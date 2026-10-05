@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Check } from '@/lib/lucide-icons';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 import BaseCard from './BaseCard';
+import { Badge } from './Badge';
 import { Button } from './Button';
 
 interface PricingCardProps {
@@ -106,9 +107,11 @@ const PricingCard = ({
             hoverEffect={true}
         >
             {recommended && (
-                <div className="absolute top-0 right-0 bg-primary text-white text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-lg">
+                /* 추천 리본은 공용 Badge(brand)다 — 손으로 짠 모서리 리본(rounded-bl/tr-lg)은 반경 네 단
+                   어디에도 없었다(§3). 카드 패딩(p-8) 안쪽 모서리에 맞춰 absolute로 둔다. */
+                <Badge tone="brand" size="md" className="absolute top-4 right-4">
                     RECOMMENDED
-                </div>
+                </Badge>
             )}
             <h3 className="typo-card-title mb-2">{title}</h3>
             <div className="flex items-baseline mb-4">

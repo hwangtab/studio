@@ -2,6 +2,8 @@ import React from 'react';
 import Link from 'next/link';
 import { MessageCircle } from '@/lib/lucide-icons';
 import { Button } from '../ui/Button';
+import { ChoiceCard, ChoiceGroup } from '../ui/Choice';
+import { Panel } from '../ui/Panel';
 import {
   buildQuoteSummary,
   estimate,
@@ -23,14 +25,8 @@ interface QuoteWizardProps {
   kakaoUrl: string;
 }
 
-const pillClass = (selected: boolean) =>
-  `cursor-pointer rounded-full border px-4 py-2 text-sm font-medium focus-within:ring-2 focus-within:ring-primary/70 dark:focus-within:ring-primary-lighter/70 ${
-    selected
-      ? 'border-primary bg-primary/10 text-primary dark:text-primary-lighter'
-      : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300'
-  }`;
-
-const ChoiceGroup = ({
+/** 알약 라디오 한 묶음 — 모양은 ChoiceGroup/ChoiceCard(variant="pill")가 소유한다. */
+const QuoteChoiceGroup = ({
   name,
   legend,
   choices,
@@ -43,24 +39,19 @@ const ChoiceGroup = ({
   value?: string;
   onChange: (id: string) => void;
 }) => (
-  <fieldset>
-    <legend className="text-sm font-semibold text-gray-900 dark:text-white mb-3">{legend}</legend>
-    <div className="flex flex-wrap gap-2">
-      {choices.map((c) => (
-        <label key={c.id} className={pillClass(value === c.id)}>
-          <input
-            type="radio"
-            name={name}
-            value={c.id}
-            checked={value === c.id}
-            onChange={() => onChange(c.id)}
-            className="sr-only"
-          />
-          {c.label}
-        </label>
-      ))}
-    </div>
-  </fieldset>
+  <ChoiceGroup label={legend} variant="pill">
+    {choices.map((c) => (
+      <ChoiceCard
+        key={c.id}
+        variant="pill"
+        name={name}
+        value={c.id}
+        checked={value === c.id}
+        onChange={() => onChange(c.id)}
+        title={c.label}
+      />
+    ))}
+  </ChoiceGroup>
 );
 
 /**
@@ -119,7 +110,7 @@ const QuoteWizard = ({ kakaoUrl }: QuoteWizardProps) => {
 
   return (
     <div className="glass-card rounded-2xl p-6 sm:p-8 max-w-3xl mx-auto space-y-8">
-      <ChoiceGroup
+      <QuoteChoiceGroup
         name="quote-service"
         legend="1. 무엇이 필요하세요?"
         choices={SERVICE_CHOICES}
@@ -128,7 +119,7 @@ const QuoteWizard = ({ kakaoUrl }: QuoteWizardProps) => {
       />
 
       {scaleQ && (
-        <ChoiceGroup
+        <QuoteChoiceGroup
           name="quote-scale"
           legend={`2. ${scaleQ.question}`}
           choices={scaleQ.choices}
@@ -138,7 +129,7 @@ const QuoteWizard = ({ kakaoUrl }: QuoteWizardProps) => {
       )}
 
       {asksReadiness && (
-        <ChoiceGroup
+        <QuoteChoiceGroup
           name="quote-readiness"
           legend="3. 지금 어디까지 준비돼 있나요?"
           choices={READINESS_CHOICES}
@@ -148,7 +139,7 @@ const QuoteWizard = ({ kakaoUrl }: QuoteWizardProps) => {
       )}
 
       {answers.service === 'release' && (
-        <ChoiceGroup
+        <QuoteChoiceGroup
           name="quote-funding-source"
           legend="4. 제작비는 어떻게 마련하실 생각인가요?"
           choices={FUNDING_SOURCE_CHOICES}
@@ -158,7 +149,7 @@ const QuoteWizard = ({ kakaoUrl }: QuoteWizardProps) => {
       )}
 
       {answers.service && (
-        <ChoiceGroup
+        <QuoteChoiceGroup
           name="quote-timing"
           legend="언제쯤 시작하고 싶으세요?"
           choices={TIMING_CHOICES}
@@ -168,8 +159,9 @@ const QuoteWizard = ({ kakaoUrl }: QuoteWizardProps) => {
       )}
 
       <div>
+        {/* 결과는 중립 Panel이다 — Notice는 본문 링크에 밑줄을 강제해 아래 버튼 링크까지 밑줄이 생긴다. */}
         {est ? (
-          <div className="rounded-xl border border-primary/30 bg-primary/5 p-5 sm:p-6 space-y-4">
+          <Panel padding="default" className="space-y-4">
             {/* 낭독은 가격 한 줄만 — 결과 블록 전체를 live로 두면 답을 바꿀 때마다 버튼까지 다시 읽힌다. */}
             <div aria-live="polite" aria-atomic="true">
               <p className="text-sm text-gray-600 dark:text-gray-400">예상 비용</p>
@@ -219,7 +211,7 @@ const QuoteWizard = ({ kakaoUrl }: QuoteWizardProps) => {
                 ? '요약을 복사했어요. 카카오톡 대화창에 붙여 넣어 보내 주세요.'
                 : '버튼을 누르면 위 답변과 견적 코드가 복사되고 카카오톡이 열립니다. 이름·연락처는 받지 않습니다.'}
             </p>
-          </div>
+          </Panel>
         ) : (
           <p className="text-sm text-gray-500 dark:text-gray-400">질문에 답하시면 여기에 예상 비용이 바로 나옵니다.</p>
         )}

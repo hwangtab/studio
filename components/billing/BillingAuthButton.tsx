@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { loadTossPayments } from '@tosspayments/tosspayments-sdk';
 
 import { Button } from '../ui/Button';
+import { Notice } from '../ui/Notice';
 
 interface Props {
   subscriptionId: string;
@@ -76,7 +77,7 @@ export default function BillingAuthButton({
   };
 
   if (error) {
-    return <p role="alert" className="text-red-600 text-sm">{error}</p>;
+    return <Notice tone="error">{error}</Notice>;
   }
 
   return (

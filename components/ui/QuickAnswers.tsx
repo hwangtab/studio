@@ -42,7 +42,8 @@ const QuickAnswers = ({
             <BaseCard
               key={`${item.question}-${index}`}
               variant="outline"
-              className="p-6 h-full flex flex-col"
+              padding="default"
+              className="h-full flex flex-col"
             >
               {/* text-primary/70은 WCAG AA 미달(3.82:1) — text-primary-dark로 대비 확보. */}
               <div className="text-xs font-semibold uppercase tracking-widest text-primary-dark dark:text-primary-lighter mb-3">

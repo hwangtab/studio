@@ -14,6 +14,7 @@ import {
 import type { LucideIcon } from '@/lib/lucide-icons';
 import type { Locale } from '../../lib/i18n';
 import BaseCard from '../ui/BaseCard';
+import { Badge } from '../ui/Badge';
 
 export const FeatureCard = ({
   icon: Icon,
@@ -26,7 +27,7 @@ export const FeatureCard = ({
   description: string;
   delay?: number;
 }) => (
-  <BaseCard variant="default" delay={delay} className="p-6 h-full">
+  <BaseCard variant="default" delay={delay} padding="default" className="h-full">
     <div className="flex items-center mb-4">
       <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
         <Icon className="text-primary dark:text-primary-lighter" size={24} aria-hidden="true" />
@@ -48,7 +49,7 @@ export const PainPoint = ({
   delay?: number;
   locale?: Locale;
 }) => (
-  <BaseCard variant="default" delay={delay} className="p-5 h-full">
+  <BaseCard variant="default" delay={delay} padding="compact" className="h-full">
     <div className="flex items-start">
       <div className="bg-gradient-to-br from-primary to-secondary p-3 rounded-full mr-4 text-white flex-shrink-0">
         <Icon size={20} aria-hidden="true" />
@@ -71,7 +72,7 @@ export const TargetAudience = ({
   icon: LucideIcon;
   delay?: number;
 }) => (
-  <BaseCard variant="default" delay={delay} className="p-6 mb-4">
+  <BaseCard variant="default" delay={delay} padding="default" className="mb-4">
     <div className="flex items-center mb-2">
       <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
         <Icon className="text-primary dark:text-primary-lighter" size={24} aria-hidden="true" />
@@ -118,7 +119,7 @@ export const BenefitCard = ({
   calendarLinkLabel?: string;
   calendarLinkUrl?: string;
 }) => (
-  <BaseCard variant="default" delay={delay} className="p-6 h-full">
+  <BaseCard variant="default" delay={delay} padding="default" className="h-full">
     <div className="flex items-center mb-4">
       <div className="bg-gradient-to-br from-primary to-secondary p-3 rounded-full mr-4 text-white flex-shrink-0">
         <Icon size={22} aria-hidden="true" />
@@ -127,10 +128,9 @@ export const BenefitCard = ({
     </div>
     {valueBadge && (
       <div className="mb-3">
-        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-primary/10 to-secondary/10 text-primary dark:text-primary-lighter border border-primary/20">
-          <Sparkles size={12} aria-hidden="true" />
+        <Badge tone="brand" size="md" icon={<Sparkles size={16} aria-hidden="true" />}>
           {valueBadge}
-        </span>
+        </Badge>
       </div>
     )}
     <ul className="space-y-2">

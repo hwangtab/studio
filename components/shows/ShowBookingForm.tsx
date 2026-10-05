@@ -3,6 +3,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Button } from '../ui/Button';
 import { Field, TextInput, Select } from '../ui/Field';
+import { ChoiceCard, ChoiceGroup } from '../ui/Choice';
+import { Disclosure } from '../ui/Disclosure';
+import { Notice } from '../ui/Notice';
+import { Panel } from '../ui/Panel';
 import PaymentMethodPicker, { PaymentMethodSkeleton } from '../payments/PaymentMethodPicker';
 import { usePaymentCheckout } from '../payments/usePaymentCheckout';
 import { reportPaymentWindowOpen } from '../../utils/reportPaymentFailure';
@@ -221,111 +225,74 @@ export default function ShowBookingForm({ show }: Props) {
     }
   };
 
+  // role은 두지 않는다 — 취소 공연은 ShowDetailView가 이미 role="status"로 알리고 있어 둘이 되면 두 번 읽힌다.
   if (show.cancelled) {
-    return <p className="rounded-xl bg-gray-100 p-4 text-sm dark:bg-gray-800">이 공연은 취소되었습니다. 문의는 아래 연락처로 부탁드립니다.</p>;
+    return <Notice tone="neutral" icon={false}>이 공연은 취소되었습니다. 문의는 아래 연락처로 부탁드립니다.</Notice>;
   }
   if (showtimes.length === 0) {
-    return <p className="rounded-xl bg-gray-100 p-4 text-sm dark:bg-gray-800">예매 일정이 곧 공개됩니다.</p>;
+    return <Notice tone="neutral" icon={false}>예매 일정이 곧 공개됩니다.</Notice>;
   }
 
   return (
     <form id="book" ref={formRef} onSubmit={submit} noValidate className="scroll-mt-24 space-y-6" aria-label="티켓 예매">
       {showtimes.length > 1 || !isOpen ? (
-      <fieldset>
-        <legend className="mb-2 typo-card-title">회차</legend>
-        <div className="grid gap-2">
-          {showtimes.map((s) => {
-            const selectable = s.saleState === 'open';
-            const selected = s.id === showtimeId;
-            return (
-              <label
+        <div>
+          <ChoiceGroup label="회차">
+            {showtimes.map((s) => (
+              <ChoiceCard
                 key={s.id}
-                className={[
-                  'flex min-h-[48px] cursor-pointer items-center justify-between gap-3 rounded-xl border px-4 py-3 focus-within:ring-2 focus-within:ring-primary/70 dark:focus-within:ring-primary-lighter/70',
-                  selected ? 'border-primary bg-primary/5 dark:border-primary-lighter dark:bg-primary-lighter/10' : 'border-gray-300 dark:border-gray-600',
-                  selectable ? '' : 'cursor-not-allowed opacity-60',
-                ].join(' ')}
-              >
-                <span className="flex items-center gap-3">
-                  <input
-                    type="radio"
-                    name="showtime"
-                    value={s.id}
-                    checked={selected}
-                    disabled={!selectable}
-                    onChange={() => setShowtimeId(s.id)}
-                    className="h-4 w-4 accent-primary"
-                  />
-                  <span className="font-medium text-gray-900 dark:text-white">{s.label}</span>
-                </span>
-                <span className="text-sm text-gray-600 dark:text-gray-300">{SALE_STATE_LABELS[s.saleState]}</span>
-              </label>
-            );
-          })}
+                name="showtime"
+                value={s.id}
+                checked={s.id === showtimeId}
+                disabled={s.saleState !== 'open'}
+                onChange={() => setShowtimeId(s.id)}
+                title={s.label}
+                trailing={<span className="font-normal text-gray-600 dark:text-gray-300">{SALE_STATE_LABELS[s.saleState]}</span>}
+              />
+            ))}
+          </ChoiceGroup>
+          {!firstOpen && (
+            <p role="status" className="mt-3 text-sm text-gray-600 dark:text-gray-300">
+              지금 예매할 수 있는 회차가 없습니다.
+            </p>
+          )}
         </div>
-        {!firstOpen && (
-          <p role="status" className="mt-3 text-sm text-gray-600 dark:text-gray-300">
-            지금 예매할 수 있는 회차가 없습니다.
-          </p>
-        )}
-      </fieldset>
       ) : null}
 
       {isOpen && showtimes.length === 1 && show.ticketTypes.length === 1 && ticketType && showtime && (
         // 고를 것이 없으면 라디오 두 묶음 대신 한 줄로 알린다 — 입력 전에 읽을 것을 줄인다.
-        <p className="rounded-xl bg-gray-50 px-4 py-3 text-sm text-gray-800 dark:bg-gray-800/60 dark:text-gray-200">
+        <Panel className="text-sm text-gray-800 dark:text-gray-200">
           <span className="font-semibold text-gray-900 dark:text-white">{showtime.label}</span> · {ticketType.name} {formatWon(ticketType.price)}
           <span className="text-gray-500 dark:text-gray-400">
             {' '}
             · {remainingFor(ticketType.id) <= 10 ? `잔여 ${remainingFor(ticketType.id)}석` : '예매 가능'}
           </span>
-        </p>
+        </Panel>
       )}
 
       {isOpen && (
         <>
           {show.ticketTypes.length > 1 ? (
-          <fieldset>
-            <legend className="mb-2 typo-card-title">티켓</legend>
-            <div className="grid gap-2">
+            <ChoiceGroup label="티켓">
               {show.ticketTypes.map((t) => {
                 const left = remainingFor(t.id);
                 const soldOut = left <= 0;
+                const availability = soldOut ? '매진' : left <= 10 ? `잔여 ${left}석` : '예매 가능';
                 return (
-                  <label
+                  <ChoiceCard
                     key={t.id}
-                    className={[
-                      'flex min-h-[48px] cursor-pointer items-center justify-between gap-3 rounded-xl border px-4 py-3 focus-within:ring-2 focus-within:ring-primary/70 dark:focus-within:ring-primary-lighter/70',
-                      t.id === selectedTypeId ? 'border-primary bg-primary/5 dark:border-primary-lighter dark:bg-primary-lighter/10' : 'border-gray-300 dark:border-gray-600',
-                      soldOut ? 'cursor-not-allowed opacity-60' : '',
-                    ].join(' ')}
-                  >
-                    <span className="flex items-center gap-3">
-                      <input
-                        type="radio"
-                        name="ticketType"
-                        value={t.id}
-                        checked={t.id === selectedTypeId}
-                        disabled={soldOut}
-                        onChange={() => setTicketTypeId(t.id)}
-                        className="h-4 w-4 accent-primary"
-                      />
-                      <span>
-                        <span className="font-medium text-gray-900 dark:text-white">{t.name}</span>
-                        {t.zoneLabel && <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">{t.zoneLabel}</span>}
-                      </span>
-                    </span>
-                    <span className="text-right text-sm text-gray-700 dark:text-gray-300">
-                      {formatWon(t.price)}
-                      <span className="block text-xs text-gray-500 dark:text-gray-400">
-                        {soldOut ? '매진' : left <= 10 ? `잔여 ${left}석` : '예매 가능'}
-                      </span>
-                    </span>
-                  </label>
+                    name="ticketType"
+                    value={t.id}
+                    checked={t.id === selectedTypeId}
+                    disabled={soldOut}
+                    onChange={() => setTicketTypeId(t.id)}
+                    title={t.name}
+                    description={t.zoneLabel ? `${t.zoneLabel} · ${availability}` : availability}
+                    trailing={formatWon(t.price)}
+                  />
                 );
               })}
-            </div>
-          </fieldset>
+            </ChoiceGroup>
           ) : null}
 
           <Field id="show-quantity" label="매수" hint={`1회 최대 ${SHOW_MAX_PER_ORDER_CAP}매`}>
@@ -368,7 +335,7 @@ export default function ShowBookingForm({ show }: Props) {
                   bankBlockedMessage={bankBlocked ? BANK_DEPOSIT_BLOCK_MESSAGES[bankBlocked] : null}
                   confirmLabel="티켓이 발권"
                 />
-                {widget.error && <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-400">{widget.error}</p>}
+                {widget.error && <Notice tone="error" className="mt-3">{widget.error}</Notice>}
               </>
             ) : (
               <>
@@ -384,23 +351,23 @@ export default function ShowBookingForm({ show }: Props) {
                   <div id={widget.methodsId} />
                   <div id={widget.agreementId} />
                   {widget.error && (
-                    <div>
-                      <p role="alert" className="text-sm text-red-600 dark:text-red-400">{widget.error}</p>
-                      <Button type="button" variant="outline" onClick={widget.retry} className="mt-3">
-                        다시 시도
-                      </Button>
-                    </div>
+                    <Notice
+                      tone="error"
+                      actions={
+                        <Button type="button" size="sm" variant="outline" onClick={widget.retry}>
+                          다시 시도
+                        </Button>
+                      }
+                    >
+                      {widget.error}
+                    </Notice>
                   )}
                 </div>
               </>
             )}
           </div>
 
-          {error && (
-            <p role="alert" className="text-sm text-red-600 dark:text-red-400">
-              {error}
-            </p>
-          )}
+          {error && <Notice tone="error">{error}</Notice>}
 
           {/*
             약관·규정 동의는 **결제하기를 누르는 행위**로 받는다 — 체크박스를 두지 않는다(펀딩 PledgeWizard와 같은
@@ -417,12 +384,9 @@ export default function ShowBookingForm({ show }: Props) {
                 ? '좌석은 입금을 확인할 때까지 잡아 두고, 확인되면 티켓(QR)을 메일로 보내 드립니다.'
                 : `좌석은 결제창을 여는 동안 ${Math.floor(SHOW_HOLD_SECONDS / 60)}분간 보류됩니다.`}
             </p>
-            <details className="mt-1">
-              <summary className="cursor-pointer rounded underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70">
-                취소·환불 규정 보기
-              </summary>
-              <RefundPolicyList className="mt-2" />
-            </details>
+            <Disclosure variant="plain" summary="취소·환불 규정 보기" className="mt-1" summaryClassName="text-xs font-medium text-gray-600 dark:text-gray-300" bodyClassName="text-xs">
+              <RefundPolicyList />
+            </Disclosure>
           </div>
 
           <Button type="submit" fullWidth disabled={!canBook || (!usingBank && !widget.ready) || submitting}>

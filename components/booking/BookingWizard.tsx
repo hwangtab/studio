@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
 
 import { reportPaymentFailure } from '../../utils/reportPaymentFailure';
 
@@ -21,6 +20,14 @@ import PaymentMethodChoice from '../payments/PaymentMethodChoice';
 import { CANONICAL_FACTS } from '../../lib/factTokens';
 import { getSiteConfig } from '../../data/siteConfig';
 import { Field, Select, TextArea, TextInput } from '../ui/Field';
+import { ChoiceCard, ChoiceGroup } from '../ui/Choice';
+import { Notice } from '../ui/Notice';
+import { Panel } from '../ui/Panel';
+import { PageHeader, PageShell } from '../ui/PageHeader';
+import { Stepper } from '../ui/Stepper';
+import { FOCUS_RING } from '../ui/focusRing';
+import { cn } from '../../lib/utils';
+import { formatPriceAmount } from '../../data/pricing';
 
 // 슬롯 조회 장애 안내의 대안 경로 — 위저드는 ko 전용 화면이라 ko 오픈채팅으로 고정한다.
 const KAKAO_URL = getSiteConfig('ko').contact.kakaoUrl;
@@ -37,6 +44,14 @@ interface BookingWizardProps {
 
 type Step = 1 | 2 | 3;
 
+const BOOKING_STEPS = ['상품·시간', '날짜·시간', '예약자 정보'];
+
+/** 안내 박스 안의 글자 링크 — 밑줄은 Notice가 긋고, 여기서는 포커스 링만 준다. */
+const NOTICE_LINK_CLASS = cn('rounded font-semibold', FOCUS_RING);
+
+/** 상품 카드 오른쪽 가격 — 공급가(VAT 별도) 기준. 시간제는 시간당가라 단위를 붙인다. */
+const productPriceLabel = (p: SessionProduct): string =>
+  p.kind === 'hourly' ? `시간당 ${formatPriceAmount(p.unitAmount)}원` : `${formatPriceAmount(p.unitAmount)}원`;
 
 /** 예약 API 페이로드 — 서버에 금액을 절대 보내지 않는다(서버가 SSOT로 재계산). */
 interface CreateBookingBody {
@@ -198,13 +213,19 @@ export default function BookingWizard({ service, products, initialProductId }: B
     return () => controller.abort();
   }, [step, date, fetchSlots, retryTick]);
 
-  const slotButtonClass = (slot: DaySlot) => {
-    if (!slot.available)
-      return 'h-11 rounded-md border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed';
-    if (selectedStartHour === slot.startHour)
-      return 'h-11 rounded-md border border-primary bg-primary text-white font-semibold';
-    return 'h-11 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-lighter transition-colors';
-  };
+  // 시간 슬롯은 설명 없는 짧은 라벨이라 선택 상태를 **채움**으로 표시한다(design-system.md §3 —
+  // 틴트는 ChoiceCard, 채움은 세그먼트·칩·시간 슬롯). 반경은 카드·폼 안의 버튼과 같은 xl.
+  const slotButtonClass = (slot: DaySlot) =>
+    cn(
+      'h-11 rounded-xl border text-sm tabular-nums',
+      FOCUS_RING,
+      !slot.available &&
+        'cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-600',
+      slot.available && selectedStartHour === slot.startHour && 'border-primary bg-primary font-semibold text-white',
+      slot.available &&
+        selectedStartHour !== slot.startHour &&
+        'border-gray-300 bg-white text-gray-700 transition-colors hover:border-primary hover:text-primary dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:text-primary-lighter',
+    );
 
   // Step 3: 예약자 정보
   const [customerName, setCustomerName] = useState('');
@@ -459,14 +480,10 @@ export default function BookingWizard({ service, products, initialProductId }: B
   };
 
   return (
-    <main className="mx-auto max-w-2xl px-4 py-12 sm:py-16">
-      <Link href={`/ko/${service}`} className="text-sm text-primary dark:text-primary-lighter hover:underline">
-        ← 서비스 소개로 돌아가기
-      </Link>
-      <h1 className="mt-3 typo-page-title">
-        {selectedProduct.nameKo} 온라인 예약
-      </h1>
-      <p className="mt-1 mb-8 text-sm text-gray-500 dark:text-gray-400">STEP {step} / 3</p>
+    <PageShell>
+      <PageHeader backHref={`/ko/${service}`} backLabel="서비스 소개로 돌아가기" title={`${selectedProduct.nameKo} 온라인 예약`}>
+        <Stepper steps={BOOKING_STEPS} current={step} />
+      </PageHeader>
 
       {step === 1 && (
         <section aria-labelledby="booking-step1-heading">
@@ -475,31 +492,20 @@ export default function BookingWizard({ service, products, initialProductId }: B
           </h2>
 
           {products.length > 1 && (
-            <fieldset className="mb-4">
-              <legend className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">상품 선택</legend>
-              <div className="space-y-2">
-                {products.map((p) => (
-                  <label
-                    key={p.id}
-                    className={`flex items-center gap-2 rounded-md border p-3 cursor-pointer transition-colors ${
-                      selectedProductId === p.id
-                        ? 'border-primary bg-primary/5'
-                        : 'border-gray-300 dark:border-gray-600 hover:border-primary/50'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="product"
-                      value={p.id}
-                      checked={selectedProductId === p.id}
-                      onChange={() => handleProductChange(p.id)}
-                      className="h-4 w-4 text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70"
-                    />
-                    <span className="text-sm text-gray-800 dark:text-gray-100">{p.nameKo}</span>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
+            <ChoiceGroup label="상품 선택" className="mb-4">
+              {products.map((p) => (
+                <ChoiceCard
+                  key={p.id}
+                  name="product"
+                  value={p.id}
+                  checked={selectedProductId === p.id}
+                  onChange={() => handleProductChange(p.id)}
+                  title={p.nameKo}
+                  description={p.kind === 'package' && p.sessionHours ? `${p.sessionHours}시간 세션` : undefined}
+                  trailing={productPriceLabel(p)}
+                />
+              ))}
+            </ChoiceGroup>
           )}
 
           {selectedProduct.kind === 'hourly' && (
@@ -537,9 +543,9 @@ export default function BookingWizard({ service, products, initialProductId }: B
           </h2>
 
           {slotsNotice && (
-            <p role="alert" className="mb-4 rounded-md bg-red-50 dark:bg-red-900/20 p-3 text-sm text-red-700 dark:text-red-300">
+            <Notice tone="error" className="mb-4">
               {slotsNotice}
-            </p>
+            </Notice>
           )}
 
           <div className="mb-4">
@@ -560,25 +566,23 @@ export default function BookingWizard({ service, products, initialProductId }: B
               <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">시간 선택</p>
               {slotsLoading && <p className="text-sm text-gray-500 dark:text-gray-400">예약 현황을 불러오는 중…</p>}
               {slotsError && (
-                <div role="alert" className="rounded-md bg-red-50 dark:bg-red-900/20 p-3 text-sm text-red-700 dark:text-red-300">
-                  <p>{slotsError}</p>
-                  <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
-                    <button
-                      type="button"
-                      onClick={() => setRetryTick((n) => n + 1)}
-                      className="font-semibold underline underline-offset-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70"
-                    >
+                <Notice
+                  tone="error"
+                  actions={
+                    <Button type="button" size="sm" variant="outline" onClick={() => setRetryTick((n) => n + 1)}>
                       다시 불러오기
-                    </button>
-                    <span className="text-red-600/80 dark:text-red-300/80">
-                      계속 안 되면{' '}
-                      <a href={KAKAO_URL} target="_blank" rel="noopener noreferrer" className="font-semibold underline underline-offset-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70">카카오톡</a>
-                      {' '}또는{' '}
-                      <a href={TEL_HREF} className="font-semibold underline underline-offset-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70">{CANONICAL_FACTS.phone}</a>
-                      로 예약해 주세요.
-                    </span>
-                  </div>
-                </div>
+                    </Button>
+                  }
+                >
+                  <p>{slotsError}</p>
+                  <p className="mt-1">
+                    계속 안 되면{' '}
+                    <a href={KAKAO_URL} target="_blank" rel="noopener noreferrer" className={NOTICE_LINK_CLASS}>카카오톡</a>
+                    {' '}또는{' '}
+                    <a href={TEL_HREF} className={NOTICE_LINK_CLASS}>{CANONICAL_FACTS.phone}</a>
+                    로 예약해 주세요.
+                  </p>
+                </Notice>
               )}
               {!slotsLoading && !slotsError && slots.length > 0 && (
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
@@ -675,14 +679,13 @@ export default function BookingWizard({ service, products, initialProductId }: B
               </Field>
             </div>
 
-            <div className="rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-4">
-              <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">환불 규정</p>
-              <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1 list-disc list-inside">
+            <Panel title="환불 규정">
+              <ul className="list-inside list-disc space-y-1 text-sm text-gray-600 dark:text-gray-400">
                 {refundPolicyFor(selectedProduct).lines.map((line) => (
                   <li key={line}>{line}</li>
                 ))}
               </ul>
-            </div>
+            </Panel>
 
             {/*
               동의는 **결제하기를 누르는 행위 자체**로 받는다. 체크박스를 두지 않는다 —
@@ -720,7 +723,7 @@ export default function BookingWizard({ service, products, initialProductId }: B
                     bankBlockedMessage={bankBlocked ? BANK_DEPOSIT_BLOCK_MESSAGES[bankBlocked] : null}
                     confirmLabel="예약이 확정"
                   />
-                  {paymentError && <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-400">{paymentError}</p>}
+                  {paymentError && <Notice tone="error" className="mt-3">{paymentError}</Notice>}
                 </>
               ) : (
                 <>
@@ -733,10 +736,9 @@ export default function BookingWizard({ service, products, initialProductId }: B
                 />
                 <div hidden={usingBank} className="mt-3">
                   {paymentError ? (
-                    <div className="mt-2">
-                      <p role="alert" className="text-sm text-red-600">{paymentError}</p>
-                      <Button type="button" variant="outline" onClick={retryPayment} className="mt-3">다시 시도</Button>
-                    </div>
+                    <Notice tone="error" actions={<Button type="button" size="sm" variant="outline" onClick={retryPayment}>다시 시도</Button>}>
+                      {paymentError}
+                    </Notice>
                   ) : (
                     <>
                       <div id={methodsId} />
@@ -750,10 +752,7 @@ export default function BookingWizard({ service, products, initialProductId }: B
 
             {/* 예전에는 결제 화면에서 남은 시간을 세어 보여 줬다. 결제창을 열고 나면 고객은
                 토스 화면에 있어서 그 타이머를 볼 수 없다 — 누르기 전에 말해야 행동이 달라진다. */}
-            <p
-              role="status"
-              className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-200"
-            >
+            <Notice tone="warning" role="status">
               {usingBank ? (
                 <>신청하시면 입금하실 계좌를 바로 알려 드리고, <strong>입금을 확인할 때까지</strong> 이 시간대를 잡아 둡니다.
                 입금이 확인되면 예약이 확정되고 메일로 알려 드립니다.</>
@@ -761,13 +760,9 @@ export default function BookingWizard({ service, products, initialProductId }: B
                 <>결제를 시작하면 이 시간대를 <strong>{Math.round(PENDING_HOLD_SECONDS / 60)}분간</strong> 잡아 둡니다.
                 그 안에 결제를 마치지 않으면 다시 열려 다른 분이 예약할 수 있습니다.</>
               )}
-            </p>
+            </Notice>
 
-            {submitError && (
-              <p role="alert" className="text-sm text-red-600 dark:text-red-400">
-                {submitError}
-              </p>
-            )}
+            {submitError && <Notice tone="error">{submitError}</Notice>}
 
             <div className="flex gap-3">
               <Button type="button" variant="outline" onClick={() => setStep(2)}>
@@ -782,6 +777,6 @@ export default function BookingWizard({ service, products, initialProductId }: B
         </section>
       )}
 
-    </main>
+    </PageShell>
   );
 }

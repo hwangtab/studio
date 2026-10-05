@@ -2,6 +2,8 @@ import { useEffect, useState, type FormEvent } from 'react';
 
 import { Button } from '../../ui/Button';
 import { Field, Select, TextInput } from '../../ui/Field';
+import { Notice } from '../../ui/Notice';
+import { Panel } from '../../ui/Panel';
 import {
   FUNDING_PAYMENT_FEE_PERCENT,
   FUNDING_PLATFORM_FEE_PERCENT,
@@ -122,7 +124,7 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
 
   return (
     <form onSubmit={submit} className="flex flex-col gap-5">
-      <div className="rounded-lg bg-gray-100 p-4 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+      <Panel className="text-sm">
         <p>
           모금이 끝나고 영업일 {FUNDING_PAYOUT_BUSINESS_DAYS}일 이내에 여기 등록하신 계좌로 정산금을 보냅니다.
         </p>
@@ -137,21 +139,21 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
           빼고, 아래 세금 처리 구분에 따라 부가세 상당액과 원천징수세액을 뺀 금액입니다(개설자 약관
           제6조). 수수료는 환불을 뺀 금액을 기준으로 계산하며, 둘 다 개설자가 부담합니다.
         </p>
-      </div>
+      </Panel>
 
       {readOnly ? (
-        <p className="rounded-lg bg-amber-50 p-3 text-sm text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
+        <Notice tone="warning">
           정산 정보는 프로젝트가 승인된 뒤에 넣습니다. 심사에서 반려될 수도 있는 단계에서 계좌 정보를
           미리 받아 두지 않기 위해서입니다.
-        </p>
+        </Notice>
       ) : (
-        <p className="rounded-lg bg-gray-50 p-3 text-sm text-gray-700 dark:bg-gray-900 dark:text-gray-300">
+        <Notice tone="info">
           {initial.registered
             ? `계좌가 등록되어 있습니다${initial.accountLast4 ? ` (계좌번호 뒤 4자리 ${initial.accountLast4})` : ''}.`
             : '아직 등록된 계좌가 없습니다. 모금이 끝나기 전에 채워 주세요.'}
           {' '}
           보안을 위해 등록한 계좌번호는 화면에 다시 띄우지 않습니다. 바꾸시려면 아래에 새로 입력해 저장해 주세요.
-        </p>
+        </Notice>
       )}
 
       <Field

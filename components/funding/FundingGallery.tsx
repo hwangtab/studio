@@ -194,14 +194,14 @@ export default function FundingGallery({ id }: { id: string }) {
                   type="button"
                   onClick={() => setOpenIndex(i)}
                   aria-label={`${photo.alt} 크게 보기`}
-                  className="group relative block h-full w-full overflow-hidden rounded-xl bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:bg-gray-800 dark:focus-visible:ring-primary-lighter/70"
+                  className="relative block h-full w-full overflow-hidden rounded-xl bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:bg-gray-800 dark:focus-visible:ring-primary-lighter/70"
                 >
                   <ResponsiveImage
                     src={photo.src}
                     alt=""
                     fill
                     sizes={cs >= 4 ? '(min-width: 1024px) 700px, 100vw' : '(min-width: 640px) 33vw, 50vw'}
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="object-cover"
                     loading="lazy"
                   />
                 </button>

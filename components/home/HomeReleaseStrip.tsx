@@ -41,15 +41,15 @@ const HomeReleaseStrip = ({ locale, covers, viewAllLabel }: HomeReleaseStripProp
             <Link
               href={`/${locale}/portfolio/${cover.id}`}
               prefetch={false}
-              className="group block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+              className="group block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
             >
-              <div className="relative aspect-square overflow-hidden rounded-md bg-gray-100 dark:bg-gray-800 ring-1 ring-black/5 dark:ring-white/10">
+              <div className="relative aspect-square overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800 ring-1 ring-black/5 dark:ring-white/10">
                 <Image
                   src={cover.image}
                   alt={cover.title}
                   fill
                   sizes="(max-width: 640px) 42vw, (max-width: 1024px) 25vw, 200px"
-                  className="object-cover transition-transform duration-slow group-hover:scale-[1.03]"
+                  className="object-cover"
                 />
               </div>
               <p className="mt-3 text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100 line-clamp-2 break-keep">

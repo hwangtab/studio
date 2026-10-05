@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { MouseEvent } from 'react';
 import BaseCard from '../ui/BaseCard';
+import { Badge } from '../ui/Badge';
 import ResponsiveImage from '../ResponsiveImage';
 import { formatPriceAmount } from '../../data/pricing';
 import { imageAspectRatio } from '../../lib/funding/imageAspect';
@@ -64,9 +65,7 @@ export default function RewardCard({ reward, remaining, pledgeHref, canPledge, o
       <BaseCard variant="glass" className="flex h-full flex-col p-5">
         {body}
         {soldOut && (
-          <span className="mt-4 inline-flex w-fit items-center rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-300">
-            품절
-          </span>
+          <Badge size="md" className="mt-4 w-fit">품절</Badge>
         )}
       </BaseCard>
     );
@@ -78,7 +77,7 @@ export default function RewardCard({ reward, remaining, pledgeHref, canPledge, o
         href={pledgeHref}
         prefetch={false}
         onClick={handleClick}
-        className="flex h-full flex-col rounded-2xl p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 dark:focus-visible:ring-primary-lighter/70 dark:focus-visible:ring-offset-gray-900"
+        className="flex h-full flex-col rounded-xl p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 dark:focus-visible:ring-primary-lighter/70 dark:focus-visible:ring-offset-gray-900"
       >
         {body}
         {/* 카드 전체가 링크라 안쪽은 버튼 모양의 span이다. 공용 buttonVariants로 다른 주 버튼과

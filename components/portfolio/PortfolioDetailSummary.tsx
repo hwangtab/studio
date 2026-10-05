@@ -1,6 +1,7 @@
 import React from 'react';
 import { ExternalLink } from '@/lib/lucide-icons';
 import ResponsiveImage from '../ResponsiveImage';
+import { Badge } from '../ui/Badge';
 import type { PortfolioItem } from '../../types/data';
 
 interface PortfolioDetailSummaryProps {
@@ -71,12 +72,10 @@ const PortfolioDetailSummary = ({
 
       <div className={contentSectionClassName}>
         <div className="mb-3">
-          <span
-            className="inline-block px-3 py-1 text-sm font-medium text-white rounded-full"
-            style={{ backgroundColor: categoryColor }}
-          >
+          {/* 카테고리 색은 데이터(categoryColor)가 주므로 style로 넘긴다 — tone 표에 없는 색이다. */}
+          <Badge size="md" className="text-white" style={{ backgroundColor: categoryColor }}>
             {categoryName}
-          </span>
+          </Badge>
         </div>
 
         <TitleTag className={titleClassName}>
@@ -93,12 +92,9 @@ const PortfolioDetailSummary = ({
           </h3>
           <div className="flex flex-wrap gap-2">
             {item.services.map((service) => (
-              <span
-                key={service}
-                className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm"
-              >
+              <Badge key={service} tone="neutral" size="md">
                 {service}
-              </span>
+              </Badge>
             ))}
           </div>
         </div>

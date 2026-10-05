@@ -15,6 +15,11 @@ import type { FundingProject } from '../../lib/funding/projects';
 import type { PublicNameStyle } from '../../lib/funding/publicName';
 import { clearStoredDraft, draftStorageKey, readStringDraft, writeStringDraft } from '../../lib/formDraft';
 import { Field, TextArea, TextInput } from '../ui/Field';
+import { ChoiceCard } from '../ui/Choice';
+import { Checkbox } from '../ui/Checkbox';
+import { Notice } from '../ui/Notice';
+import { Panel } from '../ui/Panel';
+import { PriceSummary } from '../ui/PriceSummary';
 import PublicNameChoice from './PublicNameChoice';
 import { formatKakaoAddress, loadKakaoPostcode } from './kakaoPostcode';
 
@@ -71,10 +76,8 @@ const EMPTY_ADDRESS_MESSAGE = '주소 검색으로 받으실 주소를 넣어 �
 const LAST_SELECTION_TTL_MS = 30 * 60 * 1000;
 
 const cardClass = 'glass-card rounded-2xl p-5 sm:p-6';
-// 선택 가능한 행(리워드·결제수단)은 탭 타깃이 카드 전체가 되도록.
-const choiceRow =
-  'flex items-start gap-3 rounded-xl border p-4 transition-colors cursor-pointer border-gray-200 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary-light/50 has-[:checked]:border-primary has-[:checked]:bg-primary/5 dark:has-[:checked]:border-primary-light dark:has-[:checked]:bg-primary-light/10';
-const radioClass = 'mt-0.5 h-5 w-5 shrink-0 accent-primary';
+// 선택 가능한 행(리워드·결제수단)은 ChoiceCard — 탭 타깃이 카드 전체이고 선택 틴트·포커스 링은
+// 거기 한 벌로 있다(docs/design-system.md §4). 단독 체크박스는 Checkbox.
 
 /**
  * 수량·추가 후원금은 **문자열 상태로 자유 입력**받고, 정규화는 blur와 제출 직전에만 한다.
@@ -589,16 +592,16 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
       */}
       <fieldset className={cardClass} aria-labelledby={lockedReward && !showAllRewards ? undefined : `${uid}-step-reward`}>
         {lockedReward && !showAllRewards ? (
-          <div className="mb-5 rounded-xl border border-primary bg-primary/5 p-4 dark:border-primary-light dark:bg-primary-light/10">
+          <Notice tone="brand" icon={false} className="mb-5">
             <p className="typo-card-meta">고르신 리워드</p>
             <p className="mt-1 text-lg font-bold text-gray-900 dark:text-white">{formatPriceAmount(reward.amount)}원</p>
             <p className="typo-card-meta">{reward.title}</p>
-          </div>
+          </Notice>
         ) : (
           <StepHeader id={`${uid}-step-reward`} n={1} title="리워드" hint="펀딩 금액에 따라 돌려드릴 구성입니다." />
         )}
         {stockNotice && (
-          <p role="status" className="mb-3 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-200">{stockNotice}</p>
+          <Notice tone="warning" role="status" className="mb-3">{stockNotice}</Notice>
         )}
         {selectionRestored && (
           <p role="status" className="mb-3 typo-card-meta">지난번 결제를 시도할 때 고른 리워드를 다시 담아 두었습니다.</p>
@@ -609,13 +612,16 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
               const left = remaining[r.id];
               const soldOut = isSoldOut(remaining, r.id);
               return (
-                <label key={r.id} className={`${choiceRow} ${soldOut ? 'cursor-not-allowed opacity-50' : ''}`}>
-                  <input type="radio" name="reward" value={r.id} className={radioClass} checked={rewardId === r.id} disabled={soldOut} onChange={() => { setRewardId(r.id); setQuantityText('1'); }} />
-                  <span className="min-w-0">
-                    <span className="block font-bold text-gray-900 dark:text-white">{formatPriceAmount(r.amount)}원</span>
-                    <span className="typo-card-meta block">{r.title}{soldOut ? ' (품절)' : left != null ? ` · ${left}개 남음` : ''}{r.requiresShipping ? ' · 배송' : ''}</span>
-                  </span>
-                </label>
+                <ChoiceCard
+                  key={r.id}
+                  name="reward"
+                  value={r.id}
+                  checked={rewardId === r.id}
+                  disabled={soldOut}
+                  onChange={() => { setRewardId(r.id); setQuantityText('1'); }}
+                  title={`${formatPriceAmount(r.amount)}원`}
+                  description={`${r.title}${soldOut ? ' (품절)' : left != null ? ` · ${left}개 남음` : ''}${r.requiresShipping ? ' · 배송' : ''}`}
+                />
               );
             })}
           </div>
@@ -671,21 +677,19 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
         </div>
 
         {needsShipping && (
-          <div className="mt-5 rounded-xl border border-gray-200 p-4 dark:border-gray-700">
+          <Panel variant="outline" className="mt-5">
             <p className="text-sm font-semibold text-gray-900 dark:text-white">배송지</p>
             <p className={helpClass}>고르신 리워드는 배송이 있습니다.</p>
-            <label className="mt-4 flex cursor-pointer items-center gap-3">
-              <input
-                type="checkbox"
-                className={radioClass}
-                checked={shipToOther}
-                onChange={(e) => {
-                  setShipToOther(e.target.checked);
-                  if (!e.target.checked) setShip((prev) => ({ ...prev, name: '', phone: '' }));
-                }}
-              />
-              <span className="typo-card-meta text-gray-900 dark:text-white">후원자가 아닌 다른 분이 받습니다</span>
-            </label>
+            <Checkbox
+              className="mt-2"
+              emphasis
+              checked={shipToOther}
+              onChange={(e) => {
+                setShipToOther(e.target.checked);
+                if (!e.target.checked) setShip((prev) => ({ ...prev, name: '', phone: '' }));
+              }}
+              label="후원자가 아닌 다른 분이 받습니다"
+            />
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               {shipToOther && (
                 <>
@@ -751,7 +755,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
                 </Field>
               </div>
             </div>
-          </div>
+          </Panel>
         )}
 
         {/*
@@ -768,7 +772,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
           테두리 박스는 두르지 않는다 — 필수 약관 동의처럼 보이면 안 된다(토스 위젯의 [필수]
           체크와 나란히 셋이 비슷해 보였던 이유). 옅은 바탕의 "선택" 구획으로 구분한다.
         */}
-        <div className="mt-5 rounded-xl bg-gray-50/70 p-4 dark:bg-gray-800/40">
+        <Panel variant="inset" padding="compact" className="mt-5">
           <p className="text-sm font-semibold text-gray-900 dark:text-white">
             응원 메시지 · 후원자 명단 <span className="font-normal text-gray-500 dark:text-gray-400">(선택)</span>
           </p>
@@ -779,13 +783,14 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
             </Field>
           </div>
 
-          <label className="mt-4 flex cursor-pointer items-start gap-3">
-            <input type="checkbox" className={radioClass} checked={form.displayNamePublic} onChange={(e) => setForm({ ...form, displayNamePublic: e.target.checked })} />
-            <span className="text-sm font-medium text-gray-900 dark:text-white">
-              후원자 명단에 이름 표시
-              <span className="mt-0.5 block font-normal text-gray-600 dark:text-gray-300">실명 대신 가린 이름이나 닉네임도 고를 수 있습니다.</span>
-            </span>
-          </label>
+          <Checkbox
+            className="mt-2"
+            emphasis
+            checked={form.displayNamePublic}
+            onChange={(e) => setForm({ ...form, displayNamePublic: e.target.checked })}
+            label="후원자 명단에 이름 표시"
+            hint="실명 대신 가린 이름이나 닉네임도 고를 수 있습니다."
+          />
 
           {form.displayNamePublic && (
             <PublicNameChoice
@@ -797,7 +802,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
               message={form.supporterMessage}
             />
           )}
-        </div>
+        </Panel>
       </fieldset>
 
       {/*
@@ -829,36 +834,34 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
               applePaySupported={applePaySupported}
               bankBlockedMessage={bankBlocked ? BANK_TRANSFER_BLOCK_MESSAGES[bankBlocked] : null}
             />
-            {paymentError && <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-400">{paymentError}</p>}
+            {paymentError && <Notice tone="error" className="mt-3">{paymentError}</Notice>}
           </>
         ) : (
           <>
           <div className="mb-4 space-y-2" role="radiogroup" aria-label="결제 방법">
-            <label className={choiceRow}>
-              <input type="radio" name={`${uid}-paymethod`} value="toss" className={radioClass}
-                checked={!usingBank} onChange={() => setPayMethod('toss')} />
-              <span className="min-w-0">
-                <span className="block font-bold text-gray-900 dark:text-white">카드·간편결제(토스)</span>
-                <span className="typo-card-meta block">결제가 끝나면 바로 확정됩니다.</span>
-              </span>
-            </label>
-            <label className={`${choiceRow} ${bankBlocked ? 'cursor-not-allowed opacity-50' : ''}`}>
-              <input type="radio" name={`${uid}-paymethod`} value="bank_transfer" className={radioClass}
-                checked={usingBank} disabled={bankBlocked !== null} onChange={() => setPayMethod('bank_transfer')} />
-              <span className="min-w-0">
-                <span className="block font-bold text-gray-900 dark:text-white">계좌로 직접 입금</span>
-                <span className="typo-card-meta block">
-                  {bankBlocked ? BANK_TRANSFER_BLOCK_MESSAGES[bankBlocked] : '은행·ATM에서 보내실 수 있습니다. 입금을 확인하면 메일로 알려 드립니다.'}
-                </span>
-              </span>
-            </label>
+            <ChoiceCard
+              name={`${uid}-paymethod`}
+              value="toss"
+              checked={!usingBank}
+              onChange={() => setPayMethod('toss')}
+              title="카드·간편결제(토스)"
+              description="결제가 끝나면 바로 확정됩니다."
+            />
+            <ChoiceCard
+              name={`${uid}-paymethod`}
+              value="bank_transfer"
+              checked={usingBank}
+              disabled={bankBlocked !== null}
+              onChange={() => setPayMethod('bank_transfer')}
+              title="계좌로 직접 입금"
+              description={bankBlocked ? BANK_TRANSFER_BLOCK_MESSAGES[bankBlocked] : '은행·ATM에서 보내실 수 있습니다. 입금을 확인하면 메일로 알려 드립니다.'}
+            />
           </div>
           <div hidden={usingBank}>
             {paymentError ? (
-              <div>
-                <p role="alert" className="text-sm text-red-600">{paymentError}</p>
-                <Button type="button" variant="outline" onClick={retryPayment} className="mt-3">다시 시도</Button>
-              </div>
+              <Notice tone="error" actions={<Button type="button" size="sm" variant="outline" onClick={retryPayment}>다시 시도</Button>}>
+                {paymentError}
+              </Notice>
             ) : (
               <>
                 <div id={methodsId} />
@@ -877,23 +880,17 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
       */}
       <section className={cardClass} aria-labelledby={`${uid}-summary`}>
         <h2 id={`${uid}-summary`} className="typo-card-subtitle text-gray-900 dark:text-white">결제 요약</h2>
-        <dl className="mt-3 space-y-1.5">
-          <div className="flex items-baseline justify-between gap-4">
-            <dt className="typo-card-meta min-w-0 truncate">{reward.title} × {quantity}</dt>
-            <dd className="shrink-0 text-sm font-medium tabular-nums text-gray-900 dark:text-white">{formatPriceAmount(reward.amount * quantity)}원</dd>
-          </div>
-          {additional > 0 && (
-            <div className="flex items-baseline justify-between gap-4">
-              <dt className="typo-card-meta">추가 펀딩</dt>
-              <dd className="shrink-0 text-sm font-medium tabular-nums text-gray-900 dark:text-white">{formatPriceAmount(additional)}원</dd>
-            </div>
-          )}
-          <div className="flex items-baseline justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
-            <dt className="text-sm font-semibold text-gray-900 dark:text-white">예상 합계</dt>
-            <dd className="text-lg font-bold text-gray-900 dark:text-white">{formatPriceAmount(preview.totalAmount)}원</dd>
-          </div>
-        </dl>
-        <p className={helpClass}>VAT 포함. 실제 청구액은 서버가 확정합니다.</p>
+        {/* 리워드가는 VAT 포함 최종가라 부가세 줄이 없다 — 그 사실은 note로 적는다. */}
+        <PriceSummary
+          className="mt-3"
+          items={[
+            { label: reward.title, quantity, amount: reward.amount * quantity },
+            ...(additional > 0 ? [{ label: '추가 펀딩', amount: additional }] : []),
+          ]}
+          total={preview.totalAmount}
+          totalLabel="예상 합계"
+          note="VAT 포함. 실제 청구액은 서버가 확정합니다."
+        />
       </section>
 
       {/*
@@ -911,11 +908,9 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
           : 'sticky bottom-0 z-10 -mx-4 border-t border-gray-200 bg-white/95 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur sm:mx-0 sm:rounded-t-2xl sm:border-x sm:px-6 dark:border-gray-700 dark:bg-gray-900/95'}
       >
         {allSoldOut && (
-          <p role="status" className="mb-3 rounded-xl border border-gray-200 p-3 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-200">{ALL_SOLD_OUT_MESSAGE}</p>
+          <Notice tone="neutral" role="status" className="mb-3">{ALL_SOLD_OUT_MESSAGE}</Notice>
         )}
-        {error && (
-          <p role="alert" className="mb-3 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">{error}</p>
-        )}
+        {error && <Notice tone="error" className="mb-3">{error}</Notice>}
         {/*
           약관 동의는 **결제하기를 누르는 행위 자체**로 받는다. 체크박스를 두지 않는다.
 

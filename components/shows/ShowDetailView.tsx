@@ -1,6 +1,9 @@
 import ImageHero from '../common/ImageHero';
 import MobileStickyCta from '../common/MobileStickyCta';
+import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
+import { Notice } from '../ui/Notice';
+import { Panel } from '../ui/Panel';
 import FAQSection from '../ui/FAQSection';
 import { Section } from '../ui/Section';
 import SectionHeading from '../ui/SectionHeading';
@@ -54,15 +57,16 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
           <>
             {show.subtitle && <span className="block">{show.subtitle}</span>}
             <span className="mt-6 flex flex-wrap justify-center gap-2 text-base">
+              {/* 히어로 안이라 Badge 기본(12px)보다 한 단 크게 — tone은 Badge가 소유한다. */}
               {show.showtimes.slice(0, 2).map((st) => (
-                <span key={st.id} className="inline-block rounded-full border border-white/40 bg-black/30 px-4 py-1.5 text-sm">
+                <Badge key={st.id} tone="onImage" size="md" className="px-4 py-1.5 text-sm font-medium">
                   {st.label}
-                </span>
+                </Badge>
               ))}
               {show.showtimes.length > 2 && (
-                <span className="inline-block rounded-full border border-white/40 bg-black/30 px-4 py-1.5 text-sm">외 {show.showtimes.length - 2}회</span>
+                <Badge tone="onImage" size="md" className="px-4 py-1.5 text-sm font-medium">외 {show.showtimes.length - 2}회</Badge>
               )}
-              <span className="inline-block rounded-full border border-white/40 bg-black/30 px-4 py-1.5 text-sm">{show.venueName}</span>
+              <Badge tone="onImage" size="md" className="px-4 py-1.5 text-sm font-medium">{show.venueName}</Badge>
             </span>
           </>
         }
@@ -78,9 +82,9 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
 
       {show.cancelled && (
         <Section spacing="tight">
-          <p role="status" className="mx-auto max-w-3xl rounded-xl bg-amber-50 p-4 text-sm text-amber-900 dark:bg-amber-900/20 dark:text-amber-100">
+          <Notice tone="warning" role="status" className="mx-auto max-w-3xl">
             이 공연은 취소되었습니다. 결제하신 분께는 별도로 환불을 안내해 드립니다. 문의 {SHOW_CONTACT_PHONE}
-          </p>
+          </Notice>
         </Section>
       )}
 
@@ -106,14 +110,16 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
               )}
             </div>
             {show.notices.length > 0 && (
-              <ul className="mt-8 space-y-2 break-keep rounded-2xl bg-gray-50 p-5 text-sm leading-7 text-gray-700 dark:bg-gray-800/60 dark:text-gray-300 md:text-base">
-                {show.notices.map((n) => (
-                  <li key={n} className="flex gap-2">
-                    <span aria-hidden="true" className="mt-0.5 text-primary dark:text-primary-lighter">•</span>
-                    <span>{n}</span>
-                  </li>
-                ))}
-              </ul>
+              <Panel variant="inset" padding="default" className="mt-8">
+                <ul className="space-y-2 break-keep text-sm leading-7 md:text-base">
+                  {show.notices.map((n) => (
+                    <li key={n} className="flex gap-2">
+                      <span aria-hidden="true" className="mt-0.5 text-primary dark:text-primary-lighter">•</span>
+                      <span>{n}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Panel>
             )}
 
             {show.performers.length > 0 && (

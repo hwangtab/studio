@@ -207,9 +207,9 @@ describe('폼 안의 결제위젯', () => {
   it('단계가 둘로 줄었다 — 결제 전용 화면이 없다', async () => {
     const user = userEvent.setup();
     render(<MixingOrderWizard />);
-    expect(screen.getByText('STEP 1 / 2')).toBeInTheDocument();
+    expect(screen.getByText('2단계 중 1단계: 상품·곡 수')).toBeInTheDocument();
     await goToStep2(user);
-    expect(screen.getByText('STEP 2 / 2')).toBeInTheDocument();
+    expect(screen.getByText('2단계 중 2단계: 주문자 정보')).toBeInTheDocument();
     // 수단 목록·약관 동의를 붙일 자리가 폼 안에 있다.
     expect(document.getElementById('toss-methods-test')).not.toBeNull();
     expect(document.getElementById('toss-agreement-test')).not.toBeNull();
@@ -387,7 +387,7 @@ describe('MixingOrderWizard 믹싱 전·후 30초 듣기', () => {
   it('상품 선택 위, 1단계 제목 바로 아래에 있다', () => {
     render(<MixingOrderWizard />);
     const summary = screen.getByText('먼저 믹싱 전·후 30초 들어 보기');
-    const product = screen.getByText('상품 선택');
+    const product = screen.getByRole('radiogroup', { name: '상품 선택' });
     expect(summary.compareDocumentPosition(product) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 

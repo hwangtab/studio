@@ -14,6 +14,9 @@ import { TOSS_KEY_CHANNEL_PARAM, tossKeyChannelFromQuery } from '../../../lib/bo
 import { BOOKING_CUSTOMER_DRAFT_KEY, MIXING_CUSTOMER_DRAFT_KEY } from '../../../lib/booking/customerDraft';
 import { getSiteConfig } from '../../../data/siteConfig';
 import { clearStoredDraft } from '../../../lib/formDraft';
+import { Button } from '../../../components/ui/Button';
+import { PageShell } from '../../../components/ui/PageHeader';
+import { ResultCard } from '../../../components/ui/ResultCard';
 
 interface SuccessProps {
   outcome: 'confirmed' | 'error';
@@ -49,79 +52,88 @@ export default function BookingSuccessPage({ outcome, message, orderNo, manageUr
         <title>{isMixing ? '주문 접수 완료' : '예약 결제 완료'} | 스튜디오 놀</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <main className="mx-auto max-w-lg px-4 py-24 text-center">
+      <PageShell width="result">
         {/* 사이트 헤더를 두르지 않는 화면이라(components/Layout.tsx의 isPrivatePaymentPage)
             여기가 브랜드를 밝히는 유일한 자리다 — 메일 링크로 들어온 사람이 어디서 온
             화면인지 알 수 있어야 한다. */}
-        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">스튜디오 놀</p>
+        <p className="typo-card-meta mb-4 text-center">스튜디오 놀</p>
+        {/* 이 URL에는 토스 paymentKey·orderId가, manageUrl에는 관리 토큰이 실린다.
+            이탈 링크 두 가지 규칙(lib/analytics/privatePaths.ts):
+          1. 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를 누르면,
+             그 사이 mount된 gtag가 비밀값이 붙은 이 URL로 page_view를 보낸다.
+          2. 공개 목적지에는 `rel="noreferrer"` — 사이트 Referrer-Policy가
+             strict-origin-when-cross-origin이라 **동일 출처 이동에는 전체 URL**을 보낸다.
+             없으면 도착지 gtag가 page_referrer에 토큰·paymentKey를 실어 보낸다.
+             private→private 링크(관리·입금 안내)는 도착지도 측정 대상이 아니라 불필요. */}
         {outcome === 'confirmed' ? (
-          <>
-            <h1 className="typo-page-title">{isMixing ? '주문이 접수되었습니다' : '예약이 확정되었습니다'}</h1>
-            <p className="mt-4 text-gray-600 dark:text-gray-300">
-              주문번호 {orderNo}.
-              {emailSent === false
-                ? ' 확인 메일을 보내지 못했습니다 — 아래 링크를 저장해 주세요.'
-                : isMixing
-                  ? ' 확인 메일을 보내드렸습니다.'
-                  : ' 예약 확인 메일을 보내드렸습니다.'}
-            </p>
-            {isMixing && (
+          <ResultCard
+            tone="success"
+            as="h1"
+            title={isMixing ? '주문이 접수되었습니다' : '예약이 확정되었습니다'}
+            description={
               <>
-                <p className="mt-4 text-gray-600 dark:text-gray-300">
+                주문번호 {orderNo}.
+                {emailSent === false
+                  ? ' 확인 메일을 보내지 못했습니다 — 아래 링크를 저장해 주세요.'
+                  : isMixing
+                    ? ' 확인 메일을 보내드렸습니다.'
+                    : ' 예약 확인 메일을 보내드렸습니다.'}
+              </>
+            }
+            actions={
+              <>
+                {/* 카카오톡 목적지 링크 — CLAUDE.md 카카오 CTA 배색 규칙(옐로 고정). */}
+                {isMixing && (
+                  <Button asChild variant="kakao">
+                    <a href={kakaoUrl} target="_blank" rel="noopener noreferrer">
+                      카카오톡으로 파일 보내기
+                    </a>
+                  </Button>
+                )}
+                {/* 관리 링크를 화면에도 띄운다. 예전엔 이 토큰이 메일에만 실려서, 메일이
+                    실패하면 고객이 예약을 스스로 취소할 방법이 아예 없었다. */}
+                {manageUrl && (
+                  <Button asChild>
+                    <a href={manageUrl}>{isMixing ? '주문 확인·취소 페이지 열기' : '예약 확인·취소 페이지 열기'}</a>
+                  </Button>
+                )}
+                <Button asChild variant="ghost">
+                  <a href="/ko" rel="noreferrer">홈으로</a>
+                </Button>
+              </>
+            }
+          >
+            {isMixing && (
+              <div className="text-center">
+                <p className="typo-body text-gray-600 dark:text-gray-400">
                   이 메일에 회신으로 파일(구글 드라이브·WeTransfer 링크)을 보내주시면 작업을
                   시작합니다. 카카오톡 오픈채팅으로 보내셔도 됩니다.
                 </p>
-                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                  납기: 파일 확인 후 3~7영업일
-                </p>
-                {/* 카카오톡 목적지 링크 — CLAUDE.md 카카오 CTA 배색 규칙(옐로 고정). */}
-                <p className="mt-4">
-                  <a
-                    href={kakaoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-kakao px-6 py-3 font-bold text-kakao-ink transition-colors hover:bg-kakao-dark"
-                  >
-                    카카오톡으로 파일 보내기
-                  </a>
-                </p>
-              </>
+                <p className="mt-2 typo-card-meta">납기: 파일 확인 후 3~7영업일</p>
+              </div>
             )}
-            {/* 관리 링크를 화면에도 띄운다. 예전엔 이 토큰이 메일에만 실려서, 메일이
-                실패하면 고객이 예약을 스스로 취소할 방법이 아예 없었다. */}
-            {/* 이 URL에는 토스 paymentKey·orderId가, manageUrl에는 관리 토큰이 실린다.
-                이탈 링크 두 가지 규칙(lib/analytics/privatePaths.ts):
-              1. 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를 누르면,
-                 그 사이 mount된 gtag가 비밀값이 붙은 이 URL로 page_view를 보낸다.
-              2. 공개 목적지에는 `rel="noreferrer"` — 사이트 Referrer-Policy가
-                 strict-origin-when-cross-origin이라 **동일 출처 이동에는 전체 URL**을 보낸다.
-                 없으면 도착지 gtag가 page_referrer에 토큰·paymentKey를 실어 보낸다.
-                 private→private 링크(관리·입금 안내)는 도착지도 측정 대상이 아니라 불필요. */}
-            {manageUrl && (
-              <p className="mt-4">
-                <a
-                  href={manageUrl}
-                  className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-primary px-6 py-3 font-bold text-white transition-colors hover:bg-primary-dark"
-                >
-                  {isMixing ? '주문 확인·취소 페이지 열기' : '예약 확인·취소 페이지 열기'}
-                </a>
-              </p>
-            )}
-            {manageUrl && (
-              <p className="mt-3 break-all text-xs text-gray-500 dark:text-gray-400">
-                이 주소를 저장해 두세요: {manageUrl}
-              </p>
-            )}
-          </>
+          </ResultCard>
         ) : (
-          <>
-            <h1 className="typo-page-title">결제를 확정하지 못했습니다</h1>
-            <p className="mt-4 text-gray-600 dark:text-gray-300">{message}</p>
-            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">결제가 이뤄졌다면 자동으로 취소되거나 확정됩니다. 문의: 010-4255-7893</p>
-          </>
+          <ResultCard
+            tone="error"
+            as="h1"
+            title="결제를 확정하지 못했습니다"
+            description={message}
+            actions={
+              <Button asChild variant="ghost">
+                <a href="/ko" rel="noreferrer">홈으로</a>
+              </Button>
+            }
+          >
+            <p className="text-center typo-card-meta">결제가 이뤄졌다면 자동으로 취소되거나 확정됩니다. 문의: 010-4255-7893</p>
+          </ResultCard>
         )}
-        <a href="/ko" rel="noreferrer" className="mt-8 inline-block underline">홈으로</a>
-      </main>
+        {outcome === 'confirmed' && manageUrl && (
+          <p className="mt-4 break-all text-center typo-caption">
+            이 주소를 저장해 두세요: {manageUrl}
+          </p>
+        )}
+      </PageShell>
     </>
   );
 }

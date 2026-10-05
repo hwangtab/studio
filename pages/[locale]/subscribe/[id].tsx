@@ -9,7 +9,11 @@ import { withI18nServerProps } from '../../../lib/getStatic';
 import Head from 'next/head';
 
 import BillingAuthButton from '../../../components/billing/BillingAuthButton';
-import { formatPriceAmount } from '../../../data/pricing';
+import PriceBreakdown from '../../../components/booking/PriceBreakdown';
+import { Button } from '../../../components/ui/Button';
+import { Panel } from '../../../components/ui/Panel';
+import { PageHeader, PageShell } from '../../../components/ui/PageHeader';
+import { ResultCard } from '../../../components/ui/ResultCard';
 import { subscriptionOrderName } from '../../../lib/billing/amounts';
 import { findSubscriptionForSetup } from '../../../lib/billing/service';
 import { denyContractPageCaching } from '../../../lib/contracts/page-cache';
@@ -49,19 +53,6 @@ const ERROR_MESSAGES: Record<SetupErrorCode, string> = {
   invalid_state: '지금은 카드를 등록할 수 없는 상태입니다. 010-4255-7893',
 };
 
-function PriceBreakdown({ itemAmount, vatAmount, totalAmount }: { itemAmount: number; vatAmount: number; totalAmount: number }) {
-  return (
-    <div className="mt-6 rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-4 text-sm text-gray-700 dark:text-gray-300">
-      <p>
-        상품가 {formatPriceAmount(itemAmount)}원 + VAT {formatPriceAmount(vatAmount)}원 ={' '}
-        <span className="font-semibold text-gray-900 dark:text-white">
-          합계 {formatPriceAmount(totalAmount)}원
-        </span>
-      </p>
-    </div>
-  );
-}
-
 function SubscribeSetupOk(props: OkProps) {
   const { id, setupToken, customerKey, customerName, customerEmail, productName, itemAmount, vatAmount, totalAmount, billingDay, setupMode, kind } = props;
 
@@ -72,14 +63,13 @@ function SubscribeSetupOk(props: OkProps) {
         <meta name="robots" content="noindex, nofollow" />
         <meta name="referrer" content="no-referrer" />
       </Head>
-      <main className="mx-auto max-w-lg min-w-0 max-w-full px-4 py-12 sm:py-16">
+      <PageShell>
         {/* Layout이 헤더·푸터를 벗기는 화면이라(lib/analytics/privatePaths.ts) 여기가 브랜드를
             밝히는 유일한 자리다 — 메일 링크로 들어온 사람이 피싱과 구별할 수 있어야 한다. */}
-        <p className="typo-card-meta mb-2">스튜디오 놀</p>
-        <h1 className="typo-page-title">정기결제 카드 등록</h1>
-        <p className="mt-1 mb-8 text-sm text-gray-500 dark:text-gray-400">{customerName}님</p>
+        <p className="typo-card-meta">스튜디오 놀</p>
+        <PageHeader title="정기결제 카드 등록" lead={`${customerName}님`} />
 
-        <section className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
+        <section className="glass-card rounded-2xl p-6 sm:p-8">
           <h2 className="typo-card-subtitle text-gray-900 dark:text-white">{productName}</h2>
 
           <dl className="mt-6 space-y-3 text-sm">
@@ -93,7 +83,7 @@ function SubscribeSetupOk(props: OkProps) {
             </div>
           </dl>
 
-          <PriceBreakdown itemAmount={itemAmount} vatAmount={vatAmount} totalAmount={totalAmount} />
+          <PriceBreakdown amounts={{ itemAmount, vatAmount, totalAmount }} label={productName} className="mt-6" />
 
           <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">
             {setupMode === 'initial'
@@ -101,14 +91,13 @@ function SubscribeSetupOk(props: OkProps) {
               : '카드만 교체되며 결제되지 않습니다.'}
           </p>
 
-          <div className="mt-6 rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-4">
-            <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">해지·환불 규정</p>
-            <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1 list-disc list-inside">
+          <Panel title="해지·환불 규정" className="mt-6">
+            <ul className="list-inside list-disc space-y-1 text-sm text-gray-600 dark:text-gray-400">
               {subscriptionRefundPolicyLines(kind).map((line) => (
                 <li key={line}>{line}</li>
               ))}
             </ul>
-          </div>
+          </Panel>
 
           {/*
             동의는 **카드 등록하기를 누르는 행위 자체**로 받는다. 체크박스를 두지 않는다 —
@@ -135,16 +124,16 @@ function SubscribeSetupOk(props: OkProps) {
           </div>
         </section>
 
-        <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">문의: 스튜디오 놀 010-4255-7893</p>
+        <p className="mt-6 typo-card-meta">문의: 스튜디오 놀 010-4255-7893</p>
         {/* 이 URL에는 관리·등록 토큰이 실린다 — 이탈 링크는 문서 이동(`<a href>`)이어야 한다.
             next/link 클라 전환으로 공개 페이지에 나갔다 뒤로가기를 누르면, 그 사이 mount된
             gtag가 토큰이 붙은 이 URL로 page_view를 보낸다. 공개 목적지에는 rel="noreferrer"도
             함께 — 사이트 Referrer-Policy가 동일 출처 이동에 전체 URL을 보낸다
             (규칙 정본: lib/analytics/privatePaths.ts). */}
-        <a href="/ko" rel="noreferrer" className="mt-2 inline-block text-sm text-primary dark:text-primary-lighter hover:underline">
-          홈으로
-        </a>
-      </main>
+        <Button asChild variant="ghost" size="sm" className="mt-2 -ml-3">
+          <a href="/ko" rel="noreferrer">홈으로</a>
+        </Button>
+      </PageShell>
     </>
   );
 }
@@ -157,12 +146,20 @@ export default function SubscribeSetupPage(props: SubscribeSetupProps) {
           <title>정기결제 카드 등록 | 스튜디오 놀</title>
           <meta name="robots" content="noindex, nofollow" />
         </Head>
-        <main className="mx-auto max-w-lg min-w-0 max-w-full px-4 py-24 text-center">
-          <p className="typo-card-meta mb-2">스튜디오 놀</p>
-          <h1 className="typo-page-title">카드를 등록할 수 없습니다</h1>
-          <p className="mt-4 text-gray-600 dark:text-gray-300">{ERROR_MESSAGES[props.code]}</p>
-          <a href="/ko" rel="noreferrer" className="mt-8 inline-block underline">홈으로</a>
-        </main>
+        <PageShell width="result">
+          <p className="typo-card-meta mb-4 text-center">스튜디오 놀</p>
+          <ResultCard
+            tone="error"
+            as="h1"
+            title="카드를 등록할 수 없습니다"
+            description={ERROR_MESSAGES[props.code]}
+            actions={
+              <Button asChild variant="ghost">
+                <a href="/ko" rel="noreferrer">홈으로</a>
+              </Button>
+            }
+          />
+        </PageShell>
       </>
     );
   }

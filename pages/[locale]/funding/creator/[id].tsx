@@ -16,6 +16,13 @@ import {
   type EditorReward, type SaveState,
 } from '../../../../components/funding/creator/types';
 import { Button } from '../../../../components/ui/Button';
+import { Badge, type BadgeTone } from '../../../../components/ui/Badge';
+import { Checkbox } from '../../../../components/ui/Checkbox';
+import { Notice } from '../../../../components/ui/Notice';
+import { PageHeader, PageShell } from '../../../../components/ui/PageHeader';
+import { Panel } from '../../../../components/ui/Panel';
+import { FOCUS_RING } from '../../../../components/ui/focusRing';
+import { cn } from '../../../../lib/utils';
 import { computeEarliestStartDate, toKstDateString } from '../../../../lib/funding/creatorDateInput';
 import { authenticateCreatorRequest } from '../../../../lib/funding/creatorAuth';
 import {
@@ -108,6 +115,11 @@ export const toEditorProject = (p: CreatorProjectDetail): EditorProject => ({
     locked: r.lockedAt !== null,
   })),
 });
+
+/** 심사 상태 → 배지 색. 목록 화면(`index.tsx`)과 같은 표 — 페이지 모듈끼리 import하지 않으므로 복제. */
+const REVIEW_STATUS_TONE: Record<string, BadgeTone> = {
+  draft: 'neutral', submitted: 'info', changes_requested: 'warning', approved: 'success', rejected: 'error',
+};
 
 const TABS = ['basic', 'story', 'rewards', 'creator', 'payout'] as const;
 type Tab = (typeof TABS)[number];
@@ -264,28 +276,24 @@ export default function CreatorProjectEditor({
         <title>{project.title || '프로젝트 편집'} | 스튜디오 놀</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <main className="mx-auto max-w-3xl px-4 py-16">
-        <Link href="/ko/funding/creator" className="typo-caption text-gray-500 underline underline-offset-2 dark:text-gray-400">
-          ← 내 프로젝트 목록
-        </Link>
+      <PageShell width="wide">
+        <PageHeader
+          backHref="/ko/funding/creator"
+          backLabel="내 프로젝트 목록"
+          title={project.title || '(제목 없음)'}
+          meta={
+            <Badge tone={REVIEW_STATUS_TONE[project.reviewStatus] ?? 'neutral'} size="md">
+              {REVIEW_STATUS_LABEL[project.reviewStatus] ?? project.reviewStatus}
+            </Badge>
+          }
+          className="mb-3"
+        />
 
-        <div className="mt-4 flex items-baseline justify-between gap-3">
-          <h1 className="text-2xl font-bold">{project.title || '(제목 없음)'}</h1>
-          <span className="typo-card-meta rounded-full bg-gray-100 px-3 py-1 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
-            {REVIEW_STATUS_LABEL[project.reviewStatus] ?? project.reviewStatus}
-          </span>
-        </div>
-
+        {/* review_note는 개설자에게 보이는 칸이다(CLAUDE.md "review_note와 internal_note는 다른 칸이다"). */}
         {project.reviewNote && (
-          <p className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
-            운영자 메모: {project.reviewNote}
-          </p>
+          <Notice tone="warning" className="mt-3" title="운영자 메모">{project.reviewNote}</Notice>
         )}
-        {notice && (
-          <p className="mt-3 rounded-lg bg-gray-100 p-3 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300">
-            {notice}
-          </p>
-        )}
+        {notice && <Panel className="mt-3 text-sm">{notice}</Panel>}
 
         {/* 읽기 전용 구획이다 — 탭 바깥에 두어 저장 안 한 입력 이탈 가드(TABS·dirtyTabs)와
             섞이지 않게 한다. */}
@@ -315,11 +323,13 @@ export default function CreatorProjectEditor({
               aria-selected={tab === t}
               aria-controls={`panel-${t}`}
               onClick={() => setTab(t)}
-              className={`px-4 py-2 typo-body font-medium ${
+              className={cn(
+                'rounded-t-lg px-4 py-2 typo-body font-medium',
                 tab === t
                   ? 'border-b-2 border-primary text-primary dark:text-primary-lighter'
-                  : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
-              }`}
+                  : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200',
+                FOCUS_RING,
+              )}
             >
               {TAB_LABEL[t]}
             </button>
@@ -389,21 +399,20 @@ export default function CreatorProjectEditor({
 
         <div className="mt-12 border-t border-gray-200 pt-6 dark:border-gray-700">
           {requiresTerms && (
-            <label className="mb-4 flex items-start gap-2 typo-caption text-gray-700 dark:text-gray-300">
-              <input
-                type="checkbox"
-                className="mt-0.5"
-                checked={agreedTerms}
-                disabled={!canSubmitForReview}
-                onChange={(e) => setAgreedTerms(e.target.checked)}
-              />
-              <span>
-                <Link href="/ko/funding/creator-terms" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">
-                  개설자 약관
-                </Link>
-                에 동의합니다.
-              </span>
-            </label>
+            <Checkbox
+              className="mb-4"
+              checked={agreedTerms}
+              disabled={!canSubmitForReview}
+              onChange={(e) => setAgreedTerms(e.target.checked)}
+              label={
+                <>
+                  <Link href="/ko/funding/creator-terms" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">
+                    개설자 약관
+                  </Link>
+                  에 동의합니다.
+                </>
+              }
+            />
           )}
           <div className="flex items-center gap-3">
             <Button
@@ -447,7 +456,7 @@ export default function CreatorProjectEditor({
             </div>
           )}
         </div>
-      </main>
+      </PageShell>
     </>
   );
 }

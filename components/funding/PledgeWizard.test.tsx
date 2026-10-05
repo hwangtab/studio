@@ -58,6 +58,13 @@ jest.mock('./kakaoPostcode', () => {
   };
 });
 
+/**
+ * 결제 요약(PriceSummary)의 한 줄. 라벨과 " × 수량"이 다른 요소로 갈려 있어 `getByText('CD × 1')`로는
+ * 못 잡는다 — dt 하나의 전체 텍스트로 본다.
+ */
+const summaryLine = (text: string) =>
+  screen.getByText((_, el) => el?.tagName === 'DT' && (el.textContent ?? '').replace(/\s+/g, ' ').trim() === text);
+
 /** 주소 검색을 눌러 결과를 고른다 — 우편번호·주소 칸이 채워질 때까지 기다린다. */
 const searchAddress = async (roadAddress = '서울시 어딘가') => {
   mockPostcodeResult = { ...mockPostcodeBase, roadAddress };
@@ -247,7 +254,7 @@ describe('리워드 선택', () => {
     await userEvent.click(screen.getByRole('radio', { name: /CD/ }));
     expect(screen.getByRole('radio', { name: /CD/ })).toBeChecked();
     // 합계는 바뀐 리워드 하나다(배송비 줄은 없다 — 리워드가가 최종가).
-    expect(screen.getByText('CD × 1')).toBeInTheDocument();
+    expect(summaryLine('CD × 1')).toBeInTheDocument();
   });
 
   it('제출하면 고른 리워드 하나만 items로 나간다', async () => {
@@ -305,7 +312,7 @@ describe('리워드 잠금(모달)과 다른 리워드 보기', () => {
     // 결제수단(토스/계좌 입금) 라디오는 따로 있으므로 리워드 라디오만 센다.
     expect(document.querySelectorAll('input[type="radio"][name="reward"]').length).toBe(0);
     expect(screen.getByText('고르신 리워드')).toBeInTheDocument();
-    expect(screen.getByText('CD')).toBeInTheDocument();
+    expect(screen.getByText('CD', { selector: 'p' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '다른 리워드 보기 (1)' })).toBeInTheDocument();
   });
 
@@ -315,7 +322,7 @@ describe('리워드 잠금(모달)과 다른 리워드 보기', () => {
     expect(screen.getByRole('radio', { name: /CD/ })).toBeChecked();
     await userEvent.click(screen.getByRole('radio', { name: /감사 메일/ }));
     expect(screen.getByRole('radio', { name: /감사 메일/ })).toBeChecked();
-    expect(screen.getByText('감사 메일 × 1')).toBeInTheDocument();
+    expect(summaryLine('감사 메일 × 1')).toBeInTheDocument();
   });
 
   it('접으면 다시 요약으로 돌아간다', async () => {
@@ -564,7 +571,7 @@ describe('결제를 시도한 선택 되살리기', () => {
     save('mail', 2);
     render(<PledgeWizard project={project} initialRewardId="cd" lockedReward remaining={{ cd: 5, mail: null }} />);
     await act(async () => {});
-    expect(screen.getByText('CD')).toBeInTheDocument();
+    expect(screen.getByText('CD', { selector: 'p' })).toBeInTheDocument();
     expect(screen.queryByText('감사 메일')).toBeNull();
   });
 

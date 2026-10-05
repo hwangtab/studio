@@ -6,6 +6,10 @@ import { useState } from 'react';
 import { createProject, logoutCreator } from '../../../../components/funding/creator/api';
 import { REVIEW_STATUS_LABEL } from '../../../../components/funding/creator/types';
 import { Button } from '../../../../components/ui/Button';
+import { Badge, type BadgeTone } from '../../../../components/ui/Badge';
+import { EmptyState } from '../../../../components/ui/EmptyState';
+import { Notice } from '../../../../components/ui/Notice';
+import { PageHeader, PageShell } from '../../../../components/ui/PageHeader';
 import { formatPriceAmount } from '../../../../data/pricing';
 import { withI18nServerProps } from '../../../../lib/getStatic';
 import { authenticateCreatorRequest } from '../../../../lib/funding/creatorAuth';
@@ -22,6 +26,13 @@ interface Props {
    */
   stats: Record<string, CreatorProjectStats>;
 }
+
+/** 심사 상태 → 배지 색. 라벨 정본은 REVIEW_STATUS_LABEL(components/funding/creator/types.ts).
+ *  편집 화면(`[id].tsx`)이 같은 표를 든다 — 페이지 모듈을 서로 import하면 GSSP의 서버 전용
+ *  의존이 클라이언트 번들로 끌려가므로 복제한다. 바꾸면 둘 다 바꿀 것. */
+const REVIEW_STATUS_TONE: Record<string, BadgeTone> = {
+  draft: 'neutral', submitted: 'info', changes_requested: 'warning', approved: 'success', rejected: 'error',
+};
 
 export default function CreatorHome({ projects, stats }: Props) {
   const router = useRouter();
@@ -62,32 +73,25 @@ export default function CreatorHome({ projects, stats }: Props) {
         <title>내 펀딩 프로젝트 | 스튜디오 놀</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <main className="mx-auto max-w-3xl px-4 py-16">
-        <div className="flex items-baseline justify-between gap-3">
-          <h1 className="text-3xl font-bold">내 펀딩 프로젝트</h1>
-          <div className="flex flex-col items-end gap-1">
-            <button
-              type="button"
-              onClick={handleLogout}
-              disabled={loggingOut}
-              className="typo-caption text-gray-500 underline underline-offset-2 disabled:opacity-50 dark:text-gray-400"
-            >
+      <PageShell width="wide">
+        <PageHeader
+          title="내 펀딩 프로젝트"
+          meta={
+            <Button type="button" variant="ghost" size="sm" onClick={handleLogout} disabled={loggingOut}>
               {loggingOut ? '로그아웃 중…' : '로그아웃'}
-            </button>
-            {logoutError && (
-              <span role="alert" className="typo-caption text-red-600 dark:text-red-400">{logoutError}</span>
-            )}
-          </div>
-        </div>
+            </Button>
+          }
+        />
+        {logoutError && <Notice tone="error" className="mb-6">{logoutError}</Notice>}
         {projects.length === 0 ? (
-          <p className="mt-8 text-gray-600 dark:text-gray-400">아직 만든 프로젝트가 없습니다.</p>
+          <EmptyState title="아직 만든 프로젝트가 없습니다." description="아래에서 새 프로젝트를 만들어 시작하세요." />
         ) : (
-          <ul className="mt-8 space-y-3">
+          <ul className="space-y-3">
             {projects.map((p) => (
               <li key={p.id} className="glass-card rounded-2xl p-5">
-                <div className="flex items-baseline justify-between gap-3">
+                <div className="flex flex-wrap items-center justify-between gap-3">
                   <span className="font-semibold">{p.title || '(제목 없음)'}</span>
-                  <span className="text-sm text-gray-500">{REVIEW_STATUS_LABEL[p.reviewStatus] ?? p.reviewStatus}</span>
+                  <Badge tone={REVIEW_STATUS_TONE[p.reviewStatus] ?? 'neutral'}>{REVIEW_STATUS_LABEL[p.reviewStatus] ?? p.reviewStatus}</Badge>
                 </div>
                 {stats[p.id] && (
                   /* 한 줄 요약이다 — 리워드별 판매 수량 같은 자세한 집계는 편집 화면의
@@ -99,7 +103,7 @@ export default function CreatorHome({ projects, stats }: Props) {
                   </p>
                 )}
                 {p.reviewNote && (
-                  <p className="mt-2 text-sm text-amber-700 dark:text-amber-400">운영자 메모: {p.reviewNote}</p>
+                  <Notice tone="warning" className="mt-3" title="운영자 메모">{p.reviewNote}</Notice>
                 )}
                 <div className="mt-3 flex gap-4">
                   <Link href={`/ko/funding/creator/${p.id}`} className="text-sm underline underline-offset-2">
@@ -121,7 +125,7 @@ export default function CreatorHome({ projects, stats }: Props) {
           </Button>
           {createError && <span role="alert" className="typo-caption text-red-600 dark:text-red-400">{createError}</span>}
         </div>
-      </main>
+      </PageShell>
     </>
   );
 }

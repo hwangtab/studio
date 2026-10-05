@@ -9,6 +9,11 @@ import { FUNDING_PAYOUT_BUSINESS_DAYS } from '../../../lib/funding/policy';
 import { buildPageStaticProps } from '../../../lib/getStatic';
 import { defaultLocale } from '../../../lib/i18n';
 import { releasePipelineCopy } from '../../../data/releasePipeline';
+import { Button } from '../../../components/ui/Button';
+import { Field, TextInput } from '../../../components/ui/Field';
+import { Notice } from '../../../components/ui/Notice';
+import { PageHeader, PageShell } from '../../../components/ui/PageHeader';
+import { Panel } from '../../../components/ui/Panel';
 
 export default function FundingApply() {
   const router = useRouter();
@@ -47,14 +52,14 @@ export default function FundingApply() {
         <title>펀딩 개설 신청 | 스튜디오 놀</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <main className="mx-auto max-w-2xl px-4 py-16">
-        <h1 className="text-3xl font-bold">펀딩 개설 신청</h1>
+      <PageShell>
+        <PageHeader title="펀딩 개설 신청" className="mb-6" />
         {linkExpired && (
-          <p className="mt-4 rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:bg-amber-950 dark:text-amber-300">
+          <Notice tone="warning" className="mb-6">
             링크가 만료됐거나 이미 사용되었습니다. 이메일을 다시 넣어 새 링크를 받아 주세요.
-          </p>
+          </Notice>
         )}
-        <div className="mt-6 space-y-3 text-gray-700 dark:text-gray-300">
+        <div className="space-y-3 text-gray-700 dark:text-gray-300">
           <p>앨범·공연·굿즈를 만들 비용을 후원으로 모읍니다. 페이지는 직접 쓰고, 결제·환불·정산은 스튜디오 놀이 맡습니다.</p>
           <ul className="list-disc space-y-1 pl-5">
             <li>판매자는 스튜디오 놀입니다. 후원금은 스튜디오 놀이 받아 정산으로 보내 드립니다.</li>
@@ -71,9 +76,8 @@ export default function FundingApply() {
         </div>
 
         {/* 발매 파이프라인 3단계 — 직접 쓰기 막막한 사람을 설계 대행·발매 프로젝트로 보낸다. */}
-        <aside className="mt-8 rounded-xl border border-gray-200 dark:border-gray-700 px-5 py-4">
-          <p className="font-semibold text-gray-900 dark:text-white">{releasePipelineCopy.applyHelp.title}</p>
-          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{releasePipelineCopy.applyHelp.body}</p>
+        <Panel as="aside" variant="outline" className="mt-8" title={releasePipelineCopy.applyHelp.title}>
+          <p className="text-sm text-gray-700 dark:text-gray-300">{releasePipelineCopy.applyHelp.body}</p>
           <p className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold">
             {releasePipelineCopy.applyHelp.links.map((link) => (
               <Link key={link.href} href={link.href} prefetch={false} className="text-primary underline underline-offset-2 dark:text-primary-lighter">
@@ -81,37 +85,34 @@ export default function FundingApply() {
               </Link>
             ))}
           </p>
-        </aside>
+        </Panel>
 
         <form onSubmit={submit} className="mt-10 space-y-3">
-          <label htmlFor="email" className="block font-medium">이메일 주소</label>
-          <input
-            id="email" type="email" required value={email} autoComplete="email"
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-4 py-3 dark:border-gray-700 dark:bg-gray-900"
-            placeholder="you@example.com"
-          />
-          <button
-            type="submit" disabled={busy}
-            className="w-full rounded-lg bg-primary px-4 py-3 font-semibold text-white disabled:opacity-60"
-          >
+          <Field id="email" label="이메일 주소" required>
+            <TextInput
+              type="email" required value={email} autoComplete="email"
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+            />
+          </Field>
+          <Button type="submit" size="lg" fullWidth disabled={busy}>
             {busy ? '보내는 중…' : '로그인 링크 받기'}
-          </button>
-          {sent && <p className="text-sm text-green-700 dark:text-green-400">로그인 링크를 보냈습니다. 메일함을 확인해 주세요.</p>}
-          {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
-          <p className="text-sm text-gray-500">비밀번호는 없습니다. 메일로 받은 링크로 들어옵니다.</p>
+          </Button>
+          {sent && <Notice tone="success">로그인 링크를 보냈습니다. 메일함을 확인해 주세요.</Notice>}
+          {error && <Notice tone="error">{error}</Notice>}
+          <p className="text-sm text-gray-500 dark:text-gray-400">비밀번호는 없습니다. 메일로 받은 링크로 들어옵니다.</p>
           {/*
             이 버튼 한 번에 개설자 계정(funding_creators 행)이 만들어진다 — lib/funding/creatorToken.ts가
             이메일을 받는 즉시 행을 넣는다. 그래서 "로그인 링크를 받는다"가 곧 수집 시점이고, 그 사실과
             처리방침을 누르기 전에 보여야 한다(2026-09-21 문서·코드 대조에서 링크가 0건이었다).
           */}
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             이 버튼을 누르면 입력하신 이메일로 개설자 계정이 만들어집니다. 수집·이용·보관은{' '}
             <Link href="/ko/privacy-policy" className="underline">개인정보 처리방침</Link>을, 개설 조건은{' '}
             <Link href="/ko/funding/creator-terms" className="underline">개설자 약관</Link>을 확인해 주세요.
           </p>
         </form>
-      </main>
+      </PageShell>
     </>
   );
 }

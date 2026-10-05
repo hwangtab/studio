@@ -5,6 +5,8 @@ import type { Locale } from '../../lib/i18n';
 import type { SiteConfig } from '../../types/data';
 import { trackLeadEvent } from '../../utils/analytics';
 import type { ContactTranslate } from './contactTypes';
+import { Notice } from '../ui/Notice';
+import { Panel } from '../ui/Panel';
 
 // Google Maps `hl` expects BCP-47 compatible codes. The site locale codes are
 // short forms, so keep the map embed language explicit.
@@ -129,17 +131,16 @@ const ContactInfoCard = ({
           ></iframe>
         </div>
 
-        <m.div
-          {...directionsMotionProps}
-          className="mt-12 p-8 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700"
-        >
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-primary dark:text-primary-lighter" />
-            {t('contact.directions.title')}
-          </h3>
-          <p className="text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-line">
-            {t('contact.directions.description')}
-          </p>
+        <m.div {...directionsMotionProps} className="mt-12">
+          <Panel padding="roomy">
+            <h3 className="typo-card-title text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+              <MapPin className="w-5 h-5 text-primary dark:text-primary-lighter" aria-hidden="true" />
+              {t('contact.directions.title')}
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+              {t('contact.directions.description')}
+            </p>
+          </Panel>
         </m.div>
       </div>
 
@@ -163,14 +164,14 @@ const ContactInfoCard = ({
             ))
           )}
         </div>
-        <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md">
-          <p className="typo-card-body text-blue-800 dark:text-blue-300">
-            <span className="typo-card-body text-blue-900 dark:text-blue-200">{t('contact.info.parking')}:</span> {t('contact.info.parkingDetail')}
+        <Notice tone="info" className="mt-4">
+          <p>
+            <span className="font-semibold">{t('contact.info.parking')}:</span> {t('contact.info.parkingDetail')}
           </p>
-          <p className="typo-card-body text-blue-800 dark:text-blue-300 mt-1">
-            <span className="typo-card-body text-blue-900 dark:text-blue-200">{t('contact.info.transport')}:</span> {t('contact.info.transportDetail')}
+          <p className="mt-1">
+            <span className="font-semibold">{t('contact.info.transport')}:</span> {t('contact.info.transportDetail')}
           </p>
-        </div>
+        </Notice>
       </div>
     </div>
   </m.div>

@@ -21,6 +21,9 @@ import { getFundingProjectAsync } from '../../../lib/funding/repository';
 import { clearDraftsByPrefix, clearStoredDraft, draftStorageKey } from '../../../lib/formDraft';
 import { trackMicroEvent } from '../../../utils/analytics';
 import SupporterListingEditor from '../../../components/funding/SupporterListingEditor';
+import { Button } from '../../../components/ui/Button';
+import { PageShell } from '../../../components/ui/PageHeader';
+import { ResultCard } from '../../../components/ui/ResultCard';
 import { showsMessageAnonymously } from '../../../lib/funding/policy';
 import { activePledgeLines, pledgeLines } from '../../../lib/funding/pledgeLines';
 import { pledgeDownloads } from '../../../lib/funding/shape';
@@ -184,29 +187,51 @@ export default function FundingSuccessPage({ outcome, message, statusLabel, orde
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [outcome, orderNo]);
 
+  // 결과 카드의 tone — 확정은 success, 살아 있지 않은 후원과 근거 없는 접근은 중립, 확정 실패는 error.
+  const tone = outcome === 'confirmed' ? 'success' : outcome === 'error' ? 'error' : outcome === 'unknown' ? 'pending' : 'neutral';
+  const title = outcome === 'confirmed'
+    ? '펀딩이 확정되었습니다'
+    : outcome === 'not_live'
+      ? '이 펀딩은 확정 상태가 아닙니다'
+      : outcome === 'unknown'
+        ? '펀딩 내역을 확인해 주세요'
+        : '결제를 확정하지 못했습니다';
+
   return (
     <>
       <Head>
         <title>펀딩 결제 완료 | 스튜디오 놀</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <main className="mx-auto max-w-xl px-4 pb-24 pt-16 sm:pt-20">
-        <div className="glass-card rounded-2xl p-6 text-center sm:p-8">
+      <PageShell width="result">
         {/* 사이트 헤더를 두르지 않는 화면이라(components/Layout.tsx의 isPrivatePaymentPage)
             여기가 브랜드를 밝히는 유일한 자리다 — 메일 링크로 들어온 사람이 어디서 온
             화면인지 알 수 있어야 한다. */}
-        <p className="typo-card-meta mb-2">스튜디오 놀</p>
+        <p className="typo-card-meta mb-4 text-center">스튜디오 놀</p>
         {outcome === 'confirmed' ? (
-          <>
-            <h1 className="typo-page-title">펀딩이 확정되었습니다</h1>
-            <p className="typo-card-body mx-auto mt-3 max-w-md">
-              주문번호 {orderNo}.
-              {emailSent === false
-                ? ' 확인 메일을 보내지 못했습니다 — 아래 링크를 저장해 주세요.'
-                : ' 펀딩 확인 메일을 보내드렸습니다.'}
-            </p>
+          <ResultCard
+            tone={tone}
+            title={title}
+            description={
+              <>
+                주문번호 {orderNo}.
+                {emailSent === false
+                  ? ' 확인 메일을 보내지 못했습니다 — 아래 링크를 저장해 주세요.'
+                  : ' 펀딩 확인 메일을 보내드렸습니다.'}
+              </>
+            }
+            actions={
+              // 관리 링크를 화면에도 띄운다. 예전엔 이 토큰이 메일에만 실려서, 메일이
+              // 실패하면 고객이 펀딩을 스스로 취소할 방법이 아예 없었다.
+              manageUrl ? (
+                <Button asChild size="lg">
+                  <a href={manageUrl}>펀딩 확인·취소 페이지 열기</a>
+                </Button>
+              ) : undefined
+            }
+          >
             {downloads && downloads.length > 0 && (
-              <div className="mt-6 space-y-2 text-left">
+              <div className="space-y-2">
                 <p className="typo-card-meta text-center">지금 바로 받으실 수 있습니다.</p>
                 {/* 링크가 아니라 폼이다 — 주소를 여는 것만으로는 기록이 남지 않아야 한다. */}
                 {downloads.map((d) => (
@@ -214,12 +239,9 @@ export default function FundingSuccessPage({ outcome, message, statusLabel, orde
                     <input type="hidden" name="orderNo" value={orderNo} />
                     <input type="hidden" name="token" value={manageToken} />
                     <input type="hidden" name="file" value={d.key} />
-                    <button
-                      type="submit"
-                      className="inline-flex min-h-[48px] w-full items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
-                    >
+                    <Button type="submit" fullWidth>
                       {d.label} 내려받기
-                    </button>
+                    </Button>
                   </form>
                 ))}
                 <p className="typo-card-meta text-center">
@@ -240,25 +262,13 @@ export default function FundingSuccessPage({ outcome, message, statusLabel, orde
                 messageShownAnonymously={listing.messageShownAnonymously}
               />
             )}
-            {/* 관리 링크를 화면에도 띄운다. 예전엔 이 토큰이 메일에만 실려서, 메일이
-                실패하면 고객이 펀딩을 스스로 취소할 방법이 아예 없었다. */}
             {manageUrl && (
-              <p className="mt-6">
-                <a
-                  href={manageUrl}
-                  className="inline-flex h-12 items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
-                >
-                  펀딩 확인·취소 페이지 열기
-                </a>
-              </p>
-            )}
-            {manageUrl && (
-              <p className="typo-card-meta mx-auto mt-3 max-w-md break-all">
+              <p className="typo-card-meta mx-auto mt-6 max-w-md break-all text-center">
                 이 주소를 저장해 두세요: {manageUrl}
               </p>
             )}
             {projectSlug && (
-              <p className="typo-card-meta mt-6">
+              <p className="typo-card-meta mt-6 text-center">
                 {/* 공개 목적지에는 rel="noreferrer" — 이 URL에 비밀값은 없지만(주문번호뿐),
                     도착지 gtag의 page_referrer에 주문번호까지 실어 보낼 이유는 없다. */}
                 <a href={`/ko/funding/${projectSlug}`} rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter">
@@ -266,84 +276,82 @@ export default function FundingSuccessPage({ outcome, message, statusLabel, orde
                 </a>
               </p>
             )}
-          </>
+          </ResultCard>
         ) : outcome === 'not_live' ? (
-          <>
-            {/* 확정 쿠키는 30분 살아 있다. 그 사이 취소하고 이 화면을 새로고침하면 예전에는
-                "펀딩이 확정되었습니다"와 내려받기 버튼이 그대로 다시 떴다 — 돈은 돌려받고
-                파일은 계속 받는 것처럼 보이는 화면이다(버튼을 눌러도 download.ts가 409로
-                막지만, 그건 원시 JSON이다). 판정은 manage 화면과 같은
-                isLiveFundingOrderStatus를 쓴다. */}
-            <h1 className="typo-page-title">이 펀딩은 확정 상태가 아닙니다</h1>
-            <p className="typo-card-body mx-auto mt-3 max-w-md">
-              {orderNo ? `주문번호 ${orderNo}. ` : ''}현재 상태는 “{statusLabel}”입니다.
-            </p>
-            <p className="typo-card-meta mx-auto mt-3 max-w-md">
+          /* 확정 쿠키는 30분 살아 있다. 그 사이 취소하고 이 화면을 새로고침하면 예전에는
+             "펀딩이 확정되었습니다"와 내려받기 버튼이 그대로 다시 떴다 — 돈은 돌려받고
+             파일은 계속 받는 것처럼 보이는 화면이다(버튼을 눌러도 download.ts가 409로
+             막지만, 그건 원시 JSON이다). 판정은 manage 화면과 같은
+             isLiveFundingOrderStatus를 쓴다. */
+          <ResultCard
+            tone={tone}
+            title={title}
+            description={<>{orderNo ? `주문번호 ${orderNo}. ` : ''}현재 상태는 “{statusLabel}”입니다.</>}
+            actions={
+              manageUrl ? (
+                <Button asChild size="lg">
+                  <a href={manageUrl}>펀딩 확인 페이지 열기</a>
+                </Button>
+              ) : undefined
+            }
+          >
+            <p className="typo-card-meta mx-auto max-w-md text-center">
               자세한 내역은 펀딩 확인 페이지에서 보실 수 있습니다. 문의: {PHONE} · {EMAIL}
             </p>
-            {manageUrl && (
-              <p className="mt-6">
-                <a
-                  href={manageUrl}
-                  className="inline-flex h-12 items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
-                >
-                  펀딩 확인 페이지 열기
-                </a>
-              </p>
-            )}
             {projectSlug && (
-              <p className="typo-card-meta mt-6">
+              <p className="typo-card-meta mt-6 text-center">
                 <a href={`/ko/funding/${projectSlug}`} rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter">
                   프로젝트로 돌아가기
                 </a>
               </p>
             )}
-          </>
+          </ResultCard>
         ) : outcome === 'unknown' ? (
-          <>
-            <h1 className="typo-page-title">펀딩 내역을 확인해 주세요</h1>
-            {/* 쿠키가 없으면(브라우저 차단·30분 경과·다른 기기) 관리 링크를 만들 근거가 없다.
-                그래도 결제한 사람이 빈손으로 나가면 안 된다 — 주문번호와 문의처, 그리고
-                "관리 링크는 메일에 있다"까지는 반드시 남긴다. 토큰을 URL에 실어 폴백을
-                만드는 방법은 쓰지 않는다: 그 순간 이 경로가 다시 비밀값을 달게 되고,
-                주문번호만 알면 열리는 화면이 되어 confirm이 막아 둔 구멍이 되살아난다. */}
-            <p className="typo-card-body mx-auto mt-3 max-w-md">
-              {orderNo ? `주문번호 ${orderNo}. ` : ''}이 화면에서는 펀딩 상세를 다시 열 수 없습니다.
-              결제가 끝났다면 펀딩 확인 메일에 펀딩 확인·취소 링크가 들어 있습니다.
-            </p>
-            <p className="typo-card-meta mx-auto mt-3 max-w-md">
+          /* 쿠키가 없으면(브라우저 차단·30분 경과·다른 기기) 관리 링크를 만들 근거가 없다.
+             그래도 결제한 사람이 빈손으로 나가면 안 된다 — 주문번호와 문의처, 그리고
+             "관리 링크는 메일에 있다"까지는 반드시 남긴다. 토큰을 URL에 실어 폴백을
+             만드는 방법은 쓰지 않는다: 그 순간 이 경로가 다시 비밀값을 달게 되고,
+             주문번호만 알면 열리는 화면이 되어 confirm이 막아 둔 구멍이 되살아난다. */
+          <ResultCard
+            tone={tone}
+            title={title}
+            description={
+              <>
+                {orderNo ? `주문번호 ${orderNo}. ` : ''}이 화면에서는 펀딩 상세를 다시 열 수 없습니다.
+                결제가 끝났다면 펀딩 확인 메일에 펀딩 확인·취소 링크가 들어 있습니다.
+              </>
+            }
+            actions={
+              <Button asChild size="lg">
+                <a href="/ko/funding" rel="noreferrer">펀딩 목록으로 돌아가기</a>
+              </Button>
+            }
+          >
+            <p className="typo-card-meta mx-auto max-w-md text-center">
               메일이 보이지 않거나 취소를 원하시면 주문번호와 함께 연락해 주세요: {PHONE} · {EMAIL}
             </p>
-            <a
-              href="/ko/funding"
-              rel="noreferrer"
-              className="mt-8 inline-flex h-12 items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
-            >
-              펀딩 목록으로 돌아가기
-            </a>
-          </>
+          </ResultCard>
         ) : (
-          <>
-            <h1 className="typo-page-title">결제를 확정하지 못했습니다</h1>
-            <p className="typo-card-body mx-auto mt-3 max-w-md">{message}</p>
-            <p className="typo-card-meta mx-auto mt-3 max-w-md">결제가 이뤄졌다면 자동으로 취소되거나 확정됩니다. 문의: {PHONE} · {EMAIL}</p>
-            {/* 오류 분기에도 눌러야 할 곳이 하나는 있어야 한다 — fail.tsx와 같은 solid 버튼. */}
-            <a
-              href="/ko/funding"
-              rel="noreferrer"
-              className="mt-8 inline-flex h-12 items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
-            >
-              펀딩 목록으로 돌아가기
-            </a>
-          </>
+          <ResultCard
+            tone={tone}
+            title={title}
+            description={message}
+            actions={
+              // 오류 분기에도 눌러야 할 곳이 하나는 있어야 한다 — fail.tsx와 같은 solid 버튼.
+              <Button asChild size="lg">
+                <a href="/ko/funding" rel="noreferrer">펀딩 목록으로 돌아가기</a>
+              </Button>
+            }
+          >
+            <p className="typo-card-meta mx-auto max-w-md text-center">결제가 이뤄졌다면 자동으로 취소되거나 확정됩니다. 문의: {PHONE} · {EMAIL}</p>
+          </ResultCard>
         )}
-        </div>
         {outcome === 'confirmed' && (
           <p className="typo-card-meta mt-6 text-center">
             <a href="/ko/funding" rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter">펀딩 목록으로</a>
           </p>
         )}
-      </main>
+      </PageShell>
     </>
   );
 }

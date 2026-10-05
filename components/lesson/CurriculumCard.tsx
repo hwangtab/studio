@@ -1,6 +1,7 @@
 import React from 'react';
 import { CheckCircle } from '@/lib/lucide-icons';
 import BaseCard from '../ui/BaseCard';
+import { Badge } from '../ui/Badge';
 import type { LucideIcon } from '@/lib/lucide-icons';
 
 export interface CurriculumCardProps {
@@ -14,8 +15,9 @@ export interface CurriculumCardProps {
 }
 
 const CurriculumCard = ({ step, title, subtitle, phaseLabel, description, icon: Icon, delay = 0 }: CurriculumCardProps) => (
-    <BaseCard variant="default" delay={delay} className="p-8 h-full relative overflow-hidden group">
-        <div className="absolute top-0 right-0 p-4 opacity-10 font-bold text-6xl text-primary transition-transform group-hover:scale-110">
+    <BaseCard variant="default" delay={delay} padding="roomy" className="h-full relative overflow-hidden">
+        {/* 모션은 BaseCard(리프트)가 소유한다 — 장식 숫자의 hover 스케일은 두지 않는다(§4). */}
+        <div className="absolute top-0 right-0 p-4 opacity-10 font-bold text-6xl text-primary">
             {step}
         </div>
         <div className="relative z-10">
@@ -23,9 +25,9 @@ const CurriculumCard = ({ step, title, subtitle, phaseLabel, description, icon: 
                 <Icon size={32} />
             </div>
             {phaseLabel && (
-                <span className="inline-block mb-3 px-3 py-1 rounded-full bg-primary/10 dark:bg-primary/20 text-xs font-bold text-primary dark:text-primary-lighter tracking-wide uppercase">
+                <Badge tone="brand" size="md" className="mb-3 uppercase tracking-wide">
                     {phaseLabel}
-                </span>
+                </Badge>
             )}
             <h3 className="typo-card-title mb-1">{title}</h3>
             <p className="text-sm font-semibold text-primary dark:text-primary-lighter mb-4">{subtitle}</p>

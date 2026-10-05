@@ -2,6 +2,8 @@ import { useEffect, useState, type FormEvent } from 'react';
 
 import { Button } from '../../ui/Button';
 import { Field, TextArea, TextInput } from '../../ui/Field';
+import { Checkbox } from '../../ui/Checkbox';
+import { Notice } from '../../ui/Notice';
 import { CREATOR_LIMITS, type RewardInput } from '../../../lib/funding/creatorValidation';
 import { createReward, deleteReward as deleteRewardApi, updateReward } from './api';
 import { ImageUploadField } from './ImageUploadField';
@@ -195,7 +197,7 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved, onDir
           </li>
         ))}
       </ul>
-      {deleteError && <p role="alert" className="typo-caption text-red-600 dark:text-red-400">{deleteError}</p>}
+      {deleteError && <Notice tone="error">{deleteError}</Notice>}
 
       {!showForm && (
         <Button type="button" onClick={startCreate} disabled={readOnly || rewards.length >= CREATOR_LIMITS.rewardsMax}>
@@ -255,17 +257,13 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved, onDir
               required
             />
           </Field>
-          <div className="flex items-center gap-2">
-            <input
-              id="reward-limited"
-              type="checkbox"
-              checked={form.limited}
-              onChange={(e) => { setForm((f) => ({ ...f, limited: e.target.checked })); clearSaveStatus(); }}
-              disabled={readOnly || locked}
-              className="h-4 w-4 accent-primary"
-            />
-            <label htmlFor="reward-limited" className="typo-body">수량 한정</label>
-          </div>
+          <Checkbox
+            id="reward-limited"
+            checked={form.limited}
+            onChange={(e) => { setForm((f) => ({ ...f, limited: e.target.checked })); clearSaveStatus(); }}
+            disabled={readOnly || locked}
+            label="수량 한정"
+          />
           {form.limited && (
             <Field
               id="reward-quantity"
@@ -283,22 +281,18 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved, onDir
               />
             </Field>
           )}
-          <div className="flex items-center gap-2">
-            <input
-              id="reward-shipping"
-              type="checkbox"
-              checked={form.requiresShipping}
-              onChange={(e) => { setForm((f) => ({ ...f, requiresShipping: e.target.checked })); clearSaveStatus(); }}
-              disabled={readOnly || locked}
-              className="h-4 w-4 accent-primary"
-            />
-            <label htmlFor="reward-shipping" className="typo-body">배송이 필요합니다</label>
-          </div>
+          <Checkbox
+            id="reward-shipping"
+            checked={form.requiresShipping}
+            onChange={(e) => { setForm((f) => ({ ...f, requiresShipping: e.target.checked })); clearSaveStatus(); }}
+            disabled={readOnly || locked}
+            label="배송이 필요합니다"
+          />
           {locked && (
-            <p className="typo-caption text-amber-700 dark:text-amber-400">
+            <Notice tone="warning">
               공개된 리워드는 주소·금액·수량 제한 여부·배송 여부를 바꿀 수 없습니다(수량은 늘릴 수만
               있습니다). 그 밖의 변경은 새 리워드를 추가해 주세요.
-            </p>
+            </Notice>
           )}
           <Field id="reward-delivery" label="예상 전달 시기" required hint="예: 2026년 12월">
             <TextInput

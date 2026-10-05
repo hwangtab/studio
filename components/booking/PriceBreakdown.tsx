@@ -1,23 +1,25 @@
-import { formatPriceAmount } from '../../data/pricing';
 import type { OrderAmounts } from '../../lib/booking/amounts';
+import { PriceSummary } from '../ui/PriceSummary';
 
 interface PriceBreakdownProps {
   amounts: OrderAmounts;
+  /** 상품 줄의 이름. 기본 "상품가". 상품명을 넘기면 그 이름으로 보인다. */
+  label?: string;
+  className?: string;
 }
 
 /**
  * 금액은 항상 "상품가 + VAT = 합계"로 분해해 보여준다 — 합계만 단독 표기 금지.
- * 숫자는 반드시 formatPriceAmount로만 포맷한다(리터럴 toLocaleString 금지).
+ * 모양은 공용 PriceSummary(항목 dl + 부가세 + 합계)다. 숫자는 formatPriceAmount로만 포맷된다.
  */
-export default function PriceBreakdown({ amounts }: PriceBreakdownProps) {
+export default function PriceBreakdown({ amounts, label = '상품가', className }: PriceBreakdownProps) {
   return (
-    <div className="rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-4 text-sm text-gray-700 dark:text-gray-300">
-      <p>
-        상품가 {formatPriceAmount(amounts.itemAmount)}원 + VAT {formatPriceAmount(amounts.vatAmount)}원 ={' '}
-        <span className="font-semibold text-gray-900 dark:text-white">
-          합계 {formatPriceAmount(amounts.totalAmount)}원
-        </span>
-      </p>
-    </div>
+    <PriceSummary
+      className={className}
+      items={[{ label, amount: amounts.itemAmount }]}
+      vat={amounts.vatAmount}
+      vatLabel="VAT"
+      total={amounts.totalAmount}
+    />
   );
 }

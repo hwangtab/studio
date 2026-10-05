@@ -8,6 +8,10 @@
 import { withI18nServerProps } from '../../../../lib/getStatic';
 import Head from 'next/head';
 
+import { Button } from '../../../../components/ui/Button';
+import { PageShell } from '../../../../components/ui/PageHeader';
+import { ResultCard } from '../../../../components/ui/ResultCard';
+
 /**
  * 토스 카드 등록(빌링키 인증) 실패 코드 → 우리가 쓴 문구.
  *
@@ -49,28 +53,35 @@ export default function SubscribeFailPage({ id, setupToken, code, message }: Fai
         <meta name="robots" content="noindex, nofollow" />
         <meta name="referrer" content="no-referrer" />
       </Head>
-      <main className="mx-auto max-w-lg min-w-0 max-w-full px-4 py-24 text-center">
+      <PageShell width="result">
         {/* 사이트 헤더를 두르지 않는 화면이라(lib/analytics/privatePaths.ts의 PRIVATE_PAGE_ROUTES)
             여기가 브랜드를 밝히는 유일한 자리다. */}
-        <p className="typo-card-meta mb-2">스튜디오 놀</p>
-        <h1 className="typo-page-title">카드 등록을 완료하지 못했습니다</h1>
-        <p className="mt-4 text-gray-600 dark:text-gray-300">{message}</p>
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">아직 청구되지 않았습니다 — 안심하고 다시 시도해 주세요.</p>
-        {/* 정본 연락처를 상시 표기한다 — 예전에는 쿼리의 message가 주 안내문이라, 그 자리에
-            가짜 연락처를 넣으면 화면에 우리 번호가 하나도 없었다(funding/fail.tsx와 같은 판단). */}
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">문의: 010-4255-7893 · hello@studionol.co.kr</p>
-        {code && <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">오류 코드: {code}</p>}
-        {/* 이 URL에는 setupToken이 실린다 — 이탈 링크는 문서 이동(`<a href>`)이어야 한다
-            (사유는 lib/analytics/privatePaths.ts). 목적지도 토큰이 붙는 private 화면이지만
-            Referrer-Policy가 동일 출처에 전체 URL을 보내므로 rel="noreferrer"를 함께 둔다. */}
-        <a
-          href={`/ko/subscribe/${encodeURIComponent(id)}?token=${encodeURIComponent(setupToken)}`}
-          rel="noreferrer"
-          className="mt-8 inline-block underline"
+        <p className="typo-card-meta mb-4 text-center">스튜디오 놀</p>
+        <ResultCard
+          tone="error"
+          as="h1"
+          title="카드 등록을 완료하지 못했습니다"
+          description={message}
+          actions={
+            /* 이 URL에는 setupToken이 실린다 — 이탈 링크는 문서 이동(`<a href>`)이어야 한다
+               (사유는 lib/analytics/privatePaths.ts). 목적지도 토큰이 붙는 private 화면이지만
+               Referrer-Policy가 동일 출처에 전체 URL을 보내므로 rel="noreferrer"를 함께 둔다. */
+            <Button asChild>
+              <a href={`/ko/subscribe/${encodeURIComponent(id)}?token=${encodeURIComponent(setupToken)}`} rel="noreferrer">
+                다시 시도하기
+              </a>
+            </Button>
+          }
         >
-          다시 시도하기
-        </a>
-      </main>
+          <div className="space-y-1 text-center typo-card-meta">
+            <p>아직 청구되지 않았습니다 — 안심하고 다시 시도해 주세요.</p>
+            {/* 정본 연락처를 상시 표기한다 — 예전에는 쿼리의 message가 주 안내문이라, 그 자리에
+                가짜 연락처를 넣으면 화면에 우리 번호가 하나도 없었다(funding/fail.tsx와 같은 판단). */}
+            <p>문의: 010-4255-7893 · hello@studionol.co.kr</p>
+            {code && <p>오류 코드: {code}</p>}
+          </div>
+        </ResultCard>
+      </PageShell>
     </>
   );
 }

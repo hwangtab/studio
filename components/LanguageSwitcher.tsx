@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { m, AnimatePresence } from 'framer-motion';
+import { Globe } from '@/lib/lucide-icons';
 import { locales, localeNames, type Locale } from '../lib/i18n';
 import { isRoutePatternPath } from '../lib/routePattern';
 import { isKoOnlyRoutePath } from '../lib/koOnlyRoutes';
@@ -140,7 +141,7 @@ export const LanguageSwitcher = ({
           className="flex items-center justify-between w-full min-h-[44px] px-3 py-2 text-left font-bold text-gray-900 dark:text-white touch-manipulation rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
         >
           <div className="flex items-center gap-2">
-            <span>🌐</span>
+            <Globe size={16} aria-hidden="true" />
             <span>{localeNames[currentLocale]}</span>
           </div>
           <span className={`text-xs transition-transform duration-base ease-standard ${isOpen ? 'rotate-180' : ''}`}>▾</span>
@@ -207,7 +208,7 @@ export const LanguageSwitcher = ({
         // 불일치하여 Lighthouse a11y에서 label-content-name-mismatch로 실패.
         aria-label={`${localeNames[currentLocale]} — ${t('common.languageSelector')}`}
         className={`
-          inline-flex items-center gap-1 px-2 py-2 sm:px-3 sm:py-2 min-h-[44px] sm:min-h-[36px] rounded-md text-sm sm:text-xs font-bold tracking-normal transition-colors duration-200 touch-manipulation
+          inline-flex items-center gap-1 px-2 py-2 sm:px-3 sm:py-2 min-h-[44px] sm:min-h-[36px] rounded-full text-sm sm:text-xs font-bold tracking-normal transition-colors duration-200 touch-manipulation
           max-w-[120px] sm:max-w-[160px]
           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
           ${isOpen

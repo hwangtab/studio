@@ -181,6 +181,18 @@
 - 관리자 화면(`pages/admin`)은 범위 밖. 다만 `adminFieldClass`가 새 프리미티브의 `light`
   옵트인을 그대로 타게 한다.
 
+## 5-1. 진행 기록
+
+- **2026-10-05 PR #486** — 0단계 1~3: 지침·프리미티브 12종·기준선 가드.
+- **2026-10-05 PR(feat/ui-primitives-adopt)** — 운영자 결정으로 10/13 동결·11/11 측정창을 기다리지 않고
+  0단계 4·5와 1단계를 한 번에: 예약·구독·펀딩(후원·관리·결과·개설자)·견적·연락처·아티스트 구독·공연·
+  결제수단 화면 전환, Button hover 색 전환 복구, BaseCard `padding` prop, StoryCard·포트폴리오·펀딩 배지 →
+  `Badge`, 인라인 콜아웃·고정 바 반경·톤 통일, 모션 복제 제거, 이모지 제거. 기준선: rounded-md 59→12 ·
+  notice 44→11 · badge 18→5 · tint 9→3 · h1 6→1 · emoji 6→2 · motion 30→20. 교락은
+  `docs/ctr-surgery-log.md` 2026-10-05 행. **남은 것(2단계 몫)**: 마케팅 페이지(측정 중 LP 3종 포함)의
+  콜아웃·배지·아이콘·히어로 CTA 모션, 계약 서명·완료(라이트 고정, 프리미티브에 `light` 옵트인 필요),
+  `shows/scan` h1, 스토리 목록 빈 상태 2곳.
+
 ## 6. 게이트와 판정
 
 - 각 PR: `npm run type-check` → `lint` → `npx jest`(디렉터리 좁히지 않기) → `npm run build` →

@@ -91,7 +91,8 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko', eyebrow,
                         <BaseCard
                             variant="default"
                             delay={index * 0.08}
-                            className="p-8 h-full relative group"
+                            padding="roomy"
+                            className="h-full relative group"
                         >
                             <div className="absolute top-6 right-8 text-primary/10 group-hover:text-primary/20 transition-colors" aria-hidden="true">
                                 <Quote size={60} />

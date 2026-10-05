@@ -10,6 +10,11 @@ import { withI18nServerProps } from '../../../../lib/getStatic';
 import Head from 'next/head';
 
 import { Button } from '../../../../components/ui/Button';
+import { Badge, type BadgeTone } from '../../../../components/ui/Badge';
+import { Notice } from '../../../../components/ui/Notice';
+import { Panel } from '../../../../components/ui/Panel';
+import { PageHeader, PageShell } from '../../../../components/ui/PageHeader';
+import PriceBreakdown from '../../../../components/booking/PriceBreakdown';
 import { formatPriceAmount } from '../../../../data/pricing';
 import { getMixingProduct } from '../../../../lib/booking/mixing-products';
 import { getProduct } from '../../../../lib/booking/products';
@@ -115,6 +120,22 @@ const WORK_ORDER_STATUS_NOTICES: Record<Exclude<WorkOrderStatus, 'received'>, st
   cancelled: '이 주문은 취소되었습니다.',
 };
 
+/** 상태 배지 색 — 살아 있는 예약·주문은 success, 돈을 기다리는 상태는 warning, 끝난 것은 neutral. */
+const BOOKING_STATUS_TONES: Record<BookingStatus, BadgeTone> = {
+  pending: 'warning',
+  confirmed: 'success',
+  completed: 'neutral',
+  no_show: 'neutral',
+  cancelled: 'neutral',
+};
+const WORK_ORDER_STATUS_TONES: Record<WorkOrderStatus, BadgeTone> = {
+  pending: 'warning',
+  received: 'success',
+  in_progress: 'info',
+  delivered: 'neutral',
+  cancelled: 'neutral',
+};
+
 /**
  * '2026-09-10T05:00:00.000Z' → '2026.09.10 (목) 14:00'
  * 한국은 DST가 없어 +9시간 고정 오프셋으로 충분하다(lib/booking/email.ts kstTimeLabel과 동일 방식).
@@ -210,17 +231,15 @@ function DepositWaitingSection({ orderNo, token, guide, kindLabel }: {
   const { withdrawing, withdrawError, withdraw } = useWithdraw(orderNo, token);
   if (closed) {
     return (
-      <p role="status" className="mt-6 rounded-md bg-gray-50 dark:bg-gray-800/50 p-4 text-sm text-gray-700 dark:text-gray-200">
+      <Notice tone="neutral" role="status" className="mt-6">
         신청을 취소했습니다. 받은 돈이 없어 환불할 금액은 없습니다.
-      </p>
+      </Notice>
     );
   }
   return (
     <div className="mt-2">
       <BankDepositGuide amount={guide.amount} deadline={guide.deadline} customerName={guide.customerName} applicantLabel={guide.applicantLabel} />
-      {withdrawError && (
-        <p role="alert" className="mt-4 rounded-md bg-red-50 dark:bg-red-900/20 p-3 text-sm text-red-700 dark:text-red-300">{withdrawError}</p>
-      )}
+      {withdrawError && <Notice tone="error" className="mt-4">{withdrawError}</Notice>}
       <Button type="button" variant="outline" fullWidth className="mt-8" disabled={withdrawing} onClick={() => withdraw(() => setClosed(true))}>
         {withdrawing ? '처리 중...' : `입금 전 ${kindLabel} 취소`}
       </Button>
@@ -238,19 +257,6 @@ const refundDoneMessage = (amount: number, viaAccount: boolean): string =>
       ? `취소가 완료되었습니다. 환불 금액 ${formatPriceAmount(amount)}원을 적어 주신 계좌로 접수일부터 3영업일 이내에 보내 드립니다.`
       : '취소가 완료되었습니다. 환불 규정에 따라 돌려드릴 금액이 없습니다.'
     : `취소가 완료되었습니다. 환불 금액: ${formatPriceAmount(amount)}원 (결제 수단으로 환불, 카드사에 따라 3~5영업일 소요됩니다)`;
-
-function PriceBox({ itemAmount, vatAmount, totalAmount }: { itemAmount: number; vatAmount: number; totalAmount: number }) {
-  return (
-    <div className="mt-6 rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-4 text-sm text-gray-700 dark:text-gray-300">
-      <p>
-        상품가 {formatPriceAmount(itemAmount)}원 + VAT {formatPriceAmount(vatAmount)}원 ={' '}
-        <span className="font-semibold text-gray-900 dark:text-white">
-          합계 {formatPriceAmount(totalAmount)}원
-        </span>
-      </p>
-    </div>
-  );
-}
 
 function CancelSection({
   refundQuote,
@@ -279,14 +285,13 @@ function CancelSection({
         실제 환불 금액은 취소 처리 시점 기준으로 다시 계산됩니다.
       </p>
 
-      <div className="mt-3 rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-4">
-        <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">환불 규정</p>
-        <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1 list-disc list-inside">
+      <Panel title="환불 규정" className="mt-3">
+        <ul className="list-inside list-disc space-y-1 text-sm text-gray-600 dark:text-gray-400">
           {refundLines.map((line) => (
             <li key={line}>{line}</li>
           ))}
         </ul>
-      </div>
+      </Panel>
 
       {needsAccount && account && (
         <div className="mt-4">
@@ -294,14 +299,7 @@ function CancelSection({
         </div>
       )}
 
-      {cancelError && (
-        <p
-          role="alert"
-          className="mt-4 rounded-md bg-red-50 dark:bg-red-900/20 p-3 text-sm text-red-700 dark:text-red-300"
-        >
-          {cancelError}
-        </p>
-      )}
+      {cancelError && <Notice tone="error" className="mt-4">{cancelError}</Notice>}
 
       <div className="mt-4">
         <Button
@@ -333,20 +331,19 @@ function SessionManageView(props: SessionPageProps) {
         <meta name="referrer" content="no-referrer" />
       </Head>
 
-      <main className="mx-auto max-w-2xl px-4 py-12 sm:py-16">
+      <PageShell>
         {/* 사이트 헤더를 두르지 않는 화면이라(components/Layout.tsx의 isPrivatePaymentPage)
             여기가 브랜드를 밝히는 유일한 자리다 — 메일 링크로 들어온 사람이 어디서 온
             화면인지 알 수 있어야 한다. */}
-        <p className="text-sm text-gray-500 dark:text-gray-400">스튜디오 놀</p>
-        <h1 className="typo-page-title mt-1">예약 확인</h1>
-        <p className="mt-1 mb-8 text-sm text-gray-500 dark:text-gray-400">주문번호 {orderNo}</p>
+        <p className="typo-card-meta">스튜디오 놀</p>
+        <PageHeader title="예약 확인" meta={<span>주문번호 {orderNo}</span>} />
 
-        <section className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
+        <section className="glass-card rounded-2xl p-6 sm:p-8">
           <div className="flex items-center justify-between gap-4">
             <h2 className="typo-card-subtitle text-gray-900 dark:text-white">{productName}</h2>
-            <span className="shrink-0 rounded-full bg-gray-100 dark:bg-gray-700 px-3 py-1 text-xs font-medium text-gray-700 dark:text-gray-200">
+            <Badge size="md" tone={depositGuide ? 'warning' : BOOKING_STATUS_TONES[status]} className="shrink-0">
               {depositGuide ? '입금 대기' : STATUS_LABELS[status]}
-            </span>
+            </Badge>
           </div>
 
           {depositGuide && <DepositWaitingSection orderNo={orderNo} token={token} guide={depositGuide} kindLabel="예약 신청" />}
@@ -362,23 +359,21 @@ function SessionManageView(props: SessionPageProps) {
             </div>
           </dl>
 
-          <PriceBox itemAmount={itemAmount} vatAmount={vatAmount} totalAmount={totalAmount} />
+          <PriceBreakdown amounts={{ itemAmount, vatAmount, totalAmount }} label={productName} className="mt-6" />
 
           {status !== 'confirmed' && !depositGuide &&
             (refundResult !== null ? (
-              <div className="mt-6 rounded-md bg-green-50 dark:bg-green-900/20 p-4 text-sm text-green-800 dark:text-green-300">
-                {refundDoneMessage(refundResult, viaAccount)}
-              </div>
+              <Notice tone="success" className="mt-6">{refundDoneMessage(refundResult, viaAccount)}</Notice>
             ) : (
-              <div className="mt-6 rounded-md bg-gray-50 dark:bg-gray-800/50 p-4 text-sm text-gray-600 dark:text-gray-300">
+              <Notice tone="neutral" className="mt-6">
                 {bankDeposit === 'cancelled' ? DEPOSIT_CLOSED_NOTICE : STATUS_NOTICES[status]}
-              </div>
+              </Notice>
             ))}
 
           {status === 'confirmed' && !canCancel && (
-            <div className="mt-6 rounded-md bg-gray-50 dark:bg-gray-800/50 p-4 text-sm text-gray-600 dark:text-gray-300">
+            <Notice tone="neutral" className="mt-6">
               이용 일시가 지난 예약입니다. 변경·취소가 필요하면 아래 연락처로 문의해 주세요.
-            </div>
+            </Notice>
           )}
 
           {showCancelSection && refundQuote && (
@@ -393,18 +388,27 @@ function SessionManageView(props: SessionPageProps) {
           )}
         </section>
 
-        <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">문의: 스튜디오 놀 010-4255-7893</p>
-        {/* 이탈 링크 두 가지 규칙(lib/analytics/privatePaths.ts):
-            1. 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를 누르면,
-               그 사이 mount된 gtag가 비밀값이 붙은 이 URL로 page_view를 보낸다.
-            2. 공개 목적지에는 `rel="noreferrer"` — 사이트 Referrer-Policy가
-               strict-origin-when-cross-origin이라 **동일 출처 이동에는 전체 URL**을 보낸다.
-               없으면 도착지 gtag가 page_referrer에 토큰·paymentKey를 실어 보낸다.
-               private→private 링크(관리·입금 안내)는 도착지도 측정 대상이 아니라 불필요. */}
-        <a href="/ko" rel="noreferrer" className="mt-2 inline-block text-sm text-primary dark:text-primary-lighter hover:underline">
-          홈으로
-        </a>
-      </main>
+        <ManageFooter />
+      </PageShell>
+    </>
+  );
+}
+
+/** 카드 아래 연락처와 이탈 링크 — 세션·믹싱 뷰가 같은 꼬리를 쓴다. */
+function ManageFooter() {
+  return (
+    <>
+      <p className="mt-6 typo-card-meta">문의: 스튜디오 놀 010-4255-7893</p>
+      {/* 이탈 링크 두 가지 규칙(lib/analytics/privatePaths.ts):
+          1. 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를 누르면,
+             그 사이 mount된 gtag가 비밀값이 붙은 이 URL로 page_view를 보낸다.
+          2. 공개 목적지에는 `rel="noreferrer"` — 사이트 Referrer-Policy가
+             strict-origin-when-cross-origin이라 **동일 출처 이동에는 전체 URL**을 보낸다.
+             없으면 도착지 gtag가 page_referrer에 토큰·paymentKey를 실어 보낸다.
+             private→private 링크(관리·입금 안내)는 도착지도 측정 대상이 아니라 불필요. */}
+      <Button asChild variant="ghost" size="sm" className="mt-2 -ml-3">
+        <a href="/ko" rel="noreferrer">홈으로</a>
+      </Button>
     </>
   );
 }
@@ -424,20 +428,19 @@ function MixingManageView(props: MixingPageProps) {
         <meta name="referrer" content="no-referrer" />
       </Head>
 
-      <main className="mx-auto max-w-2xl px-4 py-12 sm:py-16">
+      <PageShell>
         {/* 사이트 헤더를 두르지 않는 화면이라(components/Layout.tsx의 isPrivatePaymentPage)
             여기가 브랜드를 밝히는 유일한 자리다 — 메일 링크로 들어온 사람이 어디서 온
             화면인지 알 수 있어야 한다. */}
-        <p className="text-sm text-gray-500 dark:text-gray-400">스튜디오 놀</p>
-        <h1 className="typo-page-title mt-1">주문 확인</h1>
-        <p className="mt-1 mb-8 text-sm text-gray-500 dark:text-gray-400">주문번호 {orderNo}</p>
+        <p className="typo-card-meta">스튜디오 놀</p>
+        <PageHeader title="주문 확인" meta={<span>주문번호 {orderNo}</span>} />
 
-        <section className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
+        <section className="glass-card rounded-2xl p-6 sm:p-8">
           <div className="flex items-center justify-between gap-4">
             <h2 className="typo-card-subtitle text-gray-900 dark:text-white">{productName}</h2>
-            <span className="shrink-0 rounded-full bg-gray-100 dark:bg-gray-700 px-3 py-1 text-xs font-medium text-gray-700 dark:text-gray-200">
+            <Badge size="md" tone={depositGuide ? 'warning' : WORK_ORDER_STATUS_TONES[status]} className="shrink-0">
               {depositGuide ? '입금 대기' : WORK_ORDER_STATUS_LABELS[status]}
-            </span>
+            </Badge>
           </div>
 
           {depositGuide && <DepositWaitingSection orderNo={orderNo} token={token} guide={depositGuide} kindLabel="주문 신청" />}
@@ -461,17 +464,15 @@ function MixingManageView(props: MixingPageProps) {
             </div>
           </dl>
 
-          <PriceBox itemAmount={itemAmount} vatAmount={vatAmount} totalAmount={totalAmount} />
+          <PriceBreakdown amounts={{ itemAmount, vatAmount, totalAmount }} label={productName} className="mt-6" />
 
           {status !== 'received' && !depositGuide &&
             (refundResult !== null ? (
-              <div className="mt-6 rounded-md bg-green-50 dark:bg-green-900/20 p-4 text-sm text-green-800 dark:text-green-300">
-                {refundDoneMessage(refundResult, viaAccount)}
-              </div>
+              <Notice tone="success" className="mt-6">{refundDoneMessage(refundResult, viaAccount)}</Notice>
             ) : (
-              <div className="mt-6 rounded-md bg-gray-50 dark:bg-gray-800/50 p-4 text-sm text-gray-600 dark:text-gray-300">
+              <Notice tone="neutral" className="mt-6">
                 {bankDeposit === 'cancelled' ? DEPOSIT_CLOSED_NOTICE : WORK_ORDER_STATUS_NOTICES[status]}
-              </div>
+              </Notice>
             ))}
 
           {showCancelSection && refundQuote && (
@@ -485,18 +486,8 @@ function MixingManageView(props: MixingPageProps) {
           )}
         </section>
 
-        <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">문의: 스튜디오 놀 010-4255-7893</p>
-        {/* 이탈 링크 두 가지 규칙(lib/analytics/privatePaths.ts):
-            1. 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를 누르면,
-               그 사이 mount된 gtag가 비밀값이 붙은 이 URL로 page_view를 보낸다.
-            2. 공개 목적지에는 `rel="noreferrer"` — 사이트 Referrer-Policy가
-               strict-origin-when-cross-origin이라 **동일 출처 이동에는 전체 URL**을 보낸다.
-               없으면 도착지 gtag가 page_referrer에 토큰·paymentKey를 실어 보낸다.
-               private→private 링크(관리·입금 안내)는 도착지도 측정 대상이 아니라 불필요. */}
-        <a href="/ko" rel="noreferrer" className="mt-2 inline-block text-sm text-primary dark:text-primary-lighter hover:underline">
-          홈으로
-        </a>
-      </main>
+        <ManageFooter />
+      </PageShell>
     </>
   );
 }

@@ -9,6 +9,7 @@ import { buyerIntentHubs } from '../../data/buyerIntentHubs';
 import type { Locale } from '../../lib/i18n';
 import { trackLeadEvent } from '../../utils/analytics';
 import { Button } from '../ui/Button';
+import { NOTICE_TONE_CLASS } from '../ui/Notice';
 
 interface InlinePriceCalloutProps {
   id: string;
@@ -87,7 +88,8 @@ const InlinePriceCallout = ({ id, locale }: InlinePriceCalloutProps) => {
     <aside
       data-inline-callout="price"
       aria-label={categoryLabel}
-      className="my-8 rounded-xl border border-primary/30 bg-primary/5 p-6"
+      // 색은 Notice의 brand tone 표에서 온다(다크 짝 포함) — 구조가 카드라 Notice로 감싸지 않고 표만 쓴다.
+      className={`my-8 rounded-xl border p-6 ${NOTICE_TONE_CLASS.brand}`}
     >
       <div className="flex items-center gap-2 mb-3">
         <div

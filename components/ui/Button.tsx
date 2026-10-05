@@ -15,10 +15,11 @@ const buttonVariants = cva(
   // 켜지 못해 놓친다. 측정 방법론은 docs/design-system.md §5.
   // hover shadow-md→lg는 이제 즉시 전환된다 — 포커스 표시기를 지연시키는 값이 아니다.
   //
-  // 주의: `colors`는 CSS 속성 이름이 아니라 그냥 ident라 실제로는 아무것도 보간하지 않는다
-  // (Tailwind의 `transition-colors`가 펼치는 4개 속성과 다르다). 이 줄의 원래 의도와
-  // 어긋나지만 고치면 44곳의 hover 색 전환 동작이 새로 생기므로 이번 범위에서 제외했다.
-  "inline-flex items-center justify-center gap-2 typo-button transition-[colors,transform] duration-base ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  // `colors`는 CSS 속성 이름이 아니라 그냥 ident라 아무것도 보간하지 않았다(Tailwind의
+  // `transition-colors`가 펼치는 4개 속성과 다르다). 2026-10-05 1단계에서 실제 속성
+  // 4개(background-color·border-color·color·transform)로 고쳤다 — hover 색이 이제
+  // duration-base로 전환된다. box-shadow는 위 이유로 여전히 넣지 않는다.
+  "inline-flex items-center justify-center gap-2 typo-button transition-[background-color,border-color,color,transform] duration-base ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {

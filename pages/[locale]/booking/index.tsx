@@ -73,7 +73,7 @@ export default function BookingHubPage({ groups, shows }: BookingHubProps) {
             <ul className="grid gap-4 md:grid-cols-2">
               {shows.map((show) => (
                 <li key={show.slug}>
-                  <BaseCard className="flex h-full flex-col p-5">
+                  <BaseCard padding="compact" className="flex h-full flex-col">
                     <h3 className="typo-card-title text-gray-900 dark:text-white">{show.title}</h3>
                     <p className="mt-1 typo-card-body text-gray-700 dark:text-gray-300">
                       {show.label} · {show.venueName}
@@ -125,7 +125,7 @@ export default function BookingHubPage({ groups, shows }: BookingHubProps) {
             <ul className="grid gap-4 md:grid-cols-2">
               {group.entries.map((entry) => (
                 <li key={entry.productId}>
-                  <BaseCard className="flex h-full flex-col p-5">
+                  <BaseCard padding="compact" className="flex h-full flex-col">
                     <h3 className="typo-card-title text-gray-900 dark:text-white">{entry.name}</h3>
                     <p className="mt-1 tabular-nums">
                       <span className="text-xl font-bold text-gray-900 dark:text-white">{entry.price}</span>{' '}
@@ -161,7 +161,7 @@ export default function BookingHubPage({ groups, shows }: BookingHubProps) {
           <ul className="grid gap-4 md:grid-cols-2">
             {BOOKING_HUB_INQUIRY_LINKS.map((item) => (
               <li key={item.href}>
-                <BaseCard className="flex h-full flex-col p-5">
+                <BaseCard padding="compact" className="flex h-full flex-col">
                   <h3 className="typo-card-title text-gray-900 dark:text-white">{item.label}</h3>
                   <p className="mt-1 flex-1 typo-card-body text-gray-700 dark:text-gray-300">{item.description}</p>
                   <Link

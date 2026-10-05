@@ -15,6 +15,20 @@ const MotionLink = m.create(Link);
 // 그로 인한 강제 style-recalc flush)을 없앤다. WeakMap이라 언마운트 시 자동 GC.
 const specularRects = new WeakMap<Element, DOMRect>();
 
+/**
+ * 카드 패딩 세 단(docs/design-system.md §3). 소비처가 className에 `p-5`·`p-7`을 따로 적던
+ * 것을 이 표 하나로 모은다 — Panel의 `PANEL_PADDING`과 같은 값이다. `none`은 이미지가
+ * 가장자리까지 닿는 카드(썸네일 위·본문 아래)처럼 안쪽 래퍼가 패딩을 직접 갖는 경우다.
+ * 그 래퍼도 손으로 적지 말고 이 표를 참조할 것(`CARD_PADDING.default`).
+ */
+export type BaseCardPadding = 'none' | 'compact' | 'default' | 'roomy';
+export const CARD_PADDING: Record<BaseCardPadding, string> = {
+    none: '',
+    compact: 'p-4',
+    default: 'p-6',
+    roomy: 'p-6 sm:p-8',
+};
+
 interface BaseCardProps {
     children: React.ReactNode;
     className?: string;
@@ -25,6 +39,8 @@ interface BaseCardProps {
     delay?: number;
     variant?: 'default' | 'highlight' | 'outline' | 'glass' | 'glass-highlight';
     hoverEffect?: boolean;
+    /** 기본 `none` — 기존 소비처의 className 패딩을 조용히 바꾸지 않기 위해서다. */
+    padding?: BaseCardPadding;
 }
 
 const BaseCard = React.memo(({
@@ -37,6 +53,7 @@ const BaseCard = React.memo(({
     delay = 0,
     variant = 'default',
     hoverEffect = true,
+    padding = 'none',
 }: BaseCardProps) => {
     // bg는 baseStyles가 아닌 variant가 소유한다 — glass variant의 배경은
     // .glass-card(components 레이어)가 제공하는데, baseStyles에 bg-* 유틸리티가
@@ -99,7 +116,8 @@ const BaseCard = React.memo(({
     const interactiveStyles = isInteractive
         ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
         : "";
-    const cardClassName = cn(baseStyles, variants[variant], interactiveStyles, className);
+    // className이 뒤에 와서 호출부의 `pt-8` 같은 개별 조정이 이긴다(twMerge).
+    const cardClassName = cn(baseStyles, variants[variant], CARD_PADDING[padding], interactiveStyles, className);
     const isExternal = Boolean(href && /^(https?:|mailto:|tel:)/.test(href));
 
     if (href) {

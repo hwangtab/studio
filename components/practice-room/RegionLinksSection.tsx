@@ -44,7 +44,7 @@ const RegionLinksSection = ({ locale }: RegionLinksSectionProps) => {
                       key={lp.slug}
                       href={`/${locale}/stories/${lp.slug}`}
                       prefetch={false}
-                      className="group block px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary dark:hover:border-primary-light hover:shadow-md transition-all duration-200"
+                      className="group block px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary dark:hover:border-primary-light hover:shadow-md transition-colors duration-200"
                     >
                       <div className="font-semibold text-gray-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary-lighter transition-colors">
                         {lp.region} 음악연습실

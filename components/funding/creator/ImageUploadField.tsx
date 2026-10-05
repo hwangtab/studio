@@ -1,5 +1,7 @@
 import { useId, useState } from 'react';
 
+import { Field, TextInput } from '../../ui/Field';
+
 interface Props {
   projectId: string;
   kind: 'cover' | 'body';
@@ -44,9 +46,6 @@ export function ImageUploadField({ projectId, kind, value, onChange, disabled, l
 
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor={inputId} className="typo-card-meta font-medium text-gray-700 dark:text-gray-300">
-        {label}
-      </label>
       {value && (
         // 업로드 직후 받은 주소를 그 자리에서 미리보기하는 자리라 next/image의 정적
         // 최적화 파이프라인을 탈 이유가 없다.
@@ -57,26 +56,22 @@ export function ImageUploadField({ projectId, kind, value, onChange, disabled, l
           className="h-32 w-full max-w-xs rounded-lg border border-gray-200 object-cover dark:border-gray-700"
         />
       )}
-      <input
-        id={inputId}
-        type="file"
-        accept="image/*"
-        disabled={disabled || busy}
-        onChange={(e) => {
-          const file = e.target.files?.[0];
-          // 같은 파일을 다시 골라도 onChange가 다시 뜨도록 즉시 비운다.
-          e.target.value = '';
-          if (file) void upload(file);
-        }}
-        className="typo-body text-gray-700 disabled:opacity-50 dark:text-gray-300"
-      />
+      {/* 오류가 있으면 힌트 대신 오류만 보인다(Field가 둘을 함께 그리므로 여기서 가른다). */}
+      <Field id={inputId} label={label} hint={error ? undefined : hint} error={error ?? undefined}>
+        <TextInput
+          type="file"
+          accept="image/*"
+          disabled={disabled || busy}
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            // 같은 파일을 다시 골라도 onChange가 다시 뜨도록 즉시 비운다.
+            e.target.value = '';
+            if (file) void upload(file);
+          }}
+          className="file:mr-3 file:rounded-lg file:border-0 file:bg-gray-100 file:px-3 file:py-1 file:text-sm file:font-medium file:text-gray-700 dark:file:bg-gray-700 dark:file:text-gray-200"
+        />
+      </Field>
       {busy && <p className="typo-caption text-gray-500 dark:text-gray-400">업로드 중…</p>}
-      {error && (
-        <p role="alert" className="typo-caption text-red-600 dark:text-red-400">
-          {error}
-        </p>
-      )}
-      {hint && !error && <p className="typo-caption text-gray-500 dark:text-gray-400">{hint}</p>}
     </div>
   );
 }

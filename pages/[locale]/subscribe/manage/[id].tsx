@@ -11,6 +11,9 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import { Button } from '../../../../components/ui/Button';
+import { Badge, type BadgeTone } from '../../../../components/ui/Badge';
+import { Notice } from '../../../../components/ui/Notice';
+import { PageHeader, PageShell } from '../../../../components/ui/PageHeader';
 import { formatPriceAmount } from '../../../../data/pricing';
 import type { SubscriptionStatus } from '../../../../lib/billing/service';
 import { subscriptionOrderName } from '../../../../lib/billing/amounts';
@@ -61,10 +64,26 @@ const formatKstDate = (isoString: string): string => {
   return `${y}.${m}.${d}`;
 };
 
+/** 상태 배지 색 — 이용 중은 success, 돈·카드를 기다리는 상태는 warning, 끝나거나 멈춘 것은 neutral. */
+const STATUS_TONES: Record<SubscriptionStatus, BadgeTone> = {
+  pending_card: 'warning',
+  active: 'success',
+  past_due: 'warning',
+  paused: 'neutral',
+  cancelled: 'neutral',
+  ended: 'neutral',
+};
+
 const PAYMENT_STATUS_LABELS: Record<PaymentHistoryItem['status'], string> = {
   pending: '진행 중',
   paid: '결제 완료',
   failed: '결제 실패',
+};
+
+const PAYMENT_STATUS_TONES: Record<PaymentHistoryItem['status'], BadgeTone> = {
+  pending: 'neutral',
+  paid: 'success',
+  failed: 'error',
 };
 
 export default function SubscribeManagePage(props: ManageProps) {
@@ -125,18 +144,18 @@ export default function SubscribeManagePage(props: ManageProps) {
         <meta name="robots" content="noindex, nofollow" />
         <meta name="referrer" content="no-referrer" />
       </Head>
-      <main className="mx-auto max-w-2xl min-w-0 max-w-full px-4 py-12 sm:py-16">
+      <PageShell>
         {/* Layout이 헤더·푸터를 벗기는 화면이라(lib/analytics/privatePaths.ts) 여기가 브랜드를
             밝히는 유일한 자리다 — 메일 링크로 들어온 사람이 피싱과 구별할 수 있어야 한다. */}
-        <p className="typo-card-meta mb-2">스튜디오 놀</p>
-        <h1 className="typo-page-title">정기결제 관리</h1>
+        <p className="typo-card-meta">스튜디오 놀</p>
+        <PageHeader title="정기결제 관리" />
 
-        <section className="mt-8 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
+        <section className="glass-card rounded-2xl p-6 sm:p-8">
           <div className="flex items-center justify-between gap-4">
             <h2 className="typo-card-subtitle text-gray-900 dark:text-white">{productName}</h2>
-            <span className="shrink-0 rounded-full bg-gray-100 dark:bg-gray-700 px-3 py-1 text-xs font-medium text-gray-700 dark:text-gray-200">
+            <Badge size="md" tone={STATUS_TONES[currentStatus]} className="shrink-0">
               {STATUS_LABELS[currentStatus]}
-            </span>
+            </Badge>
           </div>
 
           <dl className="mt-6 space-y-3 text-sm">
@@ -168,9 +187,9 @@ export default function SubscribeManagePage(props: ManageProps) {
           </dl>
 
           {currentStatus === 'cancelled' && (
-            <div className="mt-6 rounded-md bg-gray-50 dark:bg-gray-800/50 p-4 text-sm text-gray-600 dark:text-gray-300">
+            <Notice tone="neutral" className="mt-6">
               해지가 접수되었습니다. {currentEndsAt ? `${formatKstDate(currentEndsAt)}까지는 계속 이용하실 수 있습니다.` : ''}
-            </div>
+            </Notice>
           )}
 
           {payments.length > 0 && (
@@ -183,28 +202,14 @@ export default function SubscribeManagePage(props: ManageProps) {
                       {p.cycleYm} {p.attempt > 1 ? `(${p.attempt}차 시도)` : ''}
                     </span>
                     <span className="text-gray-500 dark:text-gray-400">{formatKstDate(p.attemptedAt)}</span>
-                    <span
-                      className={
-                        p.status === 'paid'
-                          ? 'font-medium text-green-700 dark:text-green-400'
-                          : p.status === 'failed'
-                            ? 'font-medium text-red-600 dark:text-red-400'
-                            : 'font-medium text-gray-500 dark:text-gray-400'
-                      }
-                    >
-                      {PAYMENT_STATUS_LABELS[p.status]}
-                    </span>
+                    <Badge tone={PAYMENT_STATUS_TONES[p.status]}>{PAYMENT_STATUS_LABELS[p.status]}</Badge>
                   </li>
                 ))}
               </ul>
             </div>
           )}
 
-          {actionError && (
-            <p role="alert" className="mt-4 rounded-md bg-red-50 dark:bg-red-900/20 p-3 text-sm text-red-700 dark:text-red-300">
-              {actionError}
-            </p>
-          )}
+          {actionError && <Notice tone="error" className="mt-4">{actionError}</Notice>}
 
           <div className="mt-8 flex flex-wrap gap-3">
             <Button type="button" variant="outline" disabled={changingCard} onClick={handleCardChange}>
@@ -224,16 +229,16 @@ export default function SubscribeManagePage(props: ManageProps) {
           </div>
         </section>
 
-        <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">문의: 스튜디오 놀 010-4255-7893</p>
+        <p className="mt-6 typo-card-meta">문의: 스튜디오 놀 010-4255-7893</p>
         {/* 이 URL에는 관리·등록 토큰이 실린다 — 이탈 링크는 문서 이동(`<a href>`)이어야 한다.
             next/link 클라 전환으로 공개 페이지에 나갔다 뒤로가기를 누르면, 그 사이 mount된
             gtag가 토큰이 붙은 이 URL로 page_view를 보낸다. 공개 목적지에는 rel="noreferrer"도
             함께 — 사이트 Referrer-Policy가 동일 출처 이동에 전체 URL을 보낸다
             (규칙 정본: lib/analytics/privatePaths.ts). */}
-        <a href="/ko" rel="noreferrer" className="mt-2 inline-block text-sm text-primary dark:text-primary-lighter hover:underline">
-          홈으로
-        </a>
-      </main>
+        <Button asChild variant="ghost" size="sm" className="mt-2 -ml-3">
+          <a href="/ko" rel="noreferrer">홈으로</a>
+        </Button>
+      </PageShell>
     </>
   );
 }

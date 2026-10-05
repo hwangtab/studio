@@ -1,4 +1,5 @@
 import React from 'react';
+import { ArrowRight, Check } from '@/lib/lucide-icons';
 import { type Locale } from '../../lib/i18n';
 
 interface SessionChecklistProps {
@@ -23,8 +24,8 @@ const SessionChecklist: React.FC<SessionChecklistProps> = () => {
               '충분한 수분 (물 500ml 이상)',
             ].map((item) => (
               <li key={item} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
-                <span className="mt-0.5 text-primary dark:text-primary-lighter" aria-hidden="true">✓</span>
-                {item}
+                <Check size={16} className="mt-0.5 flex-shrink-0 text-primary dark:text-primary-lighter" aria-hidden="true" />
+                <span>{item}</span>
               </li>
             ))}
           </ul>
@@ -40,8 +41,8 @@ const SessionChecklist: React.FC<SessionChecklistProps> = () => {
               '원하는 사운드를 엔지니어에게 레퍼런스 곡으로 공유',
             ].map((tip) => (
               <li key={tip} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
-                <span className="mt-0.5 text-amber-500" aria-hidden="true">→</span>
-                {tip}
+                <ArrowRight size={16} className="mt-0.5 flex-shrink-0 text-amber-500" aria-hidden="true" />
+                <span>{tip}</span>
               </li>
             ))}
           </ul>

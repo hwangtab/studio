@@ -26,7 +26,7 @@ const FacilityCard = ({
   delay?: number;
   locale: Locale;
 }) => (
-  <BaseCard variant="default" delay={delay} className="p-5 h-full">
+  <BaseCard variant="default" delay={delay} padding="compact" className="h-full">
     <div className="flex items-start gap-3">
       <div className="bg-primary/10 dark:bg-primary/20 p-2.5 rounded-full text-primary dark:text-primary-lighter flex-shrink-0">
         <Icon size={20} aria-hidden="true" />

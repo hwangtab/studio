@@ -2,8 +2,11 @@ import { useState } from 'react';
 import Image from 'next/image';
 
 import BaseCard from '../ui/BaseCard';
-import StatusBadge from '../ui/StatusBadge';
+import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
+import { Checkbox } from '../ui/Checkbox';
+import { Disclosure } from '../ui/Disclosure';
+import { Notice } from '../ui/Notice';
 import { formatWon, SHOW_CONTACT_PHONE } from '../../lib/shows/copy';
 import { formatEntryNumber } from '../../lib/shows/format';
 import type { ManageOrderView, ManageTicketView } from '../../lib/shows/queries';
@@ -62,15 +65,13 @@ function DepositWaiting({ order, token }: { order: ManageOrderView; token: strin
     }
   };
   if (closed) {
-    return <p role="status" className="rounded-xl bg-gray-100 p-4 text-sm dark:bg-gray-800">신청을 취소했습니다. 받은 돈이 없어 환불할 금액은 없습니다.</p>;
+    return <Notice tone="neutral" role="status">신청을 취소했습니다. 받은 돈이 없어 환불할 금액은 없습니다.</Notice>;
   }
   return (
     <section aria-label="입금 안내">
-      <p className="rounded-xl bg-gray-100 p-4 text-sm text-gray-800 dark:bg-gray-800 dark:text-gray-200">
-        좌석을 잡아 두었습니다. 입금이 확인되면 티켓(QR)이 발권되어 메일로 갑니다.
-      </p>
+      <Notice tone="info">좌석을 잡아 두었습니다. 입금이 확인되면 티켓(QR)이 발권되어 메일로 갑니다.</Notice>
       <BankDepositGuide amount={guide.amount} deadline={guide.deadline} customerName={guide.customerName} applicantLabel="예매하신 분" />
-      {error && <p role="alert" className="mt-4 text-sm text-red-600 dark:text-red-400">{error}</p>}
+      {error && <Notice tone="error" className="mt-4">{error}</Notice>}
       <Button type="button" variant="outline" fullWidth className="mt-8" disabled={busy} onClick={withdraw}>
         {busy ? '처리 중…' : '입금 전 예매 신청 취소'}
       </Button>
@@ -142,14 +143,14 @@ export default function ShowTicketManage({ order, token, qr }: Props) {
       </header>
 
       {cancelledShowtime && (
-        <p role="status" className="rounded-xl bg-amber-50 p-4 text-sm text-amber-900 dark:bg-amber-900/20 dark:text-amber-100">
+        <Notice tone="warning" role="status">
           {viaAccount && refundable.length > 0
             ? '이 회차는 취소되었습니다. 계좌로 입금하신 금액은 전액 돌려드립니다 — 아래에서 티켓을 고르고 환불받을 계좌를 적어 주세요.'
             : `이 회차는 취소되었습니다. 환불 안내는 메일·문자로 별도 드립니다. 문의 ${SHOW_CONTACT_PHONE}`}
-        </p>
+        </Notice>
       )}
       {order.bankDeposit === 'awaiting' && order.depositGuide ? <DepositWaiting order={order} token={token} /> : null}
-      {notice && <p role="status" className="rounded-xl bg-gray-100 p-4 text-sm dark:bg-gray-800">{notice}</p>}
+      {notice && <Notice tone="neutral" role="status">{notice}</Notice>}
 
       {/* 입금 대기 중에는 티켓이 아직 발권 전(보류)이라 티켓 카드·환불 칸을 그리지 않는다 — 위 입금 안내가 이 화면의 전부다. */}
       {order.bankDeposit !== 'awaiting' && (<>
@@ -176,7 +177,7 @@ export default function ShowTicketManage({ order, token, qr }: Props) {
                     <p className="typo-card-meta">티켓 {i + 1}</p>
                     <p className="typo-card-subtitle text-gray-900 dark:text-white">{t.ticketTypeName}</p>
                   </div>
-                  <StatusBadge tone={live ? 'active' : 'neutral'}>{statusLabel}</StatusBadge>
+                  <Badge tone={live ? 'brand' : 'neutral'} size="md">{statusLabel}</Badge>
                 </div>
                 {qrUrl && (
                   <div className="mt-4 flex justify-center">
@@ -190,12 +191,17 @@ export default function ShowTicketManage({ order, token, qr }: Props) {
                   </p>
                 )}
                 {t.refundAmountNow != null && (
-                  <label className="mt-4 flex min-h-[44px] items-center gap-3 border-t border-gray-200/70 pt-3 text-sm text-gray-800 dark:border-gray-700/70 dark:text-gray-200">
-                    <input type="checkbox" checked={isSelected} onChange={() => toggle(t.id)} className="h-5 w-5 accent-primary" />
-                    <span>
-                      환불 선택 <span className="text-gray-500 dark:text-gray-400">(지금 환불하면 {formatWon(t.refundAmountNow)})</span>
-                    </span>
-                  </label>
+                  <Checkbox
+                    checked={isSelected}
+                    onChange={() => toggle(t.id)}
+                    emphasis
+                    className="mt-4 border-t border-gray-200/70 pt-3 dark:border-gray-700/70"
+                    label={
+                      <>
+                        환불 선택 <span className="text-gray-500 dark:text-gray-400">(지금 환불하면 {formatWon(t.refundAmountNow)})</span>
+                      </>
+                    }
+                  />
                 )}
               </BaseCard>
             </li>
@@ -219,16 +225,13 @@ export default function ShowTicketManage({ order, token, qr }: Props) {
               onClick={submitRefund}>
               {busy ? '처리 중…' : selected.length === 0 ? '환불할 티켓을 위에서 선택해 주세요' : `${selected.length}매 환불하기 · ${formatWon(refundTotal)}`}
             </Button>
-            <details className="text-xs text-gray-500 dark:text-gray-400">
-              <summary className="cursor-pointer rounded underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70">
-                취소·환불 규정 보기
-              </summary>
-              <RefundPolicyList className="mt-2" />
-            </details>
+            <Disclosure variant="plain" summary="취소·환불 규정 보기" summaryClassName="text-xs font-medium text-gray-600 dark:text-gray-300" bodyClassName="text-xs">
+              <RefundPolicyList />
+            </Disclosure>
           </>
         )}
-        {error && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{error}</p>}
-        {done && <p role="status" className="text-sm text-green-700 dark:text-green-400">{done}</p>}
+        {error && <Notice tone="error">{error}</Notice>}
+        {done && <Notice tone="success">{done}</Notice>}
       </section>
       </>)}
     </div>
