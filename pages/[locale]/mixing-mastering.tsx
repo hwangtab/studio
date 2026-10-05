@@ -657,6 +657,10 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
           <ServiceLinkPill href={`/${locale}/recording`} tone="primary">
             {t('nav.recording')}
           </ServiceLinkPill>
+          {/* 편곡 등급 = 믹싱 등급(트랙 수). FAQ 10번이 말하는 곳으로 가는 유일한 링크(2026-10-05). */}
+          <ServiceLinkPill href={`/${locale}/composition-arrangement`} tone="primary">
+            {t('nav.compositionArrangement')}
+          </ServiceLinkPill>
           <ServiceLinkPill href={`/${locale}/release-project`} tone="secondary">
             {t('nav.releaseProject')}
           </ServiceLinkPill>
