@@ -21,6 +21,14 @@
  *     전량 제출로 번진다)
  *
  * 매핑 결과가 0건이면 조용히 종료(exit 0) — CI 실패 사유가 아니다.
+ *
+ * 디자인 전용 커밋 제외 (2026-10-05):
+ *   커밋 메시지에 `[skip-indexnow]`가 있는 커밋이 건드린 파일은, **그 커밋들만** 건드렸다면
+ *   제출 대상에서 뺀다. 같은 파일을 표식 없는 커밋도 고쳤다면(본문·타이틀이 바뀐 것) 그대로 제출한다.
+ *   배경: 2026-10-05 UI 정제 PR 셋이 모양만 바꿨는데 pages/[locale]/*.tsx 변경이라 14개 URL이
+ *   "내용이 바뀐 페이지"로 Bing·네이버에 제출됐다. 내용이 같은 재제출은 신호 가치가 없고 스팸성에 가깝다.
+ *   표식은 **문구·링크·가격·구조가 전혀 안 바뀐 커밋**에만 붙인다 — 판단은 커밋 작성자 몫이다.
+ *   (머지 커밋 방식에서 동작한다. 스쿼시 머지는 스쿼시 메시지에 표식이 있어야 한다.)
  */
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -67,6 +75,23 @@ export const parseNameStatus = (raw) =>
  * 변경 파일 목록({status, path}[]) → 제출할 절대 URL 목록(중복 제거, MAX_PER_RUN 상한).
  * 순수 함수 — git을 직접 호출하지 않아 단위 테스트 가능.
  */
+export const SKIP_MARKER_RE = /\[skip-indexnow\]/i;
+
+/**
+ * 표식 커밋에서만 바뀐 파일을 걷어낸다. 순수 함수.
+ * commits: { message: string, files: string[] }[] — 머지 커밋은 호출부가 뺀다.
+ * 어느 커밋에도 안 잡힌 파일(머지 충돌 해소 등)은 안전하게 남긴다 — 과잉 제출이 누락보다 낫다.
+ */
+export const dropSkippedOnlyFiles = (entries, commits) => {
+  const touchedByNormal = new Set();
+  const touchedBySkipped = new Set();
+  for (const { message, files } of commits) {
+    const target = SKIP_MARKER_RE.test(message) ? touchedBySkipped : touchedByNormal;
+    files.forEach((f) => target.add(f));
+  }
+  return entries.filter(({ path: p }) => !(touchedBySkipped.has(p) && !touchedByNormal.has(p)));
+};
+
 export const mapChangedFilesToUrls = (entries) => {
   const urls = new Set();
 
@@ -120,7 +145,23 @@ async function main() {
     process.exit(0);
   }
 
-  const entries = parseNameStatus(raw);
+  let entries = parseNameStatus(raw);
+  const beforeSkip = entries.length;
+  try {
+    const shas = git(['rev-list', '--no-merges', `${BASE}..${HEAD}`]).split('\n').filter(Boolean);
+    const commits = shas.map((sha) => {
+      const out = git(['show', '--no-renames', '--name-only', '--format=%B%x1f', sha]);
+      const [message, files = ''] = out.split('\x1f');
+      return { message, files: files.split('\n').map((l) => l.trim()).filter(Boolean) };
+    });
+    entries = dropSkippedOnlyFiles(entries, commits);
+    if (entries.length < beforeSkip) {
+      console.log(`IndexNow: [skip-indexnow] 커밋에서만 바뀐 파일 ${beforeSkip - entries.length}개 제외`);
+    }
+  } catch (e) {
+    // 커밋 이력 조회 실패는 제출을 막을 사유가 아니다 — 표식 없이 전부 매핑한다(기존 동작).
+    console.error(`IndexNow: 커밋별 표식 조회 실패 — 필터 없이 진행: ${e.message.split('\n')[0]}`);
+  }
   const urls = mapChangedFilesToUrls(entries);
 
   if (urls.length === 0) {

@@ -1,6 +1,6 @@
 /** @jest-environment node */
 
-import { mapChangedFilesToUrls, parseNameStatus } from './indexnow-changed.mjs';
+import { dropSkippedOnlyFiles, mapChangedFilesToUrls, parseNameStatus, SKIP_MARKER_RE } from './indexnow-changed.mjs';
 
 /**
  * indexnow-changed.mjs의 매핑 규칙 단위 테스트.
@@ -157,5 +157,41 @@ describe('lib/sitemap/noindexStaticRoutes.json', () => {
     const noindexStaticRoutes = require('../lib/sitemap/noindexStaticRoutes.json');
     // quote(견적 요청서, 2026-09-26)는 답에 따라 결과가 바뀌는 ko 전용 도구 페이지라 noindex다.
     expect(noindexStaticRoutes.sort()).toEqual(['privacy-policy', 'quote', 'terms']);
+  });
+});
+
+describe('dropSkippedOnlyFiles — [skip-indexnow] 표식 커밋', () => {
+  const entry = (path: string) => ({ status: 'M', path });
+
+  it('표식 커밋에서만 바뀐 파일은 제외한다', () => {
+    const entries = [entry('pages/[locale]/contact.tsx'), entry('pages/[locale]/recording.tsx')];
+    const commits = [
+      { message: 'feat(ui): 모양만 [skip-indexnow]', files: ['pages/[locale]/contact.tsx', 'pages/[locale]/recording.tsx'] },
+    ];
+    expect(dropSkippedOnlyFiles(entries, commits)).toEqual([]);
+  });
+
+  it('표식 없는 커밋도 같은 파일을 고쳤다면 남긴다 — 본문이 바뀐 것이다', () => {
+    const entries = [entry('pages/[locale]/recording.tsx'), entry('pages/[locale]/contact.tsx')];
+    const commits = [
+      { message: 'style: 모양 [skip-indexnow]', files: ['pages/[locale]/recording.tsx', 'pages/[locale]/contact.tsx'] },
+      { message: 'content: 가격 문구 수정', files: ['pages/[locale]/recording.tsx'] },
+    ];
+    expect(dropSkippedOnlyFiles(entries, commits).map((e) => e.path)).toEqual(['pages/[locale]/recording.tsx']);
+  });
+
+  it('어느 커밋에도 안 잡힌 파일은 남긴다 — 누락보다 과잉 제출이 낫다', () => {
+    const entries = [entry('content/stories/a.md')];
+    expect(dropSkippedOnlyFiles(entries, [{ message: 'x [skip-indexnow]', files: ['other.tsx'] }])).toEqual(entries);
+  });
+
+  it('표식이 없으면 아무것도 바꾸지 않는다', () => {
+    const entries = [entry('content/stories/a.md')];
+    expect(dropSkippedOnlyFiles(entries, [{ message: 'content: 수정', files: ['content/stories/a.md'] }])).toEqual(entries);
+  });
+
+  it('표식은 대소문자를 가리지 않고 대괄호 안에서만 인정한다', () => {
+    expect(SKIP_MARKER_RE.test('fix [Skip-IndexNow]')).toBe(true);
+    expect(SKIP_MARKER_RE.test('skip-indexnow 없이 말만')).toBe(false);
   });
 });
