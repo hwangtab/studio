@@ -116,6 +116,7 @@ export const Footer = ({ locale }: FooterProps) => {
               <FooterLink href={`/${locale}/voice-acting`}>{t('nav.voiceActing')}</FooterLink>
               <FooterLink href={`/${locale}/wedding-song`}>{t('nav.weddingSong')}</FooterLink>
               <FooterLink href={`/${locale}/cover-video`}>{t('nav.coverVideo')}</FooterLink>
+              <FooterLink href={`/${locale}/composition-arrangement`}>{t('nav.compositionArrangement')}</FooterLink>
               <FooterLink href={`/${locale}/lesson`}>{t('nav.lesson')}</FooterLink>
               <FooterLink href={`/${locale}/music-promotion`}>{t('nav.musicPromotion')}</FooterLink>
             </ul>

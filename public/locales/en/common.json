@@ -26,6 +26,7 @@
     "weddingSong": "Wedding Song",
     "voiceActing": "Voice Acting",
     "coverVideo": "Cover Video",
+    "compositionArrangement": "Composition & Arrangement",
     "musicPromotion": "Release Press",
     "crowdfundingDesign": "Crowdfunding Design",
     "releaseProject": "Release Project",
@@ -2185,6 +2186,202 @@
     "hubCallout": {
       "title": "Audiobook · ASMR · Narration — Complete Guide",
       "subtitle": "From script to recording, editing, mastering, and distribution — start here."
+    }
+  },
+  "compositionArrangement": {
+    "seo": {
+      "title": "Composition & Arrangement Services — Backing Tracks, MIDI Arrangement, Production | Studio NOL",
+      "description": "A melody is enough to start. Composition, arrangement, backing-track (MR) production and MIDI producing by a producer with 15 years of releases, with recording, mixing and release handled by the same team if you need it. Free consultation, per-song quote.",
+      "keywords": "composition commission, arrangement service, backing track production, MIDI arrangement, music production Seoul, song arrangement, topline writing, beat production, demo arrangement, arrangement cost, producer for hire"
+    },
+    "hero": {
+      "title": "Composition, Arrangement & Production — A Melody Is Enough",
+      "subtitleLine1": "A hummed melody, a few guitar chords, even an AI-made demo:",
+      "subtitleLine2": "we turn it into a release-ready song",
+      "alt": "Composition and arrangement session in the Studio NOL control room"
+    },
+    "quickAnswers": {
+      "title": "Composition & Arrangement — Quick Answers",
+      "subtitle": "The three questions we hear most.",
+      "items": [
+        {
+          "q": "What can I commission?",
+          "a": "Composition (melody, chords, song structure), arrangement (from MIDI to full band and strings), backing tracks for vocals, and production that carries on into recording, mixing and mastering. You can commission a single stage."
+        },
+        {
+          "q": "How much does it cost?",
+          "a": "Quoted per song. The price depends on the size of the arrangement, the mix of virtual instruments and live session players, the scope of revisions and the deliverables, so we set it in a free consultation after hearing your references and demo. Session fees are passed on at cost."
+        },
+        {
+          "q": "How do I start?",
+          "a": "Send two or three reference songs, whatever demo you have (a phone recording is fine), the purpose and your target date via KakaoTalk or the contact form. We reply with a direction and a quote."
+        }
+      ]
+    },
+    "audience": {
+      "title": "Who commissions this",
+      "items": [
+        {
+          "title": "Singer-songwriters with only a melody and lyrics",
+          "description": "No instrument needed. We build chords and structure from your hummed recording and finish the arrangement."
+        },
+        {
+          "title": "Musicians preparing an original release",
+          "description": "When the demo exists but does not sound release-ready. We rebuild the arrangement and carry on into recording, mixing and mastering."
+        },
+        {
+          "title": "Vocalists and rappers who need a track under their part",
+          "description": "A vocal line or rap lyrics are enough. We add the beat and arrangement to make a complete song."
+        },
+        {
+          "title": "Custom backing tracks for events, weddings and brands",
+          "description": "Backing tracks in your key, tempo and length. Reharmonised arrangements of existing songs too."
+        }
+      ]
+    },
+    "services": {
+      "title": "What you can commission",
+      "subtitle": "Pick only the stages you need.",
+      "items": [
+        {
+          "title": "Composition",
+          "description": "Melody (topline), chords and structure. Start from lyrics alone or a melody alone; co-writing with shared credits is possible."
+        },
+        {
+          "title": "Arrangement",
+          "description": "From MIDI arrangement to piano- or guitar-led small settings, full band, strings and choir. Whether to finish with virtual instruments or hire session players is decided by budget and direction."
+        },
+        {
+          "title": "Backing tracks (MR)",
+          "description": "The instrumental your vocal goes on. Original backing tracks for release, custom tracks for weddings and events, reharmonised covers, delivered with WAV stems."
+        },
+        {
+          "title": "Production",
+          "description": "We shape the song with you and take responsibility through directing, session booking, recording, mixing and mastering. For a release, distribution and promotion follow."
+        }
+      ]
+    },
+    "pricing": {
+      "title": "How the price is set",
+      "subtitle": "There is no fixed price list; each song is quoted. Here is what moves the number.",
+      "factorsTitle": "Four things that decide the quote",
+      "factors": [
+        {
+          "label": "Size of the arrangement",
+          "detail": "A piano- or guitar-led setting and a full band with strings and choir differ several times over in work."
+        },
+        {
+          "label": "Virtual instruments vs. live sessions",
+          "detail": "Session players add their fees, passed on at cost with no booking commission."
+        },
+        {
+          "label": "Scope of revisions",
+          "detail": "Structure, key and tempo are fixed at the first demo. Partial revisions after that and a full re-arrangement are quoted differently."
+        },
+        {
+          "label": "Deliverables",
+          "detail": "A single backing-track file, or stems, session files and on into recording, mixing and mastering."
+        }
+      ],
+      "referenceTitle": "Reference points",
+      "referenceItems": [
+        "Recording, mixing and mastering stay at the published prices on the pricing page, even when commissioned with the arrangement.",
+        "In release projects we quote ₩500K–1.5M to expand a basic arrangement to full band, strings or choir. Use this range as a guide for standalone arrangement work.",
+        "The consultation is free. You decide after we have heard your references and written down direction, schedule and price."
+      ],
+      "cta": "Get a quote"
+    },
+    "process": {
+      "title": "How it works",
+      "subtitle": "Five steps from consultation to delivery, each confirmed before moving on.",
+      "steps": [
+        {
+          "title": "Send references and a demo",
+          "description": "Two or three reference songs, whatever demo you have (phone recording, lyrics, chord notes all fine), the purpose and your target date."
+        },
+        {
+          "title": "Agree direction and quote",
+          "description": "We decide the setting, the virtual-vs-live balance and the deliverables, and write down price and schedule. Credits and copyright shares are agreed in writing here."
+        },
+        {
+          "title": "First demo",
+          "description": "A demo with structure, key, tempo and instrumentation. The big decisions are confirmed at this stage."
+        },
+        {
+          "title": "Revision round",
+          "description": "Refinements within the agreed scope. Partial changes are quick; a full re-arrangement is re-quoted."
+        },
+        {
+          "title": "Final delivery",
+          "description": "Backing-track WAV and stems. If you continue into recording, mixing, mastering and release, the same team carries on."
+        }
+      ]
+    },
+    "delivery": {
+      "title": "Deliverables and rights",
+      "filesTitle": "Files you receive",
+      "files": [
+        "Backing track WAV 24-bit/48 kHz (44.1 kHz and MP3 on request)",
+        "Per-instrument stems, usable even if you mix elsewhere",
+        "Vocal guide demo for rehearsing before recording",
+        "Session project files when agreed in advance"
+      ],
+      "rightsTitle": "Credits and copyright",
+      "rights": [
+        "When we take part in composition, co-writing credits and shares are agreed in writing before work starts.",
+        "Arrangement work is credited as arranger. Ownership of the master stays with you.",
+        "Reference songs guide mood and instrumentation only. We do not reproduce a specific song.",
+        "Agree the scope of use as well, such as commercial, non-commercial or a single event."
+      ]
+    },
+    "faq": {
+      "title": "Composition & Arrangement FAQ",
+      "subtitle": "Questions we are asked before a commission.",
+      "items": [
+        {
+          "q": "I cannot play an instrument. Is a recorded melody enough?",
+          "a": "Yes. A hummed phone recording and lyrics are enough to build chords, structure and a full arrangement. It is the most common starting point."
+        },
+        {
+          "q": "How many revisions are included?",
+          "a": "Structure, key, tempo and instrumentation are confirmed at the first demo. After that, partial revisions within the agreed scope are refined without counting rounds. A full re-arrangement that changes direction is quoted again. We write down where revision ends and rework begins during the consultation."
+        },
+        {
+          "q": "How long does it take?",
+          "a": "It depends on the arrangement size and whether session players are involved. We set the first-demo date and the final delivery date in the consultation and work to that schedule. Tell us first if you have a fixed date such as an event."
+        },
+        {
+          "q": "What about copyright and credits?",
+          "a": "If we take part in composition, co-writing credits and shares are agreed in writing before work starts. For arrangement only, we are credited as arranger and the master belongs to you. We also prepare the information needed to register the work when you release."
+        },
+        {
+          "q": "Can you use live session players?",
+          "a": "Yes. Guitar, bass, drums, keys, strings and horns through the session network we have worked with for 15 years. Fees are passed on at cost with no booking commission. With a limited budget, recording some parts live and the rest with virtual instruments is common."
+        },
+        {
+          "q": "Can I bring an AI-generated demo?",
+          "a": "Yes. We treat an AI demo as a sketch of direction and do not use it as is. The song is re-arranged and performed by people so the rights are clear for release."
+        },
+        {
+          "q": "Can the same team continue into recording and release?",
+          "a": "Yes. Recording, mixing and mastering follow at the published prices, and if you go on to distribution and promotion we bundle it as a release project. The person who arranged the song also directs the recording and mixes it, so the intent survives to the end."
+        }
+      ]
+    },
+    "cta": {
+      "titleLine1": "The song in your head,",
+      "titleHighlight": "finished and ready to release",
+      "subtitleLine1": "Send your references and demo",
+      "subtitleLine2": "and we will lay out direction, schedule and price for free.",
+      "location": "Directions",
+      "inquiry": "Get a quote",
+      "imageAlt": "Studio NOL control room, the composition and arrangement workspace"
+    },
+    "relatedStoriesTitle": "Composition & Arrangement Guides",
+    "relatedStoriesSubtitle": "Read up on arrangement, MIDI work and collaborating with a producer.",
+    "hubCallout": {
+      "title": "Independent Release Guide",
+      "subtitle": "After the arrangement: recording, mixing, distribution and promotion, all on one page."
     }
   },
   "coverVideo": {

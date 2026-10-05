@@ -26,6 +26,7 @@
     "weddingSong": "Thu Âm Bài Chúc",
     "voiceActing": "Lồng Tiếng",
     "coverVideo": "Quay Video Cover",
+    "compositionArrangement": "Sáng tác & Hòa âm",
     "musicPromotion": "Quảng bá phát hành",
     "crowdfundingDesign": "Thiết kế crowdfunding",
     "releaseProject": "Dự án phát hành",
@@ -2157,6 +2158,202 @@
     "hubCallout": {
       "title": "Sách nói · ASMR · Thuyết minh — Hướng dẫn toàn diện cho người mới bắt đầu",
       "subtitle": "Từ chuẩn bị kịch bản, thu âm, chỉnh sửa, mastering đến phân phối — bắt đầu tất cả từ một trang."
+    }
+  },
+  "compositionArrangement": {
+    "seo": {
+      "title": "Sáng tác & Hòa âm phối khí — Làm beat/MR, Hòa âm MIDI, Sản xuất | Studio NOL",
+      "description": "Chỉ cần một giai điệu là đủ. Sáng tác, hòa âm phối khí, làm nhạc nền (MR) và sản xuất MIDI do producer với 15 năm phát hành trực tiếp thực hiện; cùng một đội tiếp tục thu âm, mix và phát hành nếu bạn cần. Tư vấn miễn phí, báo giá theo bài.",
+      "keywords": "đặt sáng tác, dịch vụ hòa âm phối khí, làm nhạc nền, hòa âm MIDI, sản xuất âm nhạc Seoul, phối khí bài hát, viết topline, làm beat, phối demo, chi phí hòa âm, thuê producer"
+    },
+    "hero": {
+      "title": "Sáng tác, Hòa âm & Sản xuất — Chỉ cần một giai điệu",
+      "subtitleLine1": "Một giai điệu ngân nga, vài hợp âm guitar, hay cả demo làm bằng AI:",
+      "subtitleLine2": "chúng tôi hoàn thiện thành một bài hát sẵn sàng phát hành",
+      "alt": "Buổi sáng tác và hòa âm trong phòng điều khiển Studio NOL"
+    },
+    "quickAnswers": {
+      "title": "Sáng tác & Hòa âm — Trả lời nhanh",
+      "subtitle": "Ba câu hỏi được hỏi nhiều nhất.",
+      "items": [
+        {
+          "q": "Tôi có thể đặt làm gì?",
+          "a": "Sáng tác (giai điệu, hợp âm, cấu trúc bài), hòa âm (từ MIDI đến full band và dàn dây), nhạc nền cho giọng hát, và sản xuất tiếp nối sang thu âm, mix, master. Bạn có thể đặt riêng một công đoạn."
+        },
+        {
+          "q": "Chi phí bao nhiêu?",
+          "a": "Báo giá theo bài. Phụ thuộc vào quy mô phối khí, tỷ lệ nhạc cụ ảo và nhạc công thật, phạm vi chỉnh sửa và sản phẩm bàn giao, nên chúng tôi chốt trong buổi tư vấn miễn phí sau khi nghe bài tham khảo và demo. Phí nhạc công tính đúng theo chi phí thực."
+        },
+        {
+          "q": "Bắt đầu thế nào?",
+          "a": "Gửi hai ba bài tham khảo, demo bạn có (ghi âm bằng điện thoại cũng được), mục đích sử dụng và ngày mong muốn qua biểu mẫu liên hệ. Chúng tôi trả lời với hướng đi và báo giá."
+        }
+      ]
+    },
+    "audience": {
+      "title": "Những ai đặt dịch vụ này",
+      "items": [
+        {
+          "title": "Singer-songwriter chỉ có giai điệu và lời",
+          "description": "Không cần biết chơi nhạc cụ. Chúng tôi dựng hợp âm và cấu trúc từ bản ghi ngân nga của bạn và hoàn thiện phối khí."
+        },
+        {
+          "title": "Nghệ sĩ chuẩn bị phát hành bài gốc",
+          "description": "Khi demo đã có nhưng âm thanh chưa đạt chuẩn phát hành. Chúng tôi dựng lại phối khí và tiếp tục thu âm, mix, master."
+        },
+        {
+          "title": "Ca sĩ, rapper cần beat và phối dưới phần hát",
+          "description": "Chỉ cần một line hát hoặc lời rap. Chúng tôi thêm beat và phối khí để thành bài hoàn chỉnh."
+        },
+        {
+          "title": "Nhạc nền riêng cho sự kiện, đám cưới, thương hiệu",
+          "description": "Nhạc nền theo tông, tempo và độ dài bạn cần. Cũng nhận phối lại hòa âm các bài có sẵn."
+        }
+      ]
+    },
+    "services": {
+      "title": "Những gì bạn có thể đặt",
+      "subtitle": "Chỉ chọn công đoạn bạn cần.",
+      "items": [
+        {
+          "title": "Sáng tác",
+          "description": "Giai điệu (topline), hợp âm và cấu trúc. Có thể bắt đầu chỉ với lời hoặc chỉ với giai điệu; đồng sáng tác chia credit cũng được."
+        },
+        {
+          "title": "Hòa âm phối khí",
+          "description": "Từ phối MIDI đến biên chế nhỏ với piano hoặc guitar, full band, dàn dây và hợp xướng. Hoàn thiện bằng nhạc cụ ảo hay thuê nhạc công tùy ngân sách và định hướng."
+        },
+        {
+          "title": "Nhạc nền (MR)",
+          "description": "Phần nhạc để giọng hát của bạn đặt lên. Nhạc nền gốc để phát hành, nhạc nền riêng cho đám cưới và sự kiện, cover phối lại, bàn giao kèm stem WAV."
+        },
+        {
+          "title": "Sản xuất",
+          "description": "Định hình bài hát cùng bạn và chịu trách nhiệm từ chỉ đạo, sắp xếp nhạc công, thu âm, mix đến master. Khi phát hành, nối tiếp sang phân phối và quảng bá."
+        }
+      ]
+    },
+    "pricing": {
+      "title": "Giá được định như thế nào",
+      "subtitle": "Không có bảng giá cố định; mỗi bài được báo giá riêng. Đây là những yếu tố quyết định con số.",
+      "factorsTitle": "Bốn yếu tố quyết định báo giá",
+      "factors": [
+        {
+          "label": "Quy mô phối khí",
+          "detail": "Biên chế piano hoặc guitar và full band với dàn dây, hợp xướng khác nhau nhiều lần về khối lượng việc."
+        },
+        {
+          "label": "Nhạc cụ ảo vs. nhạc công thật",
+          "detail": "Nhạc công thu phí riêng, tính đúng chi phí thực và không có hoa hồng."
+        },
+        {
+          "label": "Phạm vi chỉnh sửa",
+          "detail": "Cấu trúc, tông, tempo chốt ở demo đầu. Chỉnh sửa từng phần sau đó và phối lại toàn bộ được báo giá khác nhau."
+        },
+        {
+          "label": "Sản phẩm bàn giao",
+          "detail": "Chỉ một file nhạc nền, hay stem, file dự án và tiếp tục thu âm, mix, master."
+        }
+      ],
+      "referenceTitle": "Mốc tham khảo",
+      "referenceItems": [
+        "Thu âm, mix và master giữ nguyên giá công khai trên trang giá, kể cả khi đặt cùng phối khí.",
+        "Trong dự án phát hành, chúng tôi báo ₩500K–1,5M để mở rộng phối cơ bản lên full band, dàn dây hoặc hợp xướng. Dùng khoảng này làm tham khảo cho phối khí đặt riêng.",
+        "Tư vấn miễn phí. Bạn quyết định sau khi chúng tôi nghe bài tham khảo và ghi rõ hướng đi, lịch và giá."
+      ],
+      "cta": "Nhận báo giá"
+    },
+    "process": {
+      "title": "Quy trình",
+      "subtitle": "Năm bước từ tư vấn đến bàn giao, mỗi bước xác nhận trước khi đi tiếp.",
+      "steps": [
+        {
+          "title": "Gửi bài tham khảo và demo",
+          "description": "Hai ba bài tham khảo, demo bạn có (ghi âm điện thoại, lời, ghi chú hợp âm đều được), mục đích và ngày mong muốn."
+        },
+        {
+          "title": "Thống nhất hướng đi và báo giá",
+          "description": "Chốt biên chế, tỷ lệ ảo/thật và sản phẩm bàn giao, ghi rõ giá và lịch. Credit và phần quyền tác giả cũng thỏa thuận bằng văn bản ở đây."
+        },
+        {
+          "title": "Demo đầu tiên",
+          "description": "Demo có cấu trúc, tông, tempo và biên chế. Những quyết định lớn được chốt ở bước này."
+        },
+        {
+          "title": "Vòng chỉnh sửa",
+          "description": "Tinh chỉnh trong phạm vi đã thỏa thuận. Sửa từng phần thì nhanh; phối lại toàn bộ sẽ báo giá lại."
+        },
+        {
+          "title": "Bàn giao cuối",
+          "description": "File WAV nhạc nền và stem. Nếu tiếp tục thu âm, mix, master và phát hành, cùng một đội sẽ làm tiếp."
+        }
+      ]
+    },
+    "delivery": {
+      "title": "Bàn giao và quyền lợi",
+      "filesTitle": "File bạn nhận được",
+      "files": [
+        "Nhạc nền WAV 24-bit/48 kHz (44,1 kHz và MP3 theo yêu cầu)",
+        "Stem từng nhạc cụ, dùng được dù bạn mix ở nơi khác",
+        "Demo hướng dẫn giọng hát để tập trước khi thu",
+        "File dự án khi đã thỏa thuận trước"
+      ],
+      "rightsTitle": "Credit và quyền tác giả",
+      "rights": [
+        "Khi chúng tôi tham gia sáng tác, credit đồng sáng tác và phần chia được thỏa thuận bằng văn bản trước khi bắt đầu.",
+        "Phần hòa âm được ghi credit người phối khí. Quyền sở hữu bản master thuộc về bạn.",
+        "Bài tham khảo chỉ định hướng không khí và biên chế. Chúng tôi không tái tạo một bài cụ thể.",
+        "Thỏa thuận cả phạm vi sử dụng: thương mại, phi thương mại hay một sự kiện."
+      ]
+    },
+    "faq": {
+      "title": "Hỏi đáp Sáng tác & Hòa âm",
+      "subtitle": "Những câu hỏi trước khi đặt dịch vụ.",
+      "items": [
+        {
+          "q": "Tôi không chơi nhạc cụ. Chỉ có giai điệu ghi âm có đủ không?",
+          "a": "Đủ. Bản ghi ngân nga bằng điện thoại và lời bài hát là đủ để dựng hợp âm, cấu trúc và phối khí hoàn chỉnh. Đây là điểm bắt đầu phổ biến nhất."
+        },
+        {
+          "q": "Được chỉnh sửa bao nhiêu lần?",
+          "a": "Cấu trúc, tông, tempo và biên chế chốt ở demo đầu. Sau đó, chỉnh sửa từng phần trong phạm vi đã thỏa thuận được tinh chỉnh không tính số lần. Phối lại toàn bộ làm thay đổi hướng đi sẽ báo giá lại. Chúng tôi ghi rõ đâu là chỉnh sửa, đâu là làm lại ngay trong buổi tư vấn."
+        },
+        {
+          "q": "Mất bao lâu?",
+          "a": "Tùy quy mô phối và có nhạc công hay không. Chúng tôi chốt ngày demo đầu và ngày bàn giao cuối trong buổi tư vấn và làm theo lịch đó. Nếu có ngày cố định như sự kiện, hãy báo trước."
+        },
+        {
+          "q": "Quyền tác giả và credit thế nào?",
+          "a": "Nếu chúng tôi tham gia sáng tác, credit đồng sáng tác và phần chia được thỏa thuận bằng văn bản trước khi bắt đầu. Chỉ phối khí thì ghi credit người phối và bản master thuộc về bạn. Chúng tôi cũng chuẩn bị thông tin cần để đăng ký tác phẩm khi phát hành."
+        },
+        {
+          "q": "Có dùng nhạc công thật được không?",
+          "a": "Được. Guitar, bass, trống, keyboard, dàn dây và kèn qua mạng lưới nhạc công đã cùng làm việc 15 năm. Phí tính đúng chi phí thực, không hoa hồng. Ngân sách hạn chế thì thu một số phần thật, còn lại dùng nhạc cụ ảo là cách phổ biến."
+        },
+        {
+          "q": "Tôi mang demo tạo bằng AI được không?",
+          "a": "Được. Chúng tôi coi demo AI là bản phác thảo định hướng và không dùng nguyên bản. Bài hát được phối lại và chơi bởi người để quyền lợi rõ ràng khi phát hành."
+        },
+        {
+          "q": "Cùng đội có thể tiếp tục thu âm và phát hành không?",
+          "a": "Có. Thu âm, mix, master theo giá công khai, và nếu tiếp tục phân phối, quảng bá thì gói thành dự án phát hành. Người phối bài cũng chỉ đạo thu âm và mix, nên ý đồ bài hát giữ nguyên đến cuối."
+        }
+      ]
+    },
+    "cta": {
+      "titleLine1": "Bài hát trong đầu bạn,",
+      "titleHighlight": "hoàn thiện và sẵn sàng phát hành",
+      "subtitleLine1": "Gửi bài tham khảo và demo",
+      "subtitleLine2": "chúng tôi sẽ lên hướng đi, lịch và giá miễn phí.",
+      "location": "Chỉ đường",
+      "inquiry": "Nhận báo giá",
+      "imageAlt": "Phòng điều khiển Studio NOL, không gian sáng tác và hòa âm"
+    },
+    "relatedStoriesTitle": "Hướng dẫn sáng tác & hòa âm",
+    "relatedStoriesSubtitle": "Đọc trước về phối khí, làm MIDI và cách hợp tác với producer.",
+    "hubCallout": {
+      "title": "Hướng dẫn phát hành độc lập",
+      "subtitle": "Sau phối khí: thu âm, mix, phân phối và quảng bá, tất cả trên một trang."
     }
   },
   "coverVideo": {

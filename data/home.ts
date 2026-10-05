@@ -88,6 +88,12 @@ const homeData = {
         link: '/cover-video',
         icon: 'Video',
       },
+      {
+        title: "작곡·편곡 의뢰",
+        description: "멜로디만 있어도 곡이 됩니다. 작곡·편곡·MR 제작·프로듀싱을 15년 경력 프로듀서가 직접 — 무료 상담 후 곡 단위 견적.",
+        link: '/composition-arrangement',
+        icon: 'Piano',
+      },
     ],
     studioImages: [
       {
@@ -216,6 +222,12 @@ const homeData = {
         link: '/cover-video',
         icon: 'Video',
       },
+      {
+        title: "Composition & Arrangement",
+        description: "A melody is enough. Composition, arrangement, backing tracks and production by a producer with 15 years of releases — quoted per song after a free consultation.",
+        link: '/composition-arrangement',
+        icon: 'Piano',
+      },
     ],
     studioImages: [
       { src: `/images/studio2.webp`, alt: "Recording room with monitoring speakers" },
@@ -311,6 +323,12 @@ const homeData = {
         description: '拍摄+录音+混音+剪辑一站式。一次3小时完成4K视频与WAV·MP3。',
         link: '/cover-video',
         icon: 'Video',
+      },
+      {
+        title: "作曲·编曲委托",
+        description: "只有一段旋律也能成歌。作曲、编曲、伴奏制作与音乐制作由15年经验的制作人亲自负责——免费咨询后按歌报价。",
+        link: '/composition-arrangement',
+        icon: 'Piano',
       },
     ],
     studioImages: [
@@ -408,6 +426,12 @@ const homeData = {
         link: '/cover-video',
         icon: 'Video',
       },
+      {
+        title: "Composición y Arreglos",
+        description: "Con una melodía basta. Composición, arreglos, pistas y producción por un productor con 15 años de lanzamientos — presupuesto por canción tras una consulta gratuita.",
+        link: '/composition-arrangement',
+        icon: 'Piano',
+      },
     ],
     studioImages: [
       { src: `/images/studio2.webp`, alt: "Sala de grabación" },
@@ -503,6 +527,12 @@ const homeData = {
         description: 'Quay phim + thu âm + mix + dựng phim trọn gói. Video 4K và WAV/MP3 trong một buổi 3 giờ.',
         link: '/cover-video',
         icon: 'Video',
+      },
+      {
+        title: "Sáng tác & Hòa âm",
+        description: "Chỉ cần một giai điệu. Sáng tác, hòa âm, làm nhạc nền và sản xuất do producer 15 năm kinh nghiệm trực tiếp thực hiện — báo giá theo bài sau tư vấn miễn phí.",
+        link: '/composition-arrangement',
+        icon: 'Piano',
       },
     ],
     studioImages: [
@@ -600,6 +630,12 @@ const homeData = {
         link: '/cover-video',
         icon: 'Video',
       },
+      {
+        title: "แต่งเพลง & เรียบเรียง",
+        description: "มีแค่ทำนองก็พอ แต่งเพลง เรียบเรียง ทำแบ็กกิ้งแทร็ก และโปรดิวซ์โดยโปรดิวเซอร์ 15 ปี — เสนอราคาต่อเพลงหลังปรึกษาฟรี",
+        link: '/composition-arrangement',
+        icon: 'Piano',
+      },
     ],
     studioImages: [
       { src: `/images/studio2.webp`, alt: "ห้องบันทึกเสียงพร้อมลำโพงมอนิเตอร์และโต๊ะคอนโทรล" },
@@ -695,6 +731,12 @@ const homeData = {
         description: "Suratga olish + yozuv + miks + montaj bitta paketda. 3 soatlik bitta seansda 4K video va WAV/MP3.",
         link: '/cover-video',
         icon: 'Video',
+      },
+      {
+        title: "Kompozitsiya va aranjirovka",
+        description: "Bitta melodiya yetarli. Kompozitsiya, aranjirovka, fonogramma va prodyuserlikni 15 yillik prodyuser o'zi bajaradi — bepul maslahatdan so'ng har qo'shiq uchun narx.",
+        link: '/composition-arrangement',
+        icon: 'Piano',
       },
     ],
     studioImages: [

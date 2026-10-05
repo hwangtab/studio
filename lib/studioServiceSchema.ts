@@ -10,8 +10,12 @@ interface BuildStudioServiceSchemaOptions {
   name: string;
   description: string;
   serviceType: string;
-  offerName: string;
-  offerPrice: number;
+  /**
+   * Offer는 둘 다 있을 때만 내보낸다. 작곡·편곡처럼 상담 뒤 곡 단위로 견적하는 서비스는
+   * 가격이 없다 — 가격 없는 Offer나 0원 가격을 내보내면 Google이 잘못된 가격 정보로 본다.
+   */
+  offerName?: string;
+  offerPrice?: number;
   pricingHash?: string;
 }
 
@@ -59,17 +63,21 @@ export const buildStudioServiceSchema = ({
     url: siteUrl,
   },
   url: pageUrl,
-  offers: {
-    '@type': 'Offer',
-    name: offerName,
-    priceCurrency: 'KRW',
-    price: offerPrice,
-    // 다른 Offer(lesson·practice-room·pricing)는 전부 getOfferPriceValidUntil()을 쓰는데
-    // 이 Service Offer만 빠져 있었다. 없으면 Google이 가격을 만료 처리한다.
-    priceValidUntil: getOfferPriceValidUntil(),
-    availability: 'https://schema.org/InStock',
-    url: `${siteUrl}/${locale}/pricing#${pricingHash}`,
-  },
+  ...(offerName !== undefined && offerPrice !== undefined
+    ? {
+        offers: {
+          '@type': 'Offer',
+          name: offerName,
+          priceCurrency: 'KRW',
+          price: offerPrice,
+          // 다른 Offer(lesson·practice-room·pricing)는 전부 getOfferPriceValidUntil()을 쓰는데
+          // 이 Service Offer만 빠져 있었다. 없으면 Google이 가격을 만료 처리한다.
+          priceValidUntil: getOfferPriceValidUntil(),
+          availability: 'https://schema.org/InStock',
+          url: `${siteUrl}/${locale}/pricing#${pricingHash}`,
+        },
+      }
+    : {}),
 });
 
 export const buildSchemaGraph = (...items: Record<string, unknown>[]) => ({

@@ -11,7 +11,7 @@
  * - 카테고리 분포는 의도적으로 다양하게 (recording/vocal/lesson/business 혼합)
  */
 
-export type ServiceKey = 'recording' | 'wedding-song' | 'voice-acting' | 'lesson' | 'pricing' | 'cover-video' | 'release-project' | 'mixing-mastering' | 'music-promotion' | 'crowdfunding-design';
+export type ServiceKey = 'recording' | 'wedding-song' | 'voice-acting' | 'lesson' | 'pricing' | 'cover-video' | 'release-project' | 'mixing-mastering' | 'music-promotion' | 'crowdfunding-design' | 'composition-arrangement';
 
 export const serviceRelatedStorySlugs: Record<ServiceKey, readonly string[]> = {
   'crowdfunding-design': [
@@ -80,6 +80,15 @@ export const serviceRelatedStorySlugs: Record<ServiceKey, readonly string[]> = {
     'producer1',
     'daw-choice1',
     'mixing-complete-guide',
+  ],
+  // 작곡·편곡 의뢰 LP — 편곡 방법(미디·오케스트레이션·보컬 편곡), 프로듀서 협업, 자작곡 완성.
+  'composition-arrangement': [
+    'arrangement1',
+    'midi-arrangement1',
+    'orchestration1',
+    'vocal-arrangement1',
+    'beatmaker1',
+    'original-song1',
   ],
   'cover-video': [
     'cover1',
