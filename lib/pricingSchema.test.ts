@@ -132,3 +132,25 @@ describe('per-offer priceValidUntil', () => {
     expect(offers.find((o) => o.name === '컨설팅')?.priceValidUntil).toBe('2027-06-30');
   });
 });
+
+describe('buildPricingPageSchema — 작곡·편곡·MR 절 (2026-10-05)', () => {
+  it('arrangementOffers가 있으면 마스터링 뒤에 카탈로그로 실리고, 없으면 빠진다', () => {
+    const withArrangement = buildPricingPageSchema({
+      locale: 'ko',
+      siteUrl: 'https://studionol.co.kr',
+      pricingData: {
+        ...pricingData,
+        arrangementOffers: [
+          { id: 'arrangement-small', title: 'Small Arrangement', description: 'piano-led', features: [], priceValue: 500000, unit: '/ song' },
+        ],
+      },
+      t: (key: string) => (key === 'pricing.arrangement.title' ? 'Composition · Arrangement' : t(key)),
+      priceValidUntil: '2027-06-30',
+    });
+    const graph = withArrangement['@graph'] as Record<string, unknown>[];
+    const catalog = graph[1] as { itemListElement: Array<{ name: string; itemListElement: Array<{ price?: number }> }> };
+    const names = catalog.itemListElement.map((c) => c.name);
+    expect(names.indexOf('Composition · Arrangement')).toBe(names.indexOf('Mastering') + 1);
+    expect(catalog.itemListElement[names.indexOf('Composition · Arrangement')].itemListElement[0]).toMatchObject({ price: 500000 });
+  });
+});
