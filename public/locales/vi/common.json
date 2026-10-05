@@ -331,6 +331,10 @@
       "title": "Mastering",
       "subtitle": "Bước khép lại bản thu. Căn theo chuẩn nền tảng như -14 LUFS của Spotify, giữ thế cân bằng khi nghe bằng tai nghe, trong xe hay trên loa."
     },
+    "arrangement": {
+      "title": "Sáng tác · Hòa âm · Nhạc nền",
+      "subtitle": "Giá cố định theo bài. Phối khí chia hạng theo số track giống mix (≤10 / 11–30 / 31+). Nhạc công tính phí thực."
+    },
     "practiceRoom": {
       "title": "Phòng tập — Thuê theo tháng · Theo giờ",
       "subtitle": "Không gian cách âm 24/7 thuê theo tháng — nhiều tháng kín phòng nên chúng tôi nhận cả đăng ký chờ.",
@@ -2182,7 +2186,7 @@
         },
         {
           "q": "Chi phí bao nhiêu?",
-          "a": "Báo giá theo bài. Phụ thuộc vào quy mô phối khí, tỷ lệ nhạc cụ ảo và nhạc công thật, phạm vi chỉnh sửa và sản phẩm bàn giao, nên chúng tôi chốt trong buổi tư vấn miễn phí sau khi nghe bài tham khảo và demo. Phí nhạc công tính đúng theo chi phí thực."
+          "a": "Giá cố định theo bài. Sáng tác {{composition}}; phối khí ≤10 track {{small}} · 11–30 track {{band}} · 31+ track {{large}}; nhạc nền đặt riêng cho bài có sẵn {{mr}} (chưa VAT, gồm 2 lần chỉnh sửa). Nhạc công tính phí thực."
         },
         {
           "q": "Bắt đầu thế nào?",
@@ -2234,34 +2238,34 @@
       ]
     },
     "pricing": {
-      "title": "Giá được định như thế nào",
-      "subtitle": "Không có bảng giá cố định; mỗi bài được báo giá riêng. Đây là những yếu tố quyết định con số.",
-      "factorsTitle": "Bốn yếu tố quyết định báo giá",
+      "title": "Bảng giá",
+      "subtitle": "Theo bài, chưa VAT, gồm 2 lần chỉnh sửa. Hạng phối khí theo số track giống mix.",
+      "factorsTitle": "Khoản cộng thêm",
       "factors": [
         {
-          "label": "Quy mô phối khí",
-          "detail": "Biên chế piano hoặc guitar và full band với dàn dây, hợp xướng khác nhau nhiều lần về khối lượng việc."
+          "label": "Nhạc công thật",
+          "detail": "Thêm nhạc công thì cộng phí thực, không hoa hồng."
         },
         {
-          "label": "Nhạc cụ ảo vs. nhạc công thật",
-          "detail": "Nhạc công thu phí riêng, tính đúng chi phí thực và không có hoa hồng."
+          "label": "Thu âm, mix, master",
+          "detail": "Theo giá trên trang giá. Phối khí và mix cùng hạng track nên có thể tính trước."
         },
         {
-          "label": "Phạm vi chỉnh sửa",
-          "detail": "Cấu trúc, tông, tempo chốt ở demo đầu. Chỉnh sửa từng phần sau đó và phối lại toàn bộ được báo giá khác nhau."
+          "label": "Từ lần sửa thứ ba",
+          "detail": "Cấu trúc, tông, tempo, biên chế chốt ở demo đầu. Hai lần sửa sau đó được bao gồm; phối lại toàn bộ sẽ báo giá lại."
         },
         {
-          "label": "Sản phẩm bàn giao",
-          "detail": "Chỉ một file nhạc nền, hay stem, file dự án và tiếp tục thu âm, mix, master."
+          "label": "Đến phát hành",
+          "detail": "Nếu tiếp tục phân phối và quảng bá, gói thành dự án phát hành."
         }
       ],
-      "referenceTitle": "Về chi phí",
+      "referenceTitle": "Tóm tắt",
       "referenceItems": [
-        "Thu âm, mix và master tính theo giá trên trang giá, dù có đặt kèm phối khí hay không.",
-        "Phối khí full band có dàn dây hoặc hợp xướng khoảng ₩500K–1,5M. Biên chế nhỏ với piano hoặc guitar sẽ báo trong buổi tư vấn.",
-        "Tư vấn miễn phí. Bạn quyết định sau khi chúng tôi nghe và ghi rõ hướng đi, lịch và giá."
+        "Sáng tác {{composition}} · nhạc nền đặt riêng {{mr}}",
+        "Phối khí ≤10 track {{small}} · 11–30 track {{band}} · 31+ track {{large}}",
+        "Tư vấn miễn phí. Gửi bài tham khảo và demo, chúng tôi báo hạng và lịch ngay."
       ],
-      "cta": "Nhận báo giá"
+      "cta": "Liên hệ"
     },
     "process": {
       "title": "Quy trình",
@@ -2316,7 +2320,7 @@
         },
         {
           "q": "Được chỉnh sửa bao nhiêu lần?",
-          "a": "Cấu trúc, tông, tempo và biên chế chốt ở demo đầu. Sau đó, chỉnh sửa từng phần trong phạm vi đã thỏa thuận được tinh chỉnh không tính số lần. Phối lại toàn bộ làm thay đổi hướng đi sẽ báo giá lại. Chúng tôi ghi rõ đâu là chỉnh sửa, đâu là làm lại ngay trong buổi tư vấn."
+          "a": "Cấu trúc, tông, tempo, biên chế chốt ở demo đầu, sau đó bao gồm 2 lần chỉnh sửa. Phối lại toàn bộ làm thay đổi hướng đi sẽ báo giá lại. Chúng tôi ghi rõ đâu là chỉnh sửa, đâu là làm lại ngay trong buổi tư vấn."
         },
         {
           "q": "Mất bao lâu?",
@@ -2336,7 +2340,7 @@
         },
         {
           "q": "Cùng đội có thể tiếp tục thu âm và phát hành không?",
-          "a": "Có. Thu âm, mix, master theo giá công khai, và nếu tiếp tục phân phối, quảng bá thì gói thành dự án phát hành. Người phối bài cũng chỉ đạo thu âm và mix, nên ý đồ bài hát giữ nguyên đến cuối."
+          "a": "Có. Thu âm, mix, master theo giá công khai, và nếu tiếp tục phân phối, quảng bá thì gói thành dự án phát hành. Phối khí và mix cùng hạng track nên tổng tính trước được, người phối bài cũng chỉ đạo thu âm và mix."
         }
       ]
     },

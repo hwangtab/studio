@@ -90,7 +90,7 @@ const homeData = {
       },
       {
         title: "작곡·편곡 의뢰",
-        description: "멜로디만 있어도 곡이 됩니다. 작곡·편곡·MR 제작·프로듀싱을 15년 경력 프로듀서가 직접 — 무료 상담 후 곡 단위 견적.",
+        description: "멜로디만 있어도 곡이 됩니다. 작곡·편곡·MR 제작·프로듀싱을 15년 경력 프로듀서가 직접. 맞춤 MR 20만원, 편곡 50만원부터 곡당 정가.",
         link: '/composition-arrangement',
         icon: 'Piano',
       },
@@ -224,7 +224,7 @@ const homeData = {
       },
       {
         title: "Composition & Arrangement",
-        description: "A melody is enough. Composition, arrangement, backing tracks and production by a producer with 15 years of releases — quoted per song after a free consultation.",
+        description: "A melody is enough. Composition, arrangement, backing tracks and production by a producer with 15 years of releases — fixed per-song prices from ₩200,000 for a custom backing track and ₩500,000 for an arrangement.",
         link: '/composition-arrangement',
         icon: 'Piano',
       },
@@ -326,7 +326,7 @@ const homeData = {
       },
       {
         title: "作曲·编曲委托",
-        description: "只有一段旋律也能成歌。作曲、编曲、伴奏制作与音乐制作由15年经验的制作人亲自负责——免费咨询后按歌报价。",
+        description: "只有一段旋律也能成歌。作曲、编曲、伴奏制作与音乐制作由15年经验的制作人亲自负责——定制伴奏₩200,000起、编曲₩500,000起，按歌明码标价。",
         link: '/composition-arrangement',
         icon: 'Piano',
       },
@@ -428,7 +428,7 @@ const homeData = {
       },
       {
         title: "Composición y Arreglos",
-        description: "Con una melodía basta. Composición, arreglos, pistas y producción por un productor con 15 años de lanzamientos — presupuesto por canción tras una consulta gratuita.",
+        description: "Con una melodía basta. Composición, arreglos, pistas y producción por un productor con 15 años de lanzamientos — precios fijos por canción desde ₩200,000 (pista a medida) y ₩500,000 (arreglo).",
         link: '/composition-arrangement',
         icon: 'Piano',
       },
@@ -530,7 +530,7 @@ const homeData = {
       },
       {
         title: "Sáng tác & Hòa âm",
-        description: "Chỉ cần một giai điệu. Sáng tác, hòa âm, làm nhạc nền và sản xuất do producer 15 năm kinh nghiệm trực tiếp thực hiện — báo giá theo bài sau tư vấn miễn phí.",
+        description: "Chỉ cần một giai điệu. Sáng tác, hòa âm, làm nhạc nền và sản xuất do producer 15 năm kinh nghiệm trực tiếp thực hiện — giá cố định theo bài từ ₩200,000 (nhạc nền đặt riêng) và ₩500,000 (phối khí).",
         link: '/composition-arrangement',
         icon: 'Piano',
       },
@@ -632,7 +632,7 @@ const homeData = {
       },
       {
         title: "แต่งเพลง & เรียบเรียง",
-        description: "มีแค่ทำนองก็พอ แต่งเพลง เรียบเรียง ทำแบ็กกิ้งแทร็ก และโปรดิวซ์โดยโปรดิวเซอร์ 15 ปี — เสนอราคาต่อเพลงหลังปรึกษาฟรี",
+        description: "มีแค่ทำนองก็พอ แต่งเพลง เรียบเรียง ทำแบ็กกิ้งแทร็ก และโปรดิวซ์โดยโปรดิวเซอร์ 15 ปี — ราคาต่อเพลงชัดเจน แบ็กกิ้งแทร็กสั่งทำ ₩200,000 เรียบเรียงเริ่ม ₩500,000",
         link: '/composition-arrangement',
         icon: 'Piano',
       },
@@ -734,7 +734,7 @@ const homeData = {
       },
       {
         title: "Kompozitsiya va aranjirovka",
-        description: "Bitta melodiya yetarli. Kompozitsiya, aranjirovka, fonogramma va prodyuserlikni 15 yillik prodyuser o'zi bajaradi — bepul maslahatdan so'ng har qo'shiq uchun narx.",
+        description: "Bitta melodiya yetarli. Kompozitsiya, aranjirovka, fonogramma va prodyuserlikni 15 yillik prodyuser o'zi bajaradi — har qo'shiq uchun qat'iy narx: maxsus fonogramma ₩200,000, aranjirovka ₩500,000 dan.",
         link: '/composition-arrangement',
         icon: 'Piano',
       },

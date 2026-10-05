@@ -10,6 +10,11 @@
 // (data/pricing.test.ts의 가격 드리프트 가드와 동일 원칙).
 import {
   ALBUM_BUNDLE_PRICE,
+  ARRANGEMENT_BAND_PRICE,
+  ARRANGEMENT_LARGE_PRICE,
+  ARRANGEMENT_SMALL_PRICE,
+  COMPOSITION_PRICE,
+  CUSTOM_MR_PRICE,
   COVER_VIDEO_PACKAGE_PRICE,
   DAY_LOCK_4H_PRICE,
   DAY_LOCK_8H_PRICE,
@@ -67,6 +72,9 @@ export const PRICE_FACTS: string[] = [
   `**Cover Video All-in-One Package**: ${krw(COVER_VIDEO_PACKAGE_PRICE)} KRW (3-hour session: filming + mixing + 4K delivery)`,
   `**1:1 Producing Lesson (MIDI/composition/mixing)**: ${krw(LESSON_MONTHLY_PRICE)} KRW/month flat rate (4 sessions, 60 min each, ${krw(LESSON_PER_SESSION_PRICE)} KRW/session)`,
   `**Mixing**: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW/song (tier by track count: ≤10 tracks ${krw(MIXING_LEVEL1_PRICE)} · 11–30 ${krw(MIXING_LEVEL2_PRICE)} · 31+ ${krw(MIXING_LEVEL3_PRICE)}, includes 2 revisions)`,
+  `**Composition (topline, chords, structure + guide demo)**: ${krw(COMPOSITION_PRICE)} KRW/song (2 revisions; co-writing credits agreed in writing beforehand)`,
+  `**Arrangement**: ${krw(ARRANGEMENT_SMALL_PRICE)}–${krw(ARRANGEMENT_LARGE_PRICE)} KRW/song, tiered by track count exactly like mixing: small ensemble ≤10 tracks ${krw(ARRANGEMENT_SMALL_PRICE)} · full band 11–30 tracks ${krw(ARRANGEMENT_BAND_PRICE)} · large ensemble 31+ tracks with strings/brass/choir ${krw(ARRANGEMENT_LARGE_PRICE)} (virtual instruments, backing track WAV + stems, 2 revisions; live session players billed at cost, no booking commission)`,
+  `**Custom Backing Track (existing song, wedding/event/cover)**: ${krw(CUSTOM_MR_PRICE)} KRW/song (custom key, tempo and length; WAV + MP3; 2 revisions)`,
   `**Mastering**: ${krw(MASTERING_SINGLE_PRICE)} KRW/song for a single (1 revision included); ${krw(MASTERING_PACKAGE_PRICE)} KRW/song when mastering 4+ tracks together (EP / full album)`,
   `**Music Release PR (standalone)**: ${krw(RELEASE_PRESS_INTRO_PRICE)} KRW introductory rate through ${RELEASE_PRESS_INTRO_ENDS_ON} (list ${krw(RELEASE_PRESS_PRICE)} KRW) — press release in five languages, press kit page, outreach to Korean music outlets plus media, radio and record shops in 60 countries, send report. No production required; placement is not guaranteed`,
   `**Crowdfunding Design (standalone)**: ${krw(FUNDING_DESIGN_PRICE)} KRW design fee (VAT excluded), **no success fee** — the campaign runs on Studio NOL Funding (this site), whose platform fee ${FUNDING_PLATFORM_FEE_PERCENT}% and payment fee ${FUNDING_PAYMENT_FEE_PERCENT}% (VAT included) are deducted from the funds raised; creators paid as individuals (no tax invoice) also have a VAT-equivalent amount (10/110 of the post-fee amount) and ${FUNDING_WITHHOLDING_PERCENT}% withholding deducted at payout. Available without commissioning a release project`,

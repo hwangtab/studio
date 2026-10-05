@@ -35,6 +35,11 @@ import {
   SINGLE_BUNDLE_PRICE,
   VOCAL_PACKAGE_PRICE,
   WEDDING_PACKAGE_PRICE,
+  COMPOSITION_PRICE,
+  ARRANGEMENT_SMALL_PRICE,
+  ARRANGEMENT_BAND_PRICE,
+  ARRANGEMENT_LARGE_PRICE,
+  CUSTOM_MR_PRICE,
 } from '../../data/pricing';
 import { renderPriceFacts, LESSON_PER_SESSION_PRICE } from '../../lib/llms/priceFacts';
 import {
@@ -98,7 +103,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - **Practice Room Hourly**: the same soundproof private room by the hour — ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/hour **VAT included**, from 1 hour up to 8, 24/7, same-day booking allowed. Book online at ${siteUrl}/ko/booking/practice-room (Toss checkout; door, room and Wi-Fi instructions are emailed on payment). This is the only hourly offer on this site — the recording studio is never rented without an engineer.
 - **Voice Actor Recording**: Voice actor casting and voice-over/dubbing recording (English dubbing available)
 - **Music Production Lessons**: One-on-one music production lessons (MIDI, mixing, composition) with studio engineers. Vocal and instrument performance lessons are NOT offered.
-- **Composition, Arrangement & Backing-Track (MR) Production**: Topline/melody and chord writing, arrangement from MIDI to full band and strings, custom backing tracks (release, wedding, event), and producing through recording, mixing and mastering by producer Hwang Kyungha. A hummed phone recording and lyrics are enough to start; AI-made demos are accepted as sketches and rebuilt by people. Quoted per song after a free consultation (arrangement size, virtual vs. live session players, revision scope, deliverables); session-player fees are passed on at cost with no booking commission; co-writing credits and shares are agreed in writing before work starts. Dedicated page: /composition-arrangement
+- **Composition, Arrangement & Backing-Track (MR) Production**: Topline/melody and chord writing, arrangement from MIDI to full band and strings, custom backing tracks (release, wedding, event), and producing through recording, mixing and mastering by producer Hwang Kyungha. A hummed phone recording and lyrics are enough to start; AI-made demos are accepted as sketches and rebuilt by people. Fixed prices per song, VAT excluded: composition ${krw(COMPOSITION_PRICE)} KRW; arrangement tiered by track count like mixing — ≤10 tracks ${krw(ARRANGEMENT_SMALL_PRICE)}, 11–30 tracks (full band) ${krw(ARRANGEMENT_BAND_PRICE)}, 31+ tracks (strings/brass/choir) ${krw(ARRANGEMENT_LARGE_PRICE)} KRW; custom backing track for an existing song ${krw(CUSTOM_MR_PRICE)} KRW. 2 revisions included; live session players billed at cost with no booking commission; co-writing credits and shares agreed in writing before work starts. Dedicated page: /composition-arrangement
 - **Cover Video All-in-One Package**: Cover video filming + vocal recording + mixing + 4K editing in one session (studio filming with lighting)
 - **Wedding Song Recording**: Complete package for a wedding ceremony song — 2-hour recording session, vocal tuning, mixing and mastering for ${krw(WEDDING_PACKAGE_PRICE)} KRW. Beginners welcome; the engineer directs the session. Dedicated page: /wedding-song
 - **Music Release PR (standalone)**: Press release written in five languages, a press kit page, derivative copy (radio intros, in-store blurbs, tip-form versions), a full-album listening video, and outreach to Korean music outlets plus media, radio and record shops in 60 countries — sold separately, no production required. ${krw(RELEASE_PRESS_INTRO_PRICE)} KRW introductory (list ${krw(RELEASE_PRESS_PRICE)} KRW) through ${RELEASE_PRESS_INTRO_ENDS_ON}, three releases a month. Nothing is charged until the producer has listened to the music and counted, free of charge and within three business days, how many outlets it can go to. Article placement is never promised — what is promised is the agreed send volume and a report proving it. Dedicated page: /music-promotion

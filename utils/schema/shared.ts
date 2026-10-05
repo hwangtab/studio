@@ -47,6 +47,11 @@ export const COVER_VIDEO_OFFER_NAMES: Record<Locale, string> = {
   es: 'Paquete Todo en Uno para Video Cover', vi: 'Gói trọn gói quay video cover', th: 'แพ็กเกจวิดีโอคัฟเวอร์ครบวงจร',
   uz: 'Cover video uchun hammasi bir paketda',
 };
+export const ARRANGEMENT_OFFER_NAMES: Record<Locale, string> = {
+  ko: '편곡 (소편성, 10트랙 이하)', en: 'Arrangement (small ensemble, ≤10 tracks)', zh: '编曲（小编制，10轨以下）',
+  es: 'Arreglo (formación pequeña, ≤10 pistas)', vi: 'Phối khí (biên chế nhỏ, ≤10 track)',
+  th: 'เรียบเรียง (วงเล็ก ≤10 แทร็ก)', uz: 'Aranjirovka (kichik tarkib, ≤10 trek)',
+};
 export const PRACTICE_OFFER_NAMES: Record<Locale, string> = {
   ko: '음악연습실 입주 프로그램', en: 'Premium Practice Room Residency', zh: '高级练习室入驻计划',
   es: 'Programa de Residencia de Sala Premium', vi: 'Chương trình thuê phòng tập cao cấp',

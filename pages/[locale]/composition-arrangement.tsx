@@ -14,6 +14,7 @@ import SectionHeading from '../../components/ui/SectionHeading';
 import type { LucideIcon } from '@/lib/lucide-icons';
 import BaseCard from '../../components/ui/BaseCard';
 import { Section } from '../../components/ui/Section';
+import PricingCard from '../../components/ui/PricingCard';
 
 // Below-fold 컴포넌트 code-splitting
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
@@ -25,6 +26,16 @@ const HubLinkCallout = dynamic(() => import('../../components/guides/HubLinkCall
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
+import {
+  ARRANGEMENT_BAND_PRICE,
+  ARRANGEMENT_LARGE_PRICE,
+  ARRANGEMENT_SMALL_PRICE,
+  COMPOSITION_PRICE,
+  CUSTOM_MR_PRICE,
+  formatPriceLabel,
+  getPricingData,
+} from '../../data/pricing';
+import { trackLeadEvent } from '../../utils/analytics';
 import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
 import type { StoryCardData } from '../../types/story';
 import { buildSchemaGraph, buildStudioServiceSchema } from '../../lib/studioServiceSchema';
@@ -36,20 +47,18 @@ import type { NextPageWithLayout } from '../../types';
 /**
  * 작곡·편곡·MR 제작·프로듀싱 의뢰 LP (2026-10-05).
  *
- * 가격 정본(data/pricing.ts)에 상수가 없는 상품이다 — 편성·세션·수정 범위·납품 형태에 따라
- * 곡 단위로 견적하는 서비스라 PricingCard를 두지 않고 "가격은 이렇게 정해집니다" 절로
- * 변수와 비용 안내만 적는다. 풀밴드·스트링·합창 편곡 "50만~150만원"은 발매 프로젝트 페이지가
- * 이미 공개한 편곡 확장 범위(pricing.priceFactors)와 같은 숫자다 — 두 페이지가 다른 말을 하면
- * 안 된다. 그 출처를 고객 카피에 적지 말 것(2026-10-05 운영자 지적: "발매 프로젝트에서는 …으로
- * 안내합니다. 단독 의뢰도 이 범위를 참고하시면 됩니다"는 우리 사정 설명이라 AI 글로 읽힌다).
- * 고정 단가가 생기면 pricing.ts에 상수를 두고 PricingCard로 바꿀 것.
+ * 가격은 data/pricing.ts의 arrangementOffers(작곡·소편성·풀밴드·대편성 편곡·맞춤 MR) 하나를
+ * /pricing과 같이 그린다. 처음엔 "상담 후 견적"으로 열었다가 같은 날 운영자 결정으로 정가를 뒀다 —
+ * 사이트 안의 숫자(믹싱 트랙 수 등급, 발매 싱글 페이지의 편곡 확장 +50~150만원, 싱글 번들가,
+ * 10트랙 이하 믹싱가)에서 끌어낸 값이고 근거는 pricing.ts 상수 주석에 있다. 카피의 금액은
+ * common.json에 리터럴로 두지 않고 {{composition}}·{{small}}… 보간으로 상수에서 끌어온다.
  *
- * Service 스키마는 가격 없는 Offer를 내보내지 않는다(offerPrice 생략 → offers 없음).
- * 예약 플로우(BookingEntryButton)도 없다 — 상담 뒤에 금액이 정해지는 상품이라 선결제 상품이 아니다.
+ * 예약 플로우(BookingEntryButton)는 없다 — 레퍼런스·데모를 보고 등급을 정한 뒤 시작하는 상품이다.
  */
 
 interface CompositionArrangementProps {
   locale: Locale;
+  pricingData: ReturnType<typeof getPricingData>;
   relatedStories: StoryCardData[];
 }
 
@@ -84,9 +93,28 @@ const PROCESS_ANIMATION = createFadeInAnimation();
 const SERVICE_ICONS: LucideIcon[] = [Music, Layers, FileAudio, Sparkles];
 const AUDIENCE_ICONS: LucideIcon[] = [Music, Users, Users, Piano];
 
-const CompositionArrangement: NextPageWithLayout<CompositionArrangementProps> = ({ locale, relatedStories }) => {
-  const { t } = useTranslation('common', { lng: locale });
+const CompositionArrangement: NextPageWithLayout<CompositionArrangementProps> = ({ locale, pricingData, relatedStories }) => {
+  const { t: tRaw } = useTranslation('common', { lng: locale });
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
+
+  // 카피 안의 금액은 전부 상수 보간 — common.json에 숫자를 박지 않는다(가격 드리프트 방지).
+  const priceVars = React.useMemo(
+    () => ({
+      composition: formatPriceLabel(COMPOSITION_PRICE, locale),
+      small: formatPriceLabel(ARRANGEMENT_SMALL_PRICE, locale),
+      band: formatPriceLabel(ARRANGEMENT_BAND_PRICE, locale),
+      large: formatPriceLabel(ARRANGEMENT_LARGE_PRICE, locale),
+      mr: formatPriceLabel(CUSTOM_MR_PRICE, locale),
+    }),
+    [locale]
+  );
+  const t = React.useCallback((key: string) => tRaw(key, priceVars), [tRaw, priceVars]);
+
+  const arrangementOffers = pricingData.arrangementOffers;
+  const smallOffer = React.useMemo(
+    () => arrangementOffers.find((o) => o.id === 'arrangement-small'),
+    [arrangementOffers]
+  );
 
   const quickAnswers = React.useMemo(
     () => createTranslatedQaItems(t, 'compositionArrangement.quickAnswers.items', 3),
@@ -114,8 +142,11 @@ const CompositionArrangement: NextPageWithLayout<CompositionArrangementProps> = 
       name: t('compositionArrangement.seo.title'),
       description: t('compositionArrangement.seo.description'),
       serviceType: locale === 'ko' ? '작곡·편곡·음악 프로듀싱' : 'Music Composition, Arrangement & Production',
+      offerName: smallOffer?.title ?? (locale === 'ko' ? '소편성 편곡' : 'Small-Ensemble Arrangement'),
+      offerPrice: ARRANGEMENT_SMALL_PRICE,
+      pricingHash: 'arrangement',
     }),
-    [t, siteConfig, locale, pageUrl]
+    [t, siteConfig, locale, pageUrl, smallOffer]
   );
 
   const howToSchema = React.useMemo(
@@ -244,16 +275,42 @@ const CompositionArrangement: NextPageWithLayout<CompositionArrangementProps> = 
         </m.div>
       </Section>
 
-      {/* 가격은 이렇게 정해집니다 — 정가표 대신 변수와 참고 기준 */}
+      {/* 가격표 — /pricing과 같은 arrangementOffers. 등급은 믹싱과 같은 트랙 수. */}
       <Section id="composition-arrangement-pricing" variant="alternate">
         <SectionHeading
           icon={ListChecks}
           title={t('compositionArrangement.pricing.title')}
           subtitle={t('compositionArrangement.pricing.subtitle')}
-          className="mb-12"
+          className="mb-10"
           as="h2"
         />
-        <div className="grid lg:grid-cols-2 gap-12 items-start max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto" role="list">
+          {arrangementOffers.map((offer, index) => (
+            <div key={offer.id} role="listitem">
+              <PricingCard
+                id={offer.id}
+                title={offer.title}
+                price={offer.priceDisplay}
+                unit={offer.unit}
+                description={offer.description}
+                features={offer.features}
+                recommended={offer.recommended}
+                delay={0.1 * (index + 1)}
+                ctaLabel={t('compositionArrangement.pricing.cta')}
+                ctaHref={siteConfig.contact.kakaoUrl}
+                onCtaClick={() =>
+                  trackLeadEvent('lead_click_kakao', {
+                    locale,
+                    component: 'CompositionArrangementPage',
+                    cta_id: `composition_arrangement_${offer.id}_kakao`,
+                  })
+                }
+              />
+            </div>
+          ))}
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-12 items-start max-w-6xl mx-auto mt-14">
           <m.div {...PRICING_IMAGE_ANIMATION}>
             <h3 className="typo-card-subtitle mb-5">{t('compositionArrangement.pricing.factorsTitle')}</h3>
             <ol className="space-y-4">
@@ -275,7 +332,7 @@ const CompositionArrangement: NextPageWithLayout<CompositionArrangementProps> = 
             </ol>
           </m.div>
 
-          <m.div {...PRICING_TEXT_ANIMATION} className="space-y-6">
+          <m.div {...PRICING_TEXT_ANIMATION}>
             <BaseCard variant="glass" className="p-6">
               <h3 className="typo-card-subtitle mb-4">{t('compositionArrangement.pricing.referenceTitle')}</h3>
               <ul className="space-y-3">
@@ -296,7 +353,7 @@ const CompositionArrangement: NextPageWithLayout<CompositionArrangementProps> = 
                   surface="onSurface"
                 />
                 <Link
-                  href={`/${locale}/pricing`}
+                  href={`/${locale}/pricing#arrangement`}
                   className="typo-card-body text-sm font-semibold text-primary dark:text-primary-lighter underline-offset-4 hover:underline"
                 >
                   {t('nav.pricing')} →
@@ -446,10 +503,11 @@ CompositionArrangement.designEdition = 'v2';
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
+  const pricingData = getPricingData(locale);
   const relatedStories = getServiceRelatedStories('composition-arrangement', locale);
   return buildPageStaticProps(
     locale,
-    { relatedStories },
+    { pricingData, relatedStories },
     { revalidate: 86400, i18nSections: ['compositionArrangement', 'stories'] }
   );
 };

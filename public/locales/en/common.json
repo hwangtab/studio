@@ -359,6 +359,10 @@
       "title": "Mastering",
       "subtitle": "The stage that finishes the record. Matched to platform targets like Spotify's -14 LUFS, so the balance holds up on earbuds, in a car, or on speakers."
     },
+    "arrangement": {
+      "title": "Composition · Arrangement · Backing Tracks",
+      "subtitle": "Fixed per-song prices. Arrangement is tiered by track count exactly like mixing (≤10 / 11–30 / 31+). Session players are billed at cost."
+    },
     "practiceRoom": {
       "title": "Practice Room — Monthly Residency · Hourly",
       "subtitle": "A 24/7 soundproof workspace rented by the month — we are often full, so waitlist requests are welcome.",
@@ -2210,7 +2214,7 @@
         },
         {
           "q": "How much does it cost?",
-          "a": "Quoted per song. The price depends on the size of the arrangement, the mix of virtual instruments and live session players, the scope of revisions and the deliverables, so we set it in a free consultation after hearing your references and demo. Session fees are passed on at cost."
+          "a": "Fixed per song. Composition {{composition}}; arrangement ≤10 tracks {{small}} · 11–30 tracks {{band}} · 31+ tracks {{large}}; a custom backing track for an existing song {{mr}} (VAT excluded, 2 revisions included). Session players are billed at cost."
         },
         {
           "q": "How do I start?",
@@ -2262,34 +2266,34 @@
       ]
     },
     "pricing": {
-      "title": "How the price is set",
-      "subtitle": "There is no fixed price list; each song is quoted. Here is what moves the number.",
-      "factorsTitle": "Four things that decide the quote",
+      "title": "Prices",
+      "subtitle": "Per song, VAT excluded, 2 revisions included. Arrangement tiers follow the same track counts as mixing.",
+      "factorsTitle": "What adds to the price",
       "factors": [
         {
-          "label": "Size of the arrangement",
-          "detail": "A piano- or guitar-led setting and a full band with strings and choir differ several times over in work."
+          "label": "Live session players",
+          "detail": "Session fees are added at cost, with no booking commission."
         },
         {
-          "label": "Virtual instruments vs. live sessions",
-          "detail": "Session players add their fees, passed on at cost with no booking commission."
+          "label": "Recording, mixing, mastering",
+          "detail": "At the prices on the pricing page. Arrangement and mixing share the same track-count tiers, so you can add it up in advance."
         },
         {
-          "label": "Scope of revisions",
-          "detail": "Structure, key and tempo are fixed at the first demo. Partial revisions after that and a full re-arrangement are quoted differently."
+          "label": "From the third revision",
+          "detail": "Structure, key, tempo and instrumentation are fixed at the first demo. Two revisions after that are included; a full re-arrangement that changes direction is re-quoted."
         },
         {
-          "label": "Deliverables",
-          "detail": "A single backing-track file, or stems, session files and on into recording, mixing and mastering."
+          "label": "All the way to release",
+          "detail": "If you continue into distribution and promotion, we bundle it as a release project."
         }
       ],
-      "referenceTitle": "What to expect",
+      "referenceTitle": "At a glance",
       "referenceItems": [
-        "Recording, mixing and mastering are charged at the prices on the pricing page, with or without an arrangement.",
-        "A full-band arrangement with strings or choir runs ₩500K–1.5M. Smaller piano- or guitar-led settings are quoted in the consultation.",
-        "The consultation is free. Decide after we have listened and written down direction, schedule and price."
+        "Composition {{composition}} · custom backing track {{mr}}",
+        "Arrangement ≤10 tracks {{small}} · 11–30 tracks {{band}} · 31+ tracks {{large}}",
+        "The consultation is free. Send references and a demo and we will tell you the tier and schedule right away."
       ],
-      "cta": "Get a quote"
+      "cta": "Get in touch"
     },
     "process": {
       "title": "How it works",
@@ -2344,7 +2348,7 @@
         },
         {
           "q": "How many revisions are included?",
-          "a": "Structure, key, tempo and instrumentation are confirmed at the first demo. After that, partial revisions within the agreed scope are refined without counting rounds. A full re-arrangement that changes direction is quoted again. We write down where revision ends and rework begins during the consultation."
+          "a": "Structure, key, tempo and instrumentation are confirmed at the first demo, and two revisions after that are included. A full re-arrangement that changes direction is quoted again. We write down where revision ends and rework begins during the consultation."
         },
         {
           "q": "How long does it take?",
@@ -2364,7 +2368,7 @@
         },
         {
           "q": "Can the same team continue into recording and release?",
-          "a": "Yes. Recording, mixing and mastering follow at the published prices, and if you go on to distribution and promotion we bundle it as a release project. The person who arranged the song also directs the recording and mixes it, so the intent survives to the end."
+          "a": "Yes. Recording, mixing and mastering follow at the published prices, and if you go on to distribution and promotion we bundle it as a release project. Arrangement and mixing share the same track-count tiers, so the total can be added up in advance, and the person who arranged the song also directs the recording and mixes it."
         }
       ]
     },
