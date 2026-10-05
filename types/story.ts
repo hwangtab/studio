@@ -71,6 +71,7 @@ export const STORY_CTA_OVERRIDES = storyCtaTypes as unknown as readonly [
   'practice',
   'production',
   'release',
+  'arrangement',
 ];
 
 export interface StoryFrontmatter {

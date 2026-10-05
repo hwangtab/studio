@@ -1014,6 +1014,14 @@
         "primaryText": "Ver Proyecto de Lanzamiento",
         "secondaryText": "Solicitar Consulta",
         "visualText": "Proyecto de Lanzamiento"
+      },
+      "arrangement": {
+        "title": "¿Prefieres que hagamos el arreglo o la pista por ti?",
+        "descriptionLine1": "Arreglo desde {{small}}, pista a medida de una canción existente {{mr}} — precio fijo por canción, músicos al costo.",
+        "descriptionLine2": "Con una melodía basta. Un productor con 15 años de lanzamientos la termina lista para lanzar.",
+        "primaryText": "Ver composición y arreglos",
+        "secondaryText": "Contactar",
+        "visualText": "Composición y Arreglos"
       }
     },
     "detail": {
@@ -1233,7 +1241,7 @@
         },
         {
           "q": "¿Necesito traer la pista de acompañamiento (MR)?",
-          "a": "Sí, trae tu archivo MR. Si no tienes uno, podemos producirlo por un costo adicional."
+          "a": "Sí, trae tu pista. Si no la tienes, hacemos una pista a medida en tu tono, tempo y duración por {{mr}} (ver la página de composición y arreglos). Solo dinos la canción y el tono al reservar."
         },
         {
           "q": "¿Son suficientes 2 horas de grabación?",
@@ -1391,7 +1399,7 @@
         },
         {
           "q": "¿Cómo preparo una pista base?",
-          "a": "Trae tu archivo MR / instrumental. Si no tienes uno o necesitas ayuda con el arreglo, dínoslo durante la consulta y lo resolvemos juntos."
+          "a": "Trae tu pista o instrumental. Si no la tienes, hacemos una pista a medida de una canción existente por {{mr}}, o arreglamos tu tema original desde {{small}} por canción (ver la página de composición y arreglos). Quien arregla también dirige la grabación, así la intención se mantiene."
         },
         {
           "q": "¿Pueden mezclar y masterizar después?",
@@ -1656,6 +1664,10 @@
         {
           "q": "¿Hay opción urgente?",
           "a": "No hay una opción urgente aparte. La entrega es de 3 a 7 días hábiles desde que recibimos los archivos. Si ya tienes fecha de lanzamiento, dínosla al consultar y primero te confirmamos si podemos cumplirla."
+        },
+        {
+          "q": "¿Pueden encargarse también del arreglo?",
+          "a": "Sí. El arreglo se cobra por canción con los mismos niveles por pistas que la mezcla: ≤10 pistas {{small}} · 11–30 pistas {{band}} · 31+ pistas {{large}}. Como los niveles coinciden, puedes sumar ambos de antemano, y quien arregla también mezcla. Detalles en la página de composición y arreglos."
         }
       ]
     },
@@ -2456,7 +2468,7 @@
         },
         {
           "q": "¿Necesito traer mi propio MR (pista de acompañamiento)?",
-          "a": "Sí, trae tu archivo MR. La producción de MR personalizado también está disponible."
+          "a": "Sí, trae tu pista. Si no la tienes, hacemos una pista a medida en tu tono y tempo por {{mr}} (ver la página de composición y arreglos)."
         },
         {
           "q": "¿Cómo es el fondo de filmación?",

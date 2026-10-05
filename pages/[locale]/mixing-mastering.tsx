@@ -42,7 +42,12 @@ const EngineerCredit = dynamic(() => import('../../components/service/EngineerCr
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
-import { formatPriceLabel, getPricingData, MASTERING_SINGLE_PRICE, MIXING_LEVEL1_PRICE } from '../../data/pricing';
+import { formatPriceLabel, getPricingData, MASTERING_SINGLE_PRICE, MIXING_LEVEL1_PRICE,
+  CUSTOM_MR_PRICE,
+  ARRANGEMENT_SMALL_PRICE,
+  ARRANGEMENT_BAND_PRICE,
+  ARRANGEMENT_LARGE_PRICE,
+} from '../../data/pricing';
 import { buildPortfolioItems } from '../../data/portfolio/items';
 import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
 import type { StoryCardData } from '../../types/story';
@@ -119,6 +124,17 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
   credits,
 }) => {
   const { t } = useTranslation('common', { lng: locale });
+  // FAQ가 작곡·편곡 정가({{mr}}·{{small}}·{{band}}·{{large}})를 말한다 — 금액은 상수 보간(2026-10-05).
+  const priceVars = React.useMemo(
+    () => ({
+      mr: formatPriceLabel(CUSTOM_MR_PRICE, locale),
+      small: formatPriceLabel(ARRANGEMENT_SMALL_PRICE, locale),
+      band: formatPriceLabel(ARRANGEMENT_BAND_PRICE, locale),
+      large: formatPriceLabel(ARRANGEMENT_LARGE_PRICE, locale),
+    }),
+    [locale]
+  );
+  const tPrice = React.useCallback((key: string) => t(key, priceVars), [t, priceVars]);
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
 
   // 가격 SSOT(data/pricing.ts) — 가격 페이지 #mixing·#mastering과 동일 소스.
@@ -130,8 +146,8 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
   );
 
   const faqItems = React.useMemo(
-    () => createTranslatedQaItems(t, 'mixingMastering.faq.items', 9),
-    [t]
+    () => createTranslatedQaItems(tPrice, 'mixingMastering.faq.items', 10),
+    [tPrice]
   );
 
   // 비교 표 — 우리 열의 가격은 번역 파일에 숫자를 박지 않고 상수에서 채운다(가격 드리프트 가드와 같은 원칙).

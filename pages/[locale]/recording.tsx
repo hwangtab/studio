@@ -29,7 +29,12 @@ const RelatedStoriesSection = dynamic(() => import('../../components/ui/RelatedS
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
-import { formatPriceLabel, getPricingData, RECORDING_HOURLY_PRICE, VOCAL_PACKAGE_PRICE } from '../../data/pricing';
+import { formatPriceLabel, getPricingData, RECORDING_HOURLY_PRICE, VOCAL_PACKAGE_PRICE,
+  CUSTOM_MR_PRICE,
+  ARRANGEMENT_SMALL_PRICE,
+  ARRANGEMENT_BAND_PRICE,
+  ARRANGEMENT_LARGE_PRICE,
+} from '../../data/pricing';
 import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
 import type { StoryCardData } from '../../types/story';
 import { buildSchemaGraph, buildStudioServiceSchema } from '../../lib/studioServiceSchema';
@@ -80,6 +85,17 @@ const RECORDING_LASTMOD_DISPLAY = formatLastmodDate(RECORDING_LASTMOD_ISO);
 
 const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
+  // FAQ가 작곡·편곡 정가({{mr}}·{{small}}·{{band}}·{{large}})를 말한다 — 금액은 상수 보간(2026-10-05).
+  const priceVars = React.useMemo(
+    () => ({
+      mr: formatPriceLabel(CUSTOM_MR_PRICE, locale),
+      small: formatPriceLabel(ARRANGEMENT_SMALL_PRICE, locale),
+      band: formatPriceLabel(ARRANGEMENT_BAND_PRICE, locale),
+      large: formatPriceLabel(ARRANGEMENT_LARGE_PRICE, locale),
+    }),
+    [locale]
+  );
+  const tPrice = React.useCallback((key: string) => t(key, priceVars), [t, priceVars]);
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
 
   // 가격 SSOT(data/pricing.ts)의 recordingOffers를 그대로 렌더 — 가격 페이지 #recording과 동일 소스.
@@ -91,8 +107,8 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
   );
 
   const faqItems = React.useMemo(
-    () => createTranslatedQaItems(t, 'recording.faq.items', 8),
-    [t]
+    () => createTranslatedQaItems(tPrice, 'recording.faq.items', 8),
+    [tPrice]
   );
 
   // 비교 표 — 우리 열 가격은 상수에서 채운다.
@@ -428,6 +444,7 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
 
       <ServiceQuickLinksSection
         links={[
+          { href: `/${locale}/composition-arrangement`, label: t('nav.compositionArrangement'), color: 'primary' },
           { href: `/${locale}/pricing`, label: t('nav.pricing'), color: 'primary' },
           { href: `/${locale}/studio-info`, label: t('nav.equipment'), color: 'secondary' },
           { href: `/${locale}/voice-acting`, label: t('nav.voiceActing'), color: 'accent' },

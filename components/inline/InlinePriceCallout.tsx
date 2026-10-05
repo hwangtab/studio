@@ -16,7 +16,7 @@ interface InlinePriceCalloutProps {
   locale: Locale;
 }
 
-type PoolKey = 'recording' | 'mixing' | 'mastering' | 'special' | 'additional';
+type PoolKey = 'recording' | 'mixing' | 'mastering' | 'special' | 'additional' | 'arrangement';
 
 const CATEGORY_DEFAULTS: Record<PoolKey, string> = {
   recording: '보컬 녹음',
@@ -24,6 +24,7 @@ const CATEGORY_DEFAULTS: Record<PoolKey, string> = {
   mastering: '마스터링',
   special: '추천 패키지',
   additional: '부가 서비스',
+  arrangement: '작곡·편곡',
 };
 
 /**
@@ -43,6 +44,8 @@ const InlinePriceCallout = ({ id, locale }: InlinePriceCalloutProps) => {
       ['mixing', pricingData.mixingOffers],
       ['mastering', pricingData.masteringOffers],
       ['additional', pricingData.additionalServices],
+      // 2026-10-05 — 작곡·편곡·MR 정가(arrangement-small 등). 없으면 %%price:arrangement-small%%이 조용히 사라진다.
+      ['arrangement', pricingData.arrangementOffers],
     ];
     for (const [pool, list] of map) {
       const found = list.find((p) => p.id === id);

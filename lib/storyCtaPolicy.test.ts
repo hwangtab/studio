@@ -20,6 +20,17 @@ describe('resolveStoryCTAType', () => {
     expect(resolveStoryCTAType({ slug: 'songwriting1', categoryKey: 'recording' })).toBe('lesson');
   });
 
+  it('sends arrangement-commission topics to the composition-arrangement LP, not the lesson (2026-10-05)', () => {
+    for (const slug of ['arrangement1', 'arrangement-tips1', 'midi-arrangement1', 'string-arrangement1', 'orchestration1', 'beatmaker1', 'commission1', 'mr-guide1']) {
+      expect(resolveStoryCTAType({ slug, categoryKey: 'production' })).toBe('arrangement');
+    }
+    // 보컬 카테고리에서도 편곡 의뢰는 유효한 상품이다 — lesson 가드가 건드리지 않는다.
+    expect(resolveStoryCTAType({ slug: 'vocal-arrangement1', categoryKey: 'vocal' })).toBe('arrangement');
+    // 학습 의도(작곡법·코드·미디 작곡)는 그대로 레슨.
+    expect(resolveStoryCTAType({ slug: 'midi-composition1', categoryKey: 'production' })).toBe('lesson');
+    expect(resolveStoryCTAType({ slug: 'orchestral-sampling1', categoryKey: 'production' })).toBe('lesson');
+  });
+
   it('keeps vocal-category composition topics on the practice-room CTA — the vocal guard would turn lesson into recording', () => {
     expect(resolveStoryCTAType({ slug: 'topline-melody-writing', categoryKey: 'vocal' })).toBe('practice');
   });

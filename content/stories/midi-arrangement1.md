@@ -35,7 +35,7 @@ faq:
       타임 처리와 휴머나이즈(humanize) 기능을 활용하면 기계적인 느낌이 줄어듭니다. 고급 샘플 라이브러리(Spitfire,
       EastWest 등)도 큰 도움이 됩니다.
 inlineFallback:
-  price: lesson-monthly
+  price: arrangement-small
 ---
 ![MIDI 편곡 완전 가이드 — 스튜디오 놀](/images/studio2.webp)
 

@@ -1037,6 +1037,14 @@
         "primaryText": "View Release Project",
         "secondaryText": "Request Consultation",
         "visualText": "Release Project"
+      },
+      "arrangement": {
+        "title": "Want the arrangement or backing track done for you?",
+        "descriptionLine1": "Arrangement from {{small}}, a custom backing track for an existing song {{mr}} — fixed per song, session players at cost.",
+        "descriptionLine2": "A melody is enough. A producer with 15 years of releases finishes it as a release-ready song.",
+        "primaryText": "See composition & arrangement",
+        "secondaryText": "Contact",
+        "visualText": "Composition & Arrangement"
       }
     },
     "detail": {
@@ -1261,7 +1269,7 @@
         },
         {
           "q": "Do I need to bring the backing track (MR)?",
-          "a": "Yes, please bring your MR file. If you don't have one, we can arrange a separate production for an additional fee."
+          "a": "Yes, please bring your backing track. If you have none, we make a custom backing track in your key, tempo and length for {{mr}} (see the composition & arrangement page). Just tell us the song and key when you book."
         },
         {
           "q": "Is 2 hours enough for recording?",
@@ -1419,7 +1427,7 @@
         },
         {
           "q": "How do I prepare a backing track?",
-          "a": "Bring your MR / instrumental file. If you don't have one or need arrangement help, let us know during the consult and we'll work it out together."
+          "a": "Bring your backing track or instrumental. If you have none, we make a custom backing track for an existing song for {{mr}}, or arrange your original from {{small}} per song (see the composition & arrangement page). The person who arranges also directs the recording, so the intent carries through."
         },
         {
           "q": "Can you mix and master afterward?",
@@ -1684,6 +1692,10 @@
         {
           "q": "Is there a rush option?",
           "a": "There is no separate rush option. Delivery is 3–7 business days after we receive your files. If you have a fixed release date, tell us when you inquire and we will first confirm whether we can meet it."
+        },
+        {
+          "q": "Can you also handle the arrangement?",
+          "a": "Yes. Arrangement is priced per song on the same track-count tiers as mixing: ≤10 tracks {{small}} · 11–30 tracks {{band}} · 31+ tracks {{large}}. Because the tiers match, you can add both up in advance, and the person who arranges also mixes. Details are on the composition & arrangement page."
         }
       ]
     },
@@ -2484,7 +2496,7 @@
         },
         {
           "q": "Do I need to bring my own backing track (MR)?",
-          "a": "Yes, please bring your MR file. Custom MR production is also available — just let us know during consultation."
+          "a": "Yes, please bring your backing track. If you have none, we make a custom backing track in your key and tempo for {{mr}} (see the composition & arrangement page)."
         },
         {
           "q": "What does the filming background look like?",

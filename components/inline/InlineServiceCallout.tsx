@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, CheckCircle2, Disc, GraduationCap, HandCoins, Heart, Megaphone, MessageCircle, Mic, SlidersHorizontal, Speaker, Sparkles, Video } from '@/lib/lucide-icons';
+import { ArrowRight, CheckCircle2, Disc, GraduationCap, HandCoins, Heart, Megaphone, MessageCircle, Mic, SlidersHorizontal, Speaker, Sparkles, Video, Piano } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 
 import { getSiteConfig } from '../../data/siteConfig';
@@ -29,13 +29,18 @@ import {
   VOCAL_PACKAGE_PRICE,
   VOICEOVER_HOURLY_PRICE,
   WEDDING_PACKAGE_PRICE,
+  COMPOSITION_PRICE,
+  ARRANGEMENT_SMALL_PRICE,
+  ARRANGEMENT_BAND_PRICE,
+  ARRANGEMENT_LARGE_PRICE,
+  CUSTOM_MR_PRICE,
 } from '../../data/pricing';
 import type { Locale } from '../../lib/i18n';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 import { Button } from '../ui/Button';
 import { NOTICE_TONE_CLASS } from '../ui/Notice';
 
-type ServiceType = 'wedding' | 'voice' | 'lesson' | 'recording' | 'mixing' | 'practice' | 'release' | 'funding' | 'cover' | 'promotion';
+type ServiceType = 'wedding' | 'voice' | 'lesson' | 'recording' | 'mixing' | 'practice' | 'release' | 'funding' | 'cover' | 'promotion' | 'arrangement';
 
 interface InlineServiceCalloutProps {
   type: string;
@@ -54,6 +59,7 @@ const SERVICE_PATHS: Record<ServiceType, string> = {
   funding: '/crowdfunding-design',
   cover: '/cover-video',
   promotion: '/music-promotion',
+  arrangement: '/composition-arrangement',
 };
 
 const SERVICE_ICONS: Record<ServiceType, React.ElementType> = {
@@ -67,6 +73,7 @@ const SERVICE_ICONS: Record<ServiceType, React.ElementType> = {
   funding: HandCoins,
   cover: Video,
   promotion: Megaphone,
+  arrangement: Piano,
 };
 
 const SERVICE_LABEL_KEYS: Record<ServiceType, string> = {
@@ -80,6 +87,7 @@ const SERVICE_LABEL_KEYS: Record<ServiceType, string> = {
   funding: 'stories.inline.serviceLabel.funding',
   cover: 'nav.coverVideo',
   promotion: 'nav.musicPromotion',
+  arrangement: 'nav.compositionArrangement',
 };
 
 // 가격은 전부 data/pricing.ts 상수에서 온다. 2026-09-25까지 이 블록은 리터럴이었고
@@ -203,6 +211,19 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
       '발송 리포트 제공 — 기사 게재는 보장하지 않습니다',
     ],
     softNote: '음원을 들은 뒤 보낼 곳이 몇 곳인지 먼저 무료로 세어 드립니다. 비용은 그 숫자를 보신 다음입니다.',
+  },
+  // 2026-10-05 추가 — 편곡 방법·MR 구하기 글이 레슨으로만 가던 것을 의뢰 상품으로.
+  arrangement: {
+    title: '작곡·편곡·MR 제작 의뢰',
+    description: '멜로디만 있어도 곡이 됩니다. 편곡은 믹싱과 같은 트랙 수 등급으로 곡당 정가, 세션 연주비는 실비만.',
+    features: [
+      `작곡 ${man(COMPOSITION_PRICE)} · 소편성 편곡 ${man(ARRANGEMENT_SMALL_PRICE)} (10트랙 이하)`,
+      `풀밴드 편곡 ${man(ARRANGEMENT_BAND_PRICE)} (11~30트랙) · 대편성 ${man(ARRANGEMENT_LARGE_PRICE)} (31트랙 이상)`,
+      `기존 곡 맞춤 MR ${man(CUSTOM_MR_PRICE)} — 축가·행사·커버`,
+      'MR WAV + 스템 납품 · 수정 2회 포함',
+    ],
+    softNote: '레퍼런스 곡과 휴대폰 녹음 데모만 보내 주시면 등급과 일정을 바로 알려드립니다. 상담은 무료입니다.',
+    detailLabel: '작곡·편곡 의뢰 안내',
   },
 };
 
