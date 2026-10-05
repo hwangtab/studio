@@ -177,7 +177,7 @@ describe('dropSkippedOnlyFiles — [skip-indexnow] 표식 커밋', () => {
       { message: 'style: 모양 [skip-indexnow]', files: ['pages/[locale]/recording.tsx', 'pages/[locale]/contact.tsx'] },
       { message: 'content: 가격 문구 수정', files: ['pages/[locale]/recording.tsx'] },
     ];
-    expect(dropSkippedOnlyFiles(entries, commits).map((e) => e.path)).toEqual(['pages/[locale]/recording.tsx']);
+    expect(dropSkippedOnlyFiles(entries, commits).map((e: { path: string }) => e.path)).toEqual(['pages/[locale]/recording.tsx']);
   });
 
   it('어느 커밋에도 안 잡힌 파일은 남긴다 — 누락보다 과잉 제출이 낫다', () => {
