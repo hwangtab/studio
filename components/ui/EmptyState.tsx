@@ -16,15 +16,17 @@ export interface EmptyStateProps {
   description?: React.ReactNode;
   /** 다음 행동(링크·버튼). */
   action?: React.ReactNode;
+  /** 제목 태그. 목록 페이지의 빈 상태처럼 문서 개요에 남아야 하면 h2. */
+  titleAs?: 'p' | 'h2' | 'h3';
   className?: string;
 }
 
-export const EmptyState = ({ icon: Icon = Inbox, title, description, action, className }: EmptyStateProps) => (
+export const EmptyState = ({ icon: Icon = Inbox, title, description, action, titleAs: Title = 'p', className }: EmptyStateProps) => (
   <div className={cn('rounded-2xl border border-dashed border-gray-300 p-8 text-center dark:border-gray-600', className)}>
     <span aria-hidden="true" className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400">
       <Icon size={24} />
     </span>
-    <p className="typo-card-subtitle text-gray-900 dark:text-white">{title}</p>
+    <Title className="typo-card-subtitle text-gray-900 dark:text-white">{title}</Title>
     {description && <p className="mx-auto mt-1 max-w-prose typo-card-meta">{description}</p>}
     {action && <div className="mt-5 flex justify-center">{action}</div>}
   </div>

@@ -262,7 +262,7 @@ export default function MixComparePlayer({
         ))}
       </div>
 
-      <div className="relative h-28 md:h-36 rounded-md focus-within:ring-2 focus-within:ring-primary/70 dark:focus-within:ring-primary-lighter/70 focus-within:ring-offset-2 focus-within:ring-offset-white dark:focus-within:ring-offset-gray-900">
+      <div className="relative h-28 md:h-36 rounded-lg focus-within:ring-2 focus-within:ring-primary/70 dark:focus-within:ring-primary-lighter/70 focus-within:ring-offset-2 focus-within:ring-offset-white dark:focus-within:ring-offset-gray-900">
         <Bars values={peaks[active]} className="bg-gray-300 dark:bg-gray-700" />
         <div ref={clipRef} className="absolute inset-0" style={{ clipPath: 'inset(0 100% 0 0)' }}>
           <Bars values={peaks[active]} className="bg-primary dark:bg-primary-lighter" />

@@ -1,10 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, BookOpen, ChevronDown } from '@/lib/lucide-icons';
+import { ArrowRight, BookOpen } from '@/lib/lucide-icons';
 import SectionHeading from '../ui/SectionHeading';
 import { Section } from '../ui/Section';
 import { PRACTICE_ROOM_RELATED_GUIDES } from '../../data/practiceRoomRelatedGuides';
 import type { Locale } from '../../lib/i18n';
+import { Disclosure } from '../ui/Disclosure';
 
 interface RelatedGuidesSectionProps {
   title: string;
@@ -51,18 +52,17 @@ const RelatedGuidesSection = ({ title, locale }: RelatedGuidesSectionProps) => {
           ))}
         </div>
         {hiddenRelatedGuides.length > 0 && (
-          <details className="mt-6 group">
-            <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none flex items-center justify-center gap-1.5 py-3 text-sm font-semibold text-primary hover:text-primary-dark dark:text-primary-lighter dark:hover:text-white transition-colors">
-              <span className="group-open:hidden">
-                가이드 +{hiddenRelatedGuides.length}개 더 보기
-              </span>
-              <span className="hidden group-open:inline">접기</span>
-              <ChevronDown
-                size={16}
-                className="transition-transform group-open:rotate-180"
-                aria-hidden="true"
-              />
-            </summary>
+          <Disclosure
+            variant="plain"
+            className="mt-6"
+            summaryClassName="justify-center text-primary hover:text-primary-dark dark:text-primary-lighter dark:hover:text-primary-lighter"
+            summary={
+              <>
+                <span className="group-open:hidden">가이드 +{hiddenRelatedGuides.length}개 더 보기</span>
+                <span className="hidden group-open:inline">접기</span>
+              </>
+            }
+          >
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3">
               {hiddenRelatedGuides.map((guide, idx) => (
                 <Link
@@ -76,7 +76,7 @@ const RelatedGuidesSection = ({ title, locale }: RelatedGuidesSectionProps) => {
                 </Link>
               ))}
             </div>
-          </details>
+          </Disclosure>
         )}
       </div>
     </Section>

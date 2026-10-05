@@ -10,6 +10,7 @@ import { formatDate } from '../../../../lib/contracts/format';
 import { IDENTITY_DIGITS } from '../../../../lib/contracts/identity';
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
 import { getEffectiveStatus } from '../../../../lib/contracts/status';
+import { Notice } from '../../../../components/ui/Notice';
 
 /**
  * 이 페이지가 화면에 실제로 그리는 값만 담는다.
@@ -310,14 +311,10 @@ export default function ContractCompletePage({
               </Button>
 
               {downloadError && (
-                <p
-                  id="download-identity-error"
-                  role="alert"
-                  className="mt-3 text-sm text-red-700 dark:text-red-700 bg-red-50 dark:bg-red-50 rounded-xl p-3 leading-relaxed"
-                >
+                <Notice tone="error" className="mt-3 dark:border-red-200 dark:bg-red-50 dark:text-red-900">
                   <span className="block">{downloadError}</span>
                   <span className="block">계약서는 메일로도 보내 드렸습니다. 급하시면 010-4255-7893으로 연락해 주세요.</span>
-                </p>
+                </Notice>
               )}
 
               <p className="text-sm text-gray-500 dark:text-gray-500 mt-4 mb-6">

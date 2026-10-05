@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { List } from '@/lib/lucide-icons';
 import { extractMarkdownHeadings } from './extractHeadings';
+import { Disclosure } from '../ui/Disclosure';
 
 interface TableOfContentsProps {
   content: string;
@@ -39,14 +40,18 @@ const TableOfContents = ({ content, title, className }: TableOfContentsProps) =>
   if (headings.length < MIN_HEADINGS) return null;
 
   return (
-    <details
+    <Disclosure
       open
-      className={`mb-10 rounded-lg border border-gray-200 bg-gray-50/70 dark:border-gray-700 dark:bg-gray-800/40 ${className ?? ''}`}
+      className={`mb-10 bg-gray-50/70 dark:bg-gray-800/40 ${className ?? ''}`}
+      summaryClassName="px-5 font-bold"
+      bodyClassName="px-0 pb-0"
+      summary={
+        <span className="flex items-center gap-2">
+          <List size={18} aria-hidden="true" className="text-primary dark:text-primary-lighter" />
+          {title}
+        </span>
+      }
     >
-      <summary className="flex items-center gap-2 cursor-pointer select-none px-5 py-3 font-bold text-gray-900 dark:text-white touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 rounded-lg">
-        <List size={18} aria-hidden="true" className="text-primary dark:text-primary-lighter" />
-        {title}
-      </summary>
       <nav aria-label={title} className="px-5 pb-4 pt-1">
         <ul className="space-y-1">
           {headings.map((heading, index) => (
@@ -68,7 +73,7 @@ const TableOfContents = ({ content, title, className }: TableOfContentsProps) =>
           ))}
         </ul>
       </nav>
-    </details>
+    </Disclosure>
   );
 };
 

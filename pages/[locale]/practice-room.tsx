@@ -1,3 +1,4 @@
+import { Badge } from '../../components/ui/Badge';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import dynamic from 'next/dynamic';
@@ -415,10 +416,9 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
             <div className="max-w-4xl mx-auto mb-12 rounded-2xl p-6 md:p-8 bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 border border-primary/20">
               <div className="flex flex-col md:flex-row items-center gap-6">
                 <div className="flex-shrink-0 text-center md:text-left">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 dark:bg-gray-800/80 text-xs font-semibold text-primary dark:text-primary-lighter mb-3">
-                    <Sparkles size={12} aria-hidden="true" />
+                  <Badge tone="brand" size="md" icon={<Sparkles size={12} aria-hidden="true" />} className="mb-3 bg-white/80 dark:bg-gray-800/80">
                     {t('practiceRoom.residentBenefits.valueSummary.eyebrow')}
-                  </span>
+                  </Badge>
                   <p className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent leading-tight">
                     {t('practiceRoom.residentBenefits.valueSummary.headline')}
                   </p>

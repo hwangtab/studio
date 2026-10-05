@@ -2,62 +2,12 @@
   "note": "파일별 위반 수. 늘면 CI 실패, 줄면 통과. 줄인 뒤 UPDATE_UI_PATTERN_BASELINE=1 로 갱신(올리는 갱신은 거부된다).",
   "updatedAt": "2026-10-04",
   "rules": {
-    "rounded-md": {
-      "components/Layout.tsx": 1,
-      "components/audio/MixComparePlayer.tsx": 1,
-      "components/layout/DesktopNav.tsx": 1,
-      "components/layout/DropdownMenu.tsx": 1,
-      "components/release/ReleaseProducerIntro.tsx": 1,
-      "components/ui/RelatedPortfolioInline.tsx": 1,
-      "components/ui/RelatedStoriesSection.tsx": 1,
-      "pages/[locale]/index.tsx": 1,
-      "pages/[locale]/portfolio/[id].tsx": 1,
-      "pages/[locale]/stories/[id].tsx": 3
-    },
-    "notice-handroll": {
-      "components/PortfolioDetailModal.tsx": 1,
-      "components/contracts/AuditTrail.tsx": 1,
-      "components/guides/HubLinkCallout.tsx": 1,
-      "components/payments/BankDepositGuide.tsx": 1,
-      "components/service/ServiceComparison.tsx": 1,
-      "pages/[locale]/contracts/[id]/complete.tsx": 1,
-      "pages/[locale]/contracts/[id]/sign.tsx": 1,
-      "pages/[locale]/lesson.tsx": 2,
-      "pages/[locale]/music-promotion.tsx": 1,
-      "pages/[locale]/stories/[id].tsx": 1
-    },
-    "badge-handroll": {
-      "components/AudioPlayer/TrackInfo.tsx": 1,
-      "components/release/ReleasePipelineCases.tsx": 1,
-      "components/ui/StatusBadge.tsx": 1,
-      "pages/[locale]/practice-room.tsx": 1,
-      "pages/[locale]/release-project/index.tsx": 1
-    },
-    "input-tint": {
-      "pages/[locale]/contracts/[id]/sign.tsx": 3
-    },
-    "raw-page-title": {
-      "pages/[locale]/shows/scan/[token].tsx": 1
-    },
-    "emoji-icon": {
-      "pages/[locale]/stories/category/[key].tsx": 1,
-      "pages/[locale]/stories/index.tsx": 1
-    },
-    "motion-copy": {
-      "components/guides/BuyerIntentHubPage.tsx": 2,
-      "components/layout/HeaderActions.tsx": 1,
-      "components/release/ReleaseHeroCtas.tsx": 2,
-      "components/shows/ShowPoster.tsx": 1,
-      "components/ui/PortfolioMiniCard.tsx": 1,
-      "components/ui/ProjectRowCard.tsx": 1,
-      "pages/[locale]/cover-video.tsx": 1,
-      "pages/[locale]/index.tsx": 3,
-      "pages/[locale]/mixing-mastering.tsx": 2,
-      "pages/[locale]/recording.tsx": 1,
-      "pages/[locale]/release-project/index.tsx": 2,
-      "pages/[locale]/studio-info.tsx": 1,
-      "pages/[locale]/voice-acting.tsx": 1,
-      "pages/[locale]/wedding-song.tsx": 1
-    }
+    "rounded-md": {},
+    "notice-handroll": {},
+    "badge-handroll": {},
+    "input-tint": {},
+    "raw-page-title": {},
+    "emoji-icon": {},
+    "motion-copy": {}
   }
 }

@@ -173,7 +173,7 @@ export default function ShowScanPage({ token, showTitle, showtimeLabel, linkLabe
           <header>
             <p className="text-sm text-gray-600">스튜디오 놀</p>
             <p className="text-sm text-gray-600">{showtimeLabel} · 담당 {linkLabel || '-'}</p>
-            <h1 className="text-xl font-bold text-gray-900">{showTitle} 입장 확인</h1>
+            <h1 className="typo-page-title dark:text-gray-900">{showTitle} 입장 확인</h1>
             {counts && <p className="mt-1 text-sm text-gray-700" aria-live="polite">입장 {counts.checkedIn} / 발권 {counts.issued}</p>}
           </header>
 

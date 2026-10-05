@@ -1,3 +1,4 @@
+import { Badge } from '../ui/Badge';
 import React, { useEffect, useState } from 'react';
 import { m } from 'framer-motion';
 import { Disc } from '@/lib/lucide-icons';
@@ -140,12 +141,12 @@ const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: Tr
                     {track.artist}
                 </m.p>
 
-                <div className="flex items-center justify-center gap-2 text-xs font-mono text-gray-500 dark:text-white/60 uppercase tracking-widest border border-gray-200 dark:border-white/5 rounded-full py-1.5 px-4 mx-auto w-fit bg-gray-50 dark:bg-white/5">
+                <Badge tone="outline" size="md" className="mx-auto flex w-fit gap-2 border-gray-200 bg-gray-50 px-4 py-1.5 font-mono font-normal uppercase tracking-widest text-gray-500 dark:border-white/5 dark:bg-white/5 dark:text-white/60">
                     <Disc size={12} aria-hidden="true" />
                     <span>{t('audioPlayer.highFidelity')}</span>
                     <span className="w-1 h-1 bg-gray-300 dark:bg-white/20 rounded-full mx-1" />
                     <span>{t('audioPlayer.trackLabel', { number: trackNumberLabel })}</span>
-                </div>
+                </Badge>
             </div>
         </div>
     );

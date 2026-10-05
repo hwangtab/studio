@@ -1,3 +1,4 @@
+import { Badge } from '../ui/Badge';
 import React from 'react';
 import Link from 'next/link';
 import { Disc, ExternalLink, ArrowRight } from '@/lib/lucide-icons';
@@ -21,9 +22,9 @@ const ReleasePipelineCases = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-4xl mx-auto" role="list">
         {cases.map((c) => (
           <div key={c.url} role="listitem" className="glass-card rounded-2xl p-6 flex flex-col">
-            <span className="self-start text-xs font-medium text-primary dark:text-primary-lighter bg-primary/10 rounded-full px-2.5 py-0.5 mb-3">
+            <Badge tone="brand" className="mb-3 self-start">
               {copy.cases.role}
-            </span>
+            </Badge>
             <h3 className="text-base font-bold text-gray-900 dark:text-white mb-3">{c.title}</h3>
             <dl className="grid grid-cols-2 gap-2 text-sm mb-5">
               <div>

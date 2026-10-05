@@ -25,6 +25,7 @@ import { normalizePageNumber } from '../../../utils/pagination';
 import { getScrollBehavior } from '../../../utils/scrollUtils';
 
 import type { NextPageWithLayout } from '../../../types';
+import { EmptyState } from '../../../components/ui/EmptyState';
 
 // 목록 페이지에 필요한 최소 필드만 포함하는 경량 Story 타입.
 // category(라벨)는 제거 — i18n 번역(stories.categories[key])으로 대체.
@@ -276,17 +277,16 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({
           </nav>
 
           {stories.length === 0 ? (
-            <div className="text-center py-16">
-              <div className="text-gray-400 text-2xl mb-4">📭</div>
-              <h2 className="typo-card-title mb-4 text-gray-800 dark:text-white">
-                {t('stories.empty.title')}
-              </h2>
-              <p className="typo-card-body">
-                {activeCategory === 'all'
+            <EmptyState
+              className="my-8"
+              titleAs="h2"
+              title={t('stories.empty.title')}
+              description={
+                activeCategory === 'all'
                   ? t('stories.empty.all')
-                  : t('stories.empty.byCategory', { category: t(`stories.categories.${activeCategory}`) })}
-              </p>
-            </div>
+                  : t('stories.empty.byCategory', { category: t(`stories.categories.${activeCategory}`) })
+              }
+            />
           ) : (
             <>
               <h2 className="sr-only">

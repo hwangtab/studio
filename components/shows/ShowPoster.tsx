@@ -11,7 +11,7 @@ export default function ShowPoster({ src, title }: { src: string; title: string 
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`${title} 포스터 원본 크게 보기`}
-      className="block overflow-hidden rounded-2xl shadow-lg ring-1 ring-gray-200 transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:ring-gray-700 dark:focus-visible:ring-primary-lighter/70 dark:focus-visible:ring-offset-gray-900"
+      className="block overflow-hidden rounded-2xl shadow-lg ring-1 ring-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:ring-gray-700 dark:focus-visible:ring-primary-lighter/70 dark:focus-visible:ring-offset-gray-900"
     >
       <Image
         src={src}

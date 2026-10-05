@@ -64,7 +64,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                                 id={`faq-button-${index}`}
                                 type="button"
                                 onClick={() => toggleAccordion(index)}
-                                className="w-full text-left px-6 py-5 flex items-center justify-between transition-colors hover:bg-gray-50 dark:hover:bg-gray-750 min-w-0 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+                                className="w-full text-left px-6 py-5 flex items-center justify-between transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 min-w-0 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
                                 aria-expanded={activeIndex === index}
                                 aria-controls={`faq-panel-${index}`}
                             >
@@ -90,7 +90,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                                 className="overflow-hidden"
                                 aria-hidden={activeIndex !== index}
                             >
-                                <div className="px-6 pb-6 pt-6 text-gray-600 dark:text-gray-400 text-lg leading-relaxed border-t border-gray-100 dark:border-gray-750">
+                                <div className="px-6 pb-6 pt-6 text-gray-600 dark:text-gray-400 text-lg leading-relaxed border-t border-gray-100 dark:border-gray-700">
                                     <PhoneAwareText text={item.answer} source="faq" />
                                 </div>
                             </m.div>

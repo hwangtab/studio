@@ -22,6 +22,7 @@ import { normalizePageNumber } from '../../../../utils/pagination';
 import { getScrollBehavior } from '../../../../utils/scrollUtils';
 
 import type { NextPageWithLayout } from '../../../../types';
+import { EmptyState } from '../../../../components/ui/EmptyState';
 
 type CategoryKey = StoryCategoryKey;
 
@@ -218,12 +219,7 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
           </div>
 
           {stories.length === 0 ? (
-            <div className="text-center py-16">
-              <div className="text-gray-400 text-2xl mb-4">📭</div>
-              <h2 className="typo-card-title mb-4">
-                {t('stories.empty.byCategory', { category: categoryLabel })}
-              </h2>
-            </div>
+            <EmptyState className="my-8" titleAs="h2" title={t('stories.empty.byCategory', { category: categoryLabel })} />
           ) : (
             <>
               <h2 className="sr-only">{categoryLabel}</h2>

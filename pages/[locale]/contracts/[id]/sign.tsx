@@ -25,6 +25,7 @@ import { expireOverdueContracts } from '../../../../lib/contracts/service';
 import { getEffectiveStatus } from '../../../../lib/contracts/status';
 import { resolveRulesContent } from '../../../../lib/contracts/template';
 import { recordContractView } from '../../../../lib/contracts/view-log';
+import { Notice } from '../../../../components/ui/Notice';
 
 /** 점 하나만 찍고 제출하는 것을 막기 위한 최소 획 점 개수. */
 const MIN_STROKE_POINTS = 12;
@@ -693,7 +694,7 @@ export default function ContractSignPage({
                     >
                       <input
                         type="checkbox"
-                        className="mt-1 h-5 w-5 rounded border-gray-300 dark:border-gray-300 text-primary focus:ring-primary"
+                        className="mt-1 h-5 w-5 shrink-0 accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary/70 focus-visible:ring-offset-white"
                         checked={agreements[clause.id] || false}
                         onChange={(e) =>
                           setAgreements((prev) => ({ ...prev, [clause.id]: e.target.checked }))
@@ -713,7 +714,7 @@ export default function ContractSignPage({
                     >
                       <input
                         type="checkbox"
-                        className="mt-1 h-5 w-5 rounded border-gray-300 dark:border-gray-300 text-primary focus:ring-primary"
+                        className="mt-1 h-5 w-5 shrink-0 accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary/70 focus-visible:ring-offset-white"
                         checked={agreements[attachment.id] || false}
                         onChange={(e) =>
                           setAgreements((prev) => ({ ...prev, [attachment.id]: e.target.checked }))
@@ -755,7 +756,7 @@ export default function ContractSignPage({
                 <label className="mt-5 flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100">
                   <input
                     type="checkbox"
-                    className="mt-1 h-5 w-5 rounded border-gray-300 dark:border-gray-300 text-primary focus:ring-primary"
+                    className="mt-1 h-5 w-5 shrink-0 accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary/70 focus-visible:ring-offset-white"
                     checked={identityConfirmed}
                     onChange={(e) => setIdentityConfirmed(e.target.checked)}
                   />
@@ -798,9 +799,9 @@ export default function ContractSignPage({
               </div>
 
               {submitError && (
-                <div className="mt-6 p-4 bg-red-50 dark:bg-red-50 text-red-700 dark:text-red-700 rounded-xl text-sm">
+                <Notice tone="error" className="mt-6 dark:border-red-200 dark:bg-red-50 dark:text-red-900">
                   {submitError}
-                </div>
+                </Notice>
               )}
 
               <div className="mt-8">

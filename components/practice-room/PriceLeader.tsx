@@ -37,10 +37,10 @@ const PriceLeader = ({
   <Section variant="default" spacing="tight">
     <div className="max-w-5xl mx-auto">
       <div className="text-center mb-8">
-        <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-primary to-secondary text-white text-sm font-semibold shadow-sm">
+        <p className="typo-eyebrow inline-flex items-center justify-center gap-1.5">
           <Trophy size={14} aria-hidden="true" />
           {eyebrow}
-        </span>
+        </p>
         <h2
           className={`text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent mt-4 mb-2 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}
         >

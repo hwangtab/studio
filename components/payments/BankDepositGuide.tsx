@@ -1,3 +1,4 @@
+import { Notice } from '../ui/Notice';
 import { useState } from 'react';
 
 import { Button } from '../ui/Button';
@@ -86,14 +87,14 @@ export default function BankDepositGuide({ amount, deadline, customerName, appli
       </div>
 
       {/* 보내는 분 이름 — 가장 눈에 띄게(2px 강조 테두리) */}
-      <div className="mt-6 rounded-xl border-2 border-primary bg-primary/5 p-5 text-center dark:border-primary-light dark:bg-primary-light/10">
-        <p className="text-lg font-bold text-primary sm:text-xl dark:text-violet-300">
+      <Notice tone="brand" icon={false} className="mt-6 block text-center">
+        <p className="text-lg font-bold text-primary sm:text-xl dark:text-primary-lighter">
           입금하실 때 보내는 분 이름은 {applicantLabel} 성함으로 해 주세요.
         </p>
         <p className="mt-1 text-base text-gray-700 dark:text-gray-300">
           {customerName}님 성함과 금액으로 입금을 확인합니다.
         </p>
-      </div>
+      </Notice>
 
       {/* 기한 — 안내일 뿐이다(자동 취소 없음). 카운트다운으로 재촉하지 않는다. */}
       <div className="mt-6 text-center">
