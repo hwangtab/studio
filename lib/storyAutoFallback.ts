@@ -1,4 +1,3 @@
-import { ARRANGEMENT_SLUG_PATTERN } from './storyCtaPolicy';
 import { isUnsupportedPracticeInstrumentSlug } from './practiceRoomInstrumentScope';
 
 /**
@@ -88,8 +87,6 @@ export const matchPricingForStory = (categoryKey: string, slug: string): string 
 
 /** 슬러그를 함께 보는 서비스 매칭. 실상권 연습실 LP는 연습실 브릿지를 받는다. */
 export const matchServiceForStory = (categoryKey: string, slug: string): string | null => {
-  // 편곡 의뢰 의도 슬러그는 카테고리(production→lesson)보다 먼저 — 하단 CTA(storyCtaPolicy)와 같은 패턴.
-  if (ARRANGEMENT_SLUG_PATTERN.test(slug)) return 'arrangement';
   // 드럼·관악기 글에는 연습실 브릿지를 넣지 않는다(연습실은 드럼·관악기 불가).
   if (isUnsupportedPracticeInstrumentSlug(slug)) return null;
   if (isPracticeRoomRegionStory(categoryKey, slug)) return 'practice';

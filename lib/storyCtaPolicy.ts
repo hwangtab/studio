@@ -11,13 +11,12 @@ interface ResolveStoryCTATypeInput {
 // 그땐 레슨이 주력 상품이 아니었다. 지금 이 주제의 짝은 1:1 프로듀싱 레슨(미디·작곡·편곡)이라
 // lesson으로 보낸다(운영자 결정 2026-09-25). 이름은 무엇을 가리키는지로 바꿨다.
 /**
- * 작곡·편곡 **의뢰** 의도 — 편곡 방법·오케스트레이션·프로듀서 협업·외주 의뢰·MR 구하기.
- * 2026-10-05 /composition-arrangement LP 신설 전까지는 이 글들도 전부 레슨으로 갔다
- * ("편곡 방법"을 찾아온 독자에게 "편곡 배우세요"만 권하고 "편곡 맡기세요"는 어디에도 없었다).
- * 작곡법·코드 진행·멜로디 쓰기처럼 **학습** 의도인 슬러그는 그대로 COMPOSITION_SLUG_PATTERN(레슨)이다.
- * 보컬 카테고리 가드는 lesson만 막는다 — 편곡 의뢰는 보컬 글에서도 유효한 상품이다.
+ * CTA 타입 `arrangement`(/composition-arrangement)는 **슬러그 자동 매칭을 하지 않는다.**
+ * 2026-10-05에 편곡 방법·오케스트레이션 글을 자동으로 편곡 의뢰로 보냈다가 같은 날 운영자 결정으로
+ * 되돌렸다 — "레슨으로 보내". 편곡 글의 독자는 레슨 매출원이고, 편곡 의뢰 동선은 frontmatter
+ * `cta: arrangement`를 적은 글(외주 의뢰 방법·MR 구하기처럼 원래 레슨으로 가지 않던 글)과
+ * 본문 가격 카드·서비스 페이지 FAQ·허브 링크로만 연다. 자동 패턴을 다시 만들지 말 것.
  */
-export const ARRANGEMENT_SLUG_PATTERN = /(^|[-_])(arrang|orchestration|beatmaker|commission|mr-guide)/i;
 const COMPOSITION_SLUG_PATTERN = /(^|[-_])(compos|songwrit|arrang|chord|midi|beatmak|producer|creative-?block|melody(?!ne)|topline)/i;
 // 프로듀싱 레슨(미디·작곡·믹싱)이 맞는 학습 주제만. 발성 항목(breath·belting·falsetto·
 // vibrato·head/chest/mix-voice·vocal-range·posture·warmup·articulation·ear/pitch/sight…)은
@@ -78,8 +77,6 @@ const resolveStoryCTATypeUnguarded = ({
 }: ResolveStoryCTATypeInput): StoryCTAOverride => {
   if (override) return override;
   if (slug.startsWith('practice-room-')) return 'practice';
-
-  if (ARRANGEMENT_SLUG_PATTERN.test(slug)) return 'arrangement';
 
   // 작곡/편곡/코드/MIDI/비트메이킹 → 프로듀싱 레슨. melody(?!ne)는 Melodyne 같은 mixing 도구를
   // 제외한다. 보컬 카테고리(topline-* 등)만은 연습실을 유지한다 — lesson을 주면 보컬 가드가

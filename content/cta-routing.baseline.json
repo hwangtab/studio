@@ -128,13 +128,13 @@
   },
   "arrangement-tips1": {
    "category": "production",
-   "cta": "arrangement",
-   "price": "arrangement-small"
+   "cta": "lesson",
+   "price": "lesson-monthly"
   },
   "arrangement1": {
    "category": "production",
-   "cta": "arrangement",
-   "price": "arrangement-small"
+   "cta": "lesson",
+   "price": "lesson-monthly"
   },
   "articulation1": {
    "category": "vocal",
@@ -238,8 +238,8 @@
   },
   "band-arrangement1": {
    "category": "production",
-   "cta": "arrangement",
-   "price": "arrangement-band"
+   "cta": "lesson",
+   "price": "lesson-monthly"
   },
   "band-recording-guide1": {
    "category": "recording",
@@ -288,8 +288,8 @@
   },
   "beatmaker1": {
    "category": "production",
-   "cta": "arrangement",
-   "price": "arrangement-band"
+   "cta": "lesson",
+   "price": null
   },
   "beatmaking1": {
    "category": "production",
@@ -338,8 +338,8 @@
   },
   "brass-arrangement1": {
    "category": "production",
-   "cta": "arrangement",
-   "price": "arrangement-large"
+   "cta": "lesson",
+   "price": "lesson-monthly"
   },
   "breath-support1": {
    "category": "vocal",
@@ -2413,8 +2413,8 @@
   },
   "midi-arrangement1": {
    "category": "production",
-   "cta": "arrangement",
-   "price": "arrangement-small"
+   "cta": "lesson",
+   "price": "lesson-monthly"
   },
   "midi-composition1": {
    "category": "production",
@@ -2963,8 +2963,8 @@
   },
   "orchestration1": {
    "category": "production",
-   "cta": "arrangement",
-   "price": "arrangement-large"
+   "cta": "lesson",
+   "price": "lesson-monthly"
   },
   "original-song1": {
    "category": "production",
@@ -7098,8 +7098,8 @@
   },
   "string-arrangement1": {
    "category": "production",
-   "cta": "arrangement",
-   "price": "arrangement-large"
+   "cta": "lesson",
+   "price": "lesson-monthly"
   },
   "strings-recording1": {
    "category": "recording",
@@ -7353,8 +7353,8 @@
   },
   "vocal-arrangement1": {
    "category": "production",
-   "cta": "arrangement",
-   "price": "arrangement-small"
+   "cta": "lesson",
+   "price": "recording-pro"
   },
   "vocal-automation1": {
    "category": "mixing",

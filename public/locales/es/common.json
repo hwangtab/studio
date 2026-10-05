@@ -2654,7 +2654,8 @@
             "Videoclip / video en vivo",
             "Honorarios de músicos de sesión (se cobra solo el costo real, sin comisión de contratación)",
             "Lanzamiento físico (CD / LP)",
-            "Presupuesto de publicidad en redes sociales"
+            "Presupuesto de publicidad en redes sociales",
+            "Arreglo (lista de composición y arreglos, desde ₩500K por canción)"
           ],
           "priceSectionTitle": "Rango de precio",
           "priceRange": "Desde aprox. ₩500K",
@@ -2671,8 +2672,8 @@
               "detail": "No incluidos en el paquete → solo se suma el costo real de los músicos (sin comisión)"
             },
             {
-              "label": "Profundidad del arreglo",
-              "detail": "Arreglo básico → banda completa·cuerdas·coro +₩500K~1.5M"
+              "label": "Arreglo",
+              "detail": "No incluido en el paquete → formación pequeña ₩500K · banda completa ₩1M · gran formación ₩1,2M (por canción, lista de composición y arreglos)"
             },
             {
               "label": "PR en medios",

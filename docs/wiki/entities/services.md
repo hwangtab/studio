@@ -129,7 +129,7 @@ related:
 |---|---|
 | 페이지 | `/ko/composition-arrangement` |
 | 범위 | 작곡(탑라인·코드·구조), 편곡(미디 → 소편성 → 풀밴드·스트링·합창), 보컬용 MR 제작, 프로듀싱(디렉팅·세션 연결·녹음~마스터링) — 한 단계만 의뢰 가능 |
-| 가격 | **정본 상수 있음**(`data/pricing.ts`, 2026-10-05 신설, 곡당·부가세 별도·수정 2회): 작곡 500,000원(`COMPOSITION_PRICE`) · 소편성 편곡(10트랙 이하) 500,000원(`ARRANGEMENT_SMALL_PRICE`) · 풀밴드 편곡(11~30트랙) 1,000,000원(`ARRANGEMENT_BAND_PRICE`) · 대편성 편곡(31트랙 이상, 스트링·브라스·합창, 악보 포함) 2,000,000원(`ARRANGEMENT_LARGE_PRICE`) · 맞춤 MR(기존 곡, 축가·행사·커버) 200,000원(`CUSTOM_MR_PRICE`). 등급은 믹싱과 같은 트랙 수. 풀밴드 +50만·대편성 +150만은 발매 싱글 페이지의 "편곡 깊이 +50~150만원"과 같은 증분. 오퍼 id `composition-song`·`arrangement-small/band/large`·`custom-mr`(`arrangementOffers`) |
+| 가격 | **정본 상수 있음**(`data/pricing.ts`, 2026-10-05 신설, 곡당·부가세 별도·수정 2회): 작곡 500,000원(`COMPOSITION_PRICE`) · 소편성 편곡(10트랙 이하) 500,000원(`ARRANGEMENT_SMALL_PRICE`) · 풀밴드 편곡(11~30트랙) 1,000,000원(`ARRANGEMENT_BAND_PRICE`) · 대편성 편곡(31트랙 이상, 스트링·브라스·합창, 악보 포함) 1,200,000원(`ARRANGEMENT_LARGE_PRICE`, 시장가 80~150만 아래로 할인 — 운영자 결정 2026-10-05) · 맞춤 MR(기존 곡, 축가·행사·커버) 200,000원(`CUSTOM_MR_PRICE`). 등급은 믹싱과 같은 트랙 수. 풀밴드 +50만. 싱글·EP·정규 번들에 편곡은 **없다**(운영자 확인 2026-10-05) — 발매 싱글 페이지 번들 미포함 목록과 편곡 항목이 이 정가를 말한다. 오퍼 id `composition-song`·`arrangement-small/band/large`·`custom-mr`(`arrangementOffers`) |
 | 세션 | 연주자 실비만, 섭외 수수료 없음(2026-09-26 운영자 결정과 동일) |
 | 수정 | 구조·키·템포·편성은 1차 데모에서 확정. 합의 범위 안 부분 수정은 횟수 미계수, 전체 재편곡은 재견적 |
 | 납품 | MR WAV 24bit/48kHz, 악기별 스템, 보컬 가이드 데모, 세션 파일은 사전 합의 시 |

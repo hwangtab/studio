@@ -2654,7 +2654,8 @@
             "Musiqa videosi / jonli video",
             "Sessiya musiqachilari haqi (faqat haqiqiy xarajat, vositachilik haqisiz)",
             "Jismoniy chiqarish (CD / LP)",
-            "SMM reklama byudjeti"
+            "SMM reklama byudjeti",
+            "Aranjirovka (kompozitsiya va aranjirovka narxlari bo'yicha, har qo'shiq ₩500K dan)"
           ],
           "priceSectionTitle": "Narx oralig'i",
           "priceRange": "Taxminan ₩500K dan",
@@ -2671,8 +2672,8 @@
               "detail": "Paketga kirmaydi → faqat musiqachilarning haqiqiy haqi qo‘shiladi (vositachilik haqisiz)"
             },
             {
-              "label": "Aranjirovka chuqurligi",
-              "detail": "Asosiy aranjirovka → to‘liq guruh·simlar·xor +₩500K~1.5M"
+              "label": "Aranjirovka",
+              "detail": "Paketga aranjirovka kirmaydi → kichik tarkib ₩500K · to'liq guruh ₩1M · katta tarkib ₩1,2M (kompozitsiya va aranjirovka narxlari bo'yicha, har qo'shiq)"
             },
             {
               "label": "Media PR",
