@@ -1014,6 +1014,14 @@
         "primaryText": "Xem dự án phát hành",
         "secondaryText": "Đăng ký tư vấn",
         "visualText": "Dự án phát hành"
+      },
+      "arrangement": {
+        "title": "Muốn giao phần phối khí hoặc nhạc nền cho chúng tôi?",
+        "descriptionLine1": "Phối khí từ {{small}}, nhạc nền đặt riêng cho bài có sẵn {{mr}} — giá cố định theo bài, nhạc công tính phí thực.",
+        "descriptionLine2": "Chỉ cần một giai điệu. Producer 15 năm kinh nghiệm hoàn thiện thành bài sẵn sàng phát hành.",
+        "primaryText": "Xem sáng tác & hòa âm",
+        "secondaryText": "Liên hệ",
+        "visualText": "Sáng tác & Hòa âm"
       }
     },
     "detail": {
@@ -1233,7 +1241,7 @@
         },
         {
           "q": "Cần tự chuẩn bị nhạc đệm (MR) không?",
-          "a": "Có, vui lòng mang file MR theo. Nếu chưa có, chúng tôi có thể sản xuất thêm với chi phí phát sinh."
+          "a": "Có, hãy chuẩn bị sẵn file nhạc nền. Nếu chưa có, chúng tôi làm nhạc nền riêng theo tông, tempo và độ dài bạn cần với giá {{mr}} (xem trang sáng tác & hòa âm). Khi đặt lịch chỉ cần cho biết tên bài và tông."
         },
         {
           "q": "2 giờ thu âm có đủ không?",
@@ -1391,7 +1399,7 @@
         },
         {
           "q": "Chuẩn bị beat (MR) thế nào?",
-          "a": "Mang theo file MR / instrumental của bạn. Nếu chưa có hoặc cần phối khí, hãy nói khi tư vấn và chúng tôi sẽ cùng tìm cách."
+          "a": "Mang theo nhạc nền hoặc instrumental bạn có. Nếu chưa có, nhạc nền đặt riêng cho bài có sẵn là {{mr}}, phối khí bài gốc từ {{small}} mỗi bài (xem trang sáng tác & hòa âm). Người phối cũng chỉ đạo thu âm nên ý đồ bài hát được giữ nguyên."
         },
         {
           "q": "Sau khi thu có mix và master được không?",
@@ -1656,6 +1664,10 @@
         {
           "q": "Có tùy chọn làm gấp không?",
           "a": "Không có tùy chọn làm gấp riêng. Thời gian giao là 3–7 ngày làm việc kể từ khi nhận file. Nếu đã có ngày phát hành, hãy báo khi liên hệ để chúng tôi xác nhận trước là có kịp hay không."
+        },
+        {
+          "q": "Có thể giao cả phần phối khí không?",
+          "a": "Có. Phối khí tính theo bài với cùng hạng số track như mix: ≤10 track {{small}} · 11–30 track {{band}} · 31+ track {{large}}. Vì cùng hạng nên bạn cộng trước được cả hai, và người phối cũng mix. Chi tiết ở trang sáng tác & hòa âm."
         }
       ]
     },
@@ -2456,7 +2468,7 @@
         },
         {
           "q": "Có cần mang MR (nhạc nền) không?",
-          "a": "Có, hãy mang file MR của bạn. Sản xuất MR tùy chỉnh cũng có thể thực hiện khi tư vấn."
+          "a": "Có, hãy chuẩn bị sẵn file nhạc nền. Nếu chưa có, chúng tôi làm nhạc nền riêng theo tông và tempo bạn cần với giá {{mr}} (xem trang sáng tác & hòa âm)."
         },
         {
           "q": "Phông nền quay như thế nào?",

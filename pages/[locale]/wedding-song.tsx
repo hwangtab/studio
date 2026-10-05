@@ -26,7 +26,13 @@ const HubLinkCallout = dynamic(() => import('../../components/guides/HubLinkCall
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
-import { getPricingData, WEDDING_PACKAGE_PRICE } from '../../data/pricing';
+import { getPricingData, WEDDING_PACKAGE_PRICE,
+  formatPriceLabel,
+  CUSTOM_MR_PRICE,
+  ARRANGEMENT_SMALL_PRICE,
+  ARRANGEMENT_BAND_PRICE,
+  ARRANGEMENT_LARGE_PRICE,
+} from '../../data/pricing';
 import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
 import type { StoryCardData } from '../../types/story';
 import { buildSchemaGraph, buildStudioServiceSchema } from '../../lib/studioServiceSchema';
@@ -49,6 +55,17 @@ const PROCESS_ANIMATION = createFadeInAnimation();
 
 const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
+  // FAQ가 작곡·편곡 정가({{mr}}·{{small}}·{{band}}·{{large}})를 말한다 — 금액은 상수 보간(2026-10-05).
+  const priceVars = React.useMemo(
+    () => ({
+      mr: formatPriceLabel(CUSTOM_MR_PRICE, locale),
+      small: formatPriceLabel(ARRANGEMENT_SMALL_PRICE, locale),
+      band: formatPriceLabel(ARRANGEMENT_BAND_PRICE, locale),
+      large: formatPriceLabel(ARRANGEMENT_LARGE_PRICE, locale),
+    }),
+    [locale]
+  );
+  const tPrice = React.useCallback((key: string) => t(key, priceVars), [t, priceVars]);
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
 
   const weddingPackage = React.useMemo(
@@ -62,8 +79,8 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
   );
 
   const faqItems = React.useMemo(
-    () => createTranslatedQaItems(t, 'weddingSong.faq.items', 9),
-    [t]
+    () => createTranslatedQaItems(tPrice, 'weddingSong.faq.items', 9),
+    [tPrice]
   );
 
   const howToSteps = React.useMemo(
@@ -353,6 +370,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
       <ServiceQuickLinksSection
         variant="default"
         links={[
+          { href: `/${locale}/composition-arrangement`, label: t('nav.compositionArrangement'), color: 'primary' },
           { href: `/${locale}/pricing`, label: t('nav.pricing'), color: 'primary' },
           { href: `/${locale}/studio-info`, label: t('nav.equipment'), color: 'secondary' },
           { href: `/${locale}/voice-acting`, label: t('nav.voiceActing'), color: 'accent' },

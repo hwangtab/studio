@@ -2,14 +2,15 @@ import React, { useRef } from 'react';
 import Link from 'next/link';
 import { m, useInView } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { ArrowRight, Music, Mic2, Settings, BookOpen, GraduationCap, Lightbulb, MapPin, Speaker, Clock, Disc, Send, Globe } from '@/lib/lucide-icons';
+import { ArrowRight, Music, Mic2, Settings, BookOpen, GraduationCap, Lightbulb, MapPin, Speaker, Clock, Disc, Send, Globe, Piano, Layers } from '@/lib/lucide-icons';
+import { ARRANGEMENT_SMALL_PRICE, CUSTOM_MR_PRICE, formatPriceLabel } from '../data/pricing';
 import { createInViewEnterAnimation } from '../utils/animationUtils';
 import { trackMicroEvent } from '../utils/analytics';
 
 
 import type { Locale } from '../lib/i18n';
 
-export type CTAType = 'recording' | 'lesson' | 'practice' | 'production' | 'release';
+export type CTAType = 'recording' | 'lesson' | 'practice' | 'production' | 'release' | 'arrangement';
 
 interface StoryCTAProps {
     type?: CTAType;
@@ -180,6 +181,38 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
             secondaryText: t('stories.cta.release.secondaryText'),
             visualText: t('stories.cta.release.visualText'),
             visualGradient: 'from-red-500 to-purple-400',
+        },
+        arrangement: {
+            gradient: 'from-fuchsia-900 to-violet-900',
+            accentColor: 'text-fuchsia-200',
+            accentBg: 'bg-fuchsia-200',
+            buttonBg: 'bg-white text-fuchsia-900 hover:bg-fuchsia-50',
+            secondaryButtonBg: 'bg-violet-700/50 text-white hover:bg-violet-700/70 border-violet-500/30',
+            icons: (
+                <>
+                    <Piano size={20} />
+                    <span className="w-1 h-1 bg-fuchsia-200 rounded-full" />
+                    <Layers size={20} />
+                    <span className="w-1 h-1 bg-fuchsia-200 rounded-full" />
+                    <Music size={20} />
+                </>
+            ),
+            title: t('stories.cta.arrangement.title'),
+            // 금액은 상수 보간 — common.json에 숫자를 박지 않는다(가격 드리프트 방지).
+            description: (
+                <>
+                    <span className="block">{t('stories.cta.arrangement.descriptionLine1', { small: formatPriceLabel(ARRANGEMENT_SMALL_PRICE, locale), mr: formatPriceLabel(CUSTOM_MR_PRICE, locale) })}</span>
+                    <span className="block">{t('stories.cta.arrangement.descriptionLine2')}</span>
+                </>
+            ),
+            // 편곡 방법·오케스트레이션·프로듀서 협업·외주 의뢰·MR 구하기 글의 독자 — "배우기"가 아니라
+            // "맡기기" 의도. 2026-10-05 /composition-arrangement 신설 전엔 이 글들이 전부 /lesson으로 갔다.
+            primaryLink: getLink('/composition-arrangement'),
+            primaryText: t('stories.cta.arrangement.primaryText'),
+            secondaryLink: getLink('/contact'),
+            secondaryText: t('stories.cta.arrangement.secondaryText'),
+            visualText: t('stories.cta.arrangement.visualText'),
+            visualGradient: 'from-fuchsia-500 to-violet-400',
         }
     };
 

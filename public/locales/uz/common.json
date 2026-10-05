@@ -1014,6 +1014,14 @@
         "primaryText": "Reliz loyihasini ko'rish",
         "secondaryText": "Maslahat so'rash",
         "visualText": "Reliz loyihasi"
+      },
+      "arrangement": {
+        "title": "Aranjirovka yoki fonogrammani bizga topshirasizmi?",
+        "descriptionLine1": "Aranjirovka {{small}} dan, mavjud qo'shiq uchun maxsus fonogramma {{mr}} — har qo'shiq uchun qat'iy narx, musiqachilar haqiqiy xarajat bo'yicha.",
+        "descriptionLine2": "Bitta melodiya yetarli. 15 yillik prodyuser uni relizga tayyor qo'shiqqa aylantiradi.",
+        "primaryText": "Kompozitsiya va aranjirovkani ko'rish",
+        "secondaryText": "Bog'lanish",
+        "visualText": "Kompozitsiya va aranjirovka"
       }
     },
     "detail": {
@@ -1233,7 +1241,7 @@
         },
         {
           "q": "Jo'rnavoz (MR) faylni o'zim olib kelishim kerakmi?",
-          "a": "Ha, MR faylingizni olib keling. Agar yo'q bo'lsa, qo'shimcha to'lov evaziga alohida tayyorlab beramiz."
+          "a": "Ha, fonogramma faylini oldindan tayyorlab keling. Bo'lmasa, kerakli tonallik, temp va uzunlikda maxsus fonogrammani {{mr}} ga tayyorlaymiz (kompozitsiya va aranjirovka sahifasiga qarang). Band qilishda qo'shiq nomi va tonallikni ayting."
         },
         {
           "q": "2 soat yozuv vaqti yetarlimi?",
@@ -1391,7 +1399,7 @@
         },
         {
           "q": "Minus (MR) trackni qanday tayyorlayman?",
-          "a": "O'zingizdagi MR / instrumental faylni olib keling. Agar bo'lmasa yoki aranjirovka kerak bo'lsa, maslahat vaqtida ayting, birga yechim topamiz."
+          "a": "Mavjud fonogramma yoki instrumental faylini olib keling. Bo'lmasa, mavjud qo'shiq uchun maxsus fonogramma {{mr}}, original qo'shiq aranjirovkasi har qo'shiq uchun {{small}} dan (kompozitsiya va aranjirovka sahifasiga qarang). Aranjirovka qilgan odam yozuvni ham boshqaradi, shuning uchun g'oya saqlanadi."
         },
         {
           "q": "Yozuvdan keyin miks va mastering ham bo'ladimi?",
@@ -1656,6 +1664,10 @@
         {
           "q": "Tezkor variant bormi?",
           "a": "Alohida tezkor variant yo'q. Fayllarni olganimizdan keyin 3–7 ish kuni ichida topshiramiz. Chiqish sanasi belgilangan bo'lsa, murojaat qilganingizda ayting — avval ulgurish mumkinligini tasdiqlaymiz."
+        },
+        {
+          "q": "Aranjirovkani ham birga topshirsa bo'ladimi?",
+          "a": "Ha. Aranjirovka miks bilan bir xil trek darajalarida har qo'shiq uchun hisoblanadi: ≤10 trek {{small}} · 11–30 trek {{band}} · 31+ trek {{large}}. Darajalar mos kelgani uchun ikkalasini oldindan qo'shish mumkin, aranjirovka qilgan odam miksni ham qiladi. Tafsilotlar kompozitsiya va aranjirovka sahifasida."
         }
       ]
     },
@@ -2456,7 +2468,7 @@
         },
         {
           "q": "MR (jo'r bo'lish treki) olib kelish kerakmi?",
-          "a": "Ha, MR faylingizni olib keling. Maxsus MR ishlab chiqarish ham mavjud — maslahat vaqtida aytib qo'ying."
+          "a": "Ha, fonogramma faylini oldindan tayyorlab keling. Bo'lmasa, kerakli tonallik va tempda maxsus fonogrammani {{mr}} ga tayyorlaymiz (kompozitsiya va aranjirovka sahifasiga qarang)."
         },
         {
           "q": "Suratga olish foni qanday?",

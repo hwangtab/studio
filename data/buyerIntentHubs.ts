@@ -547,7 +547,8 @@ export const buyerIntentHubs: Record<BuyerIntentHubSlug, BuyerIntentHub> = {
     },
     portfolioCategory: 'all',
     primaryServiceLink: 'release-project',
-    secondaryServiceLink: 'pricing',
+    // 2026-10-05: 자작곡 발매 가이드의 보조 동선은 가격표보다 "편곡부터 맡기기"가 맞다.
+    secondaryServiceLink: 'composition-arrangement',
   },
 };
 

@@ -128,13 +128,13 @@
   },
   "arrangement-tips1": {
    "category": "production",
-   "cta": "lesson",
-   "price": "lesson-monthly"
+   "cta": "arrangement",
+   "price": "arrangement-small"
   },
   "arrangement1": {
    "category": "production",
-   "cta": "lesson",
-   "price": "lesson-monthly"
+   "cta": "arrangement",
+   "price": "arrangement-small"
   },
   "articulation1": {
    "category": "vocal",
@@ -238,8 +238,8 @@
   },
   "band-arrangement1": {
    "category": "production",
-   "cta": "lesson",
-   "price": "lesson-monthly"
+   "cta": "arrangement",
+   "price": "arrangement-band"
   },
   "band-recording-guide1": {
    "category": "recording",
@@ -288,8 +288,8 @@
   },
   "beatmaker1": {
    "category": "production",
-   "cta": "lesson",
-   "price": null
+   "cta": "arrangement",
+   "price": "arrangement-band"
   },
   "beatmaking1": {
    "category": "production",
@@ -338,8 +338,8 @@
   },
   "brass-arrangement1": {
    "category": "production",
-   "cta": "lesson",
-   "price": "lesson-monthly"
+   "cta": "arrangement",
+   "price": "arrangement-large"
   },
   "breath-support1": {
    "category": "vocal",
@@ -628,8 +628,8 @@
   },
   "commission1": {
    "category": "recording",
-   "cta": "recording",
-   "price": "recording-pro"
+   "cta": "arrangement",
+   "price": "arrangement-small"
   },
   "comp1176": {
    "category": "mixing",
@@ -2413,8 +2413,8 @@
   },
   "midi-arrangement1": {
    "category": "production",
-   "cta": "lesson",
-   "price": "lesson-monthly"
+   "cta": "arrangement",
+   "price": "arrangement-small"
   },
   "midi-composition1": {
    "category": "production",
@@ -2663,8 +2663,8 @@
   },
   "mr-guide1": {
    "category": "recording",
-   "cta": "recording",
-   "price": "recording-pro"
+   "cta": "arrangement",
+   "price": "custom-mr"
   },
   "muan1": {
    "category": "region",
@@ -2963,8 +2963,8 @@
   },
   "orchestration1": {
    "category": "production",
-   "cta": "lesson",
-   "price": "lesson-monthly"
+   "cta": "arrangement",
+   "price": "arrangement-large"
   },
   "original-song1": {
    "category": "production",
@@ -7098,8 +7098,8 @@
   },
   "string-arrangement1": {
    "category": "production",
-   "cta": "lesson",
-   "price": "lesson-monthly"
+   "cta": "arrangement",
+   "price": "arrangement-large"
   },
   "strings-recording1": {
    "category": "recording",
@@ -7353,8 +7353,8 @@
   },
   "vocal-arrangement1": {
    "category": "production",
-   "cta": "lesson",
-   "price": "recording-pro"
+   "cta": "arrangement",
+   "price": "arrangement-small"
   },
   "vocal-automation1": {
    "category": "mixing",

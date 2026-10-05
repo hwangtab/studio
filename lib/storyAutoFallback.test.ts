@@ -70,6 +70,12 @@ describe('matchServiceForCategory', () => {
   });
 
   // 2026-07-25 의도 재매칭(레버 4): 정보성 학습·비즈니스 트래픽을 의도 맞춤 서비스로.
+  it('편곡 의뢰 슬러그는 카테고리와 무관하게 arrangement 서비스 콜아웃 (2026-10-05)', () => {
+    expect(matchServiceForStory('production', 'arrangement1')).toBe('arrangement');
+    expect(matchServiceForStory('recording', 'mr-guide1')).toBe('arrangement');
+    expect(matchServiceForStory('production', 'chord-progression1')).toBe('lesson');
+  });
+
   it('production → lesson (제작 학습자 → 프로듀싱 레슨)', () => {
     expect(matchServiceForCategory('production')).toBe('lesson');
   });
