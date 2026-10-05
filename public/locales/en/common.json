@@ -2682,7 +2682,8 @@
             "Music video / live video",
             "Session musician fees (passed through at actual cost, no booking fee)",
             "Physical release (CD / LP)",
-            "SNS advertising budget"
+            "SNS advertising budget",
+            "Arrangement (composition & arrangement price list, from ₩500K per song)"
           ],
           "priceSectionTitle": "Price Range",
           "priceRange": "From approx. ₩500K",
@@ -2699,8 +2700,8 @@
               "detail": "Not included in the bundle → only the musicians' actual fees are added (no booking fee)"
             },
             {
-              "label": "Arrangement depth",
-              "detail": "Basic arrangement → full band · strings · choir +₩500K–1.5M"
+              "label": "Arrangement",
+              "detail": "Not in the bundle → small ensemble ₩500K · full band ₩1M · large ensemble ₩1.2M (per song, composition & arrangement price list)"
             },
             {
               "label": "Media PR",

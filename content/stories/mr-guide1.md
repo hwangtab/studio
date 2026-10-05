@@ -35,6 +35,7 @@ faq:
       사용합니다. 단, 대부분의 경우 MR을 들으며 노래하는 것이 감정 표현과 박자에 유리합니다.
 inlineFallback:
   price: custom-mr
+cta: arrangement
 ---
 ![MR 구하는 방법 — 스튜디오 놀](/images/hardware5.webp)
 

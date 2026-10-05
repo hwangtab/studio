@@ -122,14 +122,16 @@ describe('가격 SSOT 정합', () => {
     expect(byId.get('mixing-level3')).toBe(MIXING_LEVEL3_PRICE);
     expect(byId.get('mastering-single')).toBe(MASTERING_SINGLE_PRICE);
     expect(byId.get('mastering-package')).toBe(MASTERING_PACKAGE_PRICE);
-    // 작곡·편곡·MR (2026-10-05) — 등급은 믹싱과 같은 트랙 수, 증분은 발매 싱글 페이지의 +50~150만원
+    // 작곡·편곡·MR (2026-10-05) — 등급은 믹싱과 같은 트랙 수
     expect(byId.get('composition-song')).toBe(COMPOSITION_PRICE);
     expect(byId.get('arrangement-small')).toBe(ARRANGEMENT_SMALL_PRICE);
     expect(byId.get('arrangement-band')).toBe(ARRANGEMENT_BAND_PRICE);
     expect(byId.get('arrangement-large')).toBe(ARRANGEMENT_LARGE_PRICE);
     expect(byId.get('custom-mr')).toBe(CUSTOM_MR_PRICE);
     expect(ARRANGEMENT_BAND_PRICE - ARRANGEMENT_SMALL_PRICE).toBe(500000);
-    expect(ARRANGEMENT_LARGE_PRICE - ARRANGEMENT_SMALL_PRICE).toBe(1500000);
+    // 대편성은 시장가(80~150만) 아래로 할인 — 풀밴드보다는 비싸고 150만 미만(운영자 결정 2026-10-05)
+    expect(ARRANGEMENT_LARGE_PRICE).toBeGreaterThan(ARRANGEMENT_BAND_PRICE);
+    expect(ARRANGEMENT_LARGE_PRICE).toBeLessThan(1500000);
     expect(byId.get('package-wedding')).toBe(WEDDING_PACKAGE_PRICE);
     expect(byId.get('package-single-bundle')).toBe(SINGLE_BUNDLE_PRICE);
     expect(byId.get('package-ep-bundle')).toBe(EP_BUNDLE_PRICE);

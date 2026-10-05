@@ -34,6 +34,7 @@ faq:
       잔금을 지급하는 것이 안전합니다. 작업 범위·수정 횟수·납기일을 문서로 명확히 합의하세요.
 inlineFallback:
   price: arrangement-small
+cta: arrangement
 ---
 ![음악 작업 의뢰 — 스튜디오 놀](/images/service1.webp)
 

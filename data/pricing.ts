@@ -46,8 +46,10 @@ export const RENTAL_HOURLY_PRICE = 100000; // 촬영 대관
 // 작곡·편곡·MR 제작 정가 (2026-10-05 신설). 사이트 안의 기존 숫자에서 끌어냈다:
 //   - 등급은 믹싱과 같은 **트랙 수**로 가른다(10트랙 이하 / 11~30 / 31트랙 이상) — 편곡 등급이
 //     곧 믹싱 등급이라 고객이 두 번 셀 필요가 없다.
-//   - 풀밴드 = 소편성 + 0.5M, 대편성(스트링·합창) = 소편성 + 1.5M — 발매 프로젝트 싱글 페이지가
-//     먼저 공개한 "편곡 깊이: 기본 편곡 → 풀밴드·스트링·합창 +0.5~1.5M"과 같은 증분이다.
+//   - 풀밴드 = 소편성 + 0.5M. 대편성은 처음 소편성 + 1.5M(발매 싱글 페이지의 옛 "+0.5~1.5M" 증분)로 뒀다가
+//     운영자 결정(2026-10-05)으로 **시장가보다 낮게** 1.2M으로 — 전문 편곡 시세가 곡당 0.8~1.5M+라
+//     그 상한 아래, 풀밴드 +0.2M. 발매 싱글 페이지의 편곡 항목은 이 정가를 그대로 말한다.
+//   - 싱글·EP·정규 번들에 편곡은 **들어 있지 않다**(운영자 확인 2026-10-05) — 번들 미포함 목록에 적고, 이 정가를 따른다.
 //   - 소편성·작곡은 싱글 번들(SINGLE_BUNDLE_PRICE)과 같은 금액 — "곡 하나의 뼈대"가
 //     "곡 하나의 완성(녹음·믹싱·마스터링·유통·홍보)"과 같은 값.
 //   - 맞춤 MR은 10트랙 이하 믹싱(MIXING_LEVEL1_PRICE)과 같은 금액. 축가 패키지(WEDDING_PACKAGE_PRICE)와
@@ -57,7 +59,7 @@ export const RENTAL_HOURLY_PRICE = 100000; // 촬영 대관
 export const COMPOSITION_PRICE = 500000;       // 작곡: 탑라인·코드·곡 구조 + 가이드 데모
 export const ARRANGEMENT_SMALL_PRICE = 500000; // 소편성 편곡 (10트랙 이하, 가상악기)
 export const ARRANGEMENT_BAND_PRICE = 1000000; // 풀밴드 편곡 (11~30트랙)
-export const ARRANGEMENT_LARGE_PRICE = 2000000; // 대편성 편곡 (31트랙 이상, 스트링·브라스·합창)
+export const ARRANGEMENT_LARGE_PRICE = 1200000; // 대편성 편곡 (31트랙 이상, 스트링·브라스·합창) — 시장가(0.8~1.5M+) 아래로 할인
 export const CUSTOM_MR_PRICE = 200000;         // 맞춤 MR (기존 곡 키·템포·길이 맞춤, 축가·행사·커버)
 /**
  * 음악연습실 시간제 — **소비자가 6,600원, VAT 포함.** 다른 상수는 전부 VAT 별도인데 이것만
@@ -564,7 +566,7 @@ export const getPricingData = (locale: Locale) => {
       id: 'arrangement-large',
       title: t(locale, { ko: '대편성 편곡', en: 'Large-Ensemble Arrangement', zh: '大编制编曲', es: 'Arreglo de Gran Formación', vi: 'Phối khí biên chế lớn', th: 'เรียบเรียงวงใหญ่', uz: 'Katta tarkib aranjirovkasi' }),
       subtitle: t(locale, { ko: '31트랙 이상 · 스트링·브라스·합창', en: '31+ tracks · strings, brass, choir', zh: '31轨以上 · 弦乐·铜管·合唱', es: '31+ pistas · cuerdas, metales, coro', vi: '31+ track · dàn dây, kèn, hợp xướng', th: '31+ แทร็ก · เครื่องสาย เครื่องเป่า คอรัส', uz: "31+ trek · torli, puflama, xor" }),
-      priceDisplay: t(locale, { ko: '2,000,000원', en: '₩2,000,000', zh: '₩2,000,000', es: '₩2,000,000', vi: '₩2,000,000', th: '₩2,000,000', uz: '₩2,000,000' }),
+      priceDisplay: t(locale, { ko: '1,200,000원', en: '₩1,200,000', zh: '₩1,200,000', es: '₩1,200,000', vi: '₩1,200,000', th: '₩1,200,000', uz: '₩1,200,000' }),
       priceValue: ARRANGEMENT_LARGE_PRICE,
       unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: "/ qo'shiq" }),
       description: t(locale, {
