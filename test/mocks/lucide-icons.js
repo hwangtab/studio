@@ -10,6 +10,10 @@ const MockIcon = React.forwardRef(function MockIcon(props, ref) {
 });
 
 const iconNames = [
+  'XCircle',
+  'Inbox',
+  'AlertTriangle',
+  'AlertCircle',
   'Activity',
   'ArrowLeft',
   'ArrowRight',

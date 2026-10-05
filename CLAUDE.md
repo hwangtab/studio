@@ -647,6 +647,20 @@ GSC > 상단 URL 검사창에 URL 입력 → "색인 생성 요청". 브라우�
 동시에 viewport에 들어와, 폴백 페이지의 온디맨드 생성을 무더기로 유발한다.
 `StoryCard`·`StoryCTA`와 같은 판단이며 hover/focus prefetch는 유지된다.
 
+## 중간 계층 UI 프리미티브와 기준선 가드 (2026-10-05)
+
+고르는 항목·안내 박스·배지·거래 화면 머리·단계·금액 요약·결과 카드·모달·빈 상태·접기는
+`components/ui/`의 `ChoiceCard`·`Checkbox`·`Notice`·`Panel`·`Badge`·`PageHeader`·`Stepper`·
+`PriceSummary`·`ResultCard`·`Modal`·`EmptyState`·`Disclosure`를 쓴다 — 손으로 다시 짜지 않는다.
+규칙은 `docs/design-system.md` §3·§4, 배경과 순서는 `docs/design-ui-refinement-plan-2026-10.md`.
+
+`components/ui/uiPatterns.baseline.test.ts`가 7종 패턴(`rounded-md`·상태 박스 손조립·배지 손조립·
+라디오/체크박스 `accent-primary` 누락·원시 h1·이모지 아이콘·hover 모션 복제)을 **파일별 기준선
+대비**로 본다. 늘면 CI가 서고, 줄면 통과한다. 줄인 뒤에만
+`UPDATE_UI_PATTERN_BASELINE=1 npx jest components/ui/uiPatterns.baseline.test.ts`로 기준선을 내린다
+(올리는 갱신은 거부된다). 공용 CTA·카드(`Button`·`BaseCard`·`PricingCard`·카카오 버튼·`StoryCTA`)는
+전환 실험 때문에 **2026-10-13까지 수정 금지**이고, 측정 중 LP는 `node scripts/seo-preflight.mjs`로 확인한다.
+
 ## Liquid Glass 재질 시스템 (디자인 리뉴얼)
 
 iOS 26 리퀴드 글래스 스타일 리뉴얼의 재질 레이어. **성능 예산제**로 운영한다 —

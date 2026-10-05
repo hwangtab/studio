@@ -1,6 +1,7 @@
 export type { LucideIcon } from 'lucide-react';
-
 export { default as Activity } from 'lucide-react/dist/esm/icons/activity.js';
+export { default as AlertCircle } from 'lucide-react/dist/esm/icons/alert-circle.js';
+export { default as AlertTriangle } from 'lucide-react/dist/esm/icons/alert-triangle.js';
 export { default as ArrowLeft } from 'lucide-react/dist/esm/icons/arrow-left.js';
 export { default as ArrowRight } from 'lucide-react/dist/esm/icons/arrow-right.js';
 export { default as ArrowRightLeft } from 'lucide-react/dist/esm/icons/arrow-right-left.js';
@@ -35,6 +36,7 @@ export { default as HandCoins } from 'lucide-react/dist/esm/icons/hand-coins.js'
 export { default as Headphones } from 'lucide-react/dist/esm/icons/headphones.js';
 export { default as Heart } from 'lucide-react/dist/esm/icons/heart.js';
 export { default as HelpCircle } from 'lucide-react/dist/esm/icons/help-circle.js';
+export { default as Inbox } from 'lucide-react/dist/esm/icons/inbox.js';
 export { default as Info } from 'lucide-react/dist/esm/icons/info.js';
 export { default as Laptop } from 'lucide-react/dist/esm/icons/laptop.js';
 export { default as Layers } from 'lucide-react/dist/esm/icons/layers.js';
@@ -92,4 +94,5 @@ export { default as Wallet } from 'lucide-react/dist/esm/icons/wallet.js';
 export { default as Wind } from 'lucide-react/dist/esm/icons/wind.js';
 export { default as Wrench } from 'lucide-react/dist/esm/icons/wrench.js';
 export { default as X } from 'lucide-react/dist/esm/icons/x.js';
+export { default as XCircle } from 'lucide-react/dist/esm/icons/x-circle.js';
 export { default as Zap } from 'lucide-react/dist/esm/icons/zap.js';
