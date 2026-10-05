@@ -26,6 +26,7 @@
     "weddingSong": "To'y qo'shig'i",
     "voiceActing": "Ovoz yozish",
     "coverVideo": "Cover video suratga olish",
+    "compositionArrangement": "Kompozitsiya va aranjirovka",
     "musicPromotion": "Reliz press-kampaniyasi",
     "crowdfundingDesign": "Crowdfunding dizayni",
     "releaseProject": "Reliz loyihasi",
@@ -2157,6 +2158,202 @@
     "hubCallout": {
       "title": "Audiokitob · ASMR · Naratsiya birinchi urinish — To'liq qo'llanma",
       "subtitle": "Matn tayyorlashdan yozuv, tahrirlash, mastering va tarqatishgacha — bir sahifadan boshlang."
+    }
+  },
+  "compositionArrangement": {
+    "seo": {
+      "title": "Kompozitsiya va aranjirovka buyurtmasi — MR/fonogramma, MIDI aranjirovka, prodyuserlik | Studio NOL",
+      "description": "Bitta melodiya yetarli. Kompozitsiya, aranjirovka, fonogramma (MR) tayyorlash va MIDI prodyuserlikni 15 yillik relizlar tajribasiga ega prodyuser o'zi bajaradi; kerak bo'lsa yozuv, miks va relizni ham shu jamoa davom ettiradi. Bepul maslahat, har bir qo'shiq uchun alohida narx.",
+      "keywords": "kompozitsiya buyurtmasi, aranjirovka xizmati, fonogramma tayyorlash, MIDI aranjirovka, Seul musiqa prodyuserligi, qo'shiq aranjirovkasi, topline yozish, bit tayyorlash, demo aranjirovka, aranjirovka narxi, prodyuser yollash"
+    },
+    "hero": {
+      "title": "Kompozitsiya, aranjirovka va prodyuserlik — bitta melodiya yetarli",
+      "subtitleLine1": "Xirgoyi qilingan melodiya, bir necha gitara akkordi, hatto AI bilan yaratilgan demo:",
+      "subtitleLine2": "biz uni relizga tayyor qo'shiqqa aylantiramiz",
+      "alt": "Studio NOL boshqaruv xonasidagi kompozitsiya va aranjirovka seansi"
+    },
+    "quickAnswers": {
+      "title": "Kompozitsiya va aranjirovka — tezkor javoblar",
+      "subtitle": "Eng ko'p beriladigan uchta savol.",
+      "items": [
+        {
+          "q": "Nimalarni buyurtma qilish mumkin?",
+          "a": "Kompozitsiya (melodiya, akkordlar, qo'shiq tuzilishi), aranjirovka (MIDI dan to'liq guruh va torli cholg'ulargacha), vokal uchun fonogramma va yozuv, miks, masteringgacha davom etadigan prodyuserlik. Faqat bitta bosqichni ham buyurtma qilish mumkin."
+        },
+        {
+          "q": "Narxi qancha?",
+          "a": "Har bir qo'shiq uchun alohida hisoblanadi. Aranjirovka hajmi, virtual cholg'ular va jonli sessiya musiqachilari nisbati, tahrir doirasi va topshiriladigan materiallarga bog'liq, shu sababli referens va demoni eshitgach bepul maslahatda belgilaymiz. Musiqachilar haqi faqat haqiqiy xarajat bo'yicha olinadi."
+        },
+        {
+          "q": "Qanday boshlash kerak?",
+          "a": "Aloqa shakli orqali 2–3 ta referens qo'shiq, mavjud demo (telefon yozuvi ham bo'ladi), maqsad va istalgan sanani yuboring. Yo'nalish va narx bilan javob beramiz."
+        }
+      ]
+    },
+    "audience": {
+      "title": "Kimlar buyurtma beradi",
+      "items": [
+        {
+          "title": "Faqat melodiya va matni bor qo'shiqchi-bastakorlar",
+          "description": "Cholg'u chalish shart emas. Xirgoyi yozuvingizdan akkord va tuzilishni quramiz va aranjirovkani yakunlaymiz."
+        },
+        {
+          "title": "Original reliz tayyorlayotgan musiqachilar",
+          "description": "Demo bor, lekin ovoz relizga tayyor emas. Aranjirovkani qayta quramiz va yozuv, miks, masteringga davom etamiz."
+        },
+        {
+          "title": "Vokal yoki rep ustiga bit va aranjirovka kerak bo'lganlar",
+          "description": "Vokal chizig'i yoki rep matni yetarli. Bit va aranjirovka qo'shib to'liq qo'shiq qilamiz."
+        },
+        {
+          "title": "Tadbir, to'y va brend uchun maxsus fonogramma",
+          "description": "Sizga kerakli tonallik, temp va uzunlikdagi fonogramma. Mavjud qo'shiqlarni qayta garmonizatsiya qilish ham."
+        }
+      ]
+    },
+    "services": {
+      "title": "Buyurtma qilish mumkin bo'lgan ishlar",
+      "subtitle": "Faqat kerakli bosqichlarni tanlang.",
+      "items": [
+        {
+          "title": "Kompozitsiya",
+          "description": "Melodiya (topline), akkordlar va tuzilish. Faqat matn yoki faqat melodiya bilan boshlash mumkin; kreditlarni bo'lishib hammualliflik ham mumkin."
+        },
+        {
+          "title": "Aranjirovka",
+          "description": "MIDI aranjirovkadan pianino yoki gitara yetakchiligidagi kichik tarkib, to'liq guruh, torli cholg'ular va xorgacha. Virtual cholg'ular bilan yakunlash yoki musiqachilar yollash byudjet va yo'nalishga qarab hal qilinadi."
+        },
+        {
+          "title": "Fonogramma (MR)",
+          "description": "Vokalingiz ustiga tushadigan instrumental. Reliz uchun original fonogramma, to'y va tadbirlar uchun maxsus treklar, qayta garmonizatsiya qilingan koverlar — WAV stemlar bilan topshiriladi."
+        },
+        {
+          "title": "Prodyuserlik",
+          "description": "Qo'shiqni siz bilan birga shakllantiramiz va rejissyorlik, musiqachilar yollash, yozuv, miks va mastering uchun to'liq mas'uliyatni olamiz. Reliz bo'lsa, distribyutsiya va targ'ibot davom etadi."
+        }
+      ]
+    },
+    "pricing": {
+      "title": "Narx qanday belgilanadi",
+      "subtitle": "Qat'iy narxlar jadvali yo'q; har bir qo'shiq alohida hisoblanadi. Raqamni nima o'zgartiradi — shu yerda.",
+      "factorsTitle": "Narxni belgilovchi to'rt omil",
+      "factors": [
+        {
+          "label": "Aranjirovka hajmi",
+          "detail": "Pianino yoki gitara tarkibi va torli cholg'ular hamda xorli to'liq guruh ish hajmi bo'yicha bir necha barobar farq qiladi."
+        },
+        {
+          "label": "Virtual cholg'ular va jonli sessiya",
+          "detail": "Sessiya musiqachilari o'z haqini qo'shadi — haqiqiy xarajat bo'yicha, vositachilik haqisiz."
+        },
+        {
+          "label": "Tahrir doirasi",
+          "detail": "Tuzilish, tonallik va temp birinchi demoda belgilanadi. Undan keyingi qisman tahrirlar va to'liq qayta aranjirovka boshqacha hisoblanadi."
+        },
+        {
+          "label": "Topshiriladigan materiallar",
+          "detail": "Bitta fonogramma fayli, yoki stemlar, sessiya fayllari va yozuv, miks, masteringgacha davom etish."
+        }
+      ],
+      "referenceTitle": "Mo'ljal nuqtalari",
+      "referenceItems": [
+        "Yozuv, miks va mastering narxlar sahifasidagi e'lon qilingan narxlarda qoladi — aranjirovka bilan birga buyurtma qilinsa ham.",
+        "Reliz loyihalarida asosiy aranjirovkani to'liq guruh, torli cholg'ular yoki xorga kengaytirish uchun ₩500K–1,5M taklif qilamiz. Alohida aranjirovka uchun ham shu oraliqni mo'ljal qiling.",
+        "Maslahat bepul. Referenslaringizni eshitib, yo'nalish, jadval va narxni yozib bergach qaror qilasiz."
+      ],
+      "cta": "Narx so'rash"
+    },
+    "process": {
+      "title": "Jarayon",
+      "subtitle": "Maslahatdan topshirishgacha besh bosqich, har biri tasdiqlangach keyingisiga o'tiladi.",
+      "steps": [
+        {
+          "title": "Referens va demo yuboring",
+          "description": "2–3 ta referens qo'shiq, mavjud demo (telefon yozuvi, matn, akkord yozuvlari — barchasi bo'ladi), maqsad va istalgan sana."
+        },
+        {
+          "title": "Yo'nalish va narxni kelishish",
+          "description": "Tarkib, virtual/jonli nisbati va topshiriladigan materiallarni belgilab, narx va jadvalni yozamiz. Kredit va mualliflik ulushlari shu yerda yozma kelishiladi."
+        },
+        {
+          "title": "Birinchi demo",
+          "description": "Tuzilish, tonallik, temp va cholg'ular tarkibi bo'lgan demo. Katta qarorlar shu bosqichda tasdiqlanadi."
+        },
+        {
+          "title": "Tahrir bosqichi",
+          "description": "Kelishilgan doirada sayqallash. Qisman o'zgarishlar tez; to'liq qayta aranjirovka qayta hisoblanadi."
+        },
+        {
+          "title": "Yakuniy topshirish",
+          "description": "Fonogramma WAV va stemlar. Yozuv, miks, mastering va relizga davom etsangiz, shu jamoa davom ettiradi."
+        }
+      ]
+    },
+    "delivery": {
+      "title": "Topshirish va huquqlar",
+      "filesTitle": "Siz oladigan fayllar",
+      "files": [
+        "Fonogramma WAV 24-bit/48 kHz (so'rov bo'yicha 44,1 kHz va MP3)",
+        "Har bir cholg'u uchun stemlar — boshqa joyda miks qilsangiz ham ishlaydi",
+        "Yozuvdan oldin mashq qilish uchun vokal yo'riqnoma demosi",
+        "Oldindan kelishilganda sessiya loyiha fayllari"
+      ],
+      "rightsTitle": "Kredit va mualliflik huquqi",
+      "rights": [
+        "Kompozitsiyada ishtirok etsak, hammualliflik krediti va ulushlar ish boshlanishidan oldin yozma kelishiladi.",
+        "Aranjirovka ishi aranjirovkachi sifatida kreditlanadi. Master egaligi sizda qoladi.",
+        "Referens qo'shiqlar faqat kayfiyat va cholg'ular tarkibiga yo'naltiradi. Muayyan qo'shiqni takrorlamaymiz.",
+        "Foydalanish doirasini ham kelishing: tijorat, notijorat yoki bitta tadbir."
+      ]
+    },
+    "faq": {
+      "title": "Kompozitsiya va aranjirovka — savol-javob",
+      "subtitle": "Buyurtmadan oldin so'raladigan savollar.",
+      "items": [
+        {
+          "q": "Cholg'u chalolmayman. Yozib olingan melodiya yetarlimi?",
+          "a": "Ha. Telefonda xirgoyi qilingan yozuv va matn akkordlar, tuzilish va to'liq aranjirovka qurish uchun yetarli. Bu eng keng tarqalgan boshlanish nuqtasi."
+        },
+        {
+          "q": "Nechta tahrir kiradi?",
+          "a": "Tuzilish, tonallik, temp va cholg'ular tarkibi birinchi demoda tasdiqlanadi. Undan keyin kelishilgan doiradagi qisman tahrirlar bosqichlarni sanamay sayqallanadi. Yo'nalishni o'zgartiradigan to'liq qayta aranjirovka qayta hisoblanadi. Tahrir qayerda tugab, qayta ish qayerdan boshlanishini maslahatda yozib beramiz."
+        },
+        {
+          "q": "Qancha vaqt oladi?",
+          "a": "Aranjirovka hajmi va sessiya musiqachilari borligiga bog'liq. Maslahatda birinchi demo va yakuniy topshirish sanalarini belgilab, shu jadval bo'yicha ishlaymiz. Tadbir kabi qat'iy sana bo'lsa, oldin ayting."
+        },
+        {
+          "q": "Mualliflik huquqi va kreditlar qanday?",
+          "a": "Kompozitsiyada ishtirok etsak, hammualliflik krediti va ulushlar ish boshlanishidan oldin yozma kelishiladi. Faqat aranjirovka bo'lsa, aranjirovkachi sifatida kreditlanamiz va master sizniki. Reliz paytida asarni ro'yxatdan o'tkazish uchun kerakli ma'lumotlarni ham tayyorlaymiz."
+        },
+        {
+          "q": "Jonli sessiya musiqachilaridan foydalansa bo'ladimi?",
+          "a": "Ha. Gitara, bas, baraban, klavishli, torli va puflama cholg'ular — 15 yil birga ishlagan sessiya tarmog'i orqali. Haq haqiqiy xarajat bo'yicha, vositachilik haqisiz. Cheklangan byudjetda ba'zi partiyalarni jonli yozib, qolganini virtual cholg'ular bilan qilish keng tarqalgan."
+        },
+        {
+          "q": "AI yaratgan demoni olib kelsam bo'ladimi?",
+          "a": "Bo'ladi. AI demosini yo'nalish eskizi deb qabul qilamiz va aynan o'zini ishlatmaymiz. Qo'shiq odamlar tomonidan qayta aranjirovka qilinadi va ijro etiladi, shunda reliz uchun huquqlar aniq bo'ladi."
+        },
+        {
+          "q": "Shu jamoa yozuv va relizni ham davom ettira oladimi?",
+          "a": "Ha. Yozuv, miks va mastering e'lon qilingan narxlarda davom etadi, distribyutsiya va targ'ibotga o'tsangiz reliz loyihasi sifatida birlashtiramiz. Qo'shiqni aranjirovka qilgan odam yozuvni ham boshqaradi va miks qiladi, shuning uchun g'oya oxirigacha saqlanadi."
+        }
+      ]
+    },
+    "cta": {
+      "titleLine1": "Boshingizdagi qo'shiq,",
+      "titleHighlight": "tugallangan va relizga tayyor",
+      "subtitleLine1": "Referens va demongizni yuboring —",
+      "subtitleLine2": "yo'nalish, jadval va narxni bepul yozib beramiz.",
+      "location": "Yo'nalish",
+      "inquiry": "Narx so'rash",
+      "imageAlt": "Studio NOL boshqaruv xonasi — kompozitsiya va aranjirovka ish joyi"
+    },
+    "relatedStoriesTitle": "Kompozitsiya va aranjirovka qo'llanmalari",
+    "relatedStoriesSubtitle": "Aranjirovka, MIDI ishi va prodyuser bilan hamkorlik haqida oldindan o'qing.",
+    "hubCallout": {
+      "title": "Mustaqil reliz qo'llanmasi",
+      "subtitle": "Aranjirovkadan keyin: yozuv, miks, distribyutsiya va targ'ibot — bitta sahifada."
     }
   },
   "coverVideo": {

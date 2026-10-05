@@ -628,6 +628,9 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           <ServiceLinkPill href={`/${locale}/voice-acting`} tone="accent">
             {t('nav.voiceActing')}
           </ServiceLinkPill>
+          <ServiceLinkPill href={`/${locale}/composition-arrangement`} tone="accent">
+            {t('nav.compositionArrangement')}
+          </ServiceLinkPill>
         </div>
       </Section>
 

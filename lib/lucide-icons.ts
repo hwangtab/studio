@@ -27,6 +27,7 @@ export { default as Disc } from 'lucide-react/dist/esm/icons/disc.js';
 export { default as DollarSign } from 'lucide-react/dist/esm/icons/dollar-sign.js';
 export { default as Droplets } from 'lucide-react/dist/esm/icons/droplets.js';
 export { default as ExternalLink } from 'lucide-react/dist/esm/icons/external-link.js';
+export { default as FileAudio } from 'lucide-react/dist/esm/icons/file-audio.js';
 export { default as Gift } from 'lucide-react/dist/esm/icons/gift.js';
 export { default as Globe } from 'lucide-react/dist/esm/icons/globe.js';
 export { default as Globe2 } from 'lucide-react/dist/esm/icons/globe-2.js';

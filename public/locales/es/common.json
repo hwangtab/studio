@@ -26,6 +26,7 @@
     "weddingSong": "Canción de Boda",
     "voiceActing": "Locución",
     "coverVideo": "Video Cover",
+    "compositionArrangement": "Composición y Arreglos",
     "musicPromotion": "Campaña de Prensa",
     "crowdfundingDesign": "Diseño de Crowdfunding",
     "releaseProject": "Proyecto de Lanzamiento",
@@ -2157,6 +2158,202 @@
     "hubCallout": {
       "title": "Audiolibros · ASMR · Narración — Guía completa para principiantes",
       "subtitle": "Desde la preparación del guion hasta la grabación, edición, masterización y distribución — todo en una sola página."
+    }
+  },
+  "compositionArrangement": {
+    "seo": {
+      "title": "Composición y Arreglos — Pistas, Arreglo MIDI, Producción | Studio NOL",
+      "description": "Con una melodía basta. Composición, arreglos, producción de pistas (MR) y producción MIDI a cargo de un productor con 15 años de lanzamientos; grabación, mezcla y lanzamiento con el mismo equipo si lo necesitas. Consulta gratuita, presupuesto por canción.",
+      "keywords": "encargo de composición, servicio de arreglos, producción de pistas, arreglo MIDI, producción musical Seúl, arreglo de canciones, topline, producción de beats, arreglo de demo, costo de arreglo, productor musical"
+    },
+    "hero": {
+      "title": "Composición, Arreglos y Producción — Con una melodía basta",
+      "subtitleLine1": "Una melodía tarareada, unos acordes de guitarra o incluso un demo hecho con IA:",
+      "subtitleLine2": "lo convertimos en una canción lista para lanzar",
+      "alt": "Sesión de composición y arreglos en la sala de control de Studio NOL"
+    },
+    "quickAnswers": {
+      "title": "Composición y Arreglos — Respuestas rápidas",
+      "subtitle": "Las tres preguntas más frecuentes.",
+      "items": [
+        {
+          "q": "¿Qué puedo encargar?",
+          "a": "Composición (melodía, acordes, estructura), arreglos (desde MIDI hasta banda completa y cuerdas), pistas para voz y producción que continúa en grabación, mezcla y masterización. Puedes encargar una sola etapa."
+        },
+        {
+          "q": "¿Cuánto cuesta?",
+          "a": "Se presupuesta por canción. Depende del tamaño del arreglo, la proporción de instrumentos virtuales y músicos de sesión, el alcance de las revisiones y los entregables, así que lo fijamos en una consulta gratuita tras escuchar tus referencias y tu demo. Los honorarios de los músicos se cobran al costo."
+        },
+        {
+          "q": "¿Cómo empiezo?",
+          "a": "Envía dos o tres canciones de referencia, el demo que tengas (una grabación de celular sirve), el uso y tu fecha objetivo por el formulario de contacto. Respondemos con una dirección y un presupuesto."
+        }
+      ]
+    },
+    "audience": {
+      "title": "Quiénes nos lo encargan",
+      "items": [
+        {
+          "title": "Cantautores con solo melodía y letra",
+          "description": "No hace falta tocar un instrumento. Construimos acordes y estructura desde tu grabación tarareada y terminamos el arreglo."
+        },
+        {
+          "title": "Músicos preparando un lanzamiento original",
+          "description": "Cuando el demo existe pero no suena listo para lanzar. Rehacemos el arreglo y seguimos con grabación, mezcla y masterización."
+        },
+        {
+          "title": "Vocalistas y raperos que necesitan una pista",
+          "description": "Con una línea vocal o una letra de rap basta. Añadimos beat y arreglo para completar la canción."
+        },
+        {
+          "title": "Pistas a medida para eventos, bodas y marcas",
+          "description": "Pistas en tu tono, tempo y duración. También rearmonizaciones de canciones existentes."
+        }
+      ]
+    },
+    "services": {
+      "title": "Qué puedes encargar",
+      "subtitle": "Elige solo las etapas que necesitas.",
+      "items": [
+        {
+          "title": "Composición",
+          "description": "Melodía (topline), acordes y estructura. Se puede empezar solo con letra o solo con melodía; la coautoría con créditos compartidos es posible."
+        },
+        {
+          "title": "Arreglos",
+          "description": "Desde arreglo MIDI hasta formaciones pequeñas de piano o guitarra, banda completa, cuerdas y coro. Terminar con instrumentos virtuales o contratar músicos se decide según presupuesto y dirección."
+        },
+        {
+          "title": "Pistas (MR)",
+          "description": "El instrumental sobre el que va tu voz. Pistas originales para lanzamiento, pistas a medida para bodas y eventos, covers rearmonizados, entregados con stems en WAV."
+        },
+        {
+          "title": "Producción",
+          "description": "Definimos la canción contigo y nos hacemos cargo de la dirección, la contratación de músicos, la grabación, la mezcla y la masterización. Para un lanzamiento, siguen distribución y promoción."
+        }
+      ]
+    },
+    "pricing": {
+      "title": "Así se fija el precio",
+      "subtitle": "No hay lista de precios fija; cada canción se presupuesta. Esto es lo que mueve la cifra.",
+      "factorsTitle": "Cuatro factores que deciden el presupuesto",
+      "factors": [
+        {
+          "label": "Tamaño del arreglo",
+          "detail": "Una formación de piano o guitarra y una banda completa con cuerdas y coro difieren varias veces en trabajo."
+        },
+        {
+          "label": "Instrumentos virtuales vs. músicos",
+          "detail": "Los músicos de sesión añaden sus honorarios, cobrados al costo y sin comisión."
+        },
+        {
+          "label": "Alcance de las revisiones",
+          "detail": "Estructura, tono y tempo se fijan en el primer demo. Las revisiones parciales posteriores y un rearreglo completo se presupuestan distinto."
+        },
+        {
+          "label": "Entregables",
+          "detail": "Un solo archivo de pista, o stems, archivos de sesión y continuar con grabación, mezcla y masterización."
+        }
+      ],
+      "referenceTitle": "Puntos de referencia",
+      "referenceItems": [
+        "Grabación, mezcla y masterización mantienen los precios publicados en la página de precios, también si se encargan junto con el arreglo.",
+        "En los proyectos de lanzamiento cotizamos ₩500K–1,5M para ampliar un arreglo básico a banda completa, cuerdas o coro. Usa este rango como guía para un arreglo independiente.",
+        "La consulta es gratuita. Decides después de que hayamos escuchado tus referencias y anotado dirección, calendario y precio."
+      ],
+      "cta": "Pedir presupuesto"
+    },
+    "process": {
+      "title": "Cómo funciona",
+      "subtitle": "Cinco pasos de la consulta a la entrega, cada uno confirmado antes de seguir.",
+      "steps": [
+        {
+          "title": "Envía referencias y demo",
+          "description": "Dos o tres canciones de referencia, el demo que tengas (grabación de celular, letra, notas de acordes), el uso y tu fecha objetivo."
+        },
+        {
+          "title": "Acordar dirección y presupuesto",
+          "description": "Decidimos la formación, el balance virtual/en vivo y los entregables, y anotamos precio y calendario. Los créditos y las participaciones de derechos se acuerdan por escrito aquí."
+        },
+        {
+          "title": "Primer demo",
+          "description": "Un demo con estructura, tono, tempo e instrumentación. Las grandes decisiones se confirman en esta etapa."
+        },
+        {
+          "title": "Ronda de revisiones",
+          "description": "Ajustes dentro del alcance acordado. Los cambios parciales son rápidos; un rearreglo completo se vuelve a presupuestar."
+        },
+        {
+          "title": "Entrega final",
+          "description": "Pista en WAV y stems. Si continúas con grabación, mezcla, masterización y lanzamiento, el mismo equipo sigue."
+        }
+      ]
+    },
+    "delivery": {
+      "title": "Entregables y derechos",
+      "filesTitle": "Archivos que recibes",
+      "files": [
+        "Pista WAV 24-bit/48 kHz (44,1 kHz y MP3 a pedido)",
+        "Stems por instrumento, útiles aunque mezcles en otro lugar",
+        "Demo guía vocal para ensayar antes de grabar",
+        "Archivos de proyecto cuando se acuerda de antemano"
+      ],
+      "rightsTitle": "Créditos y derechos de autor",
+      "rights": [
+        "Cuando participamos en la composición, los créditos de coautoría y las participaciones se acuerdan por escrito antes de empezar.",
+        "El trabajo de arreglo se acredita como arreglista. La propiedad del master es tuya.",
+        "Las canciones de referencia solo orientan atmósfera e instrumentación. No reproducimos una canción concreta.",
+        "Acuerda también el alcance de uso: comercial, no comercial o un solo evento."
+      ]
+    },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "subtitle": "Lo que nos preguntan antes de un encargo.",
+      "items": [
+        {
+          "q": "No toco ningún instrumento. ¿Basta con una melodía grabada?",
+          "a": "Sí. Una grabación tarareada en el celular y la letra bastan para construir acordes, estructura y un arreglo completo. Es el punto de partida más común."
+        },
+        {
+          "q": "¿Cuántas revisiones incluye?",
+          "a": "Estructura, tono, tempo e instrumentación se confirman en el primer demo. Después, las revisiones parciales dentro del alcance acordado se pulen sin contar rondas. Un rearreglo completo que cambia la dirección se presupuesta de nuevo. Dejamos por escrito dónde termina la revisión y dónde empieza el retrabajo."
+        },
+        {
+          "q": "¿Cuánto tarda?",
+          "a": "Depende del tamaño del arreglo y de si hay músicos de sesión. Fijamos la fecha del primer demo y la de entrega final en la consulta y trabajamos con ese calendario. Avísanos primero si tienes una fecha fija como un evento."
+        },
+        {
+          "q": "¿Qué pasa con los derechos y los créditos?",
+          "a": "Si participamos en la composición, los créditos de coautoría y las participaciones se acuerdan por escrito antes de empezar. Solo con arreglo, se nos acredita como arreglistas y el master es tuyo. También preparamos la información para registrar la obra al lanzar."
+        },
+        {
+          "q": "¿Pueden usar músicos de sesión?",
+          "a": "Sí. Guitarra, bajo, batería, teclados, cuerdas y vientos a través de la red de músicos con la que trabajamos desde hace 15 años. Los honorarios se cobran al costo, sin comisión. Con presupuesto limitado, es común grabar algunas partes en vivo y el resto con instrumentos virtuales."
+        },
+        {
+          "q": "¿Puedo traer un demo generado con IA?",
+          "a": "Sí. Tratamos el demo de IA como un boceto de dirección y no lo usamos tal cual. La canción se rearregla e interpreta por personas para que los derechos queden claros al lanzar."
+        },
+        {
+          "q": "¿El mismo equipo puede seguir con grabación y lanzamiento?",
+          "a": "Sí. Grabación, mezcla y masterización siguen a los precios publicados, y si continúas con distribución y promoción lo agrupamos como proyecto de lanzamiento. Quien arregló la canción también dirige la grabación y la mezcla, así la intención llega intacta al final."
+        }
+      ]
+    },
+    "cta": {
+      "titleLine1": "La canción en tu cabeza,",
+      "titleHighlight": "terminada y lista para lanzar",
+      "subtitleLine1": "Envía tus referencias y tu demo",
+      "subtitleLine2": "y te detallamos dirección, calendario y precio sin costo.",
+      "location": "Cómo llegar",
+      "inquiry": "Pedir presupuesto",
+      "imageAlt": "Sala de control de Studio NOL, el espacio de composición y arreglos"
+    },
+    "relatedStoriesTitle": "Guías de composición y arreglos",
+    "relatedStoriesSubtitle": "Lee sobre arreglos, trabajo MIDI y cómo colaborar con un productor.",
+    "hubCallout": {
+      "title": "Guía de lanzamiento independiente",
+      "subtitle": "Después del arreglo: grabación, mezcla, distribución y promoción en una sola página."
     }
   },
   "coverVideo": {

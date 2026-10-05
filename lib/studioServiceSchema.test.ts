@@ -100,3 +100,19 @@ describe('buildSchemaGraph', () => {
     });
   });
 });
+
+describe('buildStudioServiceSchema — 견적형 서비스', () => {
+  it('offerName·offerPrice가 없으면 offers를 내보내지 않는다 (가격 없는 Offer 금지)', () => {
+    const schema = buildStudioServiceSchema({
+      locale: 'ko',
+      siteName: '스튜디오 놀',
+      siteUrl: 'https://studionol.co.kr',
+      pageUrl: 'https://studionol.co.kr/ko/composition-arrangement',
+      name: '작곡·편곡 의뢰',
+      description: '작곡·편곡·MR 제작·프로듀싱',
+      serviceType: '작곡·편곡·음악 프로듀싱',
+    });
+    expect(schema).not.toHaveProperty('offers');
+    expect(schema).toMatchObject({ '@type': 'Service', url: 'https://studionol.co.kr/ko/composition-arrangement' });
+  });
+});
