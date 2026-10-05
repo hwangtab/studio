@@ -799,7 +799,7 @@ export default function ContractSignPage({
               </div>
 
               {submitError && (
-                <Notice tone="error" className="mt-6 dark:border-red-200 dark:bg-red-50 dark:text-red-900">
+                <Notice tone="error" light className="mt-6">
                   {submitError}
                 </Notice>
               )}

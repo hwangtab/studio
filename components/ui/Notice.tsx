@@ -30,6 +30,20 @@ export const NOTICE_TONE_CLASS: Record<NoticeTone, string> = {
   brand: 'border-primary/20 bg-primary/5 text-gray-800 dark:border-primary-lighter/30 dark:bg-primary-lighter/10 dark:text-gray-100',
 };
 
+/**
+ * 라이트 고정 화면(계약 서명·완료, pages/admin — design-system §1)용 덮어쓰기. `theme-init.js`가
+ * 그 경로에도 `<html class="dark">`를 붙이므로 다크 짝을 라이트 값으로 되돌려야 종이처럼 보인다.
+ * Field의 `light` 옵트인과 같은 처방 — 호출부가 `dark:bg-red-50`을 손으로 적지 않게 한다.
+ */
+const LIGHT_ONLY: Record<NoticeTone, string> = {
+  neutral: 'dark:border-gray-200 dark:bg-gray-50 dark:text-gray-700',
+  info: 'dark:border-blue-200 dark:bg-blue-50 dark:text-blue-900',
+  success: 'dark:border-green-200 dark:bg-green-50 dark:text-green-900',
+  warning: 'dark:border-amber-200 dark:bg-amber-50 dark:text-amber-900',
+  error: 'dark:border-red-200 dark:bg-red-50 dark:text-red-900',
+  brand: 'dark:border-primary/20 dark:bg-primary/5 dark:text-gray-800',
+};
+
 const TONE_ICON: Record<NoticeTone, LucideIcon> = {
   neutral: Info,
   info: Info,
@@ -52,13 +66,15 @@ export interface NoticeProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
   icon?: LucideIcon | false;
   /** 본문 아래 행동(링크·버튼). 본문과 같은 색을 상속한다. */
   actions?: React.ReactNode;
+  /** 라이트 고정 화면 옵트인 — 다크 짝을 라이트 값으로 되돌린다. */
+  light?: boolean;
   children?: React.ReactNode;
 }
 
-export const Notice = ({ tone = 'neutral', title, icon, actions, className, children, role, ...rest }: NoticeProps) => {
+export const Notice = ({ tone = 'neutral', title, icon, actions, light, className, children, role, ...rest }: NoticeProps) => {
   const Icon = icon === false ? null : (icon ?? TONE_ICON[tone]);
   return (
-    <div role={role ?? TONE_ROLE[tone]} className={cn('flex gap-3 rounded-xl border p-4', NOTICE_TONE_CLASS[tone], className)} {...rest}>
+    <div role={role ?? TONE_ROLE[tone]} className={cn('flex gap-3 rounded-xl border p-4', NOTICE_TONE_CLASS[tone], light && LIGHT_ONLY[tone], className)} {...rest}>
       {Icon && <Icon size={20} aria-hidden="true" className="mt-0.5 shrink-0" />}
       <div className="min-w-0 flex-1 text-sm leading-relaxed">
         {title && <p className="font-semibold">{title}</p>}

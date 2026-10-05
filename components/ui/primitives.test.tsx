@@ -147,6 +147,13 @@ describe('Notice', () => {
     expect(container.firstElementChild?.getAttribute('role')).toBeNull();
   });
 
+  it('light 옵트인은 다크 짝을 라이트 값으로 되돌린다(계약 화면)', () => {
+    const { container } = render(<Notice tone="error" light>오류</Notice>);
+    const classes = classesOf(container.firstElementChild);
+    expect(classes).toContain('dark:bg-red-50');
+    expect(classes).not.toContain('dark:bg-red-950/40');
+  });
+
   it('아이콘은 기본 표시, icon={false}면 없음', () => {
     const { container, rerender } = render(<Notice>a</Notice>);
     expect(container.querySelector('svg')).not.toBeNull();

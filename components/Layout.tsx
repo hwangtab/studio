@@ -110,6 +110,9 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   // 떠 있는 버튼을 전부 치운다 — 폼과 결제 위젯이 화면 아래까지 차서 손가락이 닿는 자리가
   // 겹친다. 카카오 문의는 헤더 버튼으로 계속 갈 수 있다.
   const isFundingPledge = router.pathname === '/[locale]/funding/[slug]/pledge';
+  // 예약·주문 마법사도 같은 화면이다 — 상품 카드·곡 수 select·결제 위젯이 바닥까지 차서
+  // 모바일에서 FAB 세 개가 select 위에 겹쳤다(2026-10-05 프로덕션 다크 스크린샷).
+  const isBookingWizard = router.pathname === '/[locale]/booking/[service]';
   /**
    * 전폭 하단 고정 바(MobileStickyCta)가 뜨는 건 후원 페이지가 아니라 **펀딩 상세**다.
    * 이 주석이 한동안 위 후원 페이지에 붙어 있었는데 사실이 아니었고(그 페이지는 바를 쓰지
@@ -240,7 +243,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
         행을 bottom-6에 두면 「맨 위로」가 바 뒤로 숨는다. 그 두 화면은 예전처럼
         bottom-24에 홀로 띄워 바 위로 비켜서게 한다.
       */}
-      {!isFundingPledge && !isBareLayout && (
+      {!isFundingPledge && !isBookingWizard && !isBareLayout && (
         hasFloatingRow ? (
           <div
             style={{ bottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}
