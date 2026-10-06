@@ -87,8 +87,7 @@ faq:
 
 | 레벨 | 드러머/앨범 | 핵심 요소 |
 |------|----------|---------|
-| 입문 | Jack DeJohnette — Take Five 스타일 | 라이드 심벌 재즈 워킹 |
-| 중급 | Tony Williams — 52nd Street Theme | 폴리리듬·레이어 |
+| 입문 | Joe Morello — Take Five (Dave Brubeck Quartet) | 라이드 심벌 재즈 워킹 |
 | 고급 | Elvin Jones — A Love Supreme | 앙상블 드러밍 |
 
 ## 재즈 드럼은 손발이 각자 자동으로 돌아가야 비로소 대화가 시작됩니다
