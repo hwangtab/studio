@@ -7,7 +7,7 @@
  * display.chars.json. preload=true라 LCP 경로에 들어가므로 글자 집합을 필요 이상으로 키우지 않는다
  * (실측 2026-10-06: ko 제목 글자 568자 → 정적 700 약 65KB).
  *
- * 서체 고르기: DISPLAY_FONT=hahmlet(기본) | maruburi | pretendard. 운영자가 실제 화면으로 고르는 동안
+ * 서체 고르기: DISPLAY_FONT=hahmlet(기본) | maruburi | pretendard | suit | paperlogy. 운영자가 실제 화면으로 고르는 동안
  * 비교 브랜치가 쓰는 스위치다. 산출물 파일명은 서체와 무관하게 같아서 lib/fonts.ts는 바뀌지 않는다.
  * 사이드카에 source를 적어 두므로 어느 서체로 만든 파일인지 --check 출력에서 보인다.
  *
@@ -57,8 +57,31 @@ const SOURCES = {
     weight: '700',
     minBytes: 1_000_000,
   },
+  // SUIT — sun-typeface, OFL 1.1 (라이선스 확인: raw.githubusercontent.com/sun-typeface/SUIT/main/LICENSE).
+  // jsdelivr npm 패키지의 static TTF Bold(가변 아님, 700 그 자체). 2026-10-07 운영자가 Hahmlet 대안으로
+  // Paperlogy와 함께 비교 지정.
+  suit: {
+    url: 'https://cdn.jsdelivr.net/npm/@sun-typeface/suit@2.0.5/fonts/static/ttf/SUIT-Bold.ttf',
+    cache: 'SUIT-Bold.ttf',
+    subsetOptions: { targetFormat: 'woff2' },
+    weight: '700',
+    minBytes: 400_000,
+  },
+  // Paperlogy — Freesentation, OFL 1.1 (라이선스 확인: raw.githubusercontent.com/Freesentation/paperlogy/main/OFL%20license.txt).
+  // 저장소에 ttf/otf 원본은 zip 안에만 있고 루트에는 완성된 웹용 woff2만 있다 — subset-font는 harfbuzzjs라
+  // woff2 입력도 그대로 받는다(README 확인), 재압축 경로라 품질 손실 없음.
+  paperlogy: {
+    url: 'https://raw.githubusercontent.com/Freesentation/paperlogy/main/woff2/Paperlogy-7Bold.woff2',
+    cache: 'Paperlogy-7Bold.woff2',
+    subsetOptions: { targetFormat: 'woff2' },
+    weight: '700',
+    minBytes: 300_000,
+  },
 };
-const SOURCE_NAME = process.env.DISPLAY_FONT || 'hahmlet';
+// 2026-10-07 비교 브랜치(feat/liner-font-suit): 기본값을 suit로 — Vercel prebuild가
+// DISPLAY_FONT 환경변수 없이 돌기 때문에, 기본값을 바꿔 두지 않으면 매 빌드마다 Hahmlet을
+// 다시 받아 커밋된 산출물을 덮어쓴다.
+const SOURCE_NAME = process.env.DISPLAY_FONT || 'suit';
 const SOURCE = SOURCES[SOURCE_NAME];
 if (!SOURCE) {
   console.error(`generate-hero-font: unknown DISPLAY_FONT "${SOURCE_NAME}" (${Object.keys(SOURCES).join(' | ')})`);
