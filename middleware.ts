@@ -92,6 +92,9 @@ function buildContentSecurityPolicy(): string {
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "img-src 'self' data: https:",
         "font-src 'self' data: https://fonts.gstatic.com",
+        // 미디어는 기본이 'self'(default-src)다. 비공개 감상실(/press/*)의 발매 전 음원만 Vercel Blob
+        // private 저장소에서 서명 주소로 직접 받는다(lib/press/audio.ts) — 함수를 거치면 4.5MB 응답 한도에 걸린다.
+        "media-src 'self' https://*.private.blob.vercel-storage.com",
         "frame-src 'self' https://*.tosspayments.com https://toss.im https://*.toss.im https://www.google.com https://www.google.co.kr https://postcode.map.kakao.com",
         "connect-src 'self' https://*.tosspayments.com https://vitals.vercel-insights.com https://va.vercel-scripts.com https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net",
         "object-src 'none'",
