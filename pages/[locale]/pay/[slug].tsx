@@ -22,12 +22,24 @@ interface PayLinkProps {
 }
 
 export default function PaymentLinkPage({ slug, itemName, itemAmount, vatAmount, totalAmount }: PayLinkProps) {
-  const kakaoUrl = getSiteConfig('ko').contact.kakaoUrl;
+  const siteConfig = getSiteConfig('ko');
+  const kakaoUrl = siteConfig.contact.kakaoUrl;
+  const siteUrl = siteConfig.url;
+  const description = `${itemName} ${formatPriceAmount(totalAmount)}원(부가세 포함) — 카드·간편결제 또는 계좌 입금으로 결제합니다.`;
   return (
     <>
       <Head>
-        <title>{itemName} 결제 | 스튜디오 놀</title>
+        <title>{`${itemName} 결제 | 스튜디오 놀`}</title>
         <meta name="robots" content="noindex, nofollow" />
+        {/* 카카오톡·메신저로 링크를 보내면 미리보기가 이 태그를 읽는다. 색인은 막되 미리보기는 살린다. */}
+        <meta name="description" content={description} />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="스튜디오 놀" />
+        <meta property="og:locale" content="ko_KR" />
+        <meta property="og:title" content={`${itemName} 결제 | 스튜디오 놀`} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={`${siteUrl}/images/og-default.webp`} />
+        <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <PageShell width="form">
         <p className="typo-card-meta mb-4 text-center">스튜디오 놀</p>
