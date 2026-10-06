@@ -152,3 +152,18 @@ describe('불러오는 중 자리 잡기', () => {
     expect(screen.queryByText('응원 메시지를 불러오는 중입니다.')).toBeNull();
   });
 });
+
+it('펼친 뒤 잘림이 풀려도 접기가 남고, 재생을 누르면 접고 다시 넘어간다', () => {
+  mockClamped(true);
+  render(<SupporterTicker messages={TWO} />);
+
+  fireEvent.click(screen.getByRole('button', { name: /더 보기/ }));
+  mockClamped(false); // 펼치면 실제 DOM에서는 잘림이 사라진다
+  fireEvent.click(screen.getByRole('button', { name: /재생/ }));
+
+  expect(screen.queryByRole('button', { name: /접기/ })).not.toBeInTheDocument();
+  act(() => {
+    jest.advanceTimersByTime(1500);
+  });
+  expect(screen.getByText(/두 번째 응원/)).toBeInTheDocument();
+});

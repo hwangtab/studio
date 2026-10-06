@@ -140,11 +140,19 @@ export default function SupporterTicker({ messages, pending = false }: { message
         {showPause && (
           <button
             type="button"
-            onClick={() => setUserPaused((p) => !p)}
-            aria-label={userPaused ? '응원 메시지 자동 넘김 재생' : '응원 메시지 자동 넘김 일시정지'}
+            onClick={() => {
+              // 펼쳐서 멈춘 상태에서도 재생이 먹어야 한다 — userPaused만 풀면 expanded가 계속 멈춰 둔다.
+              if (paused) {
+                setUserPaused(false);
+                setExpanded(false);
+              } else {
+                setUserPaused(true);
+              }
+            }}
+            aria-label={paused ? '응원 메시지 자동 넘김 재생' : '응원 메시지 자동 넘김 일시정지'}
             className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white/70 text-gray-500 transition-colors hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:border-gray-700 dark:bg-gray-800/70 dark:text-gray-400 dark:focus-visible:ring-primary-lighter/70 dark:hover:text-white"
           >
-            {userPaused ? <PlayIcon /> : <PauseIcon />}
+            {paused ? <PlayIcon /> : <PauseIcon />}
           </button>
         )}
 
@@ -159,7 +167,8 @@ export default function SupporterTicker({ messages, pending = false }: { message
           </p>
           <footer className="typo-card-meta mt-3 flex items-center justify-between gap-4 pb-1">
             <span className="min-w-0 break-words">— {current.name}</span>
-            {isClamped && (
+            {/* 펼치면 잘림이 풀려 isClamped가 false가 된다 — 그래도 접기 버튼은 남아야 한다. */}
+            {(isClamped || expanded) && (
               <button
                 type="button"
                 onClick={() => setExpanded((e) => !e)}
