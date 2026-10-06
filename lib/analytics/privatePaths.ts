@@ -44,6 +44,9 @@ const PRIVATE_ROUTE_BODIES: ReadonlyArray<readonly [body: string, hasSubPath: bo
   // 전에 이 항목을 먼저 보고, 공개 페이지라면 body를 좁히거나(`subscribe/(manage|…)`)
   // 그 경로를 다른 자리에 두라. 안전한 쪽으로 틀리는 구조라 기본값은 이대로 둔다.
   ['subscribe', true],
+  // 예약금 결제 링크. `pay/<slug>`의 slug가 곧 결제 권한이고(추측 불가 무작위 값), success·fail에는 토스
+  // paymentKey·orderId가 실린다. `pay` 아래 전부가 비공개다 — 공개 페이지를 이 아래에 만들지 말 것.
+  ['pay', true],
 ];
 
 const LOCALE_GROUP = '(ko|en|zh|es|vi|th|uz)';
@@ -146,6 +149,9 @@ export const PRIVATE_PAGE_ROUTES: readonly string[] = [
   '/[locale]/subscribe/[id]/success',
   '/[locale]/subscribe/[id]/fail',
   '/[locale]/subscribe/manage/[id]',
+  '/[locale]/pay/[slug]',
+  '/[locale]/pay/success',
+  '/[locale]/pay/fail',
 ];
 
 export const isPrivatePageRoute = (pathname: string): boolean => PRIVATE_PAGE_ROUTES.includes(pathname);

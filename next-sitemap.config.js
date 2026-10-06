@@ -119,6 +119,8 @@ module.exports = {
     // SSR 동적 라우트라 next-sitemap이 열거하지 않고 /sitemap-shows.xml이 싣는다.
     '/*/shows/success', '/*/shows/fail', '/*/shows/manage/*', '/*/shows/scan/*',
     '/sitemap-shows.xml',
+    // 예약금 결제 링크 — 비공개(slug가 결제 권한). 동적 라우트라 열거되지 않지만 success·fail은 정적이다.
+    '/*/pay/success', '/*/pay/fail', '/*/pay/*',
   ],
   robotsTxtOptions: {
     // robots 스펙: UA가 자기 이름의 그룹을 찾으면 '*' 그룹을 완전히 무시한다.
@@ -148,6 +150,8 @@ module.exports = {
           '/ko/funding/success', '/ko/funding/fail', '/ko/funding/manage/', '/ko/funding/terms', '/ko/funding/*/pledge',
           // 공연 예매 트랜잭셔널·입장 스캔 경로.
           '/ko/shows/success', '/ko/shows/fail', '/ko/shows/manage/', '/ko/shows/scan/',
+          // 예약금 결제 링크 — 비공개 경로.
+          '/ko/pay/',
         ],
       };
       // 이 목록에 봇을 추가/누락해도 실효 차단 범위는 바뀌지 않는다 — 모든 명명

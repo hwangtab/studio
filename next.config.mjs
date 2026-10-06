@@ -336,6 +336,13 @@ const nextConfig = {
           { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
         ],
       },
+      // 예약금 결제 링크 — slug가 결제 권한이고 success·fail에는 토스 paymentKey·orderId가 실린다.
+      {
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/pay/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
+        ],
+      },
       {
         source: '/:path*',
         headers: [

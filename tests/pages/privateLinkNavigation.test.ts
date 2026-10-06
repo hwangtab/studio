@@ -36,6 +36,10 @@ const PRIVATE_PAGE_FILES = [
   'pages/[locale]/subscribe/[id]/success.tsx',
   'pages/[locale]/subscribe/[id]/fail.tsx',
   'pages/[locale]/subscribe/manage/[id].tsx',
+  // 예약금 결제 링크 — slug가 결제 권한이고 success·fail에는 paymentKey·orderId가 실린다.
+  'pages/[locale]/pay/[slug].tsx',
+  'pages/[locale]/pay/success.tsx',
+  'pages/[locale]/pay/fail.tsx',
 ];
 
 const read = (file: string) => readFileSync(path.join(process.cwd(), file), 'utf-8');
@@ -133,7 +137,7 @@ describe('private 페이지의 이탈 링크', () => {
   it('Layout이 bare로 두는 라우트는 명시된 예외를 빼면 전부 측정 제외 경로다', () => {
     for (const route of PRIVATE_PAGE_ROUTES) {
       if (MEASURED_PRIVATE_PAGE_ROUTES.includes(route)) continue;
-      const asPath = route.replace('[locale]', 'ko').replace('[orderNo]', 'FND-20261015-ABCD1234');
+      const asPath = route.replace('[locale]', 'ko').replace('[orderNo]', 'FND-20261015-ABCD1234').replace('[slug]', '46fee6d8ffa1a69be20324a2');
       expect(isPrivateAnalyticsPath(asPath)).toBe(true);
     }
   });
