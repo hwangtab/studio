@@ -306,7 +306,7 @@ export default function AdminContractsPage({
               </div>
 
               <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left">
+                <table className="admin-table w-full text-sm text-left">
                   <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
                     <tr>
                       <th className="px-4 py-3 rounded-l-lg">상태</th>
@@ -323,7 +323,7 @@ export default function AdminContractsPage({
                       const busy = busyId === contract.id;
                       return (
                         <tr key={contract.id} className="border-b border-gray-100 hover:bg-gray-50">
-                          <td className="px-4 py-3">
+                          <td data-label="상태" className="px-4 py-3">
                             <span
                               className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${STATUS_CLASS[contract.status]}`}
                             >
@@ -362,20 +362,20 @@ export default function AdminContractsPage({
                               </div>
                             )}
                           </td>
-                          <td className="px-4 py-3 font-medium text-gray-900">
+                          <td data-label="이용자" className="px-4 py-3 font-medium text-gray-900">
                             {contract.customerName}
                             <div className="text-xs text-gray-500 font-normal">
                               {contract.customerEmail}
                             </div>
                           </td>
-                          <td className="px-4 py-3">{contract.roomNumber}호</td>
-                          <td className="px-4 py-3 whitespace-nowrap">
+                          <td data-label="호실" className="px-4 py-3">{contract.roomNumber}호</td>
+                          <td data-label="기간" className="px-4 py-3 whitespace-nowrap">
                             {formatDate(contract.startDate)} ~ {formatDate(contract.endDate)}
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
+                          <td data-label="월 이용료" className="px-4 py-3 whitespace-nowrap">
                             {formatCurrency(contract.monthlyRent)}원
                           </td>
-                          <td className="px-4 py-3">{formatDate(contract.signedAt)}</td>
+                          <td data-label="서명일" className="px-4 py-3">{formatDate(contract.signedAt)}</td>
                           <td className="px-4 py-3">
                             <div className="flex flex-wrap gap-2">
                               <Link href={`/admin/contracts/${contract.id}`} passHref>

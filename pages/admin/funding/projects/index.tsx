@@ -78,7 +78,7 @@ export default function AdminFundingProjectsPage({ projects, services }: AdminFu
       >
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
+            <table className="admin-table w-full text-sm text-left">
               <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
                 <tr>
                   <th className="px-4 py-3 rounded-l-lg">제목</th>
@@ -92,21 +92,21 @@ export default function AdminFundingProjectsPage({ projects, services }: AdminFu
               <tbody>
                 {projects.map((p) => (
                   <tr key={p.id} className="border-b border-gray-100 hover:bg-gray-50">
-                    <td className="px-4 py-3 font-medium text-gray-900">
+                    <td data-label="제목" className="px-4 py-3 font-medium text-gray-900">
                       <Link href={`/admin/funding/projects/${p.id}`} className="text-primary font-medium hover:underline">
                         {p.title}
                       </Link>
                     </td>
-                    <td className="px-4 py-3">
+                    <td data-label="개설자" className="px-4 py-3">
                       {p.creatorName}
                       <div className="text-xs text-gray-500 font-normal">{p.creatorEmail}</div>
                     </td>
-                    <td className="px-4 py-3">
+                    <td data-label="상태" className="px-4 py-3">
                       <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold ${STATUS_BADGE_CLASS[p.reviewStatus]}`}>
                         {STATUS_LABELS[p.reviewStatus]}
                       </span>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-xs">
+                    <td data-label="서비스" className="px-4 py-3 whitespace-nowrap text-xs">
                       {!services.available ? (
                         <span className="text-gray-400">
                           {services.reason === 'missing_table'
@@ -129,10 +129,10 @@ export default function AdminFundingProjectsPage({ projects, services }: AdminFu
                         <span className="text-gray-500">{PROJECT_SERVICE_LABELS.none}</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td data-label="제출 시각" className="px-4 py-3 whitespace-nowrap">
                       {p.submittedAt ? formatKstDateTimeFull(p.submittedAt) : '미제출'}
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap">{formatPriceAmount(p.goalAmount)}원</td>
+                    <td data-label="목표액" className="px-4 py-3 whitespace-nowrap">{formatPriceAmount(p.goalAmount)}원</td>
                   </tr>
                 ))}
               </tbody>

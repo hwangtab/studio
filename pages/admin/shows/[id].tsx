@@ -69,7 +69,7 @@ export const getServerSideProps: GetServerSideProps<AdminShowDetailPageProps> = 
 
 const STATUS_LABEL: Record<string, string> = { draft: '초안(비공개)', published: '공개', cancelled: '취소' };
 const ORDER_STATUS_LABEL: Record<string, string> = {
-  pending: '결제대기', awaiting_deposit: '계좌 입금 대기', deposit_cancelled: '입금 전 취소', paid: '확정', partially_refunded: '부분환불', refunded: '환불완료', expired: '만료', failed: '결제실패',
+  pending: '결제대기', awaiting_deposit: '계좌 입금 대기', deposit_cancelled: '입금 전 취소', auto_cancel_pending: '자동 취소 처리 중', paid: '확정', partially_refunded: '부분환불', refunded: '환불완료', expired: '만료', failed: '결제실패',
 };
 const TICKET_STATUS_LABEL: Record<string, string> = { held: '보류', issued: '발권', refunding: '환불중', refunded: '환불', void: '무효' };
 
@@ -137,7 +137,7 @@ export default function AdminShowDetailPage({ show, refundAccounts = {}, sameNam
         {notice && <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>}
         {error && <div role="alert" className="mb-4 p-3 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">{error}</div>}
 
-        <section className="bg-white rounded-2xl shadow-sm p-5 md:p-6 mb-6 text-sm text-gray-900">
+        <section className="bg-white rounded-2xl shadow-sm p-4 md:p-6 mb-6 text-sm text-gray-900">
           <p className="mb-2"><strong>상태</strong> {STATUS_LABEL[show.status] ?? show.status}</p>
           <p className="mb-2"><strong>구역</strong> {show.zones.map((z) => `${z.label}(${z.code}) 정원 ${z.capacity}`).join(' · ')}</p>
           <p>
@@ -290,7 +290,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
       )}
 
       <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="admin-table w-full text-sm">
           <thead className="bg-gray-50 text-gray-600">
             <tr>
               <th className="text-left px-4 py-2 font-medium">주문</th>
@@ -306,7 +306,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
               const refundable = o.tickets.filter((k) => k.status === 'issued' && k.checkedInAt == null);
               return (
                 <tr key={o.orderNo} className="align-top">
-                  <td className="px-4 py-2 whitespace-nowrap">
+                  <td data-label="주문" className="px-4 py-2 whitespace-nowrap">
                     <div className="font-mono text-xs">{o.orderNo}</div>
                     <div className="text-xs text-gray-500">
                       {o.isComp ? '초대' : ORDER_STATUS_LABEL[o.orderStatus] ?? o.orderStatus}
@@ -319,11 +319,11 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
                       </div>
                     )}
                   </td>
-                  <td className="px-4 py-2">
+                  <td data-label="구매자" className="px-4 py-2">
                     <div>{o.buyerName}</div>
                     {!o.isComp && <div className="text-xs text-gray-500">{o.buyerContact}</div>}
                   </td>
-                  <td className="px-4 py-2">
+                  <td data-label="티켓" className="px-4 py-2">
                     <ul className="space-y-1">
                       {o.tickets.map((k) => (
                         <li key={k.id} className="text-xs">
@@ -345,7 +345,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
                       ))}
                     </ul>
                   </td>
-                  <td className="px-4 py-2 text-right whitespace-nowrap">{o.totalAmount.toLocaleString('ko-KR')}원</td>
+                  <td data-label="금액" className="px-4 py-2 text-right whitespace-nowrap">{o.totalAmount.toLocaleString('ko-KR')}원</td>
                   <td className="px-4 py-2">
                     {o.bankDeposit === 'awaiting' && (
                       <div className="mb-2 space-y-2">

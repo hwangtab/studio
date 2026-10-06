@@ -475,7 +475,7 @@ export default function AdminContractDetailPage({
           )}
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+        <div className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
           <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">작업</h2>
           <div className="flex flex-wrap gap-3">
             {isActionAllowed(contract.status, 'send') && (

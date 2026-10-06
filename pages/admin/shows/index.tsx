@@ -38,7 +38,7 @@ export default function AdminShowsPage({ shows, error }: AdminShowsPageProps) {
           <div role="alert" className="mb-4 p-3 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">{error}</div>
         )}
         {shows.length === 0 && !error && (
-          <div className="bg-white rounded-2xl shadow-sm p-8 text-center text-gray-600">등록된 공연이 없습니다.</div>
+          <div className="bg-white rounded-2xl shadow-sm p-4 md:p-8 text-center text-gray-600">등록된 공연이 없습니다.</div>
         )}
         <div className="space-y-6">
           {shows.map((show) => (
@@ -61,7 +61,7 @@ export default function AdminShowsPage({ shows, error }: AdminShowsPageProps) {
                 </div>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="admin-table w-full text-sm">
                   <thead className="bg-gray-50 text-gray-600">
                     <tr>
                       <th className="text-left px-4 py-2 font-medium">회차</th>
@@ -77,14 +77,14 @@ export default function AdminShowsPage({ shows, error }: AdminShowsPageProps) {
                   <tbody className="divide-y divide-gray-100 text-gray-900">
                     {show.showtimes.map((t) => (
                       <tr key={t.id}>
-                        <td className="px-4 py-2 whitespace-nowrap">{t.label}</td>
-                        <td className="px-4 py-2">{SHOWTIME_STATUS_LABEL[t.status] ?? t.status}</td>
-                        <td className="px-4 py-2 text-right">{t.issued}</td>
-                        <td className="px-4 py-2 text-right">{t.held}</td>
-                        <td className="px-4 py-2 text-right">{t.comp}</td>
-                        <td className="px-4 py-2 text-right">{t.capacity}</td>
-                        <td className="px-4 py-2 text-right">{t.checkedIn}</td>
-                        <td className="px-4 py-2 text-right">{t.grossAmount.toLocaleString('ko-KR')}원</td>
+                        <td data-label="회차" className="px-4 py-2 whitespace-nowrap">{t.label}</td>
+                        <td data-label="상태" className="px-4 py-2">{SHOWTIME_STATUS_LABEL[t.status] ?? t.status}</td>
+                        <td data-label="발권" className="px-4 py-2 text-right">{t.issued}</td>
+                        <td data-label="결제대기" className="px-4 py-2 text-right">{t.held}</td>
+                        <td data-label="초대" className="px-4 py-2 text-right">{t.comp}</td>
+                        <td data-label="정원" className="px-4 py-2 text-right">{t.capacity}</td>
+                        <td data-label="입장" className="px-4 py-2 text-right">{t.checkedIn}</td>
+                        <td data-label="매출" className="px-4 py-2 text-right">{t.grossAmount.toLocaleString('ko-KR')}원</td>
                       </tr>
                     ))}
                   </tbody>

@@ -98,6 +98,35 @@ it('로그아웃하면 세션을 끊고 로그인 화면으로 보낸다', async
   expect(replace).toHaveBeenCalledWith('/admin/login');
 });
 
+/**
+ * 좁은 화면에서는 구역을 버튼 하나로 접는다. 한 줄 가로 스크롤에 여덟 구역을 넣었더니
+ * 폰에서 두 구역만 보이고 지금 있는 구역이 화면 밖에 있었다.
+ */
+it('좁은 화면 메뉴 버튼은 현재 구역을 보여 주고, 누르면 모든 구역과 로그아웃을 펼친다', async () => {
+  pathname = '/admin/funding/[id]';
+  await renderShell(<AdminShell title="펀딩 상세">본문</AdminShell>);
+
+  const toggle = screen.getByRole('button', { name: '펀딩' });
+  expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  expect(screen.queryByRole('navigation', { name: '관리자 구역 메뉴' })).not.toBeInTheDocument();
+
+  await act(async () => {
+    toggle.click();
+  });
+  expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  const menu = screen.getByRole('navigation', { name: '관리자 구역 메뉴' });
+  for (const item of ADMIN_NAV) {
+    expect(within(menu).getByRole('link', { name: item.label })).toHaveAttribute('href', item.href);
+  }
+  expect(within(menu).getByRole('link', { name: '펀딩' })).toHaveAttribute('aria-current', 'page');
+  expect(screen.getAllByRole('button', { name: '로그아웃' })).toHaveLength(2);
+
+  await act(async () => {
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+  });
+  expect(screen.queryByRole('navigation', { name: '관리자 구역 메뉴' })).not.toBeInTheDocument();
+});
+
 describe('activeAdminNavHref', () => {
   it.each([
     ['/admin', '/admin'],

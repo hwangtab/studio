@@ -105,6 +105,7 @@ const ORDER_STATUS_LABELS: Record<string, string> = {
   expired: '만료',
   awaiting_deposit: '계좌 입금 대기',
   deposit_cancelled: '입금 전 취소',
+  auto_cancel_pending: '자동 취소 처리 중',
 };
 
 const BOOKING_STATUS_LABELS: Record<string, string> = {
@@ -755,7 +756,7 @@ export default function AdminBookingDetailPage({
           )}
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
+        <div className="bg-white rounded-2xl shadow-sm p-4 md:p-8 space-y-8">
           <div>
             <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">작업</h2>
             <div className="flex flex-wrap gap-3">
