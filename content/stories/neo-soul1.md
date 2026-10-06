@@ -40,7 +40,7 @@ inlineFallback:
 
 ## 네오소울 — 소울·재즈·힙합이 만나는 현대적 그루브
 
-네오소울은 D'Angelo, Erykah Badu, Lauryn Hill, H.E.R.이 대표하는 장르로, 한국에서도 다양한 R&B·소울 아티스트들이 이 장르에서 작업합니다.
+네오소울은 D'Angelo, Erykah Badu, Lauryn Hill이 대표하는 장르로, 한국에서도 다양한 R&B·소울 아티스트들이 이 장르에서 작업합니다.
 
 ---
 
@@ -116,7 +116,7 @@ Am9 → D9 → Gmaj9 → Cmaj7#11
 - 손가락으로 뜯는(핑거드) 베이스 기타 (라이브 감각)
 - 레이드백 타이밍 (드럼과 함께 뒤로)
 - 슬랩 기법 (펑크 느낌이 필요할 때)
-- Flea, Thundercat 스타일 리프
+- Thundercat 스타일 리프
 
 ---
 

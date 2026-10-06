@@ -186,7 +186,6 @@ Presence: 7~8 (응답성·어택감 강화)
 
 ## 추천 레퍼런스
 
-- **Tony Iommi** (Black Sabbath): 헤비메탈 팜뮤트의 원조
 - **James Hetfield** (Metallica): 다운 피킹의 교과서, 스래쉬 리프
 - **Dimebag Darrell** (Pantera): 파워풀한 디스토션 + 독창적 리프 구성
 - **John Petrucci** (Dream Theater): 프로그레시브 메탈 얼터네이트 피킹의 정점

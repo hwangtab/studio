@@ -101,7 +101,8 @@ faq:
 
 ### 상업 마스터링 LUFS 기준
 
-- 스트리밍 (Spotify, Apple Music): -14 LUFS
+- 스트리밍 (Spotify): -14 LUFS
+- 스트리밍 (Apple Music): -16 LUFS
 - YouTube: -14 LUFS
 - 클럽/EDM: -8~-10 LUFS
 - 팝/발라드: -13~-14 LUFS
