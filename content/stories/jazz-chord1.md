@@ -110,7 +110,7 @@ Dm7 (ii) → G7 (V) → Cmaj7 (I)
 
 **드롭-2 보이싱**
 - 4성부 코드의 2번째 음을 한 옥타브 낮춤
-- C E G B → C G B E (G 아래로 이동)
+- C E G B → G C E B (위에서 2번째 음 G를 한 옥타브 아래로 이동)
 - 기타·트롬본 등에서 많이 활용
 
 **클로즈드 vs 오픈 보이싱**
@@ -125,7 +125,7 @@ Dm7 (ii) → G7 (V) → Cmaj7 (I)
 
 **G7**
 - **왼손**: G + F (루트+b7th)
-- **오른손**: B + D + A (3rd + 5th + 9th) 또는 B + E + A (#11 추가)
+- **오른손**: B + D + A (3rd + 5th + 9th) 또는 B + E + A (3rd + 13th + 9th)
 
 **Cmaj7**
 - **왼손**: C + B (루트+7th)
@@ -149,8 +149,6 @@ Cmaj7 → Am7 → Dm7 → G7 → (Cmaj7)
 I → bVII7 → bVI7 → V7 → I
 Cmaj7 → Bb7 → Ab7 → G7 → Cmaj7
 
-- 콜트레인 식 반음 하강 도미넌트
-
 ### 대리 코드 (Tritone Substitution)
 
 G7 → Db7 (3음 위의 증4도 대리)
@@ -169,7 +167,7 @@ Dm7 → G7 → Cmaj7
 
 ### 모달 재즈의 핵심
 
-마일스 데이비스 Kind of Blue에서 시작
+마일스 데이비스의 Milestones(1958)와 Kind of Blue(1959)에서 본격화
 
 - ii-V-I 진행 대신 하나의 스케일(모드) 유지
 - 긴 시간 하나의 코드 위에서 즉흥연주
