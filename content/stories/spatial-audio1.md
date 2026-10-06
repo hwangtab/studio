@@ -40,7 +40,7 @@ faq:
 
 돌비 애트모스와 Apple Spatial Audio가 스트리밍 표준으로 자리 잡고 있습니다. 공간 음향의 기초부터 실전 활용까지 정리합니다.
 
-공간 음향 기술의 현대적 기원은 1982년 Dolby Surround 시스템이 영화관에 도입되면서 시작됩니다. Dolby Laboratories(1965년 Ray Dolby 창립)는 이후 1992년 Dolby Digital(5.1채널)로 영화·홈시어터 표준을 확립했고, 2012년 "Brave"(픽사)에 처음 적용된 Dolby Atmos는 고정 채널 대신 오브젝트 기반(128개 오브젝트) 3D 배치로 천장 스피커까지 활용하는 이머시브 포맷의 새 기준을 세웠습니다. 음악 스트리밍에 Atmos가 적용된 것은 2021년 Apple Music이 "Spatial Audio with Dolby Atmos" 지원을 발표하면서부터입니다. Billie Eilish의 "Happier Than Ever"(2021) Atmos 믹스는 발매 당시 이머시브 오디오 음악의 화두가 됐으며, 이후 BTS·aespa·NewJeans 등 K-POP 레이블이 주요 앨범의 Atmos 버전을 Apple Music 전용으로 납품하기 시작했습니다. 한국 국내 플랫폼(멜론·지니·벅스)은 2024년 현재 Atmos 지원이 없어 K-POP의 Atmos 콘텐츠는 주로 해외 청취자(Apple Music·Tidal)를 대상으로 합니다. 인디 아티스트가 Atmos 믹싱을 고려할 시점은 Apple Music 플레이리스트 유입이 의미 있는 수준에 도달한 시점이며, 초기 단계에서는 표준 스테레오 마스터 품질을 우선하는 것이 현실적입니다.
+공간 음향 기술의 현대적 기원은 1982년 Dolby Surround 시스템이 가정용으로 도입되면서 시작됩니다. Dolby Laboratories(1965년 Ray Dolby 창립)는 이후 1992년 Dolby Digital(5.1채널)로 영화·홈시어터 표준을 확립했고, 2012년 "Brave"(픽사)에 처음 적용된 Dolby Atmos는 고정 채널 대신 오브젝트 기반(128개 오브젝트) 3D 배치로 천장 스피커까지 활용하는 이머시브 포맷의 새 기준을 세웠습니다. 음악 스트리밍에 Atmos가 적용된 것은 2021년 Apple Music이 "Spatial Audio with Dolby Atmos" 지원을 발표하면서부터입니다. Billie Eilish의 "Happier Than Ever"(2021) Atmos 믹스는 발매 당시 이머시브 오디오 음악의 화두가 됐으며, 이후 BTS·aespa·NewJeans 등 K-POP 레이블이 주요 앨범의 Atmos 버전을 Apple Music 전용으로 납품하기 시작했습니다. 한국 국내 플랫폼(멜론·지니·벅스)은 2024년 현재 Atmos 지원이 없어 K-POP의 Atmos 콘텐츠는 주로 해외 청취자(Apple Music·Tidal)를 대상으로 합니다. 인디 아티스트가 Atmos 믹싱을 고려할 시점은 Apple Music 플레이리스트 유입이 의미 있는 수준에 도달한 시점이며, 초기 단계에서는 표준 스테레오 마스터 품질을 우선하는 것이 현실적입니다.
 
 ---
 

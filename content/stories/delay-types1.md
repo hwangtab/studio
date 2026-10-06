@@ -58,8 +58,7 @@ howTo:
 > - **테이프 딜레이의 매력은 Degradation + Wow-Flutter**: 반복마다 음질 저하 + 피치 흔들림이 "살아있는" 질감.
 > - **딜레이 → 리버브 체인**: 딜레이 에코에 리버브가 더해져 풍성한 공간감. 순서 반대로 하면 리버브 잔향이 다시 딜레이로 반복되어 진흙탕.
 
-딜레이는 리버브와 함께 보컬 믹싱에서 공간감과 리듬감을 만드는 중요한 도구입니다. **딜레이의 역사는 1950년대 미국 멤피스의 Sun Records 스튜디오**로 거슬러 올라갑니다. Sam Phillips 프로듀서가 Elvis Presley·Johnny Cash·Carl Perkins의 보컬에 적용한 "**슬랩백 에코(slapback echo)**"가 로큰롤·로커빌리의 사운드 정체성을 정의했습니다([Slapback — Wikipedia](https://en.wikipedia.org/wiki/Slapback) · [Reverb News: A Brief History of Tape Echo](https://reverb.com/news/repeat-that-a-brief-history-of-tape-echo)). 당시에는 두 개의 테이프 레코더를 사용해 약 80ms의 자연 딜레이를 만들었고, 이 소리가 Sun Studio 사운드의 핵심이 됐습니다. 이후 **1974년 Roland가 RE-201 Space Echo를 출시**([Roland Space Echo — Wikipedia](https://en.wikipedia.org/wiki/Roland_Space_Echo))하면서 아날로그 테이프 딜레이가 투어·스튜디오의 휴대 가능한 표준이 됐고, Echoplex와 함께 1970~80년대 딜레이 사운드의 양대 산맥이 됐습니다. U2의 The Edge가 Roland RE-201과 디지털 딜레이를 활용한 리듬 딜레이 기타 사운드는 밴드의 정체성이 됐습니다.
-
+딜레이는 리버브와 함께 보컬 믹싱에서 공간감과 리듬감을 만드는 중요한 도구입니다. **딜레이의 역사는 1950년대 미국 멤피스의 Sun Records 스튜디오**로 거슬러 올라갑니다. Sam Phillips 프로듀서가 Elvis Presley·Johnny Cash·Carl Perkins의 보컬에 적용한 "**슬랩백 에코(slapback echo)**"가 로큰롤·로커빌리의 사운드 정체성을 정의했습니다([Slapback — Wikipedia](https://en.wikipedia.org/wiki/Slapback) · [Reverb News: A Brief History of Tape Echo](https://reverb.com/news/repeat-that-a-brief-history-of-tape-echo)). 당시에는 두 개의 테이프 레코더를 사용해 자연 딜레이를 만들었고, 이 소리가 Sun Studio 사운드의 핵심이 됐습니다. 이후 **1974년 Roland가 RE-201 Space Echo를 출시**([Roland Space Echo — Wikipedia](https://en.wikipedia.org/wiki/Roland_Space_Echo))하면서 아날로그 테이프 딜레이가 투어·스튜디오의 휴대 가능한 표준이 됐고, Echoplex와 함께 1970~80년대 딜레이 사운드의 양대 산맥이 됐습니다.
 현대 디지털 DAW에서 딜레이는 소프트웨어 플러그인으로 구현됩니다. Waves H-Delay, SoundToys EchoBoy, Universal Audio TAPE DELAY 등이 아날로그 딜레이의 따뜻한 음색을 디지털로 재현하며, 각 딜레이 유형은 서로 다른 음악적 상황에서 활용됩니다.
 
 ---
@@ -68,7 +67,7 @@ howTo:
 
 ### 1. 슬랩백 딜레이 (Slapback Delay)
 
-슬랩백은 1회 반복만 발생하는 40~120ms의 매우 짧은 딜레이입니다. Elvis Presley의 「Hound Dog」, Buddy Holly의 「That'll Be the Day」에서 들을 수 있는 바로 그 소리입니다. 원음 바로 뒤에 붙어 보컬을 두껍게 만들고 레트로 질감을 더합니다. 현대 R&B·네오소울에서도 보컬에 두께감을 주는 용도로 자주 사용합니다. 피드백을 0~5%로 설정해야 1회 반복만 발생하는 슬랩백 효과가 납니다.
+슬랩백은 1회 반복만 발생하는 40~120ms의 매우 짧은 딜레이입니다. 원음 바로 뒤에 붙어 보컬을 두껍게 만들고 레트로 질감을 더합니다. 현대 R&B·네오소울에서도 보컬에 두께감을 주는 용도로 자주 사용합니다. 피드백을 0~5%로 설정해야 1회 반복만 발생하는 슬랩백 효과가 납니다.
 
 - **딜레이 타임**: 40~120ms
 - **피드백**: 0~5% (1회 반복)
@@ -84,7 +83,7 @@ BPM에 맞게 딜레이 타임을 자동 설정하는 방식입니다. 60,000 ÷
 
 ### 3. 핑퐁 딜레이 (Ping-Pong Delay)
 
-에코가 좌우 채널을 번갈아 반복하는 스테레오 딜레이입니다. 반복마다 L→R→L→R 방향으로 이동해 넓은 스테레오 공간감을 만듭니다. 코러스 보컬, 신디사이저 패드, 기타 솔로에 특히 효과적입니다. The Edge(U2)의 기타 사운드, Radiohead의 「Karma Police」 기타 텍스처가 핑퐁 딜레이의 대표 사례입니다. 과도하게 사용하면 믹스가 산만해지므로 리드 보컬보다는 배경 요소나 악기에 쓰는 것이 일반적입니다.
+에코가 좌우 채널을 번갈아 반복하는 스테레오 딜레이입니다. 반복마다 L→R→L→R 방향으로 이동해 넓은 스테레오 공간감을 만듭니다. 코러스 보컬, 신디사이저 패드, 기타 솔로에 특히 효과적입니다. 과도하게 사용하면 믹스가 산만해지므로 리드 보컬보다는 배경 요소나 악기에 쓰는 것이 일반적입니다.
 
 - **딜레이 타임**: BPM의 1/8 또는 1/16 노트
 - **적합 장르**: 일렉트로닉, 앰비언트, 신스팝, 록

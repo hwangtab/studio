@@ -41,8 +41,7 @@ faq:
 
 Steinberg Cubase는 1989년부터 업계를 이끌어온 DAW로, 유럽 스튜디오와 클래식 음악 프로덕션에서 특히 많이 사용됩니다.
 
-Cubase의 역사는 1989년 독일 Steinberg Media Technologies가 Atari ST 컴퓨터용 MIDI 시퀀서로 첫 버전을 출시하면서 시작됩니다. 1996년 VST(Virtual Studio Technology) 포맷을 세계 최초로 개발해 소프트웨어 플러그인 생태계의 기반을 만들었고, 이 VST 표준이 현재 전 세계 모든 DAW에서 사용하는 플러그인 포맷의 원형이 됐습니다. 2000년대 Cubase SX가 오디오 녹음·편집 기능을 강화하면서 유럽 클래식·영화 음악 스튜디오의 표준 DAW로 자리잡았습니다. 한국에서는 2000년대 중반부터 방송국·뮤지컬 제작사를 중심으로 도입됐고, 내장 피치 교정 도구 VariAudio와 Channel EQ의 정밀함이 K-POP 보컬 믹싱 환경에서도 인정받고 있습니다.
-
+Cubase의 역사는 1989년 독일 Steinberg Media Technologies가 Atari ST 컴퓨터용 MIDI 시퀀서로 첫 버전을 출시하면서 시작됩니다. 1996년 VST(Virtual Studio Technology) 포맷을 세계 최초로 개발해 소프트웨어 플러그인 생태계의 기반을 만들었고, 이 VST 표준이 현재 많은 DAW가 사용하는 플러그인 포맷의 원형이 됐습니다. 2000년대 Cubase SX가 오디오 녹음·편집 기능을 강화하면서 유럽 클래식·영화 음악 스튜디오의 표준 DAW로 자리잡았습니다.
 ## Cubase 기본 설정
 
 ### 오디오 인터페이스 설정

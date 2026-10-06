@@ -42,7 +42,7 @@ inlineFallback:
 
 Lo-Fi 음악은 고음질을 추구하는 현대 음악과 반대로 빈티지·아날로그의 따뜻함을 재현합니다. YouTube, Spotify에서 수억 번 재생되는 Lo-Fi Hip Hop 채널들이 증명하듯, 독특한 감성과 비즈니스 모델을 가진 장르입니다.
 
-Lo-Fi 음악의 역사는 1980년대 아날로그 테이프 녹음과 4트랙 카세트 레코더 문화에서 시작됩니다. 카세트 테이프의 테이프 히스(tape hiss)·워블·낮은 주파수 응답이 오히려 독특한 감성으로 받아들여졌고, 이것이 Lo-Fi(Low Fidelity) 미학의 출발점이 됐습니다. 1990년대 인디 록·얼터너티브 씬에서 홈 레코딩을 고집한 Guided by Voices·Palace Music 같은 아티스트들이 Lo-Fi 음질을 예술적 선택으로 정착시켰습니다. 현재의 Lo-Fi Hip Hop 장르는 2010년대 중반 유튜브 '24시간 스트리밍' 포맷과 결합하면서 폭발적으로 성장했습니다. 'ChilledCow'(현 Lofi Girl) 채널의 'Lo-Fi Hip Hop Radio — Beats to Study/Relax to' 스트림이 수억 회 이상 재생되면서 Lo-Fi Hip Hop을 별도 장르로 정의하고 집중·휴식·공부 배경 음악 시장을 만들었습니다. 한국에서는 2020년 이후 카페·스터디카페 배경 음악으로 Lo-Fi가 도입됐고, Spotify Korea·멜론의 '공부할 때 듣는 음악' 플레이리스트가 국내 Lo-Fi 제작자들에게 발매 경로를 열어줬습니다.
+Lo-Fi 음악의 역사는 1980년대 아날로그 테이프 녹음과 4트랙 카세트 레코더 문화에서 시작됩니다. 카세트 테이프의 테이프 히스(tape hiss)·워블·낮은 주파수 응답이 오히려 독특한 감성으로 받아들여졌고, 이것이 Lo-Fi(Low Fidelity) 미학의 출발점이 됐습니다. 1990년대 인디 록·얼터너티브 씬에서 홈 레코딩을 고집한 Guided by Voices·Palace Music 같은 아티스트들이 Lo-Fi 음질을 예술적 선택으로 정착시켰습니다. 현재의 Lo-Fi Hip Hop 장르는 2010년대 중반 유튜브 '24시간 스트리밍' 포맷과 결합하면서 폭발적으로 성장했습니다. 'ChilledCow'(현 Lofi Girl) 채널의 'Lo-Fi Hip Hop Radio — Beats to Study/Relax to' 스트림이 수억 회 이상 재생되면서 Lo-Fi Hip Hop을 별도 장르로 정의하고 집중·휴식·공부 배경 음악 시장을 만들었습니다.
 
 ---
 

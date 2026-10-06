@@ -40,7 +40,7 @@ faq:
 
 Logic Pro는 Apple 생태계에 최적화된 Mac 전용 유료 DAW로, 전문 스튜디오와 홈 레코딩 모두에서 널리 사용됩니다.
 
-Logic Pro의 역사는 1993년 독일 Emagic이 Logic Audio로 출시하면서 시작됩니다. 당초 Atari ST·Macintosh용 MIDI 시퀀서로 출발했고, 1999년 오디오 멀티트랙 기능이 강화되면서 유럽 음악 프로덕션 씬에서 Pro Tools의 대안으로 자리잡았습니다. 2002년 Apple이 Emagic을 인수해 Logic을 Mac 전용으로 전환하고 Windows 버전을 단종했으며, 2004년 Logic Pro 7에서 Space Designer 리버브와 Sculpture 신시사이저를 내장해 스튜디오 품질의 플러그인 번들을 제공했습니다. 2013년 Logic Pro X 출시로 드럼머신 Drummer·악보 편집·Flex Pitch 피치 교정이 통합됐고, 현재 한국의 K-POP 제작사·인디 아티스트·영상 음악 작업자들이 Final Cut Pro와의 통합 워크플로우로 Logic Pro를 사용합니다.
+Logic Pro의 역사는 1993년 독일에서 Notator Logic으로 출시하면서 시작됩니다. 당초 Atari ST·Macintosh용 MIDI 시퀀서로 출발했습니다. 2002년 Apple이 Emagic을 인수해 Logic을 Mac 전용으로 전환하고 Windows 버전을 단종했습니다. 2013년 Logic Pro X 출시로 드럼머신 Drummer·악보 편집·Flex Pitch 피치 교정이 통합됐습니다.
 
 ---
 

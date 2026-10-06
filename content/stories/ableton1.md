@@ -39,7 +39,7 @@ faq:
 
 Ableton Live는 전자음악·EDM·힙합 프로듀서에게 특히 인기 있는 DAW이며, 보컬 녹음·편집도 안정적으로 지원합니다.
 
-Ableton Live의 역사는 2001년 독일 소프트웨어 회사 Ableton이 처음 출시한 버전 1.0에서 시작됩니다. 기존 DAW가 타임라인 기반 선형 녹음에 집중했던 것과 달리, Ableton은 클립 단위로 루프를 즉흥 재생하는 Session View를 최초로 도입해 라이브 퍼포먼스와 즉흥 창작의 새로운 패러다임을 열었습니다. 2004년 Live 4에서 VST 플러그인 지원이 추가됐고, Daft Punk·Radiohead 등이 Ableton을 라이브 공연 도구로 채택하면서 EDM·전자음악 씬의 표준 DAW로 자리 잡았습니다. 2011년 Push 컨트롤러 출시로 하드웨어 통합이 강화됐고, 현재 Ableton Live 12는 MIDI 2.0을 지원하며 전통적인 보컬 녹음부터 전자음악 라이브 퍼포먼스까지 하나의 환경에서 처리합니다.
+Ableton Live의 역사는 2001년 독일 소프트웨어 회사 Ableton이 처음 출시한 버전 1.0에서 시작됩니다. 기존 DAW가 타임라인 기반 선형 녹음에 집중했던 것과 달리, Ableton은 클립 단위로 루프를 즉흥 재생하는 Session View를 최초로 도입해 라이브 퍼포먼스와 즉흥 창작의 새로운 패러다임을 열었습니다. 2004년 Live 4에서 VST 플러그인 지원이 추가됐고, EDM·전자음악 씬의 표준 DAW로 자리 잡았습니다. 2013년 Push 컨트롤러 출시로 하드웨어 통합이 강화됐고, 현재 Ableton Live 12는 전통적인 보컬 녹음부터 전자음악 라이브 퍼포먼스까지 하나의 환경에서 처리합니다.
 
 ## Ableton Live 기본 설정
 
@@ -69,7 +69,7 @@ Ableton Live의 역사는 2001년 독일 소프트웨어 회사 Ableton이 처�
 ### 트랙 생성
 
 1. Arrangement View (Tab 키로 전환)
-2. Create → Insert Audio Track (Cmd+Shift+T)
+2. Create → Insert Audio Track (Cmd+T)
 3. 트랙 입력 채널: 오디오 인터페이스 채널 선택
 4. 모니터: Auto 또는 In (녹음 중 자신 소리 모니터링)
 
