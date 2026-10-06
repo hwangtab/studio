@@ -218,6 +218,10 @@
       "keywords": "yozuv namunalari, mixingdan oldin va keyin, mastering namunalari, studio portfolio, musiqa prodakshn sifati, yozuv natijalari, Studio NOL",
       "title": "Yozuv va Miks Portfolio | Studio NOL",
       "description": "Studio NOL portfoliosi — rejadan yozuv, miks va masteringgacha, so'ng tarqatish va chiqarish PRigacha. Albom, singl va reklama musiqasi kreditlari, bajarilgan ishlar va oldin/keyin namunalari."
+    },
+    "boardTitles": {
+      "works": "Ishlar",
+      "tracks": "Namuna treklar"
     }
   },
   "contact": {

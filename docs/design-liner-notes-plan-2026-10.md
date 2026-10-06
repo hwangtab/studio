@@ -203,7 +203,8 @@ props: `items: { heading; body; href? }[]`, `columns: 1 | 2 | 3`, `numbered`(ari
 - **진행(2026-10-06, 운영자 지시로 2주차 사진은 건너뛰고 3주차 먼저)**: a·b·c 중 Provider·Dock·발췌 데이터·ServiceExcerpt(녹음·발매)·
   홈 커버 재생·버스·계측까지 `feat/liner-audio`. 발췌 음원은 이미 공개된 포트폴리오 곡 둘(Jai Fever, 류형수 숨)을 ffmpeg로 잘랐다 —
   축가·성우·레슨 발췌와 믹싱 LP 발췌는 음원이 오면 `data/audioExcerpts.ts`에 한 줄. 포트폴리오 재구성(LP판 제거·커버 그리드·필터·재생)과
-  WaveRule(d)은 다음 PR `feat/liner-portfolio`.
+  WaveRule(d)은 `feat/liner-portfolio`로 같은 날 올렸다 — 포트폴리오 히어로 board(작업 수·샘플 트랙 수), 샘플 트랙 세 줄(글로벌
+  플레이어), 커버 그리드(PortfolioCoverGrid, 분류 배지·재생 버튼), 옛 components/AudioPlayer 삭제, WaveRule(components/ui).
 
 ### 3-7. 사진
 

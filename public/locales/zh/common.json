@@ -218,6 +218,10 @@
       "keywords": "录音样本, 混音前后对比, 母带示例, 工作室作品集, 音乐制作品质, 录音成果, Studio NOL",
       "title": "录音·混音作品集 | Studio NOL",
       "description": "Studio NOL 作品集 — 从策划、录音、混音、母带到发行登记与发行宣传。公开专辑·单曲·广告音乐的制作人员、负责范围与前后对比样本。延新内录音室。"
+    },
+    "boardTitles": {
+      "works": "作品",
+      "tracks": "试听曲目"
     }
   },
   "contact": {

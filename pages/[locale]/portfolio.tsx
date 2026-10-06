@@ -12,25 +12,14 @@ import CategoryFilter from '../../components/CategoryFilter';
 import SEO from '../../components/SEO';
 import { generateItemListSchema, generateAudioObjectSchema } from '../../utils/schema';
 import { getSiteConfig } from '../../data/siteConfig';
-import ImageHero, { HERO_SCRIM } from '../../components/common/ImageHero';
+import ImageHero from '../../components/common/ImageHero';
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 import { getPortfolioItems, getAudioTracks, getCategories } from '../../data/portfolio';
 const PortfolioDetailModal = dynamic(() => import('../../components/PortfolioDetailModal'), { ssr: false });
-// loading 스켈레톤: AudioPlayer(components/AudioPlayer/index.tsx)는 청크 로드 전 null을
-// 렌더해 above-fold 공간이 예약되지 않고, 마운트 시 아래 콘텐츠를 밀어내 CLS 0.09를 유발했다.
-// 실제 컴포넌트와 동일한 bg/rounded/border의 빈 자리표시로 채우고, min-height는 실제
-// 마운트 후 높이(그리드 lg:grid-cols-[1.2fr,1fr] + 앨범아트 원형 256/320px + 컨트롤 등 실측 기반
-// 추정치)에 맞춰 모바일·태블릿(세로 스택) 1100px, 데스크톱(lg: 2열)은 720px.
-const AudioPlayer = dynamic(() => import('../../components/AudioPlayer'), {
-  ssr: false,
-  loading: () => (
-    <div
-      aria-hidden="true"
-      className="bg-white dark:bg-[#121212] overflow-hidden rounded-3xl shadow-xl dark:shadow-2xl border border-gray-200 dark:border-white/5 min-h-[1100px] lg:min-h-[720px]"
-    />
-  ),
-});
-import ProjectRowCard from '../../components/ui/ProjectRowCard';
+import PortfolioCoverGrid from '../../components/portfolio/PortfolioCoverGrid';
+import PortfolioSampleTracks from '../../components/portfolio/PortfolioSampleTracks';
+import WaveRule from '../../components/ui/WaveRule';
+import { EmptyState } from '../../components/ui/EmptyState';
 import SectionHeading from '../../components/ui/SectionHeading';
 import type { PortfolioItem, AudioTrack, PortfolioCategory } from '../../types/data';
 import { Section } from '../../components/ui/Section';
@@ -157,10 +146,22 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
               {t('portfolio.subtitle')}
             </>
           ),
-          backgroundImage: "/images/recording1.webp",
-          imageAlt: t('portfolio.heroAlt'),
-          minHeight: "min-h-[60vh]",
-          overlayGradient: HERO_SCRIM,
+          // 라이너 노트 §3-3·§3-8: 사진 대신 잉크 면 + 실제 작업 수(board). 녹음 LP와 같은 보컬 사진을 돌려 쓰던 자리.
+          layout: 'board' as const,
+          boardContent: (
+            <dl className="flex items-end gap-8 border-t border-white/25 pt-6">
+              <div className="flex flex-col-reverse">
+                <dt className="font-hero text-base md:text-lg text-primary-lighter mt-2 break-keep">{t('portfolio.boardTitles.works')}</dt>
+                <dd className="text-4xl md:text-5xl font-extrabold tabular-nums tracking-tight leading-none text-white">{initialPortfolioItems.length}</dd>
+              </div>
+              {audioTracks.length > 0 && (
+                <div className="flex flex-col-reverse">
+                  <dt className="font-hero text-base md:text-lg text-primary-lighter mt-2 break-keep">{t('portfolio.boardTitles.tracks')}</dt>
+                  <dd className="text-4xl md:text-5xl font-extrabold tabular-nums tracking-tight leading-none text-white">{audioTracks.length}</dd>
+                </div>
+              )}
+            </dl>
+          ),
           breadcrumbItems: [
             { name: t('nav.home'), path: `/${locale}` },
             { name: t('nav.portfolio'), path: `/${locale}/portfolio` },
@@ -179,7 +180,8 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
               titleClassName="typo-card-title"
               as="h2"
             />
-            <AudioPlayer tracks={audioTracks} locale={locale} />
+            {/* 라이너 노트 §3-6: LP판 플레이어 대신 글로벌 미니 플레이어로 트는 세 줄. 재생 전 0바이트. */}
+            <PortfolioSampleTracks locale={locale} tracks={audioTracks} />
             {/* SSR-visible track list for crawlers (AudioPlayer is ssr:false) */}
             <noscript>
               <ul>
@@ -188,6 +190,8 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
                 ))}
               </ul>
             </noscript>
+            {/* 파형 모티프(§3-6 d) — 움직이지 않는 장식. */}
+            <WaveRule className="mt-12 text-gray-300 dark:text-gray-700" />
           </div>
         </Section>
       )}
@@ -217,24 +221,16 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
           </div>
 
           {filteredItems.length === 0 ? (
-            <div className="text-center pt-16 pb-12">
-              <Music className="text-gray-300 dark:text-gray-600 mx-auto mb-4" size={64} aria-hidden="true" />
-              <p className="typo-card-body text-gray-500 dark:text-gray-400">
-                {t('portfolio.noProjects')}
-              </p>
-            </div>
+            <EmptyState icon={Music} title={t('portfolio.noProjects')} className="my-8" />
           ) : (
-            <div className="flex flex-col gap-4">
-              {visibleItems.map((item, index) => (
-                <ProjectRowCard
-                  key={item.id}
-                  {...item}
-                  index={index}
-                  viewProjectLabel={t('portfolio.viewProject')}
-                  onClick={() => handleCardClick(item)}
-                />
-              ))}
-            </div>
+            /* 라이너 노트 §3-8: 목록 행(배지·크레딧 나열) → 커버 그리드. 발췌가 있는 커버에는 재생 버튼. */
+            <PortfolioCoverGrid
+              locale={locale}
+              items={visibleItems}
+              categories={categories}
+              onSelect={handleCardClick}
+              viewProjectLabel={t('portfolio.viewProject')}
+            />
           )}
 
           {hasMoreItems && (
