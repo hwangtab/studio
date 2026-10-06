@@ -40,7 +40,7 @@ faq:
 
 디에서(De-esser)는 보컬 믹싱에서 치찰음(sibilance) — 's', 'sh', 'ch', 'z' 등의 고주파 소리 — 을 자동으로 감지하고 줄여주는 다이나믹 프로세서입니다. 보컬 믹싱에서 자주 쓰이는 단계 중 하나입니다.
 
-디에서의 역사는 1950~60년대 방송·녹음 현장에서 시작됩니다. 당시 마이크(특히 리본 마이크와 초기 컨덴서 마이크)는 치찰음 주파수 대역에 예민하게 반응했고, 방송 엔지니어들은 수동 EQ로 6~10kHz 대역을 일괄 감쇠시키는 방식을 사용했습니다. 그러나 이 방법은 치찰음이 없는 구간에서도 보컬 선명도를 해쳤습니다. 1970년대 들어 다이나믹 EQ 개념이 발전하면서 dbx 902·Valley Audio Gain Brain 같은 하드웨어 디에서 유닛이 스튜디오에 보급됐습니다. 1990년대 DAW의 보급 이후 Waves Renaissance DeEsser·FabFilter Pro-DS 같은 소프트웨어 플러그인이 이를 대체했고, 현재는 Oeksound Soothe2처럼 AI 기반으로 치찰음 발생 패턴을 학습하고 다이나믹 EQ를 자동 적용하는 세대까지 발전했습니다.
+DAW의 보급 이후 Waves Renaissance DeEsser·FabFilter Pro-DS 같은 소프트웨어 플러그인이 쓰이고 있고, Oeksound Soothe2처럼 공명과 치찰음을 실시간으로 찾아 자동으로 줄이는 다이나믹 레조넌스 서프레서까지 나와 있습니다.
 
 ---
 
@@ -94,7 +94,7 @@ faq:
 |---------|------|-------|
 | Waves Renaissance DeEsser | 간단한 조작, 오래된 정석 | 유료 |
 | FabFilter Pro-DS | 세밀한 컨트롤, 시각적 UI | 유료 |
-| Oeksound Soothe2 | AI 기반 다이나믹 EQ | 유료 |
+| Oeksound Soothe2 | 다이나믹 레조넌스 서프레서 | 유료 |
 | Logic Pro DeEsser | Logic 내장 플러그인 | Logic 포함 |
 | iZotope Neutron | 자동 감지 기능 | 유료 |
 
