@@ -50,8 +50,10 @@ export const pretendard = localFont({
 // 디스플레이 서체 서브셋 — hero h1 + v2 섹션 제목(.typo-display-section)이 쓰는 글자만(~80KB, preload).
 //
 // 2026-10-06 라이너 노트(docs/design-liner-notes-plan-2026-10.md §3-2)부터 제목은 Pretendard가 아니라
-// 디스플레이 세리프다(기본 Hahmlet, OFL). 본문·버튼·숫자는 위 pretendard 그대로. 생성·글자 수집 범위·
-// 서체 스위치(DISPLAY_FONT=hahmlet|maruburi|pretendard)는 scripts/generate-hero-font.mjs 머리말.
+// 디스플레이 서체다. 2026-10-07 운영자가 세리프(Hahmlet)를 "촌스럽다"며 반려해 이 브랜치는
+// **Paperlogy Bold**(Freesentation, OFL 1.1, 기하 산세리프)로 비교한다 — 비교 쌍은 feat/liner-font-suit.
+// 본문·버튼·숫자는 위 pretendard 그대로. 생성·글자 수집 범위·서체 스위치
+// (DISPLAY_FONT=hahmlet|maruburi|pretendard|suit|paperlogy)는 scripts/generate-hero-font.mjs 머리말.
 // preload=true라 다른 critical 리소스와 동시 fetch — 옛 hero 서브셋(36KB)보다 큰 만큼 LCP를 simulate로 재서
 // 넘으면 hero 글자만 담은 파일과 제목용 파일로 가른다(설계 §3-2).
 //
