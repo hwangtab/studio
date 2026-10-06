@@ -39,7 +39,7 @@ faq:
 
 믹싱에서 EQ를 효과적으로 사용하려면 주파수 스펙트럼과 각 악기의 주파수 분포를 이해하는 것이 필수입니다. 인간의 청각은 20Hz~20kHz를 감지하며, 이 범위가 오디오 작업의 전체 주파수 스펙트럼입니다. 귀는 이 주파수 범위에서 균일하게 민감하지 않습니다 — Harvey Fletcher와 Wilden Munson이 1933년 발표한 "Equal Loudness Contour(등청감 곡선)"에 따르면 인간의 귀는 2~4kHz 중간 주파수에 가장 민감하고, 저역과 고역은 상대적으로 덜 민감합니다. 이것이 저역 EQ 조정이 실제 음압보다 귀에 덜 느껴지고, 2~4kHz 컷이 믹스를 드라마틱하게 부드럽게 만드는 이유입니다.
 
-EQ의 역사에서 가장 중요한 도구는 API 550A(1967년 출시)와 Neve 1073(1970년 출시)입니다. 두 EQ 모두 지금도 Abbey Road Studios와 Electric Lady Studios 같은 전설적인 녹음 현장에서 사용됩니다. 현대 DAW 플러그인(FabFilter Pro-Q 3, Waves SSL G-EQ, UAD Neve 1073)은 이 하드웨어의 음색을 디지털로 에뮬레이션합니다.
+EQ의 역사에서 가장 중요한 도구는 API 550A(1967년 출시)와 Neve 1073(1970년 출시)입니다. 현대 DAW 플러그인(FabFilter Pro-Q 3, Waves SSL G-EQ, UAD Neve 1073)은 이 하드웨어의 음색을 디지털로 에뮬레이션합니다.
 
 ---
 

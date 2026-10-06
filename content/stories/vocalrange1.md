@@ -44,12 +44,12 @@ inlineFallback: {}
 > - **실용 음역 = 양 끝에서 2~3반음 안쪽**. 한 번 짜내야 나오는 음은 측정값이지만 곡에 쓸 음은 아님.
 > - **가성(Falsetto)은 별도 표기**. 실용 음역과 가성 최고음을 분리해야 곡 선택이 정확.
 > - **시즌·컨디션 영향 큼**: 건조한 겨울·피로 시 반음~1음 낮아짐. 측정은 워밍업 후, 동일 조건에서.
-> - **K-pop·팝 보컬은 성악 분류를 깨버림**: 마이클 잭슨은 바리톤 음역에서 팔세토로 F5 이상, 아이유는 알토~소프라노 영역을 믹스 보이스로 자유 활용. 분류는 참고일 뿐.
-> - **음역의 넓이보다 안에서의 안정성이 중요**: Bob Dylan은 약 1.5옥타브로 수십 년 경력. 음정 안정·음색 일관·감정 표현이 녹음 완성도를 결정.
+> - **K-pop·팝 보컬은 성악 분류를 깨버림**: 분류는 참고일 뿐.
+> - **음역의 넓이보다 안에서의 안정성이 중요**: 음정 안정·음색 일관·감정 표현이 녹음 완성도를 결정.
 
 노래를 부르기 전 자신의 음역대를 파악하면 곡 선택, 키 설정, 보컬 트레이닝 방향이 명확해집니다. 녹음 세션에서도 적합한 키로 진행하려면 사전에 음역을 확인하는 것이 중요합니다.
 
-음역 분류 체계는 17세기 바로크 오페라에서 성악 파트를 체계화하면서 시작됐습니다. **몬테베르디의 "L'Orfeo"(1607)** 는 현존하는 가장 초기 오페라 중 하나로 소프라노·알토·테너·베이스의 분류를 명확히 보여주며([L'Orfeo — Wikipedia](https://en.wikipedia.org/wiki/L'Orfeo)), 이후 4파트 체계가 오페라 작곡의 기준이 됐습니다. **19세기 중후반 독일 오페라에서 Fach(파흐) 시스템이 확립**돼 소프라노를 리릭·드라마틱·스핀토 등으로 세분화했습니다([Fach — Wikipedia](https://en.wikipedia.org/wiki/Fach)). 남성 테너의 고음 C5(high C)는 성악에서 가장 주목받는 음으로, **파바로티(Luciano Pavarotti)는 도니체티 "La fille du régiment"의 아리아 "Ah! mes amis"에서 9개의 high C를 잇따라 부르며 "King of the High Cs"라는 별명을 얻었습니다**([La fille du régiment — Wikipedia](https://en.wikipedia.org/wiki/La_fille_du_r%C3%A9giment) · [Classic FM: Pavarotti's 9 consecutive high Cs](https://www.classicfm.com/artists/luciano-pavarotti/sang-nine-high-cs-donizetti-ah-mes-amis-met-opera/)). 20세기 팝 보컬에서는 믹스 보이스(Mix Voice)와 팔세토(Falsetto) 활용이 일반화되면서 성악적 음역 분류가 절대 기준이 되지 않게 됐습니다. 마이클 잭슨과 아이유 같은 팝 보컬리스트들은 넓은 음역을 믹스 보이스로 자유롭게 오갔습니다. 한국에서는 K-POP 연습생 평가에서 음역 측정이 필수 항목으로 포함되며, 피아노 앱으로 반음씩 측정하는 방법이 표준화됐습니다.
+음역 분류 체계는 17세기 바로크 오페라에서 성악 파트를 체계화하면서 시작됐습니다. **몬테베르디의 "L'Orfeo"(1607)** 는 현존하는 가장 초기 오페라 중 하나로 소프라노·알토·테너·베이스의 분류를 명확히 보여주며([L'Orfeo — Wikipedia](https://en.wikipedia.org/wiki/L'Orfeo)), 이후 4파트 체계가 오페라 작곡의 기준이 됐습니다. **19세기 중후반 독일 오페라에서 Fach(파흐) 시스템이 확립**돼 소프라노를 리릭·드라마틱·스핀토 등으로 세분화했습니다([Fach — Wikipedia](https://en.wikipedia.org/wiki/Fach)). 남성 테너의 고음 C5(high C)는 성악에서 가장 주목받는 음으로, **파바로티(Luciano Pavarotti)는 도니체티 "La fille du régiment"의 아리아 "Ah! mes amis"에서 9개의 high C를 잇따라 부르며 "King of the High Cs"라는 별명을 얻었습니다**([La fille du régiment — Wikipedia](https://en.wikipedia.org/wiki/La_fille_du_r%C3%A9giment) · [Classic FM: Pavarotti's 9 consecutive high Cs](https://www.classicfm.com/artists/luciano-pavarotti/sang-nine-high-cs-donizetti-ah-mes-amis-met-opera/)). 20세기 팝 보컬에서는 믹스 보이스(Mix Voice)와 팔세토(Falsetto) 활용이 일반화되면서 성악적 음역 분류가 절대 기준이 되지 않게 됐습니다.
 
 ## 음역대 분류 기준
 
@@ -117,7 +117,7 @@ inlineFallback: {}
 **원곡 키 Bb에서 내 음역에 맞게 조정하려면**
 - 2반음 낮추면 Ab 키
 - 2반음 올리면 C 키
-- **MR 구매 시**: "A키 MR" 또는 "-2 MR" 요청
+- **MR 구매 시**: "Ab키 MR" 또는 "-2 MR" 요청
 - **스튜디오에서**: 엔지니어에게 키 조정 요청 가능
 
 ---
@@ -159,6 +159,6 @@ inlineFallback: {}
 
 실용 음역을 정할 때는 최저음과 최고음을 그대로 사용하지 말고 안쪽으로 2~3반음씩 줄인 범위를 기준으로 삼으세요. 음역의 끝에서 낼 수 있는 음은 컨디션에 따라 불안정하기 때문에, 그 음역에서 노래를 부르면 실수할 확률이 높습니다. "편안하게 낼 수 있는 가장 낮은 음"과 "편안하게 낼 수 있는 가장 높은 음" 사이가 실전 음역입니다.
 
-음역이 좁다고 녹음이 어려운 것은 아닙니다. Bob Dylan의 음역은 1.5옥타브 내외이지만 표현력으로 수십 년의 경력을 만들었습니다. 음역의 넓이보다 그 안에서 안정적인 음정, 일관된 음색, 감정 표현이 녹음의 완성도를 결정합니다.
+음역이 좁다고 녹음이 어려운 것은 아닙니다. 음역의 넓이보다 그 안에서 안정적인 음정, 일관된 음색, 감정 표현이 녹음의 완성도를 결정합니다.
 
 [보컬리스트를 위한 음악 이론 기초](/stories/music-theory1) | [나에게 맞는 노래 키 찾기](/stories/song-key1) | [노래 키 맞추는 방법 — 전조 가이드](/stories/transpose1) | [비브라토 넣는 방법 가이드](/stories/vibrato1) | [보컬 레슨 선택 가이드](/stories/lessonguide1) | [보컬 녹음 비용 결정 요인](/stories/pricing1)

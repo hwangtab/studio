@@ -62,7 +62,7 @@ howTo:
 
 아무리 발성이 좋아도 내 음역대를 벗어난 키로 노래하면 소리가 억지스럽고 피로해집니다. 내 목소리에 맞는 키를 찾으면 노래가 훨씬 자연스럽고 편안해집니다.
 
-보컬 음역대를 체계화한 분류는 **19세기 중후반 독일 오페라 하우스에서 발달한 Fach(파흐) 시스템**에서 출발합니다([Fach — Wikipedia](https://en.wikipedia.org/wiki/Fach)). 소프라노·메조소프라노·알토(여성), 테너·바리톤·베이스(남성)의 6 카테고리는 현대 보컬 의학·실용음악 교육에서도 음역 기준으로 사용됩니다. 노래방(가라오케)은 **1971년 일본 고베에서 Daisuke Inoue(井上大佑)가 11대의 기계를 술집에 임대하면서 발명**됐고([Daisuke Inoue — Wikipedia](https://en.wikipedia.org/wiki/Daisuke_Inoue) · [WIPO Magazine: The Father of Karaoke](https://www.wipo.int/en/web/wipo-magazine/articles/the-father-of-karaoke-36671)), 이후 일본 다이이치코쇼(第一興商) 등 후발 회사가 반음 단위 키 조절을 표준화하면서 현재 한국 노래방에서도 -4~+4 반음 단위 조절이 표준이 됐습니다. 현대 스마트폰 앱(Moises AI, Vocal Remover)은 실시간 피치 분리와 트랜스포즈를 지원해 사전 키 탐색이 훨씬 쉬워졌고, 스튜디오 녹음에서 후렴 최고음이 실용 최고음보다 2~3반음 낮은 키가 여유 있는 퍼포먼스의 기준으로 자리 잡았습니다.
+보컬 음역대를 체계화한 분류는 **Fach(파흐) 시스템**에서 출발합니다([Fach — Wikipedia](https://en.wikipedia.org/wiki/Fach)). 소프라노·메조소프라노·알토(여성), 테너·바리톤·베이스(남성)의 6 카테고리는 현대 보컬 의학·실용음악 교육에서도 음역 기준으로 사용됩니다. 노래방(가라오케)은 **1971년 일본 고베에서 Daisuke Inoue(井上大佑)가 11대의 기계를 술집에 임대하면서 발명**됐습니다([Daisuke Inoue — Wikipedia](https://en.wikipedia.org/wiki/Daisuke_Inoue) · [WIPO Magazine: The Father of Karaoke](https://www.wipo.int/en/web/wipo-magazine/articles/the-father-of-karaoke-36671)). 현대 스마트폰 앱(Moises AI, Vocal Remover)은 실시간 피치 분리와 트랜스포즈를 지원해 사전 키 탐색이 훨씬 쉬워졌고, 스튜디오 녹음에서 후렴 최고음이 실용 최고음보다 2~3반음 낮은 키가 여유 있는 퍼포먼스의 기준으로 자리 잡았습니다.
 
 ## 표준 보컬 음역대
 
@@ -160,7 +160,7 @@ MR 파일의 피치를 조정해드립니다.
 
 ## 출처
 
-- Fach(파흐) 시스템 — 19세기 중후반 독일 오페라 하우스 기원: [Fach — Wikipedia](https://en.wikipedia.org/wiki/Fach)
+- Fach(파흐) 시스템: [Fach — Wikipedia](https://en.wikipedia.org/wiki/Fach)
 - 노래방(가라오케) 발명 — 1971년 일본 고베, Daisuke Inoue: [Daisuke Inoue — Wikipedia](https://en.wikipedia.org/wiki/Daisuke_Inoue) · [WIPO Magazine — The Father of Karaoke](https://www.wipo.int/en/web/wipo-magazine/articles/the-father-of-karaoke-36671)
 - 음역 표기(Scientific Pitch Notation, A2/C4/E6 등): [Scientific pitch notation — Wikipedia](https://en.wikipedia.org/wiki/Scientific_pitch_notation)
 
