@@ -12,7 +12,7 @@ import CategoryFilter from '../../components/CategoryFilter';
 import SEO from '../../components/SEO';
 import { generateItemListSchema, generateAudioObjectSchema } from '../../utils/schema';
 import { getSiteConfig } from '../../data/siteConfig';
-import ImageHero from '../../components/common/ImageHero';
+import ImageHero, { HERO_SCRIM } from '../../components/common/ImageHero';
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 import { getPortfolioItems, getAudioTracks, getCategories } from '../../data/portfolio';
 const PortfolioDetailModal = dynamic(() => import('../../components/PortfolioDetailModal'), { ssr: false });
@@ -146,22 +146,9 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
               {t('portfolio.subtitle')}
             </>
           ),
-          // 라이너 노트 §3-3·§3-8: 사진 대신 잉크 면 + 실제 작업 수(board). 녹음 LP와 같은 보컬 사진을 돌려 쓰던 자리.
-          layout: 'board' as const,
-          boardContent: (
-            <dl className="flex items-end gap-8 border-t border-white/25 pt-6">
-              <div className="flex flex-col-reverse">
-                <dt className="font-hero text-base md:text-lg text-primary-lighter mt-2 break-keep">{t('portfolio.boardTitles.works')}</dt>
-                <dd className="text-4xl md:text-5xl font-extrabold tabular-nums tracking-tight leading-none text-white">{initialPortfolioItems.length}</dd>
-              </div>
-              {audioTracks.length > 0 && (
-                <div className="flex flex-col-reverse">
-                  <dt className="font-hero text-base md:text-lg text-primary-lighter mt-2 break-keep">{t('portfolio.boardTitles.tracks')}</dt>
-                  <dd className="text-4xl md:text-5xl font-extrabold tabular-nums tracking-tight leading-none text-white">{audioTracks.length}</dd>
-                </div>
-              )}
-            </dl>
-          ),
+          backgroundImage: "/images/recording1.webp",
+          imageAlt: t('portfolio.heroAlt'),
+          overlayGradient: HERO_SCRIM,
           breadcrumbItems: [
             { name: t('nav.home'), path: `/${locale}` },
             { name: t('nav.portfolio'), path: `/${locale}/portfolio` },

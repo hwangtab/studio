@@ -8,7 +8,7 @@ import ResponsiveImage from '../../components/ResponsiveImage';
 import ServiceQuickLinksSection from '../../components/service/ServiceQuickLinksSection';
 import ServicePriceTable from '../../components/service/ServicePriceTable';
 import SEO from '../../components/SEO';
-import ImageHero from '../../components/common/ImageHero';
+import ImageHero, { HERO_SCRIM_STRONG } from '../../components/common/ImageHero';
 import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 import BookingEntryButton from '../../components/booking/BookingEntryButton';
 import SectionHeading from '../../components/ui/SectionHeading';
@@ -205,8 +205,8 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
         }
         backgroundImage="/images/recording1.webp"
         imageAlt={t('recording.hero.alt')}
-        // 라이너 노트 §3-3: 왼쪽 잉크 면 + 오른쪽 사진(split). 스크림·drop-shadow 없음.
-        layout="split"
+        minHeight="min-h-[60vh]"
+        overlayGradient={HERO_SCRIM_STRONG}
         breadcrumbItems={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.recording'), path: `/${locale}/recording` },

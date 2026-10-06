@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import SectionHeading from '../../components/ui/SectionHeading';
 import {
-  formatPriceAmount,
   formatPriceLabel,
   getPricingData,
   MASTERING_SINGLE_PRICE,
@@ -28,7 +27,7 @@ import SectionAnchorNav from '../../components/ui/SectionAnchorNav';
 import PricingCard from '../../components/ui/PricingCard';
 import KakaoSectionBar from '../../components/common/KakaoSectionBar';
 import HubLocaleContentSection from '../../components/ui/HubLocaleContentSection';
-import ImageHero from '../../components/common/ImageHero';
+import ImageHero, { HERO_SCRIM } from '../../components/common/ImageHero';
 
 // Below-fold 컴포넌트 code-splitting (초기 JS 번들 감소 → TBT 단축)
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
@@ -253,26 +252,10 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
             <span className="block">{t('pricing.hero.subtitleLine2')}</span>
           </>
         }
-        // 라이너 노트 §3-3 가격판(board): 사진 없는 잉크 면. 검색용 h1은 작은 세리프 한 줄로 두고,
-        // 같은 세 숫자를 가격 정본(data/pricing.ts)에서 크게 다시 그린다 — 전단지처럼 읽히던 72px 흰 h1 대신.
-        layout="board"
-        boardContent={
-          <dl className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 border-t border-white/25 pt-6 max-w-4xl">
-            {[
-              { label: t('pricing.hero.boardTitles.recording'), value: RECORDING_HOURLY_PRICE },
-              { label: t('pricing.hero.boardTitles.practiceRoom'), value: PRACTICE_ROOM_MONTHLY_PRICE },
-              { label: t('pricing.hero.boardTitles.wedding'), value: WEDDING_PACKAGE_PRICE },
-            ].map(({ label, value }) => (
-              <div key={label} className="flex flex-col-reverse">
-                <dt className="font-hero text-base md:text-lg text-primary-lighter mt-2 break-keep">{label}</dt>
-                <dd className="text-4xl md:text-5xl font-extrabold tabular-nums tracking-tight leading-none text-white">
-                  {formatPriceAmount(value)}
-                  <span className="ml-1 text-base font-medium text-white/70">{t('pricing.hero.boardTitles.unit')}</span>
-                </dd>
-              </div>
-            ))}
-          </dl>
-        }
+        backgroundImage="/images/hardware2.webp"
+        imageAlt={t('pricing.hero.alt')}
+        minHeight="min-h-[40vh]"
+        overlayGradient={HERO_SCRIM}
         breadcrumbItems={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.pricing'), path: `/${locale}/pricing` },

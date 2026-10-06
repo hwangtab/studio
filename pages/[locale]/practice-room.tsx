@@ -7,7 +7,7 @@ import { Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, 
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
-import ImageHero from '../../components/common/ImageHero';
+import ImageHero, { HERO_SCRIM_STRONG } from '../../components/common/ImageHero';
 import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 import SectionHeading from '../../components/ui/SectionHeading';
 import ServicePriceTable from '../../components/service/ServicePriceTable';
@@ -154,8 +154,8 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
         }
         backgroundImage="/images/room5.webp"
         imageAlt={t('practiceRoom.hero.alt')}
-        // 라이너 노트 §3-3: 왼쪽 잉크 면 + 오른쪽 사진(split). 스크림·drop-shadow 없음.
-        layout="split"
+        minHeight="min-h-[60vh]"
+        overlayGradient={HERO_SCRIM_STRONG}
         breadcrumbItems={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.practiceRoom'), path: `/${locale}/practice-room` },
