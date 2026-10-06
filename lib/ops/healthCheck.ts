@@ -1,6 +1,8 @@
 import { and, eq, inArray, isNotNull, isNull, lt, or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
+import { adminUrl, buildEmailLayout, escapeHtml } from '../email/layout';
+import { formatKst } from '../email/operatorAlert';
 import { isNotificationSentinel } from './notificationSentinel';
 import { bookings, contracts, fundingPledges, fundingProjectPayouts, fundingProjects, orders, payments, refunds, subscriptionPayments, subscriptions } from '../../db/schema';
 import { calendarForService, calendarIdFor, fetchBusyRanges, isCalendarActive, roomCalendarEnvKey, type BookingCalendar } from '../booking/gcal';
@@ -46,7 +48,7 @@ export interface HealthIssue {
   detail: string;
   /** 높을수록 먼저 보여준다. */
   severity: 'high' | 'medium';
-  /** 관리자 화면에서 이 항목을 처리하러 갈 곳. 메일 본문에는 싣지 않는다. */
+  /** 관리자 화면에서 이 항목을 처리하러 갈 곳. 메일 본문에 이동 주소로 실린다. */
   href?: string;
 }
 
@@ -1095,7 +1097,8 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
 export const formatHealthReport = (report: HealthReport): string => {
   const lines = report.issues.map((issue, index) => {
     const mark = issue.severity === 'high' ? '[긴급]' : '[확인]';
-    return `${index + 1}. ${mark} ${issue.title}\n   ${issue.detail.replace(/\n/g, '\n   ')}`;
+    const link = issue.href ? `\n   이동: ${adminUrl(issue.href)}` : '';
+    return `${index + 1}. ${mark} ${issue.title}\n   ${issue.detail.replace(/\n/g, '\n   ')}${link}`;
   });
 
   return [
@@ -1111,4 +1114,39 @@ export const formatHealthReport = (report: HealthReport): string => {
     }).format(report.checkedAt)} (KST)`,
     '이 메일은 이상이 있을 때만 발송됩니다.',
   ].join('\n');
+};
+
+/**
+ * 메일 HTML. 항목마다 긴급은 붉은 블록, 일반은 앰버 블록으로 쌓고 각 항목에 처리 링크를 단다.
+ * 레이아웃의 notices는 톤이 하나뿐이라 항목 블록은 paragraphs 안에 직접 그린다(색은 레이아웃 팔레트와 같다).
+ */
+export const buildHealthReportHtml = (report: HealthReport): string => {
+  const highCount = report.issues.filter((issue) => issue.severity === 'high').length;
+
+  const blocks = report.issues.map((issue, index) => {
+    const high = issue.severity === 'high';
+    const bg = high ? '#fef2f2' : '#fffbeb';
+    const line = high ? '#f87171' : '#fcd34d';
+    const ink = high ? '#7f1d1d' : '#78350f';
+    const mark = high ? '긴급' : '확인';
+    const link = issue.href
+      ? `<br /><a href="${escapeHtml(adminUrl(issue.href))}" style="color: #6d28d9; font-weight: 700; text-decoration: underline;">처리하러 가기 &rarr;</a>`
+      : '';
+    return `<span style="display: block; padding: 12px 14px; background-color: ${bg}; border-left: 3px solid ${line}; border-radius: 6px; color: ${ink}; font-size: 14px; line-height: 1.7;"><strong>${index + 1}. [${mark}] ${escapeHtml(issue.title)}</strong><br />${escapeHtml(issue.detail).replace(/\r?\n/g, '<br />')}${link}</span>`;
+  });
+
+  return buildEmailLayout({
+    audience: 'operator',
+    noticeTone: highCount > 0 ? 'alert' : 'info',
+    preheader: `처리 필요 ${report.issues.length}건${highCount > 0 ? ` (긴급 ${highCount})` : ''}`,
+    heading: '운영 점검에서 처리할 항목을 찾았습니다',
+    // 긴급이 있으면 notices가 붉게 칠해져 "이상이 있을 때만 발송" 안내가 경고처럼 읽힌다 — 문단으로 둔다.
+    paragraphs: ['이 메일은 이상이 있을 때만 발송됩니다. 항목별 링크에서 바로 처리할 수 있습니다.', ...blocks],
+    rows: [
+      { label: '처리 필요', value: `${report.issues.length}건`, emphasis: true },
+      ...(highCount > 0 ? [{ label: '긴급', value: `${highCount}건`, emphasis: true }] : []),
+      { label: '점검 시각', value: formatKst(report.checkedAt) },
+    ],
+    cta: { label: '관리자 열기', url: adminUrl('/admin') },
+  });
 };

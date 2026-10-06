@@ -10,6 +10,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { isCronAuthorized } from '../../../lib/cron/auth';
+import { buildOperatorAlertHtml } from '../../../lib/email/operatorAlert';
 import { sendEmail } from '../../../lib/email/resend';
 import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
 import { expireStaleShowOrders } from '../../../lib/shows/service';
@@ -37,6 +38,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         '재고는 시각 조건으로 풀려 있어 판매에는 영향이 없고, 다음 실행에서 다시 정리됩니다.',
         'shows 테이블이 없다는 오류면 마이그레이션 0045 적용 여부부터 보세요.',
       ].join('\n'),
+      html: buildOperatorAlertHtml({
+        title: '공연 주문 만료 정리 크론이 실패했습니다',
+        cron: 'cron/expire-show-orders',
+        summary: '결제하지 않은 공연 티켓 주문을 만료 처리하는 크론이 실패했습니다.',
+        reason: message,
+        hints: [
+          '재고는 시각 조건으로 풀려 있어 판매에는 영향이 없고, 다음 실행에서 다시 정리됩니다.',
+          'shows 테이블이 없다는 오류면 마이그레이션 0045 적용 여부부터 보세요.',
+        ],
+      }),
     }).catch(() => ({ ok: false }));
     if (!alert.ok) console.error('[cron/expire-show-orders] 운영자 알림도 실패');
     return res.status(500).json({ ok: false, message });
