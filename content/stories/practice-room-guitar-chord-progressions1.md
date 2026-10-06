@@ -67,7 +67,7 @@ G - D - Em - C (G 메이저)
 
 ```
 
-수천 개의 팝 곡이 이 진행을 사용합니다. (Pachelbel Canon의 변형)
+많은 팝 곡이 이 진행을 사용합니다. (Pachelbel Canon의 변형)
 
 ### I-IV-I-V (블루스·록 기본)
 

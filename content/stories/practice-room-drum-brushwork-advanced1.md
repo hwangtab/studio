@@ -193,10 +193,10 @@ faq:
 
 | 드러머 | 특징 | 참고 앨범 |
 |--------|------|-----------|
-| Ed Thigpen | 브러시의 교과서 | You've Changed (Oscar Peterson) |
+| Ed Thigpen | 브러시의 교과서 | |
 | Shelly Manne | 서정적 발라드 브러시 | My Fair Lady |
 | Jack DeJohnette | 현대적 브러시 혼용 | Keith Jarrett Trio |
-| Jeff Hamilton | 클린한 스윙 브러시 | Live at Maybeck |
+| Jeff Hamilton | 클린한 스윙 브러시 | |
 
 ---
 

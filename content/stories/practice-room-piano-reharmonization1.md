@@ -210,7 +210,7 @@ Am7b5 | D7alt | Gm(maj7) | Gm |
 |---------|----------------|---------|
 | Bill Evans | 섬세한 색채 변화 | Portrait in Jazz |
 | Herbie Hancock | 대담한 모달 치환 | Speak Like a Child |
-| Keith Jarrett | 즉흥적 리하모나이제이션 | Köln Concert |
+| Keith Jarrett | 즉흥적 리하모나이제이션 | Standards, Vol. 1 |
 | Brad Mehldau | 현대 스탠다드 재해석 | Art of the Trio |
 
 ---

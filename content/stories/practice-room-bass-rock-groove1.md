@@ -95,7 +95,7 @@ faq:
 |------|-------------|-----------|
 | 입문 | Sly & The Family Stone — Thank You | 기본 훵크 그루브 |
 | 중급 | Stevie Wonder — Higher Ground | 무그 베이스+옥타브 |
-| 고급 | Jaco Pastorius — Teen Town | 무반주 그루브 |
+| 고급 | Jaco Pastorius — Teen Town | 재즈 퓨전 베이스 그루브 |
 
 ## 방 안에서 세게 친 록 베이스가 무대에서 안 들리는 이유
 
