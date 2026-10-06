@@ -39,7 +39,7 @@ faq:
 
 GarageBand는 Apple 기기에 기본 탑재된 무료 DAW로, 초보자부터 중급자까지 바로 사용할 수 있는 탄탄한 녹음 환경을 제공합니다.
 
-GarageBand의 역사는 2004년 Apple이 Mac용 iLife 번들 소프트웨어로 처음 출시하면서 시작됩니다. Steve Jobs가 Macworld Expo에서 직접 시연했으며, 기존 프로 DAW에 비해 직관적인 인터페이스로 비전문가가 바로 음악 제작을 시작할 수 있게 했습니다. 2011년 iOS용 GarageBand가 출시되면서 스마트폰으로 음악 제작이 가능해졌고, 2012년부터 Mac App Store에서 무료로 배포되기 시작했습니다. Billie Eilish·Tones and I 등 글로벌 아티스트들이 GarageBand를 제작 도구로 사용했다고 밝히면서 무료 DAW의 가능성이 재평가됐으며, 현재 GarageBand로 녹음한 드라이 보컬 파일이 전문 스튜디오 믹싱 의뢰 납품 파일로 활용되는 사례도 많습니다.
+GarageBand의 역사는 2004년 Apple이 Mac용 iLife 번들 소프트웨어로 처음 출시하면서 시작됩니다. Steve Jobs가 Macworld Expo에서 직접 시연했으며, 기존 프로 DAW에 비해 직관적인 인터페이스로 비전문가가 바로 음악 제작을 시작할 수 있게 했습니다. 2011년 iOS용 GarageBand가 출시되면서 스마트폰으로 음악 제작이 가능해졌고, 2013년 10월부터 Mac과 iOS 모두 무료로 배포되기 시작했습니다. 현재 GarageBand로 녹음한 드라이 보컬 파일이 전문 스튜디오 믹싱 의뢰 납품 파일로 활용되는 사례도 많습니다.
 
 ## GarageBand 기본 설정 (Mac)
 
