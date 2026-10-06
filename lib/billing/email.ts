@@ -334,7 +334,7 @@ export type SubscriptionAlertKind =
   | 'late_approval'
   | 'paused_late_approval';
 
-/** 돈이 이미 움직였거나 움직이지 못해 사람이 판단해야 하는 사건 — 알림 블록을 붉은 톤으로. */
+/** 사람이 판단해야 하는 사건(돈이 이미 움직였거나 첫 결제가 막힌 경우) — 알림 블록을 붉은 톤으로. */
 const ALERT_KINDS: SubscriptionAlertKind[] = ['first_charge_failed', 'late_approval', 'paused_late_approval'];
 
 /** 운영자 알림. kind는 발생 사건을 나타낸다. */
@@ -373,7 +373,7 @@ export const sendSubscriptionOperatorAlert = (
         { label: '연락처', value: sub.customerPhone, href: `tel:${sub.customerPhone.replace(/[^\d+]/g, '')}` },
       ],
       cta: { label: '관리자에서 보기', url: adminUrl(`/admin/subscriptions/${sub.id}`) },
-      ...(ALERT_KINDS.includes(kind) ? { noticeTone: 'alert' as const, notices: ['돈이 오간 건이라 사람의 판단이 필요합니다.'] } : {}),
+      ...(ALERT_KINDS.includes(kind) ? { noticeTone: 'alert' as const, notices: ['사람의 판단이 필요한 건입니다.'] } : {}),
     }),
     text: [
       `구독 ${sub.id} (${subscriptionOrderName(sub)}) — ${titleByKind[kind]}`,
