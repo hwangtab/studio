@@ -23,20 +23,23 @@ import localFont from 'next/font/local';
 // fallback chain: 시스템 한글 폰트(Apple SD Gothic Neo / Malgun Gothic 등). Pretendard
 // 자체가 Apple SD Gothic Neo + Inter 베이스라 시각적 swap gap이 작음.
 //
-// metric override(size-adjust/ascent-override): 별도 적용 안 함(의도적). next/font/local은
-// adjustFontFallback 미지정 시 기본으로 라틴(Arial) 기준 조정 fallback @font-face를
-// 자동 생성하는데, 서브셋 후에도 폰트 metric(upm 2048·ascent 1950·descent -494)이
-// 원본과 동일해 Next가 같은 override를 재계산 → CLS 변화 없음. 한글은 Arial에 글리프가
-// 없어 이 조정이 적용되지 않고 Apple SD Gothic Neo로 넘어가는데, Pretendard가 이미 그
-// metric에 맞춰 설계돼 shift가 최소. declarations로 size-adjust를 걸면 Pretendard 본체가
-// rescale돼 시각 회귀가 나므로 보수적으로 미적용.
+// metric override(size-adjust/ascent-override): next/font/local의 자동 adjustFontFallback은
+// 라틴(Arial) 기준이라 한글엔 적용되지 않고(Arial에 글리프 없음) 시스템 한글 폰트로 그대로
+// 떨어진다. 한글 음절 자체는 Apple SD Gothic Neo와 폭이 거의 같지만(99.9%, 실측) 중간점(·)·
+// 쉼표·공백 같은 구두점은 20~30% 차이가 나 짧은 문구에서 폭 흔들림(FOUT)이 보인다(운영자
+// 2026-10-07). 그래서 styles/globals.css에 'Pretendard Korean Fallback'을 한글 전용
+// unicode-range + size-adjust/ascent-override로 따로 선언해 두고, 아래 fallback 배열로
+// 끌어온다 — 계산 근거·메트릭 출처는 그 CSS 주석 참고.
 //
-// fallback: [] — 폴백 목록은 여기가 아니라 tailwind.config.ts의 font-* 스택과
-// styles/globals.css의 `:root [data-locale]`이 든다. next/font는 이 배열을
-// --font-pretendard 변수 **안에** 펼쳐 넣기 때문에, 여기 한글 폰트를 두면 스택에서
-// Pretendard 바로 다음 자리를 차지해 로케일 폰트(--font-locale)가 끼어들 수 없다.
-// 그래서 zh 한자가 Apple SD Gothic Neo(한국식 자형)로 그려졌다(2026-09-25).
-// 변수에는 Pretendard와 next/font가 만드는 메트릭 조정 폴백("pretendard Fallback")만 남긴다.
+// fallback: ['Pretendard Korean Fallback'] 하나만 — 폴백 목록 전체는 여기가 아니라
+// tailwind.config.ts의 font-* 스택과 styles/globals.css의 `:root [data-locale]`이 든다.
+// next/font는 이 배열을 --font-pretendard 변수 **안에** 펼쳐 넣기 때문에, 여기 한글 폰트를
+// 통째로 두면 스택에서 Pretendard 바로 다음 자리를 차지해 로케일 폰트(--font-locale)가
+// 끼어들 수 없다. 그래서 zh 한자가 Apple SD Gothic Neo(한국식 자형)로 그려졌다(2026-09-25).
+// 이번 항목은 그 재발을 피하려고 unicode-range를 한글 syllable·jamo + 실제 쓰인 구두점
+// 5종(공백·쉼표·마침표·NBSP·중간점)으로 좁혀 뒀다 — 한자·태국문자는 이 range 밖이라 매칭되지
+// 않고 그대로 --font-locale로 간다(해당 CSS 주석에 근거 상세). 변수에는 이 항목과 next/font가
+// 만드는 Arial 기준 메트릭 조정 폴백("pretendard Fallback")이 함께 남는다.
 export const pretendard = localFont({
   src: './fonts/pretendard-variable.woff2',
   weight: '45 920',
@@ -44,7 +47,7 @@ export const pretendard = localFont({
   display: 'swap',
   preload: false,
   variable: '--font-pretendard',
-  fallback: [],
+  fallback: ['Pretendard Korean Fallback'],
 });
 
 // 디스플레이 서체 서브셋 — hero h1 + v2 섹션 제목(.typo-display-section)이 쓰는 글자만(~80KB, preload).
