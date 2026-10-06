@@ -103,7 +103,7 @@ function LangSwitch({ lang }: { lang: Lang }) {
       hrefLang={code}
       lang={code}
       aria-current={lang === code ? 'true' : undefined}
-      className={`rounded-full px-3 py-1 text-sm font-semibold transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 ${lang === code ? 'bg-white text-black' : 'text-white/60 hover:text-white'}`}
+      className={`rounded-full px-3 py-1 text-sm font-semibold transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-black ${lang === code ? 'bg-white text-black' : 'text-white/60 hover:text-white'}`}
     >
       {label}
     </a>
@@ -220,7 +220,7 @@ function TrackPlayToggle({ index, label }: { index: number; label: string }) {
       type="button"
       onClick={() => (isCurrent ? toggle() : playTrack(index, 0))}
       aria-label={label}
-      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ring-1 transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${isCurrent && playing ? 'bg-white text-black ring-white' : 'text-white ring-white/30 hover:bg-white/10'}`}
+      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ring-1 transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-black ${isCurrent && playing ? 'bg-white text-black ring-white' : 'text-white ring-white/30 hover:bg-white/10'}`}
     >
       {isCurrent && playing ? <Pause size={16} aria-hidden="true" /> : <Play size={16} aria-hidden="true" className="translate-x-px" />}
     </button>
@@ -363,7 +363,7 @@ function Room({ lang, audioError }: { lang: Lang; audioError: boolean }) {
               <ResponsiveImage src={copy.photos[1].src} alt={t(copy.photos[1].alt, lang)} width={1600} height={900} sizes="(min-width: 1024px) 352px, 100vw" className="h-auto w-full" />
             </figure>
           </div>
-          <dl className="mt-12 grid gap-px overflow-hidden rounded-2xl bg-white/10 ring-1 ring-white/10 sm:grid-cols-2 lg:grid-cols-3">
+          <dl className="mt-12 grid gap-px overflow-hidden rounded-2xl bg-neutral-900 ring-1 ring-white/10 sm:grid-cols-2 lg:grid-cols-3">
             {copy.artist.facts.map((f, i) => (
               <div key={i} className="bg-black p-5">
                 <dt className="text-xs uppercase tracking-[0.2em] text-white/40">{t(f.label, lang)}</dt>
@@ -391,7 +391,7 @@ function Room({ lang, audioError }: { lang: Lang; audioError: boolean }) {
             {copy.photos.map((photo) => (
               <li key={photo.src}>
                 <figure>
-                  <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-white/5 ring-1 ring-white/10">
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-neutral-950 ring-1 ring-white/10">
                     <ResponsiveImage src={photo.src} alt={t(photo.alt, lang)} fill sizes="(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw" className="object-cover" />
                   </div>
                   <figcaption className="mt-3 flex items-start justify-between gap-3">
@@ -399,7 +399,7 @@ function Room({ lang, audioError }: { lang: Lang; audioError: boolean }) {
                     <a
                       href={photo.src}
                       download
-                      className="inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-sm text-white ring-1 ring-white/25 transition-colors duration-fast hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                      className="inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-sm text-white ring-1 ring-white/25 transition-colors duration-fast hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-black"
                     >
                       <Download size={14} aria-hidden="true" />
                       {t(copy.assets.download, lang)}
@@ -424,7 +424,7 @@ function Room({ lang, audioError }: { lang: Lang; audioError: boolean }) {
                     <p className="text-sm text-white/45">{c.label}</p>
                     <a
                       href={`mailto:${c.email}?subject=${encodeURIComponent('SABBAHA — SLUNG')}`}
-                      className="mt-1 inline-flex items-center gap-2 text-lg text-white underline decoration-white/30 underline-offset-4 transition-colors duration-fast hover:decoration-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+                      className="mt-1 inline-flex items-center gap-2 text-lg text-white underline decoration-white/30 underline-offset-4 transition-colors duration-fast hover:decoration-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-black"
                     >
                       <Mail size={18} aria-hidden="true" />
                       {c.email}
@@ -440,7 +440,7 @@ function Room({ lang, audioError }: { lang: Lang; audioError: boolean }) {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex items-center justify-between gap-4 rounded-xl px-4 py-3 ring-1 ring-white/10 transition-colors duration-fast hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+                    className="group flex items-center justify-between gap-4 rounded-xl px-4 py-3 ring-1 ring-white/10 transition-colors duration-fast hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-black"
                   >
                     <span>
                       <span className="block text-white/90">{typeof link.label === 'string' ? link.label : t(link.label, lang)}</span>

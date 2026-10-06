@@ -235,7 +235,7 @@ function StepButton({ dir, labels }: { dir: 'prev' | 'next'; labels: AlbumPlayer
       onClick={dir === 'prev' ? prev : next}
       disabled={disabled}
       aria-label={dir === 'prev' ? labels.prev : labels.next}
-      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white/80 transition-colors duration-fast hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 disabled:opacity-30 disabled:hover:bg-transparent"
+      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white/80 transition-colors duration-fast hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-black disabled:opacity-30 disabled:hover:bg-transparent"
     >
       <Icon size={20} aria-hidden="true" />
     </button>
@@ -344,7 +344,7 @@ export function Tracklist({ labels, instrumentalIds }: { labels: AlbumPlayerLabe
                       onClick={() => (current ? toggle() : playTrack(i, 0))}
                       aria-current={current ? 'true' : undefined}
                       aria-label={labels.playTrack(t.title)}
-                      className={`group relative flex w-full items-center gap-3 rounded-lg px-2 py-3 text-left transition-colors duration-fast hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 ${current ? 'bg-white/[0.07]' : ''}`}
+                      className={`group relative flex w-full items-center gap-3 rounded-lg px-2 py-3 text-left transition-colors duration-fast hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-black ${current ? 'bg-white/[0.07]' : ''}`}
                     >
                       <span className="flex w-7 shrink-0 justify-center text-sm tabular-nums text-white/45">
                         {current ? <NowPlayingBars active={playing} /> : (
