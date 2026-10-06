@@ -22,7 +22,7 @@ faq:
       사용하는 경우 컴프레서 전후에 배치하기도 합니다.
   - q: 스트리밍 마스터링 LUFS 목표치는?
     a: >-
-      Spotify와 Apple Music은 -14 LUFS Integrated를 권합니다. 클럽·EDM은 -10 LUFS까지
+      Spotify와 YouTube는 -14 LUFS Integrated, Apple Music은 -16 LUFS를 기준으로 삼습니다. 클럽·EDM은 -10 LUFS까지
       허용합니다. True Peak는 -1dBTP 이하를 유지해야 스트리밍 플랫폼의 라우드니스 노멀라이제이션에서 클리핑이 발생하지
       않습니다.
   - q: 마스터링에서 리미터만 사용하면 안 되나요?

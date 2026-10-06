@@ -27,7 +27,7 @@ faq:
       하루 10~15분씩 3~6개월 훈련하면 뚜렷한 향상을 느낄 수 있습니다.
   - q: 청음 훈련을 위한 무료 앱이 있나요?
     a: >-
-      네. Tenuto(iOS/Android), EarMaster(PC/모바일), Perfect Ear(Android), 그리고
+      네. Tenuto(iOS), EarMaster(PC/모바일), Perfect Ear(Android), 그리고
       Musicca.com(웹) 등이 있습니다. 유튜브에도 '인터벌 청음 연습' 영상이 많습니다. 꾸준함이 핵심입니다.
   - q: 청음 훈련을 하면 노래가 실제로 좋아지나요?
     a: >-
@@ -123,7 +123,7 @@ howTo:
 
 | 도구 | 플랫폼 | 비용 | 특징 |
 |------|--------|------|------|
-| Tenuto | iOS/Android | 유료 | 인터벌·코드 훈련 |
+| Tenuto | iOS | 유료 | 인터벌·코드 훈련 |
 | EarMaster | PC/모바일 | 유료 | 종합 청음 커리큘럼 |
 | Perfect Ear | Android | 무료/유료 | 인터벌·리듬 훈련 |
 | Musicca.com | 웹 | 무료 | 인터벌·코드 청음 |

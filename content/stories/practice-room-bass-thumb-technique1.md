@@ -159,7 +159,7 @@ Victor Wooten (Bela Fleck & The Flecktones)의 특징:
 
 ## Bootsy Collins 스타일
 
-### 펑크 슬랩의 원조
+### 펑크 베이스의 대표 주자
 
 Bootsy Collins (James Brown, Parliament):
 - **강한 "원 비트":** 1박에 강렬한 슬랩

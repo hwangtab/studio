@@ -30,7 +30,7 @@ faq:
       스테레오가 좁게 들릴 수 있습니다.
   - q: 헤드폰 믹싱에 좋은 보정 플러그인은?
     a: >-
-      Sonarworks SoundID Reference, Waves Nx, Tonality (Head Acoustics) 등이
+      Sonarworks SoundID Reference, Waves Nx 등이
       대표적입니다. Sonarworks는 특정 헤드폰 모델의 주파수 특성을 측정해 플랫하게 보정합니다.
 ---
 ![헤드폰 믹싱 완전 가이드 — 스튜디오 놀](/images/recording4.webp)
