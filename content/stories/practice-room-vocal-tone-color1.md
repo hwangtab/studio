@@ -70,8 +70,6 @@ summary: >-
 
 **적합한 장르:** 팝, 클래식, 합창, 인디 팝
 
-**참고 보컬:** Taylor Swift, Adele (브라이트 구간)
-
 ### 어두운 톤 (Dark Tone)
 
 깊고 따뜻하며 두꺼운 소리.
@@ -87,8 +85,6 @@ summary: >-
 - 후두를 약간 낮추기
 
 **적합한 장르:** 재즈, 소울, 성악, 블루스
-
-**참고 보컬:** Josh Groban, Norah Jones (다크 구간)
 
 ### 중성적 톤 (Neutral Tone)
 
