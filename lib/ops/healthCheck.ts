@@ -1140,13 +1140,13 @@ export const buildHealthReportHtml = (report: HealthReport): string => {
     noticeTone: highCount > 0 ? 'alert' : 'info',
     preheader: `처리 필요 ${report.issues.length}건${highCount > 0 ? ` (긴급 ${highCount})` : ''}`,
     heading: '운영 점검에서 처리할 항목을 찾았습니다',
-    paragraphs: blocks,
+    // 긴급이 있으면 notices가 붉게 칠해져 "이상이 있을 때만 발송" 안내가 경고처럼 읽힌다 — 문단으로 둔다.
+    paragraphs: ['이 메일은 이상이 있을 때만 발송됩니다. 항목별 링크에서 바로 처리할 수 있습니다.', ...blocks],
     rows: [
       { label: '처리 필요', value: `${report.issues.length}건`, emphasis: true },
       ...(highCount > 0 ? [{ label: '긴급', value: `${highCount}건`, emphasis: true }] : []),
       { label: '점검 시각', value: formatKst(report.checkedAt) },
     ],
     cta: { label: '관리자 열기', url: adminUrl('/admin') },
-    notices: ['이 메일은 이상이 있을 때만 발송됩니다.'],
   });
 };
