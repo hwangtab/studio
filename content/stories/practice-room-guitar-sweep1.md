@@ -91,9 +91,9 @@ faq:
 | 난이도 | 곡/아티스트 | 핵심 기술 |
 |-------|-----------|---------|
 | 입문 | 장범준 — 벚꽃 엔딩 솔로 | 기본 포지션 |
-| 초급 | Eagles — Hotel California (인트로) | 핑거피킹 솔로 |
+| 초급 | Eagles — Hotel California (인트로) | 아르페지오 인트로 |
 | 중급 | Led Zeppelin — Stairway to Heaven 솔로 | 블루스 스케일+벤딩 |
-| 고급 | Slash — November Rain 솔로 | 레가토·와밍업 |
+| 고급 | Slash — November Rain 솔로 | 레가토·벤딩 |
 
 ## 스윕 피킹은 한 번의 동작으로 여러 음을 훑는 겁니다
 

@@ -79,9 +79,9 @@ Basie 밴드의 전설적 기타리스트 Freddie Green의 스타일:
 
 **G7:**
 ```
-3번 현: B(오픈)
+3번 현: B(4프렛)
 4번 현: F(3프렛)
-5번 현: D(오픈)
+5번 현: D(5프렛)
 6번 현: 뮤트
 
 ```
@@ -165,8 +165,8 @@ C-E-G-B (짧은 리프)
 **G7 → Cmaj7:**
 ```
 
-G7의 7도(F) → Cmaj7의 7도(B)로 반음 이동
-G7의 3도(B) → Cmaj7의 3도(E)로 4도 하강
+G7의 7도(F) → Cmaj7의 3도(E)로 반음 하강
+G7의 3도(B) → Cmaj7의 7도(B)로 공통음 유지
 
 ```
 
@@ -211,7 +211,7 @@ B7 보이싱 (반음 아래) → Cmaj7로 해결
 
 | 기타리스트 | 특기 | 대표 그룹 |
 |-----------|------|---------|
-| Freddie Green | 4비트 스윙의 창조자 | Count Basie Orchestra |
+| Freddie Green | 4비트 스윙 리듬 기타의 기준 | Count Basie Orchestra |
 | Jim Hall | 섬세한 콤핑 | Bill Evans, Sonny Rollins |
 | Grant Green | 소울풀한 재즈 리듬 | 블루노트 레이블 |
 | Wes Montgomery | 엄지 콤핑 | 자신의 트리오 |

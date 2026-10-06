@@ -90,10 +90,8 @@ faq:
 
 | 난이도 | 곡/아티스트 | 핵심 기술 |
 |-------|-----------|---------|
-| 입문 | 장범준 — 벚꽃 엔딩 솔로 | 기본 포지션 |
-| 초급 | Eagles — Hotel California (인트로) | 핑거피킹 솔로 |
 | 중급 | Led Zeppelin — Stairway to Heaven 솔로 | 블루스 스케일+벤딩 |
-| 고급 | Slash — November Rain 솔로 | 레가토·와밍업 |
+| 고급 | Slash — November Rain 솔로 | 레가토·해머온·풀오프 |
 
 ## 피킹의 기본은 손목으로 다운·업을 고르게 하는 겁니다
 

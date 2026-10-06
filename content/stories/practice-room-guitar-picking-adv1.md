@@ -96,7 +96,7 @@ faq:
 | 입문 | 장범준 — 벚꽃 엔딩 솔로 | 기본 포지션 |
 | 초급 | Eagles — Hotel California (인트로) | 핑거피킹 솔로 |
 | 중급 | Led Zeppelin — Stairway to Heaven 솔로 | 블루스 스케일+벤딩 |
-| 고급 | Slash — November Rain 솔로 | 레가토·와밍업 |
+| 고급 | Slash — November Rain 솔로 | 레가토 |
 
 ## 고급 피킹은 픽의 이동 거리를 줄이는 겁니다
 

@@ -212,7 +212,7 @@ F-G-A-B-C-D-E-F
 | Oscar Peterson | 블루스 기반 즉흥 | Night Train |
 | Bill Evans | 모달 리리컬 즉흥 | Waltz for Debby |
 | Herbie Hancock | 펑키 모달 즉흥 | Head Hunters |
-| McCoy Tyner | 펜타토닉 파워 즉흥 | A Love Supreme |
+| McCoy Tyner | 펜타토닉 파워 즉흥 | A Love Supreme (John Coltrane 앨범 참여) |
 | Chick Corea | 라틴·퓨전 즉흥 | Return to Forever |
 
 ---

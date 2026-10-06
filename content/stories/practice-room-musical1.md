@@ -78,9 +78,9 @@ faq:
 
 | 유형 | 예시 곡 | 특성 |
 |-----|--------|------|
-| 업템포 | Defying Gravity, Memory | 에너지·공기감 |
+| 업템포 | Defying Gravity | 에너지·공기감 |
 | 발라드 | On My Own, Music of the Night | 감정선·레가토 |
-| 한국 뮤지컬 | 지킬앤하이드, 웬즈데이 넘버 | 국내 오디션 선호 |
+| 한국 뮤지컬 | 지킬앤하이드 | 국내 오디션 선호 |
 | 팝 뮤지컬 | Hamilton, Les Mis | 세계 표준 레퍼토리 |
 
 ---

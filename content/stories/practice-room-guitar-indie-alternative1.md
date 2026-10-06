@@ -45,8 +45,6 @@ faq:
 **기본 클린 아르페지오 (Am):**
 ```
 
-E-B-G-B-E-B (상행 후 하행, 반복)
-또는
 A-E-C-E (루트+3도+5도)
 
 ```
@@ -187,7 +185,6 @@ A-D-E (4도 포함, 3도 없음)
 | Johnny Greenwood (Radiohead) | 실험적, 클린+노이즈 | OK Computer |
 | Robert Smith (The Cure) | 리버브 많은 클린 아르페지오 | Disintegration |
 | The Edge (U2) | 딜레이 아르페지오 | The Joshua Tree |
-| Tim Kinsella (Cap'n Jazz) | 수학적 아르페지오 | Analphabetapolothology |
 
 ---
 

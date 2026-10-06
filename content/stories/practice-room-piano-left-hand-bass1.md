@@ -182,7 +182,7 @@ BPM 60에서 시작 → 80 → 100 → 120 → 140 순서로 점진적으로 올
 
 ## 추천 레퍼런스
 
-- **Fats Waller**: 스트라이드 피아노의 원조
+- **Fats Waller**: 스트라이드 피아노의 대표 연주자
 - **Art Tatum**: 스트라이드를 초고속으로 발전시킨 전설적 테크니션
 - **James P. Johnson**: 스트라이드의 창시자 중 하나
 - **Boogie Woogie Trio** (Meade Lux Lewis 등): 부기우기 베이스의 황금기
