@@ -266,6 +266,8 @@ PR은 작게, 하나씩 게이트를 지나 머지한다. 순수 디자인 커�
 | 3 | `feat/liner-audio` | 3-6 provider·dock·발췌 자리·커버 재생·포트폴리오·WaveRule·계측 | 16~20h | 재생 전 요청 0건 실측 · TBT · `_app` gz +3KB 이내 |
 | 4 | `feat/liner-rulelist` | 3-5 RuleList·QuickAnswers·단계, 가격 모바일 앵커 바, 아티스트 메뉴, 푸터 2열, secondary/accent 클래스 치환·토큰 삭제 | 8~12h | `uiPatterns.baseline` · `check:cta-routing` · `SectionHeading.test` |
 
+4주차는 2026-10-06에 `feat/liner-rulelist`로 올렸다(사진 2주차는 운영자 지시로 건너뜀). 아티스트 메뉴는 `data/navFlags.ts`의 `ARTISTS_NAV_LISTED`로 — 첫 구독 아티스트가 생기면 true.
+
 합계 코드 50~58h, 촬영 반나절.
 
 **측정 중 페이지(🔒, `scripts/seo-preflight.mjs` 2026-10-05 기준)** — 성우 LP(11/11)·`recording-price1`(10/13)·통합 승자

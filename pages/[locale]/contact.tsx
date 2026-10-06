@@ -263,19 +263,19 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
           <ServiceLinkPill href={`/${locale}/wedding-song`} tone="primary">
             {t('nav.weddingSong')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/voice-acting`} tone="secondary">
+          <ServiceLinkPill href={`/${locale}/voice-acting`} tone="primary">
             {t('nav.voiceActing')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/pricing`} tone="accent">
+          <ServiceLinkPill href={`/${locale}/pricing`} tone="primary">
             {t('nav.pricing')}
           </ServiceLinkPill>
           <ServiceLinkPill href={`/${locale}/stories`} tone="primary">
             {t('nav.stories')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/studio-info`} tone="secondary">
+          <ServiceLinkPill href={`/${locale}/studio-info`} tone="primary">
             {t('nav.equipment')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/lesson`} tone="accent">
+          <ServiceLinkPill href={`/${locale}/lesson`} tone="primary">
             {t('nav.lesson')}
           </ServiceLinkPill>
           <ServiceLinkPill href={`/${locale}/practice-room`} tone="primary">

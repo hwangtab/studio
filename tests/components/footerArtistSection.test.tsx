@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import { Footer } from '../../components/layout/Footer';
+import { ARTISTS_NAV_LISTED } from '../../data/navFlags';
 
 /**
  * 회귀 방지: ko 푸터의 '아티스트' 블록(제목 + /ko/artists · /ko/funding 링크)이
@@ -14,7 +15,8 @@ import { Footer } from '../../components/layout/Footer';
 describe('푸터 아티스트 블록 (ko 전용) 중복 회귀', () => {
   it('ko에서 아티스트 링크가 각각 1개씩만 렌더된다', () => {
     render(<Footer locale="ko" />);
-    expect(screen.getAllByRole('link', { name: 'nav.artists' })).toHaveLength(1);
+    // 아티스트 구독 링크는 data/navFlags.ts의 스위치를 따른다(구독 아티스트 0인 동안 내림 — 2026-10-06).
+    expect(screen.queryAllByRole('link', { name: 'nav.artists' })).toHaveLength(ARTISTS_NAV_LISTED ? 1 : 0);
     expect(screen.getAllByRole('link', { name: 'nav.funding' })).toHaveLength(1);
   });
 

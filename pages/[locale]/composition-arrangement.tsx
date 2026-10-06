@@ -466,8 +466,8 @@ const CompositionArrangement: NextPageWithLayout<CompositionArrangementProps> = 
       <ServiceQuickLinksSection
         links={[
           { href: `/${locale}/recording`, label: t('nav.recording'), color: 'primary' },
-          { href: `/${locale}/mixing-mastering`, label: t('nav.mixingMastering'), color: 'secondary' },
-          { href: `/${locale}/release-project`, label: t('nav.releaseProject'), color: 'accent' },
+          { href: `/${locale}/mixing-mastering`, label: t('nav.mixingMastering'), color: 'primary' },
+          { href: `/${locale}/release-project`, label: t('nav.releaseProject'), color: 'primary' },
         ]}
       />
 

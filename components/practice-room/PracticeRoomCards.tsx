@@ -51,7 +51,7 @@ export const PainPoint = ({
 }) => (
   <BaseCard variant="default" delay={delay} padding="compact" className="h-full">
     <div className="flex items-start">
-      <div className="bg-gradient-to-br from-primary to-secondary p-3 rounded-full mr-4 text-white flex-shrink-0">
+      <div className="bg-gradient-to-br from-primary to-primary p-3 rounded-full mr-4 text-white flex-shrink-0">
         <Icon size={20} aria-hidden="true" />
       </div>
       <div>
@@ -121,7 +121,7 @@ export const BenefitCard = ({
 }) => (
   <BaseCard variant="default" delay={delay} padding="default" className="h-full">
     <div className="flex items-center mb-4">
-      <div className="bg-gradient-to-br from-primary to-secondary p-3 rounded-full mr-4 text-white flex-shrink-0">
+      <div className="bg-gradient-to-br from-primary to-primary p-3 rounded-full mr-4 text-white flex-shrink-0">
         <Icon size={22} aria-hidden="true" />
       </div>
       <h3 className="typo-card-title">{title}</h3>

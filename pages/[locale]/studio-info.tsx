@@ -201,7 +201,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
           <SectionHeading
             icon={Mic2}
             title={t('studioInfo.equipment.title')}
-            titleClassName="text-heading-1 font-title bg-clip-text text-transparent bg-gradient-to-r from-primary-dark via-secondary to-accent"
+            titleClassName="text-heading-1 font-title bg-clip-text text-transparent bg-gradient-to-r from-primary-dark via-primary to-primary"
             className="mb-12 py-4"
           />
 
@@ -258,16 +258,16 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
           <ServiceLinkPill href={`/${locale}/wedding-song`} tone="primary">
             {t('nav.weddingSong')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/voice-acting`} tone="secondary">
+          <ServiceLinkPill href={`/${locale}/voice-acting`} tone="primary">
             {t('nav.voiceActing')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/pricing`} tone="accent">
+          <ServiceLinkPill href={`/${locale}/pricing`} tone="primary">
             {t('nav.pricing')}
           </ServiceLinkPill>
           <ServiceLinkPill href={`/${locale}/practice-room`} tone="primary">
             {t('nav.practiceRoom')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/lesson`} tone="secondary">
+          <ServiceLinkPill href={`/${locale}/lesson`} tone="primary">
             {t('nav.lesson')}
           </ServiceLinkPill>
         </div>

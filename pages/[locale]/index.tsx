@@ -11,6 +11,7 @@ import ImageHero from '../../components/common/ImageHero';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import MediaGallery from '../../components/ui/MediaGallery';
 import { Section } from '../../components/ui/Section';
+import RuleList from '../../components/ui/RuleList';
 
 // Below-fold 섹션은 정적 import로 유지한다(과거 next/dynamic ssr:true 코드 스플리팅에서 전환).
 // 이유: 이들은 ssr:true라 서버는 완전한 HTML을 내보내지만, 클라이언트는 청크가 도착하기
@@ -246,19 +247,13 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
             index="04"
             title={localeUsps.title}
           />
-          {/* v2: 카드 세 장 대신 번호 붙은 3단. 카드 그리드에는 스크롤 모션을 걸지 않는다
+          {/* v2: 카드 세 장 대신 번호 붙은 3단(공용 RuleList — 라이너 노트 §3-5). 카드 그리드에는 스크롤 모션을 걸지 않는다
               (여러 장이 동시에 레이어로 올라가 iOS 깜빡임을 되살린다 — 디자인 회의). */}
-          <ol className="grid gap-10 md:grid-cols-3 md:gap-8">
-            {localeUsps.items.map((item: { heading: string; body: string }, index: number) => (
-              <li key={item.heading} className="border-t-2 border-gray-950 dark:border-white pt-5">
-                <span aria-hidden="true" className="block text-sm font-semibold tabular-nums text-primary dark:text-primary-lighter mb-3">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                <h3 className="font-title text-xl font-bold leading-snug text-gray-950 dark:text-white mb-3 break-keep">{item.heading}</h3>
-                <p className="typo-card-body text-gray-600 dark:text-gray-300">{item.body}</p>
-              </li>
-            ))}
-          </ol>
+          <RuleList
+            numbered
+            columns={3}
+            items={localeUsps.items.map((item: { heading: string; body: string }) => ({ heading: item.heading, body: item.body }))}
+          />
         </Section>
       )}
 

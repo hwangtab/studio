@@ -344,7 +344,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                         {...pricingSectionRevealProps}
                         className="glass-card rounded-2xl overflow-hidden"
                     >
-                        <div className="p-8 bg-gradient-to-br from-primary to-secondary text-white text-center">
+                        <div className="p-8 bg-gradient-to-br from-primary to-primary text-white text-center">
                             <h3 className="typo-card-title text-white mb-2">{t('lesson.pricing.title')}</h3>
                             <p className="opacity-90">{t('lesson.pricing.subtitle')}</p>
                         </div>
@@ -413,8 +413,8 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
               variant="default"
               links={[
                 { href: `/${locale}/practice-room`, label: t('nav.practiceRoom'), color: 'primary' },
-                { href: `/${locale}/stories`, label: t('nav.stories'), color: 'secondary' },
-                { href: `/${locale}/pricing`, label: t('nav.pricing'), color: 'accent' },
+                { href: `/${locale}/stories`, label: t('nav.stories'), color: 'primary' },
+                { href: `/${locale}/pricing`, label: t('nav.pricing'), color: 'primary' },
                 { href: `/${locale}/contact`, label: t('nav.contact'), color: 'primary' },
               ]}
             />

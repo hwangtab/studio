@@ -29,21 +29,8 @@ const config: Config = {
           // 다크 텍스트에 못 쓴다 — lighter만 13.2:1로 통과한다. 규칙은 보라 때와 같다.
           lighter: BRAND_COLOR.primaryOnDark,
         },
-        secondary: {
-          // 라이너 노트: 핑크를 버리고 primary와 같은 값으로 재매핑했다(브랜드색은 하나). 24파일 66곳의
-          // secondary 클래스가 아직 남아 있어 이름을 유지한다 — 4주차(feat/liner-rulelist)에 primary로
-          // 치환하고 토큰을 지운다. 새 코드에서 secondary-*를 쓰지 말 것.
-          light: BRAND_COLOR.primaryOnDark,
-          DEFAULT: BRAND_COLOR.primary,
-          dark: BRAND_COLOR.primaryDark,
-        },
-        accent: {
-          // 라이너 노트: 성공·긍정 = 브랜드색. secondary와 같은 이유로 이름만 남기고 값은 primary다.
-          // accent-light는 다크 텍스트 짝(13곳)이라 primaryOnDark(13.2:1)로 간다.
-          light: BRAND_COLOR.primaryOnDark,
-          DEFAULT: BRAND_COLOR.primary,
-          dark: BRAND_COLOR.primaryDark,
-        },
+        // secondary(핑크)·accent(에메랄드)는 2026-10-06 라이너 노트에서 지웠다 — 브랜드색은 primary 하나. 성공·긍정은
+        // green-*, 다크 텍스트 짝은 primary-lighter 하나다(tailwind.config.test.ts가 재등장을 막는다).
         // 라이트 바탕. 순백 대신 종이(라이너 노트 §3-1). Section default/alternate와 body·Layout이 쓴다.
         // 글래스 카드 틴트(흰 0.72)는 그대로라 카드가 종이보다 살짝 밝게 뜬다.
         paper: {

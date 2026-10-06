@@ -340,11 +340,12 @@ describe('브랜드색 텍스트의 다크 짝', () => {
     }
   });
 
-  it('다크 짝으로 쓰는 세 토큰이 tailwind.config.ts에 존재한다', () => {
+  it('다크 짝 토큰 primary-lighter가 있고, 지운 secondary·accent는 되살아나지 않는다 (2026-10-06 라이너 노트)', () => {
     const defined = definedColorNames();
     expect(defined.has('primary-lighter')).toBe(true);
-    expect(defined.has('secondary-light')).toBe(true);
-    expect(defined.has('accent-light')).toBe(true);
+    // 핑크·에메랄드 토큰은 지웠다 — 브랜드색은 primary 하나. 아래 가드의 secondary·accent 패턴은 재등장을 잡기 위해 남긴다.
+    expect(defined.has('secondary-light')).toBe(false);
+    expect(defined.has('accent-light')).toBe(false);
   });
 });
 
@@ -424,7 +425,8 @@ describe('다크 짝의 대비가 충분한가', () => {
 
   it('금지 토큰이 실제로 tailwind.config.ts에 정의돼 있다(오탈자로 가드가 비는 것을 막는다)', () => {
     const defined = definedColorNames();
-    for (const name of ['primary-light', 'primary-dark', 'secondary-dark', 'accent-dark']) {
+    // secondary·accent는 2026-10-06 라이너 노트에서 지웠다 — primary 계열만 남는다.
+    for (const name of ['primary-light', 'primary-dark']) {
       expect(defined.has(name)).toBe(true);
     }
   });

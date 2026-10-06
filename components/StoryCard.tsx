@@ -57,7 +57,7 @@ const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) 
       >
         {story.date && <meta itemProp="datePublished" content={story.date} />}
         <link itemProp="url" href={href} />
-        <div className="h-40 bg-gradient-to-br from-primary-light to-secondary-light overflow-hidden flex-shrink-0 relative">
+        <div className="h-40 bg-gradient-to-br from-primary-light to-primary-lighter overflow-hidden flex-shrink-0 relative">
           {thumbnailUrl ? (
             <ResponsiveImage
               src={thumbnailUrl}

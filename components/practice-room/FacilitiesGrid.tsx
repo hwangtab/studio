@@ -56,7 +56,7 @@ const FacilitiesGrid = ({ title, subtitle, items, locale }: FacilitiesGridProps)
       icon={Sparkles}
       title={title}
       subtitle={subtitle}
-      titleClassName="text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
+      titleClassName="text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-primary to-primary"
       className="mb-10"
     />
     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">

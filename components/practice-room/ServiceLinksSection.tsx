@@ -22,8 +22,8 @@ interface ServiceLinksSectionProps {
 const ServiceLinksSection = ({ locale, labels }: ServiceLinksSectionProps) => {
   const serviceLinks: ServiceLinkItem[] = [
     { href: `/${locale}/lesson`, label: labels.lesson, tone: 'primary' },
-    { href: `/${locale}/pricing`, label: labels.pricing, tone: 'secondary' },
-    { href: `/${locale}/stories`, label: labels.stories, tone: 'accent' },
+    { href: `/${locale}/pricing`, label: labels.pricing, tone: 'primary' },
+    { href: `/${locale}/stories`, label: labels.stories, tone: 'primary' },
     { href: `/${locale}/contact`, label: labels.contact, tone: 'primary' },
   ];
 

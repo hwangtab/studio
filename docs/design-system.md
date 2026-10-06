@@ -31,8 +31,7 @@ Tailwind는 정의되지 않은 클래스명을 **에러 없이 빌드 CSS에서
 | 토큰 | light / DEFAULT / dark | 용도 |
 |---|---|---|
 | `primary` | `#15803d` / `#166534` / `#0e3c26` · lighter `#6ee7b7` | 1차 액션, 강조, 링크. **놀 그린** — 로고(`public/logo/logo.png`)의 짙은 녹색 계열. DEFAULT 흰 7.13:1·종이 6.67:1, dark는 로고 실측값(히어로 잉크 면·큰 면). 값의 정본은 `lib/brandColor.ts` — 메일 HTML·정적 카드·theme-color가 같은 값을 쓴다 |
-| `secondary` | = `primary` | **폐지 예정.** 2026-10-06 라이너 노트에서 핑크를 버리고 primary 값으로 재매핑했다. 새 코드에서 쓰지 말 것 — 남은 클래스(24파일)는 4주차에 primary로 치환하고 토큰을 지운다 |
-| `accent` | = `primary` | 성공·긍정 = 브랜드색. secondary와 같은 처리 |
+| ~~`secondary`~~ · ~~`accent`~~ | 삭제됨 (2026-10-06) | 핑크·에메랄드는 없다. 브랜드색은 `primary` 하나, 성공은 `green-*`, 다크 텍스트 짝은 `primary-lighter` 하나. `tailwind.config.test.ts`가 재등장을 막는다 |
 | `paper` | `#faf7f2` / `paper-2` `#f2ede4` | 라이트 바탕 두 단 — body·Layout·Section default/alternate. 순백 대신 종이. 글래스 카드 틴트(흰 0.72)는 그대로라 카드가 종이보다 살짝 밝게 뜬다 |
 | `kakao` | `#FEE500` / hover `#FADA0A` / ink `#191600` | **카카오톡 진입점 전용** |
 
@@ -82,15 +81,10 @@ Tailwind는 정의되지 않은 클래스명을 **에러 없이 빌드 CSS에서
 | `primary`(DEFAULT) | `#166534` | 2.82:1 | ✗ |
 | `primary-light` | `#15803d` | 4.01:1 | ✗ (쓰지 말 것) |
 | `primary-lighter` | `#6ee7b7` | 13.2:1 | ✓ |
-| `secondary`(DEFAULT) | = primary | 2.82:1 | ✗ |
-| `secondary-light` | = primary-lighter | 13.2:1 | ✓ |
-| `accent`(DEFAULT) | = primary | 2.82:1 | ✗ |
-| `accent-light` | = primary-lighter | 13.2:1 | ✓ |
 
 (2026-10-06 라이너 노트 값. 보라 시절 수치는 git 이력에 있다.)
 
-따라서 짝은 셋뿐이다 — `text-primary` + `dark:text-primary-lighter`,
-`text-secondary` + `dark:text-secondary-light`, `text-accent` + `dark:text-accent-light`.
+따라서 짝은 하나다 — `text-primary` + `dark:text-primary-lighter` (secondary·accent 짝은 토큰과 함께 2026-10-06에 지웠다).
 `hover:`·`group-hover:`·`focus-visible:` 같은 variant도 **같은 variant의 다크 짝**이 필요하다
 (`hover:text-primary` → `dark:hover:text-primary-lighter`). 아이콘은 `stroke`/`fill`이
 currentColor라 같은 텍스트 색 규칙을 그대로 따른다.
@@ -346,6 +340,13 @@ inset 스펙큘러를 지운다.
   커버 위 재생 버튼(`CoverPlayButton`)은 `<a>` 안이 아니라 **형제**로, 정사각 오버레이 안에 44px.
 - 계측은 `micro_audio_play`(트랙당 세션 한 번, component = 자리, cta_id = 트랙 id). 리드가 아니다.
 - 작은 썸네일 반경은 `rounded-lg`(`rounded-md`는 §3대로 없다).
+
+### 괘선 목록 — `components/ui/RuleList.tsx` (2026-10-06)
+
+**읽는 것은 카드가 아니다.** FAQ 요약·절차·이유처럼 나란히 읽는 항목은 `RuleList`(굵은 괘선 위 번호·제목·본문 — 홈 "이유" 절의
+문법)로 그린다. 떠 있는 카드(BaseCard·ChoiceCard)는 **고르는 것**(티어·리워드·시간 슬롯)에만. `numbered`는 순서가 정보일 때(`<ol>`),
+`labelPrefix="Q"`는 FAQ 요약처럼 라벨만 필요할 때(`as="ul"`). 카드 그리드에 걸던 hover 스케일·스크롤 모션은 없다.
+`QuickAnswers`와 LP 절차 절(믹싱·녹음·축가·커버)이 이걸 쓴다.
 
 ### 서비스 링크 pill — `components/ui/ServiceLinkPill.tsx`
 

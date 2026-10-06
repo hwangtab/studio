@@ -2,7 +2,7 @@ import React from 'react';
 import { HelpCircle } from '@/lib/lucide-icons';
 import SectionHeading from './SectionHeading';
 import { Section, SectionVariant } from './Section';
-import BaseCard from './BaseCard';
+import RuleList from './RuleList';
 
 interface QuickAnswerItem {
   question: string;
@@ -37,27 +37,13 @@ const QuickAnswers = ({
           subtitle={subtitle}
           className="mb-8"
         />
-        <div className="grid gap-6 md:grid-cols-3">
-          {items.map((item, index) => (
-            <BaseCard
-              key={`${item.question}-${index}`}
-              variant="outline"
-              padding="default"
-              className="h-full flex flex-col"
-            >
-              {/* text-primary/70은 WCAG AA 미달(3.82:1) — text-primary-dark로 대비 확보. */}
-              <div className="text-xs font-semibold uppercase tracking-widest text-primary-dark dark:text-primary-lighter mb-3">
-                Q{index + 1}
-              </div>
-              <h3 className="typo-card-title mb-3 text-gray-900 dark:text-gray-100 min-h-[3.5rem]">
-                {item.question}
-              </h3>
-              <p className="typo-card-body text-gray-600 dark:text-gray-300 flex-grow">
-                {item.answer}
-              </p>
-            </BaseCard>
-          ))}
-        </div>
+        {/* 라이너 노트 §3-5: 카드 세 장 → 괘선 목록(홈 "이유" 절과 같은 문법). 읽는 것은 카드가 아니다. */}
+        <RuleList
+          numbered
+          labelPrefix="Q"
+          columns={3}
+          items={items.map((item) => ({ heading: item.question, body: item.answer }))}
+        />
       </div>
     </Section>
   );

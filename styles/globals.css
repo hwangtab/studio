@@ -426,29 +426,6 @@ code {
 .dark [data-edition='v2'] .bg-clip-text.text-transparent[class*="from-primary"] {
   color: #fff;
 }
-/* ⑥ 보라→핑크 그라디언트 면(뱃지·아이콘 원) → 브랜드 단색. ②와 같은 판단의 다른 방향(to-br).
-      색 리터럴은 lib/brandColor.ts primary와 같아야 한다(theme()를 못 쓰는 자리). */
-[data-edition='v2'] .bg-gradient-to-br.from-primary.to-secondary {
-  background-image: none;
-  background-color: #166534;
-}
-/* ⑧ StoryCard 썸네일 자리 채움 면(보라→핑크) → 중립 회색. 이미지가 늦게 오거나 없을 때만 보인다. */
-[data-edition='v2'] .bg-gradient-to-br.from-primary-light.to-secondary-light {
-  background-image: none;
-  background-color: #f3f4f6;
-}
-.dark [data-edition='v2'] .bg-gradient-to-br.from-primary-light.to-secondary-light {
-  background-color: #1f2937;
-}
-/* ⑦ 보라·핑크·초록 파스텔 그라디언트 배경 패널 → 옅은 보라 단색. 알파가 붙은 3색 조합
-      (from-primary/5·/10 via-secondary/… to-accent/…, from-primary/10 to-secondary/10)만 겨눈다. */
-[data-edition='v2'] [class*="from-primary/"][class*="secondary/"] {
-  background-image: none;
-  background-color: rgb(22 101 52 / 0.05);
-}
-.dark [data-edition='v2'] [class*="from-primary/"][class*="secondary/"] {
-  background-color: rgb(110 231 183 / 0.08);
-}
 [data-edition='v2'] h1 .bg-clip-text.text-transparent {
   background-image: none;
   color: #fff;
@@ -465,12 +442,8 @@ code {
 [data-edition='v2'] .v2-heading:has(+ .mx-auto.max-w-4xl) { max-width: 56rem; margin-inline: auto; }
 [data-edition='v2'] .v2-heading:has(+ .mx-auto.max-w-5xl) { max-width: 64rem; margin-inline: auto; }
 [data-edition='v2'] .v2-heading:has(+ .mx-auto.max-w-6xl) { max-width: 72rem; margin-inline: auto; }
-/* ④ 섹션 앵커 내비의 다크 hover — v2는 브랜드 다크 짝(primary-lighter)으로. */
-.dark [data-edition='v2'] .dark\:hover\:text-accent-light:hover { color: #6ee7b7; }
-[data-edition='v2'] .bg-gradient-to-r.from-primary.to-secondary {
-  background-image: none;
-  background-color: #166534;
-}
+
+/* ④⑥⑦⑧(핑크·초록 그라디언트 → 단색 치환)은 2026-10-06 라이너 노트에서 secondary·accent 클래스 자체를 걷어내 지웠다. */
 
 /* 디자인 v2 푸터 — 잉크 배경 위에서 링 오프셋이 보라(ring-offset-primary)로 남으면 링 둘레에
    보라 테가 뜬다. 오프셋 색만 배경과 같은 잉크로 맞춘다. @tailwind utilities 뒤에 있고

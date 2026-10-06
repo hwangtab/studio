@@ -293,6 +293,12 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         }
       />
 
+      {/* 라이너 노트 §3-8: 구역 이동 바를 히어로 바로 아래로 — 요약표 아래 묻혀 있어 모바일(59,000px)에서 길을 못 찾았다.
+          sticky top-16이라 여기부터 붙어 다닌다. */}
+      <SectionAnchorNav
+        items={anchorItems}
+        ariaLabel={t('pricing.anchorNavLabel', { defaultValue: '가격 섹션 바로가기' })}
+      />
 
       {/* 상단 즉답 가격 요약표 — 상세 카드로 스크롤하기 전에 전체 단가를 한눈에. */}
       <Section variant="default" spacing="tight">
@@ -365,11 +371,6 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           )}
         </div>
       </Section>
-
-      <SectionAnchorNav
-        items={anchorItems}
-        ariaLabel={t('pricing.anchorNavLabel', { defaultValue: '가격 섹션 바로가기' })}
-      />
 
       <QuickAnswers
         title={t('pricing.quickAnswers.title')}
@@ -748,16 +749,16 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           <ServiceLinkPill href={`/${locale}/studio-info`} tone="primary">
             {t('nav.equipment')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/practice-room`} tone="secondary">
+          <ServiceLinkPill href={`/${locale}/practice-room`} tone="primary">
             {t('nav.practiceRoom')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/wedding-song`} tone="accent">
+          <ServiceLinkPill href={`/${locale}/wedding-song`} tone="primary">
             {t('nav.weddingSong')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/voice-acting`} tone="accent">
+          <ServiceLinkPill href={`/${locale}/voice-acting`} tone="primary">
             {t('nav.voiceActing')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/composition-arrangement`} tone="accent">
+          <ServiceLinkPill href={`/${locale}/composition-arrangement`} tone="primary">
             {t('nav.compositionArrangement')}
           </ServiceLinkPill>
         </div>

@@ -2,7 +2,6 @@ import React from 'react';
 import Link from 'next/link';
 import { ArrowRight } from '@/lib/lucide-icons';
 import { cn } from '../../lib/utils';
-import { useDesignEdition } from '../../lib/designEdition';
 
 /**
  * 아웃라인 서비스 링크 pill.
@@ -16,7 +15,7 @@ import { useDesignEdition } from '../../lib/designEdition';
  *
  * 1. 다크 짝은 `-lighter`/`-light`만 쓴다. 정본 §1 대비 표 기준으로 gray-900 배경 위
  *    `primary`(2.83:1)·`primary-light`(3.53:1)는 AA 미달이고 `primary-lighter`가 7.40:1,
- *    `secondary-light`가 5.71:1, `accent-light`가 7.94:1로 통과한다.
+ *    (secondary·accent 토큰은 2026-10-06 라이너 노트에서 지웠다 — 브랜드색은 primary 하나.)
  * 2. `dark:text-*`를 쓰면 `dark:hover:text-white`를 **반드시** 함께 쓴다. Tailwind가 내는
  *    `.dark\:text-x:is(.dark *)`와 `.hover\:text-white:hover`는 명시도가 둘 다 (0,2,0)으로
  *    같고 `dark:` 규칙이 CSS 뒤에 나와 hover 색이 진다. `dark:hover:`는 (0,3,0)이라 이긴다.
@@ -29,7 +28,8 @@ import { useDesignEdition } from '../../lib/designEdition';
  * 자동 prefetch를 두면 목적지 페이지의 무거운 SSG JSON을 한꺼번에 받는다. hover/focus
  * 시 prefetch는 next/link 기본 휴리스틱으로 그대로 작동한다.
  */
-export type ServiceLinkTone = 'primary' | 'secondary' | 'accent';
+/** 2026-10-06 라이너 노트: 브랜드색은 하나(primary). secondary·accent 토큰은 지웠다 — tone은 호환을 위해 남긴 자리다. */
+export type ServiceLinkTone = 'primary';
 
 /**
  * px-6 py-3 = 24px 패딩 + 24px 라인박스 = 48px이라 `min-h-[44px]`는 현재 호출부에서
@@ -46,12 +46,6 @@ const TONE_CLASS: Record<ServiceLinkTone, string> = {
   primary:
     'border-primary text-primary dark:text-primary-lighter hover:bg-primary hover:text-white dark:hover:text-white ' +
     'focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70',
-  secondary:
-    'border-secondary text-secondary dark:text-secondary-light hover:bg-secondary hover:text-white dark:hover:text-white ' +
-    'focus-visible:ring-secondary/70 dark:focus-visible:ring-secondary-light/70',
-  accent:
-    'border-accent text-accent dark:text-accent-light hover:bg-accent hover:text-white dark:hover:text-white ' +
-    'focus-visible:ring-accent/70 dark:focus-visible:ring-accent-light/70',
 };
 
 /**
@@ -79,10 +73,8 @@ const ServiceLinkPill = ({
   children,
   ...rest
 }: ServiceLinkPillProps) => {
-  // 디자인 v2는 보라 하나만 브랜드색으로 쓴다(docs/design-system.md §10) — 핑크·초록 순환은
-  // 의미 없이 색만 늘렸다. 호출부의 tone은 v1 페이지를 위해 그대로 둔다.
-  const edition = useDesignEdition();
-  const resolvedTone: ServiceLinkTone = edition === 'v2' ? 'primary' : tone;
+  // 브랜드색은 하나다(design-system §1, 2026-10-06 라이너 노트) — tone은 'primary'뿐이다.
+  const resolvedTone: ServiceLinkTone = tone;
   return (
     <Link {...rest} prefetch={prefetch} className={serviceLinkPillClass(resolvedTone, className)}>
       {children}

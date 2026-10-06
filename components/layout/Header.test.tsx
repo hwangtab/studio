@@ -1,4 +1,5 @@
 import React from 'react';
+import { ARTISTS_NAV_LISTED } from '../../data/navFlags';
 import { render, screen, act, cleanup, within } from '@testing-library/react';
 
 /**
@@ -131,7 +132,12 @@ describe('Header 모바일 메뉴', () => {
       within(nav).getByRole('button', { name: 'nav.groups.artist' }).click();
     });
     expect(within(nav).getByRole('link', { name: 'nav.funding' })).toHaveAttribute('href', '/ko/funding');
-    expect(within(nav).getByRole('link', { name: 'nav.artists' })).toHaveAttribute('href', '/ko/artists');
+    // 아티스트 구독 링크는 data/navFlags.ts의 스위치를 따른다(구독 아티스트 0인 동안 내림 — 2026-10-06).
+    if (ARTISTS_NAV_LISTED) {
+      expect(within(nav).getByRole('link', { name: 'nav.artists' })).toHaveAttribute('href', '/ko/artists');
+    } else {
+      expect(within(nav).queryByRole('link', { name: 'nav.artists' })).toBeNull();
+    }
     expect(within(nav).getByRole('link', { name: 'nav.shows' })).toHaveAttribute('href', '/ko/shows');
     cleanup();
 
