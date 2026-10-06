@@ -84,7 +84,7 @@ Am - F - C - G (vi-IV-I-V)
 
 Dm7 - G7 - Cmaj7 (ii-V-I)
 Em7 - A7 - Dmaj7 (ii-V-I in D)
-ii - bVII - I (소울 클리쉐)
+ii - bVII - I
 
 ### 힙합/트랩
 
@@ -116,7 +116,7 @@ vi - IV - I - V
 
 V7/V → V → I
 
-- **G장조에서**: D7 - G7 - C
+- **C장조에서**: D7 - G7 - C
 
 ---
 

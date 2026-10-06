@@ -92,8 +92,6 @@ faq:
 
 | 레벨 | 드러머/앨범 | 핵심 요소 |
 |------|----------|---------|
-| 입문 | Jack DeJohnette — Take Five 스타일 | 라이드 심벌 재즈 워킹 |
-| 중급 | Tony Williams — 52nd Street Theme | 폴리리듬·레이어 |
 | 고급 | Elvin Jones — A Love Supreme | 앙상블 드러밍 |
 
 ## 고급 재즈는 즉흥이지만, 그 즉흥은 방대한 어휘에서 나옵니다

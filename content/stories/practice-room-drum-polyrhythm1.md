@@ -92,7 +92,7 @@ faq:
 
 ### 에위 폴리리듬 (Ewe Polyrhythm)
 
-서아프리카 에위 족의 음악에서 가져온 3+3+2 리듬 구조입니다.
+3+3+2 리듬 구조입니다.
 
 ```
 8비트 안에서: 3 + 3 + 2
@@ -183,8 +183,6 @@ faq:
 ## 추천 레퍼런스
 
 - **Tony Williams**: 현대 재즈에서 폴리리듬 드럼의 개척자
-- **Dave Weckl**: 4-against-3 폴리리듬의 교과서적 적용
-- **Bela Fleck & Victor Wooten**: 기타+베이스+드럼에서 폴리리듬 구현
 - **African Drumming Ensembles**: 에위·요루바 전통 폴리리듬의 원형
 
 ## 마무리

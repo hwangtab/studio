@@ -71,7 +71,7 @@ C 코드:
 
 ### 기원
 
-Merle Travis와 Chet Atkins가 개발한 컨트리·팝 핑거스타일.
+Merle Travis가 만들고 Chet Atkins가 발전시킨 컨트리·팝 핑거스타일.
 
 **핵심 원리:**
 - 엄지가 저음 현에서 교대 베이스 라인
@@ -127,18 +127,7 @@ D와 A 개방현을 지속하며 다른 현에서 멜로디 연주 → 특유의
 
 ### DADGAD 기본 코드
 
-**Dm (1프렛 바레):**
-```
-
-e|--0--|
-B|--1--|
-G|--2--|
-D|--0--|
-A|--0--|
-E|--X--|
-```
-
-**G (5프렛):**
+**Gsus4 (5프렛):**
 ```
 
 e|--5--|
@@ -160,7 +149,7 @@ E|--5--|
 ```
 
 DADGAD + 카포 2 = EBEABE (E 중심)
-DADGAD + 카포 5 = GCGCGC (G 중심)
+DADGAD + 카포 5 = GDGCDG (G 중심)
 
 ```
 
@@ -194,7 +183,7 @@ DADGAD + 카포 5 = GCGCGC (G 중심)
 | 아티스트 | 스타일 | 참고 곡 |
 |---------|--------|--------|
 | Tommy Emmanuel | Travis Picking 마스터 | Angelina |
-| Pierre Bensusan | DADGAD 대가 | Lady move |
+| Pierre Bensusan | DADGAD 대가 | - |
 | Michael Hedges | 혁신적 어쿠스틱 | Aerial Boundaries |
 | Andy McKee | 현대 핑거스타일 | Drifting |
 
