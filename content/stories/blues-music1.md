@@ -41,8 +41,7 @@ inlineFallback:
 
 블루스(Blues)는 19세기 말 미국 남부 흑인 음악에서 비롯된 장르로, 재즈·록·R&B·팝·컨트리 모든 현대 대중음악의 근원입니다. BB King, Robert Johnson, Muddy Waters에서 현대 Eric Clapton, John Mayer까지 이어지는 음악 전통입니다.
 
-블루스의 뿌리는 19세기 말 미국 남부 흑인 노예 후손들의 노동요(Work Song), 영가(Spiritual), 필드 홀러(Field Holler)에서 비롯됩니다. 1920년대 Ma Rainey와 Bessie Smith가 컬럼비아 레코드에서 클래식 블루스를 녹음하며 상업 음악으로 공식화됐고 Robert Johnson은 1930년대 미시시피 델타 블루스의 원형을 정립했습니다. 1950년대 Chess Records(시카고)에서 Muddy Waters, Howlin' Wolf, Little Walter가 전기 블루스(Electric Blues)를 확립하며 블루스는 록큰롤의 직접적인 원형이 됐습니다. Eric Clapton의 1966년 John Mayall's Bluesbreakers 앨범은 영국 블루스 붐을 촉발했고, BB King의 기타 비브라토와 T-Bone Walker의 무대 기법은 현재 블루스 기타의 표준 어법이 됐습니다. 한국에서는 1990년대부터 클럽 씬을 중심으로 블루스가 수용됐고 홍대·이태원의 블루스 바를 기반으로 한국 블루스 아티스트들이 독자적인 씬을 형성하고 있습니다.
-
+블루스의 뿌리는 19세기 말 미국 남부 흑인 노예 후손들의 노동요(Work Song), 영가(Spiritual), 필드 홀러(Field Holler)에서 비롯됩니다. 1920년대 Ma Rainey와 Bessie Smith가 클래식 블루스를 녹음하며 상업 음악으로 공식화됐고 Robert Johnson은 1930년대 미시시피 델타 블루스의 원형을 정립했습니다. 1950년대 Chess Records(시카고)에서 Muddy Waters, Howlin' Wolf, Little Walter가 전기 블루스(Electric Blues)를 확립하며 블루스는 록큰롤의 직접적인 원형이 됐습니다. Eric Clapton의 1966년 John Mayall's Bluesbreakers 앨범은 영국 블루스 붐을 촉발했고, BB King의 기타 비브라토와 T-Bone Walker의 무대 기법은 현재 블루스 기타의 표준 어법이 됐습니다.
 ---
 
 ## 블루스 코드 구조

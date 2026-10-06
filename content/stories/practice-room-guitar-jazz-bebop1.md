@@ -156,7 +156,7 @@ C2(베이스) → B1 → Bb1 → A1(Am7 베이스)
 
 ### 미니멀리즘
 
-Jim Hall (Chick Corea, Bill Evans 협연):
+Jim Hall (Bill Evans 협연):
 - **공간:** 음과 음 사이 쉬는 것
 - **색깔:** 장르를 넘나드는 음색
 - **대화:** 다른 악기와의 상호작용

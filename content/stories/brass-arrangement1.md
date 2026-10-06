@@ -41,7 +41,7 @@ inlineFallback:
 
 브라스 섹션은 재즈, R&B, 소울, 팝에서 음악적 에너지를 끌어올리는 중요한 요소입니다. 짧은 리프 하나로 전체 사운드가 살아나는 브라스 편곡의 원리를 정리합니다.
 
-브라스 섹션의 현대적 형태는 1930~40년대 미국 빅밴드 시대에 확립됐습니다. Glenn Miller Orchestra는 4개 트롬본과 5개 트럼펫을 표준화한 브라스 섹션으로 "Moonlight Serenade"(1939) 같은 스윙 시대의 상징적 사운드를 만들었고, Count Basie의 Kansas City 빅밴드는 블루스에서 온 호흡감과 스윙 그루브를 결합해 재즈 브라스의 어휘를 확장했습니다. R&B와 소울 브라스의 문법은 James Brown의 JB Horns(트럼펫 Maceo Parker와 그의 형제)가 1960년대에 정립했습니다. "스탭(Stab)"이라 불리는 강박의 짧은 화음과 "리프(Riff)"의 반복이 JB Horns의 트레이드마크였고, 이것이 Earth Wind & Fire(9인조 호른 섹션), Chicago, Tower of Power의 브라스 편곡에 영향을 줬습니다. Bruno Mars와 Mark Ronson의 "Uptown Funk"(2014)는 이 전통적 R&B 브라스 스타일을 현대 팝에 성공적으로 부활시킨 대표 사례입니다.
+브라스 섹션의 현대적 형태는 1930~40년대 미국 빅밴드 시대에 확립됐습니다. Glenn Miller Orchestra는 "Moonlight Serenade"(1939) 같은 스윙 시대의 상징적 사운드를 만들었고, Count Basie의 Kansas City 빅밴드는 블루스에서 온 호흡감과 스윙 그루브를 결합해 재즈 브라스의 어휘를 확장했습니다. R&B와 소울 브라스의 문법은 James Brown의 JB Horns(색소폰 Maceo Parker, 트롬본 Fred Wesley 등)가 1960년대에 정립했습니다. "스탭(Stab)"이라 불리는 강박의 짧은 화음과 "리프(Riff)"의 반복이 JB Horns의 트레이드마크였고, 이것이 Earth Wind & Fire, Chicago, Tower of Power의 브라스 편곡에 영향을 줬습니다. Bruno Mars와 Mark Ronson의 "Uptown Funk"(2014)는 이 전통적 R&B 브라스 스타일을 현대 팝에 성공적으로 부활시킨 대표 사례입니다.
 
 ---
 

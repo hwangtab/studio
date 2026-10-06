@@ -41,7 +41,7 @@ inlineFallback:
 
 전자 음악은 신시사이저·샘플러·이펙터를 통해 세상에 존재하지 않는 사운드를 만들어내는 음악입니다. 사운드 디자인 능력이 전자 음악 제작자의 핵심 역량입니다.
 
-전자 음악의 역사는 1920년대 레옹 테레민이 발명한 테레민(Theremin)으로 거슬러 올라갑니다. 1960년대 Robert Moog의 모그 신시사이저(Moog Synthesizer)가 상업화되면서 전자 사운드가 스튜디오로 들어왔고, 크라프트베르크(Kraftwerk)는 1974년 앨범 "Autobahn"에서 인간의 감성과 기계적 정밀함을 결합한 전자 음악의 미학을 확립했습니다. 1980년대 Roland TR-808과 TB-303의 등장은 힙합·하우스·테크노의 물질적 기반이 됐으며, 시카고 하우스와 디트로이트 테크노가 클럽 씬에서 EDM의 원형을 만들었습니다. 1990년대 Prodigy, Chemical Brothers, Daft Punk가 빅 비트와 프렌치 하우스로 전자 음악을 주류로 끌어올렸고, 2010년대 Avicii·Swedish House Mafia·Calvin Harris가 상업 EDM 붐을 이끌었습니다. 한국에서는 2000년대 SM·YG의 디지털 프로덕션을 거쳐, 현재 K-POP 프로듀서들이 Ableton Live·Logic Pro·FL Studio를 기반으로 글로벌 전자 음악과 동등한 수준의 제작 환경을 갖추고 있습니다.
+전자 음악의 역사는 1920년대 레옹 테레민이 발명한 테레민(Theremin)으로 거슬러 올라갑니다. 1960년대 Robert Moog의 모그 신시사이저(Moog Synthesizer)가 상업화되면서 전자 사운드가 스튜디오로 들어왔고, 크라프트베르크(Kraftwerk)는 1974년 앨범 "Autobahn"에서 인간의 감성과 기계적 정밀함을 결합한 전자 음악의 미학을 확립했습니다. 1980년대 Roland TR-808과 TB-303의 등장은 힙합·하우스·테크노의 물질적 기반이 됐으며, 시카고 하우스와 디트로이트 테크노가 클럽 씬에서 EDM의 원형을 만들었습니다. 1990년대 Prodigy, Chemical Brothers, Daft Punk가 빅 비트와 프렌치 하우스로 전자 음악을 주류로 끌어올렸고, 2010년대 Avicii·Swedish House Mafia·Calvin Harris가 상업 EDM 붐을 이끌었습니다.
 
 ---
 

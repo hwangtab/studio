@@ -59,7 +59,7 @@ howTo:
 
 올바른 앱을 활용하면 이동 중에도, 집에서도 효과적인 보컬 훈련이 가능합니다. 목적별로 최적의 앱을 추천합니다.
 
-모바일 보컬 연습 앱의 역사는 스마트폰 시대와 함께 시작됩니다. 2008년 App Store 출시 이후 Smule이 2010년 "Magic Piano"와 "Sing! Karaoke"를 선보이며 소셜 노래 플랫폼 개념을 처음 도입했고, 이후 2010년대 중반부터 피치 감지 알고리즘이 정밀해지면서 Vocal Pitch Monitor 같은 실시간 음정 분석 앱이 등장했습니다. 현재 Vocal Pitch Monitor는 스마트폰 마이크로 입력된 음성을 고속 푸리에 변환(FFT) 방식으로 분석해 약 20ms 이내의 지연으로 피치(Hz 및 음이름)를 시각화합니다. 이는 과거 피아노 앞에서만 가능했던 음정 확인 작업을 언제 어디서나 할 수 있게 만든 기술적 도약입니다.
+모바일 보컬 연습 앱의 역사는 스마트폰 시대와 함께 시작됩니다. 2008년 App Store 출시 이후 피치 감지 알고리즘이 정밀해지면서 Vocal Pitch Monitor 같은 실시간 음정 분석 앱이 등장했습니다. 이는 과거 피아노 앞에서만 가능했던 음정 확인 작업을 언제 어디서나 할 수 있게 만든 기술적 도약입니다.
 
 보컬 연습 앱이 학습 효과를 내려면 목적에 맞는 도구를 선택해야 합니다. 음정(피치)이 문제라면 Vocal Pitch Monitor나 Vanido처럼 실시간 시각 피드백을 주는 앱이 효과적이고, 음악적 귀를 키우는 청음(ear training) 훈련에는 Perfect Ear나 Tenuto처럼 인터벌·코드·리듬을 퀴즈 형식으로 반복 학습시키는 앱이 필요합니다. 한 앱으로 모든 것을 해결하려는 접근보다, 각각의 훈련 목적에 특화된 앱 2~3개를 조합해 20분 루틴을 구성하는 것이 장기적으로 더 효율적입니다.
 
@@ -72,8 +72,8 @@ howTo:
 | 음정 시각화 | Vocal Pitch Monitor | iOS/Android | 무료 |
 | 보컬 트레이닝 | Sing Sharp | iOS/Android | 유료 |
 | 보컬 트레이닝 | Vanido | iOS/Android | 무료/유료 |
-| 청음 훈련 | Perfect Ear | Android | 무료/유료 |
-| 청음 훈련 | Tenuto | iOS/Android | 유료 |
+| 청음 훈련 | Perfect Ear | iOS/Android | 무료/유료 |
+| 청음 훈련 | Tenuto | iOS | 유료 |
 | 청음 훈련 (웹) | Musicca.com | 웹 | 무료 |
 | 전체 트레이닝 | Yousician | iOS/Android | 무료/유료 |
 | 리듬 훈련 | Rhythm Trainer | iOS | 유료 |

@@ -295,7 +295,7 @@ D 도리안 (D-E-F-G-A-B-C)
 | "So What" | D 도리안 + Eb 도리안 |
 | "Impressions" | D 도리안 |
 | "Maiden Voyage" | 4개 sus 코드 |
-| "Footprints" | 월드 도리안 |
+| "Footprints" | C 마이너 블루스(도리안 색채) |
 
 ---
 

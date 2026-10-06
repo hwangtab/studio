@@ -41,7 +41,7 @@ faq:
 
 피치 교정은 현대 음악 제작의 표준 과정입니다. K-팝, 발라드, R&B 어디서나 사용됩니다. 그러나 좋은 피치 교정은 들리지 않아야 합니다.
 
-오토튠 피치 교정 기술의 역사는 1997년 Antares Audio Technologies의 엔지니어 Andy Hildebrand가 Auto-Tune을 개발한 것으로 시작됩니다. 원래 지진 탐사 데이터 분석에 사용하던 위상 추정 알고리즘을 오디오 피치 교정에 응용한 것으로, 1998년 Cher의 "Believe"에서 Retune Speed를 최저로 설정한 극단적인 피치 효과가 세계적으로 퍼지면서 팝 음악의 아이콘이 됐습니다. 2003년 T-Pain이 Auto-Tune을 이펙트로 본격 활용했고, 2009년 Jay-Z가 "Death of Auto-Tune"을 발표해 남용에 대한 반발이 일었지만 K-POP을 포함한 글로벌 팝 시장에서 피치 교정은 표준 과정으로 정착됐습니다. 현재 K-POP 스튜디오에서는 Auto-Tune의 실시간 교정과 Melodyne의 정밀 수동 편집을 병행하는 방식이 보편화돼 있습니다.
+오토튠 피치 교정 기술의 역사는 1997년 Antares Audio Technologies의 엔지니어 Andy Hildebrand가 Auto-Tune을 개발한 것으로 시작됩니다. 원래 지진 탐사 데이터 분석에 사용하던 위상 추정 알고리즘을 오디오 피치 교정에 응용한 것으로, 1998년 Cher의 "Believe"에서 Retune Speed를 최저로 설정한 극단적인 피치 효과가 세계적으로 퍼지면서 팝 음악의 아이콘이 됐습니다. 2009년 Jay-Z가 "Death of Auto-Tune"을 발표해 남용에 대한 반발이 일었지만 K-POP을 포함한 글로벌 팝 시장에서 피치 교정은 표준 과정으로 정착됐습니다.
 
 ## 오토튠 vs 멜로다인 비교
 

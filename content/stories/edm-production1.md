@@ -40,7 +40,7 @@ inlineFallback:
 
 EDM은 구조적인 에너지 흐름이 핵심입니다. 빌드업에서 극도의 긴장감을 쌓고, 드롭에서 폭발적으로 해소하는 설계가 EDM을 정의합니다.
 
-EDM의 역사는 1970년대 시카고 하우스와 디트로이트 테크노로 시작됩니다. Larry Heard·Frankie Knuckles가 선구한 시카고 하우스는 Roland TR-808·TR-909 드럼 머신과 베이스 신스로 구조화된 그루브를 만들었고, 1980년대 후반 유럽으로 전파되면서 애시드 하우스와 레이브 문화가 형성됐습니다. 2000년대 Daft Punk·Swedish House Mafia가 유럽 EDM을 글로벌로 확장했고, 2010년대 Avicii·Skrillex가 메인스트림 팝과 EDM을 융합하면서 빌보드 차트를 장악했습니다. 한국에서는 2010년대 이후 페스티벌 씬과 함께 EDM 제작이 확산됐으며, Ableton Live·FL Studio와 Serum·Massive 신디사이저가 한국 프로듀서 표준 워크플로우로 자리잡았습니다.
+EDM의 역사는 1980년대 시카고 하우스와 디트로이트 테크노로 시작됩니다. Larry Heard·Frankie Knuckles가 선구한 시카고 하우스는 Roland TR-808·TR-909 드럼 머신과 베이스 신스로 구조화된 그루브를 만들었고, 1980년대 후반 유럽으로 전파되면서 애시드 하우스와 레이브 문화가 형성됐습니다. 2000년대 Daft Punk·Swedish House Mafia가 유럽 EDM을 글로벌로 확장했습니다. 한국에서는 2010년대 이후 페스티벌 씬과 함께 EDM 제작이 확산됐습니다.
 
 ## EDM 곡 구조
 

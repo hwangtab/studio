@@ -124,10 +124,9 @@ Celtic, Folk 스타일에 많이 사용
 
 ### Pierre Bensusan 스타일
 
-Pierre Bensusan은 DADGAD만 사용하는 기타리스트:
+Pierre Bensusan은 DADGAD를 주 튜닝으로 삼은 기타리스트:
 - **드론 현:** 낮은 D줄을 항상 울리게
 - **모달 접근:** D 도리안·믹솔리디안 중심
-- **화려한 핑거피킹:** 오른손 5손가락 사용
 
 **DADGAD 기본 코드:**
 ```
@@ -135,7 +134,7 @@ Pierre Bensusan은 DADGAD만 사용하는 기타리스트:
 D: 오픈 (Dsus4)
 G: 5프렛 (Dsus4 포지션에서 변형)
 A: 7프렛 바레
-Em: 2프렛 (E-A-E-G-A-E)
+Em: 2프렛 (E-B-E-A-B-E)
 
 ```
 
@@ -180,7 +179,7 @@ Led Zeppelin "Kashmir"는 DADGAD:
 ### Keith Richards 스타일
 
 The Rolling Stones의 Keith Richards:
-- 5번 줄 제거 (4줄 기타)
+- 6번 줄 제거 (5줄 기타)
 - 오픈 G에서 단순한 코드
 - "Brown Sugar", "Start Me Up", "Honky Tonk Women" 모두 오픈 G
 
@@ -222,8 +221,6 @@ The Rolling Stones의 Keith Richards:
 
 ### 솔로 포크 기타
 
-Nick Drake 스타일:
-
 ```
 
 오픈 D로 서정적 핑거피킹
@@ -241,16 +238,9 @@ Nick Drake 스타일:
 Joni Mitchell은 매 곡마다 다른 튜닝:
 
 **"Big Yellow Taxi":** Open E (EBEG#BE)
-**"Both Sides Now":** 오픈 G 변형
+**"Both Sides Now":** 오픈 D (DADF#AD)
 **"A Case of You":** 독특한 변형
 
-**Mitchell의 철학:**
-```
-"기타를 피아노처럼 자유롭게"
-튜닝이 악기의 한계를 넘어설 수 있게
-각 곡에 맞는 고유한 보이싱
-
-```
 
 ---
 
@@ -288,7 +278,7 @@ DADGAD로: 낮은 D 드론 유지하면서
 **Drop D + 카포 3프렛:**
 ```
 
-실질 튜닝: F A D G B E (Drop F)
+실질 튜닝: F C F Bb D G (Drop F)
 새로운 음색
 
 ```
