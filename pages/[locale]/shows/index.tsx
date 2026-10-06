@@ -1,10 +1,10 @@
 import SEO from '../../../components/SEO';
-import ImageHero from '../../../components/common/ImageHero';
+import ImageHero, { HERO_SCRIM_STRONG } from '../../../components/common/ImageHero';
 import ShowCard from '../../../components/shows/ShowCard';
 import { Section } from '../../../components/ui/Section';
 import SectionHeading from '../../../components/ui/SectionHeading';
 import { withI18nServerProps } from '../../../lib/getStatic';
-import { SHOW_CONTACT_PHONE, SHOW_HERO_BLUR_CLASS, SHOW_HERO_IMAGE } from '../../../lib/shows/copy';
+import { SHOW_CONTACT_PHONE, SHOW_HERO_IMAGE } from '../../../lib/shows/copy';
 import { listPublicShows, type PublicShow } from '../../../lib/shows/queries';
 
 interface Props {
@@ -42,7 +42,7 @@ export default function ShowsIndexPage({ upcoming, past, nowSec }: Props) {
         locale="ko"
         priority
         backgroundImage={pickHeroImage(upcoming, past)}
-        className={SHOW_HERO_BLUR_CLASS}
+        overlayGradient={HERO_SCRIM_STRONG}
         imageAlt=""
         title="공연"
         subtitle="스튜디오 놀이 여는 공연입니다. 사전 예매는 온라인에서 받고, 티켓(QR)은 메일로 보내 드립니다."

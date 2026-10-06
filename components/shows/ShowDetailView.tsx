@@ -1,4 +1,4 @@
-import ImageHero from '../common/ImageHero';
+import ImageHero, { HERO_SCRIM_STRONG } from '../common/ImageHero';
 import MobileStickyCta from '../common/MobileStickyCta';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
@@ -7,7 +7,7 @@ import { Panel } from '../ui/Panel';
 import FAQSection from '../ui/FAQSection';
 import { Section } from '../ui/Section';
 import SectionHeading from '../ui/SectionHeading';
-import { formatWon, SHOW_CONTACT_PHONE, SHOW_HERO_BLUR_CLASS, SHOW_HERO_IMAGE } from '../../lib/shows/copy';
+import { formatWon, SHOW_CONTACT_PHONE, SHOW_HERO_IMAGE } from '../../lib/shows/copy';
 import { showFaqItems } from '../../lib/shows/faq';
 import type { PublicShow } from '../../lib/shows/queries';
 import { descriptionBlocks } from '../../lib/shows/structured';
@@ -41,7 +41,7 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
   return (
     <>
       {/*
-        히어로 배경은 포스터다(스크림 아래 분위기) — 펀딩 목록이 진행 중 프로젝트의 커버를 배경으로 쓰는 것과 같은 수법.
+        히어로 배경은 포스터다 — 펀딩 상세와 같은 방식(선명한 배경 + 확대 애니메이션 + HERO_SCRIM_STRONG)으로 나온다.
         히어로 안에 작은 포스터 카드를 또 두지 않고, 읽을 수 있는 크기의 포스터는 아래 본문(ShowPoster)에 둔다.
         포스터가 없으면 SHOW_HERO_IMAGE로 떨어진다.
       */}
@@ -49,7 +49,7 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
         locale="ko"
         priority
         backgroundImage={show.coverImage ?? SHOW_HERO_IMAGE}
-        className={SHOW_HERO_BLUR_CLASS}
+        overlayGradient={HERO_SCRIM_STRONG}
         imageAlt=""
         aboveTitle={<p className="text-sm font-semibold tracking-wide text-gray-200 drop-shadow">{show.presenterName} 주최</p>}
         title={show.title}
