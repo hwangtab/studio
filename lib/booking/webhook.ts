@@ -8,6 +8,7 @@ import { confirmShowOrder, type ConfirmOutcome as ShowConfirmOutcome } from '../
 import { sendShowTicketEmail } from '../shows/email';
 import { syncShowCancelsFromToss } from '../shows/refund';
 import { confirmBookingPayment, type ConfirmOutcome } from './confirm';
+import { confirmDepositPayment } from './confirmDeposit';
 import { findOrderByOrderNo } from './service';
 import { cancelPayment, confirmPayment, fetchPayment, type TossPayment } from './toss';
 
@@ -318,6 +319,20 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
             console.error('[booking-webhook] 공연 티켓 메일 실패', { orderNo: payment.orderId, error });
           }
         }
+      } else if (orderType === 'deposit') {
+        // 예약금 결제 링크 — 하위 테이블이 없는 전용 승인 경로. 재조회로 DONE + 금액이 확인된 돈이다.
+        const outcome = await confirmDepositPayment(
+          { orderNo: payment.orderId, paymentKey, amount: payment.totalAmount },
+          { trustedByWebhook: true },
+        );
+        if (!outcome.ok && isTransientConfirmFailure(outcome.code)) {
+          console.error('[booking-webhook] 예약금 확정 처리 일시 실패 — 멱등 키 회수 후 재시도 유도', {
+            eventKey,
+            code: outcome.code,
+          });
+          await releaseEventKey(eventKey);
+          return { status: 500 };
+        }
       } else {
         const outcome =
           orderType === 'funding'
@@ -352,6 +367,15 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
         // (lib/shows/refund.ts). payment.orderId(=주문번호)만 있으면 되고, order 객체는 여기서
         // 다시 조회하지 않는다(orderType이 이미 order?.type을 거쳐 나온 값이므로 order는 존재한다).
         await syncShowCancelsFromToss(payment.orderId, payment);
+      } else if (orderType === 'deposit') {
+        // 예약금 — 선점할 하위 엔티티가 없다. 취소 금액만 refunds와 대사하고 주문 상태를 환불 계열로 옮긴다.
+        // syncCancelledFromToss는 bookings/work_orders 전제라 쓰지 않고(조용히 return하면 취소가 영영 기록되지 않는다)
+        // reconcileRefunds를 재사용한다.
+        if (order) {
+          const paymentRow = order.payments.find((p) => p.paymentKey === payment.paymentKey) ?? order.payments[0];
+          if (paymentRow) await reconcileRefunds(order, paymentRow, payment);
+          else console.error('[booking-webhook] 예약금 취소 대사 스킵 — payments 행 없음', { orderNo: order.orderNo });
+        }
       } else if (orderType === 'subscription') {
         // 관리자가 토스 콘솔에서 회차 하나를 취소해도 구독 자체는 유지한다(스펙 §6 관리자 절 —
         // 정지·해지는 관리자 화면의 별도 조작이지 결제 취소의 부작용이 아니다). 환불 금액만

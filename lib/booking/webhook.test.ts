@@ -1,6 +1,7 @@
 jest.mock('./service', () => ({ findOrderByOrderNo: jest.fn() }));
 jest.mock('./toss', () => ({ fetchPayment: jest.fn(), confirmPayment: jest.fn() }));
 jest.mock('./confirm', () => ({ confirmBookingPayment: jest.fn() }));
+jest.mock('./confirmDeposit', () => ({ confirmDepositPayment: jest.fn() }));
 jest.mock('../funding/confirm', () => ({
   confirmFundingPledge: jest.fn().mockResolvedValue({ ok: true, orderNo: 'FND-1', manageToken: 't', projectSlug: 'demo' }),
   syncFundingCancelledFromToss: jest.fn().mockResolvedValue(undefined),
@@ -34,6 +35,7 @@ import { processTossWebhook } from './webhook';
 import { findOrderByOrderNo } from './service';
 import { fetchPayment, confirmPayment } from './toss';
 import { confirmBookingPayment } from './confirm';
+import { confirmDepositPayment } from './confirmDeposit';
 import { confirmFundingPledge } from '../funding/confirm';
 import { reconcileSubscriptionPaymentFromToss } from '../billing/service';
 import { confirmShowOrder } from '../shows/confirm';
@@ -502,6 +504,62 @@ describe('processTossWebhook', () => {
     expect(insertedRefund).toMatchObject({ paymentId: 'p_s', amount: 396000 });
     const orderUpdate = setCallsOf(mockDb()).find((c) => c.status === 'refunded');
     expect(orderUpdate).toBeDefined();
+  });
+
+  describe('deposit(예약금 결제 링크) 주문 라우팅', () => {
+    const depositOrder = (over: Record<string, unknown> = {}) => ({
+      id: 'o', orderNo: 'SNB-D1', type: 'deposit', status: 'pending', totalAmount: 400000,
+      bookings: [], workOrders: [], payments: [{ id: 'p_d', paymentKey: 'pk_d' }], ...over,
+    });
+
+    it('DONE 웹훅은 confirmDepositPayment를 trustedByWebhook:true로 호출한다(confirmBookingPayment 아님)', async () => {
+      (fetchPayment as jest.Mock).mockResolvedValueOnce({
+        ok: true, payment: { paymentKey: 'pk_d', orderId: 'SNB-D1', status: 'DONE', totalAmount: 400000 },
+      });
+      (findOrderByOrderNo as jest.Mock).mockResolvedValueOnce(depositOrder());
+      (confirmDepositPayment as jest.Mock).mockResolvedValue({ ok: true, orderNo: 'SNB-D1', totalAmount: 400000, receiptUrl: null });
+
+      const { status } = await processTossWebhook({ data: { paymentKey: 'pk_d', status: 'DONE' } });
+
+      expect(status).toBe(200);
+      expect(confirmDepositPayment).toHaveBeenCalledWith(
+        { orderNo: 'SNB-D1', paymentKey: 'pk_d', amount: 400000 },
+        { trustedByWebhook: true },
+      );
+      expect(confirmBookingPayment).not.toHaveBeenCalled();
+    });
+
+    it('기록 실패(recording_failed)는 멱등 키를 회수하고 500으로 재시도를 유도한다', async () => {
+      (fetchPayment as jest.Mock).mockResolvedValueOnce({
+        ok: true, payment: { paymentKey: 'pk_d', orderId: 'SNB-D1', status: 'DONE', totalAmount: 400000 },
+      });
+      (findOrderByOrderNo as jest.Mock).mockResolvedValueOnce(depositOrder());
+      (confirmDepositPayment as jest.Mock).mockResolvedValue({ ok: false, code: 'recording_failed', message: 'x' });
+
+      const { status } = await processTossWebhook({ data: { paymentKey: 'pk_d', status: 'DONE' } });
+
+      expect(status).toBe(500);
+      expect(mockDb().delete).toHaveBeenCalled();
+    });
+
+    it('CANCELED 웹훅은 환불만 대사하고 bookings/work_orders 선점을 시도하지 않는다', async () => {
+      (fetchPayment as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        payment: {
+          paymentKey: 'pk_d', orderId: 'SNB-D1', status: 'CANCELED', totalAmount: 400000,
+          cancels: [{ transactionKey: 'ck_d', cancelAmount: 400000 }],
+        },
+      });
+      (findOrderByOrderNo as jest.Mock).mockResolvedValueOnce(depositOrder({ status: 'paid' }));
+      mockDb().query.refunds.findMany.mockResolvedValueOnce([]);
+
+      const { status } = await processTossWebhook({ data: { paymentKey: 'pk_d', status: 'CANCELED' } });
+
+      expect(status).toBe(200);
+      expect(mockDb().run).not.toHaveBeenCalled();
+      expect(insertValuesCallsOf(mockDb()).find((c) => 'paymentId' in c)).toMatchObject({ paymentId: 'p_d', amount: 400000 });
+      expect(setCallsOf(mockDb()).find((c) => c.status === 'refunded')).toBeDefined();
+    });
   });
 
   describe('ticket 주문 라우팅', () => {
