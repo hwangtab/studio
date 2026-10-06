@@ -9,7 +9,7 @@
 /* 기본 스타일 */
 @layer base {
   :root {
-    --primary-rgb: 22, 101, 52; /* = lib/brandColor.ts primary. 탭 하이라이트·인용 테두리 */
+    --primary-rgb: 6, 95, 70; /* = lib/brandColor.ts primary. 탭 하이라이트·인용 테두리 */
     color-scheme: light dark;
 
     /* Pretendard 다음 자리 — 아래 :root:lang() 블록 참고. 기본값은 예전 스택의

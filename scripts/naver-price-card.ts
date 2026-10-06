@@ -78,7 +78,7 @@ const fontUrl = `file://${path.join(process.cwd(), 'public/fonts/Pretendard-Bold
 const html = `<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>
 @font-face{font-family:PB;src:url('${fontUrl}')}
 *{box-sizing:border-box;margin:0}
-body{width:1035px;background:#f2ede4;font-family:PB,'Apple SD Gothic Neo',sans-serif;color:#1f1f2e;padding:50px 66px}
+body{width:1035px;background:#f2f5f3;font-family:PB,'Apple SD Gothic Neo',sans-serif;color:#1f1f2e;padding:50px 66px}
 .card{background:#fff;border-radius:40px;padding:56px 50px 44px;box-shadow:0 20px 60px rgba(14,60,38,.08)}
 .logo{text-align:center;font-size:52px;letter-spacing:-1px;color:#1b3a2b}.logo b{color:#f5c800;font-weight:400}
 h1{text-align:center;font-size:44px;margin-top:22px}h1 span{color:${BRAND_COLOR.primary}}

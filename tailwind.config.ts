@@ -21,18 +21,20 @@ const config: Config = {
       colors: {
         primary: {
           // 라이너 노트(2026-10-06, docs/design-liner-notes-plan-2026-10.md §3-1): 보라(violet-700)를
-          // 로고의 짙은 녹색 계열로. 값의 정본은 lib/brandColor.ts — 메일·정적 카드가 같은 값을 쓴다.
-          light: BRAND_COLOR.primaryLight, // 흰 5.02:1 · 종이 4.69:1 — 작은 텍스트에는 쓰지 않는다
-          DEFAULT: BRAND_COLOR.primary, // 흰 7.13:1 · 종이 6.67:1 (옛 보라 7.10:1과 같은 수준)
-          dark: BRAND_COLOR.primaryDark, // 로고 실측값. 흰 글씨 12.4:1 — 히어로 잉크 면·solid hover
-          // 다크 배경(gray-900 #030712) 위 텍스트·테두리용. DEFAULT는 2.82:1, light는 4.01:1로
-          // 다크 텍스트에 못 쓴다 — lighter만 13.2:1로 통과한다. 규칙은 보라 때와 같다.
+          // 로고의 짙은 녹색 계열로. 2026-10-07 2차 개정: 운영자가 1차 값(올리브 포레스트 그린 + 베이지)을
+          // "텁텁하다"며 반려 — 더 선명한 에메랄드 계열로, 바탕은 순백/근접백으로. 값의 정본은
+          // lib/brandColor.ts — 메일·정적 카드가 같은 값을 쓴다.
+          light: BRAND_COLOR.primaryLight, // 흰 3.77:1 · paper2 3.43:1 — 작은 텍스트에는 쓰지 않는다(대형·아이콘용)
+          DEFAULT: BRAND_COLOR.primary, // 흰 7.68:1 · paper2 약 7.0:1
+          dark: BRAND_COLOR.primaryDark, // 흰 글씨 12.5:1 — 히어로 잉크 면·solid hover
+          // 다크 배경(gray-900 #030712) 위 텍스트·테두리용 — lighter만 13.2:1로 통과한다. 규칙은 1차와 같다.
           lighter: BRAND_COLOR.primaryOnDark,
         },
         // secondary(핑크)·accent(에메랄드)는 2026-10-06 라이너 노트에서 지웠다 — 브랜드색은 primary 하나. 성공·긍정은
         // green-*, 다크 텍스트 짝은 primary-lighter 하나다(tailwind.config.test.ts가 재등장을 막는다).
-        // 라이트 바탕. 순백 대신 종이(라이너 노트 §3-1). Section default/alternate와 body·Layout이 쓴다.
-        // 글래스 카드 틴트(흰 0.72)는 그대로라 카드가 종이보다 살짝 밝게 뜬다.
+        // 라이트 바탕 — 순백(paper)과 차가운 근접백(paper-2). 1차 값(따뜻한 베이지)은 올리브 그린과 짝지어
+        // "텁텁하다"는 반려를 받아 2026-10-07 흰색/쿨그레이로 교체(§3-1 2차 개정). Section default/alternate와
+        // body·Layout이 쓴다. 글래스 카드 틴트(흰 0.72)는 그대로라 카드가 paper-2보다 살짝 밝게 뜬다.
         paper: {
           DEFAULT: BRAND_COLOR.paper,
           2: BRAND_COLOR.paper2,

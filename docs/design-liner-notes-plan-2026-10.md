@@ -5,6 +5,21 @@
 토큰·컴포넌트 값을 **무엇으로, 어떤 순서로, 어떤 게이트를 지나며** 바꾸는지 적는다. 끝나면
 design-system.md의 §1·§2·§3·§7을 이 문서 값으로 개정한다.
 
+## 0-1. 2026-10-07 운영자 리뷰 — 3/4 반려
+
+실제 프리뷰(1~4주차 8개 PR)를 보고 운영자가 넷 중 셋을 반려했다. 소리(3-6, `feat/liner-audio`·
+`feat/liner-portfolio`)는 비평 대상이 아니었다 — 그대로 유지.
+
+- **히어로**: "히어로는 지금이 낫다" → 3-3의 `layout='split'|'sleeve'|'board'` 적용 7곳을 overlay로
+  되돌림(§3-3 자체, 즉 컴포넌트의 분기 코드는 롤백 비용을 낮추려 데드 코드로 남겨 뒀다).
+- **색**: "너무 텁텁하다. 도시적이고 세련된게 좋다" → §3-1b(2차 개정)에 처방과 새 값.
+- **서체**: "촌스럽다. 다른 좋은 한국어 폰트들을 고민해봐라" → Hahmlet(세리프) 노선을 접고 **SUIT**·
+  **Paperlogy**(둘 다 산세리프, OFL) 두 비교 브랜치로 재검토 — §7 갱신.
+
+새 기준선 브랜치는 `feat/liner-v2-base`(4주차 tip + 히어로 되돌림 + 색 2차 개정), 그 위에 서체만
+다른 `feat/liner-font-suit`·`feat/liner-font-paperlogy` 둘. 옛 `feat/liner-tokens`(#506)·
+`feat/liner-display-font`(#507)·`feat/liner-hero`(#509)는 머지하지 않고 PR에 대체 사실만 남긴다.
+
 ## 0. 한 줄
 
 사이트의 뼈대(토큰·가드·프리미티브·홈 v2 문법)는 두고 **재료 넷**을 바꾼다. 사진(히어로 12장 교체),
@@ -84,6 +99,42 @@ PSI simulate 중앙값 70·LCP 5.9s(CrUX는 통과) — 히어로 사진이 LCP 
 **가드 영향** — `tailwind.config.test.ts`의 세 라운드(다크 짝 존재·충분성·variant 덮어쓰기)와 포커스 링 알파 가드는
 토큰 **이름**을 보고, 대비 계산은 값을 읽는다. 위 값은 전부 그 기준으로 통과한다. `SectionHeading.test.tsx`의
 v2 색 규칙(secondary·accent 클래스 금지)은 값 재매핑과 무관하게 초록이다. 비주얼 샷 기준선은 전부 갱신.
+
+#### 3-1b. 2026-10-07 2차 개정 — "텁텁하다" 반려
+
+운영자가 위 1차 값(올리브 톤 포레스트 그린 `#166534` + 따뜻한 베이지 `#faf7f2`/`#f2ede4`)을 실제 화면으로 보고
+반려했다. 평: "색은 너무 텁텁하다. 도시적이고 세련된게 좋다." 히어로 합성(3-3 split/sleeve/board)도 같은
+자리에서 "히어로는 지금이 낫다"로 반려 — §6에 overlay 복귀로 기록.
+
+**진단**: 따뜻한 베이지 바탕이 올리브 톤 그린과 짝지어지면 코지·전통적(한옥 카페·북디자인)으로 읽힌다 —
+"도시적"의 반대 방향이다. 범인은 그린의 색상(hue)이 아니라 ① 바탕의 색온도(warm)와 ② 그린의 채도(올리브는
+탁하다) 둘 다다.
+
+**처방**: 바탕을 차갑고 깨끗한 중성색으로, primary를 같은 "로고 그린" 계열 안에서 더 선명한 에메랄드 쪽으로.
+
+| 토큰 | 1차(반려) | 2차(확정) | 대비 |
+|---|---|---|---|
+| `primary.DEFAULT` | `#166534` | **`#065f46`** (emerald-800) | 흰 7.68 · paper-2 약 7.0 |
+| `primary.light` | `#15803d` | **`#059669`** (emerald-600) | 흰 3.77 · paper-2 3.43 — 작은 텍스트 금지 그대로 |
+| `primary.dark` | `#0e3c26` | **`#0b3b2c`** | 흰 글씨 12.5 |
+| `primary.lighter`(다크 텍스트 짝) | `#6ee7b7` | **그대로** | gray-900 위 13.2(이미 충분히 선명해 바꿀 이유가 없었다) |
+| `paper` | `#faf7f2` | **`#ffffff`** (순백) | — |
+| `paper-2` | `#f2ede4` | **`#f2f5f3`** (쿨그레이) | — |
+| `--primary-rgb` | `22,101,52` | `6,95,70` | tap-highlight·blockquote 테두리 |
+| theme-color(meta·manifest) | `#0e3c26` | `#0b3b2c` | |
+
+포커스 링 재실측: `ring-primary/70` on 흰 = `#4fa189` → **3.76**(1차보다 여유 확보), on paper-2 **3.58**.
+`primary-lighter/70` on gray-900은 손대지 않아 그대로 **6.6** 이상. `Button` solid(흰 on `#065f46` 7.68, hover
+`#0b3b2c` 12.5), outline(`text-primary` 7.68 / `dark:text-primary-lighter` 13.2) 전부 통과.
+
+**바꾸는 파일**(1차와 동일한 자리, 값만 교체): `lib/brandColor.ts`(정본), `tailwind.config.ts`(주석 갱신),
+`styles/globals.css`(`--primary-rgb`), `pages/_app.tsx`·`public/scripts/theme-init.js`·`components/Layout.tsx`
+(theme-color 하드코딩 3곳), `scripts/naver-price-card.ts`(명함판 배경 리터럴). 메일 템플릿·포트폴리오 카테고리·
+manifest.ts는 이미 `BRAND_COLOR`를 직접 import해서 쓰므로 **코드 변경 없이** 새 값을 따라간다 — 1차 작업에서
+이미 상수화해 둔 덕이다.
+
+**바꾸지 않는 것**: `kakao`/`kakao-dark`/`kakao-ink`(카카오 CTA 배색 규칙, 별도 고정 규칙). `ink`(`#030712`,
+다크 배경 자체는 이미 차갑다). `primary.lighter`(이미 에메랄드 계열이라 1차부터 "텁텁함"의 원인이 아니었다).
 
 ### 3-2. 활자 — Hahmlet, 제목에만
 
@@ -300,8 +351,12 @@ PR은 작게, 하나씩 게이트를 지나 머지한다. 순수 디자인 커�
 
 ## 7. 운영자가 정할 것
 
-1. **서체**: Hahmlet(1순위, 이 문서 기준) / 마루 부리 / Paperlogy. 미리보기는 1주차 `feat/liner-display-font` preview에서
-   실제 화면으로 본다.
+1. **서체**: ~~Hahmlet(1순위, 이 문서 기준) / 마루 부리 / Paperlogy~~ — 2026-10-07 운영자가 Hahmlet을 "촌스럽다"며
+   반려, 세리프 노선 전체를 재검토. 대안으로 **SUIT**(sun-typeface, OFL 1.1, 기하·인체공학 산세리프)와
+   **Paperlogy**(Freesentation, OFL 1.1, 기하 산세리프) 둘을 지정해 비교 — 둘 다 네이버·당근마켓류 최근
+   한글 브랜딩에서 흔한 "도시적" 계열이다. `scripts/generate-hero-font.mjs`의 `DISPLAY_FONT=suit|paperlogy`로
+   생성, 비교 브랜치는 `feat/liner-font-suit`·`feat/liner-font-paperlogy`(둘 다 `feat/liner-v2-base` 위).
+   마루 부리는 이번 비교에서 제외(세리프 계열에 더 가깝다는 운영자 판단).
 2. **굵기**: 정적 700 하나(65KB) vs 가변 600~800(119KB). 기본은 700 하나.
 3. **다크 바탕**: gray-900 유지(기본) vs 녹색 기운 잉크 `#0c110e`(gray-900 토큰 값 자체를 바꾸는 일이라 대비 가드
    리터럴까지 손댄다 — 2단계로 미룸).

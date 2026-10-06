@@ -30,16 +30,17 @@ Tailwind는 정의되지 않은 클래스명을 **에러 없이 빌드 CSS에서
 
 | 토큰 | light / DEFAULT / dark | 용도 |
 |---|---|---|
-| `primary` | `#15803d` / `#166534` / `#0e3c26` · lighter `#6ee7b7` | 1차 액션, 강조, 링크. **놀 그린** — 로고(`public/logo/logo.png`)의 짙은 녹색 계열. DEFAULT 흰 7.13:1·종이 6.67:1, dark는 로고 실측값(히어로 잉크 면·큰 면). 값의 정본은 `lib/brandColor.ts` — 메일 HTML·정적 카드·theme-color가 같은 값을 쓴다 |
-| ~~`secondary`~~ · ~~`accent`~~ | 삭제됨 (2026-10-06) | 핑크·에메랄드는 없다. 브랜드색은 `primary` 하나, 성공은 `green-*`, 다크 텍스트 짝은 `primary-lighter` 하나. `tailwind.config.test.ts`가 재등장을 막는다 |
-| `paper` | `#faf7f2` / `paper-2` `#f2ede4` | 라이트 바탕 두 단 — body·Layout·Section default/alternate. 순백 대신 종이. 글래스 카드 틴트(흰 0.72)는 그대로라 카드가 종이보다 살짝 밝게 뜬다 |
+| `primary` | `#059669` / `#065f46` / `#0b3b2c` · lighter `#6ee7b7` | 1차 액션, 강조, 링크. **에메랄드** — 로고(`public/logo/logo.png`) 녹색 계열을 유지하되 2026-10-07 2차 개정으로 올리브 톤을 벗고 더 선명하게 틀었다. DEFAULT 흰 7.68:1·paper-2 약 7.0:1, dark는 흰 글씨 12.5:1(히어로 잉크 면·큰 면). 값의 정본은 `lib/brandColor.ts` — 메일 HTML·정적 카드·theme-color가 같은 값을 쓴다 |
+| ~~`secondary`~~ · ~~`accent`~~ | 삭제됨 (2026-10-06) | 핑크·에메랄드(옛 accent)는 없다. 브랜드색은 `primary` 하나, 성공은 `green-*`, 다크 텍스트 짝은 `primary-lighter` 하나. `tailwind.config.test.ts`가 재등장을 막는다 |
+| `paper` | `#ffffff` / `paper-2` `#f2f5f3` | 라이트 바탕 두 단 — body·Layout·Section default/alternate. 2026-10-07 2차 개정: 1차의 따뜻한 베이지(`#faf7f2`/`#f2ede4`)가 올리브 그린과 짝지어 "텁텁하다"는 반려를 받아, 차갑고 깨끗한 순백/근접백으로 교체. 글래스 카드 틴트(흰 0.72)는 그대로라 카드가 paper-2보다 살짝 밝게 뜬다 |
 | `kakao` | `#FEE500` / hover `#FADA0A` / ink `#191600` | **카카오톡 진입점 전용** |
 
 `gray` 50~950은 커스텀 스케일이다(`500`을 `#4b5563`로 어둡게 조정 — WCAG AA). 다크 바탕은 gray-900 그대로다.
 **slate·zinc·neutral·stone은 쓰지 않는다.** 회색은 `gray` 하나다.
 
 > 2026-10-06 **라이너 노트**(`docs/design-liner-notes-plan-2026-10.md`): 보라 primary를 로고의 녹색으로, 순백을 종이로
-> 바꿨다. 아래 다크 짝 표의 수치는 그 값 기준이다. 서체·히어로·CTA 위계는 그 문서 §3-2~3-4를 따른다.
+> 바꿨다. **2026-10-07 운영자가 이 1차 값을 "텁텁하다"며 반려** — 종이(베이지)를 순백/쿨그레이로, primary를
+> 올리브에서 에메랄드로 다시 틀었다(2차 개정, 위 표가 그 값). 서체·히어로·CTA 위계는 그 문서 §3-2~3-4를 따른다.
 
 ### 카카오 옐로 — 양방향 규칙
 
@@ -78,11 +79,11 @@ Tailwind는 정의되지 않은 클래스명을 **에러 없이 빌드 CSS에서
 
 | 토큰 | 값 | 대비 | 다크 텍스트로 |
 |---|---|---|---|
-| `primary`(DEFAULT) | `#166534` | 2.82:1 | ✗ |
-| `primary-light` | `#15803d` | 4.01:1 | ✗ (쓰지 말 것) |
+| `primary`(DEFAULT) | `#065f46` | 2.62:1 | ✗ |
+| `primary-light` | `#059669` | 5.34:1 | ✗ (쓰지 말 것 — 토큰 역할상 "작은 텍스트 아님" 규칙을 유지, `tailwind.config.test.ts`의 허용 다크 짝은 `primary-lighter` 하나뿐이다) |
 | `primary-lighter` | `#6ee7b7` | 13.2:1 | ✓ |
 
-(2026-10-06 라이너 노트 값. 보라 시절 수치는 git 이력에 있다.)
+(2026-10-07 2차 개정 값. 1차 라이너 노트·보라 시절 수치는 git 이력에 있다.)
 
 따라서 짝은 하나다 — `text-primary` + `dark:text-primary-lighter` (secondary·accent 짝은 토큰과 함께 2026-10-06에 지웠다).
 `hover:`·`group-hover:`·`focus-visible:` 같은 variant도 **같은 variant의 다크 짝**이 필요하다
