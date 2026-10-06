@@ -92,7 +92,7 @@ faq:
 | 난이도 | 작품 | 핵심 기술 |
 |-------|------|---------|
 | 입문 | Burgmüller — Arabesque Op.100 No.2 | 스타카토·레가토 대비 |
-| 초급 | Bach — Minuet in G BWV 114 | 바로크 아티큘레이션 |
+| 초급 | Petzold — Minuet in G BWV Anh. 114 | 바로크 아티큘레이션 |
 | 중급 | Beethoven — Moonlight Sonata Mvt.1 | 트리플렛·페달 |
 | 고급 | Chopin — Ballade No.1 Op.23 | 테크닉·감성 종합 |
 

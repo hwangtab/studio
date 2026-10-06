@@ -39,7 +39,7 @@ faq:
 
 트랜지언트는 소리가 시작되는 순간의 날카로운 피크입니다. 이 어택 타이밍을 제어하면 소리의 펀치감, 존재감, 두께감을 조절할 수 있습니다.
 
-컴프레서가 볼륨 임계값을 기준으로 다이나믹을 제어하는 방식이라면, 트랜지언트 쉐이퍼는 신호의 패턴(어택 vs 서스테인)을 기준으로 처리합니다. 트랜지언트 쉐이퍼의 역사는 1998년 SPL(Sound Performance Lab)이 출시한 하드웨어 「Transient Designer」에서 시작됩니다. SPL의 엔지니어 Georg Neumann이 고안한 이 장치는 드럼 룸 사운드를 게이트 없이 제어하는 목적으로 설계되었습니다. 드럼 연주 공간의 룸 잔향이 과도할 때 게이트를 쓰면 자연스러운 드럼 꼬리가 끊기는 문제가 있었는데, Transient Designer는 서스테인 파라미터만 낮춰 어택(타격감)은 유지하면서 룸 잔향만 줄일 수 있었습니다. 이후 Waves Smack Attack, iZotope Neutron Transient Shaper 등 소프트웨어 플러그인으로 대중화되었습니다.
+컴프레서가 볼륨 임계값을 기준으로 다이나믹을 제어하는 방식이라면, 트랜지언트 쉐이퍼는 신호의 패턴(어택 vs 서스테인)을 기준으로 처리합니다. 트랜지언트 쉐이퍼의 역사는 1998년 SPL(Sound Performance Lab)이 출시한 하드웨어 「Transient Designer」에서 시작됩니다. 이 장치는 드럼 룸 사운드를 게이트 없이 제어하는 목적으로 설계되었습니다. 드럼 연주 공간의 룸 잔향이 과도할 때 게이트를 쓰면 자연스러운 드럼 꼬리가 끊기는 문제가 있었는데, Transient Designer는 서스테인 파라미터만 낮춰 어택(타격감)은 유지하면서 룸 잔향만 줄일 수 있었습니다. 이후 Waves Smack Attack, iZotope Neutron Transient Shaper 등 소프트웨어 플러그인으로 대중화되었습니다.
 
 ---
 
@@ -137,7 +137,6 @@ faq:
 
 ### 무료
 
-- Transient Shaper by Vladislav Goncharov
 - Flux BitterSweet III
 
 ### 유료
