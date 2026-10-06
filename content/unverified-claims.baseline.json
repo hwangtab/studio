@@ -3,9 +3,6 @@
     "ableton1": {
       "first-claim": 1
     },
-    "acoustic-treatment1": {
-      "first-claim": 1
-    },
     "ai-music1": {
       "first-claim": 1
     },
@@ -72,10 +69,6 @@
     "music-podcast1": {
       "first-claim": 1
     },
-    "music-sns1": {
-      "first-claim": 1,
-      "unsourced-ratio": 1
-    },
     "music-video1": {
       "first-claim": 1
     },
@@ -84,9 +77,6 @@
     },
     "pitchtool1": {
       "first-claim": 1
-    },
-    "playlist1": {
-      "unsourced-ratio": 1
     },
     "practice-room-bass-country-bluegrass1": {
       "attributed-quote": 1
@@ -136,9 +126,6 @@
     "practice-room-guitar-rock-lead1": {
       "first-claim": 1
     },
-    "practice-room-guitar-volume-swell1": {
-      "attributed-quote": 1
-    },
     "practice-room-piano-ballad-technique1": {
       "korea-standard": 1
     },
@@ -180,10 +167,6 @@
     },
     "singing-lesson1": {
       "first-claim": 1
-    },
-    "stage-vocal1": {
-      "first-claim": 1,
-      "korea-standard": 1
     },
     "stagefright1": {
       "attributed-quote": 1
