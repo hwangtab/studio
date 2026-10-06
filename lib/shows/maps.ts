@@ -62,7 +62,8 @@ export const showMapLinks = (show: MapSource & { mapLinks?: MapLinkOverrides }):
   });
 
 /**
- * 지도 iframe 주소 — 구글 지도의 키 없는 임베드(`?q=…&output=embed`, iframe 안에서만 열린다). 연락처 페이지는 스튜디오
+ * 카카오맵을 못 띄울 때(ShowVenueMap 폴백) 쓰는 지도 iframe 주소 — 구글 지도의 키 없는 임베드(`?q=…&output=embed`,
+ * iframe 안에서만 열린다). 평소 지도는 카카오맵이다(components/maps/KakaoMap.tsx). 연락처 페이지는 스튜디오
  * 한 곳의 고정 `pb=` 토큰을 쓰지만 공연장은 공연마다 달라 검색어로 찾는다. 허용 origin은 middleware.ts의 CSP
  * frame-src(www.google.com).
  */

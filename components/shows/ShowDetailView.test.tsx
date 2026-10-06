@@ -34,7 +34,7 @@ describe('ShowDetailView', () => {
     expect(screen.getByText('출연자')).toBeTruthy();
     expect(screen.getByRole('link', { name: '네이버 지도' }).getAttribute('href')).toBe('https://naver.me/x');
     expect(screen.getByRole('link', { name: '카카오맵' }).getAttribute('href')).toContain('map.kakao.com');
-    expect(screen.getByTitle('장소 위치 지도')).toBeTruthy();
+    expect(screen.getByRole('region', { name: '장소 위치 지도' })).toBeTruthy();
     expect(screen.getByRole('heading', { level: 2, name: '오시는 길' })).toBeTruthy();
     expect(screen.getByRole('heading', { level: 2, name: '티켓 예매' })).toBeTruthy();
     expect(screen.getByText('티켓은 어떻게 받나요?')).toBeTruthy();
