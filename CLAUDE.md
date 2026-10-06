@@ -186,6 +186,21 @@ SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이�
   (`next/dynamic`, ssr 끔). 한때 펼쳐 두었더니 상품 선택 화면이 무거워져 운영자가 접는 쪽으로 되돌렸다(2026-09-30).
   결제 흐름을 떠나는 포트폴리오 링크는 뺀다. 2단계(결제 입력)에는 없다.
 
+### 비공개 감상실 (`/press/sabbaha-slung`) — 발매 전 음원을 평론가·매체에게
+
+비밀번호로 들어오는 앨범 감상·소개 페이지(ko/en, 다른 로케일은 /en으로). 어겨도 에러가 안 나는 것만 적는다:
+
+- **비밀번호 원문을 커밋하지 않는다**(공개 저장소). `lib/press/listeningRoom.ts`에는 scrypt 해시만 있고, 바꿀 때는
+  `node scripts/press/hash-password.mjs '<새 비밀번호>'` 출력으로 갈아 끼운다 — 해시가 바뀌면 기존 입장 쿠키도 전부 풀린다.
+  쿠키 서명 키는 `ADMIN_SESSION_SECRET`에서 갈라 낸다(없으면 운영에서 문을 닫는다).
+- **음원은 Blob private**(`press/sabbaha-slung/`)이고, 통과한 요청에만 곡별 6시간 서명 주소가 나간다(`lib/press/audio.ts`).
+  `public/`에 넣거나 public Blob으로 올리지 말 것. 브라우저가 서명 주소를 직접 Range로 받으므로 함수 4.5MB 한도와 무관하고,
+  그래서 **CSP `media-src`에 `*.private.blob.vercel-storage.com`이 열려 있어야 한다**(middleware.ts).
+- 음원 교체: `node --env-file=.env.local scripts/press/build-sabbaha-slung.mjs --src <mp3 폴더> --prune` →
+  `data/press/sabbahaSlungAudio.ts`(생성물) 갱신. 받은 파일 번호는 앨범 순서와 달랐다 — 스크립트가 제목·길이로 앨범 순서에 맞춘다.
+- 문안(`data/press/sabbahaSlung.ts`)도 공개 저장소에 있다. 이미 공개된 정보만 둔다. 가사·곡 소개 인용은 sabbaha.kr/slung 부클릿 원문 그대로.
+- 사이트 껍데기를 두르지 않는다(`components/Layout.tsx` isPressRoom). noindex + no-store, 사이트맵 제외. robots.txt에는 적지 않는다(경로를 광고하게 된다).
+
 ### 계약 본문은 만든 템플릿으로 서명 때 완성한다 (마이그레이션 0046)
 
 계약 본문(`contracts.content`)은 만들 때 굳지만, 서명 API는 고객이 채운 생년월일·주소·계약일을 넣어 **템플릿에서 본문을

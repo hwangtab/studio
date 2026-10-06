@@ -121,6 +121,9 @@ module.exports = {
     '/sitemap-shows.xml',
     // 예약금 결제 링크 — 비공개(slug가 결제 권한). 동적 라우트라 열거되지 않지만 success·fail은 정적이다.
     '/*/pay/success', '/*/pay/fail', '/*/pay/*',
+    // 비공개 감상실 — 비밀번호로 들어오는 발매 전 음원 페이지(noindex). SSR이라 지금은 열거되지 않지만
+    // 정적 페이지로 바뀌는 순간 실리지 않게 미리 막아 둔다.
+    '/*/press/*',
   ],
   robotsTxtOptions: {
     // robots 스펙: UA가 자기 이름의 그룹을 찾으면 '*' 그룹을 완전히 무시한다.

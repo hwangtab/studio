@@ -159,8 +159,15 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
    */
   const isPrivatePaymentPage = isPrivatePageRoute(router.pathname);
 
+  /**
+   * 비공개 감상실(평론가·매체에 보내는 발매 전 음원 페이지). 앨범 한 장을 듣는 화면이라 스튜디오
+   * 메뉴·카카오 버튼이 끼면 남의 가게 간판이 앨범 위에 붙은 꼴이 된다. 화면 맨 아래 하단 재생 막대와
+   * 플로팅 버튼이 겹치기도 한다. 페이지가 자기 머리·꼬리를 직접 그린다.
+   */
+  const isPressRoom = router.pathname.startsWith('/[locale]/press/');
+
   /** 한 가지 일만 하러 온 화면 — 사이트 헤더·푸터·플로팅 버튼을 두르지 않는다. */
-  const isBareLayout = isContractPage || isAdminPage || isPrivatePaymentPage;
+  const isBareLayout = isContractPage || isAdminPage || isPrivatePaymentPage || isPressRoom;
 
   // 하단 고정 바가 없는 화면에서만 「맨 위로」와 카카오 FAB을 한 행으로 묶는다.
   const hasFloatingRow = !isStoryDetail && !isFundingDetail && !isShowDetail && !isFundingPledge && !isBareLayout;

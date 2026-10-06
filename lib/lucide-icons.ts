@@ -24,6 +24,7 @@ export { default as ClipboardList } from 'lucide-react/dist/esm/icons/clipboard-
 export { default as Clock } from 'lucide-react/dist/esm/icons/clock.js';
 export { default as Coffee } from 'lucide-react/dist/esm/icons/coffee.js';
 export { default as Disc } from 'lucide-react/dist/esm/icons/disc.js';
+export { default as Download } from 'lucide-react/dist/esm/icons/download.js';
 export { default as DollarSign } from 'lucide-react/dist/esm/icons/dollar-sign.js';
 export { default as Droplets } from 'lucide-react/dist/esm/icons/droplets.js';
 export { default as ExternalLink } from 'lucide-react/dist/esm/icons/external-link.js';
