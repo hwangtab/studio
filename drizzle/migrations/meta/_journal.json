@@ -351,6 +351,13 @@
       "when": 1791100389632,
       "tag": "0049_shows_map_links",
       "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "6",
+      "when": 1791305288489,
+      "tag": "0050_show_order_locales",
+      "breakpoints": true
     }
   ]
 }

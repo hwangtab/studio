@@ -81,6 +81,11 @@ export const BANK_DEPOSIT_BLOCK_MESSAGES: Record<BankDepositBlockCode, string> =
   starts_too_soon: `시작까지 ${BANK_DEPOSIT_MIN_LEAD_HOURS}시간이 남지 않아 계좌 입금은 받지 않습니다. 입금을 확인할 시간이 없어서입니다. 카드·간편결제로 해 주세요.`,
 };
 
+/** 영어 화면(공연 /en)용 — 위와 같은 내용. */
+export const BANK_DEPOSIT_BLOCK_MESSAGES_EN: Record<BankDepositBlockCode, string> = {
+  starts_too_soon: `Bank transfer is not available within ${BANK_DEPOSIT_MIN_LEAD_HOURS} hours of the start — there is no time to confirm the transfer. Please pay by card or mobile pay.`,
+};
+
 /**
  * 입금 안내 기한 — 신청 + 3일(`lib/payments/bankAccount.ts`의 `BANK_DEPOSIT_GUIDE_DAYS`), 단 시작 시각이
  * 그보다 빠르면 **시작 시각까지**. 안내용일 뿐이다(지나도 자동으로 취소하지 않는다). 저장하지 않고 매번

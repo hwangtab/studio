@@ -16,7 +16,11 @@ import {
   type ShowRefundVia,
   showtimeCancelledRefundSentence,
 } from './emailHtml';
+import { buildShowRefundEmailEn, buildShowTicketEmailEn, buildShowtimeCancelledEmailEn } from './emailEn';
 import { formatEntryNumber, formatShowtimeLabel } from './format';
+import type { ShowLocale } from './i18n';
+import { showTranslationFor } from './localize';
+import { loadShowOrderLocale } from './orderLocale';
 import { ticketQrPngBase64 } from './qr';
 import { refundRateForNotice } from './refundPolicy';
 
@@ -29,8 +33,8 @@ export const showDateTimeLabel = (startsAtSec: number): string => {
   return `${year}.${formatShowtimeLabel(startsAtSec)}`;
 };
 
-const manageUrl = (orderNo: string, token: string): string =>
-  `${SITE_URL}/ko/shows/manage/${orderNo}?token=${token}`;
+const manageUrl = (orderNo: string, token: string, locale: ShowLocale = 'ko'): string =>
+  `${SITE_URL}/${locale}/shows/manage/${orderNo}?token=${token}`;
 
 /**
  * 환불 규정 요약 — 표를 베끼지 않고 refundRateForNotice를 날짜별로 불러 만든다.
@@ -68,10 +72,20 @@ export interface ShowMailData {
   startsAtSec: number;
   totalAmount: number;
   tickets: ShowMailTicket[];
+  /** 주문 언어(show_order_locales) — en이면 영어 메일·/en 내 티켓 주소. 없으면 한국어. */
+  locale?: ShowLocale;
 }
 
 /** 티켓 메일 본문. QR 이미지는 첨부(ticket-<순번>.png)로 나가고, 본문에는 코드·입장번호를 적는다. */
 export const buildShowTicketEmail = (d: ShowMailData): { subject: string; text: string; html: string } => {
+  if (d.locale === 'en') {
+    return buildShowTicketEmailEn({
+      ...d,
+      showTitle: d.showSubtitle ? d.showTitle.replace(` — ${d.showSubtitle}`, '') : d.showTitle,
+      posterUrl: d.coverImage ? `${SITE_URL}${d.coverImage}` : null,
+      manageUrl: manageUrl(d.orderNo, d.manageToken, 'en'),
+    });
+  }
   const when = showDateTimeLabel(d.startsAtSec);
   return {
     subject: `[스튜디오 놀] 티켓이 발권되었습니다 — ${d.showTitle} ${when}`,
@@ -115,9 +129,10 @@ export const buildShowTicketEmail = (d: ShowMailData): { subject: string; text: 
 };
 
 export const buildShowRefundEmail = (
-  d: Pick<ShowMailData, 'orderNo' | 'manageToken' | 'buyerName' | 'showTitle' | 'startsAtSec'>
+  d: Pick<ShowMailData, 'orderNo' | 'manageToken' | 'buyerName' | 'showTitle' | 'startsAtSec' | 'locale'>
     & { refundedAmount: number; fullyRefunded: boolean; refundVia?: ShowRefundVia },
 ): { subject: string; text: string; html: string } => {
+  if (d.locale === 'en') return buildShowRefundEmailEn({ ...d, manageUrl: manageUrl(d.orderNo, d.manageToken, 'en') });
   const when = showDateTimeLabel(d.startsAtSec);
   return {
     subject: `[스튜디오 놀] ${showRefundHeading(d.refundVia)} — ${d.showTitle}`,
@@ -138,9 +153,10 @@ export const buildShowRefundEmail = (
 };
 
 export const buildShowtimeCancelledEmail = (
-  d: Pick<ShowMailData, 'orderNo' | 'manageToken' | 'buyerName' | 'showTitle' | 'startsAtSec' | 'totalAmount'>
+  d: Pick<ShowMailData, 'orderNo' | 'manageToken' | 'buyerName' | 'showTitle' | 'startsAtSec' | 'totalAmount' | 'locale'>
     & { refundCompleted: boolean; bankNotice?: 'refund_account_needed' | 'not_deposited' },
 ): { subject: string; text: string; html: string } => {
+  if (d.locale === 'en') return buildShowtimeCancelledEmailEn({ ...d, manageUrl: manageUrl(d.orderNo, d.manageToken, 'en') });
   const when = showDateTimeLabel(d.startsAtSec);
   return {
     subject: `[스튜디오 놀] 공연 회차가 취소되었습니다 — ${d.showTitle} ${when}`,
@@ -181,7 +197,8 @@ interface LoadedShowOrder extends ShowMailData {
   issuedTickets: ShowMailTicket[];
 }
 
-const loadShowOrder = async (orderNo: string): Promise<LoadedShowOrder | null> => {
+/** `localize: false`면 주문 언어와 무관하게 한국어 값 — 운영자 알림용. */
+const loadShowOrder = async (orderNo: string, opts: { localize?: boolean } = {}): Promise<LoadedShowOrder | null> => {
   const db = getDb();
   const order = await db.query.orders.findFirst({
     where: (o, { eq, and }) => and(eq(o.orderNo, orderNo), eq(o.type, 'ticket')),
@@ -191,11 +208,17 @@ const loadShowOrder = async (orderNo: string): Promise<LoadedShowOrder | null> =
   const so = order.showOrder;
   const show = so.showtime.show;
   const types = await db.query.showTicketTypes.findMany({ where: (t, { eq }) => eq(t.showId, show.id) });
-  const typeName = new Map(types.map((t) => [t.id, t.name]));
+  // 영어 주문이면 공연 정의의 영어 제목·장소·티켓 이름으로 바꾼다(lib/shows/localize.ts와 같은 표). 번역이 없으면 한국어.
+  const locale: ShowLocale = opts.localize === false ? 'ko' : await loadShowOrderLocale(order.orderNo);
+  const en = locale === 'en' ? showTranslationFor(show.slug) : null;
+  const typeName = new Map(types.map((t) => [t.id, en?.ticketTypeNames?.[t.name] ?? t.name]));
   const issuedTickets: ShowMailTicket[] = so.tickets
     .filter((t) => t.status === 'issued')
-    .map((t) => ({ code: t.code, entryNumber: t.entryNumber, typeName: typeName.get(t.ticketTypeId) ?? '티켓' }));
+    .map((t) => ({ code: t.code, entryNumber: t.entryNumber, typeName: typeName.get(t.ticketTypeId) ?? (locale === 'en' ? 'Ticket' : '티켓') }));
+  const title = en?.title ?? show.title;
+  const subtitle = en ? en.subtitle ?? null : show.subtitle ?? null;
   return {
+    locale,
     showId: show.id,
     buyerContact: so.buyerContact,
     orderId: order.id,
@@ -203,11 +226,11 @@ const loadShowOrder = async (orderNo: string): Promise<LoadedShowOrder | null> =
     orderNo: order.orderNo,
     manageToken: order.manageToken,
     buyerName: so.buyerName,
-    showTitle: show.subtitle ? `${show.title} — ${show.subtitle}` : show.title,
-    showSubtitle: show.subtitle ?? null,
+    showTitle: subtitle ? `${title} — ${subtitle}` : title,
+    showSubtitle: subtitle,
     coverImage: show.coverImage ?? null,
-    venueName: show.venueName,
-    venueAddress: show.venueAddress,
+    venueName: en?.venueName ?? show.venueName,
+    venueAddress: en?.venueAddress ?? show.venueAddress,
     startsAtSec: so.showtime.startsAt,
     totalAmount: order.totalAmount,
     tickets: issuedTickets,
@@ -383,7 +406,7 @@ export const buildShowPaymentOperatorEmail = (d: ShowOperatorMailData): { subjec
  */
 export const notifyShowPaymentToOperator = async (orderNo: string): Promise<void> => {
   try {
-    const data = await loadShowOrder(orderNo);
+    const data = await loadShowOrder(orderNo, { localize: false });
     if (!data) return;
     const { subject, text, html } = buildShowPaymentOperatorEmail(data);
     const r = await sendEmail({ to: OPERATOR_EMAIL, subject, text, html });

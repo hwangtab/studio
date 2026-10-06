@@ -3,11 +3,14 @@ import ShowDetailView from '../../../components/shows/ShowDetailView';
 import { withI18nServerProps } from '../../../lib/getStatic';
 import { SHOW_SLUG_PATTERN } from '../../../lib/shows/failMessages';
 import { showFaqItems } from '../../../lib/shows/faq';
+import { fallbackShowLocale, SHOW_LOCALES, showCopy, toShowLocale, type ShowLocale } from '../../../lib/shows/i18n';
+import { localizeShow } from '../../../lib/shows/localize';
 import { getPublicShowBySlug, type PublicShow } from '../../../lib/shows/queries';
 import imageMetadata from '../../../utils/imageMetadata.json';
 
 interface Props {
   show: PublicShow;
+  locale: ShowLocale;
 }
 
 const SITE_URL = 'https://studionol.co.kr';
@@ -19,9 +22,11 @@ function summarize(text: string): string {
   return flat.length > 150 ? `${flat.slice(0, 147)}…` : flat;
 }
 
-export default function ShowPage({ show }: Props) {
-  const url = `${SITE_URL}/ko/shows/${show.slug}`;
-  const faq = showFaqItems();
+export default function ShowPage({ show, locale }: Props) {
+  const copy = showCopy(locale);
+  const path = `/${locale}/shows/${show.slug}`;
+  const url = `${SITE_URL}${path}`;
+  const faq = showFaqItems(locale);
   const ogImage = show.ogImage ?? show.coverImage ?? undefined;
   const ogImageSize = ogImage ? (imageMetadata as Record<string, { width: number; height: number } | undefined>)[ogImage] : undefined;
 
@@ -59,23 +64,23 @@ export default function ShowPage({ show }: Props) {
   return (
     <>
       <SEO
-        title={`${show.title} 티켓 예매 | 스튜디오 놀`}
+        title={copy.detailSeoTitle(show.title)}
         description={summarize(show.description)}
-        canonical={`/ko/shows/${show.slug}`}
+        canonical={path}
         ogImage={ogImage}
         ogImageWidth={ogImageSize?.width}
         ogImageHeight={ogImageSize?.height}
-        availableLocales={['ko']}
+        availableLocales={SHOW_LOCALES}
         includeSchema
         schema={schema}
         faqItems={faq}
         breadcrumbs={[
-          { name: '홈', path: '/ko' },
-          { name: '공연', path: '/ko/shows' },
-          { name: show.title, path: `/ko/shows/${show.slug}` },
+          { name: copy.breadcrumbHome, path: `/${locale}` },
+          { name: copy.breadcrumbShows, path: `/${locale}/shows` },
+          { name: show.title, path },
         ]}
       />
-      <ShowDetailView show={show} />
+      <ShowDetailView show={show} locale={locale} />
     </>
   );
 }
@@ -85,8 +90,11 @@ ShowPage.hasHero = true;
 
 export const getServerSideProps = withI18nServerProps<Props>(async ({ params, res }) => {
   const slug = typeof params?.slug === 'string' ? params.slug : '';
-  if (params?.locale !== 'ko') {
-    return { redirect: { destination: SHOW_SLUG_PATTERN.test(slug) ? `/ko/shows/${slug}` : '/ko', permanent: false } };
+  // 공연은 한국어·영어만 연다(lib/shows/i18n.ts). 다른 로케일은 영어 화면으로 보낸다.
+  const locale = toShowLocale(params?.locale);
+  if (!locale) {
+    const to = fallbackShowLocale(params?.locale);
+    return { redirect: { destination: SHOW_SLUG_PATTERN.test(slug) ? `/${to}/shows/${slug}` : `/${to}`, permanent: false } };
   }
   if (!SHOW_SLUG_PATTERN.test(slug)) return { notFound: true };
 
@@ -94,7 +102,7 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ params, re
   if (!show) return { notFound: true };
   // 색인 대상 공개 페이지 — 잔여석 숫자가 낡아도 되는 만큼만 CDN에 둔다(주문 생성이 최종 게이트).
   res.setHeader('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=60');
-  return { props: { show } };
+  return { props: { show: localizeShow(show, locale), locale } };
 });
 
 // 디자인 판 — lib/designEdition.ts

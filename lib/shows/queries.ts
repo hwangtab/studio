@@ -54,6 +54,11 @@ export interface PublicShow {
   notices: string[];
   /** 제공자별 정확한 장소 주소(없으면 비어 있고 검색 링크를 쓴다) — lib/shows/maps.ts. */
   mapLinks: MapLinkOverrides;
+  /**
+   * 지도 검색에 쓸 원래(한국어) 장소명·주소. 영어 화면은 venueName·venueAddress가 영어로 바뀌는데, 지도 검색은
+   * 한국어 주소라야 잡힌다(lib/shows/localize.ts가 채운다). 없으면 venueName·venueAddress를 쓴다.
+   */
+  mapSource?: { venueName: string; venueAddress: string };
   cancelled: boolean;
   ticketTypes: PublicTicketType[];
   showtimes: PublicShowtime[];

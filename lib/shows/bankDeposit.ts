@@ -18,6 +18,9 @@ import { safeDbErrorSummary } from '../payments/refundAccount';
 import { liveShowtimeCondition } from './conditions';
 import { assignEntryNumbers } from './confirm';
 import { resolveShowRecipient, sendShowTicketEmail, showDateTimeLabel } from './email';
+import { showDateTimeLabelEn } from './emailEn';
+import { showTranslationFor } from './localize';
+import { loadShowOrderLocale } from './orderLocale';
 
 /**
  * 공연 티켓 **계좌 입금** 운영 전이 — 입금 확인(발권) · 미입금 취소(입금 전 신청 취소) · 입금 안내 발송.
@@ -56,6 +59,10 @@ export const deliverShowDepositGuide = async (
   if (!order || !so || order.status !== AWAITING_DEPOSIT) return 'invalid_state';
   const show = so.showtime.show;
   const recipient = resolveShowRecipient(order.customerEmail, so.buyerContact);
+  // 영어 화면으로 신청한 주문이면 고객 메일만 영어로(운영자 알림은 한국어 그대로).
+  const locale = await loadShowOrderLocale(order.orderNo);
+  const en = locale === 'en' ? showTranslationFor(show.slug) : null;
+  const enTitle = en ? (en.subtitle ? `${en.title} — ${en.subtitle}` : en.title) : null;
   let failure: string | null;
   try {
     const to = recipient ?? order.customerEmail;
@@ -73,8 +80,22 @@ export const deliverShowDepositGuide = async (
         `티켓: ${so.tickets.length}매`,
         '입금을 확인할 때까지 좌석을 잡아 둡니다. 확인되면 티켓(QR)을 메일로 보내 드립니다.',
       ],
-      manageUrl: `${SITE_URL}/ko/shows/manage/${order.orderNo}?token=${order.manageToken}`,
+      manageUrl: `${SITE_URL}/${locale}/shows/manage/${order.orderNo}?token=${order.manageToken}`,
       adminUrl: `${SITE_URL}/admin/shows/${show.id}`,
+      ...(locale === 'en'
+        ? {
+            customerLocale: 'en' as const,
+            customerKindLabel: 'show tickets',
+            customerApplicantLabel: 'person who booked',
+            customerSummaryLines: [
+              `Show: ${enTitle ?? (show.subtitle ? `${show.title} — ${show.subtitle}` : show.title)}`,
+              `Date: ${showDateTimeLabelEn(so.showtime.startsAt)}`,
+              `Venue: ${en?.venueName ?? show.venueName}`,
+              `Tickets: ${so.tickets.length}`,
+              'Your seats are held until we confirm the transfer. Once confirmed, we email your ticket (QR code).',
+            ],
+          }
+        : {}),
     });
   } catch (error) {
     console.error('[shows-bank-deposit] 입금 안내 메일 발송 중 예외', { orderNo, error: safeDbErrorSummary(error) });

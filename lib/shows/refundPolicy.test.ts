@@ -56,3 +56,12 @@ describe('refundTierLines', () => {
     ]);
   });
 });
+
+test('영어 환불표는 한국어 표와 같은 줄 수·같은 비율이다', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { refundTierLines, refundTierLinesEn, REFUND_POLICY_FOOTNOTES, REFUND_POLICY_FOOTNOTES_EN } = require('./refundPolicy');
+  const pct = (lines: string[]) => lines.map((l) => l.split('— ')[1]);
+  expect(pct(refundTierLinesEn())).toEqual(pct(refundTierLines()));
+  expect(refundTierLinesEn()[0]).toBe('Up to 10 days before the show — 100%');
+  expect(REFUND_POLICY_FOOTNOTES_EN).toHaveLength(REFUND_POLICY_FOOTNOTES.length);
+});

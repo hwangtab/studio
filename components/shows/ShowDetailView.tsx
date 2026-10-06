@@ -7,7 +7,8 @@ import { Panel } from '../ui/Panel';
 import FAQSection from '../ui/FAQSection';
 import { Section } from '../ui/Section';
 import SectionHeading from '../ui/SectionHeading';
-import { formatWon, SHOW_CONTACT_PHONE, SHOW_HERO_IMAGE } from '../../lib/shows/copy';
+import { SHOW_HERO_IMAGE } from '../../lib/shows/copy';
+import { formatShowWon, showCopy, type ShowLocale } from '../../lib/shows/i18n';
 import { showFaqItems } from '../../lib/shows/faq';
 import type { PublicShow } from '../../lib/shows/queries';
 import { descriptionBlocks } from '../../lib/shows/structured';
@@ -22,18 +23,20 @@ import ShowVenueMap from './ShowVenueMap';
  * 사진으로, STRONG 스크림), 본문은 Section + v2 SectionHeading("01 소개 · 02 출연 · 03 예매"), 오른쪽은
  * 핵심 정보 패널(ShowFacts, 데스크톱 sticky). 공연이 바뀌어도 이 파일은 그대로다 — 모든 값은 PublicShow에서 온다.
  */
-export const showCtaLabel = (show: PublicShow): { label: string; bookable: boolean } => {
+export const showCtaLabel = (show: PublicShow, locale: ShowLocale = 'ko'): { label: string; bookable: boolean } => {
+  const copy = showCopy(locale);
   const prices = show.ticketTypes.map((t) => t.price);
   const lowPrice = prices.length ? Math.min(...prices) : null;
   const bookable = !show.cancelled && show.showtimes.some((s) => s.saleState === 'open');
-  if (bookable) return { label: `티켓 예매하기${lowPrice !== null ? ` · ${formatWon(lowPrice)}` : ''}`, bookable };
-  return { label: show.cancelled ? '취소된 공연입니다' : '지금은 예매할 수 없습니다', bookable };
+  if (bookable) return { label: copy.ctaBook(lowPrice !== null ? formatShowWon(lowPrice, locale) : null), bookable };
+  return { label: show.cancelled ? copy.ctaCancelled : copy.ctaUnavailable, bookable };
 };
 
-export default function ShowDetailView({ show }: { show: PublicShow }) {
-  const { label: ctaLabel, bookable } = showCtaLabel(show);
+export default function ShowDetailView({ show, locale = 'ko' }: { show: PublicShow; locale?: ShowLocale }) {
+  const copy = showCopy(locale);
+  const { label: ctaLabel, bookable } = showCtaLabel(show, locale);
   const blocks = descriptionBlocks(show.description);
-  const faq = showFaqItems();
+  const faq = showFaqItems(locale);
   // 섹션 번호는 실제로 그려지는 순서대로 — 출연진이 없는 공연도 번호가 건너뛰지 않는다.
   let sectionNo = 0;
   const nextIndex = (): string => String(++sectionNo).padStart(2, '0');
@@ -46,12 +49,12 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
         포스터가 없으면 SHOW_HERO_IMAGE로 떨어진다.
       */}
       <ImageHero
-        locale="ko"
+        locale={locale}
         priority
         backgroundImage={show.coverImage ?? SHOW_HERO_IMAGE}
         overlayGradient={HERO_SCRIM_STRONG}
         imageAlt=""
-        aboveTitle={<p className="text-sm font-semibold tracking-wide text-gray-200 drop-shadow">{show.presenterName} 주최</p>}
+        aboveTitle={<p className="text-sm font-semibold tracking-wide text-gray-200 drop-shadow">{copy.presentedBy(show.presenterName)}</p>}
         title={show.title}
         subtitle={
           <>
@@ -64,7 +67,7 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
                 </Badge>
               ))}
               {show.showtimes.length > 2 && (
-                <Badge tone="onImage" size="md" className="px-4 py-1.5 text-sm font-medium">외 {show.showtimes.length - 2}회</Badge>
+                <Badge tone="onImage" size="md" className="px-4 py-1.5 text-sm font-medium">{copy.moreShowtimes(show.showtimes.length - 2)}</Badge>
               )}
               <Badge tone="onImage" size="md" className="px-4 py-1.5 text-sm font-medium">{show.venueName}</Badge>
             </span>
@@ -83,7 +86,7 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
       {show.cancelled && (
         <Section spacing="tight">
           <Notice tone="warning" role="status" className="mx-auto max-w-3xl">
-            이 공연은 취소되었습니다. 결제하신 분께는 별도로 환불을 안내해 드립니다. 문의 {SHOW_CONTACT_PHONE}
+            {copy.cancelledNotice}
           </Notice>
         </Section>
       )}
@@ -91,7 +94,7 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
       <Section className="pb-28 pt-16 lg:pb-16">
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12">
           <div className="min-w-0">
-            <SectionHeading eyebrow="소개" index={nextIndex()} title="공연 소개" as="h2" />
+            <SectionHeading eyebrow={copy.sections.about.eyebrow} index={nextIndex()} title={copy.sections.about.title} as="h2" />
             <div className="space-y-5 break-keep text-base leading-8 text-gray-800 dark:text-gray-200 md:text-lg md:leading-9">
               {blocks.map((b) =>
                 b.type === 'h' ? (
@@ -124,43 +127,43 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
 
             {show.performers.length > 0 && (
               <div className="mt-16">
-                <SectionHeading eyebrow="출연" index={nextIndex()} title="출연" as="h2" />
-                <ShowLineup performers={show.performers} />
+                <SectionHeading eyebrow={copy.sections.lineup.eyebrow} index={nextIndex()} title={copy.sections.lineup.title} as="h2" />
+                <ShowLineup performers={show.performers} locale={locale} />
               </div>
             )}
 
             <div className="mt-16">
-              <SectionHeading eyebrow="장소" index={nextIndex()} title="오시는 길" as="h2" />
-              <ShowVenueMap show={show} />
+              <SectionHeading eyebrow={copy.sections.venue.eyebrow} index={nextIndex()} title={copy.sections.venue.title} as="h2" />
+              <ShowVenueMap show={show} locale={locale} />
             </div>
           </div>
 
           {/* <lg에서는 핵심 정보(일시·장소·가격·예매)가 소개보다 먼저 보여야 한다 — 펀딩 상세가 모금 현황을
               패널에서 본문 위로 옮긴 것과 같은 이유(2026-09-28). 포스터가 맨 위, 그 아래 핵심 정보. 데스크톱은 오른쪽 sticky. */}
           <aside className="order-first mx-auto w-full max-w-sm space-y-6 lg:sticky lg:top-24 lg:order-none lg:mx-0 lg:max-w-none">
-            {show.coverImage && <ShowPoster src={show.coverImage} title={show.title} />}
-            <ShowFacts show={show} ctaLabel={ctaLabel} bookable={bookable} />
+            {show.coverImage && <ShowPoster src={show.coverImage} title={show.title} locale={locale} />}
+            <ShowFacts show={show} ctaLabel={ctaLabel} bookable={bookable} locale={locale} />
           </aside>
         </div>
       </Section>
 
       <Section variant="alternate" id="tickets" className="scroll-mt-20">
         <SectionHeading
-          eyebrow="예매"
+          eyebrow={copy.sections.tickets.eyebrow}
           index={nextIndex()}
-          title="티켓 예매"
-          subtitle={bookable ? '온라인 예매는 공연 전날 자정에 마감됩니다. 티켓(QR)은 메일로 보내 드립니다.' : undefined}
+          title={copy.sections.tickets.title}
+          subtitle={bookable ? copy.ticketsSubtitle : undefined}
           as="h2"
         />
         <div className="mx-auto max-w-2xl">
           <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-900 md:p-8">
-            <ShowBookingForm show={show} />
+            <ShowBookingForm show={show} locale={locale} />
           </div>
-          <p className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">문의 {SHOW_CONTACT_PHONE}</p>
+          <p className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">{copy.contactLine}</p>
         </div>
       </Section>
 
-      <FAQSection items={faq} title="자주 묻는 질문" subtitle="티켓 전달·입장·취소에 관해 자주 묻는 질문입니다." eyebrow="FAQ" index={nextIndex()} variant="default" />
+      <FAQSection items={faq} title={copy.faqTitle} subtitle={copy.faqSubtitle} eyebrow="FAQ" index={nextIndex()} variant="default" />
 
       {/* 예매 폼이나 핵심 정보 패널의 예매 버튼이 보이는 동안은 숨는다. */}
       <MobileStickyCta href="#book" label={ctaLabel} visible={bookable} hideWhenInView={['#book', '[data-hide-mobile-cta]']} />

@@ -6,7 +6,7 @@ import { adminUrl as absoluteAdminUrl, buildEmailLayout, escapeHtml, type EmailL
 import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 import { isPurgedValue } from '../privacy/orderRetention';
-import { BANK_ACCOUNT, formatKstDeadline } from './bankAccount';
+import { BANK_ACCOUNT, BANK_ACCOUNT_EN, formatKstDeadline } from './bankAccount';
 import { AWAITING_DEPOSIT, DEPOSIT_CANCELLED } from './bankDeposit';
 import { safeDbErrorSummary } from './refundAccount';
 
@@ -71,6 +71,15 @@ export interface DepositGuideMail {
   adminUrl: string;
   /** 고객 안내 메일을 보내지 않는다(같은 주소 발송 상한에 걸린 경우). 운영자 알림은 그대로 간다. */
   skipCustomer?: boolean;
+  /**
+   * 고객 메일 언어 — 공연 영어 화면(/en/shows)으로 신청한 주문만 'en'. 그때 고객 메일은 `customerSummaryLines`
+   * (영어 "Show: …")를 쓰고, 운영자 알림은 언제나 한국어 `summaryLines`다.
+   */
+  customerLocale?: 'ko' | 'en';
+  customerSummaryLines?: string[];
+  /** 영어 고객 메일의 kindLabel·applicantLabel(운영자 알림은 위 한국어 값을 쓴다). */
+  customerKindLabel?: string;
+  customerApplicantLabel?: string;
 }
 
 /**
@@ -91,6 +100,66 @@ const splitSummaryLines = (lines: string[]): { rows: EmailLayoutRow[]; sentences
 /** 운영자 메일의 관리자 링크 — 이미 절대 주소면 그대로, 경로면 사이트 주소를 붙인다. */
 const toAbsoluteAdminUrl = (url: string): string => (/^https?:\/\//.test(url) ? url : absoluteAdminUrl(url));
 
+const EN_DEADLINE = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'Asia/Seoul', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
+});
+
+/** 고객 입금 안내 메일의 영어판 — 아래 한국어 고객 메일과 같은 구성·같은 사실. 순수 함수. */
+export const buildDepositGuideCustomerEmailEn = (m: DepositGuideMail): { subject: string; text: string; html: string } => {
+  const deadline = `${EN_DEADLINE.format(m.deadline)} (KST)`;
+  const amount = `₩${formatPriceAmount(m.totalAmount)}`;
+  const lines = m.customerSummaryLines ?? m.summaryLines;
+  const summary = splitSummaryLines(lines);
+  const bank = `${BANK_ACCOUNT_EN.bankName} (${BANK_ACCOUNT.bankName})`;
+  const nameLine = `Please send the transfer under the name of the ${m.customerApplicantLabel ?? 'person who booked'} (${m.customerName}). We match it by name and amount.`;
+  return {
+    subject: `[Studio NOL] Bank transfer details — ${m.customerKindLabel ?? 'your booking'}`,
+    text: [
+      `Hi ${m.customerName}, thank you for your booking.`,
+      'Please transfer the amount to the account below. We will confirm it once we see the transfer.',
+      '',
+      `Bank: ${bank}`,
+      `Account number: ${BANK_ACCOUNT.accountNumber}`,
+      `Account holder: ${BANK_ACCOUNT_EN.accountHolder}`,
+      `Amount: ${amount}`,
+      '',
+      nameLine,
+      `Please transfer by ${deadline}. We will email you once the transfer is confirmed (within 1 business day).`,
+      '',
+      ...lines,
+      `Order no.: ${m.orderNo}`,
+      '',
+      ...(m.manageUrl ? [`View these details again / cancel: ${m.manageUrl}`] : []),
+      'Contact: +82 10-4255-7893 · hello@studionol.co.kr',
+    ].join('\n'),
+    html: buildEmailLayout({
+      locale: 'en',
+      preheader: `Please transfer ${amount} by ${deadline}.`,
+      heading: 'Bank transfer details',
+      paragraphs: [
+        `Hi ${escapeHtml(m.customerName)}, thank you for your booking.`,
+        'Please transfer the amount to the account below. We will confirm it once we see the transfer.',
+      ],
+      rows: [
+        { label: 'Bank', value: bank },
+        { label: 'Account number', value: BANK_ACCOUNT.accountNumber, emphasis: true },
+        { label: 'Account holder', value: BANK_ACCOUNT_EN.accountHolder },
+        { label: 'Amount', value: amount, emphasis: true },
+        { label: 'Transfer by', value: deadline },
+        ...summary.rows,
+        { label: 'Order no.', value: m.orderNo },
+      ],
+      ...(m.manageUrl ? { cta: { label: 'View details / cancel request', url: m.manageUrl } } : {}),
+      notices: [
+        escapeHtml(nameLine),
+        'We will email you once the transfer is confirmed (within 1 business day).',
+        ...summary.sentences.map(escapeHtml),
+        'Contact: +82 10-4255-7893 · hello@studionol.co.kr',
+      ],
+    }),
+  };
+};
+
 /**
  * **입금 안내 메일** — 고객 한 통 + 운영자 접수 알림 한 통. 실패 사유를 모아 돌려준다(성공이면 null) —
  * 호출부가 `orders.notification_error`에 남겨 관리자 화면의 "입금 안내 재발송"과 헬스체크가 본다.
@@ -101,7 +170,10 @@ export const sendDepositGuideEmails = async (m: DepositGuideMail): Promise<strin
   const failures: string[] = [];
   const deadline = `${formatKstDeadline(m.deadline)}(한국시간)`;
   const summary = splitSummaryLines(m.summaryLines);
-  if (!m.skipCustomer && !isPurgedValue(m.customerEmail)) {
+  if (!m.skipCustomer && !isPurgedValue(m.customerEmail) && m.customerLocale === 'en') {
+    const r = await sendEmail({ to: m.customerEmail, replyTo: CUSTOMER_REPLY_TO, ...buildDepositGuideCustomerEmailEn(m) });
+    if (!r.ok) failures.push(`customer:${r.errorCode ?? 'API_ERROR'}`);
+  } else if (!m.skipCustomer && !isPurgedValue(m.customerEmail)) {
     const r = await sendEmail({
       to: m.customerEmail, replyTo: CUSTOMER_REPLY_TO,
       subject: `[스튜디오 놀] 계좌 입금 안내 — ${m.kindLabel}`,

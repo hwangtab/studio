@@ -52,3 +52,24 @@ describe('validateCreateShowOrderPayload', () => {
     expect(validateCreateShowOrderPayload('x').ok).toBe(false);
   });
 });
+
+describe('normalizeShowContact', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { normalizeShowContact } = require('./validation');
+  it('한국 휴대폰은 기존 형식, +82도 한국 휴대폰으로 맞춘다', () => {
+    expect(normalizeShowContact('010 1234 5678')).toBe('010-1234-5678');
+    expect(normalizeShowContact('+82 10-1234-5678')).toBe('010-1234-5678');
+  });
+  it('해외 번호는 + 국가번호가 있어야 하고 +숫자로 저장한다', () => {
+    expect(normalizeShowContact('+1 (415) 555-0123')).toBe('+14155550123');
+    expect(normalizeShowContact('+44 20 7946 0958')).toBe('+442079460958');
+    expect(normalizeShowContact('415-555-0123')).toBeNull();
+    expect(normalizeShowContact('+12')).toBeNull();
+    expect(normalizeShowContact('+1 415 abc')).toBeNull();
+  });
+});
+
+it('영어 화면 요청이면 영어 오류 문구를 돌려준다', () => {
+  const r = validateCreateShowOrderPayload({ ...valid, buyerContact: '123' }, 'en');
+  expect(r).toEqual({ ok: false, message: expect.stringContaining('phone number') });
+});

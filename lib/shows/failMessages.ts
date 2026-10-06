@@ -44,3 +44,39 @@ export function confirmFailureMessage(outcome: Exclude<ConfirmOutcome, { status:
       return '결제를 확정하지 못했습니다.';
   }
 }
+
+/** 영어 화면(/en/shows/fail)용 — SHOW_FAIL_MESSAGES와 같은 코드·같은 내용. */
+export const SHOW_FAIL_MESSAGES_EN: Record<string, string> = {
+  PAY_PROCESS_CANCELED: 'You cancelled the payment.',
+  PAY_PROCESS_ABORTED: 'The payment window was closed before payment was completed.',
+  USER_CANCEL: 'You cancelled the payment.',
+  REJECT_CARD_COMPANY: 'The card company declined the payment. Please try another card or payment method.',
+  INVALID_CARD_EXPIRATION: 'Please check the card expiry date.',
+  INVALID_STOPPED_CARD: 'This card is suspended. Please try another payment method.',
+  EXCEED_MAX_DAILY_PAYMENT_COUNT: 'You have reached the daily payment limit. Please try again tomorrow or use another payment method.',
+  EXCEED_MAX_PAYMENT_AMOUNT: 'The payment exceeds your limit. Please contact your card company or use another payment method.',
+  NOT_SUPPORTED_INSTALLMENT_PLAN_CARD_OR_MERCHANT: 'This card does not support the installment plan you chose.',
+  INVALID_CARD_NUMBER: 'Please check the card number.',
+  NOT_AVAILABLE_BANK: 'The bank service is not available right now. Please try again later.',
+};
+
+export const SHOW_FAIL_GENERIC_MESSAGE_EN = 'Something went wrong during payment.';
+
+/** confirmFailureMessage()의 영어판 — 같은 분기·같은 내용. */
+export function confirmFailureMessageEn(outcome: Exclude<ConfirmOutcome, { status: 'confirmed' | 'already_confirmed' }>): string {
+  switch (outcome.status) {
+    case 'declined':
+      return 'The payment was not approved. Please check with your card company and try again.';
+    case 'sold_out':
+      return 'Seats sold out right after your payment, so we could not issue your ticket. The payment will be cancelled automatically (it may take a few business days depending on your card company).';
+    case 'auto_cancel_conflict':
+      return 'This order was refunded automatically. Please book again.';
+    case 'amount_mismatch':
+      return 'The payment amount did not match the order, so we could not confirm it.';
+    case 'error':
+      if (outcome.code === 'toss_unresolved' || outcome.code === 'recording_failed')
+        return 'We are still checking the payment result. If you were charged, the order will be confirmed automatically shortly; if not, it will be cancelled automatically.';
+      if (outcome.code === 'invalid_status') return 'This order has expired or cannot be processed. Please book again.';
+      return 'We could not confirm the payment.';
+  }
+}

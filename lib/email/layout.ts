@@ -81,6 +81,11 @@ export interface EmailLayoutInput {
    * **호출부가 값을 escape한다.** 레이아웃은 조각을 감싸지 않으므로 table 레이아웃·인라인 스타일로 만들 것.
    */
   blocks?: string[];
+  /**
+   * 고객 메일의 머리·꼬리말·버튼 안내 언어. 기본 ko — 영어는 공연 영어 화면(/en/shows)으로 예매한 주문의 메일뿐이다.
+   * 운영자 알림은 언제나 한국어다.
+   */
+  locale?: 'ko' | 'en';
 }
 
 const renderRows = (rows: EmailLayoutRow[], operator: boolean): string => {
@@ -113,7 +118,7 @@ const renderRows = (rows: EmailLayoutRow[], operator: boolean): string => {
     </table>`;
 };
 
-const renderCta = (cta: { label: string; url: string }, operator: boolean): string => {
+const renderCta = (cta: { label: string; url: string }, operator: boolean, en = false): string => {
   const url = escapeHtml(cta.url);
   const button = `
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: ${operator ? '0 0 20px' : '28px 0'};">
@@ -129,7 +134,7 @@ const renderCta = (cta: { label: string; url: string }, operator: boolean): stri
   // 운영자는 받은편지함에서 바로 누른다. 주소 복사 안내는 고객 메일에만 둔다.
   if (operator) return button;
   return `${button}
-    <p style="margin: 0 0 4px; color: ${BRAND.faint}; font-size: 12px;">버튼이 눌리지 않으면 아래 주소를 복사해 주세요.</p>
+    <p style="margin: 0 0 4px; color: ${BRAND.faint}; font-size: 12px;">${en ? 'If the button does not work, copy the address below.' : '버튼이 눌리지 않으면 아래 주소를 복사해 주세요.'}</p>
     <p style="margin: 0; color: ${BRAND.muted}; font-size: 12px; word-break: break-all;">${url}</p>`;
 };
 
@@ -158,8 +163,9 @@ const renderNotices = (notices: string[], tone: 'info' | 'alert'): string => {
 
 export const buildEmailLayout = (input: EmailLayoutInput): string => {
   const operator = input.audience === 'operator';
+  const en = !operator && input.locale === 'en';
   const tone = input.noticeTone ?? 'info';
-  const site = getSiteConfig('ko');
+  const site = getSiteConfig(en ? 'en' : 'ko');
 
   const paragraphs = (input.paragraphs ?? [])
     .map(
@@ -174,11 +180,20 @@ export const buildEmailLayout = (input: EmailLayoutInput): string => {
 
   const chip = operator
     ? `<span style="display: inline-block; padding: 3px 10px; border-radius: 999px; background-color: ${tone === 'alert' ? BRAND.alert : '#ede9fe'}; color: ${tone === 'alert' ? BRAND.alertInk : BRAND.primary}; font-size: 12px; font-weight: 700;">${tone === 'alert' ? '운영 알림 · 긴급' : '운영 알림'}</span>`
-    : `<div style="color: ${BRAND.faint}; font-size: 12px;">음악연습실 · 녹음 스튜디오</div>`;
+    : `<div style="color: ${BRAND.faint}; font-size: 12px;">${en ? 'Rehearsal rooms · Recording studio · Seoul' : '음악연습실 · 녹음 스튜디오'}</div>`;
 
   const footer = operator
     ? `<div style="color: ${BRAND.faint}; font-size: 12px;">${STUDIO_NAME} · 발송 전용</div>`
-    : `<div style="color: ${BRAND.ink}; font-size: 13px; font-weight: 600; margin-bottom: 4px;">${STUDIO_NAME}</div>
+    : en
+      ? `<div style="color: ${BRAND.ink}; font-size: 13px; font-weight: 600; margin-bottom: 4px;">Studio NOL (${STUDIO_NAME})</div>
+              <div style="color: ${BRAND.muted}; font-size: 12px; line-height: 1.7;">
+                ${escapeHtml(site.contact.address)}<br />
+                Contact +82 ${escapeHtml(site.contact.phone.replace(/^0/, ''))} · Business registration no. ${escapeHtml(site.businessRegistrationNumber ?? '')}
+              </div>
+              <div style="margin-top: 10px; color: ${BRAND.faint}; font-size: 11px;">
+                This is a send-only email. Please contact us by phone or at hello@studionol.co.kr instead of replying.
+              </div>`
+      : `<div style="color: ${BRAND.ink}; font-size: 13px; font-weight: 600; margin-bottom: 4px;">${STUDIO_NAME}</div>
               <div style="color: ${BRAND.muted}; font-size: 12px; line-height: 1.7;">
                 ${escapeHtml(site.contact.address)}<br />
                 문의 ${escapeHtml(site.contact.phone)} · 사업자등록번호 ${escapeHtml(site.businessRegistrationNumber ?? '')}
@@ -196,11 +211,11 @@ export const buildEmailLayout = (input: EmailLayoutInput): string => {
 
   const body = `${paragraphs}
               ${input.rows ? renderRows(input.rows, operator) : ''}${blocks}
-              ${input.cta ? renderCta(input.cta, operator) : ''}
+              ${input.cta ? renderCta(input.cta, operator, en) : ''}
               ${input.notices ? renderNotices(input.notices, tone) : ''}`;
 
   return `<!DOCTYPE html>
-<html lang="ko">
+<html lang="${en ? 'en' : 'ko'}">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />

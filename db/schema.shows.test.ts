@@ -18,7 +18,7 @@ function applyMigrations(client: ReturnType<typeof createClient>) {
 }
 
 describe('shows 스키마', () => {
-  it('7개 테이블이 마이그레이션으로 생성된다', async () => {
+  it('8개 테이블이 마이그레이션으로 생성된다', async () => {
     const client = createClient({ url: ':memory:' });
     await applyMigrations(client as any);
     const db = drizzle(client, { schema });
@@ -28,7 +28,7 @@ describe('shows 스키마', () => {
     );
     const names = tables.rows.map((r: any) => r.name).sort();
     expect(names).toEqual(
-      ['show_orders', 'show_scan_links', 'show_ticket_types', 'show_tickets', 'show_zones', 'showtimes', 'shows'].sort()
+      ['show_order_locales', 'show_orders', 'show_scan_links', 'show_ticket_types', 'show_tickets', 'show_zones', 'showtimes', 'shows'].sort()
     );
     await client.close();
   });

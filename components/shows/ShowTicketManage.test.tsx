@@ -30,7 +30,7 @@ describe('ShowTicketManage — 환불 2단계', () => {
     fireEvent.click(go);
 
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
-    expect(JSON.parse((fetchMock.mock.calls[0][1] as RequestInit).body as string)).toEqual({ orderNo: 'TKT-1', token: 'tok', ticketIds: ['t1'] });
+    expect(JSON.parse((fetchMock.mock.calls[0][1] as RequestInit).body as string)).toEqual({ orderNo: 'TKT-1', token: 'tok', ticketIds: ['t1'], locale: 'ko' });
     expect(await screen.findByRole('status')).toHaveTextContent('25,000원이 환불 처리되었습니다');
   });
 

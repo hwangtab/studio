@@ -18,6 +18,7 @@ export const BAKKEOJI_SLUG = 'bakkeoji-anneun-maeumdeul';
 const PRESALE_PRICE = 25000;
 const ON_SITE_PRICE = 30000;
 const won = (n: number): string => `${n.toLocaleString('ko-KR')}원`;
+const wonEn = (n: number): string => `₩${n.toLocaleString('en-US')}`;
 
 export const bakkeojiShow: ShowDefinition = {
   slug: BAKKEOJI_SLUG,
@@ -99,4 +100,50 @@ export const bakkeojiShow: ShowDefinition = {
     // quota 없음: 구역 정원 50이 한도다. 초대권은 별도 한도(compQuota)를 두지 않는다 — 필요할 때 올린다.
     { zoneCode: 'GA', name: '사전 예매 (1드링크 포함)', price: PRESALE_PRICE, quota: null, compQuota: 0 },
   ],
+  // 영어 화면(/en/shows/bakkeoji-anneun-maeumdeul) — 위 한국어 내용을 옮긴 것이다(2026-10-07). 새 사실을 더하지 않는다.
+  // 한국어를 고치면 여기도 같이 고친다. 출연진은 위와 같은 순서.
+  en: {
+    title: "Hearts That Won't Be Cut Down",
+    subtitle: 'A Night in Samcheong-dong for Pungcheon-ri',
+    presenterName: 'Jai & Friends',
+    performers: [
+      {
+        name: 'Choi-Yang Daeum (NEXT)',
+        bio: "A self-taught singer-songwriter. The name joins the father's surname, Choi, and the mother's, Yang, with Daeum (\"next\") — a stand against Korea's patriarchal family-registry system — and is written in many languages: 다음, NEXT, 次, Nächste, 翌. Has sung at the 10th Sewol Ferry memorial, the Wednesday Demonstrations, Palestine solidarity rallies and the May 18 commemoration.",
+      },
+      {
+        name: 'Jai',
+        bio: "A singer-songwriter whose warm, deep voice traces the small textures of everyday life. After the rock band Headymama (헤디마마), now a solo artist moving freely across acoustic, indie, lo-fi and jazz, building a musical world all their own.",
+      },
+      {
+        name: 'Howaho',
+        bio: 'An organic electronic duo weaving poetic lyrics into immersive soundscapes. Drifting across stages at home and abroad through many media, they sing of love and solidarity for those who stand on the edges.',
+      },
+      {
+        name: 'Solga',
+        bio: 'A singer-songwriter who has long sung, steadily and firmly, of people, nature and the dignity of life from where life is actually lived.',
+      },
+    ],
+    ageRating: 'All ages',
+    venueName: 'Lapland, Samcheong-dong',
+    venueAddress: '2F, Building Ga, 83 Samcheong-ro, Jongno-gu, Seoul',
+    description: [
+      "Have you heard of Pungcheon-ri, a village in Hongcheon? Right now Pungcheon-ri's centuries-old green forest is set to be cleared for a pumped-storage power plant, putting a long-held way of life and precious nature at risk. To protect their village and forest, residents have kept up a long, lonely and exhausting fight. We have prepared this evening to add strength to their voices, to share Pungcheon-ri's story through music, and to gather our hearts in warm solidarity.",
+      '## What is happening in Pungcheon-ri',
+      'Units 1 and 2 of the 600 MW Hongcheon pumped-storage power plant are being built in Pungcheon-ri, Hwachon-myeon, Hongcheon County, Gangwon Province. The project is run by Korea Hydro & Nuclear Power; its implementation plan was approved and announced on August 29, 2025, and main construction began in January 2026.',
+      "The construction will damage a 1,800-hectare Korean pine forest that the Korea Forest Service has named one of its \"100 Best Forests.\" 111,999 Korean pines are to be cut down, and land where 51 households lived will be flooded. 62% of Korea's domestic pine nuts come from this forest. Residents say they have seen long-tailed gorals here. The forest is the village's income and the root of its life — it holds water and sends it down to the fields. Cutting these trees does not just change the view; it decides whether people can go on living here.",
+      '## Eight years of holding on',
+      'This is the eighth year residents have stood in the streets against the plant. Since their first rally in March 2019 they have taken to the streets more than 705 times; their average age is about 70. Hands aged sixty to eighty have held up the placards, and seven of them are still on trial. These are years spent going back and forth between courtrooms, sit-in tents and the streets by the people who have kept the village alive.',
+      'The longer the fight goes on, trees are not the only thing the village loses. Laughter goes first.',
+      '> "I felt like I was living like a human being. I can\'t remember how many years it\'s been since I last laughed."\n— Heo Sun-i, resident, at the "Pine Valley Summer Feast," July 2025',
+      '## Why we are holding this night',
+      'This night is for carrying the stories of Pungcheon-ri\'s elders to people in the city, and for sharing the grief of those long, lonely and hard years. To hand over in song a story that has only travelled as documents and numbers, so that even one more person hears it and remembers. We cannot protect the village in their place, but we believe we can let them know they are not holding on alone.',
+      'Please join us for an evening of tender music and shared hearts. Let\'s share it together at Lapland on October 24.',
+    ].join('\n\n'),
+    scheduleNote: 'Doors 18:00 · Show 18:30 (KST)',
+    onSitePriceNote: `At the door ${wonEn(ON_SITE_PRICE)} (1 drink included, if seats remain)`,
+    notices: ['The show takes place on the 2nd floor of the building.', 'General admission, first come, first served.'],
+    zoneLabels: { 비지정석: 'General admission' },
+    ticketTypeNames: { '사전 예매 (1드링크 포함)': 'Advance ticket (1 drink included)' },
+  },
 };

@@ -4,7 +4,7 @@ import ResponsiveImage from '../ResponsiveImage';
 import BaseCard from '../ui/BaseCard';
 import StatusBadge from '../ui/StatusBadge';
 import { nextShowtimeOf } from '../../lib/shows/availability';
-import { formatWon, SALE_STATE_LABELS } from '../../lib/shows/copy';
+import { formatShowWon, showCopy, type ShowLocale } from '../../lib/shows/i18n';
 import type { PublicShow } from '../../lib/shows/queries';
 
 interface Props {
@@ -13,20 +13,22 @@ interface Props {
   nowSec: number;
   /** 지난 공연이면 상태 배지를 '종료'로 고정한다. */
   past?: boolean;
+  locale?: ShowLocale;
 }
 
 /**
  * 공연 목록 카드 — 펀딩 목록 카드(FundingProjectCard)와 같은 재질·구조다: Link > BaseCard glass > 이미지 + 본문.
  * 배지는 공용 StatusBadge('예매 중'만 보라 틴트).
  */
-export default function ShowCard({ show, nowSec, past = false }: Props) {
+export default function ShowCard({ show, nowSec, past = false, locale = 'ko' }: Props) {
+  const copy = showCopy(locale);
   const next = nextShowtimeOf(show, nowSec) ?? show.showtimes[show.showtimes.length - 1] ?? null;
   const stateKey = show.cancelled ? 'cancelled' : past || !next ? 'ended' : next.saleState;
   const prices = show.ticketTypes.map((t) => t.price);
   const lowPrice = prices.length ? Math.min(...prices) : null;
 
   return (
-    <Link href={`/ko/shows/${show.slug}`} prefetch={false} className="block h-full">
+    <Link href={`/${locale}/shows/${show.slug}`} prefetch={false} className="block h-full">
       <BaseCard variant="glass" className="flex h-full flex-col overflow-hidden">
         {show.coverImage ? (
           <ResponsiveImage
@@ -41,12 +43,12 @@ export default function ShowCard({ show, nowSec, past = false }: Props) {
         )}
         <div className="flex flex-1 flex-col p-6">
           <StatusBadge tone={stateKey === 'open' ? 'active' : stateKey === 'cancelled' ? 'warning' : 'neutral'}>
-            {SALE_STATE_LABELS[stateKey as keyof typeof SALE_STATE_LABELS]}
+            {copy.saleState[stateKey as keyof typeof copy.saleState]}
           </StatusBadge>
           <h2 className="typo-card-title mt-3 text-gray-900 dark:text-white">{show.title}</h2>
           {show.subtitle && <p className="typo-card-meta mt-1">{show.subtitle}</p>}
           <p className="typo-card-body mt-2 flex-1">
-            {show.presenterName} 주최
+            {copy.presentedBy(show.presenterName)}
             {next && <><br />{next.label}</>}
             <br />
             {show.venueName}
@@ -54,7 +56,7 @@ export default function ShowCard({ show, nowSec, past = false }: Props) {
           {lowPrice !== null && (
             <div className="mt-4 border-t border-gray-200/70 pt-3 dark:border-gray-700/70">
               <p className="typo-card-meta">
-                <span className="font-semibold tabular-nums text-gray-900 dark:text-white">{formatWon(lowPrice)}</span>
+                <span className="font-semibold tabular-nums text-gray-900 dark:text-white">{formatShowWon(lowPrice, locale)}</span>
                 {prices.length > 1 ? '~' : ''}
               </p>
             </div>
