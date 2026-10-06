@@ -166,10 +166,13 @@ hover:bg-primary hover:text-white`)에서 hover 실측:
 
 ## 2. 타이포그래피
 
-폰트는 **Pretendard Variable 하나**다. `sans`/`title`/`display`/`logo` 네 토큰이 전부 같은 폰트를
-가리키고, `hero`만 별도다 — hero h1 글자만 담은 ~30KB 서브셋에 `preload:true`라 LCP 경로에서
-거의 즉시 swap된다. hero h1 텍스트를 바꾸면 `scripts/generate-hero-font.mjs`를 돌려 woff2와
-`pretendard-hero.chars.json`을 **함께 커밋**해야 한다(CI가 `--check`로 잡는다).
+본문·UI·숫자는 **Pretendard Variable**, 제목은 **디스플레이 세리프**(기본 Hahmlet, OFL) — 2026-10-06 라이너 노트 §3-2.
+`sans`/`title`/`display`/`logo` 네 토큰은 Pretendard를 가리키고, `hero`가 디스플레이 서체다. `hero`는 hero h1과
+v2 섹션 제목(`.typo-display-section`)이 쓰는 글자만 담은 ~80KB 서브셋(`lib/fonts/display.woff2`)에 `preload:true`라
+LCP 경로에서 거의 즉시 swap된다. 카드 제목·버튼·가격 숫자·스토리 마크다운 제목은 Pretendard 그대로다(세리프 숫자는
+가격표에서 약하다). hero h1·섹션 제목·`data/*.ts`의 title 문자열을 바꾸면 `scripts/generate-hero-font.mjs`를 돌려
+woff2와 `display.chars.json`을 **함께 커밋**해야 한다(CI가 `--check`로 잡는다). 서체 후보 비교는 `DISPLAY_FONT=maruburi`
+같은 스위치로 같은 파일명에 생성한다 — `lib/fonts.ts`는 바뀌지 않는다.
 
 ### 역할 클래스 — 이걸 쓴다
 

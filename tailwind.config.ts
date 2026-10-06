@@ -109,11 +109,10 @@ const config: Config = {
         title: ['var(--font-pretendard)', 'var(--font-locale)', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
         display: ['var(--font-pretendard)', 'var(--font-locale)', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
         logo: ['var(--font-pretendard)', 'var(--font-locale)', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
-        // hero h1 전용 micro-subset. var(--font-pretendard-hero)는 lib/fonts.ts의
-        // pretendardHero (Pretendard Bold 700 weight, hero 텍스트 글자만 self-host,
-        // ~30KB). preload=true라 critical path에서 swap 거의 즉시. 글리프 미포함
-        // 글자는 fallback 변수(전체 Pretendard Variable)로 자동 swap.
-        hero: ['var(--font-pretendard-hero)', 'var(--font-pretendard)', 'var(--font-locale)', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
+        // 디스플레이 서체(기본 Hahmlet 700, lib/fonts.ts displayFont, ~80KB preload 서브셋) — hero h1과
+        // v2 섹션 제목(.typo-display-section)만 쓴다(라이너 노트 §3-2). 서브셋 밖 글자는 Pretendard →
+        // 로케일 폰트 → 시스템 폰트로 떨어진다(th·zh 문자는 설계상 서브셋에 없다).
+        hero: ['var(--font-display)', 'var(--font-pretendard)', 'var(--font-locale)', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
         // 인라인 <code>/마크다운 인라인 코드용 monospace 스택.
         // Tailwind default와 유사하되 source-code-pro 선호 추가.
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
@@ -308,13 +307,14 @@ const config: Config = {
           },
         },
         // v2 섹션 제목. 그라디언트 대신 잉크(gray-950) 단색 — 강조는 크기와 굵기가 맡는다.
-        // 행간·자간은 변수로 두고 th·vi·zh에서 styles/globals.css가 재정의한다
-        // (1.1 행간은 태국어·베트남어의 위아래 부호를 자르고, 음수 자간은 한자를 뭉친다).
+        // 서체는 디스플레이 세리프(fontFamily.hero, 라이너 노트 §3-2). 세리프는 음수 자간이 뭉치므로
+        // -0.03em → -0.01em, 행간은 1.12 → 1.18. 행간·자간은 변수로 두고 th·vi·zh에서
+        // styles/globals.css가 재정의한다(1.1 행간은 태국어·베트남어의 위아래 부호를 자르고, 음수 자간은 한자를 뭉친다).
         '.typo-display-section': {
-          fontFamily: theme('fontFamily.title'),
+          fontFamily: theme('fontFamily.hero'),
           fontSize: 'clamp(2rem, 1.25rem + 3vw, 3.5rem)',
-          lineHeight: 'var(--display-lh, 1.12)',
-          letterSpacing: 'var(--display-ls, -0.03em)',
+          lineHeight: 'var(--display-lh, 1.18)',
+          letterSpacing: 'var(--display-ls, -0.01em)',
           fontWeight: '700',
           color: theme('colors.gray.950'),
           overflowWrap: 'break-word',

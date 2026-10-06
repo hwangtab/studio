@@ -1,23 +1,28 @@
 #!/usr/bin/env node
 /**
- * hero h1 LCP 폰트 subset 생성기.
+ * 디스플레이 서체 subset 생성기 — hero h1 + v2 섹션 제목(.typo-display-section)이 쓰는 글자만 담는다.
  *
- * 사이트 hero 텍스트에 등장하는 글자만 추출해 Pretendard Bold weight를 micro-subset
- * → lib/fonts/pretendard-hero.woff2 (수 KB).
+ * 2026-10-06 라이너 노트(docs/design-liner-notes-plan-2026-10.md §3-2)부터 이 파일은 Pretendard Bold가 아니라
+ * **디스플레이 세리프**(기본 Hahmlet, OFL)를 서브셋한다. 산출물은 하나다 — lib/fonts/display.woff2 + 사이드카
+ * display.chars.json. preload=true라 LCP 경로에 들어가므로 글자 집합을 필요 이상으로 키우지 않는다
+ * (실측 2026-10-06: ko 제목 글자 568자 → 정적 700 약 65KB).
  *
- * 배경: Pretendard Variable woff2(2MB)는 한+영 모든 weight를 단일 파일로 묶지만 그
- * 자체를 preload하면 critical path를 점유. hero h1만 별도 micro-subset으로 preload
- * 진입시키고, 본문 Variable은 font-display:swap으로 fallback paint 후 lazy 도착.
+ * 서체 고르기: DISPLAY_FONT=hahmlet(기본) | maruburi | pretendard. 운영자가 실제 화면으로 고르는 동안
+ * 비교 브랜치가 쓰는 스위치다. 산출물 파일명은 서체와 무관하게 같아서 lib/fonts.ts는 바뀌지 않는다.
+ * 사이드카에 source를 적어 두므로 어느 서체로 만든 파일인지 --check 출력에서 보인다.
  *
- * 산출물(lib/fonts/pretendard-hero.woff2)은 commit. hero 텍스트가 바뀌면 이 스크립트
- * 재실행 후 결과 woff2도 함께 commit.
+ * 글자 수집 범위: ① locales *.hero.title* 등 h1 키(예전과 같음) ② locales의 *title*·*heading* 키 전부
+ * (SectionHeading v2 제목의 대부분) ③ data/home.ts heroContent ④ buyerIntentHubs hero ⑤ siteConfig name
+ * ⑥ content/funding 제목 ⑦ data/*.ts 최상위 파일의 title: 문자열 ⑧ data/shows 제목 ⑨ 영문·숫자·기호 안전판.
+ * 서브셋 밖 글자는 Pretendard(본문 폰트)로 떨어진다 — --check가 ①~⑨ ⊆ 사이드카를 CI에서 강제한다
+ * (hero-font-subset.test.js). th·zh 문자는 서체에 없고 지금도 --font-locale로 가므로 집합에서 뺀다.
  *
- * prebuild에 통합돼 있다(package.json). jsdelivr/GitHub에서 source ttf를 받는 외부
- * 네트워크 의존성이 CI를 깨뜨리지 않도록, fetch 실패 시 이미 커밋된 woff2를 그대로
- * 쓰고 빌드를 계속한다(main()의 fallback 참고). 따라서 hero 텍스트 변경분은 반드시
- * 로컬에서 수동 재실행해 갱신된 woff2를 commit해야 빌드에 반영된다.
+ * prebuild에 묶여 있다(package.json). 소스 폰트는 네트워크에서 받아 node_modules/.cache에 두고, 못 받으면
+ * 커밋된 woff2를 그대로 쓰고 빌드를 계속한다 — 제목 문구를 바꿨다면 로컬에서 수동 재실행해 산출물을 commit.
  *
- * 사용: node scripts/generate-hero-font.mjs
+ * 사용: node scripts/generate-hero-font.mjs            # 생성
+ *      node scripts/generate-hero-font.mjs --check    # 네트워크 없이 커버리지·sha 검증
+ *      DISPLAY_FONT=maruburi node scripts/generate-hero-font.mjs
  */
 
 import crypto from 'node:crypto';
@@ -29,53 +34,93 @@ import subsetFont from 'subset-font';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 
-const OTF_URL = 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard/packages/pretendard/dist/public/static/Pretendard-Bold.otf';
+const SOURCES = {
+  hahmlet: {
+    url: 'https://raw.githubusercontent.com/google/fonts/main/ofl/hahmlet/Hahmlet%5Bwght%5D.ttf',
+    cache: 'Hahmlet[wght].ttf',
+    // 가변 폰트를 700 하나로 고정(instance)한다 — 가변 600~800은 119KB, 정적 700은 65KB.
+    subsetOptions: { targetFormat: 'woff2', variationAxes: { wght: 700 } },
+    weight: '700',
+    minBytes: 2_000_000,
+  },
+  maruburi: {
+    url: 'https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.ttf',
+    cache: 'MaruBuri-Bold.ttf',
+    subsetOptions: { targetFormat: 'woff2' },
+    weight: '700',
+    minBytes: 2_000_000,
+  },
+  pretendard: {
+    url: 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard/packages/pretendard/dist/public/static/Pretendard-Bold.otf',
+    cache: 'Pretendard-Bold.otf',
+    subsetOptions: { targetFormat: 'woff2' },
+    weight: '700',
+    minBytes: 1_000_000,
+  },
+};
+const SOURCE_NAME = process.env.DISPLAY_FONT || 'hahmlet';
+const SOURCE = SOURCES[SOURCE_NAME];
+if (!SOURCE) {
+  console.error(`generate-hero-font: unknown DISPLAY_FONT "${SOURCE_NAME}" (${Object.keys(SOURCES).join(' | ')})`);
+  process.exit(1);
+}
+
 const CACHE_DIR = path.join(ROOT, 'node_modules', '.cache');
-const CACHE_TTF = path.join(CACHE_DIR, 'Pretendard-Bold.otf');
 // next/font/local이 빌드 시 _next/static/media/로 옮기므로 public/ 대신 lib/ 안에 둔다.
 // public/에 두면 정적 서빙(/fonts/...)으로 동시에 중복 노출되어 캐시 정책이 분기됨.
-const OUT_WOFF2 = path.join(ROOT, 'lib', 'fonts', 'pretendard-hero.woff2');
-// woff2에 포함된 글자 집합 + woff2 sha256의 사이드카. hero 텍스트가 바뀌었는데
-// woff2 재생성을 빠뜨리면 새 글자가 subset 밖이라 fallback으로 그려진다 —
-// --check 모드(네트워크 불필요)가 (1) 현재 hero 텍스트 ⊆ 사이드카 글자 집합,
-// (2) woff2 실물 sha == 사이드카 sha 를 대조하고 hero-font-subset.test.js가 CI에서
-// 강제한다. sha 대조 덕에 둘 중 한 파일만 commit해도 잡힌다. 항상 함께 commit할 것.
-const OUT_CHARS = path.join(ROOT, 'lib', 'fonts', 'pretendard-hero.chars.json');
+const OUT_WOFF2 = path.join(ROOT, 'lib', 'fonts', 'display.woff2');
+// woff2에 포함된 글자 집합 + woff2 sha256 + source의 사이드카. 제목 문구가 바뀌었는데 woff2 재생성을
+// 빠뜨리면 새 글자가 subset 밖이라 fallback으로 그려진다 — --check 모드(네트워크 불필요)가
+// (1) 현재 글자 집합 ⊆ 사이드카 글자 집합, (2) woff2 실물 sha == 사이드카 sha 를 대조하고
+// hero-font-subset.test.js가 CI에서 강제한다. sha 대조 덕에 둘 중 한 파일만 commit해도 잡힌다.
+const OUT_CHARS = path.join(ROOT, 'lib', 'fonts', 'display.chars.json');
 
 async function ensureSourceFont() {
-  if (fs.existsSync(CACHE_TTF) && fs.statSync(CACHE_TTF).size > 1_000_000) {
-    return fs.readFileSync(CACHE_TTF);
+  const cached = path.join(CACHE_DIR, SOURCE.cache);
+  if (fs.existsSync(cached) && fs.statSync(cached).size > SOURCE.minBytes) {
+    return fs.readFileSync(cached);
   }
   fs.mkdirSync(CACHE_DIR, { recursive: true });
-  console.log(`fetching Pretendard Bold OTF…`);
-  const res = await fetch(OTF_URL, { redirect: 'follow' });
+  console.log(`fetching ${SOURCE_NAME} source font…`);
+  const res = await fetch(SOURCE.url, { redirect: 'follow' });
   if (!res.ok) throw new Error(`failed to fetch source font: ${res.status} ${res.statusText}`);
   const buf = Buffer.from(await res.arrayBuffer());
-  if (buf.length < 1_000_000) throw new Error(`unexpected source size: ${buf.length}`);
-  fs.writeFileSync(CACHE_TTF, buf);
+  if (buf.length < SOURCE.minBytes) throw new Error(`unexpected source size: ${buf.length}`);
+  fs.writeFileSync(cached, buf);
   return buf;
 }
 
-// hero 텍스트가 가능한 모든 위치에서 글자 수집.
-function collectHeroChars() {
+// th·zh 문자는 디스플레이 서체에 없고 지금도 --font-locale(PingFang·Leelawadee)로 간다.
+const isLocaleOnlyChar = (ch) => {
+  const cp = ch.codePointAt(0);
+  return (
+    (cp >= 0x0e00 && cp <= 0x0e7f) || // Thai
+    (cp >= 0x4e00 && cp <= 0x9fff) || // CJK Unified Ideographs
+    (cp >= 0x3400 && cp <= 0x4dbf) ||
+    (cp >= 0x3000 && cp <= 0x303f) // CJK punctuation (，。 등)
+  );
+};
+
+// 디스플레이 서체가 들어가는 모든 자리에서 글자 수집.
+function collectDisplayChars() {
   const chars = new Set();
 
   function addStr(s) {
     if (typeof s !== 'string') return;
-    for (const ch of s) chars.add(ch);
+    for (const ch of s) if (!isLocaleOnlyChar(ch)) chars.add(ch);
   }
 
-  // hero h1에 실제 들어가는 키 패턴만 잡는다.
+  // hero h1 키(예전 범위 그대로) + v2 섹션 제목이 쓰는 *title*·*heading* 키 전부.
   //   - *.hero.title 또는 *.hero.titlePrefix/Highlight/Suffix (대부분 페이지)
-  //   - contact.title (contact 페이지가 t('contact.title') 사용)
-  //   - portfolio.title (portfolio 페이지 h1이 t('portfolio.title') 사용)
-  //   - stories.categories.* (카테고리 허브 페이지 h1이 카테고리명을 제목으로 렌더)
-  // 위 페이지 h1들은 hero.* 네임스페이스 밖이라 heroTitleRe에 안 잡혀, 놓치면 해당
-  // 제목이 본문 Pretendard(≈460KB subset)를 경유해 그려진다. subtitle/description 등은
-  // h1 아니므로 제외 — LCP 영향 없음.
+  //   - contact.title / portfolio.title (해당 페이지 h1)
+  //   - stories.categories.* (카테고리 허브 h1)
+  //   - 키 이름에 title·heading이 든 모든 문자열 — SectionHeading v2 제목의 대부분이 여기서 온다.
+  //     subtitle·description은 본문 폰트라 제외… 하되 'subtitle'은 title을 포함하므로 명시적으로 뺀다.
   const heroTitleRe = /(^|\.)hero\.title[a-z]*$/i;
   const pageH1Re = /^(contact\.title|portfolio\.title)$/i;
   const categoryHubRe = /^stories\.categories\.[a-z0-9_]+$/i;
+  const titleKeyRe = /(title|heading)/i;
+  const notTitleKeyRe = /(subtitle|description|lead|body|meta|og|seo|alt)/i;
 
   function walkObject(obj, parentKey = '') {
     if (!obj || typeof obj !== 'object') return;
@@ -87,6 +132,8 @@ function collectHeroChars() {
       const fullKey = parentKey ? `${parentKey}.${k}` : k;
       if (typeof v === 'string') {
         if (heroTitleRe.test(fullKey) || pageH1Re.test(fullKey) || categoryHubRe.test(fullKey)) {
+          addStr(v);
+        } else if (titleKeyRe.test(k) && !notTitleKeyRe.test(k)) {
           addStr(v);
         }
       } else {
@@ -108,7 +155,7 @@ function collectHeroChars() {
     }
   }
 
-  // 2) data/home.ts heroContent — titlePrefix/Highlight/Suffix만 (subtitle은 h1 아님)
+  // 2) data/home.ts heroContent — titlePrefix/Highlight/Suffix (subtitle은 h1 아님)
   const homeTs = fs.readFileSync(path.join(ROOT, 'data', 'home.ts'), 'utf8');
   for (const m of homeTs.matchAll(/(titlePrefix|titleHighlight|titleSuffix)\s*:\s*(["'`])([\s\S]*?)\2/g)) {
     addStr(m[3]);
@@ -155,21 +202,19 @@ function collectHeroChars() {
     console.warn(`skip funding titles: ${e.message}`);
   }
 
-  // 6) ko 전용 LP 중 카피를 common.json 밖(data/*.ts)에 두는 페이지의 hero.title.
-  //    /ko/crowdfunding-design(2026-09-25)이 첫 사례다 — 여기 없으면 제목 글자가
-  //    서브셋에서 빠져도 --check가 모른다(5번 펀딩 제목과 같은 구멍).
-  for (const file of ['crowdfundingDesign.ts']) {
-    try {
-      const src = fs.readFileSync(path.join(ROOT, 'data', file), 'utf8');
-      const heroBlock = src.match(/hero\s*:\s*{([\s\S]*?)}/);
-      const title = heroBlock && heroBlock[1].match(/title\s*:\s*(["'`])([\s\S]*?)\1/);
-      if (title) addStr(title[2]);
-    } catch (e) {
-      console.warn(`skip ${file}: ${e.message}`);
+  // 6) data/*.ts 최상위 파일의 title: 문자열 — ko 전용 LP(crowdfundingDesign.ts 등)의 hero.title과
+  //    섹션 제목이 common.json 밖에 있는 경우. 하위 디렉터리(portfolio/items.ts 등)는 카드 제목이라 제외.
+  try {
+    const dataDir = path.join(ROOT, 'data');
+    for (const f of fs.readdirSync(dataDir).filter((n) => n.endsWith('.ts') && !n.endsWith('.test.ts'))) {
+      const src = fs.readFileSync(path.join(dataDir, f), 'utf8');
+      for (const m of src.matchAll(/\b(title|titleHighlight|sectionTitle|heading)\s*:\s*(["'`])([\s\S]*?)\2/g)) addStr(m[3]);
     }
+  } catch (e) {
+    console.warn(`skip data titles: ${e.message}`);
   }
 
-  // 8) 공연 제목 — `data/shows/<slug>.ts`의 최상위 title이 `/ko/shows/<slug>`의 ImageHero h1으로
+  // 7) 공연 제목 — `data/shows/<slug>.ts`의 최상위 title이 `/ko/shows/<slug>`의 ImageHero h1으로
   //    나간다(2026-10-03 공연 상세를 ImageHero로 바꾸면서). 공연 정의가 정본이고 DB는 그 사본이라
   //    여기서 읽으면 된다. 2칸 들여쓰기의 title만 — 티켓타입·출연자는 name이라 섞이지 않는다.
   try {
@@ -182,8 +227,8 @@ function collectHeroChars() {
     console.warn(`skip show titles: ${e.message}`);
   }
 
-  // 7) 안전판: 영문/숫자/기본 punctuation (h1에 흔히 섞이는 기호)
-  const safety = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!?·:;()[]\'"&-—–%/';
+  // 8) 안전판: 영문/숫자/기본 punctuation (제목에 흔히 섞이는 기호)
+  const safety = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!?·:;()[]\'"&-—–%/《》〈〉“”‘’+~';
   addStr(safety);
 
   return chars;
@@ -196,7 +241,7 @@ function woff2Sha256() {
 function runCheck(chars) {
   const regenerateHint =
     `node scripts/generate-hero-font.mjs 를 로컬에서 실행하고 ` +
-    `갱신된 woff2 + chars.json을 함께 commit하세요.`;
+    `갱신된 display.woff2 + display.chars.json을 함께 commit하세요.`;
 
   if (!fs.existsSync(OUT_CHARS) || !fs.existsSync(OUT_WOFF2)) {
     console.error(
@@ -218,18 +263,18 @@ function runCheck(chars) {
   const missing = [...chars].filter((ch) => !committed.has(ch));
   if (missing.length > 0) {
     console.error(
-      `generate-hero-font --check: hero 텍스트에 subset 밖 글자 ${missing.length}자 발견: ` +
-        `${JSON.stringify(missing.join(''))}\nhero 문구가 바뀌었습니다. ${regenerateHint}`,
+      `generate-hero-font --check: 제목 텍스트에 subset 밖 글자 ${missing.length}자 발견: ` +
+        `${JSON.stringify(missing.join(''))}\n제목 문구가 바뀌었습니다. ${regenerateHint}`,
     );
     process.exit(1);
   }
-  console.log(`hero subset OK: ${chars.size} chars covered, woff2 sha match`);
+  console.log(`hero subset OK: ${chars.size} chars covered, woff2 sha match (source: ${sidecar.source ?? 'unknown'})`);
 }
 
 async function main() {
-  const chars = collectHeroChars();
+  const chars = collectDisplayChars();
   const subsetText = [...chars].join('');
-  console.log(`hero char set: ${chars.size} glyphs`);
+  console.log(`display char set: ${chars.size} glyphs (source: ${SOURCE_NAME})`);
 
   if (process.argv.includes('--check')) {
     runCheck(chars);
@@ -240,9 +285,9 @@ async function main() {
   try {
     src = await ensureSourceFont();
   } catch (err) {
-    // prebuild 체인에서 실행되므로 jsdelivr 장애·rate limit·타임아웃이 빌드 전체를
+    // prebuild 체인에서 실행되므로 CDN 장애·rate limit·타임아웃이 빌드 전체를
     // 깨뜨리면 안 된다. 산출물(woff2)은 commit돼 있으므로, source font를 못 받으면
-    // 이미 커밋된 woff2를 그대로 사용하고 빌드를 계속한다. (hero 텍스트가 바뀐 경우엔
+    // 이미 커밋된 woff2를 그대로 사용하고 빌드를 계속한다. (제목 텍스트가 바뀐 경우엔
     // 로컬에서 이 스크립트를 수동 재실행해 갱신된 woff2를 commit해야 한다.)
     if (fs.existsSync(OUT_WOFF2)) {
       console.warn(`generate-hero-font: source font unavailable (${err.message}); ` +
@@ -252,13 +297,13 @@ async function main() {
     throw err;
   }
 
-  const out = await subsetFont(src, subsetText, { targetFormat: 'woff2' });
+  const out = await subsetFont(src, subsetText, SOURCE.subsetOptions);
 
   fs.mkdirSync(path.dirname(OUT_WOFF2), { recursive: true });
   fs.writeFileSync(OUT_WOFF2, out);
   fs.writeFileSync(
     OUT_CHARS,
-    `${JSON.stringify({ sha256: woff2Sha256(), chars: [...chars].sort() })}\n`,
+    `${JSON.stringify({ source: SOURCE_NAME, weight: SOURCE.weight, sha256: woff2Sha256(), chars: [...chars].sort() })}\n`,
   );
 
   console.log(`written: ${path.relative(ROOT, OUT_WOFF2)}  (${(out.length / 1024).toFixed(1)} KB)`);

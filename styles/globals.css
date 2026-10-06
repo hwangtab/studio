@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 폰트 시스템: 사이트 전반 Pretendard Variable로 통일 (next/font/local).
-   lib/fonts.ts에 등록, _next/static/media/로 빌드 산출. hero h1만 별도 micro-subset
-   (Pretendard Bold)으로 preload 진입. 본문 Variable은 preload=false + display:swap. */
+/* 폰트 시스템: 본문·UI는 Pretendard Variable(next/font/local), 제목(hero h1·v2 섹션 제목)은 디스플레이
+   세리프 서브셋(lib/fonts.ts displayFont, 기본 Hahmlet, preload). lib/fonts.ts에 등록, _next/static/media/로
+   빌드 산출. 본문 Variable은 preload=false + display:swap. 라이너 노트 §3-2. */
 
 /* 기본 스타일 */
 @layer base {

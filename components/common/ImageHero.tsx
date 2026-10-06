@@ -123,12 +123,11 @@ const ImageHero = ({
               {aboveTitle}
             </div>
           )}
-          {/* font-hero = Pretendard Bold 700 micro-subset (lib/fonts.ts pretendardHero).
-              사이트 hero 텍스트 글자만 self-host + preload → critical path 진입,
-              swap 거의 즉시. 글리프 미포함 글자는 fallback chain(--font-pretendard →
-              시스템 한글)으로 자동 swap. */}
+          {/* font-hero = 디스플레이 세리프 700 서브셋(lib/fonts.ts displayFont, 기본 Hahmlet).
+              hero h1·섹션 제목 글자만 self-host + preload → critical path 진입, swap 거의 즉시.
+              서브셋 밖 글자는 fallback chain(--font-pretendard → 로케일 폰트 → 시스템 한글)으로 자동 swap. */}
           <h1
-            className={`font-hero text-5xl font-bold md:text-7xl lg:text-8xl text-white mb-8 drop-shadow-lg ${textBreakClass} leading-tight tracking-normal ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
+            className={`font-hero text-5xl font-bold md:text-6xl lg:text-7xl text-white mb-8 drop-shadow-lg ${textBreakClass} leading-[1.15] tracking-normal ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
             style={{ letterSpacing: '0' }}
           >
             {title}

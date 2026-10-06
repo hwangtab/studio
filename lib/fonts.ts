@@ -47,26 +47,26 @@ export const pretendard = localFont({
   fallback: [],
 });
 
-// hero h1 전용 micro-subset (7 locale × 모든 페이지 hero title 글자만, ~30KB).
-// 본문 Pretendard Variable이 lazy 도착하기 전 hero h1에 한정해 critical path 진입.
-// preload=true로 다른 critical 리소스와 동시 fetch, swap이 거의 즉시 발생.
+// 디스플레이 서체 서브셋 — hero h1 + v2 섹션 제목(.typo-display-section)이 쓰는 글자만(~80KB, preload).
 //
-// 생성: scripts/generate-hero-font.mjs (글자 set 변경 시 재실행).
+// 2026-10-06 라이너 노트(docs/design-liner-notes-plan-2026-10.md §3-2)부터 제목은 Pretendard가 아니라
+// 디스플레이 세리프다(기본 Hahmlet, OFL). 본문·버튼·숫자는 위 pretendard 그대로. 생성·글자 수집 범위·
+// 서체 스위치(DISPLAY_FONT=hahmlet|maruburi|pretendard)는 scripts/generate-hero-font.mjs 머리말.
+// preload=true라 다른 critical 리소스와 동시 fetch — 옛 hero 서브셋(36KB)보다 큰 만큼 LCP를 simulate로 재서
+// 넘으면 hero 글자만 담은 파일과 제목용 파일로 가른다(설계 §3-2).
 //
-// ⚠️ 운영 주의 — hero h1에 들어가는 텍스트(data/home.ts heroContent, public/locales/
-// */common.json의 *.hero.title* / contact.title / portfolio.title / stories.categories.*
-// 키)를 변경했다면 반드시 아래를 실행하고 결과 woff2를 commit해야 한다. 빠뜨리면 새
-// 글자가 micro-subset에 없어 fallback chain(Pretendard Variable → 시스템 한글)으로
-// 그려져 글자별로 미세한 두께/메트릭 차이가 보일 수 있다.
+// ⚠️ 운영 주의 — hero h1·섹션 제목·data/*.ts의 title 문자열을 바꿨다면 아래를 실행하고 display.woff2 +
+// display.chars.json을 함께 commit해야 한다. 빠뜨리면 새 글자가 서브셋에 없어 Pretendard로 그려져 한 제목
+// 안에서 글자 모양이 갈린다 — hero-font-subset.test.js가 --check로 CI에서 잡는다.
 //
 //   node scripts/generate-hero-font.mjs
-export const pretendardHero = localFont({
-  src: './fonts/pretendard-hero.woff2',
+export const displayFont = localFont({
+  src: './fonts/display.woff2',
   weight: '700',
   style: 'normal',
   display: 'swap',
   preload: true,
-  variable: '--font-pretendard-hero',
+  variable: '--font-display',
   // 위 pretendard와 같은 이유로 비운다 — font-hero 스택(tailwind.config.ts)이
   // var(--font-pretendard) → var(--font-locale) → 시스템 폰트를 이어서 든다.
   fallback: [],

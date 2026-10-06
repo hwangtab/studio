@@ -1,6 +1,6 @@
 import type { AppPropsWithLayout } from '../types';
 import '../styles/globals.css';
-import { pretendard, pretendardHero } from '../lib/fonts';
+import { pretendard, displayFont } from '../lib/fonts';
 
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
@@ -308,7 +308,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
           <meta charSet="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
         </Head>
-        <div className={`min-h-screen bg-paper dark:bg-gray-900 flex items-center justify-center ${pretendard.className} ${pretendard.variable} ${pretendardHero.variable}`} data-locale={locale} aria-live="polite" role="status">
+        <div className={`min-h-screen bg-paper dark:bg-gray-900 flex items-center justify-center ${pretendard.className} ${pretendard.variable} ${displayFont.variable}`} data-locale={locale} aria-live="polite" role="status">
           <div className="flex items-center gap-3 text-gray-700 dark:text-gray-200">
             <span className="h-5 w-5 rounded-full border-2 border-gray-300 border-t-primary animate-spin" aria-hidden="true" />
             <span className="text-sm font-medium">{localeLoadingMessage[locale] || localeLoadingMessage.ko}</span>
@@ -362,7 +362,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
       {/* data-edition은 v2일 때만 붙는다 — v1 페이지의 HTML은 개편 전과 글자 하나 다르지 않아야 한다
           (scripts/visual/golden-html.mjs가 확인). v2 전용 CSS는 전부 이 속성 아래로 스코프된다. */}
       <div
-        className={`${pretendard.className} ${pretendard.variable} ${pretendardHero.variable}`}
+        className={`${pretendard.className} ${pretendard.variable} ${displayFont.variable}`}
         data-locale={locale}
         data-edition={designEdition === 'v2' ? 'v2' : undefined}
       >
