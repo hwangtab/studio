@@ -7,6 +7,7 @@ import { trackLeadEvent } from '../../utils/analytics';
 import type { ContactTranslate } from './contactTypes';
 import { Notice } from '../ui/Notice';
 import { Panel } from '../ui/Panel';
+import KakaoMap from '../maps/KakaoMap';
 
 // Google Maps `hl` expects BCP-47 compatible codes. The site locale codes are
 // short forms, so keep the map embed language explicit.
@@ -19,6 +20,10 @@ export const GOOGLE_MAPS_HL: Record<Locale, string> = {
   th: 'th',
   uz: 'en',
 };
+
+// 스튜디오 건물(통일로71길 2-1, 대조빌딩) 좌표 — 카카오 주소 검색 결과(2026-10-07). 구글 임베드의 화면 중심값을
+// 쓰면 핀이 동명여고 운동장에 찍힌다.
+export const STUDIO_MAP_POSITION = { lat: 37.6143939, lng: 126.9258979 };
 
 type MotionDivProps = Omit<React.ComponentProps<typeof m.div>, 'className' | 'children'>;
 
@@ -46,6 +51,20 @@ const ContactInfoCard = ({
   const hoursRows = new Set(rawHours.map((row) => row.time)).size === 1
     ? [rawHours[0]]
     : rawHours;
+
+  // 한국어 방문자는 카카오맵, 나머지 로케일은 구글 지도(카카오맵 라벨은 한국어뿐이다). 카카오맵을 못 띄우면 구글로 물러선다.
+  const googleMap = (
+    <iframe
+      src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3160.8635287891844!2d126.92362527640926!3d37.61435329999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357c977d6c9b9b61%3A0x4ba77c752231fd06!2z7Iqk7Yqc65SU7Jik64W4!5e0!3m2!1s${GOOGLE_MAPS_HL[locale]}!2skr!4v1704364800000!5m2!1s${GOOGLE_MAPS_HL[locale]}!2skr&hl=${GOOGLE_MAPS_HL[locale]}`}
+      width="100%"
+      height="250"
+      style={{ border: 0, borderRadius: '0.5rem' }}
+      allowFullScreen
+      loading="lazy"
+      referrerPolicy="no-referrer-when-downgrade"
+      title={t('contact.info.location')}
+    ></iframe>
+  );
 
   return (
   <m.div
@@ -119,16 +138,18 @@ const ContactInfoCard = ({
       <div className="mt-6">
         <h3 className="typo-card-title mb-4">{t('contact.info.location')}</h3>
         <div className="mb-6">
-          <iframe
-            src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3160.8635287891844!2d126.92362527640926!3d37.61435329999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357c977d6c9b9b61%3A0x4ba77c752231fd06!2z7Iqk7Yqc65SU7Jik64W4!5e0!3m2!1s${GOOGLE_MAPS_HL[locale]}!2skr!4v1704364800000!5m2!1s${GOOGLE_MAPS_HL[locale]}!2skr&hl=${GOOGLE_MAPS_HL[locale]}`}
-            width="100%"
-            height="250"
-            style={{ border: 0, borderRadius: '0.5rem' }}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            title={t('contact.info.location')}
-          ></iframe>
+          {locale === 'ko' ? (
+            <KakaoMap
+              place={STUDIO_MAP_POSITION}
+              name={siteConfig.name}
+              title={t('contact.info.location')}
+              height={250}
+              className="rounded-lg overflow-hidden"
+              fallback={googleMap}
+            />
+          ) : (
+            googleMap
+          )}
         </div>
 
         <m.div {...directionsMotionProps} className="mt-12">

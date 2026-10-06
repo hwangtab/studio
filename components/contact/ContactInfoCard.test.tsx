@@ -9,6 +9,12 @@ jest.mock('../../utils/analytics', () => ({
   trackLeadEvent: jest.fn(),
 }));
 
+// jsdom은 외부 스크립트를 받지 않는다 — 로더를 "아직 불러오는 중"으로 묶어 둔다.
+jest.mock('../../lib/maps/kakaoMap', () => ({
+  ...jest.requireActual('../../lib/maps/kakaoMap'),
+  loadKakaoMaps: jest.fn(() => new Promise(() => {})),
+}));
+
 const siteConfig: SiteConfig = {
   name: '스튜디오 놀',
   url: 'https://studionol.co.kr',
@@ -84,6 +90,13 @@ describe('ContactInfoCard', () => {
       component: 'ContactPage',
       cta_id: 'contact_info_kakao',
     });
+  });
+
+  it('shows Kakao Map to Korean visitors instead of the Google embed', () => {
+    const { container } = render(<ContactInfoCard locale="ko" siteConfig={siteConfig} t={t} />);
+
+    expect(screen.getByRole('region', { name: '위치' })).toBeInTheDocument();
+    expect(container.querySelector('iframe')).toBeNull();
   });
 
   it('uses locale-specific Google Maps language parameters', () => {
