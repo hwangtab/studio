@@ -1,7 +1,16 @@
 jest.mock('../email/resend', () => ({ sendEmail: jest.fn().mockResolvedValue({ ok: true }) }));
 
 import { sendEmail } from '../email/resend';
-import { sendSubscriptionOperatorAlert, sendSubscriptionSetupEmail } from './email';
+import {
+  sendSubscriptionActivatedEmail,
+  sendSubscriptionCancelledEmail,
+  sendSubscriptionChargedEmail,
+  sendSubscriptionChargeFailedEmail,
+  sendSubscriptionOperatorAlert,
+  sendSubscriptionRefundedEmail,
+  sendSubscriptionResumedEmail,
+  sendSubscriptionSetupEmail,
+} from './email';
 import type { Subscription } from '../../db/schema';
 
 const sub = (overrides: Partial<Subscription> = {}) =>
@@ -105,5 +114,51 @@ describe('파기된 주소에는 고객 메일을 보내지 않는다', () => {
   it('운영자 알림은 그대로 나간다 — 주소가 우리 것이라 파기와 무관하다', async () => {
     await sendSubscriptionOperatorAlert(sub({ customerEmail: PURGED }), 'paused', '방치 종료');
     expect(sendEmail).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('구독 메일 HTML — 공용 레이아웃', () => {
+  const cust = { kind: 'lesson', customerName: '김<b>수강', customerEmail: 'student@studio.test', customerPhone: '010-1234-5678', artistSlug: null, totalAmount: 396000, billingDay: 5 } as unknown as Subscription;
+  const manageUrl = 'https://studionol.co.kr/ko/subscribe/manage/sub-1?token=t';
+
+  it('고객 7종 모두 text와 함께 html이 나가고 핵심 값·버튼이 든다', async () => {
+    const calls: Array<[string, () => Promise<unknown>, string[]]> = [
+      ['setup', () => sendSubscriptionSetupEmail(cust, 'https://x/setup?token=t'), ['https://x/setup?token=t', '396,000']],
+      ['activated', () => sendSubscriptionActivatedEmail(cust, { manageUrl, amount: 396000 }), [manageUrl, '396,000']],
+      ['charged', () => sendSubscriptionChargedEmail(cust, { amount: 396000, cycleYm: '2026-10', manageUrl }), [manageUrl, '2026-10']],
+      ['failed', () => sendSubscriptionChargeFailedEmail(cust, { amount: 396000, cycleYm: '2026-10', nextRetryAt: null, manageUrl, cardChangeHint: '카드를 바꿔 주세요' }), [manageUrl, '카드 변경하기', '재등록']],
+      ['resumed', () => sendSubscriptionResumedEmail(cust, { nextBillingAt: new Date('2026-11-05T00:00:00Z'), manageUrl }), [manageUrl, '2026']],
+      ['cancelled', () => sendSubscriptionCancelledEmail(cust, { endsAt: new Date('2026-11-05T00:00:00Z') }), ['2026']],
+      ['refunded', () => sendSubscriptionRefundedEmail(cust, { amount: 100000, cycleYm: '2026-10', orderNo: 'SUB-1', isFull: false, manageUrl }), [manageUrl, '100,000', 'SUB-1']],
+    ];
+    for (const [name, run, needles] of calls) {
+      await run();
+      const mail = lastCall();
+      expect(mail.html).toContain('<!DOCTYPE html>');
+      expect(mail.text).toBeTruthy();
+      for (const n of needles) expect(`${name}:${mail.html}`).toContain(n);
+      expect(mail.html).not.toContain('김<b>수강');
+      expect(mail.html).toContain('김&lt;b&gt;수강');
+    }
+  });
+
+  it('결제 실패 메일은 카드 변경을 버튼으로, 붉은 안내 톤으로 보낸다', async () => {
+    await sendSubscriptionChargeFailedEmail(cust, { amount: 396000, cycleYm: '2026-10', nextRetryAt: new Date('2026-10-08T00:00:00Z'), manageUrl, cardChangeHint: 'h' });
+    const { html } = lastCall();
+    expect(html).toContain(`href="${manageUrl}"`);
+    expect(html).toContain('카드 변경하기');
+    expect(html).toContain('#f87171');
+  });
+
+  it('운영자 알림은 관리자 딥링크 버튼과 tel 링크를 담고 detail을 escape한다', async () => {
+    await sendSubscriptionOperatorAlert({ ...cust, id: 'sub-1' }, 'first_charge_failed', '사유 <script>x</script>\n둘째 줄');
+    const mail = lastCall();
+    expect(mail.html).toContain('/admin/subscriptions/sub-1"');
+    expect(mail.html).toContain('관리자에서 보기');
+    expect(mail.html).toContain('href="tel:01012345678"');
+    expect(mail.html).toContain('&lt;script&gt;');
+    expect(mail.html).not.toContain('<script>');
+    expect(mail.html).toContain('둘째 줄');
+    expect(mail.html).toContain('운영 알림');
   });
 });
