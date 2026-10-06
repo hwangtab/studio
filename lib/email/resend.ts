@@ -20,7 +20,8 @@ interface SendEmailAttachment {
 interface SendEmailParams {
     to: string;
     subject: string;
-    html?: string;
+    /** 필수 — 모든 메일은 공용 레이아웃(lib/email/layout.ts)으로 만든 HTML을 함께 보낸다. text는 대체 본문. */
+    html: string;
     text?: string;
     replyTo?: string;
     attachments?: SendEmailAttachment[];

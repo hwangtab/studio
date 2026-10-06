@@ -364,6 +364,24 @@ SDK가 `payment()` 경로에서 `isAPIIndividualKey()`를 단언한다 — 위�
 - 새 결제 종류는 CHANGELOG 대신 이 체크리스트로 점검한다: 결제수단 두 줄 · 계좌 안내 · 운영자 입금 확인 ·
   입금 안내 메일 · 매출장부 라벨 · 비공개 경로(`lib/analytics/privatePaths.ts`) 등록 · 배포 뒤 실제 결제 1건.
 
+### 메일은 공용 레이아웃으로 — 글자만 보내지 않는다
+
+사이트가 보내는 메일(고객·운영자·개설자·크론 알림 약 70종)은 전부 `lib/email/layout.ts`의 `buildEmailLayout`
+(계약 메일 디자인 기준: 로고·정보 표·보라 버튼·안내 박스·푸터)으로 HTML을 입히고, 글자 본문(`text`)은 대체로
+함께 보낸다. 2026-10-07 점검에서 HTML이 있는 메일이 7종뿐이었고(골격 3개가 제각각), 운영자가 받는 예약·펀딩·
+구독·크론 알림은 거의 전부 서식 없는 글자였다 — 헬스체크는 이동할 관리자 주소를 이미 갖고도 메일에 싣지 않았다.
+
+- `sendEmail`의 `html`은 **필수 인자**다. 글자만 보내는 새 메일은 타입 검사가 세운다. 자기만의 `<!DOCTYPE` 골격을
+  들이면 `tests/email/layoutGuard.test.ts`가 세운다. 레이아웃에 없는 요소는 `hero`·`blocks` 슬롯으로 얹고,
+  골격을 새로 만들지 않는다.
+- **운영자 알림은 `audience: 'operator'`** — 핵심 값(고객·연락처·상품·금액·일시)을 rows로 위쪽에, 해당 건의
+  **관리자 딥링크 버튼**(`adminUrl('/admin/…/{id}')`)을 둔다. 목록 링크만 주지 않는다. 사람이 해야 할 일(입금 확인·
+  계좌 송금)과 실패·긴급은 `notices`의 `noticeTone: 'alert'`로 눈에 띄게. 크론 실패는 `lib/email/operatorAlert.ts`.
+- 사용자 입력은 반드시 escape — rows·heading은 레이아웃이 하지만 `paragraphs`·`notices`·`blocks`에 값을 넣을 때는
+  호출부가 `escapeHtml`로 한다.
+- 새 메일은 `scripts/preview-emails.ts`(`npx tsx scripts/preview-emails.ts`)로 렌더해 크롬으로 **눈으로** 본 뒤 낸다.
+  제목·`text`는 기존 테스트와 메일 필터가 기대는 형태라 HTML을 입힐 때 바꾸지 않는다.
+
 ### 약관·처리방침을 고치면 FUNDING_TERMS_VERSION을 함께 올린다
 
 `funding_pledges.terms_version`은 "그때 이 내용에 동의했다"는 증거다. 내용이 바뀌었는데
