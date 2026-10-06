@@ -38,9 +38,9 @@ faq:
 
 ## Logic Pro — 맥 사용자를 위한 전문 DAW
 
-Logic Pro는 Mac에서 사용하는 전문 DAW로, 풍부한 내장 플러그인과 직관적인 인터페이스로 보컬 녹음·믹싱에 널리 사용됩니다. 1993년 Notator Logic으로 출발해 2002년 Apple이 인수한 후 Mac 생태계에 깊숙이 통합됐습니다. 현재 Logic Pro는 $199.99 일회성 구매로 Pro Tools($599~)나 Cubase Pro($499~)보다 비용 대비 효율이 뛰어나고 내장 플러그인 품질도 상업 스튜디오에서 실사용 가능한 수준입니다.
+Logic Pro는 Mac에서 사용하는 전문 DAW로, 풍부한 내장 플러그인과 직관적인 인터페이스로 보컬 녹음·믹싱에 널리 사용됩니다. 1993년 Notator Logic으로 출발해 2002년 Apple이 인수한 후 Mac 생태계에 깊숙이 통합됐습니다. 현재 Logic Pro는 내장 플러그인 품질도 상업 스튜디오에서 실사용 가능한 수준입니다.
 
-한국의 K-POP 제작 현장에서도 Logic Pro는 SM, HYBE, JYP 등 대형 기획사의 작·편곡팀에서 광범위하게 사용됩니다. Vintage VCA Compressor, ChromaVerb, Retro Synth 등 내장 플러그인이 상업적 음원 품질을 뒷받침하며, Flex Pitch 피치 교정 도구는 드래그 하나로 보컬 음정을 직관적으로 수정할 수 있어 작업 속도를 크게 높입니다. 홈 레코딩 환경에서 Logic Pro 하나만으로 녹음, 믹싱, 마스터링까지 원스톱 처리가 가능합니다.
+Vintage VCA Compressor, ChromaVerb, Retro Synth 등 내장 플러그인이 상업적 음원 품질을 뒷받침하며, Flex Pitch 피치 교정 도구는 드래그 하나로 보컬 음정을 직관적으로 수정할 수 있어 작업 속도를 크게 높입니다. 홈 레코딩 환경에서 Logic Pro 하나만으로 녹음, 믹싱, 마스터링까지 원스톱 처리가 가능합니다.
 
 ---
 
@@ -66,7 +66,7 @@ Logic Pro는 Mac에서 사용하는 전문 DAW로, 풍부한 내장 플러그인
 
 ### 레코딩
 
-Take Folders 기능을 활용하면 동일 구간의 여러 테이크를 자동으로 정리합니다. Quick Punch-in(⌘+K)은 실수한 구간만 빠르게 재녹음할 때 유용합니다. K-POP 보컬 세션에서는 보통 4~8번 테이크를 녹음하고 각 테이크의 좋은 부분을 모아 컴핑하는 방식이 표준입니다.
+Take Folders 기능을 활용하면 동일 구간의 여러 테이크를 자동으로 정리합니다. Quick Punch-in은 실수한 구간만 빠르게 재녹음할 때 유용합니다.
 
 ---
 
@@ -86,7 +86,7 @@ Logic Pro의 내장 플러그인은 추가 구매 없이도 상업적 품질의 
 
 **2. Vintage VCA Compressor**
 
-1176 모델을 기반으로 한 Logic의 Vintage VCA는 빠른 어택으로 보컬 피크를 제어합니다. Ratio 3:1~4:1, Attack 10~20ms, Release는 Auto 또는 100~200ms 정도로 시작해 GR -4~-6dB를 목표로 설정합니다. 보컬이 믹스 안에서 일정한 레벨을 유지하면서도 자연스러운 느낌이 보존됩니다.
+Logic의 Vintage VCA는 빠른 어택으로 보컬 피크를 제어합니다. Ratio 3:1~4:1, Attack 10~20ms, Release는 Auto 또는 100~200ms 정도로 시작해 GR -4~-6dB를 목표로 설정합니다. 보컬이 믹스 안에서 일정한 레벨을 유지하면서도 자연스러운 느낌이 보존됩니다.
 
 - **Ratio**: 3:1~4:1
 - **Attack**: 10~20ms

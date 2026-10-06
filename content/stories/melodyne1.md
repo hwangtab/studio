@@ -38,16 +38,16 @@ faq:
 
 Melodyne은 보컬 피치 교정의 업계 표준으로, DNA 기술로 화음 속 개별 음표까지 편집합니다.
 
-Melodyne의 역사는 2001년 독일 Celemony가 처음 출시한 독립형 피치 교정 소프트웨어에서 시작됩니다. 당시 대부분의 피치 교정이 전체 오디오 파형을 처리하던 방식과 달리, Melodyne은 멜로디를 음표 단위로 분리해 개별 편집하는 개념을 처음으로 상업화했습니다. 2008년 Celemony는 폴리포닉 화음 오디오에서 개별 음표를 추출하는 DNA(Direct Note Access) 기술을 공개해 업계를 충격에 빠뜨렸고, 2009년 Melodyne 3.0에서 정식 탑재됐습니다. 2016년 ARA(Audio Random Access) 2 규격이 도입되면서 Logic Pro·Pro Tools·Cubase·Studio One에서 DAW 타임라인과 완전히 통합된 실시간 편집이 가능해졌으며, 별도 파일 전송 없이 클립 수준에서 직접 Melodyne을 열 수 있게 됐습니다. 현재 K-POP 제작 현장에서 보컬 피치 교정은 Auto-Tune과 Melodyne을 병행하거나 Melodyne Editor 단독으로 처리하는 방식이 표준입니다.
+Melodyne의 역사는 2001년 독일 Celemony가 처음 출시한 독립형 피치 교정 소프트웨어에서 시작됩니다. Melodyne은 멜로디를 음표 단위로 분리해 개별 편집하는 방식을 택했습니다. 2008년 Celemony는 폴리포닉 화음 오디오에서 개별 음표를 추출하는 DNA(Direct Note Access) 기술을 공개해 업계를 충격에 빠뜨렸고, 2009년 Melodyne editor로 정식 출시됐습니다. 2018년 ARA(Audio Random Access) 2 규격이 도입되면서 Logic Pro·Pro Tools·Cubase·Studio One에서 DAW 타임라인과 완전히 통합된 실시간 편집이 가능해졌으며, 별도 파일 전송 없이 클립 수준에서 직접 Melodyne을 열 수 있게 됐습니다. 현재 K-POP 제작 현장에서 보컬 피치 교정은 Auto-Tune과 Melodyne을 병행하거나 Melodyne Editor 단독으로 처리하는 방식이 표준입니다.
 
 ## Melodyne 버전 비교
 
 | 버전 | 가격 | 핵심 기능 |
 |------|------|-----------|
-| Essential | 약 $99 | 단선율 피치·타이밍 교정 |
-| Assistant | 약 $199 | 단선율 + 고급 편집 (보컬 권장) |
-| Editor | 약 $399 | 화음 분해 + 전체 기능 |
-| Studio | 약 $699 | 드럼·폴리포닉 전체 지원 |
+| Essential | 공식 페이지 참고 | 단선율 피치·타이밍 교정 |
+| Assistant | 공식 페이지 참고 | 단선율 + 고급 편집 (보컬 권장) |
+| Editor | 공식 페이지 참고 | 화음 분해 + 전체 기능 |
+| Studio | 공식 페이지 참고 | 드럼·폴리포닉 전체 지원 |
 
 ---
 

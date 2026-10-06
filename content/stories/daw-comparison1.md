@@ -39,18 +39,18 @@ faq:
 
 DAW(Digital Audio Workstation)는 음악 제작의 핵심 소프트웨어입니다. 보컬 녹음, 편집, 믹싱, 마스터링을 하나의 환경에서 처리합니다.
 
-DAW의 역사는 1977년 New England Digital의 Synclavier와 1979년 Fairlight CMI로 거슬러 올라갑니다. 이 기기들은 수천만 원대여서 대형 스튜디오만 접근 가능했습니다. 1989년 Avid의 Pro Tools 1.0이 Mac에서 최초의 하드디스크 기반 디지털 레코딩을 실용화했고, 1993년 Steinberg Cubase가 MIDI+오디오 통합 환경을 대중화했습니다. 2001년 Ableton Live가 루프 기반의 새로운 음악 제작 패러다임을 제시했고, 2004년 Apple이 Logic을 인수해 가격을 대폭 낮추면서 DAW 민주화가 가속됐습니다. 현재 GarageBand(Mac/iOS 무료)부터 Pro Tools Ultimate(전문가용)까지 목적에 맞는 DAW를 선택할 수 있는 환경이 됐습니다.
+DAW의 역사는 1977년 New England Digital의 Synclavier와 1979년 Fairlight CMI로 거슬러 올라갑니다. 이 기기들은 수천만 원대여서 대형 스튜디오만 접근 가능했습니다. 1991년 Digidesign의 Pro Tools 1.0이 Mac에서 하드디스크 기반 멀티트랙 디지털 레코딩을 실용화했고, 1993년 Steinberg Cubase가 MIDI+오디오 통합 환경을 대중화했습니다. 2001년 Ableton Live가 루프 기반의 새로운 음악 제작 패러다임을 제시했고, 2002년 Apple이 Logic을 인수해 가격을 대폭 낮추면서 DAW 민주화가 가속됐습니다. 현재 GarageBand(Mac/iOS 무료)부터 Pro Tools Ultimate(전문가용)까지 목적에 맞는 DAW를 선택할 수 있는 환경이 됐습니다.
 
 ## 주요 DAW 한눈에 비교
 
 | DAW | 제조사 | 가격 | 플랫폼 | 주요 강점 |
 |-----|--------|------|--------|---------|
 | Pro Tools | Avid | 구독형 | Mac/Win | 업계 표준, 전문 스튜디오 |
-| Logic Pro | Apple | 29,000원 (일회성) | Mac only | 가성비, 보컬 녹음 |
-| Ableton Live | Ableton | 구독/일회성 | Mac/Win | 루프, 일렉트로닉, 라이브 |
+| Logic Pro | Apple | 일회성 | Mac only | 가성비, 보컬 녹음 |
+| Ableton Live | Ableton | 일회성 | Mac/Win | 루프, 일렉트로닉, 라이브 |
 | FL Studio | Image-Line | 일회성 | Mac/Win | 비트메이킹, 힙합 |
 | GarageBand | Apple | 무료 | Mac/iOS | 입문자, Logic Pro 입문 |
-| Cubase | Steinberg | 구독형 | Mac/Win | MIDI, 오케스트라 편곡 |
+| Cubase | Steinberg | 일회성 | Mac/Win | MIDI, 오케스트라 편곡 |
 | Reaper | Cockos | 저가 | Mac/Win | 커스터마이즈, 경량 |
 
 ---
@@ -102,7 +102,7 @@ DAW의 역사는 1977년 New England Digital의 Synclavier와 1979년 Fairlight 
 ### Logic Pro
 
 **장점**
-- 가격 대비 성능 좋음 (2만9천원)
+- 가격 대비 성능 좋음
 - Flex Pitch (피치 교정) 내장
 - 풍부한 내장 플러그인
 - GarageBand에서 업그레이드 가능

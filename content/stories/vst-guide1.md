@@ -48,7 +48,7 @@ VST 포맷은 1996년 Steinberg가 Cubase 3.02와 함께 처음 공개했습니�
 |---------|------|------------|
 | EQ | 주파수 조정 | FabFilter Pro-Q 3, TDR Nova(무료) |
 | 컴프레서 | 다이나믹 조정 | Waves CLA-2A, Klanghelm MJUC jr.(무료) |
-| 디에서 | 치찰음 제거 | Waves Renaissance DeEsser, Sibilance(무료) |
+| 디에서 | 치찰음 제거 | Waves Renaissance DeEsser |
 | 리버브 | 공간감 추가 | Valhalla Room, OldSkoolVerb(무료) |
 | 딜레이 | 에코·공간감 | EchoBoy, Valhalla Delay |
 | 피치 교정 | 음정 교정 | Melodyne, Auto-Tune, ReaTune(무료) |
@@ -63,7 +63,6 @@ VST 포맷은 1996년 Steinberg가 Cubase 3.02와 함께 처음 공개했습니�
 
 - TDR Nova: 다이나믹 EQ, 전문가도 사용
 - Voxengo Marvel GEQ: 그래픽 EQ
-- Electra X2: 멀티밴드 EQ
 
 ### 컴프레서
 
@@ -75,7 +74,6 @@ VST 포맷은 1996년 Steinberg가 Cubase 3.02와 함께 처음 공개했습니�
 
 - OldSkoolVerb: 간단하고 좋은 실내 리버브
 - Dragonfly Reverb: 홀·룸·플레이트 지원
-- Epicverb: 공간감 풍부
 
 ### 유틸리티
 
@@ -89,28 +87,22 @@ VST 포맷은 1996년 Steinberg가 Cubase 3.02와 함께 처음 공개했습니�
 ### EQ
 
 - FabFilter Pro-Q 3: 현재 널리 쓰이는 EQ
-  가격: $179
 
 ### 컴프레서
 
 - Waves CLA-2A: 보컬에 자연스러운 옵티컬 컴프
-  가격: $29(세일 자주 있음)
 
 - FabFilter Pro-C 2: 정밀한 투명 컴프
-  가격: $179
 
 ### 피치 교정
 
 - Melodyne Essential: 정밀 음정 교정
-  가격: $99
 
 - Auto-Tune Pro: 실시간+그래픽 편집
-  가격: 월 $24.99~
 
 ### 리버브
 
 - Valhalla Room: 가성비 최고 알고리즘 리버브
-  가격: $50
 
 ---
 

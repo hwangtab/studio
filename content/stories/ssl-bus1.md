@@ -40,7 +40,7 @@ faq:
 
 SSL 4000 G 콘솔의 버스 컴프레서는 수십 년간 히트 레코드의 믹스 버스를 담당한 클래식 VCA 컴프레서입니다.
 
-SSL(Solid State Logic)은 1969년 영국 Oxford에서 Colin Sanders가 창립했습니다. 1976년 SSL 4000 B 콘솔 출시 후 1978년 E 시리즈, 1987년 G 시리즈로 발전했고, G 시리즈에 처음으로 마스터 버스 컴프레서가 독립 모듈로 내장됐습니다. SSL 4000 G의 버스 컴프레서는 VCA(Voltage Controlled Amplifier) 방식으로 빠른 어택과 투명한 음색을 구현했고, 이것이 'Glue 컴프레션'의 개념을 정의했습니다. 1980~90년대 Phil Collins('In the Air Tonight' 리마스터), Def Leppard('Hysteria'), Michael Jackson('Bad') 제작에 SSL 콘솔이 사용됐고, 이 시기 영국 차트 1위 곡의 약 70%가 SSL 콘솔을 거쳤다는 추산이 있습니다. 국내에서는 1990년대 후반 대형 방송사(MBC·KBS) 스튜디오와 SM엔터테인먼트 녹음실에 SSL 4000·6000 시리즈가 도입됐고, K-POP 사운드의 '가공된 선명함'에 기여했습니다. 2001년 Waves가 SSL G-Master Buss Compressor 플러그인을 출시하면서 이 사운드가 홈 스튜디오에 보급됐고, 2010년대 이후 대부분의 믹싱 DAW 세션에서 SSL G 플러그인이 마스터 버스 기본 삽입 옵션이 됐습니다.
+SSL(Solid State Logic)은 1969년 영국 Oxford에서 Colin Sanders가 창립했습니다. 1976년 SSL 4000 B 콘솔 출시 후 1979년 E 시리즈, 1987년 G 시리즈로 발전했습니다. SSL 4000 G의 버스 컴프레서는 VCA(Voltage Controlled Amplifier) 방식으로 빠른 어택과 투명한 음색을 구현했고, 이것이 'Glue 컴프레션'의 개념을 정의했습니다. 2006년 Waves가 SSL G-Master Buss Compressor 플러그인을 출시하면서 이 사운드가 홈 스튜디오에 보급됐고, 2010년대 이후 대부분의 믹싱 DAW 세션에서 SSL G 플러그인이 마스터 버스 기본 삽입 옵션이 됐습니다.
 
 ---
 
