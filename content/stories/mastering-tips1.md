@@ -36,7 +36,7 @@ faq:
 
 ## 마스터링 — 믹스를 완성하는 마지막 단계
 
-마스터링은 믹싱이 완성된 음원을 스트리밍·음반 배포에 최적화된 최종 파일로 만드는 과정입니다. 1940~50년대 LP 레코드 시대에는 마스터링이 절삭 라쿼 디스크에 음파를 새기는 물리적 과정이었습니다. Bob Ludwig와 Ted Jensen 같은 전설적인 마스터링 엔지니어들이 Abbey Road, Sterling Sound 같은 전문 스튜디오에서 수십만 달러짜리 Sontec EQ와 Fairman 리미터로 작업하던 시대에서, 오늘날에는 iZotope Ozone, FabFilter Pro-L 같은 소프트웨어로 홈 스튜디오에서도 전문 마스터링이 가능한 시대가 됐습니다.
+마스터링은 믹싱이 완성된 음원을 스트리밍·음반 배포에 최적화된 최종 파일로 만드는 과정입니다. 1940~50년대 LP 레코드 시대에는 마스터링이 절삭 라쿼 디스크에 음파를 새기는 물리적 과정이었습니다. Bob Ludwig와 Ted Jensen 같은 전설적인 마스터링 엔지니어들이 Abbey Road, Sterling Sound 같은 전문 스튜디오에서 작업하던 시대에서, 오늘날에는 iZotope Ozone, FabFilter Pro-L 같은 소프트웨어로 홈 스튜디오에서도 전문 마스터링이 가능한 시대가 됐습니다.
 
 현대 마스터링에서 가장 중요한 변수는 LUFS(Loudness Units relative to Full Scale)입니다. Spotify, Apple Music, YouTube 등 모든 주요 스트리밍 플랫폼이 라우드니스 노멀라이제이션을 적용하면서 "무조건 크게" 마스터링하던 2000년대 Loudness War의 논리가 무너졌습니다. 이제 마스터링의 핵심은 최대한 크게 만드는 것이 아니라, 플랫폼 기준 LUFS에 맞추면서 음원의 다이나믹과 음색을 최대한 보존하는 것입니다.
 

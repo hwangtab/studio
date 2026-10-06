@@ -217,7 +217,7 @@ X . X X  X . X X
 |---------|---------|---------|
 | Red Garland | 블록 코드 콤핑 | Miles Davis - 'Round About Midnight |
 | Wynton Kelly | 스윙잉 콤핑 | Kind of Blue |
-| Herbie Hancock | 모달 콤핑 | Eric Dolphy At the Five Spot |
+| Herbie Hancock | 모달 콤핑 | Miles Davis - E.S.P. |
 | McCoy Tyner | 파워풀 쿼털 콤핑 | A Love Supreme |
 
 ---
