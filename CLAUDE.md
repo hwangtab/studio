@@ -40,6 +40,11 @@ node scripts/generate-page-lastmod.mjs --check  # git 없이 커버리지만 검
 npm run check:dup-sections
 node scripts/check-duplicate-sections.mjs --update  # 기준선 갱신
 
+# 검증 필요 후보 검사 (CI) — 새 글이 날조 후보(인물 인용문·"최초" 주장·"한국에서 표준" 서술·출처 없는 비율)를 들여오는 걸 막는다
+npm run check:claims
+node scripts/check-unverified-claims.mjs --show     # 후보 문장 전체 보기
+node scripts/check-unverified-claims.mjs --update   # 근거를 확인하고 정리한 뒤 기준선 갱신
+
 # 서비스 수치 정합 검사 (CI)
 npm run check:facts
 
@@ -384,6 +389,14 @@ SDK가 `payment()` 경로에서 `isAPIIndividualKey()`를 단언한다 — 위�
 ### 암호화 필드는 `lib/crypto/CLAUDE.md`에 있다
 
 `FUNDING_FIELD_KEY`를 옛 키 백업 없이 덮어쓰지 말 것 — 잃으면 저장된 값은 복호화되지 않는다. 키 회전은 `scripts/rotate-field-key.mjs`이고, 절차·순서는 그 파일에서 읽고 진행한다.
+
+### 스토리의 외부 사실은 근거를 확인한 것만 쓴다 (`check:claims`)
+
+2026-10 표본 점검(약 190편)에서 서비스 노출 스토리의 90% 넘는 글이 틀린 연대·인명·장비(Push 2013, Lexicon 224=1978, 1176 어택은 20~800μs 등)와 출처 없는 인용문·"최초" 주장·"한국에서 표준" 서술을 담고 있었다(#503·#504·#518·#519). AI가 쓴 글에서 반복되는 유형이라 `scripts/check-unverified-claims.mjs`가 기준선 대비로 후보가 늘어나는 것만 막는다(`content/unverified-claims.baseline.json`).
+- 이 검사는 "틀렸다"를 판정하지 않는다. 후보에 걸리면 근거(공식 페이지·위키)를 확인해 사실에 맞추거나 그 문장을 뺀다. 확인했는데도 정당하면 `--update`로 기준선을 올리고 커밋 메시지에 "무엇을 어디서 확인했는지"를 적는다.
+- **윤문 스킬로 고칠 수 없다.** 윤문은 "내용 불변"이 원칙이라 날조 서술을 그대로 보존한다. 사실 점검과 문체 윤문은 별개 작업이다.
+- 윤문·점검 에이전트가 새 가격·수치를 써 넣지 못하게 한다. 소프트웨어·유통 가격은 시점에 따라 바뀌어 근거 없이 쓰면 곧 틀린다.
+- 아직 점검하지 못한 글이 남아 있다(밀도 순위 약 650편). 기준선에 남은 후보를 정리하면 `--update`로 낮춘다.
 
 ### 서비스 수치는 정본에서만 온다
 
