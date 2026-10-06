@@ -38,7 +38,7 @@ faq:
 
 ### 기원과 역사
 
-**스캣의 기원:**
+**스캣을 대중화한 녹음:**
 ```
 
 Louis Armstrong: "Heebie Jeebies" (1926)
@@ -104,7 +104,6 @@ wah, bah, dee-wah, bop-bah
 Ella Fitzgerald의 특징:
 
 ```
-"do-dee-ya-ya", "sh-bee-do-bah"
 = 빠른 속도에도 선명한 음절
 호른 라인을 목소리로 정확히 재현
 
@@ -151,7 +150,7 @@ Cmaj7: E(3도, 반음 하행)
 
 ## Louis Armstrong 스타일
 
-### 스캣의 아버지
+### 스캣을 대중에 알린 연주자
 
 Louis Armstrong의 스캣 특징:
 - **리듬 중심:** 음정보다 리듬 강조
@@ -175,7 +174,7 @@ Louis Armstrong의 스캣 특징:
 
 Sarah Vaughan ("Sassy"):
 - **넓은 음역:** 3옥타브 이상의 성역
-- **비브라토 완벽 제어:** 느리게 시작해서 빠르게
+- **풍부하게 울리는 비브라토**
 - **화성 복잡성:** 클로즈드 보이싱의 목소리 버전
 
 **Vaughan 화성적 스캣:**

@@ -22,9 +22,9 @@ faq:
       사용하려면 오디오 인터페이스가 필수입니다. 음질과 레이턴시 측면에서 오디오 인터페이스를 거치는 것이 훨씬 유리합니다.
   - q: 오디오 인터페이스 입문자 추천 제품은 무엇인가요?
     a: >-
-      Focusrite Scarlett Solo(2채널)와 Focusrite Scarlett 2i2(2채널)가 입문자에게 자주
-      추천됩니다. Universal Audio Volt 1/2, PreSonus AudioBox USB도 좋습니다. 예산이
-      10~20만원이라면 Focusrite Scarlett Solo가 가성비 최고입니다.
+      Focusrite Scarlett Solo(마이크 입력 1개)와 Focusrite Scarlett 2i2(마이크 입력 2개)가 입문자에게 자주
+      추천됩니다. Universal Audio Volt 1/2, PreSonus AudioBox USB도 좋습니다. 입문용으로는
+      Focusrite Scarlett Solo가 가격 부담이 적은 편입니다.
   - q: 오디오 인터페이스와 마이크를 연결하는 방법은 무엇인가요?
     a: >-
       XLR 케이블(캐논 케이블)로 마이크 → 인터페이스 XLR 입력 포트에 연결하고, 콘덴서 마이크라면 인터페이스의 48V 팬텀 파워
@@ -61,8 +61,8 @@ faq:
 
 | 제품 | 채널 | 가격대 | 특징 |
 |------|------|-------|------|
-| Focusrite Scarlett Solo | 1입력 | ~15만원 | 입문 최고 가성비 |
-| Focusrite Scarlett 2i2 | 2입력 | ~20만원 | 기타+보컬 동시 가능 |
+| Focusrite Scarlett Solo | 1입력 | 입문 가격대 | 입문 최고 가성비 |
+| Focusrite Scarlett 2i2 | 2입력 | 입문~중급 가격대 | 기타+보컬 동시 가능 |
 | Universal Audio Volt 1 | 1입력 | ~20만원 | 따뜻한 아날로그 사운드 |
 | PreSonus AudioBox USB96 | 2입력 | ~18만원 | Studio One 번들 |
 | Behringer U-Phoria UM2 | 1입력 | ~5만원 | 최저예산 |

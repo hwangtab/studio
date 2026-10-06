@@ -85,9 +85,9 @@ faq:
 
 ### 가격대별 추천
 
-- **입문**: Sony MDR-7506 (10~15만 원)
-- **중급**: AKG K271 MKII, ATH-M50x (15~25만 원)
-- **전문**: Sennheiser HD600/650 (35~50만 원)
+- **입문**: Sony MDR-7506
+- **중급**: AKG K271 MKII, ATH-M50x
+- **전문**: Sennheiser HD600/650
 
 ---
 

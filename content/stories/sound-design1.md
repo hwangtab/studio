@@ -1,5 +1,5 @@
 ---
-title: 사운드 디자인 입문 — 신스 가산·FM 합성으로 원하는 소리 만드는 방법
+title: 사운드 디자인 입문 — 신스 감산·FM 합성으로 원하는 소리 만드는 방법
 date: 2026-04-06
 lastmod: 2026-07-27
 author: 스튜디오 놀
@@ -14,7 +14,7 @@ tags:
   - 커스텀 사운드
 thumbnail: /images/hardware4.webp
 summary: >-
-  가산합성·FM·웨이브테이블로 사운드 설계하는 법. DAW 플러그인으로 바로 적용하는 실전 가이드.
+  감산합성·FM·웨이브테이블로 사운드 설계하는 법. DAW 플러그인으로 바로 적용하는 실전 가이드.
 faq:
   - q: 사운드 디자인이란 무엇인가요?
     a: >-
@@ -48,7 +48,7 @@ inlineFallback:
 
 | 합성 방식 | 특징 | 대표 신스 |
 |---------|------|---------|
-| 가산 합성 (Subtractive) | 오실레이터 파형 → 필터로 배음 제거 | Minimoog, Massive |
+| 감산 합성 (Subtractive) | 오실레이터 파형 → 필터로 배음 제거 | Minimoog, Massive |
 | FM 합성 | 오실레이터끼리 주파수 변조 | DX7, FM8, Volca FM |
 | 웨이브테이블 | 파형 테이블 스캔 | Serum, Vital, Wavetable |
 | 샘플 기반 | 녹음된 소리를 키보드로 배치 | Kontakt, Ableton Sampler |
@@ -57,7 +57,7 @@ inlineFallback:
 
 ---
 
-## 가산 합성 사운드 디자인
+## 감산 합성 사운드 디자인
 
 신스 베이스는 오실레이터, 필터, 엔벨로프의 조합으로 기본 질감이 결정됩니다.
 
