@@ -1,4 +1,5 @@
 import { formatPriceAmount } from '../../data/pricing';
+import { adminUrl, buildEmailLayout, escapeHtml, strong, type EmailLayoutRow } from '../email/layout';
 import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 import { isPurgedValue } from '../privacy/orderRetention';
@@ -16,6 +17,12 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.
 const manageUrl = (order: FundingOrder): string => `${SITE_URL}/ko/funding/manage/${order.orderNo}?token=${order.manageToken}`;
 export const PHONE_NUMBER = '010-4255-7893';
 export const PHONE = `문의: ${PHONE_NUMBER}`;
+
+/** HTML 메일 본문(paragraphs·notices)에 넣는 링크. 주소·라벨은 여기서 escape한다. */
+export const htmlLink = (url: string, label: string = url): string =>
+  `<a href="${escapeHtml(url)}" style="color: #6d28d9; text-decoration: underline;">${escapeHtml(label)}</a>`;
+
+const phoneParagraph = `문의: ${htmlLink(`tel:${PHONE_NUMBER.replace(/-/g, '')}`, PHONE_NUMBER)}`;
 
 /**
  * 제목 꼬리표. 프로젝트를 못 찾으면(슬러그 오타·비공개 전환) `project?.title ?? ''`가
@@ -53,6 +60,38 @@ const summaryLines = (order: FundingOrder, project: FundingProject | null): stri
   ];
 };
 
+/** `summaryLines`와 같은 사실을 HTML 메일의 표로. 값은 레이아웃이 escape한다. */
+const summaryRows = (order: FundingOrder, project: FundingProject | null): EmailLayoutRow[] => {
+  const p = order.fundingPledge;
+  if (!p) return [];
+  const lines = pledgeLines(p);
+  const deliveryOf = (rewardId: string) => project?.rewards.find((r) => r.id === rewardId)?.estimatedDelivery;
+  const refundedLabel = (n: number) => (n ? ` (${n}개 환불)` : '');
+  return [
+    { label: '프로젝트', value: project?.title ?? p.projectSlug },
+    ...(lines.length === 1
+      ? [
+          { label: '리워드', value: `${lines[0].rewardTitle} × ${lines[0].quantity}${refundedLabel(lines[0].refundedQuantity)}` },
+          ...(deliveryOf(lines[0].rewardId) ? [{ label: '예상 전달 시기', value: deliveryOf(lines[0].rewardId) as string }] : []),
+        ]
+      : lines.map((l) => ({
+          label: '리워드',
+          value: `${l.rewardTitle} × ${l.quantity}${refundedLabel(l.refundedQuantity)}${deliveryOf(l.rewardId) ? ` (예상 전달 ${deliveryOf(l.rewardId)})` : ''}`,
+        }))),
+    ...(p.additionalAmount > 0 ? [{ label: '추가 펀딩', value: `${formatPriceAmount(p.additionalAmount)}원` }] : []),
+    { label: '펀딩 금액', value: `${formatPriceAmount(order.totalAmount)}원 (VAT 포함)`, emphasis: true },
+    { label: '주문번호', value: order.orderNo },
+  ];
+};
+
+/** 운영자 알림 표 — 후원자·금액·리워드가 위, 연락처가 아래. */
+const operatorRows = (order: FundingOrder, project: FundingProject | null): EmailLayoutRow[] => [
+  { label: '후원자', value: order.customerName },
+  ...summaryRows(order, project),
+  { label: '연락처', value: order.customerPhone, href: `tel:${order.customerPhone.replace(/[^0-9+]/g, '')}` },
+  { label: '이메일', value: order.customerEmail, href: `mailto:${order.customerEmail}` },
+];
+
 /**
  * 전자상거래법 제13조 2항의 계약내용 서면 교부 — 계약이 성립한 뒤 후원자에게 도달하는 문서에는
  * 청약철회의 기한·행사 방법과 약관을 함께 담아야 한다. 전에는 확정·무통장 메일 어디에도 약관
@@ -66,6 +105,13 @@ const withdrawalLines = (order: FundingOrder): string[] => [
   '· 기한: 프로젝트 마감 전이고 리워드 발송 준비가 시작되기 전이면 언제든 취소하고 전액 환불받을 수 있습니다. 리워드를 받은 뒤에는 받은 날부터 7일 이내에 청약철회할 수 있습니다(표시·광고와 다르거나 계약 내용과 다르게 이행된 경우에는 받은 날부터 3개월 이내, 그 사실을 안 날부터 30일 이내).',
   `· 방법: 펀딩 확인 페이지(${manageUrl(order)})에서 직접 취소하거나, 이 메일에 회신 또는 ${CUSTOMER_REPLY_TO} · ${PHONE_NUMBER}으로 알려 주세요. 환불은 접수일부터 3영업일 이내에 처리합니다.`,
   `· 약관 전문(청약철회·환불 규정 포함): ${SITE_URL}/ko/funding/terms`,
+];
+
+/** `withdrawalLines`와 같은 문구 — HTML 안내 박스용. */
+const withdrawalNotices = (order: FundingOrder): string[] => [
+  '청약철회 기한: 프로젝트 마감 전이고 리워드 발송 준비가 시작되기 전이면 언제든 취소하고 전액 환불받을 수 있습니다. 리워드를 받은 뒤에는 받은 날부터 7일 이내에 청약철회할 수 있습니다(표시·광고와 다르거나 계약 내용과 다르게 이행된 경우에는 받은 날부터 3개월 이내, 그 사실을 안 날부터 30일 이내).',
+  `청약철회 방법: 펀딩 확인 페이지(${htmlLink(manageUrl(order))})에서 직접 취소하거나, 이 메일에 회신 또는 ${escapeHtml(CUSTOMER_REPLY_TO)} · ${escapeHtml(PHONE_NUMBER)}으로 알려 주세요. 환불은 접수일부터 3영업일 이내에 처리합니다.`,
+  `약관 전문(청약철회·환불 규정 포함): ${htmlLink(`${SITE_URL}/ko/funding/terms`)}`,
 ];
 
 const send = async (pairs: Array<{ key: string; params: Parameters<typeof sendEmail>[0] }>): Promise<string | null> => {
@@ -139,6 +185,18 @@ const downloadLines = (order: FundingOrder, project: FundingProject | null): str
   ];
 };
 
+/** `downloadLines`와 같은 안내 — HTML 안내 박스용. 파일 이름은 콘텐츠 값이라 escape한다. */
+const downloadNotices = (order: FundingOrder, project: FundingProject | null): string[] => {
+  const pledge = order.fundingPledge;
+  if (!pledge) return [];
+  const downloads = pledgeDownloads(project, activePledgeLines(pledgeLines(pledge)).map((l) => l.rewardId));
+  if (!downloads.length) return [];
+  return [
+    `${strong('음원 내려받기')} — ${downloads.map((d) => escapeHtml(d.label)).join(', ')}. 펀딩 확인 페이지에서 받으실 수 있습니다: ${htmlLink(manageUrl(order))}`,
+    '내려받기를 시작하면 청약철회가 제한됩니다(약관 제8조 2항).',
+  ];
+};
+
 /**
  * 운영자 메일에 싣는 명단 표시 한 줄. 운영자가 욕설·사칭 닉네임을 내리려면(관리자 후원 상세의
  * "서포터 명단에서 내리기") 먼저 **무엇이 올라갔는지** 알아야 하는데, 알림 메일에 메시지만
@@ -150,6 +208,9 @@ const listingLine = (order: FundingOrder): string => {
   return `명단: 공개 · ${p.publicName ?? `${order.customerName} (실명)`}`;
 };
 const adminPledgeUrl = (order: FundingOrder): string => `${SITE_URL}/admin/funding/${order.id}`;
+const listingValue = (order: FundingOrder): string => listingLine(order).replace(/^명단: /, '');
+const ADMIN_PLEDGE_CTA = { label: '관리자에서 보기' } as const;
+const pledgeCta = (order: FundingOrder) => ({ ...ADMIN_PLEDGE_CTA, url: adminPledgeUrl(order) });
 
 export const sendFundingConfirmedEmails = (order: FundingOrder, project: FundingProject | null): Promise<string | null> =>
   send(withoutUndeliverableCustomer(order, [
@@ -157,12 +218,32 @@ export const sendFundingConfirmedEmails = (order: FundingOrder, project: Funding
       to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
       subject: `[스튜디오 놀] 펀딩이 확정되었습니다${titleSuffix(project)}`,
       text: [`${order.customerName}님, 함께해 주셔서 고맙습니다.`, ...summaryLines(order, project), ...downloadLines(order, project), ...withdrawalLines(order), '', `펀딩 확인·취소: ${manageUrl(order)}`, PHONE].join('\n'),
+      html: buildEmailLayout({
+        preheader: '펀딩이 확정되었습니다. 함께해 주셔서 고맙습니다.',
+        heading: '펀딩이 확정되었습니다',
+        paragraphs: [`${escapeHtml(order.customerName)}님, 함께해 주셔서 고맙습니다.`, phoneParagraph],
+        rows: [...summaryRows(order, project), { label: '결제수단', value: paymentMethodLabel(order.fundingPledge?.paymentMethod) }],
+        cta: { label: '펀딩 확인·취소', url: manageUrl(order) },
+        notices: [...downloadNotices(order, project), ...withdrawalNotices(order)],
+      }),
     } },
     { key: 'operator', params: {
       to: OPERATOR_EMAIL,
       subject: `[펀딩] 펀딩 확정 ${formatPriceAmount(order.totalAmount)}원 — ${order.customerName}`,
       text: [...summaryLines(order, project), `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
         `결제수단: ${paymentMethodLabel(order.fundingPledge?.paymentMethod)}`, listingLine(order), `메시지: ${order.fundingPledge?.supporterMessage ?? '없음'}`, `관리자: ${adminPledgeUrl(order)}`].join('\n'),
+      html: buildEmailLayout({
+        audience: 'operator',
+        preheader: `${order.customerName} · ${formatPriceAmount(order.totalAmount)}원 · ${paymentMethodLabel(order.fundingPledge?.paymentMethod)}`,
+        heading: `펀딩 확정 ${formatPriceAmount(order.totalAmount)}원`,
+        rows: [
+          ...operatorRows(order, project),
+          { label: '결제수단', value: paymentMethodLabel(order.fundingPledge?.paymentMethod) },
+          { label: '명단', value: listingValue(order) },
+          { label: '메시지', value: order.fundingPledge?.supporterMessage ?? '없음' },
+        ],
+        cta: pledgeCta(order),
+      }),
     } },
   ]));
 
@@ -209,6 +290,25 @@ export const sendFundingDepositGuideEmails = (
         `입금 안내 다시 보기·신청 취소: ${manageUrl(order)}`,
         PHONE,
       ].join('\n'),
+      html: buildEmailLayout({
+        preheader: `${formatPriceAmount(order.totalAmount)}원을 아래 계좌로 입금해 주시면 펀딩이 확정됩니다.`,
+        heading: '계좌 입금 안내',
+        paragraphs: [
+          `${escapeHtml(order.customerName)}님, 펀딩을 신청해 주셔서 고맙습니다.`,
+          '아래 계좌로 입금해 주시면 펀딩이 확정됩니다.',
+          `입금하실 때 보내는 분 이름은 신청하신 분 성함(${strong(order.customerName)})으로 해 주세요. 이름과 금액으로 확인합니다.`,
+          escapeHtml(deadlineLine),
+        ],
+        rows: [
+          { label: '은행', value: BANK_ACCOUNT.bankName },
+          { label: '계좌번호', value: BANK_ACCOUNT.accountNumber, emphasis: true },
+          { label: '예금주', value: BANK_ACCOUNT.accountHolder },
+          { label: '입금하실 금액', value: `${formatPriceAmount(order.totalAmount)}원`, emphasis: true },
+          ...summaryRows(order, project),
+        ],
+        cta: { label: '입금 안내 다시 보기·신청 취소', url: manageUrl(order) },
+        notices: [phoneParagraph],
+      }),
     } },
     { key: 'operator', params: {
       to: OPERATOR_EMAIL,
@@ -221,6 +321,19 @@ export const sendFundingDepositGuideEmails = (
         listingLine(order),
         `관리자: ${adminPledgeUrl(order)}`,
       ].filter(Boolean).join('\n'),
+      html: buildEmailLayout({
+        audience: 'operator',
+        noticeTone: 'alert',
+        preheader: `${order.customerName} · ${formatPriceAmount(order.totalAmount)}원 · 입금 확인 필요`,
+        heading: `계좌 입금 신청 ${formatPriceAmount(order.totalAmount)}원`,
+        rows: [
+          ...operatorRows(order, project),
+          ...(deadline ? [{ label: '안내한 기한', value: `${formatKstDeadline(deadline)}(한국시간) — 자동 취소 없음` }] : []),
+          { label: '명단', value: listingValue(order) },
+        ],
+        cta: { label: '입금 확인하러 가기', url: adminPledgeUrl(order) },
+        notices: ['통장에 입금이 들어오면 관리자 화면에서 <strong>"입금 확인"</strong>을 눌러 주세요.'],
+      }),
     } },
   ]);
   return send(opts.skipCustomer ? pairs.filter((p) => p.key !== 'customer') : pairs);
@@ -247,11 +360,24 @@ export const sendFundingCancelledEmails = (order: FundingOrder, project: Funding
       to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
       subject: `[스튜디오 놀] ${CANCEL_SUBJECT[mode]}${titleSuffix(project)}`,
       text: [`${order.customerName}님,`, CANCEL_BODY[mode](refundAmount), ...summaryLines(order, project), PHONE].join('\n'),
+      html: buildEmailLayout({
+        preheader: CANCEL_SUBJECT[mode],
+        heading: CANCEL_SUBJECT[mode],
+        paragraphs: [`${escapeHtml(order.customerName)}님,`, escapeHtml(CANCEL_BODY[mode](refundAmount)), phoneParagraph],
+        rows: [{ label: '환불 금액', value: `${formatPriceAmount(refundAmount)}원`, emphasis: true }, ...summaryRows(order, project)],
+      }),
     } },
     { key: 'operator', params: {
       to: OPERATOR_EMAIL,
       subject: `[펀딩] ${CANCEL_SUBJECT[mode]} — ${order.customerName} (${mode})`,
       text: [...summaryLines(order, project), `환불 금액: ${formatPriceAmount(refundAmount)}원`, `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`, `관리자: ${SITE_URL}/admin/funding`].join('\n'),
+      html: buildEmailLayout({
+        audience: 'operator',
+        preheader: `${order.customerName} · 환불 ${formatPriceAmount(refundAmount)}원`,
+        heading: CANCEL_SUBJECT[mode],
+        rows: [{ label: '환불 금액', value: `${formatPriceAmount(refundAmount)}원`, emphasis: true }, ...operatorRows(order, project)],
+        cta: pledgeCta(order),
+      }),
     } },
   ]));
 
@@ -281,6 +407,23 @@ export const sendFundingLineRefundEmails = (
         `펀딩 확인: ${manageUrl(order)}`,
         PHONE,
       ].join('\n'),
+      html: buildEmailLayout({
+        preheader: `${refund.rewardTitle} ${refund.quantity}개 ${formatPriceAmount(refund.amount)}원이 환불되었습니다.`,
+        heading: '펀딩 일부가 환불되었습니다',
+        paragraphs: [
+          `${escapeHtml(order.customerName)}님,`,
+          `${escapeHtml(refund.rewardTitle)} ${refund.quantity}개에 대한 ${strong(`${formatPriceAmount(refund.amount)}원`)}을 결제하신 수단으로 환불했습니다. 카드사에 따라 영업일 기준 3~5일 뒤에 반영됩니다.`,
+          '나머지 리워드는 그대로 진행됩니다.',
+          `사유: ${escapeHtml(refund.reason)}`,
+          phoneParagraph,
+        ],
+        rows: [
+          { label: '환불 리워드', value: `${refund.rewardTitle} × ${refund.quantity}` },
+          { label: '환불 금액', value: `${formatPriceAmount(refund.amount)}원`, emphasis: true },
+          ...summaryRows(order, project),
+        ],
+        cta: { label: '펀딩 확인', url: manageUrl(order) },
+      }),
     } },
     { key: 'operator', params: {
       to: OPERATOR_EMAIL,
@@ -292,6 +435,17 @@ export const sendFundingLineRefundEmails = (
         `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
         `관리자: ${SITE_URL}/admin/funding`,
       ].join('\n'),
+      html: buildEmailLayout({
+        audience: 'operator',
+        preheader: `${order.customerName} · ${refund.rewardTitle} × ${refund.quantity} · ${formatPriceAmount(refund.amount)}원`,
+        heading: '일부 환불',
+        rows: [
+          { label: '환불', value: `${refund.rewardTitle} × ${refund.quantity} = ${formatPriceAmount(refund.amount)}원`, emphasis: true },
+          { label: '사유', value: refund.reason },
+          ...operatorRows(order, project),
+        ],
+        cta: pledgeCta(order),
+      }),
     } },
   ]));
 
@@ -320,6 +474,19 @@ export const sendFundingRefundRequestClearedEmails = (
         `펀딩 확인·취소: ${manageUrl(order)}`,
         PHONE,
       ].join('\n'),
+      html: buildEmailLayout({
+        preheader: '접수해 두었던 펀딩 취소 요청을 철회 처리했습니다.',
+        heading: '취소 요청이 철회 처리되었습니다',
+        paragraphs: [
+          `${escapeHtml(order.customerName)}님,`,
+          '접수해 두었던 펀딩 취소 요청을 철회 처리했습니다. 이 펀딩은 다시 정상 진행됩니다.',
+          `사유: ${escapeHtml(reason)}`,
+          '취소를 원하지 않으셨다면 아래 링크에서 다시 취소를 요청하시거나 이 메일에 회신해 주세요.',
+          phoneParagraph,
+        ],
+        rows: summaryRows(order, project),
+        cta: { label: '펀딩 확인·취소', url: manageUrl(order) },
+      }),
     } },
     { key: 'operator', params: {
       to: OPERATOR_EMAIL,
@@ -330,6 +497,13 @@ export const sendFundingRefundRequestClearedEmails = (
         `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
         `관리자: ${SITE_URL}/admin/funding`,
       ].join('\n'),
+      html: buildEmailLayout({
+        audience: 'operator',
+        preheader: `${order.customerName} · 취소 요청 철회 처리`,
+        heading: '취소 요청 철회 처리',
+        rows: [{ label: '사유', value: reason }, ...operatorRows(order, project)],
+        cta: pledgeCta(order),
+      }),
     } },
   ]));
 
@@ -351,6 +525,17 @@ export const sendFundingCreatorSubmissionEmail = (project: CreatorProjectDetail)
         `프로젝트: ${project.title}`,
         `심사 화면: ${SITE_URL}/admin/funding/projects/${project.id}`,
       ].join('\n'),
+      html: buildEmailLayout({
+        audience: 'operator',
+        preheader: `${project.creator.name} · ${project.title}`,
+        heading: '심사 요청이 들어왔습니다',
+        rows: [
+          { label: '프로젝트', value: project.title },
+          { label: '개설자', value: project.creator.name },
+          { label: '연락처', value: contact },
+        ],
+        cta: { label: '심사 화면 열기', url: adminUrl(`/admin/funding/projects/${project.id}`) },
+      }),
     } },
   ]);
 };
@@ -373,6 +558,18 @@ export const sendFundingCreatorWithdrawalEmail = (project: CreatorProjectDetail)
         `프로젝트: ${project.title}`,
         `심사 화면: ${SITE_URL}/admin/funding/projects/${project.id}`,
       ].join('\n'),
+      html: buildEmailLayout({
+        audience: 'operator',
+        preheader: `${project.creator.name} · ${project.title}`,
+        heading: '심사 신청이 철회되었습니다',
+        paragraphs: ['개설자가 심사 신청을 철회했습니다. 프로젝트는 작성 중(draft) 상태로 돌아갔습니다.'],
+        rows: [
+          { label: '프로젝트', value: project.title },
+          { label: '개설자', value: project.creator.name },
+          { label: '연락처', value: contact },
+        ],
+        cta: { label: '심사 화면 열기', url: adminUrl(`/admin/funding/projects/${project.id}`) },
+      }),
     } },
   ]);
 };
@@ -402,6 +599,16 @@ export const sendCreatorLoginCapAlert = async (cap: number): Promise<string | nu
       '',
       `개설자 목록(이메일 대조용): ${SITE_URL}/admin/funding/projects`,
     ].join('\n'),
+    html: buildEmailLayout({
+      audience: 'operator',
+      noticeTone: 'alert',
+      preheader: `오늘 개설자 로그인 메일이 일일 한도(${cap}통)에 도달했습니다.`,
+      heading: '개설자 로그인 메일 일일 한도에 걸렸습니다',
+      paragraphs: [`오늘 개설자 로그인 메일이 일일 한도(${cap}통)에 도달했습니다.`, '지금부터 24시간 창이 지날 때까지 로그인 링크가 발송되지 않습니다.'],
+      rows: [{ label: '일일 한도', value: `${cap}통`, emphasis: true }],
+      cta: { label: '개설자 목록 열기(이메일 대조용)', url: adminUrl('/admin/funding/projects') },
+      notices: ['정상 사용자도 함께 막히므로, 남용이 아니라면 한도를 올려야 합니다(pages/api/funding/creator/login.ts의 GLOBAL_DAILY_CAP).'],
+    }),
   });
   return result.ok ? null : `operator:${result.errorCode}`;
 };
@@ -433,6 +640,19 @@ export const sendCreatorLoginMailFailureAlert = async (email: string, reason: st
       '',
       `개설자 목록(이메일 대조용): ${SITE_URL}/admin/funding/projects`,
     ].join('\n'),
+    html: buildEmailLayout({
+      audience: 'operator',
+      noticeTone: 'alert',
+      preheader: `${email} 로그인 링크 발송 실패`,
+      heading: '개설자 로그인 메일 발송이 실패했습니다',
+      paragraphs: ['개설자 로그인 링크 메일을 보내려 했으나 발송에 실패했습니다.'],
+      rows: [
+        { label: '수신 시도 주소', value: email, href: `mailto:${email}` },
+        { label: '실패 사유', value: reason },
+      ],
+      cta: { label: '개설자 목록 열기(이메일 대조용)', url: adminUrl('/admin/funding/projects') },
+      notices: ['이 개설자는 로그인 링크를 받지 못했을 수 있습니다. 위 주소로 직접 연락해 안내해 주세요.'],
+    }),
   });
   return result.ok ? null : `operator:${result.errorCode}`;
 };
@@ -460,6 +680,18 @@ export const sendCreatorSessionFailureAlert = async (): Promise<string | null> =
       '',
       `개설자 목록: ${SITE_URL}/admin/funding/projects`,
     ].join('\n'),
+    html: buildEmailLayout({
+      audience: 'operator',
+      noticeTone: 'alert',
+      preheader: '매직링크 토큰은 소진됐는데 세션 생성이 실패했습니다.',
+      heading: '개설자 로그인 세션 생성이 실패했습니다',
+      paragraphs: [
+        '매직링크 토큰은 정상 소진됐는데, 그 뒤 세션을 만드는 단계에서 오류가 났습니다.',
+        '개설자는 새 링크를 다시 받아도 같은 자리에서 반복해 막힙니다.',
+      ],
+      cta: { label: '개설자 목록 열기', url: adminUrl('/admin/funding/projects') },
+      notices: ['원인은 서버 로그에서 확인해야 합니다(이 메일은 "실패하고 있다"는 신호만 전달합니다).'],
+    }),
   });
   return result.ok ? null : `operator:${result.errorCode}`;
 };
@@ -484,4 +716,18 @@ export const sendFundingListingNicknameAlert = (order: FundingOrder, nickname: s
       `주문번호: ${order.orderNo} / 결제자: ${order.customerName}`,
       `관리자: ${adminPledgeUrl(order)}`,
     ].join('\n'),
+    html: buildEmailLayout({
+      audience: 'operator',
+      preheader: `닉네임 ${nickname} — 부적절하면 명단에서 내려 주세요.`,
+      heading: '서포터 명단 닉네임 확인',
+      paragraphs: ['후원자가 서포터 명단 표시 이름을 닉네임으로 정했습니다.'],
+      rows: [
+        { label: '닉네임', value: nickname, emphasis: true },
+        { label: '응원 메시지', value: message ?? '없음' },
+        { label: '결제자', value: order.customerName },
+        { label: '주문번호', value: order.orderNo },
+      ],
+      cta: pledgeCta(order),
+      notices: ['부적절하면 관리자 화면에서 <strong>"서포터 명단에서 내리기"</strong>를 눌러 주세요.'],
+    }),
   } }]);

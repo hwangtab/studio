@@ -10,6 +10,7 @@
  * (lib/payments/methodAlert.ts와 같은 판단).
  */
 import { consumeRateLimit } from '../booking/rate-limit';
+import { adminUrl, buildEmailLayout, escapeHtml } from '../email/layout';
 import { sendEmail } from '../email/resend';
 import { OPERATOR_EMAIL } from '../operatorContact';
 
@@ -21,7 +22,7 @@ import { OPERATOR_EMAIL } from '../operatorContact';
 const ALERT_WINDOW_SECONDS = 24 * 60 * 60;
 const ALERT_LIMIT = 1;
 
-export const alertMissingDownloadObject = async (input: { key: string; orderNo: string }): Promise<void> => {
+export const alertMissingDownloadObject = async (input: { key: string; orderNo: string; orderId?: string }): Promise<void> => {
   try {
     // 로그는 창과 무관하게 매번 남긴다 — "언제부터 몇 건이었나"를 되짚을 근거는 건별로 있어야 한다.
     console.error('[funding-download] 저장소에 객체가 없다', { key: input.key, orderNo: input.orderNo });
@@ -44,6 +45,25 @@ export const alertMissingDownloadObject = async (input: { key: string; orderNo: 
         '',
         '이 메일은 같은 키에 대해 하루 한 번만 옵니다.',
       ].join('\n'),
+      html: buildEmailLayout({
+        audience: 'operator',
+        noticeTone: 'alert',
+        preheader: `후원자가 내려받기를 눌렀는데 파일이 없습니다 — ${input.key}`,
+        heading: '펀딩 내려받기 파일 없음',
+        paragraphs: ['후원자가 내려받기를 눌렀는데 저장소에 객체가 없습니다.'],
+        rows: [
+          { label: '키', value: input.key, emphasis: true },
+          { label: '주문', value: input.orderNo },
+        ],
+        // 주문 id를 아는 호출부는 그 후원 상세로, 모르면 후원 목록으로 보낸다.
+        cta: { label: input.orderId ? '후원 상세 보기' : '후원 목록 보기', url: adminUrl(input.orderId ? `/admin/funding/${input.orderId}` : '/admin/funding') },
+        notices: [
+          '<strong>무엇을 해야 하나</strong>: R2 버킷에 그 키로 파일이 올라가 있는지 확인한다.',
+          `없으면 올리고, 키가 바뀐 것이라면 content/funding/&lt;slug&gt;.md의 downloads를 고친다.`,
+          '후원자에게는 503과 안내 문구가 나갔고, downloaded_at은 남기지 않았습니다(파일을 못 받은 사람이 청약철회권까지 잃지 않게 합니다).',
+          `이 메일은 같은 키(${escapeHtml(input.key)})에 대해 하루 한 번만 옵니다.`,
+        ],
+      }),
     });
   } catch (error: unknown) {
     console.error('[funding-download] 파일 부재 알림 실패:', error);
