@@ -25,6 +25,7 @@ export const TRUSTED_SHORTCODE_NAMES: readonly string[] = [
   // 스튜디오가 만든 출연진 카드·갤러리. 개설자 글에 뜨면 우리 보증으로 읽힌다.
   'funding-lineup',
   'funding-gallery',
+  'funding-audio',
   ...INLINE_DIRECTIVE_NAMES,
 ];
 
