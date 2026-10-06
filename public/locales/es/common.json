@@ -311,7 +311,13 @@
       "subtitleLine1": "Salvo el uso por horas de la sala de ensayo, son tarifas reales con IVA no incluido. Abajo se detalla cada caso con coste adicional.",
       "subtitleLine2": "La tabla de abajo muestra todas las tarifas de un vistazo.",
       "alt": "Precios de Studio NOL",
-      "ctaKakao": "Cotización gratis por KakaoTalk"
+      "ctaKakao": "Cotización gratis por KakaoTalk",
+      "boardTitles": {
+        "recording": "Grabación, por hora",
+        "practiceRoom": "Sala de ensayo, al mes",
+        "wedding": "Canción de boda, por canción",
+        "unit": "KRW"
+      }
     },
     "special": {
       "title": "Paquetes especiales",

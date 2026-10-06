@@ -339,7 +339,13 @@
       "subtitleLine1": "Except hourly practice-room use, prices are actual rates with VAT excluded. Every case where an extra fee applies is listed below.",
       "subtitleLine2": "The table right below shows every service rate at a glance.",
       "alt": "Studio NOL Pricing",
-      "ctaKakao": "Get a Free Quote on KakaoTalk"
+      "ctaKakao": "Get a Free Quote on KakaoTalk",
+      "boardTitles": {
+        "recording": "Recording, per hour",
+        "practiceRoom": "Practice room, per month",
+        "wedding": "Wedding song, per song",
+        "unit": "KRW"
+      }
     },
     "special": {
       "title": "Special Packages",

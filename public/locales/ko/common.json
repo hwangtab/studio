@@ -311,7 +311,13 @@
       "subtitleLine1": "연습실 시간제 외 표시 가격은 VAT 별도 실단가이며, 추가 비용이 붙는 경우는 아래에 모두 명시했습니다.",
       "subtitleLine2": "전 서비스 단가는 바로 아래 표에 한눈에 정리했습니다.",
       "alt": "스튜디오 놀 가격 안내",
-      "ctaKakao": "카톡으로 무료 견적 받기"
+      "ctaKakao": "카톡으로 무료 견적 받기",
+      "boardTitles": {
+        "recording": "녹음, 시간당",
+        "practiceRoom": "연습실, 월",
+        "wedding": "축가, 1곡",
+        "unit": "원"
+      }
     },
     "special": {
       "title": "스페셜 패키지",

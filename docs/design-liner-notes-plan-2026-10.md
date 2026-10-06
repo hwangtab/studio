@@ -225,7 +225,7 @@ props: `items: { heading; body; href? }[]`, `columns: 1 | 2 | 3`, `numbered`(ari
 
 - 보정 규칙 하나: 섀도 따뜻하게, 채도 −15, 콘트라스트 +5, 미세 그레인. 전 페이지가 한 롤처럼 보이게.
 - 규격: AVIF + WebP 쌍(지금 `public/images` 규격), 1920/1280/640, 품질 65. `ImageHero` `sizes` 상한 1280 → 1920(split은
-  50vw라 데스크톱 바이트가 지금보다 작다), 모바일 640 유지. `quality` 60 → 65.
+  50vw라 데스크톱 바이트가 지금보다 작다), 모바일 640 유지. `quality`는 60 유지 — next.config.mjs `images.qualities`가 [60, 75]라 목록 밖 값은 400을 돌려준다(2026-10-06 dev에서 확인). 새 사진에서 선명도가 모자라면 75로 올린다.
 - **파일명에 날짜**(`hero-recording-20261020.avif`). `/images/**`는 `immutable`이라 같은 경로에 갈아 끼우면 옛 그림이
   남는다(CLAUDE.md, 두 번 겪음). OG 이미지는 별건 — 바꾸면 그쪽도 새 이름.
 - 스크림 단계는 사진마다 다시 잰다(3-3).

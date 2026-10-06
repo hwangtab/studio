@@ -311,7 +311,13 @@
       "subtitleLine1": "除练习室按小时租用外，均为实际单价（不含增值税），需额外收费的情况已全部列于下方。",
       "subtitleLine2": "下方表格可一次查看全部服务单价。",
       "alt": "Studio NOL 价格",
-      "ctaKakao": "通过KakaoTalk获取免费报价"
+      "ctaKakao": "通过KakaoTalk获取免费报价",
+      "boardTitles": {
+        "recording": "录音，每小时",
+        "practiceRoom": "练习室，每月",
+        "wedding": "婚礼歌曲，每首",
+        "unit": "韩元"
+      }
     },
     "special": {
       "title": "特别套餐",

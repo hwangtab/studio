@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import SEO from '../../components/SEO';
 import SectionHeading from '../../components/ui/SectionHeading';
-import ImageHero, { HERO_SCRIM } from '../../components/common/ImageHero';
+import ImageHero from '../../components/common/ImageHero';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import MediaGallery from '../../components/ui/MediaGallery';
 import { Section } from '../../components/ui/Section';
@@ -98,14 +98,15 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
         priority
         title={
           <>
-            <span className="block mb-2 text-gray-100 drop-shadow-lg">{heroContent.titlePrefix}</span>
+            <span className="block mb-2 text-white">{heroContent.titlePrefix}</span>
             {/* v2: 제목 일부에만 걸린 그라디언트는 사진 위에서 강조가 아니라 얼룩으로 읽혔다
-                (디자인 회의). 강조는 크기가 이미 맡고 있으니 같은 흰색으로 둔다. */}
-            <span className="text-white drop-shadow-lg">
+                (디자인 회의). 강조는 크기가 이미 맡고 있으니 같은 흰색으로 둔다.
+                라이너 노트(split): 글자가 잉크 면 위에 있으므로 drop-shadow도 없다. */}
+            <span className="text-white">
               {heroContent.titleHighlight}
             </span>
             {heroContent.titleSuffix && (
-              <span className="text-gray-100 drop-shadow-lg">{heroContent.titleSuffix}</span>
+              <span className="text-white">{heroContent.titleSuffix}</span>
             )}
           </>
         }
@@ -119,8 +120,8 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
         }
         backgroundImage={heroContent.backgroundImage}
         imageAlt={heroContent.imageAlt}
-        minHeight="min-h-[100svh]"
-        overlayGradient={HERO_SCRIM}
+        // 라이너 노트 §3-3: 왼쪽 잉크 면 + 오른쪽 사진. 글자가 사진을 가리지 않고, 사진 면이 절반이라 LCP 바이트가 준다.
+        layout="split"
         ctaButtons={
           <>
             {/* prefetch={false}: hero CTA가 LCP 측정 창 안에 있어 자동 prefetch가

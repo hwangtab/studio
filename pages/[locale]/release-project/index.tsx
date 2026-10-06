@@ -134,17 +134,18 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
         priority
         title={
           <>
-            <span className="block mb-2 text-gray-100 drop-shadow-lg">{t('releaseProject.hero.titlePrefix')}</span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[var(--hero-title-accent)] to-white drop-shadow-[0_0_25px_var(--hero-title-glow)]">
-              {t('releaseProject.hero.titleHighlight')}
-            </span>
-            <span className="text-gray-100 drop-shadow-lg">{t('releaseProject.hero.titleSuffix')}</span>
+            <span className="block mb-2 text-white">{t('releaseProject.hero.titlePrefix')}</span>
+            {/* 라이너 노트(sleeve): 그라디언트·글로우·drop-shadow 없이 흰색 한 가지 — 강조는 크기와 줄바꿈이 맡는다. */}
+            <span className="text-white">{t('releaseProject.hero.titleHighlight')}</span>
+            <span className="text-white">{t('releaseProject.hero.titleSuffix')}</span>
           </>
         }
         subtitle={isKo ? releasePipelineCopy.hero.subtitle : t('releaseProject.hero.subtitle')}
         backgroundImage="/images/studio3.webp"
         imageAlt={t('releaseProject.hero.imageAlt')}
         minHeight="min-h-[70svh]"
+        // 라이너 노트 §3-3: 전면 사진, 왼쪽 아래 제목(음반 슬리브). 사진은 2주차에 교체한다.
+        layout="sleeve"
         ctaButtons={
           <ReleaseHeroCtas
             locale={locale}

@@ -311,7 +311,13 @@
       "subtitleLine1": "Mashg‘ulot xonasining soatbay ijarasidan tashqari narxlar QQSsiz haqiqiy narxlardir. Qo‘shimcha to‘lov qo‘llaniladigan barcha holatlar quyida ko‘rsatilgan.",
       "subtitleLine2": "Quyidagi jadvalda barcha xizmat narxlari bir joyda.",
       "alt": "Studio NOL narxlari",
-      "ctaKakao": "KakaoTalk orqali bepul narx oling"
+      "ctaKakao": "KakaoTalk orqali bepul narx oling",
+      "boardTitles": {
+        "recording": "Yozuv, soatiga",
+        "practiceRoom": "Mashq xonasi, oyiga",
+        "wedding": "To‘y qo‘shig‘i, har bir qo‘shiq",
+        "unit": "KRW"
+      }
     },
     "special": {
       "title": "Maxsus paketlar",

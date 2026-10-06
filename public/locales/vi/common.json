@@ -311,7 +311,13 @@
       "subtitleLine1": "Ngoài giá thuê phòng tập theo giờ, giá là giá thực tế chưa gồm VAT. Mọi trường hợp phát sinh phí đều được nêu bên dưới.",
       "subtitleLine2": "Bảng ngay bên dưới hiển thị toàn bộ đơn giá dịch vụ.",
       "alt": "Bảng giá Studio NOL",
-      "ctaKakao": "Nhận báo giá miễn phí qua KakaoTalk"
+      "ctaKakao": "Nhận báo giá miễn phí qua KakaoTalk",
+      "boardTitles": {
+        "recording": "Thu âm, mỗi giờ",
+        "practiceRoom": "Phòng tập, mỗi tháng",
+        "wedding": "Bài hát đám cưới, mỗi bài",
+        "unit": "KRW"
+      }
     },
     "special": {
       "title": "Gói đặc biệt",
