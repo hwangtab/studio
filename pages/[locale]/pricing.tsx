@@ -26,6 +26,7 @@ import { getHubLocaleContent } from '../../data/faq';
 import { Section } from '../../components/ui/Section';
 import SectionAnchorNav from '../../components/ui/SectionAnchorNav';
 import PricingCard from '../../components/ui/PricingCard';
+import KakaoSectionBar from '../../components/common/KakaoSectionBar';
 import HubLocaleContentSection from '../../components/ui/HubLocaleContentSection';
 import ImageHero from '../../components/common/ImageHero';
 
@@ -393,6 +394,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           {specialPackages.map((offer, index) => (
             <div key={offer.id} role="listitem">
               <PricingCard
+                kakaoEmphasis="band"
                 id={offer.id}
                 title={offer.title}
                 price={offer.priceDisplay}
@@ -413,6 +415,16 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         {/* 발매 번들 카드(specialPackages의 package-*-bundle) 바로 아래 — 시장 공개 요금과의 비교(ko 전용).
             근거는 docs/market-price-survey-2026-09.md. 이 절 부제는 축가·성우를 말하지만 번들도 여기 있다. */}
         {locale === 'ko' && <MarketPriceComparison />}
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={kakaoUrl}
+          component="PricingSpecial"
+          ctaId="pricing_special_bar"
+          message={t('pricing.tierBar.packages.message')}
+          actionLabel={t('pricing.tierBar.packages.action')}
+          contactLabel={t('pricing.tierBar.contact')}
+        />
       </Section>
 
       {/* Recording Section */}
@@ -429,6 +441,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           {recordingOffers.map((offer, index) => (
             <div key={offer.id} role="listitem">
               <PricingCard
+                kakaoEmphasis="band"
                 id={offer.id}
                 title={offer.title}
                 price={offer.priceDisplay}
@@ -446,6 +459,16 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
             </div>
           ))}
         </div>
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={kakaoUrl}
+          component="PricingRecording"
+          ctaId="pricing_recording_bar"
+          message={t('pricing.tierBar.recording.message')}
+          actionLabel={t('pricing.tierBar.recording.action')}
+          contactLabel={t('pricing.tierBar.contact')}
+        />
       </Section>
 
       {/* Mixing Section */}
@@ -462,6 +485,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           {mixingOffers.map((offer, index) => (
             <div key={offer.id} role="listitem">
               <PricingCard
+                kakaoEmphasis="band"
                 id={offer.id}
                 title={offer.title}
                 price={offer.priceDisplay}
@@ -488,6 +512,16 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
             </p>
           </div>
         </div>
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={kakaoUrl}
+          component="PricingMixing"
+          ctaId="pricing_mixing_bar"
+          message={t('pricing.tierBar.mixing.message')}
+          actionLabel={t('pricing.tierBar.mixing.action')}
+          contactLabel={t('pricing.tierBar.contact')}
+        />
       </Section>
 
       {/* Mastering Section */}
@@ -504,6 +538,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           {masteringOffers.map((offer, index) => (
             <div key={offer.id} role="listitem">
               <PricingCard
+                kakaoEmphasis="band"
                 id={offer.id}
                 title={offer.title}
                 price={offer.priceDisplay}
@@ -521,6 +556,16 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
             </div>
           ))}
         </div>
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={kakaoUrl}
+          component="PricingMastering"
+          ctaId="pricing_mastering_bar"
+          message={t('pricing.tierBar.mastering.message')}
+          actionLabel={t('pricing.tierBar.mastering.action')}
+          contactLabel={t('pricing.tierBar.contact')}
+        />
       </Section>
 
       {/* 음악연습실 월 입주·시간제 — <title>·h1이 선두로 약속한 단가(월 입주)의 도착지.
@@ -539,6 +584,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           {arrangementOffers.map((offer, index) => (
             <div key={offer.id} role="listitem">
               <PricingCard
+                kakaoEmphasis="band"
                 id={offer.id}
                 title={offer.title}
                 price={offer.priceDisplay}
@@ -555,6 +601,16 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
             </div>
           ))}
         </div>
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={kakaoUrl}
+          component="PricingArrangement"
+          ctaId="pricing_arrangement_bar"
+          message={t('pricing.tierBar.general.message')}
+          actionLabel={t('pricing.tierBar.general.action')}
+          contactLabel={t('pricing.tierBar.contact')}
+        />
       </Section>
 
       <Section id="practice-room" variant="default" className="scroll-mt-32">
@@ -572,6 +628,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           {practiceRoomOffers.map((offer) => (
             <div key={offer.id} role="listitem">
               <PricingCard
+                kakaoEmphasis="band"
                 id={offer.id}
                 title={offer.title}
                 price={offer.priceDisplay}
@@ -597,6 +654,16 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
             {t('pricing.practiceRoom.detailLink')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </div>
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={kakaoUrl}
+          component="PricingPracticeRoom"
+          ctaId="pricing_practice_bar"
+          message={t('pricing.tierBar.general.message')}
+          actionLabel={t('pricing.tierBar.general.action')}
+          contactLabel={t('pricing.tierBar.contact')}
+        />
       </Section>
 
       {/* Additional Services Section */}
@@ -613,6 +680,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           {additionalServices.map((service, index) => (
             <div key={service.id} role="listitem">
               <PricingCard
+                kakaoEmphasis="band"
                 id={service.id}
                 title={service.title}
                 price={service.priceDisplay}
@@ -634,6 +702,16 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
             </div>
           ))}
         </div>
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={kakaoUrl}
+          component="PricingAdditional"
+          ctaId="pricing_support_bar"
+          message={t('pricing.tierBar.general.message')}
+          actionLabel={t('pricing.tierBar.general.action')}
+          contactLabel={t('pricing.tierBar.contact')}
+        />
       </Section>
 
       <ReviewSection variant="alternate" locale={locale} />

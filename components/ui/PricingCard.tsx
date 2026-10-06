@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Check } from '@/lib/lucide-icons';
+import { useTranslation } from 'react-i18next';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 import BaseCard from './BaseCard';
 import { Badge } from './Badge';
@@ -37,6 +38,15 @@ interface PricingCardProps {
     secondaryCtaLabel?: string;
     secondaryCtaHref?: string;
     onSecondaryCtaClick?: () => void;
+    /**
+     * 카카오 CTA의 무게(라이너 노트 §3-4, docs/design-liner-notes-plan-2026-10.md).
+     * - 'solid'(기본): 지금처럼 카드 안에 솔리드 옐로 블록 — 카드가 혼자 있는 자리.
+     * - 'band': 카드 안에는 카카오 CTA를 **그리지 않고** 행 아래 `KakaoSectionBar` 하나로 모은다. 그러면
+     *   온라인 주문·예약(secondaryCta)이 카드의 1차 블록 버튼(브랜드색)으로 올라온다. 한 행에 노랑이 셋이던
+     *   것을 하나로 — 노랑은 한 화면에 하나. 카카오 목적지 링크를 잉크 텍스트로 "조용히" 그리는 안은
+     *   ctaButtonContract(카카오 목적지 = bg-kakao)에 막혀 쓰지 않는다. 비-ko(/contact 목적지)는 영향 없다.
+     */
+    kakaoEmphasis?: 'solid' | 'band';
 }
 
 const PricingCard = ({
@@ -56,8 +66,12 @@ const PricingCard = ({
     secondaryCtaLabel,
     secondaryCtaHref,
     onSecondaryCtaClick,
+    kakaoEmphasis = 'solid',
 }: PricingCardProps) => {
+    const { t } = useTranslation('common', { lng: locale });
     const isKakaoCta = Boolean(ctaHref && ctaHref.includes('kakao'));
+    // band 모드에서는 카카오 CTA를 행 아래 띠에 넘긴다. 카카오가 아닌 목적지(비-ko /contact)는 그대로 카드 안.
+    const kakaoInBand = kakaoEmphasis === 'band' && isKakaoCta;
 
     const handleCtaClick = () => {
         // 호출자가 직접 핸들러를 넘긴 경우 그것만 실행 — 이중 발화 방지.
@@ -100,17 +114,21 @@ const PricingCard = ({
 
     return (
         <BaseCard
-            // rounded-3xl(24px) 외곽 + 내부 CTA rounded-xl(12px): iOS 26 동심원 라운드
-            className="p-8 h-full flex flex-col rounded-3xl"
+            // rounded-3xl(24px) 외곽 + 내부 CTA rounded-xl(12px): iOS 26 동심원 라운드.
+            // 라이너 노트 §3-4: 종이 바탕 위 흰 카드 + 괘선, 그림자 없음. 추천 카드만 브랜드색 테두리 + ring-1
+            // (design-system §3 "강조는 border-primary + ring-1 ring-primary/30").
+            className={`p-8 h-full flex flex-col rounded-3xl bg-white dark:bg-gray-800/40 ${
+                recommended ? 'border-primary ring-1 ring-primary/30 dark:border-primary-lighter dark:ring-primary-lighter/30' : ''
+            }`}
             delay={delay}
-            variant={recommended ? 'glass-highlight' : 'glass'}
+            variant="outline"
             hoverEffect={true}
         >
             {recommended && (
                 /* 추천 리본은 공용 Badge(brand)다 — 손으로 짠 모서리 리본(rounded-bl/tr-lg)은 반경 네 단
                    어디에도 없었다(§3). 카드 패딩(p-8) 안쪽 모서리에 맞춰 absolute로 둔다. */
                 <Badge tone="brand" size="md" className="absolute top-4 right-4">
-                    RECOMMENDED
+                    {t('actions.popularBadge', { defaultValue: '가장 많이 고르는' })}
                 </Badge>
             )}
             <h3 className="typo-card-title mb-2">{title}</h3>
@@ -125,16 +143,17 @@ const PricingCard = ({
             <ul className="space-y-3 flex-grow">
                 {features.map((feature, index) => (
                     <li key={index} className="flex items-start text-sm text-gray-600 dark:text-gray-300">
-                        <Check className="text-green-500 mt-1 mr-2 flex-shrink-0" size={14} aria-hidden="true" />
+                        <Check className="text-primary dark:text-primary-lighter mt-1 mr-2 flex-shrink-0" size={14} aria-hidden="true" />
                         <span>{feature}</span>
                     </li>
                 ))}
             </ul>
 
-            {ctaLabel && ctaHref && (
+            {ctaLabel && ctaHref && !kakaoInBand && (
                 /* 카드마다 상품은 달라도 행동은 하나(카톡 문의)라 CTA 색도 하나여야
                    한다. 카카오가 아닌 목적지(폼·상세 페이지)일 때만 primary 유지.
-                   카드 안이므로 shape은 block(rounded-xl) — 외곽 rounded-3xl과 동심원. */
+                   카드 안이므로 shape은 block(rounded-xl) — 외곽 rounded-3xl과 동심원.
+                   band 모드(kakaoInBand)에서는 이 버튼이 빠지고 행 아래 KakaoSectionBar가 맡는다. */
                 <Button
                     asChild
                     variant={isKakaoCta ? 'kakao' : 'solid'}
@@ -158,12 +177,13 @@ const PricingCard = ({
                 /* outline — 1차(카카오/primary)와 위계가 갈려야 하고, 목적지가
                    카카오톡이 아니므로 옐로는 절대 쓰지 않는다(CLAUDE.md 카카오 배색 규칙).
                    size md(h-11 = 44px)로 터치 타깃 확보. */
-                <Button asChild variant="outline" shape="block" size="md" fullWidth>
+                <Button asChild variant={kakaoInBand ? 'solid' : 'outline'} shape="block" size="md" fullWidth>
                     <Link
                         href={secondaryCtaHref}
                         prefetch={false}
                         onClick={onSecondaryCtaClick}
-                        className="mt-3 h-auto min-h-11 py-3 px-4 text-sm font-semibold"
+                        // band 모드에서는 온라인 주문·예약이 카드의 1차 버튼이다(브랜드색 solid, mt-6).
+                        className={`${kakaoInBand ? 'mt-6' : 'mt-3'} h-auto min-h-11 py-3 px-4 text-sm font-semibold`}
                     >
                         {secondaryCtaLabel}
                     </Link>

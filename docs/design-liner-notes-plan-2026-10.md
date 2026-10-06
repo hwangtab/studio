@@ -149,11 +149,12 @@ prop은 그대로**라 문장은 바뀌지 않는다.
 
 ### 3-4. CTA 위계 — 노랑은 한 화면에 하나
 
-- `PricingCard`에 `kakaoEmphasis?: 'solid' | 'quiet'`(기본 `'solid'`, 지금과 동일). LP·가격 페이지는 `'quiet'`:
-  카카오 CTA를 **잉크 텍스트 링크 + 노란 칩 아이콘**으로 내린다(`KakaoChip` — `bg-kakao` 원 안 `MessageCircle` 16px
-  `text-kakao-ink`; 카카오 목적지 신호는 칩이 유지하므로 양방향 규칙에 맞는다). 2차였던 온라인 주문·예약
-  `secondaryCta`는 `variant="outline"` 그대로 **블록 버튼 자리**로 올라온다. 추적(`handleCtaClick`·`onSecondaryCtaClick`)은
-  그대로.
+- `PricingCard`에 `kakaoEmphasis?: 'solid' | 'band'`(기본 `'solid'`, 지금과 동일). LP·가격 페이지는 `'band'`:
+  카드 안에는 카카오 CTA를 **그리지 않고** 행 아래 띠 하나로 모은다. 온라인 주문·예약 `secondaryCta`가 카드의
+  **1차 solid 블록**(브랜드색)으로 올라온다. 카드 단위 카카오 추적(`<page>_price_<id>_kakao`)은 띠의 `cta_id`로 합쳐진다.
+  (구현 중 바뀐 점, 2026-10-06: 처음 설계는 카드 안에 "잉크 텍스트 + 노란 칩"의 조용한 카카오 링크였으나
+  `ctaButtonContract`가 카카오 목적지 = `bg-kakao` 앵커를 요구한다 — 양방향 규칙의 역방향이다. 규칙을 깨지 않고 노랑을
+  줄이는 길은 개수뿐이라 띠 하나로 갔다.)
 - `components/common/KakaoSectionBar.tsx` 신설: 티어 행 아래 **노란 띠 하나**. 전체가 `<a>` 하나(`Button variant="kakao"
   shape="pill" size="lg" fullWidth` 위에 문구 + 화살표), `trackLeadEvent('lead_click_kakao', { cta_id: 'tier_bar_<page>' })`.
   문구는 카드가 못 하는 말 — 믹싱 "어디에 해당하는지 모르겠다면 세션 화면을 보내 주세요", 녹음 "몇 시간 필요한지

@@ -80,7 +80,8 @@
     "kakaoFab": "KakaoTalk Inquiry",
     "callFab": "Phone Inquiry",
     "skipToContent": "Skip to content",
-    "scrollToTop": "Scroll to top"
+    "scrollToTop": "Scroll to top",
+    "popularBadge": "Most chosen"
   },
   "common": {
     "categoryFilter": {
@@ -420,7 +421,30 @@
     "images": {
       "packageAlt": "Vocalist recording session in Studio NOL booth"
     },
-    "releaseLink": "Release Project"
+    "releaseLink": "Release Project",
+    "tierBar": {
+      "packages": {
+        "message": "Not sure which package fits? Tell us the number of songs and your target release date.",
+        "action": "Ask on KakaoTalk"
+      },
+      "recording": {
+        "message": "Not sure how many hours you need? Just tell us the song length and the parts.",
+        "action": "Ask on KakaoTalk"
+      },
+      "mixing": {
+        "message": "Not sure which tier fits? Send a screenshot of your session and we will count the tracks for you.",
+        "action": "Send on KakaoTalk"
+      },
+      "mastering": {
+        "message": "Send your mix and we will tell you whether mastering alone will get it there.",
+        "action": "Send on KakaoTalk"
+      },
+      "general": {
+        "message": "Not sure which service fits? Just describe your situation. Quotes are free.",
+        "action": "Ask on KakaoTalk"
+      },
+      "contact": "Contact us"
+    }
   },
   "lesson": {
     "mobileMenu": "Mobile Menu",
@@ -1321,6 +1345,13 @@
     "hubCallout": {
       "title": "Singing Your Own Wedding Song — Complete Guide",
       "subtitle": "From song selection and practice to recording and venue delivery — a bride-and-groom guide on one page."
+    },
+    "tierBar": {
+      "wedding": {
+        "message": "Tell us the wedding date and the song, and we will reply with available dates right away.",
+        "action": "Ask on KakaoTalk"
+      },
+      "contact": "Contact us"
     }
   },
   "recording": {
@@ -1511,6 +1542,13 @@
       ],
       "note": "Conditions differ by setup and studio, so only general tendencies are listed. Studio NOL values match the price table on this page.",
       "rowHeader": "Comparison"
+    },
+    "tierBar": {
+      "recording": {
+        "message": "Not sure how many hours you need? Just tell us the song length and the parts.",
+        "action": "Ask on KakaoTalk"
+      },
+      "contact": "Contact us"
     }
   },
   "mixingMastering": {
@@ -1766,6 +1804,17 @@
       ],
       "note": "Conditions differ by AI service and freelancer, so only general tendencies are listed. Studio NOL values match the price table on this page.",
       "rowHeader": "Comparison"
+    },
+    "tierBar": {
+      "mixing": {
+        "message": "Not sure which tier fits? Send a screenshot of your session and we will count the tracks for you.",
+        "action": "Send on KakaoTalk"
+      },
+      "mastering": {
+        "message": "Send your mix and we will tell you whether mastering alone will get it there.",
+        "action": "Send on KakaoTalk"
+      },
+      "contact": "Contact us"
     }
   },
   "musicPromotion": {
@@ -2536,6 +2585,13 @@
     "hubCallout": {
       "title": "Cover Video Production — Complete Guide: Planning, Filming, Audio & Editing",
       "subtitle": "From song selection and camera setup to audio mixing and uploading to YouTube and social media — start everything on one page."
+    },
+    "tierBar": {
+      "cover": {
+        "message": "Tell us the song and the mood you want. We will reply with available shooting dates.",
+        "action": "Ask on KakaoTalk"
+      },
+      "contact": "Contact us"
     }
   },
   "releaseProject": {

@@ -13,6 +13,7 @@ import BookingEntryButton from '../../components/booking/BookingEntryButton';
 import SectionHeading from '../../components/ui/SectionHeading';
 import { Section } from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
+import KakaoSectionBar from '../../components/common/KakaoSectionBar';
 import ServicePriceTable from '../../components/service/ServicePriceTable';
 
 // Below-fold 컴포넌트 code-splitting
@@ -243,6 +244,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
         {weddingPackage && (
           <div className="max-w-md mx-auto">
             <PricingCard
+              kakaoEmphasis="band"
               id={weddingPackage.id}
               title={weddingPackage.title}
               price={weddingPackage.priceDisplay}
@@ -298,6 +300,16 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
             />
           </div>
         )}
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={siteConfig.contact.kakaoUrl}
+          component="WeddingSongPage"
+          ctaId="wedding_tier_bar"
+          message={t('weddingSong.tierBar.wedding.message')}
+          actionLabel={t('weddingSong.tierBar.wedding.action')}
+          contactLabel={t('weddingSong.tierBar.contact')}
+        />
       </Section>
 
       {/* 진행 절차 */}

@@ -15,6 +15,7 @@ import type { LucideIcon } from '@/lib/lucide-icons';
 import BaseCard from '../../components/ui/BaseCard';
 import { Section } from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
+import KakaoSectionBar from '../../components/common/KakaoSectionBar';
 
 // Below-fold 컴포넌트 code-splitting
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
@@ -284,6 +285,7 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
         {coverVideoPackage && (
           <div className="max-w-md mx-auto">
             <PricingCard
+              kakaoEmphasis="band"
               id={coverVideoPackage.id}
               title={coverVideoPackage.title}
               price={coverVideoPackage.priceDisplay}
@@ -303,6 +305,16 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
             />
           </div>
         )}
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={siteConfig.contact.kakaoUrl}
+          component="CoverVideoPage"
+          ctaId="cover_tier_bar"
+          message={t('coverVideo.tierBar.cover.message')}
+          actionLabel={t('coverVideo.tierBar.cover.action')}
+          contactLabel={t('coverVideo.tierBar.contact')}
+        />
       </Section>
 
       {/* 진행 절차 */}

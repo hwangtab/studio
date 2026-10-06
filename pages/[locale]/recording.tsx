@@ -16,6 +16,7 @@ import type { LucideIcon } from '@/lib/lucide-icons';
 import BaseCard from '../../components/ui/BaseCard';
 import { Section } from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
+import KakaoSectionBar from '../../components/common/KakaoSectionBar';
 import { getRouteLastmod, formatLastmodDate } from '../../lib/pageLastmod';
 
 // Below-fold 컴포넌트 code-splitting
@@ -310,6 +311,7 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
         <div className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto items-stretch">
           {recordingOffers.map((offer) => (
             <PricingCard
+              kakaoEmphasis="band"
               key={offer.id}
               id={offer.id}
               title={offer.title}
@@ -361,6 +363,16 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
             ]}
           />
         </div>
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={siteConfig.contact.kakaoUrl}
+          component="RecordingPage"
+          ctaId="recording_tier_bar"
+          message={t('recording.tierBar.recording.message')}
+          actionLabel={t('recording.tierBar.recording.action')}
+          contactLabel={t('recording.tierBar.contact')}
+        />
       </Section>
 
       {/* 진행 절차 */}

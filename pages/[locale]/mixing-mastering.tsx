@@ -28,6 +28,7 @@ import type { LucideIcon } from '@/lib/lucide-icons';
 import BaseCard from '../../components/ui/BaseCard';
 import { Section } from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
+import KakaoSectionBar from '../../components/common/KakaoSectionBar';
 import ServicePriceTable from '../../components/service/ServicePriceTable';
 import { getRouteLastmod, formatLastmodDate } from '../../lib/pageLastmod';
 
@@ -302,6 +303,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
         <div className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto items-stretch">
           {mixingOffers.map((offer) => (
             <PricingCard
+              kakaoEmphasis="band"
               key={offer.id}
               id={offer.id}
               title={offer.title}
@@ -337,6 +339,16 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
         <p className="mt-6 text-center typo-card-body text-sm text-gray-500 dark:text-gray-400">
           {t('mixingMastering.mixing.vocalTuneNotice')}
         </p>
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={siteConfig.contact.kakaoUrl}
+          component="MixingMasteringPage"
+          ctaId="mixing_tier_bar"
+          message={t('mixingMastering.tierBar.mixing.message')}
+          actionLabel={t('mixingMastering.tierBar.mixing.action')}
+          contactLabel={t('mixingMastering.tierBar.contact')}
+        />
       </Section>
 
       {/* 마스터링 가격 — 싱글 / EP·정규 */}
@@ -350,6 +362,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
         <div className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto items-stretch">
           {masteringOffers.map((offer) => (
             <PricingCard
+              kakaoEmphasis="band"
               key={offer.id}
               id={offer.id}
               title={offer.title}
@@ -431,6 +444,16 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
             밀렸다(운영자 지적 2026-09-30). 절이 아니라 이 절 안의 블록이다(절을 끼우면 아래 절들의 배경
             번갈음이 전부 뒤집힌다). */}
         <MixCompareBlock locale={locale} component="MixingMasteringMixCompare" className="mt-16 max-w-3xl mx-auto border-t border-gray-200 dark:border-gray-800 pt-10" />
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={siteConfig.contact.kakaoUrl}
+          component="MixingMasteringPage"
+          ctaId="mastering_tier_bar"
+          message={t('mixingMastering.tierBar.mastering.message')}
+          actionLabel={t('mixingMastering.tierBar.mastering.action')}
+          contactLabel={t('mixingMastering.tierBar.contact')}
+        />
       </Section>
 
       {/* 원격 의뢰 절차 — HowTo 스키마와 동일 데이터 */}

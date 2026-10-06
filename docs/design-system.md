@@ -314,6 +314,23 @@ variant: `default`·`highlight`·`outline`·`glass`·`glass-highlight`. 기본 �
 (blur 없는 글래스)다. **glass 카드 hover에 `SHADOW_HOVER`를 섞지 않는다** — inline boxShadow가
 inset 스펙큘러를 지운다.
 
+### 티어 카드와 노란 띠 — `PricingCard kakaoEmphasis` · `components/common/KakaoSectionBar.tsx` (2026-10-06)
+
+티어 카드가 행으로 놓이는 자리(LP 가격 절·가격 페이지)에서는 카드 안에 솔리드 옐로를 두지 않는다 — 한 행에 노랑이
+셋이면 신호가 소음이 된다(라이너 노트 §3-4). 규칙:
+
+- `<PricingCard kakaoEmphasis="band">`: 카드는 온라인 주문·예약(`secondaryCta`)을 **브랜드색 solid 블록**으로 올리고 카카오
+  CTA는 그리지 않는다. 비-ko(/contact 목적지)는 영향 없다. 카드가 혼자 있는 자리는 기본값 `'solid'`.
+- 행 아래 `<KakaoSectionBar>` **하나** — 띠 전체가 카카오 목적지 링크 하나다(`bg-kakao` + `text-kakao-ink` + pill + 포커스 링,
+  `ctaButtonContract`가 본다). 문구는 카드가 못 하는 말("어디에 해당하는지 모르겠다면 세션 화면을 보내 주세요")이고
+  키는 **그 페이지가 싣는 i18n 섹션** 안에 둔다(`mixingMastering.tierBar.*` 등 — `pricing.*`에 두면 그 섹션을 안 싣는 LP에서
+  키 이름이 그대로 찍힌다. `content/i18nKeys.test.ts`가 잡는다).
+- 카카오 목적지를 잉크 텍스트 링크로 "조용히" 그리는 안은 쓰지 않는다 — 카카오 목적지 = 옐로 규칙(§1)에 어긋나고
+  계약 테스트가 막는다. 노랑을 줄이는 방법은 **개수**(띠 하나)뿐이다.
+- 데스크톱 뷰포트당 솔리드 옐로 ≤ 2(헤더 + 띠 또는 히어로).
+- 카드 재질: 종이 위 흰 카드 + 괘선(`variant="outline"` + `bg-white`), 그림자 없음. 추천 카드만 `border-primary ring-1`.
+  배지는 `actions.popularBadge`("가장 많이 고르는") — 영문 `RECOMMENDED`는 없앴다.
+
 ### 서비스 링크 pill — `components/ui/ServiceLinkPill.tsx`
 
 브랜드색 아웃라인 링크 pill(`<ServiceLinkPill href tone="primary|secondary|accent">라벨</ServiceLinkPill>`).

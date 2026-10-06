@@ -80,7 +80,8 @@
     "kakaoFab": "KakaoTalk 咨询",
     "callFab": "电话咨询",
     "skipToContent": "跳到主要内容",
-    "scrollToTop": "返回顶部"
+    "scrollToTop": "返回顶部",
+    "popularBadge": "最多人选择"
   },
   "common": {
     "categoryFilter": {
@@ -392,7 +393,30 @@
     "images": {
       "packageAlt": "Studio NOL 录音棚中的歌手录音"
     },
-    "releaseLink": "发行项目"
+    "releaseLink": "发行项目",
+    "tierBar": {
+      "packages": {
+        "message": "不确定哪种方案合适？告诉我们歌曲数量和目标发行日期即可。",
+        "action": "通过KakaoTalk咨询"
+      },
+      "recording": {
+        "message": "不确定需要几小时？只需告诉我们歌曲长度和声部数。",
+        "action": "通过KakaoTalk咨询"
+      },
+      "mixing": {
+        "message": "不确定属于哪一档？把工程截图发给我们，我们帮您数轨道数。",
+        "action": "通过KakaoTalk发送"
+      },
+      "mastering": {
+        "message": "把混音文件发给我们，我们听后告诉您只做母带是否足够。",
+        "action": "通过KakaoTalk发送"
+      },
+      "general": {
+        "message": "不确定哪项服务合适？描述一下您的情况即可，报价免费。",
+        "action": "通过KakaoTalk咨询"
+      },
+      "contact": "联系我们"
+    }
   },
   "lesson": {
     "mobileMenu": "移动菜单",
@@ -1293,6 +1317,13 @@
     "hubCallout": {
       "title": "亲自演唱婚礼祝歌 — 综合指南",
       "subtitle": "从选曲、练习到录音、婚礼现场交付，一页全搞定的新郎新娘指南。"
+    },
+    "tierBar": {
+      "wedding": {
+        "message": "告诉我们婚礼日期和想唱的歌，我们会立即回复可预约的日期。",
+        "action": "通过KakaoTalk咨询"
+      },
+      "contact": "联系我们"
     }
   },
   "recording": {
@@ -1483,6 +1514,13 @@
       ],
       "note": "家庭录音和大型录音室的条件因环境而异，这里只列出一般倾向。Studio NOL 的数值与本页价格表一致。",
       "rowHeader": "比较项目"
+    },
+    "tierBar": {
+      "recording": {
+        "message": "不确定需要几小时？只需告诉我们歌曲长度和声部数。",
+        "action": "通过KakaoTalk咨询"
+      },
+      "contact": "联系我们"
     }
   },
   "mixingMastering": {
@@ -1738,6 +1776,17 @@
       ],
       "note": "AI 母带与平台自由职业者的条件因服务和个人而异，这里只列出一般倾向。Studio NOL 的数值与本页价格表一致。",
       "rowHeader": "比较项目"
+    },
+    "tierBar": {
+      "mixing": {
+        "message": "不确定属于哪一档？把工程截图发给我们，我们帮您数轨道数。",
+        "action": "通过KakaoTalk发送"
+      },
+      "mastering": {
+        "message": "把混音文件发给我们，我们听后告诉您只做母带是否足够。",
+        "action": "通过KakaoTalk发送"
+      },
+      "contact": "联系我们"
     }
   },
   "musicPromotion": {
@@ -2508,6 +2557,13 @@
     "hubCallout": {
       "title": "翻唱视频制作 — 企划·拍摄·音源·剪辑综合指南",
       "subtitle": "从选曲到拍摄设置、音源混音、YouTube·SNS上传，一页全搞定。"
+    },
+    "tierBar": {
+      "cover": {
+        "message": "告诉我们想拍的歌曲和氛围，我们会立即回复可拍摄的日期。",
+        "action": "通过KakaoTalk咨询"
+      },
+      "contact": "联系我们"
     }
   },
   "releaseProject": {

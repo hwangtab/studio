@@ -19,6 +19,7 @@ import ReleaseHeroCtas from './release/ReleaseHeroCtas';
 import OnlineRequest from './story/OnlineRequest';
 import VocalMixBridge from './story/VocalMixBridge';
 import PricingCard from './ui/PricingCard';
+import KakaoSectionBar from './common/KakaoSectionBar';
 import NotFoundPage from '../pages/404';
 import ServerErrorPage from '../pages/500';
 import { getSiteConfig } from '../data/siteConfig';
@@ -164,6 +165,11 @@ const cases: Array<[string, () => HTMLElement, number]> = [
   ['StickyBottomCTA', renderStickyBottomCTA, 2],
   ['PricingCard kakao+2차', renderOf(<PricingCard id="p" title="t" price="10" description="d" features={['f']} ctaLabel="카톡 문의" ctaHref={KAKAO_URL} trackingComponent="X" locale="ko" secondaryCtaLabel="온라인 예약" secondaryCtaHref="/ko/booking/recording" />), 1],
   ['PricingCard 비-kakao (옐로 금지)', renderOf(<PricingCard id="p" title="t" price="10" description="d" features={['f']} ctaLabel="Contact" ctaHref="/en/contact" trackingComponent="X" locale="en" />), 0],
+  // 라이너 노트 §3-4: band 모드 카드에는 카카오 링크가 없고(행 아래 띠가 맡는다) 온라인 주문이 1차 solid다.
+  ['PricingCard band (카드엔 카카오 없음)', renderOf(<PricingCard id="p" title="t" price="10" description="d" features={['f']} ctaLabel="카톡 문의" ctaHref={KAKAO_URL} trackingComponent="X" locale="ko" kakaoEmphasis="band" secondaryCtaLabel="온라인 주문" secondaryCtaHref="/ko/booking/mixing-mastering" />), 0],
+  // 티어 행 아래 노란 띠 — 띠 전체가 카카오 목적지 링크 하나다. 비-ko는 /contact 폼이라 옐로 금지.
+  ['KakaoSectionBar ko', renderOf(<KakaoSectionBar locale="ko" kakaoUrl={KAKAO_URL} component="c" ctaId="bar" message="어디에 해당하는지 모르겠다면 세션 화면을 보내 주세요." actionLabel="카톡으로 보내기" contactLabel="문의하기" />), 1],
+  ['KakaoSectionBar en (옐로 금지)', renderOf(<KakaoSectionBar locale="en" kakaoUrl={KAKAO_URL} component="c" ctaId="bar" message="Not sure which tier fits?" actionLabel="Send on KakaoTalk" contactLabel="Contact us" />), 0],
   ['404', renderOf(<NotFoundPage />), 0],
   ['500', renderOf(<ServerErrorPage />), 0],
 
