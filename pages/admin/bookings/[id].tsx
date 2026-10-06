@@ -599,7 +599,7 @@ export default function AdminBookingDetailPage({
         )}
 
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
-          <div className="p-6 md:p-8 border-b border-gray-200">
+          <div className="p-4 md:p-8 border-b border-gray-200">
             <div className="flex flex-wrap items-center gap-3 mb-5">
               <span
                 className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
@@ -692,7 +692,7 @@ export default function AdminBookingDetailPage({
             )}
           </div>
 
-          <div className="p-6 md:p-8 border-b border-gray-200">
+          <div className="p-4 md:p-8 border-b border-gray-200">
             <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">결제 금액</h2>
             <dl className="space-y-2 text-sm">
               <DescriptionRow label="상품가" value={`${formatPriceAmount(booking.itemAmount)}원`} />
@@ -730,7 +730,7 @@ export default function AdminBookingDetailPage({
           </div>
 
           {booking.refunds.length > 0 && (
-            <div className="p-6 md:p-8">
+            <div className="p-4 md:p-8">
               <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">환불 내역</h2>
               <div className="space-y-2">
                 {booking.refunds.map((refund) => (

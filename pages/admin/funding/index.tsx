@@ -300,7 +300,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
         }
       >
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-            <div className="p-6 md:p-8">
+            <div className="p-4 md:p-8">
               {notice && <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>}
 
               {error && (

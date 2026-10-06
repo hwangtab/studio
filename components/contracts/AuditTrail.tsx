@@ -110,7 +110,7 @@ const Fingerprint = ({ verdict }: { verdict: SerializedAuditTrail['fingerprint']
 };
 
 const AuditTrail = ({ trail }: { trail: SerializedAuditTrail }) => (
-  <div className="p-6 md:p-8 border-b border-gray-200">
+  <div className="p-4 md:p-8 border-b border-gray-200">
     <h2 className="text-lg font-bold text-gray-900 mb-1">감사추적</h2>
     <p className="text-sm text-gray-500 mb-5">
       서명을 부인당했을 때 내놓을 기록입니다. 계약서와 별개 문서이며 PDF에는 실리지 않습니다.
@@ -128,15 +128,18 @@ const AuditTrail = ({ trail }: { trail: SerializedAuditTrail }) => (
               event.chain ? 'bg-gray-900' : 'bg-gray-300'
             }`}
           />
-          <span className="flex-1 min-w-0">
-            <span className={event.chain ? 'font-semibold text-gray-900' : 'text-gray-700'}>
-              {event.label}
+          {/* 좁은 화면에서는 시각을 이름 아래로 — 옆에 두면 이름·IP가 한두 글자씩 접힌다. */}
+          <span className="flex-1 min-w-0 flex flex-col sm:flex-row sm:gap-3">
+            <span className="flex-1 min-w-0">
+              <span className={event.chain ? 'font-semibold text-gray-900' : 'text-gray-700'}>
+                {event.label}
+              </span>
+              {event.detail && (
+                <span className="block text-xs text-gray-500 mt-0.5 break-all">{event.detail}</span>
+              )}
             </span>
-            {event.detail && (
-              <span className="block text-xs text-gray-500 mt-0.5 break-all">{event.detail}</span>
-            )}
+            <time className="shrink-0 mt-0.5 sm:mt-0 text-xs text-gray-500 tabular-nums">{event.time}</time>
           </span>
-          <time className="shrink-0 text-xs text-gray-500 tabular-nums">{event.time}</time>
         </li>
       ))}
     </ol>

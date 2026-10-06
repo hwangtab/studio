@@ -328,7 +328,7 @@ export default function AdminSubscriptionDetailPage({
         )}
 
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
-          <div className="p-6 md:p-8 border-b border-gray-200">
+          <div className="p-4 md:p-8 border-b border-gray-200">
             <div className="flex flex-wrap items-center gap-3 mb-5">
               <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700">
                 {KIND_LABELS[subscription.kind] ?? subscription.kind}
@@ -412,7 +412,7 @@ export default function AdminSubscriptionDetailPage({
             </div>
           </div>
 
-          <div className="p-6 md:p-8 border-b border-gray-200">
+          <div className="p-4 md:p-8 border-b border-gray-200">
             <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">카드</h2>
             {billingKey ? (
               <dl className="space-y-2 text-sm">
@@ -425,7 +425,7 @@ export default function AdminSubscriptionDetailPage({
             )}
           </div>
 
-          <div className="p-6 md:p-8">
+          <div className="p-4 md:p-8">
             <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">회차 이력</h2>
             {payments.length === 0 ? (
               <p className="text-sm text-gray-500">아직 결제 시도가 없습니다.</p>
