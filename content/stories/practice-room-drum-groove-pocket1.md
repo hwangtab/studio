@@ -96,7 +96,6 @@ summary: >-
 
 ### 레이드백 그루브의 대표 드러머
 
-- **James Brown 밴드의 드러머들**: 레이드백의 교과서
 - **John Bonham**: Led Zeppelin의 드러머, 무거운 레이드백
 - **Ringo Starr**: Beatles 특유의 뒤에서 끌어당기는 타이밍
 

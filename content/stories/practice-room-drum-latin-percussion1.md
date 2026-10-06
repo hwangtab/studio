@@ -139,7 +139,7 @@ faq:
 
 ```
 
-**BPM:** 삼바는 보통 BPM 90-130. 카니발 삼바는 BPM 200+까지 올라갑니다.
+**BPM:** 삼바는 보통 BPM 90-130.
 
 ---
 
@@ -254,7 +254,7 @@ O O   O X  O O   O X
 
 | 뮤지션 | 전문 장르 | 참고 앨범 |
 |-------|---------|---------|
-| Giovanni Hidalgo | 콩가·살사 | Tiempo Libre |
+| Giovanni Hidalgo | 콩가·살사 | Hands of Rhythm |
 | Alex Acuña | 라틴 재즈 | Weather Report |
 | Horacio "El Negro" Hernandez | 살사·재즈 | Italuba |
 | Airto Moreira | 삼바·브라질 | Weather Report |
