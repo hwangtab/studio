@@ -66,7 +66,11 @@ export const displayFont = localFont({
   src: './fonts/display.woff2',
   weight: '700',
   style: 'normal',
-  display: 'swap',
+  // display: 'optional' — Paperlogy는 Pretendard와 달리 시스템 고딕체와 글자 폭이 많이 달라
+  // swap 전환 시 h1 줄바꿈이 바뀌며 티나게 움직인다(운영자 2026-10-07 "불러올때 한번 꿈틀한다").
+  // optional은 제때(프리로드 중) 도착하면 바로 Paperlogy로 그리고, 못 받으면 그 세션은 폴백을
+  // 유지한다 — 전환 자체가 없어 꿈틀거림이 없다. preload=true라 대부분 제때 도착한다.
+  display: 'optional',
   preload: true,
   variable: '--font-display',
   // 위 pretendard와 같은 이유로 비운다 — font-hero 스택(tailwind.config.ts)이
