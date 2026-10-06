@@ -15,9 +15,6 @@
     "aspiring1": {
       "korea-standard": 1
     },
-    "breath-support1": {
-      "first-claim": 1
-    },
     "bucheon-sosa1": {
       "first-claim": 1
     },
@@ -48,9 +45,6 @@
     "highnote1": {
       "first-claim": 1
     },
-    "in-ear-monitor1": {
-      "korea-standard": 1
-    },
     "kpop-production1": {
       "korea-standard": 1
     },
@@ -58,9 +52,6 @@
       "korea-standard": 1
     },
     "limiter1": {
-      "first-claim": 1
-    },
-    "livesound1": {
       "first-claim": 1
     },
     "mariko-yukie-namsan-tower": {
@@ -75,13 +66,7 @@
     "microphone1": {
       "first-claim": 1
     },
-    "mix-automation1": {
-      "first-claim": 1
-    },
     "mix-prep1": {
-      "first-claim": 1
-    },
-    "mr-guide1": {
       "first-claim": 1
     },
     "music-podcast1": {
@@ -142,15 +127,6 @@
     "practice-room-goal-setting1": {
       "unsourced-ratio": 1
     },
-    "practice-room-guitar-blues-rock1": {
-      "attributed-quote": 1
-    },
-    "practice-room-guitar-dobro1": {
-      "attributed-quote": 1
-    },
-    "practice-room-guitar-jazz-chord-melody1": {
-      "attributed-quote": 1
-    },
     "practice-room-guitar-nylon1": {
       "attributed-quote": 1
     },
@@ -160,26 +136,11 @@
     "practice-room-guitar-rock-lead1": {
       "first-claim": 1
     },
-    "practice-room-guitar-shoegaze1": {
-      "attributed-quote": 1
-    },
     "practice-room-guitar-volume-swell1": {
       "attributed-quote": 1
     },
     "practice-room-piano-ballad-technique1": {
       "korea-standard": 1
-    },
-    "practice-room-piano-comp-jazz1": {
-      "attributed-quote": 1
-    },
-    "practice-room-piano-minimalism-glass1": {
-      "attributed-quote": 1
-    },
-    "practice-room-piano-new-age1": {
-      "attributed-quote": 1
-    },
-    "practice-room-piano-ragtime1": {
-      "first-claim": 1
     },
     "practice-room-piano-two-hand-independence1": {
       "attributed-quote": 1
@@ -196,15 +157,6 @@
     "practice-room-vocal-rnb-phrasing1": {
       "attributed-quote": 1
     },
-    "practice-room-vocal-scatting1": {
-      "attributed-quote": 1
-    },
-    "practice-room-vocal-soul-rn1": {
-      "attributed-quote": 1
-    },
-    "rap-recording1": {
-      "first-claim": 2
-    },
     "rap1": {
       "first-claim": 1
     },
@@ -220,9 +172,6 @@
     "reverb-guide1": {
       "first-claim": 1
     },
-    "reverb-mixing1": {
-      "first-claim": 1
-    },
     "rock-vocal1": {
       "attributed-quote": 1
     },
@@ -232,18 +181,12 @@
     "singing-lesson1": {
       "first-claim": 1
     },
-    "song-key1": {
-      "korea-standard": 1
-    },
     "stage-vocal1": {
       "first-claim": 1,
       "korea-standard": 1
     },
     "stagefright1": {
       "attributed-quote": 1
-    },
-    "streaming-platforms1": {
-      "first-claim": 1
     },
     "streaming-release1": {
       "first-claim": 1,
@@ -289,9 +232,6 @@
       "first-claim": 1
     },
     "vocal-endurance1": {
-      "korea-standard": 1
-    },
-    "vocal-microphone1": {
       "korea-standard": 1
     },
     "vocal-mixing1": {
