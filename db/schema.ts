@@ -283,7 +283,8 @@ export const orderStatusEnum = [
    */
   'deposit_cancelled',
 ] as const;
-export const orderTypeEnum = ['session', 'mixing', 'subscription', 'funding', 'ticket'] as const;
+// 'deposit' = 운영자가 금액·품목명을 정해 둔 비공개 예약금 결제 링크(data/paymentLinks.ts). 하위 테이블 없음.
+export const orderTypeEnum = ['session', 'mixing', 'subscription', 'funding', 'ticket', 'deposit'] as const;
 export const bookingStatusEnum = ['pending', 'confirmed', 'completed', 'no_show', 'cancelled'] as const;
 export const refundStatusEnum = ['done', 'failed'] as const;
 export const refundRequesterEnum = ['customer', 'admin', 'webhook'] as const;
