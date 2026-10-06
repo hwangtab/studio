@@ -1,4 +1,5 @@
 import { sendEmail, type SendEmailError } from '../email/resend';
+import { adminUrl, buildEmailLayout, escapeHtml, type EmailLayoutRow } from '../email/layout';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 import { isPurgedValue } from '../privacy/orderRetention';
 import type { Booking, Order, WorkOrder } from '../../db/schema';
@@ -29,6 +30,16 @@ export const sendDepositLinkPaidEmail = async (order: Order): Promise<string | n
       '환불 등 문의는 카카오톡 또는 전화로 해 주세요.',
       '문의: 010-4255-7893',
     ].join('\n'),
+    html: buildEmailLayout({
+      preheader: `예약금 ${formatPriceAmount(order.totalAmount)}원 입금이 확인되었습니다.`,
+      heading: '예약금 입금이 확인되었습니다',
+      paragraphs: [`${escapeHtml(order.customerName)}님, 예약금 입금이 확인되었습니다.`],
+      rows: [
+        { label: '금액', value: `${formatPriceAmount(order.totalAmount)}원 (VAT 포함)`, emphasis: true },
+        { label: '주문번호', value: order.orderNo },
+      ],
+      notices: ['환불 등 문의는 카카오톡 또는 전화(010-4255-7893)로 해 주세요.'],
+    }),
   });
 
 const kstTimeLabel = (d: Date): string => {
@@ -39,6 +50,19 @@ const kstTimeLabel = (d: Date): string => {
 
 const manageUrl = (order: Order): string =>
   `${SITE_URL}/ko/booking/manage/${order.orderNo}?token=${order.manageToken}`;
+
+/** 운영자 알림의 '관리자에서 보기' 버튼 — 건별 상세(orders.id). 예약·믹싱·예약금 모두 이 라우트로 열린다. */
+const adminDetailCta = (order: Order) => ({ label: '관리자에서 보기', url: adminUrl(`/admin/bookings/${order.id}`) });
+
+/** 운영자 알림 공통 — 고객 연락처 행. */
+const customerRows = (order: Order): EmailLayoutRow[] => [
+  { label: '고객', value: order.customerName },
+  { label: '연락처', value: order.customerPhone, href: `tel:${order.customerPhone.replace(/[^0-9+]/g, '')}` },
+  { label: '이메일', value: order.customerEmail, href: `mailto:${order.customerEmail}` },
+];
+
+const BANK_REFUND_NOTICE =
+  '계좌 입금 주문이라 고객이 적은 환불 계좌로 <strong>3영업일 이내에 송금</strong>하고, 관리자 화면에서 "송금 완료"를 눌러 주세요.';
 
 /**
  * 고객에게 가는 한 통. 실패하면 errorCode를, 성공하면 null을 돌려준다.
@@ -81,7 +105,9 @@ const sendCustomerEmail = async (
  * 문구는 2026-09-24 운영자가 준 카카오톡 안내문을 옮긴 것이다. 문자·알림톡 발송은
  * 나중 단계(솔라피 연동 뒤)이고, 지금은 확정 메일이 이 역할을 한다.
  */
-export const buildPracticeRoomGuide = (roomNumber: string | null): { text: string; missing: string[] } => {
+export const buildPracticeRoomGuide = (
+  roomNumber: string | null,
+): { text: string; missing: string[]; rows: EmailLayoutRow[]; notes: string[] } => {
   const room = roomNumber ?? '';
   const roomKey = room.replace(/[^A-Z0-9]/gi, '').toUpperCase();
   const env = {
@@ -100,6 +126,8 @@ export const buildPracticeRoomGuide = (roomNumber: string | null): { text: strin
   if (missing.length) {
     return {
       missing,
+      rows: [],
+      notes: ['입구·방·와이파이 비밀번호는 이용 전에 별도로 보내드립니다. 받지 못하셨으면 010-4255-7893으로 연락 주세요.'],
       text: [
         '🏠 입장 안내',
         '입구·방·와이파이 비밀번호는 이용 전에 별도로 보내드립니다.',
@@ -109,6 +137,17 @@ export const buildPracticeRoomGuide = (roomNumber: string | null): { text: strin
   }
   return {
     missing,
+    rows: [
+      { label: '입구 비밀번호', value: env.entrance!, emphasis: true },
+      { label: `${room}번 방 비밀번호`, value: env.room!, emphasis: true },
+      { label: '와이파이', value: env.wifiSsid! },
+      { label: '와이파이 비밀번호', value: env.wifiPassword!, emphasis: true },
+      { label: '화장실 비밀번호', value: env.restroom ?? '', emphasis: true },
+    ],
+    notes: [
+      '화장실은 밖으로 나가셔서 엘리베이터 왼쪽에 있습니다.',
+      '퇴실하실 때는 전등과 냉난방기기를 꼭 꺼 주세요.',
+    ],
     text: [
       '🏠 입장 방법',
       `• 스튜디오 입구에서 <${env.entrance}>을 누르시면 문이 열립니다. 가끔 문이 열려 있을 때도 있답니다!`,
@@ -151,6 +190,25 @@ export const sendBookingConfirmedEmails = async (order: Order, booking: Booking)
       `예약 확인·취소: ${manageUrl(order)}`,
       '문의: 010-4255-7893',
     ].join('\n'),
+    html: buildEmailLayout({
+      preheader: `${when} (${booking.durationHours}시간) 예약이 확정되었습니다.`,
+      heading: isPracticeRoom ? '연습실 예약이 확정되었습니다' : '예약이 확정되었습니다',
+      paragraphs: [
+        `${escapeHtml(order.customerName)}님, 안녕하세요. ${isPracticeRoom ? '연습실 예약이 확인되었습니다.' : '예약이 확정되었습니다.'}`,
+      ],
+      rows: [
+        { label: '일시', value: `${when} (${booking.durationHours}시간)`, emphasis: true },
+        ...(booking.roomNumber ? [{ label: '방', value: booking.roomNumber }] : []),
+        { label: '결제 금액', value: `${formatPriceAmount(order.totalAmount)}원 (VAT 포함)` },
+        { label: '주문번호', value: order.orderNo },
+        ...(guide ? guide.rows : []),
+      ],
+      cta: { label: '예약 확인·취소', url: manageUrl(order) },
+      notices: [
+        ...(guide ? guide.notes.map(escapeHtml) : []),
+        '문의: 010-4255-7893',
+      ],
+    }),
   });
   if (customerError) failures.push(`customer:${customerError}`);
 
@@ -177,8 +235,31 @@ export const sendBookingConfirmedEmails = async (order: Order, booking: Booking)
       ...(booking.serviceType !== 'practice-room'
         ? ['', '※ 손님이 오지 않았다면 다음 날 오전 11시 전에 관리자 화면에서 노쇼로 표시해 주세요(후기 요청 메일에서 빠집니다).']
         : []),
-      `관리자: ${SITE_URL}/admin/bookings`,
+      `관리자: ${adminDetailCta(order).url}`,
     ].join('\n'),
+    html: buildEmailLayout({
+      audience: 'operator',
+      noticeTone: guideWarning ? 'alert' : 'info',
+      preheader: `${order.customerName} · ${productName} · ${when}`,
+      heading: '새 예약이 결제 완료되었습니다',
+      rows: [
+        ...customerRows(order),
+        { label: '상품', value: productName },
+        { label: '일시', value: `${when} (${booking.durationHours}시간)` },
+        ...(booking.roomNumber ? [{ label: '방', value: booking.roomNumber }] : []),
+        { label: '금액', value: `${formatPriceAmount(order.totalAmount)}원`, emphasis: true },
+        { label: '요청사항', value: booking.customerNote ?? '없음' },
+      ],
+      cta: adminDetailCta(order),
+      notices: [
+        ...(guideWarning
+          ? [`<strong>입장 안내를 못 보냈습니다</strong> — 비어 있는 값: ${escapeHtml(guide!.missing.join(', '))}. 손님에게 비밀번호를 직접 보내야 합니다.`]
+          : []),
+        ...(booking.serviceType !== 'practice-room'
+          ? ['손님이 오지 않았다면 다음 날 오전 11시 전에 관리자 화면에서 노쇼로 표시해 주세요(후기 요청 메일에서 빠집니다).']
+          : []),
+      ],
+    }),
   });
   if (!operator.ok) failures.push(`operator:${operator.errorCode}`);
   // 안내 누락은 발송 실패와 같은 무게로 남긴다 — notificationError가 채워져야 건강 점검이 잡는다.
@@ -198,6 +279,57 @@ export const refundLine = (refundAmount: number, refundVia: 'payment' | 'bank_ac
       : '환불 금액: 0원 (환불 규정에 따라 돌려드릴 금액이 없습니다)'
     : `환불 금액: ${formatPriceAmount(refundAmount)}원 (결제 수단으로 환불, 카드사에 따라 3~5영업일 소요)`;
 
+/** 환불 행의 값과 설명 — 텍스트의 refundLine과 같은 사실. */
+const refundHtmlParts = (refundAmount: number, refundVia: 'payment' | 'bank_account'): { value: string; note: string } => {
+  if (refundVia === 'bank_account') {
+    return refundAmount > 0
+      ? {
+          value: `${formatPriceAmount(refundAmount)}원`,
+          note: '적어 주신 환불 계좌로 접수일부터 3영업일 이내에 보내 드립니다. 계좌를 잘못 적으셨다면 이 메일에 회신해 주세요.',
+        }
+      : { value: '0원', note: '환불 규정에 따라 돌려드릴 금액이 없습니다.' };
+  }
+  return { value: `${formatPriceAmount(refundAmount)}원`, note: '결제 수단으로 환불되며, 카드사에 따라 3~5영업일이 걸립니다.' };
+};
+
+const customerCancelHtml = (
+  order: Order, subject: string, refundAmount: number, refundVia: 'payment' | 'bank_account', heading: string,
+): string => {
+  const refund = refundHtmlParts(refundAmount, refundVia);
+  return buildEmailLayout({
+    preheader: `${subject} — 환불 ${refund.value}`,
+    heading,
+    paragraphs: [`${escapeHtml(order.customerName)}님, ${escapeHtml(heading)}.`],
+    rows: [
+      { label: '내용', value: subject },
+      { label: '환불 금액', value: refund.value, emphasis: true },
+      { label: '주문번호', value: order.orderNo },
+    ],
+    notices: [escapeHtml(refund.note)],
+  });
+};
+
+const operatorCancelHtml = (
+  order: Order, heading: string, extraRows: EmailLayoutRow[], refundAmount: number, refundVia: 'payment' | 'bank_account',
+): string => {
+  const needsTransfer = refundVia === 'bank_account' && refundAmount > 0;
+  return buildEmailLayout({
+    audience: 'operator',
+    noticeTone: needsTransfer ? 'alert' : 'info',
+    preheader: `${order.customerName} · 환불 ${formatPriceAmount(refundAmount)}원${needsTransfer ? ' · 계좌 송금 필요' : ''}`,
+    heading,
+    rows: [
+      ...customerRows(order),
+      ...extraRows,
+      { label: '환불 금액', value: `${formatPriceAmount(refundAmount)}원`, emphasis: true },
+      { label: '환불 방식', value: refundVia === 'bank_account' ? '계좌 송금' : '결제 수단으로 환불' },
+      { label: '주문번호', value: order.orderNo },
+    ],
+    cta: adminDetailCta(order),
+    notices: needsTransfer ? [BANK_REFUND_NOTICE] : [],
+  });
+};
+
 export const sendBookingCancelledEmails = async (
   order: Order, booking: Booking, refundAmount: number, refundVia: 'payment' | 'bank_account' = 'payment',
 ): Promise<string | null> => {
@@ -211,6 +343,7 @@ export const sendBookingCancelledEmails = async (
       refundLine(refundAmount, refundVia),
       `주문번호: ${order.orderNo}`,
     ].join('\n'),
+    html: customerCancelHtml(order, `${when} 예약`, refundAmount, refundVia, '예약이 취소되었습니다'),
   });
   if (customerError) failures.push(`customer:${customerError}`);
   const operator = await sendEmail({
@@ -219,6 +352,7 @@ export const sendBookingCancelledEmails = async (
     text: refundVia === 'bank_account' && refundAmount > 0
       ? `주문 ${order.orderNo} 취소 — 계좌 입금 주문이라 고객이 적은 환불 계좌로 3영업일 이내에 송금하고 관리자 화면에서 "송금 완료"를 눌러 주세요. 관리자: ${SITE_URL}/admin/bookings/${order.id}`
       : `주문 ${order.orderNo} 취소. 관리자: ${SITE_URL}/admin/bookings`,
+    html: operatorCancelHtml(order, '예약이 취소되었습니다', [{ label: '일시', value: when }], refundAmount, refundVia),
   });
   if (!operator.ok) failures.push(`operator:${operator.errorCode}`);
   return failures.length ? failures.join(', ') : null;
@@ -268,6 +402,24 @@ export const sendMixingOrderConfirmedEmails = async (order: Order, workOrder: Wo
       ...MIXING_REFUND_POLICY_LINES,
       '문의: 010-4255-7893',
     ].join('\n'),
+    html: buildEmailLayout({
+      preheader: `${productName} 주문이 접수되었습니다. 작업할 파일을 보내 주세요.`,
+      heading: '주문이 접수되었습니다',
+      paragraphs: [
+        `${escapeHtml(order.customerName)}님, 주문이 접수되었습니다.`,
+        `<strong>파일을 보내 주세요.</strong> 이 메일에 회신으로 구글 드라이브·WeTransfer 등 다운로드 링크를 보내 주시거나, <a href="${escapeHtml(kakaoUrl)}" style="color: #6d28d9;">카카오톡 오픈채팅</a>으로 보내셔도 됩니다.`,
+        '보낼 파일: 드라이 보컬 WAV · MR 또는 트랙별 스템 WAV · 레퍼런스 1~2곡 (WAV 24bit/44.1 또는 48kHz 권장)',
+      ],
+      rows: [
+        { label: '상품', value: `${productName} × ${workOrder.songCount}곡${workOrder.vocalTuning ? ' (보컬 튜닝 옵션 포함)' : ''}` },
+        { label: '결제 금액', value: `${formatPriceAmount(order.totalAmount)}원 (VAT 포함)`, emphasis: true },
+        { label: '주문번호', value: order.orderNo },
+        { label: '납기', value: '파일 확인 후 3~7영업일' },
+        { label: '수정', value: `${revisionCountLabel(workOrder.serviceType)} 기본 포함` },
+      ],
+      cta: { label: '주문 확인·취소', url: manageUrl(order) },
+      notices: [...MIXING_REFUND_POLICY_LINES.map(escapeHtml), '문의: 010-4255-7893'],
+    }),
   });
   if (customerError) failures.push(`customer:${customerError}`);
 
@@ -280,8 +432,20 @@ export const sendMixingOrderConfirmedEmails = async (order: Order, workOrder: Wo
       `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
       `금액: ${formatPriceAmount(order.totalAmount)}원`,
       `요청사항: ${workOrder.customerNote ?? '없음'}`,
-      `관리자: ${SITE_URL}/admin/bookings`,
+      `관리자: ${adminDetailCta(order).url}`,
     ].join('\n'),
+    html: buildEmailLayout({
+      audience: 'operator',
+      preheader: `${order.customerName} · ${productName} × ${workOrder.songCount}곡`,
+      heading: '새 믹싱·마스터링 주문이 결제 완료되었습니다',
+      rows: [
+        ...customerRows(order),
+        { label: '상품', value: `${productName} × ${workOrder.songCount}곡${workOrder.vocalTuning ? ' (보컬 튜닝 옵션)' : ''}` },
+        { label: '금액', value: `${formatPriceAmount(order.totalAmount)}원`, emphasis: true },
+        { label: '요청사항', value: workOrder.customerNote ?? '없음' },
+      ],
+      cta: adminDetailCta(order),
+    }),
   });
   if (!operator.ok) failures.push(`operator:${operator.errorCode}`);
 
@@ -303,6 +467,7 @@ export const sendMixingOrderCancelledEmails = async (
       refundLine(refundAmount, refundVia),
       `주문번호: ${order.orderNo}`,
     ].join('\n'),
+    html: customerCancelHtml(order, productName, refundAmount, refundVia, '주문이 취소되었습니다'),
   });
   if (customerError) failures.push(`customer:${customerError}`);
   const operator = await sendEmail({
@@ -311,6 +476,7 @@ export const sendMixingOrderCancelledEmails = async (
     text: refundVia === 'bank_account' && refundAmount > 0
       ? `주문 ${order.orderNo} 취소 — 계좌 입금 주문이라 고객이 적은 환불 계좌로 3영업일 이내에 송금하고 관리자 화면에서 "송금 완료"를 눌러 주세요. 관리자: ${SITE_URL}/admin/bookings/${order.id}`
       : `주문 ${order.orderNo} 취소. 관리자: ${SITE_URL}/admin/bookings`,
+    html: operatorCancelHtml(order, '믹싱 주문이 취소되었습니다', [{ label: '상품', value: productName }], refundAmount, refundVia),
   });
   if (!operator.ok) failures.push(`operator:${operator.errorCode}`);
   return failures.length ? failures.join(', ') : null;

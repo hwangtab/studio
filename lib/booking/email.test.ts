@@ -4,6 +4,7 @@ import { sendEmail } from '../email/resend';
 import {
   sendBookingCancelledEmails,
   sendBookingConfirmedEmails,
+  sendDepositLinkPaidEmail,
   sendMixingOrderCancelledEmails,
   sendMixingOrderConfirmedEmails,
 } from './email';
@@ -81,5 +82,82 @@ describe('파기된 주문의 고객 메일', () => {
   it('RFC 2606 시험용 주소의 실패는 여전히 센다', async () => {
     (sendEmail as jest.Mock).mockResolvedValueOnce({ ok: false, errorCode: 'UNDELIVERABLE_ADDRESS' });
     expect(await sendBookingConfirmedEmails(order, booking)).toBe('customer:UNDELIVERABLE_ADDRESS');
+  });
+});
+
+/** HTML 메일 — text와 함께 전달되고, 사용자 입력은 escape되며, 운영자 알림은 건별 상세로 간다. */
+describe('HTML 메일', () => {
+  const calls = () => (sendEmail as jest.Mock).mock.calls.map((c) => c[0] as { html?: string; text: string });
+  const evil = { ...order, customerName: '<img src=x onerror=alert(1)>' } as unknown as Order;
+
+  it('예약 확정 — 고객·운영자 모두 text와 html을 함께 보내고 핵심 값을 담는다', async () => {
+    await sendBookingConfirmedEmails(order, booking);
+    const [customer, operator] = calls();
+    expect(customer.text).toContain('예약이 확정되었습니다');
+    expect(customer.html).toContain('220,000원');
+    expect(customer.html).toContain('SNB-1');
+    expect(customer.html).toContain('/ko/booking/manage/SNB-1?token=tok');
+    expect(operator.html).toContain('singer@studio.test');
+    expect(operator.html).toContain('220,000원');
+    expect(operator.html).toContain('/admin/bookings/o1"');
+    expect(operator.html).not.toMatch(/\/admin\/bookings"/);
+  });
+
+  it('연습실 확정 — 입장 비밀번호가 별도 행으로, 누락이면 운영자 메일이 긴급 경고', async () => {
+    const env = process.env;
+    process.env = {
+      ...env, PRACTICE_ROOM_ENTRANCE_CODE: '1234*', PRACTICE_ROOM_ROOM_CODE_R02: '3333*',
+      PRACTICE_ROOM_WIFI_SSID: 'nol', PRACTICE_ROOM_WIFI_PASSWORD: 'wifipw',
+    };
+    const pr = { ...booking, serviceType: 'practice-room', roomNumber: 'R02' } as unknown as Booking;
+    await sendBookingConfirmedEmails(order, pr);
+    expect(calls()[0].html).toContain('입구 비밀번호');
+    expect(calls()[0].html).toContain('1234*');
+    expect(calls()[0].html).toContain('wifipw');
+    expect(calls()[1].html).not.toContain('운영 알림 · 긴급');
+    jest.clearAllMocks();
+
+    delete process.env.PRACTICE_ROOM_WIFI_PASSWORD;
+    await sendBookingConfirmedEmails(order, pr);
+    expect(calls()[0].html).toContain('별도로 보내드립니다');
+    expect(calls()[1].html).toContain('운영 알림 · 긴급');
+    expect(calls()[1].html).toContain('PRACTICE_ROOM_WIFI_PASSWORD');
+    process.env = env;
+  });
+
+  it('고객이 입력한 값은 escape된다', async () => {
+    await sendBookingConfirmedEmails(evil, { ...booking, customerNote: '<script>x</script>' } as unknown as Booking);
+    for (const mail of calls()) {
+      expect(mail.html).not.toContain('<img src=x');
+      expect(mail.html).not.toContain('<script>x');
+    }
+    expect(calls()[0].html).toContain('&lt;img src=x');
+  });
+
+  it('취소 — 계좌 환불이면 운영자 메일에 송금 경고와 건별 링크', async () => {
+    await sendBookingCancelledEmails(order, booking, 100000, 'bank_account');
+    const [customer, operator] = calls();
+    expect(customer.html).toContain('3영업일');
+    expect(operator.html).toContain('운영 알림 · 긴급');
+    expect(operator.html).toContain('3영업일 이내에 송금');
+    expect(operator.html).toContain('/admin/bookings/o1"');
+    jest.clearAllMocks();
+    await sendMixingOrderCancelledEmails(order, workOrder, 100000);
+    expect(calls()[1].html).toContain('/admin/bookings/o1"');
+    expect(calls()[1].html).not.toContain('운영 알림 · 긴급');
+  });
+
+  it('믹싱 접수 — 파일 안내·납기 행과 운영자 건별 링크', async () => {
+    await sendMixingOrderConfirmedEmails(order, workOrder);
+    const [customer, operator] = calls();
+    expect(customer.html).toContain('드라이 보컬 WAV');
+    expect(customer.html).toContain('3~7영업일');
+    expect(operator.html).toContain('/admin/bookings/o1"');
+  });
+
+  it('예약금 입금 확인 — html 동반', async () => {
+    await sendDepositLinkPaidEmail(order);
+    expect(calls()[0].html).toContain('예약금 입금이 확인되었습니다');
+    expect(calls()[0].html).toContain('220,000원');
   });
 });

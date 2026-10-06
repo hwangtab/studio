@@ -71,6 +71,11 @@ describe('confirmDepositPayment', () => {
     expect(mockDb().batch).toHaveBeenCalledTimes(1);
     expect(mockDb().batch.mock.calls[0][0]).toHaveLength(2);
     expect(sendEmail).toHaveBeenCalledTimes(1);
+    const mail = (sendEmail as jest.Mock).mock.calls[0][0];
+    expect(mail.text).toContain('예약금 결제가 완료되었습니다');
+    expect(mail.html).toContain('400,000원');
+    expect(mail.html).toContain('/admin/bookings/o1"');
+    expect(mail.html).toContain('https://r/1');
   });
 
   it('승인 응답이 DONE이 아니면 확정하지 않는다', async () => {
