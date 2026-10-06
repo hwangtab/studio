@@ -211,5 +211,19 @@ describe('발송', () => {
     expect(mail.text).toContain('naver.me');
     expect(mail.text).toContain('한 번만');
     expect(mail.text).not.toMatch(/할인|쿠폰|적립|사은|혜택|별 ?5|5점|좋은 후기/);
+    // HTML도 같은 약속만 — 두 링크가 href로 걸리고 혜택·유도 문구는 없다.
+    expect(mail.html).toContain('href="https://g.page/r/');
+    expect(mail.html).toContain('naver.me');
+    expect(mail.html).toContain('한 번만');
+    expect(mail.html).not.toMatch(/할인|쿠폰|적립|사은|혜택|별 ?5|5점|좋은 후기/);
+  });
+
+  it('고객 이름은 HTML에서 escape된다', () => {
+    const mail = buildReviewRequestEmail({
+      kind: 'mixing', refId: 'r', orderId: 'o', customerName: '<script>x</script>', customerEmail: 'a@b.kr',
+      serviceLabel: '믹싱', dateLabel: '', endedAt: new Date('2026-10-04T06:00:00Z'),
+    });
+    expect(mail.html).not.toContain('<script>x');
+    expect(mail.html).toContain('&lt;script&gt;');
   });
 });

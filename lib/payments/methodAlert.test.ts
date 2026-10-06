@@ -112,6 +112,15 @@ describe('checkPaymentMethod', () => {
     expect(mockLimit).toHaveBeenCalledWith('payment_method_drift:또다른新수단', 1, 24 * 60 * 60);
   });
 
+  it('html도 함께 가고 값은 escape된다', async () => {
+    await checkPaymentMethod({ method: '<i>새수단</i>', context: '테스트', orderId: 'o9', paymentKey: 'pk_9', status: 'DONE' });
+    const mail = mockSend.mock.calls[0][0];
+    expect(mail.html).toContain('결제수단');
+    expect(mail.html).toContain('&lt;i&gt;새수단');
+    expect(mail.html).not.toContain('<i>새수단');
+    expect(mail.html).toContain('운영 알림 · 긴급');
+  });
+
   it('응답 본문을 싣지 않는다 — 가상계좌·휴대폰 응답에는 개인정보가 있다', async () => {
     await checkPaymentMethod({
       method: '해외간편결제', context: '테스트', orderId: 'SNB-2', paymentKey: 'pk_2', status: 'DONE',

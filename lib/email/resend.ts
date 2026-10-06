@@ -20,7 +20,8 @@ interface SendEmailAttachment {
 interface SendEmailParams {
     to: string;
     subject: string;
-    html?: string;
+    /** 필수 — 모든 메일은 공용 레이아웃(lib/email/layout.ts)으로 만든 HTML을 함께 보낸다. text는 대체 본문. */
+    html: string;
     text?: string;
     replyTo?: string;
     attachments?: SendEmailAttachment[];
@@ -32,24 +33,6 @@ export interface SendEmailResult {
     errorCode?: SendEmailError;
     errorDetail?: string;
 }
-
-const escapeHtml = (unsafe: string): string =>
-    unsafe
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-
-export const buildEmailHtml = (parts: { title: string; body: string; footer?: string }): string => {
-    return `
-    <div style="font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; max-width: 600px; margin: 0 auto; color: #1a1a1a;">
-      <h2 style="color: #111;">${escapeHtml(parts.title)}</h2>
-      ${parts.body}
-      ${parts.footer ? `<p style="font-size: 12px; color: #999; margin-top: 24px;">${escapeHtml(parts.footer)}</p>` : ''}
-    </div>
-  `;
-};
 
 /**
  * 실제로 배달될 수 없는 주소.

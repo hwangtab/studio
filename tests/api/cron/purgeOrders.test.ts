@@ -193,7 +193,10 @@ it('실패 메일은 어느 파기가 왜 실패했는지 적는다', async () =
   (purgeExpiredSubscriptionCancelReasons as jest.Mock).mockRejectedValue(new Error('no such column: cancel_reason'));
   await call();
   expect(sendEmail).toHaveBeenCalledTimes(1);
-  const mail = (sendEmail as jest.Mock).mock.calls[0][0] as { subject: string; text: string };
+  const mail = (sendEmail as jest.Mock).mock.calls[0][0] as { subject: string; text: string; html?: string };
+  // 같은 내용을 레이아웃 HTML로도 보낸다.
+  expect(mail.html).toContain('<!DOCTYPE html>');
+  expect(mail.html).toContain('no such column: cancel_reason');
   expect(mail.subject).toContain('2건');
   expect(mail.text).toContain('구독 종료 후 5년');
   expect(mail.text).toContain('DB 장애');

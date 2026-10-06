@@ -48,3 +48,28 @@ it('skipCustomer면 고객 메일은 건너뛰고 운영자 알림만 보낸다(
   expect(mockSend).toHaveBeenCalledTimes(1);
   expect(mockSend.mock.calls[0][0].to).not.toBe('victim@example.com');
 });
+
+describe('계좌 입금 안내 HTML', () => {
+  const base = {
+    orderNo: 'SNB-1', customerName: '<b>김입금</b>', customerEmail: 'a@b.kr', customerPhone: '010-0000-0000',
+    totalAmount: 150000, deadline: new Date('2026-10-07T06:00:00Z'), kindLabel: '연습실 예약',
+    applicantLabel: '예약하신 분', summaryLines: ['상품: 연습실 4시간', '일시: 10/12 14:00', '입금 확인 전까지 자리를 잡아 둡니다.'],
+    manageUrl: 'https://studionol.co.kr/ko/booking/manage/SNB-1?token=t',
+    adminUrl: 'https://studionol.co.kr/admin/bookings/o1',
+  } as Parameters<typeof sendDepositGuideEmails>[0];
+
+  it('고객: 은행·계좌·예금주·금액·기한 행, 이름 escape / 운영자: 건별 링크와 입금 확인 경고', async () => {
+    await sendDepositGuideEmails(base);
+    const [customer, operator] = mockSend.mock.calls.map((c) => c[0] as { html: string; text: string });
+    expect(customer.text).toContain('계좌번호');
+    expect(customer.html).toContain('계좌번호');
+    expect(customer.html).toContain('150,000원');
+    expect(customer.html).toContain('입금 기한');
+    expect(customer.html).toContain('연습실 4시간');
+    expect(customer.html).toContain('입금 확인 전까지 자리를 잡아 둡니다.');
+    expect(customer.html).not.toContain('<b>김입금</b>');
+    expect(operator.html).toContain('href="https://studionol.co.kr/admin/bookings/o1"');
+    expect(operator.html).toContain('입금 확인');
+    expect(operator.html).not.toContain('<b>김입금</b>');
+  });
+});

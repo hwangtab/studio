@@ -3,6 +3,7 @@ import { and, eq, inArray, sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { orders, payments, refunds, type Order } from '../../db/schema';
 import { formatPriceAmount } from '../../data/pricing';
+import { adminUrl, buildEmailLayout } from '../email/layout';
 import { sendEmail } from '../email/resend';
 import { OPERATOR_EMAIL } from '../operatorContact';
 import { refundIdempotencyKey } from './cancel';
@@ -111,6 +112,21 @@ const notifyOperator = async (order: Order, approved: TossPayment): Promise<void
       ]
         .filter(Boolean)
         .join('\n'),
+      html: buildEmailLayout({
+        audience: 'operator',
+        preheader: `${order.customerName} · ${formatPriceAmount(order.totalAmount)}원`,
+        heading: '예약금 결제가 완료되었습니다',
+        rows: [
+          { label: '고객', value: order.customerName },
+          { label: '연락처', value: order.customerPhone, href: `tel:${order.customerPhone.replace(/[^0-9+]/g, '')}` },
+          { label: '이메일', value: order.customerEmail, href: `mailto:${order.customerEmail}` },
+          { label: '금액', value: `${formatPriceAmount(order.totalAmount)}원 (VAT 포함)`, emphasis: true },
+          { label: '결제수단', value: approved.method ?? '-' },
+          { label: '주문번호', value: order.orderNo },
+          ...(approved.receipt?.url ? [{ label: '영수증', value: '토스 영수증 열기', href: approved.receipt.url }] : []),
+        ],
+        cta: { label: '관리자에서 보기', url: adminUrl(`/admin/bookings/${order.id}`) },
+      }),
     });
     if (!result.ok) console.error('[deposit-confirm] 운영자 알림 메일 실패', { orderNo: order.orderNo, code: result.errorCode });
   } catch (error) {

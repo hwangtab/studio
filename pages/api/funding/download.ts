@@ -117,7 +117,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(503).json({ ok: false, message: '지금은 내려받을 수 없습니다. 잠시 후 다시 시도해 주세요.' });
   }
   if (!objectExists) {
-    await alertMissingDownloadObject({ key: target.key, orderNo: order.orderNo });
+    await alertMissingDownloadObject({ key: target.key, orderNo: order.orderNo, orderId: order.id });
     return res.status(503).json({ ok: false, message: '파일을 준비하지 못했습니다. 운영자에게 알렸습니다.' });
   }
 

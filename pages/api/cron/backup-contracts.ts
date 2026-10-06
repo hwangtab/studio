@@ -11,6 +11,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
 import { backupContracts } from '../../../lib/contracts/backup';
 import { isCronAuthorized } from '../../../lib/cron/auth';
+import { buildOperatorAlertHtml } from '../../../lib/email/operatorAlert';
 import { sendEmail } from '../../../lib/email/resend';
 
 export const config = { maxDuration: 60 };
@@ -37,6 +38,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         '계약 데이터 백업이 실패했습니다.\n\n' +
         `사유: ${detail}\n\n` +
         '다음 주기에 다시 시도하지만, 반복되면 Turso와 Blob 설정을 확인해 주세요.',
+      html: buildOperatorAlertHtml({
+        title: '계약 데이터 백업이 실패했습니다',
+        cron: 'cron/backup-contracts',
+        reason: detail,
+        hints: ['다음 주기에 다시 시도하지만, 반복되면 Turso와 Blob 설정을 확인해 주세요.'],
+      }),
     }).catch(() => {});
 
     return res.status(500).json({ ok: false, message: '백업에 실패했습니다.' });

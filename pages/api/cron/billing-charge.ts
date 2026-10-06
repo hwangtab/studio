@@ -24,7 +24,9 @@ import { eq } from 'drizzle-orm';
 import { getDb } from '../../../db/client';
 import { subscriptions, type Subscription } from '../../../db/schema';
 import { isCronAuthorized } from '../../../lib/cron/auth';
+import { buildOperatorAlertHtml } from '../../../lib/email/operatorAlert';
 import { sendEmail } from '../../../lib/email/resend';
+import { adminUrl } from '../../../lib/email/layout';
 import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
 import {
   chargeCycle,
@@ -217,6 +219,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           `대상 ${summary.due}건 / 성공 ${summary.charged}건 / 실패 ${summary.failed}건 / 예외 ${summary.errors.length}건\n\n` +
           summary.errors.map((e) => `- ${e.subscriptionId}: ${e.message}`).join('\n') +
           '\n\n예외가 난 구독은 다음 cron 실행에서 다시 시도됩니다(멱등) — 반복되면 확인이 필요합니다.',
+        html: buildOperatorAlertHtml({
+          title: `정기결제 청구 중 ${summary.errors.length}건에서 예외가 났습니다`,
+          cron: 'cron/billing-charge',
+          rows: [
+            { label: '대상', value: `${summary.due}건` },
+            { label: '성공', value: `${summary.charged}건` },
+            { label: '실패', value: `${summary.failed}건` },
+            { label: '예외', value: `${summary.errors.length}건`, emphasis: true },
+          ],
+          reason: summary.errors.map((e) => `${e.subscriptionId}: ${e.message}`).join('\n'),
+          hints: ['예외가 난 구독은 다음 cron 실행에서 다시 시도됩니다(멱등) — 반복되면 확인이 필요합니다.'],
+          ctaLabel: '구독 관리 열기',
+          ctaUrl: adminUrl('/admin/subscriptions'),
+        }),
       }).catch((mailError: unknown) => console.error('[cron/billing-charge] 알림 메일 실패', mailError));
     }
 
@@ -234,6 +250,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       to: OPERATOR_EMAIL,
       subject: '[Studio NOL] 정기결제 cron 전체 실패',
       text: `정기결제 청구 작업 자체가 실행되지 못했습니다.\n\n사유: ${detail}`,
+      html: buildOperatorAlertHtml({
+        title: '정기결제 청구 작업이 실행되지 못했습니다',
+        cron: 'cron/billing-charge',
+        reason: detail,
+      }),
     }).catch(() => {});
     return res.status(500).json({ ok: false, message: '정기결제 청구에 실패했습니다.' });
   }

@@ -9,6 +9,7 @@ import type { TossKeyChannel, TossPayment } from '../booking/toss';
 import type { FakeToss } from '../../tests/fakes/fakeToss';
 import { SEND_PENDING } from '../ops/notificationSentinel';
 import { liveShowtimeCondition, zoneCapacityCondition, ticketTypeQuotaCondition } from './conditions';
+import { notifyShowPaymentToOperator } from './email';
 import { rowsAffectedOf } from './service';
 import { DECLINE_CODE_PATTERN } from './tossCodes';
 
@@ -341,6 +342,9 @@ export async function confirmShowOrder(
   }
 
   await assignEntryNumbers(input.orderNo);
+  // 신규 확정에서만 한 통 — 이 줄은 orders를 paid로 바꾼 batch를 이긴 실행만 지난다(재전달·경합 패자는 위에서 already_confirmed로 끝난다).
+  // 실패는 삼킨다: 돈은 이미 받았고 확정은 되돌리지 않는다.
+  await notifyShowPaymentToOperator(input.orderNo);
   return { status: 'confirmed' };
 }
 

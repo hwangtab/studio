@@ -12,7 +12,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { isCronAuthorized } from '../../../lib/cron/auth';
 import { sendEmail } from '../../../lib/email/resend';
 import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
-import { formatHealthReport, runHealthCheck } from '../../../lib/ops/healthCheck';
+import { buildOperatorAlertHtml } from '../../../lib/email/operatorAlert';
+import { buildHealthReportHtml, formatHealthReport, runHealthCheck } from '../../../lib/ops/healthCheck';
 
 export const config = { maxDuration: 60 };
 
@@ -37,6 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       to: OPERATOR_EMAIL,
       subject: `[Studio NOL] 운영 점검 — 처리 필요 ${report.issues.length}건${highCount > 0 ? ` (긴급 ${highCount})` : ''}`,
       text: formatHealthReport(report),
+      html: buildHealthReportHtml(report),
     });
 
     return res.status(200).json({ ok: true, issues: report.issues.length });
@@ -55,6 +57,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         '운영 점검이 실행되지 못했습니다. 이상이 없어서 조용한 것이 아니라, 확인 자체를 못 한 상태입니다.\n\n' +
         `사유: ${detail}\n\n` +
         '반복되면 Turso 연결과 크론 설정을 확인해 주세요.',
+      html: buildOperatorAlertHtml({
+        title: '운영 점검이 실행되지 못했습니다',
+        cron: 'cron/health-check',
+        summary: '이상이 없어서 조용한 것이 아니라, 확인 자체를 못 한 상태입니다.',
+        reason: detail,
+        hints: ['반복되면 Turso 연결과 크론 설정을 확인해 주세요.'],
+      }),
     }).catch((e: unknown): { ok: boolean; errorCode?: string } => ({ ok: false, errorCode: String(e) }));
     // 알림이 안 나간 사실을 삼키면 점검 실패가 조용히 묻힌다 — 응답은 그대로 두고 로그만 남긴다.
     if (!alert.ok) console.error('[cron/health-check] 운영자 실패 알림 발송 실패', alert.errorCode);

@@ -2,7 +2,8 @@ import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { sendEmail } from '../email/resend';
-import { CUSTOMER_REPLY_TO } from '../operatorContact';
+import { adminUrl, buildEmailLayout, escapeHtml } from '../email/layout';
+import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 import { SEND_INFLIGHT, SEND_PENDING } from '../ops/notificationSentinel';
 import { isPurgedValue } from '../privacy/orderRetention';
 import { formatPriceAmount } from '../../data/pricing';
@@ -172,6 +173,8 @@ export const resolveShowRecipient = (customerEmail: string, buyerContact: string
 };
 
 interface LoadedShowOrder extends ShowMailData {
+  showId: string;
+  buyerContact: string;
   recipient: string | null;
   orderId: string;
   status: string;
@@ -193,6 +196,8 @@ const loadShowOrder = async (orderNo: string): Promise<LoadedShowOrder | null> =
     .filter((t) => t.status === 'issued')
     .map((t) => ({ code: t.code, entryNumber: t.entryNumber, typeName: typeName.get(t.ticketTypeId) ?? '티켓' }));
   return {
+    showId: show.id,
+    buyerContact: so.buyerContact,
     orderId: order.id,
     status: order.status,
     orderNo: order.orderNo,
@@ -305,4 +310,85 @@ export const sendShowtimeCancelledEmail = async (
   const r = await sendEmail({ to: data.recipient, replyTo: CUSTOMER_REPLY_TO, subject, text, html });
   if (!r.ok) console.error('[shows-email] 회차 취소 안내 발송 실패', { orderNo, code: r.errorCode });
   return { sent: r.ok };
+};
+
+export interface ShowOperatorMailData {
+  orderNo: string;
+  showId: string;
+  showTitle: string;
+  buyerName: string;
+  buyerContact: string;
+  startsAtSec: number;
+  totalAmount: number;
+  tickets: Array<{ typeName: string }>;
+}
+
+/** 연락처가 이메일이면 mailto:, 전화번호면 tel: — 운영자가 받은편지함에서 바로 누른다. 그 밖은 링크 없음. */
+const contactHref = (contact: string): string | undefined => {
+  const t = contact.trim();
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t)) return `mailto:${t}`;
+  const digits = t.replace(/[^\d+]/g, '');
+  return digits.replace(/\D/g, '').length >= 8 ? `tel:${digits}` : undefined;
+};
+
+/** 티켓 종류별 매수 요약 — "일반 2매 · 학생 1매". */
+const ticketSummary = (tickets: Array<{ typeName: string }>): string => {
+  const counts = new Map<string, number>();
+  for (const t of tickets) counts.set(t.typeName, (counts.get(t.typeName) ?? 0) + 1);
+  const parts = [...counts].map(([name, n]) => `${name} ${n}매`);
+  return `${tickets.length}매${counts.size > 0 ? ` (${parts.join(' · ')})` : ''}`;
+};
+
+/** 카드 결제 완료 운영자 알림. 계좌 입금 확인은 운영자가 직접 누른 일이라 보내지 않는다. */
+export const buildShowPaymentOperatorEmail = (d: ShowOperatorMailData): { subject: string; text: string; html: string } => {
+  const when = showDateTimeLabel(d.startsAtSec);
+  const amount = `${formatPriceAmount(d.totalAmount)}원`;
+  const tickets = ticketSummary(d.tickets);
+  const manage = adminUrl(`/admin/shows/${d.showId}`);
+  return {
+    subject: `[공연 예매] 결제 완료 — ${d.showTitle} ${when} · ${d.buyerName}`,
+    text: [
+      '공연 티켓 결제가 완료되었습니다.',
+      `공연: ${d.showTitle}`,
+      `회차: ${when}`,
+      `티켓: ${tickets}`,
+      `금액: ${amount} (VAT 포함)`,
+      `구매자: ${d.buyerName} / ${d.buyerContact}`,
+      `주문번호: ${d.orderNo}`,
+      `관리자: ${manage}`,
+    ].join('\n'),
+    html: buildEmailLayout({
+      audience: 'operator',
+      preheader: `${d.showTitle} ${when} · ${tickets} · ${amount}`,
+      heading: '공연 티켓 결제가 완료되었습니다',
+      paragraphs: [`${escapeHtml(d.buyerName)}님이 카드로 결제했습니다. 티켓은 자동으로 발권되어 고객에게 메일이 나갑니다.`],
+      rows: [
+        { label: '공연', value: d.showTitle },
+        { label: '회차', value: when },
+        { label: '티켓', value: tickets },
+        { label: '금액', value: amount, emphasis: true },
+        { label: '구매자', value: d.buyerName },
+        { label: '연락처', value: d.buyerContact, href: contactHref(d.buyerContact) },
+        { label: '주문번호', value: d.orderNo },
+      ],
+      cta: { label: '관리자에서 보기', url: manage },
+    }),
+  };
+};
+
+/**
+ * 카드 결제로 **새로 확정된** 주문의 운영자 알림 한 통. 호출부: `confirmShowOrder`가 `confirmed`를 돌려주는 자리 한 곳.
+ * 그 자리는 orders가 paid로 바뀐 batch를 이긴 실행만 지나므로(웹훅 재전달·새로고침·경합의 진 쪽은 `already_confirmed`)
+ * 주문당 한 통이다. 실패해도 확정은 그대로이고 로그만 남긴다 — `notificationError`(고객 메일 발송 센티널)는 건드리지 않는다.
+ */
+export const notifyShowPaymentToOperator = async (orderNo: string): Promise<void> => {
+  try {
+    const data = await loadShowOrder(orderNo);
+    if (!data) return;
+    const { subject, text, html } = buildShowPaymentOperatorEmail(data);
+    const r = await sendEmail({ to: OPERATOR_EMAIL, subject, text, html });
+    if (!r.ok) console.error('[shows-email] 운영자 결제 알림 발송 실패', { orderNo, code: r.errorCode });
+  } catch (error) {
+    console.error('[shows-email] 운영자 결제 알림 예외', { orderNo, error: (error as Error).message });
+  }
 };
