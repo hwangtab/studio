@@ -41,7 +41,7 @@ inlineFallback:
 
 좋은 보컬 코치는 단순히 노래를 가르치는 것이 아니라 본인의 목소리에 맞는 발전 경로를 찾아주는 역할을 합니다.
 
-전문 보컬 코치의 역할이 현대적으로 정의된 것은 1970~80년대 미국 팝·록 음악 산업의 확장과 함께입니다. Seth Riggs는 1970년대 LA에서 Speech Level Singing(SLS) 기법을 개발해 Michael Jackson, Stevie Wonder, Barbra Streisand 등의 코치로 활동하면서 현대 팝 보컬 코칭의 표준을 만들었습니다. 그의 접근 — 성대 압박 없이 스피치 레벨에서 고음을 내는 방법 — 은 이후 수백 명의 코치가 인증 프로그램을 통해 전수했습니다. 한국에서는 1990년대 실용음악학과 개설(서울예술대학 1993년)과 함께 보컬 코치 커리큘럼이 체계화됐고, 2000년대 K-POP 트레이닝 시스템에서 SM·JYP·YG의 전속 보컬 트레이너 제도가 보컬 코치 시장의 기준점이 됐습니다.
+Seth Riggs는 Speech Level Singing(SLS) 기법을 개발해 Michael Jackson, Stevie Wonder, Barbra Streisand 등의 코치로 활동했습니다. 그의 접근은 성대 압박 없이 스피치 레벨에서 고음을 내는 방법입니다.
 
 ## 좋은 보컬 코치의 특징
 

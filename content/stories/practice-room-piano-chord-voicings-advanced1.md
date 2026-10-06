@@ -78,7 +78,7 @@ Cmaj13: C-E-G-B-D-F-A (13th 추가)
 **Dm7 쿼털 보이싱:**
 ```
 
-오른손: F-C-G (4도+4도+완전5도)
+오른손: F-C-G (완전5도+완전5도)
 왼손: D-A (5도)
 
 ```
@@ -97,7 +97,7 @@ Cmaj13: C-E-G-B-D-F-A (13th 추가)
 
 ```
 
-Cmaj7#11 크러스터:
+Cmaj9 크러스터:
 오른손: B-C-D-E (2도 간격 밀집)
 왼손: G-C
 
@@ -107,13 +107,13 @@ Cmaj7#11 크러스터:
 
 ### 드롭 2 보이싱
 
-5성부 보이싱에서 위에서 두 번째 음을 한 옥타브 낮추는 기법:
+4성부 보이싱에서 위에서 두 번째 음을 한 옥타브 낮추는 기법:
 
 **Cmaj7 드롭 2:**
 ```
 
-원본: G-E-B-D (위에서 아래)
-드롭 2: B-G-E-D (두 번째 음 G를 아래로)
+원본: B-G-E-C (위에서 아래)
+드롭 2: B-E-C-G (두 번째 음 G를 아래로)
 
 ```
 
@@ -154,7 +154,7 @@ Cmaj7#11 크러스터:
 **G7alt 보이싱 (얼터드):**
 ```
 
-오른손: F-Db-Ab (b7-b9-b13)
+오른손: F-Db-Ab (b7-b5-b9)
 왼손: G-B (루트-3도)
 효과: 극도로 긴장된 얼터드 도미넌트
 
@@ -197,8 +197,8 @@ Cmaj7#11 크러스터:
 ```
 
 Dm7: F-A-C-E (A형 전위)
-G7: B-F-A-D (B형)
-Cmaj7: E-B-D-G (A형)
+G7: F-A-B-D (B형)
+Cmaj7: E-G-B-D (A형)
 
 ```
 
@@ -230,7 +230,7 @@ Cmaj7: E-B-D-G (A형)
 | McCoy Tyner | 쿼털 보이싱의 대가 | A Love Supreme |
 | Herbie Hancock | 크러스터·쿼털 혼용 | Head Hunters |
 | Bill Evans | 루트리스 보이싱 정석 | Portrait in Jazz |
-| Chick Corea | 라틴 텐션 보이싱 | Now He Sings |
+| Chick Corea | 라틴 텐션 보이싱 | Now He Sings, Now He Sobs |
 
 ---
 
