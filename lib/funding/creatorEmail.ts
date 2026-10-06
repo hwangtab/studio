@@ -1,3 +1,4 @@
+import { adminUrl, buildEmailLayout, escapeHtml, type EmailLayoutRow } from '../email/layout';
 import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 
@@ -12,12 +13,26 @@ export const buildCreatorLoginText = (loginUrl: string): string => [
   `문의: ${CUSTOMER_REPLY_TO}`,
 ].join('\n');
 
+export const buildCreatorLoginHtml = (loginUrl: string): string =>
+  buildEmailLayout({
+    preheader: '펀딩 개설 페이지로 들어가는 링크입니다. 15분 동안, 한 번만 쓸 수 있습니다.',
+    heading: '펀딩 개설 로그인 링크',
+    paragraphs: ['펀딩 개설 페이지로 들어가는 링크입니다.'],
+    cta: { label: '개설 페이지로 들어가기', url: loginUrl },
+    notices: [
+      '이 링크는 <strong>15분 동안, 한 번만</strong> 쓸 수 있습니다.',
+      '요청하지 않으셨다면 이 메일을 지우셔도 됩니다. 링크를 누르지 않으면 아무 일도 일어나지 않습니다.',
+      `문의: ${escapeHtml(CUSTOMER_REPLY_TO)}`,
+    ],
+  });
+
 export const sendCreatorLoginEmail = async (email: string, loginUrl: string): Promise<string | null> => {
   const result = await sendEmail({
     to: email,
     replyTo: CUSTOMER_REPLY_TO,
     subject: '[스튜디오 놀] 펀딩 개설 로그인 링크',
     text: buildCreatorLoginText(loginUrl),
+    html: buildCreatorLoginHtml(loginUrl),
   });
   // SendEmailResult는 { ok, status?, errorCode?, errorDetail? }다(lib/email/resend.ts:27).
   return result.ok ? null : (result.errorDetail ?? result.errorCode ?? '메일 발송 실패');
@@ -36,6 +51,20 @@ export const sendCreatorLoginEmail = async (email: string, loginUrl: string): Pr
 const accountNoticeText = (lines: string[]): string =>
   [...lines, '', `이 변경을 요청하지 않으셨다면 바로 알려 주세요: ${CUSTOMER_REPLY_TO}`].join('\n');
 
+const accountNoticeHtml = (input: {
+  heading: string;
+  lead: string;
+  rows: EmailLayoutRow[];
+  notices: string[];
+}): string =>
+  buildEmailLayout({
+    preheader: input.lead,
+    heading: input.heading,
+    paragraphs: [escapeHtml(input.lead)],
+    rows: input.rows,
+    notices: [...input.notices, `이 변경을 요청하지 않으셨다면 바로 알려 주세요: ${escapeHtml(CUSTOMER_REPLY_TO)}`],
+  });
+
 export const buildCreatorNameChangedText = (
   previousName: string,
   nextName: string,
@@ -51,6 +80,18 @@ export const buildCreatorNameChangedText = (
     '이 이름은 승인된 프로젝트 페이지에 개설자 이름으로 표시됩니다.',
   ]);
 
+export const buildCreatorNameChangedHtml = (previousName: string, nextName: string, reason: string): string =>
+  accountNoticeHtml({
+    heading: '개설자 이름이 변경되었습니다',
+    lead: '운영자가 개설자 이름을 고쳤습니다.',
+    rows: [
+      { label: '이전 이름', value: previousName },
+      { label: '새 이름', value: nextName, emphasis: true },
+      { label: '사유', value: reason },
+    ],
+    notices: ['이 이름은 승인된 프로젝트 페이지에 개설자 이름으로 표시됩니다.'],
+  });
+
 export const sendCreatorNameChangedEmail = async (
   email: string,
   previousName: string,
@@ -62,6 +103,7 @@ export const sendCreatorNameChangedEmail = async (
     replyTo: CUSTOMER_REPLY_TO,
     subject: '[스튜디오 놀] 개설자 이름이 변경되었습니다',
     text: buildCreatorNameChangedText(previousName, nextName, reason),
+    html: buildCreatorNameChangedHtml(previousName, nextName, reason),
   });
   return result.ok ? null : `creator:${result.errorCode}`;
 };
@@ -86,19 +128,32 @@ export const buildCreatorEmailChangedText = (
     '이제부터 로그인 링크는 새 주소로만 발송됩니다. 이전 주소로 보내 둔 로그인 링크와 기존 로그인 상태가 모두 무효가 됐습니다.',
   ]);
 
+export const buildCreatorEmailChangedHtml = (previousEmail: string, nextEmail: string, reason: string): string =>
+  accountNoticeHtml({
+    heading: '개설자 로그인 이메일이 변경되었습니다',
+    lead: '운영자가 개설자 계정의 로그인 이메일을 바꿨습니다.',
+    rows: [
+      { label: '이전 주소', value: previousEmail },
+      { label: '새 주소', value: nextEmail },
+      { label: '사유', value: reason },
+    ],
+    notices: ['이제부터 로그인 링크는 새 주소로만 발송됩니다. 이전 주소로 보내 둔 로그인 링크와 기존 로그인 상태가 모두 무효가 됐습니다.'],
+  });
+
 export const sendCreatorEmailChangedEmails = async (
   previousEmail: string,
   nextEmail: string,
   reason: string,
 ): Promise<string | null> => {
   const text = buildCreatorEmailChangedText(previousEmail, nextEmail, reason);
+  const html = buildCreatorEmailChangedHtml(previousEmail, nextEmail, reason);
   const subject = '[스튜디오 놀] 개설자 로그인 이메일이 변경되었습니다';
   const failures: string[] = [];
   for (const [key, to] of [
     ['previous', previousEmail],
     ['next', nextEmail],
   ] as const) {
-    const result = await sendEmail({ to, replyTo: CUSTOMER_REPLY_TO, subject, text });
+    const result = await sendEmail({ to, replyTo: CUSTOMER_REPLY_TO, subject, text, html });
     if (!result.ok) failures.push(`creator:${key}:${result.errorCode}`);
   }
   return failures.length > 0 ? failures.join(', ') : null;
@@ -133,6 +188,21 @@ export const sendCreatorAccountOperatorFallback = async (
       `사유: ${reason}`,
       `실패 사유: ${failureReason}`,
     ].join('\n'),
+    html: buildEmailLayout({
+      audience: 'operator',
+      noticeTone: 'alert',
+      preheader: `${creatorEmail} · 계정 ${what} 변경 알림 메일 실패`,
+      heading: `개설자 계정 변경 알림 메일 실패 — ${what}`,
+      rows: [
+        { label: '대상 개설자', value: creatorEmail, href: `mailto:${creatorEmail}` },
+        { label: '이전 값', value: previousValue },
+        { label: '새 값', value: nextValue },
+        { label: '사유', value: reason },
+        { label: '실패 사유', value: failureReason },
+      ],
+      cta: { label: '개설자 목록 열기', url: adminUrl('/admin/funding/projects') },
+      notices: [`개설자에게 계정 ${escapeHtml(what)} 변경 메일을 보내지 못했습니다. 직접 연락해 주세요.`],
+    }),
   });
   return result.ok ? null : `operator:${result.errorCode}`;
 };

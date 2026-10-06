@@ -229,7 +229,7 @@ describe('저장소에 객체가 없을 때', () => {
     expect(r.body.message).toContain('파일을 준비하지 못했습니다');
     expect(update).not.toHaveBeenCalled();
     expect(r.redirectedTo).toBeUndefined();
-    expect(alertMissingDownloadObject).toHaveBeenCalledWith({ key: KEY, orderNo: 'FND-1' });
+    expect(alertMissingDownloadObject).toHaveBeenCalledWith({ key: KEY, orderNo: 'FND-1', orderId: 1 });
   });
 
   it('HEAD 자체가 실패하면(네트워크·5xx) 재시도를 안내하고 헛경보를 보내지 않는다', async () => {
