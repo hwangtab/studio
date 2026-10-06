@@ -15,7 +15,7 @@ import { safeDbErrorSummary } from './refundAccount';
  */
 
 /** 이 함수들이 다루는 주문 종류(`orders.type`). 펀딩은 자기 표로 따로 센다(lib/funding/bankTransfer.ts). */
-const BANK_DEPOSIT_ORDER_TYPES = sql`('session', 'mixing', 'ticket')`;
+const BANK_DEPOSIT_ORDER_TYPES = sql`('session', 'mixing', 'ticket', 'deposit')`;
 
 export interface SameNameDepositOrder {
   id: string;
@@ -64,8 +64,8 @@ export interface DepositGuideMail {
   applicantLabel: string;
   /** 무엇을 신청했는지 몇 줄(공연·일시·매수 / 상품·일시 / 상품·곡 수). */
   summaryLines: string[];
-  /** 입금 안내를 다시 보고 신청을 취소할 수 있는 고객 화면(관리 토큰 포함). */
-  manageUrl: string;
+  /** 입금 안내를 다시 보고 신청을 취소할 수 있는 고객 화면(관리 토큰 포함). 그런 화면이 없는 주문(예약금 링크)은 비운다. */
+  manageUrl?: string;
   /** 운영자 메일에 싣는 관리자 화면 주소. */
   adminUrl: string;
   /** 고객 안내 메일을 보내지 않는다(같은 주소 발송 상한에 걸린 경우). 운영자 알림은 그대로 간다. */
@@ -100,7 +100,7 @@ export const sendDepositGuideEmails = async (m: DepositGuideMail): Promise<strin
         ...m.summaryLines,
         `주문번호: ${m.orderNo}`,
         '',
-        `입금 안내 다시 보기·신청 취소: ${m.manageUrl}`,
+        ...(m.manageUrl ? [`입금 안내 다시 보기·신청 취소: ${m.manageUrl}`] : []),
         '문의: 010-4255-7893',
       ].join('\n'),
     });

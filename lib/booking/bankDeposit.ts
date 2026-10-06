@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
+import { formatPriceAmount } from '../../data/pricing';
 import { SEND_PENDING } from '../ops/notificationSentinel';
 import { BANK_DEPOSIT_GUIDE_DAYS } from '../payments/bankAccount';
 import {
@@ -16,6 +17,7 @@ import { recordDepositGuideResult, rowsOf, sendDepositGuideEmails } from '../pay
 import { allowCustomerDepositGuideMail } from '../payments/depositGuideThrottle';
 import { safeDbErrorSummary } from '../payments/refundAccount';
 import { deliverPostConfirmation, ensureBookingEvent, type BookingOrder } from './confirm';
+import { sendDepositLinkPaidEmail } from './email';
 import { calendarForService, deleteBookingEvent, renameBookingEvent } from './gcal';
 import { kstDateString } from './kst';
 import { getMixingProduct } from './mixing-products';
@@ -46,7 +48,17 @@ export const bookingDepositDeadline = (order: { createdAt: Date }, booking: { st
 const manageUrlOf = (order: { orderNo: string; manageToken: string }): string =>
   `${SITE_URL}/ko/booking/manage/${order.orderNo}?token=${order.manageToken}`;
 
+/** 예약금 결제 링크 주문(`orders.type = 'deposit'`) — 하위 표가 없고, 고객용 관리 화면(booking/manage)도 없다. */
+const isDepositLink = (order: { type: string }): boolean => order.type === 'deposit';
+
 const summaryOf = (order: BookingOrder): { kindLabel: string; applicantLabel: string; lines: string[] } => {
+  if (isDepositLink(order)) {
+    // 품목명은 DB에 저장하지 않는다(data/paymentLinks.ts) — 고정 문구만.
+    return {
+      kindLabel: '예약금', applicantLabel: '신청하신 분',
+      lines: [`예약금 ${formatPriceAmount(order.totalAmount)}원 (VAT 포함)`],
+    };
+  }
   if (order.type === 'mixing') {
     const w = order.workOrders[0];
     const name = (w && getMixingProduct(w.productId)?.nameKo) ?? w?.serviceType ?? '믹싱·마스터링';
@@ -87,7 +99,7 @@ export const deliverBookingDepositGuide = async (
       customerPhone: order.customerPhone, totalAmount: order.totalAmount,
       deadline: bookingDepositDeadline(order, order.bookings[0]),
       kindLabel: s.kindLabel, applicantLabel: s.applicantLabel, summaryLines: s.lines,
-      manageUrl: manageUrlOf(order), adminUrl: `${SITE_URL}/admin/bookings/${order.id}`,
+      manageUrl: isDepositLink(order) ? undefined : manageUrlOf(order), adminUrl: `${SITE_URL}/admin/bookings/${order.id}`,
     });
   } catch (error) {
     console.error('[booking-bank-deposit] 입금 안내 메일 발송 중 예외', { orderNo, error: safeDbErrorSummary(error) });
@@ -157,6 +169,44 @@ const findById = async (orderId: string): Promise<BookingOrder | undefined> =>
   });
 
 /**
+ * 예약금 결제 링크 주문의 **입금 확인** — 하위 표(예약·믹싱)가 없고 캘린더·확정 후처리도 없다.
+ * `awaiting_deposit` → `paid` + 결제 행(`bankDepositPaymentKey`)을 한 batch로, 낙관적 조건 한 문장이라
+ * 두 번 눌러도 한쪽만 이긴다. 그다음 고객에게 "입금 확인" 메일 한 통 — 입금 안내 메일이 약속한 알림이다.
+ * 메일 실패는 확정을 뒤집지 않고 `notification_error`에 사유를 남긴다(헬스체크가 본다).
+ * `send_pending` 센티널은 쓰지 않는다 — 이어받아 처리할 후처리가 없다.
+ */
+const confirmDepositLinkBankDeposit = async (order: BookingOrder, now: Date): Promise<BookingDepositOutcome> => {
+  const db = getDb();
+  const paymentKey = bankDepositPaymentKey(order.orderNo);
+  const isPaidNow = sql`EXISTS (SELECT 1 FROM orders WHERE id = ${order.id} AND status = 'paid')`;
+  const [claim] = await db.batch([
+    db.run(sql`
+      UPDATE orders SET status = 'paid', notification_error = NULL, updated_at = unixepoch()
+      WHERE id = ${order.id} AND status = ${AWAITING_DEPOSIT}
+    `),
+    db.run(sql`
+      INSERT INTO payments (id, order_id, payment_key, method, approved_at, receipt_url, raw_response)
+      SELECT ${randomUUID().replace(/-/g, '')}, ${order.id}, ${paymentKey}, ${BANK_DEPOSIT_PAYMENT_METHOD}, ${Math.floor(now.getTime() / 1000)}, NULL, NULL
+      WHERE ${isPaidNow} AND NOT EXISTS (SELECT 1 FROM payments WHERE payment_key = ${paymentKey})
+    `),
+  ]);
+  if (rowsOf(claim) === 0) {
+    return { ok: false, code: 'invalid_state', message: '이미 확인됐거나 입금을 확인할 수 있는 상태가 아닙니다(미입금 취소된 신청은 확정할 수 없습니다). 새로고침해 주세요.' };
+  }
+  let failure: string | null = null;
+  try {
+    failure = await sendDepositLinkPaidEmail({ ...order, status: 'paid' });
+  } catch (error) {
+    console.error('[booking-bank-deposit] 예약금 입금 확인 메일 예외', { orderNo: order.orderNo, error: safeDbErrorSummary(error) });
+    failure = error instanceof Error ? error.message : String(error);
+  }
+  if (failure) {
+    await getDb().run(sql`UPDATE orders SET notification_error = ${failure} WHERE id = ${order.id}`).catch(() => {});
+  }
+  return { ok: true, emailSent: !failure };
+};
+
+/**
  * **입금 확인** — 운영자가 통장에서 입금을 확인하고 누른다. `awaiting_deposit` → `paid`.
  *
  * - 낙관적 조건 한 문장: `UPDATE … WHERE status = 'awaiting_deposit'`. 두 번 눌러도(두 운영자가 동시에 눌러도)
@@ -170,9 +220,10 @@ const findById = async (orderId: string): Promise<BookingOrder | undefined> =>
  */
 export const confirmBookingBankDeposit = async (input: { orderId: string; now: Date }): Promise<BookingDepositOutcome> => {
   const order = await findById(input.orderId);
-  if (!order || (order.type !== 'session' && order.type !== 'mixing')) {
+  if (!order || (order.type !== 'session' && order.type !== 'mixing' && order.type !== 'deposit')) {
     return { ok: false, code: 'not_found', message: '주문을 찾을 수 없습니다.' };
   }
+  if (isDepositLink(order)) return confirmDepositLinkBankDeposit(order, input.now);
   const db = getDb();
   const approvedAt = Math.floor(input.now.getTime() / 1000);
   const paymentKey = bankDepositPaymentKey(order.orderNo);
@@ -237,7 +288,7 @@ export const confirmBookingBankDeposit = async (input: { orderId: string; now: D
  */
 export const cancelAwaitingBookingDeposit = async (input: { orderId: string }): Promise<BookingDepositOutcome> => {
   const order = await findById(input.orderId);
-  if (!order || (order.type !== 'session' && order.type !== 'mixing')) {
+  if (!order || (order.type !== 'session' && order.type !== 'mixing' && order.type !== 'deposit')) {
     return { ok: false, code: 'not_found', message: '주문을 찾을 수 없습니다.' };
   }
   const db = getDb();

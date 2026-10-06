@@ -141,7 +141,8 @@ export const serializeBookingForAdmin = (
     customerPhone: order.customerPhone,
     customerEmail: order.customerEmail,
     productId: isMixing ? (workOrder?.productId ?? '') : (booking?.productId ?? ''),
-    productName: isMixing ? (mixingProduct?.nameKo ?? workOrder?.serviceType ?? '-') : (product?.nameKo ?? booking?.serviceType ?? '-'),
+    // 예약금 결제 링크 주문은 품목명 칸이 없다(data/paymentLinks.ts) — 고정 라벨.
+    productName: order.type === 'deposit' ? '예약금' : isMixing ? (mixingProduct?.nameKo ?? workOrder?.serviceType ?? '-') : (product?.nameKo ?? booking?.serviceType ?? '-'),
     serviceType: isMixing ? (workOrder?.serviceType ?? '') : (booking?.serviceType ?? ''),
     roomNumber: booking?.roomNumber ?? null,
     startAt: booking ? booking.startAt.toISOString() : null,

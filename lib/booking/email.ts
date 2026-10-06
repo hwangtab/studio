@@ -11,6 +11,26 @@ import { kstDateString } from './kst';
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr').replace(/\/+$/, '');
 
+/**
+ * 예약금 결제 링크 주문(`orders.type = 'deposit'`)의 **계좌 입금 확인** 메일 — 입금 안내 메일이 "입금이 확인되면
+ * 메일로 알려 드립니다"라고 약속한 그 알림이다. 고객 한 통뿐이고(운영자가 직접 누른 확인이라 알림 불필요),
+ * 관리 링크는 없다(deposit 주문엔 예약 확인 페이지가 없다). 실패하면 사유, 성공이면 null.
+ * (sendCustomerEmail은 아래에 const로 선언돼 있어, 호출 시점에는 이미 초기화돼 있다.)
+ */
+export const sendDepositLinkPaidEmail = async (order: Order): Promise<string | null> =>
+  sendCustomerEmail(order, {
+    to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
+    subject: '[스튜디오 놀] 입금이 확인되었습니다 — 예약금',
+    text: [
+      `${order.customerName}님, 예약금 입금이 확인되었습니다.`,
+      `금액: ${formatPriceAmount(order.totalAmount)}원 (VAT 포함)`,
+      `주문번호: ${order.orderNo}`,
+      '',
+      '환불 등 문의는 카카오톡 또는 전화로 해 주세요.',
+      '문의: 010-4255-7893',
+    ].join('\n'),
+  });
+
 const kstTimeLabel = (d: Date): string => {
   const t = new Date(d.getTime() + 9 * 3600 * 1000);
   return `${kstDateString(d)} ${String(t.getUTCHours()).padStart(2, '0')}:00`;

@@ -647,6 +647,10 @@ export const cancelBookingWithRefund = async (input: CancelInput): Promise<Cance
   const order = await findOrderByOrderNo(input.orderNo);
   if (!order) return { ok: false, code: 'not_found', message: '주문을 찾을 수 없습니다.' };
 
+  // 예약금 결제 링크 주문은 예약·믹싱 행이 없다 — 이 경로의 환불 로직을 타면 안 된다(환불은 토스 콘솔·계좌 송금).
+  if (order.type === 'deposit') {
+    return { ok: false, code: 'invalid_state', message: '예약금 주문은 여기서 환불할 수 없습니다. 토스 콘솔 또는 계좌 송금으로 처리해 주세요.' };
+  }
   if (order.type === 'mixing') return cancelMixingOrder(order, order.workOrders[0], order.payments[0], input);
   return cancelSessionBooking(order, order.payments[0], input);
 };
