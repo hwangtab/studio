@@ -17,6 +17,12 @@ export const BANK_ACCOUNT = {
   accountHolder: '황경하 / 스튜디오 놀',
 } as const;
 
+/** 영어 화면용 은행·예금주 표기(공연 /en). 계좌번호는 위 값 하나다. 예금주 실명은 은행 앱이 한글로 보여 주므로 함께 적는다. */
+export const BANK_ACCOUNT_EN = {
+  bankName: 'KakaoBank',
+  accountHolder: '황경하 (Hwang Kyungha) / Studio NOL',
+} as const;
+
 /**
  * 입금 안내에 적는 기한(일). **안내용일 뿐이다 — 지나도 신청을 자동으로 취소하지 않는다.**
  *

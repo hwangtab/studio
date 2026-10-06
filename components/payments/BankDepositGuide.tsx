@@ -3,7 +3,11 @@ import { useState } from 'react';
 
 import { Button } from '../ui/Button';
 import { formatPriceAmount } from '../../data/pricing';
-import { BANK_ACCOUNT, formatKstDeadline } from '../../lib/payments/bankAccount';
+import { BANK_ACCOUNT, BANK_ACCOUNT_EN, formatKstDeadline } from '../../lib/payments/bankAccount';
+
+const EN_DEADLINE = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'Asia/Seoul', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
+});
 
 /**
  * 계좌 입금 안내 — 결제 공용. 지금은 펀딩 확인 페이지(`pages/[locale]/funding/manage/[orderNo].tsx`)가
@@ -23,7 +27,7 @@ import { BANK_ACCOUNT, formatKstDeadline } from '../../lib/payments/bankAccount'
  *
  * 금액은 URL이 아니라 서버가 다시 읽은 값이다(호출부 SSR).
  */
-export default function BankDepositGuide({ amount, deadline, customerName, applicantLabel = '신청하신 분' }: {
+export default function BankDepositGuide({ amount, deadline, customerName, applicantLabel = '신청하신 분', locale = 'ko' }: {
   amount: number;
   /** 안내한 입금 기한(ISO) — 펀딩은 `funding_pledges.hold_expires_at`. */
   deadline: string;
@@ -31,7 +35,10 @@ export default function BankDepositGuide({ amount, deadline, customerName, appli
   customerName: string;
   /** 주문자를 부르는 말 — 펀딩 "신청하신 분", 예약 "예약하신 분", 공연 "예매하신 분" 등. */
   applicantLabel?: string;
+  /** 영어 화면(공연 /en)이면 'en'. 화면 구성·크기는 같고 말만 바뀐다. */
+  locale?: 'ko' | 'en';
 }) {
+  const en = locale === 'en';
   const [copied, setCopied] = useState(false);
   const [copyFailed, setCopyFailed] = useState(false);
 
@@ -50,16 +57,16 @@ export default function BankDepositGuide({ amount, deadline, customerName, appli
   return (
     <section aria-labelledby="deposit-guide-title" className="mt-6">
       <h2 id="deposit-guide-title" className="text-center text-2xl font-bold text-gray-900 sm:text-3xl dark:text-white">
-        아래 계좌로 입금해 주세요
+        {en ? 'Please transfer to the account below' : '아래 계좌로 입금해 주세요'}
       </h2>
 
       {/* 계좌 — 가장 크게 */}
       <div className="mt-6 rounded-xl bg-gray-100 px-3 py-6 text-center sm:p-6 dark:bg-gray-800">
-        <p className="text-lg text-gray-700 dark:text-gray-300">은행 · 예금주</p>
+        <p className="text-lg text-gray-700 dark:text-gray-300">{en ? 'Bank · account holder' : '은행 · 예금주'}</p>
         <p className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
-          {BANK_ACCOUNT.bankName} · {BANK_ACCOUNT.accountHolder}
+          {en ? `${BANK_ACCOUNT_EN.bankName} (${BANK_ACCOUNT.bankName}) · ${BANK_ACCOUNT_EN.accountHolder}` : `${BANK_ACCOUNT.bankName} · ${BANK_ACCOUNT.accountHolder}`}
         </p>
-        <p className="text-lg text-gray-700 dark:text-gray-300">계좌번호</p>
+        <p className="text-lg text-gray-700 dark:text-gray-300">{en ? 'Account number' : '계좌번호'}</p>
         {/*
           계좌번호는 **절대 줄바꿈하지 않는다** — 은행 창구·ATM 앞에서 옮겨 적는 숫자라 "3333-12-" / "5480849"로
           쪼개지면 두 줄을 이어 읽다 틀린다(2026-10-04 예약 확인 카드 안 390px에서 실제로 쪼개졌다). 대신 글자 크기를
@@ -70,42 +77,42 @@ export default function BankDepositGuide({ amount, deadline, customerName, appli
           {BANK_ACCOUNT.accountNumber}
         </p>
         <Button type="button" size="lg" onClick={copy}>
-          {copied ? '복사했습니다' : '계좌번호 복사하기'}
+          {en ? (copied ? 'Copied' : 'Copy account number') : copied ? '복사했습니다' : '계좌번호 복사하기'}
         </Button>
-        <output aria-live="polite" className="sr-only">{copied ? '계좌번호를 복사했습니다' : ''}</output>
+        <output aria-live="polite" className="sr-only">{copied ? (en ? 'Account number copied' : '계좌번호를 복사했습니다') : ''}</output>
         {copyFailed && (
           <p role="alert" className="mt-3 text-base text-red-700 dark:text-red-300">
-            복사하지 못했습니다. 위 계좌번호를 보고 직접 적어 주세요.
+            {en ? 'Could not copy. Please copy the account number above by hand.' : '복사하지 못했습니다. 위 계좌번호를 보고 직접 적어 주세요.'}
           </p>
         )}
       </div>
 
       {/* 금액 */}
       <div className="mt-6 text-center">
-        <p className="text-lg text-gray-700 dark:text-gray-300">입금하실 금액</p>
-        <p className="text-3xl font-bold text-gray-900 sm:text-4xl dark:text-white">{formatPriceAmount(amount)}원</p>
+        <p className="text-lg text-gray-700 dark:text-gray-300">{en ? 'Amount to send' : '입금하실 금액'}</p>
+        <p className="text-3xl font-bold text-gray-900 sm:text-4xl dark:text-white">{en ? `₩${formatPriceAmount(amount)}` : `${formatPriceAmount(amount)}원`}</p>
       </div>
 
       {/* 보내는 분 이름 — 가장 눈에 띄게(2px 강조 테두리) */}
       <Notice tone="brand" icon={false} className="mt-6 block text-center">
         <p className="text-lg font-bold text-primary sm:text-xl dark:text-primary-lighter">
-          입금하실 때 보내는 분 이름은 {applicantLabel} 성함으로 해 주세요.
+          {en ? `Please send the transfer under the name of the ${applicantLabel}.` : `입금하실 때 보내는 분 이름은 ${applicantLabel} 성함으로 해 주세요.`}
         </p>
         <p className="mt-1 text-base text-gray-700 dark:text-gray-300">
-          {customerName}님 성함과 금액으로 입금을 확인합니다.
+          {en ? `We match the transfer by the name “${customerName}” and the amount.` : `${customerName}님 성함과 금액으로 입금을 확인합니다.`}
         </p>
       </Notice>
 
       {/* 기한 — 안내일 뿐이다(자동 취소 없음). 카운트다운으로 재촉하지 않는다. */}
       <div className="mt-6 text-center">
-        <p className="text-lg text-gray-700 dark:text-gray-300">입금 기한</p>
+        <p className="text-lg text-gray-700 dark:text-gray-300">{en ? 'Transfer by' : '입금 기한'}</p>
         <p className="text-2xl font-bold text-gray-900 sm:text-3xl dark:text-white">
-          {formatKstDeadline(new Date(deadline))}까지(한국시간)
+          {en ? `${EN_DEADLINE.format(new Date(deadline))} (KST)` : `${formatKstDeadline(new Date(deadline))}까지(한국시간)`}
         </p>
       </div>
 
       <p className="mt-6 text-center text-lg text-gray-700 dark:text-gray-300">
-        입금이 확인되면 메일로 알려 드립니다(영업일 1일 이내).
+        {en ? 'We email you once the transfer is confirmed (within 1 business day).' : '입금이 확인되면 메일로 알려 드립니다(영업일 1일 이내).'}
       </p>
     </section>
   );

@@ -11,24 +11,27 @@ import { ChoiceCard } from '../ui/Choice';
  *
  * `bankBlockedMessage`가 있으면 계좌 줄을 막고 그 이유를 한 줄로 보인다(시작 임박 — lib/payments/bankDeposit.ts).
  */
-export default function PaymentMethodChoice({ name, value, onChange, bankBlockedMessage, confirmLabel = '확정' }: {
+export default function PaymentMethodChoice({ name, value, onChange, bankBlockedMessage, confirmLabel = '확정', locale = 'ko' }: {
   name: string;
   value: CheckoutPaymentMethod;
   onChange: (next: CheckoutPaymentMethod) => void;
   bankBlockedMessage?: string | null;
   /** 입금 확인 뒤 일어나는 일 — "예약이 확정", "티켓이 발권", "주문이 접수". */
   confirmLabel?: string;
+  /** 영어 화면(공연 /en)이면 'en' — confirmLabel도 영어로 넘긴다("your ticket is issued"). */
+  locale?: 'ko' | 'en';
 }) {
   const blocked = Boolean(bankBlockedMessage);
+  const en = locale === 'en';
   return (
-    <div className="grid gap-2" role="radiogroup" aria-label="결제 방법">
+    <div className="grid gap-2" role="radiogroup" aria-label={en ? 'Payment method' : '결제 방법'}>
       <ChoiceCard
         name={name}
         value="toss"
         checked={value === 'toss'}
         onChange={() => onChange('toss')}
-        title="카드·간편결제"
-        description={`결제가 끝나면 바로 ${confirmLabel}됩니다.`}
+        title={en ? 'Card / mobile pay' : '카드·간편결제'}
+        description={en ? `Once payment is complete, ${confirmLabel} right away.` : `결제가 끝나면 바로 ${confirmLabel}됩니다.`}
       />
       <ChoiceCard
         name={name}
@@ -36,8 +39,13 @@ export default function PaymentMethodChoice({ name, value, onChange, bankBlocked
         checked={value === 'bank_transfer'}
         disabled={blocked}
         onChange={() => onChange('bank_transfer')}
-        title="계좌로 직접 입금"
-        description={bankBlockedMessage ?? `은행·ATM에서 보내실 수 있습니다. 입금을 확인하면 ${confirmLabel}되고 메일로 알려 드립니다.`}
+        title={en ? 'Bank transfer (Korean bank account)' : '계좌로 직접 입금'}
+        description={
+          bankBlockedMessage ??
+          (en
+            ? `Send it from a Korean bank or ATM. Once we confirm the transfer, ${confirmLabel} and we let you know by email.`
+            : `은행·ATM에서 보내실 수 있습니다. 입금을 확인하면 ${confirmLabel}되고 메일로 알려 드립니다.`)
+        }
       />
     </div>
   );
