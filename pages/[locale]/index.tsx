@@ -24,6 +24,7 @@ import FAQSection from '../../components/ui/FAQSection';
 import ContactCTA from '../../components/common/ContactCTA';
 import { getHomeData, type HomeData } from '../../data/home';
 import { getPortfolioItems } from '../../data/portfolio';
+import { getExcerptForPortfolio, toGlobalTrack } from '../../data/audioExcerpts';
 import HomeReleaseStrip, { type ReleaseCover } from '../../components/home/HomeReleaseStrip';
 import HomeServiceTracklist from '../../components/home/HomeServiceTracklist';
 import HomeStudioSpec, { type StudioGearRow } from '../../components/home/HomeStudioSpec';
@@ -423,12 +424,17 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     .filter((item) => item.featured && item.image)
     .sort((a, b) => (b.releaseDate || '').localeCompare(a.releaseDate || ''))
     .slice(0, 12)
-    .map(({ id, title, image, releaseDate }) => ({
-      id,
-      title,
-      image: image as string,
-      ...(releaseDate ? { releaseDate } : {}),
-    }));
+    .map(({ id, title, image, releaseDate }) => {
+      // 30초 발췌가 있는 커버에는 재생 버튼(라이너 노트 §3-6 c). 글로벌 플레이어가 받는 모양으로 미리 만든다.
+      const excerpt = getExcerptForPortfolio(id);
+      return {
+        id,
+        title,
+        image: image as string,
+        ...(releaseDate ? { releaseDate } : {}),
+        ...(excerpt ? { excerpt: toGlobalTrack(excerpt, locale, 'HomeReleaseStrip', `/${locale}/portfolio/${id}`) } : {}),
+      };
+    });
 
   // 홈 스튜디오 섹션의 대표 장비 — 스튜디오 정보 페이지와 같은 data/equipment.ts에서 앞쪽 항목만.
   // getStaticProps에서 줄여 넘긴다(장비·이미지 전체 데이터를 클라이언트 번들에 싣지 않게).

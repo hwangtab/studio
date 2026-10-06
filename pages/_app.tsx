@@ -22,6 +22,7 @@ import { isPrivateAnalyticsPath } from '../lib/analytics/privatePaths';
 import { isAdminRoute } from '../lib/adminRoute';
 import { hashId, historyKey, pinHashTarget, restoreScroll, routeTransitionKey, scrollMemory, beforePopStateForScroll } from '../lib/routeScroll';
 import { DesignEditionContext } from '../lib/designEdition';
+import GlobalPlayerProvider from '../components/audio/GlobalPlayerProvider';
 
 
 
@@ -371,6 +372,8 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
         <ErrorBoundary locale={locale}>
           <LazyMotion features={domAnimation}>
             <MotionConfig reducedMotion={reducedMotion}>
+              {/* 글로벌 미니 플레이어(라이너 노트 §3-6) — Layout 바깥이라 라우트가 바뀌어도 소리가 이어진다. */}
+              <GlobalPlayerProvider>
               <Layout hasHero={hasHero} locale={locale}>
                 {/* 페이지 전환 애니메이션은 없다. 예전엔 AnimatePresence(mode="wait")로 감쌌는데 exit·enter
                     애니메이션이 이미 꺼져 있었고(흰 배경 번쩍임 때문), 남은 효과는 옛 페이지를 한 커밋 더
@@ -392,6 +395,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
                     내보낸다(lib/analytics/privatePaths). */}
                 {!isPrivateAnalyticsPath(router.asPath) && <DeferredAnalytics />}
               </Layout>
+              </GlobalPlayerProvider>
             </MotionConfig>
           </LazyMotion>
         </ErrorBoundary>

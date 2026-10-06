@@ -331,6 +331,22 @@ inset 스펙큘러를 지운다.
 - 카드 재질: 종이 위 흰 카드 + 괘선(`variant="outline"` + `bg-white`), 그림자 없음. 추천 카드만 `border-primary ring-1`.
   배지는 `actions.popularBadge`("가장 많이 고르는") — 영문 `RECOMMENDED`는 없앴다.
 
+### 소리 — `components/audio/GlobalPlayerProvider.tsx` · `GlobalPlayerDock` · `ServiceExcerpt` · `CoverPlayButton` (2026-10-06)
+
+사이트의 소리는 **한 번에 하나만** 난다(`lib/audio/audioBus.ts`: 재생을 시작하는 쪽이 `announcePlay`, 나머지는 `onOtherPlay`로
+멈춘다 — 글로벌 플레이어·믹싱 전후 비교·포트폴리오 플레이어 셋이 서로 모른 채 겹치지 않는다). 규칙:
+
+- 30초 발췌·커버 재생은 전부 `useGlobalPlayer().play(track)` 하나로 들어온다. `<audio>`는 `_app`의 Provider가 하나만 갖고
+  **첫 재생에서야 만든다**(`preload="none"`, 재생 전 0바이트 — /ko/portfolio LCP 21s 사고의 교훈). 도크 청크도 첫 재생 때 받는다.
+- 도크는 잉크(gray-950) 단색, 데스크톱 좌하단(우하단은 카카오 FAB 행), 모바일 바닥 바. 전폭 하단 바가 이미 있는 화면
+  (스토리·펀딩·공연 상세, 결제·예약 마법사)에서는 모바일 바를 숨긴다. 파형 막대는 트랙 id로 고정된 장식이다 — 실제 파형이 아니다.
+- 재생 아이콘은 버튼이 아니라 오디오의 `playing`/`pause` 이벤트를 따라간다(블루투스 해제·통화·미디어 키).
+- 발췌 데이터는 `data/audioExcerpts.ts` 한 곳. 파일은 `public/audio/excerpt-<slug>-<YYYYMMDD>.mp3`(256k·30초·페이드 0.25/0.8).
+  LP의 발췌 줄(`ServiceExcerpt`)은 **절이 아니라 절 안의 블록**이고, 그 서비스에 발췌가 없으면 아무것도 그리지 않는다.
+  커버 위 재생 버튼(`CoverPlayButton`)은 `<a>` 안이 아니라 **형제**로, 정사각 오버레이 안에 44px.
+- 계측은 `micro_audio_play`(트랙당 세션 한 번, component = 자리, cta_id = 트랙 id). 리드가 아니다.
+- 작은 썸네일 반경은 `rounded-lg`(`rounded-md`는 §3대로 없다).
+
 ### 서비스 링크 pill — `components/ui/ServiceLinkPill.tsx`
 
 브랜드색 아웃라인 링크 pill(`<ServiceLinkPill href tone="primary|secondary|accent">라벨</ServiceLinkPill>`).

@@ -4,6 +4,7 @@ import { ArrowRight, Pause, Play } from '@/lib/lucide-icons';
 import { Button } from '../ui/Button';
 import { cn } from '../../lib/utils';
 import { trackMicroEvent } from '../../utils/analytics';
+import { announcePlay, onOtherPlay } from '../../lib/audio/audioBus';
 import { MIX_COMPARE_SETS, type MixCompareCopy, type MixCompareVariant } from '../../data/mixCompare';
 
 type Side = 'before' | 'after';
@@ -162,6 +163,16 @@ export default function MixComparePlayer({
     };
   }, [paint, startLoop, stopLoop, sources]);
 
+  // 다른 소스(글로벌 미니 플레이어·포트폴리오 플레이어)가 울리면 멈춘다 — 한 번에 하나만(lib/audio/audioBus).
+  React.useEffect(() => onOtherPlay('mix-compare', () => {
+    const el = audios.current[activeRef.current];
+    if (el && !el.paused) {
+      el.pause();
+      stopLoop();
+      setPlaying(false);
+    }
+  }), [stopLoop]);
+
   /** 메타데이터가 아직 없으면 준비되는 대로 위치를 옮긴다(iOS Safari는 그 전의 currentTime 설정을 무시한다). */
   const seekWhenReady = (el: HTMLAudioElement, seconds: number) => {
     if (el.readyState >= 1) {
@@ -185,6 +196,7 @@ export default function MixComparePlayer({
       return;
     }
     setFailed(false);
+    announcePlay('mix-compare');
     try {
       await el.play();
     } catch {

@@ -15,6 +15,7 @@ import { Section } from '../../../components/ui/Section';
 import ReleaseConsultationSteps from '../../../components/release/ReleaseConsultationSteps';
 import ReleaseDiscographySection from '../../../components/release/ReleaseDiscographySection';
 import MixCompareBlock from '../../../components/audio/MixCompareBlock';
+import ServiceExcerpt from '../../../components/audio/ServiceExcerpt';
 import ReleaseHeroCtas from '../../../components/release/ReleaseHeroCtas';
 import ReleaseProducerIntro from '../../../components/release/ReleaseProducerIntro';
 import ReleaseReviewsSection from '../../../components/release/ReleaseReviewsSection';
@@ -322,7 +323,13 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
         viewAllLabel={t('releaseProject.discography.viewAll')}
         items={portfolioItems.filter((item) => item.featured)}
         onSelectItem={loadError ? undefined : openModal}
-        footer={<MixCompareBlock locale={locale} component="ReleaseMixCompare" />}
+        footer={
+          <>
+            <MixCompareBlock locale={locale} component="ReleaseMixCompare" />
+            {/* 라이너 노트 §3-6: 발매작 30초 발췌 — 믹싱 비교 블록과 같은 자리(절 안의 블록). */}
+            <ServiceExcerpt locale={locale} service="release" component="ReleaseExcerpt" className="mt-6" />
+          </>
+        }
       />
 
       {/* 최근 작업 노트 spotlight — 검증된 productionNotes 3건 */}

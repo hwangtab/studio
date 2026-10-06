@@ -1168,7 +1168,14 @@
     "highFidelity": "고음질 오디오",
     "trackLabel": "트랙 {{number}}",
     "volume": "볼륨",
-    "playbackProgress": "재생 진행률"
+    "playbackProgress": "재생 진행률",
+    "global": {
+      "region": "지금 재생 중",
+      "close": "플레이어 닫기",
+      "error": "재생할 수 없습니다. 잠시 뒤 다시 눌러 주세요.",
+      "listen": "30초 듣기",
+      "excerptTitle": "스튜디오 놀에서 녹음·믹싱한 30초"
+    }
   },
   "gallery": {
     "previous": "이전 이미지",

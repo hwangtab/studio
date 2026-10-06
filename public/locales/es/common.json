@@ -1168,7 +1168,14 @@
     "highFidelity": "Audio de alta fidelidad",
     "trackLabel": "Pista {{number}}",
     "volume": "Volumen",
-    "playbackProgress": "Progreso de reproducción"
+    "playbackProgress": "Progreso de reproducción",
+    "global": {
+      "region": "Reproduciendo",
+      "close": "Cerrar reproductor",
+      "error": "No se pudo reproducir. Inténtalo de nuevo en un momento.",
+      "listen": "Escuchar 30 s",
+      "excerptTitle": "30 segundos grabados y mezclados en Studio NOL"
+    }
   },
   "gallery": {
     "previous": "Imágenes anteriores",

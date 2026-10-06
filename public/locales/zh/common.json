@@ -1168,7 +1168,14 @@
     "highFidelity": "高保真音频",
     "trackLabel": "第 {{number}} 首",
     "volume": "音量",
-    "playbackProgress": "播放进度"
+    "playbackProgress": "播放进度",
+    "global": {
+      "region": "正在播放",
+      "close": "关闭播放器",
+      "error": "无法播放，请稍后再试。",
+      "listen": "试听30秒",
+      "excerptTitle": "在 Studio NOL 录音·混音的30秒"
+    }
   },
   "gallery": {
     "previous": "上一张图片",

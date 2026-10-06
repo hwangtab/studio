@@ -2,6 +2,8 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from '@/lib/lucide-icons';
+import CoverPlayButton from '../audio/CoverPlayButton';
+import type { GlobalTrack } from '../audio/GlobalPlayerProvider';
 
 export interface ReleaseCover {
   id: string;
@@ -9,6 +11,8 @@ export interface ReleaseCover {
   title: string;
   image: string;
   releaseDate?: string;
+  /** 30초 발췌(data/audioExcerpts.ts)가 있으면 커버 위에 재생 버튼이 붙는다 — 라이너 노트 §3-6 c. */
+  excerpt?: GlobalTrack;
 }
 
 interface HomeReleaseStripProps {
@@ -27,6 +31,9 @@ interface HomeReleaseStripProps {
  * 모바일은 가로 스크롤 한 줄(스냅), sm 이상은 그리드. 이미지는 전부 지연 로딩이고
  * 정사각 칸으로 자리를 먼저 잡아 CLS가 없다. alt를 비우지 않는다 — 커버는 장식이
  * 아니라 "이 작품"을 가리키는 정보다.
+ *
+ * 재생 버튼(CoverPlayButton)은 링크의 형제다 — <a> 안에 <button>을 넣으면 HTML이 깨진다. 커버 칸을
+ * relative로 두고 그 위에 absolute로 얹는다. 발췌가 없는 커버에는 아무것도 붙지 않는다.
  */
 const HomeReleaseStrip = ({ locale, covers, viewAllLabel }: HomeReleaseStripProps) => (
   <>
@@ -37,7 +44,7 @@ const HomeReleaseStrip = ({ locale, covers, viewAllLabel }: HomeReleaseStripProp
     <div className="-mx-4 px-4 sm:mx-0 sm:px-0 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-pl-4 sm:scroll-pl-0 scrollbar-hide">
       <ul className="grid grid-flow-col auto-cols-[42%] sm:grid-flow-row sm:auto-cols-auto sm:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-5">
         {covers.map((cover) => (
-          <li key={cover.id} className="snap-start">
+          <li key={cover.id} className="snap-start relative">
             <Link
               href={`/${locale}/portfolio/${cover.id}`}
               prefetch={false}
@@ -61,6 +68,13 @@ const HomeReleaseStrip = ({ locale, covers, viewAllLabel }: HomeReleaseStripProp
                 </p>
               )}
             </Link>
+            {cover.excerpt && (
+              /* 커버 칸과 같은 정사각 오버레이(pointer-events 없음) 안에 버튼만 살린다 — 칸 아래 제목 줄 때문에
+                 li 기준 bottom으로는 커버의 아래 모서리를 잡을 수 없어서. */
+              <div aria-hidden={false} className="pointer-events-none absolute inset-x-0 top-0 aspect-square">
+                <CoverPlayButton track={cover.excerpt} className="pointer-events-auto absolute bottom-2 right-2" />
+              </div>
+            )}
           </li>
         ))}
       </ul>

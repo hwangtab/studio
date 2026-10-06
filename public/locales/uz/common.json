@@ -1168,7 +1168,14 @@
     "highFidelity": "Yuqori aniqlikdagi audio",
     "trackLabel": "Trek {{number}}",
     "volume": "Ovoz balandligi",
-    "playbackProgress": "Ijro jarayoni"
+    "playbackProgress": "Ijro jarayoni",
+    "global": {
+      "region": "Hozir ijroda",
+      "close": "Pleyerni yopish",
+      "error": "Ijro etib bo‘lmadi. Birozdan keyin qayta urinib ko‘ring.",
+      "listen": "30 soniya tinglash",
+      "excerptTitle": "Studio NOL’da yozilgan va miks qilingan 30 soniya"
+    }
   },
   "gallery": {
     "previous": "Oldingi rasmlar",

@@ -1196,7 +1196,14 @@
     "highFidelity": "High Fidelity Audio",
     "trackLabel": "Track {{number}}",
     "volume": "Volume",
-    "playbackProgress": "Playback progress"
+    "playbackProgress": "Playback progress",
+    "global": {
+      "region": "Now playing",
+      "close": "Close player",
+      "error": "Playback failed. Please try again in a moment.",
+      "listen": "Listen 30s",
+      "excerptTitle": "30 seconds recorded and mixed at Studio NOL"
+    }
   },
   "gallery": {
     "previous": "Previous images",

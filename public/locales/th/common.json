@@ -1172,7 +1172,14 @@
     "highFidelity": "เสียงความละเอียดสูง",
     "trackLabel": "แทร็ก {{number}}",
     "volume": "ระดับเสียง",
-    "playbackProgress": "ความคืบหน้าการเล่น"
+    "playbackProgress": "ความคืบหน้าการเล่น",
+    "global": {
+      "region": "กำลังเล่น",
+      "close": "ปิดเครื่องเล่น",
+      "error": "เล่นไม่ได้ กรุณาลองใหม่อีกครั้ง",
+      "listen": "ฟัง 30 วินาที",
+      "excerptTitle": "30 วินาทีที่บันทึกและมิกซ์ที่ Studio NOL"
+    }
   },
   "gallery": {
     "previous": "รูปภาพก่อนหน้า",

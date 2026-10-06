@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import type { AudioTrack } from '../../types/data';
+import { announcePlay, onOtherPlay } from '../../lib/audio/audioBus';
 
 export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
     const [currentTrack, setCurrentTrack] = useState(0);
@@ -27,6 +28,11 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
             isMounted.current = false;
         };
     }, []);
+
+    // 다른 소스(글로벌 플레이어·믹싱 비교)가 울리면 멈춘다.
+    useEffect(() => onOtherPlay('portfolio-player', () => {
+        if (isMounted.current) setIsPlaying(false);
+    }), []);
 
     const stopPlayback = useCallback(() => {
         if (audioRef.current) {
@@ -95,6 +101,8 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
 
         // Handle playback
         if (isPlaying) {
+            // 한 번에 하나만 운다 — 글로벌 미니 플레이어·믹싱 비교가 이걸 듣고 멈춘다(lib/audio/audioBus).
+            announcePlay('portfolio-player');
             const playPromise = audio.play();
             if (playPromise && typeof playPromise.then === 'function') {
                 playPromise

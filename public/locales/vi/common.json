@@ -1168,7 +1168,14 @@
     "highFidelity": "Âm thanh Hi‑Fi",
     "trackLabel": "Bài {{number}}",
     "volume": "Âm lượng",
-    "playbackProgress": "Tiến trình phát"
+    "playbackProgress": "Tiến trình phát",
+    "global": {
+      "region": "Đang phát",
+      "close": "Đóng trình phát",
+      "error": "Không phát được. Vui lòng thử lại sau.",
+      "listen": "Nghe 30 giây",
+      "excerptTitle": "30 giây thu âm và mixing tại Studio NOL"
+    }
   },
   "gallery": {
     "previous": "Hình trước",

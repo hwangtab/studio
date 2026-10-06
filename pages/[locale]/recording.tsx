@@ -17,6 +17,7 @@ import BaseCard from '../../components/ui/BaseCard';
 import { Section } from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
 import KakaoSectionBar from '../../components/common/KakaoSectionBar';
+import ServiceExcerpt from '../../components/audio/ServiceExcerpt';
 import { getRouteLastmod, formatLastmodDate } from '../../lib/pageLastmod';
 
 // Below-fold 컴포넌트 code-splitting
@@ -298,6 +299,8 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
             </m.div>
           </div>
         </m.div>
+      {/* 라이너 노트 §3-6: 이 스튜디오에서 녹음한 30초 — 절이 아니라 절 안의 블록. 발췌가 없으면 아무것도 안 그린다. */}
+        <ServiceExcerpt locale={locale} service="recording" component="RecordingExcerpt" className="mt-10 max-w-3xl" />
       </Section>
 
       {/* 가격 안내 — 가격 SSOT의 recordingOffers 3종 */}
