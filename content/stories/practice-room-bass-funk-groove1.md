@@ -135,7 +135,6 @@ Parliament-Funkadelic의 전설적 베이시스트:
 
 1. **뮤트만**: 오른손으로 뮤트한 상태에서 16분음표 리듬 연습
 2. **고스트 추가**: 몇 군데에만 실제 음 삽입
-3. **비율 조정**: 고스트 노트가 전체의 40-50% 정도
 
 **체크포인트:**
 - 고스트 노트가 너무 크면 지저분해짐
@@ -210,7 +209,7 @@ A2 (명확한 음)
 
 | 베이시스트 | 그룹/아티스트 | 특징 |
 |-----------|-------------|------|
-| James Jamerson | Motown | 펑크의 기초를 만든 인물 |
+| James Jamerson | Motown | 일렉트릭 베이스 연주의 선구자 |
 | Bootsy Collins | Parliament-Funkadelic | 최고의 화려한 펑크 베이스 |
 | Larry Graham | Sly & the Family Stone | 슬랩 베이스 발명 |
 | Bernard Edwards | Chic | 디스코·펑크 완벽한 그루브 |

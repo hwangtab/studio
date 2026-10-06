@@ -42,12 +42,11 @@ summary: >-
 **유리(Glass):**
 - 따뜻하고 둥근 음색
 - 블루스, 포크에 적합
-- 대표: Dunlop #215 Coricidin Bottle
+- 대표: Dunlop #215 Glass Slide
 
 **금속(Steel):**
 - 밝고 날카로운 음색
 - 록, 컨트리에 적합
-- 대표: Dunlop #222 Steel Slide
 
 **브라스(Brass):**
 - 풍성하고 따뜻한 중간 음색
@@ -62,7 +61,6 @@ summary: >-
 **소지(새끼손가락):** 가장 일반적
 
 - 나머지 손가락이 자유로워 코드 연주 가능
-- Duane Allman, Derek Trucks 방식
 
 **약지(ring finger):** 유연성
 
@@ -158,10 +156,6 @@ summary: >-
 - 전체 개방선 = G 메이저
 - 12프렛 바레 = G (높은 옥타브)
 
-**롤링 스톤스 "Honky Tonk Women" 슬라이드 리프:**
-
-Keith Richards의 오픈 G 슬라이드 스타일
-
 ### 오픈 D (DADF#AD)
 
 ```
@@ -187,8 +181,7 @@ Keith Richards의 오픈 G 슬라이드 스타일
 ```
 
 **Robert Johnson 스타일:**
-- 오픈 D 튜닝
-- 낮은 E, A 현에서 드론 유지
+- 오픈 G(스패니시) 튜닝 사용
 - 높은 현에서 슬라이드 멜로디
 
 ---
@@ -218,7 +211,7 @@ Keith Richards의 오픈 G 슬라이드 스타일
 
 | 아티스트 | 슬라이드 특징 | 참고 곡 |
 |---------|------------|--------|
-| Robert Johnson | 델타 블루스 원조 | Cross Road Blues |
+| Robert Johnson | 델타 블루스 대표 | Cross Road Blues |
 | Duane Allman | 록 슬라이드 마스터 | Layla |
 | Derek Trucks | 현대 슬라이드 명인 | Layla (재현) |
 | Ry Cooder | 세계 음악 슬라이드 | Paris, Texas OST |
