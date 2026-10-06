@@ -76,7 +76,8 @@ export const getServerSideProps: GetServerSideProps<AdminBookingDetailPageProps>
       ? await findSameNameDepositOrders({ id: order.id, customerName: order.customerName })
       : [];
   let refundAccount: RefundAccountSummaryProps | null = null;
-  if (booking.bankDeposit === 'paid') {
+  // 예약금 결제 링크 주문은 환불 계좌 접수 화면이 없다(고객 관리 페이지가 없다) — 조회할 행이 없다.
+  if (booking.bankDeposit === 'paid' && order.type !== 'deposit') {
     const summary = await loadRefundAccountSummary({
       kind: order.type === 'mixing' ? 'mixing' : 'session',
       orderNo: order.orderNo,
@@ -354,6 +355,7 @@ export default function AdminBookingDetailPage({
   };
 
   const isMixing = booking.orderType === 'mixing';
+  const isDeposit = booking.orderType === 'deposit';
   const workOrder = booking.workOrder;
 
   // 완료·노쇼·캘린더·재발송은 슬롯이 있는 세션 예약만의 개념(API도 믹싱엔 409를 준다).
@@ -426,7 +428,7 @@ export default function AdminBookingDetailPage({
               )}
             </p>
             <p className="mt-1 text-xs text-sky-900">
-              통장에 실제로 입금됐는지 먼저 확인한 뒤 “입금 확인”을 누르세요. 이 신청은 {isMixing ? '주문' : '시간대'}을 잡아 둔 채 자동으로 취소되지 않습니다.
+              통장에 실제로 입금됐는지 먼저 확인한 뒤 “입금 확인”을 누르세요. {isDeposit ? '이 신청은 자동으로 취소되지 않습니다.' : `이 신청은 ${isMixing ? '주문' : '시간대'}을 잡아 둔 채 자동으로 취소되지 않습니다.`}
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <Button light disabled={busy} onClick={handleConfirmDeposit}>입금 확인</Button>
@@ -602,10 +604,10 @@ export default function AdminBookingDetailPage({
             <div className="flex flex-wrap items-center gap-3 mb-5">
               <span
                 className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
-                  isMixing ? 'bg-purple-100 text-purple-700' : 'bg-indigo-100 text-indigo-700'
+                  isMixing ? 'bg-purple-100 text-purple-700' : isDeposit ? 'bg-amber-100 text-amber-800' : 'bg-indigo-100 text-indigo-700'
                 }`}
               >
-                {isMixing ? '믹싱·마스터링' : '세션 예약'}
+                {isMixing ? '믹싱·마스터링' : isDeposit ? '예약금' : '세션 예약'}
               </span>
               {isMixing
                 ? workOrder && (
@@ -640,11 +642,11 @@ export default function AdminBookingDetailPage({
 
               <div>
                 <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">
-                  {isMixing ? '주문 정보' : '예약 정보'}
+                  {isMixing || isDeposit ? '주문 정보' : '예약 정보'}
                 </h2>
                 <dl className="space-y-2 text-sm">
                   <DescriptionRow label="상품" value={booking.productName} />
-                  {isMixing ? (
+                  {isDeposit ? null : isMixing ? (
                     <>
                       <DescriptionRow label="곡 수" value={workOrder ? `${workOrder.songCount}곡` : '-'} />
                       <DescriptionRow

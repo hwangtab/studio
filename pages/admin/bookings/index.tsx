@@ -69,10 +69,19 @@ export const getServerSideProps: GetServerSideProps<AdminBookingsPageProps> = as
         //
         // `?deposit=pending`이면 계좌 입금 대기 전부(전 기간·건수 제한 없음) — 자동 취소가 없어
         // 오래 열린 대기가 200건 상한 밖으로 밀려나면 영영 안 보인다.
+        // 예약금 결제 링크 주문(type 'deposit')은 계좌 입금 흐름(대기·취소)과 결제 완료·환불 건만 싣는다 —
+        // 카드 결제창을 열다 만 pending/failed/expired 행은 목록만 어지럽히고 200건 상한을 잠식한다.
         where: depositPending
           ? (ordersTable, { and: all, inArray: within, eq: same }) =>
-              all(within(ordersTable.type, ['session', 'mixing']), same(ordersTable.status, 'awaiting_deposit'))
-          : (ordersTable, { inArray: within }) => within(ordersTable.type, ['session', 'mixing']),
+              all(within(ordersTable.type, ['session', 'mixing', 'deposit']), same(ordersTable.status, 'awaiting_deposit'))
+          : (ordersTable, { and: all, or: either, inArray: within }) =>
+              either(
+                within(ordersTable.type, ['session', 'mixing']),
+                all(
+                  within(ordersTable.type, ['deposit']),
+                  within(ordersTable.status, ['awaiting_deposit', 'deposit_cancelled', 'paid', 'partially_refunded', 'refunded']),
+                ),
+              ),
         orderBy: (ordersTable, { desc }) => [desc(ordersTable.createdAt)],
         limit: depositPending ? undefined : LIST_LIMIT + 1,
         // payments를 함께 읽는다 — 주문 상태와 결제 기록의 미정합(스펙 §10) 판정에 쓴다.
@@ -85,7 +94,7 @@ export const getServerSideProps: GetServerSideProps<AdminBookingsPageProps> = as
       getDb()
         .select({ n: sql<number>`count(*)` })
         .from(orders)
-        .where(and(inArray(orders.type, ['session', 'mixing']), eq(orders.status, 'awaiting_deposit')))
+        .where(and(inArray(orders.type, ['session', 'mixing', 'deposit']), eq(orders.status, 'awaiting_deposit')))
         .get(),
     ]);
 
@@ -392,6 +401,7 @@ export default function AdminBookingsPage({
                   <tbody>
                     {filteredBookings.map((booking) => {
                       const isMixing = booking.orderType === 'mixing';
+                      const isDeposit = booking.orderType === 'deposit';
                       const isPracticeRoom = booking.serviceType === 'practice-room';
                       return (
                         <tr key={booking.id} className="border-b border-gray-100 hover:bg-gray-50">
@@ -399,11 +409,12 @@ export default function AdminBookingsPage({
                             <span
                               className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
                                 isMixing ? 'bg-purple-100 text-purple-700'
+                                  : isDeposit ? 'bg-amber-100 text-amber-800'
                                   : isPracticeRoom ? 'bg-emerald-100 text-emerald-700'
                                   : 'bg-indigo-100 text-indigo-700'
                               }`}
                             >
-                              {isMixing ? '믹싱' : isPracticeRoom ? '연습실' : '세션'}
+                              {isMixing ? '믹싱' : isDeposit ? '예약금' : isPracticeRoom ? '연습실' : '세션'}
                             </span>
                             {booking.roomNumber && (
                               <span className="ml-1 inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
@@ -414,7 +425,7 @@ export default function AdminBookingsPage({
                           <td className="px-4 py-3 whitespace-nowrap">
                             {isMixing
                               ? `${booking.productName} × ${booking.workOrder?.songCount ?? '-'}곡${booking.workOrder?.vocalTuning ? ' (튜닝)' : ''}`
-                              : formatKstDateTime(booking.startAt)}
+                              : isDeposit ? '-' : formatKstDateTime(booking.startAt)}
                           </td>
                           <td className="px-4 py-3 font-medium text-gray-900">
                             {booking.customerName}
