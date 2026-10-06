@@ -58,13 +58,13 @@ Spitfire Audio LABS
 BBC Symphony Orchestra Discover
 
 - 무료, Spitfire Audio 제공
-- 실제 런던 심포니 오케스트라 샘플
+- 실제 BBC 심포니 오케스트라 샘플
 
 ### 입문~중급
 
 Native Instruments SESSION STRINGS PRO 2
 
-- 팝·재즈 스트링에 특화
+- 팝·R&B·댄스·모던 스코어용 스트링
 - 직관적인 UI, 자동 보이싱 기능
 
 Cinematic Studio Strings (CSS)
@@ -74,15 +74,15 @@ Cinematic Studio Strings (CSS)
 
 ### 전문가급
 
-Spitfire Audio BBC Symphony Orchestra Complete
+Spitfire Audio BBC Symphony Orchestra Professional
 
-- 런던 심포니 오케스트라 전 파트 포함
+- BBC 심포니 오케스트라 전 파트 포함
 - 최고 수준의 자연스러운 표현
 
 EastWest Hollywood Orchestra
 
 - Hollywood 녹음실 사운드
-- 스탠다드~다이아몬드 에디션
+- 실버~다이아몬드 에디션
 
 ---
 

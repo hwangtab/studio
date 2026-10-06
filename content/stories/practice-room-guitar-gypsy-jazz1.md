@@ -30,7 +30,7 @@ summary: >-
 
 # 집시 재즈 기타·Django Reinhardt·라 뽕프·Manouche 스타일 — 음악연습실 완전 가이드
 
-집시 재즈 기타(Gypsy Jazz Guitar)는 **유럽 집시 음악과 미국 재즈가 융합된 독특한 스타일**입니다. Django Reinhardt — 두 손가락만 사용하면서 기타 역사상 가장 빠른 솔로를 연주한 레전드. Hot Club de France의 라 뽕프 리듬, Stéphane Grappelli와의 바이올린-기타 듀엣 — 집시 재즈는 재즈 기타의 가장 낭만적인 형태입니다.
+집시 재즈 기타(Gypsy Jazz Guitar)는 **유럽 집시 음악과 미국 재즈가 융합된 독특한 스타일**입니다. Django Reinhardt — 두 손가락만으로 솔로를 연주한 레전드. Hot Club de France의 라 뽕프 리듬, Stéphane Grappelli와의 바이올린-기타 듀엣 — 집시 재즈는 재즈 기타의 가장 낭만적인 형태입니다.
 
 ---
 
@@ -155,8 +155,7 @@ D 하모닉 마이너: D-E-F-G-A-Bb-C#-D
 **집시 재즈 도미넌트:**
 ```
 
-G7: 3-5-3-4-x-x (Django 보이싱)
-= 두 손가락 보이싱 스타일
+G7: 3-5-3-4-x-x
 
 ```
 
@@ -196,7 +195,6 @@ Django가 사용한 D-hole 기타
 ```
 
 픽: 두꺼운 플랫 픽 (1.5~2mm)
-줄: 플랫와운드 (따뜻하고 부드럽게)
 앰프 없음: 순수 어쿠스틱
 = 자연스럽고 따뜻한 집시 재즈 톤
 

@@ -107,7 +107,7 @@ John Coltrane과 함께한 McCoy Tyner:
 
 Dm7: D-A / G-C-F
 G7: G-D / C-F-Bb
-Cmaj7: C-G / F-Bb-Eb (리디안 느낌)
+Cmaj7: C-G / F-Bb-Eb
 
 ```
 
@@ -200,7 +200,7 @@ D-G-C-F (4음)
 ```
 
 전통: C-E-G-B
-4도: G-C-F (리디안 느낌, F가 #4)
+4도: G-C-F
 = 개방적인 Cmaj 보이싱
 
 ```
@@ -262,7 +262,7 @@ C4-F4-Bb4 (4도+4도)
 **D 도리안에서 4도 즉흥:**
 ```
 
-D-G-C-F-Bb (4도 상행 라인)
+D-G-C-F (4도 상행 라인)
 모두 D 도리안 음
 = 자연스러운 모달 4도 라인
 

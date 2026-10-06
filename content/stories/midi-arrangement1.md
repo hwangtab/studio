@@ -43,7 +43,7 @@ inlineFallback:
 
 현대 음악 제작에서 MIDI 편곡은 혼자서도 완전한 사운드를 구축할 수 있는 핵심 기술입니다. 가상악기와 DAW의 결합으로 드럼부터 오케스트라까지 모든 악기를 구현할 수 있습니다.
 
-MIDI 표준의 역사는 1983년 Roland·Yamaha·Korg·Sequential Circuits 등 악기 제조사들이 MIDI 1.0 규격을 합의하면서 시작됩니다. 이전까지 각사의 전자악기는 서로 통신이 불가능했지만, MIDI 1.0 출시로 Roland Juno-106과 Yamaha DX7가 처음으로 연동됐습니다. 1980년대 중반 Steinberg Cubase·Mark of the Unicorn Performer 등 MIDI 시퀀서 소프트웨어가 PC에서 실행되면서 개인 음악 제작의 시대가 열렸고, 1987년 General MIDI(GM) 표준이 정착되면서 MIDI 편곡이 대중화됐습니다. 한국에서는 1990년대 후반 Roland SC-88 사운드 모듈과 Cakewalk 시퀀서로 트로트·발라드 반주 제작이 보급됐고, 2000년대 가상악기(VST) 등장 이후 Kontakt·Omnisphere 등 고품질 샘플 라이브러리로 MIDI 편곡의 음질이 라이브 녹음 수준에 근접하게 됐습니다.
+MIDI 표준의 역사는 1983년 Roland·Yamaha·Korg·Sequential Circuits 등 악기 제조사들이 MIDI 1.0 규격을 합의하면서 시작됩니다. 이전까지 각사의 전자악기는 서로 통신이 불가능했지만, MIDI 1.0 출시로 1983년 1월 Sequential Prophet-600과 Roland Jupiter-6가 처음으로 연동됐습니다. 1980년대 중반 Mark of the Unicorn Performer 등 MIDI 시퀀서 소프트웨어가 컴퓨터에서 실행되면서 개인 음악 제작의 시대가 열렸고, 1991년 General MIDI(GM) 표준이 정립되면서 MIDI 편곡이 대중화됐습니다. 한국에서는 1990년대 후반 Roland SC-88 사운드 모듈과 Cakewalk 시퀀서로 트로트·발라드 반주 제작이 보급됐고, 가상악기(VST) 등장 이후 Kontakt·Omnisphere 등 고품질 샘플 라이브러리로 MIDI 편곡의 음질이 라이브 녹음 수준에 근접하게 됐습니다.
 
 ---
 
