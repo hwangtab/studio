@@ -346,6 +346,24 @@ SDK가 `payment()` 경로에서 `isAPIIndividualKey()`를 단언한다 — 위�
 끈다. env `NEXT_PUBLIC_PAYMENT_PICKER=on`이면 전체 기본값이 새 화면이다(빌드 시점 인라인 — 바꾸면 빌드가
 한 번 돈다). 위젯 경로는 그대로 남아 있다 — 걷어내는 것은 새 화면을 운영에서 확인한 뒤의 일이다.
 
+### 새 결제 흐름은 공용 체크아웃으로 만든다 — 카드 전용 위젯을 직접 쓰지 않는다
+
+결제 화면(펀딩·예약·믹싱·공연 티켓)은 전부 `usePaymentCheckout`(위젯 마운트·결제 요청) +
+`PaymentMethodChoice`(**카드·간편결제 / 계좌로 직접 입금** 두 줄) + `BankDepositGuide`(계좌 안내)로
+같은 모양이다. 새 결제 링크·상품을 붙일 때 이걸 빼먹으면 고객은 다른 곳에 있던 계좌 입금을 찾을 수
+없다. 2026-10-06 예약금 결제 링크(`/ko/pay/<slug>`)가 "코드를 가장 적게 쓰는 설계"로, 쓰는 곳 없던 카드
+전용 `TossPaymentWidget`을 골라 계좌 입금 없이 PR까지 나갔다 — 운영자가 보고서가 아니라 화면에서 발견했다.
+
+- **설계 전에 가장 가까운 기존 흐름(믹싱 주문·공연 예매)의 고객 화면을 연다.** 결제수단 줄·안내 문구·
+  버튼 말을 적어 두고, 서브에이전트에 조사를 맡길 때 "고객이 결제수단으로 무엇을 고르는가"를 명시적으로 묻는다.
+- 계좌 입금은 `awaiting_deposit` → 운영자 입금 확인 → `paid` 흐름이라 **관리자 입금 확인 경로와 안내 메일까지**
+  걸린다(`lib/payments/bankDeposit.ts` 머리 주석). 결제 화면만 만들고 끝나지 않는다.
+- 새 주문 종류를 `orderTypeEnum`에 더하면 `tests/payments/sharedCheckout.guard.test.ts`가 결제 화면(또는 면제 사유)을
+  짝지으라고 CI에서 선다. 토스 SDK·`useTossPaymentWidgets`·`TossPaymentWidget`을 공용 체크아웃 밖에서 직접
+  import해도 선다. 허용 목록을 늘리지 말고 공용 컴포넌트를 쓴다.
+- 새 결제 종류는 CHANGELOG 대신 이 체크리스트로 점검한다: 결제수단 두 줄 · 계좌 안내 · 운영자 입금 확인 ·
+  입금 안내 메일 · 매출장부 라벨 · 비공개 경로(`lib/analytics/privatePaths.ts`) 등록 · 배포 뒤 실제 결제 1건.
+
 ### 약관·처리방침을 고치면 FUNDING_TERMS_VERSION을 함께 올린다
 
 `funding_pledges.terms_version`은 "그때 이 내용에 동의했다"는 증거다. 내용이 바뀌었는데
