@@ -93,6 +93,32 @@ describe('buildEmailLayout', () => {
   });
 });
 
+describe('optional 슬롯 — hero·blocks', () => {
+  it('슬롯이 없으면 출력이 같다(기존 호출 불변)', () => {
+    const base = { heading: 'h', paragraphs: ['p'], rows: [{ label: 'a', value: 'b' }], cta: { label: 'c', url: 'https://x' } };
+    expect(buildEmailLayout({ ...base, hero: undefined, blocks: undefined })).toBe(buildEmailLayout(base));
+    expect(buildEmailLayout({ ...base, blocks: [] })).toBe(buildEmailLayout(base));
+  });
+
+  it('hero는 제목 위에 오고 주소·alt를 escape한다', () => {
+    const html = buildEmailLayout({ heading: 'HEAD', hero: { imageUrl: 'https://x/p.webp?a=1&b="2"', alt: '<포스터>' } });
+    expect(html).toContain('src="https://x/p.webp?a=1&amp;b=&quot;2&quot;"');
+    expect(html).toContain('alt="&lt;포스터&gt;"');
+    expect(html.indexOf('p.webp')).toBeLessThan(html.indexOf('<h1'));
+  });
+
+  it('blocks는 rows와 cta 사이에 호출부 HTML 그대로 들어간다', () => {
+    const html = buildEmailLayout({
+      heading: 'h', rows: [{ label: 'ROWLABEL', value: 'v' }], blocks: ['<div>BLOCK1</div>', '<div>BLOCK2</div>'],
+      cta: { label: 'CTALABEL', url: 'https://x' },
+    });
+    const at = (t: string) => html.indexOf(t);
+    expect(at('ROWLABEL')).toBeLessThan(at('BLOCK1'));
+    expect(at('BLOCK1')).toBeLessThan(at('BLOCK2'));
+    expect(at('BLOCK2')).toBeLessThan(at('CTALABEL'));
+  });
+});
+
 describe('helpers', () => {
   it('adminUrl은 슬래시를 정규화한다', () => {
     expect(adminUrl('/admin/a')).toMatch(/^https?:\/\/[^/]+\/admin\/a$/);

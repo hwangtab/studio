@@ -74,6 +74,13 @@ export interface EmailLayoutInput {
   notices?: string[];
   /** info=앰버(기본), alert=붉은 계열(긴급) */
   noticeTone?: 'info' | 'alert';
+  /** 제목 위에 놓는 대표 이미지(공연 포스터 등). 주소·alt는 레이아웃이 escape한다. 절대 URL을 넘긴다. */
+  hero?: { imageUrl: string; alt: string };
+  /**
+   * 정보 표(rows)와 버튼(cta) 사이에 그대로 들어가는 HTML 조각들(티켓 카드·문의 메시지 등).
+   * **호출부가 값을 escape한다.** 레이아웃은 조각을 감싸지 않으므로 table 레이아웃·인라인 스타일로 만들 것.
+   */
+  blocks?: string[];
 }
 
 const renderRows = (rows: EmailLayoutRow[], operator: boolean): string => {
@@ -180,8 +187,15 @@ export const buildEmailLayout = (input: EmailLayoutInput): string => {
                 본 메일은 발송 전용입니다. 회신 대신 위 번호로 연락해 주세요.
               </div>`;
 
+  const hero = input.hero
+    ? `<div style="margin: 0 0 20px; text-align: center;"><img src="${escapeHtml(input.hero.imageUrl)}" alt="${escapeHtml(input.hero.alt)}" width="200"
+                   style="display: inline-block; width: 200px; max-width: 60%; height: auto; border: 0; border-radius: 8px;" /></div>`
+    : '';
+
+  const blocks = input.blocks?.length ? `\n              ${input.blocks.join('\n')}` : '';
+
   const body = `${paragraphs}
-              ${input.rows ? renderRows(input.rows, operator) : ''}
+              ${input.rows ? renderRows(input.rows, operator) : ''}${blocks}
               ${input.cta ? renderCta(input.cta, operator) : ''}
               ${input.notices ? renderNotices(input.notices, tone) : ''}`;
 
@@ -215,7 +229,7 @@ export const buildEmailLayout = (input: EmailLayoutInput): string => {
 
           <tr>
             <td style="padding: 28px;">
-              <h1 style="margin: 0 0 18px; color: ${BRAND.ink}; font-size: 20px; font-weight: 700; line-height: 1.4;">
+              ${hero}<h1 style="margin: 0 0 18px; color: ${BRAND.ink}; font-size: 20px; font-weight: 700; line-height: 1.4;">
                 ${escapeHtml(input.heading)}
               </h1>
               ${body}

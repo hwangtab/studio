@@ -163,7 +163,7 @@ describe('contact send-email api', () => {
     }
   });
 
-  it('uses the current phone number in the delivered email html', async () => {
+  it('delivers the operator-layout html with the inquirer phone link and no stale studio number', async () => {
     const req = createRequest();
     const { res, getStatus } = createResponse();
 
@@ -175,9 +175,12 @@ describe('contact send-email api', () => {
     );
     expect(resendCall).toBeDefined();
 
-    const body = JSON.parse(String(resendCall?.[1]?.body)) as { html?: string };
-    expect(body.html).toContain('010-4255-7893');
-    expect(body.html).toContain('href="tel:01042557893"');
+    const body = JSON.parse(String(resendCall?.[1]?.body)) as { html?: string; reply_to?: string; text?: string };
+    expect(body.reply_to).toBe('test@example.com'); // 운영자가 그대로 답장하면 문의자에게 간다
+    expect(body.text).toContain('This is a valid inquiry message');
+    // 운영자 메일(공용 레이아웃 operator)에는 스튜디오 푸터 번호가 없고, 문의자의 전화가 tel: 링크로 실린다.
+    expect(body.html).toContain('운영 알림');
+    expect(body.html).toContain('href="tel:+821012345678"');
     expect(body.html).not.toContain('050713843144');
   });
 
