@@ -300,7 +300,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
         }
       >
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-            <div className="p-6 md:p-8">
+            <div className="p-4 md:p-8">
               {notice && <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>}
 
               {error && (
@@ -580,7 +580,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
               )}
 
               <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left">
+                <table className="admin-table w-full text-sm text-left">
                   <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
                     <tr>
                       <th className="px-4 py-3 rounded-l-lg">주문번호</th>
@@ -595,13 +595,13 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
                   <tbody>
                     {items.map((item) => (
                       <tr key={item.id} className="border-b border-gray-100 hover:bg-gray-50">
-                        <td className="px-4 py-3 whitespace-nowrap">
+                        <td data-label="주문번호" className="px-4 py-3 whitespace-nowrap">
                           <Link href={`/admin/funding/${item.id}`} className="text-primary font-medium hover:underline">
                             {item.orderNo}
                           </Link>
                           <div className="text-xs text-gray-500">{formatKstDateTime(item.createdAt)}</div>
                         </td>
-                        <td className="px-4 py-3">
+                        <td data-label="상태" className="px-4 py-3">
                           {STATUS_LABELS[item.status] ?? item.status}
                           {item.mismatch && (
                             <div className="mt-1">
@@ -629,14 +629,14 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
                             </div>
                           )}
                         </td>
-                        <td className="px-4 py-3">{PAYMENT_LABELS[item.paymentMethod] ?? item.paymentMethod}</td>
-                        <td className="px-4 py-3 font-medium text-gray-900">
+                        <td data-label="결제수단" className="px-4 py-3">{PAYMENT_LABELS[item.paymentMethod] ?? item.paymentMethod}</td>
+                        <td data-label="고객" className="px-4 py-3 font-medium text-gray-900">
                           {item.customerName}
                           <div className="text-xs text-gray-500 font-normal">{item.customerPhone}</div>
                         </td>
-                        <td className="px-4 py-3">{item.rewardLabel}</td>
-                        <td className="px-4 py-3 whitespace-nowrap">{formatPriceAmount(item.totalAmount)}원</td>
-                        <td className="px-4 py-3">{FULFILLMENT_LABELS[item.fulfillmentStatus] ?? item.fulfillmentStatus}</td>
+                        <td data-label="리워드" className="px-4 py-3">{item.rewardLabel}</td>
+                        <td data-label="금액" className="px-4 py-3 whitespace-nowrap">{formatPriceAmount(item.totalAmount)}원</td>
+                        <td data-label="발송" className="px-4 py-3">{FULFILLMENT_LABELS[item.fulfillmentStatus] ?? item.fulfillmentStatus}</td>
                       </tr>
                     ))}
                   </tbody>

@@ -178,7 +178,7 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
           )}
         </div>
 
-        <section className="bg-white rounded-2xl shadow-sm p-6 md:p-8 mb-6">
+        <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8 mb-6">
           <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">등록 아티스트</h2>
           <p className="text-xs text-gray-500 mb-4">
             아티스트는 코드(data/artists)로 등록합니다. 후원자 수는 결제한 달이 끝나지 않은 사람 전부입니다.
@@ -187,7 +187,7 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
             <p className="text-sm text-gray-600">등록된 아티스트가 없습니다. 사진 권리와 소개 자료가 오면 data/artists/index.ts에 추가합니다.</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="admin-table w-full text-sm">
                 <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
                   <tr>
                     <th className="px-4 py-3 text-left">아티스트</th>
@@ -200,16 +200,16 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
                 <tbody className="divide-y divide-gray-100">
                   {artists.map((a) => (
                     <tr key={a.slug}>
-                      <td className="px-4 py-3">
+                      <td data-label="아티스트" className="px-4 py-3">
                         <Link href={`/ko/artists/${a.slug}`} className="text-primary hover:underline" target="_blank" rel="noreferrer">
                           {a.name}
                         </Link>
                         <span className="ml-2 text-xs text-gray-400 font-mono">{a.slug}</span>
                       </td>
-                      <td className="px-4 py-3">{a.supportActive ? '예' : '아니오'}</td>
-                      <td className="px-4 py-3 text-gray-600">{TAX_LABELS[a.taxType] ?? a.taxType}</td>
-                      <td className="px-4 py-3 text-right font-medium">{a.supporterCount}명</td>
-                      <td className="px-4 py-3 text-right">
+                      <td data-label="구독 받음" className="px-4 py-3">{a.supportActive ? '예' : '아니오'}</td>
+                      <td data-label="세금 처리" className="px-4 py-3 text-gray-600">{TAX_LABELS[a.taxType] ?? a.taxType}</td>
+                      <td data-label="후원자" className="px-4 py-3 text-right font-medium">{a.supporterCount}명</td>
+                      <td data-label="연락처" className="px-4 py-3 text-right">
                         <a href={`/api/admin/artists/${a.slug}/supporters-export`} className="text-primary hover:underline text-xs">
                           CSV
                         </a>
@@ -222,7 +222,7 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
           )}
         </section>
 
-        <section className="bg-white rounded-2xl shadow-sm p-6 md:p-8 mb-6">
+        <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8 mb-6">
           <div className="flex flex-wrap items-end justify-between gap-3 mb-4">
             <div>
               <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">월 정산</h2>
@@ -250,7 +250,7 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
             <p className="text-sm text-gray-600">등록된 아티스트가 없어 정산할 것이 없습니다.</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="admin-table w-full text-sm">
                 <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
                   <tr>
                     <th className="px-3 py-3 text-left">아티스트</th>
@@ -271,15 +271,15 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
                     const drift = p.recorded && p.recorded.netAmount !== p.netAmount;
                     return (
                       <tr key={key}>
-                        <td className="px-3 py-3 font-medium text-gray-900">{p.artistName}</td>
-                        <td className="px-3 py-3 text-right">{p.subscriberCount}</td>
-                        <td className="px-3 py-3 text-right">{formatPriceAmount(p.grossAmount)}</td>
-                        <td className="px-3 py-3 text-right text-gray-500">{p.refundAmount ? `−${formatPriceAmount(p.refundAmount)}` : '-'}</td>
-                        <td className="px-3 py-3 text-right">{formatPriceAmount(p.supplyAmount)}</td>
-                        <td className="px-3 py-3 text-right">{formatPriceAmount(p.shareAmount)}</td>
-                        <td className="px-3 py-3 text-right text-gray-500">{p.withholdingAmount ? `−${formatPriceAmount(p.withholdingAmount)}` : '-'}</td>
-                        <td className="px-3 py-3 text-right font-bold">{formatPriceAmount(p.netAmount)}원</td>
-                        <td className="px-3 py-3">
+                        <td data-label="아티스트" className="px-3 py-3 font-medium text-gray-900">{p.artistName}</td>
+                        <td data-label="후원자" className="px-3 py-3 text-right">{p.subscriberCount}</td>
+                        <td data-label="결제 합계" className="px-3 py-3 text-right">{formatPriceAmount(p.grossAmount)}</td>
+                        <td data-label="환불" className="px-3 py-3 text-right text-gray-500">{p.refundAmount ? `−${formatPriceAmount(p.refundAmount)}` : '-'}</td>
+                        <td data-label="공급가" className="px-3 py-3 text-right">{formatPriceAmount(p.supplyAmount)}</td>
+                        <td data-label={`${ARTIST_SUPPORT_SHARE_PERCENT}%`} className="px-3 py-3 text-right">{formatPriceAmount(p.shareAmount)}</td>
+                        <td data-label="원천징수" className="px-3 py-3 text-right text-gray-500">{p.withholdingAmount ? `−${formatPriceAmount(p.withholdingAmount)}` : '-'}</td>
+                        <td data-label="실수령" className="px-3 py-3 text-right font-bold">{formatPriceAmount(p.netAmount)}원</td>
+                        <td data-label="상태" className="px-3 py-3">
                           {p.recorded ? (
                             <span
                               className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
@@ -337,13 +337,13 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
           )}
         </section>
 
-        <section className="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+        <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
           <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">정산 기록</h2>
           {history.length === 0 ? (
             <p className="text-sm text-gray-600">아직 기록된 정산이 없습니다.</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="admin-table w-full text-sm">
                 <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
                   <tr>
                     <th className="px-4 py-3 text-left">월</th>
@@ -357,12 +357,12 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
                 <tbody className="divide-y divide-gray-100">
                   {history.map((h) => (
                     <tr key={h.id}>
-                      <td className="px-4 py-3 font-mono text-xs">{h.period}</td>
-                      <td className="px-4 py-3">{h.artistName}</td>
-                      <td className="px-4 py-3 text-right">{h.subscriberCount}</td>
-                      <td className="px-4 py-3 text-right font-medium">{formatPriceAmount(h.netAmount)}원</td>
-                      <td className="px-4 py-3">{h.status === 'paid' ? '지급 완료' : '이체 대기'}</td>
-                      <td className="px-4 py-3 text-gray-500">{h.paidAt ? h.paidAt.slice(0, 10) : '-'}</td>
+                      <td data-label="월" className="px-4 py-3 font-mono text-xs">{h.period}</td>
+                      <td data-label="아티스트" className="px-4 py-3">{h.artistName}</td>
+                      <td data-label="후원자" className="px-4 py-3 text-right">{h.subscriberCount}</td>
+                      <td data-label="실수령" className="px-4 py-3 text-right font-medium">{formatPriceAmount(h.netAmount)}원</td>
+                      <td data-label="상태" className="px-4 py-3">{h.status === 'paid' ? '지급 완료' : '이체 대기'}</td>
+                      <td data-label="지급일" className="px-4 py-3 text-gray-500">{h.paidAt ? h.paidAt.slice(0, 10) : '-'}</td>
                     </tr>
                   ))}
                 </tbody>

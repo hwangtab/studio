@@ -324,7 +324,7 @@ export default function AdminContractDetailPage({
         )}
 
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
-          <div className="p-6 md:p-8 border-b border-gray-200">
+          <div className="p-4 md:p-8 border-b border-gray-200">
             <div className="flex flex-wrap items-center gap-3 mb-5">
               <span
                 className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${STATUS_CLASS[contract.status]}`}
@@ -385,13 +385,13 @@ export default function AdminContractDetailPage({
             </div>
           </div>
 
-          <div className="p-6 md:p-8 border-b border-gray-200">
+          <div className="p-4 md:p-8 border-b border-gray-200">
             <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">동의 항목</h2>
             <div className="space-y-2">
               {clauses.map((clause) => (
                 <div
                   key={clause.id}
-                  className="flex items-center justify-between gap-4 p-3 bg-gray-50 rounded-lg text-sm"
+                  className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4 p-3 bg-gray-50 rounded-lg text-sm"
                 >
                   <span>
                     <strong>{clause.clauseNumber}</strong> {clause.title}
@@ -406,7 +406,7 @@ export default function AdminContractDetailPage({
               {attachments.map((attachment) => (
                 <div
                   key={attachment.id}
-                  className="flex items-center justify-between gap-4 p-3 bg-gray-50 rounded-lg text-sm"
+                  className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4 p-3 bg-gray-50 rounded-lg text-sm"
                 >
                   <span>「{attachment.title}」</span>
                   <span
@@ -419,7 +419,7 @@ export default function AdminContractDetailPage({
             </div>
           </div>
 
-          <div className="p-6 md:p-8 border-b border-gray-200">
+          <div className="p-4 md:p-8 border-b border-gray-200">
             <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">서명 기록</h2>
             {customerSignature?.status === 'signed' ? (
               <div className="flex flex-wrap items-center gap-4">
@@ -456,15 +456,21 @@ export default function AdminContractDetailPage({
 
           <AuditTrail trail={auditTrail} />
 
-          <div className="p-6 md:p-8 border-b border-gray-200">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">계약서 본문</h2>
-            <ContractContent content={contract.content} size="sm" />
-          </div>
+          {/* 본문은 1만 px가 넘는다. 펼쳐 두면 아래 '작업'(발송·취소 등)이 그 밑에 묻혀,
+              특히 폰에서는 스크롤로 닿기 어려웠다. 첨부 이용수칙과 같이 접어 둔다. */}
+          <details className="p-4 md:p-8 border-b border-gray-200">
+            <summary className="text-lg font-bold text-gray-900 dark:text-gray-900 cursor-pointer">
+              계약서 본문
+            </summary>
+            <div className="mt-4">
+              <ContractContent content={contract.content} size="sm" />
+            </div>
+          </details>
 
           {/* 계약 시점에 떠 둔 이용수칙 사본. 원본 파일이 바뀌어도 이 계약에 적용되는 것은
               이 내용이므로, 분쟁이 생기면 여기를 봐야 한다. */}
           {rulesContent && (
-            <details className="p-6 md:p-8">
+            <details className="p-4 md:p-8">
               <summary className="text-lg font-bold text-gray-900 cursor-pointer">
                 첨부: 공동생활 이용수칙 (계약 시점 사본)
               </summary>
@@ -475,7 +481,7 @@ export default function AdminContractDetailPage({
           )}
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+        <div className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
           <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">작업</h2>
           <div className="flex flex-wrap gap-3">
             {isActionAllowed(contract.status, 'send') && (

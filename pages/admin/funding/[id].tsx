@@ -381,7 +381,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
             </div>
           )}
 
-          <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 space-y-6">
+          <div className="bg-white rounded-2xl shadow-sm p-4 md:p-8 space-y-6">
             <div>
               <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-3">기본 정보</h2>
               <dl className="space-y-2 text-sm">
