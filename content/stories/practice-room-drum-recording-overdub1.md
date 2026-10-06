@@ -221,7 +221,7 @@ summary: >-
 스네어: Shure SM57
 오버헤드: AKG C451B 또는 Rode NT5
 인터페이스: Focusrite Scarlett 4i4
-DAW: Reaper (무료), GarageBand (Mac)
+DAW: Reaper (60일 무료 평가판), GarageBand (Mac)
 
 ```
 

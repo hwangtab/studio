@@ -181,8 +181,8 @@ A(5프렛)에서 E(12프렛)까지:
 | 아티스트 | 프렛리스 특징 | 참고 곡 |
 |---------|------------|--------|
 | Jaco Pastorius | 프렛리스 혁명 | Portrait of Tracy |
-| Pino Palladino | R&B 프렛리스 | Come Back to Me |
-| Tony Franklin | 록 프렛리스 | 더 폼 앨범 |
+| Pino Palladino | R&B 프렛리스 | Wherever I Lay My Hat (Paul Young) |
+| Tony Franklin | 록 프렛리스 | The Firm 앨범 |
 | Michael Manring | 확장 프렛리스 | Enormous Room |
 
 ---
