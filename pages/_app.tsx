@@ -157,7 +157,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   // theme-color meta는 imperative로만 관리 — React state·re-render 없음.
   // theme-init.js(_document.tsx에서 sync 실행)가 페이지 진입 시 정확한 값으로 set하고,
   // Layout.tsx의 toggleDarkMode handler가 토글 시 setAttribute로 직접 갱신한다.
-  // 이전 코드는 React state로 meta를 관리해 hydration 시 SSR initial '#6d28d9'으로 덮어쓰기 →
+  // 이전 코드는 React state로 meta를 관리해 hydration 시 SSR initial 값으로 덮어쓰기 →
   // useEffect setState → re-render → meta 다시 변경의 race가 iOS Safari status bar 깜빡 유발.
   // 단 React tree에 meta가 있으면 reconciliation 시 DOM 덮어쓸 수 있으니 .dark 클래스 변화를
   // 감지해 imperative setAttribute로 강제 sync (state 갱신 없이).
@@ -166,7 +166,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     const sync = () => {
       const isDark = document.documentElement.classList.contains('dark');
       const meta = document.querySelector('meta[name="theme-color"]:not([media])');
-      if (meta) meta.setAttribute('content', isDark ? '#5b21b6' : '#6d28d9');
+      if (meta) meta.setAttribute('content', isDark ? '#030712' : '#0e3c26');
     };
     sync();
     const observer = new MutationObserver(sync);
@@ -308,7 +308,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
           <meta charSet="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
         </Head>
-        <div className={`min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center ${pretendard.className} ${pretendard.variable} ${pretendardHero.variable}`} data-locale={locale} aria-live="polite" role="status">
+        <div className={`min-h-screen bg-paper dark:bg-gray-900 flex items-center justify-center ${pretendard.className} ${pretendard.variable} ${pretendardHero.variable}`} data-locale={locale} aria-live="polite" role="status">
           <div className="flex items-center gap-3 text-gray-700 dark:text-gray-200">
             <span className="h-5 w-5 rounded-full border-2 border-gray-300 border-t-primary animate-spin" aria-hidden="true" />
             <span className="text-sm font-medium">{localeLoadingMessage[locale] || localeLoadingMessage.ko}</span>
@@ -335,11 +335,11 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
             2) dark용(media query 매치 시): 스크립트 실패·차단 환경 폴백. 시스템이
                dark 선호면 브라우저가 자동 매치.
             HTML 스펙은 두 meta 중 environment 매치되는 것을 사용. */}
-        {/* theme-color content는 light default(#6d28d9). theme-init.js가 페이지 진입 시 imperative로 정확한 값 set,
+        {/* theme-color content는 light default(#0e3c26, lib/brandColor.ts primaryDark). theme-init.js가 페이지 진입 시 imperative로 정확한 값 set,
             useEffect의 MutationObserver가 toggle 시점 sync. React state 미사용 → re-render 0 → iOS 깜빡 0. */}
-        <meta key="theme-color-light" name="theme-color" content="#6d28d9" />
-        <meta key="theme-color-dark" name="theme-color" content="#5b21b6" media="(prefers-color-scheme: dark)" />
-        <meta name="msapplication-TileColor" content="#6d28d9" />
+        <meta key="theme-color-light" name="theme-color" content="#0e3c26" />
+        <meta key="theme-color-dark" name="theme-color" content="#030712" media="(prefers-color-scheme: dark)" />
+        <meta name="msapplication-TileColor" content="#0e3c26" />
         <meta name="msapplication-TileImage" content="/icons/icon-192.png" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
         {/* 표준 메타 병기: apple- 접두는 폐기 경고 대상이라 표준 mobile-web-app-capable을

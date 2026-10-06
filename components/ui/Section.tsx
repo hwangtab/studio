@@ -26,8 +26,8 @@ export const Section = React.forwardRef<HTMLElement, SectionProps>(
   ({ className, variant = 'default', spacing = 'default', container = true, defer = false, style, children, ...props }, ref) => {
     const bgClass =
       variant === 'alternate'
-        ? 'bg-gray-50 dark:bg-gray-950/50' // Slightly distinctive from gray-900 but not pitch black
-        : 'bg-white dark:bg-gray-900';
+        ? 'bg-paper-2 dark:bg-gray-950/50' // 라이트는 종이 두 단(라이너 노트 §3-1). 다크는 gray-900보다 살짝 밝게
+        : 'bg-paper dark:bg-gray-900';
 
     // content-visibility: auto + contain-intrinsic-size로 뷰포트 밖 섹션의 render 생략.
     // 500px는 대략적 placeholder 높이(스크롤바 안정화용), 스크롤 도달 시 실제 크기로 교체.

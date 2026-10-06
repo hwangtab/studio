@@ -63,7 +63,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
     }
 
     // 3. Update theme-color meta tag
-    const themeColor = isDarkMode ? '#5b21b6' : '#6d28d9';
+    const themeColor = isDarkMode ? '#030712' : '#0e3c26'; // = lib/brandColor.ts ink / primaryDark (theme-init.js와 같게)
     const metaThemeColor = document.querySelector('meta[name="theme-color"]:not([media])');
     if (metaThemeColor) {
       metaThemeColor.setAttribute('content', themeColor);
@@ -181,7 +181,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
 
   return (
     <div
-      className={`flex flex-col min-h-screen bg-white dark:bg-gray-900 ${textBreakClass} overflow-x-hidden w-full`}
+      className={`flex flex-col min-h-screen bg-paper dark:bg-gray-900 ${textBreakClass} overflow-x-hidden w-full`}
     >
       {isAdminPage && <AdminRouteProgress />}
       <a

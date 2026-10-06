@@ -63,7 +63,7 @@ describe('Button', () => {
 
   // light는 className이 아니라 prop이다 — Field.test.tsx의 같은 이름 블록과 짝이다.
   // theme-init.js가 pages/admin/**·계약 화면에도 <html class="dark">를 붙이기 때문에
-  // 다크 오버라이드가 흰 카드 위로 새어 나온다(outline: #a78bfa on #fff = 2.72:1).
+  // 다크 오버라이드가 흰 카드 위로 새어 나온다(outline: #6ee7b7 on #fff = 1.52:1).
   //
   // 단언은 반드시 **렌더 결과**로 한다. buttonVariants()는 cva의 단순 연결이라
   // 나중 클래스가 앞 클래스를 지우지 않는다 — twMerge는 컴포넌트의 cn()에서만 돈다.

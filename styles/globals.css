@@ -9,7 +9,7 @@
 /* 기본 스타일 */
 @layer base {
   :root {
-    --primary-rgb: 109, 40, 217;
+    --primary-rgb: 22, 101, 52; /* = lib/brandColor.ts primary. 탭 하이라이트·인용 테두리 */
     color-scheme: light dark;
 
     /* Pretendard 다음 자리 — 아래 :root:lang() 블록 참고. 기본값은 예전 스택의
@@ -29,7 +29,7 @@
     --glass-tint: rgba(255, 255, 255, 0.72);
     --glass-tint-menu: rgba(255, 255, 255, 0.88);
     --glass-tint-clear: rgba(255, 255, 255, 0.35);
-    --glass-solid: rgba(255, 255, 255, 0.95);
+    --glass-solid: rgba(250, 247, 242, 0.95); /* 종이(paper)와 같은 값 — 모바일 헤더가 본문과 이어진다 */
     --glass-filter: blur(14px) saturate(1.7);
     --glass-filter-clear: blur(24px) saturate(1.8);
     --glass-border: rgba(255, 255, 255, 0.65);
@@ -40,8 +40,8 @@
     --glass-glow: rgba(255, 255, 255, 0.18);
 
     /* 히어로 제목 그라디언트 — index·release-project·TierPage·BuyerIntentHubPage 공용 */
-    --hero-title-accent: #a8c0ff;
-    --hero-title-glow: rgb(255 255 255 / 0.3);
+    --hero-title-accent: #6ee7b7; /* primary-lighter. 옛 푸른 글로우(#a8c0ff)는 보라 시절 값 */
+    --hero-title-glow: rgb(255 255 255 / 0.25);
   }
 
   .dark {
@@ -105,7 +105,7 @@
     /* next/font CSS variable(@font-face)는 _app.tsx에서 import될 때만 주입됨.
        body는 해당 div 밖에 있으므로 var() 의존 없이 안전한 sans-serif 스택 직접 지정. */
     font-family: var(--font-locale), BlinkMacSystemFont, system-ui, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
-    @apply text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-900;
+    @apply text-gray-800 dark:text-gray-200 bg-paper dark:bg-gray-900;
     word-break: keep-all;
     line-height: 1.6;
   }
@@ -442,10 +442,11 @@ code {
 .dark [data-edition='v2'] .bg-clip-text.text-transparent[class*="from-primary"] {
   color: #fff;
 }
-/* ⑥ 보라→핑크 그라디언트 면(뱃지·아이콘 원) → 보라 단색. ②와 같은 판단의 다른 방향(to-br). */
+/* ⑥ 보라→핑크 그라디언트 면(뱃지·아이콘 원) → 브랜드 단색. ②와 같은 판단의 다른 방향(to-br).
+      색 리터럴은 lib/brandColor.ts primary와 같아야 한다(theme()를 못 쓰는 자리). */
 [data-edition='v2'] .bg-gradient-to-br.from-primary.to-secondary {
   background-image: none;
-  background-color: #6d28d9;
+  background-color: #166534;
 }
 /* ⑧ StoryCard 썸네일 자리 채움 면(보라→핑크) → 중립 회색. 이미지가 늦게 오거나 없을 때만 보인다. */
 [data-edition='v2'] .bg-gradient-to-br.from-primary-light.to-secondary-light {
@@ -459,10 +460,10 @@ code {
       (from-primary/5·/10 via-secondary/… to-accent/…, from-primary/10 to-secondary/10)만 겨눈다. */
 [data-edition='v2'] [class*="from-primary/"][class*="secondary/"] {
   background-image: none;
-  background-color: rgb(109 40 217 / 0.05);
+  background-color: rgb(22 101 52 / 0.05);
 }
 .dark [data-edition='v2'] [class*="from-primary/"][class*="secondary/"] {
-  background-color: rgb(167 139 250 / 0.08);
+  background-color: rgb(110 231 183 / 0.08);
 }
 [data-edition='v2'] h1 .bg-clip-text.text-transparent {
   background-image: none;
@@ -480,11 +481,11 @@ code {
 [data-edition='v2'] .v2-heading:has(+ .mx-auto.max-w-4xl) { max-width: 56rem; margin-inline: auto; }
 [data-edition='v2'] .v2-heading:has(+ .mx-auto.max-w-5xl) { max-width: 64rem; margin-inline: auto; }
 [data-edition='v2'] .v2-heading:has(+ .mx-auto.max-w-6xl) { max-width: 72rem; margin-inline: auto; }
-/* ④ 섹션 앵커 내비의 다크 hover가 초록(accent-light)이었다 — v2는 보라 짝(primary-lighter)으로. */
-.dark [data-edition='v2'] .dark\:hover\:text-accent-light:hover { color: #a78bfa; }
+/* ④ 섹션 앵커 내비의 다크 hover — v2는 브랜드 다크 짝(primary-lighter)으로. */
+.dark [data-edition='v2'] .dark\:hover\:text-accent-light:hover { color: #6ee7b7; }
 [data-edition='v2'] .bg-gradient-to-r.from-primary.to-secondary {
   background-image: none;
-  background-color: #6d28d9;
+  background-color: #166534;
 }
 
 /* 디자인 v2 푸터 — 잉크 배경 위에서 링 오프셋이 보라(ring-offset-primary)로 남으면 링 둘레에

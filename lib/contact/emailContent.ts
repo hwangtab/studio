@@ -1,5 +1,6 @@
 import type { SanitizedContactPayload } from './payload';
 import { CANONICAL_FACTS } from '../factTokens';
+import { BRAND_COLOR } from '../brandColor';
 
 const escapeHtml = (value: string): string =>
   value
@@ -24,7 +25,7 @@ export const buildContactEmailHtml = (sanitized: SanitizedContactPayload): strin
         </tr>
         <tr>
           <td style="padding:0 0 18px;font-size:15px;color:#1f2937;">
-            ${link ? `<a href="${link}" style="color:#6d28d9;text-decoration:none;">${value}</a>` : value}
+            ${link ? `<a href="${link}" style="color:${BRAND_COLOR.primary};text-decoration:none;">${value}</a>` : value}
           </td>
         </tr>`;
 
@@ -64,8 +65,8 @@ export const buildContactEmailHtml = (sanitized: SanitizedContactPayload): strin
 
           <!-- 헤더 -->
           <tr>
-            <td bgcolor="#6d28d9"
-                style="background-image:linear-gradient(135deg,#6d28d9 0%,#be185d 100%);
+            <td bgcolor="${BRAND_COLOR.primaryDark}"
+                style="background-color:${BRAND_COLOR.primaryDark};
                        padding:36px 32px;text-align:center;">
               <p style="margin:0 0 6px;font-size:22px;font-weight:700;color:#ffffff;
                         letter-spacing:-.01em;">
@@ -92,7 +93,7 @@ export const buildContactEmailHtml = (sanitized: SanitizedContactPayload): strin
                 </tr>
                 <tr>
                   <td style="padding:0 0 8px;">
-                    <div style="background:#f9fafb;border-left:3px solid #6d28d9;
+                    <div style="background:#f9fafb;border-left:3px solid ${BRAND_COLOR.primary};
                                 border-radius:6px;padding:16px 18px;
                                 font-size:15px;line-height:1.7;color:#1f2937;
                                 white-space:pre-wrap;word-break:break-word;">
@@ -118,7 +119,7 @@ export const buildContactEmailHtml = (sanitized: SanitizedContactPayload): strin
                   ${CANONICAL_FACTS.phone}
                 </a>
                 &nbsp;·&nbsp;
-                <a href="https://studionol.co.kr" style="color:#6d28d9;text-decoration:none;">
+                <a href="https://studionol.co.kr" style="color:${BRAND_COLOR.primary};text-decoration:none;">
                   studionol.co.kr
                 </a>
               </p>

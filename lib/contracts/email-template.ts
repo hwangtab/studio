@@ -1,4 +1,5 @@
 import { escapeHtml } from './html-escape';
+import { BRAND_COLOR } from '../brandColor';
 
 /**
  * 계약 메일 템플릿.
@@ -15,8 +16,8 @@ import { escapeHtml } from './html-escape';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr';
 
 const BRAND = {
-  primary: '#6d28d9',
-  primaryDark: '#5b21b6',
+  primary: BRAND_COLOR.primary,
+  primaryDark: BRAND_COLOR.primaryDark,
   ink: '#1a1a1a',
   muted: '#666666',
   faint: '#999999',

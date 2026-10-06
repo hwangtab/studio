@@ -30,13 +30,17 @@ Tailwind는 정의되지 않은 클래스명을 **에러 없이 빌드 CSS에서
 
 | 토큰 | light / DEFAULT / dark | 용도 |
 |---|---|---|
-| `primary` | `#7c3aed` / `#6d28d9` / `#5b21b6` | 1차 액션, 강조, 링크 |
-| `secondary` | `#ec4899` / `#be185d` / `#9d174d` | 보조 강조 (DEFAULT는 AA 5.88:1 확보를 위해 pink-700 상당으로 승격) |
-| `accent` | `#10b981` / `#047857` / `#065f46` | 성공·긍정 (DEFAULT는 AA 5.64:1 확보를 위해 emerald-700 상당) |
+| `primary` | `#15803d` / `#166534` / `#0e3c26` · lighter `#6ee7b7` | 1차 액션, 강조, 링크. **놀 그린** — 로고(`public/logo/logo.png`)의 짙은 녹색 계열. DEFAULT 흰 7.13:1·종이 6.67:1, dark는 로고 실측값(히어로 잉크 면·큰 면). 값의 정본은 `lib/brandColor.ts` — 메일 HTML·정적 카드·theme-color가 같은 값을 쓴다 |
+| `secondary` | = `primary` | **폐지 예정.** 2026-10-06 라이너 노트에서 핑크를 버리고 primary 값으로 재매핑했다. 새 코드에서 쓰지 말 것 — 남은 클래스(24파일)는 4주차에 primary로 치환하고 토큰을 지운다 |
+| `accent` | = `primary` | 성공·긍정 = 브랜드색. secondary와 같은 처리 |
+| `paper` | `#faf7f2` / `paper-2` `#f2ede4` | 라이트 바탕 두 단 — body·Layout·Section default/alternate. 순백 대신 종이. 글래스 카드 틴트(흰 0.72)는 그대로라 카드가 종이보다 살짝 밝게 뜬다 |
 | `kakao` | `#FEE500` / hover `#FADA0A` / ink `#191600` | **카카오톡 진입점 전용** |
 
-`gray` 50~950은 커스텀 스케일이다(`500`을 `#4b5563`로 어둡게 조정 — WCAG AA).
+`gray` 50~950은 커스텀 스케일이다(`500`을 `#4b5563`로 어둡게 조정 — WCAG AA). 다크 바탕은 gray-900 그대로다.
 **slate·zinc·neutral·stone은 쓰지 않는다.** 회색은 `gray` 하나다.
+
+> 2026-10-06 **라이너 노트**(`docs/design-liner-notes-plan-2026-10.md`): 보라 primary를 로고의 녹색으로, 순백을 종이로
+> 바꿨다. 아래 다크 짝 표의 수치는 그 값 기준이다. 서체·히어로·CTA 위계는 그 문서 §3-2~3-4를 따른다.
 
 ### 카카오 옐로 — 양방향 규칙
 
@@ -75,13 +79,15 @@ Tailwind는 정의되지 않은 클래스명을 **에러 없이 빌드 CSS에서
 
 | 토큰 | 값 | 대비 | 다크 텍스트로 |
 |---|---|---|---|
-| `primary`(DEFAULT) | `#6d28d9` | 2.83:1 | ✗ |
-| `primary-light` | `#7c3aed` | 3.53:1 | ✗ (간발의 차로 미달 — 쓰지 말 것) |
-| `primary-lighter` | `#a78bfa` | 7.40:1 | ✓ |
-| `secondary`(DEFAULT) | `#be185d` | 3.33:1 | ✗ |
-| `secondary-light` | `#ec4899` | 5.71:1 | ✓ |
-| `accent`(DEFAULT) | `#047857` | 3.67:1 | ✗ |
-| `accent-light` | `#10b981` | 7.94:1 | ✓ |
+| `primary`(DEFAULT) | `#166534` | 2.82:1 | ✗ |
+| `primary-light` | `#15803d` | 4.01:1 | ✗ (쓰지 말 것) |
+| `primary-lighter` | `#6ee7b7` | 13.2:1 | ✓ |
+| `secondary`(DEFAULT) | = primary | 2.82:1 | ✗ |
+| `secondary-light` | = primary-lighter | 13.2:1 | ✓ |
+| `accent`(DEFAULT) | = primary | 2.82:1 | ✗ |
+| `accent-light` | = primary-lighter | 13.2:1 | ✓ |
+
+(2026-10-06 라이너 노트 값. 보라 시절 수치는 git 이력에 있다.)
 
 따라서 짝은 셋뿐이다 — `text-primary` + `dark:text-primary-lighter`,
 `text-secondary` + `dark:text-secondary-light`, `text-accent` + `dark:text-accent-light`.

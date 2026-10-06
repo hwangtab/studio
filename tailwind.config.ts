@@ -1,4 +1,5 @@
 import type { Config, PluginAPI } from 'tailwindcss/types/config';
+import { BRAND_COLOR } from './lib/brandColor';
 
 const config: Config = {
   content: [
@@ -19,27 +20,35 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          light: '#7c3aed', // 밝은 보라색
-          DEFAULT: '#6d28d9', // 보라색
-          dark: '#5b21b6', // 진한 보라색
-          // 다크 배경(gray-900 #030712) 위 텍스트·테두리용. primary-light(#7c3aed)는
-          // 3.53:1로 AA 미달이라 outline 버튼 라벨에 쓸 수 없다 — secondary·accent의
-          // DEFAULT를 대비 때문에 승격한 것과 같은 이유의 토큰이다(측정 7.40:1).
-          lighter: '#a78bfa',
+          // 라이너 노트(2026-10-06, docs/design-liner-notes-plan-2026-10.md §3-1): 보라(violet-700)를
+          // 로고의 짙은 녹색 계열로. 값의 정본은 lib/brandColor.ts — 메일·정적 카드가 같은 값을 쓴다.
+          light: BRAND_COLOR.primaryLight, // 흰 5.02:1 · 종이 4.69:1 — 작은 텍스트에는 쓰지 않는다
+          DEFAULT: BRAND_COLOR.primary, // 흰 7.13:1 · 종이 6.67:1 (옛 보라 7.10:1과 같은 수준)
+          dark: BRAND_COLOR.primaryDark, // 로고 실측값. 흰 글씨 12.4:1 — 히어로 잉크 면·solid hover
+          // 다크 배경(gray-900 #030712) 위 텍스트·테두리용. DEFAULT는 2.82:1, light는 4.01:1로
+          // 다크 텍스트에 못 쓴다 — lighter만 13.2:1로 통과한다. 규칙은 보라 때와 같다.
+          lighter: BRAND_COLOR.primaryOnDark,
         },
         secondary: {
-          light: '#ec4899', // 밝은 핑크
-          // #db2777(pink-600)은 gray-50 배경 대비 4.39:1로 WCAG AA(4.5) 간발의 차로 미달.
-          // accent와 동일하게 pink-700로 승격하여 흰/회색 배경 버튼 모두 통과.
-          DEFAULT: '#be185d', // 핑크 (AA 통과: 5.88:1)
-          dark: '#9d174d', // 진한 핑크
+          // 라이너 노트: 핑크를 버리고 primary와 같은 값으로 재매핑했다(브랜드색은 하나). 24파일 66곳의
+          // secondary 클래스가 아직 남아 있어 이름을 유지한다 — 4주차(feat/liner-rulelist)에 primary로
+          // 치환하고 토큰을 지운다. 새 코드에서 secondary-*를 쓰지 말 것.
+          light: BRAND_COLOR.primaryOnDark,
+          DEFAULT: BRAND_COLOR.primary,
+          dark: BRAND_COLOR.primaryDark,
         },
         accent: {
-          light: '#10b981', // 밝은 에메랄드
-          // #059669(emerald-600)는 흰 배경 대비 3.76:1로 WCAG AA(4.5) 미달.
-          // text-accent/border-accent를 흰 배경 버튼에 자주 쓰므로 emerald-700로 승격.
-          DEFAULT: '#047857', // 에메랄드 (AA 통과: 5.64:1)
-          dark: '#065f46', // 진한 에메랄드
+          // 라이너 노트: 성공·긍정 = 브랜드색. secondary와 같은 이유로 이름만 남기고 값은 primary다.
+          // accent-light는 다크 텍스트 짝(13곳)이라 primaryOnDark(13.2:1)로 간다.
+          light: BRAND_COLOR.primaryOnDark,
+          DEFAULT: BRAND_COLOR.primary,
+          dark: BRAND_COLOR.primaryDark,
+        },
+        // 라이트 바탕. 순백 대신 종이(라이너 노트 §3-1). Section default/alternate와 body·Layout이 쓴다.
+        // 글래스 카드 틴트(흰 0.72)는 그대로라 카드가 종이보다 살짝 밝게 뜬다.
+        paper: {
+          DEFAULT: BRAND_COLOR.paper,
+          2: BRAND_COLOR.paper2,
         },
         // 카카오톡 진입점 전용 컬러. 사이트에서 "노란 버튼 = 카카오톡"이 성립하도록
         // 카카오로 가는 링크에만 쓰고, 그 외 어떤 CTA에도 쓰지 않는다(반대 방향도 금지).

@@ -1,11 +1,12 @@
 import { formatPriceAmount } from '../../data/pricing';
 import { formatEntryNumber } from './format';
+import { BRAND_COLOR } from '../brandColor';
 
 /**
  * 공연 메일의 HTML 본문 — 순수 함수(DB·fs 없음). 텍스트 본문(lib/shows/email.ts)은 그대로 폴백으로 함께 나간다.
  *
  * 메일 클라이언트 제약 때문에 사이트 CSS·Tailwind는 못 쓴다. 대신 사이트 토큰값을 inline으로 박는다 —
- * 잉크 `#030712`(gray-950), 보라 `#6d28d9`(primary DEFAULT, 흰 배경 AA), 회색 `#4b5563`/`#6b7280`.
+ * 잉크 `#030712`(gray-950), 브랜드 녹색(lib/brandColor.ts primary, 흰 배경 7.13:1), 회색 `#4b5563`/`#6b7280`.
  * 외부 이미지는 포스터(공개 경로) 하나뿐이고, QR은 첨부(ticket-N.png)로 간다 — Gmail이 data URL을 막고
  * 우리 발송 모듈이 cid 인라인을 지원하지 않는다. 그래서 본문의 주 버튼은 "내 티켓(QR) 열기"다.
  */
@@ -17,7 +18,7 @@ const FONT = "'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', Helvetica, A
 const INK = '#030712';
 const BODY = '#374151';
 const MUTED = '#6b7280';
-const PRIMARY = '#6d28d9';
+const PRIMARY = BRAND_COLOR.primary;
 const BORDER = '#e5e7eb';
 
 export interface TicketEmailHtmlInput {

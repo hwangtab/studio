@@ -1,4 +1,5 @@
 import type { PortfolioItem } from '../types/data';
+import { BRAND_COLOR } from '../lib/brandColor';
 
 interface PortfolioStats {
   totalItems: number;
@@ -64,7 +65,7 @@ const getPortfolioStats = (items: readonly PortfolioItem[] = [], tracks: Readonl
 const getCategoryInfo = (categoryId: string, categories: ReadonlyArray<{ id: string; name: string; color: string }> = []) => {
   return categories.find((cat) => cat.id === categoryId) || {
     name: categoryId,
-    color: '#6d28d9',
+    color: BRAND_COLOR.primary,
   };
 };
 
