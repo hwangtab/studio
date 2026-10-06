@@ -41,7 +41,7 @@ faq:
 
 Teletronix LA-2A는 1960년대 출시 이후 수십 년간 보컬과 베이스에 독보적인 따뜻함을 부여하는 클래식 컴프레서입니다.
 
-LA-2A의 탄생은 1965년 엔지니어 James F. Lawrence Jr.가 캘리포니아의 소규모 회사 Teletronix에서 개발한 Level-Loc 기반 Electro-Optical 컴프레서로 거슬러 올라갑니다. 광전지(T4B 셀 — 발광 다이오드와 광저항기 조합)를 이용해 신호 레벨에 따라 빛의 밝기가 변하고, 그 빛이 저항값을 바꿔 컴프레션 양을 제어하는 방식은 트랜지스터 기반 컴프레서와 근본적으로 다른 '물리적 지연'을 만들어냈고, 이것이 바로 LA-2A 특유의 느리고 자연스러운 컴프레션의 핵심입니다. 1969년 Teletronix는 Bill Putnam Sr.가 설립한 UREI(United Recording Electronics Industries)에 인수됐습니다. Bill Putnam은 Capitol Records, Western Recorders 등 LA 레코딩 스튜디오의 황금기를 이끈 인물입니다. 이후 UREI는 Harman International을 거쳐 현재는 Universal Audio가 하드웨어 생산권을 보유하고 있습니다. 1990년대 이후 아날로그 하드웨어가 디지털로 전환되는 시기에도 LA-2A의 광학적 컴프레션 특성은 대체재가 없어 스튜디오에서 계속 사용됐고, 2000년대 Universal Audio UAD 플러그인 에뮬레이션이 출시되면서 홈 스튜디오와 소규모 믹싱 환경에도 LA-2A의 소리가 보급됐습니다. Bonnie Raitt, Led Zeppelin의 존 폴 존스 베이스, K-POP 발라드 보컬 믹싱에 이르기까지 장르와 시대를 초월해 사용되는 범용성이 LA-2A를 단종 없이 현재까지 생산되는 클래식으로 만든 핵심 이유입니다.
+LA-2A의 탄생은 엔지니어 James F. Lawrence Jr.가 캘리포니아의 소규모 회사 Teletronix에서 개발한 Electro-Optical 컴프레서로 거슬러 올라갑니다. 광전지(T4B 셀 — 전계발광 패널과 광저항기 조합)를 이용해 신호 레벨에 따라 빛의 밝기가 변하고, 그 빛이 저항값을 바꿔 컴프레션 양을 제어하는 방식은 트랜지스터 기반 컴프레서와 근본적으로 다른 '물리적 지연'을 만들어냈고, 이것이 바로 LA-2A 특유의 느리고 자연스러운 컴프레션의 핵심입니다. 1967년 Teletronix는 Bill Putnam Sr.가 설립한 UREI(United Recording Electronics Industries)에 인수됐습니다. 이후 UREI는 Harman International을 거쳐 현재는 Universal Audio가 하드웨어 생산권을 보유하고 있습니다. 1990년대 이후 아날로그 하드웨어가 디지털로 전환되는 시기에도 LA-2A의 광학적 컴프레션 특성은 대체재가 없어 스튜디오에서 계속 사용됐고, 2000년대 Universal Audio UAD 플러그인 에뮬레이션이 출시되면서 홈 스튜디오와 소규모 믹싱 환경에도 LA-2A의 소리가 보급됐습니다. 보컬과 베이스 믹싱에 이르기까지 장르와 시대를 초월해 사용되는 범용성이 LA-2A를 현재까지 생산되는 클래식으로 만든 핵심 이유입니다.
 
 ## LA-2A 파라미터 이해
 
@@ -63,7 +63,7 @@ LA-2A의 탄생은 1965년 엔지니어 James F. Lawrence Jr.가 캘리포니아
 - Attack: 약 10ms (빠름, 자동 조절)
 - Release: 40~60ms (초기) + 수초 (지연)
   - 이중 시간 상수(Dual Release)로 자연스러운 컴프레션
-- Ratio: 3:1~6:1 (Compress), 최대 40:1+ (Limit 모드)
+- Ratio: Compress 모드보다 Limit 모드가 훨씬 높음
 
 ### 왜 보컬에 자연스러운가?
 
@@ -141,13 +141,12 @@ LA-2A의 탄생은 1965년 엔지니어 James F. Lawrence Jr.가 캘리포니아
 
 **Universal Audio UAD LA-2A**
 - 가장 하드웨어에 충실한 모델링
-- Silver (LA-2A Classic) / Gray (LA-2) 버전 제공
+- Silver / Gray / LA-2 버전 제공
 - UA Apollo 또는 UAD DSP 카드 필요
 
 **Waves CLA-2A**
 - 가성비 최고, 네이티브 처리
 - 보컬·베이스 믹싱 작업에 충분
-- 하드웨어 대비 99% 재현
 
 **Native Instruments VC 2A**
 - Guitar Rig 내 포함, 가성비 우수
@@ -169,7 +168,7 @@ LA-2A의 탄생은 1965년 엔지니어 James F. Lawrence Jr.가 캘리포니아
 
 **케이스 2: R&B 보컬 — LA-2A 단독 Limit 모드**
 
-두껍고 강한 R&B·소울 보컬에서는 LA-2A를 Limit 모드로 단독 사용합니다. Peak Reduction을 높게 세팅해 GR -6~-10dB까지 걸고, Gain으로 충분히 보상합니다. Limit 모드의 40:1+ 비율이 강한 발성의 피크를 억누르면서 Optical 방식 특유의 따뜻한 음색이 더해져 R&B 보컬 특유의 밀도감이 만들어집니다.
+두껍고 강한 R&B·소울 보컬에서는 LA-2A를 Limit 모드로 단독 사용합니다. Peak Reduction을 높게 세팅해 GR -6~-10dB까지 걸고, Gain으로 충분히 보상합니다. Limit 모드의 높은 비율이 강한 발성의 피크를 억누르면서 Optical 방식 특유의 따뜻한 음색이 더해져 R&B 보컬 특유의 밀도감이 만들어집니다.
 
 **케이스 3: 어쿠스틱 기타 — Compress 모드 낮은 GR**
 
