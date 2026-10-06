@@ -11,6 +11,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
 import { isCronAuthorized } from '../../../lib/cron/auth';
 import { purgeExpiredPersonalData, RETENTION_YEARS } from '../../../lib/contracts/retention';
+import { buildOperatorAlertHtml } from '../../../lib/email/operatorAlert';
 import { sendEmail } from '../../../lib/email/resend';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -43,6 +44,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         to: OPERATOR_EMAIL,
         subject: '[Studio NOL] 계약 개인정보 파기 일부 실패',
         text: message,
+        html: buildOperatorAlertHtml({
+          title: `${RETENTION_YEARS}년이 지난 계약의 개인정보 파기가 일부 실패했습니다`,
+          cron: 'cron/purge-contracts',
+          rows: [
+            { label: '성공', value: `${result.purged}건` },
+            { label: '실패', value: `${result.failed}건`, emphasis: true },
+          ],
+          hints: [
+            '계약서 제12조로 약속한 파기이므로 확인이 필요합니다.',
+            '다음 주기에 다시 시도하지만, 반복되면 Turso와 Blob 설정을 확인해 주세요.',
+          ],
+        }),
       }).catch(() => {});
 
       // 크론 실행 자체를 실패로 남긴다. 재시도는 안전하다 — 이미 파기된 건은 건너뛴다.
@@ -61,6 +74,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         '보관 기간이 지난 계약의 개인정보 파기 작업이 실패했습니다.\n\n' +
         `사유: ${detail}\n\n` +
         '계약서 제12조로 약속한 파기이므로 확인이 필요합니다.',
+      html: buildOperatorAlertHtml({
+        title: '보관 기간이 지난 계약의 개인정보 파기가 실패했습니다',
+        cron: 'cron/purge-contracts',
+        reason: detail,
+        hints: ['계약서 제12조로 약속한 파기이므로 확인이 필요합니다.'],
+      }),
     }).catch(() => {});
 
     return res.status(500).json({ ok: false, message: '개인정보 파기 작업에 실패했습니다.' });

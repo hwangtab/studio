@@ -137,7 +137,10 @@ it('실패 메일은 어느 파기가 왜 실패했는지 적는다', async () =
   (purgeExpiredResidentNumbers as jest.Mock).mockRejectedValue(new Error('DB 장애'));
   await call();
   expect(sendEmail).toHaveBeenCalledTimes(1);
-  const mail = (sendEmail as jest.Mock).mock.calls[0][0] as { subject: string; text: string };
+  const mail = (sendEmail as jest.Mock).mock.calls[0][0] as { subject: string; text: string; html?: string };
+  // 같은 내용을 레이아웃 HTML로도 보낸다.
+  expect(mail.html).toContain('<!DOCTYPE html>');
+  expect(mail.html).toContain('no such table: privacy_access_logs');
   expect(mail.subject).toContain('2건');
   expect(mail.text).toContain('접속기록');
   expect(mail.text).toContain('no such table: privacy_access_logs');

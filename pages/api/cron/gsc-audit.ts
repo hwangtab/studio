@@ -11,6 +11,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { put, list } from '@vercel/blob';
 import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
+import { buildOperatorAlertHtml } from '../../../lib/email/operatorAlert';
 import { sendEmail } from '../../../lib/email/resend';
 import { isCronAuthorized } from '../../../lib/cron/auth';
 import { runAudit, type AuditSnapshot } from '../../../lib/seo/gscAudit';
@@ -66,7 +67,16 @@ function getOAuthCreds() {
 }
 
 async function sendCronEmail(subject: string, bodyText: string): Promise<{ ok: boolean; status?: number; error?: string }> {
-  const result = await sendEmail({ to: EMAIL_TO, subject, text: bodyText });
+  // 리포트 생성기가 만든 평문은 구조화하지 않고, 제목 요약 + 줄바꿈을 보존한 블록으로 입힌다.
+  const html = buildOperatorAlertHtml({
+    title: subject.replace(/^\[Studio NOL SEO\]\s*/, ''),
+    cron: 'cron/gsc-audit',
+    tone: 'info',
+    preformatted: bodyText,
+    ctaLabel: 'Search Console 열기',
+    ctaUrl: 'https://search.google.com/search-console',
+  });
+  const result = await sendEmail({ to: EMAIL_TO, subject, text: bodyText, html });
   if (result.ok) return { ok: true, status: result.status };
   return { ok: false, status: result.status, error: result.errorDetail ?? result.errorCode };
 }

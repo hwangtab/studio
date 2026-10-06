@@ -19,6 +19,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { isCronAuthorized } from '../../../lib/cron/auth';
+import { buildOperatorAlertHtml } from '../../../lib/email/operatorAlert';
 import { sendEmail } from '../../../lib/email/resend';
 import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
 import {
@@ -170,6 +171,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           .join('\n\n')}\n\n` +
         '개인정보 보호법 제21조①이 요구하는 파기이므로 확인이 필요합니다. ' +
         '표나 컬럼이 없다는 사유라면 운영 DB에 마이그레이션이 적용됐는지 먼저 확인해 주세요.',
+      html: buildOperatorAlertHtml({
+        title: `주문·구독 개인정보 파기가 ${failures.length}건 실패했습니다`,
+        cron: 'cron/purge-orders',
+        rows: [{ label: '실패 작업', value: `${failures.length}건`, emphasis: true }],
+        reason: failures.map(({ label, detail }) => `· ${label}\n  사유: ${detail}`).join('\n\n'),
+        hints: [
+          '개인정보 보호법 제21조①이 요구하는 파기이므로 확인이 필요합니다.',
+          '표나 컬럼이 없다는 사유라면 운영 DB에 마이그레이션이 적용됐는지 먼저 확인해 주세요.',
+        ],
+      }),
     }).catch((e: unknown): { ok: boolean; errorCode?: string } => ({ ok: false, errorCode: String(e) }));
     // 알림이 안 나간 사실을 삼키면 점검 실패가 조용히 묻힌다 — 응답은 그대로 두고 로그만 남긴다.
     if (!alert.ok) console.error('[cron/purge-orders] 운영자 실패 알림 발송 실패', alert.errorCode);
