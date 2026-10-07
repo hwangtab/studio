@@ -83,7 +83,6 @@ No es solo comodidad: es **no perder el flujo del tema**.
 
 “¿De verdad tengo que gastar tiempo ordenando?”
 Sí. (Firmemente.)
-Si inviertes 30 minutos en ordenar, ahorras 3 horas de mezcla.
 Y lo más importante: una sesión ordenada calma la mente y deja espacio para **decisiones artísticas**.
 
 Abre ese proyecto desordenado ahora y empieza a limpiar. El sonido cambiará. (¡Brilla!)

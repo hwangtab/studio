@@ -52,7 +52,7 @@ No son solo nombres: son **escenarios**. (¡Elige!)
 
 * **Sensación**: no es un espacio real. Es una placa metálica vibrando. Menos resonancia, colas **densas, brillantes, nítidas**.
 * **Uso**: **voces** y **caja**.
-* **Clave**: ese “shaa‑” elegante del pop casi siempre es Plate. Más limpio que Hall. (¡Shine!)
+* **Clave**: ese “shaa‑” elegante del pop suele hacerse con Plate. Más limpio que Hall. (¡Shine!)
 
 #### ④ Spring: vibración vintage (¡Boing!)
 

@@ -54,7 +54,7 @@ At 44.1 kHz, we must sample 44,100 times per second at precise intervals—but t
   * Highs sound rough and cold (gritty)
 
 **Solution**:
-With any interface above ~100,000 KRW, jitter isn’t a serious concern.
+With a typical commercially available audio interface, jitter isn’t a serious concern.
 However, in complex pro setups using **word clock** connections, the “master clock” must be set correctly.
 For home recording, remember just this: **Use a good interface and keep your drivers updated.** (Check often!)
 

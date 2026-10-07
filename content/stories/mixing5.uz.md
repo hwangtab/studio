@@ -54,7 +54,7 @@ Lekin u mast bo'lib tez‑sekin qilib yuborsa (tik—tok—tik—‑tok), albatt
   * Yuqori chastotalar g'ijim va sovuq eshitiladi (donador)
 
 **Yechim**:
-~100,000 KRWdan yuqori interfeyslarda jitter jiddiy muammo emas.
+Sotuvdagi oddiy audio interfeyslarda ham jitter jiddiy muammo emas.
 Ammo **word clock** ulanishlari bo'lgan murakkab pro setupda “master clock”ni to'g'ri sozlash kerak.
 Uyda yozishda shuni yodda tuting: **Yaxshi interfeys ishlating va drayverlarni yangilang.** (Tez-tez tekshiring!)
 

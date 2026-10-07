@@ -30,8 +30,9 @@ faq:
     a: >-
       If the track has not yet gone live in stores, your distributor can change the release date. Once it has
       already been delivered to the platforms, however, it may be locked (usually a few days before release) and
-      changes can be restricted. If you have pitched to Spotify editorial, the timing resets and you must pitch
-      again.
+      changes can be restricted. If you have pitched to Spotify editorial, it is best to update the pitch after the
+      date change. A pitch can be edited up to the release date, but there is no guarantee that editors will see the
+      edits.
   - q: Can I cancel a release entirely?
     a: >-
       Before release, your distributor can cancel or delete it. After release you can request a takedown to remove
@@ -116,7 +117,7 @@ If you want to push the date back, the track **must not yet be live.**
 
 - **Before delivery**: your distributor can freely move the date back
 - **After delivery**: it may be restricted by the lock window
-- **Editorial pitch reset**: if you have already pitched to a Spotify editor (Spotify for Artists), changing the date voids the pitch timing, so you must **re-pitch at least 7 days before the new release date**
+- **Editorial pitch update**: if you have already pitched to a Spotify editor (Spotify for Artists), after changing the date make sure delivery to your distributor is complete **at least 7 days before the new release date** and **update the pitch**. A pitch can be edited up to the release date, but there is no guarantee that editors will see the edits
 - **Pre-save links**: dates on any distributed pre-save links and promo materials must all be updated
 
 Postponing isn't technically hard, but it comes with the side work of realigning your promo assets.

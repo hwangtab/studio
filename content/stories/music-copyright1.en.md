@@ -45,7 +45,7 @@ faq:
 
 Every artist who makes music should understand the basic concepts of copyright. Copyright is the core legal tool that protects creative works and guarantees fair compensation for creation.
 
-The international framework for music copyright begins with the Berne Convention of 1886. Establishing the principle that a work is "automatically protected from the moment of creation" as an international standard, this convention has now been signed by 181 countries. Korea joined in 1996, which means that Korean artists' music receives legal protection across all member countries even without separate registration. The Korea Music Copyright Association (KOMCA), established in 1964, centrally manages royalties arising from broadcast, streaming, and performance. The reason music copyright has become especially important in the streaming era lies in the revenue distribution structure. Streaming revenue from Spotify, Melon, and Apple Music is settled separately into Composition Rights and Master Rights, and lyricists and composers registered with KOMCA can automatically collect the composition-rights share from platform streaming revenue. If you separately register with the Korea Music Performers' Association (KMPA), you can additionally collect the neighboring-rights royalties of performers (singers and instrumentalists), so registering with both associations at once is the realistic optimal revenue structure for indie artists.
+The international framework for music copyright begins with the Berne Convention of 1886. It established the principle that a work is "automatically protected from the moment of creation" as an international standard. Korea joined in 1996, which means that Korean artists' music receives legal protection across all member countries even without separate registration. The Korea Music Copyright Association (KOMCA), established in 1964, centrally manages royalties arising from broadcast, streaming, and performance. The reason music copyright has become especially important in the streaming era lies in the revenue distribution structure. Streaming revenue from Spotify, Melon, and Apple Music is settled separately into Composition Rights and Master Rights, and lyricists and composers registered with KOMCA can automatically collect the composition-rights share from platform streaming revenue. If you separately register with the Korea Federation of Music Performers (KFMP), you can additionally collect the neighboring-rights royalties of performers (singers and instrumentalists), so registering with both associations at once is the realistic optimal revenue structure for indie artists.
 
 ---
 
@@ -106,8 +106,8 @@ The international framework for music copyright begins with the Berne Convention
 - **Performance revenue**: usage fees for public performances
 - **Karaoke revenue**: revenue from the use of karaoke machines
 
-**KMPA (performer's right)**
-- Performers (singers and instrumentalists) register separately with KMPA, not KOMCA
+**KFMP (performer's right)**
+- Performers (singers and instrumentalists) register separately with KFMP, not KOMCA
 - By registering performer information when a recording is released, they collect neighboring-rights royalties
 
 ---
@@ -140,7 +140,7 @@ The international framework for music copyright begins with the Berne Convention
 
 ## In Closing
 
-Music copyright is the most powerful tool for protecting an artist's creative work. Before you create, respect the rights of others; after you create, register and manage your own rights. The minimum action an indie artist in Korea should take is to register the work with KOMCA before releasing the recording, and, if you are a singer or instrumentalist, to additionally register with KMPA. With just these two steps, you build a structure that automatically collects the royalties and neighboring-rights royalties arising from streaming, broadcast, and performance.
+Music copyright is the most powerful tool for protecting an artist's creative work. Before you create, respect the rights of others; after you create, register and manage your own rights. The minimum action an indie artist in Korea should take is to register the work with KOMCA before releasing the recording, and, if you are a singer or instrumentalist, to additionally register with KFMP. With just these two steps, you build a structure that automatically collects the royalties and neighboring-rights royalties arising from streaming, broadcast, and performance.
 
 The most common mistake with sampling and cover music is thinking that "if YouTube's Content ID isn't triggered, it's safe." Content ID non-detection also occurs when the copyright owner has not registered with the system, and legal copyright infringement is unrelated to whether Content ID fires. If you are planning a commercial release, signing a license agreement directly with the original author and record label, or obtaining official permission through KOMCA, is the only safe approach.
 

@@ -53,7 +53,7 @@ Empieza por lo más importante:
 
 **Tip: Mezcla con ruido rosa**
 
-Si estás perdido, prueba con ruido rosa. Suena a ‑12 dB y sube cada instrumento hasta que apenas sobresalga.
+Si estás perdido, prueba con ruido rosa. Ponlo a sonar y sube cada instrumento hasta que apenas sobresalga.
 Sorprendentemente logras un buen balance. (¡Bien!)
 
 ## 3. La magia del mono: detector de mentiras

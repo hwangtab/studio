@@ -52,7 +52,7 @@ These aren’t just names. They’re **choices of stage**. (Pick one!)
 
 * **Feel**: not a real room. It’s a vibrating metal plate. Less room resonance, **dense, bright, glossy** tails.
 * **Use**: **vocals** and **snare**.
-* **Key**: That polished “shaa‑” vocal tail in pop is almost always Plate. Cleaner than Hall. (Shine!)
+* **Key**: That polished “shaa‑” vocal tail in pop often comes from Plate. Cleaner than Hall. (Shine!)
 
 #### ④ Spring: vintage wobble (Boing!)
 

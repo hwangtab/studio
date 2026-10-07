@@ -62,7 +62,7 @@ Nega bunday bo'ladi?
 2. **Moslashuv**: Miya takroriy tovushlarni e'tiborsiz qoldiradi yoki buzib qabul qiladi.
 
 **[Studio tips]**:
-* **20 daqiqa ishlang, 5 daqiqa dam oling**: Quloqqa dam bering. Qisqa sayr yoki tashqaridagi tovushlar ham reset qiladi.
+* **30–45 daqiqa ishlang, 5–10 daqiqa dam oling**: Quloqqa dam bering. Qisqa sayr yoki tashqaridagi tovushlar ham reset qiladi.
 * **Past ovozda tinglang**: Baland ovoz quloqni charchatadi. Suhbat darajasida balans to'g'ri bo'lsa, u haqiqatan ham yaxshi.
 
 ## 4. Har safar bitta asbobga e'tibor bering
@@ -83,5 +83,5 @@ Shunday fikr qilsangiz — tabriklaymiz, qulog'ingiz allaqachon injyener qulog'i
 ### [Boshlovchilar qiladigan xatolar] 👂
 
 * **“Reference'siz miks”**: Kompassiz suzishdek. “Quloqlarim mukammal” degan zahoti miks yo'ldan chiqadi.
-* **“Marafon miks”**: Besh soat uzluksiz — quloq uvishadi. O'sha paytdagi qarorlarning 90%i ertasi kuni afsus bo'ladi.
+* **“Marafon miks”**: Besh soat uzluksiz — quloq uvishadi.
 * **“Ertaga yaxshi bo'ladi”**: Hozir noto'g'ri bo'lsa, noto'g'ri. “Keyin tuzaladi” deb o'zingizni gipnoz qilmang.

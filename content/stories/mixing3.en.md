@@ -55,7 +55,7 @@ Remember two main types.
 
 ## 4. Stop blaming gear
 
-There’s a phrase top engineers always say:
+There’s a phrase you hear often:
 **“It’s not the gear, it’s the ear.”**
 
 The Beatles made history on a 4‑track tape machine, and Billie Eilish’s Grammy‑winning album was recorded in a bedroom.
