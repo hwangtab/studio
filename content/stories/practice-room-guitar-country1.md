@@ -186,12 +186,6 @@ B3-G3에서 C4-A3으로 슬라이드+밴드
 
 ---
 
-## 마무리
-
-컨트리 기타는 즐거움이 가득한 장르입니다. 치킨피킹의 경쾌한 사운드, 개방현 런의 시원함, 더블 스톱의 달콤함—이 모든 것이 컨트리를 특별하게 만드는 요소입니다.
-
-은평구 24시간 음악연습실에서 텔레캐스터 스타일 클린 사운드로 컨트리 기타 기법을 마스터하세요.
-
 ## 컨트리 기타는 맑은 톤 위에서 손가락이 춤춥니다
 
 컨트리 기타의 색깔을 만드는 첫 번째 요소는 하이브리드 피킹, 흔히 치킨 피킹이라 부르는 주법이에요. 픽으로 저음 베이스를 짚으면서 나머지 손가락으로 고음 멜로디를 동시에 튕기는 거죠. 이 픽과 손가락의 조합이 컨트리 특유의 통통 튀고 쪼는 듯한 사운드를 만듭니다. 픽만 쓰던 분이라면 이 손가락 병행이 첫 관문이에요.
@@ -202,4 +196,12 @@ B3-G3에서 C4-A3으로 슬라이드+밴드
 
 ---
 
-[기타 컨트리 치킨 피킹·하이브리드 피킹 — 완전 가이드](/stories/practice-room-guitar-country-chicken-picking1) | [기타 핑거피킹·Travis Picking 패턴 — 완전 가이드](/stories/practice-room-guitar-fingerpicking-travis1) | [기타 펑크 리듬·치킨 피킹·클린 그루브 — 완전 가이드](/stories/practice-room-guitar-funk-rhythm1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 카포 활용법 완전 가이드](/stories/practice-room-guitar-capo-techniques1)
+## 마무리
+
+컨트리 기타는 즐거움이 가득한 장르입니다. 치킨피킹의 경쾌한 사운드, 개방현 런의 시원함, 더블 스톱의 달콤함—이 모든 것이 컨트리를 특별하게 만드는 요소입니다.
+
+은평구 24시간 음악연습실에서 텔레캐스터 스타일 클린 사운드로 컨트리 기타 기법을 마스터하세요.
+
+---
+
+[기타 핑거피킹·Travis Picking 패턴 — 완전 가이드](/stories/practice-room-guitar-fingerpicking-travis1) | [기타 펑크 리듬·치킨 피킹·클린 그루브 — 완전 가이드](/stories/practice-room-guitar-funk-rhythm1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [기타 카포 활용법 완전 가이드](/stories/practice-room-guitar-capo-techniques1)

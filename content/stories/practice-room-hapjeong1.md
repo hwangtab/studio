@@ -140,4 +140,4 @@ faq:
 
 ---
 
-[연신내 음악연습실 추천 — 연신내역 4번 출구 도보 5분](/stories/practice-room-yeonsinnae1) | [망원역 음악연습실 추천 — 6호선 망원역, 연신내 24시간 방음 연습실](/stories/practice-room-mangwon1) | [월드컵경기장역 음악연습실 추천 — 6호선 월드컵경기장역, 연신내 24시간 방음 연습실](/stories/practice-room-worldcup1) | [홍대 음악연습실 vs 연신내 — 서울 음악연습실 지역 비교 가이드](/stories/seoul1) | [은평구 음악연습실 — 구산·역촌·응암 지역 24시간 방음 연습실 가이드](/stories/practice-room-eunpyeong1)
+[연신내 음악연습실 추천 — 연신내역 4번 출구 도보 5분](/stories/practice-room-yeonsinnae1) | [망원역 음악연습실 추천 — 6호선 망원역, 연신내 24시간 방음 연습실](/stories/practice-room-mangwon1) | [월드컵경기장역 음악연습실 추천 — 6호선 월드컵경기장역, 연신내 24시간 방음 연습실](/stories/practice-room-worldcup1) | [은평구 음악연습실 — 구산·역촌·응암 지역 24시간 방음 연습실 가이드](/stories/practice-room-eunpyeong1)

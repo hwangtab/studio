@@ -141,4 +141,4 @@ faq:
 
 ---
 
-[연신내 음악연습실 추천 — 연신내역 4번 출구 도보 5분](/stories/practice-room-yeonsinnae1) | [고양시·일산 음악연습실 추천 — 3호선으로 15분, 연신내 24시간 방음 연습실](/stories/practice-room-goyang1) | [대화역 음악연습실 추천 — 3호선 종점 대화역, 연신내 24시간 방음 연습실](/stories/practice-room-daehwa1) | [불광 음악연습실 추천 — 불광역 도보 5분 24시간 방음 연습실 안내](/stories/practice-room-bulgwang1) | [은평구 음악연습실 — 구산·역촌·응암 지역 24시간 방음 연습실 가이드](/stories/practice-room-eunpyeong1)
+[연신내 음악연습실 추천 — 연신내역 4번 출구 도보 5분](/stories/practice-room-yeonsinnae1) | [대화역 음악연습실 추천 — 3호선 종점 대화역, 연신내 24시간 방음 연습실](/stories/practice-room-daehwa1) | [불광 음악연습실 추천 — 불광역 도보 5분 24시간 방음 연습실 안내](/stories/practice-room-bulgwang1) | [은평구 음악연습실 — 구산·역촌·응암 지역 24시간 방음 연습실 가이드](/stories/practice-room-eunpyeong1)

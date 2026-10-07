@@ -117,4 +117,4 @@ faq:
 
 ---
 
-[현악기 연습실 — 바이올린·비올라·첼로 방음 연습 공간 가이드](/stories/practice-room-string1) | [첼로 연습 — 낮은 현악기 방음 연습 완벽 가이드](/stories/practice-room-cello1) | [클래식 — 피아노·바이올린·첼로 클래식 연주 연습 공간 가이드](/stories/practice-room-classical1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [집중 연습 — 몰입 연습 환경과 슬럼프 극복 가이드](/stories/practice-room-concentration1)
+[첼로 연습 — 낮은 현악기 방음 연습 완벽 가이드](/stories/practice-room-cello1) | [클래식 — 피아노·바이올린·첼로 클래식 연주 연습 공간 가이드](/stories/practice-room-classical1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [집중 연습 — 몰입 연습 환경과 슬럼프 극복 가이드](/stories/practice-room-concentration1)

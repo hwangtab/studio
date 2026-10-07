@@ -97,13 +97,15 @@ faq:
 
 ---
 
-### 그루브 훈련을 위한 추천 트랙
+### 위 그루브를 귀로 확인할 추천 트랙
+
+앞에서 정리한 16분 하이햇, 2·4박 스네어, 레이드백이 실제 음원에서 어떻게 들리는지 레벨별로 짚어 보세요.
 
 | 레벨 | 트랙 | 그루브 포인트 |
 |------|------|------------|
-| 입문 | Stevie Wonder — Superstition | 기본 16비트 그루브 |
-| 중급 | Bruno Mars — Treasure | 훵키 그루브 |
-| 고급 | Tower of Power — What Is Hip | 16비트 정밀 그루브 |
+| 입문 | Stevie Wonder — Superstition | 16분 하이햇 위에 2·4박 스네어가 앉는 자리 |
+| 중급 | Bruno Mars — Treasure | 킥과 베이스가 맞물리는 훵키 그루브 |
+| 고급 | Tower of Power — What Is Hip | 킥을 당기는 엇박과 16분 정밀도 |
 
 ## 더 효과적으로 연습하는 법
 

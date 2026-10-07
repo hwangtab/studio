@@ -175,8 +175,8 @@ faq:
 
 서울 각 구와 경기·인천 주요 도시에서 스튜디오 놀까지의 상세 이동 경로, 맞춤 세션 안내는 아래 개별 가이드를 참고하세요.
 
-**서울**: [강남](/stories/seoul1) | [홍대](/stories/seoul1) | [잠실](/stories/seoul1) | [종로](/stories/seoul1) | [영등포](/stories/seoul1) | [노원](/stories/seoul1) | [성수](/stories/seoul1) | [사당](/stories/seoul1) | [목동](/stories/seoul1) | [구로](/stories/seoul1) | [이태원](/stories/seoul1)
+**서울**: 강남·홍대·잠실·종로·영등포·노원·성수·사당·목동·구로·이태원 — [서울 지역별 이동 가이드](/stories/seoul1)
 
-**경기**: [일산](/stories/gyeonggi1) | [분당](/stories/gyeonggi1) | [수원](/stories/gyeonggi1) | [안양](/stories/gyeonggi1) | [부천](/stories/gyeonggi1) | [김포](/stories/gyeonggi1) | [의정부](/stories/gyeonggi1) | [남양주](/stories/gyeonggi1) | [하남](/stories/gyeonggi1) | [파주](/stories/gyeonggi1) | [광명](/stories/gyeonggi1)
+**경기**: 일산·분당·수원·안양·부천·김포·의정부·남양주·하남·파주·광명 — [경기 지역별 이동 가이드](/stories/gyeonggi1)
 
-**인천**: [인천](/stories/incheon1) | [부평](/stories/incheon1) | [송도](/stories/incheon1)
+**인천**: 인천·부평·송도 — [인천 지역별 이동 가이드](/stories/incheon1)

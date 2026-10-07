@@ -119,4 +119,4 @@ faq:
 
 ---
 
-[기타 음악 이론·음악 이론 기타 적용 — 기타 이론 완성 가이드](/stories/practice-room-guitar-theory1) | [초견·악보 읽기 실전 연습 — 악보 읽기 속도 향상 가이드](/stories/practice-room-sight-reading1) | [국악·민요·가야금 연습 — 전통 음악 방음 개인 연습 공간](/stories/practice-room-gugak1) | [음악 연습 일지·기록 방법으로 실력 올리기 — 연습 효율 극대화](/stories/practice-room-journal1) | [음악 암기·악보 없이 연주하기 연습 — 외워서 연주하는 법](/stories/practice-room-memory1)
+[초견·악보 읽기 실전 연습 — 악보 읽기 속도 향상 가이드](/stories/practice-room-sight-reading1) | [국악·민요·가야금 연습 — 전통 음악 방음 개인 연습 공간](/stories/practice-room-gugak1) | [음악 연습 일지·기록 방법으로 실력 올리기 — 연습 효율 극대화](/stories/practice-room-journal1) | [음악 암기·악보 없이 연주하기 연습 — 외워서 연주하는 법](/stories/practice-room-memory1)

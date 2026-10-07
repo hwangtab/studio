@@ -191,4 +191,3 @@ C - C# - D - D# - E - F - F# - G - G# - A - A# - B - C
 - [연신내 음악연습실 완전 가이드](/stories/practice-room-yeonsinnae1)
 - [보컬 호흡 조절·서스테인 음악연습실](/stories/practice-room-vocal1)
 - [보컬 재즈스캣·즉흥 보이싱 음악연습실](/stories/practice-room-vocal-jazz-scat1)
-- [보컬 팝 발성 음악연습실](/stories/practice-room-vocal1)

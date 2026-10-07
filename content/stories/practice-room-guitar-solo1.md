@@ -81,13 +81,13 @@ faq:
 
 ---
 
-### 기타 솔로 난이도별 추천 연습 트랙
+### 벤딩·비브라토 기법으로 난이도 따라가는 추천 트랙
 
 | 난이도 | 곡/아티스트 | 핵심 기술 |
 |-------|-----------|---------|
 | 입문 | 장범준 — 벚꽃 엔딩 솔로 | 기본 포지션 |
-| 초급 | Eagles — Hotel California (인트로) | 핑거피킹 솔로 |
-| 중급 | Led Zeppelin — Stairway to Heaven 솔로 | 블루스 스케일+벤딩 |
+| 초급 | Eagles — Hotel California (인트로) | 핑거피킹 솔로, 슬라이드로 음 잇기 |
+| 중급 | Led Zeppelin — Stairway to Heaven 솔로 | 블루스 스케일+벤딩, 반음·1음 음정 맞추기 |
 | 고급 | Slash — November Rain 솔로 | 레가토 |
 
 ## 좋은 솔로는 빠른 게 아니라 이야기가 있는 겁니다

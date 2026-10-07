@@ -115,4 +115,4 @@ TV 트로트 경연 프로그램이 큰 인기를 끌며, 트로트를 배우고
 
 ---
 
-[재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [호흡·복식호흡 보컬 연습 — 발성의 기초 완성 가이드](/stories/practice-room-breath-control1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1)
+[재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [호흡·복식호흡 보컬 연습 — 발성의 기초 완성 가이드](/stories/practice-room-breath-control1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1)

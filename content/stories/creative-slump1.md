@@ -138,15 +138,7 @@ inlineFallback: {}
 - 새로운 편곡 버전으로 창의성 자극
 - 완성된 결과물로 만족감 경험
 
-## 마치며
-
-창작 슬럼프는 아티스트로서의 성장 과정입니다. 막혀있는 시간이 오히려 더 깊은 작업을 준비하는 시간이 될 수 있습니다.
-
-[무대 공연 불안 극복 완전 가이드](/stories/performance-anxiety1) | [보컬 지구력·스태미나 완전 가이드](/stories/vocal-endurance1) | [스트리밍 플랫폼 최적화 완전 가이드](/stories/streaming-optimization1) | [보컬 즉흥 연주 완전 가이드](/stories/vocal-improvisation1)
-
 ---
-
-%%studio-more%%
 
 ## 슬럼프일 땐 '무엇을'보다 '어디서·얼마나'를 바꾼다
 
@@ -163,3 +155,15 @@ inlineFallback: {}
 **듣는 방식을 비교에서 해부로 바꾼다**
 
 레퍼런스를 들으면 주눅이 든다는 분이 많은데, 감상 모드를 분석 모드로 바꿔 보세요. "이 곡이 왜 좋지?"를 편곡·구조·믹스 관점에서 뜯어보면 질투가 재료로 바뀝니다. 완성된 마스터보다 데모나 라이브 버전을 찾아 들으면, 잘된 곡도 처음엔 엉성했다는 걸 알게 돼 부담이 줄어듭니다.
+
+---
+
+## 마치며
+
+창작 슬럼프는 아티스트로서의 성장 과정입니다. 막혀있는 시간이 오히려 더 깊은 작업을 준비하는 시간이 될 수 있습니다.
+
+[무대 공연 불안 극복 완전 가이드](/stories/performance-anxiety1) | [보컬 지구력·스태미나 완전 가이드](/stories/vocal-endurance1) | [스트리밍 플랫폼 최적화 완전 가이드](/stories/streaming-optimization1) | [보컬 즉흥 연주 완전 가이드](/stories/vocal-improvisation1)
+
+---
+
+%%studio-more%%

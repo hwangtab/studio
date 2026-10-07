@@ -165,4 +165,4 @@ DMC에서 상담 주시는 분들은 대개 방송·광고·게임 쪽이라 작
 
 <!-- cross-link block — Round 5 C-H1 partial -->
 
-**상암 인근 권역 비교**: [증산](/stories/practice-room-jeungsan1), [새절](/stories/practice-room-saejeol1), [응암](/stories/practice-room-eungam1), [독바위](/stories/practice-room-dokbawi1), [서대문](/stories/practice-room-seodaemun1)
+**상암 인근 권역 비교**: [독바위](/stories/practice-room-dokbawi1), [서대문](/stories/practice-room-seodaemun1)

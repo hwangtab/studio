@@ -150,7 +150,7 @@ faq:
 
 <!-- cross-link block — Round 5 C-H1 partial -->
 
-**연신내 인근 권역 비교**: [불광](/stories/practice-room-bulgwang1), [대조동](/stories/practice-room-daejo1), [구산](/stories/practice-room-gusan1), [역촌](/stories/practice-room-yeokchon1), [녹번](/stories/practice-room-nokbeon1)
+**연신내 인근 권역 비교**: [대조동](/stories/practice-room-daejo1), [구산](/stories/practice-room-gusan1), [역촌](/stories/practice-room-yeokchon1), [녹번](/stories/practice-room-nokbeon1)
 
 ## 연신내에 사신다면 솔직히 고민할 게 별로 없어요
 

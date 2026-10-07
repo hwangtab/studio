@@ -120,4 +120,4 @@ faq:
 
 ---
 
-[보컬 워밍업·발성 준비 루틴 — 보컬 워밍업 완성 가이드](/stories/practice-room-vocal-warm-up1) | [앙상블·합주 준비 개인 연습실 — 함께 연주 전 완벽한 파트 숙지](/stories/practice-room-ensemble-prep1) | [피아노 즉흥 연주·창의적 연주 — 피아노 임프로비제이션 완성 가이드](/stories/practice-room-piano-improv1) | [악기 보관 가능한 — 월세 입주 악기 보관 완벽 가이드](/stories/practice-room-storage1) | [보컬 워밍업 루틴·발성 준비 완전 가이드 — 실전 연습](/stories/practice-room-vocal-warmup-routine1)
+[앙상블·합주 준비 개인 연습실 — 함께 연주 전 완벽한 파트 숙지](/stories/practice-room-ensemble-prep1) | [피아노 즉흥 연주·창의적 연주 — 피아노 임프로비제이션 완성 가이드](/stories/practice-room-piano-improv1) | [악기 보관 가능한 — 월세 입주 악기 보관 완벽 가이드](/stories/practice-room-storage1) | [보컬 워밍업 루틴·발성 준비 완전 가이드 — 실전 연습](/stories/practice-room-vocal-warmup-routine1)

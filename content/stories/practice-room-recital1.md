@@ -114,4 +114,4 @@ faq:
 
 ---
 
-[예술고·음악고 입시 준비 — 예중·예고 실기 완성 가이드](/stories/practice-room-arts-high1) | [오디션을 위한 연습실 활용법 — 보컬 오디션 준비 완벽 가이드](/stories/practice-room-audition1) | [버스킹 준비 — 거리 공연 전 연습 공간 완벽 가이드](/stories/practice-room-busking1) | [CCM·복음성가 연습 — 찬양 준비 완성 가이드](/stories/practice-room-ccm1) | [피아노·음악 자격증·능력 시험 준비 — 시험 합격까지](/stories/practice-room-certification1)
+[예술고·음악고 입시 준비 — 예중·예고 실기 완성 가이드](/stories/practice-room-arts-high1) | [버스킹 준비 — 거리 공연 전 연습 공간 완벽 가이드](/stories/practice-room-busking1) | [CCM·복음성가 연습 — 찬양 준비 완성 가이드](/stories/practice-room-ccm1) | [피아노·음악 자격증·능력 시험 준비 — 시험 합격까지](/stories/practice-room-certification1)

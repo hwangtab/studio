@@ -125,4 +125,4 @@ faq:
 
 ---
 
-[보컬 클래식·성악 발성 — 보컬 클래식 완성 가이드](/stories/practice-room-vocal-classical1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [클래식 기타 연습 — 나일론 기타 테크닉 완성 가이드](/stories/practice-room-classical-guitar1) | [클래식 — 피아노·바이올린·첼로 클래식 연주 연습 공간 가이드](/stories/practice-room-classical1) | [클래식 피아노 연습 — 소나타·에튀드 완성 가이드](/stories/practice-room-piano-classical1)
+[카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [클래식 기타 연습 — 나일론 기타 테크닉 완성 가이드](/stories/practice-room-classical-guitar1) | [클래식 — 피아노·바이올린·첼로 클래식 연주 연습 공간 가이드](/stories/practice-room-classical1) | [클래식 피아노 연습 — 소나타·에튀드 완성 가이드](/stories/practice-room-piano-classical1)
