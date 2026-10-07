@@ -13,7 +13,7 @@ import {
   bankDepositDeadlineOf,
   bankDepositPaymentKey,
 } from '../payments/bankDeposit';
-import { recordDepositGuideResult, rowsOf, sendDepositGuideEmails } from '../payments/bankDepositOrders';
+import { recordDepositGuideResult, rowsOf, sendDepositGuideEmails, sendDepositWithdrawnOperatorAlert } from '../payments/bankDepositOrders';
 import { allowCustomerDepositGuideMail } from '../payments/depositGuideThrottle';
 import { safeDbErrorSummary } from '../payments/refundAccount';
 import { deliverPostConfirmation, ensureBookingEvent, type BookingOrder } from './confirm';
@@ -51,7 +51,8 @@ const manageUrlOf = (order: { orderNo: string; manageToken: string }): string =>
 /** 예약금 결제 링크 주문(`orders.type = 'deposit'`) — 하위 표가 없고, 고객용 관리 화면(booking/manage)도 없다. */
 const isDepositLink = (order: { type: string }): boolean => order.type === 'deposit';
 
-const summaryOf = (order: BookingOrder): { kindLabel: string; applicantLabel: string; lines: string[] } => {
+/** `lines`는 무엇을 신청했나, `holdNote`는 입금 안내에만 붙는 자리 안내(신청 취소 알림에는 싣지 않는다). */
+const summaryOf = (order: BookingOrder): { kindLabel: string; applicantLabel: string; lines: string[]; holdNote?: string } => {
   if (isDepositLink(order)) {
     // 품목명은 DB에 저장하지 않는다(data/paymentLinks.ts) — 고정 문구만.
     return {
@@ -72,9 +73,9 @@ const summaryOf = (order: BookingOrder): { kindLabel: string; applicantLabel: st
   return {
     kindLabel: b?.serviceType === 'practice-room' ? '연습실 예약' : '스튜디오 예약', applicantLabel: '예약하신 분',
     lines: b
-      ? [`상품: ${name}${b.roomNumber ? ` (${b.roomNumber})` : ''}`, `이용 일시: ${kstHourLabel(b.startAt)}부터 ${b.durationHours}시간`,
-        '입금을 확인할 때까지 이 시간대는 다른 분이 예약할 수 없게 잡아 둡니다.']
+      ? [`상품: ${name}${b.roomNumber ? ` (${b.roomNumber})` : ''}`, `이용 일시: ${kstHourLabel(b.startAt)}부터 ${b.durationHours}시간`]
       : [`상품: ${name}`],
+    ...(b ? { holdNote: '입금을 확인할 때까지 이 시간대는 다른 분이 예약할 수 없게 잡아 둡니다.' } : {}),
   };
 };
 
@@ -98,7 +99,7 @@ export const deliverBookingDepositGuide = async (
       orderNo: order.orderNo, customerName: order.customerName, customerEmail: order.customerEmail,
       customerPhone: order.customerPhone, totalAmount: order.totalAmount,
       deadline: bookingDepositDeadline(order, order.bookings[0]),
-      kindLabel: s.kindLabel, applicantLabel: s.applicantLabel, summaryLines: s.lines,
+      kindLabel: s.kindLabel, applicantLabel: s.applicantLabel, summaryLines: s.holdNote ? [...s.lines, s.holdNote] : s.lines,
       manageUrl: isDepositLink(order) ? undefined : manageUrlOf(order), adminUrl: `${SITE_URL}/admin/bookings/${order.id}`,
     });
   } catch (error) {
@@ -107,6 +108,22 @@ export const deliverBookingDepositGuide = async (
   }
   await recordDepositGuideResult(order.id, failure);
   return failure;
+};
+
+/** 고객이 "입금 전 신청 취소"를 눌러 닫힌 신청의 운영자 알림(pages/api/bookings/cancel.ts). 예외는 삼킨다. */
+export const notifyBookingDepositWithdrawn = async (orderNo: string): Promise<void> => {
+  try {
+    const order = await findOrderByOrderNo(orderNo);
+    if (!order) return;
+    const s = summaryOf(order);
+    await sendDepositWithdrawnOperatorAlert({
+      orderNo: order.orderNo, customerName: order.customerName, customerEmail: order.customerEmail,
+      customerPhone: order.customerPhone, totalAmount: order.totalAmount,
+      kindLabel: s.kindLabel, summaryLines: s.lines, adminUrl: `${SITE_URL}/admin/bookings/${order.id}`,
+    });
+  } catch (error) {
+    console.error('[booking-bank-deposit] 신청 취소 알림 준비 실패', { orderNo, error: safeDbErrorSummary(error) });
+  }
 };
 
 /**

@@ -5,10 +5,10 @@ import { cancelPayment } from '../../../lib/booking/toss';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { isTokenMatch } from '../../../lib/booking/token';
 import { getClientIp } from '../../../lib/contracts/client-ip';
-import { sendShowRefundEmail } from '../../../lib/shows/email';
+import { notifyShowRefundToOperator, sendShowRefundEmail } from '../../../lib/shows/email';
 import { refundShowTickets } from '../../../lib/shows/refund';
 import { SHOW_REFUND_REJECT_MESSAGES, SHOW_REFUND_REJECT_MESSAGES_EN } from '../../../lib/shows/refundMessages';
-import { cancelAwaitingShowDeposit } from '../../../lib/shows/bankDeposit';
+import { cancelAwaitingShowDeposit, notifyShowDepositWithdrawn } from '../../../lib/shows/bankDeposit';
 import { AWAITING_DEPOSIT } from '../../../lib/payments/bankDeposit';
 
 /**
@@ -35,8 +35,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const orderNo = typeof rawOrderNo === 'string' ? rawOrderNo.toUpperCase() : rawOrderNo;
 
   /**
-   * 계좌 입금 **대기** 신청 거두기 — 돈이 오가지 않았으니 환불이 아니라 신청 취소다. 좌석을 바로 풀고 메일은
-   * 없다. 티켓을 고르지 않는 요청이라 아래 티켓 검증보다 먼저 가른다.
+   * 계좌 입금 **대기** 신청 거두기 — 돈이 오가지 않았으니 환불이 아니라 신청 취소다. 좌석을 바로 풀고 고객 메일은
+   * 없다(운영자에게만 알린다). 티켓을 고르지 않는 요청이라 아래 티켓 검증보다 먼저 가른다.
    */
   if (action === 'withdraw') {
     if (typeof orderNo !== 'string' || orderNo.trim() === '' || typeof token !== 'string' || token.trim() === '')
@@ -48,6 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(409).json({ ok: false, message: msg('withdraw_not_awaiting', '입금을 기다리는 신청이 아닙니다. 새로고침해 주세요.') });
     const r = await cancelAwaitingShowDeposit({ orderId: target.id });
     if (!r.ok) return res.status(409).json({ ok: false, code: r.code, message: msg('withdraw_failed', r.message) });
+    await notifyShowDepositWithdrawn(target.id);
     return res.status(200).json({ ok: true, withdrawn: true });
   }
   if (
@@ -77,6 +78,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } catch (error) {
       console.error('[shows-refund] 환불 메일 실패', { orderNo, error });
     }
+    await notifyShowRefundToOperator(orderNo, { refundedAmount: outcome.amount, refundedCount: ids.length, refundVia: outcome.refundVia });
     return res.status(200).json({ ok: true, refundAmount: outcome.amount, orderStatus: outcome.orderStatus, refundVia: outcome.refundVia });
   }
   if (outcome.status === 'toss_unknown') {

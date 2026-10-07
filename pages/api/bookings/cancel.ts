@@ -5,7 +5,7 @@ import { cancelBookingWithRefund } from '../../../lib/booking/cancel';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { findOrderByOrderNo } from '../../../lib/booking/service';
 import { isTokenMatch } from '../../../lib/booking/token';
-import { cancelAwaitingBookingDeposit } from '../../../lib/booking/bankDeposit';
+import { cancelAwaitingBookingDeposit, notifyBookingDepositWithdrawn } from '../../../lib/booking/bankDeposit';
 import { bankDepositStateOf } from '../../../lib/payments/bankDeposit';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -30,12 +30,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(404).json({ ok: false, message: '주문을 찾을 수 없습니다.' });
 
   /**
-   * 계좌 입금 **대기** 중인 신청은 돈이 오가지 않았으니 환불이 아니라 신청 취소다 — 시간대를 바로 풀고 메일은
-   * 보내지 않는다. 예약 확인 페이지(SSR)와 같은 판정(bankDepositStateOf)으로 가른다.
+   * 계좌 입금 **대기** 중인 신청은 돈이 오가지 않았으니 환불이 아니라 신청 취소다 — 시간대를 바로 풀고 고객 메일은
+   * 보내지 않는다(운영자에게만 알린다). 예약 확인 페이지(SSR)와 같은 판정(bankDepositStateOf)으로 가른다.
    */
   if (bankDepositStateOf(order) === 'awaiting') {
     const withdrawn = await cancelAwaitingBookingDeposit({ orderId: order.id });
     if (!withdrawn.ok) return res.status(409).json({ ok: false, code: withdrawn.code, message: withdrawn.message });
+    await notifyBookingDepositWithdrawn(order.orderNo);
     return res.status(200).json({ ok: true, withdrawn: true, refundAmount: 0 });
   }
 

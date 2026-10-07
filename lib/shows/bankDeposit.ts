@@ -12,7 +12,7 @@ import {
   bankDepositDeadlineOf,
   bankDepositPaymentKey,
 } from '../payments/bankDeposit';
-import { recordDepositGuideResult, rowsOf, sendDepositGuideEmails } from '../payments/bankDepositOrders';
+import { recordDepositGuideResult, rowsOf, sendDepositGuideEmails, sendDepositWithdrawnOperatorAlert } from '../payments/bankDepositOrders';
 import { allowCustomerDepositGuideMail } from '../payments/depositGuideThrottle';
 import { safeDbErrorSummary } from '../payments/refundAccount';
 import { liveShowtimeCondition } from './conditions';
@@ -46,6 +46,19 @@ const loadTicketOrder = async (where: { id: string } | { orderNo: string }) =>
     with: { showOrder: { with: { tickets: true, showtime: { with: { show: true } } } } },
   });
 
+type TicketOrder = NonNullable<Awaited<ReturnType<typeof loadTicketOrder>>>;
+
+/** 입금 안내·신청 취소 알림이 함께 쓰는 "무엇을 신청했나" 줄(한국어 — 운영자 알림은 언제나 한국어). */
+const showSummaryLines = (so: NonNullable<TicketOrder['showOrder']>): string[] => {
+  const show = so.showtime.show;
+  return [
+    `공연: ${show.subtitle ? `${show.title} — ${show.subtitle}` : show.title}`,
+    `일시: ${showDateTimeLabel(so.showtime.startsAt)}`,
+    `장소: ${show.venueName}`,
+    `티켓: ${so.tickets.length}매`,
+  ];
+};
+
 /**
  * **입금 안내 메일**(고객 + 운영자). 신청 직후와 관리자 "입금 안내 재발송"이 같은 함수를 쓴다. 입금 대기가
  * 아니면 보내지 않는다. 결과는 `notification_error`에 남는다(예외는 삼킨다).
@@ -74,10 +87,7 @@ export const deliverShowDepositGuide = async (
       deadline: showDepositDeadline(order.createdAt.getTime() / 1000, so.showtime.startsAt),
       kindLabel: '공연 예매', applicantLabel: '예매하신 분',
       summaryLines: [
-        `공연: ${show.subtitle ? `${show.title} — ${show.subtitle}` : show.title}`,
-        `일시: ${showDateTimeLabel(so.showtime.startsAt)}`,
-        `장소: ${show.venueName}`,
-        `티켓: ${so.tickets.length}매`,
+        ...showSummaryLines(so),
         '입금을 확인할 때까지 좌석을 잡아 둡니다. 확인되면 티켓(QR)을 메일로 보내 드립니다.',
       ],
       manageUrl: `${SITE_URL}/${locale}/shows/manage/${order.orderNo}?token=${order.manageToken}`,
@@ -183,4 +193,21 @@ export const cancelAwaitingShowDeposit = async (input: { orderId: string }): Pro
     return { ok: false, code: 'invalid_state', message: '입금 대기 중인 계좌 입금 신청이 아닙니다. 새로고침해 주세요.' };
   }
   return { ok: true };
+};
+
+/** 고객이 "입금 전 신청 취소"를 눌러 닫힌 신청의 운영자 알림(pages/api/shows/refund.ts의 withdraw). 예외는 삼킨다. */
+export const notifyShowDepositWithdrawn = async (orderId: string): Promise<void> => {
+  try {
+    const order = await loadTicketOrder({ id: orderId });
+    const so = order?.showOrder;
+    if (!order || !so) return;
+    await sendDepositWithdrawnOperatorAlert({
+      orderNo: order.orderNo, customerName: so.buyerName, customerEmail: order.customerEmail,
+      customerPhone: so.buyerContact, totalAmount: order.totalAmount,
+      kindLabel: '공연 예매', summaryLines: showSummaryLines(so),
+      adminUrl: `${SITE_URL}/admin/shows/${so.showtime.show.id}`,
+    });
+  } catch (error) {
+    console.error('[shows-bank-deposit] 신청 취소 알림 준비 실패', { orderId, error: safeDbErrorSummary(error) });
+  }
 };

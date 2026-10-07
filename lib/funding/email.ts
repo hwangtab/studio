@@ -341,6 +341,30 @@ export const sendFundingDepositGuideEmails = (
 };
 
 
+/**
+ * 후원자가 입금 전 계좌 입금 신청을 스스로 취소했을 때의 운영자 알림(lib/funding/cancel.ts의 withdrawn).
+ * 받은 돈이 없어 환불이 아니다 — 후원자에게는 메일이 없다. 관리자 "미입금 취소"에서는 부르지 않는다.
+ */
+export const sendFundingDepositWithdrawnOperatorEmail = (order: FundingOrder, project: FundingProject | null): Promise<string | null> =>
+  send([{ key: 'operator', params: {
+    to: OPERATOR_EMAIL,
+    subject: `[펀딩] 계좌 입금 신청 취소 ${formatPriceAmount(order.totalAmount)}원 — ${order.customerName}`,
+    text: [
+      '후원자가 입금 전에 계좌 입금 신청을 직접 취소했습니다. 받은 돈이 없어 환불할 것은 없습니다.',
+      ...summaryLines(order, project),
+      `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
+      `관리자: ${adminPledgeUrl(order)}`,
+    ].join('\n'),
+    html: buildEmailLayout({
+      audience: 'operator',
+      preheader: `${order.customerName} · ${formatPriceAmount(order.totalAmount)}원 · 후원자가 입금 전에 취소`,
+      heading: '펀딩 계좌 입금 신청을 후원자가 취소했습니다',
+      paragraphs: ['입금 전에 후원자가 직접 취소했습니다. 받은 돈이 없어 환불할 것은 없습니다.'],
+      rows: operatorRows(order, project),
+      cta: { label: '관리자에서 보기', url: adminPledgeUrl(order) },
+    }),
+  } }]);
+
 const CANCEL_SUBJECT = { refunded: '환불이 완료되었습니다', refund_requested: '취소 요청을 접수했습니다', recorded: '환불 처리 안내' } as const;
 
 /**

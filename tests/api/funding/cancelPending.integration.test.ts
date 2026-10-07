@@ -10,6 +10,10 @@ import { generateManageToken, generateOrderNo } from '../../../lib/booking/token
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../../db/client', () => ({ getDb: () => mockDb }));
 jest.mock('../../../lib/booking/rate-limit', () => ({ consumeRateLimit: jest.fn().mockResolvedValue(true) }));
+jest.mock('../../../lib/funding/email', () => ({
+  ...jest.requireActual('../../../lib/funding/email'),
+  sendFundingDepositWithdrawnOperatorEmail: jest.fn().mockResolvedValue(null),
+}));
 jest.mock('../../../lib/funding/projects', () => ({ ...jest.requireActual('../../../lib/funding/projects'), getFundingProject: () => PROJECT }));
 
 // eslint-disable-next-line import/first
@@ -18,6 +22,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../pages/api/funding/cancel';
 // eslint-disable-next-line import/first
 import { findFundingOrderByOrderNo } from '../../../lib/funding/service';
+// eslint-disable-next-line import/first
+import { sendFundingDepositWithdrawnOperatorEmail } from '../../../lib/funding/email';
 // eslint-disable-next-line import/first
 import { parseFundingProject } from '../../../lib/funding/projects';
 
@@ -102,6 +108,8 @@ it('입금 전 계좌 입금 신청은 후원자가 취소할 수 있다 — pen
   expect(r.status).toBe(200);
   expect(r.body).toMatchObject({ ok: true, mode: 'withdrawn', refundAmount: 0 });
   expect((await findFundingOrderByOrderNo(orderNo))!.status).toBe('expired');
+  // 운영자에게 한 통 — 후원자가 직접 취소했다는 사실이 메일로 남는다.
+  expect(sendFundingDepositWithdrawnOperatorEmail).toHaveBeenCalledTimes(1);
   // 공개 집계에서 빠지므로 목록·상세를 재검증한다.
   expect(revalidate).toHaveBeenCalledWith('/ko/funding/demo');
   // 두 번째 요청은 이미 닫힌 신청이라 409.

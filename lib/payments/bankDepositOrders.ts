@@ -259,6 +259,64 @@ export const sendDepositGuideEmails = async (m: DepositGuideMail): Promise<strin
   return failures.length ? failures.join(', ') : null;
 };
 
+export interface DepositWithdrawnAlert {
+  orderNo: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  totalAmount: number;
+  /** 입금 안내와 같은 값 — "공연 예매", "연습실 예약" 등. */
+  kindLabel: string;
+  /** 무엇을 신청했었는지(입금 안내 운영자 알림과 같은 줄). */
+  summaryLines: string[];
+  adminUrl: string;
+}
+
+/** 고객이 입금 전 신청을 스스로 취소했을 때의 운영자 알림 — 순수 함수. */
+export const buildDepositWithdrawnOperatorEmail = (m: DepositWithdrawnAlert): { subject: string; text: string; html: string } => {
+  const amount = `${formatPriceAmount(m.totalAmount)}원`;
+  const summary = splitSummaryLines(m.summaryLines);
+  return {
+    subject: `[${m.kindLabel}] 계좌 입금 신청 취소 ${amount} — ${m.customerName}`,
+    text: [
+      '고객이 입금 전에 계좌 입금 신청을 직접 취소했습니다. 받은 돈이 없어 환불할 것은 없습니다.',
+      ...m.summaryLines,
+      `고객: ${m.customerName} / ${m.customerPhone} / ${m.customerEmail}`,
+      `금액: ${amount}`,
+      `주문번호: ${m.orderNo}`,
+      `관리자: ${m.adminUrl}`,
+    ].join('\n'),
+    html: buildEmailLayout({
+      audience: 'operator',
+      preheader: `${m.customerName} · ${amount} · 고객이 입금 전에 취소`,
+      heading: `${m.kindLabel} 계좌 입금 신청을 고객이 취소했습니다`,
+      paragraphs: ['입금 전에 고객이 직접 취소했습니다. 받은 돈이 없어 환불할 것은 없습니다.'],
+      rows: [
+        { label: '고객', value: m.customerName },
+        { label: '연락처', value: m.customerPhone, href: `tel:${m.customerPhone.replace(/[^0-9+]/g, '')}` },
+        { label: '이메일', value: m.customerEmail, href: `mailto:${m.customerEmail}` },
+        ...summary.rows,
+        { label: '금액', value: amount },
+        { label: '주문번호', value: m.orderNo },
+      ],
+      cta: { label: '관리자에서 보기', url: toAbsoluteAdminUrl(m.adminUrl) },
+    }),
+  };
+};
+
+/**
+ * 고객 "입금 전 신청 취소"의 운영자 알림 한 통. 관리자 "미입금 취소"에서는 부르지 않는다(운영자가 직접 한 일).
+ * 취소는 이미 끝났으므로 실패·예외는 삼키고 로그만 남긴다.
+ */
+export const sendDepositWithdrawnOperatorAlert = async (m: DepositWithdrawnAlert): Promise<void> => {
+  try {
+    const r = await sendEmail({ to: OPERATOR_EMAIL, ...buildDepositWithdrawnOperatorEmail(m) });
+    if (!r.ok) console.error('[bank-deposit] 신청 취소 운영자 알림 발송 실패', { orderNo: m.orderNo, code: r.errorCode });
+  } catch (error) {
+    console.error('[bank-deposit] 신청 취소 운영자 알림 예외', { orderNo: m.orderNo, error: (error as Error).message });
+  }
+};
+
 /**
  * 입금 안내 발송 결과를 `notification_error`에 남긴다 — **입금 대기 중일 때만**(그 사이 확정·취소됐으면
  * 그 경로가 쓴 값을 덮지 않는다). 실패는 삼키고 로그만.
