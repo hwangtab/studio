@@ -121,4 +121,4 @@ PA(Public Address) 시스템의 기원은 정치 집회와 대중 행사에서 �
 
 [인이어 모니터 완전 가이드 — 무대·녹음 시 IEM 선택과 사용 방법](/stories/in-ear-monitor1)
 
-[보컬 녹음 세션 준비 가이드](/stories/session1) | [공연·발표 준비 완전 가이드](/stories/performance-prep1) | [마이크 테크닉 완전 가이드](/stories/mictechnique1) | [보컬 긴장 극복 방법](/stories/stagefright1)
+[보컬 녹음 세션 준비 가이드](/stories/session1) | [마이크 테크닉 완전 가이드](/stories/mictechnique1) | [보컬 긴장 극복 방법](/stories/stagefright1)

@@ -165,12 +165,6 @@ Pro-Q 3 부드러운 EQ → LA-2A 에뮬레이션(UAD/Waves)으로 부드러운 
 
 ---
 
-## 마치며
-
-플러그인을 구매하기 전에 DAW 내장 도구를 완전히 익히는 것이 먼저입니다. Logic Pro의 Channel EQ, Ableton의 EQ Eight, Pro Tools의 내장 컴프레서만으로도 상업 품질의 믹스를 만들 수 있습니다. 유료 플러그인은 워크플로우 효율을 높이거나 특정 아날로그 톤을 재현하는 용도에 맞춰져 있습니다. 처음 플러그인을 구매한다면 FabFilter Pro-Q 3(EQ) → Valhalla Room(리버브) → Waves CLA-2A 또는 CLA-76(컴프레서) 순서가 투자 대비 효과가 가장 높습니다.
-
-Melodyne Essential은 보컬 피치를 자연스럽게 교정하는 기본 도구로, 보컬 중심 장르라면 4순위에 추가합니다. 저도 실제 세션에서는 상위 버전인 Melodyne Studio를 씁니다. 전문 엔지니어가 쓰는 플러그인 환경에서 실제 보컬 녹음과 믹싱을 경험하고 싶다면 [스튜디오 놀](/mixing-mastering)을 방문하세요.
-
 ## 15년 믹싱하며 정리된 플러그인 철학
 
 플러그인은 사면 늘고, 늘면 헷갈립니다. 저는 15년째 믹싱을 해오면서 오히려 도구를 줄여왔어요. 입문자분들이 플러그인 때문에 헤맬 때 드리는 이야기를 정리합니다.
@@ -183,4 +177,12 @@ EQ 하나, 컴프레서 하나를 손에 익도록 깊이 쓰는 게 열 개를 
 
 ---
 
-[VST 플러그인 완전 가이드](/stories/vst-guide1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/vocal-compression1) | [음정 교정 도구 비교](/stories/pitchtool1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1)
+## 마치며
+
+플러그인을 구매하기 전에 DAW 내장 도구를 완전히 익히는 것이 먼저입니다. Logic Pro의 Channel EQ, Ableton의 EQ Eight, Pro Tools의 내장 컴프레서만으로도 상업 품질의 믹스를 만들 수 있습니다. 유료 플러그인은 워크플로우 효율을 높이거나 특정 아날로그 톤을 재현하는 용도에 맞춰져 있습니다. 처음 플러그인을 구매한다면 FabFilter Pro-Q 3(EQ) → Valhalla Room(리버브) → Waves CLA-2A 또는 CLA-76(컴프레서) 순서가 투자 대비 효과가 가장 높습니다.
+
+Melodyne Essential은 보컬 피치를 자연스럽게 교정하는 기본 도구로, 보컬 중심 장르라면 4순위에 추가합니다. 저도 실제 세션에서는 상위 버전인 Melodyne Studio를 씁니다. 전문 엔지니어가 쓰는 플러그인 환경에서 실제 보컬 녹음과 믹싱을 경험하고 싶다면 [스튜디오 놀](/mixing-mastering)을 방문하세요.
+
+---
+
+[보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/vocal-compression1) | [음정 교정 도구 비교](/stories/pitchtool1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1)

@@ -159,8 +159,6 @@ faq:
 
 ---
 
-## 마치며
-
 ## Studio NOL 보컬 딜레이 믹싱에서 자주 손보는 3가지
 
 스튜디오 놀에 들어오는 보컬 딜레이 믹싱 의뢰에서 자주 손이 가는 영역입니다.
@@ -191,4 +189,8 @@ Feedback이 강하면 에코가 보컬을 덮어 가사가 흐려집니다.
 
 ---
 
-[보컬 새추레이션 완전 가이드](/stories/vocal-saturation1) | [보컬 리버브 완전 가이드](/stories/vocal-reverb1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+## 마치며
+
+---
+
+[보컬 새추레이션 완전 가이드](/stories/vocal-saturation1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

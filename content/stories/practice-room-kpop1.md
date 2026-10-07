@@ -105,4 +105,4 @@ K-POP을 부르려면 다른 장르보다 음정 기준이 훨씬 빡빡하다�
 
 ---
 
-[팝·K-POP 보컬 스타일 — 팝 보컬 완성 가이드](/stories/practice-room-pop-vocal1) | [밴드 보컬 — 밴드 보컬리스트를 위한 개인 연습 공간 가이드](/stories/practice-room-band-vocal1) | [교회 찬양팀·성가대 — 예배 보컬·악기 연습 공간 가이드](/stories/practice-room-church1) | [커버 연습실 — 팝·K-POP 커버 연습 공간 가이드](/stories/practice-room-cover1) | [아이돌 준비생 — 보컬·댄스·퍼포먼스 연습 공간 가이드](/stories/practice-room-idol1)
+[밴드 보컬 — 밴드 보컬리스트를 위한 개인 연습 공간 가이드](/stories/practice-room-band-vocal1) | [교회 찬양팀·성가대 — 예배 보컬·악기 연습 공간 가이드](/stories/practice-room-church1) | [커버 연습실 — 팝·K-POP 커버 연습 공간 가이드](/stories/practice-room-cover1) | [아이돌 준비생 — 보컬·댄스·퍼포먼스 연습 공간 가이드](/stories/practice-room-idol1)

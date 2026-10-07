@@ -565,10 +565,9 @@ MIDI 파일이 교환되면 상대방은 자기 DAW의 가상악기로 재현해
 
 ## 출처
 
-- Cubase 1989년 Atari ST 출시 (Steinberg, Hamburg): [Cubase — Wikipedia](https://en.wikipedia.org/wiki/Cubase) · [Sound on Sound: Karl Steinberg Cubase & Computers](https://www.soundonsound.com/people/karl-steinberg-cubase-computers) · [MusicRadar: A brief history of Steinberg Cubase](https://www.musicradar.com/tuition/tech/a-brief-history-of-steinberg-cubase-406132)
-- Pro Tools 1990년 출시 (Digidesign, 현 Avid): [Pro Tools — Wikipedia](https://en.wikipedia.org/wiki/Pro_Tools) · [MusicRadar: A brief history of Pro Tools](https://www.musicradar.com/tuition/tech/a-brief-history-of-pro-tools-452963)
-- Apple의 Emagic 인수 (2002년 7월 1일): [Apple Newsroom — Apple Acquires Emagic](https://www.apple.com/newsroom/2002/07/01Apple-Acquires-Emagic/) · [Logic Pro — Wikipedia](https://en.wikipedia.org/wiki/Logic_Pro) · [Sound on Sound: Apple's Emagic Takeover](https://www.soundonsound.com/music-business/apples-emagic-takeover)
-- Ableton Live 2001년 10월 30일 베를린 출시 (Behles·Henke·Roggendorf): [Ableton Live — Wikipedia](https://en.wikipedia.org/wiki/Ableton_Live) · [MusicRadar: 20 years of Ableton Live](https://www.musicradar.com/news/story-of-ableton-live-at-20) · [MusicRadar: Robert Henke 인터뷰 — Ableton Live origins](https://www.musicradar.com/news/ableton-live-origins-robert-henke)
+- Cubase 1989년 Atari ST 출시 (Steinberg, Hamburg): [MusicRadar: A brief history of Steinberg Cubase](https://www.musicradar.com/tuition/tech/a-brief-history-of-steinberg-cubase-406132)
+- Apple의 Emagic 인수 (2002년 7월 1일): [Sound on Sound: Apple's Emagic Takeover](https://www.soundonsound.com/music-business/apples-emagic-takeover)
+- Ableton Live 2001년 10월 30일 베를린 출시 (Behles·Henke·Roggendorf): [MusicRadar: Robert Henke 인터뷰 — Ableton Live origins](https://www.musicradar.com/news/ableton-live-origins-robert-henke)
 
 본 가이드는 스튜디오 놀(연신내, 서울 은평구) 운영자 황경하 엔지니어가 15년간 진행한 녹음·믹싱 세션 경험과 위 공개 자료를 결합해 작성했습니다. 황경하 엔지니어 개인 작업의 주력 DAW는 Fender Studio Pro(구 PreSonus Studio One Pro)이며, 상대적으로 신생 DAW인 만큼 현대적인 워크플로우 편의 기능을 이유로 선택했습니다. 라이선스 방식·기능 표기는 2026년 10월 기준이며, 각 DAW 공식 사이트(Steinberg·Apple·Ableton)에서 최신 정보를 확인하시기 바랍니다. 한국 시장 동향("방송·음대에서 Pro Tools가 표준") 진술은 국내 음악 산업 현장의 1차 관찰에 기반하며 공식 시장 조사 통계가 아닙니다.
 
@@ -586,4 +585,4 @@ MIDI 파일이 교환되면 상대방은 자기 DAW의 가상악기로 재현해
 
 하나를 골라서 3개월만 집중하면 기본 작업은 무리 없이 할 수 있게 됩니다.
 
-[DAW 비교 완전 가이드](/stories/daw-comparison1) | [큐베이스 보컬 녹음 가이드](/stories/cubase1) | [로직 프로 보컬 녹음 가이드](/stories/logicpro1) | [에이블톤 보컬 녹음 가이드](/stories/ableton1) | [혼자 앨범 내는 방법](/stories/solo-album1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [게인 스테이징 완전 가이드](/stories/gain-staging1)
+[DAW 비교 완전 가이드](/stories/daw-comparison1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [게인 스테이징 완전 가이드](/stories/gain-staging1)

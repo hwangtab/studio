@@ -165,7 +165,7 @@ faq:
 
 ---
 
-[연신내 음악연습실 — 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [불광 음악연습실 — 7번 출구 도보 5분](/stories/practice-room-bulgwang1) | [구산 음악연습실 — 연신내까지 도보 15~20분](/stories/practice-room-gusan1) | [역촌 음악연습실 — 6호선 3정거장](/stories/practice-room-yeokchon1) | [은평구 음악연습실 — 구산·역촌·응암 가이드](/stories/practice-room-eunpyeong1)
+[연신내 음악연습실 — 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [불광 음악연습실 — 7번 출구 도보 5분](/stories/practice-room-bulgwang1) | [구산 음악연습실 — 연신내까지 도보 15~20분](/stories/practice-room-gusan1) | [역촌 음악연습실 — 6호선 3정거장](/stories/practice-room-yeokchon1)
 
 <!-- 내부 link block — Round 4 C-H3 -->
 
@@ -173,4 +173,4 @@ faq:
 
 <!-- cross-link block — Round 5 C-H1 partial -->
 
-**응암 인근 권역 비교**: [새절](/stories/practice-room-saejeol1), [구산](/stories/practice-room-gusan1), [증산](/stories/practice-room-jeungsan1), [역촌](/stories/practice-room-yeokchon1), [서대문](/stories/practice-room-seodaemun1)
+**응암 인근 권역 비교**: [새절](/stories/practice-room-saejeol1), [증산](/stories/practice-room-jeungsan1), [서대문](/stories/practice-room-seodaemun1)

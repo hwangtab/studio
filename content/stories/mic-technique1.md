@@ -135,15 +135,7 @@ faq:
 - 배터리 잔량 사전 확인
 - 수신기와의 거리 확인 (이동 동선 체크)
 
-## 마치며
-
-마이크 테크닉은 연습과 경험으로 개선됩니다. 거리·각도·팝 필터 세 가지만 의식적으로 조절해도 같은 마이크에서 훨씬 안정된 소리를 얻을 수 있으니, 녹음할 때마다 하나씩 점검해 보세요.
-
-[녹음 준비 완전 가이드](/stories/recording-preparation1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [보컬 EQ 완전 가이드](/stories/eq-guide1) | [성우 보이스 레코딩 완전 가이드](/stories/voice-acting1) | [콘덴서·다이나믹 마이크 비교 가이드](/stories/vocal-microphone1) | [보컬·기타 마이크 배치법 가이드](/stories/mic-placement1)
-
 ---
-
-%%studio-more%%
 
 ## 스튜디오와 라이브에서 마이크를 대하는 태도가 다릅니다
 
@@ -156,3 +148,15 @@ faq:
 ---
 
 관련 가이드: [마이크 종류 완전 가이드](/stories/microphone-types1)
+
+---
+
+## 마치며
+
+마이크 테크닉은 연습과 경험으로 개선됩니다. 거리·각도·팝 필터 세 가지만 의식적으로 조절해도 같은 마이크에서 훨씬 안정된 소리를 얻을 수 있으니, 녹음할 때마다 하나씩 점검해 보세요.
+
+[녹음 준비 완전 가이드](/stories/recording-preparation1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [보컬 EQ 완전 가이드](/stories/eq-guide1) | [성우 보이스 레코딩 완전 가이드](/stories/voice-acting1) | [콘덴서·다이나믹 마이크 비교 가이드](/stories/vocal-microphone1) | [보컬·기타 마이크 배치법 가이드](/stories/mic-placement1)
+
+---
+
+%%studio-more%%

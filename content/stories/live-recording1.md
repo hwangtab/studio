@@ -120,4 +120,4 @@ faq:
 
 라이브 믹싱에서 흔한 실수는 스튜디오 오버더빙 기준으로 과도하게 클린한 믹스를 목표로 삼는 것입니다. 앰비언스 리버브와 자연스러운 블리드는 라이브 녹음의 결함이 아니라 정체성입니다. 믹싱에서 이를 제거하면 오히려 라이브의 이유가 사라집니다. 보컬 명확성을 우선하되, 현장의 공간감을 살리는 방향으로 EQ와 리버브를 설정하는 것이 라이브 음반 믹싱의 핵심 철학입니다.
 
-[밴드 녹음 완전 가이드](/stories/band-recording1) | [음반 제작 가이드](/stories/album1) | [보컬 녹음 당일 준비 가이드](/stories/recordingday1) | [스튜디오 에티켓 가이드](/stories/studio-etiquette1)
+[음반 제작 가이드](/stories/album1) | [보컬 녹음 당일 준비 가이드](/stories/recordingday1) | [스튜디오 에티켓 가이드](/stories/studio-etiquette1)

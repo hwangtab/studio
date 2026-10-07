@@ -121,10 +121,8 @@ faq:
 
 목표는 연습하는 게 아니라 연습을 안 하면 오히려 이상한 상태를 만드는 겁니다. 그때부터는 습관이 나 대신 연습을 챙겨줘요. 이 습관을 시작하는 동력은 [연습 동기부여](/stories/practice-room-motivation1)에서 이어집니다.
 
-**3. 미리 예약 — 외부 강제력 활용**
-
-미리 예약하면 외부 강제력이 작용. "예약했으니 가야지" 심리.
+연습실을 미리 예약해 두는 방법도 있습니다. "예약했으니 가야지"라는 심리가 외부 강제력으로 작용해, 그날 연습할지 말지 고민하는 단계를 건너뛰게 해 줍니다.
 
 ---
 
-[음악 연습 동기부여 유지 가이드 — 꾸준한 연습을 위한 심리 전략](/stories/practice-room-motivation1) | [국악·민요·가야금 연습 — 전통 음악 방음 개인 연습 공간](/stories/practice-room-gugak1) | [음악 연습 일지·기록 방법으로 실력 올리기 — 연습 효율 극대화](/stories/practice-room-journal1) | [블루스 음악·블루스 기타 연습 — 블루스 필링 완성 가이드](/stories/practice-room-blues1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1)
+[국악·민요·가야금 연습 — 전통 음악 방음 개인 연습 공간](/stories/practice-room-gugak1) | [음악 연습 일지·기록 방법으로 실력 올리기 — 연습 효율 극대화](/stories/practice-room-journal1) | [블루스 음악·블루스 기타 연습 — 블루스 필링 완성 가이드](/stories/practice-room-blues1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1)

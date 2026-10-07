@@ -93,7 +93,7 @@ faq:
 
 ### 3. 새벽·야간 자유 입실
 
-24시간 무인 도어록. 직장인·학생·콘텐츠 크리에이터 모두 본업 후 자유롭게 작업 가능합니다.
+덕양구에서 오는 길은 밤과 새벽에 오히려 편합니다. 신호 정체가 적어 차량이 더 빠르고, 개인 디지털 도어록으로 24시간 무인 입실하니 퇴근이나 수업이 끝난 뒤에도 시간에 쫓기지 않습니다. 직장인·학생·콘텐츠 크리에이터 모두 본업 후 자유롭게 작업할 수 있습니다.
 
 ### 4. 본인 장비 보관
 
@@ -101,7 +101,7 @@ faq:
 
 ### 5. 녹음실 연계
 
-매월 본 스튜디오 녹음실 1시간 무료 (정규요금 시간당 10만원). 작곡 → 데모 → 정식 녹음 funnel이 한 공간에서 진행됩니다.
+매월 본 스튜디오 녹음실 1시간 무료 (정규요금 시간당 10만원). 입주실에서 쓴 곡을 데모로 옮기고 정식 녹음까지 같은 스튜디오에서 이어 가므로, 덕양구에서 오가는 동선을 따로 늘릴 필요가 없습니다.
 
 ---
 
@@ -170,7 +170,7 @@ faq:
 
 ---
 
-[연신내 음악연습실 — 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [원당 음악연습실 — 3호선 5정거장](/stories/practice-room-wondang1) | [원흥 음악연습실 — 3호선 4정거장](/stories/practice-room-wonheung1) | [삼송 음악연습실 — 3호선 3정거장](/stories/practice-room-samsong1) | [지축 음악연습실 — 3호선 2정거장](/stories/practice-room-jichuk1) | [고양시·일산 음악연습실 — 3호선으로 15분](/stories/practice-room-goyang1)
+[연신내 음악연습실 — 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [원당 음악연습실 — 3호선 5정거장](/stories/practice-room-wondang1) | [원흥 음악연습실 — 3호선 4정거장](/stories/practice-room-wonheung1) | [삼송 음악연습실 — 3호선 3정거장](/stories/practice-room-samsong1) | [지축 음악연습실 — 3호선 2정거장](/stories/practice-room-jichuk1)
 
 <!-- 내부 link block — Round 4 C-H3 -->
 
@@ -178,4 +178,4 @@ faq:
 
 <!-- cross-link block — Round 5 C-H1 partial -->
 
-**덕양구 인근 권역 비교**: [원당](/stories/practice-room-wondang1), [고양](/stories/practice-room-goyang1), [원흥](/stories/practice-room-wonheung1), [삼송](/stories/practice-room-samsong1), [일산](/stories/practice-room-ilsan1)
+**덕양구 인근 권역 비교**: [일산](/stories/practice-room-ilsan1)

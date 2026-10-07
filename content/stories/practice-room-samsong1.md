@@ -158,7 +158,7 @@ faq:
 
 ---
 
-[연신내 음악연습실 — 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [지축 음악연습실 — 3호선 2정거장](/stories/practice-room-jichuk1) | [구파발 음악연습실 — 3호선 1정거장](/stories/practice-room-gupabal1) | [고양시·일산 음악연습실 — 3호선으로 15분](/stories/practice-room-goyang1) | [대조동 음악연습실 — 동명여고 옆](/stories/practice-room-daejo1)
+[연신내 음악연습실 — 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [구파발 음악연습실 — 3호선 1정거장](/stories/practice-room-gupabal1) | [고양시·일산 음악연습실 — 3호선으로 15분](/stories/practice-room-goyang1) | [대조동 음악연습실 — 동명여고 옆](/stories/practice-room-daejo1)
 
 <!-- 내부 link block — Round 4 C-H3 -->
 
@@ -166,4 +166,4 @@ faq:
 
 <!-- cross-link block — Round 5 C-H1 partial -->
 
-**삼송 인근 권역 비교**: [지축](/stories/practice-room-jichuk1), [원흥](/stories/practice-room-wonheung1), [구파발](/stories/practice-room-gupabal1), [원당](/stories/practice-room-wondang1), [덕양구](/stories/practice-room-deogyang1)
+**삼송 인근 권역 비교**: [원흥](/stories/practice-room-wonheung1), [원당](/stories/practice-room-wondang1), [덕양구](/stories/practice-room-deogyang1)

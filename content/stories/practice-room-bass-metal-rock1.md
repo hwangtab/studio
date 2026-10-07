@@ -213,12 +213,6 @@ G2 - G2 - G2 - G2 (단순 반복)
 
 ---
 
-## 마무리
-
-메탈 베이스는 정확성과 인내의 장르입니다. 갤로핑 패턴 하나를 BPM 160에서 안정적으로 연주하기까지 수백 시간의 연습이 필요합니다.
-
-은평구 24시간 음악연습실에서 마음껏 볼륨을 높이고 메탈 베이스의 파워를 발산하세요.
-
 ## 다운튜닝에서는 손보다 악기가 먼저 한계를 드러냅니다
 
 메탈 베이스 연습이 안 풀린다며 들고 오시는 악기를 보면, 연주 실력보다 세팅이 발목을 잡고 있는 경우가 꽤 됩니다. 다운튜닝은 튜너를 돌려 끝나는 일이 아니라 악기 전체의 균형을 바꾸는 일이라서 그렇습니다.
@@ -237,4 +231,12 @@ G2 - G2 - G2 - G2 (단순 반복)
 
 ---
 
-[프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 — 완전 가이드](/stories/practice-room-bass1) | [베이스 블루스·12마디 블루스 베이스라인 — 완전 가이드](/stories/practice-room-bass-blues1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 펑크 그루브·원 드롭 베이스라인 — 완전 가이드](/stories/practice-room-bass-funk-groove1) | [베이스 5현 기타 완전 가이드](/stories/practice-room-bass-5string1)
+## 마무리
+
+메탈 베이스는 정확성과 인내의 장르입니다. 갤로핑 패턴 하나를 BPM 160에서 안정적으로 연주하기까지 수백 시간의 연습이 필요합니다.
+
+은평구 24시간 음악연습실에서 마음껏 볼륨을 높이고 메탈 베이스의 파워를 발산하세요.
+
+---
+
+[프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 — 완전 가이드](/stories/practice-room-bass1) | [베이스 블루스·12마디 블루스 베이스라인 — 완전 가이드](/stories/practice-room-bass-blues1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 펑크 그루브·원 드롭 베이스라인 — 완전 가이드](/stories/practice-room-bass-funk-groove1) | [베이스 5현 기타 완전 가이드](/stories/practice-room-bass-5string1)

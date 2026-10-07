@@ -115,4 +115,4 @@ DAW를 처음 다루거나 홈레코딩 결과물의 품질을 끌어올리고 �
 
 ---
 
-[보컬 호흡법 완전 가이드](/stories/breathing1) | [보컬 워밍업 루틴](/stories/warmup1) | [처음 보컬 녹음하는 법](/stories/vocal-recording-guide1) | [음악연습실 안내](/practice-room) | [요금 안내](/pricing)
+[보컬 호흡법 완전 가이드](/stories/breathing1) | [보컬 워밍업 루틴](/stories/warmup1) | [음악연습실 안내](/practice-room) | [요금 안내](/pricing)

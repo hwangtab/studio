@@ -100,10 +100,8 @@ faq:
 
 작은 목표를 하나씩 달성하는 그 성취감이 결국 연습을 계속하게 하는 힘이에요. 이 성취가 동기로 이어지는 원리는 [연습 동기부여](/stories/practice-room-motivation1)에서 이어집니다.
 
-**3. 매주 점검 — 진척 인지**
-
-목표는 정기 점검 없이는 흐려집니다. 매주 토요일 점검을 정합니다.
+주 단위로 쪼갠 목표도 정기 점검 없이는 흐려집니다. 매주 토요일을 점검하는 날로 정해 두고, 그 주 과제를 마쳤는지 확인하며 다음 주 과제로 넘어가세요.
 
 ---
 
-[음악 연습 일지·기록 방법으로 실력 올리기 — 연습 효율 극대화](/stories/practice-room-journal1) | [음악 연습 동기부여 유지 가이드 — 꾸준한 연습을 위한 심리 전략](/stories/practice-room-motivation1) | [음악 다시 시작하는 분을 위한 연습실 가이드 — 음악 복귀 완벽 안내](/stories/practice-room-comeback1) | [음악 경연대회·가요제 준비 — 무대 경험을 위한 집중 연습](/stories/practice-room-competition1) | [작곡·편곡 — 작곡가·음악 프로듀서를 위한 연습 공간 가이드](/stories/practice-room-composition1)
+[음악 연습 일지·기록 방법으로 실력 올리기 — 연습 효율 극대화](/stories/practice-room-journal1) | [음악 다시 시작하는 분을 위한 연습실 가이드 — 음악 복귀 완벽 안내](/stories/practice-room-comeback1) | [음악 경연대회·가요제 준비 — 무대 경험을 위한 집중 연습](/stories/practice-room-competition1) | [작곡·편곡 — 작곡가·음악 프로듀서를 위한 연습 공간 가이드](/stories/practice-room-composition1)

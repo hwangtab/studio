@@ -188,12 +188,6 @@ A-D-E (4도 포함, 3도 없음)
 
 ---
 
-## 마무리
-
-인디 기타는 기술보다 **감성과 독창성**이 우선입니다. 완벽한 테크닉보다 독특한 음색과 감성적 표현이 인디 기타리스트를 정의합니다.
-
-은평구 24시간 음악연습실에서 다양한 이펙터와 기법을 자유롭게 탐구하고 자신만의 인디 사운드를 만들어가세요.
-
 ## 인디·얼터너티브 기타는 톤이 곧 정체성입니다
 
 인디·얼터너티브 기타는 화려한 속주보다 사운드의 질감으로 승부하는 음악이에요. 그 골격은 리버브와 딜레이입니다. 리버브로 소리에 공간의 깊이를 주고, 딜레이로 음을 반복시켜 몽환적인 층을 쌓으면, 단순한 코드 몇 개도 광활하고 분위기 있게 들려요. 이 둘의 양을 곡에 맞게 조율하는 감각이 인디 기타의 첫걸음입니다.
@@ -204,4 +198,12 @@ A-D-E (4도 포함, 3도 없음)
 
 ---
 
-[기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [바리톤 기타·다운 튜닝·헤비 사운드 — 완전 가이드](/stories/practice-room-guitar-baritone1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1) | [기타 비밥·재즈 기타 즉흥·Wes Montgomery — 완전 가이드](/stories/practice-room-guitar-jazz-bebop1)
+## 마무리
+
+인디 기타는 기술보다 **감성과 독창성**이 우선입니다. 완벽한 테크닉보다 독특한 음색과 감성적 표현이 인디 기타리스트를 정의합니다.
+
+은평구 24시간 음악연습실에서 다양한 이펙터와 기법을 자유롭게 탐구하고 자신만의 인디 사운드를 만들어가세요.
+
+---
+
+[아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1) | [바리톤 기타·다운 튜닝·헤비 사운드 — 완전 가이드](/stories/practice-room-guitar-baritone1) | [기타 핑거스타일 편곡·솔로 기타 어레인지 — 완전 가이드](/stories/practice-room-guitar-fingerstyle-arrangement1) | [기타 비밥·재즈 기타 즉흥·Wes Montgomery — 완전 가이드](/stories/practice-room-guitar-jazz-bebop1)

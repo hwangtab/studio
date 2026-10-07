@@ -87,7 +87,7 @@ faq:
 
 ---
 
-### 클래식 레퍼토리를 완성하는 세 가지 습관
+### 클래식 레퍼토리를 완성하는 네 가지 습관
 
 1. **손을 풀고 시작한다** — 하논이나 스케일로 손가락을 깨운 뒤 어려운 패시지에 들어갈 것
 2. **4마디 단위로 쪼갠다** — 전체를 반복하기보다 막히는 4마디를 분리해 정확도부터 확보
@@ -129,4 +129,4 @@ faq:
 
 ---
 
-[피아노 독학 연습실 — 초보자를 위한 피아노 연습 공간 완벽 가이드](/stories/practice-room-piano-beginner1) | [피아노 연습실 완벽 가이드 — 24시간 개인 피아노 연습 공간 선택법](/stories/practice-room-piano1) | [현악기 연습실 — 바이올린·비올라·첼로 방음 연습 공간 가이드](/stories/practice-room-string1) | [건반·키보드 연습실 완벽 가이드 — 디지털 피아노·신디사이저 연습 공간 선택법](/stories/practice-room-keyboard1) | [피아노 발라드 연주 연습 — 감성 피아노 완성 가이드](/stories/practice-room-piano-ballad1)
+[피아노 연습실 완벽 가이드 — 24시간 개인 피아노 연습 공간 선택법](/stories/practice-room-piano1) | [현악기 연습실 — 바이올린·비올라·첼로 방음 연습 공간 가이드](/stories/practice-room-string1) | [건반·키보드 연습실 완벽 가이드 — 디지털 피아노·신디사이저 연습 공간 선택법](/stories/practice-room-keyboard1) | [피아노 발라드 연주 연습 — 감성 피아노 완성 가이드](/stories/practice-room-piano-ballad1)

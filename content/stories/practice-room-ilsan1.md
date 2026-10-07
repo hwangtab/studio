@@ -172,7 +172,7 @@ faq:
 
 ---
 
-[연신내 음악연습실 — 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [덕양구 음악연습실 — 화정·행신 가이드](/stories/practice-room-deogyang1) | [원당 음악연습실 — 3호선 5정거장](/stories/practice-room-wondang1) | [원흥 음악연습실 — 3호선 4정거장](/stories/practice-room-wonheung1) | [삼송 음악연습실 — 3호선 3정거장](/stories/practice-room-samsong1) | [고양시·일산 음악연습실 — 3호선으로 15분](/stories/practice-room-goyang1)
+[연신내 음악연습실 — 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [덕양구 음악연습실 — 화정·행신 가이드](/stories/practice-room-deogyang1) | [원당 음악연습실 — 3호선 5정거장](/stories/practice-room-wondang1) | [원흥 음악연습실 — 3호선 4정거장](/stories/practice-room-wonheung1) | [삼송 음악연습실 — 3호선 3정거장](/stories/practice-room-samsong1)
 
 <!-- 내부 link block — Round 4 C-H3 -->
 
@@ -180,4 +180,3 @@ faq:
 
 <!-- cross-link block — Round 5 C-H1 partial -->
 
-**일산 인근 권역 비교**: [고양](/stories/practice-room-goyang1), [덕양구](/stories/practice-room-deogyang1), [원당](/stories/practice-room-wondang1), [삼송](/stories/practice-room-samsong1), [원흥](/stories/practice-room-wonheung1)
