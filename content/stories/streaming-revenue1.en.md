@@ -43,7 +43,7 @@ faq:
 
 Streaming revenue doesn't end with the release of a single song. A long-term exposure strategy and the use of platform algorithms are the foundation of continuous income.
 
-The history of the streaming revenue model began with Apple iTunes' $0.99-per-song sales model in 2001, and took shape as the paradigm shifted to Spotify's subscription-based streaming in 2008. Pushing back against the low early streaming rates, Taylor Swift pulled all of her music from Spotify in 2014, bringing the issue of artist revenue into international public debate. Domestically, Melon established the unlimited monthly-subscription streaming model in 2004, and the 2013 revision of the Copyright Act clarified the standards for distributing streaming royalties, which solidified the artist revenue structure. Spotify's pro-rata method (distributing the entire revenue pool according to streaming share) drew criticism for being a structure that concentrates revenue around superstars, and in 2023 Spotify announced that it would stop paying out on tracks with fewer than 1,000 streams per month, sparking controversy in the indie artist community. This policy change spread the awareness that indie artists need a multi-channel revenue structure rather than depending on a handful of platforms.
+The history of the streaming revenue model began with Apple iTunes' $0.99-per-song sales model in 2003, and took shape as the paradigm shifted to Spotify's subscription-based streaming in 2008. Pushing back against the low early streaming rates, Taylor Swift pulled all of her music from Spotify in 2014, bringing the issue of artist revenue into international public debate. Domestically, Melon established the unlimited monthly-subscription streaming model in 2004. Spotify's pro-rata method (distributing the entire revenue pool according to streaming share) drew criticism for being a structure that concentrates revenue around superstars, and in 2023 Spotify announced that it would stop paying out on tracks with fewer than 1,000 streams in the past 12 months, sparking controversy in the indie artist community. This policy change spread the awareness that indie artists need a multi-channel revenue structure rather than depending on a handful of platforms.
 
 ---
 
@@ -54,7 +54,6 @@ The history of the streaming revenue model began with Apple iTunes' $0.99-per-so
 **Melon, Genie, Bugs**
 - Subscription revenue pool distributed according to streaming share
 - Distributed in the order of distributor → label → artist
-- **Domestic artists**: receive roughly 6–12% of platform revenue
 
 ### Global Platforms
 
@@ -91,7 +90,7 @@ YouTube Music / YouTube (Content ID):
 
 - Concentrate streams in the first week of release (algorithm learning)
 - Raise your save rate (ask fans to save the track)
-- Raise your completion rate (a stream counts only if the song is played to the end)
+- Raise your completion rate
 - Concentrate release-day streams with a pre-save campaign
 
 ---

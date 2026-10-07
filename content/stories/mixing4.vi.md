@@ -37,7 +37,7 @@ Sample rate là **độ phân giải theo thời gian**—mỗi giây lấy bao 
   * **96 kHz**: cực kỳ chi tiết, nhưng dung lượng gấp đôi và máy sẽ mệt. (Nghe quạt chưa?)
 
 **Mẹo thực tế**:
-* **Cho phát hành nhạc**: 44.1 kHz hoặc 48 kHz là đủ. Kể cả thu 96 kHz, nền tảng streaming cũng sẽ chuyển về 44.1/16‑bit.
+* **Cho phát hành nhạc**: 44.1 kHz hoặc 48 kHz là đủ.
 * **Cho video/YouTube**: luôn dùng **48 kHz**. Tránh lỗi lệch sync trong phần mềm dựng. (Môi mấp máy mà không có tiếng—rất rắc rối.)
 
 ## 2. Bit depth: độ sâu màu trong ảnh
@@ -45,8 +45,8 @@ Sample rate là **độ phân giải theo thời gian**—mỗi giây lấy bao 
 Bit depth là **độ phân giải của âm lượng**—mức độ chi tiết từ nhỏ nhất đến lớn nhất.
 
 * **Ví dụ ảnh**:
-  * **16‑bit (256 màu)**: màu bị dải như đồ họa game cũ. Gradient bị bậc thang.
-  * **24‑bit (true color)**: màu tự nhiên như mắt người, kể cả vùng tối. (Đậm đà!)
+  * **16‑bit**: màu bị dải như đồ họa game cũ. Gradient bị bậc thang.
+  * **24‑bit**: màu tự nhiên như mắt người, kể cả vùng tối. (Đậm đà!)
 * **Âm thanh**:
   * **16‑bit**: chất lượng CD. Đủ dùng, nhưng âm rất nhỏ dễ bị chôn trong nhiễu. Dải động khoảng 96 dB.
   * **24‑bit**: chuẩn studio. Bắt từ tiếng thì thầm đến bùng nổ. Dải động ~144 dB—gần như toàn bộ thực tế.

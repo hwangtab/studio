@@ -55,7 +55,7 @@ A 44.1 kHz, hay que muestrear 44.100 veces por segundo con intervalos exactos, p
   * Los agudos suenan ásperos y fríos (granulado)
 
 **Solución**:
-Con interfaces de más de 100.000 KRW, el jitter ya no es un problema serio.
+Con una interfaz de audio comercial común, el jitter ya no es un problema serio.
 En entornos profesionales con **word clock**, hay que configurar bien el “master clock”.
 Para home recording, solo recuerda esto: **usa una buena interfaz y mantén los drivers actualizados.** (¡Revisa seguido!)
 

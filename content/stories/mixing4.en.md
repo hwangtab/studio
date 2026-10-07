@@ -37,7 +37,7 @@ Sample rate is the **resolution of time**—how many slices per second you take.
   * **96 kHz**: extremely detailed, but file size doubles and your computer struggles. (Hear that fan?)
 
 **Practical tips**:
-* **For music release**: 44.1 kHz or 48 kHz is enough. Even if you record at 96 kHz, streaming sites will convert to 44.1/16‑bit anyway.
+* **For music release**: 44.1 kHz or 48 kHz is enough.
 * **For video/YouTube**: always use **48 kHz**. This avoids sync disasters in video editors. (If lips move but no sound—big trouble.)
 
 ## 2. Bit depth: color depth in photos
@@ -45,8 +45,8 @@ Sample rate is the **resolution of time**—how many slices per second you take.
 Bit depth is the **resolution of volume**—how finely you can represent sound from the quietest to the loudest.
 
 * **Photo analogy**:
-  * **16‑bit (256 colors)**: colors look banded like old game graphics. Gradients look stepped.
-  * **24‑bit (true color)**: natural color like what our eyes see, even in dark shadows. (Rich!)
+  * **16‑bit**: colors look banded like old game graphics. Gradients look stepped.
+  * **24‑bit**: natural color like what our eyes see, even in dark shadows. (Rich!)
 * **Audio**:
   * **16‑bit**: CD quality. Good enough, but very quiet sounds can get buried in noise. Dynamic range about 96 dB.
   * **24‑bit**: studio standard. Captures whispers to explosions vividly. Dynamic range about 144 dB—covering almost the entire real‑world range.

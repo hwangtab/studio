@@ -83,7 +83,6 @@ It’s not just convenience—it helps you **keep the flow of the song**.
 
 “Do I really need to spend time organizing?”
 Yes. (Firmly.)
-Spend 30 minutes organizing and you save 3 hours of mixing.
 More importantly, a clean session calms your mind and gives you space for **artistic decisions**.
 
 Open that messy project right now and start cleaning. Your mix will change. (Sparkle!)

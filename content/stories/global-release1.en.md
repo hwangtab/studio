@@ -42,9 +42,9 @@ faq:
 
 Thanks to digital music distribution, even Korean indie artists can release simultaneously on streaming platforms around the world. Global distribution is no longer the exclusive domain of major labels.
 
-The history of global music distribution is the story of physical borders coming down one by one. Before the iTunes Store began selling digital tracks individually in 2003, an overseas release meant having to put in place a contract with a local label, CD plant operations, and a physical distribution network all at once. When Spotify launched streaming in Europe in 2008, and DistroKid introduced its model of distributing unlimited tracks to more than 80 platforms for $19.99 a year in 2013, the barriers to going global for independent artists effectively disappeared. When BTS entered the Billboard Hot 100 with "IDOL" in 2018, they proved that a Korean artist could conquer global charts on streaming and social-media fandom alone, without local U.S. radio promotion — and this became the catalyst for countless Korean indie artists to invest seriously in overseas streaming afterward.
+The history of global music distribution is the story of physical borders coming down one by one. Before the iTunes Store began selling digital tracks individually in 2003, an overseas release meant having to put in place a contract with a local label, CD plant operations, and a physical distribution network all at once. When Spotify launched streaming in Europe in 2008, and DistroKid introduced its model of distributing unlimited tracks to more than 80 platforms for $19.99 a year in 2013, the barriers to going global for independent artists effectively disappeared. When BTS entered the Billboard Hot 100 with "IDOL" in 2018, they proved that a Korean artist could conquer global charts on streaming and social-media fandom alone, without local U.S. radio promotion.
 
-The reason Korean music performs especially well abroad is Spotify's algorithmic playlists. Discover Weekly and Release Radar recommend music to listeners worldwide based on genre and mood data, and because Korean R&B and indie pop have a distinctive sound that doesn't fit existing Western genre categories, they tend to get picked up by the algorithm as music that delivers a "thrill of discovery." Checking the listener data by country on the Spotify for Artists dashboard lets you see which regions your music is resonating in, and setting your focus target markets based on this data is the starting point of a global strategy.
+Checking the listener data by country on the Spotify for Artists dashboard lets you see which regions your music is resonating in, and setting your focus target markets based on this data is the starting point of a global strategy.
 
 ---
 
@@ -80,7 +80,7 @@ The reason Korean music performs especially well abroad is Spotify's algorithmic
 
 ## Optimizing for Overseas Streaming Platforms
 
-Each platform has different algorithms and tools for surfacing artists. On Spotify, the algorithm tends to favor artists who improve the completeness of their profile through editorial pitching, Spotify Canvas loop videos, and the Artist Pick (pinning a released track). Apple Music is linked with Shazam data, so when your music is used in performances, advertisements, or dramas, the number of Shazam recognitions ties directly to streaming exposure. YouTube Music links with official artist channels and automatically generates Official Audio; because more YouTube channel subscribers make streaming counts rise faster in the early days of a release, building up a YouTube channel in advance is important.
+Each platform has different algorithms and tools for surfacing artists. On Spotify, you can fill out your profile directly through editorial pitching, Spotify Canvas loop videos, and the Artist Pick (pinning a released track). On Apple Music, you can view Shazam data in the artist tools, and YouTube Music links with official artist channels.
 
 ### Strategy by Global Platform
 
@@ -131,7 +131,7 @@ In global playlist pitching, the quality of your English bio and pitch message d
 
 ## Major Overseas Music Markets
 
-K-pop's success in the global market is owed to a structure that combines the fandom system with digital content production. Within Southeast Asia, Indonesia has more than 60 million Spotify users, making it a top-5 Spotify market worldwide, and because K-pop fan clubs are organized at the national level, it is well-suited to concentrating streams in the early days of a release. Thailand and the Philippines likewise have fan bases formed through Korean drama OSTs and idol culture, giving them a high receptiveness to Korean-language content. Japan is the No. 2 K-pop market, but local Japanese streaming platforms (AWA, Line Music) hold a large share and there's a preference for communicating in Japanese, so the approach differs from other regions. The United States and Brazil have seen K-pop fandoms grow rapidly since BTS and BLACKPINK, making them realistic markets even for indie artists who have English social-media accounts and English-subtitled content.
+K-pop's success in the global market is owed to a structure that combines the fandom system with digital content production. Within Southeast Asia, Indonesia's K-pop fan clubs are organized at the national level, it is well-suited to concentrating streams in the early days of a release. Thailand and the Philippines likewise have fan bases formed through Korean drama OSTs and idol culture, giving them a high receptiveness to Korean-language content. In Japan, local Japanese streaming platforms (AWA, Line Music) hold a large share and there's a preference for communicating in Japanese, so the approach differs from other regions. The United States and Brazil have seen K-pop fandoms grow rapidly since BTS and BLACKPINK, making them realistic markets even for indie artists who have English social-media accounts and English-subtitled content.
 
 ### Regions Where K-pop and Korean Music Are Strong
 
@@ -141,7 +141,7 @@ K-pop's success in the global market is owed to a structure that combines the fa
 - **Strategy**: Indonesian- and Thai-language social media content
 
 **Asia**
-- **Japan**: No. 2 K-pop market, prefers Japanese-language service
+- **Japan**: prefers Japanese-language service
 - **China (limited)**: YouTube and Spotify are blocked (a separate strategy is needed)
 - **Taiwan, Hong Kong**: respond well to English and Korean content
 

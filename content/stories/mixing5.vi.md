@@ -54,7 +54,7 @@ Nhưng nếu họ say và quay nhanh chậm thất thường (tick—tock—tick
   * Dải cao gắt và lạnh (hạt)
 
 **Giải pháp**:
-Với interface từ ~100,000 KRW trở lên, jitter không còn là vấn đề lớn.
+Chỉ cần dùng audio interface thông thường bán trên thị trường, jitter không còn là vấn đề lớn.
 Tuy nhiên, trong hệ thống pro phức tạp có **word clock**, phải đặt “master clock” đúng.
 Với thu tại nhà, chỉ cần nhớ: **Dùng interface tốt và cập nhật driver thường xuyên.** (Kiểm tra đều!)
 

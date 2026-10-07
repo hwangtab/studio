@@ -56,7 +56,7 @@ Asosiy ikki turini yodda tuting.
 
 ## 4. Gear'ni ayblashni bas qiling
 
-Top injyenerlar doim aytadigan gap bor:
+Ko‘p aytiladigan bir gap bor:
 **“Gear emas, quloq muhim.”**
 
 The Beatles 4‑track lenta mashinasida tarix yaratgan, Billie Eilishning Grammy yutgan albomi esa yotoqxonada yozilgan.

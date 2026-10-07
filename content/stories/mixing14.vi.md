@@ -53,7 +53,7 @@ Bắt đầu từ yếu tố quan trọng nhất:
 
 **Tip: Pink Noise Mixing**
 
-Nếu bí, hãy thử pink noise. Mở khoảng ‑12 dB, rồi nâng từng nhạc cụ đến khi vừa nhô qua tiếng nhiễu.
+Nếu bí, hãy thử pink noise. Mở nó lên, rồi nâng từng nhạc cụ đến khi vừa nhô qua tiếng nhiễu.
 Ngạc nhiên là bạn sẽ có balance tốt. (Nice!)
 
 ## 3. Phép màu của mono: máy phát hiện nói dối

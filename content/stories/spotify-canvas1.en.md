@@ -21,7 +21,7 @@ faq:
       edit it yourself or commission a designer.
   - q: What are the Canvas specs?
     a: >-
-      Vertical 9:16 aspect ratio, recommended resolution of 720x1280px or higher, an MP4 video (or a still image),
+      Vertical 9:16 aspect ratio, 720–1080px in height, an MP4 or JPG file,
       3–8 seconds long. It plays silently and loops automatically. Promotional copy, contact details, social
       handles, logos, and excessive flashing are prohibited under the guidelines.
   - q: Does adding a Canvas actually help?
@@ -55,8 +55,8 @@ The key point is that **the distributor does not make it for you.** ISRC/UPC iss
 | Item | Spec |
 |---|---|
 | Aspect ratio | Vertical 9:16 |
-| Recommended resolution | 720x1280px or higher |
-| Format | MP4 video (or still image) |
+| Resolution | 720–1080px in height |
+| Format | MP4 or JPG |
 | Length | 3–8 seconds, auto-loop |
 | Sound | Does not play (silent loop) |
 

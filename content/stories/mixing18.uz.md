@@ -52,7 +52,7 @@ Bu faqat nom emas. Bu — **sahna tanlovi**. (Tanlang!)
 
 * **His**: haqiqiy xona emas. Titroq metall plastina. Xona rezonansi kam, **zich, yorqin, yaltiroq** tail.
 * **Ishlatish**: **vokal** va **snare**.
-* **Kalit**: Popdagi jiloli “shaa‑” vokal dumi deyarli har doim Plate. Hall'dan tozaroq. (Shine!)
+* **Kalit**: Popdagi jiloli “shaa‑” vokal dumi ko'pincha Plate bilan qilinadi. Hall'dan tozaroq. (Shine!)
 
 #### ④ Spring: vintage tebranish (Boing!)
 

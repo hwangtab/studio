@@ -64,7 +64,7 @@ Vì sao?
 2. **Thích nghi**: Não bỏ qua hoặc bóp méo âm thanh lặp lại.
 
 **[Studio tips]**:
-* **Làm 20 phút, nghỉ 5**: Cho tai nghỉ. Đi dạo ngắn hoặc nghe âm thanh ngoài trời là reset.
+* **Làm 30–45 phút, nghỉ 5–10**: Cho tai nghỉ. Đi dạo ngắn hoặc nghe âm thanh ngoài trời là reset.
 * **Nghe ở âm lượng nhỏ**: Âm lượng lớn làm tai mệt. Nếu balance ổn ở mức nói chuyện, đó là thật sự tốt.
 
 ## 4. Tập trung từng nhạc cụ một
@@ -85,5 +85,5 @@ Nếu bạn nghĩ như vậy—chúc mừng, tai bạn đã là tai kỹ sư r�
 ### [Lỗi người mới hay gặp] 👂
 
 * **“Mix không có reference”**: Như đi biển không có la bàn. Khoảnh khắc bạn nghĩ “tai mình hoàn hảo”, bản mix sẽ lạc hướng.
-* **“Mix kiểu marathon”**: Năm giờ liền và tai tê. Quyết định lúc đó 90% là hối hận ngày hôm sau.
+* **“Mix kiểu marathon”**: Năm giờ liền và tai tê.
 * **“Ngày mai sẽ hay”**: Nếu giờ nghe sai, thì sai. Đừng tự thôi miên “để mai sẽ ổn.”

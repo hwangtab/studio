@@ -56,7 +56,7 @@ DAW（Digital Audio Workstation）是电脑里的录音室。Cubase、Logic、Ab
 
 ## 4. 别再怪设备
 
-世界级工程师常说一句话：
+常有这样一句话：
 **“It’s not the gear, it’s the ear.”（不是设备，是耳朵。）**
 
 披头士用 4 轨录音机写下历史，比莉·艾利什的格莱美获奖专辑是在卧室录的。
