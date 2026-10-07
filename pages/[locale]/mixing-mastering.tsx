@@ -27,7 +27,9 @@ import SectionHeading from '../../components/ui/SectionHeading';
 import type { LucideIcon } from '@/lib/lucide-icons';
 import BaseCard from '../../components/ui/BaseCard';
 import { Section } from '../../components/ui/Section';
+import RuleList from '../../components/ui/RuleList';
 import PricingCard from '../../components/ui/PricingCard';
+import KakaoSectionBar from '../../components/common/KakaoSectionBar';
 import ServicePriceTable from '../../components/service/ServicePriceTable';
 import { getRouteLastmod, formatLastmodDate } from '../../lib/pageLastmod';
 
@@ -53,7 +55,7 @@ import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
 import type { StoryCardData } from '../../types/story';
 import { buildSchemaGraph, buildStudioServiceSchema } from '../../lib/studioServiceSchema';
 import { generateHowToSchema } from '../../utils/schema';
-import { createFadeInAnimation, createInViewEnterAnimation, HOVER_SCALE, TRANSITION_STANDARD } from '../../utils/animationUtils';
+import { createFadeInAnimation, createInViewEnterAnimation } from '../../utils/animationUtils';
 import { createTranslatedHowToSteps, createTranslatedQaItems } from '../../utils/translatedList';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 import type { NextPageWithLayout } from '../../types';
@@ -302,6 +304,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
         <div className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto items-stretch">
           {mixingOffers.map((offer) => (
             <PricingCard
+              kakaoEmphasis="band"
               key={offer.id}
               id={offer.id}
               title={offer.title}
@@ -337,6 +340,16 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
         <p className="mt-6 text-center typo-card-body text-sm text-gray-500 dark:text-gray-400">
           {t('mixingMastering.mixing.vocalTuneNotice')}
         </p>
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={siteConfig.contact.kakaoUrl}
+          component="MixingMasteringPage"
+          ctaId="mixing_tier_bar"
+          message={t('mixingMastering.tierBar.mixing.message')}
+          actionLabel={t('mixingMastering.tierBar.mixing.action')}
+          contactLabel={t('mixingMastering.tierBar.contact')}
+        />
       </Section>
 
       {/* 마스터링 가격 — 싱글 / EP·정규 */}
@@ -350,6 +363,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
         <div className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto items-stretch">
           {masteringOffers.map((offer) => (
             <PricingCard
+              kakaoEmphasis="band"
               key={offer.id}
               id={offer.id}
               title={offer.title}
@@ -431,6 +445,16 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
             밀렸다(운영자 지적 2026-09-30). 절이 아니라 이 절 안의 블록이다(절을 끼우면 아래 절들의 배경
             번갈음이 전부 뒤집힌다). */}
         <MixCompareBlock locale={locale} component="MixingMasteringMixCompare" className="mt-16 max-w-3xl mx-auto border-t border-gray-200 dark:border-gray-800 pt-10" />
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={siteConfig.contact.kakaoUrl}
+          component="MixingMasteringPage"
+          ctaId="mastering_tier_bar"
+          message={t('mixingMastering.tierBar.mastering.message')}
+          actionLabel={t('mixingMastering.tierBar.mastering.action')}
+          contactLabel={t('mixingMastering.tierBar.contact')}
+        />
       </Section>
 
       {/* 원격 의뢰 절차 — HowTo 스키마와 동일 데이터 */}
@@ -442,25 +466,17 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
             subtitle={t('mixingMastering.process.subtitle')}
             className="mb-12"
           />
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-            {([0, 1, 2, 3] as const).map((i) => (
-              <m.div
-                key={i}
-                className="relative glass-card rounded-2xl p-6"
-                whileHover={{ ...HOVER_SCALE, transition: TRANSITION_STANDARD }}
-              >
-                <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center mb-4">
-                  <span className="text-primary dark:text-primary-lighter font-bold text-sm">{String(i + 1).padStart(2, '0')}</span>
-                </div>
-                <h3 className="typo-card-subtitle mb-2">
-                  {t(`mixingMastering.process.steps.${i}.title`)}
-                </h3>
-                <p className="typo-card-body text-sm">
-                  {t(`mixingMastering.process.steps.${i}.description`)}
-                </p>
-              </m.div>
-            ))}
-          </div>
+          {/* 라이너 노트 §3-5: 단계 카드 넷 → 번호 괘선 목록. 문구·순서 불변. */}
+          <RuleList
+            numbered
+            columns={4}
+            className="max-w-5xl mx-auto"
+            items={([0, 1, 2, 3] as const).map((i) => ({
+              key: String(i),
+              heading: t(`mixingMastering.process.steps.${i}.title`),
+              body: t(`mixingMastering.process.steps.${i}.description`),
+            }))}
+          />
           {/* 방문 세션 안내 — 대면 응대는 한국어만 운영하므로 ko 한정 */}
           {locale === 'ko' && (
             <p className="typo-card-body text-center text-gray-600 dark:text-gray-400 mt-8 max-w-2xl mx-auto">
@@ -661,10 +677,10 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
           <ServiceLinkPill href={`/${locale}/composition-arrangement`} tone="primary">
             {t('nav.compositionArrangement')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/release-project`} tone="secondary">
+          <ServiceLinkPill href={`/${locale}/release-project`} tone="primary">
             {t('nav.releaseProject')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/pricing`} tone="accent">
+          <ServiceLinkPill href={`/${locale}/pricing`} tone="primary">
             {t('nav.pricing')}
           </ServiceLinkPill>
         </div>

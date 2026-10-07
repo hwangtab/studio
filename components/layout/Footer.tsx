@@ -1,4 +1,5 @@
 import React from 'react';
+import { ARTISTS_NAV_LISTED } from '../../data/navFlags';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { getSiteConfig, hostingProvider, studioOperator } from '../../data/siteConfig';
@@ -49,7 +50,7 @@ export const Footer = ({ locale }: FooterProps) => {
       className={
         edition === 'v2'
           ? 'v2-footer bg-gray-950 border-t border-white/10 text-white p-8 font-title'
-          : 'bg-gradient-to-r from-primary via-secondary to-accent text-white p-8 font-title'
+          : 'bg-gradient-to-r from-primary via-primary to-primary text-white p-8 font-title'
       }
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -109,7 +110,8 @@ export const Footer = ({ locale }: FooterProps) => {
 
           <div className="flex flex-col">
             <SectionHeading>{t('footer.sections.services')}</SectionHeading>
-            <ul className="flex flex-col">
+            {/* 라이너 노트 §3-8: 서비스 아홉 줄은 두 열로 접는다 — 한 열이 너무 길어 푸터 높이를 혼자 정하고 있었다. */}
+            <ul className="grid grid-cols-2 gap-x-6">
               <FooterLink href={`/${locale}/practice-room`}>{t('nav.practiceRoom')}</FooterLink>
               <FooterLink href={`/${locale}/recording`}>{t('nav.recording')}</FooterLink>
               <FooterLink href={`/${locale}/mixing-mastering`}>{t('nav.mixingMastering')}</FooterLink>
@@ -148,7 +150,7 @@ export const Footer = ({ locale }: FooterProps) => {
               <>
                 <SubHeading>{t('footer.sections.artist')}</SubHeading>
                 <ul className="flex flex-col">
-                  <FooterLink href={`/${locale}/artists`}>{t('nav.artists')}</FooterLink>
+                  {ARTISTS_NAV_LISTED && <FooterLink href={`/${locale}/artists`}>{t('nav.artists')}</FooterLink>}
                   <FooterLink href={`/${locale}/funding`}>{t('nav.funding')}</FooterLink>
                   <FooterLink href={`/${locale}/shows`}>{t('nav.shows')}</FooterLink>
                 </ul>

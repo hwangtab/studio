@@ -10,6 +10,7 @@
  * 일상적인 변경이라 목록을 박아 두면 테스트가 방해가 된다.
  */
 import React from 'react';
+import { ARTISTS_NAV_LISTED } from '../../data/navFlags';
 import { render, screen, cleanup } from '@testing-library/react';
 import { Footer } from './Footer';
 
@@ -45,7 +46,8 @@ describe('Footer', () => {
   it('결제 퍼널(후원·펀딩)은 ko에만 나온다', () => {
     render(<Footer locale="ko" />);
     const ko = hrefsIn(screen.getByRole('contentinfo'));
-    expect(ko).toContain('/ko/artists');
+    // 아티스트 구독 링크는 data/navFlags.ts의 스위치를 따른다(구독 아티스트 0인 동안 내림 — 2026-10-06).
+    expect(ko.includes('/ko/artists')).toBe(ARTISTS_NAV_LISTED);
     expect(ko).toContain('/ko/funding');
     cleanup();
 

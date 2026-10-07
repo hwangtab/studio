@@ -144,7 +144,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
                 </ServiceLinkPill>
                 <ServiceLinkPill
                   href={`/${locale}/release-project`}
-                  tone="secondary"
+                  tone="primary"
                   className="px-5 py-2.5 touch-manipulation"
                 >
                   {t('about.producer.releaseCta')}
@@ -359,16 +359,16 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           <ServiceLinkPill href={`/${locale}/wedding-song`} tone="primary">
             {t('nav.weddingSong')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/voice-acting`} tone="secondary">
+          <ServiceLinkPill href={`/${locale}/voice-acting`} tone="primary">
             {t('nav.voiceActing')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/lesson`} tone="accent">
+          <ServiceLinkPill href={`/${locale}/lesson`} tone="primary">
             {t('nav.lesson')}
           </ServiceLinkPill>
           <ServiceLinkPill href={`/${locale}/practice-room`} tone="primary">
             {t('nav.practiceRoom')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/pricing`} tone="secondary">
+          <ServiceLinkPill href={`/${locale}/pricing`} tone="primary">
             {t('nav.pricing')}
           </ServiceLinkPill>
         </div>

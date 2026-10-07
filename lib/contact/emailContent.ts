@@ -1,5 +1,6 @@
 import type { SanitizedContactPayload } from './payload';
 import { buildEmailLayout, escapeHtml } from '../email/layout';
+import { BRAND_COLOR } from '../brandColor';
 
 /**
  * 문의 접수 운영자 메일 HTML — 공용 레이아웃(operator). 사용자가 쓴 값은 전부 escape하고 메시지는 줄바꿈을 보존한다.
@@ -11,7 +12,7 @@ export const buildContactEmailHtml = (sanitized: SanitizedContactPayload): strin
   const messageBlock = `
     <div style="margin: 24px 0 8px; color: #666666; font-size: 12px; font-weight: 700;">메시지</div>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
-           style="margin: 0 0 24px; background-color: #f9f9fb; border-left: 3px solid #6d28d9; border-radius: 6px;">
+           style="margin: 0 0 24px; background-color: #f9f9fb; border-left: 3px solid ${BRAND_COLOR.primary}; border-radius: 6px;">
       <tr><td style="padding: 16px 18px; color: #1a1a1a; font-size: 15px; line-height: 1.7; word-break: break-word;">${message}</td></tr>
     </table>`;
 

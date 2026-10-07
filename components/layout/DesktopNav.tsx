@@ -33,10 +33,10 @@ interface DesktopNavProps {
 const linkClass = (isActive: boolean, isTransparent: boolean) =>
   `flex items-center px-2 xl:px-3 py-2 rounded-lg typo-nav-link text-sm transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
     ? !isTransparent
-      ? 'text-primary dark:text-accent-light font-bold'
+      ? 'text-primary dark:text-primary-lighter font-bold'
       : 'text-white font-bold bg-white/20'
     : !isTransparent
-      ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary dark:hover:text-accent-light'
+      ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary dark:hover:text-primary-lighter'
       : 'text-white hover:bg-white/10 hover:text-white'
   }`;
 

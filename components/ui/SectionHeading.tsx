@@ -91,7 +91,7 @@ const SectionHeading = ({
 
       <Component
         className={cn(
-          "typo-section-title text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent mb-3 break-words [overflow-wrap:anywhere]",
+          "typo-section-title text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-primary to-primary mb-3 break-words [overflow-wrap:anywhere]",
           titleClassName
         )}
       >

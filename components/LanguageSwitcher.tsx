@@ -171,7 +171,7 @@ export const LanguageSwitcher = ({
                     className={`
                       flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm transition-colors text-left touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
                       ${currentLocale === locale
-                        ? 'bg-primary/10 text-primary dark:text-accent-light font-medium'
+                        ? 'bg-primary/10 text-primary dark:text-primary-lighter font-medium'
                         : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
                       }
                     `}

@@ -12,6 +12,7 @@ import type { FundingOrder } from './service';
 import { activePledgeLines, pledgeLines } from './pledgeLines';
 import { pledgeDownloads } from './shape';
 import { BANK_ACCOUNT, formatKstDeadline } from '../payments/bankAccount';
+import { BRAND_COLOR } from '../brandColor';
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr').replace(/\/+$/, '');
 const manageUrl = (order: FundingOrder): string => `${SITE_URL}/ko/funding/manage/${order.orderNo}?token=${order.manageToken}`;
@@ -20,7 +21,7 @@ export const PHONE = `문의: ${PHONE_NUMBER}`;
 
 /** HTML 메일 본문(paragraphs·notices)에 넣는 링크. 주소·라벨은 여기서 escape한다. */
 export const htmlLink = (url: string, label: string = url): string =>
-  `<a href="${escapeHtml(url)}" style="color: #6d28d9; text-decoration: underline;">${escapeHtml(label)}</a>`;
+  `<a href="${escapeHtml(url)}" style="color: ${BRAND_COLOR.primary}; text-decoration: underline;">${escapeHtml(label)}</a>`;
 
 const phoneParagraph = `문의: ${htmlLink(`tel:${PHONE_NUMBER.replace(/-/g, '')}`, PHONE_NUMBER)}`;
 

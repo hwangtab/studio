@@ -338,10 +338,10 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({
           <ServiceLinkPill href={`/${locale}/wedding-song`} tone="primary">
             {t('nav.weddingSong')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/voice-acting`} tone="secondary">
+          <ServiceLinkPill href={`/${locale}/voice-acting`} tone="primary">
             {t('nav.voiceActing')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/lesson`} tone="accent">
+          <ServiceLinkPill href={`/${locale}/lesson`} tone="primary">
             {t('nav.lesson')}
           </ServiceLinkPill>
           <ServiceLinkPill href={`/${locale}/practice-room`} tone="primary">

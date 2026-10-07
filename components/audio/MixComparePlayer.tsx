@@ -4,6 +4,7 @@ import { ArrowRight, Pause, Play } from '@/lib/lucide-icons';
 import { Button } from '../ui/Button';
 import { cn } from '../../lib/utils';
 import { trackMicroEvent } from '../../utils/analytics';
+import { announcePlay, onOtherPlay } from '../../lib/audio/audioBus';
 import { MIX_COMPARE_SETS, type MixCompareCopy, type MixCompareVariant } from '../../data/mixCompare';
 
 type Side = 'before' | 'after';
@@ -48,7 +49,7 @@ const Bars = ({ values, className }: { values: readonly number[]; className: str
  * 믹싱 페이지(30초 발췌)가 같은 컴포넌트를 쓴다.
  *
  * - **자동 재생·미리 내려받기 없음.** 두 `Audio`는 `preload="none"`이고 재생을 누르기 전에는 한 바이트도
- *   받지 않는다(포트폴리오 LCP 사고와 같은 이유 — components/AudioPlayer/useAudioPlayer.ts). 처음 재생하면
+ *   받지 않는다(포트폴리오 LCP 사고와 같은 이유 — components/audio/GlobalPlayerProvider.tsx). 처음 재생하면
  *   반대편 음원을 미리 받아 전환 때 끊김을 줄인다.
  * - **전환은 재생 위치를 그대로 넘긴다.** 두 파일은 시간이 맞춰져 있다(scripts/build-mix-compare.mjs).
  *   새 소리가 실제로 시작하고 나서야 이전 소리를 멈춰 겹침은 있어도 빈 틈은 없게 한다.
@@ -162,6 +163,16 @@ export default function MixComparePlayer({
     };
   }, [paint, startLoop, stopLoop, sources]);
 
+  // 다른 소스(글로벌 미니 플레이어·포트폴리오 플레이어)가 울리면 멈춘다 — 한 번에 하나만(lib/audio/audioBus).
+  React.useEffect(() => onOtherPlay('mix-compare', () => {
+    const el = audios.current[activeRef.current];
+    if (el && !el.paused) {
+      el.pause();
+      stopLoop();
+      setPlaying(false);
+    }
+  }), [stopLoop]);
+
   /** 메타데이터가 아직 없으면 준비되는 대로 위치를 옮긴다(iOS Safari는 그 전의 currentTime 설정을 무시한다). */
   const seekWhenReady = (el: HTMLAudioElement, seconds: number) => {
     if (el.readyState >= 1) {
@@ -185,6 +196,7 @@ export default function MixComparePlayer({
       return;
     }
     setFailed(false);
+    announcePlay('mix-compare');
     try {
       await el.play();
     } catch {

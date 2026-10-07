@@ -80,7 +80,8 @@
     "kakaoFab": "KakaoTalk orqali so'rov",
     "callFab": "Telefon orqali so'rov",
     "skipToContent": "Asosiy mazmunga o'tish",
-    "scrollToTop": "Tepaga qaytish"
+    "scrollToTop": "Tepaga qaytish",
+    "popularBadge": "Eng ko‘p tanlanadigan"
   },
   "common": {
     "categoryFilter": {
@@ -217,6 +218,10 @@
       "keywords": "yozuv namunalari, mixingdan oldin va keyin, mastering namunalari, studio portfolio, musiqa prodakshn sifati, yozuv natijalari, Studio NOL",
       "title": "Yozuv va Miks Portfolio | Studio NOL",
       "description": "Studio NOL portfoliosi — rejadan yozuv, miks va masteringgacha, so'ng tarqatish va chiqarish PRigacha. Albom, singl va reklama musiqasi kreditlari, bajarilgan ishlar va oldin/keyin namunalari."
+    },
+    "boardTitles": {
+      "works": "Ishlar",
+      "tracks": "Namuna treklar"
     }
   },
   "contact": {
@@ -311,7 +316,13 @@
       "subtitleLine1": "Mashg‘ulot xonasining soatbay ijarasidan tashqari narxlar QQSsiz haqiqiy narxlardir. Qo‘shimcha to‘lov qo‘llaniladigan barcha holatlar quyida ko‘rsatilgan.",
       "subtitleLine2": "Quyidagi jadvalda barcha xizmat narxlari bir joyda.",
       "alt": "Studio NOL narxlari",
-      "ctaKakao": "KakaoTalk orqali bepul narx oling"
+      "ctaKakao": "KakaoTalk orqali bepul narx oling",
+      "boardTitles": {
+        "recording": "Yozuv, soatiga",
+        "practiceRoom": "Mashq xonasi, oyiga",
+        "wedding": "To‘y qo‘shig‘i, har bir qo‘shiq",
+        "unit": "KRW"
+      }
     },
     "special": {
       "title": "Maxsus paketlar",
@@ -386,7 +397,30 @@
     "images": {
       "packageAlt": "Studio NOL kabinasida vokalchi yozuv seanssi"
     },
-    "releaseLink": "Chiqarish loyihasi"
+    "releaseLink": "Chiqarish loyihasi",
+    "tierBar": {
+      "packages": {
+        "message": "Qaysi paket mosligini bilmaysizmi? Qo‘shiqlar soni va reja qilingan chiqarish sanasini ayting.",
+        "action": "KakaoTalk orqali so‘rash"
+      },
+      "recording": {
+        "message": "Necha soat kerakligini bilmaysizmi? Qo‘shiq uzunligi va partiyalar sonini ayting.",
+        "action": "KakaoTalk orqali so‘rash"
+      },
+      "mixing": {
+        "message": "Qaysi darajaga tushishini bilmaysizmi? Sessiya skrinshotini yuboring, treklarni biz sanab beramiz.",
+        "action": "KakaoTalk orqali yuborish"
+      },
+      "mastering": {
+        "message": "Miks faylini yuboring, eshitib faqat mastering yetarli-yo‘qligini aytamiz.",
+        "action": "KakaoTalk orqali yuborish"
+      },
+      "general": {
+        "message": "Qaysi xizmat mosligini bilmaysizmi? Vaziyatingizni ayting. Narx bepul.",
+        "action": "KakaoTalk orqali so‘rash"
+      },
+      "contact": "Bog‘lanish"
+    }
   },
   "lesson": {
     "seo": {
@@ -1138,7 +1172,14 @@
     "highFidelity": "Yuqori aniqlikdagi audio",
     "trackLabel": "Trek {{number}}",
     "volume": "Ovoz balandligi",
-    "playbackProgress": "Ijro jarayoni"
+    "playbackProgress": "Ijro jarayoni",
+    "global": {
+      "region": "Hozir ijroda",
+      "close": "Pleyerni yopish",
+      "error": "Ijro etib bo‘lmadi. Birozdan keyin qayta urinib ko‘ring.",
+      "listen": "30 soniya tinglash",
+      "excerptTitle": "Studio NOL’da yozilgan va miks qilingan 30 soniya"
+    }
   },
   "gallery": {
     "previous": "Oldingi rasmlar",
@@ -1287,6 +1328,13 @@
     "hubCallout": {
       "title": "To'y qo'shig'ini o'zingiz kuylash — To'liq qo'llanma",
       "subtitle": "Qo'shiq tanlash va mashqdan yozuv va to'yxonaga topshirishgacha — kelin-kuyov uchun bir sahifada."
+    },
+    "tierBar": {
+      "wedding": {
+        "message": "To‘y sanasi va qo‘shiqni ayting, bo‘sh sanalarni darhol javob beramiz.",
+        "action": "KakaoTalk orqali so‘rash"
+      },
+      "contact": "Bog‘lanish"
     }
   },
   "recording": {
@@ -1477,6 +1525,13 @@
       ],
       "note": "Shartlar muhit va studiyaga qarab farq qiladi, shuning uchun faqat umumiy tendensiyalar yozildi. Studio NOL qiymatlari shu sahifadagi narx jadvali bilan bir xil.",
       "rowHeader": "Solishtirish bandi"
+    },
+    "tierBar": {
+      "recording": {
+        "message": "Necha soat kerakligini bilmaysizmi? Qo‘shiq uzunligi va partiyalar sonini ayting.",
+        "action": "KakaoTalk orqali so‘rash"
+      },
+      "contact": "Bog‘lanish"
     }
   },
   "mixingMastering": {
@@ -1732,6 +1787,17 @@
       ],
       "note": "Shartlar xizmat va ijrochiga qarab farq qiladi, shuning uchun faqat umumiy tendensiyalar yozildi. Studio NOL qiymatlari shu sahifadagi narx jadvali bilan bir xil.",
       "rowHeader": "Solishtirish bandi"
+    },
+    "tierBar": {
+      "mixing": {
+        "message": "Qaysi darajaga tushishini bilmaysizmi? Sessiya skrinshotini yuboring, treklarni biz sanab beramiz.",
+        "action": "KakaoTalk orqali yuborish"
+      },
+      "mastering": {
+        "message": "Miks faylini yuboring, eshitib faqat mastering yetarli-yo‘qligini aytamiz.",
+        "action": "KakaoTalk orqali yuborish"
+      },
+      "contact": "Bog‘lanish"
     }
   },
   "musicPromotion": {
@@ -2502,6 +2568,13 @@
     "hubCallout": {
       "title": "Cover video yaratish — Rejalashtirish · Suratga olish · Musiqa · Montaj to'liq qo'llanmasi",
       "subtitle": "Qo'shiq tanlashdan suratga olish sozlamasi, ovoz miksiga, YouTube va SNS'ga yuklashgacha — bir sahifadan boshlang."
+    },
+    "tierBar": {
+      "cover": {
+        "message": "Suratga olmoqchi bo‘lgan qo‘shiq va kayfiyatni ayting. Bo‘sh sanalarni darhol javob beramiz.",
+        "action": "KakaoTalk orqali so‘rash"
+      },
+      "contact": "Bog‘lanish"
     }
   },
   "releaseProject": {

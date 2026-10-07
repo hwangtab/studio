@@ -11,6 +11,7 @@ import ImageHero, { HERO_SCRIM } from '../../components/common/ImageHero';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import MediaGallery from '../../components/ui/MediaGallery';
 import { Section } from '../../components/ui/Section';
+import RuleList from '../../components/ui/RuleList';
 
 // Below-fold 섹션은 정적 import로 유지한다(과거 next/dynamic ssr:true 코드 스플리팅에서 전환).
 // 이유: 이들은 ssr:true라 서버는 완전한 HTML을 내보내지만, 클라이언트는 청크가 도착하기
@@ -24,6 +25,7 @@ import FAQSection from '../../components/ui/FAQSection';
 import ContactCTA from '../../components/common/ContactCTA';
 import { getHomeData, type HomeData } from '../../data/home';
 import { getPortfolioItems } from '../../data/portfolio';
+import { getExcerptForPortfolio, toGlobalTrack } from '../../data/audioExcerpts';
 import HomeReleaseStrip, { type ReleaseCover } from '../../components/home/HomeReleaseStrip';
 import HomeServiceTracklist from '../../components/home/HomeServiceTracklist';
 import HomeStudioSpec, { type StudioGearRow } from '../../components/home/HomeStudioSpec';
@@ -98,14 +100,14 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
         priority
         title={
           <>
-            <span className="block mb-2 text-gray-100 drop-shadow-lg">{heroContent.titlePrefix}</span>
+            <span className="block mb-2 text-white">{heroContent.titlePrefix}</span>
             {/* v2: 제목 일부에만 걸린 그라디언트는 사진 위에서 강조가 아니라 얼룩으로 읽혔다
                 (디자인 회의). 강조는 크기가 이미 맡고 있으니 같은 흰색으로 둔다. */}
-            <span className="text-white drop-shadow-lg">
+            <span className="text-white">
               {heroContent.titleHighlight}
             </span>
             {heroContent.titleSuffix && (
-              <span className="text-gray-100 drop-shadow-lg">{heroContent.titleSuffix}</span>
+              <span className="text-white">{heroContent.titleSuffix}</span>
             )}
           </>
         }
@@ -244,19 +246,13 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
             index="04"
             title={localeUsps.title}
           />
-          {/* v2: 카드 세 장 대신 번호 붙은 3단. 카드 그리드에는 스크롤 모션을 걸지 않는다
+          {/* v2: 카드 세 장 대신 번호 붙은 3단(공용 RuleList — 라이너 노트 §3-5). 카드 그리드에는 스크롤 모션을 걸지 않는다
               (여러 장이 동시에 레이어로 올라가 iOS 깜빡임을 되살린다 — 디자인 회의). */}
-          <ol className="grid gap-10 md:grid-cols-3 md:gap-8">
-            {localeUsps.items.map((item: { heading: string; body: string }, index: number) => (
-              <li key={item.heading} className="border-t-2 border-gray-950 dark:border-white pt-5">
-                <span aria-hidden="true" className="block text-sm font-semibold tabular-nums text-primary dark:text-primary-lighter mb-3">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                <h3 className="font-title text-xl font-bold leading-snug text-gray-950 dark:text-white mb-3 break-keep">{item.heading}</h3>
-                <p className="typo-card-body text-gray-600 dark:text-gray-300">{item.body}</p>
-              </li>
-            ))}
-          </ol>
+          <RuleList
+            numbered
+            columns={3}
+            items={localeUsps.items.map((item: { heading: string; body: string }) => ({ heading: item.heading, body: item.body }))}
+          />
         </Section>
       )}
 
@@ -422,12 +418,17 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     .filter((item) => item.featured && item.image)
     .sort((a, b) => (b.releaseDate || '').localeCompare(a.releaseDate || ''))
     .slice(0, 12)
-    .map(({ id, title, image, releaseDate }) => ({
-      id,
-      title,
-      image: image as string,
-      ...(releaseDate ? { releaseDate } : {}),
-    }));
+    .map(({ id, title, image, releaseDate }) => {
+      // 30초 발췌가 있는 커버에는 재생 버튼(라이너 노트 §3-6 c). 글로벌 플레이어가 받는 모양으로 미리 만든다.
+      const excerpt = getExcerptForPortfolio(id);
+      return {
+        id,
+        title,
+        image: image as string,
+        ...(releaseDate ? { releaseDate } : {}),
+        ...(excerpt ? { excerpt: toGlobalTrack(excerpt, locale, 'HomeReleaseStrip', `/${locale}/portfolio/${id}`) } : {}),
+      };
+    });
 
   // 홈 스튜디오 섹션의 대표 장비 — 스튜디오 정보 페이지와 같은 data/equipment.ts에서 앞쪽 항목만.
   // getStaticProps에서 줄여 넘긴다(장비·이미지 전체 데이터를 클라이언트 번들에 싣지 않게).

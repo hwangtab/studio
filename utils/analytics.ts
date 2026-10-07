@@ -54,7 +54,11 @@ export type MicroEventName =
   // 믹싱 전·후 비교 음원. component로 자리를 가른다: HomeMixCompare(전체 곡) · MixingMasteringMixCompare ·
   // ReleaseMixCompare · MixingOrderMixCompare(30초 발췌). cta_id: mix_compare_play(처음 재생 한 번) ·
   // mix_compare_switch(전환, side 동반). 관심 신호일 뿐 리드가 아니다.
-  | 'micro_mix_compare';
+  | 'micro_mix_compare'
+  // 글로벌 미니 플레이어·LP 발췌·커버 그리드의 30초 재생(라이너 노트 §3-6). 트랙당 세션에 한 번. component = 자리
+  // (HomeReleaseStrip · RecordingExcerpt · ReleaseExcerpt · PortfolioTracks …), cta_id = 트랙 id. 관심 신호일 뿐
+  // 리드가 아니다 — 리드 연쇄는 GA4에서 micro_audio_play → lead_click_kakao 세션 경로로 본다.
+  | 'micro_audio_play';
 
 export type TrackedEventName = LeadEventName | MicroEventName;
 

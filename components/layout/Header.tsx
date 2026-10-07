@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import { ARTISTS_NAV_LISTED } from '../../data/navFlags';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { getSiteConfig } from '../../data/siteConfig';
@@ -121,7 +122,8 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
       id: 'artist',
       label: t('nav.groups.artist'),
       items: [
-        { label: t('nav.artists'), href: `/${locale}/artists` },
+        // 구독 아티스트가 0인 동안은 메뉴에서 내린다(data/navFlags.ts).
+        ...(ARTISTS_NAV_LISTED ? [{ label: t('nav.artists'), href: `/${locale}/artists` }] : []),
         { label: t('nav.funding'), href: `/${locale}/funding` },
         { label: t('nav.shows'), href: `/${locale}/shows` },
       ]

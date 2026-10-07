@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { locales, defaultLocale, type Locale } from '../../lib/i18n-config';
 import { getSiteConfig } from '../../data/siteConfig';
+import { BRAND_COLOR } from '../../lib/brandColor';
 
 const shortcutLabels: Record<Locale, {
   contact: string; contactShort: string; contactDesc: string;
@@ -37,7 +38,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     display_override: ['standalone', 'browser'],
     orientation: 'portrait-primary',
     background_color: '#ffffff',
-    theme_color: '#6d28d9',
+    theme_color: BRAND_COLOR.primaryDark,
     lang: locale,
     dir: 'ltr',
     categories: ['music', 'entertainment', 'business'],

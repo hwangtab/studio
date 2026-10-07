@@ -41,7 +41,7 @@ const FeatureCard = ({
       className={`h-full flex flex-col ${variant === 'highlight' ? 'pt-8' : ''} ${className}`}
     >
       {variant === 'highlight' && (
-        <span className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary" aria-hidden />
+        <span className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-primary" aria-hidden />
       )}
       {badge && (
         <Badge tone="brand" size="md" className="mb-3 self-start">

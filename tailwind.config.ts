@@ -1,4 +1,5 @@
 import type { Config, PluginAPI } from 'tailwindcss/types/config';
+import { BRAND_COLOR } from './lib/brandColor';
 
 const config: Config = {
   content: [
@@ -19,27 +20,24 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          light: '#7c3aed', // 밝은 보라색
-          DEFAULT: '#6d28d9', // 보라색
-          dark: '#5b21b6', // 진한 보라색
-          // 다크 배경(gray-900 #030712) 위 텍스트·테두리용. primary-light(#7c3aed)는
-          // 3.53:1로 AA 미달이라 outline 버튼 라벨에 쓸 수 없다 — secondary·accent의
-          // DEFAULT를 대비 때문에 승격한 것과 같은 이유의 토큰이다(측정 7.40:1).
-          lighter: '#a78bfa',
+          // 라이너 노트(2026-10-06, docs/design-liner-notes-plan-2026-10.md §3-1): 보라(violet-700)를
+          // 로고의 짙은 녹색 계열로. 2026-10-07 2차 개정: 운영자가 1차 값(올리브 포레스트 그린 + 베이지)을
+          // "텁텁하다"며 반려 — 더 선명한 에메랄드 계열로, 바탕은 순백/근접백으로. 값의 정본은
+          // lib/brandColor.ts — 메일·정적 카드가 같은 값을 쓴다.
+          light: BRAND_COLOR.primaryLight, // 흰 3.77:1 · paper2 3.43:1 — 작은 텍스트에는 쓰지 않는다(대형·아이콘용)
+          DEFAULT: BRAND_COLOR.primary, // 흰 7.68:1 · paper2 약 7.0:1
+          dark: BRAND_COLOR.primaryDark, // 흰 글씨 12.5:1 — 히어로 잉크 면·solid hover
+          // 다크 배경(gray-900 #030712) 위 텍스트·테두리용 — lighter만 13.2:1로 통과한다. 규칙은 1차와 같다.
+          lighter: BRAND_COLOR.primaryOnDark,
         },
-        secondary: {
-          light: '#ec4899', // 밝은 핑크
-          // #db2777(pink-600)은 gray-50 배경 대비 4.39:1로 WCAG AA(4.5) 간발의 차로 미달.
-          // accent와 동일하게 pink-700로 승격하여 흰/회색 배경 버튼 모두 통과.
-          DEFAULT: '#be185d', // 핑크 (AA 통과: 5.88:1)
-          dark: '#9d174d', // 진한 핑크
-        },
-        accent: {
-          light: '#10b981', // 밝은 에메랄드
-          // #059669(emerald-600)는 흰 배경 대비 3.76:1로 WCAG AA(4.5) 미달.
-          // text-accent/border-accent를 흰 배경 버튼에 자주 쓰므로 emerald-700로 승격.
-          DEFAULT: '#047857', // 에메랄드 (AA 통과: 5.64:1)
-          dark: '#065f46', // 진한 에메랄드
+        // secondary(핑크)·accent(에메랄드)는 2026-10-06 라이너 노트에서 지웠다 — 브랜드색은 primary 하나. 성공·긍정은
+        // green-*, 다크 텍스트 짝은 primary-lighter 하나다(tailwind.config.test.ts가 재등장을 막는다).
+        // 라이트 바탕 — 순백(paper)과 차가운 근접백(paper-2). 1차 값(따뜻한 베이지)은 올리브 그린과 짝지어
+        // "텁텁하다"는 반려를 받아 2026-10-07 흰색/쿨그레이로 교체(§3-1 2차 개정). Section default/alternate와
+        // body·Layout이 쓴다. 글래스 카드 틴트(흰 0.72)는 그대로라 카드가 paper-2보다 살짝 밝게 뜬다.
+        paper: {
+          DEFAULT: BRAND_COLOR.paper,
+          2: BRAND_COLOR.paper2,
         },
         // 카카오톡 진입점 전용 컬러. 사이트에서 "노란 버튼 = 카카오톡"이 성립하도록
         // 카카오로 가는 링크에만 쓰고, 그 외 어떤 CTA에도 쓰지 않는다(반대 방향도 금지).
@@ -100,11 +98,10 @@ const config: Config = {
         title: ['var(--font-pretendard)', 'var(--font-locale)', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
         display: ['var(--font-pretendard)', 'var(--font-locale)', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
         logo: ['var(--font-pretendard)', 'var(--font-locale)', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
-        // hero h1 전용 micro-subset. var(--font-pretendard-hero)는 lib/fonts.ts의
-        // pretendardHero (Pretendard Bold 700 weight, hero 텍스트 글자만 self-host,
-        // ~30KB). preload=true라 critical path에서 swap 거의 즉시. 글리프 미포함
-        // 글자는 fallback 변수(전체 Pretendard Variable)로 자동 swap.
-        hero: ['var(--font-pretendard-hero)', 'var(--font-pretendard)', 'var(--font-locale)', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
+        // 디스플레이 서체(기본 Hahmlet 700, lib/fonts.ts displayFont, ~80KB preload 서브셋) — hero h1과
+        // v2 섹션 제목(.typo-display-section)만 쓴다(라이너 노트 §3-2). 서브셋 밖 글자는 Pretendard →
+        // 로케일 폰트 → 시스템 폰트로 떨어진다(th·zh 문자는 설계상 서브셋에 없다).
+        hero: ['var(--font-display)', 'var(--font-pretendard)', 'var(--font-locale)', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
         // 인라인 <code>/마크다운 인라인 코드용 monospace 스택.
         // Tailwind default와 유사하되 source-code-pro 선호 추가.
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
@@ -299,13 +296,14 @@ const config: Config = {
           },
         },
         // v2 섹션 제목. 그라디언트 대신 잉크(gray-950) 단색 — 강조는 크기와 굵기가 맡는다.
-        // 행간·자간은 변수로 두고 th·vi·zh에서 styles/globals.css가 재정의한다
-        // (1.1 행간은 태국어·베트남어의 위아래 부호를 자르고, 음수 자간은 한자를 뭉친다).
+        // 서체는 디스플레이 세리프(fontFamily.hero, 라이너 노트 §3-2). 세리프는 음수 자간이 뭉치므로
+        // -0.03em → -0.01em, 행간은 1.12 → 1.18. 행간·자간은 변수로 두고 th·vi·zh에서
+        // styles/globals.css가 재정의한다(1.1 행간은 태국어·베트남어의 위아래 부호를 자르고, 음수 자간은 한자를 뭉친다).
         '.typo-display-section': {
-          fontFamily: theme('fontFamily.title'),
+          fontFamily: theme('fontFamily.hero'),
           fontSize: 'clamp(2rem, 1.25rem + 3vw, 3.5rem)',
-          lineHeight: 'var(--display-lh, 1.12)',
-          letterSpacing: 'var(--display-ls, -0.03em)',
+          lineHeight: 'var(--display-lh, 1.18)',
+          letterSpacing: 'var(--display-ls, -0.01em)',
           fontWeight: '700',
           color: theme('colors.gray.950'),
           overflowWrap: 'break-word',

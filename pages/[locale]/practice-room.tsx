@@ -360,7 +360,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
           <SectionHeading
             icon={ShieldCheck}
             title={t('practiceRoom.features.title')}
-            titleClassName="text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
+            titleClassName="text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-primary to-primary"
             className="mb-12"
           />
 
@@ -408,18 +408,18 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
               icon={Gift}
               title={t('practiceRoom.residentBenefits.title')}
               subtitle={t('practiceRoom.residentBenefits.subtitle')}
-              titleClassName="text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent"
+              titleClassName="text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-primary to-primary"
               className="mb-10"
             />
 
             {/* 혜택 총가치 환산 — 월세 대비 제공 가치 강조 */}
-            <div className="max-w-4xl mx-auto mb-12 rounded-2xl p-6 md:p-8 bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 border border-primary/20">
+            <div className="max-w-4xl mx-auto mb-12 rounded-2xl p-6 md:p-8 bg-gradient-to-br from-primary/10 via-primary/10 to-primary/10 border border-primary/20">
               <div className="flex flex-col md:flex-row items-center gap-6">
                 <div className="flex-shrink-0 text-center md:text-left">
                   <Badge tone="brand" size="md" icon={<Sparkles size={12} aria-hidden="true" />} className="mb-3 bg-white/80 dark:bg-gray-800/80">
                     {t('practiceRoom.residentBenefits.valueSummary.eyebrow')}
                   </Badge>
-                  <p className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent leading-tight">
+                  <p className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary to-primary leading-tight">
                     {t('practiceRoom.residentBenefits.valueSummary.headline')}
                   </p>
                   <p className="typo-caption text-gray-600 dark:text-gray-400 mt-1">

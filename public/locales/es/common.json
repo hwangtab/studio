@@ -80,7 +80,8 @@
     "kakaoFab": "Consulta por KakaoTalk",
     "callFab": "Consulta telefónica",
     "skipToContent": "Saltar al contenido",
-    "scrollToTop": "Volver arriba"
+    "scrollToTop": "Volver arriba",
+    "popularBadge": "La más elegida"
   },
   "common": {
     "categoryFilter": {
@@ -217,6 +218,10 @@
       "keywords": "muestras de grabación, comparación antes y después de mezcla, ejemplos de masterización, portafolio del estudio, calidad de producción musical, resultados de grabación, Studio NOL",
       "title": "Portafolio de Grabación y Mezcla | Studio NOL",
       "description": "Portafolio de Studio NOL — de la planificación, grabación, mezcla y masterización a la distribución y la promoción del lanzamiento. Créditos, servicios prestados y muestras antes/después de álbumes, sencillos y música comercial."
+    },
+    "boardTitles": {
+      "works": "Trabajos",
+      "tracks": "Pistas de muestra"
     }
   },
   "contact": {
@@ -311,7 +316,13 @@
       "subtitleLine1": "Salvo el uso por horas de la sala de ensayo, son tarifas reales con IVA no incluido. Abajo se detalla cada caso con coste adicional.",
       "subtitleLine2": "La tabla de abajo muestra todas las tarifas de un vistazo.",
       "alt": "Precios de Studio NOL",
-      "ctaKakao": "Cotización gratis por KakaoTalk"
+      "ctaKakao": "Cotización gratis por KakaoTalk",
+      "boardTitles": {
+        "recording": "Grabación, por hora",
+        "practiceRoom": "Sala de ensayo, al mes",
+        "wedding": "Canción de boda, por canción",
+        "unit": "KRW"
+      }
     },
     "special": {
       "title": "Paquetes especiales",
@@ -386,7 +397,30 @@
     "images": {
       "packageAlt": "Sesión de grabación de voz en la cabina de Studio NOL"
     },
-    "releaseLink": "Proyecto de Lanzamiento"
+    "releaseLink": "Proyecto de Lanzamiento",
+    "tierBar": {
+      "packages": {
+        "message": "¿No sabes qué paquete te conviene? Dinos cuántas canciones y la fecha de lanzamiento.",
+        "action": "Preguntar por KakaoTalk"
+      },
+      "recording": {
+        "message": "¿No sabes cuántas horas necesitas? Dinos la duración de la canción y las partes.",
+        "action": "Preguntar por KakaoTalk"
+      },
+      "mixing": {
+        "message": "¿No sabes qué nivel te corresponde? Envíanos una captura de tu sesión y contamos las pistas por ti.",
+        "action": "Enviar por KakaoTalk"
+      },
+      "mastering": {
+        "message": "Envíanos tu mezcla y te diremos si basta con la masterización.",
+        "action": "Enviar por KakaoTalk"
+      },
+      "general": {
+        "message": "¿No sabes qué servicio necesitas? Cuéntanos tu situación. El presupuesto es gratis.",
+        "action": "Preguntar por KakaoTalk"
+      },
+      "contact": "Contáctanos"
+    }
   },
   "lesson": {
     "mobileMenu": "Menú móvil",
@@ -1138,7 +1172,14 @@
     "highFidelity": "Audio de alta fidelidad",
     "trackLabel": "Pista {{number}}",
     "volume": "Volumen",
-    "playbackProgress": "Progreso de reproducción"
+    "playbackProgress": "Progreso de reproducción",
+    "global": {
+      "region": "Reproduciendo",
+      "close": "Cerrar reproductor",
+      "error": "No se pudo reproducir. Inténtalo de nuevo en un momento.",
+      "listen": "Escuchar 30 s",
+      "excerptTitle": "30 segundos grabados y mezclados en Studio NOL"
+    }
   },
   "gallery": {
     "previous": "Imágenes anteriores",
@@ -1287,6 +1328,13 @@
     "hubCallout": {
       "title": "Cantar tu propia canción de boda — Guía completa",
       "subtitle": "Desde la selección de la canción y los ensayos hasta la grabación y la entrega para la ceremonia — todo en una sola página."
+    },
+    "tierBar": {
+      "wedding": {
+        "message": "Dinos la fecha de la boda y la canción, y te responderemos con fechas disponibles.",
+        "action": "Preguntar por KakaoTalk"
+      },
+      "contact": "Contáctanos"
     }
   },
   "recording": {
@@ -1477,6 +1525,13 @@
       ],
       "note": "Las condiciones varían según el entorno y el estudio, así que solo se indican tendencias generales. Los valores de Studio NOL coinciden con la tabla de precios de esta página.",
       "rowHeader": "Comparación"
+    },
+    "tierBar": {
+      "recording": {
+        "message": "¿No sabes cuántas horas necesitas? Dinos la duración de la canción y las partes.",
+        "action": "Preguntar por KakaoTalk"
+      },
+      "contact": "Contáctanos"
     }
   },
   "mixingMastering": {
@@ -1732,6 +1787,17 @@
       ],
       "note": "Las condiciones varían según el servicio y el freelance, así que solo se indican tendencias generales. Los valores de Studio NOL coinciden con la tabla de precios de esta página.",
       "rowHeader": "Comparación"
+    },
+    "tierBar": {
+      "mixing": {
+        "message": "¿No sabes qué nivel te corresponde? Envíanos una captura de tu sesión y contamos las pistas por ti.",
+        "action": "Enviar por KakaoTalk"
+      },
+      "mastering": {
+        "message": "Envíanos tu mezcla y te diremos si basta con la masterización.",
+        "action": "Enviar por KakaoTalk"
+      },
+      "contact": "Contáctanos"
     }
   },
   "musicPromotion": {
@@ -2502,6 +2568,13 @@
     "hubCallout": {
       "title": "Producción de cover en video — Guía completa: concepto, grabación, audio y edición",
       "subtitle": "Desde la selección de la canción hasta la configuración de grabación, mezcla de audio y subida a YouTube y redes sociales — todo en una sola página."
+    },
+    "tierBar": {
+      "cover": {
+        "message": "Dinos la canción y el ambiente que buscas. Te responderemos con fechas de grabación.",
+        "action": "Preguntar por KakaoTalk"
+      },
+      "contact": "Contáctanos"
     }
   },
   "releaseProject": {

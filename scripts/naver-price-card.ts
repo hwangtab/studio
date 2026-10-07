@@ -11,6 +11,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { BRAND_COLOR } from '../lib/brandColor';
 import {
   DAY_LOCK_4H_PRICE,
   DAY_LOCK_8H_PRICE,
@@ -77,20 +78,20 @@ const fontUrl = `file://${path.join(process.cwd(), 'public/fonts/Pretendard-Bold
 const html = `<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>
 @font-face{font-family:PB;src:url('${fontUrl}')}
 *{box-sizing:border-box;margin:0}
-body{width:1035px;background:#f3f1fb;font-family:PB,'Apple SD Gothic Neo',sans-serif;color:#1f1f2e;padding:50px 66px}
-.card{background:#fff;border-radius:40px;padding:56px 50px 44px;box-shadow:0 20px 60px rgba(90,60,200,.08)}
+body{width:1035px;background:#f2f5f3;font-family:PB,'Apple SD Gothic Neo',sans-serif;color:#1f1f2e;padding:50px 66px}
+.card{background:#fff;border-radius:40px;padding:56px 50px 44px;box-shadow:0 20px 60px rgba(14,60,38,.08)}
 .logo{text-align:center;font-size:52px;letter-spacing:-1px;color:#1b3a2b}.logo b{color:#f5c800;font-weight:400}
-h1{text-align:center;font-size:44px;margin-top:22px}h1 span{color:#6d28d9}
+h1{text-align:center;font-size:44px;margin-top:22px}h1 span{color:${BRAND_COLOR.primary}}
 .lead{text-align:center;color:#666;font-size:18px;margin-top:12px;padding-bottom:36px;border-bottom:2px solid #eee}
-.g{border:2px solid #ebe8f5;border-radius:26px;padding:30px 34px 14px;margin-top:26px}
+.g{border:2px solid #e7e2d8;border-radius:26px;padding:30px 34px 14px;margin-top:26px}
 .gh{display:flex;gap:16px;align-items:center;margin-bottom:10px}.gh .i{font-size:34px}
-.gh h2{font-size:28px}.gh p{color:#6d28d9;font-size:16px;margin-top:4px}
+.gh h2{font-size:28px}.gh p{color:${BRAND_COLOR.primary};font-size:16px;margin-top:4px}
 .r{display:flex;justify-content:space-between;align-items:center;padding:18px 0;border-bottom:1px solid #eee}.r:last-child{border:0}
 .r .n{font-size:23px}.r .t{color:#777;font-size:15px;margin-top:6px}
-.r .p{color:#6d28d9;font-size:32px;white-space:nowrap}.r .p small{font-size:17px;color:#333;margin-left:4px}
+.r .p{color:${BRAND_COLOR.primary};font-size:32px;white-space:nowrap}.r .p small{font-size:17px;color:#333;margin-left:4px}
 .notes{margin-top:30px;padding-top:24px;border-top:2px solid #eee;color:#555;font-size:16px;line-height:1.9}
-.notes li{list-style:none}.notes li:before{content:'※ ';color:#6d28d9}
-.foot{text-align:center;color:#6d28d9;font-size:18px;margin-top:22px}
+.notes li{list-style:none}.notes li:before{content:'※ ';color:${BRAND_COLOR.primary}}
+.foot{text-align:center;color:${BRAND_COLOR.primary};font-size:18px;margin-top:22px}
 </style></head><body><div class="card">
 <div class="logo">studio <b>NOL</b></div>
 <h1>서비스 <span>가격 안내</span></h1>

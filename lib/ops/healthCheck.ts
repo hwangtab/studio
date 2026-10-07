@@ -25,6 +25,7 @@ import {
   decryptField, deriveKeyId, encryptField, parseFieldKey,
 } from '../crypto/fieldCrypto';
 import { ENCRYPTED_FIELD_TARGETS } from '../crypto/fieldKeyRotation';
+import { BRAND_COLOR } from '../brandColor';
 
 /**
  * 조용히 실패한 것들을 하루 한 번 훑어 운영자에게 알린다.
@@ -1130,7 +1131,7 @@ export const buildHealthReportHtml = (report: HealthReport): string => {
     const ink = high ? '#7f1d1d' : '#78350f';
     const mark = high ? '긴급' : '확인';
     const link = issue.href
-      ? `<br /><a href="${escapeHtml(adminUrl(issue.href))}" style="color: #6d28d9; font-weight: 700; text-decoration: underline;">처리하러 가기 &rarr;</a>`
+      ? `<br /><a href="${escapeHtml(adminUrl(issue.href))}" style="color: ${BRAND_COLOR.primary}; font-weight: 700; text-decoration: underline;">처리하러 가기 &rarr;</a>`
       : '';
     return `<span style="display: block; padding: 12px 14px; background-color: ${bg}; border-left: 3px solid ${line}; border-radius: 6px; color: ${ink}; font-size: 14px; line-height: 1.7;"><strong>${index + 1}. [${mark}] ${escapeHtml(issue.title)}</strong><br />${escapeHtml(issue.detail).replace(/\r?\n/g, '<br />')}${link}</span>`;
   });

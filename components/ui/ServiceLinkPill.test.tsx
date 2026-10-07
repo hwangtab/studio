@@ -15,18 +15,6 @@ const TONES: { tone: ServiceLinkTone; darkText: string; ring: string; darkRing: 
     ring: 'focus-visible:ring-primary/70',
     darkRing: 'dark:focus-visible:ring-primary-lighter/70',
   },
-  {
-    tone: 'secondary',
-    darkText: 'dark:text-secondary-light',
-    ring: 'focus-visible:ring-secondary/70',
-    darkRing: 'dark:focus-visible:ring-secondary-light/70',
-  },
-  {
-    tone: 'accent',
-    darkText: 'dark:text-accent-light',
-    ring: 'focus-visible:ring-accent/70',
-    darkRing: 'dark:focus-visible:ring-accent-light/70',
-  },
 ];
 
 const classesOf = (tone: ServiceLinkTone, className?: string): string[] => {
@@ -67,7 +55,6 @@ describe.each(TONES)('ServiceLinkPill — $tone', ({ tone, darkText, ring, darkR
     for (const forbidden of [
       `dark:text-${tone}`,
       'dark:text-primary-light',
-      'dark:text-accent',
     ]) {
       if (forbidden === darkText) continue;
       expect(classes).not.toContain(forbidden);

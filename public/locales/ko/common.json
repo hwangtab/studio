@@ -80,7 +80,8 @@
     "kakaoFab": "카톡 문의",
     "callFab": "전화 문의",
     "skipToContent": "본문 바로가기",
-    "scrollToTop": "맨 위로"
+    "scrollToTop": "맨 위로",
+    "popularBadge": "가장 많이 고르는"
   },
   "common": {
     "categoryFilter": {
@@ -217,6 +218,10 @@
       "title": "포트폴리오 · 녹음·믹싱·마스터링 샘플 | 스튜디오 놀",
       "description": "스튜디오 놀 포트폴리오 — 기획·녹음·믹싱·마스터링부터 유통·발매 홍보까지. 앨범·싱글·광고 음악의 크레딧과 제공 서비스, 비포&애프터 샘플 공개. 연신내 레코딩.",
       "keywords": "녹음 샘플, 믹싱 전후 비교, 마스터링 예시, 스튜디오 포트폴리오, 음원 제작 퀄리티, 레코딩 결과물, 스튜디오 놀"
+    },
+    "boardTitles": {
+      "works": "작업",
+      "tracks": "샘플 트랙"
     }
   },
   "contact": {
@@ -311,7 +316,13 @@
       "subtitleLine1": "연습실 시간제 외 표시 가격은 VAT 별도 실단가이며, 추가 비용이 붙는 경우는 아래에 모두 명시했습니다.",
       "subtitleLine2": "전 서비스 단가는 바로 아래 표에 한눈에 정리했습니다.",
       "alt": "스튜디오 놀 가격 안내",
-      "ctaKakao": "카톡으로 무료 견적 받기"
+      "ctaKakao": "카톡으로 무료 견적 받기",
+      "boardTitles": {
+        "recording": "녹음, 시간당",
+        "practiceRoom": "연습실, 월",
+        "wedding": "축가, 1곡",
+        "unit": "원"
+      }
     },
     "special": {
       "title": "스페셜 패키지",
@@ -386,7 +397,30 @@
     "images": {
       "packageAlt": "스튜디오 놀 부스에서 보컬리스트 녹음 세션"
     },
-    "releaseLink": "발매 프로젝트"
+    "releaseLink": "발매 프로젝트",
+    "tierBar": {
+      "packages": {
+        "message": "어떤 구성이 맞는지 모르겠다면 곡 수와 목표 발매일만 알려 주세요.",
+        "action": "카톡으로 묻기"
+      },
+      "recording": {
+        "message": "몇 시간이 필요할지 모르겠다면 곡 길이와 파트 수만 알려 주세요.",
+        "action": "카톡으로 묻기"
+      },
+      "mixing": {
+        "message": "어디에 해당하는지 모르겠다면 세션 화면을 보내 주세요. 트랙 수를 세어 알려드립니다.",
+        "action": "카톡으로 보내기"
+      },
+      "mastering": {
+        "message": "믹스 파일을 보내 주시면 들어 보고 마스터링만으로 되는지 알려드립니다.",
+        "action": "카톡으로 보내기"
+      },
+      "general": {
+        "message": "맞는 상품을 모르겠다면 상황만 알려 주세요. 견적은 무료입니다.",
+        "action": "카톡으로 묻기"
+      },
+      "contact": "문의하기"
+    }
   },
   "lesson": {
     "seo": {
@@ -1138,7 +1172,14 @@
     "highFidelity": "고음질 오디오",
     "trackLabel": "트랙 {{number}}",
     "volume": "볼륨",
-    "playbackProgress": "재생 진행률"
+    "playbackProgress": "재생 진행률",
+    "global": {
+      "region": "지금 재생 중",
+      "close": "플레이어 닫기",
+      "error": "재생할 수 없습니다. 잠시 뒤 다시 눌러 주세요.",
+      "listen": "30초 듣기",
+      "excerptTitle": "스튜디오 놀에서 녹음·믹싱한 30초"
+    }
   },
   "gallery": {
     "previous": "이전 이미지",
@@ -1287,6 +1328,13 @@
     "hubCallout": {
       "title": "결혼식 축가 직접 부르기 — 종합 가이드",
       "subtitle": "선곡·연습·녹음·식장 납품까지 한 페이지에 정리된 신랑·신부 가이드를 보세요."
+    },
+    "tierBar": {
+      "wedding": {
+        "message": "식 날짜와 부르실 곡만 알려 주시면 가능한 날짜를 바로 답합니다.",
+        "action": "카톡으로 묻기"
+      },
+      "contact": "문의하기"
     }
   },
   "recording": {
@@ -1477,6 +1525,13 @@
       ],
       "note": "홈레코딩과 대형 스튜디오는 환경·스튜디오마다 조건이 달라 일반적인 경향만 적었습니다. 스튜디오 놀 값은 이 페이지의 가격표와 같습니다.",
       "rowHeader": "비교 항목"
+    },
+    "tierBar": {
+      "recording": {
+        "message": "몇 시간이 필요할지 모르겠다면 곡 길이와 파트 수만 알려 주세요.",
+        "action": "카톡으로 묻기"
+      },
+      "contact": "문의하기"
     }
   },
   "mixingMastering": {
@@ -1732,6 +1787,17 @@
       ],
       "note": "AI 마스터링과 마켓플레이스는 서비스·작업자마다 조건이 달라 일반적인 경향만 적었습니다. 스튜디오 놀 값은 이 페이지의 가격표와 같습니다.",
       "rowHeader": "비교 항목"
+    },
+    "tierBar": {
+      "mixing": {
+        "message": "어디에 해당하는지 모르겠다면 세션 화면을 보내 주세요. 트랙 수를 세어 알려드립니다.",
+        "action": "카톡으로 보내기"
+      },
+      "mastering": {
+        "message": "믹스 파일을 보내 주시면 들어 보고 마스터링만으로 되는지 알려드립니다.",
+        "action": "카톡으로 보내기"
+      },
+      "contact": "문의하기"
     }
   },
   "musicPromotion": {
@@ -2502,6 +2568,13 @@
     "hubCallout": {
       "title": "커버 영상 제작 — 기획·촬영·음원·편집 종합 가이드",
       "subtitle": "선곡부터 촬영 세팅, 음원 믹싱, 유튜브·SNS 업로드까지 한 페이지에서 시작하세요."
+    },
+    "tierBar": {
+      "cover": {
+        "message": "찍고 싶은 곡과 분위기만 알려 주세요. 촬영 가능한 날짜를 바로 답합니다.",
+        "action": "카톡으로 묻기"
+      },
+      "contact": "문의하기"
     }
   },
   "releaseProject": {

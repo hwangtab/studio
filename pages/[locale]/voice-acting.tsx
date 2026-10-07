@@ -424,8 +424,8 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
       <ServiceQuickLinksSection
         links={[
           { href: `/${locale}/pricing`, label: t('nav.pricing'), color: 'primary' },
-          { href: `/${locale}/studio-info`, label: t('nav.equipment'), color: 'secondary' },
-          { href: `/${locale}/wedding-song`, label: t('nav.weddingSong'), color: 'accent' },
+          { href: `/${locale}/studio-info`, label: t('nav.equipment'), color: 'primary' },
+          { href: `/${locale}/wedding-song`, label: t('nav.weddingSong'), color: 'primary' },
         ]}
       />
 

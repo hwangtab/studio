@@ -14,7 +14,9 @@ import SectionHeading from '../../components/ui/SectionHeading';
 import type { LucideIcon } from '@/lib/lucide-icons';
 import BaseCard from '../../components/ui/BaseCard';
 import { Section } from '../../components/ui/Section';
+import RuleList from '../../components/ui/RuleList';
 import PricingCard from '../../components/ui/PricingCard';
+import KakaoSectionBar from '../../components/common/KakaoSectionBar';
 
 // Below-fold 컴포넌트 code-splitting
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
@@ -37,7 +39,7 @@ import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
 import type { StoryCardData } from '../../types/story';
 import { buildSchemaGraph, buildStudioServiceSchema } from '../../lib/studioServiceSchema';
 import { generateHowToSchema } from '../../utils/schema';
-import { createFadeInAnimation, createInViewEnterAnimation, HOVER_SCALE, TRANSITION_STANDARD } from '../../utils/animationUtils';
+import { createFadeInAnimation, createInViewEnterAnimation } from '../../utils/animationUtils';
 import { createTranslatedHowToSteps, createTranslatedQaItems } from '../../utils/translatedList';
 import { trackLeadEvent } from '../../utils/analytics';
 import type { NextPageWithLayout } from '../../types';
@@ -284,6 +286,7 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
         {coverVideoPackage && (
           <div className="max-w-md mx-auto">
             <PricingCard
+              kakaoEmphasis="band"
               id={coverVideoPackage.id}
               title={coverVideoPackage.title}
               price={coverVideoPackage.priceDisplay}
@@ -303,6 +306,16 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
             />
           </div>
         )}
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={siteConfig.contact.kakaoUrl}
+          component="CoverVideoPage"
+          ctaId="cover_tier_bar"
+          message={t('coverVideo.tierBar.cover.message')}
+          actionLabel={t('coverVideo.tierBar.cover.action')}
+          contactLabel={t('coverVideo.tierBar.contact')}
+        />
       </Section>
 
       {/* 진행 절차 */}
@@ -314,25 +327,17 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
             subtitle={t('coverVideo.process.subtitle')}
             className="mb-12"
           />
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-            {([0, 1, 2, 3] as const).map((i) => (
-              <m.div
-                key={i}
-                className="relative glass-card rounded-2xl p-6"
-                whileHover={{ ...HOVER_SCALE, transition: TRANSITION_STANDARD }}
-              >
-                <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center mb-4">
-                  <span className="text-primary dark:text-primary-lighter font-bold text-sm">{String(i + 1).padStart(2, '0')}</span>
-                </div>
-                <h3 className="typo-card-subtitle mb-2">
-                  {t(`coverVideo.process.steps.${i}.title`)}
-                </h3>
-                <p className="typo-card-body text-sm">
-                  {t(`coverVideo.process.steps.${i}.description`)}
-                </p>
-              </m.div>
-            ))}
-          </div>
+          {/* 라이너 노트 §3-5: 단계 카드 넷 → 번호 괘선 목록. 문구·순서 불변. */}
+          <RuleList
+            numbered
+            columns={4}
+            className="max-w-5xl mx-auto"
+            items={([0, 1, 2, 3] as const).map((i) => ({
+              key: String(i),
+              heading: t(`coverVideo.process.steps.${i}.title`),
+              body: t(`coverVideo.process.steps.${i}.description`),
+            }))}
+          />
         </m.div>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <HeroKakaoCta
@@ -374,8 +379,8 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
         links={[
           { href: `/${locale}/composition-arrangement`, label: t('nav.compositionArrangement'), color: 'primary' },
           { href: `/${locale}/pricing`, label: t('nav.pricing'), color: 'primary' },
-          { href: `/${locale}/studio-info`, label: t('nav.equipment'), color: 'secondary' },
-          { href: `/${locale}/wedding-song`, label: t('nav.weddingSong'), color: 'accent' },
+          { href: `/${locale}/studio-info`, label: t('nav.equipment'), color: 'primary' },
+          { href: `/${locale}/wedding-song`, label: t('nav.weddingSong'), color: 'primary' },
         ]}
       />
 

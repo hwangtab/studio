@@ -80,7 +80,8 @@
     "kakaoFab": "Tư vấn qua KakaoTalk",
     "callFab": "Tư vấn qua điện thoại",
     "skipToContent": "Nhảy đến nội dung",
-    "scrollToTop": "Cuộn lên đầu"
+    "scrollToTop": "Cuộn lên đầu",
+    "popularBadge": "Được chọn nhiều nhất"
   },
   "common": {
     "categoryFilter": {
@@ -217,6 +218,10 @@
       "keywords": "mẫu thu âm, trước và sau mixing, ví dụ mastering, portfolio studio, chất lượng sản xuất âm nhạc, kết quả thu âm, Studio NOL",
       "title": "Portfolio Thu Âm & Mixing | Studio NOL",
       "description": "Portfolio Studio NOL — từ lên kế hoạch, thu âm, mix, master đến phát hành và PR. Credit, phạm vi công việc và mẫu trước/sau của album, single và nhạc quảng cáo."
+    },
+    "boardTitles": {
+      "works": "Dự án",
+      "tracks": "Bản thu mẫu"
     }
   },
   "contact": {
@@ -311,7 +316,13 @@
       "subtitleLine1": "Ngoài giá thuê phòng tập theo giờ, giá là giá thực tế chưa gồm VAT. Mọi trường hợp phát sinh phí đều được nêu bên dưới.",
       "subtitleLine2": "Bảng ngay bên dưới hiển thị toàn bộ đơn giá dịch vụ.",
       "alt": "Bảng giá Studio NOL",
-      "ctaKakao": "Nhận báo giá miễn phí qua KakaoTalk"
+      "ctaKakao": "Nhận báo giá miễn phí qua KakaoTalk",
+      "boardTitles": {
+        "recording": "Thu âm, mỗi giờ",
+        "practiceRoom": "Phòng tập, mỗi tháng",
+        "wedding": "Bài hát đám cưới, mỗi bài",
+        "unit": "KRW"
+      }
     },
     "special": {
       "title": "Gói đặc biệt",
@@ -386,7 +397,30 @@
     "images": {
       "packageAlt": "Phiên thu âm vocal tại booth Studio NOL"
     },
-    "releaseLink": "Dự án phát hành"
+    "releaseLink": "Dự án phát hành",
+    "tierBar": {
+      "packages": {
+        "message": "Không chắc gói nào phù hợp? Cho biết số bài và ngày phát hành dự kiến.",
+        "action": "Hỏi qua KakaoTalk"
+      },
+      "recording": {
+        "message": "Không chắc cần mấy giờ? Chỉ cần cho biết độ dài bài và số phần thu.",
+        "action": "Hỏi qua KakaoTalk"
+      },
+      "mixing": {
+        "message": "Không chắc mình thuộc mức nào? Gửi ảnh chụp session, chúng tôi sẽ đếm số track giúp bạn.",
+        "action": "Gửi qua KakaoTalk"
+      },
+      "mastering": {
+        "message": "Gửi file mix, chúng tôi nghe và cho biết chỉ mastering có đủ hay không.",
+        "action": "Gửi qua KakaoTalk"
+      },
+      "general": {
+        "message": "Không chắc dịch vụ nào phù hợp? Chỉ cần mô tả tình huống. Báo giá miễn phí.",
+        "action": "Hỏi qua KakaoTalk"
+      },
+      "contact": "Liên hệ"
+    }
   },
   "lesson": {
     "mobileMenu": "Menu di động",
@@ -1138,7 +1172,14 @@
     "highFidelity": "Âm thanh Hi‑Fi",
     "trackLabel": "Bài {{number}}",
     "volume": "Âm lượng",
-    "playbackProgress": "Tiến trình phát"
+    "playbackProgress": "Tiến trình phát",
+    "global": {
+      "region": "Đang phát",
+      "close": "Đóng trình phát",
+      "error": "Không phát được. Vui lòng thử lại sau.",
+      "listen": "Nghe 30 giây",
+      "excerptTitle": "30 giây thu âm và mixing tại Studio NOL"
+    }
   },
   "gallery": {
     "previous": "Hình trước",
@@ -1287,6 +1328,13 @@
     "hubCallout": {
       "title": "Tự hát bài hát đám cưới — Hướng dẫn toàn diện",
       "subtitle": "Từ chọn bài, luyện tập đến thu âm và bàn giao cho hôn trường — hướng dẫn cho cô dâu chú rể trên một trang."
+    },
+    "tierBar": {
+      "wedding": {
+        "message": "Cho biết ngày cưới và bài hát, chúng tôi trả lời ngay ngày có thể thu.",
+        "action": "Hỏi qua KakaoTalk"
+      },
+      "contact": "Liên hệ"
     }
   },
   "recording": {
@@ -1477,6 +1525,13 @@
       ],
       "note": "Điều kiện khác nhau tùy môi trường và studio nên chỉ ghi xu hướng chung. Giá trị của Studio NOL trùng với bảng giá trên trang này.",
       "rowHeader": "Hạng mục so sánh"
+    },
+    "tierBar": {
+      "recording": {
+        "message": "Không chắc cần mấy giờ? Chỉ cần cho biết độ dài bài và số phần thu.",
+        "action": "Hỏi qua KakaoTalk"
+      },
+      "contact": "Liên hệ"
     }
   },
   "mixingMastering": {
@@ -1732,6 +1787,17 @@
       ],
       "note": "Điều kiện khác nhau tùy dịch vụ và người làm nên chỉ ghi xu hướng chung. Giá trị của Studio NOL trùng với bảng giá trên trang này.",
       "rowHeader": "Hạng mục so sánh"
+    },
+    "tierBar": {
+      "mixing": {
+        "message": "Không chắc mình thuộc mức nào? Gửi ảnh chụp session, chúng tôi sẽ đếm số track giúp bạn.",
+        "action": "Gửi qua KakaoTalk"
+      },
+      "mastering": {
+        "message": "Gửi file mix, chúng tôi nghe và cho biết chỉ mastering có đủ hay không.",
+        "action": "Gửi qua KakaoTalk"
+      },
+      "contact": "Liên hệ"
     }
   },
   "musicPromotion": {
@@ -2502,6 +2568,13 @@
     "hubCallout": {
       "title": "Sản xuất video cover — Hướng dẫn toàn diện: Lên ý tưởng · Quay phim · Âm nhạc · Chỉnh sửa",
       "subtitle": "Từ chọn bài hát, cài đặt quay phim, mix âm thanh đến upload lên YouTube & MXH — bắt đầu tất cả từ một trang."
+    },
+    "tierBar": {
+      "cover": {
+        "message": "Cho biết bài hát và không khí bạn muốn. Chúng tôi trả lời ngay ngày có thể quay.",
+        "action": "Hỏi qua KakaoTalk"
+      },
+      "contact": "Liên hệ"
     }
   },
   "releaseProject": {

@@ -264,12 +264,12 @@ const InlineServiceCallout = ({ type, locale }: InlineServiceCalloutProps) => {
     >
       <div className="flex items-center gap-2 mb-3">
         <div
-          className="inline-flex items-center justify-center p-1.5 rounded-full bg-secondary/15"
+          className="inline-flex items-center justify-center p-1.5 rounded-full bg-primary/15"
           aria-hidden="true"
         >
-          <Icon className="text-secondary dark:text-secondary-light" size={14} />
+          <Icon className="text-primary dark:text-primary-lighter" size={14} />
         </div>
-        <span className="text-xs font-semibold uppercase tracking-wider text-secondary dark:text-secondary-light">
+        <span className="text-xs font-semibold uppercase tracking-wider text-primary dark:text-primary-lighter">
           {categoryLabel}
         </span>
       </div>
@@ -289,7 +289,7 @@ const InlineServiceCallout = ({ type, locale }: InlineServiceCalloutProps) => {
               className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300"
             >
               <CheckCircle2
-                className="flex-shrink-0 mt-0.5 text-secondary dark:text-secondary-light"
+                className="flex-shrink-0 mt-0.5 text-primary dark:text-primary-lighter"
                 size={16}
                 aria-hidden="true"
               />
@@ -300,7 +300,7 @@ const InlineServiceCallout = ({ type, locale }: InlineServiceCalloutProps) => {
       )}
 
       {koContent.softNote && (
-        <p className="flex items-start gap-1.5 text-sm text-secondary dark:text-secondary-light mb-4 font-medium">
+        <p className="flex items-start gap-1.5 text-sm text-primary dark:text-primary-lighter mb-4 font-medium">
           <MessageCircle size={16} className="mt-0.5 flex-shrink-0" aria-hidden="true" />
           <span>{koContent.softNote}</span>
         </p>
@@ -337,7 +337,7 @@ const InlineServiceCallout = ({ type, locale }: InlineServiceCalloutProps) => {
               service_type: type,
             })
           }
-          className="inline-flex items-center gap-1 text-sm font-semibold text-secondary dark:text-secondary-light hover:underline min-h-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+          className="inline-flex items-center gap-1 text-sm font-semibold text-primary dark:text-primary-lighter hover:underline min-h-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
         >
           {koContent.detailLabel ?? t('stories.inline.serviceDetail', { defaultValue: '서비스 자세히 보기' })}
           <ArrowRight size={14} aria-hidden="true" />

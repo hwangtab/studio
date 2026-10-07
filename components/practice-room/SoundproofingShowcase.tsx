@@ -35,7 +35,7 @@ const SoundproofingShowcase = ({
           {eyebrow}
         </p>
         <h2
-          className={`text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent mt-4 mb-2 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}
+          className={`text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-primary to-primary mt-4 mb-2 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}
         >
           {title}
         </h2>
@@ -60,7 +60,7 @@ const SoundproofingShowcase = ({
             const Icon = SOUNDPROOFING_ICONS[idx] ?? Shield;
             return (
               <li key={idx} className="flex items-start gap-3">
-                <div className="bg-gradient-to-br from-primary to-secondary p-2.5 rounded-full text-white flex-shrink-0">
+                <div className="bg-gradient-to-br from-primary to-primary p-2.5 rounded-full text-white flex-shrink-0">
                   <Icon size={18} aria-hidden="true" />
                 </div>
                 <div>

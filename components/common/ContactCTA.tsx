@@ -107,7 +107,7 @@ const ContactCTA = ({
             {...contactCtaMotionProps}
         >
             <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
-                <div className="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 dark:from-primary/20 dark:via-secondary/20 dark:to-accent/20 p-8 md:p-12 flex flex-col justify-center">
+                <div className="bg-gradient-to-br from-primary/5 via-primary/5 to-primary/5 dark:from-primary/20 dark:via-primary/20 dark:to-primary/20 p-8 md:p-12 flex flex-col justify-center">
                     <SectionHeading
                         icon={Icon}
                         title={title}

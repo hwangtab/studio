@@ -42,7 +42,7 @@ const PriceLeader = ({
           {eyebrow}
         </p>
         <h2
-          className={`text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-secondary to-accent mt-4 mb-2 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}
+          className={`text-heading-2 font-title font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-dark via-primary to-primary mt-4 mb-2 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}
         >
           {title}
         </h2>
@@ -50,7 +50,7 @@ const PriceLeader = ({
           {subtitle}
         </p>
       </div>
-      <div className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-6 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 rounded-2xl p-6 md:p-8 border border-primary/10">
+      <div className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-6 bg-gradient-to-br from-primary/5 via-primary/5 to-primary/5 rounded-2xl p-6 md:p-8 border border-primary/10">
         <div className="text-center md:text-left md:border-r md:border-primary/20 md:pr-6">
           <p className="typo-caption text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
             {priceLabel}

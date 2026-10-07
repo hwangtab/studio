@@ -25,6 +25,7 @@ import { getHubLocaleContent } from '../../data/faq';
 import { Section } from '../../components/ui/Section';
 import SectionAnchorNav from '../../components/ui/SectionAnchorNav';
 import PricingCard from '../../components/ui/PricingCard';
+import KakaoSectionBar from '../../components/common/KakaoSectionBar';
 import HubLocaleContentSection from '../../components/ui/HubLocaleContentSection';
 import ImageHero, { HERO_SCRIM } from '../../components/common/ImageHero';
 
@@ -253,7 +254,6 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         }
         backgroundImage="/images/hardware2.webp"
         imageAlt={t('pricing.hero.alt')}
-        // 60vh → 40vh: 아래 요약표를 모바일 첫 화면 안으로 끌어올린다.
         minHeight="min-h-[40vh]"
         overlayGradient={HERO_SCRIM}
         breadcrumbItems={[
@@ -276,6 +276,12 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         }
       />
 
+      {/* 라이너 노트 §3-8: 구역 이동 바를 히어로 바로 아래로 — 요약표 아래 묻혀 있어 모바일(59,000px)에서 길을 못 찾았다.
+          sticky top-16이라 여기부터 붙어 다닌다. */}
+      <SectionAnchorNav
+        items={anchorItems}
+        ariaLabel={t('pricing.anchorNavLabel', { defaultValue: '가격 섹션 바로가기' })}
+      />
 
       {/* 상단 즉답 가격 요약표 — 상세 카드로 스크롤하기 전에 전체 단가를 한눈에. */}
       <Section variant="default" spacing="tight">
@@ -349,11 +355,6 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         </div>
       </Section>
 
-      <SectionAnchorNav
-        items={anchorItems}
-        ariaLabel={t('pricing.anchorNavLabel', { defaultValue: '가격 섹션 바로가기' })}
-      />
-
       <QuickAnswers
         title={t('pricing.quickAnswers.title')}
         subtitle={t('pricing.quickAnswers.subtitle')}
@@ -377,6 +378,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           {specialPackages.map((offer, index) => (
             <div key={offer.id} role="listitem">
               <PricingCard
+                kakaoEmphasis="band"
                 id={offer.id}
                 title={offer.title}
                 price={offer.priceDisplay}
@@ -397,6 +399,16 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         {/* 발매 번들 카드(specialPackages의 package-*-bundle) 바로 아래 — 시장 공개 요금과의 비교(ko 전용).
             근거는 docs/market-price-survey-2026-09.md. 이 절 부제는 축가·성우를 말하지만 번들도 여기 있다. */}
         {locale === 'ko' && <MarketPriceComparison />}
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={kakaoUrl}
+          component="PricingSpecial"
+          ctaId="pricing_special_bar"
+          message={t('pricing.tierBar.packages.message')}
+          actionLabel={t('pricing.tierBar.packages.action')}
+          contactLabel={t('pricing.tierBar.contact')}
+        />
       </Section>
 
       {/* Recording Section */}
@@ -413,6 +425,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           {recordingOffers.map((offer, index) => (
             <div key={offer.id} role="listitem">
               <PricingCard
+                kakaoEmphasis="band"
                 id={offer.id}
                 title={offer.title}
                 price={offer.priceDisplay}
@@ -430,6 +443,16 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
             </div>
           ))}
         </div>
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={kakaoUrl}
+          component="PricingRecording"
+          ctaId="pricing_recording_bar"
+          message={t('pricing.tierBar.recording.message')}
+          actionLabel={t('pricing.tierBar.recording.action')}
+          contactLabel={t('pricing.tierBar.contact')}
+        />
       </Section>
 
       {/* Mixing Section */}
@@ -446,6 +469,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           {mixingOffers.map((offer, index) => (
             <div key={offer.id} role="listitem">
               <PricingCard
+                kakaoEmphasis="band"
                 id={offer.id}
                 title={offer.title}
                 price={offer.priceDisplay}
@@ -472,6 +496,16 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
             </p>
           </div>
         </div>
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={kakaoUrl}
+          component="PricingMixing"
+          ctaId="pricing_mixing_bar"
+          message={t('pricing.tierBar.mixing.message')}
+          actionLabel={t('pricing.tierBar.mixing.action')}
+          contactLabel={t('pricing.tierBar.contact')}
+        />
       </Section>
 
       {/* Mastering Section */}
@@ -488,6 +522,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           {masteringOffers.map((offer, index) => (
             <div key={offer.id} role="listitem">
               <PricingCard
+                kakaoEmphasis="band"
                 id={offer.id}
                 title={offer.title}
                 price={offer.priceDisplay}
@@ -505,6 +540,16 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
             </div>
           ))}
         </div>
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={kakaoUrl}
+          component="PricingMastering"
+          ctaId="pricing_mastering_bar"
+          message={t('pricing.tierBar.mastering.message')}
+          actionLabel={t('pricing.tierBar.mastering.action')}
+          contactLabel={t('pricing.tierBar.contact')}
+        />
       </Section>
 
       {/* 음악연습실 월 입주·시간제 — <title>·h1이 선두로 약속한 단가(월 입주)의 도착지.
@@ -523,6 +568,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           {arrangementOffers.map((offer, index) => (
             <div key={offer.id} role="listitem">
               <PricingCard
+                kakaoEmphasis="band"
                 id={offer.id}
                 title={offer.title}
                 price={offer.priceDisplay}
@@ -539,6 +585,16 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
             </div>
           ))}
         </div>
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={kakaoUrl}
+          component="PricingArrangement"
+          ctaId="pricing_arrangement_bar"
+          message={t('pricing.tierBar.general.message')}
+          actionLabel={t('pricing.tierBar.general.action')}
+          contactLabel={t('pricing.tierBar.contact')}
+        />
       </Section>
 
       <Section id="practice-room" variant="default" className="scroll-mt-32">
@@ -556,6 +612,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           {practiceRoomOffers.map((offer) => (
             <div key={offer.id} role="listitem">
               <PricingCard
+                kakaoEmphasis="band"
                 id={offer.id}
                 title={offer.title}
                 price={offer.priceDisplay}
@@ -581,6 +638,16 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
             {t('pricing.practiceRoom.detailLink')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </div>
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={kakaoUrl}
+          component="PricingPracticeRoom"
+          ctaId="pricing_practice_bar"
+          message={t('pricing.tierBar.general.message')}
+          actionLabel={t('pricing.tierBar.general.action')}
+          contactLabel={t('pricing.tierBar.contact')}
+        />
       </Section>
 
       {/* Additional Services Section */}
@@ -597,6 +664,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           {additionalServices.map((service, index) => (
             <div key={service.id} role="listitem">
               <PricingCard
+                kakaoEmphasis="band"
                 id={service.id}
                 title={service.title}
                 price={service.priceDisplay}
@@ -618,6 +686,16 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
             </div>
           ))}
         </div>
+              {/* 라이너 노트 §3-4: 카드의 카카오 CTA는 행 아래 노란 띠 하나로 모은다 — 노랑은 한 화면에 하나. */}
+        <KakaoSectionBar
+          locale={locale}
+          kakaoUrl={kakaoUrl}
+          component="PricingAdditional"
+          ctaId="pricing_support_bar"
+          message={t('pricing.tierBar.general.message')}
+          actionLabel={t('pricing.tierBar.general.action')}
+          contactLabel={t('pricing.tierBar.contact')}
+        />
       </Section>
 
       <ReviewSection variant="alternate" locale={locale} />
@@ -654,16 +732,16 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           <ServiceLinkPill href={`/${locale}/studio-info`} tone="primary">
             {t('nav.equipment')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/practice-room`} tone="secondary">
+          <ServiceLinkPill href={`/${locale}/practice-room`} tone="primary">
             {t('nav.practiceRoom')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/wedding-song`} tone="accent">
+          <ServiceLinkPill href={`/${locale}/wedding-song`} tone="primary">
             {t('nav.weddingSong')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/voice-acting`} tone="accent">
+          <ServiceLinkPill href={`/${locale}/voice-acting`} tone="primary">
             {t('nav.voiceActing')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={`/${locale}/composition-arrangement`} tone="accent">
+          <ServiceLinkPill href={`/${locale}/composition-arrangement`} tone="primary">
             {t('nav.compositionArrangement')}
           </ServiceLinkPill>
         </div>

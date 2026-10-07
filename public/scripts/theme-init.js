@@ -26,7 +26,7 @@
 
     document.documentElement.classList.toggle('dark', shouldUseDark);
 
-    var themeColor = shouldUseDark ? '#5b21b6' : '#6d28d9';
+    var themeColor = shouldUseDark ? '#030712' : '#0b3b2c'; // lib/brandColor.ts ink / primaryDark — 정적 스크립트라 import 불가, 값이 바뀌면 함께 고칠 것
     var metaThemeColor = document.querySelector('meta[name="theme-color"]:not([media])');
     if (metaThemeColor) {
       metaThemeColor.setAttribute('content', themeColor);

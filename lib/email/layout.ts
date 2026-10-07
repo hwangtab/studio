@@ -1,4 +1,5 @@
 import { getSiteConfig } from '../../data/siteConfig';
+import { BRAND_COLOR } from '../brandColor';
 
 /**
  * 메일 공용 레이아웃 — 이 사이트가 보내는 HTML 메일의 단일 골격.
@@ -29,7 +30,7 @@ export const escapeHtml = (unsafe: string): string =>
     .replace(/'/g, '&#039;');
 
 const BRAND = {
-  primary: '#6d28d9',
+  primary: BRAND_COLOR.primary,
   ink: '#1a1a1a',
   muted: '#666666',
   faint: '#999999',

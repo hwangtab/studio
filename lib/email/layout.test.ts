@@ -1,3 +1,4 @@
+import { BRAND_COLOR } from '../brandColor';
 import { adminUrl, buildEmailLayout, escapeHtml, strong } from './layout';
 
 describe('buildEmailLayout', () => {
@@ -42,10 +43,10 @@ describe('buildEmailLayout', () => {
   it('cta가 있으면 버튼과 URL 평문 안내가 나온다(고객), 없으면 없다', () => {
     const url = 'https://studionol.co.kr/a?x=1&y=2';
     const withCta = buildEmailLayout({ heading: 'h', cta: { label: '열기', url } });
-    expect(withCta).toContain('bgcolor="#6d28d9"');
+    expect(withCta).toContain(`bgcolor="${BRAND_COLOR.primary}"`);
     expect(withCta).toContain('href="https://studionol.co.kr/a?x=1&amp;y=2"');
     expect(withCta).toContain('버튼이 눌리지 않으면');
-    expect(buildEmailLayout({ heading: 'h' })).not.toContain('bgcolor="#6d28d9"');
+    expect(buildEmailLayout({ heading: 'h' })).not.toContain(`bgcolor="${BRAND_COLOR.primary}"`);
   });
 
   it('operator cta에는 주소 복사 안내를 붙이지 않는다', () => {

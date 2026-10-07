@@ -30,13 +30,17 @@ Tailwind는 정의되지 않은 클래스명을 **에러 없이 빌드 CSS에서
 
 | 토큰 | light / DEFAULT / dark | 용도 |
 |---|---|---|
-| `primary` | `#7c3aed` / `#6d28d9` / `#5b21b6` | 1차 액션, 강조, 링크 |
-| `secondary` | `#ec4899` / `#be185d` / `#9d174d` | 보조 강조 (DEFAULT는 AA 5.88:1 확보를 위해 pink-700 상당으로 승격) |
-| `accent` | `#10b981` / `#047857` / `#065f46` | 성공·긍정 (DEFAULT는 AA 5.64:1 확보를 위해 emerald-700 상당) |
+| `primary` | `#059669` / `#065f46` / `#0b3b2c` · lighter `#6ee7b7` | 1차 액션, 강조, 링크. **에메랄드** — 로고(`public/logo/logo.png`) 녹색 계열을 유지하되 2026-10-07 2차 개정으로 올리브 톤을 벗고 더 선명하게 틀었다. DEFAULT 흰 7.68:1·paper-2 약 7.0:1, dark는 흰 글씨 12.5:1(히어로 잉크 면·큰 면). 값의 정본은 `lib/brandColor.ts` — 메일 HTML·정적 카드·theme-color가 같은 값을 쓴다 |
+| ~~`secondary`~~ · ~~`accent`~~ | 삭제됨 (2026-10-06) | 핑크·에메랄드(옛 accent)는 없다. 브랜드색은 `primary` 하나, 성공은 `green-*`, 다크 텍스트 짝은 `primary-lighter` 하나. `tailwind.config.test.ts`가 재등장을 막는다 |
+| `paper` | `#ffffff` / `paper-2` `#f2f5f3` | 라이트 바탕 두 단 — body·Layout·Section default/alternate. 2026-10-07 2차 개정: 1차의 따뜻한 베이지(`#faf7f2`/`#f2ede4`)가 올리브 그린과 짝지어 "텁텁하다"는 반려를 받아, 차갑고 깨끗한 순백/근접백으로 교체. 글래스 카드 틴트(흰 0.72)는 그대로라 카드가 paper-2보다 살짝 밝게 뜬다 |
 | `kakao` | `#FEE500` / hover `#FADA0A` / ink `#191600` | **카카오톡 진입점 전용** |
 
-`gray` 50~950은 커스텀 스케일이다(`500`을 `#4b5563`로 어둡게 조정 — WCAG AA).
+`gray` 50~950은 커스텀 스케일이다(`500`을 `#4b5563`로 어둡게 조정 — WCAG AA). 다크 바탕은 gray-900 그대로다.
 **slate·zinc·neutral·stone은 쓰지 않는다.** 회색은 `gray` 하나다.
+
+> 2026-10-06 **라이너 노트**(`docs/design-liner-notes-plan-2026-10.md`): 보라 primary를 로고의 녹색으로, 순백을 종이로
+> 바꿨다. **2026-10-07 운영자가 이 1차 값을 "텁텁하다"며 반려** — 종이(베이지)를 순백/쿨그레이로, primary를
+> 올리브에서 에메랄드로 다시 틀었다(2차 개정, 위 표가 그 값). 서체·히어로·CTA 위계는 그 문서 §3-2~3-4를 따른다.
 
 ### 카카오 옐로 — 양방향 규칙
 
@@ -75,16 +79,13 @@ Tailwind는 정의되지 않은 클래스명을 **에러 없이 빌드 CSS에서
 
 | 토큰 | 값 | 대비 | 다크 텍스트로 |
 |---|---|---|---|
-| `primary`(DEFAULT) | `#6d28d9` | 2.83:1 | ✗ |
-| `primary-light` | `#7c3aed` | 3.53:1 | ✗ (간발의 차로 미달 — 쓰지 말 것) |
-| `primary-lighter` | `#a78bfa` | 7.40:1 | ✓ |
-| `secondary`(DEFAULT) | `#be185d` | 3.33:1 | ✗ |
-| `secondary-light` | `#ec4899` | 5.71:1 | ✓ |
-| `accent`(DEFAULT) | `#047857` | 3.67:1 | ✗ |
-| `accent-light` | `#10b981` | 7.94:1 | ✓ |
+| `primary`(DEFAULT) | `#065f46` | 2.62:1 | ✗ |
+| `primary-light` | `#059669` | 5.34:1 | ✗ (쓰지 말 것 — 토큰 역할상 "작은 텍스트 아님" 규칙을 유지, `tailwind.config.test.ts`의 허용 다크 짝은 `primary-lighter` 하나뿐이다) |
+| `primary-lighter` | `#6ee7b7` | 13.2:1 | ✓ |
 
-따라서 짝은 셋뿐이다 — `text-primary` + `dark:text-primary-lighter`,
-`text-secondary` + `dark:text-secondary-light`, `text-accent` + `dark:text-accent-light`.
+(2026-10-07 2차 개정 값. 1차 라이너 노트·보라 시절 수치는 git 이력에 있다.)
+
+따라서 짝은 하나다 — `text-primary` + `dark:text-primary-lighter` (secondary·accent 짝은 토큰과 함께 2026-10-06에 지웠다).
 `hover:`·`group-hover:`·`focus-visible:` 같은 variant도 **같은 variant의 다크 짝**이 필요하다
 (`hover:text-primary` → `dark:hover:text-primary-lighter`). 아이콘은 `stroke`/`fill`이
 currentColor라 같은 텍스트 색 규칙을 그대로 따른다.
@@ -160,10 +161,13 @@ hover:bg-primary hover:text-white`)에서 hover 실측:
 
 ## 2. 타이포그래피
 
-폰트는 **Pretendard Variable 하나**다. `sans`/`title`/`display`/`logo` 네 토큰이 전부 같은 폰트를
-가리키고, `hero`만 별도다 — hero h1 글자만 담은 ~30KB 서브셋에 `preload:true`라 LCP 경로에서
-거의 즉시 swap된다. hero h1 텍스트를 바꾸면 `scripts/generate-hero-font.mjs`를 돌려 woff2와
-`pretendard-hero.chars.json`을 **함께 커밋**해야 한다(CI가 `--check`로 잡는다).
+본문·UI·숫자는 **Pretendard Variable**, 제목은 **디스플레이 세리프**(기본 Hahmlet, OFL) — 2026-10-06 라이너 노트 §3-2.
+`sans`/`title`/`display`/`logo` 네 토큰은 Pretendard를 가리키고, `hero`가 디스플레이 서체다. `hero`는 hero h1과
+v2 섹션 제목(`.typo-display-section`)이 쓰는 글자만 담은 ~80KB 서브셋(`lib/fonts/display.woff2`)에 `preload:true`라
+LCP 경로에서 거의 즉시 swap된다. 카드 제목·버튼·가격 숫자·스토리 마크다운 제목은 Pretendard 그대로다(세리프 숫자는
+가격표에서 약하다). hero h1·섹션 제목·`data/*.ts`의 title 문자열을 바꾸면 `scripts/generate-hero-font.mjs`를 돌려
+woff2와 `display.chars.json`을 **함께 커밋**해야 한다(CI가 `--check`로 잡는다). 서체 후보 비교는 `DISPLAY_FONT=maruburi`
+같은 스위치로 같은 파일명에 생성한다 — `lib/fonts.ts`는 바뀌지 않는다.
 
 ### 역할 클래스 — 이걸 쓴다
 
@@ -304,6 +308,46 @@ text-shadow). 흰 틴트(`bg-white/*`)는 배경을 밝혀 흰 글씨 대비를 
 variant: `default`·`highlight`·`outline`·`glass`·`glass-highlight`. 기본 재질은 `.glass-card`
 (blur 없는 글래스)다. **glass 카드 hover에 `SHADOW_HOVER`를 섞지 않는다** — inline boxShadow가
 inset 스펙큘러를 지운다.
+
+### 티어 카드와 노란 띠 — `PricingCard kakaoEmphasis` · `components/common/KakaoSectionBar.tsx` (2026-10-06)
+
+티어 카드가 행으로 놓이는 자리(LP 가격 절·가격 페이지)에서는 카드 안에 솔리드 옐로를 두지 않는다 — 한 행에 노랑이
+셋이면 신호가 소음이 된다(라이너 노트 §3-4). 규칙:
+
+- `<PricingCard kakaoEmphasis="band">`: 카드는 온라인 주문·예약(`secondaryCta`)을 **브랜드색 solid 블록**으로 올리고 카카오
+  CTA는 그리지 않는다. 비-ko(/contact 목적지)는 영향 없다. 카드가 혼자 있는 자리는 기본값 `'solid'`.
+- 행 아래 `<KakaoSectionBar>` **하나** — 띠 전체가 카카오 목적지 링크 하나다(`bg-kakao` + `text-kakao-ink` + pill + 포커스 링,
+  `ctaButtonContract`가 본다). 문구는 카드가 못 하는 말("어디에 해당하는지 모르겠다면 세션 화면을 보내 주세요")이고
+  키는 **그 페이지가 싣는 i18n 섹션** 안에 둔다(`mixingMastering.tierBar.*` 등 — `pricing.*`에 두면 그 섹션을 안 싣는 LP에서
+  키 이름이 그대로 찍힌다. `content/i18nKeys.test.ts`가 잡는다).
+- 카카오 목적지를 잉크 텍스트 링크로 "조용히" 그리는 안은 쓰지 않는다 — 카카오 목적지 = 옐로 규칙(§1)에 어긋나고
+  계약 테스트가 막는다. 노랑을 줄이는 방법은 **개수**(띠 하나)뿐이다.
+- 데스크톱 뷰포트당 솔리드 옐로 ≤ 2(헤더 + 띠 또는 히어로).
+- 카드 재질: 종이 위 흰 카드 + 괘선(`variant="outline"` + `bg-white`), 그림자 없음. 추천 카드만 `border-primary ring-1`.
+  배지는 `actions.popularBadge`("가장 많이 고르는") — 영문 `RECOMMENDED`는 없앴다.
+
+### 소리 — `components/audio/GlobalPlayerProvider.tsx` · `GlobalPlayerDock` · `ServiceExcerpt` · `CoverPlayButton` (2026-10-06)
+
+사이트의 소리는 **한 번에 하나만** 난다(`lib/audio/audioBus.ts`: 재생을 시작하는 쪽이 `announcePlay`, 나머지는 `onOtherPlay`로
+멈춘다 — 글로벌 플레이어·믹싱 전후 비교·포트폴리오 플레이어 셋이 서로 모른 채 겹치지 않는다). 규칙:
+
+- 30초 발췌·커버 재생은 전부 `useGlobalPlayer().play(track)` 하나로 들어온다. `<audio>`는 `_app`의 Provider가 하나만 갖고
+  **첫 재생에서야 만든다**(`preload="none"`, 재생 전 0바이트 — /ko/portfolio LCP 21s 사고의 교훈). 도크 청크도 첫 재생 때 받는다.
+- 도크는 잉크(gray-950) 단색, 데스크톱 좌하단(우하단은 카카오 FAB 행), 모바일 바닥 바. 전폭 하단 바가 이미 있는 화면
+  (스토리·펀딩·공연 상세, 결제·예약 마법사)에서는 모바일 바를 숨긴다. 파형 막대는 트랙 id로 고정된 장식이다 — 실제 파형이 아니다.
+- 재생 아이콘은 버튼이 아니라 오디오의 `playing`/`pause` 이벤트를 따라간다(블루투스 해제·통화·미디어 키).
+- 발췌 데이터는 `data/audioExcerpts.ts` 한 곳. 파일은 `public/audio/excerpt-<slug>-<YYYYMMDD>.mp3`(256k·30초·페이드 0.25/0.8).
+  LP의 발췌 줄(`ServiceExcerpt`)은 **절이 아니라 절 안의 블록**이고, 그 서비스에 발췌가 없으면 아무것도 그리지 않는다.
+  커버 위 재생 버튼(`CoverPlayButton`)은 `<a>` 안이 아니라 **형제**로, 정사각 오버레이 안에 44px.
+- 계측은 `micro_audio_play`(트랙당 세션 한 번, component = 자리, cta_id = 트랙 id). 리드가 아니다.
+- 작은 썸네일 반경은 `rounded-lg`(`rounded-md`는 §3대로 없다).
+
+### 괘선 목록 — `components/ui/RuleList.tsx` (2026-10-06)
+
+**읽는 것은 카드가 아니다.** FAQ 요약·절차·이유처럼 나란히 읽는 항목은 `RuleList`(굵은 괘선 위 번호·제목·본문 — 홈 "이유" 절의
+문법)로 그린다. 떠 있는 카드(BaseCard·ChoiceCard)는 **고르는 것**(티어·리워드·시간 슬롯)에만. `numbered`는 순서가 정보일 때(`<ol>`),
+`labelPrefix="Q"`는 FAQ 요약처럼 라벨만 필요할 때(`as="ul"`). 카드 그리드에 걸던 hover 스케일·스크롤 모션은 없다.
+`QuickAnswers`와 LP 절차 절(믹싱·녹음·축가·커버)이 이걸 쓴다.
 
 ### 서비스 링크 pill — `components/ui/ServiceLinkPill.tsx`
 

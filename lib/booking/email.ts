@@ -9,6 +9,7 @@ import { MIXING_REFUND_POLICY_LINES } from './refund-policy';
 import { getMixingProduct } from './mixing-products';
 import { getProduct } from './products';
 import { kstDateString } from './kst';
+import { BRAND_COLOR } from '../brandColor';
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr').replace(/\/+$/, '');
 
@@ -407,7 +408,7 @@ export const sendMixingOrderConfirmedEmails = async (order: Order, workOrder: Wo
       heading: '주문이 접수되었습니다',
       paragraphs: [
         `${escapeHtml(order.customerName)}님, 주문이 접수되었습니다.`,
-        `<strong>파일을 보내 주세요.</strong> 이 메일에 회신으로 구글 드라이브·WeTransfer 등 다운로드 링크를 보내 주시거나, <a href="${escapeHtml(kakaoUrl)}" style="color: #6d28d9;">카카오톡 오픈채팅</a>으로 보내셔도 됩니다.`,
+        `<strong>파일을 보내 주세요.</strong> 이 메일에 회신으로 구글 드라이브·WeTransfer 등 다운로드 링크를 보내 주시거나, <a href="${escapeHtml(kakaoUrl)}" style="color: ${BRAND_COLOR.primary};">카카오톡 오픈채팅</a>으로 보내셔도 됩니다.`,
         '보낼 파일: 드라이 보컬 WAV · MR 또는 트랙별 스템 WAV · 레퍼런스 1~2곡 (WAV 24bit/44.1 또는 48kHz 권장)',
       ],
       rows: [

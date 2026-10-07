@@ -80,7 +80,8 @@
     "kakaoFab": "KakaoTalk 咨询",
     "callFab": "电话咨询",
     "skipToContent": "跳到主要内容",
-    "scrollToTop": "返回顶部"
+    "scrollToTop": "返回顶部",
+    "popularBadge": "最多人选择"
   },
   "common": {
     "categoryFilter": {
@@ -217,6 +218,10 @@
       "keywords": "录音样本, 混音前后对比, 母带示例, 工作室作品集, 音乐制作品质, 录音成果, Studio NOL",
       "title": "录音·混音作品集 | Studio NOL",
       "description": "Studio NOL 作品集 — 从策划、录音、混音、母带到发行登记与发行宣传。公开专辑·单曲·广告音乐的制作人员、负责范围与前后对比样本。延新内录音室。"
+    },
+    "boardTitles": {
+      "works": "作品",
+      "tracks": "试听曲目"
     }
   },
   "contact": {
@@ -311,7 +316,13 @@
       "subtitleLine1": "除练习室按小时租用外，均为实际单价（不含增值税），需额外收费的情况已全部列于下方。",
       "subtitleLine2": "下方表格可一次查看全部服务单价。",
       "alt": "Studio NOL 价格",
-      "ctaKakao": "通过KakaoTalk获取免费报价"
+      "ctaKakao": "通过KakaoTalk获取免费报价",
+      "boardTitles": {
+        "recording": "录音，每小时",
+        "practiceRoom": "练习室，每月",
+        "wedding": "婚礼歌曲，每首",
+        "unit": "韩元"
+      }
     },
     "special": {
       "title": "特别套餐",
@@ -386,7 +397,30 @@
     "images": {
       "packageAlt": "Studio NOL 录音棚中的歌手录音"
     },
-    "releaseLink": "发行项目"
+    "releaseLink": "发行项目",
+    "tierBar": {
+      "packages": {
+        "message": "不确定哪种方案合适？告诉我们歌曲数量和目标发行日期即可。",
+        "action": "通过KakaoTalk咨询"
+      },
+      "recording": {
+        "message": "不确定需要几小时？只需告诉我们歌曲长度和声部数。",
+        "action": "通过KakaoTalk咨询"
+      },
+      "mixing": {
+        "message": "不确定属于哪一档？把工程截图发给我们，我们帮您数轨道数。",
+        "action": "通过KakaoTalk发送"
+      },
+      "mastering": {
+        "message": "把混音文件发给我们，我们听后告诉您只做母带是否足够。",
+        "action": "通过KakaoTalk发送"
+      },
+      "general": {
+        "message": "不确定哪项服务合适？描述一下您的情况即可，报价免费。",
+        "action": "通过KakaoTalk咨询"
+      },
+      "contact": "联系我们"
+    }
   },
   "lesson": {
     "mobileMenu": "移动菜单",
@@ -1138,7 +1172,14 @@
     "highFidelity": "高保真音频",
     "trackLabel": "第 {{number}} 首",
     "volume": "音量",
-    "playbackProgress": "播放进度"
+    "playbackProgress": "播放进度",
+    "global": {
+      "region": "正在播放",
+      "close": "关闭播放器",
+      "error": "无法播放，请稍后再试。",
+      "listen": "试听30秒",
+      "excerptTitle": "在 Studio NOL 录音·混音的30秒"
+    }
   },
   "gallery": {
     "previous": "上一张图片",
@@ -1287,6 +1328,13 @@
     "hubCallout": {
       "title": "亲自演唱婚礼祝歌 — 综合指南",
       "subtitle": "从选曲、练习到录音、婚礼现场交付，一页全搞定的新郎新娘指南。"
+    },
+    "tierBar": {
+      "wedding": {
+        "message": "告诉我们婚礼日期和想唱的歌，我们会立即回复可预约的日期。",
+        "action": "通过KakaoTalk咨询"
+      },
+      "contact": "联系我们"
     }
   },
   "recording": {
@@ -1477,6 +1525,13 @@
       ],
       "note": "家庭录音和大型录音室的条件因环境而异，这里只列出一般倾向。Studio NOL 的数值与本页价格表一致。",
       "rowHeader": "比较项目"
+    },
+    "tierBar": {
+      "recording": {
+        "message": "不确定需要几小时？只需告诉我们歌曲长度和声部数。",
+        "action": "通过KakaoTalk咨询"
+      },
+      "contact": "联系我们"
     }
   },
   "mixingMastering": {
@@ -1732,6 +1787,17 @@
       ],
       "note": "AI 母带与平台自由职业者的条件因服务和个人而异，这里只列出一般倾向。Studio NOL 的数值与本页价格表一致。",
       "rowHeader": "比较项目"
+    },
+    "tierBar": {
+      "mixing": {
+        "message": "不确定属于哪一档？把工程截图发给我们，我们帮您数轨道数。",
+        "action": "通过KakaoTalk发送"
+      },
+      "mastering": {
+        "message": "把混音文件发给我们，我们听后告诉您只做母带是否足够。",
+        "action": "通过KakaoTalk发送"
+      },
+      "contact": "联系我们"
     }
   },
   "musicPromotion": {
@@ -2502,6 +2568,13 @@
     "hubCallout": {
       "title": "翻唱视频制作 — 企划·拍摄·音源·剪辑综合指南",
       "subtitle": "从选曲到拍摄设置、音源混音、YouTube·SNS上传，一页全搞定。"
+    },
+    "tierBar": {
+      "cover": {
+        "message": "告诉我们想拍的歌曲和氛围，我们会立即回复可拍摄的日期。",
+        "action": "通过KakaoTalk咨询"
+      },
+      "contact": "联系我们"
     }
   },
   "releaseProject": {

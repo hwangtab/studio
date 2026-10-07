@@ -17,8 +17,11 @@ import localFont from 'next/font/local';
 // 회귀를 일으키지 않는다.
 //
 // preload는 의도적으로 비활성: preload하면 critical path를 점유해 첫 paint(LCP/FCP)를
-// 오히려 지연. font-display:swap으로 시스템 한글 fallback로 즉시 paint → Pretendard가
-// lazy 도착하면 swap. 재방문자는 캐시된 폰트로 첫 paint부터 final 표시.
+// 오히려 지연. font-display:optional — 첫 paint까지 못 받으면 그 문서는 시스템 한글 폰트로
+// 끝까지 그리고(백그라운드로 받아 캐시), 재방문부터 첫 paint부터 Pretendard다.
+// swap을 쓰지 않는 이유: 첫 방문에서 4~5초 뒤 전 페이지 글자가 한꺼번에 바뀌며 폭이 1~2%
+// 줄어든다(2026-10-08 실측, 프로덕션 콜드 로드 부제 497→486px — 운영자 "글씨 폭이 꿈틀댄다").
+// 폴백 메트릭 보정(size-adjust)은 local()이 가족 이름을 못 찾고 자형 차이도 남아 버렸다.
 //
 // fallback chain: 시스템 한글 폰트(Apple SD Gothic Neo / Malgun Gothic 등). Pretendard
 // 자체가 Apple SD Gothic Neo + Inter 베이스라 시각적 swap gap이 작음.
@@ -41,32 +44,38 @@ export const pretendard = localFont({
   src: './fonts/pretendard-variable.woff2',
   weight: '45 920',
   style: 'normal',
-  display: 'swap',
+  display: 'optional',
   preload: false,
   variable: '--font-pretendard',
   fallback: [],
 });
 
-// hero h1 전용 micro-subset (7 locale × 모든 페이지 hero title 글자만, ~30KB).
-// 본문 Pretendard Variable이 lazy 도착하기 전 hero h1에 한정해 critical path 진입.
-// preload=true로 다른 critical 리소스와 동시 fetch, swap이 거의 즉시 발생.
+// 디스플레이 서체 서브셋 — hero h1 + v2 섹션 제목(.typo-display-section)이 쓰는 글자만(~80KB, preload).
 //
-// 생성: scripts/generate-hero-font.mjs (글자 set 변경 시 재실행).
+// 2026-10-06 라이너 노트(docs/design-liner-notes-plan-2026-10.md §3-2)부터 제목은 Pretendard가 아니라
+// 디스플레이 서체다. 2026-10-07 운영자가 세리프(Hahmlet)를 "촌스럽다"며 반려해 이 브랜치는
+// **Paperlogy Bold**(Freesentation, OFL 1.1, 기하 산세리프)로 비교한다 — 비교 쌍은 feat/liner-font-suit.
+// 본문·버튼·숫자는 위 pretendard 그대로. 생성·글자 수집 범위·서체 스위치
+// (DISPLAY_FONT=hahmlet|maruburi|pretendard|suit|paperlogy)는 scripts/generate-hero-font.mjs 머리말.
+// preload=true라 다른 critical 리소스와 동시 fetch — 옛 hero 서브셋(36KB)보다 큰 만큼 LCP를 simulate로 재서
+// 넘으면 hero 글자만 담은 파일과 제목용 파일로 가른다(설계 §3-2).
 //
-// ⚠️ 운영 주의 — hero h1에 들어가는 텍스트(data/home.ts heroContent, public/locales/
-// */common.json의 *.hero.title* / contact.title / portfolio.title / stories.categories.*
-// 키)를 변경했다면 반드시 아래를 실행하고 결과 woff2를 commit해야 한다. 빠뜨리면 새
-// 글자가 micro-subset에 없어 fallback chain(Pretendard Variable → 시스템 한글)으로
-// 그려져 글자별로 미세한 두께/메트릭 차이가 보일 수 있다.
+// ⚠️ 운영 주의 — hero h1·섹션 제목·data/*.ts의 title 문자열을 바꿨다면 아래를 실행하고 display.woff2 +
+// display.chars.json을 함께 commit해야 한다. 빠뜨리면 새 글자가 서브셋에 없어 Pretendard로 그려져 한 제목
+// 안에서 글자 모양이 갈린다 — hero-font-subset.test.js가 --check로 CI에서 잡는다.
 //
 //   node scripts/generate-hero-font.mjs
-export const pretendardHero = localFont({
-  src: './fonts/pretendard-hero.woff2',
+export const displayFont = localFont({
+  src: './fonts/display.woff2',
   weight: '700',
   style: 'normal',
-  display: 'swap',
+  // display: 'optional' — Paperlogy는 Pretendard와 달리 시스템 고딕체와 글자 폭이 많이 달라
+  // swap 전환 시 h1 줄바꿈이 바뀌며 티나게 움직인다(운영자 2026-10-07 "불러올때 한번 꿈틀한다").
+  // optional은 제때(프리로드 중) 도착하면 바로 Paperlogy로 그리고, 못 받으면 그 세션은 폴백을
+  // 유지한다 — 전환 자체가 없어 꿈틀거림이 없다. preload=true라 대부분 제때 도착한다.
+  display: 'optional',
   preload: true,
-  variable: '--font-pretendard-hero',
+  variable: '--font-display',
   // 위 pretendard와 같은 이유로 비운다 — font-hero 스택(tailwind.config.ts)이
   // var(--font-pretendard) → var(--font-locale) → 시스템 폰트를 이어서 든다.
   fallback: [],

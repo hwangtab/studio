@@ -24,10 +24,10 @@ const buttonVariants = cva(
     variants: {
       variant: {
         solid: "bg-primary text-white hover:bg-primary-dark shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
-        // 다크 오버라이드는 필수다 — text-primary(#6d28d9)만 두면 gray-900 배경 위 대비가
-        // 2.5:1로 AA(4.5:1)는 물론 대형 텍스트(3:1)에도 미달한다. primary-light(#7c3aed)도
-        // 3.53:1로 여전히 미달이고 버튼 라벨은 text-lg(18px)라 대형 텍스트 완화
-        // (18.66px bold)에도 못 걸린다 — 그래서 다크 전용 primary-lighter(7.40:1)를 쓴다.
+        // 다크 오버라이드는 필수다 — text-primary(#166534)만 두면 gray-900 배경 위 대비가
+        // 2.8:1로 AA(4.5:1)는 물론 대형 텍스트(3:1)에도 미달한다. primary-light(#15803d)도
+        // 4.0:1로 여전히 미달이고 버튼 라벨은 text-lg(18px)라 대형 텍스트 완화
+        // (18.66px bold)에도 못 걸린다 — 그래서 다크 전용 primary-lighter(13.2:1)를 쓴다.
         // 소비처(HeroKakaoCta onSurface 전화·404/500 2차·PricingCard 2차 외 44곳)가 같은
         // 결함을 공유하므로 개별 className이 아니라 여기서 고친다.
         outline: "border-2 border-primary/20 bg-transparent text-primary hover:bg-primary/5 hover:border-primary/40 dark:text-primary-lighter dark:border-primary-lighter/40 dark:hover:border-primary-lighter/60 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
@@ -79,8 +79,8 @@ const buttonVariants = cva(
      * `public/scripts/theme-init.js`는 경로 예외 없이 모든 라우트에 `<html class="dark">`를
      * 붙인다. 그런데 docs/design-system.md §1대로 `pages/admin/**`과 계약 서명·완료 화면은
      * 종이처럼 항상 밝다 — 그 화면에서 다크 분기가 켜지면 흰 카드 위에 다크용 색이 뜬다
-     * (outline의 primary-lighter #a78bfa on #fff = 2.72:1, AA 4.5:1은 물론 대형 텍스트
-     * 완화 3:1에도 미달. 라이트 값 #6d28d9는 7.10:1). `Field`의 `light` 옵트인과 같은 처방.
+     * (outline의 primary-lighter #6ee7b7 on #fff = 1.52:1, AA 4.5:1은 물론 대형 텍스트
+     * 완화 3:1에도 미달. 라이트 값 #166534는 7.13:1). `Field`의 `light` 옵트인과 같은 처방.
      *
      * 실제로 라이트 고정 화면에서 쓰이는 variant만 되돌린다(solid·outline·ghost·secondary).
      * glass·kakao·scrim은 그 화면에 없다.
