@@ -98,7 +98,7 @@ export default function AdminIndexPage({ dashboard, ledgerFrom, ledgerTo, error 
 
         {dashboard && (
           <>
-            <section className="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+            <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
               <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">처리할 일</h2>
               <p className="text-xs text-gray-500 mb-4">
                 매일 23시 운영 점검 메일과 같은 기준입니다. 처리하면 다음 새로고침에서 사라집니다.
@@ -132,7 +132,7 @@ export default function AdminIndexPage({ dashboard, ledgerFrom, ledgerTo, error 
               )}
             </section>
 
-            <section className="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+            <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
               <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">대기 중</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 <QueueCard label="믹싱 착수 대기" count={dashboard.queues.mixingReceived} href="/admin/bookings" alert />
@@ -147,7 +147,7 @@ export default function AdminIndexPage({ dashboard, ledgerFrom, ledgerTo, error 
               </div>
             </section>
 
-            <section className="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+            <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
               <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">이번 주 세션</h2>
               <p className="text-xs text-gray-500 mb-4">오늘부터 {dashboard.upcomingWindowDays}일 안의 확정 예약입니다.</p>
               {dashboard.upcomingSessions.length === 0 ? (
@@ -170,7 +170,7 @@ export default function AdminIndexPage({ dashboard, ledgerFrom, ledgerTo, error 
             </section>
 
             {dashboard.socialTokens.length > 0 && (
-              <section className="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+              <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
                 <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">소셜 발행 토큰</h2>
                 <p className="text-xs text-gray-500 mb-3">매주 월요일 크론이 갱신합니다. 만료가 가까우면 갱신 실패 메일을 확인해 주세요.</p>
                 <ul className="text-sm text-gray-700 space-y-1">
@@ -186,7 +186,7 @@ export default function AdminIndexPage({ dashboard, ledgerFrom, ledgerTo, error 
         )}
 
         {/* 장부는 현황 데이터를 쓰지 않는다 — 건강 점검이 죽어도 정산 CSV는 받을 수 있어야 한다. */}
-          <section className="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+          <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
             <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">토스 결제 장부</h2>
             <p className="text-xs text-gray-500 mb-4">
               기간 안에 승인된 카드 결제 전부를 한 CSV로 내려받습니다(예약·믹싱·펀딩·구독). 환불은 같은

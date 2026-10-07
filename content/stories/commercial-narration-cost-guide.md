@@ -140,4 +140,4 @@ howTo:
 
 무엇부터 물어야 할지 모르겠어도 괜찮아요. "이런 광고를 만드는데 나레이션이 필요해요" 한마디면 나머지는 제가 같이 정리해 드릴게요.
 
-[성우 녹음 섭외 견적·비용 가이드](/stories/voice-actor-hiring-quote-cost) | [유튜브 나레이션 — 홈 vs 전문 스튜디오](/stories/voice1) | [내레이션 녹음 가이드](/stories/narration1) | [라우드니스(LUFS) 완전 가이드](/stories/loudness1) | [성우 녹음 방법 — 마이킹과 딕션](/stories/voice-acting1)
+[내레이션 녹음 가이드](/stories/narration1)

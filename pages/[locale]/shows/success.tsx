@@ -12,7 +12,9 @@ import { TOSS_KEY_CHANNEL_PARAM, cancelPayment, confirmPayment, fetchPayment, to
 import { withI18nServerProps } from '../../../lib/getStatic';
 import { confirmShowOrder } from '../../../lib/shows/confirm';
 import { sendShowTicketEmail } from '../../../lib/shows/email';
-import { confirmFailureMessage, SHOW_PAYMENT_ORDER_NO_PATTERN } from '../../../lib/shows/failMessages';
+import { confirmFailureMessage, confirmFailureMessageEn, SHOW_PAYMENT_ORDER_NO_PATTERN } from '../../../lib/shows/failMessages';
+import { fallbackShowLocale, SHOW_CONTACT_PHONE_INTL, toShowLocale, type ShowLocale } from '../../../lib/shows/i18n';
+import { saveShowOrderLocale } from '../../../lib/shows/orderLocale';
 
 interface SuccessProps {
   outcome: 'confirmed' | 'error';
@@ -24,9 +26,13 @@ interface SuccessProps {
   emailSent?: boolean;
   /** 주문에 이메일 주소가 있는지(없으면 메일은 처음부터 나가지 않는다). */
   hasEmail?: boolean;
+  locale: ShowLocale;
 }
 
-export default function ShowSuccessPage({ outcome, message, orderNo, manageUrl, emailSent, hasEmail }: SuccessProps) {
+export default function ShowSuccessPage({ outcome, message, orderNo, manageUrl, emailSent, hasEmail, locale }: SuccessProps) {
+  if (locale === 'en') {
+    return <ShowSuccessPageEn {...{ outcome, message, orderNo, manageUrl, emailSent, hasEmail }} />;
+  }
   return (
     <>
       <Head>
@@ -72,9 +78,57 @@ export default function ShowSuccessPage({ outcome, message, orderNo, manageUrl, 
   );
 }
 
+/** 영어 화면 — 위와 같은 구성. 비밀 URL 페이지 가드(tests/pages/privateLinkNavigation.test.ts) 때문에 같은 파일에 둔다. */
+function ShowSuccessPageEn({ outcome, message, orderNo, manageUrl, emailSent, hasEmail }: Omit<SuccessProps, 'locale'>) {
+  return (
+    <>
+      <Head>
+        <title>{outcome === 'confirmed' ? 'Booking complete' : 'Payment not confirmed'} | Studio NOL</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Head>
+      <main className="mx-auto max-w-lg px-4 py-24 text-center">
+        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">Studio NOL</p>
+        {outcome === 'confirmed' ? (
+          <>
+            <h1 className="typo-page-title">Your booking is complete</h1>
+            <p className="mt-4 text-gray-600 dark:text-gray-300">
+              Order number {orderNo}.
+              {emailSent === true && ' We have emailed your ticket.'}
+              {emailSent === false && hasEmail && ' We could not send the ticket email — please save the link below.'}
+              {emailSent === false && !hasEmail && ' No email address was given, so no email was sent — please save the link below.'}
+            </p>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+              General admission, first come, first served. Show the QR ticket from the link below at the door.
+            </p>
+            {manageUrl && (
+              <p className="mt-4">
+                <Button asChild size="lg">
+                  <a href={manageUrl}>Open my tickets (QR)</a>
+                </Button>
+              </p>
+            )}
+            {manageUrl && (
+              <p className="mt-3 break-all text-xs text-gray-500 dark:text-gray-400">Save this link: {manageUrl}</p>
+            )}
+          </>
+        ) : (
+          <>
+            <h1 className="typo-page-title">We could not confirm your payment</h1>
+            <p className="mt-4 text-gray-600 dark:text-gray-300">{message}</p>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">Contact: {SHOW_CONTACT_PHONE_INTL} · hello@studionol.co.kr</p>
+          </>
+        )}
+        <a href="/en" rel="noreferrer" className="mt-8 inline-block underline">Home</a>
+      </main>
+    </>
+  );
+}
+
 export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ query, res, params }) => {
   res.setHeader('Cache-Control', 'no-store');
-  if (params?.locale !== 'ko') return { redirect: { destination: '/ko', permanent: false } };
+  const locale = toShowLocale(params?.locale);
+  if (!locale) return { redirect: { destination: `/${fallbackShowLocale(params?.locale)}`, permanent: false } };
+  const en = locale === 'en';
 
   const { paymentKey, orderId, amount } = query;
   const amountNumber = typeof amount === 'string' ? Number(amount) : NaN;
@@ -83,7 +137,7 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
     typeof orderId !== 'string' || !SHOW_PAYMENT_ORDER_NO_PATTERN.test(orderId) ||
     !Number.isInteger(amountNumber)
   )
-    return { props: { outcome: 'error', message: '잘못된 접근입니다.' } };
+    return { props: { outcome: 'error', message: en ? 'Invalid request.' : '잘못된 접근입니다.', locale } };
 
   const result = await confirmShowOrder(
     // channel: 우리가 그린 결제수단 목록으로 연 결제는 API 개별 연동 키 쌍으로 승인한다(lib/booking/toss.ts).
@@ -92,13 +146,18 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
     { confirmPayment, fetchPayment, cancelPayment },
   );
   if (result.status !== 'confirmed' && result.status !== 'already_confirmed')
-    return { props: { outcome: 'error', message: confirmFailureMessage(result) } };
+    return { props: { outcome: 'error', message: en ? confirmFailureMessageEn(result) : confirmFailureMessage(result), locale } };
 
   const order = await getDb().query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, orderId) });
-  if (!order) return { props: { outcome: 'error', message: '주문을 찾지 못했습니다. 문의 010-4255-7893' } };
+  if (!order)
+    return { props: { outcome: 'error', message: en ? `We could not find the order. Contact: ${SHOW_CONTACT_PHONE_INTL}` : '주문을 찾지 못했습니다. 문의 010-4255-7893', locale } };
   // already_confirmed는 환불까지 끝난 주문의 재방문도 포함한다 — 환불된 주문을 "예매 완료"로 보이지 않게 한다.
   if (order.status !== 'paid' && order.status !== 'partially_refunded')
-    return { props: { outcome: 'error', message: '이미 환불 처리된 주문입니다. 다시 예매해 주세요.' } };
+    return { props: { outcome: 'error', message: en ? 'This order has already been refunded. Please book again.' : '이미 환불 처리된 주문입니다. 다시 예매해 주세요.', locale } };
+
+  // 주문 언어는 주문 생성 때 남기지만, 혹시 빠졌으면(표 적용 전 주문 등) 영어 결제 완료 화면에서 한 번 더 남긴다 —
+  // 메일보다 먼저(바로 아래 sendShowTicketEmail이 이 값을 읽는다). 이미 있으면 아무 일도 없다.
+  if (en) await saveShowOrderLocale(orderId, 'en');
 
   // 메일은 부가 기능이다 — 실패해도 확정 화면은 그대로 보여 준다. 선점(send_pending → send_inflight)이
   // 있어 웹훅·새로고침이 겹쳐도 한 통만 나간다. 새로고침(already_confirmed)에서는 안 나간 메일을 한 번 더
@@ -114,9 +173,10 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
     props: {
       outcome: 'confirmed',
       orderNo: orderId,
-      manageUrl: `/ko/shows/manage/${orderId}?token=${order.manageToken}`,
+      manageUrl: `/${locale}/shows/manage/${orderId}?token=${order.manageToken}`,
       hasEmail: order.customerEmail.trim() !== '',
       ...emailFields,
+      locale,
     },
   };
 });

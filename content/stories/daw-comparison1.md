@@ -39,18 +39,18 @@ faq:
 
 DAW(Digital Audio Workstation)는 음악 제작의 핵심 소프트웨어입니다. 보컬 녹음, 편집, 믹싱, 마스터링을 하나의 환경에서 처리합니다.
 
-DAW의 역사는 1977년 New England Digital의 Synclavier와 1979년 Fairlight CMI로 거슬러 올라갑니다. 이 기기들은 수천만 원대여서 대형 스튜디오만 접근 가능했습니다. 1989년 Avid의 Pro Tools 1.0이 Mac에서 최초의 하드디스크 기반 디지털 레코딩을 실용화했고, 1993년 Steinberg Cubase가 MIDI+오디오 통합 환경을 대중화했습니다. 2001년 Ableton Live가 루프 기반의 새로운 음악 제작 패러다임을 제시했고, 2004년 Apple이 Logic을 인수해 가격을 대폭 낮추면서 DAW 민주화가 가속됐습니다. 현재 GarageBand(Mac/iOS 무료)부터 Pro Tools Ultimate(전문가용)까지 목적에 맞는 DAW를 선택할 수 있는 환경이 됐습니다.
+DAW의 역사는 1977년 New England Digital의 Synclavier와 1979년 Fairlight CMI로 거슬러 올라갑니다. 이 기기들은 수천만 원대여서 대형 스튜디오만 접근 가능했습니다. 1991년 Digidesign의 Pro Tools 1.0이 Mac에서 하드디스크 기반 멀티트랙 디지털 레코딩을 실용화했고, 1993년 Steinberg Cubase가 MIDI+오디오 통합 환경을 대중화했습니다. 2001년 Ableton Live가 루프 기반의 새로운 음악 제작 패러다임을 제시했고, 2002년 Apple이 Logic을 인수해 가격을 대폭 낮추면서 DAW 민주화가 가속됐습니다. 현재 GarageBand(Mac/iOS 무료)부터 Pro Tools Ultimate(전문가용)까지 목적에 맞는 DAW를 선택할 수 있는 환경이 됐습니다.
 
 ## 주요 DAW 한눈에 비교
 
 | DAW | 제조사 | 가격 | 플랫폼 | 주요 강점 |
 |-----|--------|------|--------|---------|
 | Pro Tools | Avid | 구독형 | Mac/Win | 업계 표준, 전문 스튜디오 |
-| Logic Pro | Apple | 29,000원 (일회성) | Mac only | 가성비, 보컬 녹음 |
-| Ableton Live | Ableton | 구독/일회성 | Mac/Win | 루프, 일렉트로닉, 라이브 |
+| Logic Pro | Apple | 일회성 | Mac only | 가성비, 보컬 녹음 |
+| Ableton Live | Ableton | 일회성 | Mac/Win | 루프, 일렉트로닉, 라이브 |
 | FL Studio | Image-Line | 일회성 | Mac/Win | 비트메이킹, 힙합 |
 | GarageBand | Apple | 무료 | Mac/iOS | 입문자, Logic Pro 입문 |
-| Cubase | Steinberg | 구독형 | Mac/Win | MIDI, 오케스트라 편곡 |
+| Cubase | Steinberg | 일회성 | Mac/Win | MIDI, 오케스트라 편곡 |
 | Reaper | Cockos | 저가 | Mac/Win | 커스터마이즈, 경량 |
 
 ---
@@ -102,7 +102,7 @@ DAW의 역사는 1977년 New England Digital의 Synclavier와 1979년 Fairlight 
 ### Logic Pro
 
 **장점**
-- 가격 대비 성능 좋음 (2만9천원)
+- 가격 대비 성능 좋음
 - Flex Pitch (피치 교정) 내장
 - 풍부한 내장 플러그인
 - GarageBand에서 업그레이드 가능
@@ -151,12 +151,6 @@ DAW의 역사는 1977년 New England Digital의 Synclavier와 1979년 Fairlight 
 
 ---
 
-## 마치며
-
-DAW 선택보다 중요한 것은 좋은 마이크, 안정적인 오디오 인터페이스, 조용한 녹음 환경입니다.
-
-어떤 DAW를 선택해도 드라이(무처리) WAV 24bit/44.1kHz 파일로 내보내면 전문 스튜디오에 믹싱을 의뢰하는 데 아무 문제가 없습니다. 보컬 녹음이 목적이라면 Logic Pro의 Flex Pitch와 내장 Vintage 플러그인으로 스튜디오 수준의 보컬 체인을 구성할 수 있으며, 비트메이킹이 목적이라면 FL Studio의 패턴 기반 워크플로우와 평생 무료 업데이트 정책이 장점입니다. 처음 DAW를 시작한다면 GarageBand로 시작해 Logic Pro로 업그레이드하는 Apple 경로가 학습 비용을 최소화하는 가장 효율적인 선택입니다.
-
 ## DAW를 비교하다 정작 곡을 못 낸 분들에게
 
 15년 동안 70곡 넘는 발매를 옆에서 지켜본 사람으로서 솔직하게 말하면, DAW 비교로 몇 달을 보내는 분치고 그 사이에 곡을 완성한 분은 거의 못 봤습니다. 위 표에서 정리한 강점 차이는 분명 존재하지만, 보컬 곡 하나를 발매하는 관점에서 보면 어떤 DAW를 고르느냐가 결과물을 가르는 일은 잘 없어요. 같은 곡을 로직으로 뽑든 프로툴즈로 뽑든, 최종 음원에서 그 차이를 알아채는 청자는 거의 없습니다.
@@ -164,6 +158,14 @@ DAW 선택보다 중요한 것은 좋은 마이크, 안정적인 오디오 인�
 정작 결과물을 바꾸는 건 마이크와 방의 상태, 그리고 그날 부른 사람의 컨디션이었습니다. 제가 관여한 발매작들에서 "이 트랙 좋다"는 반응이 나온 이유를 되짚어 보면 DAW 이름이 등장한 적은 한 번도 없어요. 그러니 이미 하나를 쓰고 있다면 그걸 끝까지 파는 게 낫고, 처음이라면 남들이 많이 쓰는 걸로 그냥 시작하시라고 말씀드립니다. 비교는 두어 시간이면 충분하고, 나머지 시간은 곡에 쓰는 게 맞아요.
 
 물론 최종 믹싱·마스터링 단계에서는 도구보다 사람의 귀가 결과를 가릅니다. DAW 고민을 접고 일단 곡을 완성해 발매까지 가고 싶다면 [음원 제작 프로젝트](/release-project)에서 녹음부터 마감까지의 흐름을 참고해 보세요.
+
+---
+
+## 마치며
+
+DAW 선택보다 중요한 것은 좋은 마이크, 안정적인 오디오 인터페이스, 조용한 녹음 환경입니다.
+
+어떤 DAW를 선택해도 드라이(무처리) WAV 24bit/44.1kHz 파일로 내보내면 전문 스튜디오에 믹싱을 의뢰하는 데 아무 문제가 없습니다. 보컬 녹음이 목적이라면 Logic Pro의 Flex Pitch와 내장 Vintage 플러그인으로 스튜디오 수준의 보컬 체인을 구성할 수 있으며, 비트메이킹이 목적이라면 FL Studio의 패턴 기반 워크플로우와 평생 무료 업데이트 정책이 장점입니다. 처음 DAW를 시작한다면 GarageBand로 시작해 Logic Pro로 업그레이드하는 Apple 경로가 학습 비용을 최소화하는 가장 효율적인 선택입니다.
 
 ---
 

@@ -113,7 +113,7 @@ export default function NewContractPage({ initialValues, copiedFrom }: NewContra
         backLabel="계약 목록"
       >
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-            <div className="p-6 md:p-8">
+            <div className="p-4 md:p-8">
               {copiedFrom && (
                 <div className="mb-6 p-3 bg-blue-50 border border-blue-200 text-blue-900 rounded-lg text-sm">
                   {copiedFrom}님의 계약을 복제했습니다. <strong>이용 기간을 새로 정해 주세요.</strong>{' '}

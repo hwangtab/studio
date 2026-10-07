@@ -47,6 +47,9 @@ jobs:
       - name: Fact consistency check
         run: npm run check:facts
 
+      - name: Unverified claims check
+        run: npm run check:claims
+
       - name: Test
         run: npm test -- --coverage --passWithNoTests
 

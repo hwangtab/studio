@@ -3,6 +3,7 @@ import { and, asc, eq, gte, inArray, lt, sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { bookings, orders, reviewRequests, workOrders, type ReviewRequestKind } from '../../db/schema';
 import { getSiteConfig } from '../../data/siteConfig';
+import { buildEmailLayout, escapeHtml } from '../email/layout';
 import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL, OPERATOR_INBOX } from '../operatorContact';
 import { isPurgedValue } from '../privacy/orderRetention';
@@ -176,6 +177,24 @@ export const buildReviewRequestEmail = (c: ReviewCandidate) => {
       '이 안내는 이번 예약·주문에 대해 한 번만 보내드립니다.',
       '스튜디오 놀',
     ].join('\n'),
+    // 후기에 혜택·유도 문구를 붙이지 않는다(추천·보증 심사지침) — text와 같은 약속만 옮긴다.
+    html: buildEmailLayout({
+      preheader: opening,
+      heading: '이용은 어떠셨나요?',
+      paragraphs: [
+        `${escapeHtml(c.customerName)}님, 스튜디오 놀을 이용해 주셔서 고맙습니다.`,
+        escapeHtml(opening),
+        '겪으신 그대로 짧게 남겨 주시면, 스튜디오를 고르는 다른 분들께 큰 도움이 됩니다.',
+      ],
+      rows: [
+        { label: '구글 리뷰', value: '구글 리뷰 남기기', href: googleReviewUrl },
+        { label: '네이버 플레이스', value: '네이버 리뷰 남기기', href: naverMapUrl },
+      ],
+      notices: [
+        '아쉬웠던 점이 있다면 이 메일에 답장으로 알려 주세요. 직접 읽고 답드립니다.',
+        '이 안내는 이번 예약·주문에 대해 한 번만 보내드립니다.',
+      ],
+    }),
   };
 };
 

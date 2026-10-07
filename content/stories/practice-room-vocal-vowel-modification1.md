@@ -39,7 +39,7 @@ faq:
 
 모음 수정은 특정 음역에 도달했을 때 발음하는 모음의 형태를 자연스럽게 변형시키는 것입니다. 예를 들어, 낮은 음에서 "아"를 발음하던 것이, 높은 음에서는 "아→어→으" 방향으로 자연스럽게 변형됩니다.
 
-이는 속임수가 아닙니다. 성악가들이 수백 년에 걸쳐 개발한 음성 생리학적 원리입니다. 성대, 인두, 구강, 비강이 공명 공간을 최적화하기 위해 자연스럽게 형태를 바꾸는 것입니다.
+성대, 인두, 구강, 비강이 공명 공간을 최적화하기 위해 자연스럽게 형태를 바꾸는 것입니다.
 
 ### 왜 필요한가
 
@@ -198,4 +198,4 @@ G4에서 모음이 자연스럽게 변하는 것을 허용합니다.
 
 *관련 아티클:*
 
-[보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/falsetto1) | [보컬 두성·헤드 보이스 발성법 — 완전 가이드](/stories/practice-room-vocal-head-voice1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal1) | [보컬 아카펠라 그룹 퍼포먼스 — 완전 가이드](/stories/practice-room-vocal-acappella-group1)
+[보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/falsetto1) | [보컬 두성·헤드 보이스 발성법 — 완전 가이드](/stories/practice-room-vocal-head-voice1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal1) | [보컬 아카펠라 그룹 퍼포먼스 — 완전 가이드](/stories/practice-room-vocal-acappella-group1)

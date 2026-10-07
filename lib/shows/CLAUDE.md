@@ -22,14 +22,14 @@
 - 히어로 폰트 서브셋(`scripts/generate-hero-font.mjs`)이 `data/shows/*.ts`의 `title`을 소스로 읽는다.
   공연을 추가하면 **빌드 후 바뀐 woff2·chars.json을 함께 커밋**한다(CI `--check`가 잡는다).
 - 소개(`description`)는 빈 줄로 가른 문단이고, `## `로 시작하면 소제목·`> `로 시작하면 인용이다(`descriptionBlocks`). **첫 문단은 평문이어야 한다**(검색 요약·OG가 첫 문단에서 나오며 시드가 검사한다). 사실(수치·인용)은 펀딩 프로젝트 페이지처럼 출처가 있는 것만 옮기고 새 사실을 더하지 않는다.
-- **공연장 지도는 제공자 목록이 만든다**(`lib/shows/maps.ts`). 길찾기 버튼(네이버 지도·카카오맵)은 `SHOW_MAP_PROVIDERS`를 돌아 만들어지므로 제공자를 늘리려면 그 목록에 한 줄만 더한다. **제공자마다 잘 먹는 검색어가 다르다**(실측 2026-10-04): 네이버·구글은 `장소명 + 도로명 주소`, **카카오맵은 도로명 주소만**(합치면 "검색 결과가 없어요"). 셋 다 "가동 1층" 같은 건물 안쪽 표기는 떼야 한다(`showMapStreet`). 검색이 다른 가게를 잡으면 공연 정의의 `mapLinks: { kakao: 'https://place.map.kakao.com/…' }`처럼 제공자별 정확한 주소(https)로 덮는다(컬럼 `map_links_json`, 마이그레이션 0049). 옛 `map_url` 컬럼은 더 쓰지 않는다. 상세의 지도 iframe은 구글 임베드(CSP frame-src에 `www.google.com`).
+- **공연장 지도는 제공자 목록이 만든다**(`lib/shows/maps.ts`). 길찾기 버튼(네이버 지도·카카오맵)은 `SHOW_MAP_PROVIDERS`를 돌아 만들어지므로 제공자를 늘리려면 그 목록에 한 줄만 더한다. **제공자마다 잘 먹는 검색어가 다르다**(실측 2026-10-04): 네이버·구글은 `장소명 + 도로명 주소`, **카카오맵은 도로명 주소만**(합치면 "검색 결과가 없어요"). 셋 다 "가동 1층" 같은 건물 안쪽 표기는 떼야 한다(`showMapStreet`). 검색이 다른 가게를 잡으면 공연 정의의 `mapLinks: { kakao: 'https://place.map.kakao.com/…' }`처럼 제공자별 정확한 주소(https)로 덮는다(컬럼 `map_links_json`, 마이그레이션 0049). 옛 `map_url` 컬럼은 더 쓰지 않는다. 상세 지도는 한국어 화면이 카카오맵(`components/maps/KakaoMap.tsx`, 실패하면 구글 임베드), 영어 화면이 구글 임베드다(CSP frame-src에 `www.google.com`).
 - `performers`(이름 나열, NOT NULL)는 메일·관리자·검색용으로 남는다. 상세 화면은 `performers_json`을 읽는다.
 
 ### 화면은 ShowDetailView 한 벌이다 — 펀딩 상세와 같은 합성
 
 | 자리 | 쓰는 것 |
 |---|---|
-| 히어로 | 공용 `ImageHero`(**포스터를 흐리게 한 배경**(`SHOW_HERO_BLUR_CLASS` — 공용 ImageHero는 건드리지 않고 `className`으로 배경 래퍼를 덮는다) + 기본 스크림(`HERO_SCRIM`), 주최·제목·부제·일시/장소 알약·CTA). 페이지에 `hasHero = true`. 히어로 **안에** 작은 포스터 카드는 두지 않는다(운영자 지적 2026-10-04) — 포스터는 본문 `ShowPoster`가 보여 준다. 목록 히어로 배경은 가장 가까운 공연의 포스터. 포스터가 없을 때만 `SHOW_HERO_IMAGE`(스튜디오 사진) 폴백. **2026-10-04에 배경까지 고정 사진으로 바꿨다가 요청과 달라 되돌렸다 — 요청은 "히어로 안의 포스터 카드를 빼고 본문에 크게"였다** |
+| 히어로 | 공용 `ImageHero`(**포스터 배경을 다른 페이지와 똑같이 — 선명하게, 확대 애니메이션 그대로, `overlayGradient={HERO_SCRIM_STRONG}`**(펀딩 목록·상세와 같은 방식). 공연만 blur를 걸고 애니메이션을 끄던 것은 2026-10-07 운영자 지적("히어로 나오는 방식 정합성")으로 걷었다 — 다시 `className`으로 `.hero-zoom`을 덮지 말 것), 주최·제목·부제·일시/장소 알약·CTA). 페이지에 `hasHero = true`. 히어로 **안에** 작은 포스터 카드는 두지 않는다(운영자 지적 2026-10-04) — 포스터는 본문 `ShowPoster`가 보여 준다. 목록 히어로 배경은 가장 가까운 공연의 포스터. 포스터가 없을 때만 `SHOW_HERO_IMAGE`(스튜디오 사진) 폴백. **2026-10-04에 배경까지 고정 사진으로 바꿨다가 요청과 달라 되돌렸다 — 요청은 "히어로 안의 포스터 카드를 빼고 본문에 크게"였다** |
 | 포스터 | `ShowPoster` — 본문(오른쪽 sticky 패널 맨 위, 모바일은 소개 앞)에서 읽을 수 있는 크기로, 너비에 맞춰 비율을 지키고 누르면 원본을 새 탭에서 연다. 가로·세로 포스터 모두 같은 틀 |
 | 섹션 제목 | `SectionHeading`의 v2 문법(eyebrow + 번호 + 잉크 대형 제목). 맨 `<h2 class="typo-section-title">`를 쓰지 않는다 |
 | 핵심 정보 | `ShowFacts`(`BaseCard glass`, 데스크톱 sticky, `<lg`에서는 소개 **앞**) |
@@ -46,6 +46,26 @@ v2 색 가드(`components/ui/SectionHeading.test.tsx`의 `V2_FILES`)에 공연 �
 **동의는 결제하기를 누르는 행위로 받는다** — 환불 규정 체크박스를 두지 않는다(펀딩 PledgeWizard와 같은
 규칙, 운영자 지시 2026-10-03 "동의 최소화, UX 최우선"). 규정은 `<details>`로 접어 두고, 서버 검증
 (`refundPolicyAgreed`)과 기록은 그대로다. 회차·티켓 종류가 각각 하나면 라디오 대신 요약 한 줄이다.
+
+### 영어 화면(/en/shows) — 2026-10-07 운영자 결정 "영어만"
+
+공연은 **한국어·영어 두 언어만** 연다. 그 밖의 로케일(zh·es…)로 들어오면 `/en/shows/…`로 보낸다(`fallbackShowLocale`).
+처음(#442)엔 근거 없이 ko 전용이었다 — 운영자가 "왜 한국어 전용이냐"고 지적해 열었다.
+
+- **화면 문구**는 `lib/shows/i18n.ts` 한 파일에 ko·en 두 벌(`showCopy(locale)`). common.json에 넣지 않는다(5개 로케일에 빈 키가 생긴다).
+  컴포넌트는 `locale` prop(기본 'ko')을 받는다. 같이 쓰는 결제 컴포넌트(`PaymentMethodPicker`·`PaymentMethodChoice`·
+  `BankDepositGuide`·`RefundAccountFields`)와 메일 레이아웃(`buildEmailLayout`)에도 `locale` 옵션이 있다 — 기본 ko라 다른 화면은 그대로다.
+- **공연 내용**의 영어는 공연 정의의 `en` 칸(`ShowTranslation`)이다. **DB에 넣지 않는다** — 페이지가 조회 직후
+  `localizeShow`/`localizeManageOrder`(lib/shows/localize.ts)로 덮어쓴다. 한국어를 고치면 `en`도 같이 고친다. 번역이 없는 칸은 한국어 그대로 보인다.
+  출연진 소개를 옮길 때 원문에 없는 성별(she/he)을 붙이지 않는다.
+- **지도**: 영어 화면은 구글 지도 임베드 + 구글·네이버·카카오 길찾기(`showMapLinks(…, 'en')`). 지도 검색은 한국어 주소라야 잡혀서
+  영어 화면도 `mapSource`(원래 한국어 장소명·주소)로 검색한다.
+- **주문 언어**는 `show_order_locales`(마이그레이션 0050) — 영어 화면으로 만든 주문만 행이 있다. 티켓·환불·회차 취소·입금 안내 메일과
+  "내 티켓" 주소(`/en/shows/manage/…`)가 이 언어를 따른다. 운영자 알림은 언제나 한국어. 별도 표인 이유는 0037과 같다(관계 조회가 전체
+  컬럼을 SELECT) — 읽기·쓰기를 try로 감싸 **표가 없으면 한국어로 동작할 뿐 깨지지 않는다**(`lib/shows/orderLocale.ts`).
+- **연락처**: 영어 주문을 위해 해외 번호(`+국가번호…`)도 받는다(`normalizeShowContact`). 문자 발송에는 쓰지 않는다.
+- 토스 결제위젯 iframe은 토스가 그리는 한국어 화면이라 바꿀 수 없다. 처리방침은 한국어 원본으로 연결한다(라벨에 "(Korean)").
+- 영어 화면도 사이트 정책대로 `noindex, follow`다(SEO.tsx의 비-ko noindex). 색인하려면 그 정책부터 정한다.
 
 ### 경로의 대문자는 미들웨어가 소문자로 308한다 — 링크에 실리는 값은 이걸 견뎌야 한다
 

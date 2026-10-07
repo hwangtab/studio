@@ -18,12 +18,12 @@ summary: >-
 faq:
   - q: What is the minimum time it takes to release a track?
     a: >-
-      After recording wraps, mixing/mastering (1–2 weeks) → distributor registration (2–3 weeks of review) → release takes
+      After recording wraps, mixing/mastering (1–2 weeks) → distributor registration and store propagation (a few days to several weeks, depending on the store) → release takes
       at least about 3–5 weeks. We recommend giving yourself room by starting preparation from 8 weeks out.
   - q: How long does registration on the major streaming platforms take?
     a: >-
-      DIY distributors like DistroKid and TuneCore register on most platforms — Melon, Genie, Spotify, and so on — within
-      7–14 days. Korea's major platforms (Melon, Genie, Bugs) have stricter distributor review and can take 2–3 weeks.
+      With DIY distributors like DistroKid and TuneCore, a track goes live store by store after the distributor's review; Spotify usually takes a few days, and some stores take up to several weeks (TuneCore advises setting the release date at least 4 weeks out if you want it to go live on all stores at the same time).
+      For Korea's major platforms (Melon, Genie, Bugs), the timing of propagation can differ, so check the registration status before the release date.
   - q: When should pre-release promotion begin?
     a: >-
       Starting SNS teaser content from 4 weeks out and revealing a pre-save link 1 week out is effective. From 3 days out,
@@ -37,9 +37,9 @@ faq:
 
 ## The Music Release Timeline — There Is No Good Release Without Preparation
 
-Even a highly polished track will miss its exposure window if you release it without preparation. BTS's "Dynamite" broke Spotify's single-day streaming record on release in 2020 — not simply because the song was good, but because a meticulously designed teaser, preview, and countdown campaign, set in motion months before release, pushed fan anticipation to its limit. For the 2022 release of "Midnights," Taylor Swift dominated social media by revealing all 13 tracks one by one at midnight, and recorded the biggest first-week streaming numbers in history. Applying the strategic release methods of major artists at an indie scale can dramatically increase exposure even with limited resources.
+Even a highly polished track will miss its exposure window if you release it without preparation. BTS's "Dynamite" recorded the most streams of any release day on Spotify globally that year on the day it came out in 2020. Ahead of the 2022 release of "Midnights," Taylor Swift revealed the titles of its 13 tracks one by one in a TikTok series that got people talking, and on release day set Spotify's all-time record for most album streams in a single day. Applying the strategic release methods of major artists at an indie scale can dramatically increase exposure even with limited resources.
 
-For a domestic indie artist, the most reliable real-world release timeline starts from the 8-weeks-out mark. When you register through an overseas DIY distributor (DistroKid, TuneCore), Korea's major streaming platforms (Melon, Genie, Bugs) can have a longer review period than domestic distributors, and the release date should fall on a Friday (the reference day for global streaming updates) to be favorable for Spotify editorial pitching and chart inclusion. Prepare systematically from 8 weeks out to maximize the effect of your release.
+For a domestic indie artist, the most reliable real-world release timeline starts from the 8-weeks-out mark. When you register through an overseas DIY distributor (DistroKid, TuneCore), Korea's major streaming platforms (Melon, Genie, Bugs) can take time to propagate, and the release date should fall on a Friday (the reference day for global streaming updates) to be favorable for Spotify editorial pitching and chart inclusion. Prepare systematically from 8 weeks out to maximize the effect of your release.
 
 ---
 
@@ -75,7 +75,7 @@ Release preparation begins with receiving the master files. Secure the mixed and
 
 ### D-6 weeks: Distribution Registration
 
-Choosing a distributor depends on your release strategy. DistroKid lets you release unlimited tracks for a flat annual fee (about $22.99), which favors prolific artists, while TuneCore charges per release but lets the artist keep 100% of sales revenue. If concentrated exposure on domestic platforms (Melon, Genie, Bugs) is the goal, it's also worth considering a domestic distributor (a partner of Kakao Entertainment or Dreamus Company).
+Choosing a distributor depends on your release strategy. DistroKid lets you release unlimited tracks for a flat annual fee, which favors prolific artists, while TuneCore also uses annual plans and lets the artist keep 100% of sales revenue. If concentrated exposure on domestic platforms (Melon, Genie, Bugs) is the goal, it's also worth considering a domestic distributor (a partner of Kakao Entertainment or Dreamus Company).
 
 ### Distributor Registration Items
 
@@ -84,7 +84,7 @@ Choosing a distributor depends on your release strategy. DistroKid lets you rele
 - Set the release date (finalize the D-Day date — Friday recommended)
 - Confirm and register the ISRC code
 - Confirm KOMCA copyright registration
-- Wait for distributor review approval (takes 2–3 weeks)
+- Wait for distributor review approval and store propagation (a few days to several weeks, depending on the store)
 
 ### D-4 weeks: Begin Promotion
 

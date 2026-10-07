@@ -13,6 +13,8 @@ import { formatKstDeadline } from '../../../lib/payments/bankAccount';
 import { findSameNameDepositOrders, type SameNameDepositOrder } from '../../../lib/payments/bankDepositOrders';
 import { holderMatchesCustomer, loadRefundAccountSummary } from '../../../lib/payments/refundAccount';
 import { loadAdminShowDetail, type AdminOrderRow, type AdminShowDetail, type AdminShowtimeDetail } from '../../../lib/shows/adminQueries';
+import { listReportLinks, type ReportLinkSummary } from '../../../lib/shows/reportLink';
+import { REPORT_LINK_DEFAULT_TTL_DAYS, REPORT_LINK_MAX_TTL_DAYS } from '../../../lib/shows/reportLinkLimits';
 
 /** 환불 계좌 요약 — 은행·예금주·시각뿐. 계좌번호는 평문도 암호문도 props에 싣지 않는다("계좌 보기" API로만). */
 export interface ShowRefundAccountInfo {
@@ -31,6 +33,8 @@ interface AdminShowDetailPageProps {
   refundAccounts?: Record<string, ShowRefundAccountInfo>;
   /** orderNo → 같은 이름의 다른 계좌 입금 신청(입금 대기·취소 주문만) */
   sameNameDeposits?: Record<string, SameNameDepositOrder[]>;
+  /** 기획자 현황 링크 목록. null이면 표(0051)를 읽지 못한 것 — 발급 영역에 적용 전임을 보인다. */
+  reportLinks?: ReportLinkSummary[] | null;
 }
 
 const allOrders = (show: AdminShowDetail): AdminOrderRow[] => show.showtimes.flatMap((t) => t.orders);
@@ -41,7 +45,7 @@ export const getServerSideProps: GetServerSideProps<AdminShowDetailPageProps> = 
   const id = context.params?.id;
   if (typeof id !== 'string') return { notFound: true };
   try {
-    const show = await loadAdminShowDetail(id);
+    const [show, reportLinks] = await Promise.all([loadAdminShowDetail(id), listReportLinks(id)]);
     if (!show) return { notFound: true };
     const refundAccounts: Record<string, ShowRefundAccountInfo> = {};
     const sameNameDeposits: Record<string, SameNameDepositOrder[]> = {};
@@ -60,7 +64,7 @@ export const getServerSideProps: GetServerSideProps<AdminShowDetailPageProps> = 
         if (found.length > 0) sameNameDeposits[o.orderNo] = found;
       }
     }));
-    return { props: { show, refundAccounts, sameNameDeposits } };
+    return { props: { show, refundAccounts, sameNameDeposits, reportLinks } };
   } catch (error: unknown) {
     console.error('[admin/shows/[id]] 조회 실패:', error);
     throw error;
@@ -69,7 +73,7 @@ export const getServerSideProps: GetServerSideProps<AdminShowDetailPageProps> = 
 
 const STATUS_LABEL: Record<string, string> = { draft: '초안(비공개)', published: '공개', cancelled: '취소' };
 const ORDER_STATUS_LABEL: Record<string, string> = {
-  pending: '결제대기', awaiting_deposit: '계좌 입금 대기', deposit_cancelled: '입금 전 취소', paid: '확정', partially_refunded: '부분환불', refunded: '환불완료', expired: '만료', failed: '결제실패',
+  pending: '결제대기', awaiting_deposit: '계좌 입금 대기', deposit_cancelled: '입금 전 취소', auto_cancel_pending: '자동 취소 처리 중', paid: '확정', partially_refunded: '부분환불', refunded: '환불완료', expired: '만료', failed: '결제실패',
 };
 const TICKET_STATUS_LABEL: Record<string, string> = { held: '보류', issued: '발권', refunding: '환불중', refunded: '환불', void: '무효' };
 
@@ -80,12 +84,13 @@ const kstTime = (sec: number | null) => {
   return `${k.getUTCMonth() + 1}/${k.getUTCDate()} ${p(k.getUTCHours())}:${p(k.getUTCMinutes())}`;
 };
 
-export default function AdminShowDetailPage({ show, refundAccounts = {}, sameNameDeposits = {} }: AdminShowDetailPageProps) {
+export default function AdminShowDetailPage({ show, refundAccounts = {}, sameNameDeposits = {}, reportLinks = null }: AdminShowDetailPageProps) {
   const router = useRouter();
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [scanUrl, setScanUrl] = useState<string | null>(null);
+  const [reportUrl, setReportUrl] = useState<string | null>(null);
   const [onlyAwaiting, setOnlyAwaiting] = useState(false);
   const awaitingTotal = allOrders(show).filter((o) => o.bankDeposit === 'awaiting').length;
 
@@ -137,7 +142,7 @@ export default function AdminShowDetailPage({ show, refundAccounts = {}, sameNam
         {notice && <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>}
         {error && <div role="alert" className="mb-4 p-3 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">{error}</div>}
 
-        <section className="bg-white rounded-2xl shadow-sm p-5 md:p-6 mb-6 text-sm text-gray-900">
+        <section className="bg-white rounded-2xl shadow-sm p-4 md:p-6 mb-6 text-sm text-gray-900">
           <p className="mb-2"><strong>상태</strong> {STATUS_LABEL[show.status] ?? show.status}</p>
           <p className="mb-2"><strong>구역</strong> {show.zones.map((z) => `${z.label}(${z.code}) 정원 ${z.capacity}`).join(' · ')}</p>
           <p>
@@ -145,6 +150,8 @@ export default function AdminShowDetailPage({ show, refundAccounts = {}, sameNam
             {show.ticketTypes.map((t) => `${t.name} ${t.price.toLocaleString('ko-KR')}원 (한도 ${t.quota ?? '구역 정원'}, 초대 ${t.compQuota})`).join(' · ')}
           </p>
         </section>
+
+        <ReportLinkSection links={reportLinks} busy={busy} run={run} onIssued={setReportUrl} />
 
         <div className="mb-4 flex items-center gap-3 text-sm text-gray-900">
           <label className="inline-flex items-center gap-2">
@@ -162,17 +169,89 @@ export default function AdminShowDetailPage({ show, refundAccounts = {}, sameNam
         </div>
 
         {scanUrl && (
-          <div role="dialog" aria-label="스캔 링크" className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-xl bg-white rounded-2xl shadow-xl border border-gray-200 p-5 text-sm text-gray-900">
-            <p className="font-semibold mb-2">입장 스캔 링크가 만들어졌습니다</p>
-            <p className="mb-2 text-gray-600">이 주소는 지금만 볼 수 있습니다(서버에는 해시만 저장). 확인자에게 전달해 주세요.</p>
-            <input readOnly value={`${typeof window !== 'undefined' ? window.location.origin : ''}${scanUrl}`} onFocus={(e) => e.currentTarget.select()} className="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 text-gray-900" aria-label="스캔 링크 주소" />
-            <div className="mt-3 flex justify-end">
-              <Button light variant="outline" size="sm" onClick={() => setScanUrl(null)}>닫기</Button>
-            </div>
-          </div>
+          <IssuedLinkDialog title="입장 스캔 링크가 만들어졌습니다" recipient="확인자" path={scanUrl} onClose={() => setScanUrl(null)} />
+        )}
+        {reportUrl && (
+          <IssuedLinkDialog title="기획자 현황 링크가 만들어졌습니다" recipient="기획자" path={reportUrl} onClose={() => setReportUrl(null)} />
         )}
       </AdminShell>
     </>
+  );
+}
+
+function IssuedLinkDialog({ title, recipient, path, onClose }: { title: string; recipient: string; path: string; onClose: () => void }) {
+  return (
+    <div role="dialog" aria-label={title} className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-xl bg-white rounded-2xl shadow-xl border border-gray-200 p-5 text-sm text-gray-900">
+      <p className="font-semibold mb-2">{title}</p>
+      <p className="mb-2 text-gray-600">이 주소는 지금만 볼 수 있습니다(서버에는 해시만 저장). {recipient}에게 전달해 주세요.</p>
+      <input readOnly value={`${typeof window !== 'undefined' ? window.location.origin : ''}${path}`} onFocus={(e) => e.currentTarget.select()} className="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 text-gray-900" aria-label="링크 주소" />
+      <div className="mt-3 flex justify-end">
+        <Button light variant="outline" size="sm" onClick={onClose}>닫기</Button>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * 기획자 현황 링크 — 공연 전체의 판매 집계만 보는 읽기 전용 링크(lib/shows/reportLink.ts). 예매자 개인정보는 싣지 않는다.
+ */
+function ReportLinkSection({ links, busy, run, onIssued }: {
+  links: ReportLinkSummary[] | null; busy: boolean; run: Run; onIssued: (path: string) => void;
+}) {
+  const [label, setLabel] = useState('');
+  const [days, setDays] = useState(REPORT_LINK_DEFAULT_TTL_DAYS);
+  const nowSec = Math.floor(Date.now() / 1000);
+  return (
+    <section className={`bg-white rounded-2xl shadow-sm p-4 md:p-6 mb-6 text-sm text-gray-900 space-y-3 ${lightOnlyField}`}>
+      <div>
+        <h2 className="font-semibold text-gray-900">기획자 현황 링크</h2>
+        <p className="text-gray-600 mt-1">로그인 없이 이 공연의 회차별 판매·초대·입장 수와 판매 금액만 보는 링크입니다. 예매자 이름·연락처는 보이지 않습니다.</p>
+      </div>
+      {links === null ? (
+        <p role="alert" className="text-red-800">현황 링크 표를 읽지 못했습니다 — 운영 DB에 마이그레이션 0051을 적용해 주세요.</p>
+      ) : (
+        <>
+          <div className="grid gap-3 sm:grid-cols-[1fr_10rem_auto] sm:items-end">
+            <Field id="report-link-label" label="받는 분(기획자 이름·단체)">
+              <TextInput light value={label} maxLength={40} onChange={(e) => setLabel(e.target.value)} />
+            </Field>
+            <Field id="report-link-days" label={`유효 기간(일, 1~${REPORT_LINK_MAX_TTL_DAYS})`}>
+              <TextInput light type="number" min={1} max={REPORT_LINK_MAX_TTL_DAYS} value={days} onChange={(e) => setDays(Number(e.target.value))} />
+            </Field>
+            <Button light variant="outline" size="sm" disabled={busy || !label.trim()} onClick={async () => {
+              const r = await run({ action: 'issue_report_link', label, ttlDays: days }, { success: '현황 링크를 만들었습니다.' });
+              const path = r?.data?.path;
+              if (typeof path === 'string') { onIssued(path); setLabel(''); }
+            }}>
+              링크 발급
+            </Button>
+          </div>
+          {links.length > 0 && (
+            <ul className="divide-y divide-gray-100">
+              {links.map((l) => {
+                const live = l.revokedAt == null && l.expiresAt > nowSec;
+                return (
+                  <li key={l.id} className="flex flex-wrap items-center justify-between gap-2 py-2">
+                    <span>
+                      {l.label} · 발급 {kstTime(l.createdAt)} · 만료 {kstTime(l.expiresAt)}
+                      {l.revokedAt != null ? ' · 폐기' : !live ? ' · 만료됨' : ''}
+                    </span>
+                    {live && (
+                      <Button light variant="outline" size="sm" disabled={busy} onClick={() => run(
+                        { action: 'revoke_report_link', linkId: l.id },
+                        { confirm: `${l.label}에게 보낸 현황 링크를 폐기합니다. 그 주소는 바로 열리지 않게 됩니다.`, success: '링크를 폐기했습니다.' },
+                      )}>
+                        폐기
+                      </Button>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </>
+      )}
+    </section>
   );
 }
 
@@ -290,7 +369,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
       )}
 
       <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="admin-table w-full text-sm">
           <thead className="bg-gray-50 text-gray-600">
             <tr>
               <th className="text-left px-4 py-2 font-medium">주문</th>
@@ -306,7 +385,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
               const refundable = o.tickets.filter((k) => k.status === 'issued' && k.checkedInAt == null);
               return (
                 <tr key={o.orderNo} className="align-top">
-                  <td className="px-4 py-2 whitespace-nowrap">
+                  <td data-label="주문" className="px-4 py-2 whitespace-nowrap">
                     <div className="font-mono text-xs">{o.orderNo}</div>
                     <div className="text-xs text-gray-500">
                       {o.isComp ? '초대' : ORDER_STATUS_LABEL[o.orderStatus] ?? o.orderStatus}
@@ -319,11 +398,11 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
                       </div>
                     )}
                   </td>
-                  <td className="px-4 py-2">
+                  <td data-label="구매자" className="px-4 py-2">
                     <div>{o.buyerName}</div>
                     {!o.isComp && <div className="text-xs text-gray-500">{o.buyerContact}</div>}
                   </td>
-                  <td className="px-4 py-2">
+                  <td data-label="티켓" className="px-4 py-2">
                     <ul className="space-y-1">
                       {o.tickets.map((k) => (
                         <li key={k.id} className="text-xs">
@@ -345,7 +424,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
                       ))}
                     </ul>
                   </td>
-                  <td className="px-4 py-2 text-right whitespace-nowrap">{o.totalAmount.toLocaleString('ko-KR')}원</td>
+                  <td data-label="금액" className="px-4 py-2 text-right whitespace-nowrap">{o.totalAmount.toLocaleString('ko-KR')}원</td>
                   <td className="px-4 py-2">
                     {o.bankDeposit === 'awaiting' && (
                       <div className="mb-2 space-y-2">

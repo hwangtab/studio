@@ -95,12 +95,8 @@ export const normalizeKoreanMobile = (raw: string): string | null => {
 };
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
-/**
- * 이름·휴대폰·이메일·요청사항·환불 규정 동의 — 세션 예약과 믹싱 주문이 공유하는 고객
- * 정보 검증. 원래 validateCreateBookingPayload 안에 있던 로직을 그대로 옮겼을 뿐이라
- * 메시지·동작은 바뀌지 않는다.
- */
-const validateCustomerFields = (b: Record<string, unknown>): CustomerResult => {
+/** 이름·휴대폰·이메일만 — 환불 규정 동의가 없는 흐름(예약금 결제 링크)용. */
+export const validateCustomerContact = (b: Record<string, unknown>): CustomerResult => {
   const name = typeof b.customerName === 'string' ? b.customerName.trim() : '';
   if (name.length < 2 || name.length > 40) return { ok: false, message: '이름을 확인해 주세요.' };
   const phone = typeof b.customerPhone === 'string' ? normalizeKoreanMobile(b.customerPhone) : null;
@@ -109,9 +105,19 @@ const validateCustomerFields = (b: Record<string, unknown>): CustomerResult => {
   if (!isEmail(email)) return { ok: false, message: '이메일을 확인해 주세요.' };
   const note = typeof b.customerNote === 'string' ? b.customerNote.trim().slice(0, 500) : undefined;
 
-  if (b.refundPolicyAgreed !== true) return { ok: false, message: '환불 규정에 동의해 주세요.' };
-
   return { ok: true, value: { customerName: name, customerPhone: phone, customerEmail: email, customerNote: note } };
+};
+
+/**
+ * 이름·휴대폰·이메일·요청사항·환불 규정 동의 — 세션 예약과 믹싱 주문이 공유하는 고객
+ * 정보 검증. 원래 validateCreateBookingPayload 안에 있던 로직을 그대로 옮겼을 뿐이라
+ * 메시지·동작은 바뀌지 않는다.
+ */
+const validateCustomerFields = (b: Record<string, unknown>): CustomerResult => {
+  const contact = validateCustomerContact(b);
+  if (!contact.ok) return contact;
+  if (b.refundPolicyAgreed !== true) return { ok: false, message: '환불 규정에 동의해 주세요.' };
+  return contact;
 };
 
 export const validateCreateBookingPayload = (body: unknown, now: Date): Result => {

@@ -70,8 +70,6 @@ summary: >-
 
 **적합한 장르:** 팝, 클래식, 합창, 인디 팝
 
-**참고 보컬:** Taylor Swift, Adele (브라이트 구간)
-
 ### 어두운 톤 (Dark Tone)
 
 깊고 따뜻하며 두꺼운 소리.
@@ -87,8 +85,6 @@ summary: >-
 - 후두를 약간 낮추기
 
 **적합한 장르:** 재즈, 소울, 성악, 블루스
-
-**참고 보컬:** Josh Groban, Norah Jones (다크 구간)
 
 ### 중성적 톤 (Neutral Tone)
 
@@ -280,4 +276,4 @@ summary: >-
 
 은평구 24시간 음악연습실에서 여러 번 녹음하고 듣고 조절하는 과정을 거치면, 자신만의 음색이 조금씩 완성되어갑니다.
 
-[보컬 공명·음색 개발 훈련 — 완전 가이드](/stories/practice-room-vocal-resonance1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal1) | [보컬 아카펠라 그룹 퍼포먼스 — 완전 가이드](/stories/practice-room-vocal-acappella-group1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1)
+[보컬 공명·음색 개발 훈련 — 완전 가이드](/stories/practice-room-vocal-resonance1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal1) | [보컬 아카펠라 그룹 퍼포먼스 — 완전 가이드](/stories/practice-room-vocal-acappella-group1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1)

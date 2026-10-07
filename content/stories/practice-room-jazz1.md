@@ -80,7 +80,7 @@ faq:
 |-----|------|
 | 스탠다드 | Autumn Leaves, All The Things You Are |
 | 발라드 | My Funny Valentine, The Nearness of You |
-| 스윙 | Take Five, Sing Sing Sing |
+| 스윙 | Sing Sing Sing |
 | 보사노바 | Girl from Ipanema, Black Orpheus |
 | K-재즈 | 커버 재즈 편곡 한국 가요 |
 

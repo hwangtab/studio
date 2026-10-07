@@ -646,7 +646,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
           </p>
         )}
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
+        <div className="bg-white rounded-2xl shadow-sm p-4 md:p-8 space-y-8">
           <div>
             <h2 className="text-lg font-bold text-gray-900 mb-3">프로젝트 내용</h2>
             {/* eslint-disable-next-line @next/next/no-img-element -- 관리자 심사 화면, next/image 최적화 불필요 */}

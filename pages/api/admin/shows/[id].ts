@@ -7,6 +7,7 @@ import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { cancelPayment } from '../../../../lib/booking/toss';
 import { SCAN_LINK_MAX_TTL_HOURS } from '../../../../lib/shows/scanLink';
 import { createScanLinkToken } from '../../../../lib/shows/scanAccess';
+import { issueReportLink, REPORT_LINK_MAX_TTL_DAYS, revokeReportLink } from '../../../../lib/shows/reportLink';
 import { undoCheckIn } from '../../../../lib/shows/checkin';
 import { sendShowRefundEmail, sendShowtimeCancelledEmail } from '../../../../lib/shows/email';
 import { refundShowTickets } from '../../../../lib/shows/refund';
@@ -242,6 +243,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const token = await createScanLinkToken(showtime.id, label, ttlHours);
       // 토큰 원문은 지금 응답에서만 볼 수 있다(DB에는 해시만 있다) — 화면이 바로 보여 준다.
       return res.status(200).json({ ok: true, path: `/ko/shows/scan/${token}` });
+    }
+
+    case 'issue_report_link': {
+      const label = isNonEmptyString(b.label) ? b.label.trim().slice(0, 40) : '';
+      const ttlDays = typeof b.ttlDays === 'number' ? b.ttlDays : Number.NaN;
+      if (!label) return res.status(400).json({ ok: false, message: '받는 분(기획자 이름·단체)을 적어 주세요.' });
+      if (!Number.isFinite(ttlDays) || ttlDays < 1 || ttlDays > REPORT_LINK_MAX_TTL_DAYS) {
+        return res.status(400).json({ ok: false, message: `유효 기간은 1~${REPORT_LINK_MAX_TTL_DAYS}일입니다.` });
+      }
+      try {
+        const { token } = await issueReportLink(show.id, label, ttlDays, now);
+        // 토큰 원문은 지금 응답에서만 볼 수 있다(DB에는 해시만 있다).
+        return res.status(200).json({ ok: true, path: `/ko/shows/report/${token}` });
+      } catch (error) {
+        console.error('[admin-shows] 현황 링크 발급 실패', error);
+        return res.status(500).json({ ok: false, message: '현황 링크 표를 쓸 수 없습니다(마이그레이션 0051 확인).' });
+      }
+    }
+
+    case 'revoke_report_link': {
+      if (!isNonEmptyString(b.linkId)) return res.status(400).json({ ok: false, message: '링크를 찾을 수 없습니다.' });
+      const ok = await revokeReportLink(show.id, b.linkId, now);
+      return ok ? res.status(200).json({ ok: true }) : res.status(409).json({ ok: false, message: '이미 폐기됐거나 이 공연의 링크가 아닙니다.' });
     }
 
     default:

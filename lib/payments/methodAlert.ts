@@ -10,6 +10,7 @@
  * 이 함수는 어떤 경우에도 throw하지 않고, 호출자는 반환값을 보지 않아도 된다.
  */
 import { consumeRateLimit } from '../booking/rate-limit';
+import { buildEmailLayout, escapeHtml } from '../email/layout';
 import { sendEmail } from '../email/resend';
 import { OPERATOR_EMAIL } from '../operatorContact';
 import { isUnknownPaymentMethod } from './knownMethods';
@@ -149,6 +150,26 @@ export const checkPaymentMethod = async (input: PaymentMethodAlertInput): Promis
         '',
         '결제 자체는 정상 처리됐습니다. 이 메일은 같은 수단에 대해 하루 한 번만 옵니다.',
       ].join('\n'),
+      // 관리자 링크가 없다 — 이 알림은 주문 한 건이 아니라 결제수단 설정(토스 콘솔·처리방침)에 대한 것이다.
+      html: buildEmailLayout({
+        audience: 'operator',
+        noticeTone: 'alert',
+        preheader: `결제수단 "${method}"이 승인되었습니다. 처리방침 확인이 필요합니다.`,
+        heading: '처리방침에 없는 결제수단으로 결제가 승인되었습니다',
+        paragraphs: [`결제수단 <strong>${escapeHtml(method)}</strong>으로 결제가 승인됐습니다. 우리가 아는 목록에 없는 값입니다. 결제 자체는 정상 처리됐습니다.`],
+        rows: [
+          { label: '결제수단', value: method, emphasis: true },
+          { label: '경로', value: input.context },
+          { label: '주문', value: input.orderId ?? '-' },
+          { label: 'paymentKey', value: input.paymentKey ?? '-' },
+          { label: '상태', value: input.status ?? '-' },
+        ],
+        notices: [
+          '<strong>1.</strong> 토스 콘솔에서 이 수단을 열어 둘 것인지 정한다. 닫으면 여기서 끝난다.',
+          '<strong>2.</strong> 계속 받을 것이라면, 그 수단의 승인 응답에 무엇이 실리는지 확인해 개인정보 처리방침 1항에 반영하고 lib/payments/knownMethods.ts 목록에 더한다. (처리방침 ko 본문은 펀딩 동의 문서라 FUNDING_TERMS_VERSION을 먼저 올려야 한다.)',
+          '이 메일은 같은 수단에 대해 하루 한 번만 옵니다.',
+        ],
+      }),
     });
   } catch (error: unknown) {
     // 알림이 실패해도 결제 처리가 깨지면 안 된다.

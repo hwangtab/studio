@@ -55,7 +55,7 @@ Hãy nhớ hai loại chính.
 
 ## 4. Đừng đổ lỗi cho gear
 
-Có một câu mà kỹ sư hàng đầu luôn nói:
+Có một câu người ta hay nói:
 **“Không phải gear, mà là tai.”**
 
 The Beatles tạo nên lịch sử với máy tape 4‑track, và album đoạt Grammy của Billie Eilish được thu trong phòng ngủ.

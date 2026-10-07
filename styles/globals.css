@@ -289,6 +289,58 @@
   }
 }
 
+/* 관리자 목록 표 — 좁은 화면에서는 행 하나를 카드 하나로 쌓는다.
+   표 그대로 두면 열이 7~8개라 가로 스크롤 안쪽에 숨고, 전화번호가 세 줄로 접힌다.
+   칸 이름은 td의 data-label에서 온다. data-label이 없는 칸(관리 버튼·빈 목록 안내)은
+   이름 없이 한 줄을 다 쓴다. md 이상에서는 아무것도 바꾸지 않는다. */
+@media (max-width: 767px) {
+  .admin-table,
+  .admin-table tbody,
+  .admin-table tr,
+  .admin-table td {
+    display: block;
+    width: 100%;
+  }
+  .admin-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .admin-table tr {
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0.875rem;
+    border: 1px solid rgb(229 231 235);
+    border-radius: 0.75rem;
+    background: #fff;
+  }
+  /* flex로 이름과 값을 나란히 두면 "이름 + 이메일 div"처럼 섞인 칸이 옆으로 쪼개진다.
+     그래서 값은 보통 흐름에 두고, 이름만 왼쪽 여백에 띄운다. */
+  .admin-table td {
+    position: relative;
+    padding: 0.375rem 0;
+    border: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: left;
+  }
+  .admin-table td[data-label] {
+    padding-left: 5rem;
+  }
+  .admin-table td[data-label]::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    width: 4.5rem;
+    color: rgb(107 114 128);
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+  }
+}
+
 @layer components {
   /* 글래스 카드 스펙큘러 하이라이트(iOS 26 빛 반사). 포인터 좌표(--mx/--my)는
      BaseCard가 onPointerMove로 주입 — 커스텀 프로퍼티 갱신뿐이라 리플로우 없음.

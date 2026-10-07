@@ -328,7 +328,7 @@ export default function AdminSubscriptionDetailPage({
         )}
 
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
-          <div className="p-6 md:p-8 border-b border-gray-200">
+          <div className="p-4 md:p-8 border-b border-gray-200">
             <div className="flex flex-wrap items-center gap-3 mb-5">
               <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700">
                 {KIND_LABELS[subscription.kind] ?? subscription.kind}
@@ -412,7 +412,7 @@ export default function AdminSubscriptionDetailPage({
             </div>
           </div>
 
-          <div className="p-6 md:p-8 border-b border-gray-200">
+          <div className="p-4 md:p-8 border-b border-gray-200">
             <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">카드</h2>
             {billingKey ? (
               <dl className="space-y-2 text-sm">
@@ -425,13 +425,13 @@ export default function AdminSubscriptionDetailPage({
             )}
           </div>
 
-          <div className="p-6 md:p-8">
+          <div className="p-4 md:p-8">
             <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">회차 이력</h2>
             {payments.length === 0 ? (
               <p className="text-sm text-gray-500">아직 결제 시도가 없습니다.</p>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="admin-table w-full text-sm">
                   <thead className="text-gray-500 text-xs uppercase">
                     <tr>
                       <th className="px-2 py-2 text-left">회차</th>
@@ -447,26 +447,26 @@ export default function AdminSubscriptionDetailPage({
                   <tbody className="divide-y divide-gray-100">
                     {payments.map((p) => (
                       <tr key={p.id}>
-                        <td className="px-2 py-2">{p.cycleYm}</td>
-                        <td className="px-2 py-2">{p.attempt}</td>
-                        <td className="px-2 py-2">
+                        <td data-label="회차" className="px-2 py-2">{p.cycleYm}</td>
+                        <td data-label="시도" className="px-2 py-2">{p.attempt}</td>
+                        <td data-label="상태" className="px-2 py-2">
                           <span
                             className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${PAYMENT_STATUS_CLASS[p.status]}`}
                           >
                             {PAYMENT_STATUS_LABELS[p.status] ?? p.status}
                           </span>
                         </td>
-                        <td className="px-2 py-2 text-right">{formatPriceAmount(p.amount)}원</td>
-                        <td className="px-2 py-2 text-right text-gray-500">
+                        <td data-label="금액" className="px-2 py-2 text-right">{formatPriceAmount(p.amount)}원</td>
+                        <td data-label="환불" className="px-2 py-2 text-right text-gray-500">
                           {(() => {
                             const r = refundByCycle.get(p.id);
                             return r && r.refundedAmount > 0 ? `${formatPriceAmount(r.refundedAmount)}원` : '-';
                           })()}
                         </td>
-                        <td className="px-2 py-2 text-gray-500">
+                        <td data-label="토스 코드" className="px-2 py-2 text-gray-500">
                           {p.tossCode ? `${p.tossCode}${p.tossMessage ? ` — ${p.tossMessage}` : ''}` : '-'}
                         </td>
-                        <td className="px-2 py-2 text-gray-500">{formatKstDateTimeFull(p.attemptedAt)}</td>
+                        <td data-label="시도 일시" className="px-2 py-2 text-gray-500">{formatKstDateTimeFull(p.attemptedAt)}</td>
                         <td className="px-2 py-2 text-right">
                           {(() => {
                             const r = refundByCycle.get(p.id);
@@ -528,7 +528,7 @@ export default function AdminSubscriptionDetailPage({
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 space-y-6">
+        <div className="bg-white rounded-2xl shadow-sm p-4 md:p-8 space-y-6">
           <div>
             <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">작업</h2>
             <div className="flex flex-wrap gap-3">

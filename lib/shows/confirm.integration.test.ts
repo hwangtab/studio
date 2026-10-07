@@ -6,10 +6,13 @@ import { shows, showZones, showtimes, showTicketTypes } from '../../db/schema';
 
 let mockDb: ShowsTestDb;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
+jest.mock('../email/resend', () => ({ sendEmail: jest.fn().mockResolvedValue({ ok: true }) }));
 
 import { createShowOrder, expireStaleShowOrders } from './service';
 import { confirmShowOrder, autoCancelShowApproval } from './confirm';
 import { cancelShowtime } from './showtimeOps';
+import { sendEmail } from '../email/resend';
+import { OPERATOR_EMAIL } from '../operatorContact';
 
 async function seedShow(db: ShowsTestDb, capacity = 10) {
   const showId = 'show-1';
@@ -406,5 +409,73 @@ describe('finding #1 회귀 — 확정 게이트 강화', () => {
 
     const orderARow = await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, orderA.orderNo) });
     expect(orderARow?.status).toBe('refunded'); // A는 캡처된 결제가 환불로 마무리된다
+  });
+});
+
+describe('운영자 결제 알림 — 카드 결제 신규 확정에서만 한 통', () => {
+  const sendMock = sendEmail as jest.Mock;
+  beforeEach(() => {
+    sendMock.mockReset();
+    sendMock.mockResolvedValue({ ok: true });
+  });
+
+  async function pending(quantity = 2) {
+    const { db } = await createTestDb();
+    mockDb = db;
+    const { showtimeId, ticketTypeId } = await seedShow(db);
+    const created = await createShowOrder({ showtimeId, ticketTypeId, quantity, buyerName: '김<b>구매', buyerContact: '010-1234-5678' }, new Date());
+    if (!created.ok) throw new Error('setup failed');
+    return { db, created };
+  }
+
+  it('확정되면 운영자에게 [공연 예매] 메일 한 통 — 공연·티켓 수·금액·연락처·관리자 링크, 구매자 값은 escape', async () => {
+    const { created } = await pending(2);
+    const outcome = await confirmShowOrder({ orderNo: created.orderNo, paymentKey: 'pk1', amount: 20000 }, { trustedByWebhook: false }, createFakeToss());
+    expect(outcome.status).toBe('confirmed');
+    expect(sendMock).toHaveBeenCalledTimes(1);
+    const mail = sendMock.mock.calls[0][0];
+    expect(mail.to).toBe(OPERATOR_EMAIL);
+    expect(mail.subject).toContain('[공연 예매]');
+    expect(mail.text).toContain('2매 (일반 2매)');
+    expect(mail.html).toContain('20,000원');
+    expect(mail.html).toContain('/admin/shows/show-1"');
+    expect(mail.html).toContain('href="tel:01012345678"');
+    expect(mail.html).toContain('김&lt;b&gt;구매');
+    expect(mail.html).not.toContain('김<b>구매');
+  });
+
+  it('웹훅 재전달·새로고침(already_confirmed)에서는 다시 보내지 않는다', async () => {
+    const { created } = await pending(1);
+    const toss = createFakeToss();
+    await confirmShowOrder({ orderNo: created.orderNo, paymentKey: 'pk1', amount: 20000 / 2 }, { trustedByWebhook: false }, toss);
+    const again = await confirmShowOrder({ orderNo: created.orderNo, paymentKey: 'pk1', amount: 10000 }, { trustedByWebhook: true }, toss);
+    const third = await confirmShowOrder({ orderNo: created.orderNo, paymentKey: 'pk1', amount: 10000 }, { trustedByWebhook: false }, toss);
+    expect(again.status).toBe('already_confirmed');
+    expect(third.status).toBe('already_confirmed');
+    expect(sendMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('동시에 두 번 확정해도 한 통이다', async () => {
+    const { created } = await pending(1);
+    const toss = createFakeToss();
+    const run = () => confirmShowOrder({ orderNo: created.orderNo, paymentKey: 'pk1', amount: 10000 }, { trustedByWebhook: true }, toss);
+    const results = await Promise.all([run(), run()]);
+    expect(results.filter((r) => r.status === 'confirmed')).toHaveLength(1);
+    expect(sendMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('발송이 실패하거나 던져도 확정은 유지되고 notification_error(고객 메일 센티널)는 그대로다', async () => {
+    for (const fail of [() => sendMock.mockResolvedValue({ ok: false, errorCode: 'API_ERROR' }), () => sendMock.mockRejectedValue(new Error('boom'))]) {
+      sendMock.mockReset();
+      fail();
+      const spy = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+      const { db, created } = await pending(1);
+      const outcome = await confirmShowOrder({ orderNo: created.orderNo, paymentKey: 'pk1', amount: 10000 }, { trustedByWebhook: false }, createFakeToss());
+      spy.mockRestore();
+      expect(outcome.status).toBe('confirmed');
+      const order = await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, created.orderNo) });
+      expect(order?.status).toBe('paid');
+      expect(order?.notificationError).toBe('send_pending');
+    }
   });
 });

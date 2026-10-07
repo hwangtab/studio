@@ -62,7 +62,7 @@ Why does this happen?
 2. **Adaptation**: The brain ignores or distorts repeated sounds.
 
 **[Studio tips]**:
-* **Work 20 minutes, rest 5**: Give your ears a break. Even a short walk or listening to outside sounds resets them.
+* **Work 30–45 minutes, rest 5–10**: Give your ears a break. Even a short walk or listening to outside sounds resets them.
 * **Listen at low volume**: Loud volume tires your ears. If the balance works at conversation level, it’s genuinely good.
 
 ## 4. Focus on one instrument at a time
@@ -83,5 +83,5 @@ If you think like that, congratulations—your ears are already engineering ears
 ### [Common Beginner Mistakes] 👂
 
 * **"Mixing without a reference"**: It’s like sailing without a compass. The moment you think “my ears are perfect,” your mix drifts off course.
-* **"Marathon mixing"**: Five hours straight and your ears are numb. Decisions made then are 90% regret the next day.
+* **"Marathon mixing"**: Five hours straight and your ears are numb.
 * **"It’ll sound good tomorrow"**: If it sounds wrong now, it’s wrong. Don’t hypnotize yourself with “it’ll be fine later.”

@@ -87,13 +87,18 @@ function buildContentSecurityPolicy(): string {
         // api/event 서브도메인으로 나간다. 간편결제 앱 연동은 pay.toss.im 프레임.
         // 카카오 우편번호 서비스: 스크립트는 t1.kakaocdn.net 단독 파일, 검색 화면은
         // postcode.map.kakao.com iframe(펀딩 배송지 주소 검색 — components/funding/kakaoPostcode.ts).
-        "script-src 'self' https://js.tosspayments.com https://www.google.com https://www.gstatic.com https://va.vercel-scripts.com https://www.googletagmanager.com https://t1.kakaocdn.net",
+        // 카카오맵 SDK: 로더는 dapi.kakao.com, 본체·services는 t1.kakaocdn.net, 타일은 mts.kakaocdn.net(img-src https:).
+        // 주소 검색은 dapi.kakao.com으로 가는 XHR이라 connect-src에도 있어야 한다 — lib/maps/kakaoMap.ts.
+        "script-src 'self' https://js.tosspayments.com https://www.google.com https://www.gstatic.com https://va.vercel-scripts.com https://www.googletagmanager.com https://t1.kakaocdn.net https://dapi.kakao.com",
         "script-src-attr 'none'",
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "img-src 'self' data: https:",
         "font-src 'self' data: https://fonts.gstatic.com",
+        // 미디어는 기본이 'self'(default-src)다. 비공개 감상실(/press/*)의 발매 전 음원만 Vercel Blob
+        // private 저장소에서 서명 주소로 직접 받는다(lib/press/audio.ts) — 함수를 거치면 4.5MB 응답 한도에 걸린다.
+        "media-src 'self' https://*.private.blob.vercel-storage.com",
         "frame-src 'self' https://*.tosspayments.com https://toss.im https://*.toss.im https://www.google.com https://www.google.co.kr https://postcode.map.kakao.com",
-        "connect-src 'self' https://*.tosspayments.com https://vitals.vercel-insights.com https://va.vercel-scripts.com https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net",
+        "connect-src 'self' https://dapi.kakao.com https://*.tosspayments.com https://vitals.vercel-insights.com https://va.vercel-scripts.com https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net",
         "object-src 'none'",
         "base-uri 'self'",
         `form-action 'self'${R2_FORM_ACTION_ORIGIN ? ` ${R2_FORM_ACTION_ORIGIN}` : ''}`,

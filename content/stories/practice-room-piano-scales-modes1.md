@@ -80,7 +80,6 @@ C 장조 스케일: C-D-E-F-G-A-B-C
 **특성:** 어둡고 이국적, 강렬한 색채
 **대표 곡:**
 - 플라멩코 음악
-- "White Zombie" - Rob Zombie
 - 스페인 클래식 기타 음악
 
 **피아노 연습:** E 프리지안 (E-F-G-A-B-C-D-E) 양손 2옥타브
@@ -91,7 +90,7 @@ C 장조 스케일: C-D-E-F-G-A-B-C
 
 **특성:** 밝고 신비롭고 몽환적
 **대표 곡:**
-- "Flying High Again" - Joe Satriani
+- "Flying in a Blue Dream" - Joe Satriani
 - "The Simpsons" 테마 (일부)
 - John Williams 영화 음악에 자주 등장
 
@@ -120,8 +119,6 @@ C 장조 스케일: C-D-E-F-G-A-B-C
 단조이며 2도와 5도 모두 단음정입니다. 감5도(Diminished 5th)가 특성입니다. 가장 불안정하고 긴장된 색채입니다.
 
 **활용:** 현대 재즈, 메탈, 실험 음악
-**대표 곡:** "The Dance of Maya" - Mahavishnu Orchestra
-
 ---
 
 ## 피아노에서 모드 스케일 연습법
@@ -183,4 +180,4 @@ C 장조 스케일: C-D-E-F-G-A-B-C
 
 ---
 
-[피아노 모달 재즈·마일스 데이비스·모드 스케일 — 완전 가이드](/stories/practice-room-piano-modal1) | [피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 영화음악·시네마틱 피아노 연주 — 완전 가이드](/stories/practice-room-piano-film-score1)
+[피아노 블루스 콤핑·블루스 피아노 반주 — 완전 가이드](/stories/practice-room-piano-blues-comping1) | [피아노 부기우기·블루스 피아노 기초 — 완전 가이드](/stories/practice-room-piano-boogie-woogie1) | [교회 피아노·찬양 반주·코드 반주법·예배 피아노 — 완전 가이드](/stories/practice-room-piano-church1) | [피아노 영화음악·시네마틱 피아노 연주 — 완전 가이드](/stories/practice-room-piano-film-score1)

@@ -697,6 +697,8 @@ export const getPricingData = (locale: Locale) => {
   // 갈라지고 나머지 로케일은 전부 '₩n,nnn,nnn' 형식이라 두 값만 있으면 충분하다.
   const singleLineItemTotalKo = formatPriceLabel(SINGLE_LINE_ITEM_TOTAL, 'ko');
   const singleLineItemTotalIntl = formatPriceLabel(SINGLE_LINE_ITEM_TOTAL, 'en');
+  const vocalTuningKo = formatPriceLabel(VOCAL_TUNING_ADDON_PRICE, 'ko');
+  const vocalTuningIntl = formatPriceLabel(VOCAL_TUNING_ADDON_PRICE, 'en');
   const epLineItemTotalKo = formatPriceLabel(EP_LINE_ITEM_TOTAL, 'ko');
   const epLineItemTotalIntl = formatPriceLabel(EP_LINE_ITEM_TOTAL, 'en');
   const albumLineItemTotalKo = formatPriceLabel(ALBUM_LINE_ITEM_TOTAL, 'ko');
@@ -734,13 +736,13 @@ export const getPricingData = (locale: Locale) => {
       priceValue: SINGLE_BUNDLE_PRICE,
       unit: t(locale, { ko: '/ 1곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo\'shiq' }),
       description: t(locale, {
-        ko: `기획 상담부터 유통 등록·발매 홍보까지 한 곡을 끝까지 함께하는 패키지입니다. 보컬 녹음·믹싱·마스터링 제작 단가 합계 ${singleLineItemTotalKo}보다 싸면서, 앨범 기획과 유통·보도자료가 함께 들어갑니다.`,
-        en: `One song carried from the first planning conversation through distribution and release PR. Priced below the ${singleLineItemTotalIntl} production line-item total, with planning, distribution and press outreach included.`,
-        zh: `从策划咨询到发行登记与宣传，一首歌全程陪伴。价格低于 ${singleLineItemTotalIntl} 的制作单项合计，且包含策划、发行与新闻稿。`,
-        es: `Una canción acompañada desde la planificación hasta la distribución y la prensa de lanzamiento. Cuesta menos que la suma de producción (${singleLineItemTotalIntl}) e incluye planificación, distribución y difusión a prensa.`,
-        vi: `Một bài hát được đồng hành từ khâu lên kế hoạch đến phát hành và PR. Giá thấp hơn tổng chi phí sản xuất ${singleLineItemTotalIntl}, đã bao gồm lên kế hoạch, phát hành và gửi thông cáo báo chí.`,
-        th: `ดูแลหนึ่งเพลงตั้งแต่การวางแผนจนถึงการจัดจำหน่ายและประชาสัมพันธ์ ราคาต่ำกว่าผลรวมค่าผลิต ${singleLineItemTotalIntl} และรวมการวางแผน จัดจำหน่าย และส่งข่าวประชาสัมพันธ์`,
-        uz: `Bitta qo'shiq rejalashtirishdan tarqatish va PRgacha birga olib boriladi. Narxi ishlab chiqarish yig'indisi ${singleLineItemTotalIntl} dan past, rejalashtirish, tarqatish va matbuotga yuborish ham kiradi.`
+        ko: `기획 상담부터 유통 등록·발매 홍보까지 한 곡을 끝까지 함께하는 패키지입니다. 발매 계획이 없어도 녹음·믹싱·마스터링을 한 번에 맡기는 묶음으로 쓸 수 있고, 유통·홍보를 쓰지 않아도 가격은 같으며 따로 맡기는 합계 ${singleLineItemTotalKo}보다 낮습니다. 정교한 보컬 튜닝·박자 보정은 곡당 +${vocalTuningKo}(옵션)입니다.`,
+        en: `One song carried from the first planning conversation through distribution and release PR. You can also use it simply to hand off recording, mixing and mastering in one go: if you skip distribution and PR the price stays the same, and it is below the ${singleLineItemTotalIntl} you would pay ordering them separately. Detailed vocal tuning and timing correction is an optional +${vocalTuningIntl} per song.`,
+        zh: `从策划咨询到发行登记与宣传，一首歌全程陪伴。没有发行计划也可以把录音、混音、母带一次性委托给我们；不使用发行与宣传，价格也不变，且低于单项分别委托的合计 ${singleLineItemTotalIntl}。精细的人声修音与节拍校正为每首 +${vocalTuningIntl}（可选）。`,
+        es: `Una canción acompañada desde la planificación hasta la distribución y la prensa de lanzamiento. Sin plan de lanzamiento también sirve para encargar grabación, mezcla y masterización de una vez: si no usas distribución ni difusión, el precio es el mismo y queda por debajo de los ${singleLineItemTotalIntl} que sumarían por separado. La afinación vocal detallada y la corrección de tiempo cuestan +${vocalTuningIntl} por canción (opcional).`,
+        vi: `Một bài hát được đồng hành từ khâu lên kế hoạch đến phát hành và PR. Dù không có kế hoạch phát hành, bạn vẫn có thể dùng gói này để giao thu âm, mixing và mastering một lần; nếu không dùng phát hành và PR thì giá vẫn như vậy và thấp hơn tổng ${singleLineItemTotalIntl} khi đặt riêng từng hạng mục. Chỉnh giọng và căn nhịp chi tiết là tùy chọn +${vocalTuningIntl} mỗi bài.`,
+        th: `ดูแลหนึ่งเพลงตั้งแต่การวางแผนจนถึงการจัดจำหน่ายและประชาสัมพันธ์ แม้ไม่มีแผนปล่อยเพลงก็ใช้เป็นแพ็กเกจฝากอัดเสียง มิกซ์ และมาสเตอร์ในครั้งเดียวได้ ถ้าไม่ใช้การจัดจำหน่ายและประชาสัมพันธ์ ราคาก็เท่าเดิม และต่ำกว่าผลรวม ${singleLineItemTotalIntl} เมื่อสั่งแยกทีละรายการ การจูนเสียงร้องและแก้จังหวะอย่างละเอียดเป็นตัวเลือกเพิ่ม +${vocalTuningIntl} ต่อเพลง`,
+        uz: `Bitta qo'shiq rejalashtirishdan tarqatish va PRgacha birga olib boriladi. Reliz rejasi bo'lmasa ham yozuv, miks va masteringni bir yo'la topshirish uchun ishlatish mumkin: tarqatish va PRdan foydalanmasangiz ham narx o'zgarmaydi va alohida buyurtma qilingandagi ${singleLineItemTotalIntl} yig'indisidan past. Batafsil vokal tuning va ritm tuzatish — har bir qo'shiq uchun +${vocalTuningIntl} (ixtiyoriy).`
       }),
       features: tArray(locale, {
         ko: ['기획 · 방향 디렉팅', '보컬 녹음 1프로 (3시간, 전담 엔지니어)', '믹싱 10트랙 이하 (수정 2회)', '싱글 마스터링 (수정 1회)', '디지털 유통 등록 (멜론·스포티파이·애플뮤직·유튜브뮤직)', `발매 홍보 — 국내 음악 매체 + 해외 매체·라디오·플레이리스트 피칭`, `제작 단가 합계 ${singleLineItemTotalKo} 대비 약 9% 할인`],

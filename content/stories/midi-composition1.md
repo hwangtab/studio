@@ -41,7 +41,7 @@ inlineFallback:
 
 MIDI는 실제 악기가 없어도 전문 수준의 편곡을 가능하게 하는 디지털 음악 제작의 기반입니다. 피아노롤 한 화면으로 오케스트라부터 EDM까지 모든 장르를 편곡할 수 있습니다.
 
-MIDI 작곡의 가능성은 1987년 Casio CZ-1000과 Yamaha DX7의 보급으로 처음 대중에게 열렸습니다. Roland MT-32 사운드 모듈이 PC와 연동되면서 게임 음악과 광고 배경음 제작에 MIDI 시퀀싱이 광범위하게 사용됐고, 한국에서는 1990년대 중반 YMF-724 사운드카드와 Cakewalk 시퀀서가 보급되면서 인디 작곡가들이 전문 세션 뮤지션 없이도 반주를 제작할 수 있게 됐습니다. 이 시기 트로트·발라드 무대용 MR 제작이 MIDI로 대중화됐고, 2005년 이후 Spectrasonics Omnisphere·Kontakt 5 등 고품질 소프트웨어 샘플러가 출시되면서 MIDI 작곡의 음질이 라이브 오케스트라 수준에 근접했습니다. 현재 K-POP 프로듀서들의 데모 작업 대부분이 MIDI 기반으로 진행됩니다.
+MIDI 작곡의 가능성은 1980년대 Yamaha DX7 등 MIDI 탑재 신디사이저의 보급으로 처음 대중에게 열렸습니다. Roland MT-32 사운드 모듈이 PC와 연동되면서 게임 음악 제작에 MIDI 시퀀싱이 광범위하게 사용됐고, 2005년 이후 Spectrasonics Omnisphere·Kontakt 5 등 고품질 소프트웨어 샘플러가 출시되면서 MIDI 작곡의 음질이 크게 좋아졌습니다.
 
 ---
 
@@ -128,7 +128,7 @@ MIDI 작곡의 가능성은 1987년 Casio CZ-1000과 Yamaha DX7의 보급으로 
 **주요 샘플 라이브러리**
 - Spitfire Audio (BBCSO, LABS): 리얼한 현악·관악
 - EastWest Hollywood Strings: 고품질 현악
-- **Orchestral Tools**: 베를린 필 사운드
+- **Orchestral Tools**
 - Native Instruments Symphony Series
 
 **현악기 MIDI 기법**

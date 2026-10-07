@@ -12,10 +12,11 @@ node --env-file=.env.local scripts/ga4-fetch.mjs            # GA4 90일 원시 �
 node --env-file=.env.local scripts/ctr-verdict.mjs --surgery YYYY-MM-DD --slugs a,b --control c,d
 node --env-file=.env.local scripts/lead-verdict.mjs --from YYYY-MM-DD --pages a,b --control c   # 전환 실험(GA4 랜딩 기준 세션당 리드)
 
-# Hero font subset (LCP)
-# prebuild에서 자동 실행됨. hero h1 텍스트(data/home.ts heroContent,
-# public/locales/*/common.json의 *.hero.title*) 변경 후 빌드하면 woff2가 재생성되며
-# 변경된 woff2 + pretendard-hero.chars.json 사이드카를 반드시 함께 commit해야 함.
+# 제목 서체(Paperlogy Bold) subset (LCP)
+# prebuild에서 자동 실행됨. 제목 텍스트(data/home.ts heroContent, common.json의 *title*·*heading* 키,
+# data/*.ts의 title) 변경 후 빌드하면 woff2가 재생성되며
+# 변경된 lib/fonts/display.woff2 + display.chars.json 사이드카를 반드시 함께 commit해야 함.
+# 제목·본문 서체 모두 font-display: optional — swap으로 되돌리지 말 것(첫 방문에 글자 폭이 꿈틀댄다, lib/fonts.ts 주석).
 # 빠뜨리면 hero-font-subset.test.js(CI)가 --check 모드로 잡아낸다.
 # 수동 재실행:
 node scripts/generate-hero-font.mjs
@@ -39,6 +40,11 @@ node scripts/generate-page-lastmod.mjs --check  # git 없이 커버리지만 검
 # 섹션 단위 중복 검사 (CI)
 npm run check:dup-sections
 node scripts/check-duplicate-sections.mjs --update  # 기준선 갱신
+
+# 검증 필요 후보 검사 (CI) — 새 글이 날조 후보(인물 인용문·"최초" 주장·"한국에서 표준" 서술·출처 없는 비율)를 들여오는 걸 막는다
+npm run check:claims
+node scripts/check-unverified-claims.mjs --show     # 후보 문장 전체 보기
+node scripts/check-unverified-claims.mjs --update   # 근거를 확인하고 정리한 뒤 기준선 갱신
 
 # 서비스 수치 정합 검사 (CI)
 npm run check:facts
@@ -180,6 +186,21 @@ SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이�
 - 주문 마법사 1단계는 **접힌 한 줄**로 시작한다(1단계 제목 바로 아래). 열 때에야 플레이어 코드를 불러온다
   (`next/dynamic`, ssr 끔). 한때 펼쳐 두었더니 상품 선택 화면이 무거워져 운영자가 접는 쪽으로 되돌렸다(2026-09-30).
   결제 흐름을 떠나는 포트폴리오 링크는 뺀다. 2단계(결제 입력)에는 없다.
+
+### 비공개 감상실 (`/press/sabbaha-slung`) — 발매 전 음원을 평론가·매체에게
+
+비밀번호로 들어오는 앨범 감상·소개 페이지(ko/en, 다른 로케일은 /en으로). 어겨도 에러가 안 나는 것만 적는다:
+
+- **비밀번호 원문을 커밋하지 않는다**(공개 저장소). `lib/press/listeningRoom.ts`에는 scrypt 해시만 있고, 바꿀 때는
+  `node scripts/press/hash-password.mjs '<새 비밀번호>'` 출력으로 갈아 끼운다 — 해시가 바뀌면 기존 입장 쿠키도 전부 풀린다.
+  쿠키 서명 키는 `ADMIN_SESSION_SECRET`에서 갈라 낸다(없으면 운영에서 문을 닫는다).
+- **음원은 Blob private**(`press/sabbaha-slung/`)이고, 통과한 요청에만 곡별 6시간 서명 주소가 나간다(`lib/press/audio.ts`).
+  `public/`에 넣거나 public Blob으로 올리지 말 것. 브라우저가 서명 주소를 직접 Range로 받으므로 함수 4.5MB 한도와 무관하고,
+  그래서 **CSP `media-src`에 `*.private.blob.vercel-storage.com`이 열려 있어야 한다**(middleware.ts).
+- 음원 교체: `node --env-file=.env.local scripts/press/build-sabbaha-slung.mjs --src <mp3 폴더> --prune` →
+  `data/press/sabbahaSlungAudio.ts`(생성물) 갱신. 받은 파일 번호는 앨범 순서와 달랐다 — 스크립트가 제목·길이로 앨범 순서에 맞춘다.
+- 문안(`data/press/sabbahaSlung.ts`)도 공개 저장소에 있다. 이미 공개된 정보만 둔다. 가사·곡 소개 인용은 sabbaha.kr/slung 부클릿 원문 그대로.
+- 사이트 껍데기를 두르지 않는다(`components/Layout.tsx` isPressRoom). noindex + no-store, 사이트맵 제외. robots.txt에는 적지 않는다(경로를 광고하게 된다).
 
 ### 계약 본문은 만든 템플릿으로 서명 때 완성한다 (마이그레이션 0046)
 
@@ -341,6 +362,42 @@ SDK가 `payment()` 경로에서 `isAPIIndividualKey()`를 단언한다 — 위�
 끈다. env `NEXT_PUBLIC_PAYMENT_PICKER=on`이면 전체 기본값이 새 화면이다(빌드 시점 인라인 — 바꾸면 빌드가
 한 번 돈다). 위젯 경로는 그대로 남아 있다 — 걷어내는 것은 새 화면을 운영에서 확인한 뒤의 일이다.
 
+### 새 결제 흐름은 공용 체크아웃으로 만든다 — 카드 전용 위젯을 직접 쓰지 않는다
+
+결제 화면(펀딩·예약·믹싱·공연 티켓)은 전부 `usePaymentCheckout`(위젯 마운트·결제 요청) +
+`PaymentMethodChoice`(**카드·간편결제 / 계좌로 직접 입금** 두 줄) + `BankDepositGuide`(계좌 안내)로
+같은 모양이다. 새 결제 링크·상품을 붙일 때 이걸 빼먹으면 고객은 다른 곳에 있던 계좌 입금을 찾을 수
+없다. 2026-10-06 예약금 결제 링크(`/ko/pay/<slug>`)가 "코드를 가장 적게 쓰는 설계"로, 쓰는 곳 없던 카드
+전용 `TossPaymentWidget`을 골라 계좌 입금 없이 PR까지 나갔다 — 운영자가 보고서가 아니라 화면에서 발견했다.
+
+- **설계 전에 가장 가까운 기존 흐름(믹싱 주문·공연 예매)의 고객 화면을 연다.** 결제수단 줄·안내 문구·
+  버튼 말을 적어 두고, 서브에이전트에 조사를 맡길 때 "고객이 결제수단으로 무엇을 고르는가"를 명시적으로 묻는다.
+- 계좌 입금은 `awaiting_deposit` → 운영자 입금 확인 → `paid` 흐름이라 **관리자 입금 확인 경로와 안내 메일까지**
+  걸린다(`lib/payments/bankDeposit.ts` 머리 주석). 결제 화면만 만들고 끝나지 않는다.
+- 새 주문 종류를 `orderTypeEnum`에 더하면 `tests/payments/sharedCheckout.guard.test.ts`가 결제 화면(또는 면제 사유)을
+  짝지으라고 CI에서 선다. 토스 SDK·`useTossPaymentWidgets`·`TossPaymentWidget`을 공용 체크아웃 밖에서 직접
+  import해도 선다. 허용 목록을 늘리지 말고 공용 컴포넌트를 쓴다.
+- 새 결제 종류는 CHANGELOG 대신 이 체크리스트로 점검한다: 결제수단 두 줄 · 계좌 안내 · 운영자 입금 확인 ·
+  입금 안내 메일 · 매출장부 라벨 · 비공개 경로(`lib/analytics/privatePaths.ts`) 등록 · 배포 뒤 실제 결제 1건.
+
+### 메일은 공용 레이아웃으로 — 글자만 보내지 않는다
+
+사이트가 보내는 메일(고객·운영자·개설자·크론 알림 약 70종)은 전부 `lib/email/layout.ts`의 `buildEmailLayout`
+(계약 메일 디자인 기준: 로고·정보 표·보라 버튼·안내 박스·푸터)으로 HTML을 입히고, 글자 본문(`text`)은 대체로
+함께 보낸다. 2026-10-07 점검에서 HTML이 있는 메일이 7종뿐이었고(골격 3개가 제각각), 운영자가 받는 예약·펀딩·
+구독·크론 알림은 거의 전부 서식 없는 글자였다 — 헬스체크는 이동할 관리자 주소를 이미 갖고도 메일에 싣지 않았다.
+
+- `sendEmail`의 `html`은 **필수 인자**다. 글자만 보내는 새 메일은 타입 검사가 세운다. 자기만의 `<!DOCTYPE` 골격을
+  들이면 `tests/email/layoutGuard.test.ts`가 세운다. 레이아웃에 없는 요소는 `hero`·`blocks` 슬롯으로 얹고,
+  골격을 새로 만들지 않는다.
+- **운영자 알림은 `audience: 'operator'`** — 핵심 값(고객·연락처·상품·금액·일시)을 rows로 위쪽에, 해당 건의
+  **관리자 딥링크 버튼**(`adminUrl('/admin/…/{id}')`)을 둔다. 목록 링크만 주지 않는다. 사람이 해야 할 일(입금 확인·
+  계좌 송금)과 실패·긴급은 `notices`의 `noticeTone: 'alert'`로 눈에 띄게. 크론 실패는 `lib/email/operatorAlert.ts`.
+- 사용자 입력은 반드시 escape — rows·heading은 레이아웃이 하지만 `paragraphs`·`notices`·`blocks`에 값을 넣을 때는
+  호출부가 `escapeHtml`로 한다.
+- 새 메일은 `scripts/preview-emails.ts`(`npx tsx scripts/preview-emails.ts`)로 렌더해 크롬으로 **눈으로** 본 뒤 낸다.
+  제목·`text`는 기존 테스트와 메일 필터가 기대는 형태라 HTML을 입힐 때 바꾸지 않는다.
+
 ### 약관·처리방침을 고치면 FUNDING_TERMS_VERSION을 함께 올린다
 
 `funding_pledges.terms_version`은 "그때 이 내용에 동의했다"는 증거다. 내용이 바뀌었는데
@@ -384,6 +441,14 @@ SDK가 `payment()` 경로에서 `isAPIIndividualKey()`를 단언한다 — 위�
 ### 암호화 필드는 `lib/crypto/CLAUDE.md`에 있다
 
 `FUNDING_FIELD_KEY`를 옛 키 백업 없이 덮어쓰지 말 것 — 잃으면 저장된 값은 복호화되지 않는다. 키 회전은 `scripts/rotate-field-key.mjs`이고, 절차·순서는 그 파일에서 읽고 진행한다.
+
+### 스토리의 외부 사실은 근거를 확인한 것만 쓴다 (`check:claims`)
+
+2026-10 표본 점검(약 190편)에서 서비스 노출 스토리의 90% 넘는 글이 틀린 연대·인명·장비(Push 2013, Lexicon 224=1978, 1176 어택은 20~800μs 등)와 출처 없는 인용문·"최초" 주장·"한국에서 표준" 서술을 담고 있었다(#503·#504·#518·#519). AI가 쓴 글에서 반복되는 유형이라 `scripts/check-unverified-claims.mjs`가 기준선 대비로 후보가 늘어나는 것만 막는다(`content/unverified-claims.baseline.json`).
+- 이 검사는 "틀렸다"를 판정하지 않는다. 후보에 걸리면 근거(공식 페이지·위키)를 확인해 사실에 맞추거나 그 문장을 뺀다. 확인했는데도 정당하면 `--update`로 기준선을 올리고 커밋 메시지에 "무엇을 어디서 확인했는지"를 적는다.
+- **윤문 스킬로 고칠 수 없다.** 윤문은 "내용 불변"이 원칙이라 날조 서술을 그대로 보존한다. 사실 점검과 문체 윤문은 별개 작업이다.
+- 윤문·점검 에이전트가 새 가격·수치를 써 넣지 못하게 한다. 소프트웨어·유통 가격은 시점에 따라 바뀌어 근거 없이 쓰면 곧 틀린다.
+- 아직 점검하지 못한 글이 남아 있다(밀도 순위 약 650편). 기준선에 남은 후보를 정리하면 `--update`로 낮춘다.
 
 ### 서비스 수치는 정본에서만 온다
 

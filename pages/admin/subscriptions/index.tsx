@@ -140,7 +140,7 @@ export default function AdminSubscriptionsPage({ subscriptions: allSubscriptions
 
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="admin-table w-full text-sm">
               <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
                 <tr>
                   <th className="px-4 py-3 text-left">종류</th>
@@ -154,12 +154,12 @@ export default function AdminSubscriptionsPage({ subscriptions: allSubscriptions
               <tbody className="divide-y divide-gray-100">
                 {subscriptions.map((sub) => (
                   <tr key={sub.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3">
+                    <td data-label="종류" className="px-4 py-3">
                       <Link href={`/admin/subscriptions/${sub.id}`} className="text-primary hover:underline">
                         {KIND_LABELS[sub.kind] ?? sub.kind}
                       </Link>
                     </td>
-                    <td className="px-4 py-3">
+                    <td data-label="고객" className="px-4 py-3">
                       <div className="font-medium text-gray-900">{sub.customerName}</div>
                       <div className="text-gray-500 text-xs">{sub.customerPhone || sub.customerEmail}</div>
                       {sub.kind === 'artist-support' && (
@@ -169,22 +169,22 @@ export default function AdminSubscriptionsPage({ subscriptions: allSubscriptions
                         </div>
                       )}
                     </td>
-                    <td className="px-4 py-3">
+                    <td data-label="상태" className="px-4 py-3">
                       <span
                         className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_CLASS[sub.status]}`}
                       >
                         {STATUS_LABELS[sub.status] ?? sub.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-gray-600">{nextBillingLabel(sub)}</td>
-                    <td className="px-4 py-3 text-right">
+                    <td data-label="다음 결제일" className="px-4 py-3 text-gray-600">{nextBillingLabel(sub)}</td>
+                    <td data-label="미납 회차" className="px-4 py-3 text-right">
                       {sub.failedCount > 0 ? (
                         <span className="text-red-600 font-medium">{sub.failedCount}</span>
                       ) : (
                         <span className="text-gray-500">-</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-right font-medium">
+                    <td data-label="금액" className="px-4 py-3 text-right font-medium">
                       {formatPriceAmount(sub.totalAmount)}원
                     </td>
                   </tr>

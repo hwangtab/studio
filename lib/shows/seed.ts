@@ -61,6 +61,31 @@ export interface ShowDefinition {
   /** 절대 시각 — KST는 `new Date('2026-10-24T18:30:00+09:00')`처럼 오프셋을 명시한다. */
   showtimes: Array<{ startsAt: Date }>;
   ticketTypes: Array<{ zoneCode: string; name: string; price: number; quota: number | null; compQuota: number }>;
+  /**
+   * 영어 화면(/en/shows/…)의 내용. **DB에 넣지 않는다** — 시드는 이 칸을 읽지 않고, 페이지가 서버에서
+   * `lib/shows/localize.ts`로 덮어쓴다. 없으면 영어 화면은 한국어 내용을 그대로 보인다.
+   */
+  en?: ShowTranslation;
+}
+
+/** 공연 내용의 영어판. 출연진은 같은 순서로, 티켓·구역은 한국어 이름 → 영어 이름. */
+export interface ShowTranslation {
+  title: string;
+  subtitle?: string | null;
+  presenterName: string;
+  /** performers와 **같은 순서·같은 수**. 이름이 다르게 표기되면 name도 준다. */
+  performers: Array<{ name?: string; bio?: string | null }>;
+  ageRating: string;
+  venueName: string;
+  venueAddress: string;
+  description: string;
+  scheduleNote?: string | null;
+  onSitePriceNote?: string | null;
+  notices?: string[];
+  /** 구역 라벨(한국어) → 영어. */
+  zoneLabels?: Record<string, string>;
+  /** 티켓 종류 이름(한국어) → 영어. 메일·내 티켓 화면도 이 표로 바꾼다. */
+  ticketTypeNames?: Record<string, string>;
 }
 
 export interface ShowSeedReport {

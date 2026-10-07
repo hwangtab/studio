@@ -83,7 +83,6 @@ Không chỉ tiện—nó giúp bạn **giữ dòng chảy của bài**.
 
 “Có cần mất thời gian để sắp xếp không?”
 Có. (Chắc chắn.)
-Dành 30 phút sắp xếp, bạn tiết kiệm 3 giờ mix.
 Quan trọng hơn, session sạch sẽ làm đầu óc nhẹ và cho bạn không gian để **ra quyết định nghệ thuật**.
 
 Mở dự án bừa bộn ngay bây giờ và dọn dẹp. Bản mix của bạn sẽ thay đổi. (Lấp lánh!)

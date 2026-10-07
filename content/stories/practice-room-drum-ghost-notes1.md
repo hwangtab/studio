@@ -36,7 +36,7 @@ faq:
 
 ### 정의
 
-고스트 노트는 일반 스네어 타격보다 **훨씬 약하게 — 보통 음량의 10~20%** 수준으로 치는 음표입니다. 기보할 때는 괄호 `(x)` 로 표시합니다.
+고스트 노트는 일반 스네어 타격보다 **훨씬 약하게** 치는 음표입니다. 기보할 때는 괄호 `(x)` 로 표시합니다.
 
 **다이나믹 비교:**
 ```
@@ -179,7 +179,7 @@ Level 1 (Ghost): 거의 들리지 않는 고스트 노트
 
 ## 스네어 다이나믹 훈련
 
-### 40단계 다이나믹 스케일 (Moeller 기법)
+### 다이나믹 스케일 훈련
 
 ```
 
@@ -198,9 +198,9 @@ Level 1 (Ghost): 거의 들리지 않는 고스트 노트
 | 드러머 | 고스트 노트 특징 | 참고 곡 |
 |--------|----------------|--------|
 | David Garibaldi | 타워 오브 파워 펑크 마스터 | On the Serious Side |
-| John "JR" Robinson | R&B 그루브의 전설 | Thriller (MJ) |
-| Mike Clark | 허비 행콕 헤드헌터스 스타일 | Chameleon |
-| Bernard Purdie | 셔플 고스트 노트 | Babylon by Bus |
+| John "JR" Robinson | R&B 그루브의 전설 | - |
+| Mike Clark | 허비 행콕 헤드헌터스 스타일 | Thrust (Herbie Hancock 앨범) |
+| Bernard Purdie | 셔플 고스트 노트 | - |
 
 ---
 

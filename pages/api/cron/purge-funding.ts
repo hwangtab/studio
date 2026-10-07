@@ -39,6 +39,8 @@ import {
   purgeExpiredPrivacyAccessLogs,
   PRIVACY_ACCESS_LOG_RETENTION_YEARS,
 } from '../../../lib/privacy/accessLog';
+import { adminUrl } from '../../../lib/email/layout';
+import { buildOperatorAlertHtml } from '../../../lib/email/operatorAlert';
 import { sendEmail } from '../../../lib/email/resend';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -134,6 +136,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }\n\n` +
         '펀딩 약관 제13조·처리방침으로 약속한 파기이므로 확인이 필요합니다. ' +
         '표가 없다는 사유라면 운영 DB에 마이그레이션이 적용됐는지 먼저 확인해 주세요.',
+      html: buildOperatorAlertHtml({
+        title: `펀딩 개인정보 파기가 ${failures.length}건 실패했습니다`,
+        cron: 'cron/purge-funding',
+        rows: [
+          { label: '실패 작업', value: `${failures.length}건`, emphasis: true },
+          ...(result ? [{ label: '배송지 파기', value: `${result.purged}건` }] : []),
+          ...(accessLogs ? [{ label: '접속기록 파기', value: `${accessLogs.purged}건` }] : []),
+          ...(residentNumbers ? [{ label: '주민등록번호 파기', value: `${residentNumbers.purged}건` }] : []),
+          ...(media ? [{ label: '고아 이미지 삭제', value: `${media.deleted}건` }] : []),
+        ],
+        reason: failures.map(({ label, detail }) => `· ${label}\n  사유: ${detail}`).join('\n\n'),
+        hints: [
+          '펀딩 약관 제13조·처리방침으로 약속한 파기이므로 확인이 필요합니다.',
+          '표가 없다는 사유라면 운영 DB에 마이그레이션이 적용됐는지 먼저 확인해 주세요.',
+        ],
+        ctaLabel: '펀딩 관리 열기',
+        ctaUrl: adminUrl('/admin/funding'),
+      }),
     }).catch((e: unknown): { ok: boolean; errorCode?: string } => ({ ok: false, errorCode: String(e) }));
     // 알림이 안 나간 사실을 삼키면 점검 실패가 조용히 묻힌다 — 응답은 그대로 두고 로그만 남긴다.
     if (!alert.ok) console.error('[cron/purge-funding] 운영자 실패 알림 발송 실패', alert.errorCode);

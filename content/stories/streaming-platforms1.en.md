@@ -43,7 +43,7 @@ faq:
 
 Releasing music doesn't automatically get it exposed. You need to understand each platform's algorithm, revenue structure, and core user base before an effective streaming strategy is possible.
 
-The origins of music streaming trace back to the digital download wars of the early 2000s. In 2000, Napster popularized free P2P music sharing and pushed the record industry to the brink of collapse; in response, Apple launched the iTunes Store in 2003 with a 99-cent-per-track download model. But the one who opened the streaming era was Spotify, founded in Sweden in 2006 by Daniel Ek. By offering unlimited streaming on a subscription basis, Spotify drove the paradigm shift "from ownership to access," and the loudness normalization it introduced in 2013 (a -14 LUFS standard) was adopted in lockstep by YouTube, Apple Music, and Tidal, becoming the industry standard for mastering. In Korea, SK Telecom launched Melon in 2004, establishing the world's first carrier-bundle-based streaming subscription model. Melon was acquired by Kakao (then Daum Kakao) in 2013 and integrated into the Kakao platform ecosystem, and its real-time chart tabulation method became a structure that dictates the debut strategy of domestic newcomer artists. Since 2020, with Spotify's entry into Korea and the growth of YouTube Music, Korean musicians have needed a dual strategy of managing domestic and global platforms in parallel.
+The origins of music streaming trace back to the digital download wars of the early 2000s. In 1999, Napster popularized free P2P music sharing and pushed the record industry to the brink of collapse; in response, Apple launched the iTunes Store in 2003 with a 99-cent-per-track download model. But the one who opened the streaming era was Spotify, founded in Sweden in 2006 by Daniel Ek. By offering unlimited streaming on a subscription basis, Spotify drove the paradigm shift "from ownership to access." In Korea, SK Telecom launched Melon in 2004, establishing the carrier-bundle-based streaming subscription model. Melon was acquired by Kakao (then Daum Kakao) in 2013 and integrated into the Kakao platform ecosystem, and its real-time chart tabulation method became a structure that dictates the debut strategy of domestic newcomer artists. Since 2020, with Spotify's entry into Korea and the growth of YouTube Music, Korean musicians have needed a dual strategy of managing domestic and global platforms in parallel.
 
 ---
 
@@ -84,7 +84,6 @@ The origins of music streaming trace back to the digital download wars of the ea
 
 ### Apple Music
 
-- Highly loyal users (low subscriber churn)
 - Among the highest per-stream rates
 - Spatial Audio support (Dolby Atmos)
 - Essential when targeting the US, European, and Japanese markets

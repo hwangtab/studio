@@ -75,8 +75,8 @@ summary: >-
 오른손 엄지를 일정한 위치에 고정하는 대신, 연주하는 현 위의 현에 항상 얹어두는 방법입니다.
 
 **원리:**
-- 현재 3번 현(D) 연주 중 → 엄지가 4번 현(A)에 얹어 뮤트
-- 2번 현(G) 연주 중 → 엄지가 3번 현(D)에 이동하여 뮤트
+- 현재 2번 현(D) 연주 중 → 엄지가 3번 현(A)에 얹어 뮤트
+- 1번 현(G) 연주 중 → 엄지가 2번 현(D)에 이동하여 뮤트
 
 이 방법으로 항상 한 현 위에 엄지가 위치하므로, 연주하지 않는 굵은 현이 자연스럽게 뮤트됩니다.
 
@@ -100,7 +100,7 @@ summary: >-
 
 ---
 
-## 언더커런트 뮤팅 (Undercurrent Muting)
+## 슬랩 뮤팅
 
 슬랩 베이스에서 중요한 뮤팅 기법입니다.
 
@@ -178,4 +178,4 @@ summary: >-
 
 *관련 아티클:*
 
-[베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass1) | [프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 — 완전 가이드](/stories/practice-room-bass1)
+[베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1)

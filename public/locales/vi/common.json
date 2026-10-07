@@ -2749,6 +2749,10 @@
               "detail": "Gói không gồm phối khí → biên chế nhỏ ₩500K · full band ₩1M · biên chế lớn ₩1,2M (theo bảng giá sáng tác & hòa âm, mỗi bài)"
             },
             {
+              "label": "Chỉnh giọng & căn nhịp",
+              "detail": "Không bao gồm trong gói → nếu cần chỉnh chi tiết, thêm tùy chọn +₩150K mỗi bài"
+            },
+            {
               "label": "PR truyền thông",
               "detail": "1 vòng cơ bản → 2 vòng·phỏng vấn kỷ niệm phát hành +₩300K"
             }
@@ -2765,6 +2769,10 @@
             {
               "question": "Mức giá này bao gồm những gì?",
               "answer": "Thu âm vocal và mix là nền tảng, cộng thêm điều phối session, arrangement, master, phân phối và PR truyền thông khi phạm vi mở rộng. Đây không phải thuê phòng thu đơn thuần mà là chi phí đồng hành cùng bạn suốt quá trình phát hành. Tùy session và arrangement; chúng tôi sẽ báo giá tùy chỉnh sau tư vấn. Thù lao nhạc công session không nằm trong gói; chúng tôi chỉ thu đúng khoản trả cho nhạc công, không thu phí giới thiệu."
+            },
+            {
+              "question": "Không có kế hoạch phát hành thì có dùng gói này được không?",
+              "answer": "Được. Bạn có thể dùng gói này chỉ để giao thu âm, mixing và mastering một lần. Nếu không dùng phát hành và PR, giá vẫn là ₩500K, thấp hơn tổng ₩550K khi đặt riêng thu âm vocal, mixing và mastering. Chỉnh giọng và căn nhịp chi tiết là tùy chọn +₩150K mỗi bài; thù lao nhạc công session và phối khí không nằm trong gói."
             },
             {
               "question": "Các bạn sẽ không thay đổi bài hát của tôi mà không hỏi đúng không?",

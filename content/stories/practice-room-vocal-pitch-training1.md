@@ -48,7 +48,6 @@ faq:
 
 - **과긴장**: 성대나 목 근육이 필요 이상으로 긴장
 - **고음 접근 시 두려움**: 고음을 억지로 밀어붙일 때
-- **실내 온도**: 차가운 공간에서 성대가 경직되면 음정이 올라갈 수 있음
 
 ## 이어트레이닝(Ear Training)의 중요성
 
@@ -66,7 +65,7 @@ faq:
 | 완전4도 | "Here Comes the Bride" 도입부 |
 | 완전5도 | 스타워즈 테마 도입부 |
 | 장6도 | "My Bonnie Lies Over the Ocean" |
-| 장7도 | 대부 테마 (역방향) |
+| 장7도 | "Take On Me" 후렴 |
 | 옥타브 | "Somewhere Over the Rainbow" (첫 두 음) |
 
 ## 음정 훈련 방법
@@ -192,4 +191,3 @@ C - C# - D - D# - E - F - F# - G - G# - A - A# - B - C
 - [연신내 음악연습실 완전 가이드](/stories/practice-room-yeonsinnae1)
 - [보컬 호흡 조절·서스테인 음악연습실](/stories/practice-room-vocal1)
 - [보컬 재즈스캣·즉흥 보이싱 음악연습실](/stories/practice-room-vocal-jazz-scat1)
-- [보컬 팝 발성 음악연습실](/stories/practice-room-vocal1)

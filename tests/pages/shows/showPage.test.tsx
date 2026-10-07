@@ -33,5 +33,9 @@ const show = {
 
 // 2026-10-03: 출연진 변수를 schema보다 뒤에 선언해 서버 렌더가 TDZ ReferenceError로 500이 됐다.
 it('공연 상세가 렌더에서 던지지 않는다', () => {
-  expect(() => render(<ShowPage show={show} />)).not.toThrow();
+  expect(() => render(<ShowPage show={show} locale="ko" />)).not.toThrow();
+});
+
+it('영어 공연 상세도 렌더에서 던지지 않는다', () => {
+  expect(() => render(<ShowPage show={show} locale="en" />)).not.toThrow();
 });

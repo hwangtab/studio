@@ -80,7 +80,7 @@ export default function NewLessonSubscriptionPage() {
         width="narrow"
       >
         {setupUrl ? (
-          <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 space-y-4">
+          <div className="bg-white rounded-2xl shadow-sm p-4 md:p-8 space-y-4">
             <div className="p-4 bg-green-50 border border-green-200 text-green-900 rounded-lg text-sm">
               구독이 생성되고 카드 등록 안내 메일을 발송했습니다.
             </div>
@@ -113,7 +113,7 @@ export default function NewLessonSubscriptionPage() {
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm p-6 md:p-8 space-y-4">
+          <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm p-4 md:p-8 space-y-4">
             <p className="text-sm text-gray-600">
               프로듀싱 레슨 월정액: {formatPriceAmount(lessonAmounts.totalAmount)}원 청구 ({formatPriceAmount(lessonAmounts.itemAmount)}원 + VAT)
             </p>

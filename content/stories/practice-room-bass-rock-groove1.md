@@ -95,7 +95,7 @@ faq:
 |------|-------------|-----------|
 | 입문 | Sly & The Family Stone — Thank You | 기본 훵크 그루브 |
 | 중급 | Stevie Wonder — Higher Ground | 무그 베이스+옥타브 |
-| 고급 | Jaco Pastorius — Teen Town | 무반주 그루브 |
+| 고급 | Jaco Pastorius — Teen Town | 재즈 퓨전 베이스 그루브 |
 
 ## 방 안에서 세게 친 록 베이스가 무대에서 안 들리는 이유
 
@@ -115,4 +115,4 @@ faq:
 
 ---
 
-[베이스 그루브·리듬감 훈련 — 베이스 그루브 완성 가이드](/stories/practice-room-bass1) | [베이스 펑크 그루브·리듬 베이스 — 베이스 펑크 완성 가이드](/stories/practice-room-bass1) | [일렉 베이스·베이스 기타 입문 연습 — 베이스 기초 완성 가이드](/stories/practice-room-electric-bass1) | [베이스 기타 독학 입문 — 베이스 독학 완성 가이드](/stories/practice-room-bass1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1)
+[베이스 그루브·리듬감 훈련 — 베이스 그루브 완성 가이드](/stories/practice-room-bass1) | [일렉 베이스·베이스 기타 입문 연습 — 베이스 기초 완성 가이드](/stories/practice-room-electric-bass1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1)

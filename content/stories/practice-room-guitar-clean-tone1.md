@@ -160,7 +160,7 @@ Volume: 7 이상 (앰프 자연 과부하 전 최대치)
 - **Nile Rodgers** (CHIC): 펑크·소울 계열 클린, 다이나믹한 리듬 기타
 - **Mark Knopfler** (Dire Straits): 핑거피킹 클린, 투명하고 따뜻한 아르페지오
 - **John Scofield**: 재즈 클린, 험버커의 풍부하고 둥근 사운드
-- **Chet Atkins**: 컨트리 클린, 반짝이는 텔레캐스터 사운드
+- **Chet Atkins**: 컨트리 클린
 
 ## 좋은 클린 톤은 이펙터가 아니라 기타와 손에서 나옵니다
 

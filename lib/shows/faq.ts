@@ -1,5 +1,6 @@
 import { SHOW_CONTACT_PHONE } from './copy';
-import { REFUND_POLICY_FOOTNOTES, refundTierLines } from './refundPolicy';
+import { SHOW_CONTACT_PHONE_INTL, type ShowLocale } from './i18n';
+import { REFUND_POLICY_FOOTNOTES, REFUND_POLICY_FOOTNOTES_EN, refundTierLines, refundTierLinesEn } from './refundPolicy';
 
 export interface ShowFaqItem {
   question: string;
@@ -12,7 +13,7 @@ export interface ShowFaqItem {
  * (회차 전날 24:00 KST), 티켓 전달은 lib/shows/email.ts. 공연마다 다른 것(현장 판매가·입장 시각)은 여기 적지
  * 않고 공연 정의의 전용 칸이 말한다.
  */
-export const showFaqItems = (): ShowFaqItem[] => [
+export const showFaqItems = (locale: ShowLocale = 'ko'): ShowFaqItem[] => (locale === 'en' ? FAQ_EN() : [
   {
     question: '티켓은 어떻게 받나요?',
     answer:
@@ -43,5 +44,40 @@ export const showFaqItems = (): ShowFaqItem[] => [
   {
     question: '티켓 메일을 못 받았어요.',
     answer: `예매 완료 화면의 "내 티켓" 주소로 언제든 다시 열 수 있습니다. 주소를 잃어버리셨으면 주문번호와 함께 ${SHOW_CONTACT_PHONE}로 연락해 주세요.`,
+  },
+]);
+
+/** 영어판 — 위 한국어 답과 같은 사실을 같은 순서로. 한쪽을 고치면 다른 쪽도 고친다. */
+const FAQ_EN = (): ShowFaqItem[] => [
+  {
+    question: 'How do I get my ticket?',
+    answer:
+      'When payment is complete, the confirmation page shows a “My tickets” link and we email your QR ticket to the address you entered. Just show the QR code at the door.',
+  },
+  {
+    question: 'Can I pay by bank transfer?',
+    answer:
+      'Yes. Choose “Bank transfer” as the payment method and we will show you the account right away; your seats are held until the transfer is confirmed. ' +
+      'Once it is confirmed, we email your QR ticket. Please send the transfer under the name you booked with.',
+  },
+  {
+    question: 'How are seats assigned?',
+    answer: 'General admission, first come, first served. When we scan your QR code at the door, we give you an entry number and let people in in that order.',
+  },
+  {
+    question: 'How do I cancel or get a refund?',
+    answer: [
+      'You can request a refund for each ticket yourself on the “My tickets” page. The refund amount depends on how many days are left before the show.',
+      ...refundTierLinesEn(),
+      ...REFUND_POLICY_FOOTNOTES_EN,
+    ].join('\n'),
+  },
+  {
+    question: 'When do online sales close?',
+    answer: 'At midnight (KST) the day before the show. Whether tickets are sold at the door, and at what price, is noted on each show page.',
+  },
+  {
+    question: 'I did not receive the ticket email.',
+    answer: `You can open your ticket any time from the “My tickets” link on the confirmation page. If you lost the link, contact us at ${SHOW_CONTACT_PHONE_INTL} or hello@studionol.co.kr with your order number.`,
   },
 ];

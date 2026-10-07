@@ -62,6 +62,7 @@ const TYPE_LABELS: Record<string, string> = {
   mixing: '믹싱·마스터링',
   funding: '펀딩',
   subscription: '구독',
+  deposit: '예약금',
 };
 
 const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
@@ -171,6 +172,9 @@ const describeOrder = (order: LedgerOrder): string => {
       if (!cycle?.subscription) return '구독';
       return `${subscriptionOrderName(cycle.subscription.kind as SubscriptionKind)} ${cycle.cycleYm}`;
     }
+    case 'deposit':
+      // 품목명은 DB에 저장하지 않는다(data/paymentLinks.ts) — 라벨만.
+      return '예약금';
     default:
       return order.type;
   }

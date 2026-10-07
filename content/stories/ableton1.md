@@ -39,7 +39,7 @@ faq:
 
 Ableton Live는 전자음악·EDM·힙합 프로듀서에게 특히 인기 있는 DAW이며, 보컬 녹음·편집도 안정적으로 지원합니다.
 
-Ableton Live의 역사는 2001년 독일 소프트웨어 회사 Ableton이 처음 출시한 버전 1.0에서 시작됩니다. 기존 DAW가 타임라인 기반 선형 녹음에 집중했던 것과 달리, Ableton은 클립 단위로 루프를 즉흥 재생하는 Session View를 최초로 도입해 라이브 퍼포먼스와 즉흥 창작의 새로운 패러다임을 열었습니다. 2004년 Live 4에서 VST 플러그인 지원이 추가됐고, Daft Punk·Radiohead 등이 Ableton을 라이브 공연 도구로 채택하면서 EDM·전자음악 씬의 표준 DAW로 자리 잡았습니다. 2011년 Push 컨트롤러 출시로 하드웨어 통합이 강화됐고, 현재 Ableton Live 12는 MIDI 2.0을 지원하며 전통적인 보컬 녹음부터 전자음악 라이브 퍼포먼스까지 하나의 환경에서 처리합니다.
+Ableton Live의 역사는 2001년 독일 소프트웨어 회사 Ableton이 처음 출시한 버전 1.0에서 시작됩니다. 기존 DAW가 타임라인 기반 선형 녹음에 집중했던 것과 달리, Ableton은 클립 단위로 루프를 즉흥 재생하는 Session View를 최초로 도입해 라이브 퍼포먼스와 즉흥 창작의 새로운 패러다임을 열었습니다. 2004년 Live 4에서 VST 플러그인 지원이 추가됐고, EDM·전자음악 씬의 표준 DAW로 자리 잡았습니다. 2013년 Push 컨트롤러 출시로 하드웨어 통합이 강화됐고, 현재 Ableton Live 12는 전통적인 보컬 녹음부터 전자음악 라이브 퍼포먼스까지 하나의 환경에서 처리합니다.
 
 ## Ableton Live 기본 설정
 
@@ -69,7 +69,7 @@ Ableton Live의 역사는 2001년 독일 소프트웨어 회사 Ableton이 처�
 ### 트랙 생성
 
 1. Arrangement View (Tab 키로 전환)
-2. Create → Insert Audio Track (Cmd+Shift+T)
+2. Create → Insert Audio Track (Cmd+T)
 3. 트랙 입력 채널: 오디오 인터페이스 채널 선택
 4. 모니터: Auto 또는 In (녹음 중 자신 소리 모니터링)
 
@@ -139,8 +139,8 @@ Audio Effects → Dynamics → Compressor
 ### Warp 활성화
 
 1. 보컬 클립 더블클릭 → Clip View 열기
-2. Warp 버튼 ON
-3. Warp Mode: Complex Pro (보컬에 권장)
+2. Warp 버튼 ON (타이밍 교정이나 곡 템포에 맞추는 작업이 필요할 때만 켭니다. 원본 템포로 녹음한 보컬은 OFF가 기본)
+3. Warp Mode: Complex Pro (보컬 클립에 쓸 수 있는 모드)
 
 ### Warp 마커 활용
 
@@ -190,7 +190,7 @@ Ableton은 작곡·라이브에 강한 DAW라, 보컬 녹음엔 살짝 결이 �
 
 **2. Warp 비활성화 — 보컬 트랙은 Warping 끄기**
 
-Ableton의 Warp 기능은 자동 타이밍 보정이지만 보컬에 그대로 적용되면 음색이 미세하게 손상됩니다. 보컬 트랙은 Warping을 끄고 원본 그대로 두며, 타이밍 보정이 필요하면 Melodyne으로 별도 처리합니다.
+Ableton의 Warp는 클립을 Set의 템포에 맞추는 기능입니다. 원본 템포로 녹음한 보컬 트랙은 Warping을 끄고 원본 그대로 두며, 타이밍 보정이나 템포 맞춤이 필요한 클립에서만 Warp를 켭니다.
 
 **3. Send Channel로 리버브 운용 + Group Track**
 
@@ -200,6 +200,6 @@ Insert로 리버브를 직접 걸지 않고 Send Channel 분리. 보컬 트랙�
 
 ## 마치며
 
-Ableton Live는 루프 기반 창작과 전통 보컬 녹음을 하나의 환경에서 처리할 수 있는 실용적인 DAW입니다. 보컬 녹음에서 핵심 설정은 버퍼 크기입니다. 녹음 시에는 64~128 samples로 설정해 레이턴시를 5ms 이하로 유지하고, 믹싱 시에는 256~512 samples로 높여 CPU 부하를 줄이는 방식으로 전환하는 것이 표준 워크플로우입니다. 드라이 보컬은 EQ Eight과 Compressor를 Bypass한 상태로 내보내야 믹싱 의뢰 시 원본 파일로 활용할 수 있으며, 내보내기 설정은 WAV 24bit/44100Hz가 기본입니다. Warp 기능은 타이밍 교정 외에도 보컬 멜로디를 BPM에 맞게 동기화하는 데 유용하지만, Complex Pro 모드는 CPU를 많이 소모하므로 최종 믹싱 이전 단계에서만 활용하는 것이 좋습니다.
+Ableton Live는 루프 기반 창작과 전통 보컬 녹음을 하나의 환경에서 처리할 수 있는 실용적인 DAW입니다. 보컬 녹음에서 핵심 설정은 버퍼 크기입니다. 녹음 시에는 64~128 samples로 설정해 레이턴시를 5ms 이하로 유지하고, 믹싱 시에는 256~512 samples로 높여 CPU 부하를 줄이는 방식으로 전환하는 것이 표준 워크플로우입니다. 드라이 보컬은 EQ Eight과 Compressor를 Bypass한 상태로 내보내야 믹싱 의뢰 시 원본 파일로 활용할 수 있으며, 내보내기 설정은 WAV 24bit/44100Hz가 기본입니다. Warp는 원본 템포로 녹음한 보컬에서는 끄는 것이 기본이고, 타이밍 교정이나 BPM 동기화가 필요한 클립에서만 켭니다. Complex Pro 모드는 CPU를 많이 소모할 수 있으므로 필요한 클립에만 쓰는 것이 좋습니다.
 
 [Logic Pro 보컬 녹음·믹싱 완전 가이드](/stories/logic-pro1) | [Pro Tools 보컬 녹음 완전 가이드](/stories/protools1) | [GarageBand 보컬 녹음 완전 가이드](/stories/garageband1) | [음원 파일 형식 완전 가이드](/stories/audioformat1) | [DAW 성능 최적화 가이드](/stories/daw-performance1) | [나에게 맞는 DAW 선택 가이드](/stories/daw-choice1)

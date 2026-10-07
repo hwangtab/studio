@@ -7,6 +7,7 @@
  */
 export const RESERVED_SHOW_SLUGS: ReadonlySet<string> = new Set([
   'scan',
+  'report',
   'success',
   'fail',
   'manage',

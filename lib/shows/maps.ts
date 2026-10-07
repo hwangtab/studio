@@ -46,8 +46,19 @@ export const SHOW_MAP_PROVIDERS: readonly MapProvider[] = [
   { id: 'kakao', label: '카카오맵', searchUrl: (s) => `https://map.kakao.com/link/search/${enc(showMapStreet(s))}` },
 ];
 
+/**
+ * 영어 화면의 길찾기 — 외국 방문자는 구글 지도를 먼저 찾는다. 구글은 공연 정의의 mapLinks로 덮지 않는다(검색이 정확하다,
+ * 위 주석). 네이버·카카오는 영어 라벨로 뒤에 둔다.
+ */
+const GOOGLE_PROVIDER = {
+  id: 'google' as const,
+  label: 'Google Maps',
+  searchUrl: (s: MapSource) => `https://www.google.com/maps/search/?api=1&query=${enc(showMapQuery(s))}`,
+};
+const EN_LABELS: Record<MapProviderId, string> = { naver: 'Naver Map', kakao: 'KakaoMap' };
+
 export interface ShowMapLink {
-  id: MapProviderId;
+  id: MapProviderId | 'google';
   label: string;
   url: string;
   /** 공연 정의가 직접 준 주소인지(검색이 아니라). */
@@ -55,19 +66,23 @@ export interface ShowMapLink {
 }
 
 /** 제공자별 길찾기 링크. 공연 정의의 `mapLinks`가 있는 제공자는 검색 대신 그 주소를 쓴다. */
-export const showMapLinks = (show: MapSource & { mapLinks?: MapLinkOverrides }): ShowMapLink[] =>
-  SHOW_MAP_PROVIDERS.map((p) => {
+export const showMapLinks = (show: MapSource & { mapLinks?: MapLinkOverrides }, locale: 'ko' | 'en' = 'ko'): ShowMapLink[] => {
+  const links: ShowMapLink[] = SHOW_MAP_PROVIDERS.map((p) => {
     const custom = show.mapLinks?.[p.id];
-    return { id: p.id, label: p.label, url: custom ?? p.searchUrl(show), custom: Boolean(custom) };
+    return { id: p.id, label: locale === 'en' ? EN_LABELS[p.id] : p.label, url: custom ?? p.searchUrl(show), custom: Boolean(custom) };
   });
+  if (locale !== 'en') return links;
+  return [{ id: GOOGLE_PROVIDER.id, label: GOOGLE_PROVIDER.label, url: GOOGLE_PROVIDER.searchUrl(show), custom: false }, ...links];
+};
 
 /**
- * 지도 iframe 주소 — 구글 지도의 키 없는 임베드(`?q=…&output=embed`, iframe 안에서만 열린다). 연락처 페이지는 스튜디오
+ * 카카오맵을 못 띄울 때(ShowVenueMap 폴백) 쓰는 지도 iframe 주소 — 구글 지도의 키 없는 임베드(`?q=…&output=embed`,
+ * iframe 안에서만 열린다). 평소 지도는 카카오맵이다(components/maps/KakaoMap.tsx). 연락처 페이지는 스튜디오
  * 한 곳의 고정 `pb=` 토큰을 쓰지만 공연장은 공연마다 달라 검색어로 찾는다. 허용 origin은 middleware.ts의 CSP
  * frame-src(www.google.com).
  */
-export const showMapEmbedUrl = (show: MapSource): string =>
-  `https://www.google.com/maps?q=${enc(showMapQuery(show))}&z=17&hl=ko&output=embed`;
+export const showMapEmbedUrl = (show: MapSource, locale: 'ko' | 'en' = 'ko'): string =>
+  `https://www.google.com/maps?q=${enc(showMapQuery(show))}&z=17&hl=${locale}&output=embed`;
 
 // ─── 저장 형식(shows.map_links_json) ──────────────────────────────────────────────
 

@@ -84,7 +84,6 @@ Bu faqat qulaylik emas — **qo'shiq oqimini saqlashga** yordam beradi.
 
 “Rostdan ham tartibga vaqt ajratish kerakmi?”
 Ha. (Qat'iy.)
-30 daqiqa tartibga sarflasangiz, 3 soat miksdan tejaladi.
 Eng muhimi, toza session ongni tinchlantiradi va **ijodiy qarorlar** uchun joy beradi.
 
 Hozir tartibsiz loyihangizni oching va tozalashni boshlang. Miksingiz o'zgaradi. (Yaltiroq!)

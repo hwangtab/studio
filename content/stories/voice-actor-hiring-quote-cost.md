@@ -137,4 +137,4 @@ howTo:
 
 처음이라 뭘 물어야 할지 모르겠어도 괜찮습니다. "이런 걸 만들려는데 얼마나 들까요?" 한마디면 나머지는 제가 같이 정리해 드릴게요. 좋은 목소리가 필요한 순간에, 견적 때문에 망설이지 않으셨으면 합니다.
 
-[유튜브 나레이션 — 홈 vs 전문 스튜디오](/stories/voice1) | [성우 녹음 방법 — 마이킹과 딕션 완전 가이드](/stories/voice-acting1) | [성우 데모 녹음 가이드](/stories/voice-actor-demo1) | [오디오북 1시간 녹음 비용과 시간](/stories/audiobook-narration-recording-cost-time) | [내레이션 녹음 가이드](/stories/narration1)
+[내레이션 녹음 가이드](/stories/narration1)

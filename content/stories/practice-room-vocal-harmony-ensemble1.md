@@ -80,7 +80,7 @@ summary: >-
 ```
 
 멜로디: C - D - E - F - G
-하모니: A - B - C - D - E (6도 아래)
+하모니: E - F - G - A - B (6도 아래)
 
 ```
 
@@ -122,7 +122,7 @@ summary: >-
 ```
 
 리드: 멜로디 (예: C5-D5-E5)
-하모니 1: 3도 위 (E5-F#5-G5)
+하모니 1: 3도 위 (E5-F5-G5)
 하모니 2: 3도 아래 (A4-B4-C5)
 
 ```
@@ -139,12 +139,6 @@ summary: >-
 ### 성부 간 볼륨 밸런스
 
 좋은 하모니는 **멜로디가 가장 잘 들려야** 합니다.
-
-**볼륨 가이드라인:**
-- 멜로디: 100%
-- 하모니 1: 70-80%
-- 하모니 2 (있을 경우): 60-70%
-- 베이스 보컬: 50-60%
 
 **멜로디가 묻히는 이유:**
 - 하모니 파트가 너무 강함
@@ -272,4 +266,4 @@ summary: >-
 
 은평구 24시간 음악연습실에서 파트너와 함께 또는 혼자 루프를 이용해 하모니 훈련을 해보세요. 처음에는 어색하고 음정이 맞지 않아도—반복하면 반드시 귀와 목이 맞춰집니다.
 
-[보컬 클로즈 하모니·바버샵·4성부 합창 — 완전 가이드](/stories/practice-room-vocal-harmony-close1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1) | [보컬 호흡법·복식호흡·지지·버팀 기법 — 완전 가이드](/stories/practice-room-vocal1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/falsetto1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal1)
+[보컬 클로즈 하모니·바버샵·4성부 합창 — 완전 가이드](/stories/practice-room-vocal-harmony-close1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1) | [보컬 호흡법·복식호흡·지지·버팀 기법 — 완전 가이드](/stories/practice-room-vocal1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/falsetto1)

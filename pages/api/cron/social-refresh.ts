@@ -11,6 +11,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { isCronAuthorized } from '../../../lib/cron/auth';
+import { buildOperatorAlertHtml } from '../../../lib/email/operatorAlert';
 import { sendEmail } from '../../../lib/email/resend';
 import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
 import { formatOutcomes, needsAttention, refreshAll } from '../../../lib/social/tokens';
@@ -37,6 +38,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           '소셜 API 토큰 주간 갱신에서 사람이 처리해야 할 항목이 있습니다.\n\n' +
           formatOutcomes(outcomes) +
           '\n\n재승인: node --env-file=.env.local scripts/social/auth.mjs --platform <ig|threads>',
+        html: buildOperatorAlertHtml({
+          title: `소셜 토큰 처리가 필요합니다 — ${attention.map((o) => o.platform).join(', ')}`,
+          cron: 'cron/social-refresh',
+          summary: '소셜 API 토큰 주간 갱신에서 사람이 처리해야 할 항목이 있습니다.',
+          rows: [{ label: '처리 필요', value: attention.map((o) => o.platform).join(', '), emphasis: true }],
+          reason: formatOutcomes(outcomes),
+          hints: ['재승인: node --env-file=.env.local scripts/social/auth.mjs --platform <ig|threads>'],
+        }),
       }).catch((error: unknown) => console.error('[cron/social-refresh] 알림 메일 실패:', error));
     }
 
@@ -48,6 +57,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       to: OPERATOR_EMAIL,
       subject: '[Studio NOL] 소셜 토큰 갱신 실패',
       text: `주간 토큰 갱신이 실행되지 못했습니다. 반복되면 토큰이 만료됩니다.\n\n사유: ${detail}`,
+      html: buildOperatorAlertHtml({
+        title: '소셜 토큰 주간 갱신이 실행되지 못했습니다',
+        cron: 'cron/social-refresh',
+        reason: detail,
+        hints: ['반복되면 토큰이 만료됩니다.'],
+      }),
     }).catch(() => {});
     return res.status(500).json({ ok: false, message: '갱신에 실패했습니다.' });
   }

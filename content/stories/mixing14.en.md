@@ -53,7 +53,7 @@ Start with the most important elements:
 
 **Tip: Pink Noise Mixing**
 
-If you’re lost, try pink noise. Play it around ‑12 dB, then raise each instrument until it barely pokes through the noise.
+If you’re lost, try pink noise. Play it, then raise each instrument until it barely pokes through the noise.
 Surprisingly, you’ll get a solid balance. (Nice!)
 
 ## 3. The magic of mono: a lie detector

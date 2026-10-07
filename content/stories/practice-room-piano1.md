@@ -114,7 +114,7 @@ faq:
 - **피아노·건반**: 피아노 있는 방은 1실뿐(입주 중일 수 있음) — 본인 디지털 피아노(가중 터치 권장) 지참, 방음 STC 60+라 큰 소리로 연습 가능
 - **방음**: STC 방송국 수준 차음 설계, 이중 벽체
 - **운영**: 24시간 무인 운영, 개인 도어록 출입
-- **요금**: 월세 입주 36만원부터 (시간 대여 미운영)
+- **요금**: 월세 입주 36만원부터, 시간제는 1시간 6,600원(VAT 포함)
 
 ## 피아노 연습실은 방문해서 직접 쳐보기 전엔 고를 수 없어요
 
@@ -126,4 +126,4 @@ faq:
 
 ---
 
-[건반·키보드 연습실 완벽 가이드 — 디지털 피아노·신디사이저 연습 공간 선택법](/stories/practice-room-keyboard1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [피아노 독학 연습실 — 초보자를 위한 피아노 연습 공간 완벽 가이드](/stories/practice-room-piano-beginner1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [피아노 리드시트 즉흥반주·코드 읽기 가이드](/stories/practice-room-piano-lead-sheet-improvisation1) | [피아노 트레몰로·옥타브 트레몰로 완성 가이드](/stories/practice-room-piano-tremolo1) | [피아노 테크닉·손가락 독립 연습 집중 가이드](/stories/practice-room-piano-technique1)
+[건반·키보드 연습실 완벽 가이드 — 디지털 피아노·신디사이저 연습 공간 선택법](/stories/practice-room-keyboard1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [피아노 리드시트 즉흥반주·코드 읽기 가이드](/stories/practice-room-piano-lead-sheet-improvisation1) | [피아노 트레몰로·옥타브 트레몰로 완성 가이드](/stories/practice-room-piano-tremolo1) | [피아노 테크닉·손가락 독립 연습 집중 가이드](/stories/practice-room-piano-technique1)

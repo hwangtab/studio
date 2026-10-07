@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { ChevronDown, X } from 'lucide-react';
 
 import { logoutAdmin } from './contractActions';
 import { Button } from '../ui/Button';
@@ -18,7 +19,7 @@ import { Button } from '../ui/Button';
  * 대시보드의 자체 내비게이션). 같은 관리자 화면인데 페이지마다 다른 제품처럼 보였다.
  *
  * 그래서 **나가는 길은 페이지가 아니라 이 컴포넌트가 책임진다.** 어느 관리자 화면에서든
- * 상단 바의 다섯 구역과 로그아웃에 항상 닿는다. 로그인 화면만 예외다 — 세션이 없어
+ * 상단 바의 모든 구역과 로그아웃에 항상 닿는다(좁은 화면에서는 메뉴 버튼 안). 로그인 화면만 예외다 — 세션이 없어
  * 이동할 곳도 로그아웃할 것도 없다.
  */
 
@@ -116,6 +117,27 @@ export const AdminShell = ({
     };
   }, []);
 
+  /**
+   * 좁은 화면의 구역 메뉴. 예전에는 상단 바 한 줄에 여덟 구역을 가로 스크롤로 넣었는데,
+   * 폰에서는 제목·로그아웃 사이에 남는 폭이 136px이라 두 구역만 보였고 지금 있는 구역이
+   * 화면 밖으로 밀려 있었다. 그래서 lg 아래에서는 현재 구역을 단 버튼 하나로 접고,
+   * 누르면 여덟 구역을 한꺼번에 펼친다.
+   */
+  const [menuOpen, setMenuOpen] = useState(false);
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [router.pathname]);
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
+
+  const activeLabel = ADMIN_NAV.find((item) => item.href === activeHref)?.label ?? '메뉴';
+
   return (
     <div className="min-h-screen bg-gray-50 dark:text-gray-900">
       {/*
@@ -128,8 +150,7 @@ export const AdminShell = ({
             스튜디오 놀 관리자
           </Link>
 
-          {/* 좁은 화면에서는 줄바꿈 대신 가로 스크롤 — 상단 바 높이가 들쭉날쭉하면 sticky 아래 여백이 흔들린다. */}
-          <nav aria-label="관리자 구역" className="flex-1 min-w-0 overflow-x-auto">
+          <nav aria-label="관리자 구역" className="hidden lg:block flex-1 min-w-0">
             <ul className="flex items-center gap-1 whitespace-nowrap">
               {ADMIN_NAV.map((item) => {
                 const isActive = item.href === activeHref;
@@ -153,18 +174,61 @@ export const AdminShell = ({
           </nav>
 
           {adminName && (
-            <span className="shrink-0 text-sm text-gray-600 hidden sm:inline" data-testid="admin-current-user">
+            <span className="hidden lg:inline shrink-0 text-sm text-gray-600" data-testid="admin-current-user">
               {adminName}
             </span>
           )}
 
-          <Button light variant="ghost" size="sm" className="shrink-0" onClick={handleLogout}>
+          <Button light variant="ghost" size="sm" className="hidden lg:inline-flex shrink-0" onClick={handleLogout}>
             로그아웃
           </Button>
+
+          <button
+            type="button"
+            className="lg:hidden ml-auto inline-flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50"
+            aria-expanded={menuOpen}
+            aria-controls="admin-mobile-menu"
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            {activeLabel}
+            {menuOpen ? <X className="h-4 w-4" aria-hidden="true" /> : <ChevronDown className="h-4 w-4" aria-hidden="true" />}
+          </button>
         </div>
+
+        {menuOpen && (
+          <div id="admin-mobile-menu" className="lg:hidden border-t border-gray-200 bg-white px-4 pb-4 pt-3">
+            <nav aria-label="관리자 구역 메뉴">
+              <ul className="grid grid-cols-2 gap-2">
+                {ADMIN_NAV.map((item) => {
+                  const isActive = item.href === activeHref;
+                  return (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        aria-current={isActive ? 'page' : undefined}
+                        onClick={() => setMenuOpen(false)}
+                        className={`flex min-h-[44px] items-center rounded-lg px-3 text-[15px] ${
+                          isActive ? 'bg-primary/10 text-primary font-semibold' : 'bg-gray-50 text-gray-800'
+                        }`}
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+            <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
+              <span className="text-sm text-gray-600">{adminName ?? ''}</span>
+              <Button light variant="outline" size="sm" onClick={handleLogout}>
+                로그아웃
+              </Button>
+            </div>
+          </div>
+        )}
       </header>
 
-      <main className={`${WIDTH_CLASS[width]} mx-auto px-4 py-8 md:py-10`}>
+      <main className={`${WIDTH_CLASS[width]} mx-auto px-4 py-6 md:py-10`}>
         <div className="mb-6">
           {backHref && (
             <Link href={backHref} className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-primary mb-2">

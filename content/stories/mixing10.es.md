@@ -64,7 +64,7 @@ Al día siguiente, con oído fresco, me asusté. La voz pinchaba como un alfiler
 2. **Adaptación**: el cerebro ignora o deforma sonidos repetidos.
 
 **[Tips de estudio]**:
-* **20 min de trabajo, 5 de descanso**: deja descansar tus oídos. Un poco de silencio o sonidos de la calle los reinicia.
+* **30–45 min de trabajo, 5–10 de descanso**: deja descansar tus oídos. Un poco de silencio o sonidos de la calle los reinicia.
 * **Escucha a volumen bajo**: el volumen alto fatiga rápido. Si el balance funciona a nivel de conversación, es un buen mix.
 
 ## 4. Escuchar instrumentos por separado (Focus)
@@ -85,5 +85,5 @@ Si piensas eso, felicidades: ya tienes oído de ingeniero.
 ### [Errores comunes de principiantes] 👂
 
 * **"Mezclar sin referencia"**: es navegar sin brújula. En cuanto dices “mi oído es perfecto”, tu mezcla se pierde.
-* **"Maratón de mezcla"**: cinco horas seguidas y tu oído queda anestesiado. Las decisiones allí casi siempre se lamentan al día siguiente.
+* **"Maratón de mezcla"**: cinco horas seguidas y tu oído queda anestesiado.
 * **"Mañana sonará bien"**: si suena raro ahora, está raro. No te autoengañes.

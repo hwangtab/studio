@@ -96,7 +96,7 @@ export default function FundingProjectCard({ slug, title, summary, cover, goalAm
                     {formatPriceAmount(data.raisedAmount)}원
                   </span>
                   {' · '}
-                  <span className="font-semibold text-primary dark:text-violet-300">{data.percent}%</span>
+                  <span className="font-semibold text-primary dark:text-primary-lighter">{data.percent}%</span>
                   {` · ${data.backerCount}건`}
                 </>
               ) : (

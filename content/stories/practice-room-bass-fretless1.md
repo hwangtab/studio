@@ -181,17 +181,11 @@ A(5프렛)에서 E(12프렛)까지:
 | 아티스트 | 프렛리스 특징 | 참고 곡 |
 |---------|------------|--------|
 | Jaco Pastorius | 프렛리스 혁명 | Portrait of Tracy |
-| Pino Palladino | R&B 프렛리스 | Come Back to Me |
-| Tony Franklin | 록 프렛리스 | 더 폼 앨범 |
+| Pino Palladino | R&B 프렛리스 | Wherever I Lay My Hat (Paul Young) |
+| Tony Franklin | 록 프렛리스 | The Firm 앨범 |
 | Michael Manring | 확장 프렛리스 | Enormous Room |
 
 ---
-
-## 마무리
-
-프렛리스 베이스는 **귀와 손이 하나가 되는** 악기입니다. 처음에는 음정이 불안정하고 좌절스럽지만, 은평구 24시간 음악연습실에서 매일 인토네이션 훈련을 지속하면 점점 손이 음정을 스스로 찾아가게 됩니다.
-
-자코 파스토리우스처럼 프렛리스로 노래하는 베이스 라인을 꿈꾼다면, 인내심을 갖고 매일 조금씩 귀와 손의 연결고리를 강화하세요.
 
 ## 액션부터 볼 것인가, 귀부터 볼 것인가
 
@@ -205,4 +199,12 @@ A(5프렛)에서 E(12프렛)까지:
 
 ---
 
-[베이스 이펙터·페달 보드 활용 — 베이스 이펙터 완성 가이드](/stories/practice-room-bass1) | [베이스 그루브·리듬감 훈련 — 베이스 그루브 완성 가이드](/stories/practice-room-bass1) | [네오소울 베이스·D'Angelo·Erykah Badu·그루브 완전 가이드](/stories/practice-room-bass-neo-soul1) | [베이스 루트·5도 패턴·기초 라인 — 베이스 기초 라인 완성 가이드](/stories/practice-room-bass-root-fifth1) | [베이스 썸 테크닉·슬랩 베이스 고급 — 완전 가이드](/stories/practice-room-bass-thumb-technique1)
+## 마무리
+
+프렛리스 베이스는 **귀와 손이 하나가 되는** 악기입니다. 처음에는 음정이 불안정하고 좌절스럽지만, 은평구 24시간 음악연습실에서 매일 인토네이션 훈련을 지속하면 점점 손이 음정을 스스로 찾아가게 됩니다.
+
+자코 파스토리우스처럼 프렛리스로 노래하는 베이스 라인을 꿈꾼다면, 인내심을 갖고 매일 조금씩 귀와 손의 연결고리를 강화하세요.
+
+---
+
+[베이스 이펙터·페달 보드 활용 — 베이스 이펙터 완성 가이드](/stories/practice-room-bass1) | [네오소울 베이스·D'Angelo·Erykah Badu·그루브 완전 가이드](/stories/practice-room-bass-neo-soul1) | [베이스 루트·5도 패턴·기초 라인 — 베이스 기초 라인 완성 가이드](/stories/practice-room-bass-root-fifth1) | [베이스 썸 테크닉·슬랩 베이스 고급 — 완전 가이드](/stories/practice-room-bass-thumb-technique1)

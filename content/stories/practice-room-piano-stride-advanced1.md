@@ -308,12 +308,6 @@ Am7b5 → D7 → Gm (G단조)
 
 ---
 
-## 마무리
-
-스트라이드 피아노는 **피아노로 오케스트라를 만드는 예술**입니다. 왼손 도약이 안정될수록 오른손이 자유로워지고, 그때부터 진정한 스트라이드 즉흥연주가 시작됩니다.
-
-은평구 24시간 음악연습실에서 시간 제한 없이 왼손 도약을 훈련하세요. 스트라이드는 많은 반복이 필요한 스타일입니다—인내심을 갖고, 천천히, 정확하게.
-
 ## 고급 스트라이드는 왼손을 안 보고도 도약이 되느냐에서 갈려요
 
 기본 스트라이드가 되는 분들이 다음 문을 여는 열쇠는 결국 시선이에요. 초급 때는 왼손 도약을 눈으로 확인하며 치지만, 고급 스트라이드는 시선을 왼손에서 완전히 떼어야 시작돼요. 눈이 왼손에 묶여 있으면 오른손 악보를 읽을 여유가 없어서 즉흥이 나올 수가 없거든요. BPM 60에서 왼손만 따로 떼어, 악보나 천장을 보면서도 12개 조성 전부에서 도약이 정확한 지점까지 밀어붙이세요. 손이 위치를 통째로 기억할 때 비로소 오른손이 자유로워집니다.
@@ -324,4 +318,12 @@ Am7b5 → D7 → Gm (G단조)
 
 ---
 
-[피아노 코드 보이싱 고급·텐션 노트 활용 — 완전 가이드](/stories/practice-room-piano-chord-voicings-advanced1) | [피아노 스트라이드 입문·왼손 점프 기초 — 완전 가이드](/stories/practice-room-piano-stride-beginner1) | [피아노 스트라이드·뉴올리언스 피아노 — 완전 가이드](/stories/practice-room-piano-stride1) | [피아노 재즈 스탠다드 분석·All the Things You Are — 완전 가이드](/stories/practice-room-piano-jazz-standard-analysis1) | [피아노 리드시트 즉흥반주·코드 읽기 — 완전 가이드](/stories/practice-room-piano-lead-sheet-improvisation1)
+## 마무리
+
+스트라이드 피아노는 **피아노로 오케스트라를 만드는 예술**입니다. 왼손 도약이 안정될수록 오른손이 자유로워지고, 그때부터 진정한 스트라이드 즉흥연주가 시작됩니다.
+
+은평구 24시간 음악연습실에서 시간 제한 없이 왼손 도약을 훈련하세요. 스트라이드는 많은 반복이 필요한 스타일입니다—인내심을 갖고, 천천히, 정확하게.
+
+---
+
+[피아노 코드 보이싱 고급·텐션 노트 활용 — 완전 가이드](/stories/practice-room-piano-chord-voicings-advanced1) | [피아노 스트라이드·뉴올리언스 피아노 — 완전 가이드](/stories/practice-room-piano-stride1) | [피아노 재즈 스탠다드 분석·All the Things You Are — 완전 가이드](/stories/practice-room-piano-jazz-standard-analysis1) | [피아노 리드시트 즉흥반주·코드 읽기 — 완전 가이드](/stories/practice-room-piano-lead-sheet-improvisation1)

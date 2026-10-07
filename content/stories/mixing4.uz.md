@@ -37,7 +37,7 @@ Sample rate — **vaqt aniqligi**, ya'ni bir soniyada nechta bo'lak olishingiz. 
   * **96 kHz**: juda batafsil, lekin fayl hajmi ikki baravar, kompyuter ham qiynaladi. (Ventilyator ovozi eshitilyaptimi?)
 
 **Amaliy maslahatlar**:
-* **Musiqa relizi uchun**: 44.1 kHz yoki 48 kHz yetarli. 96 kHz'da yozsangiz ham, streaming saytlar baribir 44.1/16‑bitga o'giradi.
+* **Musiqa relizi uchun**: 44.1 kHz yoki 48 kHz yetarli.
 * **Video/YouTube uchun**: doimo **48 kHz** ishlating. Bu video montajda sync muammolarini oldini oladi. (Lab qimirlaydi, ovoz yo'q — katta muammo.)
 
 ## 2. Bit depth: rasmdagi rang chuqurligi
@@ -45,8 +45,8 @@ Sample rate — **vaqt aniqligi**, ya'ni bir soniyada nechta bo'lak olishingiz. 
 Bit depth — **ovoz balandligining aniqligi**, ya'ni eng pastdan eng balandgacha qanchalik nozik ifodalanishi.
 
 * **Foto analogiyasi**:
-  * **16‑bit (256 rang)**: eski o'yin grafikasi kabi ranglar chiziqlanadi, gradientlar bosqichli.
-  * **24‑bit (true color)**: ko'zimiz ko'radigan tabiiy rang, hatto soyalarda ham. (Boy!)
+  * **16‑bit**: eski o'yin grafikasi kabi ranglar chiziqlanadi, gradientlar bosqichli.
+  * **24‑bit**: ko'zimiz ko'radigan tabiiy rang, hatto soyalarda ham. (Boy!)
 * **Audio**:
   * **16‑bit**: CD sifati. Yetarli, lekin juda past tovushlar shovqinga ko'milib qolishi mumkin. Dinamik diapazon taxminan 96 dB.
   * **24‑bit**: studio standarti. Pichirlashdan portlashgacha aniq ushlaydi. Dinamik diapazon ~144 dB — deyarli real hayot to'liq qamrovi.

@@ -69,10 +69,19 @@ export const getServerSideProps: GetServerSideProps<AdminBookingsPageProps> = as
         //
         // `?deposit=pending`이면 계좌 입금 대기 전부(전 기간·건수 제한 없음) — 자동 취소가 없어
         // 오래 열린 대기가 200건 상한 밖으로 밀려나면 영영 안 보인다.
+        // 예약금 결제 링크 주문(type 'deposit')은 계좌 입금 흐름(대기·취소)과 결제 완료·환불 건만 싣는다 —
+        // 카드 결제창을 열다 만 pending/failed/expired 행은 목록만 어지럽히고 200건 상한을 잠식한다.
         where: depositPending
           ? (ordersTable, { and: all, inArray: within, eq: same }) =>
-              all(within(ordersTable.type, ['session', 'mixing']), same(ordersTable.status, 'awaiting_deposit'))
-          : (ordersTable, { inArray: within }) => within(ordersTable.type, ['session', 'mixing']),
+              all(within(ordersTable.type, ['session', 'mixing', 'deposit']), same(ordersTable.status, 'awaiting_deposit'))
+          : (ordersTable, { and: all, or: either, inArray: within }) =>
+              either(
+                within(ordersTable.type, ['session', 'mixing']),
+                all(
+                  within(ordersTable.type, ['deposit']),
+                  within(ordersTable.status, ['awaiting_deposit', 'deposit_cancelled', 'paid', 'partially_refunded', 'refunded']),
+                ),
+              ),
         orderBy: (ordersTable, { desc }) => [desc(ordersTable.createdAt)],
         limit: depositPending ? undefined : LIST_LIMIT + 1,
         // payments를 함께 읽는다 — 주문 상태와 결제 기록의 미정합(스펙 §10) 판정에 쓴다.
@@ -85,7 +94,7 @@ export const getServerSideProps: GetServerSideProps<AdminBookingsPageProps> = as
       getDb()
         .select({ n: sql<number>`count(*)` })
         .from(orders)
-        .where(and(inArray(orders.type, ['session', 'mixing']), eq(orders.status, 'awaiting_deposit')))
+        .where(and(inArray(orders.type, ['session', 'mixing', 'deposit']), eq(orders.status, 'awaiting_deposit')))
         .get(),
     ]);
 
@@ -120,6 +129,7 @@ const ORDER_STATUS_LABELS: Record<string, string> = {
   expired: '만료',
   awaiting_deposit: '계좌 입금 대기',
   deposit_cancelled: '입금 전 취소',
+  auto_cancel_pending: '자동 취소 처리 중',
 };
 
 const BOOKING_STATUS_LABELS: Record<string, string> = {
@@ -278,7 +288,7 @@ export default function AdminBookingsPage({
           <meta name="robots" content="noindex, nofollow" />
         </Head>
         <AdminShell title="예약 관리" description="세션 예약 현황을 확인하고 관리합니다." width="wide">
-          <div className="bg-white rounded-2xl shadow-sm p-8 text-center">
+          <div className="bg-white rounded-2xl shadow-sm p-4 md:p-8 text-center">
             <h2 className="text-xl font-bold text-gray-900 dark:text-gray-900 mb-2">오류</h2>
             <p className="text-gray-600">{error}</p>
           </div>
@@ -297,7 +307,7 @@ export default function AdminBookingsPage({
       <AdminShell title="예약 관리" description="세션 예약 현황을 확인하고 관리합니다." width="wide">
         <div className="space-y-6">
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-            <div className="p-6 md:p-8">
+            <div className="p-4 md:p-8">
               {notice && (
                 <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>
               )}
@@ -377,7 +387,7 @@ export default function AdminBookingsPage({
               </div>
 
               <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left">
+                <table className="admin-table w-full text-sm text-left">
                   <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
                     <tr>
                       <th className="px-4 py-3 rounded-l-lg">유형</th>
@@ -392,18 +402,20 @@ export default function AdminBookingsPage({
                   <tbody>
                     {filteredBookings.map((booking) => {
                       const isMixing = booking.orderType === 'mixing';
+                      const isDeposit = booking.orderType === 'deposit';
                       const isPracticeRoom = booking.serviceType === 'practice-room';
                       return (
                         <tr key={booking.id} className="border-b border-gray-100 hover:bg-gray-50">
-                          <td className="px-4 py-3 whitespace-nowrap">
+                          <td data-label="유형" className="px-4 py-3 whitespace-nowrap">
                             <span
                               className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
                                 isMixing ? 'bg-purple-100 text-purple-700'
+                                  : isDeposit ? 'bg-amber-100 text-amber-800'
                                   : isPracticeRoom ? 'bg-emerald-100 text-emerald-700'
                                   : 'bg-indigo-100 text-indigo-700'
                               }`}
                             >
-                              {isMixing ? '믹싱' : isPracticeRoom ? '연습실' : '세션'}
+                              {isMixing ? '믹싱' : isDeposit ? '예약금' : isPracticeRoom ? '연습실' : '세션'}
                             </span>
                             {booking.roomNumber && (
                               <span className="ml-1 inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
@@ -411,22 +423,22 @@ export default function AdminBookingsPage({
                               </span>
                             )}
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap">
+                          <td data-label="일시 / 상품" className="px-4 py-3 whitespace-nowrap">
                             {isMixing
                               ? `${booking.productName} × ${booking.workOrder?.songCount ?? '-'}곡${booking.workOrder?.vocalTuning ? ' (튜닝)' : ''}`
-                              : formatKstDateTime(booking.startAt)}
+                              : isDeposit ? '-' : formatKstDateTime(booking.startAt)}
                           </td>
-                          <td className="px-4 py-3 font-medium text-gray-900">
+                          <td data-label="고객" className="px-4 py-3 font-medium text-gray-900">
                             {booking.customerName}
                             <div className="text-xs text-gray-500 font-normal">
                               {booking.customerPhone}
                             </div>
                           </td>
-                          <td className="px-4 py-3">{booking.productName}</td>
-                          <td className="px-4 py-3 whitespace-nowrap">
+                          <td data-label="상품" className="px-4 py-3">{booking.productName}</td>
+                          <td data-label="금액" className="px-4 py-3 whitespace-nowrap">
                             {formatPriceAmount(booking.totalAmount)}원
                           </td>
-                          <td className="px-4 py-3">
+                          <td data-label="상태" className="px-4 py-3">
                             {isMixing
                               ? booking.workOrder && (
                                   <span
@@ -489,7 +501,7 @@ export default function AdminBookingsPage({
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+          <div className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
             <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">예약 불가 블록</h2>
             <p className="text-sm text-gray-500 mb-6">
               점검·휴무 등으로 예약을 받지 않을 시간대를 등록합니다. 이 시간대와 겹치는 새 예약은

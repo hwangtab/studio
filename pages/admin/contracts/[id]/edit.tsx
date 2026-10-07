@@ -130,7 +130,7 @@ export default function EditContractPage({
         backLabel="계약 상세"
       >
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-            <div className="p-6 md:p-8">
+            <div className="p-4 md:p-8">
               {specialTermsUnreadable && (
                 <div className="mb-6 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
                   <strong className="block mb-1">저장된 특약사항을 읽지 못했습니다</strong>

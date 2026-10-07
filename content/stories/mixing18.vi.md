@@ -52,7 +52,7 @@ Mở reverb plugin, bạn sẽ thấy preset: Hall, Room, Plate, Spring...
 
 * **Cảm giác**: không phải phòng thật. Tấm kim loại rung. Ít cộng hưởng phòng, tail **dày, sáng, bóng**.
 * **Dùng**: **vocal** và **snare**.
-* **Chìa khóa**: đuôi vocal “shaa‑” trong pop gần như luôn là Plate. Sạch hơn Hall. (Shine!)
+* **Chìa khóa**: đuôi vocal “shaa‑” trong pop thường dùng Plate. Sạch hơn Hall. (Shine!)
 
 #### ④ Spring: rung lắc cổ điển (Boing!)
 

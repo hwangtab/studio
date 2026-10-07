@@ -178,7 +178,7 @@ faq:
 
 ### 30만원대 — 본격 홈스튜디오
 
-- **Rode NT1-A** (약 35만원) — 자가 노이즈 5dB로 업계 최저. 보컬·어쿠스틱 기타에 가장 인기.
+- **Rode NT1-A** (약 35만원) — 자가 노이즈 5dB(A)로 매우 낮은 편. 보컬·어쿠스틱 기타에 가장 인기.
 - **Audio-Technica AT4040** (약 38만원) — 따뜻한 미드, 부드러운 고역. 락·재즈 보컬에 강세.
 
 ### 100만원대 — 프로 입문
@@ -202,7 +202,7 @@ faq:
 ### 솔로 보컬 + 어쿠스틱 기타
 
 - 보컬: U87 AI (LDC, 카디오이드, 입 거리 15~20cm)
-- 기타: AKG C414 (SDC 페어, ORTF로 사운드홀 30cm 위)
+- 기타: AKG C414 (LDC 페어, ORTF로 사운드홀 30cm 위)
 
 ### 풀밴드 라이브 녹음
 
@@ -253,4 +253,4 @@ Studio NOL에서는 대부분의 보컬 세션에 U87Ai(라지 콘덴서)를 사
 
 ---
 
-[콘덴서 마이크 완전 가이드](/stories/condenser-mic1) | [다이나믹 마이크 완전 가이드](/stories/dynamics1) | [보컬 녹음용 마이크 추천](/stories/vocal-microphone1) | [마이크 위치·거리·각도](/stories/mic-placement1) | [오디오 인터페이스 가이드](/stories/audio-interface1) | [프리앰프 완전 가이드](/stories/preamp1) | [녹음 샘플레이트·비트뎁스 선택 가이드](/stories/sample-rate1)
+[오디오 인터페이스 가이드](/stories/audio-interface1) | [프리앰프 완전 가이드](/stories/preamp1) | [녹음 샘플레이트·비트뎁스 선택 가이드](/stories/sample-rate1)

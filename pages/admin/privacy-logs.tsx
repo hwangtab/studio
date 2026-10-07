@@ -183,7 +183,7 @@ export default function AdminPrivacyLogsPage({
           <p className="text-sm text-gray-600">해당하는 기록이 없습니다.</p>
         ) : (
           <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
-            <table className="min-w-full text-sm">
+            <table className="admin-table min-w-full text-sm">
               <caption className="sr-only">개인정보 접속기록 목록</caption>
               <thead className="bg-gray-50 text-left text-gray-600">
                 <tr>
@@ -199,17 +199,17 @@ export default function AdminPrivacyLogsPage({
               <tbody className="divide-y divide-gray-100 text-gray-900">
                 {rows.map((row) => (
                   <tr key={row.id}>
-                    <td className="px-3 py-2 whitespace-nowrap tabular-nums">{formatAt(row.at)}</td>
-                    <td className="px-3 py-2 whitespace-nowrap font-medium">{row.actor}</td>
-                    <td className="px-3 py-2 whitespace-nowrap">{ACTION_LABEL[row.action] ?? row.action}</td>
-                    <td className="px-3 py-2 break-all">{row.targetId}</td>
-                    <td className="px-3 py-2 whitespace-nowrap">
+                    <td data-label="시각(KST)" className="px-3 py-2 whitespace-nowrap tabular-nums">{formatAt(row.at)}</td>
+                    <td data-label="수행자" className="px-3 py-2 whitespace-nowrap font-medium">{row.actor}</td>
+                    <td data-label="행위" className="px-3 py-2 whitespace-nowrap">{ACTION_LABEL[row.action] ?? row.action}</td>
+                    <td data-label="대상" className="px-3 py-2 break-all">{row.targetId}</td>
+                    <td data-label="결과" className="px-3 py-2 whitespace-nowrap">
                       <span className={`inline-block rounded px-2 py-0.5 text-xs ${RESULT_CLASS[row.result] ?? 'bg-gray-100 text-gray-600'}`}>
                         {RESULT_LABEL[row.result] ?? row.result}
                       </span>
                     </td>
-                    <td className="px-3 py-2 whitespace-nowrap tabular-nums">{row.rowCount ?? ''}</td>
-                    <td className="px-3 py-2 whitespace-nowrap">{row.ip ?? ''}</td>
+                    <td data-label="건수" className="px-3 py-2 whitespace-nowrap tabular-nums">{row.rowCount ?? ''}</td>
+                    <td data-label="IP" className="px-3 py-2 whitespace-nowrap">{row.ip ?? ''}</td>
                   </tr>
                 ))}
               </tbody>

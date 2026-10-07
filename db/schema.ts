@@ -283,7 +283,8 @@ export const orderStatusEnum = [
    */
   'deposit_cancelled',
 ] as const;
-export const orderTypeEnum = ['session', 'mixing', 'subscription', 'funding', 'ticket'] as const;
+// 'deposit' = 운영자가 금액·품목명을 정해 둔 비공개 예약금 결제 링크(data/paymentLinks.ts). 하위 테이블 없음.
+export const orderTypeEnum = ['session', 'mixing', 'subscription', 'funding', 'ticket', 'deposit'] as const;
 export const bookingStatusEnum = ['pending', 'confirmed', 'completed', 'no_show', 'cancelled'] as const;
 export const refundStatusEnum = ['done', 'failed'] as const;
 export const refundRequesterEnum = ['customer', 'admin', 'webhook'] as const;
@@ -1686,6 +1687,22 @@ export const showOrders = sqliteTable('show_orders', {
   showtimeIdx: index('show_orders_showtime_idx').on(t.showtimeId),
 }));
 
+/**
+ * 공연 주문의 화면 언어(마이그레이션 0050). 영어 화면(/en/shows)으로 예매한 주문만 행이 있고, 없으면 한국어다.
+ * 티켓·환불·회차 취소 메일과 "내 티켓" 주소가 이 언어를 따른다.
+ *
+ * `show_orders`에 컬럼을 더하지 않고 표를 따로 둔 이유는 배포 순서다(CLAUDE.md 0022·0037 절) — 관계 조회가 전체
+ * 컬럼을 SELECT하므로 컬럼이 없는 DB에서는 결제 확인까지 깨진다. 별도 표는 읽기·쓰기를 try로 감싸
+ * (lib/shows/orderLocale.ts) **마이그레이션 전에 배포돼도 한국어로 동작할 뿐 깨지지 않는다.**
+ */
+export const showOrderLocales = sqliteTable('show_order_locales', {
+  orderNo: text('order_no').primaryKey().references(() => orders.orderNo),
+  locale: text('locale').notNull(),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  localeCheck: check('show_order_locales_locale_check', sql`${t.locale} in ('ko','en')`),
+}));
+
 export const showTickets = sqliteTable('show_tickets', {
   id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
   orderNo: text('order_no').notNull().references(() => orders.orderNo),
@@ -1717,6 +1734,22 @@ export const showScanLinks = sqliteTable('show_scan_links', {
   createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
 }, (t) => ({
   showtimeIdx: index('show_scan_links_showtime_idx').on(t.showtimeId),
+}));
+
+/**
+ * 기획자 현황 링크 — 공연 기획자·주최 측이 로그인 없이 그 공연의 **판매 집계만** 보는 링크(lib/shows/reportLink.ts).
+ * 스캔 링크와 같은 틀(토큰 해시·만료·폐기)이고 범위만 회차가 아니라 공연 전체다. 개인정보는 싣지 않는다.
+ */
+export const showReportLinks = sqliteTable('show_report_links', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  showId: text('show_id').notNull().references(() => shows.id),
+  tokenHash: text('token_hash').notNull().unique(),
+  label: text('label').notNull(),
+  expiresAt: integer('expires_at').notNull(),
+  revokedAt: integer('revoked_at'),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  showIdx: index('show_report_links_show_idx').on(t.showId),
 }));
 
 export const showsRelations = relations(shows, ({ many }) => ({

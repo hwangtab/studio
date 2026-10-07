@@ -39,7 +39,7 @@ faq:
 
 딜레이는 보컬에 공간감과 리듬감을 동시에 부여하며, 리버브와 함께 자주 사용되는 보컬 이펙트입니다.
 
-딜레이 이펙트의 역사는 1950년대 테이프 에코 머신으로 시작됩니다. Sam Phillips가 Sun Studio에서 구현한 슬랩백 에코 사운드는 Elvis Presley와 Johnny Cash의 초기 녹음에서 보컬에 두께감을 더하는 핵심 기법이었고, 이것이 딜레이 이펙트를 음악적 도구로 활용한 최초의 상업적 사례입니다. 1970~80년대 Roland RE-201 Space Echo 같은 테이프 딜레이 기기가 스튜디오와 라이브 무대에서 널리 사용됐고, The Edge(U2)가 딜레이를 멜로디 구성 도구로 발전시키면서 딜레이를 단순 효과가 아닌 편곡 요소로 격상시켰습니다. 1990년대 디지털 딜레이 플러그인이 등장하면서 BPM 동기화 딜레이가 대중화됐고, 현재 Soundtoys EchoBoy·Valhalla Delay·FabFilter Timeless 같은 플러그인이 테이프 딜레이의 따뜻한 질감을 알고리즘으로 재현합니다.
+딜레이 이펙트의 역사는 1950년대 테이프 에코 머신으로 시작됩니다. Sam Phillips가 Sun Studio에서 구현한 슬랩백 에코 사운드는 Elvis Presley와 Johnny Cash의 초기 녹음에서 보컬에 두께감을 더하는 핵심 기법이었습니다. 1970~80년대 Roland RE-201 Space Echo 같은 테이프 딜레이 기기가 스튜디오와 라이브 무대에서 널리 사용됐고, The Edge(U2)가 딜레이를 멜로디 구성 도구로 발전시키면서 딜레이를 단순 효과가 아닌 편곡 요소로 격상시켰습니다. 1990년대 디지털 딜레이 플러그인이 등장하면서 BPM 동기화 딜레이가 대중화됐고, 현재 Soundtoys EchoBoy·Valhalla Delay·FabFilter Timeless 같은 플러그인이 테이프 딜레이의 따뜻한 질감을 알고리즘으로 재현합니다.
 
 ## 딜레이 타입 비교
 
@@ -159,8 +159,6 @@ faq:
 
 ---
 
-## 마치며
-
 ## Studio NOL 보컬 딜레이 믹싱에서 자주 손보는 3가지
 
 스튜디오 놀에 들어오는 보컬 딜레이 믹싱 의뢰에서 자주 손이 가는 영역입니다.
@@ -191,4 +189,8 @@ Feedback이 강하면 에코가 보컬을 덮어 가사가 흐려집니다.
 
 ---
 
-[보컬 새추레이션 완전 가이드](/stories/vocal-saturation1) | [보컬 리버브 완전 가이드](/stories/vocal-reverb1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+## 마치며
+
+---
+
+[보컬 새추레이션 완전 가이드](/stories/vocal-saturation1) | [보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

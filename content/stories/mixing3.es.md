@@ -59,7 +59,7 @@ Recuerda dos tipos principales.
 
 ## 4. Deja de culpar al equipo
 
-Hay una frase que los grandes ingenieros repiten:
+Hay una frase que se oye a menudo:
 **“It’s not the gear, it’s the ear.”** (No es el equipo, es el oído.)
 
 Los Beatles hicieron historia con una grabadora de 4 pistas, y el álbum ganador del Grammy de Billie Eilish se grabó en un dormitorio.

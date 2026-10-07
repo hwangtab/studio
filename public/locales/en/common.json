@@ -2777,6 +2777,10 @@
               "detail": "Not in the bundle → small ensemble ₩500K · full band ₩1M · large ensemble ₩1.2M (per song, composition & arrangement price list)"
             },
             {
+              "label": "Vocal tuning & timing correction",
+              "detail": "Not included in the bundle → detailed tuning is an optional +₩150K per song"
+            },
+            {
               "label": "Media PR",
               "detail": "1 round baseline → 2 rounds · release interview +₩300K"
             }
@@ -2793,6 +2797,10 @@
             {
               "question": "What's included at this price?",
               "answer": "Vocal recording and mixing are the base, with session coordination, arrangement, mastering, distribution, and media PR added as scope grows. This isn't simple studio rental — it's the cost of accompanying you through the whole release process. Varies by session lineup and arrangement scope; we'll give a custom quote after consultation. Session musician fees are not part of the bundle — we pass through only what the musicians are paid, with no booking fee."
+            },
+            {
+              "question": "Can I use this package without planning a release?",
+              "answer": "Yes. You can use it simply to hand off recording, mixing and mastering in one go. If you skip distribution and release PR the price stays ₩500K, which is below the ₩550K total for ordering vocal recording, mixing and mastering separately. Detailed vocal tuning and timing correction is an optional +₩150K per song; session musician fees and arrangement are not included."
             },
             {
               "question": "You won't change my song without asking, right?",

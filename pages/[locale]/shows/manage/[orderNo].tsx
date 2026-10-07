@@ -8,6 +8,8 @@ import ShowTicketManage from '../../../../components/shows/ShowTicketManage';
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
 import { withI18nServerProps } from '../../../../lib/getStatic';
 import { getShowOrderForManage, type ManageOrderView } from '../../../../lib/shows/queries';
+import { fallbackShowLocale, toShowLocale, type ShowLocale } from '../../../../lib/shows/i18n';
+import { localizeManageOrder } from '../../../../lib/shows/localize';
 import { ticketQrDataUrl } from '../../../../lib/shows/qr';
 
 interface ManageProps {
@@ -15,24 +17,31 @@ interface ManageProps {
   /** 취소 요청에 재사용하는 쿼리 토큰 — order.manageToken 자체는 내려보내지 않는다. */
   token: string;
   qr: Record<string, string>;
+  locale: ShowLocale;
 }
 
-export default function ShowManagePage({ order, token, qr }: ManageProps) {
+export default function ShowManagePage({ order, token, qr, locale }: ManageProps) {
+  const en = locale === 'en';
   return (
     <>
       <Head>
-        <title>내 티켓 | 스튜디오 놀</title>
+        <title>{en ? 'My tickets | Studio NOL' : '내 티켓 | 스튜디오 놀'}</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <main className="mx-auto max-w-lg px-4 py-16">
-        <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">스튜디오 놀</p>
-        <ShowTicketManage order={order} token={token} qr={qr} />
+        {/* 상호를 밝히는 전용 줄 — tests/pages/privateLinkNavigation.test.ts가 한국어 줄을 문자 그대로 찾는다. */}
+        {en ? (
+          <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">Studio NOL</p>
+        ) : (
+          <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">스튜디오 놀</p>
+        )}
+        <ShowTicketManage order={order} token={token} qr={qr} locale={locale} />
         {/* private 페이지(URL에 관리 토큰이 실린다)의 이탈 링크는 문서 이동 + noreferrer —
             lib/analytics/privatePaths.ts, tests/pages/privateLinkNavigation.test.ts */}
         <p className="mt-10 text-center text-sm">
-          <a href={`/ko/shows/${order.showSlug}`} rel="noreferrer" className="underline">공연 안내 보기</a>
+          <a href={`/${locale}/shows/${order.showSlug}`} rel="noreferrer" className="underline">{en ? 'Show details' : '공연 안내 보기'}</a>
           <span aria-hidden="true" className="mx-2 text-gray-400">·</span>
-          <a href="/ko" rel="noreferrer" className="underline">홈으로</a>
+          <a href={`/${locale}`} rel="noreferrer" className="underline">{en ? 'Home' : '홈으로'}</a>
         </p>
       </main>
     </>
@@ -44,7 +53,8 @@ export const getServerSideProps = withI18nServerProps<ManageProps>(async (contex
   denyContractPageCaching(context.res);
 
   const { locale, orderNo } = context.params as { locale: string; orderNo: string };
-  if (locale !== 'ko') return { redirect: { destination: '/ko', permanent: false } };
+  const showLocale = toShowLocale(locale);
+  if (!showLocale) return { redirect: { destination: `/${fallbackShowLocale(locale)}`, permanent: false } };
 
   const { token } = context.query;
   // 토큰 없음·불일치·주문 부재·티켓 주문 아님을 전부 같은 notFound로 답한다(존재 여부 노출 방지).
@@ -66,7 +76,7 @@ export const getServerSideProps = withI18nServerProps<ManageProps>(async (contex
       }
     }),
   );
-  return { props: { order, token, qr } };
+  return { props: { order: localizeManageOrder(order, showLocale), token, qr, locale: showLocale } };
 });
 
 // 디자인 판 — lib/designEdition.ts

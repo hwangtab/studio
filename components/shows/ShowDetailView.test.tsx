@@ -34,7 +34,7 @@ describe('ShowDetailView', () => {
     expect(screen.getByText('출연자')).toBeTruthy();
     expect(screen.getByRole('link', { name: '네이버 지도' }).getAttribute('href')).toBe('https://naver.me/x');
     expect(screen.getByRole('link', { name: '카카오맵' }).getAttribute('href')).toContain('map.kakao.com');
-    expect(screen.getByTitle('장소 위치 지도')).toBeTruthy();
+    expect(screen.getByRole('region', { name: '장소 위치 지도' })).toBeTruthy();
     expect(screen.getByRole('heading', { level: 2, name: '오시는 길' })).toBeTruthy();
     expect(screen.getByRole('heading', { level: 2, name: '티켓 예매' })).toBeTruthy();
     expect(screen.getByText('티켓은 어떻게 받나요?')).toBeTruthy();
@@ -44,9 +44,11 @@ describe('ShowDetailView', () => {
     ctas.forEach((a) => expect(a.getAttribute('href')).toBe('#book'));
   });
 
-  it('히어로 배경은 흐림 클래스를 달고(공용 ImageHero는 그대로), 포스터는 히어로 안 카드가 아니라 본문에서 원본 링크와 함께 보인다', () => {
+  it('히어로는 다른 페이지와 같은 방식(blur 없음·공연 전용 애니메이션 끄기 없음)이고, 포스터는 히어로 안 카드가 아니라 본문에서 원본 링크와 함께 보인다', () => {
     const { container } = render(<ShowDetailView show={show} />);
-    expect((container.querySelector('section') as HTMLElement).className).toContain('blur-sm');
+    const heroSection = container.querySelector('section') as HTMLElement;
+    expect(heroSection.className).not.toContain('blur');
+    expect(heroSection.querySelector('.animate-none')).toBeNull();
     const poster = screen.getByAltText('공연 제목 포스터');
     expect(poster).toBeTruthy();
     const link = screen.getByRole('link', { name: '공연 제목 포스터 원본 크게 보기' });

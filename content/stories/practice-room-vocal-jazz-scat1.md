@@ -38,8 +38,7 @@ faq:
 
 ## 재즈스캣이란 무엇인가
 
-재즈스캣(Scat Singing)은 의미 없는 음절(syllable)을 사용해 악기처럼 즉흥 멜로디를 노래하는 재즈 보컬 기법입니다. 1920년대 Louis Armstrong이 녹음 중 가사를 잊고 즉흥으로 음절을 부른 것이 기원으로 알려져 있습니다.
-
+재즈스캣(Scat Singing)은 의미 없는 음절(syllable)을 사용해 악기처럼 즉흥 멜로디를 노래하는 재즈 보컬 기법입니다.
 ### 스캣이 보컬에 주는 훈련 효과
 
 - **음정 정확도 향상**: 가사 없이 음고에만 집중해야 하므로 음정 감각이 예민해짐
@@ -194,7 +193,7 @@ C - Eb - F - Gb - G - Bb - C
 ## 재즈스캣 레퍼런스
 
 - **Ella Fitzgerald**: 스캣의 여왕, 명료하고 스윙감 있는 음절
-- **Louis Armstrong**: 원조 스캣, 리듬 중심의 즉흥성
+- **Louis Armstrong**: 리듬 중심의 즉흥성
 - **Sarah Vaughan**: 텐션 음 활용의 교과서
 - **Bobby McFerrin**: 현대적 바디 퍼커션 + 스캣 통합
 
@@ -227,5 +226,4 @@ C - Eb - F - Gb - G - Bb - C
 **관련 가이드**
 - [연신내 음악연습실 완전 가이드](/stories/practice-room-yeonsinnae1)
 - [보컬 팔세토·헤드보이스 음악연습실](/stories/practice-room-vocal1)
-- [보컬 R&B 그루브 음악연습실](/stories/practice-room-vocal1)
 - [보컬 클래식 성악 음악연습실](/stories/practice-room-vocal-classical1)

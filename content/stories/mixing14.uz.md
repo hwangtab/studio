@@ -54,7 +54,7 @@ Eng muhim elementlardan boshlang:
 
 **Maslahat: Pink Noise Mixing**
 
-Agar adashsangiz, pink noise qo'llang. Uni ‑12 dB atrofida qo'yib, har bir asbobni shovqindan biroz chiqguncha ko'taring.
+Agar adashsangiz, pink noise qo'llang. Uni qo'yib, har bir asbobni shovqindan biroz chiqguncha ko'taring.
 Kutilmaganda mustahkam balans chiqadi. (Nice!)
 
 ## 3. Mononing sehri: yolg'on detektori

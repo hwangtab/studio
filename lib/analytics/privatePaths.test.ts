@@ -95,9 +95,13 @@ describe('isPrivateAnalyticsPath', () => {
       '/:locale(ko|en|zh|es|vi|th|uz)/booking/(success|fail)',
       '/:locale(ko|en|zh|es|vi|th|uz)/booking/manage/:path*',
       '/:locale(ko|en|zh|es|vi|th|uz)/shows/(success|fail)',
-      '/:locale(ko|en|zh|es|vi|th|uz)/shows/(manage|scan)/:path*',
+      '/:locale(ko|en|zh|es|vi|th|uz)/shows/(manage|scan|report)/:path*',
       '/:locale(ko|en|zh|es|vi|th|uz)/subscribe/:path*',
+      '/:locale(ko|en|zh|es|vi|th|uz)/pay/:path*',
     ]);
+    // 예약금 결제 링크는 slug가 결제 권한이라 `pay` 아래 전부 측정 제외다.
+    expect(isPrivateAnalyticsPath('/ko/pay/46fee6d8ffa1a69be20324a2')).toBe(true);
+    expect(isPrivateAnalyticsPath('/ko/pay/success?paymentKey=x')).toBe(true);
     // pledge 폼은 no-store 전용 예외라 측정 제외 목록에는 없어야 한다.
     expect(isPrivateAnalyticsPath('/ko/funding/demo/pledge')).toBe(false);
   });

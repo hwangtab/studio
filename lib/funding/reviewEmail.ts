@@ -1,3 +1,4 @@
+import { adminUrl, buildEmailLayout, escapeHtml, strong, type EmailLayoutInput } from '../email/layout';
 import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 
@@ -51,6 +52,12 @@ const APPROVAL_LOCK_NOTICE = [
   '· 리워드는 제목·설명·이미지·금액·수량 제한 여부·배송 필요 여부·예상 전달 시기를 포함해 통째로 잠깁니다.',
   '승인 뒤에는 개설자 화면에서 리워드를 고치거나 새로 추가할 수 없습니다. 가격을 바꾸거나 구성을 달리한 리워드가 필요하면 새 프로젝트로 다시 신청해 주세요.',
 ];
+
+/** 운영자 메모 단락 — 줄바꿈은 살리고 값은 escape한다. */
+const noteParagraph = (note: string | null): string =>
+  `${strong('운영자 메모')}<br />${escapeHtml(note ?? '').replace(/\n/g, '<br />')}`;
+
+const contactParagraph = `문의: ${escapeHtml(CUSTOMER_REPLY_TO)} · ${escapeHtml(PHONE_NUMBER)}`;
 
 /**
  * 심사 판정을 개설자에게 알린다. 수신자는 `fundingCreators.email` 하나뿐이다
@@ -114,11 +121,48 @@ export const sendReviewDecisionEmail = async (
     ],
   };
 
+  const greeting = `${escapeHtml(project.creatorName)}님,`;
+  const htmlByAction: Record<ReviewDecisionAction, Omit<EmailLayoutInput, 'heading'>> = {
+    approve: {
+      paragraphs: [greeting, '펀딩 프로젝트가 승인되어 공개되었습니다.'],
+      rows: [
+        { label: '프로젝트', value: project.title },
+        { label: '공개 주소', value: publicUrl(slug), href: publicUrl(slug) },
+        { label: '모금 시작일', value: startAtLabel },
+      ],
+      cta: { label: '편집 화면 열기', url: editUrl(project.id) },
+      notices: [
+        `${strong('승인 뒤에는 바꿀 수 없는 항목')}: 리워드는 제목·설명·이미지·금액·수량 제한 여부·배송 필요 여부·예상 전달 시기를 포함해 통째로 잠깁니다.`,
+        '승인 뒤에는 개설자 화면에서 리워드를 고치거나 새로 추가할 수 없습니다. 가격을 바꾸거나 구성을 달리한 리워드가 필요하면 새 프로젝트로 다시 신청해 주세요.',
+      ],
+    },
+    request_changes: {
+      paragraphs: [greeting, '제출하신 펀딩 프로젝트에 보완이 필요합니다.', noteParagraph(note), '아래 편집 화면에서 내용을 고친 뒤 다시 제출해 주세요.'],
+      rows: [{ label: '프로젝트', value: project.title }],
+      cta: { label: '편집 화면 열기', url: editUrl(project.id) },
+    },
+    reject: {
+      paragraphs: [greeting, '제출하신 펀딩 프로젝트 심사 결과를 안내드립니다. 이번 심사에서는 게재가 어렵습니다.', noteParagraph(note), contactParagraph],
+      rows: [{ label: '프로젝트', value: project.title }],
+    },
+    archive: {
+      paragraphs: [
+        greeting,
+        '작성 중이던 펀딩 프로젝트가 운영자에 의해 보관 처리되었습니다.',
+        noteParagraph(note),
+        '이 프로젝트는 더 이상 편집·재제출할 수 없습니다. 다시 개설하고 싶으시면 새 프로젝트를 만들어 주세요.',
+        contactParagraph,
+      ],
+      rows: [{ label: '프로젝트', value: project.title }],
+    },
+  };
+
   const result = await sendEmail({
     to: project.creatorEmail,
     replyTo: CUSTOMER_REPLY_TO,
     subject,
     text: [`${project.creatorName}님,`, '', ...bodyByAction[action], '', PHONE].join('\n'),
+    html: buildEmailLayout({ preheader: REVIEW_SUBJECT[action], heading: REVIEW_SUBJECT[action], ...htmlByAction[action] }),
   });
   return result.ok ? null : `creator:${result.errorCode}`;
 };
@@ -169,6 +213,20 @@ export const sendCreatorEditedNotice = async (project: AdminProjectDetail): Prom
       '고친 내용이 문제가 되면 심사 화면의 "개설자에게 보이는 메모"로 연락하거나, 필요하면',
       '같은 화면의 "공개 상태"에서 종료·숨김으로 대응해 주세요.',
     ].join('\n'),
+    html: buildEmailLayout({
+      audience: 'operator',
+      preheader: `${project.creatorName} · ${project.title}`,
+      heading: '공개된 프로젝트가 수정되었습니다',
+      paragraphs: ['개설자가 공개된 프로젝트의 내용을 고쳤습니다. 심사를 거치지 않는 경로입니다.'],
+      rows: [
+        { label: '프로젝트', value: project.title },
+        { label: '개설자', value: project.creatorName },
+        { label: '개설자 이메일', value: project.creatorEmail, href: `mailto:${project.creatorEmail}` },
+        { label: '공개 주소', value: publicUrl(project.slug), href: publicUrl(project.slug) },
+      ],
+      cta: { label: '심사 화면 열기', url: adminUrl(`/admin/funding/projects/${project.id}`) },
+      notices: ['고친 내용이 문제가 되면 심사 화면의 "개설자에게 보이는 메모"로 연락하거나, 필요하면 같은 화면의 "공개 상태"에서 종료·숨김으로 대응해 주세요.'],
+    }),
   });
   return result.ok ? null : `operator:${result.errorCode}`;
 };
@@ -192,7 +250,24 @@ export const sendReviewDecisionOperatorFallback = async (
     `관리자 심사 화면: ${adminReviewUrl(project.id)}`,
   ].join('\n');
 
-  const result = await sendEmail({ to: OPERATOR_EMAIL, subject, text });
+  const html = buildEmailLayout({
+    audience: 'operator',
+    noticeTone: 'alert',
+    preheader: `${project.creatorEmail} · ${REVIEW_SUBJECT[action]} 알림 메일 실패`,
+    heading: '심사 알림 메일 실패',
+    rows: [
+      { label: '프로젝트', value: project.title },
+      { label: '판정', value: REVIEW_SUBJECT[action] },
+      { label: '개설자', value: project.creatorName },
+      { label: '개설자 이메일', value: project.creatorEmail, href: `mailto:${project.creatorEmail}` },
+      { label: '공개 주소', value: publicUrl(slug), href: publicUrl(slug) },
+      { label: '실패 사유', value: failureReason },
+    ],
+    cta: { label: '심사 화면 열기', url: adminUrl(`/admin/funding/projects/${project.id}`) },
+    notices: ['개설자에게 심사 결과 메일을 보내지 못했습니다. 위 정보로 직접 연락해 주세요.'],
+  });
+
+  const result = await sendEmail({ to: OPERATOR_EMAIL, subject, text, html });
   return result.ok ? null : `operator:${result.errorCode}`;
 };
 
@@ -278,11 +353,48 @@ export const sendPublicStatusEmail = async (
     ],
   };
 
+  const pageRow = { label: '프로젝트 주소', value: publicUrl(slug), href: publicUrl(slug) };
+  const statusGreeting = `${escapeHtml(project.creatorName)}님,`;
+  const memo = note ? [noteParagraph(note)] : [];
+  const htmlByAction: Record<PublicStatusAction, Omit<EmailLayoutInput, 'heading'>> = {
+    close: {
+      paragraphs: [statusGreeting, '펀딩 프로젝트가 운영자에 의해 종료되어 더 이상 후원을 받지 않습니다.', '프로젝트 페이지는 그대로 남아 있습니다.', noteParagraph(note), contactParagraph],
+      rows: [pageRow],
+    },
+    reopen: {
+      paragraphs: [
+        statusGreeting,
+        '펀딩 프로젝트가 다시 공개되었습니다.',
+        reopenState === 'live'
+          ? '지금 바로 새 후원을 받습니다.'
+          : reopenState === 'upcoming'
+            ? `모금 시작일(${escapeHtml(startAtLabel)})부터 후원을 받습니다. 그전까지는 페이지만 보이고 후원은 받지 않습니다.`
+            : `모금 종료일(${escapeHtml(endAtLabel)})이 이미 지나 지금은 새 후원을 받지 않습니다.`,
+        ...memo,
+      ],
+      rows: [pageRow],
+    },
+    hide: {
+      paragraphs: [statusGreeting, '펀딩 프로젝트가 목록·사이트맵에서 숨겨졌습니다. 주소를 아는 사람은 여전히 페이지를 볼 수 있습니다.', ...memo],
+      rows: [pageRow],
+    },
+    unhide: {
+      paragraphs: [statusGreeting, '펀딩 프로젝트가 다시 목록·사이트맵에 노출됩니다.', ...memo],
+      rows: [pageRow],
+    },
+  };
+
   const result = await sendEmail({
     to: project.creatorEmail,
     replyTo: CUSTOMER_REPLY_TO,
     subject,
     text: [`${project.creatorName}님,`, '', ...bodyByAction[action], '', PHONE].join('\n'),
+    html: buildEmailLayout({
+      preheader: PUBLIC_STATUS_SUBJECT[action],
+      heading: PUBLIC_STATUS_SUBJECT[action],
+      ...htmlByAction[action],
+      cta: { label: '프로젝트 페이지 보기', url: publicUrl(slug) },
+    }),
   });
   return result.ok ? null : `creator:${result.errorCode}`;
 };
@@ -311,6 +423,23 @@ export const sendPublicStatusOperatorFallback = async (
     `관리자 심사 화면: ${adminReviewUrl(project.id)}`,
   ].join('\n');
 
-  const result = await sendEmail({ to: OPERATOR_EMAIL, subject, text });
+  const html = buildEmailLayout({
+    audience: 'operator',
+    noticeTone: 'alert',
+    preheader: `${project.creatorEmail} · ${PUBLIC_STATUS_SUBJECT[action]} 알림 메일 실패`,
+    heading: '공개 상태 변경 알림 메일 실패',
+    rows: [
+      { label: '프로젝트', value: project.title },
+      { label: '변경', value: PUBLIC_STATUS_SUBJECT[action] },
+      { label: '개설자', value: project.creatorName },
+      { label: '개설자 이메일', value: project.creatorEmail, href: `mailto:${project.creatorEmail}` },
+      { label: '공개 주소', value: publicUrl(slug), href: publicUrl(slug) },
+      { label: '실패 사유', value: failureReason },
+    ],
+    cta: { label: '심사 화면 열기', url: adminUrl(`/admin/funding/projects/${project.id}`) },
+    notices: ['개설자에게 공개 상태 변경 메일을 보내지 못했습니다. 위 정보로 직접 연락해 주세요.'],
+  });
+
+  const result = await sendEmail({ to: OPERATOR_EMAIL, subject, text, html });
   return result.ok ? null : `operator:${result.errorCode}`;
 };

@@ -68,10 +68,10 @@ summary: >-
 ### 일반 튜닝 vs 다운튜닝
 
 **표준 베이스 튜닝:** E-A-D-G
-**드롭 D:** D-A-D-G (6번 현만 D로)
+**드롭 D:** D-A-D-G (4번 현만 D로)
 **드롭 C:** C-G-C-F
 **드롭 B:** B-F#-B-E
-**4반음 내림:** Eb-Ab-Db-Gb
+**반음 내림:** Eb-Ab-Db-Gb
 
 ### 다운튜닝의 특성
 
@@ -81,13 +81,13 @@ summary: >-
 
 ### 드롭 D 튜닝 활용
 
-드롭 D에서 6번 현의 D는 **파워 코드를 쉽게** 연주:
+드롭 D에서 4번 현의 D는 **파워 코드를 쉽게** 연주:
 
 ```
 
 드롭 D 파워 코드:
-6번 현: D2 (루트)
-5번 현: A2 (5도)
+4번 현: D2 (루트)
+3번 현: A2 (5도)
 → 한 프렛으로 두 현 동시 눌러 파워 코드
 
 ```
@@ -205,19 +205,13 @@ G2 - G2 - G2 - G2 (단순 반복)
 
 | 베이시스트 | 그룹 | 특기 |
 |-----------|------|------|
-| Steve Harris | Iron Maiden | 갤로핑의 창조자 |
+| Steve Harris | Iron Maiden | 갤로핑 베이스의 대표 주자 |
 | Cliff Burton | Metallica | 클래식+메탈 퓨전 베이스 |
 | Jason Newsted | Metallica | 파워풀한 피크 베이스 |
 | Geezer Butler | Black Sabbath | 헤비 베이스의 원조 |
 | Rex Brown | Pantera | 헤비 그루브 메탈 |
 
 ---
-
-## 마무리
-
-메탈 베이스는 정확성과 인내의 장르입니다. 갤로핑 패턴 하나를 BPM 160에서 안정적으로 연주하기까지 수백 시간의 연습이 필요합니다.
-
-은평구 24시간 음악연습실에서 마음껏 볼륨을 높이고 메탈 베이스의 파워를 발산하세요.
 
 ## 다운튜닝에서는 손보다 악기가 먼저 한계를 드러냅니다
 
@@ -237,4 +231,12 @@ G2 - G2 - G2 - G2 (단순 반복)
 
 ---
 
-[프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 — 완전 가이드](/stories/practice-room-bass1) | [베이스 블루스·12마디 블루스 베이스라인 — 완전 가이드](/stories/practice-room-bass-blues1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 펑크 그루브·원 드롭 베이스라인 — 완전 가이드](/stories/practice-room-bass-funk-groove1) | [베이스 5현 기타 완전 가이드](/stories/practice-room-bass-5string1)
+## 마무리
+
+메탈 베이스는 정확성과 인내의 장르입니다. 갤로핑 패턴 하나를 BPM 160에서 안정적으로 연주하기까지 수백 시간의 연습이 필요합니다.
+
+은평구 24시간 음악연습실에서 마음껏 볼륨을 높이고 메탈 베이스의 파워를 발산하세요.
+
+---
+
+[프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 — 완전 가이드](/stories/practice-room-bass1) | [베이스 블루스·12마디 블루스 베이스라인 — 완전 가이드](/stories/practice-room-bass-blues1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 펑크 그루브·원 드롭 베이스라인 — 완전 가이드](/stories/practice-room-bass-funk-groove1) | [베이스 5현 기타 완전 가이드](/stories/practice-room-bass-5string1)

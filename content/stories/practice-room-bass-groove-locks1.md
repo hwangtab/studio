@@ -157,8 +157,7 @@ faq:
 
 - **제임스 재머슨 & 베니 벤자민 (Motown)**: 레이드 백 그루브의 전설
 - **존 폴 존스 & 존 본햄 (Led Zeppelin)**: 록 역사상 가장 두꺼운 그루브 락
-- **라리 그레이엄 & 스라이 스톤 (Sly & the Family Stone)**: 펑키 그루브 락의 교과서
-- **마커스 밀러 & 오마르 하킴**: 현대 R&B 그루브의 기준
+- **라리 그레이엄 & 그렉 에리코 (Sly & the Family Stone)**: 펑키 그루브 락의 교과서
 
 ---
 
@@ -195,4 +194,4 @@ faq:
 
 *관련 아티클:*
 
-[가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 펑크 그루브·원 드롭 베이스라인 — 완전 가이드](/stories/practice-room-bass-funk-groove1)
+[가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 펑크 그루브·원 드롭 베이스라인 — 완전 가이드](/stories/practice-room-bass-funk-groove1)

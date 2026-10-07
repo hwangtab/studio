@@ -112,7 +112,7 @@ A - E - A - E (모두 셔플 느낌으로)
 **A7 워킹:**
 ```
 
-A - C - E - G (A7 코드 톤 기반)
+A - C# - E - G (A7 코드 톤 기반)
 
 ```
 
@@ -240,7 +240,7 @@ Treble: 0dB
 - D7, E7으로 이동하며 패턴 유지
 
 **3. 워킹 블루스 (15분)**
-- A7 위 A-C-E-G 워킹 패턴
+- A7 위 A-C#-E-G 워킹 패턴
 - 전체 12마디에 적용
 
 **4. 곡 적용 (10분)**
@@ -257,24 +257,6 @@ Treble: 0dB
 | Willie Dixon | Chess Records | 시카고 블루스 |
 | Jack Bruce | Cream | 블루스-록 |
 | Roscoe Beck | Robben Ford | 재즈 블루스 |
-
----
-
-## 마무리
-
-블루스 베이스는 **음악의 가장 솔직한 언어**입니다. 12마디 구조 안에서 I-IV-V 코드를 따라가는 것—이 단순함 속에서 진정한 그루브가 나옵니다.
-
-은평구 24시간 음악연습실에서 블루스 음반을 들으며 베이스를 따라 연주해보세요. BB King의 기타 아래에서 Willie Dixon의 베이스를 타고 가는 느낌—그것이 블루스 베이스의 진정한 맛입니다.
-
-[베이스 그루브 락·킥드럼 동조 — 완전 가이드](/stories/practice-room-bass-groove-locks1)
-
-[베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 펑크 그루브·원 드롭 베이스라인 — 완전 가이드](/stories/practice-room-bass-funk-groove1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass1)
-
-[베이스 메탈·헤비록 베이스라인 — 완전 가이드](/stories/practice-room-bass-metal-rock1)
-[재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일](/stories/practice-room-bass-jazz-fusion1)
-
-[베이스 리듬 락킹·드럼과의 앙상블 — 완전 가이드](/stories/practice-room-bass-rhythm-locking1)
-[베이스 레게·덥 베이스라인 — 완전 가이드](/stories/practice-room-bass-reggae-dub1)
 
 ---
 
@@ -297,5 +279,23 @@ Treble: 0dB
 ---
 
 재즈 베이스를 처음 공부할 때는 워킹 베이스라인 개념을 이해하는 것이 핵심입니다. 코드 톤을 연결하는 크로매틱 패싱 노트를 적절히 활용하면 매끄럽고 자연스러운 워킹 라인이 완성됩니다. 2박과 4박에 스윙 감을 실어주는 것이 재즈 그루브의 출발점입니다. 피아노나 기타 반주에 맞춰 실제로 연주해보는 경험이 쌓일수록 코드 진행을 귀로 읽는 능력도 함께 발전합니다. 연습실에서의 시간을 최대한 활용하려면 집에서 이미 기초 연습을 충분히 마친 상태에서 방문하는 것이 이상적입니다. 집에서는 조용히 운지나 리듬 패턴을 머릿속으로 시뮬레이션하고, 연습실에서는 실제 악기와 앰프로 이를 확인하고 정밀하게 다듬는 방식으로 역할을 나누면 효율이 높아집니다. 연습 노트를 작성해 각 세션의 목표, 성과, 다음에 집중할 부분을 기록해두면 지속적인 성장을 체계적으로 관리할 수 있습니다.
+
+---
+
+## 마무리
+
+블루스 베이스는 **음악의 가장 솔직한 언어**입니다. 12마디 구조 안에서 I-IV-V 코드를 따라가는 것—이 단순함 속에서 진정한 그루브가 나옵니다.
+
+은평구 24시간 음악연습실에서 블루스 음반을 들으며 베이스를 따라 연주해보세요. 
+
+[베이스 그루브 락·킥드럼 동조 — 완전 가이드](/stories/practice-room-bass-groove-locks1)
+
+[베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 펑크 그루브·원 드롭 베이스라인 — 완전 가이드](/stories/practice-room-bass-funk-groove1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1)
+
+[베이스 메탈·헤비록 베이스라인 — 완전 가이드](/stories/practice-room-bass-metal-rock1)
+[재즈퓨전 베이스·Stanley Clarke·Weather Report·Jaco 스타일](/stories/practice-room-bass-jazz-fusion1)
+
+[베이스 리듬 락킹·드럼과의 앙상블 — 완전 가이드](/stories/practice-room-bass-rhythm-locking1)
+[베이스 레게·덥 베이스라인 — 완전 가이드](/stories/practice-room-bass-reggae-dub1)
 
 [베이스 솔로·그루브 솔로잉 기법 — 완전 가이드](/stories/practice-room-bass-solo-grooving1)

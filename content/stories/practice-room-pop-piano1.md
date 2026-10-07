@@ -35,7 +35,7 @@ faq:
     a: >-
       K-POP 대표 코드 진행: ① I-V-vi-IV (C-G-Am-F) — 가장 흔한 팝 진행 ② vi-IV-I-V (Am-F-C-G)
       — 단조 느낌의 팝 ③ I-IV-V-I (C-F-G-C) — 단순하지만 강렬 ④ I-vi-IV-V (C-Am-F-G) — 레트로 팝
-      느낌. 이 4가지 진행이 K-POP의 약 70%를 차지합니다. 전조하면서 모든 조성에서 연주할 수 있게 훈련하세요.
+      느낌. 전조하면서 모든 조성에서 연주할 수 있게 훈련하세요.
 ---
 
 ![팝·K-POP 피아노 코드 연습 음악연습실 스튜디오 놀](/images/room1.webp)
@@ -117,4 +117,4 @@ Am → F → C → G (반복)
 
 ---
 
-[팝 피아노·감성 피아노 연주 — 팝 피아노 완성 가이드](/stories/practice-room-piano-pop1) | [기타 코드·코드 전환 연습 — 코드 자동화 완성 가이드](/stories/practice-room-guitar-chord1) | [재즈 피아노 보이싱·텐션 코드 연습 — 재즈 코드 완성 가이드](/stories/practice-room-piano-jazz-chord1) | [피아노 반주·웨딩 피아노 연습 — 결혼식 피아노 완성 가이드](/stories/practice-room-piano-wedding1) | [전자 피아노·디지털 피아노 연습 — 터치·표현력 완성 가이드](/stories/practice-room-digital-piano1)
+[기타 코드·코드 전환 연습 — 코드 자동화 완성 가이드](/stories/practice-room-guitar-chord1) | [재즈 피아노 보이싱·텐션 코드 연습 — 재즈 코드 완성 가이드](/stories/practice-room-piano-jazz-chord1) | [피아노 반주·웨딩 피아노 연습 — 결혼식 피아노 완성 가이드](/stories/practice-room-piano-wedding1) | [전자 피아노·디지털 피아노 연습 — 터치·표현력 완성 가이드](/stories/practice-room-digital-piano1)

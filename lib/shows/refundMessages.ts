@@ -21,3 +21,29 @@ export const SHOW_REFUND_REJECT_MESSAGES: Record<string, string> = {
   refund_account_unavailable: '지금은 환불 계좌를 접수할 수 없습니다. 잠시 후 다시 시도하거나 문의해 주세요. 문의 010-4255-7893',
   default: '환불을 처리하지 못했습니다. 문의 010-4255-7893',
 };
+
+/** 영어 화면(/en/shows)용 — 위 표와 같은 사유·같은 내용. 한쪽을 고치면 다른 쪽도 고친다. */
+export const SHOW_REFUND_REJECT_MESSAGES_EN: Record<string, string> = {
+  no_tickets: 'Please choose the tickets to refund.',
+  not_found: 'We could not find this order.',
+  invalid_order_status: 'Only paid orders can be refunded.',
+  ticket_not_found: 'We could not find the selected tickets. Please refresh the page.',
+  checked_in: 'Tickets that have already been checked in cannot be refunded.',
+  not_issued: 'Your selection includes a ticket that is already refunded or cannot be refunded.',
+  after_showtime_start: 'Tickets cannot be refunded after the show has started.',
+  zero_amount: 'There is no refundable amount.',
+  no_payment: 'We could not find the payment record. Contact: +82 10-4255-7893',
+  exceeds_remaining: 'This is more than the refundable balance. Contact: +82 10-4255-7893',
+  concurrent_change: 'Another change is in progress. Please refresh in a moment and try again.',
+  toss_failed: 'The payment provider could not process the refund. Please try again later or contact us: +82 10-4255-7893',
+  comp_ticket: 'Complimentary tickets cannot be refunded.',
+  toss_unknown: 'We have not been able to confirm the refund result yet. You will not be refunded twice — please refresh in a moment to check. If nothing changes, contact us: +82 10-4255-7893',
+  refund_account_invalid: 'Please check the bank, account number and account holder.',
+  refund_account_unavailable: 'We cannot accept a refund account right now. Please try again later or contact us: +82 10-4255-7893',
+  // 계좌 입금 대기 신청 거두기(action: withdraw)
+  withdraw_not_awaiting: 'This is not a request waiting for a transfer. Please refresh the page.',
+  withdraw_failed: 'We could not cancel the request. Please refresh the page or contact us: +82 10-4255-7893',
+  rate_limited: 'Too many requests. Please try again in a moment.',
+  bad_request: 'The request is not in the expected format.',
+  default: 'We could not process the refund. Contact: +82 10-4255-7893',
+};

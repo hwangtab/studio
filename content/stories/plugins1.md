@@ -55,7 +55,7 @@ howTo:
 
 > **Key Takeaways**
 > - **체인 순서가 결과를 결정**: 보컬 체인 표준은 게이트 → EQ(저음 컷) → 컴프(피크 제어) → 디에서 → EQ(톤) → 리버브·딜레이.
-> - **번들이 단품보다 ROI 높음**: Waves Gold/Platinum, FabFilter FX/Pro 번들이 단품 합산 대비 60~80% 저렴. Black Friday/Cyber Monday 할인 적극 활용.
+> - **번들이 단품보다 ROI 높음**: Waves Gold/Platinum, FabFilter FX/Pro 번들이 단품 합산 대비 저렴. Black Friday/Cyber Monday 할인 적극 활용.
 > - **무료가 유료를 못 따라잡지는 않습니다**: Logic Pro·Ableton·Cubase 내장 EQ·컴프는 프로 음반에서도 사용. Valhalla Supermassive는 무료지만 업계 표준급.
 > - **피치 교정은 두 종류**: 자연스러운 교정 = Melodyne(수동·정밀), 효과·실시간 = Auto-Tune. 목적이 다르니 둘 다 시도해보고 선택.
 > - **하드웨어 에뮬은 마지막**: UAD·Slate Digital 같은 분석 에뮬은 기본 체인 익숙해진 뒤에. 초보자는 가격 대비 체감 효과가 작음.
@@ -64,8 +64,7 @@ howTo:
 
 플러그인은 도구입니다. 어떤 도구를 쓰느냐보다 어떻게 쓰느냐가 더 중요합니다. 다만 좋은 도구는 작업 효율을 높여줍니다.
 
-플러그인 기반 오디오 믹싱은 **1996년 Waves Audio가 L1 Ultramaximizer를 시작으로 Native Power Pack 번들을 출시**([Sound on Sound: Waves Native Power Pack 리뷰](https://www.soundonsound.com/reviews/waves-native-power-pack) · [Waves Audio 공식 — Power Pack](https://www.waves.com/bundles/power-pack))하면서 본격화됐습니다. 하드웨어 랙 장비에만 있던 EQ·컴프레서·리버브가 처음 소프트웨어로 옮겨오면서 DAW 안에서 플러그인으로 믹싱하는 시대가 열렸습니다. **Steinberg의 VST 표준은 1996년 1.0, 1999년 2.0, 2008년 3.0** 순으로 발전([Virtual Studio Technology — Wikipedia](https://en.wikipedia.org/wiki/Virtual_Studio_Technology) · [Steinberg Developer — About VST SDK](https://www.steinberg.net/developers/vstsdk/))하면서 플러그인 생태계도 폭발적으로 성장했습니다. 2010년대에는 Universal Audio가 UAD DSP 카드 기반의 아날로그 하드웨어 에뮬레이션 플러그인(API 2500, Neve 1073, LA-2A)을 내놓았습니다. 이 덕분에 홈 레코딩 환경에서도 스튜디오 품질 사운드를 구현할 수 있게 됐습니다. 한국 시장은 2015년 이후 FabFilter와 Waves 번들 가격이 대중화되면서 홈 레코딩 엔지니어의 플러그인 구성이 급격히 고도화됐으며, 국내 인디 레이블과 유튜브 음악 채널 제작자 사이에서는 FabFilter Pro-Q 3·Valhalla Room·CLA-76 조합이 사실상의 표준으로 자리잡았습니다.
-
+플러그인 기반 오디오 믹싱은 **1990년대 Waves Audio가 L1 Ultramaximizer를 시작으로 Native Power Pack 번들을 출시**([Sound on Sound: Waves Native Power Pack 리뷰](https://www.soundonsound.com/reviews/waves-native-power-pack) · [Waves Audio 공식 — Power Pack](https://www.waves.com/bundles/power-pack))하면서 본격화됐습니다. 하드웨어 랙 장비에만 있던 EQ·컴프레서·리버브가 처음 소프트웨어로 옮겨오면서 DAW 안에서 플러그인으로 믹싱하는 시대가 열렸습니다. **Steinberg의 VST 표준은 1996년 1.0, 1999년 2.0, 2008년 3.0** 순으로 발전([Virtual Studio Technology — Wikipedia](https://en.wikipedia.org/wiki/Virtual_Studio_Technology) · [Steinberg Developer — About VST SDK](https://www.steinberg.net/developers/vstsdk/))하면서 플러그인 생태계도 폭발적으로 성장했습니다. Universal Audio는 UAD DSP 카드 기반의 아날로그 하드웨어 에뮬레이션 플러그인(API 2500, Neve 1073, LA-2A)을 내놓았습니다. 이 덕분에 홈 레코딩 환경에서도 스튜디오 품질 사운드를 구현할 수 있게 됐습니다.
 ---
 
 ## EQ 플러그인
@@ -141,7 +140,7 @@ howTo:
 
 ## 출처
 
-- Waves Audio 플러그인 역사 (L1 Ultramaximizer 1996, Native Power Pack): [Sound on Sound — Waves Native Power Pack](https://www.soundonsound.com/reviews/waves-native-power-pack) · [Waves Audio 공식 — Power Pack](https://www.waves.com/bundles/power-pack)
+- Waves Audio 플러그인 역사 (L1 Ultramaximizer, Native Power Pack): [Sound on Sound — Waves Native Power Pack](https://www.soundonsound.com/reviews/waves-native-power-pack) · [Waves Audio 공식 — Power Pack](https://www.waves.com/bundles/power-pack)
 - Steinberg VST 표준 (1.0=1996, 2.0=1999, 3.0=2008): [Virtual Studio Technology — Wikipedia](https://en.wikipedia.org/wiki/Virtual_Studio_Technology) · [Steinberg Developer — VST SDK](https://www.steinberg.net/developers/vstsdk/)
 
 본 가이드의 추천 조합(FabFilter Pro-Q 3·Valhalla Room·CLA-76 등)은 스튜디오 놀(연신내, 서울 은평구) 운영자 황경하 엔지니어가 보컬 녹음·믹싱 세션에서 직접 쓰고 검증한 도구입니다. 한국 인디 레이블·유튜브 채널 제작자 사이의 실제 사용 패턴 관찰에 기반합니다. 가격·할인 정보는 2026년 5월 기준입니다. 각 제조사(Waves·FabFilter·Valhalla DSP·Universal Audio·Celemony·Antares) 공식 사이트에서 최신 정보를 확인하시기 바랍니다.
@@ -166,12 +165,6 @@ Pro-Q 3 부드러운 EQ → LA-2A 에뮬레이션(UAD/Waves)으로 부드러운 
 
 ---
 
-## 마치며
-
-플러그인을 구매하기 전에 DAW 내장 도구를 완전히 익히는 것이 먼저입니다. Logic Pro의 Channel EQ, Ableton의 EQ Eight, Pro Tools의 내장 컴프레서만으로도 상업 품질의 믹스를 만들 수 있습니다. 유료 플러그인은 워크플로우 효율을 높이거나 특정 아날로그 톤을 재현하는 용도에 맞춰져 있습니다. 처음 플러그인을 구매한다면 FabFilter Pro-Q 3(EQ) → Valhalla Room(리버브) → Waves CLA-2A 또는 CLA-76(컴프레서) 순서가 투자 대비 효과가 가장 높습니다.
-
-Melodyne Essential은 보컬 피치를 자연스럽게 교정하는 기본 도구로, 보컬 중심 장르라면 4순위에 추가합니다. 저도 실제 세션에서는 상위 버전인 Melodyne Studio를 씁니다. 전문 엔지니어가 쓰는 플러그인 환경에서 실제 보컬 녹음과 믹싱을 경험하고 싶다면 [스튜디오 놀](/mixing-mastering)을 방문하세요.
-
 ## 15년 믹싱하며 정리된 플러그인 철학
 
 플러그인은 사면 늘고, 늘면 헷갈립니다. 저는 15년째 믹싱을 해오면서 오히려 도구를 줄여왔어요. 입문자분들이 플러그인 때문에 헤맬 때 드리는 이야기를 정리합니다.
@@ -184,4 +177,12 @@ EQ 하나, 컴프레서 하나를 손에 익도록 깊이 쓰는 게 열 개를 
 
 ---
 
-[VST 플러그인 완전 가이드](/stories/vst-guide1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/vocal-compression1) | [음정 교정 도구 비교](/stories/pitchtool1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1)
+## 마치며
+
+플러그인을 구매하기 전에 DAW 내장 도구를 완전히 익히는 것이 먼저입니다. Logic Pro의 Channel EQ, Ableton의 EQ Eight, Pro Tools의 내장 컴프레서만으로도 상업 품질의 믹스를 만들 수 있습니다. 유료 플러그인은 워크플로우 효율을 높이거나 특정 아날로그 톤을 재현하는 용도에 맞춰져 있습니다. 처음 플러그인을 구매한다면 FabFilter Pro-Q 3(EQ) → Valhalla Room(리버브) → Waves CLA-2A 또는 CLA-76(컴프레서) 순서가 투자 대비 효과가 가장 높습니다.
+
+Melodyne Essential은 보컬 피치를 자연스럽게 교정하는 기본 도구로, 보컬 중심 장르라면 4순위에 추가합니다. 저도 실제 세션에서는 상위 버전인 Melodyne Studio를 씁니다. 전문 엔지니어가 쓰는 플러그인 환경에서 실제 보컬 녹음과 믹싱을 경험하고 싶다면 [스튜디오 놀](/mixing-mastering)을 방문하세요.
+
+---
+
+[보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/vocal-compression1) | [음정 교정 도구 비교](/stories/pitchtool1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1)
