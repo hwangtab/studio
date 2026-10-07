@@ -3,7 +3,7 @@ import { sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { refunds } from '../../db/schema';
 import { VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE, VIRTUAL_ACCOUNT_ERROR_CODE, cancelPayment } from '../booking/toss';
-import { sendFundingCancelledEmails } from './email';
+import { sendFundingCancelledEmails, sendFundingDepositWithdrawnOperatorEmail } from './email';
 import { SEND_INFLIGHT, SEND_PENDING } from '../ops/notificationSentinel';
 import { assessSelfCancel, canWithdrawBeforeDeposit, CANCEL_BLOCK_MESSAGES } from './policy';
 import { cancelUnpaidBankDeposit } from './bankTransfer';
@@ -87,7 +87,16 @@ export const cancelFundingPledge = async (input: {
    */
   if (input.requestedBy === 'customer' && canWithdrawBeforeDeposit({ orderStatus: order.status, paymentMethod: pledge.paymentMethod, entrySource: pledge.entrySource })) {
     const r = await cancelUnpaidBankDeposit(order);
-    return r.ok ? { ok: true, mode: 'withdrawn', refundAmount: 0 } : { ok: false, code: 'invalid_state', message: r.message };
+    if (!r.ok) return { ok: false, code: 'invalid_state', message: r.message };
+    // 운영자 알림 — 실패해도 취소 결과는 그대로다.
+    try {
+      const { project } = await getFundingProjectOrFailure(pledge.projectSlug);
+      const failure = await sendFundingDepositWithdrawnOperatorEmail(order, project);
+      if (failure) console.error('[funding-cancel] 신청 취소 운영자 알림 발송 실패', { orderNo: order.orderNo, failure });
+    } catch (error) {
+      console.error('[funding-cancel] 신청 취소 운영자 알림 예외', { orderNo: order.orderNo, error: (error as Error).message });
+    }
+    return { ok: true, mode: 'withdrawn', refundAmount: 0 };
   }
   /**
    * 조회 실패와 부재를 구분한다. 예전에는 둘 다 null이라 `project ? … : 'closed'`가

@@ -415,3 +415,68 @@ export const notifyShowPaymentToOperator = async (orderNo: string): Promise<void
     console.error('[shows-email] 운영자 결제 알림 예외', { orderNo, error: (error as Error).message });
   }
 };
+
+export interface ShowRefundOperatorMailData extends ShowOperatorMailData {
+  refundedAmount: number;
+  refundedCount: number;
+  refundVia: ShowRefundVia;
+}
+
+/**
+ * 고객 셀프 환불의 운영자 알림 — 순수 함수. 카드 결제는 토스가 이미 돌려줬다는 안내, 계좌 입금 결제는
+ * **운영자가 환불 계좌로 송금해야 한다**는 할 일이다(관리자 공연 화면의 환불 계좌 패널 "송금 완료").
+ */
+export const buildShowRefundOperatorEmail = (d: ShowRefundOperatorMailData): { subject: string; text: string; html: string } => {
+  const when = showDateTimeLabel(d.startsAtSec);
+  const amount = `${formatPriceAmount(d.refundedAmount)}원`;
+  const manage = adminUrl(`/admin/shows/${d.showId}`);
+  const needsTransfer = d.refundVia === 'bank_account';
+  const lead = needsTransfer
+    ? `${d.buyerName}님이 계좌 입금으로 산 티켓 ${d.refundedCount}매를 취소했습니다. 고객이 적은 환불 계좌로 ${amount}을 보내고 관리자 화면에서 "송금 완료"를 눌러 주세요.`
+    : `${d.buyerName}님이 티켓 ${d.refundedCount}매를 취소했습니다. 카드 결제는 ${amount}이 자동으로 환불되었습니다.`;
+  return {
+    subject: `[공연 예매] ${needsTransfer ? '환불 송금 필요' : '고객 환불'} ${amount} — ${d.showTitle} ${when} · ${d.buyerName}`,
+    text: [
+      lead,
+      `공연: ${d.showTitle}`,
+      `회차: ${when}`,
+      `환불: ${d.refundedCount}매 · ${amount}`,
+      `구매자: ${d.buyerName} / ${d.buyerContact}`,
+      `주문번호: ${d.orderNo}`,
+      `관리자: ${manage}`,
+    ].join('\n'),
+    html: buildEmailLayout({
+      audience: 'operator',
+      ...(needsTransfer
+        ? { noticeTone: 'alert' as const, notices: ['송금한 뒤 관리자 화면의 환불 계좌 칸에서 <strong>"송금 완료"</strong>를 눌러 주세요.'] }
+        : {}),
+      preheader: `${d.showTitle} ${when} · ${d.refundedCount}매 · ${amount}`,
+      heading: needsTransfer ? '공연 티켓 환불 — 송금이 필요합니다' : '고객이 공연 티켓을 환불했습니다',
+      paragraphs: [escapeHtml(lead)],
+      rows: [
+        { label: '공연', value: d.showTitle },
+        { label: '회차', value: when },
+        { label: '환불', value: `${d.refundedCount}매 · ${amount}`, emphasis: true },
+        { label: '구매자', value: d.buyerName },
+        { label: '연락처', value: d.buyerContact, href: contactHref(d.buyerContact) },
+        { label: '주문번호', value: d.orderNo },
+      ],
+      cta: { label: needsTransfer ? '환불 계좌 보러 가기' : '관리자에서 보기', url: manage },
+    }),
+  };
+};
+
+/** 고객 셀프 환불(pages/api/shows/refund.ts)의 운영자 알림 한 통. 관리자 환불에서는 부르지 않는다. 예외는 삼킨다. */
+export const notifyShowRefundToOperator = async (
+  orderNo: string,
+  refund: { refundedAmount: number; refundedCount: number; refundVia: ShowRefundVia },
+): Promise<void> => {
+  try {
+    const data = await loadShowOrder(orderNo, { localize: false });
+    if (!data) return;
+    const r = await sendEmail({ to: OPERATOR_EMAIL, ...buildShowRefundOperatorEmail({ ...data, ...refund }) });
+    if (!r.ok) console.error('[shows-email] 운영자 환불 알림 발송 실패', { orderNo, code: r.errorCode });
+  } catch (error) {
+    console.error('[shows-email] 운영자 환불 알림 예외', { orderNo, error: (error as Error).message });
+  }
+};

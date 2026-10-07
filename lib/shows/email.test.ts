@@ -2,7 +2,7 @@ jest.mock('../email/resend', () => ({ sendEmail: jest.fn().mockResolvedValue({ o
 jest.mock('../../db/client', () => ({ getDb: jest.fn() }));
 
 import {
-  buildRefundPolicyLines, buildShowRefundEmail, buildShowTicketEmail,
+  buildRefundPolicyLines, buildShowRefundEmail, buildShowRefundOperatorEmail, buildShowTicketEmail,
   buildShowtimeCancelledEmail, resolveShowRecipient, showDateTimeLabel,
 } from './email';
 
@@ -77,5 +77,27 @@ describe('환불 메일 — 계좌 입금', () => {
     expect(m.text).not.toContain('3영업일');
     expect(m.html).not.toContain('3영업일');
     expect(m.text).toContain('계좌로 보내 드렸습니다');
+  });
+});
+
+describe('고객 셀프 환불 운영자 알림', () => {
+  const data = {
+    orderNo: 'TKT-20261003-ABCDEF12', showId: 'show-1', showTitle: '놀 라이브', buyerName: '김놀', buyerContact: '010-1234-5678',
+    startsAtSec: Date.UTC(2026, 9, 17, 10, 0) / 1000, totalAmount: 30000, tickets: [],
+  };
+
+  it('계좌 입금 결제는 송금이 필요하다고 알린다', () => {
+    const { subject, text, html } = buildShowRefundOperatorEmail({ ...data, refundedAmount: 27000, refundedCount: 1, refundVia: 'bank_account' });
+    expect(subject).toContain('환불 송금 필요');
+    expect(subject).toContain('27,000원');
+    expect(text).toContain('환불 계좌로 27,000원을 보내고');
+    expect(html).toContain('송금 완료');
+  });
+
+  it('카드 결제는 자동 환불됐다고만 알린다', () => {
+    const { subject, text } = buildShowRefundOperatorEmail({ ...data, refundedAmount: 30000, refundedCount: 2, refundVia: 'payment' });
+    expect(subject).toContain('고객 환불');
+    expect(text).toContain('자동으로 환불되었습니다');
+    expect(text).not.toContain('송금');
   });
 });

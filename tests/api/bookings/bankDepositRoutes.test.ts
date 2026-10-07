@@ -26,6 +26,10 @@ jest.mock('../../../lib/booking/email', () => ({
   sendBookingConfirmedEmails: jest.fn().mockResolvedValue(null),
   sendBookingCancelledEmails: jest.fn().mockResolvedValue(null),
 }));
+jest.mock('../../../lib/payments/bankDepositOrders', () => ({
+  ...jest.requireActual('../../../lib/payments/bankDepositOrders'),
+  sendDepositWithdrawnOperatorAlert: jest.fn().mockResolvedValue(undefined),
+}));
 
 /* eslint-disable import/first */
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -35,6 +39,7 @@ import adminHandler from '../../../pages/api/admin/bookings/[id]';
 import { createBookingOrder } from '../../../lib/booking/service';
 import { sendBookingCancelledEmails } from '../../../lib/booking/email';
 import { deleteBookingEvent } from '../../../lib/booking/gcal';
+import { sendDepositWithdrawnOperatorAlert } from '../../../lib/payments/bankDepositOrders';
 /* eslint-enable import/first */
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
@@ -94,12 +99,14 @@ it('슬롯 조회: 계좌 입금 대기 예약의 시간대는 하루가 지나�
   expect(slots.find((s) => s.startHour === 14)?.available).toBe(false);
 });
 
-it('고객 취소 API: 입금 대기면 환불 없이 신청을 거두고(메일 없음) 시간대를 푼다', async () => {
+it('고객 취소 API: 입금 대기면 환불 없이 신청을 거두고(고객 메일 없음, 운영자 알림 한 통) 시간대를 푼다', async () => {
   const b = await createBank();
   const res = await call(cancelHandler as Handler, { body: { orderNo: b.orderNo.toLowerCase(), token: b.token } });
   expect(res).toMatchObject({ status: 200, body: { ok: true, withdrawn: true } });
   expect(await status(b.orderNo)).toBe('deposit_cancelled');
   expect(sendBookingCancelledEmails).not.toHaveBeenCalled();
+  expect(sendDepositWithdrawnOperatorAlert).toHaveBeenCalledTimes(1);
+  expect(sendDepositWithdrawnOperatorAlert).toHaveBeenCalledWith(expect.objectContaining({ orderNo: b.orderNo }));
 });
 
 describe('관리자 예약 API — 계좌 입금', () => {
@@ -117,6 +124,8 @@ describe('관리자 예약 API — 계좌 입금', () => {
     const resend = await admin(b.id, 'resend-notification');
     expect(resend.status).toBe(409);
     expect(sendBookingCancelledEmails).not.toHaveBeenCalled();
+    // 운영자가 직접 한 취소에는 운영자 알림이 없다.
+    expect(sendDepositWithdrawnOperatorAlert).not.toHaveBeenCalled();
   });
 
   it('delete_waiting_event: 미입금 취소 때 지우지 못한 대기 일정을 다시 지운다', async () => {

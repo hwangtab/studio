@@ -17,6 +17,7 @@ jest.mock('../../../lib/shows/email', () => ({
 jest.mock('../../../lib/payments/bankDepositOrders', () => ({
   ...jest.requireActual('../../../lib/payments/bankDepositOrders'),
   sendDepositGuideEmails: jest.fn().mockResolvedValue(null),
+  sendDepositWithdrawnOperatorAlert: jest.fn().mockResolvedValue(undefined),
 }));
 
 /* eslint-disable import/first */
@@ -25,6 +26,7 @@ import refundHandler from '../../../pages/api/shows/refund';
 import adminHandler from '../../../pages/api/admin/shows/[id]';
 import { createShowOrder } from '../../../lib/shows/service';
 import { sendShowTicketEmail } from '../../../lib/shows/email';
+import { sendDepositWithdrawnOperatorAlert } from '../../../lib/payments/bankDepositOrders';
 /* eslint-enable import/first */
 
 type Handler = (req: NextApiRequest, res: NextApiResponse) => unknown;
@@ -72,7 +74,11 @@ it('고객 withdraw: 입금 대기 신청을 거두고 좌석을 푼다(토큰�
   expect(await statusOf(o.orderNo)).toBe('deposit_cancelled');
   const tickets = await mockDb.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, o.orderNo) });
   expect(tickets.every((t) => t.status === 'void')).toBe(true);
+  // 운영자에게 한 통 — 고객이 직접 취소했다는 사실이 메일로 남는다.
+  expect(sendDepositWithdrawnOperatorAlert).toHaveBeenCalledTimes(1);
+  expect(sendDepositWithdrawnOperatorAlert).toHaveBeenCalledWith(expect.objectContaining({ orderNo: o.orderNo, kindLabel: '공연 예매' }));
   expect((await call(refundHandler as Handler, { action: 'withdraw', orderNo: o.orderNo, token: o.manageToken })).status).toBe(409);
+  expect(sendDepositWithdrawnOperatorAlert).toHaveBeenCalledTimes(1);
 });
 
 describe('관리자 공연 API — 계좌 입금', () => {
@@ -88,6 +94,8 @@ describe('관리자 공연 API — 계좌 입금', () => {
     const o = await bankOrder();
     expect((await admin('cancel_unpaid_deposit', o.orderNo)).status).toBe(200);
     expect(await statusOf(o.orderNo)).toBe('deposit_cancelled');
+    // 운영자가 직접 한 취소에는 운영자 알림이 없다.
+    expect(sendDepositWithdrawnOperatorAlert).not.toHaveBeenCalled();
   });
 
   it('mark_refund_sent: 계좌 입금 주문만(대기 건은 409), 환불 계좌 행에 송금 완료를 찍는다', async () => {
