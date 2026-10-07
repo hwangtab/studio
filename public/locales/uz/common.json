@@ -2676,6 +2676,10 @@
               "detail": "Paketga aranjirovka kirmaydi → kichik tarkib ₩500K · to'liq guruh ₩1M · katta tarkib ₩1,2M (kompozitsiya va aranjirovka narxlari bo'yicha, har qo'shiq)"
             },
             {
+              "label": "Vokal tuning va ritm tuzatish",
+              "detail": "Paketga kirmaydi → batafsil tuning kerak bo'lsa, har bir qo'shiq uchun +₩150K (ixtiyoriy)"
+            },
+            {
               "label": "Media PR",
               "detail": "1 raund asos → 2 raund·chiqarish intervyusi +₩300K"
             }
@@ -2692,6 +2696,10 @@
             {
               "question": "Bu narxga qanday ishlar kiradi?",
               "answer": "Vokal yozuvi va miks asos, ko‘lam kengaygan sari sessiya muvofiqlashtirish, aranjirovka, mastering, distribyutsiya va media PR qo‘shilib narx oshib boradi. Bu oddiy studiya ijarasi emas, butun reliz jarayoni davomida siz bilan birga bo‘lish narxi. Sessiya tarkibi va aranjirovkaga qarab o‘zgaradi; konsultatsiyadan keyin moslashtirilgan taklif beramiz. Sessiya musiqachilari haqi paketga kirmaydi — musiqachilarga to‘lanadigan summaning o‘zini olamiz, vositachilik haqisiz."
+            },
+            {
+              "question": "Reliz rejasi bo'lmasa ham bu paketdan foydalansa bo'ladimi?",
+              "answer": "Ha. Uni yozuv, miks va masteringni bir yo'la topshirish uchun ishlatishingiz mumkin. Tarqatish va PRdan foydalanmasangiz ham narx ₩500K bo'lib qoladi va vokal yozuv, miks hamda masteringni alohida buyurtma qilgandagi ₩550K yig'indisidan past. Batafsil vokal tuning va ritm tuzatish — har bir qo'shiq uchun +₩150K (ixtiyoriy); sessiya musiqachilari haqi va aranjirovka kirmaydi."
             },
             {
               "question": "So'ramasdan qo'shiqni o'zgartirmaysizlarmi?",
