@@ -1736,6 +1736,22 @@ export const showScanLinks = sqliteTable('show_scan_links', {
   showtimeIdx: index('show_scan_links_showtime_idx').on(t.showtimeId),
 }));
 
+/**
+ * 기획자 현황 링크 — 공연 기획자·주최 측이 로그인 없이 그 공연의 **판매 집계만** 보는 링크(lib/shows/reportLink.ts).
+ * 스캔 링크와 같은 틀(토큰 해시·만료·폐기)이고 범위만 회차가 아니라 공연 전체다. 개인정보는 싣지 않는다.
+ */
+export const showReportLinks = sqliteTable('show_report_links', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  showId: text('show_id').notNull().references(() => shows.id),
+  tokenHash: text('token_hash').notNull().unique(),
+  label: text('label').notNull(),
+  expiresAt: integer('expires_at').notNull(),
+  revokedAt: integer('revoked_at'),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  showIdx: index('show_report_links_show_idx').on(t.showId),
+}));
+
 export const showsRelations = relations(shows, ({ many }) => ({
   zones: many(showZones),
   showtimes: many(showtimes),

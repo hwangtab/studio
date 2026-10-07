@@ -95,7 +95,7 @@ describe('isPrivateAnalyticsPath', () => {
       '/:locale(ko|en|zh|es|vi|th|uz)/booking/(success|fail)',
       '/:locale(ko|en|zh|es|vi|th|uz)/booking/manage/:path*',
       '/:locale(ko|en|zh|es|vi|th|uz)/shows/(success|fail)',
-      '/:locale(ko|en|zh|es|vi|th|uz)/shows/(manage|scan)/:path*',
+      '/:locale(ko|en|zh|es|vi|th|uz)/shows/(manage|scan|report)/:path*',
       '/:locale(ko|en|zh|es|vi|th|uz)/subscribe/:path*',
       '/:locale(ko|en|zh|es|vi|th|uz)/pay/:path*',
     ]);

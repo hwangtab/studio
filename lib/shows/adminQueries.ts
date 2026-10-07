@@ -58,7 +58,7 @@ export async function listAdminShows(): Promise<AdminShowListItem[]> {
   }));
 }
 
-async function showtimeStats(showId?: string): Promise<Array<AdminShowtimeStat & { showId: string }>> {
+export async function showtimeStats(showId?: string): Promise<Array<AdminShowtimeStat & { showId: string }>> {
   const db = getDb();
   const rows = (await db.all(sql`
     SELECT st.id as id, st.show_id as showId, st.starts_at as startsAt, st.status as status, st.sales_close_at as salesCloseAt,
