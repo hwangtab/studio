@@ -4,6 +4,7 @@ import { and, eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { showReportLinks } from '../../db/schema';
+import { REPORT_LINK_MAX_TTL_DAYS } from './reportLinkLimits';
 import { evaluateScanLink, hashScanToken, type ScanLinkRejection } from './scanLink';
 
 /**
@@ -17,8 +18,7 @@ import { evaluateScanLink, hashScanToken, type ScanLinkRejection } from './scanL
  * 처리방침 개정(판본 게이트)이 먼저다.
  */
 
-export const REPORT_LINK_MAX_TTL_DAYS = 180;
-export const REPORT_LINK_DEFAULT_TTL_DAYS = 60;
+export { REPORT_LINK_DEFAULT_TTL_DAYS, REPORT_LINK_MAX_TTL_DAYS } from './reportLinkLimits';
 
 export const issueReportLink = async (
   showId: string,

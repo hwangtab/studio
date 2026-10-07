@@ -13,7 +13,8 @@ import { formatKstDeadline } from '../../../lib/payments/bankAccount';
 import { findSameNameDepositOrders, type SameNameDepositOrder } from '../../../lib/payments/bankDepositOrders';
 import { holderMatchesCustomer, loadRefundAccountSummary } from '../../../lib/payments/refundAccount';
 import { loadAdminShowDetail, type AdminOrderRow, type AdminShowDetail, type AdminShowtimeDetail } from '../../../lib/shows/adminQueries';
-import { listReportLinks, REPORT_LINK_DEFAULT_TTL_DAYS, REPORT_LINK_MAX_TTL_DAYS, type ReportLinkSummary } from '../../../lib/shows/reportLink';
+import { listReportLinks, type ReportLinkSummary } from '../../../lib/shows/reportLink';
+import { REPORT_LINK_DEFAULT_TTL_DAYS, REPORT_LINK_MAX_TTL_DAYS } from '../../../lib/shows/reportLinkLimits';
 
 /** 환불 계좌 요약 — 은행·예금주·시각뿐. 계좌번호는 평문도 암호문도 props에 싣지 않는다("계좌 보기" API로만). */
 export interface ShowRefundAccountInfo {
