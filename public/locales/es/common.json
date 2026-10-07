@@ -2676,6 +2676,10 @@
               "detail": "No incluido en el paquete → formación pequeña ₩500K · banda completa ₩1M · gran formación ₩1,2M (por canción, lista de composición y arreglos)"
             },
             {
+              "label": "Afinación vocal y corrección de tiempo",
+              "detail": "No incluida en el paquete → la afinación detallada es opcional: +₩150K por canción"
+            },
+            {
               "label": "PR en medios",
               "detail": "1 ronda base → 2 rondas·entrevista de lanzamiento +₩300K"
             }
@@ -2692,6 +2696,10 @@
             {
               "question": "¿Qué incluye este precio?",
               "answer": "La grabación vocal y la mezcla son la base, y a medida que se añaden coordinación de sesiones, arreglos, masterización, distribución y PR de medios, el costo aumenta. No es solo alquiler de estudio — es el costo de acompañarte durante todo el proceso de lanzamiento. Varía según sesión y arreglo; presupuesto personalizado tras consulta. Los honorarios de los músicos de sesión no están incluidos en el paquete: cobramos solo lo que se les paga, sin comisión de contratación."
+            },
+            {
+              "question": "¿Puedo usar este paquete sin planear un lanzamiento?",
+              "answer": "Sí. Puedes usarlo simplemente para encargar grabación, mezcla y masterización de una vez. Si no usas distribución ni promoción, el precio sigue siendo ₩500K, por debajo de los ₩550K que sumarían grabación vocal, mezcla y masterización por separado. La afinación vocal detallada y la corrección de tiempo son opcionales: +₩150K por canción; los honorarios de músicos de sesión y los arreglos no están incluidos."
             },
             {
               "question": "No cambiarán mi canción sin preguntarme, ¿verdad?",

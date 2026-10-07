@@ -25,6 +25,7 @@ import {
   FUNDING_DESIGN_PRICE,
   formatPriceAmount,
   getPricingData,
+  formatPriceLabel,
   LESSON_MONTHLY_PRICE,
   MASTERING_PACKAGE_PRICE,
   MASTERING_SINGLE_PRICE,
@@ -45,6 +46,7 @@ import {
   SINGLE_BUNDLE_PRICE,
   SINGLE_LINE_ITEM_TOTAL,
   VOCAL_PACKAGE_PRICE,
+  VOCAL_TUNING_ADDON_PRICE,
   VOICEOVER_HOURLY_PRICE,
   WEDDING_PACKAGE_PRICE,
   ARTIST_SUPPORT_TIERS,
@@ -565,5 +567,46 @@ describe('가격 SSOT 정합', () => {
       expect(pricing.seo.title).toContain(manwon(price));
       expect(pricing.hero.title).toContain(manwon(price));
     }
+  });
+
+  /**
+   * 싱글 패키지의 "발매 안 해도 쓸 수 있다"·"튜닝은 곡당 옵션" 카피가 상수와 어긋나지 않는다.
+   *
+   * 이 카피는 세 군데(오퍼 description·발매 싱글 상세 priceFactors·FAQ)에 있고, 앞의 둘은 상수에서
+   * 끌어오지만 common.json은 JSON이라 리터럴이다. 그래서 7개 로케일 전부 숫자로 파싱해 대조한다.
+   * "낱개 합계보다 낮다"는 문장은 숫자가 뒤집히면 거짓이 되므로 대소도 함께 강제한다.
+   */
+  it('싱글 패키지 카피가 튜닝 옵션가·낱개 합계·번들가와 일치한다 (7개 로케일)', () => {
+    expect(SINGLE_BUNDLE_PRICE).toBeLessThan(SINGLE_LINE_ITEM_TOTAL);
+    const AMT = /₩\s*(\d+(?:\.\d+)?)\s*([MK万])|₩\s*(\d[\d,]{2,})|(\d[\d,]{2,})\s*원|(\d+(?:\.\d+)?)\s*만원/g;
+    const amounts = (text: string): number[] =>
+      [...text.matchAll(AMT)].map((m) => {
+        if (m[1]) return Math.round(Number(m[1]) * { M: 1_000_000, K: 1_000, 万: 10_000 }[m[2] as 'M' | 'K' | '万']);
+        if (m[3]) return Number(m[3].replace(/,/g, ''));
+        if (m[4]) return Number(m[4].replace(/,/g, ''));
+        return Math.round(Number(m[5]) * 10_000);
+      });
+    const misses: string[] = [];
+    for (const locale of LOCALES) {
+      const common = JSON.parse(
+        fs.readFileSync(path.join(__dirname, '..', 'public', 'locales', locale, 'common.json'), 'utf8')
+      );
+      const detail = common.releaseProject.tiers.single.detail as {
+        priceFactors: { label: string; detail: string }[];
+        faqItems: { question: string; answer: string }[];
+      };
+      const factor = detail.priceFactors.find((f) => amounts(f.detail).includes(VOCAL_TUNING_ADDON_PRICE));
+      if (!factor) misses.push(`${locale}: priceFactors에 튜닝 옵션가 ${VOCAL_TUNING_ADDON_PRICE} 없음`);
+      const faq = detail.faqItems.find((f) => {
+        const a = amounts(f.answer);
+        return a.includes(SINGLE_LINE_ITEM_TOTAL) && a.includes(SINGLE_BUNDLE_PRICE) && a.includes(VOCAL_TUNING_ADDON_PRICE);
+      });
+      if (!faq) misses.push(`${locale}: faqItems에 번들가·낱개 합계·튜닝 옵션가를 모두 말하는 항목 없음`);
+      const offer = getPricingData(locale).specialPackages.find((o) => o.id === 'package-single-bundle');
+      const desc = offer?.description ?? '';
+      if (!desc.includes(formatPriceLabel(SINGLE_LINE_ITEM_TOTAL, locale === 'ko' ? 'ko' : 'en'))) misses.push(`${locale}: 오퍼 description에 낱개 합계 없음`);
+      if (!desc.includes(formatPriceLabel(VOCAL_TUNING_ADDON_PRICE, locale === 'ko' ? 'ko' : 'en'))) misses.push(`${locale}: 오퍼 description에 튜닝 옵션가 없음`);
+    }
+    expect(misses).toEqual([]);
   });
 });
