@@ -1,4 +1,5 @@
 import ImageHero, { HERO_SCRIM_STRONG } from '../common/ImageHero';
+import { fitsDisplayFont } from '../../lib/fonts/displayCoverage';
 import MobileStickyCta from '../common/MobileStickyCta';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
@@ -56,6 +57,8 @@ export default function ShowDetailView({ show, locale = 'ko' }: { show: PublicSh
         imageAlt=""
         aboveTitle={<p className="text-sm font-semibold tracking-wide text-gray-200 drop-shadow">{copy.presentedBy(show.presenterName)}</p>}
         title={show.title}
+        // 공연 제목은 DB에서 온다 — 서브셋 밖 글자가 있으면 제목 전체를 본문 서체로(lib/fonts/displayCoverage.ts).
+        titleFallbackFont={!fitsDisplayFont(show.title)}
         subtitle={
           <>
             {show.subtitle && <span className="block">{show.subtitle}</span>}

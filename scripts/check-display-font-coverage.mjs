@@ -17,7 +17,8 @@
  * ʻ ʼ가 없어 styles/globals.css가 제목을 Pretendard로 통째로 돌린다), 이모지.
  *
  * 한계: 빌드 때 HTML이 만들어지지 않는 페이지(getServerSideProps — 공연·펀딩 상세 등)는 여기서 못 본다. 그
- * 제목들은 생성기의 출처 목록과 `generate-hero-font.mjs --check`가 맡는다.
+ * 제목은 DB에서 와서 빌드 때 알 수도 없다 — 그 페이지는 서브셋 밖 글자가 있으면 제목 전체를 본문 서체로 그린다
+ * (lib/fonts/displayCoverage.ts → ImageHero `titleFallbackFont`).
  *
  * 사용: npm run build && node scripts/check-display-font-coverage.mjs
  * 실패하면 빠진 글자와 그 글자가 나온 페이지를 보여 준다. 고치는 법은 생성기가 그 제목의 출처를 읽게 하는 것이다.
