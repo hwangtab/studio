@@ -35,6 +35,7 @@ import { createInViewEnterAnimation } from '../../utils/animationUtils';
 import { createTranslatedQaItems } from '../../utils/translatedList';
 
 import type { NextPageWithLayout } from '../../types';
+import { BUTTON_DEPTH } from '../../components/ui/buttonDepth';
 
 interface LessonProps {
     locale: Locale;
@@ -384,7 +385,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                                             cta_id: 'lesson_pricing_kakao',
                                         })
                                     }
-                                    className="block w-full text-center bg-kakao hover:bg-kakao-dark text-kakao-ink font-bold py-4 rounded-xl transition-colors duration-300"
+                                    className={`block w-full text-center bg-kakao hover:bg-kakao-dark text-kakao-ink font-bold py-4 rounded-xl transition-colors duration-300 ${BUTTON_DEPTH.kakao}`}
                                 >
                                     {t('lesson.pricing.cta')}
                                 </a>
@@ -399,7 +400,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                                             cta_id: 'lesson_pricing_contact',
                                         })
                                     }
-                                    className="block w-full text-center bg-gray-950 hover:bg-gray-800 text-white dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200 font-bold py-4 rounded-xl transition-colors duration-300"
+                                    className={`block w-full text-center bg-gray-950 hover:bg-gray-800 text-white dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200 font-bold py-4 rounded-xl transition-colors duration-300 ${BUTTON_DEPTH.ink}`}
                                 >
                                     {t('lesson.pricing.cta')}
                                 </Link>

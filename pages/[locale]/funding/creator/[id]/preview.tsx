@@ -9,6 +9,7 @@ import { computeProjectState, stripRewardDownloads, type FundingProject, type Pr
 import { withI18nServerProps } from '../../../../../lib/getStatic';
 
 import type { FundingProjectRow } from '../../../../../db/schema';
+import { BUTTON_DEPTH } from '../../../../../components/ui/buttonDepth';
 
 interface CompleteProps {
   incomplete: false;
@@ -65,7 +66,7 @@ export default function FundingCreatorPreviewPage(props: Props) {
           </p>
           <Link
             href={editHref}
-            className="mt-6 inline-flex h-11 items-center justify-center rounded-xl bg-gray-950 px-6 font-semibold text-white transition-colors hover:bg-gray-800 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200"
+            className={`mt-6 inline-flex h-11 items-center justify-center rounded-xl bg-gray-950 px-6 font-semibold text-white transition-colors hover:bg-gray-800 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200 ${BUTTON_DEPTH.ink}`}
           >
             편집으로 돌아가기
           </Link>

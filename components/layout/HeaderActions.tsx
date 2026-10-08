@@ -6,6 +6,7 @@ import { LanguageSwitcher } from '../LanguageSwitcher';
 import { type Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
+import { BUTTON_DEPTH } from '../ui/buttonDepth';
 
 interface HeaderActionsProps {
   isTransparent: boolean;
@@ -39,7 +40,7 @@ export const HeaderActions = ({
   // 투명 상태에서도 옐로는 솔리드라 배경 사진 밝기와 무관하게 kakao-ink 글씨 대비가
   // 16:1로 고정된다 — 밝은 히어로에서 글씨가 흐려지던 스크림 방식보다 안정적이라
   // text-shadow도 필요 없다. focus ring만 배경에 맞춰 가른다.
-  const kakaoCtaButtonClass = `${headerCtaBaseClass} bg-kakao hover:bg-kakao-dark text-kakao-ink border-transparent shadow-md hover:shadow-lg ${isTransparent
+  const kakaoCtaButtonClass = `${headerCtaBaseClass} bg-kakao hover:bg-kakao-dark text-kakao-ink border-transparent ${BUTTON_DEPTH.kakao} ${isTransparent
     ? 'focus-visible:ring-white/70 focus-visible:ring-offset-black/20'
     : 'focus-visible:ring-kakao-ink dark:focus-visible:ring-kakao focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900'
     }`;

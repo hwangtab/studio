@@ -1,0 +1,31 @@
+/**
+ * 버튼 입체감 — 면 위에 얹는 은은한 세로 그라디언트 + 윗선 하이라이트 + 층진 그림자, 누르면 안쪽 그림자.
+ *
+ * 그라디언트는 배경색이 아니라 그 위의 반투명 레이어(background-image)라서 hover의 bg-color 전환이 그대로
+ * 보간된다. 그림자는 Tailwind shadow-[...]로 둬 --tw-shadow에 들어가므로 포커스 링(ring-*)과 합성된다.
+ * 광택처럼 보이면 실패다 — 가까이서 봐야 알아챌 정도까지만(운영자 2026-10-08 "입체감을 줘서 클릭하고 싶게").
+ */
+export const BUTTON_DEPTH = {
+  /** 잉크 버튼. 다크에서는 흰 버튼이 되므로 아래쪽을 살짝 어둡게 하는 쪽으로 뒤집는다. */
+  ink:
+    'bg-[linear-gradient(180deg,rgb(255_255_255/0.13),rgb(255_255_255/0)_60%)] ' +
+    'shadow-[inset_0_1px_0_rgb(255_255_255/0.16),0_1px_2px_rgb(3_7_18/0.28),0_6px_16px_-6px_rgb(3_7_18/0.45)] ' +
+    'hover:shadow-[inset_0_1px_0_rgb(255_255_255/0.2),0_2px_4px_rgb(3_7_18/0.28),0_12px_24px_-8px_rgb(3_7_18/0.5)] ' +
+    'active:shadow-[inset_0_2px_4px_rgb(0_0_0/0.4)] ' +
+    'dark:bg-[linear-gradient(180deg,rgb(255_255_255/0),rgb(3_7_18/0.07))] ' +
+    'dark:shadow-[inset_0_-1px_0_rgb(3_7_18/0.14),0_6px_16px_-6px_rgb(0_0_0/0.7)] ' +
+    'dark:hover:shadow-[inset_0_-1px_0_rgb(3_7_18/0.14),0_12px_24px_-8px_rgb(0_0_0/0.8)] ' +
+    'dark:active:shadow-[inset_0_2px_4px_rgb(3_7_18/0.25)]',
+  /** 카카오 옐로. 윗부분을 밝히고 아랫선을 살짝 눌러 노랑이 평판으로 보이지 않게. */
+  kakao:
+    'bg-[linear-gradient(180deg,rgb(255_255_255/0.32),rgb(255_255_255/0)_55%)] ' +
+    'shadow-[inset_0_1px_0_rgb(255_255_255/0.55),inset_0_-1px_0_rgb(120_100_0/0.18),0_1px_2px_rgb(25_22_0/0.18),0_6px_16px_-6px_rgb(25_22_0/0.35)] ' +
+    'hover:shadow-[inset_0_1px_0_rgb(255_255_255/0.6),inset_0_-1px_0_rgb(120_100_0/0.18),0_2px_4px_rgb(25_22_0/0.18),0_12px_24px_-8px_rgb(25_22_0/0.4)] ' +
+    'active:shadow-[inset_0_2px_4px_rgb(25_22_0/0.25)]',
+  /** 어두운 사진 위 흰 버튼. */
+  inverse:
+    'bg-[linear-gradient(180deg,rgb(255_255_255/0),rgb(3_7_18/0.06))] ' +
+    'shadow-[inset_0_-1px_0_rgb(3_7_18/0.12),0_1px_2px_rgb(0_0_0/0.3),0_8px_20px_-6px_rgb(0_0_0/0.5)] ' +
+    'hover:shadow-[inset_0_-1px_0_rgb(3_7_18/0.12),0_2px_4px_rgb(0_0_0/0.3),0_14px_28px_-8px_rgb(0_0_0/0.6)] ' +
+    'active:shadow-[inset_0_2px_4px_rgb(3_7_18/0.2)]',
+} as const;
