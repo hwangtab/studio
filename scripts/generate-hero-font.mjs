@@ -13,9 +13,10 @@
  *
  * 글자 수집 범위: ① locales *.hero.title* 등 h1 키(예전과 같음) ② locales의 *title*·*heading* 키 전부
  * (SectionHeading v2 제목의 대부분) ③ data/home.ts heroContent ④ buyerIntentHubs hero ⑤ siteConfig name
- * ⑥ content/funding 제목 ⑦ data/*.ts 최상위 파일의 title: 문자열 ⑧ data/shows 제목 ⑨ 코드에 박힌 제목
- * (components·pages의 <SectionHeading|FAQSection|ImageHero title="…">, lib/shows/i18n.ts) ⑩ 영문·숫자·기호 안전판.
- * 서브셋 밖 글자는 Pretendard(본문 폰트)로 떨어진다 — --check가 ①~⑩ ⊆ 사이드카를 CI에서 강제한다
+ * ⑥ content/funding 제목 ⑦ data/*.ts 최상위 파일의 title*·heading* 문자열 ⑧ data/shows 제목 ⑨ 코드에 박힌 제목
+ * (components·pages의 JSX title="…" 전부, lib/shows/i18n.ts) ⑩ 스토리 글 제목(content/stories frontmatter)
+ * ⑪ 영문·숫자·기호 안전판. 서브셋 밖 글자는 Pretendard(본문 폰트)로 떨어진다 — --check가 ①~⑪ ⊆ 사이드카를,
+ * scripts/check-display-font-coverage.mjs가 빌드된 HTML의 실제 제목 글자 ⊆ 서체 글리프를 CI에서 강제한다
  * (hero-font-subset.test.js). th·zh 문자는 서체에 없고 지금도 --font-locale로 가므로 집합에서 뺀다.
  *
  * prebuild에 묶여 있다(package.json). 소스 폰트는 네트워크에서 받아 node_modules/.cache에 두고, 못 받으면
@@ -232,7 +233,9 @@ function collectDisplayChars() {
     const dataDir = path.join(ROOT, 'data');
     for (const f of fs.readdirSync(dataDir).filter((n) => n.endsWith('.ts') && !n.endsWith('.test.ts'))) {
       const src = fs.readFileSync(path.join(dataDir, f), 'utf8');
-      for (const m of src.matchAll(/\b(title|titleHighlight|sectionTitle|heading)\s*:\s*(["'`])([\s\S]*?)\2/g)) addStr(m[3]);
+      // title·heading으로 시작하는 키 전부(titleLine1·titleHighlight·sectionTitle…) — 2026-10-08 titleLine1이 빠져
+      // crowdfunding-design 제목의 "멈춘"이 Pretendard로 그려졌다. 단 subtitle은 본문 서체라 제외.
+      for (const m of src.matchAll(/\b((?:title|heading|sectionTitle)\w*)\s*:\s*(["'`])([^"'`]*?)\2/g)) addStr(m[3]);
     }
   } catch (e) {
     console.warn(`skip data titles: ${e.message}`);
@@ -253,7 +256,8 @@ function collectDisplayChars() {
 
   // 8) 코드에 박힌 제목 — locales·data를 거치지 않는 제목이 있다. 2026-10-08 공연 상세의 "출연"이 "출"만
   //    Pretendard로 그려졌다(공연 섹션 제목은 lib/shows/i18n.ts에, 허브 페이지 일부 제목은 컴포넌트 안에 있다).
-  //    ⓐ components·pages의 <SectionHeading|FAQSection|ImageHero title="…"> 리터럴
+  //    ⓐ components·pages의 **모든** JSX `title="…"` 리터럴 — 제목을 받아 제목 서체로 그리는 포장 컴포넌트
+  //       (ContactCTA 등)가 여럿이라 컴포넌트 이름으로 거르지 않는다(조금 더 담는 쪽이 안전하다).
   //    ⓑ lib/shows/i18n.ts의 제목 키(title·heroTitle·upcoming·past·faqTitle) 문자열
   try {
     const walk = (dir) => {
@@ -262,7 +266,7 @@ function collectDisplayChars() {
         if (ent.isDirectory()) walk(p);
         else if (/\.tsx$/.test(ent.name) && !/\.test\./.test(ent.name)) {
           const src = fs.readFileSync(p, 'utf8');
-          for (const m of src.matchAll(/<(?:SectionHeading|FAQSection|ImageHero)\b[^>]*?\btitle=(?:"([^"]+)"|\{'([^']+)'\})/gs)) addStr(m[1] ?? m[2]);
+          for (const m of src.matchAll(/\btitle=(?:"([^"]+)"|\{'([^']+)'\})/g)) addStr(m[1] ?? m[2]);
         }
       }
     };
@@ -274,7 +278,21 @@ function collectDisplayChars() {
     console.warn(`skip inline titles: ${e.message}`);
   }
 
-  // 9) 안전판: 영문/숫자/기본 punctuation (제목에 흔히 섞이는 기호)
+  // 9) 스토리 글 제목 — /<locale>/stories/<slug>의 ImageHero h1이 frontmatter title이다(전 로케일 파일).
+  //    2026-10-08 전수 검사에서 빠진 글자 130자 중 대부분이 여기서 나왔다. 새 글이 매일 늘지만 prebuild가
+  //    배포 때마다 다시 만들므로 자동으로 따라간다.
+  try {
+    const storiesDir = path.join(ROOT, 'content', 'stories');
+    for (const f of fs.readdirSync(storiesDir).filter((n) => n.endsWith('.md'))) {
+      const head = fs.readFileSync(path.join(storiesDir, f), 'utf8').slice(0, 2000);
+      const m = head.match(/^title:\s*(.+)$/m);
+      if (m) addStr(m[1].trim().replace(/^(["'])(.*)\1$/, '$2'));
+    }
+  } catch (e) {
+    console.warn(`skip story titles: ${e.message}`);
+  }
+
+  // 10) 안전판: 영문/숫자/기본 punctuation (제목에 흔히 섞이는 기호)
   const safety = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!?·:;()[]\'"&-—–%/《》〈〉“”‘’+~';
   addStr(safety);
 

@@ -58,6 +58,11 @@ jobs:
         env:
           NEXT_PUBLIC_SITE_URL: https://studionol.co.kr
 
+      # 빌드된 HTML의 제목(font-hero·typo-display-section) 글자가 전부 제목 서체 서브셋에 있는지 — 없으면 그 글자만
+      # Pretendard로 그려져 제목 안에서 서체가 섞인다(2026-10-08 공연 "출연"). scripts/check-display-font-coverage.mjs
+      - name: Display font coverage check
+        run: npm run check:display-font
+
   migration-drift:
     name: Migration drift check
     # main에 들어간 마이그레이션이 아직 운영 DB에 적용되지 않은 것을 잡는다
