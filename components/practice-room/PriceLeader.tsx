@@ -55,7 +55,7 @@ const PriceLeader = ({
           <p className="typo-caption text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
             {priceLabel}
           </p>
-          <p className="text-4xl md:text-5xl font-bold text-primary dark:text-primary-lighter leading-tight">
+          <p className="text-4xl md:text-5xl font-bold text-gray-950 dark:text-white leading-tight">
             {priceValue}
           </p>
           <p className="typo-caption text-gray-500 dark:text-gray-400 mt-2">

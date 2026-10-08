@@ -24,14 +24,14 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // 행동 버튼은 잉크(검정)다 — 브랜드 녹색은 링크·숫자·배지·선택 상태가 함께 써서 버튼이 묻혔다
-        // (운영자 2026-10-08 "다른 요소색들과 똑같아서 시인성이 떨어진다"). 흰 위 대비 약 19:1. 다크는 반전.
-        // 사진 위에서는 검정이 묻히므로 inverse(흰 버튼)를 쓴다.
-        solid: `bg-gray-950 text-white hover:bg-gray-800 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-gray-950/70 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200 dark:focus-visible:ring-white/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${BUTTON_DEPTH.ink}`,
+        // 행동 버튼은 파랑(primary) — 파랑 = 누를 수 있는 것(2026-10-09 운영자 "버튼은 시인성 좋게 파란색 계열").
+        // 흰 글씨 5.17:1, 라이트·다크 같은 면. 가격 숫자 같은 누를 수 없는 강조는 잉크라 버튼과 겹쳐 보이지 않는다.
+        // 사진 위에서는 inverse(흰 버튼)를 쓴다.
+        solid: `bg-primary text-white hover:bg-primary-dark hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${BUTTON_DEPTH.solid}`,
         // 어두운 히어로 사진 위 1차 행동(비-ko 문의 등). 라이트·다크 구분 없이 흰 버튼 + 잉크 글씨.
         inverse: `bg-white text-gray-950 hover:bg-gray-100 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-white/70 focus-visible:ring-offset-black/20 ${BUTTON_DEPTH.inverse}`,
-        // 테두리 버튼도 잉크 — 다크는 흰 글씨·흰 테두리(gray-900 위 대비 AA 이상).
-        outline: "border-2 border-gray-950/80 bg-transparent text-gray-950 hover:bg-gray-950/5 hover:border-gray-950 dark:text-white dark:border-white/60 dark:hover:border-white dark:hover:bg-white/10 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-gray-950/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
+        // 테두리 버튼 — 파랑 글씨·옅은 파랑 테두리. 다크는 primary-lighter(gray-900 위 약 9.9:1).
+        outline: "border-2 border-primary/20 bg-transparent text-primary hover:bg-primary/5 hover:border-primary/40 dark:text-primary-lighter dark:border-primary-lighter/40 dark:hover:border-primary-lighter/60 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         ghost: "bg-transparent text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         secondary: "bg-white text-gray-900 shadow-sm hover:bg-gray-50 border border-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         // Liquid Glass 재질 버튼. bg/border/shadow는 .glass-regular(components 레이어)가
@@ -80,7 +80,7 @@ const buttonVariants = cva(
      * `public/scripts/theme-init.js`는 경로 예외 없이 모든 라우트에 `<html class="dark">`를
      * 붙인다. 그런데 docs/design-system.md §1대로 `pages/admin/**`과 계약 서명·완료 화면은
      * 종이처럼 항상 밝다 — 그 화면에서 다크 분기가 켜지면 흰 카드 위에 다크용 색이 뜬다
-     * (solid의 흰 버튼·outline의 흰 글씨가 흰 카드 위에서 사라진다). `Field`의 `light` 옵트인과 같은 처방.
+     * (outline의 다크용 primary-lighter 글씨가 흰 카드 위에서 1.6:1로 흐려진다). `Field`의 `light` 옵트인과 같은 처방.
      *
      * 실제로 라이트 고정 화면에서 쓰이는 variant만 되돌린다(solid·outline·ghost·secondary).
      * glass·kakao·scrim은 그 화면에 없다.
@@ -89,12 +89,12 @@ const buttonVariants = cva(
       {
         light: true,
         variant: "solid",
-        class: "dark:bg-gray-950 dark:text-white dark:hover:bg-gray-800 dark:focus-visible:ring-gray-950/70 dark:focus-visible:ring-offset-white",
+        class: "dark:focus-visible:ring-primary/70 dark:focus-visible:ring-offset-white",
       },
       {
         light: true,
         variant: "outline",
-        class: "dark:text-gray-950 dark:border-gray-950/80 dark:hover:border-gray-950 dark:hover:bg-gray-950/5 dark:focus-visible:ring-gray-950/70 dark:focus-visible:ring-offset-white",
+        class: "dark:text-primary dark:border-primary/20 dark:hover:border-primary/40 dark:hover:bg-primary/5 dark:focus-visible:ring-primary/70 dark:focus-visible:ring-offset-white",
       },
       {
         light: true,

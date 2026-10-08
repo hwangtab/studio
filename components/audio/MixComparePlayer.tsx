@@ -265,7 +265,7 @@ export default function MixComparePlayer({
               'min-h-[56px] rounded-xl border-2 px-3 py-3 text-base font-bold leading-snug break-keep transition-colors duration-fast',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
               active === side
-                ? 'border-gray-950 bg-gray-950 text-white dark:border-white dark:bg-white dark:text-gray-950'
+                ? 'border-primary bg-primary text-white'
                 : 'border-gray-300 bg-transparent text-gray-800 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-white/5',
             )}
           >

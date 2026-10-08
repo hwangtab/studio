@@ -9,7 +9,7 @@
   "display_override": ["standalone", "browser"],
   "orientation": "portrait-primary",
   "background_color": "#ffffff",
-  "theme_color": "#0b3b2c",
+  "theme_color": "#1d4ed8",
   "lang": "ko",
   "dir": "ltr",
   "categories": ["music", "entertainment", "business"],

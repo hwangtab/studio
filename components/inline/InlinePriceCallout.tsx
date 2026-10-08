@@ -110,7 +110,7 @@ const InlinePriceCallout = ({ id, locale }: InlinePriceCalloutProps) => {
         {title}
       </h4>
       <div className="flex items-baseline gap-1 mb-3">
-        <span className="text-3xl font-extrabold text-primary dark:text-primary-lighter">
+        <span className="text-3xl font-extrabold text-gray-950 dark:text-white">
           {priceDisplay}
         </span>
         {unit && (

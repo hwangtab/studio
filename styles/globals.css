@@ -9,7 +9,7 @@
 /* 기본 스타일 */
 @layer base {
   :root {
-    --primary-rgb: 6, 95, 70; /* = lib/brandColor.ts primary. 탭 하이라이트·인용 테두리 */
+    --primary-rgb: 37, 99, 235; /* = lib/brandColor.ts primary. 탭 하이라이트·인용 테두리 */
     color-scheme: light dark;
 
     /* Pretendard 다음 자리 — 아래 :root:lang() 블록 참고. 기본값은 예전 스택의
@@ -40,7 +40,7 @@
     --glass-glow: rgba(255, 255, 255, 0.18);
 
     /* 히어로 제목 그라디언트 — index·release-project·TierPage·BuyerIntentHubPage 공용 */
-    --hero-title-accent: #6ee7b7; /* primary-lighter. 옛 푸른 글로우(#a8c0ff)는 보라 시절 값 */
+    --hero-title-accent: #93c5fd; /* primary-lighter. 옛 푸른 글로우(#a8c0ff)는 보라 시절 값 */
     --hero-title-glow: rgb(255 255 255 / 0.25);
   }
 

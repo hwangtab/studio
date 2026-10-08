@@ -35,7 +35,7 @@ describe('Button', () => {
     );
     const link = screen.getByRole('link', { name: '링크' });
     expect(link.className).toMatch(/custom-class/);
-    expect(link.className).toMatch(/bg-gray-950/);
+    expect(link.className).toMatch(/bg-primary/);
   });
 
   it('kakao variant는 옐로 배경에 kakao-ink 글자와 kakao-ink 포커스 링을 쓴다', () => {
@@ -73,20 +73,19 @@ describe('Button', () => {
   };
 
   describe('light 옵트인', () => {
-    it('outline + light면 다크용 흰 글씨·흰 테두리가 사라지고 잉크가 남는다', () => {
+    it('outline + light면 다크용 primary-lighter가 사라지고 라이트 파랑이 남는다', () => {
       const cls = classesOf(<Button light variant="outline">x</Button>);
-      expect(cls).not.toMatch(/(^|\s)dark:text-white(\s|$)/);
-      expect(cls).not.toMatch(/dark:border-white/);
-      expect(cls).toMatch(/(^|\s)dark:text-gray-950(\s|$)/);
-      expect(cls).toMatch(/(^|\s)dark:border-gray-950\/80(\s|$)/);
-      expect(cls).toMatch(/(^|\s)text-gray-950(\s|$)/); // 라이트 값 자체는 그대로
+      expect(cls).not.toMatch(/dark:text-primary-lighter/);
+      expect(cls).not.toMatch(/dark:border-primary-lighter/);
+      expect(cls).toMatch(/(^|\s)dark:text-primary(\s|$)/);
+      expect(cls).toMatch(/(^|\s)dark:border-primary\/20(\s|$)/);
+      expect(cls).toMatch(/(^|\s)text-primary(\s|$)/); // 라이트 값 자체는 그대로
     });
 
-    it('solid + light면 다크용 흰 버튼이 사라지고 잉크 버튼이 남는다', () => {
-      const cls = classesOf(<Button light variant="solid">x</Button>);
-      expect(cls).not.toMatch(/(^|\s)dark:bg-white(\s|$)/);
-      expect(cls).toMatch(/(^|\s)dark:bg-gray-950(\s|$)/);
-      expect(cls).toMatch(/(^|\s)dark:text-white(\s|$)/);
+    it('solid는 라이트·다크 같은 파랑 면이다', () => {
+      const cls = classesOf(<Button variant="solid">x</Button>);
+      expect(cls).toMatch(/(^|\s)bg-primary(\s|$)/);
+      expect(cls).not.toMatch(/dark:bg-/);
     });
 
     it.each([
@@ -108,13 +107,13 @@ describe('Button', () => {
     });
 
     it('light 없이는 다크 오버라이드가 그대로다(공개 페이지는 다크가 정상)', () => {
-      expect(classesOf(<Button variant="outline">x</Button>)).toMatch(/(^|\s)dark:text-white(\s|$)/);
+      expect(classesOf(<Button variant="outline">x</Button>)).toMatch(/dark:text-primary-lighter/);
     });
 
     it('호출부 className은 light보다 뒤에 와서 이긴다', () => {
       const cls = classesOf(<Button light variant="outline" className="dark:text-white">x</Button>);
       expect(cls).toMatch(/dark:text-white/);
-      expect(cls).not.toMatch(/dark:text-gray-950/);
+      expect(cls).not.toMatch(/dark:text-primary\b/);
     });
 
     it('light는 DOM 속성으로 새지 않는다', () => {

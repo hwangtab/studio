@@ -52,7 +52,7 @@ export const HeaderActions = ({
   // 밝은 히어로에서도 글씨가 읽히게 한다. glass 토큰은 모바일 폴백 시 불투명
   // 흰색이 되어 흰 글씨가 사라지므로 여기선 쓰지 않는다.
   const formCtaButtonClass = `${headerCtaBaseClass} ${!isTransparent
-    ? `bg-gray-950 hover:bg-gray-800 text-white dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200 ${BUTTON_DEPTH.ink} focus-visible:ring-gray-950/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`
+    ? `bg-primary hover:bg-primary-dark text-white ${BUTTON_DEPTH.solid} focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`
     : 'border bg-black/25 hover:bg-black/35 text-white border-white/35 [text-shadow:0_1px_2px_rgb(0_0_0/0.55)] focus-visible:ring-white/70 focus-visible:ring-offset-black/20'
     }`;
 
