@@ -1,5 +1,6 @@
 import React from 'react';
 import i18n, { defaultLocale, type Locale } from '../lib/i18n';
+import { BUTTON_DEPTH } from './ui/buttonDepth';
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -40,7 +41,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
             </p>
             <button
               onClick={() => window.location.reload()}
-              className="inline-flex items-center px-6 py-3 bg-gray-950 hover:bg-gray-800 text-white dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200 rounded-lg transition-colors"
+              className={`inline-flex items-center px-6 py-3 bg-gray-950 hover:bg-gray-800 text-white dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200 rounded-lg transition-colors ${BUTTON_DEPTH.ink}`}
             >
               {t('actions.reload')}
             </button>

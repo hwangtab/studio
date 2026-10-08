@@ -5,6 +5,7 @@ import { Pause, Play } from '@/lib/lucide-icons';
 import { useGlobalPlayer } from './GlobalPlayerProvider';
 import { getExcerptForService, toGlobalTrack, type ExcerptService } from '../../data/audioExcerpts';
 import type { Locale } from '../../lib/i18n';
+import { BUTTON_DEPTH } from '../ui/buttonDepth';
 
 interface ServiceExcerptProps {
   locale: Locale;
@@ -43,7 +44,7 @@ const ServiceExcerpt = ({ locale, service, component, className = '' }: ServiceE
         onClick={() => (playing ? pause() : void play(track))}
         aria-label={`${playing ? t('audioPlayer.pause', { defaultValue: '일시정지' }) : t('audioPlayer.global.listen', { defaultValue: '30초 듣기' })}: ${track.title}`}
         aria-pressed={playing}
-        className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-gray-950 text-white hover:bg-gray-800 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200 transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+        className={`grid h-11 w-11 shrink-0 place-items-center rounded-full bg-gray-950 text-white hover:bg-gray-800 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200 transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${BUTTON_DEPTH.ink}`}
       >
         {playing ? <Pause size={18} aria-hidden="true" /> : <Play size={18} className="ml-0.5" aria-hidden="true" />}
       </button>

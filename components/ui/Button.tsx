@@ -1,6 +1,7 @@
 import React from 'react';
 import { type VariantProps, cva } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
+import { BUTTON_DEPTH } from './buttonDepth';
 
 const buttonVariants = cva(
   // transition-all → 명시 property: iOS Safari에서 transition-all은 layout 트리거 가능 속성도
@@ -26,9 +27,9 @@ const buttonVariants = cva(
         // 행동 버튼은 잉크(검정)다 — 브랜드 녹색은 링크·숫자·배지·선택 상태가 함께 써서 버튼이 묻혔다
         // (운영자 2026-10-08 "다른 요소색들과 똑같아서 시인성이 떨어진다"). 흰 위 대비 약 19:1. 다크는 반전.
         // 사진 위에서는 검정이 묻히므로 inverse(흰 버튼)를 쓴다.
-        solid: "bg-gray-950 text-white hover:bg-gray-800 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-gray-950/70 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200 dark:focus-visible:ring-white/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
+        solid: `bg-gray-950 text-white hover:bg-gray-800 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-gray-950/70 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200 dark:focus-visible:ring-white/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${BUTTON_DEPTH.ink}`,
         // 어두운 히어로 사진 위 1차 행동(비-ko 문의 등). 라이트·다크 구분 없이 흰 버튼 + 잉크 글씨.
-        inverse: "bg-white text-gray-950 hover:bg-gray-100 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-white/70 focus-visible:ring-offset-black/20",
+        inverse: `bg-white text-gray-950 hover:bg-gray-100 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-white/70 focus-visible:ring-offset-black/20 ${BUTTON_DEPTH.inverse}`,
         // 테두리 버튼도 잉크 — 다크는 흰 글씨·흰 테두리(gray-900 위 대비 AA 이상).
         outline: "border-2 border-gray-950/80 bg-transparent text-gray-950 hover:bg-gray-950/5 hover:border-gray-950 dark:text-white dark:border-white/60 dark:hover:border-white dark:hover:bg-white/10 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-gray-950/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         ghost: "bg-transparent text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
@@ -39,7 +40,7 @@ const buttonVariants = cva(
         glass: "glass-regular text-gray-700 dark:text-gray-200 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         // 카카오톡 목적지 전용. 옐로 위 글자는 항상 kakao-ink(흰 글씨는 대비 1.3:1로 미달),
         // 포커스 링도 옐로 위에서 보이도록 ink를 쓴다.
-        kakao: "bg-kakao text-kakao-ink hover:bg-kakao-dark shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-kakao-ink dark:focus-visible:ring-kakao focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
+        kakao: `bg-kakao text-kakao-ink hover:bg-kakao-dark hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-kakao-ink dark:focus-visible:ring-kakao focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${BUTTON_DEPTH.kakao}`,
         // 어두운 히어로 이미지 위 2차 액션. 흰 틴트(bg-white/*)는 배경을 밝혀 흰 글씨
         // 대비를 오히려 떨어뜨리므로 어두운 스크림 + 흰 테두리를 쓴다.
         scrim: "bg-black/30 border border-white/40 text-white [text-shadow:0_1px_3px_rgb(0_0_0/0.55)] hover:bg-black/45 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-white/70 focus-visible:ring-offset-black/20",

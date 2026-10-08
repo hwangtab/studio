@@ -26,6 +26,7 @@ import { defaultLocale, locales, type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
 import { createEnterAnimation } from '../../../utils/animationUtils';
 import Breadcrumb from '../../../components/ui/Breadcrumb';
+import { BUTTON_DEPTH } from '../../../components/ui/buttonDepth';
 
 
 interface PortfolioDetailPageProps {
@@ -190,7 +191,7 @@ const PortfolioDetailPage: NextPageWithLayout<PortfolioDetailPageProps> = ({ loc
             titleClassName="text-heading-2 font-title mb-2"
             artistClassName="typo-card-body mb-6"
             servicesHeadingClassName="typo-card-title mb-3"
-            primaryActionClassName="flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] bg-gray-950 hover:bg-gray-800 text-white dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200 rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+            primaryActionClassName={`flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] bg-gray-950 hover:bg-gray-800 text-white dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200 rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${BUTTON_DEPTH.ink}`}
             summaryActions={
               <button
                 type="button"
@@ -217,7 +218,7 @@ const PortfolioDetailPage: NextPageWithLayout<PortfolioDetailPageProps> = ({ loc
           {/* prefetch={false}: 본문 fold 내 button CTA들의 무거운 SSG JSON
               자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
           <div className="flex flex-wrap justify-center gap-4">
-            <Link href={getLink('/pricing')} prefetch={false} className="inline-flex items-center px-6 py-3 min-h-[44px] bg-gray-950 hover:bg-gray-800 text-white dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200 rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900">
+            <Link href={getLink('/pricing')} prefetch={false} className={`inline-flex items-center px-6 py-3 min-h-[44px] bg-gray-950 hover:bg-gray-800 text-white dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200 rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${BUTTON_DEPTH.ink}`}>
               {t('nav.pricing')}
             </Link>
             {/* 같은 줄의 형제 둘이 rounded-lg 카드형 버튼이라 반경·굵기만 넘겨 맞춘다.
