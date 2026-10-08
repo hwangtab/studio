@@ -16,6 +16,7 @@ import { useGlobalPlayer } from './GlobalPlayerProvider';
  * - 재질은 잉크(gray-950) 단색 — 글래스 blur 예산(상시 고정 레이어 ≤2)을 쓰지 않는다.
  */
 const BAR_COUNT = 20;
+// 휴대폰 하단 고정 바(KakaoFab bar)가 있는 화면에서는 그 높이(--mobile-cta-h)만큼 위로 비켜 앉는다.
 const MOBILE_HIDDEN_ROUTES = new Set([
   '/[locale]/stories/[id]',
   '/[locale]/funding/[slug]',
@@ -77,7 +78,7 @@ const GlobalPlayerDock = () => {
     <section
       aria-label={t('audioPlayer.global.region', { defaultValue: '지금 재생 중' })}
       className={`fixed z-40 bg-gray-950 text-white border border-white/10 shadow-xl
-        inset-x-0 bottom-0 rounded-none border-x-0 border-b-0 px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]
+        inset-x-0 bottom-[var(--mobile-cta-h,0px)] rounded-none border-x-0 border-b-0 px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]
         lg:inset-x-auto lg:left-6 lg:bottom-6 lg:w-[380px] lg:rounded-2xl lg:border lg:px-3 lg:py-3
         ${mobileHidden ? 'hidden lg:block' : ''}`}
     >

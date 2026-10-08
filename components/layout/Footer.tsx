@@ -10,6 +10,8 @@ import { useDesignEdition } from '../../lib/designEdition';
 
 interface FooterProps {
   locale: Locale;
+  /** 휴대폰 하단 고정 바(KakaoFab bar)가 뜨는 화면 — 바가 푸터 끝을 가리지 않게 그만큼 아래 여백을 푸터 색으로 둔다. */
+  bottomBarSpace?: boolean;
 }
 
 const LINK_CLASS = "typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 link-underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary";
@@ -36,7 +38,7 @@ const SubHeading = ({ children }: { children: React.ReactNode }) => (
   <h4 className="typo-footer-meta uppercase tracking-wider text-white/60 mt-6 mb-2">{children}</h4>
 );
 
-export const Footer = ({ locale }: FooterProps) => {
+export const Footer = ({ locale, bottomBarSpace = false }: FooterProps) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig(locale);
   const currentYear = new Date().getFullYear();
@@ -48,9 +50,11 @@ export const Footer = ({ locale }: FooterProps) => {
     // styles/globals.css의 .v2-footer 규칙이 잉크로 맞춘다(여기 7곳의 ring-offset-primary).
     <footer
       className={
-        edition === 'v2'
-          ? 'v2-footer bg-gray-950 border-t border-white/10 text-white p-8 font-title'
-          : 'bg-gradient-to-r from-primary via-primary to-primary text-white p-8 font-title'
+        `${
+          edition === 'v2'
+            ? 'v2-footer bg-gray-950 border-t border-white/10 text-white p-8 font-title'
+            : 'bg-gradient-to-r from-primary via-primary to-primary text-white p-8 font-title'
+        }${bottomBarSpace ? ' pb-[calc(6rem+env(safe-area-inset-bottom))] lg:pb-8' : ''}`
       }
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
