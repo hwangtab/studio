@@ -335,7 +335,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
                       }`}
                     >
                       <dt
-                        className={`text-xs ${
+                        className={`text-sm ${
                           isUs
                             ? 'font-semibold text-primary dark:text-primary-lighter'
                             : 'text-gray-500 dark:text-gray-400'

@@ -9,7 +9,7 @@ export default function RefundPolicyList({ className = '', locale = 'ko' }: { cl
           <li key={line}>{line}</li>
         ))}
       </ul>
-      <ul className="mt-2 list-disc space-y-1 pl-5 text-xs text-gray-500 dark:text-gray-400">
+      <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-gray-500 dark:text-gray-400">
         {refundFootnotes(locale).map((line) => (
           <li key={line}>{line}</li>
         ))}

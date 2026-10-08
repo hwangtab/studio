@@ -108,7 +108,7 @@ export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, n
         />
       </Field>
       {nameLocked && (
-        <p className="-mt-3 text-xs text-gray-600">
+        <p className="-mt-3 text-sm text-gray-600">
           승인된 프로젝트가 있어 이름은 바꿀 수 없습니다. 프로젝트 상세 화면에 판매자 표시로
           그대로 노출되는 값이기 때문입니다. 소개·연락처·링크는 계속 고칠 수 있습니다.
         </p>

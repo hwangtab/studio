@@ -178,7 +178,7 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
           <option value="invoice">사업자 — 세금계산서</option>
         </Select>
       </Field>
-      <ul className="-mt-3 list-disc space-y-1 pl-5 text-xs text-gray-600 dark:text-gray-400">
+      <ul className="-mt-3 list-disc space-y-1 pl-5 text-sm text-gray-600 dark:text-gray-400">
         <li>
           개인: 세금계산서를 발행하지 않으므로 수수료를 뗀 금액에서 부가세 상당액(10/110)을 빼고, 남은
           금액에서 소득세·지방소득세 {FUNDING_WITHHOLDING_PERCENT}%를 원천징수한 나머지를 보내 드립니다.
@@ -214,7 +214,7 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
               placeholder="000000-0000000"
             />
           </Field>
-          <div className="-mt-3 space-y-1 text-xs text-gray-600 dark:text-gray-400">
+          <div className="-mt-3 space-y-1 text-sm text-gray-600 dark:text-gray-400">
             <p>
               개인으로 정산을 받으시면 스튜디오 놀이 원천징수의무자로서 위 세액을 대신 떼어 신고하고,
               국세청에 지급명세서를 제출해야 합니다. 지급명세서에는 소득을 받는 분의 주민등록번호가
@@ -235,7 +235,7 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
           </div>
         </>
       ) : (
-        <p className="-mt-2 text-xs text-gray-600 dark:text-gray-400">
+        <p className="-mt-2 text-sm text-gray-600 dark:text-gray-400">
           사업자는 주민등록번호를 받지 않습니다. 원천징수를 하지 않으므로 지급명세서 제출 대상이
           아니고, 그러면 저희가 그 번호를 보관할 근거가 없습니다.
           {' '}

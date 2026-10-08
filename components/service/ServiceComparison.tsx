@@ -38,7 +38,7 @@ const ServiceComparison = ({ title, subtitle, columns, rows, rowHeaderLabel, not
                   className={`flex flex-col gap-0.5 rounded-lg px-3 py-2 ${isUs ? 'bg-primary/10 dark:bg-primary/20' : ''}`}
                 >
                   <dt
-                    className={`text-xs ${
+                    className={`text-sm ${
                       isUs ? 'font-semibold text-primary dark:text-primary-lighter' : 'text-gray-500 dark:text-gray-400'
                     }`}
                   >
@@ -108,7 +108,7 @@ const ServiceComparison = ({ title, subtitle, columns, rows, rowHeaderLabel, not
       </table>
     </div>
 
-    {note && <p className="mt-4 text-xs text-gray-500 dark:text-gray-400">{note}</p>}
+    {note && <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">{note}</p>}
   </Section>
 );
 

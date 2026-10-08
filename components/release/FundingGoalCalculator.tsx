@@ -182,7 +182,7 @@ const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component =
               </div>
             ))}
           </dl>
-          <p className="mt-5 text-xs text-gray-500 dark:text-gray-400">{copy.compare}</p>
+          <p className="mt-5 text-sm text-gray-500 dark:text-gray-400">{copy.compare}</p>
         </Panel>
 
         <div className="md:col-span-2 flex flex-col items-center gap-3">
@@ -198,7 +198,7 @@ const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component =
               {copy.cta}
             </a>
           </Button>
-          <p className="text-xs text-gray-500 dark:text-gray-400 text-center" role="status">
+          <p className="text-sm text-gray-500 dark:text-gray-400 text-center" role="status">
             {copied ? copy.copied : copy.note}
           </p>
         </div>

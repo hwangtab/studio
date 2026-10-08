@@ -182,6 +182,9 @@ woff2와 `display.chars.json`을 **함께 커밋**해야 한다(CI가 `--check`�
 | `.typo-body` | 1rem / 300 | 일반 본문 |
 | `.typo-card-cta` | 1rem / 500 | 카드 안 CTA 라벨 |
 | `.typo-button` | 1rem / 500 | 버튼 라벨 |
+
+> **2026-10-09 TDS 대조**: 본문 굵기 기본값 400(옛 v1 300 폐지). 12px(`text-xs`)은 라벨·배지·날짜 같은 짧은 표지에만 —
+> 환불·동의·조건·주석·폼 오류처럼 **읽어야 하는 정보는 14px(`text-sm`) 이상**. 캡션 토큰은 13px.
 | `.typo-card-meta` | 0.875rem / 300 | 메타 정보 |
 | `.typo-caption` | 0.75rem / 300 | 캡션·주석 |
 | `.typo-nav-link` / `.typo-footer-*` | — | 내비·푸터 전용 |

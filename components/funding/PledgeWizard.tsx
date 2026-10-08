@@ -928,7 +928,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
           서버 검증(termsAgreed)과 판본 기록(funding_pledges.terms_version)은 그대로다 —
           누른 시점의 판본이 증거로 남는다.
         */}
-        <p className="text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+        <p className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
           {usingBank ? '계좌 안내 받기' : '결제하기'}를 누르면{' '}
           <Link href="/ko/funding/terms" target="_blank" className="underline">펀딩 약관(청약철회·환불)</Link>과{' '}
           <Link href="/ko/privacy-policy" target="_blank" className="underline">개인정보 처리방침</Link>에 동의하는 것으로 봅니다.

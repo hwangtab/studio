@@ -51,7 +51,7 @@ const MarketPriceComparison = () => {
                     <>
                       <span className="tabular-nums">{range(row.market.range)}</span>
                       {row.market.median ? (
-                        <span className="block text-xs text-gray-500 dark:text-gray-400">
+                        <span className="block text-sm text-gray-500 dark:text-gray-400">
                           중앙값 {won(row.market.median)} · {row.market.sample}
                         </span>
                       ) : null}
@@ -74,7 +74,7 @@ const MarketPriceComparison = () => {
         보컬 녹음 1프로·믹싱·마스터링에 기획·유통 등록·국내외 홍보까지 들어 있고, 번들의 믹싱은 트랙 10개 이하
         기준입니다.
       </p>
-      <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
         시장 가격은 {MARKET_SURVEY_CHECKED_ON}에 각 업체의 공개 요금표에서 확인한 값입니다. 업체마다 포함 범위가 다르고
         대부분 부가세 포함 여부를 적지 않아 대략의 범위로 봐 주세요. 스튜디오 놀 가격은 부가세 별도입니다.
       </p>

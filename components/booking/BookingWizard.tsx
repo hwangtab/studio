@@ -697,7 +697,7 @@ export default function BookingWizard({ service, products, initialProductId }: B
               전자상거래법 제13조상 **고지** 의무이고, 규정 전문을 바로 위에 펼쳐 두었다.
               서버 검증(refundPolicyAgreed)은 그대로다.
             */}
-            <p className="text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+            <p className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
               {`${usingBank ? '계좌 안내 받기' : '결제하기'}를 누르면 위 환불 규정에 동의하는 것으로 봅니다.`}
             </p>
 
