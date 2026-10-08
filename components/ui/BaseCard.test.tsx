@@ -82,3 +82,17 @@ describe('BaseCard', () => {
     expect(cls).toContain('pt-8');
   });
 });
+
+describe('BaseCard — 누를 수 있는 카드만 hover에 반응한다', () => {
+  it('누를 수 없는 카드는 data-card-static이 붙어 빛 효과가 꺼진다(안의 버튼과 함께 움직이지 않게)', () => {
+    const { container } = render(<BaseCard>본문</BaseCard>);
+    expect((container.firstElementChild as HTMLElement).hasAttribute('data-card-static')).toBe(true);
+  });
+
+  it('링크·클릭 카드에는 붙지 않는다', () => {
+    const { container: a } = render(<BaseCard href="/ko/pricing">링크</BaseCard>);
+    expect((a.firstElementChild as HTMLElement).hasAttribute('data-card-static')).toBe(false);
+    const { container: b } = render(<BaseCard onClick={() => {}}>버튼</BaseCard>);
+    expect((b.firstElementChild as HTMLElement).hasAttribute('data-card-static')).toBe(false);
+  });
+});

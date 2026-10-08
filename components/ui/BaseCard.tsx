@@ -78,6 +78,9 @@ const BaseCard = React.memo(({
     const isGlass = variant !== 'outline';
 
     const isInteractive = Boolean(onClick || href);
+    // 누를 수 있는 카드만 hover에 반응한다. 누를 수 없는 카드가 떠오르면 "카드를 누르라"는 거짓 신호가 되고,
+    // 안에 버튼이 있으면 카드와 버튼이 함께 움직여 어지럽다(운영자 2026-10-08 — 가격 카드).
+    const respondsToHover = hoverEffect && isInteractive;
 
     const animationProps = {
         ...FADE_IN_UP,
@@ -85,10 +88,10 @@ const BaseCard = React.memo(({
         // 자체 transition을 갖게 한다. 이렇게 안 하면 whileHover가 아래 컴포넌트 레벨
         // transition(진입 delay 포함)을 상속해, delay 큰 카드일수록 hover 리프트가 늦게
         // 시작한다. y·shadow 값은 기존(HOVER_Y+SHADOW_HOVER)과 동일하게 유지.
-        whileHover: hoverEffect ? (isGlass ? { ...CARD_HOVER } : { ...CARD_HOVER, ...SHADOW_HOVER }) : {},
+        whileHover: respondsToHover ? (isGlass ? { ...CARD_HOVER } : { ...CARD_HOVER, ...SHADOW_HOVER }) : {},
         // press 피드백은 클릭 가능한 카드에만. transition을 자체 보유해야 진입 delay를
         // 상속하지 않는 것은 whileHover와 동일한 이유.
-        whileTap: isInteractive && hoverEffect
+        whileTap: respondsToHover
             ? { scale: 0.98, transition: { duration: 0.1, ease: EASE_STANDARD } }
             : undefined,
         transition: { ...FADE_IN_UP.transition, delay }
@@ -98,7 +101,7 @@ const BaseCard = React.memo(({
     // --mx/--my는 ::after의 background(paint 전용)만 소비하므로 layout reflow는
     // 없다. rect는 hover 진입 시 1회만 읽어 캐시(위 specularRects)하고, 마우스/펜
     // 포인터에만 반응(터치는 글로우 자체가 @media(hover:hover) 밖이라 무의미).
-    const specularHandlers = isGlass && hoverEffect
+    const specularHandlers = isGlass && respondsToHover
         ? {
             onPointerEnter: (e: React.PointerEvent<HTMLElement>) => {
                 if (e.pointerType === 'touch') return;
@@ -179,6 +182,7 @@ const BaseCard = React.memo(({
     return (
         <m.div
             className={cardClassName}
+            data-card-static=""
             {...animationProps}
             {...specularHandlers}
         >
