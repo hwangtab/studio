@@ -6,6 +6,7 @@
  * - 따옴표 안의 가사·곡 소개는 sabbaha.kr/slung의 부클릿 원문 그대로다 — 다듬지 않는다.
  * - 한국어 곡 소개의 영어 번역은 밴드가 낸 것이 없어 우리가 옮겼다. 화면에 "our translation"으로 밝힌다.
  * - 바뀌는 숫자(공연 횟수)는 기준 날짜를 함께 적는다.
+ * - 잼스탬프는 Zsthyger가 운영하는 회사다(운영자 확인 2026-10-08) — sabbaha.kr 크레딧에는 없지만 함께한 곳에 넣는다.
  * - 출처끼리 어긋나는 것: 발매 시기(사이트 "2026년 10월 예정" vs 펀딩 "2027년 초") — 펀딩 일정(12월 인쇄)을 따랐다.
  *
  * 이 파일은 공개 저장소에 있다. 음원은 비밀이지만 소개 문안은 이미 공개된 정보만 둔다.
@@ -300,8 +301,8 @@ export const SLUNG_PRESS = {
       { role: { ko: '그래픽 디자인', en: 'Graphic design' }, name: { ko: '김정현', en: 'Kim Junghyun' } },
     ],
     note: {
-      ko: '야호야호단, 경기아트콜렉티브협동조합이 함께했습니다.',
-      en: 'With Yahoyahodan and the Gyeonggi Art Collective Cooperative.',
+      ko: '야호야호단, 잼스탬프, 경기아트콜렉티브협동조합이 함께했습니다.',
+      en: 'With Yahoyahodan, Jamstamp and the Gyeonggi Art Collective Cooperative.',
     },
   },
 
