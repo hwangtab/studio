@@ -13,8 +13,9 @@
  *
  * 글자 수집 범위: ① locales *.hero.title* 등 h1 키(예전과 같음) ② locales의 *title*·*heading* 키 전부
  * (SectionHeading v2 제목의 대부분) ③ data/home.ts heroContent ④ buyerIntentHubs hero ⑤ siteConfig name
- * ⑥ content/funding 제목 ⑦ data/*.ts 최상위 파일의 title: 문자열 ⑧ data/shows 제목 ⑨ 영문·숫자·기호 안전판.
- * 서브셋 밖 글자는 Pretendard(본문 폰트)로 떨어진다 — --check가 ①~⑨ ⊆ 사이드카를 CI에서 강제한다
+ * ⑥ content/funding 제목 ⑦ data/*.ts 최상위 파일의 title: 문자열 ⑧ data/shows 제목 ⑨ 코드에 박힌 제목
+ * (components·pages의 <SectionHeading|FAQSection|ImageHero title="…">, lib/shows/i18n.ts) ⑩ 영문·숫자·기호 안전판.
+ * 서브셋 밖 글자는 Pretendard(본문 폰트)로 떨어진다 — --check가 ①~⑩ ⊆ 사이드카를 CI에서 강제한다
  * (hero-font-subset.test.js). th·zh 문자는 서체에 없고 지금도 --font-locale로 가므로 집합에서 뺀다.
  *
  * prebuild에 묶여 있다(package.json). 소스 폰트는 네트워크에서 받아 node_modules/.cache에 두고, 못 받으면
@@ -250,7 +251,30 @@ function collectDisplayChars() {
     console.warn(`skip show titles: ${e.message}`);
   }
 
-  // 8) 안전판: 영문/숫자/기본 punctuation (제목에 흔히 섞이는 기호)
+  // 8) 코드에 박힌 제목 — locales·data를 거치지 않는 제목이 있다. 2026-10-08 공연 상세의 "출연"이 "출"만
+  //    Pretendard로 그려졌다(공연 섹션 제목은 lib/shows/i18n.ts에, 허브 페이지 일부 제목은 컴포넌트 안에 있다).
+  //    ⓐ components·pages의 <SectionHeading|FAQSection|ImageHero title="…"> 리터럴
+  //    ⓑ lib/shows/i18n.ts의 제목 키(title·heroTitle·upcoming·past·faqTitle) 문자열
+  try {
+    const walk = (dir) => {
+      for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+        const p = path.join(dir, ent.name);
+        if (ent.isDirectory()) walk(p);
+        else if (/\.tsx$/.test(ent.name) && !/\.test\./.test(ent.name)) {
+          const src = fs.readFileSync(p, 'utf8');
+          for (const m of src.matchAll(/<(?:SectionHeading|FAQSection|ImageHero)\b[^>]*?\btitle=(?:"([^"]+)"|\{'([^']+)'\})/gs)) addStr(m[1] ?? m[2]);
+        }
+      }
+    };
+    walk(path.join(ROOT, 'components'));
+    walk(path.join(ROOT, 'pages'));
+    const showsCopy = fs.readFileSync(path.join(ROOT, 'lib', 'shows', 'i18n.ts'), 'utf8');
+    for (const m of showsCopy.matchAll(/\b(?:title|heroTitle|upcoming|past|faqTitle)\s*:\s*(["'`])([^"'`]*?)\1/g)) addStr(m[2]);
+  } catch (e) {
+    console.warn(`skip inline titles: ${e.message}`);
+  }
+
+  // 9) 안전판: 영문/숫자/기본 punctuation (제목에 흔히 섞이는 기호)
   const safety = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!?·:;()[]\'"&-—–%/《》〈〉“”‘’+~';
   addStr(safety);
 
