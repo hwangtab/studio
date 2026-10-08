@@ -6,7 +6,7 @@ import { m, AnimatePresence } from 'framer-motion';
 import { Globe } from '@/lib/lucide-icons';
 import { locales, localeNames, type Locale } from '../lib/i18n';
 import { isRoutePatternPath } from '../lib/routePattern';
-import { isKoOnlyRoutePath } from '../lib/koOnlyRoutes';
+import { isKoOnlyRoutePath, isTranslatedKoOnlyPath } from '../lib/koOnlyRoutes';
 import { DUR, EASE_STANDARD, TRANSITION_STANDARD } from '../utils/animationUtils';
 
 interface LanguageSwitcherProps {
@@ -73,7 +73,7 @@ export const LanguageSwitcher = ({
     // funding·artists·guides 같은 ko 전용 SSG 라우트(fallback:false, ko만 프리렌더)는
     // 로케일 세그먼트만 바꿔서는 다른 로케일 파일이 아예 없어 404가 난다. 목적지
     // 로케일이 ko가 아니면 그 로케일 홈으로 탈출시킨다(isRoutePatternPath와 같은 처리).
-    if (isKoOnlyRoutePath(pathWithoutLocale) && targetLocale !== 'ko') {
+    if (isKoOnlyRoutePath(pathWithoutLocale) && targetLocale !== 'ko' && !isTranslatedKoOnlyPath(pathWithoutLocale, targetLocale)) {
       return `/${targetLocale}`;
     }
 

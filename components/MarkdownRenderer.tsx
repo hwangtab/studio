@@ -369,8 +369,8 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
       // 펀딩 출연진 카드. id가 없거나 모르는 값이면 컴포넌트 쪽에서 null을 반환한다.
       if (segment.name === 'funding-lineup') return segment.arg ? <FundingLineupPerson key={index} id={segment.arg} /> : null;
       if (segment.name === 'funding-gallery') return segment.arg ? <FundingGallery key={index} id={segment.arg} /> : null;
-      if (segment.name === 'funding-audio') return segment.arg ? <FundingAudioPlayer key={index} id={segment.arg} /> : null;
-      if (segment.name === 'funding-video') return segment.arg ? <FundingVideo key={index} id={segment.arg} /> : null;
+      if (segment.name === 'funding-audio') return segment.arg ? <FundingAudioPlayer key={index} id={segment.arg} locale={currentLocale} /> : null;
+      if (segment.name === 'funding-video') return segment.arg ? <FundingVideo key={index} id={segment.arg} locale={currentLocale} /> : null;
 
       // 4종 inline directive — max 2 enforce (초과는 silent drop)
       if (isInlineDirectiveName(segment.name)) {

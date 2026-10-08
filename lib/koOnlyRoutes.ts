@@ -1,3 +1,5 @@
+import { hasFundingTranslation } from './funding/translatedSlugs';
+
 /**
  * ko 전용 SSG 라우트 — getStaticPaths가 ko(또는 defaultLocale) 하나만 등록하고
  * fallback:false라, 다른 로케일로는 정적 파일 자체가 없어 404가 난다
@@ -66,4 +68,14 @@ export const isKoOnlyRoutePath = (pathWithoutLocale: string): boolean => {
 
   if (segments.length === 1) return rule.hasIndexPage;
   return !rule.literalSiblings.includes(second);
+};
+
+/**
+ * ko 전용 경로 중 **번역본이 있어 그 로케일로도 열리는** 것 — 지금은 펀딩 상세 하나다
+ * (`/funding/<slug>`, lib/funding/translatedSlugs.ts). 언어 전환기가 이 조합에서는 홈으로 탈출시키지 않고
+ * 로케일 세그먼트만 바꾼다. 페이지 쪽 가드는 funding/[slug]/index.tsx의 getStaticProps가 같은 목록으로 한다.
+ */
+export const isTranslatedKoOnlyPath = (pathWithoutLocale: string, targetLocale: string): boolean => {
+  const segments = pathWithoutLocale.split('/').filter(Boolean);
+  return segments.length === 2 && segments[0] === 'funding' && hasFundingTranslation(segments[1], targetLocale);
 };

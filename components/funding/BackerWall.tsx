@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { ANONYMOUS_LABEL } from '../../lib/funding/policy';
+import type { FundingLang } from '../../lib/funding/translatedSlugs';
 
 interface Message {
   name: string;
@@ -41,32 +42,37 @@ export default function BackerWall({
   names,
   anonymousCount = 0,
   messages,
+  lang = 'ko',
 }: {
   names: string[];
   anonymousCount?: number;
   messages: Message[];
+  lang?: FundingLang;
 }) {
+  const en = lang === 'en';
+  // 후원자가 고른 이름 대신 들어가는 표기 — 영문 화면에서도 같은 자리라 번역만 한다.
+  const anonymousLabel = en ? 'Anonymous' : ANONYMOUS_LABEL;
   const [shown, setShown] = useState(PAGE);
   if (names.length === 0 && anonymousCount <= 0) return null;
 
   const anonShown = Math.min(Math.max(0, anonymousCount), ANON_SHOWN);
   const anonRest = Math.max(0, anonymousCount - anonShown);
-  const roster = [...names, ...Array<string>(anonShown).fill(ANONYMOUS_LABEL)];
+  const roster = [...names, ...Array<string>(anonShown).fill(anonymousLabel)];
 
   const visible = messages.slice(0, shown);
 
   return (
     <section aria-labelledby="backer-wall-heading" className="glass-card rounded-2xl p-6">
       <h2 id="backer-wall-heading" className="typo-card-subtitle text-gray-900 dark:text-white">
-        함께한 후원자
+        {en ? 'Backers' : '함께한 후원자'}
       </h2>
       <p className="typo-card-body mt-3 overflow-hidden break-words leading-7">{roster.join(' · ')}
-        {anonRest > 0 && ` 외 ${ANONYMOUS_LABEL} ${anonRest}명`}
+        {anonRest > 0 && (en ? ` and ${anonRest} more anonymous` : ` 외 ${ANONYMOUS_LABEL} ${anonRest}명`)}
       </p>
 
       {visible.length > 0 && (
         <>
-          <h3 className="typo-card-subtitle mt-8 text-gray-900 dark:text-white">남겨 주신 말</h3>
+          <h3 className="typo-card-subtitle mt-8 text-gray-900 dark:text-white">{en ? 'Messages from backers' : '남겨 주신 말'}</h3>
           <ul className="mt-4 space-y-3">
             {visible.map((m, i) => (
               <li
@@ -89,7 +95,7 @@ export default function BackerWall({
               onClick={() => setShown((n) => n + PAGE)}
               className="mt-4 inline-flex min-h-[44px] w-full items-center justify-center rounded-xl border border-gray-300 px-4 font-semibold text-gray-700 transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800 dark:focus-visible:ring-primary-lighter/70"
             >
-              더 보기 ({messages.length - shown}개 남음)
+              {en ? `Show more (${messages.length - shown} more)` : `더 보기 (${messages.length - shown}개 남음)`}
             </button>
           )}
         </>

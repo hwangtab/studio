@@ -17,8 +17,15 @@ import { getSiteConfig } from '../../data/siteConfig';
 // 깨진다(2026-09-17 재리뷰 지적). 타입만 쓰는 아래 import는 컴파일 시 지워지므로 안전하다.
 import { mergeRewardRemaining } from '../../lib/funding/shape';
 import type { FundingProject, FundingReward, ProjectState } from '../../lib/funding/projects';
+import type { FundingLang } from '../../lib/funding/translatedSlugs';
 
-const STATE_LABEL: Record<ProjectState, string> = { live: '진행 중', upcoming: '오픈 예정', closed: '마감', draft: '' };
+const STATE_LABEL: Record<FundingLang, Record<ProjectState, string>> = {
+  ko: { live: '진행 중', upcoming: '오픈 예정', closed: '마감', draft: '' },
+  en: { live: 'Live', upcoming: 'Opening soon', closed: 'Closed', draft: '' },
+};
+
+/** 영문판의 문의 주소 — 해외에서 후원하려는 사람이 쓸 곳. */
+const STUDIO_EMAIL = 'hello@studionol.co.kr';
 
 export interface ProjectDetailViewProps {
   project: FundingProject;
@@ -57,6 +64,12 @@ export interface ProjectDetailViewProps {
   messages?: { name: string; message: string; at: number }[];
   /** 메시지가 올 것을 알지만 아직 폴링 전인가 — 응원 메시지 칸 자리를 미리 잡는다. */
   messagesPending?: boolean;
+  /**
+   * 화면 언어. 번역본이 있는 프로젝트(lib/funding/translatedSlugs.ts)만 en으로 그린다. en은 글자만 바뀌는 것이
+   * 아니라 **후원 동선이 다르다** — 결제·약관·배송이 한국 기준이라 리워드 모달을 열지 않고 한국어 결제 화면으로
+   * 보내며, 그 사실과 해외 후원 문의처를 리워드 위에 밝힌다.
+   */
+  lang?: FundingLang;
 }
 
 /**
@@ -81,7 +94,9 @@ export default function ProjectDetailView({
   anonymousBackers = 0,
   messages = [],
   messagesPending = false,
+  lang = 'ko',
 }: ProjectDetailViewProps) {
+  const en = lang === 'en';
   const canPledge = interactive && state === 'live';
   const rewardRemaining = mergeRewardRemaining(project.rewards, remaining);
   const mailOrderSalesNumber = getSiteConfig('ko').mailOrderSalesNumber;
@@ -106,7 +121,7 @@ export default function ProjectDetailView({
         배경을 갈아 끼우면 다시 잴 것.
       */}
       <ImageHero
-        locale="ko"
+        locale={lang}
         priority
         overlayGradient={HERO_SCRIM_STRONG}
         backgroundImage={project.heroImage ?? project.cover}
@@ -122,11 +137,15 @@ export default function ProjectDetailView({
               현황을 아직 모르면(미리보기·집계 전) 예전처럼 목표를 적는다.
             */}
             <span className="mb-6 flex flex-wrap justify-center gap-2">
-              {STATE_LABEL[state] && <Badge tone="onImage" size="md">{STATE_LABEL[state]}</Badge>}
+              {STATE_LABEL[lang][state] && <Badge tone="onImage" size="md">{STATE_LABEL[lang][state]}</Badge>}
               <Badge tone="onImage" size="md">
-                {interactive && status
-                  ? <><span className="font-semibold tabular-nums">{formatPriceAmount(status.pledgedAmount)}원</span> 모금 · {percent}%</>
-                  : <>목표 {formatPriceAmount(project.goalAmount)}원</>}
+                {en
+                  ? interactive && status
+                    ? <><span className="font-semibold tabular-nums">₩{formatPriceAmount(status.pledgedAmount)}</span> raised · {percent}%</>
+                    : <>Goal ₩{formatPriceAmount(project.goalAmount)}</>
+                  : interactive && status
+                    ? <><span className="font-semibold tabular-nums">{formatPriceAmount(status.pledgedAmount)}원</span> 모금 · {percent}%</>
+                    : <>목표 {formatPriceAmount(project.goalAmount)}원</>}
               </Badge>
             </span>
             {project.summary}
@@ -140,14 +159,14 @@ export default function ProjectDetailView({
             // 포커스 링만 흰색으로 바꾼다. 스크롤이 아니라 결제 화면을 연다(onPledge).
             <Button asChild size="lg" className="hidden lg:inline-flex focus-visible:ring-white/80 focus-visible:ring-offset-black/40">
               <a
-                href={`/ko/funding/${project.slug}/pledge`}
+                href={en ? '#rewards' : `/ko/funding/${project.slug}/pledge`}
                 onClick={(e) => {
                   if (!onPledge || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
                   e.preventDefault();
                   onPledge();
                 }}
               >
-                펀딩하기
+                {en ? 'Back this project' : '펀딩하기'}
               </a>
             </Button>
           ) : null
@@ -162,7 +181,7 @@ export default function ProjectDetailView({
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12">
           <div className="min-w-0">
             {statusError && (
-              <Notice tone="error" className="mb-6">현황을 불러오지 못했습니다. 새로고침해 주세요.</Notice>
+              <Notice tone="error" className="mb-6">{en ? 'Could not load the campaign status. Please reload the page.' : '현황을 불러오지 못했습니다. 새로고침해 주세요.'}</Notice>
             )}
             {/*
               모금 현황은 히어로 바로 아래, 본문 컬럼 맨 위에 둔다(saf-2026과 같은 배치,
@@ -183,6 +202,7 @@ export default function ProjectDetailView({
                   endAt={project.endAt}
                   now={now}
                   data={status ? { raisedAmount: status.pledgedAmount, backerCount: status.backerCount, percent, state } : null}
+                  lang={lang}
                 />
               ) : (
                 // 미리보기는 실제 모금액이 없다 — "모금 현황 집계 중…"(폴링 실패/대기)과
@@ -211,9 +231,9 @@ export default function ProjectDetailView({
               않는다 — 래퍼에 mb를 주면 그 경우 빈 간격만 남는다.
             */}
             <div className="space-y-10">
-              <SupporterTicker messages={messages} pending={messagesPending} />
+              <SupporterTicker messages={messages} pending={messagesPending} lang={lang} />
               <article className="prose prose-lg max-w-none dark:prose-invert">
-                <MarkdownRenderer content={project.content} locale="ko" />
+                <MarkdownRenderer content={project.content} locale={lang} />
               </article>
             </div>
             {/*
@@ -229,16 +249,22 @@ export default function ProjectDetailView({
               </p>
             )}
             <div className="mt-12 space-y-8">
-              <BackerWall names={backers} anonymousCount={anonymousBackers} messages={messages} />
-              <FundingTrustNotice />
+              <BackerWall names={backers} anonymousCount={anonymousBackers} messages={messages} lang={lang} />
+              <FundingTrustNotice lang={lang} />
             </div>
           </div>
 
           <aside id="rewards" className="scroll-mt-20 lg:sticky lg:top-24">
             {/* 여기에 표지 썸네일을 두지 않는다. `cover`는 프로젝트의 얼굴(행사 포스터)이지
                 리워드의 얼굴이 아니다 — 리워드 이미지는 각 리워드가 `image`로 갖는다. */}
-            <h2 className="typo-card-title text-gray-900 dark:text-white">리워드</h2>
-            <p className="typo-card-meta mt-1">펀딩 금액에 따라 돌려드릴 구성입니다.</p>
+            <h2 className="typo-card-title text-gray-900 dark:text-white">{en ? 'Rewards' : '리워드'}</h2>
+            <p className="typo-card-meta mt-1">{en ? 'What you receive for each pledge amount.' : '펀딩 금액에 따라 돌려드릴 구성입니다.'}</p>
+            {en && (
+              <Notice tone="info" className="mt-4">
+                Checkout is in Korean, with Korean payment methods, and rewards ship within South Korea only.
+                To back the album from abroad, write to <a href={`mailto:${STUDIO_EMAIL}?subject=${encodeURIComponent(project.title)}`} className="underline underline-offset-2">{STUDIO_EMAIL}</a>.
+              </Notice>
+            )}
             <div className="mt-4 space-y-4">
               {project.rewards.map((r) => (
                 <RewardCard
@@ -247,7 +273,10 @@ export default function ProjectDetailView({
                   remaining={rewardRemaining[r.id]}
                   pledgeHref={`/ko/funding/${project.slug}/pledge?reward=${encodeURIComponent(r.id)}`}
                   canPledge={canPledge}
-                  onSelect={canPledge ? onSelectReward : undefined}
+                  // 영문판은 모달(한국어 결제 위젯)을 띄우지 않고 한국어 결제 화면으로 간다 — 버튼에 그 사실을 적는다.
+                  onSelect={canPledge && !en ? onSelectReward : undefined}
+                  lang={lang}
+                  pledgeLabel={en ? 'Back this (Korean checkout)' : undefined}
                 />
               ))}
             </div>
