@@ -30,7 +30,7 @@ Tailwind는 정의되지 않은 클래스명을 **에러 없이 빌드 CSS에서
 
 | 토큰 | light / DEFAULT / dark | 용도 |
 |---|---|---|
-| `primary` | `#3b82f6` / `#2563eb` / `#1d4ed8` · lighter `#93c5fd` | **파랑 = 누를 수 있는 것**(버튼·링크·선택 상태·포커스). 2026-10-09 3차 개정. DEFAULT 흰 5.17:1, dark 흰 글씨 6.70:1(solid hover·theme-color). 가격 숫자 같은 누를 수 없는 큰 강조는 잉크(`text-gray-950 dark:text-white`). 값의 정본은 `lib/brandColor.ts` — 메일 HTML·정적 카드·theme-color가 같은 값을 쓴다. 로고 녹색은 로고 이미지에만 |
+| `primary` | `#3b82f6` / `#2563eb` / `#1d4ed8` · lighter `#93c5fd` | **파랑 = 누를 수 있는 것**(버튼·링크·선택 상태·포커스). 2026-10-09 3차 개정. DEFAULT 흰 5.17:1, dark 흰 글씨 6.70:1(solid hover·theme-color). 가격 숫자 같은 누를 수 없는 큰 강조는 잉크(`text-gray-950 dark:text-white`). 값의 정본은 `lib/brandColor.ts` — 메일 HTML·정적 카드·theme-color가 같은 값을 쓴다. 로고 녹색은 로고 이미지에만. **포커스 링 `ring-primary`는 `#1d4ed8`로 따로 매핑**(tailwind `ringColor`) — `#2563eb`/70은 paper-2 위 2.89:1로 3:1 미달 |
 | ~~`secondary`~~ · ~~`accent`~~ | 삭제됨 (2026-10-06) | 핑크·에메랄드(옛 accent)는 없다. 브랜드색은 `primary` 하나, 성공은 `green-*`, 다크 텍스트 짝은 `primary-lighter` 하나. `tailwind.config.test.ts`가 재등장을 막는다 |
 | `paper` | `#ffffff` / `paper-2` `#f2f5f3` | 라이트 바탕 두 단 — body·Layout·Section default/alternate. 2026-10-07 2차 개정: 1차의 따뜻한 베이지(`#faf7f2`/`#f2ede4`)가 올리브 그린과 짝지어 "텁텁하다"는 반려를 받아, 차갑고 깨끗한 순백/근접백으로 교체. 글래스 카드 틴트(흰 0.72)는 그대로라 카드가 paper-2보다 살짝 밝게 뜬다 |
 | `kakao` | `#FEE500` / hover `#FADA0A` / ink `#191600` | **카카오톡 진입점 전용** |

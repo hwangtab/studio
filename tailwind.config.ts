@@ -18,16 +18,25 @@ const config: Config = {
       '3xl': '1800px',
     },
     extend: {
+      // 포커스 링만 진한 파랑. ring-primary/70을 primary(#2563eb)로 그리면 흰 바탕 3.02:1·paper-2 2.89:1로
+      // SC 1.4.11(3:1) 경계·미달이다(녹색 시절엔 primary가 짙어 문제가 없었다). primaryDark(#1d4ed8)/70은
+      // 흰 3.57:1·paper-2 3.43:1 — 97곳의 ring-primary/70을 그대로 두고 여기 한 곳에서 맞춘다(2026-10-09 블라인드스팟).
+      ringColor: {
+        primary: {
+          light: BRAND_COLOR.primaryLight,
+          DEFAULT: BRAND_COLOR.primaryDark,
+          dark: BRAND_COLOR.primaryDark,
+          lighter: BRAND_COLOR.primaryOnDark,
+        },
+      },
       colors: {
         primary: {
-          // 라이너 노트(2026-10-06, docs/design-liner-notes-plan-2026-10.md §3-1): 보라(violet-700)를
-          // 로고의 짙은 녹색 계열로. 2026-10-07 2차 개정: 운영자가 1차 값(올리브 포레스트 그린 + 베이지)을
-          // "텁텁하다"며 반려 — 더 선명한 에메랄드 계열로, 바탕은 순백/근접백으로. 값의 정본은
-          // lib/brandColor.ts — 메일·정적 카드가 같은 값을 쓴다.
+          // 2026-10-09 3차: 파랑 = 누를 수 있는 것(버튼·링크·선택 상태). 녹색(10/06·10/07)을 거쳐 운영자 결정.
+          // 값의 정본은 lib/brandColor.ts — 메일·정적 카드·theme-color가 같은 값을 쓴다.
           light: BRAND_COLOR.primaryLight, // 흰 3.68:1 — 작은 텍스트에는 쓰지 않는다(대형·아이콘용)
           DEFAULT: BRAND_COLOR.primary, // 흰 5.17:1 · paper2 약 4.8:1
           dark: BRAND_COLOR.primaryDark, // 흰 글씨 6.70:1 — solid hover
-          // 다크 배경(gray-900 #030712) 위 텍스트·테두리용 — lighter만 13.2:1로 통과한다. 규칙은 1차와 같다.
+          // 다크 배경(gray-900) 위 텍스트·테두리용 — lighter만 약 9.9:1로 통과한다.
           lighter: BRAND_COLOR.primaryOnDark,
         },
         // secondary(핑크)·accent(에메랄드)는 2026-10-06 라이너 노트에서 지웠다 — 브랜드색은 primary 하나. 성공·긍정은

@@ -21,7 +21,7 @@ export const buildCategories = (locale: Locale): PortfolioCategory[] => [
     id: 'single',
     name: translate(locale, { ko: '싱글', en: 'Single', zh: '单曲', es: 'Sencillo', vi: 'Single', th: 'ซิงเกิล', uz: 'Singl' }),
     description: translate(locale, { ko: '싱글 곡 프로젝트', en: 'Single Song Projects', zh: '单曲项目', es: 'Proyectos de Sencillo', vi: 'Dự án single', th: 'โปรเจกต์ซิงเกิล', uz: 'Singl loyihalari' }),
-    color: BRAND_COLOR.primaryLight,
+    color: '#0369a1', // sky-700 — 흰 글씨 5.93:1. primaryLight(#3b82f6)는 흰 글씨 3.68:1이라 배지에 못 쓴다
   },
   {
     // EP(미니앨범). 자이 <Golden Hour>·엉아들 <Self-titled>처럼 데이터 본문이 스스로
@@ -30,7 +30,7 @@ export const buildCategories = (locale: Locale): PortfolioCategory[] => [
     id: 'ep',
     name: translate(locale, { ko: 'EP', en: 'EP', zh: 'EP', es: 'EP', vi: 'EP', th: 'EP', uz: 'EP' }),
     description: translate(locale, { ko: '미니앨범(EP) 프로젝트', en: 'Mini Album (EP) Projects', zh: '迷你专辑（EP）项目', es: 'Proyectos de Mini Álbum (EP)', vi: 'Dự án mini album (EP)', th: 'โปรเจกต์มินิอัลบั้ม (EP)', uz: 'Mini albom (EP) loyihalari' }),
-    color: '#047857', // emerald-700 — 흰 글씨 5.64:1. 녹색 안에서 EP를 가르는 청록 쪽
+    color: '#4338ca', // indigo-700 — 흰 글씨 7.9:1. 파랑 체계 안에서 EP를 가르는 남색 쪽
   },
   {
     id: 'compilation',
