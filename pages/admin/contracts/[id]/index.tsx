@@ -251,7 +251,7 @@ export default function AdminContractDetailPage({
                 {subscriptionSetupUrl}
               </code>
               <Button light
-                variant="outline"
+                variant="weak"
                 onClick={async () => {
                   const copied = await copyToClipboard(subscriptionSetupUrl);
                   setNotice(copied ? '링크를 복사했습니다.' : '링크 복사에 실패했습니다.');
@@ -506,7 +506,7 @@ export default function AdminContractDetailPage({
 
             {isActionAllowed(contract.status, 'resend') && (
               <Button light
-                variant={contract.status === 'sent' ? 'outline' : 'solid'}
+                variant={contract.status === 'sent' ? 'weak' : 'solid'}
                 disabled={busy}
                 onClick={() =>
                   run(
@@ -521,7 +521,7 @@ export default function AdminContractDetailPage({
 
             {isActionAllowed(contract.status, 'resend-signed') && !contract.purgedAt && (
               <Button light
-                variant="outline"
+                variant="weak"
                 disabled={busy}
                 onClick={() =>
                   run(
@@ -537,11 +537,11 @@ export default function AdminContractDetailPage({
             {contract.status === 'signed' && (
               subscriptionId ? (
                 <Link href={`/admin/subscriptions/${subscriptionId}`} passHref>
-                  <Button light variant="outline">정기결제 구독 보기</Button>
+                  <Button light variant="weak">정기결제 구독 보기</Button>
                 </Link>
               ) : (
                 <Button light
-                  variant="outline"
+                  variant="weak"
                   disabled={busy}
                   onClick={() =>
                     run(async () => {
@@ -567,7 +567,7 @@ export default function AdminContractDetailPage({
 
             {isActionAllowed(contract.status, 'update') && (
               <Link href={`/admin/contracts/${contract.id}/edit`} passHref>
-                <Button light variant="outline">수정</Button>
+                <Button light variant="weak">수정</Button>
               </Link>
             )}
 
@@ -598,7 +598,7 @@ export default function AdminContractDetailPage({
             {/* 같은 고객의 재계약·갱신은 14개 항목을 다시 타이핑하는 자리다.
                 발송 후에는 수정이 막히므로(설계상 의도) 복제해서 새로 만드는 길을 준다. */}
             <Link href={`/admin/contracts/new?from=${contract.id}`} passHref>
-              <Button light variant="outline">복제해서 새 계약</Button>
+              <Button light variant="weak">복제해서 새 계약</Button>
             </Link>
 
             {isActionAllowed(contract.status, 'terminate') && (

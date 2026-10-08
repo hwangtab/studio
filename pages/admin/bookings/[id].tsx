@@ -433,8 +433,8 @@ export default function AdminBookingDetailPage({
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <Button light disabled={busy} onClick={handleConfirmDeposit}>입금 확인</Button>
-              <Button light variant="outline" disabled={busy} onClick={handleCancelUnpaid}>미입금 취소</Button>
-              <Button light variant="outline" disabled={busy} onClick={handleResendDepositGuide}>입금 안내 재발송</Button>
+              <Button light variant="weak" disabled={busy} onClick={handleCancelUnpaid}>미입금 취소</Button>
+              <Button light variant="weak" disabled={busy} onClick={handleResendDepositGuide}>입금 안내 재발송</Button>
             </div>
           </div>
         )}
@@ -446,7 +446,7 @@ export default function AdminBookingDetailPage({
             {booking.gcalError?.startsWith('waiting_delete: ') && (
               <div className="mt-3">
                 <p className="font-semibold text-red-700">[입금 대기] 캘린더 일정이 남아 이 시간대의 웹 예약을 막고 있습니다.</p>
-                <Button type="button" variant="outline" className="mt-2" disabled={busy}
+                <Button type="button" variant="weak" className="mt-2" disabled={busy}
                   onClick={() => runDeposit('delete_waiting_event', '캘린더 일정을 지우지 못했습니다.', '남은 [입금 대기] 캘린더 일정을 지울까요?')}>
                   대기 일정 지우기
                 </Button>
@@ -491,7 +491,7 @@ export default function AdminBookingDetailPage({
                     <p>예금주 {refundAccountView.accountHolder}</p>
                   </div>
                 ) : (
-                  <Button light variant="outline" size="sm" className="mt-2" disabled={busy} onClick={handleShowRefundAccount}>
+                  <Button light variant="weak" size="sm" className="mt-2" disabled={busy} onClick={handleShowRefundAccount}>
                     계좌 보기
                   </Button>
                 )}
@@ -767,7 +767,7 @@ export default function AdminBookingDetailPage({
                   <Button light disabled={busy} onClick={handleComplete}>
                     완료 처리
                   </Button>
-                  <Button light variant="outline" disabled={busy} onClick={handleNoShow}>
+                  <Button light variant="weak" disabled={busy} onClick={handleNoShow}>
                     노쇼 처리
                   </Button>
                 </>
@@ -846,7 +846,7 @@ export default function AdminBookingDetailPage({
                     light className="min-h-0 text-sm"
                   />
                 </Field>
-                <Button light type="submit" variant="outline" disabled={busy}>
+                <Button light type="submit" variant="weak" disabled={busy}>
                   {isBankPaid ? '송금 완료(환불 기록)' : '환불 처리'}
                 </Button>
               </form>

@@ -48,7 +48,7 @@ export default function ShowVenueMap({
       </div>
       <div className={`mt-4 grid gap-3 ${links.length > 2 ? 'sm:grid-cols-3' : 'sm:grid-cols-2'}`}>
         {links.map((l) => (
-          <Button key={l.id} asChild variant="outline" shape="block">
+          <Button key={l.id} asChild variant="weak" shape="block">
             <a href={l.url} target="_blank" rel="noopener noreferrer">
               {copy.directionsIn(l.label)}
             </a>

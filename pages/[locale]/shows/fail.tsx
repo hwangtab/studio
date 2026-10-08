@@ -51,7 +51,7 @@ export default function ShowFailPage({ slug, code, message, orderNo, locale }: F
             title="Payment was not completed"
             description={message}
             actions={
-              <Button asChild variant="outline">
+              <Button asChild variant="weak">
                 <a href={slug ? `/en/shows/${slug}` : '/en'} rel="noreferrer">
                   {slug ? 'Back to the booking page' : 'Home'}
                 </a>
@@ -88,7 +88,7 @@ export default function ShowFailPage({ slug, code, message, orderNo, locale }: F
               <Button asChild variant="kakao">
                 <a href={kakaoUrl} target="_blank" rel="noopener noreferrer">카카오톡으로 문의하기</a>
               </Button>
-              <Button asChild variant="outline">
+              <Button asChild variant="weak">
                 <a href={slug ? `/ko/shows/${slug}` : '/ko'} rel="noreferrer">
                   {slug ? '예매 페이지로 돌아가기' : '홈으로'}
                 </a>

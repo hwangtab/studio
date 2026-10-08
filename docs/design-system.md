@@ -278,11 +278,17 @@ woff2와 `display.chars.json`을 **함께 커밋**해야 한다(CI가 `--check`�
 | `solid` | 1차 액션 — 파랑 면 + 흰 글씨(라이트·다크 같음), `BUTTON_DEPTH.solid` 입체감 |
 | `inverse` | 어두운 히어로 사진 위 1차 액션(흰 버튼 + 잉크 글씨, 테마 무관) |
 | `kakao` | 카카오톡 목적지 전용 |
-| `outline` / `ghost` / `secondary` | 2차·3차 액션(`outline`은 파랑 글씨·옅은 파랑 테두리) |
+| `weak` | 2차 액션 — 연한 파랑 채움(`bg-primary/10` + `text-primary-dark`). 옛 `outline`(테두리)을 대체했다 — 얇은 선은 누를 수 있다는 신호가 약하다 |
+| `ghost` / `secondary` | 3차 액션 |
 | `glass` | 글래스 표면 위 |
 | `scrim` | 어두운 히어로 이미지 위 2차 액션 |
 
 `shape`: `pill`(자유 배치 CTA) / `block`(카드·폼 안). `size`: `sm`/`md`/`lg`/`icon`.
+
+**누를 때 반응이 기본, hover는 덤** (2026-10-09 TDS 대조): 모든 버튼은 누를 때 0.96배로 줄고 살짝 어두워진다
+(`active:scale-[0.96] active:brightness-90`, 손으로 짠 버튼은 `BUTTON_DEPTH`가 같은 것을 준다). `hover:`는 마우스가 있는
+기기에서만 켜진다(tailwind `future.hoverOnlyWhenSupported`) — 휴대폰에서 탭한 뒤 hover가 눌어붙지 않는다. iOS가
+`:active`를 그리도록 `public/scripts/theme-init.js`가 빈 touchstart 리스너를 단다. 링크 카드는 누르면 `brightness-95`.
 
 **파랑 = 누를 수 있는 것** (2026-10-09 운영자 결정, 10/08 잉크 안 대체): 버튼·링크·선택 상태·포커스 링만 파랑이다.
 가격 숫자·대형 수치처럼 누를 수 없는 큰 강조는 잉크로 둬, 버튼과 같은 색 덩어리로 보이지 않게 한다(10/07 녹색

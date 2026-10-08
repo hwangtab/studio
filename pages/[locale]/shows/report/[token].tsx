@@ -174,7 +174,7 @@ export default function ShowReportPage({ report, linkLabel, expiresAt, generated
         </div>
 
         <div className="mt-8">
-          <Button variant="outline" size="sm" shape="block" onClick={() => window.location.reload()}>새로 고침</Button>
+          <Button variant="weak" size="sm" shape="block" onClick={() => window.location.reload()}>새로 고침</Button>
         </div>
 
         <p className="mt-6 typo-caption text-gray-600 dark:text-gray-400">

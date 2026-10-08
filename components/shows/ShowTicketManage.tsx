@@ -143,7 +143,7 @@ function DepositWaiting({ order, token, locale }: { order: ManageOrderView; toke
       <Notice tone="info">{t.depositHeld}</Notice>
       <BankDepositGuide amount={guide.amount} deadline={guide.deadline} customerName={guide.customerName} applicantLabel={t.applicant} locale={locale} />
       {error && <Notice tone="error" className="mt-4">{error}</Notice>}
-      <Button type="button" variant="outline" fullWidth className="mt-8" disabled={busy} onClick={withdraw}>
+      <Button type="button" variant="weak" fullWidth className="mt-8" disabled={busy} onClick={withdraw}>
         {busy ? t.processing : t.withdraw}
       </Button>
     </section>

@@ -179,12 +179,12 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved, onDir
                 </p>
               </div>
               <div className="flex shrink-0 gap-2">
-                <Button type="button" variant="outline" size="sm" onClick={() => startEdit(r)} disabled={readOnly}>
+                <Button type="button" variant="weak" size="sm" onClick={() => startEdit(r)} disabled={readOnly}>
                   수정
                 </Button>
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="weak"
                   size="sm"
                   className="text-red-600 dark:text-red-400"
                   onClick={() => confirmAndRemove(r.rewardId, r.title)}
@@ -315,7 +315,7 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved, onDir
             <Button type="submit" disabled={readOnly || save.status === 'saving'}>
               {save.status === 'saving' ? '저장 중…' : '리워드 저장'}
             </Button>
-            <Button type="button" variant="outline" onClick={cancel} disabled={save.status === 'saving'}>
+            <Button type="button" variant="weak" onClick={cancel} disabled={save.status === 'saving'}>
               취소
             </Button>
             {save.status === 'error' && (

@@ -45,7 +45,7 @@ export default function TossPaymentWidget({ orderNo, amount, orderName, customer
     return (
       <div>
         <p role="alert" className="text-red-600">{error}</p>
-        <Button type="button" variant="outline" onClick={retry} className="mt-3">
+        <Button type="button" variant="weak" onClick={retry} className="mt-3">
           다시 시도
         </Button>
       </div>

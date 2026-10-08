@@ -240,7 +240,7 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
               <Field id="payout-period" label="정산 월" className={lightOnlyField}>
                 <TextInput type="month" value={periodInput} onChange={(e) => setPeriodInput(e.target.value)} light className="text-sm" />
               </Field>
-              <Button light type="submit" variant="outline" size="sm">
+              <Button light type="submit" variant="weak" size="sm">
                 조회
               </Button>
             </form>
@@ -302,7 +302,7 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
                             <Button
                               light
                               size="sm"
-                              variant="outline"
+                              variant="weak"
                               disabled={busy === key}
                               onClick={() =>
                                 run(key, () => recordPayout(p.artistSlug, p.period), `${p.artistName} ${p.period} 정산을 ${formatPriceAmount(p.netAmount)}원으로 기록할까요?`)

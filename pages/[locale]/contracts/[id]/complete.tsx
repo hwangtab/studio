@@ -328,7 +328,7 @@ export default function ContractCompletePage({
               뒤로가기로 돌아온 이 주소(서명 토큰이 실려 있다)를 page_view로 보낸다. 공개 목적지라
               rel="noreferrer"도 붙인다(동일 출처 이동에는 전체 URL이 리퍼러로 간다).
               규칙: lib/analytics/privatePaths.ts, tests/pages/privateLinkNavigation.test.ts */}
-          <Button asChild light size="lg" variant="outline" fullWidth>
+          <Button asChild light size="lg" variant="weak" fullWidth>
             <a href={`/${locale}`} rel="noreferrer">
               스튜디오 홈으로
             </a>

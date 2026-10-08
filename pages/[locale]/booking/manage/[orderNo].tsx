@@ -240,7 +240,7 @@ function DepositWaitingSection({ orderNo, token, guide, kindLabel }: {
     <div className="mt-2">
       <BankDepositGuide amount={guide.amount} deadline={guide.deadline} customerName={guide.customerName} applicantLabel={guide.applicantLabel} />
       {withdrawError && <Notice tone="error" className="mt-4">{withdrawError}</Notice>}
-      <Button type="button" variant="outline" fullWidth className="mt-8" disabled={withdrawing} onClick={() => withdraw(() => setClosed(true))}>
+      <Button type="button" variant="weak" fullWidth className="mt-8" disabled={withdrawing} onClick={() => withdraw(() => setClosed(true))}>
         {withdrawing ? '처리 중...' : `입금 전 ${kindLabel} 취소`}
       </Button>
     </div>
@@ -304,7 +304,7 @@ function CancelSection({
       <div className="mt-4">
         <Button
           type="button"
-          variant="outline"
+          variant="weak"
           className="border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
           disabled={cancelling || (needsAccount && !!account && !isRefundAccountFilled(account.value))}
           onClick={onCancel}

@@ -116,8 +116,10 @@ const BaseCard = React.memo(({
             },
         }
         : {};
+    // active:brightness — 휴대폰에서 누른 카드가 살짝 어두워진다. 터치 기기는 MotionConfig가 framer whileTap을 끄므로
+    // (pages/_app.tsx reducedMotion) CSS가 맡는다. transform이 아니라 filter라 framer의 y 애니메이션과 부딪히지 않는다.
     const interactiveStyles = isInteractive
-        ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+        ? "cursor-pointer active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
         : "";
     // className이 뒤에 와서 호출부의 `pt-8` 같은 개별 조정이 이긴다(twMerge).
     const cardClassName = cn(baseStyles, variants[variant], CARD_PADDING[padding], interactiveStyles, className);

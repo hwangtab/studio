@@ -80,7 +80,7 @@ export default function FundingFailPage({ slug, code, message, orderNo }: Props)
                   <a href={`/ko/funding/${slug}/pledge`} rel="noreferrer">담았던 리워드로 다시 펀딩하기</a>
                 </Button>
               )}
-              <Button asChild size="lg" variant={slug ? 'outline' : 'solid'}>
+              <Button asChild size="lg" variant={slug ? 'weak' : 'solid'}>
                 <a href={slug ? `/ko/funding/${slug}` : '/ko/funding'} rel="noreferrer">프로젝트로 돌아가기</a>
               </Button>
             </>

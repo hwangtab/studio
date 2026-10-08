@@ -411,7 +411,7 @@ export default function ContractForm({
           <Button light
             type="button"
             size="sm"
-            variant="outline"
+            variant="weak"
             onClick={addSpecialTerm}
           >
             추가
@@ -472,7 +472,7 @@ export default function ContractForm({
         <Button light type="submit" size="lg" disabled={submitting}>
           {submitting ? '저장 중...' : submitLabel}
         </Button>
-        <Button light type="button" size="lg" variant="outline" onClick={handleCancel} disabled={submitting}>
+        <Button light type="button" size="lg" variant="weak" onClick={handleCancel} disabled={submitting}>
           취소
         </Button>
       </div>

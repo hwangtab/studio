@@ -192,7 +192,7 @@ const QuoteWizard = ({ kakaoUrl }: QuoteWizardProps) => {
                 </a>
               </Button>
               {est.bookingHref && (
-                <Button asChild variant="outline" shape="pill" size="lg">
+                <Button asChild variant="weak" shape="pill" size="lg">
                   <Link
                     href={est.bookingHref}
                     prefetch={false}

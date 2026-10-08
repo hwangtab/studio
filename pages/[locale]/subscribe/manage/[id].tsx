@@ -212,13 +212,13 @@ export default function SubscribeManagePage(props: ManageProps) {
           {actionError && <Notice tone="error" className="mt-4">{actionError}</Notice>}
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button type="button" variant="outline" disabled={changingCard} onClick={handleCardChange}>
+            <Button type="button" variant="weak" disabled={changingCard} onClick={handleCardChange}>
               {changingCard ? '이동 중...' : '카드 변경'}
             </Button>
             {showCancelButton && (
               <Button
                 type="button"
-                variant="outline"
+                variant="weak"
                 className="border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
                 disabled={cancelling}
                 onClick={handleCancel}

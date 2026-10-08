@@ -438,7 +438,7 @@ export default function CreatorProjectEditor({
             <div className="mt-4 flex items-center gap-3">
               {withdraw.status !== 'success' && (
                 <Button
-                  variant="outline"
+                  variant="weak"
                   onClick={handleWithdraw}
                   disabled={withdraw.status === 'saving'}
                 >

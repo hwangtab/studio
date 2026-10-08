@@ -295,7 +295,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
         width="wide"
         actions={
           <Link href="/admin/funding/projects" passHref>
-            <Button light variant="outline">프로젝트 심사</Button>
+            <Button light variant="weak">프로젝트 심사</Button>
           </Link>
         }
       >
@@ -423,7 +423,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
                 <a href={exportHref}>
                   <Button light variant="secondary">CSV 내보내기</Button>
                 </a>
-                <Button light variant="outline" onClick={() => setShowForm((v) => !v)}>
+                <Button light variant="weak" onClick={() => setShowForm((v) => !v)}>
                   {showForm ? '수기 등록 닫기' : '수기 등록'}
                 </Button>
               </div>
@@ -443,7 +443,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
                           </li>
                         ))}
                       </ul>
-                      <Button light type="button" variant="outline" size="sm" className="mt-3" disabled={busy}
+                      <Button light type="button" variant="weak" size="sm" className="mt-3" disabled={busy}
                         onClick={() => void handleCreateManual(null, true)}>
                         위 신청과 다른 입금입니다 — 새로 등록
                       </Button>
@@ -489,12 +489,12 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
                             />
                           </Field>
                           {formItems.length > 1 ? (
-                            <Button light type="button" variant="outline" size="sm" onClick={() => setFormItems(formItems.filter((_, i) => i !== index))}>빼기</Button>
+                            <Button light type="button" variant="weak" size="sm" onClick={() => setFormItems(formItems.filter((_, i) => i !== index))}>빼기</Button>
                           ) : <span />}
                         </div>
                       ))}
                       {selectedProject && formItems.length < selectedProject.rewards.length && (
-                        <Button light type="button" variant="outline" size="sm" onClick={() => setFormItems([...formItems, { rewardId: '', quantity: 1 }])}>
+                        <Button light type="button" variant="weak" size="sm" onClick={() => setFormItems([...formItems, { rewardId: '', quantity: 1 }])}>
                           + 리워드 추가
                         </Button>
                       )}

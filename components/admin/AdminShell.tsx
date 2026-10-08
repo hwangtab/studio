@@ -220,7 +220,7 @@ export const AdminShell = ({
             </nav>
             <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
               <span className="text-sm text-gray-600">{adminName ?? ''}</span>
-              <Button light variant="outline" size="sm" onClick={handleLogout}>
+              <Button light variant="weak" size="sm" onClick={handleLogout}>
                 로그아웃
               </Button>
             </div>

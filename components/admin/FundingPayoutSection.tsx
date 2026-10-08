@@ -408,7 +408,7 @@ export function FundingPayoutSection({
             />
           </dl>
         ) : (
-          <Button light variant="outline" size="sm" disabled={loadingAccount} onClick={revealAccount}>
+          <Button light variant="weak" size="sm" disabled={loadingAccount} onClick={revealAccount}>
             {loadingAccount ? '불러오는 중…' : '계좌 보기'}
           </Button>
         )}
@@ -441,12 +441,12 @@ export function FundingPayoutSection({
             <dl className="text-sm">
               <Row label="주민등록번호" value={residentNumber} />
             </dl>
-            <Button light variant="outline" size="sm" onClick={() => setResidentNumber(null)}>
+            <Button light variant="weak" size="sm" onClick={() => setResidentNumber(null)}>
               가리기
             </Button>
           </div>
         ) : (
-          <Button light variant="outline" size="sm" disabled={loadingResidentNumber} onClick={revealResidentNumber}>
+          <Button light variant="weak" size="sm" disabled={loadingResidentNumber} onClick={revealResidentNumber}>
             {loadingResidentNumber ? '불러오는 중…' : '주민등록번호 보기'}
           </Button>
         )}

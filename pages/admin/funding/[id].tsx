@@ -460,8 +460,8 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
                   <Button light disabled={busy} onClick={handleConfirmDeposit}>입금 확인</Button>
                   {pledge.status === 'pending' && (
                     <>
-                      <Button light variant="outline" disabled={busy} onClick={handleCancelUnpaid}>미입금 취소</Button>
-                      <Button light variant="outline" disabled={busy} onClick={handleResendDepositGuide}>입금 안내 재발송</Button>
+                      <Button light variant="weak" disabled={busy} onClick={handleCancelUnpaid}>미입금 취소</Button>
+                      <Button light variant="weak" disabled={busy} onClick={handleResendDepositGuide}>입금 안내 재발송</Button>
                     </>
                   )}
                 </div>
@@ -503,7 +503,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
                         )}
                       </div>
                     ) : (
-                      <Button light variant="outline" size="sm" className="mt-2" disabled={busy} onClick={handleShowRefundAccount}>
+                      <Button light variant="weak" size="sm" className="mt-2" disabled={busy} onClick={handleShowRefundAccount}>
                         계좌 보기
                       </Button>
                     )}
@@ -545,7 +545,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
                             >
                               {Array.from({ length: available }, (_, i) => i + 1).map((n) => <option key={n} value={n}>{n}개</option>)}
                             </select>
-                            <Button light variant="outline" size="sm" disabled={busy} onClick={() => handleRefundLine(line)}>이 리워드 환불</Button>
+                            <Button light variant="weak" size="sm" disabled={busy} onClick={() => handleRefundLine(line)}>이 리워드 환불</Button>
                           </>
                         )}
                       </li>
@@ -562,24 +562,24 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
                 </Button>
               )}
               {pledge.refundRequested && isLiveFundingOrderStatus(pledge.status) && (
-                <Button light variant="outline" disabled={busy} onClick={handleClearRefundRequest}>환불 요청 취소</Button>
+                <Button light variant="weak" disabled={busy} onClick={handleClearRefundRequest}>환불 요청 취소</Button>
               )}
               {pledge.needsReview && (
-                <Button light variant="outline" disabled={busy} onClick={handleClearStockReview}>재고 확인 완료</Button>
+                <Button light variant="weak" disabled={busy} onClick={handleClearStockReview}>재고 확인 완료</Button>
               )}
               {pledge.downloadedAt && (
-                <Button light variant="outline" disabled={busy} onClick={handleClearDownloadRecord}>내려받기 기록 초기화</Button>
+                <Button light variant="weak" disabled={busy} onClick={handleClearDownloadRecord}>내려받기 기록 초기화</Button>
               )}
               {/* 내리기는 **공개 동의와 무관하게** 늘 보여준다 — 두 축을 나눈 이유가
                   "후원자가 토글해도 운영자 판단이 살아 있게"인데, 동의가 켜져 있을 때만 버튼을
                   그리면 후원자가 공개를 껐다 켜는 사이 버튼이 사라져 선제 차단을 못 한다.
                   unpublish API 자체엔 그 조건이 없다. */}
               {pledge.listingHiddenAt ? (
-                <Button light variant="outline" disabled={busy} onClick={handleRestoreListing}>명단 숨김 해제</Button>
+                <Button light variant="weak" disabled={busy} onClick={handleRestoreListing}>명단 숨김 해제</Button>
               ) : (
-                <Button light variant="outline" disabled={busy} onClick={handleHideListing}>후원자 명단에서 내리기</Button>
+                <Button light variant="weak" disabled={busy} onClick={handleHideListing}>후원자 명단에서 내리기</Button>
               )}
-              <Button light variant="outline" disabled={busy} onClick={handleResendEmail}>메일 재발송</Button>
+              <Button light variant="weak" disabled={busy} onClick={handleResendEmail}>메일 재발송</Button>
             </div>
 
             <div>

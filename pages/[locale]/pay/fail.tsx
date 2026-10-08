@@ -61,7 +61,7 @@ export default function PaymentLinkFailPage({ code, message, orderNo, retryHref 
                 </a>
               </Button>
               {retryHref && (
-                <Button asChild variant="outline">
+                <Button asChild variant="weak">
                   <a href={retryHref} rel="noreferrer">다시 결제하기</a>
                 </Button>
               )}
