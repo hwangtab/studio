@@ -732,7 +732,13 @@ GSC > 상단 URL 검사창에 URL 입력 → "색인 생성 요청". 브라우�
 라디오/체크박스 `accent-primary` 누락·원시 h1·이모지 아이콘·hover 모션 복제)을 **파일별 기준선
 대비**로 본다. 늘면 CI가 서고, 줄면 통과한다. 줄인 뒤에만
 `UPDATE_UI_PATTERN_BASELINE=1 npx jest components/ui/uiPatterns.baseline.test.ts`로 기준선을 내린다
-(올리는 갱신은 거부된다). 공용 CTA·카드 동결(2026-10-13까지)은 **2026-10-05 운영자 결정으로 해제**됐다 —
+(올리는 갱신은 거부된다).
+
+**페이지 뼈대는 `tests/pages/pageScaffold.test.ts`가 따로 본다** — 모든 페이지 `designEdition = 'v2'`, 페이지가
+`<main>`을 만들지 않기(Layout이 준다 → `PageShell`), `min-h-screen` 바탕 금지. 예외·부채 목록은 이유와 함께 그 파일에
+있고 줄기만 한다. 새 화면은 이웃 파일이 아니라 `docs/design-system.md` §8을 기준으로 만든다.
+
+공용 CTA·카드 동결(2026-10-13까지)은 **2026-10-05 운영자 결정으로 해제**됐다 —
 그날 세 PR(#486·#487·#488)이 Button·BaseCard·배지·콜아웃까지 바꿨고 교락은 `docs/ctr-surgery-log.md`
 2026-10-05 행에 있다. 측정 중 LP를 고칠 때는 `node scripts/seo-preflight.mjs`로 확인하고 장부에 적는다.
 

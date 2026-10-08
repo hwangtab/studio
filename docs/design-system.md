@@ -568,6 +568,10 @@ reflow가 튄다. 바꾸는 속성만 지정한다(`transition-[colors,box-shado
    `PageShell`+`PageHeader`+`Stepper`+`PriceSummary`+`ResultCard`를 썼는가? (§4 중간 계층)
 8. 반경이 네 단(lg·xl·2xl·full) 안에 있는가? `rounded-md`를 쓰지 않았는가? (§3)
 9. 라디오·체크박스에 `accent-primary`를 줬는가? 이모지를 아이콘으로 쓰지 않았는가?
+10. **본뜬 화면이 이 문서를 지키는가?** 규칙의 정본은 이 문서지 이웃 파일이 아니다. 운영 도구(입장 스캔)·
+    감상실·계약 화면은 의도한 예외라 본보기로 쓰면 예외가 그대로 따라온다(2026-10-08 기획자 현황 화면).
+    히어로 없는 화면의 본보기는 `pages/[locale]/booking/manage/[orderNo].tsx`다.
+    `tests/pages/pageScaffold.test.ts`가 v2 미설정·페이지의 `<main>`·`min-h-screen` 바탕을 막는다.
 
 ## 9. 부채 현황
 
