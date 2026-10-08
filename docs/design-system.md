@@ -293,6 +293,12 @@ woff2와 `display.chars.json`을 **함께 커밋**해야 한다(CI가 `--check`�
 기기에서만 켜진다(tailwind `future.hoverOnlyWhenSupported`) — 휴대폰에서 탭한 뒤 hover가 눌어붙지 않는다. iOS가
 `:active`를 그리도록 `public/scripts/theme-init.js`가 빈 touchstart 리스너를 단다. 링크 카드는 누르면 `brightness-95`.
 
+**휴대폰 하단 고정 CTA** (2026-10-09 TDS 대조): 휴대폰(<lg)의 상시 문의 진입점은 `KakaoFab bar` — 하단 전폭 바에
+[전화](weak, 왼쪽) + [카톡 문의](kakao, 오른쪽), 아이폰 안전 영역 패딩, 스크롤 300px 뒤 노출. 보이는 글자는 짧은 라벨
+(`actions.call`·ko `actions.kakaoFab`/그 외 `actions.kakao`), 이름은 `aria-label`의 긴 라벨. 바 높이는 `--mobile-cta-h`로
+알려 휴대폰 미니 플레이어가 위로 비켜 앉고, 푸터는 `bottomBarSpace`로 그만큼 아래 여백을 둔다. 자기 하단 바가 있는
+화면(스토리·펀딩·공연 상세)과 예약 마법사·결제 화면에는 띄우지 않는다. 데스크톱은 우하단 한 행 그대로.
+
 **파랑 = 누를 수 있는 것** (2026-10-09 운영자 결정, 10/08 잉크 안 대체): 버튼·링크·선택 상태·포커스 링만 파랑이다.
 가격 숫자·대형 수치처럼 누를 수 없는 큰 강조는 잉크로 둬, 버튼과 같은 색 덩어리로 보이지 않게 한다(10/07 녹색
 시절 "버튼이 다른 요소색과 같아 시인성이 떨어진다" 지적의 원인). 한국어 페이지의 주 행동은 카카오 옐로다.

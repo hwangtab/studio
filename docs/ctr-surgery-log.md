@@ -600,6 +600,7 @@ music-crowdfunding1·music-grants1·selfrecord1)도 미등재다. 그쪽은 "10/
 | 2026-10-09 | 전 페이지 | TDS 대조 개선 1/4 — 모든 버튼에 누를 때 반응(0.96배·어둡게, 휴대폰 포함), hover는 마우스 기기에서만(tailwind hoverOnlyWhenSupported — 전 사이트 hover: 유틸리티가 휴대폰에서 꺼진다), 테두리 버튼(outline)·서비스 링크 알약 → 연한 파랑 채움(weak). 문구·href·cta_id 불변 | feat/tds-buttons | 버튼이 있는 전 페이지 단절(성우 LP·recording-price1 포함) |
 | 2026-10-09 | 전 페이지 | TDS 대조 개선 2/4 — 본문 굵기 300→400(v1 페이지 전부, v2는 원래 400), 캡션 12→13px, 읽어야 하는 정보(환불·동의·결제수단 설명·비교표 셀·시세 주석·펀딩 안내·폼 오류 등 33줄) 12→14px. 문구 불변 | feat/tds-type | 본문 렌더 단절(성우 LP 포함, 문장은 그대로) |
 | 2026-10-09 | v2 페이지 섹션 제목 · 글래스 카드 전부 | TDS 대조 개선 3/4 — 섹션 제목 스크롤 등장(view() 타임라인) 제거, 카드 포인터 빛(.glass-card::after) 제거. 문구·구조 불변 | feat/tds-motion | 시각만 변경 |
+| 2026-10-09 | 전 페이지(휴대폰, 스토리·펀딩·공연 상세·예약 마법사·결제 화면 제외) | TDS 대조 개선 4/4 — 휴대폰(<lg) 우하단 동그라미 셋(맨 위로·전화·카톡) → 하단 전폭 고정 바 [전화](연한 파랑) + [카톡 문의](옐로), 스크롤 300px 뒤 노출(첫 화면은 히어로 CTA와 겹치지 않게 숨김 — 옛 FAB과 같음). 휴대폰에서 「맨 위로」 제거. 데스크톱 그대로. 추적 이름 불변(component KakaoFab, cta_id global_fab·global_fab_phone) | feat/tds-bottom-cta | **전환 진입점 변경 — 카카오·전화 리드에 직접 닿는다.** 10/09 이후 2주 리드(특히 component=KakaoFab)를 9/17~10/05와 lead-verdict로 비교 |
 
 ## 실험 결과 판정 (2026-08-14)
 

@@ -238,7 +238,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
         {children}
       </main>
 
-      {!isBareLayout && <Footer locale={locale} />}
+      {!isBareLayout && <Footer locale={locale} bottomBarSpace={hasFloatingRow && !isBookingWizard} />}
       {/*
         우하단 플로팅 컨트롤은 한 행에 묶는다. 예전에는 「맨 위로」가 bottom-24, FAB이
         bottom-6에 따로 떠서 고정 영역이 세로로 140px 두 밴드를 차지했고, 두 덩어리가
@@ -252,13 +252,17 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       */}
       {!isFundingPledge && !isBookingWizard && !isBareLayout && (
         hasFloatingRow ? (
-          <div
-            style={{ bottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}
-            className="fixed right-6 z-40 flex items-center gap-2"
-          >
-            <ScrollToTop locale={locale} inline />
-            <KakaoFab locale={locale} inline />
-          </div>
+          <>
+            {/* 데스크톱(lg+): 우하단 한 행. 휴대폰: 하단 전폭 바(전화·카톡) — 「맨 위로」는 휴대폰에서 두지 않는다. */}
+            <div
+              style={{ bottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}
+              className="fixed right-6 z-40 hidden items-center gap-2 lg:flex"
+            >
+              <ScrollToTop locale={locale} inline />
+              <KakaoFab locale={locale} inline />
+            </div>
+            <KakaoFab locale={locale} bar />
+          </>
         ) : (
           <>
             {!isStoryDetail && <KakaoFab locale={locale} suppressBelowLg={isFundingDetail || isShowDetail} />}

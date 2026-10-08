@@ -60,6 +60,16 @@ const kakaoFab = () => document.querySelector('a[aria-label="actions.kakaoFab"]'
 const fabGroup = () => kakaoFab()?.parentElement ?? null;
 const scrollToTop = () => document.querySelector('button[aria-label="actions.scrollToTop"]') as HTMLElement | null;
 
+/** 휴대폰 하단 전폭 바(KakaoFab bar) — 링크에 aria-label 대신 보이는 글자가 이름이다. */
+const mobileBar = () => document.querySelector('div.fixed.inset-x-0.bottom-0.lg\\:hidden') as HTMLElement | null;
+
+beforeAll(() => {
+  window.matchMedia = ((q: string) => ({
+    matches: false, media: q, onchange: null,
+    addEventListener: () => {}, removeEventListener: () => {}, addListener: () => {}, removeListener: () => {}, dispatchEvent: () => false,
+  })) as unknown as typeof window.matchMedia;
+});
+
 describe('Layout의 카카오 FAB 억제', () => {
   afterEach(() => { document.documentElement.className = ''; });
 
@@ -69,9 +79,23 @@ describe('Layout의 카카오 FAB 억제', () => {
     expect(fabGroup()!.className).toContain('lg:flex');
   });
 
-  it('일반 페이지에서는 모든 폭에 FAB이 뜬다', async () => {
+  it('일반 페이지: 데스크톱은 우하단 행, 휴대폰은 하단 전폭 바(전화·카톡)', async () => {
     await renderAt('/[locale]/contact', true);
-    expect(fabGroup()!.className).not.toContain('hidden');
+    expect(floatingRoot()!.className).toContain('hidden');
+    expect(floatingRoot()!.className).toContain('lg:flex');
+    const bar = mobileBar();
+    expect(bar).not.toBeNull();
+    // 이름은 긴 라벨(aria-label), 보이는 글자는 짧은 라벨이다.
+    expect(bar!.querySelector('a[aria-label="actions.kakaoFab"]')).not.toBeNull();
+    expect(bar!.querySelector('a[aria-label="actions.callFab"]')).not.toBeNull();
+    expect(bar!.textContent).toContain('actions.call');
+    // 휴대폰 바에는 「맨 위로」를 두지 않는다.
+    expect(bar!.querySelector('button[aria-label="actions.scrollToTop"]')).toBeNull();
+  });
+
+  it('하단 바가 있는 화면(스토리·펀딩·공연 상세)에는 이 전폭 바를 띄우지 않는다', async () => {
+    await renderAt('/[locale]/funding/[slug]', true);
+    expect(mobileBar()).toBeNull();
   });
 
   it('후원 페이지에서는 FAB 자체를 렌더하지 않는다 — 결제 한 건만 하러 오는 화면', async () => {

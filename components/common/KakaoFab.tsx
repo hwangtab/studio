@@ -6,6 +6,8 @@ import { getSiteConfig } from '../../data/siteConfig';
 import { CANONICAL_FACTS } from '../../lib/factTokens';
 import type { Locale } from '../../lib/i18n';
 import { trackLeadEvent } from '../../utils/analytics';
+import { buttonVariants } from '../ui/Button';
+import { cn } from '../../lib/utils';
 
 interface KakaoFabProps {
   locale: Locale;
@@ -20,6 +22,12 @@ interface KakaoFabProps {
    * 「맨 위로」와 한 행에 묶어 고정 영역이 세로로 두 밴드를 차지하지 않게 한다.
    */
   inline?: boolean;
+  /**
+   * 휴대폰(<lg) 하단 전폭 고정 바로 그린다 — 왼쪽 [전화](보조), 오른쪽 [카카오톡 상담](주). TDS의 두 버튼 하단 CTA
+   * 배치다(2026-10-09). 오른쪽 아래에 떠 있던 동그라미 셋(맨 위로·전화·카톡)은 본문을 가리고, 가장 중요한 카톡이
+   * 작은 알약이었다. 추적 이름(component KakaoFab, cta_id global_fab·global_fab_phone)은 그대로 둬 전후 비교를 잇는다.
+   */
+  bar?: boolean;
 }
 
 /**
@@ -50,7 +58,7 @@ interface KakaoFabProps {
 /** 히어로 CTA 블록이 FAB 자리를 벗어나는 지점. ScrollToTop과 같은 값을 쓴다. */
 const REVEAL_AFTER_PX = 300;
 
-const KakaoFab = ({ locale, suppressBelowLg = false, inline = false }: KakaoFabProps) => {
+const KakaoFab = ({ locale, suppressBelowLg = false, inline = false, bar = false }: KakaoFabProps) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
 
@@ -59,6 +67,9 @@ const KakaoFab = ({ locale, suppressBelowLg = false, inline = false }: KakaoFabP
   const label = t('actions.kakaoFab');
 
   const phoneLabel = t('actions.callFab');
+  // 하단 바는 폭이 좁아 보이는 글자는 짧게(전화·Call / 카톡 문의·KakaoTalk), 이름(aria-label)은 위의 긴 라벨 그대로.
+  const barPhoneLabel = t('actions.call');
+  const barKakaoLabel = locale === 'ko' ? label : t('actions.kakao');
   // 국제표기(+82)로 두면 국내·해외 어디서 눌러도 정상 연결된다.
   const telHref = `tel:${CANONICAL_FACTS.phoneIntl.replace(/[^0-9+]/g, '')}`;
 
@@ -103,6 +114,62 @@ const KakaoFab = ({ locale, suppressBelowLg = false, inline = false }: KakaoFabP
       if (rafId) window.cancelAnimationFrame(rafId);
     };
   }, []);
+
+  // 바가 보이는 동안 높이를 --mobile-cta-h로 알린다 — 휴대폰 미니 플레이어(GlobalPlayerDock)가 그만큼 위로 비켜 앉는다.
+  const barRef = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    if (!bar) return;
+    const root = document.documentElement;
+    const el = barRef.current;
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const sync = () => {
+      const h = revealed && el && !mq.matches ? el.offsetHeight : 0;
+      root.style.setProperty('--mobile-cta-h', `${h}px`);
+    };
+    sync();
+    const ro = typeof ResizeObserver !== 'undefined' && el ? new ResizeObserver(sync) : null;
+    if (ro && el) ro.observe(el);
+    mq.addEventListener('change', sync);
+    return () => {
+      ro?.disconnect();
+      mq.removeEventListener('change', sync);
+      root.style.setProperty('--mobile-cta-h', '0px');
+    };
+  }, [bar, revealed]);
+
+  if (bar) {
+    return (
+      <div
+        ref={barRef}
+        className={`fixed inset-x-0 bottom-0 z-40 flex gap-2 border-t border-gray-200 bg-white/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur transition-opacity duration-200 lg:hidden dark:border-gray-800 dark:bg-gray-900/95 ${revealed ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        aria-hidden={!revealed}
+      >
+        <a
+          href={telHref}
+          onClick={handlePhoneClick}
+          tabIndex={revealed ? 0 : -1}
+          aria-label={phoneLabel}
+          className={cn(buttonVariants({ variant: 'weak', size: 'lg', shape: 'block' }), 'min-w-0 flex-[1] gap-1.5 whitespace-nowrap px-3')}
+        >
+          <Phone size={20} aria-hidden="true" className="flex-shrink-0" />
+          {/* 좁은 폭에서는 아이콘만 — 넘치면 카톡 버튼까지 화면 밖으로 밀린다. 이름은 aria-label이 든다. */}
+          <span className="hidden truncate min-[360px]:inline" aria-hidden="true">{barPhoneLabel}</span>
+        </a>
+        <a
+          href={siteConfig.contact.kakaoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={handleClick}
+          tabIndex={revealed ? 0 : -1}
+          aria-label={label}
+          className={cn(buttonVariants({ variant: 'kakao', size: 'lg', shape: 'block' }), 'min-w-0 flex-[1.6] gap-2 whitespace-nowrap px-3')}
+        >
+          <MessageCircle size={20} aria-hidden="true" className="flex-shrink-0" />
+          <span className="truncate" aria-hidden="true">{barKakaoLabel}</span>
+        </a>
+      </div>
+    );
+  }
 
   return (
     <div
