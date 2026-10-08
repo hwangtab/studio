@@ -5,6 +5,7 @@
 import Head from 'next/head';
 
 import ShowTicketManage from '../../../../components/shows/ShowTicketManage';
+import { PageShell } from '../../../../components/ui/PageHeader';
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
 import { withI18nServerProps } from '../../../../lib/getStatic';
 import { getShowOrderForManage, type ManageOrderView } from '../../../../lib/shows/queries';
@@ -28,12 +29,12 @@ export default function ShowManagePage({ order, token, qr, locale }: ManageProps
         <title>{en ? 'My tickets | Studio NOL' : '내 티켓 | 스튜디오 놀'}</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <main className="mx-auto max-w-lg px-4 py-16">
+      <PageShell width="result">
         {/* 상호를 밝히는 전용 줄 — tests/pages/privateLinkNavigation.test.ts가 한국어 줄을 문자 그대로 찾는다. */}
         {en ? (
-          <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">Studio NOL</p>
+          <p className="mb-4 typo-card-meta">Studio NOL</p>
         ) : (
-          <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">스튜디오 놀</p>
+          <p className="mb-4 typo-card-meta">스튜디오 놀</p>
         )}
         <ShowTicketManage order={order} token={token} qr={qr} locale={locale} />
         {/* private 페이지(URL에 관리 토큰이 실린다)의 이탈 링크는 문서 이동 + noreferrer —
@@ -43,7 +44,7 @@ export default function ShowManagePage({ order, token, qr, locale }: ManageProps
           <span aria-hidden="true" className="mx-2 text-gray-400">·</span>
           <a href={`/${locale}`} rel="noreferrer" className="underline">{en ? 'Home' : '홈으로'}</a>
         </p>
-      </main>
+      </PageShell>
     </>
   );
 }

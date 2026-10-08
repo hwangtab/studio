@@ -5,6 +5,8 @@
 import Head from 'next/head';
 
 import { Button } from '../../../components/ui/Button';
+import { PageShell } from '../../../components/ui/PageHeader';
+import { ResultCard } from '../../../components/ui/ResultCard';
 
 import { getSiteConfig } from '../../../data/siteConfig';
 import { withI18nServerProps } from '../../../lib/getStatic';
@@ -42,20 +44,28 @@ export default function ShowFailPage({ slug, code, message, orderNo, locale }: F
           <title>Payment not completed | Studio NOL</title>
           <meta name="robots" content="noindex, nofollow" />
         </Head>
-        <main className="mx-auto max-w-lg px-4 py-24 text-center">
-          <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">Studio NOL</p>
-          <h1 className="typo-page-title">Payment was not completed</h1>
-          <p className="mt-4 text-gray-600 dark:text-gray-300">{message}</p>
-          {code && <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">Error code: {code}</p>}
-          {orderNo && <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Order number: {orderNo}</p>}
-          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-            No ticket was issued and no payment details were saved. If seats remain, you can book again.
-          </p>
-          <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">Contact: {SHOW_CONTACT_PHONE_INTL} · hello@studionol.co.kr</p>
-          <a href={slug ? `/en/shows/${slug}` : '/en'} rel="noreferrer" className="mt-6 inline-block underline">
-            {slug ? 'Back to the booking page' : 'Home'}
-          </a>
-        </main>
+        <PageShell width="result">
+          <p className="typo-card-meta mb-4 text-center">Studio NOL</p>
+          <ResultCard
+            tone="error"
+            title="Payment was not completed"
+            description={message}
+            actions={
+              <Button asChild variant="outline">
+                <a href={slug ? `/en/shows/${slug}` : '/en'} rel="noreferrer">
+                  {slug ? 'Back to the booking page' : 'Home'}
+                </a>
+              </Button>
+            }
+          >
+            <div className="space-y-1 text-center typo-card-meta">
+              {code && <p>Error code: {code}</p>}
+              {orderNo && <p>Order number: {orderNo}</p>}
+              <p>No ticket was issued and no payment details were saved. If seats remain, you can book again.</p>
+              <p>Contact: {SHOW_CONTACT_PHONE_INTL} · hello@studionol.co.kr</p>
+            </div>
+          </ResultCard>
+        </PageShell>
       </>
     );
   }
@@ -65,26 +75,35 @@ export default function ShowFailPage({ slug, code, message, orderNo, locale }: F
         <title>결제를 완료하지 못했습니다 | 스튜디오 놀</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <main className="mx-auto max-w-lg px-4 py-24 text-center">
-        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">스튜디오 놀</p>
-        <h1 className="typo-page-title">결제를 완료하지 못했습니다</h1>
-        <p className="mt-4 text-gray-600 dark:text-gray-300">{message}</p>
-        {code && <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">오류 코드: {code}</p>}
-        {orderNo && <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">주문번호: {orderNo}</p>}
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-          티켓은 발권되지 않았고 결제 정보도 저장되지 않았습니다. 잔여석이 남아 있다면 다시 예매하실 수 있습니다.
-        </p>
-        <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">문의: 010-4255-7893 · hello@studionol.co.kr</p>
-        {/* 카카오톡 목적지 링크 — CLAUDE.md 카카오 CTA 배색 규칙(옐로 고정). ko 전용 화면이라 분기 없음. */}
-        <p className="mt-6">
-          <Button asChild variant="kakao" size="lg">
-            <a href={kakaoUrl} target="_blank" rel="noopener noreferrer">카카오톡으로 문의하기</a>
-          </Button>
-        </p>
-        <a href={slug ? `/ko/shows/${slug}` : '/ko'} rel="noreferrer" className="mt-4 inline-block underline">
-          {slug ? '예매 페이지로 돌아가기' : '홈으로'}
-        </a>
-      </main>
+      <PageShell width="result">
+        {/* 사이트 헤더를 두르지 않는 화면이라 여기가 브랜드를 밝히는 유일한 자리다(privateLinkNavigation.test.ts). */}
+        <p className="typo-card-meta mb-4 text-center">스튜디오 놀</p>
+        <ResultCard
+          tone="error"
+          title="결제를 완료하지 못했습니다"
+          description={message}
+          actions={
+            <>
+              {/* 카카오톡 목적지 링크 — CLAUDE.md 카카오 CTA 배색 규칙(옐로 고정). ko 전용 분기라 분기 없음. */}
+              <Button asChild variant="kakao">
+                <a href={kakaoUrl} target="_blank" rel="noopener noreferrer">카카오톡으로 문의하기</a>
+              </Button>
+              <Button asChild variant="outline">
+                <a href={slug ? `/ko/shows/${slug}` : '/ko'} rel="noreferrer">
+                  {slug ? '예매 페이지로 돌아가기' : '홈으로'}
+                </a>
+              </Button>
+            </>
+          }
+        >
+          <div className="space-y-1 text-center typo-card-meta">
+            {code && <p>오류 코드: {code}</p>}
+            {orderNo && <p>주문번호: {orderNo}</p>}
+            <p>티켓은 발권되지 않았고 결제 정보도 저장되지 않았습니다. 잔여석이 남아 있다면 다시 예매하실 수 있습니다.</p>
+            <p>문의: 010-4255-7893 · hello@studionol.co.kr</p>
+          </div>
+        </ResultCard>
+      </PageShell>
     </>
   );
 }

@@ -55,11 +55,6 @@ const MAIN_EXEMPT: Record<string, string> = {
   'pages/[locale]/press/sabbaha-slung.tsx': '비공개 감상실(자기 머리·꼬리를 그린다)',
   'pages/[locale]/contracts/[id]/sign.tsx': '계약 서명 — 라이트 고정 법적 문서 화면(design-system §1)',
   'pages/[locale]/contracts/[id]/complete.tsx': '계약 완료 — 라이트 고정 법적 문서 화면(design-system §1)',
-  'pages/[locale]/shows/success.tsx': '부채 — PageShell로 옮길 것',
-  'pages/[locale]/shows/fail.tsx': '부채 — PageShell로 옮길 것',
-  'pages/[locale]/shows/manage/[orderNo].tsx': '부채 — PageShell로 옮길 것',
-  'pages/[locale]/funding/[slug]/pledge.tsx': '부채 — PageShell로 옮길 것',
-  'pages/[locale]/funding/creator/[id]/preview.tsx': '부채 — PageShell로 옮길 것',
 };
 
 const MIN_H_SCREEN_EXEMPT: Record<string, string> = {
