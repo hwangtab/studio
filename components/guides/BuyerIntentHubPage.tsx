@@ -156,7 +156,7 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
               </Link>
             </Button>
             {secondaryServicePath && (
-              <Button asChild variant="solid" shape="pill" className={HERO_CTA_ON_IMAGE}>
+              <Button asChild variant="scrim" shape="pill" className={HERO_CTA_ON_IMAGE}>
                 <Link href={`/${locale}${secondaryServicePath}`} prefetch={false}>
                   {secondaryServiceLabel}
                 </Link>

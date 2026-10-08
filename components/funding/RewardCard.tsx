@@ -82,7 +82,7 @@ export default function RewardCard({ reward, remaining, pledgeHref, canPledge, o
         {body}
         {/* 카드 전체가 링크라 안쪽은 버튼 모양의 span이다. 공용 buttonVariants로 다른 주 버튼과
             모양을 맞추고, 문구는 통일 규칙대로 "펀딩하기"(2026-09-29). */}
-        <span className={cn(buttonVariants({ fullWidth: true }), 'mt-4 group-hover:bg-primary-dark')}>
+        <span className={cn(buttonVariants({ fullWidth: true }), 'mt-4 group-hover:bg-gray-800 dark:group-hover:bg-gray-200')}>
           펀딩하기
         </span>
       </Link>

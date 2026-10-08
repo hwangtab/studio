@@ -275,16 +275,22 @@ woff2와 `display.chars.json`을 **함께 커밋**해야 한다(CI가 `--check`�
 
 | variant | 용도 |
 |---|---|
-| `solid` | 1차 액션(보라) |
+| `solid` | 1차 액션 — 잉크(라이트 `gray-950` 위 흰 글씨, 다크는 흰 버튼 위 잉크 글씨) |
+| `inverse` | 어두운 히어로 사진 위 1차 액션(흰 버튼 + 잉크 글씨, 테마 무관) |
 | `kakao` | 카카오톡 목적지 전용 |
-| `outline` / `ghost` / `secondary` | 2차·3차 액션 |
+| `outline` / `ghost` / `secondary` | 2차·3차 액션(`outline`은 잉크 테두리) |
 | `glass` | 글래스 표면 위 |
 | `scrim` | 어두운 히어로 이미지 위 2차 액션 |
 
 `shape`: `pill`(자유 배치 CTA) / `block`(카드·폼 안). `size`: `sm`/`md`/`lg`/`icon`.
 
-**히어로 위계**: 1차가 카카오 옐로면 2차는 `bg-primary`를 쓰지 않는다 — 어두운 사진 위에서
-채도 높은 보라가 옐로와 경쟁해 위계가 뒤집힌다. 2차는 `scrim`(어두운 반투명 + 흰 테두리 +
+**버튼은 잉크, 녹색은 표시** (2026-10-08 운영자 결정): 브랜드 녹색은 링크·가격 숫자·배지·현재 위치·선택
+상태가 함께 써서, 녹색 버튼은 "누르는 것"으로 구분되지 않았다. 행동 버튼(`solid`·`outline`과 손으로 짠
+재생·주문 버튼)은 잉크, 녹색 채움은 선택·진행 상태(필터·페이지 번호·단계·시간 슬롯)에만 둔다.
+한국어 페이지의 주 행동은 카카오 옐로이고, 옐로 + 잉크는 위계가 충돌하지 않는다.
+
+**히어로 위계**: 1차가 카카오 옐로면 2차는 `solid`를 쓰지 않는다 — 어두운 사진 위에서
+채움 버튼이 옐로와 경쟁해 위계가 뒤집힌다(잉크는 사진에 묻히기도 한다). 2차는 `scrim`(어두운 반투명 + 흰 테두리 +
 text-shadow). 흰 틴트(`bg-white/*`)는 배경을 밝혀 흰 글씨 대비를 떨어뜨리므로 쓰지 않는다.
 
 ### 폼 — `components/ui/Field.tsx`
@@ -314,7 +320,7 @@ inset 스펙큘러를 지운다.
 티어 카드가 행으로 놓이는 자리(LP 가격 절·가격 페이지)에서는 카드 안에 솔리드 옐로를 두지 않는다 — 한 행에 노랑이
 셋이면 신호가 소음이 된다(라이너 노트 §3-4). 규칙:
 
-- `<PricingCard kakaoEmphasis="band">`: 카드는 온라인 주문·예약(`secondaryCta`)을 **브랜드색 solid 블록**으로 올리고 카카오
+- `<PricingCard kakaoEmphasis="band">`: 카드는 온라인 주문·예약(`secondaryCta`)을 **잉크 solid 블록**으로 올리고 카카오
   CTA는 그리지 않는다. 비-ko(/contact 목적지)는 영향 없다. 카드가 혼자 있는 자리는 기본값 `'solid'`.
 - 행 아래 `<KakaoSectionBar>` **하나** — 띠 전체가 카카오 목적지 링크 하나다(`bg-kakao` + `text-kakao-ink` + pill + 포커스 링,
   `ctaButtonContract`가 본다). 문구는 카드가 못 하는 말("어디에 해당하는지 모르겠다면 세션 화면을 보내 주세요")이고
@@ -433,7 +439,8 @@ focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
 | 일반 배경 | `ring-primary/70 dark:ring-primary-lighter/70` + `ring-offset-white dark:ring-offset-gray-900` |
 | 브랜드 아웃라인 pill | tone에 맞춰 `ring-{tone}/70` + 다크는 밝은 짝 `/70`(§4 `ServiceLinkPill`) |
 | 카카오 옐로 버튼 | `ring-kakao-ink dark:ring-kakao` + 표면에 맞는 오프셋 |
-| 어두운 히어로 이미지 위 / 솔리드 브랜드 버튼 | `ring-white/70` + 표면색 오프셋(`ring-offset-black/20`·`ring-offset-primary-dark`) |
+| 잉크 버튼(`solid`·`outline`) | `ring-gray-950/70 dark:ring-white/70` + `ring-offset-white dark:ring-offset-gray-900` |
+| 어두운 히어로 이미지 위(`inverse`·`scrim`) | `ring-white/70` + `ring-offset-black/20` |
 | 스토리 amber 고정 바 | `ring-primary/70 dark:ring-white/70` + `ring-offset-amber-50 dark:ring-offset-amber-900` — 다크 짝이 `primary-lighter`가 아닌 이유는 amber-900 위 2.32:1로 미달이라서다(`white/70`은 통과) |
 
 터치 타깃은 최소 44×44px(`min-h-[44px]` 또는 `h-11`). 아이콘 전용 버튼에는 `aria-label`.
