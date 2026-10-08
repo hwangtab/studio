@@ -152,7 +152,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
               </a>
               </Button>
             ) : (
-              <Button asChild variant="solid" shape="pill" className={HERO_CTA_ON_IMAGE}>
+              <Button asChild variant="inverse" shape="pill" className={HERO_CTA_ON_IMAGE}>
               <Link
                 href={getLink('/contact')}
                 prefetch={false}

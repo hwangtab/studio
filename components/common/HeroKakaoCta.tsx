@@ -74,7 +74,7 @@ const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, contactLabel,
       </a>
     </Button>
   ) : (
-    <Button asChild variant="solid" shape="pill" size="lg">
+    <Button asChild variant={onImage ? 'inverse' : 'solid'} shape="pill" size="lg">
       <Link
         href={`/${locale}/contact`}
         prefetch={false}

@@ -35,7 +35,7 @@ describe('Button', () => {
     );
     const link = screen.getByRole('link', { name: '링크' });
     expect(link.className).toMatch(/custom-class/);
-    expect(link.className).toMatch(/bg-primary/);
+    expect(link.className).toMatch(/bg-gray-950/);
   });
 
   it('kakao variant는 옐로 배경에 kakao-ink 글자와 kakao-ink 포커스 링을 쓴다', () => {
@@ -63,7 +63,7 @@ describe('Button', () => {
 
   // light는 className이 아니라 prop이다 — Field.test.tsx의 같은 이름 블록과 짝이다.
   // theme-init.js가 pages/admin/**·계약 화면에도 <html class="dark">를 붙이기 때문에
-  // 다크 오버라이드가 흰 카드 위로 새어 나온다(outline: #6ee7b7 on #fff = 1.52:1).
+  // 다크 오버라이드가 흰 카드 위로 새어 나온다(outline의 흰 글씨·solid의 흰 버튼이 흰 카드 위에서 사라진다).
   //
   // 단언은 반드시 **렌더 결과**로 한다. buttonVariants()는 cva의 단순 연결이라
   // 나중 클래스가 앞 클래스를 지우지 않는다 — twMerge는 컴포넌트의 cn()에서만 돈다.
@@ -73,13 +73,20 @@ describe('Button', () => {
   };
 
   describe('light 옵트인', () => {
-    it('outline + light면 다크 보라(primary-lighter)가 사라지고 라이트 보라가 남는다', () => {
+    it('outline + light면 다크용 흰 글씨·흰 테두리가 사라지고 잉크가 남는다', () => {
       const cls = classesOf(<Button light variant="outline">x</Button>);
-      expect(cls).not.toMatch(/dark:text-primary-lighter/);
-      expect(cls).not.toMatch(/dark:border-primary-lighter/);
-      expect(cls).toMatch(/(^|\s)dark:text-primary(\s|$)/);
-      expect(cls).toMatch(/(^|\s)dark:border-primary\/20(\s|$)/);
-      expect(cls).toMatch(/(^|\s)text-primary(\s|$)/); // 라이트 값 자체는 그대로
+      expect(cls).not.toMatch(/(^|\s)dark:text-white(\s|$)/);
+      expect(cls).not.toMatch(/dark:border-white/);
+      expect(cls).toMatch(/(^|\s)dark:text-gray-950(\s|$)/);
+      expect(cls).toMatch(/(^|\s)dark:border-gray-950\/80(\s|$)/);
+      expect(cls).toMatch(/(^|\s)text-gray-950(\s|$)/); // 라이트 값 자체는 그대로
+    });
+
+    it('solid + light면 다크용 흰 버튼이 사라지고 잉크 버튼이 남는다', () => {
+      const cls = classesOf(<Button light variant="solid">x</Button>);
+      expect(cls).not.toMatch(/(^|\s)dark:bg-white(\s|$)/);
+      expect(cls).toMatch(/(^|\s)dark:bg-gray-950(\s|$)/);
+      expect(cls).toMatch(/(^|\s)dark:text-white(\s|$)/);
     });
 
     it.each([
@@ -101,13 +108,13 @@ describe('Button', () => {
     });
 
     it('light 없이는 다크 오버라이드가 그대로다(공개 페이지는 다크가 정상)', () => {
-      expect(classesOf(<Button variant="outline">x</Button>)).toMatch(/dark:text-primary-lighter/);
+      expect(classesOf(<Button variant="outline">x</Button>)).toMatch(/(^|\s)dark:text-white(\s|$)/);
     });
 
     it('호출부 className은 light보다 뒤에 와서 이긴다', () => {
       const cls = classesOf(<Button light variant="outline" className="dark:text-white">x</Button>);
       expect(cls).toMatch(/dark:text-white/);
-      expect(cls).not.toMatch(/dark:text-primary\b/);
+      expect(cls).not.toMatch(/dark:text-gray-950/);
     });
 
     it('light는 DOM 속성으로 새지 않는다', () => {
