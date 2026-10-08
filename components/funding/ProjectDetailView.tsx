@@ -1,5 +1,6 @@
 import MarkdownRenderer from '../MarkdownRenderer';
 import ImageHero, { HERO_SCRIM_STRONG } from '../common/ImageHero';
+import { fitsDisplayFont } from '../../lib/fonts/displayCoverage';
 import { Section } from '../ui/Section';
 import FundingProgress from './FundingProgress';
 import { Button } from '../ui/Button';
@@ -127,6 +128,8 @@ export default function ProjectDetailView({
         backgroundImage={project.heroImage ?? project.cover}
         imageAlt=""
         title={project.title}
+        // DB로 들어온 프로젝트 제목은 빌드 때 서브셋에 없을 수 있다 — 글자가 섞이면 제목 전체를 본문 서체로.
+        titleFallbackFont={!fitsDisplayFont(project.title)}
         subtitle={
           <>
             {/*

@@ -49,6 +49,11 @@ export type HeroLayout = 'overlay' | 'split' | 'sleeve' | 'board';
 
 interface ImageHeroProps {
   title: React.ReactNode;
+  /**
+   * 제목을 제목 서체 대신 본문 서체로 — DB에서 오는 제목에 서브셋 밖 글자가 있을 때(lib/fonts/displayCoverage.ts).
+   * 글자 하나만 다른 서체로 섞이는 대신 제목 전체를 Pretendard로 그린다.
+   */
+  titleFallbackFont?: boolean;
   /** h1 위에 놓이는 요소(예: /author의 인물 아바타). h1 안에 넣으면 hero 텍스트가 오염되므로 별도 슬롯. */
   aboveTitle?: React.ReactNode;
   /** 제목 위 작은 라벨(split·sleeve·board). overlay에서는 그리지 않는다. */
@@ -72,6 +77,7 @@ interface ImageHeroProps {
 
 const ImageHero = ({
   title,
+  titleFallbackFont = false,
   aboveTitle,
   eyebrow,
   subtitle,
@@ -88,6 +94,7 @@ const ImageHero = ({
   layout = 'overlay',
   boardContent,
 }: ImageHeroProps) => {
+  const heroFont = titleFallbackFont ? 'font-sans' : 'font-hero';
   const textBreakClass = locale === 'ko' ? 'break-keep' : 'break-words';
 
   // 페이지 전환으로 mount된 히어로만 페이드인. 첫 로드(SSR)는 loaded=true로 시작해
@@ -143,7 +150,7 @@ const ImageHero = ({
         >
           {aboveTitle && <div className="mb-6">{aboveTitle}</div>}
           {eyebrowNode}
-          <h1 className="font-hero text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.12] tracking-normal text-white max-w-2xl" style={{ letterSpacing: '0' }}>
+          <h1 className={`${heroFont} text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.12] tracking-normal text-white max-w-2xl`} style={{ letterSpacing: '0' }}>
             {title}
           </h1>
           {subtitle && (
@@ -173,7 +180,7 @@ const ImageHero = ({
           {aboveTitle && <div className="mb-6">{aboveTitle}</div>}
           {eyebrowNode}
           <h1
-            className={`font-hero font-bold tracking-normal max-w-4xl ${
+            className={`${heroFont} font-bold tracking-normal max-w-4xl ${
               compactTitle ? 'text-xl md:text-2xl leading-snug text-white/85' : 'text-4xl md:text-5xl lg:text-6xl leading-[1.12] text-white'
             }`}
             style={{ letterSpacing: '0' }}
@@ -204,7 +211,7 @@ const ImageHero = ({
         <div className={`container mx-auto px-4 sm:px-6 lg:px-8 relative z-20 pt-32 pb-10 md:pb-14 text-left ${textBreakClass}`}>
           {aboveTitle && <div className="mb-6">{aboveTitle}</div>}
           {eyebrowNode}
-          <h1 className="font-hero text-4xl md:text-6xl lg:text-7xl font-bold leading-[1.12] tracking-normal text-white max-w-3xl" style={{ letterSpacing: '0' }}>
+          <h1 className={`${heroFont} text-4xl md:text-6xl lg:text-7xl font-bold leading-[1.12] tracking-normal text-white max-w-3xl`} style={{ letterSpacing: '0' }}>
             {title}
           </h1>
           {subtitle && (
@@ -253,7 +260,7 @@ const ImageHero = ({
               hero h1·섹션 제목 글자만 self-host + preload → critical path 진입, swap 거의 즉시.
               서브셋 밖 글자는 fallback chain(--font-pretendard → 로케일 폰트 → 시스템 한글)으로 자동 swap. */}
           <h1
-            className={`font-hero text-5xl font-bold md:text-6xl lg:text-7xl text-white mb-8 drop-shadow-lg ${textBreakClass} leading-[1.15] tracking-normal ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
+            className={`${heroFont} text-5xl font-bold md:text-6xl lg:text-7xl text-white mb-8 drop-shadow-lg ${textBreakClass} leading-[1.15] tracking-normal ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
             style={{ letterSpacing: '0' }}
           >
             {title}
