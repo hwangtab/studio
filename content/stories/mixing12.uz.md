@@ -35,7 +35,7 @@ Bugundan boshlab miks vaqtini yarmiga qisqartiradigan **studio sirini** oshkor q
 Bus tracklarni oldindan yaratish miksni juda oson qiladi. (Klik‑klik!)
 
 * **All Drums**: Kick, snare, toms, cymbals shu yerga yuboriladi. Bitta fader butun setni boshqaradi. (Qattiq!)
-* **All Music**: Vokal va barabandан tashqari barcha asboblarni (gitara, key, bas) guruhlang. “Fon musiqani pasaytirish” bitta harakat bo'ladi. (Qulay!)
+* **All Music**: Vokal va barabandan tashqari barcha asboblarni (gitara, key, bas) guruhlang. “Fon musiqani pasaytirish” bitta harakat bo'ladi. (Qulay!)
 * **All Vox**: Barcha vokal treklari.
 * **Mix Bus (Master)**: Hammasi yakunda shu yerda uchrashadi.
 

@@ -37,6 +37,13 @@ node scripts/generate-page-lastmod.mjs --check  # git 없이 커버리지만 검
 # 지금은 normalize 스크립트가 sitemap*.xml이 0개이거나 robots.txt가 없으면 원인을 적고 exit 1 한다.
 # 회귀 방지: scripts/normalize-sitemap-hreflang.test.ts
 
+# 제목 서체 글자 검사 (CI, 빌드 뒤) — 제목(ImageHero h1·SectionHeading)의 글자가 전부 제목 서체 서브셋에 있는가
+# 없으면 그 글자만 Pretendard로 그려져 한 제목 안에서 서체가 섞인다(2026-10-08 공연 "출연"의 "출", 스토리 제목 130자).
+# 실패하면 scripts/generate-hero-font.mjs가 그 제목의 출처를 읽게 하고 `node scripts/generate-hero-font.mjs` 후
+# display.woff2 + display.chars.json을 commit. 서체에 아예 없는 문자(베트남어 성조·우즈베크어 ʻʼ)는 globals.css가
+# 그 로케일 제목을 Pretendard로 돌린다. 제목에 줄바꿈 금지 하이픈(U+2011)·키릴 글자를 넣지 말 것.
+npm run build && npm run check:display-font
+
 # 섹션 단위 중복 검사 (CI)
 npm run check:dup-sections
 node scripts/check-duplicate-sections.mjs --update  # 기준선 갱신

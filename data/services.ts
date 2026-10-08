@@ -17,7 +17,7 @@ export const getServicesData = (locale: Locale) => {
         en: "Modern A&R at the planning stage — artist concept and album theme development, plus production scheduling and budget management.",
         zh: "设定专辑概念，共同制定制作日程及预算计划。",
         es: "Establecimiento de conceptos, programación y presupuestos del álbum.",
-        vi: "Cùng thiết lập концеп album, lịch sản xuất và kế hoạch ngân sách.",
+        vi: "Cùng thiết lập concept album, lịch sản xuất và kế hoạch ngân sách.",
         th: "ร่วมกำหนดคอนเซ็ปต์อัลบั้ม ตารางการผลิต และแผนงบประมาณ",
         uz: "Albom konsepsiyasi, ishlab chiqarish jadvali va byudjet rejasini birga belgilaymiz."
       }),

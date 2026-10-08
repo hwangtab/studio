@@ -58,6 +58,7 @@
     "check:dup-sections": "node scripts/check-duplicate-sections.mjs",
     "check:claims": "node scripts/check-unverified-claims.mjs",
     "check:facts": "node scripts/check-fact-consistency.mjs",
+    "check:display-font": "node scripts/check-display-font-coverage.mjs",
     "check:cta-routing": "npx tsx scripts/cta-routing-baseline.ts",
     "check:funding-baseline": "npx tsx scripts/funding-baseline.ts",
     "content-check:ci": "node scripts/content-quality-check.js --korean --ci",

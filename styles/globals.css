@@ -199,6 +199,16 @@
   :root:lang(th) [data-edition='v2'] {
     --eyebrow-ls: 0.02em;
   }
+  /* 베트남어·우즈베크어 제목은 디스플레이 서체(Paperlogy)를 쓰지 않는다 — Paperlogy에는 성조 붙은 글자(ạ·ế·ở…)와
+     우즈베크어 ʻ·ʼ(oʻ, gʻ)가 없어 기본 라틴 글자는 Paperlogy, 그 글자만 Pretendard로 그려져 한 단어 안에서 글자
+     모양이 갈렸다(2026-10-08). 본문 서체 스택으로 통째로 돌린다. 태국어·중국어는 문자가 아예 로케일 폰트로 간다.
+     scripts/check-display-font-coverage.mjs가 빌드 결과물에서 이 규칙을 전제로 검사한다. */
+  :root:lang(vi) .font-hero,
+  :root:lang(vi) .typo-display-section,
+  :root:lang(uz) .font-hero,
+  :root:lang(uz) .typo-display-section {
+    font-family: var(--font-pretendard), var(--font-locale), BlinkMacSystemFont, system-ui, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  }
 }
 
 /* 디자인 v2 스크롤 등장 — 섹션 제목에만 건다(카드 그리드 금지: 여러 장이 한꺼번에
