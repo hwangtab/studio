@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import type { MouseEvent } from 'react';
 import BaseCard from '../ui/BaseCard';
 import { Badge } from '../ui/Badge';
@@ -30,7 +29,7 @@ export default function RewardCard({ reward, remaining, pledgeHref, canPledge, o
   const en = lang === 'en';
   const soldOut = remaining !== null && remaining <= 0;
 
-  const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
+  const handleClick = (e: MouseEvent<HTMLElement>) => {
     if (!onSelect) return;
     // 새 탭·새 창 의도(수식 키)는 브라우저에 그대로 넘긴다.
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
@@ -87,20 +86,16 @@ export default function RewardCard({ reward, remaining, pledgeHref, canPledge, o
   }
 
   return (
-    <BaseCard variant="glass" className="group h-full p-0">
-      <Link
-        href={pledgeHref}
-        prefetch={false}
-        onClick={handleClick}
-        className="flex h-full flex-col rounded-xl p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 dark:focus-visible:ring-primary-lighter/70 dark:focus-visible:ring-offset-gray-900"
-      >
+    // 카드 자체가 링크다 — 반응(떠오름·빛)과 포커스 링을 카드가 맡는다. 안쪽 링크로 두면 overflow-hidden 카드가
+    // 링을 잘라 키보드 포커스가 안 보이고, 카드는 클릭되는데 가만히 있었다(2026-10-08 회의).
+    <BaseCard href={pledgeHref} onClick={handleClick} variant="glass" className="group flex h-full flex-col p-5">
         {body}
         {/* 카드 전체가 링크라 안쪽은 버튼 모양의 span이다. 공용 buttonVariants로 다른 주 버튼과
-            모양을 맞추고, 문구는 통일 규칙대로 "펀딩하기"(2026-09-29). */}
-        <span className={cn(buttonVariants({ fullWidth: true }), 'mt-4 group-hover:bg-gray-800 dark:group-hover:bg-gray-200')}>
+            모양을 맞추고, 문구는 통일 규칙대로 "펀딩하기"(2026-09-29). 움직이는 건 카드 하나 — 이 span은
+            색만 바뀌고 따로 떠오르지 않는다(한 물체에 한 움직임). */}
+        <span className={cn(buttonVariants({ fullWidth: true }), 'mt-4 hover:translate-y-0 active:translate-y-0 group-hover:bg-gray-800 dark:group-hover:bg-gray-200')}>
           {pledgeLabel ?? (en ? 'Back this' : '펀딩하기')}
         </span>
-      </Link>
     </BaseCard>
   );
 }

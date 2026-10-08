@@ -1,4 +1,3 @@
-import Link from 'next/link';
 
 import ResponsiveImage from '../ResponsiveImage';
 import BaseCard from '../ui/BaseCard';
@@ -17,7 +16,7 @@ interface Props {
 }
 
 /**
- * 공연 목록 카드 — 펀딩 목록 카드(FundingProjectCard)와 같은 재질·구조다: Link > BaseCard glass > 이미지 + 본문.
+ * 공연 목록 카드 — 펀딩 목록 카드(FundingProjectCard)와 같은 재질·구조다: BaseCard(href) glass > 이미지 + 본문 — 카드 자체가 링크라 hover·포커스 링을 카드가 맡는다.
  * 배지는 공용 StatusBadge('예매 중'만 보라 틴트).
  */
 export default function ShowCard({ show, nowSec, past = false, locale = 'ko' }: Props) {
@@ -28,8 +27,7 @@ export default function ShowCard({ show, nowSec, past = false, locale = 'ko' }: 
   const lowPrice = prices.length ? Math.min(...prices) : null;
 
   return (
-    <Link href={`/${locale}/shows/${show.slug}`} prefetch={false} className="block h-full">
-      <BaseCard variant="glass" className="flex h-full flex-col overflow-hidden">
+    <BaseCard href={`/${locale}/shows/${show.slug}`} variant="glass" className="flex h-full flex-col overflow-hidden">
         {show.coverImage ? (
           <ResponsiveImage
             src={show.coverImage}
@@ -62,7 +60,6 @@ export default function ShowCard({ show, nowSec, past = false, locale = 'ko' }: 
             </div>
           )}
         </div>
-      </BaseCard>
-    </Link>
+    </BaseCard>
   );
 }

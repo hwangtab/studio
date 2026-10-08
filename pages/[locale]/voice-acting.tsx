@@ -31,7 +31,7 @@ import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
 import type { StoryCardData } from '../../types/story';
 import { buildSchemaGraph, buildStudioServiceSchema } from '../../lib/studioServiceSchema';
 import { generateHowToSchema } from '../../utils/schema';
-import { createFadeInAnimation, createInViewEnterAnimation, HOVER_SCALE, TRANSITION_STANDARD } from '../../utils/animationUtils';
+import { createFadeInAnimation, createInViewEnterAnimation } from '../../utils/animationUtils';
 import { createTranslatedHowToSteps, createTranslatedQaItems } from '../../utils/translatedList';
 import { trackLeadEvent } from '../../utils/analytics';
 import type { NextPageWithLayout } from '../../types';
@@ -370,7 +370,6 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
               <m.div
                 key={i}
                 className="relative glass-card rounded-2xl p-6"
-                whileHover={{ ...HOVER_SCALE, transition: TRANSITION_STANDARD }}
               >
                 <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center mb-4">
                   <span className="text-primary dark:text-primary-lighter font-bold text-sm">{String(i + 1).padStart(2, '0')}</span>
