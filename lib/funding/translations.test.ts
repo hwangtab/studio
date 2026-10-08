@@ -5,6 +5,7 @@ import { getFundingProject } from './projects';
 import { FUNDING_TRANSLATED_SLUGS, hasFundingTranslation } from './translatedSlugs';
 import { applyFundingTranslation, FUNDING_TRANSLATION_DIR, readFundingTranslation } from './translations';
 import { isKoOnlyRoutePath, isTranslatedKoOnlyPath } from '../koOnlyRoutes';
+import { LINEUP_PEOPLE } from '../../components/funding/FundingLineupPerson';
 
 const translationFiles = (): string[] =>
   fs.readdirSync(FUNDING_TRANSLATION_DIR, { withFileTypes: true })
@@ -36,12 +37,24 @@ describe('펀딩 번역본', () => {
     },
   );
 
+  it.each(Object.entries(FUNDING_TRANSLATED_SLUGS).flatMap(([slug, ls]) => ls.map((l) => [slug, l] as const)))(
+    '%s (%s): 본문의 출연진 카드마다 영문 이름·소개가 있다 — 없으면 영문 화면에 한국어 소개가 그대로 뜬다',
+    (slug, locale) => {
+      const tr = readFundingTranslation(slug, locale)!;
+      const ids = [...tr.content.matchAll(/%%funding-lineup:([\w-]+)%%/g)].map((m) => m[1]);
+      for (const id of ids) {
+        expect(LINEUP_PEOPLE[id]).toBeDefined();
+        expect({ id, en: LINEUP_PEOPLE[id].en?.bio ? 'ok' : 'missing' }).toEqual({ id, en: 'ok' });
+      }
+    },
+  );
+
   it('번역본이 있는 조합만 언어 전환기가 같은 페이지로 보낸다', () => {
     expect(hasFundingTranslation('sabbaha-slung', 'en')).toBe(true);
     expect(isKoOnlyRoutePath('/funding/sabbaha-slung')).toBe(true);
     expect(isTranslatedKoOnlyPath('/funding/sabbaha-slung', 'en')).toBe(true);
     expect(isTranslatedKoOnlyPath('/funding/sabbaha-slung', 'zh')).toBe(false);
-    expect(isTranslatedKoOnlyPath('/funding/keep-singing-for-palestine', 'en')).toBe(false);
+    expect(isTranslatedKoOnlyPath('/funding/smoke-test', 'en')).toBe(false);
     expect(isTranslatedKoOnlyPath('/funding', 'en')).toBe(false);
   });
 });

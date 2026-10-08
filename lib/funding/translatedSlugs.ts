@@ -11,6 +11,8 @@
 export type FundingTranslationLocale = 'en';
 
 export const FUNDING_TRANSLATED_SLUGS: Readonly<Record<string, readonly FundingTranslationLocale[]>> = {
+  'keep-singing-for-palestine': ['en'],
+  'mok-jareugi': ['en'],
   'sabbaha-slung': ['en'],
 };
 
