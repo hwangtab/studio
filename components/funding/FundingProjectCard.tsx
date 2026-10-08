@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import BaseCard, { CARD_PADDING } from '../ui/BaseCard';
 import { Badge } from '../ui/Badge';
 import ResponsiveImage from '../ResponsiveImage';
@@ -56,8 +55,7 @@ export default function FundingProjectCard({ slug, title, summary, cover, goalAm
   const showProgress = Boolean(data && data.backerCount > 0);
   const percent = showProgress && data ? Math.min(100, data.percent) : 0;
   return (
-    <Link href={`/ko/funding/${slug}`} prefetch={false} className="block h-full">
-      <BaseCard variant="glass" className="flex h-full flex-col overflow-hidden">
+    <BaseCard href={`/ko/funding/${slug}`} variant="glass" className="flex h-full flex-col overflow-hidden">
         <ResponsiveImage
           src={cover}
           alt=""
@@ -106,7 +104,6 @@ export default function FundingProjectCard({ slug, title, summary, cover, goalAm
             </p>
           </div>
         </div>
-      </BaseCard>
-    </Link>
+    </BaseCard>
   );
 }

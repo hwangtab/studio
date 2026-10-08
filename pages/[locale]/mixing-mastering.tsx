@@ -585,12 +585,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
             {credits.map((credit, i) => (
               <div key={credit.id} className="flex flex-col gap-2">
-                <Link
-                  href={`/${locale}/portfolio/${credit.id}`}
-                  prefetch={false}
-                  className="group flex-1"
-                >
-                  <BaseCard variant="default" className="p-4 h-full">
+                <BaseCard href={`/${locale}/portfolio/${credit.id}`} variant="default" className="group flex-1 p-4 h-full">
                     <div className="relative aspect-square rounded-xl overflow-hidden mb-4">
                       <ResponsiveImage
                         src={credit.image}
@@ -605,8 +600,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
                     <p className="typo-card-meta text-xs">
                       {t(`mixingMastering.credits.items.${i}.role`)}
                     </p>
-                  </BaseCard>
-                </Link>
+                </BaseCard>
                 {/* 발매 음원 외부 링크 — 카드 전체가 이미 링크라 안에 넣으면 a 중첩이 된다. 형제로 둔다. */}
                 {credit.link && (
                   <a

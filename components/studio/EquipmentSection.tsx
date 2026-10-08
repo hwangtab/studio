@@ -1,6 +1,6 @@
 import { m } from 'framer-motion';
 import React from 'react';
-import { createFadeInAnimation, HOVER_SCALE, TRANSITION_STANDARD } from '../../utils/animationUtils';
+import { createFadeInAnimation } from '../../utils/animationUtils';
 
 export interface EquipmentSectionProps {
     title: string;
@@ -10,13 +10,11 @@ export interface EquipmentSectionProps {
 
 const EquipmentSection = ({ title, items, icon: Icon }: EquipmentSectionProps) => {
     const motionProps = createFadeInAnimation();
-    const cardHoverMotion = { ...HOVER_SCALE, transition: TRANSITION_STANDARD };
 
     return (
         <m.div
             className="glass-card p-6 rounded-lg mb-6"
             {...motionProps}
-            whileHover={cardHoverMotion}
         >
             <h3 className="typo-card-title mb-4 flex items-center">
                 <Icon className="mr-2 text-primary dark:text-primary-lighter" size={20} aria-hidden="true" />

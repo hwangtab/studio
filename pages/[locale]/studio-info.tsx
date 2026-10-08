@@ -27,7 +27,7 @@ import { getStudioFaqData } from '../../data/faq';
 import { getSiteConfig } from '../../data/siteConfig';
 import { DAY_LOCK_4H_PRICE, DAY_LOCK_8H_PRICE, RECORDING_HOURLY_PRICE } from '../../data/pricing';
 import { getSchemaLanguage } from '../../utils/schema';
-import { createInViewEnterAnimation, HOVER_SCALE, TRANSITION_STANDARD } from '../../utils/animationUtils';
+import { createInViewEnterAnimation } from '../../utils/animationUtils';
 
 import type { NextPageWithLayout } from '../../types';
 
@@ -211,7 +211,6 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
               <m.div
                 key={index}
                 className="rounded-lg overflow-hidden shadow-md h-48"
-                whileHover={{ ...HOVER_SCALE, transition: TRANSITION_STANDARD }}
               >
                 <ResponsiveImage
                   src={image.src}

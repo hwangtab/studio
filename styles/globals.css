@@ -381,8 +381,10 @@
       opacity: 0;
       transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1);
     }
-    /* 누를 수 없는 카드(BaseCard의 data-card-static)는 빛나지 않는다 — 움직이는 건 누를 수 있는 것뿐. */
-    .glass-card:not([data-card-static]):hover::after {
+    /* 빛은 누를 수 있는 카드에만 — 카드 자체가 링크·버튼이거나, 링크가 카드를 감싼 경우.
+       FAQ·약관·마법사 같은 정적 글래스 박스와 BaseCard의 data-card-static은 빛나지 않는다(2026-10-08 회의). */
+    :is(a, button).glass-card:hover::after,
+    a:hover > .glass-card::after {
       opacity: 1;
     }
   }

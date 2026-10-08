@@ -123,7 +123,6 @@ const MediaGallery = ({ images, className = '', locale = defaultLocale }: MediaG
             className="flex-none w-[85%] sm:w-[45%] lg:w-[31%] snap-center"
           >
             <m.div
-              whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
               className="h-full"
             >

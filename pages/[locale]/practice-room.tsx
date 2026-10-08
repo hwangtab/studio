@@ -30,7 +30,7 @@ import {
   PRACTICE_ROOM_AVAILABILITY_UPDATED_ON,
 } from '../../data/practiceRoomAvailability';
 import { generatePracticeRoomMonthlyRentSchema } from '../../utils/schema';
-import { createFadeInAnimation, HOVER_SCALE, TRANSITION_STANDARD } from '../../utils/animationUtils';
+import { createFadeInAnimation } from '../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../types';
 
 // PriceLeader·SoundproofingShowcase·FacilitiesGrid는 별도 파일로 분리(2026-05-11).
@@ -328,7 +328,6 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
               <m.div
                 key={i}
                 className="rounded-lg overflow-hidden shadow-md h-48"
-                whileHover={{ ...HOVER_SCALE, transition: TRANSITION_STANDARD }}
               >
                 <ResponsiveImage
                   src={`/images/room${i}.webp`}
