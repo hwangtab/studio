@@ -191,12 +191,12 @@ const PortfolioDetailPage: NextPageWithLayout<PortfolioDetailPageProps> = ({ loc
             titleClassName="text-heading-2 font-title mb-2"
             artistClassName="typo-card-body mb-6"
             servicesHeadingClassName="typo-card-title mb-3"
-            primaryActionClassName={`flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] bg-gray-950 hover:bg-gray-800 text-white dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200 rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${BUTTON_DEPTH.ink}`}
+            primaryActionClassName={`flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${BUTTON_DEPTH.solid}`}
             summaryActions={
               <button
                 type="button"
                 onClick={sharePortfolio}
-                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] border-2 border-gray-950 text-gray-950 dark:border-white dark:text-white hover:bg-gray-950 hover:text-white dark:hover:bg-white dark:hover:text-gray-950 rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] border-2 border-primary text-primary dark:border-primary-lighter dark:text-primary-lighter hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
               >
                 <Share2 size={16} aria-hidden="true" />
                 {t('portfolio.detail.share')}
@@ -218,7 +218,7 @@ const PortfolioDetailPage: NextPageWithLayout<PortfolioDetailPageProps> = ({ loc
           {/* prefetch={false}: 본문 fold 내 button CTA들의 무거운 SSG JSON
               자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
           <div className="flex flex-wrap justify-center gap-4">
-            <Link href={getLink('/pricing')} prefetch={false} className={`inline-flex items-center px-6 py-3 min-h-[44px] bg-gray-950 hover:bg-gray-800 text-white dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200 rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${BUTTON_DEPTH.ink}`}>
+            <Link href={getLink('/pricing')} prefetch={false} className={`inline-flex items-center px-6 py-3 min-h-[44px] bg-primary hover:bg-primary-dark text-white rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${BUTTON_DEPTH.solid}`}>
               {t('nav.pricing')}
             </Link>
             {/* 같은 줄의 형제 둘이 rounded-lg 카드형 버튼이라 반경·굵기만 넘겨 맞춘다.

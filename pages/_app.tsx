@@ -167,7 +167,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     const sync = () => {
       const isDark = document.documentElement.classList.contains('dark');
       const meta = document.querySelector('meta[name="theme-color"]:not([media])');
-      if (meta) meta.setAttribute('content', isDark ? '#030712' : '#0b3b2c');
+      if (meta) meta.setAttribute('content', isDark ? '#030712' : '#1d4ed8');
     };
     sync();
     const observer = new MutationObserver(sync);
@@ -336,11 +336,11 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
             2) dark용(media query 매치 시): 스크립트 실패·차단 환경 폴백. 시스템이
                dark 선호면 브라우저가 자동 매치.
             HTML 스펙은 두 meta 중 environment 매치되는 것을 사용. */}
-        {/* theme-color content는 light default(#0b3b2c, lib/brandColor.ts primaryDark). theme-init.js가 페이지 진입 시 imperative로 정확한 값 set,
+        {/* theme-color content는 light default(#1d4ed8, lib/brandColor.ts primaryDark). theme-init.js가 페이지 진입 시 imperative로 정확한 값 set,
             useEffect의 MutationObserver가 toggle 시점 sync. React state 미사용 → re-render 0 → iOS 깜빡 0. */}
-        <meta key="theme-color-light" name="theme-color" content="#0b3b2c" />
+        <meta key="theme-color-light" name="theme-color" content="#1d4ed8" />
         <meta key="theme-color-dark" name="theme-color" content="#030712" media="(prefers-color-scheme: dark)" />
-        <meta name="msapplication-TileColor" content="#0b3b2c" />
+        <meta name="msapplication-TileColor" content="#1d4ed8" />
         <meta name="msapplication-TileImage" content="/icons/icon-192.png" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
         {/* 표준 메타 병기: apple- 접두는 폐기 경고 대상이라 표준 mobile-web-app-capable을

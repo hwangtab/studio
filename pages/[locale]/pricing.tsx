@@ -330,7 +330,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
                         )}
                       </th>
                       <td className="py-3 pl-4 text-right whitespace-nowrap align-top">
-                        <span className="font-bold text-primary dark:text-primary-lighter">{offer.priceDisplay}</span>{' '}
+                        <span className="font-bold text-gray-950 dark:text-white">{offer.priceDisplay}</span>{' '}
                         <span className="typo-card-meta">{offer.unit}</span>
                       </td>
                     </tr>

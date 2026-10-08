@@ -63,7 +63,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
     }
 
     // 3. Update theme-color meta tag
-    const themeColor = isDarkMode ? '#030712' : '#0b3b2c'; // = lib/brandColor.ts ink / primaryDark (theme-init.js와 같게)
+    const themeColor = isDarkMode ? '#030712' : '#1d4ed8'; // = lib/brandColor.ts ink / primaryDark (theme-init.js와 같게)
     const metaThemeColor = document.querySelector('meta[name="theme-color"]:not([media])');
     if (metaThemeColor) {
       metaThemeColor.setAttribute('content', themeColor);

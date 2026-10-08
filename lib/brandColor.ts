@@ -1,23 +1,20 @@
 /**
  * 브랜드색의 단일 정본 — Tailwind 토큰(tailwind.config.ts)과, Tailwind를 못 쓰는 자리(메일 HTML·정적 카드
- * 이미지·theme-color)가 같은 값을 보게 한다. 값의 근거와 대비 실측은 docs/design-liner-notes-plan-2026-10.md §3-1.
+ * 이미지·theme-color)가 같은 값을 보게 한다.
  *
- * 2026-10-07 2차 개정 — 운영자가 1차 값(짙은 포레스트 그린 `#166534` + 따뜻한 베이지 `#faf7f2`/`#f2ede4`)을
- * "텁텁하다"며 반려하고 "도시적이고 세련된" 쪽을 요청했다. 진단: 따뜻한 베이지 바탕이 올리브 톤 그린과
- * 짝지어지며 코지·전통적으로 읽혔다(도시적이지 않음) — 바탕을 차갑고 깨끗한 흰색/근접백으로 바꾸고,
- * primary는 같은 "로고 녹색" 계열을 유지하되 올리브가 아니라 에메랄드 쪽으로 틀어 더 선명·채도 높게 올렸다.
+ * 2026-10-09 3차 — 파랑(blue-600 계열). 운영자: "버튼은 시인성 좋게 원래 파란색 계열이, 그 버튼에 맞춰 색 체계를
+ * 다시." 녹색(10/07)·잉크 버튼(10/08)을 거쳐, 파랑 = 누를 수 있는 것(버튼·링크·선택 상태·포커스)으로 정했다.
+ * 가격 숫자처럼 누를 수 없는 큰 강조는 잉크(gray-950)로 둬 버튼과 겹쳐 보이지 않게 한다(docs/design-system.md §1).
  *
- * primary(에메랄드-800 계열) 흰 배경 7.68:1(AA 여유), 종이(paper2) 배경 약 7.0:1. ring-primary/70 합성값은
- * 흰 배경 3.76:1·paper2 배경 3.58:1로 SC 1.4.11(3:1) 통과(1차 값보다 여유 확보). primaryDark는 히어로 잉크
- * 면·solid hover용 — 흰 글씨 12.5:1. primaryOnDark(다크 바탕 gray-900 위 텍스트 짝)는 1차와 동일하게 유지
- * (이미 13.2:1로 충분히 선명하고 무디지 않다).
+ * primary #2563eb 흰 위 5.17:1(AA), paper2 위 약 4.8:1. primaryDark #1d4ed8 흰 글씨 6.70:1 — solid hover·theme-color.
+ * primaryLight #3b82f6 흰 3.68:1 — 대형·아이콘용(작은 텍스트 금지). primaryOnDark #93c5fd gray-900 위 약 9.9:1.
  */
 export const BRAND_COLOR = {
-  primary: '#065f46',
-  primaryLight: '#059669',
-  primaryDark: '#0b3b2c',
-  primaryOnDark: '#6ee7b7',
+  primary: '#2563eb',
+  primaryLight: '#3b82f6',
+  primaryDark: '#1d4ed8',
+  primaryOnDark: '#93c5fd',
   ink: '#030712',
   paper: '#ffffff',
-  paper2: '#f2f5f3',
+  paper2: '#f4f6f9',
 } as const;

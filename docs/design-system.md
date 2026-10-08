@@ -30,7 +30,7 @@ Tailwind는 정의되지 않은 클래스명을 **에러 없이 빌드 CSS에서
 
 | 토큰 | light / DEFAULT / dark | 용도 |
 |---|---|---|
-| `primary` | `#059669` / `#065f46` / `#0b3b2c` · lighter `#6ee7b7` | 1차 액션, 강조, 링크. **에메랄드** — 로고(`public/logo/logo.png`) 녹색 계열을 유지하되 2026-10-07 2차 개정으로 올리브 톤을 벗고 더 선명하게 틀었다. DEFAULT 흰 7.68:1·paper-2 약 7.0:1, dark는 흰 글씨 12.5:1(히어로 잉크 면·큰 면). 값의 정본은 `lib/brandColor.ts` — 메일 HTML·정적 카드·theme-color가 같은 값을 쓴다 |
+| `primary` | `#3b82f6` / `#2563eb` / `#1d4ed8` · lighter `#93c5fd` | **파랑 = 누를 수 있는 것**(버튼·링크·선택 상태·포커스). 2026-10-09 3차 개정. DEFAULT 흰 5.17:1, dark 흰 글씨 6.70:1(solid hover·theme-color). 가격 숫자 같은 누를 수 없는 큰 강조는 잉크(`text-gray-950 dark:text-white`). 값의 정본은 `lib/brandColor.ts` — 메일 HTML·정적 카드·theme-color가 같은 값을 쓴다. 로고 녹색은 로고 이미지에만 |
 | ~~`secondary`~~ · ~~`accent`~~ | 삭제됨 (2026-10-06) | 핑크·에메랄드(옛 accent)는 없다. 브랜드색은 `primary` 하나, 성공은 `green-*`, 다크 텍스트 짝은 `primary-lighter` 하나. `tailwind.config.test.ts`가 재등장을 막는다 |
 | `paper` | `#ffffff` / `paper-2` `#f2f5f3` | 라이트 바탕 두 단 — body·Layout·Section default/alternate. 2026-10-07 2차 개정: 1차의 따뜻한 베이지(`#faf7f2`/`#f2ede4`)가 올리브 그린과 짝지어 "텁텁하다"는 반려를 받아, 차갑고 깨끗한 순백/근접백으로 교체. 글래스 카드 틴트(흰 0.72)는 그대로라 카드가 paper-2보다 살짝 밝게 뜬다 |
 | `kakao` | `#FEE500` / hover `#FADA0A` / ink `#191600` | **카카오톡 진입점 전용** |
@@ -40,7 +40,7 @@ Tailwind는 정의되지 않은 클래스명을 **에러 없이 빌드 CSS에서
 
 > 2026-10-06 **라이너 노트**(`docs/design-liner-notes-plan-2026-10.md`): 보라 primary를 로고의 녹색으로, 순백을 종이로
 > 바꿨다. **2026-10-07 운영자가 이 1차 값을 "텁텁하다"며 반려** — 종이(베이지)를 순백/쿨그레이로, primary를
-> 올리브에서 에메랄드로 다시 틀었다(2차 개정, 위 표가 그 값). 서체·히어로·CTA 위계는 그 문서 §3-2~3-4를 따른다.
+> 올리브에서 에메랄드로 다시 틀었다(2차 개정). **2026-10-09 3차**: 운영자가 "버튼은 시인성 좋게 원래 파란색 계열, 그 버튼에 맞춰 색 체계를 다시" — primary를 파랑으로(위 표가 그 값). 개편 전 보라(`#6d28d9`)가 아니라 진짜 파랑이다. 서체·히어로·CTA 위계는 그 문서 §3-2~3-4를 따른다.
 
 ### 카카오 옐로 — 양방향 규칙
 
@@ -79,9 +79,9 @@ Tailwind는 정의되지 않은 클래스명을 **에러 없이 빌드 CSS에서
 
 | 토큰 | 값 | 대비 | 다크 텍스트로 |
 |---|---|---|---|
-| `primary`(DEFAULT) | `#065f46` | 2.62:1 | ✗ |
-| `primary-light` | `#059669` | 5.34:1 | ✗ (쓰지 말 것 — 토큰 역할상 "작은 텍스트 아님" 규칙을 유지, `tailwind.config.test.ts`의 허용 다크 짝은 `primary-lighter` 하나뿐이다) |
-| `primary-lighter` | `#6ee7b7` | 13.2:1 | ✓ |
+| `primary`(DEFAULT) | `#2563eb` | 4.0:1 | ✗ |
+| `primary-light` | `#3b82f6` | 5.0:1 | ✗ (쓰지 말 것 — 토큰 역할상 "작은 텍스트 아님" 규칙을 유지, `tailwind.config.test.ts`의 허용 다크 짝은 `primary-lighter` 하나뿐이다) |
+| `primary-lighter` | `#93c5fd` | 9.9:1 | ✓ |
 
 (2026-10-07 2차 개정 값. 1차 라이너 노트·보라 시절 수치는 git 이력에 있다.)
 
@@ -275,19 +275,18 @@ woff2와 `display.chars.json`을 **함께 커밋**해야 한다(CI가 `--check`�
 
 | variant | 용도 |
 |---|---|
-| `solid` | 1차 액션 — 잉크(라이트 `gray-950` 위 흰 글씨, 다크는 흰 버튼 위 잉크 글씨) |
+| `solid` | 1차 액션 — 파랑 면 + 흰 글씨(라이트·다크 같음), `BUTTON_DEPTH.solid` 입체감 |
 | `inverse` | 어두운 히어로 사진 위 1차 액션(흰 버튼 + 잉크 글씨, 테마 무관) |
 | `kakao` | 카카오톡 목적지 전용 |
-| `outline` / `ghost` / `secondary` | 2차·3차 액션(`outline`은 잉크 테두리) |
+| `outline` / `ghost` / `secondary` | 2차·3차 액션(`outline`은 파랑 글씨·옅은 파랑 테두리) |
 | `glass` | 글래스 표면 위 |
 | `scrim` | 어두운 히어로 이미지 위 2차 액션 |
 
 `shape`: `pill`(자유 배치 CTA) / `block`(카드·폼 안). `size`: `sm`/`md`/`lg`/`icon`.
 
-**버튼은 잉크, 녹색은 표시** (2026-10-08 운영자 결정): 브랜드 녹색은 링크·가격 숫자·배지·현재 위치·선택
-상태가 함께 써서, 녹색 버튼은 "누르는 것"으로 구분되지 않았다. 행동 버튼(`solid`·`outline`과 손으로 짠
-재생·주문 버튼)은 잉크, 녹색 채움은 선택·진행 상태(필터·페이지 번호·단계·시간 슬롯)에만 둔다.
-한국어 페이지의 주 행동은 카카오 옐로이고, 옐로 + 잉크는 위계가 충돌하지 않는다.
+**파랑 = 누를 수 있는 것** (2026-10-09 운영자 결정, 10/08 잉크 안 대체): 버튼·링크·선택 상태·포커스 링만 파랑이다.
+가격 숫자·대형 수치처럼 누를 수 없는 큰 강조는 잉크로 둬, 버튼과 같은 색 덩어리로 보이지 않게 한다(10/07 녹색
+시절 "버튼이 다른 요소색과 같아 시인성이 떨어진다" 지적의 원인). 한국어 페이지의 주 행동은 카카오 옐로다.
 
 **움직이는 건 누를 수 있는 것뿐** (2026-10-08 운영자 지적 + 에이전트 회의): 클릭을 받는 요소가 반응한다.
 - 카드 전체가 링크면 **카드에 `href`(·`onClick`)를 준다** — 바깥 `<Link>`로 감싸거나 안쪽에 전면 링크를 두지 않는다.
@@ -328,7 +327,7 @@ inset 스펙큘러를 지운다.
 티어 카드가 행으로 놓이는 자리(LP 가격 절·가격 페이지)에서는 카드 안에 솔리드 옐로를 두지 않는다 — 한 행에 노랑이
 셋이면 신호가 소음이 된다(라이너 노트 §3-4). 규칙:
 
-- `<PricingCard kakaoEmphasis="band">`: 카드는 온라인 주문·예약(`secondaryCta`)을 **잉크 solid 블록**으로 올리고 카카오
+- `<PricingCard kakaoEmphasis="band">`: 카드는 온라인 주문·예약(`secondaryCta`)을 **파랑 solid 블록**으로 올리고 카카오
   CTA는 그리지 않는다. 비-ko(/contact 목적지)는 영향 없다. 카드가 혼자 있는 자리는 기본값 `'solid'`.
 - 행 아래 `<KakaoSectionBar>` **하나** — 띠 전체가 카카오 목적지 링크 하나다(`bg-kakao` + `text-kakao-ink` + pill + 포커스 링,
   `ctaButtonContract`가 본다). 문구는 카드가 못 하는 말("어디에 해당하는지 모르겠다면 세션 화면을 보내 주세요")이고
@@ -447,7 +446,6 @@ focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
 | 일반 배경 | `ring-primary/70 dark:ring-primary-lighter/70` + `ring-offset-white dark:ring-offset-gray-900` |
 | 브랜드 아웃라인 pill | tone에 맞춰 `ring-{tone}/70` + 다크는 밝은 짝 `/70`(§4 `ServiceLinkPill`) |
 | 카카오 옐로 버튼 | `ring-kakao-ink dark:ring-kakao` + 표면에 맞는 오프셋 |
-| 잉크 버튼(`solid`·`outline`) | `ring-gray-950/70 dark:ring-white/70` + `ring-offset-white dark:ring-offset-gray-900` |
 | 어두운 히어로 이미지 위(`inverse`·`scrim`) | `ring-white/70` + `ring-offset-black/20` |
 | 스토리 amber 고정 바 | `ring-primary/70 dark:ring-white/70` + `ring-offset-amber-50 dark:ring-offset-amber-900` — 다크 짝이 `primary-lighter`가 아닌 이유는 amber-900 위 2.32:1로 미달이라서다(`white/70`은 통과) |
 

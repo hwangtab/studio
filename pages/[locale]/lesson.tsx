@@ -400,7 +400,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                                             cta_id: 'lesson_pricing_contact',
                                         })
                                     }
-                                    className={`block w-full text-center bg-gray-950 hover:bg-gray-800 text-white dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200 font-bold py-4 rounded-xl transition-colors duration-300 ${BUTTON_DEPTH.ink}`}
+                                    className={`block w-full text-center bg-primary hover:bg-primary-dark text-white font-bold py-4 rounded-xl transition-colors duration-300 ${BUTTON_DEPTH.solid}`}
                                 >
                                     {t('lesson.pricing.cta')}
                                 </Link>

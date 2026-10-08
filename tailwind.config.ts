@@ -24,9 +24,9 @@ const config: Config = {
           // 로고의 짙은 녹색 계열로. 2026-10-07 2차 개정: 운영자가 1차 값(올리브 포레스트 그린 + 베이지)을
           // "텁텁하다"며 반려 — 더 선명한 에메랄드 계열로, 바탕은 순백/근접백으로. 값의 정본은
           // lib/brandColor.ts — 메일·정적 카드가 같은 값을 쓴다.
-          light: BRAND_COLOR.primaryLight, // 흰 3.77:1 · paper2 3.43:1 — 작은 텍스트에는 쓰지 않는다(대형·아이콘용)
-          DEFAULT: BRAND_COLOR.primary, // 흰 7.68:1 · paper2 약 7.0:1
-          dark: BRAND_COLOR.primaryDark, // 흰 글씨 12.5:1 — 히어로 잉크 면·solid hover
+          light: BRAND_COLOR.primaryLight, // 흰 3.68:1 — 작은 텍스트에는 쓰지 않는다(대형·아이콘용)
+          DEFAULT: BRAND_COLOR.primary, // 흰 5.17:1 · paper2 약 4.8:1
+          dark: BRAND_COLOR.primaryDark, // 흰 글씨 6.70:1 — solid hover
           // 다크 배경(gray-900 #030712) 위 텍스트·테두리용 — lighter만 13.2:1로 통과한다. 규칙은 1차와 같다.
           lighter: BRAND_COLOR.primaryOnDark,
         },

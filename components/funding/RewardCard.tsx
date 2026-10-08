@@ -93,7 +93,7 @@ export default function RewardCard({ reward, remaining, pledgeHref, canPledge, o
         {/* 카드 전체가 링크라 안쪽은 버튼 모양의 span이다. 공용 buttonVariants로 다른 주 버튼과
             모양을 맞추고, 문구는 통일 규칙대로 "펀딩하기"(2026-09-29). 움직이는 건 카드 하나 — 이 span은
             색만 바뀌고 따로 떠오르지 않는다(한 물체에 한 움직임). */}
-        <span className={cn(buttonVariants({ fullWidth: true }), 'mt-4 hover:translate-y-0 active:translate-y-0 group-hover:bg-gray-800 dark:group-hover:bg-gray-200')}>
+        <span className={cn(buttonVariants({ fullWidth: true }), 'mt-4 hover:translate-y-0 active:translate-y-0 group-hover:bg-primary-dark')}>
           {pledgeLabel ?? (en ? 'Back this' : '펀딩하기')}
         </span>
     </BaseCard>
