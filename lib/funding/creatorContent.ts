@@ -26,6 +26,7 @@ export const TRUSTED_SHORTCODE_NAMES: readonly string[] = [
   'funding-lineup',
   'funding-gallery',
   'funding-audio',
+  'funding-video',
   ...INLINE_DIRECTIVE_NAMES,
 ];
 

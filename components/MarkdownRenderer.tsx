@@ -7,6 +7,7 @@ import OnlineFallback from './story/OnlineFallback';
 import SessionChecklist from './story/SessionChecklist';
 import FundingGallery from './funding/FundingGallery';
 import FundingAudioPlayer from './funding/FundingAudioPlayer';
+import FundingVideo from './funding/FundingVideo';
 import FundingLineupPerson from './funding/FundingLineupPerson';
 import StudioMore from './story/StudioMore';
 import StudioServices from './story/StudioServices';
@@ -369,6 +370,7 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
       if (segment.name === 'funding-lineup') return segment.arg ? <FundingLineupPerson key={index} id={segment.arg} /> : null;
       if (segment.name === 'funding-gallery') return segment.arg ? <FundingGallery key={index} id={segment.arg} /> : null;
       if (segment.name === 'funding-audio') return segment.arg ? <FundingAudioPlayer key={index} id={segment.arg} /> : null;
+      if (segment.name === 'funding-video') return segment.arg ? <FundingVideo key={index} id={segment.arg} /> : null;
 
       // 4종 inline directive — max 2 enforce (초과는 silent drop)
       if (isInlineDirectiveName(segment.name)) {
