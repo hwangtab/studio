@@ -9,7 +9,7 @@ import { computeProjectState, stripRewardDownloads, type FundingProject, type Pr
 import { withI18nServerProps } from '../../../../../lib/getStatic';
 
 import type { FundingProjectRow } from '../../../../../db/schema';
-import { BUTTON_DEPTH } from '../../../../../components/ui/buttonDepth';
+import { Button } from '../../../../../components/ui/Button';
 
 interface CompleteProps {
   incomplete: false;
@@ -60,17 +60,16 @@ export default function FundingCreatorPreviewPage(props: Props) {
       {props.incomplete ? (
         // hasHero가 페이지 전역에 켜져 헤더가 투명하다(아래 선언 참조) — 배경이 흰색이면
         // 흰 헤더 글씨가 그대로 묻힌다. 히어로 사진 없이도 상단을 어둡게 채워 대비를 지킨다.
-        <main className="min-h-[70vh] bg-gray-900 px-4 pt-32 pb-24 text-center">
+        // <main>은 Layout이 준다(tests/pages/pageScaffold.test.ts) — 여기는 어두운 바탕 블록이다.
+        <div className="min-h-[70vh] bg-gray-900 px-4 pt-32 pb-24 text-center">
           <p className="typo-body text-gray-200">
             아직 미리 볼 수 없습니다. 기본정보와 리워드를 먼저 채워 주세요.
           </p>
-          <Link
-            href={editHref}
-            className={`mt-6 inline-flex h-11 items-center justify-center rounded-xl bg-gray-950 px-6 font-semibold text-white transition-colors hover:bg-gray-800 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200 ${BUTTON_DEPTH.ink}`}
-          >
-            편집으로 돌아가기
-          </Link>
-        </main>
+          {/* 어두운 바탕 위라 흰 버튼(inverse) — 잉크 버튼은 gray-900 위에서 묻힌다. */}
+          <Button asChild variant="inverse" className="mt-6">
+            <Link href={editHref}>편집으로 돌아가기</Link>
+          </Button>
+        </div>
       ) : (
         // 미리보기는 실제 모금액이 없어 후원 CTA를 그리지 않는다(interactive: false) —
         // 승인 전 프로젝트라 후원도 성립하지 않는다.

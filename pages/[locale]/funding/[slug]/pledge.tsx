@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { withI18nServerProps } from '../../../../lib/getStatic';
 import Head from 'next/head';
-import Link from 'next/link';
+import { PageHeader, PageShell } from '../../../../components/ui/PageHeader';
 import PledgeWizard from '../../../../components/funding/PledgeWizard';
 import { useFundingStatus } from '../../../../components/funding/useFundingStatus';
 import FundingTrustNotice from '../../../../components/funding/FundingTrustNotice';
@@ -24,17 +24,16 @@ export default function PledgePage({ project, initialRewardId, remaining }: Prop
   return (
     <>
       <Head><title>{project.title} 펀딩하기 | 스튜디오 놀</title><meta name="robots" content="noindex, nofollow" /></Head>
-      <main className="mx-auto max-w-2xl px-4 pb-24 pt-28 sm:pt-32">
-        <p className="typo-card-meta">
-          <Link href={`/ko/funding/${project.slug}`} className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter">
-            ← {project.title}
-          </Link>
-        </p>
-        <h1 className="typo-section-title mt-3">펀딩하기</h1>
-        <p className="typo-section-lead mt-3">리워드를 담고 후원자 정보를 입력하면 결제로 이어집니다.</p>
-        <div className="mt-10"><PledgeWizard project={project} initialRewardId={initialRewardId} remaining={data?.remaining ?? remaining} /></div>
+      <PageShell>
+        <PageHeader
+          backHref={`/ko/funding/${project.slug}`}
+          backLabel={project.title}
+          title="펀딩하기"
+          lead="리워드를 담고 후원자 정보를 입력하면 결제로 이어집니다."
+        />
+        <PledgeWizard project={project} initialRewardId={initialRewardId} remaining={data?.remaining ?? remaining} />
         <div className="mt-12"><FundingTrustNotice /></div>
-      </main>
+      </PageShell>
     </>
   );
 }

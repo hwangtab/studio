@@ -6,6 +6,8 @@
 import Head from 'next/head';
 
 import { Button } from '../../../components/ui/Button';
+import { PageShell } from '../../../components/ui/PageHeader';
+import { ResultCard } from '../../../components/ui/ResultCard';
 
 import { getDb } from '../../../db/client';
 import { TOSS_KEY_CHANNEL_PARAM, cancelPayment, confirmPayment, fetchPayment, tossKeyChannelFromQuery } from '../../../lib/booking/toss';
@@ -39,41 +41,55 @@ export default function ShowSuccessPage({ outcome, message, orderNo, manageUrl, 
         <title>{outcome === 'confirmed' ? '예매 완료' : '결제 확인 실패'} | 스튜디오 놀</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <main className="mx-auto max-w-lg px-4 py-24 text-center">
-        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">스튜디오 놀</p>
+      <PageShell width="result">
+        {/* 사이트 헤더를 두르지 않는 화면이라 여기가 브랜드를 밝히는 유일한 자리다(privateLinkNavigation.test.ts). */}
+        <p className="typo-card-meta mb-4 text-center">스튜디오 놀</p>
         {outcome === 'confirmed' ? (
-          <>
-            <h1 className="typo-page-title">예매가 완료되었습니다</h1>
-            <p className="mt-4 text-gray-600 dark:text-gray-300">
-              주문번호 {orderNo}.
-              {emailSent === true && ' 티켓 메일을 보내드렸습니다.'}
-              {emailSent === false && hasEmail && ' 티켓 메일을 보내지 못했습니다 — 아래 링크를 저장해 주세요.'}
-              {emailSent === false && !hasEmail && ' 이메일을 적지 않으셔서 메일은 보내지 않았습니다 — 아래 링크를 꼭 저장해 주세요.'}
-            </p>
-            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-              입장은 비지정석 선착순입니다. 현장에서 아래 링크의 QR 티켓을 보여 주세요.
-            </p>
-            {manageUrl && (
-              <p className="mt-4">
-                {/* 공용 Button — private→private 링크라 noreferrer 불필요(lib/analytics/privatePaths.ts). */}
-                <Button asChild size="lg">
-                  <a href={manageUrl}>내 티켓(QR) 열기</a>
+          <ResultCard
+            tone="success"
+            title="예매가 완료되었습니다"
+            description={
+              <>
+                주문번호 {orderNo}.
+                {emailSent === true && ' 티켓 메일을 보내드렸습니다.'}
+                {emailSent === false && hasEmail && ' 티켓 메일을 보내지 못했습니다 — 아래 링크를 저장해 주세요.'}
+                {emailSent === false && !hasEmail && ' 이메일을 적지 않으셔서 메일은 보내지 않았습니다 — 아래 링크를 꼭 저장해 주세요.'}
+              </>
+            }
+            actions={
+              <>
+                {manageUrl && (
+                  // 공용 Button — private→private 링크라 noreferrer 불필요(lib/analytics/privatePaths.ts).
+                  <Button asChild>
+                    <a href={manageUrl}>내 티켓(QR) 열기</a>
+                  </Button>
+                )}
+                <Button asChild variant="outline">
+                  <a href="/ko" rel="noreferrer">홈으로</a>
                 </Button>
-              </p>
-            )}
-            {manageUrl && (
-              <p className="mt-3 break-all text-xs text-gray-500 dark:text-gray-400">이 주소를 저장해 두세요: {manageUrl}</p>
-            )}
-          </>
+              </>
+            }
+          >
+            <div className="space-y-2 text-center typo-card-meta">
+              <p>입장은 비지정석 선착순입니다. 현장에서 아래 링크의 QR 티켓을 보여 주세요.</p>
+              {manageUrl && <p className="break-all typo-caption">이 주소를 저장해 두세요: {manageUrl}</p>}
+            </div>
+          </ResultCard>
         ) : (
-          <>
-            <h1 className="typo-page-title">결제를 확정하지 못했습니다</h1>
-            <p className="mt-4 text-gray-600 dark:text-gray-300">{message}</p>
-            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">문의: 010-4255-7893</p>
-          </>
+          <ResultCard
+            tone="error"
+            title="결제를 확정하지 못했습니다"
+            description={message}
+            actions={
+              <Button asChild variant="outline">
+                <a href="/ko" rel="noreferrer">홈으로</a>
+              </Button>
+            }
+          >
+            <p className="text-center typo-card-meta">문의: 010-4255-7893</p>
+          </ResultCard>
         )}
-        <a href="/ko" rel="noreferrer" className="mt-8 inline-block underline">홈으로</a>
-      </main>
+      </PageShell>
     </>
   );
 }
@@ -86,40 +102,53 @@ function ShowSuccessPageEn({ outcome, message, orderNo, manageUrl, emailSent, ha
         <title>{outcome === 'confirmed' ? 'Booking complete' : 'Payment not confirmed'} | Studio NOL</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <main className="mx-auto max-w-lg px-4 py-24 text-center">
-        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">Studio NOL</p>
+      <PageShell width="result">
+        <p className="typo-card-meta mb-4 text-center">Studio NOL</p>
         {outcome === 'confirmed' ? (
-          <>
-            <h1 className="typo-page-title">Your booking is complete</h1>
-            <p className="mt-4 text-gray-600 dark:text-gray-300">
-              Order number {orderNo}.
-              {emailSent === true && ' We have emailed your ticket.'}
-              {emailSent === false && hasEmail && ' We could not send the ticket email — please save the link below.'}
-              {emailSent === false && !hasEmail && ' No email address was given, so no email was sent — please save the link below.'}
-            </p>
-            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-              General admission, first come, first served. Show the QR ticket from the link below at the door.
-            </p>
-            {manageUrl && (
-              <p className="mt-4">
-                <Button asChild size="lg">
-                  <a href={manageUrl}>Open my tickets (QR)</a>
+          <ResultCard
+            tone="success"
+            title="Your booking is complete"
+            description={
+              <>
+                Order number {orderNo}.
+                {emailSent === true && ' We have emailed your ticket.'}
+                {emailSent === false && hasEmail && ' We could not send the ticket email — please save the link below.'}
+                {emailSent === false && !hasEmail && ' No email address was given, so no email was sent — please save the link below.'}
+              </>
+            }
+            actions={
+              <>
+                {manageUrl && (
+                  <Button asChild>
+                    <a href={manageUrl}>Open my tickets (QR)</a>
+                  </Button>
+                )}
+                <Button asChild variant="outline">
+                  <a href="/en" rel="noreferrer">Home</a>
                 </Button>
-              </p>
-            )}
-            {manageUrl && (
-              <p className="mt-3 break-all text-xs text-gray-500 dark:text-gray-400">Save this link: {manageUrl}</p>
-            )}
-          </>
+              </>
+            }
+          >
+            <div className="space-y-2 text-center typo-card-meta">
+              <p>General admission, first come, first served. Show the QR ticket from the link below at the door.</p>
+              {manageUrl && <p className="break-all typo-caption">Save this link: {manageUrl}</p>}
+            </div>
+          </ResultCard>
         ) : (
-          <>
-            <h1 className="typo-page-title">We could not confirm your payment</h1>
-            <p className="mt-4 text-gray-600 dark:text-gray-300">{message}</p>
-            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">Contact: {SHOW_CONTACT_PHONE_INTL} · hello@studionol.co.kr</p>
-          </>
+          <ResultCard
+            tone="error"
+            title="We could not confirm your payment"
+            description={message}
+            actions={
+              <Button asChild variant="outline">
+                <a href="/en" rel="noreferrer">Home</a>
+              </Button>
+            }
+          >
+            <p className="text-center typo-card-meta">Contact: {SHOW_CONTACT_PHONE_INTL} · hello@studionol.co.kr</p>
+          </ResultCard>
         )}
-        <a href="/en" rel="noreferrer" className="mt-8 inline-block underline">Home</a>
-      </main>
+      </PageShell>
     </>
   );
 }
