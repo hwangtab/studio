@@ -1,20 +1,17 @@
 /** @jest-environment node */
 
 /**
- * hero 폰트 subset 무결성 가드.
+ * 제목 서체 subset 무결성 가드 — 커밋된 lib/fonts/display.woff2와 사이드카(display.chars.json)가 짝이 맞는가(sha).
  *
- * hero h1·v2 섹션 제목 텍스트(data/home.ts, buyerIntentHubs, locales *title*·*heading* 키, data/*.ts title)가
- * 바뀌었는데 lib/fonts/display.woff2 재생성 commit을 빠뜨리면, 새 글자가 subset 밖이라
- * Pretendard로 그려져 한 제목 안에서 서체가 갈린다(빌드는 성공하므로 조용한 회귀).
- * --check 모드는 네트워크 없이 사이드카(display.chars.json)와 현재 제목
- * 문자 집합만 대조한다. 실패 시: node scripts/generate-hero-font.mjs 실행 후
- * woff2 + chars.json을 함께 commit.
+ * 커밋본이 지금 제목들을 다 덮는지는 보지 않는다(2026-10-09). 모든 빌드가 prebuild에서 저장소의 원본으로 다시
+ * 만들어 배포물은 언제나 최신이고, 커밋본은 next dev용이다. 배포물에 빠진 글자는 빌드 뒤
+ * scripts/check-display-font-coverage.mjs(CI)가 잡는다.
  */
 
 const { execFileSync } = require('child_process');
 
 describe('hero font subset', () => {
-  it('committed subset covers every current hero h1 character', () => {
+  it('committed display subset and sidecar match (sha)', () => {
     const output = execFileSync(
       process.execPath,
       ['scripts/generate-hero-font.mjs', '--check'],

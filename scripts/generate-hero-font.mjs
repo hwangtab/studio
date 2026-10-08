@@ -19,8 +19,9 @@
  * scripts/check-display-font-coverage.mjs가 빌드된 HTML의 실제 제목 글자 ⊆ 서체 글리프를 CI에서 강제한다
  * (hero-font-subset.test.js). th·zh 문자는 서체에 없고 지금도 --font-locale로 가므로 집합에서 뺀다.
  *
- * prebuild에 묶여 있다(package.json). 소스 폰트는 네트워크에서 받아 node_modules/.cache에 두고, 못 받으면
- * 커밋된 woff2를 그대로 쓰고 빌드를 계속한다 — 제목 문구를 바꿨다면 로컬에서 수동 재실행해 산출물을 commit.
+ * prebuild에 묶여 있다(package.json). 원본은 저장소(lib/fonts/paperlogy-7bold-full.woff2)라 배포·CI 빌드가 네트워크
+ * 없이 매번 다시 만든다 — 제목 문구를 바꿔도 손으로 재생성할 필요가 없다(커밋본은 `next dev`용). 원본을 못 읽으면
+ * 빌드가 멈춘다. 배포물에 빠진 글자는 빌드 뒤 scripts/check-display-font-coverage.mjs(CI)가 잡는다.
  *
  * 사용: node scripts/generate-hero-font.mjs            # 생성
  *      node scripts/generate-hero-font.mjs --check    # 네트워크 없이 커버리지·sha 검증
@@ -73,6 +74,10 @@ const SOURCES = {
   // 저장소에 ttf/otf 원본은 zip 안에만 있고 루트에는 완성된 웹용 woff2만 있다 — subset-font는 harfbuzzjs라
   // woff2 입력도 그대로 받는다(README 확인), 재압축 경로라 품질 손실 없음.
   paperlogy: {
+    // 운영 서체라 원본을 저장소에 둔다(lib/fonts/paperlogy-7bold-full.woff2, 라이선스 OFL-Paperlogy.txt — OFL은
+    // 재배포 허용). 본문 서체(pretendard-variable-full.woff2)와 같은 방식 — 배포 때 네트워크 없이 매번 다시 만든다.
+    // 2026-10-09 전엔 GitHub raw에서 받았고, 못 받으면 커밋된 산출물로 조용히 넘어가 빠진 글자가 다시 생길 수 있었다.
+    local: 'paperlogy-7bold-full.woff2',
     url: 'https://raw.githubusercontent.com/Freesentation/paperlogy/main/woff2/Paperlogy-7Bold.woff2',
     cache: 'Paperlogy-7Bold.woff2',
     subsetOptions: { targetFormat: 'woff2' },
@@ -101,6 +106,13 @@ const OUT_WOFF2 = path.join(ROOT, 'lib', 'fonts', 'display.woff2');
 const OUT_CHARS = path.join(ROOT, 'lib', 'fonts', 'display.chars.json');
 
 async function ensureSourceFont() {
+  if (SOURCE.local) {
+    const local = path.join(ROOT, 'lib', 'fonts', SOURCE.local);
+    // 저장소에 있어야 하는 파일이다 — 없으면 네트워크로 메우지 않고 실패한다(조용한 대체 금지).
+    if (!fs.existsSync(local)) throw new Error(`source font missing: ${path.relative(ROOT, local)}`);
+    return fs.readFileSync(local);
+  }
+  // 비교용 서체(DISPLAY_FONT=hahmlet 등)만 네트워크에서 받는다.
   const cached = path.join(CACHE_DIR, SOURCE.cache);
   if (fs.existsSync(cached) && fs.statSync(cached).size > SOURCE.minBytes) {
     return fs.readFileSync(cached);
@@ -176,7 +188,8 @@ function collectDisplayChars() {
       const json = JSON.parse(fs.readFileSync(f, 'utf8'));
       walkObject(json);
     } catch (e) {
-      console.warn(`skip ${f}: ${e.message}`);
+      // 출처를 못 읽으면 그 제목들의 글자가 조용히 빠진다 — 멈춘다.
+      throw new Error(`skip ${f}: ${e.message}`);
     }
   }
 
@@ -200,13 +213,13 @@ function collectDisplayChars() {
   //    studioOperator 블록은 통째로 긁으면 안 된다: awards[].name 같은 하위 name이
   //    h1에 절대 안 나오는 글자를 LCP 크리티컬 서브셋에 밀어넣는다(실제로 '레드어워드'·
   //    '한국대중음악상'이 유입돼 --check가 잡았다). 블록을 잘라낸 뒤 최상위 name만 따로 넣는다.
-  try {
+  {
     const siteCfg = fs.readFileSync(path.join(ROOT, 'data', 'siteConfig.ts'), 'utf8');
     const operatorName = siteCfg.match(/export const studioOperator\s*=\s*{\s*\n\s*name\s*:\s*(["'`])([\s\S]*?)\1/);
     if (operatorName) addStr(operatorName[2]);
     const withoutOperator = siteCfg.replace(/export const studioOperator[\s\S]*?\n};/, '');
     for (const m of withoutOperator.matchAll(/name\s*:\s*(["'`])([\s\S]*?)\1/g)) addStr(m[2]);
-  } catch {}
+  }
 
   // 5) 펀딩 프로젝트 제목 — `content/funding/<slug>.md`의 frontmatter title이
   //    `/ko/funding/<slug>`의 ImageHero h1으로 그대로 나간다.
@@ -230,7 +243,8 @@ function collectDisplayChars() {
       if (m) addStr(m[1].trim().replace(/^["']|["']$/g, ''));
     }
   } catch (e) {
-    console.warn(`skip funding titles: ${e.message}`);
+    // 출처를 못 읽으면 그 제목들의 글자가 조용히 빠진다 — 멈춘다.
+    throw new Error(`skip funding titles: ${e.message}`);
   }
 
   // 6) data/*.ts 최상위 파일의 title: 문자열 — ko 전용 LP(crowdfundingDesign.ts 등)의 hero.title과
@@ -244,7 +258,8 @@ function collectDisplayChars() {
       for (const m of src.matchAll(/\b((?:title|heading|sectionTitle)\w*)\s*:\s*(["'`])([^"'`]*?)\2/g)) addStr(m[3]);
     }
   } catch (e) {
-    console.warn(`skip data titles: ${e.message}`);
+    // 출처를 못 읽으면 그 제목들의 글자가 조용히 빠진다 — 멈춘다.
+    throw new Error(`skip data titles: ${e.message}`);
   }
 
   // 7) 공연 제목 — `data/shows/<slug>.ts`의 최상위 title이 `/ko/shows/<slug>`의 ImageHero h1으로
@@ -257,7 +272,8 @@ function collectDisplayChars() {
       for (const m of src.matchAll(/^ {2}title:\s*(["'`])([\s\S]*?)\1/gm)) addStr(m[2]);
     }
   } catch (e) {
-    console.warn(`skip show titles: ${e.message}`);
+    // 출처를 못 읽으면 그 제목들의 글자가 조용히 빠진다 — 멈춘다.
+    throw new Error(`skip show titles: ${e.message}`);
   }
 
   // 8) 코드에 박힌 제목 — locales·data를 거치지 않는 제목이 있다. 2026-10-08 공연 상세의 "출연"이 "출"만
@@ -281,7 +297,8 @@ function collectDisplayChars() {
     const showsCopy = fs.readFileSync(path.join(ROOT, 'lib', 'shows', 'i18n.ts'), 'utf8');
     for (const m of showsCopy.matchAll(/\b(?:title|heroTitle|upcoming|past|faqTitle)\s*:\s*(["'`])([^"'`]*?)\1/g)) addStr(m[2]);
   } catch (e) {
-    console.warn(`skip inline titles: ${e.message}`);
+    // 출처를 못 읽으면 그 제목들의 글자가 조용히 빠진다 — 멈춘다.
+    throw new Error(`skip inline titles: ${e.message}`);
   }
 
   // 9) 스토리 글 제목 — /<locale>/stories/<slug>의 ImageHero h1이 frontmatter title이다(전 로케일 파일).
@@ -295,7 +312,8 @@ function collectDisplayChars() {
       if (m) addStr(m[1].trim().replace(/^(["'])(.*)\1$/, '$2'));
     }
   } catch (e) {
-    console.warn(`skip story titles: ${e.message}`);
+    // 출처를 못 읽으면 그 제목들의 글자가 조용히 빠진다 — 멈춘다.
+    throw new Error(`skip story titles: ${e.message}`);
   }
 
   // 10) 안전판: 영문/숫자/기본 punctuation (제목에 흔히 섞이는 기호)
@@ -330,16 +348,16 @@ function runCheck(chars) {
     process.exit(1);
   }
 
+  // 커밋된 산출물이 지금 제목들을 다 덮는지는 따지지 않는다(2026-10-09) — 배포·CI 빌드가 prebuild에서 저장소의
+  // 원본으로 매번 다시 만들기 때문이다(본문 서체와 같다). 커밋본은 `next dev`용이다. 예전엔 여기서 실패시켜
+  // 새 글자를 쓴 스토리를 올릴 때마다 서체 파일 재생성·커밋을 요구했다. 실제 배포물의 누락은 빌드 뒤
+  // scripts/check-display-font-coverage.mjs(CI)가 잡는다. 낡은 커밋본은 알려만 준다.
   const committed = new Set(sidecar.chars);
-  const missing = [...chars].filter((ch) => !committed.has(ch));
-  if (missing.length > 0) {
-    console.error(
-      `generate-hero-font --check: 제목 텍스트에 subset 밖 글자 ${missing.length}자 발견: ` +
-        `${JSON.stringify(missing.join(''))}\n제목 문구가 바뀌었습니다. ${regenerateHint}`,
-    );
-    process.exit(1);
+  const stale = [...chars].filter((ch) => !committed.has(ch));
+  if (stale.length > 0) {
+    console.log(`note: committed subset lacks ${stale.length} chars (${JSON.stringify(stale.join(''))}) — the next build regenerates it.`);
   }
-  console.log(`hero subset OK: ${chars.size} chars covered, woff2 sha match (source: ${sidecar.source ?? 'unknown'})`);
+  console.log(`hero subset OK: woff2 sha match (source: ${sidecar.source ?? 'unknown'})`);
 }
 
 async function main() {
@@ -352,21 +370,9 @@ async function main() {
     return;
   }
 
-  let src;
-  try {
-    src = await ensureSourceFont();
-  } catch (err) {
-    // prebuild 체인에서 실행되므로 CDN 장애·rate limit·타임아웃이 빌드 전체를
-    // 깨뜨리면 안 된다. 산출물(woff2)은 commit돼 있으므로, source font를 못 받으면
-    // 이미 커밋된 woff2를 그대로 사용하고 빌드를 계속한다. (제목 텍스트가 바뀐 경우엔
-    // 로컬에서 이 스크립트를 수동 재실행해 갱신된 woff2를 commit해야 한다.)
-    if (fs.existsSync(OUT_WOFF2)) {
-      console.warn(`generate-hero-font: source font unavailable (${err.message}); ` +
-        `keeping committed ${path.relative(ROOT, OUT_WOFF2)} and continuing build.`);
-      return;
-    }
-    throw err;
-  }
+  // 원본은 저장소에 있다 — 못 읽으면 빌드를 멈춘다. 예전엔 커밋된 산출물로 조용히 넘어갔는데, 그 산출물이
+  // 낡았으면 새 제목 글자가 빠진 채 배포됐다(아무 알림 없이).
+  const src = await ensureSourceFont();
 
   const out = await subsetFont(src, subsetText, SOURCE.subsetOptions);
 
