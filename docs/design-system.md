@@ -653,19 +653,14 @@ v1 페이지는 이행될 때까지 300이다. 아래 문단은 v1에 대해 여
 | 브랜드색 | 보라·핑크·초록 | 보라 하나. 고채도는 카카오 옐로만 남긴다 |
 | 본문 굵기 | 300 | 400 |
 | 푸터 | 3색 전폭 그라디언트 | 잉크(`gray-950`) 단색 |
-| 스크롤 모션 | 없음(2026-05 iOS fix로 사실상 꺼짐) | 섹션 제목만 CSS `view()` 등장 — 카드 그리드 금지 |
+| 스크롤 모션 | 없음(2026-05 iOS fix로 사실상 꺼짐) | 없음 — 섹션 제목 `view()` 등장도 2026-10-09 TDS 대조에서 걷었다 |
 
 **다문자**: 대형 제목의 행간·자간은 `--display-lh`/`--display-ls` 변수로 두고 th·vi(행간 1.4)·
 zh(자간 0)에서 재정의한다. eyebrow 라벨은 i18n 키(`home.v2.eyebrow.*`)이고 대문자 변환은 CSS가 한다.
 
-**모션 규칙**: `prefers-reduced-motion: no-preference` + `@supports (animation-timeline: view())`에서만 켠다.
-시작 opacity는 0이 아니라 .35다. 킬스위치 `NEXT_PUBLIC_DISABLE_MOTION=1`. 모바일도 켠다(2026-09-27) —
-그 전엔 정밀 포인터 기기로 막아 두었다. iOS 26 미만 Safari는 `view()`를 몰라 정적으로 남는다.
-점검은 Playwright WebKit(26.x)의 iPhone 에뮬레이션으로 했다. 이때 사이트 CSP의
-`upgrade-insecure-requests` 때문에 WebKit이 localhost 리소스를 https로 올려 CSS가 통째로 안 뜬다
-(Chromium은 localhost를 예외로 둔다) — `context.route`로 https를 http로 돌려받아야 진짜 화면이다.
-`content-visibility: auto` 섹션은 화면에 들어오며 높이가 바뀌므로, 제목을 가운데로 한 번 스크롤하고
-재면 밀려난 위치를 재게 된다 — 위치가 멈출 때까지 다시 맞춘 뒤 잰다.
+**모션 규칙** (2026-10-09 개정): 스크롤 등장·포인터 빛 같은 장식 모션은 두지 않는다 — 내용은 처음부터 최종 상태로
+보이고, 움직임은 누를 수 있는 것의 반응(버튼 누름·링크 카드 hover)에만 쓴다. 옛 `view()` 등장 규칙과 킬스위치
+`NEXT_PUBLIC_DISABLE_MOTION`은 지웠다(git 이력: Playwright WebKit 점검 요령은 `docs/design-system.md` 이전 판).
 
 **v1이 그대로인지 확인하는 법**: `npm run visual:golden`(빌드 HTML 전수 비교, 허용 목록 밖
 변경이 있으면 실패)과 `npm run visual:shots`(스크린샷 픽셀 비교). 사용법은 각 스크립트 머리말.

@@ -781,7 +781,7 @@ iOS 26 리퀴드 글래스 스타일 리뉴얼의 재질 레이어. **성능 예
   hover 시 SHADOW_HOVER를 섞지 않는다(inline boxShadow가 inset 스펙큘러를 지움).
   AudioPlayer 대형 패널 2개의 무의미 backdrop-blur 제거(앨범아트 위 배지는 유지).
 - Phase 4: BaseCard `default`/`highlight` 재질을 글래스로 전환(전 소비처 일괄 —
-  .glass-card는 blur 무비용이라 안전). 스펙큘러 포인터 하이라이트(.glass-card::after,
+  .glass-card는 blur 무비용이라 안전). ~~스펙큘러 포인터 하이라이트~~(2026-10-09 TDS 대조에서 제거 — 장식 효과)(.glass-card::after,
   hover 기기 한정, --glass-glow는 솔리드 폴백에서 transparent), 클릭 카드 press
   스케일(0.98/0.1s), Button glass variant press(active:scale-[0.97]).
   카드 hover에 SHADOW_HOVER 금지 원칙은 전 glass variant로 확대.
