@@ -17,6 +17,11 @@ interface LineupPerson {
   photo: string;
   /** b2b 세트 등 두 사람이 한 슬롯을 쓸 때. photo 위 오른쪽 아래에 작게 겹쳐 그린다. */
   photoSecondary?: string;
+  /**
+   * 영문 화면(번역본이 있는 프로젝트, lib/funding/translatedSlugs.ts)의 이름·소개. 이름은 본인이 쓰는 영문 표기가
+   * 있으면 그것을, 없으면 국어의 로마자 표기법을 따른다. people은 같은 순서의 label만 바꾼다(SNS는 그대로).
+   */
+  en?: { name?: string; bio: string; people?: { label: string }[] };
 }
 
 /**
@@ -58,6 +63,10 @@ export const LINEUP_PEOPLE: Record<string, LineupPerson> = {
     sns: 'https://www.instagram.com/carbabyis/',
     bio: '사랑노래를 짓고 부릅니다. 잘 패배하는 사람이 되는 것이 꿈입니다.',
     photo: '/images/funding/mok-jareugi/lineup/yangchaae-20260930.webp',
+    en: {
+      name: "Yang Cha-ae",
+      bio: "Writes and sings love songs. Dreams of becoming someone who knows how to lose well.",
+    },
   },
   'mok-jareugi-dj-duo': {
     people: [
@@ -69,6 +78,10 @@ export const LINEUP_PEOPLE: Record<string, LineupPerson> = {
     bio: '두 사람이 번갈아 판을 올리는 b2b 세트. 마을회관 앞마당에 턴테이블이 놓입니다. 노래가 멎은 자리를 비트가 이어받습니다.',
     photo: '/images/funding/mok-jareugi/lineup/dj-stopone-20260930.webp',
     photoSecondary: '/images/funding/mok-jareugi/lineup/dj-gwal-20260930.webp',
+    en: {
+      bio: "A b2b set, the two taking turns at the decks. Turntables are set up in the yard in front of the village hall. Where the songs stop, the beats carry on.",
+      people: [{ label: "DJ Stopone" }, { label: "DJ Gwal" }],
+    },
   },
   'mok-jareugi-sabbaha': {
     name: '사바하',
@@ -76,6 +89,10 @@ export const LINEUP_PEOPLE: Record<string, LineupPerson> = {
     // 출처: ggac.kr/artists/sabbaha (pine-nut concert.ts에 이미 정리돼 있던 소개).
     bio: "2013년 솔로 프로젝트로 출발해 2023년 듀오로 자리잡은 둠드론 밴드. 리더 The Slaughter의 기타·보컬에 2025년 드러머 The Mortician이 합류해 서울·수원을 기반으로 활동합니다. 스스로 '사이비 오컬트 둠드론'이라 부릅니다. 2024년 정규 「THUNDER ROCKS」.",
     photo: '/images/funding/mok-jareugi/lineup/sabbaha-20260930.webp',
+    en: {
+      name: "Sabbaha",
+      bio: "A doom drone band that began as a solo project in 2013 and settled into a duo in 2023. Leader The Slaughter (guitar, vocals) was joined by drummer The Mortician in 2025, and they work out of Seoul and Suwon. They call what they play \"pseudo-occult doom drone.\" Full-length album THUNDER ROCKS (2024).",
+    },
   },
   'mok-jareugi-collins': {
     name: '달 위의 콜린스',
@@ -83,12 +100,20 @@ export const LINEUP_PEOPLE: Record<string, LineupPerson> = {
     // 출처: indistreet.com/ko/artists/dalwiyikolrinseu
     bio: '홍대 클럽빵을 거점으로 공연해온 팀. 2025년 가을 두 달 사이에 싱글 「비둘기의 失樂園」·「PM 7:37」과 EP 「19.8㎡에서의 漂流記」, 앨범 「Thief 86」을 잇달아 냈습니다.',
     photo: '/images/funding/mok-jareugi/lineup/collins-on-the-moon-20260930.webp',
+    en: {
+      name: "Collins on the Moon",
+      bio: "A band that has made Club Bbang in Hongdae its home stage. Over two months in autumn 2025 they put out the singles \"Paradise Lost of a Pigeon\" (비둘기의 失樂園) and \"PM 7:37,\" the EP \"A Drifter's Log from 19.8㎡\" (19.8㎡에서의 漂流記) and the album \"Thief 86,\" one after another.",
+    },
   },
   'mok-jareugi-parkjihwi': {
     name: '박지휘',
     sns: 'https://www.instagram.com/sickbaby109/',
     bio: "프리포크 싱어송라이터. 일러스트레이터 2da(이다)의 그림에서 따온 'sickbaby'라는 이름으로도 불렀습니다. 로파이한 프리포크로 시작해, 근래에는 엘리엇 스미스의 새드코어에 기운 곡을 씁니다.",
     photo: '/images/funding/mok-jareugi/lineup/parkjihwi-20260930.webp',
+    en: {
+      name: "Park Jihwi",
+      bio: "A free-folk singer-songwriter. Has also sung under the name sickbaby, taken from a drawing by the illustrator 2da (Ida). Started out with lo-fi free folk, and lately writes songs that lean towards the sadcore of Elliott Smith.",
+    },
   },
   'mok-jareugi-next': {
     name: '최양다음 NEXT',
@@ -99,12 +124,20 @@ export const LINEUP_PEOPLE: Record<string, LineupPerson> = {
     // (원문엔 더 많은 공연 이력이 있으나 다 넣으면 문장이 아니라 목록이 된다고 판단했다).
     bio: "독학으로 음악을 익힌 싱어송라이터. 아버지 성 '최'와 어머니 성 '양'에 '다음'을 붙인 이름으로, 호주제에 맞선다는 뜻을 담아 지었습니다. 그 이름을 여러 나라 말로 씁니다 — 다음, NEXT, 次, Nächste, 翌. 세월호 10주기 추모, 수요시위, 팔레스타인 연대 집회, 5·18 기념식 같은 자리에서 노래해왔습니다.",
     photo: '/images/funding/mok-jareugi/lineup/next-20260930.webp',
+    en: {
+      name: "Choiyangdaeum NEXT",
+      bio: "A self-taught singer-songwriter. The name joins Choi, the father's surname, and Yang, the mother's, to Daeum (\"next\"), chosen as a stand against the family-head (hoju) system. The name is written in many languages: 다음, NEXT, 次, Nächste, 翌. Has sung at the 10th anniversary memorial for the Sewol ferry, the Wednesday Demonstration, Palestine solidarity rallies and the 18 May (Gwangju Uprising) commemoration.",
+    },
   },
   'mok-jareugi-van-kiden': {
     name: 'VAN KIDEN',
     sns: 'https://www.instagram.com/van_kiden/',
     bio: '랩과 싱잉을 오가는 뮤지션. 2022년 싱글 「LIGHT」로 데뷔했습니다. 느끼는 감정을 그대로 전하고, 스스로에게 부끄럽지 않은 음악을 만들어가려 합니다.',
     photo: '/images/funding/mok-jareugi/lineup/van-kiden-20260930.webp',
+    en: {
+      name: "VAN KIDEN",
+      bio: "A musician who moves between rapping and singing. Debuted in 2022 with the single \"LIGHT.\" Aims to pass on emotions just as they are felt, and to make music they are not ashamed of.",
+    },
   },
   // 9·19 집회(keep-singing-for-palestine) 출연진 — 집회 뒤 후기 개편 때 절이 통째로 빠졌다가
   // 아카이빙을 위해 되살렸다(2026-09-30 운영자 요청). 소개는 삭제 직전 본문 그대로다.
@@ -114,30 +147,50 @@ export const LINEUP_PEOPLE: Record<string, LineupPerson> = {
     sns: 'https://www.instagram.com/momoismothermother/',
     bio: '모모는 예진 안젤라 박과 황슬기의 재즈 듀오입니다. 즉흥과 실험을 밑천으로 삼되, 그 소리가 향하는 곳은 분쟁지역의 평범한 하루와 그 안에 깔린 긴장입니다. 앨범에 실은 〈If this can be tolerated, what can\'t be?〉는 단 한 줄의 가사를 끝없이 되풀이하며 우리의 무감각을 묻습니다.',
     photo: '/images/funding/keep-singing-for-palestine/lineup/momo.webp',
+    en: {
+      name: "Momo",
+      bio: "Momo is a jazz duo of Yejin Angela Park and Hwang Seulgi. Improvisation and experiment are what they work with, but their sound is aimed at ordinary days in conflict zones and the tension that runs under them. Their track on the album, \"If this can be tolerated, what can't be?\", repeats a single line of lyrics over and over and asks about our numbness.",
+    },
   },
   'keep-singing-for-palestine-lee-seoyoung': {
     name: '이서영',
     sns: 'https://www.instagram.com/leesyoung.kr/',
     bio: '이서영은 숲해설가이면서 노래를 만듭니다. 나무를 설명하는 일과 노래를 만드는 일이 그에게는 같은 일인 듯합니다. 포크에 앰비언트와 일렉트로닉을 섞고, 맑고 서늘한 음색으로 고독과 공존을 노래합니다. 앨범에 실은 〈우리〉는 대학 시절에 쓴 곡을 10년 만에 다시 꺼내 고쳐 쓴 것입니다.',
     photo: '/images/funding/keep-singing-for-palestine/lineup/lee-seoyoung.webp',
+    en: {
+      name: "Lee Seoyoung",
+      bio: "Lee Seoyoung is a forest interpreter who also writes songs. For her, explaining trees and making songs seem to be the same work. She blends folk with ambient and electronic music, and sings of solitude and coexistence in a clear, cool voice. Her track on the album, \"우리\" (\"Us\"), is a song she wrote at university and took out again ten years later to rewrite.",
+    },
   },
   'keep-singing-for-palestine-lee-hyeongju': {
     name: '이형주',
     sns: 'https://www.instagram.com/hyungju1218/',
     bio: '이형주는 핑거스타일 블루스에 포크와 재즈를 섞어 연주합니다. 2017년부터 새 민중음악 선곡집에 참여하며 사회적 폭력이 있는 현장을 찾아다녔고, 2019년 EP 〈아토피〉와 2023년 정규 〈우리는 서로를 간직 하려고〉를 냈습니다.',
     photo: '/images/funding/keep-singing-for-palestine/lineup/lee-hyeongju.webp',
+    en: {
+      name: "Lee Hyungju",
+      bio: "Lee Hyungju plays fingerstyle blues mixed with folk and jazz. Since 2017 he has taken part in the new people's music songbook project, going to places where social violence was happening, and he has released the EP \"아토피\" (\"Atopy\", 2019) and the full-length \"우리는 서로를 간직 하려고\" (\"So That We Keep Each Other\", 2023).",
+    },
   },
   'keep-singing-for-palestine-namsu': {
     name: '남수',
     sns: 'https://www.instagram.com/namsu_ggu/',
     bio: '남수는 인디와 포크, 블루스와 재즈를 오가며 노래하고, 〈딱따구리 책방〉이라는 문화공간을 꾸립니다. 앨범 네 번째 곡 〈안녕 (먼 곳의 그대에게)〉이 그의 노래입니다. 가사에 "나의 이름을 모르는 그대에게"라는 구절이 있는데, 앨범 제목과 같은 자리에서 나온 말처럼 들립니다. 남수는 이 곡을 두고 "멀리에 있지만 같은 마음과 소망을 품은 우리, 이름을 모르지만 서로의 안녕을 바라는 우리"라고 했습니다.',
     photo: '/images/funding/keep-singing-for-palestine/lineup/namsu.webp',
+    en: {
+      name: "Namsu",
+      bio: "Namsu sings across indie, folk, blues and jazz, and runs a cultural space called Ttakttaguri Bookshop (딱따구리 책방, \"Woodpecker Bookshop\"). The album's fourth track, \"안녕 (먼 곳의 그대에게)\" (\"Annyeong (To You, Far Away)\"), is his song. Its lyrics include the line \"to you who do not know my name\", which sounds as if it came from the same place as the album's title. Namsu has described the song as being about \"us, far apart but holding the same heart and hope; us, not knowing each other's names but wishing each other well.\"",
+    },
   },
   'keep-singing-for-palestine-imjeongdeuk': {
     name: '임정득',
     sns: 'https://www.instagram.com/imjeongdeuk/',
     bio: "임정득은 영남대학교 노래패 '예사가락'에서 음악을 시작한 민중가수입니다. 2011년 데뷔 이후 거의 매년 단독 콘서트와 음반을 발표하며, 모든 앨범을 직접 프로듀싱하고 대부분의 수록곡을 작사·작곡합니다. 밀양 송전탑 투쟁, 노동자 고공농성 현장, 세월호 유가족 농성장 등 사회운동 현장의 무대에서 활동해 왔고, 대표곡 〈소금꽃나무〉는 김진숙의 동명 책에서 영감을 받았습니다.",
     photo: '/images/funding/keep-singing-for-palestine/lineup/imjeongdeuk.webp',
+    en: {
+      name: "Im Jeongdeuk",
+      bio: "Im Jeongdeuk is a people's singer (minjung gasu) who started making music in Yesagarak, the song group at Yeungnam University. Since her debut in 2011 she has put out solo concerts and albums almost every year, producing every album herself and writing the words and music for most of the songs. She has performed at the sites of social movements, including the fight against the Miryang power transmission towers, workers' high-altitude sit-ins and the sit-in of the Sewol ferry victims' families. Her best-known song, \"소금꽃나무\" (\"Salt Flower Tree\"), was inspired by Kim Jin-suk's book of the same name.",
+    },
   },
   'keep-singing-for-palestine-dj-eve': {
     name: 'DJ 이브',
@@ -145,6 +198,10 @@ export const LINEUP_PEOPLE: Record<string, LineupPerson> = {
     sns: 'https://www.instagram.com/noise_for_protest/',
     bio: "DJ 이브(Yves)는 '저항과 소음 Noise For Protest'에서 활동합니다. 저항과 소음은 가자지구 집단학살 종식을 위해 팔레스타인 연대 단체와 DJ들이 모인 프로젝트로, 음악과 춤을 통해 집단학살 반대의 움직임을 가시화합니다. 6월 '팔레스타인을 위한 자긍심, 저항과 소음(Pride Noise for Palestine)'을 비롯해 연대 무대에 꾸준히 서 왔습니다.",
     photo: '/images/funding/keep-singing-for-palestine/lineup/dj-eve.webp',
+    en: {
+      name: "DJ Yves",
+      bio: "DJ Yves (이브) is part of Noise For Protest (저항과 소음). Noise For Protest is a project that brings together Palestine solidarity groups and DJs to end the genocide in Gaza, making the movement against genocide visible through music and dance. DJ Yves has played solidarity events regularly, including Pride Noise for Palestine in June.",
+    },
   },
 };
 
@@ -161,9 +218,18 @@ const NameLink = ({ label, sns }: NamedLink) => {
   );
 };
 
-export default function FundingLineupPerson({ id }: { id: string }) {
-  const person = LINEUP_PEOPLE[id];
-  if (!person) return null;
+export default function FundingLineupPerson({ id, locale = 'ko' }: { id: string; locale?: string }) {
+  const original = LINEUP_PEOPLE[id];
+  if (!original) return null;
+  const en = locale === 'en' && original.en ? original.en : null;
+  const person: LineupPerson = en
+    ? {
+        ...original,
+        name: en.name ?? original.name,
+        bio: en.bio,
+        people: original.people?.map((p, i) => ({ ...p, label: en.people?.[i]?.label ?? p.label })),
+      }
+    : original;
 
   return (
     // 카드 모양은 공연 상세와 공유하는 LineupCard — 사람이 하나면 카드 전체가 SNS 링크,
@@ -172,7 +238,7 @@ export default function FundingLineupPerson({ id }: { id: string }) {
       className="my-3"
       photo={person.photo}
       photoSecondary={person.photoSecondary}
-      photoAlt={person.name ? `${person.name} 프로필 사진` : '프로필 사진'}
+      photoAlt={en ? (person.name ? `${person.name}, profile photo` : 'Profile photo') : person.name ? `${person.name} 프로필 사진` : '프로필 사진'}
       href={!person.people ? person.sns : undefined}
       bio={person.bio}
       name={

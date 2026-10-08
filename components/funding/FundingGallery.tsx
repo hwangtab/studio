@@ -8,6 +8,8 @@ import ResponsiveImage from '../ResponsiveImage';
 interface GalleryPhoto {
   src: string;
   alt: string;
+  /** 영문 화면(번역본이 있는 프로젝트)의 alt. */
+  altEn: string;
 }
 
 const KSFP_DIR = '/images/funding/keep-singing-for-palestine/gallery';
@@ -25,6 +27,7 @@ const GALLERIES: Record<string, GalleryPhoto[]> = {
   'keep-singing-for-palestine': [13, 14, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1].map((n, i) => ({
     src: `${KSFP_DIR}/${String(n).padStart(2, '0')}-20260930.webp`,
     alt: `9월 19일 서십자각터 거리집회 현장 사진 ${i + 1}`,
+    altEn: `The 19 September street rally at Seosipjagak-teo, photo ${i + 1}`,
   })),
 };
 
@@ -63,11 +66,13 @@ function Lightbox({
   index,
   onIndex,
   onClose,
+  en,
 }: {
   photos: GalleryPhoto[];
   index: number;
   onIndex: (next: number) => void;
   onClose: () => void;
+  en: boolean;
 }) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -107,7 +112,7 @@ function Lightbox({
       ref={dialogRef}
       role="dialog"
       aria-modal="true"
-      aria-label="현장 사진 크게 보기"
+      aria-label={en ? 'Photo viewer' : '현장 사진 크게 보기'}
       className="fixed inset-0 z-[70] flex flex-col bg-black/90"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -126,7 +131,7 @@ function Lightbox({
         <p className="text-sm tabular-nums" aria-live="polite">
           {index + 1} / {count}
         </p>
-        <button ref={closeRef} type="button" onClick={onClose} className={iconButtonClass} aria-label="닫기">
+        <button ref={closeRef} type="button" onClick={onClose} className={iconButtonClass} aria-label={en ? 'Close' : '닫기'}>
           <X className="h-5 w-5" aria-hidden />
         </button>
       </div>
@@ -140,7 +145,7 @@ function Lightbox({
           type="button"
           onClick={() => go(-1)}
           className={`${iconButtonClass} absolute left-2 top-1/2 z-10 -translate-y-1/2 bg-black/40 sm:left-4`}
-          aria-label="이전 사진"
+          aria-label={en ? 'Previous photo' : '이전 사진'}
         >
           <ChevronLeft className="h-6 w-6" aria-hidden />
         </button>
@@ -152,7 +157,7 @@ function Lightbox({
           <ResponsiveImage
             key={photo.src}
             src={photo.src}
-            alt={photo.alt}
+            alt={en ? photo.altEn : photo.alt}
             fill
             sizes="(min-width: 1152px) 1152px, 100vw"
             className="object-contain"
@@ -163,7 +168,7 @@ function Lightbox({
           type="button"
           onClick={() => go(1)}
           className={`${iconButtonClass} absolute right-2 top-1/2 z-10 -translate-y-1/2 bg-black/40 sm:right-4`}
-          aria-label="다음 사진"
+          aria-label={en ? 'Next photo' : '다음 사진'}
         >
           <ChevronRight className="h-6 w-6" aria-hidden />
         </button>
@@ -172,8 +177,9 @@ function Lightbox({
   );
 }
 
-export default function FundingGallery({ id }: { id: string }) {
+export default function FundingGallery({ id, locale = 'ko' }: { id: string; locale?: string }) {
   const photos = GALLERIES[id];
+  const en = locale === 'en';
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   if (!photos) return null;
 
@@ -193,7 +199,7 @@ export default function FundingGallery({ id }: { id: string }) {
                 <button
                   type="button"
                   onClick={() => setOpenIndex(i)}
-                  aria-label={`${photo.alt} 크게 보기`}
+                  aria-label={en ? `Enlarge: ${photo.altEn}` : `${photo.alt} 크게 보기`}
                   className="relative block h-full w-full overflow-hidden rounded-xl bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:bg-gray-800 dark:focus-visible:ring-primary-lighter/70"
                 >
                   <ResponsiveImage
@@ -211,7 +217,7 @@ export default function FundingGallery({ id }: { id: string }) {
         </ul>
       </div>
       {openIndex !== null && (
-        <Lightbox photos={photos} index={openIndex} onIndex={setOpenIndex} onClose={() => setOpenIndex(null)} />
+        <Lightbox photos={photos} index={openIndex} onIndex={setOpenIndex} onClose={() => setOpenIndex(null)} en={en} />
       )}
     </>
   );
