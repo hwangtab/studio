@@ -27,6 +27,7 @@ import { getSiteConfig } from '../../../data/siteConfig';
 import { createEnterAnimation } from '../../../utils/animationUtils';
 import Breadcrumb from '../../../components/ui/Breadcrumb';
 import { BUTTON_DEPTH } from '../../../components/ui/buttonDepth';
+import { Button } from '../../../components/ui/Button';
 
 
 interface PortfolioDetailPageProps {
@@ -193,14 +194,10 @@ const PortfolioDetailPage: NextPageWithLayout<PortfolioDetailPageProps> = ({ loc
             servicesHeadingClassName="typo-card-title mb-3"
             primaryActionClassName={`flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${BUTTON_DEPTH.solid}`}
             summaryActions={
-              <button
-                type="button"
-                onClick={sharePortfolio}
-                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] border-2 border-primary text-primary dark:border-primary-lighter dark:text-primary-lighter hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
-              >
+              <Button type="button" variant="weak" onClick={sharePortfolio} className="flex-1 min-h-[44px] rounded-lg touch-manipulation">
                 <Share2 size={16} aria-hidden="true" />
                 {t('portfolio.detail.share')}
-              </button>
+              </Button>
             }
           />
         </m.div>

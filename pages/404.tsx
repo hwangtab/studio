@@ -75,7 +75,7 @@ const NotFoundPage: NextPageWithLayout = () => {
             {t('notFound.goHome')}
           </Link>
         </Button>
-        <Button asChild variant="outline" shape="pill" size="md">
+        <Button asChild variant="weak" shape="pill" size="md">
           <Link href={`/${locale}/contact`} className={errorCtaLayout}>
             {t('notFound.contact')}
           </Link>

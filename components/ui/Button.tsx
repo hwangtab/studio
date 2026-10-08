@@ -20,7 +20,11 @@ const buttonVariants = cva(
   // `transition-colors`가 펼치는 4개 속성과 다르다). 2026-10-05 1단계에서 실제 속성
   // 4개(background-color·border-color·color·transform)로 고쳤다 — hover 색이 이제
   // duration-base로 전환된다. box-shadow는 위 이유로 여전히 넣지 않는다.
-  "inline-flex items-center justify-center gap-2 typo-button transition-[background-color,border-color,color,transform] duration-base ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  //
+  // 누를 때 반응(2026-10-09, TDS 대조): 0.96배로 줄고 살짝 어두워진다(토스 버튼과 같은 문법). hover 떠오름은
+  // 마우스가 있는 기기에서만 보이므로(tailwind future.hoverOnlyWhenSupported) 휴대폰의 유일한 반응이 이것이다.
+  // 눌림은 75ms로 빠르게, 놓을 때는 duration-base.
+  "inline-flex items-center justify-center gap-2 typo-button transition-[background-color,border-color,color,transform,filter] duration-base ease-standard active:duration-75 active:scale-[0.96] active:brightness-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -30,8 +34,9 @@ const buttonVariants = cva(
         solid: `bg-primary text-white hover:bg-primary-dark hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${BUTTON_DEPTH.solid}`,
         // 어두운 히어로 사진 위 1차 행동(비-ko 문의 등). 라이트·다크 구분 없이 흰 버튼 + 잉크 글씨.
         inverse: `bg-white text-gray-950 hover:bg-gray-100 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-white/70 focus-visible:ring-offset-black/20 ${BUTTON_DEPTH.inverse}`,
-        // 테두리 버튼 — 파랑 글씨·옅은 파랑 테두리. 다크는 primary-lighter(gray-900 위 약 9.9:1).
-        outline: "border-2 border-primary/20 bg-transparent text-primary hover:bg-primary/5 hover:border-primary/40 dark:text-primary-lighter dark:border-primary-lighter/40 dark:hover:border-primary-lighter/60 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
+        // 연한 파랑 버튼(weak) — 2차 행동. 테두리 버튼은 얇은 선이라 누를 수 있다는 신호가 약했다(TDS도 보조 버튼을
+        // 테두리가 아니라 옅은 채움으로 둔다). primary-dark 글씨 on primary/10 약 5.8:1, 다크는 primary-lighter.
+        weak: "bg-primary/10 text-primary-dark hover:bg-primary/15 dark:bg-primary-lighter/15 dark:text-primary-lighter dark:hover:bg-primary-lighter/20 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         ghost: "bg-transparent text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         secondary: "bg-white text-gray-900 shadow-sm hover:bg-gray-50 border border-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         // Liquid Glass 재질 버튼. bg/border/shadow는 .glass-regular(components 레이어)가
@@ -80,9 +85,9 @@ const buttonVariants = cva(
      * `public/scripts/theme-init.js`는 경로 예외 없이 모든 라우트에 `<html class="dark">`를
      * 붙인다. 그런데 docs/design-system.md §1대로 `pages/admin/**`과 계약 서명·완료 화면은
      * 종이처럼 항상 밝다 — 그 화면에서 다크 분기가 켜지면 흰 카드 위에 다크용 색이 뜬다
-     * (outline의 다크용 primary-lighter 글씨가 흰 카드 위에서 1.6:1로 흐려진다). `Field`의 `light` 옵트인과 같은 처방.
+     * (weak의 다크용 primary-lighter 글씨가 흰 카드 위에서 1.6:1로 흐려진다). `Field`의 `light` 옵트인과 같은 처방.
      *
-     * 실제로 라이트 고정 화면에서 쓰이는 variant만 되돌린다(solid·outline·ghost·secondary).
+     * 실제로 라이트 고정 화면에서 쓰이는 variant만 되돌린다(solid·weak·ghost·secondary).
      * glass·kakao·scrim은 그 화면에 없다.
      */
     compoundVariants: [
@@ -93,8 +98,8 @@ const buttonVariants = cva(
       },
       {
         light: true,
-        variant: "outline",
-        class: "dark:text-primary dark:border-primary/20 dark:hover:border-primary/40 dark:hover:bg-primary/5 dark:focus-visible:ring-primary/70 dark:focus-visible:ring-offset-white",
+        variant: "weak",
+        class: "dark:bg-primary/10 dark:text-primary-dark dark:hover:bg-primary/15 dark:focus-visible:ring-primary/70 dark:focus-visible:ring-offset-white",
       },
       {
         light: true,

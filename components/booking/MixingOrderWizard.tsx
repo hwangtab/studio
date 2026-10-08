@@ -521,7 +521,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
                 <PaymentMethodChoice name="mixing-paymethod" value={payMethod} onChange={setPayMethod} confirmLabel="주문이 접수" />
                 <div hidden={usingBank} className="mt-3">
                   {paymentError ? (
-                    <Notice tone="error" actions={<Button type="button" size="sm" variant="outline" onClick={retryPayment}>다시 시도</Button>}>
+                    <Notice tone="error" actions={<Button type="button" size="sm" variant="weak" onClick={retryPayment}>다시 시도</Button>}>
                       {paymentError}
                     </Notice>
                   ) : (
@@ -544,7 +544,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
             {submitError && <Notice tone="error">{submitError}</Notice>}
 
             <div className="flex gap-3">
-              <Button type="button" variant="outline" onClick={() => setStep(1)}>
+              <Button type="button" variant="weak" onClick={() => setStep(1)}>
                 이전
               </Button>
               {/* 위젯이 아직 안 떴으면 누를 수 없다 — 누르면 주문만 만들어지고 결제창은 안 열린다. 계좌 입금은 위젯이 필요 없다. */}

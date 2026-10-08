@@ -74,7 +74,7 @@ const ServerErrorPage: NextPageWithLayout = () => {
             {t('serverError.goHome')}
           </Link>
         </Button>
-        <Button asChild variant="outline" shape="pill" size="md">
+        <Button asChild variant="weak" shape="pill" size="md">
           <Link href={`/${locale}/contact`} className={errorCtaLayout}>
             {t('serverError.contact')}
           </Link>

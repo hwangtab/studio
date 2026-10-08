@@ -63,7 +63,7 @@ describe('Button', () => {
 
   // light는 className이 아니라 prop이다 — Field.test.tsx의 같은 이름 블록과 짝이다.
   // theme-init.js가 pages/admin/**·계약 화면에도 <html class="dark">를 붙이기 때문에
-  // 다크 오버라이드가 흰 카드 위로 새어 나온다(outline의 흰 글씨·solid의 흰 버튼이 흰 카드 위에서 사라진다).
+  // 다크 오버라이드가 흰 카드 위로 새어 나온다(weak의 다크용 primary-lighter 글씨가 흰 카드 위에서 흐려진다).
   //
   // 단언은 반드시 **렌더 결과**로 한다. buttonVariants()는 cva의 단순 연결이라
   // 나중 클래스가 앞 클래스를 지우지 않는다 — twMerge는 컴포넌트의 cn()에서만 돈다.
@@ -73,13 +73,26 @@ describe('Button', () => {
   };
 
   describe('light 옵트인', () => {
-    it('outline + light면 다크용 primary-lighter가 사라지고 라이트 파랑이 남는다', () => {
-      const cls = classesOf(<Button light variant="outline">x</Button>);
+    it('weak + light면 다크용 primary-lighter가 사라지고 라이트 연한 파랑이 남는다', () => {
+      const cls = classesOf(<Button light variant="weak">x</Button>);
       expect(cls).not.toMatch(/dark:text-primary-lighter/);
-      expect(cls).not.toMatch(/dark:border-primary-lighter/);
-      expect(cls).toMatch(/(^|\s)dark:text-primary(\s|$)/);
-      expect(cls).toMatch(/(^|\s)dark:border-primary\/20(\s|$)/);
-      expect(cls).toMatch(/(^|\s)text-primary(\s|$)/); // 라이트 값 자체는 그대로
+      expect(cls).not.toMatch(/dark:bg-primary-lighter/);
+      expect(cls).toMatch(/(^|\s)dark:text-primary-dark(\s|$)/);
+      expect(cls).toMatch(/(^|\s)dark:bg-primary\/10(\s|$)/);
+      expect(cls).toMatch(/(^|\s)text-primary-dark(\s|$)/); // 라이트 값 자체는 그대로
+    });
+
+    it('weak는 테두리가 아니라 연한 채움이다', () => {
+      const cls = classesOf(<Button variant="weak">x</Button>);
+      expect(cls).toMatch(/(^|\s)bg-primary\/10(\s|$)/);
+      expect(cls).not.toMatch(/(^|\s)border-2(\s|$)/);
+    });
+
+    it('모든 버튼은 누를 때 줄어든다(휴대폰의 유일한 반응)', () => {
+      for (const variant of ['solid', 'weak', 'kakao', 'ghost'] as const) {
+        expect(classesOf(<Button variant={variant}>x</Button>)).toMatch(/active:scale-\[0\.96\]/);
+        cleanup();
+      }
     });
 
     it('solid는 라이트·다크 같은 파랑 면이다', () => {
@@ -98,7 +111,7 @@ describe('Button', () => {
     });
 
     it('light면 포커스 오프셋도 라이트 배경 기준으로 돌아간다', () => {
-      for (const variant of ['solid', 'outline', 'ghost', 'secondary'] as const) {
+      for (const variant of ['solid', 'weak', 'ghost', 'secondary'] as const) {
         const cls = classesOf(<Button light variant={variant}>x</Button>);
         expect(cls).not.toMatch(/dark:focus-visible:ring-offset-gray-900/);
         expect(cls).toMatch(/dark:focus-visible:ring-offset-white/);
@@ -107,18 +120,18 @@ describe('Button', () => {
     });
 
     it('light 없이는 다크 오버라이드가 그대로다(공개 페이지는 다크가 정상)', () => {
-      expect(classesOf(<Button variant="outline">x</Button>)).toMatch(/dark:text-primary-lighter/);
+      expect(classesOf(<Button variant="weak">x</Button>)).toMatch(/dark:text-primary-lighter/);
     });
 
     it('호출부 className은 light보다 뒤에 와서 이긴다', () => {
-      const cls = classesOf(<Button light variant="outline" className="dark:text-white">x</Button>);
+      const cls = classesOf(<Button light variant="weak" className="dark:text-white">x</Button>);
       expect(cls).toMatch(/dark:text-white/);
-      expect(cls).not.toMatch(/dark:text-primary\b/);
+      expect(cls).not.toMatch(/dark:text-primary-dark/);
     });
 
     it('light는 DOM 속성으로 새지 않는다', () => {
       const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
-      render(<Button light variant="outline">x</Button>);
+      render(<Button light variant="weak">x</Button>);
       expect(screen.getByRole('button', { name: 'x' }).getAttribute('light')).toBeNull();
       expect(spy).not.toHaveBeenCalled();
       spy.mockRestore();
@@ -126,7 +139,7 @@ describe('Button', () => {
   });
 
   it('모든 variant가 44px 이상 터치 타깃과 focus-visible 링을 갖는다', () => {
-    const variants = ['solid', 'outline', 'ghost', 'secondary', 'glass', 'kakao', 'scrim'] as const;
+    const variants = ['solid', 'weak', 'ghost', 'secondary', 'glass', 'kakao', 'scrim'] as const;
     for (const variant of variants) {
       const cls = buttonVariants({ variant });
       expect(cls).toMatch(/focus-visible:ring-2/);

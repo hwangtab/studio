@@ -199,7 +199,7 @@ export default function AdminIndexPage({ dashboard, ledgerFrom, ledgerTo, error 
               <Field id="ledger-to" label="종료일" className={lightOnlyField}>
                 <TextInput type="date" name="to" defaultValue={ledgerTo} required light className="text-sm" />
               </Field>
-              <Button light type="submit" variant="outline">
+              <Button light type="submit" variant="weak">
                 CSV 내려받기
               </Button>
             </form>

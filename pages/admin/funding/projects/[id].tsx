@@ -768,7 +768,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
                       disabled={busy}
                     />
                   </Field>
-                  <Button light variant="outline" disabled={busy} onClick={handleSaveCreatorName}>
+                  <Button light variant="weak" disabled={busy} onClick={handleSaveCreatorName}>
                     이름 저장
                   </Button>
                 </div>
@@ -788,7 +788,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
                       disabled={busy}
                     />
                   </Field>
-                  <Button light variant="outline" disabled={busy} onClick={handleSaveCreatorEmail}>
+                  <Button light variant="weak" disabled={busy} onClick={handleSaveCreatorEmail}>
                     이메일 저장
                   </Button>
                 </div>
@@ -829,7 +829,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
               <Button light variant="secondary" disabled={!canDecide || busy} onClick={handleRequestChanges}>
                 보완 요청
               </Button>
-              <Button light variant="outline" disabled={!canDecide || busy} onClick={handleReject}>
+              <Button light variant="weak" disabled={!canDecide || busy} onClick={handleReject}>
                 반려
               </Button>
             </div>
@@ -848,7 +848,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
                 없습니다.
               </p>
             )}
-            <Button light variant="outline" disabled={!canArchive || busy} onClick={handleArchive}>
+            <Button light variant="weak" disabled={!canArchive || busy} onClick={handleArchive}>
               보관
             </Button>
           </div>
@@ -866,7 +866,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
                     다시 열기
                   </Button>
                 ) : (
-                  <Button light variant="outline" disabled={busy} onClick={handleClose}>
+                  <Button light variant="weak" disabled={busy} onClick={handleClose}>
                     종료
                   </Button>
                 )}
@@ -943,7 +943,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
                       <Button
                         key={kind}
                         light
-                        variant={current === kind ? 'solid' : 'outline'}
+                        variant={current === kind ? 'solid' : 'weak'}
                         disabled={busy || current === kind}
                         aria-pressed={current === kind}
                         onClick={() => handleSetService(kind)}

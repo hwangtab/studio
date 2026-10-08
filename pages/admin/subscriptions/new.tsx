@@ -90,7 +90,7 @@ export default function NewLessonSubscriptionPage() {
                 <code className="flex-1 min-w-0 truncate bg-gray-50 border border-gray-200 rounded px-2 py-1 text-xs">
                   {setupUrl}
                 </code>
-                <Button light variant="outline" onClick={() => copyToClipboard(setupUrl)}>
+                <Button light variant="weak" onClick={() => copyToClipboard(setupUrl)}>
                   복사
                 </Button>
               </div>
@@ -99,7 +99,7 @@ export default function NewLessonSubscriptionPage() {
             <div className="flex gap-3">
               <Button light onClick={() => router.push('/admin/subscriptions')}>목록으로</Button>
               <Button light
-                variant="outline"
+                variant="weak"
                 onClick={() => {
                   setSetupUrl(null);
                   setCustomerName('');

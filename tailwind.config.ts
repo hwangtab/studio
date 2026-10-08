@@ -140,6 +140,11 @@ const config: Config = {
   // addComponents 안의 `.dark &` nesting이 표준이고 정상 동작한다 — Tailwind v4
   // 마이그레이션 시에는 selector strategy 재검토 필요.
   darkMode: 'class',
+  // hover:는 마우스가 있는 기기에서만(@media (hover: hover)). 휴대폰에서 탭한 뒤 hover 색·떠오름이 눌어붙던 것을 막는다
+  // (2026-10-09 TDS 대조·접근성 리뷰). 휴대폰의 반응은 active:(누를 때)가 맡는다.
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   plugins: [
     function ({ addUtilities, addComponents, theme }: PluginAPI) {
       addUtilities({

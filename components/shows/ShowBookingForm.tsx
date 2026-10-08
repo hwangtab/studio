@@ -365,7 +365,7 @@ export default function ShowBookingForm({ show, locale = 'ko' }: Props) {
                     <Notice
                       tone="error"
                       actions={
-                        <Button type="button" size="sm" variant="outline" onClick={widget.retry}>
+                        <Button type="button" size="sm" variant="weak" onClick={widget.retry}>
                           {t.retry}
                         </Button>
                       }

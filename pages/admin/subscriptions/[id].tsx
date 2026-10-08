@@ -307,7 +307,7 @@ export default function AdminSubscriptionDetailPage({
                 {linkNotice}
               </code>
               <Button light
-                variant="outline"
+                variant="weak"
                 onClick={async () => {
                   const ok = await copyToClipboard(linkNotice);
                   setNotice(ok ? '링크를 복사했습니다.' : '복사에 실패했습니다.');
@@ -472,7 +472,7 @@ export default function AdminSubscriptionDetailPage({
                             const r = refundByCycle.get(p.id);
                             if (!r || r.remainingAmount <= 0) return null;
                             return (
-                              <Button light variant="outline" size="sm" disabled={busy} onClick={() => openRefund(p.id)}>
+                              <Button light variant="weak" size="sm" disabled={busy} onClick={() => openRefund(p.id)}>
                                 환불
                               </Button>
                             );
@@ -562,12 +562,12 @@ export default function AdminSubscriptionDetailPage({
                 </Button>
               )}
               {canCardChangeLink && (
-                <Button light variant="outline" disabled={busy} onClick={handleCardChangeLink}>
+                <Button light variant="weak" disabled={busy} onClick={handleCardChangeLink}>
                   카드 변경 링크 발급
                 </Button>
               )}
               {canResendSetup && (
-                <Button light variant="outline" disabled={busy} onClick={handleResendSetup}>
+                <Button light variant="weak" disabled={busy} onClick={handleResendSetup}>
                   등록 링크 재발송
                 </Button>
               )}
@@ -593,7 +593,7 @@ export default function AdminSubscriptionDetailPage({
                     light className="min-h-0 text-sm"
                   />
                 </Field>
-                <Button light type="submit" variant="outline" disabled={busy}>
+                <Button light type="submit" variant="weak" disabled={busy}>
                   해지 처리
                 </Button>
               </form>

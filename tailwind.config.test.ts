@@ -376,7 +376,7 @@ const DARK_UNSAFE_RE =
 const DARK_BRAND_ALLOW: { file: string; snippet: string; reason: string }[] = [
   {
     file: 'components/ui/Button.tsx',
-    snippet: 'dark:text-primary dark:border-primary/20',
+    snippet: 'dark:bg-primary/10 dark:text-primary-dark',
     reason:
       'Button의 light 옵트인 compoundVariant. theme-init.js가 라이트 고정 화면에도 .dark를 ' +
       '붙이므로 거기서는 다크 분기를 라이트 값으로 되돌려야 한다(흰 카드 위 primary-lighter = 2.72:1).',

@@ -182,7 +182,7 @@ export default function ShowScanPage({ token, showTitle, showtimeLabel, linkLabe
               {cameraOn ? (
                 <>
                   <video ref={videoRef} playsInline muted className="w-full rounded-xl bg-black aspect-square object-cover" />
-                  <Button light variant="outline" fullWidth onClick={() => setCameraOn(false)}>카메라 끄기</Button>
+                  <Button light variant="weak" fullWidth onClick={() => setCameraOn(false)}>카메라 끄기</Button>
                 </>
               ) : (
                 <Button light fullWidth onClick={() => { setCameraError(null); setCameraOn(true); }}>QR 스캔 시작</Button>

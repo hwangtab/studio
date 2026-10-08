@@ -222,7 +222,7 @@ export default function FundingManagePage(p: Props) {
               <p className="typo-card-meta">지금은 후원 정보를 불러오지 못했습니다. 잠시 후 다시 열어 주세요. 문의: 010-4255-7893 · hello@studionol.co.kr</p>
             </Panel>
           ) : deposit ? (
-            <Button className="mt-8" variant="outline" fullWidth onClick={withdraw} disabled={busy}>입금 전 신청 취소</Button>
+            <Button className="mt-8" variant="weak" fullWidth onClick={withdraw} disabled={busy}>입금 전 신청 취소</Button>
           ) : status === 'paid' && !refundRequested && (p.canCancel
             ? (
               <div className="mt-6">
@@ -249,7 +249,7 @@ export default function FundingManagePage(p: Props) {
                     </div>
                   </Panel>
                 )}
-                <Button variant="outline" fullWidth onClick={cancel}
+                <Button variant="weak" fullWidth onClick={cancel}
                   disabled={busy || (p.refundVia === 'bank_account' && accountFormOpen
                     && (!refundAccount.bankName.trim() || !refundAccount.accountNumber.trim() || !refundAccount.accountHolder.trim()))}>
                   {p.refundVia === 'bank_account'

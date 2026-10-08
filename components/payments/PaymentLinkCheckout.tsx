@@ -176,7 +176,7 @@ export default function PaymentLinkCheckout({ slug, totalAmount }: { slug: strin
               <PaymentMethodChoice name="pay-paymethod" value={payMethod} onChange={setPayMethod} confirmLabel="예약금 결제가 확정" />
               <div hidden={usingBank} className="mt-3">
                 {paymentError ? (
-                  <Notice tone="error" actions={<Button type="button" size="sm" variant="outline" onClick={retryPayment}>다시 시도</Button>}>
+                  <Notice tone="error" actions={<Button type="button" size="sm" variant="weak" onClick={retryPayment}>다시 시도</Button>}>
                     {paymentError}
                   </Notice>
                 ) : (

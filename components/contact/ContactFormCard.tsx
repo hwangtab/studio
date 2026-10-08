@@ -153,7 +153,7 @@ const ContactFormCard = ({
         </div>
       )}
       {canRetrySubmit && !isSubmitting && (
-        <Button type="button" variant="outline" size="sm" onClick={onRetrySubmit} className="mb-4 touch-manipulation">
+        <Button type="button" variant="weak" size="sm" onClick={onRetrySubmit} className="mb-4 touch-manipulation">
           {retryLabel}
         </Button>
       )}

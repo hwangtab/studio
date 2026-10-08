@@ -177,7 +177,7 @@ const PricingCard = ({
                 /* outline — 1차(카카오/primary)와 위계가 갈려야 하고, 목적지가
                    카카오톡이 아니므로 옐로는 절대 쓰지 않는다(CLAUDE.md 카카오 배색 규칙).
                    size md(h-11 = 44px)로 터치 타깃 확보. */
-                <Button asChild variant={kakaoInBand ? 'solid' : 'outline'} shape="block" size="md" fullWidth>
+                <Button asChild variant={kakaoInBand ? 'solid' : 'weak'} shape="block" size="md" fullWidth>
                     <Link
                         href={secondaryCtaHref}
                         prefetch={false}

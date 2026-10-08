@@ -379,7 +379,7 @@ export default function AdminContractsPage({
                           <td className="px-4 py-3">
                             <div className="flex flex-wrap gap-2">
                               <Link href={`/admin/contracts/${contract.id}`} passHref>
-                                <Button light size="sm" variant="outline">
+                                <Button light size="sm" variant="weak">
                                   상세
                                 </Button>
                               </Link>

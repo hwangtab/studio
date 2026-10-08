@@ -133,7 +133,7 @@ export default function AdminShowDetailPage({ show, refundAccounts = {}, sameNam
         width="wide"
         actions={
           show.status !== 'cancelled' && (
-            <Button light variant={show.status === 'published' ? 'outline' : 'solid'} disabled={busy} onClick={toggleStatus}>
+            <Button light variant={show.status === 'published' ? 'weak' : 'solid'} disabled={busy} onClick={toggleStatus}>
               {show.status === 'published' ? '비공개로 내리기' : '공개하기'}
             </Button>
           )
@@ -186,7 +186,7 @@ function IssuedLinkDialog({ title, recipient, path, onClose }: { title: string; 
       <p className="mb-2 text-gray-600">이 주소는 지금만 볼 수 있습니다(서버에는 해시만 저장). {recipient}에게 전달해 주세요.</p>
       <input readOnly value={`${typeof window !== 'undefined' ? window.location.origin : ''}${path}`} onFocus={(e) => e.currentTarget.select()} className="w-full rounded-lg border border-gray-300 px-3 py-2 bg-gray-50 text-gray-900" aria-label="링크 주소" />
       <div className="mt-3 flex justify-end">
-        <Button light variant="outline" size="sm" onClick={onClose}>닫기</Button>
+        <Button light variant="weak" size="sm" onClick={onClose}>닫기</Button>
       </div>
     </div>
   );
@@ -218,7 +218,7 @@ function ReportLinkSection({ links, busy, run, onIssued }: {
             <Field id="report-link-days" label={`유효 기간(일, 1~${REPORT_LINK_MAX_TTL_DAYS})`}>
               <TextInput light type="number" min={1} max={REPORT_LINK_MAX_TTL_DAYS} value={days} onChange={(e) => setDays(Number(e.target.value))} />
             </Field>
-            <Button light variant="outline" size="sm" disabled={busy || !label.trim()} onClick={async () => {
+            <Button light variant="weak" size="sm" disabled={busy || !label.trim()} onClick={async () => {
               const r = await run({ action: 'issue_report_link', label, ttlDays: days }, { success: '현황 링크를 만들었습니다.' });
               const path = r?.data?.path;
               if (typeof path === 'string') { onIssued(path); setLabel(''); }
@@ -237,7 +237,7 @@ function ReportLinkSection({ links, busy, run, onIssued }: {
                       {l.revokedAt != null ? ' · 폐기' : !live ? ' · 만료됨' : ''}
                     </span>
                     {live && (
-                      <Button light variant="outline" size="sm" disabled={busy} onClick={() => run(
+                      <Button light variant="weak" size="sm" disabled={busy} onClick={() => run(
                         { action: 'revoke_report_link', linkId: l.id },
                         { confirm: `${l.label}에게 보낸 현황 링크를 폐기합니다. 그 주소는 바로 열리지 않게 됩니다.`, success: '링크를 폐기했습니다.' },
                       )}>
@@ -292,7 +292,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
             명단 CSV
           </a>
           {scheduled && (
-            <Button light variant="outline" size="sm" disabled={busy} onClick={() =>
+            <Button light variant="weak" size="sm" disabled={busy} onClick={() =>
               run({ action: 'cancel_showtime', showtimeId: t.id }, {
                 confirm: '이 회차를 취소하고, 결제된 주문을 전부 전액 환불합니다(입장한 티켓 제외). 되돌릴 수 없습니다.',
                 success: '회차를 취소했습니다. 환불 결과는 주문 상태에서 확인하세요.',
@@ -336,7 +336,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
             <Field id={`ns-${t.id}`} label="새 시작 시각(KST)" hint="판매마감은 새 시각 기준으로 다시 계산됩니다.">
               <TextInput light type="datetime-local" value={newStart} onChange={(e) => setNewStart(e.target.value)} />
             </Field>
-            <Button light variant="outline" size="sm" disabled={busy || !newStart} onClick={() =>
+            <Button light variant="weak" size="sm" disabled={busy || !newStart} onClick={() =>
               run({ action: 'change_showtime', showtimeId: t.id, startsAt: `${newStart}:00+09:00` }, {
                 confirm: '시각을 변경합니다. 구매자 안내는 별도로 해 주세요.', success: '시각을 변경했습니다.',
               })}>
@@ -352,7 +352,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
             <Field id={`sh-${t.id}`} label="유효 시간(1~72)">
               <TextInput light type="number" min={1} max={72} value={linkHours} onChange={(e) => setLinkHours(Number(e.target.value))} />
             </Field>
-            <Button light variant="outline" size="sm" disabled={busy || !linkLabel.trim()} onClick={async () => {
+            <Button light variant="weak" size="sm" disabled={busy || !linkLabel.trim()} onClick={async () => {
               const r = await run({ action: 'issue_scan_link', showtimeId: t.id, label: linkLabel, ttlHours: linkHours }, { success: '스캔 링크를 만들었습니다.' });
               const path = r?.data?.path;
               if (typeof path === 'string') onScanUrl(path);
@@ -436,14 +436,14 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
                             })}>
                             입금 확인
                           </Button>
-                          <Button light variant="outline" size="sm" disabled={busy} onClick={() =>
+                          <Button light variant="weak" size="sm" disabled={busy} onClick={() =>
                             run({ action: 'cancel_unpaid_deposit', orderNo: o.orderNo }, {
                               confirm: '받은 돈이 없는 신청을 닫습니다 — 좌석이 풀리고 메일은 가지 않습니다.',
                               success: '미입금 신청을 닫았습니다.',
                             })}>
                             미입금 취소
                           </Button>
-                          <Button light variant="outline" size="sm" disabled={busy} onClick={() =>
+                          <Button light variant="weak" size="sm" disabled={busy} onClick={() =>
                             run({ action: 'resend_deposit_guide', orderNo: o.orderNo }, { confirm: '입금 안내 메일을 다시 보낼까요?' }).then((r) => {
                               const failure = r?.data?.notificationError;
                               if (typeof failure === 'string' && failure) setNotice(`입금 안내 메일 발송에 실패했습니다(${failure}).`);
@@ -467,7 +467,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
                       <RefundAccountPanel order={o} info={refundAccounts[o.orderNo]} busy={busy} run={run} setNotice={setNotice} />
                     )}
                     {!o.isComp && refundable.length > 0 && (
-                      <Button light variant="outline" size="sm" disabled={busy} onClick={() =>
+                      <Button light variant="weak" size="sm" disabled={busy} onClick={() =>
                         run({ action: 'refund_tickets', orderNo: o.orderNo, ticketIds: refundable.map((k) => k.id) }, {
                           confirm: o.bankDeposit === 'paid'
                             ? `계좌 입금 건입니다 — 토스로 돌려주지 않습니다. 고객 계좌로 송금을 마친 뒤 기록하세요.\n\n${o.orderNo}의 입장 전 티켓 ${refundable.length}장을 환불 완료로 기록합니다. 금액은 취소환불표(공연 임박도)에 따라 계산됩니다.`
@@ -527,7 +527,7 @@ function RefundAccountPanel({ order: o, info, busy, run, setNotice }: {
               {view.holderMismatch && <p className="mt-1 font-semibold text-red-700">예금주가 구매자 이름과 다릅니다.</p>}
             </div>
           ) : (
-            <Button light variant="outline" size="sm" className="mt-1" disabled={busy || loading} onClick={showAccount}>계좌 보기</Button>
+            <Button light variant="weak" size="sm" className="mt-1" disabled={busy || loading} onClick={showAccount}>계좌 보기</Button>
           )}
           <p className="mt-1">“계좌 보기”를 누른 사실은 접속기록에 남습니다.</p>
           <div className="mt-1">

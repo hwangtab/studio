@@ -42,10 +42,12 @@ describe.each(TONES)('ServiceLinkPill — $tone', ({ tone, darkText, ring, darkR
     }
   });
 
-  it('dark:hover:text-white을 함께 둔다 (없으면 다크 hover 대비가 1.7~2.6:1로 무너진다)', () => {
+  it('연한 파랑 채움이다 — 테두리 알약이 아니다(보조 행동, 2026-10-09)', () => {
     const classes = classesOf(tone);
-    expect(classes).toContain('hover:text-white');
-    expect(classes).toContain('dark:hover:text-white');
+    expect(classes).toContain('bg-primary/10');
+    expect(classes).toContain('text-primary-dark');
+    expect(classes).toContain('dark:hover:bg-primary-lighter/20');
+    expect(classes).toContain('active:scale-[0.96]');
   });
 
   it('다크 텍스트 토큰은 -lighter/-light다 (DEFAULT·-light 승격 전 값은 AA 미달)', () => {
@@ -86,7 +88,7 @@ describe('ServiceLinkPill — 동작', () => {
     expect(merged).not.toContain('px-6');
     expect(merged).not.toContain('py-3');
     // 덮어써도 색 3규칙과 포커스 링은 남는다.
-    expect(merged).toContain('dark:hover:text-white');
+    expect(merged).toContain('bg-primary/10');
     expect(merged).toContain('focus-visible:ring-primary/70');
     expect(merged).toContain('dark:focus-visible:ring-primary-lighter/70');
     expect(merged).toContain('min-h-[44px]');

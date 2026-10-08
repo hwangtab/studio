@@ -8,6 +8,9 @@
  * 인라인이 아니라 외부 파일이라 CSP에서 'self'만으로 허용 가능.
  */
 (function () {
+  // iOS Safari는 touchstart 리스너가 없으면 :active를 그리지 않는다 — 버튼의 누름 반응(active:scale)이 휴대폰에서
+  // 보이려면 문서에 빈 리스너 하나가 필요하다(2026-10-09). passive라 스크롤을 막지 않는다.
+  document.addEventListener('touchstart', function () {}, { passive: true });
   try {
     var supportedLocales = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'];
     var pathSegments = window.location.pathname.split('/');

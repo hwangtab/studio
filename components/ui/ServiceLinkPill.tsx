@@ -38,13 +38,15 @@ export type ServiceLinkTone = 'primary';
  */
 const BASE =
   'inline-flex items-center gap-2 px-6 py-3 min-h-[44px] rounded-full border-2 font-semibold ' +
-  'transition-colors duration-200 ' +
+  'transition-[background-color,color,transform,filter] duration-200 active:duration-75 ' +
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ' +
   'focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900';
 
 const TONE_CLASS: Record<ServiceLinkTone, string> = {
   primary:
-    'border-primary text-primary dark:text-primary-lighter hover:bg-primary hover:text-white dark:hover:text-white ' +
+    // 테두리 알약 → 연한 파랑 채움(2026-10-09 TDS 대조: 보조 행동은 옅은 채움). border-2는 크기 유지용으로 투명하게 남긴다.
+    'border-transparent bg-primary/10 text-primary-dark dark:bg-primary-lighter/15 dark:text-primary-lighter ' +
+    'hover:bg-primary/15 dark:hover:bg-primary-lighter/20 active:scale-[0.96] active:brightness-90 ' +
     'focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70',
 };
 

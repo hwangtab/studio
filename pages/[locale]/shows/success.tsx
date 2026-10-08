@@ -64,7 +64,7 @@ export default function ShowSuccessPage({ outcome, message, orderNo, manageUrl, 
                     <a href={manageUrl}>내 티켓(QR) 열기</a>
                   </Button>
                 )}
-                <Button asChild variant="outline">
+                <Button asChild variant="weak">
                   <a href="/ko" rel="noreferrer">홈으로</a>
                 </Button>
               </>
@@ -81,7 +81,7 @@ export default function ShowSuccessPage({ outcome, message, orderNo, manageUrl, 
             title="결제를 확정하지 못했습니다"
             description={message}
             actions={
-              <Button asChild variant="outline">
+              <Button asChild variant="weak">
                 <a href="/ko" rel="noreferrer">홈으로</a>
               </Button>
             }
@@ -123,7 +123,7 @@ function ShowSuccessPageEn({ outcome, message, orderNo, manageUrl, emailSent, ha
                     <a href={manageUrl}>Open my tickets (QR)</a>
                   </Button>
                 )}
-                <Button asChild variant="outline">
+                <Button asChild variant="weak">
                   <a href="/en" rel="noreferrer">Home</a>
                 </Button>
               </>
@@ -140,7 +140,7 @@ function ShowSuccessPageEn({ outcome, message, orderNo, manageUrl, emailSent, ha
             title="We could not confirm your payment"
             description={message}
             actions={
-              <Button asChild variant="outline">
+              <Button asChild variant="weak">
                 <a href="/en" rel="noreferrer">Home</a>
               </Button>
             }

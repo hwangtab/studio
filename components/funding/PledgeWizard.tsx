@@ -718,7 +718,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
                   />
                 </Field>
                 {!addressManual && (
-                  <Button type="button" variant="outline" onClick={() => setAddressSearchOpen((open) => !open)} aria-expanded={addressSearchOpen}>
+                  <Button type="button" variant="weak" onClick={() => setAddressSearchOpen((open) => !open)} aria-expanded={addressSearchOpen}>
                     {addressSearchOpen ? '검색 닫기' : '주소 검색'}
                   </Button>
                 )}
@@ -859,7 +859,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
           </div>
           <div hidden={usingBank}>
             {paymentError ? (
-              <Notice tone="error" actions={<Button type="button" size="sm" variant="outline" onClick={retryPayment}>다시 시도</Button>}>
+              <Notice tone="error" actions={<Button type="button" size="sm" variant="weak" onClick={retryPayment}>다시 시도</Button>}>
                 {paymentError}
               </Notice>
             ) : (

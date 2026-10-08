@@ -89,7 +89,7 @@ export default function BookingFailPage({ code, message, orderNo, service }: Fai
                      strict-origin-when-cross-origin이라 **동일 출처 이동에는 전체 URL**을 보낸다.
                      없으면 도착지 gtag가 page_referrer에 토큰·paymentKey를 실어 보낸다.
                      private→private 링크(관리·입금 안내)는 도착지도 측정 대상이 아니라 불필요. */}
-              <Button asChild variant="outline">
+              <Button asChild variant="weak">
                 <a href={`/ko/booking/${service}`} rel="noreferrer">
                   {service === 'mixing-mastering' ? '주문 페이지로 돌아가기' : '예약 페이지로 돌아가기'}
                 </a>

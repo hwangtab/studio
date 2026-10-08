@@ -126,7 +126,7 @@ const KakaoFab = ({ locale, suppressBelowLg = false, inline = false }: KakaoFabP
         onClick={handleClick}
         aria-label={label}
         tabIndex={revealed ? 0 : -1}
-        className="inline-flex items-center gap-2 rounded-full bg-kakao hover:bg-kakao-dark text-kakao-ink bg-[linear-gradient(180deg,rgb(255_255_255/0.32),rgb(255_255_255/0)_55%)] shadow-lg shadow-black/20 w-[52px] justify-center py-3 sm:w-auto sm:justify-start sm:pl-4 sm:pr-5 min-h-[52px] font-bold touch-manipulation transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kakao-ink dark:focus-visible:ring-kakao focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+        className="inline-flex items-center gap-2 rounded-full bg-kakao hover:bg-kakao-dark text-kakao-ink active:scale-[0.96] active:brightness-90 bg-[linear-gradient(180deg,rgb(255_255_255/0.32),rgb(255_255_255/0)_55%)] shadow-lg shadow-black/20 w-[52px] justify-center py-3 sm:w-auto sm:justify-start sm:pl-4 sm:pr-5 min-h-[52px] font-bold touch-manipulation transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kakao-ink dark:focus-visible:ring-kakao focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
       >
         <MessageCircle size={22} aria-hidden="true" className="flex-shrink-0" />
         {/* aria-label이 이름을 들고 있으므로 좁은 폭에서는 라벨을 감춰도 접근성이 유지된다. */}

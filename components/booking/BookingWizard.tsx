@@ -569,7 +569,7 @@ export default function BookingWizard({ service, products, initialProductId }: B
                 <Notice
                   tone="error"
                   actions={
-                    <Button type="button" size="sm" variant="outline" onClick={() => setRetryTick((n) => n + 1)}>
+                    <Button type="button" size="sm" variant="weak" onClick={() => setRetryTick((n) => n + 1)}>
                       다시 불러오기
                     </Button>
                   }
@@ -607,7 +607,7 @@ export default function BookingWizard({ service, products, initialProductId }: B
           )}
 
           <div className="mt-6 flex gap-3">
-            <Button type="button" variant="outline" onClick={() => setStep(1)}>
+            <Button type="button" variant="weak" onClick={() => setStep(1)}>
               이전
             </Button>
             <Button
@@ -736,7 +736,7 @@ export default function BookingWizard({ service, products, initialProductId }: B
                 />
                 <div hidden={usingBank} className="mt-3">
                   {paymentError ? (
-                    <Notice tone="error" actions={<Button type="button" size="sm" variant="outline" onClick={retryPayment}>다시 시도</Button>}>
+                    <Notice tone="error" actions={<Button type="button" size="sm" variant="weak" onClick={retryPayment}>다시 시도</Button>}>
                       {paymentError}
                     </Notice>
                   ) : (
@@ -765,7 +765,7 @@ export default function BookingWizard({ service, products, initialProductId }: B
             {submitError && <Notice tone="error">{submitError}</Notice>}
 
             <div className="flex gap-3">
-              <Button type="button" variant="outline" onClick={() => setStep(2)}>
+              <Button type="button" variant="weak" onClick={() => setStep(2)}>
                 이전
               </Button>
               {/* 위젯이 아직 안 떴으면 누를 수 없다 — 누르면 슬롯만 잡히고 결제창은 안 열린다. 계좌 입금은 위젯이 필요 없다. */}
