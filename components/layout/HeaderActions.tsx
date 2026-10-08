@@ -34,13 +34,14 @@ export const HeaderActions = ({
   // transition에서 box-shadow·outline을 뺀다(= transition-all 금지). Tailwind의 ring은
   // box-shadow로 그려져서, 보간하면 포커스 링이 300ms에 걸쳐 서서히 떠오른다.
   // 자세한 근거는 components/ui/Button.tsx 주석과 docs/design-system.md §5.
-  const headerCtaBaseClass = 'inline-flex items-center justify-center px-4 py-2 min-h-[44px] rounded-full text-sm font-bold leading-normal text-center whitespace-nowrap border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 transition-[background-color,border-color,color,transform] duration-300';
+  const headerCtaBaseClass = 'inline-flex items-center justify-center px-4 py-2 min-h-[44px] rounded-full text-sm font-bold leading-normal text-center whitespace-nowrap touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 transition-[background-color,border-color,color,transform] duration-300';
 
   // ko의 목적지는 카카오톡이므로 헤더 두 상태 모두 옐로(노란 버튼 = 카카오톡 규칙).
   // 투명 상태에서도 옐로는 솔리드라 배경 사진 밝기와 무관하게 kakao-ink 글씨 대비가
   // 16:1로 고정된다 — 밝은 히어로에서 글씨가 흐려지던 스크림 방식보다 안정적이라
   // text-shadow도 필요 없다. focus ring만 배경에 맞춰 가른다.
-  const kakaoCtaButtonClass = `${headerCtaBaseClass} bg-kakao hover:bg-kakao-dark text-kakao-ink border-transparent ${BUTTON_DEPTH.kakao} ${isTransparent
+  // 테두리를 두지 않는다 — 투명 테두리 1px 안쪽에 입체감의 안쪽 하이라이트가 그려져 이중 테두리처럼 보였다(2026-10-08).
+  const kakaoCtaButtonClass = `${headerCtaBaseClass} bg-kakao hover:bg-kakao-dark text-kakao-ink ${BUTTON_DEPTH.kakao} ${isTransparent
     ? 'focus-visible:ring-white/70 focus-visible:ring-offset-black/20'
     : 'focus-visible:ring-kakao-ink dark:focus-visible:ring-kakao focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900'
     }`;
@@ -50,9 +51,9 @@ export const HeaderActions = ({
   // 밝혀 흰 글씨 대비를 오히려 낮추므로, 어두운 스크림(bg-black/25)+text-shadow로
   // 밝은 히어로에서도 글씨가 읽히게 한다. glass 토큰은 모바일 폴백 시 불투명
   // 흰색이 되어 흰 글씨가 사라지므로 여기선 쓰지 않는다.
-  const formCtaButtonClass = `${headerCtaBaseClass} focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${!isTransparent
-    ? 'bg-gradient-to-r from-primary to-primary text-white shadow-md hover:shadow-lg border-transparent'
-    : 'bg-black/25 hover:bg-black/35 text-white border-white/35 [text-shadow:0_1px_2px_rgb(0_0_0/0.55)]'
+  const formCtaButtonClass = `${headerCtaBaseClass} ${!isTransparent
+    ? `bg-gray-950 hover:bg-gray-800 text-white dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200 ${BUTTON_DEPTH.ink} focus-visible:ring-gray-950/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`
+    : 'border bg-black/25 hover:bg-black/35 text-white border-white/35 [text-shadow:0_1px_2px_rgb(0_0_0/0.55)] focus-visible:ring-white/70 focus-visible:ring-offset-black/20'
     }`;
 
   return (
