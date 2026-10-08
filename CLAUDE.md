@@ -13,14 +13,12 @@ node --env-file=.env.local scripts/ctr-verdict.mjs --surgery YYYY-MM-DD --slugs 
 node --env-file=.env.local scripts/lead-verdict.mjs --from YYYY-MM-DD --pages a,b --control c   # 전환 실험(GA4 랜딩 기준 세션당 리드)
 
 # 제목 서체(Paperlogy Bold) subset (LCP)
-# prebuild에서 자동 실행됨. 제목 텍스트(data/home.ts heroContent, common.json의 *title*·*heading* 키,
-# data/*.ts의 title) 변경 후 빌드하면 woff2가 재생성되며
-# 변경된 lib/fonts/display.woff2 + display.chars.json 사이드카를 반드시 함께 commit해야 함.
+# prebuild에서 모든 빌드(Vercel·CI)가 저장소의 원본(lib/fonts/paperlogy-7bold-full.woff2, OFL)으로 다시 만든다 —
+# 네트워크를 쓰지 않고, 제목·스토리 제목이 바뀌어도 손으로 재생성·커밋할 필요가 없다(본문 서체와 같은 방식, 2026-10-09).
+# 커밋된 display.woff2는 next dev용이라 낡아도 배포에 영향이 없다. 원본을 못 읽으면 빌드가 멈춘다(조용한 대체 없음).
 # 제목·본문 서체 모두 font-display: optional — swap으로 되돌리지 말 것(첫 방문에 글자 폭이 꿈틀댄다, lib/fonts.ts 주석).
-# 빠뜨리면 hero-font-subset.test.js(CI)가 --check 모드로 잡아낸다.
-# 수동 재실행:
-node scripts/generate-hero-font.mjs
-node scripts/generate-hero-font.mjs --check  # 네트워크 없이 subset 커버리지 검증
+node scripts/generate-hero-font.mjs           # 로컬 dev 서체를 최신으로(선택)
+node scripts/generate-hero-font.mjs --check   # woff2·사이드카 짝 검증(CI) — 커밋본이 낡았으면 알림만
 
 # 사이트맵 lastmod
 # prebuild에 넣지 않는다 — Vercel·GitHub Actions는 얕은 클론이라 빌드 중 git 이력이 없다.
@@ -39,9 +37,11 @@ node scripts/generate-page-lastmod.mjs --check  # git 없이 커버리지만 검
 
 # 제목 서체 글자 검사 (CI, 빌드 뒤) — 제목(ImageHero h1·SectionHeading)의 글자가 전부 제목 서체 서브셋에 있는가
 # 없으면 그 글자만 Pretendard로 그려져 한 제목 안에서 서체가 섞인다(2026-10-08 공연 "출연"의 "출", 스토리 제목 130자).
-# 실패하면 scripts/generate-hero-font.mjs가 그 제목의 출처를 읽게 하고 `node scripts/generate-hero-font.mjs` 후
-# display.woff2 + display.chars.json을 commit. 서체에 아예 없는 문자(베트남어 성조·우즈베크어 ʻʼ)는 globals.css가
-# 그 로케일 제목을 Pretendard로 돌린다. 제목에 줄바꿈 금지 하이픈(U+2011)·키릴 글자를 넣지 말 것.
+# 실패하면 scripts/generate-hero-font.mjs가 그 제목의 출처를 읽게 한다(서체 파일은 손으로 다시 만들 필요 없다 —
+# 원본 lib/fonts/paperlogy-7bold-full.woff2가 저장소에 있어 모든 빌드가 prebuild에서 다시 만든다. 커밋본은 next dev용).
+# 서체에 아예 없는 문자(베트남어 성조·우즈베크어 ʻʼ)는 globals.css가 그 로케일 제목을 Pretendard로 돌린다.
+# DB에서 오는 제목(펀딩·공연)은 lib/fonts/displayCoverage.ts로 검사해 안 맞으면 제목 전체를 본문 서체로.
+# 제목에 줄바꿈 금지 하이픈(U+2011)·키릴 글자를 넣지 말 것.
 npm run build && npm run check:display-font
 
 # 섹션 단위 중복 검사 (CI)

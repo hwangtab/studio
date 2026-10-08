@@ -60,11 +60,9 @@ export const pretendard = localFont({
 // preload=true라 다른 critical 리소스와 동시 fetch — 옛 hero 서브셋(36KB)보다 큰 만큼 LCP를 simulate로 재서
 // 넘으면 hero 글자만 담은 파일과 제목용 파일로 가른다(설계 §3-2).
 //
-// ⚠️ 운영 주의 — hero h1·섹션 제목·data/*.ts의 title 문자열을 바꿨다면 아래를 실행하고 display.woff2 +
-// display.chars.json을 함께 commit해야 한다. 빠뜨리면 새 글자가 서브셋에 없어 Pretendard로 그려져 한 제목
-// 안에서 글자 모양이 갈린다 — hero-font-subset.test.js가 --check로 CI에서 잡는다.
-//
-//   node scripts/generate-hero-font.mjs
+// 서브셋은 모든 빌드가 prebuild에서 저장소의 원본(lib/fonts/paperlogy-7bold-full.woff2)으로 다시 만든다 — 제목을
+// 바꿔도 손으로 재생성·커밋할 필요가 없다(커밋본은 `next dev`용). 배포물에 빠진 글자는 빌드 뒤
+// scripts/check-display-font-coverage.mjs(CI)가 잡는다. 로컬 dev 서체를 최신으로: node scripts/generate-hero-font.mjs
 export const displayFont = localFont({
   src: './fonts/display.woff2',
   weight: '700',
