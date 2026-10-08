@@ -293,7 +293,7 @@ export default function ShowTicketManage({ order, token, qr, locale = 'ko' }: Pr
               onClick={submitRefund}>
               {busy ? t.processing : selected.length === 0 ? t.pickFirst : t.refundButton(selected.length, won(refundTotal))}
             </Button>
-            <Disclosure variant="plain" summary={t.refundPolicy} summaryClassName="text-xs font-medium text-gray-600 dark:text-gray-300" bodyClassName="text-xs">
+            <Disclosure variant="plain" summary={t.refundPolicy} summaryClassName="text-sm font-medium text-gray-600 dark:text-gray-300" bodyClassName="text-xs">
               <RefundPolicyList locale={locale} />
             </Disclosure>
           </>

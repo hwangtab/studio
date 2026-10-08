@@ -54,7 +54,7 @@ export default function PaymentMethodPicker({
               trailing={
                 choice.id === 'bank_transfer' ? (
                   // 휴대폰 폭에서는 은행 이름만(나머지는 아래 안내 줄이 말한다).
-                  <span className="whitespace-nowrap text-xs font-normal text-gray-500 dark:text-gray-400">
+                  <span className="whitespace-nowrap text-sm font-normal text-gray-500 dark:text-gray-400">
                     {disabled ? (en ? 'Unavailable' : '이용 불가') : en ? (
                       <>{BANK_ACCOUNT_EN.bankName}<span className="hidden sm:inline"> · {confirmLabel} after we confirm</span></>
                     ) : (

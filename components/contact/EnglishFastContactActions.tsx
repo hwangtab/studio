@@ -69,18 +69,18 @@ const EnglishFastContactActions = ({ locale, kakaoUrl, email, phone }: EnglishFa
             Call Studio NOL
           </a>
         </Button>
-        <p className="mt-3 text-xs leading-relaxed">
+        <p className="mt-3 text-sm leading-relaxed">
           No KakaoTalk? Email us or use the form below — we reply within 24 hours.
         </p>
       </div>
     }
   >
-    <p className="text-xs leading-relaxed">
+    <p className="text-sm leading-relaxed">
       Book in English · Recording, mixing &amp; mastering · Remote mixing worldwide
     </p>
     {/* 가격 즉답 — ChatGPT 등 LLM 유입 영어 방문자(이탈률 64%)가 클릭 없이 핵심 요금을
         바로 확인하도록 상단 노출. 수치는 pricing.ts SSOT / llms.txt English Quick Facts와 일치. */}
-    <p className="mt-1 text-xs font-medium">
+    <p className="mt-1 text-sm font-medium">
       Recording ₩100,000/hr · 1-song vocal package ₩250,000 · Mixing from ₩200,000/song
     </p>
     <a

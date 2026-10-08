@@ -80,15 +80,14 @@ const config: Config = {
         'heading-4': ['1.25rem', { lineHeight: '1.4', letterSpacing: '-0.01em', fontWeight: '700' }],
         'subtitle-1': ['1.25rem', { lineHeight: '1.4', fontWeight: '500' }],
         'subtitle-2': ['1.125rem', { lineHeight: '1.4', fontWeight: '500' }],
-        // 본문 굵기는 --body-weight로 뺀다. v1은 변수를 정의하지 않아 300 그대로이고
-        // (docs/design-system.md §9), 디자인 v2 스코프([data-edition='v2'])만 400으로 올린다.
-        // 300 획은 zh·th 폴백 폰트와 Windows 렌더링에서 더 가늘어져 읽히는 대비가 떨어진다.
-        'body-1': ['1rem', { lineHeight: '1.6', fontWeight: 'var(--body-weight, 300)' }],
-        'body-1-light': ['1rem', { lineHeight: '1.6', fontWeight: 'var(--body-weight, 300)' }],
-        'body-1-extra-light': ['1rem', { lineHeight: '1.6', fontWeight: 'var(--body-weight, 300)' }],
+        // 본문 굵기는 --body-weight로 뺀다. 예전엔 v1이 300(Light)이고 v2 스코프만 400이었는데, 2026-10-09 TDS 대조에서
+        // 기본값도 400으로 올렸다 — 회색 Light 300은 휴대폰·Windows·zh/th 폴백에서 획이 가늘어 읽기 어렵다.
+        'body-1': ['1rem', { lineHeight: '1.6', fontWeight: 'var(--body-weight, 400)' }],
+        'body-1-light': ['1rem', { lineHeight: '1.6', fontWeight: 'var(--body-weight, 400)' }],
+        'body-1-extra-light': ['1rem', { lineHeight: '1.6', fontWeight: 'var(--body-weight, 400)' }],
         'body-1-medium': ['1rem', { lineHeight: '1.6', fontWeight: '500' }],
-        'body-2': ['0.875rem', { lineHeight: '1.6', fontWeight: 'var(--body-weight, 300)' }],
-        'caption': ['0.75rem', { lineHeight: '1.6', fontWeight: 'var(--body-weight, 300)' }],
+        'body-2': ['0.875rem', { lineHeight: '1.6', fontWeight: 'var(--body-weight, 400)' }],
+        'caption': ['0.8125rem', { lineHeight: '1.6', fontWeight: 'var(--body-weight, 400)' }],
         'text-thin': ['1rem', { lineHeight: '1.5', fontWeight: '100' }],
         'text-extra-light': ['0.875rem', { lineHeight: '1.5', fontWeight: '200' }],
       },

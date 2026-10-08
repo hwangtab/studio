@@ -109,7 +109,7 @@ function SubscribeSetupOk(props: OkProps) {
 
             서버는 등록 토큰으로 이 화면을 통해 온 요청만 받는다(findSubscriptionForSetup).
           */}
-          <p className="mt-6 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+          <p className="mt-6 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
             카드 등록하기를 누르면 위 결제 조건과 해지·환불 규정에 동의하는 것으로 봅니다.
           </p>
 

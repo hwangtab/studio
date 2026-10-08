@@ -135,7 +135,7 @@ export function BasicSectionForm({ projectId, initial, earliestStartDate, readOn
         />
       </Field>
       {lockedFields && (
-        <p className="-mt-3 text-xs text-gray-600">
+        <p className="-mt-3 text-sm text-gray-600">
           공개된 뒤에는 바꿀 수 없습니다 — 후원자가 이 주소로 프로젝트를 찾고, 모금 기간과 목표
           금액은 후원자와의 약속입니다.
         </p>

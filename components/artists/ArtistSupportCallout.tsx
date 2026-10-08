@@ -187,7 +187,7 @@ const ArtistSupportCallout = ({ artist, locale, kakaoUrl, supportOpen, labels }:
           <Button type="submit" disabled={busy} fullWidth>
             {busy ? labels.submitting : labels.submit}
           </Button>
-          <p className="mt-3 text-xs leading-relaxed text-gray-500 dark:text-gray-400">{labels.agreeNote}</p>
+          <p className="mt-3 text-sm leading-relaxed text-gray-500 dark:text-gray-400">{labels.agreeNote}</p>
         </div>
       </form>
 

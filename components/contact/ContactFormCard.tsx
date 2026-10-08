@@ -282,7 +282,7 @@ const ContactFormCard = ({
           }
         />
         {consentError && (
-          <span id="privacy-consent-error" role="alert" className="block text-xs text-red-600 dark:text-red-400">
+          <span id="privacy-consent-error" role="alert" className="block text-sm text-red-600 dark:text-red-400">
             {t('contact.form.consentError', { defaultValue: '개인정보 수집·이용에 동의해 주세요.' })}
           </span>
         )}

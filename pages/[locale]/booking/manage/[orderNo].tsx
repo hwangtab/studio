@@ -281,7 +281,7 @@ function CancelSection({
       <p className="text-sm font-semibold text-gray-900 dark:text-white">
         지금 취소하면 {formatPriceAmount(refundQuote.refundAmount)}원 환불
       </p>
-      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+      <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
         실제 환불 금액은 취소 처리 시점 기준으로 다시 계산됩니다.
       </p>
 

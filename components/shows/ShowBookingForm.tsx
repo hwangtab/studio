@@ -386,7 +386,7 @@ export default function ShowBookingForm({ show, locale = 'ko' }: Props) {
             중복으로 읽힌다. 청약철회·환불 조건은 법적으로 **고지** 의무라 한 줄로 알리고, 표는 접어 둔다.
             서버 검증(refundPolicyAgreed)과 기록은 그대로다.
           */}
-          <div className="text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+          <div className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
             <p>
               {t.agreeLead(usingBank)}
               {/* 처리방침은 한국어 원본이 정본이다(영어판 없음) — 영어 화면에서도 /ko 문서로 연결하고 라벨에 (Korean)을 붙인다. */}
@@ -394,7 +394,7 @@ export default function ShowBookingForm({ show, locale = 'ko' }: Props) {
               {t.agreeTail}
               {usingBank ? t.holdBank : t.holdToss(Math.floor(SHOW_HOLD_SECONDS / 60))}
             </p>
-            <Disclosure variant="plain" summary={t.refundPolicy} className="mt-1" summaryClassName="text-xs font-medium text-gray-600 dark:text-gray-300" bodyClassName="text-xs">
+            <Disclosure variant="plain" summary={t.refundPolicy} className="mt-1" summaryClassName="text-sm font-medium text-gray-600 dark:text-gray-300" bodyClassName="text-xs">
               <RefundPolicyList locale={locale} />
             </Disclosure>
           </div>
