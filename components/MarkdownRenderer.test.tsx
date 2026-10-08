@@ -101,6 +101,24 @@ describe('MarkdownRenderer 숏코드 로케일 가드', () => {
     }
   });
 
+  // 펀딩 숏코드는 반대다 — 번역본이 있는 펀딩의 영문 화면에서 그대로 그려져야 한다(2026-10-08 회귀: ko 전용 가드 뒤에
+  // 있어서 /en/funding 세 페이지의 출연진 카드·사진·미리듣기·영상이 통째로 빠졌다).
+  it('펀딩 숏코드는 영문 화면에서도 영어로 렌더된다', () => {
+    const { container } = render(
+      <MarkdownRenderer
+        locale="en"
+        content={'%%funding-lineup:mok-jareugi-yangchaae%%\n\n%%funding-audio:sabbaha-kalpa%%\n\n%%funding-video:sabbaha-debt-shroud-live%%\n\n%%funding-gallery:keep-singing-for-palestine%%'}
+      />,
+    );
+    const text = container.textContent ?? '';
+    expect(text).not.toContain('%%funding-');
+    expect(text).toContain('Yang Cha-ae');
+    expect(text).toContain('Preview');
+    expect(text).toContain('Filmed by the Gyeonggi Art Collective');
+    expect(container.querySelector('button[aria-label^="Enlarge: The 19 September street rally"]')).not.toBeNull();
+    expect(text).not.toMatch(/미리듣기|사랑노래를/);
+  });
+
   it('비-ko에서는 카카오 링크가 숏코드로 새지 않는다', () => {
     const { container } = render(
       <MarkdownRenderer locale="en" content={'%%vocal-mix-bridge%%\n\n%%online-request%%'} />,
