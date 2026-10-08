@@ -90,6 +90,8 @@ rewards:
 
 2024년 첫 정규 앨범 《THUNDER ROCKS》는 The Slaughter가 혼자 만든 앨범이었습니다. 드럼도 컴퓨터로 짰습니다. 2025년 드러머 The Mortician이 합류했고, 《SLUNG》은 두 사람이 함께 녹음한 첫 정규 앨범입니다.
 
+%%funding-video:sabbaha-debt-shroud-live%%
+
 ## 《SLUNG》
 
 첫 번째 CD는 〈Kalpa〉로 시작합니다. 제목은 불교에서 헤아릴 수 없이 긴 시간을 뜻하는 겁(劫)입니다.
