@@ -347,6 +347,17 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
   const renderSegment = (segment: ContentSegment, index: number) => {
     if (segment.type === 'shortcode') {
       /**
+       * 펀딩 숏코드 넷은 locale을 받아 스스로 영어를 그린다(번역본이 있는 펀딩, lib/funding/translatedSlugs.ts).
+       * 그래서 아래 ko 전용 가드보다 **먼저** 처리한다 — 가드 뒤에 두면 영문 펀딩 페이지에서 출연진 카드·사진·
+       * 미리듣기·영상이 통째로 사라진다(2026-10-08 /en/funding 세 페이지에서 실제로 그랬다).
+       * id가 없거나 모르는 값이면 각 컴포넌트가 null을 돌려준다.
+       */
+      if (segment.name === 'funding-lineup') return segment.arg ? <FundingLineupPerson key={index} id={segment.arg} locale={currentLocale} /> : null;
+      if (segment.name === 'funding-gallery') return segment.arg ? <FundingGallery key={index} id={segment.arg} locale={currentLocale} /> : null;
+      if (segment.name === 'funding-audio') return segment.arg ? <FundingAudioPlayer key={index} id={segment.arg} locale={currentLocale} /> : null;
+      if (segment.name === 'funding-video') return segment.arg ? <FundingVideo key={index} id={segment.arg} locale={currentLocale} /> : null;
+
+      /**
        * ko 전용 숏코드는 다른 locale에서 렌더하지 않는다.
        *
        * 일곱 컴포넌트 모두 카피가 한국어 하드코딩이고(locale은 링크·GA4에만 쓰인다),
@@ -366,11 +377,6 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
       if (segment.name === 'online-request') return <OnlineRequest key={index} locale={currentLocale} />;
       if (segment.name === 'vocal-mix-bridge') return <VocalMixBridge key={index} locale={currentLocale} />;
       if (segment.name === 'practice-room-terms') return <PracticeRoomTerms key={index} locale={currentLocale} />;
-      // 펀딩 출연진 카드. id가 없거나 모르는 값이면 컴포넌트 쪽에서 null을 반환한다.
-      if (segment.name === 'funding-lineup') return segment.arg ? <FundingLineupPerson key={index} id={segment.arg} locale={currentLocale} /> : null;
-      if (segment.name === 'funding-gallery') return segment.arg ? <FundingGallery key={index} id={segment.arg} locale={currentLocale} /> : null;
-      if (segment.name === 'funding-audio') return segment.arg ? <FundingAudioPlayer key={index} id={segment.arg} locale={currentLocale} /> : null;
-      if (segment.name === 'funding-video') return segment.arg ? <FundingVideo key={index} id={segment.arg} locale={currentLocale} /> : null;
 
       // 4종 inline directive — max 2 enforce (초과는 silent drop)
       if (isInlineDirectiveName(segment.name)) {
