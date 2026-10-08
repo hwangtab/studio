@@ -100,6 +100,8 @@ rewards:
 
 죽음의 신을 다룬 〈Yama〉 뒤로는 지금 사람들의 이야기가 이어집니다. 〈Debt Shroud〉는 은행 일곱 곳과 보험사 아홉 곳에서 거절당한 빚을, 〈Dopaminethirster〉는 도파민에 목마른 삶을 노래합니다.
 
+%%funding-audio:sabbaha-debt-shroud%%
+
 두 번째 CD는 10분 안팎의 긴 연주곡 다섯 곡입니다. 엘리트주의, 교령회, 납골당을 제목으로 삼았고, 마지막 곡 〈Stone〉에는 "성한 것은 반드시 쇠한다(盛者必滅)"라는 한 줄이 붙어 있습니다.
 
 처음 정식 음반으로 나오는 곡도 있습니다. 〈Kalpa〉와 〈Yama〉는 2025년 11월 망원동 패치코드페어 현장에서만 판 한정판 싱글에 실렸던 곡이라, 지금까지 온라인에서는 들을 수 없었습니다. 〈Debt Shroud〉·〈Apprentice's Work〉·〈Dopaminethirster〉·〈Stone〉은 《THUNDER ROCKS》에 실렸던 곡을 두 사람이 다시 녹음했습니다.
