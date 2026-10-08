@@ -30,6 +30,8 @@ import { buildPublicStatusOrNull } from '../../../../lib/funding/publicStatus';
 // 첫 등장 위치를 그 함수의 실제 선언으로 오인해 로케일 가드 판정을 통째로 놓친다(실제로
 // 이 주석이 그 이름을 그대로 적었을 때 그렇게 났다 — 아래가 아니라 여기가 "선언부"로 읽혔다).
 import { mergeRewardRemaining } from '../../../../lib/funding/shape';
+import { getTranslatedFundingProject } from '../../../../lib/funding/translations';
+import { FUNDING_TRANSLATED_SLUGS, type FundingLang } from '../../../../lib/funding/translatedSlugs';
 
 interface Props {
   project: FundingProject;
@@ -39,9 +41,13 @@ interface Props {
    * "모금 현황 집계 중…"을 보여주고 폴링을 기다린다.
    */
   initialStatus?: FundingStatusResponse | null;
+  /** 화면 언어. en은 번역본이 있는 프로젝트만(lib/funding/translatedSlugs.ts) — project는 이미 번역이 덮인 값이다. */
+  lang?: FundingLang;
 }
 
-export default function FundingProjectPage({ project, initialState, initialStatus = null }: Props) {
+export default function FundingProjectPage({ project, initialState, initialStatus = null, lang = 'ko' }: Props) {
+  const en = lang === 'en';
+  const pagePath = `/${lang}/funding/${project.slug}`;
   // timing을 함께 넘긴다 — 훅이 오픈 시각에 맞춰 1회 재조회하고, 마운트 뒤로는 브라우저
   // 시계로도 상태를 다시 판정한다(FundingProjectCard와 같은 이유: 정적 생성된 initialState는
   // 빌드 시각에 고정돼 있고 상태 API 응답도 CDN 캐시라 최대 몇 분 뒤처진다). 오픈을 기다리며
@@ -134,7 +140,7 @@ export default function FundingProjectPage({ project, initialState, initialStatu
       name: project.title,
       description: project.summary,
       image: toAbsolute(project.ogImage ?? project.cover),
-      brand: { '@type': 'Organization', name: '스튜디오 놀' },
+      brand: { '@type': 'Organization', name: en ? 'Studio NOL' : '스튜디오 놀' },
       offers: {
         '@type': 'AggregateOffer',
         priceCurrency: 'KRW',
@@ -143,10 +149,10 @@ export default function FundingProjectPage({ project, initialState, initialStatu
         offerCount: amounts.length,
         availability: canPledge ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
         priceValidUntil: project.endAt.slice(0, 10),
-        url: `${SITE_URL}/ko/funding/${project.slug}`,
+        url: `${SITE_URL}${pagePath}`,
       },
     };
-  }, [canPledge, project]);
+  }, [canPledge, project, pagePath, en]);
 
   // OG 이미지의 실제 치수. 목록에 없으면 넘기지 않는다 — 틀린 값을 주느니 비우는 게 낫다.
   const ogImageSize = imageMetadata[(project.ogImage ?? project.cover) as keyof typeof imageMetadata] as
@@ -174,9 +180,11 @@ export default function FundingProjectPage({ project, initialState, initialStatu
       <SEO
         // 제목에 구분자를 두 번 겹치지 않는다 — 프로젝트 제목이 이미 '… 후원'으로 끝나는데
         // `— 펀딩 | 스튜디오 놀`을 붙이면 `—`와 `|`가 함께 나와 검색 결과에서 지저분하다.
-        title={`${project.title} | 스튜디오 놀`}
+        title={`${project.title} | ${en ? 'Studio NOL' : '스튜디오 놀'}`}
         description={project.summary}
-        canonical={`/ko/funding/${project.slug}`}
+        canonical={pagePath}
+        // 번역본이 있는 로케일만 서로 가리킨다(SEO가 비-ko를 사이트 정책대로 noindex·hreflang 제외로 다룬다).
+        availableLocales={['ko', ...(FUNDING_TRANSLATED_SLUGS[project.slug] ?? [])]}
         ogImage={project.ogImage ?? project.cover}
         // 치수를 함께 주지 않으면 카카오·페이스북이 비율을 스스로 재협상한다.
         ogImageWidth={ogImageSize?.width}
@@ -186,8 +194,9 @@ export default function FundingProjectPage({ project, initialState, initialStatu
         schema={fundingSchema}
         // 아래 FAQSection과 같은 배열(lib/funding/faq.ts) — 화면에 보이는 질문·답과
         // FAQPage 구조화 데이터가 어긋나면 안 된다.
-        faqItems={FUNDING_PROJECT_FAQ_ITEMS}
-        breadcrumbs={[
+        // FAQ는 한국어 문서뿐이라 영문판에는 싣지 않는다(화면에도 없다).
+        faqItems={en ? undefined : FUNDING_PROJECT_FAQ_ITEMS}
+        breadcrumbs={en ? null : [
           { name: '홈', path: '/ko' },
           { name: '펀딩', path: '/ko/funding' },
           { name: project.title, path: `/ko/funding/${project.slug}` },
@@ -213,17 +222,26 @@ export default function FundingProjectPage({ project, initialState, initialStatu
         anonymousBackers={data?.anonymousBackerCount ?? 0}
         messages={data?.publicMessages ?? []}
         messagesPending={!statusError && (data?.publicMessages?.length ?? 0) === 0 && (data?.messageCount ?? 0) > 0}
+        lang={lang}
       />
 
       {/* 위 SEO의 faqItems와 같은 배열 — 화면과 FAQPage 스키마가 같은 소스를 읽는다. */}
-      <FAQSection
-        items={FUNDING_PROJECT_FAQ_ITEMS}
-        title="자주 묻는 질문"
-        subtitle="후원 결제·취소·리워드에 관해 자주 묻는 질문입니다."
-      />
+      {!en && (
+        <FAQSection
+          items={FUNDING_PROJECT_FAQ_ITEMS}
+          title="자주 묻는 질문"
+          subtitle="후원 결제·취소·리워드에 관해 자주 묻는 질문입니다."
+        />
+      )}
 
-      <RewardModal project={project} reward={openReward} remaining={remaining} onClose={closeModal} />
-      <MobileStickyCta visible={canPledge} href={`/ko/funding/${project.slug}/pledge`} label="펀딩하기" onOpen={scrollToRewards} />
+      {/* 영문판은 결제 모달을 두지 않는다 — 리워드 카드가 한국어 결제 화면으로 보낸다(ProjectDetailView). */}
+      {!en && <RewardModal project={project} reward={openReward} remaining={remaining} onClose={closeModal} />}
+      <MobileStickyCta
+        visible={canPledge}
+        href={en ? '#rewards' : `/ko/funding/${project.slug}/pledge`}
+        label={en ? 'Back this project' : '펀딩하기'}
+        onOpen={scrollToRewards}
+      />
     </>
   );
 }
@@ -239,7 +257,11 @@ export const getStaticPaths: GetStaticPaths = async () => ({
   // DB 프로젝트는 첫 요청에 생성돼 ISR로 캐시된다(blocking).
   paths: getAllFundingProjects()
     .filter((p) => p.status !== 'draft')
-    .map((p) => ({ params: { locale: defaultLocale, slug: p.slug } })),
+    .flatMap((p) => [
+      { params: { locale: defaultLocale, slug: p.slug } },
+      // 번역본이 있는 프로젝트만 그 로케일로도 만든다(lib/funding/translatedSlugs.ts).
+      ...(FUNDING_TRANSLATED_SLUGS[p.slug] ?? []).map((l) => ({ params: { locale: l, slug: p.slug } })),
+    ]),
   fallback: 'blocking',
 });
 
@@ -249,15 +271,22 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   // 404로 막아야 한다 — 안 막으면 /en/funding/<slug> 같은 주소가 그대로 생성돼 ISR로
   // 캐시된다(lib/koOnlyRoutes.ts가 지키는 불변식, koOnlyRoutes.test.ts가 대조).
   // 비-ko는 언제까지나 404가 맞다(이 페이지는 애초에 ko 전용) — revalidate를 주지 않는다.
-  if (params?.locale !== defaultLocale) return { notFound: true };
-  const project = await getFundingProjectForStaticProps(String(params?.slug ?? ''));
+  //
+  // 예외는 번역본이 있는 (slug, 로케일) 조합 하나뿐이다(lib/funding/translatedSlugs.ts — 파일과 대조는 테스트가 한다).
+  const slugParam = String(params?.slug ?? '');
+  const translatedLocale = (FUNDING_TRANSLATED_SLUGS[slugParam] ?? []).find((l) => l === params?.locale);
+  if (params?.locale !== defaultLocale && !translatedLocale) return { notFound: true };
+  const original = await getFundingProjectForStaticProps(slugParam);
+  // 번역은 글자만 덮는다 — 금액·한정·일정은 정본 그대로(lib/funding/translations.ts).
+  const project = original && translatedLocale ? getTranslatedFundingProject(original, translatedLocale) : original;
   // revalidate 없는 notFound는 ISR에 영구히 캐시된다. 초안·미존재 slug는 그렇지 않다 —
   // 개설자가 승인 전에 자기 프로젝트 주소를 미리 열어 볼 수 있는데, 그때 404가 굳어 버리면
   // 나중에 승인해도 재배포 전까지 계속 404다. 승인이 배포를 기다리지 않게 하는 것이 이
   // 태스크의 목표이므로 여기는 revalidate: 60을 반드시 함께 준다(로케일 가드와 다른 이유).
   if (!project || project.status === 'draft') return { notFound: true, revalidate: 60 };
   return buildPageStaticProps(
-    defaultLocale,
+    // 번역본이면 그 로케일로 — 사이트 머리·꼬리와 <html lang>이 함께 영어가 된다.
+    translatedLocale ?? defaultLocale,
     // 공개 화면이라 내려받기 주소를 벗겨 내려보낸다(lib/funding/shape.ts 주석).
     {
       project: stripRewardDownloads(project),
@@ -265,6 +294,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
       // 모금 현황을 함께 싣는다 — 없으면 첫 화면에 "모금 현황 집계 중…"이 스친다.
       // DB가 없으면 null이 오고(빌드는 DB 없이도 성공해야 한다) 예전 동작으로 돌아간다.
       initialStatus: await buildPublicStatusOrNull(project, new Date()),
+      lang: (translatedLocale ?? 'ko') as FundingLang,
     },
     { i18nSections: ['stories'], revalidate: 60 },
   );

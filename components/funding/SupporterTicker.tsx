@@ -1,4 +1,5 @@
 import { useEffect, useRef, useId, useState } from 'react';
+import type { FundingLang } from '../../lib/funding/translatedSlugs';
 
 interface Message {
   name: string;
@@ -41,7 +42,8 @@ const PlayIcon = () => (
  * 메시지는 후원자가 쓴 글이다. `dangerouslySetInnerHTML`을 쓰지 않으므로 React가 텍스트
  * 노드로 이스케이프한다. `break-keep`은 한글 단어를 중간에서 끊지 않게 한다.
  */
-export default function SupporterTicker({ messages, pending = false }: { messages: Message[]; pending?: boolean }) {
+export default function SupporterTicker({ messages, pending = false, lang = 'ko' }: { messages: Message[]; pending?: boolean; lang?: FundingLang }) {
+  const en = lang === 'en';
   const uid = useId();
   const [index, setIndex] = useState(0);
   const [expanded, setExpanded] = useState(false);
@@ -98,12 +100,12 @@ export default function SupporterTicker({ messages, pending = false }: { message
     return (
       <section aria-labelledby={`${uid}-label`} aria-busy="true">
         <h2 id={`${uid}-label`} className="typo-card-title text-gray-900 dark:text-white">
-          응원 메시지
+          {en ? 'Messages of support' : '응원 메시지'}
         </h2>
         <div className="glass-card mt-4 flex h-40 flex-col justify-center gap-3 overflow-hidden rounded-2xl p-6 md:h-44 md:p-8">
           <div className="h-7 w-4/5 animate-pulse rounded-lg bg-gray-200/80 motion-reduce:animate-none dark:bg-gray-700/60 md:h-8" />
           <div className="h-7 w-2/5 animate-pulse rounded-lg bg-gray-200/80 motion-reduce:animate-none dark:bg-gray-700/60 md:h-8" />
-          <span className="sr-only">응원 메시지를 불러오는 중입니다.</span>
+          <span className="sr-only">{en ? 'Loading messages of support.' : '응원 메시지를 불러오는 중입니다.'}</span>
         </div>
       </section>
     );
@@ -121,7 +123,7 @@ export default function SupporterTicker({ messages, pending = false }: { message
   return (
     <section aria-labelledby={`${uid}-label`}>
       <h2 id={`${uid}-label`} className="typo-card-title text-gray-900 dark:text-white">
-        응원 메시지
+        {en ? 'Messages of support' : '응원 메시지'}
       </h2>
 
       {/*
@@ -149,7 +151,7 @@ export default function SupporterTicker({ messages, pending = false }: { message
                 setUserPaused(true);
               }
             }}
-            aria-label={paused ? '응원 메시지 자동 넘김 재생' : '응원 메시지 자동 넘김 일시정지'}
+            aria-label={en ? (paused ? 'Resume message rotation' : 'Pause message rotation') : paused ? '응원 메시지 자동 넘김 재생' : '응원 메시지 자동 넘김 일시정지'}
             className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white/70 text-gray-500 transition-colors hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:border-gray-700 dark:bg-gray-800/70 dark:text-gray-400 dark:focus-visible:ring-primary-lighter/70 dark:hover:text-white"
           >
             {paused ? <PlayIcon /> : <PauseIcon />}
@@ -175,7 +177,7 @@ export default function SupporterTicker({ messages, pending = false }: { message
                 aria-expanded={expanded}
                 className="shrink-0 rounded font-semibold text-primary transition-colors hover:text-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:text-primary-lighter dark:focus-visible:ring-primary-lighter/70 dark:hover:text-white"
               >
-                {expanded ? '접기' : '더 보기'}
+                {expanded ? (en ? 'Show less' : '접기') : en ? 'Show more' : '더 보기'}
               </button>
             )}
           </footer>

@@ -49,6 +49,21 @@ describe('LanguageSwitcher — ko 전용 라우트 탈출', () => {
     expect(enLink).toHaveAttribute('href', '/en');
   });
 
+  it('번역본이 있는 펀딩 상세(/ko/funding/sabbaha-slung)는 en만 같은 페이지로, 나머지는 홈으로', () => {
+    mockAsPath.current = '/ko/funding/sabbaha-slung';
+    render(<LanguageSwitcher currentLocale="ko" isFloating={false} variant="inline" />);
+    fireEvent.click(screen.getByRole('button'));
+    expect(screen.getByRole('link', { name: 'English' })).toHaveAttribute('href', '/en/funding/sabbaha-slung');
+    expect(screen.getByRole('link', { name: '中文' })).toHaveAttribute('href', '/zh');
+  });
+
+  it('번역본 영문 페이지에서 한국어는 같은 프로젝트로 돌아간다', () => {
+    mockAsPath.current = '/en/funding/sabbaha-slung';
+    render(<LanguageSwitcher currentLocale="en" isFloating={false} variant="inline" />);
+    fireEvent.click(screen.getByRole('button'));
+    expect(screen.getByRole('link', { name: '한국어' })).toHaveAttribute('href', '/ko/funding/sabbaha-slung');
+  });
+
   it('ko 전용이 아닌 일반 라우트는 그대로 세그먼트만 치환한다(회귀 없음 확인)', () => {
     mockAsPath.current = '/ko/pricing';
     render(<LanguageSwitcher currentLocale="ko" isFloating={false} variant="inline" />);

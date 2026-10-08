@@ -30,7 +30,8 @@ const nextConfig = {
     // 펀딩 프로젝트 md는 런타임에 fs로 읽는다(getFundingProject) — 계약서 md와 같은 이유로
     // 이 목록에 없으면 서버리스 번들에서 빠져 배포판에서만 프로젝트가 통째로 사라진다.
     '/api/funding/**': ['./content/funding/*.md'],
-    '/[locale]/funding/**': ['./content/funding/*.md'],
+    // 번역본(content/funding/<locale>/<slug>.md, lib/funding/translations.ts)도 같은 페이지가 ISR 재생성 때 읽는다.
+    '/[locale]/funding/**': ['./content/funding/*.md', './content/funding/*/*.md'],
     '/admin/funding/**': ['./content/funding/*.md'],
     '/api/admin/funding/**': ['./content/funding/*.md'],
     // 개설자 라우트도 같은 이유로 repository.ts를 지나 content/funding/*.md를 읽는다.

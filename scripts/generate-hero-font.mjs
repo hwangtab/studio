@@ -217,7 +217,13 @@ function collectDisplayChars() {
   //    빠져, 한 단어 안에서 두 글자만 폴백 서체로 그려질 뻔했다.
   try {
     const fundingDir = path.join(ROOT, 'content', 'funding');
-    for (const f of fs.readdirSync(fundingDir).filter((n) => n.endsWith('.md'))) {
+    // 번역본(content/funding/<locale>/<slug>.md)의 제목도 같은 h1로 나간다(/en/funding/<slug>).
+    const fundingFiles = fs.readdirSync(fundingDir, { withFileTypes: true }).flatMap((d) =>
+      d.isDirectory()
+        ? fs.readdirSync(path.join(fundingDir, d.name)).filter((n) => n.endsWith('.md')).map((n) => path.join(d.name, n))
+        : d.name.endsWith('.md') ? [d.name] : [],
+    );
+    for (const f of fundingFiles) {
       const raw = fs.readFileSync(path.join(fundingDir, f), 'utf8');
       // frontmatter의 최상위 title 한 줄만 본다 — 리워드 title은 h1이 아니다(들여쓰기로 구분).
       const m = raw.match(/^title:\s*(.+)$/m);

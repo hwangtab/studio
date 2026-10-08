@@ -1,12 +1,14 @@
 import { formatPriceAmount } from '../../data/pricing';
 import { daysUntilKst } from '../../lib/booking/kst';
 import type { ProjectState } from '../../lib/funding/projects';
+import type { FundingLang } from '../../lib/funding/translatedSlugs';
 
 interface Props {
   goalAmount: number;
   endAt: string;
   now: Date | null;
   data: { raisedAmount: number; backerCount: number; percent: number; state: ProjectState } | null;
+  lang?: FundingLang;
 }
 
 /**
@@ -14,31 +16,40 @@ interface Props {
  * `COUNT(*)` — 주문 행 수다. 한 사람이 두 번 후원하면 2가 되므로 'N명'은 사실과 다르다
  * (중복 후원자를 인원으로 부풀린다). 집계 SQL은 그대로 두고 라벨을 맞춘다.
  */
-export default function FundingProgress({ goalAmount, endAt, now, data }: Props) {
+export default function FundingProgress({ goalAmount, endAt, now, data, lang = 'ko' }: Props) {
+  const en = lang === 'en';
   // now가 null이면(마운트 전) D-day를 비운다 — 서버/클라이언트 시계 차이로 인한 하이드레이션
   // 불일치를 피하려는 것이고, 컨테이너 min-height가 높이를 예약하고 있어 레이아웃은 안 흔들린다.
   const days = now ? daysUntilKst(now, new Date(endAt)) : 0;
   const state = data?.state;
   // 카드와 같은 이유로 무엇의 D-day인지 밝힌다 — 행사일과 후원 마감일이 다른
   // 프로젝트에서 맨 D-N은 행사까지 남은 날로 읽힌다.
-  const dday = !now ? '' : state === 'closed' ? '펀딩 마감' : days <= 0 ? '펀딩 마감일' : `펀딩 D-${days}`;
+  const dday = !now ? ''
+    : en ? (state === 'closed' ? 'Campaign closed' : days <= 0 ? 'Last day' : `${days} day${days === 1 ? '' : 's'} left`)
+    : state === 'closed' ? '펀딩 마감' : days <= 0 ? '펀딩 마감일' : `펀딩 D-${days}`;
   const percent = data ? Math.min(100, data.percent) : 0;
   return (
     <div className="min-h-[120px]" aria-live="polite">
       {data ? (
         <>
-          <p className="text-4xl font-bold tabular-nums tracking-tight text-gray-900 dark:text-white">{formatPriceAmount(data.raisedAmount)}원</p>
-          <p className="typo-card-meta mt-2">
-            목표 {formatPriceAmount(goalAmount)}원 · <span className="font-semibold text-primary dark:text-primary-lighter">{data.percent}%</span> · {data.backerCount}건{dday ? ` · ${dday}` : ' 펀딩'}
-          </p>
+          <p className="text-4xl font-bold tabular-nums tracking-tight text-gray-900 dark:text-white">{en ? `₩${formatPriceAmount(data.raisedAmount)}` : `${formatPriceAmount(data.raisedAmount)}원`}</p>
+          {en ? (
+            <p className="typo-card-meta mt-2">
+              raised of ₩{formatPriceAmount(goalAmount)} · <span className="font-semibold text-primary dark:text-primary-lighter">{data.percent}%</span> · {data.backerCount} pledge{data.backerCount === 1 ? '' : 's'}{dday ? ` · ${dday}` : ''}
+            </p>
+          ) : (
+            <p className="typo-card-meta mt-2">
+              목표 {formatPriceAmount(goalAmount)}원 · <span className="font-semibold text-primary dark:text-primary-lighter">{data.percent}%</span> · {data.backerCount}건{dday ? ` · ${dday}` : ' 펀딩'}
+            </p>
+          )}
         </>
       ) : (
-        <p className="typo-card-meta">모금 현황 집계 중…{dday ? ` · ${dday}` : ''}</p>
+        <p className="typo-card-meta">{en ? 'Loading campaign status…' : '모금 현황 집계 중…'}{dday ? ` · ${dday}` : ''}</p>
       )}
       <div
         className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700"
         role="progressbar"
-        aria-label="펀딩 달성률"
+        aria-label={en ? 'Funding progress' : '펀딩 달성률'}
         aria-valuenow={percent}
         aria-valuemin={0}
         aria-valuemax={100}

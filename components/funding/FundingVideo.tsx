@@ -7,6 +7,7 @@ interface Video {
   title: string;
   /** 영상 아래 한 줄(언제·어디서·누가 찍었나). */
   caption: string;
+  captionEn: string;
 }
 
 /**
@@ -27,11 +28,13 @@ const VIDEOS: Record<string, Video> = {
     youtubeId: 'F8JH5d9pOt8',
     title: 'SABBAHA — Debt Shroud (2025.10.12 ACME STUDIO)',
     caption: '〈Debt Shroud〉 라이브 — 2025년 10월 12일 ACME Studio, 경기아트콜렉티브 촬영',
+    captionEn: '“Debt Shroud” live at ACME Studio, 12 October 2025. Filmed by the Gyeonggi Art Collective.',
   },
 };
 
-export default function FundingVideo({ id }: { id: string }) {
+export default function FundingVideo({ id, locale = 'ko' }: { id: string; locale?: string }) {
   const video = VIDEOS[id];
+  const en = locale === 'en';
   const [playing, setPlaying] = useState(false);
   if (!video) return null;
 
@@ -51,7 +54,7 @@ export default function FundingVideo({ id }: { id: string }) {
           <button
             type="button"
             onClick={() => setPlaying(true)}
-            aria-label={`${video.title} 영상 재생`}
+            aria-label={en ? `Play video: ${video.title}` : `${video.title} 영상 재생`}
             className="group absolute inset-0 flex h-full w-full items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white focus-visible:ring-offset-black"
           >
             {/* 유튜브 썸네일 — 외부 그림이라 next/image 최적화를 거치지 않는다. 장식이 아니라 영상의 첫 화면이지만
@@ -74,7 +77,7 @@ export default function FundingVideo({ id }: { id: string }) {
           </button>
         )}
       </div>
-      <figcaption className="mt-3 break-keep text-sm text-gray-600 dark:text-gray-400">{video.caption}</figcaption>
+      <figcaption className="mt-3 break-keep text-sm text-gray-600 dark:text-gray-400">{en ? video.captionEn : video.caption}</figcaption>
     </figure>
   );
 }

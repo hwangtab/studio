@@ -8,6 +8,7 @@ import { imageAspectRatio } from '../../lib/funding/imageAspect';
 import type { FundingReward } from '../../lib/funding/projects';
 import { buttonVariants } from '../ui/Button';
 import { cn } from '../../lib/utils';
+import type { FundingLang } from '../../lib/funding/translatedSlugs';
 
 interface Props {
   reward: FundingReward;
@@ -20,9 +21,13 @@ interface Props {
    * 주소**로 남겨 둔다. 새 탭으로 열기와 주소 복사도 그대로 된다.
    */
   onSelect?: (reward: FundingReward) => void;
+  lang?: FundingLang;
+  /** 카드 아래 버튼 문구. 영문 화면은 한국어 결제 화면으로 간다는 것을 버튼에 밝힌다. */
+  pledgeLabel?: string;
 }
 
-export default function RewardCard({ reward, remaining, pledgeHref, canPledge, onSelect }: Props) {
+export default function RewardCard({ reward, remaining, pledgeHref, canPledge, onSelect, lang = 'ko', pledgeLabel }: Props) {
+  const en = lang === 'en';
   const soldOut = remaining !== null && remaining <= 0;
 
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
@@ -48,14 +53,24 @@ export default function RewardCard({ reward, remaining, pledgeHref, canPledge, o
         />
       )}
       <p className="text-2xl font-bold tabular-nums tracking-tight text-gray-900 dark:text-white">
-        {formatPriceAmount(reward.amount)}원
+        {en ? `₩${formatPriceAmount(reward.amount)}` : `${formatPriceAmount(reward.amount)}원`}
       </p>
       <h3 className="typo-card-subtitle mt-1 text-gray-900 dark:text-white">{reward.title}</h3>
       <p className="typo-card-body mt-2 line-clamp-3 flex-1 whitespace-pre-line">{reward.description}</p>
       <p className="typo-card-meta mt-4 border-t border-gray-200/70 pt-3 dark:border-gray-700/70">
-        예상 전달 {reward.estimatedDelivery}
-        {reward.requiresShipping ? ' · 배송지 입력' : ''}
-        {remaining !== null && !soldOut ? ` · ${remaining}개 남음` : ''}
+        {en ? (
+          <>
+            Estimated delivery {reward.estimatedDelivery}
+            {reward.requiresShipping ? ' · ships within South Korea' : ''}
+            {remaining !== null && !soldOut ? ` · ${remaining} left` : ''}
+          </>
+        ) : (
+          <>
+            예상 전달 {reward.estimatedDelivery}
+            {reward.requiresShipping ? ' · 배송지 입력' : ''}
+            {remaining !== null && !soldOut ? ` · ${remaining}개 남음` : ''}
+          </>
+        )}
       </p>
     </>
   );
@@ -65,7 +80,7 @@ export default function RewardCard({ reward, remaining, pledgeHref, canPledge, o
       <BaseCard variant="glass" className="flex h-full flex-col p-5">
         {body}
         {soldOut && (
-          <Badge size="md" className="mt-4 w-fit">품절</Badge>
+          <Badge size="md" className="mt-4 w-fit">{en ? 'Sold out' : '품절'}</Badge>
         )}
       </BaseCard>
     );
@@ -83,7 +98,7 @@ export default function RewardCard({ reward, remaining, pledgeHref, canPledge, o
         {/* 카드 전체가 링크라 안쪽은 버튼 모양의 span이다. 공용 buttonVariants로 다른 주 버튼과
             모양을 맞추고, 문구는 통일 규칙대로 "펀딩하기"(2026-09-29). */}
         <span className={cn(buttonVariants({ fullWidth: true }), 'mt-4 group-hover:bg-gray-800 dark:group-hover:bg-gray-200')}>
-          펀딩하기
+          {pledgeLabel ?? (en ? 'Back this' : '펀딩하기')}
         </span>
       </Link>
     </BaseCard>

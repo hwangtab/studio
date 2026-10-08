@@ -15,6 +15,8 @@ interface AudioClip {
   peaks: readonly number[];
   /** 한 줄 설명(예: 어느 구간인가). 없으면 안 그린다. */
   note?: string;
+  /** 영문 화면(번역본이 있는 프로젝트, lib/funding/translatedSlugs.ts)의 artist·note. */
+  en?: { artist: string; note: string };
 }
 
 /**
@@ -36,6 +38,7 @@ const CLIPS: Record<string, AudioClip> = {
     coverAlt: '《SLUNG》 앞표지',
     durationSeconds: 50,
     note: '앨범을 여는 곡 〈Kalpa〉(10분 27초)의 앞 50초',
+    en: { artist: 'Sabbaha — SLUNG, track 1', note: 'The first 50 seconds of the opening track, “Kalpa” (10:27)' },
     peaks: [0.172,0.101,0.26,0.176,0.218,0.387,0.466,0.525,0.69,0.792,0.856,0.902,0.866,0.904,0.945,0.936,0.969,0.962,1,0.966,0.961,0.919,0.891,0.859,0.921,0.949,0.85,0.967,0.903,0.99,0.997,0.875,0.926,0.845,0.833,0.878,0.854,0.839,0.832,0.815,0.824,0.842,0.873,0.897,0.879,0.884,0.756,0.828,0.898,0.905,0.889,0.862,0.915,0.891,0.94,0.928,0.878,0.89,0.92,0.922,0.916,0.919,0.925,0.948,0.973,0.886,0.841,0.892,0.874,0.906,0.866,0.885,0.903,0.893,0.9,0.886,0.89,0.894,0.863,0.873,0.858,0.891,0.821,0.882,0.841,0.922,0.921,0.845,0.84,0.956,0.836,1,0.887,0.891,0.869,0.831,0.796,0.637,0.423,0.167],
   },
   // 《SLUNG》 5번 트랙 〈Debt Shroud〉(6:33)의 1:10~2:20. 비공개 저장소의 320k 원본(press/sabbaha-slung/05-…)을
@@ -49,6 +52,7 @@ const CLIPS: Record<string, AudioClip> = {
     coverAlt: '《SLUNG》 앞표지',
     durationSeconds: 70,
     note: '〈Debt Shroud〉(6분 33초)의 1분 10초부터 2분 20초까지',
+    en: { artist: 'Sabbaha — SLUNG, track 5', note: '“Debt Shroud” (6:33), from 1:10 to 2:20' },
     peaks: [0.8,0.919,0.842,0.885,0.842,0.84,0.717,0.726,0.844,0.806,0.93,0.717,0.722,0.845,0.867,0.877,0.761,0.727,0.83,0.855,0.865,0.859,0.905,0.823,0.826,0.801,0.728,0.825,0.814,0.853,0.8,0.72,0.83,0.865,0.96,0.78,0.728,0.875,0.824,0.843,0.824,0.843,0.91,0.854,0.839,0.84,0.811,0.854,0.889,0.828,0.848,0.88,0.836,0.868,0.841,0.838,0.813,0.883,0.85,0.854,0.876,0.809,1,1,0.931,0.943,0.953,0.897,0.896,0.815,0.819,0.861,0.963,0.92,0.857,0.931,0.962,0.89,0.829,0.84,0.876,0.865,0.898,0.951,0.923,0.89,0.885,0.882,0.825,0.806,0.924,0.887,0.92,0.93,0.877,0.859,0.951,0.889,0.627,0.22],
   },
 };
@@ -110,8 +114,9 @@ function drawSpectrum(canvas: HTMLCanvasElement, data: Uint8Array | null, time: 
   ctx.globalAlpha = 1;
 }
 
-export default function FundingAudioPlayer({ id }: { id: string }) {
+export default function FundingAudioPlayer({ id, locale = 'ko' }: { id: string; locale?: string }) {
   const clip = CLIPS[id];
+  const en = locale === 'en' && !!clip?.en;
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fillRef = useRef<HTMLDivElement>(null);
@@ -290,12 +295,12 @@ export default function FundingAudioPlayer({ id }: { id: string }) {
       <div className="relative p-5 md:p-7">
         <div className="flex items-center gap-4 md:gap-5">
           <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl shadow-md ring-1 ring-white/15 md:h-24 md:w-24">
-            <ResponsiveImage src={clip.cover} alt={clip.coverAlt} fill sizes="96px" className="object-cover" />
+            <ResponsiveImage src={clip.cover} alt={en ? 'Album cover' : clip.coverAlt} fill sizes="96px" className="object-cover" />
           </div>
           <div className="min-w-0">
-            <p className="text-xs font-semibold uppercase tracking-widest text-white/60">미리듣기</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-white/60">{en ? 'Preview' : '미리듣기'}</p>
             <p className="mt-1 truncate font-title text-2xl font-black leading-tight md:text-3xl">{clip.title}</p>
-            <p className="mt-0.5 break-keep text-sm text-white/70">{clip.artist}</p>
+            <p className="mt-0.5 break-keep text-sm text-white/70">{en ? clip.en!.artist : clip.artist}</p>
           </div>
         </div>
 
@@ -318,7 +323,7 @@ export default function FundingAudioPlayer({ id }: { id: string }) {
             step={0.5}
             defaultValue={0}
             onChange={onSeek}
-            aria-label={`${clip.title} 재생 위치`}
+            aria-label={en ? `${clip.title} playback position` : `${clip.title} 재생 위치`}
             aria-valuetext={`${formatTime(time)} / ${formatTime(duration)}`}
             className="absolute inset-0 h-full w-full cursor-pointer touch-pan-y opacity-0"
           />
@@ -328,7 +333,7 @@ export default function FundingAudioPlayer({ id }: { id: string }) {
           <button
             type="button"
             onClick={togglePlay}
-            aria-label={playing ? `${clip.title} 일시정지` : `${clip.title} 재생`}
+            aria-label={en ? `${playing ? 'Pause' : 'Play'} ${clip.title}` : playing ? `${clip.title} 일시정지` : `${clip.title} 재생`}
             className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white text-gray-950 shadow-md transition-colors duration-fast hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950"
           >
             {playing ? <Pause size={22} aria-hidden="true" /> : <Play size={22} aria-hidden="true" className="translate-x-px" />}
@@ -339,9 +344,9 @@ export default function FundingAudioPlayer({ id }: { id: string }) {
           </p>
         </div>
 
-        {clip.note && <figcaption className="mt-3 break-keep text-sm text-white/60">{clip.note}</figcaption>}
+        {clip.note && <figcaption className="mt-3 break-keep text-sm text-white/60">{en ? clip.en!.note : clip.note}</figcaption>}
         <p role="status" className={failed ? 'mt-3 text-sm text-red-300' : 'sr-only'}>
-          {failed ? '음원을 재생하지 못했습니다. 잠시 뒤 다시 눌러 주세요.' : ''}
+          {failed ? (en ? 'The audio could not be played. Please try again in a moment.' : '음원을 재생하지 못했습니다. 잠시 뒤 다시 눌러 주세요.') : ''}
         </p>
       </div>
     </figure>
