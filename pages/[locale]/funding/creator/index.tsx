@@ -98,7 +98,7 @@ export default function CreatorHome({ projects, stats }: Props) {
                      '모금 현황' 구획에 있다. 목록은 "얼마나 모였나"를 훑는 자리다. */
                   <p className="typo-card-meta mt-2 tabular-nums">
                     {formatPriceAmount(stats[p.id].raisedAmount)}원 ·{' '}
-                    <span className="font-semibold text-primary dark:text-primary-lighter">{stats[p.id].percent}%</span> ·{' '}
+                    <span className="font-semibold text-gray-950 dark:text-white">{stats[p.id].percent}%</span> ·{' '}
                     {stats[p.id].backerCount}건
                   </p>
                 )}

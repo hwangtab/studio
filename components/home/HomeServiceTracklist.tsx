@@ -33,7 +33,7 @@ const HomeServiceTracklist = ({ services }: HomeServiceTracklistProps) => (
           prefetch={false}
           className="group grid grid-cols-[2.25rem_minmax(0,1fr)_auto] md:grid-cols-[3.5rem_minmax(0,1fr)_minmax(0,1.35fr)_auto] items-baseline gap-x-4 md:gap-x-8 px-3 -mx-3 py-6 md:py-7 rounded-lg transition-colors duration-fast hover:bg-gray-50 dark:hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70"
         >
-          <span aria-hidden="true" className="text-sm font-semibold tabular-nums text-primary dark:text-primary-lighter">
+          <span aria-hidden="true" className="text-sm font-semibold tabular-nums text-gray-600 dark:text-gray-300">
             {String(i + 1).padStart(2, '0')}
           </span>
           <span className="font-title text-xl md:text-2xl font-bold leading-snug text-gray-950 dark:text-white break-keep">

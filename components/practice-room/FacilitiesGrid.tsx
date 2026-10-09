@@ -28,7 +28,7 @@ const FacilityCard = ({
 }) => (
   <BaseCard variant="default" delay={delay} padding="compact" className="h-full">
     <div className="flex items-start gap-3">
-      <div className="bg-primary/10 dark:bg-primary/20 p-2.5 rounded-full text-primary dark:text-primary-lighter flex-shrink-0">
+      <div className="bg-gray-100 dark:bg-gray-800 p-2.5 rounded-full text-gray-700 dark:text-gray-300 flex-shrink-0">
         <Icon size={20} aria-hidden="true" />
       </div>
       <div>

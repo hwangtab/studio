@@ -162,7 +162,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   'Reply within 24 hours · mixing, mastering & release production available',
                 ].map((fact, i) => (
                   <li key={i} className="flex items-start gap-2 text-gray-700 dark:text-gray-300">
-                    <CheckCircle className="w-5 h-5 text-primary dark:text-primary-lighter flex-shrink-0 mt-0.5" aria-hidden="true" />
+                    <CheckCircle className="w-5 h-5 text-gray-700 dark:text-gray-300 flex-shrink-0 mt-0.5" aria-hidden="true" />
                     <span>{fact}</span>
                   </li>
                 ))}
@@ -222,7 +222,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   <ul className="space-y-3">
                     {items.map((item, i) => (
                       <li key={i} className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
-                        <CheckCircle className="w-5 h-5 text-primary dark:text-primary-lighter flex-shrink-0 mt-0.5" aria-hidden="true" />
+                        <CheckCircle className="w-5 h-5 text-gray-700 dark:text-gray-300 flex-shrink-0 mt-0.5" aria-hidden="true" />
                         <span>{item}</span>
                       </li>
                     ))}

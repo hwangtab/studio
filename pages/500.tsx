@@ -41,7 +41,7 @@ const ServerErrorPage: NextPageWithLayout = () => {
 
       {/* badge를 h1(delay 0)보다 DOM에 먼저 두므로 진입 delay를 0으로 맞춰 (latent) 순서 역전 제거 */}
       <m.div
-        className="inline-flex items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 px-6 py-3 mb-6 typo-card-subtitle text-primary-dark dark:text-primary-lighter"
+        className="inline-flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 px-6 py-3 mb-6 typo-card-subtitle text-gray-700 dark:text-gray-300"
         {...PAGE_SUBTITLE_ANIMATION}
         transition={{ ...PAGE_SUBTITLE_ANIMATION.transition, delay: 0 }}
       >

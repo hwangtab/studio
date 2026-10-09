@@ -23,7 +23,7 @@ const ReleaseFundingPaths = ({ kakaoUrl }: ReleaseFundingPathsProps) => (
         <div key={item.id} role="listitem" className="glass-card rounded-2xl p-7 flex flex-col">
           <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">{item.title}</h3>
           <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mb-4">{item.body}</p>
-          <p className="text-sm font-semibold text-primary dark:text-primary-lighter mb-5">{item.stat}</p>
+          <p className="text-sm font-semibold text-gray-950 dark:text-white mb-5">{item.stat}</p>
           <div className="mt-auto flex flex-col gap-2">
             {item.links.map((link) =>
               link.href.startsWith('#') ? (

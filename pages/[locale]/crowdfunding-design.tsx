@@ -145,7 +145,7 @@ const CrowdfundingDesign: NextPageWithLayout<Props> = ({ locale, relatedStories 
             const Icon = SCOPE_ICONS[index] ?? BookOpen;
             return (
               <BaseCard key={item.title} className="p-6">
-                <Icon className="mb-4 h-8 w-8 text-primary dark:text-primary-lighter" aria-hidden="true" />
+                <Icon className="mb-4 h-8 w-8 text-gray-700 dark:text-gray-300" aria-hidden="true" />
                 <h3 className="typo-card-title mb-2 text-gray-900 dark:text-white">{item.title}</h3>
                 <p className="typo-card-body text-gray-700 dark:text-gray-300">{item.body}</p>
               </BaseCard>
@@ -265,7 +265,7 @@ const CrowdfundingDesign: NextPageWithLayout<Props> = ({ locale, relatedStories 
         title={
           <>
             {copy.cta.titleLine1}{' '}
-            <span className="text-primary dark:text-primary-lighter">{copy.cta.titleHighlight}</span>
+            <span className="text-gray-950 dark:text-white">{copy.cta.titleHighlight}</span>
           </>
         }
         subtitle={copy.cta.subtitle}

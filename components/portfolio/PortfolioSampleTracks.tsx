@@ -34,7 +34,7 @@ const PortfolioSampleTracks = ({ locale, tracks }: PortfolioSampleTracksProps) =
         const playing = isPlaying(track.id);
         return (
           <li key={track.id} className="flex items-center gap-4 py-4">
-            <span aria-hidden="true" className="w-6 text-sm font-semibold tabular-nums text-primary dark:text-primary-lighter">
+            <span aria-hidden="true" className="w-6 text-sm font-semibold tabular-nums text-gray-600 dark:text-gray-300">
               {String(i + 1).padStart(2, '0')}
             </span>
             <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">

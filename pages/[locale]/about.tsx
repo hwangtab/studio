@@ -124,7 +124,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
         <Section variant="default">
           <div className="max-w-3xl mx-auto">
             <BaseCard variant="default" className="p-8">
-              <div className="flex items-center gap-3 mb-2 text-primary dark:text-primary-lighter">
+              <div className="flex items-center gap-3 mb-2 text-gray-600 dark:text-gray-300">
                 <Award size={22} aria-hidden="true" />
                 <span className="typo-card-meta font-semibold">{t('about.producer.tagline')}</span>
               </div>
@@ -240,7 +240,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
                   className="p-4"
                 >
                   <div className="flex items-center mb-2">
-                    <Icon className="text-primary dark:text-primary-lighter mr-2" aria-hidden="true" />
+                    <Icon className="text-gray-700 dark:text-gray-300 mr-2" aria-hidden="true" />
                     <h3 className="typo-card-subtitle">{advantage.title}</h3>
                   </div>
                   <p className="typo-card-body">{advantage.description}</p>
@@ -276,7 +276,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                <Phone className="text-primary dark:text-primary-lighter" size={20} aria-hidden="true" />
+                <Phone className="text-gray-700 dark:text-gray-300" size={20} aria-hidden="true" />
               </div>
             </div>
             <h3 className="typo-card-subtitle mb-2">{t('actions.call')}</h3>
@@ -296,7 +296,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                <Mail className="text-primary dark:text-primary-lighter" size={20} aria-hidden="true" />
+                <Mail className="text-gray-700 dark:text-gray-300" size={20} aria-hidden="true" />
               </div>
             </div>
             <h3 className="typo-card-subtitle mb-2">{t('actions.email')}</h3>
@@ -318,7 +318,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                <MessageCircle className="text-primary dark:text-primary-lighter" size={20} aria-hidden="true" />
+                <MessageCircle className="text-gray-700 dark:text-gray-300" size={20} aria-hidden="true" />
               </div>
             </div>
             <h3 className="typo-card-subtitle mb-2">{t('actions.kakao')}</h3>
@@ -340,7 +340,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                <MapPin className="text-primary dark:text-primary-lighter" size={20} aria-hidden="true" />
+                <MapPin className="text-gray-700 dark:text-gray-300" size={20} aria-hidden="true" />
               </div>
             </div>
             <h3 className="typo-card-subtitle mb-2">{t('actions.location')}</h3>
@@ -380,7 +380,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           title={
             <>
               <span className="block">{t('about.cta.titleLine1')}</span>
-              <span className="block text-primary dark:text-primary-lighter">{t('about.cta.titleHighlight')}</span>
+              <span className="block text-gray-950 dark:text-white">{t('about.cta.titleHighlight')}</span>
             </>
           }
           subtitle={

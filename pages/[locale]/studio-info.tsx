@@ -278,7 +278,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
           title={
             <>
               <span className="block">{t('studioInfo.cta.titleLine1')}</span>
-              <span className="block text-primary dark:text-primary-lighter">{t('studioInfo.cta.titleHighlight')}</span>
+              <span className="block text-gray-950 dark:text-white">{t('studioInfo.cta.titleHighlight')}</span>
             </>
           }
           subtitle={

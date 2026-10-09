@@ -214,7 +214,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
                 {([0, 1, 2] as const).map((i) => (
                   <li key={i} className="flex items-start gap-4">
                     <CheckCircle2
-                      className="text-primary dark:text-primary-lighter flex-shrink-0 mt-1"
+                      className="text-gray-700 dark:text-gray-300 flex-shrink-0 mt-1"
                       size={22}
                       aria-hidden="true"
                     />
@@ -387,7 +387,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
           title={
             <>
               <span className="block">{t('weddingSong.cta.titleLine1')}</span>
-              <span className="block text-primary dark:text-primary-lighter">{t('weddingSong.cta.titleHighlight')}</span>
+              <span className="block text-gray-950 dark:text-white">{t('weddingSong.cta.titleHighlight')}</span>
             </>
           }
           subtitle={

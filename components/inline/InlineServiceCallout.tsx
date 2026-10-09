@@ -267,9 +267,9 @@ const InlineServiceCallout = ({ type, locale }: InlineServiceCalloutProps) => {
           className="inline-flex items-center justify-center p-1.5 rounded-full bg-primary/15"
           aria-hidden="true"
         >
-          <Icon className="text-primary dark:text-primary-lighter" size={14} />
+          <Icon className="text-gray-700 dark:text-gray-300" size={14} />
         </div>
-        <span className="text-xs font-semibold uppercase tracking-wider text-primary dark:text-primary-lighter">
+        <span className="text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-300">
           {categoryLabel}
         </span>
       </div>
@@ -289,7 +289,7 @@ const InlineServiceCallout = ({ type, locale }: InlineServiceCalloutProps) => {
               className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300"
             >
               <CheckCircle2
-                className="flex-shrink-0 mt-0.5 text-primary dark:text-primary-lighter"
+                className="flex-shrink-0 mt-0.5 text-gray-700 dark:text-gray-300"
                 size={16}
                 aria-hidden="true"
               />
@@ -300,7 +300,7 @@ const InlineServiceCallout = ({ type, locale }: InlineServiceCalloutProps) => {
       )}
 
       {koContent.softNote && (
-        <p className="flex items-start gap-1.5 text-sm text-primary dark:text-primary-lighter mb-4 font-medium">
+        <p className="flex items-start gap-1.5 text-sm text-gray-950 dark:text-white mb-4 font-medium">
           <MessageCircle size={16} className="mt-0.5 flex-shrink-0" aria-hidden="true" />
           <span>{koContent.softNote}</span>
         </p>

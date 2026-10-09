@@ -99,9 +99,9 @@ const InlinePriceCallout = ({ id, locale }: InlinePriceCalloutProps) => {
           className="inline-flex items-center justify-center p-1.5 rounded-full bg-primary/15"
           aria-hidden="true"
         >
-          <Tag className="text-primary dark:text-primary-lighter" size={14} />
+          <Tag className="text-gray-700 dark:text-gray-300" size={14} />
         </div>
-        <span className="text-xs font-semibold uppercase tracking-wider text-primary dark:text-primary-lighter">
+        <span className="text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-300">
           {categoryLabel}
         </span>
       </div>
@@ -130,7 +130,7 @@ const InlinePriceCallout = ({ id, locale }: InlinePriceCalloutProps) => {
               className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300"
             >
               <CheckCircle2
-                className="flex-shrink-0 mt-0.5 text-primary dark:text-primary-lighter"
+                className="flex-shrink-0 mt-0.5 text-gray-700 dark:text-gray-300"
                 size={16}
                 aria-hidden="true"
               />

@@ -53,7 +53,7 @@ export const RuleList = ({
       {items.map((item, index) => (
         <li key={item.key ?? (typeof item.heading === 'string' ? item.heading : index)} className="border-t-2 border-gray-950 dark:border-white pt-5">
           {numbered && (
-            <span aria-hidden="true" className="block text-sm font-semibold tabular-nums text-primary dark:text-primary-lighter mb-3">
+            <span aria-hidden="true" className="block text-sm font-semibold tabular-nums text-gray-600 dark:text-gray-300 mb-3">
               {labelPrefix ? `${labelPrefix}${index + 1}` : String(index + 1).padStart(2, '0')}
             </span>
           )}

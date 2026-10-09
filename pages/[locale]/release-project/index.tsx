@@ -190,7 +190,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
               className="glass-card rounded-2xl p-8 flex flex-col"
             >
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{t(`releaseProject.tiers.${key}.label`)}</h3>
-              <div className="flex items-center gap-1.5 text-primary dark:text-primary-lighter mb-4">
+              <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 mb-4">
                 <Clock size={14} className="flex-shrink-0" />
                 <span className="text-sm font-medium">{t(`releaseProject.tiers.${key}.duration`)}</span>
               </div>
@@ -240,7 +240,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
               key={i}
               className="flex items-start gap-3 glass-card rounded-xl p-5"
             >
-              <CheckCircle size={20} className="text-primary dark:text-primary-lighter flex-shrink-0 mt-0.5" />
+              <CheckCircle size={20} className="text-gray-700 dark:text-gray-300 flex-shrink-0 mt-0.5" />
               <span className="text-gray-700 dark:text-gray-300">{item}</span>
             </div>
           ))}
@@ -267,14 +267,14 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
               <div key={step} className="flex gap-5">
                 <div className="flex-shrink-0 flex flex-col items-center self-stretch">
                   <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Icon size={18} className="text-primary dark:text-primary-lighter" />
+                    <Icon size={18} className="text-gray-700 dark:text-gray-300" />
                   </div>
                   {!isLast && (
                     <div className="w-0.5 flex-1 bg-gray-200 dark:bg-gray-700 my-1.5" />
                   )}
                 </div>
                 <div className={`flex-1 pt-1.5 ${!isLast ? 'pb-6' : ''}`}>
-                  <p className="text-xs font-mono text-primary dark:text-primary-lighter mb-1 tracking-wide">{step}</p>
+                  <p className="text-xs font-mono text-gray-600 dark:text-gray-300 mb-1 tracking-wide">{step}</p>
                   <h3 className="text-base font-bold text-gray-900 dark:text-white mb-1">{s.title}</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{s.desc}</p>
                 </div>
@@ -365,7 +365,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
                   </div>
                 )}
                 <div className="p-6 flex flex-col flex-1">
-                  <p className="text-xs text-primary dark:text-primary-lighter font-medium mb-1">{item.artist}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-300 font-medium mb-1">{item.artist}</p>
                   <h3 className="text-base font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary dark:group-hover:text-primary-lighter transition-colors">
                     {item.title}
                   </h3>
@@ -428,7 +428,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           title={
             <>
               <span className="block">{t('releaseProject.cta.titleLine1')}</span>
-              <span className="block text-primary dark:text-primary-lighter">{t('releaseProject.cta.titleHighlight')}</span>
+              <span className="block text-gray-950 dark:text-white">{t('releaseProject.cta.titleHighlight')}</span>
             </>
           }
           subtitle={t('releaseProject.cta.subtitle')}

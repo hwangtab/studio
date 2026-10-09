@@ -303,9 +303,10 @@ const config: Config = {
           letterSpacing: 'var(--eyebrow-ls, 0.08em)',
           textTransform: 'uppercase',
           fontVariantNumeric: 'tabular-nums',
-          color: theme('colors.primary.DEFAULT'),
+          // 회색 — 파랑은 누를 수 있는 것에만(2026-10-09). gray-600 흰 7.56:1·paper-2 약 7:1.
+          color: theme('colors.gray.600'),
           '.dark &': {
-            color: theme('colors.primary.lighter'),
+            color: theme('colors.gray.300'),
           },
         },
         // v2 섹션 제목. 그라디언트 대신 잉크(gray-950) 단색 — 강조는 크기와 굵기가 맡는다.

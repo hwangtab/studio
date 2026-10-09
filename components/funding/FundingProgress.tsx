@@ -35,11 +35,11 @@ export default function FundingProgress({ goalAmount, endAt, now, data, lang = '
           <p className="text-4xl font-bold tabular-nums tracking-tight text-gray-900 dark:text-white">{en ? `₩${formatPriceAmount(data.raisedAmount)}` : `${formatPriceAmount(data.raisedAmount)}원`}</p>
           {en ? (
             <p className="typo-card-meta mt-2">
-              raised of ₩{formatPriceAmount(goalAmount)} · <span className="font-semibold text-primary dark:text-primary-lighter">{data.percent}%</span> · {data.backerCount} pledge{data.backerCount === 1 ? '' : 's'}{dday ? ` · ${dday}` : ''}
+              raised of ₩{formatPriceAmount(goalAmount)} · <span className="font-semibold text-gray-950 dark:text-white">{data.percent}%</span> · {data.backerCount} pledge{data.backerCount === 1 ? '' : 's'}{dday ? ` · ${dday}` : ''}
             </p>
           ) : (
             <p className="typo-card-meta mt-2">
-              목표 {formatPriceAmount(goalAmount)}원 · <span className="font-semibold text-primary dark:text-primary-lighter">{data.percent}%</span> · {data.backerCount}건{dday ? ` · ${dday}` : ' 펀딩'}
+              목표 {formatPriceAmount(goalAmount)}원 · <span className="font-semibold text-gray-950 dark:text-white">{data.percent}%</span> · {data.backerCount}건{dday ? ` · ${dday}` : ' 펀딩'}
             </p>
           )}
         </>

@@ -24,7 +24,7 @@ export function ProjectStatsPanel({ stats }: { stats: CreatorProjectStats }) {
           (components/funding/FundingProgress.tsx와 같은 라벨). */}
       <p className="typo-card-meta mt-2">
         목표 {formatPriceAmount(stats.goalAmount)}원 ·{' '}
-        <span className="font-semibold text-primary dark:text-primary-lighter">{stats.percent}%</span> · {stats.backerCount}건
+        <span className="font-semibold text-gray-950 dark:text-white">{stats.percent}%</span> · {stats.backerCount}건
       </p>
       <div
         className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700"

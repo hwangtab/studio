@@ -35,7 +35,7 @@ const RegionLinksSection = ({ locale }: RegionLinksSectionProps) => {
             if (items.length === 0) return null;
             return (
               <div key={group}>
-                <h3 className="text-sm font-bold text-primary dark:text-primary-lighter mb-3 uppercase tracking-wide">
+                <h3 className="text-sm font-bold text-gray-950 dark:text-white mb-3 uppercase tracking-wide">
                   {PRACTICE_ROOM_REGION_GROUP_LABELS[group]}
                 </h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
