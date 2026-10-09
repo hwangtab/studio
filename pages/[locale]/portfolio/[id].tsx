@@ -26,7 +26,7 @@ import { defaultLocale, locales, type Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
 import { createEnterAnimation } from '../../../utils/animationUtils';
 import Breadcrumb from '../../../components/ui/Breadcrumb';
-import { BUTTON_DEPTH } from '../../../components/ui/buttonDepth';
+import { BUTTON_PRESS } from '../../../components/ui/buttonPress';
 import { Button } from '../../../components/ui/Button';
 
 
@@ -192,7 +192,7 @@ const PortfolioDetailPage: NextPageWithLayout<PortfolioDetailPageProps> = ({ loc
             titleClassName="text-heading-2 font-title mb-2"
             artistClassName="typo-card-body mb-6"
             servicesHeadingClassName="typo-card-title mb-3"
-            primaryActionClassName={`flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${BUTTON_DEPTH.solid}`}
+            primaryActionClassName={`flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${BUTTON_PRESS}`}
             summaryActions={
               <Button type="button" variant="weak" onClick={sharePortfolio} className="flex-1 min-h-[44px] rounded-lg touch-manipulation">
                 <Share2 size={16} aria-hidden="true" />
@@ -215,7 +215,7 @@ const PortfolioDetailPage: NextPageWithLayout<PortfolioDetailPageProps> = ({ loc
           {/* prefetch={false}: 본문 fold 내 button CTA들의 무거운 SSG JSON
               자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
           <div className="flex flex-wrap justify-center gap-4">
-            <Link href={getLink('/pricing')} prefetch={false} className={`inline-flex items-center px-6 py-3 min-h-[44px] bg-primary hover:bg-primary-dark text-white rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${BUTTON_DEPTH.solid}`}>
+            <Link href={getLink('/pricing')} prefetch={false} className={`inline-flex items-center px-6 py-3 min-h-[44px] bg-primary hover:bg-primary-dark text-white rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${BUTTON_PRESS}`}>
               {t('nav.pricing')}
             </Link>
             {/* 같은 줄의 형제 둘이 rounded-lg 카드형 버튼이라 반경·굵기만 넘겨 맞춘다.

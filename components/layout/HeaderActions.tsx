@@ -6,7 +6,7 @@ import { LanguageSwitcher } from '../LanguageSwitcher';
 import { type Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
-import { BUTTON_DEPTH } from '../ui/buttonDepth';
+import { BUTTON_PRESS } from '../ui/buttonPress';
 
 interface HeaderActionsProps {
   isTransparent: boolean;
@@ -41,7 +41,7 @@ export const HeaderActions = ({
   // 16:1로 고정된다 — 밝은 히어로에서 글씨가 흐려지던 스크림 방식보다 안정적이라
   // text-shadow도 필요 없다. focus ring만 배경에 맞춰 가른다.
   // 테두리를 두지 않는다 — 투명 테두리 1px 안쪽에 입체감의 안쪽 하이라이트가 그려져 이중 테두리처럼 보였다(2026-10-08).
-  const kakaoCtaButtonClass = `${headerCtaBaseClass} bg-kakao hover:bg-kakao-dark text-kakao-ink ${BUTTON_DEPTH.kakao} ${isTransparent
+  const kakaoCtaButtonClass = `${headerCtaBaseClass} bg-kakao hover:bg-kakao-dark text-kakao-ink ${BUTTON_PRESS} ${isTransparent
     ? 'focus-visible:ring-white/70 focus-visible:ring-offset-black/20'
     : 'focus-visible:ring-kakao-ink dark:focus-visible:ring-kakao focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900'
     }`;
@@ -52,7 +52,7 @@ export const HeaderActions = ({
   // 밝은 히어로에서도 글씨가 읽히게 한다. glass 토큰은 모바일 폴백 시 불투명
   // 흰색이 되어 흰 글씨가 사라지므로 여기선 쓰지 않는다.
   const formCtaButtonClass = `${headerCtaBaseClass} ${!isTransparent
-    ? `bg-primary hover:bg-primary-dark text-white ${BUTTON_DEPTH.solid} focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`
+    ? `bg-primary hover:bg-primary-dark text-white ${BUTTON_PRESS} focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`
     : 'border bg-black/25 hover:bg-black/35 text-white border-white/35 [text-shadow:0_1px_2px_rgb(0_0_0/0.55)] focus-visible:ring-white/70 focus-visible:ring-offset-black/20'
     }`;
 

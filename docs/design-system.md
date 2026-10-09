@@ -278,7 +278,7 @@ woff2와 `display.chars.json`을 **함께 커밋**해야 한다(CI가 `--check`�
 
 | variant | 용도 |
 |---|---|
-| `solid` | 1차 액션 — 파랑 면 + 흰 글씨(라이트·다크 같음), `BUTTON_DEPTH.solid` 입체감 |
+| `solid` | 1차 액션 — 평평한 파랑 면 + 흰 글씨(라이트·다크 같음) |
 | `inverse` | 어두운 히어로 사진 위 1차 액션(흰 버튼 + 잉크 글씨, 테마 무관) |
 | `kakao` | 카카오톡 목적지 전용 |
 | `weak` | 2차 액션 — 연한 파랑 채움(`bg-primary/10` + `text-primary-dark`). 옛 `outline`(테두리)을 대체했다 — 얇은 선은 누를 수 있다는 신호가 약하다 |
@@ -289,7 +289,8 @@ woff2와 `display.chars.json`을 **함께 커밋**해야 한다(CI가 `--check`�
 `shape`: `pill`(자유 배치 CTA) / `block`(카드·폼 안). `size`: `sm`/`md`/`lg`/`icon`.
 
 **누를 때 반응이 기본, hover는 덤** (2026-10-09 TDS 대조): 모든 버튼은 누를 때 0.96배로 줄고 살짝 어두워진다
-(`active:scale-[0.96] active:brightness-90`, 손으로 짠 버튼은 `BUTTON_DEPTH`가 같은 것을 준다). `hover:`는 마우스가 있는
+(`active:scale-[0.96] active:brightness-90`, 손으로 짠 버튼은 `BUTTON_PRESS`가 같은 것을 준다). **버튼은 평평하다** —
+그림자·그라디언트·hover 떠오름 없음, hover는 색만 진해진다(2026-10-09 운영자 "입체감이 과하다", TDS 버튼과 같음). `hover:`는 마우스가 있는
 기기에서만 켜진다(tailwind `future.hoverOnlyWhenSupported`) — 휴대폰에서 탭한 뒤 hover가 눌어붙지 않는다. iOS가
 `:active`를 그리도록 `public/scripts/theme-init.js`가 빈 touchstart 리스너를 단다. 링크 카드는 누르면 `brightness-95`.
 

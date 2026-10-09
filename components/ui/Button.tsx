@@ -1,7 +1,6 @@
 import React from 'react';
 import { type VariantProps, cva } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
-import { BUTTON_DEPTH } from './buttonDepth';
 
 const buttonVariants = cva(
   // transition-all → 명시 property: iOS Safari에서 transition-all은 layout 트리거 가능 속성도
@@ -21,34 +20,34 @@ const buttonVariants = cva(
   // 4개(background-color·border-color·color·transform)로 고쳤다 — hover 색이 이제
   // duration-base로 전환된다. box-shadow는 위 이유로 여전히 넣지 않는다.
   //
-  // 누를 때 반응(2026-10-09, TDS 대조): 0.96배로 줄고 살짝 어두워진다(토스 버튼과 같은 문법). hover 떠오름은
-  // 마우스가 있는 기기에서만 보이므로(tailwind future.hoverOnlyWhenSupported) 휴대폰의 유일한 반응이 이것이다.
-  // 눌림은 75ms로 빠르게, 놓을 때는 duration-base.
+  // 버튼은 평평하다 — 그림자·그라디언트·hover 떠오름 없음. 반응은 두 가지뿐(2026-10-09 TDS 대조, 운영자 "입체감이 과하다"):
+  // hover는 색이 진해지고(마우스 기기에서만, tailwind future.hoverOnlyWhenSupported), 누르면 0.96배로 줄며 어두워진다.
+  // 눌림은 75ms로 빠르게, 놓을 때는 duration-base. 손으로 짠 버튼은 components/ui/buttonPress.ts의 BUTTON_PRESS.
   "inline-flex items-center justify-center gap-2 typo-button transition-[background-color,border-color,color,transform,filter] duration-base ease-standard active:duration-75 active:scale-[0.96] active:brightness-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
         // 행동 버튼은 파랑(primary) — 파랑 = 누를 수 있는 것(2026-10-09 운영자 "버튼은 시인성 좋게 파란색 계열").
-        // 흰 글씨 5.17:1, 라이트·다크 같은 면. 가격 숫자 같은 누를 수 없는 강조는 잉크라 버튼과 겹쳐 보이지 않는다.
+        // 흰 글씨 5.17:1, 라이트·다크 같은 평평한 면. 가격 숫자 같은 누를 수 없는 강조는 잉크라 버튼과 겹쳐 보이지 않는다.
         // 사진 위에서는 inverse(흰 버튼)를 쓴다.
-        solid: `bg-primary text-white hover:bg-primary-dark hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${BUTTON_DEPTH.solid}`,
+        solid: "bg-primary text-white hover:bg-primary-dark focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         // 어두운 히어로 사진 위 1차 행동(비-ko 문의 등). 라이트·다크 구분 없이 흰 버튼 + 잉크 글씨.
-        inverse: `bg-white text-gray-950 hover:bg-gray-100 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-white/70 focus-visible:ring-offset-black/20 ${BUTTON_DEPTH.inverse}`,
+        inverse: "bg-white text-gray-950 hover:bg-gray-100 focus-visible:ring-white/70 focus-visible:ring-offset-black/20",
         // 연한 파랑 버튼(weak) — 2차 행동. 테두리 버튼은 얇은 선이라 누를 수 있다는 신호가 약했다(TDS도 보조 버튼을
         // 테두리가 아니라 옅은 채움으로 둔다). primary-dark 글씨 on primary/10 약 5.8:1, 다크는 primary-lighter.
-        weak: "bg-primary/10 text-primary-dark hover:bg-primary/15 dark:bg-primary-lighter/15 dark:text-primary-lighter dark:hover:bg-primary-lighter/20 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
-        ghost: "bg-transparent text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
-        secondary: "bg-white text-gray-900 shadow-sm hover:bg-gray-50 border border-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
+        weak: "bg-primary/10 text-primary-dark hover:bg-primary/15 dark:bg-primary-lighter/15 dark:text-primary-lighter dark:hover:bg-primary-lighter/20 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
+        ghost: "bg-transparent text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
+        secondary: "bg-white text-gray-900 hover:bg-gray-50 border border-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         // Liquid Glass 재질 버튼. bg/border/shadow는 .glass-regular(components 레이어)가
         // 제공하므로 여기에 bg-* 등 충돌 유틸리티를 추가하지 말 것 — utilities 레이어가
         // 재질을 덮어써 폴백(솔리드 강등)까지 깨진다.
-        glass: "glass-regular text-gray-700 dark:text-gray-200 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
+        glass: "glass-regular text-gray-700 dark:text-gray-200 active:scale-[0.97] focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         // 카카오톡 목적지 전용. 옐로 위 글자는 항상 kakao-ink(흰 글씨는 대비 1.3:1로 미달),
         // 포커스 링도 옐로 위에서 보이도록 ink를 쓴다.
-        kakao: `bg-kakao text-kakao-ink hover:bg-kakao-dark hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-kakao-ink dark:focus-visible:ring-kakao focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${BUTTON_DEPTH.kakao}`,
+        kakao: "bg-kakao text-kakao-ink hover:bg-kakao-dark focus-visible:ring-kakao-ink dark:focus-visible:ring-kakao focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         // 어두운 히어로 이미지 위 2차 액션. 흰 틴트(bg-white/*)는 배경을 밝혀 흰 글씨
         // 대비를 오히려 떨어뜨리므로 어두운 스크림 + 흰 테두리를 쓴다.
-        scrim: "bg-black/30 border border-white/40 text-white [text-shadow:0_1px_3px_rgb(0_0_0/0.55)] hover:bg-black/45 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-white/70 focus-visible:ring-offset-black/20",
+        scrim: "bg-black/30 border border-white/40 text-white [text-shadow:0_1px_3px_rgb(0_0_0/0.55)] hover:bg-black/45 focus-visible:ring-white/70 focus-visible:ring-offset-black/20",
       },
       size: {
         sm: "h-11 px-3 text-sm",
