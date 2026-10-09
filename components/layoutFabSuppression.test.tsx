@@ -85,12 +85,28 @@ describe('Layout의 카카오 FAB 억제', () => {
     expect(floatingRoot()!.className).toContain('lg:flex');
     const bar = mobileBar();
     expect(bar).not.toBeNull();
-    // 이름은 긴 라벨(aria-label), 보이는 글자는 짧은 라벨이다.
-    expect(bar!.querySelector('a[aria-label="actions.kakaoFab"]')).not.toBeNull();
-    expect(bar!.querySelector('a[aria-label="actions.callFab"]')).not.toBeNull();
+    // 보이는 글자가 곧 이름이다(aria-label로 다른 이름을 덮지 않는다 — WCAG 2.5.3).
+    expect(bar!.querySelector('a[aria-label]')).toBeNull();
     expect(bar!.textContent).toContain('actions.call');
+    expect(bar!.textContent).toContain('actions.kakaoFab');
     // 휴대폰 바에는 「맨 위로」를 두지 않는다.
     expect(bar!.querySelector('button[aria-label="actions.scrollToTop"]')).toBeNull();
+    // 휴대폰 메뉴(z-40)보다 아래 층 — 메뉴를 열면 메뉴가 바를 덮는다.
+    expect(bar!.className).toContain('z-30');
+  });
+
+  it('입력칸에 커서가 있는 동안 하단 바를 숨긴다 — 키보드 위로 떠서 입력칸을 가리지 않게', async () => {
+    await renderAt('/[locale]/contact', true);
+    Object.defineProperty(window, 'scrollY', { value: 1000, configurable: true });
+    window.dispatchEvent(new Event('scroll'));
+    const input = document.createElement('input');
+    document.body.appendChild(input);
+    await waitFor(() => expect(mobileBar()!.getAttribute('aria-hidden')).toBe('false'));
+    input.focus();
+    await waitFor(() => expect(mobileBar()!.getAttribute('aria-hidden')).toBe('true'));
+    input.blur();
+    await waitFor(() => expect(mobileBar()!.getAttribute('aria-hidden')).toBe('false'));
+    input.remove();
   });
 
   it('하단 바가 있는 화면(스토리·펀딩·공연 상세)에는 이 전폭 바를 띄우지 않는다', async () => {
