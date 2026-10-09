@@ -19,7 +19,7 @@ interface StoryCTAProps {
  * 스토리 본문 끝 CTA — 유형이 무엇이든 **모양은 하나**다(docs/design-system.md §4 "스토리 CTA").
  * 유형별 내용(아이콘·목적지·가격 보간)은 lib/storyCta.ts, 문구는 `stories.cta.<type>.*`.
  *
- * 회색 면 카드 + 잉크 제목 + 파랑 주 버튼(서비스 LP) + 연한 파랑 보조 버튼(/contact). 그라디언트·흐림·무한 반복
+ * 회색 면 카드 + 잉크 제목(아이콘 줄 없음 — TDS: 아이콘을 나란히 늘어놓지 않는다) + 파랑 주 버튼(서비스 LP) + 연한 파랑 보조 버튼(/contact). 그라디언트·흐림·무한 반복
  * 막대 애니메이션은 2026-10-09에 걷었다 — 파랑 = 누를 수 있는 것, 장식 모션 없음(TDS 대조). 색을 유형마다 다시
  * 주고 싶어지면 storyCtaDesign.test.ts가 막는다.
  */
@@ -45,14 +45,6 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
 
     return (
         <aside className="my-16 rounded-2xl border border-gray-200 bg-paper-2 p-8 md:p-10 dark:border-gray-800 dark:bg-gray-900">
-            <div className="flex items-center gap-3 mb-4 text-gray-700 dark:text-gray-300" aria-hidden="true">
-                {spec.icons.map((Icon, i) => (
-                    <React.Fragment key={i}>
-                        {i > 0 && <span className="w-1 h-1 rounded-full bg-gray-400 dark:bg-gray-500" />}
-                        <Icon size={20} />
-                    </React.Fragment>
-                ))}
-            </div>
 
             <h2 className="font-title text-2xl md:text-3xl font-bold leading-snug text-gray-950 dark:text-white mb-3 break-words [overflow-wrap:anywhere]">
                 {t(`stories.cta.${type}.title`)}

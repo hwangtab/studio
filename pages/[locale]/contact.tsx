@@ -173,7 +173,8 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
       )}
 
       <Section variant="default">
-        <div className="grid lg:grid-cols-2 gap-8 container mx-auto px-4 max-w-6xl">
+        {/* id="location": 다른 페이지 ContactCTA의 "위치·오시는 길" 버튼이 지도·주소 카드로 바로 오는 자리. */}
+        <div id="location" className="grid lg:grid-cols-2 gap-8 container mx-auto px-4 max-w-6xl scroll-mt-24">
           <ContactInfoCard
             locale={locale}
             siteConfig={siteConfig}

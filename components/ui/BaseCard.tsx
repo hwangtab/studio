@@ -2,7 +2,7 @@ import { cn } from '../../lib/utils';
 import React from 'react';
 import Link from 'next/link';
 import { m } from 'framer-motion';
-import { FADE_IN_UP, CARD_HOVER, SHADOW_HOVER, EASE_STANDARD } from '../../utils/animationUtils';
+import { FADE_IN_UP } from '../../utils/animationUtils';
 
 // 신 Link API(자체 <a> 렌더)에 framer-motion을 결합한 컴포넌트. legacyBehavior +
 // 자식 <m.a> 조합(차기 Next에서 제거 예정)을 대체하며, 렌더 결과는 동일한 단일 <a>.
@@ -68,11 +68,6 @@ const BaseCard = React.memo(({
         'glass-highlight': "glass-card ring-1 ring-primary/20 dark:ring-primary-light/20",
     };
 
-    // glass 카드의 box-shadow는 inset 스펙큘러 라인을 포함하므로 SHADOW_HOVER
-    // (inline boxShadow 애니메이션)를 섞으면 hover 순간 스펙큘러가 사라진다.
-    // glass는 리프트만 — iOS 재질 감각에도 그림자 팽창 없는 쪽이 맞다.
-    const isGlass = variant !== 'outline';
-
     const isInteractive = Boolean(onClick || href);
     // 누를 수 있는 카드만 hover에 반응한다. 누를 수 없는 카드가 떠오르면 "카드를 누르라"는 거짓 신호가 되고,
     // 안에 버튼이 있으면 카드와 버튼이 함께 움직여 어지럽다(운영자 2026-10-08 — 가격 카드).
@@ -80,23 +75,14 @@ const BaseCard = React.memo(({
 
     const animationProps = {
         ...FADE_IN_UP,
-        // whileHover에 CARD_HOVER(= HOVER_Y + TRANSITION_STANDARD)를 써서 hover 리프트가
-        // 자체 transition을 갖게 한다. 이렇게 안 하면 whileHover가 아래 컴포넌트 레벨
-        // transition(진입 delay 포함)을 상속해, delay 큰 카드일수록 hover 리프트가 늦게
-        // 시작한다. y·shadow 값은 기존(HOVER_Y+SHADOW_HOVER)과 동일하게 유지.
-        whileHover: respondsToHover ? (isGlass ? { ...CARD_HOVER } : { ...CARD_HOVER, ...SHADOW_HOVER }) : {},
-        // press 피드백은 클릭 가능한 카드에만. transition을 자체 보유해야 진입 delay를
-        // 상속하지 않는 것은 whileHover와 동일한 이유.
-        whileTap: respondsToHover
-            ? { scale: 0.98, transition: { duration: 0.1, ease: EASE_STANDARD } }
-            : undefined,
+        // 카드는 떠오르지 않는다(2026-10-09 TDS 대조 — 목록 행은 누르면 살짝 어두워질 뿐 들리지 않는다). 반응은 아래
+        // interactiveStyles의 CSS(filter)가 맡는다: hover 살짝 어둡게, 누르면 조금 더.
         transition: { ...FADE_IN_UP.transition, delay }
     };
 
-    // active:brightness — 휴대폰에서 누른 카드가 살짝 어두워진다. 터치 기기는 MotionConfig가 framer whileTap을 끄므로
-    // (pages/_app.tsx reducedMotion) CSS가 맡는다. transform이 아니라 filter라 framer의 y 애니메이션과 부딪히지 않는다.
+    // 링크 카드 반응 — hover 살짝 어둡게(마우스 기기만), 누르면 조금 더. transform이 아니라 filter라 떠오르지 않는다.
     const interactiveStyles = isInteractive
-        ? "cursor-pointer active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+        ? `cursor-pointer transition-[filter] duration-fast ${respondsToHover ? 'hover:brightness-[0.98] active:brightness-95' : ''} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`
         : "";
     // className이 뒤에 와서 호출부의 `pt-8` 같은 개별 조정이 이긴다(twMerge).
     const cardClassName = cn(baseStyles, variants[variant], CARD_PADDING[padding], interactiveStyles, className);

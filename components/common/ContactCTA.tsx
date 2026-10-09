@@ -9,6 +9,7 @@ import type { LucideIcon } from '@/lib/lucide-icons';
 import { getSiteConfig } from '../../data/siteConfig';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 import { Button } from '../ui/Button';
+import { useReportKakaoBlock } from './kakaoBlockVisibility';
 
 interface ContactCTAProps {
     locale: Locale;
@@ -18,6 +19,12 @@ interface ContactCTAProps {
     imageAlt: string;
     primaryButtonLabel?: string;
     secondaryButtonLabel?: string;
+    /**
+     * 보조 버튼 목적지(로케일 접두 없이). 기본은 문의 페이지의 지도·주소 카드(`/contact#location`) — 기본 글자가
+     * "위치"·"오시는 길"이라 글자와 도착지가 같아야 한다(TDS: 글자만 보고 결과를 예측할 수 있어야 한다, 2026-10-09).
+     * 글자를 "문의하기"·"가격"처럼 다르게 주면 목적지도 함께 넘긴다.
+     */
+    secondaryHref?: string;
     icon?: LucideIcon;
     className?: string;
     headingAs?: 'h2' | 'h3';
@@ -31,6 +38,7 @@ const ContactCTA = ({
     imageAlt,
     primaryButtonLabel,
     secondaryButtonLabel,
+    secondaryHref = '/contact#location',
     icon: Icon = Sparkles,
     className = "",
     headingAs = 'h2',
@@ -46,6 +54,10 @@ const ContactCTA = ({
     const primaryLabel = primaryButtonLabel ?? (isKorean ? t('actions.kakao') : t('actions.contact'));
     const secondaryLabel = secondaryButtonLabel ?? t('actions.location');
     const contactHref = getLink('/contact');
+    // 한국어는 이 블록의 주 버튼이 카톡이다 — 보이는 동안 떠 있는 카톡 버튼들을 숨긴다(한 화면에 카톡 버튼 하나).
+    const rootRef = React.useRef<HTMLDivElement>(null);
+    useReportKakaoBlock(rootRef, isKorean);
+    const secondaryLink = getLink(secondaryHref);
     const primaryHref = isKorean ? siteConfig.contact.kakaoUrl : contactHref;
     const imageHref = isKorean ? siteConfig.contact.kakaoUrl : contactHref;
 
@@ -71,8 +83,9 @@ const ContactCTA = ({
             locale,
             component: 'ContactCTA',
             cta_id: 'contact_cta_secondary_contact',
+            cta_target: secondaryLink,
         });
-    }, [locale]);
+    }, [locale, secondaryLink]);
 
     const trackImageCta = React.useCallback(() => {
         if (isKorean) {
@@ -96,7 +109,7 @@ const ContactCTA = ({
     return (
         // 스크롤 등장(opacity 0 → 1)과 파랑 틴트 면은 2026-10-09에 걷었다 — 장식 모션 없음, 파랑 = 누를 수 있는 것.
         // SSR HTML이 opacity:0으로 칠해져 하이드레이션 전엔 보이지 않던 것도 함께 사라진다.
-        <div className={`overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 ${className}`}>
+        <div ref={rootRef} className={`overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 ${className}`}>
             <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
                 <div className="bg-paper-2 dark:bg-gray-900 p-8 md:p-12 flex flex-col justify-center">
                     <SectionHeading
@@ -111,7 +124,7 @@ const ContactCTA = ({
                         {isKorean && (
                             <Button asChild variant="secondary" shape="pill" size="lg">
                                 <Link
-                                    href={contactHref}
+                                    href={secondaryLink}
                                     prefetch={false}
                                     onClick={trackSecondaryContact}
                                     className={ctaLayout}

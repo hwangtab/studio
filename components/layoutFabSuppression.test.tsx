@@ -95,6 +95,17 @@ describe('Layout의 카카오 FAB 억제', () => {
     expect(bar!.className).toContain('z-30');
   });
 
+  it('본문 카톡 블록(ContactCTA·노란 띠)이 보이는 동안 떠 있는 카톡 바를 숨긴다 — 한 화면에 카톡 버튼 하나', async () => {
+    await renderAt('/[locale]/contact', true);
+    Object.defineProperty(window, 'scrollY', { value: 1000, configurable: true });
+    window.dispatchEvent(new Event('scroll'));
+    await waitFor(() => expect(mobileBar()!.getAttribute('aria-hidden')).toBe('false'));
+    window.dispatchEvent(new CustomEvent('studio:kakao-block-visibility', { detail: true }));
+    await waitFor(() => expect(mobileBar()!.getAttribute('aria-hidden')).toBe('true'));
+    window.dispatchEvent(new CustomEvent('studio:kakao-block-visibility', { detail: false }));
+    await waitFor(() => expect(mobileBar()!.getAttribute('aria-hidden')).toBe('false'));
+  });
+
   it('입력칸에 커서가 있는 동안 하단 바를 숨긴다 — 키보드 위로 떠서 입력칸을 가리지 않게', async () => {
     await renderAt('/[locale]/contact', true);
     Object.defineProperty(window, 'scrollY', { value: 1000, configurable: true });

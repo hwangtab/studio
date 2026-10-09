@@ -283,6 +283,7 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
           imageAlt={t('pricing.images.packageAlt')}
           primaryButtonLabel={t('pricing.cta.inquiry')}
           secondaryButtonLabel={t('pricing.cta.location')}
+          secondaryHref="/contact"
           headingAs="h3"
         />
       </Section>
