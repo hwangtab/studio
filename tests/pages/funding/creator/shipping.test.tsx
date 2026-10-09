@@ -78,7 +78,7 @@ describe('개설자 배송 화면', () => {
         projectId="proj-1"
       />,
     );
-    expect(screen.getByText(/마감 뒤에 열립니다/)).toBeInTheDocument();
+    expect(screen.getByText(/마감 뒤에 열려요/)).toBeInTheDocument();
     expect(screen.queryByText('배송지')).not.toBeInTheDocument();
     // 집계는 마감 전에도 보인다.
     expect(screen.getByText('12')).toBeInTheDocument();
@@ -119,7 +119,7 @@ describe('개설자 배송 화면', () => {
         trackingCompany: '',
         trackingNumber: '',
       });
-      expect(await screen.findByText('저장했습니다.')).toBeInTheDocument();
+      expect(await screen.findByText('저장했어요.')).toBeInTheDocument();
     });
 
     it('저장 실패 시 서버가 준 한국어 오류 메시지를 행 아래에 보여준다', async () => {

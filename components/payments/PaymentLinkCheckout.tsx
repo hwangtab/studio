@@ -64,14 +64,14 @@ export default function PaymentLinkCheckout({ slug, totalAmount }: { slug: strin
       });
       const data = (await res.json().catch(() => null)) as CreateOrderResponse | null;
       if (res.status !== 201 || !data || !data.ok) {
-        setSubmitError((data && !data.ok && data.message) || '주문 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+        setSubmitError((data && !data.ok && data.message) || '주문 신청에 실패했어요. 잠시 후 다시 시도해 주세요.');
         return;
       }
 
       if (usingBank) {
         // 계좌 입금 — 결제창이 없다. 입금 안내를 이 화면에 보여준다(금액·기한은 서버가 돌려준 값).
         if (!data.deposit) {
-          setSubmitError('입금 안내를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
+          setSubmitError('입금 안내를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.');
           return;
         }
         setBankGuide({ deadline: data.deposit.deadline, customerName: customerName.trim() });
@@ -101,7 +101,7 @@ export default function PaymentLinkCheckout({ slug, totalAmount }: { slug: strin
       } else if (code === 'NEED_CARD_PAYMENT_DETAIL') {
         setSubmitError('카드 결제는 카드사를 먼저 골라 주세요. 결제 방법 아래에서 카드사를 선택한 뒤 다시 눌러 주세요.');
       } else {
-        setSubmitError('네트워크 오류로 주문 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+        setSubmitError('네트워크 오류로 주문 신청에 실패했어요. 잠시 후 다시 시도해 주세요.');
       }
     } finally {
       setSubmitting(false);
@@ -192,8 +192,8 @@ export default function PaymentLinkCheckout({ slug, totalAmount }: { slug: strin
 
         <p className="text-sm text-gray-600 dark:text-gray-300">
           {usingBank
-            ? '신청하시면 입금하실 계좌를 바로 알려 드립니다. 입금이 확인되면 메일로 알려 드립니다.'
-            : '결제가 끝나면 바로 확정됩니다.'}
+            ? '신청하시면 입금하실 계좌를 바로 알려 드려요. 입금이 확인되면 메일로 알려 드려요.'
+            : '결제가 끝나면 바로 확정돼요.'}
         </p>
 
         {submitError && <Notice tone="error">{submitError}</Notice>}

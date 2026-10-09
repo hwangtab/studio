@@ -23,9 +23,9 @@ interface OnlineRequestProps {
 const OnlineRequest: React.FC<OnlineRequestProps> = ({ locale = 'ko' }) => {
   const siteConfig = getSiteConfig(locale);
   const rows: { label: string; body: React.ReactNode }[] = [
-    { label: '보내실 것', body: '드라이 보컬 WAV와 MR 파일. 카카오톡으로 받습니다' },
-    { label: '작업', body: '엔지니어가 믹싱·마스터링을 마쳐 완성 파일로 납품합니다' },
-    { label: '수정', body: '믹싱 2회, 마스터링 1회가 기본 포함입니다' },
+    { label: '보내실 것', body: '드라이 보컬 WAV와 MR 파일. 카카오톡으로 받아요' },
+    { label: '작업', body: '엔지니어가 믹싱·마스터링을 마쳐 완성 파일로 납품해요' },
+    { label: '수정', body: '믹싱 2회, 마스터링 1회가 기본 포함이에요' },
     {
       label: '소요 시간',
       body: (

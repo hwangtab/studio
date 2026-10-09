@@ -40,7 +40,7 @@ export default function FundingApply() {
       if (!res.ok) setError(data?.message ?? '잠시 후 다시 시도해 주세요.');
       else setSent(true);
     } catch {
-      setError('연결에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+      setError('연결에 실패했어요. 잠시 후 다시 시도해 주세요.');
     } finally {
       setBusy(false);
     }
@@ -56,22 +56,22 @@ export default function FundingApply() {
         <PageHeader title="펀딩 개설 신청" className="mb-6" />
         {linkExpired && (
           <Notice tone="warning" className="mb-6">
-            링크가 만료됐거나 이미 사용되었습니다. 이메일을 다시 넣어 새 링크를 받아 주세요.
+            링크가 만료됐거나 이미 사용됐어요. 이메일을 다시 넣어 새 링크를 받아 주세요.
           </Notice>
         )}
         <div className="space-y-3 text-gray-700 dark:text-gray-300">
-          <p>앨범·공연·굿즈를 만들 비용을 후원으로 모읍니다. 페이지는 직접 쓰고, 결제·환불·정산은 스튜디오 놀이 맡습니다.</p>
+          <p>앨범·공연·굿즈를 만들 비용을 후원으로 모아요. 페이지는 직접 쓰고, 결제·환불·정산은 스튜디오 놀이 맡아요.</p>
           <ul className="list-disc space-y-1 pl-5">
-            <li>판매자는 스튜디오 놀입니다. 후원금은 스튜디오 놀이 받아 정산으로 보내 드립니다.</li>
-            <li>리워드의 제작과 발송은 개설자가 맡습니다. 모금이 마감되면 배송 리워드를 선택한 후원자의 배송지가 개설자 화면에 열리며, 개설자는 그 정보를 발송에만 쓰고 발송을 마친 뒤 파기해야 합니다.</li>
+            <li>스튜디오 놀이 판매자예요. 후원금은 스튜디오 놀이 받아 정산으로 보내 드려요.</li>
+            <li>리워드의 제작과 발송은 개설자가 맡아요. 모금이 마감되면 배송 리워드를 선택한 후원자의 배송지가 개설자 화면에 열리며, 개설자는 그 정보를 발송에만 쓰고 발송을 마친 뒤 파기해야 해요.</li>
             {/* 수수료와 정산 시점은 신청 전에 알아야 한다 — 숫자는 상수에서 끌어온다
                 (data/pricing.ts · lib/funding/policy.ts). 문자열로 박으면 정산 계산과 갈라진다. */}
             <li>
-              정산은 모금이 끝나고 영업일 {FUNDING_PAYOUT_BUSINESS_DAYS}일 이내에 보내 드립니다.
+              정산은 모금이 끝나고 영업일 {FUNDING_PAYOUT_BUSINESS_DAYS}일 이내에 보내 드려요.
               플랫폼 수수료 {FUNDING_PLATFORM_FEE_PERCENT}%와 결제 수수료 {FUNDING_PAYMENT_FEE_PERCENT}%(둘 다 부가세 포함)를
-              개설자가 부담합니다.
+              개설자가 부담해요.
             </li>
-            <li>제출하시면 운영자가 확인하고 승인 또는 보완 요청을 메일로 알려 드립니다.</li>
+            <li>제출하시면 운영자가 확인하고 승인 또는 보완 요청을 메일로 알려 드려요.</li>
           </ul>
         </div>
 
@@ -98,9 +98,9 @@ export default function FundingApply() {
           <Button type="submit" size="lg" fullWidth disabled={busy}>
             {busy ? '보내는 중…' : '로그인 링크 받기'}
           </Button>
-          {sent && <Notice tone="success">로그인 링크를 보냈습니다. 메일함을 확인해 주세요.</Notice>}
+          {sent && <Notice tone="success">로그인 링크를 보냈어요. 메일함을 확인해 주세요.</Notice>}
           {error && <Notice tone="error">{error}</Notice>}
-          <p className="text-sm text-gray-500 dark:text-gray-400">비밀번호는 없습니다. 메일로 받은 링크로 들어옵니다.</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">비밀번호는 없어요. 메일로 받은 링크로 들어와요.</p>
           {/*
             이 버튼 한 번에 개설자 계정(funding_creators 행)이 만들어진다 — lib/funding/creatorToken.ts가
             이메일을 받는 즉시 행을 넣는다. 그래서 "로그인 링크를 받는다"가 곧 수집 시점이고, 그 사실과

@@ -18,17 +18,17 @@ import { ResultCard } from '../../../components/ui/ResultCard';
  * 이 표로 옮기고 `message`는 버린다. 두 표는 같은 토스페이먼츠 결제창 실패 코드를 쓴다.
  */
 const FAIL_MESSAGES: Record<string, string> = {
-  PAY_PROCESS_CANCELED: '결제를 취소하셨습니다.',
-  PAY_PROCESS_ABORTED: '결제가 완료되기 전에 창이 닫혔습니다.',
-  USER_CANCEL: '결제를 취소하셨습니다.',
-  REJECT_CARD_COMPANY: '카드사에서 결제를 거절했습니다. 다른 카드나 결제수단으로 시도해 주세요.',
+  PAY_PROCESS_CANCELED: '결제를 취소하셨어요.',
+  PAY_PROCESS_ABORTED: '결제가 완료되기 전에 창이 닫혔어요.',
+  USER_CANCEL: '결제를 취소하셨어요.',
+  REJECT_CARD_COMPANY: '카드사에서 결제를 거절했어요. 다른 카드나 결제수단으로 시도해 주세요.',
   INVALID_CARD_EXPIRATION: '카드 유효기간을 다시 확인해 주세요.',
-  INVALID_STOPPED_CARD: '정지된 카드입니다. 다른 결제수단으로 시도해 주세요.',
-  EXCEED_MAX_DAILY_PAYMENT_COUNT: '하루 결제 가능 횟수를 초과했습니다. 내일 다시 시도하거나 다른 결제수단을 이용해 주세요.',
-  EXCEED_MAX_PAYMENT_AMOUNT: '결제 한도를 초과했습니다. 카드사에 문의하거나 다른 결제수단을 이용해 주세요.',
-  NOT_SUPPORTED_INSTALLMENT_PLAN_CARD_OR_MERCHANT: '이 카드로는 선택하신 할부 개월 수를 쓸 수 없습니다.',
+  INVALID_STOPPED_CARD: '정지된 카드예요. 다른 결제수단으로 시도해 주세요.',
+  EXCEED_MAX_DAILY_PAYMENT_COUNT: '하루 결제 가능 횟수를 초과했어요. 내일 다시 시도하거나 다른 결제수단을 이용해 주세요.',
+  EXCEED_MAX_PAYMENT_AMOUNT: '결제 한도를 초과했어요. 카드사에 문의하거나 다른 결제수단을 이용해 주세요.',
+  NOT_SUPPORTED_INSTALLMENT_PLAN_CARD_OR_MERCHANT: '이 카드로는 선택하신 할부 개월 수를 쓸 수 없어요.',
   INVALID_CARD_NUMBER: '카드번호를 다시 확인해 주세요.',
-  NOT_AVAILABLE_BANK: '은행 서비스 시간이 아닙니다. 잠시 후 다시 시도해 주세요.',
+  NOT_AVAILABLE_BANK: '은행 서비스 시간이 아니에요. 잠시 후 다시 시도해 주세요.',
 };
 /**
  * 화면에 그대로 띄워도 되는 주문번호 형태 — 토스가 실패 URL에 `orderId`로 실어 보낸다.
@@ -39,7 +39,7 @@ const FAIL_MESSAGES: Record<string, string> = {
  * 형태를 좁게 검증해, 임의 문자열이 우리 레이아웃 안에 렌더되는 경로를 만들지 않는다.
  */
 const ORDER_NO_PATTERN = /^(SNB|FND)-(M-)?\d{8}-[0-9A-F]{8}$/;
-const GENERIC_MESSAGE = '결제 진행 중 문제가 발생했습니다.';
+const GENERIC_MESSAGE = '결제 진행 중 문제가 발생했어요.';
 /** 화면에 그대로 보여도 되는 코드 형태. 표에 없는 코드도 문의할 때 쓸 수 있게 보여준다. */
 const CODE_PATTERN = /^[A-Z0-9_]{1,60}$/;
 
@@ -71,7 +71,7 @@ export default function BookingFailPage({ code, message, orderNo, service }: Fai
         <ResultCard
           tone="error"
           as="h1"
-          title="결제를 완료하지 못했습니다"
+          title="결제를 완료하지 못했어요"
           description={message}
           actions={
             <>
@@ -100,7 +100,7 @@ export default function BookingFailPage({ code, message, orderNo, service }: Fai
           <div className="space-y-1 text-center typo-card-meta">
             {code && <p>오류 코드: {code}</p>}
             {orderNo && <p>주문번호: {orderNo}</p>}
-            <p>예약은 확정되지 않았습니다 — 결제 정보가 저장되지 않았으니 안심하고 다시 시도해 주세요.</p>
+            <p>예약은 확정되지 않았어요 — 결제 정보가 저장되지 않았으니 안심하고 다시 시도해 주세요.</p>
             {/* 정본 연락처를 상시 표기한다 — message가 비거나 알 수 없는 코드여도 기댈 곳이
                 화면에 있어야 한다(funding/fail.tsx와 같은 이유). */}
             <p>문의: 010-4255-7893 · hello@studionol.co.kr</p>

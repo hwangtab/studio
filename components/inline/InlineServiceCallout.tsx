@@ -106,14 +106,14 @@ const man = (value: number) => formatPriceLabel(value, 'ko');
 const KO_CONTENT: Record<ServiceType, { title: string; description: string; features: string[]; softNote?: string; detailLabel?: string }> = {
   lesson: {
     title: '1:1 프로듀싱 레슨',
-    description: '엔지니어와 함께 본인 곡을 단계별로 뜯어보며 개선합니다. 작곡·미디·믹싱 프로듀싱 멘토링.',
+    description: '엔지니어와 함께 본인 곡을 단계별로 뜯어보며 개선해요. 작곡·미디·믹싱 프로듀싱 멘토링.',
     features: [
       `월 ${man(LESSON_MONTHLY_PRICE)} 정액제 (주 1회 60분)`,
       '본인 곡 기준 1:1 진행',
       '믹싱·마스터링 단계 멘토 효과 큼',
       '첫 상담 무료',
     ],
-    softNote: '월 정액이 부담되면 등록 전에 궁금한 것부터 편하게 물어보세요. 첫 상담은 무료입니다.',
+    softNote: '월 정액이 부담되면 등록 전에 궁금한 것부터 편하게 물어보세요. 첫 상담은 무료예요.',
   },
   wedding: {
     title: '축가·이벤트 녹음',
@@ -147,18 +147,18 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
   },
   mixing: {
     title: '믹싱·마스터링 의뢰',
-    description: '파일만 보내면 전국·해외 어디서든 진행. 3~7영업일 안에 완성본을 드립니다.',
+    description: '파일만 보내면 전국·해외 어디서든 진행. 3~7영업일 안에 완성본을 드려요.',
     features: [
       `믹싱 곡당 ${man(MIXING_LEVEL1_PRICE)}부터 (트랙 수 기준 3단계)`,
       `마스터링 싱글 ${man(MASTERING_SINGLE_PRICE)} · 4곡 이상 곡당 ${man(MASTERING_PACKAGE_PRICE)}`,
       '기본 2회 수정 포함',
       '파일 전송 비대면 진행 — 방문 불필요',
     ],
-    softNote: '트랙 수만 알려주시면 견적을 바로 드립니다. 문의는 무료입니다.',
+    softNote: '트랙 수만 알려주시면 견적을 바로 드려요. 문의는 무료예요.',
   },
   practice: {
     title: '음악연습실',
-    description: '월세 입주형 개인·보컬·키보드·작곡 연습실. 녹음실과 같은 건물이고, 한두 시간만 필요하면 시간제로도 쓸 수 있습니다.',
+    description: '월세 입주형 개인·보컬·키보드·작곡 연습실. 녹음실과 같은 건물이고, 한두 시간만 필요하면 시간제로도 쓸 수 있어요.',
     features: [
       `월 ${man(PRACTICE_ROOM_MONTHLY_PRICE)}부터 (1년 계약 첫 달 50% 할인)`,
       `시간제 시간당 ${formatPriceAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL)}원 (부가세 포함, 온라인 예약)`,
@@ -168,19 +168,19 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
   },
   release: {
     title: '음원 발매 프로젝트',
-    description: '기획·녹음·믹싱·마스터링·유통·홍보까지, 싱글부터 정규 앨범까지 한 팀이 원스톱으로 함께합니다.',
+    description: '기획·녹음·믹싱·마스터링·유통·홍보까지, 싱글부터 정규 앨범까지 한 팀이 원스톱으로 함께해요.',
     features: [
       `싱글 ${man(SINGLE_BUNDLE_PRICE)}부터 · EP ${man(EP_BUNDLE_PRICE)}부터 · 정규 ${man(ALBUM_BUNDLE_PRICE)}부터`,
       '기획 → 녹음 → 믹싱·마스터링 → 유통 원스톱',
       '협력 유통사 연결·발매 등록',
       '아티스트 상황에 맞춘 단계별 진행',
     ],
-    softNote: '혼자 발매를 준비하다 막막하면, 계약 전에 예산·일정부터 편하게 물어보세요. 첫 상담 30분은 무료입니다.',
+    softNote: '혼자 발매를 준비하다 막막하면, 계약 전에 예산·일정부터 편하게 물어보세요. 첫 상담 30분은 무료예요.',
     detailLabel: '앨범·음원 제작 안내',
   },
   funding: {
     title: '크라우드펀딩 설계 대행',
-    description: '스튜디오 놀 펀딩에 여는 음반 펀딩을 기획부터 페이지까지 맡습니다. 음반 펀딩 수십 건, 누적 약 3억원 규모를 진행해온 방식 그대로.',
+    description: '스튜디오 놀 펀딩에 여는 음반 펀딩을 기획부터 페이지까지 맡아요. 음반 펀딩 수십 건, 누적 약 3억원 규모를 진행해온 방식 그대로.',
     features: [
       `설계비 ${man(FUNDING_DESIGN_PRICE)} · 성공 수수료 없음`,
       `모금액에서 플랫폼 ${FUNDING_PLATFORM_FEE_PERCENT}%·결제 ${FUNDING_PAYMENT_FEE_PERCENT}% 수수료(부가세 포함)`,
@@ -188,12 +188,12 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
       '목표액 산정과 제작 예산 역산',
       '발매 제작을 맡기지 않아도 의뢰 가능',
     ],
-    softNote: '펀딩을 열지 말지부터 고민 중이어도 괜찮습니다. 목표액이 현실적인지 같이 따져보는 것부터 시작해요.',
+    softNote: '펀딩을 열지 말지부터 고민 중이어도 괜찮아요. 목표액이 현실적인지 같이 따져보는 것부터 시작해요.',
   },
   // 2026-09-25 추가 — 커버 영상·발매 홍보로 가는 본문 동선이 0~2건이었다.
   cover: {
     title: '커버 영상 촬영 올인원',
-    description: '노래 커버 영상을 촬영·녹음·믹싱까지 한 번에 진행하고, 4K 영상과 음원을 함께 드립니다.',
+    description: '노래 커버 영상을 촬영·녹음·믹싱까지 한 번에 진행하고, 4K 영상과 음원을 함께 드려요.',
     features: [
       `올인원 ${man(COVER_VIDEO_PACKAGE_PRICE)} (3시간)`,
       '촬영 + 보컬 녹음 + 믹싱',
@@ -203,26 +203,26 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
   },
   promotion: {
     title: '음원 발매 홍보',
-    description: '이미 발매한 음원도 받습니다. 보도자료를 5개 언어로 쓰고 국내외 음악 매체·라디오·레코드숍에 보냅니다.',
+    description: '이미 발매한 음원도 받아요. 보도자료를 5개 언어로 쓰고 국내외 음악 매체·라디오·레코드숍에 보내요.',
     features: [
       `${man(RELEASE_PRESS_INTRO_PRICE)} (${RELEASE_PRESS_INTRO_ENDS_ON}까지 도입가 · 정가 ${man(RELEASE_PRESS_PRICE)})`,
       '보도자료 5개 언어 · 프레스킷 페이지',
       '국내 음악 매체 + 해외 60개국 매체·라디오·레코드숍 발송',
-      '발송 리포트 제공 — 기사 게재는 보장하지 않습니다',
+      '발송 리포트 제공 — 기사 게재는 보장하지 않아요',
     ],
-    softNote: '음원을 들은 뒤 보낼 곳이 몇 곳인지 먼저 무료로 세어 드립니다. 비용은 그 숫자를 보신 다음입니다.',
+    softNote: '음원을 들은 뒤 보낼 곳이 몇 곳인지 먼저 무료로 세어 드려요. 비용은 그 숫자를 보신 다음이에요.',
   },
   // 2026-10-05 추가 — 편곡 방법·MR 구하기 글이 레슨으로만 가던 것을 의뢰 상품으로.
   arrangement: {
     title: '작곡·편곡·MR 제작 의뢰',
-    description: '멜로디만 있어도 곡이 됩니다. 편곡은 믹싱과 같은 트랙 수 등급으로 곡당 정가, 세션 연주비는 실비만.',
+    description: '멜로디만 있어도 곡이 돼요. 편곡은 믹싱과 같은 트랙 수 등급으로 곡당 정가, 세션 연주비는 실비만.',
     features: [
       `작곡 ${man(COMPOSITION_PRICE)} · 소편성 편곡 ${man(ARRANGEMENT_SMALL_PRICE)} (10트랙 이하)`,
       `풀밴드 편곡 ${man(ARRANGEMENT_BAND_PRICE)} (11~30트랙) · 대편성 ${man(ARRANGEMENT_LARGE_PRICE)} (31트랙 이상)`,
       `기존 곡 맞춤 MR ${man(CUSTOM_MR_PRICE)} — 축가·행사·커버`,
       'MR WAV + 스템 납품 · 수정 2회 포함',
     ],
-    softNote: '레퍼런스 곡과 휴대폰 녹음 데모만 보내 주시면 등급과 일정을 바로 알려드립니다. 상담은 무료입니다.',
+    softNote: '레퍼런스 곡과 휴대폰 녹음 데모만 보내 주시면 등급과 일정을 바로 알려드려요. 상담은 무료예요.',
     detailLabel: '작곡·편곡 의뢰 안내',
   },
 };

@@ -84,7 +84,7 @@ function ShowtimeCard({ t, nowSec }: { t: ShowReportShowtime; nowSec: number }) 
       {salesOpen && <p className="mt-1 typo-card-meta text-gray-600 dark:text-gray-400">{kstDateTime(t.salesCloseAt)} 판매 마감</p>}
 
       {cancelled ? (
-        <p className="mt-6 typo-body text-gray-700 dark:text-gray-300">이 회차는 취소되어 판매 금액을 합계에서 뺐습니다.</p>
+        <p className="mt-6 typo-body text-gray-700 dark:text-gray-300">이 회차는 취소되어 판매 금액을 합계에서 뺐어요.</p>
       ) : (
         <div className="mt-6">
           <div className="flex items-baseline justify-between typo-card-meta text-gray-700 dark:text-gray-300">
@@ -149,9 +149,9 @@ export default function ShowReportPage({ report, linkLabel, expiresAt, generated
           title={`${report.title} 예매 현황`}
           lead={
             <>
-              {report.venueName} · {linkLabel} 님께 공유된 화면입니다.
+              {report.venueName} · {linkLabel} 님께 공유된 화면이에요.
               <span className="mt-1 block typo-card-meta text-gray-600 dark:text-gray-400">
-                {kstDateTime(generatedAt)} 기준 · 이 링크는 {kstDateTime(expiresAt)}까지 열립니다
+                {kstDateTime(generatedAt)} 기준 · 이 링크는 {kstDateTime(expiresAt)}까지 열려요
               </span>
             </>
           }
@@ -178,8 +178,8 @@ export default function ShowReportPage({ report, linkLabel, expiresAt, generated
         </div>
 
         <p className="mt-6 typo-caption text-gray-600 dark:text-gray-400">
-          판매 금액은 결제가 확정되고 환불되지 않은 티켓의 가격 합계입니다. 결제 수수료·환불 수수료를 반영하지 않은 현황 참고용이며 정산 금액이 아닙니다.
-          결제·입금 대기는 결제창을 열어 둔 좌석과 계좌 입금을 기다리는 좌석으로, 결제가 끝나면 판매로 옮겨 갑니다.
+          판매 금액은 결제가 확정되고 환불되지 않은 티켓의 가격 합계예요. 결제 수수료·환불 수수료를 반영하지 않은 현황 참고용이며 정산 금액이 아니에요.
+          결제·입금 대기는 결제창을 열어 둔 좌석과 계좌 입금을 기다리는 좌석으로, 결제가 끝나면 판매로 옮겨 가요.
         </p>
 
         {/* private 페이지(URL에 현황 토큰이 실린다)의 이탈 링크는 문서 이동 + noreferrer —

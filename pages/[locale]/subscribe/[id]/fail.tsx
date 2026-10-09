@@ -22,18 +22,18 @@ import { ResultCard } from '../../../../components/ui/ResultCard';
  * 떨어진다. funding/fail.tsx·booking/fail.tsx와 같은 규칙이다.
  */
 const FAIL_MESSAGES: Record<string, string> = {
-  PAY_PROCESS_CANCELED: '카드 등록을 취소하셨습니다.',
-  PAY_PROCESS_ABORTED: '등록이 끝나기 전에 창이 닫혔습니다.',
-  USER_CANCEL: '카드 등록을 취소하셨습니다.',
-  REJECT_CARD_COMPANY: '카드사에서 등록을 거절했습니다. 다른 카드로 시도해 주세요.',
+  PAY_PROCESS_CANCELED: '카드 등록을 취소하셨어요.',
+  PAY_PROCESS_ABORTED: '등록이 끝나기 전에 창이 닫혔어요.',
+  USER_CANCEL: '카드 등록을 취소하셨어요.',
+  REJECT_CARD_COMPANY: '카드사에서 등록을 거절했어요. 다른 카드로 시도해 주세요.',
   INVALID_CARD_EXPIRATION: '카드 유효기간을 다시 확인해 주세요.',
-  INVALID_STOPPED_CARD: '정지된 카드입니다. 다른 카드로 시도해 주세요.',
+  INVALID_STOPPED_CARD: '정지된 카드예요. 다른 카드로 시도해 주세요.',
   INVALID_CARD_NUMBER: '카드번호를 다시 확인해 주세요.',
-  EXCEED_MAX_AUTH_COUNT: '인증 시도 횟수를 초과했습니다. 잠시 후 다시 시도해 주세요.',
-  NOT_SUPPORTED_CARD_TYPE: '이 카드로는 정기결제를 등록할 수 없습니다. 다른 카드로 시도해 주세요.',
-  NOT_AVAILABLE_BANK: '카드사 서비스 시간이 아닙니다. 잠시 후 다시 시도해 주세요.',
+  EXCEED_MAX_AUTH_COUNT: '인증 시도 횟수를 초과했어요. 잠시 후 다시 시도해 주세요.',
+  NOT_SUPPORTED_CARD_TYPE: '이 카드로는 정기결제를 등록할 수 없어요. 다른 카드로 시도해 주세요.',
+  NOT_AVAILABLE_BANK: '카드사 서비스 시간이 아니에요. 잠시 후 다시 시도해 주세요.',
 };
-const GENERIC_MESSAGE = '카드 인증 중 문제가 발생했습니다.';
+const GENERIC_MESSAGE = '카드 인증 중 문제가 발생했어요.';
 /** 화면에 그대로 띄워도 되는 코드 형태. 표에 없는 코드도 문의할 때 쓸 수 있게 보여준다. */
 const CODE_PATTERN = /^[A-Z0-9_]{1,60}$/;
 
@@ -60,7 +60,7 @@ export default function SubscribeFailPage({ id, setupToken, code, message }: Fai
         <ResultCard
           tone="error"
           as="h1"
-          title="카드 등록을 완료하지 못했습니다"
+          title="카드 등록을 완료하지 못했어요"
           description={message}
           actions={
             /* 이 URL에는 setupToken이 실린다 — 이탈 링크는 문서 이동(`<a href>`)이어야 한다
@@ -74,7 +74,7 @@ export default function SubscribeFailPage({ id, setupToken, code, message }: Fai
           }
         >
           <div className="space-y-1 text-center typo-card-meta">
-            <p>아직 청구되지 않았습니다 — 안심하고 다시 시도해 주세요.</p>
+            <p>아직 청구되지 않았어요 — 안심하고 다시 시도해 주세요.</p>
             {/* 정본 연락처를 상시 표기한다 — 예전에는 쿼리의 message가 주 안내문이라, 그 자리에
                 가짜 연락처를 넣으면 화면에 우리 번호가 하나도 없었다(funding/fail.tsx와 같은 판단). */}
             <p>문의: 010-4255-7893 · hello@studionol.co.kr</p>

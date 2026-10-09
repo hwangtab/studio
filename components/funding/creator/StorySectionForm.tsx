@@ -69,12 +69,12 @@ export function StorySectionForm({ projectId, initial, readOnly, onSaved, onDirt
       );
       const data = await res.json().catch(() => null);
       if (!res.ok || !data?.ok) {
-        setUploadError(data?.message ?? '이미지를 올리지 못했습니다.');
+        setUploadError(data?.message ?? '이미지를 올리지 못했어요.');
         return;
       }
       insertAtCursor(`![](${data.url})`);
     } catch {
-      setUploadError('연결에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+      setUploadError('연결에 실패했어요. 잠시 후 다시 시도해 주세요.');
     } finally {
       setUploadBusy(false);
     }
@@ -144,7 +144,7 @@ export function StorySectionForm({ projectId, initial, readOnly, onSaved, onDirt
         <Button type="submit" disabled={readOnly || save.status === 'saving'}>
           {save.status === 'saving' ? '저장 중…' : '스토리 저장'}
         </Button>
-        {save.status === 'success' && <span className="typo-caption text-green-600 dark:text-green-400">저장했습니다.</span>}
+        {save.status === 'success' && <span className="typo-caption text-green-600 dark:text-green-400">저장했어요.</span>}
         {save.status === 'error' && (
           <span role="alert" className="typo-caption text-red-600 dark:text-red-400">{save.message}</span>
         )}

@@ -37,25 +37,25 @@ const RESULT_COPY: Record<
 > = {
   activated: {
     tone: 'success',
-    title: '정기결제가 시작됐습니다',
+    title: '정기결제가 시작됐어요',
     description: ({ amount }) => `첫 달 결제 완료 ${typeof amount === 'number' ? `${formatPriceAmount(amount)}원` : ''}`,
     note: ({ billingDay }) => (typeof billingDay === 'number' ? `다음 결제일: 매월 ${billingDay}일` : null),
   },
   card_changed: {
     tone: 'success',
-    title: '카드 등록이 완료됐습니다',
-    description: () => '이번 결제는 없으며, 다음 결제일부터 새 카드로 청구됩니다.',
+    title: '카드 등록이 완료됐어요',
+    description: () => '이번 결제는 없으며, 다음 결제일부터 새 카드로 청구돼요.',
     note: () => null,
   },
   first_charge_failed: {
     tone: 'error',
-    title: '카드는 등록됐으나 결제가 승인되지 않았습니다',
+    title: '카드는 등록됐으나 결제가 승인되지 않았어요',
     description: ({ message }) => message,
-    note: () => '다른 카드로 다시 등록해야 합니다 — 담당자에게 새 등록 링크를 요청해 주세요. 010-4255-7893',
+    note: () => '다른 카드로 다시 등록해야 해요 — 담당자에게 새 등록 링크를 요청해 주세요. 010-4255-7893',
   },
   error: {
     tone: 'error',
-    title: '카드 등록을 완료하지 못했습니다',
+    title: '카드 등록을 완료하지 못했어요',
     description: ({ message }) => message,
     note: () => '문의: 010-4255-7893',
   },
@@ -122,7 +122,7 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
     typeof customerKey !== 'string' ||
     typeof authKey !== 'string'
   ) {
-    return { props: { outcome: 'error', message: '잘못된 접근입니다.' } };
+    return { props: { outcome: 'error', message: '잘못된 접근이에요.' } };
   }
 
   const now = new Date();
@@ -143,7 +143,7 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
   }
 
   const details = await getSubscriptionWithDetails(id);
-  if (!details) return { props: { outcome: 'error', message: '구독 정보를 찾을 수 없습니다.' } };
+  if (!details) return { props: { outcome: 'error', message: '구독 정보를 찾을 수 없어요.' } };
   const { subscription } = details;
   const manageUrl = subscriptionManageUrl(subscription);
 

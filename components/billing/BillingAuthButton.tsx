@@ -41,7 +41,7 @@ export default function BillingAuthButton({
     (async () => {
       try {
         const clientKey = process.env.NEXT_PUBLIC_TOSS_BILLING_CLIENT_KEY;
-        if (!clientKey) throw new Error('결제 설정이 없습니다.');
+        if (!clientKey) throw new Error('결제 설정이 없어요.');
         const toss = await loadTossPayments(clientKey);
         const p = toss.payment({ customerKey });
         if (!cancelled) {
@@ -49,7 +49,7 @@ export default function BillingAuthButton({
           setReady(true);
         }
       } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : '결제 모듈을 불러오지 못했습니다.');
+        if (!cancelled) setError(e instanceof Error ? e.message : '결제 모듈을 불러오지 못했어요.');
       }
     })();
     return () => {

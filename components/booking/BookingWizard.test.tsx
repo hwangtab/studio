@@ -241,7 +241,7 @@ describe('폼 안의 결제위젯', () => {
     await goToStep3(user);
     const notice = screen.getByRole('status');
     expect(notice).toHaveTextContent('15분간');
-    expect(notice).toHaveTextContent('다른 분이 예약할 수 있습니다');
+    expect(notice).toHaveTextContent('다른 분이 예약할 수 있어요');
   });
 
   it('제출하면 서버가 돌려준 금액으로 결제창을 연다', async () => {
@@ -284,13 +284,13 @@ describe('폼 안의 결제위젯', () => {
     (global.fetch as jest.Mock).mockImplementation(async (input: RequestInfo | URL) => {
       const url = typeof input === 'string' ? input : input.toString();
       if (url.startsWith('/api/bookings/slots')) return { ok: true, status: 200, json: async () => slotsResponse } as Response;
-      return { ok: false, status: 409, json: async () => ({ ok: false, message: '방금 다른 예약이 먼저 잡혔습니다.' }) } as Response;
+      return { ok: false, status: 409, json: async () => ({ ok: false, message: '방금 다른 예약이 먼저 잡혔어요.' }) } as Response;
     });
     const user = userEvent.setup();
     render(<BookingWizard service="recording" products={[PRODUCT]} />);
     await fill(user);
     await user.click(screen.getByRole('button', { name: /결제하기/ }));
-    await waitFor(() => expect(screen.getByText(/방금 다른 예약이 먼저 잡혔습니다/)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/방금 다른 예약이 먼저 잡혔어요/)).toBeInTheDocument());
     expect(requestPayment).not.toHaveBeenCalled();
   });
 
@@ -450,7 +450,7 @@ describe('슬롯 조회 장애 안내', () => {
     fireEvent.change(screen.getByLabelText('날짜'), { target: { value: '2026-10-01' } });
 
     const alert = await screen.findByRole('alert');
-    expect(alert).toHaveTextContent('일시적으로 예약 현황을 불러올 수 없습니다.');
+    expect(alert).toHaveTextContent('일시적으로 예약 현황을 불러올 수 없어요.');
     expect(screen.getByRole('link', { name: '카카오톡' })).toHaveAttribute('href', 'https://open.kakao.com/me/nol');
     expect(screen.getByRole('link', { name: '010-4255-7893' })).toHaveAttribute('href', 'tel:+821042557893');
 

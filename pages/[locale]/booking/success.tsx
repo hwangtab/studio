@@ -69,15 +69,15 @@ export default function BookingSuccessPage({ outcome, message, orderNo, manageUr
           <ResultCard
             tone="success"
             as="h1"
-            title={isMixing ? '주문이 접수되었습니다' : '예약이 확정되었습니다'}
+            title={isMixing ? '주문이 접수됐어요' : '예약이 확정됐어요'}
             description={
               <>
                 주문번호 {orderNo}.
                 {emailSent === false
-                  ? ' 확인 메일을 보내지 못했습니다 — 아래 링크를 저장해 주세요.'
+                  ? ' 확인 메일을 보내지 못했어요 — 아래 링크를 저장해 주세요.'
                   : isMixing
-                    ? ' 확인 메일을 보내드렸습니다.'
-                    : ' 예약 확인 메일을 보내드렸습니다.'}
+                    ? ' 확인 메일을 보내드렸어요.'
+                    : ' 예약 확인 메일을 보내드렸어요.'}
               </>
             }
             actions={
@@ -107,7 +107,7 @@ export default function BookingSuccessPage({ outcome, message, orderNo, manageUr
               <div className="text-center">
                 <p className="typo-body text-gray-600 dark:text-gray-400">
                   이 메일에 회신으로 파일(구글 드라이브·WeTransfer 링크)을 보내주시면 작업을
-                  시작합니다. 카카오톡 오픈채팅으로 보내셔도 됩니다.
+                  시작해요. 카카오톡 오픈채팅으로 보내셔도 돼요.
                 </p>
                 <p className="mt-2 typo-card-meta">납기: 파일 확인 후 3~7영업일</p>
               </div>
@@ -117,7 +117,7 @@ export default function BookingSuccessPage({ outcome, message, orderNo, manageUr
           <ResultCard
             tone="error"
             as="h1"
-            title="결제를 확정하지 못했습니다"
+            title="결제를 확정하지 못했어요"
             description={message}
             actions={
               <Button asChild variant="ghost">
@@ -125,7 +125,7 @@ export default function BookingSuccessPage({ outcome, message, orderNo, manageUr
               </Button>
             }
           >
-            <p className="text-center typo-card-meta">결제가 이뤄졌다면 자동으로 취소되거나 확정됩니다. 문의: 010-4255-7893</p>
+            <p className="text-center typo-card-meta">결제가 이뤄졌다면 자동으로 취소되거나 확정돼요. 문의: 010-4255-7893</p>
           </ResultCard>
         )}
         {outcome === 'confirmed' && manageUrl && (
@@ -143,7 +143,7 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
   if (params?.locale !== 'ko') return { redirect: { destination: '/ko', permanent: false } };
   const { paymentKey, orderId, amount } = query;
   if (typeof paymentKey !== 'string' || typeof orderId !== 'string' || typeof amount !== 'string')
-    return { props: { outcome: 'error', message: '잘못된 접근입니다.' } };
+    return { props: { outcome: 'error', message: '잘못된 접근이에요.' } };
 
   const result = await confirmBookingPayment({
     orderNo: orderId, paymentKey, amount: Number(amount),

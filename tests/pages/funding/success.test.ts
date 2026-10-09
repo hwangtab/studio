@@ -79,7 +79,7 @@ describe('토스 승인 URL', () => {
    * 뒀다 승인하거나(hold_expired) 카드사가 거절하면(toss_rejected) 실제 paymentKey가 남는다.
    */
   it('확정 실패도 비밀값 없는 ?e= 로 리다이렉트하고 쿠키를 세우지 않는다', async () => {
-    (confirmFundingPledge as jest.Mock).mockResolvedValue({ ok: false, code: 'hold_expired', message: '결제 대기 시간이 만료된 펀딩입니다.' });
+    (confirmFundingPledge as jest.Mock).mockResolvedValue({ ok: false, code: 'hold_expired', message: '결제 대기 시간이 만료된 펀딩이에요.' });
     const c = ctx({ paymentKey: 'pk_live_abc', orderId: ORDER_NO, amount: '1' });
     const result = (await c.run()) as { redirect: { destination: string } };
     expect(result.redirect.destination).toBe('/ko/funding/success?e=hold_expired');
@@ -93,13 +93,13 @@ describe('리다이렉트된 실패 화면(?e=)', () => {
   it('코드를 우리 문구로 옮긴다', async () => {
     const result = (await ctx({ e: 'hold_expired' }).run()) as { props: { outcome: string; message: string } };
     expect(result.props.outcome).toBe('error');
-    expect(result.props.message).toBe('결제 대기 시간이 만료된 펀딩입니다. 다시 펀딩해 주세요.');
+    expect(result.props.message).toBe('결제 대기 시간이 만료된 펀딩이에요. 다시 펀딩해 주세요.');
   });
 
   it('모르는 코드·형식 밖 코드는 일반 문구 — 쿼리 문자열을 그대로 뿌리지 않는다', async () => {
     const injected = (await ctx({ e: '환불 문의: 010-0000-0000' }).run()) as { props: { message: string } };
-    expect(injected.props.message).toBe('결제를 확정하지 못했습니다.');
-    expect((await ctx({ e: 'made_up' }).run()) as { props: { message: string } }).toMatchObject({ props: { message: '결제를 확정하지 못했습니다.' } });
+    expect(injected.props.message).toBe('결제를 확정하지 못했어요.');
+    expect((await ctx({ e: 'made_up' }).run()) as { props: { message: string } }).toMatchObject({ props: { message: '결제를 확정하지 못했어요.' } });
   });
 });
 
@@ -174,7 +174,7 @@ describe('리다이렉트된 화면(?o=)', () => {
 
 it('쿼리가 없으면 잘못된 접근', async () => {
   const result = (await ctx({}).run()) as { props: { outcome: string; message: string } };
-  expect(result.props).toMatchObject({ outcome: 'error', message: '잘못된 접근입니다.' });
+  expect(result.props).toMatchObject({ outcome: 'error', message: '잘못된 접근이에요.' });
 });
 
 it('비-ko locale은 펀딩 목록으로 보낸다', async () => {
@@ -217,7 +217,7 @@ describe('실패 응답 레이트리밋', () => {
     const r = (await ctx({ paymentKey: 'pk', orderId: ORDER_NO, amount: '1' }).run()) as { redirect: { destination: string } };
     expect(r.redirect.destination).toBe('/ko/funding/success?e=too_many');
     const shown = (await ctx({ e: 'too_many' }).run()) as { props: { message: string } };
-    expect(shown.props.message).toContain('요청이 너무 잦습니다');
+    expect(shown.props.message).toContain('요청이 너무 잦아요');
   });
 
   it('성공 경로는 한도와 무관하다 — 결제 승인이 429로 막히면 안 된다', async () => {

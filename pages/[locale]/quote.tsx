@@ -29,8 +29,8 @@ const QuotePage: NextPageWithLayout = () => {
         <div className="max-w-3xl mx-auto mb-10 text-center">
           <h1 className="typo-section-title mb-4 text-gray-900 dark:text-white">견적 요청서</h1>
           <p className="typo-card-body text-gray-700 dark:text-gray-300">
-            질문 몇 개에 답하면 예상 비용이 바로 나옵니다. 가격은 사이트에 공개한 정가 그대로이고,
-            이름이나 연락처는 묻지 않습니다.
+            질문 몇 개에 답하면 예상 비용이 바로 나와요. 가격은 사이트에 공개한 정가 그대로이고,
+            이름이나 연락처는 묻지 않아요.
           </p>
         </div>
         <QuoteWizard kakaoUrl={siteConfig.contact.kakaoUrl} />

@@ -33,7 +33,7 @@ const OnlineFallback: React.FC<OnlineFallbackProps> = ({ locale = 'ko' }) => {
         <NextLink href={href} className="font-semibold text-primary dark:text-primary-lighter underline-offset-4">
           온라인 파일 의뢰
         </NextLink>
-        도 가능합니다. 녹음 파일을 전송하면 믹싱·마스터링 후 완성 파일로 납품합니다.
+        도 가능해요. 녹음 파일을 전송하면 믹싱·마스터링 후 완성 파일로 납품해요.
       </p>
     </Notice>
   );

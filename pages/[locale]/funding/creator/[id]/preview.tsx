@@ -51,7 +51,7 @@ export default function FundingCreatorPreviewPage(props: Props) {
         64px가 히어로(완성)나 `bg-gray-900`(미완성) 배경으로 항상 채워진다.
       */}
       <div className="fixed inset-x-0 top-16 z-40 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 bg-amber-400 px-4 py-2.5 text-center text-sm font-semibold text-amber-950">
-        <span>미리보기입니다. 아직 공개되지 않았습니다.</span>
+        <span>미리보기예요. 아직 공개되지 않았어요.</span>
         <Link href={editHref} className="underline underline-offset-2">
           편집으로 돌아가기
         </Link>
@@ -63,7 +63,7 @@ export default function FundingCreatorPreviewPage(props: Props) {
         // <main>은 Layout이 준다(tests/pages/pageScaffold.test.ts) — 여기는 어두운 바탕 블록이다.
         <div className="min-h-[70vh] bg-gray-900 px-4 pt-32 pb-24 text-center">
           <p className="typo-body text-gray-200">
-            아직 미리 볼 수 없습니다. 기본정보와 리워드를 먼저 채워 주세요.
+            아직 미리 볼 수 없어요. 기본정보와 리워드를 먼저 채워 주세요.
           </p>
           {/* 어두운 바탕 위라 흰 버튼(inverse) — 잉크 버튼은 gray-900 위에서 묻힌다. */}
           <Button asChild variant="inverse" className="mt-6">

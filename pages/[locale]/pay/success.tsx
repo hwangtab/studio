@@ -35,7 +35,7 @@ export default function PaymentLinkSuccessPage({ outcome, message, orderNo, tota
           <ResultCard
             tone="success"
             as="h1"
-            title="결제가 완료되었습니다"
+            title="결제가 완료됐어요"
             actions={
               <>
                 {receiptUrl && (
@@ -77,7 +77,7 @@ export default function PaymentLinkSuccessPage({ outcome, message, orderNo, tota
           <ResultCard
             tone="error"
             as="h1"
-            title="결제를 확정하지 못했습니다"
+            title="결제를 확정하지 못했어요"
             description={message}
             actions={
               <Button asChild variant="ghost">
@@ -87,7 +87,7 @@ export default function PaymentLinkSuccessPage({ outcome, message, orderNo, tota
               </Button>
             }
           >
-            <p className="text-center typo-card-meta">결제가 이뤄졌다면 자동으로 취소되거나 확정됩니다. 문의: 010-4255-7893</p>
+            <p className="text-center typo-card-meta">결제가 이뤄졌다면 자동으로 취소되거나 확정돼요. 문의: 010-4255-7893</p>
           </ResultCard>
         )}
       </PageShell>
@@ -100,7 +100,7 @@ export const getServerSideProps = withI18nServerProps<PaySuccessProps>(async ({ 
   if (params?.locale !== 'ko') return { redirect: { destination: '/ko', permanent: false } };
   const { paymentKey, orderId, amount } = query;
   if (typeof paymentKey !== 'string' || typeof orderId !== 'string' || typeof amount !== 'string')
-    return { props: { outcome: 'error', message: '잘못된 접근입니다.' } };
+    return { props: { outcome: 'error', message: '잘못된 접근이에요.' } };
 
   const result = await confirmDepositPayment({
     orderNo: orderId,

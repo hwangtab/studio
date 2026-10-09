@@ -19,12 +19,12 @@ interface StudioServicesProps {
 const StudioServices: React.FC<StudioServicesProps> = ({ locale = 'ko' }) => {
   const rows: { label: string; body: React.ReactNode }[] = [
     { label: '보컬 녹음', body: 'Neumann U87Ai, 전용 흡음 부스, 엔지니어 1:1 디렉팅' },
-    { label: '믹싱·마스터링', body: '보컬과 MR을 함께 정리하며, 믹싱 2회·마스터링 1회 수정이 기본입니다' },
+    { label: '믹싱·마스터링', body: '보컬과 MR을 함께 정리하며, 믹싱 2회·마스터링 1회 수정이 기본이에요' },
     {
       label: '온라인 의뢰',
       body: (
         <>
-          방문 없이 파일만 보내도 진행됩니다 (
+          방문 없이 파일만 보내도 진행돼요 (
           <NextLink href={`/${locale}/mixing-mastering`} prefetch={false} className="text-primary dark:text-primary-lighter hover:underline underline-offset-4">
             믹싱·마스터링 안내
           </NextLink>
@@ -32,7 +32,7 @@ const StudioServices: React.FC<StudioServicesProps> = ({ locale = 'ko' }) => {
         </>
       ),
     },
-    { label: '예약', body: '카카오톡 오픈채팅으로 일정을 잡습니다' },
+    { label: '예약', body: '카카오톡 오픈채팅으로 일정을 잡아요' },
   ];
 
   return (

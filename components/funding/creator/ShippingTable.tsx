@@ -125,7 +125,7 @@ function ShippingTableRow({ projectId, row }: ShippingTableRowProps) {
           </Button>
         </div>
         {save.status === 'success' && (
-          <p className="mt-1 typo-caption text-green-600 dark:text-green-400">저장했습니다.</p>
+          <p className="mt-1 typo-caption text-green-600 dark:text-green-400">저장했어요.</p>
         )}
         {save.status === 'error' && (
           <p className="mt-1 typo-caption text-red-600 dark:text-red-400">{save.message}</p>
@@ -142,7 +142,7 @@ interface ShippingTableProps {
 
 export function ShippingTable({ projectId, rows }: ShippingTableProps) {
   if (rows.length === 0) {
-    return <p className="typo-body text-gray-500 dark:text-gray-400">배송이 필요한 후원이 없습니다.</p>;
+    return <p className="typo-body text-gray-500 dark:text-gray-400">배송이 필요한 후원이 없어요.</p>;
   }
 
   return (

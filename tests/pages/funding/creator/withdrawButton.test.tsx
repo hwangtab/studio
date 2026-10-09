@@ -77,7 +77,7 @@ it('철회 버튼을 누르면 withdraw API를 부르고, 성공하면 draft로 
   fireEvent.click(screen.getByRole('button', { name: /심사 신청 철회/ }));
 
   await waitFor(() => {
-    expect(screen.getByText(/심사 신청을 철회했습니다/)).toBeInTheDocument();
+    expect(screen.getByText(/심사 신청을 철회했어요/)).toBeInTheDocument();
   });
   expect(global.fetch).toHaveBeenCalledWith(
     '/api/funding/creator/projects/proj-1/withdraw',
@@ -100,7 +100,7 @@ it('철회 후 같은 화면에서 재제출하면 철회 버튼이 다시 나�
 
   fireEvent.click(screen.getByRole('button', { name: /심사 신청 철회/ }));
   await waitFor(() => {
-    expect(screen.getByText(/심사 신청을 철회했습니다/)).toBeInTheDocument();
+    expect(screen.getByText(/심사 신청을 철회했어요/)).toBeInTheDocument();
   });
 
   // draft로 돌아왔으니 재제출할 수 있다 — 약관 동의 체크 후 심사 신청.
@@ -108,10 +108,10 @@ it('철회 후 같은 화면에서 재제출하면 철회 버튼이 다시 나�
   fireEvent.click(screen.getByRole('button', { name: '심사 신청' }));
 
   await waitFor(() => {
-    expect(screen.getByText('심사를 신청했습니다.')).toBeInTheDocument();
+    expect(screen.getByText('심사를 신청했어요.')).toBeInTheDocument();
   });
   // "철회했습니다" 문구는 남아 있으면 안 된다 — 방금 다시 제출했다.
-  expect(screen.queryByText(/심사 신청을 철회했습니다/)).not.toBeInTheDocument();
+  expect(screen.queryByText(/심사 신청을 철회했어요/)).not.toBeInTheDocument();
   // 다시 submitted 상태이므로 철회 버튼이 되돌아와야 한다 — 안내가 "철회할 수 있다"고
   // 말하는 상태에서 버튼이 없으면 그 안내가 거짓이 된다.
   expect(screen.getByRole('button', { name: /심사 신청 철회/ })).toBeInTheDocument();

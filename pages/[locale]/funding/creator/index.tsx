@@ -84,7 +84,7 @@ export default function CreatorHome({ projects, stats }: Props) {
         />
         {logoutError && <Notice tone="error" className="mb-6">{logoutError}</Notice>}
         {projects.length === 0 ? (
-          <EmptyState title="아직 만든 프로젝트가 없습니다." description="아래에서 새 프로젝트를 만들어 시작하세요." />
+          <EmptyState title="아직 만든 프로젝트가 없어요." description="아래에서 새 프로젝트를 만들어 시작하세요." />
         ) : (
           <ul className="space-y-3">
             {projects.map((p) => (

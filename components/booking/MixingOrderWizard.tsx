@@ -75,9 +75,9 @@ const MIXING_STEPS = ['상품·곡 수', '주문자 정보'];
 
 /** 상품 묶음 — 순서는 MIXING_PRODUCTS의 serviceType 순서와 같다(라디오 순서가 곧 화면 순서). */
 const PRODUCT_GROUPS: { serviceType: MixingProduct['serviceType']; label: string; hint?: string }[] = [
-  { serviceType: 'mixing', label: '믹싱', hint: '트랙 수로 고릅니다. 부가세 별도.' },
+  { serviceType: 'mixing', label: '믹싱', hint: '트랙 수로 골라요. 부가세 별도.' },
   { serviceType: 'mastering', label: '마스터링', hint: '믹스가 끝난 스테레오 파일을 보내 주세요.' },
-  { serviceType: 'mixing-mastering', label: '믹싱+마스터링', hint: '두 상품의 합산가 그대로입니다.' },
+  { serviceType: 'mixing-mastering', label: '믹싱+마스터링', hint: '두 상품의 합산가 그대로예요.' },
 ];
 
 /** '믹싱 · 10트랙 이하' + 3곡 → '믹싱 · 10트랙 이하 × 3곡' */
@@ -210,9 +210,9 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
           window.location.assign(data.manageUrl);
           return;
         }
-        setSubmitError(data.message ?? '주문 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+        setSubmitError(data.message ?? '주문 신청에 실패했어요. 잠시 후 다시 시도해 주세요.');
       } catch {
-        setSubmitError('네트워크 오류로 주문 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+        setSubmitError('네트워크 오류로 주문 신청에 실패했어요. 잠시 후 다시 시도해 주세요.');
       } finally {
         setSubmitting(false);
       }
@@ -280,7 +280,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
       }
 
       // 400(입력 오류) · 429(요청 과다) 등 — 현재 단계(정보 입력)에 메시지로 표시.
-      setSubmitError(data.message ?? '주문 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+      setSubmitError(data.message ?? '주문 신청에 실패했어요. 잠시 후 다시 시도해 주세요.');
     } catch (err) {
       /**
        * 결제창이 열리기 전에 SDK가 던진 경우 실패 사유는 여기서만 알 수 있다 —
@@ -310,7 +310,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
         // 2026-09-29 한 후원자가 옛 문구("결제 수단과 약관 동의를 확인해 주세요")를 보고 30초에 네 번 다시 눌렀다.
         setSubmitError('카드 결제는 카드사를 먼저 골라 주세요. 결제 방법 아래에서 카드사를 선택한 뒤 다시 눌러 주세요.');
       } else {
-        setSubmitError('네트워크 오류로 주문 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+        setSubmitError('네트워크 오류로 주문 신청에 실패했어요. 잠시 후 다시 시도해 주세요.');
       }
     } finally {
       setSubmitting(false);
@@ -464,7 +464,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
                 <TextArea
                   className="min-h-0"
                   rows={4}
-                  placeholder="파일 링크(구글 드라이브·WeTransfer)가 이미 있으면 여기 적어주셔도 됩니다."
+                  placeholder="파일 링크(구글 드라이브·WeTransfer)가 이미 있으면 여기 적어주셔도 돼요."
                   value={customerNote}
                   onChange={(e) => setCustomerNote(e.target.value)}
                 />
@@ -537,8 +537,8 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
 
             <p className="text-sm text-gray-600 dark:text-gray-300">
               {usingBank
-                ? '신청하시면 입금하실 계좌를 바로 알려 드립니다. 입금이 확인되면 주문이 접수되고, 확인 메일에 파일 보내는 방법을 안내해 드립니다.'
-                : '결제 후 확인 메일에 파일 보내는 방법을 안내해 드립니다.'}
+                ? '신청하시면 입금하실 계좌를 바로 알려 드려요. 입금이 확인되면 주문이 접수되고, 확인 메일에 파일 보내는 방법을 안내해 드려요.'
+                : '결제 후 확인 메일에 파일 보내는 방법을 안내해 드려요.'}
             </p>
 
             {submitError && <Notice tone="error">{submitError}</Notice>}

@@ -47,13 +47,13 @@ export default function ShowSuccessPage({ outcome, message, orderNo, manageUrl, 
         {outcome === 'confirmed' ? (
           <ResultCard
             tone="success"
-            title="예매가 완료되었습니다"
+            title="예매가 완료됐어요"
             description={
               <>
                 주문번호 {orderNo}.
-                {emailSent === true && ' 티켓 메일을 보내드렸습니다.'}
-                {emailSent === false && hasEmail && ' 티켓 메일을 보내지 못했습니다 — 아래 링크를 저장해 주세요.'}
-                {emailSent === false && !hasEmail && ' 이메일을 적지 않으셔서 메일은 보내지 않았습니다 — 아래 링크를 꼭 저장해 주세요.'}
+                {emailSent === true && ' 티켓 메일을 보내드렸어요.'}
+                {emailSent === false && hasEmail && ' 티켓 메일을 보내지 못했어요 — 아래 링크를 저장해 주세요.'}
+                {emailSent === false && !hasEmail && ' 이메일을 적지 않으셔서 메일은 보내지 않았어요 — 아래 링크를 꼭 저장해 주세요.'}
               </>
             }
             actions={
@@ -71,14 +71,14 @@ export default function ShowSuccessPage({ outcome, message, orderNo, manageUrl, 
             }
           >
             <div className="space-y-2 text-center typo-card-meta">
-              <p>입장은 비지정석 선착순입니다. 현장에서 아래 링크의 QR 티켓을 보여 주세요.</p>
+              <p>입장은 비지정석 선착순이에요. 현장에서 아래 링크의 QR 티켓을 보여 주세요.</p>
               {manageUrl && <p className="break-all typo-caption">이 주소를 저장해 두세요: {manageUrl}</p>}
             </div>
           </ResultCard>
         ) : (
           <ResultCard
             tone="error"
-            title="결제를 확정하지 못했습니다"
+            title="결제를 확정하지 못했어요"
             description={message}
             actions={
               <Button asChild variant="weak">
@@ -166,7 +166,7 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
     typeof orderId !== 'string' || !SHOW_PAYMENT_ORDER_NO_PATTERN.test(orderId) ||
     !Number.isInteger(amountNumber)
   )
-    return { props: { outcome: 'error', message: en ? 'Invalid request.' : '잘못된 접근입니다.', locale } };
+    return { props: { outcome: 'error', message: en ? 'Invalid request.' : '잘못된 접근이에요.', locale } };
 
   const result = await confirmShowOrder(
     // channel: 우리가 그린 결제수단 목록으로 연 결제는 API 개별 연동 키 쌍으로 승인한다(lib/booking/toss.ts).
@@ -179,10 +179,10 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
 
   const order = await getDb().query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, orderId) });
   if (!order)
-    return { props: { outcome: 'error', message: en ? `We could not find the order. Contact: ${SHOW_CONTACT_PHONE_INTL}` : '주문을 찾지 못했습니다. 문의 010-4255-7893', locale } };
+    return { props: { outcome: 'error', message: en ? `We could not find the order. Contact: ${SHOW_CONTACT_PHONE_INTL}` : '주문을 찾지 못했어요. 문의 010-4255-7893', locale } };
   // already_confirmed는 환불까지 끝난 주문의 재방문도 포함한다 — 환불된 주문을 "예매 완료"로 보이지 않게 한다.
   if (order.status !== 'paid' && order.status !== 'partially_refunded')
-    return { props: { outcome: 'error', message: en ? 'This order has already been refunded. Please book again.' : '이미 환불 처리된 주문입니다. 다시 예매해 주세요.', locale } };
+    return { props: { outcome: 'error', message: en ? 'This order has already been refunded. Please book again.' : '이미 환불 처리된 주문이에요. 다시 예매해 주세요.', locale } };
 
   // 주문 언어는 주문 생성 때 남기지만, 혹시 빠졌으면(표 적용 전 주문 등) 영어 결제 완료 화면에서 한 번 더 남긴다 —
   // 메일보다 먼저(바로 아래 sendShowTicketEmail이 이 값을 읽는다). 이미 있으면 아무 일도 없다.

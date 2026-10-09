@@ -43,7 +43,7 @@ const StudioMore: React.FC<StudioMoreProps> = ({ locale = 'ko' }) => {
       <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
         <h4 className="text-base font-semibold text-gray-900 dark:text-white">스튜디오 놀에서 한 걸음 더</h4>
         <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-          연신내역 도보 5분. 녹음·믹싱·마스터링과 연습실을 한 건물에서 이용할 수 있습니다.
+          연신내역 도보 5분. 녹음·믹싱·마스터링과 연습실을 한 건물에서 이용할 수 있어요.
         </p>
       </div>
       <ul className="px-6 py-4 grid sm:grid-cols-2 gap-x-6 gap-y-2">
@@ -61,7 +61,7 @@ const StudioMore: React.FC<StudioMoreProps> = ({ locale = 'ko' }) => {
         ))}
       </ul>
       <p className="px-6 pb-4 text-sm text-gray-600 dark:text-gray-400">
-        작업하다 막히는 부분은 카카오톡으로 트랙 일부만 보내 주셔도 원인을 짚어 드립니다.
+        작업하다 막히는 부분은 카카오톡으로 트랙 일부만 보내 주셔도 원인을 짚어 드려요.
       </p>
     </div>
   );

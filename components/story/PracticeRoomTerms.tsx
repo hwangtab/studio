@@ -27,7 +27,7 @@ const PracticeRoomTerms: React.FC<PracticeRoomTermsProps> = ({ locale = 'ko' }) 
     { label: '월세', body: `${man(PRACTICE_ROOM_MONTHLY_PRICE)} (보증금 0원)` },
     { label: '최소 계약', body: '1개월' },
     { label: '1년 계약', body: `첫 달 50% 할인 (첫 달 ${man(PRACTICE_ROOM_MONTHLY_PRICE / 2)})` },
-    { label: '장비 보관', body: '본인 장비는 무료로 두고 다닐 수 있습니다' },
+    { label: '장비 보관', body: '본인 장비는 무료로 두고 다닐 수 있어요' },
     { label: '녹음실', body: `매월 1시간 무료 (정규요금 시간당 ${man(RECORDING_HOURLY_PRICE)})` },
   ];
 
@@ -49,7 +49,7 @@ const PracticeRoomTerms: React.FC<PracticeRoomTermsProps> = ({ locale = 'ko' }) 
         <NextLink href={`/${locale}/practice-room`} prefetch={false} className="text-primary dark:text-primary-lighter hover:underline underline-offset-4">
           음악연습실 안내
         </NextLink>
-        에서 확인하실 수 있습니다.
+        에서 확인하실 수 있어요.
       </p>
     </div>
   );

@@ -109,11 +109,11 @@ export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, n
       </Field>
       {nameLocked && (
         <p className="-mt-3 text-sm text-gray-600">
-          승인된 프로젝트가 있어 이름은 바꿀 수 없습니다. 프로젝트 상세 화면에 판매자 표시로
-          그대로 노출되는 값이기 때문입니다. 소개·연락처·링크는 계속 고칠 수 있습니다.
+          승인된 프로젝트가 있어 이름은 바꿀 수 없어요. 프로젝트 상세 화면에 판매자 표시로
+          그대로 노출되는 값이기 때문이에요. 소개·연락처·링크는 계속 고칠 수 있어요.
         </p>
       )}
-      <Field id="creator-contact-name" label="담당자 이름" hint="운영자만 볼 수 있습니다.">
+      <Field id="creator-contact-name" label="담당자 이름" hint="운영자만 볼 수 있어요.">
         <TextInput
           value={contactName}
           onChange={(e) => { setContactName(e.target.value); clearSaveStatus(); }}
@@ -121,7 +121,7 @@ export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, n
           disabled={readOnly}
         />
       </Field>
-      <Field id="creator-phone" label="연락처" hint="운영자만 볼 수 있습니다.">
+      <Field id="creator-phone" label="연락처" hint="운영자만 볼 수 있어요.">
         <TextInput
           value={phone}
           onChange={(e) => { setPhone(e.target.value); clearSaveStatus(); }}
@@ -149,7 +149,7 @@ export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, n
         <Button type="submit" disabled={readOnly || save.status === 'saving'}>
           {save.status === 'saving' ? '저장 중…' : '개설자 정보 저장'}
         </Button>
-        {save.status === 'success' && <span className="typo-caption text-green-600 dark:text-green-400">저장했습니다.</span>}
+        {save.status === 'success' && <span className="typo-caption text-green-600 dark:text-green-400">저장했어요.</span>}
         {save.status === 'error' && (
           <span role="alert" className="typo-caption text-red-600 dark:text-red-400">{save.message}</span>
         )}

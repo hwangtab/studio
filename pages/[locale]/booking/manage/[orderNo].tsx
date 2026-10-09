@@ -99,10 +99,10 @@ const STATUS_LABELS: Record<BookingStatus, string> = {
 };
 
 const STATUS_NOTICES: Record<Exclude<BookingStatus, 'confirmed'>, string> = {
-  pending: '결제가 아직 확인되지 않았습니다. 결제가 완료되면 예약이 확정됩니다.',
-  completed: '이용이 완료된 예약입니다.',
-  no_show: '노쇼로 처리된 예약입니다. 문의사항은 아래 연락처로 연락해 주세요.',
-  cancelled: '이 예약은 취소되었습니다.',
+  pending: '결제가 아직 확인되지 않았어요. 결제가 완료되면 예약이 확정돼요.',
+  completed: '이용이 완료된 예약이에요.',
+  no_show: '노쇼로 처리된 예약이에요. 문의사항은 아래 연락처로 연락해 주세요.',
+  cancelled: '이 예약은 취소됐어요.',
 };
 
 const WORK_ORDER_STATUS_LABELS: Record<WorkOrderStatus, string> = {
@@ -114,10 +114,10 @@ const WORK_ORDER_STATUS_LABELS: Record<WorkOrderStatus, string> = {
 };
 
 const WORK_ORDER_STATUS_NOTICES: Record<Exclude<WorkOrderStatus, 'received'>, string> = {
-  pending: '결제가 아직 확인되지 않았습니다. 결제가 완료되면 주문이 접수됩니다.',
-  in_progress: '작업이 시작되어 온라인 취소가 불가합니다. 문의 010-4255-7893',
-  delivered: '납품이 완료된 주문입니다.',
-  cancelled: '이 주문은 취소되었습니다.',
+  pending: '결제가 아직 확인되지 않았어요. 결제가 완료되면 주문이 접수돼요.',
+  in_progress: '작업이 시작되어 온라인 취소가 불가해요. 문의 010-4255-7893',
+  delivered: '납품이 완료된 주문이에요.',
+  cancelled: '이 주문은 취소됐어요.',
 };
 
 /** 상태 배지 색 — 살아 있는 예약·주문은 success, 돈을 기다리는 상태는 warning, 끝난 것은 neutral. */
@@ -163,8 +163,8 @@ function useCancelFlow(orderNo: string, token: string, refundQuote: RefundQuote 
 
   const cancel = async (onSuccess: () => void) => {
     const confirmMessage = refundQuote
-      ? `취소하시겠습니까?\n환불 예정 금액: ${formatPriceAmount(refundQuote.refundAmount)}원${viaAccount && refundQuote.refundAmount > 0 ? `\n환불 계좌: ${refundAccount.bankName.trim()} ${refundAccount.accountHolder.trim()}` : ''}\n(실제 환불 금액은 취소 처리 시점 기준으로 다시 계산됩니다)`
-      : '취소하시겠습니까?';
+      ? `취소할까요?\n환불 예정 금액: ${formatPriceAmount(refundQuote.refundAmount)}원${viaAccount && refundQuote.refundAmount > 0 ? `\n환불 계좌: ${refundAccount.bankName.trim()} ${refundAccount.accountHolder.trim()}` : ''}\n(실제 환불 금액은 취소 처리 시점 기준으로 다시 계산돼요)`
+      : '취소할까요?';
     if (!window.confirm(confirmMessage)) return;
 
     setCancelling(true);
@@ -179,14 +179,14 @@ function useCancelFlow(orderNo: string, token: string, refundQuote: RefundQuote 
       const result = await response.json().catch(() => ({}));
 
       if (!response.ok || !result.ok) {
-        throw new Error(result.message || '취소 처리에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+        throw new Error(result.message || '취소 처리에 실패했어요. 잠시 후 다시 시도해 주세요.');
       }
 
       setRefundResult(typeof result.refundAmount === 'number' ? result.refundAmount : 0);
       onSuccess();
     } catch (err: unknown) {
       setCancelError(
-        err instanceof Error ? err.message : '취소 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.',
+        err instanceof Error ? err.message : '취소 처리 중 오류가 발생했어요. 잠시 후 다시 시도해 주세요.',
       );
     } finally {
       setCancelling(false);
@@ -209,10 +209,10 @@ function useWithdraw(orderNo: string, token: string) {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ orderNo, token }),
       });
       const result = await response.json().catch(() => ({}));
-      if (!response.ok || !result.ok) throw new Error(result.message || '취소하지 못했습니다. 잠시 후 다시 시도해 주세요.');
+      if (!response.ok || !result.ok) throw new Error(result.message || '취소하지 못했어요. 잠시 후 다시 시도해 주세요.');
       onSuccess();
     } catch (err: unknown) {
-      setWithdrawError(err instanceof Error ? err.message : '취소하지 못했습니다. 잠시 후 다시 시도해 주세요.');
+      setWithdrawError(err instanceof Error ? err.message : '취소하지 못했어요. 잠시 후 다시 시도해 주세요.');
     } finally {
       setWithdrawing(false);
     }
@@ -232,7 +232,7 @@ function DepositWaitingSection({ orderNo, token, guide, kindLabel }: {
   if (closed) {
     return (
       <Notice tone="neutral" role="status" className="mt-6">
-        신청을 취소했습니다. 받은 돈이 없어 환불할 금액은 없습니다.
+        신청을 취소했어요. 받은 돈이 없어 환불할 금액은 없어요.
       </Notice>
     );
   }
@@ -248,15 +248,15 @@ function DepositWaitingSection({ orderNo, token, guide, kindLabel }: {
 }
 
 const DEPOSIT_CLOSED_NOTICE =
-  '이 계좌 입금 신청은 입금 전에 취소되었습니다. 이미 입금하셨다면 010-4255-7893 · hello@studionol.co.kr로 알려 주세요 — 확인해 돌려드립니다.';
+  '이 계좌 입금 신청은 입금 전에 취소됐어요. 이미 입금하셨다면 010-4255-7893 · hello@studionol.co.kr로 알려 주세요 — 확인해 돌려드려요.';
 
 /** 취소 완료 문구 — 토스 결제는 결제 수단으로, 계좌 입금은 적어 주신 계좌로 3영업일 이내. */
 const refundDoneMessage = (amount: number, viaAccount: boolean): string =>
   viaAccount
     ? amount > 0
-      ? `취소가 완료되었습니다. 환불 금액 ${formatPriceAmount(amount)}원을 적어 주신 계좌로 접수일부터 3영업일 이내에 보내 드립니다.`
-      : '취소가 완료되었습니다. 환불 규정에 따라 돌려드릴 금액이 없습니다.'
-    : `취소가 완료되었습니다. 환불 금액: ${formatPriceAmount(amount)}원 (결제 수단으로 환불, 카드사에 따라 3~5영업일 소요됩니다)`;
+      ? `취소가 완료됐어요. 환불 금액 ${formatPriceAmount(amount)}원을 적어 주신 계좌로 접수일부터 3영업일 이내에 보내 드려요.`
+      : '취소가 완료됐어요. 환불 규정에 따라 돌려드릴 금액이 없어요.'
+    : `취소가 완료됐어요. 환불 금액: ${formatPriceAmount(amount)}원 (결제 수단으로 환불, 카드사에 따라 3~5영업일 소요돼요)`;
 
 function CancelSection({
   refundQuote,
@@ -282,7 +282,7 @@ function CancelSection({
         지금 취소하면 {formatPriceAmount(refundQuote.refundAmount)}원 환불
       </p>
       <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-        실제 환불 금액은 취소 처리 시점 기준으로 다시 계산됩니다.
+        실제 환불 금액은 취소 처리 시점 기준으로 다시 계산돼요.
       </p>
 
       <Panel title="환불 규정" className="mt-3">
@@ -372,7 +372,7 @@ function SessionManageView(props: SessionPageProps) {
 
           {status === 'confirmed' && !canCancel && (
             <Notice tone="neutral" className="mt-6">
-              이용 일시가 지난 예약입니다. 변경·취소가 필요하면 아래 연락처로 문의해 주세요.
+              이용 일시가 지난 예약이에요. 변경·취소가 필요하면 아래 연락처로 문의해 주세요.
             </Notice>
           )}
 

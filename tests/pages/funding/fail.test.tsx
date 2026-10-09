@@ -24,7 +24,7 @@ const run = async (query: Record<string, string>) =>
 
 it('쿼리의 message는 버린다 — 공격자가 고른 문장이 화면에 오르지 않는다', async () => {
   const { props } = await run({ message: '결제 실패. 환불 문의: 010-0000-0000 으로 연락하세요', code: 'PAY_PROCESS_CANCELED' });
-  expect(props.message).toBe('결제를 취소하셨습니다.');
+  expect(props.message).toBe('결제를 취소하셨어요.');
   expect(JSON.stringify(props)).not.toContain('010-0000-0000');
 });
 
@@ -33,8 +33,8 @@ it('아는 코드는 우리 문구로 옮긴다', async () => {
 });
 
 it('모르는 코드·코드 없음은 일반 문구', async () => {
-  expect((await run({ code: 'SOMETHING_NEW' })).props.message).toBe('결제창이 닫혔거나 결제가 거절되었습니다.');
-  expect((await run({})).props.message).toBe('결제창이 닫혔거나 결제가 거절되었습니다.');
+  expect((await run({ code: 'SOMETHING_NEW' })).props.message).toBe('결제창이 닫혔거나 결제가 거절됐어요.');
+  expect((await run({})).props.message).toBe('결제창이 닫혔거나 결제가 거절됐어요.');
 });
 
 it('코드 형식이 아니면 화면에 그대로 뿌리지 않는다', async () => {
@@ -43,13 +43,13 @@ it('코드 형식이 아니면 화면에 그대로 뿌리지 않는다', async (
 });
 
 it('정본 전화번호를 상시 표기한다', () => {
-  render(<FundingFailPage slug="demo" code={null} message="결제창이 닫혔거나 결제가 거절되었습니다." orderNo={null} />);
+  render(<FundingFailPage slug="demo" code={null} message="결제창이 닫혔거나 결제가 거절됐어요." orderNo={null} />);
   expect(screen.getByText(/010-4255-7893/)).toBeInTheDocument();
   expect(screen.getByRole('link', { name: /프로젝트로 돌아가기/ })).toHaveAttribute('href', '/ko/funding/demo');
 });
 
 it('코드가 있으면 문의용으로 함께 보여준다', () => {
-  render(<FundingFailPage slug={null} code="REJECT_CARD_COMPANY" message="카드사에서 결제를 거절했습니다." orderNo={null} />);
+  render(<FundingFailPage slug={null} code="REJECT_CARD_COMPANY" message="카드사에서 결제를 거절했어요." orderNo={null} />);
   expect(screen.getByText(/오류 코드: REJECT_CARD_COMPANY/)).toBeInTheDocument();
 });
 
@@ -89,7 +89,7 @@ describe('실패 사유 기록', () => {
 
   it('화면이 마운트되면 비콘으로 보낸다 — 원문 message는 주소에서 읽는다', async () => {
     window.history.replaceState({}, '', '/ko/funding/fail?orderId=FND-20260911-AB12CD34&code=REJECT_CARD_COMPANY&message=%EC%B9%B4%EB%93%9C%EC%82%AC+%EA%B1%B0%EC%A0%88');
-    render(<FundingFailPage slug="demo" code="REJECT_CARD_COMPANY" message="카드사에서 결제를 거절했습니다." orderNo="FND-20260911-AB12CD34" />);
+    render(<FundingFailPage slug="demo" code="REJECT_CARD_COMPANY" message="카드사에서 결제를 거절했어요." orderNo="FND-20260911-AB12CD34" />);
     await waitFor(() => expect(global.fetch).toHaveBeenCalled());
     const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
     expect(url).toBe('/api/payments/failed');
@@ -99,7 +99,7 @@ describe('실패 사유 기록', () => {
   });
 
   it('주문번호나 코드가 없으면 아무것도 보내지 않는다', async () => {
-    render(<FundingFailPage slug="demo" code={null} message="결제창이 닫혔거나 결제가 거절되었습니다." orderNo={null} />);
+    render(<FundingFailPage slug="demo" code={null} message="결제창이 닫혔거나 결제가 거절됐어요." orderNo={null} />);
     await new Promise((r) => setTimeout(r, 0));
     expect(global.fetch).not.toHaveBeenCalled();
   });

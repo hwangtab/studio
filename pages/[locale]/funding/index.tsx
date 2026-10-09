@@ -63,15 +63,15 @@ export default function FundingIndexPage({ items }: Props) {
         backgroundImage={pickHeroImage(items)}
         imageAlt=""
         title="펀딩"
-        subtitle="음반 제작비를 후원자와 함께 만듭니다. 리워드를 고르면 CD·굿즈·음원으로 돌려드립니다."
+        subtitle="음반 제작비를 후원자와 함께 만들어요. 리워드를 고르면 CD·굿즈·음원으로 돌려드려요."
       />
       <Section>
         {items.length === 0 ? (
           <div className="mx-auto max-w-xl text-center">
-            <p className="typo-card-title text-gray-900 dark:text-white">지금 열려 있는 펀딩이 없습니다</p>
+            <p className="typo-card-title text-gray-900 dark:text-white">지금 열려 있는 펀딩이 없어요</p>
             <p className="typo-card-body mt-3">
-              새 프로젝트는 스토리와 SNS에서 먼저 알립니다. 지난 펀딩이 어떻게 진행됐는지는
-              스토리에서 보실 수 있습니다.
+              새 프로젝트는 스토리와 SNS에서 먼저 알려요. 지난 펀딩이 어떻게 진행됐는지는
+              스토리에서 보실 수 있어요.
             </p>
             <Link
               href="/ko/stories"

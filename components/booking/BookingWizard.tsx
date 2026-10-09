@@ -186,20 +186,20 @@ export default function BookingWizard({ service, products, initialProductId }: B
       const res = await fetch(`/api/bookings/slots?${params.toString()}`, { signal });
       if (res.status === 503) {
         setSlots([]);
-        setSlotsError('일시적으로 예약 현황을 불러올 수 없습니다.');
+        setSlotsError('일시적으로 예약 현황을 불러올 수 없어요.');
         return;
       }
       const data: SlotsResponse = await res.json();
       if (!res.ok || !data.ok) {
         setSlots([]);
-        setSlotsError(data.message ?? '예약 현황을 불러오지 못했습니다.');
+        setSlotsError(data.message ?? '예약 현황을 불러오지 못했어요.');
         return;
       }
       setSlots(data.slots ?? []);
     } catch (e) {
       if (e instanceof Error && e.name === 'AbortError') return; // 최신 요청에 밀려난 이전 요청 — 무시
       setSlots([]);
-      setSlotsError('일시적으로 예약 현황을 불러올 수 없습니다.');
+      setSlotsError('일시적으로 예약 현황을 불러올 수 없어요.');
     } finally {
       if (!signal.aborted) setSlotsLoading(false);
     }
@@ -359,14 +359,14 @@ export default function BookingWizard({ service, products, initialProductId }: B
           return;
         }
         if (res.status === 409 && data.code === 'slot_taken') {
-          setSlotsNotice(data.message ?? '방금 다른 예약이 먼저 잡혔습니다. 다른 시간대를 선택해 주세요.');
+          setSlotsNotice(data.message ?? '방금 다른 예약이 먼저 잡혔어요. 다른 시간대를 선택해 주세요.');
           setSelectedStartHour(null);
           setStep(2);
           return;
         }
-        setSubmitError(data.message ?? '예약 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+        setSubmitError(data.message ?? '예약 신청에 실패했어요. 잠시 후 다시 시도해 주세요.');
       } catch {
-        setSubmitError('네트워크 오류로 예약 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+        setSubmitError('네트워크 오류로 예약 신청에 실패했어요. 잠시 후 다시 시도해 주세요.');
       } finally {
         setSubmitting(false);
       }
@@ -435,14 +435,14 @@ export default function BookingWizard({ service, products, initialProductId }: B
       }
 
       if (res.status === 409) {
-        setSlotsNotice(data.message ?? '방금 다른 예약이 먼저 잡혔습니다. 다른 시간대를 선택해 주세요.');
+        setSlotsNotice(data.message ?? '방금 다른 예약이 먼저 잡혔어요. 다른 시간대를 선택해 주세요.');
         setSelectedStartHour(null);
         setStep(2);
         return;
       }
 
       // 400(입력 오류) · 429(요청 과다) 등 — 현재 단계(정보 입력)에 메시지로 표시.
-      setSubmitError(data.message ?? '예약 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+      setSubmitError(data.message ?? '예약 신청에 실패했어요. 잠시 후 다시 시도해 주세요.');
     } catch (err) {
       /**
        * 결제창이 열리기 전에 SDK가 던진 경우 실패 사유는 여기서만 알 수 있다 —
@@ -472,7 +472,7 @@ export default function BookingWizard({ service, products, initialProductId }: B
         // 2026-09-29 한 후원자가 옛 문구("결제 수단과 약관 동의를 확인해 주세요")를 보고 30초에 네 번 다시 눌렀다.
         setSubmitError('카드 결제는 카드사를 먼저 골라 주세요. 결제 방법 아래에서 카드사를 선택한 뒤 다시 눌러 주세요.');
       } else {
-        setSubmitError('네트워크 오류로 예약 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+        setSubmitError('네트워크 오류로 예약 신청에 실패했어요. 잠시 후 다시 시도해 주세요.');
       }
     } finally {
       setSubmitting(false);
@@ -601,7 +601,7 @@ export default function BookingWizard({ service, products, initialProductId }: B
                 </div>
               )}
               {!slotsLoading && !slotsError && slots.length === 0 && (
-                <p className="text-sm text-gray-500 dark:text-gray-400">이 날짜에는 예약 가능한 시간이 없습니다.</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">이 날짜에는 예약 가능한 시간이 없어요.</p>
               )}
             </div>
           )}
@@ -754,11 +754,11 @@ export default function BookingWizard({ service, products, initialProductId }: B
                 토스 화면에 있어서 그 타이머를 볼 수 없다 — 누르기 전에 말해야 행동이 달라진다. */}
             <Notice tone="warning" role="status">
               {usingBank ? (
-                <>신청하시면 입금하실 계좌를 바로 알려 드리고, <strong>입금을 확인할 때까지</strong> 이 시간대를 잡아 둡니다.
-                입금이 확인되면 예약이 확정되고 메일로 알려 드립니다.</>
+                <>신청하시면 입금하실 계좌를 바로 알려 드리고, <strong>입금을 확인할 때까지</strong> 이 시간대를 잡아 둬요.
+                입금이 확인되면 예약이 확정되고 메일로 알려 드려요.</>
               ) : (
-                <>결제를 시작하면 이 시간대를 <strong>{Math.round(PENDING_HOLD_SECONDS / 60)}분간</strong> 잡아 둡니다.
-                그 안에 결제를 마치지 않으면 다시 열려 다른 분이 예약할 수 있습니다.</>
+                <>결제를 시작하면 이 시간대를 <strong>{Math.round(PENDING_HOLD_SECONDS / 60)}분간</strong> 잡아 둬요.
+                그 안에 결제를 마치지 않으면 다시 열려 다른 분이 예약할 수 있어요.</>
               )}
             </Notice>
 

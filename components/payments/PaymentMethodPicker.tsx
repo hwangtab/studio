@@ -118,11 +118,11 @@ const hintFor = (choice: PaymentChoice | undefined, confirmLabel: string, en = f
     }
     return `Goes straight to the ${choice.label} payment window. Once payment is complete, ${confirmLabel} right away.`;
   }
-  if (!choice || choice.id === 'card') return `카드 결제창에서 카드사를 고릅니다. 결제가 끝나면 바로 ${confirmLabel}됩니다.`;
+  if (!choice || choice.id === 'card') return `카드 결제창에서 카드사를 골라요. 결제가 끝나면 바로 ${confirmLabel}돼요.`;
   if (choice.id === 'bank_transfer') {
-    return `은행·ATM에서 보내실 수 있습니다. 신청하시면 입금할 계좌를 바로 알려 드리고, 입금을 확인하면 ${confirmLabel}되고 메일로 알려 드립니다.`;
+    return `은행·ATM에서 보내실 수 있어요. 신청하시면 입금할 계좌를 바로 알려 드리고, 입금을 확인하면 ${confirmLabel}되고 메일로 알려 드려요.`;
   }
-  return `${choice.label} 결제창으로 바로 이동합니다. 결제가 끝나면 바로 ${confirmLabel}됩니다.`;
+  return `${choice.label} 결제창으로 바로 이동해요. 결제가 끝나면 바로 ${confirmLabel}돼요.`;
 };
 
 /**

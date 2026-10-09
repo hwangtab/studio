@@ -12,7 +12,7 @@ describe('PaymentMethodPicker', () => {
     expect(within(group).getByRole('radio', { name: '신용·체크카드' })).not.toBeChecked();
     fireEvent.click(within(group).getByRole('radio', { name: '네이버페이' }));
     expect(onChange).toHaveBeenCalledWith('naverpay');
-    expect(screen.getByText('카카오페이 결제창으로 바로 이동합니다. 결제가 끝나면 바로 확정됩니다.')).toBeInTheDocument();
+    expect(screen.getByText('카카오페이 결제창으로 바로 이동해요. 결제가 끝나면 바로 확정돼요.')).toBeInTheDocument();
   });
 
   it('애플페이는 지원 환경에서만 줄이 생긴다', () => {

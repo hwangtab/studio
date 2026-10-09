@@ -70,7 +70,7 @@ interface Props {
   layout?: 'page' | 'modal';
 }
 const helpClass = 'typo-card-meta mt-1.5';
-const ALL_SOLD_OUT_MESSAGE = '모든 리워드가 품절되었습니다. 문의: 010-4255-7893';
+const ALL_SOLD_OUT_MESSAGE = '모든 리워드가 품절됐어요. 문의: 010-4255-7893';
 const EMPTY_ADDRESS_MESSAGE = '주소 검색으로 받으실 주소를 넣어 주세요.';
 /** 결제를 시도한 선택을 되살리는 기한. */
 const LAST_SELECTION_TTL_MS = 30 * 60 * 1000;
@@ -225,7 +225,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
       const current = Math.floor(Number(quantityText));
       if (!Number.isFinite(current) || current <= cap) return;
       setQuantityText(String(cap));
-      setStockNotice(`남은 수량이 바뀌어 ${cap}개로 조정했습니다.`);
+      setStockNotice(`남은 수량이 바뀌어 ${cap}개로 조정했어요.`);
       return;
     }
     // 고른 리워드가 폼을 열어 둔 사이 품절됐다 — 고를 수 있는 다른 리워드로 옮긴다. 예전엔
@@ -237,7 +237,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
       const soldOutTitle = project.rewards.find((r) => r.id === rewardId)?.title ?? rewardId;
       setRewardId(next.id);
       setQuantityText('1');
-      setStockNotice(`${soldOutTitle}이 품절되어 다른 리워드로 옮겼습니다.`);
+      setStockNotice(`${soldOutTitle}이 품절되어 다른 리워드로 옮겼어요.`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [remaining]);
@@ -436,16 +436,16 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
               : undefined,
           }),
         });
-        if (!res.headers.get('content-type')?.includes('application/json')) { setError('서버 오류가 발생했습니다.'); return; }
+        if (!res.headers.get('content-type')?.includes('application/json')) { setError('서버 오류가 발생했어요.'); return; }
         const json = await res.json();
-        if (!res.ok || typeof json.manageUrl !== 'string') { setError(json.message ?? '펀딩 신청에 실패했습니다.'); return; }
+        if (!res.ok || typeof json.manageUrl !== 'string') { setError(json.message ?? '펀딩 신청에 실패했어요.'); return; }
         // 신청이 만들어졌으니 임시 저장은 비운다(토스는 success 화면이 비운다).
         clearStoredDraft(draftKey);
         // 문서 이동이다 — 도착지는 관리 토큰이 실린 비밀 주소라 클라이언트 전환·측정 대상이 아니다
         // (lib/analytics/privatePaths.ts). 금액은 그 화면이 서버에서 다시 읽는다.
         window.location.assign(json.manageUrl);
       } catch {
-        setError('네트워크 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+        setError('네트워크 오류가 발생했어요. 잠시 후 다시 시도해 주세요.');
       } finally {
         submittingRef.current = false;
         setSubmitting(false);
@@ -490,11 +490,11 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
         }),
       });
       if (!res.headers.get('content-type')?.includes('application/json')) {
-        setError('서버 오류가 발생했습니다.');
+        setError('서버 오류가 발생했어요.');
         return;
       }
       const json = await res.json();
-      if (!res.ok) { setError(json.message ?? '펀딩 신청에 실패했습니다.'); return; }
+      if (!res.ok) { setError(json.message ?? '펀딩 신청에 실패했어요.'); return; }
       if (typeof json.orderNo === 'string') rememberOrderNo(json.orderNo);
       try {
         window.sessionStorage.setItem(lastSelectionKey, JSON.stringify({ at: Date.now(), rewardId: reward.id, quantity }));
@@ -557,7 +557,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
         // 2026-09-29 한 후원자가 옛 문구("결제 수단과 약관 동의를 확인해 주세요")를 보고 30초에 네 번 다시 눌렀다.
         setError('카드 결제는 카드사를 먼저 골라 주세요. 결제 방법 아래에서 카드사를 선택한 뒤 다시 눌러 주세요.');
       } else {
-        setError('결제를 시작하지 못했습니다. 잠시 후 다시 시도해 주세요.');
+        setError('결제를 시작하지 못했어요. 잠시 후 다시 시도해 주세요.');
       }
     }
     finally { submittingRef.current = false; setSubmitting(false); }
@@ -598,13 +598,13 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
             <p className="typo-card-meta">{reward.title}</p>
           </Notice>
         ) : (
-          <StepHeader id={`${uid}-step-reward`} n={1} title="리워드" hint="펀딩 금액에 따라 돌려드릴 구성입니다." />
+          <StepHeader id={`${uid}-step-reward`} n={1} title="리워드" hint="펀딩 금액에 따라 돌려드릴 구성이에요." />
         )}
         {stockNotice && (
           <Notice tone="warning" role="status" className="mb-3">{stockNotice}</Notice>
         )}
         {selectionRestored && (
-          <p role="status" className="mb-3 typo-card-meta">지난번 결제를 시도할 때 고른 리워드를 다시 담아 두었습니다.</p>
+          <p role="status" className="mb-3 typo-card-meta">지난번 결제를 시도할 때 고른 리워드를 다시 담아 뒀어요.</p>
         )}
         {(!lockedReward || showAllRewards) && (
           <div className="space-y-2">
@@ -638,7 +638,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
         )}
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           <div>
-            <Field id={`${uid}-qty`} label="수량" hint={`1~${quantityCap}개까지 펀딩할 수 있습니다.`}>
+            <Field id={`${uid}-qty`} label="수량" hint={`1~${quantityCap}개까지 펀딩할 수 있어요.`}>
               <TextInput type="number" inputMode="numeric" min={1} max={quantityCap} step={1} value={quantityText}
                 onChange={(e) => setQuantityText(e.target.value)}
                 onKeyDown={handleNumericEnter}
@@ -646,7 +646,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
             </Field>
           </div>
           <div>
-            <Field id={`${uid}-add`} label="추가 펀딩 금액" hint={`선택 항목입니다. 1,000원 단위로 최대 ${formatPriceAmount(MAX_ADDITIONAL_AMOUNT)}원까지 올릴 수 있습니다.`}>
+            <Field id={`${uid}-add`} label="추가 펀딩 금액" hint={`선택 항목이에요. 1,000원 단위로 최대 ${formatPriceAmount(MAX_ADDITIONAL_AMOUNT)}원까지 올릴 수 있어요.`}>
               <TextInput type="number" inputMode="numeric" min={0} max={MAX_ADDITIONAL_AMOUNT} step={ADDITIONAL_AMOUNT_STEP} value={additionalText}
                 onChange={(e) => setAdditionalText(e.target.value)}
                 onKeyDown={handleNumericEnter}
@@ -657,7 +657,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
       </fieldset>
 
       <fieldset className={cardClass} aria-labelledby={`${uid}-step-backer`}>
-        <StepHeader id={`${uid}-step-backer`} n={2} title="후원자 정보" hint="펀딩 확인 메일과 리워드 발송에 씁니다." />
+        <StepHeader id={`${uid}-step-backer`} n={2} title="후원자 정보" hint="펀딩 확인 메일과 리워드 발송에 써요." />
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <Field id={`${uid}-name`} label="이름" required>
@@ -679,7 +679,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
         {needsShipping && (
           <Panel variant="outline" className="mt-5">
             <p className="text-sm font-semibold text-gray-900 dark:text-white">배송지</p>
-            <p className={helpClass}>고르신 리워드는 배송이 있습니다.</p>
+            <p className={helpClass}>고르신 리워드는 배송이 있어요.</p>
             <Checkbox
               className="mt-2"
               emphasis
@@ -688,7 +688,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
                 setShipToOther(e.target.checked);
                 if (!e.target.checked) setShip((prev) => ({ ...prev, name: '', phone: '' }));
               }}
-              label="후원자가 아닌 다른 분이 받습니다"
+              label="후원자가 아닌 다른 분이 받아요"
             />
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               {shipToOther && (
@@ -729,7 +729,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
                 </div>
               )}
               {addressManual && (
-                <p className="typo-card-meta sm:col-span-2" role="status">주소 검색을 불러오지 못했습니다. 우편번호와 주소를 직접 적어 주세요.</p>
+                <p className="typo-card-meta sm:col-span-2" role="status">주소 검색을 불러오지 못했어요. 우편번호와 주소를 직접 적어 주세요.</p>
               )}
               <div className="sm:col-span-2">
                 <Field id={`${uid}-addr1`} label="주소" required>
@@ -776,7 +776,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
           <p className="text-sm font-semibold text-gray-900 dark:text-white">
             응원 메시지 · 후원자 명단 <span className="font-normal text-gray-500 dark:text-gray-400">(선택)</span>
           </p>
-          <p className={helpClass}>남겨 주신 메시지는 프로젝트 페이지 후원자 명단에 올라갑니다. 이름을 표시하지 않으면 &ldquo;{ANONYMOUS_LABEL}&rdquo;으로 보입니다.</p>
+          <p className={helpClass}>남겨 주신 메시지는 프로젝트 페이지 후원자 명단에 올라가요. 이름을 표시하지 않으면 &ldquo;{ANONYMOUS_LABEL}&rdquo;으로 보여요.</p>
           <div className="mt-3">
             <Field id={`${uid}-msg`} label="응원 메시지">
               <TextArea rows={3} className="min-h-0" maxLength={PLEDGE_TEXT_LIMITS.supporterMessage} value={form.supporterMessage} onChange={(e) => setForm({ ...form, supporterMessage: e.target.value })} />
@@ -789,7 +789,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
             checked={form.displayNamePublic}
             onChange={(e) => setForm({ ...form, displayNamePublic: e.target.checked })}
             label="후원자 명단에 이름 표시"
-            hint="실명 대신 가린 이름이나 닉네임도 고를 수 있습니다."
+            hint="실명 대신 가린 이름이나 닉네임도 고를 수 있어요."
           />
 
           {form.displayNamePublic && (
@@ -817,7 +817,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
       <fieldset className={cardClass} aria-labelledby={`${uid}-step-pay`}>
         <StepHeader
           id={`${uid}-step-pay`} n={3} title="결제수단"
-          hint={usingBank ? '신청하시면 입금하실 계좌를 바로 알려 드립니다.' : '고르신 수단으로 바로 결제창이 열립니다.'}
+          hint={usingBank ? '신청하시면 입금하실 계좌를 바로 알려 드려요.' : '고르신 수단으로 바로 결제창이 열려요.'}
         />
         {picker === null ? (
           <PaymentMethodSkeleton />
@@ -845,7 +845,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
               checked={!usingBank}
               onChange={() => setPayMethod('toss')}
               title="카드·간편결제(토스)"
-              description="결제가 끝나면 바로 확정됩니다."
+              description="결제가 끝나면 바로 확정돼요."
             />
             <ChoiceCard
               name={`${uid}-paymethod`}
@@ -854,7 +854,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
               disabled={bankBlocked !== null}
               onChange={() => setPayMethod('bank_transfer')}
               title="계좌로 직접 입금"
-              description={bankBlocked ? BANK_TRANSFER_BLOCK_MESSAGES[bankBlocked] : '은행·ATM에서 보내실 수 있습니다. 입금을 확인하면 메일로 알려 드립니다.'}
+              description={bankBlocked ? BANK_TRANSFER_BLOCK_MESSAGES[bankBlocked] : '은행·ATM에서 보내실 수 있어요. 입금을 확인하면 메일로 알려 드려요.'}
             />
           </div>
           <div hidden={usingBank}>
@@ -889,7 +889,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
           ]}
           total={preview.totalAmount}
           totalLabel="예상 합계"
-          note="VAT 포함. 실제 청구액은 서버가 확정합니다."
+          note="VAT 포함. 실제 청구액은 서버가 확정해요."
         />
       </section>
 

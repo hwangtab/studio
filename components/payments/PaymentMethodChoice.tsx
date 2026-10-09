@@ -31,7 +31,7 @@ export default function PaymentMethodChoice({ name, value, onChange, bankBlocked
         checked={value === 'toss'}
         onChange={() => onChange('toss')}
         title={en ? 'Card / mobile pay' : '카드·간편결제'}
-        description={en ? `Once payment is complete, ${confirmLabel} right away.` : `결제가 끝나면 바로 ${confirmLabel}됩니다.`}
+        description={en ? `Once payment is complete, ${confirmLabel} right away.` : `결제가 끝나면 바로 ${confirmLabel}돼요.`}
       />
       <ChoiceCard
         name={name}
@@ -44,7 +44,7 @@ export default function PaymentMethodChoice({ name, value, onChange, bankBlocked
           bankBlockedMessage ??
           (en
             ? `Send it from a Korean bank or ATM. Once we confirm the transfer, ${confirmLabel} and we let you know by email.`
-            : `은행·ATM에서 보내실 수 있습니다. 입금을 확인하면 ${confirmLabel}되고 메일로 알려 드립니다.`)
+            : `은행·ATM에서 보내실 수 있어요. 입금을 확인하면 ${confirmLabel}되고 메일로 알려 드려요.`)
         }
       />
     </div>

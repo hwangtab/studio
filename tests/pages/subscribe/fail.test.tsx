@@ -23,7 +23,7 @@ it('쿼리의 message는 버린다 — 공격자가 고른 문장이 화면에 �
     code: 'PAY_PROCESS_CANCELED',
     message: '등록 실패. 재등록 문의: 010-0000-0000 으로 연락하세요',
   });
-  expect(props.message).toBe('카드 등록을 취소하셨습니다.');
+  expect(props.message).toBe('카드 등록을 취소하셨어요.');
   expect(JSON.stringify(props)).not.toContain('010-0000-0000');
 });
 
@@ -32,8 +32,8 @@ it('아는 코드는 우리 문구로 옮긴다', async () => {
 });
 
 it('모르는 코드·코드 없음은 일반 문구', async () => {
-  expect((await run({ token: 'tok', code: 'SOMETHING_NEW' })).props.message).toBe('카드 인증 중 문제가 발생했습니다.');
-  expect((await run({ token: 'tok' })).props.message).toBe('카드 인증 중 문제가 발생했습니다.');
+  expect((await run({ token: 'tok', code: 'SOMETHING_NEW' })).props.message).toBe('카드 인증 중 문제가 발생했어요.');
+  expect((await run({ token: 'tok' })).props.message).toBe('카드 인증 중 문제가 발생했어요.');
 });
 
 it('코드 형식이 아니면 화면에 그대로 뿌리지 않는다', async () => {
@@ -51,7 +51,7 @@ it('토큰이 없으면 notFound', async () => {
 });
 
 it('정본 전화번호를 상시 표기하고, 재시도 링크는 문서 이동이다', () => {
-  render(<SubscribeFailPage id="sub-1" setupToken="tok en" code={null} message="카드 인증 중 문제가 발생했습니다." />);
+  render(<SubscribeFailPage id="sub-1" setupToken="tok en" code={null} message="카드 인증 중 문제가 발생했어요." />);
   expect(screen.getByText(/010-4255-7893/)).toBeInTheDocument();
   expect(screen.getByRole('link', { name: /다시 시도하기/ })).toHaveAttribute(
     'href',
@@ -60,6 +60,6 @@ it('정본 전화번호를 상시 표기하고, 재시도 링크는 문서 이�
 });
 
 it('코드가 있으면 문의용으로 함께 보여준다', () => {
-  render(<SubscribeFailPage id="sub-1" setupToken="tok" code="REJECT_CARD_COMPANY" message="카드사에서 등록을 거절했습니다." />);
+  render(<SubscribeFailPage id="sub-1" setupToken="tok" code="REJECT_CARD_COMPANY" message="카드사에서 등록을 거절했어요." />);
   expect(screen.getByText(/오류 코드: REJECT_CARD_COMPANY/)).toBeInTheDocument();
 });

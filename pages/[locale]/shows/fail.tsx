@@ -80,7 +80,7 @@ export default function ShowFailPage({ slug, code, message, orderNo, locale }: F
         <p className="typo-card-meta mb-4 text-center">스튜디오 놀</p>
         <ResultCard
           tone="error"
-          title="결제를 완료하지 못했습니다"
+          title="결제를 완료하지 못했어요"
           description={message}
           actions={
             <>
@@ -99,7 +99,7 @@ export default function ShowFailPage({ slug, code, message, orderNo, locale }: F
           <div className="space-y-1 text-center typo-card-meta">
             {code && <p>오류 코드: {code}</p>}
             {orderNo && <p>주문번호: {orderNo}</p>}
-            <p>티켓은 발권되지 않았고 결제 정보도 저장되지 않았습니다. 잔여석이 남아 있다면 다시 예매하실 수 있습니다.</p>
+            <p>티켓은 발권되지 않았고 결제 정보도 저장되지 않았어요. 잔여석이 남아 있다면 다시 예매하실 수 있어요.</p>
             <p>문의: 010-4255-7893 · hello@studionol.co.kr</p>
           </div>
         </ResultCard>

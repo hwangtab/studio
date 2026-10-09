@@ -67,32 +67,32 @@ describe('결제 실패 페이지 — 돌아갈 예약 페이지', () => {
   it('아는 코드는 우리 문구로 옮긴다', async () => {
     const r = await run({ service: 'wedding-song', code: 'PAY_PROCESS_CANCELED' });
     expect(r.props.code).toBe('PAY_PROCESS_CANCELED');
-    expect(r.props.message).toBe('결제를 취소하셨습니다.');
+    expect(r.props.message).toBe('결제를 취소하셨어요.');
   });
 });
 
 describe('결제 실패 페이지 — 쿼리의 message는 버린다', () => {
   it('공격자가 고른 문장이 화면에 오르지 않는다', async () => {
     const r = await run({ message: '결제 실패. 환불 문의: 010-0000-0000 으로 연락하세요', code: 'PAY_PROCESS_CANCELED' });
-    expect(r.props.message).toBe('결제를 취소하셨습니다.');
+    expect(r.props.message).toBe('결제를 취소하셨어요.');
     expect(JSON.stringify(r.props)).not.toContain('010-0000-0000');
   });
 
   it('모르는 코드·코드 없음은 일반 문구로 떨어진다', async () => {
-    expect((await run({ code: 'SOMETHING_NEW' })).props.message).toBe('결제 진행 중 문제가 발생했습니다.');
-    expect((await run({})).props.message).toBe('결제 진행 중 문제가 발생했습니다.');
+    expect((await run({ code: 'SOMETHING_NEW' })).props.message).toBe('결제 진행 중 문제가 발생했어요.');
+    expect((await run({})).props.message).toBe('결제 진행 중 문제가 발생했어요.');
   });
 
   it('코드 형식이 아니면 화면에 그대로 뿌리지 않는다', async () => {
     const r = await run({ code: '<img src=x onerror=alert(1)>' });
     expect(r.props.code).toBeNull();
-    expect(r.props.message).toBe('결제 진행 중 문제가 발생했습니다.');
+    expect(r.props.message).toBe('결제 진행 중 문제가 발생했어요.');
   });
 });
 
 describe('결제 실패 페이지 — 렌더링', () => {
   it('message가 비거나 알 수 없어도 정본 연락처와 카카오 진입점이 있다', () => {
-    render(<BookingFailPage service="recording" code={null} message="결제 진행 중 문제가 발생했습니다." orderNo={null} />);
+    render(<BookingFailPage service="recording" code={null} message="결제 진행 중 문제가 발생했어요." orderNo={null} />);
     expect(screen.getByText(/010-4255-7893/)).toBeInTheDocument();
     const kakaoLink = screen.getByRole('link', { name: /카카오톡으로 문의하기/ });
     expect(kakaoLink).toHaveAttribute('href', expect.stringContaining('kakao'));
@@ -102,7 +102,7 @@ describe('결제 실패 페이지 — 렌더링', () => {
   });
 
   it('돌아가기 링크가 상품에 맞는 예약/주문 페이지를 가리킨다', () => {
-    render(<BookingFailPage service="mixing-mastering" code={null} message="결제 진행 중 문제가 발생했습니다." orderNo={null} />);
+    render(<BookingFailPage service="mixing-mastering" code={null} message="결제 진행 중 문제가 발생했어요." orderNo={null} />);
     expect(screen.getByRole('link', { name: /주문 페이지로 돌아가기/ })).toHaveAttribute('href', '/ko/booking/mixing-mastering');
   });
 });
@@ -146,7 +146,7 @@ describe('실패 사유 기록', () => {
 
   it('화면이 마운트되면 비콘으로 보낸다 — 원문 message는 주소에서 읽는다', async () => {
     window.history.replaceState({}, '', '/ko/booking/fail?orderId=SNB-20260911-AB12CD34&code=REJECT_CARD_COMPANY&message=%EC%B9%B4%EB%93%9C%EC%82%AC+%EA%B1%B0%EC%A0%88');
-    render(<BookingFailPage service="recording" code="REJECT_CARD_COMPANY" message="카드사에서 결제를 거절했습니다." orderNo="SNB-20260911-AB12CD34" />);
+    render(<BookingFailPage service="recording" code="REJECT_CARD_COMPANY" message="카드사에서 결제를 거절했어요." orderNo="SNB-20260911-AB12CD34" />);
     await waitFor(() => expect(global.fetch).toHaveBeenCalled());
     const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
     expect(url).toBe('/api/payments/failed');

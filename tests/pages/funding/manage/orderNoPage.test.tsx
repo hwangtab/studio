@@ -25,7 +25,7 @@ it('토스 결제 취소 성공 → 환불 금액 확인 문구', async () => {
   render(<FundingManagePage {...baseProps} paymentMethod="toss" />);
   await userEvent.click(screen.getByRole('button', { name: /펀딩 취소/ }));
   expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining('환불받을까요'));
-  expect(await screen.findByText('취소되었습니다. 30,000원이 환불됩니다.')).toBeInTheDocument();
+  expect(await screen.findByText('취소됐어요. 30,000원이 환불돼요.')).toBeInTheDocument();
 });
 
 it('비JSON 응답이면 서버 오류 문구', async () => {
@@ -35,7 +35,7 @@ it('비JSON 응답이면 서버 오류 문구', async () => {
   }) as never;
   render(<FundingManagePage {...baseProps} paymentMethod="toss" />);
   await userEvent.click(screen.getByRole('button', { name: /펀딩 취소/ }));
-  expect(await screen.findByText('서버 오류가 발생했습니다.')).toBeInTheDocument();
+  expect(await screen.findByText('서버 오류가 발생했어요.')).toBeInTheDocument();
 });
 
 // 이 페이지의 URL에는 관리 토큰이 실린다. 이탈 링크가 클라 전환이면 공개 페이지에 나갔다
@@ -68,11 +68,11 @@ describe('명단 공개 설정', () => {
   it('명단에서 내리면 PATCH를 보내고 결과 문구를 띄운다', async () => {
     const fetchMock = okFetch({ ok: true, displayNamePublic: false, publicName: null });
     render(<FundingManagePage {...baseProps} displayNamePublic paymentMethod="toss" />);
-    expect(screen.getByText(/후원자 명단에/)).toHaveTextContent('홍길동(으)로 올라가 있습니다');
+    expect(screen.getByText(/후원자 명단에/)).toHaveTextContent('홍길동(으)로 올라가 있어요');
     await userEvent.click(screen.getByRole('button', { name: '명단에서 내리기' }));
     // 공개 명단은 상태 API 캐시(s-maxage=15 · SWR 60)를 통해 나가므로 즉시 반영되지 않는다 —
     // 그걸 말하지 않으면 "철회가 안 됐다"는 문의가 온다.
-    expect(await screen.findByText(/후원자 명단에서 내렸습니다\. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다\./)).toBeInTheDocument();
+    expect(await screen.findByText(/후원자 명단에서 내렸어요\. 프로젝트 페이지에는 최대 몇 분 뒤 반영돼요\./)).toBeInTheDocument();
     const [url, init] = fetchMock.mock.calls[0];
     expect(url).toBe('/api/funding/display-name');
     expect(init.method).toBe('PATCH');
@@ -89,7 +89,7 @@ describe('명단 공개 설정', () => {
     await userEvent.click(screen.getByLabelText('닉네임'));
     await userEvent.type(screen.getByLabelText('명단에 표시할 닉네임'), '청취자');
     await userEvent.click(save);
-    expect(await screen.findByText(/후원자 명단에 올렸습니다/)).toBeInTheDocument();
+    expect(await screen.findByText(/후원자 명단에 올렸어요/)).toBeInTheDocument();
     expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({
       orderNo: 'FND-1', token: 'tok', displayNamePublic: true, publicNameStyle: 'nickname', publicNickname: '청취자',
     });
@@ -114,8 +114,8 @@ describe('명단 공개 설정', () => {
   // 공개 동의가 켜져 있어도 운영자가 내렸으면 "올라가 있습니다"라고 말하면 안 된다.
   it('운영자가 내렸으면 그 사실을 알린다', () => {
     render(<FundingManagePage {...baseProps} displayNamePublic listingHidden paymentMethod="toss" />);
-    expect(screen.getByText(/후원자 명단에서 내려 두었습니다/)).toBeInTheDocument();
-    expect(screen.queryByText(/올라가 있습니다/)).toBeNull();
+    expect(screen.getByText(/후원자 명단에서 내려 뒀어요/)).toBeInTheDocument();
+    expect(screen.queryByText(/올라가 있어요/)).toBeNull();
     // 내려진 뒤에는 표시 이름을 바꿀 자리가 없다 — 바꿔도 명단에 뜨지 않는다. 동의 철회만 남는다.
     expect(screen.queryByRole('button', { name: '표시 이름 저장' })).toBeNull();
     expect(screen.queryByRole('radio')).toBeNull();
@@ -151,7 +151,7 @@ describe('명단 공개 설정', () => {
     expect(JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body)).toEqual({
       orderNo: 'FND-1', token: 'tok', displayNamePublic: false,
     });
-    expect(await screen.findByText(/후원자 명단에서 내렸습니다/)).toBeInTheDocument();
+    expect(await screen.findByText(/후원자 명단에서 내렸어요/)).toBeInTheDocument();
   });
 
   it('공개 동의가 꺼져 있으면 철회 버튼도 없다 — 거둘 것이 없다', () => {
@@ -195,7 +195,7 @@ describe('토스 결제가 아닌 펀딩', () => {
  */
 it('프로젝트 조회가 실패하면 마감이 아니라 일시 오류로 안내한다', () => {
   render(<FundingManagePage {...baseProps} paymentMethod="toss" lookupFailed canCancel={false} cancelBlockedReason={null} />);
-  expect(screen.getByText(/지금은 후원 정보를 불러오지 못했습니다/)).toBeInTheDocument();
+  expect(screen.getByText(/지금은 후원 정보를 불러오지 못했어요/)).toBeInTheDocument();
   expect(screen.queryByText(/마감/)).not.toBeInTheDocument();
   expect(screen.queryByRole('button', { name: /펀딩 취소/ })).not.toBeInTheDocument();
 });
@@ -219,7 +219,7 @@ describe('계좌 입금 안내', () => {
     expect(screen.getByText('입금하실 때 보내는 분 이름은 신청하신 분 성함으로 해 주세요.')).toBeInTheDocument();
     // 2026-10-07T06:00Z = 한국시간 15:00
     expect(screen.getByText(/10월 7일 오후 3:00까지\(한국시간\)/)).toBeInTheDocument();
-    expect(screen.getByText('입금이 확인되면 메일로 알려 드립니다(영업일 1일 이내).')).toBeInTheDocument();
+    expect(screen.getByText('입금이 확인되면 메일로 알려 드려요(영업일 1일 이내).')).toBeInTheDocument();
     expect(screen.getByText('입금 대기')).toBeInTheDocument();
   });
 
@@ -241,7 +241,7 @@ describe('계좌 입금 안내', () => {
     render(<FundingManagePage {...pendingBank} paymentMethod="bank_transfer" />);
     await userEvent.click(screen.getByRole('button', { name: '계좌번호 복사하기' }));
     expect(writeText).toHaveBeenCalledWith('3333-12-5480849');
-    expect(await screen.findByRole('button', { name: '복사했습니다' })).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: '복사했어요' })).toBeInTheDocument();
   });
 
   it('"입금 전 신청 취소" — 성공하면 계좌 안내를 거두고 환불 없음 문구', async () => {
@@ -253,7 +253,7 @@ describe('계좌 입금 안내', () => {
     render(<FundingManagePage {...pendingBank} paymentMethod="bank_transfer" />);
     await userEvent.click(screen.getByRole('button', { name: '입금 전 신청 취소' }));
     expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining('이미 입금하셨다면'));
-    expect(await screen.findByText(/신청을 취소했습니다/)).toBeInTheDocument();
+    expect(await screen.findByText(/신청을 취소했어요/)).toBeInTheDocument();
     expect(screen.queryByText('3333-12-5480849')).toBeNull();
     expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ orderNo: 'FND-1', token: 'tok' });
   });
@@ -307,5 +307,5 @@ it('취소(환불)를 요청한 건은 내려받기 버튼을 그리지 않고 �
   render(<FundingManagePage {...baseProps} paymentMethod="bank_transfer" refundRequested
     downloads={[{ label: 'MP3', key: 'k' }]} />);
   expect(screen.queryByRole('button', { name: /내려받기/ })).toBeNull();
-  expect(screen.getByText(/음원 내려받기를 닫았습니다/)).toBeInTheDocument();
+  expect(screen.getByText(/음원 내려받기를 닫았어요/)).toBeInTheDocument();
 });

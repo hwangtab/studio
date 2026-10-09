@@ -36,7 +36,7 @@ rewards:
 it('상태 조회가 실패하면 안내 문구를 띄운다', () => {
   (useFundingStatus as jest.Mock).mockReturnValue({ data: null, error: true, state: 'live' });
   render(<FundingProjectPage project={project} initialState="live" />);
-  expect(screen.getByRole('alert')).toHaveTextContent('현황을 불러오지 못했습니다. 새로고침해 주세요.');
+  expect(screen.getByRole('alert')).toHaveTextContent('현황을 불러오지 못했어요. 새로고침해 주세요.');
 });
 
 it('정상일 때는 안내 문구가 없다', () => {

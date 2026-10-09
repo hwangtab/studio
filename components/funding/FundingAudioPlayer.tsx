@@ -346,7 +346,7 @@ export default function FundingAudioPlayer({ id, locale = 'ko' }: { id: string; 
 
         {clip.note && <figcaption className="mt-3 break-keep text-sm text-white/60">{en ? clip.en!.note : clip.note}</figcaption>}
         <p role="status" className={failed ? 'mt-3 text-sm text-red-300' : 'sr-only'}>
-          {failed ? (en ? 'The audio could not be played. Please try again in a moment.' : '음원을 재생하지 못했습니다. 잠시 뒤 다시 눌러 주세요.') : ''}
+          {failed ? (en ? 'The audio could not be played. Please try again in a moment.' : '음원을 재생하지 못했어요. 잠시 뒤 다시 눌러 주세요.') : ''}
         </p>
       </div>
     </figure>

@@ -128,7 +128,7 @@ describe('저장하지 않은 입력 — 앱 내부 이동(routeChangeStart) 가
     fireEvent.change(screen.getByLabelText('제목', { exact: false }), { target: { value: '고친 제목' } });
     fireEvent.click(screen.getByRole('button', { name: '기본정보 저장' }));
 
-    await waitFor(() => expect(screen.getByText('저장했습니다.')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
 
     // 저장 성공은 폼(BasicSectionForm) 자신의 렌더에서 즉시 dirty=false로 잡히지만, 그
     // 사실이 부모의 dirtyTabs 집계로 올라가는 것은 그다음 커밋(onDirtyChange 이펙트)이다
@@ -167,7 +167,7 @@ describe('저장하지 않은 입력 — 앱 내부 이동(routeChangeStart) 가
     fireEvent.change(screen.getByLabelText('링크', { exact: false }), { target: { value: 'https://x\n' } });
     fireEvent.click(screen.getByRole('button', { name: '개설자 정보 저장' }));
 
-    await waitFor(() => expect(screen.getByText('저장했습니다.')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
     await waitFor(() => expect(() => triggerRouteChangeStart()).not.toThrow());
   });
 
@@ -194,7 +194,7 @@ describe('저장하지 않은 입력 — 앱 내부 이동(routeChangeStart) 가
     fireEvent.change(bioField, { target: { value: '첫 문장. 이어서 쓴 문장.' } });
 
     resolveFetch({ ok: true, json: async () => ({ ok: true }) });
-    await waitFor(() => expect(screen.getByText('저장했습니다.')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
 
     // 이어서 친 입력이 살아 있어야 하고, 그 값은 서버에 보낸(제출 시점) 값과 다르므로
     // dirty도 열린 채 남아야 한다 — 이탈 가드가 계속 경고해야 한다.
@@ -219,7 +219,7 @@ describe('저장하지 않은 입력 — 앱 내부 이동(routeChangeStart) 가
     fireEvent.change(slugField, { target: { value: 'New-Slug-Continued' } });
 
     resolveFetch({ ok: true, json: async () => ({ ok: true }) });
-    await waitFor(() => expect(screen.getByText('저장했습니다.')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
 
     expect(slugField).toHaveValue('New-Slug-Continued');
     expect(() => triggerRouteChangeStart()).toThrow();

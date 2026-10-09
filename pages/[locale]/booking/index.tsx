@@ -49,15 +49,15 @@ export default function BookingHubPage({ groups, shows }: BookingHubProps) {
         <div className="mx-auto max-w-3xl text-center">
           <h1 className="typo-page-title">온라인 예약·결제</h1>
           <p className="mt-4 typo-card-body text-gray-700 dark:text-gray-300">
-            하고 싶은 일을 고르면 날짜와 시간 선택부터 결제까지 이어집니다. 결제가 끝나면 확정 메일로 예약
-            확인·취소 링크를 보내드립니다.
+            하고 싶은 일을 고르면 날짜와 시간 선택부터 결제까지 이어져요. 결제가 끝나면 확정 메일로 예약
+            확인·취소 링크를 보내드려요.
           </p>
           <p className="mt-2 typo-card-meta">
             취소·환불 기준은{' '}
             <Link href="/ko/terms#refund" prefetch={false} className="underline underline-offset-4">
               이용약관
             </Link>
-            에서 확인하실 수 있습니다.
+            에서 확인하실 수 있어요.
           </p>
         </div>
       </Section>
@@ -67,7 +67,7 @@ export default function BookingHubPage({ groups, shows }: BookingHubProps) {
           <div className="mx-auto max-w-4xl">
             <SectionHeading
               title="공연 티켓"
-              subtitle="스튜디오 놀이 여는 공연입니다. 사전 예매는 온라인에서 받고, 티켓(QR)은 메일로 보내 드립니다."
+              subtitle="스튜디오 놀이 여는 공연이에요. 사전 예매는 온라인에서 받고, 티켓(QR)은 메일로 보내 드려요."
               as="h2"
             />
             <ul className="grid gap-4 md:grid-cols-2">
@@ -155,7 +155,7 @@ export default function BookingHubPage({ groups, shows }: BookingHubProps) {
         <div className="mx-auto max-w-4xl">
           <SectionHeading
             title="온라인 결제가 없는 의뢰"
-            subtitle="상담한 뒤 진행합니다. 카카오톡으로 먼저 문의해 주세요."
+            subtitle="상담한 뒤 진행해요. 카카오톡으로 먼저 문의해 주세요."
             as="h2"
           />
           <ul className="grid gap-4 md:grid-cols-2">

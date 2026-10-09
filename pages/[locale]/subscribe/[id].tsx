@@ -47,10 +47,10 @@ interface OkProps {
 type SubscribeSetupProps = ErrorProps | OkProps;
 
 const ERROR_MESSAGES: Record<SetupErrorCode, string> = {
-  not_found: '유효하지 않은 링크입니다. 담당자에게 문의해 주세요. 010-4255-7893',
-  used: '이미 등록된 링크입니다.',
-  expired: '링크가 만료됐습니다 — 새 링크를 요청해 주세요 010-4255-7893',
-  invalid_state: '지금은 카드를 등록할 수 없는 상태입니다. 010-4255-7893',
+  not_found: '유효하지 않은 링크예요. 담당자에게 문의해 주세요. 010-4255-7893',
+  used: '이미 등록된 링크예요.',
+  expired: '링크가 만료됐어요 — 새 링크를 요청해 주세요 010-4255-7893',
+  invalid_state: '지금은 카드를 등록할 수 없는 상태예요. 010-4255-7893',
 };
 
 function SubscribeSetupOk(props: OkProps) {
@@ -87,8 +87,8 @@ function SubscribeSetupOk(props: OkProps) {
 
           <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">
             {setupMode === 'initial'
-              ? '카드 등록과 동시에 첫 달치가 결제됩니다.'
-              : '카드만 교체되며 결제되지 않습니다.'}
+              ? '카드 등록과 동시에 첫 달치가 결제돼요.'
+              : '카드만 교체되며 결제되지 않아요.'}
           </p>
 
           <Panel title="해지·환불 규정" className="mt-6">
@@ -151,7 +151,7 @@ export default function SubscribeSetupPage(props: SubscribeSetupProps) {
           <ResultCard
             tone="error"
             as="h1"
-            title="카드를 등록할 수 없습니다"
+            title="카드를 등록할 수 없어요"
             description={ERROR_MESSAGES[props.code]}
             actions={
               <Button asChild variant="ghost">
