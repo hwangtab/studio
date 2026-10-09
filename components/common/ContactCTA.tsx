@@ -78,14 +78,17 @@ const ContactCTA = ({
         });
     }, [isKorean, locale]);
 
+    // 보조 버튼은 페이지마다 목적지가 다르다(오시는 길·가격·온라인 예약). 예약으로 가는 클릭을 문의 이동으로 세면
+    // 예약 진입이 contact 지표에 섞인다 — 목적지로 이벤트와 cta_id를 가른다(2026-10-09).
     const trackSecondaryContact = React.useCallback(() => {
-        trackMicroEvent('micro_click_contact', {
+        const isBooking = secondaryHref.startsWith('/booking');
+        trackMicroEvent(isBooking ? 'micro_click_service' : 'micro_click_contact', {
             locale,
             component: 'ContactCTA',
-            cta_id: 'contact_cta_secondary_contact',
+            cta_id: isBooking ? 'contact_cta_secondary_booking' : 'contact_cta_secondary_contact',
             cta_target: secondaryLink,
         });
-    }, [locale, secondaryLink]);
+    }, [locale, secondaryHref, secondaryLink]);
 
     const trackImageCta = React.useCallback(() => {
         if (isKorean) {

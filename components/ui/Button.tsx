@@ -44,8 +44,8 @@ const buttonVariants = cva(
         // 어두운 히어로 사진 위 2차 행동 — 거의 불투명한 잉크 면(테두리·글자 그림자 없음). 예전 bg-black/30 + 흰 40% 테두리는
         // 사진이 비쳐 "사진 위에 그린 상자"로 보였다(운영자 2026-10-09 "투명 버튼 가시성이 안 좋다", TDS: 보조도 채운 면).
         // 노란 카톡 1차와 위계가 뒤집히지 않게 흰 면(inverse) 대신 잉크.
-        // 옅은 흰 테두리는 휴대폰용 — 휴대폰 히어로는 사진을 검게 깔아 잉크 면의 가장자리가 묻혀 버튼이 글자로만 보였다(2026-10-09).
-        scrim: "bg-gray-950/85 text-white border border-white/25 hover:bg-gray-950 focus-visible:ring-white/70 focus-visible:ring-offset-black/20",
+        // 옅은 흰 테두리(안쪽 그림자 — border면 옆 노란 버튼보다 2px 커진다)는 휴대폰용 — 휴대폰 히어로는 사진을 검게 깔아 잉크 면의 가장자리가 묻혀 버튼이 글자로만 보였다(2026-10-09).
+        scrim: "bg-gray-950/85 text-white shadow-[inset_0_0_0_1px_rgb(255_255_255/0.25)] hover:bg-gray-950 focus-visible:ring-white/70 focus-visible:ring-offset-black/20",
       },
       size: {
         sm: "h-11 px-3 text-sm",
