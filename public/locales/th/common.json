@@ -81,7 +81,13 @@
     "callFab": "สอบถามทางโทรศัพท์",
     "skipToContent": "ข้ามไปที่เนื้อหาหลัก",
     "scrollToTop": "เลื่อนขึ้นด้านบน",
-    "popularBadge": "เลือกมากที่สุด"
+    "popularBadge": "เลือกมากที่สุด",
+    "bookOnline": "จองออนไลน์",
+    "orderOnline": "สั่งออนไลน์",
+    "seePricing": "ดูราคา",
+    "seeServices": "ดูบริการ",
+    "callConsult": "โทรปรึกษา",
+    "bookHourly": "จองรายชั่วโมง"
   },
   "common": {
     "categoryFilter": {

@@ -12,6 +12,8 @@ export interface PricingBadge {
 }
 
 interface PriceLeaderProps {
+  /** 앵커 — 연습실 히어로 "가격 보기"(비-ko)가 여기로 온다. */
+  id?: string;
   eyebrow: string;
   title: string;
   subtitle: string;
@@ -33,8 +35,9 @@ const PriceLeader = ({
   badges,
   note,
   locale,
+  id,
 }: PriceLeaderProps) => (
-  <Section variant="default" spacing="tight">
+  <Section id={id} variant="default" spacing="tight">
     <div className="max-w-5xl mx-auto">
       <div className="text-center mb-8">
         <p className="typo-eyebrow inline-flex items-center justify-center gap-1.5">

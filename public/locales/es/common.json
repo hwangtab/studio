@@ -81,7 +81,13 @@
     "callFab": "Consulta telefónica",
     "skipToContent": "Saltar al contenido",
     "scrollToTop": "Volver arriba",
-    "popularBadge": "La más elegida"
+    "popularBadge": "La más elegida",
+    "bookOnline": "Reservar en línea",
+    "orderOnline": "Pedir en línea",
+    "seePricing": "Ver precios",
+    "seeServices": "Ver servicios",
+    "callConsult": "Llamar",
+    "bookHourly": "Reservar por horas"
   },
   "common": {
     "categoryFilter": {

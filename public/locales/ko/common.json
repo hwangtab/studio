@@ -81,7 +81,13 @@
     "callFab": "전화 문의",
     "skipToContent": "본문 바로가기",
     "scrollToTop": "맨 위로",
-    "popularBadge": "가장 많이 고르는"
+    "popularBadge": "가장 많이 고르는",
+    "bookOnline": "온라인 예약하기",
+    "orderOnline": "온라인 주문하기",
+    "seePricing": "가격 보기",
+    "seeServices": "서비스 보기",
+    "callConsult": "전화 상담",
+    "bookHourly": "시간제 예약하기"
   },
   "common": {
     "categoryFilter": {
@@ -579,7 +585,7 @@
       "subtitleLine1": "월 35만원 정액제(주 1회 · 60분 · 월 4회)로 실전 프로듀싱의 모든 것을 배우세요.",
       "subtitleLine2": "첫 상담 무료 · 현직 프로듀서 1:1 맞춤 지도",
       "location": "오시는 길",
-      "inquiry": "무료 상담 신청",
+      "inquiry": "카톡으로 레슨 상담",
       "imageAlt": "스튜디오 놀 프로덕션 셋업 - Softube Console 1과 모니터링 스피커"
     },
     "relatedStoriesTitle": "레슨생들이 가장 많이 본 작곡·믹싱 가이드",
@@ -919,7 +925,7 @@
       "subtitleLine1": "국내 최정상급 방음 · 냉난방 · 하이엔드 모니터링 · 월 무제한 이용",
       "subtitleLine2": "지금 입주 상담하고 1년 계약 시 첫 달 50% 할인 받으세요.",
       "location": "오시는 길",
-      "inquiry": "입주 상담 신청",
+      "inquiry": "카톡으로 입주 상담",
       "imageAlt": "스튜디오 놀 음악연습실"
     },
     "relatedGuides": {
@@ -1320,7 +1326,7 @@
       "subtitleLine1": "초보자 환영 · 당일 보정 · 올인원 패키지",
       "subtitleLine2": "카카오톡으로 간편하게 상담하세요.",
       "location": "오시는 길",
-      "inquiry": "축가 녹음 예약하기",
+      "inquiry": "카톡으로 축가 상담",
       "imageAlt": "스튜디오 놀 보컬 부스 녹음 모습"
     },
     "relatedStoriesTitle": "축가 준비에 도움이 되는 가이드",
@@ -1474,7 +1480,7 @@
     "relatedStoriesTitle": "녹음 준비 가이드",
     "relatedStoriesSubtitle": "녹음실 예약 전 알아두면 좋은 실전 가이드 — 가격·준비·홈녹음 비교까지.",
     "cta": {
-      "inquiry": "카카오톡으로 녹음 문의",
+      "inquiry": "카톡으로 녹음 상담",
       "location": "오시는 길",
       "titleLine1": "녹음, 이제",
       "titleHighlight": "제대로 남길 시간이에요",
@@ -1729,7 +1735,7 @@
     "relatedStoriesTitle": "믹싱 의뢰 전에 읽어두면 좋은 글",
     "relatedStoriesSubtitle": "온라인 의뢰 방법부터 스템 준비, 트랙 수별 비용까지 정리했어요.",
     "cta": {
-      "inquiry": "카카오톡으로 믹싱 문의",
+      "inquiry": "카톡으로 믹싱 상담",
       "location": "오시는 길",
       "titleLine1": "믹스가 안 잡힐 때,",
       "titleHighlight": "파일만 보내주세요",
@@ -2057,7 +2063,7 @@
     "relatedStoriesTitle": "발매와 홍보에 대해 쓴 글",
     "relatedStoriesSubtitle": "직접 해보실 분들을 위해 저희가 아는 것을 적어뒀어요",
     "cta": {
-      "inquiry": "음원 발매 홍보 문의",
+      "inquiry": "카톡으로 홍보 상담",
       "titleLine1": "음악이 닿을 곳이",
       "titleHighlight": "아직 남아 있어요",
       "subtitleLine1": "카카오톡으로 음원을 보내주시면, 프로듀서가 음원을 듣고 3영업일 안에 답을 드려요.",
@@ -2232,7 +2238,7 @@
       "subtitleLine1": "하이엔드 장비 · 완벽 방음 · 실시간 편집",
       "subtitleLine2": "카카오톡으로 간편하게 예약하세요.",
       "location": "오시는 길",
-      "inquiry": "녹음 예약하기",
+      "inquiry": "카톡으로 성우 녹음 상담",
       "imageAlt": "스튜디오 놀 보이스 녹음 장비 전경"
     },
     "relatedStoriesTitle": "성우·내레이션 녹음 가이드",
@@ -2560,7 +2566,7 @@
       "subtitleLine1": "영상 촬영 · 녹음 · 믹싱 · 편집 올인원",
       "subtitleLine2": "카카오톡으로 간편하게 상담하세요.",
       "location": "오시는 길",
-      "inquiry": "커버 영상 촬영 예약하기",
+      "inquiry": "카톡으로 촬영 상담",
       "imageAlt": "스튜디오 놀 커버 영상 촬영 세션"
     },
     "relatedStoriesTitle": "커버 영상 촬영 가이드",
@@ -2603,7 +2609,7 @@
       "titleHighlight": "제작비부터",
       "titleSuffix": "만들어 드려요",
       "subtitle": "제작비를 만드는 펀딩부터 녹음·믹싱, 국내외 매체 홍보, 협력 유통사 연결까지. 발매의 모든 단계를 한 팀이 끝까지 함께해요.",
-      "ctaConsult": "발매 자금 상담 (무료 30분)",
+      "ctaConsult": "카톡으로 발매 상담 (무료 30분)",
       "ctaPortfolio": "발매 디스코그래피 보기",
       "imageAlt": "스튜디오 놀 발매 프로젝트"
     },

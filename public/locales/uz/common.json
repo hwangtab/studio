@@ -81,7 +81,13 @@
     "callFab": "Telefon orqali so'rov",
     "skipToContent": "Asosiy mazmunga o'tish",
     "scrollToTop": "Tepaga qaytish",
-    "popularBadge": "Eng ko‘p tanlanadigan"
+    "popularBadge": "Eng ko‘p tanlanadigan",
+    "bookOnline": "Onlayn band qilish",
+    "orderOnline": "Onlayn buyurtma",
+    "seePricing": "Narxlarni koʻrish",
+    "seeServices": "Xizmatlarni koʻrish",
+    "callConsult": "Qoʻngʻiroq qilish",
+    "bookHourly": "Soatbay band qilish"
   },
   "common": {
     "categoryFilter": {

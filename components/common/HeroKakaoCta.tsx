@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { MessageCircle, Mail, Phone } from '@/lib/lucide-icons';
+import { useTranslation } from 'react-i18next';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 import { Button } from '../ui/Button';
 import type { Locale } from '../../lib/i18n';
@@ -34,6 +35,11 @@ interface HeroKakaoCtaProps {
    * 보이지 않으므로 테두리(outline) 전화 버튼으로 강등한다.
    */
   surface?: 'onImage' | 'onSurface';
+  /**
+   * 2차 행동 — "그 페이지에서 할 수 있는 가장 구체적인 다음 행동"(docs/hero-cta-audit-2026-10.md).
+   * 온라인 예약이 되는 서비스는 예약 화면, 견적형은 같은 페이지 가격 절(#…). href는 로케일 접두를 포함한 경로나 '#앵커'.
+   */
+  secondary?: { label: string; href: string; ctaId: string };
 }
 
 /**
@@ -43,8 +49,9 @@ interface HeroKakaoCtaProps {
  * 직링크를 히어로에 노출하고 `lead_click_kakao`를 발화한다.
  * (pricing/release 히어로 CTA와 동일한 시각·계측 패턴을 단일 컴포넌트로 통일.)
  */
-const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, contactLabel, phone, phoneCtaId, surface = 'onImage' }: HeroKakaoCtaProps) => {
+const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, contactLabel, phone, phoneCtaId, surface = 'onImage', secondary }: HeroKakaoCtaProps) => {
   const onImage = surface === 'onImage';
+  const { t } = useTranslation('common', { lng: locale });
   // 카카오 오픈채팅은 한국어 상담 채널이다. 비-ko 방문자를 여기로 보내면 한국어 채팅방
   // (앱이 없으면 설치 유도)에 떨어지므로, ContactCTA·ReleaseHeroCtas·HeaderActions와
   // 똑같이 /contact 폼으로 가른다. 옐로도 쓰지 않는다 — 노란 버튼 = 카카오톡 규칙.
@@ -88,20 +95,42 @@ const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, contactLabel,
         className={`${ctaLayout} ${onImage ? onImageRing : ''}`}
       >
         <Mail className="w-5 h-5" aria-hidden="true" />
-        {contactLabel ?? label}
+        {contactLabel ?? t('actions.contact')}
       </Link>
     </Button>
   );
 
-  if (!phone) return primaryButton;
+  // 2차 버튼은 하나 — 전화는 버튼이 아니라 아래 한 줄 텍스트(로컬 의도 페이지만 phone을 넘긴다). 버튼 셋은 TDS(화면당 주 행동
+  // 하나)에 어긋나고, 휴대폰은 하단 바에 이미 전화가 있다(2026-10-09 히어로 CTA 전수 점검).
+  const secondaryButton = secondary ? (
+    <Button asChild variant={onImage ? 'scrim' : 'weak'} shape="block" size="lg">
+      <Link
+        href={secondary.href}
+        prefetch={false}
+        onClick={() =>
+          trackMicroEvent('micro_click_service', {
+            locale,
+            component,
+            cta_id: secondary.ctaId,
+            cta_target: secondary.href,
+          })
+        }
+        className="w-full sm:w-auto h-auto min-h-[48px] py-4 px-8 font-semibold touch-manipulation"
+      >
+        {secondary.label}
+      </Link>
+    </Button>
+  ) : null;
+
+  if (!secondaryButton && !phone) return primaryButton;
 
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-3">
-      {primaryButton}
-      {/* 2차 전화 CTA. 어두운 히어로 위에서는 scrim(거의 불투명한 잉크 면)을 쓴다 — 흰 틴트는 배경을 밝혀
-          흰 글씨 대비를 떨어뜨리고, 반투명 테두리 상자는 사진이 비쳐 버튼으로 안 읽혔다(2026-10-09).
-          본문 섹션 배경 위(onSurface)에서는 테두리 버튼으로 강등한다. */}
-      <Button asChild variant={onImage ? 'scrim' : 'weak'} shape="block" size="lg">
+    <div className="flex flex-col items-center gap-3">
+      <div className="flex w-full flex-col sm:flex-row items-center justify-center gap-3">
+        {primaryButton}
+        {secondaryButton}
+      </div>
+      {phone && (
         <a
           href={`tel:${phone}`}
           onClick={() =>
@@ -111,12 +140,16 @@ const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, contactLabel,
               cta_id: phoneCtaId ?? `${ctaId}_phone`,
             })
           }
-          className="w-full sm:w-auto h-auto min-h-[48px] py-4 px-8 font-semibold touch-manipulation"
+          className={`inline-flex min-h-[44px] items-center gap-1.5 rounded-xl px-2 text-sm font-semibold underline-offset-4 hover:underline touch-manipulation focus-visible:outline-none focus-visible:ring-2 ${
+            onImage
+              ? 'text-white/90 focus-visible:ring-white/70 focus-visible:ring-offset-black/20'
+              : 'text-gray-700 dark:text-gray-300 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70'
+          }`}
         >
-          <Phone className="w-5 h-5" aria-hidden="true" />
-          {phone}
+          <Phone className="w-4 h-4" aria-hidden="true" />
+          {t('actions.callConsult')} {phone}
         </a>
-      </Button>
+      )}
     </div>
   );
 };

@@ -57,6 +57,7 @@ const PROCESS_ANIMATION = createFadeInAnimation();
 
 const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
+  const isKo = locale === 'ko';
   // FAQ가 작곡·편곡 정가({{mr}}·{{small}}·{{band}}·{{large}})를 말한다 — 금액은 상수 보간(2026-10-05).
   const priceVars = React.useMemo(
     () => ({
@@ -171,6 +172,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
             component="WeddingSongHero"
             ctaId="wedding_song_hero_kakao"
             label={t('weddingSong.cta.inquiry')}
+            secondary={isKo ? { label: t('actions.bookOnline'), href: '/ko/booking/wedding-song', ctaId: 'wedding_song_hero_book' } : { label: t('actions.seePricing'), href: '#wedding-package', ctaId: 'wedding_song_hero_pricing' }}
           />
         }
       />

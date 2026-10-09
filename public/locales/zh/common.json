@@ -81,7 +81,13 @@
     "callFab": "电话咨询",
     "skipToContent": "跳到主要内容",
     "scrollToTop": "返回顶部",
-    "popularBadge": "最多人选择"
+    "popularBadge": "最多人选择",
+    "bookOnline": "在线预约",
+    "orderOnline": "在线下单",
+    "seePricing": "查看价格",
+    "seeServices": "查看服务",
+    "callConsult": "电话咨询",
+    "bookHourly": "按小时预约"
   },
   "common": {
     "categoryFilter": {

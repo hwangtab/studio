@@ -81,7 +81,13 @@
     "callFab": "Tư vấn qua điện thoại",
     "skipToContent": "Nhảy đến nội dung",
     "scrollToTop": "Cuộn lên đầu",
-    "popularBadge": "Được chọn nhiều nhất"
+    "popularBadge": "Được chọn nhiều nhất",
+    "bookOnline": "Đặt lịch trực tuyến",
+    "orderOnline": "Đặt hàng trực tuyến",
+    "seePricing": "Xem bảng giá",
+    "seeServices": "Xem dịch vụ",
+    "callConsult": "Gọi điện",
+    "bookHourly": "Đặt theo giờ"
   },
   "common": {
     "categoryFilter": {

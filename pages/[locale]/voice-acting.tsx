@@ -72,6 +72,7 @@ const PROCESS_ANIMATION = createFadeInAnimation();
 
 const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
+  const isKo = locale === 'ko';
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
 
   const voiceoverPackage = React.useMemo(
@@ -179,6 +180,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
             component="VoiceActingHero"
             ctaId="voice_acting_hero_kakao"
             label={t('voiceActing.cta.inquiry')}
+            secondary={isKo ? { label: t('actions.bookOnline'), href: '/ko/booking/voice-acting', ctaId: 'voice_acting_hero_book' } : { label: t('actions.seePricing'), href: '#voice-acting-package', ctaId: 'voice_acting_hero_pricing' }}
           />
         }
       />

@@ -117,7 +117,7 @@ const CrowdfundingDesign: NextPageWithLayout<Props> = ({ locale, relatedStories 
             component="CrowdfundingDesignHero"
             ctaId="crowdfunding_design_hero_kakao"
             label={copy.hero.cta}
-            phone={siteConfig.contact.phone}
+            secondary={{ label: '가격 보기', href: '#crowdfunding-pricing', ctaId: 'crowdfunding_design_hero_pricing' }}
           />
         }
       />
@@ -138,7 +138,7 @@ const CrowdfundingDesign: NextPageWithLayout<Props> = ({ locale, relatedStories 
         />
       </Section>
 
-      <Section variant="alternate">
+      <Section id="crowdfunding-pricing" variant="alternate">
         <SectionHeading icon={Banknote} title={copy.scope.title} subtitle={copy.scope.subtitle} />
         <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-3">
           {copy.scope.items.map((item, index) => {

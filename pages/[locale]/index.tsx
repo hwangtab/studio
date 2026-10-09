@@ -64,18 +64,14 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
   // 검증된 유일 전환 채널(카카오) — 히어로 1차 CTA를 폼이 아닌 카카오 직링크로.
   const kakaoUrl = getSiteConfig(locale).contact.kakaoUrl;
 
+  // 히어로 2차는 같은 페이지 서비스 절로 내려가는 이동이다(docs/hero-cta-audit-2026-10.md C 규칙).
   const trackHeroSecondary = () => {
-    if (heroContent.cta.secondaryLink.startsWith('/release-project')) {
-      trackMicroEvent('micro_click_service', {
-        locale,
-        component: 'HomeHero',
-        // 펀딩 계산기로 가는 버튼은 따로 센다 — /release-project 전환 실험과 가르기 위해.
-        cta_id: heroContent.cta.secondaryLink.includes('#funding-goal')
-          ? 'hero_secondary_funding'
-          : 'hero_secondary_release',
-        cta_target: heroContent.cta.secondaryLink,
-      });
-    }
+    trackMicroEvent('micro_click_service', {
+      locale,
+      component: 'HomeHero',
+      cta_id: 'hero_secondary_home',
+      cta_target: '#services',
+    });
   };
 
   return (
@@ -178,11 +174,11 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
                 동일 — 흰 틴트는 배경을 밝혀 흰 글씨 대비를 오히려 떨어뜨린다. */}
             <Button asChild variant="scrim" shape="block" className={HERO_CTA}>
             <Link
-              href={getLink(heroContent.cta.secondaryLink)}
+              href="#services"
               prefetch={false}
               onClick={trackHeroSecondary}
             >
-              {heroContent.cta.secondary}
+              {t('actions.seeServices')}
             </Link>
             </Button>
           </>
@@ -302,8 +298,8 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
         </Section>
       )}
 
-      {/* 서비스 소개 섹션 — 트랙리스트 */}
-      <Section variant="alternate">
+      {/* 서비스 소개 섹션 — 트랙리스트. 히어로 2차 "서비스 보기"(#services)가 여기로 온다. */}
+      <Section id="services" variant="alternate">
         <SectionHeading
           eyebrow={t('home.v2.eyebrow.services')}
           index="06"

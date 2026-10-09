@@ -48,7 +48,7 @@ const ReleaseHeroCtas = ({
         </a>
       </Button>
     ) : (
-      <Button asChild variant="secondary" shape="block" className={`${HERO_CTA} border-transparent text-primary-dark hover:text-primary-dark`}>
+      <Button asChild variant="inverse" shape="block" className={HERO_CTA}>
         <Link
           href={`/${locale}/contact`}
           prefetch={false}

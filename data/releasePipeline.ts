@@ -77,7 +77,7 @@ export const releasePipelineCopy = {
   hero: {
     subtitle:
       '제작비를 만드는 펀딩부터 녹음·믹싱, 국내외 매체 홍보, 협력 유통사 연결까지. 발매의 모든 단계를 한 팀이 끝까지 함께해요.',
-    cta: '발매 자금 상담 (무료 30분)',
+    cta: '카톡으로 발매 상담 (무료 30분)',
   },
   paths: {
     title: '제작비, 이렇게 만들어요',
