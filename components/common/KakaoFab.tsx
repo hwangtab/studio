@@ -67,7 +67,7 @@ const KakaoFab = ({ locale, suppressBelowLg = false, inline = false, bar = false
   const label = t('actions.kakaoFab');
 
   const phoneLabel = t('actions.callFab');
-  // 하단 바는 폭이 좁아 보이는 글자는 짧게(전화·Call / 카톡 문의·KakaoTalk), 이름(aria-label)은 위의 긴 라벨 그대로.
+  // 하단 바는 폭이 좁아 보이는 글자를 짧게(전화·Call / 카톡 문의·KakaoTalk) — 보이는 글자가 곧 이름이다.
   const barPhoneLabel = t('actions.call');
   const barKakaoLabel = locale === 'ko' ? label : t('actions.kakao');
   // 국제표기(+82)로 두면 국내·해외 어디서 눌러도 정상 연결된다.
@@ -115,6 +115,22 @@ const KakaoFab = ({ locale, suppressBelowLg = false, inline = false, bar = false
     };
   }, []);
 
+  // 휴대폰 키보드가 올라온 동안(입력칸에 커서)은 바를 숨긴다 — 81px 바가 문의 폼 입력칸을 가린다.
+  const [typing, setTyping] = React.useState(false);
+  React.useEffect(() => {
+    if (!bar) return;
+    const isField = (el: EventTarget | null) =>
+      el instanceof HTMLElement && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName));
+    const onIn = (e: FocusEvent) => { if (isField(e.target)) setTyping(true); };
+    const onOut = (e: FocusEvent) => { if (isField(e.target)) setTyping(false); };
+    document.addEventListener('focusin', onIn);
+    document.addEventListener('focusout', onOut);
+    return () => {
+      document.removeEventListener('focusin', onIn);
+      document.removeEventListener('focusout', onOut);
+    };
+  }, [bar]);
+
   // 바가 보이는 동안 높이를 --mobile-cta-h로 알린다 — 휴대폰 미니 플레이어(GlobalPlayerDock)가 그만큼 위로 비켜 앉는다.
   const barRef = React.useRef<HTMLDivElement>(null);
   React.useEffect(() => {
@@ -123,7 +139,7 @@ const KakaoFab = ({ locale, suppressBelowLg = false, inline = false, bar = false
     const el = barRef.current;
     const mq = window.matchMedia('(min-width: 1024px)');
     const sync = () => {
-      const h = revealed && el && !mq.matches ? el.offsetHeight : 0;
+      const h = revealed && !typing && el && !mq.matches ? el.offsetHeight : 0;
       root.style.setProperty('--mobile-cta-h', `${h}px`);
     };
     sync();
@@ -135,37 +151,37 @@ const KakaoFab = ({ locale, suppressBelowLg = false, inline = false, bar = false
       mq.removeEventListener('change', sync);
       root.style.setProperty('--mobile-cta-h', '0px');
     };
-  }, [bar, revealed]);
+  }, [bar, revealed, typing]);
 
   if (bar) {
+    const shown = revealed && !typing;
     return (
       <div
         ref={barRef}
-        className={`fixed inset-x-0 bottom-0 z-40 flex gap-2 border-t border-gray-200 bg-white/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur transition-opacity duration-200 lg:hidden dark:border-gray-800 dark:bg-gray-900/95 ${revealed ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-        aria-hidden={!revealed}
+        className={`fixed inset-x-0 bottom-0 z-30 flex gap-2 border-t border-gray-200 bg-white/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur transition-opacity duration-200 lg:hidden dark:border-gray-800 dark:bg-gray-900/95 ${shown ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        aria-hidden={!shown}
       >
         <a
           href={telHref}
           onClick={handlePhoneClick}
-          tabIndex={revealed ? 0 : -1}
-          aria-label={phoneLabel}
+          tabIndex={shown ? 0 : -1}
           className={cn(buttonVariants({ variant: 'weak', size: 'lg', shape: 'block' }), 'min-w-0 flex-[1] gap-1.5 whitespace-nowrap px-3')}
         >
           <Phone size={20} aria-hidden="true" className="flex-shrink-0" />
-          {/* 좁은 폭에서는 아이콘만 — 넘치면 카톡 버튼까지 화면 밖으로 밀린다. 이름은 aria-label이 든다. */}
-          <span className="hidden truncate min-[360px]:inline" aria-hidden="true">{barPhoneLabel}</span>
+          {/* 보이는 글자가 곧 이름이다(WCAG 2.5.3 — "Call"이 보이는데 이름이 "Phone Inquiry"면 음성 조작이 안 된다).
+              좁은 폭에서는 아이콘만 보이고 글자는 sr-only로 남아 이름을 든다. */}
+          <span className="sr-only truncate min-[360px]:not-sr-only">{barPhoneLabel}</span>
         </a>
         <a
           href={siteConfig.contact.kakaoUrl}
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleClick}
-          tabIndex={revealed ? 0 : -1}
-          aria-label={label}
+          tabIndex={shown ? 0 : -1}
           className={cn(buttonVariants({ variant: 'kakao', size: 'lg', shape: 'block' }), 'min-w-0 flex-[1.6] gap-2 whitespace-nowrap px-3')}
         >
           <MessageCircle size={20} aria-hidden="true" className="flex-shrink-0" />
-          <span className="truncate" aria-hidden="true">{barKakaoLabel}</span>
+          <span className="truncate">{barKakaoLabel}</span>
         </a>
       </div>
     );
