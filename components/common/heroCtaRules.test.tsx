@@ -22,9 +22,16 @@ const KAKAO_LABELS: Array<[string, string]> = [
   ['pricing.hero.ctaKakao', ko.pricing.hero.ctaKakao],
   ['releaseProject.hero.ctaConsult', ko.releaseProject.hero.ctaConsult],
   ['crowdfundingDesign hero.cta', crowdfundingDesignCopy.hero.cta],
+  // 히어로 밖이지만 ko에서 카톡으로 가는 버튼(가격 카드·페이지 끝 상담 블록) — 같은 문구 규칙(2026-10-09 블라인드스팟).
+  ['pricing.cta.inquiry', ko.pricing.cta.inquiry],
+  ['home.cta.inquiry', ko.home.cta.inquiry],
+  ['lesson.pricing.cta', ko.lesson.pricing.cta],
+  ['compositionArrangement.pricing.cta', ko.compositionArrangement.pricing.cta],
+  ['releaseProject.cta.inquiry', ko.releaseProject.cta.inquiry],
+  ['artists.cta.label', ko.artists.cta.label],
 ];
 
-describe('히어로 1차(카톡) 문구 — "카톡으로 …", 예약·신청이라 부르지 않는다', () => {
+describe('카톡 버튼 문구 — "카톡으로 …", 예약·신청이라 부르지 않는다', () => {
   it.each(KAKAO_LABELS)('%s: %s', (_key, label) => {
     expect(label).toMatch(/^카톡으로 /);
     expect(label).not.toMatch(/예약|신청/);
