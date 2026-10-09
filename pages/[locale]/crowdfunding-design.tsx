@@ -123,7 +123,7 @@ const CrowdfundingDesign: NextPageWithLayout<Props> = ({ locale, relatedStories 
       />
 
       {/* 가격·범위·실적을 시맨틱 <table>로 — AI가 옮기는 건 표·FAQ의 숫자다(#226). */}
-      <Section variant="default" spacing="tight">
+      <Section id="crowdfunding-pricing" variant="default" spacing="tight">
         <SectionHeading icon={Info} title={copy.facts.title} as="h2" className="mb-6" />
         <ServicePriceTable
           caption={copy.facts.title}
@@ -138,7 +138,7 @@ const CrowdfundingDesign: NextPageWithLayout<Props> = ({ locale, relatedStories 
         />
       </Section>
 
-      <Section id="crowdfunding-pricing" variant="alternate">
+      <Section variant="alternate">
         <SectionHeading icon={Banknote} title={copy.scope.title} subtitle={copy.scope.subtitle} />
         <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-3">
           {copy.scope.items.map((item, index) => {
