@@ -73,15 +73,15 @@ export const getAuthorProfile = (locale: Locale) => ({
   }),
   intro: [
     t(locale, {
-      ko: '인디 싱어송라이터와 밴드의 발매를 15년째 함께해 왔습니다. 곡을 다듬어 멜론·스포티파이에 올리고, 세션 연주자를 연결하고, 음악 매체와 평론에 닿게 하는 일까지 — 한 곡이 리스너와 매체에 닿는 데 필요한 단계들을 처음부터 끝까지 다룹니다. 그 과정에서 여러 아티스트를 발굴했고, 뮤지션으로 자리 잡기까지의 방향 상담도 함께해 왔습니다.',
+      ko: '인디 싱어송라이터와 밴드의 발매를 15년째 함께해 왔어요. 곡을 다듬어 멜론·스포티파이에 올리고, 세션 연주자를 연결하고, 음악 매체와 평론에 닿게 하는 일까지 — 한 곡이 리스너와 매체에 닿는 데 필요한 단계들을 처음부터 끝까지 다뤄요. 그 과정에서 여러 아티스트를 발굴했고, 뮤지션으로 자리 잡기까지의 방향 상담도 함께해 왔어요.',
       en: 'For 15 years I have released music together with indie singer-songwriters and bands — shaping songs, getting them on Melon and Spotify, connecting session players, and reaching music press and critics.',
     }),
     t(locale, {
-      ko: '서울 연신내의 스튜디오 놀을 운영하며 보컬 디렉팅과 녹음·믹싱·마스터링을 인하우스로 진행합니다. 70개가 넘는 발매작을 아티스트와 함께 만들었습니다.',
+      ko: '서울 연신내의 스튜디오 놀을 운영하며 보컬 디렉팅과 녹음·믹싱·마스터링을 인하우스로 진행해요. 70개가 넘는 발매작을 아티스트와 함께 만들었어요.',
       en: 'I run Studio NOL in Yeonsinnae, Seoul, handling vocal direction, recording, mixing, and mastering in-house. I have made 70+ releases with artists.',
     }),
     t(locale, {
-      ko: '성공적인 발매는 혼자 해내기 어렵습니다. 결과를 약속하기보다, 음악이 세상에 닿는 동선을 함께 만드는 동료가 되는 것 — 그게 제가 하는 일입니다.',
+      ko: '성공적인 발매는 혼자 해내기 어려워요. 결과를 약속하기보다, 음악이 세상에 닿는 동선을 함께 만드는 동료가 되는 것 — 그게 제가 하는 일이에요.',
       en: 'A successful release is hard to pull off alone. Rather than promising outcomes, my job is to be the colleague who builds the path your music takes into the world.',
     }),
   ],
@@ -142,7 +142,7 @@ export const getAuthorProfile = (locale: Locale) => ({
   },
   cta: {
     titleLine1: t(locale, { ko: '발매를 준비하고 있다면,', en: 'Preparing a release?' }),
-    titleHighlight: t(locale, { ko: '함께 동선을 만들어 드립니다', en: "Let's build the path together" }),
+    titleHighlight: t(locale, { ko: '함께 동선을 만들어 드려요', en: "Let's build the path together" }),
     subtitle: t(locale, {
       ko: '녹음·믹싱부터 발매·PR까지, 지금 단계에서 무엇이 필요한지 편하게 물어보세요.',
       en: 'From recording and mixing to release and PR — ask what your next step needs.',

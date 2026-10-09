@@ -125,7 +125,7 @@ export const getMixCompareCopy = (locale: Locale): MixCompareCopy => {
     vi: 'Vị trí phát', th: 'ตำแหน่งการเล่น', uz: 'Ijro o‘rni',
   }),
   note: t(locale, {
-    ko: '두 음원은 같은 녹음이고, 음량은 같게 맞췄습니다. 스튜디오 놀에서 녹음하고 믹싱한 곡입니다.',
+    ko: '두 음원은 같은 녹음이고, 음량은 같게 맞췄어요. 스튜디오 놀에서 녹음하고 믹싱한 곡이에요.',
     en: 'Both versions come from the same recording and play at the same volume. The song was recorded and mixed at Studio NOL.',
     zh: '两个版本来自同一次录音，音量已调为一致。这首歌在 Studio NOL 录音并混音。',
     es: 'Ambas versiones son la misma grabación y suenan al mismo volumen. La canción se grabó y mezcló en Studio NOL.',
@@ -134,7 +134,7 @@ export const getMixCompareCopy = (locale: Locale): MixCompareCopy => {
     uz: 'Ikkala versiya bir xil yozuvdan olingan va bir xil balandlikda ijro etiladi. Qoʻshiq Studio NOLda yozilgan va miks qilingan.',
   }),
   error: t(locale, {
-    ko: '음원을 불러오지 못했습니다. 잠시 뒤 다시 눌러 주세요.',
+    ko: '음원을 불러오지 못했어요. 잠시 뒤 다시 눌러 주세요.',
     en: 'Could not load the audio. Please try again in a moment.',
     zh: '音频加载失败，请稍后再试。',
     es: 'No se pudo cargar el audio. Inténtalo de nuevo en un momento.',

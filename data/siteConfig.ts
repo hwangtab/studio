@@ -208,7 +208,7 @@ export const getSiteConfig = (locale: Locale): SiteConfig => {
       googleReviewUrl: 'https://g.page/r/CVZTKO82moj1EAI/review',
     },
     vatNotice: t(locale, {
-      ko: '* 모든 가격은 VAT 별도입니다.',
+      ko: '* 모든 가격은 VAT 별도예요.',
       en: '* All prices exclude VAT.',
       zh: '* 所有价格均不含增值税。',
       es: '* Todos los precios excluyen el IVA.',
