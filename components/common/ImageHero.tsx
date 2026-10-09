@@ -244,6 +244,9 @@ const ImageHero = ({
       <div
         className={`absolute inset-0 z-10 ${overlayGradient ? `bg-gradient-to-b ${overlayGradient}` : cinematicOverlay}`}
       />
+      {/* 휴대폰에서만 아래쪽을 더 어둡게 — 좁은 화면은 부제·버튼이 아래로 몰려, 사진의 밝은 부분(모니터 화면 등)과
+          겹치면 부제가 흐려졌다(2026-10-09 운영자). 데스크톱은 글이 가운데라 위 균일한 막으로 충분하다. */}
+      <div aria-hidden="true" className="absolute inset-0 z-10 bg-gradient-to-t from-black/75 via-black/50 to-black/15 md:hidden" />
 
       <div className={`container mx-auto px-4 z-20 relative ${alignmentClass}`}>
         {/* framer-motion 래퍼 제거: 모바일 Lighthouse에서 LCP element(H1 내 span)의
