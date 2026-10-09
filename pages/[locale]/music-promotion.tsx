@@ -258,6 +258,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
             label={t('musicPromotion.cta.inquiry')}
             /* 비-ko는 목적지가 /contact 폼이라 카카오를 명시한 라벨을 쓸 수 없다. */
             contactLabel={t('actions.contact')}
+            phone={siteConfig.contact.phone}
             phoneCtaId="music_promotion_hero_phone"
             secondary={{ label: t('actions.seePricing'), href: '#pricing', ctaId: 'music_promotion_hero_pricing' }}
           />

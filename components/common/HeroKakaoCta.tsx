@@ -100,8 +100,10 @@ const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, contactLabel,
     </Button>
   );
 
-  // 2차 버튼은 하나 — 전화는 버튼이 아니라 아래 한 줄 텍스트(로컬 의도 페이지만 phone을 넘긴다). 버튼 셋은 TDS(화면당 주 행동
+  // 2차 버튼은 하나 — 전화는 버튼이 아니라 아래 한 줄 텍스트(전화로도 상담이 들어오는 서비스 페이지가 phone을 넘긴다 — 녹음·연습실·믹싱·음원 홍보·펀딩 설계). 버튼 셋은 TDS(화면당 주 행동
   // 하나)에 어긋나고, 휴대폰은 하단 바에 이미 전화가 있다(2026-10-09 히어로 CTA 전수 점검).
+  // 번호를 줄로 남기는 이유: 데스크톱에서 번호를 보고 휴대폰으로 직접 거는 전화는 클릭 이벤트로 안 잡힌다 — GA4 0건이어도
+  // 운영자 체감으로는 이 번호가 일한다(2026-10-10 운영자 판단, 믹싱·음원 홍보·펀딩 설계에 되살림).
   const secondaryButton = secondary ? (
     <Button asChild variant={onImage ? 'scrim' : 'weak'} shape="block" size="lg">
       <Link
