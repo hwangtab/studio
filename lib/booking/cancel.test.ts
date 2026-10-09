@@ -96,7 +96,7 @@ describe('cancelBookingWithRefund', () => {
   it('주문을 찾을 수 없으면 not_found', async () => {
     (findOrderByOrderNo as jest.Mock).mockResolvedValue(undefined);
     const r = await cancelBookingWithRefund({ orderNo: 'SNB-X', requestedBy: 'customer', reason: '고객 취소', now: NOW });
-    expect(r).toEqual({ ok: false, code: 'not_found', message: '주문을 찾을 수 없습니다.' });
+    expect(r).toEqual({ ok: false, code: 'not_found', message: '주문을 찾을 수 없어요.' });
     expect(cancelPayment).not.toHaveBeenCalled();
   });
 
@@ -114,7 +114,7 @@ describe('cancelBookingWithRefund', () => {
       order({ bookings: [{ id: 'b1', status: 'confirmed', startAt: BEFORE_NOW, endAt: BEFORE_NOW, durationHours: 3, serviceType: 'recording', customerNote: null, gcalEventId: null }] }),
     );
     const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 취소', now: NOW });
-    expect(r).toEqual({ ok: false, code: 'invalid_state', message: '이용 시작 후에는 온라인 취소가 불가합니다.' });
+    expect(r).toEqual({ ok: false, code: 'invalid_state', message: '이용 시작 후에는 온라인 취소가 불가해요.' });
     expect(cancelPayment).not.toHaveBeenCalled();
   });
 
@@ -176,7 +176,7 @@ describe('cancelBookingWithRefund', () => {
     const r = await cancelBookingWithRefund({
       orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', overrideAmount, now: NOW,
     });
-    expect(r).toEqual({ ok: false, code: 'invalid_state', message: '환불 금액이 올바르지 않습니다.' });
+    expect(r).toEqual({ ok: false, code: 'invalid_state', message: '환불 금액이 올바르지 않아요.' });
     expect(cancelPayment).not.toHaveBeenCalled();
     expect(mockDb().run).not.toHaveBeenCalled(); // 선점보다 먼저 걸러진다
     expect(mockDb().batch).not.toHaveBeenCalled();
@@ -198,7 +198,7 @@ describe('cancelBookingWithRefund', () => {
     (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
     mockDb().run.mockResolvedValueOnce({ rowsAffected: 0 });
     const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 셀프 취소', now: NOW });
-    expect(r).toEqual({ ok: false, code: 'invalid_state', message: '이미 처리 중이거나 취소된 예약입니다.' });
+    expect(r).toEqual({ ok: false, code: 'invalid_state', message: '이미 처리 중이거나 취소된 예약이에요.' });
     expect(cancelPayment).not.toHaveBeenCalled();
     expect(mockDb().batch).not.toHaveBeenCalled();
   });
@@ -218,12 +218,12 @@ describe('cancelBookingWithRefund', () => {
   it('CONFIG_ERROR/NETWORK_ERROR는 고객 노출 메시지를 일반 문구로 치환하고 원문은 로그에만 남긴다', async () => {
     (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
     (cancelPayment as jest.Mock).mockResolvedValue({
-      ok: false, code: 'CONFIG_ERROR', message: 'TOSS_SECRET_KEY가 설정되지 않았습니다.',
+      ok: false, code: 'CONFIG_ERROR', message: 'TOSS_SECRET_KEY가 설정되지 않았어요.',
     });
     const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 셀프 취소', now: NOW });
     expect(r).toEqual({
       ok: false, code: 'toss_failed',
-      message: '취소 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.',
+      message: '취소 처리 중 오류가 발생했어요. 잠시 후 다시 시도해 주세요.',
     });
     expect(consoleErrorSpy).toHaveBeenCalled();
   });
@@ -236,7 +236,7 @@ describe('cancelBookingWithRefund', () => {
     const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 셀프 취소', now: NOW });
     expect(r).toEqual({
       ok: false, code: 'recording_failed',
-      message: '환불은 완료되었으나 처리 기록이 지연되고 있습니다. 010-4255-7893으로 확인 부탁드립니다.',
+      message: '환불은 완료되었으나 처리 기록이 지연되고 있어요. 010-4255-7893으로 확인 부탁드려요.',
     });
     expect(consoleErrorSpy).toHaveBeenCalled();
   });
@@ -324,7 +324,7 @@ describe('cancelBookingWithRefund', () => {
         partiallyRefundedOrder({ payments: [{ id: 'p1', paymentKey: 'pk', refunds: [{ id: 'r1', amount: 275000, status: 'done' }] }] }),
       );
       const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 셀프 취소', now: NOW });
-      expect(r).toEqual({ ok: false, code: 'invalid_state', message: '이미 전액 환불된 주문입니다.' });
+      expect(r).toEqual({ ok: false, code: 'invalid_state', message: '이미 전액 환불된 주문이에요.' });
       expect(cancelPayment).not.toHaveBeenCalled();
       expect(mockDb().run).not.toHaveBeenCalled(); // 선점도 하지 않는다
     });
@@ -334,7 +334,7 @@ describe('cancelBookingWithRefund', () => {
       const r = await cancelBookingWithRefund({
         orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', overrideAmount: 100000, now: NOW,
       });
-      expect(r).toEqual({ ok: false, code: 'invalid_state', message: '환불 금액이 올바르지 않습니다.' });
+      expect(r).toEqual({ ok: false, code: 'invalid_state', message: '환불 금액이 올바르지 않아요.' });
       expect(cancelPayment).not.toHaveBeenCalled();
     });
   });
@@ -375,7 +375,7 @@ describe('cancelBookingWithRefund', () => {
       const r = await cancelBookingWithRefund({
         orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 추가 환불', overrideAmount: 150000, now: NOW,
       });
-      expect(r).toEqual({ ok: false, code: 'invalid_state', message: '환불 금액이 올바르지 않습니다.' });
+      expect(r).toEqual({ ok: false, code: 'invalid_state', message: '환불 금액이 올바르지 않아요.' });
       expect(cancelPayment).not.toHaveBeenCalled();
     });
 
@@ -482,7 +482,7 @@ describe('cancelBookingWithRefund', () => {
       const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 셀프 취소', now: NOW });
       expect(r).toEqual({
         ok: false, code: 'invalid_state',
-        message: '작업이 시작된 주문은 온라인으로 취소할 수 없습니다. 010-4255-7893으로 문의해 주세요.',
+        message: '작업이 시작된 주문은 온라인으로 취소할 수 없어요. 010-4255-7893으로 문의해 주세요.',
       });
       expect(cancelPayment).not.toHaveBeenCalled();
     });
@@ -545,7 +545,7 @@ describe('cancelBookingWithRefund', () => {
       const r = await cancelBookingWithRefund({
         orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 추가 환불', overrideAmount: 150000, now: NOW,
       });
-      expect(r).toEqual({ ok: false, code: 'invalid_state', message: '환불 금액이 올바르지 않습니다.' });
+      expect(r).toEqual({ ok: false, code: 'invalid_state', message: '환불 금액이 올바르지 않아요.' });
       expect(cancelPayment).not.toHaveBeenCalled();
     });
 

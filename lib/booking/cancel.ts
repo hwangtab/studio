@@ -31,7 +31,7 @@ export type CancelOutcome =
       message: string;
     };
 
-const GENERIC_TOSS_ERROR_MESSAGE = '취소 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+const GENERIC_TOSS_ERROR_MESSAGE = '취소 처리 중 오류가 발생했어요. 잠시 후 다시 시도해 주세요.';
 /**
  * 토스 취소 요청의 멱등키.
  *
@@ -52,10 +52,10 @@ export const refundIdempotencyKey = (orderNo: string, refundAmount: number, pref
   `${prefix}:${orderNo}:${refundAmount}`;
 
 const RECORDING_FAILED_MESSAGE =
-  '환불은 완료되었으나 처리 기록이 지연되고 있습니다. 010-4255-7893으로 확인 부탁드립니다.';
+  '환불은 완료되었으나 처리 기록이 지연되고 있어요. 010-4255-7893으로 확인 부탁드려요.';
 
 const MIXING_STARTED_MESSAGE =
-  '작업이 시작된 주문은 온라인으로 취소할 수 없습니다. 010-4255-7893으로 문의해 주세요.';
+  '작업이 시작된 주문은 온라인으로 취소할 수 없어요. 010-4255-7893으로 문의해 주세요.';
 
 /**
  * payments 각각의 refunds까지 물고 온 행 — findOrderByOrderNo가 이 형태로 돌려준다.
@@ -82,13 +82,13 @@ export const remainingRefundable = (order: Order, payments: PaymentWithRefunds[]
   return Math.max(0, order.totalAmount - refunded);
 };
 
-const FULLY_REFUNDED_MESSAGE = '이미 전액 환불된 주문입니다.';
+const FULLY_REFUNDED_MESSAGE = '이미 전액 환불된 주문이에요.';
 
 const ALREADY_REFUNDED_AMOUNT_MESSAGE =
-  '같은 금액의 환불이 이미 기록되어 있습니다. 한 번 더 환불하려면 금액을 다르게 나눠 입력해 주세요(잔액 안에서만 나갑니다).';
+  '같은 금액의 환불이 이미 기록되어 있어요. 한 번 더 환불하려면 금액을 다르게 나눠 입력해 주세요(잔액 안에서만 나가요).';
 const CLAIM_LOOKUP_FAILED_MESSAGE =
-  '환불 이력을 확인하지 못했습니다. 잠시 후 같은 금액으로 다시 시도해 주세요.';
-const ZERO_REMAINDER_REFUND_MESSAGE = '추가로 환불할 금액을 입력해 주세요(0원은 처리할 것이 없습니다).';
+  '환불 이력을 확인하지 못했어요. 잠시 후 같은 금액으로 다시 시도해 주세요.';
+const ZERO_REMAINDER_REFUND_MESSAGE = '추가로 환불할 금액을 입력해 주세요(0원은 처리할 것이 없어요).';
 
 /**
  * 잔액 환불의 **선점 네임스페이스**.
@@ -147,7 +147,7 @@ const planBankRefund = (input: CancelInput, payment: PaymentWithRefunds, refundA
   } catch (error) {
     // 키가 없는 배포 — 평문으로 저장하는 길은 없다. 값은 로그에 적지 않는다.
     console.error('[booking-cancel] 환불 계좌 암호화 실패 — 접수하지 않는다', { orderNo: input.orderNo, error: error instanceof Error ? error.name : 'unknown' });
-    return { ok: false, code: 'temporarily_unavailable', message: '지금은 환불 계좌를 접수할 수 없습니다. 010-4255-7893으로 연락 주세요.' };
+    return { ok: false, code: 'temporarily_unavailable', message: '지금은 환불 계좌를 접수할 수 없어요. 010-4255-7893으로 연락 주세요.' };
   }
 };
 
@@ -166,7 +166,7 @@ const saveCustomerRefundAccount = async (
     // 오류 객체를 통째로 찍지 않는다 — drizzle 메시지에 바인딩 값(계좌번호 암호문·예금주)이 실린다.
     console.error('[booking-cancel] 환불 계좌 저장 실패 — 취소를 되돌린다', { orderNo: key.orderNo, error: safeDbErrorSummary(error) });
     await revert();
-    return { ok: false, code: 'temporarily_unavailable', message: '지금은 취소를 접수할 수 없습니다. 잠시 후 다시 시도해 주세요.' };
+    return { ok: false, code: 'temporarily_unavailable', message: '지금은 취소를 접수할 수 없어요. 잠시 후 다시 시도해 주세요.' };
   }
 };
 
@@ -181,7 +181,7 @@ const validateOverrideAmount = (remaining: number, input: CancelInput): string |
     typeof input.overrideAmount === 'number' &&
     (!Number.isInteger(input.overrideAmount) || input.overrideAmount < 0 || input.overrideAmount > remaining)
   )
-    return '환불 금액이 올바르지 않습니다.';
+    return '환불 금액이 올바르지 않아요.';
   return null;
 };
 
@@ -377,7 +377,7 @@ export const settleRefund = async (args: {
       console.error('[booking-cancel] 계좌 입금 환불 기록 실패 — 선점·환불 계좌를 되돌린다', { orderNo: order.orderNo, refundAmount, error: safeDbErrorSummary(error) });
       if (revertClaim) await revertClaim();
       if (args.onBankRecordFailure) await args.onBankRecordFailure();
-      return { ok: false, code: 'temporarily_unavailable', message: '취소를 처리하지 못했습니다. 잠시 후 다시 시도해 주세요(아직 아무것도 바뀌지 않았습니다).' };
+      return { ok: false, code: 'temporarily_unavailable', message: '취소를 처리하지 못했어요. 잠시 후 다시 시도해 주세요(아직 아무것도 바뀌지 않았어요).' };
     }
     // 토스 취소는 이미 끝났다 — 여기서는 삼키되 기록한다(confirm.ts의 recording_failed와 동일 원칙).
     // 복구는 토스가 보내는 CANCELED 웹훅이 맡는다: 그 시점엔 대상이 이미 cancelled라 선점할 게
@@ -410,7 +410,7 @@ const cancelSessionBooking = async (
 ): Promise<CancelOutcome> => {
   const booking = order.bookings[0];
   if (!booking || !payment)
-    return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아닙니다.' };
+    return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아니에요.' };
 
   // 관리자 추가 환불: 이미 취소된 예약에 잔액이 남아 있으면 더 돌려줄 수 있어야 한다(믹싱
   // cancelMixingOrder와 대칭). 선점할 대상이 없으므로 claim UPDATE를 건너뛰고, 후처리
@@ -431,11 +431,11 @@ const cancelSessionBooking = async (
       ? canAdminRefund({ orderType: order.type, orderStatus: order.status, entityStatus: booking.status, refundableAmount: remaining })
       : (order.status === 'paid' || order.status === 'partially_refunded') && booking.status === 'confirmed';
   if (!cancellable)
-    return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아닙니다.' };
+    return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아니에요.' };
 
   // 고객 셀프 취소는 이용 시작 전에만 — 시작 후 처리는 관리자의 몫(노쇼/완료/임의 환불).
   if (input.requestedBy === 'customer' && booking.startAt.getTime() <= input.now.getTime())
-    return { ok: false, code: 'invalid_state', message: '이용 시작 후에는 온라인 취소가 불가합니다.' };
+    return { ok: false, code: 'invalid_state', message: '이용 시작 후에는 온라인 취소가 불가해요.' };
 
   const overrideError = validateOverrideAmount(remaining, input);
   if (overrideError) return { ok: false, code: 'invalid_state', message: overrideError };
@@ -486,7 +486,7 @@ const cancelSessionBooking = async (
       sql`UPDATE bookings SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch() WHERE id = ${booking.id} AND status = 'confirmed'`,
     );
     if (Number(claim.rowsAffected) === 0)
-      return { ok: false, code: 'invalid_state', message: '이미 처리 중이거나 취소된 예약입니다.' };
+      return { ok: false, code: 'invalid_state', message: '이미 처리 중이거나 취소된 예약이에요.' };
     const saveFailure = await saveCustomerRefundAccount({ kind: 'session', orderNo: order.orderNo }, bankPlan, input.now, revertSessionClaim);
     if (saveFailure) return saveFailure;
   }
@@ -544,7 +544,7 @@ const cancelMixingOrder = async (
   input: CancelInput,
 ): Promise<CancelOutcome> => {
   if (!workOrder || !payment || !(order.status === 'paid' || order.status === 'partially_refunded'))
-    return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아닙니다.' };
+    return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아니에요.' };
 
   // 관리자 추가 환불: 이미 취소 처리된 주문(work_order cancelled)에 잔액이 남아 있으면 더
   // 돌려줄 수 있어야 한다. 이 경우 선점할 대상이 없으므로(이미 cancelled) 아래 claim UPDATE를
@@ -561,12 +561,12 @@ const cancelMixingOrder = async (
     if (workOrder.status === 'in_progress' || workOrder.status === 'delivered')
       return { ok: false, code: 'invalid_state', message: MIXING_STARTED_MESSAGE };
     if (workOrder.status !== 'received')
-      return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아닙니다.' };
+      return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아니에요.' };
   } else if (
     // 관리자 판정은 화면과 같은 함수를 쓴다(위 세션 주석 참조).
     !canAdminRefund({ orderType: order.type, orderStatus: order.status, entityStatus: workOrder.status, refundableAmount: remaining })
   ) {
-    return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아닙니다.' };
+    return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아니에요.' };
   }
 
   const overrideError = validateOverrideAmount(remaining, input);
@@ -616,7 +616,7 @@ const cancelMixingOrder = async (
       sql`UPDATE work_orders SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch() WHERE id = ${workOrder.id} AND status = ${workOrder.status}`,
     );
     if (Number(claim.rowsAffected) === 0)
-      return { ok: false, code: 'invalid_state', message: '이미 처리 중이거나 취소된 주문입니다.' };
+      return { ok: false, code: 'invalid_state', message: '이미 처리 중이거나 취소된 주문이에요.' };
     const saveFailure = await saveCustomerRefundAccount({ kind: 'mixing', orderNo: order.orderNo }, bankPlan, input.now, revertMixingClaim);
     if (saveFailure) return saveFailure;
   }
@@ -645,11 +645,11 @@ const cancelMixingOrder = async (
 
 export const cancelBookingWithRefund = async (input: CancelInput): Promise<CancelOutcome> => {
   const order = await findOrderByOrderNo(input.orderNo);
-  if (!order) return { ok: false, code: 'not_found', message: '주문을 찾을 수 없습니다.' };
+  if (!order) return { ok: false, code: 'not_found', message: '주문을 찾을 수 없어요.' };
 
   // 예약금 결제 링크 주문은 예약·믹싱 행이 없다 — 이 경로의 환불 로직을 타면 안 된다(환불은 토스 콘솔·계좌 송금).
   if (order.type === 'deposit') {
-    return { ok: false, code: 'invalid_state', message: '예약금 주문은 여기서 환불할 수 없습니다. 토스 콘솔 또는 계좌 송금으로 처리해 주세요.' };
+    return { ok: false, code: 'invalid_state', message: '예약금 주문은 여기서 환불할 수 없어요. 토스 콘솔 또는 계좌 송금으로 처리해 주세요.' };
   }
   if (order.type === 'mixing') return cancelMixingOrder(order, order.workOrders[0], order.payments[0], input);
   return cancelSessionBooking(order, order.payments[0], input);

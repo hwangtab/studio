@@ -344,12 +344,12 @@ describe('confirmBookingPayment', () => {
   it('CONFIG_ERROR는 고객에게 일반 문구로 치환하고 원문은 서버 로그에만 남긴다', async () => {
     (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
     (confirmPayment as jest.Mock).mockResolvedValue({
-      ok: false, code: 'CONFIG_ERROR', message: 'TOSS_SECRET_KEY가 설정되지 않았습니다.',
+      ok: false, code: 'CONFIG_ERROR', message: 'TOSS_SECRET_KEY가 설정되지 않았어요.',
     });
     const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
     expect(r).toEqual({
       ok: false, code: 'toss_rejected',
-      message: '결제 승인 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.',
+      message: '결제 승인 중 오류가 발생했어요. 잠시 후 다시 시도해 주세요.',
     });
     expect(consoleErrorSpy).toHaveBeenCalled();
   });
@@ -360,7 +360,7 @@ describe('confirmBookingPayment', () => {
     const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
     expect(r).toEqual({
       ok: false, code: 'toss_rejected',
-      message: '결제 승인 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.',
+      message: '결제 승인 중 오류가 발생했어요. 잠시 후 다시 시도해 주세요.',
     });
   });
 
@@ -406,7 +406,7 @@ describe('confirmBookingPayment', () => {
     const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
     expect(r).toEqual({
       ok: false, code: 'toss_rejected',
-      message: '결제 승인 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.',
+      message: '결제 승인 중 오류가 발생했어요. 잠시 후 다시 시도해 주세요.',
     });
     expect(db.batch).not.toHaveBeenCalled();
     expect(db.run).not.toHaveBeenCalled(); // 재시도 여지를 남긴다 — pending 그대로
@@ -436,7 +436,7 @@ describe('confirmBookingPayment', () => {
       const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
       expect(r).toEqual({
         ok: false, code: 'invalid_state',
-        message: '결제 대기 시간이 만료된 주문입니다. 슬롯이 해제되었으니 다시 예약해 주세요.',
+        message: '결제 대기 시간이 만료된 주문이에요. 슬롯이 해제되었으니 다시 예약해 주세요.',
       });
       expect(confirmPayment).not.toHaveBeenCalled(); // 돈이 움직이기 전에 멈춘다
       expect(mockDb().batch).not.toHaveBeenCalled();
@@ -496,7 +496,7 @@ describe('confirmBookingPayment', () => {
     expect(r).toEqual({
       ok: false,
       code: 'recording_failed',
-      message: '결제는 완료되었으나 예약 확정 처리가 지연되고 있습니다. 몇 분 내 자동 확정되며, 지속되면 010-4255-7893으로 연락 주세요.',
+      message: '결제는 완료되었으나 예약 확정 처리가 지연되고 있어요. 몇 분 내 자동 확정되며, 지속되면 010-4255-7893으로 연락 주세요.',
     });
     expect(consoleErrorSpy).toHaveBeenCalled();
   });
@@ -521,7 +521,7 @@ describe('confirmBookingPayment', () => {
     expect(r).toEqual({
       ok: false,
       code: 'recording_failed',
-      message: '결제는 완료되었으나 예약 확정 처리가 지연되고 있습니다. 몇 분 내 자동 확정되며, 지속되면 010-4255-7893으로 연락 주세요.',
+      message: '결제는 완료되었으나 예약 확정 처리가 지연되고 있어요. 몇 분 내 자동 확정되며, 지속되면 010-4255-7893으로 연락 주세요.',
     });
     expect(consoleErrorSpy).toHaveBeenCalled();
   });
@@ -593,7 +593,7 @@ describe('confirmBookingPayment', () => {
 
       expect(r).toEqual({
         ok: false, code: 'invalid_state',
-        message: '주문이 만료된 뒤 결제가 승인되어 자동으로 취소되었습니다. 결제 금액은 취소 처리되었으니 다시 주문해 주세요.',
+        message: '주문이 만료된 뒤 결제가 승인되어 자동으로 취소됐어요. 결제 금액은 취소 처리되었으니 다시 주문해 주세요.',
       });
       // 멱등키는 cancel.ts와 같은 규약 — 웹훅 재도착이 같은 키로 replay되어 돈이 두 번 나가지 않는다.
       expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({
@@ -619,7 +619,7 @@ describe('confirmBookingPayment', () => {
       // 계속 재시도하지만 그 재시도는 전부 `status !== 'pending'`에 막힌다.
       expect(r).toEqual({
         ok: false, code: 'invalid_state',
-        message: '결제 확인 중 문제가 발생했습니다. 결제가 이뤄졌다면 확인 후 환불해 드립니다. 문의: 010-4255-7893',
+        message: '결제 확인 중 문제가 발생했어요. 결제가 이뤄졌다면 확인 후 환불해 드려요. 문의: 010-4255-7893',
       });
       const refundInsert = insertValuesCallsOf(db).find((c) => c.reason === '주문 만료 후 승인 — 자동 전액 취소');
       expect(refundInsert).toMatchObject({ status: 'failed', tossTransactionKey: null });

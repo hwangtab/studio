@@ -44,7 +44,7 @@ describe('buildPracticeRoomGuide', () => {
     const g = buildPracticeRoomGuide('R02'); // 방 코드 없음
     expect(g.missing).toEqual(['PRACTICE_ROOM_ROOM_CODE_R02']);
     expect(g.text).not.toContain('<1111*>');
-    expect(g.text).toContain('별도로 보내드립니다');
+    expect(g.text).toContain('별도로 보내드려요');
   });
 
   it('방이 배정되지 않았으면 roomNumber가 missing이다', () => {

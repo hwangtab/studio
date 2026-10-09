@@ -83,17 +83,17 @@ const isCustomerDecline = (code: string): boolean => DECLINE_CODE_PATTERN.test(c
  * 이 라운드에서 되돌리려던 바로 그 사고다. 가시성 회복 + 수동 재발송까지가 안전한 선이다.
  */
 
-const GENERIC_TOSS_ERROR_MESSAGE = '결제 승인 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
-const EXPIRED_MESSAGE = '결제 대기 시간이 만료된 주문입니다. 슬롯이 해제되었으니 다시 예약해 주세요.';
+const GENERIC_TOSS_ERROR_MESSAGE = '결제 승인 중 오류가 발생했어요. 잠시 후 다시 시도해 주세요.';
+const EXPIRED_MESSAGE = '결제 대기 시간이 만료된 주문이에요. 슬롯이 해제되었으니 다시 예약해 주세요.';
 const CALENDAR_CONFLICT_MESSAGE =
-  '선점 뒤 해당 시간에 다른 일정이 잡혀 결제를 진행하지 않았습니다. 결제되지 않았으니 다른 시간대로 다시 예약해 주세요.';
-const CALENDAR_UNAVAILABLE_MESSAGE = '예약 캘린더를 확인할 수 없어 결제를 진행하지 않았습니다. 잠시 후 다시 시도해 주세요.';
+  '선점 뒤 해당 시간에 다른 일정이 잡혀 결제를 진행하지 않았어요. 결제되지 않았으니 다른 시간대로 다시 예약해 주세요.';
+const CALENDAR_UNAVAILABLE_MESSAGE = '예약 캘린더를 확인할 수 없어 결제를 진행하지 않았어요. 잠시 후 다시 시도해 주세요.';
 const RECORDING_FAILED_MESSAGE =
-  '결제는 완료되었으나 예약 확정 처리가 지연되고 있습니다. 몇 분 내 자동 확정되며, 지속되면 010-4255-7893으로 연락 주세요.';
+  '결제는 완료되었으나 예약 확정 처리가 지연되고 있어요. 몇 분 내 자동 확정되며, 지속되면 010-4255-7893으로 연락 주세요.';
 
 /** 승인 뒤 주문이 이미 pending을 벗어나 있어 자동 전액 취소한 경우의 고객 문구. */
 const STALE_APPROVAL_MESSAGE =
-  '주문이 만료된 뒤 결제가 승인되어 자동으로 취소되었습니다. 결제 금액은 취소 처리되었으니 다시 주문해 주세요.';
+  '주문이 만료된 뒤 결제가 승인되어 자동으로 취소됐어요. 결제 금액은 취소 처리되었으니 다시 주문해 주세요.';
 const AUTO_CANCEL_REASON = '주문 만료 후 승인 — 자동 전액 취소';
 
 /**
@@ -106,7 +106,7 @@ const AUTO_CANCEL_REASON = '주문 만료 후 승인 — 자동 전액 취소';
  * 위 console.error가 그 대사의 단서이며, 관리자 미정합 목록도 이 주문을 잡는다.
  */
 const AUTO_CANCEL_FAILED_MESSAGE =
-  '결제 확인 중 문제가 발생했습니다. 결제가 이뤄졌다면 확인 후 환불해 드립니다. 문의: 010-4255-7893';
+  '결제 확인 중 문제가 발생했어요. 결제가 이뤄졌다면 확인 후 환불해 드려요. 문의: 010-4255-7893';
 
 /**
  * libSQL batch 결과 한 항목의 rowsAffected.
@@ -393,14 +393,14 @@ export const confirmBookingPayment = async (
   options: { trustedByWebhook?: boolean } = {},
 ): Promise<ConfirmOutcome> => {
   const order = await findOrderByOrderNo(input.orderNo);
-  if (!order) return { ok: false, code: 'not_found', message: '주문을 찾을 수 없습니다.' };
+  if (!order) return { ok: false, code: 'not_found', message: '주문을 찾을 수 없어요.' };
 
   // 이 함수는 session·mixing 전용이다 — ticket·funding·subscription은 각자의 confirm 함수가
   // 있다(lib/shows/confirm.ts·lib/funding/confirm.ts·lib/billing/service.ts). 호출부가 잘못
   // 라우팅해도(예: webhook.ts의 orderType 분기가 깨진 경우) 여기서 조용히 session/mixing
   // 전용 로직(캘린더 재확인·bookings/work_orders 전이)을 다른 타입 주문에 돌리지 않는다.
   if (order.type !== 'session' && order.type !== 'mixing') {
-    return { ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 주문입니다.' };
+    return { ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 주문이에요.' };
   }
 
   // success 페이지 새로고침·웹훅 중복 도착 멱등성 — 단, 소유 증명이 있을 때만이다.
@@ -433,7 +433,7 @@ export const confirmBookingPayment = async (
         orderNo: order.orderNo,
         paymentKey: input.paymentKey,
       });
-      return { ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 주문입니다.' };
+      return { ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 주문이에요.' };
     }
     return replay(order);
   }
@@ -455,12 +455,12 @@ export const confirmBookingPayment = async (
         status: order.status,
       });
     }
-    return { ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 주문입니다.' };
+    return { ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 주문이에요.' };
   }
 
   // 서버가 저장한 금액이 유일한 진실 — 다르면 토스를 부르지도 않는다(위변조 차단).
   if (input.amount !== order.totalAmount)
-    return { ok: false, code: 'amount_mismatch', message: '결제 금액이 주문과 일치하지 않습니다.' };
+    return { ok: false, code: 'amount_mismatch', message: '결제 금액이 주문과 일치하지 않아요.' };
 
   // 선점 만료를 confirm이 스스로 적용한다 — expireStaleOrders는 슬롯 조회·관리자 목록에서만
   // lazy 호출되므로, 결제창을 900초 넘게 방치한 주문이 status='pending'인 채로 남아 있을 수

@@ -38,7 +38,7 @@ it('한 통이라도 실패하면 요약을 돌려준다', async () => {
 it('취소 메일 본문은 총액이 아니라 실제 환불액을 말한다', async () => {
   await sendFundingCancelledEmails(order, project, 'refunded', 3000);
   const customer = (sendEmail as jest.Mock).mock.calls[0][0];
-  expect(customer.text).toContain('3,000원이 결제 수단으로 환불됩니다');
+  expect(customer.text).toContain('3,000원이 결제 수단으로 환불돼요');
   expect(customer.text).not.toContain('5,000원이 결제 수단으로');
   const operator = (sendEmail as jest.Mock).mock.calls[1][0];
   expect(operator.text).toContain('환불 금액: 3,000원');
@@ -46,22 +46,22 @@ it('취소 메일 본문은 총액이 아니라 실제 환불액을 말한다', 
 
 it('무통장 환불 기록 메일도 환불액을 말한다', async () => {
   await sendFundingCancelledEmails(order, project, 'recorded', 1500);
-  expect((sendEmail as jest.Mock).mock.calls[0][0].text).toContain('1,500원 환불 처리가 완료되었습니다');
+  expect((sendEmail as jest.Mock).mock.calls[0][0].text).toContain('1,500원 환불 처리가 완료됐어요');
 });
 
 describe('제목 꼬리표 · 결제수단 라벨', () => {
   it('프로젝트를 못 찾으면 제목이 em dash로 끝나지 않는다', async () => {
     await sendFundingConfirmedEmails(order, null);
-    expect((sendEmail as jest.Mock).mock.calls[0][0].subject).toBe('[스튜디오 놀] 펀딩이 확정되었습니다');
+    expect((sendEmail as jest.Mock).mock.calls[0][0].subject).toBe('[스튜디오 놀] 펀딩이 확정됐어요');
 
     (sendEmail as jest.Mock).mockClear();
     await sendFundingCancelledEmails(order, null, 'refunded', 5000);
-    expect((sendEmail as jest.Mock).mock.calls[0][0].subject).toBe('[스튜디오 놀] 환불이 완료되었습니다');
+    expect((sendEmail as jest.Mock).mock.calls[0][0].subject).toBe('[스튜디오 놀] 환불이 완료됐어요');
   });
 
   it('프로젝트가 있으면 제목에 붙는다', async () => {
     await sendFundingConfirmedEmails(order, project);
-    expect((sendEmail as jest.Mock).mock.calls[0][0].subject).toBe('[스튜디오 놀] 펀딩이 확정되었습니다 — 데모 앨범');
+    expect((sendEmail as jest.Mock).mock.calls[0][0].subject).toBe('[스튜디오 놀] 펀딩이 확정됐어요 — 데모 앨범');
   });
 
   it('운영자 메일의 결제수단은 한글 라벨로 나간다 — enum 원문을 보이지 않는다', async () => {
@@ -110,7 +110,7 @@ it('취소 요청 철회 메일은 고객·운영자 두 통, 사유와 다시 �
   const customer = (sendEmail as jest.Mock).mock.calls[0][0];
   expect(customer.to).toBe('a@b.com');
   expect(customer.replyTo).toBe(CUSTOMER_REPLY_TO);
-  expect(customer.subject).toBe('[스튜디오 놀] 취소 요청이 철회 처리되었습니다 — 데모 앨범');
+  expect(customer.subject).toBe('[스튜디오 놀] 취소 요청이 철회 처리됐어요 — 데모 앨범');
   expect(customer.text).toContain('사유: 후원자 전화 철회');
   expect(customer.text).toContain('다시 취소를 요청');
   expect(customer.text).toContain('/ko/funding/manage/FND-20261015-ABCDEF12?token=tok');
@@ -344,7 +344,7 @@ describe('계좌 입금 안내 메일', () => {
     expect(customer.text).toContain('10월 16일 오전 12:00(한국시간)까지');
     expect(customer.text).toContain('영업일 1일 이내');
     expect(customer.text).toContain('/ko/funding/manage/FND-20261015-ABCDEF12?token=tok');
-    expect(customer.text).not.toMatch(/취소됩니다|취소될|자동 취소/);
+    expect(customer.text).not.toMatch(/취소돼요|취소될|자동 취소/);
   });
   it('운영자 메일에는 입금 확인 안내와 관리자 링크, 자동 취소가 없다는 사실', async () => {
     await sendFundingDepositGuideEmails(order, project);

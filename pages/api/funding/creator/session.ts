@@ -34,14 +34,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const token = typeof req.body?.token === 'string' ? req.body.token : '';
-  if (!token) return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
+  if (!token) return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않아요.' });
 
   const consumed = await consumeCreatorLoginToken(token);
   if (!consumed) {
     // 이미 링크를 가진 사람만 오는 자리라 열거 위험이 없다 — 실패 이유는 사용자에게
     // 보여도 되지만, 만료와 이미 사용됨은 여기서도 구분하지 않는다(consumeCreatorLoginToken과
     // 같은 이유: 구분해 주면 토큰의 상태를 밖에서 캐물을 수 있게 된다).
-    return res.status(401).json({ ok: false, message: '링크가 만료됐거나 이미 사용되었습니다.' });
+    return res.status(401).json({ ok: false, message: '링크가 만료됐거나 이미 사용됐어요.' });
   }
 
   try {
@@ -56,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     return res.status(500).json({
       ok: false,
-      message: '일시적인 오류로 로그인하지 못했습니다. 잠시 후 새 링크로 다시 시도해 주세요.',
+      message: '일시적인 오류로 로그인하지 못했어요. 잠시 후 새 링크로 다시 시도해 주세요.',
     });
   }
   return res.status(200).json({ ok: true });

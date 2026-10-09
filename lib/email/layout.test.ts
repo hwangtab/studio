@@ -36,7 +36,7 @@ describe('buildEmailLayout', () => {
     expect(html).toContain('서울특별시 은평구 통일로71길 2-1');
     expect(html).toContain('010-4255-7893');
     expect(html).toContain('사업자등록번호 753-74-00653');
-    expect(html).toContain('본 메일은 발송 전용입니다');
+    expect(html).toContain('본 메일은 발송 전용이에요');
     expect(html).toContain('음악연습실 · 녹음 스튜디오');
   });
 

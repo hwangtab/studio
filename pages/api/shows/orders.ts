@@ -13,10 +13,10 @@ import { BANK_DEPOSIT_BLOCK_MESSAGES, BANK_DEPOSIT_BLOCK_MESSAGES_EN, isCheckout
 
 const FAILURE_MESSAGES = {
   ko: {
-    sold_out: '선택하신 티켓의 잔여석이 부족합니다. 매수를 줄이거나 다른 티켓을 선택해 주세요.',
-    sales_closed: '이 회차는 예매가 마감되었습니다.',
+    sold_out: '선택하신 티켓의 잔여석이 부족해요. 매수를 줄이거나 다른 티켓을 선택해 주세요.',
+    sales_closed: '이 회차는 예매가 마감됐어요.',
     invalid_quantity: '매수를 확인해 주세요.',
-    ticket_type_mismatch: '선택하신 회차와 티켓 종류가 맞지 않습니다. 페이지를 새로고침해 주세요.',
+    ticket_type_mismatch: '선택하신 회차와 티켓 종류가 맞지 않아요. 페이지를 새로고침해 주세요.',
     starts_too_soon: BANK_DEPOSIT_BLOCK_MESSAGES.starts_too_soon,
   },
   en: {
@@ -30,9 +30,9 @@ const FAILURE_MESSAGES = {
 
 const OTHER_MESSAGES = {
   ko: {
-    rateLimited: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.',
+    rateLimited: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.',
     payMethod: '결제 방법을 다시 골라 주세요.',
-    createFailed: '주문을 만들지 못했습니다. 잠시 후 다시 시도해 주세요.',
+    createFailed: '주문을 만들지 못했어요. 잠시 후 다시 시도해 주세요.',
   },
   en: {
     rateLimited: 'Too many requests. Please try again in a moment.',

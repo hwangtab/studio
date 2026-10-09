@@ -34,18 +34,18 @@ const EDITABLE_STATUSES = new Set([
   'partially_refunded',
 ]);
 
-const NOT_FOUND = { ok: false, message: '펀딩 내역을 찾을 수 없습니다.' } as const;
+const NOT_FOUND = { ok: false, message: '펀딩 내역을 찾을 수 없어요.' } as const;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'PATCH') return res.status(405).json({ ok: false });
   const ip = getClientIp(req) ?? 'unknown';
   if (!(await consumeRateLimit(`funding_display_name:ip:${ip}`, 30, 3600)))
-    return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
 
   const { orderNo, token, displayNamePublic, publicNameStyle, publicNickname } = (typeof req.body === 'object' && req.body) || {};
   if (typeof orderNo !== 'string' || typeof token !== 'string' || !orderNo || !token || typeof displayNamePublic !== 'boolean')
-    return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
+    return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않아요.' });
   if (publicNameStyle !== undefined && !isPublicNameStyle(publicNameStyle))
     return res.status(400).json({ ok: false, message: '명단 표시 방식을 확인해 주세요.' });
 
@@ -53,7 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!order || !isTokenMatch(order.manageToken, token)) return res.status(404).json(NOT_FOUND);
   if (!order.fundingPledge) return res.status(404).json(NOT_FOUND);
   if (!EDITABLE_STATUSES.has(order.status))
-    return res.status(409).json({ ok: false, code: 'invalid_state', message: '이 펀딩은 이름 공개 설정을 바꿀 수 없습니다.' });
+    return res.status(409).json({ ok: false, code: 'invalid_state', message: '이 펀딩은 이름 공개 설정을 바꿀 수 없어요.' });
   /**
    * **운영자가 내린 뒤에는 공개를 켜지 못한다. 끄는 것은 된다.**
    *
@@ -73,7 +73,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (order.fundingPledge.listingHiddenAt && displayNamePublic)
     return res.status(409).json({
       ok: false, code: 'listing_hidden',
-      message: '운영 기준에 따라 명단에서 내려 둔 펀딩입니다. 다시 올리려면 문의해 주세요.',
+      message: '운영 기준에 따라 명단에서 내려 둔 펀딩이에요. 다시 올리려면 문의해 주세요.',
     });
 
   /**
@@ -107,7 +107,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (displayNamePublic && rowsAffectedOf(saved) === 0)
     return res.status(409).json({
       ok: false, code: 'listing_hidden',
-      message: '운영 기준에 따라 명단에서 내려 둔 펀딩입니다. 다시 올리려면 문의해 주세요.',
+      message: '운영 기준에 따라 명단에서 내려 둔 펀딩이에요. 다시 올리려면 문의해 주세요.',
     });
   const storedPublicName = publicName !== undefined ? publicName : order.fundingPledge.publicName ?? null;
   /**

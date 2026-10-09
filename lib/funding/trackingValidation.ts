@@ -22,8 +22,8 @@ export const validateTrackingInput = (input: {
     const v = input[key];
     if (typeof v !== 'string') continue;
     const t = v.trim();
-    if (CONTROL_CHARS.test(t)) return { ok: false, message: `${label} 줄바꿈·제어 문자를 넣을 수 없습니다.` };
-    if (t.length > max) return { ok: false, message: `${label} ${max}자까지 입력할 수 있습니다.` };
+    if (CONTROL_CHARS.test(t)) return { ok: false, message: `${label} 줄바꿈·제어 문자를 넣을 수 없어요.` };
+    if (t.length > max) return { ok: false, message: `${label} ${max}자까지 입력할 수 있어요.` };
   }
   return { ok: true };
 };

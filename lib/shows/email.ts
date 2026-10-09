@@ -88,7 +88,7 @@ export const buildShowTicketEmail = (d: ShowMailData): { subject: string; text: 
   }
   const when = showDateTimeLabel(d.startsAtSec);
   return {
-    subject: `[스튜디오 놀] 티켓이 발권되었습니다 — ${d.showTitle} ${when}`,
+    subject: `[스튜디오 놀] 티켓이 발권됐어요 — ${d.showTitle} ${when}`,
     html: buildShowTicketEmailHtml({
       buyerName: d.buyerName,
       showTitle: d.showSubtitle ? d.showTitle.replace(` — ${d.showSubtitle}`, '') : d.showTitle,
@@ -105,7 +105,7 @@ export const buildShowTicketEmail = (d: ShowMailData): { subject: string; text: 
       contact: CUSTOMER_REPLY_TO,
     }),
     text: [
-      `${d.buyerName}님, 결제가 확인되어 티켓이 발권되었습니다.`,
+      `${d.buyerName}님, 결제가 확인되어 티켓이 발권됐어요.`,
       '',
       `공연: ${d.showTitle}`,
       `일시: ${when}`,
@@ -117,7 +117,7 @@ export const buildShowTicketEmail = (d: ShowMailData): { subject: string; text: 
       ...d.tickets.map((t, i) =>
         `${i + 1}. ${t.typeName}${t.entryNumber != null ? ` · 입장번호 ${formatEntryNumber(t.entryNumber)}` : ''}\n   티켓 코드: ${t.code}\n   QR: 첨부 ticket-${i + 1}.png`),
       '',
-      '입장할 때 QR 이미지를 보여 주세요. 첨부가 보이지 않으면 아래 링크에서 티켓을 열 수 있습니다.',
+      '입장할 때 QR 이미지를 보여 주세요. 첨부가 보이지 않으면 아래 링크에서 티켓을 열 수 있어요.',
       `내 티켓 보기·환불: ${manageUrl(d.orderNo, d.manageToken)}`,
       '',
       '환불 규정',
@@ -143,7 +143,7 @@ export const buildShowRefundEmail = (
       `공연: ${d.showTitle} (${when})`,
       `주문번호: ${d.orderNo}`,
       `환불 금액: ${formatPriceAmount(d.refundedAmount)}원`,
-      d.fullyRefunded ? '이 주문의 티켓은 모두 환불되어 입장에 사용할 수 없습니다.' : '환불한 티켓은 입장에 사용할 수 없습니다. 남은 티켓은 그대로 사용할 수 있습니다.',
+      d.fullyRefunded ? '이 주문의 티켓은 모두 환불되어 입장에 사용할 수 없어요.' : '환불한 티켓은 입장에 사용할 수 없어요. 남은 티켓은 그대로 사용할 수 있어요.',
       showRefundViaSentence(d.refundVia),
       '',
       `주문 내역: ${manageUrl(d.orderNo, d.manageToken)}`,
@@ -159,10 +159,10 @@ export const buildShowtimeCancelledEmail = (
   if (d.locale === 'en') return buildShowtimeCancelledEmailEn({ ...d, manageUrl: manageUrl(d.orderNo, d.manageToken, 'en') });
   const when = showDateTimeLabel(d.startsAtSec);
   return {
-    subject: `[스튜디오 놀] 공연 회차가 취소되었습니다 — ${d.showTitle} ${when}`,
+    subject: `[스튜디오 놀] 공연 회차가 취소됐어요 — ${d.showTitle} ${when}`,
     html: buildShowtimeCancelledEmailHtml({ ...d, when, manageUrl: manageUrl(d.orderNo, d.manageToken), contact: CUSTOMER_REPLY_TO }),
     text: [
-      `${d.buyerName}님, 예매하신 아래 회차가 취소되었습니다.`,
+      `${d.buyerName}님, 예매하신 아래 회차가 취소됐어요.`,
       '',
       `공연: ${d.showTitle}`,
       `취소된 회차: ${when}`,
@@ -371,7 +371,7 @@ export const buildShowPaymentOperatorEmail = (d: ShowOperatorMailData): { subjec
   return {
     subject: `[공연 예매] 결제 완료 — ${d.showTitle} ${when} · ${d.buyerName}`,
     text: [
-      '공연 티켓 결제가 완료되었습니다.',
+      '공연 티켓 결제가 완료됐어요.',
       `공연: ${d.showTitle}`,
       `회차: ${when}`,
       `티켓: ${tickets}`,
@@ -383,8 +383,8 @@ export const buildShowPaymentOperatorEmail = (d: ShowOperatorMailData): { subjec
     html: buildEmailLayout({
       audience: 'operator',
       preheader: `${d.showTitle} ${when} · ${tickets} · ${amount}`,
-      heading: '공연 티켓 결제가 완료되었습니다',
-      paragraphs: [`${escapeHtml(d.buyerName)}님이 카드로 결제했습니다. 티켓은 자동으로 발권되어 고객에게 메일이 나갑니다.`],
+      heading: '공연 티켓 결제가 완료됐어요',
+      paragraphs: [`${escapeHtml(d.buyerName)}님이 카드로 결제했어요. 티켓은 자동으로 발권되어 고객에게 메일이 나가요.`],
       rows: [
         { label: '공연', value: d.showTitle },
         { label: '회차', value: when },
@@ -432,8 +432,8 @@ export const buildShowRefundOperatorEmail = (d: ShowRefundOperatorMailData): { s
   const manage = adminUrl(`/admin/shows/${d.showId}`);
   const needsTransfer = d.refundVia === 'bank_account';
   const lead = needsTransfer
-    ? `${d.buyerName}님이 계좌 입금으로 산 티켓 ${d.refundedCount}매를 취소했습니다. 고객이 적은 환불 계좌로 ${amount}을 보내고 관리자 화면에서 "송금 완료"를 눌러 주세요.`
-    : `${d.buyerName}님이 티켓 ${d.refundedCount}매를 취소했습니다. 카드 결제는 ${amount}이 자동으로 환불되었습니다.`;
+    ? `${d.buyerName}님이 계좌 입금으로 산 티켓 ${d.refundedCount}매를 취소했어요. 고객이 적은 환불 계좌로 ${amount}을 보내고 관리자 화면에서 "송금 완료"를 눌러 주세요.`
+    : `${d.buyerName}님이 티켓 ${d.refundedCount}매를 취소했어요. 카드 결제는 ${amount}이 자동으로 환불됐어요.`;
   return {
     subject: `[공연 예매] ${needsTransfer ? '환불 송금 필요' : '고객 환불'} ${amount} — ${d.showTitle} ${when} · ${d.buyerName}`,
     text: [
@@ -451,7 +451,7 @@ export const buildShowRefundOperatorEmail = (d: ShowRefundOperatorMailData): { s
         ? { noticeTone: 'alert' as const, notices: ['송금한 뒤 관리자 화면의 환불 계좌 칸에서 <strong>"송금 완료"</strong>를 눌러 주세요.'] }
         : {}),
       preheader: `${d.showTitle} ${when} · ${d.refundedCount}매 · ${amount}`,
-      heading: needsTransfer ? '공연 티켓 환불 — 송금이 필요합니다' : '고객이 공연 티켓을 환불했습니다',
+      heading: needsTransfer ? '공연 티켓 환불 — 송금이 필요해요' : '고객이 공연 티켓을 환불했어요',
       paragraphs: [escapeHtml(lead)],
       rows: [
         { label: '공연', value: d.showTitle },

@@ -22,7 +22,7 @@ import type { FundingPayoutAccountMasked } from './payoutAccount';
  * `reviewEmail.ts`·`creatorEmail.ts`와 같은 규약이다.
  */
 const accountValue = (account: FundingPayoutAccountMasked | null): string => {
-  if (!account) return '등록된 계좌 정보를 읽지 못했습니다.';
+  if (!account) return '등록된 계좌 정보를 읽지 못했어요.';
   /**
    * 은행명·예금주는 암호문 안에 있어 서버가 키로 열어야 나온다(`payoutAccount.ts`). 열지
    * 못하면 그 두 칸만 비는데, 그때 빈 칸을 남기면 "입금 계좌:  (뒤 4자리 1234)"가 되어
@@ -30,7 +30,7 @@ const accountValue = (account: FundingPayoutAccountMasked | null): string => {
    */
   const who = account.bankName && account.holder
     ? `${account.bankName} ${account.holder}`
-    : '등록하신 계좌(은행명·예금주는 이 메일을 만들 때 읽지 못했습니다)';
+    : '등록하신 계좌(은행명·예금주는 이 메일을 만들 때 읽지 못했어요)';
   return `${who} (계좌번호 뒤 4자리 ${account.accountLast4 ?? '확인 필요'})`;
 };
 const accountLine = (account: FundingPayoutAccountMasked | null): string => `입금 계좌: ${accountValue(account)}`;
@@ -71,7 +71,7 @@ const breakdownRows = (payout: FundingProjectPayout): EmailLayoutRow[] => {
       : []),
     { label: '실지급액', value: `${formatPriceAmount(payout.netAmount)}원`, emphasis: true },
     ...(payout.shortfallAmount > 0
-      ? [{ label: '정산금으로 충당하지 못한 대금', value: `${formatPriceAmount(payout.shortfallAmount)}원 — 추가 청구나 제작 규모 조정은 따로 상의드립니다.` }]
+      ? [{ label: '정산금으로 충당하지 못한 대금', value: `${formatPriceAmount(payout.shortfallAmount)}원 — 추가 청구나 제작 규모 조정은 따로 상의드려요.` }]
       : []),
     { label: '확정 후원', value: `${payout.backerCount}건` },
   ];
@@ -87,13 +87,13 @@ export const buildFundingPayoutRecordedText = (
   account: FundingPayoutAccountMasked | null,
 ): string =>
   [
-    `"${projectTitle}" 프로젝트의 정산 금액이 확정되었습니다.`,
+    `"${projectTitle}" 프로젝트의 정산 금액이 확정됐어요.`,
     '',
     ...breakdownLines(payout),
     '',
     accountLine(account),
     '',
-    '이체가 끝나면 다시 알려 드립니다. 금액이나 계좌가 다르면 이체 전에 알려 주세요.',
+    '이체가 끝나면 다시 알려 드려요. 금액이나 계좌가 다르면 이체 전에 알려 주세요.',
     `문의: ${CUSTOMER_REPLY_TO}`,
   ].join('\n');
 
@@ -103,7 +103,7 @@ export const buildFundingPayoutPaidText = (
   account: FundingPayoutAccountMasked | null,
 ): string =>
   [
-    `"${projectTitle}" 프로젝트의 정산금을 보냈습니다.`,
+    `"${projectTitle}" 프로젝트의 정산금을 보냈어요.`,
     '',
     ...breakdownLines(payout),
     '',
@@ -121,11 +121,11 @@ export const buildFundingPayoutRecordedHtml = (
 ): string =>
   buildEmailLayout({
     preheader: `${projectTitle} — 실지급액 ${formatPriceAmount(payout.netAmount)}원`,
-    heading: '정산 금액이 확정되었습니다',
-    paragraphs: [`"${escapeHtml(projectTitle)}" 프로젝트의 정산 금액이 확정되었습니다.`],
+    heading: '정산 금액이 확정됐어요',
+    paragraphs: [`"${escapeHtml(projectTitle)}" 프로젝트의 정산 금액이 확정됐어요.`],
     rows: [...breakdownRows(payout), { label: '입금 계좌', value: accountValue(account) }],
     notices: [
-      '이체가 끝나면 다시 알려 드립니다. 금액이나 계좌가 다르면 이체 전에 알려 주세요.',
+      '이체가 끝나면 다시 알려 드려요. 금액이나 계좌가 다르면 이체 전에 알려 주세요.',
       `문의: ${escapeHtml(CUSTOMER_REPLY_TO)}`,
     ],
   });
@@ -136,9 +136,9 @@ export const buildFundingPayoutPaidHtml = (
   account: FundingPayoutAccountMasked | null,
 ): string =>
   buildEmailLayout({
-    preheader: `${projectTitle} — ${formatPriceAmount(payout.netAmount)}원을 보냈습니다.`,
-    heading: '정산금을 보냈습니다',
-    paragraphs: [`"${escapeHtml(projectTitle)}" 프로젝트의 정산금을 보냈습니다.`],
+    preheader: `${projectTitle} — ${formatPriceAmount(payout.netAmount)}원을 보냈어요.`,
+    heading: '정산금을 보냈어요',
+    paragraphs: [`"${escapeHtml(projectTitle)}" 프로젝트의 정산금을 보냈어요.`],
     rows: [
       ...breakdownRows(payout),
       { label: '입금 계좌', value: accountValue(account) },
@@ -156,7 +156,7 @@ export const sendFundingPayoutRecordedEmail = async (
   const result = await sendEmail({
     to: creatorEmail,
     replyTo: CUSTOMER_REPLY_TO,
-    subject: `[스튜디오 놀] 정산 금액이 확정되었습니다 — ${projectTitle}`,
+    subject: `[스튜디오 놀] 정산 금액이 확정됐어요 — ${projectTitle}`,
     text: buildFundingPayoutRecordedText(projectTitle, payout, account),
     html: buildFundingPayoutRecordedHtml(projectTitle, payout, account),
   });
@@ -172,7 +172,7 @@ export const sendFundingPayoutPaidEmail = async (
   const result = await sendEmail({
     to: creatorEmail,
     replyTo: CUSTOMER_REPLY_TO,
-    subject: `[스튜디오 놀] 정산금을 보냈습니다 — ${projectTitle}`,
+    subject: `[스튜디오 놀] 정산금을 보냈어요 — ${projectTitle}`,
     text: buildFundingPayoutPaidText(projectTitle, payout, account),
     html: buildFundingPayoutPaidHtml(projectTitle, payout, account),
   });
@@ -195,11 +195,11 @@ export const sendFundingPayoutOperatorFallback = async (
     to: OPERATOR_EMAIL,
     subject: `[펀딩] ${what} 알림 메일 발송 실패 — ${projectTitle}`,
     text: [
-      `${what}은 정상 처리됐지만 개설자에게 보내는 알림 메일이 실패했습니다.`,
+      `${what}은 정상 처리됐지만 개설자에게 보내는 알림 메일이 실패했어요.`,
       `수신 시도 주소: ${creatorEmail}`,
       `실패 사유: ${reason}`,
       '',
-      '개설자는 이 사실을 모릅니다. 위 주소로 직접 알려 주세요.',
+      '개설자는 이 사실을 몰라요. 위 주소로 직접 알려 주세요.',
       '',
       `심사 화면: ${SITE_URL}/admin/funding/projects/${projectId}`,
     ].join('\n'),
@@ -214,7 +214,7 @@ export const sendFundingPayoutOperatorFallback = async (
         { label: '실패 사유', value: reason },
       ],
       cta: { label: '심사 화면 열기', url: adminUrl(`/admin/funding/projects/${projectId}`) },
-      notices: [`${escapeHtml(what)}은 정상 처리됐지만 개설자에게 보내는 알림 메일이 실패했습니다. 개설자는 이 사실을 모릅니다. 위 주소로 직접 알려 주세요.`],
+      notices: [`${escapeHtml(what)}은 정상 처리됐지만 개설자에게 보내는 알림 메일이 실패했어요. 개설자는 이 사실을 몰라요. 위 주소로 직접 알려 주세요.`],
     }),
   });
   return result.ok ? null : `operator:${result.errorCode}`;

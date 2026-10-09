@@ -23,7 +23,7 @@ const FUNDING_CREATE_LIMIT = 20;
  * 무제한 리워드는 아예 세지 않는다 — 이 카운터가 지키는 건 한정 재고뿐이다.
  */
 const MAX_LIMITED_TOSS_ATTEMPTS_PER_IP = 5;
-const TOO_MANY_ATTEMPTS_MESSAGE = '한정 리워드 결제 시도가 잦습니다. 15분 뒤 다시 시도해 주세요.';
+const TOO_MANY_ATTEMPTS_MESSAGE = '한정 리워드 결제 시도가 잦아요. 15분 뒤 다시 시도해 주세요.';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -40,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!validated.ok) return res.status(400).json({ ok: false, message: validated.message });
 
   if (!(await consumeRateLimit(`funding_create:ip:${ip}`, FUNDING_CREATE_LIMIT, 3600)))
-    return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
 
   // 이메일·전화를 매번 바꾸면 고객 단위 상한을 우회할 수 있다 — 한정 재고를 잠그는 그 경로만
   // IP 카운터로 한 번 더 막는다(한정 수량 리워드). 무제한 리워드만 담았으면 세지 않는다.
@@ -63,7 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const result = await createFundingPledge(validated.value, project!, validated.lines, now, {
     releaseOrderNo: previousOrderNo,
   });
-  if (!result.ok) return res.status(409).json({ ok: false, code: result.code, message: '남은 수량보다 많이 신청했거나 방금 마감되었습니다. 수량을 줄이거나 다른 리워드를 선택해 주세요.' });
+  if (!result.ok) return res.status(409).json({ ok: false, code: result.code, message: '남은 수량보다 많이 신청했거나 방금 마감됐어요. 수량을 줄이거나 다른 리워드를 선택해 주세요.' });
 
   /**
    * 계좌 입금 — 결제창이 없다. 입금 안내 메일을 보내고, 후원 폼은 응답의 `manageUrl`(펀딩 확인

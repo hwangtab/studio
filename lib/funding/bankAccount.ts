@@ -32,7 +32,7 @@ export const bankTransferBlockReason = (
 ): BankTransferBlockCode | null => (rewards.some((r) => r.totalQuantity !== null) ? 'limited_reward' : null);
 
 export const BANK_TRANSFER_BLOCK_MESSAGES: Record<BankTransferBlockCode, string> = {
-  limited_reward: '수량이 정해진 리워드는 카드·간편결제로만 받습니다. 입금을 확인하는 사이 다 팔릴 수 있어서입니다.',
+  limited_reward: '수량이 정해진 리워드는 카드·간편결제로만 받아요. 입금을 확인하는 사이 다 팔릴 수 있어서예요.',
 };
 
 /**

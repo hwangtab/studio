@@ -49,18 +49,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const auth = await authenticateCreatorApi(req, res);
-  if (!auth.ok) return res.status(401).json({ ok: false, message: '로그인이 필요합니다.' });
+  if (!auth.ok) return res.status(401).json({ ok: false, message: '로그인이 필요해요.' });
 
   const projectId = typeof req.query.id === 'string' ? req.query.id : '';
-  if (!projectId) return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
+  if (!projectId) return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않아요.' });
 
   const mode = req.body?.mode;
   if (mode !== 'create' && mode !== 'update' && mode !== 'delete') {
-    return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
+    return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않아요.' });
   }
 
   if (!(await consumeRateLimit(`creator_save:${auth.creatorId}`, 30, 60))) {
-    return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
   }
 
   if (mode === 'delete') {
@@ -105,7 +105,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ),
     )
     .limit(1);
-  if (duplicate) return res.status(400).json({ ok: false, message: '이미 쓰고 있는 리워드 주소입니다.' });
+  if (duplicate) return res.status(400).json({ ok: false, message: '이미 쓰고 있는 리워드 주소예요.' });
 
   return respondWriteResult(res, await upsertReward(auth.creatorId, projectId, validated.value));
 }

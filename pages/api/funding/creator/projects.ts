@@ -39,16 +39,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const auth = await authenticateCreatorApi(req, res);
-  if (!auth.ok) return res.status(401).json({ ok: false, message: '로그인이 필요합니다.' });
+  if (!auth.ok) return res.status(401).json({ ok: false, message: '로그인이 필요해요.' });
 
   // 로그인이 "처음 보는 이메일이면 계정 자동 생성"이라 creatorId 하나만 보면 메일함
   // N개로 N배가 된다 — upload.ts(IP+계정 두 겹)와 같은 이유로 IP 한 겹을 더한다.
   const ip = getClientIp(req) ?? 'unknown';
   if (!(await consumeRateLimit(`creator_save:ip:${ip}`, 30, 60))) {
-    return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
   }
   if (!(await consumeRateLimit(`creator_save:${auth.creatorId}`, 30, 60))) {
-    return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
   }
 
   // 초안도 계정당 상한이 있다 — CREATOR_LIMITS.draftsMax와 UNREVIEWED_STATUSES 주석 참조.
@@ -64,7 +64,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // 경로가 아직 없다(할 수 없는 일을 시키지 않는다). submitted도 이 상한에 걸리는
       // 상태라 "제출하면 풀린다"도 아니다 — 실제로 풀리는 계기는 운영자 심사(승인·반려)
       // 뿐이라 그대로 안내한다.
-      message: '아직 심사되지 않은 프로젝트가 너무 많습니다. 운영자 심사(승인 또는 반려)가 끝난 뒤 새 프로젝트를 만들 수 있습니다.',
+      message: '아직 심사되지 않은 프로젝트가 너무 많아요. 운영자 심사(승인 또는 반려)가 끝난 뒤 새 프로젝트를 만들 수 있어요.',
     });
   }
 

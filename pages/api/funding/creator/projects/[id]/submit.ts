@@ -52,20 +52,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const auth = await authenticateCreatorApi(req, res);
-  if (!auth.ok) return res.status(401).json({ ok: false, message: '로그인이 필요합니다.' });
+  if (!auth.ok) return res.status(401).json({ ok: false, message: '로그인이 필요해요.' });
 
   const projectId = typeof req.query.id === 'string' ? req.query.id : '';
-  if (!projectId) return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
+  if (!projectId) return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않아요.' });
 
   if (!(await consumeRateLimit(`creator_save:${auth.creatorId}`, 30, 60))) {
-    return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
   }
 
   const project = await loadProjectForCreator(auth.creatorId, projectId);
-  if (!project) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없습니다.' });
+  if (!project) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없어요.' });
 
   const next = nextReviewStatus(project.reviewStatus as FundingReviewStatus, 'submit');
-  if (!next) return res.status(409).json({ ok: false, message: '지금 상태에서는 심사를 신청할 수 없습니다.' });
+  if (!next) return res.status(409).json({ ok: false, message: '지금 상태에서는 심사를 신청할 수 없어요.' });
 
   const missing = findMissingSections(project);
   if (missing.length > 0) {
@@ -80,7 +80,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (project.startAt.getTime() < Date.now() + CREATOR_LIMITS.leadDays * 86_400_000) {
     return res.status(400).json({
       ok: false,
-      message: '시작일이 너무 가깝습니다. 기본정보에서 모금 기간을 다시 잡아 주세요.',
+      message: '시작일이 너무 가까워요. 기본정보에서 모금 기간을 다시 잡아 주세요.',
     });
   }
 
@@ -96,7 +96,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({
         ok: false,
         message: agreedTermsVersion
-          ? '약관이 개정되었습니다. 새로고침 후 다시 신청해 주세요.'
+          ? '약관이 개정됐어요. 새로고침 후 다시 신청해 주세요.'
           : '개설자 약관에 동의해 주세요.',
       });
     }
@@ -115,7 +115,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }).where(and(eq(fundingProjects.id, projectId), eq(fundingProjects.reviewStatus, project.reviewStatus as FundingReviewStatus)));
 
   if (Number(result.rowsAffected) === 0) {
-    return res.status(409).json({ ok: false, message: '지금 상태에서는 심사를 신청할 수 없습니다.' });
+    return res.status(409).json({ ok: false, message: '지금 상태에서는 심사를 신청할 수 없어요.' });
   }
 
   try {

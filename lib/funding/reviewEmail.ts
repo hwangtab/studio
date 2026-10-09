@@ -33,13 +33,13 @@ const publicUrl = (slug: string): string => `${SITE_URL}/ko/funding/${slug}`;
 const adminReviewUrl = (projectId: string): string => `${SITE_URL}/admin/funding/projects/${projectId}`;
 
 const REVIEW_SUBJECT: Record<ReviewDecisionAction, string> = {
-  approve: '펀딩 프로젝트가 승인되었습니다',
+  approve: '펀딩 프로젝트가 승인됐어요',
   request_changes: '펀딩 프로젝트 보완 요청',
   reject: '펀딩 프로젝트 심사 결과',
   // DB상 reject와 완전히 같은 처리(reviewStatus: rejected)이지만, 개설자가 받는 메일
   // 제목·본문은 "반려"가 아니라 "보관"이라고 정직하게 말한다 — 심사에서 떨어진 것이
   // 아니라 방치를 정리한 것이라는 사실이 사유(reviewNote)와 함께 그대로 전달돼야 한다.
-  archive: '펀딩 프로젝트가 보관 처리되었습니다',
+  archive: '펀딩 프로젝트가 보관 처리됐어요',
 };
 
 /**
@@ -49,8 +49,8 @@ const REVIEW_SUBJECT: Record<ReviewDecisionAction, string> = {
  */
 const APPROVAL_LOCK_NOTICE = [
   '[승인 뒤에는 바꿀 수 없는 항목]',
-  '· 리워드는 제목·설명·이미지·금액·수량 제한 여부·배송 필요 여부·예상 전달 시기를 포함해 통째로 잠깁니다.',
-  '승인 뒤에는 개설자 화면에서 리워드를 고치거나 새로 추가할 수 없습니다. 가격을 바꾸거나 구성을 달리한 리워드가 필요하면 새 프로젝트로 다시 신청해 주세요.',
+  '· 리워드는 제목·설명·이미지·금액·수량 제한 여부·배송 필요 여부·예상 전달 시기를 포함해 통째로 잠겨요.',
+  '승인 뒤에는 개설자 화면에서 리워드를 고치거나 새로 추가할 수 없어요. 가격을 바꾸거나 구성을 달리한 리워드가 필요하면 새 프로젝트로 다시 신청해 주세요.',
 ];
 
 /** 운영자 메모 단락 — 줄바꿈은 살리고 값은 escape한다. */
@@ -81,7 +81,7 @@ export const sendReviewDecisionEmail = async (
 
   const bodyByAction: Record<ReviewDecisionAction, string[]> = {
     approve: [
-      '펀딩 프로젝트가 승인되어 공개되었습니다.',
+      '펀딩 프로젝트가 승인되어 공개됐어요.',
       '',
       `공개 주소: ${publicUrl(slug)}`,
       `모금 시작일: ${startAtLabel}`,
@@ -91,7 +91,7 @@ export const sendReviewDecisionEmail = async (
       `편집 화면: ${editUrl(project.id)}`,
     ],
     request_changes: [
-      '제출하신 펀딩 프로젝트에 보완이 필요합니다.',
+      '제출하신 펀딩 프로젝트에 보완이 필요해요.',
       '',
       '[운영자 메모]',
       note ?? '',
@@ -99,7 +99,7 @@ export const sendReviewDecisionEmail = async (
       `아래 편집 화면에서 내용을 고친 뒤 다시 제출해 주세요: ${editUrl(project.id)}`,
     ],
     reject: [
-      '제출하신 펀딩 프로젝트 심사 결과를 안내드립니다. 이번 심사에서는 게재가 어렵습니다.',
+      '제출하신 펀딩 프로젝트 심사 결과를 안내드려요. 이번 심사에서는 게재가 어려워요.',
       '',
       '[운영자 메모]',
       note ?? '',
@@ -110,12 +110,12 @@ export const sendReviewDecisionEmail = async (
     // 것이다 — reject와 같은 문구를 쓰면 "심사에 떨어졌다"로 오해한다. 새 프로젝트를
     // 다시 만들 수 있다는 것도 함께 알린다(보관 처리는 미심사 상한에서 빠지므로).
     archive: [
-      '작성 중이던 펀딩 프로젝트가 운영자에 의해 보관 처리되었습니다.',
+      '작성 중이던 펀딩 프로젝트가 운영자에 의해 보관 처리됐어요.',
       '',
       '[운영자 메모]',
       note ?? '',
       '',
-      '이 프로젝트는 더 이상 편집·재제출할 수 없습니다. 다시 개설하고 싶으시면 새 프로젝트를 만들어 주세요.',
+      '이 프로젝트는 더 이상 편집·재제출할 수 없어요. 다시 개설하고 싶으시면 새 프로젝트를 만들어 주세요.',
       '',
       `문의: ${CUSTOMER_REPLY_TO} · ${PHONE_NUMBER}`,
     ],
@@ -124,7 +124,7 @@ export const sendReviewDecisionEmail = async (
   const greeting = `${escapeHtml(project.creatorName)}님,`;
   const htmlByAction: Record<ReviewDecisionAction, Omit<EmailLayoutInput, 'heading'>> = {
     approve: {
-      paragraphs: [greeting, '펀딩 프로젝트가 승인되어 공개되었습니다.'],
+      paragraphs: [greeting, '펀딩 프로젝트가 승인되어 공개됐어요.'],
       rows: [
         { label: '프로젝트', value: project.title },
         { label: '공개 주소', value: publicUrl(slug), href: publicUrl(slug) },
@@ -132,25 +132,25 @@ export const sendReviewDecisionEmail = async (
       ],
       cta: { label: '편집 화면 열기', url: editUrl(project.id) },
       notices: [
-        `${strong('승인 뒤에는 바꿀 수 없는 항목')}: 리워드는 제목·설명·이미지·금액·수량 제한 여부·배송 필요 여부·예상 전달 시기를 포함해 통째로 잠깁니다.`,
-        '승인 뒤에는 개설자 화면에서 리워드를 고치거나 새로 추가할 수 없습니다. 가격을 바꾸거나 구성을 달리한 리워드가 필요하면 새 프로젝트로 다시 신청해 주세요.',
+        `${strong('승인 뒤에는 바꿀 수 없는 항목')}: 리워드는 제목·설명·이미지·금액·수량 제한 여부·배송 필요 여부·예상 전달 시기를 포함해 통째로 잠겨요.`,
+        '승인 뒤에는 개설자 화면에서 리워드를 고치거나 새로 추가할 수 없어요. 가격을 바꾸거나 구성을 달리한 리워드가 필요하면 새 프로젝트로 다시 신청해 주세요.',
       ],
     },
     request_changes: {
-      paragraphs: [greeting, '제출하신 펀딩 프로젝트에 보완이 필요합니다.', noteParagraph(note), '아래 편집 화면에서 내용을 고친 뒤 다시 제출해 주세요.'],
+      paragraphs: [greeting, '제출하신 펀딩 프로젝트에 보완이 필요해요.', noteParagraph(note), '아래 편집 화면에서 내용을 고친 뒤 다시 제출해 주세요.'],
       rows: [{ label: '프로젝트', value: project.title }],
       cta: { label: '편집 화면 열기', url: editUrl(project.id) },
     },
     reject: {
-      paragraphs: [greeting, '제출하신 펀딩 프로젝트 심사 결과를 안내드립니다. 이번 심사에서는 게재가 어렵습니다.', noteParagraph(note), contactParagraph],
+      paragraphs: [greeting, '제출하신 펀딩 프로젝트 심사 결과를 안내드려요. 이번 심사에서는 게재가 어려워요.', noteParagraph(note), contactParagraph],
       rows: [{ label: '프로젝트', value: project.title }],
     },
     archive: {
       paragraphs: [
         greeting,
-        '작성 중이던 펀딩 프로젝트가 운영자에 의해 보관 처리되었습니다.',
+        '작성 중이던 펀딩 프로젝트가 운영자에 의해 보관 처리됐어요.',
         noteParagraph(note),
-        '이 프로젝트는 더 이상 편집·재제출할 수 없습니다. 다시 개설하고 싶으시면 새 프로젝트를 만들어 주세요.',
+        '이 프로젝트는 더 이상 편집·재제출할 수 없어요. 다시 개설하고 싶으시면 새 프로젝트를 만들어 주세요.',
         contactParagraph,
       ],
       rows: [{ label: '프로젝트', value: project.title }],
@@ -200,9 +200,9 @@ export const sendReviewDecisionEmail = async (
 export const sendCreatorEditedNotice = async (project: AdminProjectDetail): Promise<string | null> => {
   const result = await sendEmail({
     to: OPERATOR_EMAIL,
-    subject: `[펀딩] 공개된 프로젝트가 수정되었습니다 — ${project.title}`,
+    subject: `[펀딩] 공개된 프로젝트가 수정됐어요 — ${project.title}`,
     text: [
-      '개설자가 공개된 프로젝트의 내용을 고쳤습니다. 심사를 거치지 않는 경로입니다.',
+      '개설자가 공개된 프로젝트의 내용을 고쳤어요. 심사를 거치지 않는 경로예요.',
       '',
       `프로젝트: ${project.title} (id: ${project.id})`,
       `개설자: ${project.creatorName} <${project.creatorEmail}>`,
@@ -216,8 +216,8 @@ export const sendCreatorEditedNotice = async (project: AdminProjectDetail): Prom
     html: buildEmailLayout({
       audience: 'operator',
       preheader: `${project.creatorName} · ${project.title}`,
-      heading: '공개된 프로젝트가 수정되었습니다',
-      paragraphs: ['개설자가 공개된 프로젝트의 내용을 고쳤습니다. 심사를 거치지 않는 경로입니다.'],
+      heading: '공개된 프로젝트가 수정됐어요',
+      paragraphs: ['개설자가 공개된 프로젝트의 내용을 고쳤어요. 심사를 거치지 않는 경로예요.'],
       rows: [
         { label: '프로젝트', value: project.title },
         { label: '개설자', value: project.creatorName },
@@ -239,7 +239,7 @@ export const sendReviewDecisionOperatorFallback = async (
 ): Promise<string | null> => {
   const subject = `[펀딩] 심사 알림 메일 실패 — ${project.title}`;
   const text = [
-    '개설자에게 심사 결과 메일을 보내지 못했습니다. 아래 정보로 직접 연락해 주세요.',
+    '개설자에게 심사 결과 메일을 보내지 못했어요. 아래 정보로 직접 연락해 주세요.',
     '',
     `프로젝트: ${project.title} (id: ${project.id})`,
     `판정: ${REVIEW_SUBJECT[action]}`,
@@ -264,7 +264,7 @@ export const sendReviewDecisionOperatorFallback = async (
       { label: '실패 사유', value: failureReason },
     ],
     cta: { label: '심사 화면 열기', url: adminUrl(`/admin/funding/projects/${project.id}`) },
-    notices: ['개설자에게 심사 결과 메일을 보내지 못했습니다. 위 정보로 직접 연락해 주세요.'],
+    notices: ['개설자에게 심사 결과 메일을 보내지 못했어요. 위 정보로 직접 연락해 주세요.'],
   });
 
   const result = await sendEmail({ to: OPERATOR_EMAIL, subject, text, html });
@@ -280,10 +280,10 @@ export const sendReviewDecisionOperatorFallback = async (
 export type PublicStatusAction = 'close' | 'reopen' | 'hide' | 'unhide';
 
 const PUBLIC_STATUS_SUBJECT: Record<PublicStatusAction, string> = {
-  close: '펀딩 프로젝트가 종료되었습니다',
-  reopen: '펀딩 프로젝트가 다시 공개되었습니다',
-  hide: '펀딩 프로젝트가 목록에서 숨겨졌습니다',
-  unhide: '펀딩 프로젝트가 다시 목록에 노출됩니다',
+  close: '펀딩 프로젝트가 종료됐어요',
+  reopen: '펀딩 프로젝트가 다시 공개됐어요',
+  hide: '펀딩 프로젝트가 목록에서 숨겨졌어요',
+  unhide: '펀딩 프로젝트가 다시 목록에 노출돼요',
 };
 
 /**
@@ -316,9 +316,9 @@ export const sendPublicStatusEmail = async (
 
   const bodyByAction: Record<PublicStatusAction, string[]> = {
     close: [
-      '펀딩 프로젝트가 운영자에 의해 종료되어 더 이상 후원을 받지 않습니다.',
+      '펀딩 프로젝트가 운영자에 의해 종료되어 더 이상 후원을 받지 않아요.',
       '',
-      `프로젝트 페이지는 그대로 남아 있습니다: ${publicUrl(slug)}`,
+      `프로젝트 페이지는 그대로 남아 있어요: ${publicUrl(slug)}`,
       '',
       '[운영자 메모]',
       note ?? '',
@@ -326,27 +326,27 @@ export const sendPublicStatusEmail = async (
       `문의: ${CUSTOMER_REPLY_TO} · ${PHONE_NUMBER}`,
     ],
     reopen: [
-      '펀딩 프로젝트가 다시 공개되었습니다.',
+      '펀딩 프로젝트가 다시 공개됐어요.',
       '',
       `공개 주소: ${publicUrl(slug)}`,
       '',
       // 모금 기간(startAt~endAt)은 승인 뒤 잠겨 있어(basicLockedViolation) 다시 여는 것만으로는
       // 못 바꾼다 — 상태를 사실대로만 말한다.
       ...(reopenState === 'live'
-        ? ['지금 바로 새 후원을 받습니다.']
+        ? ['지금 바로 새 후원을 받아요.']
         : reopenState === 'upcoming'
-          ? [`모금 시작일(${startAtLabel})부터 후원을 받습니다. 그전까지는 페이지만 보이고 후원은 받지 않습니다.`]
-          : [`모금 종료일(${endAtLabel})이 이미 지나 지금은 새 후원을 받지 않습니다.`]),
+          ? [`모금 시작일(${startAtLabel})부터 후원을 받아요. 그전까지는 페이지만 보이고 후원은 받지 않아요.`]
+          : [`모금 종료일(${endAtLabel})이 이미 지나 지금은 새 후원을 받지 않아요.`]),
       ...(note ? ['', '[운영자 메모]', note] : []),
     ],
     hide: [
-      '펀딩 프로젝트가 목록·사이트맵에서 숨겨졌습니다. 주소를 아는 사람은 여전히 페이지를 볼 수 있습니다.',
+      '펀딩 프로젝트가 목록·사이트맵에서 숨겨졌어요. 주소를 아는 사람은 여전히 페이지를 볼 수 있어요.',
       '',
       `페이지 주소: ${publicUrl(slug)}`,
       ...(note ? ['', '[운영자 메모]', note] : []),
     ],
     unhide: [
-      '펀딩 프로젝트가 다시 목록·사이트맵에 노출됩니다.',
+      '펀딩 프로젝트가 다시 목록·사이트맵에 노출돼요.',
       '',
       `공개 주소: ${publicUrl(slug)}`,
       ...(note ? ['', '[운영자 메모]', note] : []),
@@ -358,28 +358,28 @@ export const sendPublicStatusEmail = async (
   const memo = note ? [noteParagraph(note)] : [];
   const htmlByAction: Record<PublicStatusAction, Omit<EmailLayoutInput, 'heading'>> = {
     close: {
-      paragraphs: [statusGreeting, '펀딩 프로젝트가 운영자에 의해 종료되어 더 이상 후원을 받지 않습니다.', '프로젝트 페이지는 그대로 남아 있습니다.', noteParagraph(note), contactParagraph],
+      paragraphs: [statusGreeting, '펀딩 프로젝트가 운영자에 의해 종료되어 더 이상 후원을 받지 않아요.', '프로젝트 페이지는 그대로 남아 있어요.', noteParagraph(note), contactParagraph],
       rows: [pageRow],
     },
     reopen: {
       paragraphs: [
         statusGreeting,
-        '펀딩 프로젝트가 다시 공개되었습니다.',
+        '펀딩 프로젝트가 다시 공개됐어요.',
         reopenState === 'live'
-          ? '지금 바로 새 후원을 받습니다.'
+          ? '지금 바로 새 후원을 받아요.'
           : reopenState === 'upcoming'
-            ? `모금 시작일(${escapeHtml(startAtLabel)})부터 후원을 받습니다. 그전까지는 페이지만 보이고 후원은 받지 않습니다.`
-            : `모금 종료일(${escapeHtml(endAtLabel)})이 이미 지나 지금은 새 후원을 받지 않습니다.`,
+            ? `모금 시작일(${escapeHtml(startAtLabel)})부터 후원을 받아요. 그전까지는 페이지만 보이고 후원은 받지 않아요.`
+            : `모금 종료일(${escapeHtml(endAtLabel)})이 이미 지나 지금은 새 후원을 받지 않아요.`,
         ...memo,
       ],
       rows: [pageRow],
     },
     hide: {
-      paragraphs: [statusGreeting, '펀딩 프로젝트가 목록·사이트맵에서 숨겨졌습니다. 주소를 아는 사람은 여전히 페이지를 볼 수 있습니다.', ...memo],
+      paragraphs: [statusGreeting, '펀딩 프로젝트가 목록·사이트맵에서 숨겨졌어요. 주소를 아는 사람은 여전히 페이지를 볼 수 있어요.', ...memo],
       rows: [pageRow],
     },
     unhide: {
-      paragraphs: [statusGreeting, '펀딩 프로젝트가 다시 목록·사이트맵에 노출됩니다.', ...memo],
+      paragraphs: [statusGreeting, '펀딩 프로젝트가 다시 목록·사이트맵에 노출돼요.', ...memo],
       rows: [pageRow],
     },
   };
@@ -412,7 +412,7 @@ export const sendPublicStatusOperatorFallback = async (
 ): Promise<string | null> => {
   const subject = `[펀딩] 공개 상태 변경 알림 메일 실패 — ${project.title}`;
   const text = [
-    '개설자에게 공개 상태 변경 메일을 보내지 못했습니다. 아래 정보로 직접 연락해 주세요.',
+    '개설자에게 공개 상태 변경 메일을 보내지 못했어요. 아래 정보로 직접 연락해 주세요.',
     '',
     `프로젝트: ${project.title} (id: ${project.id})`,
     `변경: ${PUBLIC_STATUS_SUBJECT[action]}`,
@@ -437,7 +437,7 @@ export const sendPublicStatusOperatorFallback = async (
       { label: '실패 사유', value: failureReason },
     ],
     cta: { label: '심사 화면 열기', url: adminUrl(`/admin/funding/projects/${project.id}`) },
-    notices: ['개설자에게 공개 상태 변경 메일을 보내지 못했습니다. 위 정보로 직접 연락해 주세요.'],
+    notices: ['개설자에게 공개 상태 변경 메일을 보내지 못했어요. 위 정보로 직접 연락해 주세요.'],
   });
 
   const result = await sendEmail({ to: OPERATOR_EMAIL, subject, text, html });

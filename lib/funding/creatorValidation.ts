@@ -241,11 +241,11 @@ export const validateBasicSection = (
 
     const earliest = new Date(now.getTime() + CREATOR_LIMITS.leadDays * 86_400_000);
     if (startAt.getTime() < earliest.getTime()) {
-      return fail(`심사에 시간이 걸립니다. 시작일은 오늘부터 ${CREATOR_LIMITS.leadDays}일 뒤부터 고를 수 있습니다.`);
+      return fail(`심사에 시간이 걸려요. 시작일은 오늘부터 ${CREATOR_LIMITS.leadDays}일 뒤부터 고를 수 있어요.`);
     }
-    if (endAt.getTime() <= startAt.getTime()) return fail('종료일이 시작일보다 뒤여야 합니다.');
+    if (endAt.getTime() <= startAt.getTime()) return fail('종료일이 시작일보다 뒤여야 해요.');
     if (endAt.getTime() - startAt.getTime() > CREATOR_LIMITS.maxDurationDays * 86_400_000) {
-      return fail(`모금 기간은 최대 ${CREATOR_LIMITS.maxDurationDays}일입니다.`);
+      return fail(`모금 기간은 최대 ${CREATOR_LIMITS.maxDurationDays}일이에요.`);
     }
     return { startAt, endAt };
   })();
@@ -264,7 +264,7 @@ export const validateStorySection = (input: unknown): { ok: true; value: StorySe
   if (typeof d.content !== 'string') return fail('본문을 확인해 주세요.');
   const content = d.content;
   if (content.length > CREATOR_LIMITS.contentMax) {
-    return fail(`본문은 ${CREATOR_LIMITS.contentMax}자를 넘을 수 없습니다.`);
+    return fail(`본문은 ${CREATOR_LIMITS.contentMax}자를 넘을 수 없어요.`);
   }
   return { ok: true, value: { content } };
 };
@@ -315,12 +315,12 @@ export const validateCreatorSection = (input: unknown): { ok: true; value: Creat
   let links: string[] | null = null;
   if (d.links !== undefined && d.links !== null) {
     if (!Array.isArray(d.links) || d.links.length > CREATOR_LIMITS.linksMax) {
-      return fail(`링크는 최대 ${CREATOR_LIMITS.linksMax}개까지 넣을 수 있습니다.`);
+      return fail(`링크는 최대 ${CREATOR_LIMITS.linksMax}개까지 넣을 수 있어요.`);
     }
     const parsed: string[] = [];
     for (const raw of d.links) {
       const v = str(raw);
-      if (!v || !isSafeCreatorLink(v)) return fail('링크는 http(s)로 시작하는 주소만 넣을 수 있습니다.');
+      if (!v || !isSafeCreatorLink(v)) return fail('링크는 http(s)로 시작하는 주소만 넣을 수 있어요.');
       parsed.push(v);
     }
     links = parsed;
@@ -474,7 +474,7 @@ export const validateRewardInput = (
 
   const rewardId = str(d.rewardId);
   if (!rewardId || rewardId.length > CREATOR_LIMITS.rewardIdMax || !REWARD_ID_PATTERN.test(rewardId)) {
-    return fail('리워드 id는 영문 소문자·숫자·하이픈만 쓸 수 있습니다.');
+    return fail('리워드 id는 영문 소문자·숫자·하이픈만 쓸 수 있어요.');
   }
 
   const title = str(d.title);
@@ -501,7 +501,7 @@ export const validateRewardInput = (
   if (d.totalQuantity !== null && d.totalQuantity !== undefined) {
     const v = d.totalQuantity;
     if (typeof v !== 'number' || !Number.isInteger(v) || v <= 0) {
-      return fail('한정 수량은 1 이상의 정수여야 합니다.');
+      return fail('한정 수량은 1 이상의 정수여야 해요.');
     }
     totalQuantity = v;
   }

@@ -55,7 +55,7 @@ const SIGNUP_IP_WINDOW_SECONDS = 3_600;
  * "등록되지 않은 이메일입니다"라고 답하면 이 화면이 **누가 개설자인지 알려 주는 조회기**가
  * 된다. 보낸 척과 실제로 보낸 것을 밖에서 구분할 수 없어야 한다.
  */
-const OK = { ok: true, message: '로그인 링크를 보냈습니다. 메일함을 확인해 주세요.' };
+const OK = { ok: true, message: '로그인 링크를 보냈어요. 메일함을 확인해 주세요.' };
 
 /**
  * rate_limits.key에 평문 이메일을 남기지 않는다. 이 테이블은 10분 창이 지나도 즉시
@@ -87,7 +87,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const ip = getClientIp(req) ?? 'unknown';
   if (!(await consumeRateLimit(`creator_login:ip:${ip}`, IP_LIMIT, WINDOW_SECONDS))) {
-    return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
   }
   if (!(await consumeRateLimit(emailRateLimitKey(email), EMAIL_LIMIT, WINDOW_SECONDS))) {
     // 한 주소로 링크를 퍼붓는 것을 막는다. 여기서도 같은 200을 돌려준다 — 429를 주면

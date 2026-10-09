@@ -39,13 +39,13 @@ const ALREADY_PROCESSED_CODE = 'ALREADY_PROCESSED_PAYMENT';
 const DECLINE_CODE_PATTERN =
   /^(REJECT_|INVALID_REJECT_CARD|EXCEED_MAX_|INVALID_CARD|INVALID_STOPPED_CARD$|INVALID_ACCOUNT_INFO|NOT_ENOUGH_BALANCE$|NOT_AVAILABLE_BANK$|CARD_PROCESSING_ERROR$|PAY_PROCESS_(CANCELED|ABORTED)$)/;
 
-const GENERIC_TOSS_ERROR_MESSAGE = '결제 승인 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
-const INVALID_STATE_MESSAGE = '이미 처리되었거나 만료된 주문입니다.';
+const GENERIC_TOSS_ERROR_MESSAGE = '결제 승인 중 오류가 발생했어요. 잠시 후 다시 시도해 주세요.';
+const INVALID_STATE_MESSAGE = '이미 처리되었거나 만료된 주문이에요.';
 const RECORDING_FAILED_MESSAGE =
-  '결제는 완료되었으나 확정 처리가 지연되고 있습니다. 몇 분 내 자동 확정되며, 지속되면 010-4255-7893으로 연락 주세요.';
-const STALE_APPROVAL_MESSAGE = '주문이 처리된 뒤 결제가 승인되어 자동으로 취소되었습니다. 결제 금액은 취소 처리되었으니 다시 결제해 주세요.';
+  '결제는 완료되었으나 확정 처리가 지연되고 있어요. 몇 분 내 자동 확정되며, 지속되면 010-4255-7893으로 연락 주세요.';
+const STALE_APPROVAL_MESSAGE = '주문이 처리된 뒤 결제가 승인되어 자동으로 취소됐어요. 결제 금액은 취소 처리되었으니 다시 결제해 주세요.';
 const AUTO_CANCEL_FAILED_MESSAGE =
-  '결제 확인 중 문제가 발생했습니다. 결제가 이뤄졌다면 확인 후 환불해 드립니다. 문의: 010-4255-7893';
+  '결제 확인 중 문제가 발생했어요. 결제가 이뤄졌다면 확인 후 환불해 드려요. 문의: 010-4255-7893';
 const AUTO_CANCEL_REASON = '주문 상태 변경 후 승인 — 자동 전액 취소';
 
 const receiptOf = (order: { payments: { paymentKey: string; receiptUrl: string | null }[] }, paymentKey?: string): string | null =>
@@ -103,7 +103,7 @@ const notifyOperator = async (order: Order, approved: TossPayment): Promise<void
       to: OPERATOR_EMAIL,
       subject: `[예약금 결제] ${formatPriceAmount(order.totalAmount)}원 — ${order.customerName}`,
       text: [
-        '예약금 결제가 완료되었습니다.',
+        '예약금 결제가 완료됐어요.',
         `금액: ${formatPriceAmount(order.totalAmount)}원 (VAT 포함)`,
         `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
         `주문번호: ${order.orderNo}`,
@@ -115,7 +115,7 @@ const notifyOperator = async (order: Order, approved: TossPayment): Promise<void
       html: buildEmailLayout({
         audience: 'operator',
         preheader: `${order.customerName} · ${formatPriceAmount(order.totalAmount)}원`,
-        heading: '예약금 결제가 완료되었습니다',
+        heading: '예약금 결제가 완료됐어요',
         rows: [
           { label: '고객', value: order.customerName },
           { label: '연락처', value: order.customerPhone, href: `tel:${order.customerPhone.replace(/[^0-9+]/g, '')}` },
@@ -140,7 +140,7 @@ export const confirmDepositPayment = async (
   options: { trustedByWebhook?: boolean } = {},
 ): Promise<DepositConfirmOutcome> => {
   const order = await findOrderByOrderNo(input.orderNo);
-  if (!order) return { ok: false, code: 'not_found', message: '주문을 찾을 수 없습니다.' };
+  if (!order) return { ok: false, code: 'not_found', message: '주문을 찾을 수 없어요.' };
   if (order.type !== 'deposit') return { ok: false, code: 'invalid_state', message: INVALID_STATE_MESSAGE };
 
   const replay = (): DepositConfirmOutcome => ({
@@ -176,7 +176,7 @@ export const confirmDepositPayment = async (
 
   // 서버가 저장한 금액이 유일한 진실 — 다르면 토스를 부르지도 않는다.
   if (input.amount !== order.totalAmount)
-    return { ok: false, code: 'amount_mismatch', message: '결제 금액이 주문과 일치하지 않습니다.' };
+    return { ok: false, code: 'amount_mismatch', message: '결제 금액이 주문과 일치하지 않아요.' };
 
   const db = getDb();
   const toss = await confirmPayment({

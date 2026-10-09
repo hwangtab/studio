@@ -42,8 +42,8 @@ import { pledgeDownloads } from '../../../lib/funding/shape';
  * 확정 화면의 버튼(form POST)에서만 시작된다 — 사람이 누른 것만 기록에 남는다.
  */
 
-const NOT_FOUND = { ok: false, message: '펀딩 내역을 찾을 수 없습니다.' } as const;
-const REFUND_REQUESTED_MESSAGE = '취소(환불)를 요청한 펀딩은 내려받을 수 없습니다. 요청을 거두려면 010-4255-7893으로 연락 주세요.';
+const NOT_FOUND = { ok: false, message: '펀딩 내역을 찾을 수 없어요.' } as const;
+const REFUND_REQUESTED_MESSAGE = '취소(환불)를 요청한 펀딩은 내려받을 수 없어요. 요청을 거두려면 010-4255-7893으로 연락 주세요.';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -51,12 +51,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const ip = getClientIp(req) ?? 'unknown';
   if (!(await consumeRateLimit(`funding_download:ip:${ip}`, 60, 3600)))
-    return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
 
   // 폼 전송이라 본문으로 온다. 쿼리는 보지 않는다 — 받으면 GET과 같은 구멍이 우회로로 남는다.
   const { orderNo, token, file } = (req.body ?? {}) as Record<string, unknown>;
   if (typeof orderNo !== 'string' || typeof token !== 'string' || typeof file !== 'string' || !orderNo || !token)
-    return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
+    return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않아요.' });
 
   const order = await findFundingOrderByOrderNo(orderNo);
   // 주문 부재와 토큰 불일치를 같은 404로 — 다르게 답하면 주문의 존재를 떠볼 수 있다.
@@ -66,7 +66,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // 환불·취소된 건에는 내려주지 않는다. 화면 쪽 판정과 같은 집합을 쓴다.
   if (!isLiveFundingOrderStatus(order.status))
-    return res.status(409).json({ ok: false, message: '결제가 살아 있는 펀딩만 내려받을 수 있습니다.' });
+    return res.status(409).json({ ok: false, message: '결제가 살아 있는 펀딩만 내려받을 수 있어요.' });
   /**
    * **취소(환불)를 요청한 펀딩은 내려주지 않는다.** 계좌 입금 셀프 취소는 운영자가 송금할 때까지
    * 주문을 paid로 두고 `refund_requested_at`만 찍는다 — 주문 상태만 보면 요청 뒤에 내려받고 환불도
@@ -82,7 +82,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    */
   const { project, lookupFailed } = await getFundingProjectOrFailure(pledge.projectSlug);
   if (lookupFailed) {
-    return res.status(503).json({ ok: false, message: '지금은 내려받을 수 없습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(503).json({ ok: false, message: '지금은 내려받을 수 없어요. 잠시 후 다시 시도해 주세요.' });
   }
   // `file`은 **이 후원자가 담은 리워드들이 주는 키**와 일치해야 한다. 목록에 없는 값을 넘겨
   // 다른 티어의 파일이나 버킷의 다른 객체에 서명을 받아 내지 못하게 한다.
@@ -98,7 +98,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     signedUrl = await presignFundingDownload(target.key);
   } catch (error) {
     console.error('[funding-download] 서명 주소 발급 실패', { orderNo: order.orderNo, key: target.key, error });
-    return res.status(503).json({ ok: false, message: '지금은 내려받을 수 없습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(503).json({ ok: false, message: '지금은 내려받을 수 없어요. 잠시 후 다시 시도해 주세요.' });
   }
 
   /**
@@ -114,11 +114,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } catch (error) {
     // "없다"가 아니라 "모르겠다" — 헛경보를 보내지 않고 재시도를 안내한다.
     console.error('[funding-download] 객체 확인 실패', { orderNo: order.orderNo, key: target.key, error });
-    return res.status(503).json({ ok: false, message: '지금은 내려받을 수 없습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(503).json({ ok: false, message: '지금은 내려받을 수 없어요. 잠시 후 다시 시도해 주세요.' });
   }
   if (!objectExists) {
     await alertMissingDownloadObject({ key: target.key, orderNo: order.orderNo, orderId: order.id });
-    return res.status(503).json({ ok: false, message: '파일을 준비하지 못했습니다. 운영자에게 알렸습니다.' });
+    return res.status(503).json({ ok: false, message: '파일을 준비하지 못했어요. 운영자에게 알렸어요.' });
   }
 
   /**
@@ -175,8 +175,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       message: refundRequested
         ? REFUND_REQUESTED_MESSAGE
         : refundDone
-        ? '이미 취소된 후원입니다. 내려받을 수 없습니다.'
-        : '취소 처리 중입니다. 잠시 후 다시 시도해 주세요.',
+        ? '이미 취소된 후원이에요. 내려받을 수 없어요.'
+        : '취소 처리 중이에요. 잠시 후 다시 시도해 주세요.',
     });
   }
 

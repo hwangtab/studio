@@ -310,7 +310,7 @@ describe('cancelFundingPledge', () => {
     await client.execute("INSERT INTO refunds (id,payment_id,amount,reason,requested_by,status) VALUES ('r3','p2',5000,'전액','webhook','done')");
 
     const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: 'r', now: NOW });
-    expect(r).toMatchObject({ ok: false, code: 'invalid_state', message: '환불할 잔액이 없습니다.' });
+    expect(r).toMatchObject({ ok: false, code: 'invalid_state', message: '환불할 잔액이 없어요.' });
     expect(cancelPayment).not.toHaveBeenCalled();
     expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('partially_refunded');
   });
@@ -321,7 +321,7 @@ describe('cancelFundingPledge', () => {
     await client.execute({ sql: "UPDATE orders SET status='partially_refunded' WHERE order_no=?", args: [c.orderNo] });
     await client.execute("INSERT INTO refunds (id,payment_id,amount,reason,requested_by,status) VALUES ('r4','p1',5000,'전액','admin','done')");
     const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: 'r', now: NOW });
-    expect(r).toMatchObject({ ok: false, code: 'invalid_state', message: '환불할 잔액이 없습니다.' });
+    expect(r).toMatchObject({ ok: false, code: 'invalid_state', message: '환불할 잔액이 없어요.' });
     expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('partially_refunded');
   });
 

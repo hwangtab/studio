@@ -30,22 +30,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const auth = await authenticateCreatorApi(req, res);
-  if (!auth.ok) return res.status(401).json({ ok: false, message: '로그인이 필요합니다.' });
+  if (!auth.ok) return res.status(401).json({ ok: false, message: '로그인이 필요해요.' });
 
   const projectId = typeof req.query.id === 'string' ? req.query.id : '';
-  if (!projectId) return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
+  if (!projectId) return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않아요.' });
 
   // submit.ts와 같은 예산을 공유한다 — 둘 다 "개설자가 자기 프로젝트 상태를 바꾸는" 같은
   // 범주의 쓰기라, 따로 두면 한쪽 예산만 소진해 다른 쪽을 우회하는 경로가 생긴다.
   if (!(await consumeRateLimit(`creator_save:${auth.creatorId}`, 30, 60))) {
-    return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
   }
 
   const project = await loadProjectForCreator(auth.creatorId, projectId);
-  if (!project) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없습니다.' });
+  if (!project) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없어요.' });
 
   const next = nextReviewStatus(project.reviewStatus as FundingReviewStatus, 'withdraw');
-  if (!next) return res.status(409).json({ ok: false, message: '지금 상태에서는 철회할 수 없습니다.' });
+  if (!next) return res.status(409).json({ ok: false, message: '지금 상태에서는 철회할 수 없어요.' });
 
   const now = new Date();
   // submit.ts와 같은 이유의 낙관적 잠금이다 — 읽고 나서 쓰는 사이(loadProjectForCreator
@@ -69,7 +69,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // reviewDecision.ts(운영자 승인·반려 경로)의 같은 상황과 같은 문구다 — 여기서만 다르게
     // 말하면 "왜 갑자기 안 되지"에 대한 답이 화면마다 달라진다. 이 409는 위(!next)와
     // 달리 경합(그 사이 운영자가 먼저 확정)이라 새로고침하면 최신 상태가 보인다.
-    return res.status(409).json({ ok: false, message: '그 사이 상태가 바뀌었습니다. 새로고침 후 다시 확인해 주세요.' });
+    return res.status(409).json({ ok: false, message: '그 사이 상태가 바뀌었어요. 새로고침 후 다시 확인해 주세요.' });
   }
 
   try {

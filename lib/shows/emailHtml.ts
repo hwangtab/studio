@@ -56,11 +56,11 @@ const ticketCards = (tickets: TicketEmailHtmlInput['tickets']): string => {
 export const buildShowTicketEmailHtml = (d: TicketEmailHtmlInput): string =>
   buildEmailLayout({
     preheader: `${d.showTitle} ${d.when} — 내 티켓(QR)을 열어 입장하세요.`,
-    heading: '티켓이 발권되었습니다',
+    heading: '티켓이 발권됐어요',
     hero: d.posterUrl ? { imageUrl: d.posterUrl, alt: d.showTitle } : undefined,
     paragraphs: [
-      `${escapeHtml(d.buyerName)}님, 결제가 확인되었습니다.`,
-      `입장은 ${strong('비지정석 선착순')}입니다. 현장에서 아래 버튼의 QR이나 첨부 이미지를 보여 주세요.`,
+      `${escapeHtml(d.buyerName)}님, 결제가 확인됐어요.`,
+      `입장은 ${strong('비지정석 선착순')}이에요. 현장에서 아래 버튼의 QR이나 첨부 이미지를 보여 주세요.`,
     ],
     rows: [
       { label: '공연', value: d.showSubtitle ? `${d.showTitle} — ${d.showSubtitle}` : d.showTitle },
@@ -73,7 +73,7 @@ export const buildShowTicketEmailHtml = (d: TicketEmailHtmlInput): string =>
     cta: { label: '내 티켓(QR) 열기', url: d.manageUrl },
     notices: [
       ...(d.refundLines.length > 0 ? [`${strong('취소·환불 규정')}<br />${d.refundLines.map(escapeHtml).join('<br />')}`] : []),
-      '환불 신청은 "내 티켓" 페이지에서 티켓별로 할 수 있습니다.',
+      '환불 신청은 "내 티켓" 페이지에서 티켓별로 할 수 있어요.',
     ],
   });
 
@@ -86,15 +86,15 @@ export type ShowRefundVia = 'payment' | 'bank_account' | 'bank_account_sent';
 
 /** 메일 제목·머리말·첫 줄 — 고객 요청 계좌 환불은 아직 돈이 안 갔으니 "완료"라고 쓰지 않는다. */
 export const showRefundHeading = (refundVia: ShowRefundVia | undefined): string =>
-  refundVia === 'bank_account' ? '환불 요청을 접수했습니다' : '환불이 완료되었습니다';
+  refundVia === 'bank_account' ? '환불 요청을 접수했어요' : '환불이 완료됐어요';
 
 /** 환불 방법 한 줄. */
 export const showRefundViaSentence = (refundVia: ShowRefundVia | undefined): string =>
   refundVia === 'bank_account'
-    ? '계좌로 입금하신 주문이라 적어 주신 환불 계좌로 접수일부터 3영업일 이내에 보내 드립니다. 계좌를 잘못 적으셨다면 이 메일에 회신해 주세요.'
+    ? '계좌로 입금하신 주문이라 적어 주신 환불 계좌로 접수일부터 3영업일 이내에 보내 드려요. 계좌를 잘못 적으셨다면 이 메일에 회신해 주세요.'
     : refundVia === 'bank_account_sent'
-      ? '계좌로 입금하신 주문이라 환불 금액을 계좌로 보내 드렸습니다. 받지 못하셨다면 이 메일에 회신해 주세요.'
-      : '카드 결제는 카드사에 따라 취소 반영까지 영업일 기준 며칠이 걸릴 수 있습니다.';
+      ? '계좌로 입금하신 주문이라 환불 금액을 계좌로 보내 드렸어요. 받지 못하셨다면 이 메일에 회신해 주세요.'
+      : '카드 결제는 카드사에 따라 취소 반영까지 영업일 기준 며칠이 걸릴 수 있어요.';
 
 /**
  * 회차 취소 안내의 환불 문장. `bankNotice` — 계좌 입금 주문은 토스로 돌려줄 수 없다: 입금이 확인된 주문은
@@ -103,11 +103,11 @@ export const showRefundViaSentence = (refundVia: ShowRefundVia | undefined): str
 export const showtimeCancelledRefundSentence = (d: {
   totalAmount: number; refundCompleted: boolean; bankNotice?: 'refund_account_needed' | 'not_deposited';
 }): string => {
-  if (d.bankNotice === 'not_deposited') return '입금 전인 신청은 함께 취소되었습니다. 입금하지 않으셔도 됩니다. 이미 보내셨다면 이 메일에 회신해 주세요 — 확인해 돌려드립니다.';
-  if (d.bankNotice === 'refund_account_needed') return `계좌로 입금하신 ${formatPriceAmount(d.totalAmount)}원은 전액 돌려드립니다. 아래 "주문 내역 보기"에서 환불받을 계좌를 적어 주시면 3영업일 이내에 보내 드립니다.`;
+  if (d.bankNotice === 'not_deposited') return '입금 전인 신청은 함께 취소됐어요. 입금하지 않으셔도 돼요. 이미 보내셨다면 이 메일에 회신해 주세요 — 확인해 돌려드려요.';
+  if (d.bankNotice === 'refund_account_needed') return `계좌로 입금하신 ${formatPriceAmount(d.totalAmount)}원은 전액 돌려드려요. 아래 "주문 내역 보기"에서 환불받을 계좌를 적어 주시면 3영업일 이내에 보내 드려요.`;
   return d.refundCompleted
-    ? `결제하신 ${formatPriceAmount(d.totalAmount)}원은 전액 환불 처리되었습니다. 카드사에 따라 취소 반영까지 영업일 기준 며칠이 걸릴 수 있습니다.`
-    : '환불은 접수되어 처리 중입니다. 완료되면 다시 안내드립니다.';
+    ? `결제하신 ${formatPriceAmount(d.totalAmount)}원은 전액 환불 처리됐어요. 카드사에 따라 취소 반영까지 영업일 기준 며칠이 걸릴 수 있어요.`
+    : '환불은 접수되어 처리 중이에요. 완료되면 다시 안내드려요.';
 };
 
 export const buildShowRefundEmailHtml = (d: {
@@ -119,11 +119,11 @@ export const buildShowRefundEmailHtml = (d: {
     heading: showRefundHeading(d.refundVia),
     paragraphs: [
       d.refundVia === 'bank_account'
-        ? `${escapeHtml(d.buyerName)}님, 신청하신 환불을 접수했습니다.`
-        : `${escapeHtml(d.buyerName)}님, 신청하신 환불이 처리되었습니다.`,
+        ? `${escapeHtml(d.buyerName)}님, 신청하신 환불을 접수했어요.`
+        : `${escapeHtml(d.buyerName)}님, 신청하신 환불이 처리됐어요.`,
       d.fullyRefunded
-        ? '이 주문의 티켓은 모두 환불되어 입장에 사용할 수 없습니다.'
-        : '환불한 티켓은 입장에 사용할 수 없습니다. 남은 티켓은 그대로 사용할 수 있습니다.',
+        ? '이 주문의 티켓은 모두 환불되어 입장에 사용할 수 없어요.'
+        : '환불한 티켓은 입장에 사용할 수 없어요. 남은 티켓은 그대로 사용할 수 있어요.',
     ],
     rows: [
       { label: '공연', value: `${d.showTitle} ${d.when}` },
@@ -140,10 +140,10 @@ export const buildShowtimeCancelledEmailHtml = (d: {
   bankNotice?: 'refund_account_needed' | 'not_deposited';
 }): string => {
   return buildEmailLayout({
-    preheader: `${d.showTitle} ${d.when} 회차가 취소되었습니다.`,
-    heading: '공연 회차가 취소되었습니다',
+    preheader: `${d.showTitle} ${d.when} 회차가 취소됐어요.`,
+    heading: '공연 회차가 취소됐어요',
     paragraphs: [
-      `${escapeHtml(d.buyerName)}님, 예매하신 회차가 취소되어 안내드립니다.`,
+      `${escapeHtml(d.buyerName)}님, 예매하신 회차가 취소되어 안내드려요.`,
       escapeHtml(showtimeCancelledRefundSentence(d)),
     ],
     rows: [

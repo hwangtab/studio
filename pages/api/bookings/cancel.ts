@@ -14,20 +14,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const ip = getClientIp(req) ?? 'unknown';
   if (!(await consumeRateLimit(`booking_cancel:ip:${ip}`, 10, 3600)))
-    return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
 
   if (typeof req.body !== 'object' || req.body === null || Array.isArray(req.body))
-    return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
+    return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않아요.' });
 
   const { orderNo, token, refundAccount } = req.body as Record<string, unknown>;
   if (typeof orderNo !== 'string' || orderNo.trim() === '' || typeof token !== 'string' || token.trim() === '')
-    return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
+    return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않아요.' });
 
   // 주문 부재와 토큰 불일치를 같은 응답으로 답한다 — 어느 쪽인지 구분해 주면 orderNo
   // 존재 여부를 토큰 없이도 확인하는 창구가 된다.
   const order = await findOrderByOrderNo(orderNo);
   if (!order || !isTokenMatch(order.manageToken, token))
-    return res.status(404).json({ ok: false, message: '주문을 찾을 수 없습니다.' });
+    return res.status(404).json({ ok: false, message: '주문을 찾을 수 없어요.' });
 
   /**
    * 계좌 입금 **대기** 중인 신청은 돈이 오가지 않았으니 환불이 아니라 신청 취소다 — 시간대를 바로 풀고 고객 메일은

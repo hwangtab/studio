@@ -74,7 +74,7 @@ export const buildBookingHub = (): BookingHubGroup[] => {
     {
       id: 'recording',
       title: '보컬 녹음',
-      description: '전담 엔지니어와 함께 녹음합니다. 날짜와 시간을 고르고 바로 결제하면 확정 메일이 갑니다.',
+      description: '전담 엔지니어와 함께 녹음해요. 날짜와 시간을 고르고 바로 결제하면 확정 메일이 가요.',
       priceNote: '부가세 별도',
       href: '/ko/booking/recording',
       entries: [
@@ -103,7 +103,7 @@ export const buildBookingHub = (): BookingHubGroup[] => {
     {
       id: 'cover-video',
       title: '커버 영상',
-      description: '촬영·녹음·믹싱을 한 세션에. 4K 영상과 음원을 함께 드립니다.',
+      description: '촬영·녹음·믹싱을 한 세션에. 4K 영상과 음원을 함께 드려요.',
       priceNote: '부가세 별도',
       href: '/ko/booking/cover-video',
       entries: [sessionEntry('cover-video', '촬영 + 보컬 녹음 + 믹싱 + 4K 편집', '커버 영상 올인원')],
@@ -111,7 +111,7 @@ export const buildBookingHub = (): BookingHubGroup[] => {
     {
       id: 'practice-room',
       title: '음악연습실 시간제',
-      description: '24시간 방음 개인실을 1시간부터 쓸 수 있습니다. 예약 후 확정 메일로 입장 안내를 받습니다.',
+      description: '24시간 방음 개인실을 1시간부터 쓸 수 있어요. 예약 후 확정 메일로 입장 안내를 받아요.',
       priceNote: '부가세 포함',
       href: '/ko/booking/practice-room',
       entries: [
@@ -128,7 +128,7 @@ export const buildBookingHub = (): BookingHubGroup[] => {
     {
       id: 'mixing-mastering',
       title: '믹싱·마스터링 의뢰',
-      description: '날짜 예약이 아니라 파일 주문입니다. 믹싱과 마스터링을 한 번에 맡기려면 위의 \"믹싱+마스터링\"을 고르세요. 결제 후 확인 메일에 파일 링크로 회신하면 작업을 시작합니다. 방문은 필요 없습니다.',
+      description: '날짜 예약이 아니라 파일 주문이에요. 믹싱과 마스터링을 한 번에 맡기려면 위의 \"믹싱+마스터링\"을 고르세요. 결제 후 확인 메일에 파일 링크로 회신하면 작업을 시작해요. 방문은 필요 없어요.',
       priceNote: '부가세 별도 · 곡당',
       href: '/ko/booking/mixing-mastering',
       entries: [
@@ -148,8 +148,8 @@ export const buildBookingHub = (): BookingHubGroup[] => {
 
 /** 온라인 결제가 없는 상품 — 문의로 진행한다. 랜딩 하단에 "그 밖의 의뢰"로 링크만 건다. */
 export const BOOKING_HUB_INQUIRY_LINKS: readonly { label: string; description: string; href: string }[] = [
-  { label: '음악연습실 월 입주', description: '월 단위 입주는 상담 후 계약합니다.', href: '/ko/practice-room' },
-  { label: '프로듀싱 레슨', description: '미디·작곡·믹싱 1:1 레슨. 첫 상담은 무료입니다.', href: '/ko/lesson' },
+  { label: '음악연습실 월 입주', description: '월 단위 입주는 상담 후 계약해요.', href: '/ko/practice-room' },
+  { label: '프로듀싱 레슨', description: '미디·작곡·믹싱 1:1 레슨. 첫 상담은 무료예요.', href: '/ko/lesson' },
   { label: '발매 프로젝트', description: '기획부터 유통·홍보까지. 싱글·EP·정규.', href: '/ko/release-project' },
   { label: '음원 발매 홍보', description: '이미 발매한 음원의 보도자료·매체 발송.', href: '/ko/music-promotion' },
   { label: '크라우드펀딩 설계 대행', description: '텀블벅 등 펀딩 페이지 기획·제작.', href: '/ko/crowdfunding-design' },

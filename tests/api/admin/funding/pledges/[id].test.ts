@@ -227,7 +227,7 @@ it('set_fulfillment: 환불 요청된 펀딩은 409이고 DB를 건드리지 않
   expect(r.status).toBe(409);
   expect(r.body).toEqual({
     ok: false,
-    message: '환불 요청된 펀딩입니다. 환불을 처리하거나 요청을 취소한 뒤에 발송 상태를 바꿔 주세요.',
+    message: '환불 요청된 펀딩이에요. 환불을 처리하거나 요청을 취소한 뒤에 발송 상태를 바꿔 주세요.',
   });
   expect(mockRun).not.toHaveBeenCalled();
 });

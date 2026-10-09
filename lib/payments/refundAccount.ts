@@ -43,7 +43,7 @@ export const validateRefundAccount = (raw: unknown): { ok: true; value: RefundAc
     return { ok: false, message: '환불받을 은행·계좌번호·예금주를 모두 적어 주세요.' };
   }
   if (bankName.length > REFUND_ACCOUNT_LIMITS.bankName || accountHolder.length > REFUND_ACCOUNT_LIMITS.accountHolder) {
-    return { ok: false, message: `은행과 예금주는 ${REFUND_ACCOUNT_LIMITS.bankName}자까지 적을 수 있습니다.` };
+    return { ok: false, message: `은행과 예금주는 ${REFUND_ACCOUNT_LIMITS.bankName}자까지 적을 수 있어요.` };
   }
   const digits = accountNumber.replace(/[^0-9]/g, '');
   if (accountNumber.length > REFUND_ACCOUNT_LIMITS.accountNumber || !/^[0-9\- ]+$/.test(accountNumber) || digits.length < 8 || digits.length > 20) {

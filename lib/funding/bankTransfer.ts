@@ -59,8 +59,8 @@ export const payoutWarningOf = (state: ProjectPayoutState): string | null =>
   state === null
     ? null
     : state.status === 'paid'
-      ? '이 프로젝트는 정산을 이미 이체했습니다 — 이 입금을 확정하면 개설자에게 추가로 보낼 몫이 생깁니다. 정산 패널에서 차액을 확인해 주세요.'
-      : '이 프로젝트는 정산이 기록됐습니다 — 확정하면 개설자에게 보낼 금액이 늘어납니다. 이체 전에 정산 패널의 계산값을 다시 확인해 주세요.';
+      ? '이 프로젝트는 정산을 이미 이체했어요 — 이 입금을 확정하면 개설자에게 추가로 보낼 몫이 생겨요. 정산 패널에서 차액을 확인해 주세요.'
+      : '이 프로젝트는 정산이 기록됐어요 — 확정하면 개설자에게 보낼 금액이 늘어나요. 이체 전에 정산 패널의 계산값을 다시 확인해 주세요.';
 
 /**
  * **입금 확인** — 운영자가 통장에서 입금을 확인하고 누른다. `pending`(그리고 늦은 입금을 위해
@@ -80,9 +80,9 @@ export const payoutWarningOf = (state: ProjectPayoutState): string | null =>
  */
 export const confirmBankDeposit = async (input: { orderId: string; now: Date }): Promise<BankDepositOutcome> => {
   const order = await findFundingOrderById(input.orderId);
-  if (!order?.fundingPledge) return { ok: false, code: 'not_found', message: '펀딩 내역을 찾을 수 없습니다.' };
+  if (!order?.fundingPledge) return { ok: false, code: 'not_found', message: '펀딩 내역을 찾을 수 없어요.' };
   if (order.fundingPledge.paymentMethod !== 'bank_transfer') {
-    return { ok: false, code: 'not_bank_transfer', message: '계좌 입금 펀딩이 아닙니다.' };
+    return { ok: false, code: 'not_bank_transfer', message: '계좌 입금 펀딩이 아니에요.' };
   }
   const project = await getFundingProjectAsync(order.fundingPledge.projectSlug);
   /**
@@ -93,7 +93,7 @@ export const confirmBankDeposit = async (input: { orderId: string; now: Date }):
    * 않는다(fail-closed — 잠시 뒤 다시 누르면 된다).
    */
   if (!project) {
-    return { ok: false, code: 'project_unavailable', message: '프로젝트 정보를 읽지 못해 재고를 확인할 수 없습니다. 잠시 뒤 다시 눌러 주세요.' };
+    return { ok: false, code: 'project_unavailable', message: '프로젝트 정보를 읽지 못해 재고를 확인할 수 없어요. 잠시 뒤 다시 눌러 주세요.' };
   }
   const lines = activePledgeLines(pledgeLines(order.fundingPledge));
   const resolved: ResolvedPledgeLine[] = lines.flatMap((l) => {
@@ -127,10 +127,10 @@ export const confirmBankDeposit = async (input: { orderId: string; now: Date }):
       const limited = resolved.filter((l) => l.reward.totalQuantity !== null).map((l) => l.reward.title).join(', ');
       return {
         ok: false, code: 'sold_out',
-        message: `한정 리워드(${limited})의 남은 수량이 모자라 확정할 수 없습니다. 후원자와 리워드 변경이나 환불을 협의해 주세요(받은 돈이 있으면 계좌로 돌려줘야 합니다).`,
+        message: `한정 리워드(${limited})의 남은 수량이 모자라 확정할 수 없어요. 후원자와 리워드 변경이나 환불을 협의해 주세요(받은 돈이 있으면 계좌로 돌려줘야 해요).`,
       };
     }
-    return { ok: false, code: 'invalid_state', message: '이미 확인됐거나 입금을 확인할 수 있는 상태가 아닙니다. 새로고침해 주세요.' };
+    return { ok: false, code: 'invalid_state', message: '이미 확인됐거나 입금을 확인할 수 있는 상태가 아니에요. 새로고침해 주세요.' };
   }
   const fresh = (await findFundingOrderById(order.id)) ?? order;
   const emailSent = await deliverConfirmedEmailsOnce(fresh);
@@ -158,7 +158,7 @@ export const cancelUnpaidBankDeposit = async (order: Pick<FundingOrder, 'id'>): 
       AND EXISTS (SELECT 1 FROM funding_pledges WHERE order_id = ${order.id} AND payment_method = 'bank_transfer' AND entry_source = 'online')
   `);
   if (rowsAffectedOf(result) === 0) {
-    return { ok: false, code: 'invalid_state', message: '입금 대기 중인 계좌 입금 신청이 아닙니다. 새로고침해 주세요.' };
+    return { ok: false, code: 'invalid_state', message: '입금 대기 중인 계좌 입금 신청이 아니에요. 새로고침해 주세요.' };
   }
   return { ok: true };
 };

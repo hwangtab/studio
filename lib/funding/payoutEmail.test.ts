@@ -84,7 +84,7 @@ describe('정산 메일 본문', () => {
 
   it('계좌를 읽지 못하면 그 사실을 적는다 — 빈 칸으로 두지 않는다', () => {
     const text = buildFundingPayoutRecordedText('데모', PAYOUT, null);
-    expect(text).toContain('등록된 계좌 정보를 읽지 못했습니다');
+    expect(text).toContain('등록된 계좌 정보를 읽지 못했어요');
   });
 
   it('지급 메일은 메모를 함께 싣는다', () => {

@@ -28,7 +28,7 @@ export type DecisionResult =
       message: string;
     };
 
-const STALE_VERSION_MESSAGE = '그 사이 개설자가 수정해 다시 제출했습니다. 새로고침해 새 판본을 확인해 주세요.';
+const STALE_VERSION_MESSAGE = '그 사이 개설자가 수정해 다시 제출했어요. 새로고침해 새 판본을 확인해 주세요.';
 
 const deny = (code: Exclude<DecisionResult, { ok: true }>['code'], message: string): DecisionResult => ({
   ok: false,
@@ -54,7 +54,7 @@ export const decideProject = async (
   now: Date = new Date(),
 ): Promise<DecisionResult> => {
   const project = await loadProjectForAdmin(projectId);
-  if (!project) return deny('not_found', '프로젝트를 찾을 수 없습니다.');
+  if (!project) return deny('not_found', '프로젝트를 찾을 수 없어요.');
 
   /**
    * 운영자가 **본 판본**이 지금 판본인지 확인한다. 화면을 연 뒤 개설자가 철회 → 수정 →
@@ -77,7 +77,7 @@ export const decideProject = async (
       : eq(fundingProjects.submittedAt, new Date(expectedSubmittedAtMs));
 
   const next = nextReviewStatus(project.reviewStatus, action);
-  if (!next) return deny('conflict', '지금 상태에서는 그 판정을 할 수 없습니다.');
+  if (!next) return deny('conflict', '지금 상태에서는 그 판정을 할 수 없어요.');
 
   const note = input.note?.trim() || null;
   // 보완 요청·반려·보관 셋 다 "왜"를 개설자에게 알리는 것이 약관 §2의 약속이다(승인은
@@ -85,9 +85,9 @@ export const decideProject = async (
   // 상태로 돌려보낸다 — 반려·보관은 되돌릴 수 없는 종착 상태라(reviewTransition.ts)
   // 보완 요청보다 오히려 더 절실하다.
   const NOTE_REQUIRED_MESSAGE: Record<'request_changes' | 'reject' | 'archive', string> = {
-    reject: '반려에는 사유 메모가 필요합니다.',
-    archive: '보관에는 사유 메모가 필요합니다.',
-    request_changes: '보완 요청에는 안내 메모가 필요합니다.',
+    reject: '반려에는 사유 메모가 필요해요.',
+    archive: '보관에는 사유 메모가 필요해요.',
+    request_changes: '보완 요청에는 안내 메모가 필요해요.',
   };
   if ((action === 'request_changes' || action === 'reject' || action === 'archive') && !note) {
     return deny('incomplete', NOTE_REQUIRED_MESSAGE[action]);
@@ -130,7 +130,7 @@ export const decideProject = async (
       .where(and(eq(fundingProjects.id, projectId), eq(fundingProjects.reviewStatus, project.reviewStatus), versionCondition));
 
     if (Number(result.rowsAffected) === 0) {
-      return deny('conflict', '그 사이 상태가 바뀌었습니다. 새로고침 후 다시 확인해 주세요.');
+      return deny('conflict', '그 사이 상태가 바뀌었어요. 새로고침 후 다시 확인해 주세요.');
     }
     return { ok: true, slug: project.slug };
   }
@@ -153,11 +153,11 @@ export const decideProject = async (
   const startAt = new Date(project.startAt);
   const endAt = new Date(project.endAt);
   if (endAt.getTime() <= now.getTime()) {
-    return deny('expired', '모금 종료일이 이미 지났습니다. 보완 요청으로 돌려보내 기간을 다시 잡게 해 주세요.');
+    return deny('expired', '모금 종료일이 이미 지났어요. 보완 요청으로 돌려보내 기간을 다시 잡게 해 주세요.');
   }
   const warnings: string[] = [];
   if (startAt.getTime() < now.getTime()) {
-    warnings.push('시작일이 이미 지나 승인 즉시 모금이 시작됩니다.');
+    warnings.push('시작일이 이미 지나 승인 즉시 모금이 시작돼요.');
   }
 
   // 슬러그 확정: 운영자가 새 값을 넣었으면 그것을, 아니면 개설자가 고른 기존 값을 쓴다.
@@ -172,18 +172,18 @@ export const decideProject = async (
   // 파일이 이긴다(lib/funding/repository.ts) — 같은 slug로 승인하면 이 프로젝트는 어떤
   // 주소로도 열리지 않는다.
   if (getFundingProject(slug)) {
-    return deny('duplicate_slug', '이미 사이트가 쓰고 있는 주소라 사용할 수 없습니다. 다른 주소를 적어 주세요.');
+    return deny('duplicate_slug', '이미 사이트가 쓰고 있는 주소라 사용할 수 없어요. 다른 주소를 적어 주세요.');
   }
 
   // 반려·보관된 프로젝트는 점유로 세지 않는다(lib/funding/slugOccupancy.ts) — 반려된 옛
   // 신청서가 주소를 영구히 붙들고 있던 자리다.
   if (await isFundingSlugTaken(slug, projectId)) {
-    return deny('duplicate_slug', '이미 쓰이고 있는 주소입니다. 다른 주소를 적어 주세요.');
+    return deny('duplicate_slug', '이미 쓰이고 있는 주소예요. 다른 주소를 적어 주세요.');
   }
   // 승인 경로의 마지막 확인 — 두 공개 프로젝트가 같은 주소를 갖는 상태는 어느 쪽이 열릴지
   // 알 수 없고, 승인이 그것을 만드는 유일한 경로다.
   if (await hasApprovedFundingSlug(slug, projectId)) {
-    return deny('duplicate_slug', '이미 승인된 프로젝트가 쓰고 있는 주소입니다. 다른 주소를 적어 주세요.');
+    return deny('duplicate_slug', '이미 승인된 프로젝트가 쓰고 있는 주소예요. 다른 주소를 적어 주세요.');
   }
 
   // 필수값 검사. 제출 시점엔 채워져 있었어도 제출과 승인 사이에 무엇이 바뀌었을 수 있다
@@ -199,7 +199,7 @@ export const decideProject = async (
     creatorEmail: project.creatorEmail,
   });
   if (missing.length > 0) {
-    return deny('incomplete', `다음 항목이 비어 있어 승인할 수 없습니다: ${missing.join(', ')}`);
+    return deny('incomplete', `다음 항목이 비어 있어 승인할 수 없어요: ${missing.join(', ')}`);
   }
 
   /**
@@ -216,7 +216,7 @@ export const decideProject = async (
   if (!project.creatorTermsVersion) {
     return deny(
       'terms_not_agreed',
-      '개설자 약관 동의 기록이 없어 승인할 수 없습니다. 보완 요청으로 돌려보내 다시 제출하게 해 주세요.',
+      '개설자 약관 동의 기록이 없어 승인할 수 없어요. 보완 요청으로 돌려보내 다시 제출하게 해 주세요.',
     );
   }
 
@@ -285,13 +285,13 @@ export const decideProject = async (
     ]);
   } catch (error: unknown) {
     if (isSlugConflictError(error)) {
-      return deny('duplicate_slug', '그 사이 다른 프로젝트가 같은 주소로 승인됐습니다. 다른 주소를 적어 주세요.');
+      return deny('duplicate_slug', '그 사이 다른 프로젝트가 같은 주소로 승인됐어요. 다른 주소를 적어 주세요.');
     }
     throw error;
   }
 
   if (Number(batchResult[0].rowsAffected) === 0) {
-    return deny('conflict', '그 사이 상태가 바뀌었습니다. 새로고침 후 다시 확인해 주세요.');
+    return deny('conflict', '그 사이 상태가 바뀌었어요. 새로고침 후 다시 확인해 주세요.');
   }
 
   return { ok: true, slug, ...(warnings.length > 0 ? { warnings } : {}) };

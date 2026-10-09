@@ -31,7 +31,7 @@ export const alertMissingDownloadObject = async (input: { key: string; orderNo: 
       to: OPERATOR_EMAIL,
       subject: `[Studio NOL] 펀딩 내려받기 파일 없음 — ${input.key}`,
       text: [
-        `후원자가 내려받기를 눌렀는데 저장소에 객체가 없습니다.`,
+        `후원자가 내려받기를 눌렀는데 저장소에 객체가 없어요.`,
         '',
         `키: ${input.key}`,
         `주문: ${input.orderNo}`,
@@ -40,17 +40,17 @@ export const alertMissingDownloadObject = async (input: { key: string; orderNo: 
         '  1. R2 버킷에 그 키로 파일이 올라가 있는지 확인한다.',
         '  2. 없으면 올리고, 키가 바뀐 것이라면 content/funding/<slug>.md의 downloads를 고친다.',
         '',
-        '후원자에게는 503과 안내 문구가 나갔고, downloaded_at은 남기지 않았습니다',
-        '(파일을 못 받은 사람이 청약철회권까지 잃지 않게 합니다).',
+        '후원자에게는 503과 안내 문구가 나갔고, downloaded_at은 남기지 않았어요',
+        '(파일을 못 받은 사람이 청약철회권까지 잃지 않게 해요).',
         '',
-        '이 메일은 같은 키에 대해 하루 한 번만 옵니다.',
+        '이 메일은 같은 키에 대해 하루 한 번만 와요.',
       ].join('\n'),
       html: buildEmailLayout({
         audience: 'operator',
         noticeTone: 'alert',
-        preheader: `후원자가 내려받기를 눌렀는데 파일이 없습니다 — ${input.key}`,
+        preheader: `후원자가 내려받기를 눌렀는데 파일이 없어요 — ${input.key}`,
         heading: '펀딩 내려받기 파일 없음',
-        paragraphs: ['후원자가 내려받기를 눌렀는데 저장소에 객체가 없습니다.'],
+        paragraphs: ['후원자가 내려받기를 눌렀는데 저장소에 객체가 없어요.'],
         rows: [
           { label: '키', value: input.key, emphasis: true },
           { label: '주문', value: input.orderNo },
@@ -60,8 +60,8 @@ export const alertMissingDownloadObject = async (input: { key: string; orderNo: 
         notices: [
           '<strong>무엇을 해야 하나</strong>: R2 버킷에 그 키로 파일이 올라가 있는지 확인한다.',
           `없으면 올리고, 키가 바뀐 것이라면 content/funding/&lt;slug&gt;.md의 downloads를 고친다.`,
-          '후원자에게는 503과 안내 문구가 나갔고, downloaded_at은 남기지 않았습니다(파일을 못 받은 사람이 청약철회권까지 잃지 않게 합니다).',
-          `이 메일은 같은 키(${escapeHtml(input.key)})에 대해 하루 한 번만 옵니다.`,
+          '후원자에게는 503과 안내 문구가 나갔고, downloaded_at은 남기지 않았어요(파일을 못 받은 사람이 청약철회권까지 잃지 않게 해요).',
+          `이 메일은 같은 키(${escapeHtml(input.key)})에 대해 하루 한 번만 와요.`,
         ],
       }),
     });

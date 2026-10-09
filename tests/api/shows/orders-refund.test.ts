@@ -133,7 +133,7 @@ describe('POST /api/shows/refund', () => {
     (refundShowTickets as jest.Mock).mockResolvedValue({ status: 'rejected', reason: 'checked_in' });
     const r = await call(refundHandler, { body: { orderNo, token, ticketIds: [ticketId] } });
     expect(r.status).toBe(409);
-    expect(r.body.message).toBe('이미 입장 처리된 티켓은 환불할 수 없습니다.');
+    expect(r.body.message).toBe('이미 입장 처리된 티켓은 환불할 수 없어요.');
   });
 
   it('토스 응답을 못 받은 경우(toss_unknown)는 202로 확인 안내', async () => {

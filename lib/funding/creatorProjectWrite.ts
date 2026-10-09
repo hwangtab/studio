@@ -42,7 +42,7 @@ const deny = (code: Exclude<WriteResult, { ok: true }>['code'], message: string)
  * WHERE가 0행이면 이 응답이다 — 가드의 확인은 읽는 순간의 사실이라 쓰는 순간까지 가지 않는다.
  */
 const raced = (): WriteResult =>
-  deny('not_editable', '그 사이 프로젝트 상태가 바뀌어 저장하지 못했습니다. 새로고침 후 다시 확인해 주세요.');
+  deny('not_editable', '그 사이 프로젝트 상태가 바뀌어 저장하지 못했어요. 새로고침 후 다시 확인해 주세요.');
 
 export interface CreatorProjectDetail {
   id: string;
@@ -86,9 +86,9 @@ export interface CreatorProjectDetail {
 const guard = async (creatorId: string, projectId: string, section: CreatorSectionName) => {
   const [row] = await getDb().select().from(fundingProjects)
     .where(and(eq(fundingProjects.id, projectId), eq(fundingProjects.creatorId, creatorId))).limit(1);
-  if (!row) return { row: null, denial: deny('not_found', '프로젝트를 찾을 수 없습니다.') };
+  if (!row) return { row: null, denial: deny('not_found', '프로젝트를 찾을 수 없어요.') };
   if (!canCreatorEditSection(row.reviewStatus, section)) {
-    return { row, denial: deny('not_editable', '지금 상태에서는 이 항목을 고칠 수 없습니다.') };
+    return { row, denial: deny('not_editable', '지금 상태에서는 이 항목을 고칠 수 없어요.') };
   }
   return { row, denial: null };
 };
@@ -183,12 +183,12 @@ const basicLockedViolation = (
 ): string | null => {
   if (existing.reviewStatus !== 'approved') return null;
   if (existing.slug !== next.slug) {
-    return '공개된 프로젝트의 주소는 바꿀 수 없습니다. 후원자가 후원 확인 페이지에서 이 주소로 프로젝트를 찾습니다.';
+    return '공개된 프로젝트의 주소는 바꿀 수 없어요. 후원자가 후원 확인 페이지에서 이 주소로 프로젝트를 찾아요.';
   }
-  if (existing.goalAmount !== next.goalAmount) return '공개된 프로젝트의 목표 금액은 바꿀 수 없습니다.';
+  if (existing.goalAmount !== next.goalAmount) return '공개된 프로젝트의 목표 금액은 바꿀 수 없어요.';
   if (existing.startAt.getTime() !== next.startAt.getTime()
     || existing.endAt.getTime() !== next.endAt.getTime()) {
-    return '공개된 프로젝트의 모금 기간은 바꿀 수 없습니다.';
+    return '공개된 프로젝트의 모금 기간은 바꿀 수 없어요.';
   }
   return null;
 };
@@ -202,11 +202,11 @@ export const saveBasicSection = async (creatorId: string, projectId: string, val
 
   // 파일 프로젝트가 이긴다(lib/funding/repository.ts). 파일과 같은 slug로 승인되면
   // 그 DB 프로젝트는 어떤 주소로도 열리지 않는다 — 여기서 막는 편이 훨씬 싸다.
-  if (getFundingProject(value.slug)) return deny('duplicate_slug', '이미 쓰이고 있는 주소입니다. 다른 주소를 적어 주세요.');
+  if (getFundingProject(value.slug)) return deny('duplicate_slug', '이미 쓰이고 있는 주소예요. 다른 주소를 적어 주세요.');
 
   // 반려·보관된 프로젝트는 점유로 세지 않는다(lib/funding/slugOccupancy.ts).
   if (await isFundingSlugTaken(value.slug, projectId)) {
-    return deny('duplicate_slug', '이미 쓰이고 있는 주소입니다. 다른 주소를 적어 주세요.');
+    return deny('duplicate_slug', '이미 쓰이고 있는 주소예요. 다른 주소를 적어 주세요.');
   }
 
   const now = new Date();
@@ -227,7 +227,7 @@ export const saveBasicSection = async (creatorId: string, projectId: string, val
     // 위 검사와 이 쓰기 사이에 같은 slug가 남에게 넘어간 경합. 부분 유니크 인덱스가 막아
     // 냈고, 데이터는 안전하다 — 메시지는 검사와 같은 것을 준다.
     if (isSlugConflictError(error)) {
-      return deny('duplicate_slug', '그 사이 다른 프로젝트가 같은 주소를 쓰기 시작했습니다. 다른 주소를 적어 주세요.');
+      return deny('duplicate_slug', '그 사이 다른 프로젝트가 같은 주소를 쓰기 시작했어요. 다른 주소를 적어 주세요.');
     }
     throw error;
   }
@@ -251,7 +251,7 @@ export const saveStorySection = async (creatorId: string, projectId: string, val
   if (row!.reviewStatus === 'approved' && content.trim().length < STORY_MIN_LENGTH) {
     return deny(
       'story_too_short',
-      `공개된 프로젝트의 본문은 ${STORY_MIN_LENGTH}자 이상이어야 합니다. 공개 페이지가 비어 보이지 않게 막았습니다.`,
+      `공개된 프로젝트의 본문은 ${STORY_MIN_LENGTH}자 이상이어야 해요. 공개 페이지가 비어 보이지 않게 막았어요.`,
     );
   }
 
@@ -341,7 +341,7 @@ export const isCreatorNameLocked = async (creatorId: string): Promise<boolean> =
 export const saveCreatorSection = async (creatorId: string, value: CreatorSection): Promise<WriteResult> => {
   const [existing] = await getDb().select({ id: fundingCreators.id, name: fundingCreators.name, email: fundingCreators.email })
     .from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
-  if (!existing) return deny('not_found', '개설자 계정을 찾을 수 없습니다.');
+  if (!existing) return deny('not_found', '개설자 계정을 찾을 수 없어요.');
 
   // 잠겨 있으면 들어온 이름을 버리고 기존 이름을 그대로 쓴다(거부하지 않는다 — 위 주석).
   const nameLocked = value.name !== existing.name
@@ -479,10 +479,10 @@ export const loadPayoutSummary = async (creatorId: string): Promise<CreatorPayou
 export const savePayoutSection = async (creatorId: string, value: PayoutSection): Promise<WriteResult> => {
   const [existing] = await getDb().select({ id: fundingCreators.id })
     .from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
-  if (!existing) return deny('not_found', '개설자 계정을 찾을 수 없습니다.');
+  if (!existing) return deny('not_found', '개설자 계정을 찾을 수 없어요.');
 
   if (!(await hasApprovedProject(creatorId))) {
-    return deny('not_editable', '프로젝트가 승인된 뒤에 정산 정보를 넣을 수 있습니다.');
+    return deny('not_editable', '프로젝트가 승인된 뒤에 정산 정보를 넣을 수 있어요.');
   }
 
   /**
@@ -512,8 +512,8 @@ export const savePayoutSection = async (creatorId: string, value: PayoutSection)
       console.error('[funding] payout account encryption failed', { code: error.code });
       return deny(
         'encryption_unavailable',
-        '서버의 암호화 설정 문제로 정산 정보를 저장할 수 없습니다. 이번 저장은 아무것도 반영되지 '
-          + '않았습니다. 개설자님이 고치실 수 있는 문제가 아니니 스튜디오 놀에 알려 주세요.',
+        '서버의 암호화 설정 문제로 정산 정보를 저장할 수 없어요. 이번 저장은 아무것도 반영되지 '
+          + '않았어요. 개설자님이 고치실 수 있는 문제가 아니니 스튜디오 놀에 알려 주세요.',
       );
     }
     throw error;
@@ -559,8 +559,8 @@ export const savePayoutSection = async (creatorId: string, value: PayoutSection)
         console.error('[funding] resident number encryption failed', { code: error.code });
         return deny(
           'encryption_unavailable',
-          '서버의 암호화 설정 문제로 주민등록번호를 저장할 수 없습니다. 이번 저장은 계좌를 포함해 '
-            + '아무것도 반영되지 않았습니다. 개설자님이 고치실 수 있는 문제가 아니니 스튜디오 놀에 '
+          '서버의 암호화 설정 문제로 주민등록번호를 저장할 수 없어요. 이번 저장은 계좌를 포함해 '
+            + '아무것도 반영되지 않았어요. 개설자님이 고치실 수 있는 문제가 아니니 스튜디오 놀에 '
             + '알려 주세요.',
         );
       }
@@ -599,14 +599,14 @@ export const savePayoutSection = async (creatorId: string, value: PayoutSection)
  */
 const lockedViolation = (existing: FundingRewardRow, next: RewardInput): string | null => {
   if (!existing.lockedAt) return null;
-  if (existing.amount !== next.amount) return '공개된 리워드의 금액은 바꿀 수 없습니다. 새 리워드를 추가해 주세요.';
+  if (existing.amount !== next.amount) return '공개된 리워드의 금액은 바꿀 수 없어요. 새 리워드를 추가해 주세요.';
   if ((existing.totalQuantity === null) !== (next.totalQuantity === null)) {
-    return '공개된 리워드의 수량 제한 여부는 바꿀 수 없습니다.';
+    return '공개된 리워드의 수량 제한 여부는 바꿀 수 없어요.';
   }
   if (existing.totalQuantity !== null && next.totalQuantity !== null && next.totalQuantity < existing.totalQuantity) {
-    return '수량은 늘릴 수만 있습니다.';
+    return '수량은 늘릴 수만 있어요.';
   }
-  if (existing.requiresShipping !== next.requiresShipping) return '공개된 리워드의 배송 여부는 바꿀 수 없습니다.';
+  if (existing.requiresShipping !== next.requiresShipping) return '공개된 리워드의 배송 여부는 바꿀 수 없어요.';
   return null;
 };
 
@@ -628,14 +628,14 @@ export const upsertReward = async (
   if (previousRewardId !== undefined && previousRewardId !== value.rewardId) {
     const [previous] = await getDb().select().from(fundingRewards)
       .where(and(eq(fundingRewards.projectId, projectId), eq(fundingRewards.rewardId, previousRewardId))).limit(1);
-    if (!previous) return deny('not_found', '리워드를 찾을 수 없습니다.');
+    if (!previous) return deny('not_found', '리워드를 찾을 수 없어요.');
     if (previous.lockedAt) {
-      return deny('locked', '공개된 리워드의 주소는 바꿀 수 없습니다. 새 리워드를 추가해 주세요.');
+      return deny('locked', '공개된 리워드의 주소는 바꿀 수 없어요. 새 리워드를 추가해 주세요.');
     }
 
     const [taken] = await getDb().select({ id: fundingRewards.id }).from(fundingRewards)
       .where(and(eq(fundingRewards.projectId, projectId), eq(fundingRewards.rewardId, value.rewardId))).limit(1);
-    if (taken) return deny('duplicate_reward', '이미 쓰고 있는 리워드 주소입니다.');
+    if (taken) return deny('duplicate_reward', '이미 쓰고 있는 리워드 주소예요.');
 
     try {
       const renamed = await getDb().update(fundingRewards).set({
@@ -652,7 +652,7 @@ export const upsertReward = async (
       // 가드 뒤에 승인이 리워드를 잠근 경합 — 잠긴 행은 이 UPDATE가 건드리지 않는다.
       if (Number(renamed.rowsAffected) === 0) return raced();
     } catch (error: unknown) {
-      if (isRewardDuplicateError(error)) return deny('duplicate_reward', '이미 쓰고 있는 리워드 주소입니다.');
+      if (isRewardDuplicateError(error)) return deny('duplicate_reward', '이미 쓰고 있는 리워드 주소예요.');
       throw error;
     }
     return { ok: true };
@@ -687,7 +687,7 @@ export const upsertReward = async (
   const [{ value: existingCount }] = await getDb().select({ value: count() }).from(fundingRewards)
     .where(eq(fundingRewards.projectId, projectId));
   if (existingCount >= CREATOR_LIMITS.rewardsMax) {
-    return deny('too_many', `리워드는 최대 ${CREATOR_LIMITS.rewardsMax}개까지 만들 수 있습니다.`);
+    return deny('too_many', `리워드는 최대 ${CREATOR_LIMITS.rewardsMax}개까지 만들 수 있어요.`);
   }
 
   try {
@@ -705,7 +705,7 @@ export const upsertReward = async (
   } catch (error: unknown) {
     // 더블 클릭 등으로 같은 id의 생성이 겹쳤다 — 위 선조회를 둘 다 통과하고 유니크 인덱스가
     // 뒤쪽을 떨어뜨린 것이다. 500이 아니라 사람이 읽을 중복 오류로 돌려준다.
-    if (isRewardDuplicateError(error)) return deny('duplicate_reward', '이미 쓰고 있는 리워드 주소입니다.');
+    if (isRewardDuplicateError(error)) return deny('duplicate_reward', '이미 쓰고 있는 리워드 주소예요.');
     throw error;
   }
   return { ok: true };
@@ -717,8 +717,8 @@ export const deleteReward = async (creatorId: string, projectId: string, rewardI
 
   const [existing] = await getDb().select().from(fundingRewards)
     .where(and(eq(fundingRewards.projectId, projectId), eq(fundingRewards.rewardId, rewardId))).limit(1);
-  if (!existing) return deny('not_found', '리워드를 찾을 수 없습니다.');
-  if (existing.lockedAt) return deny('locked', '공개된 리워드는 지울 수 없습니다.');
+  if (!existing) return deny('not_found', '리워드를 찾을 수 없어요.');
+  if (existing.lockedAt) return deny('locked', '공개된 리워드는 지울 수 없어요.');
 
   const deleted = await getDb().delete(fundingRewards)
     .where(and(eq(fundingRewards.id, existing.id), isNull(fundingRewards.lockedAt)));

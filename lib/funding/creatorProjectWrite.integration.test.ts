@@ -802,10 +802,10 @@ describe('승인 뒤 편집 (Task 5)', () => {
     (typeof BASIC_LOCKED_FIELD_NAMES)[number],
     { patch: (basic: ReturnType<typeof basicSection>) => Partial<ReturnType<typeof basicSection>>; message: string }
   > = {
-    slug: { patch: () => ({ slug: 'other-slug' }), message: '주소는 바꿀 수 없습니다' },
-    goalAmount: { patch: (b) => ({ goalAmount: b.goalAmount + 10_000 }), message: '목표 금액은 바꿀 수 없습니다' },
-    startAt: { patch: (b) => ({ startAt: new Date(b.startAt.getTime() + 86_400_000) }), message: '모금 기간은 바꿀 수 없습니다' },
-    endAt: { patch: (b) => ({ endAt: new Date(b.endAt.getTime() + 86_400_000) }), message: '모금 기간은 바꿀 수 없습니다' },
+    slug: { patch: () => ({ slug: 'other-slug' }), message: '주소는 바꿀 수 없어요' },
+    goalAmount: { patch: (b) => ({ goalAmount: b.goalAmount + 10_000 }), message: '목표 금액은 바꿀 수 없어요' },
+    startAt: { patch: (b) => ({ startAt: new Date(b.startAt.getTime() + 86_400_000) }), message: '모금 기간은 바꿀 수 없어요' },
+    endAt: { patch: (b) => ({ endAt: new Date(b.endAt.getTime() + 86_400_000) }), message: '모금 기간은 바꿀 수 없어요' },
   };
 
   it('BASIC_LOCKED_FIELD_NAMES는 정확히 4개다 — 원소가 빠지면 아래 it.each가 그 케이스를 안 돈다', () => {

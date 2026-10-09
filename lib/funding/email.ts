@@ -181,7 +181,7 @@ const downloadLines = (order: FundingOrder, project: FundingProject | null): str
     '',
     '[음원 내려받기]',
     ...downloads.map((d) => `· ${d.label}`),
-    `아래 펀딩 확인 페이지에서 받으실 수 있습니다: ${manageUrl(order)}`,
+    `아래 펀딩 확인 페이지에서 받으실 수 있어요: ${manageUrl(order)}`,
     '· 내려받기를 시작하면 청약철회가 제한됩니다(약관 제8조 2항).',
   ];
 };
@@ -193,7 +193,7 @@ const downloadNotices = (order: FundingOrder, project: FundingProject | null): s
   const downloads = pledgeDownloads(project, activePledgeLines(pledgeLines(pledge)).map((l) => l.rewardId));
   if (!downloads.length) return [];
   return [
-    `${strong('음원 내려받기')} — ${downloads.map((d) => escapeHtml(d.label)).join(', ')}. 펀딩 확인 페이지에서 받으실 수 있습니다: ${htmlLink(manageUrl(order))}`,
+    `${strong('음원 내려받기')} — ${downloads.map((d) => escapeHtml(d.label)).join(', ')}. 펀딩 확인 페이지에서 받으실 수 있어요: ${htmlLink(manageUrl(order))}`,
     '내려받기를 시작하면 청약철회가 제한됩니다(약관 제8조 2항).',
   ];
 };
@@ -217,11 +217,11 @@ export const sendFundingConfirmedEmails = (order: FundingOrder, project: Funding
   send(withoutUndeliverableCustomer(order, [
     { key: 'customer', params: {
       to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
-      subject: `[스튜디오 놀] 펀딩이 확정되었습니다${titleSuffix(project)}`,
+      subject: `[스튜디오 놀] 펀딩이 확정됐어요${titleSuffix(project)}`,
       text: [`${order.customerName}님, 함께해 주셔서 고맙습니다.`, ...summaryLines(order, project), ...downloadLines(order, project), ...withdrawalLines(order), '', `펀딩 확인·취소: ${manageUrl(order)}`, PHONE].join('\n'),
       html: buildEmailLayout({
-        preheader: '펀딩이 확정되었습니다. 함께해 주셔서 고맙습니다.',
-        heading: '펀딩이 확정되었습니다',
+        preheader: '펀딩이 확정됐어요. 함께해 주셔서 고맙습니다.',
+        heading: '펀딩이 확정됐어요',
         paragraphs: [`${escapeHtml(order.customerName)}님, 함께해 주셔서 고맙습니다.`, phoneParagraph],
         rows: [...summaryRows(order, project), { label: '결제수단', value: paymentMethodLabel(order.fundingPledge?.paymentMethod) }],
         cta: { label: '펀딩 확인·취소', url: manageUrl(order) },
@@ -268,22 +268,22 @@ export const sendFundingDepositGuideEmails = (
 ): Promise<string | null> => {
   const deadline = order.fundingPledge?.holdExpiresAt ?? null;
   const deadlineLine = deadline
-    ? `${formatKstDeadline(deadline)}(한국시간)까지 입금해 주시면, 확인한 뒤 메일로 알려 드립니다(영업일 1일 이내).`
-    : '입금해 주시면 확인한 뒤 메일로 알려 드립니다(영업일 1일 이내).';
+    ? `${formatKstDeadline(deadline)}(한국시간)까지 입금해 주시면, 확인한 뒤 메일로 알려 드려요(영업일 1일 이내).`
+    : '입금해 주시면 확인한 뒤 메일로 알려 드려요(영업일 1일 이내).';
   const pairs = withoutUndeliverableCustomer(order, [
     { key: 'customer', params: {
       to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
       subject: `[스튜디오 놀] 계좌 입금 안내${titleSuffix(project)}`,
       text: [
         `${order.customerName}님, 펀딩을 신청해 주셔서 고맙습니다.`,
-        '아래 계좌로 입금해 주시면 펀딩이 확정됩니다.',
+        '아래 계좌로 입금해 주시면 펀딩이 확정돼요.',
         '',
         `은행: ${BANK_ACCOUNT.bankName}`,
         `계좌번호: ${BANK_ACCOUNT.accountNumber}`,
         `예금주: ${BANK_ACCOUNT.accountHolder}`,
         `입금하실 금액: ${formatPriceAmount(order.totalAmount)}원`,
         '',
-        `입금하실 때 보내는 분 이름은 신청하신 분 성함(${order.customerName})으로 해 주세요. 이름과 금액으로 확인합니다.`,
+        `입금하실 때 보내는 분 이름은 신청하신 분 성함(${order.customerName})으로 해 주세요. 이름과 금액으로 확인해요.`,
         deadlineLine,
         '',
         ...summaryLines(order, project),
@@ -292,12 +292,12 @@ export const sendFundingDepositGuideEmails = (
         PHONE,
       ].join('\n'),
       html: buildEmailLayout({
-        preheader: `${formatPriceAmount(order.totalAmount)}원을 아래 계좌로 입금해 주시면 펀딩이 확정됩니다.`,
+        preheader: `${formatPriceAmount(order.totalAmount)}원을 아래 계좌로 입금해 주시면 펀딩이 확정돼요.`,
         heading: '계좌 입금 안내',
         paragraphs: [
           `${escapeHtml(order.customerName)}님, 펀딩을 신청해 주셔서 고맙습니다.`,
-          '아래 계좌로 입금해 주시면 펀딩이 확정됩니다.',
-          `입금하실 때 보내는 분 이름은 신청하신 분 성함(${strong(order.customerName)})으로 해 주세요. 이름과 금액으로 확인합니다.`,
+          '아래 계좌로 입금해 주시면 펀딩이 확정돼요.',
+          `입금하실 때 보내는 분 이름은 신청하신 분 성함(${strong(order.customerName)})으로 해 주세요. 이름과 금액으로 확인해요.`,
           escapeHtml(deadlineLine),
         ],
         rows: [
@@ -350,7 +350,7 @@ export const sendFundingDepositWithdrawnOperatorEmail = (order: FundingOrder, pr
     to: OPERATOR_EMAIL,
     subject: `[펀딩] 계좌 입금 신청 취소 ${formatPriceAmount(order.totalAmount)}원 — ${order.customerName}`,
     text: [
-      '후원자가 입금 전에 계좌 입금 신청을 직접 취소했습니다. 받은 돈이 없어 환불할 것은 없습니다.',
+      '후원자가 입금 전에 계좌 입금 신청을 직접 취소했어요. 받은 돈이 없어 환불할 것은 없어요.',
       ...summaryLines(order, project),
       `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
       `관리자: ${adminPledgeUrl(order)}`,
@@ -358,25 +358,25 @@ export const sendFundingDepositWithdrawnOperatorEmail = (order: FundingOrder, pr
     html: buildEmailLayout({
       audience: 'operator',
       preheader: `${order.customerName} · ${formatPriceAmount(order.totalAmount)}원 · 후원자가 입금 전에 취소`,
-      heading: '펀딩 계좌 입금 신청을 후원자가 취소했습니다',
-      paragraphs: ['입금 전에 후원자가 직접 취소했습니다. 받은 돈이 없어 환불할 것은 없습니다.'],
+      heading: '펀딩 계좌 입금 신청을 후원자가 취소했어요',
+      paragraphs: ['입금 전에 후원자가 직접 취소했어요. 받은 돈이 없어 환불할 것은 없어요.'],
       rows: operatorRows(order, project),
       cta: { label: '관리자에서 보기', url: adminPledgeUrl(order) },
     }),
   } }]);
 
-const CANCEL_SUBJECT = { refunded: '환불이 완료되었습니다', refund_requested: '취소 요청을 접수했습니다', recorded: '환불 처리 안내' } as const;
+const CANCEL_SUBJECT = { refunded: '환불이 완료됐어요', refund_requested: '취소 요청을 접수했어요', recorded: '환불 처리 안내' } as const;
 
 /**
  * 본문 금액은 totalAmount가 아니라 **실제 환불액**이다 — 부분환불 이력이 있는 건에서 두 값은
  * 다르고, 총액을 적으면 이미 돌려준 몫까지 다시 돌려주는 것처럼 읽힌다.
  */
 const CANCEL_BODY = {
-  refunded: (amount: number) => `${formatPriceAmount(amount)}원이 결제 수단으로 환불됩니다(카드사에 따라 3~7일).`,
+  refunded: (amount: number) => `${formatPriceAmount(amount)}원이 결제 수단으로 환불돼요(카드사에 따라 3~7일).`,
   // 계좌 입금 후원의 셀프 취소. 환불 계좌는 펀딩 확인 페이지에서 이미 받았다 — 메일에는 계좌를
   // 싣지 않는다(메일함에 계좌가 남는다). 기한은 약관 제10조와 같다.
-  refund_requested: (amount: number) => `취소 요청을 접수했습니다. ${formatPriceAmount(amount)}원을 적어 주신 환불 계좌로 접수일부터 3영업일 이내에 보내 드립니다. 계좌를 잘못 적으셨다면 이 메일에 회신해 주세요.`,
-  recorded: (amount: number) => `${formatPriceAmount(amount)}원 환불 처리가 완료되었습니다.`,
+  refund_requested: (amount: number) => `취소 요청을 접수했어요. ${formatPriceAmount(amount)}원을 적어 주신 환불 계좌로 접수일부터 3영업일 이내에 보내 드려요. 계좌를 잘못 적으셨다면 이 메일에 회신해 주세요.`,
+  recorded: (amount: number) => `${formatPriceAmount(amount)}원 환불 처리가 완료됐어요.`,
 } as const;
 
 export const sendFundingCancelledEmails = (order: FundingOrder, project: FundingProject | null, mode: 'refunded' | 'refund_requested' | 'recorded', refundAmount: number): Promise<string | null> =>
@@ -420,11 +420,11 @@ export const sendFundingLineRefundEmails = (
   send(withoutUndeliverableCustomer(order, [
     { key: 'customer', params: {
       to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
-      subject: `[스튜디오 놀] 펀딩 일부가 환불되었습니다${titleSuffix(project)}`,
+      subject: `[스튜디오 놀] 펀딩 일부가 환불됐어요${titleSuffix(project)}`,
       text: [
         `${order.customerName}님,`,
-        `${refund.rewardTitle} ${refund.quantity}개에 대한 ${formatPriceAmount(refund.amount)}원을 결제하신 수단으로 환불했습니다. 카드사에 따라 영업일 기준 3~5일 뒤에 반영됩니다.`,
-        '나머지 리워드는 그대로 진행됩니다.',
+        `${refund.rewardTitle} ${refund.quantity}개에 대한 ${formatPriceAmount(refund.amount)}원을 결제하신 수단으로 환불했어요. 카드사에 따라 영업일 기준 3~5일 뒤에 반영돼요.`,
+        '나머지 리워드는 그대로 진행돼요.',
         `사유: ${refund.reason}`,
         '',
         ...summaryLines(order, project),
@@ -433,12 +433,12 @@ export const sendFundingLineRefundEmails = (
         PHONE,
       ].join('\n'),
       html: buildEmailLayout({
-        preheader: `${refund.rewardTitle} ${refund.quantity}개 ${formatPriceAmount(refund.amount)}원이 환불되었습니다.`,
-        heading: '펀딩 일부가 환불되었습니다',
+        preheader: `${refund.rewardTitle} ${refund.quantity}개 ${formatPriceAmount(refund.amount)}원이 환불됐어요.`,
+        heading: '펀딩 일부가 환불됐어요',
         paragraphs: [
           `${escapeHtml(order.customerName)}님,`,
-          `${escapeHtml(refund.rewardTitle)} ${refund.quantity}개에 대한 ${strong(`${formatPriceAmount(refund.amount)}원`)}을 결제하신 수단으로 환불했습니다. 카드사에 따라 영업일 기준 3~5일 뒤에 반영됩니다.`,
-          '나머지 리워드는 그대로 진행됩니다.',
+          `${escapeHtml(refund.rewardTitle)} ${refund.quantity}개에 대한 ${strong(`${formatPriceAmount(refund.amount)}원`)}을 결제하신 수단으로 환불했어요. 카드사에 따라 영업일 기준 3~5일 뒤에 반영돼요.`,
+          '나머지 리워드는 그대로 진행돼요.',
           `사유: ${escapeHtml(refund.reason)}`,
           phoneParagraph,
         ],
@@ -487,10 +487,10 @@ export const sendFundingRefundRequestClearedEmails = (
   send(withoutUndeliverableCustomer(order, [
     { key: 'customer', params: {
       to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
-      subject: `[스튜디오 놀] 취소 요청이 철회 처리되었습니다${titleSuffix(project)}`,
+      subject: `[스튜디오 놀] 취소 요청이 철회 처리됐어요${titleSuffix(project)}`,
       text: [
         `${order.customerName}님,`,
-        '접수해 두었던 펀딩 취소 요청을 철회 처리했습니다. 이 펀딩은 다시 정상 진행됩니다.',
+        '접수해 두었던 펀딩 취소 요청을 철회 처리했어요. 이 펀딩은 다시 정상 진행돼요.',
         `사유: ${reason}`,
         '',
         '취소를 원하지 않으셨다면 아래 링크에서 다시 취소를 요청하시거나 이 메일에 회신해 주세요.',
@@ -500,11 +500,11 @@ export const sendFundingRefundRequestClearedEmails = (
         PHONE,
       ].join('\n'),
       html: buildEmailLayout({
-        preheader: '접수해 두었던 펀딩 취소 요청을 철회 처리했습니다.',
-        heading: '취소 요청이 철회 처리되었습니다',
+        preheader: '접수해 두었던 펀딩 취소 요청을 철회 처리했어요.',
+        heading: '취소 요청이 철회 처리됐어요',
         paragraphs: [
           `${escapeHtml(order.customerName)}님,`,
-          '접수해 두었던 펀딩 취소 요청을 철회 처리했습니다. 이 펀딩은 다시 정상 진행됩니다.',
+          '접수해 두었던 펀딩 취소 요청을 철회 처리했어요. 이 펀딩은 다시 정상 진행돼요.',
           `사유: ${escapeHtml(reason)}`,
           '취소를 원하지 않으셨다면 아래 링크에서 다시 취소를 요청하시거나 이 메일에 회신해 주세요.',
           phoneParagraph,
@@ -553,7 +553,7 @@ export const sendFundingCreatorSubmissionEmail = (project: CreatorProjectDetail)
       html: buildEmailLayout({
         audience: 'operator',
         preheader: `${project.creator.name} · ${project.title}`,
-        heading: '심사 요청이 들어왔습니다',
+        heading: '심사 요청이 들어왔어요',
         rows: [
           { label: '프로젝트', value: project.title },
           { label: '개설자', value: project.creator.name },
@@ -578,7 +578,7 @@ export const sendFundingCreatorWithdrawalEmail = (project: CreatorProjectDetail)
       to: OPERATOR_EMAIL,
       subject: `[펀딩] 심사 철회 — ${project.title}`,
       text: [
-        `개설자가 심사 신청을 철회했습니다. 프로젝트는 작성 중(draft) 상태로 돌아갔습니다.`,
+        `개설자가 심사 신청을 철회했어요. 프로젝트는 작성 중(draft) 상태로 돌아갔어요.`,
         `개설자: ${project.creator.name} (${contact})`,
         `프로젝트: ${project.title}`,
         `심사 화면: ${SITE_URL}/admin/funding/projects/${project.id}`,
@@ -586,8 +586,8 @@ export const sendFundingCreatorWithdrawalEmail = (project: CreatorProjectDetail)
       html: buildEmailLayout({
         audience: 'operator',
         preheader: `${project.creator.name} · ${project.title}`,
-        heading: '심사 신청이 철회되었습니다',
-        paragraphs: ['개설자가 심사 신청을 철회했습니다. 프로젝트는 작성 중(draft) 상태로 돌아갔습니다.'],
+        heading: '심사 신청이 철회됐어요',
+        paragraphs: ['개설자가 심사 신청을 철회했어요. 프로젝트는 작성 중(draft) 상태로 돌아갔어요.'],
         rows: [
           { label: '프로젝트', value: project.title },
           { label: '개설자', value: project.creator.name },
@@ -614,12 +614,12 @@ export const sendFundingCreatorWithdrawalEmail = (project: CreatorProjectDetail)
 export const sendCreatorLoginCapAlert = async (cap: number): Promise<string | null> => {
   const result = await sendEmail({
     to: OPERATOR_EMAIL,
-    subject: '[펀딩] 개설자 로그인 메일 일일 한도에 걸렸습니다',
+    subject: '[펀딩] 개설자 로그인 메일 일일 한도에 걸렸어요',
     text: [
-      `오늘 개설자 로그인 메일이 일일 한도(${cap}통)에 도달했습니다.`,
-      '지금부터 24시간 창이 지날 때까지 로그인 링크가 발송되지 않습니다.',
+      `오늘 개설자 로그인 메일이 일일 한도(${cap}통)에 도달했어요.`,
+      '지금부터 24시간 창이 지날 때까지 로그인 링크가 발송되지 않아요.',
       '',
-      '정상 사용자도 함께 막히므로, 남용이 아니라면 한도를 올려야 합니다',
+      '정상 사용자도 함께 막히므로, 남용이 아니라면 한도를 올려야 해요',
       '(pages/api/funding/creator/login.ts의 GLOBAL_DAILY_CAP).',
       '',
       `개설자 목록(이메일 대조용): ${SITE_URL}/admin/funding/projects`,
@@ -627,12 +627,12 @@ export const sendCreatorLoginCapAlert = async (cap: number): Promise<string | nu
     html: buildEmailLayout({
       audience: 'operator',
       noticeTone: 'alert',
-      preheader: `오늘 개설자 로그인 메일이 일일 한도(${cap}통)에 도달했습니다.`,
-      heading: '개설자 로그인 메일 일일 한도에 걸렸습니다',
-      paragraphs: [`오늘 개설자 로그인 메일이 일일 한도(${cap}통)에 도달했습니다.`, '지금부터 24시간 창이 지날 때까지 로그인 링크가 발송되지 않습니다.'],
+      preheader: `오늘 개설자 로그인 메일이 일일 한도(${cap}통)에 도달했어요.`,
+      heading: '개설자 로그인 메일 일일 한도에 걸렸어요',
+      paragraphs: [`오늘 개설자 로그인 메일이 일일 한도(${cap}통)에 도달했어요.`, '지금부터 24시간 창이 지날 때까지 로그인 링크가 발송되지 않아요.'],
       rows: [{ label: '일일 한도', value: `${cap}통`, emphasis: true }],
       cta: { label: '개설자 목록 열기(이메일 대조용)', url: adminUrl('/admin/funding/projects') },
-      notices: ['정상 사용자도 함께 막히므로, 남용이 아니라면 한도를 올려야 합니다(pages/api/funding/creator/login.ts의 GLOBAL_DAILY_CAP).'],
+      notices: ['정상 사용자도 함께 막히므로, 남용이 아니라면 한도를 올려야 해요(pages/api/funding/creator/login.ts의 GLOBAL_DAILY_CAP).'],
     }),
   });
   return result.ok ? null : `operator:${result.errorCode}`;
@@ -655,13 +655,13 @@ export const sendCreatorLoginCapAlert = async (cap: number): Promise<string | nu
 export const sendCreatorLoginMailFailureAlert = async (email: string, reason: string): Promise<string | null> => {
   const result = await sendEmail({
     to: OPERATOR_EMAIL,
-    subject: '[펀딩] 개설자 로그인 메일 발송이 실패했습니다',
+    subject: '[펀딩] 개설자 로그인 메일 발송이 실패했어요',
     text: [
-      '개설자 로그인 링크 메일을 보내려 했으나 발송에 실패했습니다.',
+      '개설자 로그인 링크 메일을 보내려 했으나 발송에 실패했어요.',
       `수신 시도 주소: ${email}`,
       `실패 사유: ${reason}`,
       '',
-      '이 개설자는 로그인 링크를 받지 못했을 수 있습니다. 위 주소로 직접 연락해 안내해 주세요.',
+      '이 개설자는 로그인 링크를 받지 못했을 수 있어요. 위 주소로 직접 연락해 안내해 주세요.',
       '',
       `개설자 목록(이메일 대조용): ${SITE_URL}/admin/funding/projects`,
     ].join('\n'),
@@ -669,14 +669,14 @@ export const sendCreatorLoginMailFailureAlert = async (email: string, reason: st
       audience: 'operator',
       noticeTone: 'alert',
       preheader: `${email} 로그인 링크 발송 실패`,
-      heading: '개설자 로그인 메일 발송이 실패했습니다',
-      paragraphs: ['개설자 로그인 링크 메일을 보내려 했으나 발송에 실패했습니다.'],
+      heading: '개설자 로그인 메일 발송이 실패했어요',
+      paragraphs: ['개설자 로그인 링크 메일을 보내려 했으나 발송에 실패했어요.'],
       rows: [
         { label: '수신 시도 주소', value: email, href: `mailto:${email}` },
         { label: '실패 사유', value: reason },
       ],
       cta: { label: '개설자 목록 열기(이메일 대조용)', url: adminUrl('/admin/funding/projects') },
-      notices: ['이 개설자는 로그인 링크를 받지 못했을 수 있습니다. 위 주소로 직접 연락해 안내해 주세요.'],
+      notices: ['이 개설자는 로그인 링크를 받지 못했을 수 있어요. 위 주소로 직접 연락해 안내해 주세요.'],
     }),
   });
   return result.ok ? null : `operator:${result.errorCode}`;
@@ -696,26 +696,26 @@ export const sendCreatorLoginMailFailureAlert = async (email: string, reason: st
 export const sendCreatorSessionFailureAlert = async (): Promise<string | null> => {
   const result = await sendEmail({
     to: OPERATOR_EMAIL,
-    subject: '[펀딩] 개설자 로그인 세션 생성이 실패했습니다',
+    subject: '[펀딩] 개설자 로그인 세션 생성이 실패했어요',
     text: [
-      '매직링크 토큰은 정상 소진됐는데, 그 뒤 세션을 만드는 단계에서 오류가 났습니다.',
-      '개설자는 새 링크를 다시 받아도 같은 자리에서 반복해 막힙니다.',
+      '매직링크 토큰은 정상 소진됐는데, 그 뒤 세션을 만드는 단계에서 오류가 났어요.',
+      '개설자는 새 링크를 다시 받아도 같은 자리에서 반복해 막혀요.',
       '',
-      '원인은 서버 로그에서 확인해야 합니다(이 메일은 "실패하고 있다"는 신호만 전달합니다).',
+      '원인은 서버 로그에서 확인해야 해요(이 메일은 "실패하고 있다"는 신호만 전달해요).',
       '',
       `개설자 목록: ${SITE_URL}/admin/funding/projects`,
     ].join('\n'),
     html: buildEmailLayout({
       audience: 'operator',
       noticeTone: 'alert',
-      preheader: '매직링크 토큰은 소진됐는데 세션 생성이 실패했습니다.',
-      heading: '개설자 로그인 세션 생성이 실패했습니다',
+      preheader: '매직링크 토큰은 소진됐는데 세션 생성이 실패했어요.',
+      heading: '개설자 로그인 세션 생성이 실패했어요',
       paragraphs: [
-        '매직링크 토큰은 정상 소진됐는데, 그 뒤 세션을 만드는 단계에서 오류가 났습니다.',
-        '개설자는 새 링크를 다시 받아도 같은 자리에서 반복해 막힙니다.',
+        '매직링크 토큰은 정상 소진됐는데, 그 뒤 세션을 만드는 단계에서 오류가 났어요.',
+        '개설자는 새 링크를 다시 받아도 같은 자리에서 반복해 막혀요.',
       ],
       cta: { label: '개설자 목록 열기', url: adminUrl('/admin/funding/projects') },
-      notices: ['원인은 서버 로그에서 확인해야 합니다(이 메일은 "실패하고 있다"는 신호만 전달합니다).'],
+      notices: ['원인은 서버 로그에서 확인해야 해요(이 메일은 "실패하고 있다"는 신호만 전달해요).'],
     }),
   });
   return result.ok ? null : `operator:${result.errorCode}`;
@@ -734,7 +734,7 @@ export const sendFundingListingNicknameAlert = (order: FundingOrder, nickname: s
     to: OPERATOR_EMAIL,
     subject: `[펀딩] 서포터 명단 닉네임 — ${nickname}`,
     text: [
-      `후원자가 서포터 명단 표시 이름을 닉네임으로 정했습니다. 부적절하면 관리자 화면에서 "서포터 명단에서 내리기"를 눌러 주세요.`,
+      `후원자가 서포터 명단 표시 이름을 닉네임으로 정했어요. 부적절하면 관리자 화면에서 "서포터 명단에서 내리기"를 눌러 주세요.`,
       '',
       `닉네임: ${nickname}`,
       `응원 메시지: ${message ?? '없음'}`,
@@ -745,7 +745,7 @@ export const sendFundingListingNicknameAlert = (order: FundingOrder, nickname: s
       audience: 'operator',
       preheader: `닉네임 ${nickname} — 부적절하면 명단에서 내려 주세요.`,
       heading: '서포터 명단 닉네임 확인',
-      paragraphs: ['후원자가 서포터 명단 표시 이름을 닉네임으로 정했습니다.'],
+      paragraphs: ['후원자가 서포터 명단 표시 이름을 닉네임으로 정했어요.'],
       rows: [
         { label: '닉네임', value: nickname, emphasis: true },
         { label: '응원 메시지', value: message ?? '없음' },

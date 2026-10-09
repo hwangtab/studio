@@ -167,7 +167,7 @@ describe('로그인 메일 발송 실패 알림', () => {
     expect(sendCreatorLoginMailFailureAlert).toHaveBeenCalledWith('creator@example.com', 'API_ERROR');
     // 화면 응답은 여전히 200과 같은 문구 — 열거 방지는 그대로 유지된다.
     expect(r.status).toBe(200);
-    expect(r.body).toEqual({ ok: true, message: '로그인 링크를 보냈습니다. 메일함을 확인해 주세요.' });
+    expect(r.body).toEqual({ ok: true, message: '로그인 링크를 보냈어요. 메일함을 확인해 주세요.' });
   });
 
   it('발송이 성공하면 알림을 보내지 않는다', async () => {
@@ -234,7 +234,7 @@ describe('미가입 주소는 별도 캡을 쓴다', () => {
       Promise.resolve(key !== 'funding_creator_signup:global'));
     const r = await call({ email: 'newbie@example.com' });
     expect(r.status).toBe(200);
-    expect(r.body).toEqual({ ok: true, message: '로그인 링크를 보냈습니다. 메일함을 확인해 주세요.' });
+    expect(r.body).toEqual({ ok: true, message: '로그인 링크를 보냈어요. 메일함을 확인해 주세요.' });
     // issueCreatorLoginToken이 개설자 행을 만드는 유일한 경로다 — 부르지 않으면 행도 없다.
     expect(issueCreatorLoginToken).not.toHaveBeenCalled();
     expect(sendCreatorLoginEmail).not.toHaveBeenCalled();

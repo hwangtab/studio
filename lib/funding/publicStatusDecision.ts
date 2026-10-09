@@ -34,19 +34,19 @@ export const decidePublicStatus = async (
   now: Date = new Date(),
 ): Promise<PublicStatusResult> => {
   const project = await loadProjectForAdmin(projectId);
-  if (!project) return deny('not_found', '프로젝트를 찾을 수 없습니다.');
+  if (!project) return deny('not_found', '프로젝트를 찾을 수 없어요.');
 
   // 승인 전에는 공개된 적이 없다 — status·hidden을 바꿔도 어떤 화면에도 드러나지 않아
   // 운영자가 "됐다"고 착각할 위험만 남는다.
   if (project.reviewStatus !== 'approved') {
-    return deny('conflict', '승인된 프로젝트만 공개 상태를 바꿀 수 있습니다.');
+    return deny('conflict', '승인된 프로젝트만 공개 상태를 바꿀 수 있어요.');
   }
 
   const note = input.note?.trim() || null;
   // 종료만 사유를 필수로 받는다 — 개설자가 "왜 멈췄는지" 알아야 하는 쪽은 모금을 멈추는
   // 쪽이다. 다시 열기·숨김 토글은 되돌리는 조작이라 강제하지 않는다.
   if (action === 'close' && !note) {
-    return deny('incomplete', '종료에는 사유 메모가 필요합니다.');
+    return deny('incomplete', '종료에는 사유 메모가 필요해요.');
   }
 
   const db = getDb();
@@ -64,7 +64,7 @@ export const decidePublicStatus = async (
     const [payout] = await db.select({ id: fundingProjectPayouts.id }).from(fundingProjectPayouts)
       .where(eq(fundingProjectPayouts.projectId, projectId)).limit(1);
     if (payout) {
-      return deny('conflict', '정산이 기록된 프로젝트는 다시 열 수 없습니다. 다시 열면 이후 들어온 후원이 영구히 정산에서 빠집니다.');
+      return deny('conflict', '정산이 기록된 프로젝트는 다시 열 수 없어요. 다시 열면 이후 들어온 후원이 영구히 정산에서 빠져요.');
     }
   }
 
@@ -95,8 +95,8 @@ export const decidePublicStatus = async (
       return deny(
         'conflict',
         action === 'close'
-          ? '이미 종료됐거나 그 사이 상태가 바뀌었습니다. 새로고침 후 다시 확인해 주세요.'
-          : '이미 공개 중이거나 그 사이 상태가 바뀌었습니다. 새로고침 후 다시 확인해 주세요.',
+          ? '이미 종료됐거나 그 사이 상태가 바뀌었어요. 새로고침 후 다시 확인해 주세요.'
+          : '이미 공개 중이거나 그 사이 상태가 바뀌었어요. 새로고침 후 다시 확인해 주세요.',
       );
     }
     return { ok: true, slug: project.slug };
@@ -127,8 +127,8 @@ export const decidePublicStatus = async (
     return deny(
       'conflict',
       action === 'hide'
-        ? '이미 숨겨져 있거나 그 사이 상태가 바뀌었습니다. 새로고침 후 다시 확인해 주세요.'
-        : '이미 노출 중이거나 그 사이 상태가 바뀌었습니다. 새로고침 후 다시 확인해 주세요.',
+        ? '이미 숨겨져 있거나 그 사이 상태가 바뀌었어요. 새로고침 후 다시 확인해 주세요.'
+        : '이미 노출 중이거나 그 사이 상태가 바뀌었어요. 새로고침 후 다시 확인해 주세요.',
     );
   }
   return { ok: true, slug: project.slug };

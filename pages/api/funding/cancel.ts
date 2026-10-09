@@ -12,12 +12,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method !== 'POST') return res.status(405).json({ ok: false });
   const ip = getClientIp(req) ?? 'unknown';
   if (!(await consumeRateLimit(`funding_cancel:ip:${ip}`, 10, 3600)))
-    return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
   const { orderNo, token, refundAccount } = (typeof req.body === 'object' && req.body) || {};
   if (typeof orderNo !== 'string' || typeof token !== 'string' || !orderNo || !token)
-    return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
+    return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않아요.' });
   const order = await findFundingOrderByOrderNo(orderNo);
-  if (!order || !isTokenMatch(order.manageToken, token)) return res.status(404).json({ ok: false, message: '펀딩 내역을 찾을 수 없습니다.' });
+  if (!order || !isTokenMatch(order.manageToken, token)) return res.status(404).json({ ok: false, message: '펀딩 내역을 찾을 수 없어요.' });
 
   // 계좌 입금 후원은 환불 계좌(refundAccount)를 함께 받는다 — 검증·암호화는 cancel.ts가 한다.
   // 입금 전 신청이면 같은 요청이 "신청 취소"(withdrawn)로 끝난다.

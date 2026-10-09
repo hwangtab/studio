@@ -35,12 +35,12 @@ const str = (v: unknown): string => (typeof v === 'string' ? v.trim() : '');
  */
 export const validateArtistSupportSignup = (body: unknown): SignupValidation => {
   if (typeof body !== 'object' || body === null || Array.isArray(body)) {
-    return { ok: false, message: '요청 형식이 올바르지 않습니다.' };
+    return { ok: false, message: '요청 형식이 올바르지 않아요.' };
   }
   const b = body as Record<string, unknown>;
 
   const artistSlug = str(b.artistSlug);
-  if (!artistSlug || !getSupportedArtist(artistSlug)) return { ok: false, message: '아티스트를 찾을 수 없습니다.' };
+  if (!artistSlug || !getSupportedArtist(artistSlug)) return { ok: false, message: '아티스트를 찾을 수 없어요.' };
 
   const tierId = str(b.tierId);
   if (!tierId || !getArtistSupportTier(tierId)) return { ok: false, message: '구독 등급을 골라 주세요.' };

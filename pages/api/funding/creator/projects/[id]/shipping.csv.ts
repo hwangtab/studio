@@ -61,7 +61,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const auth = await authenticateCreatorApi(req, res);
-  if (!auth.ok) return res.status(401).json({ ok: false, message: '로그인이 필요합니다.' });
+  if (!auth.ok) return res.status(401).json({ ok: false, message: '로그인이 필요해요.' });
 
   /**
    * 개설자별 별도 키. `creator_fulfillment:<creatorId>`(300회/600초 — 행 단위 저장을
@@ -76,11 +76,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    * 여전히 낮은 벽으로 막는다.
    */
   if (!(await consumeRateLimit(`funding_creator_csv:${auth.creatorId}`, 20, 600))) {
-    return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
   }
 
   const projectId = typeof req.query.id === 'string' ? req.query.id : '';
-  if (!projectId) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없습니다.' });
+  if (!projectId) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없어요.' });
 
   /**
    * 기록 경로의 예외가 다운로드를 끊지 않게 한 겹 더 받는다(payout-account.ts와 같은 이유).
@@ -107,12 +107,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } catch (error: unknown) {
     await log('error');
     console.error('[API/funding/creator/shipping.csv] 배송 목록 조회 실패:', error);
-    return res.status(500).json({ ok: false, message: '배송 목록을 만들지 못했습니다.' });
+    return res.status(500).json({ ok: false, message: '배송 목록을 만들지 못했어요.' });
   }
-  if (!view) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없습니다.' });
+  if (!view) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없어요.' });
 
   if (view.state !== 'open') {
-    return res.status(409).json({ ok: false, message: '모금이 끝난 뒤에만 배송 목록을 내려받을 수 있습니다.' });
+    return res.status(409).json({ ok: false, message: '모금이 끝난 뒤에만 배송 목록을 내려받을 수 있어요.' });
   }
 
   const csv = toCsv(view.rows.map(toCsvRow), COLUMNS);

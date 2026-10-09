@@ -433,7 +433,7 @@ describe('승인', () => {
     await seedReward(projectId);
 
     const result = await decideProject(projectId, 'approve', {}, new Date('2026-09-18T00:00:00Z'));
-    expect(result).toEqual({ ok: true, slug: expect.any(String), warnings: ['시작일이 이미 지나 승인 즉시 모금이 시작됩니다.'] });
+    expect(result).toEqual({ ok: true, slug: expect.any(String), warnings: ['시작일이 이미 지나 승인 즉시 모금이 시작돼요.'] });
 
     const after = await readProject(projectId);
     expect(after.reviewStatus).toBe('approved');

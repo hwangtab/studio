@@ -24,12 +24,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const ip = getClientIp(req) ?? 'unknown';
   if (!(await consumeRateLimit(`payment_link:ip:${ip}`, 10, 3600)))
-    return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
 
   const body = (typeof req.body === 'object' && req.body !== null ? req.body : {}) as Record<string, unknown>;
   const now = new Date();
   const link = getPaymentLink(body.slug, now);
-  if (!link) return res.status(404).json({ ok: false, message: '결제 링크를 찾을 수 없습니다.' });
+  if (!link) return res.status(404).json({ ok: false, message: '결제 링크를 찾을 수 없어요.' });
 
   const customer = validateCustomerContact(body);
   if (!customer.ok) return res.status(400).json({ ok: false, message: customer.message });
