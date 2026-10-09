@@ -163,7 +163,7 @@ const ContactCTA = ({
                         )}
                     </div>
                     <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                        {t('actions.responseAssurance', { defaultValue: '보통 24시간 이내 답변 · 당일 예약도 가능합니다' })}
+                        {t('actions.responseAssurance', { defaultValue: '보통 24시간 이내 답변 · 당일 예약도 가능해요' })}
                     </p>
                 </div>
 

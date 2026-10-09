@@ -295,7 +295,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
           <FAQSection
             items={faqItems}
             title={t('stories.detail.faqTitle', { defaultValue: '자주 묻는 질문' })}
-            subtitle={t('stories.detail.faqSubtitle', { defaultValue: '이 주제에 대해 자주 묻는 질문을 모았습니다.' })}
+            subtitle={t('stories.detail.faqSubtitle', { defaultValue: '이 주제에 대해 자주 묻는 질문을 모았어요.' })}
             variant="default"
           />
         )}
@@ -336,7 +336,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
                 locale={locale}
                 title={t('stories.bottomCta.title', { defaultValue: '지금 카톡으로 바로 상담하세요' })}
                 subtitle={t('stories.bottomCta.subtitle', {
-                  defaultValue: '이 글에서 본 작업도 동일하게 진행 가능합니다. 일정·견적 1분 안에 안내드려요.',
+                  defaultValue: '이 글에서 본 작업도 동일하게 진행 가능해요. 일정·견적 1분 안에 안내드려요.',
                 })}
                 imageSrc="/images/studio2.webp"
                 imageAlt={t('stories.bottomCta.imageAlt', { defaultValue: '스튜디오 놀 작업 공간' })}
