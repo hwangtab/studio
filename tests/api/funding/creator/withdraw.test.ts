@@ -220,7 +220,7 @@ it('읽은 뒤(경합) 운영자가 먼저 승인해 버리면 409 — approved�
   expect(r.status).toBe(409);
   // reviewDecision.ts(운영자 승인·반려 경로)의 같은 경합 상황과 같은 문구다 — 위
   // "approved에서는 철회할 수 없다"(전이표가 애초에 막는 경우)와는 다른 메시지다.
-  expect(r.body.message).toBe('그 사이 상태가 바뀌었습니다. 새로고침 후 다시 확인해 주세요.');
+  expect(r.body.message).toBe('그 사이 상태가 바뀌었어요. 새로고침 후 다시 확인해 주세요.');
 
   const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, project.id));
   expect(row?.reviewStatus).toBe('approved');

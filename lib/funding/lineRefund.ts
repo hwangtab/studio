@@ -44,30 +44,30 @@ export const refundFundingLine = async (input: {
 }): Promise<LineRefundOutcome> => {
   const order = await findFundingOrderByOrderNo(input.orderNo);
   const pledge = order?.fundingPledge;
-  if (!order || !pledge) return { ok: false, code: 'not_found', message: '펀딩 내역을 찾을 수 없습니다.' };
+  if (!order || !pledge) return { ok: false, code: 'not_found', message: '펀딩 내역을 찾을 수 없어요.' };
   if (order.status !== 'paid' && order.status !== 'partially_refunded') {
-    return { ok: false, code: 'invalid_state', message: '결제가 살아 있는 펀딩만 일부 환불할 수 있습니다.' };
+    return { ok: false, code: 'invalid_state', message: '결제가 살아 있는 펀딩만 일부 환불할 수 있어요.' };
   }
   if (pledge.paymentMethod !== 'toss') {
-    return { ok: false, code: 'offline_payment', message: '계좌로 받은 후원은 일부 환불을 기록할 수 없습니다. 계좌로 송금한 뒤 전액 환불 기록이나 관리자 메모로 남겨 주세요.' };
+    return { ok: false, code: 'offline_payment', message: '계좌로 받은 후원은 일부 환불을 기록할 수 없어요. 계좌로 송금한 뒤 전액 환불 기록이나 관리자 메모로 남겨 주세요.' };
   }
 
   const line = pledgeLines(pledge).find((l) => l.rewardId === input.rewardId);
-  if (!line) return { ok: false, code: 'not_found', message: '이 후원에 담긴 리워드가 아닙니다.' };
+  if (!line) return { ok: false, code: 'not_found', message: '이 후원에 담긴 리워드가 아니에요.' };
   const available = line.quantity - line.refundedQuantity;
   if (!Number.isInteger(input.quantity) || input.quantity < 1 || input.quantity > available) {
-    return { ok: false, code: 'invalid_quantity', message: `환불할 수 있는 수량은 1~${available}개입니다.` };
+    return { ok: false, code: 'invalid_quantity', message: `환불할 수 있는 수량은 1~${available}개예요.` };
   }
   const amount = line.unitAmount * input.quantity;
   if (amount > remainingRefundable(order)) {
-    return { ok: false, code: 'invalid_state', message: '환불 가능한 잔액보다 큽니다. 이미 환불된 금액을 확인해 주세요.' };
+    return { ok: false, code: 'invalid_state', message: '환불 가능한 잔액보다 커요. 이미 환불된 금액을 확인해 주세요.' };
   }
 
   // cancel.ts와 같은 규칙으로 취소를 걸 결제 행을 고른다.
   const doneRefundedOn = (p: (typeof order.payments)[number]): number =>
     (p.refunds ?? []).filter((r) => r.status === 'done').reduce((sum, r) => sum + r.amount, 0);
   const payment = order.payments.find((p) => doneRefundedOn(p) < order.totalAmount) ?? order.payments[order.payments.length - 1];
-  if (!payment) return { ok: false, code: 'invalid_state', message: '결제 기록이 없는 펀딩입니다.' };
+  if (!payment) return { ok: false, code: 'invalid_state', message: '결제 기록이 없는 펀딩이에요.' };
 
   const db = getDb();
   const hasItems = (pledge.items?.length ?? 0) > 0;
@@ -93,7 +93,7 @@ export const refundFundingLine = async (input: {
   // RETURNING이 붙은 문장은 libsql이 rowsAffected를 0으로 돌려준다(로컬 실측) — 선점 여부는
   // 돌려받은 행으로 판정한다.
   if (claimResult.rows.length === 0) {
-    return { ok: false, code: 'invalid_state', message: '이미 처리됐거나 남은 수량이 부족합니다. 새로고침해 주세요.' };
+    return { ok: false, code: 'invalid_state', message: '이미 처리됐거나 남은 수량이 부족해요. 새로고침해 주세요.' };
   }
 
   // 멱등 키의 누적 수량은 **선점 UPDATE가 돌려준 값**으로 만든다. 위에서 읽은
@@ -107,7 +107,7 @@ export const refundFundingLine = async (input: {
       WHERE pledge_id = ${pledge.id} AND reward_id = ${input.rewardId} AND refunded_quantity >= ${input.quantity}
     `);
     console.error('[funding-line-refund] 선점 결과에서 누적 환불 수량을 읽지 못했다', { orderNo: order.orderNo, rewardId: input.rewardId });
-    return { ok: false, code: 'invalid_state', message: '처리 중 오류가 발생했습니다. 새로고침 후 다시 시도해 주세요.' };
+    return { ok: false, code: 'invalid_state', message: '처리 중 오류가 발생했어요. 새로고침 후 다시 시도해 주세요.' };
   }
   const toss = await cancelPayment({
     paymentKey: payment.paymentKey,
@@ -123,7 +123,7 @@ export const refundFundingLine = async (input: {
       console.error('[funding-line-refund] 토스 응답 없음 — 선점 유지, 확인 필요', { orderNo: order.orderNo, rewardId: input.rewardId, amount });
       return {
         ok: false, code: 'toss_unknown',
-        message: '토스 응답을 받지 못했습니다. 토스 콘솔에서 취소 여부를 확인해 주세요. 취소됐다면 기록은 곧 자동으로 맞춰집니다.',
+        message: '토스 응답을 받지 못했어요. 토스 콘솔에서 취소 여부를 확인해 주세요. 취소됐다면 기록은 곧 자동으로 맞춰져요.',
       };
     }
     try {

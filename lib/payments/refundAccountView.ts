@@ -18,12 +18,12 @@ import { holderMatchesCustomer, loadRefundAccount, safeDbErrorSummary, type Refu
  */
 
 const CRYPTO_ERROR_MESSAGE: Record<FieldCryptoError['code'], string> = {
-  missing_key: `이 환경에 복호화 키(${FIELD_CRYPTO_KEY_ENV})가 없습니다. 값은 그대로 있습니다 — 배포 환경 변수에 키를 등록한 뒤 다시 시도해 주세요.`,
-  invalid_key: `복호화 키(${FIELD_CRYPTO_KEY_ENV})의 형식이 맞지 않습니다. 값은 그대로 있습니다 — 환경 변수를 고친 뒤 다시 시도해 주세요.`,
-  malformed: '저장된 값이 암호화 형식이 아닙니다. 고객에게 환불 계좌를 다시 받아 주세요.',
-  unsupported_version: '저장된 값의 암호화 판본을 이 배포가 모릅니다. 배포 판본을 확인해 주세요 — 값을 지우거나 덮어쓰지 마세요.',
-  key_mismatch: `이 값은 지금 이 배포의 키(${FIELD_CRYPTO_KEY_ENV})가 아니라 다른 키로 저장됐습니다. 값은 손상되지 않았습니다 — 키 회전이 중간에 멈춘 것이라면 scripts/rotate-field-key.mjs를 이어서 돌리면 열립니다.`,
-  auth_failed: `복호화에 실패했습니다. 키(${FIELD_CRYPTO_KEY_ENV})가 저장 당시와 다르거나 값이 손상됐습니다. 고객에게 계좌를 다시 받아야 할 수 있습니다.`,
+  missing_key: `이 환경에 복호화 키(${FIELD_CRYPTO_KEY_ENV})가 없어요. 값은 그대로 있어요 — 배포 환경 변수에 키를 등록한 뒤 다시 시도해 주세요.`,
+  invalid_key: `복호화 키(${FIELD_CRYPTO_KEY_ENV})의 형식이 맞지 않아요. 값은 그대로 있어요 — 환경 변수를 고친 뒤 다시 시도해 주세요.`,
+  malformed: '저장된 값이 암호화 형식이 아니에요. 고객에게 환불 계좌를 다시 받아 주세요.',
+  unsupported_version: '저장된 값의 암호화 판본을 이 배포가 몰라요. 배포 판본을 확인해 주세요 — 값을 지우거나 덮어쓰지 마세요.',
+  key_mismatch: `이 값은 지금 이 배포의 키(${FIELD_CRYPTO_KEY_ENV})가 아니라 다른 키로 저장됐어요. 값은 손상되지 않았어요 — 키 회전이 중간에 멈춘 것이라면 scripts/rotate-field-key.mjs를 이어서 돌리면 열려요.`,
+  auth_failed: `복호화에 실패했어요. 키(${FIELD_CRYPTO_KEY_ENV})가 저장 당시와 다르거나 값이 손상됐어요. 고객에게 계좌를 다시 받아야 할 수 있어요.`,
 };
 
 /** 주문 id로 환불 계좌의 키와 주문자 이름을 찾는다. 없으면 null. */
@@ -45,7 +45,7 @@ export const handleRefundAccountView = async (
   }
 
   const id = typeof req.query.id === 'string' ? req.query.id : '';
-  if (!id) return res.status(400).json({ ok: false, message: '잘못된 요청입니다.' });
+  if (!id) return res.status(400).json({ ok: false, message: '잘못된 요청이에요.' });
 
   const log = (result: PrivacyAccessResult) =>
     recordAdminPrivacyAccess(req, auth.actor, 'refund_account_view', id, result).catch((error: unknown) => {
@@ -56,12 +56,12 @@ export const handleRefundAccountView = async (
     const target = await loadTarget(id);
     if (!target) {
       await log('not_found');
-      return res.status(404).json({ ok: false, message: '주문을 찾을 수 없습니다.' });
+      return res.status(404).json({ ok: false, message: '주문을 찾을 수 없어요.' });
     }
     const account = await loadRefundAccount(target.key);
     if (!account) {
       await log('not_found');
-      return res.status(404).json({ ok: false, message: '접수된 환불 계좌가 없습니다.' });
+      return res.status(404).json({ ok: false, message: '접수된 환불 계좌가 없어요.' });
     }
     await log('success');
     return res.status(200).json({
@@ -77,6 +77,6 @@ export const handleRefundAccountView = async (
     }
     await log('error');
     console.error(`[${logContext}] 환불 계좌 조회 실패 (orderId=${id}):`, safeDbErrorSummary(error));
-    return res.status(500).json({ ok: false, message: '환불 계좌를 읽지 못했습니다. 마이그레이션 0048이 적용됐는지 확인해 주세요.' });
+    return res.status(500).json({ ok: false, message: '환불 계좌를 읽지 못했어요. 마이그레이션 0048이 적용됐는지 확인해 주세요.' });
   }
 };

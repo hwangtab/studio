@@ -104,7 +104,7 @@ it('검증 실패 400, 품절 409', async () => {
   (createFundingPledge as jest.Mock).mockResolvedValue({ ok: false, code: 'sold_out' });
   const r = await call(body);
   expect(r.status).toBe(409);
-  expect(r.body.message).toBe('남은 수량보다 많이 신청했거나 방금 마감되었습니다. 수량을 줄이거나 다른 리워드를 선택해 주세요.');
+  expect(r.body.message).toBe('남은 수량보다 많이 신청했거나 방금 마감됐어요. 수량을 줄이거나 다른 리워드를 선택해 주세요.');
 });
 
 describe('속도 제한 · 홀드 상한', () => {
@@ -152,7 +152,7 @@ describe('속도 제한 · 홀드 상한', () => {
     (consumeRateLimit as jest.Mock).mockImplementation(async (key: string) => !key.startsWith('funding_hold:'));
     const r = await call({ ...body, ...cdBodyExtra, paymentMethod: 'toss' });
     expect(r.status).toBe(429);
-    expect(r.body.message).toBe('한정 리워드 결제 시도가 잦습니다. 15분 뒤 다시 시도해 주세요.');
+    expect(r.body.message).toBe('한정 리워드 결제 시도가 잦아요. 15분 뒤 다시 시도해 주세요.');
     expect(createFundingPledge).not.toHaveBeenCalled();
   });
 });

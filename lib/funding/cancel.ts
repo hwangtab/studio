@@ -22,7 +22,7 @@ export type FundingCancelOutcome =
   | { ok: true; mode: 'refunded' | 'refund_requested' | 'recorded' | 'withdrawn'; refundAmount: number; warnings?: string[] }
   | { ok: false; code: 'not_found' | 'invalid_state' | 'toss_failed' | 'recording_failed' | 'temporarily_unavailable'; message: string };
 
-const GENERIC = '취소 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+const GENERIC = '취소 처리 중 오류가 발생했어요. 잠시 후 다시 시도해 주세요.';
 const refundIdempotencyKey = (orderNo: string, amount: number): string => `refund:${orderNo}:${amount}`;
 
 /**
@@ -79,7 +79,7 @@ export const cancelFundingPledge = async (input: {
   refundAccount?: unknown;
 }): Promise<FundingCancelOutcome> => {
   const order = await findFundingOrderByOrderNo(input.orderNo);
-  if (!order || !order.fundingPledge) return { ok: false, code: 'not_found', message: '펀딩 내역을 찾을 수 없습니다.' };
+  if (!order || !order.fundingPledge) return { ok: false, code: 'not_found', message: '펀딩 내역을 찾을 수 없어요.' };
   const pledge = order.fundingPledge;
   /**
    * 입금 전 계좌 입금 신청 — 후원자가 "입금 전 신청 취소"를 눌렀다. 화면(manage SSR)과 같은
@@ -105,7 +105,7 @@ export const cancelFundingPledge = async (input: {
    */
   const { project, lookupFailed } = await getFundingProjectOrFailure(pledge.projectSlug);
   if (lookupFailed && input.requestedBy === 'customer') {
-    return { ok: false, code: 'temporarily_unavailable', message: '지금은 처리할 수 없습니다. 잠시 후 다시 시도해 주세요.' };
+    return { ok: false, code: 'temporarily_unavailable', message: '지금은 처리할 수 없어요. 잠시 후 다시 시도해 주세요.' };
   }
   // 부분환불 건은 관리자만 다룰 수 있다 — 남은 금액 계산이 걸려 있어 고객 셀프 취소에 맡기지 않는다.
   if (order.status === 'partially_refunded' && input.requestedBy !== 'admin') {
@@ -140,7 +140,7 @@ export const cancelFundingPledge = async (input: {
   const refundAmount = remainingRefundable(order);
 
   if (pledge.paymentMethod === 'toss' && !payment) {
-    return { ok: false, code: 'invalid_state', message: '결제 기록이 없는 펀딩입니다. 관리자에게 문의해 주세요.' };
+    return { ok: false, code: 'invalid_state', message: '결제 기록이 없는 펀딩이에요. 관리자에게 문의해 주세요.' };
   }
 
   /**
@@ -162,7 +162,7 @@ export const cancelFundingPledge = async (input: {
       } catch (error) {
         // 키가 없는 배포 — 평문으로 저장하는 길은 없다. 값은 로그에 적지 않는다.
         console.error('[funding-cancel] 환불 계좌 암호화 실패 — 접수하지 않는다', { orderNo: order.orderNo, error: error instanceof Error ? error.name : 'unknown' });
-        return { ok: false, code: 'temporarily_unavailable', message: '지금은 환불 계좌를 접수할 수 없습니다. 010-4255-7893으로 연락 주세요.' };
+        return { ok: false, code: 'temporarily_unavailable', message: '지금은 환불 계좌를 접수할 수 없어요. 010-4255-7893으로 연락 주세요.' };
       }
       const requestedAt = Math.floor(input.now.getTime() / 1000);
       /**
@@ -185,7 +185,7 @@ export const cancelFundingPledge = async (input: {
         claimed = Number(claim.rowsAffected ?? 0);
       } catch (error) {
         console.error('[funding-cancel] 취소 접수 선점 실패', { orderNo: order.orderNo, error: safeDbErrorSummary(error) });
-        return { ok: false, code: 'temporarily_unavailable', message: '지금은 취소를 접수할 수 없습니다. 잠시 후 다시 시도해 주세요.' };
+        return { ok: false, code: 'temporarily_unavailable', message: '지금은 취소를 접수할 수 없어요. 잠시 후 다시 시도해 주세요.' };
       }
       if (claimed > 0) {
         try {
@@ -199,18 +199,18 @@ export const cancelFundingPledge = async (input: {
           console.error('[funding-cancel] 환불 계좌 저장 실패 — 접수를 되돌린다', { orderNo: order.orderNo, error: safeDbErrorSummary(error) });
           await db0.run(sql`UPDATE funding_pledges SET refund_requested_at = NULL WHERE id = ${pledge.id} AND refund_requested_at = ${requestedAt}`)
             .catch((revertError: unknown) => console.error('[funding-cancel] 접수 되돌리기 실패 — 관리자 화면에서 환불 요청 취소 필요', { orderNo: order.orderNo, error: safeDbErrorSummary(revertError) }));
-          return { ok: false, code: 'temporarily_unavailable', message: '지금은 취소를 접수할 수 없습니다. 잠시 후 다시 시도해 주세요.' };
+          return { ok: false, code: 'temporarily_unavailable', message: '지금은 취소를 접수할 수 없어요. 잠시 후 다시 시도해 주세요.' };
         }
       }
-      if (claimed === 0) return { ok: false, code: 'invalid_state', message: '이미 취소 요청이 접수되었거나 지금은 취소할 수 없는 상태입니다. 새로고침해 주세요.' };
+      if (claimed === 0) return { ok: false, code: 'invalid_state', message: '이미 취소 요청이 접수되었거나 지금은 취소할 수 없는 상태예요. 새로고침해 주세요.' };
       await notifyCancelled(db0, order, project, 'refund_requested', refundAmount);
       return { ok: true, mode: 'refund_requested', refundAmount };
     }
-    if (refundAmount <= 0) return { ok: false, code: 'invalid_state', message: '환불할 잔액이 없습니다.' };
+    if (refundAmount <= 0) return { ok: false, code: 'invalid_state', message: '환불할 잔액이 없어요.' };
     const claim = await db.run(
       sql`UPDATE orders SET status = 'refunded', updated_at = unixepoch() WHERE id = ${order.id} AND status IN (${liveFundingOrderStatusList()})`,
     );
-    if (Number(claim.rowsAffected) === 0) return { ok: false, code: 'invalid_state', message: '이미 처리된 펀딩입니다.' };
+    if (Number(claim.rowsAffected) === 0) return { ok: false, code: 'invalid_state', message: '이미 처리된 펀딩이에요.' };
     // 송금을 마쳤다는 기록 — 결제 공용 환불 계좌 표의 refunded_at(계좌가 없는 수기 건이면 아무 일도 없다).
     await markRefundAccountRefunded({ kind: 'funding', orderNo: order.orderNo }, input.now);
     await notifyCancelled(db, order, project, 'recorded', refundAmount);
@@ -224,13 +224,13 @@ export const cancelFundingPledge = async (input: {
     );
     return {
       ok: true, mode: 'recorded', refundAmount,
-      ...(downloadedAfterRequest ? { warnings: ['이 후원자는 취소를 요청한 뒤 음원을 내려받았습니다 — 환불 기록은 했습니다. 청약철회 제한 여부를 확인해 주세요.'] } : {}),
+      ...(downloadedAfterRequest ? { warnings: ['이 후원자는 취소를 요청한 뒤 음원을 내려받았어요 — 환불 기록은 했어요. 청약철회 제한 여부를 확인해 주세요.'] } : {}),
     };
   }
 
   // 잔액이 0이면 토스를 아예 부르지 않는다 — 부르면 취소 금액 0(또는 초과)으로 거절되거나,
   // 잔액이 남은 것처럼 계산된 금액이 이중으로 나간다.
-  if (refundAmount <= 0) return { ok: false, code: 'invalid_state', message: '환불할 잔액이 없습니다.' };
+  if (refundAmount <= 0) return { ok: false, code: 'invalid_state', message: '환불할 잔액이 없어요.' };
 
   // 토스: 선점 → 취소 API → 기록. 실패 시 되돌림(예약 cancel.ts와 같은 순서).
   //
@@ -248,7 +248,7 @@ export const cancelFundingPledge = async (input: {
   const claim = await db.run(
     sql`UPDATE orders SET status = 'refunded', updated_at = unixepoch() WHERE id = ${order.id} AND status = ${order.status}${selfCancelGuard}`,
   );
-  if (Number(claim.rowsAffected) === 0) return { ok: false, code: 'invalid_state', message: '이미 처리 중이거나 취소된 펀딩입니다.' };
+  if (Number(claim.rowsAffected) === 0) return { ok: false, code: 'invalid_state', message: '이미 처리 중이거나 취소된 펀딩이에요.' };
   const toss = await cancelPayment({
     paymentKey: payment!.paymentKey, cancelReason: input.reason, cancelAmount: refundAmount,
     idempotencyKey: refundIdempotencyKey(order.orderNo, refundAmount),
@@ -330,7 +330,7 @@ export const cancelFundingPledge = async (input: {
     recorded = Number(inserted.rowsAffected) > 0;
   } catch (error) {
     console.error('[funding-cancel] 환불 완료, 기록 실패 — 웹훅 CANCELED 동기화가 보정', { orderNo: order.orderNo, error });
-    return { ok: false, code: 'recording_failed', message: '환불은 완료되었으나 기록이 지연되고 있습니다. 010-4255-7893으로 확인 부탁드립니다.' };
+    return { ok: false, code: 'recording_failed', message: '환불은 완료되었으나 기록이 지연되고 있어요. 010-4255-7893으로 확인 부탁드려요.' };
   }
   if (recorded) await notifyCancelled(db, order, project, 'refunded', refundAmount);
   return { ok: true, mode: 'refunded', refundAmount };

@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const ip = getClientIp(req) ?? 'unknown';
   // bookings/index.ts와 같은 키 접두사를 공유 — 세션·믹싱 두 진입점이 합쳐 한 IP당 한도를 쓴다.
   if (!(await consumeRateLimit(`booking_create:ip:${ip}`, 10, 3600)))
-    return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
 
   const now = new Date();
   const validated = validateCreateMixingOrderPayload(req.body, now);

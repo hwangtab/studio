@@ -105,7 +105,7 @@ describe('CONFIG_ERROR', () => {
     const mock = jest.fn();
     global.fetch = mock as unknown as typeof fetch;
     const result = await confirmPayment({ paymentKey: 'pk', orderId: 'SNB-1', amount: 275000 });
-    expect(result).toEqual({ ok: false, code: 'CONFIG_ERROR', message: 'TOSS_SECRET_KEY가 설정되지 않았습니다.' });
+    expect(result).toEqual({ ok: false, code: 'CONFIG_ERROR', message: 'TOSS_SECRET_KEY가 설정되지 않았어요.' });
     expect(mock).not.toHaveBeenCalled();
   });
 });

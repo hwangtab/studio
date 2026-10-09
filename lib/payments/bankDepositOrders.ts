@@ -179,15 +179,15 @@ export const sendDepositGuideEmails = async (m: DepositGuideMail): Promise<strin
       subject: `[스튜디오 놀] 계좌 입금 안내 — ${m.kindLabel}`,
       text: [
         `${m.customerName}님, 신청해 주셔서 고맙습니다.`,
-        '아래 계좌로 입금해 주시면 확인한 뒤 확정해 드립니다.',
+        '아래 계좌로 입금해 주시면 확인한 뒤 확정해 드려요.',
         '',
         `은행: ${BANK_ACCOUNT.bankName}`,
         `계좌번호: ${BANK_ACCOUNT.accountNumber}`,
         `예금주: ${BANK_ACCOUNT.accountHolder}`,
         `입금하실 금액: ${formatPriceAmount(m.totalAmount)}원`,
         '',
-        `입금하실 때 보내는 분 이름은 ${m.applicantLabel} 성함(${m.customerName})으로 해 주세요. 이름과 금액으로 확인합니다.`,
-        `${deadline}까지 입금해 주세요. 입금이 확인되면 메일로 알려 드립니다(영업일 1일 이내).`,
+        `입금하실 때 보내는 분 이름은 ${m.applicantLabel} 성함(${m.customerName})으로 해 주세요. 이름과 금액으로 확인해요.`,
+        `${deadline}까지 입금해 주세요. 입금이 확인되면 메일로 알려 드려요(영업일 1일 이내).`,
         '',
         ...m.summaryLines,
         `주문번호: ${m.orderNo}`,
@@ -200,7 +200,7 @@ export const sendDepositGuideEmails = async (m: DepositGuideMail): Promise<strin
         heading: '계좌 입금 안내',
         paragraphs: [
           `${escapeHtml(m.customerName)}님, 신청해 주셔서 고맙습니다.`,
-          '아래 계좌로 입금해 주시면 확인한 뒤 확정해 드립니다.',
+          '아래 계좌로 입금해 주시면 확인한 뒤 확정해 드려요.',
         ],
         rows: [
           { label: '은행', value: BANK_ACCOUNT.bankName },
@@ -213,8 +213,8 @@ export const sendDepositGuideEmails = async (m: DepositGuideMail): Promise<strin
         ],
         ...(m.manageUrl ? { cta: { label: '입금 안내 다시 보기·신청 취소', url: m.manageUrl } } : {}),
         notices: [
-          `입금하실 때 보내는 분 이름은 ${escapeHtml(m.applicantLabel)} 성함(<strong>${escapeHtml(m.customerName)}</strong>)으로 해 주세요. 이름과 금액으로 확인합니다.`,
-          '입금이 확인되면 메일로 알려 드립니다(영업일 1일 이내).',
+          `입금하실 때 보내는 분 이름은 ${escapeHtml(m.applicantLabel)} 성함(<strong>${escapeHtml(m.customerName)}</strong>)으로 해 주세요. 이름과 금액으로 확인해요.`,
+          '입금이 확인되면 메일로 알려 드려요(영업일 1일 이내).',
           ...summary.sentences.map(escapeHtml),
           '문의: 010-4255-7893',
         ],
@@ -226,7 +226,7 @@ export const sendDepositGuideEmails = async (m: DepositGuideMail): Promise<strin
     to: OPERATOR_EMAIL,
     subject: `[${m.kindLabel}] 계좌 입금 신청 ${formatPriceAmount(m.totalAmount)}원 — ${m.customerName}`,
     text: [
-      '통장에 입금이 들어오면 관리자 화면에서 "입금 확인"을 눌러 주세요. 자동 취소는 없습니다.',
+      '통장에 입금이 들어오면 관리자 화면에서 "입금 확인"을 눌러 주세요. 자동 취소는 없어요.',
       ...m.summaryLines,
       `고객: ${m.customerName} / ${m.customerPhone} / ${m.customerEmail}`,
       `금액: ${formatPriceAmount(m.totalAmount)}원`,
@@ -238,7 +238,7 @@ export const sendDepositGuideEmails = async (m: DepositGuideMail): Promise<strin
       audience: 'operator',
       noticeTone: 'alert',
       preheader: `${m.customerName} · ${formatPriceAmount(m.totalAmount)}원 · ${m.kindLabel}`,
-      heading: `${m.kindLabel} 계좌 입금 신청이 접수되었습니다`,
+      heading: `${m.kindLabel} 계좌 입금 신청이 접수됐어요`,
       rows: [
         { label: '고객', value: m.customerName },
         { label: '연락처', value: m.customerPhone, href: `tel:${m.customerPhone.replace(/[^0-9+]/g, '')}` },
@@ -250,7 +250,7 @@ export const sendDepositGuideEmails = async (m: DepositGuideMail): Promise<strin
       ],
       cta: { label: '관리자에서 보기', url: toAbsoluteAdminUrl(m.adminUrl) },
       notices: [
-        '통장에 입금이 들어오면 관리자 화면에서 <strong>"입금 확인"</strong>을 눌러 주세요. 자동 취소는 없습니다.',
+        '통장에 입금이 들어오면 관리자 화면에서 <strong>"입금 확인"</strong>을 눌러 주세요. 자동 취소는 없어요.',
         ...summary.sentences.map(escapeHtml),
       ],
     }),
@@ -279,7 +279,7 @@ export const buildDepositWithdrawnOperatorEmail = (m: DepositWithdrawnAlert): { 
   return {
     subject: `[${m.kindLabel}] 계좌 입금 신청 취소 ${amount} — ${m.customerName}`,
     text: [
-      '고객이 입금 전에 계좌 입금 신청을 직접 취소했습니다. 받은 돈이 없어 환불할 것은 없습니다.',
+      '고객이 입금 전에 계좌 입금 신청을 직접 취소했어요. 받은 돈이 없어 환불할 것은 없어요.',
       ...m.summaryLines,
       `고객: ${m.customerName} / ${m.customerPhone} / ${m.customerEmail}`,
       `금액: ${amount}`,
@@ -289,8 +289,8 @@ export const buildDepositWithdrawnOperatorEmail = (m: DepositWithdrawnAlert): { 
     html: buildEmailLayout({
       audience: 'operator',
       preheader: `${m.customerName} · ${amount} · 고객이 입금 전에 취소`,
-      heading: `${m.kindLabel} 계좌 입금 신청을 고객이 취소했습니다`,
-      paragraphs: ['입금 전에 고객이 직접 취소했습니다. 받은 돈이 없어 환불할 것은 없습니다.'],
+      heading: `${m.kindLabel} 계좌 입금 신청을 고객이 취소했어요`,
+      paragraphs: ['입금 전에 고객이 직접 취소했어요. 받은 돈이 없어 환불할 것은 없어요.'],
       rows: [
         { label: '고객', value: m.customerName },
         { label: '연락처', value: m.customerPhone, href: `tel:${m.customerPhone.replace(/[^0-9+]/g, '')}` },

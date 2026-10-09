@@ -35,7 +35,7 @@ export function normalizeShowContact(raw: string): string | null {
 
 const MESSAGES = {
   ko: {
-    body: '요청 형식이 올바르지 않습니다.',
+    body: '요청 형식이 올바르지 않아요.',
     showtime: '회차를 선택해 주세요.',
     ticketType: '티켓 종류를 선택해 주세요.',
     quantity: (max: number) => `매수는 1~${max}매 사이로 선택해 주세요.`,

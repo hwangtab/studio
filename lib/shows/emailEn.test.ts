@@ -28,7 +28,7 @@ describe('영어 주문의 티켓 메일', () => {
 
   it('언어가 없으면 지금과 같은 한국어 메일이다', () => {
     const m = buildShowTicketEmail(base);
-    expect(m.subject.startsWith('[스튜디오 놀] 티켓이 발권되었습니다')).toBe(true);
+    expect(m.subject.startsWith('[스튜디오 놀] 티켓이 발권됐어요')).toBe(true);
     expect(m.text).toContain('/ko/shows/manage/');
     expect(m.html).toContain('<html lang="ko">');
   });

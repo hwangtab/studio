@@ -75,7 +75,7 @@ const summaryOf = (order: BookingOrder): { kindLabel: string; applicantLabel: st
     lines: b
       ? [`상품: ${name}${b.roomNumber ? ` (${b.roomNumber})` : ''}`, `이용 일시: ${kstHourLabel(b.startAt)}부터 ${b.durationHours}시간`]
       : [`상품: ${name}`],
-    ...(b ? { holdNote: '입금을 확인할 때까지 이 시간대는 다른 분이 예약할 수 없게 잡아 둡니다.' } : {}),
+    ...(b ? { holdNote: '입금을 확인할 때까지 이 시간대는 다른 분이 예약할 수 없게 잡아 둬요.' } : {}),
   };
 };
 
@@ -172,11 +172,11 @@ export const retryWaitingEventDelete = async (orderId: string): Promise<{ ok: bo
   const order = await findById(orderId);
   const booking = order?.bookings[0];
   if (!order || order.status !== DEPOSIT_CANCELLED || !booking?.gcalEventId) {
-    return { ok: false, message: '지울 입금 대기 일정이 없습니다.' };
+    return { ok: false, message: '지울 입금 대기 일정이 없어요.' };
   }
   return (await removeWaitingCalendarEvent(booking, booking.gcalEventId))
     ? { ok: true }
-    : { ok: false, message: '캘린더 일정을 지우지 못했습니다. 잠시 뒤 다시 누르거나 구글 캘린더에서 직접 지운 뒤 다시 눌러 주세요.' };
+    : { ok: false, message: '캘린더 일정을 지우지 못했어요. 잠시 뒤 다시 누르거나 구글 캘린더에서 직접 지운 뒤 다시 눌러 주세요.' };
 };
 
 const findById = async (orderId: string): Promise<BookingOrder | undefined> =>
@@ -208,7 +208,7 @@ const confirmDepositLinkBankDeposit = async (order: BookingOrder, now: Date): Pr
     `),
   ]);
   if (rowsOf(claim) === 0) {
-    return { ok: false, code: 'invalid_state', message: '이미 확인됐거나 입금을 확인할 수 있는 상태가 아닙니다(미입금 취소된 신청은 확정할 수 없습니다). 새로고침해 주세요.' };
+    return { ok: false, code: 'invalid_state', message: '이미 확인됐거나 입금을 확인할 수 있는 상태가 아니에요(미입금 취소된 신청은 확정할 수 없어요). 새로고침해 주세요.' };
   }
   let failure: string | null = null;
   try {
@@ -238,7 +238,7 @@ const confirmDepositLinkBankDeposit = async (order: BookingOrder, now: Date): Pr
 export const confirmBookingBankDeposit = async (input: { orderId: string; now: Date }): Promise<BookingDepositOutcome> => {
   const order = await findById(input.orderId);
   if (!order || (order.type !== 'session' && order.type !== 'mixing' && order.type !== 'deposit')) {
-    return { ok: false, code: 'not_found', message: '주문을 찾을 수 없습니다.' };
+    return { ok: false, code: 'not_found', message: '주문을 찾을 수 없어요.' };
   }
   if (isDepositLink(order)) return confirmDepositLinkBankDeposit(order, input.now);
   const db = getDb();
@@ -268,7 +268,7 @@ export const confirmBookingBankDeposit = async (input: { orderId: string; now: D
         `),
   ]);
   if (rowsOf(claim) === 0) {
-    return { ok: false, code: 'invalid_state', message: '이미 확인됐거나 입금을 확인할 수 있는 상태가 아닙니다(미입금 취소된 신청은 확정할 수 없습니다). 새로고침해 주세요.' };
+    return { ok: false, code: 'invalid_state', message: '이미 확인됐거나 입금을 확인할 수 있는 상태가 아니에요(미입금 취소된 신청은 확정할 수 없어요). 새로고침해 주세요.' };
   }
 
   // [입금 대기] 일정이 있으면 제목만 [예약]으로 바꾼다 — 같은 일정이 확정 일정이 된다. 실패하면 gcal_error에
@@ -291,7 +291,7 @@ export const confirmBookingBankDeposit = async (input: { orderId: string; now: D
   const warnings: string[] = [];
   const booking = fresh.bookings[0];
   if (booking && booking.startAt.getTime() <= input.now.getTime()) {
-    warnings.push('이용 시작 시각이 이미 지난 예약입니다 — 고객과 이용 여부를 확인하고, 이용하지 못했다면 환불해 주세요.');
+    warnings.push('이용 시작 시각이 이미 지난 예약이에요 — 고객과 이용 여부를 확인하고, 이용하지 못했다면 환불해 주세요.');
   }
   return { ok: true, emailSent, ...(warnings.length ? { warnings } : {}) };
 };
@@ -306,7 +306,7 @@ export const confirmBookingBankDeposit = async (input: { orderId: string; now: D
 export const cancelAwaitingBookingDeposit = async (input: { orderId: string }): Promise<BookingDepositOutcome> => {
   const order = await findById(input.orderId);
   if (!order || (order.type !== 'session' && order.type !== 'mixing' && order.type !== 'deposit')) {
-    return { ok: false, code: 'not_found', message: '주문을 찾을 수 없습니다.' };
+    return { ok: false, code: 'not_found', message: '주문을 찾을 수 없어요.' };
   }
   const db = getDb();
   const isClosed = sql`EXISTS (SELECT 1 FROM orders WHERE id = ${order.id} AND status = ${DEPOSIT_CANCELLED})`;
@@ -325,7 +325,7 @@ export const cancelAwaitingBookingDeposit = async (input: { orderId: string }): 
     `),
   ]);
   if (rowsOf(claim) === 0) {
-    return { ok: false, code: 'invalid_state', message: '입금 대기 중인 계좌 입금 신청이 아닙니다. 새로고침해 주세요.' };
+    return { ok: false, code: 'invalid_state', message: '입금 대기 중인 계좌 입금 신청이 아니에요. 새로고침해 주세요.' };
   }
   const booking = order.bookings[0];
   if (booking?.gcalEventId) await removeWaitingCalendarEvent(booking, booking.gcalEventId);

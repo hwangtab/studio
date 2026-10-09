@@ -121,27 +121,27 @@ const validateCustomerFields = (b: Record<string, unknown>): CustomerResult => {
 };
 
 export const validateCreateBookingPayload = (body: unknown, now: Date): Result => {
-  if (typeof body !== 'object' || body === null) return { ok: false, message: '잘못된 요청입니다.' };
+  if (typeof body !== 'object' || body === null) return { ok: false, message: '잘못된 요청이에요.' };
   const b = body as Record<string, unknown>;
 
   const product = typeof b.productId === 'string' ? getProduct(b.productId) : undefined;
-  if (!product) return { ok: false, message: '알 수 없는 상품입니다.' };
+  if (!product) return { ok: false, message: '알 수 없는 상품이에요.' };
 
   const hours = resolveHours(product, typeof b.hours === 'number' ? b.hours : undefined);
-  if (hours === null) return { ok: false, message: '예약 시간 수가 올바르지 않습니다.' };
+  if (hours === null) return { ok: false, message: '예약 시간 수가 올바르지 않아요.' };
 
-  if (typeof b.date !== 'string' || !DATE_RE.test(b.date)) return { ok: false, message: '날짜가 올바르지 않습니다.' };
-  if (typeof b.startHour !== 'number' || !Number.isInteger(b.startHour)) return { ok: false, message: '시작 시간이 올바르지 않습니다.' };
+  if (typeof b.date !== 'string' || !DATE_RE.test(b.date)) return { ok: false, message: '날짜가 올바르지 않아요.' };
+  if (typeof b.startHour !== 'number' || !Number.isInteger(b.startHour)) return { ok: false, message: '시작 시간이 올바르지 않아요.' };
   const { openHour, closeHour } = productHours(product);
   if (b.startHour < openHour || b.startHour + hours > closeHour)
-    return { ok: false, message: '예약 가능 시간대가 아닙니다.' };
+    return { ok: false, message: '예약 가능 시간대가 아니에요.' };
 
   const startAt = kstDateTime(b.date, b.startHour);
-  if (Number.isNaN(startAt.getTime())) return { ok: false, message: '날짜가 올바르지 않습니다.' };
+  if (Number.isNaN(startAt.getTime())) return { ok: false, message: '날짜가 올바르지 않아요.' };
   if (startAt.getTime() - now.getTime() < MIN_LEAD_HOURS * 3600 * 1000)
-    return { ok: false, message: MIN_LEAD_HOURS > 0 ? `예약은 ${MIN_LEAD_HOURS}시간 이후 시간대부터 가능합니다.` : '이미 지난 시간대입니다.' };
+    return { ok: false, message: MIN_LEAD_HOURS > 0 ? `예약은 ${MIN_LEAD_HOURS}시간 이후 시간대부터 가능해요.` : '이미 지난 시간대예요.' };
   if (daysUntilKst(now, startAt) > MAX_BOOK_DAYS)
-    return { ok: false, message: `예약은 ${MAX_BOOK_DAYS}일 이내만 가능합니다.` };
+    return { ok: false, message: `예약은 ${MAX_BOOK_DAYS}일 이내만 가능해요.` };
 
   const customer = validateCustomerFields(b);
   if (!customer.ok) return customer;
@@ -157,18 +157,18 @@ export const validateCreateBookingPayload = (body: unknown, now: Date): Result =
 
 export const validateCreateMixingOrderPayload = (body: unknown, now: Date): MixingResult => {
   void now; // 세션과 시그니처를 맞춰 두되, 믹싱은 날짜 개념이 없어 지금은 쓰지 않는다.
-  if (typeof body !== 'object' || body === null) return { ok: false, message: '잘못된 요청입니다.' };
+  if (typeof body !== 'object' || body === null) return { ok: false, message: '잘못된 요청이에요.' };
   const b = body as Record<string, unknown>;
 
   const product = typeof b.productId === 'string' ? getMixingProduct(b.productId) : undefined;
-  if (!product) return { ok: false, message: '알 수 없는 상품입니다.' };
+  if (!product) return { ok: false, message: '알 수 없는 상품이에요.' };
 
   const songCount = resolveSongCount(product, b.songCount);
-  if (songCount === null) return { ok: false, message: '곡 수가 올바르지 않습니다.' };
+  if (songCount === null) return { ok: false, message: '곡 수가 올바르지 않아요.' };
 
-  if (typeof b.vocalTuning !== 'boolean') return { ok: false, message: '보컬 튜닝 옵션이 올바르지 않습니다.' };
+  if (typeof b.vocalTuning !== 'boolean') return { ok: false, message: '보컬 튜닝 옵션이 올바르지 않아요.' };
   if (b.vocalTuning && !product.tuningEligible)
-    return { ok: false, message: '이 상품은 보컬 튜닝 옵션을 선택할 수 없습니다.' };
+    return { ok: false, message: '이 상품은 보컬 튜닝 옵션을 선택할 수 없어요.' };
 
   const customer = validateCustomerFields(b);
   if (!customer.ok) return customer;

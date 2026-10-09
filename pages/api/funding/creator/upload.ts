@@ -66,18 +66,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const auth = await authenticateCreatorApi(req, res);
-  if (!auth.ok) return res.status(401).json({ ok: false, message: '로그인이 필요합니다.' });
+  if (!auth.ok) return res.status(401).json({ ok: false, message: '로그인이 필요해요.' });
 
   const projectId = typeof req.query.projectId === 'string' ? req.query.projectId : '';
   const kind = typeof req.query.kind === 'string' ? req.query.kind : '';
   if (!projectId || (kind !== 'cover' && kind !== 'body')) {
-    return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
+    return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않아요.' });
   }
 
   // 남의 프로젝트면 '권한 없음'이 아니라 404다 — creatorProjectWrite.ts의 guard와 같은
   // 이유로, 존재 여부 자체를 알려 주지 않는다.
   const project = await loadProjectForCreator(auth.creatorId, projectId);
-  if (!project) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없습니다.' });
+  if (!project) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없어요.' });
 
   // 심사 중이거나 이미 판정 난 프로젝트는 saveStorySection 등 저장 경로가 guard로 막지만,
   // 업로드 자체(Blob에 파일이 쌓이는 것)는 그 검사를 타지 않아 계정만 있으면 편집 가능
@@ -90,7 +90,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // 업로드도 열려 있어야 한다. 구획 단위 판정이 필요한 자리가 아니다 — 업로드는
   // "지금 이 프로젝트를 편집 중인가"만 알면 된다.
   if (!canCreatorEdit(project.reviewStatus as FundingReviewStatus)) {
-    return res.status(409).json({ ok: false, message: '심사 중이거나 이미 판정이 난 프로젝트에는 이미지를 올릴 수 없습니다.' });
+    return res.status(409).json({ ok: false, message: '심사 중이거나 이미 판정이 난 프로젝트에는 이미지를 올릴 수 없어요.' });
   }
 
   // 로그인이 "처음 보는 이메일이면 계정 자동 생성"이라 메일 주소만 있으면 누구나 개설자
@@ -98,27 +98,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // login.ts(IP+이메일 두 겹)와 같은 이유로 IP 한 겹을 더한다.
   const ip = getClientIp(req) ?? 'unknown';
   if (!(await consumeRateLimit(`creator_upload:ip:${ip}`, 120, 3600))) {
-    return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
   }
   if (!(await consumeRateLimit(`creator_upload:${auth.creatorId}`, 60, 3600))) {
-    return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
   }
 
   const rewardImageUrls = project.rewards.map((reward) => reward.imageUrl);
   if (countProjectMedia(project.content, project.coverUrl, rewardImageUrls) >= UPLOAD_LIMITS.maxPerProject) {
-    return res.status(400).json({ ok: false, message: `이미지는 프로젝트당 최대 ${UPLOAD_LIMITS.maxPerProject}장까지 올릴 수 있습니다.` });
+    return res.status(400).json({ ok: false, message: `이미지는 프로젝트당 최대 ${UPLOAD_LIMITS.maxPerProject}장까지 올릴 수 있어요.` });
   }
 
   const body = await readBodyWithLimit(req, UPLOAD_LIMITS.maxBytes);
-  if (body === null) return res.status(413).json({ ok: false, message: '파일이 너무 큽니다.' });
-  if (body.length === 0) return res.status(400).json({ ok: false, message: '파일이 비어 있습니다.' });
+  if (body === null) return res.status(413).json({ ok: false, message: '파일이 너무 커요.' });
+  if (body.length === 0) return res.status(400).json({ ok: false, message: '파일이 비어 있어요.' });
 
   let processed: { buffer: Buffer; width: number; height: number };
   try {
     processed = await processCreatorImage(body, kind);
   } catch (error: unknown) {
     console.error('[funding/creator/upload] 이미지 처리 실패:', error);
-    return res.status(400).json({ ok: false, message: '이미지 파일이 아닙니다.' });
+    return res.status(400).json({ ok: false, message: '이미지 파일이 아니에요.' });
   }
 
   /**
@@ -137,7 +137,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // 다른 실패는 전부 { ok: false, message } JSON이다 — 여기서 throw를 그대로 흘리면
     // Next 기본 500 HTML이 나가 클라이언트 파싱 계약이 깨진다.
     console.error('[funding/creator/upload] Blob 저장 실패:', error);
-    return res.status(500).json({ ok: false, message: '이미지를 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(500).json({ ok: false, message: '이미지를 저장하지 못했어요. 잠시 후 다시 시도해 주세요.' });
   }
 
   return res.status(200).json({ ok: true, url: buildFundingMediaUrl(filename, processed.width, processed.height) });

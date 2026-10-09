@@ -52,7 +52,7 @@ export const setFulfillment = async (input: {
   const db = getDb();
 
   if (!(fulfillmentStatusEnum as readonly string[]).includes(status)) {
-    return { ok: false, code: 'invalid_status', message: '발송 상태가 올바르지 않습니다.' };
+    return { ok: false, code: 'invalid_status', message: '발송 상태가 올바르지 않아요.' };
   }
 
   // 택배사·운송장은 관리자·개설자 두 경로가 모두 여기를 지난다 — 길이·제어문자 검증도 한 곳이다.
@@ -64,7 +64,7 @@ export const setFulfillment = async (input: {
     with: { order: true, items: true },
   });
   if (!row || !row.order) {
-    return { ok: false, code: 'not_found', message: '펀딩 내역을 찾을 수 없습니다.' };
+    return { ok: false, code: 'not_found', message: '펀딩 내역을 찾을 수 없어요.' };
   }
   const pledge = row;
   const order = row.order;
@@ -84,7 +84,7 @@ export const setFulfillment = async (input: {
       where: (t, { and, eq }) => and(eq(t.slug, pledge.projectSlug), eq(t.reviewStatus, 'approved')),
     });
     if (!project || project.creatorId !== actor.creatorId) {
-      return { ok: false, code: 'forbidden', message: '이 후원의 발송 상태를 바꿀 권한이 없습니다.' };
+      return { ok: false, code: 'forbidden', message: '이 후원의 발송 상태를 바꿀 권한이 없어요.' };
     }
   }
 
@@ -93,7 +93,7 @@ export const setFulfillment = async (input: {
   // 수 없었다 — 목록·CSV에는 영구 '미발송'으로 떠 다음 회차 중복 발송 후보가 됐고,
   // delivered_at이 안 찍혀 아래 주석이 말하는 파기 기산점 자체가 생기지 않았다.
   if (!isLiveFundingOrderStatus(order.status)) {
-    return { ok: false, code: 'not_live', message: '확정된 펀딩만 발송 상태를 바꿀 수 있습니다.' };
+    return { ok: false, code: 'not_live', message: '확정된 펀딩만 발송 상태를 바꿀 수 있어요.' };
   }
 
   // 무통장 청약철회는 자동 환불 경로가 없어 refundRequestedAt만 찍히고 주문은 paid로
@@ -107,7 +107,7 @@ export const setFulfillment = async (input: {
     return {
       ok: false,
       code: 'refund_requested',
-      message: '환불 요청된 펀딩입니다. 환불을 처리하거나 요청을 취소한 뒤에 발송 상태를 바꿔 주세요.',
+      message: '환불 요청된 펀딩이에요. 환불을 처리하거나 요청을 취소한 뒤에 발송 상태를 바꿔 주세요.',
     };
   }
 
@@ -197,7 +197,7 @@ export const setFulfillment = async (input: {
     return {
       ok: false,
       code: 'conflict',
-      message: '그 사이 환불 요청이나 주문 상태 변경이 있었습니다. 새로고침 후 다시 확인해 주세요.',
+      message: '그 사이 환불 요청이나 주문 상태 변경이 있었어요. 새로고침 후 다시 확인해 주세요.',
     };
   }
   return { ok: true };

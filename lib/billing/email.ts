@@ -77,18 +77,18 @@ export const sendSubscriptionSetupEmail = (
   const isPaused = sub.status === 'paused';
   const setupLine = isChange
     ? isPaused
-      ? '아래 버튼에서 새 카드를 등록하시면 카드만 교체되며, 이번에는 결제되지 않습니다. 정기결제가 멈춰 있는 상태라 재개는 문의로 안내해 드립니다.'
-      : '아래 버튼에서 새 카드를 등록하시면 카드만 교체되며, 이번에는 결제되지 않습니다. 다음 결제일부터 새 카드로 청구됩니다.'
-    : '아래 버튼에서 카드를 등록하면 즉시 첫 달치가 결제되고, 이후 매월 같은 날 자동으로 결제됩니다.';
+      ? '아래 버튼에서 새 카드를 등록하시면 카드만 교체되며, 이번에는 결제되지 않아요. 정기결제가 멈춰 있는 상태라 재개는 문의로 안내해 드려요.'
+      : '아래 버튼에서 새 카드를 등록하시면 카드만 교체되며, 이번에는 결제되지 않아요. 다음 결제일부터 새 카드로 청구돼요.'
+    : '아래 버튼에서 카드를 등록하면 즉시 첫 달치가 결제되고, 이후 매월 같은 날 자동으로 결제돼요.';
   return sendCustomerEmail(sub, 'setup', {
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
     subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} 정기결제 ${isChange ? '카드 변경' : '카드 등록'} 안내`,
     html: customerHtml({
-      preheader: isChange ? '정기결제에 사용할 카드를 바꿉니다.' : '카드를 등록하면 정기결제가 시작됩니다.',
+      preheader: isChange ? '정기결제에 사용할 카드를 바꿔요.' : '카드를 등록하면 정기결제가 시작돼요.',
       heading: isChange ? '정기결제 카드 변경 안내' : '정기결제 카드 등록 안내',
       paragraphs: [
-        `${greet(sub)} ${product(sub)} 정기결제에 사용할 카드 ${isChange ? '변경' : '등록'}을 안내드립니다.`,
+        `${greet(sub)} ${product(sub)} 정기결제에 사용할 카드 ${isChange ? '변경' : '등록'}을 안내드려요.`,
         escapeHtml(setupLine),
       ],
       rows: [
@@ -97,24 +97,24 @@ export const sendSubscriptionSetupEmail = (
         { label: '결제일', value: `매월 ${sub.billingDay}일` },
       ],
       cta: { label: isChange ? '카드 변경하기' : '카드 등록하기', url: setupUrl },
-      notices: ['링크는 발급일로부터 7일간 유효합니다.'],
+      notices: ['링크는 발급일로부터 7일간 유효해요.'],
     }),
     text: [
       isChange
-        ? `${sub.customerName}님, ${subscriptionOrderName(sub)} 정기결제에 사용할 카드 변경을 안내드립니다.`
-        : `${sub.customerName}님, ${subscriptionOrderName(sub)} 정기결제를 위한 카드 등록을 안내드립니다.`,
+        ? `${sub.customerName}님, ${subscriptionOrderName(sub)} 정기결제에 사용할 카드 변경을 안내드려요.`
+        : `${sub.customerName}님, ${subscriptionOrderName(sub)} 정기결제를 위한 카드 등록을 안내드려요.`,
       `상품: ${subscriptionOrderName(sub)}`,
       `${amountLine(sub)}`,
       `결제일: 매월 ${sub.billingDay}일`,
       '',
       isChange
         ? isPaused
-          ? '아래 링크에서 새 카드를 등록하시면 카드만 교체되며, 이번에는 결제되지 않습니다. 정기결제가 멈춰 있는 상태라 재개는 문의로 안내해 드립니다.'
-          : '아래 링크에서 새 카드를 등록하시면 카드만 교체되며, 이번에는 결제되지 않습니다. 다음 결제일부터 새 카드로 청구됩니다.'
-        : '아래 링크에서 카드를 등록하면 즉시 첫 달치가 결제되고, 이후 매월 같은 날 자동으로 결제됩니다.',
+          ? '아래 링크에서 새 카드를 등록하시면 카드만 교체되며, 이번에는 결제되지 않아요. 정기결제가 멈춰 있는 상태라 재개는 문의로 안내해 드려요.'
+          : '아래 링크에서 새 카드를 등록하시면 카드만 교체되며, 이번에는 결제되지 않아요. 다음 결제일부터 새 카드로 청구돼요.'
+        : '아래 링크에서 카드를 등록하면 즉시 첫 달치가 결제되고, 이후 매월 같은 날 자동으로 결제돼요.',
       setupUrl,
       '',
-      '링크는 발급일로부터 7일간 유효합니다.',
+      '링크는 발급일로부터 7일간 유효해요.',
       '문의: 010-4255-7893',
     ].join('\n'),
   });
@@ -128,11 +128,11 @@ export const sendSubscriptionActivatedEmail = (
   sendCustomerEmail(sub, 'activated', {
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
-    subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} 정기결제가 시작되었습니다`,
+    subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} 정기결제가 시작됐어요`,
     html: customerHtml({
-      preheader: '카드 등록과 첫 결제가 완료되었습니다.',
-      heading: '정기결제가 시작되었습니다',
-      paragraphs: [`${greet(sub)} ${product(sub)} 카드 등록과 첫 결제가 완료되어 정기결제가 시작되었습니다.`],
+      preheader: '카드 등록과 첫 결제가 완료됐어요.',
+      heading: '정기결제가 시작됐어요',
+      paragraphs: [`${greet(sub)} ${product(sub)} 카드 등록과 첫 결제가 완료되어 정기결제가 시작됐어요.`],
       rows: [
         { label: '이번 결제', value: `${formatPriceAmount(input.amount)}원 (VAT 포함)`, emphasis: true },
         { label: '다음 결제일', value: `매월 ${sub.billingDay}일` },
@@ -140,7 +140,7 @@ export const sendSubscriptionActivatedEmail = (
       cta: { label: '구독 조회·해지', url: input.manageUrl },
     }),
     text: [
-      `${sub.customerName}님, 카드 등록과 첫 결제가 완료되어 정기결제가 시작되었습니다.`,
+      `${sub.customerName}님, 카드 등록과 첫 결제가 완료되어 정기결제가 시작됐어요.`,
       `이번 결제: ${formatPriceAmount(input.amount)}원 (VAT 포함)`,
       `다음 결제일: 매월 ${sub.billingDay}일`,
       '',
@@ -157,11 +157,11 @@ export const sendSubscriptionChargedEmail = (
   sendCustomerEmail(sub, 'charged', {
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
-    subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} ${input.cycleYm} 결제가 완료되었습니다`,
+    subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} ${input.cycleYm} 결제가 완료됐어요`,
     html: customerHtml({
-      preheader: `${input.cycleYm}분 결제가 완료되었습니다.`,
-      heading: `${input.cycleYm} 결제가 완료되었습니다`,
-      paragraphs: [`${greet(sub)} ${escapeHtml(input.cycleYm)}분 ${product(sub)}가 결제되었습니다.`],
+      preheader: `${input.cycleYm}분 결제가 완료됐어요.`,
+      heading: `${input.cycleYm} 결제가 완료됐어요`,
+      paragraphs: [`${greet(sub)} ${escapeHtml(input.cycleYm)}분 ${product(sub)}가 결제됐어요.`],
       rows: [
         { label: '결제 금액', value: `${formatPriceAmount(input.amount)}원 (VAT 포함)`, emphasis: true },
         { label: '결제월', value: input.cycleYm },
@@ -169,7 +169,7 @@ export const sendSubscriptionChargedEmail = (
       cta: { label: '구독 조회·해지', url: input.manageUrl },
     }),
     text: [
-      `${sub.customerName}님, ${input.cycleYm}분 ${subscriptionOrderName(sub)}가 결제되었습니다.`,
+      `${sub.customerName}님, ${input.cycleYm}분 ${subscriptionOrderName(sub)}가 결제됐어요.`,
       `결제 금액: ${formatPriceAmount(input.amount)}원 (VAT 포함)`,
       '',
       `구독 조회·해지: ${input.manageUrl}`,
@@ -189,18 +189,18 @@ export const sendSubscriptionChargeFailedEmail = (
   },
 ): Promise<string | null> => {
   const statusLine = input.nextRetryAt
-    ? `${input.nextRetryAt.toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' })}에 다시 결제를 시도합니다.`
-    : '재시도 한도를 넘어 정기결제가 정지되었습니다. 카드를 재등록해야 이용이 계속됩니다.';
+    ? `${input.nextRetryAt.toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' })}에 다시 결제를 시도해요.`
+    : '재시도 한도를 넘어 정기결제가 정지됐어요. 카드를 재등록해야 이용이 계속돼요.';
 
   return sendCustomerEmail(sub, 'charge_failed', {
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
-    subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} ${input.cycleYm} 결제에 실패했습니다`,
+    subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} ${input.cycleYm} 결제에 실패했어요`,
     html: customerHtml({
-      preheader: input.nextRetryAt ? '카드를 확인해 주세요. 다시 결제를 시도합니다.' : '정기결제가 정지되었습니다. 카드를 재등록해 주세요.',
-      heading: `${input.cycleYm} 결제에 실패했습니다`,
+      preheader: input.nextRetryAt ? '카드를 확인해 주세요. 다시 결제를 시도해요.' : '정기결제가 정지됐어요. 카드를 재등록해 주세요.',
+      heading: `${input.cycleYm} 결제에 실패했어요`,
       paragraphs: [
-        `${greet(sub)} ${escapeHtml(input.cycleYm)}분 ${product(sub)} 결제(${escapeHtml(formatPriceAmount(input.amount))}원)에 실패했습니다.`,
+        `${greet(sub)} ${escapeHtml(input.cycleYm)}분 ${product(sub)} 결제(${escapeHtml(formatPriceAmount(input.amount))}원)에 실패했어요.`,
         escapeHtml(statusLine),
         escapeHtml(input.cardChangeHint),
       ],
@@ -209,11 +209,11 @@ export const sendSubscriptionChargeFailedEmail = (
         { label: '결제월', value: input.cycleYm },
       ],
       cta: { label: '카드 변경하기', url: input.manageUrl },
-      notices: [input.nextRetryAt ? '카드 한도·유효기간·잔액을 확인해 주세요.' : '카드를 재등록하기 전까지 이용이 계속되지 않습니다.'],
+      notices: [input.nextRetryAt ? '카드 한도·유효기간·잔액을 확인해 주세요.' : '카드를 재등록하기 전까지 이용이 계속되지 않아요.'],
       noticeTone: 'alert',
     }),
     text: [
-      `${sub.customerName}님, ${input.cycleYm}분 ${subscriptionOrderName(sub)} 결제(${formatPriceAmount(input.amount)}원)에 실패했습니다.`,
+      `${sub.customerName}님, ${input.cycleYm}분 ${subscriptionOrderName(sub)} 결제(${formatPriceAmount(input.amount)}원)에 실패했어요.`,
       statusLine,
       '',
       input.cardChangeHint,
@@ -237,23 +237,23 @@ export const sendSubscriptionResumedEmail = (
   sendCustomerEmail(sub, 'resumed', {
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
-    subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} 정기결제가 다시 시작됩니다`,
+    subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} 정기결제가 다시 시작돼요`,
     html: customerHtml({
-      preheader: `다음 결제 예정일은 ${fmtDate(input.nextBillingAt)}입니다.`,
-      heading: '정기결제가 다시 시작됩니다',
-      paragraphs: [`${greet(sub)} 잠시 멈춰 두었던 ${product(sub)} 정기결제가 다시 시작됩니다.`],
+      preheader: `다음 결제 예정일은 ${fmtDate(input.nextBillingAt)}이에요.`,
+      heading: '정기결제가 다시 시작돼요',
+      paragraphs: [`${greet(sub)} 잠시 멈춰 두었던 ${product(sub)} 정기결제가 다시 시작돼요.`],
       rows: [
         { label: '다음 결제 예정일', value: fmtDate(input.nextBillingAt), emphasis: true },
         { label: '결제 금액', value: amountLine(sub) },
       ],
       cta: { label: '구독 조회·해지', url: input.manageUrl },
-      notices: ['멈춰 있던 동안의 금액은 청구하지 않습니다.'],
+      notices: ['멈춰 있던 동안의 금액은 청구하지 않아요.'],
     }),
     text: [
-      `${sub.customerName}님, 잠시 멈춰 두었던 ${subscriptionOrderName(sub)} 정기결제가 다시 시작됩니다.`,
+      `${sub.customerName}님, 잠시 멈춰 두었던 ${subscriptionOrderName(sub)} 정기결제가 다시 시작돼요.`,
       `다음 결제 예정일: ${input.nextBillingAt.toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' })}`,
       `결제 금액: ${amountLine(sub)}`,
-      '멈춰 있던 동안의 금액은 청구하지 않습니다.',
+      '멈춰 있던 동안의 금액은 청구하지 않아요.',
       '',
       `구독 조회·해지: ${input.manageUrl}`,
       '문의: 010-4255-7893',
@@ -268,19 +268,19 @@ export const sendSubscriptionCancelledEmail = (
   sendCustomerEmail(sub, 'cancelled', {
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
-    subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} 정기결제가 해지되었습니다`,
+    subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} 정기결제가 해지됐어요`,
     html: customerHtml({
-      preheader: `${fmtDate(input.endsAt)}까지 이용하실 수 있습니다.`,
-      heading: '정기결제 해지가 접수되었습니다',
+      preheader: `${fmtDate(input.endsAt)}까지 이용하실 수 있어요.`,
+      heading: '정기결제 해지가 접수됐어요',
       paragraphs: [
-        `${greet(sub)} ${product(sub)} 정기결제 해지가 접수되었습니다.`,
-        `${escapeHtml(fmtDate(input.endsAt))}까지는 계속 이용하실 수 있고, 이후 청구는 없습니다.`,
+        `${greet(sub)} ${product(sub)} 정기결제 해지가 접수됐어요.`,
+        `${escapeHtml(fmtDate(input.endsAt))}까지는 계속 이용하실 수 있고, 이후 청구는 없어요.`,
       ],
       rows: [{ label: '이용 가능 기간', value: `${fmtDate(input.endsAt)}까지`, emphasis: true }],
     }),
     text: [
-      `${sub.customerName}님, ${subscriptionOrderName(sub)} 정기결제 해지가 접수되었습니다.`,
-      `${input.endsAt.toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' })}까지는 계속 이용하실 수 있고, 이후 청구는 없습니다.`,
+      `${sub.customerName}님, ${subscriptionOrderName(sub)} 정기결제 해지가 접수됐어요.`,
+      `${input.endsAt.toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' })}까지는 계속 이용하실 수 있고, 이후 청구는 없어요.`,
       '',
       '문의: 010-4255-7893',
     ].join('\n'),
@@ -300,13 +300,13 @@ export const sendSubscriptionRefundedEmail = (
   sendCustomerEmail(sub, 'refunded', {
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
-    subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} ${input.cycleYm} 결제가 ${input.isFull ? '' : '일부 '}환불되었습니다`,
+    subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} ${input.cycleYm} 결제가 ${input.isFull ? '' : '일부 '}환불됐어요`,
     html: customerHtml({
-      preheader: `${formatPriceAmount(input.amount)}원이 결제하신 카드로 환불되었습니다.`,
-      heading: `${input.cycleYm} 결제가 ${input.isFull ? '' : '일부 '}환불되었습니다`,
+      preheader: `${formatPriceAmount(input.amount)}원이 결제하신 카드로 환불됐어요.`,
+      heading: `${input.cycleYm} 결제가 ${input.isFull ? '' : '일부 '}환불됐어요`,
       paragraphs: [
-        `${greet(sub)} ${escapeHtml(input.cycleYm)}분 ${product(sub)} 결제에서 ${escapeHtml(formatPriceAmount(input.amount))}원이 결제하신 카드로 환불되었습니다.`,
-        '정기결제 자체는 이번 환불로 바뀌지 않습니다. 해지나 정지가 함께 필요하면 아래 버튼이나 문의로 알려 주세요.',
+        `${greet(sub)} ${escapeHtml(input.cycleYm)}분 ${product(sub)} 결제에서 ${escapeHtml(formatPriceAmount(input.amount))}원이 결제하신 카드로 환불됐어요.`,
+        '정기결제 자체는 이번 환불로 바뀌지 않아요. 해지나 정지가 함께 필요하면 아래 버튼이나 문의로 알려 주세요.',
       ],
       rows: [
         { label: '환불 금액', value: `${formatPriceAmount(input.amount)}원`, emphasis: true },
@@ -314,13 +314,13 @@ export const sendSubscriptionRefundedEmail = (
         { label: '주문번호', value: input.orderNo },
       ],
       cta: { label: '구독 조회·해지', url: input.manageUrl },
-      notices: ['카드사에 따라 취소 반영까지 3~7영업일이 걸릴 수 있습니다.'],
+      notices: ['카드사에 따라 취소 반영까지 3~7영업일이 걸릴 수 있어요.'],
     }),
     text: [
-      `${sub.customerName}님, ${input.cycleYm}분 ${subscriptionOrderName(sub)} 결제(${input.orderNo})에서 ${formatPriceAmount(input.amount)}원이 결제하신 카드로 환불되었습니다.`,
-      '카드사에 따라 취소 반영까지 3~7영업일이 걸릴 수 있습니다.',
+      `${sub.customerName}님, ${input.cycleYm}분 ${subscriptionOrderName(sub)} 결제(${input.orderNo})에서 ${formatPriceAmount(input.amount)}원이 결제하신 카드로 환불됐어요.`,
+      '카드사에 따라 취소 반영까지 3~7영업일이 걸릴 수 있어요.',
       '',
-      '정기결제 자체는 이번 환불로 바뀌지 않습니다. 해지나 정지가 함께 필요하면 아래 링크나 문의로 알려 주세요.',
+      '정기결제 자체는 이번 환불로 바뀌지 않아요. 해지나 정지가 함께 필요하면 아래 링크나 문의로 알려 주세요.',
       `구독 조회·해지: ${input.manageUrl}`,
       '문의: 010-4255-7893',
     ].join('\n'),
@@ -373,7 +373,7 @@ export const sendSubscriptionOperatorAlert = (
         { label: '연락처', value: sub.customerPhone, href: `tel:${sub.customerPhone.replace(/[^\d+]/g, '')}` },
       ],
       cta: { label: '관리자에서 보기', url: adminUrl(`/admin/subscriptions/${sub.id}`) },
-      ...(ALERT_KINDS.includes(kind) ? { noticeTone: 'alert' as const, notices: ['사람의 판단이 필요한 건입니다.'] } : {}),
+      ...(ALERT_KINDS.includes(kind) ? { noticeTone: 'alert' as const, notices: ['사람의 판단이 필요한 건이에요.'] } : {}),
     }),
     text: [
       `구독 ${sub.id} (${subscriptionOrderName(sub)}) — ${titleByKind[kind]}`,

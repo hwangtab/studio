@@ -51,7 +51,7 @@ describe('sendSubscriptionSetupEmail — setupMode별 안내', () => {
     const mail = lastCall();
     expect(mail.subject).toContain('카드 변경');
     expect(mail.text).not.toContain('즉시 첫 달치가 결제');
-    expect(mail.text).toContain('이번에는 결제되지 않습니다');
+    expect(mail.text).toContain('이번에는 결제되지 않아요');
     expect(mail.text).toContain('다음 결제일부터 새 카드로');
   });
 });
@@ -80,7 +80,7 @@ describe('sendSubscriptionSetupEmail — 일시정지 구독', () => {
       'https://studionol.co.kr/ko/subscribe/sub-1?token=t',
     );
     const mail = lastCall();
-    expect(mail.text).toContain('이번에는 결제되지 않습니다');
+    expect(mail.text).toContain('이번에는 결제되지 않아요');
     expect(mail.text).not.toContain('다음 결제일부터');
     expect(mail.text).toContain('멈춰 있는 상태');
   });

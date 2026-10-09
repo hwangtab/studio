@@ -89,9 +89,9 @@ it('금액을 생략하면 잔액 전액을 환불하고 주문번호·금액을
   expect(sendEmail).toHaveBeenCalledTimes(1);
   const mail = sendEmail.mock.calls[0][0];
   expect(mail.to).toBe('s@example.com');
-  expect(mail.subject).toContain('2026-09 결제가 환불되었습니다');
+  expect(mail.subject).toContain('2026-09 결제가 환불됐어요');
   expect(mail.text).toContain('385,000원');
-  expect(mail.text).toContain('정기결제 자체는 이번 환불로 바뀌지 않습니다');
+  expect(mail.text).toContain('정기결제 자체는 이번 환불로 바뀌지 않아요');
 });
 
 it('메일이 실패해도 환불 결과는 그대로이고 notificationError에 남는다', async () => {

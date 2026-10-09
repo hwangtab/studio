@@ -131,6 +131,6 @@ describe('ShowBookingForm — 계좌로 직접 입금', () => {
     render(<ShowBookingForm show={{ ...base, showtimes: [{ ...showtime('st1', '오늘'), startsAt: soon }] }} />);
     const bank = screen.getByRole('radio', { name: /계좌로 직접 입금/ }) as HTMLInputElement;
     expect(bank.disabled).toBe(true);
-    expect(screen.getByText(/2시간이 남지 않아 계좌 입금은 받지 않습니다/)).toBeTruthy();
+    expect(screen.getByText(/2시간이 남지 않아 계좌 입금은 받지 않아요/)).toBeTruthy();
   });
 });

@@ -93,7 +93,7 @@ describe('HTML 메일', () => {
   it('예약 확정 — 고객·운영자 모두 text와 html을 함께 보내고 핵심 값을 담는다', async () => {
     await sendBookingConfirmedEmails(order, booking);
     const [customer, operator] = calls();
-    expect(customer.text).toContain('예약이 확정되었습니다');
+    expect(customer.text).toContain('예약이 확정됐어요');
     expect(customer.html).toContain('220,000원');
     expect(customer.html).toContain('SNB-1');
     expect(customer.html).toContain('/ko/booking/manage/SNB-1?token=tok');
@@ -119,7 +119,7 @@ describe('HTML 메일', () => {
 
     delete process.env.PRACTICE_ROOM_WIFI_PASSWORD;
     await sendBookingConfirmedEmails(order, pr);
-    expect(calls()[0].html).toContain('별도로 보내드립니다');
+    expect(calls()[0].html).toContain('별도로 보내드려요');
     expect(calls()[1].html).toContain('운영 알림 · 긴급');
     expect(calls()[1].html).toContain('PRACTICE_ROOM_WIFI_PASSWORD');
     process.env = env;
@@ -157,7 +157,7 @@ describe('HTML 메일', () => {
 
   it('예약금 입금 확인 — html 동반', async () => {
     await sendDepositLinkPaidEmail(order);
-    expect(calls()[0].html).toContain('예약금 입금이 확인되었습니다');
+    expect(calls()[0].html).toContain('예약금 입금이 확인됐어요');
     expect(calls()[0].html).toContain('220,000원');
   });
 });

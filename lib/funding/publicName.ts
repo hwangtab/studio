@@ -92,7 +92,7 @@ export const resolvePublicName = (style: PublicNameStyle, customerName: string, 
   const trimmed = stripInvisible(nickname ?? '').replace(/\s+/g, ' ').trim();
   if (/^[\s\p{M}]*$/u.test(trimmed)) return { ok: false, message: '명단에 표시할 닉네임을 입력해 주세요.' };
   if (Array.from(trimmed).length > PLEDGE_TEXT_LIMITS.publicNickname)
-    return { ok: false, message: `닉네임은 ${PLEDGE_TEXT_LIMITS.publicNickname}자까지 입력할 수 있습니다.` };
+    return { ok: false, message: `닉네임은 ${PLEDGE_TEXT_LIMITS.publicNickname}자까지 입력할 수 있어요.` };
   return { ok: true, value: trimmed };
 };
 

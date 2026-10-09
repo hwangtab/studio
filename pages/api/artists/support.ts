@@ -22,8 +22,8 @@ import { getClientIp } from '../../../lib/contracts/client-ip';
  * 요청은 503으로 끝낸다 — 404가 아닌 이유는 "곧 열린다"를 페이지가 이미 말하고 있어서다.
  */
 const CREATE_ERROR: Record<string, { status: number; message: string }> = {
-  artist_required: { status: 400, message: '아티스트를 찾을 수 없습니다.' },
-  artist_not_open: { status: 409, message: '이 아티스트는 아직 구독을 받지 않습니다.' },
+  artist_required: { status: 400, message: '아티스트를 찾을 수 없어요.' },
+  artist_not_open: { status: 409, message: '이 아티스트는 아직 구독을 받지 않아요.' },
   invalid_tier: { status: 400, message: '구독 등급을 골라 주세요.' },
 };
 
@@ -35,12 +35,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   if (!isArtistSupportOpen()) {
-    return res.status(503).json({ ok: false, code: 'closed', message: '아티스트 구독은 아직 열리지 않았습니다.' });
+    return res.status(503).json({ ok: false, code: 'closed', message: '아티스트 구독은 아직 열리지 않았어요.' });
   }
 
   const ip = getClientIp(req) ?? 'unknown';
   if (!(await consumeRateLimit(`artist_support_signup:ip:${ip}`, 10, 3600))) {
-    return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
   }
 
   const validated = validateArtistSupportSignup(req.body);
@@ -65,7 +65,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     now,
   );
   if (!result.ok) {
-    const mapped = CREATE_ERROR[result.code] ?? { status: 400, message: '구독을 만들지 못했습니다.' };
+    const mapped = CREATE_ERROR[result.code] ?? { status: 400, message: '구독을 만들지 못했어요.' };
     return res.status(mapped.status).json({ ok: false, code: result.code, message: mapped.message });
   }
 

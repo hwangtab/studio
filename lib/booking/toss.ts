@@ -100,7 +100,7 @@ const request = async (
 ): Promise<TossResult> => {
   const secrets = tossSecretsInOrder(init?.channel);
   if (secrets.length === 0) {
-    return { ok: false, code: 'CONFIG_ERROR', message: 'TOSS_SECRET_KEY가 설정되지 않았습니다.' };
+    return { ok: false, code: 'CONFIG_ERROR', message: 'TOSS_SECRET_KEY가 설정되지 않았어요.' };
   }
   const first = await requestWith(secrets[0], path, init);
   if (first.ok || secrets.length < 2 || !KEY_MISMATCH_CODES.has(first.code)) return first;
@@ -143,12 +143,12 @@ export const VIRTUAL_ACCOUNT_ERROR_CODE = 'VIRTUAL_ACCOUNT_UNSUPPORTED';
  * 무엇을 하면 되는지(다른 수단으로 결제)를 말한다.
  */
 export const VIRTUAL_ACCOUNT_CONFIRM_MESSAGE =
-  '가상계좌는 이용하실 수 없는 결제수단입니다. 카드·계좌이체·간편결제로 다시 결제해 주세요.';
+  '가상계좌는 이용하실 수 없는 결제수단이에요. 카드·계좌이체·간편결제로 다시 결제해 주세요.';
 
 export const VIRTUAL_ACCOUNT_CANCEL_CUSTOMER_MESSAGE =
-  '이 결제수단은 화면에서 취소할 수 없습니다. 010-4255-7893으로 연락 주시면 환불해 드립니다.';
+  '이 결제수단은 화면에서 취소할 수 없어요. 010-4255-7893으로 연락 주시면 환불해 드려요.';
 export const VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE =
-  '가상계좌 결제는 화면에서 환불할 수 없습니다. 고객에게 환불받을 계좌(은행·계좌번호·예금주)를 받아 토스 콘솔에서 직접 취소해 주세요.';
+  '가상계좌 결제는 화면에서 환불할 수 없어요. 고객에게 환불받을 계좌(은행·계좌번호·예금주)를 받아 토스 콘솔에서 직접 취소해 주세요.';
 
 export const isVirtualAccountMethod = (method: string | null | undefined): boolean =>
   typeof method === 'string' && VIRTUAL_ACCOUNT_METHODS.some((m) => m.toLowerCase() === method.trim().toLowerCase());
@@ -190,7 +190,7 @@ export const confirmPayment = async (input: {
       paymentKey: input.paymentKey, orderId: input.orderId,
       method: result.payment.method, status: result.payment.status,
     });
-    return { ok: false, code: VIRTUAL_ACCOUNT_ERROR_CODE, message: '가상계좌는 지원하지 않는 결제수단입니다.' };
+    return { ok: false, code: VIRTUAL_ACCOUNT_ERROR_CODE, message: '가상계좌는 지원하지 않는 결제수단이에요.' };
   }
   return result;
 };

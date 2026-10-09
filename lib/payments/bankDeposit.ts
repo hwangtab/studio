@@ -78,7 +78,7 @@ export const bankDepositBlockReason = (input: { startsAt: Date | null; now: Date
 };
 
 export const BANK_DEPOSIT_BLOCK_MESSAGES: Record<BankDepositBlockCode, string> = {
-  starts_too_soon: `시작까지 ${BANK_DEPOSIT_MIN_LEAD_HOURS}시간이 남지 않아 계좌 입금은 받지 않습니다. 입금을 확인할 시간이 없어서입니다. 카드·간편결제로 해 주세요.`,
+  starts_too_soon: `시작까지 ${BANK_DEPOSIT_MIN_LEAD_HOURS}시간이 남지 않아 계좌 입금은 받지 않아요. 입금을 확인할 시간이 없어서예요. 카드·간편결제로 해 주세요.`,
 };
 
 /** 영어 화면(공연 /en)용 — 위와 같은 내용. */

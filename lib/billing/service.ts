@@ -298,12 +298,12 @@ export const completeCardSetup = async (
   // customerKey는 우리가 만들어 SDK에 넘긴 값이 그대로 돌아온 것이다. 다르면 다른 구독의
   // 콜백이 섞였거나 조작된 것이므로, 남의 구독에 카드를 붙이기 전에 멈춘다.
   if (subscription.customerKey !== input.customerKey)
-    return { ok: false, code: 'customer_key_mismatch', message: '카드 등록 정보가 일치하지 않습니다.' };
+    return { ok: false, code: 'customer_key_mismatch', message: '카드 등록 정보가 일치하지 않아요.' };
 
   const issued = await issueBillingKey({ authKey: input.authKey, customerKey: input.customerKey });
   if (!issued.ok) {
     console.error('[billing] 빌링키 발급 실패', { subscriptionId: subscription.id, code: issued.code, message: issued.message });
-    return { ok: false, code: 'issue_failed', message: '카드 등록에 실패했습니다. 다른 카드로 다시 시도해 주세요.' };
+    return { ok: false, code: 'issue_failed', message: '카드 등록에 실패했어요. 다른 카드로 다시 시도해 주세요.' };
   }
 
   const db = getDb();
@@ -343,7 +343,7 @@ export const completeCardSetup = async (
     return {
       ok: false,
       code: 'first_charge_failed',
-      message: charged.message ?? '카드는 등록되었으나 첫 결제가 승인되지 않았습니다. 다른 카드로 다시 시도해 주세요.',
+      message: charged.message ?? '카드는 등록되었으나 첫 결제가 승인되지 않았어요. 다른 카드로 다시 시도해 주세요.',
     };
   }
   return { ok: true, status: charged.status, charged: true, paymentKey: charged.paymentKey };
@@ -379,20 +379,20 @@ export const chargeCycle = async (
 ): Promise<ChargeCycleResult> => {
   const db = getDb();
   const subscription = await findSubscriptionById(subscriptionId);
-  if (!subscription) return { ok: false, status: 'ended', message: '구독을 찾을 수 없습니다.' };
+  if (!subscription) return { ok: false, status: 'ended', message: '구독을 찾을 수 없어요.' };
 
   if (subscription.status === 'cancelled' || subscription.status === 'ended')
-    return { ok: false, status: subscription.status, message: '해지된 구독입니다.' };
+    return { ok: false, status: subscription.status, message: '해지된 구독이에요.' };
   // paused는 자동 청구 대상이 아니다(재시도 한도를 이미 소진했다). 관리자 수동 결제와
   // 카드 재등록 직후의 첫 결제만 통과시킨다.
   if (subscription.status === 'paused' && options.reason !== 'manual' && options.reason !== 'first')
-    return { ok: false, status: subscription.status, message: '정지된 구독입니다.' };
+    return { ok: false, status: subscription.status, message: '정지된 구독이에요.' };
 
   const key = await db.query.billingKeys.findFirst({
     where: (t, { and: all, eq: is, isNull: nul }) => all(is(t.subscriptionId, subscriptionId), nul(t.revokedAt)),
     orderBy: (t) => [desc(t.issuedAt)],
   });
-  if (!key) return { ok: false, status: subscription.status, message: '등록된 카드가 없습니다.' };
+  if (!key) return { ok: false, status: subscription.status, message: '등록된 카드가 없어요.' };
 
   // 새 청구 전에 "응답을 못 받은 지난 시도"를 먼저 대사한다. NETWORK_ERROR로 끝난 회차는
   // orders가 pending인 채 남는데(위 규칙), 실제로는 토스가 승인했을 수 있다. 그걸 확인하지
@@ -417,7 +417,7 @@ export const chargeCycle = async (
         ok: false,
         status: subscription.status,
         tossCode: refetched.code,
-        message: '이전 결제 상태를 확인하지 못해 청구를 보류했습니다. 잠시 후 다시 시도해 주세요.',
+        message: '이전 결제 상태를 확인하지 못해 청구를 보류했어요. 잠시 후 다시 시도해 주세요.',
       };
     }
     if (refetched.payment.status === 'DONE') {
@@ -687,8 +687,8 @@ export const chargeCycle = async (
     await alertLateApproval(
       current ?? subscription,
       [
-        `${cycleYm}분 ${formatPriceAmount(subscription.totalAmount)}원이 승인됐지만 구독 상태가 ${current?.status ?? '알 수 없음'}이라 이용기간을 전진시키지 않았습니다.`,
-        '승인 왕복 중에 해지가 들어온 것으로 보입니다 — 환불 여부를 판단해 주세요.',
+        `${cycleYm}분 ${formatPriceAmount(subscription.totalAmount)}원이 승인됐지만 구독 상태가 ${current?.status ?? '알 수 없음'}이라 이용기간을 전진시키지 않았어요.`,
+        '승인 왕복 중에 해지가 들어온 것으로 보여요 — 환불 여부를 판단해 주세요.',
         `주문번호 ${orderNo} / paymentKey ${approved.paymentKey}`,
       ].join('\n'),
       now,
@@ -1388,8 +1388,8 @@ export const reconcileSubscriptionPaymentFromToss = async (payment: TossPayment,
       subscription,
       'paused_late_approval',
       [
-        `${subscriptionPayment.cycleYm}분 ${formatPriceAmount(order.totalAmount)}원의 승인이 뒤늦게 도착했습니다.`,
-        '운영자가 세워 둔 구독이라 자동으로 되살리지 않았습니다 — 이용기간만 전진시키고 정지 상태를 그대로 뒀습니다.',
+        `${subscriptionPayment.cycleYm}분 ${formatPriceAmount(order.totalAmount)}원의 승인이 뒤늦게 도착했어요.`,
+        '운영자가 세워 둔 구독이라 자동으로 되살리지 않았어요 — 이용기간만 전진시키고 정지 상태를 그대로 뒀어요.',
         '계속 쓸 구독이면 관리자 > 구독 상세에서 재개하고, 아니면 이 회차를 환불해 주세요.',
         `주문번호 ${order.orderNo} / paymentKey ${payment.paymentKey}`,
       ].join('\n'),
@@ -1433,16 +1433,16 @@ export const reconcileSubscriptionPaymentFromToss = async (payment: TossPayment,
     await alertLateApproval(
       current ?? subscription,
       [
-        `${subscriptionPayment.cycleYm}분 ${formatPriceAmount(order.totalAmount)}원의 승인이 뒤늦게 도착했지만 이용기간을 전진시키지 않았습니다.`,
+        `${subscriptionPayment.cycleYm}분 ${formatPriceAmount(order.totalAmount)}원의 승인이 뒤늦게 도착했지만 이용기간을 전진시키지 않았어요.`,
         ...(keepsPause
           ? [
-              `정지된 구독에 반영하는 사이 재개 또는 해지가 들어와(현재 ${currentStatus}) 반영을 건너뛴 것입니다.`,
-              '해지·종료된 것이라면 고객은 한 달치를 냈고 이용기간은 늘어나지 않은 상태입니다 — 환불 여부를 판단해 주세요.',
+              `정지된 구독에 반영하는 사이 재개 또는 해지가 들어와(현재 ${currentStatus}) 반영을 건너뛴 것이에요.`,
+              '해지·종료된 것이라면 고객은 한 달치를 냈고 이용기간은 늘어나지 않은 상태예요 — 환불 여부를 판단해 주세요.',
               '재개된 것이라면 이용기간만 밀리지 않았으니 관리자 > 구독 상세에서 확인해 주세요.',
             ]
           : [
-              `구독이 ${currentStatus}라 되살리지 않았습니다.`,
-              '고객은 한 달치를 냈고 이용기간은 늘어나지 않은 상태입니다 — 환불 여부를 판단해 주세요.',
+              `구독이 ${currentStatus}라 되살리지 않았어요.`,
+              '고객은 한 달치를 냈고 이용기간은 늘어나지 않은 상태예요 — 환불 여부를 판단해 주세요.',
             ]),
         `주문번호 ${order.orderNo} / paymentKey ${payment.paymentKey}`,
       ].join('\n'),

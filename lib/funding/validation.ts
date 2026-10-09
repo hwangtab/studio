@@ -48,17 +48,17 @@ const text = (v: unknown, max: number): string | null =>
 const overLimitMessage = (entries: { value: unknown; max: number; label: string }[]): string | null => {
   for (const e of entries) {
     if (typeof e.value === 'string' && e.value.trim().length > e.max) {
-      return `${e.label} ${e.max}자까지 입력할 수 있습니다.`;
+      return `${e.label} ${e.max}자까지 입력할 수 있어요.`;
     }
   }
   return null;
 };
 
 export const validateCreatePledgePayload = (body: unknown, project: FundingProject | null, now: Date): Result => {
-  if (typeof body !== 'object' || body === null || Array.isArray(body)) return { ok: false, message: '요청 형식이 올바르지 않습니다.' };
+  if (typeof body !== 'object' || body === null || Array.isArray(body)) return { ok: false, message: '요청 형식이 올바르지 않아요.' };
   const b = body as Record<string, unknown>;
-  if (!project) return { ok: false, message: '프로젝트를 찾을 수 없습니다.' };
-  if (computeProjectState(project, now) !== 'live') return { ok: false, message: '지금은 펀딩을 받지 않는 프로젝트입니다.' };
+  if (!project) return { ok: false, message: '프로젝트를 찾을 수 없어요.' };
+  if (computeProjectState(project, now) !== 'live') return { ok: false, message: '지금은 펀딩을 받지 않는 프로젝트예요.' };
   /**
    * 담은 리워드. `items: [{ rewardId, quantity }]`가 정본이다. 한 리워드만 보내던 옛 모양
    * (`rewardId`·`quantity`)도 받는다 — 배포 직후 옛 화면을 띄워 둔 사람의 제출이 깨지지 않게.
@@ -70,18 +70,18 @@ export const validateCreatePledgePayload = (body: unknown, project: FundingProje
   for (const raw of rawItems) {
     const item = (typeof raw === 'object' && raw !== null && !Array.isArray(raw) ? raw : {}) as Record<string, unknown>;
     const reward = typeof item.rewardId === 'string' ? findReward(project, item.rewardId) : undefined;
-    if (!reward) return { ok: false, message: '리워드를 찾을 수 없습니다.' };
+    if (!reward) return { ok: false, message: '리워드를 찾을 수 없어요.' };
     // 같은 리워드를 두 줄로 받지 않는다 — 재고 조건이 줄마다 걸려 합산이 어긋나고, DB도 막는다.
-    if (lines.some((l) => l.reward.id === reward.id)) return { ok: false, message: '같은 리워드가 두 번 담겼습니다.' };
+    if (lines.some((l) => l.reward.id === reward.id)) return { ok: false, message: '같은 리워드가 두 번 담겼어요.' };
     const quantity = item.quantity;
     if (typeof quantity !== 'number' || !Number.isInteger(quantity) || quantity < 1 || quantity > MAX_QUANTITY)
-      return { ok: false, message: `수량은 1~${MAX_QUANTITY} 사이여야 합니다.` };
+      return { ok: false, message: `수량은 1~${MAX_QUANTITY} 사이여야 해요.` };
     lines.push({ reward, quantity });
   }
   const additionalAmount = b.additionalAmount ?? 0;
   if (typeof additionalAmount !== 'number' || !Number.isInteger(additionalAmount) || additionalAmount < 0
     || additionalAmount > MAX_ADDITIONAL_AMOUNT || additionalAmount % ADDITIONAL_AMOUNT_STEP !== 0)
-    return { ok: false, message: '추가 펀딩 금액은 1,000원 단위로 500만원까지 가능합니다.' };
+    return { ok: false, message: '추가 펀딩 금액은 1,000원 단위로 500만원까지 가능해요.' };
   if (b.paymentMethod !== 'toss' && b.paymentMethod !== 'bank_transfer') return { ok: false, message: '결제수단을 선택해 주세요.' };
   const paymentMethod: CreatePledgePayload['paymentMethod'] = b.paymentMethod;
   /**

@@ -26,10 +26,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const ip = getClientIp(req) ?? 'unknown';
   if (!(await consumeRateLimit(`show_refund:ip:${ip}`, 10, 3600)))
-    return res.status(429).json({ ok: false, message: msg('rate_limited', '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.') });
+    return res.status(429).json({ ok: false, message: msg('rate_limited', '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.') });
 
   if (typeof req.body !== 'object' || req.body === null || Array.isArray(req.body))
-    return res.status(400).json({ ok: false, message: msg('bad_request', '요청 형식이 올바르지 않습니다.') });
+    return res.status(400).json({ ok: false, message: msg('bad_request', '요청 형식이 올바르지 않아요.') });
   const { orderNo: rawOrderNo, token, ticketIds, action, refundAccount } = req.body as Record<string, unknown>;
   // 화면은 DB 값(대문자)을 보내지만, 손으로 적은 소문자도 같은 주문이다 — 조회와 같은 정규화.
   const orderNo = typeof rawOrderNo === 'string' ? rawOrderNo.toUpperCase() : rawOrderNo;
@@ -40,12 +40,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    */
   if (action === 'withdraw') {
     if (typeof orderNo !== 'string' || orderNo.trim() === '' || typeof token !== 'string' || token.trim() === '')
-      return res.status(400).json({ ok: false, message: msg('bad_request', '요청 형식이 올바르지 않습니다.') });
+      return res.status(400).json({ ok: false, message: msg('bad_request', '요청 형식이 올바르지 않아요.') });
     const target = await getDb().query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, orderNo) });
     if (!target || target.type !== 'ticket' || !isTokenMatch(target.manageToken, token))
-      return res.status(404).json({ ok: false, message: msg('not_found', '주문을 찾을 수 없습니다.') });
+      return res.status(404).json({ ok: false, message: msg('not_found', '주문을 찾을 수 없어요.') });
     if (target.status !== AWAITING_DEPOSIT)
-      return res.status(409).json({ ok: false, message: msg('withdraw_not_awaiting', '입금을 기다리는 신청이 아닙니다. 새로고침해 주세요.') });
+      return res.status(409).json({ ok: false, message: msg('withdraw_not_awaiting', '입금을 기다리는 신청이 아니에요. 새로고침해 주세요.') });
     const r = await cancelAwaitingShowDeposit({ orderId: target.id });
     if (!r.ok) return res.status(409).json({ ok: false, code: r.code, message: msg('withdraw_failed', r.message) });
     await notifyShowDepositWithdrawn(target.id);
@@ -62,7 +62,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const order = await getDb().query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, orderNo) });
   if (!order || order.type !== 'ticket' || !isTokenMatch(order.manageToken, token))
-    return res.status(404).json({ ok: false, message: msg('not_found', '주문을 찾을 수 없습니다.') });
+    return res.status(404).json({ ok: false, message: msg('not_found', '주문을 찾을 수 없어요.') });
 
   // 초대권은 환불 대상이 아니다(결제가 없다) — 화면에서도 숨기지만 서버가 한 번 더 막는다.
   const comp = await getDb().query.showTickets.findMany({

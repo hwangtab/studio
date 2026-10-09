@@ -297,7 +297,7 @@ describe('종료 → 결제 거부까지 한 줄로', () => {
       now,
     );
     expect(afterResult.ok).toBe(false);
-    if (!afterResult.ok) expect(afterResult.message).toBe('지금은 펀딩을 받지 않는 프로젝트입니다.');
+    if (!afterResult.ok) expect(afterResult.message).toBe('지금은 펀딩을 받지 않는 프로젝트예요.');
   });
 });
 

@@ -34,12 +34,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const auth = await authenticateCreatorApi(req, res);
-  if (!auth.ok) return res.status(401).json({ ok: false, message: '로그인이 필요합니다.' });
+  if (!auth.ok) return res.status(401).json({ ok: false, message: '로그인이 필요해요.' });
 
   const pledgeId = typeof req.body?.pledgeId === 'string' ? req.body.pledgeId : '';
   const fulfillmentStatus = typeof req.body?.fulfillmentStatus === 'string' ? req.body.fulfillmentStatus : '';
   if (!pledgeId || !fulfillmentStatus) {
-    return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
+    return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않아요.' });
   }
 
   /**
@@ -53,33 +53,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    * 스크립트로 무한 반복 호출하는 경로는 여전히 막는다.
    */
   if (!(await consumeRateLimit(`creator_fulfillment:${auth.creatorId}`, 300, 600))) {
-    return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
+    return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
   }
 
   const now = new Date();
   const gate = await loadFulfillmentGate(pledgeId, now);
-  if (!gate) return res.status(404).json({ ok: false, message: '펀딩 내역을 찾을 수 없습니다.' });
+  if (!gate) return res.status(404).json({ ok: false, message: '펀딩 내역을 찾을 수 없어요.' });
 
   // URL의 :id가 이 pledge가 실제로 속한 프로젝트와 다르면(다른 자기 프로젝트를 잘못
   // 짚었거나 조작한 값) 이 자리에서 찾을 수 없는 것으로 다룬다 — 인가는 이미
   // gate.creatorId로 판정하므로 이건 라우팅 스코프를 맞추기 위한 것일 뿐이다.
   const projectId = typeof req.query.id === 'string' ? req.query.id : '';
   if (projectId && projectId !== gate.projectId) {
-    return res.status(404).json({ ok: false, message: '이 프로젝트에서 해당 후원을 찾을 수 없습니다.' });
+    return res.status(404).json({ ok: false, message: '이 프로젝트에서 해당 후원을 찾을 수 없어요.' });
   }
 
   // 남의 후원이면 '권한 없음'이 아니라 404다 — 403은 "그 pledge id는 존재한다"를 알려 주는
   // 셈이다. 다른 개설자 라우트는 전부 404로 통일돼 있다(preview.tsx:105의 원칙).
   if (gate.creatorId !== auth.creatorId) {
-    return res.status(404).json({ ok: false, message: '펀딩 내역을 찾을 수 없습니다.' });
+    return res.status(404).json({ ok: false, message: '펀딩 내역을 찾을 수 없어요.' });
   }
 
   if (!gate.pastFundingEnd) {
-    return res.status(409).json({ ok: false, message: '모금이 끝난 뒤에만 발송 상태를 바꿀 수 있습니다.' });
+    return res.status(409).json({ ok: false, message: '모금이 끝난 뒤에만 발송 상태를 바꿀 수 있어요.' });
   }
 
   if (!gate.requiresShipping) {
-    return res.status(409).json({ ok: false, message: '배송이 필요 없는 리워드입니다.' });
+    return res.status(409).json({ ok: false, message: '배송이 필요 없는 리워드예요.' });
   }
 
   const trackingCompany = typeof req.body?.trackingCompany === 'string' ? req.body.trackingCompany : undefined;

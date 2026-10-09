@@ -45,11 +45,11 @@ it('승인 메일 — 제목·공개 주소·잠금 안내·편집 링크', asyn
   const call = (sendEmail as jest.Mock).mock.calls[0][0];
   expect(call.to).toBe('creator@example.com');
   expect(call.replyTo).toBe(CUSTOMER_REPLY_TO);
-  expect(call.subject).toBe('[스튜디오 놀] 펀딩 프로젝트가 승인되었습니다 — 강정피스앤뮤직캠프');
+  expect(call.subject).toBe('[스튜디오 놀] 펀딩 프로젝트가 승인됐어요 — 강정피스앤뮤직캠프');
   expect(call.text).toContain('/ko/funding/new-slug');
   expect(call.text).not.toContain('/ko/funding/old-slug');
   expect(call.text).toContain('/ko/funding/creator/proj-1');
-  expect(call.text).toContain('통째로 잠깁니다');
+  expect(call.text).toContain('통째로 잠겨요');
   expect(call.text).toContain('제목·설명·이미지·금액·수량 제한 여부·배송 필요 여부·예상 전달 시기');
   // 승인 뒤에는 개설자도 관리자 API도 리워드를 추가할 경로가 없다(creatorProjectWrite.ts의
   // guard가 upsertReward를 맨 앞에서 거부, 관리자 쪽엔 애초에 리워드 라우트가 없다).
@@ -80,9 +80,9 @@ it('반려 메일 — 제목·운영자 메모 전문·문의 경로, 공개 주
 it('보관 메일 — 제목이 반려와 다르고("심사에서 게재가 어렵다"가 아니다), 운영자 메모·재개설 안내가 들어간다', async () => {
   await sendReviewDecisionEmail(project, 'archive', '오래 방치되어 정리합니다.', 'old-slug');
   const call = (sendEmail as jest.Mock).mock.calls[0][0];
-  expect(call.subject).toBe('[스튜디오 놀] 펀딩 프로젝트가 보관 처리되었습니다 — 강정피스앤뮤직캠프');
+  expect(call.subject).toBe('[스튜디오 놀] 펀딩 프로젝트가 보관 처리됐어요 — 강정피스앤뮤직캠프');
   expect(call.text).toContain('오래 방치되어 정리합니다.');
-  expect(call.text).not.toContain('이번 심사에서는 게재가 어렵습니다');
+  expect(call.text).not.toContain('이번 심사에서는 게재가 어려워요');
   expect(call.text).toContain('새 프로젝트를 만들어 주세요');
   expect(call.text).not.toContain('/ko/funding/creator/proj-1');
   expect(call.text).not.toContain('/ko/funding/old-slug');
@@ -126,7 +126,7 @@ describe('sendReviewDecisionOperatorFallback', () => {
     expect(call.to).toBe(OPERATOR_EMAIL);
     expect(call.subject).toContain('강정피스앤뮤직캠프');
     expect(call.text).toContain('creator@example.com');
-    expect(call.text).toContain('펀딩 프로젝트가 승인되었습니다');
+    expect(call.text).toContain('펀딩 프로젝트가 승인됐어요');
     expect(call.text).toContain('creator:API_ERROR');
     // 링크는 개설자 인증 페이지(/ko/funding/creator/{id})가 아니라 관리자 심사 화면이어야
     // 한다 — 수신자가 운영자이기 때문이다. 개설자용 editUrl을 잘못 넣으면 운영자가 링크를
@@ -148,17 +148,17 @@ describe('sendPublicStatusEmail', () => {
     expect(await sendPublicStatusEmail(project, 'close', '가격 표기 오류 발견', 'old-slug')).toBeNull();
     const call = (sendEmail as jest.Mock).mock.calls[0][0];
     expect(call.to).toBe('creator@example.com');
-    expect(call.subject).toBe('[스튜디오 놀] 펀딩 프로젝트가 종료되었습니다 — 강정피스앤뮤직캠프');
-    expect(call.subject).not.toBe('[스튜디오 놀] 펀딩 프로젝트가 승인되었습니다 — 강정피스앤뮤직캠프');
+    expect(call.subject).toBe('[스튜디오 놀] 펀딩 프로젝트가 종료됐어요 — 강정피스앤뮤직캠프');
+    expect(call.subject).not.toBe('[스튜디오 놀] 펀딩 프로젝트가 승인됐어요 — 강정피스앤뮤직캠프');
     expect(call.text).toContain('/ko/funding/old-slug');
     expect(call.text).toContain('가격 표기 오류 발견');
-    expect(call.text).toContain('더 이상 후원을 받지 않습니다');
+    expect(call.text).toContain('더 이상 후원을 받지 않아요');
   });
 
   it('다시 열기 메일 — 제목·공개 주소, 메모가 없으면 [운영자 메모] 섹션이 없다', async () => {
     await sendPublicStatusEmail(project, 'reopen', null, 'old-slug');
     const call = (sendEmail as jest.Mock).mock.calls[0][0];
-    expect(call.subject).toBe('[스튜디오 놀] 펀딩 프로젝트가 다시 공개되었습니다 — 강정피스앤뮤직캠프');
+    expect(call.subject).toBe('[스튜디오 놀] 펀딩 프로젝트가 다시 공개됐어요 — 강정피스앤뮤직캠프');
     expect(call.text).toContain('/ko/funding/old-slug');
     expect(call.text).not.toContain('[운영자 메모]');
   });
@@ -166,15 +166,15 @@ describe('sendPublicStatusEmail', () => {
   it('숨김 메일 — 목록·사이트맵에서 빠진다는 것과 주소를 아는 사람은 여전히 볼 수 있다는 것을 함께 말한다', async () => {
     await sendPublicStatusEmail(project, 'hide', null, 'old-slug');
     const call = (sendEmail as jest.Mock).mock.calls[0][0];
-    expect(call.subject).toBe('[스튜디오 놀] 펀딩 프로젝트가 목록에서 숨겨졌습니다 — 강정피스앤뮤직캠프');
-    expect(call.text).toContain('목록·사이트맵에서 숨겨졌습니다');
-    expect(call.text).toContain('여전히 페이지를 볼 수 있습니다');
+    expect(call.subject).toBe('[스튜디오 놀] 펀딩 프로젝트가 목록에서 숨겨졌어요 — 강정피스앤뮤직캠프');
+    expect(call.text).toContain('목록·사이트맵에서 숨겨졌어요');
+    expect(call.text).toContain('여전히 페이지를 볼 수 있어요');
   });
 
   it('노출 메일 — 제목·공개 주소', async () => {
     await sendPublicStatusEmail(project, 'unhide', null, 'old-slug');
     const call = (sendEmail as jest.Mock).mock.calls[0][0];
-    expect(call.subject).toBe('[스튜디오 놀] 펀딩 프로젝트가 다시 목록에 노출됩니다 — 강정피스앤뮤직캠프');
+    expect(call.subject).toBe('[스튜디오 놀] 펀딩 프로젝트가 다시 목록에 노출돼요 — 강정피스앤뮤직캠프');
     expect(call.text).toContain('/ko/funding/old-slug');
   });
 
@@ -192,7 +192,7 @@ describe('sendPublicStatusOperatorFallback', () => {
     const call = (sendEmail as jest.Mock).mock.calls[0][0];
     expect(call.to).toBe(OPERATOR_EMAIL);
     expect(call.text).toContain('creator@example.com');
-    expect(call.text).toContain('펀딩 프로젝트가 종료되었습니다');
+    expect(call.text).toContain('펀딩 프로젝트가 종료됐어요');
     expect(call.text).toContain('creator:API_ERROR');
     expect(call.text).toContain(`/admin/funding/projects/${project.id}`);
   });

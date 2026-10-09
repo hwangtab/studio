@@ -88,7 +88,7 @@ export const deliverShowDepositGuide = async (
       kindLabel: '공연 예매', applicantLabel: '예매하신 분',
       summaryLines: [
         ...showSummaryLines(so),
-        '입금을 확인할 때까지 좌석을 잡아 둡니다. 확인되면 티켓(QR)을 메일로 보내 드립니다.',
+        '입금을 확인할 때까지 좌석을 잡아 둬요. 확인되면 티켓(QR)을 메일로 보내 드려요.',
       ],
       manageUrl: `${SITE_URL}/${locale}/shows/manage/${order.orderNo}?token=${order.manageToken}`,
       adminUrl: `${SITE_URL}/admin/shows/${show.id}`,
@@ -128,7 +128,7 @@ export const deliverShowDepositGuide = async (
 export const confirmShowBankDeposit = async (input: { orderId: string; now: Date }): Promise<ShowDepositOutcome> => {
   const order = await loadTicketOrder({ id: input.orderId });
   const so = order?.showOrder;
-  if (!order || !so) return { ok: false, code: 'not_found', message: '주문을 찾을 수 없습니다.' };
+  if (!order || !so) return { ok: false, code: 'not_found', message: '주문을 찾을 수 없어요.' };
   const db = getDb();
   const paymentKey = bankDepositPaymentKey(order.orderNo);
   const approvedAt = Math.floor(input.now.getTime() / 1000);
@@ -153,10 +153,10 @@ export const confirmShowBankDeposit = async (input: { orderId: string; now: Date
     if (again?.status === AWAITING_DEPOSIT) {
       return {
         ok: false, code: 'showtime_closed',
-        message: '회차가 취소됐거나 이미 시작해 발권할 수 없습니다. 입금을 받으셨다면 고객에게 돌려주고, 이 신청은 "미입금 취소"로 닫아 주세요.',
+        message: '회차가 취소됐거나 이미 시작해 발권할 수 없어요. 입금을 받으셨다면 고객에게 돌려주고, 이 신청은 "미입금 취소"로 닫아 주세요.',
       };
     }
-    return { ok: false, code: 'invalid_state', message: '이미 확인됐거나 입금을 확인할 수 있는 상태가 아닙니다(미입금 취소된 신청은 확정할 수 없습니다). 새로고침해 주세요.' };
+    return { ok: false, code: 'invalid_state', message: '이미 확인됐거나 입금을 확인할 수 있는 상태가 아니에요(미입금 취소된 신청은 확정할 수 없어요). 새로고침해 주세요.' };
   }
   await assignEntryNumbers(order.orderNo);
   let emailSent = false;
@@ -176,7 +176,7 @@ export const confirmShowBankDeposit = async (input: { orderId: string; now: Date
  */
 export const cancelAwaitingShowDeposit = async (input: { orderId: string }): Promise<ShowDepositOutcome> => {
   const order = await loadTicketOrder({ id: input.orderId });
-  if (!order) return { ok: false, code: 'not_found', message: '주문을 찾을 수 없습니다.' };
+  if (!order) return { ok: false, code: 'not_found', message: '주문을 찾을 수 없어요.' };
   const db = getDb();
   const [claim] = await db.batch([
     db.run(sql`
@@ -190,7 +190,7 @@ export const cancelAwaitingShowDeposit = async (input: { orderId: string }): Pro
     `),
   ]);
   if (rowsOf(claim) === 0) {
-    return { ok: false, code: 'invalid_state', message: '입금 대기 중인 계좌 입금 신청이 아닙니다. 새로고침해 주세요.' };
+    return { ok: false, code: 'invalid_state', message: '입금 대기 중인 계좌 입금 신청이 아니에요. 새로고침해 주세요.' };
   }
   return { ok: true };
 };

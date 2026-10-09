@@ -65,18 +65,18 @@ describe('shows email 본문', () => {
 describe('환불 메일 — 계좌 입금', () => {
   it('고객이 요청한 계좌 환불은 제목·첫 줄·HTML 모두 "환불 요청을 접수했습니다"이고 3영업일 송금을 말한다', () => {
     const m = buildShowRefundEmail({ ...base, refundedAmount: 10000, fullyRefunded: false, refundVia: 'bank_account' });
-    expect(m.subject).toContain('환불 요청을 접수했습니다');
-    expect(m.text.split('\n')[0]).toContain('환불 요청을 접수했습니다');
-    expect(m.text).not.toContain('환불이 완료되었습니다');
+    expect(m.subject).toContain('환불 요청을 접수했어요');
+    expect(m.text.split('\n')[0]).toContain('환불 요청을 접수했어요');
+    expect(m.text).not.toContain('환불이 완료됐어요');
     expect(m.text).toContain('3영업일 이내');
-    expect(m.html).not.toContain('환불이 완료되었습니다');
+    expect(m.html).not.toContain('환불이 완료됐어요');
   });
   it('관리자가 기록한 계좌 환불(이미 송금)은 "완료"이고 3영업일 문구가 없다', () => {
     const m = buildShowRefundEmail({ ...base, refundedAmount: 10000, fullyRefunded: true, refundVia: 'bank_account_sent' });
-    expect(m.subject).toContain('환불이 완료되었습니다');
+    expect(m.subject).toContain('환불이 완료됐어요');
     expect(m.text).not.toContain('3영업일');
     expect(m.html).not.toContain('3영업일');
-    expect(m.text).toContain('계좌로 보내 드렸습니다');
+    expect(m.text).toContain('계좌로 보내 드렸어요');
   });
 });
 
@@ -97,7 +97,7 @@ describe('고객 셀프 환불 운영자 알림', () => {
   it('카드 결제는 자동 환불됐다고만 알린다', () => {
     const { subject, text } = buildShowRefundOperatorEmail({ ...data, refundedAmount: 30000, refundedCount: 2, refundVia: 'payment' });
     expect(subject).toContain('고객 환불');
-    expect(text).toContain('자동으로 환불되었습니다');
+    expect(text).toContain('자동으로 환불됐어요');
     expect(text).not.toContain('송금');
   });
 });

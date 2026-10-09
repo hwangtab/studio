@@ -45,7 +45,7 @@ describe('validateCreatePledgePayload', () => {
     });
     it('같은 리워드를 두 줄로 담으면 거부한다', () => {
       const r = validateCreatePledgePayload({ ...noLegacy, items: [{ rewardId: 'mail', quantity: 1 }, { rewardId: 'mail', quantity: 1 }] }, project, NOW);
-      expect(r).toEqual({ ok: false, message: '같은 리워드가 두 번 담겼습니다.' });
+      expect(r).toEqual({ ok: false, message: '같은 리워드가 두 번 담겼어요.' });
     });
     it('빈 목록은 거부한다', () => {
       expect(validateCreatePledgePayload({ ...noLegacy, items: [] }, project, NOW).ok).toBe(false);
@@ -229,7 +229,7 @@ describe('경계값 — 감사 probe 24종', () => {
       expect(ok([]).ok).toBe(false);
     });
     it("rewardId '__proto__'는 리워드로 찾지 않는다", () => {
-      expect(ok({ ...base, rewardId: '__proto__' })).toMatchObject({ ok: false, message: '리워드를 찾을 수 없습니다.' });
+      expect(ok({ ...base, rewardId: '__proto__' })).toMatchObject({ ok: false, message: '리워드를 찾을 수 없어요.' });
     });
     it('shipping이 배열이면 배송지 미입력으로 거부한다', () => {
       expect(ok({ ...base, rewardId: 'cd', shipping: ['x'] })).toMatchObject({ ok: false, message: '배송지를 모두 입력해 주세요.' });

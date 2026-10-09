@@ -81,7 +81,7 @@ const reward = (id: string) => PROJECT.rewards.find((r) => r.id === id)!;
 const payloadFor = (over: Partial<CreatePledgePayload> = {}): CreatePledgePayload => ({
   projectSlug: 'demo', rewardId: 'mail', quantity: 1, additionalAmount: 0, paymentMethod: 'bank_transfer',
   customerName: '김후원', customerPhone: '010-1111-2222', customerEmail: 'a@example.com',
-  displayNamePublic: true, supporterMessage: '응원합니다', termsAgreed: true, ...over,
+  displayNamePublic: true, supporterMessage: '응원해요', termsAgreed: true, ...over,
 });
 
 const createBank = async (over: Partial<CreatePledgePayload> = {}, rewardId = 'mail', now = NOW) => {
@@ -167,7 +167,7 @@ describe('계좌 입금 신청 — 자동 취소가 없다', () => {
     expect(status.backerCount).toBe(1);
     expect(status.backerPersonCount).toBe(1);
     expect(status.publicBackers).toEqual(['김후원']);
-    expect(status.publicMessages.map((m) => m.message)).toEqual(['응원합니다']);
+    expect(status.publicMessages.map((m) => m.message)).toEqual(['응원해요']);
     expect(await aggregateRewardSales('demo')).toEqual({ mail: 1 });
 
     // 기한(3일)이 한참 지나도 그대로다 — 자동 해제가 없다.
@@ -436,7 +436,7 @@ describe('리뷰 지적 — 재현', () => {
     await client.execute({ sql: 'UPDATE funding_pledges SET downloaded_at = refund_requested_at + 60 WHERE order_id = ?', args: [c.id] });
     const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: '계좌 송금 환불', now: NOW });
     expect(r).toMatchObject({ ok: true, mode: 'recorded' });
-    expect(r.ok && r.warnings?.[0]).toContain('내려받았습니다');
+    expect(r.ok && r.warnings?.[0]).toContain('내려받았어요');
   });
 
   it('[6] 환불 계좌 저장이 실패해도 로그에 암호문·예금주가 남지 않는다', async () => {

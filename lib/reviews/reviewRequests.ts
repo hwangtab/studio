@@ -159,22 +159,22 @@ export const buildReviewRequestEmail = (c: ReviewCandidate) => {
   const { googleReviewUrl, naverMapUrl } = getSiteConfig('ko').contact;
   const opening =
     c.kind === 'session'
-      ? `${c.dateLabel} ${c.serviceLabel} 세션은 잘 마무리되셨는지 궁금합니다.`
-      : `보내드린 ${c.serviceLabel} 결과물은 받아 보셨는지 궁금합니다.`;
+      ? `${c.dateLabel} ${c.serviceLabel} 세션은 잘 마무리되셨는지 궁금해요.`
+      : `보내드린 ${c.serviceLabel} 결과물은 받아 보셨는지 궁금해요.`;
   return {
     subject: '[스튜디오 놀] 이용은 어떠셨나요?',
     text: [
       `${c.customerName}님, 스튜디오 놀을 이용해 주셔서 고맙습니다.`,
       '',
       opening,
-      '겪으신 그대로 짧게 남겨 주시면, 스튜디오를 고르는 다른 분들께 큰 도움이 됩니다.',
+      '겪으신 그대로 짧게 남겨 주시면, 스튜디오를 고르는 다른 분들께 큰 도움이 돼요.',
       '',
       `구글 리뷰: ${googleReviewUrl}`,
       `네이버 플레이스: ${naverMapUrl}`,
       '',
-      '아쉬웠던 점이 있다면 이 메일에 답장으로 알려 주세요. 직접 읽고 답드립니다.',
+      '아쉬웠던 점이 있다면 이 메일에 답장으로 알려 주세요. 직접 읽고 답드려요.',
       '',
-      '이 안내는 이번 예약·주문에 대해 한 번만 보내드립니다.',
+      '이 안내는 이번 예약·주문에 대해 한 번만 보내드려요.',
       '스튜디오 놀',
     ].join('\n'),
     // 후기에 혜택·유도 문구를 붙이지 않는다(추천·보증 심사지침) — text와 같은 약속만 옮긴다.
@@ -184,15 +184,15 @@ export const buildReviewRequestEmail = (c: ReviewCandidate) => {
       paragraphs: [
         `${escapeHtml(c.customerName)}님, 스튜디오 놀을 이용해 주셔서 고맙습니다.`,
         escapeHtml(opening),
-        '겪으신 그대로 짧게 남겨 주시면, 스튜디오를 고르는 다른 분들께 큰 도움이 됩니다.',
+        '겪으신 그대로 짧게 남겨 주시면, 스튜디오를 고르는 다른 분들께 큰 도움이 돼요.',
       ],
       rows: [
         { label: '구글 리뷰', value: '구글 리뷰 남기기', href: googleReviewUrl },
         { label: '네이버 플레이스', value: '네이버 리뷰 남기기', href: naverMapUrl },
       ],
       notices: [
-        '아쉬웠던 점이 있다면 이 메일에 답장으로 알려 주세요. 직접 읽고 답드립니다.',
-        '이 안내는 이번 예약·주문에 대해 한 번만 보내드립니다.',
+        '아쉬웠던 점이 있다면 이 메일에 답장으로 알려 주세요. 직접 읽고 답드려요.',
+        '이 안내는 이번 예약·주문에 대해 한 번만 보내드려요.',
       ],
     }),
   };

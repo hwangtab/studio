@@ -200,7 +200,7 @@ export const buildEmailLayout = (input: EmailLayoutInput): string => {
                 문의 ${escapeHtml(site.contact.phone)} · 사업자등록번호 ${escapeHtml(site.businessRegistrationNumber ?? '')}
               </div>
               <div style="margin-top: 10px; color: ${BRAND.faint}; font-size: 11px;">
-                본 메일은 발송 전용입니다. 회신 대신 위 번호로 연락해 주세요.
+                본 메일은 발송 전용이에요. 회신 대신 위 번호로 연락해 주세요.
               </div>`;
 
   const hero = input.hero

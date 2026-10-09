@@ -100,7 +100,7 @@ describe('validateCreateMixingOrderPayload', () => {
       now,
     );
     expect(r.ok).toBe(false);
-    if (!r.ok) expect(r.message).toBe('이 상품은 보컬 튜닝 옵션을 선택할 수 없습니다.');
+    if (!r.ok) expect(r.message).toBe('이 상품은 보컬 튜닝 옵션을 선택할 수 없어요.');
   });
   it('마스터링 패키지는 4곡 미만이면 거부(minSongs)', () => {
     expect(

@@ -41,24 +41,24 @@ export const refundSubscriptionPayment = async (
       both(is(t.id, input.subscriptionPaymentId), is(t.subscriptionId, input.subscriptionId)),
     with: { order: { with: { payments: { with: { refunds: true } } } } },
   });
-  if (!cycle || !cycle.order) return { ok: false, code: 'not_found', message: '회차를 찾을 수 없습니다.' };
+  if (!cycle || !cycle.order) return { ok: false, code: 'not_found', message: '회차를 찾을 수 없어요.' };
   if (cycle.status !== 'paid') {
-    return { ok: false, code: 'invalid_state', message: '결제가 완료된 회차만 환불할 수 있습니다.' };
+    return { ok: false, code: 'invalid_state', message: '결제가 완료된 회차만 환불할 수 있어요.' };
   }
 
   const order = cycle.order;
   const payment = order.payments[0];
   if (!payment) {
     // 회차는 paid인데 승인 기록이 없다 — 결제 기록과 주문 상태가 어긋난 건이라 토스 콘솔 대조가 먼저다.
-    return { ok: false, code: 'invalid_state', message: '결제 기록이 없어 환불할 수 없습니다. 토스 콘솔에서 확인해 주세요.' };
+    return { ok: false, code: 'invalid_state', message: '결제 기록이 없어 환불할 수 없어요. 토스 콘솔에서 확인해 주세요.' };
   }
 
   const remaining = remainingRefundable(order, order.payments);
-  if (remaining <= 0) return { ok: false, code: 'invalid_state', message: '이미 전액 환불된 회차입니다.' };
+  if (remaining <= 0) return { ok: false, code: 'invalid_state', message: '이미 전액 환불된 회차예요.' };
 
   const refundAmount = input.amount ?? remaining;
   if (!Number.isInteger(refundAmount) || refundAmount <= 0 || refundAmount > remaining) {
-    return { ok: false, code: 'invalid_state', message: `환불 금액은 1원 이상 ${remaining.toLocaleString('ko-KR')}원 이하의 정수여야 합니다.` };
+    return { ok: false, code: 'invalid_state', message: `환불 금액은 1원 이상 ${remaining.toLocaleString('ko-KR')}원 이하의 정수여야 해요.` };
   }
 
   const failure = await settleRefund({

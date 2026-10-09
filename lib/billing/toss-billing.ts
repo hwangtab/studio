@@ -25,7 +25,7 @@ export type IssueBillingKeyResult =
 
 const authHeader = (): string => {
   const secret = process.env.TOSS_BILLING_SECRET_KEY;
-  if (!secret) throw new Error('TOSS_BILLING_SECRET_KEY가 설정되지 않았습니다.');
+  if (!secret) throw new Error('TOSS_BILLING_SECRET_KEY가 설정되지 않았어요.');
   return `Basic ${Buffer.from(`${secret}:`).toString('base64')}`;
 };
 
@@ -42,7 +42,7 @@ const request = async (
     return {
       ok: false,
       code: 'CONFIG_ERROR',
-      message: error instanceof Error ? error.message : 'TOSS_BILLING_SECRET_KEY가 설정되지 않았습니다.',
+      message: error instanceof Error ? error.message : 'TOSS_BILLING_SECRET_KEY가 설정되지 않았어요.',
     };
   }
   try {
@@ -80,7 +80,7 @@ export const issueBillingKey = async (input: {
   const json = result.json;
   const billingKey = typeof json.billingKey === 'string' ? json.billingKey : '';
   if (!billingKey) {
-    return { ok: false, code: 'INVALID_RESPONSE', message: '빌링키가 응답에 없습니다.' };
+    return { ok: false, code: 'INVALID_RESPONSE', message: '빌링키가 응답에 없어요.' };
   }
   const card = (json.card ?? {}) as Record<string, unknown>;
   return {
@@ -157,7 +157,7 @@ export const fetchPaymentByOrderId = async (orderId: string): Promise<TossResult
     return {
       ok: false,
       code: 'CONFIG_ERROR',
-      message: error instanceof Error ? error.message : 'TOSS_BILLING_SECRET_KEY가 설정되지 않았습니다.',
+      message: error instanceof Error ? error.message : 'TOSS_BILLING_SECRET_KEY가 설정되지 않았어요.',
     };
   }
   try {

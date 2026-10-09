@@ -22,9 +22,9 @@ const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr')
 export const sendDepositLinkPaidEmail = async (order: Order): Promise<string | null> =>
   sendCustomerEmail(order, {
     to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
-    subject: '[스튜디오 놀] 입금이 확인되었습니다 — 예약금',
+    subject: '[스튜디오 놀] 입금이 확인됐어요 — 예약금',
     text: [
-      `${order.customerName}님, 예약금 입금이 확인되었습니다.`,
+      `${order.customerName}님, 예약금 입금이 확인됐어요.`,
       `금액: ${formatPriceAmount(order.totalAmount)}원 (VAT 포함)`,
       `주문번호: ${order.orderNo}`,
       '',
@@ -32,9 +32,9 @@ export const sendDepositLinkPaidEmail = async (order: Order): Promise<string | n
       '문의: 010-4255-7893',
     ].join('\n'),
     html: buildEmailLayout({
-      preheader: `예약금 ${formatPriceAmount(order.totalAmount)}원 입금이 확인되었습니다.`,
-      heading: '예약금 입금이 확인되었습니다',
-      paragraphs: [`${escapeHtml(order.customerName)}님, 예약금 입금이 확인되었습니다.`],
+      preheader: `예약금 ${formatPriceAmount(order.totalAmount)}원 입금이 확인됐어요.`,
+      heading: '예약금 입금이 확인됐어요',
+      paragraphs: [`${escapeHtml(order.customerName)}님, 예약금 입금이 확인됐어요.`],
       rows: [
         { label: '금액', value: `${formatPriceAmount(order.totalAmount)}원 (VAT 포함)`, emphasis: true },
         { label: '주문번호', value: order.orderNo },
@@ -128,10 +128,10 @@ export const buildPracticeRoomGuide = (
     return {
       missing,
       rows: [],
-      notes: ['입구·방·와이파이 비밀번호는 이용 전에 별도로 보내드립니다. 받지 못하셨으면 010-4255-7893으로 연락 주세요.'],
+      notes: ['입구·방·와이파이 비밀번호는 이용 전에 별도로 보내드려요. 받지 못하셨으면 010-4255-7893으로 연락 주세요.'],
       text: [
         '🏠 입장 안내',
-        '입구·방·와이파이 비밀번호는 이용 전에 별도로 보내드립니다.',
+        '입구·방·와이파이 비밀번호는 이용 전에 별도로 보내드려요.',
         '받지 못하셨으면 010-4255-7893으로 연락 주세요.',
       ].join('\n'),
     };
@@ -146,22 +146,22 @@ export const buildPracticeRoomGuide = (
       { label: '화장실 비밀번호', value: env.restroom ?? '', emphasis: true },
     ],
     notes: [
-      '화장실은 밖으로 나가셔서 엘리베이터 왼쪽에 있습니다.',
+      '화장실은 밖으로 나가셔서 엘리베이터 왼쪽에 있어요.',
       '퇴실하실 때는 전등과 냉난방기기를 꼭 꺼 주세요.',
     ],
     text: [
       '🏠 입장 방법',
-      `• 스튜디오 입구에서 <${env.entrance}>을 누르시면 문이 열립니다. 가끔 문이 열려 있을 때도 있답니다!`,
-      `• ${room}번 방을 준비해 두었어요! 방 비밀번호는 <${env.room}>입니다. 💕`,
+      `• 스튜디오 입구에서 <${env.entrance}>을 누르시면 문이 열려요. 가끔 문이 열려 있을 때도 있어요!`,
+      `• ${room}번 방을 준비해 두었어요! 방 비밀번호: <${env.room}> 💕`,
       '',
       '🌐 인터넷 연결',
       `• 와이파이: ${env.wifiSsid}`,
       `• 비밀번호: ${env.wifiPassword}`,
       '',
-      `🚽 화장실은 밖으로 나가셔서 엘리베이터 왼쪽에 있어요. 비밀번호는 <${env.restroom}>입니다. 항상 청결하게 관리하고 있으니 안심하세요!`,
+      `🚽 화장실은 밖으로 나가셔서 엘리베이터 왼쪽에 있어요. 비밀번호: <${env.restroom}>. 항상 청결하게 관리하고 있으니 안심하세요!`,
       '✅ 퇴실하실 때는 전등과 냉난방기기를 꼭! 꺼주시는 센스! 💫',
       '',
-      '궁금하신 점이나 필요한 것이 있으시면 언제든지 연락 주세요. 즐겁고 보람 있는 연습 시간 보내세요! 항상 응원합니다! 💕🎵✨',
+      '궁금하신 점이나 필요한 것이 있으시면 언제든지 연락 주세요. 즐겁고 보람 있는 연습 시간 보내세요! 항상 응원해요! 💕🎵✨',
     ].join('\n'),
   };
 };
@@ -177,11 +177,11 @@ export const sendBookingConfirmedEmails = async (order: Order, booking: Booking)
     to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
     subject: isPracticeRoom
       ? `✨ 스튜디오 놀 연습실 예약 확정 — ${when}`
-      : `[스튜디오 놀] 예약이 확정되었습니다 — ${when}`,
+      : `[스튜디오 놀] 예약이 확정됐어요 — ${when}`,
     text: [
       isPracticeRoom
         ? `${order.customerName}님, 안녕하세요! 연습실 예약이 확인되었어요~ 🎵🎤`
-        : `${order.customerName}님, 예약이 확정되었습니다.`,
+        : `${order.customerName}님, 예약이 확정됐어요.`,
       `일시: ${when} (${booking.durationHours}시간)`,
       ...(roomLine ? [roomLine] : []),
       `결제 금액: ${formatPriceAmount(order.totalAmount)}원 (VAT 포함)`,
@@ -192,10 +192,10 @@ export const sendBookingConfirmedEmails = async (order: Order, booking: Booking)
       '문의: 010-4255-7893',
     ].join('\n'),
     html: buildEmailLayout({
-      preheader: `${when} (${booking.durationHours}시간) 예약이 확정되었습니다.`,
-      heading: isPracticeRoom ? '연습실 예약이 확정되었습니다' : '예약이 확정되었습니다',
+      preheader: `${when} (${booking.durationHours}시간) 예약이 확정됐어요.`,
+      heading: isPracticeRoom ? '연습실 예약이 확정됐어요' : '예약이 확정됐어요',
       paragraphs: [
-        `${escapeHtml(order.customerName)}님, 안녕하세요. ${isPracticeRoom ? '연습실 예약이 확인되었습니다.' : '예약이 확정되었습니다.'}`,
+        `${escapeHtml(order.customerName)}님, 안녕하세요. ${isPracticeRoom ? '연습실 예약이 확인됐어요.' : '예약이 확정됐어요.'}`,
       ],
       rows: [
         { label: '일시', value: `${when} (${booking.durationHours}시간)`, emphasis: true },
@@ -214,7 +214,7 @@ export const sendBookingConfirmedEmails = async (order: Order, booking: Booking)
   if (customerError) failures.push(`customer:${customerError}`);
 
   const guideWarning = guide && guide.missing.length
-    ? `⚠ 입장 안내를 못 보냈습니다 — 비어 있는 값: ${guide.missing.join(', ')}. 손님에게 비밀번호를 직접 보내야 합니다.`
+    ? `⚠ 입장 안내를 못 보냈어요 — 비어 있는 값: ${guide.missing.join(', ')}. 손님에게 비밀번호를 직접 보내야 해요.`
     : null;
 
   // 상품명을 싣는다 — 서비스 종류만으로는 Day Lock 8시간과 시간당 8시간이 금액으로만 갈린다.
@@ -223,7 +223,7 @@ export const sendBookingConfirmedEmails = async (order: Order, booking: Booking)
     to: OPERATOR_EMAIL,
     subject: `[예약] ${when} ${productName}${booking.roomNumber ? ` ${booking.roomNumber}` : ''} — ${order.customerName}`,
     text: [
-      `새 예약이 결제 완료되었습니다.`,
+      `새 예약이 결제 완료됐어요.`,
       `상품: ${productName}`,
       `일시: ${when} (${booking.durationHours}시간)`,
       ...(roomLine ? [roomLine] : []),
@@ -234,7 +234,7 @@ export const sendBookingConfirmedEmails = async (order: Order, booking: Booking)
       // 후기 요청 메일(lib/reviews/reviewRequests.ts)은 세션 다음 날 11:00에 확정·완료 예약으로 나간다.
       // 노쇼 표시는 관리자가 손으로 하므로, 그 전에 표시해야 노쇼 고객에게 "잘 마무리되셨나요"가 가지 않는다.
       ...(booking.serviceType !== 'practice-room'
-        ? ['', '※ 손님이 오지 않았다면 다음 날 오전 11시 전에 관리자 화면에서 노쇼로 표시해 주세요(후기 요청 메일에서 빠집니다).']
+        ? ['', '※ 손님이 오지 않았다면 다음 날 오전 11시 전에 관리자 화면에서 노쇼로 표시해 주세요(후기 요청 메일에서 빠져요).']
         : []),
       `관리자: ${adminDetailCta(order).url}`,
     ].join('\n'),
@@ -242,7 +242,7 @@ export const sendBookingConfirmedEmails = async (order: Order, booking: Booking)
       audience: 'operator',
       noticeTone: guideWarning ? 'alert' : 'info',
       preheader: `${order.customerName} · ${productName} · ${when}`,
-      heading: '새 예약이 결제 완료되었습니다',
+      heading: '새 예약이 결제 완료됐어요',
       rows: [
         ...customerRows(order),
         { label: '상품', value: productName },
@@ -254,10 +254,10 @@ export const sendBookingConfirmedEmails = async (order: Order, booking: Booking)
       cta: adminDetailCta(order),
       notices: [
         ...(guideWarning
-          ? [`<strong>입장 안내를 못 보냈습니다</strong> — 비어 있는 값: ${escapeHtml(guide!.missing.join(', '))}. 손님에게 비밀번호를 직접 보내야 합니다.`]
+          ? [`<strong>입장 안내를 못 보냈어요</strong> — 비어 있는 값: ${escapeHtml(guide!.missing.join(', '))}. 손님에게 비밀번호를 직접 보내야 해요.`]
           : []),
         ...(booking.serviceType !== 'practice-room'
-          ? ['손님이 오지 않았다면 다음 날 오전 11시 전에 관리자 화면에서 노쇼로 표시해 주세요(후기 요청 메일에서 빠집니다).']
+          ? ['손님이 오지 않았다면 다음 날 오전 11시 전에 관리자 화면에서 노쇼로 표시해 주세요(후기 요청 메일에서 빠져요).']
           : []),
       ],
     }),
@@ -276,8 +276,8 @@ export const sendBookingConfirmedEmails = async (order: Order, booking: Booking)
 export const refundLine = (refundAmount: number, refundVia: 'payment' | 'bank_account'): string =>
   refundVia === 'bank_account'
     ? refundAmount > 0
-      ? `환불 금액: ${formatPriceAmount(refundAmount)}원 (적어 주신 환불 계좌로 접수일부터 3영업일 이내에 보내 드립니다. 계좌를 잘못 적으셨다면 이 메일에 회신해 주세요.)`
-      : '환불 금액: 0원 (환불 규정에 따라 돌려드릴 금액이 없습니다)'
+      ? `환불 금액: ${formatPriceAmount(refundAmount)}원 (적어 주신 환불 계좌로 접수일부터 3영업일 이내에 보내 드려요. 계좌를 잘못 적으셨다면 이 메일에 회신해 주세요.)`
+      : '환불 금액: 0원 (환불 규정에 따라 돌려드릴 금액이 없어요)'
     : `환불 금액: ${formatPriceAmount(refundAmount)}원 (결제 수단으로 환불, 카드사에 따라 3~5영업일 소요)`;
 
 /** 환불 행의 값과 설명 — 텍스트의 refundLine과 같은 사실. */
@@ -286,11 +286,11 @@ const refundHtmlParts = (refundAmount: number, refundVia: 'payment' | 'bank_acco
     return refundAmount > 0
       ? {
           value: `${formatPriceAmount(refundAmount)}원`,
-          note: '적어 주신 환불 계좌로 접수일부터 3영업일 이내에 보내 드립니다. 계좌를 잘못 적으셨다면 이 메일에 회신해 주세요.',
+          note: '적어 주신 환불 계좌로 접수일부터 3영업일 이내에 보내 드려요. 계좌를 잘못 적으셨다면 이 메일에 회신해 주세요.',
         }
-      : { value: '0원', note: '환불 규정에 따라 돌려드릴 금액이 없습니다.' };
+      : { value: '0원', note: '환불 규정에 따라 돌려드릴 금액이 없어요.' };
   }
-  return { value: `${formatPriceAmount(refundAmount)}원`, note: '결제 수단으로 환불되며, 카드사에 따라 3~5영업일이 걸립니다.' };
+  return { value: `${formatPriceAmount(refundAmount)}원`, note: '결제 수단으로 환불되며, 카드사에 따라 3~5영업일이 걸려요.' };
 };
 
 const customerCancelHtml = (
@@ -338,13 +338,13 @@ export const sendBookingCancelledEmails = async (
   const failures: string[] = [];
   const customerError = await sendCustomerEmail(order, {
     to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
-    subject: `[스튜디오 놀] 예약이 취소되었습니다 — ${when}`,
+    subject: `[스튜디오 놀] 예약이 취소됐어요 — ${when}`,
     text: [
-      `${order.customerName}님, 예약이 취소되었습니다.`,
+      `${order.customerName}님, 예약이 취소됐어요.`,
       refundLine(refundAmount, refundVia),
       `주문번호: ${order.orderNo}`,
     ].join('\n'),
-    html: customerCancelHtml(order, `${when} 예약`, refundAmount, refundVia, '예약이 취소되었습니다'),
+    html: customerCancelHtml(order, `${when} 예약`, refundAmount, refundVia, '예약이 취소됐어요'),
   });
   if (customerError) failures.push(`customer:${customerError}`);
   const operator = await sendEmail({
@@ -353,7 +353,7 @@ export const sendBookingCancelledEmails = async (
     text: refundVia === 'bank_account' && refundAmount > 0
       ? `주문 ${order.orderNo} 취소 — 계좌 입금 주문이라 고객이 적은 환불 계좌로 3영업일 이내에 송금하고 관리자 화면에서 "송금 완료"를 눌러 주세요. 관리자: ${SITE_URL}/admin/bookings/${order.id}`
       : `주문 ${order.orderNo} 취소. 관리자: ${SITE_URL}/admin/bookings`,
-    html: operatorCancelHtml(order, '예약이 취소되었습니다', [{ label: '일시', value: when }], refundAmount, refundVia),
+    html: operatorCancelHtml(order, '예약이 취소됐어요', [{ label: '일시', value: when }], refundAmount, refundVia),
   });
   if (!operator.ok) failures.push(`operator:${operator.errorCode}`);
   return failures.length ? failures.join(', ') : null;
@@ -380,15 +380,15 @@ export const sendMixingOrderConfirmedEmails = async (order: Order, workOrder: Wo
 
   const customerError = await sendCustomerEmail(order, {
     to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
-    subject: `[스튜디오 놀] 주문이 접수되었습니다 — ${productName}`,
+    subject: `[스튜디오 놀] 주문이 접수됐어요 — ${productName}`,
     text: [
-      `${order.customerName}님, 주문이 접수되었습니다.`,
+      `${order.customerName}님, 주문이 접수됐어요.`,
       `상품: ${productName} × ${workOrder.songCount}곡${workOrder.vocalTuning ? ' (보컬 튜닝 옵션 포함)' : ''}`,
       `결제 금액: ${formatPriceAmount(order.totalAmount)}원 (VAT 포함)`,
       `주문번호: ${order.orderNo}`,
       '',
       '파일을 보내주세요 — 이 메일에 회신으로 구글 드라이브·WeTransfer 등 다운로드 링크를 보내주시거나,',
-      `카카오톡 오픈채팅으로 보내셔도 됩니다: ${kakaoUrl}`,
+      `카카오톡 오픈채팅으로 보내셔도 돼요: ${kakaoUrl}`,
       '',
       '보낼 파일',
       '- 드라이 보컬 WAV',
@@ -404,11 +404,11 @@ export const sendMixingOrderConfirmedEmails = async (order: Order, workOrder: Wo
       '문의: 010-4255-7893',
     ].join('\n'),
     html: buildEmailLayout({
-      preheader: `${productName} 주문이 접수되었습니다. 작업할 파일을 보내 주세요.`,
-      heading: '주문이 접수되었습니다',
+      preheader: `${productName} 주문이 접수됐어요. 작업할 파일을 보내 주세요.`,
+      heading: '주문이 접수됐어요',
       paragraphs: [
-        `${escapeHtml(order.customerName)}님, 주문이 접수되었습니다.`,
-        `<strong>파일을 보내 주세요.</strong> 이 메일에 회신으로 구글 드라이브·WeTransfer 등 다운로드 링크를 보내 주시거나, <a href="${escapeHtml(kakaoUrl)}" style="color: ${BRAND_COLOR.primary};">카카오톡 오픈채팅</a>으로 보내셔도 됩니다.`,
+        `${escapeHtml(order.customerName)}님, 주문이 접수됐어요.`,
+        `<strong>파일을 보내 주세요.</strong> 이 메일에 회신으로 구글 드라이브·WeTransfer 등 다운로드 링크를 보내 주시거나, <a href="${escapeHtml(kakaoUrl)}" style="color: ${BRAND_COLOR.primary};">카카오톡 오픈채팅</a>으로 보내셔도 돼요.`,
         '보낼 파일: 드라이 보컬 WAV · MR 또는 트랙별 스템 WAV · 레퍼런스 1~2곡 (WAV 24bit/44.1 또는 48kHz 권장)',
       ],
       rows: [
@@ -428,7 +428,7 @@ export const sendMixingOrderConfirmedEmails = async (order: Order, workOrder: Wo
     to: OPERATOR_EMAIL,
     subject: `[믹싱 주문] ${productName} × ${workOrder.songCount}곡 — ${order.customerName}`,
     text: [
-      '새 믹싱·마스터링 주문이 결제 완료되었습니다.',
+      '새 믹싱·마스터링 주문이 결제 완료됐어요.',
       `상품: ${productName} × ${workOrder.songCount}곡${workOrder.vocalTuning ? ' (보컬 튜닝 옵션)' : ''}`,
       `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
       `금액: ${formatPriceAmount(order.totalAmount)}원`,
@@ -438,7 +438,7 @@ export const sendMixingOrderConfirmedEmails = async (order: Order, workOrder: Wo
     html: buildEmailLayout({
       audience: 'operator',
       preheader: `${order.customerName} · ${productName} × ${workOrder.songCount}곡`,
-      heading: '새 믹싱·마스터링 주문이 결제 완료되었습니다',
+      heading: '새 믹싱·마스터링 주문이 결제 완료됐어요',
       rows: [
         ...customerRows(order),
         { label: '상품', value: `${productName} × ${workOrder.songCount}곡${workOrder.vocalTuning ? ' (보컬 튜닝 옵션)' : ''}` },
@@ -462,13 +462,13 @@ export const sendMixingOrderCancelledEmails = async (
 
   const customerError = await sendCustomerEmail(order, {
     to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
-    subject: `[스튜디오 놀] 주문이 취소되었습니다 — ${productName}`,
+    subject: `[스튜디오 놀] 주문이 취소됐어요 — ${productName}`,
     text: [
-      `${order.customerName}님, 주문이 취소되었습니다.`,
+      `${order.customerName}님, 주문이 취소됐어요.`,
       refundLine(refundAmount, refundVia),
       `주문번호: ${order.orderNo}`,
     ].join('\n'),
-    html: customerCancelHtml(order, productName, refundAmount, refundVia, '주문이 취소되었습니다'),
+    html: customerCancelHtml(order, productName, refundAmount, refundVia, '주문이 취소됐어요'),
   });
   if (customerError) failures.push(`customer:${customerError}`);
   const operator = await sendEmail({
@@ -477,7 +477,7 @@ export const sendMixingOrderCancelledEmails = async (
     text: refundVia === 'bank_account' && refundAmount > 0
       ? `주문 ${order.orderNo} 취소 — 계좌 입금 주문이라 고객이 적은 환불 계좌로 3영업일 이내에 송금하고 관리자 화면에서 "송금 완료"를 눌러 주세요. 관리자: ${SITE_URL}/admin/bookings/${order.id}`
       : `주문 ${order.orderNo} 취소. 관리자: ${SITE_URL}/admin/bookings`,
-    html: operatorCancelHtml(order, '믹싱 주문이 취소되었습니다', [{ label: '상품', value: productName }], refundAmount, refundVia),
+    html: operatorCancelHtml(order, '믹싱 주문이 취소됐어요', [{ label: '상품', value: productName }], refundAmount, refundVia),
   });
   if (!operator.ok) failures.push(`operator:${operator.errorCode}`);
   return failures.length ? failures.join(', ') : null;

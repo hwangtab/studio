@@ -60,7 +60,7 @@ const order = {
   notificationError: null, createdAt: new Date(), updatedAt: new Date(), payments: [],
   fundingPledge: {
     id: 'p', orderId: 'ord-1', projectSlug: 'demo', rewardId: 'mail', rewardTitle: '감사 메일', unitAmount: 5000, quantity: 1, additionalAmount: 0,
-    paymentMethod: 'toss', holdExpiresAt: new Date('2026-10-15T15:00:00Z'), paidAt: null, supporterMessage: '응원합니다', displayNamePublic: true, publicName: null,
+    paymentMethod: 'toss', holdExpiresAt: new Date('2026-10-15T15:00:00Z'), paidAt: null, supporterMessage: '응원해요', displayNamePublic: true, publicName: null,
     shippingName: null, shippingPhone: null, shippingPostcode: null, shippingAddress1: null, shippingAddress2: null, shippingMemo: null,
     fulfillmentStatus: 'none', trackingCompany: null, trackingNumber: null, entrySource: 'online', refundRequestedAt: null, adminMemo: null,
     createdAt: new Date(), updatedAt: new Date(),
@@ -97,7 +97,7 @@ describe('후원 확정', () => {
     const operator = sent(1);
     expect(operator.to).not.toBe('a@b.com');
     expect(operator.html).toContain('운영 알림');
-    for (const expected of ['김후원', '5,000원', '토스', '응원합니다', '010-1111-2222', 'a@b.com']) {
+    for (const expected of ['김후원', '5,000원', '토스', '응원해요', '010-1111-2222', 'a@b.com']) {
       expect(operator.html).toContain(expected);
     }
     expect(operator.html).toContain(`href="${SITE_URL}/admin/funding/ord-1"`);
@@ -154,7 +154,7 @@ describe('취소·환불·철회', () => {
   it('일부 환불: 환불 리워드·금액·사유, 운영자 건별 링크, escape', async () => {
     const refund = { rewardTitle: '감사 메일', quantity: 1, amount: 5000, reason: ATTACK };
     await sendFundingLineRefundEmails(order, project, refund);
-    expect(sent(0).html).toContain('나머지 리워드는 그대로 진행됩니다');
+    expect(sent(0).html).toContain('나머지 리워드는 그대로 진행돼요');
     expect(sent(0).html).toContain('5,000원');
     expect(sent(1).html).toContain(`href="${SITE_URL}/admin/funding/ord-1"`);
     expectNoInjection(sent(0).html);

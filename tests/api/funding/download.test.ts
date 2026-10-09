@@ -141,7 +141,7 @@ it('선점만 됐고 done 환불이 없으면 "취소 처리 중"이라고 답�
 
   const r = await call(ok);
   expect(r.status).toBe(409);
-  expect(r.body.message).toBe('취소 처리 중입니다. 잠시 후 다시 시도해 주세요.');
+  expect(r.body.message).toBe('취소 처리 중이에요. 잠시 후 다시 시도해 주세요.');
 });
 
 it('done 환불이 있으면 "이미 취소된"이라고 답한다', async () => {
@@ -152,7 +152,7 @@ it('done 환불이 있으면 "이미 취소된"이라고 답한다', async () =>
 
   const r = await call(ok);
   expect(r.status).toBe(409);
-  expect(r.body.message).toBe('이미 취소된 후원입니다. 내려받을 수 없습니다.');
+  expect(r.body.message).toBe('이미 취소된 후원이에요. 내려받을 수 없어요.');
 });
 
 it('재조회가 실패하면 조심스러운 쪽("처리 중")을 쓴다', async () => {
@@ -162,7 +162,7 @@ it('재조회가 실패하면 조심스러운 쪽("처리 중")을 쓴다', asyn
     .mockRejectedValueOnce(new Error('DB down'));
 
   const r = await call(ok);
-  expect(r.body.message).toBe('취소 처리 중입니다. 잠시 후 다시 시도해 주세요.');
+  expect(r.body.message).toBe('취소 처리 중이에요. 잠시 후 다시 시도해 주세요.');
 });
 
 /**
@@ -226,7 +226,7 @@ describe('저장소에 객체가 없을 때', () => {
     (fundingDownloadObjectExists as jest.Mock).mockResolvedValue(false);
     const r = await call(ok);
     expect(r.status).toBe(503);
-    expect(r.body.message).toContain('파일을 준비하지 못했습니다');
+    expect(r.body.message).toContain('파일을 준비하지 못했어요');
     expect(update).not.toHaveBeenCalled();
     expect(r.redirectedTo).toBeUndefined();
     expect(alertMissingDownloadObject).toHaveBeenCalledWith({ key: KEY, orderNo: 'FND-1', orderId: 1 });

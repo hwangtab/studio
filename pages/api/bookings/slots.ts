@@ -51,26 +51,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { productId, hours: hoursParam, date } = req.query;
 
   const product = typeof productId === 'string' ? getProduct(productId) : undefined;
-  if (!product) return res.status(400).json({ ok: false, message: '알 수 없는 상품입니다.' });
+  if (!product) return res.status(400).json({ ok: false, message: '알 수 없는 상품이에요.' });
 
   const requestedHours = typeof hoursParam === 'string' && hoursParam !== '' ? Number(hoursParam) : undefined;
   const hours = resolveHours(product, requestedHours);
-  if (hours === null) return res.status(400).json({ ok: false, message: '예약 시간 수가 올바르지 않습니다.' });
+  if (hours === null) return res.status(400).json({ ok: false, message: '예약 시간 수가 올바르지 않아요.' });
 
   if (typeof date !== 'string' || !DATE_RE.test(date))
-    return res.status(400).json({ ok: false, message: '날짜가 올바르지 않습니다.' });
+    return res.status(400).json({ ok: false, message: '날짜가 올바르지 않아요.' });
 
   const { openHour, closeHour } = productHours(product);
   const dayStart = kstDateTime(date, openHour);
   const dayEnd = kstDateTime(date, closeHour);
-  if (Number.isNaN(dayStart.getTime())) return res.status(400).json({ ok: false, message: '날짜가 올바르지 않습니다.' });
+  if (Number.isNaN(dayStart.getTime())) return res.status(400).json({ ok: false, message: '날짜가 올바르지 않아요.' });
 
   // 슬롯 조회는 날짜 단위. **당일도 연다** — 지난 시각은 buildDaySlots가 leadOk로 거른다.
   // 2026-09-25까지 "당일은 조회 불가"로 막고 있었다(리드타임 24h 전제).
   const daysUntil = daysUntilKst(now, dayStart);
-  if (daysUntil < 0) return res.status(400).json({ ok: false, message: '지난 날짜는 조회할 수 없습니다.' });
+  if (daysUntil < 0) return res.status(400).json({ ok: false, message: '지난 날짜는 조회할 수 없어요.' });
   if (daysUntil > MAX_BOOK_DAYS)
-    return res.status(400).json({ ok: false, message: `예약은 ${MAX_BOOK_DAYS}일 이내만 가능합니다.` });
+    return res.status(400).json({ ok: false, message: `예약은 ${MAX_BOOK_DAYS}일 이내만 가능해요.` });
 
   const db = getDb();
 

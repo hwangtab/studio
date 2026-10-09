@@ -27,8 +27,8 @@ export const buildContactEmailHtml = (sanitized: SanitizedContactPayload): strin
 
   return buildEmailLayout({
     audience: 'operator',
-    preheader: `${sanitized.name}님의 새 문의가 도착했습니다.`,
-    heading: '새 문의가 도착했습니다',
+    preheader: `${sanitized.name}님의 새 문의가 도착했어요.`,
+    heading: '새 문의가 도착했어요',
     rows: [
       { label: '이름', value: sanitized.name },
       { label: '이메일', value: sanitized.email, href: `mailto:${sanitized.email}` },
