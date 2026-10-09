@@ -528,7 +528,9 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
           imageSrc="/images/room8.webp"
           imageAlt={t('practiceRoom.cta.imageAlt')}
           primaryButtonLabel={t('practiceRoom.cta.inquiry')}
-          secondaryButtonLabel={t('practiceRoom.cta.location')}
+          // 페이지 끝 2차는 히어로와 같은 규칙 — 온라인 예약이 되는 서비스는 예약으로(docs/hero-cta-audit-2026-10.md). 비-ko는 오시는 길.
+          secondaryButtonLabel={locale === 'ko' ? t('actions.bookHourly') : t('practiceRoom.cta.location')}
+          secondaryHref={locale === 'ko' ? '/booking/practice-room' : undefined}
           headingAs="h3"
         />
       </Section>

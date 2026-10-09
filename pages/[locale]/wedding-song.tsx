@@ -401,7 +401,9 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
           imageSrc="/images/recording3.webp"
           imageAlt={t('weddingSong.cta.imageAlt')}
           primaryButtonLabel={t('weddingSong.cta.inquiry')}
-          secondaryButtonLabel={t('weddingSong.cta.location')}
+          // 페이지 끝 2차는 히어로와 같은 규칙 — 온라인 예약이 되는 서비스는 예약으로(docs/hero-cta-audit-2026-10.md). 비-ko는 오시는 길.
+          secondaryButtonLabel={locale === 'ko' ? t('actions.bookOnline') : t('weddingSong.cta.location')}
+          secondaryHref={locale === 'ko' ? '/booking/wedding-song' : undefined}
           headingAs="h3"
         />
       </Section>
