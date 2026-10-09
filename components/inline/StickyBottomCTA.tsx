@@ -8,6 +8,7 @@ import { CANONICAL_FACTS } from '../../lib/factTokens';
 import type { Locale } from '../../lib/i18n';
 import { trackLeadEvent } from '../../utils/analytics';
 import { Button } from '../ui/Button';
+import { useKakaoBlockInView } from '../common/kakaoBlockVisibility';
 
 interface StickyBottomCTAProps {
   /** article 시작 직전 invisible marker ref */
@@ -32,6 +33,8 @@ const isDismissedNow = (): boolean => {
 
 const StickyBottomCTA = ({ markerRef, locale }: StickyBottomCTAProps) => {
   const { t } = useTranslation('common', { lng: locale });
+  // 본문 카톡 블록(ContactCTA)이 보이는 동안 숨긴다 — 같은 카톡 버튼이 한 화면에 둘이 되지 않게.
+  const blockInView = useKakaoBlockInView();
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
 
   // 전화는 로컬 서비스업의 1순위 전환 행동인데, 스토리 상세에서 상시 노출되는 진입점이
@@ -90,7 +93,7 @@ const StickyBottomCTA = ({ markerRef, locale }: StickyBottomCTAProps) => {
     setDismissed(true);
   };
 
-  if (dismissed || !visible) return null;
+  if (dismissed || !visible || blockInView) return null;
 
   return (
     <div

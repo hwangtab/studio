@@ -4,6 +4,7 @@ import { ArrowRight, MessageCircle, Mail } from '@/lib/lucide-icons';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 import { Button } from '../ui/Button';
 import type { Locale } from '../../lib/i18n';
+import { useReportKakaoBlock } from './kakaoBlockVisibility';
 
 interface KakaoSectionBarProps {
   locale: Locale;
@@ -33,6 +34,9 @@ interface KakaoSectionBarProps {
  */
 const KakaoSectionBar = ({ locale, kakaoUrl, component, ctaId, message, actionLabel, contactLabel, className = '' }: KakaoSectionBarProps) => {
   const isKorean = locale === 'ko';
+  // 보이는 동안 떠 있는 카톡 버튼들을 숨긴다(한 화면에 카톡 버튼 하나 — kakaoBlockVisibility).
+  const rootRef = React.useRef<HTMLDivElement>(null);
+  useReportKakaoBlock(rootRef, isKorean);
   // 띠는 한 줄(데스크톱)·두 줄(모바일)로 접힌다. 반경은 pill — 자유 배치 CTA(design-system §3).
   const layout = `h-auto min-h-[56px] w-full justify-between gap-4 px-6 py-4 text-left whitespace-normal leading-snug ${className}`;
   const body = (label: string, Icon: typeof MessageCircle) => (
@@ -50,7 +54,7 @@ const KakaoSectionBar = ({ locale, kakaoUrl, component, ctaId, message, actionLa
 
   if (isKorean) {
     return (
-      <div className="mt-8 max-w-5xl mx-auto">
+      <div ref={rootRef} className="mt-8 max-w-5xl mx-auto">
         <Button asChild variant="kakao" shape="pill" size="lg" fullWidth>
           <a
             href={kakaoUrl}

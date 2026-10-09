@@ -48,11 +48,11 @@ describe('ContactCTA 리드 계측', () => {
     });
   });
 
-  it('한국어: /contact 버튼은 micro_click_contact를 발화한다 (라벨·목적지는 그대로)', () => {
+  it('한국어: "위치" 버튼은 문의 페이지의 지도 카드(#location)로 가고 micro_click_contact를 발화한다', () => {
     render(<ContactCTA locale="ko" {...baseProps} />);
 
     const link = screen.getByRole('link', { name: '위치' });
-    expect(link).toHaveAttribute('href', '/ko/contact');
+    expect(link).toHaveAttribute('href', '/ko/contact#location');
 
     fireEvent.click(link);
 
@@ -60,6 +60,7 @@ describe('ContactCTA 리드 계측', () => {
       locale: 'ko',
       component: 'ContactCTA',
       cta_id: 'contact_cta_secondary_contact',
+      cta_target: '/ko/contact#location',
     });
   });
 
@@ -88,5 +89,10 @@ describe('ContactCTA 리드 계측', () => {
     const buttonRow = container.querySelector('.flex.flex-col.sm\\:flex-row');
     const contactLinks = buttonRow?.querySelectorAll('a[href="/en/contact"]') ?? [];
     expect(contactLinks).toHaveLength(1);
+  });
+
+  it('보조 버튼 글자를 바꾸면 목적지도 함께 넘긴다(글자와 도착지가 같아야 한다)', () => {
+    render(<ContactCTA locale="ko" {...baseProps} secondaryButtonLabel="문의하기" secondaryHref="/contact" />);
+    expect(screen.getByRole('link', { name: '문의하기' })).toHaveAttribute('href', '/ko/contact');
   });
 });

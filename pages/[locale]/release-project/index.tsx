@@ -438,6 +438,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           // 기본 secondary 라벨은 '위치'인데 실제 목적지는 /contact 문의 폼이라
           // 라벨-목적지가 어긋난다. 문의 라벨로 명시 덮어쓴다.
           secondaryButtonLabel={t('actions.contact')}
+          secondaryHref="/contact"
         />
       </Section>
 

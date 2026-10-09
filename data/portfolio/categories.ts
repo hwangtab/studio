@@ -3,7 +3,7 @@ import type { Locale } from '../../lib/i18n';
 import { translate } from './i18n';
 import { BRAND_COLOR } from '../../lib/brandColor';
 
-/** 카테고리 배지색(포트폴리오 상세, 흰 글씨). 라이너 노트 §3-1: 보라·핑크·주황 대신 브랜드 녹색 계열 한 가족 + 중립 하나. */
+/** 카테고리 배지색(포트폴리오 상세, 흰 글씨). 브랜드 파랑 계열 한 가족 + 중립 하나(2026-10-09). */
 export const buildCategories = (locale: Locale): PortfolioCategory[] => [
   {
     id: 'all',
@@ -45,3 +45,7 @@ export const buildCategories = (locale: Locale): PortfolioCategory[] => [
     color: '#4b5563', // gray-500 — 상업음악은 브랜드색 밖의 중립. 흰 글씨 7.0:1
   },
 ];
+
+/** 분류 id(album·single…)를 그 로케일의 이름으로 — 한국어 화면에 "ALBUM" 같은 영어 대문자가 뜨지 않게(2026-10-09). */
+export const getCategoryName = (id: string, locale: Locale): string =>
+  buildCategories(locale).find((c) => c.id === id)?.name ?? id;

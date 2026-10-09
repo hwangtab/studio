@@ -1,8 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { m } from 'framer-motion';
-import { HOVER_SCALE, TAP_SCALE } from '../utils/animationUtils';
 
 interface CategoryBase {
   id: string;
@@ -93,25 +91,21 @@ const CategoryFilter = ({
               : {};
 
             return (
-              <m.button
+              <button
                 key={category.id}
                 type="button"
                 onClick={() => setActiveCategory(category.id)}
-                animate={{ scale: isActive ? 1.05 : 1 }}
-                transition={{ duration: 0.2, ease: 'easeOut' }}
-                className={`${sizeClasses[buttonSize]} rounded-full transition-colors duration-300 min-w-fit whitespace-nowrap flex-shrink-0 min-h-[44px] sm:min-h-[36px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
+                className={`${sizeClasses[buttonSize]} rounded-full transition-[background-color,color,transform] duration-300 active:scale-[0.96] active:duration-75 min-w-fit whitespace-nowrap flex-shrink-0 min-h-[44px] sm:min-h-[36px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
                   ? useCustomColors && category.color
-                    ? 'text-white shadow-lg'
-                    : 'bg-primary text-white shadow-lg'
+                    ? 'text-white'
+                    : 'bg-primary text-white'
                   : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                   }`}
                 style={customStyle}
-                whileHover={HOVER_SCALE}
-                whileTap={TAP_SCALE}
                 aria-pressed={isActive}
               >
                 {category.label}
-              </m.button>
+              </button>
             );
           })}
         </div>
