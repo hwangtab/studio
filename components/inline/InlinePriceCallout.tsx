@@ -92,7 +92,7 @@ const InlinePriceCallout = ({ id, locale }: InlinePriceCalloutProps) => {
       data-inline-callout="price"
       aria-label={categoryLabel}
       // 색은 Notice의 brand tone 표에서 온다(다크 짝 포함) — 구조가 카드라 Notice로 감싸지 않고 표만 쓴다.
-      className={`my-8 rounded-xl border p-6 ${NOTICE_TONE_CLASS.brand}`}
+      className={`my-8 rounded-xl border p-6 ${NOTICE_TONE_CLASS.neutral}`}
     >
       <div className="flex items-center gap-2 mb-3">
         <div

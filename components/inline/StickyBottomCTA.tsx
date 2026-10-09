@@ -8,7 +8,6 @@ import { CANONICAL_FACTS } from '../../lib/factTokens';
 import type { Locale } from '../../lib/i18n';
 import { trackLeadEvent } from '../../utils/analytics';
 import { Button } from '../ui/Button';
-import { NOTICE_TONE_CLASS } from '../ui/Notice';
 
 interface StickyBottomCTAProps {
   /** article 시작 직전 invisible marker ref */
@@ -98,24 +97,23 @@ const StickyBottomCTA = ({ markerRef, locale }: StickyBottomCTAProps) => {
       role="region"
       aria-label={t('stories.sticky.label', { defaultValue: '고정 문의 바' })}
       style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
-      // 색은 Notice의 warning tone 표. 단, 고정 바는 본문 위에 떠 있어 다크 배경을 불투명(amber-950)으로
-      // 덮는다 — 표의 amber-950/40은 흐르는 본문이 비쳐 글자 대비가 흔들린다. 테두리는 한 종(border).
-      className={`fixed inset-x-4 bottom-4 sm:bottom-8 z-50 max-w-2xl sm:mx-auto rounded-xl border shadow-lg p-4 flex items-center gap-3 ${NOTICE_TONE_CLASS.warning} dark:bg-amber-950`}
+      // 흰 면(다크는 gray-900) — 휴대폰 하단 바(KakaoFab bar)와 같은 재질. 예전엔 Notice의 warning(앰버) 톤이었는데
+      // 판매 안내에 "주의" 색을 쓴 셈이었다(2026-10-09 스토리 CTA 기준). 카톡만 옐로, 가격은 파랑 링크, 전화는 weak.
+      className="fixed inset-x-4 bottom-4 sm:bottom-8 z-50 max-w-2xl sm:mx-auto rounded-xl border border-gray-200 bg-white/95 text-gray-900 shadow-lg backdrop-blur p-4 flex items-center gap-3 dark:border-gray-800 dark:bg-gray-900/95 dark:text-gray-100"
     >
-      <div className="flex-shrink-0 inline-flex items-center justify-center p-2 rounded-full bg-amber-300/40 dark:bg-amber-500/30" aria-hidden="true">
-        <MessageCircle className="text-amber-700 dark:text-amber-300" size={18} />
+      <div className="flex-shrink-0 inline-flex items-center justify-center p-2 rounded-full bg-gray-100 dark:bg-gray-800" aria-hidden="true">
+        <MessageCircle className="text-gray-700 dark:text-gray-300" size={18} />
       </div>
       <p className="flex-1 typo-card-body text-sm text-gray-800 dark:text-gray-200 truncate">
         {t('stories.sticky.headline', { defaultValue: '예약·문의는 카카오톡으로' })}
       </p>
-      {/* 링 오프셋만 amber 바 배경에 맞춰 덮는다(기본은 흰색/gray-900). */}
       <Button asChild variant="kakao" shape="pill" size="md">
         <a
           href={siteConfig.contact.kakaoUrl}
           target="_blank"
           rel="noopener noreferrer"
           onClick={trackKakaoClick}
-          className="hidden sm:inline-flex gap-1 h-auto min-h-[44px] px-4 py-2 text-sm font-bold touch-manipulation focus-visible:ring-offset-amber-50 dark:focus-visible:ring-offset-amber-950"
+          className="hidden sm:inline-flex gap-1 h-auto min-h-[44px] px-4 py-2 text-sm font-bold touch-manipulation focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
         >
           {t('stories.sticky.kakao', { defaultValue: '카카오톡' })}
           <ArrowRight size={14} aria-hidden="true" />
@@ -124,14 +122,14 @@ const StickyBottomCTA = ({ markerRef, locale }: StickyBottomCTAProps) => {
       <Link
         href={`/${locale}/pricing`}
         prefetch={false}
-        className="hidden sm:inline-flex items-center gap-1 px-3 py-2 text-sm font-semibold text-amber-700 dark:text-amber-300 hover:underline min-h-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-amber-50 dark:focus-visible:ring-offset-amber-950"
+        className="hidden sm:inline-flex items-center gap-1 px-3 py-2 text-sm font-semibold text-primary dark:text-primary-lighter hover:underline min-h-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
       >
         {t('nav.pricing')}
       </Link>
       <a
         href={telHref}
         onClick={trackPhoneClick}
-        className="inline-flex items-center justify-center w-11 h-11 rounded-full border border-amber-400 dark:border-amber-500/50 text-amber-800 dark:text-amber-200 hover:bg-amber-200 dark:hover:bg-amber-500/20 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-amber-50 dark:focus-visible:ring-offset-amber-950"
+        className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-primary/10 text-primary-dark dark:bg-primary-lighter/15 dark:text-primary-lighter hover:bg-primary/15 dark:hover:bg-primary-lighter/20 active:scale-[0.96] transition-[background-color,transform] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
         aria-label={t('stories.sticky.phone', { defaultValue: '전화 문의' })}
       >
         <Phone size={20} aria-hidden="true" />
@@ -142,7 +140,7 @@ const StickyBottomCTA = ({ markerRef, locale }: StickyBottomCTAProps) => {
           target="_blank"
           rel="noopener noreferrer"
           onClick={trackKakaoClick}
-          className="sm:hidden touch-manipulation focus-visible:ring-offset-amber-50 dark:focus-visible:ring-offset-amber-950"
+          className="sm:hidden touch-manipulation focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
           aria-label={t('stories.sticky.kakao', { defaultValue: '카카오톡' })}
         >
           <MessageCircle size={20} aria-hidden="true" />
@@ -151,7 +149,7 @@ const StickyBottomCTA = ({ markerRef, locale }: StickyBottomCTAProps) => {
       <button
         type="button"
         onClick={handleDismiss}
-        className="flex-shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-full hover:bg-amber-200 dark:hover:bg-amber-500/20 text-amber-800 dark:text-amber-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-amber-50 dark:focus-visible:ring-offset-amber-950"
+        className="flex-shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
         aria-label={t('stories.sticky.dismiss', { defaultValue: '닫기' })}
       >
         <X size={18} aria-hidden="true" />

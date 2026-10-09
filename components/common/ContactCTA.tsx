@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import { m } from 'framer-motion';
 import { Mail, MessageCircle, Sparkles } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../ResponsiveImage';
@@ -94,20 +93,12 @@ const ContactCTA = ({
     // variant가 표현하지 못하는 레이아웃(전폭·가변 높이·긴 라벨 줄바꿈)만 남긴다.
     const ctaLayout = 'w-full sm:w-auto h-auto min-h-[44px] py-4 px-8 text-center break-all sm:break-normal whitespace-normal leading-snug font-bold touch-manipulation';
 
-    const contactCtaMotionProps = {
-        initial: { opacity: 0 },
-        whileInView: { opacity: 1 },
-        viewport: { once: true },
-        transition: { duration: 0.8 }
-    };
-
     return (
-        <m.div
-            className={`overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 ${className}`}
-            {...contactCtaMotionProps}
-        >
+        // 스크롤 등장(opacity 0 → 1)과 파랑 틴트 면은 2026-10-09에 걷었다 — 장식 모션 없음, 파랑 = 누를 수 있는 것.
+        // SSR HTML이 opacity:0으로 칠해져 하이드레이션 전엔 보이지 않던 것도 함께 사라진다.
+        <div className={`overflow-hidden rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 ${className}`}>
             <div className="grid md:grid-cols-2 items-stretch min-h-[400px]">
-                <div className="bg-gradient-to-br from-primary/5 via-primary/5 to-primary/5 dark:from-primary/20 dark:via-primary/20 dark:to-primary/20 p-8 md:p-12 flex flex-col justify-center">
+                <div className="bg-paper-2 dark:bg-gray-900 p-8 md:p-12 flex flex-col justify-center">
                     <SectionHeading
                         icon={Icon}
                         title={title}
@@ -181,7 +172,6 @@ const ContactCTA = ({
                             sizes="(min-width: 768px) 50vw, 100vw"
                             fill
                         />
-                        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
                     </a>
                 ) : (
                     <Link
@@ -200,11 +190,10 @@ const ContactCTA = ({
                             sizes="(min-width: 768px) 50vw, 100vw"
                             fill
                         />
-                        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
                     </Link>
                 )}
             </div>
-        </m.div>
+        </div>
     );
 };
 

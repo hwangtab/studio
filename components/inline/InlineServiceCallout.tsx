@@ -260,7 +260,7 @@ const InlineServiceCallout = ({ type, locale }: InlineServiceCalloutProps) => {
       aria-label={categoryLabel}
       // 박스 색은 Notice의 brand tone 표(다크 짝 포함). secondary 틴트는 tone 표에 없어 박스는 brand로
       // 통일하고, 가격 콜아웃과 구분되는 secondary 강조색은 아이콘·라벨·링크에만 남긴다.
-      className={`my-8 rounded-xl border p-6 ${NOTICE_TONE_CLASS.brand}`}
+      className={`my-8 rounded-xl border p-6 ${NOTICE_TONE_CLASS.neutral}`}
     >
       <div className="flex items-center gap-2 mb-3">
         <div

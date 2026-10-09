@@ -604,6 +604,11 @@ const SOLID_CARD_BG_RE = /(?<![-\w:])bg-white\/\d+(?![-\w])/;
  */
 const SOLID_CARD_ALLOW: { file: string; snippet: string; reason: string }[] = [
   {
+    file: 'components/inline/StickyBottomCTA.tsx',
+    snippet: 'rounded-xl border border-gray-200 bg-white/95',
+    reason: '카드가 아니라 화면 하단에 떠 있는 고정 문의 바다 — 휴대폰 하단 바(KakaoFab bar)와 같은 흰 반투명 재질(2026-10-09 스토리 CTA 기준).',
+  },
+  {
     file: 'components/funding/PublicNameChoice.tsx',
     snippet: 'rounded-xl bg-white/80',
     reason: '가드 도입 이전부터 있던 폼 내부 안내 박스(2026-09-30). BaseCard 전환 여부는 별도 검토.',

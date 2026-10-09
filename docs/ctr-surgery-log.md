@@ -602,6 +602,7 @@ music-crowdfunding1·music-grants1·selfrecord1)도 미등재다. 그쪽은 "10/
 | 2026-10-09 | v2 페이지 섹션 제목 · 글래스 카드 전부 | TDS 대조 개선 3/4 — 섹션 제목 스크롤 등장(view() 타임라인) 제거, 카드 포인터 빛(.glass-card::after) 제거. 문구·구조 불변 | feat/tds-motion | 시각만 변경 |
 | 2026-10-09 | 전 페이지(휴대폰, 스토리·펀딩·공연 상세·예약 마법사·결제 화면 제외) | TDS 대조 개선 4/4 — 휴대폰(<lg) 우하단 동그라미 셋(맨 위로·전화·카톡) → 하단 전폭 고정 바 [전화](연한 파랑) + [카톡 문의](옐로), 스크롤 300px 뒤 노출(첫 화면은 히어로 CTA와 겹치지 않게 숨김 — 옛 FAB과 같음). 휴대폰에서 「맨 위로」 제거. 데스크톱 그대로. 추적 이름 불변(component KakaoFab, cta_id global_fab·global_fab_phone) | feat/tds-bottom-cta | **전환 진입점 변경 — 카카오·전화 리드에 직접 닿는다.** 10/09 이후 2주 리드(특히 component=KakaoFab)를 9/17~10/05와 lead-verdict로 비교 |
 | 2026-10-09 | 전 페이지 | 파랑 = 누를 수 있는 것 정리 — 누를 수 없는 파랑 장식(아이콘·체크·아이콘 배경 원·번호·eyebrow·CTA 제목 강조줄·수치·달성률) 약 130곳을 잉크·회색으로. 문구 불변 | fix/blue-noninteractive | 시각만 변경(성우 LP 포함) |
+| 2026-10-09 | 스토리 전부(ko·번역, 통합 승자 3편 포함) | 스토리 CTA 기준 통일 — 하단 StoryCTA 6유형 그라디언트(보라·주황·청록·남색·빨강·자주)+무한 막대 애니메이션 → 회색 면 카드 하나 + 파랑 solid(서비스 LP)·weak(/contact), 내용 정본 lib/storyCta.ts. StickyBottomCTA·예약 콜아웃 경고(앰버) 톤 → 흰 면·neutral, 가격·서비스 콜아웃 브랜드 틴트 → neutral. 문구·목적지·cta_id·리드 이벤트 불변 | feat/story-cta-system | 스토리 전 페이지 하단 시각 단절 — 측정 중 통합 승자 3편도(문장 불변). 스토리발 micro_click_service·lead_click_kakao 비교 시 이 날짜를 경계로 |
 
 ## 실험 결과 판정 (2026-08-14)
 
