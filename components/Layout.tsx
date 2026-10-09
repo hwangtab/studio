@@ -266,7 +266,10 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
         ) : (
           <>
             {!isStoryDetail && <KakaoFab locale={locale} suppressBelowLg={isFundingDetail || isShowDetail} />}
-            <ScrollToTop locale={locale} />
+            {/* 「맨 위로」는 휴대폰에서 두지 않는다(일반 화면의 하단 바와 같은 기준) — 데스크톱만. */}
+            <div className="hidden lg:block">
+              <ScrollToTop locale={locale} />
+            </div>
           </>
         )
       )}

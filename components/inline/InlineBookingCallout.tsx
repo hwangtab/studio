@@ -42,17 +42,17 @@ const InlineBookingCallout = ({ message, locale }: InlineBookingCalloutProps) =>
     <aside
       data-inline-callout="booking"
       aria-label={categoryLabel}
-      // 테두리는 한 종(border)이고 색은 Notice의 warning tone 표에서 온다 — border-2·amber 손조립을 걷었다(§3).
-      className={`my-8 rounded-xl border p-6 ${NOTICE_TONE_CLASS.warning}`}
+      // 테두리는 한 종(border)이고 색은 Notice의 neutral tone — 판매 안내에 경고(앰버) 톤을 쓰지 않는다(2026-10-09 스토리 CTA 기준).
+      className={`my-8 rounded-xl border p-6 ${NOTICE_TONE_CLASS.neutral}`}
     >
       <div className="flex items-center gap-2 mb-3">
         <div
-          className="inline-flex items-center justify-center p-1.5 rounded-full bg-amber-300/40 dark:bg-amber-500/30"
+          className="inline-flex items-center justify-center p-1.5 rounded-full bg-gray-200 dark:bg-gray-700"
           aria-hidden="true"
         >
-          <MessageCircle className="text-amber-700 dark:text-amber-300" size={14} />
+          <MessageCircle className="text-gray-700 dark:text-gray-300" size={14} />
         </div>
-        <span className="text-xs font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-300">
+        <span className="text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-300">
           {categoryLabel}
         </span>
       </div>
@@ -74,7 +74,7 @@ const InlineBookingCallout = ({ message, locale }: InlineBookingCalloutProps) =>
               className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300"
             >
               <CheckCircle2
-                className="flex-shrink-0 mt-0.5 text-amber-600 dark:text-amber-400"
+                className="flex-shrink-0 mt-0.5 text-gray-700 dark:text-gray-300"
                 size={16}
                 aria-hidden="true"
               />

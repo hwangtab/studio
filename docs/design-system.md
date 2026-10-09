@@ -373,6 +373,23 @@ inset 스펙큘러를 지운다.
 - 계측은 `micro_audio_play`(트랙당 세션 한 번, component = 자리, cta_id = 트랙 id). 리드가 아니다.
 - 작은 썸네일 반경은 `rounded-lg`(`rounded-md`는 §3대로 없다).
 
+### 스토리 CTA — `components/StoryCTA.tsx` · `lib/storyCta.ts` · `components/inline/*` (2026-10-09)
+
+스토리 하단·본문 CTA는 **카테고리를 색이 아니라 내용으로만** 가른다. 운영자 "통합관리 가능하게 기준을 만들어서".
+- **내용 정본은 `lib/storyCta.ts` 하나** — 유형(recording·lesson·practice·production·release·arrangement)마다 아이콘 셋,
+  주 버튼 목적지(서비스 LP), 가격 보간. 문구는 `stories.cta.<type>.*`. 유형 추가 = 여기 한 줄 + 문구 키 7개 로케일.
+  어느 글에 어느 유형이 붙는지는 `lib/storyCtaPolicy.ts`(라우팅, 기준선 게이트)가 정한다 — 모양과 분리돼 있다.
+- **어느 컴포넌트가 하단을 맡나**: ko·en 스토리는 `ContactCTA`(카톡 직링크·계측 완비), 나머지 5개 로케일은 `StoryCTA`.
+  `ContactCTA`도 같은 기준이다 — 회색 면(`bg-paper-2`), 파랑 틴트·사진 위 파랑 그라디언트·스크롤 등장 없음(LP에도 쓰인다).
+- **모양은 하나**: 회색 면(`bg-paper-2`) 카드 + 회색 아이콘 줄 + 잉크 제목 + 회색 설명 + 파랑 `solid`(서비스 LP) +
+  `weak`(/contact). 그라디언트·흐림·무한 반복 애니메이션 없음.
+- **하단 고정 바(`StickyBottomCTA`)**: 흰 면(휴대폰 하단 바와 같은 재질), 카톡만 옐로, 가격은 파랑 링크, 전화는 weak.
+- **본문 콜아웃(예약·가격·서비스)**: Notice `neutral` 톤. 판매 안내에 경고(앰버)·브랜드 틴트 면을 쓰지 않는다.
+  후기 콜아웃의 별점 금색만 예외.
+- 추적 이름(`story_cta_<type>_<variant>`, StickyBottomCTA의 lead 이벤트)은 모양과 무관하게 고정.
+- `components/storyCtaDesign.test.tsx`가 이 파일들에 팔레트 색·그라디언트·흐림이 다시 들어오는 것과, 유형마다 모양이
+  갈리는 것을 막는다.
+
 ### 괘선 목록 — `components/ui/RuleList.tsx` (2026-10-06)
 
 **읽는 것은 카드가 아니다.** FAQ 요약·절차·이유처럼 나란히 읽는 항목은 `RuleList`(굵은 괘선 위 번호·제목·본문 — 홈 "이유" 절의
