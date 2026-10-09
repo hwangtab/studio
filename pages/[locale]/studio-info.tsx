@@ -9,6 +9,7 @@ import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
 import HubLocaleContentSection from '../../components/ui/HubLocaleContentSection';
 import ImageHero, { HERO_SCRIM } from '../../components/common/ImageHero';
+import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 import SectionHeading from '../../components/ui/SectionHeading';
 import { getEquipmentData } from '../../data/equipment';
 import EquipmentSection from '../../components/studio/EquipmentSection';
@@ -144,6 +145,18 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
         imageAlt={t('studioInfo.hero.alt')}
         minHeight="min-h-[60vh]"
         overlayGradient={HERO_SCRIM}
+        ctaButtons={
+          <HeroKakaoCta
+            locale={locale}
+            kakaoUrl={siteConfig.contact.kakaoUrl}
+            component="StudioInfoHero"
+            ctaId="studio_info_hero_kakao"
+            label={t('actions.kakaoFreeConsult')}
+            phone={siteConfig.contact.phone}
+            phoneCtaId="studio_info_hero_phone"
+            secondary={{ label: t('actions.seePricing'), href: `/${locale}/pricing`, ctaId: 'studio_info_hero_pricing' }}
+          />
+        }
         breadcrumbItems={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.equipment'), path: `/${locale}/studio-info` },

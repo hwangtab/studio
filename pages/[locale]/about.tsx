@@ -9,6 +9,7 @@ import FeatureCard from '../../components/ui/FeatureCard';
 import BaseCard from '../../components/ui/BaseCard';
 import HubLocaleContentSection from '../../components/ui/HubLocaleContentSection';
 import ImageHero, { HERO_SCRIM } from '../../components/common/ImageHero';
+import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 
 // Below-fold 컴포넌트 code-splitting
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
@@ -108,6 +109,19 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           imageAlt: t('about.heroAlt'),
           minHeight: "min-h-[60vh]",
           overlayGradient: HERO_SCRIM,
+          // 스튜디오 메뉴(소개·포트폴리오·장비)도 문의가 시작되는 자리다 — 히어로에 상담·가격·전화(2026-10-10 운영자).
+          ctaButtons: (
+            <HeroKakaoCta
+              locale={locale}
+              kakaoUrl={siteConfig.contact.kakaoUrl}
+              component="AboutHero"
+              ctaId="about_hero_kakao"
+              label={t('actions.kakaoFreeConsult')}
+              phone={siteConfig.contact.phone}
+              phoneCtaId="about_hero_phone"
+              secondary={{ label: t('actions.seePricing'), href: `/${locale}/pricing`, ctaId: 'about_hero_pricing' }}
+            />
+          ),
           breadcrumbItems: [
             { name: t('nav.home'), path: `/${locale}` },
             { name: t('nav.about'), path: `/${locale}/about` },
