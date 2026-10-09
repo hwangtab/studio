@@ -296,6 +296,7 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
           imageAlt={hub.hero.imageAlt}
           primaryButtonLabel={t('nav.contact')}
           secondaryButtonLabel={t('nav.pricing')}
+          secondaryHref="/pricing"
           headingAs="h3"
         />
       </Section>

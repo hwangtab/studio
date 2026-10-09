@@ -8,6 +8,7 @@ import type { Locale } from '../../lib/i18n';
 import { trackLeadEvent } from '../../utils/analytics';
 import { buttonVariants } from '../ui/Button';
 import { cn } from '../../lib/utils';
+import { useKakaoBlockInView } from './kakaoBlockVisibility';
 
 interface KakaoFabProps {
   locale: Locale;
@@ -91,7 +92,10 @@ const KakaoFab = ({ locale, suppressBelowLg = false, inline = false, bar = false
 
   // 항상 mount한 채 opacity·pointer-events만 토글한다 — mount/unmount는 iOS Safari에서
   // paint jank를 남긴다(ScrollToTop과 같은 판단). rAF 스로틀로 경계 근처 thrashing 차단.
-  const [revealed, setRevealed] = React.useState(false);
+  const [scrolledPast, setRevealed] = React.useState(false);
+  // 본문 카톡 블록(ContactCTA·노란 띠)이 보이는 동안은 떠 있는 카톡 버튼을 숨긴다 — 한 화면에 카톡 버튼 하나.
+  const blockInView = useKakaoBlockInView();
+  const revealed = scrolledPast && !blockInView;
 
   React.useEffect(() => {
     let rafId = 0;

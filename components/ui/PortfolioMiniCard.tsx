@@ -6,6 +6,7 @@ import ResponsiveImage from '../ResponsiveImage';
 import { Badge } from './Badge';
 import type { PortfolioItem } from '../../types/data';
 import type { Locale } from '../../lib/i18n';
+import { getCategoryName } from '../../data/portfolio/categories';
 
 interface PortfolioMiniCardProps {
   item: PortfolioItem;
@@ -41,8 +42,8 @@ const PortfolioMiniCard = ({ item, locale }: PortfolioMiniCardProps) => {
       </div>
       <div className="p-4">
         {/* 카테고리별 색(핑크·에메랄드…)은 다섯 분류를 외워야 뜻이 생기는 장식이라 중립 배지로 통일한다. */}
-        <Badge tone="neutral" className="mb-2 uppercase tracking-wider">
-          {item.category}
+        <Badge tone="neutral" className="mb-2">
+          {getCategoryName(item.category, locale)}
         </Badge>
         <h4 className="typo-card-subtitle line-clamp-2 mb-1 text-gray-900 dark:text-white">
           {item.title}
