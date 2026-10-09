@@ -3,7 +3,7 @@ import { ExternalLink } from '@/lib/lucide-icons';
 import ResponsiveImage from '../ResponsiveImage';
 import { Badge } from '../ui/Badge';
 import type { PortfolioItem } from '../../types/data';
-import { BUTTON_DEPTH } from '../ui/buttonDepth';
+import { BUTTON_PRESS } from '../ui/buttonPress';
 
 interface PortfolioDetailSummaryProps {
   item: PortfolioItem;
@@ -49,7 +49,7 @@ const PortfolioDetailSummary = ({
   artistClassName = 'typo-card-body text-gray-600 dark:text-gray-300 mb-4',
   servicesHeadingClassName = 'typo-card-meta font-medium text-gray-500 dark:text-gray-400 mb-2',
   actionRowClassName = 'flex flex-col sm:flex-row gap-4',
-  primaryActionClassName = `w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium ${BUTTON_DEPTH.solid}`,
+  primaryActionClassName = `w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors font-medium ${BUTTON_PRESS}`,
 }: PortfolioDetailSummaryProps) => {
   const TitleTag = titleTag;
   // titleTag='h1'은 페이지 사용처(above-fold LCP)만 넘기므로 priority 유추 신호로 재사용.

@@ -25,7 +25,7 @@ import type { PortfolioItem, AudioTrack, PortfolioCategory } from '../../types/d
 import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
-import { BUTTON_DEPTH } from '../../components/ui/buttonDepth';
+import { BUTTON_PRESS } from '../../components/ui/buttonPress';
 
 interface PortfolioProps {
   locale: Locale;
@@ -226,7 +226,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
               <button
                 type="button"
                 onClick={handleLoadMore}
-                className={`min-h-[44px] px-6 py-3 rounded-full bg-primary text-white hover:bg-primary-dark transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${BUTTON_DEPTH.solid}`}
+                className={`min-h-[44px] px-6 py-3 rounded-full bg-primary text-white hover:bg-primary-dark transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${BUTTON_PRESS}`}
               >
                 {t('actions.more')}
               </button>

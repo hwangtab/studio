@@ -88,6 +88,14 @@ describe('Button', () => {
       expect(cls).not.toMatch(/(^|\s)border-2(\s|$)/);
     });
 
+    it('버튼은 평평하다 — 그림자·그라디언트·hover 떠오름이 없다(2026-10-09)', () => {
+      for (const variant of ['solid', 'weak', 'kakao', 'inverse', 'ghost', 'secondary'] as const) {
+        const cls = classesOf(<Button variant={variant}>x</Button>);
+        expect(cls).not.toMatch(/(^|\s)(hover:)?shadow-|linear-gradient|hover:-translate-y/);
+        cleanup();
+      }
+    });
+
     it('모든 버튼은 누를 때 줄어든다(휴대폰의 유일한 반응)', () => {
       for (const variant of ['solid', 'weak', 'kakao', 'ghost'] as const) {
         expect(classesOf(<Button variant={variant}>x</Button>)).toMatch(/active:scale-\[0\.96\]/);
