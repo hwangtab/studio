@@ -135,7 +135,7 @@ const GlobalPlayerDock = () => {
         </button>
       </div>
       {status === 'error' && (
-        <p role="alert" className="mt-2 text-xs text-red-300">{t('audioPlayer.global.error', { defaultValue: '재생할 수 없습니다. 잠시 뒤 다시 눌러 주세요.' })}</p>
+        <p role="alert" className="mt-2 text-xs text-red-300">{t('audioPlayer.global.error', { defaultValue: '재생할 수 없어요. 잠시 뒤 다시 눌러 주세요.' })}</p>
       )}
     </section>
   );

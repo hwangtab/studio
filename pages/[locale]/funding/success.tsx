@@ -286,7 +286,7 @@ export default function FundingSuccessPage({ outcome, message, statusLabel, orde
           <ResultCard
             tone={tone}
             title={title}
-            description={<>{orderNo ? `주문번호 ${orderNo}. ` : ''}현재 상태는 “{statusLabel}”입니다.</>}
+            description={<>{orderNo ? `주문번호 ${orderNo}. ` : ''}현재 “{statusLabel}” 상태예요.</>}
             actions={
               manageUrl ? (
                 <Button asChild size="lg">

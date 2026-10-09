@@ -53,7 +53,7 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko', eyebrow,
                         <span>{t('reviewSection.titleHighlight', { defaultValue: '감동의 기록' })}</span>
                     </>
                 )}
-                subtitle={t('reviewSection.subtitle', { defaultValue: '스튜디오 놀을 거쳐간 많은 분들이 증명하는 기술력과 진정성입니다.' })}
+                subtitle={t('reviewSection.subtitle', { defaultValue: '스튜디오 놀을 거쳐간 많은 분들이 증명하는 기술력과 진정성이에요.' })}
                 className="mb-8"
                 eyebrow={eyebrow}
                 index={index}

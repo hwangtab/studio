@@ -27,7 +27,7 @@ import GlobalPlayerProvider from '../components/audio/GlobalPlayerProvider';
 
 
 const localeLoadingMessage: Record<Locale, string> = {
-  ko: '콘텐츠를 불러오는 중입니다...',
+  ko: '콘텐츠를 불러오는 중이에요...',
   en: 'Loading content...',
   zh: '正在加载内容...',
   es: 'Cargando contenido...',
