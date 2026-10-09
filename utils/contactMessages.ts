@@ -29,11 +29,11 @@ interface ContactValidationFallbacks {
 
 const SUBMIT_ERROR_MESSAGES: Record<Locale, ContactSubmitErrorMessages> = {
   ko: {
-    timeout: '요청 시간이 초과되었습니다. 네트워크 상태를 확인한 뒤 다시 시도해 주세요.',
-    tooMany: '요청이 많아 잠시 제한되었습니다. 잠시 후 다시 시도해 주세요.',
-    unavailable: '현재 문의 서비스가 일시적으로 불안정합니다. 잠시 후 다시 시도해 주세요.',
-    forbidden: '요청이 차단되었습니다. 페이지를 새로고침한 뒤 다시 시도해 주세요.',
-    invalidRequest: '요청 형식이 올바르지 않습니다. 입력 내용을 확인해 주세요.',
+    timeout: '요청 시간이 초과됐어요. 네트워크 상태를 확인한 뒤 다시 시도해 주세요.',
+    tooMany: '요청이 많아 잠시 제한됐어요. 잠시 후 다시 시도해 주세요.',
+    unavailable: '현재 문의 서비스가 일시적으로 불안정해요. 잠시 후 다시 시도해 주세요.',
+    forbidden: '요청이 차단됐어요. 페이지를 새로고침한 뒤 다시 시도해 주세요.',
+    invalidRequest: '요청 형식이 올바르지 않아요. 입력 내용을 확인해 주세요.',
     retry: '다시 시도',
   },
   en: {
@@ -92,12 +92,12 @@ const VALIDATION_FALLBACKS: Record<Locale, ContactValidationFallbacks> = {
     nameRequired: '이름을 입력해 주세요.',
     nameMin: '이름은 2자 이상 입력해 주세요.',
     nameMax: '이름은 100자 이하로 입력해 주세요.',
-    nameInvalid: '이름에 사용할 수 없는 문자가 포함되어 있습니다.',
+    nameInvalid: '이름에 사용할 수 없는 문자가 들어 있어요.',
     emailRequired: '이메일을 입력해 주세요.',
     emailInvalid: '유효한 이메일 형식을 입력해 주세요.',
     emailMax: '이메일은 254자 이하로 입력해 주세요.',
     phoneRequired: '연락처를 입력해 주세요.',
-    phoneInvalid: '연락처 형식이 올바르지 않습니다.',
+    phoneInvalid: '연락처 형식이 올바르지 않아요.',
     phoneLength: '연락처는 5자 이상 50자 이하로 입력해 주세요.',
     messageRequired: '메시지를 입력해 주세요.',
     messageMin: '메시지는 10자 이상 입력해 주세요.',

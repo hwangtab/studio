@@ -63,8 +63,8 @@ describe('ShowDetailView', () => {
 
   it('취소된 공연은 안내가 뜨고 예매 버튼이 없다', () => {
     render(<ShowDetailView show={{ ...show, cancelled: true, showtimes: [{ ...show.showtimes[0], saleState: 'cancelled' }] }} />);
-    expect(showCtaLabel({ ...show, cancelled: true })).toEqual({ label: '취소된 공연입니다', bookable: false });
-    expect(screen.getByRole('status')).toHaveTextContent('이 공연은 취소되었습니다');
+    expect(showCtaLabel({ ...show, cancelled: true })).toEqual({ label: '취소된 공연이에요', bookable: false });
+    expect(screen.getByRole('status')).toHaveTextContent('이 공연은 취소됐어요');
     expect(screen.queryByRole('link', { name: /티켓 예매하기/ })).toBeNull();
   });
 });

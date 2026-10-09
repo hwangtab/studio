@@ -128,7 +128,7 @@ describe('TossPaymentWidget', () => {
 
     render(<TossPaymentWidget {...PROPS} />);
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('결제 설정이 없습니다.');
+    expect(await screen.findByRole('alert')).toHaveTextContent('결제 설정이 없어요.');
     expect(loadTossPayments).not.toHaveBeenCalled();
     expect(screen.queryByRole('button', { name: '결제하기' })).not.toBeInTheDocument();
   });

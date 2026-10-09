@@ -97,7 +97,7 @@ export const useTossPaymentWidgets = (amount: number, enabled = true) => {
     (async () => {
       try {
         const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
-        if (!clientKey) throw new Error('결제 설정이 없습니다.');
+        if (!clientKey) throw new Error('결제 설정이 없어요.');
         const toss = await loadTossPayments(clientKey);
         const widgets = toss.widgets({ customerKey: ANONYMOUS });
         await widgets.setAmount({ currency: 'KRW', value: amountRef.current });
@@ -116,7 +116,7 @@ export const useTossPaymentWidgets = (amount: number, enabled = true) => {
         });
         if (!cancelled) { widgetsRef.current = widgets; setReady(true); }
       } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : '결제 모듈을 불러오지 못했습니다.');
+        if (!cancelled) setError(e instanceof Error ? e.message : '결제 모듈을 불러오지 못했어요.');
       }
     })();
     return () => {
@@ -142,7 +142,7 @@ export const useTossPaymentWidgets = (amount: number, enabled = true) => {
 
   const requestPayment = useCallback(async ({ amount: finalAmount, ...params }: TossRequestPaymentParams) => {
     const widgets = widgetsRef.current;
-    if (!widgets) throw new Error('결제 모듈이 준비되지 않았습니다.');
+    if (!widgets) throw new Error('결제 모듈이 준비되지 않았어요.');
     // 서버가 확정한 금액으로 맞춘 뒤 연다. 화면의 추정치로 열면 청구액이 어긋난다.
     if (finalAmount !== undefined) await widgets.setAmount({ currency: 'KRW', value: finalAmount });
     await widgets.requestPayment(params);

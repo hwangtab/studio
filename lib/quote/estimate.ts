@@ -186,8 +186,8 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
         priceLabel: `${won(DAY_LOCK_8H_PRICE)}부터`,
         vat: 'excluded',
         basis: [
-          `Day Lock 8시간(${won(DAY_LOCK_8H_PRICE)}) 기준 — 곡당 3시간 안팎이라 8시간에 2~3곡씩 녹음합니다`,
-          '필요한 날수는 곡 수와 테이크에 따라 상담에서 정합니다',
+          `Day Lock 8시간(${won(DAY_LOCK_8H_PRICE)}) 기준 — 곡당 3시간 안팎이라 8시간에 2~3곡씩 녹음해요`,
+          '필요한 날수는 곡 수와 테이크에 따라 상담에서 정해요',
         ],
         bookingHref: '/ko/booking/recording?product=recording-daylock-8h',
       };
@@ -226,9 +226,9 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
           vat: 'excluded',
           basis: [
             `펀딩 설계비 ${won(FUNDING_DESIGN_PRICE)} + 발매 번들 ${won(bundle)}부터를 합친 한 견적 — 기획·녹음·믹싱·마스터링·디지털 유통 등록·국내외 매체 홍보`,
-            '설계비와 제작비는 펀딩이 끝나 모금액을 정산할 때 모금액에서 받습니다. 모금액이 견적에 못 미치면 차액 청구나 규모 조정을 상의해 정합니다',
-            `목표에 못 미쳐도 모인 금액으로 제작을 집행합니다. 모금액에서 플랫폼 ${FUNDING_PLATFORM_FEE_PERCENT}%·결제 ${FUNDING_PAYMENT_FEE_PERCENT}% 수수료를 뗍니다`,
-            '세션 연주비는 포함되지 않고 연주자 실비만 따로 받습니다',
+            '설계비와 제작비는 펀딩이 끝나 모금액을 정산할 때 모금액에서 받아요. 모금액이 견적에 못 미치면 차액 청구나 규모 조정을 상의해 정해요',
+            `목표에 못 미쳐도 모인 금액으로 제작을 집행해요. 모금액에서 플랫폼 ${FUNDING_PLATFORM_FEE_PERCENT}%·결제 ${FUNDING_PAYMENT_FEE_PERCENT}% 수수료를 떼요`,
+            '세션 연주비는 포함되지 않고 연주자 실비만 따로 받아요',
           ],
         };
       }
@@ -237,7 +237,7 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
         vat: 'excluded',
         basis: [
           '기획·녹음·믹싱·마스터링·디지털 유통 등록·국내외 매체 홍보를 묶은 번들 기준',
-          '세션 연주비는 포함되지 않고 연주자 실비만 따로 받습니다',
+          '세션 연주비는 포함되지 않고 연주자 실비만 따로 받아요',
         ],
       };
     }
@@ -283,7 +283,7 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
         return {
           priceLabel: `월 ${won(PRACTICE_ROOM_MONTHLY_PRICE)}`,
           vat: 'excluded',
-          basis: ['개인 방음 연습실 월 입주, 24시간 이용 — 빈방 여부는 상담에서 확인합니다'],
+          basis: ['개인 방음 연습실 월 입주, 24시간 이용 — 빈방 여부는 상담에서 확인해요'],
         };
       }
       return {

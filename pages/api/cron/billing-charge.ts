@@ -51,8 +51,8 @@ export const config = { maxDuration: 60 };
 /** 재등록 안내 힌트 — pages/api/admin/subscriptions/[id].ts의 같은 이름 함수와 동일 문구(카피 정본은 그쪽). */
 const cardChangeHint = (paused: boolean): string =>
   paused
-    ? '정기결제가 정지되었습니다. 위 링크에서 카드를 다시 등록해야 이용이 계속됩니다.'
-    : '카드 정보가 오래되었거나 한도 초과일 수 있습니다. 위 링크에서 카드를 다시 등록해 주세요.';
+    ? '정기결제가 정지됐어요. 위 링크에서 카드를 다시 등록해야 이용이 계속돼요.'
+    : '카드 정보가 오래됐거나 한도 초과일 수 있어요. 위 링크에서 카드를 다시 등록해 주세요.';
 
 /** 고객 안내에 적는 날짜. 메일 본문·운영자 알림이 같은 표기를 쓴다. */
 const formatKstDay = (d: Date): string => d.toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' });
@@ -159,7 +159,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       await sendSubscriptionOperatorAlert(
         subscription,
         'pause_expired',
-        `정지 기한이 지나 자동으로 재개했습니다. 다음 결제 예정일: ${formatKstDay(nextBillingAt)}`,
+        `정지 기한이 지나 자동으로 재개했어요. 다음 결제 예정일: ${formatKstDay(nextBillingAt)}`,
       ).catch((error: unknown) => console.error('[cron/billing-charge] 자동 재개 운영자 알림 실패', error));
     }
 
