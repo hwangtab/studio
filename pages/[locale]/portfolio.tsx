@@ -13,6 +13,7 @@ import SEO from '../../components/SEO';
 import { generateItemListSchema, generateAudioObjectSchema } from '../../utils/schema';
 import { getSiteConfig } from '../../data/siteConfig';
 import ImageHero, { HERO_SCRIM } from '../../components/common/ImageHero';
+import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 import { getPortfolioItems, getAudioTracks, getCategories } from '../../data/portfolio';
 const PortfolioDetailModal = dynamic(() => import('../../components/PortfolioDetailModal'), { ssr: false });
@@ -46,6 +47,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
 }) => {
   const router = useRouter();
   const { t } = useTranslation('common', { lng: locale });
+  const siteConfig = getSiteConfig(locale);
   // canonical은 항상 목록 페이지로 고정. 모달은 클라이언트 UX이며 SSR 단계에서
   // 아이템 상세 URL이 canonical로 인식되면 색인이 오염됨.
   const canonicalOverride = `/${locale}/portfolio`;
@@ -150,6 +152,18 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
           backgroundImage: "/images/recording1.webp",
           imageAlt: t('portfolio.heroAlt'),
           overlayGradient: HERO_SCRIM,
+          ctaButtons: (
+            <HeroKakaoCta
+              locale={locale}
+              kakaoUrl={siteConfig.contact.kakaoUrl}
+              component="PortfolioHero"
+              ctaId="portfolio_hero_kakao"
+              label={t('actions.kakaoFreeConsult')}
+              phone={siteConfig.contact.phone}
+              phoneCtaId="portfolio_hero_phone"
+              secondary={{ label: t('actions.seePricing'), href: `/${locale}/pricing`, ctaId: 'portfolio_hero_pricing' }}
+            />
+          ),
           breadcrumbItems: [
             { name: t('nav.home'), path: `/${locale}` },
             { name: t('nav.portfolio'), path: `/${locale}/portfolio` },
