@@ -60,7 +60,7 @@ export const usePaymentCheckout = (amount: number, enabled = true) => {
   choiceRef.current = choice;
 
   const requestPickerPayment = useCallback(async ({ amount: finalAmount, ...params }: TossRequestPaymentParams) => {
-    if (!apiClientKey) throw new Error('결제 설정이 없습니다.');
+    if (!apiClientKey) throw new Error('결제 설정이 없어요.');
     const toss = await loadTossPayments(apiClientKey);
     const payment = toss.payment({ customerKey: paymentCustomerKey(params.orderId, ANONYMOUS) });
     // 금액은 서버가 확정한 값으로 연다(없으면 화면 금액). 승인 경로가 같은 쌍의 시크릿부터 쓰게 표식을 붙인다.
@@ -77,7 +77,7 @@ export const usePaymentCheckout = (amount: number, enabled = true) => {
       choice, setChoice, applePaySupported,
       methodsId: widget.methodsId, agreementId: widget.agreementId,
       ready: Boolean(apiClientKey),
-      error: apiClientKey ? null : '결제 설정이 없습니다.',
+      error: apiClientKey ? null : '결제 설정이 없어요.',
       retry: widget.retry,
       requestPayment: requestPickerPayment,
       agreedRequiredTerms: true as boolean | null,
