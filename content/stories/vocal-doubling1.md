@@ -39,7 +39,7 @@ faq:
 
 보컬 더블링은 보컬 사운드에 두께감과 입체감을 추가하는 핵심 기법입니다. 적절히 사용하면 완성도 있는 사운드를 만드는 데 도움이 됩니다.
 
-1966년 EMI 엔지니어 Ken Townsend가 John Lennon의 요청으로 ADT(Automatic Double Tracking) 기계를 발명했고, 테이프 딜레이로 원본 신호를 미세하게 복제하는 방식이었습니다. 1970~80년대 록·헤비메탈 레코딩에서 Left/Right 하드 팬 더블트래킹이 파워풀한 사운드의 표준이 됐고, Def Leppard의 프로듀서 Mutt Lange는 코러스에 수많은 테이크를 쌓아 "Hysteria"(1987년)를 완성했습니다. 현재 Waves Doubler·SoundToys MicroShift 같은 플러그인으로 ADT 효과를 구현할 수 있지만, 실제 두 번 녹음한 더블트래킹이 가장 자연스러운 결과를 만든다는 원칙은 변하지 않았습니다.
+1966년 EMI 엔지니어 Ken Townsend가 John Lennon의 요청으로 ADT(Automatic Double Tracking) 기계를 발명했고, 테이프 딜레이로 원본 신호를 미세하게 복제하는 방식이었습니다. 1970~80년대 록·헤비메탈 레코딩에서 Left/Right 하드 팬 더블트래킹이 파워풀한 사운드를 만드는 방식으로 널리 쓰였고, Def Leppard의 프로듀서 Mutt Lange는 코러스에 수많은 테이크를 쌓아 "Hysteria"(1987년)를 완성했습니다. 현재 Waves Doubler·SoundToys MicroShift 같은 플러그인으로 ADT 효과를 구현할 수 있지만, 실제 두 번 녹음한 더블트래킹이 가장 자연스러운 결과를 만든다는 원칙은 변하지 않았습니다.
 
 ## 더블링 방식 비교
 

@@ -66,7 +66,7 @@ Auto-Tune은 1997년 Andy Hildebrand가 Antares Audio Technologies에서 개발�
 
 ### Auto-Tune (Antares)
 
-최초의 자동 피치 교정 플러그인. 실시간 처리 가능.
+1997년 출시된 자동 피치 교정 플러그인. 실시간 처리 가능.
 
 **작동 방식:**
 - 실시간 또는 Graphic Mode로 피치 교정
