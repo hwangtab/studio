@@ -27,7 +27,7 @@ interface KakaoSectionBarProps {
  *
  * 카드마다 솔리드 옐로를 두면 한 행에 노랑이 셋이라 신호가 소음이 된다. 카드는 온라인 주문·예약(브랜드색)만
  * 맡고, 카카오 상담은 행 아래 이 띠 하나로 모은다 — 노랑은 한 화면에 하나. 띠 전체가 링크 하나다
- * (`components/ctaButtonContract.test.tsx`: 카카오 목적지 = bg-kakao + text-kakao-ink + rounded-full + 포커스 링).
+ * (`components/ctaButtonContract.test.tsx`: 카카오 목적지 = bg-kakao + text-kakao-ink + 포커스 링).
  *
  * 문구는 카드가 못 하는 말을 한다: 어디에 해당하는지 모르는 사람에게 "무엇을 보내면 되는지"를 알려 준다.
  * 비-ko는 HeroKakaoCta·ContactCTA와 같은 규칙으로 /contact 폼 + 브랜드색이다.
@@ -55,7 +55,7 @@ const KakaoSectionBar = ({ locale, kakaoUrl, component, ctaId, message, actionLa
   if (isKorean) {
     return (
       <div ref={rootRef} className="mt-8 max-w-5xl mx-auto">
-        <Button asChild variant="kakao" shape="pill" size="lg" fullWidth>
+        <Button asChild variant="kakao" shape="block" size="lg" fullWidth>
           <a
             href={kakaoUrl}
             target="_blank"
@@ -72,7 +72,7 @@ const KakaoSectionBar = ({ locale, kakaoUrl, component, ctaId, message, actionLa
 
   return (
     <div className="mt-8 max-w-5xl mx-auto">
-      <Button asChild variant="solid" shape="pill" size="lg" fullWidth>
+      <Button asChild variant="solid" shape="block" size="lg" fullWidth>
         <Link
           href={`/${locale}/contact`}
           prefetch={false}

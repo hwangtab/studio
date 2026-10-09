@@ -20,7 +20,7 @@ const BookingEntryButton = ({ service, locale }: BookingEntryButtonProps) => {
   if (locale !== 'ko') return null;
 
   return (
-    <Button asChild variant="solid" shape="pill" size="lg">
+    <Button asChild variant="solid" shape="block" size="lg">
       <Link
         href={`/ko/booking/${service}`}
         prefetch={false}

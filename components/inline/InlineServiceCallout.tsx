@@ -307,7 +307,7 @@ const InlineServiceCallout = ({ type, locale }: InlineServiceCalloutProps) => {
       )}
 
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-        <Button asChild variant="kakao" shape="pill" size="md">
+        <Button asChild variant="kakao" shape="block" size="md">
           <a
             href={siteConfig.contact.kakaoUrl}
             target="_blank"

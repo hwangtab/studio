@@ -147,7 +147,7 @@ describe('Button', () => {
   });
 
   it('모든 variant가 44px 이상 터치 타깃과 focus-visible 링을 갖는다', () => {
-    const variants = ['solid', 'weak', 'ghost', 'secondary', 'glass', 'kakao', 'scrim'] as const;
+    const variants = ['solid', 'weak', 'ghost', 'secondary', 'kakao', 'scrim'] as const;
     for (const variant of variants) {
       const cls = buttonVariants({ variant });
       expect(cls).toMatch(/focus-visible:ring-2/);

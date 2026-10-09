@@ -38,10 +38,6 @@ const buttonVariants = cva(
         weak: "bg-primary/10 text-primary-dark hover:bg-primary/15 dark:bg-primary-lighter/15 dark:text-primary-lighter dark:hover:bg-primary-lighter/20 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         ghost: "bg-transparent text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         secondary: "bg-white text-gray-900 hover:bg-gray-50 border border-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
-        // Liquid Glass 재질 버튼. bg/border/shadow는 .glass-regular(components 레이어)가
-        // 제공하므로 여기에 bg-* 등 충돌 유틸리티를 추가하지 말 것 — utilities 레이어가
-        // 재질을 덮어써 폴백(솔리드 강등)까지 깨진다.
-        glass: "glass-regular text-gray-700 dark:text-gray-200 active:scale-[0.97] focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         // 카카오톡 목적지 전용. 옐로 위 글자는 항상 kakao-ink(흰 글씨는 대비 1.3:1로 미달),
         // 포커스 링도 옐로 위에서 보이도록 ink를 쓴다.
         kakao: "bg-kakao text-kakao-ink hover:bg-kakao-dark focus-visible:ring-kakao-ink dark:focus-visible:ring-kakao focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
@@ -59,8 +55,10 @@ const buttonVariants = cva(
       },
       shape: {
         // 자유 배치 CTA(히어로·스티키·FAB·인라인 콜아웃)
+        // 원형 — 아이콘만 있는 버튼(size="icon") 전용. 글자 버튼은 전부 block(2026-10-09 TDS 대조: 모서리 체계 하나).
         pill: "rounded-full",
         // 카드·폼 안의 버튼
+        // 글자 버튼 전부 — 히어로·카드·폼·띠 구분 없이.
         block: "rounded-xl",
       },
       fullWidth: {
@@ -87,7 +85,7 @@ const buttonVariants = cva(
      * (weak의 다크용 primary-lighter 글씨가 흰 카드 위에서 1.6:1로 흐려진다). `Field`의 `light` 옵트인과 같은 처방.
      *
      * 실제로 라이트 고정 화면에서 쓰이는 variant만 되돌린다(solid·weak·ghost·secondary).
-     * glass·kakao·scrim은 그 화면에 없다.
+     * kakao·scrim은 그 화면에 없다.
      */
     compoundVariants: [
       {

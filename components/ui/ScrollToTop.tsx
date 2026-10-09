@@ -19,9 +19,8 @@ interface ScrollToTopProps {
 // - framer-motion AnimatePresence + m.div 제거 → mount/unmount 시 paint frame jank 차단
 // - 항상 DOM에 mount + opacity·pointer-events CSS toggle만 — paint 비용 거의 0
 // - rAF throttle로 scroll listener thrashing 방지 (300px 경계 빠른 toggle 차단)
-// 재질: variant="glass" (리퀴드 글래스 리뉴얼). 과거 "backdrop-blur-md 제거(iOS GPU)"
-// 결정은 글래스 토큰의 모바일 자동 솔리드 폴백(styles/globals.css)이 대체한다 —
-// 터치 기기에서는 filter 비용 0인 솔리드로 강등되므로 당시 우려가 재발하지 않는다.
+// 재질: variant="secondary"(흰 면 + 회색 테두리) — glass 버튼 변형은 2026-10-09 TDS 대조에서 없앴다(버튼은 채움·연한 채움·
+// 테두리 흰 면 정도로 단순하게). 데스크톱 전용(휴대폰은 하단 바 기준으로 「맨 위로」를 두지 않는다).
 export const ScrollToTop = ({ locale = defaultLocale, inline = false }: ScrollToTopProps) => {
   const { t } = useTranslation('common', { lng: locale });
   const [isVisible, setIsVisible] = useState(false);
@@ -56,10 +55,10 @@ export const ScrollToTop = ({ locale = defaultLocale, inline = false }: ScrollTo
       aria-hidden={!isVisible}
     >
       <Button
-        variant="glass"
+        variant="secondary"
         size="icon"
+        shape="pill"
         onClick={scrollToTop}
-        className="rounded-full"
         aria-label={t('actions.scrollToTop')}
         tabIndex={isVisible ? 0 : -1}
       >

@@ -110,7 +110,7 @@ const StickyBottomCTA = ({ markerRef, locale }: StickyBottomCTAProps) => {
       <p className="flex-1 typo-card-body text-sm text-gray-800 dark:text-gray-200 truncate">
         {t('stories.sticky.headline', { defaultValue: '예약·문의는 카카오톡으로' })}
       </p>
-      <Button asChild variant="kakao" shape="pill" size="md">
+      <Button asChild variant="kakao" shape="block" size="md">
         <a
           href={siteConfig.contact.kakaoUrl}
           target="_blank"

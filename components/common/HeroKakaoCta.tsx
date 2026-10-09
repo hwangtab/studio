@@ -55,7 +55,7 @@ const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, contactLabel,
   const onImageRing = 'focus-visible:ring-white/70 focus-visible:ring-offset-black/20 dark:focus-visible:ring-offset-black/20';
 
   const primaryButton = isKorean ? (
-    <Button asChild variant="kakao" shape="pill" size="lg">
+    <Button asChild variant="kakao" shape="block" size="lg">
       <a
         href={kakaoUrl}
         target="_blank"
@@ -74,7 +74,7 @@ const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, contactLabel,
       </a>
     </Button>
   ) : (
-    <Button asChild variant={onImage ? 'inverse' : 'solid'} shape="pill" size="lg">
+    <Button asChild variant={onImage ? 'inverse' : 'solid'} shape="block" size="lg">
       <Link
         href={`/${locale}/contact`}
         prefetch={false}
@@ -102,7 +102,7 @@ const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, contactLabel,
           + text-shadow)을 쓴다 — 흰 틴트는 배경을 밝혀 흰 글씨 대비를 오히려 떨어뜨린다
           (CLAUDE.md 카카오 CTA 배색 규칙, 홈 히어로·ReleaseHeroCtas와 동일).
           본문 섹션 배경 위(onSurface)에서는 테두리 버튼으로 강등한다. */}
-      <Button asChild variant={onImage ? 'scrim' : 'weak'} shape="pill" size="lg">
+      <Button asChild variant={onImage ? 'scrim' : 'weak'} shape="block" size="lg">
         <a
           href={`tel:${phone}`}
           onClick={() =>

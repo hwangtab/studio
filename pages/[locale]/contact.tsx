@@ -123,7 +123,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
               className="p-6 md:p-8"
               actions={
                 <>
-                  <Button asChild variant="kakao" shape="pill" size="sm">
+                  <Button asChild variant="kakao" shape="block" size="sm">
                     <a
                       href={siteConfig.contact.kakaoUrl}
                       target="_blank"
