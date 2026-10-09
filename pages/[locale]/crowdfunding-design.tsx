@@ -117,6 +117,8 @@ const CrowdfundingDesign: NextPageWithLayout<Props> = ({ locale, relatedStories 
             component="CrowdfundingDesignHero"
             ctaId="crowdfunding_design_hero_kakao"
             label={copy.hero.cta}
+            phone={siteConfig.contact.phone}
+            phoneCtaId="crowdfunding_design_hero_phone"
             secondary={{ label: '가격 보기', href: '#crowdfunding-pricing', ctaId: 'crowdfunding_design_hero_pricing' }}
           />
         }

@@ -259,6 +259,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
             label={t('mixingMastering.cta.inquiry')}
             /* 비-ko는 목적지가 /contact 폼이다 — 이 라벨은 KakaoTalk을 명시하므로 쓸 수 없다. */
             contactLabel={t('actions.contact')}
+            phone={siteConfig.contact.phone}
             phoneCtaId="mixing_hero_phone"
             secondary={isKo ? { label: t('actions.orderOnline'), href: '/ko/booking/mixing-mastering', ctaId: 'mixing_hero_order' } : { label: t('actions.seePricing'), href: '#mixing', ctaId: 'mixing_hero_pricing' }}
           />
