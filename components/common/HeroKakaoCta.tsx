@@ -98,9 +98,8 @@ const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, contactLabel,
   return (
     <div className="flex flex-col sm:flex-row items-center gap-3">
       {primaryButton}
-      {/* 2차 전화 CTA. 어두운 히어로 위에서는 스크림 아웃라인(bg-black/30 + border-white/40
-          + text-shadow)을 쓴다 — 흰 틴트는 배경을 밝혀 흰 글씨 대비를 오히려 떨어뜨린다
-          (CLAUDE.md 카카오 CTA 배색 규칙, 홈 히어로·ReleaseHeroCtas와 동일).
+      {/* 2차 전화 CTA. 어두운 히어로 위에서는 scrim(거의 불투명한 잉크 면)을 쓴다 — 흰 틴트는 배경을 밝혀
+          흰 글씨 대비를 떨어뜨리고, 반투명 테두리 상자는 사진이 비쳐 버튼으로 안 읽혔다(2026-10-09).
           본문 섹션 배경 위(onSurface)에서는 테두리 버튼으로 강등한다. */}
       <Button asChild variant={onImage ? 'scrim' : 'weak'} shape="block" size="lg">
         <a
