@@ -81,7 +81,13 @@
     "callFab": "Phone Inquiry",
     "skipToContent": "Skip to content",
     "scrollToTop": "Scroll to top",
-    "popularBadge": "Most chosen"
+    "popularBadge": "Most chosen",
+    "bookOnline": "Book online",
+    "orderOnline": "Order online",
+    "seePricing": "See pricing",
+    "seeServices": "See services",
+    "callConsult": "Call us",
+    "bookHourly": "Book by the hour"
   },
   "common": {
     "categoryFilter": {

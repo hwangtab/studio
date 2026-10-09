@@ -20,7 +20,7 @@ import type { getPricingData } from '../../data/pricing';
 import { Button } from '../ui/Button';
 
 /** 히어로 CTA 크기 — 리프트·색 전환·포커스 링은 Button이 소유한다(design-system §4). */
-const HERO_CTA = 'h-auto min-h-[48px] w-full sm:w-auto whitespace-normal py-4 px-10 text-base sm:text-lg font-bold leading-snug shadow-lg hover:shadow-xl';
+const HERO_CTA = 'h-auto min-h-[48px] w-full sm:w-auto whitespace-normal py-4 px-10 text-base sm:text-lg font-bold leading-snug';
 const HERO_CTA_ON_IMAGE = `${HERO_CTA} focus-visible:ring-white/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-black/20 dark:focus-visible:ring-offset-black/20`;
 
 const FAQSection = dynamic(() => import('../ui/FAQSection'));
@@ -42,6 +42,7 @@ interface BuyerIntentHubPageProps {
 }
 
 const SERVICE_LINK_PATH: Record<string, string> = {
+  'recording': '/recording',
   'wedding-song': '/wedding-song',
   'voice-acting': '/voice-acting',
   'lesson': '/lesson',
@@ -54,6 +55,7 @@ const SERVICE_LINK_PATH: Record<string, string> = {
 };
 
 const SERVICE_LINK_LABEL_KEY: Record<string, string> = {
+  'recording': 'nav.recording',
   'wedding-song': 'nav.weddingSong',
   'voice-acting': 'nav.voiceActing',
   'lesson': 'nav.lesson',
@@ -94,13 +96,7 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
   );
 
   const primaryServicePath = SERVICE_LINK_PATH[hub.primaryServiceLink] ?? '/contact';
-  const secondaryServicePath = hub.secondaryServiceLink
-    ? SERVICE_LINK_PATH[hub.secondaryServiceLink] ?? '/contact'
-    : undefined;
   const primaryServiceLabel = t(SERVICE_LINK_LABEL_KEY[hub.primaryServiceLink] ?? 'nav.contact');
-  const secondaryServiceLabel = hub.secondaryServiceLink
-    ? t(SERVICE_LINK_LABEL_KEY[hub.secondaryServiceLink] ?? 'nav.contact')
-    : undefined;
 
   return (
     <>
@@ -150,18 +146,18 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
         overlayGradient="from-black/55 via-black/30 to-black/45"
         ctaButtons={
           <>
-            <Button asChild variant="secondary" shape="block" className={`${HERO_CTA} border-transparent text-primary-dark hover:text-primary-dark`}>
+            {/* 히어로 CTA 규칙 D(docs/hero-cta-audit-2026-10.md): 1차 = 가장 가까운 서비스 LP(흰), 2차 = 가격 보기.
+                가이드는 읽으러 온 사람이라 카톡을 히어로에 올리지 않는다 — 본문 끝 ContactCTA가 맡는다. */}
+            <Button asChild variant="inverse" shape="block" className={HERO_CTA_ON_IMAGE}>
               <Link href={`/${locale}${primaryServicePath}`} prefetch={false}>
-                {primaryServiceLabel}
+                {primaryServiceLabel} 알아보기
               </Link>
             </Button>
-            {secondaryServicePath && (
-              <Button asChild variant="scrim" shape="block" className={HERO_CTA_ON_IMAGE}>
-                <Link href={`/${locale}${secondaryServicePath}`} prefetch={false}>
-                  {secondaryServiceLabel}
-                </Link>
-              </Button>
-            )}
+            <Button asChild variant="scrim" shape="block" className={HERO_CTA_ON_IMAGE}>
+              <Link href={`/${locale}/pricing`} prefetch={false}>
+                {t('actions.seePricing')}
+              </Link>
+            </Button>
           </>
         }
       />

@@ -143,7 +143,8 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                         component="LessonHero"
                         ctaId="lesson_hero_kakao"
                         label={t('lesson.cta.inquiry')}
-                    />
+                      secondary={{ label: t('actions.seePricing'), href: '#lesson-pricing', ctaId: 'lesson_hero_pricing' }}
+          />
                 }
             />
 
@@ -340,10 +341,11 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                         </div>
                     </m.div>
 
-                    {/* Pricing Card */}
+                    {/* Pricing Card — 히어로 "가격 보기"가 여기로 온다(#lesson-pricing). */}
                     <m.div
+                        id="lesson-pricing"
                         {...pricingSectionRevealProps}
-                        className="glass-card rounded-2xl overflow-hidden"
+                        className="glass-card rounded-2xl overflow-hidden scroll-mt-24"
                     >
                         <div className="p-8 bg-gradient-to-br from-primary to-primary text-white text-center">
                             <h3 className="typo-card-title text-white mb-2">{t('lesson.pricing.title')}</h3>

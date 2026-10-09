@@ -49,7 +49,7 @@ export const crowdfundingDesignCopy = {
     line1: '앨범 제작비를 펀딩으로 모으는 일, 기획부터 페이지까지 같이 만들어요.',
     line2: `설계비 ${designFee} · 성공 수수료 없음 · 스튜디오 놀 펀딩에서 열어요`,
     badge: '음반 펀딩 수십 건 · 누적 약 3억원',
-    cta: '카카오톡으로 펀딩 상담',
+    cta: '카톡으로 펀딩 상담',
   },
   facts: {
     title: '한눈에 보기',

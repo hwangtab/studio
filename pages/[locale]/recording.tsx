@@ -88,6 +88,7 @@ const RECORDING_LASTMOD_DISPLAY = formatLastmodDate(RECORDING_LASTMOD_ISO);
 
 const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
+  const isKo = locale === 'ko';
   // FAQ가 작곡·편곡 정가({{mr}}·{{small}}·{{band}}·{{large}})를 말한다 — 금액은 상수 보간(2026-10-05).
   const priceVars = React.useMemo(
     () => ({
@@ -222,6 +223,7 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
             contactLabel={t('actions.contact')}
             phone={siteConfig.contact.phone}
             phoneCtaId="recording_hero_phone"
+            secondary={isKo ? { label: t('actions.bookOnline'), href: '/ko/booking/recording', ctaId: 'recording_hero_book' } : { label: t('actions.seePricing'), href: '#recording-pricing', ctaId: 'recording_hero_pricing' }}
           />
         }
       />

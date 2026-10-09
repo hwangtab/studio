@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import { AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import {
-  ArrowLeft, ArrowRight, Check, CheckCircle, Users, DollarSign,
+  ArrowRight, Check, CheckCircle, Users, DollarSign,
   Target, Calendar, ListChecks, X,
   ArrowRightLeft,
 } from '@/lib/lucide-icons';
@@ -140,9 +140,8 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
             locale={locale}
             kakaoUrl={siteConfig.contact.kakaoUrl}
             consultLabel={t('releaseProject.hero.ctaConsult')}
-            secondaryHref={getLink('/release-project')}
-            secondaryLabel={t(k('linkBack'))}
-            secondaryLeadingIcon={<ArrowLeft size={16} />}
+            secondaryHref="#tier-pricing"
+            secondaryLabel={t('actions.seePricing')}
           />
         }
       />
@@ -271,7 +270,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
       </Section>
 
       {/* M1: 3티어 비교표 — 가격 결정 직전 */}
-      <Section variant="default">
+      <Section id="tier-pricing" variant="default">
         <SectionHeading
           icon={DollarSign}
           title={t(k('priceSectionTitle'))}

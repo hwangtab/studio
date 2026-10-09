@@ -85,6 +85,7 @@ interface PricingProps {
 
 const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLocaleContent, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
+  const isKo = locale === 'ko';
   const {
     VAT_NOTICE,
     SUMMARY_VAT_NOTICE,
@@ -272,6 +273,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
             label={t('pricing.hero.ctaKakao', { defaultValue: '카톡으로 무료 견적 받기' })}
             /* 비-ko는 목적지가 /contact 폼이라 "카톡" 라벨을 쓸 수 없다. */
             contactLabel={t('actions.contact')}
+            secondary={isKo ? { label: t('actions.bookOnline'), href: '/ko/booking', ctaId: 'pricing_hero_book' } : undefined}
           />
         }
       />

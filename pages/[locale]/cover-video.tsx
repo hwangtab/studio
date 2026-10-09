@@ -80,6 +80,7 @@ const PROCESS_ANIMATION = createFadeInAnimation();
 
 const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
+  const isKo = locale === 'ko';
   // FAQ가 작곡·편곡 정가({{mr}}·{{small}}·{{band}}·{{large}})를 말한다 — 금액은 상수 보간(2026-10-05).
   const priceVars = React.useMemo(
     () => ({
@@ -196,6 +197,7 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
             component="CoverVideoHero"
             ctaId="cover_video_hero_kakao"
             label={t('coverVideo.cta.inquiry')}
+            secondary={isKo ? { label: t('actions.bookOnline'), href: '/ko/booking/cover-video', ctaId: 'cover_video_hero_book' } : { label: t('actions.seePricing'), href: '#cover-video-package', ctaId: 'cover_video_hero_pricing' }}
           />
         }
       />

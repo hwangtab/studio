@@ -24,18 +24,6 @@ const homeData = {
       imageAlt: "연신내 녹음실 스튜디오 놀 - 은평구 전문 음악 스튜디오 메인룸",
       cta: {
         reserve: "카톡으로 무료 상담",
-        // 히어로 헤드라인("곡은 다 썼는데, 그 다음")이 부르는 발매 의도 방문자를
-        // 스크롤 없이 플래그십으로 보낸다. 포트폴리오는 발매 페이지 안에서
-        // 디스코그래피 증거로 다시 연결된다. (2026-08-04 매출 감사: 발매 허브
-        // 90일 방문 37명 — 홈 히어로에 진입로가 없던 것이 원인 중 하나)
-        // 운영자 결정(2026-09-26): 2차 CTA를 "제작비부터 상담"으로. 목적지는 카카오가 아니라
-        // 발매 페이지의 펀딩 목표액 계산기 — 거기 "이 계산으로 발매 자금 상담" 카톡 버튼이 있다.
-        // 카카오로 바로 보내면 히어로에 같은 목적지의 노란 버튼이 둘이 된다.
-        // ⚠ /release-project 전환 실험(2026-11-20 판정)의 1차 지표가 펀딩 상담 건수라, 이 버튼이
-        // 프로덕션에 나가는 날부터 홈발 유입이 섞인다. cta_id 'hero_secondary_funding'으로 따로
-        // 세고, 배포일을 docs/ctr-surgery-log.md에 단절로 적을 것.
-        secondary: "제작비부터 상담",
-        secondaryLink: "/release-project#funding-goal"
       },
       ctaImageAlt: "연신내 녹음실 스튜디오 놀 - 전문 녹음 장비와 하드웨어"
     },
@@ -167,9 +155,7 @@ const homeData = {
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL Main Studio",
       cta: {
-        reserve: "Free Release Consultation",
-        secondary: "Portfolio",
-        secondaryLink: "/portfolio"
+        reserve: "Free Release Consultation"
       },
       ctaImageAlt: "Studio NOL Seoul - Professional Recording Equipment and Hardware"
     },
@@ -269,9 +255,7 @@ const homeData = {
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL 主录音室",
       cta: {
-        reserve: "免费发行咨询",
-        secondary: "作品集",
-        secondaryLink: "/portfolio"
+        reserve: "免费发行咨询"
       },
       ctaImageAlt: "Studio NOL 首尔 - 专业录音设备和硬件"
     },
@@ -371,9 +355,7 @@ const homeData = {
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Estudio Principal Studio NOL",
       cta: {
-        reserve: "Consulta Gratuita de Lanzamiento",
-        secondary: "Portafolio",
-        secondaryLink: "/portfolio"
+        reserve: "Consulta Gratuita de Lanzamiento"
       },
       ctaImageAlt: "Studio NOL Seúl - Equipo de grabación profesional"
     },
@@ -473,9 +455,7 @@ const homeData = {
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL phòng thu chính",
       cta: {
-        reserve: "Tư vấn Phát hành Miễn phí",
-        secondary: "Portfolio",
-        secondaryLink: "/portfolio"
+        reserve: "Tư vấn Phát hành Miễn phí"
       },
       ctaImageAlt: "Studio NOL Seoul - Thiết bị thu âm chuyên nghiệp"
     },
@@ -575,9 +555,7 @@ const homeData = {
       backgroundImage: "/images/studio2.webp",
       imageAlt: "สตูดิโอหลักของ Studio NOL",
       cta: {
-        reserve: "ปรึกษาการปล่อยเพลงฟรี",
-        secondary: "ผลงาน",
-        secondaryLink: "/portfolio"
+        reserve: "ปรึกษาการปล่อยเพลงฟรี"
       },
       ctaImageAlt: "Studio NOL โซล - อุปกรณ์บันทึกเสียงมืออาชีพ"
     },
@@ -677,9 +655,7 @@ const homeData = {
       backgroundImage: "/images/studio2.webp",
       imageAlt: "Studio NOL asosiy studiyasi",
       cta: {
-        reserve: "Bepul Chiqarish Maslahati",
-        secondary: "Portfel",
-        secondaryLink: "/portfolio"
+        reserve: "Bepul Chiqarish Maslahati"
       },
       ctaImageAlt: "Studio NOL Seul - Professional yozuv uskunalari"
     },
@@ -799,7 +775,7 @@ export interface HomeData {
     subtitle: string;
     backgroundImage: string;
     imageAlt: string;
-    cta: { reserve: string; secondary: string; secondaryLink: string };
+    cta: { reserve: string };
     ctaImageAlt: string;
   };
   homeServices: { title: string; description: string; link: string; icon: string }[];

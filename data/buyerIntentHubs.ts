@@ -93,10 +93,11 @@ export interface BuyerIntentHub {
    * 'all'은 featured 우선으로 셔플.
    */
   portfolioCategory: 'all' | 'single' | 'ep' | 'album' | 'compilation' | 'commercial';
-  /** 본 hub와 가장 가까운 service LP — primary CTA 대상 */
+  /**
+   * 본 hub와 가장 가까운 service LP — 히어로 1차("{서비스} 알아보기") 대상. 2차는 모든 허브가 "가격 보기"(/pricing)로
+   * 같다(docs/hero-cta-audit-2026-10.md D 규칙) — 예전엔 허브마다 2차 목적지가 제각각이었다.
+   */
   primaryServiceLink: ServiceKey | 'practice-room' | 'release-project' | 'contact';
-  /** 보조 service LP — secondary CTA */
-  secondaryServiceLink?: ServiceKey | 'practice-room' | 'release-project' | 'contact';
 }
 
 export const buyerIntentHubs: Record<BuyerIntentHubSlug, BuyerIntentHub> = {
@@ -165,7 +166,6 @@ export const buyerIntentHubs: Record<BuyerIntentHubSlug, BuyerIntentHub> = {
     pricingPackageId: 'package-wedding',
     portfolioCategory: 'single',
     primaryServiceLink: 'wedding-song',
-    secondaryServiceLink: 'pricing',
   },
 
   'audiobook-asmr-getting-started': {
@@ -233,7 +233,6 @@ export const buyerIntentHubs: Record<BuyerIntentHubSlug, BuyerIntentHub> = {
     pricingPackageId: 'package-voiceover',
     portfolioCategory: 'commercial',
     primaryServiceLink: 'voice-acting',
-    secondaryServiceLink: 'pricing',
   },
 
   'home-recording-survival': {
@@ -301,8 +300,7 @@ export const buyerIntentHubs: Record<BuyerIntentHubSlug, BuyerIntentHub> = {
     pricingPackageId: 'recording-pro',
     secondaryPricingPackageId: 'mixing-level1',
     portfolioCategory: 'single',
-    primaryServiceLink: 'pricing',
-    secondaryServiceLink: 'practice-room',
+    primaryServiceLink: 'recording',
   },
 
   'vocal-beginners-guide': {
@@ -387,7 +385,6 @@ export const buyerIntentHubs: Record<BuyerIntentHubSlug, BuyerIntentHub> = {
     },
     portfolioCategory: 'single',
     primaryServiceLink: 'lesson',
-    secondaryServiceLink: 'contact',
   },
 
   'cover-video-production': {
@@ -455,7 +452,6 @@ export const buyerIntentHubs: Record<BuyerIntentHubSlug, BuyerIntentHub> = {
     pricingPackageId: 'package-cover-video',
     portfolioCategory: 'single',
     primaryServiceLink: 'cover-video',
-    secondaryServiceLink: 'pricing',
   },
 
   'indie-release-guide': {
@@ -548,7 +544,6 @@ export const buyerIntentHubs: Record<BuyerIntentHubSlug, BuyerIntentHub> = {
     portfolioCategory: 'all',
     primaryServiceLink: 'release-project',
     // 2026-10-05: 자작곡 발매 가이드의 보조 동선은 가격표보다 "편곡부터 맡기기"가 맞다.
-    secondaryServiceLink: 'composition-arrangement',
   },
 };
 

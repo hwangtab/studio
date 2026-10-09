@@ -213,6 +213,7 @@ const CompositionArrangement: NextPageWithLayout<CompositionArrangementProps> = 
             component="CompositionArrangementHero"
             ctaId="composition_arrangement_hero_kakao"
             label={t('compositionArrangement.cta.inquiry')}
+            secondary={{ label: t('actions.seePricing'), href: '#composition-arrangement-pricing', ctaId: 'composition_arrangement_hero_pricing' }}
           />
         }
       />

@@ -68,6 +68,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
   locale,
 }) => {
   const { t } = useTranslation('common', { lng: locale });
+  const isKo = locale === 'ko';
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
   const practiceRoomOffer = React.useMemo(
     () => getPricingData(locale).practiceRoomOffers[0],
@@ -169,12 +170,14 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
             label={t('practiceRoom.cta.inquiry')}
             phone={siteConfig.contact.phone}
             phoneCtaId="practice_room_hero_phone"
+            secondary={isKo ? { label: t('actions.bookHourly'), href: '/ko/booking/practice-room', ctaId: 'practice_room_hero_book_hourly' } : { label: t('actions.seePricing'), href: '#practice-room-pricing', ctaId: 'practice_room_hero_pricing' }}
           />
         }
       />
 
       {pricingBadges.length > 0 && (
         <PriceLeader
+          id="practice-room-pricing"
           eyebrow={t('practiceRoom.pricing.eyebrow')}
           title={t('practiceRoom.pricing.title')}
           subtitle={t('practiceRoom.pricing.subtitle')}

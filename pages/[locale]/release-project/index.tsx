@@ -149,9 +149,10 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
             locale={locale}
             kakaoUrl={siteConfig.contact.kakaoUrl}
             consultLabel={isKo ? releasePipelineCopy.hero.cta : t('releaseProject.hero.ctaConsult')}
-            // ko는 1차 버튼 하나만 — 발매 자금 상담이 이 페이지의 단일 행동이다(전략 핵심 축).
-            secondaryHref={isKo ? undefined : getLink('/portfolio')}
-            secondaryLabel={isKo ? undefined : t('releaseProject.hero.ctaPortfolio')}
+            // 1차는 발매 자금 상담(전략 핵심 축). 2차는 같은 페이지의 티어·가격(2026-10-09 히어로 CTA 규칙 — 예전엔 ko는 1차
+            // 하나뿐, 비-ko는 포트폴리오였다. 견적형 페이지의 2차는 "가격 보기"로 통일: docs/hero-cta-audit-2026-10.md).
+            secondaryHref="#release-tiers"
+            secondaryLabel={t('actions.seePricing')}
           />
         }
       />
@@ -176,7 +177,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
       )}
 
       {/* 발매 프로젝트 3형태 */}
-      <Section variant="default">
+      <Section id="release-tiers" variant="default">
         <SectionHeading
           icon={Disc}
           title={t('releaseProject.tiers.sectionTitle')}
