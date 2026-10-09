@@ -121,7 +121,7 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko', eyebrow,
                                         <span className="block font-bold typo-card-title text-base mb-1">
                                             {review.author}
                                         </span>
-                                        <span className="text-sm text-primary dark:text-primary-lighter font-semibold">
+                                        <span className="text-sm text-gray-600 dark:text-gray-300 font-semibold">
                                             {review.category}
                                         </span>
                                         {/* 메타·캡션 역할색은 라이트 gray-500 / 다크 gray-400 (docs/design-system.md §1).
@@ -133,7 +133,7 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko', eyebrow,
                                             </span>
                                         )}
                                     </div>
-                                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary dark:text-primary-lighter" aria-hidden="true">
+                                    <div className="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center text-gray-700 dark:text-primary-lighter" aria-hidden="true">
                                         <MessageSquare size={20} />
                                     </div>
                                 </div>

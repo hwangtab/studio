@@ -100,7 +100,7 @@ const AudienceCard = ({
   <BaseCard variant="default" delay={delay} className="p-6 h-full">
     <div className="flex items-center mb-3">
       <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
-        <Icon className="text-primary dark:text-primary-lighter" size={22} aria-hidden="true" />
+        <Icon className="text-gray-700 dark:text-gray-300" size={22} aria-hidden="true" />
       </div>
       <h3 className="typo-card-subtitle">{title}</h3>
     </div>
@@ -504,7 +504,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
                 {([0, 1, 2, 3] as const).map((i) => (
                   <li key={i} className="flex items-start gap-3">
                     <CheckCircle2
-                      className="text-primary dark:text-primary-lighter flex-shrink-0 mt-0.5"
+                      className="text-gray-700 dark:text-gray-300 flex-shrink-0 mt-0.5"
                       size={18}
                       aria-hidden="true"
                     />
@@ -551,7 +551,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
                 {([0, 1, 2, 3] as const).map((i) => (
                   <li key={i} className="flex items-center gap-3">
                     <CheckCircle2
-                      className="text-primary dark:text-primary-lighter flex-shrink-0"
+                      className="text-gray-700 dark:text-gray-300 flex-shrink-0"
                       size={20}
                       aria-hidden="true"
                     />
@@ -686,7 +686,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
           title={
             <>
               <span className="block">{t('mixingMastering.cta.titleLine1')}</span>
-              <span className="block text-primary dark:text-primary-lighter">{t('mixingMastering.cta.titleHighlight')}</span>
+              <span className="block text-gray-950 dark:text-white">{t('mixingMastering.cta.titleHighlight')}</span>
             </>
           }
           subtitle={

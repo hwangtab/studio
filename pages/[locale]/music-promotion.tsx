@@ -283,7 +283,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
               {...createInViewEnterAnimation({ delay: index * 0.05 })}
               className="flex gap-4"
             >
-              <span className="shrink-0 text-3xl font-bold leading-none tabular-nums text-primary/25 dark:text-primary-lighter/25">
+              <span className="shrink-0 text-3xl font-bold leading-none tabular-nums text-gray-950/15 dark:text-white/15">
                 {String(index + 1).padStart(2, '0')}
               </span>
               <div>
@@ -337,7 +337,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
                       <dt
                         className={`text-sm ${
                           isUs
-                            ? 'font-semibold text-primary dark:text-primary-lighter'
+                            ? 'font-semibold text-gray-600 dark:text-gray-300'
                             : 'text-gray-500 dark:text-gray-400'
                         }`}
                       >
@@ -372,7 +372,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
                       scope="col"
                       className={`px-4 py-3 font-semibold ${
                         isUs
-                          ? 'rounded-t-xl bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-lighter'
+                          ? 'rounded-t-xl bg-gray-100 text-gray-950 dark:bg-gray-800 dark:text-white'
                           : 'text-gray-500 dark:text-gray-400'
                       }`}
                     >
@@ -427,7 +427,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
             return (
               <m.div key={item.title} {...createInViewEnterAnimation({ delay: index * 0.06 })}>
                 <BaseCard className="h-full p-6">
-                  <Icon className="h-7 w-7 text-primary dark:text-primary-lighter" aria-hidden="true" />
+                  <Icon className="h-7 w-7 text-gray-700 dark:text-gray-300" aria-hidden="true" />
                   <h3 className="mt-4 font-bold text-gray-900 dark:text-white">{item.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
                     {item.body}
@@ -480,7 +480,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
                   aria-hidden="true"
                 />
               )}
-              <span className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-primary/25 bg-primary/10 text-sm font-bold tabular-nums text-primary dark:border-primary-lighter/25 dark:bg-primary-lighter/10 dark:text-primary-lighter">
+              <span className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gray-300 bg-white text-sm font-bold tabular-nums text-gray-950 dark:border-gray-700 dark:bg-gray-900 dark:text-white">
                 {String(index + 1).padStart(2, '0')}
               </span>
               <div className="pt-1.5">
@@ -512,7 +512,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
               className="flex gap-4"
             >
               <CheckCircle2
-                className="mt-0.5 h-5 w-5 shrink-0 text-primary dark:text-primary-lighter"
+                className="mt-0.5 h-5 w-5 shrink-0 text-gray-600 dark:text-gray-300"
                 aria-hidden="true"
               />
               <div>
@@ -652,7 +652,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
         title={
           <>
             {t('musicPromotion.cta.titleLine1')}{' '}
-            <span className="text-primary dark:text-primary-lighter">{t('musicPromotion.cta.titleHighlight')}</span>
+            <span className="text-gray-950 dark:text-white">{t('musicPromotion.cta.titleHighlight')}</span>
           </>
         }
         subtitle={

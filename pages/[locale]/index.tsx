@@ -383,7 +383,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
           title={
             <>
               <span className="block">{t('home.cta.titleLine1')}</span>
-              <span className="block text-primary dark:text-primary-lighter">{t('home.cta.titleHighlight')}</span>
+              <span className="block text-gray-950 dark:text-white">{t('home.cta.titleHighlight')}</span>
             </>
           }
           subtitle={

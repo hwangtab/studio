@@ -143,7 +143,7 @@ const PricingCard = ({
             <ul className="space-y-3 flex-grow">
                 {features.map((feature, index) => (
                     <li key={index} className="flex items-start text-sm text-gray-600 dark:text-gray-300">
-                        <Check className="text-primary dark:text-primary-lighter mt-1 mr-2 flex-shrink-0" size={14} aria-hidden="true" />
+                        <Check className="text-gray-700 dark:text-gray-300 mt-1 mr-2 flex-shrink-0" size={14} aria-hidden="true" />
                         <span>{feature}</span>
                     </li>
                 ))}

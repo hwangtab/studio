@@ -70,13 +70,13 @@ const ReleaseProducerIntro = ({
   <Section variant="alternate">
     <div className="max-w-3xl mx-auto">
       <div className="glass-card rounded-3xl p-8 sm:p-10 text-center">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-5">
-          <Award size={32} className="text-primary dark:text-primary-lighter" />
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 mb-5">
+          <Award size={32} className="text-gray-700 dark:text-gray-300" />
         </div>
         <h2 className="text-2xl sm:text-3xl font-title font-bold text-gray-900 dark:text-white mb-2">
           {sectionTitle}
         </h2>
-        <p className="text-sm text-primary dark:text-primary-lighter font-medium mb-6">
+        <p className="text-sm text-gray-600 dark:text-gray-300 font-medium mb-6">
           {tagline}
         </p>
         <div className="text-left sm:text-center space-y-3 max-w-xl mx-auto mb-8">
@@ -90,7 +90,7 @@ const ReleaseProducerIntro = ({
           <div className="grid grid-cols-3 gap-4 pt-6 border-t border-gray-100 dark:border-gray-700">
             {stats.map((stat, index) => (
               <div key={`${stat.value}-${index}`}>
-                <p className="text-2xl sm:text-3xl font-bold text-primary dark:text-primary-lighter mb-1">{stat.value}</p>
+                <p className="text-2xl sm:text-3xl font-bold text-gray-950 dark:text-white mb-1">{stat.value}</p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 leading-tight">{stat.label}</p>
               </div>
             ))}

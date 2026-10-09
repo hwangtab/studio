@@ -39,7 +39,7 @@ const ServiceComparison = ({ title, subtitle, columns, rows, rowHeaderLabel, not
                 >
                   <dt
                     className={`text-sm ${
-                      isUs ? 'font-semibold text-primary dark:text-primary-lighter' : 'text-gray-500 dark:text-gray-400'
+                      isUs ? 'font-semibold text-gray-950 dark:text-white' : 'text-gray-500 dark:text-gray-400'
                     }`}
                   >
                     {columns[i + 1]}
@@ -67,7 +67,7 @@ const ServiceComparison = ({ title, subtitle, columns, rows, rowHeaderLabel, not
                   scope="col"
                   className={`px-4 py-3 font-semibold ${
                     isUs
-                      ? 'rounded-t-xl bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-lighter'
+                      ? 'rounded-t-xl bg-gray-100 text-gray-950 dark:bg-gray-800 dark:text-white'
                       : 'text-gray-500 dark:text-gray-400'
                   }`}
                 >

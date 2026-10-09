@@ -109,7 +109,7 @@ const AuthorPage: NextPageWithLayout<AuthorPageProps> = ({ locale }) => {
               key={stat.label}
               className="rounded-lg border border-gray-200 p-6 text-center dark:border-gray-700"
             >
-              <p className="text-3xl font-bold text-primary dark:text-primary-lighter">{stat.value}</p>
+              <p className="text-3xl font-bold text-gray-950 dark:text-white">{stat.value}</p>
               <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">{stat.label}</p>
             </div>
           ))}
@@ -125,7 +125,7 @@ const AuthorPage: NextPageWithLayout<AuthorPageProps> = ({ locale }) => {
               key={`${award.year}-${award.title}-${award.work}`}
               className="flex flex-col gap-1 border-l-2 border-primary/40 pl-4 sm:flex-row sm:items-baseline sm:gap-3"
             >
-              <span className="text-sm font-semibold tabular-nums text-primary dark:text-primary-lighter sm:w-14 sm:flex-shrink-0">
+              <span className="text-sm font-semibold tabular-nums text-gray-600 dark:text-gray-300 sm:w-14 sm:flex-shrink-0">
                 {award.year}
               </span>
               <span className="text-gray-900 dark:text-gray-50">
@@ -262,7 +262,7 @@ const AuthorPage: NextPageWithLayout<AuthorPageProps> = ({ locale }) => {
           title={
             <>
               <span className="block">{profile.cta.titleLine1}</span>
-              <span className="block text-primary dark:text-primary-lighter">{profile.cta.titleHighlight}</span>
+              <span className="block text-gray-950 dark:text-white">{profile.cta.titleHighlight}</span>
             </>
           }
           subtitle={profile.cta.subtitle}

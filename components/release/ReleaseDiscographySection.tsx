@@ -84,7 +84,7 @@ const ReleaseDiscographySection: React.FC<ReleaseDiscographySectionProps> = ({
               </div>
             )}
             <div className={CARD_PADDING.compact}>
-              <p className="text-xs text-primary dark:text-primary-lighter font-medium mb-1">{item.artist}</p>
+              <p className="text-xs text-gray-600 dark:text-gray-300 font-medium mb-1">{item.artist}</p>
               <h3 className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary-lighter transition-colors">
                 {item.title}
               </h3>

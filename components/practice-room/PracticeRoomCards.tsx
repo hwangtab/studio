@@ -29,8 +29,8 @@ export const FeatureCard = ({
 }) => (
   <BaseCard variant="default" delay={delay} padding="default" className="h-full">
     <div className="flex items-center mb-4">
-      <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
-        <Icon className="text-primary dark:text-primary-lighter" size={24} aria-hidden="true" />
+      <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-full mr-4">
+        <Icon className="text-gray-700 dark:text-gray-300" size={24} aria-hidden="true" />
       </div>
       <h3 className="typo-card-title">{title}</h3>
     </div>
@@ -74,8 +74,8 @@ export const TargetAudience = ({
 }) => (
   <BaseCard variant="default" delay={delay} padding="default" className="mb-4">
     <div className="flex items-center mb-2">
-      <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
-        <Icon className="text-primary dark:text-primary-lighter" size={24} aria-hidden="true" />
+      <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-full mr-4">
+        <Icon className="text-gray-700 dark:text-gray-300" size={24} aria-hidden="true" />
       </div>
       <h3 className="typo-card-subtitle">{title}</h3>
     </div>
@@ -140,7 +140,7 @@ export const BenefitCard = ({
         return (
           <li key={idx} className="flex items-start gap-2">
             <Check
-              className="text-primary dark:text-primary-lighter mt-1 flex-shrink-0"
+              className="text-gray-700 dark:text-gray-300 mt-1 flex-shrink-0"
               size={16}
               aria-hidden="true"
             />
