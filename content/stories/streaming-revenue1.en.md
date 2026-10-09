@@ -18,7 +18,7 @@ summary: >-
 faq:
   - q: How much do I earn per stream?
     a: >-
-      It varies by platform. Spotify pays roughly $0.003–0.005 per stream (about 4–7 KRW), Apple Music about
+      It varies by platform. Spotify does not officially disclose its per-stream rate, but industry estimates put it at roughly $0.003–0.005 per stream (about 4–7 KRW), Apple Music about
       $0.007–0.01, and Melon/Genie calculate payouts based on the domestic subscriber pool. At 1,000 streams a
       month, you're looking at roughly 3,000–7,000 KRW.
   - q: How do I get onto a Spotify playlist?
@@ -58,7 +58,7 @@ The history of the streaming revenue model began with Apple iTunes' $0.99-per-so
 ### Global Platforms
 
 **Spotify**
-- About $0.003–$0.005 per stream
+- About $0.003–$0.005 per stream (an industry estimate, not an official rate)
 - Entering an editorial playlist can cause a sharp increase in streams
 - Algorithmic playlists (Discover Weekly, Daily Mix): automatic exposure
 
@@ -161,7 +161,7 @@ Winter (December–February): Christmas and year-end themes
 
 ## In Closing
 
-Streaming revenue is less about a short-term explosion and more about the accumulation of long-term exposure. When a single song is streamed 10,000 times a month on Spotify, the revenue is around $30–50. Turning that into a realistic living income requires a catalog of dozens of songs and millions of streams, but by releasing steadily and gaining repeated exposure on algorithmic playlists like Discover Weekly and Release Radar, the lifespan of your existing songs is extended. On domestic platforms like Melon and Genie, the "reverse-charting" phenomenon often occurs when broadcast insert songs, OSTs, or viral memes sharply boost the streams of older releases — and in those cases, if it's an original composition registered with KOMCA, you can collect broadcast royalties and streaming royalties at the same time.
+Streaming revenue is less about a short-term explosion and more about the accumulation of long-term exposure. When a single song is streamed 10,000 times a month on Spotify, the revenue is around $30–50 at the industry-estimated rate. Turning that into a realistic living income requires a catalog of dozens of songs and millions of streams, but by releasing steadily and gaining repeated exposure on algorithmic playlists like Discover Weekly and Release Radar, the lifespan of your existing songs is extended. On domestic platforms like Melon and Genie, the "reverse-charting" phenomenon often occurs when broadcast insert songs, OSTs, or viral memes sharply boost the streams of older releases — and in those cases, if it's an original composition registered with KOMCA, you can collect broadcast royalties and streaming royalties at the same time.
 
 Content ID registration is an option you must be sure to check when choosing a distributor. When another YouTuber uses your music as background or covers it, an artist with Content ID activated gains a passive revenue channel that lets them claim or share the ad revenue from that video. When a track goes viral on TikTok or Instagram Reels, YouTube search traffic increases, and this leads to exploration on streaming platforms — a cross-platform revenue structure that became the core revenue pattern for indie artists in the 2020s.
 
