@@ -42,7 +42,7 @@ inlineFallback: {}
 
 AI 음악 도구는 빠르게 발전하고 있습니다. AI를 단순한 대체재가 아닌 창작 보조 도구로 활용하면 제작 속도와 창작 범위를 함께 넓힐 수 있습니다.
 
-AI 음악 기술의 역사는 1957년 Lejaren Hiller와 Leonard Isaacson이 최초의 컴퓨터 생성 작품 "Illiac Suite"를 발표한 것으로 시작됩니다. 1990년대 David Cope의 EMI(Experiments in Musical Intelligence) 시스템이 바흐·베토벤 스타일을 모방한 악곡을 생성해 논란을 일으켰고, 2016년 구글의 Magenta 프로젝트가 딥러닝 기반 음악 생성을 공개했습니다. 2023년 말 Suno, 2024년 Udio가 텍스트 프롬프트 하나로 완성 음악을 생성하면서 AI 음악이 대중에게 본격적으로 개방됐습니다.
+AI 음악 기술의 역사는 1957년 Lejaren Hiller와 Leonard Isaacson이 최초의 컴퓨터 생성 작품 "Illiac Suite"를 발표한 것으로 시작됩니다. 1981년 David Cope가 만든 EMI(Experiments in Musical Intelligence) 시스템이 바흐·베토벤 스타일을 모방한 악곡을 생성해 논란을 일으켰고, 2016년 구글의 Magenta 프로젝트가 딥러닝 기반 음악 생성을 공개했습니다. 2023년 말 Suno, 2024년 Udio가 텍스트 프롬프트 하나로 완성 음악을 생성하면서 AI 음악이 대중에게 본격적으로 개방됐습니다.
 
 ## AI 음악 생성 도구 비교
 
