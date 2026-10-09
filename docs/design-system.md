@@ -283,10 +283,11 @@ woff2와 `display.chars.json`을 **함께 커밋**해야 한다(CI가 `--check`�
 | `kakao` | 카카오톡 목적지 전용 |
 | `weak` | 2차 액션 — 연한 파랑 채움(`bg-primary/10` + `text-primary-dark`). 옛 `outline`(테두리)을 대체했다 — 얇은 선은 누를 수 있다는 신호가 약하다 |
 | `ghost` / `secondary` | 3차 액션 |
-| `glass` | 글래스 표면 위 |
 | `scrim` | 어두운 히어로 이미지 위 2차 액션 |
 
-`shape`: `pill`(자유 배치 CTA) / `block`(카드·폼 안). `size`: `sm`/`md`/`lg`/`icon`.
+`shape`: 글자 버튼은 전부 `block`(rounded-xl) — 히어로·카드·폼·띠 구분 없이(2026-10-09 TDS 대조, 모서리 체계 하나).
+`pill`(원형)은 아이콘만 있는 버튼(`size="icon"`) 전용 — `components/ui/buttonShape.test.ts`가 막는다. 칩·필터·배지·떠 있는 버튼(FAB)은
+버튼이 아니라 표지라 알약 모양을 둔다. `size`: `sm`/`md`/`lg`/`icon`.
 
 **누를 때 반응이 기본, hover는 덤** (2026-10-09 TDS 대조): 모든 버튼은 누를 때 0.96배로 줄고 살짝 어두워진다
 (`active:scale-[0.96] active:brightness-90`, 손으로 짠 버튼은 `BUTTON_PRESS`가 같은 것을 준다). **버튼은 평평하다** —
@@ -322,7 +323,7 @@ woff2와 `display.chars.json`을 **함께 커밋**해야 한다(CI가 `--check`�
 - 그런 카드 안의 버튼 모양(`<span>` + `buttonVariants`)은 `group-hover` 색만 바뀌고 따로 떠오르지 않는다
   (`hover:translate-y-0 active:translate-y-0`) — 한 물체에 한 움직임.
 - 누를 수 없는 카드는 떠오르지도, 커지지도, 빛나지도 않는다. 안의 버튼만 반응한다.
-  `.glass-card` 빛은 `a`·`button`이거나 링크에 감싸인 카드에만 켜진다(styles/globals.css).
+  카드 빛 효과(`.glass-card::after`)는 2026-10-09에 없앴다 — 링크 카드는 hover 때 살짝 어두워질 뿐이다.
 
 **히어로 위계**: 1차가 카카오 옐로면 2차는 `solid`를 쓰지 않는다 — 어두운 사진 위에서
 채움 버튼이 옐로와 경쟁해 위계가 뒤집힌다(잉크는 사진에 묻히기도 한다). 2차는 `scrim`(어두운 반투명 + 흰 테두리 +

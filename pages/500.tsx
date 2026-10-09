@@ -69,12 +69,12 @@ const ServerErrorPage: NextPageWithLayout = () => {
         className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6"
         {...pageContentMotionProps}
       >
-        <Button asChild variant="solid" shape="pill" size="md">
+        <Button asChild variant="solid" shape="block" size="md">
           <Link href={`/${locale}`} className={errorCtaLayout}>
             {t('serverError.goHome')}
           </Link>
         </Button>
-        <Button asChild variant="weak" shape="pill" size="md">
+        <Button asChild variant="weak" shape="block" size="md">
           <Link href={`/${locale}/contact`} className={errorCtaLayout}>
             {t('serverError.contact')}
           </Link>
