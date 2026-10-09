@@ -79,7 +79,7 @@ describe('승인된 프로젝트 — 구획별·필드별 잠금이 화면에 �
     expect(screen.getByLabelText('시작일', { exact: false })).toBeDisabled();
     expect(screen.getByLabelText('종료일', { exact: false })).toBeDisabled();
     expect(
-      screen.getByText(/공개된 뒤에는 바꿀 수 없습니다 — 후원자가 이 주소로 프로젝트를 찾고/),
+      screen.getByText(/공개된 뒤에는 바꿀 수 없어요 — 후원자가 이 주소로 프로젝트를 찾고/),
     ).toBeInTheDocument();
   });
 
@@ -125,14 +125,14 @@ describe('개설자 이름 잠금 안내 — nameLocked prop 배선', () => {
     render(<CreatorProjectEditor project={APPROVED_PROJECT} earliestStartDate="2026-09-25" nameLocked payout={UNREGISTERED_PAYOUT} />);
     fireEvent.click(screen.getByRole('tab', { name: '개설자 정보' }));
     expect(screen.getByLabelText('공개 이름', { exact: false })).toBeDisabled();
-    expect(screen.getByText(/승인된 프로젝트가 있어 이름은 바꿀 수 없습니다/)).toBeInTheDocument();
+    expect(screen.getByText(/승인된 프로젝트가 있어 이름은 바꿀 수 없어요/)).toBeInTheDocument();
   });
 
   it('nameLocked=false면 이름 칸이 활성이고 이유 문구가 없다', () => {
     render(<CreatorProjectEditor project={APPROVED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
     fireEvent.click(screen.getByRole('tab', { name: '개설자 정보' }));
     expect(screen.getByLabelText('공개 이름', { exact: false })).toBeEnabled();
-    expect(screen.queryByText(/승인된 프로젝트가 있어 이름은 바꿀 수 없습니다/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/승인된 프로젝트가 있어 이름은 바꿀 수 없어요/)).not.toBeInTheDocument();
   });
 });
 
@@ -144,7 +144,7 @@ describe('작성 중(draft) 프로젝트 — 대조군, 전부 편집 가능해�
     expect(screen.getByLabelText('목표 금액', { exact: false })).toBeEnabled();
     expect(screen.getByLabelText('시작일', { exact: false })).toBeEnabled();
     expect(screen.getByLabelText('종료일', { exact: false })).toBeEnabled();
-    expect(screen.queryByText(/공개된 뒤에는 바꿀 수 없습니다/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/공개된 뒤에는 바꿀 수 없어요/)).not.toBeInTheDocument();
   });
 
   it('리워드 추가 버튼이 활성이다', () => {

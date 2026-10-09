@@ -146,15 +146,15 @@ const TOO_MANY_CODE = 'too_many';
  * 키는 `FundingConfirmOutcome`의 실패 코드다(lib/funding/confirm.ts).
  */
 const CONFIRM_ERROR_MESSAGES: Record<string, string> = {
-  not_found: '펀딩 내역을 찾을 수 없습니다. 주문번호를 확인해 주세요.',
-  [TOO_MANY_CODE]: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.',
-  amount_mismatch: '결제 금액이 펀딩 내용과 일치하지 않습니다.',
-  invalid_state: '이미 처리되었거나 만료된 펀딩입니다.',
-  hold_expired: '결제 대기 시간이 만료된 펀딩입니다. 다시 펀딩해 주세요.',
-  toss_rejected: '결제 승인이 거절되었습니다. 다시 시도하시거나 다른 결제수단을 이용해 주세요.',
-  recording_failed: '결제는 완료되었으나 펀딩 확정 처리가 지연되고 있습니다. 몇 분 내 자동 확정됩니다.',
+  not_found: '펀딩 내역을 찾을 수 없어요. 주문번호를 확인해 주세요.',
+  [TOO_MANY_CODE]: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.',
+  amount_mismatch: '결제 금액이 펀딩 내용과 일치하지 않아요.',
+  invalid_state: '이미 처리되었거나 만료된 펀딩이에요.',
+  hold_expired: '결제 대기 시간이 만료된 펀딩이에요. 다시 펀딩해 주세요.',
+  toss_rejected: '결제 승인이 거절됐어요. 다시 시도하시거나 다른 결제수단을 이용해 주세요.',
+  recording_failed: '결제는 완료되었으나 펀딩 확정 처리가 지연되고 있어요. 몇 분 내 자동 확정돼요.',
 };
-const GENERIC_ERROR = '결제를 확정하지 못했습니다.';
+const GENERIC_ERROR = '결제를 확정하지 못했어요.';
 const ERROR_CODE_PATTERN = /^[a-z_]{1,40}$/;
 
 export default function FundingSuccessPage({ outcome, message, statusLabel, orderNo, manageUrl, manageToken, projectSlug, emailSent, downloads, listing }: SuccessProps) {
@@ -190,12 +190,12 @@ export default function FundingSuccessPage({ outcome, message, statusLabel, orde
   // 결과 카드의 tone — 확정은 success, 살아 있지 않은 후원과 근거 없는 접근은 중립, 확정 실패는 error.
   const tone = outcome === 'confirmed' ? 'success' : outcome === 'error' ? 'error' : outcome === 'unknown' ? 'pending' : 'neutral';
   const title = outcome === 'confirmed'
-    ? '펀딩이 확정되었습니다'
+    ? '펀딩이 확정됐어요'
     : outcome === 'not_live'
-      ? '이 펀딩은 확정 상태가 아닙니다'
+      ? '이 펀딩은 확정 상태가 아니에요'
       : outcome === 'unknown'
         ? '펀딩 내역을 확인해 주세요'
-        : '결제를 확정하지 못했습니다';
+        : '결제를 확정하지 못했어요';
 
   return (
     <>
@@ -216,8 +216,8 @@ export default function FundingSuccessPage({ outcome, message, statusLabel, orde
               <>
                 주문번호 {orderNo}.
                 {emailSent === false
-                  ? ' 확인 메일을 보내지 못했습니다 — 아래 링크를 저장해 주세요.'
-                  : ' 펀딩 확인 메일을 보내드렸습니다.'}
+                  ? ' 확인 메일을 보내지 못했어요 — 아래 링크를 저장해 주세요.'
+                  : ' 펀딩 확인 메일을 보내드렸어요.'}
               </>
             }
             actions={
@@ -232,7 +232,7 @@ export default function FundingSuccessPage({ outcome, message, statusLabel, orde
           >
             {downloads && downloads.length > 0 && (
               <div className="space-y-2">
-                <p className="typo-card-meta text-center">지금 바로 받으실 수 있습니다.</p>
+                <p className="typo-card-meta text-center">지금 바로 받으실 수 있어요.</p>
                 {/* 링크가 아니라 폼이다 — 주소를 여는 것만으로는 기록이 남지 않아야 한다. */}
                 {downloads.map((d) => (
                   <form key={d.key} method="post" action="/api/funding/download">
@@ -296,7 +296,7 @@ export default function FundingSuccessPage({ outcome, message, statusLabel, orde
             }
           >
             <p className="typo-card-meta mx-auto max-w-md text-center">
-              자세한 내역은 펀딩 확인 페이지에서 보실 수 있습니다. 문의: {PHONE} · {EMAIL}
+              자세한 내역은 펀딩 확인 페이지에서 보실 수 있어요. 문의: {PHONE} · {EMAIL}
             </p>
             {projectSlug && (
               <p className="typo-card-meta mt-6 text-center">
@@ -317,8 +317,8 @@ export default function FundingSuccessPage({ outcome, message, statusLabel, orde
             title={title}
             description={
               <>
-                {orderNo ? `주문번호 ${orderNo}. ` : ''}이 화면에서는 펀딩 상세를 다시 열 수 없습니다.
-                결제가 끝났다면 펀딩 확인 메일에 펀딩 확인·취소 링크가 들어 있습니다.
+                {orderNo ? `주문번호 ${orderNo}. ` : ''}이 화면에서는 펀딩 상세를 다시 열 수 없어요.
+                결제가 끝났다면 펀딩 확인 메일에 펀딩 확인·취소 링크가 들어 있어요.
               </>
             }
             actions={
@@ -343,7 +343,7 @@ export default function FundingSuccessPage({ outcome, message, statusLabel, orde
               </Button>
             }
           >
-            <p className="typo-card-meta mx-auto max-w-md text-center">결제가 이뤄졌다면 자동으로 취소되거나 확정됩니다. 문의: {PHONE} · {EMAIL}</p>
+            <p className="typo-card-meta mx-auto max-w-md text-center">결제가 이뤄졌다면 자동으로 취소되거나 확정돼요. 문의: {PHONE} · {EMAIL}</p>
           </ResultCard>
         )}
         {outcome === 'confirmed' && (
@@ -400,7 +400,7 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
   }
 
   const requested = typeof query.o === 'string' && ORDER_NO_PATTERN.test(query.o) ? query.o.toUpperCase() : null;
-  if (!requested) return { props: { outcome: 'error', message: '잘못된 접근입니다.' } };
+  if (!requested) return { props: { outcome: 'error', message: '잘못된 접근이에요.' } };
 
   const cookie = parseConfirmCookie(req.cookies?.[CONFIRM_COOKIE]);
   // 쿠키가 없거나 다른 주문의 것이면 DB를 아예 조회하지 않는다 — 주문번호만 아는 제3자가

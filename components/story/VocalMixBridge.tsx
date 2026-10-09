@@ -24,8 +24,8 @@ interface VocalMixBridgeProps {
 const VocalMixBridge: React.FC<VocalMixBridgeProps> = ({ locale = 'ko' }) => {
   const siteConfig = getSiteConfig(locale);
   const items = [
-    '드라이 보컬 30초면 충분합니다 — 곡 전체를 보낼 필요 없어요',
-    '발성 문제인지, 마이크·방 울림인지, 믹싱인지 먼저 갈라드립니다',
+    '드라이 보컬 30초면 충분해요 — 곡 전체를 보낼 필요 없어요',
+    '발성 문제인지, 마이크·방 울림인지, 믹싱인지 먼저 갈라드려요',
     `믹싱이 필요하다면 곡당 ${formatPriceAmount(MIXING_LEVEL1_PRICE)}원부터, 3~7영업일`,
   ];
 
@@ -36,7 +36,7 @@ const VocalMixBridge: React.FC<VocalMixBridgeProps> = ({ locale = 'ko' }) => {
           연습할 땐 괜찮은데, 녹음하면 이상하게 들린다면
         </h4>
         <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-          발성 문제가 아닐 수 있습니다. 홈레코딩 보컬이 앨범처럼 안 들리는 원인은 대개 마이크 거리, 방 울림, 그리고 믹싱에서 갈립니다. 어디서 막혔는지 모르겠다면 녹음한 파일 일부만 보내주세요. 원인을 먼저 짚어드리고, 상담은 무료입니다.
+          발성 문제가 아닐 수 있어요. 홈레코딩 보컬이 앨범처럼 안 들리는 원인은 대개 마이크 거리, 방 울림, 그리고 믹싱에서 갈려요. 어디서 막혔는지 모르겠다면 녹음한 파일 일부만 보내주세요. 원인을 먼저 짚어드리고, 상담은 무료예요.
         </p>
       </div>
       <ul className="px-6 py-4 space-y-2">

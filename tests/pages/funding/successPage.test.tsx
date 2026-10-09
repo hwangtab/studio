@@ -77,14 +77,14 @@ it('확정을 되살릴 수 없는 화면(unknown)에는 주문번호·문의처
 });
 
 it('오류 화면에서도 이벤트를 보내지 않는다', () => {
-  render(<FundingSuccessPage outcome="error" message="이미 처리되었거나 만료된 펀딩입니다." />);
+  render(<FundingSuccessPage outcome="error" message="이미 처리되었거나 만료된 펀딩이에요." />);
   expect(trackMicroEvent).not.toHaveBeenCalled();
-  expect(screen.getByText('이미 처리되었거나 만료된 펀딩입니다.')).toBeInTheDocument();
+  expect(screen.getByText('이미 처리되었거나 만료된 펀딩이에요.')).toBeInTheDocument();
 });
 
 it('확인 메일이 실패했으면 링크를 저장하라고 안내한다', () => {
   render(<FundingSuccessPage {...confirmed} emailSent={false} />);
-  expect(screen.getByText(/확인 메일을 보내지 못했습니다/)).toBeInTheDocument();
+  expect(screen.getByText(/확인 메일을 보내지 못했어요/)).toBeInTheDocument();
 });
 
 /**

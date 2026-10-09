@@ -64,20 +64,20 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
           ...(nextPublic ? { publicNameStyle: style, publicNickname: nickname } : {}),
         }),
       });
-      if (!res.headers.get('content-type')?.includes('application/json')) { setError('서버 오류가 발생했습니다.'); return; }
+      if (!res.headers.get('content-type')?.includes('application/json')) { setError('서버 오류가 발생했어요.'); return; }
       const json = await res.json();
-      if (!res.ok) { setError(json.message ?? '명단 공개 설정을 바꾸지 못했습니다.'); return; }
+      if (!res.ok) { setError(json.message ?? '명단 공개 설정을 바꾸지 못했어요.'); return; }
       setIsPublic(Boolean(json.displayNamePublic));
       setSavedName(typeof json.publicName === 'string' ? json.publicName : null);
       // 공개 명단은 상태 API 응답(s-maxage=15 · SWR 60)을 거쳐 나가므로 즉시 뜨지 않는다 —
       // 그걸 말하지 않으면 "공개가 안 됐다"는 문의가 온다.
       setNotice(json.displayNamePublic
-        ? '후원자 명단에 올렸습니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.'
+        ? '후원자 명단에 올렸어요. 프로젝트 페이지에는 최대 몇 분 뒤 반영돼요.'
         : messageShownAnonymously && hasMessage
-          ? '명단에서 이름을 내렸습니다. 응원 메시지는 익명으로 남습니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.'
-          : '후원자 명단에서 내렸습니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.');
+          ? '명단에서 이름을 내렸어요. 응원 메시지는 익명으로 남아요. 프로젝트 페이지에는 최대 몇 분 뒤 반영돼요.'
+          : '후원자 명단에서 내렸어요. 프로젝트 페이지에는 최대 몇 분 뒤 반영돼요.');
     } catch {
-      setError('네트워크 오류가 발생했습니다.');
+      setError('네트워크 오류가 발생했어요.');
     } finally { setBusy(false); }
   };
 
@@ -104,12 +104,12 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
     return (
       <Panel variant="outline" className="mt-6 text-left">
         <p className="break-keep text-sm text-gray-900 dark:text-white">
-          운영 기준에 따라 후원자 명단에서 내려 두었습니다. 표시 이름·메시지는 공개되지 않습니다.
+          운영 기준에 따라 후원자 명단에서 내려 뒀어요. 표시 이름·메시지는 공개되지 않아요.
           다시 올리기를 원하시면 문의해 주세요.
         </p>
         {isPublic && (
           <>
-            <p className="typo-card-meta mt-1">공개 동의는 아직 켜져 있습니다 — 여기서 거둘 수 있습니다.</p>
+            <p className="typo-card-meta mt-1">공개 동의는 아직 켜져 있어요 — 여기서 거둘 수 있어요.</p>
             <div className="mt-4">
               <Button type="button" size="sm" variant="weak" disabled={busy} onClick={() => void save(false)}>공개 동의 철회</Button>
             </div>
@@ -124,7 +124,7 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
     return (
       <Panel variant="outline" className="mt-6 text-left">
         <p className="break-keep text-sm text-gray-900 dark:text-white">
-          후원자 명단에 <span className="whitespace-nowrap"><span className="font-semibold">{savedDisplay}</span>(으)로</span> 올라갑니다.
+          후원자 명단에 <span className="whitespace-nowrap"><span className="font-semibold">{savedDisplay}</span>(으)로</span> 올라가요.
         </p>
         <p className="typo-card-meta mt-1">표시 이름을 바꾸거나 내리려면 펀딩 확인 페이지를 이용해 주세요.</p>
         {feedback}
@@ -136,7 +136,7 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
     <Panel variant="outline" className="mt-6 text-left">
       {isPublic ? (
         <p className="break-keep text-sm text-gray-900 dark:text-white">
-          후원자 명단에 <span className="whitespace-nowrap"><span className="font-semibold">{savedDisplay}</span>(으)로</span> 올라가 있습니다.
+          후원자 명단에 <span className="whitespace-nowrap"><span className="font-semibold">{savedDisplay}</span>(으)로</span> 올라가 있어요.
         </p>
       ) : (
         <>
@@ -144,10 +144,10 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
           <p className="typo-card-meta mt-1">
             {hasMessage
               ? messageShownAnonymously
-                ? '남겨 주신 응원 메시지는 지금 “익명”으로 올라가 있습니다. 이름을 함께 올릴 수 있습니다.'
-                : '남겨 주신 응원 메시지는 명단에 올려야 프로젝트 페이지에 보입니다.'
-              : '프로젝트 페이지 후원자 명단에 함께한 사람으로 이름이 올라갑니다.'}
-            {' '}실명 대신 가린 이름이나 닉네임도 고를 수 있습니다.
+                ? '남겨 주신 응원 메시지는 지금 “익명”으로 올라가 있어요. 이름을 함께 올릴 수 있어요.'
+                : '남겨 주신 응원 메시지는 명단에 올려야 프로젝트 페이지에 보여요.'
+              : '프로젝트 페이지 후원자 명단에 함께한 사람으로 이름이 올라가요.'}
+            {' '}실명 대신 가린 이름이나 닉네임도 고를 수 있어요.
           </p>
         </>
       )}

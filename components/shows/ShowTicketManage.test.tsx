@@ -31,7 +31,7 @@ describe('ShowTicketManage — 환불 2단계', () => {
 
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
     expect(JSON.parse((fetchMock.mock.calls[0][1] as RequestInit).body as string)).toEqual({ orderNo: 'TKT-1', token: 'tok', ticketIds: ['t1'], locale: 'ko' });
-    expect(await screen.findByRole('status')).toHaveTextContent('25,000원이 환불 처리되었습니다');
+    expect(await screen.findByRole('status')).toHaveTextContent('25,000원이 환불 처리됐어요');
   });
 
   it('입장 번호와 상태 배지를 티켓 카드마다 보여 준다', () => {

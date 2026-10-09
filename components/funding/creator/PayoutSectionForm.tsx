@@ -126,7 +126,7 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
     <form onSubmit={submit} className="flex flex-col gap-5">
       <Panel className="text-sm">
         <p>
-          모금이 끝나고 영업일 {FUNDING_PAYOUT_BUSINESS_DAYS}일 이내에 여기 등록하신 계좌로 정산금을 보냅니다.
+          모금이 끝나고 영업일 {FUNDING_PAYOUT_BUSINESS_DAYS}일 이내에 여기 등록하신 계좌로 정산금을 보내요.
         </p>
         {/*
           환불 차감을 먼저 적는다. 계산 순서가 실제로 그렇고(`lib/funding/payout.ts`의
@@ -143,16 +143,16 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
 
       {readOnly ? (
         <Notice tone="warning">
-          정산 정보는 프로젝트가 승인된 뒤에 넣습니다. 심사에서 반려될 수도 있는 단계에서 계좌 정보를
-          미리 받아 두지 않기 위해서입니다.
+          정산 정보는 프로젝트가 승인된 뒤에 넣어요. 심사에서 반려될 수도 있는 단계에서 계좌 정보를
+          미리 받아 두지 않기 위해서예요.
         </Notice>
       ) : (
         <Notice tone="info">
           {initial.registered
-            ? `계좌가 등록되어 있습니다${initial.accountLast4 ? ` (계좌번호 뒤 4자리 ${initial.accountLast4})` : ''}.`
-            : '아직 등록된 계좌가 없습니다. 모금이 끝나기 전에 채워 주세요.'}
+            ? `계좌가 등록되어 있어요${initial.accountLast4 ? ` (계좌번호 뒤 4자리 ${initial.accountLast4})` : ''}.`
+            : '아직 등록된 계좌가 없어요. 모금이 끝나기 전에 채워 주세요.'}
           {' '}
-          보안을 위해 등록한 계좌번호는 화면에 다시 띄우지 않습니다. 바꾸시려면 아래에 새로 입력해 저장해 주세요.
+          보안을 위해 등록한 계좌번호는 화면에 다시 띄우지 않아요. 바꾸시려면 아래에 새로 입력해 저장해 주세요.
         </Notice>
       )}
 
@@ -160,7 +160,7 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
         id="payout-tax-type"
         label="세금 유형"
         required
-        hint="어느 쪽을 고르느냐에 따라 실제로 받으시는 금액이 달라집니다."
+        hint="어느 쪽을 고르느냐에 따라 실제로 받으시는 금액이 달라져요."
       >
         <Select
           value={taxType}
@@ -181,11 +181,11 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
       <ul className="-mt-3 list-disc space-y-1 pl-5 text-sm text-gray-600 dark:text-gray-400">
         <li>
           개인: 세금계산서를 발행하지 않으므로 수수료를 뗀 금액에서 부가세 상당액(10/110)을 빼고, 남은
-          금액에서 소득세·지방소득세 {FUNDING_WITHHOLDING_PERCENT}%를 원천징수한 나머지를 보내 드립니다.
+          금액에서 소득세·지방소득세 {FUNDING_WITHHOLDING_PERCENT}%를 원천징수한 나머지를 보내 드려요.
         </li>
         <li>
-          사업자: 원천징수 없이 정산금 전액을 보내 드립니다. 대신 그 금액에 대한 세금계산서를
-          스튜디오 놀 앞으로 발행해 주셔야 합니다.
+          사업자: 원천징수 없이 정산금 전액을 보내 드려요. 대신 그 금액에 대한 세금계산서를
+          스튜디오 놀 앞으로 발행해 주셔야 해요.
         </li>
       </ul>
 
@@ -202,7 +202,7 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
           <Field
             id="payout-resident-number"
             label="주민등록번호"
-            hint="하이픈(-)은 넣어도 되고 빼도 됩니다."
+            hint="하이픈(-)은 넣어도 되고 빼도 돼요."
           >
             <TextInput
               value={residentNumber}
@@ -217,31 +217,31 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
           <div className="-mt-3 space-y-1 text-sm text-gray-600 dark:text-gray-400">
             <p>
               개인으로 정산을 받으시면 스튜디오 놀이 원천징수의무자로서 위 세액을 대신 떼어 신고하고,
-              국세청에 지급명세서를 제출해야 합니다. 지급명세서에는 소득을 받는 분의 주민등록번호가
-              들어갑니다 — 그래서 원천징수 대상일 때만 받습니다.
+              국세청에 지급명세서를 제출해야 해요. 지급명세서에는 소득을 받는 분의 주민등록번호가
+              들어가요 — 그래서 원천징수 대상일 때만 받아요.
             </p>
             <p>
               {initial.residentNumberRegistered
-                ? '주민등록번호가 등록되어 있습니다. 비워 두고 저장하면 등록된 번호가 그대로 남고, 새로 입력해 저장하면 덮어씁니다.'
-                : '주민등록번호가 아직 등록되어 있지 않습니다. 정산을 보내려면 등록해 주세요.'}
+                ? '주민등록번호가 등록되어 있어요. 비워 두고 저장하면 등록된 번호가 그대로 남고, 새로 입력해 저장하면 덮어써요.'
+                : '주민등록번호가 아직 등록되어 있지 않아요. 정산을 보내려면 등록해 주세요.'}
               {' '}
-              암호화해 보관하며, 등록한 번호는 계좌와 마찬가지로 화면에 다시 띄우지 않습니다.
+              암호화해 보관하며, 등록한 번호는 계좌와 마찬가지로 화면에 다시 띄우지 않아요.
             </p>
             <p>
               {initial.withheldPayoutRecorded
-                ? '세금 유형을 사업자로 바꾸면 이 칸이 사라지지만, 이미 원천징수한 정산이 있어 지급명세서 제출을 위해 등록된 번호는 그대로 보관됩니다 — 이미 떼어 간 세액을 신고할 의무가 남아 있기 때문입니다.'
-                : '세금 유형을 사업자로 바꾸면 이 칸이 사라지고, 이미 등록된 번호도 지워집니다 — 원천징수 대상이 아니면 저희가 이 번호를 보관할 근거가 없기 때문입니다.'}
+                ? '세금 유형을 사업자로 바꾸면 이 칸이 사라지지만, 이미 원천징수한 정산이 있어 지급명세서 제출을 위해 등록된 번호는 그대로 보관돼요 — 이미 떼어 간 세액을 신고할 의무가 남아 있기 때문이에요.'
+                : '세금 유형을 사업자로 바꾸면 이 칸이 사라지고, 이미 등록된 번호도 지워져요 — 원천징수 대상이 아니면 저희가 이 번호를 보관할 근거가 없기 때문이에요.'}
             </p>
           </div>
         </>
       ) : (
         <p className="-mt-2 text-sm text-gray-600 dark:text-gray-400">
-          사업자는 주민등록번호를 받지 않습니다. 원천징수를 하지 않으므로 지급명세서 제출 대상이
-          아니고, 그러면 저희가 그 번호를 보관할 근거가 없습니다.
+          사업자는 주민등록번호를 받지 않아요. 원천징수를 하지 않으므로 지급명세서 제출 대상이
+          아니고, 그러면 저희가 그 번호를 보관할 근거가 없어요.
           {' '}
           {initial.withheldPayoutRecorded
-            ? '다만 이미 원천징수한 정산이 있어, 사업자로 바꿔 저장하셔도 지급명세서 제출을 위해 등록된 번호는 그대로 보관됩니다 — 이미 떼어 간 세액을 신고할 의무가 남아 있기 때문입니다.'
-            : '개인으로 등록해 두셨다가 사업자로 바꿔 저장하시면 이미 등록된 번호도 함께 지워집니다.'}
+            ? '다만 이미 원천징수한 정산이 있어, 사업자로 바꿔 저장하셔도 지급명세서 제출을 위해 등록된 번호는 그대로 보관돼요 — 이미 떼어 간 세액을 신고할 의무가 남아 있기 때문이에요.'
+            : '개인으로 등록해 두셨다가 사업자로 바꿔 저장하시면 이미 등록된 번호도 함께 지워져요.'}
         </p>
       )}
 
@@ -282,7 +282,7 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
         <Button type="submit" disabled={readOnly || save.status === 'saving'}>
           {save.status === 'saving' ? '저장 중…' : '정산 정보 저장'}
         </Button>
-        {save.status === 'success' && <span className="typo-caption text-green-600 dark:text-green-400">저장했습니다.</span>}
+        {save.status === 'success' && <span className="typo-caption text-green-600 dark:text-green-400">저장했어요.</span>}
         {save.status === 'error' && (
           <span role="alert" className="typo-caption text-red-600 dark:text-red-400">{save.message}</span>
         )}

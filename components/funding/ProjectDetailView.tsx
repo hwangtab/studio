@@ -184,7 +184,7 @@ export default function ProjectDetailView({
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12">
           <div className="min-w-0">
             {statusError && (
-              <Notice tone="error" className="mb-6">{en ? 'Could not load the campaign status. Please reload the page.' : '현황을 불러오지 못했습니다. 새로고침해 주세요.'}</Notice>
+              <Notice tone="error" className="mb-6">{en ? 'Could not load the campaign status. Please reload the page.' : '현황을 불러오지 못했어요. 새로고침해 주세요.'}</Notice>
             )}
             {/*
               모금 현황은 히어로 바로 아래, 본문 컬럼 맨 위에 둔다(saf-2026과 같은 배치,
@@ -211,7 +211,7 @@ export default function ProjectDetailView({
                 // 미리보기는 실제 모금액이 없다 — "모금 현황 집계 중…"(폴링 실패/대기)과
                 // 헷갈리지 않도록 다른 문구를 낸다.
                 <div className="min-h-[120px]" aria-live="polite">
-                  <p className="typo-card-meta">미리보기 — 공개되면 실제 모금 현황이 여기 표시됩니다.</p>
+                  <p className="typo-card-meta">미리보기 — 공개되면 실제 모금 현황이 여기 표시돼요.</p>
                   <div
                     className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700"
                     role="progressbar"
@@ -261,7 +261,7 @@ export default function ProjectDetailView({
             {/* 여기에 표지 썸네일을 두지 않는다. `cover`는 프로젝트의 얼굴(행사 포스터)이지
                 리워드의 얼굴이 아니다 — 리워드 이미지는 각 리워드가 `image`로 갖는다. */}
             <h2 className="typo-card-title text-gray-900 dark:text-white">{en ? 'Rewards' : '리워드'}</h2>
-            <p className="typo-card-meta mt-1">{en ? 'What you receive for each pledge amount.' : '펀딩 금액에 따라 돌려드릴 구성입니다.'}</p>
+            <p className="typo-card-meta mt-1">{en ? 'What you receive for each pledge amount.' : '펀딩 금액에 따라 돌려드릴 구성이에요.'}</p>
             {en && (
               <Notice tone="info" className="mt-4">
                 Checkout is in Korean, with Korean payment methods, and rewards ship within South Korea only.

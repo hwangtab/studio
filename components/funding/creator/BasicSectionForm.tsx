@@ -136,8 +136,8 @@ export function BasicSectionForm({ projectId, initial, earliestStartDate, readOn
       </Field>
       {lockedFields && (
         <p className="-mt-3 text-sm text-gray-600">
-          공개된 뒤에는 바꿀 수 없습니다 — 후원자가 이 주소로 프로젝트를 찾고, 모금 기간과 목표
-          금액은 후원자와의 약속입니다.
+          공개된 뒤에는 바꿀 수 없어요 — 후원자가 이 주소로 프로젝트를 찾고, 모금 기간과 목표
+          금액은 후원자와의 약속이에요.
         </p>
       )}
       <ImageUploadField
@@ -170,7 +170,7 @@ export function BasicSectionForm({ projectId, initial, earliestStartDate, readOn
           id="basic-start"
           label="시작일"
           required
-          hint={`심사에 시간이 걸립니다 — ${earliestStartDate}부터 고를 수 있습니다.`}
+          hint={`심사에 시간이 걸려요 — ${earliestStartDate}부터 고를 수 있어요.`}
         >
           <TextInput
             type="date"
@@ -181,7 +181,7 @@ export function BasicSectionForm({ projectId, initial, earliestStartDate, readOn
             required
           />
         </Field>
-        <Field id="basic-end" label="종료일" required hint={`모금 기간은 최대 ${CREATOR_LIMITS.maxDurationDays}일입니다.`}>
+        <Field id="basic-end" label="종료일" required hint={`모금 기간은 최대 ${CREATOR_LIMITS.maxDurationDays}일이에요.`}>
           <TextInput
             type="date"
             value={endAt}
@@ -196,7 +196,7 @@ export function BasicSectionForm({ projectId, initial, earliestStartDate, readOn
         <Button type="submit" disabled={readOnly || save.status === 'saving'}>
           {save.status === 'saving' ? '저장 중…' : '기본정보 저장'}
         </Button>
-        {save.status === 'success' && <span className="typo-caption text-green-600 dark:text-green-400">저장했습니다.</span>}
+        {save.status === 'success' && <span className="typo-caption text-green-600 dark:text-green-400">저장했어요.</span>}
         {save.status === 'error' && (
           <span role="alert" className="typo-caption text-red-600 dark:text-red-400">{save.message}</span>
         )}

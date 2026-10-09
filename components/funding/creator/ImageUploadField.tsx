@@ -33,12 +33,12 @@ export function ImageUploadField({ projectId, kind, value, onChange, disabled, l
       );
       const data = await res.json().catch(() => null);
       if (!res.ok || !data?.ok) {
-        setError(data?.message ?? '이미지를 올리지 못했습니다.');
+        setError(data?.message ?? '이미지를 올리지 못했어요.');
         return;
       }
       onChange(data.url);
     } catch {
-      setError('연결에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+      setError('연결에 실패했어요. 잠시 후 다시 시도해 주세요.');
     } finally {
       setBusy(false);
     }

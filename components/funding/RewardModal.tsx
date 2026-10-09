@@ -168,7 +168,7 @@ export default function RewardModal({ project, reward, checkout = false, remaini
               <ul className="typo-card-meta mt-6 space-y-1 border-t border-gray-200/70 pt-4 dark:border-gray-700/70">
                 <li>예상 전달: {reward.estimatedDelivery}</li>
                 <li>{stockLabel(left)}</li>
-                {reward.requiresShipping && <li>배송지를 입력받습니다.</li>}
+                {reward.requiresShipping && <li>배송지를 입력받아요.</li>}
               </ul>
             </div>
           ) : (

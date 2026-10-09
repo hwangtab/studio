@@ -176,7 +176,7 @@ const QuoteWizard = ({ kakaoUrl }: QuoteWizardProps) => {
               ))}
             </ul>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              실제 금액은 곡 상태와 작업량을 보고 상담에서 확정합니다. 견적 코드 <strong className="tabular-nums">{code}</strong>
+              실제 금액은 곡 상태와 작업량을 보고 상담에서 확정해요. 견적 코드 <strong className="tabular-nums">{code}</strong>
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Button asChild variant="kakao" shape="block" size="lg">
@@ -209,11 +209,11 @@ const QuoteWizard = ({ kakaoUrl }: QuoteWizardProps) => {
             <p className="text-sm text-gray-500 dark:text-gray-400" role="status">
               {copied
                 ? '요약을 복사했어요. 카카오톡 대화창에 붙여 넣어 보내 주세요.'
-                : '버튼을 누르면 위 답변과 견적 코드가 복사되고 카카오톡이 열립니다. 이름·연락처는 받지 않습니다.'}
+                : '버튼을 누르면 위 답변과 견적 코드가 복사되고 카카오톡이 열려요. 이름·연락처는 받지 않아요.'}
             </p>
           </Panel>
         ) : (
-          <p className="text-sm text-gray-500 dark:text-gray-400">질문에 답하시면 여기에 예상 비용이 바로 나옵니다.</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">질문에 답하시면 여기에 예상 비용이 바로 나와요.</p>
         )}
       </div>
     </div>

@@ -25,7 +25,7 @@ export default function PaymentLinkPage({ slug, itemName, itemAmount, vatAmount,
   const siteConfig = getSiteConfig('ko');
   const kakaoUrl = siteConfig.contact.kakaoUrl;
   const siteUrl = siteConfig.url;
-  const description = `${itemName} ${formatPriceAmount(totalAmount)}원(부가세 포함) — 카드·간편결제 또는 계좌 입금으로 결제합니다.`;
+  const description = `${itemName} ${formatPriceAmount(totalAmount)}원(부가세 포함) — 카드·간편결제 또는 계좌 입금으로 결제해요.`;
   return (
     <>
       <Head>

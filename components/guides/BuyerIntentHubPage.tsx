@@ -203,8 +203,8 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
         <Section variant="default">
           <SectionHeading
             icon={Sparkles}
-            title="이 가이드들이 도와줍니다"
-            subtitle="한 페이지에서 시작해 깊게 들어갈 수 있도록 단계별로 큐레이션했습니다."
+            title="이 가이드들이 도와줘요"
+            subtitle="한 페이지에서 시작해 깊게 들어갈 수 있도록 단계별로 큐레이션했어요."
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {relatedStories.map((story) => (
@@ -224,7 +224,7 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
         <Section variant="alternate">
           <SectionHeading
             title="추천 패키지"
-            subtitle="이 의도에 가장 맞는 패키지입니다. 상세는 가격 페이지에서 확인하세요."
+            subtitle="이 의도에 가장 맞는 패키지예요. 상세는 가격 페이지에서 확인하세요."
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             <PricingCard
@@ -283,7 +283,7 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
       <FAQSection
         items={faqItems}
         title="자주 묻는 질문"
-        subtitle="이 페이지의 핵심 질문 5가지를 한곳에 모았습니다."
+        subtitle="이 페이지의 핵심 질문 5가지를 한곳에 모았어요."
         variant="alternate"
       />
 
@@ -291,7 +291,7 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
         <ContactCTA
           locale={locale}
           title="시작할 준비가 되셨나요"
-          subtitle="카카오톡으로 가볍게 상담부터 시작할 수 있습니다."
+          subtitle="카카오톡으로 가볍게 상담부터 시작할 수 있어요."
           imageSrc={hub.hero.image}
           imageAlt={hub.hero.imageAlt}
           primaryButtonLabel={t('nav.contact')}

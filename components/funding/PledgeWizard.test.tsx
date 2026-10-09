@@ -120,7 +120,7 @@ it('배송 리워드는 배송지 입력이 보인다 — 받는 분은 기본�
   render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
   expect(screen.getByLabelText(/^주소\*$/)).toBeInTheDocument();
   expect(screen.queryByLabelText(/^받는 분\*$/)).toBeNull();
-  await userEvent.click(screen.getByLabelText('후원자가 아닌 다른 분이 받습니다'));
+  await userEvent.click(screen.getByLabelText('후원자가 아닌 다른 분이 받아요'));
   expect(screen.getByLabelText(/^받는 분\*$/)).toBeInTheDocument();
 });
 
@@ -155,7 +155,7 @@ describe('배송지', () => {
   it('다른 분이 받으면 그분의 이름·연락처로 보낸다', async () => {
     render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
     await fill();
-    await userEvent.click(screen.getByLabelText('후원자가 아닌 다른 분이 받습니다'));
+    await userEvent.click(screen.getByLabelText('후원자가 아닌 다른 분이 받아요'));
     await userEvent.type(screen.getByLabelText(/^받는 분\*$/), '박수령');
     await userEvent.type(screen.getByLabelText(/^받는 분 연락처\*$/), '010-3333-4444');
     await searchAddress();
@@ -177,7 +177,7 @@ describe('배송지', () => {
     mockPostcodeFails = true;
     render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
     await userEvent.click(screen.getByRole('button', { name: '주소 검색' }));
-    expect(await screen.findByText(/주소 검색을 불러오지 못했습니다/)).toBeInTheDocument();
+    expect(await screen.findByText(/주소 검색을 불러오지 못했어요/)).toBeInTheDocument();
     await userEvent.type(screen.getByLabelText(/^우편번호\*$/), '54321');
     await userEvent.type(screen.getByLabelText(/^주소\*$/), '부산시 어딘가');
     expect(screen.getByLabelText(/^주소\*$/)).toHaveValue('부산시 어딘가');
@@ -403,7 +403,7 @@ describe('후원자 명단', () => {
 
   it('메시지가 익명으로 올라간다고 알리고, 메시지를 써도 이름 표시는 저절로 켜지지 않는다', async () => {
     renderWizard();
-    expect(screen.getByText(/이름을 표시하지 않으면 .익명.으로 보입니다/)).toBeInTheDocument();
+    expect(screen.getByText(/이름을 표시하지 않으면 .익명.으로 보여요/)).toBeInTheDocument();
     await userEvent.type(screen.getByLabelText('응원 메시지'), '응원합니다');
     expect(screen.getByLabelText(/후원자 명단에 이름 표시/)).not.toBeChecked();
   });
@@ -415,7 +415,7 @@ describe('후원자 명단', () => {
     await userEvent.click(screen.getByLabelText(/후원자 명단에 이름 표시/));
     expect(screen.getByLabelText(/실명 \(홍길동\)/)).toBeChecked();
     await userEvent.click(screen.getByLabelText(/가린 이름 \(홍\*동\)/));
-    expect(screen.getByText(/이렇게 보입니다/).parentElement).toHaveTextContent('홍*동 “끝까지 함께”');
+    expect(screen.getByText(/이렇게 보여요/).parentElement).toHaveTextContent('홍*동 “끝까지 함께”');
   });
 
   it('고른 방식과 닉네임이 서버로 나간다', async () => {
@@ -471,7 +471,7 @@ it('추가 펀딩 칸에서 Enter로 바로 제출해도 서버에는 정규화�
 it('Enter 제출 뒤 입력 칸에는 실제로 청구될 정규화 값이 남는다', async () => {
   (global.fetch as jest.Mock).mockResolvedValue({
     ok: false, status: 400, headers: { get: () => 'application/json' },
-    json: async () => ({ ok: false, message: '펀딩 신청에 실패했습니다.' }),
+    json: async () => ({ ok: false, message: '펀딩 신청에 실패했어요.' }),
   });
   render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
   await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
@@ -479,7 +479,7 @@ it('Enter 제출 뒤 입력 칸에는 실제로 청구될 정규화 값이 남�
   await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
   const additionalInput = screen.getByLabelText(/추가 펀딩 금액/) as HTMLInputElement;
   await userEvent.type(additionalInput, '{selectall}5500{Enter}');
-  expect(await screen.findByRole('alert')).toHaveTextContent('펀딩 신청에 실패했습니다.');
+  expect(await screen.findByRole('alert')).toHaveTextContent('펀딩 신청에 실패했어요.');
   expect(additionalInput).toHaveValue(5000);
 });
 
@@ -505,7 +505,7 @@ it('전 리워드 품절이면 제출을 막고 이유를 밝힌다', async () =
   const { container } = render(<PledgeWizard project={project} initialRewardId={null} remaining={{ cd: 0, mail: 0 }} />);
   const submit = container.querySelector('button[type=submit]') as HTMLButtonElement;
   expect(submit).toBeDisabled();
-  expect(screen.getByRole('status')).toHaveTextContent('모든 리워드가 품절되었습니다');
+  expect(screen.getByRole('status')).toHaveTextContent('모든 리워드가 품절됐어요');
   // 폼 자체를 제출해도(Enter 등) 서버를 부르지 않는다.
   fireEvent.submit(submit.closest('form')!);
   await act(async () => { await Promise.resolve(); });
@@ -555,7 +555,7 @@ describe('결제를 시도한 선택 되살리기', () => {
   it('다시 들어오면 되살리되, 지금 남은 수량으로 자른다', async () => {
     save('cd', 4);
     render(<PledgeWizard project={project} initialRewardId={null} remaining={{ cd: 3, mail: null }} />);
-    expect(await screen.findByText('지난번 결제를 시도할 때 고른 리워드를 다시 담아 두었습니다.')).toBeInTheDocument();
+    expect(await screen.findByText('지난번 결제를 시도할 때 고른 리워드를 다시 담아 뒀어요.')).toBeInTheDocument();
     expect(screen.getByRole('radio', { name: /CD/ })).toBeChecked();
     expect(screen.getByLabelText(/^수량/)).toHaveValue(3);
   });
@@ -594,14 +594,14 @@ describe('폼을 여는 동안 재고가 줄면', () => {
     expect(qty.value).toBe('3');
 
     rerender(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 1, mail: null }} />);
-    expect(await screen.findByText('남은 수량이 바뀌어 1개로 조정했습니다.')).toBeInTheDocument();
+    expect(await screen.findByText('남은 수량이 바뀌어 1개로 조정했어요.')).toBeInTheDocument();
     expect(screen.getByLabelText(/^수량/)).toHaveValue(1);
   });
 
   it('고른 리워드가 품절되면 다른 리워드로 옮긴다', async () => {
     const { rerender } = render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
     rerender(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 0, mail: null }} />);
-    expect(await screen.findByText('CD이 품절되어 다른 리워드로 옮겼습니다.')).toBeInTheDocument();
+    expect(await screen.findByText('CD이 품절되어 다른 리워드로 옮겼어요.')).toBeInTheDocument();
     expect(screen.getByRole('radio', { name: /감사 메일/ })).toBeChecked();
   });
 });
@@ -685,7 +685,7 @@ describe('임시 저장', () => {
     await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
     await userEvent.type(screen.getByLabelText(/^응원 메시지$/), '화이팅');
     // 다른 분이 받는 경우라야 받는 분 두 칸이 저장된다 — 복원하면 체크도 다시 켜진다.
-    await userEvent.click(screen.getByLabelText('후원자가 아닌 다른 분이 받습니다'));
+    await userEvent.click(screen.getByLabelText('후원자가 아닌 다른 분이 받아요'));
     await userEvent.type(screen.getByLabelText(/^받는 분\*$/), '박수령');
     await userEvent.type(screen.getByLabelText(/^받는 분 연락처\*$/), '010-3333-4444');
     await searchAddress();
@@ -903,9 +903,9 @@ describe('폼 안의 결제위젯', () => {
   });
 
   it('위젯을 못 불러오면 이유와 다시 시도를 준다', async () => {
-    widgetError = '결제 모듈을 불러오지 못했습니다.';
+    widgetError = '결제 모듈을 불러오지 못했어요.';
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    expect(screen.getByRole('alert')).toHaveTextContent('결제 모듈을 불러오지 못했습니다.');
+    expect(screen.getByRole('alert')).toHaveTextContent('결제 모듈을 불러오지 못했어요.');
     await userEvent.click(screen.getByRole('button', { name: '다시 시도' }));
     expect(retryPayment).toHaveBeenCalled();
   });

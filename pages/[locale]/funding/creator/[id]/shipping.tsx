@@ -73,8 +73,8 @@ export default function CreatorShippingPage({ view, projectTitle, projectId }: P
         <section className="mt-8">
           {view.state === 'before_close' ? (
             <Panel className="typo-body">
-              배송지는 마감 뒤에 열립니다. 모금 중에는 후원자가 자유롭게 후원을 취소할 수 있어
-              주소가 그때그때 바뀔 수 있기 때문입니다.
+              배송지는 마감 뒤에 열려요. 모금 중에는 후원자가 자유롭게 후원을 취소할 수 있어
+              주소가 그때그때 바뀔 수 있기 때문이에요.
             </Panel>
           ) : (
             <ShippingTable projectId={projectId} rows={view.rows} />

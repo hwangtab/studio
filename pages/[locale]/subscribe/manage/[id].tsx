@@ -96,7 +96,7 @@ export default function SubscribeManagePage(props: ManageProps) {
   const [actionError, setActionError] = useState<string | null>(null);
 
   const handleCancel = async () => {
-    if (!window.confirm('정기결제를 해지하시겠습니까? 다음 결제일부터 청구가 멈추고, 이미 결제된 기간까지는 계속 이용하실 수 있습니다.')) return;
+    if (!window.confirm('정기결제를 해지할까요? 다음 결제일부터 청구가 멈추고, 이미 결제된 기간까지는 계속 이용하실 수 있어요.')) return;
     setCancelling(true);
     setActionError(null);
     try {
@@ -106,11 +106,11 @@ export default function SubscribeManagePage(props: ManageProps) {
         body: JSON.stringify({ id, token }),
       });
       const result = await response.json().catch(() => ({}));
-      if (!response.ok || !result.ok) throw new Error(result.message || '해지 처리에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+      if (!response.ok || !result.ok) throw new Error(result.message || '해지 처리에 실패했어요. 잠시 후 다시 시도해 주세요.');
       setCurrentStatus('cancelled');
       if (typeof result.endsAt === 'string') setCurrentEndsAt(result.endsAt);
     } catch (err: unknown) {
-      setActionError(err instanceof Error ? err.message : '해지 처리 중 오류가 발생했습니다.');
+      setActionError(err instanceof Error ? err.message : '해지 처리 중 오류가 발생했어요.');
     } finally {
       setCancelling(false);
     }
@@ -126,10 +126,10 @@ export default function SubscribeManagePage(props: ManageProps) {
         body: JSON.stringify({ id, token }),
       });
       const result = await response.json().catch(() => ({}));
-      if (!response.ok || !result.ok) throw new Error(result.message || '카드 변경 링크 발급에 실패했습니다.');
+      if (!response.ok || !result.ok) throw new Error(result.message || '카드 변경 링크 발급에 실패했어요.');
       await router.push(`/ko/subscribe/${id}?token=${encodeURIComponent(result.setupToken)}`);
     } catch (err: unknown) {
-      setActionError(err instanceof Error ? err.message : '카드 변경 처리 중 오류가 발생했습니다.');
+      setActionError(err instanceof Error ? err.message : '카드 변경 처리 중 오류가 발생했어요.');
       setChangingCard(false);
     }
   };
@@ -188,7 +188,7 @@ export default function SubscribeManagePage(props: ManageProps) {
 
           {currentStatus === 'cancelled' && (
             <Notice tone="neutral" className="mt-6">
-              해지가 접수되었습니다. {currentEndsAt ? `${formatKstDate(currentEndsAt)}까지는 계속 이용하실 수 있습니다.` : ''}
+              해지가 접수됐어요. {currentEndsAt ? `${formatKstDate(currentEndsAt)}까지는 계속 이용하실 수 있어요.` : ''}
             </Notice>
           )}
 

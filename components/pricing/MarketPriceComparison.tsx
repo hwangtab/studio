@@ -23,7 +23,7 @@ const MarketPriceComparison = () => {
     <div className="max-w-5xl mx-auto mt-12">
       <h3 className="typo-card-title text-center text-gray-900 dark:text-white mb-2">따로 맡기면 얼마가 드나요?</h3>
       <p className="typo-card-body text-center text-gray-700 dark:text-gray-300 mb-6">
-        서울 독립 스튜디오들이 공개한 요금표와 스튜디오 놀 가격을 나란히 놓았습니다.
+        서울 독립 스튜디오들이 공개한 요금표와 스튜디오 놀 가격을 나란히 놓았어요.
       </p>
       {/* 좁은 화면에서는 표가 가로로 스크롤된다 — 키보드로도 스크롤할 수 있게 포커스를 받고 이름을 단다. */}
       <div
@@ -70,13 +70,13 @@ const MarketPriceComparison = () => {
         </table>
       </div>
       <p className="mt-5 typo-card-body text-gray-800 dark:text-gray-200">
-        스튜디오 놀 싱글 번들은 {won(MARKET_COMPARISON_BUNDLE_PRICE)}, 부가세를 더해 {bundleWithVat.toLocaleString('en-US')}원입니다.
+        스튜디오 놀 싱글 번들은 {won(MARKET_COMPARISON_BUNDLE_PRICE)}, 부가세를 더해 {bundleWithVat.toLocaleString('en-US')}원이에요.
         보컬 녹음 1프로·믹싱·마스터링에 기획·유통 등록·국내외 홍보까지 들어 있고, 번들의 믹싱은 트랙 10개 이하
-        기준입니다.
+        기준이에요.
       </p>
       <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
-        시장 가격은 {MARKET_SURVEY_CHECKED_ON}에 각 업체의 공개 요금표에서 확인한 값입니다. 업체마다 포함 범위가 다르고
-        대부분 부가세 포함 여부를 적지 않아 대략의 범위로 봐 주세요. 스튜디오 놀 가격은 부가세 별도입니다.
+        시장 가격은 {MARKET_SURVEY_CHECKED_ON}에 각 업체의 공개 요금표에서 확인한 값이에요. 업체마다 포함 범위가 다르고
+        대부분 부가세 포함 여부를 적지 않아 대략의 범위로 봐 주세요. 스튜디오 놀 가격은 부가세 별도예요.
       </p>
     </div>
   );

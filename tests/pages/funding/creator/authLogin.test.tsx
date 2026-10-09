@@ -30,7 +30,7 @@ it('세션 API가 401이면 "만료됐거나 이미 사용됨" 문구를 보여�
   fireEvent.click(screen.getByRole('button', { name: /로그인하기/ }));
 
   await waitFor(() => {
-    expect(screen.getByText(/링크가 만료됐거나 이미 사용되었습니다/)).toBeInTheDocument();
+    expect(screen.getByText(/링크가 만료됐거나 이미 사용됐어요/)).toBeInTheDocument();
   });
   expect(screen.queryByText(/일시적인 오류/)).not.toBeInTheDocument();
 });
@@ -42,7 +42,7 @@ it('세션 API가 5xx면 "일시적인 오류" 문구를 보여준다(만료 문
   fireEvent.click(screen.getByRole('button', { name: /로그인하기/ }));
 
   await waitFor(() => {
-    expect(screen.getByText(/일시적인 오류로 로그인하지 못했습니다/)).toBeInTheDocument();
+    expect(screen.getByText(/일시적인 오류로 로그인하지 못했어요/)).toBeInTheDocument();
   });
-  expect(screen.queryByText(/만료됐거나 이미 사용되었습니다/)).not.toBeInTheDocument();
+  expect(screen.queryByText(/만료됐거나 이미 사용됐어요/)).not.toBeInTheDocument();
 });

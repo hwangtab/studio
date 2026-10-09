@@ -73,13 +73,13 @@ export default function CreatorAuth({ token }: Props) {
       // 반복해서 보게 되고 원인을 알 수 없다. 5xx는 "무엇이 잘못됐는지"를 지어내지 않고
       // 일시적인 오류라고만 알린다.
       if (res.status === 401) {
-        setError('링크가 만료됐거나 이미 사용되었습니다. 아래 링크로 다시 받아 주세요.');
+        setError('링크가 만료됐거나 이미 사용됐어요. 아래 링크로 다시 받아 주세요.');
       } else {
-        setError('일시적인 오류로 로그인하지 못했습니다. 잠시 후 새 링크로 다시 시도해 주세요.');
+        setError('일시적인 오류로 로그인하지 못했어요. 잠시 후 새 링크로 다시 시도해 주세요.');
       }
       setBusy(false);
     } catch {
-      setError('연결에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+      setError('연결에 실패했어요. 잠시 후 다시 시도해 주세요.');
       setBusy(false);
     }
   };
@@ -99,7 +99,7 @@ export default function CreatorAuth({ token }: Props) {
         <PageHeader
           align="center"
           title="개설자 로그인"
-          lead={token ? '메일로 받은 링크입니다. 아래 버튼을 눌러 로그인해 주세요.' : '로그인 링크가 없습니다. 이메일로 다시 받아 주세요.'}
+          lead={token ? '메일로 받은 링크예요. 아래 버튼을 눌러 로그인해 주세요.' : '로그인 링크가 없어요. 이메일로 다시 받아 주세요.'}
         />
         {token && (
           <>

@@ -29,7 +29,7 @@ export default function PledgePage({ project, initialRewardId, remaining }: Prop
           backHref={`/ko/funding/${project.slug}`}
           backLabel={project.title}
           title="펀딩하기"
-          lead="리워드를 담고 후원자 정보를 입력하면 결제로 이어집니다."
+          lead="리워드를 담고 후원자 정보를 입력하면 결제로 이어져요."
         />
         <PledgeWizard project={project} initialRewardId={initialRewardId} remaining={data?.remaining ?? remaining} />
         <div className="mt-12"><FundingTrustNotice /></div>

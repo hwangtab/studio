@@ -77,12 +77,12 @@ export default function BankDepositGuide({ amount, deadline, customerName, appli
           {BANK_ACCOUNT.accountNumber}
         </p>
         <Button type="button" size="lg" onClick={copy}>
-          {en ? (copied ? 'Copied' : 'Copy account number') : copied ? '복사했습니다' : '계좌번호 복사하기'}
+          {en ? (copied ? 'Copied' : 'Copy account number') : copied ? '복사했어요' : '계좌번호 복사하기'}
         </Button>
-        <output aria-live="polite" className="sr-only">{copied ? (en ? 'Account number copied' : '계좌번호를 복사했습니다') : ''}</output>
+        <output aria-live="polite" className="sr-only">{copied ? (en ? 'Account number copied' : '계좌번호를 복사했어요') : ''}</output>
         {copyFailed && (
           <p role="alert" className="mt-3 text-base text-red-700 dark:text-red-300">
-            {en ? 'Could not copy. Please copy the account number above by hand.' : '복사하지 못했습니다. 위 계좌번호를 보고 직접 적어 주세요.'}
+            {en ? 'Could not copy. Please copy the account number above by hand.' : '복사하지 못했어요. 위 계좌번호를 보고 직접 적어 주세요.'}
           </p>
         )}
       </div>
@@ -99,7 +99,7 @@ export default function BankDepositGuide({ amount, deadline, customerName, appli
           {en ? `Please send the transfer under the name of the ${applicantLabel}.` : `입금하실 때 보내는 분 이름은 ${applicantLabel} 성함으로 해 주세요.`}
         </p>
         <p className="mt-1 text-base text-gray-700 dark:text-gray-300">
-          {en ? `We match the transfer by the name “${customerName}” and the amount.` : `${customerName}님 성함과 금액으로 입금을 확인합니다.`}
+          {en ? `We match the transfer by the name “${customerName}” and the amount.` : `${customerName}님 성함과 금액으로 입금을 확인해요.`}
         </p>
       </Notice>
 
@@ -112,7 +112,7 @@ export default function BankDepositGuide({ amount, deadline, customerName, appli
       </div>
 
       <p className="mt-6 text-center text-lg text-gray-700 dark:text-gray-300">
-        {en ? 'We email you once the transfer is confirmed (within 1 business day).' : '입금이 확인되면 메일로 알려 드립니다(영업일 1일 이내).'}
+        {en ? 'We email you once the transfer is confirmed (within 1 business day).' : '입금이 확인되면 메일로 알려 드려요(영업일 1일 이내).'}
       </p>
     </section>
   );

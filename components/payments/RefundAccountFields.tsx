@@ -33,7 +33,7 @@ export default function RefundAccountFields({ idPrefix, value, onChange, intro, 
         {intro ??
           (en
             ? 'You paid by bank transfer, so we send the refund to the account you enter (within 3 business days of the request). A Korean bank account is required. The account number is stored encrypted.'
-            : '계좌로 입금하신 주문이라 적어 주신 계좌로 직접 보내 드립니다(접수일부터 3영업일 이내). 계좌번호는 암호화해 보관합니다.')}
+            : '계좌로 입금하신 주문이라 적어 주신 계좌로 직접 보내 드려요(접수일부터 3영업일 이내). 계좌번호는 암호화해 보관해요.')}
       </p>
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
         <Field id={`${idPrefix}-bank`} label={en ? 'Bank' : '은행'} required>

@@ -79,13 +79,13 @@ export default function FundingManagePage(p: Props) {
     setBusy(true); setError(null);
     try {
       const res = await fetch('/api/funding/cancel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ orderNo: p.orderNo, token: p.token }) });
-      if (!res.headers.get('content-type')?.includes('application/json')) { setError('서버 오류가 발생했습니다.'); return; }
+      if (!res.headers.get('content-type')?.includes('application/json')) { setError('서버 오류가 발생했어요.'); return; }
       const json = await res.json();
-      if (!res.ok) { setError(json.message ?? '취소하지 못했습니다.'); return; }
+      if (!res.ok) { setError(json.message ?? '취소하지 못했어요.'); return; }
       setDeposit(null);
       setStatus('expired');
-      setConfirmMessage('신청을 취소했습니다. 받은 돈이 없어 환불할 금액은 없습니다.');
-    } catch { setError('네트워크 오류가 발생했습니다.'); } finally { setBusy(false); }
+      setConfirmMessage('신청을 취소했어요. 받은 돈이 없어 환불할 금액은 없어요.');
+    } catch { setError('네트워크 오류가 발생했어요.'); } finally { setBusy(false); }
   };
 
   const cancel = async () => {
@@ -102,22 +102,22 @@ export default function FundingManagePage(p: Props) {
         body: JSON.stringify({ orderNo: p.orderNo, token: p.token, ...(viaAccount ? { refundAccount } : {}) }),
       });
       if (!res.headers.get('content-type')?.includes('application/json')) {
-        setError('서버 오류가 발생했습니다.');
+        setError('서버 오류가 발생했어요.');
         return;
       }
       const json = await res.json();
-      if (!res.ok) { setError(json.message ?? '취소에 실패했습니다.'); return; }
+      if (!res.ok) { setError(json.message ?? '취소에 실패했어요.'); return; }
       // 계좌 입금 후원 — 취소를 접수했고, 운영자가 적어 주신 계좌로 송금한다.
       if (json.mode === 'refund_requested') {
         setRefundRequested(true);
         setAccountFormOpen(false);
         setRefundAccount({ bankName: '', accountNumber: '', accountHolder: '' });
-        setConfirmMessage(`취소 요청을 접수했습니다. ${formatPriceAmount(json.refundAmount ?? p.totalAmount)}원을 적어 주신 계좌로 접수일부터 3영업일 이내에 보내 드립니다.`);
+        setConfirmMessage(`취소 요청을 접수했어요. ${formatPriceAmount(json.refundAmount ?? p.totalAmount)}원을 적어 주신 계좌로 접수일부터 3영업일 이내에 보내 드려요.`);
       } else {
         setStatus('refunded');
-        setConfirmMessage(`취소되었습니다. ${formatPriceAmount(json.refundAmount ?? p.totalAmount)}원이 환불됩니다.`);
+        setConfirmMessage(`취소됐어요. ${formatPriceAmount(json.refundAmount ?? p.totalAmount)}원이 환불돼요.`);
       }
-    } catch { setError('네트워크 오류가 발생했습니다.'); } finally { setBusy(false); }
+    } catch { setError('네트워크 오류가 발생했어요.'); } finally { setBusy(false); }
   };
   return (
     <>
@@ -129,7 +129,7 @@ export default function FundingManagePage(p: Props) {
             뒤로 링크(backHref)는 두지 않는다 — next/link라 이 화면의 이탈 규칙(아래 privatePaths
             주석)에 어긋난다. */}
         <p className="typo-card-meta">스튜디오 놀</p>
-        <PageHeader title="펀딩 확인" lead="펀딩 내역과 진행 상태를 확인하고, 조건이 되면 여기서 취소할 수 있습니다." />
+        <PageHeader title="펀딩 확인" lead="펀딩 내역과 진행 상태를 확인하고, 조건이 되면 여기서 취소할 수 있어요." />
 
         <div className="glass-card rounded-2xl p-6 sm:p-8">
           <div className="flex flex-wrap items-center gap-3">
@@ -142,7 +142,7 @@ export default function FundingManagePage(p: Props) {
           {deposit && <BankDepositGuide amount={deposit.amount} deadline={deposit.deadline} customerName={deposit.customerName} applicantLabel="신청하신 분" />}
           {!deposit && p.onlineBankTransfer && status === 'expired' && (
             <Panel variant="outline" className="mt-5 text-base">
-              이 계좌 입금 신청은 취소되었습니다. 이미 입금하셨다면 010-4255-7893 · hello@studionol.co.kr로 알려 주세요 — 확인한 뒤 펀딩을 확정해 드립니다.
+              이 계좌 입금 신청은 취소됐어요. 이미 입금하셨다면 010-4255-7893 · hello@studionol.co.kr로 알려 주세요 — 확인한 뒤 펀딩을 확정해 드려요.
             </Panel>
           )}
 
@@ -192,7 +192,7 @@ export default function FundingManagePage(p: Props) {
               서버가 결제 살아 있는 건에만 내려보내므로 여기서 상태를 다시 보지 않는다. */}
           {refundRequested && isLive && (
             <Panel variant="outline" className="mt-6 text-sm">
-              취소(환불)를 요청한 펀딩이라 음원 내려받기를 닫았습니다. 요청을 거두려면 010-4255-7893으로 연락 주세요.
+              취소(환불)를 요청한 펀딩이라 음원 내려받기를 닫았어요. 요청을 거두려면 010-4255-7893으로 연락 주세요.
             </Panel>
           )}
           {p.downloads.length > 0 && isLive && !refundRequested && (
@@ -219,7 +219,7 @@ export default function FundingManagePage(p: Props) {
               대신 다시 열어 달라고 말한다. */}
           {p.lookupFailed ? (
             <Panel variant="outline" className="mt-6">
-              <p className="typo-card-meta">지금은 후원 정보를 불러오지 못했습니다. 잠시 후 다시 열어 주세요. 문의: 010-4255-7893 · hello@studionol.co.kr</p>
+              <p className="typo-card-meta">지금은 후원 정보를 불러오지 못했어요. 잠시 후 다시 열어 주세요. 문의: 010-4255-7893 · hello@studionol.co.kr</p>
             </Panel>
           ) : deposit ? (
             <Button className="mt-8" variant="weak" fullWidth onClick={withdraw} disabled={busy}>입금 전 신청 취소</Button>
@@ -230,7 +230,7 @@ export default function FundingManagePage(p: Props) {
                 {p.refundVia === 'bank_account' && accountFormOpen && (
                   <Panel variant="outline" className="mb-4">
                     <p className="text-base font-semibold text-gray-900 dark:text-white">환불받을 계좌</p>
-                    <p className="typo-card-meta mt-1">계좌로 입금하신 펀딩이라 적어 주신 계좌로 직접 보내 드립니다. 계좌번호는 암호화해 보관합니다.</p>
+                    <p className="typo-card-meta mt-1">계좌로 입금하신 펀딩이라 적어 주신 계좌로 직접 보내 드려요. 계좌번호는 암호화해 보관해요.</p>
                     <div className="mt-3 grid gap-3 sm:grid-cols-2">
                       <Field id="refund-bank" label="은행" required>
                         <TextInput required maxLength={REFUND_ACCOUNT_LIMITS.bankName} value={refundAccount.bankName}

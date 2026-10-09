@@ -128,7 +128,7 @@ const TAB_LABEL: Record<Tab, string> = {
 };
 
 /** 이탈 시 잃는 것을 구체적으로 말한다 — beforeunload와 routeChangeStart 양쪽에서 같은 문구를 쓴다. */
-const UNSAVED_CHANGES_MESSAGE = '저장하지 않은 변경이 있습니다. 지금 나가면 그 내용이 사라집니다. 계속하시겠습니까?';
+const UNSAVED_CHANGES_MESSAGE = '저장하지 않은 변경이 있어요. 지금 나가면 그 내용이 사라져요. 계속할까요?';
 
 export default function CreatorProjectEditor({
   project: initial, earliestStartDate, nameLocked: initialNameLocked, payout: initialPayout, stats,
@@ -422,7 +422,7 @@ export default function CreatorProjectEditor({
               {submit.status === 'saving' ? '신청 중…' : '심사 신청'}
             </Button>
             {submit.status === 'success' && (
-              <span className="typo-caption text-green-600 dark:text-green-400">심사를 신청했습니다.</span>
+              <span className="typo-caption text-green-600 dark:text-green-400">심사를 신청했어요.</span>
             )}
             {submit.status === 'error' && (
               <span role="alert" className="typo-caption text-red-600 dark:text-red-400">{submit.message}</span>
@@ -447,7 +447,7 @@ export default function CreatorProjectEditor({
               )}
               {withdraw.status === 'success' && (
                 <span className="typo-caption text-green-600 dark:text-green-400">
-                  심사 신청을 철회했습니다. 다시 작성한 뒤 제출해 주세요.
+                  심사 신청을 철회했어요. 다시 작성한 뒤 제출해 주세요.
                 </span>
               )}
               {withdraw.status === 'error' && (

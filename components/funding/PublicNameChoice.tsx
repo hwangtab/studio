@@ -79,7 +79,7 @@ export default function PublicNameChoice({ customerName, style, nickname, onStyl
           끊겨 "홍*" / "동"처럼 이름이 두 줄로 갈렸다(2026-09-26 모바일 실측). 라벨을 윗줄로
           떼고, 이름은 줄을 바꾸지 않으며, 한글 줄바꿈은 어절 단위(break-keep)로 한다. */}
       <div className="mt-3 text-sm" aria-live="polite">
-        <p className="typo-card-meta">이렇게 보입니다</p>
+        <p className="typo-card-meta">이렇게 보여요</p>
         <p className="mt-1 break-keep text-gray-600 dark:text-gray-300">
           {shown ? (
             <span className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">{shown}</span>

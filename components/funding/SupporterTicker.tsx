@@ -105,7 +105,7 @@ export default function SupporterTicker({ messages, pending = false, lang = 'ko'
         <div className="glass-card mt-4 flex h-40 flex-col justify-center gap-3 overflow-hidden rounded-2xl p-6 md:h-44 md:p-8">
           <div className="h-7 w-4/5 animate-pulse rounded-lg bg-gray-200/80 motion-reduce:animate-none dark:bg-gray-700/60 md:h-8" />
           <div className="h-7 w-2/5 animate-pulse rounded-lg bg-gray-200/80 motion-reduce:animate-none dark:bg-gray-700/60 md:h-8" />
-          <span className="sr-only">{en ? 'Loading messages of support.' : '응원 메시지를 불러오는 중입니다.'}</span>
+          <span className="sr-only">{en ? 'Loading messages of support.' : '응원 메시지를 불러오는 중이에요.'}</span>
         </div>
       </section>
     );

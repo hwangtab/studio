@@ -17,19 +17,19 @@ import { ResultCard } from '../../../components/ui/ResultCard';
  * 자주 보는 것만 적어 둔다.
  */
 const FAIL_MESSAGES: Record<string, string> = {
-  PAY_PROCESS_CANCELED: '결제를 취소하셨습니다.',
-  PAY_PROCESS_ABORTED: '결제가 완료되기 전에 창이 닫혔습니다.',
-  USER_CANCEL: '결제를 취소하셨습니다.',
-  REJECT_CARD_COMPANY: '카드사에서 결제를 거절했습니다. 다른 카드나 결제수단으로 시도해 주세요.',
+  PAY_PROCESS_CANCELED: '결제를 취소하셨어요.',
+  PAY_PROCESS_ABORTED: '결제가 완료되기 전에 창이 닫혔어요.',
+  USER_CANCEL: '결제를 취소하셨어요.',
+  REJECT_CARD_COMPANY: '카드사에서 결제를 거절했어요. 다른 카드나 결제수단으로 시도해 주세요.',
   INVALID_CARD_EXPIRATION: '카드 유효기간을 다시 확인해 주세요.',
-  INVALID_STOPPED_CARD: '정지된 카드입니다. 다른 결제수단으로 시도해 주세요.',
-  EXCEED_MAX_DAILY_PAYMENT_COUNT: '하루 결제 가능 횟수를 초과했습니다. 내일 다시 시도하거나 다른 결제수단을 이용해 주세요.',
-  EXCEED_MAX_PAYMENT_AMOUNT: '결제 한도를 초과했습니다. 카드사에 문의하거나 다른 결제수단을 이용해 주세요.',
-  NOT_SUPPORTED_INSTALLMENT_PLAN_CARD_OR_MERCHANT: '이 카드로는 선택하신 할부 개월 수를 쓸 수 없습니다.',
+  INVALID_STOPPED_CARD: '정지된 카드예요. 다른 결제수단으로 시도해 주세요.',
+  EXCEED_MAX_DAILY_PAYMENT_COUNT: '하루 결제 가능 횟수를 초과했어요. 내일 다시 시도하거나 다른 결제수단을 이용해 주세요.',
+  EXCEED_MAX_PAYMENT_AMOUNT: '결제 한도를 초과했어요. 카드사에 문의하거나 다른 결제수단을 이용해 주세요.',
+  NOT_SUPPORTED_INSTALLMENT_PLAN_CARD_OR_MERCHANT: '이 카드로는 선택하신 할부 개월 수를 쓸 수 없어요.',
   INVALID_CARD_NUMBER: '카드번호를 다시 확인해 주세요.',
-  NOT_AVAILABLE_BANK: '은행 서비스 시간이 아닙니다. 잠시 후 다시 시도해 주세요.',
+  NOT_AVAILABLE_BANK: '은행 서비스 시간이 아니에요. 잠시 후 다시 시도해 주세요.',
 };
-const GENERIC_MESSAGE = '결제창이 닫혔거나 결제가 거절되었습니다.';
+const GENERIC_MESSAGE = '결제창이 닫혔거나 결제가 거절됐어요.';
 /** 화면에 그대로 보여도 되는 코드 형태. 표에 없는 코드도 문의할 때 쓸 수 있게 보여준다. */
 /**
  * 화면에 그대로 띄워도 되는 주문번호 형태 — 토스가 실패 URL에 `orderId`로 실어 보낸다.
@@ -62,7 +62,7 @@ export default function FundingFailPage({ slug, code, message, orderNo }: Props)
         <p className="typo-card-meta mb-4 text-center">스튜디오 놀</p>
         <ResultCard
           tone="error"
-          title="결제가 완료되지 않았습니다"
+          title="결제가 완료되지 않았어요"
           description={message}
           actions={
             <>
@@ -88,7 +88,7 @@ export default function FundingFailPage({ slug, code, message, orderNo }: Props)
         >
           <div className="text-center">
             <p className="typo-card-meta mx-auto max-w-md">
-              결제가 이뤄지지 않았으므로 청구되지 않습니다. 15분 뒤 신청이 자동 해제되며 다시 펀딩할 수 있습니다.
+              결제가 이뤄지지 않았으므로 청구되지 않아요. 15분 뒤 신청이 자동 해제되며 다시 펀딩할 수 있어요.
             </p>
             {/* 정본 연락처를 상시 표기한다 — 예전에는 쿼리의 message가 주 안내문이라, 그 자리에
                 가짜 연락처를 넣으면 화면에 우리 번호가 하나도 없었다. */}

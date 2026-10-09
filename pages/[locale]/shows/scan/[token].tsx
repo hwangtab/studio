@@ -86,7 +86,7 @@ export default function ShowScanPage({ token, showTitle, showtimeLabel, linkLabe
           body: JSON.stringify({ token, code: raw, action }),
         });
         if (r.status === 401) {
-          setOutcome({ kind: 'error', message: '스캔 링크가 만료됐거나 폐기됐습니다. 관리자에게 새 링크를 요청하세요.' });
+          setOutcome({ kind: 'error', message: '스캔 링크가 만료됐거나 폐기됐어요. 관리자에게 새 링크를 요청하세요.' });
           return;
         }
         const j = await r.json();
@@ -99,7 +99,7 @@ export default function ShowScanPage({ token, showTitle, showtimeLabel, linkLabe
           case 'already_checked_in': setOutcome({ kind: 'dup' }); break;
           case 'wrong_showtime': setOutcome({ kind: 'wrong' }); break;
           case 'undone': setOutcome(null); break;
-          case 'undo_rejected': setOutcome({ kind: 'error', message: '입장 취소는 직접 스캔한 뒤 2분 안에만 할 수 있습니다.' }); break;
+          case 'undo_rejected': setOutcome({ kind: 'error', message: '입장 취소는 직접 스캔한 뒤 2분 안에만 할 수 있어요.' }); break;
           default: setOutcome({ kind: 'invalid' });
         }
       } catch {
@@ -143,7 +143,7 @@ export default function ShowScanPage({ token, showTitle, showtimeLabel, linkLabe
         };
         tick();
       } catch {
-        setCameraError('카메라를 열 수 없습니다. 권한을 확인하거나 아래에 코드를 직접 입력하세요.');
+        setCameraError('카메라를 열 수 없어요. 권한을 확인하거나 아래에 코드를 직접 입력하세요.');
         setCameraOn(false);
       }
     })();
@@ -157,8 +157,8 @@ export default function ShowScanPage({ token, showTitle, showtimeLabel, linkLabe
   const panel =
     outcome?.kind === 'ok' ? { cls: 'bg-green-600 text-white', title: '입장 확인', sub: outcome.entryNumber ? `입장 번호 ${outcome.entryNumber}` : '입장 번호 없음' }
     : outcome?.kind === 'dup' ? { cls: 'bg-amber-500 text-gray-900', title: '이미 입장한 티켓', sub: '다시 입장시키지 마세요' }
-    : outcome?.kind === 'wrong' ? { cls: 'bg-red-700 text-white', title: '다른 회차 티켓', sub: '이 회차의 티켓이 아닙니다' }
-    : outcome?.kind === 'invalid' ? { cls: 'bg-red-700 text-white', title: '유효하지 않은 티켓', sub: '환불·취소됐거나 없는 코드입니다' }
+    : outcome?.kind === 'wrong' ? { cls: 'bg-red-700 text-white', title: '다른 회차 티켓', sub: '이 회차의 티켓이 아니에요' }
+    : outcome?.kind === 'invalid' ? { cls: 'bg-red-700 text-white', title: '유효하지 않은 티켓', sub: '환불·취소됐거나 없는 코드예요' }
     : outcome?.kind === 'error' ? { cls: 'bg-gray-800 text-white', title: '확인 실패', sub: outcome.message }
     : null;
 
@@ -192,7 +192,7 @@ export default function ShowScanPage({ token, showTitle, showtimeLabel, linkLabe
           )}
           {!canScan && (
             <p className="text-sm text-gray-700 bg-white rounded-2xl shadow-sm p-4">
-              이 브라우저는 카메라 QR 스캔을 지원하지 않습니다. 티켓의 코드(예: SNT1:XXXXXXXXXXXXXXXX)를 아래에 입력해 주세요.
+              이 브라우저는 카메라 QR 스캔을 지원하지 않아요. 티켓의 코드(예: SNT1:XXXXXXXXXXXXXXXX)를 아래에 입력해 주세요.
             </p>
           )}
 

@@ -42,7 +42,7 @@ describe('manage 화면 — 셀프 취소 직후', () => {
     }) as unknown as typeof fetch;
     render(<FundingManagePage {...baseProps} />);
     await userEvent.click(screen.getByRole('button', { name: /펀딩 취소/ }));
-    await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('취소되었습니다'));
+    await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('취소됐어요'));
     expect(screen.queryByRole('button', { name: /내려받기/ })).toBeNull();
     expect(screen.queryByTestId('listing-editor')).toBeNull();
   });

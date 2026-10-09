@@ -127,7 +127,7 @@ describe('정산 정보 구획 — 등록 상태 표시', () => {
   it('미등록이면 아직 없다고 말한다', () => {
     renderEditor(APPROVED_PROJECT);
     openPayoutTab();
-    expect(screen.getByText('아직 등록된 계좌가 없습니다', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText('아직 등록된 계좌가 없어요', { exact: false })).toBeInTheDocument();
   });
 
   it('등록됐으면 뒤 4자리만 보여 준다 — 입력 칸은 비어 있다', () => {
@@ -161,7 +161,7 @@ describe('정산 정보 구획 — 저장', () => {
     expect(() => triggerRouteChangeStart()).toThrow();
 
     fireEvent.click(screen.getByRole('button', { name: '정산 정보 저장' }));
-    await waitFor(() => expect(screen.getByText('저장했습니다.')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
 
     const [url, init] = fetchMock.mock.calls[0];
     expect(url).toBe('/api/funding/creator/projects/proj-1');
@@ -203,7 +203,7 @@ describe('정산 정보 구획 — 저장', () => {
     fireEvent.change(accountField(), { target: { value: '123-456-789012' } });
 
     resolveFetch({ ok: true, json: async () => ({ ok: true }) });
-    await waitFor(() => expect(screen.getByText('저장했습니다.')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
 
     expect(accountField()).toHaveValue('123-456-789012');
     // 보낸 값과 지금 값이 다르므로 dirty는 열린 채 남아야 한다.
@@ -238,7 +238,7 @@ describe('정산 정보 구획 — 주민등록번호는 원천징수 대상만'
     expect(rrnField()).toHaveAttribute('inputmode', 'numeric');
     // 법적 근거를 화면이 말한다 — 근거 없는 수집으로 읽히면 안 된다.
     expect(screen.getByText('지급명세서', { exact: false })).toBeInTheDocument();
-    expect(screen.getByText('주민등록번호가 아직 등록되어 있지 않습니다', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText('주민등록번호가 아직 등록되어 있지 않아요', { exact: false })).toBeInTheDocument();
   });
 
   it('등록 상태는 등록됨/미등록뿐이다 — 값은 어떤 조각도 오지 않는다', () => {
@@ -247,7 +247,7 @@ describe('정산 정보 구획 — 주민등록번호는 원천징수 대상만'
     });
     openPayoutTab();
 
-    expect(screen.getByText('주민등록번호가 등록되어 있습니다', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText('주민등록번호가 등록되어 있어요', { exact: false })).toBeInTheDocument();
     expect(rrnField()).toHaveValue('');
   });
 
@@ -259,7 +259,7 @@ describe('정산 정보 구획 — 주민등록번호는 원천징수 대상만'
     fireEvent.change(taxField(), { target: { value: 'invoice' } });
 
     expect(queryRrnField()).toBeNull();
-    expect(screen.getByText('이미 등록된 번호도 함께 지워집니다', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText('이미 등록된 번호도 함께 지워져요', { exact: false })).toBeInTheDocument();
   });
 
   /**
@@ -274,14 +274,14 @@ describe('정산 정보 구획 — 주민등록번호는 원천징수 대상만'
     });
     openPayoutTab();
 
-    expect(screen.getByText('등록된 번호는 그대로 보관됩니다', { exact: false })).toBeInTheDocument();
-    expect(screen.queryByText('이미 등록된 번호도 지워집니다', { exact: false })).toBeNull();
+    expect(screen.getByText('등록된 번호는 그대로 보관돼요', { exact: false })).toBeInTheDocument();
+    expect(screen.queryByText('이미 등록된 번호도 지워져요', { exact: false })).toBeNull();
 
     // 사업자로 바꿔도 같은 사실을 말한다 — 이쪽 문단이 개설자가 실제로 보게 되는 자리다.
     fireEvent.change(taxField(), { target: { value: 'invoice' } });
     expect(queryRrnField()).toBeNull();
-    expect(screen.getByText('등록된 번호는 그대로 보관됩니다', { exact: false })).toBeInTheDocument();
-    expect(screen.queryByText('이미 등록된 번호도 함께 지워집니다', { exact: false })).toBeNull();
+    expect(screen.getByText('등록된 번호는 그대로 보관돼요', { exact: false })).toBeInTheDocument();
+    expect(screen.queryByText('이미 등록된 번호도 함께 지워져요', { exact: false })).toBeNull();
   });
 
   it('사업자로 저장했는데 서버가 보관했다고 답하면 등록 표시가 유지된다', async () => {
@@ -299,11 +299,11 @@ describe('정산 정보 구획 — 주민등록번호는 원천징수 대상만'
     fireEvent.change(accountField(), { target: { value: '123-456-789012' } });
     fireEvent.change(holderField(), { target: { value: '황경하' } });
     fireEvent.click(screen.getByRole('button', { name: '정산 정보 저장' }));
-    await waitFor(() => expect(screen.getByText('저장했습니다.')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
 
     // 다시 원천징수로 돌려 보면 등록 상태가 살아 있다 — 지워졌다고 표시했다면 미등록이 된다.
     fireEvent.change(taxField(), { target: { value: 'withholding' } });
-    expect(screen.getByText('주민등록번호가 등록되어 있습니다', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText('주민등록번호가 등록되어 있어요', { exact: false })).toBeInTheDocument();
   });
 
   it('사업자로 저장하면 주민등록번호 칸을 빈 문자열로 보낸다 — 키는 실리고 값은 비어 있다', async () => {
@@ -318,7 +318,7 @@ describe('정산 정보 구획 — 주민등록번호는 원천징수 대상만'
     fireEvent.change(accountField(), { target: { value: '123-456-789012' } });
     fireEvent.change(holderField(), { target: { value: '황경하' } });
     fireEvent.click(screen.getByRole('button', { name: '정산 정보 저장' }));
-    await waitFor(() => expect(screen.getByText('저장했습니다.')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
 
     const body = JSON.parse((fetchMock.mock.calls[0][1] as { body: string }).body);
     expect(body.value.residentNumber).toBe('');
@@ -339,12 +339,12 @@ describe('정산 정보 구획 — 주민등록번호는 원천징수 대상만'
     expect(() => triggerRouteChangeStart()).toThrow();
 
     fireEvent.click(screen.getByRole('button', { name: '정산 정보 저장' }));
-    await waitFor(() => expect(screen.getByText('저장했습니다.')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
 
     expect(rrnField()).toHaveValue('');
     await waitFor(() => expect(() => triggerRouteChangeStart()).not.toThrow());
     // 등록 표시가 곧바로 바뀐다 — 바뀌는 것은 불리언 하나다.
-    expect(screen.getByText('주민등록번호가 등록되어 있습니다', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText('주민등록번호가 등록되어 있어요', { exact: false })).toBeInTheDocument();
   });
 
   it('저장이 도는 동안 이어서 친 주민등록번호는 응답이 지우지 않는다', async () => {
@@ -364,7 +364,7 @@ describe('정산 정보 구획 — 주민등록번호는 원천징수 대상만'
 
     fireEvent.change(rrnField(), { target: { value: '900101-1234567' } });
     resolveFetch({ ok: true, json: async () => ({ ok: true }) });
-    await waitFor(() => expect(screen.getByText('저장했습니다.')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
 
     expect(rrnField()).toHaveValue('900101-1234567');
     // 보낸 값과 지금 값이 다르므로 이탈 가드는 열린 채 남는다.
@@ -404,7 +404,7 @@ describe('정산 정보 구획 — 주민등록번호는 원천징수 대상만'
     fireEvent.change(holderField(), { target: { value: '황경하' } });
     fireEvent.change(rrnField(), { target: { value: '900101-1234567' } });
     fireEvent.click(screen.getByRole('button', { name: '정산 정보 저장' }));
-    await waitFor(() => expect(screen.getByText('저장했습니다.')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
 
     // 값 자체도, 뒤 7자리·앞 6자리 같은 조각도 남지 않는다.
     expect(document.body.innerHTML).not.toContain('1234567');

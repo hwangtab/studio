@@ -230,7 +230,7 @@ export default function FundingProjectPage({ project, initialState, initialStatu
         <FAQSection
           items={FUNDING_PROJECT_FAQ_ITEMS}
           title="자주 묻는 질문"
-          subtitle="후원 결제·취소·리워드에 관해 자주 묻는 질문입니다."
+          subtitle="후원 결제·취소·리워드에 관해 자주 묻는 질문이에요."
         />
       )}
 

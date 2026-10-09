@@ -158,7 +158,7 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved, onDir
 
   const confirmAndRemove = (rewardId: string, title: string) => {
     // 되돌릴 경로가 없다 — 한 번의 오클릭으로 지워지면 안 된다(2026-09-17 리뷰 지적).
-    if (!window.confirm(`"${title}" 리워드를 삭제할까요? 되돌릴 수 없습니다.`)) return;
+    if (!window.confirm(`"${title}" 리워드를 삭제할까요? 되돌릴 수 없어요.`)) return;
     void remove(rewardId);
   };
 
@@ -166,7 +166,7 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved, onDir
     <div className="flex flex-col gap-6">
       <ul className="flex flex-col gap-3">
         {rewards.length === 0 && (
-          <p className="typo-body text-gray-500 dark:text-gray-400">아직 등록한 리워드가 없습니다.</p>
+          <p className="typo-body text-gray-500 dark:text-gray-400">아직 등록한 리워드가 없어요.</p>
         )}
         {rewards.map((r) => (
           <li key={r.rewardId} className="glass-card rounded-2xl p-4">
@@ -212,7 +212,7 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved, onDir
             id="reward-id"
             label="리워드 주소(id)"
             required
-            hint={locked ? '공개된 리워드는 주소를 바꿀 수 없습니다.' : '영문 소문자·숫자·하이픈만'}
+            hint={locked ? '공개된 리워드는 주소를 바꿀 수 없어요.' : '영문 소문자·숫자·하이픈만'}
           >
             <TextInput
               value={form.rewardId}
@@ -244,7 +244,7 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved, onDir
             id="reward-amount"
             label="금액"
             required
-            hint={locked ? '공개된 리워드는 금액을 바꿀 수 없습니다.' : `${CREATOR_LIMITS.amountStep.toLocaleString()}원 단위`}
+            hint={locked ? '공개된 리워드는 금액을 바꿀 수 없어요.' : `${CREATOR_LIMITS.amountStep.toLocaleString()}원 단위`}
           >
             <TextInput
               type="number"
@@ -269,7 +269,7 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved, onDir
               id="reward-quantity"
               label="수량"
               required
-              hint={locked ? '공개된 리워드는 수량을 늘릴 수만 있습니다.' : undefined}
+              hint={locked ? '공개된 리워드는 수량을 늘릴 수만 있어요.' : undefined}
             >
               <TextInput
                 type="number"
@@ -286,12 +286,12 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved, onDir
             checked={form.requiresShipping}
             onChange={(e) => { setForm((f) => ({ ...f, requiresShipping: e.target.checked })); clearSaveStatus(); }}
             disabled={readOnly || locked}
-            label="배송이 필요합니다"
+            label="배송이 필요해요"
           />
           {locked && (
             <Notice tone="warning">
-              공개된 리워드는 주소·금액·수량 제한 여부·배송 여부를 바꿀 수 없습니다(수량은 늘릴 수만
-              있습니다). 그 밖의 변경은 새 리워드를 추가해 주세요.
+              공개된 리워드는 주소·금액·수량 제한 여부·배송 여부를 바꿀 수 없어요(수량은 늘릴 수만
+              있어요). 그 밖의 변경은 새 리워드를 추가해 주세요.
             </Notice>
           )}
           <Field id="reward-delivery" label="예상 전달 시기" required hint="예: 2026년 12월">
