@@ -84,7 +84,7 @@ const InlineBookingCallout = ({ message, locale }: InlineBookingCalloutProps) =>
         </ul>
       )}
 
-      <Button asChild variant="kakao" shape="pill" size="md">
+      <Button asChild variant="kakao" shape="block" size="md">
         <a
           href={siteConfig.contact.kakaoUrl}
           target="_blank"

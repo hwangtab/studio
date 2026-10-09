@@ -186,7 +186,7 @@ const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component =
         </Panel>
 
         <div className="md:col-span-2 flex flex-col items-center gap-3">
-          <Button asChild variant="kakao" shape="pill" size="lg">
+          <Button asChild variant="kakao" shape="block" size="lg">
             <a
               href={kakaoUrl}
               target="_blank"

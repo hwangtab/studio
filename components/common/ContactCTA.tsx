@@ -122,7 +122,7 @@ const ContactCTA = ({
                     />
                     <div className="flex flex-col sm:flex-row gap-4">
                         {isKorean && (
-                            <Button asChild variant="secondary" shape="pill" size="lg">
+                            <Button asChild variant="secondary" shape="block" size="lg">
                                 <Link
                                     href={secondaryLink}
                                     prefetch={false}
@@ -136,7 +136,7 @@ const ContactCTA = ({
                         {isKorean ? (
                             /* 목적지가 카카오톡일 때만 옐로. 비-ko는 /contact 폼으로 가므로
                                아래 Link가 primary 보라를 유지한다(노란 버튼 = 카카오톡 규칙). */
-                            <Button asChild variant="kakao" shape="pill" size="lg">
+                            <Button asChild variant="kakao" shape="block" size="lg">
                                 <a
                                     href={primaryHref}
                                     target="_blank"
@@ -149,7 +149,7 @@ const ContactCTA = ({
                                 </a>
                             </Button>
                         ) : (
-                            <Button asChild variant="solid" shape="pill" size="lg">
+                            <Button asChild variant="solid" shape="block" size="lg">
                                 <Link
                                     href={primaryHref}
                                     prefetch={false}

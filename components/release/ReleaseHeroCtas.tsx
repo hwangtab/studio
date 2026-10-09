@@ -31,7 +31,7 @@ const ReleaseHeroCtas = ({
     {/* ko의 1차 목적지는 카카오톡이라 옐로(노란 버튼 = 카카오톡 규칙), 비-ko는 /contact 폼이라
         옐로를 쓰면 안 되므로 흰 버튼(secondary)을 유지한다. */}
     {locale === 'ko' ? (
-      <Button asChild variant="kakao" shape="pill" className={HERO_CTA_ON_IMAGE}>
+      <Button asChild variant="kakao" shape="block" className={HERO_CTA_ON_IMAGE}>
         <a
           href={kakaoUrl}
           target="_blank"
@@ -48,7 +48,7 @@ const ReleaseHeroCtas = ({
         </a>
       </Button>
     ) : (
-      <Button asChild variant="secondary" shape="pill" className={`${HERO_CTA} border-transparent text-primary-dark hover:text-primary-dark`}>
+      <Button asChild variant="secondary" shape="block" className={`${HERO_CTA} border-transparent text-primary-dark hover:text-primary-dark`}>
         <Link
           href={`/${locale}/contact`}
           prefetch={false}
@@ -68,7 +68,7 @@ const ReleaseHeroCtas = ({
     {/* 2차는 홈 히어로와 동일 사유로 강등 — 1차가 옐로가 된 이상 솔리드 보라를 두면
         어두운 히어로 위에서 2차가 더 튀어 위계가 뒤집힌다. scrim variant가 그 배색이다. */}
     {secondaryHref && secondaryLabel ? (
-      <Button asChild variant="scrim" shape="pill" className={HERO_CTA}>
+      <Button asChild variant="scrim" shape="block" className={HERO_CTA}>
         <Link href={secondaryHref} prefetch={false}>
           {secondaryLeadingIcon}
           {secondaryLabel}

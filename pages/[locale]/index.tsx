@@ -135,7 +135,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
                 채팅방(앱이 없으면 설치 유도)에 떨어지므로 /contact 폼으로 가른다.
                 옐로도 함께 내린다 — 노란 버튼 = 카카오톡 규칙은 양방향이다. */}
             {locale === 'ko' ? (
-              <Button asChild variant="kakao" shape="pill" className={HERO_CTA_ON_IMAGE}>
+              <Button asChild variant="kakao" shape="block" className={HERO_CTA_ON_IMAGE}>
               <a
                 href={kakaoUrl}
                 target="_blank"
@@ -152,7 +152,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
               </a>
               </Button>
             ) : (
-              <Button asChild variant="inverse" shape="pill" className={HERO_CTA_ON_IMAGE}>
+              <Button asChild variant="inverse" shape="block" className={HERO_CTA_ON_IMAGE}>
               <Link
                 href={getLink('/contact')}
                 prefetch={false}
@@ -176,7 +176,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
                 시각적 2등). 1차를 카카오 옐로로 올리고 2차는 어두운 스크림 아웃라인으로
                 내린다. 흰 틴트(bg-white/*) 대신 bg-black/30을 쓰는 이유는 HeaderActions와
                 동일 — 흰 틴트는 배경을 밝혀 흰 글씨 대비를 오히려 떨어뜨린다. */}
-            <Button asChild variant="scrim" shape="pill" className={HERO_CTA}>
+            <Button asChild variant="scrim" shape="block" className={HERO_CTA}>
             <Link
               href={getLink(heroContent.cta.secondaryLink)}
               prefetch={false}

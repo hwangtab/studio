@@ -179,7 +179,7 @@ const QuoteWizard = ({ kakaoUrl }: QuoteWizardProps) => {
               실제 금액은 곡 상태와 작업량을 보고 상담에서 확정합니다. 견적 코드 <strong className="tabular-nums">{code}</strong>
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
-              <Button asChild variant="kakao" shape="pill" size="lg">
+              <Button asChild variant="kakao" shape="block" size="lg">
                 <a
                   href={kakaoUrl}
                   target="_blank"
@@ -192,7 +192,7 @@ const QuoteWizard = ({ kakaoUrl }: QuoteWizardProps) => {
                 </a>
               </Button>
               {est.bookingHref && (
-                <Button asChild variant="weak" shape="pill" size="lg">
+                <Button asChild variant="weak" shape="block" size="lg">
                   <Link
                     href={est.bookingHref}
                     prefetch={false}

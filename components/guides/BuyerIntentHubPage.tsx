@@ -150,13 +150,13 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
         overlayGradient="from-black/55 via-black/30 to-black/45"
         ctaButtons={
           <>
-            <Button asChild variant="secondary" shape="pill" className={`${HERO_CTA} border-transparent text-primary-dark hover:text-primary-dark`}>
+            <Button asChild variant="secondary" shape="block" className={`${HERO_CTA} border-transparent text-primary-dark hover:text-primary-dark`}>
               <Link href={`/${locale}${primaryServicePath}`} prefetch={false}>
                 {primaryServiceLabel}
               </Link>
             </Button>
             {secondaryServicePath && (
-              <Button asChild variant="scrim" shape="pill" className={HERO_CTA_ON_IMAGE}>
+              <Button asChild variant="scrim" shape="block" className={HERO_CTA_ON_IMAGE}>
                 <Link href={`/${locale}${secondaryServicePath}`} prefetch={false}>
                   {secondaryServiceLabel}
                 </Link>
@@ -188,7 +188,7 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
               key={idx}
               className="p-6 rounded-xl glass-card"
             >
-              <div className="inline-flex items-center justify-center p-2.5 bg-primary/10 dark:bg-primary/20 rounded-full mb-4" aria-hidden="true">
+              <div className="inline-flex items-center justify-center p-2.5 bg-gray-100 dark:bg-gray-800 rounded-full mb-4" aria-hidden="true">
                 <CheckCircle2 className="text-primary dark:text-primary-lighter" size={20} />
               </div>
               <h3 className="typo-card-subtitle mb-2 text-gray-900 dark:text-white">{feature.title}</h3>
