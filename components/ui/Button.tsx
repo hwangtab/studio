@@ -41,9 +41,10 @@ const buttonVariants = cva(
         // 카카오톡 목적지 전용. 옐로 위 글자는 항상 kakao-ink(흰 글씨는 대비 1.3:1로 미달),
         // 포커스 링도 옐로 위에서 보이도록 ink를 쓴다.
         kakao: "bg-kakao text-kakao-ink hover:bg-kakao-dark focus-visible:ring-kakao-ink dark:focus-visible:ring-kakao focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
-        // 어두운 히어로 이미지 위 2차 액션. 흰 틴트(bg-white/*)는 배경을 밝혀 흰 글씨
-        // 대비를 오히려 떨어뜨리므로 어두운 스크림 + 흰 테두리를 쓴다.
-        scrim: "bg-black/30 border border-white/40 text-white [text-shadow:0_1px_3px_rgb(0_0_0/0.55)] hover:bg-black/45 focus-visible:ring-white/70 focus-visible:ring-offset-black/20",
+        // 어두운 히어로 사진 위 2차 행동 — 거의 불투명한 잉크 면(테두리·글자 그림자 없음). 예전 bg-black/30 + 흰 40% 테두리는
+        // 사진이 비쳐 "사진 위에 그린 상자"로 보였다(운영자 2026-10-09 "투명 버튼 가시성이 안 좋다", TDS: 보조도 채운 면).
+        // 노란 카톡 1차와 위계가 뒤집히지 않게 흰 면(inverse) 대신 잉크.
+        scrim: "bg-gray-950/85 text-white hover:bg-gray-950 focus-visible:ring-white/70 focus-visible:ring-offset-black/20",
       },
       size: {
         sm: "h-11 px-3 text-sm",

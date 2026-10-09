@@ -811,8 +811,8 @@ iOS 26 리퀴드 글래스 스타일 리뉴얼의 재질 레이어. **성능 예
   올릴 수 없다. `#191600` on `#FEE500`은 약 16:1.
 - **히어로 위계**: 1차(카카오)가 옐로면 2차는 솔리드 `bg-primary`를 쓰지 않는다 —
   어두운 히어로 사진 위에서 채도 높은 브랜드색(지금은 파랑)이 옐로와 경쟁해 위계가 뒤집힌다.
-  2차는 `bg-black/30 + border-white/40 + text-shadow` 스크림 아웃라인
-  (홈 히어로·ReleaseHeroCtas 공통). 흰 틴트(`bg-white/*`)는 배경을 밝혀
+  2차는 Button `scrim` — 거의 불투명한 잉크 면(`bg-gray-950/85`, 2026-10-09 개정: 반투명 테두리 상자는
+  사진이 비쳐 버튼으로 안 읽혔다)(홈 히어로·ReleaseHeroCtas 공통). 흰 틴트(`bg-white/*`)는 배경을 밝혀
   흰 글씨 대비를 오히려 떨어뜨리므로 쓰지 않는다(HeaderActions와 동일 판단).
 - 적용: HeaderActions, KakaoFab, 홈·pricing 히어로, HeroKakaoCta(onImage/onSurface 공통),
   ContactCTA, ReleaseHeroCtas, PricingCard, StickyBottomCTA, Inline{Booking,Price,Service}Callout,
