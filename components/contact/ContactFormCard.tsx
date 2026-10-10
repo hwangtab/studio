@@ -174,7 +174,7 @@ const ContactFormCard = ({
           })}
         </Notice>
       )}
-      <form onSubmit={handleGatedSubmit} className="space-y-4">
+      <form id="contact-form" onSubmit={handleGatedSubmit} className="space-y-4 scroll-mt-24">
         <input
           type="text"
           name="company"
