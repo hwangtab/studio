@@ -20,10 +20,8 @@ interface HeroKakaoCtaProps {
    */
   contactLabel?: string;
   /**
-   * 선택: 2차 전화 CTA. 지정하면 카카오(1차) 옆에 tel: 링크를 노출한다.
-   * 네이버·지역검색으로 유입되는 로컬 고객(전화 선호층)의 리드를 포착하기 위한 것 —
-   * 전화 리드가 구조적으로 과소집계(90일 6건)되던 로컬 의도 페이지(연습실·녹음)에만 켠다.
-   * 미지정 시 기존과 동일하게 카카오 단일 버튼만 렌더(하위호환).
+   * 선택: 버튼 아래 전화 텍스트 줄(tel: 링크). 버튼이 아니다 — 히어로 버튼은 최대 둘.
+   * 서비스·스튜디오 메뉴 페이지가 넘긴다(docs/hero-cta-audit-2026-10.md).
    */
   phone?: string;
   phoneCtaId?: string;
@@ -40,6 +38,8 @@ interface HeroKakaoCtaProps {
    * 온라인 예약이 되는 서비스는 예약 화면, 견적형은 같은 페이지 가격 절(#…). href는 로케일 접두를 포함한 경로나 '#앵커'.
    */
   secondary?: { label: string; href: string; ctaId: string };
+  /** 비-ko 1차(문의 폼) 목적지. 기본 `/${locale}/contact` — 문의 페이지 자신은 같은 페이지 폼 앵커를 넘긴다. */
+  contactHref?: string;
 }
 
 /**
@@ -49,7 +49,7 @@ interface HeroKakaoCtaProps {
  * 직링크를 히어로에 노출하고 `lead_click_kakao`를 발화한다.
  * (pricing/release 히어로 CTA와 동일한 시각·계측 패턴을 단일 컴포넌트로 통일.)
  */
-const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, contactLabel, phone, phoneCtaId, surface = 'onImage', secondary }: HeroKakaoCtaProps) => {
+const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, contactLabel, phone, phoneCtaId, surface = 'onImage', secondary, contactHref }: HeroKakaoCtaProps) => {
   const onImage = surface === 'onImage';
   const { t } = useTranslation('common', { lng: locale });
   // 카카오 오픈채팅은 한국어 상담 채널이다. 비-ko 방문자를 여기로 보내면 한국어 채팅방
@@ -83,7 +83,7 @@ const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, contactLabel,
   ) : (
     <Button asChild variant={onImage ? 'inverse' : 'solid'} shape="block" size="lg">
       <Link
-        href={`/${locale}/contact`}
+        href={contactHref ?? `/${locale}/contact`}
         prefetch={false}
         onClick={() =>
           trackMicroEvent('micro_click_contact', {

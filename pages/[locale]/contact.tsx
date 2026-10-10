@@ -7,6 +7,7 @@ import { CheckCircle, ArrowRight, MessageCircle } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
+import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 import ContactFormCard from '../../components/contact/ContactFormCard';
 import ContactInfoCard from '../../components/contact/ContactInfoCard';
 import { Section } from '../../components/ui/Section';
@@ -104,6 +105,20 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
           imageAlt: t('contact.heroAlt'),
           minHeight: "min-h-[60vh]",
           overlayGradient: "from-black/50 via-black/30 to-black/50",
+          // 스튜디오 메뉴와 같은 히어로(2026-10-11 운영자 "문의도 넣어줘라"). 비-ko 1차는 이 페이지의 폼으로 내려간다.
+          ctaButtons: (
+            <HeroKakaoCta
+              locale={locale}
+              kakaoUrl={siteConfig.contact.kakaoUrl}
+              component="ContactHero"
+              ctaId="contact_hero_kakao"
+              label={t('actions.kakaoFreeConsult')}
+              contactHref="#contact-form"
+              phone={siteConfig.contact.phone}
+              phoneCtaId="contact_hero_phone"
+              secondary={{ label: t('actions.seePricing'), href: `/${locale}/pricing`, ctaId: 'contact_hero_pricing' }}
+            />
+          ),
           breadcrumbItems: [
             { name: t('nav.home'), path: `/${locale}` },
             { name: t('nav.contact'), path: `/${locale}/contact` },
