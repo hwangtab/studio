@@ -273,7 +273,7 @@ woff2와 `display.chars.json`을 **함께 커밋**해야 한다(CI가 `--check`�
 
 전수 점검과 근거는 `docs/hero-cta-audit-2026-10.md`. 버튼은 **최대 둘**, 글자만 보고 도착지를 알 수 있어야 한다.
 
-| 유형 | 1차 (ko 노랑) | 2차 (scrim) |
+| 유형 | 1차 (ko 노랑) | 2차 (흰 inverse) |
 |---|---|---|
 | 온라인 예약·주문 서비스(녹음·성우·축가·커버·연습실·믹싱) | 카톡으로 {서비스} 상담 | 온라인 예약하기(믹싱 "온라인 주문하기", 연습실 "시간제 예약하기") → `/ko/booking/…` |
 | 견적형(레슨·작곡편곡·음원 홍보·펀딩 설계·발매·발매 티어) | 카톡으로 {서비스} 상담 | 가격 보기 → 같은 페이지 가격 절 |
@@ -297,11 +297,10 @@ woff2와 `display.chars.json`을 **함께 커밋**해야 한다(CI가 `--check`�
 | variant | 용도 |
 |---|---|
 | `solid` | 1차 액션 — 평평한 파랑 면 + 흰 글씨(라이트·다크 같음) |
-| `inverse` | 어두운 히어로 사진 위 1차 액션(흰 버튼 + 잉크 글씨, 테마 무관) |
+| `inverse` | 어두운 히어로 사진 위 2차 액션(흰 버튼 + 잉크 글씨, 테마 무관). 노란 카톡 옆 2차, 비-ko·가이드는 파랑 1차 옆 2차 |
 | `kakao` | 카카오톡 목적지 전용 |
 | `weak` | 2차 액션 — 연한 파랑 채움(`bg-primary/10` + `text-primary-dark`). 옛 `outline`(테두리)을 대체했다 — 얇은 선은 누를 수 있다는 신호가 약하다 |
 | `ghost` / `secondary` | 3차 액션 |
-| `scrim` | 어두운 히어로 이미지 위 2차 액션 — 거의 불투명한 잉크 면(`bg-gray-950/85`, 테두리 없음) |
 
 `shape`: 글자 버튼은 전부 `block`(rounded-xl) — 히어로·카드·폼·띠 구분 없이(2026-10-09 TDS 대조, 모서리 체계 하나).
 `pill`(원형)은 아이콘만 있는 버튼(`size="icon"`) 전용 — `components/ui/buttonShape.test.ts`가 막는다. 칩·필터·배지·떠 있는 버튼(FAB)은
@@ -344,7 +343,7 @@ woff2와 `display.chars.json`을 **함께 커밋**해야 한다(CI가 `--check`�
   카드 빛 효과(`.glass-card::after`)는 2026-10-09에 없앴다 — 링크 카드는 hover 때 살짝 어두워질 뿐이다.
 
 **히어로 위계**: 1차가 카카오 옐로면 2차는 `solid`를 쓰지 않는다 — 어두운 사진 위에서
-파랑 채움 버튼이 옐로와 경쟁해 위계가 뒤집힌다. 2차는 `scrim`(거의 불투명한 잉크 면 — 반투명 테두리 상자는 사진이 비쳐 버튼으로 안 읽혔다, 2026-10-09). 흰 틴트(`bg-white/*`)는 배경을 밝혀 흰 글씨 대비를 떨어뜨리므로 쓰지 않는다.
+파랑 채움 버튼이 옐로와 경쟁해 위계가 뒤집힌다. 2차는 흰 `inverse`(2026-10-11 — 반투명 테두리 상자도, 잉크 면 `scrim`도 어두운 사진·휴대폰 스크림 위에서 거의 안 보였다. `scrim` variant는 없앴다). 노란 카톡이 없는 비-ko·가이드 히어로는 1차 파랑 `solid` + 2차 흰 `inverse`.
 
 ### 폼 — `components/ui/Field.tsx`
 
@@ -509,7 +508,7 @@ focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
 | 일반 배경 | `ring-primary/70 dark:ring-primary-lighter/70` + `ring-offset-white dark:ring-offset-gray-900` |
 | 브랜드 아웃라인 pill | tone에 맞춰 `ring-{tone}/70` + 다크는 밝은 짝 `/70`(§4 `ServiceLinkPill`) |
 | 카카오 옐로 버튼 | `ring-kakao-ink dark:ring-kakao` + 표면에 맞는 오프셋 |
-| 어두운 히어로 이미지 위(`inverse`·`scrim`) | `ring-white/70` + `ring-offset-black/20` |
+| 어두운 히어로 이미지 위(`inverse`·사진 위 `solid`) | `ring-white/70` + `ring-offset-black/20` |
 | 스토리 amber 고정 바 | `ring-primary/70 dark:ring-white/70` + `ring-offset-amber-50 dark:ring-offset-amber-900` — 다크 짝이 `primary-lighter`가 아닌 이유는 amber-900 위 2.32:1로 미달이라서다(`white/70`은 통과) |
 
 터치 타깃은 최소 44×44px(`min-h-[44px]` 또는 `h-11`). 아이콘 전용 버튼에는 `aria-label`.

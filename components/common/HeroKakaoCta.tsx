@@ -27,10 +27,9 @@ interface HeroKakaoCtaProps {
   phoneCtaId?: string;
   /**
    * 카카오 버튼 자체는 두 경우 모두 카카오 옐로로 동일하다(사이트 전역 규칙:
-   * 노란 버튼 = 카카오톡). surface는 옆에 붙는 2차 전화 버튼과 focus ring만 가른다.
-   * 'onImage'(기본): 어두운 히어로 오버레이 위 — 스크림 아웃라인(scrim) 전화 버튼.
-   * 'onSurface': 본문 섹션 배경 위 — 라이트 모드 밝은 배경에서 스크림 버튼이
-   * 보이지 않으므로 테두리(outline) 전화 버튼으로 강등한다.
+   * 노란 버튼 = 카카오톡). surface는 2차 버튼·전화 줄 색과 focus ring을 가른다.
+   * 'onImage'(기본): 어두운 히어로 오버레이 위 — 2차는 흰 inverse.
+   * 'onSurface': 본문 섹션 배경 위 — 2차는 연한 파랑 weak.
    */
   surface?: 'onImage' | 'onSurface';
   /**
@@ -81,7 +80,7 @@ const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, contactLabel,
       </a>
     </Button>
   ) : (
-    <Button asChild variant={onImage ? 'inverse' : 'solid'} shape="block" size="lg">
+    <Button asChild variant="solid" shape="block" size="lg">
       <Link
         href={contactHref ?? `/${locale}/contact`}
         prefetch={false}
@@ -105,7 +104,7 @@ const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, contactLabel,
   // 번호를 줄로 남기는 이유: 데스크톱에서 번호를 보고 휴대폰으로 직접 거는 전화는 클릭 이벤트로 안 잡힌다 — GA4 0건이어도
   // 운영자 체감으로는 이 번호가 일한다(2026-10-10 운영자 판단, 믹싱·음원 홍보·펀딩 설계에 되살림).
   const secondaryButton = secondary ? (
-    <Button asChild variant={onImage ? 'scrim' : 'weak'} shape="block" size="lg">
+    <Button asChild variant={onImage ? 'inverse' : 'weak'} shape="block" size="lg">
       <Link
         href={secondary.href}
         prefetch={false}
