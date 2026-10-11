@@ -15,7 +15,7 @@ interface ReleaseHeroCtasProps {
 }
 
 /** 히어로 CTA 크기 — 리프트·색 전환·포커스 링은 Button이 소유한다(design-system §4). */
-const HERO_CTA = 'h-auto min-h-[48px] w-full sm:w-auto whitespace-normal py-4 px-10 text-base sm:text-lg font-bold leading-snug shadow-lg hover:shadow-xl';
+const HERO_CTA = 'h-auto min-h-[48px] w-full sm:w-auto whitespace-normal py-4 px-10 text-base sm:text-lg font-bold leading-snug';
 // 어두운 히어로 사진 위 — 링은 흰색, 오프셋은 사진 위 스크림(§5: 표면이 고정이라 다크 짝도 같은 값).
 const HERO_CTA_ON_IMAGE = `${HERO_CTA} focus-visible:ring-white/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-black/20 dark:focus-visible:ring-offset-black/20`;
 
@@ -48,7 +48,7 @@ const ReleaseHeroCtas = ({
         </a>
       </Button>
     ) : (
-      <Button asChild variant="inverse" shape="block" className={HERO_CTA}>
+      <Button asChild variant="solid" shape="block" className={HERO_CTA}>
         <Link
           href={`/${locale}/contact`}
           prefetch={false}
@@ -66,9 +66,9 @@ const ReleaseHeroCtas = ({
       </Button>
     )}
     {/* 2차는 홈 히어로와 동일 사유로 강등 — 1차가 옐로가 된 이상 솔리드 보라를 두면
-        어두운 히어로 위에서 2차가 더 튀어 위계가 뒤집힌다. scrim variant가 그 배색이다. */}
+        어두운 히어로 위에서 2차가 더 튀어 위계가 뒤집힌다. 2차는 흰 inverse(2026-10-11 — 잉크 면은 어두운 사진 위에서 안 보였다). */}
     {secondaryHref && secondaryLabel ? (
-      <Button asChild variant="scrim" shape="block" className={HERO_CTA}>
+      <Button asChild variant="inverse" shape="block" className={HERO_CTA}>
         <Link href={secondaryHref} prefetch={false}>
           {secondaryLeadingIcon}
           {secondaryLabel}

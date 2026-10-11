@@ -31,7 +31,9 @@ const buttonVariants = cva(
         // 흰 글씨 5.17:1, 라이트·다크 같은 평평한 면. 가격 숫자 같은 누를 수 없는 강조는 잉크라 버튼과 겹쳐 보이지 않는다.
         // 사진 위에서는 inverse(흰 버튼)를 쓴다.
         solid: "bg-primary text-white hover:bg-primary-dark focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
-        // 어두운 히어로 사진 위 1차 행동(비-ko 문의 등). 라이트·다크 구분 없이 흰 버튼 + 잉크 글씨.
+        // 어두운 히어로 사진 위 버튼 — 흰 면 + 잉크 글씨(라이트·다크 같음). ko는 노란 카톡 옆 2차, 비-ko·가이드는 파랑(solid) 1차 옆 2차.
+        // 예전 2차였던 잉크 면(scrim)은 어두운 사진·휴대폰 스크림 위에서 거의 안 보였다(운영자 2026-10-11 "밝은 배경 버튼이 낫다").
+        // 노란 1차 옆에 솔리드 파랑을 두지 않는 이유: 채도 높은 두 색이 경쟁해 위계가 흐려진다(CLAUDE.md 카카오 배색 규칙).
         inverse: "bg-white text-gray-950 hover:bg-gray-100 focus-visible:ring-white/70 focus-visible:ring-offset-black/20",
         // 연한 파랑 버튼(weak) — 2차 행동. 테두리 버튼은 얇은 선이라 누를 수 있다는 신호가 약했다(TDS도 보조 버튼을
         // 테두리가 아니라 옅은 채움으로 둔다). primary-dark 글씨 on primary/10 약 5.8:1, 다크는 primary-lighter.
@@ -41,11 +43,6 @@ const buttonVariants = cva(
         // 카카오톡 목적지 전용. 옐로 위 글자는 항상 kakao-ink(흰 글씨는 대비 1.3:1로 미달),
         // 포커스 링도 옐로 위에서 보이도록 ink를 쓴다.
         kakao: "bg-kakao text-kakao-ink hover:bg-kakao-dark focus-visible:ring-kakao-ink dark:focus-visible:ring-kakao focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
-        // 어두운 히어로 사진 위 2차 행동 — 거의 불투명한 잉크 면(테두리·글자 그림자 없음). 예전 bg-black/30 + 흰 40% 테두리는
-        // 사진이 비쳐 "사진 위에 그린 상자"로 보였다(운영자 2026-10-09 "투명 버튼 가시성이 안 좋다", TDS: 보조도 채운 면).
-        // 노란 카톡 1차와 위계가 뒤집히지 않게 흰 면(inverse) 대신 잉크.
-        // 옅은 흰 테두리(안쪽 그림자 — border면 옆 노란 버튼보다 2px 커진다)는 휴대폰용 — 휴대폰 히어로는 사진을 검게 깔아 잉크 면의 가장자리가 묻혀 버튼이 글자로만 보였다(2026-10-09).
-        scrim: "bg-gray-950/85 text-white shadow-[inset_0_0_0_1px_rgb(255_255_255/0.25)] hover:bg-gray-950 focus-visible:ring-white/70 focus-visible:ring-offset-black/20",
       },
       size: {
         sm: "h-11 px-3 text-sm",
@@ -87,7 +84,7 @@ const buttonVariants = cva(
      * (weak의 다크용 primary-lighter 글씨가 흰 카드 위에서 1.6:1로 흐려진다). `Field`의 `light` 옵트인과 같은 처방.
      *
      * 실제로 라이트 고정 화면에서 쓰이는 variant만 되돌린다(solid·weak·ghost·secondary).
-     * kakao·scrim은 그 화면에 없다.
+     * kakao·inverse는 그 화면에 없다.
      */
     compoundVariants: [
       {

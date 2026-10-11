@@ -616,6 +616,7 @@ music-crowdfunding1·music-grants1·selfrecord1)도 미등재다. 그쪽은 "10/
 | 2026-10-10 | mixing-mastering · music-promotion · crowdfunding-design (히어로) | 히어로 전화번호 줄 복원 — 10/9에 뺀 전화를 버튼이 아니라 녹음·연습실과 같은 텍스트 줄("전화 상담 010-…")로 되살림(운영자 판단: 직접 거는 전화는 GA4에 안 잡힌다). 타이틀·메타·본문 불변 | feat/hero-phone-line | 10/9~10/10 하루 동안 세 페이지 히어로에 번호 없음 — 전화 문의 비교 시 이 하루를 빼고 읽을 것 |
 | 2026-10-10 | about · portfolio · studio-info (히어로) | 스튜디오 메뉴 히어로에 CTA 신설 — 카톡으로 무료 상담 + 가격 보기(/pricing) + 전화 줄(비-ko는 문의 폼 + See pricing). 이전엔 히어로 버튼 없음(맨 아래 상담 블록만). 타이틀·메타·본문 불변 | feat/studio-pages-hero-cta | 기준선(90일): 조회 portfolio 298·about 137·studio-info 80, 카톡 클릭 0·0·1 — cta_id `about_hero_*`·`portfolio_hero_*`·`studio_info_hero_*`로 따로 셀 수 있다 |
 | 2026-10-11 | contact (히어로) | 문의 페이지 히어로에 스튜디오 메뉴와 같은 CTA — 카톡으로 무료 상담 + 가격 보기 + 전화 줄. 비-ko 1차는 같은 페이지 폼(#contact-form)으로. 타이틀·메타·본문 불변 | feat/contact-hero-cta | 기준선(90일): /ko/contact 조회 62, 카톡 2·전화 1 — cta_id `contact_hero_*` |
+| 2026-10-11 | 사진 히어로 전부(서비스 LP·홈·가격·발매·티어·스튜디오 메뉴·문의·가이드 6종) | 히어로 2차 버튼 잉크(scrim) → 흰 버튼(inverse) — 어두운 사진 위에서 거의 안 보였다(운영자). 비-ko 1차(문의)와 가이드 1차(서비스 LP)는 흰 → 파랑. 홈·발매 히어로 버튼 그림자 제거. 문구·href·cta_id 불변 | feat/hero-secondary-white | 시각만 변경 — 2차 클릭(micro_click_service `*_hero_book`·`*_hero_pricing`)이 이 날짜부터 늘 수 있다 |
 
 ## 실험 결과 판정 (2026-08-14)
 

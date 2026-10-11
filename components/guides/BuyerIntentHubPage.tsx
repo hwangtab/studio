@@ -146,14 +146,14 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
         overlayGradient="from-black/55 via-black/30 to-black/45"
         ctaButtons={
           <>
-            {/* 히어로 CTA 규칙 D(docs/hero-cta-audit-2026-10.md): 1차 = 가장 가까운 서비스 LP(흰), 2차 = 가격 보기.
+            {/* 히어로 CTA 규칙 D(docs/hero-cta-audit-2026-10.md): 1차 = 가장 가까운 서비스 LP(파랑), 2차 = 가격 보기(흰).
                 가이드는 읽으러 온 사람이라 카톡을 히어로에 올리지 않는다 — 본문 끝 ContactCTA가 맡는다. */}
-            <Button asChild variant="inverse" shape="block" className={HERO_CTA_ON_IMAGE}>
+            <Button asChild variant="solid" shape="block" className={HERO_CTA_ON_IMAGE}>
               <Link href={`/${locale}${primaryServicePath}`} prefetch={false}>
                 {primaryServiceLabel} 알아보기
               </Link>
             </Button>
-            <Button asChild variant="scrim" shape="block" className={HERO_CTA_ON_IMAGE}>
+            <Button asChild variant="inverse" shape="block" className={HERO_CTA_ON_IMAGE}>
               <Link href={`/${locale}/pricing`} prefetch={false}>
                 {t('actions.seePricing')}
               </Link>

@@ -42,7 +42,7 @@ import type { NextPageWithLayout } from '../../types';
 import { Button } from '../../components/ui/Button';
 
 /** 히어로 CTA — Button 위에 얹는 크기만. 리프트·색 전환·포커스 링은 Button이 소유한다(design-system §4). */
-const HERO_CTA = 'h-auto min-h-[48px] w-full sm:w-auto whitespace-normal py-4 px-10 text-base sm:text-lg font-bold leading-snug shadow-lg hover:shadow-xl';
+const HERO_CTA = 'h-auto min-h-[48px] w-full sm:w-auto whitespace-normal py-4 px-10 text-base sm:text-lg font-bold leading-snug';
 const HERO_CTA_ON_IMAGE = `${HERO_CTA} focus-visible:ring-white/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-black/20 dark:focus-visible:ring-offset-black/20`;
 
 interface HomeProps {
@@ -148,7 +148,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
               </a>
               </Button>
             ) : (
-              <Button asChild variant="inverse" shape="block" className={HERO_CTA_ON_IMAGE}>
+              <Button asChild variant="solid" shape="block" className={HERO_CTA_ON_IMAGE}>
               <Link
                 href={getLink('/contact')}
                 prefetch={false}
@@ -172,7 +172,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
                 시각적 2등). 1차를 카카오 옐로로 올리고 2차는 어두운 스크림 아웃라인으로
                 내린다. 흰 틴트(bg-white/*) 대신 bg-black/30을 쓰는 이유는 HeaderActions와
                 동일 — 흰 틴트는 배경을 밝혀 흰 글씨 대비를 오히려 떨어뜨린다. */}
-            <Button asChild variant="scrim" shape="block" className={HERO_CTA}>
+            <Button asChild variant="inverse" shape="block" className={HERO_CTA}>
             <Link
               href="#services"
               prefetch={false}
