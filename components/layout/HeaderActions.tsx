@@ -46,13 +46,12 @@ export const HeaderActions = ({
     : 'focus-visible:ring-kakao-ink dark:focus-visible:ring-kakao focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900'
     }`;
 
-  // 비-ko는 목적지가 카카오톡이 아니라 /contact 폼이라 옐로를 쓰면 안 된다 — 기존 배색 유지.
-  // 투명 헤더 CTA는 히어로 위 — 거의 불투명한 잉크 면(Button scrim과 같은 값). 흰 틴트는 흰 글씨 대비를 낮추고,
-  // 반투명 테두리 상자는 사진이 비쳐 버튼으로 안 읽혔다(2026-10-09). glass 토큰은 모바일 폴백 시 불투명
-  // 흰색이 되어 흰 글씨가 사라지므로 여기선 쓰지 않는다.
-  const formCtaButtonClass = `${headerCtaBaseClass} ${!isTransparent
-    ? `bg-primary hover:bg-primary-dark text-white ${BUTTON_PRESS} focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`
-    : 'bg-gray-950/85 hover:bg-gray-950 text-white focus-visible:ring-white/70 focus-visible:ring-offset-black/20'
+  // 비-ko는 목적지가 카카오톡이 아니라 /contact 폼이라 옐로를 쓰면 안 된다.
+  // 투명 헤더(히어로 위)에서도 파랑 — 비-ko 히어로 1차(문의)와 같은 색·같은 목적지다. 예전 잉크 면은 어두운 사진 위에서
+  // 거의 안 보였다(운영자 2026-10-11). ko 헤더가 투명 상태에서도 옐로인 것과 같은 판단: 솔리드 면은 배경 밝기와 무관하게 보인다.
+  const formCtaButtonClass = `${headerCtaBaseClass} bg-primary hover:bg-primary-dark text-white ${BUTTON_PRESS} ${isTransparent
+    ? 'focus-visible:ring-white/70 focus-visible:ring-offset-black/20'
+    : 'focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900'
     }`;
 
   return (
