@@ -65,6 +65,27 @@ describe('confirmShowOrder', () => {
     expect(second.status).toBe('already_confirmed');
   });
 
+  it('확정된 주문을 주문번호만으로 다시 부르면(틀린 paymentKey·금액) already_confirmed를 돌려주지 않는다 — 관리 토큰 발급 차단', async () => {
+    const { db } = await createTestDb();
+    mockDb = db;
+    const { showtimeId, ticketTypeId } = await seedShow(db);
+    const created = await createShowOrder({ showtimeId, ticketTypeId, quantity: 1, buyerName: 'a', buyerContact: '010' }, new Date());
+    if (!created.ok) throw new Error('setup failed');
+    const toss = createFakeToss();
+    await confirmShowOrder({ orderNo: created.orderNo, paymentKey: 'pk1', amount: 10000 }, { trustedByWebhook: false }, toss);
+
+    const wrongKey = await confirmShowOrder({ orderNo: created.orderNo, paymentKey: 'x', amount: 10000 }, { trustedByWebhook: false }, toss);
+    expect(wrongKey).toEqual({ status: 'error', code: 'invalid_status' });
+    const wrongAmount = await confirmShowOrder({ orderNo: created.orderNo, paymentKey: 'pk1', amount: 1 }, { trustedByWebhook: false }, toss);
+    expect(wrongAmount).toEqual({ status: 'error', code: 'invalid_status' });
+    // 결제창을 연 당사자(새로고침)는 그대로 재생된다.
+    const owner = await confirmShowOrder({ orderNo: created.orderNo, paymentKey: 'pk1', amount: 10000 }, { trustedByWebhook: false }, toss);
+    expect(owner.status).toBe('already_confirmed');
+    // 웹훅은 토스 재조회로 검증하고 오므로 소유 증명 없이도 재생된다.
+    const webhook = await confirmShowOrder({ orderNo: created.orderNo, paymentKey: 'x', amount: 1 }, { trustedByWebhook: true }, toss);
+    expect(webhook.status).toBe('already_confirmed');
+  });
+
   it('토스 확정이 NETWORK_ERROR면 실패로 낙인찍지 않고 재시도 가치가 있는 코드(toss_unresolved)로 정규화한다', async () => {
     const { db } = await createTestDb();
     mockDb = db;

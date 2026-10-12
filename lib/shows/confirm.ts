@@ -87,11 +87,28 @@ export async function confirmShowOrder(
   toss: Pick<FakeToss, 'confirmPayment' | 'fetchPayment' | 'cancelPayment'>,
 ): Promise<ConfirmOutcome> {
   const db = getDb();
-  const order = await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, input.orderNo) });
+  const order = await db.query.orders.findFirst({
+    where: (o, { eq }) => eq(o.orderNo, input.orderNo),
+    with: { payments: true },
+  });
   if (!order) return { status: 'error', code: 'not_found' };
 
   // 재생(새로고침·웹훅 중복 도착) — 이미 결론이 난 주문은 다시 승인을 부르지 않는다.
   if (CONCLUDED_STATUSES.includes(order.status)) {
+    // success 페이지는 이 결과로 관리 토큰(내 티켓·환불의 유일한 인증)을 HTML에 싣는다.
+    // 주문번호는 영수증·메일·문의 대화에 평문으로 나오므로, 결제창을 실제로 연 사람만
+    // 아는 paymentKey·금액이 맞을 때만 재생을 허용한다(lib/booking/confirm.ts provesOwnership).
+    // 웹훅 경로는 토스 재조회로 검증하고 오므로 그대로 통과한다.
+    if (opts.trustedByWebhook) return { status: 'already_confirmed' };
+    const provesOwnership =
+      input.amount === order.totalAmount && order.payments.some((p) => p.paymentKey === input.paymentKey);
+    if (!provesOwnership) {
+      console.error('[shows-confirm] 확정된 주문에 소유 증명 없는 접근 — 관리 토큰을 발급하지 않는다', {
+        orderNo: order.orderNo,
+        paymentKey: input.paymentKey,
+      });
+      return { status: 'error', code: 'invalid_status' };
+    }
     return { status: 'already_confirmed' };
   }
 
