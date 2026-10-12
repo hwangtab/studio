@@ -26,6 +26,7 @@ import {
   subscriptionSetupUrl,
 } from '../../../../lib/billing/email';
 import { refundSubscriptionPayment } from '../../../../lib/billing/refund';
+import { serializeBillingKey, serializeSubscription, serializeSubscriptionPayment } from '../../../../lib/billing/admin-serialize';
 import { generateSetupToken, SETUP_TOKEN_TTL_SECONDS } from '../../../../lib/billing/token';
 
 const ACTIONS = ['charge', 'cancel', 'pause', 'resume', 'card_change_link', 'resend_setup', 'refund_payment'] as const;
@@ -59,7 +60,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!details) {
         return res.status(404).json({ ok: false, message: '구독을 찾을 수 없습니다.' });
       }
-      return res.status(200).json({ ok: true, ...details });
+      // 화면과 같은 직렬화 — 빌링키 원문·고객 토큰은 응답에 싣지 않는다(lib/billing/admin-serialize.ts).
+      return res.status(200).json({
+        ok: true,
+        subscription: serializeSubscription(details.subscription),
+        billingKey: details.billingKey ? serializeBillingKey(details.billingKey) : null,
+        payments: details.payments.map(serializeSubscriptionPayment),
+        contract: details.contract,
+      });
     } catch (error: unknown) {
       console.error('[API/admin/subscriptions/[id]] Failed to load subscription:', error);
       return res.status(500).json({ ok: false, message: '구독을 불러오지 못했습니다.' });
