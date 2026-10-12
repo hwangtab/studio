@@ -3,6 +3,7 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import ServiceLinkPill from '../../components/ui/ServiceLinkPill';
+import QuoteEntryLink from '../../components/quote/QuoteEntryLink';
 import { Mic, SlidersHorizontal, Disc, Info, Star, PlusCircle, ArrowRight, Building, Music } from '@/lib/lucide-icons';
 import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 import MarketPriceComparison from '../../components/pricing/MarketPriceComparison';
@@ -351,13 +352,9 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           {/* 견적 요청서(ko 전용) — 표를 본 뒤 "내 경우는 얼마인가"로 넘어가는 자리. 카카오가 아니라 옐로 금지. */}
           {locale === 'ko' && (
             <p className="mt-3 text-center text-sm">
-              <Link
-                href="/ko/quote"
-                prefetch={false}
-                className="font-semibold text-primary underline underline-offset-4 hover:text-primary-dark dark:text-primary-lighter dark:hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 rounded"
-              >
+              <QuoteEntryLink ctaId="pricing_table">
                 내 경우엔 얼마일까? 질문 몇 개로 예상 비용 바로 보기 →
-              </Link>
+              </QuoteEntryLink>
             </p>
           )}
         </div>

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { ArrowRight } from '@/lib/lucide-icons';
 import { Button } from './ui/Button';
+import QuoteEntryLink from './quote/QuoteEntryLink';
 import { STORY_CTA, STORY_CTA_SECONDARY_PATH, type CTAType } from '../lib/storyCta';
 import { trackMicroEvent } from '../utils/analytics';
 
@@ -70,6 +71,15 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                     </Link>
                 </Button>
             </div>
+            {/* 발매 글만 — 발매 카톡 상담 대부분이 견적·예산 질문이라 견적 요청서로 바로 잇는다. 견적 요청서가 ko 전용이라 ko만. */}
+            {type === 'release' && locale === 'ko' && (
+                <p className="mt-4 text-sm text-gray-700 dark:text-gray-300">
+                    예산부터 궁금하다면{' '}
+                    <QuoteEntryLink ctaId="story_cta_release" service="release">
+                        질문 몇 개로 예상 비용 보기
+                    </QuoteEntryLink>
+                </p>
+            )}
         </aside>
     );
 };

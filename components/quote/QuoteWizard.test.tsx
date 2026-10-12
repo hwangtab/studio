@@ -74,3 +74,21 @@ describe('QuoteWizard', () => {
     expect(screen.queryByRole('link', { name: /카카오톡으로 보내기/ })).not.toBeInTheDocument();
   });
 });
+
+describe('QuoteWizard — 입구 링크의 미리 고르기', () => {
+  afterEach(() => window.history.replaceState(null, '', '/'));
+
+  it('?service=release&scale=ep이면 발매·EP가 골라진 채 시작하고, 시작 이벤트는 보내지 않는다', () => {
+    window.history.replaceState(null, '', '/ko/quote?service=release&scale=ep');
+    render(<QuoteWizard kakaoUrl={KAKAO} />);
+    expect(screen.getByRole('radio', { name: /음반 발매/ })).toBeChecked();
+    expect(screen.getByRole('radio', { name: 'EP (3~5곡)' })).toBeChecked();
+    expect(mockMicro).not.toHaveBeenCalledWith('micro_quote_start', expect.anything());
+    // 남은 문항만 답하면 견적이 나온다.
+    pick('데모가 있어요');
+    pick('직접 준비한 예산');
+    pick('3개월 안');
+    expect(screen.getByText(`${formatPriceLabel(EP_BUNDLE_PRICE, 'ko')}부터`)).toBeInTheDocument();
+    expect(mockMicro).toHaveBeenCalledWith('micro_quote_start', expect.objectContaining({ component: 'QuoteWizard' }));
+  });
+});
