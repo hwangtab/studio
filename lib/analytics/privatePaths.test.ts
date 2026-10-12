@@ -98,7 +98,13 @@ describe('isPrivateAnalyticsPath', () => {
       '/:locale(ko|en|zh|es|vi|th|uz)/shows/(manage|scan|report)/:path*',
       '/:locale(ko|en|zh|es|vi|th|uz)/subscribe/:path*',
       '/:locale(ko|en|zh|es|vi|th|uz)/pay/:path*',
+      '/:locale(ko|en|zh|es|vi|th|uz)/shop/(success|fail)',
+      '/:locale(ko|en|zh|es|vi|th|uz)/shop/manage/:path*',
     ]);
+    // 상점은 결과·관리 화면만 비공개다 — 목록·상품 상세는 측정 대상.
+    expect(isPrivateAnalyticsPath('/ko/shop/success?paymentKey=x')).toBe(true);
+    expect(isPrivateAnalyticsPath('/ko/shop/manage/SHP-20261012-AAAAAAAA?token=t')).toBe(true);
+    expect(isPrivateAnalyticsPath('/ko/shop/example-cd')).toBe(false);
     // 예약금 결제 링크는 slug가 결제 권한이라 `pay` 아래 전부 측정 제외다.
     expect(isPrivateAnalyticsPath('/ko/pay/46fee6d8ffa1a69be20324a2')).toBe(true);
     expect(isPrivateAnalyticsPath('/ko/pay/success?paymentKey=x')).toBe(true);

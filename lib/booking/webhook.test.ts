@@ -2,6 +2,8 @@ jest.mock('./service', () => ({ findOrderByOrderNo: jest.fn() }));
 jest.mock('./toss', () => ({ fetchPayment: jest.fn(), confirmPayment: jest.fn() }));
 jest.mock('./confirm', () => ({ confirmBookingPayment: jest.fn() }));
 jest.mock('./confirmDeposit', () => ({ confirmDepositPayment: jest.fn() }));
+jest.mock('../shop/confirm', () => ({ confirmShopOrder: jest.fn() }));
+jest.mock('../shop/webhookSync', () => ({ closeShopFulfillmentOnFullCancel: jest.fn().mockResolvedValue(undefined) }));
 jest.mock('../funding/confirm', () => ({
   confirmFundingPledge: jest.fn().mockResolvedValue({ ok: true, orderNo: 'FND-1', manageToken: 't', projectSlug: 'demo' }),
   syncFundingCancelledFromToss: jest.fn().mockResolvedValue(undefined),
@@ -36,6 +38,8 @@ import { findOrderByOrderNo } from './service';
 import { fetchPayment, confirmPayment } from './toss';
 import { confirmBookingPayment } from './confirm';
 import { confirmDepositPayment } from './confirmDeposit';
+import { confirmShopOrder } from '../shop/confirm';
+import { closeShopFulfillmentOnFullCancel } from '../shop/webhookSync';
 import { confirmFundingPledge } from '../funding/confirm';
 import { reconcileSubscriptionPaymentFromToss } from '../billing/service';
 import { confirmShowOrder } from '../shows/confirm';
@@ -559,6 +563,61 @@ describe('processTossWebhook', () => {
       expect(mockDb().run).not.toHaveBeenCalled();
       expect(insertValuesCallsOf(mockDb()).find((c) => 'paymentId' in c)).toMatchObject({ paymentId: 'p_d', amount: 400000 });
       expect(setCallsOf(mockDb()).find((c) => c.status === 'refunded')).toBeDefined();
+    });
+  });
+
+  describe('merch(상점) 주문 라우팅', () => {
+    const shopOrder = (over: Record<string, unknown> = {}) => ({
+      id: 'o', orderNo: 'SHP-20261012-AAAAAAAA', type: 'merch', status: 'pending', totalAmount: 24000,
+      bookings: [], workOrders: [], payments: [{ id: 'p_s', paymentKey: 'pk_s' }], ...over,
+    });
+
+    it('DONE 웹훅은 confirmShopOrder를 trustedByWebhook:true로 호출한다 — 예약 확정으로 새지 않는다', async () => {
+      (fetchPayment as jest.Mock).mockResolvedValueOnce({
+        ok: true, payment: { paymentKey: 'pk_s', orderId: 'SHP-20261012-AAAAAAAA', status: 'DONE', totalAmount: 24000 },
+      });
+      (findOrderByOrderNo as jest.Mock).mockResolvedValueOnce(shopOrder());
+      (confirmShopOrder as jest.Mock).mockResolvedValue({ ok: true });
+
+      const { status } = await processTossWebhook({ data: { paymentKey: 'pk_s', status: 'DONE' } });
+
+      expect(status).toBe(200);
+      expect(confirmShopOrder).toHaveBeenCalledWith(
+        { orderNo: 'SHP-20261012-AAAAAAAA', paymentKey: 'pk_s', amount: 24000 },
+        { trustedByWebhook: true },
+      );
+      expect(confirmBookingPayment).not.toHaveBeenCalled();
+    });
+
+    it('기록 실패는 멱등 키를 회수하고 500으로 재시도를 유도한다', async () => {
+      (fetchPayment as jest.Mock).mockResolvedValueOnce({
+        ok: true, payment: { paymentKey: 'pk_s', orderId: 'SHP-20261012-AAAAAAAA', status: 'DONE', totalAmount: 24000 },
+      });
+      (findOrderByOrderNo as jest.Mock).mockResolvedValueOnce(shopOrder());
+      (confirmShopOrder as jest.Mock).mockResolvedValue({ ok: false, code: 'recording_failed', message: 'x' });
+
+      const { status } = await processTossWebhook({ data: { paymentKey: 'pk_s', status: 'DONE' } });
+
+      expect(status).toBe(500);
+      expect(mockDb().delete).toHaveBeenCalled();
+    });
+
+    it('CANCELED(전액) 웹훅은 환불을 대사하고 발송 상태를 닫는다', async () => {
+      (fetchPayment as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        payment: {
+          paymentKey: 'pk_s', orderId: 'SHP-20261012-AAAAAAAA', status: 'CANCELED', totalAmount: 24000,
+          cancels: [{ transactionKey: 'ck_s', cancelAmount: 24000 }],
+        },
+      });
+      (findOrderByOrderNo as jest.Mock).mockResolvedValueOnce(shopOrder({ status: 'paid' }));
+      mockDb().query.refunds.findMany.mockResolvedValueOnce([]);
+
+      const { status } = await processTossWebhook({ data: { paymentKey: 'pk_s', status: 'CANCELED' } });
+
+      expect(status).toBe(200);
+      expect(insertValuesCallsOf(mockDb()).find((c) => 'paymentId' in c)).toMatchObject({ paymentId: 'p_s', amount: 24000 });
+      expect(closeShopFulfillmentOnFullCancel).toHaveBeenCalledWith('SHP-20261012-AAAAAAAA');
     });
   });
 

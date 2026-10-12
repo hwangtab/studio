@@ -47,6 +47,9 @@ const PRIVATE_ROUTE_BODIES: ReadonlyArray<readonly [body: string, hasSubPath: bo
   // 예약금 결제 링크. `pay/<slug>`의 slug가 곧 결제 권한이고(추측 불가 무작위 값), success·fail에는 토스
   // paymentKey·orderId가 실린다. `pay` 아래 전부가 비공개다 — 공개 페이지를 이 아래에 만들지 말 것.
   ['pay', true],
+  // 상점(음반·굿즈). success·fail은 토스 paymentKey·orderId, manage는 `?token=<관리 토큰>`. 목록·상품 상세는 측정 대상이다.
+  ['shop/(success|fail)', false],
+  ['shop/manage', true],
 ];
 
 const LOCALE_GROUP = '(ko|en|zh|es|vi|th|uz)';
@@ -153,6 +156,9 @@ export const PRIVATE_PAGE_ROUTES: readonly string[] = [
   '/[locale]/pay/[slug]',
   '/[locale]/pay/success',
   '/[locale]/pay/fail',
+  '/[locale]/shop/success',
+  '/[locale]/shop/fail',
+  '/[locale]/shop/manage/[orderNo]',
 ];
 
 export const isPrivatePageRoute = (pathname: string): boolean => PRIVATE_PAGE_ROUTES.includes(pathname);

@@ -41,6 +41,10 @@ const PRIVATE_PAGE_FILES = [
   'pages/[locale]/pay/[slug].tsx',
   'pages/[locale]/pay/success.tsx',
   'pages/[locale]/pay/fail.tsx',
+  // 상점 — success·fail에는 paymentKey·orderId, manage에는 관리 토큰이 실린다.
+  'pages/[locale]/shop/success.tsx',
+  'pages/[locale]/shop/fail.tsx',
+  'pages/[locale]/shop/manage/[orderNo].tsx',
 ];
 
 const read = (file: string) => readFileSync(path.join(process.cwd(), file), 'utf-8');

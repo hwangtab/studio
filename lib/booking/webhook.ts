@@ -9,6 +9,8 @@ import { sendShowTicketEmail } from '../shows/email';
 import { syncShowCancelsFromToss } from '../shows/refund';
 import { confirmBookingPayment, type ConfirmOutcome } from './confirm';
 import { confirmDepositPayment } from './confirmDeposit';
+import { confirmShopOrder } from '../shop/confirm';
+import { closeShopFulfillmentOnFullCancel } from '../shop/webhookSync';
 import { findOrderByOrderNo } from './service';
 import { cancelPayment, confirmPayment, fetchPayment, type TossPayment } from './toss';
 
@@ -319,6 +321,18 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
             console.error('[booking-webhook] 공연 티켓 메일 실패', { orderNo: payment.orderId, error });
           }
         }
+      } else if (orderType === 'merch') {
+        // 상점(음반·굿즈) — 전용 승인 경로(lib/shop/confirm.ts). 이 분기가 없으면 아래 else가 예약 확정
+        // (confirmBookingPayment)으로 보내 bookings 행이 없는 주문을 조용히 실패시킨다.
+        const outcome = await confirmShopOrder(
+          { orderNo: payment.orderId, paymentKey, amount: payment.totalAmount },
+          { trustedByWebhook: true },
+        );
+        if (!outcome.ok && (outcome.code === 'recording_failed' || outcome.code === 'toss_rejected')) {
+          console.error('[booking-webhook] 상점 확정 처리 일시 실패 — 멱등 키 회수 후 재시도 유도', { eventKey, code: outcome.code });
+          await releaseEventKey(eventKey);
+          return { status: 500 };
+        }
       } else if (orderType === 'deposit') {
         // 예약금 결제 링크 — 하위 테이블이 없는 전용 승인 경로. 재조회로 DONE + 금액이 확인된 돈이다.
         const outcome = await confirmDepositPayment(
@@ -367,6 +381,16 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
         // (lib/shows/refund.ts). payment.orderId(=주문번호)만 있으면 되고, order 객체는 여기서
         // 다시 조회하지 않는다(orderType이 이미 order?.type을 거쳐 나온 값이므로 order는 존재한다).
         await syncShowCancelsFromToss(payment.orderId, payment);
+      } else if (orderType === 'merch') {
+        // 상점 — 토스 콘솔 등 외부에서 걸린 취소의 대사. refunds 차액을 채우고 주문 상태를 환불 계열로 옮긴다
+        // (예약금과 같은 reconcileRefunds). 전액 취소면 발송 상태도 닫는다 — 안 그러면 돈은 돌려줬는데 "발송 준비"로 남는다.
+        if (order) {
+          const paymentRow = order.payments.find((p) => p.paymentKey === payment.paymentKey) ?? order.payments[0];
+          if (paymentRow) {
+            await reconcileRefunds(order, paymentRow, payment);
+            if (payment.status === 'CANCELED') await closeShopFulfillmentOnFullCancel(order.orderNo);
+          } else console.error('[booking-webhook] 상점 취소 대사 스킵 — payments 행 없음', { orderNo: order.orderNo });
+        }
       } else if (orderType === 'deposit') {
         // 예약금 — 선점할 하위 엔티티가 없다. 취소 금액만 refunds와 대사하고 주문 상태를 환불 계열로 옮긴다.
         // syncCancelledFromToss는 bookings/work_orders 전제라 쓰지 않고(조용히 return하면 취소가 영영 기록되지 않는다)

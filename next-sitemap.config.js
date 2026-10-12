@@ -121,6 +121,9 @@ module.exports = {
     '/sitemap-shows.xml',
     // 예약금 결제 링크 — 비공개(slug가 결제 권한). 동적 라우트라 열거되지 않지만 success·fail은 정적이다.
     '/*/pay/success', '/*/pay/fail', '/*/pay/*',
+    // 상점 트랜잭셔널 경로(noindex). 목록·상품 상세는 SSR이라 열거되지 않는다 — 판매를 열 때 런타임 사이트맵을 붙인다
+    // (lib/shop/CLAUDE.md 판매 개시 체크리스트).
+    '/*/shop/success', '/*/shop/fail', '/*/shop/manage/*',
     // 비공개 감상실 — 비밀번호로 들어오는 발매 전 음원 페이지(noindex). SSR이라 지금은 열거되지 않지만
     // 정적 페이지로 바뀌는 순간 실리지 않게 미리 막아 둔다.
     '/*/press/*',
@@ -155,6 +158,8 @@ module.exports = {
           '/ko/shows/success', '/ko/shows/fail', '/ko/shows/manage/', '/ko/shows/scan/',
           // 예약금 결제 링크 — 비공개 경로.
           '/ko/pay/',
+          // 상점 트랜잭셔널 경로.
+          '/ko/shop/success', '/ko/shop/fail', '/ko/shop/manage/',
         ],
       };
       // 이 목록에 봇을 추가/누락해도 실효 차단 범위는 바뀌지 않는다 — 모든 명명

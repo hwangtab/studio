@@ -34,6 +34,8 @@ const CHECKOUT_FORM_BY_ORDER_TYPE: Record<
   // 펀딩 후원 폼은 같은 두 줄을 자기 표(funding_pledges.payment_method)로 갈라 직접 그린다.
   funding: { file: 'components/funding/PledgeWizard.tsx', ownMethodChoice: true },
   deposit: { file: 'components/payments/PaymentLinkCheckout.tsx' },
+  // 상점(음반·굿즈)도 결제수단이 전부 토스다(직접 입금 없음, 2026-10-12).
+  merch: { file: 'components/shop/ShopOrderForm.tsx', tossOnly: true },
   subscription: { exempt: '토스 빌링키 자동결제 — 결제창 위젯을 쓰지 않는다(components/billing/BillingAuthButton.tsx)' },
 };
 
