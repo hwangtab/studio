@@ -12,14 +12,19 @@
  * - 애플페이: 간편결제와 같은 모양. PC=Safari·모바일=iOS에서만 동작하므로 `window.ApplePaySession`이
  *   결제를 할 수 있다고 답할 때만 보인다(`visiblePaymentChoices`).
  * - 계좌로 직접 입금(`bank_transfer`): 토스를 부르지 않는 기존 무통장 흐름 — 폼이 처리한다.
+ * - 토스 계좌이체(`transfer`): `method: 'TRANSFER'`. 인터넷뱅킹으로 바로 이체하고, 환불은 토스 취소가 원래
+ *   계좌로 돌려준다(환불 계좌를 받아 손으로 송금할 일이 없다).
  *
- * **토스 계좌이체(TRANSFER)는 넣지 않는다**(운영자 결정 2026-10-04) — PC에서 보안 프로그램 설치
- * 화면이 떠 결제를 막는다. 계좌로 내고 싶은 사람은 "계좌로 직접 입금"을 쓴다.
+ * **계좌 줄은 화면마다 둘 중 하나다**(`bankOption`). 기본은 직접 입금(펀딩·예약·믹싱). 공연 예매는 토스
+ * 계좌이체다(운영자 결정 2026-10-12 — 직접 입금은 환불 때 수동 송금이 너무 번거롭다). 2026-10-04에는
+ * "PC에서 은행 보안 프로그램 설치 화면이 떠 결제를 막는다"는 이유로 토스 계좌이체를 빼기로 했었고, 그 문제는
+ * 그대로다 — 알고 뒤집은 결정이다. 안내 줄이 PC 보안 프로그램을 미리 알린다. 은행·ATM 입금(직접 입금)은
+ * 공연에서 없어진다.
  */
 
 export type EasyPayKo = '카카오페이' | '네이버페이' | '토스페이' | '페이코' | '애플페이';
 
-export type PaymentChoiceId = 'card' | 'bank_transfer' | 'kakaopay' | 'naverpay' | 'tosspay' | 'payco' | 'applepay';
+export type PaymentChoiceId = 'card' | 'bank_transfer' | 'transfer' | 'kakaopay' | 'naverpay' | 'tosspay' | 'payco' | 'applepay';
 
 /** 토스 결제창을 여는 수단(계좌 입금 제외). */
 export type TossPaymentChoiceId = Exclude<PaymentChoiceId, 'bank_transfer'>;
@@ -48,6 +53,7 @@ export interface PaymentChoice {
 export const PAYMENT_CHOICES: readonly PaymentChoice[] = [
   { id: 'card', label: '신용·체크카드' },
   { id: 'bank_transfer', label: '계좌로 직접 입금' },
+  { id: 'transfer', label: '계좌이체' },
   {
     id: 'kakaopay', label: '카카오페이', easyPay: '카카오페이',
     logo: { src: '/images/payment/kakaopay-20261004.png', width: 121, height: 50, heightClass: 'h-6' },
@@ -70,8 +76,13 @@ export const PAYMENT_CHOICES: readonly PaymentChoice[] = [
   },
 ];
 
-export const visiblePaymentChoices = (opts: { applePaySupported: boolean }): PaymentChoice[] =>
-  PAYMENT_CHOICES.filter((c) => !c.requiresApplePay || opts.applePaySupported);
+/** 계좌 줄을 무엇으로 둘지 — 직접 입금(무통장, 기본) / 토스 계좌이체. 한 화면에 둘이 함께 뜨지 않는다. */
+export type BankOption = 'direct' | 'toss_transfer';
+
+export const visiblePaymentChoices = (opts: { applePaySupported: boolean; bankOption?: BankOption }): PaymentChoice[] => {
+  const hidden: PaymentChoiceId = (opts.bankOption ?? 'direct') === 'direct' ? 'transfer' : 'bank_transfer';
+  return PAYMENT_CHOICES.filter((c) => c.id !== hidden && (!c.requiresApplePay || opts.applePaySupported));
+};
 
 export const isTossPaymentChoice = (id: PaymentChoiceId): id is TossPaymentChoiceId => id !== 'bank_transfer';
 
@@ -86,8 +97,7 @@ export interface PaymentWindowParams {
   failUrl: string;
 }
 
-export interface TossCardPaymentRequest {
-  method: 'CARD';
+interface TossPaymentRequestBase {
   amount: { currency: 'KRW'; value: number };
   orderId: string;
   orderName: string;
@@ -95,17 +105,28 @@ export interface TossCardPaymentRequest {
   customerEmail?: string;
   successUrl: string;
   failUrl: string;
+}
+
+export interface TossCardPaymentRequest extends TossPaymentRequestBase {
+  method: 'CARD';
   card?: { flowMode: 'DIRECT'; easyPay: EasyPayKo };
 }
 
+/** 계좌이체 — 결제창이 은행 선택·현금영수증 신청을 받는다. `transfer` 옵션은 싣지 않는다(기본값). */
+export interface TossTransferPaymentRequest extends TossPaymentRequestBase {
+  method: 'TRANSFER';
+}
+
+export type TossPaymentRequest = TossCardPaymentRequest | TossTransferPaymentRequest;
+
 /**
- * `requestPayment` 인자를 만든다. 간편결제는 그 결제창으로 직행(DIRECT), 카드는 카드 결제창(기본).
+ * `requestPayment` 인자를 만든다. 간편결제는 그 결제창으로 직행(DIRECT), 카드는 카드 결제창(기본),
+ * 계좌이체는 TRANSFER 결제창.
  * 이메일은 값이 있을 때만 싣는다(빈 문자열을 보내면 토스가 형식 오류로 거절한다).
  */
-export const buildTossPaymentRequest = (choice: TossPaymentChoiceId, params: PaymentWindowParams): TossCardPaymentRequest => {
+export const buildTossPaymentRequest = (choice: TossPaymentChoiceId, params: PaymentWindowParams): TossPaymentRequest => {
   const def = PAYMENT_CHOICES.find((c) => c.id === choice);
-  return {
-    method: 'CARD',
+  const base: TossPaymentRequestBase = {
     amount: { currency: 'KRW', value: params.amount },
     orderId: params.orderId,
     orderName: params.orderName,
@@ -113,6 +134,11 @@ export const buildTossPaymentRequest = (choice: TossPaymentChoiceId, params: Pay
     ...(params.customerEmail ? { customerEmail: params.customerEmail } : {}),
     successUrl: params.successUrl,
     failUrl: params.failUrl,
+  };
+  if (choice === 'transfer') return { method: 'TRANSFER', ...base };
+  return {
+    method: 'CARD',
+    ...base,
     ...(def?.easyPay ? { card: { flowMode: 'DIRECT' as const, easyPay: def.easyPay } } : {}),
   };
 };

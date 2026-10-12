@@ -9,9 +9,16 @@ const params = {
 };
 
 describe('결제수단 목록', () => {
-  it('순서: 카드 / 계좌 입금 / 카카오·네이버·토스·페이코 / 애플페이 — 토스 계좌이체는 없다', () => {
-    expect(PAYMENT_CHOICES.map((c) => c.id)).toEqual(['card', 'bank_transfer', 'kakaopay', 'naverpay', 'tosspay', 'payco', 'applepay']);
-    expect(PAYMENT_CHOICES.some((c) => (c.id as string) === 'transfer')).toBe(false);
+  it('순서: 카드 / 계좌 줄 / 카카오·네이버·토스·페이코 / 애플페이', () => {
+    expect(PAYMENT_CHOICES.map((c) => c.id)).toEqual(['card', 'bank_transfer', 'transfer', 'kakaopay', 'naverpay', 'tosspay', 'payco', 'applepay']);
+  });
+
+  it('계좌 줄은 화면마다 하나 — 기본은 직접 입금, toss_transfer면 토스 계좌이체', () => {
+    const direct = visiblePaymentChoices({ applePaySupported: false }).map((c) => c.id);
+    expect(direct).toContain('bank_transfer');
+    expect(direct).not.toContain('transfer');
+    const toss = visiblePaymentChoices({ applePaySupported: false, bankOption: 'toss_transfer' }).map((c) => c.id);
+    expect(toss).toEqual(['card', 'transfer', 'kakaopay', 'naverpay', 'tosspay', 'payco']);
   });
 
   it('애플페이는 지원 환경에서만 보인다', () => {
@@ -39,8 +46,14 @@ describe('buildTossPaymentRequest — 수단별 requestPayment 인자', () => {
     ['kakaopay', '카카오페이'], ['naverpay', '네이버페이'], ['tosspay', '토스페이'], ['payco', '페이코'], ['applepay', '애플페이'],
   ] as const)('%s는 CARD + DIRECT + 한국어 easyPay(%s)', (id, easyPay) => {
     const req = buildTossPaymentRequest(id, params);
-    expect(req.method).toBe('CARD');
+    if (req.method !== 'CARD') throw new Error('CARD여야 한다');
     expect(req.card).toEqual({ flowMode: 'DIRECT', easyPay });
+  });
+
+  it('계좌이체는 TRANSFER(card 옵션 없음)', () => {
+    const req = buildTossPaymentRequest('transfer', params);
+    expect(req.method).toBe('TRANSFER');
+    expect('card' in req).toBe(false);
   });
 
   it('이메일이 비면 키를 싣지 않는다', () => {

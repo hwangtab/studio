@@ -25,11 +25,12 @@ const walk = (dir: string): string[] =>
 /** 주문 종류별 결제 화면. 새 종류를 orderTypeEnum에 더하면 여기에도 적어야 테스트가 통과한다. */
 const CHECKOUT_FORM_BY_ORDER_TYPE: Record<
   (typeof orderTypeEnum)[number],
-  { file: string; ownMethodChoice?: true } | { exempt: string }
+  { file: string; ownMethodChoice?: true; tossOnly?: true } | { exempt: string }
 > = {
   session: { file: 'components/booking/BookingWizard.tsx' },
   mixing: { file: 'components/booking/MixingOrderWizard.tsx' },
-  ticket: { file: 'components/shows/ShowBookingForm.tsx' },
+  // 공연은 결제수단이 전부 토스다(직접 입금 없음, 2026-10-12) — 두 줄 선택(PaymentMethodChoice)이 없다.
+  ticket: { file: 'components/shows/ShowBookingForm.tsx', tossOnly: true },
   // 펀딩 후원 폼은 같은 두 줄을 자기 표(funding_pledges.payment_method)로 갈라 직접 그린다.
   funding: { file: 'components/funding/PledgeWizard.tsx', ownMethodChoice: true },
   deposit: { file: 'components/payments/PaymentLinkCheckout.tsx' },
@@ -52,10 +53,14 @@ describe('공용 결제 체크아웃 가드', () => {
   it.each(Object.entries(CHECKOUT_FORM_BY_ORDER_TYPE).filter(([, v]) => 'file' in v))(
     '%s 결제 화면은 usePaymentCheckout과 결제수단 선택을 공용 컴포넌트로 쓴다',
     (_type, spec) => {
-      const { file, ownMethodChoice } = spec as { file: string; ownMethodChoice?: true };
+      const { file, ownMethodChoice, tossOnly } = spec as { file: string; ownMethodChoice?: true; tossOnly?: true };
       const source = read(file);
       expect(source).toMatch(/usePaymentCheckout/);
-      if (!ownMethodChoice) expect(source).toMatch(/PaymentMethodChoice/);
+      if (tossOnly) {
+        // 직접 입금을 다시 붙이면 환불 계좌·수동 송금이 되살아난다 — 결정을 바꿀 때 이 가드도 함께 고친다.
+        expect(source).not.toMatch(/PaymentMethodChoice|paymentMethod: 'bank_transfer'/);
+        expect(source).toMatch(/bankOption="toss_transfer"/);
+      } else if (!ownMethodChoice) expect(source).toMatch(/PaymentMethodChoice/);
     },
   );
 
