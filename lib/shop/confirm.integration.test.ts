@@ -134,6 +134,7 @@ describe('cancelShopOrder · markShopOrderShipped', () => {
 
   it('보낸 뒤에는 고객 취소를 막고, 운영자 환불(반품)은 된다', async () => {
     const o = await paidOrder();
+    expect(await markShopOrderShipped({ orderNo: o.orderNo, courier: '아무택배', trackingNumber: '1234' })).toMatchObject({ ok: false });
     expect(await markShopOrderShipped({ orderNo: o.orderNo, courier: 'CJ대한통운', trackingNumber: '1234' })).toEqual({ ok: true });
     expect(await cancelShopOrder({ orderNo: o.orderNo, requestedBy: 'customer', reason: 'x', now: new Date() })).toMatchObject({ ok: false, code: 'shipped' });
     (cancelPayment as jest.Mock).mockResolvedValueOnce(cancelled(o.orderNo, o.totalAmount));

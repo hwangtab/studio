@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 import { AdminShell } from '../../../components/admin/AdminShell';
 import { formatPriceAmount } from '../../../data/pricing';
+import { SHOP_COURIERS } from '../../../data/shop/policy';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { remainingRefundable } from '../../../lib/booking/cancel';
 import { shopLineName } from '../../../lib/shop/catalog';
@@ -117,7 +118,14 @@ export default function AdminShopOrderPage(p: Props) {
           <section className="mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
             <h2 className="mb-2 font-semibold">발송</h2>
             <div className="grid gap-3 sm:grid-cols-[12rem_1fr_auto] sm:items-end">
-              <label className="block">택배사<input value={courier} onChange={(e) => setCourier(e.target.value)} className={`mt-1 ${inputClass}`} /></label>
+              <label className="block">
+                택배사
+                {/* 처리방침 4항에 적은 택배사만 고른다(data/shop/policy.ts SHOP_COURIERS). */}
+                <select value={courier} onChange={(e) => setCourier(e.target.value)} className={`mt-1 ${inputClass}`}>
+                  <option value="">고르기</option>
+                  {SHOP_COURIERS.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </label>
               <label className="block">운송장 번호<input value={tracking} onChange={(e) => setTracking(e.target.value)} className={`mt-1 ${inputClass}`} /></label>
               <button type="button" disabled={busy} onClick={() => act({ action: 'ship', courier, trackingNumber: tracking })} className={buttonClass}>
                 {p.fulfillmentStatus === 'preparing' ? '발송 처리(고객 메일)' : '운송장 고치기'}

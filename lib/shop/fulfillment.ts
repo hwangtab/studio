@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
+import { SHOP_COURIERS, isShopCourier } from '../../data/shop/policy';
 import { validateTrackingInput } from '../funding/trackingValidation';
 import { sendShopShippedEmail } from './email';
 import { findShopOrderByOrderNo, rowsAffectedOf } from './service';
@@ -16,6 +17,8 @@ export const markShopOrderShipped = async (input: { orderNo: string; courier: st
   const courier = input.courier.trim();
   const trackingNumber = input.trackingNumber.trim();
   if (!courier || !trackingNumber) return { ok: false, message: '택배사와 운송장 번호를 모두 적어 주세요.' };
+  // 처리방침 4항에 수탁자로 적은 택배사만 — 목록 밖 업체에 배송지를 넘기면 고지하지 않은 위탁이 된다(data/shop/policy.ts).
+  if (!isShopCourier(courier)) return { ok: false, message: `택배사는 ${SHOP_COURIERS.join('·')} 중에서 골라 주세요. 다른 곳을 쓰려면 목록과 처리방침부터 고쳐야 해요.` };
   const checked = validateTrackingInput({ trackingCompany: courier, trackingNumber });
   if (!checked.ok) return checked;
 

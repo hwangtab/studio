@@ -26,6 +26,18 @@ export const SHOP_TEXT_LIMITS = {
   shippingMemo: 200,
 } as const;
 
+/**
+ * 상품을 보낼 때 쓸 수 있는 택배사 — **닫힌 목록이다.** 개인정보 처리방침 4항의 수탁자 표가 이 목록에서 만들어지고
+ * (data/privacyPolicy.ts), 관리자 발송 화면은 이 중에서만 고르며 서버도 목록 밖 이름을 거절한다(lib/shop/fulfillment.ts).
+ * 택배사는 발송할 때마다 달라질 수 있어(운영자 2026-10-13) 한 곳을 정하지 않고 쓸 수 있는 곳을 모두 적는다.
+ *
+ * **새 택배사를 쓰려면 여기 한 줄을 더한다** — 그러면 처리방침 본문이 바뀌어 펀딩 약관 판본 게이트가
+ * `FUNDING_TERMS_VERSION`을 올리라고 CI를 세운다. 고지하지 않은 수탁자에게 배송지가 넘어가는 길이 없다.
+ */
+export const SHOP_COURIERS = ['우체국택배', 'CJ대한통운', '한진택배', '롯데택배', '로젠택배'] as const;
+export type ShopCourier = (typeof SHOP_COURIERS)[number];
+export const isShopCourier = (v: unknown): v is ShopCourier => typeof v === 'string' && (SHOP_COURIERS as readonly string[]).includes(v);
+
 /** 결제창을 여는 동안 재고를 잡아 두는 시간(초). 공연 예매와 같은 10분. */
 export const SHOP_HOLD_SECONDS = 600;
 

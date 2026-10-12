@@ -11,6 +11,7 @@ import {
 } from '../../lib/funding/policy';
 import { FUNDING_TERMS_SECTIONS } from '../../pages/[locale]/funding/terms';
 import { locales } from '../../lib/i18n-config';
+import { SHOP_COURIERS } from '../../data/shop/policy';
 
 const flatten = (locale: keyof typeof POLICY_COPY_BY_LOCALE): string => {
   const copy = POLICY_COPY_BY_LOCALE[locale];
@@ -99,8 +100,16 @@ describe('처리방침 4항 — 문의·예약의 처리위탁 고지', () => {
   //   토스페이먼츠   components/booking/TossPaymentWidget.tsx · lib/booking/toss.ts
   it('예약 플로우의 수탁자가 모두 들어 있다', () => {
     expect(SERVICE_DATA_PROCESSORS.map((p) => p.name).sort()).toEqual(
-      ['Google LLC', 'Resend', 'Turso', 'Vercel', '토스페이먼츠'].sort(),
+      ['Google LLC', 'Resend', 'Turso', 'Vercel', '토스페이먼츠', SERVICE_DATA_PROCESSORS.find((p) => p.name.startsWith('택배사'))!.name].sort(),
     );
+  });
+
+  // 상점 배송 위탁 — 택배사는 발송마다 달라질 수 있어 쓸 수 있는 곳을 모두 적는다. 표의 이름이 목록 상수에서 와야
+  // 관리자가 고를 수 있는 택배사와 고지한 수탁자가 갈리지 않는다(data/shop/policy.ts SHOP_COURIERS).
+  it('택배사 수탁자 행이 SHOP_COURIERS 전부를 싣고 배송지 6항목을 밝힌다', () => {
+    const courierRow = SERVICE_DATA_PROCESSORS.find((p) => p.name.startsWith('택배사'))!;
+    for (const c of SHOP_COURIERS) expect(courierRow.name).toContain(c);
+    for (const field of ['받는 분 이름', '연락처', '우편번호', '주소', '상세주소', '배송 메모']) expect(courierRow.items).toContain(field);
   });
 
   it('구글 캘린더 위탁 항목이 실제로 이벤트에 담기는 필드를 밝힌다', () => {
