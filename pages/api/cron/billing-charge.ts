@@ -65,6 +65,8 @@ type ChargeSummary = {
   due: number;
   charged: number;
   failed: number;
+  /** 지난 회차 상태를 확인하지 못해 청구를 시도하지 않은 수(failed에 포함). */
+  held: number;
   paused: number;
   ended: number;
   skipped: number;
@@ -103,6 +105,12 @@ const processOne = async (sub: Subscription, now: Date, summary: ChargeSummary):
   }
 
   summary.failed += 1;
+  if (result.held) {
+    // 청구를 시도조차 못 했다 — 카드 거절이 아니므로 고객 '결제 실패' 메일은 보내지 않는다.
+    summary.held += 1;
+    await sendSubscriptionOperatorAlert(sub, 'charge_held', `${result.message ?? ''} (토스 코드 ${result.tossCode ?? '-'})`);
+    return;
+  }
   const paused = result.status === 'paused';
   if (paused) summary.paused += 1;
 
@@ -135,7 +143,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const now = new Date();
-  const summary: ChargeSummary = { resumed: 0, notified: 0, due: 0, charged: 0, failed: 0, paused: 0, ended: 0, skipped: 0, errors: [] };
+  const summary: ChargeSummary = { resumed: 0, notified: 0, due: 0, charged: 0, failed: 0, held: 0, paused: 0, ended: 0, skipped: 0, errors: [] };
 
   try {
     summary.ended = await endExpiredSubscriptions(now);

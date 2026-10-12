@@ -29,7 +29,7 @@ const authHeader = (): string => {
   return `Basic ${Buffer.from(`${secret}:`).toString('base64')}`;
 };
 
-type RawResult = { ok: true; json: Record<string, unknown> } | { ok: false; code: string; message: string };
+type RawResult = { ok: true; json: Record<string, unknown> } | { ok: false; code: string; message: string; httpStatus?: number };
 
 const request = async (
   path: string,
@@ -58,7 +58,7 @@ const request = async (
     });
     const json = (await res.json()) as Record<string, unknown>;
     if (!res.ok) {
-      return { ok: false, code: String(json.code ?? 'UNKNOWN'), message: String(json.message ?? '결제사 오류') };
+      return { ok: false, code: String(json.code ?? 'UNKNOWN'), message: String(json.message ?? '결제사 오류'), httpStatus: res.status };
     }
     return { ok: true, json };
   } catch (error) {
@@ -167,7 +167,7 @@ export const fetchPaymentByOrderId = async (orderId: string): Promise<TossResult
     });
     const json = (await res.json()) as Record<string, unknown>;
     if (!res.ok) {
-      return { ok: false, code: String(json.code ?? 'UNKNOWN'), message: String(json.message ?? '결제사 오류') };
+      return { ok: false, code: String(json.code ?? 'UNKNOWN'), message: String(json.message ?? '결제사 오류'), httpStatus: res.status };
     }
     const payment = json as unknown as TossPayment;
     await checkPaymentMethod({

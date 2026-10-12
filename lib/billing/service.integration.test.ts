@@ -519,6 +519,95 @@ describe('chargeCycle — 이전 pending 회차 재조회 대사 (unresolved)', 
     const rows = await client.execute("SELECT status FROM orders ORDER BY created_at");
     expect(rows.rows.map((r) => r.status)).toEqual(['paid', 'failed', 'paid']); // 첫 결제 / 재조회로 확정한 stale 4월 시도 / 새 4월 시도
   });
+
+  it('재조회가 NOT_FOUND_PAYMENT이고 시도 뒤 30분이 지났으면 failed로 확정하고 새 청구를 진행한다', async () => {
+    const { created } = await activated();
+    await leaveNetworkErrorPending(created.id);
+    fetchPaymentByOrderId.mockResolvedValue({ ok: false, code: 'NOT_FOUND_PAYMENT', message: '없음', httpStatus: 404 });
+    chargeBillingKey.mockResolvedValue(chargeOk('pay_after_not_found'));
+
+    const result = await chargeCycle(created.id, new Date('2026-04-06T00:00:00Z'), { reason: 'retry' });
+
+    expect(result).toMatchObject({ ok: true, status: 'active', attempt: 2 });
+    expect(chargeBillingKey).toHaveBeenCalledTimes(1);
+    const rows = await client.execute("SELECT status FROM orders ORDER BY created_at");
+    expect(rows.rows.map((r) => r.status)).toEqual(['paid', 'failed', 'paid']);
+  });
+
+  it('재조회가 NOT_FOUND_PAYMENT라도 방금 낸 시도면 보류한다(held) — 토스에 아직 안 적혔을 수 있다', async () => {
+    const { created } = await activated();
+    await leaveNetworkErrorPending(created.id);
+    fetchPaymentByOrderId.mockResolvedValue({ ok: false, code: 'NOT_FOUND_PAYMENT', message: '없음', httpStatus: 404 });
+
+    const result = await chargeCycle(created.id, new Date('2026-04-05T00:10:00Z'), { reason: 'manual' });
+
+    expect(result).toMatchObject({ ok: false, held: true, tossCode: 'NOT_FOUND_PAYMENT' });
+    expect(chargeBillingKey).not.toHaveBeenCalled();
+    const rows = await client.execute("SELECT status FROM orders ORDER BY created_at");
+    expect(rows.rows.map((r) => r.status)).toEqual(['paid', 'pending']);
+  });
+
+  it('재조회 보류(NETWORK_ERROR)는 held로 표시된다 — 호출부가 고객 실패 메일을 보내지 않게', async () => {
+    const { created } = await activated();
+    await leaveNetworkErrorPending(created.id);
+    fetchPaymentByOrderId.mockResolvedValue({ ok: false, code: 'NETWORK_ERROR', message: 'timeout' });
+    const result = await chargeCycle(created.id, new Date('2026-04-06T00:00:00Z'), { reason: 'retry' });
+    expect(result).toMatchObject({ ok: false, held: true });
+  });
+
+  it('토스 5xx 응답은 거절이 아니다 — orders를 pending에 두고 다음 청구 전 재조회 DONE으로 복구된다(charge 0회)', async () => {
+    const { created } = await activated();
+    chargeBillingKey.mockResolvedValue({ ok: false, code: 'FAILED_INTERNAL_SYSTEM_PROCESSING', message: '내부 오류', httpStatus: 500 });
+    await chargeCycle(created.id, new Date('2026-04-05T00:00:00Z'), { reason: 'scheduled' });
+    let rows = await client.execute("SELECT status FROM orders ORDER BY created_at");
+    expect(rows.rows.map((r) => r.status)).toEqual(['paid', 'pending']);
+
+    const orderNo = await orderNoForCycle(created.id, '2026-04');
+    chargeBillingKey.mockClear();
+    fetchPaymentByOrderId.mockResolvedValue({
+      ok: true,
+      payment: { paymentKey: 'pay_5xx_recovered', orderId: orderNo, status: 'DONE', totalAmount: LESSON_TOTAL },
+    });
+    const result = await chargeCycle(created.id, new Date('2026-04-06T00:00:00Z'), { reason: 'retry' });
+    expect(result).toMatchObject({ ok: true, status: 'active', cycleYm: '2026-04' });
+    expect(chargeBillingKey).not.toHaveBeenCalled();
+    rows = await client.execute("SELECT status FROM orders ORDER BY created_at");
+    expect(rows.rows.map((r) => r.status)).toEqual(['paid', 'paid']);
+  });
+
+  it('토스 4xx 거절(httpStatus 400)은 지금처럼 failed로 확정한다', async () => {
+    const { created } = await activated();
+    chargeBillingKey.mockResolvedValue({ ok: false, code: 'REJECT_CARD_COMPANY', message: '거절', httpStatus: 400 });
+    await chargeCycle(created.id, new Date('2026-04-05T00:00:00Z'), { reason: 'scheduled' });
+    const rows = await client.execute("SELECT status FROM orders ORDER BY created_at");
+    expect(rows.rows.map((r) => r.status)).toEqual(['paid', 'failed']);
+  });
+
+  it('같은 달에 이미 결제된 회차가 있는데 옛 시도의 DONE이 뒤늦게 오면 기록만 하고 기간은 전진시키지 않으며 운영자에게 알린다', async () => {
+    const { created } = await activated();
+    // 4월 1차 시도: 5xx로 pending에 남는다. 2차 시도(새 주문)가 승인돼 4월분이 paid가 된다.
+    chargeBillingKey.mockResolvedValueOnce({ ok: false, code: 'FAILED_INTERNAL_SYSTEM_PROCESSING', message: '', httpStatus: 500 });
+    await chargeCycle(created.id, new Date('2026-04-05T00:00:00Z'), { reason: 'scheduled' });
+    const staleOrderNo = await orderNoForCycle(created.id, '2026-04', 1);
+    // 재조회는 "토스에 없음"(30분 경과) → 1차를 failed로 확정하고 2차 승인.
+    fetchPaymentByOrderId.mockResolvedValue({ ok: false, code: 'NOT_FOUND_PAYMENT', message: '', httpStatus: 404 });
+    chargeBillingKey.mockResolvedValue(chargeOk('pay_second'));
+    await chargeCycle(created.id, new Date('2026-04-06T00:00:00Z'), { reason: 'retry' });
+    const before = (await findSubscriptionById(created.id))!;
+    expect(before.nextBillingAt?.toISOString()).toBe('2026-05-05T00:00:00.000Z');
+
+    sendSubscriptionOperatorAlert.mockClear();
+    await reconcileSubscriptionPaymentFromToss(
+      { paymentKey: 'pay_first_late', orderId: staleOrderNo, status: 'DONE', totalAmount: LESSON_TOTAL } as never,
+      new Date('2026-04-06T01:00:00Z'),
+    );
+
+    const after = (await findSubscriptionById(created.id))!;
+    expect(after.nextBillingAt?.toISOString()).toBe('2026-05-05T00:00:00.000Z'); // 두 번 전진하지 않는다
+    const rows = await client.execute("SELECT status FROM subscription_payments WHERE cycle_ym = '2026-04' ORDER BY attempt");
+    expect(rows.rows.map((r) => r.status)).toEqual(['paid', 'paid']); // 돈이 들어온 사실은 적는다
+    expect(sendSubscriptionOperatorAlert).toHaveBeenCalledWith(expect.objectContaining({ id: created.id }), 'duplicate_approval', expect.stringContaining(staleOrderNo));
+  });
 });
 
 /**

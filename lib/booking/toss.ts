@@ -16,7 +16,8 @@ export interface TossPayment {
 
 export type TossResult =
   | { ok: true; payment: TossPayment }
-  | { ok: false; code: string; message: string };
+  /** httpStatus: 토스가 응답은 했을 때의 상태 코드. 5xx는 "처리 여부 미상"이라 거절로 다루면 안 된다. */
+  | { ok: false; code: string; message: string; httpStatus?: number };
 
 /**
  * 어느 키 쌍으로 결제창을 열었나 — 승인은 **연 키와 같은 쌍의 시크릿**으로 해야 한다.

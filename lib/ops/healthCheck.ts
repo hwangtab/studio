@@ -549,6 +549,36 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   }
 
   /**
+   * 같은 구독·같은 달에 결제된 회차가 둘 이상 — 이중 청구다. 토스가 5xx로 답한 시도가 실제로는
+   * 승인됐고 D+1 재시도까지 승인된 경우가 여기 걸린다(`reconcileSubscriptionPaymentFromToss`의
+   * duplicate_approval 메일이 첫 겹, 이 점검이 둘째 겹). 환불하면 orders.status가 바뀌어도
+   * subscription_payments는 paid로 남으므로 환불 행이 있는 회차는 뺀다.
+   */
+  const duplicatePaid = await db
+    .select({
+      subscriptionId: subscriptionPayments.subscriptionId,
+      cycleYm: subscriptionPayments.cycleYm,
+      customerName: subscriptions.customerName,
+    })
+    .from(subscriptionPayments)
+    .innerJoin(orders, eq(orders.id, subscriptionPayments.orderId))
+    .innerJoin(subscriptions, eq(subscriptions.id, subscriptionPayments.subscriptionId))
+    .where(and(eq(subscriptionPayments.status, 'paid'), eq(orders.status, 'paid')))
+    .groupBy(subscriptionPayments.subscriptionId, subscriptionPayments.cycleYm, subscriptions.customerName)
+    .having(sql`count(*) > 1`);
+
+  if (duplicatePaid.length > 0) {
+    issues.push({
+      severity: 'high',
+      href: '/admin/subscriptions',
+      title: `같은 달에 두 번 결제된 구독 ${duplicatePaid.length}건 — 환불 필요`,
+      detail:
+        `구독·회차: ${sample(duplicatePaid.map((row) => `${row.customerName} ${row.cycleYm}`))}\n` +
+        '한 달치가 두 번 승인됐습니다. 관리자 > 구독 상세의 회차 이력에서 한 회차를 전액 환불하면 이 항목은 사라집니다.',
+    });
+  }
+
+  /**
    * 자동 재개 안내가 나가지 못하고 있다 — **예고 없는 청구로 이어진다.**
    *
    * 정지 기한이 끝나 자동 재개된 구독은 다음 정기 청구일에 청구된다. 그 날짜를 적은 안내

@@ -628,6 +628,40 @@ describe('구독이 끝난 뒤에 들어온 결제', () => {
  *
  * NOW는 2026-09-10이고 방치는 3년, 경보는 30일 앞서므로 기준선은 2023-10-10이다.
  */
+describe('같은 달에 두 번 결제된 구독', () => {
+  const seedTwice = async (secondOrderStatus = 'paid') => {
+    await client.execute({
+      sql: `INSERT INTO subscriptions (id, kind, customer_name, customer_phone, customer_email,
+              customer_key, manage_token, item_amount, vat_amount, total_amount, billing_day, status, created_at, updated_at)
+            VALUES ('s2','lesson','김중복','010-2','d@b.c','sub_k2','mtok2',360000,36000,396000,5,'active',unixepoch(),unixepoch())`,
+      args: [],
+    });
+    await insertOrder({ id: 'o21', order_no: 'SUB-21', manage_token: 't21', status: 'paid' });
+    await insertOrder({ id: 'o22', order_no: 'SUB-22', manage_token: 't22', status: secondOrderStatus });
+    for (const [id, orderId, attempt] of [['sp21', 'o21', 1], ['sp22', 'o22', 2]] as const) {
+      await client.execute({
+        sql: `INSERT INTO subscription_payments (id, subscription_id, order_id, cycle_ym, attempt, amount, status, attempted_at, paid_at)
+              VALUES (?,'s2',?,'2026-09',?,396000,'paid',?,?)`,
+        args: [id, orderId, attempt, EPOCH('2026-09-05T00:00:00Z'), EPOCH('2026-09-06T00:00:00Z')],
+      });
+    }
+  };
+  const issue = async () => (await runHealthCheck(NOW)).issues.find((i) => i.title.includes('두 번 결제된 구독'));
+
+  it('같은 회차에 paid가 둘이면 high로 보고한다', async () => {
+    await seedTwice();
+    const found = (await issue())!;
+    expect(found).toBeDefined();
+    expect(found.severity).toBe('high');
+    expect(found.detail).toContain('김중복 2026-09');
+  });
+
+  it('한 회차를 환불(orders refunded)하면 사라진다', async () => {
+    await seedTwice('refunded');
+    expect(await issue()).toBeUndefined();
+  });
+});
+
 describe('곧 자동 종료되는 정지 구독', () => {
   const seedPaused = async (over: { pausedReason?: string | null; updatedAt?: string; status?: string } = {}) => {
     const updatedAt = over.updatedAt ?? '2023-09-01T00:00:00Z';
