@@ -6,6 +6,7 @@ import { subscriptionPayments, subscriptions } from '../../../../db/schema';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { createSubscription, endExpiredSubscriptions } from '../../../../lib/billing/service';
 import { sendSubscriptionSetupEmail, subscriptionSetupUrl } from '../../../../lib/billing/email';
+import { serializeSubscription } from '../../../../lib/billing/admin-serialize';
 
 const LIST_LIMIT = 200;
 
@@ -62,7 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       return res.status(200).json({
         ok: true,
-        subscriptions: rows.map((row) => ({ ...row, failedCount: failedCountBySubscription.get(row.id) ?? 0 })),
+        subscriptions: rows.map((row) => ({ ...serializeSubscription(row), failedCount: failedCountBySubscription.get(row.id) ?? 0 })),
       });
     } catch (error: unknown) {
       console.error('[API/admin/subscriptions] Failed to list subscriptions:', error);
