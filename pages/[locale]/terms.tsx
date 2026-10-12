@@ -145,7 +145,7 @@ const TermsPage: NextPageWithLayout<TermsPageProps> = ({ locale }) => {
                 ))}
               </ul>
               <p className="typo-card-body mt-4">
-                <Link href="/ko/funding/terms" className="text-primary underline underline-offset-2">
+                <Link href="/ko/funding/terms" className="text-primary dark:text-primary-lighter underline underline-offset-2">
                   펀딩(리워드 선주문) 약관 보기
                 </Link>
               </p>
