@@ -36,7 +36,7 @@ import type { PortfolioItem } from '../../../types/data';
 import type { StoryCardData } from '../../../types/story';
 import type { NextPageWithLayout } from '../../../types';
 
-// 동적 import 금지 — 홈 히어로 2차 CTA가 /release-project#funding-goal로 온다. 동적이면 클라이언트
+// 동적 import 금지 — "제작비, 이렇게 만들어요"의 #funding-goal 링크가 이 절을 가리킨다. 동적이면 클라이언트
 // 이동에서 청크가 올 때까지 대상 id가 없어, 페이지 맨 위가 칠해진 뒤 계산기로 뛴다(2026-09-28 프레임 기록).
 import FundingGoalCalculator from '../../../components/release/FundingGoalCalculator';
 import { centeredGrid } from '../../../components/ui/centeredGrid';
@@ -173,7 +173,6 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
       />
 
       {isKo && <ReleaseFundingPaths kakaoUrl={siteConfig.contact.kakaoUrl} />}
-      {isKo && <FundingGoalCalculator kakaoUrl={siteConfig.contact.kakaoUrl} />}
       {/* 시장 공개 요금과의 비교(ko 전용, 전략 축 A) — 가격 페이지와 같은 컴포넌트. */}
       {isKo && (
         <Section variant="alternate">
@@ -299,6 +298,10 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
       </Section>
 
       {isKo && <ReleasePipelineCases />}
+      {/* 펀딩 목표액 계산기 — 가격·사례를 본 뒤에, 접힌 한 줄로(calm). 예전엔 히어로 바로 아래에서 EP 기준
+          목표액(약 316만원)과 공제 줄을 가격표보다 먼저 보여 줘 압박이 됐다(2026-10-12 운영자). 앞쪽 "제작비, 이렇게
+          만들어요"의 #funding-goal 링크로 오면 펼쳐진다. */}
+      {isKo && <FundingGoalCalculator kakaoUrl={siteConfig.contact.kakaoUrl} defaultProduction="single" calm />}
 
       {/* 지금 함께 만들고 있는 음반들 */}
       <Section variant="alternate">
