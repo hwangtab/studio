@@ -332,10 +332,12 @@ export type SubscriptionAlertKind =
   | 'first_charge_failed'
   | 'cancelled'
   | 'late_approval'
-  | 'paused_late_approval';
+  | 'paused_late_approval'
+  | 'duplicate_approval'
+  | 'charge_held';
 
 /** 사람이 판단해야 하는 사건(돈이 이미 움직였거나 첫 결제가 막힌 경우) — 알림 블록을 붉은 톤으로. */
-const ALERT_KINDS: SubscriptionAlertKind[] = ['first_charge_failed', 'late_approval', 'paused_late_approval'];
+const ALERT_KINDS: SubscriptionAlertKind[] = ['first_charge_failed', 'late_approval', 'paused_late_approval', 'duplicate_approval'];
 
 /** 운영자 알림. kind는 발생 사건을 나타낸다. */
 export const sendSubscriptionOperatorAlert = (
@@ -357,6 +359,11 @@ export const sendSubscriptionOperatorAlert = (
     // 정지 그대로다 — 운영자가 세워 둔 것을 웹훅이 말없이 되살리지 않기 위해서다
     // (`reconcileSubscriptionPaymentFromToss`). 재개할지 환불할지는 사람이 정한다.
     paused_late_approval: '정지된 구독에 뒤늦은 승인 — 재개 여부 판단 필요',
+    // 같은 달에 승인이 두 번 들어온 경우(5xx 뒤 재시도 + 옛 시도의 뒤늦은 DONE). 환불할 건이다.
+    duplicate_approval: '같은 달 이중 승인 — 환불 필요',
+    // 지난 회차의 토스 상태를 확인하지 못해 청구를 시도하지 않은 경우. 카드 문제가 아니므로
+    // 고객에게는 아무것도 가지 않고 운영자만 안다 — 계속 반복되면 토스 쪽 장애나 키 문제다.
+    charge_held: '청구 보류 — 지난 회차 상태 확인 실패',
   };
 
   return sendEmail({

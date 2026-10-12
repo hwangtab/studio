@@ -111,6 +111,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(200).json({ ok: true, status: result.status, paymentKey: result.paymentKey });
       }
 
+      // 청구를 시도조차 못 한 보류 — 카드 거절이 아니므로 고객 메일 없이 운영자에게만 남긴다.
+      if (result.held) {
+        await sendSubscriptionOperatorAlert(subscription, 'charge_held', `수동 결제 — ${result.message ?? ''} (토스 코드 ${result.tossCode ?? '-'})`);
+        return res.status(409).json({ ok: false, code: 'charge_held', status: result.status, message: result.message ?? '청구를 보류했습니다.' });
+      }
+
       // 첫 결제 실패(pending_card 유지)와 정기 재시도 실패(past_due/paused)를 구분해 메일을 고른다.
       if (result.status === 'pending_card') {
         return res.status(409).json({ ok: false, code: 'charge_failed', message: result.message ?? '결제에 실패했습니다.' });

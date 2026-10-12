@@ -16,6 +16,7 @@ import {
   subscriptions,
   type BillingKey,
   type Contract,
+  type Order,
   type Subscription,
   type SubscriptionPayment,
 } from '../../db/schema';
@@ -354,6 +355,11 @@ export const completeCardSetup = async (
 export interface ChargeCycleResult {
   ok: boolean;
   status: SubscriptionStatus;
+  /**
+   * 청구를 **시도하지 않고** 보류했다 — 지난 회차의 토스 상태를 확인하지 못해서다. 카드가 거절된
+   * 것이 아니므로 호출부는 고객에게 '결제 실패' 메일을 보내지 말고 운영자에게만 알린다.
+   */
+  held?: boolean;
   paymentKey?: string;
   tossCode?: string;
   message?: string;
@@ -369,6 +375,9 @@ export interface ChargeCycleResult {
  * 않는다. 반대로 attempt를 빼먹지 않는 한, 같은 시도의 재전송(타임아웃 후 재호출)은
  * 여전히 replay되어 이중 청구를 막는다.
  */
+/** 토스에 주문이 없다는 재조회 응답을 "요청이 닿지 못했다"로 확정하기까지 기다리는 시간. */
+const NOT_FOUND_SETTLE_MS = 30 * 60 * 1000;
+
 export const chargeIdempotencyKey = (subscriptionId: string, cycleYm: string, attempt: number): string =>
   `billing:${subscriptionId}:${cycleYm}:${attempt}`;
 
@@ -399,13 +408,32 @@ export const chargeCycle = async (
   // 않고 새 회차를 내면 이중 청구다. cron만이 아니라 관리자 수동 결제·카드 재등록 첫 결제
   // 등 chargeCycle을 부르는 모든 경로가 같은 위험을 지므로, 대사는 호출부가 아니라 여기서 한다.
   const unresolved = await db
-    .select({ orderNo: orders.orderNo, orderId: orders.id })
+    .select({ orderNo: orders.orderNo, orderId: orders.id, attemptedAt: subscriptionPayments.attemptedAt })
     .from(subscriptionPayments)
     .innerJoin(orders, eq(orders.id, subscriptionPayments.orderId))
     .where(and(eq(subscriptionPayments.subscriptionId, subscriptionId), eq(orders.status, 'pending')));
   for (const row of unresolved) {
     const refetched = await fetchPaymentByOrderId(row.orderNo);
     if (!refetched.ok) {
+      /**
+       * 토스에 그 주문이 아예 없다(NOT_FOUND_PAYMENT) — 요청이 토스에 닿지 못한 경우(연결 실패·
+       * 시크릿 키 누락·키 쌍 교체 뒤 남은 주문)다. 돈이 움직이지 않았다는 뜻이라(lib/booking/toss.ts)
+       * failed로 확정해도 안전하다. 다만 "막 보낸 요청이 아직 토스에 기록되기 전"일 수 있으니
+       * 시도 뒤 충분히 지난 것만 — 함수 maxDuration·토스 타임아웃을 한참 넘긴 뒤라 진행 중일 수 없다.
+       * 이 분기가 없으면 일시 장애 한 번이 그 구독의 청구를 영구히 보류시킨다(아무 경로도 풀지 않는다).
+       */
+      const stale = now.getTime() - row.attemptedAt.getTime() >= NOT_FOUND_SETTLE_MS;
+      if (refetched.code === 'NOT_FOUND_PAYMENT' && stale) {
+        console.error('[billing] pending 회차가 토스에 없음 — failed로 확정하고 청구를 진행', {
+          subscriptionId,
+          orderNo: row.orderNo,
+          attemptedAt: row.attemptedAt.toISOString(),
+        });
+        await db.run(
+          sql`UPDATE orders SET status = 'failed', updated_at = unixepoch() WHERE id = ${row.orderId} AND status = 'pending'`,
+        );
+        continue;
+      }
       // 재조회조차 안 되면 청구를 보류한다 — 모르는 채로 돈을 또 걷는 쪽이 훨씬 나쁘다.
       console.error('[billing] pending 회차 재조회 실패 — 청구 보류', {
         subscriptionId,
@@ -415,6 +443,7 @@ export const chargeCycle = async (
       });
       return {
         ok: false,
+        held: true,
         status: subscription.status,
         tossCode: refetched.code,
         message: '이전 결제 상태를 확인하지 못해 청구를 보류했어요. 잠시 후 다시 시도해 주세요.',
@@ -529,7 +558,11 @@ export const chargeCycle = async (
     // NETWORK_ERROR·CONFIG_ERROR는 "거절당했다"가 아니라 "물어보지도 못했다"이다. 실제로는
     // 승인됐을 수 있으므로 orders를 failed로 확정하지 않는다 — failed를 찍으면 뒤늦게 오는
     // 웹훅 DONE 복구가 막힌다(lib/booking/confirm.ts의 같은 규칙, #42).
-    const isInternalError = toss.code === 'NETWORK_ERROR' || toss.code === 'CONFIG_ERROR';
+    // 5xx도 같다 — 토스가 받긴 했는데 처리 여부를 말해 주지 못한 응답이다. 거절로 낙인하면 재조회
+    // 대사(위 unresolved 블록)에서 빠져 D+1 재시도가 같은 달을 한 번 더 걷는다. 4xx는 토스가
+    // 승인하지 않았다는 뜻이라 지금처럼 failed로 확정한다.
+    const isInternalError =
+      toss.code === 'NETWORK_ERROR' || toss.code === 'CONFIG_ERROR' || (toss.httpStatus ?? 0) >= 500;
     if (isInternalError) {
       console.error('[billing] 빌링 결제 응답 없음 — orders는 pending 유지, 토스 재조회 필요', {
         subscriptionId,
@@ -1244,6 +1277,55 @@ export const claimDueSubscription = async (id: string, expectedNextBillingAt: Da
  * fetchPayment로 확인한 값이라는 뜻이고, 여기서 다시 금액·상태를 검증한다
  * (booking/confirm.ts와 같은 원칙: 재조회 결과만 신뢰).
  */
+/** 같은 달 두 번째 승인 — payments·orders·회차만 paid로 적고 구독 기간은 건드리지 않는다. */
+const recordDuplicateApproval = async (
+  order: Pick<Order, 'id' | 'orderNo' | 'totalAmount'>,
+  subscriptionPayment: Pick<SubscriptionPayment, 'id' | 'cycleYm'>,
+  subscription: Subscription,
+  payment: TossPayment,
+  now: Date,
+): Promise<void> => {
+  const db = getDb();
+  try {
+    await db.batch([
+      db.insert(payments).values({
+        orderId: order.id,
+        paymentKey: payment.paymentKey,
+        method: payment.method ?? null,
+        approvedAt: payment.approvedAt ? new Date(payment.approvedAt) : null,
+        receiptUrl: payment.receipt?.url ?? null,
+        rawResponse: JSON.stringify(payment),
+      }),
+      db
+        .update(orders)
+        .set({ status: 'paid', updatedAt: now })
+        .where(and(eq(orders.id, order.id), inArray(orders.status, ['pending', 'failed']))),
+      db
+        .update(subscriptionPayments)
+        .set({ status: 'paid', paymentKey: payment.paymentKey, paidAt: now, tossCode: null, tossMessage: null })
+        .where(and(eq(subscriptionPayments.id, subscriptionPayment.id), inArray(subscriptionPayments.status, ['pending', 'failed']))),
+    ]);
+  } catch (error) {
+    console.error('[billing] 같은 달 이중 승인 — 기록 실패, 수동 대사 필요', {
+      orderNo: order.orderNo,
+      paymentKey: payment.paymentKey,
+      error,
+    });
+    return;
+  }
+  const notificationError = await sendSubscriptionOperatorAlert(
+    subscription,
+    'duplicate_approval',
+    [
+      `${subscriptionPayment.cycleYm}분이 이미 결제돼 있는데 ${formatPriceAmount(order.totalAmount)}원 승인이 한 번 더 도착했어요.`,
+      '이용기간은 전진시키지 않았어요. 관리자 > 구독 상세의 회차 이력에서 이 회차를 환불해 주세요.',
+      `주문번호 ${order.orderNo} / paymentKey ${payment.paymentKey}`,
+    ].join('\n'),
+  );
+  if (notificationError)
+    console.error('[billing] 이중 승인 운영자 알림 발송 실패', { subscriptionId: subscription.id, notificationError });
+};
+
 export const reconcileSubscriptionPaymentFromToss = async (payment: TossPayment, now: Date = new Date()): Promise<void> => {
   if (payment.status !== 'DONE') return; // CANCELED 등은 별도 경로(webhook.ts) — 여긴 승인 복구만 본다
 
@@ -1283,6 +1365,25 @@ export const reconcileSubscriptionPaymentFromToss = async (payment: TossPayment,
    * 9/30 청구가 응답 없이 끝나고 10/1에 DONE이 확인됐다면 반영하는 것은 9월분이고 다음 청구는
    * 10/30이다. `now`로 계산하면 11/30이 되어 10월분이 조용히 빠진다.
    */
+  /**
+   * 같은 달에 이미 결제된 다른 회차가 있으면 — 이 회차의 승인은 **이중 청구**다(5xx 뒤 재시도가
+   * 승인된 뒤 옛 시도의 DONE이 뒤늦게 온 경우). 돈이 들어온 사실은 적되 이용기간은 두 번 전진시키지
+   * 않고, 환불할 건으로 운영자에게 알린다.
+   */
+  const duplicatePaid = await db
+    .select({ id: subscriptionPayments.id })
+    .from(subscriptionPayments)
+    .where(and(
+      eq(subscriptionPayments.subscriptionId, subscription.id),
+      eq(subscriptionPayments.cycleYm, subscriptionPayment.cycleYm),
+      eq(subscriptionPayments.status, 'paid'),
+    ))
+    .limit(1);
+  if (duplicatePaid.length > 0) {
+    await recordDuplicateApproval(order, subscriptionPayment, subscription, payment, now);
+    return;
+  }
+
   const { period, nextBillingAt } = paidCycleSchedule(subscription, subscriptionPayment.cycleYm, now);
   /**
    * **운영자가 세워 둔 구독은 웹훅이 되살리지 않는다.**
