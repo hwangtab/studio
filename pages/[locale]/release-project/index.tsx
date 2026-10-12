@@ -22,7 +22,8 @@ import ReleaseReviewsSection from '../../../components/release/ReleaseReviewsSec
 import TierComparisonTable from '../../../components/release/TierComparisonTable';
 import ReleaseFundingPaths from '../../../components/release/ReleaseFundingPaths';
 import ReleasePipelineCases from '../../../components/release/ReleasePipelineCases';
-import QuoteEntryLink from '../../../components/quote/QuoteEntryLink';
+// 정적 import — 티어 페이지·발매 글이 #release-budget로 온다(FundingGoalCalculator와 같은 이유).
+import ReleaseBudgetCalculator from '../../../components/release/ReleaseBudgetCalculator';
 import { releasePipelineCopy } from '../../../data/releasePipeline';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../../lib/getStatic';
 import { usePortfolioModalLazy } from '../../../hooks/usePortfolioModalLazy';
@@ -219,13 +220,12 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           </Link>
           {t('releaseProject.tiers.footNotePost')}
         </p>
-        {/* 견적 요청서 입구 — 발매 카톡 상담 대부분이 "내 경우 얼마인가"라서 티어를 본 자리에 둔다. ko 전용. */}
+        {/* 발매 예산 계산기 — 티어 카드의 "~부터"를 본 자리에서 "내 경우엔?"을 바로 계산한다. 펼친 채(2026-10-12 운영자).
+            발매 카톡 상담 대부분이 견적·예산 질문이다. ko 전용. 티어 페이지·발매 글의 입구가 #release-budget로 온다. */}
         {isKo && (
-          <p className="text-center text-sm mt-3">
-            <QuoteEntryLink ctaId="release_tiers" service="release">
-              내 발매 예산은 얼마일까? 질문 몇 개로 바로 보기 →
-            </QuoteEntryLink>
-          </p>
+          <div className="mt-12">
+            <ReleaseBudgetCalculator kakaoUrl={siteConfig.contact.kakaoUrl} id="release-budget" />
+          </div>
         )}
 
         {/* M1: 3티어 비교표 — 결정 보조 */}

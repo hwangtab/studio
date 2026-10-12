@@ -52,8 +52,11 @@ export type MicroEventName =
   // 카톡을 여는 클릭은 lead_click_kakao(cta_id quote_kakao, quote_code)로 따로 잡힌다.
   | 'micro_quote_start'
   // 견적 요청서로 넘어가는 입구 링크 클릭(QuoteEntryLink). cta_id = 자리(pricing_table·contact_fast·
-  // release_tiers·release_tier_<tier>·inline_service_release_quote). 페이지 이동이라 리드가 아니다.
+  // release_tier_<tier>·inline_service_release_quote — 이 둘은 2026-10-12부터 /release-project#release-budget로 간다). 페이지 이동이라 리드가 아니다.
   | 'micro_click_quote_entry'
+  // 발매 예산 계산기(/release-project 티어 아래)를 처음 만졌을 때 한 번. 관심 신호일 뿐 리드가 아니다 — 결과로
+  // 카톡을 여는 클릭은 lead_click_kakao(cta_id release_budget_kakao, quote_code)로 따로 잡힌다.
+  | 'micro_release_budget'
   // 믹싱 전·후 비교 음원. component로 자리를 가른다: HomeMixCompare(전체 곡) · MixingMasteringMixCompare ·
   // ReleaseMixCompare · MixingOrderMixCompare(30초 발췌). cta_id: mix_compare_play(처음 재생 한 번) ·
   // mix_compare_switch(전환, side 동반). 관심 신호일 뿐 리드가 아니다.
