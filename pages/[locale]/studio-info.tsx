@@ -239,7 +239,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
           </div>
 
           {/* id="equipment": 홈 스튜디오 섹션의 "전체 장비 보기"가 여기로 온다 */}
-          <div id="equipment" className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 scroll-mt-24">
+          <div id="equipment" className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 scroll-mt-24">
             <EquipmentSection title={categories.microphones} items={equipment.microphones} icon={Mic} />
             <EquipmentSection title={t('studioInfo.equipment.preampsEq')} items={[...equipment.preamps, ...equipment.equalizers]} icon={SlidersHorizontal} />
             <EquipmentSection title={t('studioInfo.equipment.compressorsProcessors')} items={[...equipment.compressors, ...equipment.processors]} icon={SlidersHorizontal} />

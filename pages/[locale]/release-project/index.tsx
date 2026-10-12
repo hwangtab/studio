@@ -38,6 +38,10 @@ import type { NextPageWithLayout } from '../../../types';
 // 동적 import 금지 — 홈 히어로 2차 CTA가 /release-project#funding-goal로 온다. 동적이면 클라이언트
 // 이동에서 청크가 올 때까지 대상 id가 없어, 페이지 맨 위가 칠해진 뒤 계산기로 뛴다(2026-09-28 프레임 기록).
 import FundingGoalCalculator from '../../../components/release/FundingGoalCalculator';
+import { centeredGrid } from '../../../components/ui/centeredGrid';
+
+// 진행 중 음반 5장 — 마지막 줄을 가운데로(docs/grid-orphan-audit-2026-10.md).
+const IN_PROGRESS_GRID = centeredGrid({ md: 2, lg: 3, gap: 4 });
 const ContactCTA = dynamic(() => import('../../../components/common/ContactCTA'));
 // 계산기는 상호작용 절이라 초기 번들에서 뺀다(ssr 유지 — 결과 표가 SSR HTML에 남는다).
 const MarketPriceComparison = dynamic(() => import('../../../components/pricing/MarketPriceComparison'));
@@ -298,11 +302,11 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
         <p className="text-center text-xs text-gray-500 dark:text-gray-400 mb-10">
           {t('releaseProject.inProgress.asOf', { date: asOf })}
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
+        <div className={`${IN_PROGRESS_GRID.container} max-w-4xl mx-auto`}>
           {IN_PROGRESS_ITEMS.map((item) => (
             <div
               key={`${item.artist}-${item.titleKey}`}
-              className="glass-card rounded-xl p-5"
+              className={`glass-card rounded-xl p-5 ${IN_PROGRESS_GRID.item}`}
             >
               <Badge tone="brand" className="mb-3">
                 {t(`releaseProject.inProgress.types.${item.typeKey}`)}

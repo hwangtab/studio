@@ -9,6 +9,10 @@ import { Section } from './Section';
 import { STORY_CATEGORY_KEYS } from '../../lib/storyCategories';
 import type { Locale } from '../../lib/i18n';
 import type { StoryCardData } from '../../types/story';
+import { centeredGrid } from './centeredGrid';
+
+const MAX_RELATED_STORIES = 6;
+const STORY_GRID = centeredGrid({ md: 2, lg: 3, gap: 6 });
 
 interface RelatedStoriesSectionProps {
   stories: StoryCardData[];
@@ -58,14 +62,16 @@ const RelatedStoriesSection: React.FC<RelatedStoriesSectionProps> = ({
     <Section variant="default">
       <SectionHeading icon={BookOpen} title={title} subtitle={subtitle} />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {stories.map((story) => (
-          <StoryCard
-            key={story.slug}
-            story={story}
-            locale={locale}
-            labels={labels}
-          />
+      {/* 6편까지 — 3칸·2칸 모두 나누어떨어진다. 그보다 적으면 마지막 줄을 가운데로(docs/grid-orphan-audit-2026-10.md). */}
+      <div className={STORY_GRID.container}>
+        {stories.slice(0, MAX_RELATED_STORIES).map((story) => (
+          <div key={story.slug} className={STORY_GRID.item}>
+            <StoryCard
+              story={story}
+              locale={locale}
+              labels={labels}
+            />
+          </div>
         ))}
       </div>
 

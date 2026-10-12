@@ -1,5 +1,6 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
+import { centeredGrid } from './centeredGrid';
 
 /**
  * 괘선 목록(라이너 노트 §3-5, docs/design-liner-notes-plan-2026-10.md).
@@ -48,10 +49,17 @@ export const RuleList = ({
   className,
 }: RuleListProps) => {
   if (items.length === 0) return null;
+  // 3칸에 4개면 2×2로, 5·7개처럼 나누어떨어지지 않으면 마지막 줄을 가운데로(docs/grid-orphan-audit-2026-10.md).
+  const n = items.length;
+  const twoByTwo = columns === 3 && n === 4;
+  const centered = columns === 3 && !twoByTwo && n % 3 !== 0 ? centeredGrid({ md: 3, gap: 8 }) : null;
+  const listClass = centered
+    ? cn(centered.container, 'gap-y-10 md:gap-y-8', className)
+    : cn('grid gap-10 md:gap-8', twoByTwo ? 'sm:grid-cols-2' : COLUMNS[columns], className);
   return (
-    <List className={cn('grid gap-10 md:gap-8', COLUMNS[columns], className)}>
+    <List className={listClass}>
       {items.map((item, index) => (
-        <li key={item.key ?? (typeof item.heading === 'string' ? item.heading : index)} className="border-t-2 border-gray-950 dark:border-white pt-5">
+        <li key={item.key ?? (typeof item.heading === 'string' ? item.heading : index)} className={cn('border-t-2 border-gray-950 dark:border-white pt-5', centered?.item)}>
           {numbered && (
             <span aria-hidden="true" className="block text-sm font-semibold tabular-nums text-gray-600 dark:text-gray-300 mb-3">
               {labelPrefix ? `${labelPrefix}${index + 1}` : String(index + 1).padStart(2, '0')}

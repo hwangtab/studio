@@ -290,7 +290,8 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
               <p className="text-center text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">
                 {t(k('priceFactorsTitle'))}
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* 홀수 개면 마지막 한 칸을 두 칸 폭으로 — 왼쪽에 홀로 남지 않게(docs/grid-orphan-audit-2026-10.md). */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:[&>*:last-child:nth-child(odd)]:col-span-2">
                 {priceFactors.map((f, i) => (
                   <div
                     key={i}
