@@ -78,65 +78,80 @@ const TermsPage: NextPageWithLayout<TermsPageProps> = ({ locale }) => {
         ]}
       />
 
-      <Section variant="default">
+      <Section variant="default" className="pb-16 pt-28 md:pb-24 md:pt-36">
         <div className="max-w-4xl mx-auto">
-          <h1 className="typo-section-title mb-4 text-gray-900 dark:text-white">{title}</h1>
-          <p className="typo-card-body text-gray-700 dark:text-gray-300 mb-2">{subtitle}</p>
-          <p className="typo-card-meta text-gray-500 dark:text-gray-400 mb-8">시행일: 2026년 10월 4일</p>
+          <h1 className="typo-section-title">{title}</h1>
+          <p className="typo-section-lead mt-4 mb-2">{subtitle}</p>
+          <p className="typo-card-meta mb-10">시행일: 2026년 10월 4일</p>
 
           <div className="space-y-6">
             {TERMS_SECTIONS.map((section) => (
-              <article key={section.heading} className="glass-card rounded-xl p-6">
+              <article key={section.heading} className="glass-card rounded-2xl p-6">
                 <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">{section.heading}</h2>
                 <p className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed">{section.body}</p>
               </article>
             ))}
 
-            <article id="refund" className="glass-card scroll-mt-24 rounded-xl p-6">
+            <article id="refund" className="glass-card scroll-mt-24 rounded-2xl p-6">
               <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">환불 규정</h2>
               <ul className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed list-disc pl-5 space-y-1">
                 {REFUND_POLICY_LINES.map((line) => (
                   <li key={line}>{line}</li>
                 ))}
               </ul>
-              <h3 className="typo-card-title mt-4 mb-2 text-base text-gray-900 dark:text-white">음악연습실 시간제 예약</h3>
+            </article>
+
+            <article className="glass-card rounded-2xl p-6">
+              <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">환불 규정 — 음악연습실 시간제 예약</h2>
               <ul className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed list-disc pl-5 space-y-1">
                 {PRACTICE_ROOM_REFUND_POLICY_LINES.map((line) => (
                   <li key={line}>{line}</li>
                 ))}
               </ul>
-              <h3 className="typo-card-title mt-4 mb-2 text-base text-gray-900 dark:text-white">믹싱·마스터링 주문</h3>
+            </article>
+
+            <article className="glass-card rounded-2xl p-6">
+              <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">환불 규정 — 믹싱·마스터링 주문</h2>
               <ul className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed list-disc pl-5 space-y-1">
                 {MIXING_REFUND_POLICY_LINES.map((line) => (
                   <li key={line}>{line}</li>
                 ))}
               </ul>
-              <h3 className="typo-card-title mt-4 mb-2 text-base text-gray-900 dark:text-white">음원 발매 홍보</h3>
+            </article>
+
+            <article className="glass-card rounded-2xl p-6">
+              <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">환불 규정 — 음원 발매 홍보</h2>
               <ul className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed list-disc pl-5 space-y-1">
                 {PRESS_REFUND_POLICY_LINES.map((line) => (
                   <li key={line}>{line}</li>
                 ))}
               </ul>
-              <h3 className="typo-card-title mt-4 mb-2 text-base text-gray-900 dark:text-white">정기결제(연습실 월 이용료·프로듀싱 레슨)</h3>
+            </article>
+
+            <article className="glass-card rounded-2xl p-6">
+              <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">환불 규정 — 정기결제(연습실 월 이용료·프로듀싱 레슨)</h2>
               <ul className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed list-disc pl-5 space-y-1">
                 {SUBSCRIPTION_REFUND_POLICY_LINES.map((line) => (
                   <li key={line}>{line}</li>
                 ))}
               </ul>
-              <h3 className="typo-card-title mt-4 mb-2 text-base text-gray-900 dark:text-white">아티스트 구독(월 후원 멤버십)</h3>
+            </article>
+
+            <article className="glass-card rounded-2xl p-6">
+              <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">환불 규정 — 아티스트 구독(월 후원 멤버십)</h2>
               <ul className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed list-disc pl-5 space-y-1">
                 {ARTIST_SUPPORT_REFUND_POLICY_LINES.map((line) => (
                   <li key={line}>{line}</li>
                 ))}
               </ul>
-              <p className="mt-6 text-sm">
-                <Link href="/ko/funding/terms" className="underline">
+              <p className="typo-card-body mt-4">
+                <Link href="/ko/funding/terms" className="text-primary underline underline-offset-2">
                   펀딩(리워드 선주문) 약관 보기
                 </Link>
               </p>
             </article>
 
-            <article className="glass-card rounded-xl p-6">
+            <article className="glass-card rounded-2xl p-6">
               <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">사업자 정보</h2>
               <dl className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed space-y-1">
                 <div className="flex gap-2">
