@@ -43,6 +43,12 @@ import { buildPricingPageSchema } from '../../lib/pricingSchema';
 import { trackMicroEvent } from '../../utils/analytics';
 import type { StoryCardData } from '../../types/story';
 import type { NextPageWithLayout } from '../../types';
+import { centeredGrid } from '../../components/ui/centeredGrid';
+
+// 카드 수가 칸 수로 나누어떨어지지 않는 절(스페셜 7·작곡편곡 5·부가 2)은 마지막 줄을 가운데로(docs/grid-orphan-audit-2026-10.md).
+const SPECIAL_GRID = centeredGrid({ md: 3, gap: 8 });
+const ARRANGEMENT_GRID = centeredGrid({ md: 2, lg: 3, gap: 6 });
+const ADDITIONAL_GRID = centeredGrid({ md: 2, lg: 3, gap: 6 });
 
 /**
  * ko에서 온라인 결제까지 이어지는 오퍼만 보조 CTA를 받는다(Phase 2 §5).
@@ -376,9 +382,9 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
           {VAT_NOTICE}
         </p>
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto" role="list">
+        <div className={`${SPECIAL_GRID.container} max-w-6xl mx-auto`} role="list">
           {specialPackages.map((offer, index) => (
-            <div key={offer.id} role="listitem">
+            <div key={offer.id} role="listitem" className={SPECIAL_GRID.item}>
               <PricingCard
                 kakaoEmphasis="band"
                 id={offer.id}
@@ -566,9 +572,9 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
           {VAT_NOTICE}
         </p>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto" role="list">
+        <div className={`${ARRANGEMENT_GRID.container} max-w-6xl mx-auto`} role="list">
           {arrangementOffers.map((offer, index) => (
-            <div key={offer.id} role="listitem">
+            <div key={offer.id} role="listitem" className={ARRANGEMENT_GRID.item}>
               <PricingCard
                 kakaoEmphasis="band"
                 id={offer.id}
@@ -662,9 +668,9 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
           {VAT_NOTICE}
         </p>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" role="list">
+        <div className={`${ADDITIONAL_GRID.container} max-w-6xl mx-auto`} role="list">
           {additionalServices.map((service, index) => (
-            <div key={service.id} role="listitem">
+            <div key={service.id} role="listitem" className={ADDITIONAL_GRID.item}>
               <PricingCard
                 kakaoEmphasis="band"
                 id={service.id}

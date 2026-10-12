@@ -18,12 +18,18 @@ import type { PortfolioItem } from '../../types/data';
 import type { BuyerIntentHub } from '../../data/buyerIntentHubs';
 import type { getPricingData } from '../../data/pricing';
 import { Button } from '../ui/Button';
+import { centeredGrid } from '../ui/centeredGrid';
 
 /** 히어로 CTA 크기 — 리프트·색 전환·포커스 링은 Button이 소유한다(design-system §4). */
 const HERO_CTA = 'h-auto min-h-[48px] w-full sm:w-auto whitespace-normal py-4 px-10 text-base sm:text-lg font-bold leading-snug';
 const HERO_CTA_ON_IMAGE = `${HERO_CTA} focus-visible:ring-white/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-black/20 dark:focus-visible:ring-offset-black/20`;
 
 const FAQSection = dynamic(() => import('../ui/FAQSection'));
+
+// 마지막 줄이 덜 차면 가운데로 — 추천 패키지 1장·작업 결과 1장이 왼쪽에 홀로 서던 자리(docs/grid-orphan-audit-2026-10.md).
+const HUB_STORY_GRID = centeredGrid({ md: 2, lg: 3, gap: 6 });
+const HUB_PACKAGE_GRID = centeredGrid({ md: 2, gap: 6 });
+const HUB_PORTFOLIO_GRID = centeredGrid({ md: 3, gap: 4 });
 const ContactCTA = dynamic(() => import('../common/ContactCTA'));
 
 type PricingData = ReturnType<typeof getPricingData>;
@@ -202,14 +208,16 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
             title="이 가이드들이 도와줘요"
             subtitle="한 페이지에서 시작해 깊게 들어갈 수 있도록 단계별로 큐레이션했어요."
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {relatedStories.map((story) => (
-              <StoryCard
-                key={story.slug}
-                story={story}
-                locale={locale}
-                labels={storyCardLabels}
-              />
+          {/* 6편까지(3칸·2칸 모두 나누어떨어진다), 적으면 마지막 줄을 가운데로 — docs/grid-orphan-audit-2026-10.md. */}
+          <div className={HUB_STORY_GRID.container}>
+            {relatedStories.slice(0, 6).map((story) => (
+              <div key={story.slug} className={HUB_STORY_GRID.item}>
+                <StoryCard
+                  story={story}
+                  locale={locale}
+                  labels={storyCardLabels}
+                />
+              </div>
             ))}
           </div>
         </Section>
@@ -222,7 +230,8 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
             title="추천 패키지"
             subtitle="이 의도에 가장 맞는 패키지예요. 상세는 가격 페이지에서 확인하세요."
           />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <div className={`${HUB_PACKAGE_GRID.container} max-w-4xl mx-auto`}>
+            <div className={HUB_PACKAGE_GRID.item}>
             <PricingCard
               id={primaryPackage.id}
               title={primaryPackage.title}
@@ -234,7 +243,9 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
               ctaLabel={t('nav.pricing')}
               ctaHref={`/${locale}/pricing`}
             />
+            </div>
             {secondaryPackage && (
+              <div className={HUB_PACKAGE_GRID.item}>
               <PricingCard
                 id={secondaryPackage.id}
                 title={secondaryPackage.title}
@@ -245,6 +256,7 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
                 ctaLabel={t('nav.pricing')}
                 ctaHref={`/${locale}/pricing`}
               />
+              </div>
             )}
           </div>
         </Section>
@@ -257,9 +269,11 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
             title="실제 작업 결과물"
             subtitle="가이드대로 진행한 실제 결과를 확인해보세요."
           />
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-5xl mx-auto">
+          <div className={`${HUB_PORTFOLIO_GRID.container} max-w-5xl mx-auto`}>
             {relatedPortfolio.map((item) => (
-              <PortfolioMiniCard key={item.id} item={item} locale={locale} />
+              <div key={item.id} className={HUB_PORTFOLIO_GRID.item}>
+                <PortfolioMiniCard item={item} locale={locale} />
+              </div>
             ))}
           </div>
           <div className="mt-8 text-center">

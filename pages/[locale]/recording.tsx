@@ -306,7 +306,7 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
         <ServiceExcerpt locale={locale} service="recording" component="RecordingExcerpt" className="mt-10 max-w-3xl" />
       </Section>
 
-      {/* 가격 안내 — 가격 SSOT의 recordingOffers 3종 */}
+      {/* 가격 안내 — 가격 SSOT의 recordingOffers(지금 4종 → 2×2, docs/grid-orphan-audit-2026-10.md). 문구에 개수를 적지 않는다 — 상품이 늘면 어긋난다. */}
       <Section id="recording-pricing" variant="alternate">
         <SectionHeading
           icon={Mic2}
@@ -314,7 +314,7 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
           subtitle={t('recording.package.subtitle')}
           className="mb-10"
         />
-        <div className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto items-stretch">
+        <div className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto items-stretch">
           {recordingOffers.map((offer) => (
             <PricingCard
               kakaoEmphasis="band"

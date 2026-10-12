@@ -6,6 +6,9 @@ import SectionHeading from './SectionHeading';
 import { Section, SectionVariant } from './Section';
 import { getReviews } from '../../data/reviews';
 import type { Locale } from '../../lib/i18n';
+import { centeredGrid } from './centeredGrid';
+
+const REVIEW_GRID = centeredGrid({ md: 2, gap: 8 });
 
 
 // 별점 5점 고정이므로 상수 배열로 정의 (매 렌더마다 재생성 방지)
@@ -81,13 +84,14 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko', eyebrow,
                 </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            {/* 후기가 1개여도 왼쪽 절반에 홀로 서지 않게 가운데로(2026-10-12 운영자, docs/grid-orphan-audit-2026-10.md). */}
+            <div className={`${REVIEW_GRID.container} max-w-6xl mx-auto`}>
                 {/* 리뷰 schema는 JSON-LD(generateDefaultSchema의 LocalBusiness.review)
                     에서 완전 형태로 이미 출력됨. microdata로 중복 마킹 시 itemReviewed의
                     bare LocalBusiness가 4개씩 생겨 Google Rich Results 검사기 warning 양산.
                     의미 정보는 JSON-LD가 단독으로 모두 표현하므로 microdata 제거. */}
                 {reviews.map((review, index) => (
-                    <div key={`${review.author}-${review.categoryKey}-${review.datePublished}`}>
+                    <div key={`${review.author}-${review.categoryKey}-${review.datePublished}`} className={REVIEW_GRID.item}>
                         <BaseCard
                             variant="default"
                             delay={index * 0.08}

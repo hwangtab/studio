@@ -11,6 +11,7 @@ import { defaultLocale } from '../../../lib/i18n';
 import { computeProjectState, type ProjectState } from '../../../lib/funding/projects';
 import { getListableFundingProjectsForStaticProps } from '../../../lib/funding/repository';
 import FundingPipelinePromo from '../../../components/funding/FundingPipelinePromo';
+import { centeredGrid } from '../../../components/ui/centeredGrid';
 
 interface Item {
   slug: string;
@@ -37,9 +38,11 @@ const FALLBACK_HERO = '/images/bulgwang-mixing-club.webp';
 const pickHeroImage = (items: Item[]): string =>
   items.find((it) => it.state === 'live')?.cover ?? items[0]?.cover ?? FALLBACK_HERO;
 
-/** 1장이면 한 칸, 2장이면 두 칸까지만 벌린다 — 3열 고정이면 한 장짜리가 왼쪽으로 몰린다. */
+/** 1장이면 한 칸, 2장이면 두 칸까지만 벌린다 — 3열 고정이면 한 장짜리가 왼쪽으로 몰린다.
+ *  3장 이상은 마지막 줄을 가운데로(태블릿 2칸에 3장이면 끝 한 장이 왼쪽에 남았다, docs/grid-orphan-audit-2026-10.md). */
+const MANY_GRID = centeredGrid({ md: 2, lg: 3, gap: 6 });
 const gridColumns = (count: number): string =>
-  count <= 1 ? 'max-w-md' : count === 2 ? 'max-w-3xl md:grid-cols-2' : 'max-w-6xl md:grid-cols-2 lg:grid-cols-3';
+  count <= 1 ? 'grid max-w-md' : count === 2 ? 'grid max-w-3xl md:grid-cols-2' : `${MANY_GRID.container} max-w-6xl`;
 
 export default function FundingIndexPage({ items }: Props) {
   return (
@@ -82,9 +85,11 @@ export default function FundingIndexPage({ items }: Props) {
             </Link>
           </div>
         ) : (
-          <div className={`mx-auto grid items-stretch gap-6 ${gridColumns(items.length)}`}>
+          <div className={`mx-auto items-stretch gap-6 ${gridColumns(items.length)}`}>
             {items.map((it) => (
-              <FundingProjectCard key={it.slug} {...it} />
+              <div key={it.slug} className={items.length >= 3 ? MANY_GRID.item : undefined}>
+                <FundingProjectCard {...it} />
+              </div>
             ))}
           </div>
         )}

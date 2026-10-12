@@ -177,7 +177,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           className="mb-12"
         />
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <div className="grid md:grid-cols-3 gap-6 mb-12">
           {coreServices.map((service) => (
             <FeatureCard
               key={service.title}
@@ -198,7 +198,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           className="mb-12"
         />
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {productionProcess.map((step) => (
             <FeatureCard
               key={step.title}

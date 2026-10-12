@@ -54,6 +54,10 @@ import {
   parseResidentBenefits,
   parseTitleDescriptionItems,
 } from '../../components/practice-room/contentItems';
+import { centeredGrid } from '../../components/ui/centeredGrid';
+
+// 고민 5개 — 마지막 줄을 가운데로(docs/grid-orphan-audit-2026-10.md).
+const PAIN_GRID = centeredGrid({ md: 2, lg: 3, gap: 4 });
 
 interface PracticeRoomProps {
   locale: Locale;
@@ -287,12 +291,12 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
             title={t('practiceRoom.painPoints.title')}
             className="mb-8"
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
-            <PainPoint icon={Wind} text={t('practiceRoom.painPoints.items.0')} locale={locale} />
-            <PainPoint icon={VolumeX} text={t('practiceRoom.painPoints.items.1')} locale={locale} />
-            <PainPoint icon={Wind} text={t('practiceRoom.painPoints.items.2')} locale={locale} />
-            <PainPoint icon={Zap} text={t('practiceRoom.painPoints.items.3')} locale={locale} />
-            <PainPoint icon={Sparkles} text={t('practiceRoom.painPoints.items.4')} locale={locale} />
+          <div className={`${PAIN_GRID.container} max-w-4xl mx-auto`}>
+            <div className={PAIN_GRID.item}><PainPoint icon={Wind} text={t('practiceRoom.painPoints.items.0')} locale={locale} /></div>
+            <div className={PAIN_GRID.item}><PainPoint icon={VolumeX} text={t('practiceRoom.painPoints.items.1')} locale={locale} /></div>
+            <div className={PAIN_GRID.item}><PainPoint icon={Wind} text={t('practiceRoom.painPoints.items.2')} locale={locale} /></div>
+            <div className={PAIN_GRID.item}><PainPoint icon={Zap} text={t('practiceRoom.painPoints.items.3')} locale={locale} /></div>
+            <div className={PAIN_GRID.item}><PainPoint icon={Sparkles} text={t('practiceRoom.painPoints.items.4')} locale={locale} /></div>
           </div>
         </m.div>
       </Section>

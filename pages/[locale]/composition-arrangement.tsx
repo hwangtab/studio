@@ -43,6 +43,11 @@ import { generateHowToSchema } from '../../utils/schema';
 import { createFadeInAnimation, createInViewEnterAnimation } from '../../utils/animationUtils';
 import { createTranslatedHowToSteps, createTranslatedQaItems } from '../../utils/translatedList';
 import type { NextPageWithLayout } from '../../types';
+import { centeredGrid } from '../../components/ui/centeredGrid';
+
+// 5개짜리 가격표·절차 — 마지막 줄을 가운데로(docs/grid-orphan-audit-2026-10.md).
+const PRICE_GRID = centeredGrid({ md: 2, lg: 3, gap: 6 });
+const PROCESS_GRID = centeredGrid({ md: 3, lg: 5, gap: 6 });
 
 /**
  * 작곡·편곡·MR 제작·프로듀싱 의뢰 LP (2026-10-05).
@@ -285,9 +290,9 @@ const CompositionArrangement: NextPageWithLayout<CompositionArrangementProps> = 
           className="mb-10"
           as="h2"
         />
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto" role="list">
+        <div className={`${PRICE_GRID.container} max-w-6xl mx-auto`} role="list">
           {arrangementOffers.map((offer, index) => (
-            <div key={offer.id} role="listitem">
+            <div key={offer.id} role="listitem" className={PRICE_GRID.item}>
               <PricingCard
                 id={offer.id}
                 title={offer.title}
@@ -374,11 +379,11 @@ const CompositionArrangement: NextPageWithLayout<CompositionArrangementProps> = 
             subtitle={t('compositionArrangement.process.subtitle')}
             className="mb-12"
           />
-          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-6 max-w-6xl mx-auto">
+          <div className={`${PROCESS_GRID.container} max-w-6xl mx-auto`}>
             {([0, 1, 2, 3, 4] as const).map((i) => (
               <m.div
                 key={i}
-                className="relative glass-card rounded-2xl p-6"
+                className={`relative glass-card rounded-2xl p-6 ${PROCESS_GRID.item}`}
               >
                 <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center mb-4">
                   <span className="text-gray-600 dark:text-gray-300 font-bold text-sm">{String(i + 1).padStart(2, '0')}</span>

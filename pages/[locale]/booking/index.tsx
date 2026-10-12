@@ -13,6 +13,10 @@ import { nextShowtimeOf } from '../../../lib/shows/availability';
 import { formatWon, SALE_STATE_LABELS } from '../../../lib/shows/copy';
 import { listPublicShows } from '../../../lib/shows/queries';
 import { trackMicroEvent } from '../../../utils/analytics';
+import { centeredGrid } from '../../../components/ui/centeredGrid';
+
+// 상품이 하나뿐인 서비스(성우·축가·커버·시간제)가 왼쪽 절반에 홀로 서지 않게 가운데로(docs/grid-orphan-audit-2026-10.md).
+const BOOKING_GRID = centeredGrid({ md: 2, gap: 4 });
 
 /** 허브에 싣는 공연 한 줄 — 상세와 같은 조회(listPublicShows)에서 필요한 값만 추린다. */
 type HubShow = { slug: string; title: string; label: string; venueName: string; lowPrice: number | null; stateLabel: string; open: boolean };
@@ -70,9 +74,9 @@ export default function BookingHubPage({ groups, shows }: BookingHubProps) {
               subtitle="스튜디오 놀이 여는 공연이에요. 사전 예매는 온라인에서 받고, 티켓(QR)은 메일로 보내 드려요."
               as="h2"
             />
-            <ul className="grid gap-4 md:grid-cols-2">
+            <ul className={BOOKING_GRID.container}>
               {shows.map((show) => (
-                <li key={show.slug}>
+                <li key={show.slug} className={BOOKING_GRID.item}>
                   <BaseCard padding="compact" className="flex h-full flex-col">
                     <h3 className="typo-card-title text-gray-900 dark:text-white">{show.title}</h3>
                     <p className="mt-1 typo-card-body text-gray-700 dark:text-gray-300">
@@ -122,9 +126,9 @@ export default function BookingHubPage({ groups, shows }: BookingHubProps) {
           <div className="mx-auto max-w-4xl">
             <SectionHeading title={group.title} subtitle={group.description} as="h2" />
             <p className="mb-4 text-right typo-card-meta">{group.priceNote}</p>
-            <ul className="grid gap-4 md:grid-cols-2">
+            <ul className={BOOKING_GRID.container}>
               {group.entries.map((entry) => (
-                <li key={entry.productId}>
+                <li key={entry.productId} className={BOOKING_GRID.item}>
                   <BaseCard padding="compact" className="flex h-full flex-col">
                     <h3 className="typo-card-title text-gray-900 dark:text-white">{entry.name}</h3>
                     <p className="mt-1 tabular-nums">
@@ -158,9 +162,9 @@ export default function BookingHubPage({ groups, shows }: BookingHubProps) {
             subtitle="상담한 뒤 진행해요. 카카오톡으로 먼저 문의해 주세요."
             as="h2"
           />
-          <ul className="grid gap-4 md:grid-cols-2">
+          <ul className={BOOKING_GRID.container}>
             {BOOKING_HUB_INQUIRY_LINKS.map((item) => (
-              <li key={item.href}>
+              <li key={item.href} className={BOOKING_GRID.item}>
                 <BaseCard padding="compact" className="flex h-full flex-col">
                   <h3 className="typo-card-title text-gray-900 dark:text-white">{item.label}</h3>
                   <p className="mt-1 flex-1 typo-card-body text-gray-700 dark:text-gray-300">{item.description}</p>
