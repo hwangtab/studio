@@ -38,6 +38,7 @@ import {
 import type { Locale } from '../../lib/i18n';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 import { Button } from '../ui/Button';
+import QuoteEntryLink from '../quote/QuoteEntryLink';
 import { NOTICE_TONE_CLASS } from '../ui/Notice';
 
 type ServiceType = 'wedding' | 'voice' | 'lesson' | 'recording' | 'mixing' | 'practice' | 'release' | 'funding' | 'cover' | 'promotion' | 'arrangement';
@@ -343,6 +344,16 @@ const InlineServiceCallout = ({ type, locale }: InlineServiceCalloutProps) => {
           <ArrowRight size={14} aria-hidden="true" />
         </Link>
       </div>
+      {/* 발매만 — softNote가 "예산·일정부터 물어보라"고 하는 자리라, 카톡 전에 예상 비용을 바로 볼 수 있게 한다.
+          발매 카톡 상담 대부분이 견적·예산 질문이다(2026-10-12). 이 콜아웃은 ko에서만 렌더된다. */}
+      {type === 'release' && (
+        <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+          예산부터 궁금하다면{' '}
+          <QuoteEntryLink ctaId="inline_service_release_quote" service="release">
+            질문 몇 개로 예상 비용 보기
+          </QuoteEntryLink>
+        </p>
+      )}
     </aside>
   );
 };
