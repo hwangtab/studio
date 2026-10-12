@@ -7,6 +7,7 @@ import { ChoiceCard, ChoiceGroup } from '../ui/Choice';
 import { Checkbox } from '../ui/Checkbox';
 import { Field, TextInput } from '../ui/Field';
 import { Panel } from '../ui/Panel';
+import { Disclosure } from '../ui/Disclosure';
 import { formatPriceAmount, FUNDING_DESIGN_PRICE } from '../../data/pricing';
 import { PIPELINE_BUNDLE_PRICES, releasePipelineCopy, type ReleaseTierKey } from '../../data/releasePipeline';
 import { computeFundingGoal } from '../../lib/funding/goal';
@@ -30,6 +31,13 @@ interface FundingGoalCalculatorProps {
   component?: string;
   /** 배경. 펀딩 설계 페이지는 앞 절(진행 과정)에 이어 붙이려고 alternate로 쓴다. */
   variant?: 'default' | 'alternate';
+  /**
+   * 발매 페이지용. 펀딩을 아직 정하지 않은 방문자가 대부분이라 한 줄로 접어 두고(#funding-goal로 오면 펼침),
+   * 공제 내역은 "계산 내역 보기"로 접고, 다른 펀딩 모금 중앙값 비교는 싣지 않는다 — 큰 목표액과 공제 줄이
+   * 가격표보다 먼저 보여 "이만큼 모아야 한다"는 압박이 됐다(2026-10-12 운영자). 펀딩 설계 페이지는 펀딩할
+   * 사람이 오는 곳이라 펼친 그대로 쓴다.
+   */
+  calm?: boolean;
 }
 
 /** 알약형 라디오 한 벌 — 제작 규모와 개설 방식이 같은 모양이다. 모양은 ChoiceGroup/ChoiceCard(variant="pill")가 소유한다. */
@@ -69,13 +77,35 @@ function PillRadios<K extends string>({ name, legend, options, value, label, onC
  *
  * 카톡과 경쟁하지 않는다: 결과 버튼은 계산 요약을 클립보드에 복사한 뒤 카카오톡을 연다.
  */
-const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component = 'FundingGoalCalculator', variant = 'default' }: FundingGoalCalculatorProps) => {
+const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component = 'FundingGoalCalculator', variant = 'default', calm = false }: FundingGoalCalculatorProps) => {
   const [tier, setTier] = React.useState<ProductionKey>(defaultProduction);
   const [designKey, setDesignKey] = React.useState<DesignKey>('design');
   const [otherCostInput, setOtherCostInput] = React.useState('');
   const [withholding, setWithholding] = React.useState(true);
   const [copied, setCopied] = React.useState(false);
   const usedRef = React.useRef(false);
+  const [open, setOpen] = React.useState(false);
+  const openedRef = React.useRef(false);
+
+  // 접힌 계산기는 #funding-goal로 들어오면(같은 페이지의 "목표액 계산해 보기" 링크 포함) 펼친다.
+  React.useEffect(() => {
+    if (!calm) return undefined;
+    const sync = () => {
+      if (window.location.hash === `#${copy.anchorId}`) setOpen(true);
+    };
+    sync();
+    window.addEventListener('hashchange', sync);
+    return () => window.removeEventListener('hashchange', sync);
+  }, [calm]);
+
+  const onToggle = (e: React.SyntheticEvent<HTMLDetailsElement>) => {
+    const next = e.currentTarget.open;
+    setOpen(next);
+    if (next && !openedRef.current) {
+      openedRef.current = true;
+      trackMicroEvent('micro_pipeline_calc', { locale: 'ko', component, cta_id: 'pipeline_calc_open' });
+    }
+  };
 
   const markUsed = () => {
     if (usedRef.current) return;
@@ -123,10 +153,22 @@ const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component =
       : []),
   ];
 
-  return (
-    <Section variant={variant} id={copy.anchorId} className="scroll-mt-24">
-      <SectionHeading title={copy.title} subtitle={copy.subtitle} className="mb-10" />
-      <div className="glass-card rounded-2xl p-6 sm:p-8 max-w-3xl mx-auto grid gap-8 md:grid-cols-2">
+  const breakdown = (
+    <dl className="space-y-2 text-sm">
+      {rows.map(([label, value, deduction]) => (
+        <div key={label} className="flex justify-between gap-4">
+          <dt className="text-gray-600 dark:text-gray-400">{label}</dt>
+          <dd className="text-gray-900 dark:text-white tabular-nums">
+            {deduction ? '−' : ''}
+            {won(value)}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  );
+
+  const calculator = (
+      <div className={calm ? 'grid gap-8 md:grid-cols-2 pt-2' : 'glass-card rounded-2xl p-6 sm:p-8 max-w-3xl mx-auto grid gap-8 md:grid-cols-2'}>
         <div className="space-y-6">
           <PillRadios
             name="funding-goal-tier"
@@ -168,21 +210,20 @@ const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component =
           />
         </div>
 
-        <Panel variant="inset" padding="default" aria-live="polite">
+        {/* calm에선 내역이 접혀 있어 짧다 — 왼쪽 열 높이로 늘이면 아래가 빈 칸으로 남는다. */}
+        <Panel variant="inset" padding="default" aria-live="polite" className={calm ? 'self-start' : undefined}>
           <p className="text-sm text-gray-500 dark:text-gray-400">{copy.resultLabel}</p>
           <p className="text-3xl font-bold text-gray-900 dark:text-white mb-5">{won(result.goal)}</p>
-          <dl className="space-y-2 text-sm">
-            {rows.map(([label, value, deduction]) => (
-              <div key={label} className="flex justify-between gap-4">
-                <dt className="text-gray-600 dark:text-gray-400">{label}</dt>
-                <dd className="text-gray-900 dark:text-white tabular-nums">
-                  {deduction ? '−' : ''}
-                  {won(value)}
-                </dd>
-              </div>
-            ))}
-          </dl>
-          <p className="mt-5 text-sm text-gray-500 dark:text-gray-400">{copy.compare}</p>
+          {calm ? (
+            <Disclosure variant="plain" summary={copy.breakdownSummary}>
+              {breakdown}
+            </Disclosure>
+          ) : (
+            <>
+              {breakdown}
+              <p className="mt-5 text-sm text-gray-500 dark:text-gray-400">{copy.compare}</p>
+            </>
+          )}
         </Panel>
 
         <div className="md:col-span-2 flex flex-col items-center gap-3">
@@ -203,6 +244,28 @@ const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component =
           </p>
         </div>
       </div>
+  );
+
+  return (
+    <Section variant={variant} id={copy.anchorId} className="scroll-mt-24">
+      {calm ? (
+        <Disclosure
+          open={open}
+          onToggle={onToggle}
+          summary={copy.collapsedSummary}
+          className="glass-card max-w-3xl mx-auto"
+          summaryClassName="text-base px-6 py-4"
+          bodyClassName="px-6 pb-6"
+        >
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">{copy.calmSubtitle}</p>
+          {calculator}
+        </Disclosure>
+      ) : (
+        <>
+          <SectionHeading title={copy.title} subtitle={copy.subtitle} className="mb-10" />
+          {calculator}
+        </>
+      )}
     </Section>
   );
 };

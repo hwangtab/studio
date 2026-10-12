@@ -23,7 +23,9 @@ export interface DisclosureProps extends Omit<React.DetailsHTMLAttributes<HTMLDe
 
 export const Disclosure = ({ summary, variant = 'card', className, summaryClassName, bodyClassName, children, ...rest }: DisclosureProps) => (
   <details
-    className={cn('group', variant === 'card' && 'rounded-xl border border-gray-200 dark:border-gray-700', className)}
+    // 화살표 회전은 group-open이 아니라 "자기 summary의 화살표"로만 건다 — group-open은 조상 아무 details가
+    // 열려도 걸려서, 접기 안에 접기를 넣으면 닫힌 안쪽 화살표까지 돈다(2026-10-12 목표액 계산기).
+    className={cn('group [&[open]>summary>svg]:rotate-180', variant === 'card' && 'rounded-xl border border-gray-200 dark:border-gray-700', className)}
     {...rest}
   >
     <summary
@@ -35,7 +37,7 @@ export const Disclosure = ({ summary, variant = 'card', className, summaryClassN
       )}
     >
       <span className="min-w-0">{summary}</span>
-      <ChevronDown size={16} aria-hidden="true" className="shrink-0 text-gray-500 transition-transform duration-base group-open:rotate-180 dark:text-gray-400" />
+      <ChevronDown size={16} aria-hidden="true" className="shrink-0 text-gray-500 transition-transform duration-base dark:text-gray-400" />
     </summary>
     <div className={cn('text-sm text-gray-700 dark:text-gray-300', variant === 'card' ? 'px-4 pb-4' : 'pb-2', bodyClassName)}>{children}</div>
   </details>

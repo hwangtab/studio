@@ -113,6 +113,11 @@ export const releasePipelineCopy = {
     anchorId: 'funding-goal',
     title: '펀딩 목표액 계산기',
     subtitle: '목표액은 거꾸로 계산해야 해요. 수수료와 리워드 원가를 빼먹으면 달성해도 제작비가 모자라요.',
+    // 발매 페이지(calm) 전용 — 펀딩을 아직 정하지 않은 방문자가 대부분이라 한 줄로 접어 두고, 겁주는 말 대신
+    // 계산이 무엇을 해 주는지만 말한다(2026-10-12 운영자: 목표액이 압박·진입장벽이 된다).
+    collapsedSummary: '펀딩으로 제작비를 마련할 계획이라면 — 목표액 계산해 보기',
+    calmSubtitle: '수수료를 떼고도 제작비가 남으려면 얼마를 목표로 잡으면 되는지 계산해 볼 수 있어요.',
+    breakdownSummary: '계산 내역 보기 (수수료·세금)',
     tierLabel: '스튜디오 놀 제작',
     tiers: { single: '싱글', ep: 'EP (4곡 기준)', album: '정규 (8곡 기준)' } as Record<ReleaseTierKey, string>,
     // 작은 펀딩도 같은 흐름이다(2026-09-28 운영자) — 제작을 이미 마쳤거나 다른 곳에서 하면 제작비 없이,

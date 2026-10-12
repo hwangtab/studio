@@ -15,8 +15,10 @@ interface ReleaseFundingPathsProps {
  * 발매를 막는 1순위 이유(돈)에 페이지 위쪽에서 답한다. 세 갈래(펀딩·지원사업·자비)는
  * 자금원만 다르고 제작부터는 같은 흐름이다.
  */
+// 배경은 default — 앞 절(프로듀서 소개)이 alternate, 뒤 절(시장가 비교)도 alternate라 번갈음을 맞춘다.
+// 2026-10-12 목표액 계산기(default)가 이 뒤에서 아래로 옮겨 가며 alternate가 셋 이어지게 됐다.
 const ReleaseFundingPaths = ({ kakaoUrl }: ReleaseFundingPathsProps) => (
-  <Section variant="alternate">
+  <Section variant="default">
     <SectionHeading icon={Banknote} title={copy.paths.title} subtitle={copy.paths.subtitle} className="mb-12" />
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto" role="list">
       {copy.paths.items.map((item) => (
