@@ -5,6 +5,7 @@ import { Button } from '../ui/Button';
 import { ChoiceCard, ChoiceGroup } from '../ui/Choice';
 import { Panel } from '../ui/Panel';
 import {
+  answersFromQuery,
   buildQuoteSummary,
   estimate,
   FUNDING_SOURCE_CHOICES,
@@ -70,6 +71,10 @@ const QuoteWizard = ({ kakaoUrl }: QuoteWizardProps) => {
 
   React.useEffect(() => {
     setCode(makeQuoteCode((n) => crypto.getRandomValues(new Uint8Array(n))));
+    // 입구 링크(QuoteEntryLink)가 실어 온 서비스·규모를 미리 골라 둔다. 고객이 고른 것이 아니므로
+    // micro_quote_start는 보내지 않는다 — 처음 직접 만질 때 보낸다.
+    const prefill = answersFromQuery(new URLSearchParams(window.location.search));
+    if (prefill.service) setAnswers(prefill);
   }, []);
 
   const update = (patch: Partial<QuoteAnswers>) => {

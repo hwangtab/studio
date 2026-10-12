@@ -19,6 +19,7 @@ import ReleaseHeroCtas from './ReleaseHeroCtas';
 import ReleaseProducerIntro from './ReleaseProducerIntro';
 import ReleaseReviewsSection from './ReleaseReviewsSection';
 import TierComparisonTable from './TierComparisonTable';
+import QuoteEntryLink from '../quote/QuoteEntryLink';
 import { Section } from '../ui/Section';
 import { getReviews } from '../../data/reviews';
 import { getSiteConfig } from '../../data/siteConfig';
@@ -313,6 +314,14 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
             </Link>
             {t('releaseProject.tiers.footNotePost')}
           </p>
+          {/* 견적 요청서 입구 — 이 티어를 미리 골라 둔다. ko 전용. */}
+          {locale === 'ko' && (
+            <p className="text-center text-sm mt-3">
+              <QuoteEntryLink ctaId={`release_tier_${tier}`} service="release" scale={tier}>
+                내 발매 예산은 얼마일까? 질문 몇 개로 바로 보기 →
+              </QuoteEntryLink>
+            </p>
+          )}
         </div>
       </Section>
 

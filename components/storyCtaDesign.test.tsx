@@ -56,3 +56,16 @@ describe('StoryCTA — 유형이 달라도 모양은 하나', () => {
     expect(screen.getByRole('link', { name: `stories.cta.${type}.secondaryText` }).getAttribute('href')).toBe(`/ko${STORY_CTA_SECONDARY_PATH}`);
   });
 });
+
+describe('StoryCTA — 발매 글의 견적 요청서 입구', () => {
+  it('ko 발매 CTA에만 견적 요청서 링크가 있다', () => {
+    render(<StoryCTA type="release" locale="ko" />);
+    expect(screen.getByRole('link', { name: '질문 몇 개로 예상 비용 보기' }).getAttribute('href')).toBe('/ko/quote?service=release');
+    cleanup();
+    render(<StoryCTA type="release" locale="en" />);
+    expect(screen.queryByRole('link', { name: '질문 몇 개로 예상 비용 보기' })).toBeNull();
+    cleanup();
+    render(<StoryCTA type="recording" locale="ko" />);
+    expect(screen.queryByRole('link', { name: '질문 몇 개로 예상 비용 보기' })).toBeNull();
+  });
+});

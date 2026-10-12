@@ -149,6 +149,17 @@ const range = (min: number, max: number) => (min === max ? won(min) : `${won(min
 
 export const scaleQuestionFor = (service: QuoteService | undefined) => (service ? SCALE_QUESTIONS[service] : undefined);
 
+/**
+ * 입구 링크의 `?service=release&scale=ep`를 답으로 바꾼다. 문항에 없는 값은 버린다 — 주소를 손으로
+ * 고친 값이 결과 화면에 없는 선택지로 남지 않게.
+ */
+export const answersFromQuery = (params: URLSearchParams): QuoteAnswers => {
+  const service = SERVICE_CHOICES.find((c) => c.id === params.get('service'))?.id;
+  if (!service) return {};
+  const scale = scaleQuestionFor(service)?.choices.find((c) => c.id === params.get('scale'))?.id;
+  return scale ? { service, scale } : { service };
+};
+
 /** 필요한 문항이 모두 답해졌는가. */
 export const isComplete = (a: QuoteAnswers): boolean => {
   if (!a.service) return false;

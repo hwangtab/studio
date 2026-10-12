@@ -22,6 +22,7 @@ import ReleaseReviewsSection from '../../../components/release/ReleaseReviewsSec
 import TierComparisonTable from '../../../components/release/TierComparisonTable';
 import ReleaseFundingPaths from '../../../components/release/ReleaseFundingPaths';
 import ReleasePipelineCases from '../../../components/release/ReleasePipelineCases';
+import QuoteEntryLink from '../../../components/quote/QuoteEntryLink';
 import { releasePipelineCopy } from '../../../data/releasePipeline';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../../lib/getStatic';
 import { usePortfolioModalLazy } from '../../../hooks/usePortfolioModalLazy';
@@ -219,6 +220,14 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           </Link>
           {t('releaseProject.tiers.footNotePost')}
         </p>
+        {/* 견적 요청서 입구 — 발매 카톡 상담 대부분이 "내 경우 얼마인가"라서 티어를 본 자리에 둔다. ko 전용. */}
+        {isKo && (
+          <p className="text-center text-sm mt-3">
+            <QuoteEntryLink ctaId="release_tiers" service="release">
+              내 발매 예산은 얼마일까? 질문 몇 개로 바로 보기 →
+            </QuoteEntryLink>
+          </p>
+        )}
 
         {/* M1: 3티어 비교표 — 결정 보조 */}
         <div className="mt-16">

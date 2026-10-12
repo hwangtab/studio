@@ -15,6 +15,7 @@ import {
 import { getMixingProduct } from '../booking/mixing-products';
 import { getProduct, productsForService } from '../booking/products';
 import {
+  answersFromQuery,
   buildQuoteSummary,
   estimate,
   isComplete,
@@ -135,5 +136,25 @@ describe('견적 코드와 요약', () => {
     expect(s).toContain('크라우드펀딩');
     expect(s).toContain(`${won(EP_BUNDLE_PRICE + FUNDING_DESIGN_PRICE)}부터`); // 펀딩이면 설계비까지 한 견적
     expect(s).not.toMatch(/이름|연락처|이메일|전화/);
+  });
+});
+
+describe('answersFromQuery — 입구 링크가 실어 온 서비스·규모', () => {
+  const q = (s: string) => answersFromQuery(new URLSearchParams(s));
+
+  it('발매 티어 페이지의 규모를 그대로 미리 고른다', () => {
+    for (const tier of ['single', 'ep', 'album']) expect(q(`service=release&scale=${tier}`)).toEqual({ service: 'release', scale: tier });
+  });
+
+  it('규모 없이 서비스만 오면 서비스만 고른다', () => {
+    expect(q('service=release')).toEqual({ service: 'release' });
+  });
+
+  it('문항에 없는 값은 버린다', () => {
+    expect(q('service=release&scale=mega')).toEqual({ service: 'release' });
+    expect(q('service=nope&scale=ep')).toEqual({});
+    expect(q('')).toEqual({});
+    // 규모 문항이 없는 서비스에 scale이 붙어 와도 싣지 않는다.
+    expect(q('service=wedding&scale=ep')).toEqual({ service: 'wedding' });
   });
 });
