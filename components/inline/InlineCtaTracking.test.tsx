@@ -72,13 +72,13 @@ describe('inline CTA tracking', () => {
 
   it('발매 콜아웃에만 견적 요청서 입구가 있고, 클릭은 리드가 아니라 micro_click_quote_entry다', () => {
     const { unmount } = render(<InlineServiceCallout type="release" locale="ko" />);
-    const link = screen.getByRole('link', { name: '질문 몇 개로 예상 비용 보기' });
-    expect(link).toHaveAttribute('href', '/ko/quote?service=release');
+    const link = screen.getByRole('link', { name: '곡 수·편성으로 발매 예산 계산해 보기' });
+    expect(link).toHaveAttribute('href', '/ko/release-project#release-budget');
     fireEvent.click(link);
     expect(trackMicroEvent).toHaveBeenCalledWith('micro_click_quote_entry', expect.objectContaining({ cta_id: 'inline_service_release_quote' }));
     expect(trackLeadEvent).not.toHaveBeenCalled();
     unmount();
     render(<InlineServiceCallout type="mixing" locale="ko" />);
-    expect(screen.queryByRole('link', { name: '질문 몇 개로 예상 비용 보기' })).toBeNull();
+    expect(screen.queryByRole('link', { name: '곡 수·편성으로 발매 예산 계산해 보기' })).toBeNull();
   });
 });

@@ -314,11 +314,11 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
             </Link>
             {t('releaseProject.tiers.footNotePost')}
           </p>
-          {/* 견적 요청서 입구 — 이 티어를 미리 골라 둔다. ko 전용. */}
+          {/* 발매 예산 계산기 입구 — 곡 수·편성으로 계산하는 화면이 발매 페이지에 펼쳐져 있다. ko 전용. */}
           {locale === 'ko' && (
             <p className="text-center text-sm mt-3">
-              <QuoteEntryLink ctaId={`release_tier_${tier}`} service="release" scale={tier}>
-                내 발매 예산은 얼마일까? 질문 몇 개로 바로 보기 →
+              <QuoteEntryLink ctaId={`release_tier_${tier}`} href="/ko/release-project#release-budget">
+                곡 수·편성으로 내 발매 예산 계산해 보기 →
               </QuoteEntryLink>
             </p>
           )}

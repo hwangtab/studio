@@ -11,6 +11,8 @@ interface QuoteEntryLinkProps {
   service?: QuoteService;
   scale?: string;
   className?: string;
+  /** 견적 요청서 대신 다른 계산 화면으로 보낼 때(발매는 /release-project의 예산 계산기). service·scale은 무시한다. */
+  href?: string;
 }
 
 /**
@@ -21,12 +23,12 @@ interface QuoteEntryLinkProps {
  * 아래와 문의 페이지뿐이라, 발매 상담(카톡 대부분이 견적·예산 질문)이 실제로 시작되는 발매 LP·발매
  * 글에 입구를 둔다.
  */
-const QuoteEntryLink = ({ ctaId, children, service, scale, className = '' }: QuoteEntryLinkProps) => {
+const QuoteEntryLink = ({ ctaId, children, service, scale, className = '', href: hrefOverride }: QuoteEntryLinkProps) => {
   const params = new URLSearchParams();
   if (service) params.set('service', service);
   if (service && scale) params.set('scale', scale);
   const query = params.toString();
-  const href = `/ko/quote${query ? `?${query}` : ''}`;
+  const href = hrefOverride ?? `/ko/quote${query ? `?${query}` : ''}`;
   return (
     <Link
       href={href}

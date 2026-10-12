@@ -349,8 +349,8 @@ const InlineServiceCallout = ({ type, locale }: InlineServiceCalloutProps) => {
       {type === 'release' && (
         <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
           예산부터 궁금하다면{' '}
-          <QuoteEntryLink ctaId="inline_service_release_quote" service="release">
-            질문 몇 개로 예상 비용 보기
+          <QuoteEntryLink ctaId="inline_service_release_quote" href="/ko/release-project#release-budget">
+            곡 수·편성으로 발매 예산 계산해 보기
           </QuoteEntryLink>
         </p>
       )}
