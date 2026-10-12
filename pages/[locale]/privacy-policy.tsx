@@ -31,17 +31,17 @@ const PrivacyPolicyPage: NextPageWithLayout<PrivacyPolicyProps> = ({ locale }) =
         ]}
       />
 
-      <Section variant="default">
+      <Section variant="default" className="pb-16 pt-28 md:pb-24 md:pt-36">
         <div className="max-w-4xl mx-auto">
-          <h1 className="typo-section-title mb-4 text-gray-900 dark:text-white">{policyCopy.title}</h1>
-          <p className="typo-card-body text-gray-700 dark:text-gray-300 mb-2">{policyCopy.subtitle}</p>
-          <p className="typo-card-meta text-gray-500 dark:text-gray-400 mb-8">
+          <h1 className="typo-section-title">{policyCopy.title}</h1>
+          <p className="typo-section-lead mt-4 mb-2">{policyCopy.subtitle}</p>
+          <p className="typo-card-meta mb-10">
             {policyCopy.lastUpdatedLabel}: {policyCopy.lastUpdatedValue}
           </p>
 
           <div className="space-y-6">
             {policyCopy.sections.map((section) => (
-              <article key={section.heading} className="glass-card rounded-xl p-6">
+              <article key={section.heading} className="glass-card rounded-2xl p-6">
                 <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">{section.heading}</h2>
                 <p className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed">{section.body}</p>
                 {section.items && (
