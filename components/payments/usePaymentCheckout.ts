@@ -64,11 +64,14 @@ export const usePaymentCheckout = (amount: number, enabled = true) => {
     const toss = await loadTossPayments(apiClientKey);
     const payment = toss.payment({ customerKey: paymentCustomerKey(params.orderId, ANONYMOUS) });
     // 금액은 서버가 확정한 값으로 연다(없으면 화면 금액). 승인 경로가 같은 쌍의 시크릿부터 쓰게 표식을 붙인다.
-    await payment.requestPayment(buildTossPaymentRequest(choiceRef.current, {
+    const request = buildTossPaymentRequest(choiceRef.current, {
       ...params,
       amount: finalAmount ?? amountRef.current,
       successUrl: withApiKeyChannel(params.successUrl),
-    }));
+    });
+    // SDK의 requestPayment는 수단별 오버로드라 합집합을 그대로 못 받는다 — 수단으로 좁혀 부른다.
+    if (request.method === 'TRANSFER') await payment.requestPayment(request);
+    else await payment.requestPayment(request);
   }, [apiClientKey]);
 
   if (picker) {

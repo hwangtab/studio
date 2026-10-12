@@ -44,11 +44,15 @@ afterEach(() => {
 
 const lastRequest = () => sdkRequestPayment.mock.calls.at(-1)![0];
 
-const expectPicker = async (groupName = '결제수단') => {
+const DIRECT_DEPOSIT_LIST = ['신용·체크카드', '계좌로 직접 입금', '카카오페이', '네이버페이', '토스페이', '페이코'];
+// 공연은 직접 입금 대신 토스 계좌이체(2026-10-12, lib/payments/paymentChoices.ts `bankOption`).
+const TOSS_TRANSFER_LIST = ['신용·체크카드', '계좌이체', '카카오페이', '네이버페이', '토스페이', '페이코'];
+
+const expectPicker = async (groupName = '결제수단', expected = DIRECT_DEPOSIT_LIST) => {
   const group = await screen.findByRole('group', { name: groupName });
   const radios = within(group).getAllByRole('radio').map((r) => r.getAttribute('aria-label'));
-  // 토스 계좌이체는 없다. 애플페이는 ApplePaySession이 없는 jsdom에서 보이지 않는다.
-  expect(radios).toEqual(['신용·체크카드', '계좌로 직접 입금', '카카오페이', '네이버페이', '토스페이', '페이코']);
+  // 화면마다 계좌 줄은 하나다. 애플페이는 ApplePaySession이 없는 jsdom에서 보이지 않는다.
+  expect(radios).toEqual(expected);
   expect(within(group).getByAltText('카카오페이')).toBeInTheDocument();
   return group;
 };
@@ -223,7 +227,7 @@ describe('ShowBookingForm — 결제수단 목록', () => {
     fireEvent.change(screen.getByLabelText(/이름/), { target: { value: '이관객' } });
     fireEvent.change(screen.getByLabelText(/휴대폰 번호/), { target: { value: '010-1111-2222' } });
     fireEvent.change(screen.getByLabelText(/이메일/), { target: { value: 'fan@example.com' } });
-    await expectPicker();
+    await expectPicker('결제수단', TOSS_TRANSFER_LIST);
     fireEvent.click(screen.getByRole('radio', { name: '페이코' }));
     await act(async () => {
       fireEvent.click(screen.getByRole('button', { name: /결제하기/ }));
@@ -233,6 +237,29 @@ describe('ShowBookingForm — 결제수단 목록', () => {
       orderId: 'TKT-20261024-ABCDEFGH', amount: { currency: 'KRW', value: 25000 }, card: { flowMode: 'DIRECT', easyPay: '페이코' },
     }));
     expect(lastRequest().successUrl).toBe('http://localhost/ko/shows/success?tosskey=api');
+  });
+
+  it('계좌이체를 고르면 TRANSFER 결제창을 연다 — 직접 입금 신청(paymentMethod)은 보내지 않는다', async () => {
+    const fetchMock = jest.fn(async (input: RequestInfo | URL) => {
+      const url = typeof input === 'string' ? input : input.toString();
+      if (url === '/api/shows/orders') return { ok: true, status: 201, json: async () => ({ ok: true, orderNo: 'TKT-20261024-ABCDEFGH', totalAmount: 25000 }) } as Response;
+      return { ok: true, status: 200, json: async () => ({ ok: true }) } as Response;
+    });
+    global.fetch = fetchMock as unknown as typeof fetch;
+    render(<ShowBookingForm show={show} />);
+    fireEvent.change(screen.getByLabelText(/이름/), { target: { value: '이관객' } });
+    fireEvent.change(screen.getByLabelText(/휴대폰 번호/), { target: { value: '010-1111-2222' } });
+    fireEvent.change(screen.getByLabelText(/이메일/), { target: { value: 'fan@example.com' } });
+    await expectPicker('결제수단', TOSS_TRANSFER_LIST);
+    fireEvent.click(screen.getByRole('radio', { name: '계좌이체' }));
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /결제하기/ }));
+    });
+    await waitFor(() => expect(sdkRequestPayment).toHaveBeenCalled());
+    expect(lastRequest().method).toBe('TRANSFER');
+    expect('card' in lastRequest()).toBe(false);
+    const call = fetchMock.mock.calls.find((c) => c[0] === '/api/shows/orders') as unknown as [string, RequestInit];
+    expect(JSON.parse(String(call[1].body)).paymentMethod).toBeUndefined();
   });
 });
 
@@ -299,7 +326,8 @@ describe('ShowBookingForm — 플래그가 꺼져 있으면 실제 훅 경로로
       expect(loadTossPayments).toHaveBeenCalledWith('live_gck_test');
       expect(sdkWidgets).toHaveBeenCalledWith({ customerKey: '@@ANONYMOUS' });
       expect(screen.queryByRole('group', { name: '결제수단' })).toBeNull();
-      expect(screen.getByRole('radio', { name: /카드·간편결제/ })).toBeInTheDocument();
+      // 공연은 직접 입금을 받지 않아 위젯 앞의 두 줄 선택(카드·간편결제 / 직접 입금)이 없다 — 위젯이 수단을 그린다.
+      expect(screen.queryByRole('radio', { name: /계좌로 직접 입금/ })).toBeNull();
     } finally {
       delete process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
     }

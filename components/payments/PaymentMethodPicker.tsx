@@ -3,7 +3,7 @@ import { CreditCard, Landmark } from 'lucide-react';
 import { ChoiceCard } from '../ui/Choice';
 
 import { BANK_ACCOUNT, BANK_ACCOUNT_EN } from '../../lib/payments/bankAccount';
-import { type PaymentChoice, type PaymentChoiceId, visiblePaymentChoices } from '../../lib/payments/paymentChoices';
+import { type BankOption, type PaymentChoice, type PaymentChoiceId, visiblePaymentChoices } from '../../lib/payments/paymentChoices';
 
 /**
  * 결제수단 목록 — 결제 공용(펀딩·예약·믹싱·공연). 토스 결제위젯 대신 **우리가 그린다**(기능 플래그,
@@ -17,7 +17,7 @@ import { type PaymentChoice, type PaymentChoiceId, visiblePaymentChoices } from 
  * 네이티브 라디오라 화살표 키·스크린리더가 그대로 동작한다. 애플페이는 지원 환경에서만 보인다.
  */
 export default function PaymentMethodPicker({
-  name, value, onChange, applePaySupported, bankBlockedMessage, confirmLabel = '확정', locale = 'ko',
+  name, value, onChange, applePaySupported, bankBlockedMessage, confirmLabel = '확정', locale = 'ko', bankOption = 'direct',
 }: {
   name: string;
   value: PaymentChoiceId;
@@ -29,9 +29,11 @@ export default function PaymentMethodPicker({
   confirmLabel?: string;
   /** 영어 화면(공연 /en)이면 'en' — confirmLabel도 영어로 넘긴다. 결제창으로 넘기는 값(easyPay)은 그대로 한국어다. */
   locale?: 'ko' | 'en';
+  /** 계좌 줄 — 직접 입금(기본, 펀딩·예약·믹싱) / 토스 계좌이체(공연·상점). lib/payments/paymentChoices.ts */
+  bankOption?: BankOption;
 }) {
   const en = locale === 'en';
-  const choices = visiblePaymentChoices({ applePaySupported }).map((c) => (en ? { ...c, label: PAYMENT_LABELS_EN[c.id] ?? c.label } : c));
+  const choices = visiblePaymentChoices({ applePaySupported, bankOption }).map((c) => (en ? { ...c, label: PAYMENT_LABELS_EN[c.id] ?? c.label } : c));
   const active = choices.find((c) => c.id === value);
   const hintId = `${name}-hint`;
 
@@ -103,6 +105,7 @@ function ChoiceBody({ choice }: { choice: PaymentChoice }) {
 const PAYMENT_LABELS_EN: Partial<Record<PaymentChoiceId, string>> = {
   card: 'Credit / debit card',
   bank_transfer: 'Bank transfer (Korean bank account)',
+  transfer: 'Account transfer (Korean bank account)',
   kakaopay: 'KakaoPay',
   naverpay: 'Naver Pay',
   tosspay: 'Toss Pay',
@@ -113,12 +116,18 @@ const PAYMENT_LABELS_EN: Partial<Record<PaymentChoiceId, string>> = {
 const hintFor = (choice: PaymentChoice | undefined, confirmLabel: string, en = false): string => {
   if (en) {
     if (!choice || choice.id === 'card') return `Choose your card company in the card payment window. Once payment is complete, ${confirmLabel} right away.`;
+    if (choice.id === 'transfer') {
+      return `Pay straight from your Korean bank account. On a PC your bank may ask you to install its security program. Once payment is complete, ${confirmLabel} right away.`;
+    }
     if (choice.id === 'bank_transfer') {
       return `Send it from a Korean bank or ATM. We show you the account right away, and once we confirm the transfer, ${confirmLabel} and we let you know by email.`;
     }
     return `Goes straight to the ${choice.label} payment window. Once payment is complete, ${confirmLabel} right away.`;
   }
   if (!choice || choice.id === 'card') return `카드 결제창에서 카드사를 골라요. 결제가 끝나면 바로 ${confirmLabel}돼요.`;
+  if (choice.id === 'transfer') {
+    return `내 은행 계좌에서 바로 이체해요. PC에서는 은행 보안 프로그램 설치를 요구할 수 있어요. 결제가 끝나면 바로 ${confirmLabel}돼요.`;
+  }
   if (choice.id === 'bank_transfer') {
     return `은행·ATM에서 보내실 수 있어요. 신청하시면 입금할 계좌를 바로 알려 드리고, 입금을 확인하면 ${confirmLabel}되고 메일로 알려 드려요.`;
   }
