@@ -313,6 +313,19 @@ const nextConfig = {
           { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
         ],
       },
+      // 상점 — success·fail은 토스 paymentKey·orderId, manage는 관리 토큰이 URL에 실린다. 목록·상품 상세는 CDN 캐시 대상.
+      {
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/shop/(success|fail)',
+        headers: [
+          { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
+        ],
+      },
+      {
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/shop/manage/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
+        ],
+      },
       {
         source: '/:locale(ko|en|zh|es|vi|th|uz)/funding/:slug/pledge',
         headers: [

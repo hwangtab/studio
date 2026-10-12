@@ -1,5 +1,5 @@
 /**
- * 공연 티켓 주문 만료 정리 — 보류 시간과 30분 유예가 지난 pending 주문을 expired로 돌리고
+ * 공연 티켓(그리고 상점) 주문 만료 정리 — 보류 시간과 30분 유예가 지난 pending 주문을 expired로 돌리고
  * held 티켓을 void로 바꾼다(lib/shows/service.ts `expireStaleShowOrders`).
  *
  * 좌석 점유 판정은 시각 조건(lib/shows/conditions.ts)이 하므로 이 크론이 늦어도 재고는
@@ -14,6 +14,7 @@ import { buildOperatorAlertHtml } from '../../../lib/email/operatorAlert';
 import { sendEmail } from '../../../lib/email/resend';
 import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
 import { expireStaleShowOrders } from '../../../lib/shows/service';
+import { expireStaleShopOrders } from '../../../lib/shop/service';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -22,9 +23,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const expired = await expireStaleShowOrders(new Date());
-    console.log(`[cron/expire-show-orders] expired=${expired}`);
-    return res.status(200).json({ ok: true, expired });
+    const now = new Date();
+    const expired = await expireStaleShowOrders(now);
+    // 상점(음반·굿즈) 결제 대기 정리도 같은 크론이 한다 — 크론을 늘리지 않으려고. 공연 정리와 실패를 갈라 둔다:
+    // shop_orders 표가 없는 DB(마이그레이션 0052 전)에서도 공연 정리는 성공으로 끝나야 한다. 재고는 시각 조건으로
+    // 이미 풀려 있어(lib/shop/stock.ts) 이 정리가 실패해도 판매에는 영향이 없다.
+    let shopExpired: number | null = null;
+    try {
+      shopExpired = await expireStaleShopOrders(now);
+    } catch (shopError) {
+      console.error('[cron/expire-show-orders] 상점 주문 만료 정리 실패(공연 정리는 완료)', shopError);
+    }
+    console.log(`[cron/expire-show-orders] expired=${expired} shopExpired=${shopExpired ?? 'error'}`);
+    return res.status(200).json({ ok: true, expired, shopExpired });
   } catch (error: unknown) {
     console.error('[cron/expire-show-orders] 실패:', error);
     const message = error instanceof Error ? error.message : String(error);

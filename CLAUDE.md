@@ -155,6 +155,13 @@ SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이�
 새 공연은 `data/shows/<slug>.ts` 하나 + 이미지로 올린다(코드 수정 없음, 시드 `scripts/seed-show.ts`).
 구조화 칸(0047)·ShowDetailView 합성·소문자 308에 견디는 링크 규칙·10/14 공용화 보류가 거기 있다.
 
+### 상점(음반·굿즈)은 `lib/shop/CLAUDE.md`를 먼저 읽는다
+
+`/ko/shop`. 상품 정의는 `data/shop/catalog.ts`, 재고는 DB(계산값), 결제는 전부 토스(계좌이체 포함, 직접 입금 없음).
+**`SHOP_SALES_OPEN`(data/shop/policy.ts)이 false인 동안 주문을 받지 않는다** — 켜기 전 체크리스트(마이그레이션 0052 → 처리방침
+개정·판본 → 상품·재고 → 켜기 → 메뉴·사이트맵)가 그 파일에 있다. 새 주문 종류를 만들면 `lib/booking/webhook.ts`의 type 분기를
+먼저 넣을 것 — 모르는 type은 예약 확정으로 떨어진다.
+
 ### 믹싱 전·후 비교 음원 (`components/audio/MixComparePlayer.tsx`)
 
 김동산과 블루이웃 〈물결〉의 믹싱 전 / 믹싱 후를 같은 재생 위치에서 바꿔 듣는다. **네 자리**에 있다 —

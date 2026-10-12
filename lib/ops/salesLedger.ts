@@ -63,6 +63,7 @@ const TYPE_LABELS: Record<string, string> = {
   funding: '펀딩',
   subscription: '구독',
   deposit: '예약금',
+  merch: '상점',
 };
 
 const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
@@ -175,6 +176,9 @@ const describeOrder = (order: LedgerOrder): string => {
     case 'deposit':
       // 품목명은 DB에 저장하지 않는다(data/paymentLinks.ts) — 라벨만.
       return '예약금';
+    case 'merch':
+      // 품목은 shop_order_items에 있지만 여기서 관계를 싣지 않는다 — 마이그레이션 0052 전 DB에서 장부 전체가 깨진다.
+      return '상점(음반·굿즈)';
     default:
       return order.type;
   }

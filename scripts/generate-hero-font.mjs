@@ -13,7 +13,7 @@
  *
  * 글자 수집 범위: ① locales *.hero.title* 등 h1 키(예전과 같음) ② locales의 *title*·*heading* 키 전부
  * (SectionHeading v2 제목의 대부분) ③ data/home.ts heroContent ④ buyerIntentHubs hero ⑤ siteConfig name
- * ⑥ content/funding 제목 ⑦ data/*.ts 최상위 파일의 title*·heading* 문자열 ⑧ data/shows 제목 ⑨ 코드에 박힌 제목
+ * ⑥ content/funding 제목 ⑦ data/*.ts 최상위 파일의 title*·heading* 문자열 ⑧ data/shows·data/shop 제목 ⑨ 코드에 박힌 제목
  * (components·pages의 JSX title="…" 전부, lib/shows/i18n.ts) ⑩ 스토리 글 제목(content/stories frontmatter)
  * ⑪ 영문·숫자·기호 안전판. 서브셋 밖 글자는 Pretendard(본문 폰트)로 떨어진다 — --check가 ①~⑪ ⊆ 사이드카를,
  * scripts/check-display-font-coverage.mjs가 빌드된 HTML의 실제 제목 글자 ⊆ 서체 글리프를 CI에서 강제한다
@@ -274,6 +274,15 @@ function collectDisplayChars() {
   } catch (e) {
     // 출처를 못 읽으면 그 제목들의 글자가 조용히 빠진다 — 멈춘다.
     throw new Error(`skip show titles: ${e.message}`);
+  }
+
+  // 7-1) 상점 상품 제목 — `data/shop/catalog.ts`의 상품 title이 `/ko/shop/<slug>`의 h1으로 나간다(2026-10-12).
+  //      SHOP_PRODUCTS 배열 안 객체라 4칸 들여쓰기의 title만 읽는다(머리 주석의 예시 ` *   title:`은 걸리지 않는다).
+  try {
+    const catalog = fs.readFileSync(path.join(ROOT, 'data', 'shop', 'catalog.ts'), 'utf8');
+    for (const m of catalog.matchAll(/^ {4}title:\s*(["'`])([\s\S]*?)\1/gm)) addStr(m[2]);
+  } catch (e) {
+    throw new Error(`skip shop titles: ${e.message}`);
   }
 
   // 8) 코드에 박힌 제목 — locales·data를 거치지 않는 제목이 있다. 2026-10-08 공연 상세의 "출연"이 "출"만

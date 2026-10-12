@@ -1,0 +1,75 @@
+# CLAUDE.md — 상점(음반·굿즈)
+
+`lib/shop/`·`components/shop/`·`pages/[locale]/shop/`·`pages/admin/shop/`·`data/shop/`를 만질 때 읽는 규칙이다.
+설계 배경은 `docs/merch-shop-plan-2026-10.md`(§10이 최신 결정).
+
+### 판매는 잠겨 있다 — `SHOP_SALES_OPEN`(data/shop/policy.ts)
+
+false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, 상품 화면은 주문 폼 대신 "판매 준비 중"을 보이며,
+목록·상세는 `noindex`다. **처리방침이 고지하지 않은 배송지를 받지 않으려고** 이 순서를 코드로 막는다.
+
+#### 판매 개시 체크리스트 (위에서부터)
+
+1. **운영 DB에 마이그레이션 0052(`shop_skus`·`shop_orders`·`shop_order_items`)를 적용한다** — 배포보다 먼저(루트 CLAUDE.md
+   "운영 DB 마이그레이션 적용 방법", Turso CLI). 새 표뿐이라 순서를 어겨도 다른 결제는 안 깨지고 상점만 꺼진다.
+2. **개인정보 처리방침을 고친다**(`data/privacyPolicy.ts`) — 수집 항목(상품 주문: 받는 분 이름·연락처·우편번호·주소·상세주소·
+   배송 메모), 목적(상품 발송과 교환·반품 응대), 파기(자동 파기 ④의 "주문(예약·믹싱·펀딩·정기결제)"에 상품 주문을 더한다 —
+   코드는 이미 `purgeShopPersonalDataOfPurgedOrders`가 돈다), **위탁(택배사 이름 — 운영자가 정한다)**. 처리방침 ko 전체가
+   펀딩 약관 판본 해시 대상이라 `FUNDING_TERMS_VERSION`을 올리고 기준선을 갱신한다(루트 CLAUDE.md "약관·처리방침을 고치면…").
+3. 이용약관(`/ko/terms`)에 상품 판매의 청약철회·교환·반품 조항이 있는지 본다. 화면의 규정 문구는 `lib/shop/policyCopy.ts` 한 곳이다.
+4. 상품을 `data/shop/catalog.ts`에 올린다(머리 주석의 예시). 이미지는 `public/images/shop/<이름>-YYYYMMDD.webp`, **`git add -f`**.
+   `UPDATE_SHOP_CATALOG_BASELINE=1 npx jest data/shop/catalog.baseline.test.ts`로 SKU 기준선을 싣고, 빌드 후 바뀐 히어로 폰트
+   서브셋(woff2·chars.json)을 함께 커밋한다(상품 제목이 `/ko/shop/<slug>` h1이다 — `scripts/generate-hero-font.mjs` 7-1).
+5. 배포 뒤 `/admin/shop`에서 SKU별 총 재고를 넣는다(행이 없으면 품절이다).
+6. `SHOP_SALES_OPEN = true`로 바꿔 배포한다.
+7. 그때 붙인다: 헤더·푸터 메뉴, 런타임 사이트맵(`/sitemap-shop.xml` — 공연 `pages/sitemap-shows.xml.ts`와 같은 방식,
+   `next-sitemap.config.js`의 additionalSitemaps), `pages/api/llms.ts`.
+8. 최소 금액으로 실결제 → 취소를 한 번씩, **계좌이체로도** 한다(토스 API 키 쌍에 계좌이체가 개통됐는지 이때 확인된다).
+
+### 결제는 전부 토스다 — 계좌 입금(무통장) 없음
+
+카드·간편결제·**토스 계좌이체**(`PaymentMethodPicker bankOption="toss_transfer"`). 직접 입금은 환불 때 고객 계좌를 받아
+손으로 송금해야 해서 받지 않는다(운영자 결정 2026-10-12, 공연 예매도 같은 날 같은 결정). 그래서 `awaiting_deposit`·
+환불 계좌(`refund_accounts`)·입금 안내 메일이 상점에는 없다. `tests/payments/sharedCheckout.guard.test.ts`가 폼에 직접 입금이
+붙는 것을 막는다.
+
+- 승인은 `lib/shop/confirm.ts` — 예약금 결제 링크(`lib/booking/confirmDeposit.ts`)의 안전장치 + **재고 재판정**(아래).
+- 웹훅(`lib/booking/webhook.ts`)에 `merch` 분기가 있다. **없으면 모르는 type이 `'session'`으로 떨어져 예약 확정으로 간다.**
+  새 주문 종류를 만들면 이 두 분기(DONE·CANCELED)부터 넣는다.
+- 환불은 전액만(`lib/shop/cancel.ts`, 돈이 움직이는 구간은 예약·믹싱과 같은 `settleRefund`). 고객은 발송 전에만, 운영자는
+  발송 뒤 반품도. 부분 환불은 토스 콘솔에서 하면 웹훅 대사(`reconcileRefunds`)가 원장을 맞춘다.
+- 주문번호 `SHP-YYYYMMDD-XXXXXXXX`. 결제 실패 기록 패턴(`lib/payments/recordFailure.ts`)에 SHP가 들어 있다 — 빼면 실패 사유가 조용히 안 남는다.
+
+### 재고는 계산값이다 — 차감·복원 쓰기가 없다
+
+`shop_skus.stock`은 "지금까지 내놓은 총수량"이고, 남은 수량은 매번 주문에서 뺀다(`lib/shop/stock.ts`). 점유로 세는 것:
+`paid`·`partially_refunded`·`auto_cancel_pending`, 그리고 홀드(10분)가 안 끝난 `pending`. `refunded`·`expired`·`failed`는
+세지 않는다 — **환불·만료가 겹쳐도 재고가 두 번 돌아오는 일이 구조적으로 없다.** 대신:
+
+- **발송 뒤 반품 환불도 재고로 돌아온다.** 되팔 수 없으면 관리자에서 총 재고를 줄인다.
+- 생성 게이트는 홀드가 끝난 주문을 세지 않는다(새 손님에게 자리를 연다). 그래서 홀드가 지난 뒤 결제를 마친 주문과 그 사이 같은
+  재고를 잡은 주문이 동시에 승인될 수 있다 — 확정 UPDATE의 WHERE가 **나를 뺀 나머지로 다시 센다**(공연 `excludeOrderNo`와 같은 자리).
+  걸리면 승인된 돈을 전액 자동 취소한다(`autocancel:` 멱등키). 이 게이트를 빼면 초과 판매다.
+- 화면의 남은 수량(`getRemainingStock`)과 게이트(`stockGateSql`)는 같은 점유 판정(`occupyingCondition`)을 쓴다. 한쪽만 고치지 말 것.
+
+### 상품 정의는 파일, 재고·주문은 DB
+
+`data/shop/catalog.ts`가 이름·옵션·가격의 정본이고 **아무것도 import하지 않는다**(클라이언트가 값으로 쓴다). 주문 API는 요청의
+금액·이름을 보지 않는다. 주문 줄은 주문 시점의 상품명·옵션·단가를 스냅샷한다.
+
+- **판매를 시작한 SKU의 id·가격은 바꾸지 않는다** — 가격은 새 id로 더하고 옛 SKU는 `retired: true`. `catalog.baseline.test.ts`가
+  지우기·가격 변경을 막고, 갱신 경로도 같은 위반을 거부한다.
+- slug `success`·`fail`·`manage`는 페이지 이름이라 못 쓴다(`SHOP_RESERVED_SLUGS`, 검사기가 막는다).
+- 배송비 4,000원·상품 20만원 이상 무료(운영자 결정 2026-10-12)는 `data/shop/policy.ts`. 카피·FAQ·폼은 그 상수로 문구를 만든다.
+
+### 화면
+
+- `/ko/shop`(목록·분류 필터 음반/굿즈), `/ko/shop/<slug>`(사진·소개·주문 폼). ko 전용(다른 로케일은 `/ko/shop`으로).
+- 주문 폼(`components/shop/ShopOrderForm.tsx`)은 공연 예매 폼의 장치(위젯 지연 로드·같은 입력이면 주문 재사용)와 펀딩 후원 폼의
+  장치(카카오 주소 검색 — 공용 `components/common/ShippingAddressFields.tsx`, 이름·주소 초안 저장)를 합쳤다. 다른 상품도 같은 주문에
+  담을 수 있다(배송비 한 번). 동의는 결제하기를 누르는 행위로 받는다.
+- success·fail·manage는 비공개 경로다(`lib/analytics/privatePaths.ts`·`next.config.mjs` no-store·robots). 이탈 링크는 `<a href>` 문서 이동.
+- 관리자 `/admin/shop`(재고 표·주문 목록), `/admin/shop/<주문번호>`(발송·운송장 고치기·배송 완료·전액 환불).
+- 메일: 주문 접수(고객·운영자), 발송(고객), 취소·환불(고객·운영자) — `lib/shop/email.ts`. 실패는 `orders.notification_error`.
+- 만료 정리는 공연 만료 크론(`/api/cron/expire-show-orders`)이 같이 돈다(크론을 늘리지 않으려고). 개인정보 파기는
+  `purge-orders` 크론의 `purgeShopPersonalDataOfPurgedOrders`(5년 파기 결과를 따른다).

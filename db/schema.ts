@@ -284,7 +284,7 @@ export const orderStatusEnum = [
   'deposit_cancelled',
 ] as const;
 // 'deposit' = 운영자가 금액·품목명을 정해 둔 비공개 예약금 결제 링크(data/paymentLinks.ts). 하위 테이블 없음.
-export const orderTypeEnum = ['session', 'mixing', 'subscription', 'funding', 'ticket', 'deposit'] as const;
+export const orderTypeEnum = ['session', 'mixing', 'subscription', 'funding', 'ticket', 'deposit', 'merch'] as const;
 export const bookingStatusEnum = ['pending', 'confirmed', 'completed', 'no_show', 'cancelled'] as const;
 export const refundStatusEnum = ['done', 'failed'] as const;
 export const refundRequesterEnum = ['customer', 'admin', 'webhook'] as const;
@@ -441,6 +441,7 @@ export const ordersRelations = relations(orders, ({ many, one }) => ({
   workOrders: many(workOrders),
   subscriptionPayment: one(subscriptionPayments, { fields: [orders.id], references: [subscriptionPayments.orderId] }),
   showOrder: one(showOrders, { fields: [orders.orderNo], references: [showOrders.orderNo] }),
+  shopOrder: one(shopOrders, { fields: [orders.orderNo], references: [shopOrders.orderNo] }),
 }));
 export const paymentsRelations = relations(payments, ({ one, many }) => ({
   order: one(orders, { fields: [payments.orderId], references: [orders.id] }),
@@ -1777,3 +1778,86 @@ export const showTicketsRelations = relations(showTickets, ({ one }) => ({
   ticketType: one(showTicketTypes, { fields: [showTickets.ticketTypeId], references: [showTicketTypes.id] }),
   showOrder: one(showOrders, { fields: [showTickets.orderNo], references: [showOrders.orderNo] }),
 }));
+
+// ─── 상점(음반·굿즈) ─────────────────────────────────────────────────────────────
+//
+// 상품의 정본은 `data/shop/catalog.ts`(이름·옵션·가격)다. DB는 **재고**와 **주문**만 든다 — 가격은 주문 시점 값을
+// `shop_order_items.unit_price`에 스냅샷한다. 규칙은 lib/shop/CLAUDE.md.
+//
+// `orders`에 컬럼을 더하지 않고 표를 따로 둔다(루트 CLAUDE.md 0022 절 — 관계 조회가 전체 컬럼을 SELECT해 마이그레이션
+// 전 배포에서 결제 확인이 깨진다). 세 표 모두 새 표라 미적용 DB에서는 상점만 꺼지고 다른 결제는 영향이 없다.
+
+/**
+ * SKU별 **총 재고**(지금까지 팔 수 있게 내놓은 수량). 판매·보류 수량을 빼는 계산은 주문에서 매번 한다
+ * (lib/shop/stock.ts) — 재고를 차감·복원하는 쓰기가 없어 환불·만료·취소가 겹쳐도 재고가 두 번 돌아오지 않는다.
+ * 행이 없으면 재고 0(품절)이다. 운영자가 관리자 화면에서 값을 넣는다.
+ */
+export const shopSkus = sqliteTable('shop_skus', {
+  /** `data/shop/catalog.ts`의 SKU id. */
+  id: text('id').primaryKey(),
+  productSlug: text('product_slug').notNull(),
+  stock: integer('stock').notNull().default(0),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at').notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  stockCheck: check('shop_skus_stock_check', sql`${t.stock} >= 0`),
+}));
+
+export const shopFulfillmentStatusEnum = ['preparing', 'shipped', 'delivered', 'cancelled'] as const;
+
+/** 상점 주문의 부속 정보 — 받는 분·배송지·금액 내역·발송. 돈은 orders/payments/refunds가 정본이다. */
+export const shopOrders = sqliteTable('shop_orders', {
+  orderNo: text('order_no').primaryKey().references(() => orders.orderNo),
+  recipientName: text('recipient_name').notNull(),
+  recipientPhone: text('recipient_phone').notNull(),
+  postcode: text('postcode').notNull(),
+  address1: text('address1').notNull(),
+  address2: text('address2'),
+  shippingMemo: text('shipping_memo'),
+  /** 상품 합계(배송비 제외, VAT 포함). */
+  subtotalAmount: integer('subtotal_amount').notNull(),
+  /** 주문 시점의 배송비(VAT 포함). 무료 배송이면 0. */
+  shippingFee: integer('shipping_fee').notNull(),
+  /** 토스 홀드 만료(초). 이 시각까지 결제 대기 주문이 재고를 잡는다. */
+  holdExpiresAt: integer('hold_expires_at').notNull(),
+  fulfillmentStatus: text('fulfillment_status', { enum: shopFulfillmentStatusEnum }).notNull().default('preparing'),
+  courier: text('courier'),
+  trackingNumber: text('tracking_number'),
+  shippedAt: integer('shipped_at'),
+  deliveredAt: integer('delivered_at'),
+  cancelledAt: integer('cancelled_at'),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at').notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  fulfillmentCheck: check('shop_orders_fulfillment_check', sql`${t.fulfillmentStatus} in ('preparing','shipped','delivered','cancelled')`),
+}));
+
+/** 주문 한 줄 — 상품명·옵션·단가를 주문 시점 값으로 남긴다(카탈로그가 바뀌어도 이 주문의 기록은 그대로). */
+export const shopOrderItems = sqliteTable('shop_order_items', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  orderNo: text('order_no').notNull().references(() => orders.orderNo),
+  skuId: text('sku_id').notNull(),
+  productSlug: text('product_slug').notNull(),
+  productTitle: text('product_title').notNull(),
+  optionLabel: text('option_label'),
+  unitPrice: integer('unit_price').notNull(),
+  quantity: integer('quantity').notNull(),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  orderIdx: index('shop_order_items_order_idx').on(t.orderNo),
+  skuIdx: index('shop_order_items_sku_idx').on(t.skuId),
+  quantityCheck: check('shop_order_items_quantity_check', sql`${t.quantity} > 0`),
+  unitPriceCheck: check('shop_order_items_unit_price_check', sql`${t.unitPrice} >= 0`),
+}));
+
+export const shopOrdersRelations = relations(shopOrders, ({ one, many }) => ({
+  order: one(orders, { fields: [shopOrders.orderNo], references: [orders.orderNo] }),
+  items: many(shopOrderItems),
+}));
+
+export const shopOrderItemsRelations = relations(shopOrderItems, ({ one }) => ({
+  shopOrder: one(shopOrders, { fields: [shopOrderItems.orderNo], references: [shopOrders.orderNo] }),
+}));
+
+export type ShopOrder = typeof shopOrders.$inferSelect;
+export type ShopOrderItem = typeof shopOrderItems.$inferSelect;

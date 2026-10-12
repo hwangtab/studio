@@ -244,6 +244,28 @@ export const purgeRefundAccountsOfPurgedOrders = async (): Promise<OrderPurgeRes
 };
 
 /**
+ * 결제자 이름이 파기된 **상점 주문**(음반·굿즈)의 받는 분·배송지를 파기한다(`shop_orders`, 마이그레이션 0052).
+ * 펀딩 배송지(`purgeFundingPersonalDataOfPurgedOrders`)와 같은 기준 — 위 5년 파기의 결과를 따른다. 그 전에는 오배송·
+ * 반품·민원 대응에 배송지가 필요하다.
+ *
+ * NOT NULL 칸(받는 분 이름·연락처·우편번호·주소)은 표식으로 덮고, 상세주소·배송 메모는 NULL로 지운다. 택배사·운송장
+ * 번호·발송 시각은 거래 사실을 설명하는 기록이라 남긴다(펀딩과 같은 판단). 행 자체는 남는다 — 주문의 금액 내역이 있다.
+ *
+ * 따로 둔 함수인 이유: 표가 없으면(0052 미적용) 이 하나만 실패하고 같은 크론의 나머지 파기는 돈다.
+ */
+export const purgeShopPersonalDataOfPurgedOrders = async (): Promise<OrderPurgeResult> => {
+  const result = await getDb().run(sql`
+    UPDATE shop_orders
+    SET recipient_name = ${PURGED_MARK}, recipient_phone = ${PURGED_MARK}, postcode = ${PURGED_MARK},
+        address1 = ${PURGED_MARK}, address2 = NULL, shipping_memo = NULL
+    WHERE order_no IN (SELECT order_no FROM orders WHERE type = 'merch' AND customer_name = ${PURGED_MARK})
+      AND (recipient_name <> ${PURGED_MARK} OR recipient_phone <> ${PURGED_MARK} OR postcode <> ${PURGED_MARK}
+           OR address1 <> ${PURGED_MARK} OR address2 IS NOT NULL OR shipping_memo IS NOT NULL)
+  `);
+  return rows(result as { rowsAffected?: number });
+};
+
+/**
  * 보관 기간이 지난 결제 실패 사유 원문을 파기한다.
  *
  * 대상은 `orders.payment_fail_message` 하나다. 기산점은 실패 시각(`payment_failed_at`),
