@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { reportPaymentFailure } from '../../utils/reportPaymentFailure';
 
 import PriceBreakdown from './PriceBreakdown';
-import BankDepositFallback from '../payments/BankDepositFallback';
 import PaymentMethodPicker from '../payments/PaymentMethodPicker';
 import { usePaymentCheckout } from '../payments/usePaymentCheckout';
 import { Button } from '../ui/Button';
@@ -316,7 +315,7 @@ export default function BookingWizard({ service, products, initialProductId }: B
   } = usePaymentCheckout(amounts.totalAmount, step === 3);
 
   /**
-   * 결제수단 — 기본은 토스, 결제가 어려운 분만 계좌번호 직접 입금(폴백, 2026-10-14). 계좌는 이용 시작 2시간 전부터 막는다(입금을 확인할 시간이
+   * 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금(우리 계좌번호 안내, 토스 계좌이체는 2026-10-14에 뺐다). 계좌는 이용 시작 2시간 전부터 막는다(입금을 확인할 시간이
    * 없다). 서버(pages/api/bookings)가 **같은 함수·같은 인자**(시작 시각, 지금)로 다시 판정한다.
    */
   const [payMethod, setPayMethod] = useState<CheckoutPaymentMethod>('toss');
@@ -327,7 +326,7 @@ export default function BookingWizard({ service, products, initialProductId }: B
     if (bankBlocked && payMethod === 'bank_transfer') setPayMethod('toss');
   }, [bankBlocked, payMethod]);
   const usingBank = payMethod === 'bank_transfer' && !bankBlocked;
-  // 결제 실패 화면에서 "계좌번호로 직접 보내기"로 돌아온 경우 — 계좌 안내 모드로 연다(lib/payments/bankFallback.ts).
+  // 결제 실패 화면에서 "계좌로 직접 입금"으로 돌아온 경우 — 계좌 줄이 골라진 채 연다(lib/payments/bankFallback.ts).
   useEffect(() => {
     if (wantsBankFallback(window.location.search)) setPayMethod('bank_transfer');
   }, []);
@@ -449,7 +448,7 @@ export default function BookingWizard({ service, products, initialProductId }: B
        */
       const code = (err as { code?: string } | null)?.code;
       if (code === 'USER_CANCEL' || code === 'PAY_PROCESS_CANCELED') return;
-      setSubmitError('네트워크 오류로 예약 신청에 실패했어요. 잠시 후 다시 시도해 주세요. 결제가 계속 어려우시면 아래 "계좌번호로 직접 보내기"를 이용하실 수 있어요.');
+      setSubmitError('네트워크 오류로 예약 신청에 실패했어요. 잠시 후 다시 시도해 주세요. 결제가 계속 어려우시면 결제수단에서 "계좌로 직접 입금"을 고르실 수 있어요.');
     } finally {
       setSubmitting(false);
     }
@@ -676,29 +675,24 @@ export default function BookingWizard({ service, products, initialProductId }: B
               {`${usingBank ? '계좌 안내 받기' : '결제하기'}를 누르면 위 환불 규정에 동의하는 것으로 봅니다.`}
             </p>
 
-            {/* 결제수단 — 기본은 토스(카드·간편결제·계좌이체) 목록이고, 결제가 어려운 분만 목록 아래 링크로
-                "계좌번호로 직접 보내기"를 연다(2026-10-14). 계좌 모드에서는 목록을 숨긴다. */}
+            {/* 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금(우리 계좌번호 안내). 토스 계좌이체는 뱅크페이가 떠
+                고령층이 쓰지 못해 뺐다(2026-10-14). */}
             <div className="pt-2">
               <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200">결제수단</h3>
-              {!usingBank && (
-                <>
-                  <PaymentMethodPicker
-                    name="booking-paymethod"
-                    value={pickerChoice}
-                    onChange={setPickerChoice}
-                    applePaySupported={applePaySupported}
-                    confirmLabel="예약이 확정"
-                  />
-                  {paymentError && <Notice tone="error" className="mt-3">{paymentError}</Notice>}
-                </>
-              )}
-              <BankDepositFallback
-                active={usingBank}
-                blockedMessage={bankBlocked ? BANK_DEPOSIT_BLOCK_MESSAGES[bankBlocked] : null}
-                onEnter={() => setPayMethod('bank_transfer')}
-                onLeave={() => setPayMethod('toss')}
+              <PaymentMethodPicker
+                name="booking-paymethod"
+                value={usingBank ? 'bank_transfer' : pickerChoice}
+                onChange={(next) => {
+                  if (next === 'bank_transfer') { setPayMethod('bank_transfer'); return; }
+                  setPayMethod('toss');
+                  setPickerChoice(next);
+                }}
+                applePaySupported={applePaySupported}
+                withBank
+                bankBlockedMessage={bankBlocked ? BANK_DEPOSIT_BLOCK_MESSAGES[bankBlocked] : null}
                 confirmLabel="예약이 확정"
               />
+              {paymentError && <Notice tone="error" className="mt-3">{paymentError}</Notice>}
             </div>
 
             {/* 예전에는 결제 화면에서 남은 시간을 세어 보여 줬다. 결제창을 열고 나면 고객은

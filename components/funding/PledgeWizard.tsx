@@ -3,7 +3,6 @@ import Link from 'next/link';
 
 import { reportPaymentFailure, reportPaymentWindowOpen } from '../../utils/reportPaymentFailure';
 
-import BankDepositFallback from '../payments/BankDepositFallback';
 import PaymentMethodPicker from '../payments/PaymentMethodPicker';
 import { usePaymentCheckout } from '../payments/usePaymentCheckout';
 import { Button } from '../ui/Button';
@@ -381,8 +380,8 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
   const preview = useMemo(() => computeFundingAmounts(reward.amount, quantity, additional), [reward.amount, quantity, additional]);
 
   /**
-   * 결제수단 — 기본은 토스(카드·간편결제·계좌이체)이고, 결제가 어려운 분만 계좌번호 직접 입금(폴백, 2026-10-14).
-   * 입구는 폼 아래 링크(BankDepositFallback)와 실패 화면에서 돌아올 때의 `?bank=1`뿐이다.
+   * 결제수단 — 카드·간편결제(토스) 또는 계좌로 직접 입금(우리 계좌번호 안내). 토스 계좌이체는 뱅크페이가 떠 고령층이
+   * 쓰지 못해 뺐다(2026-10-14). 실패 화면에서 `?bank=1`로 돌아오면 계좌 줄이 골라진 채 열린다.
    *
    * 계좌 입금은 한정 수량 리워드에 못 쓴다. 판정은 서버 검증(lib/funding/validation.ts)과
    * **같은 함수·같은 인자**다(bankTransferBlockReason) — 한쪽만 바뀌면 화면은 고르게 두는데 서버가
@@ -394,7 +393,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
   useEffect(() => {
     if (bankBlocked && payMethod === 'bank_transfer') setPayMethod('toss');
   }, [bankBlocked, payMethod]);
-  // 결제 실패 화면에서 "계좌번호로 직접 보내기"로 돌아온 경우 — 계좌 안내 모드로 연다(lib/payments/bankFallback.ts).
+  // 결제 실패 화면에서 "계좌로 직접 입금"으로 돌아온 경우 — 계좌 줄이 골라진 채 연다(lib/payments/bankFallback.ts).
   useEffect(() => {
     if (wantsBankFallback(window.location.search)) setPayMethod('bank_transfer');
   }, []);
@@ -531,7 +530,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
        */
       const code = (err as { code?: string } | null)?.code;
       if (code === 'USER_CANCEL' || code === 'PAY_PROCESS_CANCELED') return;
-      setError('결제를 시작하지 못했어요. 잠시 후 다시 시도해 주세요. 결제가 계속 어려우시면 아래 "계좌번호로 직접 보내기"를 이용하실 수 있어요.');
+      setError('결제를 시작하지 못했어요. 잠시 후 다시 시도해 주세요. 결제가 계속 어려우시면 결제수단에서 "계좌로 직접 입금"을 고르실 수 있어요.');
     }
     finally { submittingRef.current = false; setSubmitting(false); }
   };
@@ -778,33 +777,28 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
       </fieldset>
 
       {/*
-        결제수단 — 기본은 토스(카드·간편결제·계좌이체) 목록이고, 결제가 어려운 분만 목록 아래 링크로
-        "계좌번호로 직접 보내기"를 연다(운영자 결정 2026-10-14). 계좌 모드에서는 목록을 숨긴다 — 두 길이
-        한 화면에 있으면 어느 쪽 버튼인지 헷갈린다.
+        결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금(우리 계좌번호 안내). 토스 계좌이체는 뱅크페이가 떠
+        고령층이 쓰지 못해 뺐다(운영자 결정 2026-10-14). 계좌 줄은 한정 수량 리워드에서 막힌다.
       */}
       <fieldset className={cardClass} aria-labelledby={`${uid}-step-pay`}>
         <StepHeader
           id={`${uid}-step-pay`} n={3} title="결제수단"
           hint={usingBank ? '신청하시면 입금하실 계좌를 바로 알려 드려요.' : '고르신 수단으로 바로 결제창이 열려요.'}
         />
-        {!usingBank && (
-          <>
-            <PaymentMethodPicker
-              name={`${uid}-paymethod`}
-              value={pickerChoice}
-              onChange={setPickerChoice}
-              applePaySupported={applePaySupported}
-            />
-            {paymentError && <Notice tone="error" className="mt-3">{paymentError}</Notice>}
-          </>
-        )}
-        <BankDepositFallback
-          active={usingBank}
-          blockedMessage={bankBlocked ? BANK_TRANSFER_BLOCK_MESSAGES[bankBlocked] : null}
-          onEnter={() => setPayMethod('bank_transfer')}
-          onLeave={() => setPayMethod('toss')}
+        <PaymentMethodPicker
+          name={`${uid}-paymethod`}
+          value={usingBank ? 'bank_transfer' : pickerChoice}
+          onChange={(next) => {
+            if (next === 'bank_transfer') { setPayMethod('bank_transfer'); return; }
+            setPayMethod('toss');
+            setPickerChoice(next);
+          }}
+          applePaySupported={applePaySupported}
+          withBank
+          bankBlockedMessage={bankBlocked ? BANK_TRANSFER_BLOCK_MESSAGES[bankBlocked] : null}
           confirmLabel="후원이 확정"
         />
+        {paymentError && <Notice tone="error" className="mt-3">{paymentError}</Notice>}
       </fieldset>
 
       {/*

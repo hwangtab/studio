@@ -27,7 +27,7 @@ interface PendingOrder {
 /**
  * 소프트웨어 라이선스 구매 폼 — 구매자 정보 → 결제수단 → **환불 규정 동의(체크)** → 결제하기.
  *
- * 결제수단은 전부 토스(카드·간편결제·토스 계좌이체)다. "계좌로 직접 입금"은 넣지 않는다 —
+ * 결제수단은 카드·간편결제(토스)다(토스 계좌이체는 뱅크페이가 떠 2026-10-14에 뺐다). "계좌로 직접 입금"은 넣지 않는다 —
  * 입금 확인까지 라이선스를 줄 수 없어 즉시 발급과 맞지 않는다. 다른 흐름과 달리 동의를 **체크박스로** 받는다: 디지털콘텐츠
  * 청약철회 제한은 결제 전에 알리고 동의를 받아야 성립하고(입증 책임은 사업자), 서버가 그 시각을 주문에 남긴다.
  */
@@ -146,7 +146,7 @@ export default function SoftwareOrderForm({ product, price }: { product: Softwar
         <PaymentMethodPicker
           name="software-paymethod"
           value={widget.choice}
-          onChange={widget.setChoice}
+          onChange={(next) => { if (next !== 'bank_transfer') widget.setChoice(next); }} // 직접 입금 줄은 이 화면에 없다
           applePaySupported={widget.applePaySupported}
           confirmLabel="라이선스가 발급"
         />

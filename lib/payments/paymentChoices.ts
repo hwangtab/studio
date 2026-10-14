@@ -11,23 +11,21 @@
  *   enum('KAKAOPAY' 등)은 Toss 검증 단계에서 거부됨". 값도 그 파일의 PAYMENT_CHOICES에서 그대로 옮겼다.
  * - 애플페이: 간편결제와 같은 모양. PC=Safari·모바일=iOS에서만 동작하므로 `window.ApplePaySession`이
  *   결제를 할 수 있다고 답할 때만 보인다(`visiblePaymentChoices`).
- * - 계좌이체(`transfer`): `method: 'TRANSFER'`. 인터넷뱅킹으로 바로 이체하고, 환불은 토스 취소가 원래
- *   계좌로 돌려준다(환불 계좌를 받아 손으로 송금할 일이 없다).
+ * - 계좌로 직접 입금(`bank_transfer`): 토스를 부르지 않는 무통장 흐름 — 폼이 처리한다. `withBank`를 준 화면에만 보인다.
  *
- * **"계좌로 직접 입금"(무통장)은 이 목록에 없다**(운영자 결정 2026-10-14). 모든 화면의 기본 결제수단은 토스
- * (카드·간편결제·계좌이체)이고, 결제가 어려운 분(주로 고령층)만 계좌번호를 안내받는다 — 결제 실패 화면의
- * 안내 버튼과 폼 아래의 작은 링크(`components/payments/BankDepositFallback.tsx`, `lib/payments/bankFallback.ts`)가
- * 유일한 입구다. 직접 입금을 다시 목록 줄로 올리면 환불 때 수동 송금이 되살아난다. 2026-10-04에는 "PC에서
- * 은행 보안 프로그램 설치 화면이 떠 결제를 막는다"는 이유로 토스 계좌이체를 빼기로 했었고, 그 문제는 그대로다 —
- * 그래서 안내 줄이 PC 보안 프로그램을 미리 알리고, 막힌 분의 안전망이 위 폴백이다.
+ * **토스 계좌이체(`method: 'TRANSFER'`)는 쓰지 않는다**(운영자 결정 2026-10-14). 은행을 고르면 금융결제원 뱅크페이
+ * 결제창이 뜨고, PC에서는 은행 보안 프로그램 설치를, 모바일에서는 뱅크페이·은행 앱 전환을 요구해 고령층은 사실상
+ * 쓰지 못한다 — 2026-10-04 "넣지 않는다", 2026-10-12 공연에 넣었다가 실제로 확인하고 되돌렸다. 계좌 수단은
+ * 우리 계좌번호를 보여 주는 직접 입금 하나다. 공연·상점의 직접 입금 재도입은 환불 때 환불 계좌를 받아 손으로 송금하는
+ * 부담을 알고 내린 결정이다(2026-10-12 "접는다"를 뒤집음).
  */
 
 export type EasyPayKo = '카카오페이' | '네이버페이' | '토스페이' | '페이코' | '애플페이';
 
-export type PaymentChoiceId = 'card' | 'transfer' | 'kakaopay' | 'naverpay' | 'tosspay' | 'payco' | 'applepay';
+export type PaymentChoiceId = 'card' | 'bank_transfer' | 'kakaopay' | 'naverpay' | 'tosspay' | 'payco' | 'applepay';
 
-/** 토스 결제창을 여는 수단 — 목록의 모든 줄이 해당한다. */
-export type TossPaymentChoiceId = PaymentChoiceId;
+/** 토스 결제창을 여는 수단(계좌 입금 제외). */
+export type TossPaymentChoiceId = Exclude<PaymentChoiceId, 'bank_transfer'>;
 
 export interface PaymentBrandLogo {
   src: string;
@@ -52,7 +50,7 @@ export interface PaymentChoice {
  */
 export const PAYMENT_CHOICES: readonly PaymentChoice[] = [
   { id: 'card', label: '신용·체크카드' },
-  { id: 'transfer', label: '계좌이체' },
+  { id: 'bank_transfer', label: '계좌로 직접 입금' },
   {
     id: 'kakaopay', label: '카카오페이', easyPay: '카카오페이',
     logo: { src: '/images/payment/kakaopay-20261004.png', width: 121, height: 50, heightClass: 'h-6' },
@@ -75,8 +73,11 @@ export const PAYMENT_CHOICES: readonly PaymentChoice[] = [
   },
 ];
 
-export const visiblePaymentChoices = (opts: { applePaySupported: boolean }): PaymentChoice[] =>
-  PAYMENT_CHOICES.filter((c) => !c.requiresApplePay || opts.applePaySupported);
+/** `withBank`를 준 화면에만 "계좌로 직접 입금" 줄이 보인다(공연·상점·소프트웨어 등 입금 흐름이 없는 화면은 뺀다). */
+export const visiblePaymentChoices = (opts: { applePaySupported: boolean; withBank?: boolean }): PaymentChoice[] =>
+  PAYMENT_CHOICES.filter((c) => (c.id !== 'bank_transfer' || opts.withBank) && (!c.requiresApplePay || opts.applePaySupported));
+
+export const isTossPaymentChoice = (id: PaymentChoiceId): id is TossPaymentChoiceId => id !== 'bank_transfer';
 
 export interface PaymentWindowParams {
   orderId: string;
@@ -104,16 +105,10 @@ export interface TossCardPaymentRequest extends TossPaymentRequestBase {
   card?: { flowMode: 'DIRECT'; easyPay: EasyPayKo };
 }
 
-/** 계좌이체 — 결제창이 은행 선택·현금영수증 신청을 받는다. `transfer` 옵션은 싣지 않는다(기본값). */
-export interface TossTransferPaymentRequest extends TossPaymentRequestBase {
-  method: 'TRANSFER';
-}
-
-export type TossPaymentRequest = TossCardPaymentRequest | TossTransferPaymentRequest;
+export type TossPaymentRequest = TossCardPaymentRequest;
 
 /**
- * `requestPayment` 인자를 만든다. 간편결제는 그 결제창으로 직행(DIRECT), 카드는 카드 결제창(기본),
- * 계좌이체는 TRANSFER 결제창.
+ * `requestPayment` 인자를 만든다. 간편결제는 그 결제창으로 직행(DIRECT), 카드는 카드 결제창(기본).
  * 이메일은 값이 있을 때만 싣는다(빈 문자열을 보내면 토스가 형식 오류로 거절한다).
  */
 export const buildTossPaymentRequest = (choice: TossPaymentChoiceId, params: PaymentWindowParams): TossPaymentRequest => {
@@ -127,7 +122,6 @@ export const buildTossPaymentRequest = (choice: TossPaymentChoiceId, params: Pay
     successUrl: params.successUrl,
     failUrl: params.failUrl,
   };
-  if (choice === 'transfer') return { method: 'TRANSFER', ...base };
   return {
     method: 'CARD',
     ...base,

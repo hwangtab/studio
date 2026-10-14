@@ -91,12 +91,19 @@ describe('ShowBookingForm — 결제 스크립트 지연 로드', () => {
   });
 });
 
-describe('ShowBookingForm — 계좌로 직접 입금은 받지 않는다(2026-10-12)', () => {
-  it('직접 입금 줄도 계좌번호 폴백 링크도 없고, 버튼은 결제하기다', () => {
+describe('ShowBookingForm — 계좌로 직접 입금(2026-10-14 재도입, 토스 계좌이체는 뱅크페이가 떠 뺐다)', () => {
+  it('계좌로 직접 입금 줄이 있고 토스 계좌이체 줄은 없다 — 고르면 버튼이 "계좌 안내 받기"가 된다', () => {
     render(<ShowBookingForm show={base} />);
-    expect(screen.queryByRole('radio', { name: /계좌로 직접 입금/ })).toBeNull();
-    expect(screen.queryByRole('button', { name: '계좌번호로 직접 보내기' })).toBeNull();
+    expect(screen.queryByRole('radio', { name: '계좌이체' })).toBeNull();
     expect(screen.getByRole('button', { name: /결제하기/ })).toBeTruthy();
-    expect(screen.queryByText(/계좌 안내 받기/)).toBeNull();
+    fireEvent.click(screen.getByRole('radio', { name: /계좌로 직접 입금/ }));
+    expect(screen.getByRole('button', { name: /계좌 안내 받기/ })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: /결제하기/ })).toBeNull();
+  });
+
+  it('회차 시작이 2시간 안이면 계좌 줄을 막는다', () => {
+    const soon = { ...base, showtimes: [{ ...showtime('st1', '곧 시작'), startsAt: Math.floor(Date.now() / 1000) + 3600 }] };
+    render(<ShowBookingForm show={soon} />);
+    expect(screen.getByRole('radio', { name: /계좌로 직접 입금/ })).toBeDisabled();
   });
 });
