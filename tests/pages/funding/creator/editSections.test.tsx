@@ -125,14 +125,14 @@ describe('개설자 이름 잠금 안내 — nameLocked prop 배선', () => {
     render(<CreatorProjectEditor project={APPROVED_PROJECT} earliestStartDate="2026-09-25" nameLocked payout={UNREGISTERED_PAYOUT} />);
     fireEvent.click(screen.getByRole('tab', { name: '개설자 정보' }));
     expect(screen.getByLabelText('공개 이름', { exact: false })).toBeDisabled();
-    expect(screen.getByText(/승인된 프로젝트가 있어 이름은 바꿀 수 없어요/)).toBeInTheDocument();
+    expect(screen.getByText(/프로젝트·상품이 있어 이름은 바꿀 수 없어요/)).toBeInTheDocument();
   });
 
   it('nameLocked=false면 이름 칸이 활성이고 이유 문구가 없다', () => {
     render(<CreatorProjectEditor project={APPROVED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
     fireEvent.click(screen.getByRole('tab', { name: '개설자 정보' }));
     expect(screen.getByLabelText('공개 이름', { exact: false })).toBeEnabled();
-    expect(screen.queryByText(/승인된 프로젝트가 있어 이름은 바꿀 수 없어요/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/프로젝트·상품이 있어 이름은 바꿀 수 없어요/)).not.toBeInTheDocument();
   });
 });
 

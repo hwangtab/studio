@@ -150,7 +150,7 @@ export default function AdminShopPage({ orders, skus, artistSales, month, prevMo
         <title>상점 관리 | Studio NOL</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <AdminShell title="상점 관리" description="음반·굿즈 주문과 재고입니다. 상품 정의(이름·옵션·가격)는 data/shop/catalog.ts에서 바꿉니다." width="wide" actions={(
+      <AdminShell title="상점 관리" description="음반·굿즈 주문과 재고입니다. 파일 상품(이름·옵션·가격)은 data/shop/catalog.ts에서, 아티스트 상품은 상품 심사에서 다룹니다." width="wide" actions={(
         <span className="flex items-center gap-4">
           <Link href="/admin/shop/products" className="text-sm font-medium text-primary hover:underline">
             상품 심사{pendingProducts ? `(대기 ${pendingProducts})` : ''}

@@ -1,7 +1,7 @@
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { AdminShell } from '../../../../components/admin/AdminShell';
 import ShopProductDetail from '../../../../components/shop/ShopProductDetail';
@@ -65,6 +65,9 @@ const parseFiles = (text: string): Array<{ label: string; key: string }> =>
   });
 
 export default function AdminShopProductPage({ product }: Props) {
+  // 관리자 화면은 항상 밝은 바탕이다. 미리보기에 들어가는 공개 컴포넌트는 dark: 색을 쓰므로, 운영자 기기가
+  // 어두운 모드면 흰 바탕에 연한 글씨가 되어 안 보인다 — 이 화면에서는 dark 클래스를 걷는다(Layout이 없어 다시 붙이는 쪽이 없다).
+  useEffect(() => { document.documentElement.classList.remove('dark'); }, []);
   const [note, setNote] = useState('');
   const [slug, setSlug] = useState(product.slug.startsWith('draft-') ? '' : product.slug);
   const [shipsOn, setShipsOn] = useState(product.shipsOn ?? '');
