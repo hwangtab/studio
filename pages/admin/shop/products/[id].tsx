@@ -216,13 +216,13 @@ export default function AdminShopProductPage({ product }: Props) {
                 </button>
               </div>
             )}
-            <div className="md:col-span-2">
+            {product.kind === 'digital' && (<div className="md:col-span-2">
               <label className="block">내려받기 파일 — 한 줄에 하나, &quot;이름|저장소 키&quot; (키는 shop/로 시작)
                 <textarea value={filesText} onChange={(e) => setFilesText(e.target.value)} rows={3} placeholder="앨범 (WAV)|shop/album-name/album.zip" className={`${inputClass} mt-1 font-mono`} />
               </label>
               <button type="button" disabled={busy} onClick={() => run({ action: 'set_digital_files', files: parseFiles(filesText) }, '파일을 저장했습니다.')} className={`${secondaryBtn} mt-2`}>파일 저장</button>
-              {product.kind === 'digital' && product.digitalFiles.length === 0 && <span className="ml-3 text-xs text-amber-800">디지털 상품은 파일이 있어야 승인됩니다.</span>}
-            </div>
+              {product.digitalFiles.length === 0 && <span className="ml-3 text-xs text-amber-800">디지털 상품은 파일이 있어야 승인됩니다.</span>}
+            </div>)}
             <div className="md:col-span-2">
               <label className="block">내부 메모 (아티스트에게 보이지 않습니다)
                 <textarea value={internalNote} onChange={(e) => setInternalNote(e.target.value)} rows={3} className={`${inputClass} mt-1`} />
