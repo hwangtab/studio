@@ -8,6 +8,8 @@ import { shopShippingFeeFor } from '../../data/shop/policy';
 export interface ShopLinePrice {
   unitPrice: number;
   quantity: number;
+  /** 디지털 상품 줄이면 true. 배송비와 무료 배송 기준은 실물 줄만 본다. */
+  digital?: boolean;
 }
 
 export interface ShopTotals {
@@ -16,9 +18,15 @@ export interface ShopTotals {
   total: number;
 }
 
-/** `needsShipping` — 실물 줄이 하나라도 있는가. 디지털 상품만이면 배송비가 없다. */
-export const computeShopTotals = (lines: readonly ShopLinePrice[], needsShipping = true): ShopTotals => {
-  const subtotal = lines.reduce((sum, l) => sum + l.unitPrice * l.quantity, 0);
-  const shippingFee = needsShipping && subtotal > 0 ? shopShippingFeeFor(subtotal) : 0;
+/**
+ * 배송비는 실물 줄이 있을 때만, 무료 배송 기준(SHOP_FREE_SHIPPING_FROM)은 **실물 줄 합계**로 본다 — 디지털 상품을 얹어
+ * 실물 배송비를 없애지 않게(운영자 결정 2026-10-14).
+ */
+export const computeShopTotals = (lines: readonly ShopLinePrice[]): ShopTotals => {
+  const lineSum = (l: ShopLinePrice) => l.unitPrice * l.quantity;
+  const subtotal = lines.reduce((sum, l) => sum + lineSum(l), 0);
+  const physical = lines.filter((l) => !l.digital);
+  const physicalSubtotal = physical.reduce((sum, l) => sum + lineSum(l), 0);
+  const shippingFee = physical.length > 0 && physicalSubtotal > 0 ? shopShippingFeeFor(physicalSubtotal) : 0;
   return { subtotal, shippingFee, total: subtotal + shippingFee };
 };

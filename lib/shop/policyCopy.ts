@@ -10,7 +10,7 @@ import { SHOP_FREE_SHIPPING_FROM, SHOP_SHIPPING_FEE } from '../../data/shop/poli
 const won = (n: number) => `${formatPriceAmount(n)}원`;
 
 export const shopShippingNote = (): string =>
-  `배송비 ${won(SHOP_SHIPPING_FEE)}, 상품 ${won(SHOP_FREE_SHIPPING_FROM)} 이상이면 무료예요. 국내만 보내요.`;
+  `배송비 ${won(SHOP_SHIPPING_FEE)}, 실물 상품 ${won(SHOP_FREE_SHIPPING_FROM)} 이상이면 무료예요. 국내만 보내요.`;
 
 export const SHOP_REFUND_RULES: readonly string[] = [
   '보내기 전에는 주문 확인 페이지에서 바로 취소할 수 있어요. 결제하신 수단으로 전액 돌려드려요.',

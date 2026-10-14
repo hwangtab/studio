@@ -87,7 +87,7 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
   // 실물 줄이 하나라도 있어야 배송지·배송비가 있다. 디지털 상품만이면 둘 다 없다(담은 게 없을 때는 실물로 본다).
   const hasDigital = lines.some((l) => l.product.kind === 'digital');
   const needsShipping = lines.length === 0 || lines.some((l) => l.product.kind !== 'digital');
-  const totals = computeShopTotals(lines.map((l) => ({ unitPrice: l.sku.price, quantity: l.quantity })), needsShipping);
+  const totals = computeShopTotals(lines.map((l) => ({ unitPrice: l.sku.price, quantity: l.quantity, digital: l.product.kind === 'digital' })));
 
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -329,7 +329,7 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
               <TextInput value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" placeholder="010-1234-5678" />
             </Field>
           </div>
-          <Field id="shop-email" label="이메일" required hint={needsShipping ? '주문 확인과 발송 안내(운송장 번호)를 이 주소로 보내 드려요.' : '주문 확인 주소를 이 메일로 보내 드려요.'}>
+          <Field id="shop-email" label="이메일" required hint={needsShipping ? '주문 확인과 발송 안내(운송장 번호)를 이 주소로 보내 드려요.' : '주문 확인과 내려받기 안내를 이 주소로 보내 드려요.'}>
             <TextInput value={email} onChange={(e) => setEmail(e.target.value)} type="email" inputMode="email" autoComplete="email" />
           </Field>
 

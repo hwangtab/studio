@@ -47,7 +47,7 @@ export const createShopOrder = async (
   if (needsShipping && !input.shipping) return { ok: false, code: 'shipping_required' };
   const ship = needsShipping ? input.shipping : null;
 
-  const totals = computeShopTotals(resolved.map((r) => ({ unitPrice: r.sku.price, quantity: r.quantity })), needsShipping);
+  const totals = computeShopTotals(resolved.map((r) => ({ unitPrice: r.sku.price, quantity: r.quantity, digital: r.product.kind === 'digital' })));
   const { itemAmount, vatAmount, totalAmount } = splitInclusiveAmount(totals.total);
   const orderNo = generateShopOrderNo(now);
   const manageToken = generateManageToken();
