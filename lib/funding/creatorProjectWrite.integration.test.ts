@@ -851,7 +851,7 @@ describe('승인 뒤 편집 (Task 5)', () => {
 describe('정산 정보 저장 — 승인 뒤에만, 계정 단위로', () => {
   const payout = {
     taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '황경하',
-    residentNumber: null,
+    residentNumber: null, business: null,
   } as const;
 
   it('승인된 프로젝트가 하나도 없으면 거부한다 — 반려될 신청서에 계좌를 미리 받지 않는다', async () => {
@@ -861,7 +861,7 @@ describe('정산 정보 저장 — 승인 뒤에만, 계정 단위로', () => {
 
     const summary = await loadPayoutSummary(creatorId);
     expect(summary).toEqual({
-      registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false, withheldPayoutRecorded: false,
+      registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false, withheldPayoutRecorded: false, business: null,
     });
   });
 
@@ -931,10 +931,11 @@ describe('정산 정보 저장 — 승인 뒤에만, 계정 단위로', () => {
     await savePayoutSection(creatorId, { ...payout });
     expect(await savePayoutSection(creatorId, {
       taxType: 'invoice', bankName: '토스뱅크', account: '1000-0000-0000', holder: '스튜디오놀', residentNumber: null,
+      business: null,
     })).toEqual({ ok: true });
 
     expect(await loadPayoutSummary(creatorId)).toEqual({
-      registered: true, accountLast4: '0000', taxType: 'invoice', residentNumberRegistered: false, withheldPayoutRecorded: false,
+      registered: true, accountLast4: '0000', taxType: 'invoice', residentNumberRegistered: false, withheldPayoutRecorded: false, business: null,
     });
   });
 
@@ -955,12 +956,12 @@ describe('loadPayoutSummary — 계좌 원본은 함수 밖으로 안 나간다'
   it('등록 여부·뒤 4자리·세금 유형뿐이고, 직렬화에 은행명·예금주·계좌 전체가 없다', async () => {
     const { creatorId } = await seedProject({ reviewStatus: 'approved' });
     await savePayoutSection(creatorId, {
-      taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '정산예금주', residentNumber: null,
+      taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '정산예금주', residentNumber: null, business: null,
     });
 
     const summary = await loadPayoutSummary(creatorId);
     expect(Object.keys(summary).sort()).toEqual([
-      'accountLast4', 'registered', 'residentNumberRegistered', 'taxType', 'withheldPayoutRecorded',
+      'accountLast4', 'business', 'registered', 'residentNumberRegistered', 'taxType', 'withheldPayoutRecorded',
     ]);
 
     // lib/funding/dbProjects.integration.test.ts의 같은 모양 단언 — 이 값이 그대로
@@ -983,7 +984,7 @@ describe('loadPayoutSummary — 계좌 원본은 함수 밖으로 안 나간다'
       .where(eq(schema.fundingCreators.id, creatorId));
 
     expect(await loadPayoutSummary(creatorId)).toEqual({
-      registered: false, accountLast4: null, taxType: 'withholding', residentNumberRegistered: false, withheldPayoutRecorded: false,
+      registered: false, accountLast4: null, taxType: 'withholding', residentNumberRegistered: false, withheldPayoutRecorded: false, business: null,
     });
   });
 
@@ -994,7 +995,7 @@ describe('loadPayoutSummary — 계좌 원본은 함수 밖으로 안 나간다'
   it('키가 없어도 등록 여부와 뒤 4자리는 나온다 — 복호화하지 않는다', async () => {
     const { creatorId } = await seedProject({ reviewStatus: 'approved' });
     await savePayoutSection(creatorId, {
-      taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '정산예금주', residentNumber: null,
+      taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '정산예금주', residentNumber: null, business: null,
     });
 
     const key = process.env[FIELD_CRYPTO_KEY_ENV];
@@ -1008,7 +1009,7 @@ describe('loadPayoutSummary — 계좌 원본은 함수 밖으로 안 나간다'
 
   it('없는 계정은 전부 비어 있는 요약을 돌려준다', async () => {
     expect(await loadPayoutSummary('없는-id')).toEqual({
-      registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false, withheldPayoutRecorded: false,
+      registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false, withheldPayoutRecorded: false, business: null,
     });
   });
 });
@@ -1027,6 +1028,7 @@ describe('주민등록번호 — 암호화해서만 들어간다', () => {
     account: '123-456-789012',
     holder: '황경하',
     residentNumber,
+    business: null,
   });
 
   const readStored = async (creatorId: string): Promise<string | null> => {
@@ -1087,7 +1089,7 @@ describe('주민등록번호 — 암호화해서만 들어간다', () => {
   /** 사업자로 저장하는 호출 한 벌 — 세 테스트가 같은 입력으로 결과만 가른다. */
   const switchToInvoice = (creatorId: string) => savePayoutSection(creatorId, {
     taxType: 'invoice' as const, bankName: '국민은행', account: '123-456-789012', holder: '황경하',
-    residentNumber: RRN,
+    residentNumber: RRN, business: null,
   });
 
   /** 프로젝트에 정산을 기록해 둔다. 원천징수 여부는 `withholdingAmount`로 가른다. */
@@ -1335,3 +1337,187 @@ describe('가드 뒤에 상태가 바뀌는 경합', () => {
   });
 });
 /* eslint-enable @typescript-eslint/no-explicit-any */
+
+describe('정산 정보 — 사업자 정보·국세청 조회·자격', () => {
+  const lookupOk = jest.fn(async () => ({ ok: true as const, status: 'active' as const, taxTypeCode: '01', taxTypeLabel: '부가가치세 일반과세자' }));
+  const lookupFail = jest.fn(async () => ({ ok: false as const, error: 'missing_key' as const }));
+  const invoice = (n = '7537400653') => ({
+    taxType: 'invoice' as const, bankName: '농협', account: '1234-5678', holder: '놀', residentNumber: null,
+    business: { businessNumber: n, businessName: '스튜디오 놀', representativeName: '황경하' },
+  });
+  const withholding = (residentNumber: string | null = null) => ({ ...invoice(), taxType: 'withholding' as const, residentNumber, business: null });
+  const businessRows = (creatorId: string) => mockDb.select().from(schema.creatorBusinessProfiles)
+    .where(eq(schema.creatorBusinessProfiles.creatorId, creatorId));
+  const recordPayout = async (projectId: string, withholdingAmount: number) => {
+    await mockDb.insert(schema.fundingProjectPayouts).values({
+      projectId, grossAmount: 1_000_000, refundAmount: 0, supplyAmount: 909_091, feeAmount: 88_000,
+      platformFeeAmount: 55_000, paymentFeeAmount: 33_000, shareAmount: 912_000, withholdingAmount,
+      netAmount: 912_000 - withholdingAmount, backerCount: 1,
+    });
+  };
+
+  beforeEach(() => { lookupOk.mockClear(); lookupFail.mockClear(); });
+
+  it('사업자 저장 — 조회 성공이면 active로 남는다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    expect(await savePayoutSection(creatorId, invoice(), { lookup: lookupOk })).toEqual({ ok: true });
+    const [row] = await businessRows(creatorId);
+    expect(row).toMatchObject({
+      businessNumber: '7537400653', businessName: '스튜디오 놀', representativeName: '황경하',
+      ntsStatus: 'active', ntsTaxTypeCode: '01', ntsCheckError: null,
+    });
+    expect(lookupOk).toHaveBeenCalledWith('7537400653');
+  });
+
+  it('조회 실패는 저장을 막지 않는다 — unverified + 사유 코드 + 경고', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    const r = await savePayoutSection(creatorId, invoice(), { lookup: lookupFail });
+    expect(r).toMatchObject({ ok: true });
+    expect(r.ok && r.businessWarnings?.join()).toContain('저장');
+    const [row] = await businessRows(creatorId);
+    expect(row).toMatchObject({ ntsStatus: 'unverified', ntsCheckError: 'missing_key' });
+    expect(row.ntsCheckedAt).toBeInstanceOf(Date);
+  });
+
+  it('번호가 같고 이미 확인됐으면 다시 조회하지 않는다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, invoice(), { lookup: lookupOk });
+    lookupOk.mockClear();
+    await savePayoutSection(creatorId, invoice(), { lookup: lookupOk });
+    expect(lookupOk).not.toHaveBeenCalled();
+    expect((await businessRows(creatorId))[0].ntsStatus).toBe('active');
+  });
+
+  it('번호가 바뀌면 다시 조회하고 옛 사업자등록증을 지운다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, invoice(), { lookup: lookupOk });
+    const key = `tax-docs/${creatorId}/old.pdf`;
+    await mockDb.update(schema.creatorBusinessProfiles)
+      .set({ certificateKey: key, certificateContentType: 'application/pdf', certificateUploadedAt: new Date() })
+      .where(eq(schema.creatorBusinessProfiles.creatorId, creatorId));
+    lookupOk.mockClear();
+    const deleteBlob = jest.fn(async () => undefined);
+    expect(await savePayoutSection(creatorId, invoice('1234567891'), { lookup: lookupOk, deleteBlob })).toEqual({ ok: true });
+    expect(lookupOk).toHaveBeenCalledWith('1234567891');
+    const [row] = await businessRows(creatorId);
+    expect(row).toMatchObject({ businessNumber: '1234567891', certificateKey: null, certificateContentType: null, certificateUploadedAt: null });
+    expect(deleteBlob).toHaveBeenCalledWith(key);
+  });
+
+  it('조회 한도를 넘으면 조회하지 않고 rate_limited로 남긴다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await mockDb.insert(schema.rateLimits).values({ key: `nts_lookup:${creatorId}`, count: 10, expiresAt: Math.floor(Date.now() / 1000) + 3600 });
+    expect(await savePayoutSection(creatorId, invoice(), { lookup: lookupOk })).toMatchObject({ ok: true });
+    expect(lookupOk).not.toHaveBeenCalled();
+    expect((await businessRows(creatorId))[0]).toMatchObject({ ntsStatus: 'unverified', ntsCheckError: 'rate_limited' });
+  });
+
+  it('암호화 키가 없으면 사업자 정보도 저장하지 않는다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    const key = process.env[FIELD_CRYPTO_KEY_ENV];
+    delete process.env[FIELD_CRYPTO_KEY_ENV];
+    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      expect(await savePayoutSection(creatorId, invoice(), { lookup: lookupOk })).toMatchObject({ ok: false, code: 'encryption_unavailable' });
+    } finally {
+      error.mockRestore();
+      process.env[FIELD_CRYPTO_KEY_ENV] = key;
+    }
+    expect(await businessRows(creatorId)).toEqual([]);
+    expect(lookupOk).not.toHaveBeenCalled();
+  });
+
+  it('개인으로 바꾸면 사업자 행과 Blob을 지운다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, invoice(), { lookup: lookupOk });
+    await mockDb.update(schema.creatorBusinessProfiles).set({ certificateKey: `tax-docs/${creatorId}/x.pdf` })
+      .where(eq(schema.creatorBusinessProfiles.creatorId, creatorId));
+    const deleteBlob = jest.fn(async () => undefined);
+    const r = await savePayoutSection(creatorId, withholding(), { lookup: lookupOk, deleteBlob });
+    expect(r).toEqual({ ok: true });
+    expect(await businessRows(creatorId)).toEqual([]);
+    expect(deleteBlob).toHaveBeenCalledWith(`tax-docs/${creatorId}/x.pdf`);
+  });
+
+  it('남의 경로를 가리키는 키는 Blob을 지우지 않는다(행은 지운다)', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, invoice(), { lookup: lookupOk });
+    await mockDb.update(schema.creatorBusinessProfiles).set({ certificateKey: 'contracts/other.pdf' })
+      .where(eq(schema.creatorBusinessProfiles.creatorId, creatorId));
+    const deleteBlob = jest.fn(async () => undefined);
+    expect(await savePayoutSection(creatorId, withholding(), { lookup: lookupOk, deleteBlob })).toEqual({ ok: true });
+    expect(await businessRows(creatorId)).toEqual([]);
+    expect(deleteBlob).not.toHaveBeenCalled();
+  });
+
+  it('Blob 삭제가 실패해도 저장은 성공한다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, invoice(), { lookup: lookupOk });
+    await mockDb.update(schema.creatorBusinessProfiles).set({ certificateKey: `tax-docs/${creatorId}/x.pdf` })
+      .where(eq(schema.creatorBusinessProfiles.creatorId, creatorId));
+    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      const deleteBlob = jest.fn(async () => { throw new Error('blob down'); });
+      expect(await savePayoutSection(creatorId, withholding(), { lookup: lookupOk, deleteBlob })).toEqual({ ok: true });
+    } finally {
+      error.mockRestore();
+    }
+    expect(await businessRows(creatorId)).toEqual([]);
+  });
+
+  it('사업자 정산 기록이 있으면 개인으로 바꿔도 사업자 행을 남긴다', async () => {
+    const { creatorId, projectId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, invoice(), { lookup: lookupOk });
+    await recordPayout(projectId, 0);
+    const deleteBlob = jest.fn(async () => undefined);
+    const r = await savePayoutSection(creatorId, withholding(), { lookup: lookupOk, deleteBlob });
+    expect(r).toEqual({ ok: true, businessProfileRetained: true });
+    expect(await businessRows(creatorId)).toHaveLength(1);
+    expect(deleteBlob).not.toHaveBeenCalled();
+  });
+
+  it('상점 아티스트면 사업자로 바꿔도 주민등록번호를 남긴다 — 상점 정산은 기록 표가 없다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, withholding('9901011234567'), { lookup: lookupOk });
+    await mockDb.insert(schema.shopArtists).values({ creatorId, slug: `artist-${creatorId}` });
+    expect(await savePayoutSection(creatorId, invoice(), { lookup: lookupOk }))
+      .toEqual({ ok: true, residentNumberRetained: true });
+    const [row] = await mockDb.select({ enc: schema.fundingCreators.residentNumberEnc })
+      .from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creatorId));
+    expect(row.enc).toBeTruthy();
+  });
+
+  it('승인된 공연 등록만 있어도 열린다 / 상점 아티스트만 있어도 열린다 / 아무것도 없으면 not_editable', async () => {
+    const show = await seedCreator('show@example.com');
+    await mockDb.insert(schema.showSubmissions).values({ creatorId: show, draftJson: '{}', reviewStatus: 'approved' });
+    expect(await savePayoutSection(show, invoice(), { lookup: lookupOk })).toMatchObject({ ok: true });
+
+    const shop = await seedCreator('shop@example.com');
+    await mockDb.insert(schema.shopArtists).values({ creatorId: shop, slug: 'shop-artist' });
+    expect(await savePayoutSection(shop, invoice(), { lookup: lookupOk })).toMatchObject({ ok: true });
+
+    const none = await seedCreator('none@example.com');
+    expect(await savePayoutSection(none, invoice(), { lookup: lookupOk })).toMatchObject({ ok: false, code: 'not_editable' });
+  });
+
+  it('요약에 사업자 정보가 실린다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    expect((await loadPayoutSummary(creatorId)).business).toBeNull();
+    await savePayoutSection(creatorId, invoice(), { lookup: lookupOk, now: new Date('2026-10-14T00:00:00Z') });
+    expect((await loadPayoutSummary(creatorId)).business).toEqual({
+      businessNumber: '7537400653', businessName: '스튜디오 놀', representativeName: '황경하',
+      ntsStatus: 'active', ntsTaxTypeCode: '01', ntsTaxTypeLabel: '부가가치세 일반과세자',
+      ntsCheckedAt: '2026-10-14T00:00:00.000Z', ntsCheckError: null, hasCertificate: false, certificateUploadedAt: null,
+    });
+  });
+
+  it('사업자 표가 없는 DB에서도 원천징수 저장은 된다 — 사업자 저장은 business_unavailable', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await client.execute('DROP TABLE creator_business_profiles');
+    expect(await savePayoutSection(creatorId, withholding(), { lookup: lookupOk })).toEqual({ ok: true });
+    expect((await loadPayoutSummary(creatorId)).business).toBe('unavailable');
+    expect(await savePayoutSection(creatorId, invoice(), { lookup: lookupOk }))
+      .toMatchObject({ ok: false, code: 'business_unavailable' });
+    expect(lookupOk).not.toHaveBeenCalled();
+  });
+});
