@@ -1476,6 +1476,35 @@ describe('정산 정보 — 사업자 정보·국세청 조회·자격', () => {
     expect(deleteBlob).not.toHaveBeenCalled();
   });
 
+  it('상점 아티스트면 개인으로 바꿔도 사업자 행을 남긴다 — 상점 정산은 기록 표가 없다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, invoice(), { lookup: lookupOk });
+    await mockDb.update(schema.creatorBusinessProfiles).set({ certificateKey: `tax-docs/${creatorId}/x.pdf` })
+      .where(eq(schema.creatorBusinessProfiles.creatorId, creatorId));
+    await mockDb.insert(schema.shopArtists).values({ creatorId, slug: `artist-${creatorId}` });
+    const deleteBlob = jest.fn(async () => undefined);
+    expect(await savePayoutSection(creatorId, withholding(), { lookup: lookupOk, deleteBlob }))
+      .toEqual({ ok: true, businessProfileRetained: true });
+    expect(await businessRows(creatorId)).toHaveLength(1);
+    expect(deleteBlob).not.toHaveBeenCalled();
+  });
+
+  it('개인 전환 뒤 사업자 정리가 실패해도 저장은 성공이다 — 계정 변경은 이미 커밋됐다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, invoice(), { lookup: lookupOk });
+    await client.execute('PRAGMA foreign_keys = OFF');
+    await client.execute('DROP TABLE funding_project_payouts');
+    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      expect(await savePayoutSection(creatorId, withholding(), { lookup: lookupOk })).toEqual({ ok: true });
+    } finally {
+      error.mockRestore();
+    }
+    const [row] = await mockDb.select({ taxType: schema.fundingCreators.taxType })
+      .from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creatorId));
+    expect(row.taxType).toBe('withholding');
+  });
+
   it('상점 아티스트면 사업자로 바꿔도 주민등록번호를 남긴다 — 상점 정산은 기록 표가 없다', async () => {
     const { creatorId } = await seedProject({ reviewStatus: 'approved' });
     await savePayoutSection(creatorId, withholding('9901011234567'), { lookup: lookupOk });
@@ -1514,10 +1543,17 @@ describe('정산 정보 — 사업자 정보·국세청 조회·자격', () => {
   it('사업자 표가 없는 DB에서도 원천징수 저장은 된다 — 사업자 저장은 business_unavailable', async () => {
     const { creatorId } = await seedProject({ reviewStatus: 'approved' });
     await client.execute('DROP TABLE creator_business_profiles');
-    expect(await savePayoutSection(creatorId, withholding(), { lookup: lookupOk })).toEqual({ ok: true });
+    expect(await savePayoutSection(creatorId, withholding('9901011234567'), { lookup: lookupOk })).toEqual({ ok: true });
     expect((await loadPayoutSummary(creatorId)).business).toBe('unavailable');
+    const readRrn = async () => (await mockDb.select({ enc: schema.fundingCreators.residentNumberEnc })
+      .from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creatorId)))[0].enc;
+    const before = await readRrn();
+    expect(before).toBeTruthy();
     expect(await savePayoutSection(creatorId, invoice(), { lookup: lookupOk }))
       .toMatchObject({ ok: false, code: 'business_unavailable' });
     expect(lookupOk).not.toHaveBeenCalled();
+    // 거부된 저장은 아무것도 바꾸지 않는다 — 주민등록번호도 그대로다.
+    expect(await readRrn()).toBe(before);
+    expect((await loadPayoutSummary(creatorId)).taxType).toBe('withholding');
   });
 });

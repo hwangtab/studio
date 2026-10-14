@@ -665,9 +665,18 @@ export const savePayoutSection = async (
     }
     const numberChanged = Boolean(existing && existing.businessNumber !== value.business.businessNumber);
     if (numberChanged) {
-      const [old] = await getDb().select({ key: creatorBusinessProfiles.certificateKey }).from(creatorBusinessProfiles)
-        .where(eq(creatorBusinessProfiles.creatorId, creatorId)).limit(1);
-      staleCertificateKey = old?.key ?? null;
+      // 이 읽기 실패도 표를 못 읽은 것과 같다 — 아직 아무것도 쓰지 않았으니 business_unavailable로 돌려보낸다.
+      try {
+        const [old] = await getDb().select({ key: creatorBusinessProfiles.certificateKey }).from(creatorBusinessProfiles)
+          .where(eq(creatorBusinessProfiles.creatorId, creatorId)).limit(1);
+        staleCertificateKey = old?.key ?? null;
+      } catch {
+        console.error('[funding] 사업자등록증 키 조회 실패', { creatorId });
+        return deny(
+          'business_unavailable',
+          '사업자 정보를 저장할 준비가 아직 안 됐어요. 이번 저장은 아무것도 반영되지 않았어요. 스튜디오 놀에 알려 주세요.',
+        );
+      }
     }
     businessWrite = {
       creatorId,
@@ -707,10 +716,19 @@ export const savePayoutSection = async (
     await creatorUpdate;
   }
 
+  /**
+   * 개인으로 바꿨을 때 사업자 행 정리. 남기는 경우는 둘이다 — 사업자로 정산한 펀딩 기록(`hasInvoicePayout`),
+   * 그리고 상점 아티스트(`isShopArtist` — 상점 정산은 기록 표가 없어 세금계산서로 받았는지 알 수 없다. 주민등록번호 유지와 거울).
+   * 계정 변경은 이미 커밋됐으므로 여기서 실패해도 저장은 성공으로 돌려준다(남은 행은 다음 저장·파기가 정리한다).
+   */
   let businessProfileRetained = false;
   if (value.taxType === 'withholding' && existingBusiness && existingBusiness !== 'unavailable') {
-    if (await hasInvoicePayout(creatorId)) businessProfileRetained = true;
-    else await deleteBusinessProfile(creatorId, { deleteBlob: deps.deleteBlob });
+    try {
+      if (await hasInvoicePayout(creatorId) || await isShopArtist(creatorId)) businessProfileRetained = true;
+      else await deleteBusinessProfile(creatorId, { deleteBlob: deps.deleteBlob });
+    } catch {
+      console.error('[funding] 개인 전환 뒤 사업자 정보 정리 실패', { creatorId });
+    }
   }
 
   return {
