@@ -16,15 +16,16 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
    배송 메모), 목적(상품 발송과 교환·반품 응대), 파기(자동 파기 ④의 "주문(예약·믹싱·펀딩·정기결제)"에 상품 주문을 더한다 —
    코드는 이미 `purgeShopPersonalDataOfPurgedOrders`가 돈다), **위탁(택배사 이름 — 운영자가 정한다)**. 처리방침 ko 전체가
    펀딩 약관 판본 해시 대상이라 `FUNDING_TERMS_VERSION`을 올리고 기준선을 갱신한다(루트 CLAUDE.md "약관·처리방침을 고치면…").
-3. 이용약관(`/ko/terms`)에 상품 판매의 청약철회·교환·반품 조항이 있는지 본다. 화면의 규정 문구는 `lib/shop/policyCopy.ts` 한 곳이다.
-   디지털 상품을 열 때는 **`/ko/terms`에 디지털 콘텐츠 청약철회 조항(내려받기를 시작하면 제한 — 전자상거래법 제17조 제2항 제5호)이 있는지** 따로 확인한다. 화면의 고지(`SHOP_DIGITAL_WITHDRAWAL_NOTICE`)가 약관과 같은 약속을 해야 한다.
+3. 이용약관(`/ko/terms`)의 "상품 판매" 절은 **이미 `SHOP_SALES_OPEN`에 묶여 있다 — 켜면 함께 열린다.** 문구는 `lib/shop/policyCopy.ts`를 읽어 렌더하므로
+   (판매 주체·배송·예약 판매·실물 청약철회·디지털 청약철회) 상점 화면과 약관이 같은 약속을 한다. 문구를 바꾸려면 policyCopy 한 곳만 고친다.
 4. 상품을 `data/shop/catalog.ts`에 올린다(머리 주석의 예시). 이미지는 `public/images/shop/<이름>-YYYYMMDD.webp`, **`git add -f`**.
    `UPDATE_SHOP_CATALOG_BASELINE=1 npx jest data/shop/catalog.baseline.test.ts`로 SKU 기준선을 싣고, 빌드 후 바뀐 히어로 폰트
    서브셋(woff2·chars.json)을 함께 커밋한다(상품 제목이 `/ko/shop/<slug>` h1이다 — `scripts/generate-hero-font.mjs` 7-1).
 5. 배포 뒤 `/admin/shop`에서 SKU별 총 재고를 넣는다(행이 없으면 품절이다).
 6. `SHOP_SALES_OPEN = true`로 바꿔 배포한다.
-7. 그때 붙인다: 헤더·푸터 메뉴, 런타임 사이트맵(`/sitemap-shop.xml` — 공연 `pages/sitemap-shows.xml.ts`와 같은 방식,
-   `next-sitemap.config.js`의 additionalSitemaps), `pages/api/llms.ts`.
+7. 헤더·푸터 메뉴(`SHOP_NAV_LABEL`), 런타임 사이트맵(`/sitemap-shop.xml` — robots의 `additionalSitemaps`는 `next-sitemap.config.js`가
+   `data/shop/policy.ts`의 선언을 읽어 싣는다), `pages/api/llms.ts`·`llms-full.ts`의 상점 절, `/ko/terms` 상품 판매 절은 **이미 `SHOP_SALES_OPEN`에
+   묶여 있다 — 켜면 함께 열린다.** 켠 뒤 `/sitemap-shop.xml`이 상품·아티스트 URL을 내는지 한 번 열어 본다.
 8. 최소 금액으로 실결제 → 취소를 한 번씩, **계좌이체로도** 한다(토스 API 키 쌍에 계좌이체가 개통됐는지 이때 확인된다).
 
 ### 결제는 전부 토스다 — 계좌 입금(무통장) 없음

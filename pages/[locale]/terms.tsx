@@ -15,6 +15,15 @@ import {
   ARTIST_SUPPORT_REFUND_POLICY_LINES,
 } from '../../lib/booking/refund-policy';
 import type { Locale } from '../../lib/i18n';
+import { SHOP_SALES_OPEN } from '../../data/shop/policy';
+import {
+  SHOP_DIGITAL_RULES,
+  SHOP_PREORDER_MIX_NOTE,
+  SHOP_PREORDER_TERMS_NOTE,
+  SHOP_REFUND_RULES,
+  SHOP_SELLER_NOTE,
+  shopShippingNote,
+} from '../../lib/shop/policyCopy';
 
 // ko 전용 페이지 — 예약 퍼널(lib/booking/*)이 ko 전용이라 약관·환불규정도 ko에만 존재한다.
 // 다른 로케일 경로는 getServerSideProps에서 /ko/terms로 리다이렉트한다.
@@ -127,6 +136,43 @@ const TermsPage: NextPageWithLayout<TermsPageProps> = ({ locale }) => {
                 ))}
               </ul>
             </article>
+
+            {/* 상품 판매(음반·굿즈·디지털) — 상점 화면과 같은 문구(lib/shop/policyCopy.ts)를 읽는다. 판매를 열 때(SHOP_SALES_OPEN)만 보인다. */}
+            {SHOP_SALES_OPEN && (
+              <article id="shop" className="glass-card scroll-mt-24 rounded-2xl p-6">
+                <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">상품 판매 — 음반·굿즈·디지털 상품</h2>
+                <div className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed space-y-4">
+                  <section>
+                    <h3 className="font-semibold">판매 주체</h3>
+                    <p>{SHOP_SELLER_NOTE}</p>
+                  </section>
+                  <section>
+                    <h3 className="font-semibold">배송</h3>
+                    <ul className="list-disc pl-5 space-y-1">
+                      <li>{shopShippingNote()}</li>
+                      <li>{SHOP_PREORDER_TERMS_NOTE}</li>
+                      <li>{SHOP_PREORDER_MIX_NOTE}</li>
+                    </ul>
+                  </section>
+                  <section>
+                    <h3 className="font-semibold">실물 상품의 청약철회·교환·반품</h3>
+                    <ul className="list-disc pl-5 space-y-1">
+                      {SHOP_REFUND_RULES.map((line) => (
+                        <li key={line}>{line}</li>
+                      ))}
+                    </ul>
+                  </section>
+                  <section>
+                    <h3 className="font-semibold">디지털 상품</h3>
+                    <ul className="list-disc pl-5 space-y-1">
+                      {SHOP_DIGITAL_RULES.map((line) => (
+                        <li key={line}>{line}</li>
+                      ))}
+                    </ul>
+                  </section>
+                </div>
+              </article>
+            )}
 
             <article className="glass-card rounded-2xl p-6">
               <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">환불 규정 — 정기결제(연습실 월 이용료·프로듀싱 레슨)</h2>
