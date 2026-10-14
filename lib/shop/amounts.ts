@@ -14,6 +14,8 @@ export interface ShopLinePrice {
 
 export interface ShopTotals {
   subtotal: number;
+  /** 실물 줄 합계 — 무료 배송 기준이 보는 값. */
+  physicalSubtotal: number;
   shippingFee: number;
   total: number;
 }
@@ -28,5 +30,5 @@ export const computeShopTotals = (lines: readonly ShopLinePrice[]): ShopTotals =
   const physical = lines.filter((l) => !l.digital);
   const physicalSubtotal = physical.reduce((sum, l) => sum + lineSum(l), 0);
   const shippingFee = physical.length > 0 && physicalSubtotal > 0 ? shopShippingFeeFor(physicalSubtotal) : 0;
-  return { subtotal, shippingFee, total: subtotal + shippingFee };
+  return { subtotal, physicalSubtotal, shippingFee, total: subtotal + shippingFee };
 };

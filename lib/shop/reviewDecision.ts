@@ -24,7 +24,7 @@ import { SHOP_CREATOR_LIMITS } from './productRules';
 export type ShopDecisionAction = Extract<ReviewAction, 'approve' | 'request_changes' | 'reject'>;
 
 export type ShopDecisionCode =
-  | 'not_found' | 'conflict' | 'invalid_slug' | 'duplicate_slug' | 'incomplete' | 'no_artist' | 'no_files';
+  | 'not_found' | 'conflict' | 'invalid_slug' | 'duplicate_slug' | 'incomplete' | 'no_artist' | 'no_files' | 'digital_edition';
 
 export type ShopDecisionResult =
   | { ok: true; slug: string; warnings?: string[] }
@@ -99,6 +99,9 @@ export const decideShopProduct = async (
 
   if (!product.artistSlug) {
     return deny('no_artist', '상점 아티스트로 등재되지 않은 계정이에요. /admin/shop/artists에서 먼저 등재해 주세요.');
+  }
+  if (product.kind === 'digital' && product.editionSize !== null) {
+    return deny('digital_edition', '한정 번호는 실물 상품에만 붙일 수 있어요. 한정 수량을 비워 달라고 요청해 주세요.');
   }
   if (product.kind === 'digital' && product.digitalFiles.length === 0) {
     return deny('no_files', '디지털 상품은 내려받기 파일을 등록한 뒤에 승인할 수 있어요.');

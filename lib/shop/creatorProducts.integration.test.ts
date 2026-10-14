@@ -396,6 +396,11 @@ describe('validateShopProductInput', () => {
     expect(validateShopProductInput({ ...input(), skus: [{ optionLabel: null, price: 1_000_000, retired: false }] }, media).ok).toBe(true);
   });
 
+  it('한정 번호는 실물에만 — 디지털 상품의 한정 수량은 거부', () => {
+    expect(validateShopProductInput({ ...input(), kind: 'digital', editionSize: 100 }, media).ok).toBe(false);
+    expect(validateShopProductInput({ ...input(), kind: 'physical', editionSize: 100 }, media).ok).toBe(true);
+  });
+
   it('사진은 자기 업로드만, 8장·옵션은 12개까지', () => {
     expect(validateShopProductInput({ ...input(), images: [url('c2-33333333-3333-3333-3333-333333333333.webp')] }, media).ok).toBe(false);
     expect(validateShopProductInput({ ...input(), images: ['https://evil.example/x.webp'] }, media).ok).toBe(false);

@@ -307,7 +307,7 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
                   label: '배송비',
                   amount: totals.shippingFee,
                   note: totals.shippingFee > 0
-                    ? `상품 ${formatPriceAmount(SHOP_FREE_SHIPPING_FROM)}원 이상이면 무료 · ${formatPriceAmount(SHOP_FREE_SHIPPING_FROM - totals.subtotal)}원 남았어요`
+                    ? `실물 상품 ${formatPriceAmount(SHOP_FREE_SHIPPING_FROM)}원 이상이면 무료 · ${formatPriceAmount(SHOP_FREE_SHIPPING_FROM - totals.physicalSubtotal)}원 남았어요`
                     : '무료 배송',
                 }]
               : []),

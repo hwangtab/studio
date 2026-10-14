@@ -156,6 +156,8 @@ export const validateShopProductInput = (
     }
     editionSize = raw.editionSize;
   }
+  // 넘버링은 실물 한정판만 — 디지털은 내려받은 뒤에도 환불될 수 있어 반납한 번호가 두 번 나간다.
+  if (editionSize !== null && raw.kind === 'digital') return fail('한정 번호는 실물 상품에만 붙일 수 있어요.');
 
   const skus = validateSkus(raw.skus);
   if (!skus.ok) return skus;

@@ -167,7 +167,9 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
 
 - **배송 없는 주문**: 실물(`kind !== 'digital'`) 줄이 하나도 없으면 배송지·배송비가 없다. 서비스(`createShopOrder`)가 SKU를 해석한 뒤 판정하고,
   실물이 있는데 `shipping`이 없으면 `shipping_required`(API 400). 디지털만이면 받은 배송지도 저장하지 않는다. 검증(`validation.ts`)에서 `shipping`은 선택 —
-  있으면 전부 검증한다. 배송비 면제 기준(20만원)은 디지털 줄을 포함한 상품 합계로 센다.
+  있으면 전부 검증한다. 무료 배송 기준(`SHOP_FREE_SHIPPING_FROM`)은 **실물 줄 합계**로 센다 — 디지털을 얹어 배송비를 없애지 않게(`computeShopTotals`).
+- **넘버링은 실물만**: 디지털 상품에는 `edition_size`를 받지 않는다(입력 검증·승인 둘 다). 섞인 주문은 내려받은 뒤에도 `preparing`이라,
+  발송 전 환불이 번호를 반납해 이미 전달된 번호가 다시 나간다.
 - **배송지 없음 표식**: `shop_orders`의 받는 분·연락처·우편번호·주소가 NOT NULL이라 **`''`**를 넣는다. 판정은 `shopOrderShips(o) = o.postcode !== ''`
   (`lib/shop/shape.ts`) 하나 — 화면·메일·관리자·정산이 이걸 쓴다. 받는 분 이름·연락처는 주문자(`orders.customer_*`)가 따로 있어 `''`로 둔다.
   5년 파기(`purgeShopPersonalDataOfPurgedOrders`)는 `postcode <> ''`인 행만 덮는다(표식을 파기 표식으로 바꾸면 배송이 있던 주문으로 읽힌다).
