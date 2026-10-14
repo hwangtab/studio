@@ -41,3 +41,6 @@ export const SHOP_SALES_OPEN = false;
 /** 상품 합계로 배송비를 정한다. 0원 주문은 없다(상품 합계는 항상 0보다 크다). */
 export const shopShippingFeeFor = (subtotal: number): number =>
   subtotal >= SHOP_FREE_SHIPPING_FROM ? 0 : SHOP_SHIPPING_FEE;
+
+/** 헤더·푸터 메뉴 이름(ko 전용 — 상점은 ko에만 있다). `SHOP_SALES_OPEN`일 때만 메뉴에 뜬다. */
+export const SHOP_NAV_LABEL = '음반·굿즈';

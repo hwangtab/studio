@@ -24,6 +24,12 @@ export const SHOP_REFUND_RULES: readonly string[] = [
 export const shopPreorderSupplyNote = (shipsOn: string): string =>
   `예약 판매 상품이에요. ${formatShipsOn(shipsOn)} 이후에 보내요.`;
 
+/** 예약 판매 공급 시기 일반 고지 — 이용약관용(상품마다의 발송 예정일은 위 shopPreorderSupplyNote가 상품 화면에 보인다). */
+export const SHOP_PREORDER_TERMS_NOTE = '예약 판매 상품은 상품 화면에 적힌 발송 예정일 이후에 보내요.';
+
+/** 판매·발송 주체 — 상점 화면과 이용약관이 같은 말을 한다. */
+export const SHOP_SELLER_NOTE = '판매·발송은 스튜디오 놀이 해요. 아티스트의 상품도 마찬가지예요.';
+
 export const SHOP_PREORDER_MIX_NOTE = '예약 상품을 다른 상품과 함께 담으면 가장 늦은 발송 예정일에 함께 보내요.';
 
 /** 디지털 상품 청약철회 고지 — 주문 폼·관리 페이지·메일이 같은 문장을 쓴다(전자상거래법 제17조 제2항 제5호). */

@@ -64,10 +64,10 @@ describe('LLM contact metadata', () => {
     expect(getBody()).toContain(': /shows');
   });
 
-  it('uses the current mobile number in llms-full.txt', () => {
+  it('uses the current mobile number in llms-full.txt', async () => {
     const { res, getBody, getHeader } = createResponse();
 
-    llmsFullHandler(createRequest(), res);
+    await llmsFullHandler(createRequest(), res);
 
     expect(getHeader('content-type')).toBe('text/plain; charset=utf-8');
     expect(getBody()).toContain('+82-10-4255-7893');
@@ -178,10 +178,10 @@ describe('rss.xml HEAD support', () => {
 });
 
 describe('external content index policy', () => {
-  it('omits Korean stories with explicit noindex from llms-full.txt', () => {
+  it('omits Korean stories with explicit noindex from llms-full.txt', async () => {
     const { res, getBody } = createResponse();
 
-    llmsFullHandler(createRequest({ locale: 'ko' }), res);
+    await llmsFullHandler(createRequest({ locale: 'ko' }), res);
 
     expect(getBody()).not.toContain('/ko/stories/bulgwang-mixing-club-3rd)');
     expect(getBody()).not.toContain('/ko/stories/bulgwang-mixing-club)');

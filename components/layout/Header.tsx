@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { ARTISTS_NAV_LISTED } from '../../data/navFlags';
+import { SHOP_NAV_LABEL, SHOP_SALES_OPEN } from '../../data/shop/policy';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { getSiteConfig } from '../../data/siteConfig';
@@ -126,6 +127,8 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
         ...(ARTISTS_NAV_LISTED ? [{ label: t('nav.artists'), href: `/${locale}/artists` }] : []),
         { label: t('nav.funding'), href: `/${locale}/funding` },
         { label: t('nav.shows'), href: `/${locale}/shows` },
+        // 판매를 열 때(SHOP_SALES_OPEN)만 — 닫힌 동안 준비 중 화면을 메뉴에 걸지 않는다.
+        ...(SHOP_SALES_OPEN ? [{ label: SHOP_NAV_LABEL, href: `/${locale}/shop` }] : []),
       ]
     }] : []),
     {

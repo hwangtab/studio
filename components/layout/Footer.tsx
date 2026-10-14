@@ -1,5 +1,6 @@
 import React from 'react';
 import { ARTISTS_NAV_LISTED } from '../../data/navFlags';
+import { SHOP_NAV_LABEL, SHOP_SALES_OPEN } from '../../data/shop/policy';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { getSiteConfig, hostingProvider, studioOperator } from '../../data/siteConfig';
@@ -157,6 +158,7 @@ export const Footer = ({ locale, bottomBarSpace = false }: FooterProps) => {
                   {ARTISTS_NAV_LISTED && <FooterLink href={`/${locale}/artists`}>{t('nav.artists')}</FooterLink>}
                   <FooterLink href={`/${locale}/funding`}>{t('nav.funding')}</FooterLink>
                   <FooterLink href={`/${locale}/shows`}>{t('nav.shows')}</FooterLink>
+                  {SHOP_SALES_OPEN && <FooterLink href={`/${locale}/shop`}>{SHOP_NAV_LABEL}</FooterLink>}
                 </ul>
               </>
             )}
