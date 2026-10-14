@@ -43,7 +43,7 @@ beforeAll(async () => {
 });
 afterAll(() => client.close());
 beforeEach(async () => {
-  for (const t of ['refunds', 'payments', 'bookings', 'work_orders', 'funding_pledges', 'funding_projects', 'funding_creators', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'social_tokens']) {
+  for (const t of ['show_submissions', 'refunds', 'payments', 'bookings', 'work_orders', 'funding_pledges', 'funding_projects', 'funding_creators', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'social_tokens']) {
     await client.execute(`DELETE FROM ${t}`);
   }
 });
@@ -146,6 +146,11 @@ it('대기열 건수 — 믹싱 착수 대기·작업 중, 구독 카드 대기�
     artistPayoutsPending: 0,
     fundingProjectsAwaitingReview: 2,
     fundingPayoutsPending: 0,
+    depositsBooking: 0,
+    depositsShow: 0,
+    depositsFunding: 0,
+    fundingRefundRequests: 0,
+    showSubmissionsAwaitingReview: 0,
   });
   expect(dash.issues.map((i) => i.title)).toContain('서명 기한이 지난 계약 1건');
 });
@@ -171,6 +176,48 @@ describe('서명 기한이 지난 계약 알림', () => {
     await insertContract('purged', 'expired', '2026-09-10T00:00:00Z');
     await client.execute("UPDATE contracts SET purged_at = unixepoch() WHERE id = 'purged'");
     expect((await titles()).filter((t) => t.startsWith('서명 기한이 지난 계약'))).toEqual([]);
+  });
+});
+
+it('대기열 건수 — 계좌 입금 확인 대기(예약·믹싱·공연·펀딩)·펀딩 환불 요청·주최자 공연 심사', async () => {
+  const insertOrderWith = async (id: string, type: string, status: string) => {
+    await client.execute({
+      sql: `INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email, manage_token,
+              item_amount, vat_amount, total_amount) VALUES (?, ?, ?, ?, '홍길동', '010', 'a@b.c', ?, 100, 10, 110)`,
+      args: [id, `NO-${id}`, type, status, `tok-${id}`],
+    });
+  };
+  const insertPledge = async (id: string, orderStatus: string, method: string, source: string, refundRequested = false) => {
+    await insertOrderWith(id, 'funding', orderStatus);
+    await client.execute({
+      sql: `INSERT INTO funding_pledges (id, order_id, project_slug, reward_id, reward_title, unit_amount, quantity,
+              payment_method, hold_expires_at, entry_source, refund_requested_at) VALUES (?, ?, 'p', 'r', '리워드', 100, 1, ?, ?, ?, ?)`,
+      args: [`fp-${id}`, id, method, EPOCH('2026-09-20T00:00:00Z'), source, refundRequested ? EPOCH('2026-09-15T00:00:00Z') : null],
+    });
+  };
+  await insertOrderWith('d1', 'session', 'awaiting_deposit');
+  await insertOrderWith('d2', 'mixing', 'awaiting_deposit');
+  await insertOrderWith('d3', 'deposit', 'awaiting_deposit');
+  await insertOrderWith('d4', 'session', 'deposit_cancelled'); // 닫힌 건은 안 센다
+  await insertOrderWith('t1', 'ticket', 'awaiting_deposit');
+  await insertPledge('f1', 'pending', 'bank_transfer', 'online');
+  await insertPledge('f2', 'pending', 'bank_transfer', 'manual'); // 수기 등록은 대기가 아니다
+  await insertPledge('f3', 'pending', 'card', 'online'); // 토스 홀드
+  await insertPledge('f4', 'paid', 'bank_transfer', 'online', true);
+  await insertPledge('f5', 'refunded', 'bank_transfer', 'online', true); // 환불 끝 — 시각이 남아도 안 센다
+  await client.execute({ sql: `INSERT INTO funding_creators (id, email, name) VALUES ('c1', 'c@x.y', '주최자')`, args: [] });
+  for (const [id, status] of [['s1', 'submitted'], ['s2', 'draft'], ['s3', 'approved']]) {
+    await client.execute({ sql: `INSERT INTO show_submissions (id, creator_id, draft_json, review_status) VALUES (?, 'c1', '{}', ?)`, args: [id, status] });
+  }
+
+  const dash = await loadAdminDashboard(NOW);
+
+  expect(dash.queues).toMatchObject({
+    depositsBooking: 3,
+    depositsShow: 1,
+    depositsFunding: 1,
+    fundingRefundRequests: 1,
+    showSubmissionsAwaitingReview: 1,
   });
 });
 
