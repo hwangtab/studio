@@ -12,6 +12,7 @@ import {
 import { FUNDING_PAYOUT_BUSINESS_DAYS } from '../lib/funding/policy';
 import { MIN_LEAD_DAYS } from '../lib/shows/organizer/draft';
 import { SHOW_ORGANIZER_TERMS_VERSION } from '../lib/shows/organizer/policy';
+import { REFUND_POLICY_FOOTNOTES, refundTierLines } from '../lib/shows/refundPolicy';
 import {
   assertShowOrganizerTermsBaselineUpdateAllowed,
   serializeShowOrganizerTerms,
@@ -127,7 +128,7 @@ describe('공연 주최자 약관 판본 게이트', () => {
     for (const heading of [
       '제1조 (판매자와 주최자)',
       '제2조 (심사)',
-      '제3조 (승인 뒤 잠기는 것)',
+      '제3조 (승인 뒤에 바꿀 수 있는 것과 없는 것)',
       '제4조 (권리 보증)',
       '제5조 (금지 내용)',
       '제6조 (수수료와 정산)',
@@ -167,6 +168,18 @@ describe('공연 주최자 약관 판본 게이트', () => {
     expect(cancel).toContain('정산금에서 빼고');
     expect(cancel).toContain('주최자에게 청구합니다');
     expect(cancel).toContain('공연마다 따로 정하지 않습니다');
+  });
+
+  it('7조 본문과 상수 블록이 환불표·안내를 refundPolicy.ts에서 그대로 싣는다', () => {
+    const cancel = section(serialized, '\n제7조 (', '\n제8조 (');
+    for (const line of refundTierLines()) expect(cancel).toContain(line);
+    for (const note of REFUND_POLICY_FOOTNOTES) expect(cancel).toContain(note);
+    for (const line of refundTierLines()) expect(serialized).toContain(`REFUND_TIER ${line}`);
+    for (const note of REFUND_POLICY_FOOTNOTES) expect(serialized).toContain(`REFUND_FOOTNOTE ${note}`);
+  });
+
+  it('3조는 회차가 취소되는 변경만 제7조로 보낸다', () => {
+    expect(section(serialized, '\n제3조 (', '\n제4조 (')).toContain('그 변경으로 회차가 취소되면 제7조를 따릅니다');
   });
 
   it('8조가 관객 이름·연락처를 주최자에게 주지 않는다고 말한다', () => {

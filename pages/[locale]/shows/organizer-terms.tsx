@@ -12,6 +12,7 @@ import {
 } from '../../../data/pricing';
 import { FUNDING_PAYOUT_BUSINESS_DAYS } from '../../../lib/funding/policy';
 import { MIN_LEAD_DAYS } from '../../../lib/shows/organizer/draft';
+import { REFUND_POLICY_FOOTNOTES, refundTierLines } from '../../../lib/shows/refundPolicy';
 import { SHOW_ORGANIZER_TERMS_VERSION } from '../../../lib/shows/organizer/policy';
 import type { Locale } from '../../../lib/i18n';
 
@@ -37,7 +38,7 @@ export const SHOW_ORGANIZER_TERMS_SECTIONS: OrganizerTermsSection[] = [
     heading: '제1조 (판매자와 주최자)',
     body: [
       '이 약관은 스튜디오 놀(이하 "스튜디오")이 운영하는 공연 예매 페이지에 주최자가 직접 공연을 등록하고, 관객에게 티켓을 판매하는 절차와 주최자의 의무를 정합니다.',
-      '티켓의 판매자는 스튜디오 놀이며, 관객의 결제도 스튜디오가 받습니다. 주최자는 공연의 기획과 진행, 그리고 공연 페이지에 실리는 내용에 대한 책임을 집니다.',
+      '티켓의 판매자는 스튜디오이며, 관객의 결제도 스튜디오가 받습니다. 주최자는 공연의 기획과 진행, 그리고 공연 페이지에 실리는 내용에 대한 책임을 집니다.',
     ],
   },
   {
@@ -51,10 +52,10 @@ export const SHOW_ORGANIZER_TERMS_SECTIONS: OrganizerTermsSection[] = [
     ],
   },
   {
-    heading: '제3조 (승인 뒤 잠기는 것)',
+    heading: '제3조 (승인 뒤에 바꿀 수 있는 것과 없는 것)',
     body: [
       '공연이 승인되면 회차 일시, 정원, 티켓 종류(이름과 가격), 장소 이름과 주소, 공연 시간, 관람 등급, 공연 페이지 주소는 주최자가 바꿀 수 없습니다. 관객이 보고 결제한 조건이기 때문입니다.',
-      '이 가운데 바꿔야 하는 것이 있으면 스튜디오에 요청해 주세요. 스튜디오가 받아들여 바꾸는 경우, 그 변경으로 관객에게 생기는 환불은 제7조를 따릅니다.',
+      '이 가운데 바꿔야 하는 것이 있으면 스튜디오에 요청해 주세요. 그 변경으로 회차가 취소되면 제7조를 따릅니다.',
       '제목, 부제, 주최 이름, 소개, 포스터, 출연진, 일정 안내, 안내 사항은 승인 뒤에도 주최자가 고칠 수 있습니다. 고치면 다시 심사를 받지 않고 바로 공연 페이지에 반영되며, 스튜디오에 알림이 갑니다.',
     ],
   },
@@ -85,7 +86,11 @@ export const SHOW_ORGANIZER_TERMS_SECTIONS: OrganizerTermsSection[] = [
   {
     heading: '제7조 (취소와 환불)',
     body: [
-      '관객의 환불은 사이트의 공연 환불 규정을 따릅니다. 이 규정은 모든 공연에 같게 적용되며, 공연마다 따로 정하지 않습니다. 규정은 공연 페이지의 "취소·환불" 안내에 표로 적혀 있습니다.',
+      // 환불표는 계산(lib/shows/refundPolicy.ts)과 같은 출처에서 만든다 — 손으로 옮겨 적으면 갈라진다.
+      // 보간하므로 showOrganizerTermsHash.ts가 같은 표를 상수 블록에도 싣는다.
+      '관객의 환불은 사이트의 공연 환불 규정을 따릅니다. 이 규정은 모든 공연에 같게 적용되며, 공연마다 따로 정하지 않습니다. 공연 페이지의 "취소·환불" 안내에도 같은 내용이 적혀 있습니다.',
+      `관객이 환불을 신청하면 공연까지 남은 날짜에 따라 다음 비율로 환불합니다: ${refundTierLines().join(', ')}.`,
+      ...REFUND_POLICY_FOOTNOTES,
       `회차가 취소되면 그 회차의 티켓을 산 관객에게 전액을 환불합니다. 이때 그 회차 결제분에 대한 결제 수수료(${FUNDING_PAYMENT_FEE_PERCENT}%)는 취소 사유와 관계없이 주최자가 부담합니다.`,
       '이 금액은 주최자의 정산금에서 빼고, 정산금이 모자라면 모자라는 금액을 주최자에게 청구합니다.',
     ],

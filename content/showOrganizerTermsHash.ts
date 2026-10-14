@@ -6,7 +6,7 @@
  * 동의했다"는 증거가 되려면 내용이 바뀌면 반드시 문자열도 바뀌어야 한다.
  *
  * 무엇을 해시에 넣는가: 약관 조항 전부(`SHOW_ORGANIZER_TERMS_SECTIONS`)와 **본문에 보간되는 공유 상수
- * 다섯 개**다. 지금은 본문 보간과 중복이지만, 다음 사람이 숫자를 리터럴로 적거나 본문에서 걷어내도
+ * 다섯 개**, 그리고 제7조가 싣는 **공연 환불 규정**(환불표·안내)이다. 지금은 본문 보간과 중복이지만, 다음 사람이 숫자를 리터럴로 적거나 본문에서 걷어내도
  * 상수만 바꾼 개정이 조용히 통과하지 않게 따로 싣는다(creatorTermsHash.ts 머리주석과 같은 이유).
  * `FUNDING_WITHHOLDING_PERCENT`는 `FUNDING_INDIVIDUAL_PAYOUT_NOTE` 안에 보간된다.
  */
@@ -17,6 +17,7 @@ import {
 } from '../data/pricing';
 import { FUNDING_PAYOUT_BUSINESS_DAYS } from '../lib/funding/policy';
 import { MIN_LEAD_DAYS } from '../lib/shows/organizer/draft';
+import { REFUND_POLICY_FOOTNOTES, refundTierLines } from '../lib/shows/refundPolicy';
 import { SHOW_ORGANIZER_TERMS_SECTIONS } from '../pages/[locale]/shows/organizer-terms';
 
 /** 해시 대상을 사람이 읽을 수 있는 형태로 직렬화한다 — 실패했을 때 무엇이 바뀌었는지 diff로 보이도록. */
@@ -32,6 +33,11 @@ export const serializeShowOrganizerTerms = (): string => {
   lines.push(`FUNDING_WITHHOLDING_PERCENT=${FUNDING_WITHHOLDING_PERCENT}`);
   lines.push(`FUNDING_PAYOUT_BUSINESS_DAYS=${FUNDING_PAYOUT_BUSINESS_DAYS}`);
   lines.push(`MIN_LEAD_DAYS=${MIN_LEAD_DAYS}`);
+
+  // 제7조가 보간하는 공연 환불 규정(lib/shows/refundPolicy.ts) — 표나 안내가 바뀌면 주최자가 동의한 내용도 바뀐다.
+  lines.push('## 제7조에 보간되는 공연 환불 규정 (lib/shows/refundPolicy.ts)');
+  lines.push(...refundTierLines().map((l) => `REFUND_TIER ${l}`));
+  lines.push(...REFUND_POLICY_FOOTNOTES.map((l) => `REFUND_FOOTNOTE ${l}`));
 
   return lines.join('\n');
 };
