@@ -3,7 +3,7 @@ import { and, count, eq, gt, inArray, isNull } from 'drizzle-orm';
 import { encryptField, FieldCryptoError } from '../crypto/fieldCrypto';
 import { getDb } from '../../db/client';
 import {
-  fundingCreators, fundingProjectPayouts, fundingProjects, fundingRewards,
+  fundingCreators, fundingProjectPayouts, fundingProjects, fundingRewards, shopProducts,
   type FundingProjectRow, type FundingRewardRow,
 } from '../../db/schema';
 import { getFundingProject } from './projects';
@@ -318,7 +318,32 @@ const hasReviewedProject = async (creatorId: string): Promise<boolean> => {
       eq(fundingProjects.creatorId, creatorId),
       inArray(fundingProjects.reviewStatus, ['submitted', 'approved']),
     )).limit(1);
-  return Boolean(row);
+  if (row) return true;
+  return hasReviewedShopProduct(creatorId);
+};
+
+/** `no such table`(마이그레이션 0053 전) — 드라이버가 감싸면 원문이 `cause`에 있다. */
+const isNoSuchTableError = (error: unknown): boolean => {
+  for (let e: unknown = error, depth = 0; e instanceof Error && depth < 5; e = e.cause, depth += 1) {
+    if (/no such table/i.test(e.message)) return true;
+  }
+  return false;
+};
+
+/**
+ * 상점 상품이 심사에 들어갔거나 승인됐는가 — 상품 화면에도 아티스트 이름이 나가므로(`/ko/shop/artist/<slug>`, 상품 상세)
+ * 펀딩과 같은 이유로 이름을 잠근다. **별도 문장·별도 try**: 표가 없으면(0053 전 배포) 펀딩 판정을 깨지 않고 false,
+ * 그 밖의 오류는 던진다(조용히 잠금이 풀리는 쪽이 더 나쁘다 — 펀딩 쿼리 오류와 같은 처리).
+ */
+const hasReviewedShopProduct = async (creatorId: string): Promise<boolean> => {
+  try {
+    const [row] = await getDb().select({ id: shopProducts.id }).from(shopProducts)
+      .where(and(eq(shopProducts.creatorId, creatorId), inArray(shopProducts.reviewStatus, ['submitted', 'approved']))).limit(1);
+    return Boolean(row);
+  } catch (error: unknown) {
+    if (isNoSuchTableError(error)) return false;
+    throw error;
+  }
 };
 
 /**

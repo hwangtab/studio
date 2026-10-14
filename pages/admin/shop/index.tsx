@@ -9,6 +9,7 @@ import { SHOP_SALES_OPEN } from '../../../data/shop/policy';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { kstDateString } from '../../../lib/booking/kst';
 import { kstMonthRange } from '../../../lib/shop/artistPayout';
+import { countPendingShopProducts } from '../../../lib/shop/adminProducts';
 import {
   listAdminShopOrders, listAdminSkuStock, listShopArtistSales,
   type AdminShopArtistSalesRow, type AdminShopOrderRow, type AdminSkuStockRow,
@@ -23,6 +24,8 @@ interface Props {
   prevMonth: string;
   nextMonth: string;
   salesOpen: boolean;
+  /** 제출돼 심사를 기다리는 상품 수. 표가 없거나 조회가 실패하면 null. */
+  pendingProducts: number | null;
   error?: string;
 }
 
@@ -39,12 +42,13 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   const asked = typeof context.query.month === 'string' ? context.query.month : '';
   const month = kstMonthRange(asked) ? asked : kstDateString(now).slice(0, 7);
   const months = { month, prevMonth: shiftMonth(month, -1), nextMonth: shiftMonth(month, 1) };
+  const pendingProducts = await countPendingShopProducts();
   try {
     const [orders, skus, artistSales] = await Promise.all([listAdminShopOrders(), listAdminSkuStock(now), listShopArtistSales(month)]);
-    return { props: { orders, skus, artistSales, ...months, salesOpen: SHOP_SALES_OPEN } };
+    return { props: { orders, skus, artistSales, ...months, salesOpen: SHOP_SALES_OPEN, pendingProducts } };
   } catch (error: unknown) {
     console.error('[admin/shop] 조회 실패:', error);
-    return { props: { orders: [], skus: [], artistSales: [], ...months, salesOpen: SHOP_SALES_OPEN, error: '상점 정보를 불러오지 못했습니다. 운영 DB에 마이그레이션 0052가 적용됐는지 확인해 주세요.' } };
+    return { props: { orders: [], skus: [], artistSales: [], ...months, salesOpen: SHOP_SALES_OPEN, pendingProducts, error: '상점 정보를 불러오지 못했습니다. 운영 DB에 마이그레이션 0052가 적용됐는지 확인해 주세요.' } };
   }
 };
 
@@ -113,7 +117,7 @@ function ArtistSalesSection({ rows, month, prevMonth, nextMonth }: Pick<Props, '
                 <tr key={r.artistSlug} className="border-t border-gray-100 align-top">
                   <td className="py-2 pr-3">
                     {r.artistName}
-                    <span className="block text-xs text-gray-500">{r.taxType === 'invoice' ? '사업자 · 세금계산서' : r.taxType === 'withholding' ? '개인 · 원천징수' : 'data/artists에 없음'}</span>
+                    <span className="block text-xs text-gray-500">{r.taxType === 'invoice' ? '사업자 · 세금계산서' : r.taxType === 'withholding' ? '개인 · 원천징수' : r.artistSlug.startsWith('creator:') ? '세금 유형 미설정' : 'data/artists에 없음'}</span>
                     {r.needsReviewOrderNos.length > 0 && (
                       <span className="block text-xs text-amber-800">부분 환불 주문은 빼고 계산했습니다 — 직접 확인: {r.needsReviewOrderNos.join(', ')}</span>
                     )}
@@ -136,14 +140,21 @@ function ArtistSalesSection({ rows, month, prevMonth, nextMonth }: Pick<Props, '
   );
 }
 
-export default function AdminShopPage({ orders, skus, artistSales, month, prevMonth, nextMonth, salesOpen, error }: Props) {
+export default function AdminShopPage({ orders, skus, artistSales, month, prevMonth, nextMonth, salesOpen, pendingProducts, error }: Props) {
   return (
     <>
       <Head>
         <title>상점 관리 | Studio NOL</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <AdminShell title="상점 관리" description="음반·굿즈 주문과 재고입니다. 상품 정의(이름·옵션·가격)는 data/shop/catalog.ts에서 바꿉니다." width="wide" actions={<Link href="/admin/shop/artists" className="text-sm font-medium text-primary hover:underline">아티스트</Link>}>
+      <AdminShell title="상점 관리" description="음반·굿즈 주문과 재고입니다. 상품 정의(이름·옵션·가격)는 data/shop/catalog.ts에서 바꿉니다." width="wide" actions={(
+        <span className="flex items-center gap-4">
+          <Link href="/admin/shop/products" className="text-sm font-medium text-primary hover:underline">
+            상품 심사{pendingProducts ? `(대기 ${pendingProducts})` : ''}
+          </Link>
+          <Link href="/admin/shop/artists" className="text-sm font-medium text-primary hover:underline">아티스트</Link>
+        </span>
+      )}>
         {error && <div role="alert" className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-900">{error}</div>}
         {!salesOpen && (
           <div className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">

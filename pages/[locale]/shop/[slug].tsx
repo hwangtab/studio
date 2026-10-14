@@ -1,13 +1,8 @@
-import Link from 'next/link';
-import { useState } from 'react';
-
 import SEO from '../../../components/SEO';
-import ResponsiveImage from '../../../components/ResponsiveImage';
 import ShopOrderForm, { type RemainingStock } from '../../../components/shop/ShopOrderForm';
+import ShopProductDetail from '../../../components/shop/ShopProductDetail';
 import { Section } from '../../../components/ui/Section';
-import StatusBadge from '../../../components/ui/StatusBadge';
-import { formatPriceAmount } from '../../../data/pricing';
-import { SHOP_CATEGORY_LABELS, type ShopProduct } from '../../../data/shop/catalog';
+import type { ShopProduct } from '../../../data/shop/catalog';
 import { SHOP_SALES_OPEN } from '../../../data/shop/policy';
 import { withI18nServerProps } from '../../../lib/getStatic';
 import { fitsDisplayFont } from '../../../lib/fonts/displayCoverage';
@@ -36,10 +31,7 @@ const summarize = (text: string): string => {
 
 export default function ShopProductPage({ product, others, remaining, salesOpen, artist, titleFallbackFont }: Props) {
   const path = `/ko/shop/${product.slug}`;
-  const [active, setActive] = useState(0);
   const sellable = product.skus.filter((s) => !s.retired);
-  const prices = sellable.map((s) => s.price);
-  const low = Math.min(...prices);
   const cover = product.images[0];
   const coverSize = cover ? (imageMetadata as Record<string, { width: number; height: number } | undefined>)[cover] : undefined;
 
@@ -84,61 +76,9 @@ export default function ShopProductPage({ product, others, remaining, salesOpen,
         ]}
       />
       <Section>
-        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2">
-          <div>
-            {product.images[active] && (
-              <ResponsiveImage
-                src={product.images[active]}
-                alt={`${product.title} 사진 ${active + 1}`}
-                containerClassName="relative block aspect-square w-full overflow-hidden rounded-2xl bg-gray-100 dark:bg-gray-800"
-                className="object-contain"
-                priority={active === 0}
-              />
-            )}
-            {product.images.length > 1 && (
-              <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="사진 고르기">
-                {product.images.map((img, i) => (
-                  <button
-                    key={img}
-                    type="button"
-                    onClick={() => setActive(i)}
-                    aria-pressed={i === active}
-                    aria-label={`사진 ${i + 1}`}
-                    className={`h-16 w-16 overflow-hidden rounded-lg border-2 ${i === active ? 'border-primary' : 'border-transparent'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70`}
-                  >
-                    <ResponsiveImage src={img} alt="" containerClassName="relative block h-full w-full" className="object-cover" loading="lazy" />
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-          <div>
-            <p className="typo-card-meta">
-              <Link href={`/ko/shop?category=${product.category}`} className="underline">{SHOP_CATEGORY_LABELS[product.category]}</Link>
-            </p>
-            <h1 className={`typo-page-title mt-2 text-gray-900 dark:text-white${titleFallbackFont ? ' font-sans' : ''}`}>{product.title}</h1>
-            {product.subtitle && <p className="typo-card-body mt-2">{product.subtitle}</p>}
-            {artist && (
-              <p className="typo-card-meta mt-2">
-                <Link href={`/ko/shop/artist/${artist.slug}`} className="underline">{artist.name}의 다른 음반·굿즈</Link>
-              </p>
-            )}
-            <p className="mt-4 text-2xl font-bold tabular-nums text-gray-900 dark:text-white">
-              {formatPriceAmount(low)}원{new Set(prices).size > 1 ? '~' : ''}
-            </p>
-            {remaining && sellable.every((s) => (remaining[s.id] ?? 0) <= 0) && (
-              <StatusBadge tone="neutral" className="mt-2">품절</StatusBadge>
-            )}
-            <div className="mt-6 space-y-4">
-              {product.description.map((para, i) => (
-                <p key={i} className="typo-card-body whitespace-pre-line">{para}</p>
-              ))}
-            </div>
-            <div className="mt-8">
-              <ShopOrderForm product={product} others={others} remaining={remaining} salesOpen={salesOpen} />
-            </div>
-          </div>
-        </div>
+        <ShopProductDetail product={product} remaining={remaining} artist={artist} titleFallbackFont={titleFallbackFont}>
+          <ShopOrderForm product={product} others={others} remaining={remaining} salesOpen={salesOpen} />
+        </ShopProductDetail>
       </Section>
     </>
   );

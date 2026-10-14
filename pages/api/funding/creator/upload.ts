@@ -9,6 +9,8 @@ import { getClientIp } from '../../../../lib/contracts/client-ip';
 import { authenticateCreatorApi } from '../../../../lib/funding/creatorAuth';
 import { loadProjectForCreator } from '../../../../lib/funding/creatorProjectWrite';
 import { getShopArtistByCreator } from '../../../../lib/shop/artists';
+import { loadProductForCreator } from '../../../../lib/shop/creatorProductWrite';
+import { canCreatorEditShopField, SHOP_CREATOR_LIMITS } from '../../../../lib/shop/productRules';
 import { buildFundingMediaUrl, processCreatorImage, UPLOAD_LIMITS } from '../../../../lib/funding/creatorUpload';
 import { FUNDING_MEDIA_PREFIX, FUNDING_MEDIA_URL_PREFIX } from '../../../../lib/funding/mediaPath';
 import { canCreatorEdit, type FundingReviewStatus } from '../../../../lib/funding/reviewTransition';
@@ -71,14 +73,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // 상점 프로필 사진 — 프로젝트가 아니라 shop_artists 행이 있는지로 권한을 본다.
   const shopProfile = req.query.target === 'shop-profile';
+  // 상점 상품 사진 — `productId`. 자르지 않는 본문 사진(kind 'body')만 있다.
+  const shopProductId = typeof req.query.productId === 'string' ? req.query.productId : '';
   const projectId = typeof req.query.projectId === 'string' ? req.query.projectId : '';
   const kind = typeof req.query.kind === 'string' ? req.query.kind : '';
-  if (!shopProfile && (!projectId || (kind !== 'cover' && kind !== 'body'))) {
+  if (!shopProfile && !shopProductId && (!projectId || (kind !== 'cover' && kind !== 'body'))) {
     return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않아요.' });
   }
 
   let project: Awaited<ReturnType<typeof loadProjectForCreator>> = null;
-  if (shopProfile) {
+  let shopProductImageCount: number | null = null;
+  if (shopProductId && !shopProfile) {
+    // 남의 상품이면 404 — 존재 여부를 알려 주지 않는다(creatorProductWrite.ts와 같다).
+    let product: Awaited<ReturnType<typeof loadProductForCreator>> = null;
+    try {
+      product = await loadProductForCreator(auth.creatorId, shopProductId);
+    } catch (error: unknown) {
+      console.error('[funding/creator/upload] 상품 조회 실패:', error);
+      return res.status(500).json({ ok: false, message: '잠시 후 다시 시도해 주세요.' });
+    }
+    if (!product) return res.status(404).json({ ok: false, message: '상품을 찾을 수 없어요.' });
+    if (!canCreatorEditShopField(product.reviewStatus, 'images')) {
+      return res.status(409).json({ ok: false, message: '지금 상태에서는 사진을 올릴 수 없어요.' });
+    }
+    shopProductImageCount = product.images.length;
+  } else if (shopProfile) {
     try {
       if (!(await getShopArtistByCreator(auth.creatorId))) {
         return res.status(404).json({ ok: false, message: '상점을 찾을 수 없어요.' });
@@ -113,6 +132,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
   }
 
+  if (shopProductImageCount !== null && shopProductImageCount >= SHOP_CREATOR_LIMITS.imagesMax) {
+    return res.status(400).json({ ok: false, message: `사진은 상품당 최대 ${SHOP_CREATOR_LIMITS.imagesMax}장까지 올릴 수 있어요.` });
+  }
+
   if (project) {
     const rewardImageUrls = project.rewards.map((reward) => reward.imageUrl);
     if (countProjectMedia(project.content, project.coverUrl, rewardImageUrls) >= UPLOAD_LIMITS.maxPerProject) {
@@ -126,7 +149,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   let processed: { buffer: Buffer; width: number; height: number };
   try {
-    processed = await processCreatorImage(body, shopProfile ? 'avatar' : (kind as 'cover' | 'body'));
+    processed = await processCreatorImage(body, shopProfile ? 'avatar' : shopProductId ? 'body' : (kind as 'cover' | 'body'));
   } catch (error: unknown) {
     console.error('[funding/creator/upload] 이미지 처리 실패:', error);
     return res.status(400).json({ ok: false, message: '이미지 파일이 아니에요.' });

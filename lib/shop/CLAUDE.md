@@ -103,16 +103,43 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
 
 운영자 결정 2026-10-14(계획 `docs/artist-store-plan-2026-10.md`). 아티스트가 재고를 맡기고, 스튜디오가 자기 이름으로 팔아
 발송한 뒤 아티스트에게 정산한다. 결제·재고·배송·환불은 스튜디오 상품과 **같은 경로**다 — 아티스트 상품만의 주문 흐름은 없다.
+상품의 출처는 둘이다: 파일 상품(`artist: '<data/artists slug>'`)과 아티스트가 콘솔에서 등록한 **DB 상품**(`creator:<id>`).
 
-- 상품에 `artist: '<slug>'`(`data/artists`의 등재 아티스트)를 붙인다. 그 아티스트 페이지 `/ko/artists/<slug>`에 상품이 모이고
-  (판매가 열려 있을 때만), 상품 화면에 아티스트 링크가 붙는다. 등재 아티스트가 아니면 `catalog.test.ts`가 선다.
-  등재는 후원 멤버십과 같은 목록이다 — 멤버십을 안 하는 아티스트는 `supportActive: false`.
-- **판매를 시작한 SKU의 아티스트는 바꾸지 않는다.** 정산이 주문 줄의 SKU → 상품의 `artist`로 아티스트를 찾는다.
-  `catalog.baseline.json`이 SKU마다 `{ price, artist }`를 고정한다.
-- 정산: 아티스트 몫 `SHOP_ARTIST_SHARE_PERCENT`(55%, 상품 판매가 VAT 포함 기준, 배송비 제외). 계산은
-  `lib/shop/artistPayout.ts` 하나. 개인 아티스트는 부가세 상당액과 원천징수 3.3%를 뺀다(펀딩 정산과 같은 이유).
-  `/admin/shop`의 "아티스트 정산 예정"이 그 달(KST)에 **발송한** 결제 완료 주문만 센다. 1단계는 운영자가 이 표를 보고
-  손으로 이체한다 — 정산 기록 표·정산 메일은 아직 없다(아티스트가 늘면 2단계).
+**파일 상품**
+- 상품에 `artist` 하나를 붙인다. 그 아티스트 페이지 `/ko/artists/<slug>`에 상품이 모이고(판매가 열려 있을 때만), 상품 화면에 아티스트
+  링크가 붙는다. 등재 아티스트가 아니면 `catalog.test.ts`가 선다. 판매를 시작한 SKU의 아티스트는 바꾸지 않는다 —
+  정산이 SKU → 상품의 `artist`로 찾는다(`catalog.baseline.json`이 SKU마다 `{ price, artist }`를 고정한다).
+
+**DB 상품 — 등록·심사·잠금 (플랫폼 PR 3)**
+- **등록**: 개설자 콘솔 상점 탭(`/ko/funding/creator/shop`)의 "새 상품" → `/ko/funding/creator/shop/<id>`. `shop_artists` 행이 있는
+  계정만(`createDraftProduct`), 미심사(작성 중·심사 대기·보완 요청) 10개까지. 초안 주소는 `draft-<uuid>` 임시값이고 `draft-` 접두사는 실제
+  주소로 못 쓴다. 한도·가격 규칙(1,000~1,000,000원, 10원 단위, 사진 8장, 옵션 12개)은 `SHOP_CREATOR_LIMITS`(`productRules.ts`) 한 벌 —
+  화면과 서버가 같이 쓴다. 입력 검증은 순수 모듈 `creatorValidation.ts`, 쓰기는 `creatorProductWrite.ts`.
+- **심사**: `decideShopProduct`(`reviewDecision.ts`), 관리자 `/admin/shop/products`. 전이는 펀딩의 `nextReviewStatus` 재사용.
+  승인은 **한 묶음**(slug 확정 · SKU `locked_at` · 승인+공개)이고, SKU 잠금 UPDATE의 `EXISTS`가 `p.updated_at = <이 배치의 epoch>`까지 요구한다 —
+  남이 먼저 승인했으면 이 호출은 conflict이면서 잠그지 않는다. 시각 칸은 전부 **초 단위 정수**다. 거부 조건: 파일 slug 충돌·예약어·다른 DB 상품의
+  slug 점유·사진/소개/옵션 없음·옵션이 여럿인데 이름 없음·이름 미설정(기본값)·`shop_artists` 없음·디지털인데 파일 없음.
+  보완 요청·반려는 메모 필수이고 **`review_note`는 아티스트 화면에 그대로 보인다**(내부 메모가 아니다). 내부 메모는 `internal_note`(관리자 전용) —
+  아티스트 조회(`loadProductForCreator`)는 그 칸과 `digital_files`를 읽지도 않고, 테스트가 응답에 없음을 고정한다.
+- **승인 뒤 잠금**: 열린 칸은 부제·소개·사진·공개 여부·새 옵션·판매 종료(`SHOP_PRODUCT_EDITABLE`). 제목·주소·분류·종류·한정 수량·예약 발송일(관리자만)과
+  **잠긴 SKU의 id·가격·옵션명·삭제**는 거부한다. 쓰기 UPDATE의 WHERE에 `locked_at IS NULL`을 한 번 더 건다(읽은 뒤 승인이 잠근 경합은 0행).
+  가격 변경은 새 옵션. 승인 뒤 더한 옵션은 안 잠긴 채라 **팔리지 않고**, 관리자 "새 옵션 승인"(`lock_new_skus`)이 잠그는 순간 팔린다.
+- **승인 뒤 수정 알림**: 승인 상태에서 저장하면 `creator_edited_at`을 찍고 운영자에게 메일(`sendShopCreatorEditedNotice`) — 재심사 대기열은 없다.
+  관리자 화면이 "승인 뒤 수정"과 "승인 대기 옵션"을 표시한다. 메일 실패는 저장·판정을 실패시키지 않는다(판정 메일은 운영자 폴백 메일이 있다).
+- **재고는 관리자만**: 아티스트 쓰기 경로(`creatorProductWrite.ts`)에 `shop_skus`가 없다(테스트가 소스를 검사한다). `setSkuStock`은 잠긴 SKU만
+  받고 `edition_size`가 있으면 그 상품 재고 합이 한정 수량을 넘지 못하게 한다. 승인하면 공개되므로 재고(0이면 품절)를 바로 넣는다.
+- **관리자 액션**: `lock_new_skus`·`set_ships_on`·`set_published`·`set_internal_note`·`set_digital_files`(키는 `shop/` 접두사 + `isSafeObjectKey` +
+  R2 존재 확인). 승인·공개 토글 뒤 그 아티스트가 `data/artists`와 연결돼 있으면 `/ko/artists/<slug>`를 재검증한다(실패는 `warnings`).
+- **판매 현황**: 콘솔 상점 탭의 표(`creatorStats.ts`) — SKU별 맡긴 수량(`shop_skus.stock`)·결제 완료·발송 완료·남은 수량. 구매자 정보는 읽지 않는다.
+  부분 환불 주문은 결제 완료로 센다(어느 줄이 환불됐는지 원장이 모른다).
+- **이름 잠금**: 상점 상품이 심사 중·승인이면 아티스트 이름이 잠긴다(`hasReviewedProject`, `lib/funding/CLAUDE.md`).
+
+**정산**
+- 아티스트 몫 `SHOP_ARTIST_SHARE_PERCENT`(55%, 상품 판매가 VAT 포함 기준, 배송비 제외). 계산은 `lib/shop/artistPayout.ts` 하나. 개인 아티스트는
+  부가세 상당액과 원천징수 3.3%를 뺀다(펀딩 정산과 같은 이유). `/admin/shop`의 "아티스트 정산 예정"이 그 달(KST)에 **발송한** 결제 완료 주문만
+  센다 — 파일 갈래는 키 `file:<slug>`(세금 유형은 `data/artists`), DB 갈래는 `creator:<id>`(`sku_id → shop_product_skus → shop_products.creator_id`,
+  세금 유형은 `funding_creators.tax_type`, 비어 있으면 "계산하지 않음"). DB 갈래는 별도 try라 실패해도 파일 갈래 표는 나온다.
+  1단계는 운영자가 이 표를 보고 손으로 이체한다 — 정산 기록 표·정산 메일은 아직 없다.
 - 이미 정산한 달의 반품 환불은 그 주문이 표에서 빠질 뿐 자동으로 차감되지 않는다. 다음 정산에서 손으로 뺀다.
   부분 환불 주문은 어느 줄이 환불됐는지 원장이 모르므로 계산에서 빼고 "직접 확인"으로 띄운다.
 

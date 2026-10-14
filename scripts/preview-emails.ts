@@ -10,6 +10,9 @@
 import { mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { adminUrl, buildEmailLayout, escapeHtml, strong, type EmailLayoutInput } from '../lib/email/layout';
+import {
+  buildShopDecisionLayout, buildShopEditedLayout, buildShopSubmissionLayout, type ShopMailProduct,
+} from '../lib/shop/reviewEmail';
 
 const samples: { name: string; input: EmailLayoutInput }[] = [
   {
@@ -61,6 +64,16 @@ const samples: { name: string; input: EmailLayoutInput }[] = [
     },
   },
 ];
+
+// 상점 상품 심사 메일(lib/shop/reviewEmail.ts) — 사용자 입력은 escape되는지 눈으로 본다.
+const shopProduct: ShopMailProduct = { id: 'abc123', title: '첫 앨범 <CD>', slug: 'first-album', creatorName: '홍길동 & 밴드', creatorEmail: 'artist@example.com' };
+samples.push(
+  { name: 'shop-submitted', input: buildShopSubmissionLayout(shopProduct) },
+  { name: 'shop-approved', input: buildShopDecisionLayout(shopProduct, 'approve', null, shopProduct.slug) },
+  { name: 'shop-changes', input: buildShopDecisionLayout(shopProduct, 'request_changes', '사진을 한 장 더 올려 주세요.\n제목 <b>확인</b>', shopProduct.slug) },
+  { name: 'shop-rejected', input: buildShopDecisionLayout(shopProduct, 'reject', '위탁 계약 범위 밖의 상품이에요.', shopProduct.slug) },
+  { name: 'shop-edited', input: buildShopEditedLayout(shopProduct) },
+);
 
 const outDir = process.argv[2] ?? '/tmp/email-preview';
 mkdirSync(outDir, { recursive: true });

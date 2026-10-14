@@ -85,6 +85,28 @@ export const setSkuStock = async (skuId: string, stock: number): Promise<{ ok: t
   }
   if (!product) return { ok: false, message: '카탈로그에 없는 SKU예요.' };
   if (!Number.isInteger(stock) || stock < 0 || stock > 100000) return { ok: false, message: '재고는 0 이상의 정수로 적어 주세요.' };
+  // 한정판(edition_size): 그 상품 SKU 총 재고 합이 한정 수량을 넘으면 번호가 모자란다.
+  if (isDbSkuId(skuId)) {
+    try {
+      const [cap] = await getDb().all<{ edition_size: number | null; others: number }>(sql`
+        SELECT p.edition_size AS edition_size,
+               COALESCE((SELECT SUM(k.stock) FROM shop_skus k JOIN shop_product_skus o ON o.id = k.id
+                         WHERE o.product_id = p.id AND k.id <> ${skuId}), 0) AS others
+        FROM shop_product_skus s JOIN shop_products p ON p.id = s.product_id
+        WHERE s.id = ${skuId}
+      `);
+      if (cap && cap.edition_size !== null) {
+        const edition = Number(cap.edition_size);
+        const others = Number(cap.others);
+        if (others + stock > edition) {
+          return { ok: false, message: `한정판 ${edition}장이에요. 다른 옵션 재고가 ${others}장이라 이 옵션은 ${Math.max(0, edition - others)}장까지만 넣을 수 있어요.` };
+        }
+      }
+    } catch (error) {
+      console.error('[shop] 한정 수량 확인 실패(재고 설정)', error);
+      return { ok: false, message: '한정 수량을 확인하지 못했어요. 잠시 후 다시 시도해 주세요.' };
+    }
+  }
   await getDb().run(sql`
     INSERT INTO shop_skus (id, product_slug, stock) VALUES (${skuId}, ${product.slug}, ${stock})
     ON CONFLICT(id) DO UPDATE SET stock = excluded.stock, updated_at = unixepoch()
@@ -115,41 +137,77 @@ export interface AdminShopArtistSalesRow {
 export const listShopArtistSales = async (month: string): Promise<AdminShopArtistSalesRow[]> => {
   const range = kstMonthRange(month);
   if (!range) return [];
-  const artistBySku = new Map(
-    SHOP_PRODUCTS.flatMap((p) => (p.artist ? p.skus.map((s) => [s.id, p.artist as string] as const) : [])),
-  );
-  if (artistBySku.size === 0) return [];
-  const rows = await getDb().all<{ order_no: string; status: string; sku_id: string; unit_price: number; quantity: number }>(sql`
-    SELECT o.order_no, o.status, i.sku_id, i.unit_price, i.quantity
-    FROM orders o
-    JOIN shop_orders so ON so.order_no = o.order_no
-    JOIN shop_order_items i ON i.order_no = o.order_no
-    WHERE o.type = 'merch' AND o.status IN ('paid', 'partially_refunded')
-      AND so.fulfillment_status IN ('shipped', 'delivered')
-      AND so.shipped_at >= ${range.from} AND so.shipped_at < ${range.to}
-  `);
   const byArtist = new Map<string, { quantity: number; salesAmount: number; review: Set<string> }>();
-  for (const r of rows) {
-    const slug = artistBySku.get(r.sku_id);
-    if (!slug) continue;
-    const acc = byArtist.get(slug) ?? { quantity: 0, salesAmount: 0, review: new Set<string>() };
+  const add = (key: string, r: { order_no: string; status: string; unit_price: number; quantity: number }) => {
+    const acc = byArtist.get(key) ?? { quantity: 0, salesAmount: 0, review: new Set<string>() };
     if (r.status === 'partially_refunded') acc.review.add(r.order_no);
     else {
       acc.quantity += Number(r.quantity);
       acc.salesAmount += Number(r.unit_price) * Number(r.quantity);
     }
-    byArtist.set(slug, acc);
+    byArtist.set(key, acc);
+  };
+
+  // 파일 갈래 — 카탈로그 상품의 artist(data/artists slug). 키는 `file:<slug>`.
+  const artistBySku = new Map(
+    SHOP_PRODUCTS.flatMap((p) => (p.artist ? p.skus.map((s) => [s.id, p.artist as string] as const) : [])),
+  );
+  if (artistBySku.size > 0) {
+    const rows = await getDb().all<{ order_no: string; status: string; sku_id: string; unit_price: number; quantity: number }>(sql`
+      SELECT o.order_no, o.status, i.sku_id, i.unit_price, i.quantity
+      FROM orders o
+      JOIN shop_orders so ON so.order_no = o.order_no
+      JOIN shop_order_items i ON i.order_no = o.order_no
+      WHERE o.type = 'merch' AND o.status IN ('paid', 'partially_refunded')
+        AND so.fulfillment_status IN ('shipped', 'delivered')
+        AND so.shipped_at >= ${range.from} AND so.shipped_at < ${range.to}
+    `);
+    for (const r of rows) {
+      const slug = artistBySku.get(r.sku_id);
+      if (slug) add(`file:${slug}`, r);
+    }
   }
+
+  // DB 갈래 — sku_id → shop_product_skus → shop_products.creator_id. 키는 `creator:<id>`. **별도 try**: 표가 없는 DB에서도
+  // 파일 상품 정산 표는 그대로 나와야 한다. 실패는 로그만 남기고 그 갈래를 건너뛴다(운영자는 /admin/shop 오류 안내로 안다).
+  const creatorInfo = new Map<string, { name: string; taxType: 'withholding' | 'invoice' | null }>();
+  try {
+    const rows = await getDb().all<{
+      order_no: string; status: string; unit_price: number; quantity: number; creator_id: string; name: string; tax_type: string | null;
+    }>(sql`
+      SELECT o.order_no, o.status, i.unit_price, i.quantity, p.creator_id AS creator_id, c.name AS name, c.tax_type AS tax_type
+      FROM orders o
+      JOIN shop_orders so ON so.order_no = o.order_no
+      JOIN shop_order_items i ON i.order_no = o.order_no
+      JOIN shop_product_skus ps ON ps.id = i.sku_id
+      JOIN shop_products p ON p.id = ps.product_id
+      JOIN funding_creators c ON c.id = p.creator_id
+      WHERE i.sku_id LIKE 'db-%'
+        AND o.type = 'merch' AND o.status IN ('paid', 'partially_refunded')
+        AND so.fulfillment_status IN ('shipped', 'delivered')
+        AND so.shipped_at >= ${range.from} AND so.shipped_at < ${range.to}
+    `);
+    for (const r of rows) {
+      const key = `creator:${r.creator_id}`;
+      creatorInfo.set(key, { name: r.name, taxType: r.tax_type === 'withholding' || r.tax_type === 'invoice' ? r.tax_type : null });
+      add(key, r);
+    }
+  } catch (error) {
+    console.error('[shop] 아티스트 정산(DB 상품) 조회 실패 — 파일 상품만 표시합니다:', error);
+  }
+
   return [...byArtist.entries()]
-    .map(([slug, acc]) => {
-      const artist = getSupportedArtist(slug);
+    .map(([key, acc]) => {
+      const creator = creatorInfo.get(key);
+      const artist = key.startsWith('file:') ? getSupportedArtist(key.slice('file:'.length)) : null;
+      const taxType = creator ? creator.taxType : (artist?.taxType ?? null);
       return {
-        artistSlug: slug,
-        artistName: artist?.name ?? slug,
-        taxType: artist?.taxType ?? null,
+        artistSlug: key,
+        artistName: creator?.name ?? artist?.name ?? key.slice(key.indexOf(':') + 1),
+        taxType,
         quantity: acc.quantity,
         salesAmount: acc.salesAmount,
-        payout: artist ? computeShopArtistPayout({ salesAmount: acc.salesAmount, refundAmount: 0, taxType: artist.taxType }) : null,
+        payout: taxType ? computeShopArtistPayout({ salesAmount: acc.salesAmount, refundAmount: 0, taxType }) : null,
         needsReviewOrderNos: [...acc.review].sort(),
       };
     })

@@ -17,10 +17,17 @@ import { authenticateCreatorRequest } from '../../../../../lib/funding/creatorAu
 import { isCreatorNameLocked } from '../../../../../lib/funding/creatorProjectWrite';
 import { withI18nServerProps } from '../../../../../lib/getStatic';
 import { getShopArtistByCreator } from '../../../../../lib/shop/artists';
+import { ProductList } from '../../../../../components/shop/creator/ProductList';
+import { SalesTable } from '../../../../../components/shop/creator/SalesTable';
+import { listProductsForCreator, type CreatorProductSummary } from '../../../../../lib/shop/creatorProductWrite';
+import { loadCreatorSales, type CreatorSkuSales } from '../../../../../lib/shop/creatorStats';
 
 interface Props {
   /** 상점이 열린 아티스트만 값이 있다. */
-  shop: { slug: string; profileImageUrl: string | null; profile: EditorCreatorProfile; nameLocked: boolean } | null;
+  shop: {
+    slug: string; profileImageUrl: string | null; profile: EditorCreatorProfile; nameLocked: boolean;
+    products: CreatorProductSummary[]; sales: CreatorSkuSales[];
+  } | null;
 }
 
 export default function CreatorShopHome({ shop }: Props) {
@@ -58,12 +65,16 @@ export default function CreatorShopHome({ shop }: Props) {
         <CreatorConsoleTabs current="shop" />
         {logoutError && <Notice tone="error" className="mb-6">{logoutError}</Notice>}
         {shop ? (
-          <ShopProfilePanel
-            initial={shop.profile}
-            nameLocked={shop.nameLocked}
-            profileImageUrl={shop.profileImageUrl}
-            shopPath={`/ko/shop/artist/${shop.slug}`}
-          />
+          <>
+            <ShopProfilePanel
+              initial={shop.profile}
+              nameLocked={shop.nameLocked}
+              profileImageUrl={shop.profileImageUrl}
+              shopPath={`/ko/shop/artist/${shop.slug}`}
+            />
+            <ProductList products={shop.products} />
+            <SalesTable rows={shop.sales} />
+          </>
         ) : (
           <EmptyState title="상점은 위탁 계약을 맺은 아티스트에게 열려요." />
         )}
@@ -93,7 +104,12 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
         profileImageUrl: artist.profileImageUrl,
         profile: { name: artist.name, contactName: row?.contactName ?? null, phone: row?.phone ?? null, bio: artist.bio, links: artist.links.length > 0 ? artist.links : null },
         nameLocked: await isCreatorNameLocked(auth.creatorId),
+        products: [],
+        sales: [],
       };
+      // 목록·판매 현황은 각자 실패해도 프로필 화면을 막지 않는다(0053 전 DB에서도 콘솔이 열려야 한다).
+      try { shop.products = await listProductsForCreator(auth.creatorId); } catch (error: unknown) { console.error('[funding] 개설자 상품 목록 조회 실패:', error); }
+      try { shop.sales = await loadCreatorSales(auth.creatorId); } catch (error: unknown) { console.error('[funding] 개설자 판매 현황 조회 실패:', error); }
     }
   } catch (error: unknown) {
     // 상점 표 조회 실패가 콘솔 전체를 막지 않는다 — 상점이 안 열린 것처럼 보인다.
