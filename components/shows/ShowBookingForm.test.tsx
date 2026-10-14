@@ -4,10 +4,10 @@ import type { PublicShow } from '../../lib/shows/queries';
 import ShowBookingForm from './ShowBookingForm';
 
 const mockUseToss = jest.fn((_amount: number, _enabled?: boolean) => ({
-  methodsId: 'm', agreementId: 'a', ready: true, error: null, retry: jest.fn(), requestPayment: jest.fn(), agreedRequiredTerms: null,
+  choice: 'card', setChoice: jest.fn(), applePaySupported: false, ready: true, error: null, requestPayment: jest.fn(),
 }));
-jest.mock('../booking/useTossPaymentWidgets', () => ({
-  useTossPaymentWidgets: (amount: number, enabled?: boolean) => mockUseToss(amount, enabled),
+jest.mock('../payments/usePaymentCheckout', () => ({
+  usePaymentCheckout: (amount: number, enabled?: boolean) => mockUseToss(amount, enabled),
 }));
 jest.mock('../../utils/reportPaymentFailure', () => ({ reportPaymentWindowOpen: jest.fn() }));
 
@@ -49,7 +49,7 @@ describe('ShowBookingForm — 동의·선택 최소화', () => {
   });
 });
 
-describe('ShowBookingForm — 결제 위젯 지연 로드', () => {
+describe('ShowBookingForm — 결제 스크립트 지연 로드', () => {
   type IoCallback = (entries: Array<{ isIntersecting: boolean }>) => void;
   let trigger: IoCallback = () => {};
   const lastEnabled = () => mockUseToss.mock.calls[mockUseToss.mock.calls.length - 1][1];
@@ -92,10 +92,10 @@ describe('ShowBookingForm — 결제 위젯 지연 로드', () => {
 });
 
 describe('ShowBookingForm — 계좌로 직접 입금은 받지 않는다(2026-10-12)', () => {
-  it('위젯 경로에 직접 입금 줄이 없고, 위젯은 숨겨지지 않으며 버튼은 결제하기다', () => {
-    const { container } = render(<ShowBookingForm show={base} />);
+  it('직접 입금 줄도 계좌번호 폴백 링크도 없고, 버튼은 결제하기다', () => {
+    render(<ShowBookingForm show={base} />);
     expect(screen.queryByRole('radio', { name: /계좌로 직접 입금/ })).toBeNull();
-    expect(container.querySelector('#m')?.closest('[hidden]')).toBeNull();
+    expect(screen.queryByRole('button', { name: '계좌번호로 직접 보내기' })).toBeNull();
     expect(screen.getByRole('button', { name: /결제하기/ })).toBeTruthy();
     expect(screen.queryByText(/계좌 안내 받기/)).toBeNull();
   });

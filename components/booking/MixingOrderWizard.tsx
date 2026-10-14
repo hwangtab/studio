@@ -4,8 +4,8 @@ import dynamic from 'next/dynamic';
 import { reportPaymentFailure } from '../../utils/reportPaymentFailure';
 
 import PriceBreakdown from './PriceBreakdown';
-import { TOSS_TERMS_REQUIRED_MESSAGE } from './useTossPaymentWidgets';
-import PaymentMethodPicker, { PaymentMethodSkeleton } from '../payments/PaymentMethodPicker';
+import BankDepositFallback from '../payments/BankDepositFallback';
+import PaymentMethodPicker from '../payments/PaymentMethodPicker';
 import { usePaymentCheckout } from '../payments/usePaymentCheckout';
 import { Button } from '../ui/Button';
 import { formatPriceAmount, VOCAL_TUNING_ADDON_PRICE } from '../../data/pricing';
@@ -21,7 +21,7 @@ import {
 import { MIXING_REFUND_POLICY_LINES } from '../../lib/booking/refund-policy';
 import { clearStoredDraft, readStringDraft, writeStringDraft } from '../../lib/formDraft';
 import type { CheckoutPaymentMethod } from '../../lib/payments/bankDeposit';
-import PaymentMethodChoice from '../payments/PaymentMethodChoice';
+import { wantsBankFallback } from '../../lib/payments/bankFallback';
 import { Field, Select, TextArea, TextInput } from '../ui/Field';
 import { ChoiceCard, ChoiceGroup } from '../ui/Choice';
 import { Checkbox } from '../ui/Checkbox';
@@ -168,21 +168,25 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
   }, [draftRestored, customerName, customerPhone, customerEmail, customerNote]);
 
   /**
-   * 결제위젯을 **주문자 정보 폼 안에** 띄운다. 예전에는 주문을 만든 뒤 3단계 결제 화면을
+   * 결제수단 목록을 **주문자 정보 폼 안에** 보인다. 예전에는 주문을 만든 뒤 3단계 결제 화면을
    * 따로 그렸는데, 거기서 하는 일이 금액 확인과 위젯 렌더뿐이라 화면 하나와 클릭 하나가
    * 더 있는 셈이었다. 잡아 둘 슬롯도 없어(주문은 24시간 유지) 그 화면이 알려 줄 시한도 없다.
    *
    * 초기 금액은 화면의 추정치이고, **청구는 서버가 돌려준 금액으로** 연다(handleSubmit).
    */
   const {
-    methodsId, agreementId, ready: paymentReady, error: paymentError, retry: retryPayment, requestPayment,
-    agreedRequiredTerms, picker, choice: pickerChoice, setChoice: setPickerChoice, applePaySupported,
-    // 마운트 지점이 2단계에만 있다 — 그 전에 붙이려 하면 선택자가 비어 실패한다.
+    ready: paymentReady, error: paymentError, requestPayment,
+    choice: pickerChoice, setChoice: setPickerChoice, applePaySupported,
+    // 결제수단 목록은 2단계에만 있다 — 그 전에는 토스 스크립트를 미리 받지 않는다.
   } = usePaymentCheckout(amounts.totalAmount, step === 2);
 
-  /** 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금. 믹싱은 잡는 시간대가 없어 막는 조건이 없다. */
+  /** 결제수단 — 기본은 토스, 결제가 어려운 분만 계좌번호 직접 입금(폴백, 2026-10-14). 믹싱은 잡는 시간대가 없어 막는 조건이 없다. */
   const [payMethod, setPayMethod] = useState<CheckoutPaymentMethod>('toss');
   const usingBank = payMethod === 'bank_transfer';
+  // 결제 실패 화면에서 "계좌번호로 직접 보내기"로 돌아온 경우 — 계좌 안내 모드로 연다(lib/payments/bankFallback.ts).
+  useEffect(() => {
+    if (wantsBankFallback(window.location.search)) setPayMethod('bank_transfer');
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -218,20 +222,6 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
       }
       return;
     }
-    /**
-     * 위젯이 그리는 결제 약관도 제출 **전에** 본다.
-     *
-     * 예전에는 그냥 보내고 `requestPayment`가 실패하게 뒀다. 그 시점엔 주문이 이미
-     * 만들어져 있고, 문구도 "잠시 후 다시 시도해 주세요"라 무엇을 고쳐야 하는지 알 수
-     * 없었다(가리려던 `NEED_AGREEMENT` 코드는 SDK에 없다). 동의 상태를 못 받았을 때
-     * (null)는 막지 않는다 — 동의했는데 결제가 안 되는 쪽이 더 나쁘다.
-     */
-    if (agreedRequiredTerms !== true) {
-      setSubmitError(TOSS_TERMS_REQUIRED_MESSAGE);
-      document.getElementById(agreementId)?.scrollIntoView?.({ block: 'center', behavior: 'smooth' });
-      return;
-    }
-
     setSubmitting(true);
     setSubmitError(null);
     // 결제창 실패를 서버에 알릴 때 쓴다 — catch에서 주문번호가 보여야 한다.
@@ -296,22 +286,8 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
        * 이탈한다. 그 밖의 실패만 메시지로 알린다.
        */
       const code = (err as { code?: string } | null)?.code;
-      // **취소를 가장 먼저 걸러낸다.** 결제창을 닫은 것은 오류가 아니라서 아무 문구도
-      // 띄우지 않는다 — 여기서 아래 약관 분기가 먼저 걸리면 창을 닫은 사람에게 "약관에
-      // 동의해 주세요"를 띄우는 오진이 된다.
       if (code === 'USER_CANCEL' || code === 'PAY_PROCESS_CANCELED') return;
-      // `NEED_AGREEMENT`는 SDK에 없는 코드였다 — 그 분기는 한 번도 타지 않았고, 약관만
-      // 빼먹은 사람이 "잠시 후 다시 시도해 주세요"를 봤다. 이제는 제출 전에 막지만(위),
-      // 동의 상태를 못 받은 경우(null)까지 대비해 여기서도 동의 쪽을 먼저 의심한다.
-      if (agreedRequiredTerms !== true) {
-        setSubmitError(TOSS_TERMS_REQUIRED_MESSAGE);
-      } else if (code === 'NEED_CARD_PAYMENT_DETAIL') {
-        // 신용·체크카드를 고르고 카드사를 안 고른 채 누른 경우다(이 분기는 약관 동의 뒤에만 온다).
-        // 2026-09-29 한 후원자가 옛 문구("결제 수단과 약관 동의를 확인해 주세요")를 보고 30초에 네 번 다시 눌렀다.
-        setSubmitError('카드 결제는 카드사를 먼저 골라 주세요. 결제 방법 아래에서 카드사를 선택한 뒤 다시 눌러 주세요.');
-      } else {
-        setSubmitError('네트워크 오류로 주문 신청에 실패했어요. 잠시 후 다시 시도해 주세요.');
-      }
+      setSubmitError('네트워크 오류로 주문 신청에 실패했어요. 잠시 후 다시 시도해 주세요. 결제가 계속 어려우시면 아래 "계좌번호로 직접 보내기"를 이용하실 수 있어요.');
     } finally {
       setSubmitting(false);
     }
@@ -481,9 +457,8 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
 
             {/*
               동의는 **결제하기를 누르는 행위 자체**로 받는다. 체크박스를 두지 않는다 —
-              같은 화면에 결제위젯이 그리는 [필수] 결제 서비스 약관 체크가 이미 있고,
-              위젯은 자기 영역 안에 들여쓰여 그리므로 정렬도 배경도 맞출 수 없다. 거의 같은
-              말을 하는 체크가 어긋난 자리에 둘이면 중복으로 읽힌다(2026-09-16 실사용 확인).
+              토스 결제창이 자체 [필수] 결제 서비스 약관을 받으므로, 같은 말을 하는 체크를 우리 화면에도
+              두면 중복으로 읽힌다(2026-09-16 실사용 확인).
 
               법적으로도 체크박스가 요구되는 항목이 아니다 — 청약철회·환불 조건은
               전자상거래법 제13조상 **고지** 의무이고, 규정 전문을 바로 위에 펼쳐 두었다.
@@ -493,46 +468,28 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
               {`${usingBank ? '계좌 안내 받기' : '결제하기'}를 누르면 위 환불 규정에 동의하는 것으로 봅니다.`}
             </p>
 
-            {/* 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금. 토스 수단과 결제 약관 동의는 **위젯이 그린다**.
-                계좌를 고르면 위젯을 **숨기기만** 한다 — 언마운트하면 동의 상태가 풀린다(PledgeWizard와 같다).
-                기능 플래그(`?pay=v2`)가 켜지면 위젯 대신 우리가 그린 결제수단 목록(PaymentMethodPicker)이다. */}
+            {/* 결제수단 — 기본은 토스(카드·간편결제·계좌이체) 목록이고, 결제가 어려운 분만 목록 아래 링크로
+                "계좌번호로 직접 보내기"를 연다(2026-10-14). 계좌 모드에서는 목록을 숨긴다. */}
             <div className="pt-2">
               <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200">결제수단</h3>
-              {picker === null ? (
-                <PaymentMethodSkeleton />
-              ) : picker ? (
+              {!usingBank && (
                 <>
                   <PaymentMethodPicker
                     name="mixing-paymethod"
-                    value={usingBank ? 'bank_transfer' : pickerChoice}
-                    onChange={(next) => {
-                      if (next === 'bank_transfer') { setPayMethod('bank_transfer'); return; }
-                      setPayMethod('toss');
-                      setPickerChoice(next);
-                    }}
+                    value={pickerChoice}
+                    onChange={setPickerChoice}
                     applePaySupported={applePaySupported}
-                    bankBlockedMessage={null}
                     confirmLabel="주문이 접수"
                   />
                   {paymentError && <Notice tone="error" className="mt-3">{paymentError}</Notice>}
                 </>
-              ) : (
-                <>
-                <PaymentMethodChoice name="mixing-paymethod" value={payMethod} onChange={setPayMethod} confirmLabel="주문이 접수" />
-                <div hidden={usingBank} className="mt-3">
-                  {paymentError ? (
-                    <Notice tone="error" actions={<Button type="button" size="sm" variant="weak" onClick={retryPayment}>다시 시도</Button>}>
-                      {paymentError}
-                    </Notice>
-                  ) : (
-                    <>
-                      <div id={methodsId} />
-                      <div id={agreementId} />
-                    </>
-                  )}
-                </div>
-                </>
               )}
+              <BankDepositFallback
+                active={usingBank}
+                onEnter={() => setPayMethod('bank_transfer')}
+                onLeave={() => setPayMethod('toss')}
+                confirmLabel="주문이 접수"
+              />
             </div>
 
             <p className="text-sm text-gray-600 dark:text-gray-300">
@@ -547,7 +504,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
               <Button type="button" variant="weak" onClick={() => setStep(1)}>
                 이전
               </Button>
-              {/* 위젯이 아직 안 떴으면 누를 수 없다 — 누르면 주문만 만들어지고 결제창은 안 열린다. 계좌 입금은 위젯이 필요 없다. */}
+              {/* 결제 설정이 없으면 누를 수 없다 — 누르면 주문만 만들어지고 결제창은 안 열린다. 계좌 입금은 설정이 필요 없다. */}
               <Button type="submit" disabled={submitting || (!usingBank && !paymentReady)} fullWidth>
                 {submitting ? '처리 중…' : usingBank ? '계좌 안내 받기' : '결제하기'}
               </Button>

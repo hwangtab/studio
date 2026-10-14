@@ -1,65 +1,59 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { ANONYMOUS, loadTossPayments } from '@tosspayments/tosspayments-sdk';
 
-import { type TossRequestPaymentParams, useTossPaymentWidgets } from '../booking/useTossPaymentWidgets';
 import {
   type TossPaymentChoiceId,
   buildTossPaymentRequest,
   paymentCustomerKey,
   withApiKeyChannel,
 } from '../../lib/payments/paymentChoices';
-import { PAYMENT_PICKER_COOKIE, resolvePaymentPicker } from '../../lib/payments/paymentPickerFlag';
+
+export interface TossRequestPaymentParams {
+  orderId: string;
+  orderName: string;
+  customerName: string;
+  customerEmail?: string;
+  /** origin을 포함한 전체 주소. */
+  successUrl: string;
+  failUrl: string;
+  /**
+   * 청구할 금액. 넘기면 결제창을 **서버가 확정한 값으로** 연다(없으면 화면 금액).
+   *
+   * 폼 안에서 후원자가 수량을 고치는 동안 화면 금액은 계속 움직인다. 서버가 돌려준 금액으로 열지 않으면
+   * 화면의 추정치로 결제창이 열린다.
+   */
+  amount?: number;
+}
 
 /**
- * 결제 화면 공용 훅 — **토스 결제위젯**(기본)과 **우리가 그린 결제수단 목록**(기능 플래그) 중 하나로 돈다.
+ * 결제 화면 공용 훅 — **우리가 그린 결제수단 목록**(PaymentMethodPicker)에서 고른 수단의 토스 결제창을 연다.
  *
- * 네 폼(PledgeWizard·BookingWizard·MixingOrderWizard·ShowBookingForm)은 `useTossPaymentWidgets`를
- * 부르던 자리에서 이 훅을 부른다. 돌려주는 모양이 위젯 훅과 같아 폼의 제출 로직은 그대로다:
+ * 다섯 폼(PledgeWizard·BookingWizard·MixingOrderWizard·ShowBookingForm·ShopOrderForm)과 예약금 결제 링크가
+ * 이 훅 하나로 결제를 시작한다. 토스 결제위젯(수단 목록 + 약관 iframe) 경로는 2026-10-14에 걷어냈다 —
+ * 결제수단을 통일하려면 화면마다 목록이 같아야 하고, 위젯은 토스 콘솔 설정에 따라 줄이 달라졌다.
  *
- * - 위젯 모드(`picker === false`): 위젯 훅을 그대로 쓴다 — 지금과 100% 같은 흐름.
- * - 목록 모드(`picker === true`): 위젯을 붙이지 않는다. `requestPayment`는 고른 수단(`choice`)의
- *   결제창을 **API 개별 연동 키**(`NEXT_PUBLIC_TOSS_API_CLIENT_KEY`)로 연다. 위젯 약관 UI가 없으므로
- *   (결제창이 자체 약관을 받는다) `agreedRequiredTerms`는 늘 true — 폼의 위젯 약관 게이트를 타지 않는다.
- * - 판정 전(`picker === null`): 서버 렌더와 하이드레이션 첫 패스뿐이다(쿼리·쿠키는 브라우저에서만 읽힌다).
- *   폼은 이때 결제수단 구획을 같은 높이의 빈 자리(`PaymentMethodSkeleton`)로 둔다 — 옛 선택지가 한 프레임
- *   보였다가 바뀌는 깜빡임과 레이아웃 튐을 막는다.
+ * `requestPayment`는 고른 수단(`choice`)의 결제창을 **API 개별 연동 키**(`NEXT_PUBLIC_TOSS_API_CLIENT_KEY`)로
+ * 연다. 결제창이 자체 약관을 받으므로 우리 화면에는 약관 동의 UI가 없다.
  */
 const noopSubscribe = () => () => {};
 
 export const usePaymentCheckout = (amount: number, enabled = true) => {
-  // 판정은 렌더 중에 동기로 읽는다(useSyncExternalStore). 서버 렌더·하이드레이션 첫 패스만 null이고,
-  // 클라이언트에서 처음 그려지는 화면(모달·다음 단계)은 첫 렌더부터 값이 있다 — 위젯 마운트가 한 박자도
-  // 늦어지지 않는다. 쿠키 기억은 부수 효과라 effect에서 한다.
-  const picker = useSyncExternalStore(noopSubscribe, readPaymentPicker, () => null);
-  useEffect(() => {
-    try {
-      const { remember } = resolvePickerFromBrowser();
-      if (remember) {
-        document.cookie = `${PAYMENT_PICKER_COOKIE}=${remember}; path=/; max-age=${60 * 60 * 24 * 30}; samesite=lax`;
-      }
-    } catch {
-      /* 기억하지 못해도 이번 화면은 판정대로 돈다. */
-    }
-  }, []);
-
-  const widget = useTossPaymentWidgets(amount, enabled && picker === false);
-
   const [choice, setChoice] = useState<TossPaymentChoiceId>('card');
   const applePaySupported = useApplePaySupport();
   const apiClientKey = process.env.NEXT_PUBLIC_TOSS_API_CLIENT_KEY;
 
   // 결제창을 누르는 순간 스크립트를 받느라 기다리지 않게 미리 불러 둔다. 실패해도 누를 때 다시 시도한다.
   useEffect(() => {
-    if (!picker || !enabled || !apiClientKey) return;
+    if (!enabled || !apiClientKey) return;
     void loadTossPayments(apiClientKey).catch(() => {});
-  }, [apiClientKey, enabled, picker]);
+  }, [apiClientKey, enabled]);
 
   const amountRef = useRef(amount);
   amountRef.current = amount;
   const choiceRef = useRef(choice);
   choiceRef.current = choice;
 
-  const requestPickerPayment = useCallback(async ({ amount: finalAmount, ...params }: TossRequestPaymentParams) => {
+  const requestPayment = useCallback(async ({ amount: finalAmount, ...params }: TossRequestPaymentParams) => {
     if (!apiClientKey) throw new Error('결제 설정이 없어요.');
     const toss = await loadTossPayments(apiClientKey);
     const payment = toss.payment({ customerKey: paymentCustomerKey(params.orderId, ANONYMOUS) });
@@ -74,33 +68,12 @@ export const usePaymentCheckout = (amount: number, enabled = true) => {
     else await payment.requestPayment(request);
   }, [apiClientKey]);
 
-  if (picker) {
-    return {
-      picker: true as const,
-      choice, setChoice, applePaySupported,
-      methodsId: widget.methodsId, agreementId: widget.agreementId,
-      ready: Boolean(apiClientKey),
-      error: apiClientKey ? null : '결제 설정이 없어요.',
-      retry: widget.retry,
-      requestPayment: requestPickerPayment,
-      agreedRequiredTerms: true as boolean | null,
-    };
-  }
-  return { ...widget, picker, choice, setChoice, applePaySupported };
-};
-
-const resolvePickerFromBrowser = () => resolvePaymentPicker({
-  envValue: process.env.NEXT_PUBLIC_PAYMENT_PICKER,
-  search: window.location.search,
-  cookie: document.cookie,
-});
-/** 판정 실패는 기본값(위젯)으로 — 결제를 막지 않는다. */
-const readPaymentPicker = (): boolean => {
-  try {
-    return resolvePickerFromBrowser().on;
-  } catch {
-    return false;
-  }
+  return {
+    choice, setChoice, applePaySupported,
+    ready: Boolean(apiClientKey),
+    error: apiClientKey ? null : '결제 설정이 없어요.',
+    requestPayment,
+  };
 };
 
 /**

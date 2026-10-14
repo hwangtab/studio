@@ -806,7 +806,7 @@ export const AVAILABILITY_MEMO_RETENTION_YEARS = 1;
  * 웹훅 복구 경로로 들어와 저장될 수 있다**(`lib/booking/webhook.ts`).
  *
  * 우리가 토스에 보내는 값은 `customerName`·`customerEmail`이다
- * (`components/booking/TossPaymentWidget.tsx`의 `requestPayment`,
+ * (`components/payments/usePaymentCheckout.ts`의 `requestPayment`,
  * `lib/billing/toss-billing.ts`의 `chargeBillingKey`). `metadata`를 보내는 코드는 없다(확인).
  *
  * **확인되지 않은 것**: 보낸 `customerEmail`이 응답에 되돌아오는 경로가 있는지, `receipt.url`·

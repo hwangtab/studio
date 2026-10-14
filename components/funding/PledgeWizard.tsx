@@ -3,14 +3,15 @@ import Link from 'next/link';
 
 import { reportPaymentFailure, reportPaymentWindowOpen } from '../../utils/reportPaymentFailure';
 
-import { TOSS_TERMS_REQUIRED_MESSAGE } from '../booking/useTossPaymentWidgets';
-import PaymentMethodPicker, { PaymentMethodSkeleton } from '../payments/PaymentMethodPicker';
+import BankDepositFallback from '../payments/BankDepositFallback';
+import PaymentMethodPicker from '../payments/PaymentMethodPicker';
 import { usePaymentCheckout } from '../payments/usePaymentCheckout';
 import { Button } from '../ui/Button';
 import { formatPriceAmount } from '../../data/pricing';
 import { computeFundingAmounts } from '../../lib/funding/amounts';
 import { ADDITIONAL_AMOUNT_STEP, ANONYMOUS_LABEL, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY, PLEDGE_TEXT_LIMITS } from '../../lib/funding/policy';
 import { BANK_TRANSFER_BLOCK_MESSAGES, bankTransferBlockReason } from '../../lib/funding/bankAccount';
+import { wantsBankFallback } from '../../lib/payments/bankFallback';
 import type { FundingProject } from '../../lib/funding/projects';
 import type { PublicNameStyle } from '../../lib/funding/publicName';
 import { clearStoredDraft, draftStorageKey, readStringDraft, writeStringDraft } from '../../lib/formDraft';
@@ -380,7 +381,8 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
   const preview = useMemo(() => computeFundingAmounts(reward.amount, quantity, additional), [reward.amount, quantity, additional]);
 
   /**
-   * 결제수단 — 카드·간편결제(토스 위젯) 또는 계좌로 직접 입금.
+   * 결제수단 — 기본은 토스(카드·간편결제·계좌이체)이고, 결제가 어려운 분만 계좌번호 직접 입금(폴백, 2026-10-14).
+   * 입구는 폼 아래 링크(BankDepositFallback)와 실패 화면에서 돌아올 때의 `?bank=1`뿐이다.
    *
    * 계좌 입금은 한정 수량 리워드에 못 쓴다. 판정은 서버 검증(lib/funding/validation.ts)과
    * **같은 함수·같은 인자**다(bankTransferBlockReason) — 한쪽만 바뀌면 화면은 고르게 두는데 서버가
@@ -392,16 +394,18 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
   useEffect(() => {
     if (bankBlocked && payMethod === 'bank_transfer') setPayMethod('toss');
   }, [bankBlocked, payMethod]);
+  // 결제 실패 화면에서 "계좌번호로 직접 보내기"로 돌아온 경우 — 계좌 안내 모드로 연다(lib/payments/bankFallback.ts).
+  useEffect(() => {
+    if (wantsBankFallback(window.location.search)) setPayMethod('bank_transfer');
+  }, []);
 
   /**
-   * 결제위젯을 **폼 안에** 띄운다(기본). 기능 플래그가 켜지면 위젯 대신 우리가 그린 결제수단
-   * 목록(PaymentMethodPicker)을 보이고 고른 수단의 결제창으로 바로 보낸다(usePaymentCheckout).
-   *
-   * 금액은 후원자가 수량·추가 후원금을 고칠 때마다 위젯에 알린다. 다시 그리지는 않는다.
+   * 결제수단 목록(PaymentMethodPicker)을 폼 안에 보이고 고른 수단의 결제창으로 바로 보낸다(usePaymentCheckout).
+   * 금액은 서버가 확정한 값으로 결제창을 연다.
    */
   const {
-    methodsId, agreementId, ready: paymentReady, error: paymentError, retry: retryPayment, requestPayment,
-    agreedRequiredTerms, picker, choice: pickerChoice, setChoice: setPickerChoice, applePaySupported,
+    ready: paymentReady, error: paymentError, requestPayment,
+    choice: pickerChoice, setChoice: setPickerChoice, applePaySupported,
   } = usePaymentCheckout(preview.totalAmount);
 
   const submit = async () => {
@@ -450,20 +454,6 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
         submittingRef.current = false;
         setSubmitting(false);
       }
-      return;
-    }
-    /**
-     * 위젯 약관도 제출 **전에** 본다.
-     *
-     * 예전에는 그냥 보내고 `requestPayment`가 실패하게 뒀다. 그 시점엔 주문이 이미
-     * 만들어져 있어서 한정 재고 홀드가 잡힌 채 실패했고, 문구도 "잠시 후 다시 시도해
-     * 주세요"라 무엇을 고쳐야 하는지 알 수 없었다. 동의 상태를 못 받았을 때(null)는
-     * 막지 않는다 — 동의했는데 결제가 안 되는 쪽이 더 나쁘다.
-     */
-    if (agreedRequiredTerms !== true) {
-      submittingRef.current = false;
-      setError(TOSS_TERMS_REQUIRED_MESSAGE);
-      document.getElementById(agreementId)?.scrollIntoView?.({ block: 'center', behavior: 'smooth' });
       return;
     }
     // 제출 직전 확정 — blur 없이 Enter로 보낸 경우에도 입력 칸이 실제 청구 값과 일치한다.
@@ -538,27 +528,10 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
        * 결제창을 닫으면 여기로 온다 — 오류가 아니다. 주문은 pending으로 남고, 다시
        * 제출하면 `previousOrderNo`가 그 홀드를 풀어 준다(본인이 한정 재고를 붙들고
        * 품절을 보는 일이 없게).
-       *
-       * 약관 동의를 안 한 채 누르면 위젯이 그 사실을 코드로 알려 준다. 그건 후원자가
-       * 고쳐야 하는 것이라 문구를 띄운다.
        */
       const code = (err as { code?: string } | null)?.code;
-      // **취소를 가장 먼저 걸러낸다.** 결제창을 닫은 것은 오류가 아니라서 아무 문구도
-      // 띄우지 않는다 — 여기서 아래 약관 분기가 먼저 걸리면 창을 닫은 사람에게 "약관에
-      // 동의해 주세요"를 띄우는 오진이 된다.
       if (code === 'USER_CANCEL' || code === 'PAY_PROCESS_CANCELED') return;
-      // `NEED_AGREEMENT`는 SDK에 없는 코드였다 — 그 분기는 한 번도 타지 않았고, 약관만
-      // 빼먹은 사람이 "잠시 후 다시 시도해 주세요"를 봤다. 이제는 제출 전에 막지만(위),
-      // 동의 상태를 못 받은 경우(null)까지 대비해 여기서도 동의 쪽을 먼저 의심한다.
-      if (agreedRequiredTerms !== true) {
-        setError(TOSS_TERMS_REQUIRED_MESSAGE);
-      } else if (code === 'NEED_CARD_PAYMENT_DETAIL') {
-        // 신용·체크카드를 고르고 카드사를 안 고른 채 누른 경우다(이 분기는 약관 동의 뒤에만 온다).
-        // 2026-09-29 한 후원자가 옛 문구("결제 수단과 약관 동의를 확인해 주세요")를 보고 30초에 네 번 다시 눌렀다.
-        setError('카드 결제는 카드사를 먼저 골라 주세요. 결제 방법 아래에서 카드사를 선택한 뒤 다시 눌러 주세요.');
-      } else {
-        setError('결제를 시작하지 못했어요. 잠시 후 다시 시도해 주세요.');
-      }
+      setError('결제를 시작하지 못했어요. 잠시 후 다시 시도해 주세요. 결제가 계속 어려우시면 아래 "계좌번호로 직접 보내기"를 이용하실 수 있어요.');
     }
     finally { submittingRef.current = false; setSubmitting(false); }
   };
@@ -575,8 +548,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
   const handleNumericEnter = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== 'Enter') return;
     e.preventDefault();
-    // 위젯이 아직 안 떴으면 Enter도 제출하지 않는다 — 안 막으면 동의 상태를 못 받은 것이
-    // "약관을 빼먹었다"로 읽혀, 후원자가 고칠 수 없는 약관 문구를 본다. 계좌 입금은 위젯이 필요 없다.
+    // 결제 설정(클라이언트 키)이 없으면 Enter도 제출하지 않는다. 계좌 입금은 키가 필요 없다.
     if (!paymentReady && !usingBank) return;
     void submit();
   };
@@ -806,71 +778,33 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
       </fieldset>
 
       {/*
-        결제수단 — 위에서 **카드·간편결제(토스)**와 **계좌로 직접 입금** 중 하나를 고른다. 토스 쪽 수단
-        목록과 결제 약관 동의는 **위젯이 그린다**(우리 목록을 따로 두지 않는다 — 계약된 수단이 늘면 그대로
-        따라온다). 계좌 입금을 고르면 위젯을 **숨기기만 한다** — 언마운트하면 훅이 iframe을 걷었다가
-        되돌아올 때 다시 그리며 동의 상태가 풀린다. 숨긴 동안 위젯 약관은 제출 조건에서 빠진다.
-
-        기능 플래그(`?pay=v2`, lib/payments/paymentPickerFlag.ts)가 켜지면 위젯 대신 결제수단 목록을 우리가
-        그린다 — 카드·계좌 입금·간편결제가 한 목록이고, 고른 수단의 결제창으로 바로 간다(위젯 약관 없음).
+        결제수단 — 기본은 토스(카드·간편결제·계좌이체) 목록이고, 결제가 어려운 분만 목록 아래 링크로
+        "계좌번호로 직접 보내기"를 연다(운영자 결정 2026-10-14). 계좌 모드에서는 목록을 숨긴다 — 두 길이
+        한 화면에 있으면 어느 쪽 버튼인지 헷갈린다.
       */}
       <fieldset className={cardClass} aria-labelledby={`${uid}-step-pay`}>
         <StepHeader
           id={`${uid}-step-pay`} n={3} title="결제수단"
           hint={usingBank ? '신청하시면 입금하실 계좌를 바로 알려 드려요.' : '고르신 수단으로 바로 결제창이 열려요.'}
         />
-        {picker === null ? (
-          <PaymentMethodSkeleton />
-        ) : picker ? (
+        {!usingBank && (
           <>
             <PaymentMethodPicker
               name={`${uid}-paymethod`}
-              value={usingBank ? 'bank_transfer' : pickerChoice}
-              onChange={(next) => {
-                if (next === 'bank_transfer') { setPayMethod('bank_transfer'); return; }
-                setPayMethod('toss');
-                setPickerChoice(next);
-              }}
+              value={pickerChoice}
+              onChange={setPickerChoice}
               applePaySupported={applePaySupported}
-              bankBlockedMessage={bankBlocked ? BANK_TRANSFER_BLOCK_MESSAGES[bankBlocked] : null}
             />
             {paymentError && <Notice tone="error" className="mt-3">{paymentError}</Notice>}
           </>
-        ) : (
-          <>
-          <div className="mb-4 space-y-2" role="radiogroup" aria-label="결제 방법">
-            <ChoiceCard
-              name={`${uid}-paymethod`}
-              value="toss"
-              checked={!usingBank}
-              onChange={() => setPayMethod('toss')}
-              title="카드·간편결제(토스)"
-              description="결제가 끝나면 바로 확정돼요."
-            />
-            <ChoiceCard
-              name={`${uid}-paymethod`}
-              value="bank_transfer"
-              checked={usingBank}
-              disabled={bankBlocked !== null}
-              onChange={() => setPayMethod('bank_transfer')}
-              title="계좌로 직접 입금"
-              description={bankBlocked ? BANK_TRANSFER_BLOCK_MESSAGES[bankBlocked] : '은행·ATM에서 보내실 수 있어요. 입금을 확인하면 메일로 알려 드려요.'}
-            />
-          </div>
-          <div hidden={usingBank}>
-            {paymentError ? (
-              <Notice tone="error" actions={<Button type="button" size="sm" variant="weak" onClick={retryPayment}>다시 시도</Button>}>
-                {paymentError}
-              </Notice>
-            ) : (
-              <>
-                <div id={methodsId} />
-                <div id={agreementId} />
-              </>
-            )}
-          </div>
-          </>
         )}
+        <BankDepositFallback
+          active={usingBank}
+          blockedMessage={bankBlocked ? BANK_TRANSFER_BLOCK_MESSAGES[bankBlocked] : null}
+          onEnter={() => setPayMethod('bank_transfer')}
+          onLeave={() => setPayMethod('toss')}
+          confirmLabel="후원이 확정"
+        />
       </fieldset>
 
       {/*
@@ -934,8 +868,8 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
           <Link href="/ko/privacy-policy" target="_blank" className="underline">개인정보 처리방침</Link>에 동의하는 것으로 봅니다.
         </p>
 
-        {/* 위젯이 아직 안 떴으면 누를 수 없다 — 누르면 주문만 만들어지고 결제창은 안 열린다.
-            계좌 입금은 위젯이 필요 없고, 마지막 버튼 말만 "계좌 안내 받기"다(버튼 규칙의 "결제하기" 자리). */}
+        {/* 결제 설정이 없으면 누를 수 없다 — 누르면 주문만 만들어지고 결제창은 안 열린다.
+            계좌 입금은 설정이 필요 없고, 마지막 버튼 말만 "계좌 안내 받기"다(버튼 규칙의 "결제하기" 자리). */}
         <Button type="submit" size="lg" fullWidth className="mt-3" disabled={submitting || allSoldOut || (!usingBank && !paymentReady)}>
           {submitting ? '처리 중…' : `${formatPriceAmount(preview.totalAmount)}원 · ${usingBank ? '계좌 안내 받기' : '결제하기'}`}
         </Button>

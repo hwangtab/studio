@@ -17,7 +17,7 @@ interface Props {
 /**
  * 토스 빌링(자동결제) 카드 등록 버튼.
  *
- * 위젯 결제(TossPaymentWidget)와 달리 결제수단 UI를 렌더링하지 않는다 — 클릭 시
+ * 결제수단 목록 결제(usePaymentCheckout)와 달리 결제수단 UI를 렌더링하지 않는다 — 클릭 시
  * `requestBillingAuth`가 카드 인증창을 직접 띄운다. clientKey는 빌링 전용 env
  * (`NEXT_PUBLIC_TOSS_BILLING_CLIENT_KEY`)로, 위젯 키와 섞으면 안 된다(스펙 §9).
  */

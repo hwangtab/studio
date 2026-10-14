@@ -4,7 +4,9 @@ import path from 'node:path';
 import { orderTypeEnum } from '../../db/schema';
 
 /**
- * 결제 화면은 공용 체크아웃(usePaymentCheckout + PaymentMethodChoice)으로 만든다.
+ * 결제 화면은 공용 체크아웃(usePaymentCheckout + PaymentMethodPicker)으로 만든다. 기본 결제수단은 전부 토스이고,
+ * 계좌번호 직접 입금은 결제가 어려운 분만 쓰는 폴백(BankDepositFallback·실패 화면)이다(운영자 결정 2026-10-14).
+ *
  *
  * 2026-10-06 예약금 결제 링크가 "코드를 가장 적게 쓰는" 설계로 카드 전용 위젯(TossPaymentWidget)을 골라
  * 계좌 입금 없이 PR까지 나갔다. 새 결제 흐름이 공용 체크아웃을 빼먹으면 CI가 서게 한다 —
@@ -25,14 +27,14 @@ const walk = (dir: string): string[] =>
 /** 주문 종류별 결제 화면. 새 종류를 orderTypeEnum에 더하면 여기에도 적어야 테스트가 통과한다. */
 const CHECKOUT_FORM_BY_ORDER_TYPE: Record<
   (typeof orderTypeEnum)[number],
-  { file: string; ownMethodChoice?: true; tossOnly?: true } | { exempt: string }
+  { file: string; tossOnly?: true } | { exempt: string }
 > = {
   session: { file: 'components/booking/BookingWizard.tsx' },
   mixing: { file: 'components/booking/MixingOrderWizard.tsx' },
-  // 공연은 결제수단이 전부 토스다(직접 입금 없음, 2026-10-12) — 두 줄 선택(PaymentMethodChoice)이 없다.
+  // 공연은 결제수단이 전부 토스다(직접 입금 없음, 2026-10-12) — 계좌번호 폴백도 없다.
   ticket: { file: 'components/shows/ShowBookingForm.tsx', tossOnly: true },
-  // 펀딩 후원 폼은 같은 두 줄을 자기 표(funding_pledges.payment_method)로 갈라 직접 그린다.
-  funding: { file: 'components/funding/PledgeWizard.tsx', ownMethodChoice: true },
+  // 펀딩은 폴백을 고르면 자기 표(funding_pledges.payment_method)로 갈라 접수한다.
+  funding: { file: 'components/funding/PledgeWizard.tsx' },
   deposit: { file: 'components/payments/PaymentLinkCheckout.tsx' },
   // 상점(음반·굿즈)도 결제수단이 전부 토스다(직접 입금 없음, 2026-10-12).
   merch: { file: 'components/shop/ShopOrderForm.tsx', tossOnly: true },
@@ -42,8 +44,6 @@ const CHECKOUT_FORM_BY_ORDER_TYPE: Record<
 /** 토스 SDK·위젯 훅·카드 전용 위젯을 직접 쓰는 것이 허용된 파일(공용 체크아웃의 내부와 빌링). */
 const DIRECT_TOSS_ALLOWED = new Set([
   'components/payments/usePaymentCheckout.ts',
-  'components/booking/useTossPaymentWidgets.ts',
-  'components/booking/TossPaymentWidget.tsx',
   'components/billing/BillingAuthButton.tsx',
 ]);
 
@@ -53,18 +53,35 @@ describe('공용 결제 체크아웃 가드', () => {
   });
 
   it.each(Object.entries(CHECKOUT_FORM_BY_ORDER_TYPE).filter(([, v]) => 'file' in v))(
-    '%s 결제 화면은 usePaymentCheckout과 결제수단 선택을 공용 컴포넌트로 쓴다',
+    '%s 결제 화면은 usePaymentCheckout과 결제수단 목록을 공용 컴포넌트로 쓴다',
     (_type, spec) => {
-      const { file, ownMethodChoice, tossOnly } = spec as { file: string; ownMethodChoice?: true; tossOnly?: true };
+      const { file, tossOnly } = spec as { file: string; tossOnly?: true };
       const source = read(file);
       expect(source).toMatch(/usePaymentCheckout/);
+      expect(source).toMatch(/<PaymentMethodPicker/);
       if (tossOnly) {
         // 직접 입금을 다시 붙이면 환불 계좌·수동 송금이 되살아난다 — 결정을 바꿀 때 이 가드도 함께 고친다.
-        expect(source).not.toMatch(/PaymentMethodChoice|paymentMethod: 'bank_transfer'/);
-        expect(source).toMatch(/bankOption="toss_transfer"/);
-      } else if (!ownMethodChoice) expect(source).toMatch(/PaymentMethodChoice/);
+        expect(source).not.toMatch(/BankDepositFallback|paymentMethod: 'bank_transfer'/);
+      } else {
+        // 결제가 어려운 분의 안전망 — 폼 아래 계좌번호 폴백 링크가 있어야 한다.
+        expect(source).toMatch(/<BankDepositFallback/);
+      }
     },
   );
+
+  it('직접 입금은 결제수단 목록의 줄이 아니다 — 위젯 경로·옛 선택 컴포넌트가 되살아나지 않는다', () => {
+    expect(fs.existsSync(path.join(ROOT, 'components/payments/PaymentMethodChoice.tsx'))).toBe(false);
+    expect(fs.existsSync(path.join(ROOT, 'components/booking/useTossPaymentWidgets.ts'))).toBe(false);
+    expect(fs.existsSync(path.join(ROOT, 'components/booking/TossPaymentWidget.tsx'))).toBe(false);
+    expect(read('lib/payments/paymentChoices.ts')).not.toMatch(/id: 'bank_transfer'/);
+    expect(read('components/payments/PaymentMethodPicker.tsx')).not.toMatch(/bankOption|bank_transfer/);
+  });
+
+  it('결제 실패 화면(예약·믹싱·펀딩·예약금 링크)에 계좌번호 폴백 안내가 있다', () => {
+    for (const file of ['pages/[locale]/booking/fail.tsx', 'pages/[locale]/funding/fail.tsx', 'pages/[locale]/pay/fail.tsx']) {
+      expect(read(file)).toMatch(/<FailBankFallback/);
+    }
+  });
 
   it('면제 사유는 비어 있지 않다', () => {
     for (const spec of Object.values(CHECKOUT_FORM_BY_ORDER_TYPE)) {

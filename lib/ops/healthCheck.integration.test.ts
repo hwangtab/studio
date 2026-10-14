@@ -46,6 +46,9 @@ import { FIELD_CRYPTO_KEY_ENV } from '../crypto/fieldCrypto';
  */
 const TEST_FIELD_KEY = Buffer.alloc(32).toString('base64');
 process.env[FIELD_CRYPTO_KEY_ENV] = TEST_FIELD_KEY;
+// 결제수단 목록이 유일한 결제 경로라 토스 API 키 쌍이 없으면 점검이 high를 낸다(checkTossApiKeyPair) — 정상 상태로 둔다.
+process.env.NEXT_PUBLIC_TOSS_API_CLIENT_KEY = 'live_ck_test';
+process.env.TOSS_API_SECRET_KEY = 'live_sk_test';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 const NOW = new Date('2026-09-10T00:00:00Z');

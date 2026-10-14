@@ -29,7 +29,7 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
 
 ### 결제는 전부 토스다 — 계좌 입금(무통장) 없음
 
-카드·간편결제·**토스 계좌이체**(`PaymentMethodPicker bankOption="toss_transfer"`). 직접 입금은 환불 때 고객 계좌를 받아
+카드·간편결제·**토스 계좌이체**(`PaymentMethodPicker`의 기본 목록 — 2026-10-14부터 전 화면 공통. 계좌번호 폴백(`BankDepositFallback`)은 상점에 없다). 직접 입금은 환불 때 고객 계좌를 받아
 손으로 송금해야 해서 받지 않는다(운영자 결정 2026-10-12, 공연 예매도 같은 날 같은 결정). 그래서 `awaiting_deposit`·
 환불 계좌(`refund_accounts`)·입금 안내 메일이 상점에는 없다. `tests/payments/sharedCheckout.guard.test.ts`가 폼에 직접 입금이
 붙는 것을 막는다.
@@ -188,7 +188,7 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
 ### 화면
 
 - `/ko/shop`(목록·분류 필터 음반/굿즈), `/ko/shop/<slug>`(사진·소개·주문 폼). ko 전용(다른 로케일은 `/ko/shop`으로).
-- 주문 폼(`components/shop/ShopOrderForm.tsx`)은 공연 예매 폼의 장치(위젯 지연 로드·같은 입력이면 주문 재사용)와 펀딩 후원 폼의
+- 주문 폼(`components/shop/ShopOrderForm.tsx`)은 공연 예매 폼의 장치(결제 스크립트 지연 로드·같은 입력이면 주문 재사용)와 펀딩 후원 폼의
   장치(카카오 주소 검색 — 공용 `components/common/ShippingAddressFields.tsx`, 이름·주소 초안 저장)를 합쳤다. 다른 상품도 같은 주문에
   담을 수 있다(배송비 한 번). 동의는 결제하기를 누르는 행위로 받는다.
 - success·fail·manage는 비공개 경로다(`lib/analytics/privatePaths.ts`·`next.config.mjs` no-store·robots). 이탈 링크는 `<a href>` 문서 이동.

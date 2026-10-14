@@ -1,14 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { TOSS_TERMS_REQUIRED_MESSAGE } from '../booking/useTossPaymentWidgets';
 import type { CheckoutPaymentMethod } from '../../lib/payments/bankDeposit';
+import { wantsBankFallback } from '../../lib/payments/bankFallback';
 import { reportPaymentFailure } from '../../utils/reportPaymentFailure';
 import { Button } from '../ui/Button';
 import { Field, TextInput } from '../ui/Field';
 import { Notice } from '../ui/Notice';
 import BankDepositGuide from './BankDepositGuide';
-import PaymentMethodChoice from './PaymentMethodChoice';
-import PaymentMethodPicker, { PaymentMethodSkeleton } from './PaymentMethodPicker';
+import BankDepositFallback from './BankDepositFallback';
+import PaymentMethodPicker from './PaymentMethodPicker';
 import { usePaymentCheckout } from './usePaymentCheckout';
 
 type CreateOrderResponse =
@@ -17,8 +17,7 @@ type CreateOrderResponse =
 
 /**
  * 예약금 결제 링크의 결제 폼 — 믹싱 주문 위저드의 결제 단계(components/booking/MixingOrderWizard.tsx 2단계)와 같은
- * 구성이다: 주문자 정보 → 결제수단(위젯 또는 `?pay=v2` 목록, 계좌 입금) → 한 번의 제출. 계좌를 고르면
- * 위젯을 **숨기기만** 한다(언마운트하면 약관 동의가 풀린다).
+ * 구성이다: 주문자 정보 → 결제수단(토스 목록, 막힌 분은 계좌번호 직접 입금 폴백) → 한 번의 제출.
  */
 export default function PaymentLinkCheckout({ slug, totalAmount }: { slug: string; totalAmount: number }) {
   const [customerName, setCustomerName] = useState('');
@@ -29,24 +28,21 @@ export default function PaymentLinkCheckout({ slug, totalAmount }: { slug: strin
   const [bankGuide, setBankGuide] = useState<{ deadline: string; customerName: string } | null>(null);
 
   const {
-    methodsId, agreementId, ready: paymentReady, error: paymentError, retry: retryPayment, requestPayment,
-    agreedRequiredTerms, picker, choice: pickerChoice, setChoice: setPickerChoice, applePaySupported,
+    ready: paymentReady, error: paymentError, requestPayment,
+    choice: pickerChoice, setChoice: setPickerChoice, applePaySupported,
   } = usePaymentCheckout(totalAmount);
 
-  /** 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금. 시작 시각이 없어 막는 조건이 없다. */
+  /** 결제수단 — 기본은 토스, 결제가 어려운 분만 계좌번호 직접 입금(폴백, 2026-10-14). 시작 시각이 없어 막는 조건이 없다. */
   const [payMethod, setPayMethod] = useState<CheckoutPaymentMethod>('toss');
   const usingBank = payMethod === 'bank_transfer';
+  // 결제 실패 화면에서 "계좌번호로 직접 보내기"로 돌아온 경우 — 계좌 안내 모드로 연다(lib/payments/bankFallback.ts).
+  useEffect(() => {
+    if (wantsBankFallback(window.location.search)) setPayMethod('bank_transfer');
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
-    // 위젯이 그리는 결제 약관도 제출 전에 본다(믹싱 주문과 같은 이유 — 주문만 만들어지고 결제가 실패하는 것을 막는다).
-    if (!usingBank && agreedRequiredTerms !== true) {
-      setSubmitError(TOSS_TERMS_REQUIRED_MESSAGE);
-      document.getElementById(agreementId)?.scrollIntoView?.({ block: 'center', behavior: 'smooth' });
-      return;
-    }
-
     setSubmitting(true);
     setSubmitError(null);
     let createdOrderNo: string | null = null;
@@ -96,13 +92,7 @@ export default function PaymentLinkCheckout({ slug, totalAmount }: { slug: strin
       const code = (err as { code?: string } | null)?.code;
       // 결제창을 닫은 것은 오류가 아니다 — 아무 문구도 띄우지 않는다.
       if (code === 'USER_CANCEL' || code === 'PAY_PROCESS_CANCELED') return;
-      if (agreedRequiredTerms !== true) {
-        setSubmitError(TOSS_TERMS_REQUIRED_MESSAGE);
-      } else if (code === 'NEED_CARD_PAYMENT_DETAIL') {
-        setSubmitError('카드 결제는 카드사를 먼저 골라 주세요. 결제 방법 아래에서 카드사를 선택한 뒤 다시 눌러 주세요.');
-      } else {
-        setSubmitError('네트워크 오류로 주문 신청에 실패했어요. 잠시 후 다시 시도해 주세요.');
-      }
+      setSubmitError('네트워크 오류로 주문 신청에 실패했어요. 잠시 후 다시 시도해 주세요. 결제가 계속 어려우시면 아래 "계좌번호로 직접 보내기"를 이용하실 수 있어요.');
     } finally {
       setSubmitting(false);
     }
@@ -149,45 +139,27 @@ export default function PaymentLinkCheckout({ slug, totalAmount }: { slug: strin
           />
         </Field>
 
-        {/* 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금. 토스 수단과 결제 약관 동의는 위젯이 그린다.
-            계좌를 고르면 위젯을 숨기기만 한다. 기능 플래그(`?pay=v2`)가 켜지면 위젯 대신 우리가 그린 목록이다. */}
+        {/* 결제수단 — 기본은 토스 목록이고, 결제가 어려운 분만 목록 아래 링크로 계좌번호 직접 입금을 연다(2026-10-14). */}
         <div className="pt-2">
           <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200">결제수단</h3>
-          {picker === null ? (
-            <PaymentMethodSkeleton />
-          ) : picker ? (
+          {!usingBank && (
             <>
               <PaymentMethodPicker
                 name="pay-paymethod"
-                value={usingBank ? 'bank_transfer' : pickerChoice}
-                onChange={(next) => {
-                  if (next === 'bank_transfer') { setPayMethod('bank_transfer'); return; }
-                  setPayMethod('toss');
-                  setPickerChoice(next);
-                }}
+                value={pickerChoice}
+                onChange={setPickerChoice}
                 applePaySupported={applePaySupported}
-                bankBlockedMessage={null}
                 confirmLabel="예약금 결제가 확정"
               />
               {paymentError && <Notice tone="error" className="mt-3">{paymentError}</Notice>}
             </>
-          ) : (
-            <>
-              <PaymentMethodChoice name="pay-paymethod" value={payMethod} onChange={setPayMethod} confirmLabel="예약금 결제가 확정" />
-              <div hidden={usingBank} className="mt-3">
-                {paymentError ? (
-                  <Notice tone="error" actions={<Button type="button" size="sm" variant="weak" onClick={retryPayment}>다시 시도</Button>}>
-                    {paymentError}
-                  </Notice>
-                ) : (
-                  <>
-                    <div id={methodsId} />
-                    <div id={agreementId} />
-                  </>
-                )}
-              </div>
-            </>
           )}
+          <BankDepositFallback
+            active={usingBank}
+            onEnter={() => setPayMethod('bank_transfer')}
+            onLeave={() => setPayMethod('toss')}
+            confirmLabel="예약금 결제가 확정"
+          />
         </div>
 
         <p className="text-sm text-gray-600 dark:text-gray-300">
@@ -198,7 +170,7 @@ export default function PaymentLinkCheckout({ slug, totalAmount }: { slug: strin
 
         {submitError && <Notice tone="error">{submitError}</Notice>}
 
-        {/* 위젯이 아직 안 떴으면 누를 수 없다 — 누르면 주문만 만들어지고 결제창은 안 열린다. 계좌 입금은 위젯이 필요 없다. */}
+        {/* 결제 설정이 없으면 누를 수 없다 — 누르면 주문만 만들어지고 결제창은 안 열린다. 계좌 입금은 설정이 필요 없다. */}
         <Button type="submit" disabled={submitting || (!usingBank && !paymentReady)} fullWidth>
           {submitting ? '처리 중…' : usingBank ? '계좌 안내 받기' : '결제하기'}
         </Button>

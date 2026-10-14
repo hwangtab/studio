@@ -23,12 +23,10 @@ describe('PaymentMethodPicker', () => {
     expect(screen.getByAltText('애플페이')).toBeInTheDocument();
   });
 
-  it('계좌 줄 오른쪽 보조 문구, 막히면 비활성 + 이유', () => {
-    const { rerender } = render(<PaymentMethodPicker name="t" value="card" onChange={() => {}} applePaySupported={false} confirmLabel="티켓이 발권" />);
-    expect(screen.getByText('카카오뱅크')).toBeInTheDocument();
-    expect(screen.getByText('· 입금 확인 후 티켓이 발권')).toBeInTheDocument();
-    rerender(<PaymentMethodPicker name="t" value="card" onChange={() => {}} applePaySupported={false} bankBlockedMessage="2시간 안이라 안 됩니다." />);
-    expect(screen.getByRole('radio', { name: '계좌로 직접 입금' })).toBeDisabled();
-    expect(screen.getByText(/계좌 입금: 2시간 안이라 안 됩니다\./)).toBeInTheDocument();
+  it('직접 입금 줄은 없다 — 계좌번호 안내는 폴백 링크로만 연다', () => {
+    render(<PaymentMethodPicker name="t" value="card" onChange={() => {}} applePaySupported={false} />);
+    expect(screen.queryByRole('radio', { name: '계좌로 직접 입금' })).toBeNull();
+    expect(screen.getByRole('radio', { name: '계좌이체' })).toBeInTheDocument();
+    expect(screen.queryByText('카카오뱅크')).toBeNull();
   });
 });

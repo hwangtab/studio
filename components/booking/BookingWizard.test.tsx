@@ -13,28 +13,21 @@ import type { SessionProduct } from '../../lib/booking/products';
  */
 
 /**
- * 결제위젯은 예약자 정보 폼 안에 떠 있고, 제출은 그 위젯의 `requestPayment`를 부른다.
+ * 결제수단 목록은 예약자 정보 폼 안에 있고, 제출은 공용 체크아웃 훅의 `requestPayment`를 부른다.
+ * (토스 결제위젯 경로는 2026-10-14에 걷어냈다.)
  */
 const requestPayment = jest.fn().mockResolvedValue(undefined);
-const retryPayment = jest.fn();
 let widgetReady = true;
 let widgetError: string | null = null;
-// 위젯 약관 동의 상태. 위젯이 iframe 안에서 체크를 받으므로 실제로는 SDK의
-// `agreementStatusChange`가 알려 준다. null은 "아직 모름"(= 한 번도 건드리지 않음).
-//
-// 기본값을 `true`로 두는 이유: 대부분의 테스트는 결제까지 가는 정상 경로를 본다.
-// 가드를 확인하는 테스트만 `false`·`null`로 내려 쓴다.
-let widgetAgreed: boolean | null = true;
-jest.mock('./useTossPaymentWidgets', () => ({
-  useTossPaymentWidgets: () => ({
-    methodsId: 'toss-methods-test', agreementId: 'toss-agreement-test',
-    ready: widgetReady, error: widgetError, retry: retryPayment, requestPayment,
-    agreedRequiredTerms: widgetAgreed,
+jest.mock('../payments/usePaymentCheckout', () => ({
+  usePaymentCheckout: () => ({
+    choice: 'card', setChoice: jest.fn(), applePaySupported: false,
+    ready: widgetReady, error: widgetError, requestPayment,
   }),
-  // 모듈을 통째로 대체하므로 상수도 함께 내보내야 한다 — 빠뜨리면 호출부가 undefined를
-  // setError에 넣어 경고가 조용히 사라진다(2026-09-16에 실제로 그랬다).
-  TOSS_TERMS_REQUIRED_MESSAGE: '결제수단 아래 [필수] 결제 서비스 이용 약관에도 동의해 주세요.',
 }));
+
+// 계좌번호 폴백은 이용 시작 2시간 전부터 막힌다 — 테스트 날짜가 지나간 날이면 폴백 링크가 사라진다.
+const BOOKING_DATE = new Date(Date.now() + 10 * 24 * 60 * 60 * 1000 + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
 const PRODUCT: SessionProduct = {
   id: 'recording-pro',
@@ -75,7 +68,7 @@ afterEach(() => {
 /** 3단계(예약자 정보)까지 진행한다 — 날짜·시간대는 매번 새로 고른다(임시 저장 대상이 아니므로). */
 async function goToStep3(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole('button', { name: '다음: 날짜·시간 선택' }));
-  fireEvent.change(screen.getByLabelText('날짜'), { target: { value: '2026-10-01' } });
+  fireEvent.change(screen.getByLabelText('날짜'), { target: { value: BOOKING_DATE } });
   const slotButton = await screen.findByRole('button', { name: '10:00' });
   await user.click(slotButton);
   await user.click(screen.getByRole('button', { name: '다음: 예약자 정보' }));
@@ -211,7 +204,7 @@ describe('BookingWizard 임시 저장', () => {
  * 보여 줬다. 그 말은 없애지 않고 **시작 전으로 옮겼다** — 결제창을 열고 나면 고객은 토스
  * 화면에 있어서 우리 타이머를 볼 수 없다.
  */
-describe('폼 안의 결제위젯', () => {
+describe('폼 안의 결제수단 목록', () => {
   afterEach(() => { widgetReady = true; widgetError = null; requestPayment.mockClear(); });
 
   const fill = async (user: ReturnType<typeof userEvent.setup>) => {
@@ -221,14 +214,27 @@ describe('폼 안의 결제위젯', () => {
     await user.type(screen.getByLabelText(/이메일/), 'a@b.com');
   };
 
-  it('단계가 셋으로 줄었고, 수단·약관 자리가 폼 안에 있다', async () => {
+  it('단계가 셋으로 줄었고, 결제수단 목록과 계좌번호 폴백 링크가 폼 안에 있다', async () => {
     const user = userEvent.setup();
     render(<BookingWizard service="recording" products={[PRODUCT]} />);
     // 단계 표시는 Stepper — 화면의 번호 원과 함께 sr-only 요약("3단계 중 1단계: 상품·시간")을 준다.
     expect(screen.getByText('3단계 중 1단계: 상품·시간')).toBeInTheDocument();
     await goToStep3(user);
-    expect(document.getElementById('toss-methods-test')).not.toBeNull();
-    expect(document.getElementById('toss-agreement-test')).not.toBeNull();
+    expect(screen.getByRole('group', { name: '결제수단' })).toBeInTheDocument();
+    expect(screen.queryByRole('radio', { name: '계좌로 직접 입금' })).toBeNull();
+    expect(screen.getByRole('button', { name: '계좌번호로 직접 보내기' })).toBeInTheDocument();
+  });
+
+  it('폴백 링크를 누르면 목록이 숨고 버튼이 "계좌 안내 받기"가 된다 — 돌아가기로 되돌린다', async () => {
+    const user = userEvent.setup();
+    render(<BookingWizard service="recording" products={[PRODUCT]} />);
+    await goToStep3(user);
+    await user.click(screen.getByRole('button', { name: '계좌번호로 직접 보내기' }));
+    expect(screen.queryByRole('group', { name: '결제수단' })).toBeNull();
+    expect(screen.getByRole('button', { name: '계좌 안내 받기' })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /돌아가기/ }));
+    expect(screen.getByRole('group', { name: '결제수단' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '결제하기' })).toBeInTheDocument();
   });
 
   /**
@@ -268,7 +274,7 @@ describe('폼 안의 결제위젯', () => {
     expect(body.refundPolicyAgreed).toBe(true);
   });
 
-  it('위젯이 준비되기 전에는 제출할 수 없다', async () => {
+  it('결제 설정이 준비되기 전에는 제출할 수 없다', async () => {
     widgetReady = false;
     const user = userEvent.setup();
     render(<BookingWizard service="recording" products={[PRODUCT]} />);
@@ -374,64 +380,6 @@ describe('BookingWizard 동의 안내', () => {
   });
 });
 
-/**
- * 위젯이 그리는 결제 약관을 빼먹은 경우.
- *
- * 예전엔 그냥 보내고 `requestPayment`가 실패하게 두고 `code === 'NEED_AGREEMENT'`로 사유를
- * 가리려 했는데 **그 코드는 SDK에 없다**. 그래서 약관만 빼먹은 사람이 "결제를 시작하지
- * 못했습니다. 잠시 후 다시 시도해 주세요"를 봤다 — 다시 시도해도 같고 무엇을 고쳐야
- * 하는지도 알 수 없다. 게다가 그 시점엔 주문이 이미 만들어져 있었다.
- */
-describe('BookingWizard 위젯 약관 가드', () => {
-  beforeEach(() => {
-    Element.prototype.scrollIntoView = jest.fn();
-    requestPayment.mockClear();
-  });
-  afterEach(() => { widgetAgreed = true; });
-
-  const fillAndSubmit = async (user: ReturnType<typeof userEvent.setup>) => {
-    await goToStep3(user);
-    await user.type(screen.getByLabelText(/^이름/), '홍길동');
-    await user.type(screen.getByLabelText(/^휴대폰 번호/), '01012345678');
-    await user.type(screen.getByLabelText(/^이메일/), 'hong@example.com');
-    await user.click(screen.getByRole('button', { name: /결제하기/ }));
-  };
-
-  /** 위젯을 한 번도 건드리지 않은 경로(null)가 약관을 빼먹는 가장 흔한 경우다. */
-  it('동의 상태를 모르면 주문을 만들지 않는다', async () => {
-    widgetAgreed = null;
-    const user = userEvent.setup();
-    render(<BookingWizard service="recording" products={[PRODUCT]} />);
-    await fillAndSubmit(user);
-
-    expect(await screen.findByRole('alert')).toHaveTextContent('결제 서비스 이용 약관');
-    expect(requestPayment).not.toHaveBeenCalled();
-  });
-
-  it('위젯 약관을 빼먹으면 예약을 만들지 않고 어느 약관인지 알려 준다', async () => {
-    widgetAgreed = false;
-    const user = userEvent.setup();
-    render(<BookingWizard service="recording" products={[PRODUCT]} />);
-    await fillAndSubmit(user);
-
-    expect(await screen.findByRole('alert')).toHaveTextContent('결제 서비스 이용 약관');
-    expect(requestPayment).not.toHaveBeenCalled();
-  });
-
-  /** 결제창을 닫은 것은 오류가 아니다 — 약관 문구를 띄우면 오진이다. */
-  it('결제창을 닫으면 약관 문구를 띄우지 않는다', async () => {
-    // 결제까지 가야 취소를 재현할 수 있으니 동의된 상태로 둔다.
-    widgetAgreed = true;
-    requestPayment.mockRejectedValueOnce(Object.assign(new Error('취소'), { code: 'USER_CANCEL' }));
-    const user = userEvent.setup();
-    render(<BookingWizard service="recording" products={[PRODUCT]} />);
-    await fillAndSubmit(user);
-    await waitFor(() => expect(requestPayment).toHaveBeenCalled());
-
-    expect(screen.queryByText(/결제 서비스 이용 약관/)).toBeNull();
-  });
-});
-
 describe('슬롯 조회 장애 안내', () => {
   it('503이면 안내와 대안 링크를 띄우고, 다시 불러오기를 누르면 재조회한다', async () => {
     let calls = 0;
@@ -447,7 +395,7 @@ describe('슬롯 조회 장애 안내', () => {
     const user = userEvent.setup();
     render(<BookingWizard service="recording" products={[PRODUCT]} />);
     await user.click(screen.getByRole('button', { name: '다음: 날짜·시간 선택' }));
-    fireEvent.change(screen.getByLabelText('날짜'), { target: { value: '2026-10-01' } });
+    fireEvent.change(screen.getByLabelText('날짜'), { target: { value: BOOKING_DATE } });
 
     const alert = await screen.findByRole('alert');
     expect(alert).toHaveTextContent('일시적으로 예약 현황을 불러올 수 없어요.');

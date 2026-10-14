@@ -126,22 +126,26 @@ const checkCalendar = async (now: Date): Promise<HealthIssue[]> => {
 const FIELD_KEY_PROBE = 'health-check';
 
 /**
- * 토스 API 개별 연동 키 쌍이 반쪽만 있는가 — 클라이언트 키(`NEXT_PUBLIC_TOSS_API_CLIENT_KEY`)는
- * 있는데 시크릿(`TOSS_API_SECRET_KEY`)이 없으면 결제수단 목록 화면(`?pay=v2`)이 결제창은 열지만
- * 승인은 전부 실패한다 — 고객은 결제창 인증까지 마치고 실패 화면을 본다(루트 CLAUDE.md "토스 키는 두 쌍이다").
- * 값은 싣지 않는다 — 설정 여부만 본다.
+ * 토스 API 개별 연동 키 쌍이 빠졌는가 — 결제수단 목록 화면이 이제 **유일한 결제 경로**다(위젯 경로는
+ * 2026-10-14에 걷어냈다). 클라이언트 키(`NEXT_PUBLIC_TOSS_API_CLIENT_KEY`)가 없으면 결제창이 아예 안 열리고,
+ * 시크릿(`TOSS_API_SECRET_KEY`)이 없으면 결제창은 열리지만 승인이 전부 실패한다 — 고객은 결제창 인증까지
+ * 마치고 실패 화면을 본다(루트 CLAUDE.md "토스 키는 두 쌍이다"). 값은 싣지 않는다 — 설정 여부만 본다.
  */
 export const checkTossApiKeyPair = (): HealthIssue | null => {
   const hasClient = Boolean(process.env.NEXT_PUBLIC_TOSS_API_CLIENT_KEY?.trim());
   const hasSecret = Boolean(process.env.TOSS_API_SECRET_KEY?.trim());
-  if (!hasClient || hasSecret) return null;
+  if (hasClient && hasSecret) return null;
+  const missing = [
+    ...(hasClient ? [] : ['NEXT_PUBLIC_TOSS_API_CLIENT_KEY']),
+    ...(hasSecret ? [] : ['TOSS_API_SECRET_KEY']),
+  ];
   return {
     severity: 'high',
-    title: '토스 API 시크릿 키(TOSS_API_SECRET_KEY) 없음 — 새 결제 화면의 승인이 전부 실패합니다',
+    title: `토스 API 키(${missing.join(', ')}) 없음 — 결제가 되지 않습니다`,
     detail: [
-      '상태: NEXT_PUBLIC_TOSS_API_CLIENT_KEY 설정됨 · TOSS_API_SECRET_KEY 없음',
-      '결제수단 목록 화면(?pay=v2 또는 NEXT_PUBLIC_PAYMENT_PICKER=on)으로 연 결제는 같은 쌍의 시크릿으로만 승인됩니다.',
-      'Vercel 환경 변수에 TOSS_API_SECRET_KEY(live_sk_)를 넣거나, 넣기 전까지 새 화면을 끄세요(?pay=widget, NEXT_PUBLIC_PAYMENT_PICKER 해제).',
+      `상태: NEXT_PUBLIC_TOSS_API_CLIENT_KEY ${hasClient ? '설정됨' : '없음'} · TOSS_API_SECRET_KEY ${hasSecret ? '설정됨' : '없음'}`,
+      '모든 결제 화면(펀딩·예약·믹싱·공연·상점)은 결제수단 목록 → API 개별 연동 키 쌍(live_ck_/live_sk_)으로만 결제창을 열고 승인합니다.',
+      'Vercel 환경 변수에 빠진 키를 넣고 다시 배포해 주세요(NEXT_PUBLIC_ 값은 빌드 시점에 박힙니다).',
     ].join('\n'),
   };
 };

@@ -91,6 +91,14 @@ npm run indexnow:changed -- --dry-run
 
 ### 계좌 입금(무통장)은 펀딩·예약·믹싱 공통이다 — 자동 취소 없음, 자원은 잡는다
 
+**2026-10-14부터 계좌번호 직접 입금은 기본 결제수단이 아니라 폴백이다**(운영자 결정). 모든 결제 화면의 기본은 토스
+(카드·간편결제·계좌이체)이고, 결제가 어려운 분(주로 고령층)만 계좌번호를 안내받는다. 입구는 둘뿐이다 — 폼 결제수단
+목록 아래의 "결제가 어려우신가요? 계좌번호로 직접 보내기" 링크(`components/payments/BankDepositFallback.tsx`), 그리고
+결제 실패 화면(`booking/fail`·`funding/fail`·`pay/fail`)의 같은 말 버튼(`FailBankFallback`, 폼 주소에 `?bank=1`을 붙여 돌려보내면
+폼이 계좌 안내 모드로 열린다 — `lib/payments/bankFallback.ts`). **결제수단 목록(`PaymentMethodPicker`)에 "계좌로 직접 입금" 줄을
+다시 넣지 말 것** — 가드 테스트가 막는다. 공연·상점에는 폴백도 없다(전부 토스). 아래 상태·판정 규칙은 폴백으로 들어온 건에
+그대로 적용된다.
+
 **공연 예매는 2026-10-12부터 직접 입금 신규 신청을 받지 않는다**(토스 계좌이체로 바꿈 — 아래 "토스 키는 두 쌍이다"의
 결제수단 목록 절). 이미 들어온 공연 계좌 입금 주문의 처리 경로(입금 확인·환불 계좌·송금 완료)는 그대로 남아 있다.
 
@@ -354,8 +362,8 @@ drizzle의 libsql 마이그레이터는 적용된 것 중 `created_at`이 가장
 
 | 갈래 | 클라이언트 키 | 시크릿 키 | 쓰는 화면 |
 |---|---|---|---|
-| `toss.widgets()` + `renderPaymentMethods` | `NEXT_PUBLIC_TOSS_CLIENT_KEY`(`live_gck_`) | `TOSS_SECRET_KEY`(`live_gsk_`) | 결제위젯 — **기본값** |
-| `toss.payment()` + `requestPayment` | `NEXT_PUBLIC_TOSS_API_CLIENT_KEY`(`live_ck_`) | `TOSS_API_SECRET_KEY`(`live_sk_`) | 우리가 그린 결제수단 목록 — 기능 플래그 |
+| `toss.widgets()` + `renderPaymentMethods` | `NEXT_PUBLIC_TOSS_CLIENT_KEY`(`live_gck_`) | `TOSS_SECRET_KEY`(`live_gsk_`) | 결제위젯 — **2026-10-14에 화면에서 걷어냈다.** 그 전에 위젯으로 낸 결제의 조회·취소·웹훅이 아직 쓴다 |
+| `toss.payment()` + `requestPayment` | `NEXT_PUBLIC_TOSS_API_CLIENT_KEY`(`live_ck_`) | `TOSS_API_SECRET_KEY`(`live_sk_`) | 우리가 그린 결제수단 목록 — **유일한 결제 경로**. 둘 중 하나라도 없으면 헬스체크(`checkTossApiKeyPair`)가 high |
 
 SDK가 `payment()` 경로에서 `isAPIIndividualKey()`를 단언한다 — 위젯 키로 부르면
 `NotSupportedWidgetKeyError`를 던진다. 결제창 개설 API(`px-payment-parameters`)는 위젯 키로도
@@ -374,29 +382,20 @@ SDK가 `payment()` 경로에서 `isAPIIndividualKey()`를 단언한다 — 위�
 (2026-10-04 실측: 두 시크릿 모두 위젯 결제를 조회했다).
 
 **결제수단 목록 화면**(`components/payments/PaymentMethodPicker.tsx`, 정의 `lib/payments/paymentChoices.ts`,
-네 폼 공용 훅 `components/payments/usePaymentCheckout.ts`). 순서는 신용·체크카드 / 계좌로 직접 입금 /
-카카오페이 / 네이버페이 / 토스페이 / 페이코 / 애플페이(`window.ApplePaySession`이 결제 가능할 때만).
-간편결제는 `method: 'CARD', card: { flowMode: 'DIRECT', easyPay: '카카오페이' }`처럼 **한국어** 값으로 그
-결제창에 직행한다 — 영문 enum은 토스가 거부한다(SAF2026 실측). **계좌 줄은 화면마다 하나다**(`bankOption`):
-펀딩·예약·믹싱은 "계좌로 직접 입금"(무통장), **공연 예매는 토스 계좌이체(`method: 'TRANSFER'`)**다(운영자 결정
-2026-10-12 — 직접 입금은 환불이 생기면 환불 계좌를 받아 손으로 송금해야 해 번거롭다. 계좌이체 환불은 토스 취소가
-원래 계좌로 돌려준다). 2026-10-04에는 "PC에서 은행 보안 프로그램 설치 화면이 떠 결제를 막는다"는 이유로 토스
-계좌이체를 빼기로 했었다 — 그 문제는 그대로이고 알고 뒤집은 결정이라, 안내 줄과 FAQ가 PC 보안 프로그램을 미리
-알린다. 은행·ATM 입금은 공연에서 없어진다. `tests/payments/sharedCheckout.guard.test.ts`가 공연 폼에 직접 입금이
-되살아나는 것을 막는다. 이 화면에는 위젯 약관 UI가 없어(결제창이 자체 약관을 받는다) 훅이
-`agreedRequiredTerms: true`를 돌려주고, 폼의 위젯 약관 게이트를 타지 않는다.
+공용 훅 `components/payments/usePaymentCheckout.ts`) — 이제 **모든 결제 화면의 유일한 경로**다(위젯·`?pay=` 스위치·
+`studio_pay` 쿠키·`NEXT_PUBLIC_PAYMENT_PICKER`는 2026-10-14에 걷어냈다. Vercel에 남은 `NEXT_PUBLIC_PAYMENT_PICKER`는 무해하니 치워도 된다).
+순서는 신용·체크카드 / 계좌이체(토스 `method: 'TRANSFER'`) / 카카오페이 / 네이버페이 / 토스페이 / 페이코 / 애플페이(`window.ApplePaySession`이
+결제 가능할 때만). 간편결제는 `method: 'CARD', card: { flowMode: 'DIRECT', easyPay: '카카오페이' }`처럼 **한국어** 값으로 그
+결제창에 직행한다 — 영문 enum은 토스가 거부한다(SAF2026 실측). 계좌이체 환불은 토스 취소가 원래 계좌로 돌려준다(환불 계좌를 받아
+손으로 송금할 일이 없다). 2026-10-04에는 "PC에서 은행 보안 프로그램 설치 화면이 떠 결제를 막는다"는 이유로 토스 계좌이체를
+빼기로 했었다 — 그 문제는 그대로이고 알고 뒤집은 결정이라(2026-10-12 공연, 2026-10-14 전체), 안내 줄과 FAQ가 PC 보안 프로그램을
+미리 알리고 막힌 분의 안전망이 위 계좌번호 폴백이다. 이 화면에는 약관 UI가 없다(결제창이 자체 약관을 받는다).
 
-**켜는 법**(`lib/payments/paymentPickerFlag.ts`의 `resolvePaymentPicker`가 유일한 판정). 기본값은 위젯이다.
-주소에 `?pay=v2`를 붙이면 켜지고 쿠키 `studio_pay`(30일)에 기억돼 이후 페이지에서도 유지된다. `?pay=widget`은
-끈다. env `NEXT_PUBLIC_PAYMENT_PICKER=on`이면 전체 기본값이 새 화면이다(빌드 시점 인라인 — 바꾸면 빌드가
-한 번 돈다). 위젯 경로는 그대로 남아 있다 — 걷어내는 것은 새 화면을 운영에서 확인한 뒤의 일이다.
+### 새 결제 흐름은 공용 체크아웃으로 만든다 — 토스 SDK를 직접 쓰지 않는다
 
-### 새 결제 흐름은 공용 체크아웃으로 만든다 — 카드 전용 위젯을 직접 쓰지 않는다
-
-결제 화면(펀딩·예약·믹싱)은 전부 `usePaymentCheckout`(위젯 마운트·결제 요청) +
-`PaymentMethodChoice`(**카드·간편결제 / 계좌로 직접 입금** 두 줄) + `BankDepositGuide`(계좌 안내)로
-같은 모양이다(공연 티켓은 2026-10-12부터 결제수단이 전부 토스라 두 줄 선택이 없다 — 계좌는 토스 계좌이체). 새 결제 링크·상품을 붙일 때 이걸 빼먹으면 고객은 다른 곳에 있던 계좌 입금을 찾을 수
-없다. 2026-10-06 예약금 결제 링크(`/ko/pay/<slug>`)가 "코드를 가장 적게 쓰는 설계"로, 쓰는 곳 없던 카드
+결제 화면(펀딩·예약·믹싱·예약금 링크)은 전부 `usePaymentCheckout`(결제창 열기) + `PaymentMethodPicker`(토스 수단 목록) +
+`BankDepositFallback`(막힌 분의 계좌번호 폴백) + `BankDepositGuide`(계좌 안내)로 같은 모양이다(공연 티켓·상점은 폴백 없이 전부 토스).
+새 결제 링크·상품을 붙일 때 폴백을 빼먹으면 결제가 막힌 고객이 갈 곳이 없다. 2026-10-06 예약금 결제 링크(`/ko/pay/<slug>`)가 "코드를 가장 적게 쓰는 설계"로, 쓰는 곳 없던 카드
 전용 `TossPaymentWidget`을 골라 계좌 입금 없이 PR까지 나갔다 — 운영자가 보고서가 아니라 화면에서 발견했다.
 
 - **설계 전에 가장 가까운 기존 흐름(믹싱 주문·공연 예매)의 고객 화면을 연다.** 결제수단 줄·안내 문구·
@@ -404,9 +403,8 @@ SDK가 `payment()` 경로에서 `isAPIIndividualKey()`를 단언한다 — 위�
 - 계좌 입금은 `awaiting_deposit` → 운영자 입금 확인 → `paid` 흐름이라 **관리자 입금 확인 경로와 안내 메일까지**
   걸린다(`lib/payments/bankDeposit.ts` 머리 주석). 결제 화면만 만들고 끝나지 않는다.
 - 새 주문 종류를 `orderTypeEnum`에 더하면 `tests/payments/sharedCheckout.guard.test.ts`가 결제 화면(또는 면제 사유)을
-  짝지으라고 CI에서 선다. 토스 SDK·`useTossPaymentWidgets`·`TossPaymentWidget`을 공용 체크아웃 밖에서 직접
-  import해도 선다. 허용 목록을 늘리지 말고 공용 컴포넌트를 쓴다.
-- 새 결제 종류는 CHANGELOG 대신 이 체크리스트로 점검한다: 결제수단 두 줄 · 계좌 안내 · 운영자 입금 확인 ·
+  짝지으라고 CI에서 선다. 토스 SDK를 공용 체크아웃 밖에서 직접 import해도 선다. 허용 목록을 늘리지 말고 공용 컴포넌트를 쓴다.
+- 새 결제 종류는 CHANGELOG 대신 이 체크리스트로 점검한다: 결제수단 목록 · 계좌번호 폴백(+ 실패 화면 안내) · 계좌 안내 · 운영자 입금 확인 ·
   입금 안내 메일 · 매출장부 라벨 · 비공개 경로(`lib/analytics/privatePaths.ts`) 등록 · 배포 뒤 실제 결제 1건.
 
 ### 메일은 공용 레이아웃으로 — 글자만 보내지 않는다

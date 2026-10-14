@@ -3,8 +3,10 @@ import { render, screen } from '@testing-library/react';
 import type { PublicShow } from '../../lib/shows/queries';
 import ShowDetailView, { showCtaLabel } from './ShowDetailView';
 
-jest.mock('../booking/useTossPaymentWidgets', () => ({
-  useTossPaymentWidgets: () => ({ methodsId: 'm', agreementId: 'a', ready: true, error: null, retry: jest.fn(), requestPayment: jest.fn(), agreedRequiredTerms: null }),
+jest.mock('../payments/usePaymentCheckout', () => ({
+  usePaymentCheckout: () => ({
+    choice: 'card', setChoice: jest.fn(), applePaySupported: false, ready: true, error: null, requestPayment: jest.fn(),
+  }),
 }));
 jest.mock('../../utils/reportPaymentFailure', () => ({ reportPaymentWindowOpen: jest.fn() }));
 jest.mock('../../lib/navigationState', () => ({ hasNavigatedSinceLoad: () => false }));
