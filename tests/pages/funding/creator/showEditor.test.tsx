@@ -118,3 +118,89 @@ it('출연진 순서를 바꾸고, 회차·티켓 종류를 더하고 지울 수
   fireEvent.click(screen.getByRole('button', { name: /티켓 종류 추가/ }));
   expect(screen.getAllByLabelText('가격(원)')).toHaveLength(2);
 });
+
+/** 업로드 응답을 손으로 풀어 주는 fetch — 업로드가 도는 사이에 다른 칸을 고친다. */
+const deferredUploadFetch = () => {
+  const pending: Array<(url: string) => void> = [];
+  const fetchMock = jest.fn((url: string) => {
+    if (url.includes('/upload?')) {
+      return new Promise<Response>((resolve) => {
+        pending.push((u) => resolve({ ok: true, status: 200, json: () => Promise.resolve({ ok: true, url: u }) } as Response));
+      });
+    }
+    return ok({ ok: true });
+  });
+  global.fetch = fetchMock as unknown as typeof fetch;
+  return { fetchMock, pending };
+};
+
+const pickFile = (input: HTMLElement) =>
+  fireEvent.change(input, { target: { files: [new File(['x'], 'a.png', { type: 'image/png' })] } });
+
+const putBody = (fetchMock: jest.Mock) => {
+  const call = fetchMock.mock.calls.find((c) => (c[1] as RequestInit | undefined)?.method === 'PUT');
+  return JSON.parse((call![1] as RequestInit).body as string);
+};
+
+it('포스터 업로드가 도는 사이에 고친 소개가 업로드 완료로 지워지지 않는다', async () => {
+  const { pending } = deferredUploadFetch();
+  render(<ShowSubmissionEditor submission={sub()} />);
+  pickFile(screen.getByLabelText('포스터'));
+  fireEvent.change(screen.getByLabelText(/공연 소개/), { target: { value: '고친 소개' } });
+  await waitFor(() => expect(pending).toHaveLength(1));
+  pending[0]('/api/funding/media/c-poster.webp');
+  await waitFor(() => expect(document.querySelector('img[src="/api/funding/media/c-poster.webp"]')).not.toBeNull());
+  expect(screen.getByLabelText(/공연 소개/)).toHaveValue('고친 소개');
+});
+
+it('출연진 B의 사진은 업로드 중에 B를 위로 옮겨도 B에 붙는다', async () => {
+  const { pending } = deferredUploadFetch();
+  const ab = { ...DRAFT, performers: [{ name: 'A', bio: '', photoUrl: null }, { name: 'B', bio: '', photoUrl: null }] };
+  render(<ShowSubmissionEditor submission={sub({ draft: ab })} />);
+  pickFile(screen.getAllByLabelText('사진')[1]);
+  await waitFor(() => expect(pending).toHaveLength(1));
+  fireEvent.click(screen.getAllByRole('button', { name: '위로' })[1]);
+  expect(screen.getAllByRole('heading', { level: 3 }).map((h) => h.textContent)).toEqual(['B', 'A']);
+  pending[0]('/api/funding/media/c-b.webp');
+  const groupB = screen.getByRole('group', { name: 'B' });
+  await waitFor(() => expect(groupB.querySelector('img[src="/api/funding/media/c-b.webp"]')).not.toBeNull());
+  expect(screen.getByRole('group', { name: 'A' }).querySelector('img')).toBeNull();
+});
+
+it('저장 본문: 빈 회차 줄은 빠지고, 숫자 칸은 숫자 또는 null로 간다', async () => {
+  const { fetchMock } = deferredUploadFetch();
+  render(<ShowSubmissionEditor submission={sub()} />);
+  fireEvent.click(screen.getByRole('button', { name: /회차 추가/ }));
+  fireEvent.change(screen.getByLabelText(/정원/), { target: { value: '' } });
+  fireEvent.change(screen.getByLabelText('가격(원)'), { target: { value: '15000' } });
+  fireEvent.click(screen.getByRole('button', { name: '임시 저장' }));
+  await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+  const body = putBody(fetchMock);
+  expect(body.showtimes).toEqual(['2026-11-20T19:30']);
+  expect(body.capacity).toBeNull();
+  expect(body.runningMinutes).toBe(90);
+  expect(body.ticketTypes).toEqual([{ name: '일반', price: 15000 }]);
+  expect(body.performers).toEqual([{ name: '출연자', bio: '', photoUrl: null }]);
+  expect(await screen.findByText('저장했어요.')).toBeInTheDocument();
+});
+
+it('환불표를 그 자리에 보이고, 전문은 주최자 약관으로 잇는다', () => {
+  render(<ShowSubmissionEditor submission={sub()} />);
+  expect(screen.getByText('환불 규정은 모든 공연이 같아요')).toBeInTheDocument();
+  expect(screen.getByText(/— 100%$/)).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: '주최자 약관 제7조' })).toHaveAttribute('href', '/ko/shows/organizer-terms');
+  expect(screen.queryByRole('link', { name: '환불 규정 보기' })).not.toBeInTheDocument();
+});
+
+it('일정 안내 한 줄과 관람 안내는 승인 뒤에도 고칠 수 있다', async () => {
+  const { fetchMock } = deferredUploadFetch();
+  render(<ShowSubmissionEditor submission={sub({ reviewStatus: 'approved', showSlug: 'autumn' })} />);
+  fireEvent.change(screen.getByLabelText('일정 안내 한 줄'), { target: { value: '18:30 입장' } });
+  fireEvent.click(screen.getByRole('button', { name: /안내 추가/ }));
+  fireEvent.change(screen.getByLabelText('안내 1'), { target: { value: '주차 공간이 없어요' } });
+  fireEvent.click(screen.getByRole('button', { name: '임시 저장' }));
+  await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+  const body = putBody(fetchMock);
+  expect(body.scheduleNote).toBe('18:30 입장');
+  expect(body.notices).toEqual(['주차 공간이 없어요']);
+});

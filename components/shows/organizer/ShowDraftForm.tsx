@@ -7,12 +7,42 @@ import { Panel } from '../../ui/Panel';
 import SectionHeading from '../../ui/SectionHeading';
 import { ArrowDown, ArrowUp, Plus, X } from '../../../lib/lucide-icons';
 import { MIN_LEAD_DAYS, MIN_TICKET_PRICE, SHOW_DRAFT_LIMITS as L, type ShowSubmissionDraft } from '../../../lib/shows/organizer/draft';
+import { refundTierLines } from '../../../lib/shows/refundPolicy';
 import { showUploadUrl } from './api';
+
+type Performer = ShowSubmissionDraft['performers'][number];
+
+/**
+ * 화면이 들고 있는 초안 — 출연진 줄마다 화면 전용 `key`가 붙는다. 사진 업로드는 비동기라 그 사이
+ * 순서를 바꾸거나 지울 수 있는데, 자리 번호로 찾으면 결과가 엉뚱한 출연진에 붙는다. 서버로 보낼 때는
+ * `toDraftPayload`가 key를 떼어 낸다.
+ */
+export type EditorShowDraft = Omit<ShowSubmissionDraft, 'performers'> & { performers: Array<Performer & { key: string }> };
+export type DraftUpdater = (fn: (prev: EditorShowDraft) => EditorShowDraft) => void;
+
+let keySeq = 0;
+const newKey = (): string => `performer-${(keySeq += 1)}`;
+
+export const toEditorDraft = (d: ShowSubmissionDraft): EditorShowDraft => ({
+  ...d,
+  performers: d.performers.map((p) => ({ ...p, key: newKey() })),
+});
+
+/** PUT body — 화면 전용 key를 떼고, 아직 고르지 않은 빈 회차 줄은 뺀다(빈 값은 서버가 형식 오류로 거부한다). */
+export const toDraftPayload = (d: EditorShowDraft): ShowSubmissionDraft => ({
+  ...d,
+  showtimes: d.showtimes.filter((s) => s !== ''),
+  performers: d.performers.map(({ name, bio, photoUrl }) => ({ name, bio, photoUrl })),
+});
 
 interface Props {
   submissionId: string;
-  value: ShowSubmissionDraft;
-  onChange: (next: ShowSubmissionDraft) => void;
+  value: EditorShowDraft;
+  /**
+   * 갱신은 언제나 함수형이다 — 업로드 완료처럼 await 뒤에 오는 갱신이 렌더 시점의 값을 펼쳐 쓰면
+   * 그 사이에 고친 다른 칸이 사라진다.
+   */
+  onChange: DraftUpdater;
   /** 심사 중·반려 — 모든 칸이 잠긴다. */
   readOnly: boolean;
   /**
@@ -33,19 +63,29 @@ const LOCKED_HINT = '판매 조건은 운영자에게 요청해 주세요.';
  * 이미지 업로드도 저장이 아니다 — 받은 주소를 초안에 넣을 뿐이다(펀딩 ImageUploadField와 같다).
  */
 export function ShowDraftForm({ submissionId, value: d, onChange, readOnly, locked }: Props) {
-  const set = <K extends keyof ShowSubmissionDraft>(key: K, v: ShowSubmissionDraft[K]) => onChange({ ...d, [key]: v });
+  const set = <K extends keyof EditorShowDraft>(key: K, v: EditorShowDraft[K]) => onChange((prev) => ({ ...prev, [key]: v }));
   const saleLocked = readOnly || locked;
 
-  const setShowtime = (i: number, v: string) => set('showtimes', d.showtimes.map((s, j) => (j === i ? v : s)));
+  const setShowtime = (i: number, v: string) => onChange((prev) => ({ ...prev, showtimes: prev.showtimes.map((s, j) => (j === i ? v : s)) }));
+  const removeShowtime = (i: number) => onChange((prev) => ({ ...prev, showtimes: prev.showtimes.filter((_, j) => j !== i) }));
   const setTicket = (i: number, patch: Partial<ShowSubmissionDraft['ticketTypes'][number]>) =>
-    set('ticketTypes', d.ticketTypes.map((t, j) => (j === i ? { ...t, ...patch } : t)));
-  const setPerformer = (i: number, patch: Partial<ShowSubmissionDraft['performers'][number]>) =>
-    set('performers', d.performers.map((p, j) => (j === i ? { ...p, ...patch } : p)));
-  const movePerformer = (i: number, delta: -1 | 1) => {
-    const next = [...d.performers];
-    [next[i], next[i + delta]] = [next[i + delta], next[i]];
-    set('performers', next);
-  };
+    onChange((prev) => ({ ...prev, ticketTypes: prev.ticketTypes.map((t, j) => (j === i ? { ...t, ...patch } : t)) }));
+  const removeTicket = (i: number) => onChange((prev) => ({ ...prev, ticketTypes: prev.ticketTypes.filter((_, j) => j !== i) }));
+  const setNotice = (i: number, v: string) => onChange((prev) => ({ ...prev, notices: prev.notices.map((n, j) => (j === i ? v : n)) }));
+  const removeNotice = (i: number) => onChange((prev) => ({ ...prev, notices: prev.notices.filter((_, j) => j !== i) }));
+  // 출연진은 key로 찾는다 — 업로드가 끝났을 때 그 출연진이 옮겨졌거나 지워졌어도 맞는 자리에 붙거나 버려진다.
+  const setPerformer = (key: string, patch: Partial<Performer>) =>
+    onChange((prev) => ({ ...prev, performers: prev.performers.map((p) => (p.key === key ? { ...p, ...patch } : p)) }));
+  const removePerformer = (key: string) => onChange((prev) => ({ ...prev, performers: prev.performers.filter((p) => p.key !== key) }));
+  const movePerformer = (key: string, delta: -1 | 1) =>
+    onChange((prev) => {
+      const i = prev.performers.findIndex((p) => p.key === key);
+      const j = i + delta;
+      if (i < 0 || j < 0 || j >= prev.performers.length) return prev;
+      const next = [...prev.performers];
+      [next[i], next[j]] = [next[j], next[i]];
+      return { ...prev, performers: next };
+    });
 
   return (
     <div className="flex flex-col gap-14">
@@ -108,6 +148,32 @@ export function ShowDraftForm({ submissionId, value: d, onChange, readOnly, lock
           <Field id="show-venue-address" label="주소" required hint="공연 페이지의 지도에 쓰여요.">
             <TextInput value={d.venueAddress} onChange={(e) => set('venueAddress', e.target.value)} maxLength={L.venueAddress} disabled={saleLocked} />
           </Field>
+          <fieldset className="flex flex-col gap-3">
+            <legend className="typo-card-title mb-1 text-gray-900 dark:text-white">관람 안내</legend>
+            <p className="typo-caption text-gray-600 dark:text-gray-400">
+              주차·입장·준비물처럼 관객이 미리 알아야 할 것을 한 줄씩 적어요. {L.notices}줄까지예요.
+            </p>
+            {d.notices.map((n, i) => (
+              <div key={i} className="flex items-end gap-2">
+                <Field id={`show-notice-${i}`} label={`안내 ${i + 1}`} className="min-w-0 flex-1">
+                  <TextInput value={n} onChange={(e) => setNotice(i, e.target.value)} maxLength={L.notice} disabled={readOnly} />
+                </Field>
+                {!readOnly && (
+                  <Button type="button" variant="ghost" size="icon" shape="pill" aria-label={`안내 ${i + 1} 지우기`} onClick={() => removeNotice(i)}>
+                    <X className="h-5 w-5" aria-hidden="true" />
+                  </Button>
+                )}
+              </div>
+            ))}
+            {!readOnly && d.notices.length < L.notices && (
+              <div>
+                <Button type="button" variant="weak" size="sm" onClick={() => onChange((prev) => ({ ...prev, notices: [...prev.notices, ''] }))}>
+                  <Plus className="h-4 w-4" aria-hidden="true" />
+                  안내 추가
+                </Button>
+              </div>
+            )}
+          </fieldset>
         </div>
       </section>
 
@@ -133,7 +199,7 @@ export function ShowDraftForm({ submissionId, value: d, onChange, readOnly, lock
                     size="icon"
                     shape="pill"
                     aria-label={`${i + 1}회차 지우기`}
-                    onClick={() => set('showtimes', d.showtimes.filter((_, j) => j !== i))}
+                    onClick={() => removeShowtime(i)}
                   >
                     <X className="h-5 w-5" aria-hidden="true" />
                   </Button>
@@ -142,12 +208,15 @@ export function ShowDraftForm({ submissionId, value: d, onChange, readOnly, lock
             ))}
             {!saleLocked && d.showtimes.length < L.showtimes && (
               <div>
-                <Button type="button" variant="weak" size="sm" onClick={() => set('showtimes', [...d.showtimes, ''])}>
+                <Button type="button" variant="weak" size="sm" onClick={() => onChange((prev) => ({ ...prev, showtimes: [...prev.showtimes, ''] }))}>
                   <Plus className="h-4 w-4" aria-hidden="true" />
                   회차 추가
                 </Button>
               </div>
             )}
+            <Field id="show-schedule-note" label="일정 안내 한 줄" hint="예) 18:30 입장 · 19:00 공연 시작">
+              <TextInput value={d.scheduleNote} onChange={(e) => set('scheduleNote', e.target.value)} maxLength={L.scheduleNote} disabled={readOnly} />
+            </Field>
           </fieldset>
 
           <Field id="show-capacity" label="정원(석)" required hint="모든 회차에 같은 정원이 적용돼요.">
@@ -194,7 +263,7 @@ export function ShowDraftForm({ submissionId, value: d, onChange, readOnly, lock
                     size="icon"
                     shape="pill"
                     aria-label={`${t.name || `${i + 1}번째`} 티켓 지우기`}
-                    onClick={() => set('ticketTypes', d.ticketTypes.filter((_, j) => j !== i))}
+                    onClick={() => removeTicket(i)}
                   >
                     <X className="h-5 w-5" aria-hidden="true" />
                   </Button>
@@ -203,18 +272,24 @@ export function ShowDraftForm({ submissionId, value: d, onChange, readOnly, lock
             ))}
             {!saleLocked && d.ticketTypes.length < L.ticketTypes && (
               <div>
-                <Button type="button" variant="weak" size="sm" onClick={() => set('ticketTypes', [...d.ticketTypes, { name: '', price: null }])}>
+                <Button type="button" variant="weak" size="sm" onClick={() => onChange((prev) => ({ ...prev, ticketTypes: [...prev.ticketTypes, { name: '', price: null }] }))}>
                   <Plus className="h-4 w-4" aria-hidden="true" />
                   티켓 종류 추가
                 </Button>
               </div>
             )}
-            <p className="typo-caption text-gray-600 dark:text-gray-400">
-              환불 규정은 모든 공연이 같아요.{' '}
-              <Link href="/ko/shows" target="_blank" rel="noopener noreferrer" className="text-primary underline underline-offset-2 dark:text-primary-lighter">
-                환불 규정 보기
-              </Link>
-            </p>
+            <Panel title="환불 규정은 모든 공연이 같아요" className="text-sm">
+              <ul className="list-disc space-y-1 pl-5">
+                {refundTierLines().map((line) => <li key={line}>{line}</li>)}
+              </ul>
+              <p className="mt-2 typo-caption text-gray-600 dark:text-gray-400">
+                전문은{' '}
+                <Link href="/ko/shows/organizer-terms" target="_blank" rel="noopener noreferrer" className="text-primary underline underline-offset-2 dark:text-primary-lighter">
+                  주최자 약관 제7조
+                </Link>
+                에 있어요.
+              </p>
+            </Panel>
           </fieldset>
         </div>
       </section>
@@ -226,14 +301,14 @@ export function ShowDraftForm({ submissionId, value: d, onChange, readOnly, lock
             팀이면 팀 이름 하나로 적어도 돼요. 공연 페이지에 이 순서대로 보여요.
           </p>
           {d.performers.map((p, i) => (
-            <Panel key={i} variant="outline" role="group" aria-labelledby={`show-performer-head-${i}`} className="flex flex-col gap-4">
+            <Panel key={p.key} variant="outline" role="group" aria-labelledby={`show-performer-head-${p.key}`} className="flex flex-col gap-4">
               <div className="flex items-center justify-between gap-2">
-                <h3 id={`show-performer-head-${i}`} className="typo-card-meta min-w-0 truncate font-medium text-gray-900 dark:text-white">
+                <h3 id={`show-performer-head-${p.key}`} className="typo-card-meta min-w-0 truncate font-medium text-gray-900 dark:text-white">
                   {p.name || `출연진 ${i + 1}`}
                 </h3>
                 {!readOnly && (
                   <div className="flex gap-1">
-                    <Button type="button" variant="ghost" size="icon" shape="pill" aria-label="위로" disabled={i === 0} onClick={() => movePerformer(i, -1)}>
+                    <Button type="button" variant="ghost" size="icon" shape="pill" aria-label="위로" disabled={i === 0} onClick={() => movePerformer(p.key, -1)}>
                       <ArrowUp className="h-5 w-5" aria-hidden="true" />
                     </Button>
                     <Button
@@ -243,7 +318,7 @@ export function ShowDraftForm({ submissionId, value: d, onChange, readOnly, lock
                       shape="pill"
                       aria-label="아래로"
                       disabled={i === d.performers.length - 1}
-                      onClick={() => movePerformer(i, 1)}
+                      onClick={() => movePerformer(p.key, 1)}
                     >
                       <ArrowDown className="h-5 w-5" aria-hidden="true" />
                     </Button>
@@ -253,23 +328,23 @@ export function ShowDraftForm({ submissionId, value: d, onChange, readOnly, lock
                       size="icon"
                       shape="pill"
                       aria-label={`${p.name || `출연진 ${i + 1}`} 지우기`}
-                      onClick={() => set('performers', d.performers.filter((_, j) => j !== i))}
+                      onClick={() => removePerformer(p.key)}
                     >
                       <X className="h-5 w-5" aria-hidden="true" />
                     </Button>
                   </div>
                 )}
               </div>
-              <Field id={`show-performer-name-${i}`} label="이름" required>
-                <TextInput value={p.name} onChange={(e) => setPerformer(i, { name: e.target.value })} maxLength={L.performerName} disabled={readOnly} />
+              <Field id={`show-performer-name-${p.key}`} label="이름" required>
+                <TextInput value={p.name} onChange={(e) => setPerformer(p.key, { name: e.target.value })} maxLength={L.performerName} disabled={readOnly} />
               </Field>
-              <Field id={`show-performer-bio-${i}`} label="소개">
-                <TextArea value={p.bio} onChange={(e) => setPerformer(i, { bio: e.target.value })} maxLength={L.performerBio} rows={3} disabled={readOnly} />
+              <Field id={`show-performer-bio-${p.key}`} label="소개">
+                <TextArea value={p.bio} onChange={(e) => setPerformer(p.key, { bio: e.target.value })} maxLength={L.performerBio} rows={3} disabled={readOnly} />
               </Field>
               <ImageUploadField
                 uploadUrl={showUploadUrl(submissionId, 'photo')}
                 value={p.photoUrl ?? ''}
-                onChange={(url) => setPerformer(i, { photoUrl: url })}
+                onChange={(url) => setPerformer(p.key, { photoUrl: url })}
                 disabled={readOnly}
                 label="사진"
               />
@@ -277,7 +352,7 @@ export function ShowDraftForm({ submissionId, value: d, onChange, readOnly, lock
           ))}
           {!readOnly && d.performers.length < L.performers && (
             <div>
-              <Button type="button" variant="weak" size="sm" onClick={() => set('performers', [...d.performers, { name: '', bio: '', photoUrl: null }])}>
+              <Button type="button" variant="weak" size="sm" onClick={() => onChange((prev) => ({ ...prev, performers: [...prev.performers, { key: newKey(), name: '', bio: '', photoUrl: null }] }))}>
                 <Plus className="h-4 w-4" aria-hidden="true" />
                 출연진 추가
               </Button>

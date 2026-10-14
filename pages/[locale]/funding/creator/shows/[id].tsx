@@ -4,7 +4,9 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import { REVIEW_STATUS_LABEL } from '../../../../../components/funding/creator/types';
-import { ShowDraftForm } from '../../../../../components/shows/organizer/ShowDraftForm';
+import {
+  ShowDraftForm, toDraftPayload, toEditorDraft, type EditorShowDraft,
+} from '../../../../../components/shows/organizer/ShowDraftForm';
 import { saveShowDraft, submitShowSubmission, withdrawShowSubmission } from '../../../../../components/shows/organizer/api';
 import { Badge, type BadgeTone } from '../../../../../components/ui/Badge';
 import { Button } from '../../../../../components/ui/Button';
@@ -50,8 +52,9 @@ const IDLE: Status = { kind: 'idle' };
 export default function ShowSubmissionEditor({ submission }: Props) {
   const router = useRouter();
   const [reviewStatus, setReviewStatus] = useState(submission.reviewStatus);
-  const [draft, setDraft] = useState<ShowSubmissionDraft>(submission.draft);
-  const [savedJson, setSavedJson] = useState(() => JSON.stringify(submission.draft));
+  const [draft, setDraft] = useState<EditorShowDraft>(() => toEditorDraft(submission.draft));
+  // 저장된 값과의 비교는 서버로 보내는 모양(toDraftPayload)으로 한다 — 화면 전용 key·빈 회차 줄은 변경이 아니다.
+  const [savedJson, setSavedJson] = useState(() => JSON.stringify(toDraftPayload(toEditorDraft(submission.draft))));
   const [save, setSave] = useState<Status>(IDLE);
   const [submit, setSubmit] = useState<Status>(IDLE);
   const [withdraw, setWithdraw] = useState<Status>(IDLE);
@@ -59,7 +62,7 @@ export default function ShowSubmissionEditor({ submission }: Props) {
 
   const editable = reviewStatus === 'draft' || reviewStatus === 'changes_requested' || reviewStatus === 'approved';
   const canSubmit = reviewStatus === 'draft' || reviewStatus === 'changes_requested';
-  const dirty = editable && JSON.stringify(draft) !== savedJson;
+  const dirty = editable && JSON.stringify(toDraftPayload(draft)) !== savedJson;
   const busy = save.kind === 'busy' || submit.kind === 'busy' || withdraw.kind === 'busy';
   const notice = STATUS_NOTICE[reviewStatus];
 
@@ -100,8 +103,8 @@ export default function ShowSubmissionEditor({ submission }: Props) {
     };
   }, [dirty, router]);
 
-  const onChange = (next: ShowSubmissionDraft) => {
-    setDraft(next);
+  const onChange = (fn: (prev: EditorShowDraft) => EditorShowDraft) => {
+    setDraft(fn);
     // 저장·제출 결과 표시는 그때의 입력에 대한 것이다 — 입력이 바뀌면 낡은 안내가 된다.
     setSave((s) => (s.kind === 'idle' ? s : IDLE));
     setSubmit((s) => (s.kind === 'idle' ? s : IDLE));
@@ -109,7 +112,7 @@ export default function ShowSubmissionEditor({ submission }: Props) {
 
   /** 지금 입력을 저장한다. 성공하면 true. */
   const persist = async (): Promise<{ ok: true; warnings?: string[] } | { ok: false; message: string; problems?: string[] }> => {
-    const sent = draft;
+    const sent = toDraftPayload(draft);
     const result = await saveShowDraft(submission.id, sent);
     if (result.ok) setSavedJson(JSON.stringify(sent));
     return result;
