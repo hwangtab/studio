@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { BasicSectionForm, type BasicSectionValue } from '../../../../components/funding/creator/BasicSectionForm';
 import { CreatorSectionForm } from '../../../../components/funding/creator/CreatorSectionForm';
-import { PayoutSectionForm } from '../../../../components/funding/creator/PayoutSectionForm';
+import { PayoutSummaryCard } from '../../../../components/funding/creator/PayoutSummaryCard';
 import { ProjectStatsPanel } from '../../../../components/funding/creator/ProjectStatsPanel';
 import { RewardSectionForm } from '../../../../components/funding/creator/RewardSectionForm';
 import { StorySectionForm } from '../../../../components/funding/creator/StorySectionForm';
@@ -123,6 +123,9 @@ const REVIEW_STATUS_TONE: Record<string, BadgeTone> = {
 
 const TABS = ['basic', 'story', 'rewards', 'creator', 'payout'] as const;
 type Tab = (typeof TABS)[number];
+/** 입력 폼이 있는 탭 — 이탈 가드가 보는 것. 정산 탭은 요약과 링크뿐이라 저장 안 한 입력이 생기지 않는다. */
+const FORM_TABS = ['basic', 'story', 'rewards', 'creator'] as const;
+type FormTab = (typeof FORM_TABS)[number];
 const TAB_LABEL: Record<Tab, string> = {
   basic: '기본정보', story: '스토리', rewards: '리워드', creator: '개설자 정보', payout: '정산 정보',
 };
@@ -131,11 +134,10 @@ const TAB_LABEL: Record<Tab, string> = {
 const UNSAVED_CHANGES_MESSAGE = '저장하지 않은 변경이 있어요. 지금 나가면 그 내용이 사라져요. 계속할까요?';
 
 export default function CreatorProjectEditor({
-  project: initial, earliestStartDate, nameLocked: initialNameLocked, payout: initialPayout, stats,
+  project: initial, earliestStartDate, nameLocked: initialNameLocked, payout, stats,
 }: Props) {
   const router = useRouter();
   const [project, setProject] = useState<EditorProject>(initial);
-  const [payout, setPayout] = useState<EditorPayoutSummary>(initialPayout);
   const [tab, setTab] = useState<Tab>('basic');
   const [submit, setSubmit] = useState<SaveState>(IDLE_SAVE_STATE);
   const [withdraw, setWithdraw] = useState<SaveState>(IDLE_SAVE_STATE);
@@ -152,19 +154,19 @@ export default function CreatorProjectEditor({
   // 각 폼의 `useEffect(() => onDirtyChange?.(dirty), [dirty, onDirtyChange])`가 dirty
   // 값이 안 바뀌어도 매번 다시 실행된다 — 동작은 맞지만(진 setState는 no-op) 불필요한
   // 호출이 계속 쌓인다.
-  const [dirtyTabs, setDirtyTabs] = useState<Record<Tab, boolean>>({
-    basic: false, story: false, rewards: false, creator: false, payout: false,
+  const [dirtyTabs, setDirtyTabs] = useState<Record<FormTab, boolean>>({
+    basic: false, story: false, rewards: false, creator: false,
   });
   const onDirtyChangeBySection = useMemo(() => {
-    const handlers = {} as Record<Tab, (dirty: boolean) => void>;
-    for (const t of TABS) {
+    const handlers = {} as Record<FormTab, (dirty: boolean) => void>;
+    for (const t of FORM_TABS) {
       handlers[t] = (dirty: boolean) => {
         setDirtyTabs((prev) => (prev[t] === dirty ? prev : { ...prev, [t]: dirty }));
       };
     }
     return handlers;
   }, []);
-  const hasUnsavedChanges = TABS.some((t) => dirtyTabs[t]);
+  const hasUnsavedChanges = FORM_TABS.some((t) => dirtyTabs[t]);
 
   // 브라우저 이탈(새로고침·닫기·주소창 이동) 경고.
   useEffect(() => {
@@ -377,11 +379,7 @@ export default function CreatorProjectEditor({
             />
           </div>
           <div id="panel-payout" role="tabpanel" aria-labelledby="tab-payout" hidden={tab !== 'payout'}>
-            <PayoutSectionForm
-              initial={payout}
-              onSaved={setPayout}
-              onDirtyChange={onDirtyChangeBySection.payout}
-            />
+            <PayoutSummaryCard summary={payout} />
           </div>
           <div id="panel-creator" role="tabpanel" aria-labelledby="tab-creator" hidden={tab !== 'creator'}>
             <CreatorSectionForm
