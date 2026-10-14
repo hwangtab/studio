@@ -4,6 +4,7 @@ import { useReportPaymentFailureOnMount } from '../../../utils/reportPaymentFail
 import { Button } from '../../../components/ui/Button';
 import { PageShell } from '../../../components/ui/PageHeader';
 import { ResultCard } from '../../../components/ui/ResultCard';
+import FailBankFallback from '../../../components/payments/FailBankFallback';
 
 /**
  * 토스 실패 코드 → 우리가 쓴 문구.
@@ -86,7 +87,9 @@ export default function FundingFailPage({ slug, code, message, orderNo }: Props)
             </>
           }
         >
-          <div className="text-center">
+          {/* 결제가 어려운 분(주로 고령층)의 안전망 — 계좌번호로 직접 보내기(2026-10-14). 프로젝트를 알 때만. */}
+          {slug && <FailBankFallback formPath={`/ko/funding/${slug}/pledge`} />}
+          <div className="mt-4 text-center">
             <p className="typo-card-meta mx-auto max-w-md">
               결제가 이뤄지지 않았으므로 청구되지 않아요. 15분 뒤 신청이 자동 해제되며 다시 펀딩할 수 있어요.
             </p>

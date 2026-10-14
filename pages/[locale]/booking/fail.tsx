@@ -7,6 +7,7 @@ import { SESSION_PRODUCTS } from '../../../lib/booking/products';
 import { Button } from '../../../components/ui/Button';
 import { PageShell } from '../../../components/ui/PageHeader';
 import { ResultCard } from '../../../components/ui/ResultCard';
+import FailBankFallback from '../../../components/payments/FailBankFallback';
 
 /**
  * 토스 실패 코드 → 우리가 쓴 문구.
@@ -97,7 +98,9 @@ export default function BookingFailPage({ code, message, orderNo, service }: Fai
             </>
           }
         >
-          <div className="space-y-1 text-center typo-card-meta">
+          {/* 결제가 어려운 분(주로 고령층)의 안전망 — 계좌번호로 직접 보내기(2026-10-14). */}
+          <FailBankFallback formPath={`/ko/booking/${service}`} />
+          <div className="mt-4 space-y-1 text-center typo-card-meta">
             {code && <p>오류 코드: {code}</p>}
             {orderNo && <p>주문번호: {orderNo}</p>}
             <p>예약은 확정되지 않았어요 — 결제 정보가 저장되지 않았으니 안심하고 다시 시도해 주세요.</p>

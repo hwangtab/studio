@@ -96,7 +96,7 @@ describe('처리방침 4항 — 문의·예약의 처리위탁 고지', () => {
   //   Vercel        vercel.json · data/siteConfig.ts hostingProvider
   //   Turso         db/client.ts — orders·bookings 영속
   //   Google LLC    lib/booking/gcal.ts + confirm.ts (이벤트 본문에 이름·전화·이메일·요청사항)
-  //   토스페이먼츠   components/booking/TossPaymentWidget.tsx · lib/booking/toss.ts
+  //   토스페이먼츠   components/payments/usePaymentCheckout.ts · lib/booking/toss.ts
   it('예약 플로우의 수탁자가 모두 들어 있다', () => {
     expect(SERVICE_DATA_PROCESSORS.map((p) => p.name).sort()).toEqual(
       ['Google LLC', 'Resend', 'Turso', 'Vercel', '토스페이먼츠'].sort(),

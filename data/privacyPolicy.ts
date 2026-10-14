@@ -61,7 +61,7 @@ type PolicyCopy = {
  *   Turso(libsql) db/client.ts — orders·bookings·work_orders 영속
  *   Google LLC    lib/booking/gcal.ts — 확정 시 캘린더 이벤트 생성.
  *                 lib/booking/confirm.ts가 이벤트 본문에 고객 이름·전화·이메일·요청사항을 담는다.
- *   토스페이먼츠   components/booking/TossPaymentWidget.tsx(customerName·customerEmail) · lib/booking/toss.ts
+ *   토스페이먼츠   components/payments/usePaymentCheckout.ts(customerName·customerEmail) · lib/booking/toss.ts
  *
  * 형식은 9항(FUNDING_DATA_PROCESSORS)과 같은 수탁자·업무·항목 3열을 쓴다. 위탁이 늘거나
  * 줄면 여기부터 고칠 것 — 4항 본문이 "아래와 같이"라고 단언하므로 표가 곧 사실 주장이다.

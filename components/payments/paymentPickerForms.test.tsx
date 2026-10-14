@@ -11,8 +11,8 @@ import type { SessionProduct } from '../../lib/booking/products';
 import type { PublicShow } from '../../lib/shows/queries';
 
 /**
- * 새 결제 화면(기능 플래그 `?pay=v2`)에서 네 폼이 우리가 그린 결제수단 목록을 보이고, 고른 수단의
- * 결제창을 **API 개별 연동 키**로 여는지 본다. 위젯 훅은 진짜 구현을 쓰되 켜지지 않아야 한다.
+ * 네 폼이 우리가 그린 결제수단 목록을 보이고, 고른 수단의 결제창을 **API 개별 연동 키**로 여는지 본다.
+ * 토스 결제위젯 경로는 2026-10-14에 걷어냈다. 계좌번호 직접 입금은 목록의 줄이 아니라 폴백 링크(`?bank=1` 포함)다.
  */
 const sdkRequestPayment = jest.fn().mockResolvedValue(undefined);
 const sdkPayment = jest.fn(() => ({ requestPayment: sdkRequestPayment }));
@@ -27,7 +27,7 @@ jest.mock('../../utils/analytics', () => ({ trackMicroEvent: jest.fn(), trackEve
 const savedKey = process.env.NEXT_PUBLIC_TOSS_API_CLIENT_KEY;
 beforeEach(() => {
   process.env.NEXT_PUBLIC_TOSS_API_CLIENT_KEY = 'live_ck_test';
-  window.history.replaceState({}, '', '/ko/test?pay=v2');
+  window.history.replaceState({}, '', '/ko/test');
   window.sessionStorage.clear();
   sdkRequestPayment.mockClear();
   sdkPayment.mockClear();
@@ -37,21 +37,19 @@ beforeEach(() => {
 afterEach(() => {
   if (savedKey === undefined) delete process.env.NEXT_PUBLIC_TOSS_API_CLIENT_KEY;
   else process.env.NEXT_PUBLIC_TOSS_API_CLIENT_KEY = savedKey;
-  document.cookie = 'studio_pay=; path=/; max-age=0';
   window.history.replaceState({}, '', '/');
   jest.restoreAllMocks();
 });
 
 const lastRequest = () => sdkRequestPayment.mock.calls.at(-1)![0];
 
-const DIRECT_DEPOSIT_LIST = ['신용·체크카드', '계좌로 직접 입금', '카카오페이', '네이버페이', '토스페이', '페이코'];
-// 공연은 직접 입금 대신 토스 계좌이체(2026-10-12, lib/payments/paymentChoices.ts `bankOption`).
-const TOSS_TRANSFER_LIST = ['신용·체크카드', '계좌이체', '카카오페이', '네이버페이', '토스페이', '페이코'];
+// 모든 화면의 목록이 같다 — 직접 입금 줄은 없다(2026-10-14). 계좌이체는 토스 TRANSFER 결제창이다.
+const TOSS_LIST = ['신용·체크카드', '계좌이체', '카카오페이', '네이버페이', '토스페이', '페이코'];
 
-const expectPicker = async (groupName = '결제수단', expected = DIRECT_DEPOSIT_LIST) => {
+const expectPicker = async (groupName = '결제수단', expected = TOSS_LIST) => {
   const group = await screen.findByRole('group', { name: groupName });
   const radios = within(group).getAllByRole('radio').map((r) => r.getAttribute('aria-label'));
-  // 화면마다 계좌 줄은 하나다. 애플페이는 ApplePaySession이 없는 jsdom에서 보이지 않는다.
+  // 애플페이는 ApplePaySession이 없는 jsdom에서 보이지 않는다.
   expect(radios).toEqual(expected);
   expect(within(group).getByAltText('카카오페이')).toBeInTheDocument();
   return group;
@@ -89,11 +87,10 @@ rewards:
     await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
   };
 
-  it('위젯을 붙이지 않고 목록을 그린다 — 쿠키에 기억한다', async () => {
+  it('위젯을 붙이지 않고 목록을 그린다', async () => {
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ mail: null }} />);
     await expectPicker();
     expect(sdkWidgets).not.toHaveBeenCalled();
-    expect(document.cookie).toContain('studio_pay=v2');
   });
 
   it('카카오페이를 고르면 그 결제창으로 직행하고, 승인 표식(tosskey=api)을 success 주소에 싣는다', async () => {
@@ -121,14 +118,16 @@ rewards:
     expect(lastRequest().card).toBeUndefined();
   });
 
-  it('계좌로 직접 입금은 토스를 부르지 않고 신청을 만든다 — 버튼은 "계좌 안내 받기"', async () => {
+  it('폴백 링크로 계좌번호 직접 입금을 열면 토스를 부르지 않고 신청을 만든다 — 버튼은 "계좌 안내 받기"', async () => {
     const assign = jest.fn();
     const realLocation = window.location;
-    Object.defineProperty(window, 'location', { value: { ...realLocation, assign, search: '?pay=v2', origin: 'http://localhost' }, configurable: true });
+    Object.defineProperty(window, 'location', { value: { ...realLocation, assign, search: '', origin: 'http://localhost' }, configurable: true });
     try {
       render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ mail: null }} />);
       await fill();
-      await userEvent.click(await screen.findByRole('radio', { name: '계좌로 직접 입금' }));
+      expect(screen.queryByRole('radio', { name: '계좌로 직접 입금' })).toBeNull();
+      await userEvent.click(await screen.findByRole('button', { name: '계좌번호로 직접 보내기' }));
+      expect(screen.queryByRole('group', { name: '결제수단' })).toBeNull();
       await userEvent.click(screen.getByRole('button', { name: /계좌 안내 받기/ }));
       await waitFor(() => expect(assign).toHaveBeenCalled());
       const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
@@ -137,6 +136,13 @@ rewards:
     } finally {
       Object.defineProperty(window, 'location', { value: realLocation, configurable: true });
     }
+  });
+
+  it('실패 화면에서 ?bank=1로 돌아오면 계좌 안내 모드로 열린다', async () => {
+    window.history.replaceState({}, '', '/ko/test?bank=1');
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ mail: null }} />);
+    expect(await screen.findByRole('button', { name: /계좌 안내 받기/ })).toBeInTheDocument();
+    expect(screen.queryByRole('group', { name: '결제수단' })).toBeNull();
   });
 
   it('결제창을 닫으면(USER_CANCEL) 아무 문구도 띄우지 않는다', async () => {
@@ -227,7 +233,7 @@ describe('ShowBookingForm — 결제수단 목록', () => {
     fireEvent.change(screen.getByLabelText(/이름/), { target: { value: '이관객' } });
     fireEvent.change(screen.getByLabelText(/휴대폰 번호/), { target: { value: '010-1111-2222' } });
     fireEvent.change(screen.getByLabelText(/이메일/), { target: { value: 'fan@example.com' } });
-    await expectPicker('결제수단', TOSS_TRANSFER_LIST);
+    await expectPicker();
     fireEvent.click(screen.getByRole('radio', { name: '페이코' }));
     await act(async () => {
       fireEvent.click(screen.getByRole('button', { name: /결제하기/ }));
@@ -250,7 +256,7 @@ describe('ShowBookingForm — 결제수단 목록', () => {
     fireEvent.change(screen.getByLabelText(/이름/), { target: { value: '이관객' } });
     fireEvent.change(screen.getByLabelText(/휴대폰 번호/), { target: { value: '010-1111-2222' } });
     fireEvent.change(screen.getByLabelText(/이메일/), { target: { value: 'fan@example.com' } });
-    await expectPicker('결제수단', TOSS_TRANSFER_LIST);
+    await expectPicker();
     fireEvent.click(screen.getByRole('radio', { name: '계좌이체' }));
     await act(async () => {
       fireEvent.click(screen.getByRole('button', { name: /결제하기/ }));
@@ -260,91 +266,5 @@ describe('ShowBookingForm — 결제수단 목록', () => {
     expect('card' in lastRequest()).toBe(false);
     const call = fetchMock.mock.calls.find((c) => c[0] === '/api/shows/orders') as unknown as [string, RequestInit];
     expect(JSON.parse(String(call[1].body)).paymentMethod).toBeUndefined();
-  });
-});
-
-describe('플래그가 꺼져 있으면 위젯 그대로', () => {
-  it('쿼리·쿠키·env가 없으면 목록을 그리지 않고 위젯(widgets)을 붙인다', async () => {
-    window.history.replaceState({}, '', '/ko/test');
-    const widgets = {
-      setAmount: jest.fn().mockResolvedValue(undefined),
-      renderPaymentMethods: jest.fn().mockResolvedValue(undefined),
-      renderAgreement: jest.fn().mockResolvedValue({ on: jest.fn() }),
-      requestPayment: jest.fn(),
-    };
-    sdkWidgets.mockReturnValue(widgets);
-    const project = parseFundingProject(`---
-slug: demo
-title: 데모
-summary: s
-cover: /c.webp
-goalAmount: 1000
-startAt: 2026-01-01T00:00:00+09:00
-endAt: 2036-01-01T00:00:00+09:00
-rewards:
-  - id: mail
-    title: 감사 메일
-    description: d
-    amount: 5000
-    requiresShipping: false
-    estimatedDelivery: 2026-11
----
-`, 'demo');
-    process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY = 'live_gck_test';
-    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ mail: null }} />);
-    await waitFor(() => expect(widgets.renderPaymentMethods).toHaveBeenCalled());
-    expect(loadTossPayments).toHaveBeenCalledWith('live_gck_test');
-    expect(screen.queryByRole('group', { name: '결제수단' })).toBeNull();
-    expect(screen.getByRole('radio', { name: /카드·간편결제\(토스\)/ })).toBeInTheDocument();
-    delete process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
-  });
-});
-
-describe('ShowBookingForm — 플래그가 꺼져 있으면 실제 훅 경로로 위젯이 붙는다', () => {
-  it('목록을 그리지 않고 위젯 키로 widgets()를 붙인다', async () => {
-    window.history.replaceState({}, '', '/ko/shows/s');
-    const widgets = {
-      setAmount: jest.fn().mockResolvedValue(undefined),
-      renderPaymentMethods: jest.fn().mockResolvedValue(undefined),
-      renderAgreement: jest.fn().mockResolvedValue({ on: jest.fn() }),
-      requestPayment: jest.fn(),
-    };
-    sdkWidgets.mockReturnValue(widgets);
-    process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY = 'live_gck_test';
-    const show: PublicShow = {
-      slug: 's', title: '공연', subtitle: null, presenterName: '주최', performers: [{ name: '출연' }], ageRating: '전체', runningMinutes: 100,
-      venueName: '장소', venueAddress: '주소', description: '소개', coverImage: null, ogImage: null, scheduleNote: null, onSitePriceNote: null,
-      notices: [], mapLinks: {}, cancelled: false,
-      ticketTypes: [{ id: 'tt1', name: '사전 예매', price: 25000, zoneLabel: '비지정석' }],
-      showtimes: [{ id: 'st1', startsAt: 2000000000, label: '10.24(토) 18:30', saleState: 'open', remaining: { tt1: 30 } }],
-    };
-    try {
-      render(<ShowBookingForm show={show} />);
-      // 폼에 포커스가 들어오면 위젯을 켠다(IntersectionObserver가 없는 jsdom에서는 바로 켠다).
-      fireEvent.focusIn(screen.getByLabelText(/이름/));
-      await waitFor(() => expect(widgets.renderPaymentMethods).toHaveBeenCalled());
-      expect(loadTossPayments).toHaveBeenCalledWith('live_gck_test');
-      expect(sdkWidgets).toHaveBeenCalledWith({ customerKey: '@@ANONYMOUS' });
-      expect(screen.queryByRole('group', { name: '결제수단' })).toBeNull();
-      // 공연은 직접 입금을 받지 않아 위젯 앞의 두 줄 선택(카드·간편결제 / 직접 입금)이 없다 — 위젯이 수단을 그린다.
-      expect(screen.queryByRole('radio', { name: /계좌로 직접 입금/ })).toBeNull();
-    } finally {
-      delete process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
-    }
-  });
-});
-
-describe('판정 시점', () => {
-  it('클라이언트에서 처음 그려지면 첫 렌더부터 판정돼 빈 자리를 거치지 않는다', () => {
-    window.history.replaceState({}, '', '/ko/shows/s');
-    const show: PublicShow = {
-      slug: 's', title: '공연', subtitle: null, presenterName: '주최', performers: [{ name: '출연' }], ageRating: '전체', runningMinutes: 100,
-      venueName: '장소', venueAddress: '주소', description: '소개', coverImage: null, ogImage: null, scheduleNote: null, onSitePriceNote: null,
-      notices: [], mapLinks: {}, cancelled: false,
-      ticketTypes: [{ id: 'tt1', name: '사전 예매', price: 25000, zoneLabel: '비지정석' }],
-      showtimes: [{ id: 'st1', startsAt: 2000000000, label: '10.24(토) 18:30', saleState: 'open', remaining: { tt1: 30 } }],
-    };
-    render(<ShowBookingForm show={show} />);
-    expect(screen.queryByTestId('payment-method-skeleton')).toBeNull();
   });
 });

@@ -11,6 +11,7 @@ import { useReportPaymentFailureOnMount } from '../../../utils/reportPaymentFail
 import { Button } from '../../../components/ui/Button';
 import { PageShell } from '../../../components/ui/PageHeader';
 import { ResultCard } from '../../../components/ui/ResultCard';
+import FailBankFallback from '../../../components/payments/FailBankFallback';
 
 /** 토스 실패 코드 → 우리 문구. 쿼리의 message는 읽지 않는다(booking/fail.tsx와 같은 이유). */
 const FAIL_MESSAGES: Record<string, string> = {
@@ -73,7 +74,9 @@ export default function PaymentLinkFailPage({ code, message, orderNo, retryHref 
             </>
           }
         >
-          <div className="space-y-1 text-center typo-card-meta">
+          {/* 결제가 어려운 분(주로 고령층)의 안전망 — 계좌번호로 직접 보내기(2026-10-14). 결제 링크를 알 때만. */}
+          {retryHref && <FailBankFallback formPath={retryHref} />}
+          <div className="mt-4 space-y-1 text-center typo-card-meta">
             {code && <p>오류 코드: {code}</p>}
             {orderNo && <p>주문번호: {orderNo}</p>}
             <p>결제 정보가 저장되지 않았으니 안심하고 다시 시도해 주세요.</p>

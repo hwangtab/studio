@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
-import PaymentMethodPicker, { PaymentMethodSkeleton } from '../payments/PaymentMethodPicker';
+import PaymentMethodPicker from '../payments/PaymentMethodPicker';
 import { usePaymentCheckout } from '../payments/usePaymentCheckout';
 import { Button } from '../ui/Button';
 import { Checkbox } from '../ui/Checkbox';
@@ -27,7 +27,7 @@ interface PendingOrder {
 /**
  * 소프트웨어 라이선스 구매 폼 — 구매자 정보 → 결제수단 → **환불 규정 동의(체크)** → 결제하기.
  *
- * 결제수단은 전부 토스(카드·간편결제·토스 계좌이체, `bankOption="toss_transfer"`)다. "계좌로 직접 입금"은 넣지 않는다 —
+ * 결제수단은 전부 토스(카드·간편결제·토스 계좌이체)다. "계좌로 직접 입금"은 넣지 않는다 —
  * 입금 확인까지 라이선스를 줄 수 없어 즉시 발급과 맞지 않는다. 다른 흐름과 달리 동의를 **체크박스로** 받는다: 디지털콘텐츠
  * 청약철회 제한은 결제 전에 알리고 동의를 받아야 성립하고(입증 책임은 사업자), 서버가 그 시각을 주문에 남긴다.
  */
@@ -74,10 +74,6 @@ export default function SoftwareOrderForm({ product, price }: { product: Softwar
     setError(null);
     if (!ack) {
       setError('환불 규정을 확인하고 동의해 주세요.');
-      return;
-    }
-    if (widget.agreedRequiredTerms === false) {
-      setError('결제수단 아래 [필수] 결제 서비스 이용 약관에도 동의해 주세요.');
       return;
     }
     setSubmitting(true);
@@ -148,34 +144,14 @@ export default function SoftwareOrderForm({ product, price }: { product: Softwar
 
       <div>
         <h3 className="mb-2 typo-card-meta font-medium text-gray-700 dark:text-gray-300">결제수단</h3>
-        {widget.picker === null ? (
-          <PaymentMethodSkeleton />
-        ) : widget.picker ? (
-          <>
-            <PaymentMethodPicker
-              name="software-paymethod"
-              value={widget.choice}
-              onChange={(next) => {
-                // 직접 입금 줄은 이 화면에 없다(bankOption) — 남은 수단은 전부 토스 결제창이다.
-                if (next !== 'bank_transfer') widget.setChoice(next);
-              }}
-              applePaySupported={widget.applePaySupported}
-              bankOption="toss_transfer"
-              confirmLabel="라이선스가 발급"
-            />
-            {widget.error && <Notice tone="error" className="mt-3">{widget.error}</Notice>}
-          </>
-        ) : (
-          <div>
-            <div id={widget.methodsId} />
-            <div id={widget.agreementId} />
-            {widget.error && (
-              <Notice tone="error" actions={<Button type="button" size="sm" variant="weak" onClick={widget.retry}>다시 시도</Button>}>
-                {widget.error}
-              </Notice>
-            )}
-          </div>
-        )}
+        <PaymentMethodPicker
+          name="software-paymethod"
+          value={widget.choice}
+          onChange={widget.setChoice}
+          applePaySupported={widget.applePaySupported}
+          confirmLabel="라이선스가 발급"
+        />
+        {widget.error && <Notice tone="error" className="mt-3">{widget.error}</Notice>}
       </div>
 
       <div className="space-y-2">

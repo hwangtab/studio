@@ -53,7 +53,7 @@ v2 색 가드(`components/ui/SectionHeading.test.tsx`의 `V2_FILES`)에 공연 �
 처음(#442)엔 근거 없이 ko 전용이었다 — 운영자가 "왜 한국어 전용이냐"고 지적해 열었다.
 
 - **화면 문구**는 `lib/shows/i18n.ts` 한 파일에 ko·en 두 벌(`showCopy(locale)`). common.json에 넣지 않는다(5개 로케일에 빈 키가 생긴다).
-  컴포넌트는 `locale` prop(기본 'ko')을 받는다. 같이 쓰는 결제 컴포넌트(`PaymentMethodPicker`·`PaymentMethodChoice`·
+  컴포넌트는 `locale` prop(기본 'ko')을 받는다. 같이 쓰는 결제 컴포넌트(`PaymentMethodPicker`·
   `BankDepositGuide`·`RefundAccountFields`)와 메일 레이아웃(`buildEmailLayout`)에도 `locale` 옵션이 있다 — 기본 ko라 다른 화면은 그대로다.
 - **공연 내용**의 영어는 공연 정의의 `en` 칸(`ShowTranslation`)이다. **DB에 넣지 않는다** — 페이지가 조회 직후
   `localizeShow`/`localizeManageOrder`(lib/shows/localize.ts)로 덮어쓴다. 한국어를 고치면 `en`도 같이 고친다. 번역이 없는 칸은 한국어 그대로 보인다.
@@ -79,11 +79,11 @@ v2 색 가드(`components/ui/SectionHeading.test.tsx`의 `V2_FILES`)에 공연 �
 
 ### 결제수단은 전부 토스다 — 계좌는 토스 계좌이체 (2026-10-12)
 
-예매 폼은 카드·간편결제·**토스 계좌이체**만 보인다(`PaymentMethodPicker bankOption="toss_transfer"`). "계좌로 직접
+예매 폼은 카드·간편결제·**토스 계좌이체**만 보인다(`PaymentMethodPicker`의 기본 목록 — 2026-10-14부터 전 화면 공통이고, 다른 서비스의 계좌번호 폴백(`BankDepositFallback`)은 공연에 없다). "계좌로 직접
 입금"은 운영자 결정으로 접었다 — 입금 뒤 환불이 생기면 환불 계좌를 받아 손으로 송금해야 해 번거롭다. 계좌이체는
 토스 결제라 홀드(10분)·승인·환불(토스 취소가 원래 계좌로)이 카드와 같은 길을 간다. `/api/shows/orders`는
 `paymentMethod: 'bank_transfer'`를 400(`bank_deposit_retired`)으로 거절한다 — 화면에서 뺐어도 옛 페이지·직접 호출이 남는다.
-위젯 경로(`?pay=widget`)는 토스 콘솔에 개통된 수단을 그대로 그린다.
+토스 결제위젯 경로(`?pay=widget`)는 2026-10-14에 걷어냈다.
 
 - **확인 안 된 것**: 토스 계좌이체의 **부분 취소**(매수 단위 환불)를 실결제로 해 본 적이 없다. 안 되면 일부 매수 환불이
   토스 오류로 실패한다 — 공개 뒤 최소 매수로 계좌이체 결제·부분 환불을 한 번 할 것.

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import ShippingAddressFields, { EMPTY_SHIPPING_ADDRESS, type ShippingAddressValue } from '../common/ShippingAddressFields';
-import PaymentMethodPicker, { PaymentMethodSkeleton } from '../payments/PaymentMethodPicker';
+import PaymentMethodPicker from '../payments/PaymentMethodPicker';
 import { usePaymentCheckout } from '../payments/usePaymentCheckout';
 import { Button } from '../ui/Button';
 import { Checkbox } from '../ui/Checkbox';
@@ -41,7 +41,7 @@ const sellable = (p: ShopProduct): ShopSku[] => p.skus.filter((s) => !s.retired)
 /**
  * 상품 주문 폼 — 수량(옵션별) → 함께 담을 다른 상품(배송비는 주문당 한 번) → 주문자·받는 분·배송지 → 결제수단 → 결제하기.
  *
- * 결제수단은 전부 토스다(카드·간편결제·**토스 계좌이체**, `bankOption="toss_transfer"`) — 상점은 "계좌로 직접 입금"을
+ * 결제수단은 전부 토스다(카드·간편결제·**토스 계좌이체**) — 상점은 "계좌로 직접 입금"을
  * 받지 않는다(운영자 결정 2026-10-12: 직접 입금은 환불 때 수동 송금이 번거롭다). 공연 예매 폼(ShowBookingForm)과
  * 같은 장치를 쓴다: 위젯 지연 로드, 같은 입력으로 결제창을 다시 열면 만든 주문을 재사용(재고 홀드가 쌓이지 않게).
  * 펀딩 후원 폼에서 가져온 것: 카카오 주소 검색, 이름·연락처·주소 초안 저장(수량은 저장하지 않는다 — 재고가 바뀐다).
@@ -148,10 +148,6 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
     setError(null);
     if (needsShipping && (!address.postcode.trim() || !address.address1.trim())) {
       setError('배송지 주소를 찾아 주세요.');
-      return;
-    }
-    if (widget.agreedRequiredTerms === false) {
-      setError('결제수단 아래 [필수] 결제 서비스 이용 약관에도 동의해 주세요.');
       return;
     }
     setSubmitting(true);
@@ -361,35 +357,14 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
 
           <div>
             <h3 className="mb-2 typo-card-meta font-medium text-gray-700 dark:text-gray-300">결제수단</h3>
-            {widget.picker === null ? (
-              <PaymentMethodSkeleton />
-            ) : widget.picker ? (
-              <>
-                <PaymentMethodPicker
-                  name="shop-paymethod"
-                  value={widget.choice}
-                  onChange={(next) => {
-                    // 직접 입금 줄은 이 화면에 없다(bankOption) — 남은 수단은 전부 토스 결제창이다.
-                    if (next !== 'bank_transfer') widget.setChoice(next);
-                  }}
-                  applePaySupported={widget.applePaySupported}
-                  bankOption="toss_transfer"
-                  confirmLabel="주문이 접수"
-                />
-                {widget.error && <Notice tone="error" className="mt-3">{widget.error}</Notice>}
-              </>
-            ) : (
-              <div>
-                {/* 위젯(`?pay=widget`)은 토스 콘솔에 개통된 수단을 그대로 그린다. */}
-                <div id={widget.methodsId} />
-                <div id={widget.agreementId} />
-                {widget.error && (
-                  <Notice tone="error" actions={<Button type="button" size="sm" variant="weak" onClick={widget.retry}>다시 시도</Button>}>
-                    {widget.error}
-                  </Notice>
-                )}
-              </div>
-            )}
+            <PaymentMethodPicker
+              name="shop-paymethod"
+              value={widget.choice}
+              onChange={widget.setChoice}
+              applePaySupported={widget.applePaySupported}
+              confirmLabel="주문이 접수"
+            />
+            {widget.error && <Notice tone="error" className="mt-3">{widget.error}</Notice>}
           </div>
 
           {error && <Notice tone="error">{error}</Notice>}

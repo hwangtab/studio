@@ -268,7 +268,7 @@ export type DataProcessorRow = {
 };
 
 /**
- * 처리위탁 현황. 실제 구성에서 온다 — 토스 결제 위젯(components TossPaymentWidget),
+ * 처리위탁 현황. 실제 구성에서 온다 — 토스 결제창(components/payments/usePaymentCheckout.ts),
  * Resend REST API(lib/email/resend.ts), Vercel 호스팅, Turso(libsql, db/client.ts).
  */
 export const FUNDING_DATA_PROCESSORS: ReadonlyArray<DataProcessorRow> = [

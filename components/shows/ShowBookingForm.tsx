@@ -7,7 +7,7 @@ import { ChoiceCard, ChoiceGroup } from '../ui/Choice';
 import { Disclosure } from '../ui/Disclosure';
 import { Notice } from '../ui/Notice';
 import { Panel } from '../ui/Panel';
-import PaymentMethodPicker, { PaymentMethodSkeleton } from '../payments/PaymentMethodPicker';
+import PaymentMethodPicker from '../payments/PaymentMethodPicker';
 import { usePaymentCheckout } from '../payments/usePaymentCheckout';
 import { reportPaymentWindowOpen } from '../../utils/reportPaymentFailure';
 import { formatShowWon, showCopy, type ShowLocale } from '../../lib/shows/i18n';
@@ -30,8 +30,8 @@ interface PendingOrder {
 type AvailabilityPatch = Pick<PublicShowtime, 'id' | 'saleState' | 'remaining'>;
 
 /**
- * 공연 예매 폼 — 회차·티켓·매수·구매자 정보를 받고, 토스 결제위젯을 폼 안에 띄워 제출 한 번에
- * 주문 생성 → 결제창으로 간다(펀딩과 같은 구조, 위젯 키 제약은 CLAUDE.md "토스 연동 키" 참고).
+ * 공연 예매 폼 — 회차·티켓·매수·구매자 정보를 받고, 토스 결제수단 목록을 폼 안에 보이고 제출 한 번에
+ * 주문 생성 → 결제창으로 간다(펀딩과 같은 구조, 키 구성은 CLAUDE.md "토스 키는 두 쌍이다" 참고).
  * 홀드는 주문 생성 순간부터 10분이다. 같은 입력으로 결제창을 닫았다 다시 열면 만든 주문을
  * 재사용해 좌석이 이중으로 잡히지 않게 한다.
  */
@@ -122,7 +122,7 @@ export default function ShowBookingForm({ show, locale = 'ko' }: Props) {
     };
   }, [widgetArmed]);
 
-  // 위젯(기본) 또는 우리가 그린 결제수단 목록(기능 플래그) — components/payments/usePaymentCheckout.ts.
+  // 우리가 그린 결제수단 목록 → 토스 결제창 — components/payments/usePaymentCheckout.ts.
   const widget = usePaymentCheckout(total, canBook && widgetArmed);
 
   /**
@@ -134,7 +134,6 @@ export default function ShowBookingForm({ show, locale = 'ko' }: Props) {
     e.preventDefault();
     if (!canBook || !ticketType || !showtime || submitting) return;
     setError(null);
-    if (widget.agreedRequiredTerms === false) return setError(t.errTerms);
     setSubmitting(true);
     try {
       const key = JSON.stringify([showtime.id, ticketType.id, qty, name.trim(), phone.trim(), email.trim()]);
@@ -289,52 +288,22 @@ export default function ShowBookingForm({ show, locale = 'ko' }: Props) {
 
           <div>
             <h3 className="mb-2 typo-card-meta font-medium text-gray-700 dark:text-gray-300">{t.payMethod}</h3>
-            {widget.picker === null ? (
-              <PaymentMethodSkeleton />
-            ) : widget.picker ? (
-              <>
-                <PaymentMethodPicker
-                  name="show-paymethod"
-                  value={widget.choice}
-                  onChange={(next) => {
-                    // 직접 입금 줄은 이 화면에 없다(bankOption) — 남은 수단은 전부 토스 결제창이다.
-                    if (next !== 'bank_transfer') widget.setChoice(next);
-                  }}
-                  applePaySupported={widget.applePaySupported}
-                  bankOption="toss_transfer"
-                  confirmLabel={t.confirmLabel}
-                  locale={locale}
-                />
-                {widget.error && <Notice tone="error" className="mt-3">{en ? 'The payment module failed to load. Please refresh the page.' : widget.error}</Notice>}
-              </>
-            ) : (
-              <>
-                {/* 위젯(`?pay=widget`)은 토스 콘솔에 개통된 수단을 그대로 그린다 — 계좌이체도 콘솔 설정을 따른다. */}
-                <div>
-                  <div id={widget.methodsId} />
-                  <div id={widget.agreementId} />
-                  {widget.error && (
-                    <Notice
-                      tone="error"
-                      actions={
-                        <Button type="button" size="sm" variant="weak" onClick={widget.retry}>
-                          {t.retry}
-                        </Button>
-                      }
-                    >
-                      {en ? 'The payment module failed to load. Please try again.' : widget.error}
-                    </Notice>
-                  )}
-                </div>
-              </>
-            )}
+            <PaymentMethodPicker
+              name="show-paymethod"
+              value={widget.choice}
+              onChange={widget.setChoice}
+              applePaySupported={widget.applePaySupported}
+              confirmLabel={t.confirmLabel}
+              locale={locale}
+            />
+            {widget.error && <Notice tone="error" className="mt-3">{en ? 'The payment module failed to load. Please refresh the page.' : widget.error}</Notice>}
           </div>
 
           {error && <Notice tone="error">{error}</Notice>}
 
           {/*
             약관·규정 동의는 **결제하기를 누르는 행위**로 받는다 — 체크박스를 두지 않는다(펀딩 PledgeWizard와 같은
-            규칙). 화면에는 결제위젯의 [필수] 결제 서비스 약관 체크가 이미 있어, 같은 말을 하는 체크를 더 두면
+            규칙). 토스 결제창이 자체 [필수] 결제 서비스 약관을 받아, 같은 말을 하는 체크를 더 두면
             중복으로 읽힌다. 청약철회·환불 조건은 법적으로 **고지** 의무라 한 줄로 알리고, 표는 접어 둔다.
             서버 검증(refundPolicyAgreed)과 기록은 그대로다.
           */}

@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 
@@ -9,28 +9,17 @@ import { MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY } from '../../lib/funding/policy';
 import type { KakaoPostcodeData } from './kakaoPostcode';
 
 /**
- * 결제위젯은 폼 안에 떠 있고, 제출은 그 위젯의 `requestPayment`를 부른다. 테스트에서는
- * 무엇을 어떤 금액으로 여는지를 본다 — 그게 이 폼의 계약이다.
+ * 결제수단 목록은 폼 안에 있고, 제출은 공용 체크아웃 훅의 `requestPayment`를 부른다. 테스트에서는
+ * 무엇을 어떤 금액으로 여는지를 본다 — 그게 이 폼의 계약이다. (토스 결제위젯 경로는 2026-10-14에 걷어냈다.)
  */
 const requestPayment = jest.fn().mockResolvedValue(undefined);
-const retryPayment = jest.fn();
 let widgetReady = true;
 let widgetError: string | null = null;
-// 위젯 약관 동의 상태. 위젯이 iframe 안에서 체크를 받으므로 실제로는 SDK의
-// `agreementStatusChange`가 알려 준다. null은 "아직 모름"(= 한 번도 건드리지 않음).
-//
-// 기본값을 `true`로 두는 이유: 대부분의 테스트는 결제까지 가는 정상 경로를 본다.
-// 가드를 확인하는 테스트만 `false`·`null`로 내려 쓴다.
-let widgetAgreed: boolean | null = true;
-jest.mock('../booking/useTossPaymentWidgets', () => ({
-  useTossPaymentWidgets: () => ({
-    methodsId: 'toss-methods-test', agreementId: 'toss-agreement-test',
-    ready: widgetReady, error: widgetError, retry: retryPayment, requestPayment,
-    agreedRequiredTerms: widgetAgreed,
+jest.mock('../payments/usePaymentCheckout', () => ({
+  usePaymentCheckout: () => ({
+    choice: 'card', setChoice: jest.fn(), applePaySupported: false,
+    ready: widgetReady, error: widgetError, requestPayment,
   }),
-  // 모듈을 통째로 대체하므로 상수도 함께 내보내야 한다 — 빠뜨리면 호출부가 undefined를
-  // setError에 넣어 경고가 조용히 사라진다(2026-09-16에 실제로 그랬다).
-  TOSS_TERMS_REQUIRED_MESSAGE: '결제수단 아래 [필수] 결제 서비스 이용 약관에도 동의해 주세요.',
 }));
 jest.mock('../../utils/analytics', () => ({ trackMicroEvent: jest.fn() }));
 
@@ -863,11 +852,11 @@ it('추가 펀딩 칸에서 Enter를 연타해도 주문은 한 번만 생성된
  * 「결제하기」를 또 눌러야 했다. 위젯이 폼 안에 있으니 그 화면은 같은 것을 두 번 보여
  * 주는 자리였다.
  */
-describe('폼 안의 결제위젯', () => {
+describe('폼 안의 결제수단 목록', () => {
   // requestPayment는 파일 전체가 공유하는 모의라 앞선 테스트의 호출이 쌓인다 —
   // "부르지 않았다"를 보려면 매번 비워야 한다.
   beforeEach(() => { requestPayment.mockClear(); });
-  afterEach(() => { widgetReady = true; widgetError = null; widgetAgreed = true; });
+  afterEach(() => { widgetReady = true; widgetError = null; });
 
   const fill = async () => {
     await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
@@ -875,25 +864,25 @@ describe('폼 안의 결제위젯', () => {
     await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
   };
 
-  it('수단 목록과 약관 동의를 붙일 자리가 폼 안에 있다', () => {
+  it('결제수단 목록과 계좌번호 폴백 링크가 폼 안에 있고, 직접 입금 줄은 없다', () => {
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    expect(document.getElementById('toss-methods-test')).not.toBeNull();
-    expect(document.getElementById('toss-agreement-test')).not.toBeNull();
+    expect(screen.getByRole('group', { name: '결제수단' })).toBeInTheDocument();
+    expect(screen.queryByRole('radio', { name: /계좌로 직접 입금/ })).toBeNull();
+    expect(screen.getByRole('button', { name: '계좌번호로 직접 보내기' })).toBeInTheDocument();
   });
 
   /**
    * 위젯이 아직 안 떴는데 제출되면 **주문만 만들어지고 결제창은 안 열린다** — 후원자는
    * 아무 일도 안 일어난 줄 알고, 한정 리워드면 본인이 재고를 붙든 채 품절을 본다.
    */
-  it('위젯이 준비되기 전에는 제출할 수 없다', () => {
+  it('결제 설정이 준비되기 전에는 제출할 수 없다', () => {
     widgetReady = false;
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
     expect(screen.getByRole('button', { name: /결제하기/ })).toBeDisabled();
   });
 
-  it('위젯이 안 떴으면 추가 펀딩 칸의 Enter도 제출하지 않고 약관 문구도 띄우지 않는다', async () => {
+  it('결제 설정이 없으면 추가 펀딩 칸의 Enter도 제출하지 않는다', async () => {
     widgetReady = false;
-    widgetAgreed = null;
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
     await fill();
     await userEvent.type(screen.getByLabelText(/추가 펀딩 금액/), '{selectall}5000{Enter}');
@@ -902,12 +891,10 @@ describe('폼 안의 결제위젯', () => {
     expect(requestPayment).not.toHaveBeenCalled();
   });
 
-  it('위젯을 못 불러오면 이유와 다시 시도를 준다', async () => {
-    widgetError = '결제 모듈을 불러오지 못했어요.';
+  it('결제 설정이 없으면 이유를 알린다', () => {
+    widgetError = '결제 설정이 없어요.';
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    expect(screen.getByRole('alert')).toHaveTextContent('결제 모듈을 불러오지 못했어요.');
-    await userEvent.click(screen.getByRole('button', { name: '다시 시도' }));
-    expect(retryPayment).toHaveBeenCalled();
+    expect(screen.getByRole('alert')).toHaveTextContent('결제 설정이 없어요.');
   });
 
   it('성공·실패 주소와 주문 이름을 함께 넘긴다', async () => {
@@ -935,65 +922,13 @@ describe('폼 안의 결제위젯', () => {
     expect(screen.getByRole('button', { name: /결제하기/ })).not.toBeDisabled();
   });
 
-  /**
-   * 신용·체크카드를 고르고 카드사를 안 고른 채 누른 경우. 옛 문구("결제 수단과 약관 동의를
-   * 확인해 주세요")로는 무엇을 하라는지 몰라 한 후원자가 30초에 네 번 다시 눌렀다(2026-09-29).
-   */
-  it('카드사를 안 고르고 누르면 카드사를 고르라고 알려 준다', async () => {
-    requestPayment.mockRejectedValueOnce(Object.assign(new Error('카드'), { code: 'NEED_CARD_PAYMENT_DETAIL' }));
+  it('결제창을 열지 못하면 계좌번호 폴백을 안내한다', async () => {
+    requestPayment.mockRejectedValueOnce(Object.assign(new Error('x'), { code: 'SOMETHING' }));
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
     await fill();
     await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
-    expect(await screen.findByRole('alert')).toHaveTextContent('카드사를 먼저 골라 주세요');
+    expect(await screen.findByRole('alert')).toHaveTextContent('계좌번호로 직접 보내기');
     expect(screen.getByRole('button', { name: /결제하기/ })).not.toBeDisabled();
-  });
-
-  /**
-   * 위젯 약관을 빼먹은 경우.
-   *
-   * 예전엔 그냥 보내고 `requestPayment`가 실패하게 두고 `code === 'NEED_AGREEMENT'`로
-   * 사유를 가리려 했는데 **그 코드는 SDK에 없다**. 그래서 약관만 빼먹은 사람이 "결제를
-   * 시작하지 못했습니다. 잠시 후 다시 시도해 주세요"를 봤고, 그 시점엔 한정 재고 홀드가
-   * 잡힌 주문이 이미 만들어져 있었다. 지금은 제출 전에 막는다.
-   */
-  it('위젯 약관을 빼먹으면 주문을 만들지 않고 어느 약관인지 알려 준다', async () => {
-    widgetAgreed = false;
-    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    await fill();
-    await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
-
-    expect(await screen.findByRole('alert')).toHaveTextContent('결제 서비스 이용 약관');
-    expect(requestPayment).not.toHaveBeenCalled();
-    // 주문 생성 요청도 나가지 않는다 — 실패가 홀드를 남기지 않는다.
-    expect(fetch).not.toHaveBeenCalled();
-  });
-
-  /**
-   * 동의 상태를 **모를 때도** 막는다.
-   *
-   * 위젯은 체크를 한 번이라도 건드릴 때만 이벤트를 준다 — 한 번도 건드리지 않은 경로가
-   * 정확히 `null`이고, 그게 약관을 빼먹는 가장 흔한 경우다. 여기를 열어 두면 가드가
-   * 실사용에서 아무것도 막지 못한다(2026-09-16 프로덕션 실측으로 확인).
-   */
-  it('동의 상태를 모르면(위젯을 건드리지 않았으면) 주문을 만들지 않는다', async () => {
-    widgetAgreed = null;
-    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    await fill();
-    await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
-
-    expect(await screen.findByRole('alert')).toHaveTextContent('결제 서비스 이용 약관');
-    expect(requestPayment).not.toHaveBeenCalled();
-    expect(fetch).not.toHaveBeenCalled();
-  });
-
-  /** 체크하면 이벤트가 true로 오고, 그때는 막지 않는다. */
-  it('위젯 약관에 동의했으면 정상 진행한다', async () => {
-    widgetAgreed = true;
-    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    await fill();
-    await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
-
-    await waitFor(() => expect(requestPayment).toHaveBeenCalled());
   });
 });
 
@@ -1055,7 +990,7 @@ describe('결제수단 — 계좌로 직접 입금', () => {
     await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
   };
   beforeEach(() => {
-    widgetReady = true; widgetError = null; widgetAgreed = true;
+    widgetReady = true; widgetError = null;
     requestPayment.mockClear();
     Object.defineProperty(window, 'location', { value: { ...originalLocation, assign: jest.fn() }, writable: true });
     global.fetch = jest.fn().mockResolvedValue({
@@ -1067,22 +1002,22 @@ describe('결제수단 — 계좌로 직접 입금', () => {
     Object.defineProperty(window, 'location', { value: originalLocation, writable: true });
   });
 
-  it('계좌를 고르면 위젯을 숨기고 버튼이 "계좌 안내 받기"가 된다', async () => {
+  it('폴백 링크를 누르면 목록이 숨고 버튼이 "계좌 안내 받기"가 된다 — 돌아가기로 되돌린다', async () => {
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    expect(document.getElementById('toss-methods-test')).toBeVisible();
+    expect(screen.getByRole('group', { name: '결제수단' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '5,000원 · 결제하기' })).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('radio', { name: /계좌로 직접 입금/ }));
-    expect(document.getElementById('toss-methods-test')).not.toBeVisible();
+    await userEvent.click(screen.getByRole('button', { name: '계좌번호로 직접 보내기' }));
+    expect(screen.queryByRole('group', { name: '결제수단' })).toBeNull();
     expect(screen.getByRole('button', { name: '5,000원 · 계좌 안내 받기' })).toBeInTheDocument();
     expect(screen.getByText(/계좌 안내 받기를 누르면/)).toBeInTheDocument();
-    // 카드로 돌아오면 위젯이 그대로 다시 보인다(언마운트하지 않는다).
-    await userEvent.click(screen.getByRole('radio', { name: /^카드·간편결제\(토스\)/ }));
-    expect(document.getElementById('toss-methods-test')).toBeVisible();
+    await userEvent.click(screen.getByRole('button', { name: /돌아가기/ }));
+    expect(screen.getByRole('group', { name: '결제수단' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '5,000원 · 결제하기' })).toBeInTheDocument();
   });
 
   it('제출하면 bank_transfer로 신청하고 결제창 없이 펀딩 확인 페이지로 옮긴다', async () => {
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    await userEvent.click(screen.getByRole('radio', { name: /계좌로 직접 입금/ }));
+    await userEvent.click(screen.getByRole('button', { name: '계좌번호로 직접 보내기' }));
     await fillBacker();
     await userEvent.click(screen.getByRole('button', { name: /계좌 안내 받기/ }));
     await waitFor(() => expect(window.location.assign).toHaveBeenCalledWith('/ko/funding/manage/FND-B?token=t'));
@@ -1092,26 +1027,25 @@ describe('결제수단 — 계좌로 직접 입금', () => {
     expect(requestPayment).not.toHaveBeenCalled();
   });
 
-  it('위젯이 아직 안 떴거나 위젯 약관을 안 눌렀어도 계좌 입금은 낼 수 있다', async () => {
-    widgetReady = false; widgetAgreed = null;
+  it('결제 설정이 없어도 계좌 입금은 낼 수 있다', async () => {
+    widgetReady = false;
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
     expect(screen.getByRole('button', { name: /결제하기/ })).toBeDisabled();
-    await userEvent.click(screen.getByRole('radio', { name: /계좌로 직접 입금/ }));
+    await userEvent.click(screen.getByRole('button', { name: '계좌번호로 직접 보내기' }));
     expect(screen.getByRole('button', { name: /계좌 안내 받기/ })).toBeEnabled();
   });
 
-  it('한정 수량 리워드면 계좌 입금을 막고 이유를 한 줄로 알린다', () => {
+  it('한정 수량 리워드면 폴백 링크 대신 막힌 이유를 한 줄로 알린다', () => {
     render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
-    expect(screen.getByRole('radio', { name: /계좌로 직접 입금/ })).toBeDisabled();
+    expect(screen.queryByRole('button', { name: '계좌번호로 직접 보내기' })).toBeNull();
     expect(screen.getByText(/수량이 정해진 리워드는 카드·간편결제로만/)).toBeInTheDocument();
   });
 
   it('계좌를 고른 뒤 한정 리워드로 바꾸면 카드로 되돌린다', async () => {
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    await userEvent.click(screen.getByRole('radio', { name: /계좌로 직접 입금/ }));
+    await userEvent.click(screen.getByRole('button', { name: '계좌번호로 직접 보내기' }));
     await userEvent.click(screen.getByRole('radio', { name: /CD/ }));
-    expect(screen.getByRole('radio', { name: /^카드·간편결제\(토스\)/ })).toBeChecked();
+    expect(screen.getByRole('group', { name: '결제수단' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /결제하기/ })).toBeInTheDocument();
-    expect(document.getElementById('toss-methods-test')).toBeVisible();
   });
 });
