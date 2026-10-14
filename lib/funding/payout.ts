@@ -684,6 +684,18 @@ export const recordFundingPayout = async (
   }
 };
 
+/**
+ * 기록된 정산 행만 읽는다 — 후원 집계(`buildFundingPayoutPreview`)와 따로.
+ *
+ * 지급 완료 처리는 이미 기록된 행의 상태만 바꾸므로 집계가 필요 없다. 예전엔 집계에서 정산 행을 같이 읽어,
+ * 집계가 던지면(서비스 표·사업자 표 조회 실패 등) **이체를 끝냈는데도 지급 완료를 기록할 수 없었다**
+ * — 화면 버튼이 사라지고 API도 500이었다. 대시보드의 이체 대기 건수도 줄지 않는다.
+ */
+export const loadRecordedFundingPayout = async (projectId: string): Promise<FundingProjectPayout | null> =>
+  (await getDb().query.fundingProjectPayouts.findFirst({
+    where: (t, { eq: is }) => is(t.projectId, projectId),
+  })) ?? null;
+
 /** 운영자가 이체를 마친 뒤 누른다. pending → paid 한 방향, 되돌리지 않는다. */
 export const markFundingPayoutPaid = async (id: string, memo: string | null, now: Date): Promise<boolean> => {
   const result = await getDb()
