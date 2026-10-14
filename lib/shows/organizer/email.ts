@@ -59,6 +59,8 @@ const contactText = `문의: ${CUSTOMER_REPLY_TO}`;
 export function buildOperatorMail(kind: 'submitted' | 'edited', ctx: ShowMailContext): BuiltMail {
   const { draft } = ctx;
   const title = titleOf(draft);
+  // 입력 순서는 날짜순이 아니다 — 정렬한 사본에서 가장 이른 회차를 고른다('YYYY-MM-DDTHH:MM'라 문자열 순서가 곧 시간 순서).
+  const firstShowtime = draft.showtimes.filter(Boolean).sort()[0];
   const heading = kind === 'submitted' ? '새 공연 신청이 들어왔어요' : '공개된 공연이 수정됐어요';
   const lead =
     kind === 'submitted'
@@ -67,7 +69,7 @@ export function buildOperatorMail(kind: 'submitted' | 'edited', ctx: ShowMailCon
   const rowsData: Array<[string, string]> = [
     ['제목', title],
     ['주최', draft.presenterName],
-    ['첫 회차', draft.showtimes[0] ? formatShowtime(draft.showtimes[0]) : '미정'],
+    ['첫 회차', firstShowtime ? formatShowtime(firstShowtime) : '미정'],
     ['정원', draft.capacity === null ? '미정' : `${draft.capacity}명`],
     ['티켓', ticketSummary(draft)],
   ];

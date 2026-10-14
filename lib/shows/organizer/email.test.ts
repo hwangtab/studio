@@ -56,6 +56,12 @@ describe('운영자 메일', () => {
     expect(m.text).toContain('학생 10,000원');
   });
 
+  it('첫 회차는 입력 순서가 아니라 가장 이른 회차다', async () => {
+    mockRow = row({ draftJson: JSON.stringify({ ...draft, showtimes: ['2026-11-28T19:00', '', '2026-11-20T15:00'] }) });
+    await notifyOperatorShowSubmitted('sub1');
+    expect(sent().text).toContain('첫 회차: 2026년 11월 20일(금) 15:00');
+  });
+
   it('승인 뒤 수정: 수정 알림 제목', async () => {
     await notifyOperatorShowEdited('sub1');
     expect(sent().subject).toContain('공개된 공연 수정');
