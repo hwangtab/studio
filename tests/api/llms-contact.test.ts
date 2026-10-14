@@ -64,6 +64,15 @@ describe('LLM contact metadata', () => {
     expect(getBody()).toContain(': /shows');
   });
 
+  it('states the Voice Actor Recording hourly rate (not just a bare service description)', async () => {
+    const { res, getBody } = createResponse();
+
+    await llmsHandler(createRequest(), res);
+
+    expect(getBody()).toContain('Voice Actor Recording');
+    expect(getBody()).toMatch(/Voice Actor Recording[^\n]*100,000 KRW\/hour/);
+  });
+
   it('uses the current mobile number in llms-full.txt', async () => {
     const { res, getBody, getHeader } = createResponse();
 
