@@ -3,6 +3,7 @@ import BaseCard from '../ui/BaseCard';
 import StatusBadge from '../ui/StatusBadge';
 import { formatPriceAmount } from '../../data/pricing';
 import { SHOP_CATEGORY_LABELS, type ShopProduct } from '../../data/shop/catalog';
+import { isPreorder } from '../../lib/shop/preorder';
 
 /**
  * 상점 목록 카드 — 공연 목록 카드(ShowCard)·펀딩 카드와 같은 구조: BaseCard(href) glass > 이미지 + 본문.
@@ -12,6 +13,7 @@ export default function ShopProductCard({ product, soldOut }: { product: ShopPro
   const prices = product.skus.filter((s) => !s.retired).map((s) => s.price);
   const low = prices.length ? Math.min(...prices) : null;
   const cover = product.images[0];
+  const preorder = isPreorder(product, new Date());
   return (
     <BaseCard href={`/ko/shop/${product.slug}`} variant="glass" className="flex h-full flex-col overflow-hidden">
       {cover ? (
@@ -26,7 +28,7 @@ export default function ShopProductCard({ product, soldOut }: { product: ShopPro
         <div aria-hidden="true" className="aspect-square w-full bg-gray-100 dark:bg-gray-800" />
       )}
       <div className="flex flex-1 flex-col p-6">
-        <StatusBadge tone={soldOut ? 'neutral' : 'active'}>{soldOut ? '품절' : SHOP_CATEGORY_LABELS[product.category]}</StatusBadge>
+        <StatusBadge tone={soldOut ? 'neutral' : 'active'}>{soldOut ? '품절' : preorder ? '예약 판매' : SHOP_CATEGORY_LABELS[product.category]}</StatusBadge>
         <h2 className="typo-card-title mt-3 text-gray-900 dark:text-white">{product.title}</h2>
         {product.subtitle && <p className="typo-card-meta mt-1">{product.subtitle}</p>}
         {low !== null && (

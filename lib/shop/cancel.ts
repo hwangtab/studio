@@ -4,6 +4,7 @@ import { getDb } from '../../db/client';
 import { remainingRefundable, settleRefund, type CancelInput } from '../booking/cancel';
 import { isBankDepositPayment } from '../payments/bankDeposit';
 import { sendShopCancelledEmails } from './email';
+import { releaseOrderSerials } from './serials';
 import { findShopOrderByOrderNo, rowsAffectedOf } from './service';
 
 /**
@@ -77,6 +78,9 @@ export const cancelShopOrder = async (input: {
     const code = failure.code === 'not_found' ? 'invalid_state' : failure.code;
     return { ok: false, code, message: failure.message };
   }
+
+  // 한정판 번호 반납 — 발송 전(선점 전 preparing) 전액 취소만. 발송 뒤 반품 환불은 번호를 남긴다.
+  if (fulfillment === 'preparing') await releaseOrderSerials(order.orderNo, order.shopOrder.items);
 
   await sendShopCancelledEmails(order.orderNo, remaining, input.requestedBy);
   return { ok: true, refundAmount: remaining };

@@ -7,6 +7,7 @@ import { cancelPayment, confirmPayment, fetchPayment, type TossKeyChannel, type 
 import { DECLINE_CODE_PATTERN } from '../shows/tossCodes';
 import { sendShopOrderConfirmedEmails } from './email';
 import { findShopOrderByOrderNo, rowsAffectedOf, type ShopOrderWithDetails } from './service';
+import { alertIfSerialsMissing, serialInsertStatements } from './serials';
 import { stockGateSql } from './stock';
 
 /**
@@ -166,6 +167,8 @@ export const confirmShopOrder = async (
           AND NOT EXISTS (SELECT 1 FROM shop_orders WHERE order_no = ${order.orderNo} AND fulfillment_status = 'cancelled')
           AND ${stockGates}
       `),
+      // 한정판 번호 — paid UPDATE 뒤, 같은 batch. `db-` 줄에만(없으면 빈 배열).
+      ...serialInsertStatements({ id: order.id, orderNo: order.orderNo }, items).map((s) => db.run(s)),
     ];
     batchResults = await db.batch(statements as [typeof statements[number], ...typeof statements]);
   } catch (error) {
@@ -189,6 +192,8 @@ export const confirmShopOrder = async (
     if (current?.status === 'paid' || current?.status === 'partially_refunded') return replay();
     return autoCancelApproval(order, approved);
   }
+
+  await alertIfSerialsMissing(order.orderNo, items);
 
   // 신규 확정에서만 한 통 — 이 줄은 paid로 바꾼 batch를 이긴 실행만 지난다.
   await sendShopOrderConfirmedEmails(order.orderNo);

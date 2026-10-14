@@ -143,6 +143,25 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
 - 이미 정산한 달의 반품 환불은 그 주문이 표에서 빠질 뿐 자동으로 차감되지 않는다. 다음 정산에서 손으로 뺀다.
   부분 환불 주문은 어느 줄이 환불됐는지 원장이 모르므로 계산에서 빼고 "직접 확인"으로 띄운다.
 
+### 예약 판매·한정판 넘버링 (플랫폼 PR 4)
+
+**예약 판매** — `ships_on`(KST 날짜)이 오늘보다 뒤면 예약 판매(`lib/shop/preorder.ts` `isPreorder`, 순수 모듈). 발송일 당일부터는 보통 상품이다.
+결제·재고 경로는 그대로다. 카드 배지·상세 "YYYY년 M월 D일 발송 예정"·주문 폼 안내(섞어 담으면 가장 늦은 날에 함께)·주문 메일(고객·운영자)·
+관리 페이지·관리자 주문 화면이 이 날짜를 읽는다. **날짜는 주문에 스냅샷하지 않는다** — 주문 줄 sku_id로 상품의 현재 값을 읽는다
+(`loadShipsOnBySku`, 오류는 삼킨다). 그래서 운영자가 `set_ships_on`으로 발송일을 **미루면** 이미 들어온 주문의 화면은 바뀌지만 고객에게 메일은
+가지 않는다 — 미룬 날짜는 운영자가 고객에게 직접 안내한다. 발송일이 지나면(오늘 이하) 화면에서 예약 표시가 사라진다.
+
+**한정판 넘버링** — `edition_size`가 있는 DB 상품. `lib/shop/serials.ts`가 확정 배치(`confirm.ts`)의 `orders.status='paid'` UPDATE **뒤에**
+줄 수량만큼 INSERT를 붙인다(같은 batch — 재고 게이트가 0행이면 번호도 0행). 결번 중 가장 작은 번호이고 `edition_size IS NOT NULL`·`db-` 줄만이다.
+웹훅 확정도 같은 `confirmShopOrder`를 지나므로 확정 경로는 하나다.
+- 번호가 모자라면(재고 합이 한정 수량을 넘은 경우) 확정은 성공하고 확정 뒤 개수 점검(`alertIfSerialsMissing`)이 운영자에게 메일을 보낸다. 배치에서
+  NOT NULL 위반으로 실패시키지 않는 이유다(돈만 들어온 주문이 된다).
+- **반납은 발송 전 전액 취소만.** `cancel.ts`는 `settleRefund` 성공 뒤 선점 전 fulfillment가 `preparing`이었을 때, `webhookSync.ts`는
+  `shipped_at IS NULL`일 때 `DELETE FROM shop_serials WHERE order_no=?`. 둘 다 `db-` 줄이 있을 때만, 실패는 로그(환불은 성공 유지).
+  **발송 뒤 반품 환불은 번호를 남긴다** — 이미 나간 물건의 번호라 다시 팔면 같은 번호가 둘이 된다. 되팔려면 운영자가 DB에서 직접 지운다.
+- 표시: 주문 접수 메일(줄별 "한정판 번호 7/100"), `/ko/shop/manage/<주문번호>`, 관리자 주문 화면("포장할 번호"). 조회는 오류를 삼킨다.
+- `setSkuStock`이 그 상품 SKU 재고 합 ≤ `edition_size`로 막는다(PR 3).
+
 ### 화면
 
 - `/ko/shop`(목록·분류 필터 음반/굿즈), `/ko/shop/<slug>`(사진·소개·주문 폼). ko 전용(다른 로케일은 `/ko/shop`으로).

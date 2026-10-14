@@ -7,6 +7,8 @@ import { SITE_URL, adminUrl, buildEmailLayout, type EmailLayoutRow } from '../em
 import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 import { shopLineName } from './catalog';
+import { loadOrderExtras, type OrderExtras } from './orderExtras';
+import { formatShipsOn } from './preorder';
 import { findShopOrderByOrderNo, type ShopOrderWithDetails } from './service';
 
 /**
@@ -26,6 +28,18 @@ const itemRows = (order: ShopOrderWithDetails): EmailLayoutRow[] =>
     label: shopLineName(i.productTitle, i.optionLabel),
     value: `${i.quantity}개 · ${won(i.unitPrice * i.quantity)}`,
   }));
+
+/** 예약 발송일·한정판 번호 줄 — 해당하는 줄에만. */
+const extraRows = (order: ShopOrderWithDetails, extras: OrderExtras): EmailLayoutRow[] =>
+  (order.shopOrder?.items ?? []).flatMap((i) => {
+    const name = shopLineName(i.productTitle, i.optionLabel);
+    const rows: EmailLayoutRow[] = [];
+    const shipsOn = extras.shipsOnByItem.get(i.id);
+    if (shipsOn) rows.push({ label: `${name} 발송 예정`, value: formatShipsOn(shipsOn) });
+    const serials = extras.serialsByItem.get(i.id);
+    if (serials) rows.push({ label: `${name} 한정판 번호`, value: serials });
+    return rows;
+  });
 
 const amountRows = (order: ShopOrderWithDetails): EmailLayoutRow[] => [
   { label: '배송비', value: order.shopOrder && order.shopOrder.shippingFee > 0 ? won(order.shopOrder.shippingFee) : '무료' },
@@ -63,17 +77,25 @@ export const sendShopOrderConfirmedEmails = async (orderNo: string): Promise<voi
   const so = order.shopOrder;
   const manage = shopManageUrl(order.orderNo, order.manageToken);
   const failures: string[] = [];
+  const extras = await loadOrderExtras(order.orderNo, so.items, new Date()).catch((error) => {
+    console.error('[shop-email] 발송일·번호 조회 실패', { orderNo, error });
+    return { shipsOnByItem: new Map(), latestShipsOn: null, serialsByItem: new Map() } as OrderExtras;
+  });
+  const extra = extraRows(order, extras);
 
   const customerHtml = buildEmailLayout({
     preheader: `주문번호 ${order.orderNo} · ${won(order.totalAmount)}`,
     heading: '주문이 접수됐어요',
     paragraphs: [
-      `${order.customerName}님, 주문해 주셔서 고마워요. 준비되는 대로 발송하고 운송장 번호를 메일로 알려 드릴게요.`,
+      extras.latestShipsOn
+        ? `${order.customerName}님, 주문해 주셔서 고마워요. 예약 판매 상품이 있어서 ${formatShipsOn(extras.latestShipsOn)} 이후에 함께 보내요. 보내면 운송장 번호를 메일로 알려 드릴게요.`
+        : `${order.customerName}님, 주문해 주셔서 고마워요. 준비되는 대로 발송하고 운송장 번호를 메일로 알려 드릴게요.`,
       '발송 전에는 주문 확인 페이지에서 바로 취소할 수 있어요. 결제하신 수단으로 전액 돌려드려요.',
     ],
     rows: [
       { label: '주문번호', value: order.orderNo },
       ...itemRows(order),
+      ...extra,
       ...amountRows(order),
       { label: '받는 분', value: `${so.recipientName} · ${so.recipientPhone}` },
       { label: '배송지', value: addressLine(order) },
@@ -84,7 +106,7 @@ export const sendShopOrderConfirmedEmails = async (orderNo: string): Promise<voi
   const customerText = [
     '주문이 접수됐어요.',
     `주문번호: ${order.orderNo}`,
-    ...itemRows(order).map((r) => `${r.label}: ${r.value}`),
+    ...[...itemRows(order), ...extra].map((r) => `${r.label}: ${r.value}`),
     `결제 금액: ${won(order.totalAmount)} (부가세 포함)`,
     `주문 확인·취소: ${manage}`,
   ].join('\n');
@@ -101,6 +123,7 @@ export const sendShopOrderConfirmedEmails = async (orderNo: string): Promise<voi
       { label: '주문번호', value: order.orderNo },
       { label: '주문자', value: `${order.customerName} / ${order.customerPhone}` },
       ...itemRows(order),
+      ...extra,
       ...amountRows(order),
       { label: '받는 분', value: `${so.recipientName} / ${so.recipientPhone}` },
       { label: '배송지', value: addressLine(order) },

@@ -5,6 +5,7 @@ import ResponsiveImage from '../ResponsiveImage';
 import StatusBadge from '../ui/StatusBadge';
 import { formatPriceAmount } from '../../data/pricing';
 import { SHOP_CATEGORY_LABELS, type ShopProduct } from '../../data/shop/catalog';
+import { formatShipsOn, isPreorder } from '../../lib/shop/preorder';
 import { cn } from '../../lib/utils';
 
 /**
@@ -77,6 +78,12 @@ export default function ShopProductDetail({ product, remaining = null, artist = 
         {low !== null && (
           <p className="mt-4 text-2xl font-bold tabular-nums text-gray-900 dark:text-white">
             {formatPriceAmount(low)}원{new Set(prices).size > 1 ? '~' : ''}
+          </p>
+        )}
+        {product.shipsOn && isPreorder(product, new Date()) && (
+          <p className="mt-2 flex flex-wrap items-center gap-2 text-sm text-gray-800 dark:text-gray-200">
+            <StatusBadge tone="active">예약 판매</StatusBadge>
+            <span>{formatShipsOn(product.shipsOn)} 발송 예정</span>
           </p>
         )}
         {remaining && sellable.length > 0 && sellable.every((s) => (remaining[s.id] ?? 0) <= 0) && (

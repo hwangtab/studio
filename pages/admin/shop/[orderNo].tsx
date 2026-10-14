@@ -8,6 +8,8 @@ import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { remainingRefundable } from '../../../lib/booking/cancel';
 import { shopLineName } from '../../../lib/shop/catalog';
+import { loadOrderExtras } from '../../../lib/shop/orderExtras';
+import { formatShipsOn } from '../../../lib/shop/preorder';
 import { findShopOrderByOrderNo } from '../../../lib/shop/service';
 import { normalizeShopOrderNo } from '../../../lib/shop/shape';
 
@@ -17,7 +19,8 @@ interface Props {
   fulfillmentStatus: string;
   customer: { name: string; phone: string; email: string };
   recipient: { name: string; phone: string; address: string; memo: string | null };
-  lines: Array<{ label: string; quantity: number; amount: number }>;
+  lines: Array<{ label: string; quantity: number; amount: number; shipsOn: string | null; serials: string | null }>;
+  latestShipsOn: string | null;
   subtotal: number;
   shippingFee: number;
   totalAmount: number;
@@ -38,6 +41,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   if (!order || !order.shopOrder) return { notFound: true };
   const so = order.shopOrder;
   const payment = order.payments[0];
+  const extras = await loadOrderExtras(order.orderNo, so.items, new Date()).catch(() => null);
   return {
     props: {
       orderNo: order.orderNo,
@@ -45,7 +49,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
       fulfillmentStatus: so.fulfillmentStatus,
       customer: { name: order.customerName, phone: order.customerPhone, email: order.customerEmail },
       recipient: { name: so.recipientName, phone: so.recipientPhone, address: `(${so.postcode}) ${so.address1}${so.address2 ? ` ${so.address2}` : ''}`, memo: so.shippingMemo },
-      lines: so.items.map((i) => ({ label: shopLineName(i.productTitle, i.optionLabel), quantity: i.quantity, amount: i.unitPrice * i.quantity })),
+      lines: so.items.map((i) => ({
+        label: shopLineName(i.productTitle, i.optionLabel), quantity: i.quantity, amount: i.unitPrice * i.quantity,
+        shipsOn: extras?.shipsOnByItem.get(i.id) ?? null, serials: extras?.serialsByItem.get(i.id) ?? null,
+      })),
+      latestShipsOn: extras?.latestShipsOn ?? null,
       subtotal: so.subtotalAmount,
       shippingFee: so.shippingFee,
       totalAmount: order.totalAmount,
@@ -99,8 +107,15 @@ export default function AdminShopOrderPage(p: Props) {
         <section className="mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
           <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-gray-900">주문</h2>
           <ul className="mb-3 space-y-1">
-            {p.lines.map((l) => <li key={l.label}>{l.label} × {l.quantity} — {formatPriceAmount(l.amount)}원</li>)}
+            {p.lines.map((l) => (
+              <li key={l.label}>
+                {l.label} × {l.quantity} — {formatPriceAmount(l.amount)}원
+                {l.shipsOn && <span className="ml-2 text-amber-700">예약 · {formatShipsOn(l.shipsOn)} 발송 예정</span>}
+                {l.serials && <span className="ml-2 font-semibold">포장할 번호 {l.serials}</span>}
+              </li>
+            ))}
           </ul>
+          {p.latestShipsOn && <p className="mb-2 text-amber-800">예약 상품이 있어요. {formatShipsOn(p.latestShipsOn)} 이후에 함께 보내세요.</p>}
           <p>상품 {formatPriceAmount(p.subtotal)}원 + 배송비 {formatPriceAmount(p.shippingFee)}원 = <strong>{formatPriceAmount(p.totalAmount)}원</strong></p>
           <p className="mt-1 text-gray-600">결제수단 {p.paymentMethod ?? '-'}{p.receiptUrl && <> · <a href={p.receiptUrl} target="_blank" rel="noreferrer" className="text-primary hover:underline">영수증</a></>} · 환불 가능 잔액 {formatPriceAmount(p.refundable)}원</p>
         </section>
