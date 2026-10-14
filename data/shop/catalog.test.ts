@@ -3,10 +3,16 @@ import { SHOP_FREE_SHIPPING_FROM, SHOP_SHIPPING_FEE, shopShippingFeeFor } from '
 import { validateShopCatalog } from '../../lib/shop/catalog';
 import { computeShopTotals } from '../../lib/shop/amounts';
 import { SHOP_FIXTURE_PRODUCTS } from '../../tests/helpers/shopFixtures';
+import { getSupportedArtist } from '../artists';
 
 describe('상점 카탈로그(data/shop/catalog.ts)', () => {
   it('모양 검사를 통과한다', () => {
     expect(validateShopCatalog(SHOP_PRODUCTS)).toEqual([]);
+  });
+
+  it('아티스트 상품의 artist는 data/artists에 등재된 아티스트다(아티스트 페이지·정산 세금 유형이 거기서 온다)', () => {
+    const unknown = SHOP_PRODUCTS.filter((p) => p.artist !== undefined && !getSupportedArtist(p.artist)).map((p) => `${p.slug} → ${p.artist}`);
+    expect(unknown).toEqual([]);
   });
 
   it('테스트 고정 카탈로그도 통과한다(검사기가 정상 정의를 막지 않는다)', () => {
@@ -24,6 +30,7 @@ describe('상점 카탈로그(data/shop/catalog.ts)', () => {
     ['0원', { ...base, skus: [{ id: 'a-1', price: 0 }] }, /가격/],
     ['옵션 이름 없는 복수 SKU', { ...base, skus: [{ id: 'a-1', price: 1 }, { id: 'a-2', price: 1 }] }, /optionLabel/],
     ['첫 문단 소제목', { ...base, description: ['## 소제목'] }, /평문/],
+    ['artist 형식', { ...base, artist: 'Jai' }, /artist/],
   ])('%s를 잡는다', (_label, product, pattern) => {
     expect(validateShopCatalog([product as ShopProduct]).join('\n')).toMatch(pattern);
   });

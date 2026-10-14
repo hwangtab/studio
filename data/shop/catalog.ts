@@ -27,6 +27,8 @@
  *   published: true,
  * }
  * ```
+ * 아티스트 상품(위탁 판매)이면 `artist: '<data/artists의 slug>'`를 붙인다 — 그 아티스트 페이지에 상품이 모이고,
+ * 관리자 화면이 아티스트별 정산 예정액을 계산한다(SHOP_ARTIST_SHARE_PERCENT). 스튜디오 상품은 비운다.
  * 옷처럼 옵션이 있으면 `skus: [{ id: 'tee-s', optionLabel: 'S', price: 30000 }, { id: 'tee-m', optionLabel: 'M', price: 30000 }]`.
  */
 
@@ -58,6 +60,11 @@ export interface ShopProduct {
   /** 첫 장이 대표 이미지. `/images/shop/…` */
   images: string[];
   skus: ShopSku[];
+  /**
+   * 위탁 판매 아티스트(`data/artists`의 slug). 비우면 스튜디오 상품. 판매를 시작한 뒤 바꾸지 않는다 —
+   * 정산이 주문 줄의 SKU → 이 값으로 아티스트를 찾으므로, 바꾸면 지난 판매가 다른 아티스트에게 정산된다.
+   */
+  artist?: string;
   /** false면 목록·상세에 나오지 않고 주문도 받지 않는다. */
   published: boolean;
 }

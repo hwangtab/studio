@@ -4,27 +4,47 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 import { AdminShell } from '../../../components/admin/AdminShell';
-import { formatPriceAmount } from '../../../data/pricing';
+import { formatPriceAmount, SHOP_ARTIST_SHARE_PERCENT } from '../../../data/pricing';
 import { SHOP_SALES_OPEN } from '../../../data/shop/policy';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
-import { listAdminShopOrders, listAdminSkuStock, type AdminShopOrderRow, type AdminSkuStockRow } from '../../../lib/shop/adminQueries';
+import { kstDateString } from '../../../lib/booking/kst';
+import { kstMonthRange } from '../../../lib/shop/artistPayout';
+import {
+  listAdminShopOrders, listAdminSkuStock, listShopArtistSales,
+  type AdminShopArtistSalesRow, type AdminShopOrderRow, type AdminSkuStockRow,
+} from '../../../lib/shop/adminQueries';
 
 interface Props {
   orders: AdminShopOrderRow[];
   skus: AdminSkuStockRow[];
+  artistSales: AdminShopArtistSalesRow[];
+  /** 정산 표의 달(KST 'YYYY-MM'). */
+  month: string;
+  prevMonth: string;
+  nextMonth: string;
   salesOpen: boolean;
   error?: string;
 }
 
+const shiftMonth = (month: string, delta: number): string => {
+  const [y, m] = month.split('-').map(Number);
+  const d = new Date(Date.UTC(y, m - 1 + delta, 1));
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
+};
+
 export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
   const auth = await authenticateAdminRequest(context);
   if (!auth.ok) return { redirect: { destination: '/admin/login', permanent: false } };
+  const now = new Date();
+  const asked = typeof context.query.month === 'string' ? context.query.month : '';
+  const month = kstMonthRange(asked) ? asked : kstDateString(now).slice(0, 7);
+  const months = { month, prevMonth: shiftMonth(month, -1), nextMonth: shiftMonth(month, 1) };
   try {
-    const [orders, skus] = await Promise.all([listAdminShopOrders(), listAdminSkuStock(new Date())]);
-    return { props: { orders, skus, salesOpen: SHOP_SALES_OPEN } };
+    const [orders, skus, artistSales] = await Promise.all([listAdminShopOrders(), listAdminSkuStock(now), listShopArtistSales(month)]);
+    return { props: { orders, skus, artistSales, ...months, salesOpen: SHOP_SALES_OPEN } };
   } catch (error: unknown) {
     console.error('[admin/shop] 조회 실패:', error);
-    return { props: { orders: [], skus: [], salesOpen: SHOP_SALES_OPEN, error: '상점 정보를 불러오지 못했습니다. 운영 DB에 마이그레이션 0052가 적용됐는지 확인해 주세요.' } };
+    return { props: { orders: [], skus: [], artistSales: [], ...months, salesOpen: SHOP_SALES_OPEN, error: '상점 정보를 불러오지 못했습니다. 운영 DB에 마이그레이션 0052가 적용됐는지 확인해 주세요.' } };
   }
 };
 
@@ -64,7 +84,59 @@ function StockRow({ row }: { row: AdminSkuStockRow }) {
   );
 }
 
-export default function AdminShopPage({ orders, skus, salesOpen, error }: Props) {
+const won = (n: number) => `${formatPriceAmount(n)}원`;
+
+function ArtistSalesSection({ rows, month, prevMonth, nextMonth }: Pick<Props, 'month' | 'prevMonth' | 'nextMonth'> & { rows: AdminShopArtistSalesRow[] }) {
+  return (
+    <section className="mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
+      <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
+        <h2 className="font-semibold">아티스트 정산 예정 · {month}</h2>
+        <div className="flex gap-3 text-xs">
+          <Link href={`/admin/shop?month=${prevMonth}`} className="text-primary hover:underline">← {prevMonth}</Link>
+          <Link href={`/admin/shop?month=${nextMonth}`} className="text-primary hover:underline">{nextMonth} →</Link>
+        </div>
+      </div>
+      <p className="mb-3 text-gray-600">
+        그 달에 발송한 결제 완료 주문의 위탁 상품만 셉니다. 아티스트 몫 {SHOP_ARTIST_SHARE_PERCENT}%(상품 판매가 기준, 배송비 제외). 개인 아티스트는 부가세 상당액과 원천징수 3.3%를 뺍니다.
+        이미 정산한 달의 반품 환불은 다음 정산에서 빼 주세요.
+      </p>
+      {rows.length === 0 ? (
+        <p className="text-gray-600">이 달에 발송한 아티스트 상품이 없습니다.</p>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead className="text-xs text-gray-500">
+              <tr><th className="py-2 pr-3">아티스트</th><th className="py-2 pr-3">수량</th><th className="py-2 pr-3">판매액</th><th className="py-2 pr-3">공제</th><th className="py-2">이체액</th></tr>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.artistSlug} className="border-t border-gray-100 align-top">
+                  <td className="py-2 pr-3">
+                    {r.artistName}
+                    <span className="block text-xs text-gray-500">{r.taxType === 'invoice' ? '사업자 · 세금계산서' : r.taxType === 'withholding' ? '개인 · 원천징수' : 'data/artists에 없음'}</span>
+                    {r.needsReviewOrderNos.length > 0 && (
+                      <span className="block text-xs text-amber-800">부분 환불 주문은 빼고 계산했습니다 — 직접 확인: {r.needsReviewOrderNos.join(', ')}</span>
+                    )}
+                  </td>
+                  <td className="py-2 pr-3 tabular-nums">{r.quantity}</td>
+                  <td className="py-2 pr-3 tabular-nums">{won(r.salesAmount)}</td>
+                  <td className="py-2 pr-3 text-xs tabular-nums text-gray-600">
+                    {r.payout ? (
+                      <>상점 {won(r.payout.storeAmount)}{r.payout.vatDeductionAmount > 0 && <><br />부가세 상당 {won(r.payout.vatDeductionAmount)}</>}{r.payout.withholdingAmount > 0 && <><br />원천징수 {won(r.payout.withholdingAmount)}</>}</>
+                    ) : '—'}
+                  </td>
+                  <td className="py-2 font-semibold tabular-nums">{r.payout ? won(r.payout.netAmount) : '세금 유형을 몰라 계산하지 않음'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
+  );
+}
+
+export default function AdminShopPage({ orders, skus, artistSales, month, prevMonth, nextMonth, salesOpen, error }: Props) {
   return (
     <>
       <Head>
@@ -93,6 +165,8 @@ export default function AdminShopPage({ orders, skus, salesOpen, error }: Props)
             </div>
           )}
         </section>
+
+        <ArtistSalesSection rows={artistSales} month={month} prevMonth={prevMonth} nextMonth={nextMonth} />
 
         <section className="rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
           <h2 className="mb-3 font-semibold">주문</h2>

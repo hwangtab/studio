@@ -6,6 +6,7 @@ import ResponsiveImage from '../../../components/ResponsiveImage';
 import ShopOrderForm, { type RemainingStock } from '../../../components/shop/ShopOrderForm';
 import { Section } from '../../../components/ui/Section';
 import StatusBadge from '../../../components/ui/StatusBadge';
+import { getSupportedArtist } from '../../../data/artists';
 import { formatPriceAmount } from '../../../data/pricing';
 import { SHOP_CATEGORY_LABELS, type ShopProduct } from '../../../data/shop/catalog';
 import { SHOP_SALES_OPEN } from '../../../data/shop/policy';
@@ -19,6 +20,8 @@ interface Props {
   others: ShopProduct[];
   remaining: RemainingStock;
   salesOpen: boolean;
+  /** 위탁 아티스트(상품의 artist). 이름·주소만 싣는다 — 세금 유형 등은 __NEXT_DATA__에 실리면 안 된다. */
+  artist: { slug: string; name: string } | null;
 }
 
 const SITE_URL = 'https://studionol.co.kr';
@@ -28,7 +31,7 @@ const summarize = (text: string): string => {
   return flat.length > 150 ? `${flat.slice(0, 147)}…` : flat;
 };
 
-export default function ShopProductPage({ product, others, remaining, salesOpen }: Props) {
+export default function ShopProductPage({ product, others, remaining, salesOpen, artist }: Props) {
   const path = `/ko/shop/${product.slug}`;
   const [active, setActive] = useState(0);
   const sellable = product.skus.filter((s) => !s.retired);
@@ -44,7 +47,7 @@ export default function ShopProductPage({ product, others, remaining, salesOpen 
     name: product.title,
     description: summarize(product.description[0]),
     image: product.images.map((i) => `${SITE_URL}${i}`),
-    brand: { '@type': 'Brand', name: '스튜디오 놀' },
+    brand: { '@type': 'Brand', name: artist?.name ?? '스튜디오 놀' },
     offers: sellable.map((s) => ({
       '@type': 'Offer',
       ...(s.optionLabel ? { name: s.optionLabel } : {}),
@@ -112,6 +115,11 @@ export default function ShopProductPage({ product, others, remaining, salesOpen 
             </p>
             <h1 className="typo-page-title mt-2 text-gray-900 dark:text-white">{product.title}</h1>
             {product.subtitle && <p className="typo-card-body mt-2">{product.subtitle}</p>}
+            {artist && (
+              <p className="typo-card-meta mt-2">
+                <Link href={`/ko/artists/${artist.slug}`} className="underline">{artist.name}의 다른 음반·굿즈</Link>
+              </p>
+            )}
             <p className="mt-4 text-2xl font-bold tabular-nums text-gray-900 dark:text-white">
               {formatPriceAmount(low)}원{new Set(prices).size > 1 ? '~' : ''}
             </p>
@@ -148,7 +156,9 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ params, re
   }
   // 남은 수량이 낡아도 되는 만큼만 CDN에 둔다 — 화면이 마운트 뒤 다시 읽고, 주문 생성이 최종 게이트다.
   res.setHeader('Cache-Control', remaining ? 'public, s-maxage=30, stale-while-revalidate=60' : 'no-store');
-  return { props: { product, others, remaining, salesOpen: SHOP_SALES_OPEN } };
+  const registered = product.artist ? getSupportedArtist(product.artist) : null;
+  const artist = registered ? { slug: registered.slug, name: registered.name } : null;
+  return { props: { product, others, remaining, salesOpen: SHOP_SALES_OPEN, artist } };
 });
 
 // 디자인 판 — lib/designEdition.ts

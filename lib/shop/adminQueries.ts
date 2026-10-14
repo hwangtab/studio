@@ -1,10 +1,12 @@
 import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
+import { getSupportedArtist } from '../../data/artists';
 import { SHOP_PRODUCTS } from '../../data/shop/catalog';
+import { computeShopArtistPayout, kstMonthRange, type ShopArtistPayout } from './artistPayout';
 import { getRemainingStock } from './service';
 
-/** 관리자 상점 화면 — 주문 목록·재고 표. */
+/** 관리자 상점 화면 — 주문 목록·재고 표·아티스트별 정산 예정액. */
 
 export interface AdminShopOrderRow {
   orderNo: string;
@@ -74,4 +76,68 @@ export const setSkuStock = async (skuId: string, stock: number): Promise<{ ok: t
     ON CONFLICT(id) DO UPDATE SET stock = excluded.stock, updated_at = unixepoch()
   `);
   return { ok: true };
+};
+
+export interface AdminShopArtistSalesRow {
+  artistSlug: string;
+  artistName: string;
+  taxType: 'withholding' | 'invoice' | null;
+  quantity: number;
+  /** 상품 판매가 합계(VAT 포함, 배송비 제외). */
+  salesAmount: number;
+  /** 등재 정보가 없으면(세금 유형을 모르면) null. */
+  payout: ShopArtistPayout | null;
+  /** 부분 환불된 주문 — 어느 줄이 환불됐는지 원장이 모르므로 운영자가 직접 본다. 정산액에 넣지 않았다. */
+  needsReviewOrderNos: string[];
+}
+
+/**
+ * 아티스트별 월 판매·정산 예정액(위탁 판매, 1단계는 운영자가 이 표를 보고 손으로 이체한다).
+ *
+ * 세는 것: 그 달(KST)에 **발송한** 결제 완료 주문의 아티스트 상품 줄. 발송 전 주문은 고객이 셀프 취소할 수 있어 세지 않는다.
+ * 발송 뒤 반품 환불은 주문이 `refunded`가 되어 다음 조회부터 빠진다 — 이미 정산한 달이면 다음 정산에서 빼야 한다.
+ * 아티스트는 SKU → 카탈로그 상품의 `artist`로 찾는다(판매 시작 뒤 바뀌지 않게 catalog.baseline이 막는다).
+ */
+export const listShopArtistSales = async (month: string): Promise<AdminShopArtistSalesRow[]> => {
+  const range = kstMonthRange(month);
+  if (!range) return [];
+  const artistBySku = new Map(
+    SHOP_PRODUCTS.flatMap((p) => (p.artist ? p.skus.map((s) => [s.id, p.artist as string] as const) : [])),
+  );
+  if (artistBySku.size === 0) return [];
+  const rows = await getDb().all<{ order_no: string; status: string; sku_id: string; unit_price: number; quantity: number }>(sql`
+    SELECT o.order_no, o.status, i.sku_id, i.unit_price, i.quantity
+    FROM orders o
+    JOIN shop_orders so ON so.order_no = o.order_no
+    JOIN shop_order_items i ON i.order_no = o.order_no
+    WHERE o.type = 'merch' AND o.status IN ('paid', 'partially_refunded')
+      AND so.fulfillment_status IN ('shipped', 'delivered')
+      AND so.shipped_at >= ${range.from} AND so.shipped_at < ${range.to}
+  `);
+  const byArtist = new Map<string, { quantity: number; salesAmount: number; review: Set<string> }>();
+  for (const r of rows) {
+    const slug = artistBySku.get(r.sku_id);
+    if (!slug) continue;
+    const acc = byArtist.get(slug) ?? { quantity: 0, salesAmount: 0, review: new Set<string>() };
+    if (r.status === 'partially_refunded') acc.review.add(r.order_no);
+    else {
+      acc.quantity += Number(r.quantity);
+      acc.salesAmount += Number(r.unit_price) * Number(r.quantity);
+    }
+    byArtist.set(slug, acc);
+  }
+  return [...byArtist.entries()]
+    .map(([slug, acc]) => {
+      const artist = getSupportedArtist(slug);
+      return {
+        artistSlug: slug,
+        artistName: artist?.name ?? slug,
+        taxType: artist?.taxType ?? null,
+        quantity: acc.quantity,
+        salesAmount: acc.salesAmount,
+        payout: artist ? computeShopArtistPayout({ salesAmount: acc.salesAmount, refundAmount: 0, taxType: artist.taxType }) : null,
+        needsReviewOrderNos: [...acc.review].sort(),
+      };
+    })
+    .sort((a, b) => a.artistName.localeCompare(b.artistName, 'ko'));
 };
