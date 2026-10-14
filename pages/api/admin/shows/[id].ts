@@ -197,7 +197,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const state = bankDepositStateOf(order);
       if (b.action === 'mark_refund_sent') {
         if (state !== 'paid') return res.status(409).json({ ok: false, message: '계좌 입금 주문이 아닙니다.' });
-        await markRefundAccountRefunded({ kind: 'show', orderNo }, now);
+        const recorded = await markRefundAccountRefunded({ kind: 'show', orderNo }, now);
+        if (!recorded) return res.status(500).json({ ok: false, message: '송금 완료를 기록하지 못했습니다. 잠시 후 다시 시도해 주세요.' });
         return res.status(200).json({ ok: true });
       }
       if (order.status !== AWAITING_DEPOSIT) return res.status(409).json({ ok: false, message: '입금 대기 중인 계좌 입금 신청이 아닙니다. 새로고침해 주세요.' });
