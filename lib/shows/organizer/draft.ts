@@ -1,5 +1,5 @@
 // lib/shows/organizer/draft.ts
-import { isFundingMediaUrl, FUNDING_MEDIA_URL_PREFIX } from '../../funding/mediaPath';
+import { isFundingMediaUrl, FUNDING_MEDIA_URL_PREFIX, resolveFundingBlobPath } from '../../funding/mediaPath';
 import { descriptionBlocks } from '../structured';
 import type { ShowDefinition } from '../seed';
 
@@ -40,15 +40,38 @@ export const emptyDraft = (): ShowSubmissionDraft => ({
   ticketTypes: [{ name: '일반', price: null }], performers: [],
 });
 
+const isObj = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v);
+const asStr = (v: unknown, d: string): string => (typeof v === 'string' ? v : d);
+const asStrOrNull = (v: unknown): string | null => (typeof v === 'string' ? v : null);
+const asNumOrNull = (v: unknown): number | null => (typeof v === 'number' && Number.isFinite(v) ? v : null);
+const asStrArray = (v: unknown): string[] => (Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : []);
+
+/** 저장된 JSON을 칸마다 타입을 확인해 읽는다 — 한 칸이 깨져도 나머지와 제출 검증이 죽지 않는다. */
 export const parseDraft = (json: string | null): ShowSubmissionDraft => {
-  if (!json) return emptyDraft();
+  const d = emptyDraft();
+  if (!json) return d;
+  let parsed: unknown;
   try {
-    const parsed: unknown = JSON.parse(json);
-    if (!parsed || typeof parsed !== 'object') return emptyDraft();
-    return { ...emptyDraft(), ...(parsed as Partial<ShowSubmissionDraft>) };
+    parsed = JSON.parse(json);
   } catch {
-    return emptyDraft();
+    return d;
   }
+  if (!isObj(parsed)) return d;
+  const ticketTypes = Array.isArray(parsed.ticketTypes)
+    ? parsed.ticketTypes.filter(isObj).map((t) => ({ name: asStr(t.name, ''), price: asNumOrNull(t.price) }))
+    : d.ticketTypes;
+  const performers = Array.isArray(parsed.performers)
+    ? parsed.performers.filter(isObj).map((x) => ({ name: asStr(x.name, ''), bio: asStr(x.bio, ''), photoUrl: asStrOrNull(x.photoUrl) }))
+    : d.performers;
+  return {
+    title: asStr(parsed.title, d.title), subtitle: asStr(parsed.subtitle, d.subtitle),
+    presenterName: asStr(parsed.presenterName, d.presenterName), description: asStr(parsed.description, d.description),
+    posterUrl: asStrOrNull(parsed.posterUrl), ageRating: asStr(parsed.ageRating, d.ageRating),
+    runningMinutes: asNumOrNull(parsed.runningMinutes), venueName: asStr(parsed.venueName, d.venueName),
+    venueAddress: asStr(parsed.venueAddress, d.venueAddress), scheduleNote: asStr(parsed.scheduleNote, d.scheduleNote),
+    notices: asStrArray(parsed.notices), showtimes: asStrArray(parsed.showtimes), capacity: asNumOrNull(parsed.capacity),
+    ticketTypes, performers,
+  };
 };
 
 const KST_WALL = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/;
@@ -67,10 +90,19 @@ const intOrNull = (v: unknown, max: number): number | null | undefined =>
 // isOwnFundingMedia(lib/funding/mediaAccess.ts)와 같은 판정 — 그 모듈은 db/client를 물어 순수 모듈에 들이지 않는다.
 const isOwnMedia = (filename: string, creatorId: string): boolean => creatorId !== '' && filename.startsWith(`${creatorId}-`);
 
+const MAX_IMAGE_URL_LENGTH = 300;
+const IMAGE_QUERY = /^\?w=\d{1,5}&h=\d{1,5}$/;
+
 const ownImage = (v: unknown, creatorId: string): string | null | undefined => {
   if (v === null || v === '' || v === undefined) return null;
-  if (typeof v !== 'string' || !isFundingMediaUrl(v)) return undefined;
-  const filename = v.slice(FUNDING_MEDIA_URL_PREFIX.length).split('?')[0];
+  if (typeof v !== 'string' || v.length > MAX_IMAGE_URL_LENGTH || !isFundingMediaUrl(v)) return undefined;
+  const rest = v.slice(FUNDING_MEDIA_URL_PREFIX.length);
+  const q = rest.indexOf('?');
+  const filename = q === -1 ? rest : rest.slice(0, q);
+  const query = q === -1 ? '' : rest.slice(q);
+  // 경로 탈출(`..`·`\`·`%2e`·`#`·여러 세그먼트)을 먼저 걸러야 접두사 검사가 의미를 갖는다.
+  if (query !== '' && !IMAGE_QUERY.test(query)) return undefined;
+  if (resolveFundingBlobPath(filename) === null) return undefined;
   return isOwnMedia(filename, creatorId) ? v : undefined;
 };
 
@@ -90,6 +122,11 @@ export const normalizeDraftInput = (
   const venueName = str(i.venueName, L.venueName);
   const venueAddress = str(i.venueAddress, L.venueAddress);
   const scheduleNote = str(i.scheduleNote ?? '', L.scheduleNote);
+  const rawRequired = [i.title, i.presenterName, i.description, i.ageRating, i.venueName, i.venueAddress];
+  const rawOptional = [i.subtitle, i.scheduleNote];
+  if (rawRequired.some((v) => typeof v !== 'string') || rawOptional.some((v) => v !== undefined && v !== null && typeof v !== 'string')) {
+    return fail('요청 형식이 올바르지 않아요.');
+  }
   if ([title, subtitle, presenterName, description, ageRating, venueName, venueAddress, scheduleNote].some((v) => v === null)) {
     return fail('글자 수가 너무 많은 칸이 있어요.');
   }

@@ -69,3 +69,56 @@ test('승인 뒤 저장은 잠긴 칸을 승인본에서 가져온다', () => {
 test('깨진 JSON은 빈 초안', () => {
   expect(parseDraft('{oops')).toEqual(emptyDraft());
 });
+
+describe('이미지 주소 경로 탈출 차단', () => {
+  const OTHER = 'b'.repeat(32);
+  const bad = [
+    `/api/funding/media/${CREATOR}-x/../${OTHER}-uuid.webp`,
+    `/api/funding/media/${CREATOR}-x\\..\\${OTHER}-uuid.webp`,
+    `/api/funding/media/${CREATOR}-%2e%2e/${OTHER}-uuid.webp`,
+    `/api/funding/media/${CREATOR}-%2e%2e%2f${OTHER}-uuid.webp`,
+    `${ownPhoto}#frag`,
+    `/api/funding/media/${CREATOR}-x.webp/extra.webp`,
+    `/api/funding/media/${CREATOR}-11111111.webp?w=800&h=1100&evil=1`,
+    `/api/funding/media/${CREATOR}-11111111.webp?x=1`,
+    `/api/funding/media/${CREATOR}-${'a'.repeat(300)}.webp`,
+  ];
+  test.each(bad)('거부: %s', (url) => {
+    expect(normalizeDraftInput({ ...complete(), posterUrl: url }, CREATOR).ok).toBe(false);
+    expect(normalizeDraftInput({ ...complete(), performers: [{ name: 'a', bio: '', photoUrl: url }] }, CREATOR).ok).toBe(false);
+  });
+  test('쿼리 없는 본인 주소는 통과', () => {
+    const url = `/api/funding/media/${CREATOR}-11111111.webp`;
+    expect(normalizeDraftInput({ ...complete(), posterUrl: url }, CREATOR).ok).toBe(true);
+  });
+});
+
+test('정상 입력은 다듬어서 ok', () => {
+  const r = normalizeDraftInput({ ...complete(), title: '  가을 밤  ', notices: [' 안내 ', ''] }, CREATOR);
+  expect(r.ok).toBe(true);
+  if (r.ok) {
+    expect(r.draft.title).toBe('가을 밤');
+    expect(r.draft.notices).toEqual(['안내']);
+    expect(r.draft.posterUrl).toBe(ownPhoto);
+  }
+});
+
+test('문자열이 아닌 필수 칸은 형식 오류, 너무 길면 글자 수 오류', () => {
+  const a = normalizeDraftInput({ ...complete(), title: 5 }, CREATOR);
+  expect(a.ok === false && a.message).toBe('요청 형식이 올바르지 않아요.');
+  const b = normalizeDraftInput({ ...complete(), venueName: undefined }, CREATOR);
+  expect(b.ok === false && b.message).toBe('요청 형식이 올바르지 않아요.');
+  const c = normalizeDraftInput({ ...complete(), title: 'x'.repeat(61) }, CREATOR);
+  expect(c.ok === false && c.message).toBe('글자 수가 너무 많은 칸이 있어요.');
+});
+
+test('parseDraft는 칸마다 타입을 보정한다', () => {
+  const d = parseDraft(JSON.stringify({ title: 'T', showtimes: 'x', ticketTypes: 7, performers: [1, { name: 3 }], capacity: '9', notices: [1, 'a'] }));
+  expect(d.title).toBe('T');
+  expect(d.showtimes).toEqual([]);
+  expect(d.ticketTypes).toEqual(emptyDraft().ticketTypes);
+  expect(d.performers).toEqual([{ name: '', bio: '', photoUrl: null }]);
+  expect(d.capacity).toBeNull();
+  expect(d.notices).toEqual(['a']);
+  expect(() => findSubmitProblems(d, NOW)).not.toThrow();
+});
