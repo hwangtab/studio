@@ -290,7 +290,7 @@ export const listShopArtistSales = async (month: string): Promise<AdminShopArtis
       for (const id of invoiceIds) if (!haveIds.has(id)) missingBusiness.add(`creator:${id}`);
     }
   } catch (error) {
-    console.error('[shop] 아티스트 사업자 정보 조회 실패 — 미등록 표시를 생략합니다:', error);
+    if (!isMissingTableError(error)) console.error('[shop] 아티스트 사업자 정보 조회 실패 — 미등록 표시를 생략합니다:', error);
   }
 
   return [...byArtist.entries()]

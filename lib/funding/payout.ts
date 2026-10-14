@@ -613,17 +613,18 @@ export const recordFundingPayout = async (
   if (preview.recorded) return { ok: false, code: 'already_recorded' };
   if (!preview.closed) return { ok: false, code: 'not_closed' };
   if (!preview.hasPayoutAccount) return { ok: false, code: 'no_payout_account' };
+  if (preview.taxType === 'invoice') {
+    // 세금계산서를 받을 상대를 모른 채 기록하면 되돌릴 수 없다. 표를 못 읽은 것도 "있다"고 볼 수 없다.
+    // 계좌 복호화 점검보다 먼저 본다 — 어차피 막힐 기록에 계좌를 열어 접속기록을 남길 이유가 없다.
+    if (preview.hasBusinessNumber === null) return { ok: false, code: 'business_profile_unavailable' };
+    if (!preview.hasBusinessNumber) return { ok: false, code: 'no_business_number' };
+  }
   // 계좌는 세금 구분과 무관하게 필요하다 — 원천징수든 사업자든 돈은 계좌로 간다.
   const accountRead = await payoutAccountReadable(projectId, actor, ip);
   if (!accountRead.ok) {
     return { ok: false, code: 'payout_account_unreadable', cryptoCode: accountRead.cryptoCode };
   }
   if (!preview.taxType) return { ok: false, code: 'no_tax_type' };
-  if (preview.taxType === 'invoice') {
-    // 세금계산서를 받을 상대를 모른 채 기록하면 되돌릴 수 없다. 표를 못 읽은 것도 "있다"고 볼 수 없다.
-    if (preview.hasBusinessNumber === null) return { ok: false, code: 'business_profile_unavailable' };
-    if (!preview.hasBusinessNumber) return { ok: false, code: 'no_business_number' };
-  }
   if (preview.taxType === 'withholding') {
     if (!preview.hasResidentNumber) return { ok: false, code: 'no_resident_number' };
     const residentRead = await residentNumberReadable(projectId, actor, ip);

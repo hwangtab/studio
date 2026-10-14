@@ -763,6 +763,13 @@ describe('정산 기록 시의 복호화도 접속기록에 남는다', () => {
       expect(await recordAsAdmin(project.id, new Date())).toEqual({ ok: false, code: 'no_business_number' });
     });
 
+    it('사업자 게이트에서 막히면 계좌를 열어 보지 않는다 — 복호화 접속기록이 남지 않는다', async () => {
+      const { project } = await seedProject({}, { taxType: 'invoice' });
+      await seedPledge(project.slug, 1_000_000);
+      expect(await recordAsAdmin(project.id, new Date())).toEqual({ ok: false, code: 'no_business_number' });
+      expect(await accessLogs()).toEqual([]);
+    });
+
     it('사업자 정보가 있으면 국세청 상태와 무관하게 기록된다(휴업·폐업은 운영자 판단)', async () => {
       const { project, creator } = await seedProject({}, { taxType: 'invoice' });
       await seedBusinessProfile(creator.id, { ntsStatus: 'closed' });
