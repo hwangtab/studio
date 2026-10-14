@@ -2,6 +2,7 @@ export type { LucideIcon } from 'lucide-react';
 export { default as Activity } from 'lucide-react/dist/esm/icons/activity.js';
 export { default as AlertCircle } from 'lucide-react/dist/esm/icons/alert-circle.js';
 export { default as AlertTriangle } from 'lucide-react/dist/esm/icons/alert-triangle.js';
+export { default as ArrowDown } from 'lucide-react/dist/esm/icons/arrow-down.js';
 export { default as ArrowLeft } from 'lucide-react/dist/esm/icons/arrow-left.js';
 export { default as ArrowRight } from 'lucide-react/dist/esm/icons/arrow-right.js';
 export { default as ArrowRightLeft } from 'lucide-react/dist/esm/icons/arrow-right-left.js';

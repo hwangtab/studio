@@ -51,3 +51,16 @@ export function resolveFundingBlobPath(input: string | string[] | undefined): st
  */
 export const isFundingMediaUrl = (src: string | undefined): boolean =>
   typeof src === 'string' && src.startsWith(FUNDING_MEDIA_URL_PREFIX);
+
+/** 업로드 주소 끝의 `?w=&h=` 힌트(원본 픽셀 크기). 업로드 이미지는 utils/imageMetadata.json에 없어서 이 힌트가 유일한 크기 출처다. */
+export function fundingMediaDimensions(src: string | undefined): { width: number; height: number } | null {
+  if (!isFundingMediaUrl(src)) return null;
+  const query = (src as string).split('?')[1];
+  if (!query) return null;
+  const params = new URLSearchParams(query);
+  const width = Number(params.get('w'));
+  const height = Number(params.get('h'));
+  if (!Number.isInteger(width) || width <= 0 || width > 10000) return null;
+  if (!Number.isInteger(height) || height <= 0 || height > 10000) return null;
+  return { width, height };
+}

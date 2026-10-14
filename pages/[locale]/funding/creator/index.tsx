@@ -29,7 +29,7 @@ interface Props {
 }
 
 /** 심사 상태 → 배지 색. 라벨 정본은 REVIEW_STATUS_LABEL(components/funding/creator/types.ts).
- *  편집 화면(`[id].tsx`)이 같은 표를 든다 — 페이지 모듈을 서로 import하면 GSSP의 서버 전용
+ *  편집 화면(`[id].tsx`)·공연 탭(`shows/index.tsx`)이 같은 표를 든다 — 페이지 모듈을 서로 import하면 GSSP의 서버 전용
  *  의존이 클라이언트 번들로 끌려가므로 복제한다. 바꾸면 둘 다 바꿀 것. */
 const REVIEW_STATUS_TONE: Record<string, BadgeTone> = {
   draft: 'neutral', submitted: 'info', changes_requested: 'warning', approved: 'success', rejected: 'error',

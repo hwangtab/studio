@@ -5,6 +5,7 @@ import { getDb } from '../../../../db/client';
 import { showTicketTypes, showtimes, showZones } from '../../../../db/schema';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { cancelPayment } from '../../../../lib/booking/toss';
+import { isPublishable, revalidateShow, sqlUpdateStatus } from '../../../../lib/shows/revalidate';
 import { SCAN_LINK_MAX_TTL_HOURS } from '../../../../lib/shows/scanLink';
 import { createScanLinkToken } from '../../../../lib/shows/scanAccess';
 import { issueReportLink, REPORT_LINK_MAX_TTL_DAYS, revokeReportLink } from '../../../../lib/shows/reportLink';
@@ -40,21 +41,7 @@ const REFUND_REASON_MESSAGE: Record<string, string> = {
   refund_account_unavailable: '환불 계좌 표를 읽거나 쓸 수 없습니다(마이그레이션 0048·키 확인).',
 };
 
-const sqlUpdateStatus = (showId: string, status: 'draft' | 'published', now: Date) =>
-  sql`UPDATE shows SET status = ${status}, updated_at = ${Math.floor(now.getTime() / 1000)} WHERE id = ${showId} AND status != 'cancelled'`;
-
 const isNonEmptyString = (v: unknown): v is string => typeof v === 'string' && v.trim() !== '';
-
-/** 공개 페이지를 다시 만든다 — best-effort. 이 앱이 ISR이 아닌 경로에서 던지는 오류는 무시한다. */
-async function revalidateShow(res: NextApiResponse, slug: string) {
-  for (const path of ['/ko/shows', `/ko/shows/${slug}`]) {
-    try {
-      await res.revalidate(path);
-    } catch {
-      /* 재검증 실패가 운영 액션을 실패시키지 않는다 */
-    }
-  }
-}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -84,8 +71,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (next !== 'draft' && next !== 'published') return res.status(400).json({ ok: false, message: '상태는 draft 또는 published만 바꿀 수 있습니다.' });
       if (show.status === 'cancelled') return res.status(409).json({ ok: false, message: '취소된 공연은 상태를 바꿀 수 없습니다.' });
       if (next === 'published') {
-        const live = show.showtimes.some((s) => s.status === 'scheduled' && s.startsAt * 1000 > now.getTime());
-        if (!live || show.zones.length === 0 || show.ticketTypes.length === 0) {
+        if (!isPublishable(show, now)) {
           return res.status(409).json({ ok: false, message: '공개하려면 예정된 회차·구역·티켓타입이 모두 필요합니다.' });
         }
       }

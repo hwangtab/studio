@@ -1,5 +1,6 @@
 import Image from 'next/image';
 
+import { fundingMediaDimensions, isFundingMediaUrl } from '../../lib/funding/mediaPath';
 import { showCopy, type ShowLocale } from '../../lib/shows/i18n';
 
 /**
@@ -8,6 +9,8 @@ import { showCopy, type ShowLocale } from '../../lib/shows/i18n';
  */
 export default function ShowPoster({ src, title, locale = 'ko' }: { src: string; title: string; locale?: ShowLocale }) {
   const copy = showCopy(locale);
+  // 업로드 이미지는 최적화기를 건너뛰고(isFundingMediaUrl 주석), 크기는 주소의 ?w=&h= 힌트에서 읽는다.
+  const dims = fundingMediaDimensions(src) ?? { width: 1200, height: 1200 };
   return (
     <a
       href={src}
@@ -19,8 +22,9 @@ export default function ShowPoster({ src, title, locale = 'ko' }: { src: string;
       <Image
         src={src}
         alt={copy.posterAlt(title)}
-        width={1200}
-        height={1200}
+        width={dims.width}
+        height={dims.height}
+        unoptimized={isFundingMediaUrl(src)}
         sizes="(min-width: 1024px) 352px, (min-width: 640px) 420px, 92vw"
         style={{ width: '100%', height: 'auto' }}
         priority

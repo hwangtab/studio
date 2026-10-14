@@ -34,6 +34,12 @@ export interface MediaPurgeResult {
   failed: number;
 }
 
+/** 표가 아직 없는 DB(마이그레이션 전)의 `no such table`만 참이다 — 원인(cause)까지 본다. */
+const isNoSuchTable = (error: unknown): boolean => {
+  const cause = error instanceof Error && error.cause instanceof Error ? error.cause.message : '';
+  return /no such table/i.test(`${error instanceof Error ? error.message : String(error)} ${cause}`);
+};
+
 /**
  * 상점이 참조하는 업로드 이미지 텍스트 — 상품 사진(**초안·심사 중 포함, 상태를 보지 않는다**)과 아티스트 프로필 사진.
  *
@@ -47,8 +53,20 @@ const shopReferences = async (): Promise<Array<{ text: string | null }>> => {
       union all select profile_image_url as text from shop_artists
     `);
   } catch (error: unknown) {
-    const cause = error instanceof Error && error.cause instanceof Error ? error.cause.message : '';
-    if (/no such table/i.test(`${error instanceof Error ? error.message : String(error)} ${cause}`)) return [];
+    if (isNoSuchTable(error)) return [];
+    throw error;
+  }
+};
+
+/**
+ * 주최자 공연 초안(포스터·출연진 사진) — 상점과 같은 규칙. 표가 아직 없는 DB만 건너뛰고, 그 밖의
+ * 실패는 던져서 청소 전체를 멈춘다(참조를 못 읽은 채 지우면 살아 있는 그림이 사라진다).
+ */
+const showSubmissionReferences = async (): Promise<Array<{ text: string | null }>> => {
+  try {
+    return await getDb().all<{ text: string | null }>(sql`select draft_json as text from show_submissions`);
+  } catch (error: unknown) {
+    if (isNoSuchTable(error)) return [];
     throw error;
   }
 };
@@ -68,6 +86,8 @@ const referencedFilenames = async (): Promise<Set<string>> => {
     union all select hero_image_url as text from funding_projects
     union all select content as text from funding_projects
     union all select image_url as text from funding_rewards
+    union all select cover_image as text from shows
+    union all select performers_json as text from shows
   `);
 
   const pattern = new RegExp(`${FUNDING_MEDIA_URL_PREFIX}([A-Za-z0-9._-]+\\.webp)`, 'gi');
@@ -75,17 +95,15 @@ const referencedFilenames = async (): Promise<Set<string>> => {
   const collect = (texts: Array<{ text: string | null }>) => {
     for (const row of texts) {
       if (!row.text) continue;
+      // Blob pathname과 맞대 볼 것이므로 소문자로 모은다 — 정규식이 대소문자를 가리지
+      // 않는데 Set 조회가 가린다면, `X.WEBP`로 적힌 참조가 `x.webp` 파일과 어긋나 살아
+      // 있는 그림이 지워진다(조회 쪽도 같이 소문자로 내린다).
       for (const match of row.text.matchAll(pattern)) referenced.add(match[1].toLowerCase());
     }
   };
-  for (const row of rows) {
-    if (!row.text) continue;
-    // Blob pathname과 맞대 볼 것이므로 소문자로 모은다 — 정규식이 대소문자를 가리지
-    // 않는데 Set 조회가 가린다면, `X.WEBP`로 적힌 참조가 `x.webp` 파일과 어긋나 살아
-    // 있는 그림이 지워진다(조회 쪽도 같이 소문자로 내린다).
-    for (const match of row.text.matchAll(pattern)) referenced.add(match[1].toLowerCase());
-  }
+  collect(rows);
   collect(await shopReferences());
+  collect(await showSubmissionReferences());
   return referenced;
 };
 
