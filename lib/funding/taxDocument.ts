@@ -1,6 +1,6 @@
 import sharp from 'sharp';
 
-export const TAX_DOCUMENT_MAX_BYTES = 8 * 1024 * 1024;
+export const TAX_DOCUMENT_MAX_BYTES = 4 * 1024 * 1024; // Vercel 함수 본문 한도(4.5MB) 안 — 이보다 크면 함수에 닿기 전에 막힌다
 /** 글자가 읽혀야 하므로 본문 이미지(1600)보다 크게 둔다. */
 const MAX_WIDTH = 2400;
 const MAX_INPUT_PIXELS = 40_000_000; // creatorUpload.ts와 같은 이유

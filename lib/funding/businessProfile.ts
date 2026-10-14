@@ -1,7 +1,7 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, isNull } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { creatorBusinessProfiles, fundingProjectPayouts, fundingProjects } from '../../db/schema';
+import { creatorBusinessProfiles, fundingCreators, fundingProjectPayouts, fundingProjects } from '../../db/schema';
 import type { NtsBusinessStatus } from './businessStatus';
 
 /**
@@ -129,16 +129,27 @@ export const setBusinessCertificate = async (
   now: Date,
 ): Promise<{ previousKey: string | null } | null> => {
   const db = getDb();
-  const [row] = await db.select({ key: creatorBusinessProfiles.certificateKey }).from(creatorBusinessProfiles)
-    .where(eq(creatorBusinessProfiles.creatorId, creatorId)).limit(1);
-  if (!row) return null;
-  await db.update(creatorBusinessProfiles).set({
-    certificateKey: key,
-    certificateContentType: contentType,
-    certificateUploadedAt: now,
-    updatedAt: now,
-  }).where(eq(creatorBusinessProfiles.creatorId, creatorId));
-  return { previousKey: row.key ?? null };
+  // 읽고 쓰는 사이에 다른 요청이 키를 바꾸면 옛 키를 놓쳐 Blob이 고아가 된다.
+  // 읽은 키가 그대로일 때만 갱신하고(비교 후 쓰기), 아니면 다시 읽는다.
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const [row] = await db.select({ key: creatorBusinessProfiles.certificateKey }).from(creatorBusinessProfiles)
+      .where(eq(creatorBusinessProfiles.creatorId, creatorId)).limit(1);
+    if (!row) return null;
+    const previousKey = row.key ?? null;
+    const updated = await db.update(creatorBusinessProfiles).set({
+      certificateKey: key,
+      certificateContentType: contentType,
+      certificateUploadedAt: now,
+      updatedAt: now,
+    }).where(and(
+      eq(creatorBusinessProfiles.creatorId, creatorId),
+      previousKey === null
+        ? isNull(creatorBusinessProfiles.certificateKey)
+        : eq(creatorBusinessProfiles.certificateKey, previousKey),
+    )).returning({ id: creatorBusinessProfiles.creatorId });
+    if (updated.length > 0) return { previousKey };
+  }
+  throw new Error('certificate_update_conflict');
 };
 
 /** 사업자등록증만 비운다(사업자 정보는 둔다). 행이 없으면 null. */
@@ -157,4 +168,11 @@ export const clearBusinessCertificate = async (
     updatedAt: now,
   }).where(eq(creatorBusinessProfiles.creatorId, creatorId));
   return { previousKey: row.key ?? null };
+};
+
+/** 세금 구분이 사업자(`invoice`)인가 — 한 컬럼만 읽는다. 사업자 행은 개인으로 바꾼 뒤에도 근거로 남을 수 있어 행 유무로는 알 수 없다. */
+export const isInvoiceTaxType = async (creatorId: string): Promise<boolean> => {
+  const [row] = await getDb().select({ taxType: fundingCreators.taxType }).from(fundingCreators)
+    .where(eq(fundingCreators.id, creatorId)).limit(1);
+  return row?.taxType === 'invoice';
 };

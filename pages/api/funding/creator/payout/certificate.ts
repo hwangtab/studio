@@ -9,6 +9,7 @@ import { getClientIp } from '../../../../../lib/contracts/client-ip';
 import {
   clearBusinessCertificate,
   deleteTaxDocumentBlob,
+  isInvoiceTaxType,
   loadBusinessProfile,
   setBusinessCertificate,
   TAX_DOCUMENT_PREFIX,
@@ -46,6 +47,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!(await hasApprovedEngagement(creatorId))) {
       return res.status(403).json({ ok: false, message: '승인된 뒤에 올릴 수 있어요.' });
     }
+    if (!(await isInvoiceTaxType(creatorId))) {
+      return res.status(409).json({
+        ok: false,
+        message: req.method === 'DELETE' ? '세금 구분이 사업자일 때만 지울 수 있어요.' : '세금 구분이 사업자일 때만 올릴 수 있어요.',
+      });
+    }
     profile = await loadBusinessProfile(creatorId);
   } catch (error: unknown) {
     console.error('[funding/creator/payout/certificate] 조회 실패:', error);
@@ -78,7 +85,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const body = await readBodyWithLimit(req, TAX_DOCUMENT_MAX_BYTES);
-  if (body === null) return res.status(413).json({ ok: false, message: '파일이 너무 커요. 8MB 이하로 올려 주세요.' });
+  if (body === null) return res.status(413).json({ ok: false, message: '파일이 너무 커요. 4MB 이하로 올려 주세요.' });
   if (body.length === 0) return res.status(400).json({ ok: false, message: '파일이 비어 있어요.' });
 
   let processed: Awaited<ReturnType<typeof processTaxDocument>>;
