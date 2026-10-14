@@ -804,6 +804,47 @@ export const fundingCreators = sqliteTable('funding_creators', {
 });
 
 /**
+ * 국세청 상태조회 결과를 우리 말로 접은 값. `unverified`는 "조회하지 못했다"(키 없음·실패·한도)이고
+ * 사유는 `nts_check_error`에 있다 — "등록되지 않은 번호"(`unregistered`)와 섞지 않는다.
+ */
+export const ntsBusinessStatusEnum = ['active', 'suspended', 'closed', 'unregistered', 'unverified'] as const;
+
+/**
+ * 사업자 개설자의 사업자 정보(2026-10-14). 계정(`funding_creators`) 하나에 한 행.
+ *
+ * **`funding_creators`에 컬럼을 더하지 않고 표를 따로 둔 이유는 배포 순서다**(0022·0035 절) — 그 표는
+ * 결제 확인·정산·로그인 경로가 전체 컬럼으로 읽는다. 같은 이유로 이 표는 **어떤 relations()에도 잇지 않는다.**
+ *
+ * **암호화하지 않는다.** 고유식별정보가 아니고 사업자가 세금계산서·통신판매 표시에 공개로 적는 값이며,
+ * 국세청 조회에 평문이 필요하다. 노출 규칙은 계좌와 같다 — 개설자 본인·관리자 화면에만 싣는다.
+ * 세금 구분을 개인으로 바꾸면 `savePayoutSection`이 이 행과 사업자등록증 Blob을 지운다(사업자 정산 기록이 있으면 유지).
+ */
+export const creatorBusinessProfiles = sqliteTable('creator_business_profiles', {
+  creatorId: text('creator_id').primaryKey().references(() => fundingCreators.id),
+  /** 하이픈 없는 10자리. 검사는 lib/funding/businessStatus.ts의 normalizeBusinessNumber. */
+  businessNumber: text('business_number').notNull(),
+  businessName: text('business_name').notNull(),
+  representativeName: text('representative_name').notNull(),
+  ntsStatus: text('nts_status', { enum: ntsBusinessStatusEnum }).notNull().default('unverified'),
+  /** 국세청 tax_type_cd 원문('01'…'07'). 조회 못 했으면 null. */
+  ntsTaxTypeCode: text('nts_tax_type_code'),
+  /** 국세청 tax_type 원문(화면 표시용). */
+  ntsTaxTypeLabel: text('nts_tax_type_label'),
+  /** 마지막으로 조회를 **시도한** 시각. */
+  ntsCheckedAt: integer('nts_checked_at', { mode: 'timestamp' }),
+  /** 마지막 시도가 실패했으면 사유 코드(missing_key·timeout·http_error·bad_response·network·rate_limited). 성공하면 null. */
+  ntsCheckError: text('nts_check_error'),
+  /** private Blob pathname(`tax-docs/<creatorId>/<uuid>.webp|pdf`). 주소가 아니라 경로다. */
+  certificateKey: text('certificate_key'),
+  certificateContentType: text('certificate_content_type'),
+  certificateUploadedAt: integer('certificate_uploaded_at', { mode: 'timestamp' }),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+});
+
+export type CreatorBusinessProfileRow = typeof creatorBusinessProfiles.$inferSelect;
+
+/**
  * 매직링크 토큰.
  *
  * **원문은 저장하지 않는다.** 이 테이블을 읽을 수 있는 쪽이 곧바로 남의 계정으로 들어갈 수
