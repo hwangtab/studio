@@ -17,7 +17,7 @@ const TABS: ReadonlyArray<{ key: CreatorConsoleTab; href: string; label: string 
  */
 export function CreatorConsoleTabs({ current }: { current: CreatorConsoleTab }) {
   return (
-    <nav aria-label="콘솔" className="mb-8 flex gap-2 border-b border-gray-200 dark:border-gray-700">
+    <nav aria-label="콘솔" className="mb-8 flex gap-2 overflow-x-auto border-b border-gray-200 dark:border-gray-700">
       {TABS.map((t) => (
         <Link
           key={t.key}
@@ -25,7 +25,7 @@ export function CreatorConsoleTabs({ current }: { current: CreatorConsoleTab }) 
           prefetch={false}
           aria-current={t.key === current ? 'page' : undefined}
           className={cn(
-            '-mb-px border-b-2 px-3 py-2 text-sm font-medium',
+            '-mb-px shrink-0 whitespace-nowrap border-b-2 px-3 py-2 text-sm font-medium',
             t.key === current
               ? 'border-gray-900 text-gray-900 dark:border-white dark:text-white'
               : 'border-transparent text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white',

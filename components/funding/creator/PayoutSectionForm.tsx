@@ -150,8 +150,15 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
       setBusinessName((cur) => (cur === businessName ? business.businessName : cur));
       setRepresentativeName((cur) => (cur === representativeName ? business.representativeName : cur));
     }
+    // 개인으로 저장해 서버가 사업자 행을 지웠으면(남긴다는 응답이 없으면) 사업자 칸도 비운다.
+    const businessDeleted = !business && savedBusiness !== null && !result.businessProfileRetained;
+    if (businessDeleted) {
+      setBusinessNumber((cur) => (cur === businessNumber ? '' : cur));
+      setBusinessName((cur) => (cur === businessName ? '' : cur));
+      setRepresentativeName((cur) => (cur === representativeName ? '' : cur));
+    }
     // 기준은 무조건 제출한 값으로 옮긴다 — 이어서 친 입력이 남아 있으면 dirty가 열린 채로 유지된다.
-    // 개인으로 저장했으면 사업자 칸의 기준은 그대로 둔다(칸이 숨어 있고 값도 바뀌지 않았다).
+    // 개인으로 저장했으면 사업자 칸의 기준은 그대로 두되, 서버가 사업자 행을 지웠으면 빈 값이 기준이다.
     setBaseline((prev) => ({
       bankName: value.bankName,
       account: value.account,
@@ -160,7 +167,9 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
       residentNumber: '',
       ...(business
         ? { businessNumber: shownNumber, businessName: business.businessName, representativeName: business.representativeName }
-        : { businessNumber: prev.businessNumber, businessName: prev.businessName, representativeName: prev.representativeName }),
+        : businessDeleted
+          ? { businessNumber: '', businessName: '', representativeName: '' }
+          : { businessNumber: prev.businessNumber, businessName: prev.businessName, representativeName: prev.representativeName }),
     }));
     setSave({ status: 'success' });
     setSavedWarnings(business ? result.businessWarnings ?? [] : null);
@@ -172,7 +181,7 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
     if (business && !businessUnavailable) {
       const named = { businessNumber: digits, businessName: business.businessName, representativeName: business.representativeName };
       nextBusiness = savedBusiness && savedBusiness.businessNumber === digits ? { ...savedBusiness, ...named } : freshBusinessView(named);
-    } else if (!business && savedBusiness && !result.businessProfileRetained) {
+    } else if (businessDeleted) {
       nextBusiness = null;
     }
     onSaved({
@@ -234,6 +243,13 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
               // 사업자로 바꾸면 주민등록번호 칸이 사라진다. 사라진 칸에 입력이 남아 있으면
               // 그 값이 보이지 않는 채로 다음 저장까지 브라우저 메모리에 머문다.
               if (next === 'invoice') setResidentNumber('');
+              // 개인으로 바꾸면 사업자 칸이 사라진다. 그 칸에 친 값은 보내지도 않으므로 저장된 값으로 되돌린다 —
+              // 안 그러면 개인으로 저장해도 dirty가 안 풀리고, 다시 사업자로 돌렸을 때 저장되지 않은 값이 보인다.
+              if (next === 'withholding') {
+                setBusinessNumber(baseline.businessNumber);
+                setBusinessName(baseline.businessName);
+                setRepresentativeName(baseline.representativeName);
+              }
               clearSaveStatus();
             }}
           >

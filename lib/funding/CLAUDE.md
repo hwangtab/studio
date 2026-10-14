@@ -412,6 +412,13 @@ supporterMessage는 후원자가 준 개인정보라 파기 약속이 걸리지�
 
 ### 개설자 콘솔에는 상점 탭이 있다
 
-`/ko/funding/creator`(펀딩 프로젝트 | 상점 탭, `CreatorConsoleTabs`)의 상점 탭은 관리자가 `shop_artists`에 등재한 아티스트에게만 열린다(규칙은 `lib/shop/CLAUDE.md`).
+`/ko/funding/creator`(펀딩 프로젝트 | 공연 | 상점 | 정산 정보 탭, `CreatorConsoleTabs`)의 상점 탭은 관리자가 `shop_artists`에 등재한 아티스트에게만 열린다(규칙은 `lib/shop/CLAUDE.md`).
 이름·소개·링크는 `funding_creators`를 펀딩과 공유한다. 업로드 라우트(`/api/funding/creator/upload`)는 `target=shop-profile`도 받고,
 **월간 미디어 청소(`mediaRetention.ts`)와 미디어 공개 판정(`media/[...path].ts`)이 상점 참조도 본다** — 이 둘을 고칠 때 상점 쪽 쿼리를 빼먹지 말 것.
+
+### 정산 정보는 계정에 한 벌, 저장 경로는 하나다
+
+정산 정보(계좌·세금 구분·주민등록번호·사업자 정보·사업자등록증)는 콘솔의 정산 정보 탭(`/ko/funding/creator/payout`)에서만 고친다.
+저장은 `POST /api/funding/creator/payout` 하나(`savePayoutSection`), 사업자등록증은 `/api/funding/creator/payout/certificate`.
+펀딩 편집기의 정산 탭은 요약(`PayoutSummaryCard`)과 링크뿐이다 — 프로젝트 구획 라우트(`projects/[id]`)는 `section: 'payout'`을 400으로 거부한다.
+같은 폼을 두 곳에 그리면 저장 경로는 하나여도 화면 상태(이탈 가드·국세청 경고)가 두 벌이 된다.

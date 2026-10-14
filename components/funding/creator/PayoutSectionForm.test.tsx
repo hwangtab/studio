@@ -199,6 +199,42 @@ describe('사업자 칸', () => {
     expect(screen.getByText('개인(원천징수)으로 바꿔 저장하면 사업자 정보와 사업자등록증이 지워져요.')).toBeInTheDocument();
   });
 
+  it('사업자 번호를 치다가 개인으로 바꿔 저장하면 dirty가 풀린다(이탈 가드 없음)', async () => {
+    mockFetchOk();
+    renderForm();
+    fireEvent.change(taxField(), { target: { value: 'invoice' } });
+    fireEvent.change(queryBizNumber()!, { target: { value: '1208147521' } });
+    fireEvent.change(taxField(), { target: { value: 'withholding' } });
+    fillAccount();
+    fireEvent.click(saveButton());
+    await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
+    await waitFor(() => expect(dirtyState()).toBe('clean'));
+    // 다시 사업자로 돌리면 저장된 값(없음)이 보인다 — 저장하지 않은 번호가 되살아나지 않는다.
+    fireEvent.change(taxField(), { target: { value: 'invoice' } });
+    expect(queryBizNumber()).toHaveValue('');
+  });
+
+  it('개인으로 바꾸면 사업자 칸이 저장된 값으로 돌아간다', () => {
+    renderForm(INVOICE);
+    fireEvent.change(queryBizNumber()!, { target: { value: '1208147521' } });
+    fireEvent.change(taxField(), { target: { value: 'withholding' } });
+    fireEvent.change(taxField(), { target: { value: 'invoice' } });
+    expect(queryBizNumber()).toHaveValue('753-74-00653');
+    expect(dirtyState()).toBe('clean');
+  });
+
+  it('저장된 사업자를 개인으로 저장해 서버가 지우면 사업자 칸이 비고 dirty가 풀린다', async () => {
+    mockFetchOk();
+    renderForm(INVOICE);
+    fireEvent.change(taxField(), { target: { value: 'withholding' } });
+    fillAccount();
+    fireEvent.click(saveButton());
+    await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
+    await waitFor(() => expect(dirtyState()).toBe('clean'));
+    fireEvent.change(taxField(), { target: { value: 'invoice' } });
+    expect(queryBizNumber()).toHaveValue('');
+  });
+
   it('개인으로 저장했는데 서버가 사업자 정보를 남겼다고 답하면 그렇게 말한다', async () => {
     mockFetchOk({ ok: true, businessProfileRetained: true });
     renderForm(INVOICE);
