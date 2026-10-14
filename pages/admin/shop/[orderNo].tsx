@@ -76,6 +76,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 };
 
 const kst = (sec: number) => new Date(sec * 1000).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+const PAYMENT_LABEL: Record<string, string> = { pending: '결제 대기', paid: '결제 완료', partially_refunded: '부분 환불', refunded: '환불', auto_cancel_pending: '자동 취소 중', expired: '만료', failed: '결제 실패' };
 const FULFILLMENT_LABEL: Record<string, string> = { preparing: '발송 준비', shipped: '발송함', delivered: '배송 완료', cancelled: '취소' };
 const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
 const buttonClass = 'rounded-lg bg-gray-900 px-4 py-2 text-white disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
@@ -108,7 +109,7 @@ export default function AdminShopOrderPage(p: Props) {
         <title>{p.orderNo} | 상점 관리</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <AdminShell title={`상점 주문 ${p.orderNo}`} description={`결제 ${p.status} · 발송 ${FULFILLMENT_LABEL[p.fulfillmentStatus] ?? p.fulfillmentStatus}`}>
+      <AdminShell title={`상점 주문 ${p.orderNo}`} description={`${PAYMENT_LABEL[p.status] ?? p.status} · ${FULFILLMENT_LABEL[p.fulfillmentStatus] ?? p.fulfillmentStatus}`}>
         <p className="mb-4 text-sm"><Link href="/admin/shop" className="text-primary hover:underline">← 상점 관리</Link></p>
         {error && <div role="alert" className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-900">{error}</div>}
         {p.notificationError && <div className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">마지막 메일 발송 실패: {p.notificationError}</div>}
