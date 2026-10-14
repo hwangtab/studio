@@ -42,6 +42,7 @@ import {
   purgeFundingPersonalDataOfPurgedOrders,
   purgeRefundAccountsOfPurgedOrders,
   purgeShopPersonalDataOfPurgedOrders,
+  purgeSoftwareLicensePersonalDataOfPurgedOrders,
   purgeUnusableBillingKeyRawResponses,
   SUBSCRIPTION_DORMANCY_YEARS,
 } from '../../../lib/privacy/orderRetention';
@@ -91,6 +92,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const shopShipping = await run(
     '결제자 이름이 파기된 상점 주문의 받는 분·배송지 파기',
     purgeShopPersonalDataOfPurgedOrders,
+  );
+  const softwareLicenses = await run(
+    '결제자 이름이 파기된 소프트웨어 주문의 라이선스 이메일·이름 파기',
+    purgeSoftwareLicensePersonalDataOfPurgedOrders,
   );
   const failMessages = await run(
     `결제 실패 후 ${PAYMENT_FAIL_MESSAGE_RETENTION_YEARS}년이 지난 결제사 실패 사유 원문 파기`,
@@ -150,6 +155,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     purgedFundingPledges: fundingListings ? fundingListings.purged : null,
     purgedRefundAccounts: refundAccounts ? refundAccounts.purged : null,
     purgedShopShipping: shopShipping ? shopShipping.purged : null,
+    purgedSoftwareLicenses: softwareLicenses ? softwareLicenses.purged : null,
     purgedPaymentFailMessages: failMessages ? failMessages.purged : null,
     endedDormantSubscriptions: dormantSubscriptions ? dormantSubscriptions.ended : null,
     purgedDormantSubscriptionCustomers: dormantSubscriptions ? dormantSubscriptions.purged : null,

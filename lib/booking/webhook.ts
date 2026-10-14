@@ -11,6 +11,8 @@ import { confirmBookingPayment, type ConfirmOutcome } from './confirm';
 import { confirmDepositPayment } from './confirmDeposit';
 import { confirmShopOrder } from '../shop/confirm';
 import { closeShopFulfillmentOnFullCancel } from '../shop/webhookSync';
+import { refundLicensesOnFullCancel } from '../software/cancel';
+import { confirmSoftwareOrder } from '../software/confirm';
 import { findOrderByOrderNo } from './service';
 import { cancelPayment, confirmPayment, fetchPayment, type TossPayment } from './toss';
 
@@ -333,6 +335,17 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
           await releaseEventKey(eventKey);
           return { status: 500 };
         }
+      } else if (orderType === 'software') {
+        // 소프트웨어 라이선스 — 전용 승인 경로(lib/software/confirm.ts). 승인과 라이선스 발급이 한 batch다.
+        const outcome = await confirmSoftwareOrder(
+          { orderNo: payment.orderId, paymentKey, amount: payment.totalAmount },
+          { trustedByWebhook: true },
+        );
+        if (!outcome.ok && (outcome.code === 'recording_failed' || outcome.code === 'toss_rejected')) {
+          console.error('[booking-webhook] 소프트웨어 확정 처리 일시 실패 — 멱등 키 회수 후 재시도 유도', { eventKey, code: outcome.code });
+          await releaseEventKey(eventKey);
+          return { status: 500 };
+        }
       } else if (orderType === 'deposit') {
         // 예약금 결제 링크 — 하위 테이블이 없는 전용 승인 경로. 재조회로 DONE + 금액이 확인된 돈이다.
         const outcome = await confirmDepositPayment(
@@ -390,6 +403,15 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
             await reconcileRefunds(order, paymentRow, payment);
             if (payment.status === 'CANCELED') await closeShopFulfillmentOnFullCancel(order.orderNo);
           } else console.error('[booking-webhook] 상점 취소 대사 스킵 — payments 행 없음', { orderNo: order.orderNo });
+        }
+      } else if (orderType === 'software') {
+        // 소프트웨어 — 콘솔 등 외부 취소의 대사. 전액 취소면 라이선스도 닫는다(돈이 다 돌아간 키로 새 기기를 받지 않게).
+        if (order) {
+          const paymentRow = order.payments.find((p) => p.paymentKey === payment.paymentKey) ?? order.payments[0];
+          if (paymentRow) {
+            await reconcileRefunds(order, paymentRow, payment);
+            if (payment.status === 'CANCELED') await refundLicensesOnFullCancel(order.orderNo);
+          } else console.error('[booking-webhook] 소프트웨어 취소 대사 스킵 — payments 행 없음', { orderNo: order.orderNo });
         }
       } else if (orderType === 'deposit') {
         // 예약금 — 선점할 하위 엔티티가 없다. 취소 금액만 refunds와 대사하고 주문 상태를 환불 계열로 옮긴다.

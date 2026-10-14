@@ -106,21 +106,34 @@ export const activateLicense = async (input: ActivateInput, signer: LicenseSigne
       .set({ lastSeenAt: now, ...(label ? { label } : {}), ...(appVersion ? { appVersion } : {}) })
       .where(eq(softwareActivations.id, existing.id));
   } else {
-    const result = await db.run(sql`
-      INSERT INTO software_activations (id, license_id, machine_id, label, app_version, activated_at, last_seen_at)
-      SELECT ${randomUUID()}, ${found.id}, ${machineId}, ${label}, ${appVersion}, ${nowSec}, ${nowSec}
-      WHERE (SELECT count(*) FROM software_activations WHERE license_id = ${found.id} AND deactivated_at IS NULL) < ${found.maxActivations}
-        AND NOT EXISTS (SELECT 1 FROM software_activations WHERE license_id = ${found.id} AND machine_id = ${machineId} AND deactivated_at IS NULL)
-    `);
+    // 활성화 행과 첫 활성화 시각을 한 batch(트랜잭션)로 — 고객 셀프 환불(lib/software/cancel.ts)이 둘 사이에 끼어
+    // "기기는 붙었는데 활성화 기록은 없는" 순간을 보고 환불하지 못하게. 라이선스가 여전히 active일 때만 자리를 준다.
+    const activationId = randomUUID();
+    const [result] = await db.batch([
+      db.run(sql`
+        INSERT INTO software_activations (id, license_id, machine_id, label, app_version, activated_at, last_seen_at)
+        SELECT ${activationId}, ${found.id}, ${machineId}, ${label}, ${appVersion}, ${nowSec}, ${nowSec}
+        WHERE (SELECT count(*) FROM software_activations WHERE license_id = ${found.id} AND deactivated_at IS NULL) < ${found.maxActivations}
+          AND NOT EXISTS (SELECT 1 FROM software_activations WHERE license_id = ${found.id} AND machine_id = ${machineId} AND deactivated_at IS NULL)
+          AND EXISTS (SELECT 1 FROM software_licenses WHERE id = ${found.id} AND status = 'active')
+      `),
+      db.run(sql`
+        UPDATE software_licenses SET first_activated_at = COALESCE(first_activated_at, ${nowSec})
+        WHERE id = ${found.id} AND EXISTS (SELECT 1 FROM software_activations WHERE id = ${activationId})
+      `),
+    ]);
     if (Number(result.rowsAffected) === 0) {
       // 같은 기기가 바로 앞에서 동시에 들어와 자리를 잡았을 수 있다 — 그러면 재사용으로 본다.
       const raced = await db.query.softwareActivations.findFirst({
         where: and(eq(softwareActivations.licenseId, found.id), eq(softwareActivations.machineId, machineId), isNull(softwareActivations.deactivatedAt)),
       });
-      if (!raced) return { ok: false, code: 'activation_limit' };
-      reused = true;
+      if (raced) reused = true;
+      else {
+        // 그 사이 환불·취소됐으면 revoked로 답한다.
+        const now2 = await db.query.softwareLicenses.findFirst({ where: eq(softwareLicenses.id, found.id) });
+        return { ok: false, code: now2 && now2.status !== 'active' ? 'revoked' : 'activation_limit' };
+      }
     }
-    await db.run(sql`UPDATE software_licenses SET first_activated_at = COALESCE(first_activated_at, ${nowSec}) WHERE id = ${found.id}`);
   }
 
   const licenseFile = signLicense({
