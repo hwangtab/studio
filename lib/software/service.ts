@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import { and, desc, eq, isNull, like, or, sql } from 'drizzle-orm';
+import { and, desc, eq, inArray, isNull, like, or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { softwareActivations, softwareLicenses, type SoftwareLicense, type softwareLicenseSourceEnum } from '../../db/schema';
@@ -235,23 +235,24 @@ export const listAdminLicenses = async (q = '', limit = 100): Promise<AdminLicen
     orderBy: desc(softwareLicenses.issuedAt),
     limit,
   });
-  const result: AdminLicenseRow[] = [];
-  for (const r of rows) {
-    const acts = await db.query.softwareActivations.findMany({
-      where: and(eq(softwareActivations.licenseId, r.id), isNull(softwareActivations.deactivatedAt)),
-      orderBy: desc(softwareActivations.activatedAt),
-    });
-    result.push({
-      id: r.id, productSlug: r.productSlug, licenseKey: r.licenseKey, email: r.email, customerName: r.customerName,
-      source: r.source, orderNo: r.orderNo, note: r.note, maxActivations: r.maxActivations, status: r.status,
-      issuedAt: r.issuedAt.toISOString(), firstActivatedAt: iso(r.firstActivatedAt),
-      activations: acts.map((a) => ({
-        id: a.id, machineId: a.machineId, label: a.label, appVersion: a.appVersion,
-        activatedAt: a.activatedAt.toISOString(), lastSeenAt: a.lastSeenAt.toISOString(),
-      })),
-    });
-  }
-  return result;
+  if (rows.length === 0) return [];
+  // 활성 기기는 한 번에 읽어 라이선스별로 묶는다(행마다 따로 읽으면 목록 한 번에 최대 101회 조회가 된다).
+  // (license_id, machine_id) 인덱스의 앞 칸이 license_id라 IN 조회가 인덱스를 탄다.
+  const acts = await db.query.softwareActivations.findMany({
+    where: and(inArray(softwareActivations.licenseId, rows.map((r) => r.id)), isNull(softwareActivations.deactivatedAt)),
+    orderBy: desc(softwareActivations.activatedAt),
+  });
+  const actsByLicense = new Map<string, typeof acts>();
+  for (const a of acts) actsByLicense.set(a.licenseId, [...(actsByLicense.get(a.licenseId) ?? []), a]);
+  return rows.map((r) => ({
+    id: r.id, productSlug: r.productSlug, licenseKey: r.licenseKey, email: r.email, customerName: r.customerName,
+    source: r.source, orderNo: r.orderNo, note: r.note, maxActivations: r.maxActivations, status: r.status,
+    issuedAt: r.issuedAt.toISOString(), firstActivatedAt: iso(r.firstActivatedAt),
+    activations: (actsByLicense.get(r.id) ?? []).map((a) => ({
+      id: a.id, machineId: a.machineId, label: a.label, appVersion: a.appVersion,
+      activatedAt: a.activatedAt.toISOString(), lastSeenAt: a.lastSeenAt.toISOString(),
+    })),
+  }));
 };
 
 /** 라이선스 취소 — 새 기기 활성화가 막힌다. 이미 활성화한 기기는 오프라인 파일이라 계속 돈다(의도). */

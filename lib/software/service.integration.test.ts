@@ -133,6 +133,9 @@ describe('관리자', () => {
 
     const all = await listAdminLicenses();
     expect(all).toHaveLength(2);
+    // 한 번에 읽은 기기가 제 라이선스에만 붙는다.
+    expect(all.find((r) => r.email === 'a@example.com')!.activations).toHaveLength(1);
+    expect(all.find((r) => r.email === 'b@example.com')!.activations).toHaveLength(0);
     const byEmail = await listAdminLicenses('A@EXAMPLE');
     expect(byEmail.map((r) => r.email)).toEqual(['a@example.com']);
     expect(byEmail[0].activations.map((x) => x.label)).toEqual(['iMac']);
