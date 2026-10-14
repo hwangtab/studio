@@ -185,9 +185,7 @@ export default function ShowBookingForm({ show, locale = 'ko' }: Props) {
         });
       } catch (err) {
         // 같은 입력이면 만든 주문을 그대로 재사용하므로 어느 경우든 같은 버튼으로 다시 시도할 수 있다.
-        // 카드사를 안 고른 경우(NEED_CARD_PAYMENT_DETAIL)는 창을 닫은 것이 아니라서 따로 안내한다.
-        const code = (err as { code?: string } | null)?.code;
-        setError(code === 'NEED_CARD_PAYMENT_DETAIL' ? t.errNeedCard : t.errClosed);
+        setError(t.errClosed);
       }
     } finally {
       setSubmitting(false);

@@ -15,7 +15,7 @@ import { Notice } from '../ui/Notice';
  *
  * 글자는 본문 크기 이상이다 — 이 안내를 찾는 분이 바로 작은 글씨를 읽기 어려운 분이다.
  */
-export default function FailBankFallback({ formPath }: { formPath: string }) {
+export default function FailBankFallback({ formPath, note }: { formPath: string; /** 폴백이 막힐 수 있는 경우의 보조 안내(펀딩 한정 수량 리워드 등). */ note?: string }) {
   return (
     <Notice tone="info" className="mx-auto max-w-md text-center">
       <p className="text-lg font-semibold">결제가 어려우신가요?</p>
@@ -27,6 +27,7 @@ export default function FailBankFallback({ formPath }: { formPath: string }) {
           <a href={bankFallbackHref(formPath)} rel="noreferrer">계좌번호로 직접 보내기</a>
         </Button>
       </div>
+      {note && <p className="mt-3 text-base leading-relaxed">{note}</p>}
     </Notice>
   );
 }
