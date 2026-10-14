@@ -15,7 +15,7 @@ import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { formatKstDateTimeFull } from '../../../../lib/booking/format';
 import { loadProjectForAdmin, type AdminProjectSummary } from '../../../../lib/funding/adminProjects';
 import { loadProjectService, PROJECT_SERVICE_LABELS, type LoadServiceResult } from '../../../../lib/funding/projectServices';
-import { buildFundingPayoutPreview, recordedVatDeduction } from '../../../../lib/funding/payout';
+import { buildFundingPayoutPreview, loadRecordedFundingPayout, recordedVatDeduction } from '../../../../lib/funding/payout';
 import { computeProjectState } from '../../../../lib/funding/projectState';
 import { normalizeFundingSlug } from '../../../../lib/funding/reservedSlugs';
 import type { FundingReviewStatus } from '../../../../lib/funding/reviewTransition';
@@ -69,6 +69,12 @@ interface AdminFundingProjectDetailPageProps {
    * 조회 실패 시 null이다 — 정산 계산이 죽어도 심사 화면 자체는 열려야 한다.
    */
   payout: AdminPayoutView | null;
+  /**
+   * 정산 집계가 실패했을 때(`payout === null`)에도 **이미 기록된 이체 대기 정산**이 있으면 그 최소 정보.
+   * 지급 완료 처리는 기록된 행만 있으면 되는데, 집계 실패 때 화면이 그 버튼까지 같이 지워 이체를 끝낸 뒤에도
+   * 지급 완료를 기록할 수 없었다. 집계가 살아 있으면 항상 null이다(그때는 `payout.recorded`가 정본).
+   */
+  pendingPayoutFallback?: { netAmount: number } | null;
   /**
    * 스튜디오 서비스(설계 대행·발매 프로젝트 연계). `project`의 형제 필드 — 별도 테이블이고
    * (마이그레이션 0037) 운영 DB에 아직 없으면 `{ available: false }`로 화면만 "미적용"을 띄운다.
@@ -156,6 +162,17 @@ const loadPayoutView = async (projectId: string): Promise<AdminPayoutView | null
   }
 };
 
+/** 집계 없이 기록된 이체 대기 정산만 읽는다 — `pendingPayoutFallback` 주석 참고. 이것도 실패하면 null. */
+const loadPendingPayoutFallback = async (projectId: string): Promise<{ netAmount: number } | null> => {
+  try {
+    const recorded = await loadRecordedFundingPayout(projectId);
+    return recorded && recorded.status === 'pending' ? { netAmount: recorded.netAmount } : null;
+  } catch (error: unknown) {
+    console.error(`[admin] 기록된 정산 조회 실패 (id=${projectId}):`, error);
+    return null;
+  }
+};
+
 export const getServerSideProps: GetServerSideProps<AdminFundingProjectDetailPageProps> = async (context) => {
   const auth = await authenticateAdminRequest(context);
   if (!auth.ok) {
@@ -170,6 +187,8 @@ export const getServerSideProps: GetServerSideProps<AdminFundingProjectDetailPag
 
   // 승인 전에는 후원도 정산도 있을 수 없다 — 쓸모없는 집계 질의를 돌리지 않는다.
   const payout = project.reviewStatus === 'approved' ? await loadPayoutView(id) : null;
+  const pendingPayoutFallback =
+    project.reviewStatus === 'approved' && payout === null ? await loadPendingPayoutFallback(id) : null;
 
   const service = await loadProjectService(id);
 
@@ -177,6 +196,7 @@ export const getServerSideProps: GetServerSideProps<AdminFundingProjectDetailPag
     props: {
       service,
       payout,
+      pendingPayoutFallback,
       project: {
         id: project.id,
         slug: project.slug,
@@ -228,7 +248,7 @@ const REVIEW_STATUS_LABELS: Record<FundingReviewStatus, string> = {
  * 운영자가 이 화면에서 바로 알아야 한다. */
 const PROJECT_STATUS_LABELS: Record<string, string> = { auto: '공개중', draft: '비공개(작성중)', closed: '종료' };
 
-export default function AdminFundingProjectDetailPage({ project, payout, service }: AdminFundingProjectDetailPageProps) {
+export default function AdminFundingProjectDetailPage({ project, payout, pendingPayoutFallback, service }: AdminFundingProjectDetailPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -574,7 +594,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
   };
 
   const handleMarkPayoutPaid = () => {
-    const recorded = payout?.recorded;
+    const recorded = payout?.recorded?.status === 'pending' ? payout.recorded : pendingPayoutFallback;
     if (!recorded) return;
     const memo = window.prompt('이체 메모를 적어 주세요 (선택 — 개설자에게 가는 메일에 함께 나갑니다).');
     if (memo === null) return;
@@ -890,6 +910,19 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
           )}
 
           {project.reviewStatus === 'approved' && <CreatorTaxProfilePanel creatorId={project.creator.id} payoutAccount={false} />}
+
+          {project.reviewStatus === 'approved' && payout === null && pendingPayoutFallback && (
+            <div role="alert" className="mb-6 rounded-xl border border-amber-300 bg-amber-50 p-4">
+              <h2 className="text-lg font-bold text-gray-900 mb-1">이체 대기 정산이 기록되어 있습니다</h2>
+              <p className="mb-3 text-sm text-amber-900">
+                정산 집계를 불러오지 못해 상세 내역은 볼 수 없지만, 기록된 실이체액 {formatPriceAmount(pendingPayoutFallback.netAmount)}원을
+                이체하셨다면 지급 완료로 기록할 수 있습니다. 집계는 새로고침 후 다시 시도해 주세요.
+              </p>
+              <Button light variant="secondary" disabled={busy} onClick={handleMarkPayoutPaid}>
+                지급 완료로 표시
+              </Button>
+            </div>
+          )}
 
           {project.reviewStatus === 'approved' && (
             <FundingPayoutSection
