@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getDb } from '../../../db/client';
 import { authenticateAdminApi } from '../../../lib/contracts/admin-auth';
-import { serializeContractForAdmin } from '../../../lib/contracts/serialize';
+import { serializeContractForAdmin, serializeContractForAdminList } from '../../../lib/contracts/serialize';
 import { createContract, expireOverdueContracts, findRoomConflict } from '../../../lib/contracts/service';
 import { describeRoomConflict } from '../../../lib/contracts/conflict';
 import { validateCreateContractPayload } from '../../../lib/contracts/validation';
@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       return res.status(200).json({
         ok: true,
-        contracts: allContracts.map((contract) => serializeContractForAdmin(contract)),
+        contracts: allContracts.map((contract) => serializeContractForAdminList(contract)),
       });
     } catch (error: unknown) {
       console.error('[API/contracts] Failed to list contracts:', error);
