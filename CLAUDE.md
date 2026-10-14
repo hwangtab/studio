@@ -149,6 +149,13 @@ npm run indexnow:changed -- --dry-run
 공연 주최자 제출물 표다. 순서를 뒤집어도 **주최자 화면(개설자 콘솔의 공연 탭·편집기)과 관리자 제출물 화면만** 실패한다 — 공개 공연 페이지·결제는 이 표를 읽지 않고,
 미디어 공개 판정(`mediaAccess`의 공연 갈래)·청소 크론·관리자 공연 목록의 대기 건수는 표가 없어도 견디게 감싸 두었다. 확인은 `PRAGMA table_info(show_submissions);`.
 
+### 마이그레이션 0058(`creator_business_profiles`)도 배포보다 먼저 적용한다
+
+개설자 사업자 정보 표다. 순서를 뒤집으면 **사업자 정보 저장과 사업자 개설자의 정산 기록만** 실패한다 — 결제·로그인·원천징수 저장은 이 표 없이 돈다.
+확인은 `PRAGMA table_info(creator_business_profiles);`. 국세청 상태조회 키 env `NTS_BUSINESS_STATUS_API_KEY`(공공데이터포털 "국세청_사업자등록정보
+진위확인 및 상태조회 서비스"의 일반 인증키 Decoding, Production·Preview)는 머지 전에 넣어 두면 머지 푸시가 싣고 간다 — 따로 재배포하지 않는다.
+키가 없어도 저장은 되고 상태가 "미확인(API 키 없음)"으로 남는다. 규칙은 `lib/funding/CLAUDE.md` "개설자 사업자 정보·국세청 조회".
+
 ### 마이그레이션 0035(`public_name`)·0036(`listing_hidden_at`)·0039(`listing_hidden_name`)도 배포보다 먼저 적용한다
 
 `funding_pledges.public_name`(후원자 명단 표시 이름 — 가린 이름·닉네임, `lib/funding/publicName.ts`)이

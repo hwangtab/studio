@@ -422,3 +422,26 @@ supporterMessage는 후원자가 준 개인정보라 파기 약속이 걸리지�
 저장은 `POST /api/funding/creator/payout` 하나(`savePayoutSection`), 사업자등록증은 `/api/funding/creator/payout/certificate`.
 펀딩 편집기의 정산 탭은 요약(`PayoutSummaryCard`)과 링크뿐이다 — 프로젝트 구획 라우트(`projects/[id]`)는 `section: 'payout'`을 400으로 거부한다.
 같은 폼을 두 곳에 그리면 저장 경로는 하나여도 화면 상태(이탈 가드·국세청 경고)가 두 벌이 된다.
+
+### 개설자 사업자 정보·국세청 조회 (마이그레이션 0058)
+
+사업자(세금계산서) 개설자의 사업자등록번호·상호·대표자명과 국세청 조회 결과는 `creator_business_profiles`(계정당 한 행)에,
+사업자등록증 사본은 private Blob `tax-docs/`에 둔다. 저장 경로·화면은 위 절과 같다 — `savePayoutSection` 하나, `/ko/funding/creator/payout` 하나.
+
+- **열리는 조건은 `hasApprovedEngagement`**(`lib/funding/creatorEligibility.ts` — 승인된 펀딩·승인된 공연·상점 아티스트 중 하나).
+- **국세청 조회 실패는 저장을 막지 않는다.** `lookupBusinessStatus`(`businessStatus.ts`)는 던지지 않고 사유 코드를 돌려주며,
+  저장은 `nts_status = 'unverified'` + `nts_check_error`로 남는다. 키는 env `NTS_BUSINESS_STATUS_API_KEY`(공공데이터포털 Decoding 키)이고
+  없으면 `missing_key`. 조회는 개설자당 시간당 10회. **휴업·폐업·세금계산서 미발급 유형도 정산을 막지 않는다** — 개설자에게는 경고,
+  판단은 운영자가 관리자 패널(`CreatorTaxProfilePanel`)을 보고 한다. 정산 기록을 막는 것은 사업자인데 사업자 정보가 없는 경우
+  (`no_business_number`, `payout.ts`) 하나뿐이다.
+- **사업자등록증은 `tax-docs/`이고 `/api/funding/media/`로는 나가지 않는다.** `resolveFundingBlobPath`(`mediaPath.ts`)를 넓히지 말 것 —
+  넓히면 사본이 공개 미디어 경로로 열린다. 열람은 관리자 라우트 `pages/api/admin/creators/[creatorId]/business-certificate.ts` 하나이고,
+  열 때마다 접속기록 `creator_business_certificate_view`가 남는다.
+- **세금 구분 전환·파기 규칙은 한 묶음이다.** 개인(원천징수)으로 바꾸면 사업자 행·사본을 지우되 사업자로 정산한 펀딩 기록
+  (`hasInvoicePayout`)이 있거나 상점 아티스트(`isShopArtist`)면 남긴다. 사업자로 바꾸면 주민등록번호를 지우되 원천징수 정산
+  기록(`hasWithheldPayout`)이 있으면 남긴다. 남긴 값은 월간 크론의 `purgeExpiredBusinessProfiles`·`purgeExpiredResidentNumbers`
+  (`retention.ts`)가 지급 시각부터 5년(기록이 없으면 1년 휴면) 뒤 지우고, 어느 행도 참조하지 않는 사본 파일은 `purgeOrphanTaxDocuments`가
+  지운다. 한쪽 판정만 바꾸면 전환 때 남긴 값을 파기가 너무 일찍 지우거나 영영 안 지운다 — 셋을 함께 고칠 것.
+- **알려진 한계 — 상점 정산은 기록 표가 없다.** 상점에서 원천징수로 지급한 사실을 코드가 모르므로, 상점 아티스트가 원천징수로
+  정산받은 뒤 사업자로 바꾸면 `hasWithheldPayout`이 거짓이라 주민등록번호가 지워진다. 상점 정산 기록 표를 만들 때 그 판정에
+  상점 갈래를 넣을 것.
