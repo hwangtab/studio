@@ -6,27 +6,31 @@ import Link from 'next/link';
 import { AdminShell } from '../../../components/admin/AdminShell';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { listAdminShows, type AdminShowListItem } from '../../../lib/shows/adminQueries';
+import { countPendingSubmissions } from '../../../lib/shows/organizer/adminSubmissions';
 
 interface AdminShowsPageProps {
   shows: AdminShowListItem[];
+  /** 심사 대기 건수. 표(0053)가 없거나 조회가 실패하면 null — 공연 목록은 그대로 보인다. */
+  pendingSubmissions: number | null;
   error?: string;
 }
 
 export const getServerSideProps: GetServerSideProps<AdminShowsPageProps> = async (context) => {
   const auth = await authenticateAdminRequest(context);
   if (!auth.ok) return { redirect: { destination: '/admin/login', permanent: false } };
+  const pendingSubmissions = await countPendingSubmissions().catch(() => null);
   try {
-    return { props: { shows: await listAdminShows() } };
+    return { props: { shows: await listAdminShows(), pendingSubmissions } };
   } catch (error: unknown) {
     console.error('[admin/shows] 목록 조회 실패:', error);
-    return { props: { shows: [], error: '공연 목록을 불러오지 못했습니다. 마이그레이션 0045가 적용됐는지 확인해 주세요.' } };
+    return { props: { shows: [], pendingSubmissions, error: '공연 목록을 불러오지 못했습니다. 마이그레이션 0045가 적용됐는지 확인해 주세요.' } };
   }
 };
 
 const STATUS_LABEL: Record<string, string> = { draft: '초안(비공개)', published: '공개', cancelled: '취소' };
 const SHOWTIME_STATUS_LABEL: Record<string, string> = { scheduled: '예정', cancelled: '취소됨', ended: '종료' };
 
-export default function AdminShowsPage({ shows, error }: AdminShowsPageProps) {
+export default function AdminShowsPage({ shows, pendingSubmissions, error }: AdminShowsPageProps) {
   return (
     <>
       <Head>
@@ -34,6 +38,15 @@ export default function AdminShowsPage({ shows, error }: AdminShowsPageProps) {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <AdminShell title="공연 관리" description="직영 공연의 회차별 판매 현황입니다. 공연 정의 변경은 scripts/seed-show.ts로 합니다." width="wide">
+        <div className="mb-4">
+          <Link href="/admin/shows/submissions" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+            주최자 공연 심사
+            {pendingSubmissions !== null && pendingSubmissions > 0 && (
+              <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-800">심사 대기 {pendingSubmissions}건</span>
+            )}
+            →
+          </Link>
+        </div>
         {error && (
           <div role="alert" className="mb-4 p-3 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">{error}</div>
         )}
