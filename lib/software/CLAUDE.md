@@ -6,7 +6,7 @@
 ## 지금 상태 — 단계 2(국내 결제) 코드 완료, 판매 잠김
 
 - 상품 정본 `data/software/catalog.ts`(비어 있음), 판매 스위치 `SOFTWARE_SALES_OPEN = false`(`data/software/policy.ts`).
-- 국내 결제: 상세 화면(ko)의 구매 폼(`components/software/SoftwareOrderForm.tsx`) → `orders(type='software')` + `software_orders`(0055)
+- 국내 결제: 상세 화면(ko)의 구매 폼(`components/software/SoftwareOrderForm.tsx`) → `orders(type='software')` + `software_orders`(0056)
   → 토스 승인(`lib/software/confirm.ts`)이 **결제 기록·paid·라이선스 발급을 한 batch로** → 확정 메일(키 포함).
 - 구매자 화면 `/ko/software/manage/<주문번호>?token=` — 키·활성 기기 해제·설치 파일·셀프 환불. 링크를 잃으면 `/ko/software/find`(이메일로 재발송).
 - 수동 발급(`/admin/software`)은 그대로 — 결제 없이 시험·리뷰어·증정 키.
@@ -14,7 +14,7 @@
 
 ## 판매를 열기 전에 (위에서부터)
 
-1. **운영 DB에 마이그레이션 0054·0055를 적용한다** — 배포보다 먼저(루트 CLAUDE.md "운영 DB 마이그레이션 적용 방법"). 0054는 2026-10-14 적용됨.
+1. **운영 DB에 마이그레이션 0054·0056을 적용한다** — 배포보다 먼저(루트 CLAUDE.md "운영 DB 마이그레이션 적용 방법"). 0054는 2026-10-14 적용됨.
    새 표뿐이라 순서를 어겨도 다른 결제는 안 깨지고 소프트웨어 기능만 꺼진다.
 2. 서명키 — k1은 2026-10-14에 만들어 넣었다(Vercel production·preview, 운영자 맥 키체인 `studio-nol-software-license-k1`). 맥 밖 백업은 운영자 몫.
    `SOFTWARE_LICENSE_SIGNING_KEY`·`SOFTWARE_LICENSE_KEY_ID`·`publicKeys.ts` 중 하나라도 빠지면 활성화 API가 503으로 닫힌다(의도).
