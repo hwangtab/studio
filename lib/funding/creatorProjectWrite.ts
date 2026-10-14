@@ -543,9 +543,11 @@ export const savePayoutSection = async (
   value: PayoutSection,
   deps: { lookup?: typeof lookupBusinessStatus; now?: Date; deleteBlob?: DeleteBlob } = {},
 ): Promise<WriteResult> => {
-  const [existing] = await getDb().select({ id: fundingCreators.id })
+  const [existing] = await getDb().select({ id: fundingCreators.id, taxType: fundingCreators.taxType })
     .from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
   if (!existing) return deny('not_found', '개설자 계정을 찾을 수 없어요.');
+  // *Retained 응답은 "이번 저장으로 바꿨지만 지우지 않았다"는 뜻이다 — 같은 구분으로 다시 저장(계좌만 고침)하면 싣지 않는다.
+  const previousTaxType = existing.taxType;
 
   if (!(await hasApprovedEngagement(creatorId))) {
     return deny('not_editable', '프로젝트·공연·상점 중 하나가 승인된 뒤에 정산 정보를 넣을 수 있어요.');
@@ -613,7 +615,7 @@ export const savePayoutSection = async (
     if (await keepsResidentNumber(creatorId)) {
       // undefined = SET 목록에서 빠진다(아래 주석). 지우지 않고 그대로 둔다.
       residentNumberEnc = undefined;
-      residentNumberRetained = true;
+      residentNumberRetained = previousTaxType === 'withholding';
     } else {
       residentNumberEnc = null;
     }
@@ -745,7 +747,7 @@ export const savePayoutSection = async (
   let businessProfileRetained = false;
   if (value.taxType === 'withholding' && existingBusiness && existingBusiness !== 'unavailable') {
     try {
-      if (await keepsBusinessProfile(creatorId)) businessProfileRetained = true;
+      if (await keepsBusinessProfile(creatorId)) businessProfileRetained = previousTaxType === 'invoice';
       else await deleteBusinessProfile(creatorId, { deleteBlob: deps.deleteBlob });
     } catch {
       console.error('[funding] 개인 전환 뒤 사업자 정보 정리 실패', { creatorId });
