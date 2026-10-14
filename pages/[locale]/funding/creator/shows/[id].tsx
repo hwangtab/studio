@@ -184,8 +184,8 @@ export default function ShowSubmissionEditor({ submission }: Props) {
       </Head>
       <PageShell width="wide">
         <PageHeader
-          backHref="/ko/funding/creator"
-          backLabel="내 펀딩·공연"
+          backHref="/ko/funding/creator/shows"
+          backLabel="내 공연"
           title={draft.title || '(제목 없음)'}
           meta={
             <Badge tone={REVIEW_STATUS_TONE[reviewStatus] ?? 'neutral'} size="md">

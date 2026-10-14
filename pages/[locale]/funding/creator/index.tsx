@@ -5,7 +5,6 @@ import { useState } from 'react';
 
 import { createProject, logoutCreator } from '../../../../components/funding/creator/api';
 import { CreatorConsoleTabs } from '../../../../components/funding/creator/CreatorConsoleTabs';
-import { createShowSubmission } from '../../../../components/shows/organizer/api';
 import { REVIEW_STATUS_LABEL } from '../../../../components/funding/creator/types';
 import { Button } from '../../../../components/ui/Button';
 import { Badge, type BadgeTone } from '../../../../components/ui/Badge';
@@ -17,18 +16,6 @@ import { withI18nServerProps } from '../../../../lib/getStatic';
 import { authenticateCreatorRequest } from '../../../../lib/funding/creatorAuth';
 import { listProjectsForCreator, type CreatorProjectSummary } from '../../../../lib/funding/creatorProjectList';
 import { loadCreatorProjectStats, type CreatorProjectStats } from '../../../../lib/funding/creatorStats';
-import { formatShowtime } from '../../../../lib/shows/organizer/email';
-import { listSubmissionsForCreator } from '../../../../lib/shows/organizer/submissions';
-
-/** 대시보드의 공연 한 줄 — 초안 전체는 싣지 않는다(편집 화면이 따로 읽는다). */
-export interface CreatorShowSummary {
-  id: string;
-  title: string;
-  reviewStatus: string;
-  showSlug: string | null;
-  /** 첫 회차를 읽기 좋은 한국어로('2026년 11월 20일(금) 19:30'). 회차가 없으면 null. */
-  firstShowtimeLabel: string | null;
-}
 
 interface Props {
   projects: CreatorProjectSummary[];
@@ -39,23 +26,19 @@ interface Props {
    * 들어 있지 않다(개설자 약관 제8조).
    */
   stats: Record<string, CreatorProjectStats>;
-  /** 공연 신청서 목록. 표(show_submissions)를 못 읽으면 빈 목록이다 — 펀딩 목록은 그대로 뜬다. */
-  shows: CreatorShowSummary[];
 }
 
 /** 심사 상태 → 배지 색. 라벨 정본은 REVIEW_STATUS_LABEL(components/funding/creator/types.ts).
- *  편집 화면(`[id].tsx`)이 같은 표를 든다 — 페이지 모듈을 서로 import하면 GSSP의 서버 전용
+ *  편집 화면(`[id].tsx`)·공연 탭(`shows/index.tsx`)이 같은 표를 든다 — 페이지 모듈을 서로 import하면 GSSP의 서버 전용
  *  의존이 클라이언트 번들로 끌려가므로 복제한다. 바꾸면 둘 다 바꿀 것. */
 const REVIEW_STATUS_TONE: Record<string, BadgeTone> = {
   draft: 'neutral', submitted: 'info', changes_requested: 'warning', approved: 'success', rejected: 'error',
 };
 
-export default function CreatorHome({ projects, stats, shows }: Props) {
+export default function CreatorHome({ projects, stats }: Props) {
   const router = useRouter();
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
-  const [creatingShow, setCreatingShow] = useState(false);
-  const [createShowError, setCreateShowError] = useState<string | null>(null);
   const [loggingOut, setLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState<string | null>(null);
 
@@ -69,18 +52,6 @@ export default function CreatorHome({ projects, stats, shows }: Props) {
     }
     setCreateError(result.message);
     setCreating(false);
-  };
-
-  const handleCreateShow = async () => {
-    setCreatingShow(true);
-    setCreateShowError(null);
-    const result = await createShowSubmission();
-    if (result.ok) {
-      router.push(`/ko/funding/creator/shows/${result.id}`);
-      return;
-    }
-    setCreateShowError(result.message);
-    setCreatingShow(false);
   };
 
   const handleLogout = async () => {
@@ -100,12 +71,12 @@ export default function CreatorHome({ projects, stats, shows }: Props) {
   return (
     <>
       <Head>
-        <title>내 펀딩·공연 | 스튜디오 놀</title>
+        <title>내 펀딩 프로젝트 | 스튜디오 놀</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <PageShell width="wide">
         <PageHeader
-          title="내 펀딩·공연"
+          title="내 펀딩 프로젝트"
           meta={
             <Button type="button" variant="ghost" size="sm" onClick={handleLogout} disabled={loggingOut}>
               {loggingOut ? '로그아웃 중…' : '로그아웃'}
@@ -114,7 +85,6 @@ export default function CreatorHome({ projects, stats, shows }: Props) {
         />
         <CreatorConsoleTabs current="funding" />
         {logoutError && <Notice tone="error" className="mb-6">{logoutError}</Notice>}
-        <h2 className="typo-card-title mb-4 text-gray-900 dark:text-white">펀딩 프로젝트</h2>
         {projects.length === 0 ? (
           <EmptyState title="아직 만든 프로젝트가 없어요." description="아래에서 새 프로젝트를 만들어 시작하세요." />
         ) : (
@@ -157,39 +127,6 @@ export default function CreatorHome({ projects, stats, shows }: Props) {
           </Button>
           {createError && <span role="alert" className="typo-caption text-red-600 dark:text-red-400">{createError}</span>}
         </div>
-
-        <h2 className="typo-card-title mb-4 mt-16 text-gray-900 dark:text-white">공연</h2>
-        {shows.length === 0 ? (
-          <EmptyState title="아직 등록한 공연이 없어요." description="공연 정보를 적어 제출하면, 심사를 거쳐 예매 페이지가 열려요." />
-        ) : (
-          <ul className="space-y-3">
-            {shows.map((s) => (
-              <li key={s.id} className="glass-card rounded-2xl p-5">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <span className="font-semibold">{s.title || '(제목 없음)'}</span>
-                  <Badge tone={REVIEW_STATUS_TONE[s.reviewStatus] ?? 'neutral'}>{REVIEW_STATUS_LABEL[s.reviewStatus] ?? s.reviewStatus}</Badge>
-                </div>
-                <p className="typo-card-meta mt-2">{s.firstShowtimeLabel ? `첫 회차 ${s.firstShowtimeLabel}` : '회차 미정'}</p>
-                <div className="mt-3 flex gap-4">
-                  <Link href={`/ko/funding/creator/shows/${s.id}`} className="text-sm underline underline-offset-2">
-                    편집하기
-                  </Link>
-                  {s.reviewStatus === 'approved' && s.showSlug && (
-                    <Link href={`/ko/shows/${s.showSlug}`} className="text-sm underline underline-offset-2">
-                      공개된 페이지 보기
-                    </Link>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-        <div className="mt-10 flex items-center gap-3">
-          <Button onClick={handleCreateShow} disabled={creatingShow}>
-            {creatingShow ? '만드는 중…' : '공연 등록하기'}
-          </Button>
-          {createShowError && <span role="alert" className="typo-caption text-red-600 dark:text-red-400">{createShowError}</span>}
-        </div>
       </PageShell>
     </>
   );
@@ -223,23 +160,7 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
       console.error('[funding] 개설자 모금 현황 조회 실패:', error);
     }
   }
-  /**
-   * 공연 목록은 펀딩 목록과 따로 읽는다 — show_submissions 표가 아직 없는 DB(마이그레이션 전)에서도
-   * 펀딩 대시보드는 떠야 한다. 실패하면 공연 절만 빈 목록이다.
-   */
-  let shows: CreatorShowSummary[] = [];
-  try {
-    shows = (await listSubmissionsForCreator(auth.creatorId)).map((s) => ({
-      id: s.id,
-      title: s.title,
-      reviewStatus: s.reviewStatus,
-      showSlug: s.showSlug,
-      firstShowtimeLabel: s.firstShowtime ? formatShowtime(s.firstShowtime) : null,
-    }));
-  } catch (error: unknown) {
-    console.error('[shows] 주최자 공연 목록 조회 실패:', error);
-  }
-  return { props: { projects, stats, shows } };
+  return { props: { projects, stats } };
 });
 
 // 디자인 판 — lib/designEdition.ts
