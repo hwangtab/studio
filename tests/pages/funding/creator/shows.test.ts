@@ -39,15 +39,15 @@ describe('콘솔 공연 탭 getServerSideProps', () => {
 
   it('본인 id로 읽고, 첫 회차를 읽기 좋은 말로 바꿔 싣는다', async () => {
     (listSubmissionsForCreator as jest.Mock).mockResolvedValue([
-      { id: 's1', title: '공연', reviewStatus: 'approved', showSlug: 'live', showStatus: 'on_sale', firstShowtime: '2026-11-20T19:30' },
+      { id: 's1', title: '공연', reviewStatus: 'approved', showSlug: 'live', showStatus: 'published', firstShowtime: '2026-11-20T19:30' },
       { id: 's2', title: '', reviewStatus: 'draft', showSlug: null, showStatus: null, firstShowtime: null },
     ]);
     const result = (await run()) as unknown as { props: { shows: unknown[]; loadFailed: boolean } };
     expect(listSubmissionsForCreator).toHaveBeenCalledWith('creator-a');
     expect(result.props.loadFailed).toBe(false);
     expect(result.props.shows).toEqual([
-      { id: 's1', title: '공연', reviewStatus: 'approved', showSlug: 'live', firstShowtimeLabel: '2026년 11월 20일(금) 19:30' },
-      { id: 's2', title: '', reviewStatus: 'draft', showSlug: null, firstShowtimeLabel: null },
+      { id: 's1', title: '공연', reviewStatus: 'approved', showSlug: 'live', showStatus: 'published', firstShowtimeLabel: '2026년 11월 20일(금) 19:30' },
+      { id: 's2', title: '', reviewStatus: 'draft', showSlug: null, showStatus: null, firstShowtimeLabel: null },
     ]);
   });
 

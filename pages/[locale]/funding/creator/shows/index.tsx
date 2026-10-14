@@ -15,6 +15,7 @@ import { PageHeader, PageShell } from '../../../../../components/ui/PageHeader';
 import { authenticateCreatorRequest } from '../../../../../lib/funding/creatorAuth';
 import { withI18nServerProps } from '../../../../../lib/getStatic';
 import { formatShowtime } from '../../../../../lib/shows/organizer/email';
+import { isShowPagePublic } from '../../../../../lib/shows/organizer/policy';
 import { listSubmissionsForCreator } from '../../../../../lib/shows/organizer/submissions';
 
 /** 공연 탭의 한 줄 — 초안 전체는 싣지 않는다(편집 화면이 따로 읽는다). */
@@ -23,6 +24,8 @@ export interface CreatorShowSummary {
   title: string;
   reviewStatus: string;
   showSlug: string | null;
+  /** 연결된 공연의 상태 — 공개 페이지가 열린 상태에서만 링크를 띄운다(isShowPagePublic). */
+  showStatus: string | null;
   /** 첫 회차를 읽기 좋은 한국어로('2026년 11월 20일(금) 19:30'). 회차가 없으면 null. */
   firstShowtimeLabel: string | null;
 }
@@ -103,7 +106,7 @@ export default function CreatorShowsHome({ shows, loadFailed }: Props) {
                   <Link href={`/ko/funding/creator/shows/${s.id}`} className="text-sm underline underline-offset-2">
                     편집하기
                   </Link>
-                  {s.reviewStatus === 'approved' && s.showSlug && (
+                  {s.reviewStatus === 'approved' && s.showSlug && isShowPagePublic(s.showStatus) && (
                     <Link href={`/ko/shows/${s.showSlug}`} className="text-sm underline underline-offset-2">
                       공개된 페이지 보기
                     </Link>
@@ -144,6 +147,7 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
       title: s.title,
       reviewStatus: s.reviewStatus,
       showSlug: s.showSlug,
+      showStatus: s.showStatus,
       firstShowtimeLabel: s.firstShowtime ? formatShowtime(s.firstShowtime) : null,
     }));
     return { props: { shows, loadFailed: false } };
