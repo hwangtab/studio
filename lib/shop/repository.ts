@@ -1,7 +1,7 @@
 import {
   artistShopProducts, findShopProduct, findSellableSku, publishedShopProducts, type ResolvedSku,
 } from './catalog';
-import { findDbProductBySlug, findDbSellableSku, listDbPublishedProducts, listDbPublishedProductsByCreator, listDbSkusForAdmin } from './dbProducts';
+import { findDbProductBySlug, findDbSellableSku, loadDbShipsOnBySku, listDbPublishedProducts, listDbPublishedProductsByCreator, listDbSkusForAdmin } from './dbProducts';
 import { findShopArtistCreatorId } from './artists';
 import { isDbSkuId } from './productRules';
 import { SHOP_PRODUCTS, type ShopProduct, type ShopSku } from '../../data/shop/catalog';
@@ -81,4 +81,22 @@ export const listAllSkusForAdmin = async (): Promise<Array<{ product: ShopProduc
   const fromDb = await safeDb(() => listDbSkusForAdmin(), [] as Array<{ product: ShopProduct; sku: ShopSku }>, 'admin-skus');
   // 파일 slug에 가려진 DB 상품의 SKU도 싣는다 — 가려져도 sku_id로 팔릴 수 있어 재고를 정할 수 있어야 한다.
   return [...fromFile, ...fromDb];
+};
+
+/**
+ * 주문 줄의 SKU → 예약 발송일(상품의 현재 값). 파일 상품은 카탈로그에서, `db-` SKU는 DB에서 읽는다.
+ * 오류는 삼킨다 — 발송일 표시 때문에 주문 화면·메일이 깨지면 안 된다(없는 것처럼 보일 뿐이다).
+ */
+export const loadShipsOnBySku = async (skuIds: readonly string[]): Promise<Map<string, string>> => {
+  const out = new Map<string, string>();
+  for (const p of SHOP_PRODUCTS) {
+    if (!p.shipsOn) continue;
+    for (const s of p.skus) if (skuIds.includes(s.id)) out.set(s.id, p.shipsOn);
+  }
+  const dbIds = skuIds.filter(isDbSkuId);
+  if (dbIds.length > 0) {
+    const fromDb = await safeDb(() => loadDbShipsOnBySku(dbIds), new Map<string, string>(), 'ships-on');
+    for (const [id, d] of fromDb) out.set(id, d);
+  }
+  return out;
 };

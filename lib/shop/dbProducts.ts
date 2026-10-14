@@ -1,4 +1,4 @@
-import { and, asc, eq, inArray, isNotNull } from 'drizzle-orm';
+import { and, asc, eq, inArray, isNotNull, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { shopProducts, shopProductSkus, type ShopProductRow, type ShopProductSkuRow } from '../../db/schema';
@@ -132,4 +132,17 @@ export const listDbSkusForAdmin = async (): Promise<Array<{ product: ShopProduct
     .where(isNotNull(shopProductSkus.lockedAt))
     .orderBy(asc(shopProducts.slug), asc(shopProductSkus.sortOrder), asc(shopProductSkus.id));
   return rows.map(({ sku, product }) => ({ product: normalizeDbProduct(product, [sku]), sku: toShopSku(sku) }));
+};
+
+/** SKU id → 그 상품의 예약 발송일(`ships_on`). 값이 있는 SKU만. 주문 화면·메일이 상품의 현재 값을 읽는다(스냅샷 없음). */
+export const loadDbShipsOnBySku = async (skuIds: string[]): Promise<Map<string, string>> => {
+  const out = new Map<string, string>();
+  if (skuIds.length === 0) return out;
+  const rows = await getDb().all<{ id: string; ships_on: string }>(sql`
+    SELECT k.id AS id, p.ships_on AS ships_on
+    FROM shop_product_skus k JOIN shop_products p ON p.id = k.product_id
+    WHERE k.id IN (${sql.join(skuIds.map((id) => sql`${id}`), sql`, `)}) AND p.ships_on IS NOT NULL
+  `);
+  for (const r of rows) out.set(r.id, r.ships_on);
+  return out;
 };

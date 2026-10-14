@@ -15,6 +15,8 @@ import { getSiteConfig } from '../../../../data/siteConfig';
 import { isTokenMatch } from '../../../../lib/booking/token';
 import { withI18nServerProps } from '../../../../lib/getStatic';
 import { shopLineName } from '../../../../lib/shop/catalog';
+import { loadOrderExtras } from '../../../../lib/shop/orderExtras';
+import { formatShipsOn } from '../../../../lib/shop/preorder';
 import { findShopOrderByOrderNo } from '../../../../lib/shop/service';
 import { normalizeShopOrderNo } from '../../../../lib/shop/shape';
 
@@ -22,7 +24,9 @@ interface Props {
   orderNo: string;
   token: string;
   state: 'preparing' | 'shipped' | 'delivered' | 'cancelled' | 'unpaid';
-  lines: Array<{ label: string; quantity: number; amount: number }>;
+  lines: Array<{ label: string; quantity: number; amount: number; serials: string | null }>;
+  /** 아직 오지 않은 가장 늦은 발송 예정일(YYYY-MM-DD). 발송 전 예약 주문만. */
+  shipsOn: string | null;
   shippingFee: number;
   totalAmount: number;
   recipient: string;
@@ -40,7 +44,7 @@ const STATE_LABEL: Record<Props['state'], string> = {
 };
 
 export default function ShopManagePage(props: Props) {
-  const { orderNo, token, state, lines, shippingFee, totalAmount, recipient, address, courier, trackingNumber } = props;
+  const { orderNo, token, state, lines, shipsOn, shippingFee, totalAmount, recipient, address, courier, trackingNumber } = props;
   const kakaoUrl = getSiteConfig('ko').contact.kakaoUrl;
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ tone: 'error' | 'success'; text: string } | null>(null);
@@ -91,6 +95,12 @@ export default function ShopManagePage(props: Props) {
         <Panel className="mb-6 space-y-1 text-sm text-gray-800 dark:text-gray-200">
           <p><span className="text-gray-500 dark:text-gray-400">받는 분</span> {recipient}</p>
           <p><span className="text-gray-500 dark:text-gray-400">배송지</span> {address}</p>
+          {state === 'preparing' && shipsOn && (
+            <p><span className="text-gray-500 dark:text-gray-400">발송 예정</span> {formatShipsOn(shipsOn)}</p>
+          )}
+          {lines.filter((l) => l.serials).map((l) => (
+            <p key={l.label}><span className="text-gray-500 dark:text-gray-400">한정판</span> {l.label} {l.serials}</p>
+          ))}
           {courier && trackingNumber && (
             <p><span className="text-gray-500 dark:text-gray-400">운송장</span> {courier} {trackingNumber}</p>
           )}
@@ -139,13 +149,15 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ params, qu
   const order = await findShopOrderByOrderNo(orderNo).catch(() => undefined);
   if (!order || !order.shopOrder || !isTokenMatch(order.manageToken, token)) return { notFound: true };
   const so = order.shopOrder;
+  const extras = await loadOrderExtras(order.orderNo, so.items, new Date()).catch(() => null);
   const paid = order.status === 'paid' || order.status === 'partially_refunded' || order.status === 'refunded';
   return {
     props: {
       orderNo: order.orderNo,
       token,
       state: !paid ? 'unpaid' : so.fulfillmentStatus,
-      lines: so.items.map((i) => ({ label: shopLineName(i.productTitle, i.optionLabel), quantity: i.quantity, amount: i.unitPrice * i.quantity })),
+      lines: so.items.map((i) => ({ label: shopLineName(i.productTitle, i.optionLabel), quantity: i.quantity, amount: i.unitPrice * i.quantity, serials: extras?.serialsByItem.get(i.id) ?? null })),
+      shipsOn: extras?.latestShipsOn ?? null,
       shippingFee: so.shippingFee,
       totalAmount: order.totalAmount,
       recipient: `${so.recipientName} · ${so.recipientPhone}`,

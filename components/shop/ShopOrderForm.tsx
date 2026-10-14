@@ -18,7 +18,8 @@ import { readStringDraft, writeStringDraft } from '../../lib/formDraft';
 import { SHOP_DRAFT_KEY } from '../../lib/shop/draft';
 import { computeShopTotals } from '../../lib/shop/amounts';
 import { shopLineName } from '../../lib/shop/catalog';
-import { SHOP_REFUND_RULES, shopShippingNote } from '../../lib/shop/policyCopy';
+import { SHOP_PREORDER_MIX_NOTE, SHOP_REFUND_RULES, shopPreorderSupplyNote, shopShippingNote } from '../../lib/shop/policyCopy';
+import { latestPendingShipsOn } from '../../lib/shop/preorder';
 import { reportPaymentFailure, reportPaymentWindowOpen } from '../../utils/reportPaymentFailure';
 
 /** 남은 수량 — SKU id → 수량. null이면 아직 모른다(DB 조회 실패) — 고를 수는 있고 최종 판정은 주문 생성이 한다. */
@@ -81,6 +82,8 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
       .filter((l) => l.quantity > 0),
     [allProducts, qty, capOf],
   );
+  // 예약 상품을 담았으면 가장 늦은 발송 예정일에 함께 보낸다.
+  const latestShipsOn = latestPendingShipsOn(lines.map((l) => l.product.shipsOn), new Date());
   const totals = computeShopTotals(lines.map((l) => ({ unitPrice: l.sku.price, quantity: l.quantity })));
 
   const [name, setName] = useState('');
@@ -279,6 +282,12 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
             )))}
           </div>
         </Disclosure>
+      )}
+
+      {latestShipsOn && (
+        <Notice tone="info">
+          {shopPreorderSupplyNote(latestShipsOn)} {SHOP_PREORDER_MIX_NOTE}
+        </Notice>
       )}
 
       {lines.length > 0 && (

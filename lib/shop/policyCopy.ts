@@ -1,4 +1,5 @@
 import { formatPriceAmount } from '../../data/pricing';
+import { formatShipsOn } from './preorder';
 import { SHOP_FREE_SHIPPING_FROM, SHOP_SHIPPING_FEE } from '../../data/shop/policy';
 
 /**
@@ -18,3 +19,9 @@ export const SHOP_REFUND_RULES: readonly string[] = [
   '상품이 불량이거나 주문과 다르게 왔으면 포장을 뜯었어도 돌려드리고, 배송비도 저희가 내요. 받으신 날부터 3개월, 그 사실을 아신 날부터 30일 안에 알려 주세요.',
   '교환·반품은 카카오톡이나 010-4255-7893으로 요청해 주세요.',
 ];
+
+/** 예약 판매 공급 시기 — 상세·주문 폼 안내. 섞어 담으면 가장 늦은 날에 함께 보낸다. */
+export const shopPreorderSupplyNote = (shipsOn: string): string =>
+  `예약 판매 상품이에요. ${formatShipsOn(shipsOn)} 이후에 보내요.`;
+
+export const SHOP_PREORDER_MIX_NOTE = '예약 상품을 다른 상품과 함께 담으면 가장 늦은 발송 예정일에 함께 보내요.';
