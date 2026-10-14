@@ -4,7 +4,7 @@
  * 이 저장소의 업로드 이미지는 승인 전 프로젝트의 자료이기도 하다 — 초안·심사 중·반려·
  * 철회된 프로젝트의 그림과, 올렸다가 저장하지 않은 고아 파일까지 같은 접두사에 섞여 있다.
  * 그래서 "공개 페이지가 실제로 쓰는 그림"만 무인증으로 연다: **승인된 프로젝트가 참조하는
- * 키**. 나머지는 소유 개설자나 관리자만 본다(`pages/api/funding/media/[...path].ts`).
+ * 키**(공연 갈래: 주최자 공연이 공개된 뒤의 포스터·출연진 사진). 나머지는 소유 개설자나 관리자만 본다(`pages/api/funding/media/[...path].ts`).
  *
  * 참조 범위가 `cover_url`·`funding_rewards.image_url`보다 넓다. 승인된 프로젝트의 공개
  * 상세는 본문(`content`)의 그림과 `og_image_url`·`hero_image_url`도 그대로 내보내므로,
@@ -33,8 +33,7 @@ import { FUNDING_MEDIA_URL_PREFIX } from './mediaPath';
  * 마크다운·HTML 안에 박혀 있어 완전 일치로는 못 찾는다. `LIKE`는 파일명에 흔한 `_`가
  * 한 글자 와일드카드라 판정이 필요 이상으로 느슨해진다.
  */
-export const isApprovedFundingMedia = async (filename: string): Promise<boolean> => {
-  const needle = `${FUNDING_MEDIA_URL_PREFIX}${filename}`;
+const isReferencedByApprovedProject = async (filename: string, needle: string): Promise<boolean> => {
   try {
     const rows = await getDb().all<{ one: number }>(sql`
       select 1 as one from funding_projects p
@@ -61,6 +60,40 @@ export const isApprovedFundingMedia = async (filename: string): Promise<boolean>
     console.error('[funding/media] 공개 여부 조회 실패 — 비공개로 본다:', error);
     return false;
   }
+};
+
+/**
+ * 승인된 주최자 공연(공개·취소 상태)의 포스터·출연진 사진인가.
+ *
+ * 펀딩 조회와 **따로** try로 감싼다 — `show_submissions` 표가 아직 없는 DB(마이그레이션 전 배포)에서
+ * 이 조회가 던져도 승인된 펀딩 이미지의 판정은 살아 있어야 한다. 소유 접두사(`<creatorId>-`)가
+ * 맞아야 한다: 남의 파일명을 자기 공연 칸에 적어 공개로 만들 수 없게.
+ */
+const isReferencedByApprovedShow = async (filename: string, needle: string): Promise<boolean> => {
+  try {
+    const rows = await getDb().all<{ one: number }>(sql`
+      select 1 as one from show_submissions ss
+      join shows s on s.id = ss.show_id
+      where ss.review_status = 'approved'
+        and s.status in ('published', 'cancelled')
+        and (
+          instr(coalesce(s.cover_image, ''), ${needle}) > 0
+          or instr(coalesce(s.performers_json, ''), ${needle}) > 0
+        )
+        and substr(${filename}, 1, length(ss.creator_id) + 1) = ss.creator_id || '-'
+      limit 1
+    `);
+    return rows.length > 0;
+  } catch (error) {
+    console.error('[funding/media] 공연 이미지 공개 여부 조회 실패 — 비공개로 본다:', error);
+    return false;
+  }
+};
+
+export const isApprovedFundingMedia = async (filename: string): Promise<boolean> => {
+  const needle = `${FUNDING_MEDIA_URL_PREFIX}${filename}`;
+  if (await isReferencedByApprovedProject(filename, needle)) return true;
+  return isReferencedByApprovedShow(filename, needle);
 };
 
 /**

@@ -1,4 +1,4 @@
-import { and, desc, eq, sql } from 'drizzle-orm';
+import { and, count, desc, eq, inArray, sql } from 'drizzle-orm';
 
 import { getDb } from '../../../db/client';
 import { showSubmissions, shows } from '../../../db/schema';
@@ -195,4 +195,16 @@ export async function withdrawSubmission(creatorId: string, id: string, now: Dat
     .where(and(eq(showSubmissions.id, id), eq(showSubmissions.reviewStatus, row.sub.reviewStatus)));
   if (res.rowsAffected === 0) return conflict('상태가 바뀌었어요. 새로 고침해 주세요.');
   return { ok: true };
+}
+
+/** 아직 심사를 안 거쳤거나 다시 손봐야 하는 제출물 수 — 새로 만들 때의 상한(펀딩 projects.ts와 같은 기준). */
+export async function countOpenSubmissions(creatorId: string): Promise<number> {
+  const [row] = await getDb()
+    .select({ value: count() })
+    .from(showSubmissions)
+    .where(and(
+      eq(showSubmissions.creatorId, creatorId),
+      inArray(showSubmissions.reviewStatus, ['draft', 'submitted', 'changes_requested']),
+    ));
+  return row?.value ?? 0;
 }
