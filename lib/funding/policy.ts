@@ -184,7 +184,7 @@ export const cancelBlockedMessage = (code: keyof typeof CANCEL_BLOCK_MESSAGES, g
  * 날짜만으로는 하루에 두 번 고친 것을 구분할 수 없어 게이트를 통과시킬 방법이 없어진다 —
  * r2가 실제로 그 경우였다(#63이 처리방침에 언론 홍보 3개 항을 더한 날 이 게이트가 도입됐다).
  */
-export const FUNDING_TERMS_VERSION = 'funding-terms-2026-10-14-r3';
+export const FUNDING_TERMS_VERSION = 'funding-terms-2026-10-14-r4';
 
 /**
  * 이 판본부터 응원 메시지는 이름 공개 여부와 **따로** 간다 — 이름을 공개하지 않은 후원의 메시지도
@@ -231,7 +231,7 @@ export const PRIVACY_LEGAL_RETENTION_TEXT =
  * `: string` 타입 주석을 명시로 둔다 — 이 값을 리터럴 타입으로 좁혀 두면 다음 개정에서
  * 판본 문자열을 갱신할 때마다 타입 에러가 난다.
  */
-export const FUNDING_CREATOR_TERMS_VERSION: string = 'funding-creator-terms-2026-10-04';
+export const FUNDING_CREATOR_TERMS_VERSION: string = 'funding-creator-terms-2026-10-14';
 
 /** 후원 시 수집하는 항목 — PledgeWizard가 실제로 전송하고 funding_pledges·orders에 저장되는 필드와 1:1이다. */
 export const FUNDING_COLLECTED_ITEMS: readonly string[] = [
@@ -318,8 +318,8 @@ export const FUNDING_CREATOR_DATA_PROCESSORS: ReadonlyArray<DataProcessorRow> = 
       '이메일 주소, 메일 본문에 담기는 로그인 링크·심사 결과·공개 상태 변경 안내와 운영자 메모·바뀐 계정 정보(이름 또는 로그인 이메일)와 ' +
       '정산 금액 내역(모금액·환불액·수수료·부가세 상당액·원천징수액·설계비와 제작비 공제액·충당하지 못한 대금·실지급액·확정 후원 건수), 입금 계좌의 은행명·예금주·계좌번호 뒤 4자리',
   },
-  { name: 'Turso', country: '미국', purpose: '개설자 계정·프로젝트·공연 등록·정산 기록 데이터베이스 보관', items: '위 13항 수집 항목 전부' },
-  { name: 'Vercel', country: '미국', purpose: '개설자 화면 서버 호스팅', items: '개설자 화면 이용 과정에서 전송되는 위 항목 전부' },
+  { name: 'Turso', country: '미국', purpose: '개설자 계정·프로젝트·공연 등록·사업자 정보·정산 기록 데이터베이스 보관', items: '위 13항 수집 항목 전부(사업자등록증 사본 파일은 제외)' },
+  { name: 'Vercel', country: '미국', purpose: '개설자 화면 서버 호스팅, 사업자등록증 사본 보관(비공개 파일 저장소)', items: '개설자 화면 이용 과정에서 전송되는 위 항목 전부, 사업자등록증 사본' },
 ];
 
 /**
