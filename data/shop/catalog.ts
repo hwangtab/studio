@@ -67,6 +67,20 @@ export interface ShopProduct {
   artist?: string;
   /** false면 목록·상세에 나오지 않고 주문도 받지 않는다. */
   published: boolean;
+  /**
+   * 아래 다섯은 **DB 상품(source: 'db') 전용**이다 — 파일 상품은 쓰지 않는다
+   * (`validateShopCatalog`가 파일 상품의 kind: 'digital'·editionSize를 거부). 전부 선택이라 파일 정의는 그대로다.
+   */
+  /** 실물/디지털. 비우면 실물. */
+  kind?: 'physical' | 'digital';
+  /** 예약 발송일(YYYY-MM-DD, KST). */
+  shipsOn?: string;
+  /** 한정판 수량(일련번호를 붙인다). */
+  editionSize?: number;
+  /** 내려받기 파일이 있는가. 파일 키(R2)는 공개 객체에 싣지 않는다. */
+  hasDownloads?: boolean;
+  /** 정본 출처. 비우면 'file'. */
+  source?: 'file' | 'db';
 }
 
 export const SHOP_PRODUCTS: readonly ShopProduct[] = [];

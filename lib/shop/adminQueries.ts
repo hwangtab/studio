@@ -3,6 +3,9 @@ import { sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { getSupportedArtist } from '../../data/artists';
 import { SHOP_PRODUCTS } from '../../data/shop/catalog';
+import { listDbSkusForAdmin } from './dbProducts';
+import { isDbSkuId } from './productRules';
+import { listAllSkusForAdmin } from './repository';
 import { computeShopArtistPayout, kstMonthRange, type ShopArtistPayout } from './artistPayout';
 import { getRemainingStock } from './service';
 
@@ -49,9 +52,9 @@ export interface AdminSkuStockRow {
   remaining: number;
 }
 
-/** 카탈로그의 모든 SKU와 DB 재고. 재고 행이 없으면 stock null(= 0, 아직 안 넣음). */
+/** 카탈로그(파일 + DB의 잠긴 SKU)의 모든 SKU와 DB 재고. 재고 행이 없으면 stock null(= 0, 아직 안 넣음). */
 export const listAdminSkuStock = async (now: Date): Promise<AdminSkuStockRow[]> => {
-  const skus = SHOP_PRODUCTS.flatMap((p) => p.skus.map((s) => ({ product: p, sku: s })));
+  const skus = await listAllSkusForAdmin();
   if (skus.length === 0) return [];
   const ids = skus.map((x) => x.sku.id);
   const stockRows = await getDb().all<{ id: string; stock: number }>(
@@ -66,9 +69,20 @@ export const listAdminSkuStock = async (now: Date): Promise<AdminSkuStockRow[]> 
   }));
 };
 
-/** 총 재고를 정한다(없으면 만든다). 카탈로그에 없는 SKU는 거절한다. */
+/**
+ * 총 재고를 정한다(없으면 만든다). 카탈로그에 없는 SKU는 거절한다. DB 상품 SKU(`db-`)는 **잠긴 것만** 받는다 —
+ * 승인 전·새로 더한 SKU의 재고를 먼저 넣어 두면 잠그는 순간 바로 팔리기 때문이다.
+ */
 export const setSkuStock = async (skuId: string, stock: number): Promise<{ ok: true } | { ok: false; message: string }> => {
-  const product = SHOP_PRODUCTS.find((p) => p.skus.some((s) => s.id === skuId));
+  let product = SHOP_PRODUCTS.find((p) => p.skus.some((s) => s.id === skuId));
+  if (!product && isDbSkuId(skuId)) {
+    try {
+      product = (await listDbSkusForAdmin()).find((x) => x.sku.id === skuId)?.product;
+    } catch (error) {
+      console.error('[shop] DB SKU 조회 실패(재고 설정)', error);
+      return { ok: false, message: 'DB 상품 정보를 확인하지 못했어요. 잠시 후 다시 시도해 주세요.' };
+    }
+  }
   if (!product) return { ok: false, message: '카탈로그에 없는 SKU예요.' };
   if (!Number.isInteger(stock) || stock < 0 || stock > 100000) return { ok: false, message: '재고는 0 이상의 정수로 적어 주세요.' };
   await getDb().run(sql`

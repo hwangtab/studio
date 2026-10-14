@@ -11,7 +11,8 @@ import { formatPriceAmount } from '../../../data/pricing';
 import { SHOP_CATEGORY_LABELS, type ShopProduct } from '../../../data/shop/catalog';
 import { SHOP_SALES_OPEN } from '../../../data/shop/policy';
 import { withI18nServerProps } from '../../../lib/getStatic';
-import { findShopProduct, publishedShopProducts } from '../../../lib/shop/catalog';
+import { fitsDisplayFont } from '../../../lib/fonts/displayCoverage';
+import { findShopProductAsync, listPublishedShopProducts } from '../../../lib/shop/repository';
 import { getRemainingStock } from '../../../lib/shop/service';
 import imageMetadata from '../../../utils/imageMetadata.json';
 
@@ -22,6 +23,8 @@ interface Props {
   salesOpen: boolean;
   /** 위탁 아티스트(상품의 artist). 이름·주소만 싣는다 — 세금 유형 등은 __NEXT_DATA__에 실리면 안 된다. */
   artist: { slug: string; name: string } | null;
+  /** DB 상품 제목이 제목 서체 서브셋 밖 글자를 품으면 true — h1을 본문 서체로 그린다(글자만 섞이는 것보다 낫다). */
+  titleFallbackFont: boolean;
 }
 
 const SITE_URL = 'https://studionol.co.kr';
@@ -31,7 +34,7 @@ const summarize = (text: string): string => {
   return flat.length > 150 ? `${flat.slice(0, 147)}…` : flat;
 };
 
-export default function ShopProductPage({ product, others, remaining, salesOpen, artist }: Props) {
+export default function ShopProductPage({ product, others, remaining, salesOpen, artist, titleFallbackFont }: Props) {
   const path = `/ko/shop/${product.slug}`;
   const [active, setActive] = useState(0);
   const sellable = product.skus.filter((s) => !s.retired);
@@ -113,7 +116,7 @@ export default function ShopProductPage({ product, others, remaining, salesOpen,
             <p className="typo-card-meta">
               <Link href={`/ko/shop?category=${product.category}`} className="underline">{SHOP_CATEGORY_LABELS[product.category]}</Link>
             </p>
-            <h1 className="typo-page-title mt-2 text-gray-900 dark:text-white">{product.title}</h1>
+            <h1 className={`typo-page-title mt-2 text-gray-900 dark:text-white${titleFallbackFont ? ' font-sans' : ''}`}>{product.title}</h1>
             {product.subtitle && <p className="typo-card-body mt-2">{product.subtitle}</p>}
             {artist && (
               <p className="typo-card-meta mt-2">
@@ -144,9 +147,9 @@ export default function ShopProductPage({ product, others, remaining, salesOpen,
 export const getServerSideProps = withI18nServerProps<Props>(async ({ params, res }) => {
   const slug = typeof params?.slug === 'string' ? params.slug : '';
   if (params?.locale !== 'ko') return { redirect: { destination: `/ko/shop${/^[a-z0-9-]+$/.test(slug) ? `/${slug}` : ''}`, permanent: false } };
-  const product = findShopProduct(slug);
+  const product = await findShopProductAsync(slug);
   if (!product) return { notFound: true };
-  const others = publishedShopProducts().filter((p) => p.slug !== product.slug);
+  const others = (await listPublishedShopProducts()).filter((p) => p.slug !== product.slug);
 
   let remaining: RemainingStock = null;
   try {
@@ -158,7 +161,7 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ params, re
   res.setHeader('Cache-Control', remaining ? 'public, s-maxage=30, stale-while-revalidate=60' : 'no-store');
   const registered = product.artist ? getSupportedArtist(product.artist) : null;
   const artist = registered ? { slug: registered.slug, name: registered.name } : null;
-  return { props: { product, others, remaining, salesOpen: SHOP_SALES_OPEN, artist } };
+  return { props: { product, others, remaining, salesOpen: SHOP_SALES_OPEN, artist, titleFallbackFont: product.source === 'db' && !fitsDisplayFont(product.title) } };
 });
 
 // 디자인 판 — lib/designEdition.ts

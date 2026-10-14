@@ -9,7 +9,7 @@ import { PageShell } from '../../../components/ui/PageHeader';
 import { ResultCard } from '../../../components/ui/ResultCard';
 import { getSiteConfig } from '../../../data/siteConfig';
 import { withI18nServerProps } from '../../../lib/getStatic';
-import { findShopProduct } from '../../../lib/shop/catalog';
+import { findShopProductAsync } from '../../../lib/shop/repository';
 import { normalizeShopOrderNo } from '../../../lib/shop/shape';
 import { useReportPaymentFailureOnMount } from '../../../utils/reportPaymentFailure';
 
@@ -87,7 +87,7 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ query, res
   const { code, orderId, slug } = query;
   const safeCode = typeof code === 'string' && CODE_PATTERN.test(code) ? code : null;
   // 쿼리의 slug를 그대로 경로에 넣지 않는다 — 실제 공개 상품일 때만 돌아갈 주소를 만든다.
-  const product = findShopProduct(slug);
+  const product = await findShopProductAsync(slug);
   return {
     props: {
       code: safeCode,

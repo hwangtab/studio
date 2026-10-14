@@ -26,7 +26,7 @@ import {
 } from '../../../data/artists';
 import type { ShopProduct } from '../../../data/shop/catalog';
 import { SHOP_SALES_OPEN } from '../../../data/shop/policy';
-import { artistShopProducts } from '../../../lib/shop/catalog';
+import { listShopProductsByArtist } from '../../../lib/shop/repository';
 import type { PortfolioItem } from '../../../types/data';
 import type { NextPageWithLayout } from '../../../types';
 
@@ -207,7 +207,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     locale,
     {
       artist: toArtistPageData(artist), works, supportOpen: isArtistSupportOpen(),
-      products: SHOP_SALES_OPEN ? artistShopProducts(artist.slug) : [],
+      products: SHOP_SALES_OPEN ? await listShopProductsByArtist(artist.slug) : [],
     },
     { revalidate: 86400, i18nSections: ['artists', 'portfolio'] },
   );

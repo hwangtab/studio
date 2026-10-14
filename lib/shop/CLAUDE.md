@@ -52,6 +52,24 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
   걸리면 승인된 돈을 전액 자동 취소한다(`autocancel:` 멱등키). 이 게이트를 빼면 초과 판매다.
 - 화면의 남은 수량(`getRemainingStock`)과 게이트(`stockGateSql`)는 같은 점유 판정(`occupyingCondition`)을 쓴다. 한쪽만 고치지 말 것.
 
+### 상품 정본은 둘 — 파일이 먼저, 그다음 DB (`repository.ts`가 유일한 입구)
+
+아티스트 상점 플랫폼(설계 `docs/shop-artist-platform-design-2026-10.md`)부터 상품 정본이 둘이다. 상품을 읽는 서버 코드는
+`data/shop/catalog.ts`나 `lib/shop/catalog.ts`의 동기 조회를 직접 부르지 말고 `lib/shop/repository.ts`를 거친다.
+
+- 순서는 **파일 먼저, 그다음 DB.** 같은 slug가 양쪽에 있으면 파일이 이긴다(비공개 파일 상품의 slug도 DB가 가로채지 못한다).
+  공개 목록·상세는 DB 오류를 삼키고 파일 상품만 돌려준다(빌드는 TURSO 없이 성공해야 한다). 주문 생성만
+  `findSellableSkuAsync`가 `{found}`/`{lookupFailed}`로 나눠 `lookup_failed` → API 503.
+- **`db-` 접두사**: DB 상품의 SKU id는 서버가 `db-` + hex10으로 만든다. 파일 SKU는 못 쓴다(`validateShopCatalog`가 거부) —
+  두 정본의 SKU 충돌이 구조적으로 불가능하고, **`db-`로 시작하지 않는 SKU는 새 표를 조회하지 않는다.** 새 표에 닿는 확정·취소·생성
+  문장은 `db-` 줄이 있을 때만 돌게 만들 것(`isDbSkuId`, `lib/shop/productRules.ts`).
+- DB 상품 공개 = `review_status='approved' AND published=1`, 판매 가능 SKU = `locked_at IS NOT NULL AND retired=0`.
+  공개 객체(`ShopProduct`)에 `digital_files`(R2 키)를 싣지 않는다 — `hasDownloads`만. `kind: 'digital'`·`editionSize`는 DB 상품 전용.
+- 마이그레이션 **0053은 새 표 다섯 개뿐**(`shop_artists`·`shop_products`·`shop_product_skus`·`shop_serials`·`shop_order_downloads`)이다.
+  기존 표에 컬럼을 더하지 않았고 새 표를 기존 `relations()`에 잇지 않았다(0022 함정). 그래도 순서는 **마이그레이션 → 배포**.
+  뒤집어도 파일 상품 결제는 안 깨진다(새 표를 안 읽는다) — 목록·상세는 DB 오류를 삼키고, `db-` SKU만 503.
+- slug 예약어에 `artist`가 늘었다(`/ko/shop/artist/<slug>`).
+
 ### 상품 정의는 파일, 재고·주문은 DB
 
 `data/shop/catalog.ts`가 이름·옵션·가격의 정본이고 **아무것도 import하지 않는다**(클라이언트가 값으로 쓴다). 주문 API는 요청의
