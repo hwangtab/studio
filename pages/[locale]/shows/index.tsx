@@ -80,7 +80,7 @@ export default function ShowsIndexPage({ upcoming, past, nowSec, locale }: Props
       )}
       {locale === 'ko' && (
         <p className="py-8 text-center text-sm text-gray-500 dark:text-gray-400">
-          <Link href="/ko/shows/host" prefetch={false} className="underline underline-offset-2">공연을 올리고 싶다면</Link>
+          <Link href="/ko/shows/host" prefetch={false} className="underline underline-offset-2">공연 올리는 방법</Link>
         </p>
       )}
     </>
