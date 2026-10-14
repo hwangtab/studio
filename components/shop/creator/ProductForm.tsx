@@ -13,10 +13,10 @@ import type { ShopProduct } from '../../../data/shop/catalog';
 import { splitShopDescription } from '../../../lib/shop/creatorValidation';
 import type { CreatorProductDetail } from '../../../lib/shop/creatorProductWrite';
 import {
-  canCreatorEditShopField, canCreatorEditShopProduct, isDraftPlaceholderSlug, SHOP_CREATOR_LIMITS as L, SHOP_STATUS_LABELS,
+  canAdminEditShopField, canAdminEditShopProduct, canCreatorEditShopField, canCreatorEditShopProduct, isDraftPlaceholderSlug, SHOP_CREATOR_LIMITS as L, SHOP_STATUS_LABELS,
   type ShopProductEditableField,
 } from '../../../lib/shop/productRules';
-import { saveShopProduct, shopProductAction } from './api';
+import { saveShopProduct, saveShopProductAsAdmin, shopProductAction } from './api';
 
 interface SkuRow {
   /** 화면 안에서만 쓰는 키(새 행은 id가 없다). */
@@ -87,7 +87,11 @@ const newRow = (): SkuRow => {
 
 type Message = { tone: 'success' | 'error'; text: string } | null;
 
-export function ProductForm({ initial }: { initial: CreatorProductDetail }) {
+/**
+ * 아티스트 콘솔과 관리자 화면이 함께 쓰는 상품 폼. `admin`이면 열린 칸이 관리자 표(`canAdminEditShopField`)이고, 저장·사진 업로드는
+ * 관리자 라우트로 가며, 심사 신청·철회·공개 버튼은 없다(관리자 화면이 판정·공개를 따로 다룬다). 저장하면 `onSaved`로 알린다.
+ */
+export function ProductForm({ initial, admin = false, onSaved }: { initial: CreatorProductDetail; admin?: boolean; onSaved?: (p: CreatorProductDetail) => void }) {
   const [product, setProduct] = useState(initial);
   const [form, setForm] = useState<FormState>(() => toForm(initial));
   const [busy, setBusy] = useState<'save' | 'action' | null>(null);
@@ -95,8 +99,8 @@ export function ProductForm({ initial }: { initial: CreatorProductDetail }) {
   const [showPreview, setShowPreview] = useState(false);
 
   const status = product.reviewStatus;
-  const can = (field: ShopProductEditableField) => canCreatorEditShopField(status, field);
-  const formOpen = canCreatorEditShopProduct(status);
+  const can = (field: ShopProductEditableField) => (admin ? canAdminEditShopField(status, field) : canCreatorEditShopField(status, field));
+  const formOpen = admin ? canAdminEditShopProduct(status) : canCreatorEditShopProduct(status);
   const dirty = useMemo(() => JSON.stringify(form) !== JSON.stringify(toForm(product)), [form, product]);
 
   useEffect(() => {
@@ -114,11 +118,12 @@ export function ProductForm({ initial }: { initial: CreatorProductDetail }) {
   const save = async (e?: FormEvent) => {
     e?.preventDefault();
     setBusy('save');
-    const result = await saveShopProduct(product.id, toValue(form));
+    const result = await (admin ? saveShopProductAsAdmin : saveShopProduct)(product.id, toValue(form));
     setBusy(null);
     if (result.ok) {
       applyServerProduct(result.product);
       setMessage({ tone: 'success', text: '저장했어요.' });
+      onSaved?.(result.product);
     } else {
       setMessage({ tone: 'error', text: result.message });
     }
@@ -150,20 +155,22 @@ export function ProductForm({ initial }: { initial: CreatorProductDetail }) {
 
   return (
     <div className="flex flex-col gap-6">
-      {status === 'submitted' && (
+      {!admin && status === 'submitted' && (
         <Notice tone="info">심사 중이에요. 고치려면 심사 신청을 철회해 주세요.</Notice>
       )}
       {status === 'approved' && (
         <Notice tone="success" title="승인된 상품이에요">
-          제목·주소·분류·종류와 판매 중인 옵션의 가격은 바꿀 수 없어요. 새로 추가한 옵션은 운영자가 승인하면 판매가 시작돼요.
+          {admin
+            ? '제목·주소·분류·종류와 판매 중인 옵션의 가격은 관리자도 바꿀 수 없어요. 새 옵션은 아래 "새 옵션 승인"을 눌러야 판매가 시작돼요.'
+            : '제목·주소·분류·종류와 판매 중인 옵션의 가격은 바꿀 수 없어요. 새로 추가한 옵션은 운영자가 승인하면 판매가 시작돼요.'}
         </Notice>
       )}
-      {(status === 'changes_requested' || status === 'rejected') && product.reviewNote && (
+      {!admin && (status === 'changes_requested' || status === 'rejected') && product.reviewNote && (
         <Notice tone={status === 'rejected' ? 'error' : 'warning'} title="운영자 메모">
           <span className="whitespace-pre-line">{product.reviewNote}</span>
         </Notice>
       )}
-      {status === 'rejected' && <Notice tone="neutral">반려된 상품은 고칠 수 없어요. 새 상품으로 다시 만들어 주세요.</Notice>}
+      {!admin && status === 'rejected' && <Notice tone="neutral">반려된 상품은 고칠 수 없어요. 새 상품으로 다시 만들어 주세요.</Notice>}
 
       <form onSubmit={save} className="flex flex-col gap-6">
         <div className="grid gap-5 sm:grid-cols-2">
@@ -243,7 +250,9 @@ export function ProductForm({ initial }: { initial: CreatorProductDetail }) {
           )}
           {can('images') && form.images.length < L.imagesMax && (
             <ImageUploadField
-              uploadQuery={`productId=${encodeURIComponent(product.id)}&kind=body`}
+              {...(admin
+                ? { uploadUrl: `/api/admin/shop/upload?productId=${encodeURIComponent(product.id)}` }
+                : { uploadQuery: `productId=${encodeURIComponent(product.id)}&kind=body` })}
               value=""
               onChange={(url) => patch({ images: [...form.images, url] })}
               disabled={disabled}
@@ -315,15 +324,15 @@ export function ProductForm({ initial }: { initial: CreatorProductDetail }) {
 
         <div className="flex flex-wrap items-center gap-3">
           {formOpen && <Button type="submit" disabled={disabled || !dirty}>{busy === 'save' ? '저장 중…' : '저장'}</Button>}
-          {(status === 'draft' || status === 'changes_requested') && (
+          {!admin && (status === 'draft' || status === 'changes_requested') && (
             <Button type="button" variant="secondary" disabled={disabled || dirty} onClick={() => act('submit', '심사를 신청했어요.')}>
               {busy === 'action' ? '처리 중…' : '심사 신청'}
             </Button>
           )}
-          {status === 'submitted' && (
+          {!admin && status === 'submitted' && (
             <Button type="button" variant="secondary" disabled={disabled} onClick={() => act('withdraw', '심사 신청을 철회했어요.')}>심사 신청 철회</Button>
           )}
-          {status === 'approved' && (
+          {!admin && status === 'approved' && (
             <Button type="button" variant="secondary" disabled={disabled || dirty} onClick={() => act(product.published ? 'unpublish' : 'publish', product.published ? '비공개로 바꿨어요.' : '공개했어요.')}>
               {product.published ? '비공개로 바꾸기' : '공개하기'}
             </Button>

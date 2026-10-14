@@ -1,16 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
+import { approveShopProductNow, saveProductAsAdmin } from '../../../../../lib/shop/adminProductWrite';
 import { loadShopProductForAdmin } from '../../../../../lib/shop/adminProducts';
+import { respondProductFailure } from '../../../../../lib/shop/creatorWriteHttp';
 import {
   applyShopAdminAction, decideShopProduct,
   type ShopAdminAction, type ShopAdminCode, type ShopDecisionAction, type ShopDecisionCode,
 } from '../../../../../lib/shop/reviewDecision';
 import { sendShopReviewDecisionEmail, sendShopReviewOperatorFallback, type ShopMailProduct } from '../../../../../lib/shop/reviewEmail';
 import { revalidateShopArtistPages } from '../../../../../lib/shop/revalidate';
+import { isStudioShopArtistSlug } from '../../../../../lib/shop/studioArtist';
 
 /**
- * 관리자 — 상품 심사 판정(approve·request_changes·reject)과 관리자 액션(lock_new_skus·set_ships_on·set_published·
+ * 관리자 — 상품 저장(PUT `{ value }` — 아티스트와 같은 검증·잠금 규칙, 소유자 대신 관리자 인증), 저장한 그대로 바로 승인(`approve_now`),
+ * 상품 심사 판정(approve·request_changes·reject)과 관리자 액션(lock_new_skus·set_ships_on·set_published·
  * set_internal_note·set_digital_files). 판정 DB 쓰기가 끝난 뒤의 후속 작업(재검증·메일)은 실패해도 200 + `warnings`다 —
  * 실패시키면 운영자가 같은 버튼을 다시 눌러 409를 받는다(펀딩 심사 라우트와 같은 원칙).
  */
@@ -50,26 +54,41 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   res.setHeader('Cache-Control', 'no-store');
   const auth = await authenticateAdminApi(req, res);
   if (!auth.ok) return res.status(401).json({ ok: false, message: 'Unauthorized' });
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
+  if (req.method !== 'POST' && req.method !== 'PUT') {
+    res.setHeader('Allow', 'POST, PUT');
     return res.status(405).json({ ok: false });
   }
   const id = typeof req.query.id === 'string' ? req.query.id : '';
   if (!id) return res.status(400).json({ ok: false, message: '잘못된 요청이에요.' });
+
+  if (req.method === 'PUT') {
+    try {
+      const saved = await saveProductAsAdmin(id, req.body?.value);
+      if (!saved.ok) return respondProductFailure(res, saved);
+      return res.status(200).json({ ok: true, product: saved.product });
+    } catch (error: unknown) {
+      console.error(`[shop/admin] 상품 저장 실패 (id=${id}):`, error);
+      return res.status(500).json({ ok: false, message: '저장하지 못했습니다. 잠시 후 다시 시도해 주세요.' });
+    }
+  }
   const b = ((typeof req.body === 'object' && req.body) || {}) as Record<string, unknown>;
   const warnings: string[] = [];
 
   try {
-    if (isDecision(b.action)) {
-      const action = b.action;
+    if (isDecision(b.action) || b.action === 'approve_now') {
+      const immediate = b.action === 'approve_now';
+      const action: ShopDecisionAction = immediate ? 'approve' : (b.action as ShopDecisionAction);
       const note = typeof b.note === 'string' ? b.note : undefined;
-      // 운영자가 본 판본(submitted_at 초). 없으면 거부한다 — 화면은 항상 싣는다.
-      if (typeof b.expectedSubmittedAt !== 'number' && b.expectedSubmittedAt !== null) {
+      // 운영자가 본 판본(submitted_at 초). 없으면 거부한다 — 화면은 항상 싣는다. (바로 승인은 판본이 없다 — 저장한 현재 내용이 그 판본이다.)
+      if (!immediate && typeof b.expectedSubmittedAt !== 'number' && b.expectedSubmittedAt !== null) {
         return res.status(400).json({ ok: false, message: '화면을 새로고침한 뒤 다시 시도해 주세요.' });
       }
-      const result = await decideShopProduct(id, action, {
-        note, slug: typeof b.slug === 'string' ? b.slug : undefined, expectedSubmittedAt: b.expectedSubmittedAt,
-      });
+      const slugIn = typeof b.slug === 'string' ? b.slug : undefined;
+      const result = immediate
+        ? await approveShopProductNow(id, { slug: slugIn })
+        : await decideShopProduct(id, action, {
+          note, slug: slugIn, expectedSubmittedAt: b.expectedSubmittedAt as number | null,
+        });
       if (!result.ok) return res.status(DECISION_STATUS[result.code]).json({ ok: false, message: result.message });
 
       try {
@@ -82,7 +101,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           const mail: ShopMailProduct = {
             id: product.id, title: product.title, slug: result.slug, creatorName: product.creatorName, creatorEmail: product.creatorEmail,
           };
-          const mailError = await sendShopReviewDecisionEmail(mail, action, note?.trim() || null, result.slug);
+          // 스튜디오 자체 상품은 알릴 아티스트가 없다(그 계정 주소는 운영자 받은편지함의 별칭이다).
+          const mailError = isStudioShopArtistSlug(product.artistSlug)
+            ? null
+            : await sendShopReviewDecisionEmail(mail, action, note?.trim() || null, result.slug);
           if (mailError) {
             warnings.push(mailError);
             const fallbackError = await sendShopReviewOperatorFallback(mail, action, mailError);

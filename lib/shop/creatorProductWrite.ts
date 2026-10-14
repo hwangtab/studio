@@ -11,7 +11,7 @@ import { nextReviewStatus } from '../funding/reviewTransition';
 import { getShopArtistByCreator } from './artists';
 import { findMissingShopProductFields, splitShopDescription, type ShopProductInput } from './creatorValidation';
 import {
-  canCreatorEditShopField, canCreatorEditShopProduct, DB_SKU_PREFIX, DRAFT_SLUG_PREFIX, SHOP_CREATOR_LIMITS,
+  canAdminEditShopField, canAdminEditShopProduct, canCreatorEditShopField, canCreatorEditShopProduct, DB_SKU_PREFIX, DRAFT_SLUG_PREFIX, SHOP_CREATOR_LIMITS,
   type ShopReviewStatus,
 } from './productRules';
 
@@ -163,13 +163,18 @@ export const listProductsForCreator = async (creatorId: string): Promise<Creator
 
 const UNREVIEWED: readonly ShopReviewStatus[] = ['draft', 'submitted', 'changes_requested'];
 
-/** 초안 생성 — `shop_artists` 행이 있는 계정만. 임시 주소(`draft-<uuid>`)로 만든다. */
-export const createDraftProduct = async (creatorId: string): Promise<ProductWriteResult<{ id: string }>> => {
+/**
+ * 초안 생성 — `shop_artists` 행이 있는 계정만. 임시 주소(`draft-<uuid>`)로 만든다.
+ * 관리자가 대신 만들 때(`admin: true`)는 미심사 상한을 보지 않는다(상한은 아티스트의 남용을 막는 장치다).
+ */
+export const createDraftProduct = async (creatorId: string, options: { admin?: boolean } = {}): Promise<ProductWriteResult<{ id: string }>> => {
   if (!(await getShopArtistByCreator(creatorId))) return deny('no_shop', '상점이 열린 아티스트만 상품을 만들 수 있어요.');
-  const [{ value: existing }] = await getDb().select({ value: count() }).from(shopProducts)
-    .where(and(eq(shopProducts.creatorId, creatorId), inArray(shopProducts.reviewStatus, [...UNREVIEWED])));
-  if (existing >= SHOP_CREATOR_LIMITS.draftsMax) {
-    return deny('too_many', '아직 심사되지 않은 상품이 너무 많아요. 심사가 끝난 뒤 새 상품을 만들 수 있어요.');
+  if (!options.admin) {
+    const [{ value: existing }] = await getDb().select({ value: count() }).from(shopProducts)
+      .where(and(eq(shopProducts.creatorId, creatorId), inArray(shopProducts.reviewStatus, [...UNREVIEWED])));
+    if (existing >= SHOP_CREATOR_LIMITS.draftsMax) {
+      return deny('too_many', '아직 심사되지 않은 상품이 너무 많아요. 심사가 끝난 뒤 새 상품을 만들 수 있어요.');
+    }
   }
   const [row] = await getDb().insert(shopProducts).values({
     creatorId, slug: `${DRAFT_SLUG_PREFIX}${randomUUID()}`, category: 'goods', title: '',
@@ -197,13 +202,19 @@ export const saveProduct = async (
   productId: string,
   value: ShopProductInput,
   now: Date = new Date(),
+  options: { admin?: boolean } = {},
 ): Promise<ProductWriteResult<{ approvedEdit: boolean }>> => {
+  // 관리자 저장(`admin: true`)은 `creatorId`에 상품 소유자를 넘긴다. 열린 칸만 `canAdminEditShopField`로 달라지고, SKU 잠금·
+  // 제목/주소 잠금(승인 뒤)은 아래 같은 판정을 탄다 — 관리자도 판매 중인 옵션의 가격을 못 바꾼다.
+  const admin = options.admin === true;
   const row = await loadOwnRow(creatorId, productId);
   if (!row) return deny('not_found', '상품을 찾을 수 없어요.');
   const status = row.reviewStatus;
-  if (!canCreatorEditShopProduct(status)) return deny('not_editable', '지금 상태에서는 상품을 고칠 수 없어요.');
+  if (!(admin ? canAdminEditShopProduct(status) : canCreatorEditShopProduct(status))) {
+    return deny('not_editable', '지금 상태에서는 상품을 고칠 수 없어요.');
+  }
 
-  const can = (f: Parameters<typeof canCreatorEditShopField>[1]) => canCreatorEditShopField(status, f);
+  const can = (f: Parameters<typeof canCreatorEditShopField>[1]) => (admin ? canAdminEditShopField(status, f) : canCreatorEditShopField(status, f));
   const storedImages = parseImages(row.images);
   const slugIn = value.slug === '' ? row.slug : value.slug;
 
@@ -248,7 +259,8 @@ export const saveProduct = async (
   }
 
   const nowSec = Math.floor(now.getTime() / 1000);
-  const approvedEdit = status === 'approved';
+  // 관리자 저장은 "아티스트가 승인 뒤 고쳤다"는 표시도 알림 메일도 만들지 않는다.
+  const approvedEdit = status === 'approved' && !admin;
 
   try {
     const result = await getDb().update(shopProducts).set({

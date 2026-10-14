@@ -17,6 +17,8 @@ import { authenticateAdminRequest } from '../../lib/contracts/admin-auth';
  */
 import type { AdminDashboard } from '../../lib/ops/adminDashboard';
 import { loadAdminDashboard } from '../../lib/ops/adminDashboard';
+import { countPendingShopProducts } from '../../lib/shop/adminProducts';
+import { countShopAwaitingShipment } from '../../lib/shop/adminQueries';
 
 /**
  * 관리자 첫 화면 = 오늘 처리할 일.
@@ -27,6 +29,8 @@ import { loadAdminDashboard } from '../../lib/ops/adminDashboard';
  */
 interface AdminIndexPageProps {
   dashboard: AdminDashboard | null;
+  /** 상점 대기 건수 — 표가 없거나 조회가 실패하면 null(그 카드는 숨긴다). */
+  shopQueues: { pendingProducts: number | null; awaitingShipment: number | null };
   /** 이번 달 1일·오늘(KST) — 장부 폼의 기본 기간. */
   ledgerFrom: string;
   ledgerTo: string;
@@ -43,14 +47,18 @@ export const getServerSideProps: GetServerSideProps<AdminIndexPageProps> = async
   const today = kstDateString(now);
   const ledgerFrom = `${today.slice(0, 7)}-01`;
 
+  // 상점 건수는 따로 읽는다 — 상점 표가 없는 DB에서도 대시보드가 그대로 열려야 한다(각 함수가 실패를 삼키고 null).
+  const [pendingProducts, awaitingShipment] = await Promise.all([countPendingShopProducts(), countShopAwaitingShipment()]);
+  const shopQueues = { pendingProducts, awaitingShipment };
+
   try {
     const dashboard = await loadAdminDashboard(now);
-    return { props: { dashboard, ledgerFrom, ledgerTo: today } };
+    return { props: { dashboard, shopQueues, ledgerFrom, ledgerTo: today } };
   } catch (error: unknown) {
     // 첫 화면이 죽으면 나머지 관리 화면으로 가는 길까지 막힌다 — 링크는 살려 두고 오류만 알린다.
     console.error('[admin] Failed to load dashboard:', error);
     return {
-      props: { dashboard: null, ledgerFrom, ledgerTo: today, error: '현황을 불러오지 못했습니다. 각 관리 화면은 열 수 있습니다.' },
+      props: { dashboard: null, shopQueues, ledgerFrom, ledgerTo: today, error: '현황을 불러오지 못했습니다. 각 관리 화면은 열 수 있습니다.' },
     };
   }
 };
@@ -85,7 +93,7 @@ const QueueCard = ({ label, count, href, alert }: { label: string; count: number
   </Link>
 );
 
-export default function AdminIndexPage({ dashboard, ledgerFrom, ledgerTo, error }: AdminIndexPageProps) {
+export default function AdminIndexPage({ dashboard, shopQueues, ledgerFrom, ledgerTo, error }: AdminIndexPageProps) {
   return (
     <>
       <Head>
@@ -144,6 +152,12 @@ export default function AdminIndexPage({ dashboard, ledgerFrom, ledgerTo, error 
                 <QueueCard label="이체 대기 아티스트 정산" count={dashboard.queues.artistPayoutsPending} href="/admin/artists" alert />
                 <QueueCard label="심사 대기 펀딩 프로젝트" count={dashboard.queues.fundingProjectsAwaitingReview} href="/admin/funding/projects" alert />
                 <QueueCard label="이체 대기 펀딩 정산" count={dashboard.queues.fundingPayoutsPending} href="/admin/funding/projects" alert />
+                {shopQueues.pendingProducts !== null && (
+                  <QueueCard label="심사 대기 상점 상품" count={shopQueues.pendingProducts} href="/admin/shop/products" alert />
+                )}
+                {shopQueues.awaitingShipment !== null && (
+                  <QueueCard label="발송 대기 상점 주문" count={shopQueues.awaitingShipment} href="/admin/shop" alert />
+                )}
               </div>
             </section>
 

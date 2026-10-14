@@ -4,16 +4,20 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import { AdminShell } from '../../../../components/admin/AdminShell';
+import { ProductForm } from '../../../../components/shop/creator/ProductForm';
 import ShopProductDetail from '../../../../components/shop/ShopProductDetail';
 import { formatPriceAmount } from '../../../../data/pricing';
 import type { ShopProduct } from '../../../../data/shop/catalog';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { loadShopProductForAdmin, type AdminShopProductDetail } from '../../../../lib/shop/adminProducts';
+import { loadProductForCreator, type CreatorProductDetail } from '../../../../lib/shop/creatorProductWrite';
 import { splitShopDescription } from '../../../../lib/shop/creatorValidation';
 import { SHOP_STATUS_LABELS } from '../../../../lib/shop/productRules';
 
 interface Props {
   product: AdminShopProductDetail;
+  /** 편집 폼이 읽는 판본(아티스트 콘솔과 같은 모양). */
+  editable: CreatorProductDetail;
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
@@ -22,7 +26,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   const id = typeof context.params?.id === 'string' ? context.params.id : '';
   const product = id ? await loadShopProductForAdmin(id) : null;
   if (!product) return { notFound: true };
-  return { props: { product } };
+  const editable = await loadProductForCreator(product.creatorId, product.id);
+  if (!editable) return { notFound: true };
+  return { props: { product, editable } };
 };
 
 const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
@@ -56,6 +62,35 @@ async function post(id: string, body: Record<string, unknown>): Promise<{ ok: bo
   }
 }
 
+/** 잠긴 옵션의 총 재고 — 승인 직후 "재고 0" 경고 옆에서 바로 넣는다(`/api/admin/shop/stock`). */
+function StockCell({ skuId, stock }: { skuId: string; stock: number | null }) {
+  const [value, setValue] = useState(stock === null ? '' : String(stock));
+  const [state, setState] = useState<string | null>(null);
+  const save = async () => {
+    setState('저장 중…');
+    try {
+      const res = await fetch('/api/admin/shop/stock', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ skuId, stock: Number(value) }),
+      });
+      const data = (await res.json().catch(() => null)) as { ok?: boolean; message?: string } | null;
+      if (res.ok && data?.ok) window.location.reload();
+      else setState(data?.message ?? '저장하지 못했습니다.');
+    } catch {
+      setState('연결에 실패했습니다.');
+    }
+  };
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <input
+        type="number" min={0} inputMode="numeric" value={value} onChange={(e) => setValue(e.target.value)}
+        aria-label={`${skuId} 총 재고`} className="w-24 rounded-lg border border-gray-300 bg-white px-2 py-1 text-gray-900"
+      />
+      <button type="button" onClick={save} disabled={value === ''} className={`${secondaryBtn} !px-3 !py-1`}>저장</button>
+      {state && <span role="alert" className="text-xs text-red-700">{state}</span>}
+    </div>
+  );
+}
+
 const filesToText = (p: AdminShopProductDetail) => p.digitalFiles.map((f) => `${f.label}|${f.key}`).join('\n');
 
 const parseFiles = (text: string): Array<{ label: string; key: string }> =>
@@ -64,7 +99,7 @@ const parseFiles = (text: string): Array<{ label: string; key: string }> =>
     return i === -1 ? { label: l.slice(l.lastIndexOf('/') + 1), key: l } : { label: l.slice(0, i).trim(), key: l.slice(i + 1).trim() };
   });
 
-export default function AdminShopProductPage({ product }: Props) {
+export default function AdminShopProductPage({ product, editable }: Props) {
   // 관리자 화면은 항상 밝은 바탕이다. 미리보기에 들어가는 공개 컴포넌트는 dark: 색을 쓰므로, 운영자 기기가
   // 어두운 모드면 흰 바탕에 연한 글씨가 되어 안 보인다 — 이 화면에서는 dark 클래스를 걷는다(Layout이 없어 다시 붙이는 쪽이 없다).
   useEffect(() => { document.documentElement.classList.remove('dark'); }, []);
@@ -130,7 +165,7 @@ export default function AdminShopProductPage({ product }: Props) {
         )}
         {approved && totalStock === 0 && (
           <div className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
-            재고가 0입니다. <Link href="/admin/shop" className="underline">상점 관리</Link>에서 옵션별 총 재고를 넣어 주세요.
+            재고가 0입니다. 아래 옵션 표에서 옵션별 총 재고를 넣어 주세요(<Link href="/admin/shop" className="underline">상점 관리</Link>에서도 넣을 수 있습니다).
           </div>
         )}
         {message && (
@@ -138,6 +173,14 @@ export default function AdminShopProductPage({ product }: Props) {
             {message.text}
           </div>
         )}
+
+        <section className={card}>
+          <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-gray-900">편집</h2>
+          <p className="mb-4 text-xs text-gray-600">
+            아티스트가 올린 것과 같은 항목·규칙입니다. 승인된 상품의 제목·주소·분류·종류와 판매 중인 옵션의 가격은 관리자도 바꿀 수 없습니다.
+          </p>
+          <ProductForm initial={editable} admin onSaved={() => window.setTimeout(() => window.location.reload(), 700)} />
+        </section>
 
         <section className={card}>
           <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-gray-900">미리보기</h2>
@@ -163,7 +206,7 @@ export default function AdminShopProductPage({ product }: Props) {
                     <td className="py-2 pr-3">{s.optionLabel ?? '(옵션 없음)'}<span className="block text-xs text-gray-500">{s.id}</span></td>
                     <td className="py-2 pr-3 tabular-nums">{formatPriceAmount(s.price)}원</td>
                     <td className="py-2 pr-3">{s.locked ? (s.retired ? '판매 종료' : '판매 중') : '승인 대기'}</td>
-                    <td className="py-2 tabular-nums">{s.locked ? (s.stock ?? '미입력') : '—'}</td>
+                    <td className="py-2 tabular-nums">{s.locked ? <StockCell skuId={s.id} stock={s.stock} /> : '—'}</td>
                   </tr>
                 ))}
               </tbody>
@@ -190,6 +233,16 @@ export default function AdminShopProductPage({ product }: Props) {
               <button type="button" disabled={busy || !note.trim()} onClick={() => decide('request_changes')} className={secondaryBtn}>보완 요청</button>
               <button type="button" disabled={busy || !note.trim()} onClick={() => decide('reject')} className={secondaryBtn}>반려</button>
             </div>
+          </section>
+        )}
+        {(product.reviewStatus === 'draft' || product.reviewStatus === 'changes_requested') && (
+          <section className={card}>
+            <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-gray-900">바로 승인</h2>
+            <p className="mb-3 text-gray-600">저장한 내용 그대로 심사를 거치지 않고 승인해 공개합니다. 먼저 위 편집 내용을 저장해 주세요. 승인 조건은 심사와 같습니다.</p>
+            <label className="block md:max-w-md">주소(slug) — 승인할 때 확정됩니다
+              <input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="예: my-album" className={`${inputClass} mt-1`} />
+            </label>
+            <button type="button" disabled={busy} onClick={() => run({ action: 'approve_now', slug: slug || undefined }, '승인했습니다.')} className={`${primaryBtn} mt-3`}>바로 승인</button>
           </section>
         )}
         {product.reviewNote && (

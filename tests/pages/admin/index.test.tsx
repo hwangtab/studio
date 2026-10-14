@@ -43,13 +43,15 @@ const DASHBOARD: AdminDashboard = {
   checkedAt: '2026-09-16T03:00:00.000Z',
 };
 
+const SHOP_QUEUES = { pendingProducts: 2, awaitingShipment: 5 };
+
 beforeEach(() => {
   jest.clearAllMocks();
   (authenticateAdminRequest as jest.Mock).mockResolvedValue({ ok: true });
 });
 
 it('점검 항목은 심각도 배지와 처리 링크를, 대기열은 건수를, 세션은 일시·고객·상품을 그린다', () => {
-  render(<AdminIndexPage dashboard={DASHBOARD} ledgerFrom="2026-09-01" ledgerTo="2026-09-16" />);
+  render(<AdminIndexPage dashboard={DASHBOARD} shopQueues={SHOP_QUEUES} ledgerFrom="2026-09-01" ledgerTo="2026-09-16" />);
 
   expect(screen.getByText('긴급')).toBeInTheDocument();
   expect(screen.getByRole('link', { name: /구독이 끝난 뒤에 들어온 결제/ })).toHaveAttribute('href', '/admin/subscriptions');
@@ -58,6 +60,8 @@ it('점검 항목은 심각도 배지와 처리 링크를, 대기열은 건수�
   expect(screen.getByRole('link', { name: /믹싱 착수 대기\s*3/ })).toHaveAttribute('href', '/admin/bookings');
   expect(screen.getByRole('link', { name: /결제 재시도 중 구독\s*2/ })).toBeInTheDocument();
   expect(screen.getByRole('link', { name: /심사 대기 펀딩 프로젝트\s*4/ })).toHaveAttribute('href', '/admin/funding/projects');
+  expect(screen.getByRole('link', { name: /심사 대기 상점 상품\s*2/ })).toHaveAttribute('href', '/admin/shop/products');
+  expect(screen.getByRole('link', { name: /발송 대기 상점 주문\s*5/ })).toHaveAttribute('href', '/admin/shop');
 
   expect(screen.getByText('2026.09.17 (목) 14:00')).toBeInTheDocument();
   expect(screen.getByText('홍길동 · 보컬 녹음 1프로')).toBeInTheDocument();
@@ -68,12 +72,19 @@ it('점검 항목은 심각도 배지와 처리 링크를, 대기열은 건수�
   expect(screen.getByText('인스타그램: 만료까지 10일')).toBeInTheDocument();
 });
 
+it('상점 건수를 못 읽으면(표 없음·오류) 그 카드만 숨기고 나머지는 그대로 그린다', () => {
+  render(<AdminIndexPage dashboard={DASHBOARD} shopQueues={{ pendingProducts: null, awaitingShipment: null }} ledgerFrom="2026-09-01" ledgerTo="2026-09-16" />);
+  expect(screen.queryByText('심사 대기 상점 상품')).not.toBeInTheDocument();
+  expect(screen.queryByText('발송 대기 상점 주문')).not.toBeInTheDocument();
+  expect(screen.getByRole('link', { name: /믹싱 착수 대기\s*3/ })).toBeInTheDocument();
+});
+
 it('현황 로딩이 실패하면 오류를 알리되 관리 화면 링크는 남는다', async () => {
   (loadAdminDashboard as jest.Mock).mockRejectedValue(new Error('db down'));
   jest.spyOn(console, 'error').mockImplementation(() => {});
 
   const result = (await getServerSideProps({ query: {} } as unknown as GetServerSidePropsContext)) as {
-    props: { dashboard: AdminDashboard | null; ledgerFrom: string; ledgerTo: string; error?: string };
+    props: { dashboard: AdminDashboard | null; shopQueues: { pendingProducts: number | null; awaitingShipment: number | null }; ledgerFrom: string; ledgerTo: string; error?: string };
   };
   expect(result.props.dashboard).toBeNull();
   expect(result.props.error).toMatch(/불러오지 못했습니다/);

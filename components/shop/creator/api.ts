@@ -30,3 +30,7 @@ export const saveShopProduct = (id: string, value: unknown) =>
 
 export const shopProductAction = (id: string, action: 'submit' | 'withdraw' | 'publish' | 'unpublish') =>
   request<{ product: CreatorProductDetail }>('POST', `${base}/${encodeURIComponent(id)}`, { action });
+
+/** 관리자 화면이 같은 폼으로 저장하는 자리 — 같은 검증·잠금 규칙을 서버가 탄다(`/api/admin/shop/products/<id>`). */
+export const saveShopProductAsAdmin = (id: string, value: unknown) =>
+  request<{ product: CreatorProductDetail }>('PUT', `/api/admin/shop/products/${encodeURIComponent(id)}`, { value });

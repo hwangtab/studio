@@ -18,10 +18,10 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
    펀딩 약관 판본 해시 대상이라 `FUNDING_TERMS_VERSION`을 올리고 기준선을 갱신한다(루트 CLAUDE.md "약관·처리방침을 고치면…").
 3. 이용약관(`/ko/terms`)의 "상품 판매" 절은 **이미 `SHOP_SALES_OPEN`에 묶여 있다 — 켜면 함께 열린다.** 문구는 `lib/shop/policyCopy.ts`를 읽어 렌더하므로
    (판매 주체·배송·예약 판매·실물 청약철회·디지털 청약철회) 상점 화면과 약관이 같은 약속을 한다. 문구를 바꾸려면 policyCopy 한 곳만 고친다.
-4. 상품을 `data/shop/catalog.ts`에 올린다(머리 주석의 예시). 이미지는 `public/images/shop/<이름>-YYYYMMDD.webp`, **`git add -f`**.
-   `UPDATE_SHOP_CATALOG_BASELINE=1 npx jest data/shop/catalog.baseline.test.ts`로 SKU 기준선을 싣고, 빌드 후 바뀐 히어로 폰트
-   서브셋(woff2·chars.json)을 함께 커밋한다(상품 제목이 `/ko/shop/<slug>` h1이다 — `scripts/generate-hero-font.mjs` 7-1).
-5. 배포 뒤 `/admin/shop`에서 SKU별 총 재고를 넣는다(행이 없으면 품절이다).
+4. **상품은 관리자 화면에서 등록한다**(`/admin/shop` → "상품 등록" — 스튜디오 상품도 같다. 아래 "관리자 직접 등록"). 제목·본문·사진·옵션·가격을 채워
+   저장하고 "바로 승인"한다. `data/shop/catalog.ts`는 이미 있는 파일 상품을 위해 남아 있을 뿐 새 상품은 거기 올리지 않는다(파일 상품을 올리면
+   `public/images/shop/…webp`를 `git add -f`하고 SKU 기준선·히어로 폰트 서브셋을 함께 커밋해야 한다 — DB 상품에는 그 절차가 없다).
+5. 승인한 뒤 같은 상품 화면(`/admin/shop/products/<id>`)의 옵션 표에서 SKU별 총 재고를 넣는다(행이 없으면 품절이다). `/admin/shop`의 재고 표에서도 된다.
 6. `SHOP_SALES_OPEN = true`로 바꿔 배포한다.
 7. 헤더·푸터 메뉴(`SHOP_NAV_LABEL`), 런타임 사이트맵(`/sitemap-shop.xml` — robots의 `additionalSitemaps`는 `next-sitemap.config.js`가
    `data/shop/policy.ts`의 선언을 읽어 싣는다), `pages/api/llms.ts`·`llms-full.ts`의 상점 절, `/ko/terms` 상품 판매 절은 **이미 `SHOP_SALES_OPEN`에
@@ -144,6 +144,27 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
   1단계는 운영자가 이 표를 보고 손으로 이체한다 — 정산 기록 표·정산 메일은 아직 없다.
 - 이미 정산한 달의 반품 환불은 그 주문이 표에서 빠질 뿐 자동으로 차감되지 않는다. 다음 정산에서 손으로 뺀다.
   부분 환불 주문은 어느 줄이 환불됐는지 원장이 모르므로 계산에서 빼고 "직접 확인"으로 띄운다.
+
+### 관리자 직접 등록 — 스튜디오 상품도 DB로
+
+`/admin/shop/products/new`(상점·상품 심사 화면의 "상품 등록")에서 판매 주체(스튜디오 또는 등재된 아티스트)를 고르면 빈 초안이 생기고
+(`createDraftProductAsAdmin`), `/admin/shop/products/<id>`의 "편집"에서 아티스트 콘솔과 **같은 폼**(`components/shop/creator/ProductForm.tsx`의
+`admin` 모드)으로 채운다. 저장은 `PUT /api/admin/shop/products/<id>` → `saveProductAsAdmin` → 아티스트와 같은 `validateShopProductInput`·`saveProduct`
+(`{ admin: true }`)다 — 쓰기·잠금 규칙이 한 벌이라 **관리자도 승인된 SKU의 가격·옵션명·삭제와 승인 뒤의 제목·주소·분류·종류·한정 수량을 못 바꾼다.**
+
+- 열린 칸 표는 `canAdminEditShopField`(`productRules.ts`): 아티스트 표에서 ① 심사 대기도 작성 중처럼 열려 있고 ② 승인 뒤에도 예약 발송일을 바꿀 수 있고
+  ③ 반려는 닫힌다. 관리자 저장은 `creator_edited_at`을 찍지 않고 "승인 뒤 수정" 메일도 보내지 않는다. 미심사 10개 상한은 관리자에게 적용하지 않는다.
+- **바로 승인**(`approve_now`, `approveShopProductNow`): 작성 중·보완 요청 상품을 심사 대기로 올린 뒤 기존 `decideShopProduct` 승인 배치를 부른다 — 거부 조건
+  (주소 충돌·사진/소개/옵션/디지털 파일 없음 등)이 심사 승인과 같고, **거부되면 올려 둔 심사 대기를 되돌려** 아티스트 쪽에 "심사 대기"가 남지 않는다.
+  아티스트 대신 만든 상품은 그 아티스트 콘솔에도 보이고, 승인 메일이 그 아티스트에게 간다(스튜디오 상품은 안 간다).
+- **사진 업로드** `POST /api/admin/shop/upload?productId=`: 같은 sharp 재인코딩·private Blob이고 **키 앞부분이 상품 소유자(`creator_id`)**라
+  소유 판정(`isOwnUploadedMedia`)·공개 판정(`isApprovedShopMedia`)·월간 청소(`mediaRetention`)가 그대로 통한다. 키를 관리자 id 같은 다른 접두사로 바꾸지 말 것.
+- **스튜디오 상품 계정**: `shop_artists.slug = 'studio-nol'`(`STUDIO_SHOP_ARTIST_SLUG`, `studioArtist.ts`) 한 행 + `funding_creators`(이름 "스튜디오 놀",
+  이메일은 운영자 받은편지함의 plus 별칭 — 운영자 본인의 개설자 계정과 겹치지 않게). 처음 스튜디오 초안을 만들 때 `ensureStudioShopArtist`가 만든다(동시 호출에도 한 벌).
+  이 slug 판정 하나로: 정산 예정 표(`listShopArtistSales`)에서 빠지고(스튜디오 몫), `resolveShopArtist`가 null이라 `/ko/shop/artist/studio-nol`이 404이며
+  상품 상세에 아티스트 링크가 없고(`findShopArtistOfDbProduct`) 사이트맵·llms에도 안 들어가고, 일반 아티스트 등재·slug 변경이 이 주소를 못 쓴다. 스튜디오 상품은 `/ko/shop`에만 나온다.
+- 상품 화면의 옵션 표에서 잠긴 옵션의 총 재고를 바로 넣는다(`setSkuStock` 재사용). 대시보드(`/admin`)에 "심사 대기 상점 상품"·"발송 대기 상점 주문" 카드가
+  있고(`countPendingShopProducts`·`countShopAwaitingShipment`), 표가 없거나 조회가 실패하면 그 카드만 숨는다.
 
 ### 예약 판매·한정판 넘버링 (플랫폼 PR 4)
 

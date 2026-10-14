@@ -1,6 +1,6 @@
 import { fundingReviewStatusEnum, shopProductReviewStatusEnum } from '../../db/schema';
 import {
-  DB_SKU_PREFIX, SHOP_CREATOR_LIMITS, SHOP_PRODUCT_EDITABLE, SHOP_REVIEW_STATUSES, canCreatorEditShopField, canCreatorEditShopProduct, isDbSkuId,
+  DB_SKU_PREFIX, SHOP_CREATOR_LIMITS, SHOP_PRODUCT_EDITABLE, SHOP_REVIEW_STATUSES, canAdminEditShopField, canAdminEditShopProduct, canCreatorEditShopField, canCreatorEditShopProduct, isDbSkuId,
   type ShopProductEditableField, type ShopReviewStatus,
 } from './productRules';
 
@@ -15,6 +15,22 @@ describe('상점 DB 상품 규칙', () => {
     expect(SHOP_PRODUCT_EDITABLE.submitted).toEqual([]);
     expect(SHOP_PRODUCT_EDITABLE.approved).not.toContain('title');
     expect(SHOP_PRODUCT_EDITABLE.approved).not.toContain('slug');
+  });
+
+  it('관리자 표는 아티스트 표에서 심사 대기 열림·승인 뒤 발송일만 다르다', () => {
+    const all: ShopProductEditableField[] = ['title', 'subtitle', 'description', 'images', 'category', 'kind', 'slug', 'shipsOn', 'editionSize', 'skus', 'published'];
+    for (const status of SHOP_REVIEW_STATUSES) {
+      for (const f of all) {
+        const expected = status === 'submitted'
+          ? canCreatorEditShopField('draft', f)
+          : status === 'approved' && f === 'shipsOn' ? true : canCreatorEditShopField(status, f);
+        expect(canAdminEditShopField(status, f)).toBe(expected);
+      }
+    }
+    expect(canAdminEditShopProduct('rejected')).toBe(false);
+    expect(canAdminEditShopProduct('submitted')).toBe(true);
+    // 승인 뒤 제목·주소·분류·종류·한정 수량은 관리자도 잠겨 있다.
+    for (const f of ['title', 'slug', 'category', 'kind', 'editionSize'] as const) expect(canAdminEditShopField('approved', f)).toBe(false);
   });
 
   it('db- 접두사로만 DB SKU를 판정한다', () => {

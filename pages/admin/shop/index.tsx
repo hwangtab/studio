@@ -150,8 +150,9 @@ export default function AdminShopPage({ orders, skus, artistSales, month, prevMo
         <title>상점 관리 | Studio NOL</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <AdminShell title="상점 관리" description="음반·굿즈 주문과 재고입니다. 파일 상품(이름·옵션·가격)은 data/shop/catalog.ts에서, 아티스트 상품은 상품 심사에서 다룹니다." width="wide" actions={(
+      <AdminShell title="상점 관리" description="음반·굿즈 주문과 재고입니다. 새 상품은 상품 등록에서 만들고(스튜디오 상품도 같습니다), 아티스트가 올린 상품은 상품 심사에서 다룹니다. data/shop/catalog.ts의 기존 상품은 파일에서 고칩니다." width="wide" actions={(
         <span className="flex items-center gap-4">
+          <Link href="/admin/shop/products/new" className="rounded-lg bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-800">상품 등록</Link>
           <Link href="/admin/shop/products" className="text-sm font-medium text-primary hover:underline">
             상품 심사{pendingProducts ? `(대기 ${pendingProducts})` : ''}
           </Link>
