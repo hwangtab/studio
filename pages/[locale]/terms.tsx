@@ -16,6 +16,8 @@ import {
 } from '../../lib/booking/refund-policy';
 import type { Locale } from '../../lib/i18n';
 import { SHOP_SALES_OPEN } from '../../data/shop/policy';
+import { SOFTWARE_SALES_OPEN } from '../../data/software/policy';
+import { SOFTWARE_TERMS_SECTIONS } from '../../lib/software/policyCopy';
 import {
   SHOP_DIGITAL_RULES,
   SHOP_PREORDER_MIX_NOTE,
@@ -170,6 +172,25 @@ const TermsPage: NextPageWithLayout<TermsPageProps> = ({ locale }) => {
                       ))}
                     </ul>
                   </section>
+                </div>
+              </article>
+            )}
+
+            {/* 소프트웨어 라이선스 — 구매 폼·구매 내역·환불 판정과 같은 약속(lib/software/policyCopy.ts). 판매를 열 때(SOFTWARE_SALES_OPEN)만 보인다. */}
+            {SOFTWARE_SALES_OPEN && (
+              <article id="software" className="glass-card scroll-mt-24 rounded-2xl p-6">
+                <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">소프트웨어(플러그인·앱) 라이선스</h2>
+                <div className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed space-y-4">
+                  {SOFTWARE_TERMS_SECTIONS.map((section) => (
+                    <section key={section.heading}>
+                      <h3 className="font-semibold">{section.heading}</h3>
+                      <ul className="list-disc pl-5 space-y-1">
+                        {section.lines.map((line) => (
+                          <li key={line}>{line}</li>
+                        ))}
+                      </ul>
+                    </section>
+                  ))}
                 </div>
               </article>
             )}

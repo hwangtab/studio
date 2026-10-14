@@ -18,11 +18,9 @@
    새 표뿐이라 순서를 어겨도 다른 결제는 안 깨지고 소프트웨어 기능만 꺼진다.
 2. 서명키 — k1은 2026-10-14에 만들어 넣었다(Vercel production·preview, 운영자 맥 키체인 `studio-nol-software-license-k1`). 맥 밖 백업은 운영자 몫.
    `SOFTWARE_LICENSE_SIGNING_KEY`·`SOFTWARE_LICENSE_KEY_ID`·`publicKeys.ts` 중 하나라도 빠지면 활성화 API가 503으로 닫힌다(의도).
-3. **이용약관(`/ko/terms`)에 소프트웨어 사용권 조항**을 넣는다 — 사용 범위·기기 수·양도 금지·업데이트 정책·보증 제한, 그리고 **청약철회 제한**
-   (라이선스 활성화 = 디지털콘텐츠 제공 개시, 활성화 전 7일 안 환불 — 화면 문구는 `SoftwareOrderForm`·manage·메일·`lib/software/cancel.ts`).
-   조문 호 번호는 law.go.kr 원문으로 확인한다.
-4. **개인정보 처리방침**에 소프트웨어 구매의 수집 항목(이름·휴대폰·이메일, 기기 식별값의 해시·기기 이름)·목적(라이선스 발급·활성화·재발송)·
-   보유(주문 5년 파기 뒤 라이선스의 이메일·이름도 지운다 — `purgeSoftwareLicensePersonalDataOfPurgedOrders`)를 더하고 `FUNDING_TERMS_VERSION`을 올린다.
+3. 이용약관 — **소프트웨어 절이 준비돼 있다**(`/ko/terms#software`, 문구 정본 `lib/software/policyCopy.ts`, `SOFTWARE_SALES_OPEN`일 때만 보인다).
+   구매 폼·구매 내역·메일·`lib/software/cancel.ts`와 같은 약속이어야 한다 — 한쪽을 바꾸면 다른 쪽도.
+4. 개인정보 처리방침 — **반영됨**(2026-10-14, `funding-terms-2026-10-14-r2`): 1항 수집 항목, 2항 목적, 3항 보유, 4항 Resend 업무, 18항 ④·⑭.
 5. 상품을 `data/software/catalog.ts`에 올린다 — 가격은 `prices` **맨 앞이 지금 가격**. 기준선 갱신(`UPDATE_SOFTWARE_CATALOG_BASELINE=1`).
 6. `SOFTWARE_SALES_OPEN = true`로 배포 → 메뉴·런타임 사이트맵·`pages/api/llms.ts`를 그때 붙인다.
 7. 최소 금액으로 실결제 → 키 수령 → 활성화 전 셀프 환불 → 키 거절까지 한 바퀴, 카드·간편결제·계좌이체 각 1건.
