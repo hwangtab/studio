@@ -1,11 +1,13 @@
-import { and, eq, sql } from 'drizzle-orm';
+import { and, eq, ne, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { fundingCreators, shopArtists, shopProducts } from '../../db/schema';
 import { getSupportedArtist } from '../../data/artists';
 import { CREATOR_LIMITS, isDefaultCreatorName } from '../funding/creatorValidation';
 import { normalizeCreatorEmail } from '../funding/creatorToken';
+import { OPERATOR_EMAIL } from '../operatorContact';
 import { SHOP_RESERVED_SLUGS, SHOP_SLUG_PATTERN } from './catalog';
+import { isStudioShopArtistSlug, STUDIO_SHOP_ARTIST_NAME, STUDIO_SHOP_ARTIST_SLUG } from './studioArtist';
 
 /**
  * 상점 아티스트 — 서버 전용. 로그인 계정 정본은 `funding_creators`(이름·소개·링크), 상점 공개 정체성(slug·등재·프로필 사진)은
@@ -78,11 +80,47 @@ export interface ResolvedShopArtist {
 
 const httpLinks = (links: readonly string[]): string[] => links.filter((l) => /^https?:\/\//i.test(l));
 
+/** 스튜디오 자체 상품 계정의 로그인 주소 — 운영자 받은편지함의 plus 주소(운영자 본인의 개설자 계정과 겹치지 않게). */
+export const studioShopArtistEmail = (operatorEmail: string = OPERATOR_EMAIL): string => {
+  const at = operatorEmail.lastIndexOf('@');
+  return at < 1 ? operatorEmail : `${operatorEmail.slice(0, at).split('+')[0]}+${STUDIO_SHOP_ARTIST_SLUG}${operatorEmail.slice(at)}`.toLowerCase();
+};
+
+/**
+ * 스튜디오 상품 계정을 돌려준다 — 없으면 만든다(`funding_creators` + `shop_artists`). 여러 번·동시에 불러도 한 벌이다.
+ * 관리자 쓰기 경로에서만 부른다(공개 읽기는 이 계정을 만들지 않는다).
+ */
+export const ensureStudioShopArtist = async (): Promise<{ creatorId: string; created: boolean }> => {
+  const db = getDb();
+  const find = async () => (await db.select({ creatorId: shopArtists.creatorId }).from(shopArtists).where(eq(shopArtists.slug, STUDIO_SHOP_ARTIST_SLUG)).limit(1))[0];
+  const existing = await find();
+  if (existing) return { creatorId: existing.creatorId, created: false };
+
+  const email = studioShopArtistEmail();
+  await db.insert(fundingCreators).values({ email, name: STUDIO_SHOP_ARTIST_NAME }).onConflictDoNothing({ target: fundingCreators.email });
+  const [creator] = await db.select({ id: fundingCreators.id, name: fundingCreators.name }).from(fundingCreators).where(eq(fundingCreators.email, email)).limit(1);
+  if (!creator) throw new Error('스튜디오 상품 계정을 만들지 못했습니다.');
+  if (isDefaultCreatorName(creator.name, email) && creator.name !== STUDIO_SHOP_ARTIST_NAME) {
+    await db.update(fundingCreators).set({ name: STUDIO_SHOP_ARTIST_NAME, updatedAt: new Date() }).where(eq(fundingCreators.id, creator.id));
+  }
+  // 동시에 두 요청이 들어오면 한쪽의 INSERT가 PK/slug 충돌로 던진다 — 던진 쪽은 이긴 쪽의 행을 읽는다.
+  try {
+    await db.insert(shopArtists).values({ creatorId: creator.id, slug: STUDIO_SHOP_ARTIST_SLUG, curatedSlugLinked: false });
+  } catch (error: unknown) {
+    const raced = await find();
+    if (!raced) throw error;
+    return { creatorId: raced.creatorId, created: false };
+  }
+  return { creatorId: creator.id, created: true };
+};
+
 /**
  * slug로 아티스트를 찾는다 — `data/artists`(후원 멤버십·큐레이션)가 먼저, 없으면 `shop_artists` + `funding_creators`.
  * DB 오류는 삼키고 null(공개 화면은 DB가 흔들려도 파일 아티스트로 열려 있어야 한다).
  */
 export const resolveShopArtist = async (slug: string): Promise<ResolvedShopArtist | null> => {
+  // 스튜디오 자체 상품 계정은 공개 아티스트가 아니다 — 아티스트 페이지·링크가 열리지 않는다.
+  if (isStudioShopArtistSlug(slug)) return null;
   const curated = getSupportedArtist(slug);
   if (curated) {
     return {
@@ -118,7 +156,10 @@ export const findShopArtistOfDbProduct = async (productSlug: string): Promise<{ 
     .from(shopProducts)
     .innerJoin(shopArtists, eq(shopArtists.creatorId, shopProducts.creatorId))
     .innerJoin(fundingCreators, eq(fundingCreators.id, shopArtists.creatorId))
-    .where(and(eq(shopProducts.slug, productSlug), eq(shopProducts.reviewStatus, 'approved'), eq(shopProducts.published, true)))
+    .where(and(
+      eq(shopProducts.slug, productSlug), eq(shopProducts.reviewStatus, 'approved'), eq(shopProducts.published, true),
+      ne(shopArtists.slug, STUDIO_SHOP_ARTIST_SLUG),
+    ))
     .limit(1);
   return rows[0] ?? null;
 };
@@ -138,7 +179,7 @@ const checkSlug = (slug: string, linkCurated: boolean): ShopArtistWriteResult | 
   if (!slug || slug.length > SHOP_ARTIST_SLUG_MAX || !SHOP_SLUG_PATTERN.test(slug)) {
     return deny('invalid', `주소는 소문자·숫자·하이픈으로 ${SHOP_ARTIST_SLUG_MAX}자 이내로 적어 주세요.`);
   }
-  if ((SHOP_RESERVED_SLUGS as readonly string[]).includes(slug)) return deny('invalid', '쓸 수 없는 주소예요.');
+  if ((SHOP_RESERVED_SLUGS as readonly string[]).includes(slug) || isStudioShopArtistSlug(slug)) return deny('invalid', '쓸 수 없는 주소예요.');
   if (getSupportedArtist(slug) && !linkCurated) {
     return deny('curated_not_linked', '이 주소는 후원 아티스트 페이지와 같아요. 같은 사람이 맞으면 확인란을 체크해 주세요.');
   }
@@ -199,6 +240,7 @@ export const updateShopArtistSlug = async (input: { creatorId: string; slug: str
   const db = getDb();
   const current = await db.select({ slug: shopArtists.slug }).from(shopArtists).where(eq(shopArtists.creatorId, input.creatorId)).limit(1);
   if (!current[0]) return deny('not_found', '등재된 아티스트가 아니에요.');
+  if (isStudioShopArtistSlug(current[0].slug)) return deny('locked', '스튜디오 상품 계정의 주소는 바꿀 수 없어요.');
   if (await hasApprovedShopProduct(input.creatorId)) return deny('locked', '승인된 상품이 있어 주소를 바꿀 수 없어요.');
   try {
     await db.update(shopArtists)
@@ -251,6 +293,6 @@ export const listShopArtistSlugsWithDbProducts = async (): Promise<string[]> => 
     .selectDistinct({ slug: shopArtists.slug })
     .from(shopProducts)
     .innerJoin(shopArtists, eq(shopArtists.creatorId, shopProducts.creatorId))
-    .where(and(eq(shopProducts.reviewStatus, 'approved'), eq(shopProducts.published, true)));
+    .where(and(eq(shopProducts.reviewStatus, 'approved'), eq(shopProducts.published, true), ne(shopArtists.slug, STUDIO_SHOP_ARTIST_SLUG)));
   return rows.map((r) => r.slug);
 };

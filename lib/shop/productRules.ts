@@ -38,6 +38,19 @@ export const canCreatorEditShopField = (status: ShopReviewStatus, field: ShopPro
 export const canCreatorEditShopProduct = (status: ShopReviewStatus): boolean =>
   (SHOP_PRODUCT_EDITABLE[status]?.length ?? 0) > 0;
 
+/**
+ * 관리자가 고칠 수 있는 칸 — 아티스트 표에서 두 가지만 다르다: ① 심사 대기(`submitted`)도 작성 중과 같이 열려 있고(운영자가 직접
+ * 손보고 승인한다), ② 승인 뒤에도 예약 발송일을 바꿀 수 있다. 반려는 닫힌다. **잠긴 SKU의 id·가격·옵션명·삭제는 관리자도
+ * 못 바꾼다** — 쓰기 경로(`saveProduct`)의 SKU 판정은 이 표와 무관하게 같다.
+ */
+export const canAdminEditShopField = (status: ShopReviewStatus, field: ShopProductEditableField): boolean => {
+  if (status === 'rejected') return false;
+  if (status === 'approved' && field === 'shipsOn') return true;
+  return canCreatorEditShopField(status === 'submitted' ? 'draft' : status, field);
+};
+
+export const canAdminEditShopProduct = (status: ShopReviewStatus): boolean => status !== 'rejected';
+
 /** 제목·부제·본문·사진·SKU 상한과 가격 규칙. 화면과 서버가 같은 값을 쓴다. */
 export const SHOP_CREATOR_LIMITS = {
   titleMax: 80,

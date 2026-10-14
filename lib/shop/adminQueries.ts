@@ -8,6 +8,7 @@ import { isDbSkuId } from './productRules';
 import { listAllSkusForAdmin } from './repository';
 import { computeShopArtistPayout, kstMonthRange, type ShopArtistPayout } from './artistPayout';
 import { getRemainingStock } from './service';
+import { STUDIO_SHOP_ARTIST_SLUG } from './studioArtist';
 
 /** 관리자 상점 화면 — 주문 목록·재고 표·아티스트별 정산 예정액. */
 
@@ -187,6 +188,7 @@ export const listShopArtistSales = async (month: string): Promise<AdminShopArtis
       JOIN shop_products p ON p.id = ps.product_id
       JOIN funding_creators c ON c.id = p.creator_id
       WHERE i.sku_id LIKE 'db-%'
+        AND p.creator_id NOT IN (SELECT creator_id FROM shop_artists WHERE slug = ${STUDIO_SHOP_ARTIST_SLUG})
         AND o.type = 'merch' AND o.status IN ('paid', 'partially_refunded')
         AND so.fulfillment_status IN ('shipped', 'delivered') AND so.postcode <> ''
         AND so.shipped_at >= ${range.from} AND so.shipped_at < ${range.to}
@@ -211,6 +213,7 @@ export const listShopArtistSales = async (month: string): Promise<AdminShopArtis
       JOIN shop_products p ON p.id = ps.product_id
       JOIN funding_creators c ON c.id = p.creator_id
       WHERE i.sku_id LIKE 'db-%'
+        AND p.creator_id NOT IN (SELECT creator_id FROM shop_artists WHERE slug = ${STUDIO_SHOP_ARTIST_SLUG})
         AND o.type = 'merch' AND o.status IN ('paid', 'partially_refunded')
         AND so.fulfillment_status <> 'cancelled' AND so.postcode = ''
         AND (SELECT MIN(pay.approved_at) FROM payments pay WHERE pay.order_id = o.id) >= ${range.from}
@@ -246,4 +249,19 @@ export const listShopArtistSales = async (month: string): Promise<AdminShopArtis
       };
     })
     .sort((a, b) => a.artistName.localeCompare(b.artistName, 'ko'));
+};
+
+/** 발송을 기다리는 주문 수(실물, 결제 완료·부분 환불, 아직 안 보냄) — 대시보드 카드. 표가 없거나 조회가 실패하면 null. */
+export const countShopAwaitingShipment = async (): Promise<number | null> => {
+  try {
+    const [row] = await getDb().all<{ n: number }>(sql`
+      SELECT COUNT(*) AS n FROM orders o JOIN shop_orders so ON so.order_no = o.order_no
+      WHERE o.type = 'merch' AND o.status IN ('paid', 'partially_refunded')
+        AND so.fulfillment_status = 'preparing' AND so.postcode <> ''
+    `);
+    return Number(row?.n ?? 0);
+  } catch (error: unknown) {
+    console.error('[shop] 발송 대기 건수 조회 실패:', error);
+    return null;
+  }
 };

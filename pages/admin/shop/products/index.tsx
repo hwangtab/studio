@@ -40,7 +40,9 @@ export default function AdminShopProductsPage({ products, error }: Props) {
         <title>상품 심사 | Studio NOL</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <AdminShell title="상품 심사" description="아티스트가 올린 상품을 검토하고 승인·보완 요청·반려합니다. 제출된 것이 위에 옵니다." backHref="/admin/shop" backLabel="상점" width="wide">
+      <AdminShell title="상품 심사" description="아티스트가 올린 상품을 검토하고 승인·보완 요청·반려합니다. 제출된 것이 위에 옵니다." backHref="/admin/shop" backLabel="상점" width="wide" actions={(
+        <Link href="/admin/shop/products/new" className="rounded-lg bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-800">상품 등록</Link>
+      )}>
         {error && <div role="alert" className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-900">{error}</div>}
         <section className="rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
           {products.length === 0 ? (
