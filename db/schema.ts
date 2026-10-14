@@ -1482,6 +1482,12 @@ export const privacyAccessActionEnum = [
    * 컬럼이 enum 문자열이라 마이그레이션이 필요 없다(DB CHECK 없음). 처리방침 19항의 열거도 함께 고친다.
    */
   'shop_artist_shipping_view',
+  /**
+   * 관리자의 개설자 사업자등록증 열람 (pages/api/admin/creators/[creatorId]/business-certificate.ts).
+   * 사본에 사업장 주소·대표자 생년월일이 찍힐 수 있어 파일을 여는 일을 남긴다. 대상은 creatorId —
+   * 파일 경로·이름은 적지 않는다. 컬럼이 enum 문자열이라 마이그레이션이 필요 없다(DB CHECK 없음).
+   */
+  'creator_business_certificate_view',
 ] as const;
 
 /**

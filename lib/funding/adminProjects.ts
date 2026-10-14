@@ -62,6 +62,8 @@ export interface AdminProjectDetail extends AdminProjectSummary {
   /** 개설자가 승인 뒤에 마지막으로 고친 시각. null이면 승인 후 고친 적이 없다. */
   creatorEditedAt: string | null;
   creator: {
+    /** 관리자 사업자 정보 패널(`CreatorTaxProfilePanel`)이 조회 주소에 쓴다. */
+    id: string;
     contactName: string | null;
     phone: string | null;
     bio: string | null;
@@ -146,6 +148,7 @@ export const loadProjectForAdmin = async (projectId: string): Promise<AdminProje
     creatorTermsVersion: row.project.creatorTermsVersion,
     creatorEditedAt: row.project.creatorEditedAt?.toISOString() ?? null,
     creator: {
+      id: row.creator.id,
       contactName: row.creator.contactName,
       phone: row.creator.phone,
       bio: row.creator.bio,

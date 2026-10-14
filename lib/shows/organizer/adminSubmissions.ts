@@ -27,6 +27,8 @@ export interface AdminSubmissionDetail {
   approvedAt: string | null;
   organizerEditedAt: string | null;
   organizerTermsVersion: string | null;
+  /** 관리자 사업자 정보 패널(`CreatorTaxProfilePanel`)이 조회 주소에 쓴다. */
+  creatorId: string;
   creatorName: string;
   creatorEmail: string;
   draft: ShowSubmissionDraft;
@@ -91,6 +93,7 @@ export async function loadSubmissionForAdmin(id: string): Promise<AdminSubmissio
     approvedAt: iso(sub.approvedAt),
     organizerEditedAt: iso(sub.organizerEditedAt),
     organizerTermsVersion: sub.organizerTermsVersion,
+    creatorId: sub.creatorId,
     creatorName: row.creatorName,
     creatorEmail: row.creatorEmail,
     draft: parseDraft(sub.draftJson),

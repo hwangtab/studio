@@ -2,7 +2,7 @@ import { and, eq, isNull } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { creatorBusinessProfiles, fundingCreators, fundingProjectPayouts, fundingProjects } from '../../db/schema';
-import type { NtsBusinessStatus } from './businessStatus';
+import { lookupBusinessStatus, type NtsBusinessStatus } from './businessStatus';
 
 /**
  * 개설자 사업자 정보(`creator_business_profiles`, 0057) 읽기·지우기.
@@ -175,4 +175,43 @@ export const isInvoiceTaxType = async (creatorId: string): Promise<boolean> => {
   const [row] = await getDb().select({ taxType: fundingCreators.taxType }).from(fundingCreators)
     .where(eq(fundingCreators.id, creatorId)).limit(1);
   return row?.taxType === 'invoice';
+};
+
+/** 관리자 화면 — 세금 구분 한 컬럼만. 개설자가 없으면 null. */
+export const loadCreatorTaxType = async (
+  creatorId: string,
+): Promise<{ taxType: 'withholding' | 'invoice' | null } | null> => {
+  const [row] = await getDb().select({ taxType: fundingCreators.taxType }).from(fundingCreators)
+    .where(eq(fundingCreators.id, creatorId)).limit(1);
+  return row ? { taxType: row.taxType ?? null } : null;
+};
+
+/** 사업자등록증 Blob 경로 — 관리자 열람 라우트만 쓴다. 행이나 키가 없으면 null. */
+export const loadBusinessCertificateKey = async (creatorId: string): Promise<string | null> => {
+  const [row] = await getDb().select({ key: creatorBusinessProfiles.certificateKey }).from(creatorBusinessProfiles)
+    .where(eq(creatorBusinessProfiles.creatorId, creatorId)).limit(1);
+  return row?.key?.trim() ? row.key : null;
+};
+
+/**
+ * 운영자의 "국세청 다시 조회" — 저장된 번호로 다시 묻고 상태 칸만 갱신한다. 행이 없으면 null.
+ * 실패는 `unverified` + 사유 코드로 남긴다(저장 경로와 같은 모양). 요청 제한은 호출하는 라우트가 건다.
+ */
+export const refreshBusinessStatus = async (
+  creatorId: string,
+  deps: { lookup?: typeof lookupBusinessStatus; now?: Date } = {},
+): Promise<BusinessProfileView | null> => {
+  const db = getDb();
+  const [row] = await db.select({ businessNumber: creatorBusinessProfiles.businessNumber }).from(creatorBusinessProfiles)
+    .where(eq(creatorBusinessProfiles.creatorId, creatorId)).limit(1);
+  if (!row) return null;
+  const now = deps.now ?? new Date();
+  const result = await (deps.lookup ?? lookupBusinessStatus)(row.businessNumber);
+  await db.update(creatorBusinessProfiles).set(result.ok
+    ? { ntsStatus: result.status, ntsTaxTypeCode: result.taxTypeCode, ntsTaxTypeLabel: result.taxTypeLabel, ntsCheckedAt: now, ntsCheckError: null, updatedAt: now }
+    : { ntsStatus: 'unverified', ntsTaxTypeCode: null, ntsTaxTypeLabel: null, ntsCheckedAt: now, ntsCheckError: result.error, updatedAt: now })
+    .where(eq(creatorBusinessProfiles.creatorId, creatorId));
+  const view = await loadBusinessProfile(creatorId);
+  if (view === 'unavailable') throw new Error('business_profile_unavailable');
+  return view;
 };

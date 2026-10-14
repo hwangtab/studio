@@ -33,7 +33,7 @@ const project = {
   internalNote: null,
   creatorTermsVersion: 'funding-creator-terms-2026-09-18',
   creatorEditedAt: null,
-  creator: { contactName: '김개설', phone: '010', bio: null, links: null },
+  creator: { id: 'creator-1', contactName: '김개설', phone: '010', bio: null, links: null },
   rewards: [],
 } as AdminProjectDetail;
 

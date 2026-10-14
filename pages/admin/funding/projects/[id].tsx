@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 
 import { patchFundingProject } from '../../../../components/admin/fundingProjectActions';
 import { AdminShell } from '../../../../components/admin/AdminShell';
+import { CreatorTaxProfilePanel } from '../../../../components/admin/CreatorTaxProfilePanel';
 import { FundingPayoutSection, type AdminPayoutView } from '../../../../components/admin/FundingPayoutSection';
 import { Button } from '../../../../components/ui/Button';
 import { Field, TextArea, TextInput } from '../../../../components/ui/Field';
@@ -55,6 +56,7 @@ interface AdminFundingProjectDetailPageProps {
      * 클라이언트로 내보낼 이유가 없다).
      */
     creator: {
+      id: string;
       contactName: string | null;
       phone: string | null;
     };
@@ -191,7 +193,7 @@ export const getServerSideProps: GetServerSideProps<AdminFundingProjectDetailPag
         reviewNote: project.reviewNote,
         internalNote: project.internalNote,
         creatorEditedAt: project.creatorEditedAt,
-        creator: { contactName: project.creator.contactName, phone: project.creator.phone },
+        creator: { id: project.creator.id, contactName: project.creator.contactName, phone: project.creator.phone },
         rewards: project.rewards.map((r) => ({
           rewardId: r.rewardId,
           title: r.title,
@@ -882,6 +884,8 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
               </div>
             </div>
           )}
+
+          {project.reviewStatus === 'approved' && <CreatorTaxProfilePanel creatorId={project.creator.id} />}
 
           {project.reviewStatus === 'approved' && (
             <FundingPayoutSection

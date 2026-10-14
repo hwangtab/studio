@@ -53,7 +53,7 @@ const baseDetail: AdminProjectDetail = {
   internalNote: null,
   creatorTermsVersion: 'funding-creator-terms-2026-09-18',
   creatorEditedAt: null,
-  creator: { contactName: '담당자', phone: '010-0000-0000', bio: null, links: null },
+  creator: { id: 'creator-1', contactName: '담당자', phone: '010-0000-0000', bio: null, links: null },
   rewards: [
     {
       rewardId: 'r1',
@@ -162,16 +162,16 @@ describe('심사 상세 getServerSideProps', () => {
   // 최상위 화이트리스트만 보면 creator 서브객체가 조용히 넓어질 수 있다 — bio·links는
   // 화면 어디에도 렌더하지 않으므로 애초에 담지 않는다(안 쓰는 개인정보를 클라이언트로
   // 내보낼 이유가 없다).
-  it('creator 서브객체도 contactName·phone만 담고 bio·links는 없다', async () => {
+  it('creator 서브객체도 id·contactName·phone만 담고 bio·links는 없다', async () => {
     (authenticateAdminRequest as jest.Mock).mockResolvedValue({ ok: true });
     (loadProjectForAdmin as jest.Mock).mockResolvedValue({
       ...baseDetail,
-      creator: { contactName: '담당자', phone: '010-0000-0000', bio: '자기소개 원문', links: ['https://x.com'] },
+      creator: { id: 'creator-1', contactName: '담당자', phone: '010-0000-0000', bio: '자기소개 원문', links: ['https://x.com'] },
     });
     const result = (await getDetailProps(detailContext('proj-1'))) as unknown as {
       props: { project: { creator: Record<string, unknown> } };
     };
-    expect(Object.keys(result.props.project.creator).sort()).toEqual(['contactName', 'phone']);
+    expect(Object.keys(result.props.project.creator).sort()).toEqual(['contactName', 'id', 'phone']);
   });
 });
 
