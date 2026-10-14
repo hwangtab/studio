@@ -5,7 +5,7 @@ import { creatorBusinessProfiles, fundingCreators, fundingProjectPayouts, fundin
 import { lookupBusinessStatus, type NtsBusinessStatus } from './businessStatus';
 
 /**
- * 개설자 사업자 정보(`creator_business_profiles`, 0057) 읽기·지우기.
+ * 개설자 사업자 정보(`creator_business_profiles`, 0058) 읽기·지우기.
  * `savePayoutSection`·관리자 화면·파기가 함께 쓴다.
  *
  * 이 표는 마이그레이션 전 배포에서 없을 수 있다 — 그래서 **항상 컬럼을 고른 select**로 읽고(전 컬럼 select 금지,

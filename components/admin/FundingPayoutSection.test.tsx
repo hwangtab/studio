@@ -165,7 +165,7 @@ describe('기록 버튼과 막는 이유', () => {
 
   it('사업자 정보 표를 읽지 못해도 버튼을 막는다', () => {
     renderSection({ ...VIEW, businessGate: 'unavailable' });
-    expect(screen.getByRole('status')).toHaveTextContent('마이그레이션 0057');
+    expect(screen.getByRole('status')).toHaveTextContent('마이그레이션 0058');
     expect(screen.getByRole('button', { name: '정산 기록' })).toBeDisabled();
   });
 

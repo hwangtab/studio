@@ -261,7 +261,7 @@ export function FundingPayoutSection({
     );
   }
   if (payout.businessGate === 'unavailable') {
-    blockers.push('사업자 정보 표(마이그레이션 0057)를 읽지 못했습니다. 적용 여부와 서버 로그를 확인해 주세요.');
+    blockers.push('사업자 정보 표(마이그레이션 0058)를 읽지 못했습니다. 적용 여부와 서버 로그를 확인해 주세요.');
   }
   if (payout.serviceChargesUnavailable) {
     blockers.push(

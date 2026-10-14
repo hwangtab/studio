@@ -205,7 +205,7 @@ export interface FundingPayoutPreview extends FundingPayoutBreakdown {
   taxType: FundingCreatorTaxType | null;
   /**
    * 사업자(`invoice`) 개설자에게 사업자 정보(사업자등록번호·상호·대표자명)가 있는가. 값이 아니라 있고 없음만이다.
-   * 사업자가 아니면 해당이 없어 null이고, 사업자인데 `creator_business_profiles`를 읽지 못해도(마이그레이션 0057 전) null이다 —
+   * 사업자가 아니면 해당이 없어 null이고, 사업자인데 `creator_business_profiles`를 읽지 못해도(마이그레이션 0058 전) null이다 —
    * 기록은 앞의 경우를 통과시키고 뒤의 경우를 `business_profile_unavailable`로 막는다(taxType으로 가른다).
    * 국세청 상태(휴업·폐업)로는 막지 않는다 — 운영자가 사업자 정보 패널을 보고 판단한다.
    */

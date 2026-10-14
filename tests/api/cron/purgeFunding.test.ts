@@ -176,7 +176,7 @@ it('실패 메일은 어느 파기가 왜 실패했는지 적는다', async () =
   expect(mail.text).not.toContain('또는');
 });
 
-/** 사업자 정보 파기는 표(0057)가 없으면 던진다 — 그 단계만 실패로 보고하고 나머지는 돈다. */
+/** 사업자 정보 파기는 표(0058)가 없으면 던진다 — 그 단계만 실패로 보고하고 나머지는 돈다. */
 it('사업자 정보 파기가 실패해도 다른 단계는 돌고, 그 단계만 null로 보고한다', async () => {
   (purgeExpiredBusinessProfiles as jest.Mock).mockRejectedValue(new Error('no such table: creator_business_profiles'));
   const r = await call();

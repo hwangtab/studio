@@ -20,7 +20,7 @@ const STATUS_BY_CODE: Record<Exclude<WriteResult, { ok: true }>['code'], number>
   story_too_short: 400,
   // 서버 설정(암호화 키) 문제라 개설자가 고칠 수 있는 것이 없다 — 4xx가 아니다.
   encryption_unavailable: 503,
-  // 사업자 정보 표(0057)를 읽지 못함 — 마이그레이션·DB 문제라 개설자가 고칠 수 없다.
+  // 사업자 정보 표(0058)를 읽지 못함 — 마이그레이션·DB 문제라 개설자가 고칠 수 없다.
   business_unavailable: 503,
 };
 

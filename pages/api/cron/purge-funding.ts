@@ -114,7 +114,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     () => purgeOrphanFundingMedia(),
   );
 
-  // 사업자 정보(0057)는 표가 없으면 던진다 — 그 단계만 실패로 보고되고 앞의 단계는 이미 돌았다.
+  // 사업자 정보(0058)는 표가 없으면 던진다 — 그 단계만 실패로 보고되고 앞의 단계는 이미 돌았다.
   const businessProfiles = await run(
     `사업자 정산 기록 지급 후 ${BUSINESS_PROFILE_RETENTION_YEARS}년 또는 ${RESIDENT_NUMBER_DORMANT_YEARS}년 휴면이 지난 개설자 사업자 정보 파기`,
     () => purgeExpiredBusinessProfiles(),

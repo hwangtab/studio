@@ -426,7 +426,7 @@ export interface CreatorPayoutSummary {
    */
   withheldPayoutRecorded: boolean;
   /**
-   * 사업자 정보(`creator_business_profiles`). 없으면 `null`, 표가 없거나(마이그레이션 0057 전) 읽지 못하면
+   * 사업자 정보(`creator_business_profiles`). 없으면 `null`, 표가 없거나(마이그레이션 0058 전) 읽지 못하면
    * `'unavailable'` — 화면은 사업자 칸만 끄고 계좌·주민번호는 그대로 둔다.
    * 개설자 본인 화면에만 싣는다(공개 화면·목록 금지). 사업자등록증 경로는 담지 않는다.
    */

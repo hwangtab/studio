@@ -108,7 +108,7 @@ const PAYOUT_RECORD_ERROR: Record<
   },
   business_profile_unavailable: {
     status: 503,
-    message: '사업자 정보 표(마이그레이션 0057)를 읽지 못했습니다.',
+    message: '사업자 정보 표(마이그레이션 0058)를 읽지 못했습니다.',
   },
   services_unavailable: {
     status: 503,
