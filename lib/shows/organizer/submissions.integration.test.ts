@@ -1,6 +1,6 @@
 /** @jest-environment node */
 import { createTestDb, type ShowsTestDb } from '../../../tests/helpers/showsDb';
-import { fundingCreators, showSubmissions, showTicketTypes, showtimes, shows } from '../../../db/schema';
+import { fundingCreators, showSubmissions, showTicketTypes, showtimes, shows, showZones } from '../../../db/schema';
 import { eq } from 'drizzle-orm';
 import { FUNDING_MEDIA_URL_PREFIX } from '../../funding/mediaPath';
 import { buildShowDefinition, emptyDraft, kstWallToDate, type ShowSubmissionDraft } from './draft';
@@ -18,6 +18,18 @@ import { SHOW_ORGANIZER_TERMS_VERSION } from './policy';
 
 let mockDb: ShowsTestDb;
 jest.mock('../../../db/client', () => ({ getDb: () => mockDb }));
+let betweenReadAndWrite: (() => Promise<unknown>) | null = null;
+jest.mock('./draft', () => {
+  const actual = jest.requireActual('./draft');
+  return {
+    ...actual,
+    mergeApprovedEdit: (...a: unknown[]) => {
+      // 동기 함수라 훅은 결과를 기다리지 않고 바로 발사한다(in-memory DB 쓰기는 다음 await 전에 끝난다).
+      if (betweenReadAndWrite) void betweenReadAndWrite();
+      return actual.mergeApprovedEdit(...a);
+    },
+  };
+});
 jest.mock('./email', () => ({
   notifyOperatorShowSubmitted: jest.fn(async () => {}),
   notifyOperatorShowEdited: jest.fn(async () => {}),
@@ -210,6 +222,42 @@ describe('주최자 제출물 저장소', () => {
       expect(s.description).toBe(draft.description);
       const [row] = await mockDb.select().from(showSubmissions).where(eq(showSubmissions.id, id));
       expect(row.organizerEditedAt).toBeNull();
+    });
+
+    it('운영자가 DB에서 바꾼 회차·가격·정원은 주최자 저장이 덮어쓰지 않는다', async () => {
+      const cid = await seedCreator();
+      const { id, show, draft } = await approve(cid);
+      await mockDb.update(showtimes).set({ startsAt: 1_900_000_000 }).where(eq(showtimes.showId, show.id));
+      await mockDb.update(showTicketTypes).set({ price: 31000 }).where(eq(showTicketTypes.showId, show.id));
+      await mockDb.update(showZones).set({ capacity: 80 }).where(eq(showZones.showId, show.id));
+      expect(await saveSubmission(cid, id, { ...draft, description: '새 소개', notices: ['안내 하나'] }, NOW)).toEqual({ ok: true });
+      const sts = await mockDb.select().from(showtimes).where(eq(showtimes.showId, show.id));
+      expect(sts.map((x) => x.startsAt)).toEqual([1_900_000_000]);
+      expect((await mockDb.select().from(showTicketTypes).where(eq(showTicketTypes.showId, show.id)))[0].price).toBe(31000);
+      expect((await mockDb.select().from(showZones).where(eq(showZones.showId, show.id)))[0].capacity).toBe(80);
+      const [s] = await mockDb.select().from(shows).where(eq(shows.id, show.id));
+      expect(s.description).toBe('새 소개');
+      expect(s.noticesJson).toContain('안내 하나');
+    });
+
+    it('승인본이 없으면 409', async () => {
+      const cid = await seedCreator();
+      const { id, draft } = await approve(cid);
+      await mockDb.update(showSubmissions).set({ approvedDraftJson: null }).where(eq(showSubmissions.id, id));
+      expect(await saveSubmission(cid, id, draft, NOW)).toMatchObject({ ok: false, status: 409 });
+    });
+
+    it('읽은 뒤 상태가 바뀌면 409이고 공연은 그대로(가드)', async () => {
+      const cid = await seedCreator();
+      const { id, show, draft } = await approve(cid);
+      // 읽기와 쓰기 사이(병합 시점)에 상태가 바뀐 상황.
+      betweenReadAndWrite = () =>
+        mockDb.update(showSubmissions).set({ reviewStatus: 'rejected' }).where(eq(showSubmissions.id, id)).execute();
+      const res = await saveSubmission(cid, id, { ...draft, description: '바뀌면 안 됨' }, NOW);
+      betweenReadAndWrite = null;
+      expect(res).toMatchObject({ ok: false, status: 409 });
+      const [s] = await mockDb.select().from(shows).where(eq(shows.id, show.id));
+      expect(s.description).toBe(draft.description);
     });
 
     it('제출·철회는 409', async () => {

@@ -1,9 +1,9 @@
-import { and, desc, eq } from 'drizzle-orm';
+import { and, desc, eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../../db/client';
 import { showSubmissions, shows } from '../../../db/schema';
 import { canCreatorEdit, nextReviewStatus, type FundingReviewStatus } from '../../funding/reviewTransition';
-import { seedShow, ShowSeedError } from '../seed';
+import { performerNames, serializeNotices, serializePerformers } from '../structured';
 import {
   buildShowDefinition,
   findSubmitProblems,
@@ -56,6 +56,7 @@ export async function listSubmissionsForCreator(creatorId: string) {
       reviewStatus: sub.reviewStatus,
       showSlug: slug ?? null,
       showStatus: showStatus ?? null,
+      // 'YYYY-MM-DDTHH:mm' 형식이라 문자열 정렬이 시간순이다.
       firstShowtime: [...draft.showtimes].sort()[0] ?? null,
     };
   });
@@ -115,22 +116,39 @@ export async function saveSubmission(creatorId: string, id: string, input: unkno
     return { ok: true };
   }
 
-  // 승인 뒤: 잠긴 칸은 승인본 값으로 되돌려 합치고, 공연을 먼저 갱신한 뒤에만 초안 행을 바꾼다.
-  if (!sub.approvedDraftJson || !row.slug) return conflict('승인된 공연 정보를 찾을 수 없어요. 운영자에게 문의해 주세요.');
+  // 승인 뒤: 잠긴 칸은 승인본 값으로 되돌려 합친다. 공연 정의 전체를 seedShow로 다시 맞추지 않는다 —
+  // 운영자가 손으로 바꾼 정원·가격·회차(change_showtime)를 승인본 값으로 덮어쓰기 때문이다.
+  // 그래서 shows 행의 편집 가능한 메타 칸만 갱신하고 구역·회차·티켓 종류는 건드리지 않는다.
+  if (!sub.approvedDraftJson || !row.slug || !sub.showId) return conflict('승인된 공연 정보를 찾을 수 없어요. 운영자에게 문의해 주세요.');
   const merged = mergeApprovedEdit(parseDraft(sub.approvedDraftJson), normalized.draft);
   // 첫 회차 7일 규칙은 제출·승인 때의 약속이다. 공연이 가까워진 뒤의 오탈자 수정은 막지 않는다.
   const problems = findSubmitProblems(merged, new Date(0));
   if (problems.length > 0) return { ok: false, status: 400, message: '빠진 칸이 있어요.', problems };
-  try {
-    await seedShow(db, buildShowDefinition(merged, row.slug), { apply: true, now });
-  } catch (err) {
-    if (err instanceof ShowSeedError) return { ok: false, status: 400, message: err.message };
-    throw err;
-  }
-  await db
-    .update(showSubmissions)
-    .set({ draftJson: JSON.stringify(merged), organizerEditedAt: now, updatedAt: now })
-    .where(eq(showSubmissions.id, id));
+  // 값 매핑은 buildShowDefinition 한 곳에 둔다.
+  const def = buildShowDefinition(merged, row.slug);
+  const approvedGuard = sql`exists (select 1 from show_submissions where id = ${id} and review_status = 'approved')`;
+  const [, subRes] = await db.batch([
+    db
+      .update(shows)
+      .set({
+        title: def.title,
+        subtitle: def.subtitle ?? null,
+        presenterName: def.presenterName,
+        performers: performerNames(def.performers),
+        performersJson: serializePerformers(def.performers),
+        description: def.description,
+        coverImage: def.coverImage,
+        scheduleNote: def.scheduleNote ?? null,
+        noticesJson: def.notices && def.notices.length > 0 ? serializeNotices(def.notices) : null,
+        updatedAt: Math.floor(now.getTime() / 1000),
+      })
+      .where(and(eq(shows.id, sub.showId), approvedGuard)),
+    db
+      .update(showSubmissions)
+      .set({ draftJson: JSON.stringify(merged), organizerEditedAt: now, updatedAt: now })
+      .where(and(eq(showSubmissions.id, id), eq(showSubmissions.reviewStatus, 'approved'))),
+  ]);
+  if (subRes.rowsAffected === 0) return conflict('상태가 바뀌었어요. 새로 고침해 주세요.');
   const warnings = await tryNotify(() => notifyOperatorShowEdited(id));
   return warnings ? { ok: true, warnings } : { ok: true };
 }
