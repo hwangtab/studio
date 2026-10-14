@@ -50,6 +50,9 @@ const PRIVATE_ROUTE_BODIES: ReadonlyArray<readonly [body: string, hasSubPath: bo
   // 상점(음반·굿즈). success·fail은 토스 paymentKey·orderId, manage는 `?token=<관리 토큰>`. 목록·상품 상세는 측정 대상이다.
   ['shop/(success|fail)', false],
   ['shop/manage', true],
+  // 소프트웨어. success·fail은 토스 paymentKey·orderId, manage는 관리 토큰. find(링크 다시 받기)는 이메일을 받는 폼이라 뺀다. 목록·상세는 측정 대상.
+  ['software/(success|fail|find)', false],
+  ['software/manage', true],
 ];
 
 const LOCALE_GROUP = '(ko|en|zh|es|vi|th|uz)';
@@ -159,6 +162,10 @@ export const PRIVATE_PAGE_ROUTES: readonly string[] = [
   '/[locale]/shop/success',
   '/[locale]/shop/fail',
   '/[locale]/shop/manage/[orderNo]',
+  '/[locale]/software/success',
+  '/[locale]/software/fail',
+  '/[locale]/software/find',
+  '/[locale]/software/manage/[orderNo]',
 ];
 
 export const isPrivatePageRoute = (pathname: string): boolean => PRIVATE_PAGE_ROUTES.includes(pathname);

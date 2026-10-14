@@ -17,4 +17,10 @@ export const SOFTWARE_DEFAULT_TRIAL_DAYS = 30;
 export const SOFTWARE_DEFAULT_MAX_ACTIVATIONS = 3;
 
 /** 페이지 이름과 겹쳐 slug로 쓸 수 없는 낱말. */
-export const SOFTWARE_RESERVED_SLUGS: readonly string[] = ['manage', 'success', 'fail'];
+export const SOFTWARE_RESERVED_SLUGS: readonly string[] = ['manage', 'success', 'fail', 'find'];
+
+/**
+ * 고객 셀프 환불 기간(일, 결제 승인 시각부터). 라이선스를 **한 번도 활성화하지 않았을 때만** — 활성화가 디지털콘텐츠
+ * "제공 개시"다(전자상거래법 제17조 제2항 제5호, 계획서 §4). 법정 청약철회 기간 7일에 맞춘다.
+ */
+export const SOFTWARE_SELF_CANCEL_DAYS = 7;

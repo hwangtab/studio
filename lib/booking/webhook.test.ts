@@ -4,6 +4,8 @@ jest.mock('./confirm', () => ({ confirmBookingPayment: jest.fn() }));
 jest.mock('./confirmDeposit', () => ({ confirmDepositPayment: jest.fn() }));
 jest.mock('../shop/confirm', () => ({ confirmShopOrder: jest.fn() }));
 jest.mock('../shop/webhookSync', () => ({ closeShopFulfillmentOnFullCancel: jest.fn().mockResolvedValue(undefined) }));
+jest.mock('../software/confirm', () => ({ confirmSoftwareOrder: jest.fn() }));
+jest.mock('../software/cancel', () => ({ refundLicensesOnFullCancel: jest.fn().mockResolvedValue(undefined) }));
 jest.mock('../funding/confirm', () => ({
   confirmFundingPledge: jest.fn().mockResolvedValue({ ok: true, orderNo: 'FND-1', manageToken: 't', projectSlug: 'demo' }),
   syncFundingCancelledFromToss: jest.fn().mockResolvedValue(undefined),
@@ -40,6 +42,8 @@ import { confirmBookingPayment } from './confirm';
 import { confirmDepositPayment } from './confirmDeposit';
 import { confirmShopOrder } from '../shop/confirm';
 import { closeShopFulfillmentOnFullCancel } from '../shop/webhookSync';
+import { confirmSoftwareOrder } from '../software/confirm';
+import { refundLicensesOnFullCancel } from '../software/cancel';
 import { confirmFundingPledge } from '../funding/confirm';
 import { reconcileSubscriptionPaymentFromToss } from '../billing/service';
 import { confirmShowOrder } from '../shows/confirm';
@@ -618,6 +622,48 @@ describe('processTossWebhook', () => {
       expect(status).toBe(200);
       expect(insertValuesCallsOf(mockDb()).find((c) => 'paymentId' in c)).toMatchObject({ paymentId: 'p_s', amount: 24000 });
       expect(closeShopFulfillmentOnFullCancel).toHaveBeenCalledWith('SHP-20261012-AAAAAAAA');
+    });
+  });
+
+  describe('software(소프트웨어) 주문 라우팅', () => {
+    const swOrder = (over: Record<string, unknown> = {}) => ({
+      id: 'o', orderNo: 'SWR-20261014-AAAAAAAA', type: 'software', status: 'pending', totalAmount: 69000,
+      bookings: [], workOrders: [], payments: [{ id: 'p_w', paymentKey: 'pk_w' }], ...over,
+    });
+
+    it('DONE 웹훅은 confirmSoftwareOrder를 trustedByWebhook:true로 호출한다 — 예약 확정으로 새지 않는다', async () => {
+      (fetchPayment as jest.Mock).mockResolvedValueOnce({
+        ok: true, payment: { paymentKey: 'pk_w', orderId: 'SWR-20261014-AAAAAAAA', status: 'DONE', totalAmount: 69000 },
+      });
+      (findOrderByOrderNo as jest.Mock).mockResolvedValueOnce(swOrder());
+      (confirmSoftwareOrder as jest.Mock).mockResolvedValue({ ok: true });
+
+      const { status } = await processTossWebhook({ data: { paymentKey: 'pk_w', status: 'DONE' } });
+
+      expect(status).toBe(200);
+      expect(confirmSoftwareOrder).toHaveBeenCalledWith(
+        { orderNo: 'SWR-20261014-AAAAAAAA', paymentKey: 'pk_w', amount: 69000 },
+        { trustedByWebhook: true },
+      );
+      expect(confirmBookingPayment).not.toHaveBeenCalled();
+    });
+
+    it('CANCELED(전액) 웹훅은 환불을 대사하고 라이선스를 닫는다', async () => {
+      (fetchPayment as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        payment: {
+          paymentKey: 'pk_w', orderId: 'SWR-20261014-AAAAAAAA', status: 'CANCELED', totalAmount: 69000,
+          cancels: [{ transactionKey: 'ck_w', cancelAmount: 69000 }],
+        },
+      });
+      (findOrderByOrderNo as jest.Mock).mockResolvedValueOnce(swOrder({ status: 'paid' }));
+      mockDb().query.refunds.findMany.mockResolvedValueOnce([]);
+
+      const { status } = await processTossWebhook({ data: { paymentKey: 'pk_w', status: 'CANCELED' } });
+
+      expect(status).toBe(200);
+      expect(insertValuesCallsOf(mockDb()).find((c) => 'paymentId' in c)).toMatchObject({ paymentId: 'p_w', amount: 69000 });
+      expect(refundLicensesOnFullCancel).toHaveBeenCalledWith('SWR-20261014-AAAAAAAA');
     });
   });
 

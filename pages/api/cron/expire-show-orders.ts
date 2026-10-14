@@ -15,6 +15,7 @@ import { sendEmail } from '../../../lib/email/resend';
 import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
 import { expireStaleShowOrders } from '../../../lib/shows/service';
 import { expireStaleShopOrders } from '../../../lib/shop/service';
+import { expireStaleSoftwareOrders } from '../../../lib/software/order';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -34,8 +35,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } catch (shopError) {
       console.error('[cron/expire-show-orders] 상점 주문 만료 정리 실패(공연 정리는 완료)', shopError);
     }
-    console.log(`[cron/expire-show-orders] expired=${expired} shopExpired=${shopExpired ?? 'error'}`);
-    return res.status(200).json({ ok: true, expired, shopExpired });
+    // 소프트웨어 결제 대기도 같은 크론이 닫는다(재고가 없어 판매에는 영향이 없다 — 관리자 목록 정리용).
+    let softwareExpired: number | null = null;
+    try {
+      softwareExpired = await expireStaleSoftwareOrders(now);
+    } catch (softwareError) {
+      console.error('[cron/expire-show-orders] 소프트웨어 주문 만료 정리 실패(공연 정리는 완료)', softwareError);
+    }
+    console.log(`[cron/expire-show-orders] expired=${expired} shopExpired=${shopExpired ?? 'error'} softwareExpired=${softwareExpired ?? 'error'}`);
+    return res.status(200).json({ ok: true, expired, shopExpired, softwareExpired });
   } catch (error: unknown) {
     console.error('[cron/expire-show-orders] 실패:', error);
     const message = error instanceof Error ? error.message : String(error);

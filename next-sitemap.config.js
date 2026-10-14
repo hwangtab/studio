@@ -174,6 +174,8 @@ module.exports = {
           '/ko/pay/',
           // 상점 트랜잭셔널 경로.
           '/ko/shop/success', '/ko/shop/fail', '/ko/shop/manage/',
+          // 소프트웨어 트랜잭셔널 경로.
+          '/ko/software/success', '/ko/software/fail', '/ko/software/find', '/ko/software/manage/',
         ],
       };
       // 이 목록에 봇을 추가/누락해도 실효 차단 범위는 바뀌지 않는다 — 모든 명명
