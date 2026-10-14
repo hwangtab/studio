@@ -42,6 +42,8 @@ export interface PageHeaderProps {
   backLabel?: React.ReactNode;
   title: React.ReactNode;
   as?: 'h1' | 'h2';
+  /** 제목이 제목 서체 서브셋 밖 글자를 품으면 true — 본문 서체로 그린다(`fitsDisplayFont`로 판정). DB에서 오는 제목용. */
+  titleFallbackFont?: boolean;
   /** 제목 아래 한두 문장. */
   lead?: React.ReactNode;
   /** 제목 오른쪽(또는 아래) 메타 — 주문번호·상태 배지. */
@@ -58,6 +60,7 @@ export const PageHeader = ({
   backLabel = '뒤로',
   title,
   as: Heading = 'h1',
+  titleFallbackFont = false,
   lead,
   meta,
   align = 'left',
@@ -85,7 +88,7 @@ export const PageHeader = ({
         <p className={cn('typo-card-meta', backHref ? 'mt-4' : undefined)}>{brand === true || brand === undefined ? '스튜디오 놀' : brand}</p>
       )}
       <div className={cn('mt-2 flex flex-wrap items-start gap-x-4 gap-y-2', centered ? 'justify-center' : 'justify-between')}>
-        <Heading className="typo-page-title">{title}</Heading>
+        <Heading className={cn('typo-page-title', titleFallbackFont && 'font-sans')}>{title}</Heading>
         {meta && <div className="typo-card-meta flex items-center gap-2">{meta}</div>}
       </div>
       {lead && <p className={cn('mt-2 typo-body text-gray-600 dark:text-gray-400', centered && 'mx-auto max-w-prose')}>{lead}</p>}

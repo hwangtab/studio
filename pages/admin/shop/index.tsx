@@ -143,7 +143,7 @@ export default function AdminShopPage({ orders, skus, artistSales, month, prevMo
         <title>상점 관리 | Studio NOL</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <AdminShell title="상점 관리" description="음반·굿즈 주문과 재고입니다. 상품 정의(이름·옵션·가격)는 data/shop/catalog.ts에서 바꿉니다." width="wide">
+      <AdminShell title="상점 관리" description="음반·굿즈 주문과 재고입니다. 상품 정의(이름·옵션·가격)는 data/shop/catalog.ts에서 바꿉니다." width="wide" actions={<Link href="/admin/shop/artists" className="text-sm font-medium text-primary hover:underline">아티스트</Link>}>
         {error && <div role="alert" className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-900">{error}</div>}
         {!salesOpen && (
           <div className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">

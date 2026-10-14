@@ -6,6 +6,7 @@ import { SHOP_PRODUCTS, type ShopProduct, type ShopSku } from '../../data/shop/c
  */
 
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+export const SHOP_SLUG_PATTERN = SLUG_PATTERN;
 const SKU_ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 /** pages/[locale]/shop/ 아래 리터럴 페이지 — 리터럴 라우트가 [slug]를 이겨 그 상품은 어떤 주소로도 안 열린다. */
 export const SHOP_RESERVED_SLUGS = ['success', 'fail', 'manage', 'artist'] as const;

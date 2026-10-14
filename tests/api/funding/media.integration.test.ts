@@ -201,3 +201,45 @@ it('공개 여부 조회가 실패하면 404다 (fail-closed)', async () => {
   client.close();
   expect((await call(OWNED_KEY)).status).toBe(404);
 });
+
+describe('상점 미디어', () => {
+  const SHOP_OWNER = 'beef01';
+  const PRODUCT_KEY = `${SHOP_OWNER}-aaaa.webp`;
+  const AVATAR_KEY = `${SHOP_OWNER}-bbbb.webp`;
+
+  const seedShop = async (status: 'draft' | 'approved', published = true) => {
+    const creatorId = await seedCreator(SHOP_OWNER);
+    await mockDb.insert(schema.shopArtists).values({ creatorId, slug: 'shop-owner', profileImageUrl: `/api/funding/media/${AVATAR_KEY}?w=640&h=640` });
+    await mockDb.insert(schema.shopProducts).values({
+      creatorId, slug: 'shop-thing', category: 'goods', title: '굿즈', description: '소개', published,
+      images: JSON.stringify([`/api/funding/media/${PRODUCT_KEY}?w=1600&h=900`]), reviewStatus: status,
+    });
+  };
+
+  it('승인·공개 상품의 사진과 그 아티스트의 프로필 사진은 무인증으로 열린다', async () => {
+    await seedShop('approved');
+    expect((await call(PRODUCT_KEY)).status).toBe(200);
+    expect((await call(AVATAR_KEY)).status).toBe(200);
+  });
+
+  it('승인 전 상품의 사진과 프로필 사진은 열리지 않는다', async () => {
+    await seedShop('draft');
+    expect((await call(PRODUCT_KEY)).status).toBe(404);
+    expect((await call(AVATAR_KEY)).status).toBe(404);
+  });
+
+  it('비공개로 돌린 상품의 사진은 열리지 않는다', async () => {
+    await seedShop('approved', false);
+    expect((await call(PRODUCT_KEY)).status).toBe(404);
+  });
+
+  it('상점 표가 없어도 승인 프로젝트의 펀딩 이미지는 열린다', async () => {
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    const creatorId = await seedCreator(OWNER);
+    await seedProject(creatorId, { reviewStatus: 'approved', coverUrl: `/api/funding/media/${OWNED_KEY}?w=1200&h=675` });
+    await client.execute('DROP TABLE shop_products');
+    await client.execute('DROP TABLE shop_artists');
+    expect((await call(OWNED_KEY)).status).toBe(200);
+    expect((await call('nobody-0000.webp')).status).toBe(404);
+  });
+});

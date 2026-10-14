@@ -35,6 +35,25 @@ export interface MediaPurgeResult {
 }
 
 /**
+ * 상점이 참조하는 업로드 이미지 텍스트 — 상품 사진(**초안·심사 중 포함, 상태를 보지 않는다**)과 아티스트 프로필 사진.
+ *
+ * 펀딩 쿼리와 **별도 문장**이다. 상점 표가 없으면(`no such table`) 참조가 없는 것이니 빈 집합이고,
+ * 그 밖의 오류는 **던져 청소를 중단**한다 — 삼키면 상점 참조를 못 본 채 공개 중인 사진을 지운다.
+ */
+const shopReferences = async (): Promise<Array<{ text: string | null }>> => {
+  try {
+    return await getDb().all<{ text: string | null }>(sql`
+      select images as text from shop_products
+      union all select profile_image_url as text from shop_artists
+    `);
+  } catch (error: unknown) {
+    const cause = error instanceof Error && error.cause instanceof Error ? error.cause.message : '';
+    if (/no such table/i.test(`${error instanceof Error ? error.message : String(error)} ${cause}`)) return [];
+    throw error;
+  }
+};
+
+/**
  * DB가 참조하는 업로드 이미지 파일명 전부.
  *
  * **상태를 보지 않는다** — 초안·심사 중·반려 프로젝트의 참조도 참조다. 주소는 치수 쿼리가
@@ -53,6 +72,12 @@ const referencedFilenames = async (): Promise<Set<string>> => {
 
   const pattern = new RegExp(`${FUNDING_MEDIA_URL_PREFIX}([A-Za-z0-9._-]+\\.webp)`, 'gi');
   const referenced = new Set<string>();
+  const collect = (texts: Array<{ text: string | null }>) => {
+    for (const row of texts) {
+      if (!row.text) continue;
+      for (const match of row.text.matchAll(pattern)) referenced.add(match[1].toLowerCase());
+    }
+  };
   for (const row of rows) {
     if (!row.text) continue;
     // Blob pathname과 맞대 볼 것이므로 소문자로 모은다 — 정규식이 대소문자를 가리지
@@ -60,6 +85,7 @@ const referencedFilenames = async (): Promise<Set<string>> => {
     // 있는 그림이 지워진다(조회 쪽도 같이 소문자로 내린다).
     for (const match of row.text.matchAll(pattern)) referenced.add(match[1].toLowerCase());
   }
+  collect(await shopReferences());
   return referenced;
 };
 

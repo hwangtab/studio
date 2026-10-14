@@ -6,12 +6,12 @@ import ResponsiveImage from '../../../components/ResponsiveImage';
 import ShopOrderForm, { type RemainingStock } from '../../../components/shop/ShopOrderForm';
 import { Section } from '../../../components/ui/Section';
 import StatusBadge from '../../../components/ui/StatusBadge';
-import { getSupportedArtist } from '../../../data/artists';
 import { formatPriceAmount } from '../../../data/pricing';
 import { SHOP_CATEGORY_LABELS, type ShopProduct } from '../../../data/shop/catalog';
 import { SHOP_SALES_OPEN } from '../../../data/shop/policy';
 import { withI18nServerProps } from '../../../lib/getStatic';
 import { fitsDisplayFont } from '../../../lib/fonts/displayCoverage';
+import { findShopArtistOfDbProduct, resolveShopArtist } from '../../../lib/shop/artists';
 import { findShopProductAsync, listPublishedShopProducts } from '../../../lib/shop/repository';
 import { getRemainingStock } from '../../../lib/shop/service';
 import imageMetadata from '../../../utils/imageMetadata.json';
@@ -120,7 +120,7 @@ export default function ShopProductPage({ product, others, remaining, salesOpen,
             {product.subtitle && <p className="typo-card-body mt-2">{product.subtitle}</p>}
             {artist && (
               <p className="typo-card-meta mt-2">
-                <Link href={`/ko/artists/${artist.slug}`} className="underline">{artist.name}의 다른 음반·굿즈</Link>
+                <Link href={`/ko/shop/artist/${artist.slug}`} className="underline">{artist.name}의 다른 음반·굿즈</Link>
               </p>
             )}
             <p className="mt-4 text-2xl font-bold tabular-nums text-gray-900 dark:text-white">
@@ -159,8 +159,18 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ params, re
   }
   // 남은 수량이 낡아도 되는 만큼만 CDN에 둔다 — 화면이 마운트 뒤 다시 읽고, 주문 생성이 최종 게이트다.
   res.setHeader('Cache-Control', remaining ? 'public, s-maxage=30, stale-while-revalidate=60' : 'no-store');
-  const registered = product.artist ? getSupportedArtist(product.artist) : null;
-  const artist = registered ? { slug: registered.slug, name: registered.name } : null;
+  // 파일 상품은 product.artist(data/artists slug), DB 상품은 올린 아티스트의 shop_artists slug로 /ko/shop/artist/<slug>에 잇는다.
+  let artist: { slug: string; name: string } | null = null;
+  try {
+    if (product.artist) {
+      const resolved = await resolveShopArtist(product.artist);
+      artist = resolved ? { slug: resolved.slug, name: resolved.name } : null;
+    } else if (product.source === 'db') {
+      artist = await findShopArtistOfDbProduct(product.slug);
+    }
+  } catch (error) {
+    console.error('[shop] 상세 아티스트 조회 실패', { slug, error });
+  }
   return { props: { product, others, remaining, salesOpen: SHOP_SALES_OPEN, artist, titleFallbackFont: product.source === 'db' && !fitsDisplayFont(product.title) } };
 });
 

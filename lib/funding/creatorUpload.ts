@@ -25,6 +25,9 @@ export const UPLOAD_LIMITS = {
 /** 대표 이미지는 목록 카드·OG가 함께 쓰는 16:9다(lib/funding/imageAspect.ts와 같은 전제). */
 const COVER_SIZE = { width: 1200, height: 675 } as const;
 
+/** 프로필 사진은 정사각이다(상점 아티스트 페이지의 원형 사진). */
+const AVATAR_SIZE = 640;
+
 /**
  * 디코드 후 픽셀 수 상한.
  *
@@ -46,12 +49,14 @@ const MAX_INPUT_PIXELS = 40_000_000;
  */
 export const processCreatorImage = async (
   input: Buffer,
-  kind: 'cover' | 'body',
+  kind: 'cover' | 'body' | 'avatar',
 ): Promise<{ buffer: Buffer; width: number; height: number }> => {
   const pipeline = sharp(input, { failOn: 'error', limitInputPixels: MAX_INPUT_PIXELS }).rotate();
   const resized = kind === 'cover'
     ? pipeline.resize(COVER_SIZE.width, COVER_SIZE.height, { fit: 'cover' })
-    : pipeline.resize({ width: UPLOAD_LIMITS.maxWidth, withoutEnlargement: true });
+    : kind === 'avatar'
+      ? pipeline.resize(AVATAR_SIZE, AVATAR_SIZE, { fit: 'cover' })
+      : pipeline.resize({ width: UPLOAD_LIMITS.maxWidth, withoutEnlargement: true });
   const { data, info } = await resized.webp({ quality: 82 }).toBuffer({ resolveWithObject: true });
   return { buffer: data, width: info.width, height: info.height };
 };

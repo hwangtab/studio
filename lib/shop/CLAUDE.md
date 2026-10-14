@@ -70,6 +70,25 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
   뒤집어도 파일 상품 결제는 안 깨진다(새 표를 안 읽는다) — 목록·상세는 DB 오류를 삼키고, `db-` SKU만 503.
 - slug 예약어에 `artist`가 늘었다(`/ko/shop/artist/<slug>`).
 
+### 아티스트 등재·공개 상점·콘솔 탭·미디어 청소 (플랫폼 PR 2)
+
+- **등재는 관리자만**: `/admin/shop/artists` → `createShopArtist`가 이메일(소문자 정규화, 로그인과 같은 방식)로 `funding_creators`를 찾거나
+  만들고 `shop_artists` 행을 만든다. 이미 있는 계정의 이름은 건드리지 않는다(기본 이름일 때만 채운다). slug가 `data/artists` slug와
+  같으면 "같은 사람" 확인 없이는 거부(사칭 방지)하고 확인하면 `curated_slug_linked=1`. slug 변경(`updateShopArtistSlug`)은 승인된
+  상품이 하나라도 있으면 거부한다(주소가 이미 퍼졌다).
+- **공개 상점 `/ko/shop/artist/<slug>`**: SSR, `s-maxage=30`, ko 전용. `resolveShopArtist`가 `data/artists` 먼저, 없으면
+  `shop_artists`+`funding_creators`. **아티스트가 없거나 공개 상품이 0개면 404**, 판매 닫힘이면 noindex. props에는 slug·이름·소개·링크(http(s)만)·
+  사진·`curatedSlug`만 싣는다 — `creatorId`는 서버 전용(`tests/pages/shop/artistPage.test.ts`가 고정). 상품 목록은
+  `listShopProductsByArtist` = 파일 상품(`artist===slug`) + 그 slug 소유자의 공개 DB 상품(파일 slug에 가려지는 것은 뺀다, DB 오류는 삼킨다).
+  상품 상세의 아티스트 링크는 `/ko/shop/artist/<slug>`(DB 상품은 `findShopArtistOfDbProduct`로 올린 아티스트를 찾는다).
+- **개설자 콘솔 상점 탭** `/ko/funding/creator/shop`(no-store, noindex, ko 전용): `shop_artists` 행이 없으면 안내만. 있으면 프로필(이름·소개·링크는
+  펀딩과 같은 `funding_creators`라 `saveCreatorSection`을 그대로 쓴다 — 이름 잠금 포함)과 프로필 사진. 사진은 업로드 라우트
+  `target=shop-profile`(권한 = `shop_artists` 행, 정사각 640px)로 올리고 `profile.ts`의 `section:'image'`가 저장한다(`isOwnUploadedMedia`로 자기 업로드만).
+- **미디어 공개 판정은 펀딩과 별도 문장·별도 try**(`lib/shop/mediaAccess.ts`): 승인·공개 상품의 `images`, 그리고 승인 상품이 하나라도 있는 아티스트의
+  프로필 사진. 펀딩 판정이 false일 때만 이어서 본다 — 한 쿼리에 OR로 붙이면 상점 표가 없는 DB에서 펀딩 이미지까지 404가 된다.
+- **월간 청소가 상점 참조도 본다**(`lib/funding/mediaRetention.ts`): `shop_products.images` 전부(초안 포함)와 `shop_artists.profile_image_url`을 별도 쿼리로.
+  표가 없으면(`no such table`) 빈 집합, **그 밖의 오류는 던져 청소를 중단**한다 — 삼키면 공개 중인 사진을 지운다.
+
 ### 상품 정의는 파일, 재고·주문은 DB
 
 `data/shop/catalog.ts`가 이름·옵션·가격의 정본이고 **아무것도 import하지 않는다**(클라이언트가 값으로 쓴다). 주문 API는 요청의
