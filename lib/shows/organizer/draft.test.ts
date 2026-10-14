@@ -122,3 +122,45 @@ test('parseDraft는 칸마다 타입을 보정한다', () => {
   expect(d.notices).toEqual(['a']);
   expect(() => findSubmitProblems(d, NOW)).not.toThrow();
 });
+
+describe('한 줄 칸의 제어 문자', () => {
+  const normalized = (over: Partial<ShowSubmissionDraft>): ShowSubmissionDraft => {
+    const r = normalizeDraftInput({ ...complete(), ...over }, CREATOR);
+    if (!r.ok) throw new Error(r.message);
+    return r.draft;
+  };
+
+  test('줄바꿈·탭·제어 문자는 공백 하나로 접는다', () => {
+    const d = normalized({
+      title: '가을\n밤\r\n단독\t공연',
+      subtitle: '부제\u0000끝',
+      presenterName: '밴드 \n 놀',
+      ageRating: '전체 관람가',
+      venueName: '스튜디오\u007f놀',
+      venueAddress: '서울\n마포구',
+      scheduleNote: '매주\r금요일',
+      notices: ['주차\n불가', '\n'],
+      ticketTypes: [{ name: '일반\t석', price: 20000 }],
+      performers: [{ name: '보컬\n김', bio: '첫 줄\n둘째 줄', photoUrl: null }],
+    });
+    expect(d.title).toBe('가을 밤 단독 공연');
+    expect(d.subtitle).toBe('부제 끝');
+    expect(d.presenterName).toBe('밴드 놀');
+    expect(d.ageRating).toBe('전체 관람가');
+    expect(d.venueName).toBe('스튜디오 놀');
+    expect(d.venueAddress).toBe('서울 마포구');
+    expect(d.scheduleNote).toBe('매주 금요일');
+    expect(d.notices).toEqual(['주차 불가']);
+    expect(d.ticketTypes[0].name).toBe('일반 석');
+    expect(d.performers[0].name).toBe('보컬 김');
+  });
+
+  test('소개·출연진 소개는 줄바꿈을 지키고 그 밖의 제어 문자만 뺀다', () => {
+    const d = normalized({
+      description: '첫 문단\r\n\r\n둘째\u0000 문단',
+      performers: [{ name: '김', bio: '첫 줄\n둘째\u0007 줄', photoUrl: null }],
+    });
+    expect(d.description).toBe('첫 문단\n\n둘째 문단');
+    expect(d.performers[0].bio).toBe('첫 줄\n둘째 줄');
+  });
+});

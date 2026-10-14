@@ -83,6 +83,22 @@ export const kstWallToDate = (wall: string): Date | null => {
 };
 
 const str = (v: unknown, max: number): string | null => (typeof v === 'string' && v.length <= max ? v.trim() : null);
+
+/**
+ * 한 줄 칸(제목·주최·장소·티켓 이름·출연진 이름 등) — 줄바꿈·탭·제어 문자(C0·C1·U+2028/2029)를 앞뒤 공백까지 묶어
+ * 공백 하나로 접는다. 이 값은 메일 제목·관리자 화면·공연 페이지 메타에 그대로 실린다.
+ */
+const CONTROL_RUN = /[ \u0000-\u001f\u007f-\u009f\u2028\u2029]*[\u0000-\u001f\u007f-\u009f\u2028\u2029]+[ \u0000-\u001f\u007f-\u009f\u2028\u2029]*/g;
+const line = (v: unknown, max: number): string | null => {
+  const s = str(v, max);
+  return s === null ? null : s.replace(CONTROL_RUN, ' ').trim();
+};
+/** 여러 줄 칸(소개·출연진 소개) — 줄바꿈은 지키고(\r\n·\r → \n) 탭을 뺀 나머지 제어 문자만 지운다. */
+const MULTILINE_STRIP = /[\u0000-\u0008\u000b-\u001f\u007f-\u009f]/g;
+const text = (v: unknown, max: number): string | null => {
+  const s = str(v, max);
+  return s === null ? null : s.replace(/\r\n?/g, '\n').replace(MULTILINE_STRIP, '').trim();
+};
 const intOrNull = (v: unknown, max: number): number | null | undefined =>
   v === null || v === '' || v === undefined ? null : (Number.isInteger(v) && (v as number) >= 0 && (v as number) <= max ? (v as number) : undefined);
 
@@ -114,14 +130,14 @@ export const normalizeDraftInput = (
   if (!input || typeof input !== 'object') return fail('요청 형식이 올바르지 않아요.');
   const i = input as Record<string, unknown>;
   const L = SHOW_DRAFT_LIMITS;
-  const title = str(i.title, L.title);
-  const subtitle = str(i.subtitle ?? '', L.subtitle);
-  const presenterName = str(i.presenterName, L.presenterName);
-  const description = str(i.description, L.description);
-  const ageRating = str(i.ageRating, L.ageRating);
-  const venueName = str(i.venueName, L.venueName);
-  const venueAddress = str(i.venueAddress, L.venueAddress);
-  const scheduleNote = str(i.scheduleNote ?? '', L.scheduleNote);
+  const title = line(i.title, L.title);
+  const subtitle = line(i.subtitle ?? '', L.subtitle);
+  const presenterName = line(i.presenterName, L.presenterName);
+  const description = text(i.description, L.description);
+  const ageRating = line(i.ageRating, L.ageRating);
+  const venueName = line(i.venueName, L.venueName);
+  const venueAddress = line(i.venueAddress, L.venueAddress);
+  const scheduleNote = line(i.scheduleNote ?? '', L.scheduleNote);
   const rawRequired = [i.title, i.presenterName, i.description, i.ageRating, i.venueName, i.venueAddress];
   const rawOptional = [i.subtitle, i.scheduleNote];
   if (rawRequired.some((v) => typeof v !== 'string') || rawOptional.some((v) => v !== undefined && v !== null && typeof v !== 'string')) {
@@ -136,7 +152,7 @@ export const normalizeDraftInput = (
   const capacity = intOrNull(i.capacity, L.capacity);
   if (runningMinutes === undefined || capacity === undefined) return fail('숫자 칸을 확인해 주세요.');
 
-  const notices = Array.isArray(i.notices) ? i.notices.map((n) => str(n, L.notice)) : [];
+  const notices = Array.isArray(i.notices) ? i.notices.map((n) => line(n, L.notice)) : [];
   if (notices.length > L.notices || notices.some((n) => n === null)) return fail('안내 목록을 확인해 주세요.');
   const showtimes = Array.isArray(i.showtimes) ? i.showtimes : [];
   if (showtimes.length > L.showtimes || showtimes.some((s) => typeof s !== 'string' || !kstWallToDate(s))) return fail('회차 일시를 확인해 주세요.');
@@ -145,7 +161,7 @@ export const normalizeDraftInput = (
   if (ticketTypesIn.length > L.ticketTypes) return fail(`티켓 종류는 ${L.ticketTypes}개까지예요.`);
   const ticketTypes: ShowSubmissionDraft['ticketTypes'] = [];
   for (const t of ticketTypesIn) {
-    const name = str((t as Record<string, unknown>)?.name, L.ticketName);
+    const name = line((t as Record<string, unknown>)?.name, L.ticketName);
     const price = intOrNull((t as Record<string, unknown>)?.price, L.price);
     if (name === null || price === undefined) return fail('티켓 종류를 확인해 주세요.');
     ticketTypes.push({ name, price });
@@ -156,8 +172,8 @@ export const normalizeDraftInput = (
   const performers: ShowSubmissionDraft['performers'] = [];
   for (const p of performersIn) {
     const rec = (p ?? {}) as Record<string, unknown>;
-    const name = str(rec.name, L.performerName);
-    const bio = str(rec.bio ?? '', L.performerBio);
+    const name = line(rec.name, L.performerName);
+    const bio = text(rec.bio ?? '', L.performerBio);
     const photoUrl = ownImage(rec.photoUrl, creatorId);
     if (name === null || bio === null) return fail('출연진 칸을 확인해 주세요.');
     if (photoUrl === undefined) return fail('출연진 사진은 이 화면에서 올린 이미지만 쓸 수 있어요.');
