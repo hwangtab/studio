@@ -55,6 +55,15 @@ describe('LLM contact metadata', () => {
     expect(getBody()).not.toContain('+82-507-1384-3144');
   });
 
+  it('lists the Live Shows ticketing service', async () => {
+    const { res, getBody } = createResponse();
+
+    await llmsHandler(createRequest(), res);
+
+    expect(getBody()).toContain('Live Shows');
+    expect(getBody()).toContain(': /shows');
+  });
+
   it('uses the current mobile number in llms-full.txt', () => {
     const { res, getBody, getHeader } = createResponse();
 
