@@ -47,8 +47,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
   }
 
-  // 꽉 찬 신청서(포스터 1 + 사진 12)에서 올리는 것은 교체뿐이다 — 저장(normalizeDraftInput)이 포스터 1장·출연진 12명으로
-  // 자르므로 저장본이 상한을 넘을 수 없다. 상한에서 막으면 교체까지 막힌다. 남발은 위 요청 한도가 막는다.
+  // 꽉 찬 신청서(포스터 1 + 사진 12)에서 올리는 것은 교체뿐이다 — 저장(normalizeDraftInput)이 포스터 1장·출연진 12명을 넘는 초안을
+  // 거절하므로 저장본이 상한을 넘을 수 없다(이 검사는 안전망). 상한에서 막으면 교체까지 막힌다. 남발은 위 요청 한도가 막는다.
   if (countDraftImages(submission.draft) > MAX_IMAGES_PER_SUBMISSION) {
     return res.status(400).json({ ok: false, message: `이미지는 신청서당 최대 ${MAX_IMAGES_PER_SUBMISSION}장까지 올릴 수 있어요.` });
   }
