@@ -15,7 +15,7 @@ const DECISION_STATUS: Record<ShowDecisionCode, number> = {
   not_found: 404,
   conflict: 409,
   invalid_slug: 400,
-  duplicate_slug: 400,
+  duplicate_slug: 409,
   incomplete: 400,
   terms_not_agreed: 400,
   seed_failed: 500,
@@ -71,6 +71,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   if (!result.ok) return res.status(DECISION_STATUS[result.code]).json({ ok: false, code: result.code, message: result.message });
-  if (action === 'approve' && result.slug) await revalidateShow(res, result.slug);
-  return res.status(200).json({ ok: true, slug: result.slug, warnings: result.warnings });
+  const warnings = [...(result.warnings ?? [])];
+  if (action === 'approve' && result.slug && !(await revalidateShow(res, result.slug))) {
+    warnings.push('공개 페이지 갱신에 실패했어요. 잠시 뒤 반영되지 않으면 /admin/shows에서 다시 저장해 주세요.');
+  }
+  return res.status(200).json({ ok: true, slug: result.slug, warnings: warnings.length > 0 ? warnings : undefined });
 }

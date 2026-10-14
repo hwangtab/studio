@@ -2,14 +2,17 @@ import type { NextApiResponse } from 'next';
 import { sql } from 'drizzle-orm';
 
 /** 공개 페이지를 다시 만든다 — best-effort. 이 앱이 ISR이 아닌 경로에서 던지는 오류는 무시한다. */
-export async function revalidateShow(res: NextApiResponse, slug: string) {
+export async function revalidateShow(res: NextApiResponse, slug: string): Promise<boolean> {
+  let ok = true;
   for (const path of ['/ko/shows', `/ko/shows/${slug}`, `/en/shows/${slug}`]) {
     try {
       await res.revalidate(path);
     } catch {
+      ok = false;
       /* 재검증 실패가 운영 액션을 실패시키지 않는다 */
     }
   }
+  return ok;
 }
 
 /** 공연 공개 상태 변경(취소된 공연은 건드리지 않는다) — 관리자 set_status와 주최자 공연 승인이 함께 쓴다. */

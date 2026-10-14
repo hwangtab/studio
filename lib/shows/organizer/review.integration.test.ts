@@ -144,11 +144,11 @@ describe('주최자 공연 심사', () => {
     expect(sendShowReviewResultEmail).toHaveBeenCalledWith(b.id, 'rejected');
   });
 
-  it('제출물 갱신이 실패하면 공연은 draft로 되돌려지고 seed_failed, 같은 slug로 재승인하면 이어받는다', async () => {
+  it('제출물 갱신이 실패하면 새로 만든 초안 공연을 지우고 seed_failed, 같은 slug로 재승인하면 성공', async () => {
     const s = await submitted();
     const realUpdate = mockDb.update.bind(mockDb);
     let failNext = true;
-    jest.spyOn(mockDb, 'update').mockImplementation(((table: unknown) => {
+    const spy = jest.spyOn(mockDb, 'update').mockImplementation(((table: unknown) => {
       if (failNext && table === showSubmissions) {
         failNext = false;
         throw new Error('disk full');
@@ -158,16 +158,40 @@ describe('주최자 공연 심사', () => {
 
     const first = await decideShowSubmission(s.id, 'approve', { slug: 'abc-show' }, NOW);
     expect(first).toMatchObject({ ok: false, code: 'seed_failed' });
-    const [orphan] = await mockDb.select().from(shows).where(eq(shows.slug, 'abc-show'));
-    expect(orphan.status).toBe('draft');
+    expect(await mockDb.select().from(shows).where(eq(shows.slug, 'abc-show'))).toHaveLength(0);
+    expect(await mockDb.select().from(showZones)).toHaveLength(0);
+    expect(await mockDb.select().from(showtimes)).toHaveLength(0);
+    expect(await mockDb.select().from(showTicketTypes)).toHaveLength(0);
     expect((await row(s.id)).reviewStatus).toBe('submitted');
+    spy.mockRestore();
 
-    const second = await decideShowSubmission(s.id, 'approve', { slug: 'abc-show' }, NOW);
-    expect(second).toMatchObject({ ok: true, slug: 'abc-show' });
+    expect(await decideShowSubmission(s.id, 'approve', { slug: 'abc-show' }, NOW)).toMatchObject({ ok: true, slug: 'abc-show' });
+    const [show] = await mockDb.select().from(shows).where(eq(shows.slug, 'abc-show'));
+    expect(show.status).toBe('published');
+    expect((await row(s.id)).showId).toBe(show.id);
+  });
+
+  it('같은 slug의 기존 공연(운영자 초안)이 있으면 duplicate_slug이고 그 공연은 그대로다', async () => {
+    const s = await submitted();
+    const [draftShow] = await mockDb
+      .insert(shows)
+      .values({ slug: 'abc-show', title: '운영자 초안', presenterName: '운영자', performers: '[]', ageRating: '전체', runningMinutes: 60, venueName: 'v', venueAddress: 'a', description: 'd', status: 'draft' } as never)
+      .returning();
+    expect(await decideShowSubmission(s.id, 'approve', { slug: 'abc-show' }, NOW)).toMatchObject({ ok: false, code: 'duplicate_slug' });
     const all = await mockDb.select().from(shows).where(eq(shows.slug, 'abc-show'));
     expect(all).toHaveLength(1);
-    expect(all[0]).toMatchObject({ id: orphan.id, status: 'published' });
-    expect(await mockDb.select().from(showZones).where(eq(showZones.showId, orphan.id))).toHaveLength(1);
-    expect((await row(s.id)).showId).toBe(orphan.id);
+    expect(all[0]).toMatchObject({ id: draftShow.id, status: 'draft', title: '운영자 초안' });
+    expect(await mockDb.select().from(showtimes).where(eq(showtimes.showId, draftShow.id))).toHaveLength(0);
+    expect((await row(s.id)).reviewStatus).toBe('submitted');
+  });
+
+  it('이미 승인된 제출물을 다시 승인하면 거절되고 공연은 공개 상태 그대로다', async () => {
+    const s = await submitted();
+    expect(await decideShowSubmission(s.id, 'approve', { slug: 'abc-show' }, NOW)).toMatchObject({ ok: true });
+    const again = await decideShowSubmission(s.id, 'approve', { slug: 'abc-show' }, NOW);
+    expect(again.ok).toBe(false);
+    expect(again.ok === false && ['conflict', 'duplicate_slug']).toContain(again.ok === false ? again.code : '');
+    const [show] = await mockDb.select().from(shows).where(eq(shows.slug, 'abc-show'));
+    expect(show.status).toBe('published');
   });
 });

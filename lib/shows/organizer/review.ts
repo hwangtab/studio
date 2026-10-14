@@ -69,7 +69,7 @@ export async function decideShowSubmission(
       .update(showSubmissions)
       .set({ reviewStatus: next, reviewNote: note, ...(action === 'reject' ? { rejectedAt: now } : {}), updatedAt: now })
       .where(sameVersion);
-    if (Number(res.rowsAffected) === 0) return deny('conflict', '그 사이 상태가 바뀌었어요. 새로고침 후 다시 확인해 주세요.');
+    if (Number(res.rowsAffected) === 0) return deny('conflict', STALE_VERSION_MESSAGE);
     const warnings = await notify(id, action === 'reject' ? 'rejected' : 'changes_requested');
     return warnings.length > 0 ? { ok: true, warnings } : { ok: true };
   }
@@ -84,50 +84,44 @@ export async function decideShowSubmission(
   const slugProblem = validateShowSlug(slug);
   if (slugProblem) return deny('invalid_slug', slugProblem);
 
-  // 이미 있는 slug는 중복이다. 단 직전 승인이 중간에 실패해 남은 고아 draft 공연(제출물이 가리키지 않고
-  // status='draft')은 이어받는다 — seedShow가 멱등이라 같은 slug로 다시 승인하면 그 공연을 마저 채운다.
-  const [existing] = await db.select().from(shows).where(eq(shows.slug, slug)).limit(1);
-  if (existing) {
-    const [owner] = await db
-      .select({ id: showSubmissions.id })
-      .from(showSubmissions)
-      .where(eq(showSubmissions.showId, existing.id))
-      .limit(1);
-    if (owner || existing.status !== 'draft') return deny('duplicate_slug', `slug "${slug}"는 이미 쓰이고 있어요.`);
-  }
+  // 같은 slug의 공연이 하나라도 있으면 중복이다 — 운영자가 data/shows/<slug>.ts로 만든 초안을 가로채거나
+  // 남은 회차·티켓타입에 섞어 쓰지 않도록 이어받기는 하지 않는다.
+  const [existing] = await db.select({ id: shows.id }).from(shows).where(eq(shows.slug, slug)).limit(1);
+  if (existing) return deny('duplicate_slug', `slug "${slug}"는 이미 쓰이고 있어요.`);
 
+  const warnings: string[] = [];
+  let showId: string;
   try {
-    await seedShow(db, buildShowDefinition(draft, slug), { apply: true, now });
+    const report = await seedShow(db, buildShowDefinition(draft, slug), { apply: true, now });
+    warnings.push(...report.warnings);
+    const [created] = await db.select({ id: shows.id }).from(shows).where(eq(shows.slug, slug)).limit(1);
+    if (!report.created || !created) return deny('duplicate_slug', `slug "${slug}"는 이미 쓰이고 있어요.`);
+    showId = created.id;
   } catch (error) {
     console.error(`[shows/organizer] 공연 생성 실패 (id=${id}, slug=${slug})`, error);
     return deny('seed_failed', `공연을 만들지 못했어요: ${error instanceof Error ? error.message : String(error)}`);
   }
 
-  const [show] = await db.select().from(shows).where(eq(shows.slug, slug)).limit(1);
-  const unpublish = async () => {
+  // 방금 만든 초안만 지운다 — 새 초안이라 주문이 참조할 수 없다.
+  const deleteFreshDraft = async () => {
     try {
-      await db.run(sqlUpdateStatus(show.id, 'draft', now));
+      await db.batch([
+        db.delete(showTicketTypes).where(eq(showTicketTypes.showId, showId)),
+        db.delete(showtimes).where(eq(showtimes.showId, showId)),
+        db.delete(showZones).where(eq(showZones.showId, showId)),
+        db.delete(shows).where(eq(shows.id, showId)),
+      ]);
     } catch (error) {
-      console.error(`[shows/organizer] 공연을 초안으로 되돌리지 못했어요 (slug=${slug})`, error);
+      console.error(`[shows/organizer] 만들다 만 초안 공연을 지우지 못했어요 (slug=${slug})`, error);
     }
   };
 
   try {
-    const [zones, ticketTypes, showtimeRows] = await Promise.all([
-      db.select().from(showZones).where(eq(showZones.showId, show.id)),
-      db.select().from(showTicketTypes).where(eq(showTicketTypes.showId, show.id)),
-      db.select().from(showtimes).where(eq(showtimes.showId, show.id)),
-    ]);
-    if (!isPublishable({ zones, ticketTypes, showtimes: showtimeRows }, now)) {
-      return deny('seed_failed', '공개하려면 예정된 회차·구역·티켓타입이 모두 필요해요.');
-    }
-    await db.run(sqlUpdateStatus(show.id, 'published', now));
-
     const res = await db
       .update(showSubmissions)
       .set({
         reviewStatus: next,
-        showId: show.id,
+        showId,
         approvedDraftJson: sub.draftJson,
         approvedAt: now,
         reviewNote: null,
@@ -135,15 +129,33 @@ export async function decideShowSubmission(
       })
       .where(sameVersion);
     if (Number(res.rowsAffected) === 0) {
-      await unpublish();
+      await deleteFreshDraft();
       return deny('conflict', '그 사이 상태가 바뀌었어요. 새로고침 후 다시 확인해 주세요.');
     }
   } catch (error) {
-    console.error(`[shows/organizer] 승인 기록 실패 — 공연을 비공개로 되돌립니다 (id=${id}, slug=${slug})`, error);
-    await unpublish();
-    return deny('seed_failed', `승인을 기록하지 못해 공연을 공개하지 않았어요. 같은 slug로 다시 승인해 주세요: ${error instanceof Error ? error.message : String(error)}`);
+    console.error(`[shows/organizer] 승인 기록 실패 — 만든 초안을 지웁니다 (id=${id}, slug=${slug})`, error);
+    await deleteFreshDraft();
+    return deny('seed_failed', `승인을 기록하지 못했어요. 다시 승인해 주세요: ${error instanceof Error ? error.message : String(error)}`);
   }
 
-  const warnings = await notify(id, 'approved');
+  // 승인은 이미 기록됐다 — 공개 실패는 승인을 되돌리지 않고 알린다.
+  const publishFailed = '승인됐지만 공개하지 못했어요. /admin/shows에서 공개해 주세요.';
+  try {
+    const [zones, ticketTypes, showtimeRows] = await Promise.all([
+      db.select().from(showZones).where(eq(showZones.showId, showId)),
+      db.select().from(showTicketTypes).where(eq(showTicketTypes.showId, showId)),
+      db.select().from(showtimes).where(eq(showtimes.showId, showId)),
+    ]);
+    if (isPublishable({ zones, ticketTypes, showtimes: showtimeRows }, now)) {
+      await db.run(sqlUpdateStatus(showId, 'published', now));
+    } else {
+      warnings.push(publishFailed);
+    }
+  } catch (error) {
+    console.error(`[shows/organizer] 공개 실패 (id=${id}, slug=${slug})`, error);
+    warnings.push(publishFailed);
+  }
+
+  warnings.push(...(await notify(id, 'approved')));
   return warnings.length > 0 ? { ok: true, slug, warnings } : { ok: true, slug };
 }
