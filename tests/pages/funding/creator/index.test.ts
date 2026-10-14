@@ -7,6 +7,7 @@
 jest.mock('../../../../lib/funding/creatorAuth', () => ({ authenticateCreatorRequest: jest.fn() }));
 jest.mock('../../../../lib/funding/creatorProjectList', () => ({ listProjectsForCreator: jest.fn() }));
 jest.mock('../../../../lib/funding/creatorStats', () => ({ loadCreatorProjectStats: jest.fn() }));
+jest.mock('../../../../lib/shows/organizer/submissions', () => ({ listSubmissionsForCreator: jest.fn().mockResolvedValue([]) }));
 
 // eslint-disable-next-line import/first
 import { getServerSideProps } from '../../../../pages/[locale]/funding/creator';
@@ -16,6 +17,8 @@ import { authenticateCreatorRequest } from '../../../../lib/funding/creatorAuth'
 import { listProjectsForCreator } from '../../../../lib/funding/creatorProjectList';
 // eslint-disable-next-line import/first
 import { loadCreatorProjectStats } from '../../../../lib/funding/creatorStats';
+// eslint-disable-next-line import/first
+import { listSubmissionsForCreator } from '../../../../lib/shows/organizer/submissions';
 
 const resStub = () => ({ setHeader: jest.fn() }) as unknown as import('http').ServerResponse;
 
@@ -76,6 +79,45 @@ describe('모금 현황 props', () => {
     (loadCreatorProjectStats as jest.Mock).mockRejectedValue(new Error('DB 없음'));
     const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
     expect((await run()).stats).toEqual({});
+    spy.mockRestore();
+  });
+});
+
+/** 공연 절 — show_submissions 표가 없는 DB(마이그레이션 전)에서도 펀딩 목록은 떠야 한다. */
+describe('내 공연 props', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (authenticateCreatorRequest as jest.Mock).mockResolvedValue({ ok: true, creatorId: 'creator-a' });
+    (listProjectsForCreator as jest.Mock).mockResolvedValue([]);
+  });
+
+  const run = async () => {
+    const result = await getServerSideProps({
+      params: { locale: 'ko' }, query: {}, req: { headers: {}, cookies: {} }, res: resStub(),
+    } as never);
+    return (result as unknown as { props: { projects: unknown[]; shows: unknown[] } }).props;
+  };
+
+  it('본인 id로 읽고, 첫 회차를 읽기 좋은 말로 바꿔 싣는다', async () => {
+    (listSubmissionsForCreator as jest.Mock).mockResolvedValue([
+      { id: 's1', title: '공연', reviewStatus: 'approved', showSlug: 'live', showStatus: 'on_sale', firstShowtime: '2026-11-20T19:30' },
+      { id: 's2', title: '', reviewStatus: 'draft', showSlug: null, showStatus: null, firstShowtime: null },
+    ]);
+    const props = await run();
+    expect(listSubmissionsForCreator).toHaveBeenCalledWith('creator-a');
+    expect(props.shows).toEqual([
+      { id: 's1', title: '공연', reviewStatus: 'approved', showSlug: 'live', firstShowtimeLabel: '2026년 11월 20일(금) 19:30' },
+      { id: 's2', title: '', reviewStatus: 'draft', showSlug: null, firstShowtimeLabel: null },
+    ]);
+  });
+
+  it('공연 목록 조회가 실패해도 펀딩 목록은 뜬다 — 공연 절만 비어 있다', async () => {
+    (listProjectsForCreator as jest.Mock).mockResolvedValue([{ id: 'p1', reviewStatus: 'draft' }]);
+    (listSubmissionsForCreator as jest.Mock).mockRejectedValue(new Error('no such table: show_submissions'));
+    const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const props = await run();
+    expect(props.projects).toHaveLength(1);
+    expect(props.shows).toEqual([]);
     spy.mockRestore();
   });
 });

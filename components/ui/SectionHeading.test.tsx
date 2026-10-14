@@ -80,6 +80,8 @@ describe('디자인 v2 파일 색 가드', () => {
     'components/shows/ShowDetailView.tsx',
     'components/shows/ShowFacts.tsx',
     'pages/[locale]/shows/report/[token].tsx',
+    'components/shows/organizer/ShowDraftForm.tsx',
+    'pages/[locale]/funding/creator/shows/[id].tsx',
   ];
 
   it.each(V2_FILES)('%s에 텍스트 그라디언트·secondary·accent가 없다', (rel) => {
