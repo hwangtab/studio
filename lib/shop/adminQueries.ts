@@ -1,6 +1,7 @@
-import { sql } from 'drizzle-orm';
+import { inArray, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
+import { creatorBusinessProfiles } from '../../db/schema';
 import { getSupportedArtist } from '../../data/artists';
 import { SHOP_PRODUCTS } from '../../data/shop/catalog';
 import { loadArtistShippersByOrder } from './artistShipping';
@@ -138,6 +139,8 @@ export interface AdminShopArtistSalesRow {
   needsReviewOrderNos: string[];
   /** 배송 없는 디지털 주문 중 아직 내려받지 않은(고객이 철회할 수 있는) 주문 수. 정산액에 넣지 않았다. */
   withdrawableOrderCount: number;
+  /** 사업자(invoice)인 DB 상품 아티스트에게 사업자등록번호가 없다 — 표시만 한다(상점은 기록 경로가 없다). 읽지 못했으면 false. */
+  businessNumberMissing: boolean;
 }
 
 /**
@@ -272,6 +275,24 @@ export const listShopArtistSales = async (month: string): Promise<AdminShopArtis
     if (!isMissingTableError(error)) console.error('[shop] 아티스트 정산(배송비) 조회 실패 — 배송비를 넣지 않았습니다:', error);
   }
 
+  // 사업자인 DB 아티스트 중 사업자 정보가 없는 쪽. **별도 try** — 표가 없거나 실패하면 표시만 생략한다.
+  const missingBusiness = new Set<string>();
+  try {
+    const invoiceIds = [...creatorInfo.entries()]
+      .filter(([, info]) => info.taxType === 'invoice')
+      .map(([key]) => key.slice('creator:'.length));
+    if (invoiceIds.length > 0) {
+      const have = await getDb()
+        .select({ creatorId: creatorBusinessProfiles.creatorId })
+        .from(creatorBusinessProfiles)
+        .where(inArray(creatorBusinessProfiles.creatorId, invoiceIds));
+      const haveIds = new Set(have.map((r) => r.creatorId));
+      for (const id of invoiceIds) if (!haveIds.has(id)) missingBusiness.add(`creator:${id}`);
+    }
+  } catch (error) {
+    if (!isMissingTableError(error)) console.error('[shop] 아티스트 사업자 정보 조회 실패 — 미등록 표시를 생략합니다:', error);
+  }
+
   return [...byArtist.entries()]
     .map(([key, acc]) => {
       const creator = creatorInfo.get(key);
@@ -288,6 +309,7 @@ export const listShopArtistSales = async (month: string): Promise<AdminShopArtis
         payout: taxType ? computeShopArtistPayout({ salesAmount: acc.salesAmount, refundAmount: 0, taxType, shippingAmount: acc.shippingAmount }) : null,
         needsReviewOrderNos: [...acc.review].sort(),
         withdrawableOrderCount: acc.withdrawable.size,
+        businessNumberMissing: missingBusiness.has(key),
       };
     })
     .sort((a, b) => a.artistName.localeCompare(b.artistName, 'ko'));

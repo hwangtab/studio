@@ -1,3 +1,6 @@
+// 타입만 가져온다 — businessProfile.ts는 db/client를 값으로 물고 있어 클라이언트 번들에 실으면 안 된다.
+import type { BusinessProfileView } from '../../../lib/funding/businessProfile';
+
 /**
  * 개설자 편집 화면(4구획)이 공유하는 타입.
  *
@@ -98,6 +101,20 @@ export interface EditorPayoutSummary {
    * 화면은 이 값으로 "지워집니다"와 "보관됩니다"를 가른다. 여기서도 불리언뿐이다.
    */
   withheldPayoutRecorded: boolean;
+  /**
+   * 사업자로 바꿔 저장해도 주민등록번호를 남기는가(원천징수한 정산 기록이 있거나 상점 아티스트). 저장 경로와 같은
+   * 판정이다(`lib/funding/creatorProjectWrite.ts`의 `keepsResidentNumber`). 화면 문구가 이 값으로 갈린다.
+   */
+  keepsResidentNumber: boolean;
+  /** 개인으로 바꿔 저장해도 사업자 정보·사업자등록증을 남기는가(`keepsBusinessProfile`). */
+  keepsBusinessProfile: boolean;
+  /**
+   * 사업자 정보(`lib/funding/businessProfile.ts`의 `BusinessProfileView`). 없으면 `null`, 표를 읽지 못하면
+   * `'unavailable'`(화면은 사업자 칸만 끈다). 계좌와 달리 번호·상호·대표자명을 그대로 싣는다 — 사업자가 늘 공개로
+   * 적는 값이고, 같은 번호면 국세청 조회를 다시 부르지 않으려면 화면이 저장된 번호를 알아야 한다.
+   * 사업자등록증의 Blob 경로는 싣지 않는다(있다/없다와 올린 시각뿐).
+   */
+  business: BusinessProfileView | null | 'unavailable';
 }
 
 /** 개설자 편집 화면의 프로젝트 구획. `lib/funding/reviewTransition.ts`의 `CreatorSectionName`과 같다. */

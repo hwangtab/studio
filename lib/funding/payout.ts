@@ -12,6 +12,7 @@ import { decryptField, FieldCryptoError, type FieldCryptoErrorCode } from '../cr
 import { PRIVACY_ACTOR_ADMIN, recordPrivacyAccess } from '../privacy/accessLog';
 import { decryptPayoutAccount } from './payoutAccountCrypto';
 import { computeProjectState } from './projectState';
+import { loadBusinessProfile } from './businessProfile';
 import { loadProjectService } from './projectServices';
 import { liveFundingOrderStatusList } from './refundable';
 
@@ -203,6 +204,13 @@ export interface FundingPayoutPreview extends FundingPayoutBreakdown {
    */
   taxType: FundingCreatorTaxType | null;
   /**
+   * 사업자(`invoice`) 개설자에게 사업자 정보(사업자등록번호·상호·대표자명)가 있는가. 값이 아니라 있고 없음만이다.
+   * 사업자가 아니면 해당이 없어 null이고, 사업자인데 `creator_business_profiles`를 읽지 못해도(마이그레이션 0058 전) null이다 —
+   * 기록은 앞의 경우를 통과시키고 뒤의 경우를 `business_profile_unavailable`로 막는다(taxType으로 가른다).
+   * 국세청 상태(휴업·폐업)로는 막지 않는다 — 운영자가 사업자 정보 패널을 보고 판단한다.
+   */
+  hasBusinessNumber: boolean | null;
+  /**
    * grossAmount 중 **토스를 지나지 않은 몫**(수기 등록 + 계좌 입금, payment_method='bank_transfer') —
    * 결제 수수료에서 빠진 금액이라 화면이 이유를 적을 수 있어야 한다. 이름은 옛 그대로 둔다(화면·테스트가 읽는다).
    */
@@ -314,6 +322,13 @@ export const buildFundingPayoutPreview = async (projectId: string): Promise<Fund
    */
   const assumedTaxType: FundingCreatorTaxType = taxType ?? 'withholding';
 
+  // 사업자 정산만 이 표를 읽는다 — 원천징수 정산은 표가 없어도 영향이 없어야 한다.
+  let hasBusinessNumber: boolean | null = null;
+  if (taxType === 'invoice') {
+    const profile = await loadBusinessProfile(creator.id);
+    hasBusinessNumber = profile === 'unavailable' ? null : profile !== null;
+  }
+
   /**
    * 정산 때 받기로 한 설계비·제작비(개설자 약관 제6조). 부가세 포함으로 뺀다 — 약정은 공급가다.
    * 설계비를 정산 밖에서 이미 받았으면(design_fee_paid_at) 다시 빼지 않는다. 직접 개설로 되돌린
@@ -334,6 +349,7 @@ export const buildFundingPayoutPreview = async (projectId: string): Promise<Fund
     projectSlug: project.slug,
     projectTitle: project.title,
     taxType,
+    hasBusinessNumber,
     manualGrossAmount,
     backerCount: rows.length,
     awaitingDepositCount: Number(awaiting[0]?.n ?? 0),
@@ -362,6 +378,8 @@ export type RecordFundingPayoutResult =
         | 'not_closed'
         | 'no_payout_account'
         | 'no_tax_type'
+        | 'no_business_number'
+        | 'business_profile_unavailable'
         | 'no_resident_number'
         | 'services_unavailable';
     }
@@ -595,6 +613,12 @@ export const recordFundingPayout = async (
   if (preview.recorded) return { ok: false, code: 'already_recorded' };
   if (!preview.closed) return { ok: false, code: 'not_closed' };
   if (!preview.hasPayoutAccount) return { ok: false, code: 'no_payout_account' };
+  if (preview.taxType === 'invoice') {
+    // 세금계산서를 받을 상대를 모른 채 기록하면 되돌릴 수 없다. 표를 못 읽은 것도 "있다"고 볼 수 없다.
+    // 계좌 복호화 점검보다 먼저 본다 — 어차피 막힐 기록에 계좌를 열어 접속기록을 남길 이유가 없다.
+    if (preview.hasBusinessNumber === null) return { ok: false, code: 'business_profile_unavailable' };
+    if (!preview.hasBusinessNumber) return { ok: false, code: 'no_business_number' };
+  }
   // 계좌는 세금 구분과 무관하게 필요하다 — 원천징수든 사업자든 돈은 계좌로 간다.
   const accountRead = await payoutAccountReadable(projectId, actor, ip);
   if (!accountRead.ok) {

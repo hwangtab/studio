@@ -22,6 +22,10 @@
  * 이미지를 저장소에서 지운다(`purgeOrphanFundingMedia`) — 대상이 파일이고 기준도 다르므로
  * 함수를 따로 두고 호출만 나란히 둔다.
  *
+ * **다섯·여섯 번째는 사업자 정보다.** 개설자 사업자 정보 행과 사업자등록증 사본은 **사업자 정산**의 지급
+ * 시각부터 5년(정산 기록이 없으면 1년 휴면) 뒤 지운다(`purgeExpiredBusinessProfiles`). 사업자등록증 파일
+ * 중 어느 행도 참조하지 않는 것은 `purgeOrphanTaxDocuments`가 `tax-docs/` 접두사 안에서만 지운다.
+ *
  * 인증: Vercel Cron이 Authorization: Bearer ${CRON_SECRET} 헤더를 붙인다.
  */
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -29,12 +33,16 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
 import { isCronAuthorized } from '../../../lib/cron/auth';
 import {
+  BUSINESS_PROFILE_RETENTION_YEARS,
+  purgeExpiredBusinessProfiles,
   purgeExpiredFundingPersonalData,
   purgeExpiredResidentNumbers,
+  RESIDENT_NUMBER_DORMANT_YEARS,
   RESIDENT_NUMBER_RETENTION_YEARS,
   REWARD_RETENTION_YEARS,
 } from '../../../lib/funding/retention';
 import { purgeOrphanFundingMedia } from '../../../lib/funding/mediaRetention';
+import { purgeOrphanTaxDocuments } from '../../../lib/funding/taxDocumentRetention';
 import {
   purgeExpiredPrivacyAccessLogs,
   PRIVACY_ACCESS_LOG_RETENTION_YEARS,
@@ -106,12 +114,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     () => purgeOrphanFundingMedia(),
   );
 
+  // 사업자 정보(0058)는 표가 없으면 던진다 — 그 단계만 실패로 보고되고 앞의 단계는 이미 돌았다.
+  const businessProfiles = await run(
+    `사업자 정산 기록 지급 후 ${BUSINESS_PROFILE_RETENTION_YEARS}년 또는 ${RESIDENT_NUMBER_DORMANT_YEARS}년 휴면이 지난 개설자 사업자 정보 파기`,
+    () => purgeExpiredBusinessProfiles(),
+  );
+  // 파기 뒤에 돌린다 — 방금 행이 지워졌는데 Blob 삭제가 실패한 파일은 7일 유예가 지난 것이면 여기서 함께 지워진다.
+  const taxDocuments = await run(
+    '아무 계정도 참조하지 않는 사업자등록증 파일 정리',
+    () => purgeOrphanTaxDocuments(),
+  );
+
   // 성공한 것은 건수를, 실패한 것은 null을 싣는다 — "0건 파기"와 "돌지 못함"은 다른 상태다.
   const body = {
     purged: result ? result.purged : null,
     purgedAccessLogs: accessLogs ? accessLogs.purged : null,
     purgedResidentNumbers: residentNumbers ? residentNumbers.purged : null,
+    purgedBusinessProfiles: businessProfiles ? businessProfiles.purged : null,
     orphanMedia: media,
+    orphanTaxDocuments: taxDocuments,
   };
 
   if (failures.length > 0) {
@@ -130,6 +151,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             media
               ? `고아 이미지 ${media.deleted}건 삭제(${media.scanned}개 검사, 유예 ${media.skippedRecent}개, 실패 ${media.failed}건)`
               : null,
+            businessProfiles ? `사업자 정보 ${businessProfiles.purged}건` : null,
+            taxDocuments
+              ? `고아 사업자등록증 ${taxDocuments.deleted}건 삭제(${taxDocuments.scanned}개 검사, 유예 ${taxDocuments.skippedRecent}개, 실패 ${taxDocuments.failed}건)`
+              : null,
           ]
             .filter(Boolean)
             .join(', ') || '없음'
@@ -145,6 +170,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           ...(accessLogs ? [{ label: '접속기록 파기', value: `${accessLogs.purged}건` }] : []),
           ...(residentNumbers ? [{ label: '주민등록번호 파기', value: `${residentNumbers.purged}건` }] : []),
           ...(media ? [{ label: '고아 이미지 삭제', value: `${media.deleted}건` }] : []),
+          ...(businessProfiles ? [{ label: '사업자 정보 파기', value: `${businessProfiles.purged}건` }] : []),
+          ...(taxDocuments ? [{ label: '고아 사업자등록증 삭제', value: `${taxDocuments.deleted}건` }] : []),
         ],
         reason: failures.map(({ label, detail }) => `· ${label}\n  사유: ${detail}`).join('\n\n'),
         hints: [

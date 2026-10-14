@@ -185,13 +185,16 @@ describe('validatePayoutSection', () => {
       ok: true,
       value: {
         taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '황경하',
-        residentNumber: null,
+        residentNumber: null, business: null,
       },
     });
   });
 
   it('사업자(invoice)도 받는다', () => {
-    expect(validatePayoutSection({ ...payout(), taxType: 'invoice' }).ok).toBe(true);
+    expect(validatePayoutSection({
+      ...payout(), taxType: 'invoice',
+      business: { businessNumber: '7537400653', businessName: '스튜디오 놀', representativeName: '황경하' },
+    }).ok).toBe(true);
   });
 
   it('세금 유형이 없거나 모르는 값이면 거부한다', () => {
@@ -287,7 +290,10 @@ describe('주민등록번호 — 형식만 본다', () => {
   it('사업자면 값이 와도 버린다 — 거부가 아니라 null이다', () => {
     // 법적 근거(소득세법상 지급명세서 제출 의무)가 원천징수에만 있으므로 사업자에게는
     // 애초에 받지 않는다. 거부 메시지를 돌려주면 "값을 보냈다"는 사실만 더 남는다.
-    const r = validatePayoutSection({ ...payout('9901011234567'), taxType: 'invoice' });
+    const r = validatePayoutSection({
+      ...payout('9901011234567'), taxType: 'invoice',
+      business: { businessNumber: '7537400653', businessName: '스튜디오 놀', representativeName: '황경하' },
+    });
     expect(r.ok).toBe(true);
     expect(r.ok && r.value.residentNumber).toBeNull();
   });
@@ -345,5 +351,34 @@ describe('업로드 이미지 주소 검증', () => {
     expect(validateRewardInput({ ...reward, imageUrl: '/api/funding/media/c2-r.webp' }, MEDIA).ok).toBe(false);
     expect(validateRewardInput({ ...reward, imageUrl: '/api/funding/media/../x.webp' }, MEDIA).ok).toBe(false);
     expect(validateRewardInput({ ...reward, imageUrl: '/api/funding/media/c1-r.webp' }, MEDIA).ok).toBe(true);
+  });
+});
+
+describe('validatePayoutSection — 사업자 정보', () => {
+  it('사업자는 사업자 정보 셋이 필수', () => {
+    const base = { taxType: 'invoice', bankName: '농협', account: '1234-5678', holder: '놀' };
+    expect(validatePayoutSection(base).ok).toBe(false);
+    const ok = validatePayoutSection({ ...base, business: { businessNumber: '753-74-00653', businessName: '스튜디오 놀', representativeName: '황경하' } });
+    expect(ok.ok && ok.value.business).toEqual({ businessNumber: '7537400653', businessName: '스튜디오 놀', representativeName: '황경하' });
+  });
+
+  it('상호·대표자명이 비거나 길면 거부한다', () => {
+    const base = { taxType: 'invoice', bankName: '농협', account: '1234-5678', holder: '놀' };
+    const b = { businessNumber: '7537400653', businessName: '스튜디오 놀', representativeName: '황경하' };
+    expect(validatePayoutSection({ ...base, business: { ...b, businessName: ' ' } }).ok).toBe(false);
+    expect(validatePayoutSection({ ...base, business: { ...b, businessName: 'a'.repeat(CREATOR_LIMITS.businessNameMax + 1) } }).ok).toBe(false);
+    expect(validatePayoutSection({ ...base, business: { ...b, representativeName: '' } }).ok).toBe(false);
+    expect(validatePayoutSection({ ...base, business: { ...b, representativeName: 'a'.repeat(CREATOR_LIMITS.representativeNameMax + 1) } }).ok).toBe(false);
+  });
+
+  it('검증식이 틀린 번호는 거부(메시지에 번호를 넣지 않는다)', () => {
+    const r = validatePayoutSection({ taxType: 'invoice', bankName: '농협', account: '1234', holder: '놀', business: { businessNumber: '7537400654', businessName: 'a', representativeName: 'b' } });
+    expect(r.ok).toBe(false);
+    expect(!r.ok && r.message).not.toContain('7537400654');
+  });
+
+  it('원천징수면 사업자 정보는 버린다', () => {
+    const r = validatePayoutSection({ taxType: 'withholding', bankName: '농협', account: '1234', holder: '놀', business: { businessNumber: '7537400653', businessName: 'a', representativeName: 'b' } });
+    expect(r.ok && r.value.business).toBeNull();
   });
 });

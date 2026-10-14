@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 
 import { patchFundingProject } from '../../../../components/admin/fundingProjectActions';
 import { AdminShell } from '../../../../components/admin/AdminShell';
+import { CreatorTaxProfilePanel } from '../../../../components/admin/CreatorTaxProfilePanel';
 import { FundingPayoutSection, type AdminPayoutView } from '../../../../components/admin/FundingPayoutSection';
 import { Button } from '../../../../components/ui/Button';
 import { Field, TextArea, TextInput } from '../../../../components/ui/Field';
@@ -55,6 +56,7 @@ interface AdminFundingProjectDetailPageProps {
      * 클라이언트로 내보낼 이유가 없다).
      */
     creator: {
+      id: string;
       contactName: string | null;
       phone: string | null;
     };
@@ -118,6 +120,11 @@ const loadPayoutView = async (projectId: string): Promise<AdminPayoutView | null
       // 적는 것뿐이고, 사업자에게는 애초에 해당이 없는 조건이라서다. 서버 게이트
       // (`recordFundingPayout`의 no_resident_number)와 같은 식이어야 화면과 기록이 갈리지 않는다.
       needsResidentNumber: preview.taxType === 'withholding' && !preview.hasResidentNumber,
+      // 사업자 정보도 판정 하나만 싣는다 — 서버 게이트(`business_profile_unavailable`·`no_business_number`)와 같은 식이다.
+      businessGate:
+        preview.taxType !== 'invoice' ? null
+          : preview.hasBusinessNumber === null ? 'unavailable'
+            : preview.hasBusinessNumber ? null : 'missing',
       recorded: r
         ? {
             id: r.id,
@@ -191,7 +198,7 @@ export const getServerSideProps: GetServerSideProps<AdminFundingProjectDetailPag
         reviewNote: project.reviewNote,
         internalNote: project.internalNote,
         creatorEditedAt: project.creatorEditedAt,
-        creator: { contactName: project.creator.contactName, phone: project.creator.phone },
+        creator: { id: project.creator.id, contactName: project.creator.contactName, phone: project.creator.phone },
         rewards: project.rewards.map((r) => ({
           rewardId: r.rewardId,
           title: r.title,
@@ -882,6 +889,8 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
               </div>
             </div>
           )}
+
+          {project.reviewStatus === 'approved' && <CreatorTaxProfilePanel creatorId={project.creator.id} payoutAccount={false} />}
 
           {project.reviewStatus === 'approved' && (
             <FundingPayoutSection

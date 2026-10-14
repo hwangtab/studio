@@ -43,7 +43,7 @@ const PROJECT = {
   reviewNote: null,
   internalNote: null,
   creatorEditedAt: null,
-  creator: { contactName: '담당자', phone: '010-0000-0000' },
+  creator: { id: 'creator-1', contactName: '담당자', phone: '010-0000-0000' },
   rewards: [
     {
       rewardId: 'r1',

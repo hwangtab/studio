@@ -3,6 +3,8 @@ import Head from 'next/head';
 import { useState, type FormEvent } from 'react';
 
 import { AdminShell } from '../../../components/admin/AdminShell';
+import { CreatorTaxProfilePanel } from '../../../components/admin/CreatorTaxProfilePanel';
+import { Disclosure } from '../../../components/ui/Disclosure';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { listShopArtistsForAdmin, type AdminShopArtistRow } from '../../../lib/shop/artists';
 
@@ -71,6 +73,8 @@ function ArtistRow({ artist }: { artist: AdminShopArtistRow }) {
   const [slug, setSlug] = useState(artist.slug);
   const [linkCurated, setLinkCurated] = useState(artist.curatedSlugLinked);
   const [message, setMessage] = useState<string | null>(null);
+  // 패널은 처음 펼칠 때 붙인다 — 접힌 줄마다 사업자 정보를 불러오지 않게.
+  const [taxOpened, setTaxOpened] = useState(false);
   const locked = artist.approvedProducts > 0;
 
   const save = async () => {
@@ -81,19 +85,32 @@ function ArtistRow({ artist }: { artist: AdminShopArtistRow }) {
   };
 
   return (
-    <tr className="border-t border-gray-100 align-top">
-      <td className="py-2 pr-3">{artist.name}<span className="block text-xs text-gray-500">{artist.email}</span></td>
-      <td className="py-2 pr-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <input value={slug} onChange={(e) => setSlug(e.target.value)} disabled={locked} aria-label={`${artist.name} 주소`} className={`${inputClass} w-48`} />
-          <label className="flex items-center gap-1 text-xs"><input type="checkbox" checked={linkCurated} disabled={locked} onChange={(e) => setLinkCurated(e.target.checked)} className="accent-primary" />후원 아티스트와 같은 사람</label>
-          {!locked && <button type="button" onClick={save} className="rounded-lg bg-gray-900 px-3 py-1 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70">저장</button>}
-        </div>
-        {locked && <span className="block text-xs text-gray-500">승인된 상품이 있어 주소를 바꿀 수 없습니다.</span>}
-        {message && <span className="block text-xs text-gray-600">{message}</span>}
-      </td>
-      <td className="py-2 tabular-nums">{artist.approvedProducts}</td>
-    </tr>
+    <>
+      <tr className="border-t border-gray-100 align-top">
+        <td className="py-2 pr-3">{artist.name}<span className="block text-xs text-gray-500">{artist.email}</span></td>
+        <td className="py-2 pr-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <input value={slug} onChange={(e) => setSlug(e.target.value)} disabled={locked} aria-label={`${artist.name} 주소`} className={`${inputClass} w-48`} />
+            <label className="flex items-center gap-1 text-xs"><input type="checkbox" checked={linkCurated} disabled={locked} onChange={(e) => setLinkCurated(e.target.checked)} className="accent-primary" />후원 아티스트와 같은 사람</label>
+            {!locked && <button type="button" onClick={save} className="rounded-lg bg-gray-900 px-3 py-1 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70">저장</button>}
+          </div>
+          {locked && <span className="block text-xs text-gray-500">승인된 상품이 있어 주소를 바꿀 수 없습니다.</span>}
+          {message && <span className="block text-xs text-gray-600">{message}</span>}
+        </td>
+        <td className="py-2 tabular-nums">{artist.approvedProducts}</td>
+      </tr>
+      <tr>
+        <td colSpan={3} className="pb-3">
+          <Disclosure
+            summary="사업자 정보"
+            variant="plain"
+            onToggle={(e) => { if (e.currentTarget.open) setTaxOpened(true); }}
+          >
+            {taxOpened && <CreatorTaxProfilePanel creatorId={artist.creatorId} heading={false} />}
+          </Disclosure>
+        </td>
+      </tr>
+    </>
   );
 }
 

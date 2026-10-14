@@ -10,7 +10,7 @@ jest.mock('../../../../lib/funding/creatorProjectWrite', () => ({
   loadProjectForCreator: jest.fn(),
   isCreatorNameLocked: jest.fn().mockResolvedValue(false),
   loadPayoutSummary: jest.fn().mockResolvedValue({
-    registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false, withheldPayoutRecorded: false,
+    registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false, withheldPayoutRecorded: false, keepsResidentNumber: false, keepsBusinessProfile: false,
   }),
 }));
 jest.mock('../../../../lib/funding/creatorStats', () => ({ loadCreatorProjectStats: jest.fn().mockResolvedValue(null) }));
@@ -195,7 +195,7 @@ describe('funding creator 편집 화면 getServerSideProps', () => {
       (authenticateCreatorRequest as jest.Mock).mockResolvedValue({ ok: true, creatorId: 'creator-a' });
       (loadProjectForCreator as jest.Mock).mockResolvedValue(PROJECT);
       (loadPayoutSummary as jest.Mock).mockResolvedValue({
-        registered: true, accountLast4: '9012', taxType: 'withholding', residentNumberRegistered: true, withheldPayoutRecorded: false,
+        registered: true, accountLast4: '9012', taxType: 'withholding', residentNumberRegistered: true, withheldPayoutRecorded: false, keepsResidentNumber: false, keepsBusinessProfile: false,
       });
       const res = resStub();
       const result = await getServerSideProps({
@@ -204,10 +204,11 @@ describe('funding creator 편집 화면 getServerSideProps', () => {
       const props = (result as unknown as { props: { payout: Record<string, unknown> } }).props;
 
       expect(props.payout).toEqual({
-        registered: true, accountLast4: '9012', taxType: 'withholding', residentNumberRegistered: true, withheldPayoutRecorded: false,
+        registered: true, accountLast4: '9012', taxType: 'withholding', residentNumberRegistered: true, withheldPayoutRecorded: false, keepsResidentNumber: false, keepsBusinessProfile: false,
       });
       expect(Object.keys(props.payout).sort()).toEqual([
-        'accountLast4', 'registered', 'residentNumberRegistered', 'taxType', 'withheldPayoutRecorded',
+        'accountLast4', 'keepsBusinessProfile', 'keepsResidentNumber', 'registered', 'residentNumberRegistered', 'taxType',
+        'withheldPayoutRecorded',
       ]);
       expect(loadPayoutSummary).toHaveBeenCalledWith('creator-a');
 
@@ -290,7 +291,7 @@ describe('모금 현황 props', () => {
     (loadProjectForCreator as jest.Mock).mockResolvedValue(PROJECT);
     (isCreatorNameLocked as jest.Mock).mockResolvedValue(false);
     (loadPayoutSummary as jest.Mock).mockResolvedValue({
-      registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false, withheldPayoutRecorded: false,
+      registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false, withheldPayoutRecorded: false, keepsResidentNumber: false, keepsBusinessProfile: false,
     });
   });
 

@@ -16,7 +16,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import * as schema from '../../db/schema';
-import { fundingCreators, fundingProjectPayouts, fundingProjects } from '../../db/schema';
+import { fundingCreators, fundingProjectPayouts, fundingProjects, shopArtists, showSubmissions } from '../../db/schema';
 
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
@@ -117,6 +117,8 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
+  await client.execute('DELETE FROM shop_artists');
+  await client.execute('DELETE FROM show_submissions');
   await client.execute('DELETE FROM funding_project_payouts');
   await client.execute('DELETE FROM funding_projects');
   await client.execute('DELETE FROM funding_creators');
@@ -271,6 +273,31 @@ describe('원천징수 기록이 한 번도 없는 경우 — 계정 최종 활�
     await addProject({ id: 'p1', creatorId: 'c1', reviewStatus: 'submitted' });
     expect((await purgeExpiredResidentNumbers(NOW)).purged).toBe(0);
     expect((await creatorOf('c1')).residentNumberEnc).toBe(ENC);
+  });
+});
+
+/**
+ * 정산 정보 화면이 공연·상점 계정에도 열린다. 공연·상점은 정산 기록 표가 없어 "정산이 끝났다"를 알 수 없으므로,
+ * 승인·등록돼 있는 동안은 잠든 계정이어도 주민등록번호를 지우지 않는다.
+ */
+describe('공연·상점 계정은 살아 있는 것으로 본다', () => {
+  it('상점 아티스트는 1년 넘게 잠들어도 보관한다', async () => {
+    await addCreator({ id: 'c1', updatedAt: '2022-01-01' });
+    await mockDb.insert(shopArtists).values({ creatorId: 'c1', slug: 'artist-c1' });
+    expect((await purgeExpiredResidentNumbers(NOW)).purged).toBe(0);
+    expect((await creatorOf('c1')).residentNumberEnc).toBe(ENC);
+  });
+
+  it.each(['submitted', 'changes_requested', 'approved'] as const)('%s 공연 등록이 있으면 보관한다', async (reviewStatus) => {
+    await addCreator({ id: 'c1', updatedAt: '2022-01-01' });
+    await mockDb.insert(showSubmissions).values({ creatorId: 'c1', draftJson: '{}', reviewStatus });
+    expect((await purgeExpiredResidentNumbers(NOW)).purged).toBe(0);
+  });
+
+  it.each(['draft', 'rejected'] as const)('%s 공연 등록은 막지 않는다', async (reviewStatus) => {
+    await addCreator({ id: 'c1', updatedAt: '2022-01-01' });
+    await mockDb.insert(showSubmissions).values({ creatorId: 'c1', draftJson: '{}', reviewStatus });
+    expect((await purgeExpiredResidentNumbers(NOW)).purged).toBe(1);
   });
 });
 

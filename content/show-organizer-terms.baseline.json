@@ -1,7 +1,7 @@
 {
  "note": "주최자가 공연을 제출할 때 동의하는 공연 주최자 약관(SHOW_ORGANIZER_TERMS_SECTIONS)의 내용 해시. 내용이 바뀌면 SHOW_ORGANIZER_TERMS_VERSION을 먼저 올린 뒤 UPDATE_SHOW_ORGANIZER_TERMS_BASELINE=1 로 갱신할 것.",
- "version": "show-organizer-terms-2026-10-14-r2",
- "hash": "5a0d296f431b4baa19d0f87b0971919dcbfc859fcee08730e6a24caaf2567f02",
+ "version": "show-organizer-terms-2026-10-14-r3",
+ "hash": "6c96268e4bca24d090b60d846a0292d658681bd37706f85c48680adcdef1de86",
  "covers": [
   "pages/[locale]/shows/organizer-terms.tsx — SHOW_ORGANIZER_TERMS_SECTIONS",
   "data/pricing.ts · lib/funding/policy.ts · lib/shows/organizer/draft.ts — 본문에 보간되는 수수료율·원천징수율·정산 시점·첫 회차 최소 기간"

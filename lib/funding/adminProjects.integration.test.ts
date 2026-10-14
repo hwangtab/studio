@@ -252,7 +252,7 @@ describe('loadProjectForAdmin', () => {
       ].sort(),
     );
     expect(Object.keys(detail!.creator).sort()).toEqual(
-      ['contactName', 'phone', 'bio', 'links'].sort(),
+      ['id', 'contactName', 'phone', 'bio', 'links'].sort(),
     );
 
     const serialized = JSON.stringify(detail);

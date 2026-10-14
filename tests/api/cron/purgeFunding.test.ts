@@ -1,20 +1,25 @@
 /** @jest-environment node */
 
 /**
- * 한 크론이 기준이 다른 세 파기를 나란히 돌린다.
+ * 한 크론이 기준이 다른 여섯 단계를 나란히 돌린다.
  *
  * - 후원 배송지·응원 메시지: 리워드 전달 후 1년(법정 보존 5년 우선) — 약관 제13조·처리방침 8항
  * - 고유식별정보 접속기록: 2년 — 「개인정보의 안전성 확보조치 기준」 제8조①
  * - 개설자 주민등록번호: 원천징수 정산의 **지급 시각**부터 5년(운영 판단)
+ * - 펀딩 업로드 이미지 청소: 어느 프로젝트도 가리키지 않는 파일
+ * - 개설자 사업자 정보: 사업자 정산의 지급 시각부터 5년(기록이 없으면 1년 휴면)
+ * - 사업자등록증 청소: 어느 사업자 행도 참조하지 않는 `tax-docs/` 파일
  *
  * 기준이 한 함수로 합쳐지면 접속기록이 법정 하한 전에 지워지거나, 아직 지급명세서 제출
- * 의무가 남은 주민등록번호가 배송지와 함께 지워진다. 이 테스트는 호출이 **셋으로 갈려
- * 있다**는 사실을 고정한다.
+ * 의무가 남은 주민등록번호가 배송지와 함께 지워진다. 이 테스트는 단계가 **따로 돌고
+ * 하나가 실패해도 나머지는 돈다**는 사실을 고정한다.
  */
 jest.mock('../../../lib/cron/auth', () => ({ isCronAuthorized: jest.fn() }));
 jest.mock('../../../lib/funding/retention', () => ({
   purgeExpiredFundingPersonalData: jest.fn(),
   purgeExpiredResidentNumbers: jest.fn(),
+  purgeExpiredBusinessProfiles: jest.fn(),
+  BUSINESS_PROFILE_RETENTION_YEARS: 5,
   REWARD_RETENTION_YEARS: 1,
   RESIDENT_NUMBER_RETENTION_YEARS: 5,
 }));
@@ -24,16 +29,23 @@ jest.mock('../../../lib/privacy/accessLog', () => ({
 }));
 jest.mock('../../../lib/email/resend', () => ({ sendEmail: jest.fn() }));
 jest.mock('../../../lib/funding/mediaRetention', () => ({ purgeOrphanFundingMedia: jest.fn() }));
+jest.mock('../../../lib/funding/taxDocumentRetention', () => ({ purgeOrphanTaxDocuments: jest.fn() }));
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../pages/api/cron/purge-funding';
 import { isCronAuthorized } from '../../../lib/cron/auth';
-import { purgeExpiredFundingPersonalData, purgeExpiredResidentNumbers } from '../../../lib/funding/retention';
+import {
+  purgeExpiredBusinessProfiles,
+  purgeExpiredFundingPersonalData,
+  purgeExpiredResidentNumbers,
+} from '../../../lib/funding/retention';
+import { purgeOrphanTaxDocuments } from '../../../lib/funding/taxDocumentRetention';
 import { purgeExpiredPrivacyAccessLogs } from '../../../lib/privacy/accessLog';
 import { sendEmail } from '../../../lib/email/resend';
 import { purgeOrphanFundingMedia } from '../../../lib/funding/mediaRetention';
 
 const MEDIA = { scanned: 5, deleted: 2, skippedRecent: 1, failed: 0 };
+const TAX_DOCS = { scanned: 3, deleted: 1, skippedRecent: 1, failed: 0 };
 
 const call = async () => {
   const json = jest.fn();
@@ -52,6 +64,8 @@ beforeEach(() => {
   (purgeExpiredResidentNumbers as jest.Mock).mockResolvedValue({ purged: 2 });
   (sendEmail as jest.Mock).mockResolvedValue({ ok: true });
   (purgeOrphanFundingMedia as jest.Mock).mockResolvedValue(MEDIA);
+  (purgeExpiredBusinessProfiles as jest.Mock).mockResolvedValue({ purged: 4 });
+  (purgeOrphanTaxDocuments as jest.Mock).mockResolvedValue(TAX_DOCS);
 });
 
 afterEach(() => jest.restoreAllMocks());
@@ -63,14 +77,24 @@ it('인증 없으면 401이고 아무것도 지우지 않는다', async () => {
   expect(purgeExpiredPrivacyAccessLogs).not.toHaveBeenCalled();
   expect(purgeExpiredResidentNumbers).not.toHaveBeenCalled();
   expect(purgeOrphanFundingMedia).not.toHaveBeenCalled();
+  expect(purgeExpiredBusinessProfiles).not.toHaveBeenCalled();
+  expect(purgeOrphanTaxDocuments).not.toHaveBeenCalled();
 });
 
 it('세 파기와 저장소 청소를 각각 돌리고 건수를 따로 돌려준다', async () => {
   const r = await call();
   expect(r.status).toBe(200);
   expect(r.body).toEqual({
-    ok: true, purged: 3, purgedAccessLogs: 7, purgedResidentNumbers: 2, orphanMedia: MEDIA,
+    ok: true,
+    purged: 3,
+    purgedAccessLogs: 7,
+    purgedResidentNumbers: 2,
+    purgedBusinessProfiles: 4,
+    orphanMedia: MEDIA,
+    orphanTaxDocuments: TAX_DOCS,
   });
+  expect(purgeExpiredBusinessProfiles).toHaveBeenCalledTimes(1);
+  expect(purgeOrphanTaxDocuments).toHaveBeenCalledTimes(1);
   expect(purgeOrphanFundingMedia).toHaveBeenCalledTimes(1);
   expect(purgeExpiredFundingPersonalData).toHaveBeenCalledTimes(1);
   expect(purgeExpiredPrivacyAccessLogs).toHaveBeenCalledTimes(1);
@@ -150,4 +174,26 @@ it('실패 메일은 어느 파기가 왜 실패했는지 적는다', async () =
   expect(mail.text).toContain('배송지 3건');
   // 실패한 것을 "또는"으로 뭉뚱그리지 않는다.
   expect(mail.text).not.toContain('또는');
+});
+
+/** 사업자 정보 파기는 표(0058)가 없으면 던진다 — 그 단계만 실패로 보고하고 나머지는 돈다. */
+it('사업자 정보 파기가 실패해도 다른 단계는 돌고, 그 단계만 null로 보고한다', async () => {
+  (purgeExpiredBusinessProfiles as jest.Mock).mockRejectedValue(new Error('no such table: creator_business_profiles'));
+  const r = await call();
+  expect(r.status).toBe(500);
+  expect(purgeExpiredResidentNumbers).toHaveBeenCalledTimes(1);
+  expect(purgeOrphanTaxDocuments).toHaveBeenCalledTimes(1);
+  expect(r.body).toMatchObject({ purgedBusinessProfiles: null, purgedResidentNumbers: 2, orphanTaxDocuments: TAX_DOCS });
+  const mail = (sendEmail as jest.Mock).mock.calls[0][0] as { text: string };
+  expect(mail.text).toContain('사업자 정보');
+  expect(mail.text).toContain('no such table: creator_business_profiles');
+});
+
+it('사업자등록증 청소가 실패해도 다른 단계는 돌고, 그 단계만 null로 보고한다', async () => {
+  (purgeOrphanTaxDocuments as jest.Mock).mockRejectedValue(new Error('blob 장애'));
+  const r = await call();
+  expect(r.status).toBe(500);
+  expect(purgeExpiredBusinessProfiles).toHaveBeenCalledTimes(1);
+  expect(purgeOrphanFundingMedia).toHaveBeenCalledTimes(1);
+  expect(r.body).toMatchObject({ purgedBusinessProfiles: 4, orphanTaxDocuments: null, orphanMedia: MEDIA });
 });

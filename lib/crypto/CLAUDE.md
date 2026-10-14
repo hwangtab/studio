@@ -9,6 +9,7 @@
 저장 시 암호화가 법적 의무라 예외가 없다), `funding_creators.payout_account_enc`(정산 계좌),
 `refund_accounts.account_number_enc`(계좌 입금 주문의 환불 계좌번호 — 결제 공용, 마이그레이션 0048).
 목록의 정본은 `ENCRYPTED_FIELD_TARGETS`다.
+개설자 사업자 정보(`creator_business_profiles`의 사업자등록번호·상호·대표자명)는 일부러 평문이다 — 이유는 `db/schema.ts`의 그 표 주석.
 
 - **새로 쓰는 저장 형식은 `v2:<keyId>:<iv_b64>:<tag_b64>:<ct_b64>` 한 문자열.**
   읽기는 `v1:<iv_b64>:<tag_b64>:<ct_b64>`도 받는다 — 운영 DB에 이미 그 값이 있고, 영구히

@@ -1,7 +1,16 @@
-import { and, eq, exists, gt, gte, inArray, isNotNull, isNull, lt, notExists, or, sql, type SQL } from 'drizzle-orm';
+import { and, eq, exists, gt, gte, inArray, isNotNull, isNull, lt, not, notExists, or, sql, type AnyColumn, type SQL } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { fundingCreators, fundingPledges, fundingProjectPayouts, fundingProjects } from '../../db/schema';
+import {
+  creatorBusinessProfiles,
+  fundingCreators,
+  fundingPledges,
+  fundingProjectPayouts,
+  fundingProjects,
+  shopArtists,
+  showSubmissions,
+} from '../../db/schema';
+import { deleteTaxDocumentBlob, type DeleteBlob } from './businessProfile';
 import { PURGED_MARK } from '../privacy/orderRetention';
 
 /**
@@ -168,6 +177,54 @@ export const purgeExpiredFundingPersonalData = async (now: Date = new Date()): P
 };
 
 /**
+ * 이 개설자에게 **아직 살아 있는 일**이 있는가 — 주민등록번호·사업자 정보 파기가 함께 쓰는 조건.
+ * `creatorIdColumn`은 바깥 문장의 개설자 id 컬럼이다(상관 서브쿼리).
+ *
+ * - 정산이 끝나지 않은 펀딩 프로젝트: 지급 완료(`paid_at IS NOT NULL`)된 정산 기록이 붙지 않은 심사 중·승인
+ *   프로젝트. `draft`·`rejected`는 정산으로 이어질 수 없으므로 제외한다.
+ * - 심사 중·승인된 공연 등록(`show_submissions`).
+ * - 상점 아티스트 등록(`shop_artists`).
+ *
+ * **공연·상점은 정산 기록 표가 없어 "정산이 끝났다"를 알 수 없다.** 그래서 승인·등록돼 있는 동안은
+ * 살아 있는 것으로 본다(정산 표가 생기면 이 조건을 고친다). 두 표가 없는 DB에서는 이 조건이
+ * `no such table`로 던지고, 파기는 아무것도 지우지 않은 채 실패로 보고된다.
+ */
+export const liveEngagementExists = (creatorIdColumn: AnyColumn): SQL => {
+  const db = getDb();
+  const liveProjects = db
+    .select({ ok: sql`1` })
+    .from(fundingProjects)
+    .where(
+      and(
+        eq(fundingProjects.creatorId, creatorIdColumn),
+        inArray(fundingProjects.reviewStatus, ['submitted', 'changes_requested', 'approved']),
+        notExists(
+          db
+            .select({ ok: sql`1` })
+            .from(fundingProjectPayouts)
+            .where(
+              and(
+                eq(fundingProjectPayouts.projectId, fundingProjects.id),
+                isNotNull(fundingProjectPayouts.paidAt),
+              ),
+            ),
+        ),
+      ),
+    );
+  const liveShows = db
+    .select({ ok: sql`1` })
+    .from(showSubmissions)
+    .where(
+      and(
+        eq(showSubmissions.creatorId, creatorIdColumn),
+        inArray(showSubmissions.reviewStatus, ['submitted', 'changes_requested', 'approved']),
+      ),
+    );
+  const shopArtist = db.select({ ok: sql`1` }).from(shopArtists).where(eq(shopArtists.creatorId, creatorIdColumn));
+  return or(exists(liveProjects), exists(liveShows), exists(shopArtist)) as SQL;
+};
+
+/**
  * 원천징수한 정산의 지급일로부터 개설자 주민등록번호를 보관하는 기간.
  *
  * **이 값은 법이 정한 것이 아니라 운영 판단이다.** 이 작업에 근거로 주어진 법령이 정하는
@@ -200,8 +257,8 @@ export const RESIDENT_NUMBER_RETENTION_YEARS = 5;
  * 그런데 이 경우에는 기산점으로 쓸 지급 시각이 없다. 계정 생성일은 쓰지 않는다 — 지금
  * 활발히 준비 중인 개설자의 번호까지 나이만으로 지워 버린다. 대신 `updatedAt`(로그인과
  * 정산 정보 저장이 모두 갱신한다. `lib/funding/creatorToken.ts`·`creatorProjectWrite.ts`)을
- * 써서 **마지막으로 계정이 살아 있던 시각**부터 센다. 아래 `hasLiveProject` 조건이 함께
- * 걸리므로, 심사 중이거나 정산이 남은 프로젝트를 가진 개설자는 이 경로로 지워지지 않는다.
+ * 써서 **마지막으로 계정이 살아 있던 시각**부터 센다. `liveEngagementExists` 조건이 함께
+ * 걸리므로, 정산이 남은 프로젝트·승인된 공연·상점 아티스트 등록이 있는 개설자는 이 경로로 지워지지 않는다.
  */
 export const RESIDENT_NUMBER_DORMANT_YEARS = 1;
 
@@ -218,10 +275,9 @@ export const RESIDENT_NUMBER_DORMANT_YEARS = 1;
  * ## 파기 규칙 (전부 AND)
  *
  * 1. `resident_number_enc`가 남아 있다 — 이미 NULL이면 대상이 아니다(멱등).
- * 2. **정산이 남은 프로젝트가 없다.** 심사 중(`submitted`·`changes_requested`)이거나
- *    승인된(`approved`) 프로젝트 중에 아직 지급 완료된 정산 기록이 없는 것이 하나라도 있으면
- *    지우지 않는다 — 곧 원천징수에 쓸 값이다. 지워 버리면 개설자가 번호를 다시 입력해야
- *    정산이 진행된다.
+ * 2. **살아 있는 일이 없다**(`liveEngagementExists`). 정산이 남은 펀딩 프로젝트, 심사 중·승인된
+ *    공연 등록, 상점 아티스트 등록 중 하나라도 있으면 지우지 않는다 — 곧 원천징수에 쓸 값이다.
+ *    지워 버리면 개설자가 번호를 다시 입력해야 정산이 진행된다.
  * 3. 그리고 아래 둘 중 하나:
  *    - **(A) 원천징수 기록이 있는 경우** — `withholding_amount > 0`인 정산 행 가운데
  *      아직 지급되지 않았거나(`paid_at IS NULL`) 지급일이 `RESIDENT_NUMBER_RETENTION_YEARS`
@@ -290,32 +346,6 @@ export const purgeExpiredResidentNumbers = async (now: Date = new Date()): Promi
     or(isNull(fundingProjectPayouts.paidAt), gte(fundingProjectPayouts.paidAt, reportingBoundary)),
   );
 
-  /**
-   * 아직 정산이 끝나지 않은, 살아 있는 프로젝트. 지급 완료(`paid_at IS NOT NULL`)된 정산
-   * 기록이 붙지 않은 심사 중·승인 프로젝트가 여기 걸린다. `draft`·`rejected`는 정산으로
-   * 이어질 수 없으므로 제외한다.
-   */
-  const liveProjects = db
-    .select({ ok: sql`1` })
-    .from(fundingProjects)
-    .where(
-      and(
-        eq(fundingProjects.creatorId, fundingCreators.id),
-        inArray(fundingProjects.reviewStatus, ['submitted', 'changes_requested', 'approved']),
-        notExists(
-          db
-            .select({ ok: sql`1` })
-            .from(fundingProjectPayouts)
-            .where(
-              and(
-                eq(fundingProjectPayouts.projectId, fundingProjects.id),
-                isNotNull(fundingProjectPayouts.paidAt),
-              ),
-            ),
-        ),
-      ),
-    );
-
   const result = await db
     .update(fundingCreators)
     // 이 컬럼 하나만. 계좌·세금 구분·연락처는 근거도 보존기간도 다르다.
@@ -323,7 +353,7 @@ export const purgeExpiredResidentNumbers = async (now: Date = new Date()): Promi
     .where(
       and(
         isNotNull(fundingCreators.residentNumberEnc),
-        notExists(liveProjects),
+        not(liveEngagementExists(fundingCreators.id)),
         or(
           // (A) 원천징수 기록이 있고, 그중 신고 의무가 살아 있는 것이 없다.
           and(exists(withheldPayouts()), notExists(withholdingStillInScope)),
@@ -334,4 +364,81 @@ export const purgeExpiredResidentNumbers = async (now: Date = new Date()): Promi
     );
 
   return { purged: Number(result.rowsAffected ?? 0) };
+};
+
+/**
+ * 사업자 정산의 지급일로부터 개설자 사업자 정보(`creator_business_profiles`)와 사업자등록증을 보관하는 기간.
+ * 이미 받은 세금계산서와 대조할 근거다. 주민등록번호 보관 기간(`RESIDENT_NUMBER_RETENTION_YEARS`)과 같은
+ * 운영 판단이다 — 법이 정한 값이라고 단정하지 않는다. 사업자 정산 기록이 없으면 휴면 기간은
+ * `RESIDENT_NUMBER_DORMANT_YEARS`를 그대로 쓴다.
+ */
+export const BUSINESS_PROFILE_RETENTION_YEARS = 5;
+
+/**
+ * 목적이 끝난 개설자 사업자 정보 행과 사업자등록증 사본을 파기한다. `purgeExpiredResidentNumbers`의 거울이다.
+ *
+ * ## 파기 규칙 (전부 AND)
+ *
+ * 1. 사업자 행이 있다.
+ * 2. 살아 있는 일이 없다(`liveEngagementExists`).
+ * 3. 그리고 둘 중 하나:
+ *    - **(A)** 사업자 정산 기록(`withholding_amount = 0`)이 있고, 그중 미지급이거나 지급일이
+ *      `BUSINESS_PROFILE_RETENTION_YEARS` 안인 것이 없다.
+ *    - **(B)** 사업자 정산 기록이 한 번도 없고, 계정 최종 활동(`funding_creators.updated_at`)이
+ *      `RESIDENT_NUMBER_DORMANT_YEARS`보다 오래됐다.
+ *
+ * "사업자 정산 = 세액 0"의 경계는 `hasInvoicePayout`(businessProfile.ts)과 같다 — 원천징수인데 세액 0원인
+ * 정산도 사업자 정산으로 센다(남기는 쪽이라 안전하다). 둘을 함께 바꿀 것.
+ *
+ * 행을 지운 **뒤** 사업자등록증 Blob을 지운다. Blob 삭제 실패는 로그만 남긴다 — 행이 없어진 파일은
+ * `purgeOrphanTaxDocuments`가 다음 달에 지운다. 표가 없으면(마이그레이션 전) 던진다.
+ */
+export const purgeExpiredBusinessProfiles = async (
+  now: Date = new Date(),
+  deps: { deleteBlob?: DeleteBlob } = {},
+): Promise<FundingPurgeResult> => {
+  const db = getDb();
+  const retentionBoundary = yearsAgo(now, BUSINESS_PROFILE_RETENTION_YEARS);
+  const dormantBoundary = yearsAgo(now, RESIDENT_NUMBER_DORMANT_YEARS);
+
+  const invoicePayouts = (extra?: SQL) =>
+    db
+      .select({ ok: sql`1` })
+      .from(fundingProjectPayouts)
+      .innerJoin(fundingProjects, eq(fundingProjects.id, fundingProjectPayouts.projectId))
+      .where(
+        and(
+          eq(fundingProjects.creatorId, creatorBusinessProfiles.creatorId),
+          eq(fundingProjectPayouts.withholdingAmount, 0),
+          extra,
+        ),
+      );
+
+  const invoiceStillInScope = invoicePayouts(
+    or(isNull(fundingProjectPayouts.paidAt), gte(fundingProjectPayouts.paidAt, retentionBoundary)),
+  );
+
+  const dormantAccount = db
+    .select({ ok: sql`1` })
+    .from(fundingCreators)
+    .where(and(eq(fundingCreators.id, creatorBusinessProfiles.creatorId), lt(fundingCreators.updatedAt, dormantBoundary)));
+
+  const deleted = await db
+    .delete(creatorBusinessProfiles)
+    .where(
+      and(
+        not(liveEngagementExists(creatorBusinessProfiles.creatorId)),
+        or(
+          and(exists(invoicePayouts()), notExists(invoiceStillInScope)),
+          and(notExists(invoicePayouts()), exists(dormantAccount)),
+        ),
+      ),
+    )
+    .returning({ creatorId: creatorBusinessProfiles.creatorId, certificateKey: creatorBusinessProfiles.certificateKey });
+
+  for (const row of deleted) {
+    await deleteTaxDocumentBlob(row.certificateKey, row.creatorId, deps.deleteBlob);
+  }
+
+  return { purged: deleted.length };
 };

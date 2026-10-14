@@ -3,9 +3,16 @@ import { and, count, eq, gt, inArray, isNull } from 'drizzle-orm';
 import { encryptField, FieldCryptoError } from '../crypto/fieldCrypto';
 import { getDb } from '../../db/client';
 import {
-  fundingCreators, fundingProjectPayouts, fundingProjects, fundingRewards, shopProducts,
+  creatorBusinessProfiles, fundingCreators, fundingProjectPayouts, fundingProjects, fundingRewards, shopProducts,
   type FundingProjectRow, type FundingRewardRow,
 } from '../../db/schema';
+import { consumeRateLimit } from '../booking/rate-limit';
+import { businessStatusWarnings, lookupBusinessStatus, type NtsBusinessStatus } from './businessStatus';
+import {
+  type BusinessProfileView, type DeleteBlob, deleteBusinessProfile, deleteTaxDocumentBlob, hasInvoicePayout,
+  loadBusinessProfile,
+} from './businessProfile';
+import { hasApprovedEngagement, isShopArtist } from './creatorEligibility';
 import { getFundingProject } from './projects';
 import { isFundingSlugTaken, isSlugConflictError, isUniqueConflictError } from './slugOccupancy';
 import { canCreatorEditSection, type CreatorSectionName } from './reviewTransition';
@@ -27,11 +34,20 @@ export type WriteResult =
        * **불리언 하나뿐이다** — 값도 암호문도 여기 실리지 않는다.
        */
       residentNumberRetained?: true;
+      /**
+       * 국세청 조회 결과에 따른 개설자 안내(`businessStatusWarnings`). **저장을 막지 않는다** — 붙어 있어도 저장은 됐다.
+       */
+      businessWarnings?: string[];
+      /**
+       * 개인(원천징수)으로 바꿔 저장했지만 사업자 정보를 **지우지 않고 남겼다.** 사업자로 정산한 펀딩 기록이
+       * 있거나(`hasInvoicePayout`) 상점 아티스트일 때(`isShopArtist`) 붙는다 — `residentNumberRetained`의 거울.
+       */
+      businessProfileRetained?: true;
     }
   | {
       ok: false;
       code: 'not_found' | 'locked' | 'not_editable' | 'duplicate_slug' | 'too_many' | 'duplicate_reward'
-        | 'encryption_unavailable' | 'story_too_short';
+        | 'encryption_unavailable' | 'story_too_short' | 'business_unavailable';
       message: string;
     };
 
@@ -292,16 +308,6 @@ export const saveStorySection = async (creatorId: string, projectId: string, val
  * 이미 로컬파트 이름으로 남아 있던 행도 이 예외로 스스로 풀린다.
  */
 /**
- * 승인된 프로젝트가 하나라도 있는지 — 정산 정보 수집 게이트(`savePayoutSection`)가 쓴다.
- * 반려될 신청서에 계좌·주민번호 성격의 정보를 미리 받지 않는다(스펙 §6.2).
- */
-const hasApprovedProject = async (creatorId: string): Promise<boolean> => {
-  const [row] = await getDb().select({ id: fundingProjects.id }).from(fundingProjects)
-    .where(and(eq(fundingProjects.creatorId, creatorId), eq(fundingProjects.reviewStatus, 'approved'))).limit(1);
-  return Boolean(row);
-};
-
-/**
  * `saveCreatorSection`의 이름 잠금 조건과 `isCreatorNameLocked`가 공유하는 조회 —
  * **심사에 들어간(`submitted`) 또는 승인된(`approved`)** 프로젝트가 하나라도 있는지.
  *
@@ -419,6 +425,22 @@ export interface CreatorPayoutSummary {
    * 여기서도 나가는 것은 불리언뿐이다 — 정산 금액·날짜는 이 구획이 알 이유가 없다.
    */
   withheldPayoutRecorded: boolean;
+  /**
+   * 사업자로 바꿔 저장해도 주민등록번호를 남기는가 — 저장 경로와 **같은 함수**(`keepsResidentNumber`)로 판정한다.
+   * 원천징수한 정산 기록이 있거나 상점 아티스트면 참이다. 화면은 이 값으로 "지워져요"와 "남겨 둬요"를 가른다.
+   */
+  keepsResidentNumber: boolean;
+  /**
+   * 개인으로 바꿔 저장해도 사업자 정보·사업자등록증을 남기는가 — 저장 경로와 같은 `keepsBusinessProfile`.
+   * 사업자로 정산한 기록이 있거나 상점 아티스트면 참이다.
+   */
+  keepsBusinessProfile: boolean;
+  /**
+   * 사업자 정보(`creator_business_profiles`). 없으면 `null`, 표가 없거나(마이그레이션 0058 전) 읽지 못하면
+   * `'unavailable'` — 화면은 사업자 칸만 끄고 계좌·주민번호는 그대로 둔다.
+   * 개설자 본인 화면에만 싣는다(공개 화면·목록 금지). 사업자등록증 경로는 담지 않는다.
+   */
+  business: BusinessProfileView | null | 'unavailable';
 }
 
 /**
@@ -434,7 +456,8 @@ export interface CreatorPayoutSummary {
  * **경계: 세금 구분이 원천징수인데 계산된 세액이 0원인 정산은 여기서 세지 않는다.** 이 표에
  * 세금 구분 컬럼이 없어 그런 행과 "사업자로 정산한 건"을 기록만으로 가를 수 없기 때문이다.
  * 판단 근거 전문은 `lib/funding/retention.ts`의 `withheldPayouts` 주석에 있다 — 그쪽이 같은
- * `> 0` 기준으로 주민등록번호 자동 파기를 판정하므로 **둘은 함께 바꿔야 한다.**
+ * `> 0` 기준으로 주민등록번호 자동 파기를 판정하므로 **둘은 함께 바꿔야 한다.** 사업자 쪽 거울인
+ * `hasInvoicePayout`(businessProfile.ts, `= 0`)도 같은 경계에 기대므로 함께 본다.
  */
 export const hasWithheldPayout = async (creatorId: string): Promise<boolean> => {
   const [row] = await getDb()
@@ -445,6 +468,17 @@ export const hasWithheldPayout = async (creatorId: string): Promise<boolean> => 
     .limit(1);
   return Boolean(row);
 };
+
+/**
+ * 사업자로 바꿔 저장할 때 주민등록번호를 남기는가. `savePayoutSection`과 `loadPayoutSummary`가 함께 쓴다 —
+ * 화면 문구와 서버가 실제로 하는 일이 갈리지 않게 판정을 한 곳에 둔다.
+ */
+export const keepsResidentNumber = async (creatorId: string): Promise<boolean> =>
+  await hasWithheldPayout(creatorId) || await isShopArtist(creatorId);
+
+/** 개인으로 바꿔 저장할 때 사업자 정보·사업자등록증을 남기는가. `keepsResidentNumber`의 거울. */
+export const keepsBusinessProfile = async (creatorId: string): Promise<boolean> =>
+  await hasInvoicePayout(creatorId) || await isShopArtist(creatorId);
 
 /**
  * 편집 화면이 정산 구획을 그리는 데 필요한 것만 읽는다.
@@ -464,6 +498,7 @@ export const loadPayoutSummary = async (creatorId: string): Promise<CreatorPayou
     return {
       registered: false, accountLast4: null, taxType: null,
       residentNumberRegistered: false, withheldPayoutRecorded: false,
+      keepsResidentNumber: false, keepsBusinessProfile: false, business: null,
     };
   }
 
@@ -483,31 +518,37 @@ export const loadPayoutSummary = async (creatorId: string): Promise<CreatorPayou
     // 다루면 공백뿐인 행에서 화면은 "등록됨", 정산 게이트는 "없음"으로 갈린다.
     residentNumberRegistered: Boolean(row.residentNumberEnc?.trim()),
     withheldPayoutRecorded: await hasWithheldPayout(creatorId),
+    keepsResidentNumber: await keepsResidentNumber(creatorId),
+    keepsBusinessProfile: await keepsBusinessProfile(creatorId),
+    business: await loadBusinessProfile(creatorId),
   };
 };
 
 /**
- * 정산 정보(세금 유형·계좌) 저장.
+ * 정산 정보(세금 유형·계좌·주민등록번호·사업자 정보) 저장. 저장 경로는 계정 단위 라우트
+ * `/api/funding/creator/payout` 하나다(화면은 콘솔의 정산 정보 탭).
  *
  * `saveCreatorSection`과 같은 축이다 — 값이 `funding_creators`에 붙어 있으므로 프로젝트
- * 단위 `guard()`를 타지 않는다. 대신 **승인된 프로젝트가 하나라도 있을 때만** 받는다:
- * 반려될 신청서에 계좌 정보를 미리 받지 않는다는 것이 이 구획의 존재 조건이고(설계 스펙
- * §6.2), 값이 계정 소속인 이상 판정도 계정 단위여야 한다. 특정 프로젝트의 심사 상태로
- * 막으면, 승인된 프로젝트 A를 가진 개설자가 초안 B를 열어 둔 채로는 정산 계좌를 못 고치는
- * — 목적과 무관한 — 잠금이 된다.
+ * 단위 `guard()`를 타지 않는다. 대신 **계정 단위 게이트**(`hasApprovedEngagement`)를 지날 때만
+ * 받는다: 승인된 펀딩 프로젝트, 승인된 공연 등록, 상점 아티스트 등록 중 하나라도 있어야 한다.
+ * 반려될 신청서에 계좌 정보를 미리 받지 않는다는 것이 이 구획의 존재 조건이고(설계 스펙 §6.2),
+ * 값이 계정 소속인 이상 판정도 계정 단위다. 화면(`pages/[locale]/funding/creator/payout.tsx`)도
+ * 같은 함수로 폼을 열지 정하므로 화면과 서버의 판정이 갈리지 않는다.
  *
- * 화면 쪽 판정(`EDITABLE_SECTIONS`의 `payout`)은 지금 보고 있는 **그 프로젝트**가
- * 승인됐는지를 본다. 둘이 어긋나는 경우는 하나뿐이고(승인된 A + 초안 B를 함께 가진
- * 개설자가 B 화면을 볼 때) 그때 화면이 더 엄하다 — 정산이 실제로 일어나는 A의 화면에서
- * 고치면 된다. 반대 방향(화면은 열렸는데 서버가 막는 것)은 생기지 않는다.
+ * 사업자 정보(`creator_business_profiles`)도 여기서 함께 저장한다. 국세청 조회는 DB 쓰기 **전에** 하고,
+ * 조회 실패는 어떤 경우에도 저장을 실패시키지 않는다("미확인"으로 남긴다).
  */
-export const savePayoutSection = async (creatorId: string, value: PayoutSection): Promise<WriteResult> => {
+export const savePayoutSection = async (
+  creatorId: string,
+  value: PayoutSection,
+  deps: { lookup?: typeof lookupBusinessStatus; now?: Date; deleteBlob?: DeleteBlob } = {},
+): Promise<WriteResult> => {
   const [existing] = await getDb().select({ id: fundingCreators.id })
     .from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
   if (!existing) return deny('not_found', '개설자 계정을 찾을 수 없어요.');
 
-  if (!(await hasApprovedProject(creatorId))) {
-    return deny('not_editable', '프로젝트가 승인된 뒤에 정산 정보를 넣을 수 있어요.');
+  if (!(await hasApprovedEngagement(creatorId))) {
+    return deny('not_editable', '프로젝트·공연·상점 중 하나가 승인된 뒤에 정산 정보를 넣을 수 있어요.');
   }
 
   /**
@@ -556,6 +597,8 @@ export const savePayoutSection = async (creatorId: string, value: PayoutSection)
    *    없는 상태가 **복구 불가능하게** 남는다(암호문 자체가 사라진다). 그래서
    *    `hasWithheldPayout`이 참이면 값을 유지하고, 그 사실을 `residentNumberRetained`로
    *    응답에 실어 화면이 "지워졌다"고 잘못 말하지 않게 한다.
+   *    **상점 아티스트도 유지한다**(`isShopArtist`). 상점 정산은 기록 표가 없어(운영자 수기 이체)
+   *    원천징수를 이미 했는지 알 수 없다 — 모르는 채로 지우면 되돌릴 수 없다.
    * 2. **빈 값(`null`)이면 기존 값을 유지한다.** 계좌와 일부러 다르게 둔다. 계좌는 매번
    *    다시 입력해 덮어쓰게 하지만, 주민등록번호까지 그렇게 하면 은행명 한 글자를 고칠
    *    때마다 평문이 화면과 네트워크를 한 번 더 지난다. 지우는 수단은 세금 구분을
@@ -567,7 +610,7 @@ export const savePayoutSection = async (creatorId: string, value: PayoutSection)
   let residentNumberEnc: string | null | undefined;
   let residentNumberRetained = false;
   if (value.taxType === 'invoice') {
-    if (await hasWithheldPayout(creatorId)) {
+    if (await keepsResidentNumber(creatorId)) {
       // undefined = SET 목록에서 빠진다(아래 주석). 지우지 않고 그대로 둔다.
       residentNumberEnc = undefined;
       residentNumberRetained = true;
@@ -593,7 +636,86 @@ export const savePayoutSection = async (creatorId: string, value: PayoutSection)
     }
   }
 
-  await getDb().update(fundingCreators).set({
+  /**
+   * 사업자 정보 — 위 암호화가 모두 통과한 뒤에만 여기 온다(암호화 실패면 사업자 정보도 저장하지 않는다).
+   *
+   * - 사업자 저장: 표를 읽지 못하면 **저장 전체를 거부한다**(`business_unavailable`) — 사업자로 바꿨는데 사업자 정보가
+   *   빠진 계정이 생기면 정산 때에야 드러난다. 같은 번호가 이미 확인돼 있으면 다시 조회하지 않는다(미확인·미등록이면 다시 조회). 조회는 개설자당
+   *   시간당 10회(`consumeRateLimit`)이고 넘으면 건너뛰어 "미확인"(`rate_limited`)으로 남긴다.
+   * - 번호가 바뀌면 이전 번호의 사업자등록증은 맞지 않는다 — 키를 비우고 Blob은 쓰기 뒤에 지운다.
+   * - 개인 저장: 아래 쓰기 뒤에 사업자 행을 지운다. 단 사업자로 정산한 기록이 있거나(`hasInvoicePayout`)
+   *   상점 아티스트면(`isShopArtist`) 남긴다.
+   *   표를 읽지 못하면 지울 것도 없으니 건너뛴다 — 원천징수 저장은 이 표 없이도 된다.
+   */
+  const now = deps.now ?? new Date();
+  let businessWrite: typeof creatorBusinessProfiles.$inferInsert | null = null;
+  let businessWarnings: string[] | undefined;
+  let staleCertificateKey: string | null = null;
+  let existingBusiness: BusinessProfileView | null | 'unavailable' = null;
+  if (value.taxType === 'invoice' && value.business) {
+    existingBusiness = await loadBusinessProfile(creatorId);
+    if (existingBusiness === 'unavailable') {
+      return deny(
+        'business_unavailable',
+        '사업자 정보를 저장할 준비가 아직 안 됐어요. 이번 저장은 아무것도 반영되지 않았어요. 스튜디오 놀에 알려 주세요.',
+      );
+    }
+    const existing = existingBusiness;
+    let nts: {
+      ntsStatus: NtsBusinessStatus; ntsTaxTypeCode: string | null; ntsTaxTypeLabel: string | null;
+      ntsCheckedAt: Date | null; ntsCheckError: string | null;
+    };
+    // 미확인·미등록은 다시 조회한다 — 미등록은 등록 직후 국세청 반영 전이었을 수 있어, 굳혀 두면 정산 게이트에서 못 푼다.
+    if (existing && existing.businessNumber === value.business.businessNumber
+      && existing.ntsStatus !== 'unverified' && existing.ntsStatus !== 'unregistered') {
+      nts = {
+        ntsStatus: existing.ntsStatus,
+        ntsTaxTypeCode: existing.ntsTaxTypeCode,
+        ntsTaxTypeLabel: existing.ntsTaxTypeLabel,
+        ntsCheckedAt: existing.ntsCheckedAt ? new Date(existing.ntsCheckedAt) : null,
+        ntsCheckError: null,
+      };
+    } else {
+      const allowed = await consumeRateLimit(`nts_lookup:${creatorId}`, 10, 3600);
+      const result = allowed
+        ? await (deps.lookup ?? lookupBusinessStatus)(value.business.businessNumber)
+        : { ok: false as const, error: 'rate_limited' as const };
+      nts = result.ok
+        ? { ntsStatus: result.status, ntsTaxTypeCode: result.taxTypeCode, ntsTaxTypeLabel: result.taxTypeLabel, ntsCheckedAt: now, ntsCheckError: null }
+        : { ntsStatus: 'unverified', ntsTaxTypeCode: null, ntsTaxTypeLabel: null, ntsCheckedAt: now, ntsCheckError: result.error };
+    }
+    const numberChanged = Boolean(existing && existing.businessNumber !== value.business.businessNumber);
+    if (numberChanged) {
+      // 이 읽기 실패도 표를 못 읽은 것과 같다 — 아직 아무것도 쓰지 않았으니 business_unavailable로 돌려보낸다.
+      try {
+        const [old] = await getDb().select({ key: creatorBusinessProfiles.certificateKey }).from(creatorBusinessProfiles)
+          .where(eq(creatorBusinessProfiles.creatorId, creatorId)).limit(1);
+        staleCertificateKey = old?.key ?? null;
+      } catch {
+        console.error('[funding] 사업자등록증 키 조회 실패', { creatorId });
+        return deny(
+          'business_unavailable',
+          '사업자 정보를 저장할 준비가 아직 안 됐어요. 이번 저장은 아무것도 반영되지 않았어요. 스튜디오 놀에 알려 주세요.',
+        );
+      }
+    }
+    businessWrite = {
+      creatorId,
+      ...value.business,
+      ...nts,
+      updatedAt: now,
+      ...(numberChanged ? { certificateKey: null, certificateContentType: null, certificateUploadedAt: null } : {}),
+    };
+    const warnings = businessStatusWarnings({
+      status: nts.ntsStatus, taxTypeCode: nts.ntsTaxTypeCode, taxTypeLabel: nts.ntsTaxTypeLabel,
+    });
+    if (warnings.length) businessWarnings = warnings;
+  } else if (value.taxType === 'withholding') {
+    existingBusiness = await loadBusinessProfile(creatorId);
+  }
+
+  const db = getDb();
+  const creatorUpdate = db.update(fundingCreators).set({
     taxType: value.taxType,
     payoutAccountEnc,
     // 평문으로 남는 것은 이 4자리뿐이다 — 근거는 db/schema.ts의 컬럼 주석.
@@ -602,7 +724,40 @@ export const savePayoutSection = async (creatorId: string, value: PayoutSection)
     ...(residentNumberEnc === undefined ? {} : { residentNumberEnc }),
     updatedAt: new Date(),
   }).where(eq(fundingCreators.id, creatorId));
-  return residentNumberRetained ? { ok: true, residentNumberRetained: true } : { ok: true };
+  if (businessWrite) {
+    // 계정 행과 사업자 행을 한 배치로 — 한쪽만 들어간 상태(사업자로 바뀌었는데 사업자 정보가 없는)를 남기지 않는다.
+    const { creatorId: _key, createdAt: _created, ...updateSet } = businessWrite;
+    await db.batch([
+      creatorUpdate,
+      db.insert(creatorBusinessProfiles).values(businessWrite)
+        .onConflictDoUpdate({ target: creatorBusinessProfiles.creatorId, set: updateSet }),
+    ]);
+    await deleteTaxDocumentBlob(staleCertificateKey, creatorId, deps.deleteBlob);
+  } else {
+    await creatorUpdate;
+  }
+
+  /**
+   * 개인으로 바꿨을 때 사업자 행 정리. 남기는 경우는 둘이다 — 사업자로 정산한 펀딩 기록(`hasInvoicePayout`),
+   * 그리고 상점 아티스트(`isShopArtist` — 상점 정산은 기록 표가 없어 세금계산서로 받았는지 알 수 없다. 주민등록번호 유지와 거울).
+   * 계정 변경은 이미 커밋됐으므로 여기서 실패해도 저장은 성공으로 돌려준다(남은 행은 다음 저장·파기가 정리한다).
+   */
+  let businessProfileRetained = false;
+  if (value.taxType === 'withholding' && existingBusiness && existingBusiness !== 'unavailable') {
+    try {
+      if (await keepsBusinessProfile(creatorId)) businessProfileRetained = true;
+      else await deleteBusinessProfile(creatorId, { deleteBlob: deps.deleteBlob });
+    } catch {
+      console.error('[funding] 개인 전환 뒤 사업자 정보 정리 실패', { creatorId });
+    }
+  }
+
+  return {
+    ok: true,
+    ...(residentNumberRetained ? { residentNumberRetained: true as const } : {}),
+    ...(businessWarnings ? { businessWarnings } : {}),
+    ...(businessProfileRetained ? { businessProfileRetained: true as const } : {}),
+  };
 };
 
 /**

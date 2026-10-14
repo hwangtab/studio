@@ -53,7 +53,7 @@ const baseDetail: AdminProjectDetail = {
   internalNote: null,
   creatorTermsVersion: 'funding-creator-terms-2026-09-18',
   creatorEditedAt: null,
-  creator: { contactName: '담당자', phone: '010-0000-0000', bio: null, links: null },
+  creator: { id: 'creator-1', contactName: '담당자', phone: '010-0000-0000', bio: null, links: null },
   rewards: [
     {
       rewardId: 'r1',
@@ -162,16 +162,16 @@ describe('심사 상세 getServerSideProps', () => {
   // 최상위 화이트리스트만 보면 creator 서브객체가 조용히 넓어질 수 있다 — bio·links는
   // 화면 어디에도 렌더하지 않으므로 애초에 담지 않는다(안 쓰는 개인정보를 클라이언트로
   // 내보낼 이유가 없다).
-  it('creator 서브객체도 contactName·phone만 담고 bio·links는 없다', async () => {
+  it('creator 서브객체도 id·contactName·phone만 담고 bio·links는 없다', async () => {
     (authenticateAdminRequest as jest.Mock).mockResolvedValue({ ok: true });
     (loadProjectForAdmin as jest.Mock).mockResolvedValue({
       ...baseDetail,
-      creator: { contactName: '담당자', phone: '010-0000-0000', bio: '자기소개 원문', links: ['https://x.com'] },
+      creator: { id: 'creator-1', contactName: '담당자', phone: '010-0000-0000', bio: '자기소개 원문', links: ['https://x.com'] },
     });
     const result = (await getDetailProps(detailContext('proj-1'))) as unknown as {
       props: { project: { creator: Record<string, unknown> } };
     };
-    expect(Object.keys(result.props.project.creator).sort()).toEqual(['contactName', 'phone']);
+    expect(Object.keys(result.props.project.creator).sort()).toEqual(['contactName', 'id', 'phone']);
   });
 });
 
@@ -193,6 +193,7 @@ describe('심사 상세 getServerSideProps — 정산', () => {
     closed: true,
     hasPayoutAccount: true,
     hasResidentNumber: true,
+    hasBusinessNumber: null,
     grossAmount: 1_000_000,
     refundAmount: 0,
     supplyAmount: 909_091,
@@ -230,7 +231,7 @@ describe('심사 상세 getServerSideProps — 정산', () => {
         'grossAmount', 'refundAmount', 'manualGrossAmount', 'supplyAmount',
         'platformFeeAmount', 'paymentFeeAmount', 'feeAmount', 'shareAmount',
         'withholdingAmount', 'netAmount', 'backerCount', 'closed',
-        'hasPayoutAccount', 'hasTaxType', 'needsResidentNumber', 'recorded',
+        'hasPayoutAccount', 'hasTaxType', 'needsResidentNumber', 'businessGate', 'recorded',
         // 설계·제작 대금 공제(개설자 약관 제6조) — 금액과 불리언뿐, 민감 정보가 아니다.
         'designFeeOffsetAmount', 'productionFeeOffsetAmount', 'shortfallAmount', 'serviceChargesUnavailable',
         // 원천징수 개설자의 부가세 상당액(개설자 약관 제6조) — 금액일 뿐 민감 정보가 아니다.
@@ -271,6 +272,19 @@ describe('심사 상세 getServerSideProps — 정산', () => {
       props: { payout: Record<string, unknown> };
     };
     expect(result.props.payout.needsResidentNumber).toBe(false);
+  });
+
+  it('사업자 정보 게이트는 missing·unavailable·null 셋으로 내려간다', async () => {
+    (loadProjectForAdmin as jest.Mock).mockResolvedValue({ ...baseDetail, reviewStatus: 'approved' });
+    const gate = async (over: Record<string, unknown>) => {
+      (buildFundingPayoutPreview as jest.Mock).mockResolvedValue({ ...PREVIEW, ...over });
+      const r = (await getDetailProps(detailContext('proj-1'))) as unknown as { props: { payout: { businessGate: unknown } } };
+      return r.props.payout.businessGate;
+    };
+    expect(await gate({ taxType: 'invoice', hasBusinessNumber: false })).toBe('missing');
+    expect(await gate({ taxType: 'invoice', hasBusinessNumber: null })).toBe('unavailable');
+    expect(await gate({ taxType: 'invoice', hasBusinessNumber: true })).toBeNull();
+    expect(await gate({ taxType: 'withholding', hasBusinessNumber: null })).toBeNull();
   });
 
   it('기록된 정산의 Date는 ISO 문자열로 좁혀진다', async () => {

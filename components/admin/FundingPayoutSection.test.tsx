@@ -157,6 +157,18 @@ describe('기록 버튼과 막는 이유', () => {
     expect(screen.getByRole('button', { name: '정산 기록' })).toBeDisabled();
   });
 
+  it('사업자 정보가 없으면 이유를 적고 버튼을 막는다', () => {
+    renderSection({ ...VIEW, businessGate: 'missing' });
+    expect(screen.getByRole('status')).toHaveTextContent('사업자등록번호·상호·대표자명이 없습니다');
+    expect(screen.getByRole('button', { name: '정산 기록' })).toBeDisabled();
+  });
+
+  it('사업자 정보 표를 읽지 못해도 버튼을 막는다', () => {
+    renderSection({ ...VIEW, businessGate: 'unavailable' });
+    expect(screen.getByRole('status')).toHaveTextContent('마이그레이션 0058');
+    expect(screen.getByRole('button', { name: '정산 기록' })).toBeDisabled();
+  });
+
   /** 사업자는 원천징수를 하지 않으므로 이 조건에 걸리지 않는다(props가 이미 false로 온다). */
   it('사업자는 그 게이트에 걸리지 않는다', () => {
     renderSection({ ...VIEW, needsResidentNumber: false });

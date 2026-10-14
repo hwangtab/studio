@@ -1,3 +1,4 @@
+import { normalizeBusinessNumber } from './businessStatus';
 import { kstEndOfDayIso, kstStartOfDayIso } from './creatorDateInput';
 import { FUNDING_MEDIA_URL_PREFIX, resolveFundingBlobPath } from './mediaPath';
 import { slugRejectionReason } from './reservedSlugs';
@@ -88,6 +89,9 @@ export const CREATOR_LIMITS = {
   payoutHolderMax: 40,
   /** 주민등록번호 입력 길이 상한 — 13자리 + 하이픈 1개. */
   residentNumberMax: 14,
+  /** 사업자 정보(세금 구분이 사업자일 때). 번호는 businessStatus.ts의 검증식이 본다. */
+  businessNameMax: 60,
+  representativeNameMax: 30,
   /**
    * 개설자 한 명이 동시에 가질 수 있는 **미심사** 프로젝트(draft·submitted·
    * changes_requested) 수. `approved`·`rejected`는 세지 않는다 — 둘 다 운영자가
@@ -342,6 +346,11 @@ export interface PayoutSection {
    * 여기서 이미 `null`로 떨어진다.
    */
   residentNumber: string | null;
+  /**
+   * 사업자 정보. `taxType === 'invoice'`면 필수, `withholding`이면 값이 와도 `null`로 버린다 —
+   * 주민등록번호(사업자면 버림)와 거울이다. 번호는 하이픈 없는 10자리.
+   */
+  business: { businessNumber: string; businessName: string; representativeName: string } | null;
 }
 
 /**
@@ -450,7 +459,24 @@ export const validatePayoutSection = (input: unknown): { ok: true; value: Payout
     }
   }
 
-  return { ok: true, value: { taxType, bankName, account, holder, residentNumber } };
+  // 오류 메시지에 입력값을 넣지 않는다(주민등록번호와 같은 규약).
+  let business: PayoutSection['business'] = null;
+  if (taxType === 'invoice') {
+    const b = (d.business && typeof d.business === 'object' ? d.business : {}) as Record<string, unknown>;
+    const businessNumber = normalizeBusinessNumber(str(b.businessNumber) ?? '');
+    if (!businessNumber) return fail('사업자등록번호 10자리를 정확히 적어 주세요.');
+    const businessName = str(b.businessName);
+    if (!businessName || businessName.length > CREATOR_LIMITS.businessNameMax) {
+      return fail(`상호는 1~${CREATOR_LIMITS.businessNameMax}자로 적어 주세요.`);
+    }
+    const representativeName = str(b.representativeName);
+    if (!representativeName || representativeName.length > CREATOR_LIMITS.representativeNameMax) {
+      return fail(`대표자명은 1~${CREATOR_LIMITS.representativeNameMax}자로 적어 주세요.`);
+    }
+    business = { businessNumber, businessName, representativeName };
+  }
+
+  return { ok: true, value: { taxType, bankName, account, holder, residentNumber, business } };
 };
 
 export interface RewardInput {

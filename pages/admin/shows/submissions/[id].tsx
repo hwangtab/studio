@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { AdminShell } from '../../../../components/admin/AdminShell';
+import { CreatorTaxProfilePanel } from '../../../../components/admin/CreatorTaxProfilePanel';
 import { patchShowSubmission, type ShowSubmissionActionResult } from '../../../../components/admin/showSubmissionActions';
 import { Button } from '../../../../components/ui/Button';
 import { Notice } from '../../../../components/ui/Notice';
@@ -281,6 +282,8 @@ export default function AdminShowSubmissionDetailPage({ submission }: AdminShowS
               <Row label="동의한 약관">{submission.organizerTermsVersion ?? '없음'}</Row>
             </dl>
           </div>
+
+          <CreatorTaxProfilePanel creatorId={submission.creatorId} />
 
           {submission.reviewNote && (
             <div>
