@@ -27,6 +27,8 @@ const ko = {
   noDownload: '설치 파일을 준비하고 있어요.',
   salesClosedHeading: '판매 준비 중',
   salesClosedBody: '구매는 곧 열어요. 그전까지 체험판으로 써 보세요.',
+  koOnlyHeading: '',
+  koOnlyBody: '',
   kind: { plugin: '플러그인', app: '앱' },
 };
 
@@ -50,6 +52,8 @@ const en: typeof ko = {
   noDownload: 'Installers are on the way.',
   salesClosedHeading: 'Not on sale yet',
   salesClosedBody: 'Purchasing opens soon. Until then, try the trial.',
+  koOnlyHeading: 'Sold in Korea for now',
+  koOnlyBody: 'Checkout is currently available in Korean won only. International checkout is on the way — until then, try the trial.',
   kind: { plugin: 'Plugin', app: 'App' },
 };
 

@@ -24,3 +24,10 @@ export const SOFTWARE_RESERVED_SLUGS: readonly string[] = ['manage', 'success', 
  * "제공 개시"다(전자상거래법 제17조 제2항 제5호, 계획서 §4). 법정 청약철회 기간 7일에 맞춘다.
  */
 export const SOFTWARE_SELF_CANCEL_DAYS = 7;
+
+/**
+ * 고객 쪽(플러그인 "이 기기에서 해제"·구매 내역 화면) 기기 해제 한도 — 라이선스당 30일에 이 횟수까지. 운영자 해제는 한도가 없다.
+ * 서명 파일은 오프라인이라 해제한 기기의 파일도 계속 돈다. 한도가 없으면 활성화→해제를 되풀이해 기기 수 한도를 무력화할 수 있다
+ * (2026-10-14 감사 재현: 한도 2인 키로 파일 10개). 정상 사용(컴퓨터 교체·재설치)은 한 달에 몇 번이면 충분하다.
+ */
+export const SOFTWARE_DEACTIVATIONS_PER_30_DAYS = 5;

@@ -11,7 +11,7 @@ import { PageShell } from '../../../../components/ui/PageHeader';
 import { Panel } from '../../../../components/ui/Panel';
 import StatusBadge from '../../../../components/ui/StatusBadge';
 import { formatPriceAmount } from '../../../../data/pricing';
-import { SOFTWARE_SELF_CANCEL_DAYS } from '../../../../data/software/policy';
+import { SOFTWARE_DEACTIVATIONS_PER_30_DAYS, SOFTWARE_SELF_CANCEL_DAYS } from '../../../../data/software/policy';
 import { getSiteConfig } from '../../../../data/siteConfig';
 import { isTokenMatch } from '../../../../lib/booking/token';
 import { withI18nServerProps } from '../../../../lib/getStatic';
@@ -107,7 +107,7 @@ export default function SoftwareManagePage({ orderNo, token, state, productTitle
                 ))}
               </ul>
             )}
-            <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">컴퓨터를 바꿨다면 옛 기기를 해제하고 새 기기에서 활성화하세요.</p>
+            <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">컴퓨터를 바꿨다면 옛 기기를 해제하고 새 기기에서 활성화하세요. 해제는 30일에 {SOFTWARE_DEACTIVATIONS_PER_30_DAYS}번까지 할 수 있어요.</p>
           </Panel>
         ))}
 

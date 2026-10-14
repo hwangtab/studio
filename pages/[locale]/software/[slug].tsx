@@ -87,6 +87,8 @@ export default function SoftwareDetailPage({ softwareLocale: locale, product, sa
                 이미 구매하셨나요? <Link href="/ko/software/find" className="underline">구매 내역 링크 다시 받기</Link>
               </p>
             </Panel>
+          ) : salesOpen && locale === 'en' ? (
+            <Notice tone="info" title={t.koOnlyHeading}>{t.koOnlyBody}</Notice>
           ) : (
             <Notice tone="info" title={t.salesClosedHeading}>{t.salesClosedBody}</Notice>
           )}

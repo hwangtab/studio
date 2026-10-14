@@ -1,4 +1,4 @@
-import { SOFTWARE_DEFAULT_MAX_ACTIVATIONS, SOFTWARE_DEFAULT_TRIAL_DAYS, SOFTWARE_SELF_CANCEL_DAYS } from '../../data/software/policy';
+import { SOFTWARE_DEACTIVATIONS_PER_30_DAYS, SOFTWARE_DEFAULT_MAX_ACTIVATIONS, SOFTWARE_DEFAULT_TRIAL_DAYS, SOFTWARE_SELF_CANCEL_DAYS } from '../../data/software/policy';
 
 /**
  * 소프트웨어 라이선스 이용 조건 — 이용약관(`/ko/terms#software`)이 이 문구를 그대로 렌더한다. 구매 폼·구매 내역·메일의 짧은 안내와
@@ -21,7 +21,7 @@ export const SOFTWARE_TERMS_SECTIONS: ReadonlyArray<{ heading: string; lines: re
   {
     heading: '쓸 수 있는 범위',
     lines: [
-      `라이선스 한 개로 동시에 활성화할 수 있는 기기 수는 상품 화면에 적힌 대로이고, 따로 적지 않았으면 ${SOFTWARE_DEFAULT_MAX_ACTIVATIONS}대입니다. 구매 내역 화면이나 소프트웨어 안에서 기기를 해제하면 다른 기기에서 활성화할 수 있어요.`,
+      `라이선스 한 개로 동시에 활성화할 수 있는 기기 수는 상품 화면에 적힌 대로이고, 따로 적지 않았으면 ${SOFTWARE_DEFAULT_MAX_ACTIVATIONS}대입니다. 구매 내역 화면이나 소프트웨어 안에서 기기를 해제하면 다른 기기에서 활성화할 수 있어요. 해제는 라이선스 한 개당 30일에 ${SOFTWARE_DEACTIVATIONS_PER_30_DAYS}번까지 직접 할 수 있고, 그보다 많이 필요하면 문의해 주세요.`,
       '라이선스 키를 다른 사람과 나눠 쓰거나, 팔거나, 빌려주면 안 됩니다. 다른 분께 넘기려면 먼저 문의해 주세요.',
       '소프트웨어를 고치거나 역설계해 라이선스 확인을 피하는 것, 그렇게 만든 파일을 퍼뜨리는 것을 금지합니다. 이를 어기면 그 라이선스를 취소할 수 있습니다.',
     ],

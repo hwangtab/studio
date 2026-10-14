@@ -4,9 +4,10 @@ import { and, desc, eq, isNull, like, or, sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { softwareActivations, softwareLicenses, type SoftwareLicense, type softwareLicenseSourceEnum } from '../../db/schema';
 import { SOFTWARE_LICENSE_PUBLIC_KEYS } from '../../data/software/publicKeys';
+import { SOFTWARE_DEACTIVATIONS_PER_30_DAYS } from '../../data/software/policy';
 import { getAnySoftware, maxActivationsOf } from './catalog';
 import { generateLicenseKey, licenseKeyHint, normalizeLicenseKey } from './key';
-import { signLicense, type LicenseFile, type LicenseSigner } from './licenseFile';
+import { rawPublicKeyOf, signLicense, type LicenseFile, type LicenseSigner } from './licenseFile';
 
 /**
  * 라이선스 발급·활성화·해제. 규칙은 lib/software/CLAUDE.md.
@@ -15,7 +16,11 @@ import { signLicense, type LicenseFile, type LicenseSigner } from './licenseFile
  * 둘 다 "아직 자리 있음"을 보고 한도를 넘는다.
  */
 
-export const MACHINE_ID_PATTERN = /^[A-Za-z0-9_-]{8,128}$/;
+/**
+ * 기기 식별값 — 플러그인이 `hex(sha256("<slug>:" + 원래 값))`으로 보낸다(연동 안내서 §2). 원래 값(UUID 등)을 받지 않으려고 형식을
+ * 소문자 hex 64자로 못 박는다 — 처리방침·약관이 "원래 값이 아니라 변환한 값"이라고 약속한다.
+ */
+export const MACHINE_ID_PATTERN = /^[0-9a-f]{64}$/;
 const LABEL_MAX = 80;
 const APP_VERSION_MAX = 40;
 
@@ -147,7 +152,39 @@ export const activateLicense = async (input: ActivateInput, signer: LicenseSigne
   return { ok: true, licenseFile, reused };
 };
 
-export type DeactivateResult = { ok: true; deactivated: boolean } | { ok: false; code: 'bad_request' | 'invalid_key' };
+export type DeactivateResult =
+  | { ok: true; deactivated: boolean }
+  | { ok: false; code: 'bad_request' | 'invalid_key' | 'deactivation_limit' };
+
+const DEACTIVATION_WINDOW_SEC = 30 * 24 * 60 * 60;
+
+/**
+ * 고객 쪽 기기 해제 — 30일 한도(`SOFTWARE_DEACTIVATIONS_PER_30_DAYS`)를 **같은 UPDATE의 WHERE**로 건다(동시 요청에도 넘지 않게).
+ * `target`은 기기 식별값(플러그인) 또는 활성화 행 id(구매 내역 화면). 대상이 이미 해제됐으면 `deactivated: false`(멱등).
+ */
+export const customerDeactivate = async (
+  licenseId: string,
+  target: { machineId: string } | { activationId: string },
+  now = new Date(),
+): Promise<DeactivateResult> => {
+  const nowSec = Math.floor(now.getTime() / 1000);
+  const db = getDb();
+  const match = 'machineId' in target ? sql`machine_id = ${target.machineId}` : sql`id = ${target.activationId}`;
+  const result = await db.run(sql`
+    UPDATE software_activations SET deactivated_at = ${nowSec}
+    WHERE license_id = ${licenseId} AND ${match} AND deactivated_at IS NULL
+      AND (SELECT count(*) FROM software_activations WHERE license_id = ${licenseId} AND deactivated_at >= ${nowSec - DEACTIVATION_WINDOW_SEC}) < ${SOFTWARE_DEACTIVATIONS_PER_30_DAYS}
+  `);
+  if (Number(result.rowsAffected) > 0) return { ok: true, deactivated: true };
+  const stillActive = await db.query.softwareActivations.findFirst({
+    where: and(
+      eq(softwareActivations.licenseId, licenseId),
+      'machineId' in target ? eq(softwareActivations.machineId, target.machineId) : eq(softwareActivations.id, target.activationId),
+      isNull(softwareActivations.deactivatedAt),
+    ),
+  });
+  return stillActive ? { ok: false, code: 'deactivation_limit' } : { ok: true, deactivated: false };
+};
 
 /** 플러그인의 "이 기기에서 해제". 이미 해제됐어도 성공(멱등) — `deactivated`로 실제로 바뀌었는지만 알린다. */
 export const deactivateMachine = async (input: ActivateInput, now = new Date()): Promise<DeactivateResult> => {
@@ -155,17 +192,18 @@ export const deactivateMachine = async (input: ActivateInput, now = new Date()):
   const found = await findLicense(input.key, input.product);
   if (found === 'bad') return { ok: false, code: 'bad_request' };
   if (!found) return { ok: false, code: 'invalid_key' };
-  const result = await getDb().update(softwareActivations)
-    .set({ deactivatedAt: now })
-    .where(and(eq(softwareActivations.licenseId, found.id), eq(softwareActivations.machineId, input.machineId), isNull(softwareActivations.deactivatedAt)));
-  return { ok: true, deactivated: Number(result.rowsAffected) > 0 };
+  return customerDeactivate(found.id, { machineId: input.machineId }, now);
 };
 
 /**
  * 서명키가 플러그인에 박힐 공개키 목록에 있는가. 없으면 플러그인이 검증하지 못하는 파일을 내주게 되므로
  * 활성화 API가 닫힌다.
  */
-export const isSignerPublished = (signer: LicenseSigner): boolean => Boolean(SOFTWARE_LICENSE_PUBLIC_KEYS[signer.kid]);
+export const isSignerPublished = (signer: LicenseSigner): boolean => {
+  const published = SOFTWARE_LICENSE_PUBLIC_KEYS[signer.kid];
+  // kid만 맞고 다른 키(회전 실수·preview 키)면 플러그인이 검증하지 못하는 파일을 200으로 내주게 된다 — 짝까지 본다.
+  return Boolean(published) && rawPublicKeyOf(signer.key) === published;
+};
 
 // ─── 관리자 ────────────────────────────────────────────────────────────────────
 
@@ -234,4 +272,25 @@ export const adminDeactivate = async (licenseId: string, activationId?: string, 
       ...(activationId ? [eq(softwareActivations.id, activationId)] : []),
     ));
   return Number(r.rowsAffected);
+};
+
+/**
+ * 플러그인 요청 본문. JUCE `URL::withPOSTData`는 Content-Type을 주지 않으면 `application/x-www-form-urlencoded`를 붙여,
+ * Next가 JSON 문자열 전체를 폼 키 하나로 풀어 버린다(2026-10-14 감사). 문자열이거나 그런 모양이면 JSON으로 다시 읽는다.
+ */
+export const pluginRequestBody = (raw: unknown): Record<string, unknown> => {
+  const tryJson = (text: string): Record<string, unknown> | null => {
+    try {
+      const v = JSON.parse(text) as unknown;
+      return typeof v === 'object' && v !== null && !Array.isArray(v) ? (v as Record<string, unknown>) : null;
+    } catch {
+      return null;
+    }
+  };
+  if (typeof raw === 'string') return tryJson(raw) ?? {};
+  if (typeof raw !== 'object' || raw === null) return {};
+  const obj = raw as Record<string, unknown>;
+  const keys = Object.keys(obj);
+  if (keys.length === 1 && keys[0].startsWith('{') && (obj[keys[0]] === '' || obj[keys[0]] === undefined)) return tryJson(keys[0]) ?? obj;
+  return obj;
 };

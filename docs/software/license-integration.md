@@ -21,13 +21,13 @@
 ## 2. 기기 식별값(machineId)
 
 - 기기마다 고정이고 재설치해도 같은 값. 원값을 그대로 보내지 말고 **해시해서** 보낸다: `hex(sha256("<상품 slug>:" + 원값))` (64자).
-- 허용 형식: 8~128자, `A-Z a-z 0-9 _ -`.
+- 허용 형식: **소문자 hex 64자**(sha256 결과 그대로). 원래 값(UUID 등)을 보내면 400 — 처리방침이 "원래 값이 아니라 변환한 값"을 약속한다.
 - JUCE: `juce::SystemStats::getUniqueDeviceID()`(JUCE 7+)를 원값으로 쓴다. 비JUCE: macOS `IOPlatformUUID`, Windows `HKLM\SOFTWARE\Microsoft\Cryptography\MachineGuid`, Python은 `py-machineid` 같은 라이브러리.
 - 하드웨어 교체로 값이 바뀌면 그 기기는 새 기기로 센다 — 고객은 구매자 화면(또는 운영자)에서 옛 기기를 해제한다.
 
 ## 3. API
 
-모든 요청은 JSON, 응답은 JSON. 기본 주소 `https://studionol.co.kr`.
+모든 요청은 JSON(`Content-Type: application/json`), 응답은 JSON. 기본 주소 `https://studionol.co.kr`. 헤더를 빠뜨려도 서버가 본문을 JSON으로 다시 읽지만, 헤더를 붙이는 것이 정석이다.
 
 ### POST `/api/software/activate`
 
@@ -43,7 +43,7 @@
 | 400 | `bad_request` | 입력 형식 오류 |
 | 404 | `invalid_key` | "키가 맞지 않습니다" — 없는 키와 다른 상품의 키를 구분하지 않는다 |
 | 403 | `revoked` | "사용할 수 없는 라이선스입니다(환불·취소)" |
-| 409 | `activation_limit` | "활성화 가능한 기기 수를 넘었습니다. 구매 내역 화면에서 다른 기기를 해제해 주세요" |
+| 409 | `activation_limit` | "활성화 가능한 기기 수를 넘었습니다. 쓰지 않는 기기에서 해제하거나(소프트웨어 안·구매 내역 화면) 문의해 주세요" |
 | 429 | `rate_limited` | 잠시 뒤 다시 |
 | 503 | `unavailable` | 서버 점검 — 잠시 뒤 다시 |
 
@@ -55,7 +55,9 @@
 { "key": "…", "product": "…", "machineId": "…" }
 ```
 
-플러그인 안의 "이 기기에서 해제" 버튼용. 성공하면 로컬 라이선스 파일도 지운다.
+플러그인 안의 "이 기기에서 해제" 버튼용. 성공하면 로컬 라이선스 파일도 지운다. 이미 해제된 기기면 200 `deactivated: false`.
+
+**해제 한도**: 라이선스당 30일에 5번(`SOFTWARE_DEACTIVATIONS_PER_30_DAYS`, 구매 내역 화면의 해제와 합산). 넘으면 429 `deactivation_limit` — "이번 달 해제 횟수를 다 썼습니다. 문의해 주세요". 서명 파일은 오프라인이라, 한도가 없으면 활성화→해제를 되풀이해 기기 수 한도를 무력화할 수 있다. 운영자는 관리자 화면에서 한도 없이 해제한다.
 
 ### GET `/api/software/latest?product=<slug>`
 
@@ -101,14 +103,13 @@ bool verifyEd25519 (const uint8_t pub[32], const uint8_t sig[64], const uint8_t*
 
 JUCE에서 base64url 풀기: 문자열의 `-`/`_`를 `+`/`/`로 바꾸고 길이가 4의 배수가 되게 `=`를 붙인 뒤 `juce::Base64::convertFromBase64 (outputStream, string)`.
 machineId 해시는 `juce::SHA256 (("<slug>:" + juce::SystemStats::getUniqueDeviceID()).toUTF8()).toHexString()`.
-네트워크 요청은 `juce::URL::withPOSTData(json).createInputStream(...)`, 응답 JSON은 `juce::JSON::parse`.
+네트워크 요청은 `juce::URL(...).withPOSTData(json)`에 **`.withExtraHeaders("Content-Type: application/json")`를 꼭 붙여**(JUCE는 Content-Type이 없으면 폼 인코딩으로 보낸다) `createInputStream(...)`, 응답 JSON은 `juce::JSON::parse`.
 
 ### Python — `cryptography`
 
 ```python
 import base64, json
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
-from cryptography.exceptions import InvalidSignature
 
 def b64url(s: str) -> bytes:
     return base64.urlsafe_b64decode(s + "=" * (-len(s) % 4))
@@ -122,7 +123,7 @@ def verify(license_text: str, public_keys: dict[str, str], product: str, machine
         Ed25519PublicKey.from_public_bytes(base64.b64decode(public_keys[f["kid"]])).verify(b64url(f["sig"]), payload)
         p = json.loads(payload)
         return p.get("product") == product and p.get("machine") == machine_id and p.get("edition") == "full"
-    except (ValueError, KeyError, InvalidSignature):
+    except Exception:  # 깨진 파일(배열·null·타입 오류 포함)은 전부 체험 모드로 — 플러그인이 죽지 않게
         return False
 ```
 

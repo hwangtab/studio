@@ -18,7 +18,7 @@ jest.mock('../booking/toss', () => ({
 jest.mock('../email/resend', () => ({ sendEmail: jest.fn().mockResolvedValue({ ok: true }) }));
 
 /* eslint-disable import/first */
-import { cancelSoftwareOrder, refundLicensesOnFullCancel } from './cancel';
+import { cancelSoftwareOrder, refundLicensesOnFullCancel, softwareSelfCancelBlocker } from './cancel';
 import { confirmSoftwareOrder } from './confirm';
 import { createSoftwareOrder, expireStaleSoftwareOrders, findSoftwareOrder } from './order';
 import { activateLicense } from './service';
@@ -118,13 +118,18 @@ describe('confirmSoftwareOrder', () => {
     expect(confirmPayment).not.toHaveBeenCalled();
   });
 
-  it('웹훅은 만료된 주문도 확정한다(재조회로 검증된 돈)', async () => {
+  it('만료된 주문도 확정한다(재고가 없어 만료는 정리 표식) — 실패한 주문은 웹훅만 확정한다', async () => {
     const o = await place();
     await testDb.run(sql`UPDATE orders SET status = 'expired' WHERE order_no = ${o.orderNo}`);
     (confirmPayment as jest.Mock).mockResolvedValue(done(o.orderNo, o.totalAmount));
-    expect(await confirmSoftwareOrder({ orderNo: o.orderNo, paymentKey: `pk-${o.orderNo}`, amount: o.totalAmount })).toMatchObject({ ok: false, code: 'invalid_state' });
-    expect(await confirmSoftwareOrder({ orderNo: o.orderNo, paymentKey: `pk-${o.orderNo}`, amount: o.totalAmount }, { trustedByWebhook: true })).toMatchObject({ ok: true });
+    expect(await confirmSoftwareOrder({ orderNo: o.orderNo, paymentKey: `pk-${o.orderNo}`, amount: o.totalAmount })).toMatchObject({ ok: true });
     expect((await findSoftwareOrder(o.orderNo))!.licenses).toHaveLength(1);
+
+    const f = await place();
+    await testDb.run(sql`UPDATE orders SET status = 'failed' WHERE order_no = ${f.orderNo}`);
+    (confirmPayment as jest.Mock).mockResolvedValue(done(f.orderNo, f.totalAmount));
+    expect(await confirmSoftwareOrder({ orderNo: f.orderNo, paymentKey: `pk-${f.orderNo}`, amount: f.totalAmount })).toMatchObject({ ok: false, code: 'invalid_state' });
+    expect(await confirmSoftwareOrder({ orderNo: f.orderNo, paymentKey: `pk-${f.orderNo}`, amount: f.totalAmount }, { trustedByWebhook: true })).toMatchObject({ ok: true });
   });
 });
 
@@ -136,13 +141,13 @@ describe('cancelSoftwareOrder', () => {
     const order = await findSoftwareOrder(o.orderNo);
     expect(order!.status).toBe('refunded');
     expect(order!.licenses[0].status).toBe('refunded');
-    expect(await activateLicense({ key: order!.licenses[0].licenseKey, product: 'test-plugin', machineId: 'machine-0001' }, signer)).toEqual({ ok: false, code: 'revoked' });
+    expect(await activateLicense({ key: order!.licenses[0].licenseKey, product: 'test-plugin', machineId: '1'.padStart(64, '0') }, signer)).toEqual({ ok: false, code: 'revoked' });
   });
 
   it('고객: 한 번이라도 활성화했으면 거절(기기를 해제해도), 운영자는 된다', async () => {
     const o = await placeAndPay();
     const key = (await findSoftwareOrder(o.orderNo))!.licenses[0].licenseKey;
-    expect((await activateLicense({ key, product: 'test-plugin', machineId: 'machine-0001' }, signer)).ok).toBe(true);
+    expect((await activateLicense({ key, product: 'test-plugin', machineId: '1'.padStart(64, '0') }, signer)).ok).toBe(true);
     await testDb.run(sql`UPDATE software_activations SET deactivated_at = unixepoch()`);
     expect(await cancelSoftwareOrder({ orderNo: o.orderNo, requestedBy: 'customer', reason: 't', now: new Date() })).toMatchObject({ ok: false, code: 'activated' });
     expect(cancelPayment).not.toHaveBeenCalled();
@@ -166,6 +171,26 @@ describe('cancelSoftwareOrder', () => {
     const order = await findSoftwareOrder(o.orderNo);
     expect(order!.status).toBe('paid');
     expect(order!.licenses[0].status).toBe('active');
+  });
+
+  it('토스가 거절해도 그 사이 돈이 다른 길로 돌아갔으면 라이선스를 되살리지 않는다(응답만 늦은 취소 + 웹훅 선처리)', async () => {
+    const o = await placeAndPay();
+    (cancelPayment as jest.Mock).mockImplementation(async () => {
+      // 토스는 실제로 취소했고 CANCELED 웹훅이 먼저 처리됐다 — 환불 기록이 생기고 주문은 refunded.
+      const order = await findSoftwareOrder(o.orderNo);
+      await testDb.run(sql`INSERT INTO refunds (id, payment_id, amount, reason, requested_by, status) VALUES ('wh-1', ${order!.payments[0].id}, ${o.totalAmount}, 'webhook', 'webhook', 'done')`);
+      await testDb.run(sql`UPDATE orders SET status = 'refunded' WHERE order_no = ${o.orderNo}`);
+      return { ok: false, code: 'NETWORK_ERROR', message: 'timeout' };
+    });
+    const r = await cancelSoftwareOrder({ orderNo: o.orderNo, requestedBy: 'customer', reason: 't', now: new Date() });
+    expect(r.ok).toBe(false);
+    expect((await findSoftwareOrder(o.orderNo))!.licenses[0].status).toBe('refunded');
+  });
+
+  it('운영자가 취소한 라이선스는 셀프 환불 버튼 대상이 아니다', async () => {
+    const o = await placeAndPay();
+    await testDb.run(sql`UPDATE software_licenses SET status = 'revoked' WHERE order_no = ${o.orderNo}`);
+    expect(softwareSelfCancelBlocker((await findSoftwareOrder(o.orderNo))!, new Date())).toBe('invalid_state');
   });
 
   it('웹훅 전액 취소는 라이선스를 닫는다', async () => {

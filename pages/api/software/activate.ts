@@ -4,7 +4,7 @@ import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { getClientIp } from '../../../lib/contracts/client-ip';
 import { normalizeLicenseKey } from '../../../lib/software/key';
 import { loadLicenseSigner } from '../../../lib/software/licenseFile';
-import { activateLicense, isSignerPublished } from '../../../lib/software/service';
+import { activateLicense, isSignerPublished, pluginRequestBody } from '../../../lib/software/service';
 
 const STATUS = { bad_request: 400, invalid_key: 404, revoked: 403, activation_limit: 409 } as const;
 
@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(503).json({ ok: false, error: 'unavailable' });
   }
 
-  const body = (typeof req.body === 'object' && req.body !== null ? req.body : {}) as Record<string, unknown>;
+  const body = pluginRequestBody(req.body);
   const key = normalizeLicenseKey(body.key);
   if (key && !(await consumeRateLimit(`software_activate:key:${key}`, 20, 3600))) return res.status(429).json({ ok: false, error: 'rate_limited' });
 
