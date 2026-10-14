@@ -8,7 +8,7 @@ import {
   loadProductForCreator, saveProduct, setPublishedByCreator, submitProduct, withdrawProduct,
   type CreatorProductDetail, type ProductWriteResult,
 } from '../../../../../../lib/shop/creatorProductWrite';
-import { respondProductFailure } from '../../../../../../lib/shop/creatorWriteHttp';
+import { rejectUnlessShopArtistTermsAgreed, respondProductFailure } from '../../../../../../lib/shop/creatorWriteHttp';
 import { sendShopCreatorEditedNotice, sendShopSubmissionNotice, type ShopMailProduct } from '../../../../../../lib/shop/reviewEmail';
 import { revalidateShopArtistPages } from '../../../../../../lib/shop/revalidate';
 
@@ -48,6 +48,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const productId = typeof req.query.id === 'string' ? req.query.id : '';
   if (!productId) return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않아요.' });
+
+  if (!(await rejectUnlessShopArtistTermsAgreed(res, auth.creatorId, 'funding/creator/shop/products/[id]'))) return;
 
   if (!(await consumeRateLimit(`creator_save:${auth.creatorId}`, 30, 60))) {
     return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });

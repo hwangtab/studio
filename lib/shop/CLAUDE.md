@@ -156,6 +156,27 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
 - 이미 정산한 달의 반품 환불은 그 주문이 표에서 빠질 뿐 자동으로 차감되지 않는다. 다음 정산에서 손으로 뺀다.
   부분 환불 주문은 어느 줄이 환불됐는지 원장이 모르므로 계산에서 빼고 "직접 확인"으로 띄운다.
 
+### 위탁 약관 — 콘솔 전자 동의 (마이그레이션 0059)
+
+아티스트와의 위탁 판매 계약은 개설자 콘솔의 **클릭 동의**로 맺는다(연습실 전자계약 `lib/contracts`는 쓰지 않는다). 본문은
+`lib/shop/artistTerms.ts`의 `SHOP_ARTIST_TERMS_SECTIONS`(순수 모듈 — 정산 비율·원천징수율·택배사·가림 기간·사업자 정보를 상수에서 보간),
+판본은 `SHOP_ARTIST_TERMS_VERSION`. 펀딩 개설자 약관·공연 주최자 약관과 같은 해시 게이트(`content/shopArtistTerms.baseline.test.ts`,
+갱신 `UPDATE_SHOP_ARTIST_TERMS_BASELINE=1` — 판본을 안 올린 내용 변경은 갱신 경로가 거부한다)를 탄다. 제9조가 처리방침 4항이 약속한
+"위탁 계약"이다 — 아티스트에게 주는 항목·가림 기간을 바꾸면 처리방침 4항과 이 약관을 함께 고치고 둘 다 판본을 올린다(테스트가 두 문서의 항목 문자열을 대조한다).
+
+- **기록**: 새 표 `shop_artist_terms_agreements(creator_id, terms_version, agreed_at)`, PK가 두 칸이라 판본마다 한 행이 쌓이고 옛 행은 남는다
+  (`lib/shop/artistTermsAgreement.ts`). 남기는 것은 펀딩·공연 약관 동의와 같은 판본·시각뿐이다(IP를 남기려면 처리방침 13항부터 고친다).
+- **판정**은 "현재 판본 행이 있는가" 하나. 판본을 올리면 모든 아티스트가 다시 동의 화면을 본다.
+- **fail-closed**: 표가 없는 DB는 미동의다 — 콘솔은 동의 화면(저장은 503), 쓰기 API는 403, 아티스트 상품 승인은 `terms_not_agreed`.
+  그래서 순서는 **마이그레이션 → 배포**(뒤집어도 결제·주문은 안 깨지고 아티스트 상점 쓰기·승인만 멈춘다).
+- **동의 전 막는 것(서버)**: 상품 생성·저장·제출·공개 토글(`products`·`products/[id]`), 상품 사진 업로드(`upload?productId=`), 재고 입력(`stock`),
+  발송 처리(`shipping`) — `rejectUnlessShopArtistTermsAgreed`(`creatorWriteHttp.ts`). 화면은 `/ko/funding/creator/shop`이 상품·판매 현황·발송 대신
+  `ArtistTermsConsent`를 보이고, 편집·발송 화면은 상점 탭으로 돌려보낸다(발송 화면은 받는 분 정보를 싣기 전에 판정한다). 프로필 저장은 막지 않는다.
+- **승인 게이트**: `decideShopProduct` 승인(관리자 "바로 승인"도 이 함수를 지난다)이 미동의면 `terms_not_agreed`. **스튜디오 상품 계정
+  (`STUDIO_SHOP_ARTIST_SLUG`)은 예외**(스튜디오 자신이라 위탁 계약이 없다). 이미 승인된 상품은 판본이 바뀌어도 내리지 않는다.
+- **동의 API** `POST /api/funding/creator/shop/terms { version, agreed: true }` — 화면이 본 판본이 지금과 다르면 409, `shop_artists` 행이 없으면 403.
+- 관리자: `/admin/shop/artists` 목록과 상품 심사 상세에 "위탁 약관: 동의(판본·일시) / 옛 판본 동의 / 미동의"(`describeShopArtistTerms`).
+
 ### 발송 주체 — 아티스트가 직접 보내는 상품 (마이그레이션 0057)
 
 운영자 결정 2026-10-14. 판매자(결제·환불·고객 응대)는 언제나 스튜디오이고, **포장해 보내는 쪽**만 상품마다 다르다. 택배사는 스튜디오 발송분이 로젠택배다

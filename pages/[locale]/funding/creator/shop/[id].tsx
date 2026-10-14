@@ -5,6 +5,7 @@ import { PageHeader, PageShell } from '../../../../../components/ui/PageHeader';
 import { authenticateCreatorRequest } from '../../../../../lib/funding/creatorAuth';
 import { fitsDisplayFont } from '../../../../../lib/fonts/displayCoverage';
 import { withI18nServerProps } from '../../../../../lib/getStatic';
+import { hasAgreedCurrentShopArtistTerms } from '../../../../../lib/shop/artistTermsAgreement';
 import { loadProductForCreator, type CreatorProductDetail } from '../../../../../lib/shop/creatorProductWrite';
 
 interface Props {
@@ -44,6 +45,10 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
 
   let product: CreatorProductDetail | null = null;
   try {
+    // 위탁 약관(현재 판본)에 동의하기 전에는 편집 화면을 열지 않는다 — 상점 탭이 동의 화면을 보인다.
+    if (!(await hasAgreedCurrentShopArtistTerms(auth.creatorId))) {
+      return { redirect: { destination: '/ko/funding/creator/shop', permanent: false } };
+    }
     product = await loadProductForCreator(auth.creatorId, id);
   } catch (error: unknown) {
     console.error('[funding] 개설자 상품 조회 실패:', error);

@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { consumeRateLimit } from '../../../../../lib/booking/rate-limit';
 import { isAllowedContactRequestOrigin } from '../../../../../lib/contact/origin';
 import { authenticateCreatorApi } from '../../../../../lib/funding/creatorAuth';
+import { rejectUnlessShopArtistTermsAgreed } from '../../../../../lib/shop/creatorWriteHttp';
 import { markShopOrderDelivered, markShopOrderShipped } from '../../../../../lib/shop/fulfillment';
 import { normalizeShopOrderNo } from '../../../../../lib/shop/shape';
 
@@ -19,6 +20,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const auth = await authenticateCreatorApi(req, res);
   if (!auth.ok) return res.status(401).json({ ok: false, message: '로그인이 필요해요.' });
+
+  // 받는 분 정보를 다루는 위탁 업무라 위탁 약관(제9조) 동의가 먼저다.
+  if (!(await rejectUnlessShopArtistTermsAgreed(res, auth.creatorId, 'funding/creator/shop/shipping'))) return;
 
   // 발송 처리는 주문 건마다 연속으로 부르는 작업이다 — 구획 저장 키와 따로 둔다(creator_fulfillment와 같은 이유).
   if (!(await consumeRateLimit(`creator_shop_shipping:${auth.creatorId}`, 300, 600))) {

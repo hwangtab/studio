@@ -23,6 +23,8 @@ import { SalesTable } from '../../../../../components/shop/creator/SalesTable';
 import { listProductsForCreator, type CreatorProductSummary } from '../../../../../lib/shop/creatorProductWrite';
 import { loadCreatorSales, type CreatorSkuSales } from '../../../../../lib/shop/creatorStats';
 import { countArtistShipments } from '../../../../../lib/shop/artistShipping';
+import { loadShopArtistTermsStatus } from '../../../../../lib/shop/artistTermsAgreement';
+import { ArtistTermsConsent } from '../../../../../components/shop/creator/ArtistTermsConsent';
 
 interface Props {
   /** 상점이 열린 아티스트만 값이 있다. */
@@ -31,6 +33,11 @@ interface Props {
     products: CreatorProductSummary[]; sales: CreatorSkuSales[];
     /** 직접 보내는 상품이 있을 때만 값이 있다 — 발송 전 주문 수(개인정보 없음). */
     shipments: { pending: number } | null;
+    /**
+     * 위탁 약관 — 현재 판본에 동의하지 않았으면 `agreed: false`이고, 화면은 상품·판매 현황·발송 대신 동의 화면만 보인다.
+     * `previousVersion`은 옛 판본에 동의한 적이 있을 때 그 판본(다시 동의 안내).
+     */
+    terms: { agreed: boolean; previousVersion: string | null };
   } | null;
 }
 
@@ -68,7 +75,9 @@ export default function CreatorShopHome({ shop }: Props) {
         />
         <CreatorConsoleTabs current="shop" />
         {logoutError && <Notice tone="error" className="mb-6">{logoutError}</Notice>}
-        {shop ? (
+        {shop && !shop.terms.agreed ? (
+          <ArtistTermsConsent previousVersion={shop.terms.previousVersion} />
+        ) : shop ? (
           <>
             <ShopProfilePanel
               initial={shop.profile}
@@ -121,7 +130,14 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
         products: [],
         sales: [],
         shipments: null,
+        terms: { agreed: false, previousVersion: null },
       };
+      // 위탁 약관 동의가 먼저다 — 동의 전에는 상품·판매·발송 정보를 읽지도 않는다. 조회가 실패하면 바깥 catch로 가 상점이 닫힌 것처럼 보인다
+      // (fail-closed: 표가 없는 DB는 'none'이라 동의 화면이 뜬다).
+      const terms = await loadShopArtistTermsStatus(auth.creatorId);
+      shop.terms = { agreed: terms.state === 'agreed', previousVersion: terms.state === 'outdated' ? terms.version : null };
+      if (!shop.terms.agreed) return { props: { shop } };
+
       // 목록·판매 현황은 각자 실패해도 프로필 화면을 막지 않는다(0053 전 DB에서도 콘솔이 열려야 한다).
       try { shop.products = await listProductsForCreator(auth.creatorId); } catch (error: unknown) { console.error('[funding] 개설자 상품 목록 조회 실패:', error); }
       try { shop.sales = await loadCreatorSales(auth.creatorId); } catch (error: unknown) { console.error('[funding] 개설자 판매 현황 조회 실패:', error); }
