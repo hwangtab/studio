@@ -19,12 +19,12 @@ const BUSINESS: BusinessProfileView = {
 };
 
 const INVOICE: EditorPayoutSummary = {
-  registered: true, accountLast4: '9012', taxType: 'invoice', residentNumberRegistered: false, withheldPayoutRecorded: false,
+  registered: true, accountLast4: '9012', taxType: 'invoice', residentNumberRegistered: false, withheldPayoutRecorded: false, keepsResidentNumber: false, keepsBusinessProfile: false,
   business: BUSINESS,
 };
 
 const WITHHOLDING: EditorPayoutSummary = {
-  registered: true, accountLast4: '1234', taxType: 'withholding', residentNumberRegistered: true, withheldPayoutRecorded: false,
+  registered: true, accountLast4: '1234', taxType: 'withholding', residentNumberRegistered: true, withheldPayoutRecorded: false, keepsResidentNumber: false, keepsBusinessProfile: false,
   business: null,
 };
 

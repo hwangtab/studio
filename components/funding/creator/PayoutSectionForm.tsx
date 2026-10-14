@@ -87,6 +87,7 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
   /** 마지막 저장 응답의 국세청 안내. `null`이면 저장된 상태에서 다시 만든다. */
   const [savedWarnings, setSavedWarnings] = useState<string[] | null>(null);
   const [businessRetained, setBusinessRetained] = useState(false);
+  const [residentRetained, setResidentRetained] = useState(false);
 
   const businessUnavailable = initial.business === 'unavailable';
   const savedBusiness = isBusinessView(initial.business) ? initial.business : null;
@@ -106,6 +107,7 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
   const clearSaveStatus = () => {
     setSave((s) => (s.status === 'idle' ? s : IDLE_SAVE_STATE));
     setBusinessRetained(false);
+    setResidentRetained(false);
   };
 
   const warnings = savedWarnings ?? (savedBusiness && savedTaxType === 'invoice'
@@ -118,6 +120,7 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
     e.preventDefault();
     setSave({ status: 'saving' });
     setBusinessRetained(false);
+    setResidentRetained(false);
     const business = taxType === 'invoice'
       ? { businessNumber: businessNumber.trim(), businessName: businessName.trim(), representativeName: representativeName.trim() }
       : null;
@@ -174,6 +177,7 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
     setSave({ status: 'success' });
     setSavedWarnings(business ? result.businessWarnings ?? [] : null);
     setBusinessRetained(Boolean(result.businessProfileRetained));
+    setResidentRetained(Boolean(result.residentNumberRetained) && initial.residentNumberRegistered);
 
     // 부모에게도 요약만 올린다. 계좌 전체를 올리면 그 값이 페이지 state를 타고 다른 곳으로 번진다.
     // 바뀐 번호의 국세청 상태는 여기서 추측하지 않는다(미확인으로 둔다) — 페이지가 서버 값을 다시 읽어 갈아 끼운다.
@@ -194,6 +198,8 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
         ? Boolean(result.residentNumberRetained) && initial.residentNumberRegistered
         : value.residentNumber.length > 0 || initial.residentNumberRegistered,
       withheldPayoutRecorded: initial.withheldPayoutRecorded,
+      keepsResidentNumber: initial.keepsResidentNumber,
+      keepsBusinessProfile: initial.keepsBusinessProfile,
       business: nextBusiness,
     });
   };
@@ -273,15 +279,21 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
           근거는 소득세법상 원천징수의무자의 지급명세서 제출 의무 하나뿐이라, 사업자에게
           받으면 근거 없는 수집이 된다 — 개인정보 보호법이 주민등록번호를 법령에 구체적인
           근거가 있을 때만 처리하도록 정하고 있기 때문이다. 그래서 칸 자체가 사라지고 서버도
-          그때 기존 값을 지운다(`savePayoutSection`). **이미 원천징수한 정산이 기록돼 있으면
-          지우지 않는다** — 그때는 이미 지급한 소득의 지급명세서 제출 의무가 근거로 남는다.
+          그때 기존 값을 지운다(`savePayoutSection`). **이미 원천징수한 정산이 기록돼 있거나 상점 아티스트면
+          지우지 않는다**(`keepsResidentNumber`) — 이미 지급한 소득의 지급명세서 제출 의무가 근거로 남을 수 있다.
         */}
         {taxType === 'withholding' ? (
           <>
             {switchingToWithholding && (
-              <Notice tone="warning">
-                개인(원천징수)으로 바꿔 저장하면 사업자 정보와 사업자등록증이 지워져요.
-              </Notice>
+              initial.keepsBusinessProfile ? (
+                <Notice tone="info">
+                  개인(원천징수)으로 바꿔 저장해도 사업자 정보와 사업자등록증은 정산 대조와 세금 신고에 필요해 남겨 둬요.
+                </Notice>
+              ) : (
+                <Notice tone="warning">
+                  개인(원천징수)으로 바꿔 저장하면 사업자 정보와 사업자등록증이 지워져요.
+                </Notice>
+              )
             )}
             <Field
               id="payout-resident-number"
@@ -311,8 +323,8 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
                 암호화해 보관하며, 등록한 번호는 계좌와 마찬가지로 화면에 다시 띄우지 않아요.
               </p>
               <p>
-                {initial.withheldPayoutRecorded
-                  ? '세금 유형을 사업자로 바꾸면 이 칸이 사라지지만, 이미 원천징수한 정산이 있어 지급명세서 제출을 위해 등록된 번호는 그대로 보관돼요 — 이미 떼어 간 세액을 신고할 의무가 남아 있기 때문이에요.'
+                {initial.keepsResidentNumber
+                  ? '세금 유형을 사업자로 바꾸면 이 칸이 사라지지만, 정산 대조와 세금 신고에 필요해 등록된 번호는 그대로 보관돼요.'
                   : '세금 유형을 사업자로 바꾸면 이 칸이 사라지고, 이미 등록된 번호도 지워져요 — 원천징수 대상이 아니면 저희가 이 번호를 보관할 근거가 없기 때문이에요.'}
               </p>
             </div>
@@ -323,8 +335,8 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
               사업자는 주민등록번호를 받지 않아요. 원천징수를 하지 않으므로 지급명세서 제출 대상이
               아니고, 그러면 저희가 그 번호를 보관할 근거가 없어요.
               {' '}
-              {initial.withheldPayoutRecorded
-                ? '다만 이미 원천징수한 정산이 있어, 사업자로 바꿔 저장하셔도 지급명세서 제출을 위해 등록된 번호는 그대로 보관돼요 — 이미 떼어 간 세액을 신고할 의무가 남아 있기 때문이에요.'
+              {initial.keepsResidentNumber
+                ? '다만 정산 대조와 세금 신고에 필요해, 사업자로 바꿔 저장하셔도 등록된 번호는 그대로 보관돼요.'
                 : '개인으로 등록해 두셨다가 사업자로 바꿔 저장하시면 이미 등록된 번호도 함께 지워져요.'}
             </p>
 
@@ -418,7 +430,10 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
           )}
         </div>
         {businessRetained && (
-          <p className="-mt-2 text-sm text-gray-600 dark:text-gray-400">사업자로 정산받은 기록이 있어 사업자 정보는 남겨 두었어요.</p>
+          <p className="-mt-2 text-sm text-gray-600 dark:text-gray-400">사업자 정보는 정산 대조와 세금 신고에 필요해 남겨 두었어요.</p>
+        )}
+        {residentRetained && (
+          <p className="-mt-2 text-sm text-gray-600 dark:text-gray-400">주민등록번호는 정산 대조와 세금 신고에 필요해 남겨 두었어요.</p>
         )}
       </form>
 
@@ -426,6 +441,14 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
         <CertificateControl
           business={savedTaxType === 'invoice' ? savedBusiness : null}
           onChange={(next) => { if (savedBusiness) onSaved({ ...initial, business: { ...savedBusiness, ...next } }); }}
+        />
+      )}
+      {/* 개인으로 바꾼 뒤에도 남아 있는 사업자등록증은 지울 수만 있다(서버도 올리기는 사업자일 때만 받는다). */}
+      {taxType !== 'invoice' && savedBusiness?.hasCertificate && (
+        <CertificateControl
+          business={savedBusiness}
+          deleteOnly
+          onChange={(next) => onSaved({ ...initial, business: { ...savedBusiness, ...next } })}
         />
       )}
     </div>
@@ -436,8 +459,10 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
  * 사업자등록증 사본(선택). 사업자 정보가 저장된 뒤에만 올릴 수 있다 — 서버도 그 전에는 409로 막는다
  * (`pages/api/funding/creator/payout/certificate.ts`).
  */
-function CertificateControl({ business, onChange }: {
+function CertificateControl({ business, deleteOnly = false, onChange }: {
   business: BusinessProfileView | null;
+  /** 개인으로 바꾼 뒤 남은 파일 — 올리기 칸 없이 지우기만 보인다. */
+  deleteOnly?: boolean;
   onChange: (next: Pick<BusinessProfileView, 'hasCertificate' | 'certificateUploadedAt'>) => void;
 }) {
   const inputId = useId();
@@ -483,7 +508,11 @@ function CertificateControl({ business, onChange }: {
 
   return (
     <Panel as="section" variant="outline" padding="default" title="사업자등록증 사본 (선택)" className="flex flex-col gap-3 text-sm">
-      <p>올려 주시면 사업자 정보를 대조하는 데 써요. 이 파일은 스튜디오 놀 운영자만 볼 수 있어요.</p>
+      {deleteOnly ? (
+        <p>개인 전환 뒤에도 정산 대조를 위해 보관 중인 파일이에요. 이 파일은 스튜디오 놀 운영자만 볼 수 있어요.</p>
+      ) : (
+        <p>올려 주시면 사업자 정보를 대조하는 데 써요. 이 파일은 스튜디오 놀 운영자만 볼 수 있어요.</p>
+      )}
       {business === null ? (
         <p className="text-gray-600 dark:text-gray-400">사업자 정보를 먼저 저장해 주세요.</p>
       ) : (
@@ -493,19 +522,23 @@ function CertificateControl({ business, onChange }: {
             : '아직 올린 파일이 없어요.'}
         </p>
       )}
-      <Field id={inputId} label="파일 고르기" hint="JPG·PNG·WEBP 이미지나 PDF, 4MB 이하">
-        <TextInput
-          key={inputKey}
-          type="file"
-          accept={CERTIFICATE_ACCEPT}
-          disabled={business === null || busy !== null}
-          onChange={(e) => { setFile(e.target.files?.[0] ?? null); setMessage(null); }}
-        />
-      </Field>
+      {!deleteOnly && (
+        <Field id={inputId} label="파일 고르기" hint="JPG·PNG·WEBP 이미지나 PDF, 4MB 이하">
+          <TextInput
+            key={inputKey}
+            type="file"
+            accept={CERTIFICATE_ACCEPT}
+            disabled={business === null || busy !== null}
+            onChange={(e) => { setFile(e.target.files?.[0] ?? null); setMessage(null); }}
+          />
+        </Field>
+      )}
       <div className="flex flex-wrap items-center gap-3">
-        <Button type="button" variant="weak" onClick={upload} disabled={business === null || !file || busy !== null}>
-          {busy === 'upload' ? '올리는 중…' : '올리기'}
-        </Button>
+        {!deleteOnly && (
+          <Button type="button" variant="weak" onClick={upload} disabled={business === null || !file || busy !== null}>
+            {busy === 'upload' ? '올리는 중…' : '올리기'}
+          </Button>
+        )}
         {business?.hasCertificate && (
           <Button type="button" variant="ghost" onClick={remove} disabled={busy !== null}>
             {busy === 'delete' ? '지우는 중…' : '지우기'}

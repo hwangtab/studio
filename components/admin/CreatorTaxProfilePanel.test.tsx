@@ -49,3 +49,22 @@ it('payoutAccount={false}면 계좌 보기가 없다 — 펀딩 프로젝트 상
   await screen.findByText(/개인\(원천징수\)/);
   expect(screen.queryByRole('button', { name: '계좌 보기' })).not.toBeInTheDocument();
 });
+
+it('개인으로 바뀌었는데 사업자 정보가 남아 있으면 이유를 단정하지 않고 보관 중이라고만 적는다', async () => {
+  fetchMock.mockImplementation(async (url: string) => {
+    if (url.endsWith('/tax-profile')) {
+      return jsonResponse({
+        ok: true, taxType: 'withholding',
+        business: {
+          businessNumber: '7537400653', businessName: '스튜디오 놀', representativeName: '황경하',
+          ntsStatus: 'active', ntsTaxTypeCode: '01', ntsTaxTypeLabel: '부가가치세 일반과세자',
+          ntsCheckedAt: '2026-10-14T03:00:00.000Z', ntsCheckError: null, hasCertificate: false, certificateUploadedAt: null,
+        },
+      });
+    }
+    throw new Error(`unexpected ${url}`);
+  });
+  render(<CreatorTaxProfilePanel creatorId="creator-1" payoutAccount={false} />);
+  expect(await screen.findByText('개인(원천징수) — 개인 전환 뒤에도 정산 대조를 위해 보관 중인 정보')).toBeInTheDocument();
+  expect(screen.queryByText(/사업자로 정산한 기록/)).not.toBeInTheDocument();
+});

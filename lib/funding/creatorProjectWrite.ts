@@ -426,6 +426,16 @@ export interface CreatorPayoutSummary {
    */
   withheldPayoutRecorded: boolean;
   /**
+   * 사업자로 바꿔 저장해도 주민등록번호를 남기는가 — 저장 경로와 **같은 함수**(`keepsResidentNumber`)로 판정한다.
+   * 원천징수한 정산 기록이 있거나 상점 아티스트면 참이다. 화면은 이 값으로 "지워져요"와 "남겨 둬요"를 가른다.
+   */
+  keepsResidentNumber: boolean;
+  /**
+   * 개인으로 바꿔 저장해도 사업자 정보·사업자등록증을 남기는가 — 저장 경로와 같은 `keepsBusinessProfile`.
+   * 사업자로 정산한 기록이 있거나 상점 아티스트면 참이다.
+   */
+  keepsBusinessProfile: boolean;
+  /**
    * 사업자 정보(`creator_business_profiles`). 없으면 `null`, 표가 없거나(마이그레이션 0058 전) 읽지 못하면
    * `'unavailable'` — 화면은 사업자 칸만 끄고 계좌·주민번호는 그대로 둔다.
    * 개설자 본인 화면에만 싣는다(공개 화면·목록 금지). 사업자등록증 경로는 담지 않는다.
@@ -460,6 +470,17 @@ export const hasWithheldPayout = async (creatorId: string): Promise<boolean> => 
 };
 
 /**
+ * 사업자로 바꿔 저장할 때 주민등록번호를 남기는가. `savePayoutSection`과 `loadPayoutSummary`가 함께 쓴다 —
+ * 화면 문구와 서버가 실제로 하는 일이 갈리지 않게 판정을 한 곳에 둔다.
+ */
+export const keepsResidentNumber = async (creatorId: string): Promise<boolean> =>
+  await hasWithheldPayout(creatorId) || await isShopArtist(creatorId);
+
+/** 개인으로 바꿔 저장할 때 사업자 정보·사업자등록증을 남기는가. `keepsResidentNumber`의 거울. */
+export const keepsBusinessProfile = async (creatorId: string): Promise<boolean> =>
+  await hasInvoicePayout(creatorId) || await isShopArtist(creatorId);
+
+/**
  * 편집 화면이 정산 구획을 그리는 데 필요한 것만 읽는다.
  *
  * `select()`(전 컬럼)를 쓰지 않는다 — 전 컬럼을 읽어 오면 호출부가 실수로 통째 스프레드할
@@ -476,7 +497,8 @@ export const loadPayoutSummary = async (creatorId: string): Promise<CreatorPayou
   if (!row) {
     return {
       registered: false, accountLast4: null, taxType: null,
-      residentNumberRegistered: false, withheldPayoutRecorded: false, business: null,
+      residentNumberRegistered: false, withheldPayoutRecorded: false,
+      keepsResidentNumber: false, keepsBusinessProfile: false, business: null,
     };
   }
 
@@ -496,6 +518,8 @@ export const loadPayoutSummary = async (creatorId: string): Promise<CreatorPayou
     // 다루면 공백뿐인 행에서 화면은 "등록됨", 정산 게이트는 "없음"으로 갈린다.
     residentNumberRegistered: Boolean(row.residentNumberEnc?.trim()),
     withheldPayoutRecorded: await hasWithheldPayout(creatorId),
+    keepsResidentNumber: await keepsResidentNumber(creatorId),
+    keepsBusinessProfile: await keepsBusinessProfile(creatorId),
     business: await loadBusinessProfile(creatorId),
   };
 };
@@ -586,7 +610,7 @@ export const savePayoutSection = async (
   let residentNumberEnc: string | null | undefined;
   let residentNumberRetained = false;
   if (value.taxType === 'invoice') {
-    if (await hasWithheldPayout(creatorId) || await isShopArtist(creatorId)) {
+    if (await keepsResidentNumber(creatorId)) {
       // undefined = SET 목록에서 빠진다(아래 주석). 지우지 않고 그대로 둔다.
       residentNumberEnc = undefined;
       residentNumberRetained = true;
@@ -616,7 +640,7 @@ export const savePayoutSection = async (
    * 사업자 정보 — 위 암호화가 모두 통과한 뒤에만 여기 온다(암호화 실패면 사업자 정보도 저장하지 않는다).
    *
    * - 사업자 저장: 표를 읽지 못하면 **저장 전체를 거부한다**(`business_unavailable`) — 사업자로 바꿨는데 사업자 정보가
-   *   빠진 계정이 생기면 정산 때에야 드러난다. 같은 번호가 이미 확인돼 있으면 다시 조회하지 않는다. 조회는 개설자당
+   *   빠진 계정이 생기면 정산 때에야 드러난다. 같은 번호가 이미 확인돼 있으면 다시 조회하지 않는다(미확인·미등록이면 다시 조회). 조회는 개설자당
    *   시간당 10회(`consumeRateLimit`)이고 넘으면 건너뛰어 "미확인"(`rate_limited`)으로 남긴다.
    * - 번호가 바뀌면 이전 번호의 사업자등록증은 맞지 않는다 — 키를 비우고 Blob은 쓰기 뒤에 지운다.
    * - 개인 저장: 아래 쓰기 뒤에 사업자 행을 지운다. 단 사업자로 정산한 기록이 있거나(`hasInvoicePayout`)
@@ -641,7 +665,9 @@ export const savePayoutSection = async (
       ntsStatus: NtsBusinessStatus; ntsTaxTypeCode: string | null; ntsTaxTypeLabel: string | null;
       ntsCheckedAt: Date | null; ntsCheckError: string | null;
     };
-    if (existing && existing.businessNumber === value.business.businessNumber && existing.ntsStatus !== 'unverified') {
+    // 미확인·미등록은 다시 조회한다 — 미등록은 등록 직후 국세청 반영 전이었을 수 있어, 굳혀 두면 정산 게이트에서 못 푼다.
+    if (existing && existing.businessNumber === value.business.businessNumber
+      && existing.ntsStatus !== 'unverified' && existing.ntsStatus !== 'unregistered') {
       nts = {
         ntsStatus: existing.ntsStatus,
         ntsTaxTypeCode: existing.ntsTaxTypeCode,
@@ -719,7 +745,7 @@ export const savePayoutSection = async (
   let businessProfileRetained = false;
   if (value.taxType === 'withholding' && existingBusiness && existingBusiness !== 'unavailable') {
     try {
-      if (await hasInvoicePayout(creatorId) || await isShopArtist(creatorId)) businessProfileRetained = true;
+      if (await keepsBusinessProfile(creatorId)) businessProfileRetained = true;
       else await deleteBusinessProfile(creatorId, { deleteBlob: deps.deleteBlob });
     } catch {
       console.error('[funding] 개인 전환 뒤 사업자 정보 정리 실패', { creatorId });

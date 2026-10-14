@@ -861,7 +861,8 @@ describe('정산 정보 저장 — 승인 뒤에만, 계정 단위로', () => {
 
     const summary = await loadPayoutSummary(creatorId);
     expect(summary).toEqual({
-      registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false, withheldPayoutRecorded: false, business: null,
+      registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false, withheldPayoutRecorded: false,
+      keepsResidentNumber: false, keepsBusinessProfile: false, business: null,
     });
   });
 
@@ -935,7 +936,8 @@ describe('정산 정보 저장 — 승인 뒤에만, 계정 단위로', () => {
     })).toEqual({ ok: true });
 
     expect(await loadPayoutSummary(creatorId)).toEqual({
-      registered: true, accountLast4: '0000', taxType: 'invoice', residentNumberRegistered: false, withheldPayoutRecorded: false, business: null,
+      registered: true, accountLast4: '0000', taxType: 'invoice', residentNumberRegistered: false, withheldPayoutRecorded: false,
+      keepsResidentNumber: false, keepsBusinessProfile: false, business: null,
     });
   });
 
@@ -961,7 +963,8 @@ describe('loadPayoutSummary — 계좌 원본은 함수 밖으로 안 나간다'
 
     const summary = await loadPayoutSummary(creatorId);
     expect(Object.keys(summary).sort()).toEqual([
-      'accountLast4', 'business', 'registered', 'residentNumberRegistered', 'taxType', 'withheldPayoutRecorded',
+      'accountLast4', 'business', 'keepsBusinessProfile', 'keepsResidentNumber', 'registered', 'residentNumberRegistered',
+      'taxType', 'withheldPayoutRecorded',
     ]);
 
     // lib/funding/dbProjects.integration.test.ts의 같은 모양 단언 — 이 값이 그대로
@@ -984,7 +987,8 @@ describe('loadPayoutSummary — 계좌 원본은 함수 밖으로 안 나간다'
       .where(eq(schema.fundingCreators.id, creatorId));
 
     expect(await loadPayoutSummary(creatorId)).toEqual({
-      registered: false, accountLast4: null, taxType: 'withholding', residentNumberRegistered: false, withheldPayoutRecorded: false, business: null,
+      registered: false, accountLast4: null, taxType: 'withholding', residentNumberRegistered: false, withheldPayoutRecorded: false,
+      keepsResidentNumber: false, keepsBusinessProfile: false, business: null,
     });
   });
 
@@ -1009,7 +1013,8 @@ describe('loadPayoutSummary — 계좌 원본은 함수 밖으로 안 나간다'
 
   it('없는 계정은 전부 비어 있는 요약을 돌려준다', async () => {
     expect(await loadPayoutSummary('없는-id')).toEqual({
-      registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false, withheldPayoutRecorded: false, business: null,
+      registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false, withheldPayoutRecorded: false,
+      keepsResidentNumber: false, keepsBusinessProfile: false, business: null,
     });
   });
 });
@@ -1388,6 +1393,18 @@ describe('정산 정보 — 사업자 정보·국세청 조회·자격', () => {
     expect((await businessRows(creatorId))[0].ntsStatus).toBe('active');
   });
 
+  it('번호가 같아도 지난 조회가 미등록(unregistered)이면 다시 조회한다 — 등록 직후라 반영 전이었을 수 있다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    const lookupUnregistered = jest.fn(async () => ({
+      ok: true as const, status: 'unregistered' as const, taxTypeCode: null, taxTypeLabel: null,
+    }));
+    await savePayoutSection(creatorId, invoice(), { lookup: lookupUnregistered });
+    expect((await businessRows(creatorId))[0].ntsStatus).toBe('unregistered');
+    await savePayoutSection(creatorId, invoice(), { lookup: lookupOk });
+    expect(lookupOk).toHaveBeenCalledWith('7537400653');
+    expect((await businessRows(creatorId))[0].ntsStatus).toBe('active');
+  });
+
   it('번호가 바뀌면 다시 조회하고 옛 사업자등록증을 지운다', async () => {
     const { creatorId } = await seedProject({ reviewStatus: 'approved' });
     await savePayoutSection(creatorId, invoice(), { lookup: lookupOk });
@@ -1523,6 +1540,26 @@ describe('정산 정보 — 사업자 정보·국세청 조회·자격', () => {
     const [row] = await mockDb.select({ taxType: schema.fundingCreators.taxType })
       .from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creatorId));
     expect(row.taxType).toBe('withholding');
+  });
+
+  it('요약의 keeps* 플래그는 저장 경로와 같은 판정이다 — 상점 아티스트면 둘 다 참', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, withholding('9901011234567'), { lookup: lookupOk });
+    expect(await loadPayoutSummary(creatorId)).toMatchObject({ keepsResidentNumber: false, keepsBusinessProfile: false });
+    await mockDb.insert(schema.shopArtists).values({ creatorId, slug: `artist-${creatorId}` });
+    expect(await loadPayoutSummary(creatorId)).toMatchObject({ keepsResidentNumber: true, keepsBusinessProfile: true });
+  });
+
+  it('요약의 keeps* 플래그 — 원천징수 기록은 주민번호만, 사업자 정산 기록은 사업자 정보만 남긴다', async () => {
+    const withheld = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(withheld.creatorId, withholding('9901011234567'), { lookup: lookupOk });
+    await recordPayout(withheld.projectId, 30_096);
+    expect(await loadPayoutSummary(withheld.creatorId)).toMatchObject({ keepsResidentNumber: true, keepsBusinessProfile: false });
+
+    const invoiced = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(invoiced.creatorId, invoice(), { lookup: lookupOk });
+    await recordPayout(invoiced.projectId, 0);
+    expect(await loadPayoutSummary(invoiced.creatorId)).toMatchObject({ keepsResidentNumber: false, keepsBusinessProfile: true });
   });
 
   it('상점 아티스트면 사업자로 바꿔도 주민등록번호를 남긴다 — 상점 정산은 기록 표가 없다', async () => {

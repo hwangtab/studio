@@ -141,7 +141,7 @@ export function CreatorTaxProfilePanel({
       ) : (
         <div className="space-y-3">
           <dl className="space-y-2 text-sm">
-            <Row label="세금 구분">{data.taxType === 'invoice' ? '사업자(세금계산서)' : '개인(원천징수) — 사업자로 정산한 기록 때문에 남긴 정보'}</Row>
+            <Row label="세금 구분">{data.taxType === 'invoice' ? '사업자(세금계산서)' : '개인(원천징수) — 개인 전환 뒤에도 정산 대조를 위해 보관 중인 정보'}</Row>
             <Row label="사업자등록번호"><span className="tabular-nums">{formatBusinessNumber(business.businessNumber)}</span></Row>
             <Row label="상호">{business.businessName}</Row>
             <Row label="대표자명">{business.representativeName}</Row>

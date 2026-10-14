@@ -122,11 +122,32 @@ test('개인(원천징수)으로 바꾼 뒤 남은 행 — POST 409, 올리지 �
   expect(put).not.toHaveBeenCalled();
 });
 
-test('개인(원천징수)으로 바꾼 뒤 남은 행 — DELETE 409, Blob을 지우지 않는다', async () => {
+test('개인(원천징수)으로 바꾼 뒤 남은 행 — DELETE 200, 파일을 지운다(올리기만 사업자 전용)', async () => {
   (isInvoiceTaxType as jest.Mock).mockResolvedValue(false);
+  (loadBusinessProfile as jest.Mock).mockResolvedValue({ businessNumber: '1234567890', hasCertificate: true });
+  expect(await call('DELETE')).toEqual({ status: 200, json: { ok: true } });
+  expect(clearBusinessCertificate).toHaveBeenCalledWith(CID, expect.any(Date));
+  expect(deleteTaxDocumentBlob).toHaveBeenCalledWith(`tax-docs/${CID}/old.pdf`, CID);
+});
+
+test('개인(원천징수)이고 남은 파일이 없으면 DELETE 409', async () => {
+  (isInvoiceTaxType as jest.Mock).mockResolvedValue(false);
+  (loadBusinessProfile as jest.Mock).mockResolvedValue({ businessNumber: '1234567890', hasCertificate: false });
   expect((await call('DELETE')).status).toBe(409);
   expect(clearBusinessCertificate).not.toHaveBeenCalled();
-  expect(deleteTaxDocumentBlob).not.toHaveBeenCalled();
+});
+
+test('개인(원천징수)이어도 DELETE는 인증·Origin·승인 게이트를 그대로 탄다', async () => {
+  (isInvoiceTaxType as jest.Mock).mockResolvedValue(false);
+  (loadBusinessProfile as jest.Mock).mockResolvedValue({ businessNumber: '1234567890', hasCertificate: true });
+  (hasApprovedEngagement as jest.Mock).mockResolvedValue(false);
+  expect((await call('DELETE')).status).toBe(403);
+  (hasApprovedEngagement as jest.Mock).mockResolvedValue(true);
+  (authenticateCreatorApi as jest.Mock).mockResolvedValue({ ok: false });
+  expect((await call('DELETE')).status).toBe(401);
+  (isAllowedContactRequestOrigin as jest.Mock).mockReturnValue(false);
+  expect((await call('DELETE')).status).toBe(403);
+  expect(clearBusinessCertificate).not.toHaveBeenCalled();
 });
 
 test('사업자 표가 없으면 503', async () => {

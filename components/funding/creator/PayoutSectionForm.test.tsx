@@ -13,7 +13,7 @@ import { PayoutSectionForm } from './PayoutSectionForm';
 import type { EditorPayoutSummary } from './types';
 
 const UNREGISTERED: EditorPayoutSummary = {
-  registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false, withheldPayoutRecorded: false,
+  registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false, withheldPayoutRecorded: false, keepsResidentNumber: false, keepsBusinessProfile: false,
   business: null,
 };
 
@@ -31,7 +31,7 @@ const BUSINESS: BusinessProfileView = {
 };
 
 const INVOICE: EditorPayoutSummary = {
-  registered: true, accountLast4: '9012', taxType: 'invoice', residentNumberRegistered: false, withheldPayoutRecorded: false,
+  registered: true, accountLast4: '9012', taxType: 'invoice', residentNumberRegistered: false, withheldPayoutRecorded: false, keepsResidentNumber: false, keepsBusinessProfile: false,
   business: BUSINESS,
 };
 
@@ -242,11 +242,45 @@ describe('사업자 칸', () => {
     fillAccount();
     fireEvent.click(saveButton());
     await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
-    expect(screen.getByText('사업자로 정산받은 기록이 있어 사업자 정보는 남겨 두었어요.')).toBeInTheDocument();
+    expect(screen.getByText('사업자 정보는 정산 대조와 세금 신고에 필요해 남겨 두었어요.')).toBeInTheDocument();
+  });
+
+  it('사업자 정보를 남기는 계정이면 개인으로 바꿀 때 "지워져요" 대신 "남겨 둬요"라고 말한다', () => {
+    renderForm({ ...INVOICE, keepsBusinessProfile: true });
+    fireEvent.change(taxField(), { target: { value: 'withholding' } });
+    expect(screen.getByText('사업자등록증은 정산 대조와 세금 신고에 필요해 남겨 둬요', { exact: false })).toBeInTheDocument();
+    expect(screen.queryByText('사업자 정보와 사업자등록증이 지워져요', { exact: false })).toBeNull();
+  });
+
+  it('남길 근거가 없으면 개인으로 바꿀 때 지워진다고 말한다', () => {
+    renderForm(INVOICE);
+    fireEvent.change(taxField(), { target: { value: 'withholding' } });
+    expect(screen.getByText('사업자 정보와 사업자등록증이 지워져요', { exact: false })).toBeInTheDocument();
   });
 });
 
 describe('사업자등록증', () => {
+  it('개인으로 바뀐 뒤 남은 사업자등록증은 지우기만 보이고, 지울 수 있다', async () => {
+    const fetchMock = mockFetchOk({ ok: true });
+    renderForm({
+      ...INVOICE, taxType: 'withholding', keepsBusinessProfile: true,
+      business: { ...BUSINESS, hasCertificate: true, certificateUploadedAt: '2026-10-14T03:00:00.000Z' },
+    });
+    expect(screen.getByText('개인 전환 뒤에도 정산 대조를 위해 보관 중인 파일이에요', { exact: false })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: '올리기' })).toBeNull();
+    expect(screen.queryByLabelText('파일 고르기', { exact: false })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: '지우기' }));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('/certificate'), expect.objectContaining({ method: 'DELETE' }),
+    ));
+    await waitFor(() => expect(screen.queryByRole('button', { name: '지우기' })).toBeNull());
+  });
+
+  it('개인이고 남은 사업자등록증이 없으면 사업자등록증 칸을 그리지 않는다', () => {
+    renderForm({ ...INVOICE, taxType: 'withholding', keepsBusinessProfile: true });
+    expect(screen.queryByText('사업자등록증 사본', { exact: false })).toBeNull();
+  });
+
   it('사업자 정보를 저장하기 전에는 올리기를 끄고 먼저 저장하라고 말한다', () => {
     renderForm();
     fireEvent.change(taxField(), { target: { value: 'invoice' } });
@@ -360,8 +394,28 @@ describe('주민등록번호는 원천징수 대상만', () => {
     expect(screen.getByText('이미 등록된 번호도 함께 지워져요', { exact: false })).toBeInTheDocument();
   });
 
+  it('상점 아티스트처럼 정산 기록 없이도 서버가 남기는 계정이면 "보관됩니다"라고 말한다', () => {
+    renderForm({ ...UNREGISTERED, registered: true, taxType: 'withholding', residentNumberRegistered: true, keepsResidentNumber: true });
+    fireEvent.change(taxField(), { target: { value: 'invoice' } });
+    expect(screen.getByText('등록된 번호는 그대로 보관돼요', { exact: false })).toBeInTheDocument();
+    expect(screen.queryByText('이미 등록된 번호도 함께 지워져요', { exact: false })).toBeNull();
+  });
+
+  it('사업자로 저장해 서버가 번호를 남겼다고 답하면 저장 뒤에 그렇게 말한다', async () => {
+    mockFetchOk({ ok: true, residentNumberRetained: true });
+    renderForm({ ...UNREGISTERED, registered: true, taxType: 'withholding', residentNumberRegistered: true, keepsResidentNumber: true });
+    fireEvent.change(taxField(), { target: { value: 'invoice' } });
+    fireEvent.change(queryBizNumber()!, { target: { value: '7537400653' } });
+    fireEvent.change(screen.getByLabelText('상호', { exact: false }), { target: { value: '스튜디오 놀' } });
+    fireEvent.change(screen.getByLabelText('대표자명', { exact: false }), { target: { value: '황경하' } });
+    fillAccount();
+    fireEvent.click(saveButton());
+    await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
+    expect(screen.getByText('주민등록번호는 정산 대조와 세금 신고에 필요해 남겨 두었어요.')).toBeInTheDocument();
+  });
+
   it('원천징수한 정산 기록이 있으면 "보관됩니다"라고 말한다', () => {
-    renderForm({ ...UNREGISTERED, registered: true, taxType: 'withholding', residentNumberRegistered: true, withheldPayoutRecorded: true });
+    renderForm({ ...UNREGISTERED, registered: true, taxType: 'withholding', residentNumberRegistered: true, withheldPayoutRecorded: true, keepsResidentNumber: true });
     expect(screen.getByText('등록된 번호는 그대로 보관돼요', { exact: false })).toBeInTheDocument();
     fireEvent.change(taxField(), { target: { value: 'invoice' } });
     expect(screen.getByText('등록된 번호는 그대로 보관돼요', { exact: false })).toBeInTheDocument();
@@ -370,7 +424,7 @@ describe('주민등록번호는 원천징수 대상만', () => {
 
   it('사업자로 저장했는데 서버가 보관했다고 답하면 등록 표시가 유지된다', async () => {
     mockFetchOk({ ok: true, residentNumberRetained: true });
-    renderForm({ ...UNREGISTERED, registered: true, taxType: 'withholding', residentNumberRegistered: true, withheldPayoutRecorded: true });
+    renderForm({ ...UNREGISTERED, registered: true, taxType: 'withholding', residentNumberRegistered: true, withheldPayoutRecorded: true, keepsResidentNumber: true });
     fireEvent.change(taxField(), { target: { value: 'invoice' } });
     fireEvent.change(queryBizNumber()!, { target: { value: '7537400653' } });
     fireEvent.change(screen.getByLabelText('상호', { exact: false }), { target: { value: '스튜디오 놀' } });

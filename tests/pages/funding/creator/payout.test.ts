@@ -25,7 +25,7 @@ const run = async (locale = 'ko') =>
 
 const SUMMARY = {
   registered: true, accountLast4: '9012', taxType: 'withholding', residentNumberRegistered: true,
-  withheldPayoutRecorded: false, business: null,
+  withheldPayoutRecorded: false, keepsResidentNumber: false, keepsBusinessProfile: false, business: null,
 };
 
 describe('콘솔 정산 정보 탭 getServerSideProps', () => {

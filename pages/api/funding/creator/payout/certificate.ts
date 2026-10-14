@@ -22,6 +22,8 @@ import { readBodyWithLimit } from '../../../../../lib/funding/uploadBody';
 /**
  * 사업자등록증 사본 업로드(POST)·삭제(DELETE).
  *
+ * 올리기는 세금 구분이 사업자일 때만, 지우기는 개인으로 바꾼 뒤 남은 파일도 받는다(인증·Origin·승인 게이트는 같다).
+ *
  * 원문 바이트를 받으므로 JSON 바디 파서를 끈다(`creator/upload.ts`와 같다).
  * 응답에는 키·주소를 싣지 않는다 — 열람은 관리자 경로(접속기록)만 한다.
  */
@@ -43,15 +45,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // 정산 정보를 받아도 되는 계정만 — savePayoutSection과 같은 게이트.
   let profile: Awaited<ReturnType<typeof loadBusinessProfile>>;
+  let invoice: boolean;
   try {
     if (!(await hasApprovedEngagement(creatorId))) {
       return res.status(403).json({ ok: false, message: '승인된 뒤에 올릴 수 있어요.' });
     }
-    if (!(await isInvoiceTaxType(creatorId))) {
-      return res.status(409).json({
-        ok: false,
-        message: req.method === 'DELETE' ? '세금 구분이 사업자일 때만 지울 수 있어요.' : '세금 구분이 사업자일 때만 올릴 수 있어요.',
-      });
+    invoice = await isInvoiceTaxType(creatorId);
+    // 올리기만 사업자 전용이다. 지우기는 개인으로 바꾼 뒤 남은 파일(정산 대조용으로 남긴 행)도 받는다.
+    if (!invoice && req.method === 'POST') {
+      return res.status(409).json({ ok: false, message: '세금 구분이 사업자일 때만 올릴 수 있어요.' });
     }
     profile = await loadBusinessProfile(creatorId);
   } catch (error: unknown) {
@@ -63,6 +65,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   if (!profile) {
     return res.status(409).json({ ok: false, message: '사업자 정보를 먼저 저장해 주세요.' });
+  }
+  if (!invoice && !profile.hasCertificate) {
+    return res.status(409).json({ ok: false, message: '지울 사업자등록증이 없어요.' });
   }
 
   if (req.method === 'DELETE') {
