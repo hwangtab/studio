@@ -99,7 +99,7 @@ export default function SoftwareDetailPage({ softwareLocale: locale, product, sa
             </section>
           )}
 
-          <p className="text-sm"><Link href={softwarePath(locale)} className="text-primary hover:underline">← {t.backToIndex}</Link></p>
+          <p className="text-sm"><Link href={softwarePath(locale)} className="text-primary hover:underline dark:text-primary-lighter">← {t.backToIndex}</Link></p>
         </div>
       </PageShell>
     </>

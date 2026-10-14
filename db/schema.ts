@@ -1967,7 +1967,7 @@ export type ShopProductSkuRow = typeof shopProductSkus.$inferSelect;
 // `orders`에 컬럼을 더하지 않고 표를 따로 둔다(루트 CLAUDE.md 0022 절). 두 표 모두 새 표라 미적용 DB에서는
 // 소프트웨어 기능만 꺼지고 다른 결제는 영향이 없다.
 
-export const softwareLicenseSourceEnum = ['manual', 'toss', 'paypal'] as const;
+export const softwareLicenseSourceEnum = ['manual', 'toss', 'overseas'] as const;
 export const softwareLicenseStatusEnum = ['active', 'revoked', 'refunded'] as const;
 
 /**

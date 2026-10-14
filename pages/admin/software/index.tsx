@@ -30,7 +30,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   }
 };
 
-const SOURCE_LABEL: Record<string, string> = { manual: '수동 발급', toss: '국내 결제', paypal: '해외 결제' };
+const SOURCE_LABEL: Record<string, string> = { manual: '수동 발급', toss: '국내 결제', overseas: '해외 결제' };
 const STATUS_LABEL: Record<string, string> = { active: '사용 중', revoked: '취소', refunded: '환불' };
 const kst = (iso: string) => new Date(iso).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', year: '2-digit', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
