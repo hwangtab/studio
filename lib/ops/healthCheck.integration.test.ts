@@ -662,6 +662,36 @@ describe('같은 달에 두 번 결제된 구독', () => {
   });
 });
 
+describe('청구일이 지났는데 걷히지 않은 구독', () => {
+  const seed = async (status: string, nextBillingAt: string) => {
+    await client.execute({
+      sql: `INSERT INTO subscriptions (id, kind, customer_name, customer_phone, customer_email,
+              customer_key, manage_token, item_amount, vat_amount, total_amount, billing_day, status, next_billing_at, created_at, updated_at)
+            VALUES ('ob-1','lesson','박연체','010-4','o@b.c','sub_o','otok',300000,30000,330000,5,?,?,unixepoch(),unixepoch())`,
+      args: [status, EPOCH(nextBillingAt)],
+    });
+  };
+  const issue = async () => (await runHealthCheck(NOW)).issues.find((i) => i.title.includes('걷히지 않은 구독'));
+
+  it('active 구독의 청구일이 36시간 넘게 지났으면 high로 보고한다', async () => {
+    await seed('active', new Date(NOW.getTime() - 40 * 3600 * 1000).toISOString());
+    const found = (await issue())!;
+    expect(found).toBeDefined();
+    expect(found.severity).toBe('high');
+    expect(found.detail).toContain('ob-1');
+  });
+
+  it('청구일이 하루 지난 정도(정상 재시도 범위)는 뜨지 않는다', async () => {
+    await seed('past_due', new Date(NOW.getTime() - 20 * 3600 * 1000).toISOString());
+    expect(await issue()).toBeUndefined();
+  });
+
+  it('정지·해지된 구독은 보지 않는다', async () => {
+    await seed('paused', new Date(NOW.getTime() - 400 * 3600 * 1000).toISOString());
+    expect(await issue()).toBeUndefined();
+  });
+});
+
 describe('곧 자동 종료되는 정지 구독', () => {
   const seedPaused = async (over: { pausedReason?: string | null; updatedAt?: string; status?: string } = {}) => {
     const updatedAt = over.updatedAt ?? '2023-09-01T00:00:00Z';

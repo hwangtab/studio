@@ -85,6 +85,13 @@ describe('sendSubscriptionSetupEmail — 일시정지 구독', () => {
     expect(mail.text).toContain('멈춰 있는 상태');
   });
 
+  it('결제 실패 정지의 재등록(initial + paused)은 밀린 달치 즉시 결제와 재개를 알린다', async () => {
+    await sendSubscriptionSetupEmail(sub({ setupMode: 'initial', status: 'paused' }), 'https://studionol.co.kr/ko/subscribe/sub-1?token=t');
+    const mail = lastCall();
+    expect(mail.text).toContain('밀린 달치가 결제되고 정기결제가 다시 시작');
+    expect(mail.text).not.toContain('첫 달치');
+  });
+
   it('active는 종전대로 다음 결제일 청구를 알린다', async () => {
     await sendSubscriptionSetupEmail(
       sub({ setupMode: 'change', status: 'active' }),

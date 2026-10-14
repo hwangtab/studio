@@ -49,6 +49,7 @@ import {
   chargeIdempotencyKey,
   claimDueSubscription,
   completeCardSetup,
+  firstPaidAtOf,
   createSubscription,
   endExpiredSubscriptions,
   findSubscriptionById,
@@ -748,23 +749,45 @@ describe('카드 재등록', () => {
     const token = await issueCardChangeToken(created.id, changeAt);
     if (!token.ok) throw new Error('unreachable');
     issueBillingKey.mockResolvedValue(issuedOk('bkey_2'));
+    chargeBillingKey.mockResolvedValue(chargeOk('pay_after_change'));
     const sub = (await findSubscriptionById(created.id))!;
     const setup = await completeCardSetup(
       { id: created.id, token: token.setupToken, authKey: 'auth_2', customerKey: sub.customerKey },
       changeAt,
     );
-    // 카드 교체 모드라 등록만으로는 결제하지 않는다 — 여기서 청구하면 카드만 바꾼 고객에게 한 달치가 더 나간다.
-    expect(setup).toMatchObject({ ok: true, charged: false });
+    // 결제 실패 정지의 재등록은 'initial'이다 — 등록 즉시 미납분(4월)을 새 카드로 걷고 active로 돌아온다.
+    // 'change'로 두면 listDueSubscriptions가 paused를 걷지 않아 영영 청구되지 않는다.
+    expect(token.setupMode).toBe('initial');
+    expect(setup).toMatchObject({ ok: true, charged: true, status: 'active', resumed: true });
     const keys = await client.execute('SELECT billing_key, revoked_at FROM billing_keys ORDER BY issued_at');
     expect(keys.rows[0].revoked_at).not.toBeNull();
     expect(keys.rows[1]).toMatchObject({ billing_key: 'bkey_2', revoked_at: null });
-
-    chargeBillingKey.mockResolvedValue(chargeOk('pay_after_change'));
-    const manual = await chargeCycle(created.id, changeAt, { reason: 'manual' });
-    expect(manual.ok).toBe(true);
     expect((await findSubscriptionById(created.id))!.status).toBe('active');
     // 새 카드로 결제됐는지 — 옛 키가 남아 있으면 revoke가 무의미하다.
     expect((chargeBillingKey.mock.calls.at(-1)![0] as { billingKey: string }).billingKey).toBe('bkey_2');
+    const paid = await client.execute("SELECT cycle_ym FROM subscription_payments WHERE status = 'paid' ORDER BY attempted_at");
+    expect(paid.rows.map((r) => r.cycle_ym)).toEqual(['2026-03', '2026-04']); // 실패했던 4월분을 걷었다
+  });
+
+  it('운영자 정지 구독의 카드 교체는 결제·재개 없이 끝나고 운영자에게 알린다', async () => {
+    const { created } = await activated();
+    await pauseSubscription(created.id, PAUSE_UNTIL, new Date('2026-04-01T00:00:00Z'));
+    const changeAt = new Date('2026-04-10T00:00:00Z');
+    const token = await issueCardChangeToken(created.id, changeAt);
+    if (!token.ok) throw new Error('unreachable');
+    expect(token.setupMode).toBe('change');
+    issueBillingKey.mockResolvedValue(issuedOk('bkey_3'));
+    chargeBillingKey.mockClear();
+    sendSubscriptionOperatorAlert.mockClear();
+    const sub = (await findSubscriptionById(created.id))!;
+    const setup = await completeCardSetup(
+      { id: created.id, token: token.setupToken, authKey: 'auth_3', customerKey: sub.customerKey },
+      changeAt,
+    );
+    expect(setup).toMatchObject({ ok: true, charged: false, status: 'paused' });
+    expect(chargeBillingKey).not.toHaveBeenCalled();
+    expect((await findSubscriptionById(created.id))!.status).toBe('paused');
+    expect(sendSubscriptionOperatorAlert).toHaveBeenCalledWith(expect.objectContaining({ id: created.id }), 'card_changed_while_paused', expect.any(String));
   });
 
   /**
@@ -1755,5 +1778,15 @@ describe('cancelSubscriptionsOfContract — 계약 종료 시 구독 해지', ()
     expect(result.failed[0].subscriptionId).not.toBe(result.cancelledIds[0]);
     expect((await findSubscriptionById(result.cancelledIds[0]))!.status).toBe('cancelled');
     expect((await findSubscriptionById(result.failed[0].subscriptionId))!.status).toBe('pending_card');
+  });
+});
+
+describe('firstPaidAtOf', () => {
+  it('첫 결제가 승인된 시각을 돌려주고, 결제 이력이 없으면 null', async () => {
+    const { created } = await activated();
+    expect((await firstPaidAtOf(created.id))?.toISOString()).toBe(NOW.toISOString());
+    const fresh = await createSubscription(lessonInput, NOW);
+    if (!fresh.ok) throw new Error('setup');
+    expect(await firstPaidAtOf(fresh.id)).toBeNull();
   });
 });

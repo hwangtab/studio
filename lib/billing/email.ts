@@ -79,7 +79,10 @@ export const sendSubscriptionSetupEmail = (
     ? isPaused
       ? '아래 버튼에서 새 카드를 등록하시면 카드만 교체되며, 이번에는 결제되지 않아요. 정기결제가 멈춰 있는 상태라 재개는 문의로 안내해 드려요.'
       : '아래 버튼에서 새 카드를 등록하시면 카드만 교체되며, 이번에는 결제되지 않아요. 다음 결제일부터 새 카드로 청구돼요.'
-    : '아래 버튼에서 카드를 등록하면 즉시 첫 달치가 결제되고, 이후 매월 같은 날 자동으로 결제돼요.';
+    : isPaused
+      // 결제 실패 정지의 재등록 — issueCardChangeToken이 'initial'로 발급한다. 등록 즉시 밀린 달치가 결제되고 재개된다.
+      ? '아래 버튼에서 새 카드를 등록하시면 즉시 밀린 달치가 결제되고 정기결제가 다시 시작돼요. 이후 매월 같은 날 자동으로 결제돼요.'
+      : '아래 버튼에서 카드를 등록하면 즉시 첫 달치가 결제되고, 이후 매월 같은 날 자동으로 결제돼요.';
   return sendCustomerEmail(sub, 'setup', {
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
@@ -107,11 +110,7 @@ export const sendSubscriptionSetupEmail = (
       `${amountLine(sub)}`,
       `결제일: 매월 ${sub.billingDay}일`,
       '',
-      isChange
-        ? isPaused
-          ? '아래 링크에서 새 카드를 등록하시면 카드만 교체되며, 이번에는 결제되지 않아요. 정기결제가 멈춰 있는 상태라 재개는 문의로 안내해 드려요.'
-          : '아래 링크에서 새 카드를 등록하시면 카드만 교체되며, 이번에는 결제되지 않아요. 다음 결제일부터 새 카드로 청구돼요.'
-        : '아래 링크에서 카드를 등록하면 즉시 첫 달치가 결제되고, 이후 매월 같은 날 자동으로 결제돼요.',
+      setupLine.replace('아래 버튼에서', '아래 링크에서'),
       setupUrl,
       '',
       '링크는 발급일로부터 7일간 유효해요.',
@@ -263,7 +262,8 @@ export const sendSubscriptionResumedEmail = (
 /** 해지 확인. 즉시 환불 없이 이미 결제한 기간까지 이용 가능함을 안내한다. */
 export const sendSubscriptionCancelledEmail = (
   sub: Pick<Subscription, 'kind' | 'artistSlug' | 'customerEmail' | 'customerName'>,
-  input: { endsAt: Date },
+  /** refundNote: 환불 안내 한 줄(청약철회 기간 안의 해지 등). 없으면 이용 가능 기간만 안내한다. */
+  input: { endsAt: Date; refundNote?: string },
 ): Promise<string | null> =>
   sendCustomerEmail(sub, 'cancelled', {
     to: sub.customerEmail,
@@ -275,12 +275,14 @@ export const sendSubscriptionCancelledEmail = (
       paragraphs: [
         `${greet(sub)} ${product(sub)} 정기결제 해지가 접수됐어요.`,
         `${escapeHtml(fmtDate(input.endsAt))}까지는 계속 이용하실 수 있고, 이후 청구는 없어요.`,
+        ...(input.refundNote ? [escapeHtml(input.refundNote)] : []),
       ],
       rows: [{ label: '이용 가능 기간', value: `${fmtDate(input.endsAt)}까지`, emphasis: true }],
     }),
     text: [
       `${sub.customerName}님, ${subscriptionOrderName(sub)} 정기결제 해지가 접수됐어요.`,
       `${input.endsAt.toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' })}까지는 계속 이용하실 수 있고, 이후 청구는 없어요.`,
+      ...(input.refundNote ? [input.refundNote] : []),
       '',
       '문의: 010-4255-7893',
     ].join('\n'),
@@ -334,10 +336,11 @@ export type SubscriptionAlertKind =
   | 'late_approval'
   | 'paused_late_approval'
   | 'duplicate_approval'
-  | 'charge_held';
+  | 'charge_held'
+  | 'card_changed_while_paused';
 
 /** 사람이 판단해야 하는 사건(돈이 이미 움직였거나 첫 결제가 막힌 경우) — 알림 블록을 붉은 톤으로. */
-const ALERT_KINDS: SubscriptionAlertKind[] = ['first_charge_failed', 'late_approval', 'paused_late_approval', 'duplicate_approval'];
+const ALERT_KINDS: SubscriptionAlertKind[] = ['first_charge_failed', 'late_approval', 'paused_late_approval', 'duplicate_approval', 'cancelled'];
 
 /** 운영자 알림. kind는 발생 사건을 나타낸다. */
 export const sendSubscriptionOperatorAlert = (
@@ -364,6 +367,8 @@ export const sendSubscriptionOperatorAlert = (
     // 지난 회차의 토스 상태를 확인하지 못해 청구를 시도하지 않은 경우. 카드 문제가 아니므로
     // 고객에게는 아무것도 가지 않고 운영자만 안다 — 계속 반복되면 토스 쪽 장애나 키 문제다.
     charge_held: '청구 보류 — 지난 회차 상태 확인 실패',
+    // 운영자 정지 상태에서 고객이 카드를 새로 등록한 경우. 자동 재개하지 않으므로 사람이 정한다.
+    card_changed_while_paused: '정지 구독의 카드 교체됨 — 재개 여부 판단',
   };
 
   return sendEmail({

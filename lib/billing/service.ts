@@ -281,7 +281,8 @@ export const getSubscriptionWithDetails = async (id: string): Promise<Subscripti
 // ─── 카드 등록 ──────────────────────────────────────────────────────────────
 
 export type CompleteCardSetupResult =
-  | { ok: true; status: SubscriptionStatus; charged: boolean; paymentKey?: string }
+  /** resumed: 결제 실패로 정지됐던 구독이 재등록 + 미납분 결제로 다시 active가 된 경우. */
+  | { ok: true; status: SubscriptionStatus; charged: boolean; paymentKey?: string; resumed?: boolean }
   | {
       ok: false;
       code: 'not_found' | 'used' | 'expired' | 'invalid_state' | 'customer_key_mismatch' | 'issue_failed' | 'first_charge_failed';
@@ -337,7 +338,19 @@ export const completeCardSetup = async (
 
   // 카드 교체는 결제하지 않는다. 여기서 chargeCycle을 부르면 카드만 바꾸려던 고객에게
   // 한 달치가 더 청구된다(schema의 setupMode 주석).
-  if (wasChangeMode) return { ok: true, status: subscription.status, charged: false };
+  if (wasChangeMode) {
+    // 운영자가 세워 둔 구독의 카드가 바뀌었다 — 웹훅 뒤늦은 승인과 같은 원칙으로 자동 재개하지
+    // 않고 사람에게 알린다. 고객은 '카드 등록 완료'를 봤는데 아무도 모르면 정지가 방치된다.
+    if (subscription.status === 'paused') {
+      const alertError = await sendSubscriptionOperatorAlert(
+        subscription,
+        'card_changed_while_paused',
+        '정지 상태의 구독에 고객이 새 카드를 등록했어요. 재개할지는 관리자 > 구독 상세에서 정해 주세요.',
+      );
+      if (alertError) console.error('[billing] 정지 구독 카드 교체 운영자 알림 발송 실패', { subscriptionId: subscription.id, alertError });
+    }
+    return { ok: true, status: subscription.status, charged: false };
+  }
 
   const charged = await chargeCycle(subscription.id, now, { reason: 'first' });
   if (!charged.ok) {
@@ -347,7 +360,7 @@ export const completeCardSetup = async (
       message: charged.message ?? '카드는 등록되었으나 첫 결제가 승인되지 않았어요. 다른 카드로 다시 시도해 주세요.',
     };
   }
-  return { ok: true, status: charged.status, charged: true, paymentKey: charged.paymentKey };
+  return { ok: true, status: charged.status, charged: true, paymentKey: charged.paymentKey, resumed: subscription.status === 'paused' };
 };
 
 // ─── 회차 결제 ──────────────────────────────────────────────────────────────
@@ -742,6 +755,17 @@ export type MutateResult =
  * 해지. 이미 결제한 달은 기간 끝까지 쓴다(선불) — 즉시 환불하지 않는다. 연습실의 일할
  * 반환·위약금은 계약 절차라 코드가 관여하지 않는다(스펙 §8).
  */
+/** 첫 결제가 승인된 시각 — 청약철회(첫 결제 후 7일) 판정에 쓴다. 결제 이력이 없으면 null. */
+export const firstPaidAtOf = async (subscriptionId: string): Promise<Date | null> => {
+  const [row] = await getDb()
+    .select({ paidAt: subscriptionPayments.paidAt })
+    .from(subscriptionPayments)
+    .where(and(eq(subscriptionPayments.subscriptionId, subscriptionId), eq(subscriptionPayments.status, 'paid'), isNotNull(subscriptionPayments.paidAt)))
+    .orderBy(asc(subscriptionPayments.paidAt))
+    .limit(1);
+  return row?.paidAt ?? null;
+};
+
 export const cancelSubscription = async (
   id: string,
   input: { requestedBy: 'customer' | 'admin'; reason: string },
@@ -1009,7 +1033,14 @@ export const issueCardChangeToken = async (
   if (!subscription) return { ok: false, code: 'not_found' };
   if (!SETUP_ALLOWED_STATUSES.includes(subscription.status)) return { ok: false, code: 'invalid_state' };
   const setupToken = generateSetupToken();
-  const setupMode = subscription.status === 'pending_card' ? 'initial' : 'change';
+  /**
+   * 결제 실패로 정지된 구독(paused · payment_failed)은 재등록이 곧 "미납분 결제 + 재개"다 —
+   * 실패 메일이 그렇게 안내하고(billing-charge.ts cardChangeHint), 스펙도 'paused ──카드 재등록+미납
+   * 결제──▶ active'다. 'change'로 두면 completeCardSetup이 결제 없이 끝나고 listDueSubscriptions는
+   * paused를 걷지 않아 **영영 청구되지 않는다**. 운영자 정지는 사람이 재개를 정하므로 'change' 그대로.
+   */
+  const resumesByPayment = subscription.status === 'paused' && subscription.pausedReason === 'payment_failed';
+  const setupMode = subscription.status === 'pending_card' || resumesByPayment ? 'initial' : 'change';
   await db
     .update(subscriptions)
     .set({
