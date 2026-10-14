@@ -149,6 +149,11 @@ const shownAmounts = (preview: Awaited<ReturnType<typeof buildFundingPayoutPrevi
   shortfallAmount: preview?.shortfallAmount ?? 0,
 });
 
+const seedBusinessProfile = (creatorId: string, over: Partial<schema.CreatorBusinessProfileRow> = {}) =>
+  mockDb.insert(schema.creatorBusinessProfiles).values({
+    creatorId, businessNumber: '7537400653', businessName: 'a', representativeName: 'b', ...over,
+  });
+
 const recordAsAdmin = async (projectId: string, now: Date) => {
   const preview = await buildFundingPayoutPreview(projectId);
   return recordFundingPayout(projectId, now, shownAmounts(preview));
@@ -501,7 +506,8 @@ describe('recordFundingPayout', () => {
   });
 
   it('사업자는 주민등록번호가 없어도 기록된다 — 원천징수를 하지 않으므로 해당이 없다', async () => {
-    const { project } = await seedProject({}, { taxType: 'invoice', residentNumberEnc: null });
+    const { project, creator } = await seedProject({}, { taxType: 'invoice', residentNumberEnc: null });
+    await seedBusinessProfile(creator.id);
     await seedPledge(project.slug, 1_000_000);
     const result = await recordAsAdmin(project.id, new Date('2026-02-20T00:00:00Z'));
     expect(result.ok).toBe(true);
@@ -741,11 +747,42 @@ describe('정산 기록 시의 복호화도 접속기록에 남는다', () => {
    * 계좌는 세금 구분과 무관하게 열어 보므로 그쪽 기록은 남는다.
    */
   it('원천징수 대상이 아니면 주민등록번호 복호화도 그 기록도 없다', async () => {
-    const { project } = await seedProject({}, { taxType: 'invoice' });
+    const { project, creator } = await seedProject({}, { taxType: 'invoice' });
+    await seedBusinessProfile(creator.id);
     await seedPledge(project.slug, 1_000_000);
 
     const result = await recordAsAdmin(project.id, new Date('2026-02-20T00:00:00Z'));
     expect(result.ok).toBe(true);
     expect((await accessLogs()).map((r) => r.action)).toEqual(['funding_payout_account_decrypt_check']);
+  });
+
+  describe('사업자 정보 게이트', () => {
+    it('사업자인데 사업자 정보가 없으면 no_business_number', async () => {
+      const { project } = await seedProject({}, { taxType: 'invoice' });
+      await seedPledge(project.slug, 1_000_000);
+      expect(await recordAsAdmin(project.id, new Date())).toEqual({ ok: false, code: 'no_business_number' });
+    });
+
+    it('사업자 정보가 있으면 국세청 상태와 무관하게 기록된다(휴업·폐업은 운영자 판단)', async () => {
+      const { project, creator } = await seedProject({}, { taxType: 'invoice' });
+      await seedBusinessProfile(creator.id, { ntsStatus: 'closed' });
+      await seedPledge(project.slug, 1_000_000);
+      expect(await recordAsAdmin(project.id, new Date('2026-02-20T00:00:00Z'))).toMatchObject({ ok: true });
+    });
+
+    it('표가 없으면 사업자 정산만 business_profile_unavailable, 원천징수 정산은 그대로, 미리보기는 던지지 않는다', async () => {
+      const inv = await seedProject({}, { taxType: 'invoice' });
+      await seedPledge(inv.project.slug, 1_000_000);
+      const wh = await seedProject();
+      await seedPledge(wh.project.slug, 1_000_000);
+      await client.execute('DROP TABLE creator_business_profiles');
+      const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+      const preview = await buildFundingPayoutPreview(inv.project.id);
+      expect(preview!.hasBusinessNumber).toBeNull();
+      expect((await buildFundingPayoutPreview(wh.project.id))!.hasBusinessNumber).toBeNull();
+      expect(await recordAsAdmin(inv.project.id, new Date())).toEqual({ ok: false, code: 'business_profile_unavailable' });
+      expect(await recordAsAdmin(wh.project.id, new Date('2026-02-20T00:00:00Z'))).toMatchObject({ ok: true });
+      error.mockRestore();
+    });
   });
 });

@@ -2,7 +2,7 @@ import { eq, sql } from 'drizzle-orm';
 
 import { createTestDb, type ShowsTestDb } from '../../tests/helpers/showsDb';
 import { shopPayload } from '../../tests/helpers/shopFixtures';
-import { fundingCreators, shopArtists, shopProducts, shopProductSkus, shopSkus } from '../../db/schema';
+import { creatorBusinessProfiles, fundingCreators, shopArtists, shopProducts, shopProductSkus, shopSkus } from '../../db/schema';
 
 let testDb: ShowsTestDb;
 jest.mock('../../db/client', () => ({ getDb: () => testDb }));
@@ -85,6 +85,23 @@ describe('listShopArtistSales — DB 갈래', () => {
     await testDb.update(fundingCreators).set({ taxType: null }).where(eq(fundingCreators.id, 'c1'));
     const rows = await listShopArtistSales('2026-10');
     expect(rows[0]).toMatchObject({ taxType: null, payout: null, quantity: 2 });
+  });
+
+  it('사업자인데 사업자 정보가 없으면 businessNumberMissing, 있으면 아니다, 개인은 아니다', async () => {
+    await placeShipped();
+    expect((await listShopArtistSales('2026-10'))[0].businessNumberMissing).toBe(false);
+    await testDb.update(fundingCreators).set({ taxType: 'invoice' }).where(eq(fundingCreators.id, 'c1'));
+    expect((await listShopArtistSales('2026-10'))[0].businessNumberMissing).toBe(true);
+    await testDb.insert(creatorBusinessProfiles).values({ creatorId: 'c1', businessNumber: '7537400653', businessName: 'a', representativeName: 'b' });
+    expect((await listShopArtistSales('2026-10'))[0].businessNumberMissing).toBe(false);
+  });
+
+  it('사업자 표를 읽지 못하면 표시만 생략하고 정산 행은 그대로다', async () => {
+    await placeShipped();
+    await testDb.update(fundingCreators).set({ taxType: 'invoice' }).where(eq(fundingCreators.id, 'c1'));
+    await testDb.run(sql`DROP TABLE creator_business_profiles`);
+    const rows = await listShopArtistSales('2026-10');
+    expect(rows[0]).toMatchObject({ quantity: 2, businessNumberMissing: false });
   });
 
   it('DB 갈래가 실패해도 던지지 않는다(파일 갈래는 그대로)', async () => {

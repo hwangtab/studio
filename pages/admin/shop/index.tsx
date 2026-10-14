@@ -118,6 +118,7 @@ function ArtistSalesSection({ rows, month, prevMonth, nextMonth }: Pick<Props, '
                   <td className="py-2 pr-3">
                     {r.artistName}
                     <span className="block text-xs text-gray-500">{r.taxType === 'invoice' ? '사업자 · 세금계산서' : r.taxType === 'withholding' ? '개인 · 원천징수' : r.artistSlug.startsWith('creator:') ? '세금 유형 미설정' : 'data/artists에 없음'}</span>
+                    {r.businessNumberMissing && <span className="block text-xs font-semibold text-red-600">사업자등록번호 미등록</span>}
                     {r.withdrawableOrderCount > 0 && (
                       <span className="block text-xs text-amber-800">철회 가능 {r.withdrawableOrderCount}건 — 내려받기 전 디지털 주문이라 정산에 넣지 않았습니다</span>
                     )}

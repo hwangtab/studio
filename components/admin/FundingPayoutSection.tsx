@@ -81,6 +81,11 @@ export interface AdminPayoutView {
    * 눌렀을 때만 별도 라우트로 가져와 이 컴포넌트의 state에만 둔다.
    */
   needsResidentNumber: boolean;
+  /**
+   * 사업자 개설자의 사업자 정보 게이트 — 서버의 `no_business_number`(missing)·`business_profile_unavailable`
+   * (unavailable)와 같은 식이다. 해당 없거나 통과면 null. 옛 props 호환으로 선택.
+   */
+  businessGate?: 'missing' | 'unavailable' | null;
   recorded: AdminPayoutRecordView | null;
 }
 
@@ -249,6 +254,14 @@ export function FundingPayoutSection({
     blockers.push(
       '개설자가 원천징수 대상인데 주민등록번호가 등록되지 않았습니다. 지금 기록하면 세액만 떼고 지급명세서를 낼 수 없습니다 — 개설자에게 정산 정보 구획에서 등록을 요청해 주세요.',
     );
+  }
+  if (payout.businessGate === 'missing') {
+    blockers.push(
+      '사업자로 등록한 개설자인데 사업자등록번호·상호·대표자명이 없습니다. 개설자에게 콘솔의 정산 정보 화면에서 등록을 요청해 주세요.',
+    );
+  }
+  if (payout.businessGate === 'unavailable') {
+    blockers.push('사업자 정보 표(마이그레이션 0057)를 읽지 못했습니다. 적용 여부와 서버 로그를 확인해 주세요.');
   }
   if (payout.serviceChargesUnavailable) {
     blockers.push(

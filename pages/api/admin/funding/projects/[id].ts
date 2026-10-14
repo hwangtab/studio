@@ -101,6 +101,15 @@ const PAYOUT_RECORD_ERROR: Record<
     message:
       '개설자의 세금 처리 구분(개인 원천징수 / 사업자 세금계산서)이 등록되지 않았습니다. 추측해서 기록하면 실이체액이 틀리고 되돌릴 수 없으니, 개설자에게 정산 정보 저장을 요청해 주세요.',
   },
+  no_business_number: {
+    status: 409,
+    message:
+      '사업자로 등록한 개설자인데 사업자등록번호·상호·대표자명이 없습니다. 개설자에게 콘솔의 정산 정보 화면에서 등록을 요청해 주세요.',
+  },
+  business_profile_unavailable: {
+    status: 503,
+    message: '사업자 정보 표(마이그레이션 0057)를 읽지 못했습니다.',
+  },
   services_unavailable: {
     status: 503,
     message:

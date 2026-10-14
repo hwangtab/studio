@@ -193,6 +193,7 @@ describe('심사 상세 getServerSideProps — 정산', () => {
     closed: true,
     hasPayoutAccount: true,
     hasResidentNumber: true,
+    hasBusinessNumber: null,
     grossAmount: 1_000_000,
     refundAmount: 0,
     supplyAmount: 909_091,
@@ -230,7 +231,7 @@ describe('심사 상세 getServerSideProps — 정산', () => {
         'grossAmount', 'refundAmount', 'manualGrossAmount', 'supplyAmount',
         'platformFeeAmount', 'paymentFeeAmount', 'feeAmount', 'shareAmount',
         'withholdingAmount', 'netAmount', 'backerCount', 'closed',
-        'hasPayoutAccount', 'hasTaxType', 'needsResidentNumber', 'recorded',
+        'hasPayoutAccount', 'hasTaxType', 'needsResidentNumber', 'businessGate', 'recorded',
         // 설계·제작 대금 공제(개설자 약관 제6조) — 금액과 불리언뿐, 민감 정보가 아니다.
         'designFeeOffsetAmount', 'productionFeeOffsetAmount', 'shortfallAmount', 'serviceChargesUnavailable',
         // 원천징수 개설자의 부가세 상당액(개설자 약관 제6조) — 금액일 뿐 민감 정보가 아니다.
@@ -271,6 +272,19 @@ describe('심사 상세 getServerSideProps — 정산', () => {
       props: { payout: Record<string, unknown> };
     };
     expect(result.props.payout.needsResidentNumber).toBe(false);
+  });
+
+  it('사업자 정보 게이트는 missing·unavailable·null 셋으로 내려간다', async () => {
+    (loadProjectForAdmin as jest.Mock).mockResolvedValue({ ...baseDetail, reviewStatus: 'approved' });
+    const gate = async (over: Record<string, unknown>) => {
+      (buildFundingPayoutPreview as jest.Mock).mockResolvedValue({ ...PREVIEW, ...over });
+      const r = (await getDetailProps(detailContext('proj-1'))) as unknown as { props: { payout: { businessGate: unknown } } };
+      return r.props.payout.businessGate;
+    };
+    expect(await gate({ taxType: 'invoice', hasBusinessNumber: false })).toBe('missing');
+    expect(await gate({ taxType: 'invoice', hasBusinessNumber: null })).toBe('unavailable');
+    expect(await gate({ taxType: 'invoice', hasBusinessNumber: true })).toBeNull();
+    expect(await gate({ taxType: 'withholding', hasBusinessNumber: null })).toBeNull();
   });
 
   it('기록된 정산의 Date는 ISO 문자열로 좁혀진다', async () => {
