@@ -5,3 +5,8 @@
 export async function notifyOperatorShowSubmitted(_submissionId: string): Promise<void> {}
 
 export async function notifyOperatorShowEdited(_submissionId: string): Promise<void> {}
+
+export async function sendShowReviewResultEmail(
+  _submissionId: string,
+  _result: 'approved' | 'changes_requested' | 'rejected',
+): Promise<void> {}

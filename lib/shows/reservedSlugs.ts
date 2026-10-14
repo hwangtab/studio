@@ -11,6 +11,9 @@ export const RESERVED_SHOW_SLUGS: ReadonlySet<string> = new Set([
   'success',
   'fail',
   'manage',
+  // 주최자 안내·약관 페이지(Task 10·11)
+  'host',
+  'organizer-terms',
   // pages/api/shows/ 아래 리터럴들
   'orders',
   'refund',
