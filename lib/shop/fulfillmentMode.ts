@@ -43,7 +43,7 @@ export const loadShippedByArtistSlugs = async (productIds: readonly string[]): P
       FROM shop_product_fulfillment f
       JOIN shop_products p ON p.id = f.product_id
       JOIN shop_artists a ON a.creator_id = p.creator_id
-      WHERE f.mode = 'artist' AND f.product_id IN (${sql.join(productIds.map((id) => sql`${id}`), sql`, `)})
+      WHERE f.mode = 'artist' AND p.kind <> 'digital' AND f.product_id IN (${sql.join(productIds.map((id) => sql`${id}`), sql`, `)})
     `);
     for (const r of rows) out.set(r.product_id, r.slug);
   } catch (error: unknown) {
@@ -95,13 +95,32 @@ export const setProductFulfillmentMode = async (
     const result = await db.run(sql`
       INSERT INTO shop_product_fulfillment (product_id, mode, created_at, updated_at)
       SELECT ${productId}, ${mode}, ${epoch}, ${epoch}
-      WHERE EXISTS (SELECT 1 FROM shop_products WHERE id = ${productId} AND review_status <> 'approved')
+      WHERE EXISTS (
+        SELECT 1 FROM shop_products WHERE id = ${productId} AND review_status <> 'approved'
+          ${mode === 'artist' ? sql`AND kind <> 'digital'` : sql``}
+      )
       ON CONFLICT(product_id) DO UPDATE SET mode = excluded.mode, updated_at = excluded.updated_at
     `);
-    if (Number(result.rowsAffected) === 0) return deny('conflict', '그 사이 상품이 승인됐어요. 승인된 상품의 발송 주체는 바꿀 수 없어요.');
+    if (Number(result.rowsAffected) === 0) return deny('conflict', '그 사이 상품이 승인됐거나 디지털 상품으로 바뀌었어요. 새로고침해 확인해 주세요.');
   } catch (error: unknown) {
     if (isMissingTableError(error, FULFILLMENT_TABLE)) return deny('storage_unavailable', '발송 주체 표가 아직 없어요. 마이그레이션 0057을 먼저 적용해 주세요.');
     throw error;
   }
   return { ok: true };
+};
+
+/**
+ * 디지털 상품에는 발송 주체가 없다 — 저장 때 종류가 디지털이면 아티스트 발송 행을 지운다(행이 없으면 'studio').
+ * 승인 전에만 종류를 바꿀 수 있으므로 승인 뒤 주문의 발송 책임은 흔들리지 않는다. 표가 없으면(0057 전) 지울 것도 없다.
+ */
+export const clearArtistFulfillmentOfDigital = async (productId: string): Promise<void> => {
+  try {
+    await getDb().run(sql`
+      DELETE FROM shop_product_fulfillment
+      WHERE product_id = ${productId} AND mode = 'artist'
+        AND EXISTS (SELECT 1 FROM shop_products WHERE id = ${productId} AND kind = 'digital')
+    `);
+  } catch (error: unknown) {
+    if (!isMissingTableError(error, FULFILLMENT_TABLE)) throw error;
+  }
 };

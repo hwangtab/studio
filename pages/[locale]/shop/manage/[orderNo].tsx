@@ -41,6 +41,8 @@ interface Props {
   downloads: Array<{ index: number; label: string }>;
   /** 첫 내려받기 시각(초). 없으면 null. */
   downloadedAt: number | null;
+  /** 일부 환불된 주문 — 디지털 상품은 내려받기를 내주지 않는다(문의로 돌린다). */
+  partiallyRefunded: boolean;
 }
 
 const DIGITAL_STATE_LABEL: Partial<Record<Props['state'], string>> = { preparing: '내려받을 수 있어요', delivered: '내려받기 시작' };
@@ -54,7 +56,7 @@ const STATE_LABEL: Record<Props['state'], string> = {
 };
 
 export default function ShopManagePage(props: Props) {
-  const { orderNo, token, state, lines, shipsOn, shippingFee, totalAmount, recipient, address, courier, trackingNumber, ships, downloads, downloadedAt } = props;
+  const { orderNo, token, state, lines, shipsOn, shippingFee, totalAmount, recipient, address, courier, trackingNumber, ships, downloads, downloadedAt, partiallyRefunded } = props;
   const kakaoUrl = getSiteConfig('ko').contact.kakaoUrl;
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ tone: 'error' | 'success'; text: string } | null>(null);
@@ -92,7 +94,7 @@ export default function ShopManagePage(props: Props) {
         <header className="mb-6 text-center">
           <h1 className="typo-page-title text-gray-900 dark:text-white">주문 확인</h1>
           <p className="mt-2 typo-card-meta">주문번호 {orderNo}</p>
-          <StatusBadge tone={state === 'cancelled' || state === 'unpaid' ? 'neutral' : 'active'} className="mt-3">{(!ships && DIGITAL_STATE_LABEL[state]) || STATE_LABEL[state]}</StatusBadge>
+          <StatusBadge tone={state === 'cancelled' || state === 'unpaid' ? 'neutral' : 'active'} className="mt-3">{(!ships && partiallyRefunded && '일부 환불됨') || (!ships && DIGITAL_STATE_LABEL[state]) || STATE_LABEL[state]}</StatusBadge>
         </header>
 
         <PriceSummary
@@ -116,6 +118,10 @@ export default function ShopManagePage(props: Props) {
             ))}
             <p className="typo-card-meta">{SHOP_DIGITAL_WITHDRAWAL_NOTICE}</p>
           </div>
+        )}
+
+        {!ships && partiallyRefunded && (
+          <p className="mb-6 typo-card-meta">일부 환불된 주문이라 여기서는 내려받을 수 없어요. 카카오톡이나 010-4255-7893으로 문의해 주세요.</p>
         )}
 
         {ships && (
@@ -182,7 +188,8 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ params, qu
   const so = order.shopOrder;
   const extras = await loadOrderExtras(order.orderNo, so.items, new Date()).catch(() => null);
   const paid = order.status === 'paid' || order.status === 'partially_refunded' || order.status === 'refunded';
-  const live = (order.status === 'paid' || order.status === 'partially_refunded') && so.fulfillmentStatus !== 'cancelled';
+  // 내려받기 버튼은 결제 완료 주문만 — 일부 환불 주문은 내려받기 API도 거절한다(어느 파일이 환불됐는지 원장이 모른다).
+  const live = order.status === 'paid' && so.fulfillmentStatus !== 'cancelled';
   // 디지털 상품 — 목록·첫 내려받기 시각. 조회 실패는 삼킨다(주문 확인 화면이 이것 때문에 깨지면 안 된다). 키는 props에 싣지 않는다.
   const hasDb = so.items.some((i) => i.skuId.startsWith('db-'));
   const downloads = live && hasDb
@@ -205,6 +212,7 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ params, qu
       ships: shopOrderShips(so),
       downloads,
       downloadedAt,
+      partiallyRefunded: order.status === 'partially_refunded',
     },
   };
 });

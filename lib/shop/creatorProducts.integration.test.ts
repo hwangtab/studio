@@ -362,10 +362,10 @@ describe('관리자 액션', () => {
     const id = await draftWith('c1');
     await submitProduct('c1', id);
     await approve(id);
-    expect(await applyShopAdminAction(id, { type: 'lock_new_skus' })).toMatchObject({ ok: false, code: 'conflict' });
+    expect(await applyShopAdminAction(id, { type: 'lock_new_skus', skus: [] })).toMatchObject({ ok: false, code: 'conflict' });
     await testDb.update(shopProductSkus).set({ optionLabel: '기본' }).where(eq(shopProductSkus.productId, id));
     await testDb.insert(shopProductSkus).values({ id: 'db-aaaaaaaaaa', productId: id, optionLabel: '새 옵션', price: 30000 });
-    expect(await applyShopAdminAction(id, { type: 'lock_new_skus' })).toMatchObject({ ok: true, locked: 1 });
+    expect(await applyShopAdminAction(id, { type: 'lock_new_skus', skus: [{ id: 'db-aaaaaaaaaa', price: 30000, optionLabel: '새 옵션' }] })).toMatchObject({ ok: true, locked: 1 });
     expect((await skusOf(id)).every((s) => s.lockedAt !== null)).toBe(true);
   });
 

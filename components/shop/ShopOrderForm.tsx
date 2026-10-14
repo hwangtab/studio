@@ -20,7 +20,9 @@ import { computeShopTotals } from '../../lib/shop/amounts';
 import { shopLineName } from '../../lib/shop/catalog';
 import { SHOP_DIGITAL_RULES, SHOP_DIGITAL_WITHDRAWAL_NOTICE, SHOP_PREORDER_MIX_NOTE, SHOP_REFUND_RULES, shopPreorderSupplyNote, shopShippingNote } from '../../lib/shop/policyCopy';
 import { latestPendingShipsOn } from '../../lib/shop/preorder';
-import { hasMixedShippers, SHOP_ARTIST_SHARING_NOTICE, SHOP_MIXED_SHIPPER_MESSAGE } from '../../lib/shop/shipper';
+import {
+  canShareOrder, hasMixedKinds, hasMixedShippers, SHOP_ARTIST_SHARING_NOTICE, SHOP_MIXED_KIND_MESSAGE, SHOP_MIXED_SHIPPER_MESSAGE,
+} from '../../lib/shop/shipper';
 import { reportPaymentFailure, reportPaymentWindowOpen } from '../../utils/reportPaymentFailure';
 
 /** 남은 수량 — SKU id → 수량. null이면 아직 모른다(DB 조회 실패) — 고를 수는 있고 최종 판정은 주문 생성이 한다. */
@@ -47,7 +49,7 @@ const sellable = (p: ShopProduct): ShopSku[] => p.skus.filter((s) => !s.retired)
  * 같은 장치를 쓴다: 위젯 지연 로드, 같은 입력으로 결제창을 다시 열면 만든 주문을 재사용(재고 홀드가 쌓이지 않게).
  * 펀딩 후원 폼에서 가져온 것: 카카오 주소 검색, 이름·연락처·주소 초안 저장(수량은 저장하지 않는다 — 재고가 바뀐다).
  */
-export default function ShopOrderForm({ product, others, remaining, salesOpen }: {
+export default function ShopOrderForm({ product, others: candidates, remaining, salesOpen }: {
   product: ShopProduct;
   /** 같은 주문에 함께 담을 수 있는 다른 공개 상품. */
   others: ShopProduct[];
@@ -77,6 +79,8 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
   const setLineQty = (skuId: string, n: number) => setQty((prev) => ({ ...prev, [skuId]: n }));
 
   // 담은 줄 — 재고가 줄어 상한을 넘으면 상한으로 낮춰 계산한다(입력값은 그대로 두고 화면·전송에 쓰는 값만).
+  // 함께 담을 후보는 같은 종류·같은 발송 주체만(서버 상세 페이지가 이미 거르지만 폼도 같은 판정으로 한 번 더 거른다).
+  const others = useMemo(() => candidates.filter((p) => canShareOrder(product, p)), [product, candidates]);
   const allProducts = useMemo(() => [product, ...others], [product, others]);
   const lines = useMemo(
     () => allProducts.flatMap((p) => sellable(p).map((sku) => ({ product: p, sku, quantity: Math.min(qty[sku.id] ?? 0, capOf(sku.id)) })))
@@ -141,8 +145,10 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
   }, [armed]);
 
   // 한 주문은 한 발송 주체만 — 아티스트가 직접 보내는 상품은 같은 아티스트의 상품끼리만 담는다(서버도 같은 판정으로 거절한다).
+  // 실물과 디지털도 한 주문에 담지 않는다 — 디지털을 내려받으면 같은 주문의 실물까지 발송 전 취소가 막힌다.
   const mixedShippers = hasMixedShippers(lines.map((l) => l.product));
-  const canOrder = salesOpen && lines.length > 0 && !mixedShippers;
+  const mixedKinds = hasMixedKinds(lines.map((l) => l.product));
+  const canOrder = salesOpen && lines.length > 0 && !mixedShippers && !mixedKinds;
   const widget = usePaymentCheckout(totals.total, canOrder && armed);
 
   const submit = async (e: React.FormEvent) => {
@@ -289,7 +295,8 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
         </Disclosure>
       )}
 
-      {mixedShippers && <Notice tone="warning">{SHOP_MIXED_SHIPPER_MESSAGE}</Notice>}
+      {mixedKinds && <Notice tone="warning">{SHOP_MIXED_KIND_MESSAGE}</Notice>}
+      {mixedShippers && !mixedKinds && <Notice tone="warning">{SHOP_MIXED_SHIPPER_MESSAGE}</Notice>}
 
       {latestShipsOn && (
         <Notice tone="info">

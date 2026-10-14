@@ -2,6 +2,7 @@ import { inArray, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { creatorBusinessProfiles } from '../../db/schema';
+import { kstDateString } from '../booking/kst';
 import { getSupportedArtist } from '../../data/artists';
 import { SHOP_PRODUCTS } from '../../data/shop/catalog';
 import { loadArtistShippersByOrder } from './artistShipping';
@@ -94,33 +95,46 @@ export const setSkuStock = async (skuId: string, stock: number): Promise<{ ok: t
   }
   if (!product) return { ok: false, message: '카탈로그에 없는 SKU예요.' };
   if (!Number.isInteger(stock) || stock < 0 || stock > 100000) return { ok: false, message: '재고는 0 이상의 정수로 적어 주세요.' };
-  // 한정판(edition_size): 그 상품 SKU 총 재고 합이 한정 수량을 넘으면 번호가 모자란다.
-  if (isDbSkuId(skuId)) {
-    try {
-      const [cap] = await getDb().all<{ edition_size: number | null; others: number }>(sql`
-        SELECT p.edition_size AS edition_size,
-               COALESCE((SELECT SUM(k.stock) FROM shop_skus k JOIN shop_product_skus o ON o.id = k.id
-                         WHERE o.product_id = p.id AND k.id <> ${skuId}), 0) AS others
-        FROM shop_product_skus s JOIN shop_products p ON p.id = s.product_id
-        WHERE s.id = ${skuId}
-      `);
-      if (cap && cap.edition_size !== null) {
-        const edition = Number(cap.edition_size);
-        const others = Number(cap.others);
-        if (others + stock > edition) {
-          return { ok: false, message: `한정판 ${edition}장이에요. 다른 옵션 재고가 ${others}장이라 이 옵션은 ${Math.max(0, edition - others)}장까지만 넣을 수 있어요.` };
-        }
-      }
-    } catch (error) {
-      console.error('[shop] 한정 수량 확인 실패(재고 설정)', error);
-      return { ok: false, message: '한정 수량을 확인하지 못했어요. 잠시 후 다시 시도해 주세요.' };
-    }
+  if (!isDbSkuId(skuId)) {
+    await getDb().run(sql`
+      INSERT INTO shop_skus (id, product_slug, stock) VALUES (${skuId}, ${product.slug}, ${stock})
+      ON CONFLICT(id) DO UPDATE SET stock = excluded.stock, updated_at = unixepoch()
+    `);
+    return { ok: true };
   }
-  await getDb().run(sql`
-    INSERT INTO shop_skus (id, product_slug, stock) VALUES (${skuId}, ${product.slug}, ${stock})
-    ON CONFLICT(id) DO UPDATE SET stock = excluded.stock, updated_at = unixepoch()
-  `);
-  return { ok: true };
+  // 한정판(edition_size): 그 상품 SKU 총 재고 합이 한정 수량을 넘으면 번호가 모자란다. 다른 옵션 합을 먼저 읽고 쓰면 그 사이
+  // 다른 옵션 재고가 바뀌는 경합에서 상한을 넘긴다 — **쓰는 문장 하나의 WHERE**가 "다른 옵션 합 + 이 값 ≤ 한정 수량"을 판정한다.
+  const othersSql = sql`COALESCE((SELECT SUM(k.stock) FROM shop_skus k JOIN shop_product_skus o ON o.id = k.id
+                         WHERE o.product_id = p.id AND k.id <> ${skuId}), 0)`;
+  let written: number;
+  try {
+    const result = await getDb().run(sql`
+      INSERT INTO shop_skus (id, product_slug, stock)
+      SELECT ${skuId}, ${product.slug}, ${stock}
+      FROM shop_product_skus s JOIN shop_products p ON p.id = s.product_id
+      WHERE s.id = ${skuId} AND (p.edition_size IS NULL OR ${othersSql} + ${stock} <= p.edition_size)
+      ON CONFLICT(id) DO UPDATE SET stock = excluded.stock, updated_at = unixepoch()
+    `);
+    written = Number(result.rowsAffected);
+  } catch (error) {
+    console.error('[shop] 재고 저장 실패(한정 수량 판정)', error);
+    return { ok: false, message: '재고를 저장하지 못했어요. 잠시 후 다시 시도해 주세요.' };
+  }
+  if (written > 0) return { ok: true };
+  // 0행 = 한정 수량을 넘는다(SKU는 위에서 확인했다). 안내 문구용으로만 다시 읽는다 — 판정은 이미 끝났다.
+  const [cap] = await getDb().all<{ edition_size: number | null; others: number }>(sql`
+    SELECT p.edition_size AS edition_size, ${othersSql} AS others
+    FROM shop_product_skus s JOIN shop_products p ON p.id = s.product_id
+    WHERE s.id = ${skuId}
+  `).catch(() => []);
+  const edition = Number(cap?.edition_size ?? 0);
+  const others = Number(cap?.others ?? 0);
+  return {
+    ok: false,
+    message: cap?.edition_size != null
+      ? `한정판 ${edition}장이에요. 다른 옵션 재고가 ${others}장이라 이 옵션은 ${Math.max(0, edition - others)}장까지만 넣을 수 있어요.`
+      : '재고를 저장하지 못했어요. 새로고침한 뒤 다시 시도해 주세요.',
+  };
 };
 
 export interface AdminShopArtistSalesRow {
@@ -259,7 +273,7 @@ export const listShopArtistSales = async (month: string): Promise<AdminShopArtis
       JOIN shop_product_skus ps ON ps.id = i.sku_id
       JOIN shop_products p ON p.id = ps.product_id
       JOIN shop_product_fulfillment f ON f.product_id = p.id AND f.mode = 'artist'
-      WHERE i.sku_id LIKE 'db-%'
+      WHERE i.sku_id LIKE 'db-%' AND p.kind <> 'digital'
         AND p.creator_id NOT IN (SELECT creator_id FROM shop_artists WHERE slug = ${STUDIO_SHOP_ARTIST_SLUG})
         AND o.type = 'merch' AND o.status = 'paid'
         AND so.fulfillment_status IN ('shipped', 'delivered') AND so.postcode <> '' AND so.shipping_fee > 0
@@ -315,17 +329,77 @@ export const listShopArtistSales = async (month: string): Promise<AdminShopArtis
     .sort((a, b) => a.artistName.localeCompare(b.artistName, 'ko'));
 };
 
-/** 발송을 기다리는 주문 수(실물, 결제 완료·부분 환불, 아직 안 보냄) — 대시보드 카드. 표가 없거나 조회가 실패하면 null. */
-export const countShopAwaitingShipment = async (): Promise<number | null> => {
+export interface ShopAwaitingShipmentCounts {
+  /** 스튜디오가 지금 보낼 주문 — 대시보드 "발송 대기" 카드. */
+  studio: number;
+  /** 스튜디오가 보낼 주문 가운데 예약 발송일이 아직 오지 않은 주문(아직 보낼 수 없다). */
+  preorder: number;
+  /** 아티스트가 직접 보낼 주문(아티스트 콘솔에서 처리한다 — 스튜디오의 할 일이 아니다). */
+  artist: number;
+}
+
+/**
+ * 발송을 기다리는 실물 주문(결제 완료·부분 환불, 아직 안 보냄, 배송 있는 주문) — 대시보드 카드. 표가 없거나 조회가 실패하면 null.
+ *
+ * 발송 주체 판정은 `resolveOrderShipper`와 같은 기준이다: 실물 줄(파일 상품 포함)이 **전부** 한 아티스트의 아티스트 발송 실물이면 아티스트 발송,
+ * 아니면 스튜디오 발송. 예약 발송일은 상품의 현재 `ships_on`을 읽는다(주문에 스냅샷하지 않는다 — lib/shop/preorder.ts). 오늘(KST)보다 뒤인 줄이
+ * 하나라도 있으면 예약으로 센다(섞어 담으면 가장 늦은 날에 함께 보낸다).
+ * 발송 주체 표(0057)·DB 상품 표(0053)가 없으면 전부 스튜디오 발송·예약 없음으로 센다.
+ */
+export const countShopAwaitingShipment = async (now: Date = new Date()): Promise<ShopAwaitingShipmentCounts | null> => {
+  const base = sql`o.type = 'merch' AND o.status IN ('paid', 'partially_refunded') AND so.fulfillment_status = 'preparing' AND so.postcode <> ''`;
   try {
-    const [row] = await getDb().all<{ n: number }>(sql`
-      SELECT COUNT(*) AS n FROM orders o JOIN shop_orders so ON so.order_no = o.order_no
-      WHERE o.type = 'merch' AND o.status IN ('paid', 'partially_refunded')
-        AND so.fulfillment_status = 'preparing' AND so.postcode <> ''
+    const today = kstDateString(now);
+    const [row] = await getDb().all<{ studio: number; preorder: number; artist: number }>(sql`
+      WITH awaiting AS (
+        SELECT o.order_no AS order_no,
+          (EXISTS (
+             SELECT 1 FROM shop_order_items i
+             JOIN shop_product_skus ps ON ps.id = i.sku_id
+             JOIN shop_products p ON p.id = ps.product_id
+             JOIN shop_product_fulfillment f ON f.product_id = p.id AND f.mode = 'artist'
+             WHERE i.order_no = o.order_no AND p.kind <> 'digital')
+           AND NOT EXISTS (
+             SELECT 1 FROM shop_order_items i
+             LEFT JOIN shop_product_skus ps ON ps.id = i.sku_id
+             LEFT JOIN shop_products p ON p.id = ps.product_id
+             LEFT JOIN shop_product_fulfillment f ON f.product_id = p.id
+             WHERE i.order_no = o.order_no AND COALESCE(p.kind, 'physical') <> 'digital' AND COALESCE(f.mode, 'studio') <> 'artist')
+           AND (
+             SELECT COUNT(DISTINCT p.creator_id) FROM shop_order_items i
+             JOIN shop_product_skus ps ON ps.id = i.sku_id
+             JOIN shop_products p ON p.id = ps.product_id
+             JOIN shop_product_fulfillment f ON f.product_id = p.id AND f.mode = 'artist'
+             WHERE i.order_no = o.order_no AND p.kind <> 'digital') = 1
+          ) AS by_artist,
+          EXISTS (
+             SELECT 1 FROM shop_order_items i
+             JOIN shop_product_skus ps ON ps.id = i.sku_id
+             JOIN shop_products p ON p.id = ps.product_id
+             WHERE i.order_no = o.order_no AND p.ships_on IS NOT NULL AND p.ships_on > ${today}
+          ) AS pending_ships_on
+        FROM orders o JOIN shop_orders so ON so.order_no = o.order_no
+        WHERE ${base}
+      )
+      SELECT
+        COALESCE(SUM(CASE WHEN by_artist THEN 0 WHEN pending_ships_on THEN 0 ELSE 1 END), 0) AS studio,
+        COALESCE(SUM(CASE WHEN NOT by_artist AND pending_ships_on THEN 1 ELSE 0 END), 0) AS preorder,
+        COALESCE(SUM(CASE WHEN by_artist THEN 1 ELSE 0 END), 0) AS artist
+      FROM awaiting
     `);
-    return Number(row?.n ?? 0);
+    return { studio: Number(row?.studio ?? 0), preorder: Number(row?.preorder ?? 0), artist: Number(row?.artist ?? 0) };
   } catch (error: unknown) {
-    console.error('[shop] 발송 대기 건수 조회 실패:', error);
+    if (!isMissingTableError(error)) {
+      console.error('[shop] 발송 대기 건수 조회 실패:', error);
+      return null;
+    }
+  }
+  // 상점 확장 표가 없는 DB — 전부 스튜디오 발송이고 예약 발송일도 없다. shop_orders까지 없으면 null(카드를 숨긴다).
+  try {
+    const [row] = await getDb().all<{ n: number }>(sql`SELECT COUNT(*) AS n FROM orders o JOIN shop_orders so ON so.order_no = o.order_no WHERE ${base}`);
+    return { studio: Number(row?.n ?? 0), preorder: 0, artist: 0 };
+  } catch (error: unknown) {
+    if (!isMissingTableError(error)) console.error('[shop] 발송 대기 건수 조회 실패:', error);
     return null;
   }
 };

@@ -8,7 +8,7 @@ import { DECLINE_CODE_PATTERN } from '../shows/tossCodes';
 import { sendShopOrderConfirmedEmails } from './email';
 import { findShopOrderByOrderNo, rowsAffectedOf, type ShopOrderWithDetails } from './service';
 import { alertIfSerialsMissing, serialInsertStatements } from './serials';
-import { stockGateSql } from './stock';
+import { editionGates, stockGateSql } from './stock';
 
 /**
  * 상점 주문 결제 승인 — 예약금 결제 링크(lib/booking/confirmDeposit.ts)의 안전장치를 그대로 옮기고 **재고 재판정**을
@@ -146,8 +146,12 @@ export const confirmShopOrder = async (
 
   const now = new Date();
   const items = order.shopOrder.items;
+  // 한정판은 남은 번호 수로도 판정한다 — 발송 뒤 반품으로 재고는 돌아와도 번호는 돌아오지 않는다. 걸리면 재고 부족과 같이 자동 전액 취소(번호 없는 확정 금지).
   const stockGates = items.length
-    ? sql.join(items.map((i) => stockGateSql(i.skuId, i.quantity, now, order.orderNo)), sql` AND `)
+    ? sql.join([
+      ...items.map((i) => stockGateSql(i.skuId, i.quantity, now, order.orderNo)),
+      ...editionGates(items.map((i) => ({ skuId: i.skuId, quantity: i.quantity, productKey: i.productSlug })), now, order.orderNo),
+    ], sql` AND `)
     : sql`1 = 0`;
   const statusList = sql.join(acceptableStatuses.map((s) => sql`${s}`), sql`, `);
   const approvedAtSec = approved.approvedAt ? Math.floor(new Date(approved.approvedAt).getTime() / 1000) : null;

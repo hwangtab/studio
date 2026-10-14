@@ -15,7 +15,7 @@ export interface OrderExtras {
   latestShipsOn: string | null;
   /** 줄 id → "7/100, 8/100". 번호가 있는 줄만. */
   serialsByItem: Map<string, string>;
-  /** 디지털 상품 줄이 있는가(디지털만이든 섞였든). 조회 실패는 false. */
+  /** 디지털 상품 줄이 있는가(새 주문은 디지털만 담는다 — 실물과 섞인 것은 그 규칙 전의 주문). 조회 실패는 false. */
   hasDigital: boolean;
 }
 

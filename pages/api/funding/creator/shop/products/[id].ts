@@ -10,6 +10,7 @@ import {
 } from '../../../../../../lib/shop/creatorProductWrite';
 import { respondProductFailure } from '../../../../../../lib/shop/creatorWriteHttp';
 import { sendShopCreatorEditedNotice, sendShopSubmissionNotice, type ShopMailProduct } from '../../../../../../lib/shop/reviewEmail';
+import { revalidateShopArtistPages } from '../../../../../../lib/shop/revalidate';
 
 /**
  * 아티스트 상품 저장(PUT `{ value }`)과 상태 전환(POST `{ action: 'submit' | 'withdraw' | 'publish' | 'unpublish' }`).
@@ -58,6 +59,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     let result: ProductWriteResult;
     let afterSave: (() => Promise<void>) | null = null;
+    // 공개 상품 그리드가 바뀌는 쓰기(공개 토글·승인 상태 저장) 뒤에는 /ko/artists/<slug>(ISR)를 다시 만든다 — 관리자 경로와 같은 함수.
+    let revalidate = false;
 
     if (req.method === 'PUT') {
       const validated = validateShopProductInput(req.body?.value, { creatorId: auth.creatorId, existing: current.images });
@@ -66,6 +69,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       result = saved;
       if (saved.ok && saved.approvedEdit) {
         afterSave = () => notify('승인 뒤 수정 알림', () => sendShopCreatorEditedNotice(mailShape(current)));
+        revalidate = true;
       }
     } else {
       const action = req.body?.action;
@@ -78,11 +82,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         result = await withdrawProduct(auth.creatorId, productId);
       } else {
         result = await setPublishedByCreator(auth.creatorId, productId, action === 'publish');
+        revalidate = true;
       }
     }
 
     if (!result.ok) return respondProductFailure(res, result);
     if (afterSave) await afterSave();
+    if (revalidate) {
+      // 실패는 로그만 — 이미 저장됐다. 아티스트 페이지는 최대 하루(ISR) 뒤 갱신된다.
+      try {
+        const warning = await revalidateShopArtistPages(res, auth.creatorId);
+        if (warning) console.error(`[funding/creator/shop] 재검증 경고 (id=${productId}): ${warning}`);
+      } catch (error: unknown) {
+        console.error(`[funding/creator/shop] 재검증 실패 (id=${productId}):`, error);
+      }
+    }
     const product = await loadProductForCreator(auth.creatorId, productId);
     return res.status(200).json({ ok: true, product });
   } catch (error: unknown) {

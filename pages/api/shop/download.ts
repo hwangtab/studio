@@ -42,7 +42,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const order = await findShopOrderByOrderNo(orderNo);
     // 주문 부재와 토큰 불일치를 같은 404로 — 다르게 답하면 주문의 존재를 떠볼 수 있다.
     if (!order || !order.shopOrder || !isTokenMatch(order.manageToken, token)) return res.status(404).json(NOT_FOUND);
-    if ((order.status !== 'paid' && order.status !== 'partially_refunded') || order.shopOrder.fulfillmentStatus === 'cancelled')
+    // 일부 환불된 주문은 어느 파일이 환불됐는지 원장이 모른다 — 내주지 않고 문의로 돌린다(recordFirstDownload의 조건과 같다).
+    if (order.status === 'partially_refunded')
+      return res.status(409).json({ ok: false, message: '일부 환불된 주문이라 여기서 내려받을 수 없어요. 카카오톡이나 010-4255-7893으로 문의해 주세요.' });
+    if (order.status !== 'paid' || order.shopOrder.fulfillmentStatus === 'cancelled')
       return res.status(409).json({ ok: false, message: '결제가 살아 있는 주문만 내려받을 수 있어요.' });
 
     // `file`은 **이 주문 줄의 디지털 상품이 가진 파일 순번**이어야 한다 — 목록에 없는 값으로 버킷의 다른 객체에 서명을 받아 내지 못한다.

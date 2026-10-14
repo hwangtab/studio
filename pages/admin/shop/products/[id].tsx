@@ -224,7 +224,7 @@ export default function AdminShopProductPage({ product, editable, fulfillment }:
             </table>
           </div>
           {approved && unlocked.length > 0 && (
-            <button type="button" disabled={busy} onClick={() => run({ action: 'lock_new_skus' }, '새 옵션을 승인했습니다.')} className={`${primaryBtn} mt-3`}>새 옵션 승인</button>
+            <button type="button" disabled={busy} onClick={() => run({ action: 'lock_new_skus', skus: unlocked.map((s) => ({ id: s.id, price: s.price, optionLabel: s.optionLabel ?? null })) }, '새 옵션을 승인했습니다.')} className={`${primaryBtn} mt-3`}>새 옵션 승인</button>
           )}
         </section>
 
@@ -254,7 +254,7 @@ export default function AdminShopProductPage({ product, editable, fulfillment }:
             <label className="block md:max-w-md">주소(slug) — 승인할 때 확정됩니다
               <input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="예: my-album" className={`${inputClass} mt-1`} />
             </label>
-            <button type="button" disabled={busy} onClick={() => run({ action: 'approve_now', slug: slug || undefined }, '승인했습니다.')} className={`${primaryBtn} mt-3`}>바로 승인</button>
+            <button type="button" disabled={busy} onClick={() => run({ action: 'approve_now', slug: slug || undefined, expectedUpdatedAt: product.updatedAt }, '승인했습니다.')} className={`${primaryBtn} mt-3`}>바로 승인</button>
           </section>
         )}
         {product.reviewNote && (

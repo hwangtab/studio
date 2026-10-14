@@ -25,10 +25,14 @@ interface Props {
 
 const SITE_URL = 'https://studionol.co.kr';
 
-const summarize = (text: string): string => {
-  const flat = text.replace(/\s+/g, ' ').trim();
+const summarize = (text: string | undefined): string => {
+  const flat = (text ?? '').replace(/\s+/g, ' ').trim();
   return flat.length > 150 ? `${flat.slice(0, 147)}…` : flat;
 };
+
+/** 검색 요약·공유 카드 설명 — 첫 문단. DB 상품은 소개가 비어 들어올 수 있어(옛 저장분) 부제·제목으로 대신한다. */
+const summaryOf = (product: ShopProduct): string =>
+  summarize(product.description[0]) || summarize(product.subtitle) || `${product.title} — 스튜디오 놀 음반·굿즈`;
 
 export default function ShopProductPage({ product, others, remaining, salesOpen, artist, titleFallbackFont }: Props) {
   const path = `/ko/shop/${product.slug}`;
@@ -41,7 +45,7 @@ export default function ShopProductPage({ product, others, remaining, salesOpen,
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.title,
-    description: summarize(product.description[0]),
+    description: summaryOf(product),
     image: product.images.map((i) => `${SITE_URL}${i}`),
     brand: { '@type': 'Brand', name: artist?.name ?? '스튜디오 놀' },
     offers: sellable.map((s) => ({
@@ -61,7 +65,7 @@ export default function ShopProductPage({ product, others, remaining, salesOpen,
     <>
       <SEO
         title={`${product.title} | 음반·굿즈 | 스튜디오 놀`}
-        description={summarize(product.description[0])}
+        description={summaryOf(product)}
         canonical={path}
         ogImage={cover}
         ogImageWidth={coverSize?.width}

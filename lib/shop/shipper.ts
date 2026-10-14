@@ -5,7 +5,10 @@ import type { ShopProduct } from '../../data/shop/catalog';
  * 상품마다 다르다: 기본은 스튜디오, 아티스트가 직접 보내는 상품도 있다(`shop_product_fulfillment`, lib/shop/fulfillmentMode.ts).
  *
  * **한 주문은 한 발송 주체만 담는다.** 두 곳에서 따로 부쳐야 하는 주문은 운송장 하나·발송 처리 하나로 닫을 수 없다.
- * 디지털 상품은 발송이 없으니 판정에서 뺀다. 아티스트 직접 발송 실물과 다른 실물(스튜디오 발송 또는 다른 아티스트)이 섞이면 거절.
+ * 아티스트 직접 발송 실물과 다른 실물(스튜디오 발송 또는 다른 아티스트)이 섞이면 거절.
+ *
+ * **실물과 디지털도 한 주문에 담지 않는다.** 약관·화면·메일은 "발송 전이면 취소·전액 환불"을 약속하는데, 디지털을 내려받으면
+ * 청약철회가 제한돼(전자상거래법 제17조 제2항 제5호) 같은 주문의 실물까지 고객 취소가 막힌다. 그래서 한 주문은 실물만 또는 디지털만이다.
  */
 
 export const SHOP_STUDIO_COURIER = '로젠택배';
@@ -16,12 +19,21 @@ export const shipperGroupOf = (p: Pick<ShopProduct, 'kind' | 'shippedByArtist'>)
   return p.shippedByArtist ? `artist:${p.shippedByArtist}` : 'studio';
 };
 
-/** 두 상품을 한 주문에 담을 수 있는가. */
+const isDigital = (p: Pick<ShopProduct, 'kind'>): boolean => p.kind === 'digital';
+
+/** 두 상품을 한 주문에 담을 수 있는가 — 같은 종류(실물끼리·디지털끼리)이고 실물이면 같은 발송 주체. */
 export const canShareOrder = (a: Pick<ShopProduct, 'kind' | 'shippedByArtist'>, b: Pick<ShopProduct, 'kind' | 'shippedByArtist'>): boolean => {
+  if (isDigital(a) !== isDigital(b)) return false;
   const ga = shipperGroupOf(a);
   const gb = shipperGroupOf(b);
   return ga === null || gb === null || ga === gb;
 };
+
+/** 담은 상품이 실물과 디지털을 섞었는가. */
+export const hasMixedKinds = (products: ReadonlyArray<Pick<ShopProduct, 'kind'>>): boolean =>
+  new Set(products.map(isDigital)).size > 1;
+
+export const SHOP_MIXED_KIND_MESSAGE = '디지털 상품은 실물 상품과 따로 주문해 주세요.';
 
 /** 담은 상품들이 둘 이상의 발송 주체를 섞었는가. */
 export const hasMixedShippers = (products: ReadonlyArray<Pick<ShopProduct, 'kind' | 'shippedByArtist'>>): boolean =>

@@ -1,5 +1,5 @@
 import { validateShopCatalog } from './catalog';
-import { canShareOrder, hasMixedShippers, shipperGroupOf } from './shipper';
+import { canShareOrder, hasMixedKinds, hasMixedShippers, shipperGroupOf } from './shipper';
 
 const studio = { kind: 'physical' as const };
 const artistA = { kind: 'physical' as const, shippedByArtist: 'artist-a' };
@@ -21,8 +21,18 @@ describe('발송 주체 묶음', () => {
     expect(canShareOrder(artistA, studio)).toBe(false);
     expect(canShareOrder(studio, artistA)).toBe(false);
     expect(canShareOrder(artistA, artistB)).toBe(false);
-    expect(canShareOrder(artistA, digital)).toBe(true);
-    expect(canShareOrder(digital, studio)).toBe(true);
+    // 실물과 디지털은 한 주문에 담지 않는다 — 디지털을 내려받으면 실물의 "발송 전 취소"까지 막힌다.
+    expect(canShareOrder(artistA, digital)).toBe(false);
+    expect(canShareOrder(digital, studio)).toBe(false);
+    expect(canShareOrder(digital, digital)).toBe(true);
+  });
+
+  it('종류 섞임 판정', () => {
+    expect(hasMixedKinds([])).toBe(false);
+    expect(hasMixedKinds([digital, digital])).toBe(false);
+    expect(hasMixedKinds([studio, artistA])).toBe(false);
+    expect(hasMixedKinds([studio, digital])).toBe(true);
+    expect(hasMixedKinds([{}, digital])).toBe(true);
   });
 
   it('섞임 판정 — 디지털은 세지 않는다', () => {

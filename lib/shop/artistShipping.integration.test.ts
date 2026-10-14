@@ -103,10 +103,11 @@ describe('한 주문 = 한 발송 주체 (서버)', () => {
     expect(await testDb.query.orders.findMany()).toHaveLength(0);
   });
 
-  it('디지털 상품은 판정에서 빠진다 — 어느 발송 주체의 실물과도 함께 담긴다', async () => {
-    expect((await createShopOrder(shopPayload([{ skuId: A_PHY, quantity: 1 }, { skuId: D_DIG, quantity: 1 }]), new Date(), { salesOpen: true })).ok).toBe(true);
-    expect((await createShopOrder(shopPayload([{ skuId: B_PHY, quantity: 1 }, { skuId: D_DIG, quantity: 1 }]), new Date(), { salesOpen: true })).ok).toBe(true);
-    expect((await createShopOrder(shopPayload([{ skuId: S_PHY, quantity: 1 }, { skuId: D_DIG, quantity: 1 }]), new Date(), { salesOpen: true })).ok).toBe(true);
+  it('디지털 상품은 어느 발송 주체의 실물과도 함께 담지 않는다(mixed_kind)', async () => {
+    for (const phy of [A_PHY, B_PHY, S_PHY]) {
+      expect(await createShopOrder(shopPayload([{ skuId: phy, quantity: 1 }, { skuId: D_DIG, quantity: 1 }]), new Date(), { salesOpen: true }))
+        .toEqual({ ok: false, code: 'mixed_kind' });
+    }
   });
 
   it('API가 사람이 읽는 400 메시지로 답한다', async () => {
@@ -156,8 +157,13 @@ describe('아티스트 발송 목록 — 자기 주문만', () => {
     expect(json).not.toContain(String(a.totalAmount));
   });
 
-  it('섞인 주문(디지털 포함)에서는 자기 직접 발송 줄만 싣는다', async () => {
-    await place([{ skuId: B_PHY, quantity: 1 }, { skuId: D_DIG, quantity: 1 }]);
+  it('옛 섞인 주문(디지털 포함)에서는 자기 직접 발송 줄만 싣는다', async () => {
+    // 지금은 주문 생성이 실물·디지털 섞임을 거절한다(mixed_kind) — 그 전 모양의 주문을 손으로 만든다.
+    const r = await place([{ skuId: B_PHY, quantity: 1 }]);
+    await testDb.run(sql`
+      INSERT INTO shop_order_items (id, order_no, sku_id, product_slug, product_title, unit_price, quantity)
+      VALUES ('legacy-dig', ${r.orderNo}, ${D_DIG}, 'a-digital', 'A 디지털', 5000, 1)
+    `);
     const rows = await loadArtistShippingOrders('cB');
     expect(rows).toHaveLength(1);
     expect(rows[0].items.map((i) => i.label)).toEqual(['B 굿즈']);
@@ -268,7 +274,12 @@ describe('발송 처리 — 소유 판정', () => {
     expect(await resolveOrderShipper(a.orderNo)).toMatchObject({ kind: 'artist', creatorId: 'cA', creatorName: '아티스트A', artistSlug: 'artist-a' });
     const s = await place([{ skuId: S_PHY, quantity: 1 }]);
     expect(await resolveOrderShipper(s.orderNo)).toEqual({ kind: 'studio' });
-    const withDigital = await place([{ skuId: B_PHY, quantity: 1 }, { skuId: D_DIG, quantity: 1 }]);
+    // 옛 섞인 주문(지금은 mixed_kind로 막힌다) — 디지털 줄은 발송 주체 판정에서 빠진다.
+    const withDigital = await place([{ skuId: B_PHY, quantity: 1 }]);
+    await testDb.run(sql`
+      INSERT INTO shop_order_items (id, order_no, sku_id, product_slug, product_title, unit_price, quantity)
+      VALUES ('legacy-dig-2', ${withDigital.orderNo}, ${D_DIG}, 'a-digital', 'A 디지털', 5000, 1)
+    `);
     expect(await resolveOrderShipper(withDigital.orderNo)).toMatchObject({ kind: 'artist', creatorId: 'cB' });
   });
 });

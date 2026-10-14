@@ -10,7 +10,7 @@ import { isUniqueConflictError } from '../funding/slugOccupancy';
 import { nextReviewStatus } from '../funding/reviewTransition';
 import { parseDigitalFiles, salesDigitalFiles } from './adminProducts';
 import { getShopArtistByCreator } from './artists';
-import { loadProductFulfillmentMode, type ShopFulfillmentMode } from './fulfillmentMode';
+import { clearArtistFulfillmentOfDigital, loadProductFulfillmentMode, type ShopFulfillmentMode } from './fulfillmentMode';
 import { findMissingShopProductFields, splitShopDescription, type ShopProductInput } from './creatorValidation';
 import {
   canAdminEditShopField, canAdminEditShopProduct, canCreatorEditShopField, canCreatorEditShopProduct, DB_SKU_PREFIX, DRAFT_SLUG_PREFIX, SHOP_CREATOR_LIMITS,
@@ -28,7 +28,7 @@ import {
  */
 
 export type ProductWriteCode =
-  | 'not_found' | 'not_editable' | 'locked' | 'duplicate_slug' | 'too_many' | 'invalid' | 'no_shop' | 'incomplete';
+  | 'not_found' | 'not_editable' | 'locked' | 'duplicate_slug' | 'too_many' | 'invalid' | 'no_shop' | 'incomplete' | 'conflict';
 
 export type ProductWriteResult<T extends object = object> =
   | ({ ok: true } & T)
@@ -65,6 +65,8 @@ export interface CreatorProductDetail {
   submittedAt: number | null;
   approvedAt: number | null;
   creatorEditedAt: number | null;
+  /** 마지막 저장 시각(초) — 관리자 저장이 "화면을 연 판본"인지 확인하는 값. */
+  updatedAt: number;
   /** 내려받기 파일이 등록돼 있는가(키는 싣지 않는다). */
   hasDownloads: boolean;
   skus: CreatorProductSku[];
@@ -122,6 +124,7 @@ const toDetail = (row: ShopProductRow, skus: readonly ShopProductSkuRow[], creat
   submittedAt: row.submittedAt,
   approvedAt: row.approvedAt,
   creatorEditedAt: row.creatorEditedAt,
+  updatedAt: row.updatedAt,
   hasDownloads: hasFiles(row.digitalFiles),
   skus: [...skus].sort((a, b) => a.sortOrder - b.sortOrder || a.id.localeCompare(b.id)).map(toSku),
   creator,
@@ -186,6 +189,11 @@ export const createDraftProduct = async (creatorId: string, options: { admin?: b
 
 const sameLabel = (a: string | null, b: string | null): boolean => (a ?? null) === (b ?? null);
 
+/** 입력 주소가 비면 저장된 주소를 유지한다. */
+const slugOf = (value: ShopProductInput, row: ShopProductRow): string => (value.slug === '' ? row.slug : value.slug);
+
+const STALE_EDIT = '그사이 아티스트가 상품을 고쳤어요. 새로고침해 바뀐 내용을 확인한 뒤 다시 저장해 주세요.';
+
 /** 파일 상품 slug·다른 살아 있는 DB 상품 slug와 겹치는가. */
 const slugTaken = async (slug: string, exceptProductId: string): Promise<boolean> => {
   if (SHOP_PRODUCTS.some((p) => p.slug === slug)) return true;
@@ -204,21 +212,32 @@ export const saveProduct = async (
   productId: string,
   value: ShopProductInput,
   now: Date = new Date(),
-  options: { admin?: boolean } = {},
+  options: { admin?: boolean; expectedUpdatedAt?: number } = {},
 ): Promise<ProductWriteResult<{ approvedEdit: boolean }>> => {
   // 관리자 저장(`admin: true`)은 `creatorId`에 상품 소유자를 넘긴다. 열린 칸만 `canAdminEditShopField`로 달라지고, SKU 잠금·
   // 제목/주소 잠금(승인 뒤)은 아래 같은 판정을 탄다 — 관리자도 판매 중인 옵션의 가격을 못 바꾼다.
   const admin = options.admin === true;
   const row = await loadOwnRow(creatorId, productId);
   if (!row) return deny('not_found', '상품을 찾을 수 없어요.');
+  // 관리자 화면이 연 판본인가 — 그 사이 아티스트가 고쳤으면 덮어쓰지 않는다(아래 UPDATE의 WHERE에도 같은 값을 건다).
+  const expected = options.expectedUpdatedAt;
+  if (expected !== undefined && row.updatedAt !== expected) return deny('conflict', STALE_EDIT);
   const status = row.reviewStatus;
   if (!(admin ? canAdminEditShopProduct(status) : canCreatorEditShopProduct(status))) {
     return deny('not_editable', '지금 상태에서는 상품을 고칠 수 없어요.');
   }
+  // 심사 대기·승인 상품은 공개 화면(첫 문단 = 검색 요약·공유 카드, 첫 사진 = 대표 사진)이 기대는 칸을 비울 수 없다 — 제출·승인 게이트와 같은 정의.
+  if (status === 'approved' || status === 'submitted') {
+    const missing = findMissingShopProductFields(
+      { title: value.title, slug: slugOf(value, row), description: value.description, images: value.images, skus: value.skus, creatorName: '-', creatorEmail: '' },
+      true,
+    ).filter((f) => f === '소개' || f === '사진');
+    if (missing.length > 0) return deny('incomplete', `심사 중이거나 승인된 상품은 다음 항목을 비울 수 없어요: ${missing.join(', ')}`);
+  }
 
   const can = (f: Parameters<typeof canCreatorEditShopField>[1]) => (admin ? canAdminEditShopField(status, f) : canCreatorEditShopField(status, f));
   const storedImages = parseImages(row.images);
-  const slugIn = value.slug === '' ? row.slug : value.slug;
+  const slugIn = slugOf(value, row);
 
   const lockedChecks: Array<[Parameters<typeof canCreatorEditShopField>[1], boolean, string]> = [
     ['title', value.title !== row.title, '제목은 승인된 뒤에는 바꿀 수 없어요.'],
@@ -277,14 +296,20 @@ export const saveProduct = async (
       editionSize: value.editionSize,
       updatedAt: nowSec,
       ...(approvedEdit ? { creatorEditedAt: nowSec } : {}),
-    }).where(and(eq(shopProducts.id, productId), eq(shopProducts.creatorId, creatorId), eq(shopProducts.reviewStatus, status)));
-    if (Number(result.rowsAffected) === 0) return raced();
+    }).where(and(
+      eq(shopProducts.id, productId), eq(shopProducts.creatorId, creatorId), eq(shopProducts.reviewStatus, status),
+      expected !== undefined ? eq(shopProducts.updatedAt, expected) : undefined,
+    ));
+    if (Number(result.rowsAffected) === 0) return expected !== undefined ? deny('conflict', STALE_EDIT) : raced();
   } catch (error: unknown) {
     if (isUniqueConflictError(error, 'shop_products.slug')) {
       return deny('duplicate_slug', '그 사이 다른 상품이 같은 주소를 쓰기 시작했어요. 다른 주소를 적어 주세요.');
     }
     throw error;
   }
+
+  // 디지털 상품에는 발송이 없다 — 종류를 디지털로 바꿨으면 아티스트 발송 행을 걷는다(받는 분 정보 제공·배송비 정산이 따라 붙지 않게).
+  if (value.kind === 'digital') await clearArtistFulfillmentOfDigital(productId);
 
   // 잠긴 SKU에는 가격·옵션명 UPDATE가 닿지 않는다 — 읽은 뒤 승인이 잠근 경합도 WHERE locked_at IS NULL이 0행으로 막는다.
   for (const gone of removed) {

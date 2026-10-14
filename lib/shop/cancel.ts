@@ -43,7 +43,8 @@ export const cancelShopOrder = async (input: {
   }
   const fulfillment = order.shopOrder.fulfillmentStatus;
   if (fulfillment === 'cancelled') return { ok: false, code: 'invalid_state', message: '이미 취소된 주문이에요.' };
-  // 내려받기 기록이 있으면 고객 취소는 막는다. 디지털만 주문은 첫 내려받기가 `delivered`로 닫으므로 이 검사가 먼저 와야 문구가 맞다.
+  // 내려받기 기록이 있으면 고객 취소는 막는다. 디지털 주문(디지털만 담는다 — 실물과 섞인 주문은 주문 생성이 `mixed_kind`로 거절한다)은
+  // 첫 내려받기가 `delivered`로 닫으므로 이 검사가 먼저 와야 문구가 맞다. 그래서 내려받기가 실물의 "발송 전 취소"를 막는 일은 새 주문에 없다.
   const customerGuardsDownload = input.requestedBy === 'customer' && order.shopOrder.items.some((i) => isDbSkuId(i.skuId));
   if (customerGuardsDownload) {
     try {

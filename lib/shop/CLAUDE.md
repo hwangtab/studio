@@ -130,12 +130,19 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
 - **승인 뒤 잠금**: 열린 칸은 부제·소개·사진·공개 여부·새 옵션·판매 종료(`SHOP_PRODUCT_EDITABLE`). 제목·주소·분류·종류·한정 수량·예약 발송일(관리자만)과
   **잠긴 SKU의 id·가격·옵션명·삭제**는 거부한다. 쓰기 UPDATE의 WHERE에 `locked_at IS NULL`을 한 번 더 건다(읽은 뒤 승인이 잠근 경합은 0행).
   가격 변경은 새 옵션. 승인 뒤 더한 옵션은 안 잠긴 채라 **팔리지 않고**, 관리자 "새 옵션 승인"(`lock_new_skus`)이 잠그는 순간 팔린다.
+  "새 옵션 승인"은 화면이 본 미잠금 옵션 목록(`{id, price, optionLabel}`)을 함께 보내고, 지금 미잠금 옵션 집합·값이 그 목록과 다르면 **하나도 잠그지 않고** conflict다
+  (UPDATE 문장 하나가 `id IN (본 목록)` + 가격·옵션명 일치 + "미잠금 전체 = 본 목록"을 판정한다 — 운영자가 보지 않은 옵션·가격이 팔리기 시작하지 않게).
+- **심사 대기·승인 상품은 소개(첫 문단)·사진을 비울 수 없다**(`saveProduct`가 `findMissingShopProductFields`의 같은 정의로 거부) — 상세의 검색 요약·대표 사진이 그 칸을 읽는다.
+  상세 페이지는 빈 소개도 견딘다(요약은 부제·제목으로 대신).
+- **관리자 저장·바로 승인은 화면을 연 판본(`updated_at`)을 싣는다**(`expectedUpdatedAt`) — 그 사이 아티스트가 고쳤으면 conflict(덮어쓰기·못 본 판본 승인 방지). 라우트는 값이 없으면 400.
 - **승인 뒤 수정 알림**: 승인 상태에서 저장하면 `creator_edited_at`을 찍고 운영자에게 메일(`sendShopCreatorEditedNotice`) — 재심사 대기열은 없다.
   관리자 화면이 "승인 뒤 수정"과 "승인 대기 옵션"을 표시한다. 메일 실패는 저장·판정을 실패시키지 않는다(판정 메일은 운영자 폴백 메일이 있다).
 - **재고는 관리자만**(스튜디오가 보관·발송하는 상품): 아티스트 쓰기 경로(`creatorProductWrite.ts`)에 `shop_skus`가 없다(테스트가 소스를 검사한다). 아티스트가 직접 보내는 상품만 예외로 `creatorStock.ts`가 자기 옵션의 총 재고를 넣게 한다(아래 "발송 주체"). `setSkuStock`은 잠긴 SKU만
-  받고 `edition_size`가 있으면 그 상품 재고 합이 한정 수량을 넘지 못하게 한다. 승인하면 공개되므로 재고(0이면 품절)를 바로 넣는다.
+  받고 `edition_size`가 있으면 그 상품 재고 합이 한정 수량을 넘지 못하게 한다 — **INSERT … SELECT의 WHERE 하나가** "다른 옵션 합 + 이 값 ≤ 한정 수량"을 판정한다(읽고 쓰는 사이 경합 없음, 0행이면 거부).
+  승인하면 공개되므로 재고(0이면 품절)를 바로 넣는다.
 - **관리자 액션**: `lock_new_skus`·`set_ships_on`·`set_published`·`set_internal_note`·`set_digital_files`(키는 `shop/` 접두사 + `isSafeObjectKey` +
-  R2 존재 확인). 승인·공개 토글 뒤 그 아티스트가 `data/artists`와 연결돼 있으면 `/ko/artists/<slug>`를 재검증한다(실패는 `warnings`).
+  R2 존재 확인). 승인·공개 토글 뒤 그 아티스트가 `data/artists`와 연결돼 있으면 `/ko/artists/<slug>`를 재검증한다(실패는 `warnings`). 아티스트 콘솔의 공개 토글·승인 상태 저장도
+  같은 `revalidateShopArtistPages`를 부른다(실패는 로그만).
 - **판매 현황**: 콘솔 상점 탭의 표(`creatorStats.ts`) — SKU별 맡긴 수량(`shop_skus.stock`)·결제 완료·발송 완료·남은 수량. 구매자 정보는 읽지 않는다.
   부분 환불 주문은 결제 완료로 센다(어느 줄이 환불됐는지 원장이 모른다).
 - **이름 잠금**: 상점 상품이 심사 중·승인이면 아티스트 이름이 잠긴다(`hasReviewedProject`, `lib/funding/CLAUDE.md`).
@@ -161,7 +168,11 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
 - **정하는 사람과 시점**: 관리자만, 상품 상세 "운영" 칸(`set_fulfillment_mode`). **승인 뒤에는 바꿀 수 없다** — 쓰기 문장의 WHERE가 `review_status <> 'approved'`를 같이 걸어
   사전 검사 뒤 승인이 끼어도 0행이다. 이유: 이미 들어온 주문의 발송 책임·받는 분 정보 제공 범위가 갈린다. 그래서 "바로 승인" 전에 정해야 한다. 아티스트 폼에는 읽기 전용 표시.
   디지털 상품·스튜디오 계정(`studio-nol`) 상품·`shop_artists` 미등재 계정은 'artist'로 못 정한다. 파일 카탈로그 상품은 항상 스튜디오 발송(`validateShopCatalog`가 `shippedByArtist`를 거부).
-- **한 주문 = 한 발송 주체**(`lib/shop/shipper.ts`, 순수 모듈): 실물은 'studio' 또는 `artist:<slug>`로 묶이고 **디지털은 어디에도 묶이지 않는다**. 아티스트 직접 발송 실물이 다른 실물과 섞이면
+  **디지털에는 발송 주체가 없다**: 저장 때 종류가 디지털이면 아티스트 발송 행을 지우고(`clearArtistFulfillmentOfDigital`), 승인은 디지털 + 'artist' 행이면 거부한다(`digital_shipper`).
+  아티스트 발송을 읽는 조회(발송 목록·건수·관리자 목록·정산 배송비·`canSetStock`·`creatorStock`·공개 객체의 `shippedByArtist`)는 전부 `p.kind <> 'digital'`을 건다 — `resolveOrderShipper`와 같은 기준.
+- **한 주문 = 실물만 또는 디지털만**: 섞이면 `createShopOrder`가 `mixed_kind`(API 400)로 거절하고 주문 폼도 같은 판정(`canShareOrder`·`hasMixedKinds`)으로 거른다. 약관·화면·메일이 "발송 전이면 취소·전액 환불"을
+  약속하는데, 디지털을 내려받으면 청약철회가 제한돼 같은 주문의 실물까지 고객 취소가 막히기 때문이다. 약관 디지털 절·`SHOP_DIGITAL_RULES`에 "따로 주문" 한 줄.
+- **한 주문 = 한 발송 주체**(`lib/shop/shipper.ts`, 순수 모듈): 실물은 'studio' 또는 `artist:<slug>`로 묶인다(디지털은 발송 주체가 없다). 아티스트 직접 발송 실물이 다른 실물과 섞이면
   `createShopOrder`가 `mixed_shipper`(API 400, 사람이 읽는 문구)로 거절한다 — 주문 폼은 함께 담을 상품을 같은 묶음으로 거르고(`canShareOrder`), 담은 뒤에도 같은 판정(`hasMixedShippers`)으로
   결제를 막는다. 서버 판정이 최종이다. 공개 상품 객체는 `shippedByArtist`(아티스트 상점 slug)를 싣고 **creatorId는 싣지 않는다**. 상품 상세에 "직접 발송" 한 줄, 주문 폼 배송지 아래에
   받는 분 정보가 그 아티스트에게 전달된다는 고지(`SHOP_ARTIST_SHARING_NOTICE`).
@@ -200,7 +211,8 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
   이 slug 판정 하나로: 정산 예정 표(`listShopArtistSales`)에서 빠지고(스튜디오 몫), `resolveShopArtist`가 null이라 `/ko/shop/artist/studio-nol`이 404이며
   상품 상세에 아티스트 링크가 없고(`findShopArtistOfDbProduct`) 사이트맵·llms에도 안 들어가고, 일반 아티스트 등재·slug 변경이 이 주소를 못 쓴다. 스튜디오 상품은 `/ko/shop`에만 나온다.
 - 상품 화면의 옵션 표에서 잠긴 옵션의 총 재고를 바로 넣는다(`setSkuStock` 재사용). 대시보드(`/admin`)에 "심사 대기 상점 상품"·"발송 대기 상점 주문" 카드가
-  있고(`countPendingShopProducts`·`countShopAwaitingShipment`), 표가 없거나 조회가 실패하면 그 카드만 숨는다.
+  있고(`countPendingShopProducts`·`countShopAwaitingShipment`), 표가 없거나 조회가 실패하면 그 카드만 숨는다. "발송 대기"는 **스튜디오가 지금 보낼 주문만**이다 —
+  아티스트 발송 주문(`resolveOrderShipper`와 같은 기준)·예약 발송일 전 주문은 따로 센다(`{ studio, preorder, artist }`, 0이 아니면 카드가 따로 뜬다).
 
 ### 예약 판매·한정판 넘버링 (플랫폼 PR 4)
 
@@ -220,27 +232,33 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
   **발송 뒤 반품 환불은 번호를 남긴다** — 이미 나간 물건의 번호라 다시 팔면 같은 번호가 둘이 된다. 되팔려면 운영자가 DB에서 직접 지운다.
 - 표시: 주문 접수 메일(줄별 "한정판 번호 7/100"), `/ko/shop/manage/<주문번호>`, 관리자 주문 화면("포장할 번호"). 조회는 오류를 삼킨다.
 - `setSkuStock`이 그 상품 SKU 재고 합 ≤ `edition_size`로 막는다(PR 3).
+- **판매 가능 수량은 남은 번호로 한 번 더 자른다**(`lib/shop/stock.ts`): `min(재고 계산값, edition_size − 부여된 번호 수 − 점유 중 줄이 아직 못 받은 번호 수)`.
+  발송 뒤 반품은 재고를 돌려주지만 번호는 남기므로, 이 상한이 없으면 새 구매자가 번호 없이 확정된다. 화면(`remainingStockSql`)·생성 게이트·확정 게이트(`editionGates`, 상품별로 옵션 수량 합)가
+  같은 식이고, 확정 게이트에 걸리면 재고 부족과 같이 자동 전액 취소다. `alertIfSerialsMissing`은 게이트 밖 이상 상태를 위한 최후 방어로 남겨 둔다.
 
 ### 디지털 상품 (플랫폼 PR 5) — 배송 없는 주문과 내려받기 게이트
 
 - **배송 없는 주문**: 실물(`kind !== 'digital'`) 줄이 하나도 없으면 배송지·배송비가 없다. 서비스(`createShopOrder`)가 SKU를 해석한 뒤 판정하고,
   실물이 있는데 `shipping`이 없으면 `shipping_required`(API 400). 디지털만이면 받은 배송지도 저장하지 않는다. 검증(`validation.ts`)에서 `shipping`은 선택 —
   있으면 전부 검증한다. 무료 배송 기준(`SHOP_FREE_SHIPPING_FROM`)은 **실물 줄 합계**로 센다 — 디지털을 얹어 배송비를 없애지 않게(`computeShopTotals`).
-- **넘버링은 실물만**: 디지털 상품에는 `edition_size`를 받지 않는다(입력 검증·승인 둘 다). 섞인 주문은 내려받은 뒤에도 `preparing`이라,
-  발송 전 환불이 번호를 반납해 이미 전달된 번호가 다시 나간다.
+- **넘버링은 실물만**: 디지털 상품에는 `edition_size`를 받지 않는다(입력 검증·승인 둘 다). (실물·디지털을 따로 주문하게 한 뒤에도 유지한다 — 옛 섞인 주문은
+  내려받은 뒤에도 `preparing`이라, 발송 전 환불이 번호를 반납해 이미 전달된 번호가 다시 나갈 수 있었다.)
 - **배송지 없음 표식**: `shop_orders`의 받는 분·연락처·우편번호·주소가 NOT NULL이라 **`''`**를 넣는다. 판정은 `shopOrderShips(o) = o.postcode !== ''`
   (`lib/shop/shape.ts`) 하나 — 화면·메일·관리자·정산이 이걸 쓴다. 받는 분 이름·연락처는 주문자(`orders.customer_*`)가 따로 있어 `''`로 둔다.
   5년 파기(`purgeShopPersonalDataOfPurgedOrders`)는 `postcode <> ''`인 행만 덮는다(표식을 파기 표식으로 바꾸면 배송이 있던 주문으로 읽힌다).
 - **내려받기 게이트** `pages/api/shop/download.ts`(펀딩 download를 본뜸): POST만(GET 405 — 링크 미리보기 봇이 기록을 남기지 못하게), 관리 토큰, 레이트리밋, no-store.
   `file`은 그 주문 줄의 `kind='digital'` 상품 `digital_files` 순번이고 화면에는 라벨·순번만 나간다(R2 키는 서버만). 순서는 서명 → 객체 존재 확인(없으면 기록 안 하고
   503 + 운영자 메일) → 기록 → 302. **메일에는 내려받기 주소를 싣지 않는다** — 주문 확인 페이지 링크만.
+- **일부 환불(`partially_refunded`) 주문은 내려받지 못한다** — 어느 줄이 환불됐는지 원장이 몰라 환불한 음원을 계속 받아 갈 수 있다. "살아 있는 주문"은 `paid`만이고(`liveOrderSql`),
+  download API가 409, 관리 페이지는 버튼 대신 문의 안내를 보인다.
 - **기록** `recordFirstDownload`(`lib/shop/downloads.ts`): `INSERT … SELECT … WHERE EXISTS(살아 있는 주문) ON CONFLICT DO NOTHING` + 같은 batch에서 디지털만 주문(`postcode=''`)을
   `delivered`로(`shipped_at`·`delivered_at`). 이미 기록된 주문은 행이 있고 주문이 아직 살아 있어야 통과한다(행만 보면 환불된 주문에도 통과).
 - **청약철회 제한**: 고객 취소(`cancel.ts`)는 `db-` 줄이 있는 주문에서만 "내려받기 기록 없음"을 보고, 선점 UPDATE의 WHERE에 `NOT EXISTS(shop_order_downloads)`를 건다 —
   내려받기와 취소가 겹치면 어느 쪽이 먼저든 다른 쪽은 0행이다. 표가 없는 DB에서 파일 상품 주문 취소가 깨지지 않게 `db-` 줄이 있을 때만 새 표를 읽는다.
   운영자 환불은 내려받은 뒤에도 되고, 관리자 주문 화면이 "내려받음: 시각"을 경고한다. 디지털만 주문은 발송 처리를 거부한다(`markShopOrderShipped`).
 - **미리듣기는 필수다**(전자상거래법 제17조 제6항 — 청약철회를 제한하려면 시험 사용 상품을 제공해야 한다). `digital_files` 항목의 `preview: true`가 미리듣기 파일이고(마이그레이션 없음),
-  관리자 상품 화면의 "미리듣기 파일" 칸에 넣는다. **판매 파일과 다른 키**여야 한다(같은 키면 `set_digital_files`가 거부 — 전곡을 공짜로 받게 된다). 판매 파일·미리듣기가 각각 1개 이상이어야
+  관리자 상품 화면의 "미리듣기 파일" 칸에 넣는다. **판매 파일과 다른 키**여야 한다(같은 키면 `set_digital_files`가 거부 — 전곡을 공짜로 받게 된다). **다른 상품의
+  `digital_files`에 있는 키(판매·미리듣기 모두)도 거부한다** — 남의 판매 파일 키를 미리듣기에 넣으면 그 전곡이 공개된다. 판매 파일·미리듣기가 각각 1개 이상이어야
   승인되고(`decideShopProduct`·"바로 승인" 같은 경로), 승인된 상품은 어느 쪽도 비울 수 없다. 30초~1분 발췌본은 운영자가 만들어 R2 `shop/` 아래에 올린다.
   미리듣기는 구매자 내려받기 목록(`loadOrderDownloadFiles`)과 `hasDownloads`에 들어가지 않는다. 재생은 `GET /api/shop/preview?product=<slug>&i=<미리듣기 순번>` —
   승인·공개된 디지털 상품의 `preview` 항목만 5분 서명 주소(inline)로 302, IP 레이트리밋, no-store. 공개 상품 객체에는 라벨(`previews`)만 싣고 키는 싣지 않는다.

@@ -74,7 +74,7 @@ export default function ShopArtistPage({ artist, products, soldOut, salesOpen, t
           {products.map((p) => <ShopProductCard key={p.slug} product={p} soldOut={soldOut[p.slug] === true} />)}
         </div>
         <p className="typo-card-meta mt-10">
-          판매·발송: 스튜디오 놀
+          판매: 스튜디오 놀
           {artist.curatedSlug && (
             <>
               {' · '}

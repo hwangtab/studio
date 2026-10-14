@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { fundingCreators, orders } from '../../db/schema';
 import { formatPriceAmount } from '../../data/pricing';
-import { SITE_URL, adminUrl, buildEmailLayout, type EmailLayoutRow } from '../email/layout';
+import { SITE_URL, adminUrl, buildEmailLayout, escapeHtml, type EmailLayoutRow } from '../email/layout';
 import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 import { resolveOrderShipper } from './artistShipping';
@@ -19,6 +19,8 @@ import { findShopOrderByOrderNo, type ShopOrderWithDetails } from './service';
  *
  * 실패는 던지지 않는다 — 돈은 이미 움직였고 메일 실패로 결과를 뒤집지 않는다. 마지막 실패 사유를
  * `orders.notification_error`에 남겨 관리자 화면에 드러낸다(성공하면 비운다).
+ *
+ * `paragraphs`·`notices`에 넣는 값은 레이아웃이 escape하지 않는다(rows·heading만 한다) — 이름·날짜 같은 저장값은 여기서 `escapeHtml`로 넣는다.
  */
 
 const won = (n: number): string => `${formatPriceAmount(n)}원`;
@@ -92,8 +94,8 @@ const sendArtistShipRequest = async (order: ShopOrderWithDetails, extras: OrderE
     preheader: `주문번호 ${order.orderNo}`,
     heading: '발송할 주문이 들어왔어요',
     paragraphs: [
-      `${creator.name}님, 직접 보내시는 상품의 주문이 들어왔어요. 받는 분 정보는 콘솔의 발송할 주문에서 확인하고, 보낸 뒤 택배사와 운송장 번호를 입력해 주세요.`,
-      ...(extras.latestShipsOn ? [`예약 판매 상품이 있어서 ${formatShipsOn(extras.latestShipsOn)} 이후에 보내 주세요.`] : []),
+      `${escapeHtml(creator.name)}님, 직접 보내시는 상품의 주문이 들어왔어요. 받는 분 정보는 콘솔의 발송할 주문에서 확인하고, 보낸 뒤 택배사와 운송장 번호를 입력해 주세요.`,
+      ...(extras.latestShipsOn ? [`예약 판매 상품이 있어서 ${escapeHtml(formatShipsOn(extras.latestShipsOn))} 이후에 보내 주세요.`] : []),
     ],
     rows: [{ label: '주문번호', value: order.orderNo }],
     cta: { label: '발송할 주문 보기', url: ARTIST_SHIPPING_CONSOLE_URL },
@@ -117,15 +119,16 @@ export const sendShopOrderConfirmedEmails = async (orderNo: string): Promise<voi
   const ships = shopOrderShips(so);
 
   // 내려받기 주소는 싣지 않는다 — 메일의 링크를 여는 봇이 "내려받음"을 남기지 않게. 내려받기는 주문 확인 페이지의 버튼에서만 시작된다.
+  const customerName = escapeHtml(order.customerName);
   const customerHtml = buildEmailLayout({
     preheader: `주문번호 ${order.orderNo} · ${won(order.totalAmount)}`,
     heading: '주문이 접수됐어요',
     paragraphs: [
       !ships
-        ? `${order.customerName}님, 주문해 주셔서 고마워요. 주문 확인 페이지에서 파일을 내려받을 수 있어요.`
+        ? `${customerName}님, 주문해 주셔서 고마워요. 주문 확인 페이지에서 파일을 내려받을 수 있어요.`
         : extras.latestShipsOn
-        ? `${order.customerName}님, 주문해 주셔서 고마워요. 예약 판매 상품이 있어서 ${formatShipsOn(extras.latestShipsOn)} 이후에 함께 보내요. 보내면 운송장 번호를 메일로 알려 드릴게요.`
-        : `${order.customerName}님, 주문해 주셔서 고마워요. 준비되는 대로 발송하고 운송장 번호를 메일로 알려 드릴게요.`,
+        ? `${customerName}님, 주문해 주셔서 고마워요. 예약 판매 상품이 있어서 ${escapeHtml(formatShipsOn(extras.latestShipsOn))} 이후에 함께 보내요. 보내면 운송장 번호를 메일로 알려 드릴게요.`
+        : `${customerName}님, 주문해 주셔서 고마워요. 준비되는 대로 발송하고 운송장 번호를 메일로 알려 드릴게요.`,
       ...(ships && extras.hasDigital ? ['디지털 상품은 주문 확인 페이지에서 내려받을 수 있어요.'] : []),
       !ships
         ? '내려받기 전에는 주문 확인 페이지에서 바로 취소할 수 있어요. 결제하신 수단으로 전액 돌려드려요.'
@@ -199,7 +202,7 @@ export const sendShopShippedEmail = async (orderNo: string): Promise<void> => {
   const html = buildEmailLayout({
     preheader: `${so.courier ?? ''} ${so.trackingNumber ?? ''}`.trim(),
     heading: '주문하신 상품을 보냈어요',
-    paragraphs: [`${order.customerName}님, 주문하신 상품을 발송했어요. 운송장 번호로 배송 상황을 확인할 수 있어요.`],
+    paragraphs: [`${escapeHtml(order.customerName)}님, 주문하신 상품을 발송했어요. 운송장 번호로 배송 상황을 확인할 수 있어요.`],
     rows: [
       { label: '주문번호', value: order.orderNo },
       ...itemRows(order),
@@ -224,7 +227,7 @@ export const sendShopCancelledEmails = async (orderNo: string, refundAmount: num
       preheader: `${won(refundAmount)} 환불`,
       heading: '주문이 취소됐어요',
       paragraphs: [
-        `${order.customerName}님, 주문이 취소되어 ${won(refundAmount)}을 결제하신 수단으로 돌려드렸어요.`,
+        `${escapeHtml(order.customerName)}님, 주문이 취소되어 ${won(refundAmount)}을 결제하신 수단으로 돌려드렸어요.`,
         '카드는 카드사 사정에 따라 승인 취소가 보이기까지 며칠 걸릴 수 있어요.',
       ],
       rows: [

@@ -12,6 +12,7 @@ const STATUS_BY_CODE: Record<ProductWriteCode, number> = {
   invalid: 400,
   incomplete: 400,
   no_shop: 403,
+  conflict: 409,
 };
 
 export const respondProductFailure = (res: NextApiResponse, result: Extract<ProductWriteResult, { ok: false }>) =>
