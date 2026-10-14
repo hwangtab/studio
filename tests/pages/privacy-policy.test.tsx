@@ -97,9 +97,21 @@ describe('처리방침 4항 — 문의·예약의 처리위탁 고지', () => {
   //   Turso         db/client.ts — orders·bookings 영속
   //   Google LLC    lib/booking/gcal.ts + confirm.ts (이벤트 본문에 이름·전화·이메일·요청사항)
   //   토스페이먼츠   components/payments/usePaymentCheckout.ts · lib/booking/toss.ts
-  it('예약 플로우의 수탁자가 모두 들어 있다', () => {
+  //   Cloudflare    pages/api/shop/download.ts — 디지털 상품 내려받기(R2 서명 주소 302)
+  //   로젠택배       상품 주문 발송(운영자 결정 2026-10-14)
+  //   아티스트       직접 발송 상품의 발송 정보(펀딩 9항 개설자 행과 같은 구조)
+  it('예약·상품 주문 플로우의 수탁자가 모두 들어 있다', () => {
     expect(SERVICE_DATA_PROCESSORS.map((p) => p.name).sort()).toEqual(
-      ['Google LLC', 'Resend', 'Turso', 'Vercel', '토스페이먼츠'].sort(),
+      [
+        'Cloudflare',
+        'Google LLC',
+        'Resend',
+        'Turso',
+        'Vercel',
+        '로젠택배',
+        '상품을 직접 발송하는 아티스트(상점에 상품을 맡긴 아티스트)',
+        '토스페이먼츠',
+      ].sort(),
     );
   });
 
