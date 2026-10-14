@@ -16,6 +16,7 @@
 2. **서명키를 만든다**: `node scripts/software/generate-license-key.mjs k1` → 비밀키를 Vercel env `SOFTWARE_LICENSE_SIGNING_KEY`
    (Sensitive)와 **오프라인 백업** 두 곳에, `SOFTWARE_LICENSE_KEY_ID=k1`, 공개키를 `data/software/publicKeys.ts`에 커밋.
    셋 중 하나라도 빠지면 활성화 API가 503으로 닫힌다(의도 — 플러그인이 검증하지 못하는 파일을 내주지 않는다).
+   **k1은 2026-10-14에 만들어 넣었다**(Vercel production·preview, 운영자 맥 키체인 `studio-nol-software-license-k1`). 맥 밖 백업은 운영자 몫.
 3. 상품을 `data/software/catalog.ts`에 올린다(머리 주석의 예시). 설치 파일은 버전이 박힌 주소로.
 4. 관리자에서 시험 키를 발급해 `docs/software/license-integration.md` §7 순서로 실제 DAW에서 확인한다.
 
