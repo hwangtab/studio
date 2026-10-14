@@ -284,7 +284,7 @@ export const orderStatusEnum = [
   'deposit_cancelled',
 ] as const;
 // 'deposit' = 운영자가 금액·품목명을 정해 둔 비공개 예약금 결제 링크(data/paymentLinks.ts). 하위 테이블 없음.
-export const orderTypeEnum = ['session', 'mixing', 'subscription', 'funding', 'ticket', 'deposit', 'merch'] as const;
+export const orderTypeEnum = ['session', 'mixing', 'subscription', 'funding', 'ticket', 'deposit', 'merch', 'software'] as const;
 export const bookingStatusEnum = ['pending', 'confirmed', 'completed', 'no_show', 'cancelled'] as const;
 export const refundStatusEnum = ['done', 'failed'] as const;
 export const refundRequesterEnum = ['customer', 'admin', 'webhook'] as const;
@@ -1753,6 +1753,36 @@ export const showReportLinks = sqliteTable('show_report_links', {
   showIdx: index('show_report_links_show_idx').on(t.showId),
 }));
 
+/**
+ * 주최자 자가등록 공연의 초안·심사 기록(2026-10-14). 주최자 계정은 펀딩 개설자(`funding_creators`)와 같다.
+ * 초안은 `draft_json` 한 칸(lib/shows/organizer/draft.ts가 유일한 주인)이고, 승인하면 seedShow가
+ * shows·구역·회차·티켓타입을 만들고 `show_id`를 잇는다. `shows`에 컬럼을 더하지 않은 이유는 0037과 같다.
+ */
+export const showSubmissions = sqliteTable('show_submissions', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  creatorId: text('creator_id').notNull().references(() => fundingCreators.id),
+  showId: text('show_id').references(() => shows.id),
+  draftJson: text('draft_json').notNull(),
+  /** 승인 때 굳힌 초안 — 승인 뒤 저장은 잠긴 칸을 여기서 가져온다(mergeApprovedEdit). */
+  approvedDraftJson: text('approved_draft_json'),
+  reviewStatus: text('review_status', { enum: fundingReviewStatusEnum }).notNull().default('draft'),
+  reviewNote: text('review_note'),
+  internalNote: text('internal_note'),
+  organizerTermsVersion: text('organizer_terms_version'),
+  organizerTermsAgreedAt: integer('organizer_terms_agreed_at', { mode: 'timestamp' }),
+  submittedAt: integer('submitted_at', { mode: 'timestamp' }),
+  approvedAt: integer('approved_at', { mode: 'timestamp' }),
+  rejectedAt: integer('rejected_at', { mode: 'timestamp' }),
+  organizerEditedAt: integer('organizer_edited_at', { mode: 'timestamp' }),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  creatorIdx: index('show_submissions_creator_idx').on(t.creatorId),
+  showIdx: uniqueIndex('show_submissions_show_idx').on(t.showId),
+}));
+
+export type ShowSubmission = typeof showSubmissions.$inferSelect;
+
 export const showsRelations = relations(shows, ({ many }) => ({
   zones: many(showZones),
   showtimes: many(showtimes),
@@ -2011,3 +2041,22 @@ export const softwareActivations = sqliteTable('software_activations', {
 
 export type SoftwareLicense = typeof softwareLicenses.$inferSelect;
 export type SoftwareActivation = typeof softwareActivations.$inferSelect;
+
+/**
+ * 소프트웨어 주문(국내 결제) — `orders(type='software')` 한 건에 상품 한 개·라이선스 한 개. 상품명·단가는 주문 시점 스냅샷.
+ * `orders`의 `relations()`에 잇지 않는다(0022 절 — 관계 조회가 이 표를 싣지 않게). 조회는 order_no로 따로 한다.
+ */
+export const softwareOrders = sqliteTable('software_orders', {
+  orderNo: text('order_no').primaryKey(),
+  productSlug: text('product_slug').notNull(),
+  priceId: text('price_id').notNull(),
+  productTitle: text('product_title').notNull(),
+  /** VAT 포함 단가(원). */
+  unitPrice: integer('unit_price').notNull(),
+  currency: text('currency').notNull().default('KRW'),
+  /** 결제 화면에서 "라이선스 활성화 뒤에는 단순 변심 환불이 안 된다"에 동의한 시각 — 청약철회 제한의 표시·동의 증거. */
+  withdrawalAckAt: integer('withdrawal_ack_at', { mode: 'timestamp' }).notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+});
+
+export type SoftwareOrder = typeof softwareOrders.$inferSelect;

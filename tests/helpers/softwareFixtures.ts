@@ -16,6 +16,7 @@ export const SOFTWARE_FIXTURE_PRODUCTS: SoftwareProduct[] = [
     requirements: [],
     requirementsEn: [],
     maxActivations: 2,
+    prices: [{ id: 'test-plugin-v2', krw: 69000 }, { id: 'test-plugin-v1', krw: 59000 }],
     releases: [
       { version: '1.1.0', date: '2026-11-01', notes: ['고침'], notesEn: ['Fixes'], downloads: [] },
       { version: '1.0.0', date: '2026-10-20', notes: ['첫 공개'], notesEn: ['First release'], downloads: [] },

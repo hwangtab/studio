@@ -41,6 +41,11 @@ export interface KoOnlyRouteRule {
    * ko 전용 정적 페이지가 아니라 SSR + 런타임 리다이렉트 페이지다.
    */
   literalSiblings: readonly string[];
+  /**
+   * 있으면 두 번째 세그먼트가 이 목록에 있는 경로**만** ko 전용이다(나머지는 다국어·SSR 형제).
+   * shows/host.tsx처럼 ko 전용 정적 페이지가 동적 라우트([slug])와 섞인 세그먼트용.
+   */
+  onlyPages?: readonly string[];
 }
 
 export const KO_ONLY_ROUTE_RULES: readonly KoOnlyRouteRule[] = [
@@ -51,6 +56,8 @@ export const KO_ONLY_ROUTE_RULES: readonly KoOnlyRouteRule[] = [
   { segment: 'guides', hasIndexPage: false, literalSiblings: [] },
   // 견적 요청서(2026-09-26) — 가격·카카오 상담이 ko 기준이라 ko 전용.
   { segment: 'quote', hasIndexPage: true, literalSiblings: [] },
+  // 공연 주최자 안내(2026-10-14) — shows 세그먼트의 나머지(목록·[slug]·success·fail 등)는 다국어/SSR이라 host 하나만 ko 전용.
+  { segment: 'shows', hasIndexPage: false, literalSiblings: [], onlyPages: ['host'] },
 ];
 
 /**
@@ -67,6 +74,7 @@ export const isKoOnlyRoutePath = (pathWithoutLocale: string): boolean => {
   if (!rule) return false;
 
   if (segments.length === 1) return rule.hasIndexPage;
+  if (rule.onlyPages) return rule.onlyPages.includes(second);
   return !rule.literalSiblings.includes(second);
 };
 

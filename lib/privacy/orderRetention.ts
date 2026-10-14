@@ -267,6 +267,20 @@ export const purgeShopPersonalDataOfPurgedOrders = async (): Promise<OrderPurgeR
 };
 
 /**
+ * 결제자 이름이 파기된 **소프트웨어 주문**의 라이선스에 남은 이메일·이름을 파기한다(`software_licenses`, 마이그레이션 0054).
+ * 라이선스 행과 키는 남긴다 — 고객이 계속 쓰는 사용권이고, 활성화에는 이메일이 필요 없다. 위 5년 파기의 결과를 따른다.
+ * 수동 발급(주문 없는) 라이선스는 대상이 아니다.
+ */
+export const purgeSoftwareLicensePersonalDataOfPurgedOrders = async (): Promise<OrderPurgeResult> => {
+  const result = await getDb().run(sql`
+    UPDATE software_licenses SET email = ${PURGED_MARK}, customer_name = NULL
+    WHERE order_no IN (SELECT order_no FROM orders WHERE type = 'software' AND customer_name = ${PURGED_MARK})
+      AND (email <> ${PURGED_MARK} OR customer_name IS NOT NULL)
+  `);
+  return rows(result as { rowsAffected?: number });
+};
+
+/**
  * 보관 기간이 지난 결제 실패 사유 원문을 파기한다.
  *
  * 대상은 `orders.payment_fail_message` 하나다. 기산점은 실패 시각(`payment_failed_at`),

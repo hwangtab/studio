@@ -244,3 +244,13 @@ export const setShopArtistProfileImage = async (creatorId: string, url: string |
     .where(eq(shopArtists.creatorId, creatorId));
   return (res.rowsAffected ?? 0) > 0;
 };
+
+/** 공개 DB 상품이 하나라도 있는 아티스트 slug(사이트맵용 후보). 오류는 던진다(호출부가 삼킨다). */
+export const listShopArtistSlugsWithDbProducts = async (): Promise<string[]> => {
+  const rows = await getDb()
+    .selectDistinct({ slug: shopArtists.slug })
+    .from(shopProducts)
+    .innerJoin(shopArtists, eq(shopArtists.creatorId, shopProducts.creatorId))
+    .where(and(eq(shopProducts.reviewStatus, 'approved'), eq(shopProducts.published, true)));
+  return rows.map((r) => r.slug);
+};

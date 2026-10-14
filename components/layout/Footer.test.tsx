@@ -11,6 +11,7 @@
  */
 import React from 'react';
 import { ARTISTS_NAV_LISTED } from '../../data/navFlags';
+import { SHOP_SALES_OPEN } from '../../data/shop/policy';
 import { render, screen, cleanup } from '@testing-library/react';
 import { Footer } from './Footer';
 
@@ -49,11 +50,13 @@ describe('Footer', () => {
     // 아티스트 구독 링크는 data/navFlags.ts의 스위치를 따른다(구독 아티스트 0인 동안 내림 — 2026-10-06).
     expect(ko.includes('/ko/artists')).toBe(ARTISTS_NAV_LISTED);
     expect(ko).toContain('/ko/funding');
+    // 음반·굿즈는 SHOP_SALES_OPEN을 따른다.
+    expect(ko.includes('/ko/shop')).toBe(SHOP_SALES_OPEN);
     cleanup();
 
     render(<Footer locale="en" />);
     const en = hrefsIn(screen.getByRole('contentinfo'));
-    expect(en.some((h) => h.endsWith('/artists') || h.endsWith('/funding'))).toBe(false);
+    expect(en.some((h) => h.endsWith('/artists') || h.endsWith('/funding') || h.endsWith('/shop'))).toBe(false);
   });
 
   it('발매 티어는 전 로케일에 나온다 (2026-09-11에 ko 게이트를 풀었다)', () => {

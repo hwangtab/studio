@@ -68,6 +68,10 @@ npm run check:funding-baseline -- --update         # 의도한 변경이면 기�
 npx jest content/fundingTerms.baseline.test.ts
 UPDATE_FUNDING_TERMS_BASELINE=1 npx jest content/fundingTerms.baseline.test.ts   # 버전을 올린 뒤 갱신
 
+# 공연 주최자 약관 판본 게이트 (CI) — 조항·수수료·환불 구간이 바뀌었는데 SHOW_ORGANIZER_TERMS_VERSION이 그대로면 실패
+npx jest content/showOrganizerTerms.baseline.test.ts
+UPDATE_SHOW_ORGANIZER_TERMS_BASELINE=1 npx jest content/showOrganizerTerms.baseline.test.ts   # 버전을 올린 뒤 갱신
+
 # IndexNow 변경분 제출 — 전량 반복 제출 금지, CI(main push)가 diff로 바뀐 URL만 자동 제출한다.
 # 문구·링크·가격·구조가 안 바뀐 순수 디자인 커밋은 메시지에 `[skip-indexnow]`를 붙인다 — 그 커밋에서만 바뀐
 # 파일은 제출에서 빠진다(2026-10-05 UI 정제가 모양만 바꿨는데 14 URL이 제출됐다). 본문이 바뀐 커밋엔 붙이지 말 것.
@@ -140,6 +144,11 @@ npm run indexnow:changed -- --dry-run
 마이그레이션을 CI/CD에서 자동 실행하지 않는다(`npm run db:migrate`는 운영자가 수동 실행) —
 그래서 순서를 지키는 것은 배포하는 사람의 책임이고, 그 사람이 보는 문서는 여기다.
 
+### 마이그레이션 0055(`show_submissions`)도 배포보다 먼저 적용한다
+
+공연 주최자 제출물 표다. 순서를 뒤집어도 **주최자 화면(개설자 콘솔의 공연 탭·편집기)과 관리자 제출물 화면만** 실패한다 — 공개 공연 페이지·결제는 이 표를 읽지 않고,
+미디어 공개 판정(`mediaAccess`의 공연 갈래)·청소 크론·관리자 공연 목록의 대기 건수는 표가 없어도 견디게 감싸 두었다. 확인은 `PRAGMA table_info(show_submissions);`.
+
 ### 마이그레이션 0035(`public_name`)·0036(`listing_hidden_at`)·0039(`listing_hidden_name`)도 배포보다 먼저 적용한다
 
 `funding_pledges.public_name`(후원자 명단 표시 이름 — 가린 이름·닉네임, `lib/funding/publicName.ts`)이
@@ -176,7 +185,8 @@ SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이�
 `/ko/software`·`/en/software`. 상품 정의는 `data/software/catalog.ts`, 라이선스·기기 활성화는 DB(0054), 서명은 Ed25519.
 **라이선스 파일 형식·활성화 API 응답 코드·`publicKeys.ts`의 kid는 배포된 플러그인이 오프라인으로 기대므로 바꾸지 않는다.**
 서명 비밀키(`SOFTWARE_LICENSE_SIGNING_KEY`)를 잃으면 모든 플러그인을 다시 배포해야 한다 — 오프라인 백업 필수.
-`SOFTWARE_SALES_OPEN`이 false인 동안은 관리자 수동 발급만 된다.
+`SOFTWARE_SALES_OPEN`이 false인 동안은 관리자 수동 발급만 된다. 국내 결제는 `orders(type='software')` + `software_orders`(0056)이고
+승인 batch가 라이선스를 함께 발급한다 — 판매를 열기 전 체크리스트(약관 사용권·청약철회 조항, 처리방침·판본)가 그 파일에 있다.
 
 ### 믹싱 전·후 비교 음원 (`components/audio/MixComparePlayer.tsx`)
 

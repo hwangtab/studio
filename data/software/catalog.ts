@@ -8,7 +8,7 @@
  *
  * - **판매를 시작한 가격 id의 금액은 바꾸지 않는다.** 가격을 바꾸려면 새 id로 더한다.
  *   `data/software/catalog.baseline.test.ts`가 지우기·금액 변경을 막는다.
- * - slug는 소문자·숫자·하이픈. `manage`·`success`·`fail`은 페이지 이름이라 쓸 수 없다.
+ * - slug는 소문자·숫자·하이픈. `manage`·`success`·`fail`·`find`는 페이지 이름이라 쓸 수 없다.
  * - `releases`는 **최신이 맨 앞**이다(`latest` API·화면이 첫 항목을 최신으로 읽는다). 버전은 `1.2.3` 형식,
  *   설치 파일 주소는 버전이 박힌 새 경로로 올린다(같은 경로에 덮어쓰지 않는다 — sha256이 어긋난다).
  * - 체험판과 정식판은 같은 설치 파일이다. 라이선스 파일이 들어오면 정식으로 바뀐다.
@@ -90,7 +90,7 @@ export interface SoftwareProduct {
   trialDays?: number;
   /** 라이선스 한 개당 동시에 활성화할 수 있는 기기 수. 기본 `SOFTWARE_DEFAULT_MAX_ACTIVATIONS`. */
   maxActivations?: number;
-  /** 판매 가격(결제 단계에서 쓴다). 비우면 판매하지 않는 상품. */
+  /** 판매 가격. **맨 앞이 지금 파는 가격**이다(가격을 바꾸면 새 id를 맨 앞에 더하고 옛 id는 지우지 않는다). 비우면 판매하지 않는 상품. */
   prices?: SoftwarePrice[];
   /** 최신이 맨 앞. */
   releases: SoftwareRelease[];

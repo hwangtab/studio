@@ -64,6 +64,7 @@ const TYPE_LABELS: Record<string, string> = {
   subscription: '구독',
   deposit: '예약금',
   merch: '상점',
+  software: '소프트웨어',
 };
 
 const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
@@ -179,6 +180,9 @@ const describeOrder = (order: LedgerOrder): string => {
     case 'merch':
       // 품목은 shop_order_items에 있지만 여기서 관계를 싣지 않는다 — 마이그레이션 0052 전 DB에서 장부 전체가 깨진다.
       return '상점(음반·굿즈)';
+    case 'software':
+      // 품목은 software_orders에 있지만 관계를 싣지 않는다 — 마이그레이션 0056 전 DB에서 장부 전체가 깨진다.
+      return '소프트웨어 라이선스';
     default:
       return order.type;
   }

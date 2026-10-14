@@ -44,6 +44,15 @@ const NOINDEX_STATIC_ROUTES = require('./lib/sitemap/noindexStaticRoutes.json');
 // ⚠️ 엔트리는 self-canonical 라우트만(계약 상세: components/seo/metadataUrls.ts).
 const EN_INDEXABLE_PATHS = new Set(require('./lib/enIndexablePaths.json'));
 
+// 이 파일은 CJS라 TS 상수(data/shop/policy.ts)를 import할 수 없다 — 선언 한 줄을 읽는다.
+// 못 찾으면 던진다(조용히 false로 떨어지면 판매를 열고도 사이트맵이 robots에 안 실린다).
+const SHOP_SALES_OPEN = (() => {
+  const src = fs.readFileSync(path.join(__dirname, 'data/shop/policy.ts'), 'utf8');
+  const m = src.match(/export const SHOP_SALES_OPEN\s*=\s*(true|false)\s*;/);
+  if (!m) throw new Error('data/shop/policy.ts에서 SHOP_SALES_OPEN 선언을 읽지 못했습니다.');
+  return m[1] === 'true';
+})();
+
 const buildTimestamp = new Date().toISOString();
 
 // Map of marketing pages to their representative OG images.
@@ -124,6 +133,8 @@ module.exports = {
     // 상점 트랜잭셔널 경로(noindex). 목록·상품 상세는 SSR이라 열거되지 않는다 — 판매를 열 때 런타임 사이트맵을 붙인다
     // (lib/shop/CLAUDE.md 판매 개시 체크리스트).
     '/*/shop/success', '/*/shop/fail', '/*/shop/manage/*',
+    // 런타임 상점 사이트맵(pages/sitemap-shop.xml.ts) — 페이지가 아니라 사이트맵이다.
+    '/sitemap-shop.xml',
     // 소프트웨어 — 판매를 열기 전(SOFTWARE_SALES_OPEN=false)엔 noindex다. SSR이라 지금은 열거되지 않지만 정적으로
     // 바뀌어도 실리지 않게 막아 둔다. 판매를 열 때 런타임 사이트맵을 붙인다(lib/software/CLAUDE.md).
     '/*/software', '/*/software/*',
@@ -163,6 +174,8 @@ module.exports = {
           '/ko/pay/',
           // 상점 트랜잭셔널 경로.
           '/ko/shop/success', '/ko/shop/fail', '/ko/shop/manage/',
+          // 소프트웨어 트랜잭셔널 경로.
+          '/ko/software/success', '/ko/software/fail', '/ko/software/find', '/ko/software/manage/',
         ],
       };
       // 이 목록에 봇을 추가/누락해도 실효 차단 범위는 바뀌지 않는다 — 모든 명명
@@ -192,7 +205,12 @@ module.exports = {
         ...NAMED_BOTS.map((userAgent) => ({ userAgent, ...RULES })),
       ];
     })(),
-    additionalSitemaps: [`${SITE_URL}/sitemap-funding.xml`, `${SITE_URL}/sitemap-shows.xml`],
+    additionalSitemaps: [
+      `${SITE_URL}/sitemap-funding.xml`,
+      `${SITE_URL}/sitemap-shows.xml`,
+      // 판매를 열 때(SHOP_SALES_OPEN=true)만 robots에 싣는다. 닫힌 동안은 라우트도 빈 urlset을 낸다.
+      ...(SHOP_SALES_OPEN ? [`${SITE_URL}/sitemap-shop.xml`] : []),
+    ],
     transformRobotsTxt: async (_config, robotsTxt) => {
       const cleaned = robotsTxt.replace(/# Host[\r\n]+Host:[^\r\n]*[\r\n]*/g, '');
       const llmsHint = `\n# LLM / AI content index\n# llms.txt: ${SITE_URL}/llms.txt\n# llms-full.txt: ${SITE_URL}/llms-full.txt\n# llms-full (locale-scoped): ${SITE_URL}/llms-full-ko.txt ${SITE_URL}/llms-full-en.txt ${SITE_URL}/llms-full-zh.txt\n`;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { ARTISTS_NAV_LISTED } from '../../data/navFlags';
+import { SHOP_NAV_LABEL, SHOP_SALES_OPEN } from '../../data/shop/policy';
 import { render, screen, act, cleanup, within } from '@testing-library/react';
 
 /**
@@ -133,6 +134,12 @@ describe('Header 모바일 메뉴', () => {
     });
     expect(within(nav).getByRole('link', { name: 'nav.funding' })).toHaveAttribute('href', '/ko/funding');
     // 아티스트 구독 링크는 data/navFlags.ts의 스위치를 따른다(구독 아티스트 0인 동안 내림 — 2026-10-06).
+    // 음반·굿즈는 SHOP_SALES_OPEN을 따른다 — 닫힌 동안은 메뉴에 없다.
+    if (SHOP_SALES_OPEN) {
+      expect(within(nav).getByRole('link', { name: SHOP_NAV_LABEL })).toHaveAttribute('href', '/ko/shop');
+    } else {
+      expect(within(nav).queryByRole('link', { name: SHOP_NAV_LABEL })).toBeNull();
+    }
     if (ARTISTS_NAV_LISTED) {
       expect(within(nav).getByRole('link', { name: 'nav.artists' })).toHaveAttribute('href', '/ko/artists');
     } else {

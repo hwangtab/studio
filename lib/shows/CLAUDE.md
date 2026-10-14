@@ -118,3 +118,26 @@ v2 색 가드(`components/ui/SectionHeading.test.tsx`의 `V2_FILES`)에 공연 �
 - 메일 3종(티켓·환불·회차 취소)은 `lib/shows/emailHtml.ts`(순수)가 HTML을 만들고 텍스트는 폴백이다(#463).
   QR은 첨부(ticket-N.png) — cid 인라인을 발송 모듈이 지원하지 않아서다. 실발송 확인은 아직이다.
 - 실결제 흐름은 브라우저에서 눌러 본 적이 없다. 공개 뒤 최소 매수로 결제·취소를 한 번 할 것.
+
+### 주최자 자가등록 (2026-10-14)
+
+주최자 = 펀딩 개설자 계정(매직 링크, `creator_session`). 개설자 콘솔의 공연 탭 `/ko/funding/creator/shows` → 편집기
+`/ko/funding/creator/shows/[id]`(`components/shows/organizer/ShowDraftForm.tsx`). 안내 `/ko/shows/host`, 약관 `/ko/shows/organizer-terms`.
+제출물은 `show_submissions`(마이그레이션 0055). 어겨도 에러가 안 나는 것만 적는다.
+
+- **초안 형식의 주인은 `lib/shows/organizer/draft.ts`다.** `ownImage` 검증(본인 업로드만, 한 조각 파일명 `resolveFundingBlobPath`,
+  쿼리는 `?w=&h=`만)을 우회하는 새 경로를 만들지 말 것.
+- **승인**(`review.ts`): 같은 slug의 `shows` 행이 하나라도 있으면 `duplicate_slug`(기존 공연을 넘겨받지 않는다). `seedShow`(반드시 새로 만듦)
+  → 제출물 갱신(조건부) → 실패하면 방금 만든 초안 행을 지움 → publish 순서. publish만 실패하면 승인은 유지하고 경고를 낸다.
+- **승인 뒤 주최자 수정은 `seedShow`를 쓰지 않는다.** `shows`의 메타 칸(title·subtitle·presenterName·performers·performersJson·description·
+  coverImage·scheduleNote·noticesJson)만 `review_status='approved'` 조건의 한 배치로 고친다.
+  **잠긴 칸**: ageRating·runningMinutes·venue·showtimes·capacity·ticketTypes — 운영자가 기존 관리자 도구로 손수 바꾸고, 주최자 저장이 되돌리지 않는다.
+- **미디어**: `isApprovedFundingMedia`에 공연 갈래가 따로 있다(승인된 제출물 + 공연 published/cancelled + 소유자 접두). 심사 중 포스터는 무인증 404다.
+  청소 크론(`mediaRetention`)은 `shows.cover_image`·`shows.performers_json`·`show_submissions.draft_json`을 참조로 센다 — 새 이미지 칸을 만들면 여기에 더할 것
+  (표가 없는 DB는 허용, 그 외 오류는 삭제를 멈춘다).
+- **주최자 공연은 `data/shows/<slug>.ts` 파일이 없다.** `scripts/seed-show.ts`를 그 slug로 돌리지 말 것.
+- **약관 판본**: `SHOW_ORGANIZER_TERMS_VERSION`(`lib/shows/organizer/policy.ts`), 게이트 `content/showOrganizerTerms.baseline.test.ts`
+  (갱신 `UPDATE_SHOW_ORGANIZER_TERMS_BASELINE=1`, 판본을 먼저 올린다). 해시에 조항·수수료·정산·리드타임 상수와 **`refundPolicy.ts`의 환불 구간 줄·각주**가 든다 —
+  환불 구간을 바꾸면 주최자 약관 판본도 올려야 한다.
+- 메일은 `lib/shows/organizer/email.ts`(운영자: 새 제출·승인 뒤 수정 / 주최자: 승인·보완 요청·반려). 관리자는 `/admin/shows/submissions`, 처리는 `PATCH /api/admin/shows/submissions/[id]`.
+- **알려진 공백**: 정산 계좌 등록이 승인된 펀딩 프로젝트에 묶여 있어 공연만 하는 주최자는 아직 계좌를 등록할 수 없다(정산은 3단계).

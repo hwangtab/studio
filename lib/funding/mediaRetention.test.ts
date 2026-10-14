@@ -108,7 +108,7 @@ describe('상점 참조', () => {
   const OLD_BLOBS = ['product', 'avatar', 'orphan'].map((n) => blob(`funding/${n}.webp`, OLD));
 
   it('상점 상품 사진(초안 포함)과 프로필 사진은 지우지 않는다', async () => {
-    // 첫 질의는 펀딩, 두 번째가 상점 — 별도 문장이다.
+    // 첫 질의는 펀딩, 두 번째가 상점, 세 번째가 공연 초안 — 별도 문장이다.
     all
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([
@@ -118,7 +118,7 @@ describe('상점 참조', () => {
       ]);
     list.mockResolvedValue({ blobs: OLD_BLOBS, hasMore: false });
     const result = await purgeOrphanFundingMedia(NOW);
-    expect(all).toHaveBeenCalledTimes(2);
+    expect(all).toHaveBeenCalledTimes(3);
     expect(del).toHaveBeenCalledTimes(1);
     expect(del).toHaveBeenCalledWith('https://blob.example/funding/orphan.webp');
     expect(result.deleted).toBe(1);
@@ -141,4 +141,45 @@ describe('상점 참조', () => {
     expect(del).not.toHaveBeenCalled();
     expect(list).not.toHaveBeenCalled();
   });
+});
+
+it('주최자 공연 초안·공개 공연이 참조하는 파일도 남긴다', async () => {
+  all
+    .mockResolvedValueOnce([
+      { text: '/api/funding/media/show-cover.webp?w=800&h=1200' },
+      { text: '[{"name":"가수","photo":"/api/funding/media/show-photo.webp?w=400&h=400"}]' },
+    ])
+    .mockResolvedValueOnce([])
+    .mockResolvedValueOnce([{ text: '{"posterUrl":"/api/funding/media/draft-poster.webp?w=800&h=1200"}' }]);
+  list.mockResolvedValue({
+    blobs: ['show-cover', 'show-photo', 'draft-poster', 'orphan'].map((n) => blob(`funding/${n}.webp`, OLD)),
+    hasMore: false,
+  });
+  await purgeOrphanFundingMedia(NOW);
+  expect(del).toHaveBeenCalledTimes(1);
+  expect(del).toHaveBeenCalledWith('https://blob.example/funding/orphan.webp');
+});
+
+it('show_submissions 표가 없으면 그 출처만 건너뛴다', async () => {
+  all
+    .mockResolvedValueOnce([{ text: '/api/funding/media/keep.webp' }])
+    .mockResolvedValueOnce([])
+    .mockRejectedValueOnce(new Error('SQLITE_ERROR: no such table: show_submissions'));
+  list.mockResolvedValue({
+    blobs: ['keep', 'orphan'].map((n) => blob(`funding/${n}.webp`, OLD)),
+    hasMore: false,
+  });
+  await purgeOrphanFundingMedia(NOW);
+  expect(del).toHaveBeenCalledTimes(1);
+  expect(del).toHaveBeenCalledWith('https://blob.example/funding/orphan.webp');
+});
+
+it('공연 초안 조회가 다른 이유로 실패하면 아무것도 지우지 않는다', async () => {
+  all
+    .mockResolvedValueOnce([])
+    .mockResolvedValueOnce([])
+    .mockRejectedValueOnce(new Error('connection reset'));
+  list.mockResolvedValue({ blobs: [blob('funding/a.webp', OLD)], hasMore: false });
+  await expect(purgeOrphanFundingMedia(NOW)).rejects.toThrow('connection reset');
+  expect(del).not.toHaveBeenCalled();
 });

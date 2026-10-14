@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { loadShopLlmsSection } from '../../lib/shop/llms';
 import { truncateToByteLimit } from '../../lib/llms/truncate';
 import { getAllStories, getStoryAvailableLocales } from '../../lib/stories';
 import { getSiteConfig } from '../../data/siteConfig';
@@ -34,7 +35,7 @@ const formatStoryLine = (siteUrl: string, locale: Locale, story: { title: string
   return parts.join('');
 };
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // HEAD 허용 이유는 pages/api/llms.ts 핸들러 주석 참조.
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     res.setHeader('Allow', 'GET, HEAD');
@@ -73,6 +74,11 @@ ${renderPriceFacts(2)}
 - **Operating Notes**: Band rehearsal rooms are NOT operated. Vocal and instrument performance lessons are NOT offered (lessons are producing lessons only).
 
 `;
+
+  // 상점(음반·굿즈) — ko 전용 상점이라 ko·전체 판에만. SHOP_SALES_OPEN일 때만 붙는다.
+  if (!requestedLocale || requestedLocale === 'ko') {
+    body += await loadShopLlmsSection(siteUrl);
+  }
 
   // 포트폴리오 상세 — 프로듀싱 크레딧은 "황경하/스튜디오 놀 작업물" 류 AI 쿼리의
   // 인용 근거인데 그동안 stories만 방출돼 색인 자산에서 통째로 빠져 있었다.

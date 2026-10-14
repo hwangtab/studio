@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import SEO from '../../../components/SEO';
 import ImageHero, { HERO_SCRIM_STRONG } from '../../../components/common/ImageHero';
 import ShowCard from '../../../components/shows/ShowCard';
@@ -76,6 +77,11 @@ export default function ShowsIndexPage({ upcoming, past, nowSec, locale }: Props
             ))}
           </div>
         </Section>
+      )}
+      {locale === 'ko' && (
+        <p className="py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+          <Link href="/ko/shows/host" prefetch={false} className="underline underline-offset-2">공연 올리는 방법</Link>
+        </p>
       )}
     </>
   );

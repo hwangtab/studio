@@ -651,6 +651,10 @@ export const cancelBookingWithRefund = async (input: CancelInput): Promise<Cance
   if (order.type === 'deposit') {
     return { ok: false, code: 'invalid_state', message: '예약금 주문은 여기서 환불할 수 없어요. 토스 콘솔 또는 계좌 송금으로 처리해 주세요.' };
   }
+  // 소프트웨어 주문은 라이선스 선점이 따로 있다(lib/software/cancel.ts) — 여기로 오면 세션 예약으로 떨어진다.
+  if (order.type === 'software') {
+    return { ok: false, code: 'invalid_state', message: '소프트웨어 주문은 소프트웨어 관리 화면에서 환불해 주세요.' };
+  }
   if (order.type === 'mixing') return cancelMixingOrder(order, order.workOrders[0], order.payments[0], input);
   return cancelSessionBooking(order, order.payments[0], input);
 };

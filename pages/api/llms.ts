@@ -52,6 +52,7 @@ import {
   PRACTICE_ROOM_REFUND_POLICY_LINES,
 } from '../../lib/booking/refund-policy';
 import { buyerIntentHubs, buyerIntentHubSlugs } from '../../data/buyerIntentHubs';
+import { loadShopLlmsSection } from '../../lib/shop/llms';
 import { computeProjectState } from '../../lib/funding/projects';
 import { getListableFundingProjectsAsync } from '../../lib/funding/repository';
 import { getSupportedArtists } from '../../data/artists';
@@ -516,6 +517,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const siteUrl = siteConfig.url;
 
   let body = BASE_SECTIONS(siteUrl) + '\n';
+
+  // 상점(음반·굿즈) — SHOP_SALES_OPEN일 때만 한 절이 붙는다.
+  body += await loadShopLlmsSection(siteUrl);
 
   // 한국어 상담 상황별 quick-fact 블록 (정의부 주석 참조).
   body += USE_CASE_ANSWERS(siteUrl, await fundingStatusLine(siteUrl)) + '\n';

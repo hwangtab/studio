@@ -111,8 +111,8 @@ export function CreatorSectionForm({ projectId: _projectId, onSave, initial, rea
       </Field>
       {nameLocked && (
         <p className="-mt-3 text-sm text-gray-600">
-          승인된 프로젝트가 있어 이름은 바꿀 수 없어요. 프로젝트 상세 화면에 판매자 표시로
-          그대로 노출되는 값이기 때문이에요. 소개·연락처·링크는 계속 고칠 수 있어요.
+          심사를 요청했거나 승인된 프로젝트·상품이 있어 이름은 바꿀 수 없어요. 펀딩 프로젝트와
+          상점 화면에 판매자 표시로 그대로 노출되는 값이기 때문이에요. 소개·연락처·링크는 계속 고칠 수 있어요.
         </p>
       )}
       <Field id="creator-contact-name" label="담당자 이름" hint="운영자만 볼 수 있어요.">

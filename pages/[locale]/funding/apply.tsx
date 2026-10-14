@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState, type FormEvent } from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 
 import { FUNDING_PAYMENT_FEE_PERCENT, FUNDING_PLATFORM_FEE_PERCENT } from '../../../data/pricing';
@@ -9,8 +8,7 @@ import { FUNDING_PAYOUT_BUSINESS_DAYS } from '../../../lib/funding/policy';
 import { buildPageStaticProps } from '../../../lib/getStatic';
 import { defaultLocale } from '../../../lib/i18n';
 import { releasePipelineCopy } from '../../../data/releasePipeline';
-import { Button } from '../../../components/ui/Button';
-import { Field, TextInput } from '../../../components/ui/Field';
+import CreatorLoginForm from '../../../components/funding/CreatorLoginForm';
 import { Notice } from '../../../components/ui/Notice';
 import { PageHeader, PageShell } from '../../../components/ui/PageHeader';
 import { Panel } from '../../../components/ui/Panel';
@@ -21,30 +19,6 @@ export default function FundingApply() {
   // 만료됐는지 이미 쓰였는지는 구분하지 않는다(캐물을 여지를 주지 않으려는 의도가
   // creatorToken.ts부터 일관된다) — 할 일은 "다시 받기" 하나뿐이다.
   const linkExpired = router.query.e === 'link';
-  const [email, setEmail] = useState('');
-  const [sent, setSent] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
-
-  const submit = async (e: FormEvent) => {
-    e.preventDefault();
-    setBusy(true);
-    setError(null);
-    try {
-      const res = await fetch('/api/funding/creator/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-      const data = await res.json();
-      if (!res.ok) setError(data?.message ?? '잠시 후 다시 시도해 주세요.');
-      else setSent(true);
-    } catch {
-      setError('연결에 실패했어요. 잠시 후 다시 시도해 주세요.');
-    } finally {
-      setBusy(false);
-    }
-  };
 
   return (
     <>
@@ -87,31 +61,7 @@ export default function FundingApply() {
           </p>
         </Panel>
 
-        <form onSubmit={submit} className="mt-10 space-y-3">
-          <Field id="email" label="이메일 주소" required>
-            <TextInput
-              type="email" required value={email} autoComplete="email"
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-            />
-          </Field>
-          <Button type="submit" size="lg" fullWidth disabled={busy}>
-            {busy ? '보내는 중…' : '로그인 링크 받기'}
-          </Button>
-          {sent && <Notice tone="success">로그인 링크를 보냈어요. 메일함을 확인해 주세요.</Notice>}
-          {error && <Notice tone="error">{error}</Notice>}
-          <p className="text-sm text-gray-500 dark:text-gray-400">비밀번호는 없어요. 메일로 받은 링크로 들어와요.</p>
-          {/*
-            이 버튼 한 번에 개설자 계정(funding_creators 행)이 만들어진다 — lib/funding/creatorToken.ts가
-            이메일을 받는 즉시 행을 넣는다. 그래서 "로그인 링크를 받는다"가 곧 수집 시점이고, 그 사실과
-            처리방침을 누르기 전에 보여야 한다(2026-09-21 문서·코드 대조에서 링크가 0건이었다).
-          */}
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            이 버튼을 누르면 입력하신 이메일로 개설자 계정이 만들어집니다. 수집·이용·보관은{' '}
-            <Link href="/ko/privacy-policy" className="underline">개인정보 처리방침</Link>을, 개설 조건은{' '}
-            <Link href="/ko/funding/creator-terms" className="underline">개설자 약관</Link>을 확인해 주세요.
-          </p>
-        </form>
+        <CreatorLoginForm terms={{ href: '/ko/funding/creator-terms', label: '개설자 약관', purpose: '개설자', condition: '개설 조건' }} />
       </PageShell>
     </>
   );

@@ -9,6 +9,8 @@
  */
 import { mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
+import { emptyDraft } from '../lib/shows/organizer/draft';
+import { buildOperatorMail, buildReviewMail, type ShowMailContext } from '../lib/shows/organizer/email';
 import { adminUrl, buildEmailLayout, escapeHtml, strong, type EmailLayoutInput } from '../lib/email/layout';
 import {
   buildShopDecisionLayout, buildShopEditedLayout, buildShopSubmissionLayout, type ShopMailProduct,
@@ -75,10 +77,37 @@ samples.push(
   { name: 'shop-edited', input: buildShopEditedLayout(shopProduct) },
 );
 
+const showCtx: ShowMailContext = {
+  submissionId: 'sample-sub',
+  draft: {
+    ...emptyDraft(),
+    title: '가을밤 어쿠스틱 콘서트',
+    presenterName: '밴드 하늘',
+    showtimes: ['2026-11-21T19:00'],
+    capacity: 40,
+    ticketTypes: [{ name: '일반', price: 15000 }, { name: '학생', price: 10000 }],
+  },
+  reviewNote: '포스터 해상도가 낮아요.\n더 큰 이미지로 바꿔 주세요.',
+  creatorName: '김주최',
+  creatorEmail: 'org@example.com',
+  slug: 'autumn-night',
+};
+const htmlSamples: { name: string; html: string }[] = [
+  { name: 'show-operator-submitted', html: buildOperatorMail('submitted', showCtx).html },
+  { name: 'show-approved', html: buildReviewMail('approved', showCtx).html },
+  { name: 'show-changes-requested', html: buildReviewMail('changes_requested', showCtx).html },
+  { name: 'show-rejected', html: buildReviewMail('rejected', showCtx).html },
+];
+
 const outDir = process.argv[2] ?? '/tmp/email-preview';
 mkdirSync(outDir, { recursive: true });
 for (const { name, input } of samples) {
   const file = join(outDir, `${name}.html`);
   writeFileSync(file, buildEmailLayout(input));
+  console.log(file);
+}
+for (const { name, html } of htmlSamples) {
+  const file = join(outDir, `${name}.html`);
+  writeFileSync(file, html);
   console.log(file);
 }

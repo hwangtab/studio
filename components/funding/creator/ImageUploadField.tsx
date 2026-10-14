@@ -2,12 +2,7 @@ import { useId, useState } from 'react';
 
 import { Field, TextInput } from '../../ui/Field';
 
-interface Props {
-  /** 펀딩 프로젝트 이미지(`?projectId=&kind=`). `uploadQuery`가 없을 때 쓴다. */
-  projectId?: string;
-  kind?: 'cover' | 'body';
-  /** 쿼리 문자열을 직접 준다(예: `target=shop-profile`). 있으면 projectId·kind보다 먼저다. */
-  uploadQuery?: string;
+interface SharedProps {
   value: string;
   onChange: (url: string) => void;
   disabled?: boolean;
@@ -16,12 +11,30 @@ interface Props {
 }
 
 /**
+ * 업로드 대상은 셋 중 하나다 — 다른 라우트의 전체 주소(`uploadUrl`, 공연 포스터·출연진 사진 —
+ * `components/shows/organizer/api.ts`의 showUploadUrl), 펀딩 업로드 라우트에 붙일 쿼리 문자열
+ * (`uploadQuery`, 예: `target=shop-profile`·상점 상품 사진), 또는 펀딩 프로젝트 이미지(`projectId`+`kind`).
+ */
+type Props = SharedProps & (
+  | { uploadUrl: string }
+  | { uploadQuery: string }
+  | { projectId: string; kind: 'cover' | 'body' }
+);
+
+const targetUrl = (p: Props): string => {
+  if ('uploadUrl' in p) return p.uploadUrl;
+  if ('uploadQuery' in p) return `/api/funding/creator/upload?${p.uploadQuery}`;
+  return `/api/funding/creator/upload?projectId=${encodeURIComponent(p.projectId)}&kind=${p.kind}`;
+};
+
+/**
  * 개설자 이미지 업로드 — `pages/api/funding/creator/upload.ts`(원문 바이트를 그대로 받는
  * 라우트, `?projectId=&kind=`)에 파일 선택 즉시 올린다. 성공하면 받은 주소를 폼 값에
  * 그대로 넣는다(부모가 상태로 들고 있다가 구획 저장 시 함께 보낸다) — 업로드 자체는
  * 저장이 아니다. 실패 메시지는 서버가 준 한국어를 그대로 보여 준다.
  */
-export function ImageUploadField({ projectId, kind, uploadQuery, value, onChange, disabled, label, hint }: Props) {
+export function ImageUploadField(props: Props) {
+  const { value, onChange, disabled, label, hint } = props;
   const inputId = useId();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,9 +43,8 @@ export function ImageUploadField({ projectId, kind, uploadQuery, value, onChange
     setBusy(true);
     setError(null);
     try {
-      const query = uploadQuery ?? `projectId=${encodeURIComponent(projectId ?? '')}&kind=${kind ?? ''}`;
       const res = await fetch(
-        `/api/funding/creator/upload?${query}`,
+        targetUrl(props),
         { method: 'POST', body: file },
       );
       const data = await res.json().catch(() => null);

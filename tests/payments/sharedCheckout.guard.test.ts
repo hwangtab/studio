@@ -38,6 +38,7 @@ const CHECKOUT_FORM_BY_ORDER_TYPE: Record<
   deposit: { file: 'components/payments/PaymentLinkCheckout.tsx' },
   // 상점(음반·굿즈)도 결제수단이 전부 토스다(직접 입금 없음, 2026-10-12).
   merch: { file: 'components/shop/ShopOrderForm.tsx', tossOnly: true },
+  software: { file: 'components/software/SoftwareOrderForm.tsx', tossOnly: true },
   subscription: { exempt: '토스 빌링키 자동결제 — 결제창 위젯을 쓰지 않는다(components/billing/BillingAuthButton.tsx)' },
 };
 
