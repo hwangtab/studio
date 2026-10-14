@@ -210,8 +210,6 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
       const code = (err as { code?: string } | null)?.code;
       if (code === 'USER_CANCEL' || code === 'PAY_PROCESS_CANCELED') {
         setError('결제창이 닫혔어요. 상품은 잠시 잡아 두었으니 같은 버튼으로 다시 시도할 수 있어요.');
-      } else if (code === 'NEED_CARD_PAYMENT_DETAIL') {
-        setError('카드 결제는 카드사를 먼저 골라 주세요. 결제수단 아래에서 카드사를 고른 뒤 다시 눌러 주세요.');
       } else {
         setError('결제창을 열지 못했어요. 잠시 후 같은 버튼으로 다시 시도해 주세요.');
       }

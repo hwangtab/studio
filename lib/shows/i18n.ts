@@ -114,7 +114,6 @@ const ko = {
     submit: (total: string) => `${total} · 결제하기`,
     orderName: (title: string, when: string, type: string, qty: number) => `${title} ${when} ${type} ${qty}매`,
     errCreate: '주문을 만들지 못했어요. 잠시 후 다시 시도해 주세요.',
-    errNeedCard: '카드 결제는 카드사를 먼저 골라 주세요. 결제 방법 아래에서 카드사를 선택한 뒤 다시 눌러 주세요.',
     errClosed: '결제창이 닫혔어요. 좌석은 잠시 보류되어 있으니 같은 버튼으로 다시 시도할 수 있어요.',
   },
 };
@@ -198,7 +197,6 @@ const en: ShowCopy = {
     submit: (total: string) => `${total} · Pay`,
     orderName: (title: string, when: string, type: string, qty: number) => `${title} ${when} ${type} x${qty}`,
     errCreate: 'We could not create your order. Please try again in a moment.',
-    errNeedCard: 'For card payment, please choose your card company first, then press the button again.',
     errClosed: 'The payment window was closed. Your seats are held for a few minutes, so you can try again with the same button.',
   },
 };
