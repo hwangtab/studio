@@ -5,7 +5,8 @@ import { getPortfolioItems } from '../portfolio';
 export type ArtistLinkKey = 'instagram' | 'youtube' | 'spotify' | 'melon' | 'bandcamp' | 'site';
 
 /**
- * 후원 멤버십에 참여하는 아티스트. 운영자가 섭외·동의서를 받은 팀만 여기 싣는다.
+ * 등재 아티스트 — 후원 멤버십과 상점 위탁 판매(data/shop/catalog.ts의 artist)가 같은 목록을 쓴다.
+ * 운영자가 섭외·동의서를 받은 팀만 여기 싣는다. 상점만 하는 아티스트는 supportActive: false.
  * 관리자 UI 없음 — 상품·포트폴리오와 같이 코드로 관리한다(스펙 §7.1).
  *
  * - portfolioArtist: data/portfolio/items.ts의 artist 문자열과 정확히 일치해야 작업 사례가 붙는다.

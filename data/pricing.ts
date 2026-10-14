@@ -90,6 +90,13 @@ export const ARTIST_SUPPORT_SHARE_PERCENT = 90;
 export const ARTIST_SUPPORT_WITHHOLDING_PERCENT = 3.3;
 
 /**
+ * 상점 아티스트 상품(위탁 판매) 정산 비율 — 아티스트 몫. 스튜디오 몫은 나머지 45%(운영자 결정 2026-10-14,
+ * 음반 매장 위탁 수준). 기준은 **상품 판매가(VAT 포함), 배송비 제외** — 배송비는 발송하는 스튜디오 몫이다.
+ * 판매자는 스튜디오이고 재고를 맡아 발송한다. 계산은 lib/shop/artistPayout.ts가 정본이다.
+ */
+export const SHOP_ARTIST_SHARE_PERCENT = 55;
+
+/**
  * 펀딩 프로젝트 정산 수수료(운영자 결정, 2026-09-23, 텀블벅 방식) —
  * 플랫폼 수수료와 결제 수수료를 따로 떼고 둘 다 개설자가 부담한다.
  * 계산은 결제액(gross − refund) 기준이며 lib/funding/payout.ts의

@@ -33,6 +33,10 @@ export const findSellableSku = (skuId: unknown, products: readonly ShopProduct[]
   return null;
 };
 
+/** 그 아티스트의 공개 상품(위탁 판매). */
+export const artistShopProducts = (artistSlug: string, products: readonly ShopProduct[] = SHOP_PRODUCTS): ShopProduct[] =>
+  products.filter((p) => p.published && p.artist === artistSlug);
+
 /** 한 줄 표시 이름 — "상품명 · 옵션". */
 export const shopLineName = (title: string, optionLabel?: string | null): string =>
   optionLabel ? `${title} · ${optionLabel}` : title;
@@ -53,6 +57,7 @@ export const validateShopCatalog = (products: readonly ShopProduct[]): string[] 
     slugs.add(p.slug);
     if (p.category !== 'album' && p.category !== 'goods') problems.push(`${where}: category는 album 또는 goods`);
     if (!p.title.trim()) problems.push(`${where}: title이 비었다`);
+    if (p.artist !== undefined && !SLUG_PATTERN.test(p.artist)) problems.push(`${where}: artist는 data/artists의 slug(소문자·숫자·하이픈)`);
     if (p.description.length === 0 || !p.description[0].trim()) problems.push(`${where}: 첫 문단(description[0])이 비었다`);
     if (p.description[0] && /^(##|>)/.test(p.description[0].trim())) problems.push(`${where}: 첫 문단은 평문이어야 한다(검색 요약·OG 설명)`);
     if (p.published && p.images.length === 0) problems.push(`${where}: 공개 상품은 이미지가 한 장 이상 있어야 한다`);

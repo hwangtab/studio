@@ -11,6 +11,7 @@ import SectionHeading from '../../../components/ui/SectionHeading';
 import ResponsiveImage from '../../../components/ResponsiveImage';
 import PortfolioMiniCard from '../../../components/ui/PortfolioMiniCard';
 import ArtistSupportCallout from '../../../components/artists/ArtistSupportCallout';
+import ShopProductCard from '../../../components/shop/ShopProductCard';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
 import type { Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
@@ -23,6 +24,9 @@ import {
   type ArtistPageData,
   type ArtistLinkKey,
 } from '../../../data/artists';
+import type { ShopProduct } from '../../../data/shop/catalog';
+import { SHOP_SALES_OPEN } from '../../../data/shop/policy';
+import { artistShopProducts } from '../../../lib/shop/catalog';
 import type { PortfolioItem } from '../../../types/data';
 import type { NextPageWithLayout } from '../../../types';
 
@@ -32,13 +36,18 @@ interface ArtistPageProps {
   works: PortfolioItem[];
   /** 빌드 시점의 오픈 여부(lib/artistSupport/open.ts). 정적 페이지라 값이 박히며, 플래그를 바꾸면 재배포로 반영된다. */
   supportOpen: boolean;
+  /**
+   * 이 아티스트의 위탁 상품(data/shop/catalog.ts의 artist). 상점 판매가 닫혀 있으면 비운다 — 상품 페이지가 noindex인
+   * 동안 색인되는 이 페이지에서 링크하지 않는다. 품절 여부는 상품 페이지가 본다(이 페이지는 정적이다).
+   */
+  products: ShopProduct[];
 }
 
 const LINK_LABELS: Record<ArtistLinkKey, string> = {
   instagram: 'Instagram', youtube: 'YouTube', spotify: 'Spotify', melon: '멜론', bandcamp: 'Bandcamp', site: '공식 사이트',
 };
 
-const ArtistPage: NextPageWithLayout<ArtistPageProps> = ({ locale, artist, works, supportOpen }) => {
+const ArtistPage: NextPageWithLayout<ArtistPageProps> = ({ locale, artist, works, supportOpen, products }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig(locale);
   const links = Object.entries(artist.links) as [ArtistLinkKey, string][];
@@ -153,6 +162,17 @@ const ArtistPage: NextPageWithLayout<ArtistPageProps> = ({ locale, artist, works
         </Section>
       )}
 
+      {products.length > 0 && (
+        <Section variant="alternate">
+          <SectionHeading title="음반·굿즈" />
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {products.map((product) => (
+              <ShopProductCard key={product.slug} product={product} soldOut={false} />
+            ))}
+          </div>
+        </Section>
+      )}
+
       {works.length > 0 && (
         <Section>
           <SectionHeading title={t('artists.detail.worksTitle')} />
@@ -185,7 +205,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   });
   return buildPageStaticProps(
     locale,
-    { artist: toArtistPageData(artist), works, supportOpen: isArtistSupportOpen() },
+    {
+      artist: toArtistPageData(artist), works, supportOpen: isArtistSupportOpen(),
+      products: SHOP_SALES_OPEN ? artistShopProducts(artist.slug) : [],
+    },
     { revalidate: 86400, i18nSections: ['artists', 'portfolio'] },
   );
 };
