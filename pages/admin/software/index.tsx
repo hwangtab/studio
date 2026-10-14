@@ -67,7 +67,7 @@ function IssueForm({ products }: { products: Props['products'] }) {
   if (issued) {
     return (
       <div className="space-y-3">
-        <Notice tone="success" title="발급했습니다">
+        <Notice tone="success" light title="발급했습니다">
           <p className="font-mono text-base tracking-wide">{issued}</p>
           <p className="mt-1">이 키를 받는 분께 전해 주세요. 아래 목록에서도 다시 볼 수 있습니다.</p>
         </Notice>
@@ -161,22 +161,22 @@ export default function AdminSoftwarePage({ licenses, products, q, salesOpen, er
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <AdminShell title="소프트웨어 관리" description="플러그인·툴 라이선스입니다. 상품 정의(이름·가격·릴리스)는 data/software/catalog.ts에서 바꿉니다." width="wide">
-        {error && <Notice tone="error" className="mb-4">{error}</Notice>}
+        {error && <Notice tone="error" light className="mb-4">{error}</Notice>}
         {!salesOpen && (
-          <Notice tone="warning" className="mb-4">
+          <Notice tone="warning" light className="mb-4">
             판매가 닫혀 있습니다(data/software/policy.ts의 SOFTWARE_SALES_OPEN). 지금은 수동 발급만 됩니다 — 결제는 2단계(docs/software-sales-plan-2026-10.md).
           </Notice>
         )}
 
         <section className="mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
-          <h2 className="mb-1 font-semibold">수동 발급</h2>
+          <h2 className="mb-1 text-lg font-bold text-gray-900 dark:text-gray-900">수동 발급</h2>
           <p className="mb-3 text-gray-600">결제 없이 키를 만듭니다 — 플러그인 시험, 리뷰어, 증정용. 비공개 상품에도 발급됩니다.</p>
           <IssueForm products={products} />
         </section>
 
         <section className="rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-            <h2 className="font-semibold">라이선스</h2>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900">라이선스</h2>
             <form method="get" className="flex gap-2">
               <input name="q" defaultValue={q} placeholder="이메일·키·주문번호" aria-label="라이선스 검색" className={inputClass} />
               <button type="submit" className={buttonClass}>찾기</button>
