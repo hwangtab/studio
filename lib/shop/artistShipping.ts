@@ -15,8 +15,8 @@ import { formatSerials, type OrderSerial } from './serials';
  * 다른 아티스트·스튜디오 발송 주문은 어떤 경로로도 이 목록에 들어오지 않는다.
  *
  * 필드를 하나씩 골라 담는다(스프레드 없음). 이 화면의 props는 `__NEXT_DATA__`로 페이지 소스에 실리므로 발송에 필요 없는 값 —
- * 주문자 이메일·결제 금액·결제수단·관리 토큰(`manage_token`) — 은 아예 읽지 않는다. 그 주문의 **다른 발송 주체 줄**(섞일 수 없지만
- * 디지털 상품은 섞인다)도 싣지 않는다: 줄 조회가 이 아티스트의 아티스트 발송 상품으로 좁혀져 있다.
+ * 주문자 이메일·결제 금액·결제수단·관리 토큰(`manage_token`) — 은 아예 읽지 않는다. 그 주문의 **다른 발송 주체 줄**(새 주문은 섞일 수
+ * 없고 실물·디지털도 따로 주문한다 — 옛 주문에는 디지털 줄이 섞여 있을 수 있다)도 싣지 않는다: 줄 조회가 이 아티스트의 아티스트 발송 실물로 좁혀져 있다.
  *
  * ── 받는 분 정보를 가리는 시점 ──
  * 배송 완료 표시(`delivered_at`) 30일 뒤. 배송 완료를 표시하지 않았으면 발송(`shipped_at`) 60일 뒤. 가려진 행은 이름·연락처·주소·메모를
@@ -97,8 +97,11 @@ interface ItemRaw {
   edition_size: number | null;
 }
 
-/** 이 아티스트의 아티스트 발송 상품 줄 — 조회의 EXISTS와 줄 조회가 같은 조건을 쓴다. */
-const ownArtistShippedLine = (creatorId: string) => sql`p.creator_id = ${creatorId} AND f.mode = 'artist'`;
+/**
+ * 이 아티스트의 아티스트 발송 상품 줄 — 조회의 EXISTS와 줄 조회가 같은 조건을 쓴다. 디지털 상품은 발송이 없으므로 발송 주체 행이
+ * 'artist'로 남아 있어도 빼낸다(`resolveOrderShipper`와 같은 기준 — 빼지 않으면 그 주문의 받는 분 정보가 아티스트에게 열린다).
+ */
+const ownArtistShippedLine = (creatorId: string) => sql`p.creator_id = ${creatorId} AND f.mode = 'artist' AND p.kind <> 'digital'`;
 
 /**
  * 이 아티스트가 보낼 주문 목록(발송 전 → 발송함 → 배송 완료 순, 같은 상태는 최근 주문이 먼저).
@@ -264,7 +267,7 @@ export const loadArtistShippersByOrder = async (orderNos: readonly string[]): Pr
       JOIN shop_products p ON p.id = ps.product_id
       JOIN shop_product_fulfillment f ON f.product_id = p.id AND f.mode = 'artist'
       JOIN funding_creators c ON c.id = p.creator_id
-      WHERE i.order_no IN (${sql.join(orderNos.map((n) => sql`${n}`), sql`, `)})
+      WHERE p.kind <> 'digital' AND i.order_no IN (${sql.join(orderNos.map((n) => sql`${n}`), sql`, `)})
     `);
     for (const r of rows) out.set(r.order_no, r.name);
   } catch (error: unknown) {

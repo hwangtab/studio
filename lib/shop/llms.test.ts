@@ -24,4 +24,11 @@ describe('renderShopLlmsSection', () => {
     expect(out).toContain('https://x.test/ko/shop/lp-one');
     expect(out).toContain('https://x.test/ko/shop/artist/artist-a');
   });
+
+  it('판매자는 스튜디오, 발송은 상품에 따라 아티스트일 수 있다고 말한다(스튜디오가 다 보낸다고 하지 않는다)', () => {
+    const out = renderShopLlmsSection({ ...base, open: true });
+    expect(out).toContain('Sold by Studio NOL');
+    expect(out).toContain('some artist items ship directly from the artist');
+    expect(out).not.toContain('Sold and shipped by Studio NOL');
+  });
 });

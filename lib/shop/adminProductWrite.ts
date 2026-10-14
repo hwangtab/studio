@@ -17,6 +17,8 @@ import { decideShopProduct, type ShopDecisionResult } from './reviewDecision';
  * 재고(`shop_skus`)는 여기서도 건드리지 않는다 — `setSkuStock`이 유일한 경로다.
  */
 
+const STALE_MESSAGE = '그사이 아티스트가 상품을 고쳤어요. 새로고침해 바뀐 내용을 확인한 뒤 다시 승인해 주세요.';
+
 export type AdminDraftTarget = { studio: true } | { creatorId: string };
 
 /** 초안을 만든다. 스튜디오 상품이면 스튜디오 계정을 먼저 보장한다. 미심사 상한은 관리자에게 적용하지 않는다. */
@@ -26,11 +28,15 @@ export const createDraftProductAsAdmin = async (target: AdminDraftTarget): Promi
   return result.ok ? { ok: true, id: result.id, creatorId } : result;
 };
 
-/** 입력 검증 + 저장. 소유자는 상품 행에서 읽는다. 돌려주는 객체는 아티스트가 보는 것과 같은 모양(내부 메모·파일 키 없음). */
+/**
+ * 입력 검증 + 저장. 소유자는 상품 행에서 읽는다. 돌려주는 객체는 아티스트가 보는 것과 같은 모양(내부 메모·파일 키 없음).
+ * `expectedUpdatedAt`은 관리자 화면이 연 판본(updated_at 초) — 그 사이 아티스트가 고쳤으면 `conflict`로 덮어쓰지 않는다(라우트는 항상 싣는다).
+ */
 export const saveProductAsAdmin = async (
   productId: string,
   raw: unknown,
   now: Date = new Date(),
+  options: { expectedUpdatedAt?: number } = {},
 ): Promise<ProductWriteResult<{ product: CreatorProductDetail }>> => {
   const [row] = await getDb().select({ creatorId: shopProducts.creatorId }).from(shopProducts).where(eq(shopProducts.id, productId)).limit(1);
   if (!row) return { ok: false, code: 'not_found', message: '상품을 찾을 수 없어요.' };
@@ -38,7 +44,7 @@ export const saveProductAsAdmin = async (
   if (!current) return { ok: false, code: 'not_found', message: '상품을 찾을 수 없어요.' };
   const validated = validateShopProductInput(raw, { creatorId: row.creatorId, existing: current.images });
   if (!validated.ok) return { ok: false, code: 'invalid', message: validated.message };
-  const saved = await saveProduct(row.creatorId, productId, validated.value, now, { admin: true });
+  const saved = await saveProduct(row.creatorId, productId, validated.value, now, { admin: true, expectedUpdatedAt: options.expectedUpdatedAt });
   if (!saved.ok) return saved;
   const product = await loadProductForCreator(row.creatorId, productId);
   if (!product) return { ok: false, code: 'not_found', message: '상품을 찾을 수 없어요.' };
@@ -49,20 +55,23 @@ export const saveProductAsAdmin = async (
  * 저장한 그대로 바로 승인한다 — 작성 중·보완 요청 상품을 심사 대기로 올린 뒤 기존 승인 배치(`decideShopProduct`)를 부른다.
  * 거부 조건(주소 충돌·사진/소개/옵션 없음·디지털 파일 없음 등)은 승인과 같다. 거부되면 올려 둔 심사 대기를 되돌려
  * 아티스트 쪽에 "심사 대기"가 남지 않게 한다. 이미 심사 대기인 상품은 그냥 승인한다.
+ * `expectedUpdatedAt`(관리자 화면이 연 판본)을 주면 그 판본일 때만 승인한다 — 운영자가 보지 않은 아티스트 수정본을 승인하지 않게.
  */
 export const approveShopProductNow = async (
   productId: string,
-  input: { slug?: string },
+  input: { slug?: string; expectedUpdatedAt?: number },
   now: Date = new Date(),
 ): Promise<ShopDecisionResult> => {
   const db = getDb();
-  const [row] = await db.select({ status: shopProducts.reviewStatus, submittedAt: shopProducts.submittedAt })
+  const [row] = await db.select({ status: shopProducts.reviewStatus, submittedAt: shopProducts.submittedAt, updatedAt: shopProducts.updatedAt })
     .from(shopProducts).where(eq(shopProducts.id, productId)).limit(1);
   if (!row) return { ok: false, code: 'not_found', message: '상품을 찾을 수 없어요.' };
   const epoch = Math.floor(now.getTime() / 1000);
+  const expected = input.expectedUpdatedAt;
+  if (expected !== undefined && row.updatedAt !== expected) return { ok: false, code: 'conflict', message: STALE_MESSAGE };
 
   if (row.status === 'submitted') {
-    return decideShopProduct(productId, 'approve', { slug: input.slug, expectedSubmittedAt: row.submittedAt }, now);
+    return decideShopProduct(productId, 'approve', { slug: input.slug, expectedSubmittedAt: row.submittedAt, expectedUpdatedAt: expected }, now);
   }
   if (row.status !== 'draft' && row.status !== 'changes_requested') {
     return { ok: false, code: 'conflict', message: '지금 상태에서는 승인할 수 없어요.' };
@@ -70,12 +79,15 @@ export const approveShopProductNow = async (
 
   const lift = await db.update(shopProducts)
     .set({ reviewStatus: 'submitted', submittedAt: epoch })
-    .where(and(eq(shopProducts.id, productId), eq(shopProducts.reviewStatus, row.status)));
-  if (Number(lift.rowsAffected) === 0) return { ok: false, code: 'conflict', message: '그 사이 상태가 바뀌었어요. 새로고침 후 다시 확인해 주세요.' };
+    .where(and(
+      eq(shopProducts.id, productId), eq(shopProducts.reviewStatus, row.status),
+      expected !== undefined ? eq(shopProducts.updatedAt, expected) : undefined,
+    ));
+  if (Number(lift.rowsAffected) === 0) return { ok: false, code: 'conflict', message: expected !== undefined ? STALE_MESSAGE : '그 사이 상태가 바뀌었어요. 새로고침 후 다시 확인해 주세요.' };
 
   let result: ShopDecisionResult;
   try {
-    result = await decideShopProduct(productId, 'approve', { slug: input.slug, expectedSubmittedAt: epoch }, now);
+    result = await decideShopProduct(productId, 'approve', { slug: input.slug, expectedSubmittedAt: epoch, expectedUpdatedAt: expected }, now);
   } catch (error: unknown) {
     await revert(productId, row.status, row.submittedAt, epoch);
     throw error;

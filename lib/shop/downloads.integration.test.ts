@@ -118,12 +118,19 @@ describe('주문 모양 — 배송 없는 디지털 주문', () => {
     expect((await findShopOrderByOrderNo(r.orderNo))!.shopOrder).toMatchObject({ postcode: '', address1: '' });
   });
 
-  it('실물이 섞이면 배송지가 필요하다 — 없으면 shipping_required, 있으면 배송비가 붙는다', async () => {
-    const lines = [{ skuId: DIG, quantity: 1 }, { skuId: PHY, quantity: 1 }];
+  it('실물과 디지털은 한 주문에 담지 않는다(mixed_kind) — 배송지가 있어도 없어도', async () => {
+    const mixed = [{ skuId: DIG, quantity: 1 }, { skuId: PHY, quantity: 1 }];
+    expect(await createShopOrder(noShip(mixed) as never, new Date(), { salesOpen: true })).toEqual({ ok: false, code: 'mixed_kind' });
+    expect(await createShopOrder(shopPayload(mixed) as never, new Date(), { salesOpen: true })).toEqual({ ok: false, code: 'mixed_kind' });
+    expect(await testDb.query.orders.findMany()).toHaveLength(0);
+  });
+
+  it('DB 실물 상품은 배송지가 필요하다 — 없으면 shipping_required, 있으면 배송비가 붙는다', async () => {
+    const lines = [{ skuId: PHY, quantity: 1 }];
     expect(await createShopOrder(noShip(lines) as never, new Date(), { salesOpen: true })).toEqual({ ok: false, code: 'shipping_required' });
     expect(await testDb.query.orders.findMany()).toHaveLength(0);
     const r = await place(lines, shopPayload(lines));
-    expect(r.totalAmount).toBe(15000 + SHOP_SHIPPING_FEE);
+    expect(r.totalAmount).toBe(10000 + SHOP_SHIPPING_FEE);
     const so = (await findShopOrderByOrderNo(r.orderNo))!.shopOrder!;
     expect(shopOrderShips(so)).toBe(true);
     expect(so).toMatchObject({ postcode: '03000', shippingFee: SHOP_SHIPPING_FEE });
@@ -138,9 +145,8 @@ describe('주문 모양 — 배송 없는 디지털 주문', () => {
 });
 
 describe('내려받기 목록·첫 기록', () => {
-  it('목록은 주문 줄의 디지털 상품 파일이고 순번이 붙는다(실물 줄은 파일이 없다)', async () => {
-    const lines = [{ skuId: PHY, quantity: 1 }, { skuId: DIG, quantity: 1 }];
-    const r = await paid(lines, shopPayload(lines));
+  it('목록은 주문 줄의 디지털 상품 파일이고 순번이 붙는다(미리듣기는 빠진다)', async () => {
+    const r = await paid([{ skuId: DIG, quantity: 1 }]);
     const order = await findShopOrderByOrderNo(r.orderNo);
     expect(await loadOrderDownloadFiles(r.orderNo, order!.shopOrder!.items)).toEqual([
       { index: 0, label: '음원 묶음', key: 'shop/dig/album.zip' },
@@ -160,13 +166,6 @@ describe('내려받기 목록·첫 기록', () => {
     expect(first).not.toBeNull();
     expect(await recordFirstDownload(r.orderNo)).toBe(true);
     expect(await getFirstDownloadedAt(r.orderNo)).toBe(first);
-  });
-
-  it('섞인 주문은 첫 내려받기로 발송 상태가 바뀌지 않는다', async () => {
-    const lines = [{ skuId: DIG, quantity: 1 }, { skuId: PHY, quantity: 1 }];
-    const r = await paid(lines, shopPayload(lines));
-    expect(await recordFirstDownload(r.orderNo)).toBe(true);
-    expect((await findShopOrderByOrderNo(r.orderNo))!.shopOrder!.fulfillmentStatus).toBe('preparing');
   });
 
   it('결제 전 주문과 취소된 주문은 기록하지 않는다', async () => {
@@ -202,9 +201,10 @@ describe('청약철회 제한 — 고객 취소', () => {
   });
 
   it('경합 — 취소가 읽은 뒤 내려받기가 먼저 기록되면 선점이 0행이라 토스를 부르지 않는다', async () => {
-    const lines = [{ skuId: DIG, quantity: 1 }, { skuId: PHY, quantity: 1 }];
-    const r = await paid(lines, shopPayload(lines)); // 섞인 주문: 첫 내려받기로 fulfillment가 안 바뀌어 선점 WHERE의 NOT EXISTS만이 막는다
+    const r = await paid([{ skuId: DIG, quantity: 1 }]);
     await recordFirstDownload(r.orderNo);
+    // 낡은 읽기를 흉내 낸다 — 취소가 주문을 읽은 시점에는 아직 발송 전(preparing)이었고 기록도 없었다. 선점 WHERE의 NOT EXISTS만이 막는다.
+    await testDb.run(sql`UPDATE shop_orders SET fulfillment_status = 'preparing' WHERE order_no = ${r.orderNo}`);
     (getFirstDownloadedAt as jest.Mock).mockResolvedValueOnce(null); // 낡은 읽기를 흉내 낸다
     expect(await cancelShopOrder({ orderNo: r.orderNo, requestedBy: 'customer', reason: 'x', now: new Date() })).toMatchObject({ ok: false, code: 'downloaded' });
     expect(cancelPayment).not.toHaveBeenCalled();

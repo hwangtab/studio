@@ -248,7 +248,7 @@ describe('대시보드 건수', () => {
   it('심사 대기 상품 수와 발송 대기 주문 수를 센다', async () => {
     await seedArtist();
     expect(await countPendingShopProducts()).toBe(0);
-    expect(await countShopAwaitingShipment()).toBe(0);
+    expect(await countShopAwaitingShipment()).toEqual({ studio: 0, preorder: 0, artist: 0 });
 
     const id = await draftSaved('c1');
     await testDb.update(shopProducts).set({ reviewStatus: 'submitted', submittedAt: 1 }).where(eq(shopProducts.id, id));
@@ -260,11 +260,11 @@ describe('대시보드 건수', () => {
     const r = await createShopOrder(shopPayload([{ skuId: sku.id, quantity: 1 }]), new Date(), { salesOpen: true });
     if (!r.ok) throw new Error('setup');
     // 결제 전(pending)은 세지 않는다.
-    expect(await countShopAwaitingShipment()).toBe(0);
+    expect(await countShopAwaitingShipment()).toEqual({ studio: 0, preorder: 0, artist: 0 });
     await testDb.run(sql`UPDATE orders SET status = 'paid' WHERE order_no = ${r.orderNo}`);
-    expect(await countShopAwaitingShipment()).toBe(1);
+    expect(await countShopAwaitingShipment()).toEqual({ studio: 1, preorder: 0, artist: 0 });
     await testDb.run(sql`UPDATE shop_orders SET fulfillment_status = 'shipped' WHERE order_no = ${r.orderNo}`);
-    expect(await countShopAwaitingShipment()).toBe(0);
+    expect(await countShopAwaitingShipment()).toEqual({ studio: 0, preorder: 0, artist: 0 });
   });
 
   it('표가 없으면 null이다(대시보드는 그 카드만 숨긴다)', async () => {

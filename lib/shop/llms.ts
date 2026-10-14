@@ -25,7 +25,7 @@ export const renderShopLlmsSection = (input: {
   const artists = input.artists.map((a) => `- ${a.name}: ${siteUrl}/ko/shop/artist/${a.slug}`);
   return [
     '\n## Shop — Records & Goods (Korean)\n',
-    `Studio NOL sells records and goods online (Korea only, Korean-language pages). Sold and shipped by Studio NOL, including artists' items. Shipping fee ${won(SHOP_SHIPPING_FEE)} per order, free for physical goods of ${won(SHOP_FREE_SHIPPING_FROM)} or more. Pay by card, easy-pay or bank transfer through Toss. Shop: ${siteUrl}/ko/shop\n`,
+    `Studio NOL sells records and goods online (Korea only, Korean-language pages). Sold by Studio NOL (artists' items included); some artist items ship directly from the artist. Digital items are downloaded after payment. Shipping fee ${won(SHOP_SHIPPING_FEE)} per order, free for physical goods of ${won(SHOP_FREE_SHIPPING_FROM)} or more. Pay by card, easy-pay or bank transfer through Toss. Shop: ${siteUrl}/ko/shop\n`,
     '### Products\n',
     ...lines,
     ...(artists.length > 0 ? ['\n### Artist shops\n', ...artists] : []),

@@ -66,17 +66,21 @@ export const getFirstDownloadedAt = async (orderNo: string): Promise<number | nu
   return row ? Number(row.t) : null;
 };
 
-/** 내려받기를 내줄 수 있는 주문의 조건 — 결제 살아 있음 + 발송 상태가 취소 아님. 기록 문장과 확인 문장이 같은 조건을 쓴다. */
+/**
+ * 내려받기를 내줄 수 있는 주문의 조건 — 결제 완료(`paid`) + 발송 상태가 취소 아님. 기록 문장과 확인 문장이 같은 조건을 쓴다.
+ * **일부 환불(`partially_refunded`)은 내주지 않는다** — 원장이 어느 줄이 환불됐는지 몰라, 환불한 음원을 계속 받아 갈 수 있다. 운영자가 확인한다.
+ */
 const liveOrderSql = (orderNo: string) => sql`
   EXISTS (
     SELECT 1 FROM orders o JOIN shop_orders so ON so.order_no = o.order_no
-    WHERE o.order_no = ${orderNo} AND o.type = 'merch' AND o.status IN ('paid', 'partially_refunded')
+    WHERE o.order_no = ${orderNo} AND o.type = 'merch' AND o.status = 'paid'
       AND so.fulfillment_status <> 'cancelled'
   )`;
 
 /**
  * 첫 내려받기를 기록한다. 주문이 **그 순간** 살아 있을 때만 행이 생기고(`INSERT … SELECT … WHERE EXISTS`), 이미 있으면 그대로 둔다
- * (판정 기준은 "언제 시작했는가"이지 "마지막으로 언제 받았는가"가 아니다). 같은 묶음에서 디지털만 주문(우편번호 `''`)은 `delivered`로 닫는다.
+ * (판정 기준은 "언제 시작했는가"이지 "마지막으로 언제 받았는가"가 아니다). 같은 묶음에서 디지털 주문(우편번호 `''` — 디지털은 실물과 따로
+ * 주문하므로 디지털 주문은 곧 배송 없는 주문이다)을 `delivered`로 닫는다. 이 변경 전에 실물과 섞여 들어온 주문은 `preparing`으로 남는다.
  *
  * 돌려주는 값: true = 기록이 있고 주문이 아직 살아 있다(내줘도 된다), false = 주문이 살아 있지 않다(취소가 먼저였다).
  * 고객 취소의 선점 UPDATE가 `NOT EXISTS(shop_order_downloads)`를 걸어 두므로, 둘이 겹치면 어느 쪽이 먼저든 다른 쪽은 0행이다.

@@ -20,7 +20,7 @@ import { isStudioShopArtistSlug } from '../../../../../lib/shop/studioArtist';
  */
 
 const DECISION_STATUS: Record<ShopDecisionCode, number> = {
-  not_found: 404, conflict: 409, invalid_slug: 400, duplicate_slug: 400, incomplete: 400, no_artist: 400, no_files: 400, digital_edition: 400,
+  not_found: 404, conflict: 409, invalid_slug: 400, duplicate_slug: 400, incomplete: 400, no_artist: 400, no_files: 400, digital_edition: 400, digital_shipper: 400,
 };
 const ADMIN_STATUS: Record<ShopAdminCode, number> = {
   not_found: 404, invalid: 400, conflict: 409, incomplete: 400, storage_unavailable: 503,
@@ -31,7 +31,17 @@ const isDecision = (v: unknown): v is ShopDecisionAction => typeof v === 'string
 
 const parseAdminAction = (b: Record<string, unknown>): ShopAdminAction | null => {
   switch (b.action) {
-    case 'lock_new_skus': return { type: 'lock_new_skus' };
+    case 'lock_new_skus': {
+      // 화면이 본 미잠금 옵션 목록 — 없으면 거부한다(보지 않은 옵션까지 잠그지 않게).
+      if (!Array.isArray(b.skus) || b.skus.length === 0) return null;
+      const skus: Array<{ id: string; price: number; optionLabel: string | null }> = [];
+      for (const raw of b.skus) {
+        const s = (typeof raw === 'object' && raw !== null ? raw : {}) as Record<string, unknown>;
+        if (typeof s.id !== 'string' || typeof s.price !== 'number' || (s.optionLabel !== null && typeof s.optionLabel !== 'string')) return null;
+        skus.push({ id: s.id, price: s.price, optionLabel: s.optionLabel as string | null });
+      }
+      return { type: 'lock_new_skus', skus };
+    }
     case 'set_ships_on':
       if (b.shipsOn === null || b.shipsOn === '') return { type: 'set_ships_on', shipsOn: null };
       return typeof b.shipsOn === 'string' ? { type: 'set_ships_on', shipsOn: b.shipsOn } : null;
@@ -63,8 +73,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!id) return res.status(400).json({ ok: false, message: '잘못된 요청이에요.' });
 
   if (req.method === 'PUT') {
+    // 화면을 연 판본(updated_at 초) — 없으면 거부한다(그 사이 아티스트가 고친 판본을 덮어쓰지 않게, 화면은 항상 싣는다).
+    const expectedUpdatedAt = req.body?.expectedUpdatedAt;
+    if (typeof expectedUpdatedAt !== 'number') return res.status(400).json({ ok: false, message: '화면을 새로고침한 뒤 다시 시도해 주세요.' });
     try {
-      const saved = await saveProductAsAdmin(id, req.body?.value);
+      const saved = await saveProductAsAdmin(id, req.body?.value, new Date(), { expectedUpdatedAt });
       if (!saved.ok) return respondProductFailure(res, saved);
       return res.status(200).json({ ok: true, product: saved.product });
     } catch (error: unknown) {
@@ -84,9 +97,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!immediate && typeof b.expectedSubmittedAt !== 'number' && b.expectedSubmittedAt !== null) {
         return res.status(400).json({ ok: false, message: '화면을 새로고침한 뒤 다시 시도해 주세요.' });
       }
+      // 바로 승인은 화면을 연 판본(updated_at)을 싣는다 — 그 사이 아티스트가 고쳤으면 못 본 판본을 승인하지 않는다.
+      if (immediate && typeof b.expectedUpdatedAt !== 'number') {
+        return res.status(400).json({ ok: false, message: '화면을 새로고침한 뒤 다시 시도해 주세요.' });
+      }
       const slugIn = typeof b.slug === 'string' ? b.slug : undefined;
       const result = immediate
-        ? await approveShopProductNow(id, { slug: slugIn })
+        ? await approveShopProductNow(id, { slug: slugIn, expectedUpdatedAt: b.expectedUpdatedAt as number })
         : await decideShopProduct(id, action, {
           note, slug: slugIn, expectedSubmittedAt: b.expectedSubmittedAt as number | null,
         });

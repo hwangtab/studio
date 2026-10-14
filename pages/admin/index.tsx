@@ -18,7 +18,7 @@ import { authenticateAdminRequest } from '../../lib/contracts/admin-auth';
 import type { AdminDashboard } from '../../lib/ops/adminDashboard';
 import { loadAdminDashboard } from '../../lib/ops/adminDashboard';
 import { countPendingShopProducts } from '../../lib/shop/adminProducts';
-import { countShopAwaitingShipment } from '../../lib/shop/adminQueries';
+import { countShopAwaitingShipment, type ShopAwaitingShipmentCounts } from '../../lib/shop/adminQueries';
 
 /**
  * 관리자 첫 화면 = 오늘 처리할 일.
@@ -30,7 +30,7 @@ import { countShopAwaitingShipment } from '../../lib/shop/adminQueries';
 interface AdminIndexPageProps {
   dashboard: AdminDashboard | null;
   /** 상점 대기 건수 — 표가 없거나 조회가 실패하면 null(그 카드는 숨긴다). */
-  shopQueues: { pendingProducts: number | null; awaitingShipment: number | null };
+  shopQueues: { pendingProducts: number | null; awaitingShipment: ShopAwaitingShipmentCounts | null };
   /** 이번 달 1일·오늘(KST) — 장부 폼의 기본 기간. */
   ledgerFrom: string;
   ledgerTo: string;
@@ -48,7 +48,7 @@ export const getServerSideProps: GetServerSideProps<AdminIndexPageProps> = async
   const ledgerFrom = `${today.slice(0, 7)}-01`;
 
   // 상점 건수는 따로 읽는다 — 상점 표가 없는 DB에서도 대시보드가 그대로 열려야 한다(각 함수가 실패를 삼키고 null).
-  const [pendingProducts, awaitingShipment] = await Promise.all([countPendingShopProducts(), countShopAwaitingShipment()]);
+  const [pendingProducts, awaitingShipment] = await Promise.all([countPendingShopProducts(), countShopAwaitingShipment(now)]);
   const shopQueues = { pendingProducts, awaitingShipment };
 
   try {
@@ -156,7 +156,16 @@ export default function AdminIndexPage({ dashboard, shopQueues, ledgerFrom, ledg
                   <QueueCard label="심사 대기 상점 상품" count={shopQueues.pendingProducts} href="/admin/shop/products" alert />
                 )}
                 {shopQueues.awaitingShipment !== null && (
-                  <QueueCard label="발송 대기 상점 주문" count={shopQueues.awaitingShipment} href="/admin/shop" alert />
+                  <>
+                    {/* 스튜디오가 지금 보낼 주문만 — 아티스트가 보낼 주문·예약 발송일이 안 된 주문은 따로 센다(할 일이 아니다). */}
+                    <QueueCard label="발송 대기 상점 주문" count={shopQueues.awaitingShipment.studio} href="/admin/shop" alert />
+                    {shopQueues.awaitingShipment.preorder > 0 && (
+                      <QueueCard label="예약 발송일 전 상점 주문" count={shopQueues.awaitingShipment.preorder} href="/admin/shop" />
+                    )}
+                    {shopQueues.awaitingShipment.artist > 0 && (
+                      <QueueCard label="아티스트 발송 대기 상점 주문" count={shopQueues.awaitingShipment.artist} href="/admin/shop" />
+                    )}
+                  </>
                 )}
               </div>
             </section>

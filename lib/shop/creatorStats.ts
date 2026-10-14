@@ -60,7 +60,7 @@ export const loadCreatorSales = async (creatorId: string, now: Date = new Date()
       SELECT s.id AS id FROM shop_product_skus s
       JOIN shop_products p ON p.id = s.product_id
       JOIN shop_product_fulfillment f ON f.product_id = p.id
-      WHERE p.creator_id = ${creatorId} AND f.mode = 'artist'
+      WHERE p.creator_id = ${creatorId} AND f.mode = 'artist' AND p.kind <> 'digital'
     `);
     for (const r of rows) selfShipped.add(r.id);
   } catch (error: unknown) {

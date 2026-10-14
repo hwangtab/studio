@@ -23,7 +23,7 @@ import { confirmShopOrder } from './confirm';
 import { cancelShopOrder } from './cancel';
 import { markShopOrderShipped } from './fulfillment';
 import { createShopOrder } from './service';
-import { loadOrderSerials } from './serials';
+import { alertIfSerialsMissing, loadOrderSerials } from './serials';
 import { closeShopFulfillmentOnFullCancel } from './webhookSync';
 import { cancelPayment, confirmPayment } from '../booking/toss';
 import { sendEmail } from '../email/resend';
@@ -126,13 +126,20 @@ describe('한정판 번호 — 확정 배치', () => {
     expect(await serialsOf(b.orderNo)).toEqual([2]);
   });
 
-  it('빈 번호가 없어도 확정은 성공하고 운영자에게 알린다', async () => {
+  it('번호가 다 나가면 재고가 남아 있어도 더 팔지 않는다(화면·생성 게이트)', async () => {
     await testDb.run(sql`UPDATE shop_products SET edition_size = 1 WHERE id = 'p-ltd'`);
     const a = await paid([{ skuId: LTD, quantity: 1 }]);
-    (sendEmail as jest.Mock).mockClear();
-    const b = await paid([{ skuId: LTD, quantity: 1 }]);
     expect(await serialsOf(a.orderNo)).toEqual([1]);
-    expect(await serialsOf(b.orderNo)).toEqual([]);
+    expect(await createShopOrder(shopPayload([{ skuId: LTD2, quantity: 1 }]), new Date(), { salesOpen: true })).toEqual({ ok: false, code: 'sold_out' });
+  });
+
+  it('최후 방어 — 확정된 주문에 번호가 모자라면(게이트 밖 이상 상태) 운영자에게 알린다', async () => {
+    const a = await paid([{ skuId: LTD, quantity: 1 }]);
+    // 게이트가 막는 상태를 손으로 만든다 — 번호 행이 사라진 확정 주문.
+    await testDb.run(sql`DELETE FROM shop_serials WHERE order_no = ${a.orderNo}`);
+    (sendEmail as jest.Mock).mockClear();
+    const order = await testDb.all<{ id: string; sku_id: string; quantity: number }>(sql`SELECT id, sku_id, quantity FROM shop_order_items WHERE order_no = ${a.orderNo}`);
+    await alertIfSerialsMissing(a.orderNo, order.map((i) => ({ skuId: i.sku_id })));
     const subjects = (sendEmail as jest.Mock).mock.calls.map((c) => c[0].subject as string);
     expect(subjects.some((s) => s.includes('한정판 번호가 모자라요'))).toBe(true);
   });

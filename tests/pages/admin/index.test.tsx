@@ -43,7 +43,7 @@ const DASHBOARD: AdminDashboard = {
   checkedAt: '2026-09-16T03:00:00.000Z',
 };
 
-const SHOP_QUEUES = { pendingProducts: 2, awaitingShipment: 5 };
+const SHOP_QUEUES = { pendingProducts: 2, awaitingShipment: { studio: 5, preorder: 1, artist: 2 } };
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -61,7 +61,10 @@ it('점검 항목은 심각도 배지와 처리 링크를, 대기열은 건수�
   expect(screen.getByRole('link', { name: /결제 재시도 중 구독\s*2/ })).toBeInTheDocument();
   expect(screen.getByRole('link', { name: /심사 대기 펀딩 프로젝트\s*4/ })).toHaveAttribute('href', '/admin/funding/projects');
   expect(screen.getByRole('link', { name: /심사 대기 상점 상품\s*2/ })).toHaveAttribute('href', '/admin/shop/products');
-  expect(screen.getByRole('link', { name: /발송 대기 상점 주문\s*5/ })).toHaveAttribute('href', '/admin/shop');
+  expect(screen.getByRole('link', { name: /^발송 대기 상점 주문\s*5/ })).toHaveAttribute('href', '/admin/shop');
+  // 스튜디오가 지금 보낼 주문과 따로 — 예약 발송일 전·아티스트 발송.
+  expect(screen.getByRole('link', { name: /예약 발송일 전 상점 주문\s*1/ })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: /아티스트 발송 대기 상점 주문\s*2/ })).toBeInTheDocument();
 
   expect(screen.getByText('2026.09.17 (목) 14:00')).toBeInTheDocument();
   expect(screen.getByText('홍길동 · 보컬 녹음 1프로')).toBeInTheDocument();
@@ -84,7 +87,7 @@ it('현황 로딩이 실패하면 오류를 알리되 관리 화면 링크는 �
   jest.spyOn(console, 'error').mockImplementation(() => {});
 
   const result = (await getServerSideProps({ query: {} } as unknown as GetServerSidePropsContext)) as {
-    props: { dashboard: AdminDashboard | null; shopQueues: { pendingProducts: number | null; awaitingShipment: number | null }; ledgerFrom: string; ledgerTo: string; error?: string };
+    props: { dashboard: AdminDashboard | null; shopQueues: { pendingProducts: number | null; awaitingShipment: { studio: number; preorder: number; artist: number } | null }; ledgerFrom: string; ledgerTo: string; error?: string };
   };
   expect(result.props.dashboard).toBeNull();
   expect(result.props.error).toMatch(/불러오지 못했습니다/);

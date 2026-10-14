@@ -3,15 +3,16 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { getClientIp } from '../../../lib/contracts/client-ip';
 import { createShopOrder } from '../../../lib/shop/service';
-import { SHOP_MIXED_SHIPPER_MESSAGE } from '../../../lib/shop/shipper';
+import { SHOP_MIXED_KIND_MESSAGE, SHOP_MIXED_SHIPPER_MESSAGE } from '../../../lib/shop/shipper';
 import { validateCreateShopOrderPayload } from '../../../lib/shop/validation';
 
-const FAILURE: Record<'sales_closed' | 'unknown_item' | 'sold_out' | 'lookup_failed' | 'shipping_required' | 'mixed_shipper', { status: number; message: string }> = {
+const FAILURE: Record<'sales_closed' | 'unknown_item' | 'sold_out' | 'lookup_failed' | 'shipping_required' | 'mixed_shipper' | 'mixed_kind', { status: number; message: string }> = {
   sales_closed: { status: 409, message: '지금은 주문을 받지 않아요.' },
   unknown_item: { status: 400, message: '판매하지 않는 상품이 들어 있어요. 페이지를 새로고침해 주세요.' },
   lookup_failed: { status: 503, message: '상품 정보를 확인하지 못했어요. 잠시 후 다시 시도해 주세요.' },
   shipping_required: { status: 400, message: '배송지를 입력해 주세요.' },
   mixed_shipper: { status: 400, message: SHOP_MIXED_SHIPPER_MESSAGE },
+  mixed_kind: { status: 400, message: SHOP_MIXED_KIND_MESSAGE },
   sold_out: { status: 409, message: '남은 수량이 부족한 상품이 있어요. 수량을 줄이거나 다른 상품을 골라 주세요.' },
 };
 

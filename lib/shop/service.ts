@@ -8,8 +8,8 @@ import { computeShopTotals } from './amounts';
 import { shopLineName, type ResolvedSku } from './catalog';
 import { findSellableSkuAsync } from './repository';
 import { generateShopOrderNo } from './shape';
-import { hasMixedShippers } from './shipper';
-import { remainingStockSql, stockGateSql } from './stock';
+import { hasMixedKinds, hasMixedShippers } from './shipper';
+import { editionGates, remainingStockSql, stockGateSql } from './stock';
 import type { CreateShopOrderPayload } from './validation';
 
 /** libSQL batch 결과의 rowsAffected(lib/shows/service.ts와 같은 로컬 헬퍼 — 모듈 그래프를 섞지 않는다). */
@@ -18,7 +18,7 @@ export const rowsAffectedOf = (result: unknown): number =>
 
 export type CreateShopOrderResult =
   | { ok: true; orderNo: string; totalAmount: number; orderName: string }
-  | { ok: false; code: 'sales_closed' | 'unknown_item' | 'sold_out' | 'lookup_failed' | 'shipping_required' | 'mixed_shipper' };
+  | { ok: false; code: 'sales_closed' | 'unknown_item' | 'sold_out' | 'lookup_failed' | 'shipping_required' | 'mixed_shipper' | 'mixed_kind' };
 
 /**
  * 주문 생성 — 재고를 SHOP_HOLD_SECONDS 동안 잡고(`pending`), 결제 승인(confirmShopOrder)이 `paid`로 바꾼다.
@@ -43,8 +43,11 @@ export const createShopOrder = async (
     resolved.push({ ...lookup.found, quantity: line.quantity });
   }
 
+  // 한 주문은 실물만 또는 디지털만 — 디지털을 내려받으면 같은 주문의 실물까지 "발송 전 취소"가 막힌다(lib/shop/shipper.ts).
+  if (hasMixedKinds(resolved.map((r) => r.product))) return { ok: false, code: 'mixed_kind' };
+
   // 한 주문은 한 발송 주체만 — 스튜디오 발송과 아티스트 직접 발송(또는 다른 아티스트)을 섞으면 운송장 하나로 닫을 수 없다.
-  // 디지털 상품은 발송이 없어 판정에서 빠진다. 장바구니가 이미 거르지만 서버가 다시 판정한다.
+  // 장바구니가 이미 거르지만 서버가 다시 판정한다.
   if (hasMixedShippers(resolved.map((r) => r.product))) return { ok: false, code: 'mixed_shipper' };
 
   // 실물 줄이 하나라도 있으면 배송지가 필요하다. 디지털 상품만이면 배송지·배송비가 없다(받은 배송지는 쓰지 않는다).
@@ -58,7 +61,11 @@ export const createShopOrder = async (
   const manageToken = generateManageToken();
   const holdExpiresAt = Math.floor(now.getTime() / 1000) + SHOP_HOLD_SECONDS;
 
-  const gates = sql.join(resolved.map((r) => stockGateSql(r.sku.id, r.quantity, now)), sql` AND `);
+  // 재고 게이트(SKU별) + 한정판 게이트(상품별 — 남은 번호 수). 화면의 남은 수량과 같은 식이다(lib/shop/stock.ts).
+  const gates = sql.join([
+    ...resolved.map((r) => stockGateSql(r.sku.id, r.quantity, now)),
+    ...editionGates(resolved.map((r) => ({ skuId: r.sku.id, quantity: r.quantity, productKey: r.product.slug })), now),
+  ], sql` AND `);
 
   const db = getDb();
   const statements = [

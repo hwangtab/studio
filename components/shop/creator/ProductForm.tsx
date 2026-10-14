@@ -118,7 +118,9 @@ export function ProductForm({ initial, admin = false, onSaved }: { initial: Crea
   const save = async (e?: FormEvent) => {
     e?.preventDefault();
     setBusy('save');
-    const result = await (admin ? saveShopProductAsAdmin : saveShopProduct)(product.id, toValue(form));
+    const result = admin
+      ? await saveShopProductAsAdmin(product.id, toValue(form), product.updatedAt)
+      : await saveShopProduct(product.id, toValue(form));
     setBusy(null);
     if (result.ok) {
       applyServerProduct(result.product);
