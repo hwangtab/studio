@@ -164,7 +164,7 @@ describe('공연 주최자 약관 판본 게이트', () => {
   it('7조가 회차 취소 때 전액 환불과 결제 수수료 주최자 부담(사유 무관·정산금 공제·부족분 청구)을 말한다', () => {
     const cancel = section(serialized, '\n제7조 (', '\n제8조 (');
     expect(cancel).toContain('전액을 환불합니다');
-    expect(cancel).toContain(`결제 수수료(${FUNDING_PAYMENT_FEE_PERCENT}%)는 취소 사유와 관계없이 주최자가 부담합니다`);
+    expect(cancel).toContain(`결제 수수료(${FUNDING_PAYMENT_FEE_PERCENT}%)는 스튜디오의 귀책 사유로 취소된 경우가 아니면 주최자가 부담합니다`);
     expect(cancel).toContain('정산금에서 빼고');
     expect(cancel).toContain('주최자에게 청구합니다');
     expect(cancel).toContain('공연마다 따로 정하지 않습니다');

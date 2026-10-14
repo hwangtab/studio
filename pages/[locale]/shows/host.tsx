@@ -73,7 +73,7 @@ export default function ShowsHostPage() {
               </li>
               <li>{FUNDING_INDIVIDUAL_PAYOUT_NOTE}</li>
               <li>
-                회차가 취소되면 그 회차의 티켓을 산 관객에게 전액을 환불해요. 이때 결제 수수료는 주최자가 부담해요.
+                회차가 취소되면 그 회차의 티켓을 산 관객에게 전액을 환불해요. 이때 결제 수수료는 스튜디오 잘못으로 취소된 경우가 아니면 주최자가 부담해요.
               </li>
             </ul>
             <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
