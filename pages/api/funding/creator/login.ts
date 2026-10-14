@@ -6,6 +6,7 @@ import { consumeRateLimit } from '../../../../lib/booking/rate-limit';
 import { isAllowedContactRequestOrigin } from '../../../../lib/contact/origin';
 import { getClientIp } from '../../../../lib/contracts/client-ip';
 import { sendCreatorLoginEmail } from '../../../../lib/funding/creatorEmail';
+import { parseCreatorLoginNext } from '../../../../lib/funding/creatorLoginNext';
 import { isRegisteredCreatorEmail, issueCreatorLoginToken, normalizeCreatorEmail } from '../../../../lib/funding/creatorToken';
 import { sendCreatorLoginCapAlert, sendCreatorLoginMailFailureAlert } from '../../../../lib/funding/email';
 
@@ -132,7 +133,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const issued = await issueCreatorLoginToken(email);
   if (issued) {
-    const url = `${SITE_URL}/ko/funding/creator/auth?token=${encodeURIComponent(issued.rawToken)}`;
+    // next는 허용 목록의 이름만 싣는다(parseCreatorLoginNext) — 이동 주소는 착지 화면이 같은 표로 다시 고른다.
+    const next = parseCreatorLoginNext(req.body?.next);
+    const url = `${SITE_URL}/ko/funding/creator/auth?token=${encodeURIComponent(issued.rawToken)}${next ? `&next=${next}` : ''}`;
     const error = await sendCreatorLoginEmail(email, url);
     // 메일 실패는 사용자에게 드러내지 않는다(위와 같은 이유). 기록만 남긴다 + 운영자에게 알린다.
     if (error) {

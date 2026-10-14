@@ -8,12 +8,17 @@
 import Head from 'next/head';
 import { useState } from 'react';
 
+import { creatorLandingPath, parseCreatorLoginNext, type CreatorLoginNext } from '../../../../lib/funding/creatorLoginNext';
 import { withI18nServerProps } from '../../../../lib/getStatic';
 import { Button } from '../../../../components/ui/Button';
 import { Notice } from '../../../../components/ui/Notice';
 import { PageHeader, PageShell } from '../../../../components/ui/PageHeader';
 
-interface Props { token: string | null }
+interface Props {
+  token: string | null;
+  /** 로그인 뒤 돌아갈 콘솔 탭 — 허용 목록의 이름만(lib/funding/creatorLoginNext.ts). 그 밖은 null. */
+  next?: CreatorLoginNext | null;
+}
 
 // 화면이 있는 페이지다(예전엔 항상 redirect만 하는 화면 없는 페이지였다). 회사 메일의
 // 링크 검사기(Safe Links·Proofpoint)나 카카오톡·슬랙 미리보기 봇이 배달 시점에 이 GET
@@ -32,10 +37,10 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
     return { redirect: { destination: `/ko/funding/creator/auth${search ? `?${search}` : ''}`, permanent: false } };
   }
   const token = typeof context.query.token === 'string' && context.query.token ? context.query.token : null;
-  return { props: { token } };
+  return { props: { token, next: parseCreatorLoginNext(context.query.next) } };
 });
 
-export default function CreatorAuth({ token }: Props) {
+export default function CreatorAuth({ token, next = null }: Props) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -59,7 +64,7 @@ export default function CreatorAuth({ token }: Props) {
         body: JSON.stringify({ token }),
       });
       if (res.ok) {
-        window.location.href = '/ko/funding/creator';
+        window.location.href = creatorLandingPath(next);
         return;
       }
       // 링크가 만료됐는지 이미 쓰였는지는 구분해 알리지 않는다(consumeCreatorLoginToken과
@@ -113,11 +118,11 @@ export default function CreatorAuth({ token }: Props) {
             허용 — lib/analytics/privatePaths.ts 주석 참조). 목적지는 측정 대상인 공개
             페이지라 rel="noreferrer"로 Referrer-Policy가 보내는 전체 URL 유출을 막는다. */}
         <a
-          href="/ko/funding/apply?e=link"
+          href={next === 'shows' ? '/ko/shows/host' : '/ko/funding/apply?e=link'}
           rel="noreferrer"
           className="mt-8 inline-block text-sm underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter"
         >
-          펀딩 신청 페이지로
+          {next === 'shows' ? '공연 등록 안내 페이지로' : '펀딩 신청 페이지로'}
         </a>
       </PageShell>
     </>

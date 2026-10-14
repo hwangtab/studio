@@ -220,6 +220,8 @@ describe('개설자 메일', () => {
     expect(sent(0).html).toContain(`href="${url}"`);
     expect(sent(0).html).toContain('15분');
     expect(sent(0).html).toContain('버튼이 눌리지 않으면');
+    expect(sent(0).subject).toBe('[스튜디오 놀] 개설자 콘솔 로그인 링크');
+    expect(sent(0).html).not.toContain('펀딩');
   });
 
   it('이름·이메일 변경: 이전·새 값·사유를 표로, escape, 양쪽 주소에 html', async () => {
