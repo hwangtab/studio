@@ -378,9 +378,7 @@ export default function CreatorProjectEditor({
           </div>
           <div id="panel-payout" role="tabpanel" aria-labelledby="tab-payout" hidden={tab !== 'payout'}>
             <PayoutSectionForm
-              projectId={project.id}
               initial={payout}
-              readOnly={ro('payout')}
               onSaved={setPayout}
               onDirtyChange={onDirtyChangeBySection.payout}
             />
