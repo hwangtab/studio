@@ -320,6 +320,19 @@ const nextConfig = {
           { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
         ],
       },
+      // 소프트웨어 — success·fail은 토스 paymentKey·orderId, manage는 관리 토큰이 URL에 실린다. find는 이메일 입력 폼.
+      {
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/software/(success|fail|find)',
+        headers: [
+          { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
+        ],
+      },
+      {
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/software/manage/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
+        ],
+      },
       {
         source: '/:locale(ko|en|zh|es|vi|th|uz)/shop/manage/:path*',
         headers: [

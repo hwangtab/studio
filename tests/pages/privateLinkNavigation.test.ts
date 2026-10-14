@@ -45,6 +45,10 @@ const PRIVATE_PAGE_FILES = [
   'pages/[locale]/shop/success.tsx',
   'pages/[locale]/shop/fail.tsx',
   'pages/[locale]/shop/manage/[orderNo].tsx',
+  'pages/[locale]/software/success.tsx',
+  'pages/[locale]/software/fail.tsx',
+  'pages/[locale]/software/find.tsx',
+  'pages/[locale]/software/manage/[orderNo].tsx',
 ];
 
 const read = (file: string) => readFileSync(path.join(process.cwd(), file), 'utf-8');

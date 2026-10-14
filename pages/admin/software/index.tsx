@@ -116,6 +116,14 @@ function LicenseRow({ row }: { row: AdminLicenseRow }) {
     if (r.ok) window.location.reload();
     else setState(String(r.data?.message ?? '처리하지 못했습니다.'));
   };
+  const refund = async (orderNo: string) => {
+    const warn = row.firstActivatedAt ? '\n\n이 라이선스는 이미 활성화됐습니다(하자·분쟁 대응일 때만).' : '';
+    if (!window.confirm(`주문 ${orderNo}을 전액 환불할까요? 라이선스는 환불 상태가 되어 새 기기를 받지 않습니다.${warn}`)) return;
+    setState('환불 중…');
+    const r = await post(`/api/admin/software/orders/${orderNo}`, { action: 'refund' });
+    if (r.ok) window.location.reload();
+    else setState(String(r.data?.message ?? '환불하지 못했습니다.'));
+  };
   return (
     <tr className="border-t border-gray-100 align-top">
       <td className="py-2 pr-3">
@@ -143,6 +151,9 @@ function LicenseRow({ row }: { row: AdminLicenseRow }) {
           {row.activations.length > 0 && (
             <button type="button" className={linkButtonClass} onClick={() => act({ action: 'deactivate' }, '활성 기기를 전부 해제할까요?')}>기기 전부 해제</button>
           )}
+          {row.orderNo && row.status !== 'refunded' && (
+            <button type="button" className={linkButtonClass} onClick={() => refund(row.orderNo as string)}>주문 전액 환불</button>
+          )}
           {row.status === 'active' && (
             <button type="button" className={linkButtonClass} onClick={() => act({ action: 'revoke' }, '이 라이선스를 취소할까요? 새 기기 활성화가 막힙니다(이미 활성화한 기기는 계속 돕니다).')}>라이선스 취소</button>
           )}
@@ -164,7 +175,7 @@ export default function AdminSoftwarePage({ licenses, products, q, salesOpen, er
         {error && <Notice tone="error" light className="mb-4">{error}</Notice>}
         {!salesOpen && (
           <Notice tone="warning" light className="mb-4">
-            판매가 닫혀 있습니다(data/software/policy.ts의 SOFTWARE_SALES_OPEN). 지금은 수동 발급만 됩니다 — 결제는 2단계(docs/software-sales-plan-2026-10.md).
+            판매가 닫혀 있습니다(data/software/policy.ts의 SOFTWARE_SALES_OPEN) — 지금은 수동 발급만 됩니다. 여는 순서는 lib/software/CLAUDE.md의 체크리스트를 보세요.
           </Notice>
         )}
 

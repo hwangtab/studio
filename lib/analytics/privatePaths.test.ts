@@ -100,6 +100,8 @@ describe('isPrivateAnalyticsPath', () => {
       '/:locale(ko|en|zh|es|vi|th|uz)/pay/:path*',
       '/:locale(ko|en|zh|es|vi|th|uz)/shop/(success|fail)',
       '/:locale(ko|en|zh|es|vi|th|uz)/shop/manage/:path*',
+      '/:locale(ko|en|zh|es|vi|th|uz)/software/(success|fail|find)',
+      '/:locale(ko|en|zh|es|vi|th|uz)/software/manage/:path*',
     ]);
     // 상점은 결과·관리 화면만 비공개다 — 목록·상품 상세는 측정 대상.
     expect(isPrivateAnalyticsPath('/ko/shop/success?paymentKey=x')).toBe(true);

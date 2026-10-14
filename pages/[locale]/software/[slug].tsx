@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import SEO from '../../../components/SEO';
+import SoftwareOrderForm from '../../../components/software/SoftwareOrderForm';
 import { buttonVariants } from '../../../components/ui/Button';
 import { Notice } from '../../../components/ui/Notice';
 import { PageHeader, PageShell } from '../../../components/ui/PageHeader';
@@ -79,7 +80,14 @@ export default function SoftwareDetailPage({ softwareLocale: locale, product, sa
             )}
           </Panel>
 
-          {!salesOpen && (
+          {salesOpen && locale === 'ko' && product.prices?.[0] ? (
+            <Panel as="section" padding="default" title="구매">
+              <SoftwareOrderForm product={product} price={product.prices[0]} />
+              <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                이미 구매하셨나요? <Link href="/ko/software/find" className="underline">구매 내역 링크 다시 받기</Link>
+              </p>
+            </Panel>
+          ) : (
             <Notice tone="info" title={t.salesClosedHeading}>{t.salesClosedBody}</Notice>
           )}
 

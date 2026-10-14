@@ -177,7 +177,8 @@ SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이�
 `/ko/software`·`/en/software`. 상품 정의는 `data/software/catalog.ts`, 라이선스·기기 활성화는 DB(0054), 서명은 Ed25519.
 **라이선스 파일 형식·활성화 API 응답 코드·`publicKeys.ts`의 kid는 배포된 플러그인이 오프라인으로 기대므로 바꾸지 않는다.**
 서명 비밀키(`SOFTWARE_LICENSE_SIGNING_KEY`)를 잃으면 모든 플러그인을 다시 배포해야 한다 — 오프라인 백업 필수.
-`SOFTWARE_SALES_OPEN`이 false인 동안은 관리자 수동 발급만 된다.
+`SOFTWARE_SALES_OPEN`이 false인 동안은 관리자 수동 발급만 된다. 국내 결제는 `orders(type='software')` + `software_orders`(0055)이고
+승인 batch가 라이선스를 함께 발급한다 — 판매를 열기 전 체크리스트(약관 사용권·청약철회 조항, 처리방침·판본)가 그 파일에 있다.
 
 ### 믹싱 전·후 비교 음원 (`components/audio/MixComparePlayer.tsx`)
 
