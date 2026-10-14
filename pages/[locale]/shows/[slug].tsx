@@ -6,6 +6,7 @@ import { showFaqItems } from '../../../lib/shows/faq';
 import { fallbackShowLocale, SHOW_LOCALES, showCopy, toShowLocale, type ShowLocale } from '../../../lib/shows/i18n';
 import { localizeShow } from '../../../lib/shows/localize';
 import { getPublicShowBySlug, type PublicShow } from '../../../lib/shows/queries';
+import { fundingMediaDimensions } from '../../../lib/funding/mediaPath';
 import imageMetadata from '../../../utils/imageMetadata.json';
 
 interface Props {
@@ -28,7 +29,7 @@ export default function ShowPage({ show, locale }: Props) {
   const url = `${SITE_URL}${path}`;
   const faq = showFaqItems(locale);
   const ogImage = show.ogImage ?? show.coverImage ?? undefined;
-  const ogImageSize = ogImage ? (imageMetadata as Record<string, { width: number; height: number } | undefined>)[ogImage] : undefined;
+  const ogImageSize = ogImage ? (imageMetadata as Record<string, { width: number; height: number } | undefined>)[ogImage] ?? fundingMediaDimensions(ogImage) ?? undefined : undefined;
 
   // 회차마다 Event 하나 — 가격은 티켓 종류별 Offer. 취소·매진·마감 상태를 schema에도 반영한다.
   const schema = show.showtimes.map((s) => ({
