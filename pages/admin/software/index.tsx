@@ -26,7 +26,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     return { props: { licenses: await listAdminLicenses(q), products, q, salesOpen: SOFTWARE_SALES_OPEN } };
   } catch (error: unknown) {
     console.error('[admin/software] 조회 실패:', error);
-    return { props: { licenses: [], products, q, salesOpen: SOFTWARE_SALES_OPEN, error: '라이선스를 불러오지 못했습니다. 운영 DB에 마이그레이션 0053이 적용됐는지 확인해 주세요.' } };
+    return { props: { licenses: [], products, q, salesOpen: SOFTWARE_SALES_OPEN, error: '라이선스를 불러오지 못했습니다. 운영 DB에 마이그레이션 0054가 적용됐는지 확인해 주세요.' } };
   }
 };
 

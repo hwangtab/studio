@@ -11,7 +11,7 @@
 
 ## 켜기 전에 (위에서부터)
 
-1. **운영 DB에 마이그레이션 0053(`software_licenses`·`software_activations`)을 적용한다** — 배포보다 먼저(루트 CLAUDE.md
+1. **운영 DB에 마이그레이션 0054(`software_licenses`·`software_activations`)을 적용한다** — 배포보다 먼저(루트 CLAUDE.md
    "운영 DB 마이그레이션 적용 방법"). 새 표뿐이라 순서를 어겨도 다른 결제는 안 깨지고 소프트웨어 기능만 500/503이다.
 2. **서명키를 만든다**: `node scripts/software/generate-license-key.mjs k1` → 비밀키를 Vercel env `SOFTWARE_LICENSE_SIGNING_KEY`
    (Sensitive)와 **오프라인 백업** 두 곳에, `SOFTWARE_LICENSE_KEY_ID=k1`, 공개키를 `data/software/publicKeys.ts`에 커밋.
