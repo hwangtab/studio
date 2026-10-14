@@ -73,6 +73,8 @@ function ArtistRow({ artist }: { artist: AdminShopArtistRow }) {
   const [slug, setSlug] = useState(artist.slug);
   const [linkCurated, setLinkCurated] = useState(artist.curatedSlugLinked);
   const [message, setMessage] = useState<string | null>(null);
+  // 패널은 처음 펼칠 때 붙인다 — 접힌 줄마다 사업자 정보를 불러오지 않게.
+  const [taxOpened, setTaxOpened] = useState(false);
   const locked = artist.approvedProducts > 0;
 
   const save = async () => {
@@ -99,8 +101,12 @@ function ArtistRow({ artist }: { artist: AdminShopArtistRow }) {
       </tr>
       <tr>
         <td colSpan={3} className="pb-3">
-          <Disclosure summary="사업자 정보" variant="plain">
-            <CreatorTaxProfilePanel creatorId={artist.creatorId} heading={false} />
+          <Disclosure
+            summary="사업자 정보"
+            variant="plain"
+            onToggle={(e) => { if (e.currentTarget.open) setTaxOpened(true); }}
+          >
+            {taxOpened && <CreatorTaxProfilePanel creatorId={artist.creatorId} heading={false} />}
           </Disclosure>
         </td>
       </tr>

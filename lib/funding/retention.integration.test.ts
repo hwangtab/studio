@@ -152,6 +152,19 @@ describe('(A) 사업자 정산 기록이 있는 경우 — 기산점은 지급 �
     expect(await profileOf('c1')).toBeDefined();
   });
 
+  it('다른 개설자의 최근 사업자 정산은 이 개설자를 붙잡지 않는다', async () => {
+    await addCreator({ id: 'c1' });
+    await addProject({ id: 'p1', creatorId: 'c1', reviewStatus: 'approved' });
+    await addPayout({ projectId: 'p1', withholdingAmount: 0, paidAt: '2020-01-01' });
+    await addCreator({ id: 'c2' });
+    await addProject({ id: 'p2', creatorId: 'c2', reviewStatus: 'approved' });
+    await addPayout({ projectId: 'p2', withholdingAmount: 0, paidAt: '2024-01-01' });
+
+    expect((await purge()).purged).toBe(1);
+    expect(await profileOf('c1')).toBeUndefined();
+    expect(await profileOf('c2')).toBeDefined();
+  });
+
   it('미지급 사업자 정산이 있으면 남긴다', async () => {
     await addCreator({ id: 'c1' });
     await addProject({ id: 'p1', creatorId: 'c1', reviewStatus: 'approved' });
