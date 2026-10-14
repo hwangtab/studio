@@ -267,17 +267,25 @@ export const purgeShopPersonalDataOfPurgedOrders = async (): Promise<OrderPurgeR
 };
 
 /**
- * 결제자 이름이 파기된 **소프트웨어 주문**의 라이선스에 남은 이메일·이름을 파기한다(`software_licenses`, 마이그레이션 0054).
- * 라이선스 행과 키는 남긴다 — 고객이 계속 쓰는 사용권이고, 활성화에는 이메일이 필요 없다. 위 5년 파기의 결과를 따른다.
- * 수동 발급(주문 없는) 라이선스는 대상이 아니다.
+ * 결제자 이름이 파기된 **소프트웨어 주문**의 라이선스에 남은 이메일·이름과, 그 라이선스로 활성화한 기기의 이름을 파기한다
+ * (`software_licenses`·`software_activations`, 마이그레이션 0054). 기기 이름은 보통 컴퓨터 이름이라 사람 이름이 들어 있을 수 있다.
+ * 라이선스 행·키·기기 식별 해시는 남긴다 — 고객이 계속 쓰는 사용권이고, 활성화에는 이메일이 필요 없다. 위 5년 파기의 결과를 따른다.
+ * 수동 발급(주문 없는) 라이선스는 대상이 아니다. 반환 건수는 라이선스 기준이다.
  */
 export const purgeSoftwareLicensePersonalDataOfPurgedOrders = async (): Promise<OrderPurgeResult> => {
-  const result = await getDb().run(sql`
-    UPDATE software_licenses SET email = ${PURGED_MARK}, customer_name = NULL
-    WHERE order_no IN (SELECT order_no FROM orders WHERE type = 'software' AND customer_name = ${PURGED_MARK})
-      AND (email <> ${PURGED_MARK} OR customer_name IS NOT NULL)
-  `);
-  return rows(result as { rowsAffected?: number });
+  const db = getDb();
+  const purgedOrders = sql`SELECT order_no FROM orders WHERE type = 'software' AND customer_name = ${PURGED_MARK}`;
+  const [licenses] = await db.batch([
+    db.run(sql`
+      UPDATE software_licenses SET email = ${PURGED_MARK}, customer_name = NULL
+      WHERE order_no IN (${purgedOrders}) AND (email <> ${PURGED_MARK} OR customer_name IS NOT NULL)
+    `),
+    db.run(sql`
+      UPDATE software_activations SET label = NULL
+      WHERE label IS NOT NULL AND license_id IN (SELECT id FROM software_licenses WHERE order_no IN (${purgedOrders}))
+    `),
+  ]);
+  return rows(licenses as { rowsAffected?: number });
 };
 
 /**

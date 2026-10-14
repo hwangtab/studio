@@ -162,7 +162,7 @@ export default function SoftwareOrderForm({ product, price }: { product: Softwar
         />
         <p className="pl-7 text-sm text-gray-500 dark:text-gray-400">
           체험판으로 먼저 써 보세요. 설치·동작에 문제가 있으면 활성화 뒤에도 환불해 드려요. 결제하면{' '}
-          <Link href="/ko/terms" target="_blank" className="underline">이용약관</Link>과{' '}
+          <Link href="/ko/terms#software" target="_blank" className="underline">이용약관</Link>과{' '}
           <Link href="/ko/privacy-policy" target="_blank" className="underline">개인정보 처리방침</Link>에 동의하는 것으로 봐요.
         </p>
       </div>
