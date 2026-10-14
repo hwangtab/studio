@@ -137,7 +137,7 @@ export default function AdminShopProductPage({ product }: Props) {
         )}
 
         <section className={card}>
-          <h2 className="mb-3 font-semibold">미리보기</h2>
+          <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-gray-900">미리보기</h2>
           <ShopProductDetail product={toPreview(product)} layout="stack" headingAs="h2" titleFallbackFont />
           <dl className="mt-4 grid gap-1 text-xs text-gray-600 sm:grid-cols-2">
             <div>분류: {product.category === 'album' ? '음반' : '굿즈'} · {product.kind === 'digital' ? '디지털' : '실물'}</div>
@@ -150,7 +150,7 @@ export default function AdminShopProductPage({ product }: Props) {
         </section>
 
         <section className={card}>
-          <h2 className="mb-3 font-semibold">옵션</h2>
+          <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-gray-900">옵션</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead className="text-xs text-gray-500"><tr><th className="py-2 pr-3">옵션</th><th className="py-2 pr-3">가격</th><th className="py-2 pr-3">상태</th><th className="py-2">총 재고</th></tr></thead>
@@ -173,7 +173,7 @@ export default function AdminShopProductPage({ product }: Props) {
 
         {product.reviewStatus === 'submitted' && (
           <section className={card}>
-            <h2 className="mb-3 font-semibold">판정</h2>
+            <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-gray-900">판정</h2>
             <div className="grid gap-3 md:grid-cols-2">
               <label className="block">주소(slug) — 승인할 때 확정됩니다
                 <input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="비우면 아티스트가 적은 주소" className={`${inputClass} mt-1`} />
@@ -191,13 +191,13 @@ export default function AdminShopProductPage({ product }: Props) {
         )}
         {product.reviewNote && (
           <section className={card}>
-            <h2 className="mb-2 font-semibold">아티스트에게 보인 메모</h2>
+            <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-gray-900">아티스트에게 보인 메모</h2>
             <p className="whitespace-pre-line text-gray-700">{product.reviewNote}</p>
           </section>
         )}
 
         <section className={card}>
-          <h2 className="mb-3 font-semibold">운영</h2>
+          <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-gray-900">운영</h2>
           <div className="grid gap-5 md:grid-cols-2">
             <div>
               <label className="block">예약 발송일
