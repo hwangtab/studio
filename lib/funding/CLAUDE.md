@@ -371,6 +371,11 @@ supporterMessage는 후원자가 준 개인정보라 파기 약속이 걸리지�
 (`lib/funding/creatorValidation.ts`)이 그 값을 미설정으로 판정하고, 심사 신청·승인이 막고,
 이름 잠금도 걸리지 않는다(설정한 적 없는 값을 잠그는 것은 잠금이 아니라 사고다).
 
+**이름 잠금은 상점 상품도 본다.** `hasReviewedProject`는 펀딩 프로젝트에 더해 `shop_products`의
+`submitted`·`approved` 상품이 있어도 참이다(상품 상세·아티스트 상점에도 같은 이름이 나간다).
+상점 조회는 펀딩 조회와 **별도 문장·별도 try**다 — 표가 없는 DB(마이그레이션 0053 전)에서는
+`no such table`만 false로 보고, 그 밖의 오류는 던진다.
+
 ### 개설자 계정은 운영자만 되돌릴 수 있다
 
 `funding_creators`에 쓰는 경로는 세 개다 — 가입(`lib/funding/creatorToken.ts`), 개설자 본인
