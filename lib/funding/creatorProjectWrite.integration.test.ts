@@ -1562,6 +1562,30 @@ describe('정산 정보 — 사업자 정보·국세청 조회·자격', () => {
     expect(await loadPayoutSummary(invoiced.creatorId)).toMatchObject({ keepsResidentNumber: false, keepsBusinessProfile: true });
   });
 
+  it('이미 개인인 채로 다시 저장하면(계좌만 고침) 사업자 행을 남겼다고 말하지 않는다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, invoice(), { lookup: lookupOk });
+    await mockDb.insert(schema.shopArtists).values({ creatorId, slug: `artist-${creatorId}` });
+    expect(await savePayoutSection(creatorId, withholding(), { lookup: lookupOk }))
+      .toEqual({ ok: true, businessProfileRetained: true });
+    // 개인 → 개인: 전환이 아니다.
+    expect(await savePayoutSection(creatorId, withholding(), { lookup: lookupOk })).toEqual({ ok: true });
+    expect(await businessRows(creatorId)).toHaveLength(1);
+  });
+
+  it('이미 사업자인 채로 다시 저장하면 주민등록번호를 남겼다고 말하지 않는다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, withholding('9901011234567'), { lookup: lookupOk });
+    await mockDb.insert(schema.shopArtists).values({ creatorId, slug: `artist-${creatorId}` });
+    expect(await savePayoutSection(creatorId, invoice(), { lookup: lookupOk }))
+      .toEqual({ ok: true, residentNumberRetained: true });
+    // 사업자 → 사업자: 전환이 아니다.
+    expect(await savePayoutSection(creatorId, invoice(), { lookup: lookupOk })).toEqual({ ok: true });
+    const [row] = await mockDb.select({ enc: schema.fundingCreators.residentNumberEnc })
+      .from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creatorId));
+    expect(row.enc).toBeTruthy();
+  });
+
   it('상점 아티스트면 사업자로 바꿔도 주민등록번호를 남긴다 — 상점 정산은 기록 표가 없다', async () => {
     const { creatorId } = await seedProject({ reviewStatus: 'approved' });
     await savePayoutSection(creatorId, withholding('9901011234567'), { lookup: lookupOk });

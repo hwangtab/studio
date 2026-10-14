@@ -73,3 +73,18 @@ describe('funding creator 착지(auth) getServerSideProps', () => {
     expect(result).toEqual({ props: expect.objectContaining({ token: null }) });
   });
 });
+
+describe('로그인 뒤 돌아갈 곳(next)', () => {
+  const run = (query: Record<string, string>) =>
+    getServerSideProps({
+      params: { locale: 'ko' }, query, resolvedUrl: '/ko/funding/creator/auth', req: { headers: {}, cookies: {} }, res: resStub(),
+    } as never) as Promise<{ props: { token: string | null; next: string | null } }>;
+
+  it('next=shows만 받아 props로 넘긴다', async () => {
+    expect((await run({ token: 't', next: 'shows' })).props).toMatchObject({ token: 't', next: 'shows' });
+  });
+
+  it.each(['https://evil.example', '//evil.example', '/ko/admin', 'funding'])('허용 목록 밖(%p)은 버린다', async (next) => {
+    expect((await run({ token: 't', next })).props).toMatchObject({ token: 't', next: null });
+  });
+});

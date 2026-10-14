@@ -34,7 +34,7 @@ const DRAFT = {
 };
 
 const sub = (over: Partial<EditorShowSubmission> = {}): EditorShowSubmission => ({
-  id: 'sub-1', reviewStatus: 'draft', reviewNote: null, draft: DRAFT, showSlug: null, ...over,
+  id: 'sub-1', reviewStatus: 'draft', reviewNote: null, draft: DRAFT, showSlug: null, showStatus: null, ...over,
 });
 
 const originalFetch = global.fetch;
@@ -46,7 +46,7 @@ afterEach(() => {
 const ok = (body: unknown, status = 200) => Promise.resolve({ ok: status < 400, status, json: () => Promise.resolve(body) } as Response);
 
 it('승인된 공연은 판매 조건 칸만 잠기고, 내용 칸은 열려 있다', () => {
-  render(<ShowSubmissionEditor submission={sub({ reviewStatus: 'approved', showSlug: 'autumn' })} />);
+  render(<ShowSubmissionEditor submission={sub({ reviewStatus: 'approved', showSlug: 'autumn', showStatus: 'published' })} />);
   expect(screen.getByLabelText(/공연 제목/)).toBeEnabled();
   expect(screen.getByLabelText(/공연 소개/)).toBeEnabled();
   expect(screen.getByLabelText(/관람 등급/)).toBeDisabled();
@@ -59,6 +59,16 @@ it('승인된 공연은 판매 조건 칸만 잠기고, 내용 칸은 열려 있
   expect(screen.getByRole('link', { name: '공개된 페이지 보기' })).toHaveAttribute('href', '/ko/shows/autumn');
   // 승인 뒤에는 제출이 없다.
   expect(screen.queryByRole('button', { name: '제출하기' })).not.toBeInTheDocument();
+});
+
+it('승인됐어도 공연이 아직 공개 전(draft)이면 "공개된 페이지 보기"를 띄우지 않는다', () => {
+  render(<ShowSubmissionEditor submission={sub({ reviewStatus: 'approved', showSlug: 'autumn', showStatus: 'draft' })} />);
+  expect(screen.queryByRole('link', { name: '공개된 페이지 보기' })).not.toBeInTheDocument();
+});
+
+it('취소된 공연도 공개 페이지가 남아 있어 링크를 띄운다', () => {
+  render(<ShowSubmissionEditor submission={sub({ reviewStatus: 'approved', showSlug: 'autumn', showStatus: 'cancelled' })} />);
+  expect(screen.getByRole('link', { name: '공개된 페이지 보기' })).toHaveAttribute('href', '/ko/shows/autumn');
 });
 
 it('심사 중에는 모든 칸이 잠기고 철회 버튼이 보인다', () => {
@@ -194,7 +204,7 @@ it('환불표를 그 자리에 보이고, 전문은 주최자 약관으로 잇�
 
 it('일정 안내 한 줄과 관람 안내는 승인 뒤에도 고칠 수 있다', async () => {
   const { fetchMock } = deferredUploadFetch();
-  render(<ShowSubmissionEditor submission={sub({ reviewStatus: 'approved', showSlug: 'autumn' })} />);
+  render(<ShowSubmissionEditor submission={sub({ reviewStatus: 'approved', showSlug: 'autumn', showStatus: 'published' })} />);
   fireEvent.change(screen.getByLabelText('일정 안내 한 줄'), { target: { value: '18:30 입장' } });
   fireEvent.click(screen.getByRole('button', { name: /안내 추가/ }));
   fireEvent.change(screen.getByLabelText('안내 1'), { target: { value: '주차 공간이 없어요' } });

@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
+import { isMissingTableError } from '../dbErrors';
 import { isStudioShopArtistSlug } from './studioArtist';
 
 /**
@@ -19,19 +20,6 @@ import { isStudioShopArtistSlug } from './studioArtist';
 export type ShopFulfillmentMode = 'studio' | 'artist';
 
 const FULFILLMENT_TABLE = 'shop_product_fulfillment';
-
-/** `no such table` 오류인가. `table`을 주면 그 표가 없는 경우만 참이다(다른 표가 없는 것까지 삼키지 않게). */
-export const isMissingTableError = (error: unknown, table?: string): boolean => {
-  const seen = new Set<unknown>();
-  let cur: unknown = error;
-  while (cur && !seen.has(cur)) {
-    seen.add(cur);
-    const msg = cur instanceof Error ? cur.message : typeof cur === 'string' ? cur : '';
-    if (/no such table/i.test(msg) && (!table || msg.includes(table))) return true;
-    cur = (cur as { cause?: unknown }).cause;
-  }
-  return false;
-};
 
 /** 상품 id → 아티스트 상점 slug. 아티스트가 직접 보내는 상품만 들어 있다. 표가 없으면 빈 맵. */
 export const loadShippedByArtistSlugs = async (productIds: readonly string[]): Promise<Map<string, string>> => {
