@@ -139,5 +139,7 @@ v2 색 가드(`components/ui/SectionHeading.test.tsx`의 `V2_FILES`)에 공연 �
 - **약관 판본**: `SHOW_ORGANIZER_TERMS_VERSION`(`lib/shows/organizer/policy.ts`), 게이트 `content/showOrganizerTerms.baseline.test.ts`
   (갱신 `UPDATE_SHOW_ORGANIZER_TERMS_BASELINE=1`, 판본을 먼저 올린다). 해시에 조항·수수료·정산·리드타임 상수와 **`refundPolicy.ts`의 환불 구간 줄·각주**가 든다 —
   환불 구간을 바꾸면 주최자 약관 판본도 올려야 한다.
-- 메일은 `lib/shows/organizer/email.ts`(운영자: 새 제출·승인 뒤 수정 / 주최자: 승인·보완 요청·반려). 관리자는 `/admin/shows/submissions`, 처리는 `PATCH /api/admin/shows/submissions/[id]`.
-- **알려진 공백**: 정산 계좌 등록이 승인된 펀딩 프로젝트에 묶여 있어 공연만 하는 주최자는 아직 계좌를 등록할 수 없다(정산은 3단계).
+- 메일은 `lib/shows/organizer/email.ts`(운영자: 새 제출·승인 뒤 수정 / 주최자: 승인·보완 요청·반려). 승인했는데 공개하지 못하면 주최자 메일은
+  `approved_pending`(승인됨·곧 공개, 공개 주소 없음)으로 가고, 운영자가 뒤에 `/admin/shows`에서 공개해도 메일은 다시 가지 않는다. 관리자는 `/admin/shows/submissions`, 처리는 `PATCH /api/admin/shows/submissions/[id]`.
+- 정산 정보(계좌·세금 구분)는 개설자 콘솔의 정산 정보 탭(`/ko/funding/creator/payout`)에서 받는다. 승인된 공연 등록만 있어도 열린다
+  (`hasApprovedEngagement`, `lib/funding/creatorEligibility.ts`). 공연 정산 기록 자체는 3단계다.
