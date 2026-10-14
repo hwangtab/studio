@@ -1,4 +1,5 @@
 import { sql } from 'drizzle-orm';
+import { waitUntil } from '@vercel/functions';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getDb } from '../../../db/client';
@@ -25,14 +26,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const email = typeof b.email === 'string' ? b.email.trim().toLowerCase() : '';
   if (!EMAIL.test(email) || email.length > 200) return res.status(400).json({ ok: false, message: '이메일을 확인해 주세요.' });
 
-  const done = () => res.status(200).json({ ok: true });
-  if (!(await consumeRateLimit(`software_resend:email:${email}`, 3, 86400))) return done();
+  // 조회·발송은 응답 뒤에 한다(waitUntil) — 산 적이 있는 주소만 메일 API를 기다리면 응답 시간으로 구매 여부가 드러난다.
+  waitUntil(sendLinksIfAny(email));
+  return res.status(200).json({ ok: true });
+}
 
+const sendLinksIfAny = async (email: string): Promise<void> => {
   try {
+    // 주소당 하루 3통 — 남의 주소로 메일 폭탄을 보내지 못하게.
+    if (!(await consumeRateLimit(`software_resend:email:${email}`, 3, 86400))) return;
     const rows = await getDb().all<{ order_no: string; manage_token: string; product_title: string; created_at: number }>(sql`
       SELECT o.order_no, o.manage_token, s.product_title, o.created_at
       FROM orders o JOIN software_orders s ON s.order_no = o.order_no
-      WHERE o.type = 'software' AND o.status IN ('paid', 'partially_refunded') AND lower(o.customer_email) = ${email} -- 주문 칸은 입력 그대로라 대소문자를 무시한다
+      WHERE o.type = 'software' AND o.status IN ('paid', 'partially_refunded') AND lower(o.customer_email) = ${email}
       ORDER BY o.created_at DESC LIMIT 20
     `);
     await sendSoftwareLinksEmail(email, rows.map((r) => ({
@@ -41,5 +47,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } catch (error) {
     console.error('[api/software/resend] 처리 실패', error);
   }
-  return done();
-}
+};

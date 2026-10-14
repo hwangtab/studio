@@ -90,7 +90,8 @@ export const confirmSoftwareOrder = async (
     return replay();
   }
 
-  const acceptableStatuses: Order['status'][] = options.trustedByWebhook ? ['pending', 'expired', 'failed'] : ['pending'];
+  // 재고가 없어 만료는 정리용 표식일 뿐이다 — 승인 직전 크론이 expired로 바꿔도 결과 화면에서 확정한다(그 경합에 돈을 자동 취소하지 않게).
+  const acceptableStatuses: Order['status'][] = options.trustedByWebhook ? ['pending', 'expired', 'failed'] : ['pending', 'expired'];
   if (!acceptableStatuses.includes(order.status)) {
     if (options.trustedByWebhook) console.error('[software-confirm] 웹훅이 확정 불가 상태의 주문을 만남 — 수동 대사 필요', { orderNo: order.orderNo, status: order.status });
     return { ok: false, code: 'invalid_state', message: INVALID_STATE_MESSAGE };

@@ -11,13 +11,14 @@ jest.mock('../../data/software/catalog', () => ({
 
 /* eslint-disable import/first */
 import { rawPublicKeyOf, verifyLicenseFile } from './licenseFile';
+import { SOFTWARE_DEACTIVATIONS_PER_30_DAYS } from '../../data/software/policy';
 import { activateLicense, adminDeactivate, deactivateMachine, issueLicense, listAdminLicenses, revokeLicense } from './service';
 /* eslint-enable import/first */
 
 const { privateKey } = generateKeyPairSync('ed25519');
 const signer = { kid: 'k-test', key: privateKey };
 const publicKeys = { 'k-test': rawPublicKeyOf(privateKey) };
-const machine = (n: number) => `machine-${String(n).padStart(4, '0')}`;
+const machine = (n: number) => n.toString(16).padStart(64, '0');
 
 beforeEach(async () => {
   testDb = (await createTestDb()).db;
@@ -85,6 +86,9 @@ describe('activateLicense', () => {
     expect(await activateLicense({ key: 'garbage', product: 'test-plugin', machineId: machine(1) }, signer)).toEqual({ ok: false, code: 'bad_request' });
     expect(await activateLicense({ key: lic.licenseKey, product: 'test-plugin', machineId: 'short' }, signer)).toEqual({ ok: false, code: 'bad_request' });
     expect(await activateLicense({ key: lic.licenseKey, product: 'test-plugin', machineId: 'has space here' }, signer)).toEqual({ ok: false, code: 'bad_request' });
+    // 원래 값(UUID)은 받지 않는다 — 해시(소문자 hex 64자)만.
+    expect(await activateLicense({ key: lic.licenseKey, product: 'test-plugin', machineId: '6F9619FF-8B86-D011-B42D-00C04FC964FF' }, signer)).toEqual({ ok: false, code: 'bad_request' });
+    expect(await activateLicense({ key: lic.licenseKey, product: 'test-plugin', machineId: 'A'.repeat(64) }, signer)).toEqual({ ok: false, code: 'bad_request' });
   });
 
   it('취소된 라이선스는 revoked — 새 기기를 받지 않는다', async () => {
@@ -92,6 +96,30 @@ describe('activateLicense', () => {
     expect(await revokeLicense(lic.id)).toBe(true);
     expect(await revokeLicense(lic.id)).toBe(false);
     expect(await activateLicense({ key: lic.licenseKey, product: 'test-plugin', machineId: machine(1) }, signer)).toEqual({ ok: false, code: 'revoked' });
+  });
+});
+
+describe('고객 해제 한도', () => {
+  it(`30일에 ${'$'}{SOFTWARE_DEACTIVATIONS_PER_30_DAYS}번까지 — 활성화·해제를 되풀이해 기기 수 한도를 무력화하지 못한다`, async () => {
+    const lic = await issue();
+    for (let i = 1; i <= SOFTWARE_DEACTIVATIONS_PER_30_DAYS; i++) {
+      expect((await activateLicense({ key: lic.licenseKey, product: 'test-plugin', machineId: machine(i) }, signer)).ok).toBe(true);
+      expect(await deactivateMachine({ key: lic.licenseKey, product: 'test-plugin', machineId: machine(i) })).toEqual({ ok: true, deactivated: true });
+    }
+    const n = SOFTWARE_DEACTIVATIONS_PER_30_DAYS + 1;
+    expect((await activateLicense({ key: lic.licenseKey, product: 'test-plugin', machineId: machine(n) }, signer)).ok).toBe(true);
+    expect(await deactivateMachine({ key: lic.licenseKey, product: 'test-plugin', machineId: machine(n) })).toEqual({ ok: false, code: 'deactivation_limit' });
+    // 31일 뒤에는 다시 된다.
+    const later = new Date(Date.now() + 31 * 24 * 3600 * 1000);
+    expect(await deactivateMachine({ key: lic.licenseKey, product: 'test-plugin', machineId: machine(n) }, later)).toEqual({ ok: true, deactivated: true });
+  });
+
+  it('운영자 해제는 한도가 없다', async () => {
+    const lic = await issue();
+    for (let i = 1; i <= SOFTWARE_DEACTIVATIONS_PER_30_DAYS + 2; i++) {
+      await activateLicense({ key: lic.licenseKey, product: 'test-plugin', machineId: machine(i) }, signer);
+      expect(await adminDeactivate(lic.id)).toBe(1);
+    }
   });
 });
 

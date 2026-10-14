@@ -35,6 +35,8 @@ const paidAtOf = (order: SoftwareOrderWithDetails): Date => order.payments[0]?.a
 export const softwareSelfCancelBlocker = (order: SoftwareOrderWithDetails, now: Date): 'activated' | 'expired_window' | 'invalid_state' | null => {
   if (order.status !== 'paid') return 'invalid_state';
   if (order.licenses.some((l) => l.firstActivatedAt !== null)) return 'activated';
+  // 운영자가 취소한(revoked) 라이선스는 셀프 환불 대상이 아니다 — 선점 UPDATE가 active만 받으므로 버튼을 띄우면 눌러도 실패한다.
+  if (order.licenses.some((l) => l.status !== 'active')) return 'invalid_state';
   if (now.getTime() - paidAtOf(order).getTime() > SOFTWARE_SELF_CANCEL_DAYS * DAY_MS) return 'expired_window';
   return null;
 };
@@ -67,7 +69,7 @@ export const cancelSoftwareOrder = async (input: {
 
   const db = getDb();
   // 선점 — 라이선스가 없는 주문(발급 전 장애)은 선점할 것 없이 환불만 한다(운영자 경로에서만 생긴다).
-  const previous = order.licenses.map((l) => ({ id: l.id, status: l.status }));
+  const previous = order.licenses.map((l) => ({ id: l.id, status: l.status, revokedAt: l.revokedAt ? Math.floor(l.revokedAt.getTime() / 1000) : null }));
   let claimed = false;
   if (previous.length > 0) {
     const claim = await db.run(sql`
@@ -88,11 +90,22 @@ export const cancelSoftwareOrder = async (input: {
     }
   }
 
+  const remainingAtStart = remainingRefundable(order, order.payments);
+  /**
+   * 토스가 거절하면 선점을 되돌린다 — **단, 그 사이 돈이 다른 길로 이미 돌아갔으면 되돌리지 않는다.** 응답만 늦은 취소
+   * (토스는 취소했고 12초 타임아웃으로 우리만 모름)의 CANCELED 웹훅이 먼저 처리됐거나, 운영자 환불·콘솔 취소가 동시에
+   * 성공했으면 주문은 이미 환불 상태다. 그때 라이선스를 되살리면 전액 환불된 키가 다시 활성화를 받는다(2026-10-14 감사 재현).
+   */
   const revertClaim = claimed
     ? async (): Promise<void> => {
         try {
+          const fresh = await findSoftwareOrder(order.orderNo);
+          if (!fresh || fresh.status === 'refunded' || remainingRefundable(fresh, fresh.payments) < remainingAtStart) {
+            console.error('[software-cancel] 토스 거절이지만 돈은 이미 돌아감 — 라이선스를 되살리지 않는다', { orderNo: order.orderNo, status: fresh?.status });
+            return;
+          }
           for (const l of previous) {
-            await db.run(sql`UPDATE software_licenses SET status = ${l.status}, revoked_at = NULL WHERE id = ${l.id} AND status = 'refunded'`);
+            await db.run(sql`UPDATE software_licenses SET status = ${l.status}, revoked_at = ${l.revokedAt} WHERE id = ${l.id} AND status = 'refunded'`);
           }
         } catch (error) {
           console.error('[software-cancel] 선점 되돌리기 실패 — 수동 복구 필요', { orderNo: order.orderNo, error });
@@ -100,7 +113,7 @@ export const cancelSoftwareOrder = async (input: {
       }
     : null;
 
-  const remaining = remainingRefundable(order, order.payments);
+  const remaining = remainingAtStart;
   if (remaining <= 0) {
     if (revertClaim) await revertClaim();
     return { ok: false, code: 'invalid_state', message: '환불할 금액이 남아 있지 않아요.' };
@@ -120,14 +133,14 @@ export const cancelSoftwareOrder = async (input: {
   return { ok: true, refundAmount: remaining };
 };
 
-/** 토스 쪽에서 전액 취소된 주문(웹훅 CANCELED)의 라이선스를 닫는다 — 돈이 다 돌아간 주문의 키로 새 기기를 받지 않게. */
+/**
+ * 토스 쪽에서 전액 취소된 주문(웹훅 CANCELED)의 라이선스를 닫는다 — 돈이 다 돌아간 주문의 키로 새 기기를 받지 않게.
+ * **실패를 삼키지 않는다** — 웹훅이 500으로 멱등 키를 회수해 토스가 다시 보내게 한다(삼키면 쓸 수 있는 키가 남는다).
+ * 멱등이라 재시도로 두 번 돌아도 된다.
+ */
 export const refundLicensesOnFullCancel = async (orderNo: string): Promise<void> => {
-  try {
-    await getDb().run(sql`
-      UPDATE software_licenses SET status = 'refunded', revoked_at = COALESCE(revoked_at, unixepoch())
-      WHERE order_no = ${orderNo} AND status <> 'refunded'
-    `);
-  } catch (error) {
-    console.error('[software-webhook] 전액 취소 뒤 라이선스 닫기 실패', { orderNo, error });
-  }
+  await getDb().run(sql`
+    UPDATE software_licenses SET status = 'refunded', revoked_at = COALESCE(revoked_at, unixepoch())
+    WHERE order_no = ${orderNo} AND status <> 'refunded'
+  `);
 };

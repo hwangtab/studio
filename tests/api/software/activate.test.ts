@@ -79,6 +79,22 @@ describe('POST /api/software/activate', () => {
   });
 });
 
+describe('플러그인 본문·서명키 짝', () => {
+  it('Content-Type 없이 보낸 JSON(JUCE 기본 — 폼 인코딩으로 파싱됨)도 읽는다', async () => {
+    const lic = await issueLicense({ productSlug: 'test-plugin', email: 'a@b.com', source: 'manual' });
+    const json = JSON.stringify({ key: lic.licenseKey, product: 'test-plugin', machineId });
+    expect(await call(activate, { body: { [json]: '' } })).toMatchObject({ status: 200 });
+    expect(await call(activate, { body: json })).toMatchObject({ status: 200 });
+  });
+
+  it('env 비밀키가 그 kid의 공개키와 짝이 아니면 503 — 검증 못 할 파일을 내주지 않는다', async () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    const lic = await issueLicense({ productSlug: 'test-plugin', email: 'a@b.com', source: 'manual' });
+    mockPublicKeys.k1 = rawPublicKeyOf(generateKeyPairSync('ed25519').privateKey);
+    expect(await call(activate, { body: { key: lic.licenseKey, product: 'test-plugin', machineId } })).toMatchObject({ status: 503 });
+  });
+});
+
 describe('POST /api/software/deactivate', () => {
   it('해제는 멱등 — 두 번째도 200', async () => {
     const lic = await issueLicense({ productSlug: 'test-plugin', email: 'a@b.com', source: 'manual' });
