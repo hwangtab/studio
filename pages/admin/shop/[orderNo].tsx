@@ -97,7 +97,7 @@ export default function AdminShopOrderPage(p: Props) {
         {p.notificationError && <div className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">마지막 메일 발송 실패: {p.notificationError}</div>}
 
         <section className="mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
-          <h2 className="mb-2 font-semibold">주문</h2>
+          <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-gray-900">주문</h2>
           <ul className="mb-3 space-y-1">
             {p.lines.map((l) => <li key={l.label}>{l.label} × {l.quantity} — {formatPriceAmount(l.amount)}원</li>)}
           </ul>
@@ -106,7 +106,7 @@ export default function AdminShopOrderPage(p: Props) {
         </section>
 
         <section className="mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
-          <h2 className="mb-2 font-semibold">주문자·받는 분</h2>
+          <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-gray-900">주문자·받는 분</h2>
           <p>주문자 {p.customer.name} · {p.customer.phone} · {p.customer.email}</p>
           <p className="mt-1">받는 분 {p.recipient.name} · {p.recipient.phone}</p>
           <p className="mt-1">배송지 {p.recipient.address}</p>
@@ -115,7 +115,7 @@ export default function AdminShopOrderPage(p: Props) {
 
         {paid && p.fulfillmentStatus !== 'cancelled' && (
           <section className="mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
-            <h2 className="mb-2 font-semibold">발송</h2>
+            <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-gray-900">발송</h2>
             <div className="grid gap-3 sm:grid-cols-[12rem_1fr_auto] sm:items-end">
               <label className="block">택배사<input value={courier} onChange={(e) => setCourier(e.target.value)} className={`mt-1 ${inputClass}`} /></label>
               <label className="block">운송장 번호<input value={tracking} onChange={(e) => setTracking(e.target.value)} className={`mt-1 ${inputClass}`} /></label>
@@ -131,7 +131,7 @@ export default function AdminShopOrderPage(p: Props) {
 
         {paid && p.refundable > 0 && (
           <section className="rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
-            <h2 className="mb-2 font-semibold">전액 환불</h2>
+            <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-gray-900">전액 환불</h2>
             <p className="mb-3 text-gray-600">토스로 {formatPriceAmount(p.refundable)}원을 돌려주고 주문을 취소합니다. 발송한 뒤라면 반품을 받은 다음에 누르세요. 일부만 돌려줄 때는 토스 콘솔에서 하면 웹훅이 기록을 맞춥니다.</p>
             <label className="block">사유<input value={reason} onChange={(e) => setReason(e.target.value)} placeholder="예: 반품 접수(불량)" className={`mt-1 ${inputClass}`} /></label>
             <button type="button" disabled={busy} onClick={() => act({ action: 'refund', reason }, `${formatPriceAmount(p.refundable)}원을 환불할까요? 되돌릴 수 없습니다.`)} className={`mt-3 ${buttonClass}`}>
