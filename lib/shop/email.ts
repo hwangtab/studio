@@ -1,11 +1,12 @@
 import { eq } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { orders } from '../../db/schema';
+import { fundingCreators, orders } from '../../db/schema';
 import { formatPriceAmount } from '../../data/pricing';
 import { SITE_URL, adminUrl, buildEmailLayout, type EmailLayoutRow } from '../email/layout';
 import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
+import { resolveOrderShipper } from './artistShipping';
 import { shopLineName } from './catalog';
 import { loadOrderExtras, type OrderExtras } from './orderExtras';
 import { formatShipsOn } from './preorder';
@@ -63,14 +64,42 @@ const recordNotification = async (orderId: string, failure: string | null): Prom
   }
 };
 
-const send = async (to: string, subject: string, html: string, text: string, customer: boolean): Promise<string | null> => {
+const send = async (to: string, subject: string, html: string, text: string, customer: boolean, who?: string): Promise<string | null> => {
+  const label = who ?? (customer ? '고객' : '운영자');
   try {
     const result = await sendEmail({ to, subject, html, text, ...(customer ? { replyTo: CUSTOMER_REPLY_TO } : {}) });
-    return result.ok ? null : `${customer ? '고객' : '운영자'} 메일 실패: ${result.errorCode ?? 'unknown'}`;
+    return result.ok ? null : `${label} 메일 실패: ${result.errorCode ?? 'unknown'}`;
   } catch (error) {
     console.error('[shop-email] 발송 예외', { subject, error });
-    return `${customer ? '고객' : '운영자'} 메일 예외`;
+    return `${label} 메일 예외`;
   }
+};
+
+/** 아티스트 콘솔의 발송할 주문 화면. 메일에는 주소·연락처를 싣지 않고 이 링크만 건다. */
+export const ARTIST_SHIPPING_CONSOLE_URL = `${SITE_URL}/ko/funding/creator/shop/shipping`;
+
+/**
+ * 아티스트가 직접 보내는 주문이 접수되면 그 아티스트에게 "발송할 주문" 메일 — 받는 분 이름·연락처·주소는 싣지 않는다(콘솔에서만 본다).
+ * 스튜디오 발송 주문이면 아무것도 하지 않는다(null). 실패 사유 문자열을 돌려주면 호출부가 `notification_error`에 남긴다.
+ */
+const sendArtistShipRequest = async (order: ShopOrderWithDetails, extras: OrderExtras): Promise<string | null> => {
+  const shipper = await resolveOrderShipper(order.orderNo);
+  if (shipper.kind !== 'artist') return null;
+  const [creator] = await getDb().select({ email: fundingCreators.email, name: fundingCreators.name })
+    .from(fundingCreators).where(eq(fundingCreators.id, shipper.creatorId)).limit(1);
+  if (!creator?.email) return '아티스트 메일 실패: 받을 주소 없음';
+  const html = buildEmailLayout({
+    preheader: `주문번호 ${order.orderNo}`,
+    heading: '발송할 주문이 들어왔어요',
+    paragraphs: [
+      `${creator.name}님, 직접 보내시는 상품의 주문이 들어왔어요. 받는 분 정보는 콘솔의 발송할 주문에서 확인하고, 보낸 뒤 택배사와 운송장 번호를 입력해 주세요.`,
+      ...(extras.latestShipsOn ? [`예약 판매 상품이 있어서 ${formatShipsOn(extras.latestShipsOn)} 이후에 보내 주세요.`] : []),
+    ],
+    rows: [{ label: '주문번호', value: order.orderNo }],
+    cta: { label: '발송할 주문 보기', url: ARTIST_SHIPPING_CONSOLE_URL },
+  });
+  const text = `발송할 주문이 들어왔어요.\n주문번호: ${order.orderNo}\n발송할 주문: ${ARTIST_SHIPPING_CONSOLE_URL}`;
+  return send(creator.email, `[스튜디오 놀] 발송할 주문이 들어왔어요 (${order.orderNo})`, html, text, false, '아티스트');
 };
 
 /** 결제 확정 직후 한 번 — 확정 batch를 이긴 실행만 부른다(lib/shop/confirm.ts). */
@@ -149,6 +178,15 @@ export const sendShopOrderConfirmedEmails = async (orderNo: string): Promise<voi
   });
   const f = await send(OPERATOR_EMAIL, `[상점 주문] ${won(order.totalAmount)} — ${order.customerName}`, operatorHtml, `상점 주문 ${order.orderNo} / ${won(order.totalAmount)}`, false);
   if (f) failures.push(f);
+
+  // 아티스트 직접 발송 주문이면 그 아티스트에게도 — 던지지 않는다(실패는 notification_error로 관리자 화면에 드러난다).
+  try {
+    const artistFailure = await sendArtistShipRequest(order, extras);
+    if (artistFailure) failures.push(artistFailure);
+  } catch (error) {
+    console.error('[shop-email] 아티스트 발송 요청 메일 예외', { orderNo, error });
+    failures.push('아티스트 메일 예외');
+  }
 
   await recordNotification(order.id, failures.length ? failures.join(' / ') : null);
 };

@@ -101,7 +101,7 @@ function ArtistSalesSection({ rows, month, prevMonth, nextMonth }: Pick<Props, '
         </div>
       </div>
       <p className="mb-3 text-gray-600">
-        그 달에 발송한 결제 완료 주문의 위탁 상품만 셉니다. 배송 없는 디지털 주문은 결제 승인 월로 세고, 내려받기 전 주문은 철회할 수 있어 세지 않습니다. 아티스트 몫 {SHOP_ARTIST_SHARE_PERCENT}%(상품 판매가 기준, 배송비 제외). 개인 아티스트는 부가세 상당액과 원천징수 3.3%를 뺍니다.
+        그 달에 발송한 결제 완료 주문의 위탁 상품만 셉니다. 배송 없는 디지털 주문은 결제 승인 월로 세고, 내려받기 전 주문은 철회할 수 있어 세지 않습니다. 아티스트 몫 {SHOP_ARTIST_SHARE_PERCENT}%(상품 판매가 기준). 아티스트가 직접 보낸 주문은 배송비 전액을 더합니다. 개인 아티스트는 부가세 상당액과 원천징수 3.3%를 뺍니다.
         이미 정산한 달의 반품 환불은 다음 정산에서 빼 주세요.
       </p>
       {rows.length === 0 ? (
@@ -126,7 +126,10 @@ function ArtistSalesSection({ rows, month, prevMonth, nextMonth }: Pick<Props, '
                     )}
                   </td>
                   <td className="py-2 pr-3 tabular-nums">{r.quantity}</td>
-                  <td className="py-2 pr-3 tabular-nums">{won(r.salesAmount)}</td>
+                  <td className="py-2 pr-3 tabular-nums">
+                    {won(r.salesAmount)}
+                    {r.shippingAmount > 0 && <span className="block text-xs text-gray-600">+ 배송비 {won(r.shippingAmount)} ({r.shippingOrderCount}건, 전액 아티스트 몫)</span>}
+                  </td>
                   <td className="py-2 pr-3 text-xs tabular-nums text-gray-600">
                     {r.payout ? (
                       <>상점 {won(r.payout.storeAmount)}{r.payout.vatDeductionAmount > 0 && <><br />부가세 상당 {won(r.payout.vatDeductionAmount)}</>}{r.payout.withholdingAmount > 0 && <><br />원천징수 {won(r.payout.withholdingAmount)}</>}</>
@@ -201,7 +204,10 @@ export default function AdminShopPage({ orders, skus, artistSales, month, prevMo
                       <td className="py-2 pr-3">{o.itemSummary}</td>
                       <td className="py-2 pr-3 tabular-nums">{formatPriceAmount(o.totalAmount)}원</td>
                       <td className="py-2 pr-3">{STATUS_LABEL[o.status] ?? o.status}</td>
-                      <td className="py-2">{FULFILLMENT_LABEL[o.fulfillmentStatus] ?? o.fulfillmentStatus}</td>
+                      <td className="py-2">
+                        {FULFILLMENT_LABEL[o.fulfillmentStatus] ?? o.fulfillmentStatus}
+                        {o.artistShipper && <span className="block text-xs text-amber-800">아티스트 발송: {o.artistShipper}</span>}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

@@ -20,6 +20,7 @@ import { computeShopTotals } from '../../lib/shop/amounts';
 import { shopLineName } from '../../lib/shop/catalog';
 import { SHOP_DIGITAL_RULES, SHOP_DIGITAL_WITHDRAWAL_NOTICE, SHOP_PREORDER_MIX_NOTE, SHOP_REFUND_RULES, shopPreorderSupplyNote, shopShippingNote } from '../../lib/shop/policyCopy';
 import { latestPendingShipsOn } from '../../lib/shop/preorder';
+import { hasMixedShippers, SHOP_ARTIST_SHARING_NOTICE, SHOP_MIXED_SHIPPER_MESSAGE } from '../../lib/shop/shipper';
 import { reportPaymentFailure, reportPaymentWindowOpen } from '../../utils/reportPaymentFailure';
 
 /** 남은 수량 — SKU id → 수량. null이면 아직 모른다(DB 조회 실패) — 고를 수는 있고 최종 판정은 주문 생성이 한다. */
@@ -139,7 +140,9 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
     return () => { io.disconnect(); form.removeEventListener('focusin', arm); };
   }, [armed]);
 
-  const canOrder = salesOpen && lines.length > 0;
+  // 한 주문은 한 발송 주체만 — 아티스트가 직접 보내는 상품은 같은 아티스트의 상품끼리만 담는다(서버도 같은 판정으로 거절한다).
+  const mixedShippers = hasMixedShippers(lines.map((l) => l.product));
+  const canOrder = salesOpen && lines.length > 0 && !mixedShippers;
   const widget = usePaymentCheckout(totals.total, canOrder && armed);
 
   const submit = async (e: React.FormEvent) => {
@@ -288,6 +291,8 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
         </Disclosure>
       )}
 
+      {mixedShippers && <Notice tone="warning">{SHOP_MIXED_SHIPPER_MESSAGE}</Notice>}
+
       {latestShipsOn && (
         <Notice tone="info">
           {shopPreorderSupplyNote(latestShipsOn)} {SHOP_PREORDER_MIX_NOTE}
@@ -352,6 +357,7 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
               />
             </div>
             <p className="mt-2 typo-caption">{shopShippingNote()}</p>
+            {lines.some((l) => l.product.shippedByArtist && l.product.kind !== 'digital') && <p className="mt-1 typo-caption">{SHOP_ARTIST_SHARING_NOTICE}</p>}
           </div>
           )}
 

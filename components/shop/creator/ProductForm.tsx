@@ -158,6 +158,11 @@ export function ProductForm({ initial, admin = false, onSaved }: { initial: Crea
       {!admin && status === 'submitted' && (
         <Notice tone="info">심사 중이에요. 고치려면 심사 신청을 철회해 주세요.</Notice>
       )}
+      {!admin && product.fulfillmentMode === 'artist' && (
+        <Notice tone="neutral" title="직접 보내는 상품이에요">
+          주문이 들어오면 콘솔의 발송할 주문에서 받는 분 정보를 확인하고 직접 보내요. 재고도 판매 현황 표에서 직접 정해요. 판매·결제·환불·문의는 스튜디오 놀이 맡아요.
+        </Notice>
+      )}
       {status === 'approved' && (
         <Notice tone="success" title="승인된 상품이에요">
           {admin

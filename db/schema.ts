@@ -1434,6 +1434,13 @@ export const privacyAccessActionEnum = [
    * 마이그레이션이 필요 없다(DB CHECK 없음).
    */
   'show_roster_export',
+  /**
+   * 상점 아티스트의 **발송할 주문** 화면 열람 (pages/[locale]/funding/creator/shop/shipping.tsx).
+   * 아티스트가 직접 발송하는 상품의 주문자 받는 분 이름·연락처·주소·배송 메모가 화면(`__NEXT_DATA__`)에 실린다.
+   * 수행자는 `creator:<creatorId>`(`privacyCreatorActor`), 대상은 아티스트 id, `row_count`는 실린 주문 수.
+   * 컬럼이 enum 문자열이라 마이그레이션이 필요 없다(DB CHECK 없음). 처리방침 19항의 열거도 함께 고친다.
+   */
+  'shop_artist_shipping_view',
 ] as const;
 
 /**
@@ -1986,6 +1993,19 @@ export const shopOrderDownloads = sqliteTable('shop_order_downloads', {
   firstDownloadedAt: integer('first_downloaded_at').notNull(),
   createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
 });
+
+/** 상품의 발송 주체 — 스튜디오(기본) 또는 아티스트. 행이 없으면 'studio'. 승인 뒤에는 바꾸지 않는다(lib/shop/fulfillmentMode.ts). */
+export const shopFulfillmentModeEnum = ['studio', 'artist'] as const;
+
+/** 발송 주체 표(0057). 새 표뿐이라 기존 표를 건드리지 않는다 — 표가 없으면(`no such table`) 모든 상품이 'studio'다. */
+export const shopProductFulfillment = sqliteTable('shop_product_fulfillment', {
+  productId: text('product_id').primaryKey().references(() => shopProducts.id),
+  mode: text('mode', { enum: shopFulfillmentModeEnum }).notNull().default('studio'),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at').notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  modeCheck: check('shop_product_fulfillment_mode_check', sql`${t.mode} in ('studio','artist')`),
+}));
 
 export type ShopArtistRow = typeof shopArtists.$inferSelect;
 export type ShopProductRow = typeof shopProducts.$inferSelect;

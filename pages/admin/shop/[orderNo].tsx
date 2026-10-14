@@ -8,11 +8,13 @@ import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { remainingRefundable } from '../../../lib/booking/cancel';
 import { shopLineName } from '../../../lib/shop/catalog';
+import { resolveOrderShipper } from '../../../lib/shop/artistShipping';
 import { getFirstDownloadedAt } from '../../../lib/shop/downloads';
 import { loadOrderExtras } from '../../../lib/shop/orderExtras';
 import { formatShipsOn } from '../../../lib/shop/preorder';
 import { findShopOrderByOrderNo } from '../../../lib/shop/service';
 import { normalizeShopOrderNo, shopOrderShips } from '../../../lib/shop/shape';
+import { SHOP_STUDIO_COURIER } from '../../../lib/shop/shipper';
 
 interface Props {
   orderNo: string;
@@ -35,6 +37,8 @@ interface Props {
   ships: boolean;
   /** 고객이 처음 내려받은 시각(초). 없으면 null. */
   downloadedAt: number | null;
+  /** 발송 주체. 'artist'면 그 아티스트가 콘솔에서 보낸다(관리자도 대신 처리할 수 있다). */
+  shipper: { kind: 'studio' } | { kind: 'artist'; name: string };
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
@@ -48,8 +52,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   const payment = order.payments[0];
   const extras = await loadOrderExtras(order.orderNo, so.items, new Date()).catch(() => null);
   const downloadedAt = so.items.some((i) => i.skuId.startsWith('db-')) ? await getFirstDownloadedAt(order.orderNo).catch(() => null) : null;
+  const found = await resolveOrderShipper(order.orderNo);
+  const shipper: Props['shipper'] = found.kind === 'artist' ? { kind: 'artist', name: found.creatorName } : { kind: 'studio' };
   return {
     props: {
+      shipper,
       orderNo: order.orderNo,
       status: order.status,
       fulfillmentStatus: so.fulfillmentStatus,
@@ -82,7 +89,8 @@ const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 
 const buttonClass = 'rounded-lg bg-gray-900 px-4 py-2 text-white disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
 
 export default function AdminShopOrderPage(p: Props) {
-  const [courier, setCourier] = useState(p.courier ?? '');
+  // 스튜디오가 보내는 주문은 택배사가 로젠택배다 — 처음 보낼 때 채워 둔다. 아티스트가 보내는 주문은 아티스트가 고른 택배사를 따른다.
+  const [courier, setCourier] = useState(p.courier ?? (p.shipper.kind === 'studio' ? SHOP_STUDIO_COURIER : ''));
   const [tracking, setTracking] = useState(p.trackingNumber ?? '');
   const [reason, setReason] = useState('');
   const [busy, setBusy] = useState(false);
@@ -132,6 +140,7 @@ export default function AdminShopOrderPage(p: Props) {
 
         <section className="mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
           <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-gray-900">{p.ships ? '주문자·받는 분' : '주문자'}</h2>
+          {p.ships && <p className="mb-1">발송 {p.shipper.kind === 'artist' ? `아티스트 발송: ${p.shipper.name}` : '스튜디오 발송'}</p>}
           <p>주문자 {p.customer.name} · {p.customer.phone} · {p.customer.email}</p>
           {p.ships ? (
             <>
@@ -148,6 +157,9 @@ export default function AdminShopOrderPage(p: Props) {
         {p.ships && paid && p.fulfillmentStatus !== 'cancelled' && (
           <section className="mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
             <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-gray-900">발송</h2>
+            {p.shipper.kind === 'artist' && (
+              <p className="mb-3 rounded-lg bg-amber-50 p-3 text-amber-900">아티스트가 직접 보내는 주문입니다({p.shipper.name}). 아티스트가 콘솔에서 발송 처리하며, 필요하면 여기서 대신 처리할 수 있습니다.</p>
+            )}
             <div className="grid gap-3 sm:grid-cols-[12rem_1fr_auto] sm:items-end">
               <label className="block">택배사<input value={courier} onChange={(e) => setCourier(e.target.value)} className={`mt-1 ${inputClass}`} /></label>
               <label className="block">운송장 번호<input value={tracking} onChange={(e) => setTracking(e.target.value)} className={`mt-1 ${inputClass}`} /></label>

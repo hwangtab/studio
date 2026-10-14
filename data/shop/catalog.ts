@@ -81,6 +81,12 @@ export interface ShopProduct {
   hasDownloads?: boolean;
   /** 정본 출처. 비우면 'file'. */
   source?: 'file' | 'db';
+  /**
+   * 아티스트가 직접 발송하는 DB 상품이면 그 아티스트의 상점 slug(`/ko/shop/artist/<slug>`). 비우면 스튜디오가 발송한다.
+   * **DB 상품 전용** — 파일 상품은 항상 스튜디오 발송이다. 한 주문은 한 발송 주체만 담을 수 있어(lib/shop/shipper.ts)
+   * 주문 폼이 이 값으로 함께 담을 상품을 거른다. 아티스트 id(creatorId)는 싣지 않는다.
+   */
+  shippedByArtist?: string;
 }
 
 export const SHOP_PRODUCTS: readonly ShopProduct[] = [];

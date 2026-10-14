@@ -3,6 +3,8 @@ import { sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { getSupportedArtist } from '../../data/artists';
 import { SHOP_PRODUCTS } from '../../data/shop/catalog';
+import { loadArtistShippersByOrder } from './artistShipping';
+import { isMissingTableError } from './fulfillmentMode';
 import { listDbSkusForAdmin } from './dbProducts';
 import { isDbSkuId } from './productRules';
 import { listAllSkusForAdmin } from './repository';
@@ -20,6 +22,8 @@ export interface AdminShopOrderRow {
   totalAmount: number;
   itemSummary: string;
   createdAt: number;
+  /** 아티스트가 직접 보내는 주문이면 그 아티스트 이름. 스튜디오 발송이면 null. */
+  artistShipper: string | null;
 }
 
 /** 최근 주문(결제 대기·만료는 뺀다 — 관리자가 할 일이 없는 주문). */
@@ -36,9 +40,12 @@ export const listAdminShopOrders = async (limit = 200): Promise<AdminShopOrderRo
     ORDER BY o.created_at DESC
     LIMIT ${limit}
   `);
+  // 발송 주체는 표시용이다 — 표가 없거나 조회가 실패해도(삼킨다) 주문 목록은 그대로 나온다.
+  const shippers = await loadArtistShippersByOrder(rows.map((r) => r.order_no));
   return rows.map((r) => ({
     orderNo: r.order_no, status: r.status, fulfillmentStatus: r.fulfillment_status, customerName: r.customer_name,
     totalAmount: Number(r.total_amount), itemSummary: r.item_summary ?? '', createdAt: Number(r.created_at),
+    artistShipper: shippers.get(r.order_no) ?? null,
   }));
 };
 
@@ -124,6 +131,9 @@ export interface AdminShopArtistSalesRow {
   salesAmount: number;
   /** 등재 정보가 없으면(세금 유형을 모르면) null. */
   payout: ShopArtistPayout | null;
+  /** 아티스트가 직접 보낸 주문의 배송비 합계(VAT 포함, 전액 아티스트 몫)와 그 주문 수. */
+  shippingAmount: number;
+  shippingOrderCount: number;
   /** 부분 환불된 주문 — 어느 줄이 환불됐는지 원장이 모르므로 운영자가 직접 본다. 정산액에 넣지 않았다. */
   needsReviewOrderNos: string[];
   /** 배송 없는 디지털 주문 중 아직 내려받지 않은(고객이 철회할 수 있는) 주문 수. 정산액에 넣지 않았다. */
@@ -137,14 +147,17 @@ export interface AdminShopArtistSalesRow {
  * **배송 없는 디지털 주문**(우편번호 `''`)은 발송이 없으므로 결제 승인 월(`payments.approved_at`)로 센다. 내려받기 전 주문은 고객이 철회할
  * 수 있어 정산에 넣지 않고 `withdrawableOrderCount`로만 알린다(정산 기록은 아직 없다).
  * 발송 뒤 반품 환불은 주문이 `refunded`가 되어 다음 조회부터 빠진다 — 이미 정산한 달이면 다음 정산에서 빼야 한다.
+ * 아티스트가 **직접 보낸** 주문(DB 갈래)은 그 주문의 배송비를 주문당 한 번 전액 아티스트 몫으로 더한다(스튜디오가 보낸 주문의 배송비는 스튜디오 몫).
  * 아티스트는 SKU → 카탈로그 상품의 `artist`로 찾는다(판매 시작 뒤 바뀌지 않게 catalog.baseline이 막는다).
  */
 export const listShopArtistSales = async (month: string): Promise<AdminShopArtistSalesRow[]> => {
   const range = kstMonthRange(month);
   if (!range) return [];
-  const byArtist = new Map<string, { quantity: number; salesAmount: number; review: Set<string>; withdrawable: Set<string> }>();
+  interface Acc { quantity: number; salesAmount: number; review: Set<string>; withdrawable: Set<string>; shippingAmount: number; shippingOrders: Set<string> }
+  const newAcc = (): Acc => ({ quantity: 0, salesAmount: 0, review: new Set<string>(), withdrawable: new Set<string>(), shippingAmount: 0, shippingOrders: new Set<string>() });
+  const byArtist = new Map<string, Acc>();
   const add = (key: string, r: { order_no: string; status: string; unit_price: number; quantity: number }) => {
-    const acc = byArtist.get(key) ?? { quantity: 0, salesAmount: 0, review: new Set<string>(), withdrawable: new Set<string>() };
+    const acc = byArtist.get(key) ?? newAcc();
     if (r.status === 'partially_refunded') acc.review.add(r.order_no);
     else {
       acc.quantity += Number(r.quantity);
@@ -223,13 +236,40 @@ export const listShopArtistSales = async (month: string): Promise<AdminShopArtis
       const key = note(r);
       if (Number(r.downloaded) > 0) add(key, r);
       else {
-        const acc = byArtist.get(key) ?? { quantity: 0, salesAmount: 0, review: new Set<string>(), withdrawable: new Set<string>() };
+        const acc = byArtist.get(key) ?? newAcc();
         acc.withdrawable.add(r.order_no);
         byArtist.set(key, acc);
       }
     }
   } catch (error) {
     console.error('[shop] 아티스트 정산(DB 상품) 조회 실패 — 파일 상품만 표시합니다:', error);
+  }
+
+  // 아티스트가 직접 보낸 주문의 배송비 — 주문당 한 번, 전액 아티스트 몫. 발송 주체 표(0057)가 없으면 건너뛴다(전부 스튜디오 발송).
+  // 별도 try: 이 조회가 실패해도 위 판매 합계는 그대로 나온다. 부분 환불 주문은 위에서 "직접 확인"으로 빠졌으므로 배송비도 넣지 않는다.
+  try {
+    const shippingRows = await getDb().all<{ order_no: string; creator_id: string; shipping_fee: number }>(sql`
+      SELECT DISTINCT o.order_no AS order_no, p.creator_id AS creator_id, so.shipping_fee AS shipping_fee
+      FROM orders o
+      JOIN shop_orders so ON so.order_no = o.order_no
+      JOIN shop_order_items i ON i.order_no = o.order_no
+      JOIN shop_product_skus ps ON ps.id = i.sku_id
+      JOIN shop_products p ON p.id = ps.product_id
+      JOIN shop_product_fulfillment f ON f.product_id = p.id AND f.mode = 'artist'
+      WHERE i.sku_id LIKE 'db-%'
+        AND p.creator_id NOT IN (SELECT creator_id FROM shop_artists WHERE slug = ${STUDIO_SHOP_ARTIST_SLUG})
+        AND o.type = 'merch' AND o.status = 'paid'
+        AND so.fulfillment_status IN ('shipped', 'delivered') AND so.postcode <> '' AND so.shipping_fee > 0
+        AND so.shipped_at >= ${range.from} AND so.shipped_at < ${range.to}
+    `);
+    for (const r of shippingRows) {
+      const acc = byArtist.get(`creator:${r.creator_id}`);
+      if (!acc || acc.shippingOrders.has(r.order_no)) continue;
+      acc.shippingOrders.add(r.order_no);
+      acc.shippingAmount += Number(r.shipping_fee);
+    }
+  } catch (error) {
+    if (!isMissingTableError(error)) console.error('[shop] 아티스트 정산(배송비) 조회 실패 — 배송비를 넣지 않았습니다:', error);
   }
 
   return [...byArtist.entries()]
@@ -243,7 +283,9 @@ export const listShopArtistSales = async (month: string): Promise<AdminShopArtis
         taxType,
         quantity: acc.quantity,
         salesAmount: acc.salesAmount,
-        payout: taxType ? computeShopArtistPayout({ salesAmount: acc.salesAmount, refundAmount: 0, taxType }) : null,
+        shippingAmount: acc.shippingAmount,
+        shippingOrderCount: acc.shippingOrders.size,
+        payout: taxType ? computeShopArtistPayout({ salesAmount: acc.salesAmount, refundAmount: 0, taxType, shippingAmount: acc.shippingAmount }) : null,
         needsReviewOrderNos: [...acc.review].sort(),
         withdrawableOrderCount: acc.withdrawable.size,
       };

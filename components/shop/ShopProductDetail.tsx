@@ -92,6 +92,12 @@ export default function ShopProductDetail({ product, remaining = null, artist = 
             <span>배송 없음 · 결제 뒤 주문 확인 페이지에서 내려받아요</span>
           </p>
         )}
+        {product.shippedByArtist && product.kind !== 'digital' && (
+          <p className="mt-2 flex flex-wrap items-center gap-2 text-sm text-gray-800 dark:text-gray-200">
+            <StatusBadge tone="neutral">직접 발송</StatusBadge>
+            <span>아티스트가 직접 보내요 · 판매와 문의는 스튜디오 놀이 맡아요</span>
+          </p>
+        )}
         {remaining && sellable.length > 0 && sellable.every((s) => (remaining[s.id] ?? 0) <= 0) && (
           <StatusBadge tone="neutral" className="mt-2">품절</StatusBadge>
         )}

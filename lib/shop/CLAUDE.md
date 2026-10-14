@@ -101,10 +101,11 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
 - slug `success`·`fail`·`manage`는 페이지 이름이라 못 쓴다(`SHOP_RESERVED_SLUGS`, 검사기가 막는다).
 - 배송비 4,000원·상품 20만원 이상 무료(운영자 결정 2026-10-12)는 `data/shop/policy.ts`. 카피·FAQ·폼은 그 상수로 문구를 만든다.
 
-### 아티스트 상품(위탁 판매) — 판매자는 스튜디오, 발송도 스튜디오
+### 아티스트 상품(위탁 판매) — 판매자는 스튜디오, 발송은 상품별(기본은 스튜디오)
 
 운영자 결정 2026-10-14(계획 `docs/artist-store-plan-2026-10.md`). 아티스트가 재고를 맡기고, 스튜디오가 자기 이름으로 팔아
 발송한 뒤 아티스트에게 정산한다. 결제·재고·배송·환불은 스튜디오 상품과 **같은 경로**다 — 아티스트 상품만의 주문 흐름은 없다.
+다만 상품에 따라 **아티스트가 직접 발송**하기도 한다(아래 "발송 주체"). 그때도 판매자·결제·환불·고객 응대는 스튜디오다.
 상품의 출처는 둘이다: 파일 상품(`artist: '<data/artists slug>'`)과 아티스트가 콘솔에서 등록한 **DB 상품**(`creator:<id>`).
 
 **파일 상품**
@@ -128,7 +129,7 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
   가격 변경은 새 옵션. 승인 뒤 더한 옵션은 안 잠긴 채라 **팔리지 않고**, 관리자 "새 옵션 승인"(`lock_new_skus`)이 잠그는 순간 팔린다.
 - **승인 뒤 수정 알림**: 승인 상태에서 저장하면 `creator_edited_at`을 찍고 운영자에게 메일(`sendShopCreatorEditedNotice`) — 재심사 대기열은 없다.
   관리자 화면이 "승인 뒤 수정"과 "승인 대기 옵션"을 표시한다. 메일 실패는 저장·판정을 실패시키지 않는다(판정 메일은 운영자 폴백 메일이 있다).
-- **재고는 관리자만**: 아티스트 쓰기 경로(`creatorProductWrite.ts`)에 `shop_skus`가 없다(테스트가 소스를 검사한다). `setSkuStock`은 잠긴 SKU만
+- **재고는 관리자만**(스튜디오가 보관·발송하는 상품): 아티스트 쓰기 경로(`creatorProductWrite.ts`)에 `shop_skus`가 없다(테스트가 소스를 검사한다). 아티스트가 직접 보내는 상품만 예외로 `creatorStock.ts`가 자기 옵션의 총 재고를 넣게 한다(아래 "발송 주체"). `setSkuStock`은 잠긴 SKU만
   받고 `edition_size`가 있으면 그 상품 재고 합이 한정 수량을 넘지 못하게 한다. 승인하면 공개되므로 재고(0이면 품절)를 바로 넣는다.
 - **관리자 액션**: `lock_new_skus`·`set_ships_on`·`set_published`·`set_internal_note`·`set_digital_files`(키는 `shop/` 접두사 + `isSafeObjectKey` +
   R2 존재 확인). 승인·공개 토글 뒤 그 아티스트가 `data/artists`와 연결돼 있으면 `/ko/artists/<slug>`를 재검증한다(실패는 `warnings`).
@@ -137,13 +138,45 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
 - **이름 잠금**: 상점 상품이 심사 중·승인이면 아티스트 이름이 잠긴다(`hasReviewedProject`, `lib/funding/CLAUDE.md`).
 
 **정산**
-- 아티스트 몫 `SHOP_ARTIST_SHARE_PERCENT`(55%, 상품 판매가 VAT 포함 기준, 배송비 제외). 계산은 `lib/shop/artistPayout.ts` 하나. 개인 아티스트는
+- 아티스트 몫 `SHOP_ARTIST_SHARE_PERCENT`(55%, 상품 판매가 VAT 포함 기준). 스튜디오가 보낸 주문의 배송비는 정산에 넣지 않고(스튜디오 몫), **아티스트가 직접 보낸 주문은 배송비 전액을 더한다**(상품 55% + 배송비 100%, 주문당 한 번). 계산은 `lib/shop/artistPayout.ts` 하나. 개인 아티스트는
   부가세 상당액과 원천징수 3.3%를 뺀다(펀딩 정산과 같은 이유). `/admin/shop`의 "아티스트 정산 예정"이 그 달(KST)에 **발송한** 결제 완료 주문만
   센다 — 파일 갈래는 키 `file:<slug>`(세금 유형은 `data/artists`), DB 갈래는 `creator:<id>`(`sku_id → shop_product_skus → shop_products.creator_id`,
   세금 유형은 `funding_creators.tax_type`, 비어 있으면 "계산하지 않음"). DB 갈래는 별도 try라 실패해도 파일 갈래 표는 나온다.
   1단계는 운영자가 이 표를 보고 손으로 이체한다 — 정산 기록 표·정산 메일은 아직 없다.
 - 이미 정산한 달의 반품 환불은 그 주문이 표에서 빠질 뿐 자동으로 차감되지 않는다. 다음 정산에서 손으로 뺀다.
   부분 환불 주문은 어느 줄이 환불됐는지 원장이 모르므로 계산에서 빼고 "직접 확인"으로 띄운다.
+
+### 발송 주체 — 아티스트가 직접 보내는 상품 (마이그레이션 0057)
+
+운영자 결정 2026-10-14. 판매자(결제·환불·고객 응대)는 언제나 스튜디오이고, **포장해 보내는 쪽**만 상품마다 다르다. 택배사는 스튜디오 발송분이 로젠택배다
+(`SHOP_STUDIO_COURIER` — 관리자 발송 칸의 기본값). 설계는 `docs/shop-artist-platform-design-2026-10.md` §10.
+
+- **저장**: 새 표 `shop_product_fulfillment(product_id PK, mode 'studio'|'artist')` 하나(`lib/shop/fulfillmentMode.ts`). 기존 표에 컬럼을 더하지 않았다.
+  행이 없으면 'studio', **표가 없는 DB(0057 전 배포)에서도 모든 읽기가 'studio'로 돌아 기존 주문 경로가 그대로다** — 순서는 마이그레이션 → 배포가 맞지만
+  뒤집어도 상점은 안 깨진다(아티스트 발송이 안 켜질 뿐). `no such table`을 삼킬 때는 **그 표 이름을 확인한다**(`isMissingTableError(error, table)`) — 다른 표가 없는 것까지
+  삼키면 섞임 판정이 조용히 빠진다. 그 밖의 오류는 던진다(주문 생성은 `lookup_failed` 503).
+- **정하는 사람과 시점**: 관리자만, 상품 상세 "운영" 칸(`set_fulfillment_mode`). **승인 뒤에는 바꿀 수 없다** — 쓰기 문장의 WHERE가 `review_status <> 'approved'`를 같이 걸어
+  사전 검사 뒤 승인이 끼어도 0행이다. 이유: 이미 들어온 주문의 발송 책임·받는 분 정보 제공 범위가 갈린다. 그래서 "바로 승인" 전에 정해야 한다. 아티스트 폼에는 읽기 전용 표시.
+  디지털 상품·스튜디오 계정(`studio-nol`) 상품·`shop_artists` 미등재 계정은 'artist'로 못 정한다. 파일 카탈로그 상품은 항상 스튜디오 발송(`validateShopCatalog`가 `shippedByArtist`를 거부).
+- **한 주문 = 한 발송 주체**(`lib/shop/shipper.ts`, 순수 모듈): 실물은 'studio' 또는 `artist:<slug>`로 묶이고 **디지털은 어디에도 묶이지 않는다**. 아티스트 직접 발송 실물이 다른 실물과 섞이면
+  `createShopOrder`가 `mixed_shipper`(API 400, 사람이 읽는 문구)로 거절한다 — 주문 폼은 함께 담을 상품을 같은 묶음으로 거르고(`canShareOrder`), 담은 뒤에도 같은 판정(`hasMixedShippers`)으로
+  결제를 막는다. 서버 판정이 최종이다. 공개 상품 객체는 `shippedByArtist`(아티스트 상점 slug)를 싣고 **creatorId는 싣지 않는다**. 상품 상세에 "직접 발송" 한 줄, 주문 폼 배송지 아래에
+  받는 분 정보가 그 아티스트에게 전달된다는 고지(`SHOP_ARTIST_SHARING_NOTICE`).
+- **아티스트 콘솔 `/ko/funding/creator/shop/shipping`**(`lib/shop/artistShipping.ts`): 그 아티스트가 직접 보내는 상품의 **결제 완료 주문**만(조회 SQL의 EXISTS가
+  `p.creator_id = ? AND f.mode = 'artist'`를 건다 — 다른 아티스트·스튜디오 주문은 구조적으로 못 들어온다). 주문번호·내 줄(상품·수량·한정판 번호)·받는 분 이름·연락처·주소·배송 메모·예약 발송일을
+  싣고, **주문자 이메일·관리 토큰·결제 금액은 읽지 않는다**. 발송 처리는 관리자와 **같은 함수**(`markShopOrderShipped`·`markShopOrderDelivered`)에 `actor: { kind: 'artist', creatorId }`를 넘겨
+  지난다 — 소유(`resolveOrderShipper`)를 라우트가 아니라 거기서 다시 판정하고, 남의 주문·스튜디오 주문·없는 주문은 같은 404 문구다. 고객 발송 메일도 그대로 나간다.
+  일부 환불(`partially_refunded`) 주문은 어느 줄이 환불됐는지 원장이 모르므로 아티스트는 발송 처리를 못 하고 스튜디오가 확인한다.
+- **열람 기록**: 받는 분 정보가 실린 만큼 `privacy_access_logs`에 `shop_artist_shipping_view`(수행자 `creator:<id>`, 대상 개설자 id, 건수, 값은 담지 않음)를 남긴다.
+  가려진 행만 있거나 주문이 0건이면 남기지 않는다(펀딩 개설자 배송 화면과 같은 규칙). 새 action을 더했으니 **처리방침 19항의 열거도 함께 고친다**.
+- **받는 분 정보 가림**: 배송 완료 표시(`delivered_at`) **30일 뒤**, 완료 표시를 안 했으면 발송 **60일 뒤**에 서버가 이름·연락처·주소·메모를 **비워서** props에 싣는다(화면에서 숨기는 게 아니다).
+  주문번호·상품·운송장은 남는다. 펀딩 개설자 배송 열람에는 이런 가림이 없어(전달 1년·결제 5년 파기뿐) 같은 규칙을 옮기지 않고 새로 정했다. 스튜디오의 주문 원본은 5년 보관 그대로.
+- **메일**: 주문 접수 때(`sendShopOrderConfirmedEmails`) 아티스트 직접 발송 주문이면 그 아티스트에게 "발송할 주문" 메일(콘솔 링크, **주소·연락처 없음**). 실패는 `notification_error`.
+- **재고**: 아티스트 직접 발송 상품의 옵션은 콘솔 판매 현황 표에서 아티스트가 총 재고를 넣는다(`creatorStock.ts` → 관리자와 같은 `setSkuStock` — 잠긴 SKU만·한정 수량 합 상한).
+  소유(내 상품·`mode='artist'`·승인·잠김)만 이 파일이 판정한다. 스튜디오 발송 상품은 지금처럼 관리자만.
+- **정산**: 위 "정산"의 배송비 가산. 계산식은 `artistPayout.ts` 머리 주석, 배송비 조회는 DB 갈래와 **별도 try**(표가 없으면 건너뛴다).
+- 관리자 화면: 주문 목록·상세에 "아티스트 발송: 이름", 상세의 발송 칸 택배사 기본값은 스튜디오 발송이면 로젠택배. 관리자는 아티스트 발송 주문도 대신 처리할 수 있다.
+- 발송 상태를 **누가** 바꿨는지는 `shop_orders`에 기록하지 않는다(기존 표에 컬럼을 더하지 않으려고). 필요해지면 새 표로.
 
 ### 관리자 직접 등록 — 스튜디오 상품도 DB로
 
