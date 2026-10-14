@@ -2,7 +2,7 @@ import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { shopLineName } from './catalog';
-import { isMissingTableError } from './fulfillmentMode';
+import { isMissingTableError } from '../dbErrors';
 import { latestPendingShipsOn } from './preorder';
 import { loadShipsOnBySku } from './repository';
 import { formatSerials, type OrderSerial } from './serials';
