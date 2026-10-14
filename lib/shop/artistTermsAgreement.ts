@@ -2,7 +2,7 @@ import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { SHOP_ARTIST_TERMS_VERSION, type ShopArtistTermsState, type ShopArtistTermsStatus } from './artistTerms';
-import { isMissingTableError } from './fulfillmentMode';
+import { isMissingTableError } from '../dbErrors';
 
 /**
  * 상점 아티스트 위탁 약관 동의 기록(`shop_artist_terms_agreements`, 마이그레이션 0059) — 서버 전용.
