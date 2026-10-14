@@ -1,6 +1,7 @@
 /** @jest-environment node */
 jest.mock('../../../../lib/contracts/admin-auth', () => ({ authenticateAdminApi: jest.fn() }));
 jest.mock('../../../../lib/funding/payoutAccount', () => ({
+  PAYOUT_ACCOUNT_CRYPTO_ERROR_MESSAGE: jest.requireActual('../../../../lib/funding/payoutAccount').PAYOUT_ACCOUNT_CRYPTO_ERROR_MESSAGE,
   loadFundingPayoutAccount: jest.fn(),
   isApprovedFundingProject: jest.fn(),
 }));

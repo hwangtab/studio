@@ -1488,6 +1488,13 @@ export const privacyAccessActionEnum = [
    * 파일 경로·이름은 적지 않는다. 컬럼이 enum 문자열이라 마이그레이션이 필요 없다(DB CHECK 없음).
    */
   'creator_business_certificate_view',
+  /**
+   * 관리자의 개설자 정산 계좌 조회 — 개설자 단위 경로(pages/api/admin/creators/[creatorId]/payout-account.ts).
+   * 펀딩 프로젝트가 없는 공연·상점 개설자에게 이체하려고 연다. `funding_payout_account_view`와 같은 일이지만
+   * 대상이 프로젝트 id가 아니라 creatorId라 행위를 가른다 — 같은 이름에 다른 종류의 id가 섞이면 기록을 읽을 수 없다.
+   * 컬럼이 enum 문자열이라 마이그레이션이 필요 없다(DB CHECK 없음).
+   */
+  'creator_payout_account_view',
 ] as const;
 
 /**

@@ -890,7 +890,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
             </div>
           )}
 
-          {project.reviewStatus === 'approved' && <CreatorTaxProfilePanel creatorId={project.creator.id} />}
+          {project.reviewStatus === 'approved' && <CreatorTaxProfilePanel creatorId={project.creator.id} payoutAccount={false} />}
 
           {project.reviewStatus === 'approved' && (
             <FundingPayoutSection
