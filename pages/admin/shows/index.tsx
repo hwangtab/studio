@@ -10,7 +10,7 @@ import { countPendingSubmissions } from '../../../lib/shows/organizer/adminSubmi
 
 interface AdminShowsPageProps {
   shows: AdminShowListItem[];
-  /** 심사 대기 건수. 표(0053)가 없거나 조회가 실패하면 null — 공연 목록은 그대로 보인다. */
+  /** 심사 대기 건수. 표(0055)가 없거나 조회가 실패하면 null — 공연 목록은 그대로 보인다. */
   pendingSubmissions: number | null;
   error?: string;
 }

@@ -38,7 +38,7 @@ export const getServerSideProps: GetServerSideProps<AdminShowSubmissionsPageProp
     return { props: { submissions } };
   } catch (error: unknown) {
     console.error('[admin/shows/submissions] 목록 조회 실패:', error);
-    return { props: { submissions: [], error: '제출물 목록을 불러오지 못했습니다. 마이그레이션 0053이 적용됐는지 확인해 주세요.' } };
+    return { props: { submissions: [], error: '제출물 목록을 불러오지 못했습니다. 마이그레이션 0055가 적용됐는지 확인해 주세요.' } };
   }
 };
 

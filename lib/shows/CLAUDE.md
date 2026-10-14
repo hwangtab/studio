@@ -123,7 +123,7 @@ v2 색 가드(`components/ui/SectionHeading.test.tsx`의 `V2_FILES`)에 공연 �
 
 주최자 = 펀딩 개설자 계정(매직 링크, `creator_session`). 대시보드 `/ko/funding/creator`의 공연 절 → 편집기
 `/ko/funding/creator/shows/[id]`(`components/shows/organizer/ShowDraftForm.tsx`). 안내 `/ko/shows/host`, 약관 `/ko/shows/organizer-terms`.
-제출물은 `show_submissions`(마이그레이션 0053). 어겨도 에러가 안 나는 것만 적는다.
+제출물은 `show_submissions`(마이그레이션 0055). 어겨도 에러가 안 나는 것만 적는다.
 
 - **초안 형식의 주인은 `lib/shows/organizer/draft.ts`다.** `ownImage` 검증(본인 업로드만, 한 조각 파일명 `resolveFundingBlobPath`,
   쿼리는 `?w=&h=`만)을 우회하는 새 경로를 만들지 말 것.
