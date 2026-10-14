@@ -8,10 +8,11 @@ import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { remainingRefundable } from '../../../lib/booking/cancel';
 import { shopLineName } from '../../../lib/shop/catalog';
+import { getFirstDownloadedAt } from '../../../lib/shop/downloads';
 import { loadOrderExtras } from '../../../lib/shop/orderExtras';
 import { formatShipsOn } from '../../../lib/shop/preorder';
 import { findShopOrderByOrderNo } from '../../../lib/shop/service';
-import { normalizeShopOrderNo } from '../../../lib/shop/shape';
+import { normalizeShopOrderNo, shopOrderShips } from '../../../lib/shop/shape';
 
 interface Props {
   orderNo: string;
@@ -30,6 +31,10 @@ interface Props {
   courier: string | null;
   trackingNumber: string | null;
   notificationError: string | null;
+  /** 배송이 있는 주문인가. 디지털 상품만이면 false(발송 처리·배송지 없음). */
+  ships: boolean;
+  /** 고객이 처음 내려받은 시각(초). 없으면 null. */
+  downloadedAt: number | null;
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
@@ -42,6 +47,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   const so = order.shopOrder;
   const payment = order.payments[0];
   const extras = await loadOrderExtras(order.orderNo, so.items, new Date()).catch(() => null);
+  const downloadedAt = so.items.some((i) => i.skuId.startsWith('db-')) ? await getFirstDownloadedAt(order.orderNo).catch(() => null) : null;
   return {
     props: {
       orderNo: order.orderNo,
@@ -63,10 +69,13 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
       courier: so.courier,
       trackingNumber: so.trackingNumber,
       notificationError: order.notificationError,
+      ships: shopOrderShips(so),
+      downloadedAt,
     },
   };
 };
 
+const kst = (sec: number) => new Date(sec * 1000).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 const FULFILLMENT_LABEL: Record<string, string> = { preparing: '발송 준비', shipped: '발송함', delivered: '배송 완료', cancelled: '취소' };
 const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
 const buttonClass = 'rounded-lg bg-gray-900 px-4 py-2 text-white disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
@@ -116,19 +125,26 @@ export default function AdminShopOrderPage(p: Props) {
             ))}
           </ul>
           {p.latestShipsOn && <p className="mb-2 text-amber-800">예약 상품이 있어요. {formatShipsOn(p.latestShipsOn)} 이후에 함께 보내세요.</p>}
-          <p>상품 {formatPriceAmount(p.subtotal)}원 + 배송비 {formatPriceAmount(p.shippingFee)}원 = <strong>{formatPriceAmount(p.totalAmount)}원</strong></p>
+          <p>상품 {formatPriceAmount(p.subtotal)}원{p.ships && <> + 배송비 {formatPriceAmount(p.shippingFee)}원</>} = <strong>{formatPriceAmount(p.totalAmount)}원</strong></p>
           <p className="mt-1 text-gray-600">결제수단 {p.paymentMethod ?? '-'}{p.receiptUrl && <> · <a href={p.receiptUrl} target="_blank" rel="noreferrer" className="text-primary hover:underline">영수증</a></>} · 환불 가능 잔액 {formatPriceAmount(p.refundable)}원</p>
         </section>
 
         <section className="mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
-          <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-gray-900">주문자·받는 분</h2>
+          <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-gray-900">{p.ships ? '주문자·받는 분' : '주문자'}</h2>
           <p>주문자 {p.customer.name} · {p.customer.phone} · {p.customer.email}</p>
-          <p className="mt-1">받는 분 {p.recipient.name} · {p.recipient.phone}</p>
-          <p className="mt-1">배송지 {p.recipient.address}</p>
-          {p.recipient.memo && <p className="mt-1">배송 메모 {p.recipient.memo}</p>}
+          {p.ships ? (
+            <>
+              <p className="mt-1">받는 분 {p.recipient.name} · {p.recipient.phone}</p>
+              <p className="mt-1">배송지 {p.recipient.address}</p>
+              {p.recipient.memo && <p className="mt-1">배송 메모 {p.recipient.memo}</p>}
+            </>
+          ) : (
+            <p className="mt-1 text-gray-600">배송 없음(디지털 상품). 첫 내려받기에서 배송 완료로 바뀝니다.</p>
+          )}
+          <p className="mt-1">내려받기 {p.downloadedAt ? kst(p.downloadedAt) : '아직 없음'}</p>
         </section>
 
-        {paid && p.fulfillmentStatus !== 'cancelled' && (
+        {p.ships && paid && p.fulfillmentStatus !== 'cancelled' && (
           <section className="mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
             <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-gray-900">발송</h2>
             <div className="grid gap-3 sm:grid-cols-[12rem_1fr_auto] sm:items-end">
@@ -147,9 +163,14 @@ export default function AdminShopOrderPage(p: Props) {
         {paid && p.refundable > 0 && (
           <section className="rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
             <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-gray-900">전액 환불</h2>
+            {p.downloadedAt && (
+              <div role="alert" className="mb-3 rounded-lg border border-amber-300 bg-amber-50 p-3 text-amber-900">
+                고객이 {kst(p.downloadedAt)}에 파일을 내려받았습니다. 환불하면 파일을 받은 채 돈을 돌려주게 됩니다. 파일 문제 등 환불할 사유인지 확인하세요.
+              </div>
+            )}
             <p className="mb-3 text-gray-600">토스로 {formatPriceAmount(p.refundable)}원을 돌려주고 주문을 취소합니다. 발송한 뒤라면 반품을 받은 다음에 누르세요. 일부만 돌려줄 때는 토스 콘솔에서 하면 웹훅이 기록을 맞춥니다.</p>
             <label className="block">사유<input value={reason} onChange={(e) => setReason(e.target.value)} placeholder="예: 반품 접수(불량)" className={`mt-1 ${inputClass}`} /></label>
-            <button type="button" disabled={busy} onClick={() => act({ action: 'refund', reason }, `${formatPriceAmount(p.refundable)}원을 환불할까요? 되돌릴 수 없습니다.`)} className={`mt-3 ${buttonClass}`}>
+            <button type="button" disabled={busy} onClick={() => act({ action: 'refund', reason }, `${p.downloadedAt ? `고객이 ${kst(p.downloadedAt)}에 파일을 내려받았습니다. ` : ''}${formatPriceAmount(p.refundable)}원을 환불할까요? 되돌릴 수 없습니다.`)} className={`mt-3 ${buttonClass}`}>
               전액 환불
             </button>
           </section>

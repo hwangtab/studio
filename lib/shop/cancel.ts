@@ -4,6 +4,8 @@ import { getDb } from '../../db/client';
 import { remainingRefundable, settleRefund, type CancelInput } from '../booking/cancel';
 import { isBankDepositPayment } from '../payments/bankDeposit';
 import { sendShopCancelledEmails } from './email';
+import { getFirstDownloadedAt } from './downloads';
+import { isDbSkuId } from './productRules';
 import { releaseOrderSerials } from './serials';
 import { findShopOrderByOrderNo, rowsAffectedOf } from './service';
 
@@ -15,12 +17,18 @@ import { findShopOrderByOrderNo, rowsAffectedOf } from './service';
  * 실패 기록이 한 벌이다. 선점은 `shop_orders.fulfillment_status`를 읽은 값 그대로일 때만 `cancelled`로 바꾸는 CAS다
  * (고객 취소와 관리자 발송 처리가 겹치면 한쪽만 이긴다). 토스가 거절하면 선점을 되돌린다.
  *
+ * **디지털 상품**: 고객은 내려받기를 시작한 뒤에는 취소할 수 없다(전자상거래법 제17조 제2항 제5호). 선점 UPDATE의 WHERE가
+ * `NOT EXISTS(shop_order_downloads)`를 함께 걸어, 내려받기 기록과 겹치면 어느 쪽이 먼저든 다른 쪽은 0행이다. `db-` 줄이 있는 주문에만
+ * 걸린다(표 없는 DB에서 파일 상품 주문 취소가 깨지지 않게). 운영자 환불은 내려받은 뒤에도 할 수 있다(관리자 화면이 내려받음을 알린다).
+ *
  * 재고는 따로 돌려주지 않는다 — 주문이 `refunded`가 되는 순간 점유 계산(lib/shop/stock.ts)에서 빠진다.
  */
 
 export type ShopCancelOutcome =
   | { ok: true; refundAmount: number }
-  | { ok: false; code: 'not_found' | 'invalid_state' | 'shipped' | 'toss_failed' | 'recording_failed' | 'temporarily_unavailable'; message: string };
+  | { ok: false; code: 'not_found' | 'invalid_state' | 'shipped' | 'downloaded' | 'toss_failed' | 'recording_failed' | 'temporarily_unavailable'; message: string };
+
+const DOWNLOADED_MESSAGE = '내려받기를 시작한 주문은 여기서 취소할 수 없어요(전자상거래법 제17조 제2항 제5호). 문의는 카카오톡이나 010-4255-7893으로 해 주세요.';
 
 export const cancelShopOrder = async (input: {
   orderNo: string;
@@ -35,6 +43,16 @@ export const cancelShopOrder = async (input: {
   }
   const fulfillment = order.shopOrder.fulfillmentStatus;
   if (fulfillment === 'cancelled') return { ok: false, code: 'invalid_state', message: '이미 취소된 주문이에요.' };
+  // 내려받기 기록이 있으면 고객 취소는 막는다. 디지털만 주문은 첫 내려받기가 `delivered`로 닫으므로 이 검사가 먼저 와야 문구가 맞다.
+  const customerGuardsDownload = input.requestedBy === 'customer' && order.shopOrder.items.some((i) => isDbSkuId(i.skuId));
+  if (customerGuardsDownload) {
+    try {
+      if ((await getFirstDownloadedAt(order.orderNo)) !== null) return { ok: false, code: 'downloaded', message: DOWNLOADED_MESSAGE };
+    } catch (error) {
+      console.error('[shop-cancel] 내려받기 기록 확인 실패', { orderNo: order.orderNo, error });
+      return { ok: false, code: 'temporarily_unavailable', message: '지금은 취소를 확인하지 못했어요. 잠시 후 다시 시도해 주세요.' };
+    }
+  }
   if (input.requestedBy === 'customer' && fulfillment !== 'preparing') {
     return { ok: false, code: 'shipped', message: '이미 보낸 주문은 여기서 취소할 수 없어요. 반품은 카카오톡이나 010-4255-7893으로 문의해 주세요.' };
   }
@@ -49,8 +67,15 @@ export const cancelShopOrder = async (input: {
   const claim = await db.run(sql`
     UPDATE shop_orders SET fulfillment_status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch()
     WHERE order_no = ${order.orderNo} AND fulfillment_status = ${fulfillment}
+    ${customerGuardsDownload ? sql`AND NOT EXISTS (SELECT 1 FROM shop_order_downloads WHERE order_no = ${order.orderNo})` : sql``}
   `);
-  if (rowsAffectedOf(claim) === 0) return { ok: false, code: 'invalid_state', message: '방금 상태가 바뀌었어요. 화면을 새로고침해 주세요.' };
+  if (rowsAffectedOf(claim) === 0) {
+    // 읽은 뒤에 내려받기가 먼저 기록됐을 수 있다 — 그 경우 문구를 맞춘다.
+    if (customerGuardsDownload && (await getFirstDownloadedAt(order.orderNo).catch(() => null)) !== null) {
+      return { ok: false, code: 'downloaded', message: DOWNLOADED_MESSAGE };
+    }
+    return { ok: false, code: 'invalid_state', message: '방금 상태가 바뀌었어요. 화면을 새로고침해 주세요.' };
+  }
 
   const revertClaim = async (): Promise<void> => {
     try {

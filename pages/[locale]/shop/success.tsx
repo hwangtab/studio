@@ -13,8 +13,9 @@ import { TOSS_KEY_CHANNEL_PARAM, tossKeyChannelFromQuery } from '../../../lib/bo
 import { clearStoredDraft } from '../../../lib/formDraft';
 import { withI18nServerProps } from '../../../lib/getStatic';
 import { confirmShopOrder } from '../../../lib/shop/confirm';
+import { findShopOrderByOrderNo } from '../../../lib/shop/service';
 import { SHOP_DRAFT_KEY } from '../../../lib/shop/draft';
-import { SHOP_ORDER_NO_PATTERN } from '../../../lib/shop/shape';
+import { SHOP_ORDER_NO_PATTERN, shopOrderShips } from '../../../lib/shop/shape';
 
 interface Props {
   outcome: 'confirmed' | 'error';
@@ -23,9 +24,11 @@ interface Props {
   totalAmount?: number;
   receiptUrl?: string | null;
   manageUrl?: string;
+  /** 디지털 상품만 담은 주문(배송 없음). */
+  digitalOnly?: boolean;
 }
 
-export default function ShopSuccessPage({ outcome, message, orderNo, totalAmount, receiptUrl, manageUrl }: Props) {
+export default function ShopSuccessPage({ outcome, message, orderNo, totalAmount, receiptUrl, manageUrl, digitalOnly }: Props) {
   // 결제가 확정됐으면 주문 폼의 입력 초안(이름·주소)을 지운다 — 공용 PC에 남지 않게.
   useEffect(() => {
     if (outcome === 'confirmed') clearStoredDraft(SHOP_DRAFT_KEY);
@@ -44,12 +47,12 @@ export default function ShopSuccessPage({ outcome, message, orderNo, totalAmount
             tone="success"
             as="h1"
             title="주문이 접수됐어요"
-            description="준비되는 대로 보내 드리고, 운송장 번호를 메일로 알려 드릴게요."
+            description={digitalOnly ? '주문 확인 페이지에서 파일을 내려받을 수 있어요.' : '준비되는 대로 보내 드리고, 운송장 번호를 메일로 알려 드릴게요.'}
             actions={
               <>
                 {manageUrl && (
                   <Button asChild>
-                    <a href={manageUrl} rel="noreferrer">주문 확인</a>
+                    <a href={manageUrl} rel="noreferrer">{digitalOnly ? '주문 확인·내려받기' : '주문 확인'}</a>
                   </Button>
                 )}
                 {receiptUrl && (
@@ -75,7 +78,7 @@ export default function ShopSuccessPage({ outcome, message, orderNo, totalAmount
                 </div>
               )}
             </dl>
-            <p className="mt-4 text-center typo-card-meta">보내기 전에는 주문 확인 페이지에서 바로 취소할 수 있어요.</p>
+            <p className="mt-4 text-center typo-card-meta">{digitalOnly ? '내려받기 전에는 주문 확인 페이지에서 바로 취소할 수 있어요.' : '보내기 전에는 주문 확인 페이지에서 바로 취소할 수 있어요.'}</p>
           </ResultCard>
         ) : (
           <ResultCard
@@ -111,6 +114,9 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ query, res
     channel: tossKeyChannelFromQuery(query[TOSS_KEY_CHANNEL_PARAM]),
   });
   if (!result.ok) return { props: { outcome: 'error', message: result.message } };
+  // 배송이 없는 주문인지 — 안내 문구만 바뀐다. 조회가 흔들리면 배송 있는 주문의 문구로 둔다.
+  const placed = await findShopOrderByOrderNo(result.orderNo).catch(() => null);
+  const digitalOnly = Boolean(placed?.shopOrder && !shopOrderShips(placed.shopOrder));
   return {
     props: {
       outcome: 'confirmed',
@@ -118,6 +124,7 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ query, res
       totalAmount: result.totalAmount,
       receiptUrl: result.receiptUrl,
       manageUrl: `/ko/shop/manage/${result.orderNo}?token=${encodeURIComponent(result.manageToken)}`,
+      digitalOnly,
     },
   };
 });

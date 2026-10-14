@@ -49,7 +49,7 @@ function CreateForm() {
 
   return (
     <form onSubmit={submit} className="mb-6 space-y-3 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
-      <h2 className="font-semibold">아티스트 등재</h2>
+      <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900">아티스트 등재</h2>
       <div className="grid gap-3 md:grid-cols-3">
         <label className="block">이메일<input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className={`${inputClass} mt-1`} /></label>
         <label className="block">이름<input required value={name} onChange={(e) => setName(e.target.value)} maxLength={60} className={`${inputClass} mt-1`} /></label>
@@ -108,7 +108,7 @@ export default function AdminShopArtistsPage({ artists, error }: Props) {
         {error && <div role="alert" className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-900">{error}</div>}
         <CreateForm />
         <section className="rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
-          <h2 className="mb-3 font-semibold">등재된 아티스트</h2>
+          <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-gray-900">등재된 아티스트</h2>
           {artists.length === 0 ? (
             <p className="text-gray-600">아직 없습니다.</p>
           ) : (

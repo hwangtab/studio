@@ -56,7 +56,7 @@ describe('배송비', () => {
   });
 
   it('합계 = 상품 + 배송비(주문당 한 번)', () => {
-    expect(computeShopTotals([{ unitPrice: 20000, quantity: 2 }, { unitPrice: 15000, quantity: 1 }])).toEqual({ subtotal: 55000, shippingFee: SHOP_SHIPPING_FEE, total: 55000 + SHOP_SHIPPING_FEE });
-    expect(computeShopTotals([])).toEqual({ subtotal: 0, shippingFee: 0, total: 0 });
+    expect(computeShopTotals([{ unitPrice: 20000, quantity: 2 }, { unitPrice: 15000, quantity: 1 }])).toEqual({ subtotal: 55000, physicalSubtotal: 55000, shippingFee: SHOP_SHIPPING_FEE, total: 55000 + SHOP_SHIPPING_FEE });
+    expect(computeShopTotals([])).toEqual({ subtotal: 0, physicalSubtotal: 0, shippingFee: 0, total: 0 });
   });
 });

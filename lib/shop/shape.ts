@@ -19,3 +19,9 @@ export const normalizeShopOrderNo = (raw: unknown): string | null => {
   const upper = raw.trim().toUpperCase();
   return SHOP_ORDER_NO_PATTERN.test(upper) ? upper : null;
 };
+
+/**
+ * 배송이 있는 주문인가 — 디지털 상품만 담은 주문은 우편번호 칸이 빈 문자열(`''`)이다(칸이 NOT NULL이라 만든 표식).
+ * 실물 줄이 하나라도 있으면 배송지를 받으므로 우편번호가 비지 않는다. 파기된 주문(`PURGED_MARK`)은 배송이 있던 주문이다.
+ */
+export const shopOrderShips = (o: { postcode: string }): boolean => o.postcode !== '';

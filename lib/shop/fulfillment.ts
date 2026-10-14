@@ -4,6 +4,7 @@ import { getDb } from '../../db/client';
 import { validateTrackingInput } from '../funding/trackingValidation';
 import { sendShopShippedEmail } from './email';
 import { findShopOrderByOrderNo, rowsAffectedOf } from './service';
+import { shopOrderShips } from './shape';
 
 /**
  * 발송 상태 전이 — 운영자만(관리자 화면). `preparing → shipped → delivered`. 취소는 lib/shop/cancel.ts.
@@ -22,6 +23,8 @@ export const markShopOrderShipped = async (input: { orderNo: string; courier: st
   const order = await findShopOrderByOrderNo(input.orderNo);
   if (!order || !order.shopOrder) return { ok: false, message: '주문을 찾을 수 없어요.' };
   if (order.status !== 'paid' && order.status !== 'partially_refunded') return { ok: false, message: '결제가 끝난 주문만 보낼 수 있어요.' };
+  // 디지털 상품만 담은 주문(우편번호 '')은 보낼 것이 없다 — 첫 내려받기가 delivered로 닫는다.
+  if (!shopOrderShips(order.shopOrder)) return { ok: false, message: '배송이 없는 디지털 주문이에요. 발송 처리를 하지 않습니다.' };
 
   // 운송장을 고쳐 적는 것(shipped → shipped)도 받는다 — 오타를 고칠 길이 있어야 한다. 메일은 처음 보낼 때만.
   const wasPreparing = order.shopOrder.fulfillmentStatus === 'preparing';

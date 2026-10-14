@@ -17,7 +17,7 @@ export const rowsAffectedOf = (result: unknown): number =>
 
 export type CreateShopOrderResult =
   | { ok: true; orderNo: string; totalAmount: number; orderName: string }
-  | { ok: false; code: 'sales_closed' | 'unknown_item' | 'sold_out' | 'lookup_failed' };
+  | { ok: false; code: 'sales_closed' | 'unknown_item' | 'sold_out' | 'lookup_failed' | 'shipping_required' };
 
 /**
  * 주문 생성 — 재고를 SHOP_HOLD_SECONDS 동안 잡고(`pending`), 결제 승인(confirmShopOrder)이 `paid`로 바꾼다.
@@ -42,7 +42,12 @@ export const createShopOrder = async (
     resolved.push({ ...lookup.found, quantity: line.quantity });
   }
 
-  const totals = computeShopTotals(resolved.map((r) => ({ unitPrice: r.sku.price, quantity: r.quantity })));
+  // 실물 줄이 하나라도 있으면 배송지가 필요하다. 디지털 상품만이면 배송지·배송비가 없다(받은 배송지는 쓰지 않는다).
+  const needsShipping = resolved.some((r) => r.product.kind !== 'digital');
+  if (needsShipping && !input.shipping) return { ok: false, code: 'shipping_required' };
+  const ship = needsShipping ? input.shipping : null;
+
+  const totals = computeShopTotals(resolved.map((r) => ({ unitPrice: r.sku.price, quantity: r.quantity, digital: r.product.kind === 'digital' })));
   const { itemAmount, vatAmount, totalAmount } = splitInclusiveAmount(totals.total);
   const orderNo = generateShopOrderNo(now);
   const manageToken = generateManageToken();
@@ -62,8 +67,8 @@ export const createShopOrder = async (
     db.run(sql`
       INSERT INTO shop_orders (order_no, recipient_name, recipient_phone, postcode, address1, address2, shipping_memo,
                                subtotal_amount, shipping_fee, hold_expires_at)
-      SELECT ${orderNo}, ${input.shipping.recipientName}, ${input.shipping.recipientPhone}, ${input.shipping.postcode},
-             ${input.shipping.address1}, ${input.shipping.address2}, ${input.shipping.shippingMemo},
+      SELECT ${orderNo}, ${ship?.recipientName ?? ''}, ${ship?.recipientPhone ?? ''}, ${ship?.postcode ?? ''},
+             ${ship?.address1 ?? ''}, ${ship?.address2 ?? null}, ${ship?.shippingMemo ?? null},
              ${totals.subtotal}, ${totals.shippingFee}, ${holdExpiresAt}
       WHERE EXISTS (SELECT 1 FROM orders WHERE order_no = ${orderNo})
     `),
