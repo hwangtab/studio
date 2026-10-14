@@ -6,6 +6,7 @@ import type { LibSQLDatabase } from 'drizzle-orm/libsql';
 
 import * as schema from '../../db/schema';
 import { showTicketTypes, showtimes, shows, showZones } from '../../db/schema';
+import { isFundingMediaUrl } from '../funding/mediaPath';
 import { validateShowSlug } from './reservedSlugs';
 import { serializeMapLinks, validateMapLinks, type MapProviderId } from './maps';
 import { descriptionBlocks, performerNames, serializeNotices, serializePerformers, type ShowPerformer } from './structured';
@@ -105,6 +106,8 @@ const imageMetadata = require('../../utils/imageMetadata.json') as Record<string
 
 /** `/images/…` 경로가 public/ 아래 실제 파일인지. 포스터·사진을 빼먹은 채 시드하면 화면에 빈 칸이 뜬다. */
 const publicFileExists = (webPath: string): boolean => existsSync(join(process.cwd(), 'public', webPath));
+/** 저장소 정적 파일이거나, 주최자 업로드(private Blob, 저장 단계에서 소유를 확인했다) 주소. */
+const imageExists = (webPath: string): boolean => isFundingMediaUrl(webPath) || publicFileExists(webPath);
 
 export function validateShowDefinition(def: ShowDefinition): string[] {
   const errors: string[] = [];
@@ -122,10 +125,10 @@ export function validateShowDefinition(def: ShowDefinition): string[] {
     if (!perf.name.trim()) errors.push('출연자 이름이 비어 있습니다.');
     if (performerNameSet.has(perf.name)) errors.push(`출연자 "${perf.name}"이 중복입니다.`);
     performerNameSet.add(perf.name);
-    if (perf.photo && !publicFileExists(perf.photo)) errors.push(`출연자 "${perf.name}": 사진 파일이 없습니다(${perf.photo}).`);
+    if (perf.photo && !imageExists(perf.photo)) errors.push(`출연자 "${perf.name}": 사진 파일이 없습니다(${perf.photo}).`);
   }
   for (const [key, value] of [['coverImage', def.coverImage], ['ogImage', def.ogImage ?? null]] as const) {
-    if (value && !publicFileExists(value)) errors.push(`${key} 파일이 없습니다(${value}).`);
+    if (value && !imageExists(value)) errors.push(`${key} 파일이 없습니다(${value}).`);
   }
   if (def.ogImage) {
     const size = imageMetadata[def.ogImage];

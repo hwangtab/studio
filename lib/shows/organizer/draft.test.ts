@@ -1,0 +1,71 @@
+// lib/shows/organizer/draft.test.ts
+import { buildShowDefinition, emptyDraft, findSubmitProblems, mergeApprovedEdit, normalizeDraftInput, parseDraft, type ShowSubmissionDraft } from './draft';
+import { validateShowDefinition } from '../seed';
+
+const CREATOR = 'a'.repeat(32);
+const NOW = new Date('2026-10-14T03:00:00Z');
+const ownPhoto = `/api/funding/media/${CREATOR}-11111111-1111-1111-1111-111111111111.webp?w=800&h=1100`;
+
+const complete = (): ShowSubmissionDraft => ({
+  ...emptyDraft(),
+  title: '가을 밤 단독 공연',
+  presenterName: '밴드 놀',
+  description: '첫 문단 소개입니다.\n\n둘째 문단.',
+  posterUrl: ownPhoto,
+  ageRating: '전체 관람가',
+  runningMinutes: 90,
+  venueName: '스튜디오 놀',
+  venueAddress: '서울 마포구 어딘가 1',
+  showtimes: ['2026-11-01T19:00'],
+  capacity: 60,
+  ticketTypes: [{ name: '일반', price: 20000 }],
+  performers: [{ name: '밴드 놀', bio: '', photoUrl: null }],
+});
+
+test('완성된 초안은 문제 없음', () => {
+  expect(findSubmitProblems(complete(), NOW)).toEqual([]);
+});
+
+test('첫 회차가 7일 안이면 거부', () => {
+  const d = { ...complete(), showtimes: ['2026-10-18T19:00'] };
+  expect(findSubmitProblems(d, NOW).join()).toContain('7일');
+});
+
+test('1,000원 미만 가격 거부', () => {
+  const d = { ...complete(), ticketTypes: [{ name: '일반', price: 500 }] };
+  expect(findSubmitProblems(d, NOW).join()).toContain('1,000원');
+});
+
+test('남의 업로드 이미지는 저장 단계에서 거부', () => {
+  const other = `/api/funding/media/${'b'.repeat(32)}-x.webp?w=1&h=1`;
+  const r = normalizeDraftInput({ ...complete(), posterUrl: other }, CREATOR);
+  expect(r.ok).toBe(false);
+});
+
+test('외부 이미지 주소도 거부', () => {
+  const r = normalizeDraftInput({ ...complete(), posterUrl: 'https://evil.example/a.png' }, CREATOR);
+  expect(r.ok).toBe(false);
+});
+
+test('ShowDefinition으로 바꾸면 기존 검증을 통과(이미지 존재 검사는 업로드 주소를 건너뜀)', () => {
+  const def = buildShowDefinition(complete(), 'autumn-night');
+  expect(def.zones).toEqual([{ code: 'GA', label: '전석', capacity: 60 }]);
+  expect(def.ticketTypes).toEqual([{ zoneCode: 'GA', name: '일반', price: 20000, quota: null, compQuota: 0 }]);
+  expect(def.showtimes[0].startsAt.toISOString()).toBe('2026-11-01T10:00:00.000Z'); // KST 19:00
+  expect(def.coverImage).toBe(ownPhoto);
+  expect(validateShowDefinition(def)).toEqual([]);
+});
+
+test('승인 뒤 저장은 잠긴 칸을 승인본에서 가져온다', () => {
+  const approved = complete();
+  const incoming = { ...complete(), description: '바뀐 소개.', ticketTypes: [{ name: '일반', price: 1000 }], showtimes: ['2026-12-01T19:00'], capacity: 999 };
+  const merged = mergeApprovedEdit(approved, incoming);
+  expect(merged.description).toBe('바뀐 소개.');
+  expect(merged.ticketTypes).toEqual(approved.ticketTypes);
+  expect(merged.showtimes).toEqual(approved.showtimes);
+  expect(merged.capacity).toBe(60);
+});
+
+test('깨진 JSON은 빈 초안', () => {
+  expect(parseDraft('{oops')).toEqual(emptyDraft());
+});
