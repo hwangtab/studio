@@ -163,6 +163,13 @@ SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이�
 먼저 넣을 것 — 모르는 type은 예약 확정으로 떨어진다.
 아티스트 상품(DB 정본)은 마이그레이션 0053(새 표 다섯 개)과 `lib/shop/repository.ts` 입구를 쓴다 — 순서는 마이그레이션 → 배포, 설계는 `docs/shop-artist-platform-design-2026-10.md`.
 
+### 소프트웨어(플러그인·툴) 판매는 `lib/software/CLAUDE.md`를 먼저 읽는다
+
+`/ko/software`·`/en/software`. 상품 정의는 `data/software/catalog.ts`, 라이선스·기기 활성화는 DB(0054), 서명은 Ed25519.
+**라이선스 파일 형식·활성화 API 응답 코드·`publicKeys.ts`의 kid는 배포된 플러그인이 오프라인으로 기대므로 바꾸지 않는다.**
+서명 비밀키(`SOFTWARE_LICENSE_SIGNING_KEY`)를 잃으면 모든 플러그인을 다시 배포해야 한다 — 오프라인 백업 필수.
+`SOFTWARE_SALES_OPEN`이 false인 동안은 관리자 수동 발급만 된다.
+
 ### 믹싱 전·후 비교 음원 (`components/audio/MixComparePlayer.tsx`)
 
 김동산과 블루이웃 〈물결〉의 믹싱 전 / 믹싱 후를 같은 재생 위치에서 바꿔 듣는다. **네 자리**에 있다 —

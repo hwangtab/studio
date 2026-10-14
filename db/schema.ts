@@ -1960,3 +1960,54 @@ export const shopOrderDownloads = sqliteTable('shop_order_downloads', {
 export type ShopArtistRow = typeof shopArtists.$inferSelect;
 export type ShopProductRow = typeof shopProducts.$inferSelect;
 export type ShopProductSkuRow = typeof shopProductSkus.$inferSelect;
+
+// ─── 소프트웨어(플러그인·툴) 라이선스 ─────────────────────────────────────────────
+//
+// 상품의 정본은 `data/software/catalog.ts`다. DB는 **라이선스**와 **기기 활성화**만 든다. 규칙은 lib/software/.
+// `orders`에 컬럼을 더하지 않고 표를 따로 둔다(루트 CLAUDE.md 0022 절). 두 표 모두 새 표라 미적용 DB에서는
+// 소프트웨어 기능만 꺼지고 다른 결제는 영향이 없다.
+
+export const softwareLicenseSourceEnum = ['manual', 'toss', 'overseas'] as const;
+export const softwareLicenseStatusEnum = ['active', 'revoked', 'refunded'] as const;
+
+/**
+ * 라이선스 키 한 개. 키는 **평문**으로 둔다 — 고객이 manage 화면에서 다시 봐야 한다. 서명 파일에는 키가 아니라
+ * 이 행의 id만 실린다.
+ */
+export const softwareLicenses = sqliteTable('software_licenses', {
+  id: text('id').primaryKey(),
+  productSlug: text('product_slug').notNull(),
+  /** `NOL-XXXXX-XXXXX-XXXXX-XXXXX`(정규화된 형태). */
+  licenseKey: text('license_key').notNull().unique(),
+  email: text('email').notNull(),
+  customerName: text('customer_name'),
+  source: text('source', { enum: softwareLicenseSourceEnum }).notNull(),
+  orderNo: text('order_no'),
+  /** 관리자 메모. */
+  note: text('note'),
+  maxActivations: integer('max_activations').notNull(),
+  status: text('status', { enum: softwareLicenseStatusEnum }).notNull().default('active'),
+  issuedAt: integer('issued_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  firstActivatedAt: integer('first_activated_at', { mode: 'timestamp' }),
+  revokedAt: integer('revoked_at', { mode: 'timestamp' }),
+}, (t) => ({
+  emailIdx: index('software_licenses_email_idx').on(t.email),
+  orderNoIdx: index('software_licenses_order_no_idx').on(t.orderNo),
+}));
+
+/** 기기 활성화. 동시 활성 = `deactivated_at IS NULL`. */
+export const softwareActivations = sqliteTable('software_activations', {
+  id: text('id').primaryKey(),
+  licenseId: text('license_id').notNull().references(() => softwareLicenses.id),
+  machineId: text('machine_id').notNull(),
+  label: text('label'),
+  appVersion: text('app_version'),
+  activatedAt: integer('activated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  lastSeenAt: integer('last_seen_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  deactivatedAt: integer('deactivated_at', { mode: 'timestamp' }),
+}, (t) => ({
+  licenseMachineIdx: index('software_activations_license_machine_idx').on(t.licenseId, t.machineId),
+}));
+
+export type SoftwareLicense = typeof softwareLicenses.$inferSelect;
+export type SoftwareActivation = typeof softwareActivations.$inferSelect;

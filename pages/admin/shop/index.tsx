@@ -90,7 +90,7 @@ function ArtistSalesSection({ rows, month, prevMonth, nextMonth }: Pick<Props, '
   return (
     <section className="mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
       <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
-        <h2 className="font-semibold">아티스트 정산 예정 · {month}</h2>
+        <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900">아티스트 정산 예정 · {month}</h2>
         <div className="flex gap-3 text-xs">
           <Link href={`/admin/shop?month=${prevMonth}`} className="text-primary hover:underline">← {prevMonth}</Link>
           <Link href={`/admin/shop?month=${nextMonth}`} className="text-primary hover:underline">{nextMonth} →</Link>
@@ -152,7 +152,7 @@ export default function AdminShopPage({ orders, skus, artistSales, month, prevMo
         )}
 
         <section className="mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
-          <h2 className="mb-1 font-semibold">재고</h2>
+          <h2 className="mb-1 text-lg font-bold text-gray-900 dark:text-gray-900">재고</h2>
           <p className="mb-3 text-gray-600">총 재고 = 지금까지 내놓은 수량. 판매·결제 대기 수량은 주문에서 자동으로 빠지고, 취소·환불되면 돌아옵니다. 반품을 다시 팔 수 없으면 총 재고를 줄여 주세요.</p>
           {skus.length === 0 ? (
             <p className="text-gray-600">카탈로그에 상품이 없습니다.</p>
@@ -169,7 +169,7 @@ export default function AdminShopPage({ orders, skus, artistSales, month, prevMo
         <ArtistSalesSection rows={artistSales} month={month} prevMonth={prevMonth} nextMonth={nextMonth} />
 
         <section className="rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
-          <h2 className="mb-3 font-semibold">주문</h2>
+          <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-gray-900">주문</h2>
           {orders.length === 0 ? (
             <p className="text-gray-600">아직 주문이 없습니다.</p>
           ) : (

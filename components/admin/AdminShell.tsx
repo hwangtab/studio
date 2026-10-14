@@ -40,6 +40,7 @@ export const ADMIN_NAV: readonly AdminNavItem[] = [
   { href: '/admin/funding', label: '펀딩' },
   { href: '/admin/shows', label: '공연' },
   { href: '/admin/shop', label: '상점' },
+  { href: '/admin/software', label: '소프트웨어' },
   { href: '/admin/subscriptions', label: '구독' },
   { href: '/admin/artists', label: '아티스트' },
   { href: '/admin/privacy-logs', label: '접속기록' },

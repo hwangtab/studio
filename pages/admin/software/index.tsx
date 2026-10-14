@@ -1,0 +1,201 @@
+import type { GetServerSideProps } from 'next';
+import Head from 'next/head';
+import { useState } from 'react';
+
+import { AdminShell } from '../../../components/admin/AdminShell';
+import { Notice } from '../../../components/ui/Notice';
+import { SOFTWARE_PRODUCTS } from '../../../data/software/catalog';
+import { SOFTWARE_SALES_OPEN } from '../../../data/software/policy';
+import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
+import { listAdminLicenses, type AdminLicenseRow } from '../../../lib/software/service';
+
+interface Props {
+  licenses: AdminLicenseRow[];
+  products: { slug: string; title: string; published: boolean }[];
+  q: string;
+  salesOpen: boolean;
+  error?: string;
+}
+
+export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
+  const auth = await authenticateAdminRequest(context);
+  if (!auth.ok) return { redirect: { destination: '/admin/login', permanent: false } };
+  const q = typeof context.query.q === 'string' ? context.query.q.slice(0, 100) : '';
+  const products = SOFTWARE_PRODUCTS.map((p) => ({ slug: p.slug, title: p.title, published: p.published }));
+  try {
+    return { props: { licenses: await listAdminLicenses(q), products, q, salesOpen: SOFTWARE_SALES_OPEN } };
+  } catch (error: unknown) {
+    console.error('[admin/software] 조회 실패:', error);
+    return { props: { licenses: [], products, q, salesOpen: SOFTWARE_SALES_OPEN, error: '라이선스를 불러오지 못했습니다. 운영 DB에 마이그레이션 0054가 적용됐는지 확인해 주세요.' } };
+  }
+};
+
+const SOURCE_LABEL: Record<string, string> = { manual: '수동 발급', toss: '국내 결제', overseas: '해외 결제' };
+const STATUS_LABEL: Record<string, string> = { active: '사용 중', revoked: '취소', refunded: '환불' };
+const kst = (iso: string) => new Date(iso).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', year: '2-digit', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
+const buttonClass = 'rounded-lg bg-gray-900 px-3 py-2 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 disabled:opacity-50';
+const linkButtonClass = 'text-xs text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
+
+const post = async (url: string, body: unknown): Promise<{ ok: boolean; data: Record<string, unknown> | null }> => {
+  const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const data = (await res.json().catch(() => null)) as Record<string, unknown> | null;
+  return { ok: res.ok && data?.ok === true, data };
+};
+
+function IssueForm({ products }: { products: Props['products'] }) {
+  const [form, setForm] = useState({ productSlug: products[0]?.slug ?? '', email: '', customerName: '', note: '', maxActivations: '' });
+  const [busy, setBusy] = useState(false);
+  const [issued, setIssued] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+  const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setForm({ ...form, [k]: e.target.value });
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBusy(true);
+    setMessage(null);
+    const r = await post('/api/admin/software/licenses', form);
+    setBusy(false);
+    if (r.ok) setIssued(String(r.data?.licenseKey ?? ''));
+    else setMessage(String(r.data?.message ?? '발급하지 못했습니다.'));
+  };
+
+  if (products.length === 0) {
+    return <p className="text-gray-600">data/software/catalog.ts에 상품이 없습니다. 상품을 먼저 올리면 여기서 시험·증정 키를 발급할 수 있습니다.</p>;
+  }
+  if (issued) {
+    return (
+      <div className="space-y-3">
+        <Notice tone="success" light title="발급했습니다">
+          <p className="font-mono text-base tracking-wide">{issued}</p>
+          <p className="mt-1">이 키를 받는 분께 전해 주세요. 아래 목록에서도 다시 볼 수 있습니다.</p>
+        </Notice>
+        <button type="button" className={buttonClass} onClick={() => window.location.reload()}>목록 새로고침</button>
+      </div>
+    );
+  }
+  return (
+    <form onSubmit={submit} className="grid gap-3 md:grid-cols-2">
+      <label className="block">
+        <span className="mb-1 block text-xs text-gray-600">상품</span>
+        <select value={form.productSlug} onChange={set('productSlug')} className={inputClass}>
+          {products.map((p) => <option key={p.slug} value={p.slug}>{p.title}{p.published ? '' : ' (비공개)'}</option>)}
+        </select>
+      </label>
+      <label className="block">
+        <span className="mb-1 block text-xs text-gray-600">받는 분 이메일</span>
+        <input type="email" required value={form.email} onChange={set('email')} className={inputClass} />
+      </label>
+      <label className="block">
+        <span className="mb-1 block text-xs text-gray-600">이름(선택)</span>
+        <input value={form.customerName} onChange={set('customerName')} maxLength={80} className={inputClass} />
+      </label>
+      <label className="block">
+        <span className="mb-1 block text-xs text-gray-600">기기 수(비우면 상품 기본값)</span>
+        <input type="number" min={1} max={50} inputMode="numeric" value={form.maxActivations} onChange={set('maxActivations')} className={inputClass} />
+      </label>
+      <label className="block md:col-span-2">
+        <span className="mb-1 block text-xs text-gray-600">메모(선택 — 리뷰어·시험·증정 등)</span>
+        <input value={form.note} onChange={set('note')} maxLength={200} className={inputClass} />
+      </label>
+      <div className="flex items-center gap-3 md:col-span-2">
+        <button type="submit" disabled={busy} className={buttonClass}>{busy ? '발급 중…' : '키 발급'}</button>
+        {message && <span role="alert" className="text-sm text-red-700">{message}</span>}
+      </div>
+    </form>
+  );
+}
+
+function LicenseRow({ row }: { row: AdminLicenseRow }) {
+  const [state, setState] = useState<string | null>(null);
+  const act = async (body: Record<string, unknown>, confirmText: string) => {
+    if (!window.confirm(confirmText)) return;
+    setState('처리 중…');
+    const r = await post(`/api/admin/software/licenses/${row.id}`, body);
+    if (r.ok) window.location.reload();
+    else setState(String(r.data?.message ?? '처리하지 못했습니다.'));
+  };
+  return (
+    <tr className="border-t border-gray-100 align-top">
+      <td className="py-2 pr-3">
+        <span className="font-mono">{row.licenseKey}</span>
+        <span className="block text-xs text-gray-500">{row.productSlug} · {SOURCE_LABEL[row.source] ?? row.source}{row.orderNo ? ` · ${row.orderNo}` : ''}</span>
+        {row.note && <span className="block text-xs text-gray-500">{row.note}</span>}
+      </td>
+      <td className="py-2 pr-3">{row.email}{row.customerName && <span className="block text-xs text-gray-500">{row.customerName}</span>}</td>
+      <td className="py-2 pr-3 text-xs">{kst(row.issuedAt)}{row.firstActivatedAt && <span className="block text-gray-500">첫 활성화 {kst(row.firstActivatedAt)}</span>}</td>
+      <td className="py-2 pr-3">
+        <span className="tabular-nums">{row.activations.length} / {row.maxActivations}</span>
+        <ul className="mt-1 space-y-1 text-xs text-gray-600">
+          {row.activations.map((a) => (
+            <li key={a.id}>
+              {a.label ?? a.machineId.slice(0, 10)}{a.appVersion ? ` · v${a.appVersion}` : ''}
+              <span className="block text-gray-500">{kst(a.activatedAt)}</span>
+              <button type="button" className={linkButtonClass} onClick={() => act({ action: 'deactivate', activationId: a.id }, '이 기기를 해제할까요? 그 기기는 다시 활성화해야 합니다.')}>이 기기 해제</button>
+            </li>
+          ))}
+        </ul>
+      </td>
+      <td className="py-2">
+        <span>{STATUS_LABEL[row.status] ?? row.status}</span>
+        <div className="mt-1 flex flex-col items-start gap-1">
+          {row.activations.length > 0 && (
+            <button type="button" className={linkButtonClass} onClick={() => act({ action: 'deactivate' }, '활성 기기를 전부 해제할까요?')}>기기 전부 해제</button>
+          )}
+          {row.status === 'active' && (
+            <button type="button" className={linkButtonClass} onClick={() => act({ action: 'revoke' }, '이 라이선스를 취소할까요? 새 기기 활성화가 막힙니다(이미 활성화한 기기는 계속 돕니다).')}>라이선스 취소</button>
+          )}
+          {state && <span className="text-xs text-gray-600">{state}</span>}
+        </div>
+      </td>
+    </tr>
+  );
+}
+
+export default function AdminSoftwarePage({ licenses, products, q, salesOpen, error }: Props) {
+  return (
+    <>
+      <Head>
+        <title>소프트웨어 관리 | Studio NOL</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Head>
+      <AdminShell title="소프트웨어 관리" description="플러그인·툴 라이선스입니다. 상품 정의(이름·가격·릴리스)는 data/software/catalog.ts에서 바꿉니다." width="wide">
+        {error && <Notice tone="error" light className="mb-4">{error}</Notice>}
+        {!salesOpen && (
+          <Notice tone="warning" light className="mb-4">
+            판매가 닫혀 있습니다(data/software/policy.ts의 SOFTWARE_SALES_OPEN). 지금은 수동 발급만 됩니다 — 결제는 2단계(docs/software-sales-plan-2026-10.md).
+          </Notice>
+        )}
+
+        <section className="mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
+          <h2 className="mb-1 text-lg font-bold text-gray-900 dark:text-gray-900">수동 발급</h2>
+          <p className="mb-3 text-gray-600">결제 없이 키를 만듭니다 — 플러그인 시험, 리뷰어, 증정용. 비공개 상품에도 발급됩니다.</p>
+          <IssueForm products={products} />
+        </section>
+
+        <section className="rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900">라이선스</h2>
+            <form method="get" className="flex gap-2">
+              <input name="q" defaultValue={q} placeholder="이메일·키·주문번호" aria-label="라이선스 검색" className={inputClass} />
+              <button type="submit" className={buttonClass}>찾기</button>
+            </form>
+          </div>
+          {licenses.length === 0 ? (
+            <p className="text-gray-600">{q ? '찾는 라이선스가 없습니다.' : '아직 발급한 라이선스가 없습니다.'}</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead className="text-xs text-gray-500">
+                  <tr><th className="py-2 pr-3">키</th><th className="py-2 pr-3">받는 분</th><th className="py-2 pr-3">발급</th><th className="py-2 pr-3">기기</th><th className="py-2">상태</th></tr>
+                </thead>
+                <tbody>{licenses.map((row) => <LicenseRow key={row.id} row={row} />)}</tbody>
+              </table>
+            </div>
+          )}
+        </section>
+      </AdminShell>
+    </>
+  );
+}

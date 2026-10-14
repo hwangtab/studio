@@ -124,6 +124,9 @@ module.exports = {
     // 상점 트랜잭셔널 경로(noindex). 목록·상품 상세는 SSR이라 열거되지 않는다 — 판매를 열 때 런타임 사이트맵을 붙인다
     // (lib/shop/CLAUDE.md 판매 개시 체크리스트).
     '/*/shop/success', '/*/shop/fail', '/*/shop/manage/*',
+    // 소프트웨어 — 판매를 열기 전(SOFTWARE_SALES_OPEN=false)엔 noindex다. SSR이라 지금은 열거되지 않지만 정적으로
+    // 바뀌어도 실리지 않게 막아 둔다. 판매를 열 때 런타임 사이트맵을 붙인다(lib/software/CLAUDE.md).
+    '/*/software', '/*/software/*',
     // 비공개 감상실 — 비밀번호로 들어오는 발매 전 음원 페이지(noindex). SSR이라 지금은 열거되지 않지만
     // 정적 페이지로 바뀌는 순간 실리지 않게 미리 막아 둔다.
     '/*/press/*',
