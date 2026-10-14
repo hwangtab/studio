@@ -437,11 +437,14 @@ supporterMessage는 후원자가 준 개인정보라 파기 약속이 걸리지�
 - **사업자등록증은 `tax-docs/`이고 `/api/funding/media/`로는 나가지 않는다.** `resolveFundingBlobPath`(`mediaPath.ts`)를 넓히지 말 것 —
   넓히면 사본이 공개 미디어 경로로 열린다. 열람은 관리자 라우트 `pages/api/admin/creators/[creatorId]/business-certificate.ts` 하나이고,
   열 때마다 접속기록 `creator_business_certificate_view`가 남는다.
-- **세금 구분 전환·파기 규칙은 한 묶음이다.** 개인(원천징수)으로 바꾸면 사업자 행·사본을 지우되 사업자로 정산한 펀딩 기록
-  (`hasInvoicePayout`)이 있거나 상점 아티스트(`isShopArtist`)면 남긴다. 사업자로 바꾸면 주민등록번호를 지우되 원천징수 정산
-  기록(`hasWithheldPayout`)이 있으면 남긴다. 남긴 값은 월간 크론의 `purgeExpiredBusinessProfiles`·`purgeExpiredResidentNumbers`
-  (`retention.ts`)가 지급 시각부터 5년(기록이 없으면 1년 휴면) 뒤 지우고, 어느 행도 참조하지 않는 사본 파일은 `purgeOrphanTaxDocuments`가
-  지운다. 한쪽 판정만 바꾸면 전환 때 남긴 값을 파기가 너무 일찍 지우거나 영영 안 지운다 — 셋을 함께 고칠 것.
-- **알려진 한계 — 상점 정산은 기록 표가 없다.** 상점에서 원천징수로 지급한 사실을 코드가 모르므로, 상점 아티스트가 원천징수로
-  정산받은 뒤 사업자로 바꾸면 `hasWithheldPayout`이 거짓이라 주민등록번호가 지워진다. 상점 정산 기록 표를 만들 때 그 판정에
-  상점 갈래를 넣을 것.
+- **세금 구분 전환·파기 규칙은 한 묶음이다.** 개인(원천징수)으로 바꾸면 사업자 행·사본을 지우되 `keepsBusinessProfile`
+  (사업자로 정산한 펀딩 기록 `hasInvoicePayout` 또는 상점 아티스트 `isShopArtist`)이면 남긴다. 사업자로 바꾸면 주민등록번호를
+  지우되 `keepsResidentNumber`(원천징수 정산 기록 `hasWithheldPayout` 또는 `isShopArtist`)이면 남긴다(`creatorProjectWrite.ts`).
+  개설자 화면 문구도 같은 두 함수로 갈린다(`loadPayoutSummary`가 플래그로 싣는다) — 문구만 따로 판정하지 말 것.
+  남긴 값은 월간 크론의 `purgeExpiredBusinessProfiles`·`purgeExpiredResidentNumbers`(`retention.ts`)가 지급 시각부터 5년(기록이
+  없으면 1년 휴면) 뒤 지우고, 어느 행도 참조하지 않는 사본 파일은 `purgeOrphanTaxDocuments`가 지운다. 한쪽 판정만 바꾸면 전환 때
+  남긴 값을 파기가 너무 일찍 지우거나 영영 안 지운다 — 셋을 함께 고칠 것.
+- **상점 아티스트의 주민등록번호·사업자 정보는 `shop_artists` 행이 있는 한 남는다.** 상점 정산은 기록 표가 없어(운영자 수기 이체)
+  원천징수·세금계산서 여부를 코드가 모르므로 전환 때 지우지 않고(`isShopArtist`), 파기 쪽도 `liveEngagementExists`가 상점 아티스트를
+  진행 중으로 보아 지우지 않는다. 상점 정산 기록 표를 만들면 `isShopArtist`를 그 표 기반 판정(원천징수·사업자 지급 기록 유무)으로
+  바꾸고, 파기의 지급 시각 기준에도 그 표를 넣을 것.

@@ -151,8 +151,18 @@ npm run indexnow:changed -- --dry-run
 
 ### 마이그레이션 0058(`creator_business_profiles`)도 배포보다 먼저 적용한다
 
-개설자 사업자 정보 표다. 순서를 뒤집으면 **사업자 정보 저장과 사업자 개설자의 정산 기록만** 실패한다 — 결제·로그인·원천징수 저장은 이 표 없이 돈다.
-확인은 `PRAGMA table_info(creator_business_profiles);`. 국세청 상태조회 키 env `NTS_BUSINESS_STATUS_API_KEY`(공공데이터포털 "국세청_사업자등록정보
+개설자 사업자 정보 표다. 순서를 뒤집으면 실패하는 범위는 넷이다 — 결제·로그인·원천징수 저장은 이 표 없이 돈다.
+
+- 사업자(세금계산서) 개설자는 **정산 정보를 아무것도 저장하지 못한다**(계좌 포함, `business_unavailable` — 저장 전체를 거부한다).
+- 사업자 개설자의 정산 기록이 `business_profile_unavailable`로 막힌다.
+- 사업자등록증 업로드·삭제 라우트가 503을 돌려준다.
+- 월간 파기 크론(`purge-funding`)의 사업자 정보·사본 단계가 매달 실패하고, 그때마다 운영자에게 실패 메일이 간다.
+
+확인은 `PRAGMA table_info(creator_business_profiles);`.
+
+**배포 직후 할 일 — 기존 사업자 개설자에게 연락한다.** 이 표가 생기기 전에 사업자로 등록한 개설자는 사업자 정보가 없어, 정산을
+기록하려 하면 `no_business_number`로 막힌다. 정산 전에 운영자가 그 개설자들에게 정산 정보 탭에서 사업자등록번호·상호·대표자명을
+넣어 달라고 연락할 것. 국세청 상태조회 키 env `NTS_BUSINESS_STATUS_API_KEY`(공공데이터포털 "국세청_사업자등록정보
 진위확인 및 상태조회 서비스"의 일반 인증키 Decoding, Production·Preview)는 머지 전에 넣어 두면 머지 푸시가 싣고 간다 — 따로 재배포하지 않는다.
 키가 없어도 저장은 되고 상태가 "미확인(API 키 없음)"으로 남는다. 규칙은 `lib/funding/CLAUDE.md` "개설자 사업자 정보·국세청 조회".
 
