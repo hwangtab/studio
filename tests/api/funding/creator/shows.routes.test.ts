@@ -21,10 +21,10 @@ jest.mock('../../../../lib/shows/organizer/email', () => ({
 }));
 
 /* eslint-disable import/first */
-import showsHandler from './shows';
-import showHandler from './shows/[id]';
-import uploadHandler from './shows/[id]/upload';
-import withdrawHandler from './shows/[id]/withdraw';
+import showsHandler from '../../../../pages/api/funding/creator/shows';
+import showHandler from '../../../../pages/api/funding/creator/shows/[id]';
+import uploadHandler from '../../../../pages/api/funding/creator/shows/[id]/upload';
+import withdrawHandler from '../../../../pages/api/funding/creator/shows/[id]/withdraw';
 /* eslint-enable import/first */
 
 const GOOD_ORIGIN = 'https://studionol.co.kr';
