@@ -10,6 +10,8 @@ import type { ShopReviewStatus } from './productRules';
 export interface ShopDigitalFile {
   label: string;
   key: string;
+  /** true면 상품 화면의 미리듣기 파일이다 — 구매자 내려받기 목록에는 들어가지 않는다(전자상거래법 제17조 제6항의 시험 사용 상품). */
+  preview?: true;
 }
 
 export interface AdminShopSku {
@@ -82,13 +84,17 @@ export const parseDigitalFiles = (raw: string | null): ShopDigitalFile[] => {
     if (!Array.isArray(parsed)) return [];
     return parsed.flatMap((v) => {
       if (typeof v !== 'object' || v === null) return [];
-      const { label, key } = v as Record<string, unknown>;
-      return typeof label === 'string' && typeof key === 'string' ? [{ label, key }] : [];
+      const { label, key, preview } = v as Record<string, unknown>;
+      return typeof label === 'string' && typeof key === 'string' ? [{ label, key, ...(preview === true ? { preview: true as const } : {}) }] : [];
     });
   } catch {
     return [];
   }
 };
+
+/** 판매 파일(구매자가 내려받는 것)과 미리듣기 파일을 가른다. */
+export const salesDigitalFiles = (files: readonly ShopDigitalFile[]): ShopDigitalFile[] => files.filter((f) => !f.preview);
+export const previewDigitalFiles = (files: readonly ShopDigitalFile[]): ShopDigitalFile[] => files.filter((f) => f.preview === true);
 
 const fileSlugs = (): Set<string> => new Set(SHOP_PRODUCTS.map((p) => p.slug));
 

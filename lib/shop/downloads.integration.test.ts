@@ -42,7 +42,7 @@ import { SHOP_SHIPPING_FEE } from '../../data/shop/policy';
 
 const DIG = 'db-dddddddddd';
 const PHY = 'db-pppppppppp';
-const FILES = [{ label: '음원 묶음', key: 'shop/dig/album.zip' }, { label: '가사집', key: 'shop/dig/lyrics.pdf' }];
+const FILES = [{ label: '음원 묶음', key: 'shop/dig/album.zip' }, { label: '가사집', key: 'shop/dig/lyrics.pdf' }, { label: '미리듣기', key: 'shop/dig/preview.mp3', preview: true }];
 const SIGNED = 'https://acct.r2.cloudflarestorage.com/bucket/shop/dig/album.zip?X-Amz-Signature=beef';
 
 const done = (orderNo: string, totalAmount: number) => ({

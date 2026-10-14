@@ -5,7 +5,7 @@ import { consumeRateLimit } from '../booking/rate-limit';
 import { adminUrl, buildEmailLayout } from '../email/layout';
 import { sendEmail } from '../email/resend';
 import { OPERATOR_EMAIL } from '../operatorContact';
-import { parseDigitalFiles } from './adminProducts';
+import { parseDigitalFiles, salesDigitalFiles } from './adminProducts';
 import { DB_SKU_PREFIX, isDbSkuId } from './productRules';
 import { rowsAffectedOf } from './service';
 
@@ -41,7 +41,8 @@ export const loadOrderDownloadFiles = async (orderNo: string, items: ReadonlyArr
   for (const r of rows) {
     if (seen.has(r.product_id)) continue;
     seen.add(r.product_id);
-    for (const f of parseDigitalFiles(r.digital_files)) out.push({ index: out.length, label: f.label, key: f.key });
+    // 미리듣기 파일은 판매 파일이 아니다 — 구매자 내려받기 목록에 넣지 않는다.
+    for (const f of salesDigitalFiles(parseDigitalFiles(r.digital_files))) out.push({ index: out.length, label: f.label, key: f.key });
   }
   return out;
 };

@@ -212,7 +212,31 @@ describe('승인(한 묶음)', () => {
     await submitProduct('c1', id);
     expect(await approve(id)).toMatchObject({ ok: false, code: 'no_files' });
     expect((await applyShopAdminAction(id, { type: 'set_digital_files', files: [{ label: '앨범', key: 'shop/a.zip' }] })).ok).toBe(true);
+    // 판매 파일만 있고 미리듣기가 없으면 거부 — 시험 사용 상품(전자상거래법 제17조 제6항)이 먼저다.
+    expect(await approve(id)).toMatchObject({ ok: false, code: 'no_files', message: expect.stringContaining('미리듣기') });
+    expect((await applyShopAdminAction(id, { type: 'set_digital_files', files: [{ label: '앨범', key: 'shop/a.zip' }, { label: '미리듣기', key: 'shop/a-preview.mp3', preview: true }] })).ok).toBe(true);
     expect((await approve(id)).ok).toBe(true);
+  });
+
+  it('미리듣기만 있고 판매 파일이 없어도 승인하지 못한다', async () => {
+    const id = await draftWith('c1', input({ kind: 'digital' }));
+    await submitProduct('c1', id);
+    expect((await applyShopAdminAction(id, { type: 'set_digital_files', files: [{ label: '미리듣기', key: 'shop/p.mp3', preview: true }] })).ok).toBe(true);
+    expect(await approve(id)).toMatchObject({ ok: false, code: 'no_files' });
+  });
+
+  it('미리듣기와 판매 파일이 같은 키면 거부한다 — 전곡을 공짜로 받게 된다', async () => {
+    const id = await draftWith('c1', input({ kind: 'digital' }));
+    const r = await applyShopAdminAction(id, { type: 'set_digital_files', files: [{ label: '앨범', key: 'shop/a.zip' }, { label: '미리듣기', key: 'shop/a.zip', preview: true }] });
+    expect(r).toMatchObject({ ok: false, code: 'invalid' });
+  });
+
+  it('승인된 디지털 상품은 미리듣기를 비울 수 없다', async () => {
+    const id = await draftWith('c1', input({ kind: 'digital' }));
+    await submitProduct('c1', id);
+    await applyShopAdminAction(id, { type: 'set_digital_files', files: [{ label: '앨범', key: 'shop/a.zip' }, { label: '미리듣기', key: 'shop/a-preview.mp3', preview: true }] });
+    expect((await approve(id)).ok).toBe(true);
+    expect(await applyShopAdminAction(id, { type: 'set_digital_files', files: [{ label: '앨범', key: 'shop/a.zip' }] })).toMatchObject({ ok: false, code: 'conflict' });
   });
 
   it('상점 아티스트 등재가 없으면 승인하지 못한다', async () => {

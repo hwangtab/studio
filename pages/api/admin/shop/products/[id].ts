@@ -39,10 +39,10 @@ const parseAdminAction = (b: Record<string, unknown>): ShopAdminAction | null =>
     case 'set_internal_note': return typeof b.note === 'string' ? { type: 'set_internal_note', note: b.note } : null;
     case 'set_digital_files': {
       if (!Array.isArray(b.files)) return null;
-      const files: Array<{ label: string; key: string }> = [];
+      const files: Array<{ label: string; key: string; preview?: true }> = [];
       for (const f of b.files) {
         if (typeof f !== 'object' || f === null || typeof (f as Record<string, unknown>).label !== 'string' || typeof (f as Record<string, unknown>).key !== 'string') return null;
-        files.push({ label: (f as { label: string }).label, key: (f as { key: string }).key });
+        files.push({ label: (f as { label: string }).label, key: (f as { key: string }).key, ...((f as { preview?: unknown }).preview === true ? { preview: true as const } : {}) });
       }
       return { type: 'set_digital_files', files };
     }

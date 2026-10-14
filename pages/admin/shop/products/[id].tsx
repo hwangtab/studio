@@ -98,12 +98,14 @@ function StockCell({ skuId, stock }: { skuId: string; stock: number | null }) {
   );
 }
 
-const filesToText = (p: AdminShopProductDetail) => p.digitalFiles.map((f) => `${f.label}|${f.key}`).join('\n');
+const filesToText = (p: AdminShopProductDetail, preview: boolean) =>
+  p.digitalFiles.filter((f) => Boolean(f.preview) === preview).map((f) => `${f.label}|${f.key}`).join('\n');
 
-const parseFiles = (text: string): Array<{ label: string; key: string }> =>
+const parseFiles = (text: string, preview: boolean): Array<{ label: string; key: string; preview?: true }> =>
   text.split('\n').map((l) => l.trim()).filter(Boolean).map((l) => {
     const i = l.indexOf('|');
-    return i === -1 ? { label: l.slice(l.lastIndexOf('/') + 1), key: l } : { label: l.slice(0, i).trim(), key: l.slice(i + 1).trim() };
+    const base = i === -1 ? { label: l.slice(l.lastIndexOf('/') + 1), key: l } : { label: l.slice(0, i).trim(), key: l.slice(i + 1).trim() };
+    return preview ? { ...base, preview: true as const } : base;
   });
 
 export default function AdminShopProductPage({ product, editable, fulfillment }: Props) {
@@ -114,7 +116,8 @@ export default function AdminShopProductPage({ product, editable, fulfillment }:
   const [slug, setSlug] = useState(product.slug.startsWith('draft-') ? '' : product.slug);
   const [shipsOn, setShipsOn] = useState(product.shipsOn ?? '');
   const [fulfillmentMode, setFulfillmentMode] = useState<ShopFulfillmentMode>(fulfillment.mode);
-  const [filesText, setFilesText] = useState(filesToText(product));
+  const [filesText, setFilesText] = useState(filesToText(product, false));
+  const [previewText, setPreviewText] = useState(filesToText(product, true));
   const [internalNote, setInternalNote] = useState(product.internalNote ?? '');
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ tone: 'ok' | 'error'; text: string } | null>(null);
@@ -304,8 +307,13 @@ export default function AdminShopProductPage({ product, editable, fulfillment }:
               <label className="block">내려받기 파일 — 한 줄에 하나, &quot;이름|저장소 키&quot; (키는 shop/로 시작)
                 <textarea value={filesText} onChange={(e) => setFilesText(e.target.value)} rows={3} placeholder="앨범 (WAV)|shop/album-name/album.zip" className={`${inputClass} mt-1 font-mono`} />
               </label>
-              <button type="button" disabled={busy} onClick={() => run({ action: 'set_digital_files', files: parseFiles(filesText) }, '파일을 저장했습니다.')} className={`${secondaryBtn} mt-2`}>파일 저장</button>
-              {product.digitalFiles.length === 0 && <span className="ml-3 text-xs text-amber-800">디지털 상품은 파일이 있어야 승인됩니다.</span>}
+              <label className="mt-3 block">미리듣기 파일 — 상품 화면에서 누구나 먼저 들어 보는 30초~1분 발췌본. 한 줄에 하나, 형식은 같고 <strong>내려받기 파일과 다른 키</strong>여야 합니다
+                <textarea value={previewText} onChange={(e) => setPreviewText(e.target.value)} rows={3} placeholder="미리듣기 (1분)|shop/album-name/preview.mp3" className={`${inputClass} mt-1 font-mono`} />
+              </label>
+              <button type="button" disabled={busy} onClick={() => run({ action: 'set_digital_files', files: [...parseFiles(filesText, false), ...parseFiles(previewText, true)] }, '파일을 저장했습니다.')} className={`${secondaryBtn} mt-2`}>파일 저장</button>
+              {(!product.digitalFiles.some((f) => !f.preview) || !product.digitalFiles.some((f) => f.preview)) && (
+                <span className="ml-3 text-xs text-amber-800">디지털 상품은 내려받기 파일과 미리듣기 파일이 모두 있어야 승인됩니다.</span>
+              )}
             </div>)}
             <div className="md:col-span-2">
               <label className="block">내부 메모 (아티스트에게 보이지 않습니다)
