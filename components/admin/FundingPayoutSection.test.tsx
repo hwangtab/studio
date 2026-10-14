@@ -135,6 +135,9 @@ describe('기록 버튼과 막는 이유', () => {
     expect(within(list).getAllByRole('listitem')).toHaveLength(4);
     expect(list).toHaveTextContent('모금이 아직 끝나지 않았습니다');
     expect(list).toHaveTextContent('정산 계좌가 등록되지 않았습니다');
+    // 정산 정보는 개설자 콘솔의 탭이다(프로젝트 편집 화면의 구획이 아니다).
+    expect(list).toHaveTextContent('개설자 콘솔의 정산 정보 탭(/ko/funding/creator/payout)');
+    expect(list).not.toHaveTextContent('편집 화면의 정산 정보 구획');
     expect(list).toHaveTextContent('세금 처리 구분');
     expect(list).toHaveTextContent('결제된 후원이 없어');
     expect(screen.getByRole('button', { name: '정산 기록' })).toBeDisabled();
@@ -154,6 +157,7 @@ describe('기록 버튼과 막는 이유', () => {
     const list = screen.getByRole('status');
     expect(within(list).getAllByRole('listitem')).toHaveLength(1);
     expect(list).toHaveTextContent('주민등록번호가 등록되지 않았습니다');
+    expect(list).toHaveTextContent('개설자 콘솔의 정산 정보 탭');
     expect(screen.getByRole('button', { name: '정산 기록' })).toBeDisabled();
   });
 

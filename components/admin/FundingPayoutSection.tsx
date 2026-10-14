@@ -243,7 +243,7 @@ export function FundingPayoutSection({
     blockers.push('모금이 아직 끝나지 않았습니다. 지금 기록하면 이후 들어온 후원이 정산에서 통째로 빠집니다.');
   }
   if (!payout.hasPayoutAccount) {
-    blockers.push('개설자의 정산 계좌가 등록되지 않았습니다. 개설자 편집 화면의 정산 정보 구획에서 등록을 요청해 주세요.');
+    blockers.push('개설자의 정산 계좌가 등록되지 않았습니다. 개설자에게 개설자 콘솔의 정산 정보 탭(/ko/funding/creator/payout)에서 등록을 요청해 주세요.');
   }
   if (!payout.hasTaxType) {
     blockers.push(
@@ -252,7 +252,7 @@ export function FundingPayoutSection({
   }
   if (payout.needsResidentNumber) {
     blockers.push(
-      '개설자가 원천징수 대상인데 주민등록번호가 등록되지 않았습니다. 지금 기록하면 세액만 떼고 지급명세서를 낼 수 없습니다 — 개설자에게 정산 정보 구획에서 등록을 요청해 주세요.',
+      '개설자가 원천징수 대상인데 주민등록번호가 등록되지 않았습니다. 지금 기록하면 세액만 떼고 지급명세서를 낼 수 없습니다 — 개설자에게 개설자 콘솔의 정산 정보 탭(/ko/funding/creator/payout)에서 등록을 요청해 주세요.',
     );
   }
   if (payout.businessGate === 'missing') {
