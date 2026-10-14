@@ -4,6 +4,7 @@ import { getDb } from '../../db/client';
 import { shopProducts, shopProductSkus, type ShopProductRow, type ShopProductSkuRow } from '../../db/schema';
 import type { ShopProduct, ShopSku } from '../../data/shop/catalog';
 import type { ResolvedSku } from './catalog';
+import { loadShippedByArtistSlugs } from './fulfillmentMode';
 
 /**
  * DB 상품(아티스트 위탁) 읽기 — 공개 객체 `ShopProduct`로 정규화한다. 호출은 `repository.ts`가 유일한 입구다.
@@ -41,7 +42,7 @@ export const toShopSku = (row: ShopProductSkuRow): ShopSku => ({
 });
 
 /** DB 행 → ShopProduct. `skus`는 호출부가 정한 것(공개는 잠긴 SKU만)을 받는다. */
-export const normalizeDbProduct = (row: ShopProductRow, skus: readonly ShopProductSkuRow[]): ShopProduct => ({
+export const normalizeDbProduct = (row: ShopProductRow, skus: readonly ShopProductSkuRow[], shippedByArtist?: string): ShopProduct => ({
   slug: row.slug,
   category: row.category,
   title: row.title,
@@ -55,6 +56,7 @@ export const normalizeDbProduct = (row: ShopProductRow, skus: readonly ShopProdu
   ...(row.editionSize != null ? { editionSize: row.editionSize } : {}),
   hasDownloads: hasFiles(row.digitalFiles),
   source: 'db',
+  ...(shippedByArtist ? { shippedByArtist } : {}),
 });
 
 const publicProductWhere = and(eq(shopProducts.reviewStatus, 'approved'), eq(shopProducts.published, true));
@@ -78,13 +80,17 @@ const loadLockedSkus = async (productIds: string[]): Promise<Map<string, ShopPro
 /** 팔 수 있는 SKU가 하나도 없는 상품은 공개하지 않는다(주문 폼이 가격을 못 고른다). */
 const hasSellable = (skus: readonly ShopProductSkuRow[]): boolean => skus.some((s) => !s.retired);
 
+/** 팔 수 있는 상품만 골라 정규화한다. 발송 주체(아티스트 직접 발송)는 표가 없는 DB에서는 비어 있다(= 스튜디오 발송). */
+const toPublicProducts = async (rows: ShopProductRow[]): Promise<ShopProduct[]> => {
+  const skus = await loadLockedSkus(rows.map((r) => r.id));
+  const sellable = rows.filter((r) => hasSellable(skus.get(r.id) ?? []));
+  const shippers = await loadShippedByArtistSlugs(sellable.map((r) => r.id));
+  return sellable.map((r) => normalizeDbProduct(r, skus.get(r.id) ?? [], shippers.get(r.id)));
+};
+
 export const listDbPublishedProducts = async (): Promise<ShopProduct[]> => {
   const rows = await getDb().select().from(shopProducts).where(publicProductWhere).orderBy(asc(shopProducts.approvedAt), asc(shopProducts.slug));
-  const skus = await loadLockedSkus(rows.map((r) => r.id));
-  return rows.flatMap((r) => {
-    const list = skus.get(r.id) ?? [];
-    return hasSellable(list) ? [normalizeDbProduct(r, list)] : [];
-  });
+  return toPublicProducts(rows);
 };
 
 /** 그 아티스트(creator)의 공개 DB 상품. */
@@ -92,19 +98,15 @@ export const listDbPublishedProductsByCreator = async (creatorId: string): Promi
   const rows = await getDb().select().from(shopProducts)
     .where(and(publicProductWhere, eq(shopProducts.creatorId, creatorId)))
     .orderBy(asc(shopProducts.approvedAt), asc(shopProducts.slug));
-  const skus = await loadLockedSkus(rows.map((r) => r.id));
-  return rows.flatMap((r) => {
-    const list = skus.get(r.id) ?? [];
-    return hasSellable(list) ? [normalizeDbProduct(r, list)] : [];
-  });
+  return toPublicProducts(rows);
 };
 
 export const findDbProductBySlug = async (slug: string): Promise<ShopProduct | null> => {
   const rows = await getDb().select().from(shopProducts).where(and(publicProductWhere, eq(shopProducts.slug, slug))).limit(1);
   const row = rows[0];
   if (!row) return null;
-  const list = (await loadLockedSkus([row.id])).get(row.id) ?? [];
-  return hasSellable(list) ? normalizeDbProduct(row, list) : null;
+  const [product] = await toPublicProducts([row]);
+  return product ?? null;
 };
 
 /** 팔 수 있는 DB SKU — 공개 상품 + 잠김 + retired 아님. 없으면 null. */
@@ -118,7 +120,8 @@ export const findDbSellableSku = async (skuId: string): Promise<ResolvedSku | nu
   const hit = rows[0];
   if (!hit) return null;
   const list = (await loadLockedSkus([hit.product.id])).get(hit.product.id) ?? [hit.sku];
-  const product = normalizeDbProduct(hit.product, list);
+  const shipper = (await loadShippedByArtistSlugs([hit.product.id])).get(hit.product.id);
+  const product = normalizeDbProduct(hit.product, list, shipper);
   const sku = product.skus.find((s) => s.id === hit.sku.id);
   return sku ? { product, sku } : null;
 };

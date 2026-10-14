@@ -8,6 +8,7 @@ import { computeShopTotals } from './amounts';
 import { shopLineName, type ResolvedSku } from './catalog';
 import { findSellableSkuAsync } from './repository';
 import { generateShopOrderNo } from './shape';
+import { hasMixedShippers } from './shipper';
 import { remainingStockSql, stockGateSql } from './stock';
 import type { CreateShopOrderPayload } from './validation';
 
@@ -17,7 +18,7 @@ export const rowsAffectedOf = (result: unknown): number =>
 
 export type CreateShopOrderResult =
   | { ok: true; orderNo: string; totalAmount: number; orderName: string }
-  | { ok: false; code: 'sales_closed' | 'unknown_item' | 'sold_out' | 'lookup_failed' | 'shipping_required' };
+  | { ok: false; code: 'sales_closed' | 'unknown_item' | 'sold_out' | 'lookup_failed' | 'shipping_required' | 'mixed_shipper' };
 
 /**
  * 주문 생성 — 재고를 SHOP_HOLD_SECONDS 동안 잡고(`pending`), 결제 승인(confirmShopOrder)이 `paid`로 바꾼다.
@@ -41,6 +42,10 @@ export const createShopOrder = async (
     if (!lookup.found) return { ok: false, code: 'unknown_item' };
     resolved.push({ ...lookup.found, quantity: line.quantity });
   }
+
+  // 한 주문은 한 발송 주체만 — 스튜디오 발송과 아티스트 직접 발송(또는 다른 아티스트)을 섞으면 운송장 하나로 닫을 수 없다.
+  // 디지털 상품은 발송이 없어 판정에서 빠진다. 장바구니가 이미 거르지만 서버가 다시 판정한다.
+  if (hasMixedShippers(resolved.map((r) => r.product))) return { ok: false, code: 'mixed_shipper' };
 
   // 실물 줄이 하나라도 있으면 배송지가 필요하다. 디지털 상품만이면 배송지·배송비가 없다(받은 배송지는 쓰지 않는다).
   const needsShipping = resolved.some((r) => r.product.kind !== 'digital');

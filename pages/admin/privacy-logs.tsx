@@ -62,6 +62,7 @@ const ACTION_LABEL: Record<string, string> = {
   contract_pdf_download: '계약서 PDF',
   contract_view: '계약서 상세 열람',
   show_roster_export: '공연 명단 CSV',
+  shop_artist_shipping_view: '상점 아티스트 발송 화면 열람',
 };
 
 const RESULT_LABEL: Record<string, string> = {

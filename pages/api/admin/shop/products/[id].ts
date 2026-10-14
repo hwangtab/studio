@@ -46,6 +46,7 @@ const parseAdminAction = (b: Record<string, unknown>): ShopAdminAction | null =>
       }
       return { type: 'set_digital_files', files };
     }
+    case 'set_fulfillment_mode': return b.mode === 'studio' || b.mode === 'artist' ? { type: 'set_fulfillment_mode', mode: b.mode } : null;
     default: return null;
   }
 };

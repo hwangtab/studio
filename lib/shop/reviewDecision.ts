@@ -8,6 +8,7 @@ import { fundingDownloadObjectExists } from '../funding/r2';
 import { isUniqueConflictError } from '../funding/slugOccupancy';
 import { nextReviewStatus, type ReviewAction } from '../funding/reviewTransition';
 import { isDefaultCreatorName } from '../funding/creatorValidation';
+import { setProductFulfillmentMode, type ShopFulfillmentMode } from './fulfillmentMode';
 import { loadShopProductForAdmin, type ShopDigitalFile } from './adminProducts';
 import { findMissingShopProductFields, isValidDateOnly, shopSlugRejection } from './creatorValidation';
 import { SHOP_CREATOR_LIMITS } from './productRules';
@@ -143,7 +144,8 @@ export type ShopAdminAction =
   | { type: 'set_ships_on'; shipsOn: string | null }
   | { type: 'set_published'; published: boolean }
   | { type: 'set_internal_note'; note: string }
-  | { type: 'set_digital_files'; files: ShopDigitalFile[] };
+  | { type: 'set_digital_files'; files: ShopDigitalFile[] }
+  | { type: 'set_fulfillment_mode'; mode: ShopFulfillmentMode };
 
 export type ShopAdminCode = 'not_found' | 'invalid' | 'conflict' | 'incomplete' | 'storage_unavailable';
 export type ShopAdminResult =
@@ -229,6 +231,12 @@ export const applyShopAdminAction = async (
       }
       const stored = files.length === 0 ? null : JSON.stringify(files.map((f) => ({ label: f.label.trim(), key: f.key })));
       await db.update(shopProducts).set({ digitalFiles: stored, updatedAt: epoch }).where(eq(shopProducts.id, productId));
+      return { ok: true, slug: product.slug };
+    }
+    case 'set_fulfillment_mode': {
+      // 승인 전에만 정한다 — 승인된 상품·스튜디오 상품·디지털 상품의 거부는 setProductFulfillmentMode가 판정한다.
+      const result = await setProductFulfillmentMode(productId, action.mode, now);
+      if (!result.ok) return adminDeny(result.code === 'not_found' ? 'not_found' : result.code === 'invalid' ? 'invalid' : result.code === 'conflict' ? 'conflict' : 'storage_unavailable', result.message);
       return { ok: true, slug: product.slug };
     }
     default: {

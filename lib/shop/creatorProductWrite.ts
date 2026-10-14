@@ -9,6 +9,7 @@ import { isDefaultCreatorName } from '../funding/creatorValidation';
 import { isUniqueConflictError } from '../funding/slugOccupancy';
 import { nextReviewStatus } from '../funding/reviewTransition';
 import { getShopArtistByCreator } from './artists';
+import { loadProductFulfillmentMode, type ShopFulfillmentMode } from './fulfillmentMode';
 import { findMissingShopProductFields, splitShopDescription, type ShopProductInput } from './creatorValidation';
 import {
   canAdminEditShopField, canAdminEditShopProduct, canCreatorEditShopField, canCreatorEditShopProduct, DB_SKU_PREFIX, DRAFT_SLUG_PREFIX, SHOP_CREATOR_LIMITS,
@@ -67,6 +68,8 @@ export interface CreatorProductDetail {
   hasDownloads: boolean;
   skus: CreatorProductSku[];
   creator: { name: string; email: string };
+  /** 발송 주체(읽기 전용 — 운영자가 승인 전에 정한다). 표가 없으면 'studio'. */
+  fulfillmentMode: ShopFulfillmentMode;
 }
 
 export interface CreatorProductSummary {
@@ -109,7 +112,7 @@ const toSku = (r: ShopProductSkuRow): CreatorProductSku => ({
   id: r.id, optionLabel: r.optionLabel, price: r.price, retired: r.retired, locked: r.lockedAt !== null,
 });
 
-const toDetail = (row: ShopProductRow, skus: readonly ShopProductSkuRow[], creator: { name: string; email: string }): CreatorProductDetail => ({
+const toDetail = (row: ShopProductRow, skus: readonly ShopProductSkuRow[], creator: { name: string; email: string }, fulfillmentMode: ShopFulfillmentMode): CreatorProductDetail => ({
   id: row.id,
   slug: row.slug,
   category: row.category,
@@ -129,6 +132,7 @@ const toDetail = (row: ShopProductRow, skus: readonly ShopProductSkuRow[], creat
   hasDownloads: hasFiles(row.digitalFiles),
   skus: [...skus].sort((a, b) => a.sortOrder - b.sortOrder || a.id.localeCompare(b.id)).map(toSku),
   creator,
+  fulfillmentMode,
 });
 
 const loadOwnRow = async (creatorId: string, productId: string): Promise<ShopProductRow | null> => {
@@ -144,7 +148,12 @@ export const loadProductForCreator = async (creatorId: string, productId: string
   const [creator] = await getDb().select({ name: fundingCreators.name, email: fundingCreators.email })
     .from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
   const skus = await getDb().select().from(shopProductSkus).where(eq(shopProductSkus.productId, productId));
-  return toDetail(row, skus, creator ?? { name: '', email: '' });
+  // 발송 주체는 읽기 전용 표시다 — 못 읽어도 상품 화면은 열려야 한다('studio'로 두고 로그).
+  const { mode } = await loadProductFulfillmentMode(productId).catch((error: unknown) => {
+    console.error('[shop] 발송 주체 조회 실패 — 스튜디오 발송으로 표시합니다:', error);
+    return { mode: 'studio' as const };
+  });
+  return toDetail(row, skus, creator ?? { name: '', email: '' }, mode);
 };
 
 /** 콘솔 목록 — 승인·진행 중인 것이 위. */

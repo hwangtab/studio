@@ -9,6 +9,7 @@ import { fitsDisplayFont } from '../../../lib/fonts/displayCoverage';
 import { findShopArtistOfDbProduct, resolveShopArtist } from '../../../lib/shop/artists';
 import { findShopProductAsync, listPublishedShopProducts } from '../../../lib/shop/repository';
 import { getRemainingStock } from '../../../lib/shop/service';
+import { canShareOrder } from '../../../lib/shop/shipper';
 import imageMetadata from '../../../utils/imageMetadata.json';
 
 interface Props {
@@ -89,7 +90,8 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ params, re
   if (params?.locale !== 'ko') return { redirect: { destination: `/ko/shop${/^[a-z0-9-]+$/.test(slug) ? `/${slug}` : ''}`, permanent: false } };
   const product = await findShopProductAsync(slug);
   if (!product) return { notFound: true };
-  const others = (await listPublishedShopProducts()).filter((p) => p.slug !== product.slug);
+  // 함께 담을 수 있는 상품만 — 한 주문은 한 발송 주체만 담는다(아티스트가 직접 보내는 상품은 같은 아티스트끼리만).
+  const others = (await listPublishedShopProducts()).filter((p) => p.slug !== product.slug && canShareOrder(product, p));
 
   let remaining: RemainingStock = null;
   try {

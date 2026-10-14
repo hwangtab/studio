@@ -70,6 +70,7 @@ export const validateShopCatalog = (products: readonly ShopProduct[]): string[] 
     }
     if (p.kind === 'digital') problems.push(`${where}: 디지털 상품(kind: 'digital')은 DB 상품 전용이다`);
     if (p.editionSize !== undefined) problems.push(`${where}: 한정판 넘버링(editionSize)은 DB 상품 전용이다`);
+    if (p.shippedByArtist !== undefined) problems.push(`${where}: 아티스트 직접 발송(shippedByArtist)은 DB 상품 전용이다`);
     if (p.skus.length === 0) problems.push(`${where}: SKU가 없다`);
     const sellable = p.skus.filter((s) => !s.retired);
     if (p.published && sellable.length === 0) problems.push(`${where}: 공개 상품인데 팔 수 있는 SKU가 없다`);

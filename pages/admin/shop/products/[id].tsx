@@ -10,6 +10,7 @@ import { formatPriceAmount } from '../../../../data/pricing';
 import type { ShopProduct } from '../../../../data/shop/catalog';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { loadShopProductForAdmin, type AdminShopProductDetail } from '../../../../lib/shop/adminProducts';
+import { loadProductFulfillmentMode, type ShopFulfillmentMode } from '../../../../lib/shop/fulfillmentMode';
 import { loadProductForCreator, type CreatorProductDetail } from '../../../../lib/shop/creatorProductWrite';
 import { splitShopDescription } from '../../../../lib/shop/creatorValidation';
 import { SHOP_STATUS_LABELS } from '../../../../lib/shop/productRules';
@@ -18,6 +19,8 @@ interface Props {
   product: AdminShopProductDetail;
   /** 편집 폼이 읽는 판본(아티스트 콘솔과 같은 모양). */
   editable: CreatorProductDetail;
+  /** 발송 주체. `tableMissing`이면 마이그레이션 0057 전이라 바꿀 수 없다. */
+  fulfillment: { mode: ShopFulfillmentMode; tableMissing: boolean };
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
@@ -28,7 +31,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   if (!product) return { notFound: true };
   const editable = await loadProductForCreator(product.creatorId, product.id);
   if (!editable) return { notFound: true };
-  return { props: { product, editable } };
+  const fulfillment = await loadProductFulfillmentMode(product.id).catch((error: unknown) => {
+    console.error('[admin/shop] 발송 주체 조회 실패:', error);
+    return { mode: 'studio' as const, tableMissing: true };
+  });
+  return { props: { product, editable, fulfillment } };
 };
 
 const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
@@ -99,13 +106,14 @@ const parseFiles = (text: string): Array<{ label: string; key: string }> =>
     return i === -1 ? { label: l.slice(l.lastIndexOf('/') + 1), key: l } : { label: l.slice(0, i).trim(), key: l.slice(i + 1).trim() };
   });
 
-export default function AdminShopProductPage({ product, editable }: Props) {
+export default function AdminShopProductPage({ product, editable, fulfillment }: Props) {
   // 관리자 화면은 항상 밝은 바탕이다. 미리보기에 들어가는 공개 컴포넌트는 dark: 색을 쓰므로, 운영자 기기가
   // 어두운 모드면 흰 바탕에 연한 글씨가 되어 안 보인다 — 이 화면에서는 dark 클래스를 걷는다(Layout이 없어 다시 붙이는 쪽이 없다).
   useEffect(() => { document.documentElement.classList.remove('dark'); }, []);
   const [note, setNote] = useState('');
   const [slug, setSlug] = useState(product.slug.startsWith('draft-') ? '' : product.slug);
   const [shipsOn, setShipsOn] = useState(product.shipsOn ?? '');
+  const [fulfillmentMode, setFulfillmentMode] = useState<ShopFulfillmentMode>(fulfillment.mode);
   const [filesText, setFilesText] = useState(filesToText(product));
   const [internalNote, setInternalNote] = useState(product.internalNote ?? '');
   const [busy, setBusy] = useState(false);
@@ -220,6 +228,7 @@ export default function AdminShopProductPage({ product, editable }: Props) {
         {product.reviewStatus === 'submitted' && (
           <section className={card}>
             <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-gray-900">판정</h2>
+            <p className="mb-3 text-gray-600">발송 주체는 승인 뒤 바꿀 수 없으니 아래 운영에서 먼저 정해 주세요.</p>
             <div className="grid gap-3 md:grid-cols-2">
               <label className="block">주소(slug) — 승인할 때 확정됩니다
                 <input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="비우면 아티스트가 적은 주소" className={`${inputClass} mt-1`} />
@@ -238,7 +247,7 @@ export default function AdminShopProductPage({ product, editable }: Props) {
         {(product.reviewStatus === 'draft' || product.reviewStatus === 'changes_requested') && (
           <section className={card}>
             <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-gray-900">바로 승인</h2>
-            <p className="mb-3 text-gray-600">저장한 내용 그대로 심사를 거치지 않고 승인해 공개합니다. 먼저 위 편집 내용을 저장해 주세요. 승인 조건은 심사와 같습니다.</p>
+            <p className="mb-3 text-gray-600">저장한 내용 그대로 심사를 거치지 않고 승인해 공개합니다. 먼저 위 편집 내용을 저장해 주세요. 승인 조건은 심사와 같습니다. 발송 주체는 승인 뒤 바꿀 수 없으니 아래 운영에서 먼저 정해 주세요.</p>
             <label className="block md:max-w-md">주소(slug) — 승인할 때 확정됩니다
               <input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="예: my-album" className={`${inputClass} mt-1`} />
             </label>
@@ -260,6 +269,28 @@ export default function AdminShopProductPage({ product, editable }: Props) {
                 <input type="date" value={shipsOn} onChange={(e) => setShipsOn(e.target.value)} className={`${inputClass} mt-1`} />
               </label>
               <button type="button" disabled={busy} onClick={() => run({ action: 'set_ships_on', shipsOn: shipsOn || null }, '발송 예정일을 저장했습니다.')} className={`${secondaryBtn} mt-2`}>저장</button>
+            </div>
+            <div>
+              <label className="block">발송 주체
+                <select
+                  value={fulfillmentMode} disabled={approved || fulfillment.tableMissing || busy}
+                  onChange={(e) => setFulfillmentMode(e.target.value === 'artist' ? 'artist' : 'studio')}
+                  className={`${inputClass} mt-1`}
+                >
+                  <option value="studio">스튜디오가 보내요</option>
+                  <option value="artist">아티스트가 직접 보내요</option>
+                </select>
+              </label>
+              <p className="mt-1 text-xs text-gray-600">
+                {fulfillment.tableMissing
+                  ? '마이그레이션 0057이 적용되기 전이라 바꿀 수 없습니다(모든 상품을 스튜디오가 보냅니다).'
+                  : approved
+                    ? '승인된 상품은 바꿀 수 없습니다. 이미 들어온 주문의 발송 책임이 갈리기 때문입니다.'
+                    : '승인 전에만 정할 수 있습니다. 아티스트가 보내면 주문자의 받는 분 정보가 그 아티스트에게 제공되고, 배송비 전액이 아티스트 몫입니다.'}
+              </p>
+              {!approved && !fulfillment.tableMissing && (
+                <button type="button" disabled={busy || fulfillmentMode === fulfillment.mode} onClick={() => run({ action: 'set_fulfillment_mode', mode: fulfillmentMode }, '발송 주체를 저장했습니다.')} className={`${secondaryBtn} mt-2`}>저장</button>
+              )}
             </div>
             {approved && (
               <div>

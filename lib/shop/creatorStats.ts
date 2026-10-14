@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
+import { isMissingTableError } from './fulfillmentMode';
 import { getRemainingStock } from './service';
 
 /**
@@ -20,6 +21,8 @@ export interface CreatorSkuSales {
   paid: number;
   shipped: number;
   remaining: number;
+  /** 아티스트가 직접 보내는 상품의 옵션이면 true — 총 재고를 콘솔에서 직접 넣는다(스튜디오 발송 상품은 관리자만). */
+  canSetStock: boolean;
 }
 
 export const loadCreatorSales = async (creatorId: string, now: Date = new Date()): Promise<CreatorSkuSales[]> => {
@@ -50,6 +53,20 @@ export const loadCreatorSales = async (creatorId: string, now: Date = new Date()
   const soldById = new Map(sold.map((r) => [r.sku_id, r]));
   const remaining = await getRemainingStock(ids, now);
 
+  // 발송 주체 표(0057)가 없으면 전부 스튜디오 발송이다 — 재고 입력 칸이 없을 뿐 판매 현황은 그대로 나온다.
+  const selfShipped = new Set<string>();
+  try {
+    const rows = await db.all<{ id: string }>(sql`
+      SELECT s.id AS id FROM shop_product_skus s
+      JOIN shop_products p ON p.id = s.product_id
+      JOIN shop_product_fulfillment f ON f.product_id = p.id
+      WHERE p.creator_id = ${creatorId} AND f.mode = 'artist'
+    `);
+    for (const r of rows) selfShipped.add(r.id);
+  } catch (error: unknown) {
+    if (!isMissingTableError(error)) console.error('[shop] 아티스트 발송 상품 조회 실패:', error);
+  }
+
   return skus.map((s) => ({
     skuId: s.sku_id,
     productId: s.product_id,
@@ -60,5 +77,6 @@ export const loadCreatorSales = async (creatorId: string, now: Date = new Date()
     paid: Number(soldById.get(s.sku_id)?.paid ?? 0),
     shipped: Number(soldById.get(s.sku_id)?.shipped ?? 0),
     remaining: remaining[s.sku_id] ?? 0,
+    canSetStock: selfShipped.has(s.sku_id),
   }));
 };
