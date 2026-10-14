@@ -16,8 +16,9 @@ export interface ShopTotals {
   total: number;
 }
 
-export const computeShopTotals = (lines: readonly ShopLinePrice[]): ShopTotals => {
+/** `needsShipping` — 실물 줄이 하나라도 있는가. 디지털 상품만이면 배송비가 없다. */
+export const computeShopTotals = (lines: readonly ShopLinePrice[], needsShipping = true): ShopTotals => {
   const subtotal = lines.reduce((sum, l) => sum + l.unitPrice * l.quantity, 0);
-  const shippingFee = subtotal > 0 ? shopShippingFeeFor(subtotal) : 0;
+  const shippingFee = needsShipping && subtotal > 0 ? shopShippingFeeFor(subtotal) : 0;
   return { subtotal, shippingFee, total: subtotal + shippingFee };
 };

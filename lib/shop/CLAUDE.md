@@ -17,6 +17,7 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
    코드는 이미 `purgeShopPersonalDataOfPurgedOrders`가 돈다), **위탁(택배사 이름 — 운영자가 정한다)**. 처리방침 ko 전체가
    펀딩 약관 판본 해시 대상이라 `FUNDING_TERMS_VERSION`을 올리고 기준선을 갱신한다(루트 CLAUDE.md "약관·처리방침을 고치면…").
 3. 이용약관(`/ko/terms`)에 상품 판매의 청약철회·교환·반품 조항이 있는지 본다. 화면의 규정 문구는 `lib/shop/policyCopy.ts` 한 곳이다.
+   디지털 상품을 열 때는 **`/ko/terms`에 디지털 콘텐츠 청약철회 조항(내려받기를 시작하면 제한 — 전자상거래법 제17조 제2항 제5호)이 있는지** 따로 확인한다. 화면의 고지(`SHOP_DIGITAL_WITHDRAWAL_NOTICE`)가 약관과 같은 약속을 해야 한다.
 4. 상품을 `data/shop/catalog.ts`에 올린다(머리 주석의 예시). 이미지는 `public/images/shop/<이름>-YYYYMMDD.webp`, **`git add -f`**.
    `UPDATE_SHOP_CATALOG_BASELINE=1 npx jest data/shop/catalog.baseline.test.ts`로 SKU 기준선을 싣고, 빌드 후 바뀐 히어로 폰트
    서브셋(woff2·chars.json)을 함께 커밋한다(상품 제목이 `/ko/shop/<slug>` h1이다 — `scripts/generate-hero-font.mjs` 7-1).
@@ -161,6 +162,26 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
   **발송 뒤 반품 환불은 번호를 남긴다** — 이미 나간 물건의 번호라 다시 팔면 같은 번호가 둘이 된다. 되팔려면 운영자가 DB에서 직접 지운다.
 - 표시: 주문 접수 메일(줄별 "한정판 번호 7/100"), `/ko/shop/manage/<주문번호>`, 관리자 주문 화면("포장할 번호"). 조회는 오류를 삼킨다.
 - `setSkuStock`이 그 상품 SKU 재고 합 ≤ `edition_size`로 막는다(PR 3).
+
+### 디지털 상품 (플랫폼 PR 5) — 배송 없는 주문과 내려받기 게이트
+
+- **배송 없는 주문**: 실물(`kind !== 'digital'`) 줄이 하나도 없으면 배송지·배송비가 없다. 서비스(`createShopOrder`)가 SKU를 해석한 뒤 판정하고,
+  실물이 있는데 `shipping`이 없으면 `shipping_required`(API 400). 디지털만이면 받은 배송지도 저장하지 않는다. 검증(`validation.ts`)에서 `shipping`은 선택 —
+  있으면 전부 검증한다. 배송비 면제 기준(20만원)은 디지털 줄을 포함한 상품 합계로 센다.
+- **배송지 없음 표식**: `shop_orders`의 받는 분·연락처·우편번호·주소가 NOT NULL이라 **`''`**를 넣는다. 판정은 `shopOrderShips(o) = o.postcode !== ''`
+  (`lib/shop/shape.ts`) 하나 — 화면·메일·관리자·정산이 이걸 쓴다. 받는 분 이름·연락처는 주문자(`orders.customer_*`)가 따로 있어 `''`로 둔다.
+  5년 파기(`purgeShopPersonalDataOfPurgedOrders`)는 `postcode <> ''`인 행만 덮는다(표식을 파기 표식으로 바꾸면 배송이 있던 주문으로 읽힌다).
+- **내려받기 게이트** `pages/api/shop/download.ts`(펀딩 download를 본뜸): POST만(GET 405 — 링크 미리보기 봇이 기록을 남기지 못하게), 관리 토큰, 레이트리밋, no-store.
+  `file`은 그 주문 줄의 `kind='digital'` 상품 `digital_files` 순번이고 화면에는 라벨·순번만 나간다(R2 키는 서버만). 순서는 서명 → 객체 존재 확인(없으면 기록 안 하고
+  503 + 운영자 메일) → 기록 → 302. **메일에는 내려받기 주소를 싣지 않는다** — 주문 확인 페이지 링크만.
+- **기록** `recordFirstDownload`(`lib/shop/downloads.ts`): `INSERT … SELECT … WHERE EXISTS(살아 있는 주문) ON CONFLICT DO NOTHING` + 같은 batch에서 디지털만 주문(`postcode=''`)을
+  `delivered`로(`shipped_at`·`delivered_at`). 이미 기록된 주문은 행이 있고 주문이 아직 살아 있어야 통과한다(행만 보면 환불된 주문에도 통과).
+- **청약철회 제한**: 고객 취소(`cancel.ts`)는 `db-` 줄이 있는 주문에서만 "내려받기 기록 없음"을 보고, 선점 UPDATE의 WHERE에 `NOT EXISTS(shop_order_downloads)`를 건다 —
+  내려받기와 취소가 겹치면 어느 쪽이 먼저든 다른 쪽은 0행이다. 표가 없는 DB에서 파일 상품 주문 취소가 깨지지 않게 `db-` 줄이 있을 때만 새 표를 읽는다.
+  운영자 환불은 내려받은 뒤에도 되고, 관리자 주문 화면이 "내려받음: 시각"을 경고한다. 디지털만 주문은 발송 처리를 거부한다(`markShopOrderShipped`).
+- **큰 파일**은 함수 한도(4.5MB) 때문에 웹에서 올리지 않는다: 운영자가 R2에 `shop/` 접두사로 올리고 관리자 상품 화면(`set_digital_files`)에서 라벨·키를 넣는다.
+- **정산 예정 표**: 배송 없는 주문은 발송이 없어 결제 승인 월(`payments.approved_at`)로 센다. 내려받기 전 주문은 고객이 철회할 수 있어 세지 않고 "철회 가능 N건"으로만 표시한다
+  (정산 기록 표는 아직 없다).
 
 ### 화면
 

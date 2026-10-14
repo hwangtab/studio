@@ -259,6 +259,7 @@ export const purgeShopPersonalDataOfPurgedOrders = async (): Promise<OrderPurgeR
     SET recipient_name = ${PURGED_MARK}, recipient_phone = ${PURGED_MARK}, postcode = ${PURGED_MARK},
         address1 = ${PURGED_MARK}, address2 = NULL, shipping_memo = NULL
     WHERE order_no IN (SELECT order_no FROM orders WHERE type = 'merch' AND customer_name = ${PURGED_MARK})
+      AND postcode <> ''  -- 디지털 상품만 담은 주문은 배송지를 받지 않았다(빈 문자열 표식을 표식으로 덮지 않는다)
       AND (recipient_name <> ${PURGED_MARK} OR recipient_phone <> ${PURGED_MARK} OR postcode <> ${PURGED_MARK}
            OR address1 <> ${PURGED_MARK} OR address2 IS NOT NULL OR shipping_memo IS NOT NULL)
   `);

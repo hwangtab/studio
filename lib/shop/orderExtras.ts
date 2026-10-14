@@ -1,3 +1,4 @@
+import { orderHasDigitalLines } from './downloads';
 import { latestPendingShipsOn, isPendingShipsOn } from './preorder';
 import { loadShipsOnBySku } from './repository';
 import { formatSerials, loadOrderSerials } from './serials';
@@ -14,6 +15,8 @@ export interface OrderExtras {
   latestShipsOn: string | null;
   /** 줄 id → "7/100, 8/100". 번호가 있는 줄만. */
   serialsByItem: Map<string, string>;
+  /** 디지털 상품 줄이 있는가(디지털만이든 섞였든). 조회 실패는 false. */
+  hasDigital: boolean;
 }
 
 export const loadOrderExtras = async (
@@ -33,5 +36,6 @@ export const loadOrderExtras = async (
     const label = formatSerials(list);
     if (label) serialsByItem.set(itemId, label);
   }
-  return { shipsOnByItem, latestShipsOn: latestPendingShipsOn(shipsOnByItem.values(), now), serialsByItem };
+  const hasDigital = await orderHasDigitalLines(orderNo, items).catch(() => false);
+  return { shipsOnByItem, latestShipsOn: latestPendingShipsOn(shipsOnByItem.values(), now), serialsByItem, hasDigital };
 };

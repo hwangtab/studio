@@ -31,4 +31,11 @@ describe('validateCreateShopOrderPayload', () => {
     const r = validateCreateShopOrderPayload(body);
     expect(r).toMatchObject({ ok: false, message: expect.stringContaining('배송 메모') });
   });
+
+  it('배송지는 선택이다 — 없으면 null(실물 여부는 서비스가 판정), 있으면 전부 검증한다', () => {
+    const none = validateCreateShopOrderPayload(shopPayload([{ skuId: 'a', quantity: 1 }], { shipping: undefined }));
+    expect(none.ok && none.value.shipping).toBeNull();
+    const partial = validateCreateShopOrderPayload(shopPayload([{ skuId: 'a', quantity: 1 }], { shipping: { recipientName: '김구매' } }));
+    expect(partial.ok).toBe(false);
+  });
 });

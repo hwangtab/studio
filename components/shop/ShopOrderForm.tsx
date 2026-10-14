@@ -18,7 +18,7 @@ import { readStringDraft, writeStringDraft } from '../../lib/formDraft';
 import { SHOP_DRAFT_KEY } from '../../lib/shop/draft';
 import { computeShopTotals } from '../../lib/shop/amounts';
 import { shopLineName } from '../../lib/shop/catalog';
-import { SHOP_PREORDER_MIX_NOTE, SHOP_REFUND_RULES, shopPreorderSupplyNote, shopShippingNote } from '../../lib/shop/policyCopy';
+import { SHOP_DIGITAL_RULES, SHOP_DIGITAL_WITHDRAWAL_NOTICE, SHOP_PREORDER_MIX_NOTE, SHOP_REFUND_RULES, shopPreorderSupplyNote, shopShippingNote } from '../../lib/shop/policyCopy';
 import { latestPendingShipsOn } from '../../lib/shop/preorder';
 import { reportPaymentFailure, reportPaymentWindowOpen } from '../../utils/reportPaymentFailure';
 
@@ -84,7 +84,10 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
   );
   // 예약 상품을 담았으면 가장 늦은 발송 예정일에 함께 보낸다.
   const latestShipsOn = latestPendingShipsOn(lines.map((l) => l.product.shipsOn), new Date());
-  const totals = computeShopTotals(lines.map((l) => ({ unitPrice: l.sku.price, quantity: l.quantity })));
+  // 실물 줄이 하나라도 있어야 배송지·배송비가 있다. 디지털 상품만이면 둘 다 없다(담은 게 없을 때는 실물로 본다).
+  const hasDigital = lines.some((l) => l.product.kind === 'digital');
+  const needsShipping = lines.length === 0 || lines.some((l) => l.product.kind !== 'digital');
+  const totals = computeShopTotals(lines.map((l) => ({ unitPrice: l.sku.price, quantity: l.quantity })), needsShipping);
 
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -143,7 +146,7 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
     e.preventDefault();
     if (!canOrder || submitting) return;
     setError(null);
-    if (!address.postcode.trim() || !address.address1.trim()) {
+    if (needsShipping && (!address.postcode.trim() || !address.address1.trim())) {
       setError('배송지 주소를 찾아 주세요.');
       return;
     }
@@ -159,14 +162,19 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
         customerName: name.trim(),
         customerPhone: phone.trim(),
         customerEmail: email.trim(),
-        shipping: {
-          recipientName: (sameRecipient ? name : recipientName).trim(),
-          recipientPhone: (sameRecipient ? phone : recipientPhone).trim(),
-          postcode: address.postcode.trim(),
-          address1: address.address1.trim(),
-          address2: address.address2.trim(),
-          shippingMemo: address.memo.trim(),
-        },
+        // 디지털 상품만이면 배송지를 보내지 않는다(같은 입력의 주문 재사용 키에서도 빠진다).
+        ...(needsShipping
+          ? {
+              shipping: {
+                recipientName: (sameRecipient ? name : recipientName).trim(),
+                recipientPhone: (sameRecipient ? phone : recipientPhone).trim(),
+                postcode: address.postcode.trim(),
+                address1: address.address1.trim(),
+                address2: address.address2.trim(),
+                shippingMemo: address.memo.trim(),
+              },
+            }
+          : {}),
       };
       const key = JSON.stringify(body);
       let pending = pendingRef.current;
@@ -294,13 +302,15 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
         <PriceSummary
           items={[
             ...lines.map((l) => ({ label: shopLineName(l.product.title, l.sku.optionLabel), amount: l.sku.price * l.quantity, quantity: l.quantity, unit: '개' })),
-            {
-              label: '배송비',
-              amount: totals.shippingFee,
-              note: totals.shippingFee > 0
-                ? `상품 ${formatPriceAmount(SHOP_FREE_SHIPPING_FROM)}원 이상이면 무료 · ${formatPriceAmount(SHOP_FREE_SHIPPING_FROM - totals.subtotal)}원 남았어요`
-                : '무료 배송',
-            },
+            ...(needsShipping
+              ? [{
+                  label: '배송비',
+                  amount: totals.shippingFee,
+                  note: totals.shippingFee > 0
+                    ? `상품 ${formatPriceAmount(SHOP_FREE_SHIPPING_FROM)}원 이상이면 무료 · ${formatPriceAmount(SHOP_FREE_SHIPPING_FROM - totals.subtotal)}원 남았어요`
+                    : '무료 배송',
+                }]
+              : []),
           ]}
           total={totals.total}
           totalLabel="결제 금액 (부가세 포함)"
@@ -319,10 +329,11 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
               <TextInput value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" placeholder="010-1234-5678" />
             </Field>
           </div>
-          <Field id="shop-email" label="이메일" required hint="주문 확인과 발송 안내(운송장 번호)를 이 주소로 보내 드려요.">
+          <Field id="shop-email" label="이메일" required hint={needsShipping ? '주문 확인과 발송 안내(운송장 번호)를 이 주소로 보내 드려요.' : '주문 확인 주소를 이 메일로 보내 드려요.'}>
             <TextInput value={email} onChange={(e) => setEmail(e.target.value)} type="email" inputMode="email" autoComplete="email" />
           </Field>
 
+          {needsShipping && (
           <div>
             <h3 className="mb-2 typo-card-meta font-medium text-gray-700 dark:text-gray-300">배송지</h3>
             <Checkbox label="주문하시는 분이 받아요" checked={sameRecipient} onChange={(e) => setSameRecipient(e.target.checked)} />
@@ -346,6 +357,7 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
             </div>
             <p className="mt-2 typo-caption">{shopShippingNote()}</p>
           </div>
+          )}
 
           <div>
             <h3 className="mb-2 typo-card-meta font-medium text-gray-700 dark:text-gray-300">결제수단</h3>
@@ -382,6 +394,13 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
 
           {error && <Notice tone="error">{error}</Notice>}
 
+          {hasDigital && (
+            <Notice tone="info">
+              {needsShipping ? '디지털 상품은 배송 없이 주문 확인 페이지에서 내려받아요. ' : '배송 없이 주문 확인 페이지에서 내려받는 상품이에요. '}
+              {SHOP_DIGITAL_WITHDRAWAL_NOTICE}
+            </Notice>
+          )}
+
           {/* 동의는 결제하기를 누르는 행위로 받는다(공연·펀딩과 같은 규칙) — 체크박스 없이 고지 한 줄 + 접힌 규정. */}
           <div className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
             <p>
@@ -391,7 +410,8 @@ export default function ShopOrderForm({ product, others, remaining, salesOpen }:
             </p>
             <Disclosure variant="plain" summary="교환·환불 규정 보기" className="mt-1" summaryClassName="text-sm font-medium text-gray-600 dark:text-gray-300" bodyClassName="text-xs">
               <ul className="list-disc space-y-1 pl-5">
-                {SHOP_REFUND_RULES.map((rule) => <li key={rule}>{rule}</li>)}
+                {(needsShipping ? SHOP_REFUND_RULES : []).map((rule) => <li key={rule}>{rule}</li>)}
+                {hasDigital && SHOP_DIGITAL_RULES.map((rule) => <li key={rule}>{rule}</li>)}
               </ul>
             </Disclosure>
           </div>

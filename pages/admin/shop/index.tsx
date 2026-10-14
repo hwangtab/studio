@@ -101,7 +101,7 @@ function ArtistSalesSection({ rows, month, prevMonth, nextMonth }: Pick<Props, '
         </div>
       </div>
       <p className="mb-3 text-gray-600">
-        그 달에 발송한 결제 완료 주문의 위탁 상품만 셉니다. 아티스트 몫 {SHOP_ARTIST_SHARE_PERCENT}%(상품 판매가 기준, 배송비 제외). 개인 아티스트는 부가세 상당액과 원천징수 3.3%를 뺍니다.
+        그 달에 발송한 결제 완료 주문의 위탁 상품만 셉니다. 배송 없는 디지털 주문은 결제 승인 월로 세고, 내려받기 전 주문은 철회할 수 있어 세지 않습니다. 아티스트 몫 {SHOP_ARTIST_SHARE_PERCENT}%(상품 판매가 기준, 배송비 제외). 개인 아티스트는 부가세 상당액과 원천징수 3.3%를 뺍니다.
         이미 정산한 달의 반품 환불은 다음 정산에서 빼 주세요.
       </p>
       {rows.length === 0 ? (
@@ -118,6 +118,9 @@ function ArtistSalesSection({ rows, month, prevMonth, nextMonth }: Pick<Props, '
                   <td className="py-2 pr-3">
                     {r.artistName}
                     <span className="block text-xs text-gray-500">{r.taxType === 'invoice' ? '사업자 · 세금계산서' : r.taxType === 'withholding' ? '개인 · 원천징수' : r.artistSlug.startsWith('creator:') ? '세금 유형 미설정' : 'data/artists에 없음'}</span>
+                    {r.withdrawableOrderCount > 0 && (
+                      <span className="block text-xs text-amber-800">철회 가능 {r.withdrawableOrderCount}건 — 내려받기 전 디지털 주문이라 정산에 넣지 않았습니다</span>
+                    )}
                     {r.needsReviewOrderNos.length > 0 && (
                       <span className="block text-xs text-amber-800">부분 환불 주문은 빼고 계산했습니다 — 직접 확인: {r.needsReviewOrderNos.join(', ')}</span>
                     )}

@@ -15,10 +15,12 @@ import { getSiteConfig } from '../../../../data/siteConfig';
 import { isTokenMatch } from '../../../../lib/booking/token';
 import { withI18nServerProps } from '../../../../lib/getStatic';
 import { shopLineName } from '../../../../lib/shop/catalog';
+import { getFirstDownloadedAt, loadOrderDownloadFiles } from '../../../../lib/shop/downloads';
 import { loadOrderExtras } from '../../../../lib/shop/orderExtras';
+import { SHOP_DIGITAL_WITHDRAWAL_NOTICE } from '../../../../lib/shop/policyCopy';
 import { formatShipsOn } from '../../../../lib/shop/preorder';
 import { findShopOrderByOrderNo } from '../../../../lib/shop/service';
-import { normalizeShopOrderNo } from '../../../../lib/shop/shape';
+import { normalizeShopOrderNo, shopOrderShips } from '../../../../lib/shop/shape';
 
 interface Props {
   orderNo: string;
@@ -33,7 +35,15 @@ interface Props {
   address: string;
   courier: string | null;
   trackingNumber: string | null;
+  /** 배송이 있는 주문인가. 디지털 상품만이면 false. */
+  ships: boolean;
+  /** 내려받기 파일(라벨·순번만 — R2 키는 서버만 안다). 결제가 살아 있는 주문만. */
+  downloads: Array<{ index: number; label: string }>;
+  /** 첫 내려받기 시각(초). 없으면 null. */
+  downloadedAt: number | null;
 }
+
+const DIGITAL_STATE_LABEL: Partial<Record<Props['state'], string>> = { preparing: '내려받을 수 있어요', delivered: '내려받기 시작' };
 
 const STATE_LABEL: Record<Props['state'], string> = {
   preparing: '보낼 준비 중',
@@ -44,7 +54,7 @@ const STATE_LABEL: Record<Props['state'], string> = {
 };
 
 export default function ShopManagePage(props: Props) {
-  const { orderNo, token, state, lines, shipsOn, shippingFee, totalAmount, recipient, address, courier, trackingNumber } = props;
+  const { orderNo, token, state, lines, shipsOn, shippingFee, totalAmount, recipient, address, courier, trackingNumber, ships, downloads, downloadedAt } = props;
   const kakaoUrl = getSiteConfig('ko').contact.kakaoUrl;
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ tone: 'error' | 'success'; text: string } | null>(null);
@@ -82,16 +92,33 @@ export default function ShopManagePage(props: Props) {
         <header className="mb-6 text-center">
           <h1 className="typo-page-title text-gray-900 dark:text-white">주문 확인</h1>
           <p className="mt-2 typo-card-meta">주문번호 {orderNo}</p>
-          <StatusBadge tone={state === 'cancelled' || state === 'unpaid' ? 'neutral' : 'active'} className="mt-3">{STATE_LABEL[state]}</StatusBadge>
+          <StatusBadge tone={state === 'cancelled' || state === 'unpaid' ? 'neutral' : 'active'} className="mt-3">{(!ships && DIGITAL_STATE_LABEL[state]) || STATE_LABEL[state]}</StatusBadge>
         </header>
 
         <PriceSummary
           className="mb-6"
-          items={[...lines.map((l) => ({ label: l.label, amount: l.amount, quantity: l.quantity, unit: '개' })), { label: '배송비', amount: shippingFee }]}
+          items={[...lines.map((l) => ({ label: l.label, amount: l.amount, quantity: l.quantity, unit: '개' })), ...(ships ? [{ label: '배송비', amount: shippingFee }] : [])]}
           total={totalAmount}
           totalLabel="결제 금액 (부가세 포함)"
         />
 
+        {downloads.length > 0 && (
+          <div className="mb-6 space-y-2">
+            {/* 링크가 아니라 폼이다 — 주소를 여는 것만으로는 기록이 남지 않아야, 링크를 긁는 봇이 고객의 청약철회를 없애지 못한다. */}
+            {downloads.map((d) => (
+              <form key={d.index} method="post" action="/api/shop/download">
+                <input type="hidden" name="orderNo" value={orderNo} />
+                <input type="hidden" name="token" value={token} />
+                <input type="hidden" name="file" value={String(d.index)} />
+                <input type="hidden" name="label" value={d.label} />
+                <Button type="submit" fullWidth>{d.label} 내려받기</Button>
+              </form>
+            ))}
+            <p className="typo-card-meta">{SHOP_DIGITAL_WITHDRAWAL_NOTICE}</p>
+          </div>
+        )}
+
+        {ships && (
         <Panel className="mb-6 space-y-1 text-sm text-gray-800 dark:text-gray-200">
           <p><span className="text-gray-500 dark:text-gray-400">받는 분</span> {recipient}</p>
           <p><span className="text-gray-500 dark:text-gray-400">배송지</span> {address}</p>
@@ -105,10 +132,11 @@ export default function ShopManagePage(props: Props) {
             <p><span className="text-gray-500 dark:text-gray-400">운송장</span> {courier} {trackingNumber}</p>
           )}
         </Panel>
+        )}
 
         {message && <Notice tone={message.tone} className="mb-4">{message.text}</Notice>}
 
-        {state === 'preparing' && (
+        {state === 'preparing' && downloadedAt === null && (
           <div className="space-y-3">
             {!confirming ? (
               <Button type="button" variant="weak" fullWidth onClick={() => setConfirming(true)}>주문 취소하기</Button>
@@ -123,7 +151,10 @@ export default function ShopManagePage(props: Props) {
             )}
           </div>
         )}
-        {(state === 'shipped' || state === 'delivered') && (
+        {downloadedAt !== null && state !== 'cancelled' && (
+          <p className="typo-card-meta">내려받기를 시작해 이 페이지에서는 취소할 수 없어요. 파일에 문제가 있으면 카카오톡이나 010-4255-7893으로 알려 주세요.</p>
+        )}
+        {ships && (state === 'shipped' || state === 'delivered') && (
           <p className="typo-card-meta">교환·반품은 받으신 날부터 7일 안에 카카오톡이나 010-4255-7893으로 요청해 주세요.</p>
         )}
 
@@ -151,6 +182,13 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ params, qu
   const so = order.shopOrder;
   const extras = await loadOrderExtras(order.orderNo, so.items, new Date()).catch(() => null);
   const paid = order.status === 'paid' || order.status === 'partially_refunded' || order.status === 'refunded';
+  const live = (order.status === 'paid' || order.status === 'partially_refunded') && so.fulfillmentStatus !== 'cancelled';
+  // 디지털 상품 — 목록·첫 내려받기 시각. 조회 실패는 삼킨다(주문 확인 화면이 이것 때문에 깨지면 안 된다). 키는 props에 싣지 않는다.
+  const hasDb = so.items.some((i) => i.skuId.startsWith('db-'));
+  const downloads = live && hasDb
+    ? (await loadOrderDownloadFiles(order.orderNo, so.items).catch(() => [])).map((f) => ({ index: f.index, label: f.label }))
+    : [];
+  const downloadedAt = hasDb ? await getFirstDownloadedAt(order.orderNo).catch(() => null) : null;
   return {
     props: {
       orderNo: order.orderNo,
@@ -164,6 +202,9 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ params, qu
       address: `(${so.postcode}) ${so.address1}${so.address2 ? ` ${so.address2}` : ''}`,
       courier: so.courier,
       trackingNumber: so.trackingNumber,
+      ships: shopOrderShips(so),
+      downloads,
+      downloadedAt,
     },
   };
 });

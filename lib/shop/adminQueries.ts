@@ -125,21 +125,25 @@ export interface AdminShopArtistSalesRow {
   payout: ShopArtistPayout | null;
   /** 부분 환불된 주문 — 어느 줄이 환불됐는지 원장이 모르므로 운영자가 직접 본다. 정산액에 넣지 않았다. */
   needsReviewOrderNos: string[];
+  /** 배송 없는 디지털 주문 중 아직 내려받지 않은(고객이 철회할 수 있는) 주문 수. 정산액에 넣지 않았다. */
+  withdrawableOrderCount: number;
 }
 
 /**
  * 아티스트별 월 판매·정산 예정액(위탁 판매, 1단계는 운영자가 이 표를 보고 손으로 이체한다).
  *
  * 세는 것: 그 달(KST)에 **발송한** 결제 완료 주문의 아티스트 상품 줄. 발송 전 주문은 고객이 셀프 취소할 수 있어 세지 않는다.
+ * **배송 없는 디지털 주문**(우편번호 `''`)은 발송이 없으므로 결제 승인 월(`payments.approved_at`)로 센다. 내려받기 전 주문은 고객이 철회할
+ * 수 있어 정산에 넣지 않고 `withdrawableOrderCount`로만 알린다(정산 기록은 아직 없다).
  * 발송 뒤 반품 환불은 주문이 `refunded`가 되어 다음 조회부터 빠진다 — 이미 정산한 달이면 다음 정산에서 빼야 한다.
  * 아티스트는 SKU → 카탈로그 상품의 `artist`로 찾는다(판매 시작 뒤 바뀌지 않게 catalog.baseline이 막는다).
  */
 export const listShopArtistSales = async (month: string): Promise<AdminShopArtistSalesRow[]> => {
   const range = kstMonthRange(month);
   if (!range) return [];
-  const byArtist = new Map<string, { quantity: number; salesAmount: number; review: Set<string> }>();
+  const byArtist = new Map<string, { quantity: number; salesAmount: number; review: Set<string>; withdrawable: Set<string> }>();
   const add = (key: string, r: { order_no: string; status: string; unit_price: number; quantity: number }) => {
-    const acc = byArtist.get(key) ?? { quantity: 0, salesAmount: 0, review: new Set<string>() };
+    const acc = byArtist.get(key) ?? { quantity: 0, salesAmount: 0, review: new Set<string>(), withdrawable: new Set<string>() };
     if (r.status === 'partially_refunded') acc.review.add(r.order_no);
     else {
       acc.quantity += Number(r.quantity);
@@ -159,7 +163,7 @@ export const listShopArtistSales = async (month: string): Promise<AdminShopArtis
       JOIN shop_orders so ON so.order_no = o.order_no
       JOIN shop_order_items i ON i.order_no = o.order_no
       WHERE o.type = 'merch' AND o.status IN ('paid', 'partially_refunded')
-        AND so.fulfillment_status IN ('shipped', 'delivered')
+        AND so.fulfillment_status IN ('shipped', 'delivered') AND so.postcode <> ''
         AND so.shipped_at >= ${range.from} AND so.shipped_at < ${range.to}
     `);
     for (const r of rows) {
@@ -184,13 +188,42 @@ export const listShopArtistSales = async (month: string): Promise<AdminShopArtis
       JOIN funding_creators c ON c.id = p.creator_id
       WHERE i.sku_id LIKE 'db-%'
         AND o.type = 'merch' AND o.status IN ('paid', 'partially_refunded')
-        AND so.fulfillment_status IN ('shipped', 'delivered')
+        AND so.fulfillment_status IN ('shipped', 'delivered') AND so.postcode <> ''
         AND so.shipped_at >= ${range.from} AND so.shipped_at < ${range.to}
     `);
-    for (const r of rows) {
+    const note = (r: { creator_id: string; name: string; tax_type: string | null }): string => {
       const key = `creator:${r.creator_id}`;
       creatorInfo.set(key, { name: r.name, taxType: r.tax_type === 'withholding' || r.tax_type === 'invoice' ? r.tax_type : null });
-      add(key, r);
+      return key;
+    };
+    for (const r of rows) add(note(r), r);
+
+    // 배송 없는 디지털 주문 — 결제 승인 월로 센다. 내려받은 주문만 판매로 세고, 아직인 주문은 "철회 가능"으로만 알린다.
+    const digitalRows = await getDb().all<{
+      order_no: string; status: string; unit_price: number; quantity: number; creator_id: string; name: string; tax_type: string | null; downloaded: number;
+    }>(sql`
+      SELECT o.order_no, o.status, i.unit_price, i.quantity, p.creator_id AS creator_id, c.name AS name, c.tax_type AS tax_type,
+             EXISTS (SELECT 1 FROM shop_order_downloads d WHERE d.order_no = o.order_no) AS downloaded
+      FROM orders o
+      JOIN shop_orders so ON so.order_no = o.order_no
+      JOIN shop_order_items i ON i.order_no = o.order_no
+      JOIN shop_product_skus ps ON ps.id = i.sku_id
+      JOIN shop_products p ON p.id = ps.product_id
+      JOIN funding_creators c ON c.id = p.creator_id
+      WHERE i.sku_id LIKE 'db-%'
+        AND o.type = 'merch' AND o.status IN ('paid', 'partially_refunded')
+        AND so.fulfillment_status <> 'cancelled' AND so.postcode = ''
+        AND (SELECT MIN(pay.approved_at) FROM payments pay WHERE pay.order_id = o.id) >= ${range.from}
+        AND (SELECT MIN(pay.approved_at) FROM payments pay WHERE pay.order_id = o.id) < ${range.to}
+    `);
+    for (const r of digitalRows) {
+      const key = note(r);
+      if (Number(r.downloaded) > 0) add(key, r);
+      else {
+        const acc = byArtist.get(key) ?? { quantity: 0, salesAmount: 0, review: new Set<string>(), withdrawable: new Set<string>() };
+        acc.withdrawable.add(r.order_no);
+        byArtist.set(key, acc);
+      }
     }
   } catch (error) {
     console.error('[shop] 아티스트 정산(DB 상품) 조회 실패 — 파일 상품만 표시합니다:', error);
@@ -209,6 +242,7 @@ export const listShopArtistSales = async (month: string): Promise<AdminShopArtis
         salesAmount: acc.salesAmount,
         payout: taxType ? computeShopArtistPayout({ salesAmount: acc.salesAmount, refundAmount: 0, taxType }) : null,
         needsReviewOrderNos: [...acc.review].sort(),
+        withdrawableOrderCount: acc.withdrawable.size,
       };
     })
     .sort((a, b) => a.artistName.localeCompare(b.artistName, 'ko'));

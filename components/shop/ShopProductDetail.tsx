@@ -86,6 +86,12 @@ export default function ShopProductDetail({ product, remaining = null, artist = 
             <span>{formatShipsOn(product.shipsOn)} 발송 예정</span>
           </p>
         )}
+        {product.kind === 'digital' && (
+          <p className="mt-2 flex flex-wrap items-center gap-2 text-sm text-gray-800 dark:text-gray-200">
+            <StatusBadge tone="active">디지털 상품</StatusBadge>
+            <span>배송 없음 · 결제 뒤 주문 확인 페이지에서 내려받아요</span>
+          </p>
+        )}
         {remaining && sellable.length > 0 && sellable.every((s) => (remaining[s.id] ?? 0) <= 0) && (
           <StatusBadge tone="neutral" className="mt-2">품절</StatusBadge>
         )}
