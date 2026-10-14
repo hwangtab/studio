@@ -239,6 +239,12 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
 - **청약철회 제한**: 고객 취소(`cancel.ts`)는 `db-` 줄이 있는 주문에서만 "내려받기 기록 없음"을 보고, 선점 UPDATE의 WHERE에 `NOT EXISTS(shop_order_downloads)`를 건다 —
   내려받기와 취소가 겹치면 어느 쪽이 먼저든 다른 쪽은 0행이다. 표가 없는 DB에서 파일 상품 주문 취소가 깨지지 않게 `db-` 줄이 있을 때만 새 표를 읽는다.
   운영자 환불은 내려받은 뒤에도 되고, 관리자 주문 화면이 "내려받음: 시각"을 경고한다. 디지털만 주문은 발송 처리를 거부한다(`markShopOrderShipped`).
+- **미리듣기는 필수다**(전자상거래법 제17조 제6항 — 청약철회를 제한하려면 시험 사용 상품을 제공해야 한다). `digital_files` 항목의 `preview: true`가 미리듣기 파일이고(마이그레이션 없음),
+  관리자 상품 화면의 "미리듣기 파일" 칸에 넣는다. **판매 파일과 다른 키**여야 한다(같은 키면 `set_digital_files`가 거부 — 전곡을 공짜로 받게 된다). 판매 파일·미리듣기가 각각 1개 이상이어야
+  승인되고(`decideShopProduct`·"바로 승인" 같은 경로), 승인된 상품은 어느 쪽도 비울 수 없다. 30초~1분 발췌본은 운영자가 만들어 R2 `shop/` 아래에 올린다.
+  미리듣기는 구매자 내려받기 목록(`loadOrderDownloadFiles`)과 `hasDownloads`에 들어가지 않는다. 재생은 `GET /api/shop/preview?product=<slug>&i=<미리듣기 순번>` —
+  승인·공개된 디지털 상품의 `preview` 항목만 5분 서명 주소(inline)로 302, IP 레이트리밋, no-store. 공개 상품 객체에는 라벨(`previews`)만 싣고 키는 싣지 않는다.
+  화면은 `<audio preload="none">`(재생 전에는 한 바이트도 받지 않는다). 302 목적지가 R2라 CSP `media-src`에 R2 오리진이 열려 있다(`middleware.ts`).
 - **큰 파일**은 함수 한도(4.5MB) 때문에 웹에서 올리지 않는다: 운영자가 R2에 `shop/` 접두사로 올리고 관리자 상품 화면(`set_digital_files`)에서 라벨·키를 넣는다.
 - **정산 예정 표**: 배송 없는 주문은 발송이 없어 결제 승인 월(`payments.approved_at`)로 센다. 내려받기 전 주문은 고객이 철회할 수 있어 세지 않고 "철회 가능 N건"으로만 표시한다
   (정산 기록 표는 아직 없다).

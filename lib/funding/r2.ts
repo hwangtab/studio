@@ -66,17 +66,18 @@ export const fundingDownloadObjectExists = async (key: string): Promise<boolean>
   return true;
 };
 
-export const presignFundingDownload = async (key: string): Promise<string> => {
+export const presignFundingDownload = async (key: string, options: { inline?: boolean; ttlSeconds?: number } = {}): Promise<string> => {
   if (!isSafeObjectKey(key)) throw new Error(`내려받기 키 형식이 올바르지 않습니다: ${key}`);
 
   const client = objectClient();
 
   const url = objectUrl(key);
-  url.searchParams.set('X-Amz-Expires', String(TTL_SECONDS));
+  url.searchParams.set('X-Amz-Expires', String(options.ttlSeconds ?? TTL_SECONDS));
   // 키는 무작위 경로라 그대로 저장되면 파일 이름이 뜻을 잃는다. 받는 쪽에 원래 이름으로
   // 저장되게 지정한다.
   const filename = key.slice(key.lastIndexOf('/') + 1);
-  url.searchParams.set('response-content-disposition', `attachment; filename="${filename}"`);
+  // inline = 상점 미리듣기(<audio>가 바로 재생). 내려받기는 attachment.
+  url.searchParams.set('response-content-disposition', `${options.inline ? 'inline' : 'attachment'}; filename="${filename}"`);
 
   const signed = await client.sign(url.toString(), { method: 'GET', aws: { signQuery: true } });
   return signed.url;

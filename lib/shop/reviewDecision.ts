@@ -9,7 +9,7 @@ import { isUniqueConflictError } from '../funding/slugOccupancy';
 import { nextReviewStatus, type ReviewAction } from '../funding/reviewTransition';
 import { isDefaultCreatorName } from '../funding/creatorValidation';
 import { setProductFulfillmentMode, type ShopFulfillmentMode } from './fulfillmentMode';
-import { loadShopProductForAdmin, type ShopDigitalFile } from './adminProducts';
+import { loadShopProductForAdmin, previewDigitalFiles, salesDigitalFiles, type ShopDigitalFile } from './adminProducts';
 import { findMissingShopProductFields, isValidDateOnly, shopSlugRejection } from './creatorValidation';
 import { SHOP_CREATOR_LIMITS } from './productRules';
 
@@ -104,8 +104,12 @@ export const decideShopProduct = async (
   if (product.kind === 'digital' && product.editionSize !== null) {
     return deny('digital_edition', '한정 번호는 실물 상품에만 붙일 수 있어요. 한정 수량을 비워 달라고 요청해 주세요.');
   }
-  if (product.kind === 'digital' && product.digitalFiles.length === 0) {
+  if (product.kind === 'digital' && salesDigitalFiles(product.digitalFiles).length === 0) {
     return deny('no_files', '디지털 상품은 내려받기 파일을 등록한 뒤에 승인할 수 있어요.');
+  }
+  // 내려받기를 시작하면 청약철회가 제한되므로(전자상거래법 제17조 제2항 제5호) 시험 사용 상품(미리듣기)을 먼저 제공해야 한다(같은 조 제6항).
+  if (product.kind === 'digital' && previewDigitalFiles(product.digitalFiles).length === 0) {
+    return deny('no_files', '디지털 상품은 상품 화면에서 먼저 들어 볼 수 있는 미리듣기 파일을 등록한 뒤에 승인할 수 있어요. (30초~1분 발췌본을 저장소에 올리고 "미리듣기 파일" 칸에 넣어 주세요.)');
   }
 
   let batch;
@@ -206,8 +210,9 @@ export const applyShopAdminAction = async (
     case 'set_digital_files': {
       const files = action.files;
       if (files.length > SHOP_CREATOR_LIMITS.digitalFilesMax) return adminDeny('invalid', `파일은 최대 ${SHOP_CREATOR_LIMITS.digitalFilesMax}개까지예요.`);
-      if (files.length === 0 && product.kind === 'digital' && product.reviewStatus === 'approved') {
-        return adminDeny('conflict', '승인된 디지털 상품의 파일은 비울 수 없어요.');
+      if (product.kind === 'digital' && product.reviewStatus === 'approved') {
+        if (salesDigitalFiles(files).length === 0) return adminDeny('conflict', '승인된 디지털 상품의 파일은 비울 수 없어요.');
+        if (previewDigitalFiles(files).length === 0) return adminDeny('conflict', '승인된 디지털 상품의 미리듣기 파일은 비울 수 없어요.');
       }
       const seen = new Set<string>();
       for (const f of files) {
@@ -216,7 +221,9 @@ export const applyShopAdminAction = async (
         if (!isSafeObjectKey(f.key) || !f.key.startsWith(DIGITAL_KEY_PREFIX)) {
           return adminDeny('invalid', `파일 키는 ${DIGITAL_KEY_PREFIX}로 시작하는 저장소 경로여야 해요: ${f.key}`);
         }
-        if (seen.has(f.key)) return adminDeny('invalid', `같은 파일이 두 번 들어 있어요: ${f.key}`);
+        if (seen.has(f.key)) {
+          return adminDeny('invalid', `같은 파일이 두 번 들어 있어요: ${f.key} (미리듣기는 판매 파일과 다른 발췌본이어야 해요 — 같은 파일이면 전곡을 무료로 받게 돼요.)`);
+        }
         seen.add(f.key);
       }
       for (const f of files) {
@@ -229,7 +236,7 @@ export const applyShopAdminAction = async (
         }
         if (!exists) return adminDeny('invalid', `저장소에 없는 파일이에요: ${f.key}`);
       }
-      const stored = files.length === 0 ? null : JSON.stringify(files.map((f) => ({ label: f.label.trim(), key: f.key })));
+      const stored = files.length === 0 ? null : JSON.stringify(files.map((f) => ({ label: f.label.trim(), key: f.key, ...(f.preview ? { preview: true } : {}) })));
       await db.update(shopProducts).set({ digitalFiles: stored, updatedAt: epoch }).where(eq(shopProducts.id, productId));
       return { ok: true, slug: product.slug };
     }

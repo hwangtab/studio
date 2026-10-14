@@ -87,6 +87,17 @@ describe('공개 목록·상세', () => {
     expect(JSON.stringify(db)).not.toContain('undefined');
   });
 
+  it('미리듣기는 라벨만 싣고(키 미노출), hasDownloads는 판매 파일만 센다', async () => {
+    await seedProduct({ slug: 'db-prev', kind: 'digital', digitalFiles: JSON.stringify([{ label: '미리듣기 1분', key: 'shop/p/prev.mp3', preview: true }]) }, [{ id: 'db-pppppppppp' }]);
+    const only = (await listPublishedShopProducts()).find((p) => p.slug === 'db-prev')!;
+    expect(only).toMatchObject({ previews: ['미리듣기 1분'], hasDownloads: false });
+    expect(JSON.stringify(only)).not.toContain('shop/p/prev.mp3');
+    await testDb.update(shopProducts).set({ digitalFiles: JSON.stringify([{ label: '앨범', key: 'shop/p/a.zip' }, { label: '미리듣기 1분', key: 'shop/p/prev.mp3', preview: true }]) });
+    const both = (await listPublishedShopProducts()).find((p) => p.slug === 'db-prev')!;
+    expect(both).toMatchObject({ previews: ['미리듣기 1분'], hasDownloads: true });
+    expect(JSON.stringify(both)).not.toMatch(/shop\/p\//);
+  });
+
   it('같은 slug면 파일이 이긴다(목록·상세 모두)', async () => {
     await seedProduct({ slug: 'test-cd', title: 'DB가 가로채려는 제목' }, [{ id: 'db-eeeeeeeeee' }]);
     const list = await listPublishedShopProducts();

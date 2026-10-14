@@ -422,6 +422,13 @@ describe('form-action — 내려받기 302 목적지', () => {
     expect(csp).not.toContain('*.r2.cloudflarestorage.com');
   });
 
+  it('media-src에도 같은 오리진 하나만 연다 — 상점 미리듣기 302 목적지', async () => {
+    const csp = await cspFor({ R2_ACCOUNT_ENDPOINT: 'https://acct123.r2.cloudflarestorage.com' });
+    expect(csp).toContain("media-src 'self' https://*.private.blob.vercel-storage.com https://acct123.r2.cloudflarestorage.com;");
+    const none = await cspFor({ R2_ACCOUNT_ENDPOINT: undefined });
+    expect(none).toContain("media-src 'self' https://*.private.blob.vercel-storage.com;");
+  });
+
   it('설정이 없으면 예전대로 self만 — 빈 값을 흘리지 않는다', async () => {
     const csp = await cspFor({ R2_ACCOUNT_ENDPOINT: undefined });
     expect(csp).toContain("form-action 'self';");

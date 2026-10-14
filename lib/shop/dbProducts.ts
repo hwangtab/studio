@@ -5,6 +5,7 @@ import { shopProducts, shopProductSkus, type ShopProductRow, type ShopProductSku
 import type { ShopProduct, ShopSku } from '../../data/shop/catalog';
 import type { ResolvedSku } from './catalog';
 import { loadShippedByArtistSlugs } from './fulfillmentMode';
+import { parseDigitalFiles, previewDigitalFiles, salesDigitalFiles } from './adminProducts';
 
 /**
  * DB 상품(아티스트 위탁) 읽기 — 공개 객체 `ShopProduct`로 정규화한다. 호출은 `repository.ts`가 유일한 입구다.
@@ -24,15 +25,11 @@ const parseImages = (raw: string): string[] => {
   }
 };
 
-const hasFiles = (raw: string | null): boolean => {
-  if (!raw) return false;
-  try {
-    const parsed: unknown = JSON.parse(raw);
-    return Array.isArray(parsed) && parsed.length > 0;
-  } catch {
-    return false;
-  }
-};
+const hasFiles = (raw: string | null): boolean => salesDigitalFiles(parseDigitalFiles(raw)).length > 0;
+
+/** 미리듣기 파일의 라벨만 — R2 키는 싣지 않는다. 순번은 이 목록의 순서다(`/api/shop/preview?i=`). */
+const previewLabels = (row: ShopProductRow): string[] =>
+  row.kind === 'digital' ? previewDigitalFiles(parseDigitalFiles(row.digitalFiles)).map((f) => f.label) : [];
 
 export const toShopSku = (row: ShopProductSkuRow): ShopSku => ({
   id: row.id,
@@ -55,6 +52,7 @@ export const normalizeDbProduct = (row: ShopProductRow, skus: readonly ShopProdu
   ...(row.shipsOn ? { shipsOn: row.shipsOn } : {}),
   ...(row.editionSize != null ? { editionSize: row.editionSize } : {}),
   hasDownloads: hasFiles(row.digitalFiles),
+  ...(previewLabels(row).length > 0 ? { previews: previewLabels(row) } : {}),
   source: 'db',
   ...(shippedByArtist ? { shippedByArtist } : {}),
 });
@@ -148,4 +146,16 @@ export const loadDbShipsOnBySku = async (skuIds: string[]): Promise<Map<string, 
   `);
   for (const r of rows) out.set(r.id, r.ships_on);
   return out;
+};
+
+/**
+ * 미리듣기 파일의 R2 키 — 공개·승인된 **디지털** 상품의 미리듣기 `index`번째(0부터). 없으면 null.
+ * 판매 파일은 이 경로로 닿지 않는다(`preview: true` 항목만 센다). 키는 서버 안에서만 쓴다.
+ */
+export const findDbPreviewKey = async (slug: string, index: number): Promise<string | null> => {
+  if (!Number.isInteger(index) || index < 0) return null;
+  const rows = await getDb().select().from(shopProducts).where(and(publicProductWhere, eq(shopProducts.slug, slug), eq(shopProducts.kind, 'digital'))).limit(1);
+  const row = rows[0];
+  if (!row) return null;
+  return previewDigitalFiles(parseDigitalFiles(row.digitalFiles))[index]?.key ?? null;
 };

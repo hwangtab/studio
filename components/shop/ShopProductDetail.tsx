@@ -5,6 +5,7 @@ import ResponsiveImage from '../ResponsiveImage';
 import StatusBadge from '../ui/StatusBadge';
 import { formatPriceAmount } from '../../data/pricing';
 import { SHOP_CATEGORY_LABELS, type ShopProduct } from '../../data/shop/catalog';
+import { SHOP_PREVIEW_HINT, SHOP_PREVIEW_UNSUPPORTED } from '../../lib/shop/policyCopy';
 import { formatShipsOn, isPreorder } from '../../lib/shop/preorder';
 import { cn } from '../../lib/utils';
 
@@ -91,6 +92,22 @@ export default function ShopProductDetail({ product, remaining = null, artist = 
             <StatusBadge tone="active">디지털 상품</StatusBadge>
             <span>배송 없음 · 결제 뒤 주문 확인 페이지에서 내려받아요</span>
           </p>
+        )}
+        {product.kind === 'digital' && product.previews && product.previews.length > 0 && (
+          <section aria-labelledby="shop-preview-title" className="mt-4 rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800/60">
+            <h2 id="shop-preview-title" className="text-sm font-semibold text-gray-900 dark:text-white">미리듣기</h2>
+            <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">{SHOP_PREVIEW_HINT}</p>
+            <ul className="mt-3 space-y-3">
+              {product.previews.map((label, i) => (
+                <li key={`${i}-${label}`}>
+                  <p className="mb-1 text-sm text-gray-800 dark:text-gray-200">{label}</p>
+                  <audio controls preload="none" className="w-full" src={`/api/shop/preview?product=${encodeURIComponent(product.slug)}&i=${i}`}>
+                    {SHOP_PREVIEW_UNSUPPORTED}
+                  </audio>
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
         {product.shippedByArtist && product.kind !== 'digital' && (
           <p className="mt-2 flex flex-wrap items-center gap-2 text-sm text-gray-800 dark:text-gray-200">

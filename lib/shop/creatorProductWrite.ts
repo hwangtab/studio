@@ -8,6 +8,7 @@ import { SHOP_PRODUCTS } from '../../data/shop/catalog';
 import { isDefaultCreatorName } from '../funding/creatorValidation';
 import { isUniqueConflictError } from '../funding/slugOccupancy';
 import { nextReviewStatus } from '../funding/reviewTransition';
+import { parseDigitalFiles, salesDigitalFiles } from './adminProducts';
 import { getShopArtistByCreator } from './artists';
 import { loadProductFulfillmentMode, type ShopFulfillmentMode } from './fulfillmentMode';
 import { findMissingShopProductFields, splitShopDescription, type ShopProductInput } from './creatorValidation';
@@ -94,15 +95,7 @@ const parseImages = (raw: string): string[] => {
   }
 };
 
-const hasFiles = (raw: string | null): boolean => {
-  if (!raw) return false;
-  try {
-    const parsed: unknown = JSON.parse(raw);
-    return Array.isArray(parsed) && parsed.length > 0;
-  } catch {
-    return false;
-  }
-};
+const hasFiles = (raw: string | null): boolean => salesDigitalFiles(parseDigitalFiles(raw)).length > 0;
 
 const kstToday = (now: Date): string => new Date(now.getTime() + 9 * 3_600_000).toISOString().slice(0, 10);
 

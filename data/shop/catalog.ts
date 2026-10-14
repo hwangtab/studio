@@ -79,6 +79,8 @@ export interface ShopProduct {
   editionSize?: number;
   /** 내려받기 파일이 있는가. 파일 키(R2)는 공개 객체에 싣지 않는다. */
   hasDownloads?: boolean;
+  /** 미리듣기 파일 이름 목록(디지털 DB 상품). 키는 싣지 않는다 — 재생은 `/api/shop/preview?product=<slug>&i=<순번>`. */
+  previews?: string[];
   /** 정본 출처. 비우면 'file'. */
   source?: 'file' | 'db';
   /**
