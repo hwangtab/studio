@@ -8,10 +8,12 @@ import { fundingDownloadObjectExists } from '../funding/r2';
 import { isUniqueConflictError } from '../funding/slugOccupancy';
 import { nextReviewStatus, type ReviewAction } from '../funding/reviewTransition';
 import { isDefaultCreatorName } from '../funding/creatorValidation';
+import { hasAgreedCurrentShopArtistTerms } from './artistTermsAgreement';
 import { loadProductFulfillmentMode, setProductFulfillmentMode, type ShopFulfillmentMode } from './fulfillmentMode';
 import { loadShopProductForAdmin, parseDigitalFiles, previewDigitalFiles, salesDigitalFiles, type ShopDigitalFile } from './adminProducts';
 import { findMissingShopProductFields, isValidDateOnly, shopSlugRejection } from './creatorValidation';
 import { SHOP_CREATOR_LIMITS } from './productRules';
+import { isStudioShopArtistSlug } from './studioArtist';
 
 /**
  * 상품 심사 판정과 관리자 액션 — `lib/funding/reviewDecision.ts`를 본떴다(전이는 `nextReviewStatus`가 정본).
@@ -25,7 +27,7 @@ import { SHOP_CREATOR_LIMITS } from './productRules';
 export type ShopDecisionAction = Extract<ReviewAction, 'approve' | 'request_changes' | 'reject'>;
 
 export type ShopDecisionCode =
-  | 'not_found' | 'conflict' | 'invalid_slug' | 'duplicate_slug' | 'incomplete' | 'no_artist' | 'no_files' | 'digital_edition' | 'digital_shipper';
+  | 'not_found' | 'conflict' | 'invalid_slug' | 'duplicate_slug' | 'incomplete' | 'no_artist' | 'no_files' | 'digital_edition' | 'digital_shipper' | 'terms_not_agreed';
 
 export type ShopDecisionResult =
   | { ok: true; slug: string; warnings?: string[] }
@@ -104,6 +106,11 @@ export const decideShopProduct = async (
 
   if (!product.artistSlug) {
     return deny('no_artist', '상점 아티스트로 등재되지 않은 계정이에요. /admin/shop/artists에서 먼저 등재해 주세요.');
+  }
+  // 위탁 약관(현재 판본) 동의가 없으면 승인하지 않는다 — 펀딩 개설자 약관과 같은 코드명. 표가 없으면 미동의(fail-closed).
+  // 스튜디오 상품 계정은 스튜디오 자신이라 위탁 계약이 없다. "바로 승인"도 이 함수를 지나므로 같은 게이트다.
+  if (!isStudioShopArtistSlug(product.artistSlug) && !(await hasAgreedCurrentShopArtistTerms(product.creatorId))) {
+    return deny('terms_not_agreed', '이 아티스트가 현재 판본의 상점 위탁 약관에 동의하지 않았어요. 아티스트가 내 상점 화면에서 동의한 뒤 승인할 수 있어요.');
   }
   if (product.kind === 'digital' && product.editionSize !== null) {
     return deny('digital_edition', '한정 번호는 실물 상품에만 붙일 수 있어요. 한정 수량을 비워 달라고 요청해 주세요.');

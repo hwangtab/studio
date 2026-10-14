@@ -4,6 +4,7 @@ import path from 'node:path';
 import { eq, sql } from 'drizzle-orm';
 
 import { createTestDb, type ShowsTestDb } from '../../tests/helpers/showsDb';
+import { agreeShopArtistTermsForTest } from '../../tests/helpers/shopFixtures';
 import { fundingCreators, shopArtists, shopProducts, shopProductSkus } from '../../db/schema';
 
 let testDb: ShowsTestDb;
@@ -43,6 +44,7 @@ const input = (over: Partial<ShopProductInput> = {}): ShopProductInput => ({
 const seedCreator = async (id: string, name = '아티스트 이름') => {
   await testDb.insert(fundingCreators).values({ id, email: `${id}@example.com`, name });
   await testDb.insert(shopArtists).values({ creatorId: id, slug: `artist-${id}` });
+  await agreeShopArtistTermsForTest(testDb, id);
 };
 
 /** 초안을 만들어 입력을 저장한다. */

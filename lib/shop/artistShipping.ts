@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
+import { ARTIST_SHIPPING_MASK_AFTER_DELIVERED_DAYS, ARTIST_SHIPPING_MASK_AFTER_SHIPPED_DAYS } from './artistTerms';
 import { shopLineName } from './catalog';
 import { isMissingTableError } from '../dbErrors';
 import { latestPendingShipsOn } from './preorder';
@@ -24,8 +25,8 @@ import { formatSerials, type OrderSerial } from './serials';
  * 5년 보관하므로(전자상거래법) 그 뒤 문의는 스튜디오가 받는다.
  */
 
-export const ARTIST_SHIPPING_MASK_AFTER_DELIVERED_DAYS = 30;
-export const ARTIST_SHIPPING_MASK_AFTER_SHIPPED_DAYS = 60;
+// 가림 기간은 위탁 약관 제9조가 약속하는 값이라 약관 모듈이 정본이다(그 해시 게이트가 함께 지킨다).
+export { ARTIST_SHIPPING_MASK_AFTER_DELIVERED_DAYS, ARTIST_SHIPPING_MASK_AFTER_SHIPPED_DAYS };
 /** 발송 끝난 주문을 목록에 두는 기간(일). 발송 전 주문은 오래돼도 계속 보인다. */
 export const ARTIST_SHIPPING_LIST_DAYS = 180;
 const DAY = 86400;

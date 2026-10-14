@@ -2061,6 +2061,19 @@ export const shopProductFulfillment = sqliteTable('shop_product_fulfillment', {
   modeCheck: check('shop_product_fulfillment_mode_check', sql`${t.mode} in ('studio','artist')`),
 }));
 
+/**
+ * 상점 아티스트 위탁 약관 동의 기록(마이그레이션 0059) — 판본마다 한 행. 판본이 바뀌면 새 행이 쌓이고 옛 행은 남는다
+ * ("그때 이 내용에 동의했다"는 증거). 규칙은 lib/shop/artistTermsAgreement.ts. 기존 표에 컬럼을 더하지 않으려고 따로 둔다.
+ * 시각은 초 단위 정수(상점 표들과 같다).
+ */
+export const shopArtistTermsAgreements = sqliteTable('shop_artist_terms_agreements', {
+  creatorId: text('creator_id').notNull().references(() => fundingCreators.id),
+  termsVersion: text('terms_version').notNull(),
+  agreedAt: integer('agreed_at').notNull(),
+}, (t) => ({
+  pk: primaryKey({ columns: [t.creatorId, t.termsVersion] }),
+}));
+
 export type ShopArtistRow = typeof shopArtists.$inferSelect;
 export type ShopProductRow = typeof shopProducts.$inferSelect;
 export type ShopProductSkuRow = typeof shopProductSkus.$inferSelect;

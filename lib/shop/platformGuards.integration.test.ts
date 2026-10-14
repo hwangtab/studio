@@ -7,7 +7,7 @@ import { eq, sql } from 'drizzle-orm';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { createTestDb, type ShowsTestDb } from '../../tests/helpers/showsDb';
-import { shopPayload } from '../../tests/helpers/shopFixtures';
+import { agreeShopArtistTermsForTest, shopPayload } from '../../tests/helpers/shopFixtures';
 import { fundingCreators, shopArtists, shopProducts, shopProductSkus, shopSkus } from '../../db/schema';
 
 let testDb: ShowsTestDb;
@@ -66,6 +66,7 @@ const seedCreators = async () => {
     { id: 'c2', email: 'c2@example.com', name: '아티스트이', taxType: 'invoice' },
   ]);
   await testDb.insert(shopArtists).values([{ creatorId: 'c1', slug: 'artist-c1' }, { creatorId: 'c2', slug: 'artist-c2' }]);
+  await agreeShopArtistTermsForTest(testDb, 'c1', 'c2');
 };
 
 type ProductOver = Partial<typeof shopProducts.$inferInsert>;

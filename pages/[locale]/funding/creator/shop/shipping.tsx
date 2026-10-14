@@ -9,6 +9,7 @@ import { authenticateCreatorRequest } from '../../../../../lib/funding/creatorAu
 import { withI18nServerProps } from '../../../../../lib/getStatic';
 import { privacyCreatorActor, recordPrivacyAccess } from '../../../../../lib/privacy/accessLog';
 import { loadArtistShippingOrders, type ArtistShippingRow } from '../../../../../lib/shop/artistShipping';
+import { hasAgreedCurrentShopArtistTerms } from '../../../../../lib/shop/artistTermsAgreement';
 
 interface Props {
   rows: ArtistShippingRow[];
@@ -47,6 +48,15 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
   }
   const auth = await authenticateCreatorRequest(context);
   if (!auth.ok) return { redirect: { destination: '/ko/funding/apply', permanent: false } };
+
+  // 받는 분 정보는 위탁 약관(제9조 개인정보 처리의 위탁)에 동의한 아티스트에게만 싣는다. 확인하지 못하면 싣지 않는다(fail-closed).
+  let agreed = false;
+  try {
+    agreed = await hasAgreedCurrentShopArtistTerms(auth.creatorId);
+  } catch (error: unknown) {
+    console.error('[funding] 위탁 약관 동의 조회 실패:', error);
+  }
+  if (!agreed) return { redirect: { destination: '/ko/funding/creator/shop', permanent: false } };
 
   let rows: ArtistShippingRow[] = [];
   let loadFailed = false;

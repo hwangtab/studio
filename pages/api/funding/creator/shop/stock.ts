@@ -4,6 +4,7 @@ import { consumeRateLimit } from '../../../../../lib/booking/rate-limit';
 import { isAllowedContactRequestOrigin } from '../../../../../lib/contact/origin';
 import { authenticateCreatorApi } from '../../../../../lib/funding/creatorAuth';
 import { setOwnSkuStock } from '../../../../../lib/shop/creatorStock';
+import { rejectUnlessShopArtistTermsAgreed } from '../../../../../lib/shop/creatorWriteHttp';
 
 /** 아티스트가 직접 보내는 상품의 옵션별 총 재고 정하기. 소유·발송 주체 판정은 `setOwnSkuStock`. */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -13,6 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const auth = await authenticateCreatorApi(req, res);
   if (!auth.ok) return res.status(401).json({ ok: false, message: '로그인이 필요해요.' });
+  if (!(await rejectUnlessShopArtistTermsAgreed(res, auth.creatorId, 'funding/creator/shop/stock'))) return;
   if (!(await consumeRateLimit(`creator_shop_stock:${auth.creatorId}`, 60, 600))) {
     return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
   }
