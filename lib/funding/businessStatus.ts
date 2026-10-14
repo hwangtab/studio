@@ -18,8 +18,8 @@ const NTS_STATUS_URL = 'https://api.odcloud.kr/api/nts-businessman/v1/status';
 
 /**
  * 세금계산서를 발급하는 과세 유형. 01 일반과세자, 07 간이과세자(세금계산서 발급사업자).
- * 그 밖(02 간이·03 과세특례·04 면세·05/06 고유번호 단체)은 경고만 한다.
- * ⚠ 구현 때 공공데이터포털 문서의 tax_type_cd 표로 다시 확인할 것.
+ * 그 밖(02 간이과세자·03 과세특례자·04 면세사업자·05 수익사업을 하지 않는 비영리법인·국가기관 등·
+ * 06 고유번호를 받은 단체)은 경고만 한다.
  */
 export const INVOICE_CAPABLE_TAX_TYPE_CODES: readonly string[] = ['01', '07'];
 
@@ -61,6 +61,13 @@ export const parseNtsStatusResponse = (json: unknown): NtsLookupResult => {
   return bad;
 };
 
+const isAbortError = (error: unknown): boolean =>
+  // DOMException은 런타임에 따라 Error의 인스턴스가 아닐 수 있어 이름으로 본다.
+  typeof error === 'object' && error !== null && (error as { name?: unknown }).name === 'AbortError';
+
+/**
+ * `businessNumber`는 normalizeBusinessNumber를 통과한 10자리 숫자여야 한다 — 이 함수는 다시 검사하지 않는다.
+ */
 export const lookupBusinessStatus = async (
   businessNumber: string,
   deps: { fetchImpl?: typeof fetch; apiKey?: string | undefined; timeoutMs?: number } = {},
@@ -79,12 +86,17 @@ export const lookupBusinessStatus = async (
       body: JSON.stringify({ b_no: [businessNumber] }),
       signal: controller.signal,
     });
+    if (res.status === 429) return { ok: false, error: 'rate_limited' };
     if (!res.ok) return { ok: false, error: 'http_error' };
     let json: unknown;
-    try { json = await res.json(); } catch { return { ok: false, error: 'bad_response' }; }
+    try {
+      json = await res.json();
+    } catch (error: unknown) {
+      return { ok: false, error: isAbortError(error) ? 'timeout' : 'bad_response' };
+    }
     return parseNtsStatusResponse(json);
   } catch (error: unknown) {
-    if (error instanceof Error && error.name === 'AbortError') return { ok: false, error: 'timeout' };
+    if (isAbortError(error)) return { ok: false, error: 'timeout' };
     return { ok: false, error: 'network' };
   } finally {
     clearTimeout(timer);
@@ -109,8 +121,10 @@ export const businessStatusWarnings = (input: {
       return ['지금은 국세청 조회를 하지 못해 사업자 상태를 확인하지 못했어요. 입력하신 정보는 저장됐고, 스튜디오 놀이 따로 확인해요.'];
     case 'active':
       if (input.taxTypeCode && !INVOICE_CAPABLE_TAX_TYPE_CODES.includes(input.taxTypeCode)) {
-        const label = input.taxTypeLabel ? `「${input.taxTypeLabel}」` : '세금계산서 발급 대상이 아닌 유형';
-        return [`국세청 조회 결과 과세 유형이 ${label}로 나와요. 이 유형은 세금계산서 발행이 어려울 수 있어, 정산 전에 스튜디오 놀이 확인해 연락드려요.`];
+        if (!input.taxTypeLabel) {
+          return ['국세청 조회 결과 과세 유형으로 보면 세금계산서 발행이 어려울 수 있어요. 정산 전에 스튜디오 놀이 확인해 연락드려요.'];
+        }
+        return [`국세청 조회 결과 과세 유형이 「${input.taxTypeLabel}」로 나와요. 이 유형은 세금계산서 발행이 어려울 수 있어, 정산 전에 스튜디오 놀이 확인해 연락드려요.`];
       }
       return [];
     default:

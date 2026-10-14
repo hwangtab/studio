@@ -39,8 +39,8 @@ export type WriteResult =
        */
       businessWarnings?: string[];
       /**
-       * 개인(원천징수)으로 바꿔 저장했지만 사업자 정보를 **지우지 않고 남겼다.** 사업자로 정산한 기록이 있을 때만
-       * 붙는다(`hasInvoicePayout`) — `residentNumberRetained`의 거울.
+       * 개인(원천징수)으로 바꿔 저장했지만 사업자 정보를 **지우지 않고 남겼다.** 사업자로 정산한 펀딩 기록이
+       * 있거나(`hasInvoicePayout`) 상점 아티스트일 때(`isShopArtist`) 붙는다 — `residentNumberRetained`의 거울.
        */
       businessProfileRetained?: true;
     }
@@ -619,7 +619,8 @@ export const savePayoutSection = async (
    *   빠진 계정이 생기면 정산 때에야 드러난다. 같은 번호가 이미 확인돼 있으면 다시 조회하지 않는다. 조회는 개설자당
    *   시간당 10회(`consumeRateLimit`)이고 넘으면 건너뛰어 "미확인"(`rate_limited`)으로 남긴다.
    * - 번호가 바뀌면 이전 번호의 사업자등록증은 맞지 않는다 — 키를 비우고 Blob은 쓰기 뒤에 지운다.
-   * - 개인 저장: 아래 쓰기 뒤에 사업자 행을 지운다. 단 사업자로 정산한 기록이 있으면 남긴다(`hasInvoicePayout`).
+   * - 개인 저장: 아래 쓰기 뒤에 사업자 행을 지운다. 단 사업자로 정산한 기록이 있거나(`hasInvoicePayout`)
+   *   상점 아티스트면(`isShopArtist`) 남긴다.
    *   표를 읽지 못하면 지울 것도 없으니 건너뛴다 — 원천징수 저장은 이 표 없이도 된다.
    */
   const now = deps.now ?? new Date();

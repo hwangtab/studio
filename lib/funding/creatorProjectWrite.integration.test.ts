@@ -1404,6 +1404,26 @@ describe('정산 정보 — 사업자 정보·국세청 조회·자격', () => {
     expect(deleteBlob).toHaveBeenCalledWith(key);
   });
 
+  it('번호가 바뀌었는데 옛 사업자등록증 키를 못 읽으면 business_unavailable — 아무것도 쓰지 않는다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, invoice(), { lookup: lookupOk });
+    const realSelect = mockDb.select.bind(mockDb);
+    const spy = jest.spyOn(mockDb, 'select').mockImplementation(((fields?: Record<string, unknown>) => {
+      if (fields && Object.keys(fields).join() === 'key') throw new Error('db down');
+      return realSelect(fields as never);
+    }) as typeof mockDb.select);
+    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      expect(await savePayoutSection(creatorId, invoice('1234567891'), { lookup: lookupOk }))
+        .toMatchObject({ ok: false, code: 'business_unavailable' });
+      expect(error).toHaveBeenCalledWith('[funding] 사업자등록증 키 조회 실패', { creatorId });
+    } finally {
+      spy.mockRestore();
+      error.mockRestore();
+    }
+    expect((await businessRows(creatorId))[0].businessNumber).toBe('7537400653');
+  });
+
   it('조회 한도를 넘으면 조회하지 않고 rate_limited로 남긴다', async () => {
     const { creatorId } = await seedProject({ reviewStatus: 'approved' });
     await mockDb.insert(schema.rateLimits).values({ key: `nts_lookup:${creatorId}`, count: 10, expiresAt: Math.floor(Date.now() / 1000) + 3600 });

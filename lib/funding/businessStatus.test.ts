@@ -54,6 +54,18 @@ describe('lookupBusinessStatus — 던지지 않는다', () => {
   test('5xx → http_error', async () => {
     expect(await lookupBusinessStatus('7537400653', { fetchImpl: fakeFetch(500, {}), apiKey: 'k' })).toEqual({ ok: false, error: 'http_error' });
   });
+  test('429 → rate_limited', async () => {
+    expect(await lookupBusinessStatus('7537400653', { fetchImpl: fakeFetch(429, {}), apiKey: 'k' })).toEqual({ ok: false, error: 'rate_limited' });
+  });
+  test('본문을 읽다 시간 초과 → timeout(bad_response 아님)', async () => {
+    const abortError = Object.assign(new Error('aborted'), { name: 'AbortError' });
+    const fetchImpl = jest.fn(async () => ({ ok: true, status: 200, json: async () => { throw abortError; } }) as unknown as Response);
+    expect(await lookupBusinessStatus('7537400653', { fetchImpl, apiKey: 'k' })).toEqual({ ok: false, error: 'timeout' });
+  });
+  test('Error가 아닌 AbortError(DOMException 모양)도 timeout', async () => {
+    const fetchImpl = jest.fn(async () => { throw { name: 'AbortError' }; });
+    expect(await lookupBusinessStatus('7537400653', { fetchImpl, apiKey: 'k' })).toEqual({ ok: false, error: 'timeout' });
+  });
   test('네트워크 예외 → network', async () => {
     const fetchImpl = jest.fn(async () => { throw new TypeError('fetch failed'); });
     expect(await lookupBusinessStatus('7537400653', { fetchImpl, apiKey: 'k' })).toEqual({ ok: false, error: 'network' });
@@ -88,6 +100,14 @@ describe('businessStatusWarnings', () => {
     expect(w).toContain('어려울 수 있');
     expect(w).toContain('부가가치세 간이과세자');
     expect(businessStatusWarnings({ status: 'active', taxTypeCode: '04', taxTypeLabel: '면세' }).join()).toContain('확인');
+  });
+  test('과세 유형 코드가 없으면 경고 없음', () => {
+    expect(businessStatusWarnings({ status: 'active', taxTypeCode: null, taxTypeLabel: null })).toEqual([]);
+  });
+  test('유형 이름이 없어도 단정하지 않는다', () => {
+    const w = businessStatusWarnings({ status: 'active', taxTypeCode: '05', taxTypeLabel: null }).join();
+    expect(w).toContain('어려울 수 있');
+    expect(w).not.toContain('대상이 아닌');
   });
   test('미확인은 저장됐다고 말한다', () => {
     expect(businessStatusWarnings({ status: 'unverified', taxTypeCode: null, taxTypeLabel: null }).join()).toContain('저장');
