@@ -1861,3 +1861,102 @@ export const shopOrderItemsRelations = relations(shopOrderItems, ({ one }) => ({
 
 export type ShopOrder = typeof shopOrders.$inferSelect;
 export type ShopOrderItem = typeof shopOrderItems.$inferSelect;
+
+// ─── 상점 아티스트 플랫폼(0053) ──────────────────────────────────────────────────
+//
+// 설계: docs/shop-artist-platform-design-2026-10.md. 전부 **새 표**다 — 기존 표에 컬럼을 더하지 않고, 새 표를 기존 표의
+// `relations()`에 잇지 않는다(관계 조회가 전체 컬럼을 SELECT해 마이그레이션 전 배포에서 결제 확인이 깨지는 0022 함정).
+// 새 표를 읽는 경로는 `db-` SKU가 있을 때만 돌거나, 오류를 삼키고 파일 상품만 돌려준다.
+
+/** 상점 상품 심사 상태 — 펀딩(`fundingReviewStatusEnum`)과 같은 값 집합. lib/shop/productRules.ts가 리터럴로 적고 테스트가 대조한다. */
+export const shopProductReviewStatusEnum = ['draft', 'submitted', 'changes_requested', 'approved', 'rejected'] as const;
+export const shopProductCategoryEnum = ['album', 'goods'] as const;
+export const shopProductKindEnum = ['physical', 'digital'] as const;
+
+/** 상점 공개 정체성 — 관리자만 만든다(위탁은 실물 인수·계약이 먼저). 이름·소개·링크는 funding_creators가 정본. */
+export const shopArtists = sqliteTable('shop_artists', {
+  creatorId: text('creator_id').primaryKey().references(() => fundingCreators.id),
+  slug: text('slug').notNull().unique(),
+  /** data/artists와 같은 slug를 쓰도록 관리자가 연결을 확인했는가(사칭 방지). */
+  curatedSlugLinked: integer('curated_slug_linked', { mode: 'boolean' }).notNull().default(false),
+  profileImageUrl: text('profile_image_url'),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at').notNull().default(sql`(unixepoch())`),
+});
+
+export const shopProducts = sqliteTable('shop_products', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  creatorId: text('creator_id').notNull().references(() => fundingCreators.id),
+  slug: text('slug').notNull(),
+  category: text('category', { enum: shopProductCategoryEnum }).notNull(),
+  kind: text('kind', { enum: shopProductKindEnum }).notNull().default('physical'),
+  title: text('title').notNull(),
+  subtitle: text('subtitle'),
+  /** 빈 줄로 나눈 문단. */
+  description: text('description').notNull().default(''),
+  /** 이미지 주소 JSON 배열. */
+  images: text('images').notNull().default('[]'),
+  /** 예약 발송일(YYYY-MM-DD, KST). */
+  shipsOn: text('ships_on'),
+  editionSize: integer('edition_size'),
+  /** [{label,key}] JSON — 관리자만 쓰고, 공개 객체에는 싣지 않는다. */
+  digitalFiles: text('digital_files'),
+  reviewStatus: text('review_status', { enum: shopProductReviewStatusEnum }).notNull().default('draft'),
+  published: integer('published', { mode: 'boolean' }).notNull().default(false),
+  reviewNote: text('review_note'),
+  internalNote: text('internal_note'),
+  submittedAt: integer('submitted_at'),
+  approvedAt: integer('approved_at'),
+  rejectedAt: integer('rejected_at'),
+  creatorEditedAt: integer('creator_edited_at'),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at').notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  creatorIdx: index('shop_products_creator_idx').on(t.creatorId),
+  /** 살아 있는(반려 아닌) 상품끼리만 slug 유일 — funding_projects_slug_live_unique와 같은 규칙. */
+  slugLiveUnique: uniqueIndex('shop_products_slug_live_unique').on(t.slug).where(sql`review_status <> 'rejected'`),
+  categoryCheck: check('shop_products_category_check', sql`${t.category} in ('album','goods')`),
+  kindCheck: check('shop_products_kind_check', sql`${t.kind} in ('physical','digital')`),
+  editionCheck: check('shop_products_edition_check', sql`${t.editionSize} IS NULL OR ${t.editionSize} > 0`),
+}));
+
+/** DB 상품의 SKU. id는 서버가 `db-` + hex10으로 만든다. 재고는 shop_skus(id 같음)가 정본. */
+export const shopProductSkus = sqliteTable('shop_product_skus', {
+  id: text('id').primaryKey(),
+  productId: text('product_id').notNull().references(() => shopProducts.id),
+  optionLabel: text('option_label'),
+  price: integer('price').notNull(),
+  sortOrder: integer('sort_order').notNull().default(0),
+  retired: integer('retired', { mode: 'boolean' }).notNull().default(false),
+  /** 승인 때 찍는다. 잠긴 SKU만 판매 가능하고, 잠긴 뒤에는 id·가격·옵션명을 바꾸지 않는다. */
+  lockedAt: integer('locked_at'),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at').notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  productIdx: index('shop_product_skus_product_idx').on(t.productId),
+  priceCheck: check('shop_product_skus_price_check', sql`${t.price} > 0`),
+}));
+
+/** 한정판 일련번호. */
+export const shopSerials = sqliteTable('shop_serials', {
+  productId: text('product_id').notNull(),
+  serial: integer('serial').notNull(),
+  orderNo: text('order_no').notNull().references(() => orders.orderNo),
+  orderItemId: text('order_item_id').notNull(),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  productSerialUnique: uniqueIndex('shop_serials_product_serial_unique').on(t.productId, t.serial),
+  orderIdx: index('shop_serials_order_idx').on(t.orderNo),
+  itemIdx: index('shop_serials_item_idx').on(t.orderItemId),
+}));
+
+/** 디지털 상품 주문의 첫 내려받기 기록(청약철회 제한 판정). */
+export const shopOrderDownloads = sqliteTable('shop_order_downloads', {
+  orderNo: text('order_no').primaryKey().references(() => orders.orderNo),
+  firstDownloadedAt: integer('first_downloaded_at').notNull(),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+});
+
+export type ShopArtistRow = typeof shopArtists.$inferSelect;
+export type ShopProductRow = typeof shopProducts.$inferSelect;
+export type ShopProductSkuRow = typeof shopProductSkus.$inferSelect;

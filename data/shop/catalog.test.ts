@@ -31,6 +31,10 @@ describe('상점 카탈로그(data/shop/catalog.ts)', () => {
     ['옵션 이름 없는 복수 SKU', { ...base, skus: [{ id: 'a-1', price: 1 }, { id: 'a-2', price: 1 }] }, /optionLabel/],
     ['첫 문단 소제목', { ...base, description: ['## 소제목'] }, /평문/],
     ['artist 형식', { ...base, artist: 'Jai' }, /artist/],
+    ['예약 slug artist(상점 아티스트 페이지)', { ...base, slug: 'artist' }, /예약된 slug/],
+    ['db- 접두사 SKU', { ...base, skus: [{ id: 'db-abc123', price: 1000 }] }, /db-/],
+    ['파일 상품의 디지털 종류', { ...base, kind: 'digital' }, /DB 상품 전용/],
+    ['파일 상품의 한정판 수량', { ...base, editionSize: 100 }, /editionSize/],
   ])('%s를 잡는다', (_label, product, pattern) => {
     expect(validateShopCatalog([product as ShopProduct]).join('\n')).toMatch(pattern);
   });

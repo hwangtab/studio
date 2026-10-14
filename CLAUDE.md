@@ -161,6 +161,7 @@ SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이�
 **`SHOP_SALES_OPEN`(data/shop/policy.ts)이 false인 동안 주문을 받지 않는다** — 켜기 전 체크리스트(마이그레이션 0052 → 처리방침
 개정·판본 → 상품·재고 → 켜기 → 메뉴·사이트맵)가 그 파일에 있다. 새 주문 종류를 만들면 `lib/booking/webhook.ts`의 type 분기를
 먼저 넣을 것 — 모르는 type은 예약 확정으로 떨어진다.
+아티스트 상품(DB 정본)은 마이그레이션 0053(새 표 다섯 개)과 `lib/shop/repository.ts` 입구를 쓴다 — 순서는 마이그레이션 → 배포, 설계는 `docs/shop-artist-platform-design-2026-10.md`.
 
 ### 믹싱 전·후 비교 음원 (`components/audio/MixComparePlayer.tsx`)
 

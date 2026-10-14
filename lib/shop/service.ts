@@ -5,7 +5,8 @@ import { SHOP_HOLD_SECONDS, SHOP_SALES_OPEN } from '../../data/shop/policy';
 import { splitInclusiveAmount } from '../booking/amounts';
 import { generateManageToken } from '../booking/token';
 import { computeShopTotals } from './amounts';
-import { findSellableSku, shopLineName } from './catalog';
+import { shopLineName, type ResolvedSku } from './catalog';
+import { findSellableSkuAsync } from './repository';
 import { generateShopOrderNo } from './shape';
 import { remainingStockSql, stockGateSql } from './stock';
 import type { CreateShopOrderPayload } from './validation';
@@ -16,7 +17,7 @@ export const rowsAffectedOf = (result: unknown): number =>
 
 export type CreateShopOrderResult =
   | { ok: true; orderNo: string; totalAmount: number; orderName: string }
-  | { ok: false; code: 'sales_closed' | 'unknown_item' | 'sold_out' };
+  | { ok: false; code: 'sales_closed' | 'unknown_item' | 'sold_out' | 'lookup_failed' };
 
 /**
  * 주문 생성 — 재고를 SHOP_HOLD_SECONDS 동안 잡고(`pending`), 결제 승인(confirmShopOrder)이 `paid`로 바꾼다.
@@ -32,11 +33,13 @@ export const createShopOrder = async (
 ): Promise<CreateShopOrderResult> => {
   if (!(opts.salesOpen ?? SHOP_SALES_OPEN)) return { ok: false, code: 'sales_closed' };
 
-  const resolved: Array<NonNullable<ReturnType<typeof findSellableSku>> & { quantity: number }> = [];
+  const resolved: Array<ResolvedSku & { quantity: number }> = [];
   for (const line of input.lines) {
-    const found = findSellableSku(line.skuId);
-    if (!found) return { ok: false, code: 'unknown_item' };
-    resolved.push({ ...found, quantity: line.quantity });
+    const lookup = await findSellableSkuAsync(line.skuId);
+    // 조회 실패는 "없는 상품"이 아니다 — 400으로 읽히면 고객이 멀쩡한 상품을 판매 종료로 오해한다(API는 503).
+    if ('lookupFailed' in lookup) return { ok: false, code: 'lookup_failed' };
+    if (!lookup.found) return { ok: false, code: 'unknown_item' };
+    resolved.push({ ...lookup.found, quantity: line.quantity });
   }
 
   const totals = computeShopTotals(resolved.map((r) => ({ unitPrice: r.sku.price, quantity: r.quantity })));

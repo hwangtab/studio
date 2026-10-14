@@ -8,7 +8,7 @@ import { Section } from '../../../components/ui/Section';
 import { SHOP_CATEGORY_LABELS, type ShopCategory, type ShopProduct } from '../../../data/shop/catalog';
 import { SHOP_SALES_OPEN } from '../../../data/shop/policy';
 import { withI18nServerProps } from '../../../lib/getStatic';
-import { publishedShopProducts } from '../../../lib/shop/catalog';
+import { listPublishedShopProducts } from '../../../lib/shop/repository';
 import { getRemainingStock } from '../../../lib/shop/service';
 import { SHOW_HERO_IMAGE } from '../../../lib/shows/copy';
 
@@ -88,7 +88,7 @@ ShopIndexPage.hasHero = true;
 export const getServerSideProps = withI18nServerProps<Props>(async ({ params, query, res }) => {
   // 상점은 ko 전용이다(국내 배송만). 다른 로케일은 ko로 보낸다.
   if (params?.locale !== 'ko') return { redirect: { destination: '/ko/shop', permanent: false } };
-  const products = publishedShopProducts();
+  const products = await listPublishedShopProducts();
   const category = query.category === 'album' || query.category === 'goods' ? query.category : null;
 
   let soldOut: Record<string, boolean> = {};

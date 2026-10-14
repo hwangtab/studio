@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { findShopProduct } from '../../../lib/shop/catalog';
+import { findShopProductAsync } from '../../../lib/shop/repository';
 import { getRemainingStock } from '../../../lib/shop/service';
 
 /**
@@ -9,7 +9,7 @@ import { getRemainingStock } from '../../../lib/shop/service';
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') return res.status(405).json({ ok: false });
-  const product = findShopProduct(req.query.slug);
+  const product = await findShopProductAsync(req.query.slug);
   if (!product) return res.status(404).json({ ok: false });
   try {
     const remaining = await getRemainingStock(product.skus.filter((s) => !s.retired).map((s) => s.id), new Date());

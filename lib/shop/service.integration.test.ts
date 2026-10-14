@@ -97,6 +97,26 @@ describe('createShopOrder', () => {
   });
 });
 
+describe('새 표(0053)가 없는 DB — 마이그레이션 전 배포', () => {
+  beforeEach(async () => {
+    const { sql } = await import('drizzle-orm');
+    for (const t of ['shop_product_skus', 'shop_products', 'shop_serials', 'shop_order_downloads', 'shop_artists']) {
+      await testDb.run(sql.raw(`DROP TABLE ${t}`));
+    }
+  });
+
+  it('파일 SKU 주문은 성공한다(db- 아닌 SKU는 새 표를 조회하지 않는다)', async () => {
+    const r = await createShopOrder(shopPayload([{ skuId: 'test-cd-std', quantity: 1 }]), new Date(), open);
+    expect(r.ok).toBe(true);
+  });
+
+  it('db- SKU는 표가 없으면 없는 상품이 아니라 조회 실패(lookup_failed)다', async () => {
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    const r = await createShopOrder(shopPayload([{ skuId: 'db-abcdef0123', quantity: 1 }]), new Date(), open);
+    expect(r).toEqual({ ok: false, code: 'lookup_failed' });
+  });
+});
+
 describe('expireStaleShopOrders', () => {
   it('홀드 + 30분 유예가 지난 pending만 expired로 닫는다', async () => {
     const now = new Date();

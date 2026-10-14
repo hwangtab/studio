@@ -1,3 +1,4 @@
+import { isDbSkuId } from './productRules';
 import { SHOP_PRODUCTS, type ShopProduct, type ShopSku } from '../../data/shop/catalog';
 
 /**
@@ -7,7 +8,7 @@ import { SHOP_PRODUCTS, type ShopProduct, type ShopSku } from '../../data/shop/c
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const SKU_ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 /** pages/[locale]/shop/ 아래 리터럴 페이지 — 리터럴 라우트가 [slug]를 이겨 그 상품은 어떤 주소로도 안 열린다. */
-export const SHOP_RESERVED_SLUGS = ['success', 'fail', 'manage'] as const;
+export const SHOP_RESERVED_SLUGS = ['success', 'fail', 'manage', 'artist'] as const;
 
 export const publishedShopProducts = (products: readonly ShopProduct[] = SHOP_PRODUCTS): ShopProduct[] =>
   products.filter((p) => p.published);
@@ -66,6 +67,8 @@ export const validateShopCatalog = (products: readonly ShopProduct[]): string[] 
         problems.push(`${where}: 이미지 ${img}는 /images/shop/<이름>-YYYYMMDD.<확장자> 형식이어야 한다(immutable 캐시)`);
       }
     }
+    if (p.kind === 'digital') problems.push(`${where}: 디지털 상품(kind: 'digital')은 DB 상품 전용이다`);
+    if (p.editionSize !== undefined) problems.push(`${where}: 한정판 넘버링(editionSize)은 DB 상품 전용이다`);
     if (p.skus.length === 0) problems.push(`${where}: SKU가 없다`);
     const sellable = p.skus.filter((s) => !s.retired);
     if (p.published && sellable.length === 0) problems.push(`${where}: 공개 상품인데 팔 수 있는 SKU가 없다`);
@@ -74,6 +77,7 @@ export const validateShopCatalog = (products: readonly ShopProduct[]): string[] 
     }
     for (const s of p.skus) {
       if (!SKU_ID_PATTERN.test(s.id)) problems.push(`${where}: SKU id ${s.id}는 소문자·숫자·하이픈만`);
+      if (isDbSkuId(s.id)) problems.push(`${where}: SKU id ${s.id}는 'db-' 접두사를 쓸 수 없다(DB 상품 전용)`);
       if (skuIds.has(s.id)) problems.push(`${where}: SKU id ${s.id} 중복(전역에서 겹치면 안 된다)`);
       skuIds.add(s.id);
       if (!Number.isInteger(s.price) || s.price <= 0) problems.push(`${where}: SKU ${s.id} 가격은 0보다 큰 정수(원)`);
