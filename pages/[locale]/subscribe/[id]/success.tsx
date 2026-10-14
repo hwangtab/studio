@@ -20,7 +20,7 @@ import {
 import { completeCardSetup, getSubscriptionWithDetails } from '../../../../lib/billing/service';
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
 
-type Outcome = 'activated' | 'card_changed' | 'first_charge_failed' | 'error';
+type Outcome = 'activated' | 'resumed' | 'card_changed' | 'card_changed_paused' | 'first_charge_failed' | 'error';
 
 interface SuccessProps {
   outcome: Outcome;
@@ -41,11 +41,24 @@ const RESULT_COPY: Record<
     description: ({ amount }) => `첫 달 결제 완료 ${typeof amount === 'number' ? `${formatPriceAmount(amount)}원` : ''}`,
     note: ({ billingDay }) => (typeof billingDay === 'number' ? `다음 결제일: 매월 ${billingDay}일` : null),
   },
+  resumed: {
+    tone: 'success',
+    title: '정기결제가 다시 시작됐어요',
+    description: ({ amount }) => `밀린 달치 결제 완료 ${typeof amount === 'number' ? `${formatPriceAmount(amount)}원` : ''}`,
+    note: ({ billingDay }) => (typeof billingDay === 'number' ? `다음 결제일: 매월 ${billingDay}일` : null),
+  },
   card_changed: {
     tone: 'success',
     title: '카드 등록이 완료됐어요',
     description: () => '이번 결제는 없으며, 다음 결제일부터 새 카드로 청구돼요.',
     note: () => null,
+  },
+  // 운영자가 세워 둔 구독 — 카드만 바뀌었고 재개는 사람이 정한다(service.ts completeCardSetup). 오지 않을 청구를 예고하지 않는다.
+  card_changed_paused: {
+    tone: 'success',
+    title: '카드 등록이 완료됐어요',
+    description: () => '이번 결제는 없어요. 정기결제가 멈춰 있는 상태라 재개 여부는 담당자가 확인한 뒤 안내드려요.',
+    note: () => '문의: 010-4255-7893',
   },
   first_charge_failed: {
     tone: 'error',
@@ -150,7 +163,7 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
   if (!result.charged) {
     // 카드 교체(setupMode='change')는 결제 없이 키만 갈아 끼운다 — 확정 메일이 아니라
     // 화면 안내만으로 충분하다(스펙 §6, service.ts completeCardSetup 주석과 같은 판단).
-    return { props: { outcome: 'card_changed', manageUrl } };
+    return { props: { outcome: subscription.status === 'paused' ? 'card_changed_paused' : 'card_changed', manageUrl } };
   }
 
   const emailError = await sendSubscriptionActivatedEmail(subscription, {
@@ -163,7 +176,7 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
 
   return {
     props: {
-      outcome: 'activated',
+      outcome: result.resumed ? 'resumed' : 'activated',
       amount: subscription.totalAmount,
       billingDay: subscription.billingDay,
       manageUrl,

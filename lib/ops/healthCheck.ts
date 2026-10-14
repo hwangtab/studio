@@ -61,6 +61,9 @@ export interface HealthReport {
 /** 목록에 실을 최대 건수 — 메일이 수백 줄이 되면 아무도 안 읽는다. */
 const SAMPLE_LIMIT = 10;
 
+/** 청구일을 이만큼 넘긴 구독을 "걷히지 않았다"로 본다(위 overdueBilling 주석). */
+const OVERDUE_BILLING_HOURS = 36;
+
 const sample = (values: string[]): string =>
   values.length <= SAMPLE_LIMIT
     ? values.join(', ')
@@ -667,6 +670,38 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
    * 여기가 다시 유일한 방어다). 자동화가 생겼다고 마지막 방어를 걷으면 그 자동화가 멈춘
    * 날에 예전 사고가 그대로 돌아온다.
    */
+  /**
+   * 청구일이 지났는데 걷히지 않은 구독 — **청구 cron이 멈췄거나 chargeCycle이 보류로 돌아오는** 경우를
+   * 잡는다. 카드 거절은 조용하지 않다(재시도 뒤 paused 전이와 운영자 알림). 조용한 것은 cron이 아예
+   * 안 돌거나(배포·스케줄 사고) 지난 회차 재조회 실패로 청구를 시도하지 않고 돌아오는 경우다 —
+   * 둘 다 `next_billing_at`이 움직이지 않는다. 36시간: 08:00 점검·09:00 청구 간격에서 청구를 두 번
+   * 연속 놓친 뒤 뜨는 값이고, 정상 재시도는 next_billing_at을 D+1·D+3으로 옮기므로 걸리지 않는다.
+   * CRON_SECRET 소실은 이 점검도 같은 인증을 타므로 여기서는 못 잡는다 — Vercel 크론 대시보드가 유일하다.
+   */
+  const overdueBilling = await db
+    .select({ id: subscriptions.id, nextBillingAt: subscriptions.nextBillingAt })
+    .from(subscriptions)
+    .where(
+      and(
+        inArray(subscriptions.status, ['active', 'past_due']),
+        isNotNull(subscriptions.nextBillingAt),
+        lt(subscriptions.nextBillingAt, new Date(now.getTime() - OVERDUE_BILLING_HOURS * 60 * 60 * 1000)),
+      ),
+    );
+
+  if (overdueBilling.length > 0) {
+    issues.push({
+      severity: 'high',
+      href: '/admin/subscriptions',
+      title: `청구일이 ${OVERDUE_BILLING_HOURS}시간 넘게 지났는데 걷히지 않은 구독 ${overdueBilling.length}건`,
+      detail: [
+        `구독 id: ${sample(overdueBilling.map((row) => `${row.id}(${row.nextBillingAt ? formatKst(row.nextBillingAt) : '-'})`))}`,
+        '청구 cron(/api/cron/billing-charge)이 돌지 않았거나, 지난 회차의 토스 상태를 확인하지 못해 청구를 보류하고 있습니다.',
+        'Vercel 크론 실행 기록과 [구독] 청구 보류 메일을 확인하고, 관리자 > 구독 상세에서 수동 결제로 풀 수 있습니다.',
+      ].join('\n'),
+    });
+  }
+
   const dormancyWarning = await db
     .select({ id: subscriptions.id, pausedReason: subscriptions.pausedReason })
     .from(subscriptions)

@@ -3,12 +3,17 @@ jest.mock('../../../lib/booking/rate-limit', () => ({ consumeRateLimit: jest.fn(
 jest.mock('../../../lib/billing/service', () => ({
   findSubscriptionForManage: jest.fn(),
   cancelSubscription: jest.fn(),
+  firstPaidAtOf: jest.fn().mockResolvedValue(null),
 }));
-jest.mock('../../../lib/billing/email', () => ({ sendSubscriptionCancelledEmail: jest.fn().mockResolvedValue(null) }));
+jest.mock('../../../lib/billing/email', () => ({
+  sendSubscriptionCancelledEmail: jest.fn().mockResolvedValue(null),
+  sendSubscriptionOperatorAlert: jest.fn().mockResolvedValue(null),
+}));
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../pages/api/subscriptions/cancel';
-import { cancelSubscription, findSubscriptionForManage } from '../../../lib/billing/service';
+import { cancelSubscription, findSubscriptionForManage, firstPaidAtOf } from '../../../lib/billing/service';
+import { sendSubscriptionCancelledEmail, sendSubscriptionOperatorAlert } from '../../../lib/billing/email';
 
 const call = async (body: unknown) => {
   const json = jest.fn();
@@ -50,4 +55,48 @@ it('이미 해지된 구독 → 409', async () => {
   (cancelSubscription as jest.Mock).mockResolvedValue({ ok: false, code: 'invalid_state' });
   const r = await call({ id: 'sub-1', token: 'correct' });
   expect(r.status).toBe(409);
+});
+
+describe('셀프 해지 운영자 알림 — 환불 약속을 이행할 트리거', () => {
+  const cancelled = (kind: string) => {
+    (findSubscriptionForManage as jest.Mock).mockResolvedValue({ ok: true, subscription: {} });
+    (cancelSubscription as jest.Mock).mockResolvedValue({
+      ok: true,
+      subscription: { id: 'sub-1', kind, endsAt: new Date('2026-10-05T00:00:00.000Z'), customerEmail: 'a@b.c', customerName: '김해지' },
+    });
+  };
+
+  it('레슨 셀프 해지는 운영자에게 cancelled 알림이 간다(첫 수업 전 전액 환불 힌트)', async () => {
+    cancelled('lesson');
+    await call({ id: 'sub-1', token: 'correct' });
+    expect(sendSubscriptionOperatorAlert).toHaveBeenCalledWith(expect.objectContaining({ id: 'sub-1' }), 'cancelled', expect.stringContaining('첫 수업 전'));
+    expect(sendSubscriptionCancelledEmail).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ refundNote: undefined }));
+  });
+
+  it('아티스트 후원이 첫 결제 후 7일 안에 해지되면 전액 환불 대상으로 알리고 고객 메일에도 적는다', async () => {
+    cancelled('artist-support');
+    jest.useFakeTimers().setSystemTime(new Date('2026-10-04T00:00:00Z'));
+    (firstPaidAtOf as jest.Mock).mockResolvedValue(new Date('2026-09-30T00:00:00Z'));
+    await call({ id: 'sub-1', token: 'correct' });
+    jest.useRealTimers();
+    expect(sendSubscriptionOperatorAlert).toHaveBeenCalledWith(expect.anything(), 'cancelled', expect.stringContaining('7일 이내 해지 — 전액 환불 대상'));
+    expect(sendSubscriptionCancelledEmail).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ refundNote: expect.stringContaining('전액 환불') }));
+  });
+
+  it('아티스트 후원이 7일을 지나 해지되면 일할 환급 안내만 운영자에게 간다', async () => {
+    cancelled('artist-support');
+    jest.useFakeTimers().setSystemTime(new Date('2026-10-10T00:00:00Z'));
+    (firstPaidAtOf as jest.Mock).mockResolvedValue(new Date('2026-09-30T00:00:00Z'));
+    await call({ id: 'sub-1', token: 'correct' });
+    jest.useRealTimers();
+    expect(sendSubscriptionOperatorAlert).toHaveBeenCalledWith(expect.anything(), 'cancelled', expect.stringContaining('7일이 지난 해지'));
+    expect(sendSubscriptionCancelledEmail).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ refundNote: undefined }));
+  });
+
+  it('운영자 알림이 실패해도 해지는 200이다', async () => {
+    cancelled('lesson');
+    (sendSubscriptionOperatorAlert as jest.Mock).mockResolvedValueOnce('operator:fail');
+    const r = await call({ id: 'sub-1', token: 'correct' });
+    expect(r.status).toBe(200);
+  });
 });

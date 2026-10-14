@@ -40,6 +40,8 @@ interface OkProps {
   billingDay: number;
   /** 'initial'이면 등록과 동시에 첫 달치가 결제된다, 'change'면 카드만 교체된다(스펙 §6). */
   setupMode: 'initial' | 'change';
+  /** 'paused'면 결제 실패 뒤 재등록이다 — 'initial'이어도 "첫 달치"가 아니라 "밀린 달치"가 결제된다. */
+  status: string;
   /** 규정 문구를 고르는 기준 — 아티스트 구독은 7일 청약철회·지급률 안내가 다르다. */
   kind: string;
 }
@@ -54,7 +56,7 @@ const ERROR_MESSAGES: Record<SetupErrorCode, string> = {
 };
 
 function SubscribeSetupOk(props: OkProps) {
-  const { id, setupToken, customerKey, customerName, customerEmail, productName, itemAmount, vatAmount, totalAmount, billingDay, setupMode, kind } = props;
+  const { id, setupToken, customerKey, customerName, customerEmail, productName, itemAmount, vatAmount, totalAmount, billingDay, setupMode, status, kind } = props;
 
   return (
     <>
@@ -87,7 +89,9 @@ function SubscribeSetupOk(props: OkProps) {
 
           <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">
             {setupMode === 'initial'
-              ? '카드 등록과 동시에 첫 달치가 결제돼요.'
+              ? status === 'paused'
+                ? '카드 등록과 동시에 밀린 달치가 결제되고 정기결제가 다시 시작돼요.'
+                : '카드 등록과 동시에 첫 달치가 결제돼요.'
               : '카드만 교체되며 결제되지 않아요.'}
           </p>
 
@@ -197,6 +201,7 @@ export const getServerSideProps = withI18nServerProps<SubscribeSetupProps>(async
       totalAmount: sub.totalAmount,
       billingDay: sub.billingDay,
       setupMode: sub.setupMode,
+      status: sub.status,
       kind: sub.kind,
     },
   };

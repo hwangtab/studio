@@ -78,3 +78,25 @@ it('첫 결제 실패는 운영자 알림을 보내고 first_charge_failed를 �
     '카드 한도 초과',
   );
 });
+
+it('결제 실패 정지의 재등록(resumed)은 밀린 달치 결제 완료 화면 + 확정 메일', async () => {
+  mockComplete.mockResolvedValue({ ok: true, status: 'active', charged: true, paymentKey: 'pk', resumed: true });
+  mockDetails.mockResolvedValue({
+    subscription: { id: 'sub-1', kind: 'lesson', status: 'active', totalAmount: 330000, billingDay: 5, manageToken: 'mtok' },
+    billingKey: null, payments: [], contract: null,
+  });
+  const r = await run({ token: 'tok', customerKey: 'sub_abc', authKey: 'auth' });
+  expect(r.props.outcome).toBe('resumed');
+  expect(sendSubscriptionActivatedEmail).toHaveBeenCalled();
+});
+
+it('운영자 정지 구독의 카드 교체는 card_changed_paused — 다음 결제일 청구를 예고하지 않는다', async () => {
+  mockComplete.mockResolvedValue({ ok: true, status: 'paused', charged: false });
+  mockDetails.mockResolvedValue({
+    subscription: { id: 'sub-1', kind: 'lesson', status: 'paused', totalAmount: 330000, billingDay: 5, manageToken: 'mtok' },
+    billingKey: null, payments: [], contract: null,
+  });
+  const r = await run({ token: 'tok', customerKey: 'sub_abc', authKey: 'auth' });
+  expect(r.props.outcome).toBe('card_changed_paused');
+  expect(sendSubscriptionActivatedEmail).not.toHaveBeenCalled();
+});

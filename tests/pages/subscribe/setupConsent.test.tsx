@@ -36,6 +36,7 @@ const OK_PROPS = {
   totalAmount: 396000,
   billingDay: 10,
   setupMode: 'initial' as const,
+  status: 'pending_card',
   kind: 'practice-room',
 };
 
