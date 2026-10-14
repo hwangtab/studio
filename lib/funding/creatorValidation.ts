@@ -38,7 +38,7 @@ export interface MediaOwnership {
 const MEDIA_QUERY = /^\?w=\d{1,5}&h=\d{1,5}$/;
 const MEDIA_URL_MAX_LENGTH = 256;
 
-const isOwnUploadedMedia = (value: string, media: MediaOwnership): boolean => {
+export const isOwnUploadedMedia = (value: string, media: MediaOwnership): boolean => {
   if (media.existing?.includes(value)) return true;
   if (value.length > MEDIA_URL_MAX_LENGTH) return false;
   if (!value.startsWith(FUNDING_MEDIA_URL_PREFIX)) return false;

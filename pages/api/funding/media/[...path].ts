@@ -13,7 +13,7 @@
  * 이미지와, 저장하지 않고 올린 고아 파일까지 주소를 아는 사람에게 영구히 열려 있었다.
  * 지금은 세 갈래만 통과한다:
  *
- *   1. 승인된 프로젝트가 참조하는 키 — 무인증 공개. 검색엔진·카카오톡 미리보기 봇과
+ *   1. 승인된 프로젝트(또는 승인된 상점 상품·아티스트 프로필)가 참조하는 키 — 무인증 공개. 검색엔진·카카오톡 미리보기 봇과
  *      OG 생성기가 쿠키 없이 가져가는 경로가 이것이다.
  *   2. 키가 `<creatorId>-<uuid>.webp`이고 개설자 세션의 creatorId와 같을 때 — 미리보기.
  *   3. 관리자 세션 — 심사 화면.
@@ -29,6 +29,7 @@ import { readCreatorId, readCreatorSessionVersion, verifyCreatorSessionVersion }
 import { getCreatorSession } from '../../../../lib/funding/creatorSession';
 import { isApprovedFundingMedia, isOwnFundingMedia } from '../../../../lib/funding/mediaAccess';
 import { FUNDING_MEDIA_PREFIX, resolveFundingBlobPath } from '../../../../lib/funding/mediaPath';
+import { isApprovedShopMedia } from '../../../../lib/shop/mediaAccess';
 
 /** 세션만 읽어 creatorId를 얻는다. 로그인하지 않았거나 판본이 어긋나면 null. */
 const readSessionCreatorId = async (req: NextApiRequest, res: NextApiResponse): Promise<string | null> => {
@@ -54,7 +55,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!pathname) return res.status(404).json({ message: 'Not found' });
   const filename = pathname.slice(FUNDING_MEDIA_PREFIX.length);
 
-  const isPublic = await isApprovedFundingMedia(filename);
+  // 펀딩 판정이 false일 때만 상점을 본다 — 별도 문장·별도 try(상점 표가 없어도 펀딩 이미지는 열려야 한다).
+  const isPublic = (await isApprovedFundingMedia(filename)) || (await isApprovedShopMedia(filename));
   let allowed = isPublic;
 
   if (!allowed) {

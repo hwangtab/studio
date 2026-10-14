@@ -74,3 +74,9 @@ export const withdrawProject = (projectId: string) =>
 export const createProject = () => post<{ id: string }>('/api/funding/creator/projects', {});
 
 export const logoutCreator = () => post('/api/funding/creator/logout', {});
+
+export const saveShopProfile = (value: unknown) =>
+  post('/api/funding/creator/shop/profile', { section: 'profile', value });
+
+export const saveShopProfileImage = (url: string) =>
+  post('/api/funding/creator/shop/profile', { section: 'image', url });

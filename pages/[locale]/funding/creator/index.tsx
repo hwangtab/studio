@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import { createProject, logoutCreator } from '../../../../components/funding/creator/api';
+import { CreatorConsoleTabs } from '../../../../components/funding/creator/CreatorConsoleTabs';
 import { REVIEW_STATUS_LABEL } from '../../../../components/funding/creator/types';
 import { Button } from '../../../../components/ui/Button';
 import { Badge, type BadgeTone } from '../../../../components/ui/Badge';
@@ -82,6 +83,7 @@ export default function CreatorHome({ projects, stats }: Props) {
             </Button>
           }
         />
+        <CreatorConsoleTabs current="funding" />
         {logoutError && <Notice tone="error" className="mb-6">{logoutError}</Notice>}
         {projects.length === 0 ? (
           <EmptyState title="아직 만든 프로젝트가 없어요." description="아래에서 새 프로젝트를 만들어 시작하세요." />

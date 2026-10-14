@@ -1,7 +1,8 @@
 import {
   artistShopProducts, findShopProduct, findSellableSku, publishedShopProducts, type ResolvedSku,
 } from './catalog';
-import { findDbProductBySlug, findDbSellableSku, listDbPublishedProducts, listDbSkusForAdmin } from './dbProducts';
+import { findDbProductBySlug, findDbSellableSku, listDbPublishedProducts, listDbPublishedProductsByCreator, listDbSkusForAdmin } from './dbProducts';
+import { findShopArtistCreatorId } from './artists';
 import { isDbSkuId } from './productRules';
 import { SHOP_PRODUCTS, type ShopProduct, type ShopSku } from '../../data/shop/catalog';
 
@@ -60,8 +61,19 @@ export const findSellableSkuAsync = async (skuId: unknown): Promise<SellableSkuL
   }
 };
 
-/** 파일 상품 중 그 아티스트(`data/artists` slug)의 공개 상품. DB 상품의 아티스트 연결은 이후 단계에서 더한다. */
-export const listShopProductsByArtist = async (artistSlug: string): Promise<ShopProduct[]> => artistShopProducts(artistSlug);
+/**
+ * 그 아티스트의 공개 상품 — 파일 상품(`artist === slug`) 먼저, 그다음 그 slug의 `shop_artists` 소유자가 가진 공개 DB 상품.
+ * 파일 slug에 가려지는 DB 상품은 뺀다. DB 오류는 삼키고 파일 상품만 돌려준다.
+ */
+export const listShopProductsByArtist = async (artistSlug: string): Promise<ShopProduct[]> => {
+  const fromFile = artistShopProducts(artistSlug);
+  const taken = fileSlugs();
+  const fromDb = await safeDb(async () => {
+    const creatorId = await findShopArtistCreatorId(artistSlug);
+    return creatorId ? listDbPublishedProductsByCreator(creatorId) : [];
+  }, [] as ShopProduct[], `artist=${artistSlug}`);
+  return [...fromFile, ...fromDb.filter((p) => !taken.has(p.slug))];
+};
 
 /** 관리자 재고 표용 — 파일 SKU 전부 + DB의 잠긴 SKU. DB 오류는 삼킨다. */
 export const listAllSkusForAdmin = async (): Promise<Array<{ product: ShopProduct; sku: ShopSku }>> => {

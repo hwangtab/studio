@@ -3,8 +3,11 @@ import { useId, useState } from 'react';
 import { Field, TextInput } from '../../ui/Field';
 
 interface Props {
-  projectId: string;
-  kind: 'cover' | 'body';
+  /** 펀딩 프로젝트 이미지(`?projectId=&kind=`). `uploadQuery`가 없을 때 쓴다. */
+  projectId?: string;
+  kind?: 'cover' | 'body';
+  /** 쿼리 문자열을 직접 준다(예: `target=shop-profile`). 있으면 projectId·kind보다 먼저다. */
+  uploadQuery?: string;
   value: string;
   onChange: (url: string) => void;
   disabled?: boolean;
@@ -18,7 +21,7 @@ interface Props {
  * 그대로 넣는다(부모가 상태로 들고 있다가 구획 저장 시 함께 보낸다) — 업로드 자체는
  * 저장이 아니다. 실패 메시지는 서버가 준 한국어를 그대로 보여 준다.
  */
-export function ImageUploadField({ projectId, kind, value, onChange, disabled, label, hint }: Props) {
+export function ImageUploadField({ projectId, kind, uploadQuery, value, onChange, disabled, label, hint }: Props) {
   const inputId = useId();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -27,8 +30,9 @@ export function ImageUploadField({ projectId, kind, value, onChange, disabled, l
     setBusy(true);
     setError(null);
     try {
+      const query = uploadQuery ?? `projectId=${encodeURIComponent(projectId ?? '')}&kind=${kind ?? ''}`;
       const res = await fetch(
-        `/api/funding/creator/upload?projectId=${encodeURIComponent(projectId)}&kind=${kind}`,
+        `/api/funding/creator/upload?${query}`,
         { method: 'POST', body: file },
       );
       const data = await res.json().catch(() => null);

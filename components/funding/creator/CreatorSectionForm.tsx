@@ -3,12 +3,14 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { Button } from '../../ui/Button';
 import { Field, TextArea, TextInput } from '../../ui/Field';
 import { CREATOR_LIMITS } from '../../../lib/funding/creatorValidation';
-import { saveCreatorSection } from './api';
+import { saveCreatorSection, type ApiResult } from './api';
 import type { EditorCreatorProfile } from './types';
 import { IDLE_SAVE_STATE, type SaveState } from './types';
 
 interface Props {
-  projectId: string;
+  projectId?: string;
+  /** 저장 방법을 바꾼다(상점 콘솔). 없으면 프로젝트 편집 화면의 기존 저장 경로. */
+  onSave?: (value: EditorCreatorProfile) => Promise<ApiResult>;
   initial: EditorCreatorProfile;
   readOnly: boolean;
   /**
@@ -32,7 +34,7 @@ interface Props {
  * 프로젝트 상태로 판단해 내려준다) — 심사 중인 프로젝트를 보면서 계정 프로필을 태연히
  * 바꾸는 것은 "무엇을 고치는 화면인지" 헷갈리게 만든다.
  */
-export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, nameLocked, onSaved, onDirtyChange }: Props) {
+export function CreatorSectionForm({ projectId: _projectId, onSave, initial, readOnly, nameLocked, onSaved, onDirtyChange }: Props) {
   const [name, setName] = useState(initial.name);
   const [contactName, setContactName] = useState(initial.contactName ?? '');
   const [phone, setPhone] = useState(initial.phone ?? '');
@@ -69,7 +71,7 @@ export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, n
     // saveCreatorSection이 URL id를 쓰지 않으므로 어떤 프로젝트 id를 붙여도 무관하지만,
     // 라우트 스키마는 여전히 :id 세그먼트를 요구한다(프로젝트별 저장 라우트를 공유하기
     // 때문) — 지금 열려 있는 프로젝트의 id를 그대로 쓴다.
-    const result = await saveCreatorSection(_projectId, value);
+    const result = onSave ? await onSave(value) : await saveCreatorSection(_projectId ?? '', value);
     if (result.ok) {
       // BasicSectionForm의 setSlug(normalizedSlug)와 같은 이유·같은 처방(2026-09-22
       // 리뷰 지적). submit이 trim·빈 값→null·줄 필터링으로 정규화한 값을 서버로

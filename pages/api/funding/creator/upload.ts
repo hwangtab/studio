@@ -8,6 +8,7 @@ import { isAllowedContactRequestOrigin } from '../../../../lib/contact/origin';
 import { getClientIp } from '../../../../lib/contracts/client-ip';
 import { authenticateCreatorApi } from '../../../../lib/funding/creatorAuth';
 import { loadProjectForCreator } from '../../../../lib/funding/creatorProjectWrite';
+import { getShopArtistByCreator } from '../../../../lib/shop/artists';
 import { buildFundingMediaUrl, processCreatorImage, UPLOAD_LIMITS } from '../../../../lib/funding/creatorUpload';
 import { FUNDING_MEDIA_PREFIX, FUNDING_MEDIA_URL_PREFIX } from '../../../../lib/funding/mediaPath';
 import { canCreatorEdit, type FundingReviewStatus } from '../../../../lib/funding/reviewTransition';
@@ -68,29 +69,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const auth = await authenticateCreatorApi(req, res);
   if (!auth.ok) return res.status(401).json({ ok: false, message: '로그인이 필요해요.' });
 
+  // 상점 프로필 사진 — 프로젝트가 아니라 shop_artists 행이 있는지로 권한을 본다.
+  const shopProfile = req.query.target === 'shop-profile';
   const projectId = typeof req.query.projectId === 'string' ? req.query.projectId : '';
   const kind = typeof req.query.kind === 'string' ? req.query.kind : '';
-  if (!projectId || (kind !== 'cover' && kind !== 'body')) {
+  if (!shopProfile && (!projectId || (kind !== 'cover' && kind !== 'body'))) {
     return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않아요.' });
   }
 
-  // 남의 프로젝트면 '권한 없음'이 아니라 404다 — creatorProjectWrite.ts의 guard와 같은
-  // 이유로, 존재 여부 자체를 알려 주지 않는다.
-  const project = await loadProjectForCreator(auth.creatorId, projectId);
-  if (!project) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없어요.' });
+  let project: Awaited<ReturnType<typeof loadProjectForCreator>> = null;
+  if (shopProfile) {
+    try {
+      if (!(await getShopArtistByCreator(auth.creatorId))) {
+        return res.status(404).json({ ok: false, message: '상점을 찾을 수 없어요.' });
+      }
+    } catch (error: unknown) {
+      console.error('[funding/creator/upload] 상점 아티스트 조회 실패:', error);
+      return res.status(500).json({ ok: false, message: '잠시 후 다시 시도해 주세요.' });
+    }
+  } else {
+    // 남의 프로젝트면 '권한 없음'이 아니라 404다 — creatorProjectWrite.ts의 guard와 같은
+    // 이유로, 존재 여부 자체를 알려 주지 않는다.
+    project = await loadProjectForCreator(auth.creatorId, projectId);
+    if (!project) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없어요.' });
 
-  // 심사 중이거나 이미 판정 난 프로젝트는 saveStorySection 등 저장 경로가 guard로 막지만,
-  // 업로드 자체(Blob에 파일이 쌓이는 것)는 그 검사를 타지 않아 계정만 있으면 편집 가능
-  // 여부와 무관하게 저장소를 채울 수 있었다. 여기서 같은 조건을 본다.
-  // CreatorProjectDetail.reviewStatus는 string으로 넓혀 있다(DB 컬럼은 enum이지만
-  // loadProjectForCreator의 반환 타입이 좁히지 않는다) — canCreatorEdit이 기대하는
-  // FundingReviewStatus로 다시 좁힌다.
-  //
-  // 승인 뒤에도 본문·표지는 고칠 수 있으므로(reviewTransition.ts의 EDITABLE_SECTIONS)
-  // 업로드도 열려 있어야 한다. 구획 단위 판정이 필요한 자리가 아니다 — 업로드는
-  // "지금 이 프로젝트를 편집 중인가"만 알면 된다.
-  if (!canCreatorEdit(project.reviewStatus as FundingReviewStatus)) {
-    return res.status(409).json({ ok: false, message: '심사 중이거나 이미 판정이 난 프로젝트에는 이미지를 올릴 수 없어요.' });
+    // 심사 중이거나 이미 판정 난 프로젝트는 saveStorySection 등 저장 경로가 guard로 막지만,
+    // 업로드 자체(Blob에 파일이 쌓이는 것)는 그 검사를 타지 않아 계정만 있으면 편집 가능
+    // 여부와 무관하게 저장소를 채울 수 있었다. 여기서 같은 조건을 본다.
+    // 승인 뒤에도 본문·표지는 고칠 수 있으므로 업로드도 열려 있어야 한다.
+    if (!canCreatorEdit(project.reviewStatus as FundingReviewStatus)) {
+      return res.status(409).json({ ok: false, message: '심사 중이거나 이미 판정이 난 프로젝트에는 이미지를 올릴 수 없어요.' });
+    }
   }
 
   // 로그인이 "처음 보는 이메일이면 계정 자동 생성"이라 메일 주소만 있으면 누구나 개설자
@@ -104,9 +113,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(429).json({ ok: false, message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
   }
 
-  const rewardImageUrls = project.rewards.map((reward) => reward.imageUrl);
-  if (countProjectMedia(project.content, project.coverUrl, rewardImageUrls) >= UPLOAD_LIMITS.maxPerProject) {
-    return res.status(400).json({ ok: false, message: `이미지는 프로젝트당 최대 ${UPLOAD_LIMITS.maxPerProject}장까지 올릴 수 있어요.` });
+  if (project) {
+    const rewardImageUrls = project.rewards.map((reward) => reward.imageUrl);
+    if (countProjectMedia(project.content, project.coverUrl, rewardImageUrls) >= UPLOAD_LIMITS.maxPerProject) {
+      return res.status(400).json({ ok: false, message: `이미지는 프로젝트당 최대 ${UPLOAD_LIMITS.maxPerProject}장까지 올릴 수 있어요.` });
+    }
   }
 
   const body = await readBodyWithLimit(req, UPLOAD_LIMITS.maxBytes);
@@ -115,7 +126,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   let processed: { buffer: Buffer; width: number; height: number };
   try {
-    processed = await processCreatorImage(body, kind);
+    processed = await processCreatorImage(body, shopProfile ? 'avatar' : (kind as 'cover' | 'body'));
   } catch (error: unknown) {
     console.error('[funding/creator/upload] 이미지 처리 실패:', error);
     return res.status(400).json({ ok: false, message: '이미지 파일이 아니에요.' });

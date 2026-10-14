@@ -87,6 +87,18 @@ export const listDbPublishedProducts = async (): Promise<ShopProduct[]> => {
   });
 };
 
+/** 그 아티스트(creator)의 공개 DB 상품. */
+export const listDbPublishedProductsByCreator = async (creatorId: string): Promise<ShopProduct[]> => {
+  const rows = await getDb().select().from(shopProducts)
+    .where(and(publicProductWhere, eq(shopProducts.creatorId, creatorId)))
+    .orderBy(asc(shopProducts.approvedAt), asc(shopProducts.slug));
+  const skus = await loadLockedSkus(rows.map((r) => r.id));
+  return rows.flatMap((r) => {
+    const list = skus.get(r.id) ?? [];
+    return hasSellable(list) ? [normalizeDbProduct(r, list)] : [];
+  });
+};
+
 export const findDbProductBySlug = async (slug: string): Promise<ShopProduct | null> => {
   const rows = await getDb().select().from(shopProducts).where(and(publicProductWhere, eq(shopProducts.slug, slug))).limit(1);
   const row = rows[0];

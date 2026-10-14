@@ -103,3 +103,42 @@ it('페이지네이션을 끝까지 따라간다', async () => {
   expect(list).toHaveBeenNthCalledWith(2, expect.objectContaining({ cursor: 'c1' }));
   expect(result.deleted).toBe(2);
 });
+
+describe('상점 참조', () => {
+  const OLD_BLOBS = ['product', 'avatar', 'orphan'].map((n) => blob(`funding/${n}.webp`, OLD));
+
+  it('상점 상품 사진(초안 포함)과 프로필 사진은 지우지 않는다', async () => {
+    // 첫 질의는 펀딩, 두 번째가 상점 — 별도 문장이다.
+    all
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([
+        { text: JSON.stringify(['/api/funding/media/product.webp?w=1600&h=900']) },
+        { text: '/api/funding/media/avatar.webp?w=640&h=640' },
+        { text: null },
+      ]);
+    list.mockResolvedValue({ blobs: OLD_BLOBS, hasMore: false });
+    const result = await purgeOrphanFundingMedia(NOW);
+    expect(all).toHaveBeenCalledTimes(2);
+    expect(del).toHaveBeenCalledTimes(1);
+    expect(del).toHaveBeenCalledWith('https://blob.example/funding/orphan.webp');
+    expect(result.deleted).toBe(1);
+  });
+
+  it('상점 표가 없으면 참조 없음으로 보고 펀딩 기준으로 청소한다', async () => {
+    all
+      .mockResolvedValueOnce([{ text: '/api/funding/media/product.webp' }])
+      .mockRejectedValueOnce(new Error('SQLite error: no such table: shop_products'));
+    list.mockResolvedValue({ blobs: OLD_BLOBS, hasMore: false });
+    const result = await purgeOrphanFundingMedia(NOW);
+    expect(result.deleted).toBe(2);
+    expect(del).not.toHaveBeenCalledWith('https://blob.example/funding/product.webp');
+  });
+
+  it('상점 질의가 그 밖의 오류로 실패하면 아무것도 지우지 않고 던진다', async () => {
+    all.mockResolvedValueOnce([]).mockRejectedValueOnce(new Error('SQLITE_BUSY'));
+    list.mockResolvedValue({ blobs: OLD_BLOBS, hasMore: false });
+    await expect(purgeOrphanFundingMedia(NOW)).rejects.toThrow('SQLITE_BUSY');
+    expect(del).not.toHaveBeenCalled();
+    expect(list).not.toHaveBeenCalled();
+  });
+});

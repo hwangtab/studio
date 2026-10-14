@@ -404,3 +404,9 @@ supporterMessage는 후원자가 준 개인정보라 파기 약속이 걸리지�
 알림도 레이트리밋을 탄다 — 키는 `creator_login:mail_failure_alert`이고 전역 캡 알림
 (`creator_login:global_alert`)과 **반드시 달라야 한다.** 같으면 한쪽이 다른 쪽 예산을 먹어
 둘 중 하나가 조용해진다.
+
+### 개설자 콘솔에는 상점 탭이 있다
+
+`/ko/funding/creator`(펀딩 프로젝트 | 상점 탭, `CreatorConsoleTabs`)의 상점 탭은 관리자가 `shop_artists`에 등재한 아티스트에게만 열린다(규칙은 `lib/shop/CLAUDE.md`).
+이름·소개·링크는 `funding_creators`를 펀딩과 공유한다. 업로드 라우트(`/api/funding/creator/upload`)는 `target=shop-profile`도 받고,
+**월간 미디어 청소(`mediaRetention.ts`)와 미디어 공개 판정(`media/[...path].ts`)이 상점 참조도 본다** — 이 둘을 고칠 때 상점 쪽 쿼리를 빼먹지 말 것.
