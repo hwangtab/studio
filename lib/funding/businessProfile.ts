@@ -117,3 +117,44 @@ export const deleteBusinessProfile = async (creatorId: string, deps: { deleteBlo
   await db.delete(creatorBusinessProfiles).where(eq(creatorBusinessProfiles.creatorId, creatorId));
   await deleteTaxDocumentBlob(row?.key, creatorId, deps.deleteBlob);
 };
+
+/**
+ * 사업자등록증 키를 행에 쓴다. 행이 없으면 null(사업자 정보를 먼저 저장해야 한다).
+ * 옛 키를 돌려주므로 호출자가 **행 갱신 뒤에** 옛 Blob을 지운다.
+ */
+export const setBusinessCertificate = async (
+  creatorId: string,
+  key: string,
+  contentType: string,
+  now: Date,
+): Promise<{ previousKey: string | null } | null> => {
+  const db = getDb();
+  const [row] = await db.select({ key: creatorBusinessProfiles.certificateKey }).from(creatorBusinessProfiles)
+    .where(eq(creatorBusinessProfiles.creatorId, creatorId)).limit(1);
+  if (!row) return null;
+  await db.update(creatorBusinessProfiles).set({
+    certificateKey: key,
+    certificateContentType: contentType,
+    certificateUploadedAt: now,
+    updatedAt: now,
+  }).where(eq(creatorBusinessProfiles.creatorId, creatorId));
+  return { previousKey: row.key ?? null };
+};
+
+/** 사업자등록증만 비운다(사업자 정보는 둔다). 행이 없으면 null. */
+export const clearBusinessCertificate = async (
+  creatorId: string,
+  now: Date,
+): Promise<{ previousKey: string | null } | null> => {
+  const db = getDb();
+  const [row] = await db.select({ key: creatorBusinessProfiles.certificateKey }).from(creatorBusinessProfiles)
+    .where(eq(creatorBusinessProfiles.creatorId, creatorId)).limit(1);
+  if (!row) return null;
+  await db.update(creatorBusinessProfiles).set({
+    certificateKey: null,
+    certificateContentType: null,
+    certificateUploadedAt: null,
+    updatedAt: now,
+  }).where(eq(creatorBusinessProfiles.creatorId, creatorId));
+  return { previousKey: row.key ?? null };
+};
