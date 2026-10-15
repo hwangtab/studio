@@ -115,6 +115,17 @@ describe('POST /api/funding/creator/payout', () => {
     expect((await call(payoutHandler, { value: VALID })).status).toBe(503);
   });
 
+  it('계좌 그대로 두기는 keepAccount만 넘기고, 등록된 계좌가 없다는 거부는 400이다', async () => {
+    const rest = { taxType: VALID.taxType, residentNumber: VALID.residentNumber, business: VALID.business };
+    expect((await call(payoutHandler, { value: { ...rest, keepAccount: true } })).status).toBe(200);
+    const [, value] = (savePayoutSection as jest.Mock).mock.calls[0];
+    expect(value).toMatchObject({ keepAccount: true });
+    expect(value).not.toHaveProperty('account');
+
+    (savePayoutSection as jest.Mock).mockResolvedValue({ ok: false, code: 'no_payout_account', message: '등록된 계좌가 없어요.' });
+    expect((await call(payoutHandler, { value: { ...rest, keepAccount: true } })).status).toBe(400);
+  });
+
   it('Cache-Control: no-store', async () => {
     const res = { setHeader: jest.fn(), status() { return this; }, json() { return this; } } as unknown as NextApiResponse;
     await payoutHandler({ method: 'POST', headers: {}, query: {}, body: { value: VALID } } as unknown as NextApiRequest, res);

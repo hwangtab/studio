@@ -235,6 +235,43 @@ describe('validatePayoutSection', () => {
   });
 });
 
+describe('validatePayoutSection — 등록된 계좌 그대로 두기(keepAccount)', () => {
+  it('keepAccount: true면 계좌 세 칸 없이 통과하고, 값에는 keepAccount만 남는다', () => {
+    expect(validatePayoutSection({ taxType: 'withholding', keepAccount: true })).toEqual({
+      ok: true,
+      value: { taxType: 'withholding', keepAccount: true, residentNumber: null, business: null },
+    });
+  });
+
+  it('사업자 정보·주민등록번호 규칙은 그대로다', () => {
+    expect(validatePayoutSection({ taxType: 'invoice', keepAccount: true }).ok).toBe(false);
+    const r = validatePayoutSection({
+      taxType: 'invoice', keepAccount: true,
+      business: { businessNumber: '7537400653', businessName: '스튜디오 놀', representativeName: '황경하' },
+    });
+    expect(r.ok && r.value.business).toEqual({ businessNumber: '7537400653', businessName: '스튜디오 놀', representativeName: '황경하' });
+    const w = validatePayoutSection({ taxType: 'withholding', keepAccount: true, residentNumber: '990101-1234567' });
+    expect(w.ok && w.value.residentNumber).toBe('9901011234567');
+  });
+
+  it('그대로 두면서 새 계좌 칸을 함께 보내면 거부한다 — 어느 쪽인지 서버가 추측하지 않는다', () => {
+    for (const extra of [{ bankName: '국민은행' }, { account: '123-456' }, { holder: '황경하' }]) {
+      const r = validatePayoutSection({ taxType: 'withholding', keepAccount: true, ...extra });
+      expect(r.ok).toBe(false);
+      // 오류 메시지에 입력값을 넣지 않는다.
+      expect(r.ok === false && r.message).not.toContain('123-456');
+    }
+    // 빈 칸은 보낸 것으로 치지 않는다.
+    expect(validatePayoutSection({ taxType: 'withholding', keepAccount: true, bankName: ' ', account: '', holder: '' }).ok).toBe(true);
+  });
+
+  it('keepAccount가 true가 아니면(빠짐·문자열) 계좌 세 칸이 필수다', () => {
+    expect(validatePayoutSection({ taxType: 'withholding' }).ok).toBe(false);
+    expect(validatePayoutSection({ taxType: 'withholding', keepAccount: 'true' }).ok).toBe(false);
+    expect(validatePayoutSection({ taxType: 'withholding', keepAccount: false }).ok).toBe(false);
+  });
+});
+
 /**
  * 아래 번호는 전부 **형식만 맞춘 임의의 값**이다 — 실제 사람에게 발급된 번호가 아니고,
  * 그렇게 되지 않도록 뒤 6자리를 아무렇게나 잡았다.

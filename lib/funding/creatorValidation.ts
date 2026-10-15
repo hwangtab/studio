@@ -333,11 +333,28 @@ export const validateCreatorSection = (input: unknown): { ok: true; value: Creat
   return { ok: true, value: { name, contactName, phone, bio, links } };
 };
 
-export interface PayoutSection {
-  taxType: 'withholding' | 'invoice';
+/** 새로 입력한 계좌 한 벌. `savePayoutSection`이 암호화해 넣는다. */
+interface PayoutAccountInput {
+  keepAccount?: false;
   bankName: string;
   account: string;
   holder: string;
+}
+
+/**
+ * 등록된 계좌를 그대로 둔다 — 주민등록번호의 "빈 칸이면 기존 값 유지"와 같은 뜻이다.
+ * 계좌 칸이 하나도 없으므로 `savePayoutSection`은 계좌 컬럼을 건드리지 않고, 암호화 키도 요구하지 않는다.
+ * 등록된 계좌가 없을 때는 거부된다(`no_payout_account`) — 그대로 둘 것이 없다.
+ */
+interface PayoutAccountKeep {
+  keepAccount: true;
+  bankName?: never;
+  account?: never;
+  holder?: never;
+}
+
+export type PayoutSection = (PayoutAccountInput | PayoutAccountKeep) & {
+  taxType: 'withholding' | 'invoice';
   /**
    * 하이픈을 뺀 13자리 평문, 또는 `null`.
    *
@@ -351,7 +368,7 @@ export interface PayoutSection {
    * 주민등록번호(사업자면 버림)와 거울이다. 번호는 하이픈 없는 10자리.
    */
   business: { businessNumber: string; businessName: string; representativeName: string } | null;
-}
+};
 
 /**
  * 주민등록번호 형식 검사 — **형식만** 본다.
@@ -409,25 +426,40 @@ export const validatePayoutSection = (input: unknown): { ok: true; value: Payout
     return fail('세금 유형을 골라 주세요.');
   }
 
-  const bankName = str(d.bankName);
-  if (!bankName || bankName.length > CREATOR_LIMITS.payoutBankNameMax) {
-    return fail(`은행명은 1~${CREATOR_LIMITS.payoutBankNameMax}자로 적어 주세요.`);
-  }
+  /**
+   * 계좌는 둘 중 하나다 — `keepAccount: true`(등록된 계좌 그대로) 또는 세 칸 전부.
+   * `true` 그 자체만 그대로 두기로 읽는다. 빠졌거나 문자열 `'true'`면 세 칸이 필수다 — 클라이언트가 칸을
+   * 빠뜨린 실수가 조용히 "그대로 두기"로 저장되지 않게. 그대로 두면서 칸까지 채워 오면 어느 쪽인지
+   * 추측하지 않고 거부한다(메시지에 값은 넣지 않는다).
+   */
+  let accountInput: PayoutAccountInput | PayoutAccountKeep;
+  if (d.keepAccount === true) {
+    if (str(d.bankName) || str(d.account) || str(d.holder)) {
+      return fail('등록된 계좌를 그대로 두면서 새 계좌를 함께 보낼 수는 없어요. 화면을 새로고침해 다시 저장해 주세요.');
+    }
+    accountInput = { keepAccount: true };
+  } else {
+    const bankName = str(d.bankName);
+    if (!bankName || bankName.length > CREATOR_LIMITS.payoutBankNameMax) {
+      return fail(`은행명은 1~${CREATOR_LIMITS.payoutBankNameMax}자로 적어 주세요.`);
+    }
 
-  const account = str(d.account);
-  if (!account || account.length > CREATOR_LIMITS.payoutAccountMax) {
-    return fail(`계좌번호는 1~${CREATOR_LIMITS.payoutAccountMax}자로 적어 주세요.`);
-  }
-  if (!PAYOUT_ACCOUNT_PATTERN.test(account)) {
-    return fail('계좌번호는 숫자와 하이픈(-)만 넣어 주세요.');
-  }
-  if (account.replace(/[^0-9]/g, '').length < PAYOUT_ACCOUNT_MIN_DIGITS) {
-    return fail(`계좌번호에 숫자를 ${PAYOUT_ACCOUNT_MIN_DIGITS}자리 이상 넣어 주세요.`);
-  }
+    const account = str(d.account);
+    if (!account || account.length > CREATOR_LIMITS.payoutAccountMax) {
+      return fail(`계좌번호는 1~${CREATOR_LIMITS.payoutAccountMax}자로 적어 주세요.`);
+    }
+    if (!PAYOUT_ACCOUNT_PATTERN.test(account)) {
+      return fail('계좌번호는 숫자와 하이픈(-)만 넣어 주세요.');
+    }
+    if (account.replace(/[^0-9]/g, '').length < PAYOUT_ACCOUNT_MIN_DIGITS) {
+      return fail(`계좌번호에 숫자를 ${PAYOUT_ACCOUNT_MIN_DIGITS}자리 이상 넣어 주세요.`);
+    }
 
-  const holder = str(d.holder);
-  if (!holder || holder.length > CREATOR_LIMITS.payoutHolderMax) {
-    return fail(`예금주는 1~${CREATOR_LIMITS.payoutHolderMax}자로 적어 주세요.`);
+    const holder = str(d.holder);
+    if (!holder || holder.length > CREATOR_LIMITS.payoutHolderMax) {
+      return fail(`예금주는 1~${CREATOR_LIMITS.payoutHolderMax}자로 적어 주세요.`);
+    }
+    accountInput = { bankName, account, holder };
   }
 
   /**
@@ -476,7 +508,7 @@ export const validatePayoutSection = (input: unknown): { ok: true; value: Payout
     business = { businessNumber, businessName, representativeName };
   }
 
-  return { ok: true, value: { taxType, bankName, account, holder, residentNumber, business } };
+  return { ok: true, value: { taxType, ...accountInput, residentNumber, business } };
 };
 
 export interface RewardInput {

@@ -18,6 +18,8 @@ const STATUS_BY_CODE: Record<Exclude<WriteResult, { ok: true }>['code'], number>
   duplicate_reward: 400,
   too_many: 400,
   story_too_short: 400,
+  // 계좌를 그대로 두라고 했는데 등록된 계좌가 없다 — 개설자가 계좌를 입력하면 풀린다.
+  no_payout_account: 400,
   // 서버 설정(암호화 키) 문제라 개설자가 고칠 수 있는 것이 없다 — 4xx가 아니다.
   encryption_unavailable: 503,
   // 사업자 정보 표(0058)를 읽지 못함 — 마이그레이션·DB 문제라 개설자가 고칠 수 없다.
