@@ -64,7 +64,9 @@ it('묶음에 들어 있지 않은 구역이 없다 — 새 구역을 더하면 
   const grouped = ADMIN_NAV_ENTRIES.flatMap((entry) => (isNavGroup(entry) ? entry.items : [entry])).map((i) => i.href);
   expect(new Set(grouped).size).toBe(grouped.length);
   expect(grouped).toEqual(ADMIN_NAV.map((i) => i.href));
-  expect(ADMIN_NAV.map((i) => i.href)).toEqual(expect.arrayContaining(['/admin/revenue', '/admin/payment-links', '/admin/privacy-logs']));
+  expect(grouped).toEqual(expect.arrayContaining(['/admin/revenue', '/admin/payment-links', '/admin/privacy-logs', '/admin/contracts', '/admin/subscriptions', '/admin/artists']));
+  // 예약은 한 화면을 라인으로 갈라 세 곳에 걸린다.
+  expect(grouped.filter((h) => h.startsWith('/admin/bookings'))).toEqual(['/admin/bookings?line=practice', '/admin/bookings?line=studio', '/admin/bookings?line=mixing']);
 });
 
 describe('데스크톱 드롭다운', () => {
@@ -72,21 +74,21 @@ describe('데스크톱 드롭다운', () => {
 
   it('처음에는 닫혀 있고, 누르면 열리고, 다시 누르면 닫힌다', async () => {
     await renderShell(<AdminShell title="대시보드">본문</AdminShell>);
-    expect(group('판매')).toHaveAttribute('aria-expanded', 'false');
+    expect(group('플랫폼')).toHaveAttribute('aria-expanded', 'false');
     expect(within(nav()).queryByRole('link', { name: '펀딩' })).not.toBeInTheDocument();
 
-    await act(async () => group('판매').click());
-    expect(group('판매')).toHaveAttribute('aria-expanded', 'true');
+    await act(async () => group('플랫폼').click());
+    expect(group('플랫폼')).toHaveAttribute('aria-expanded', 'true');
     expect(within(nav()).getByRole('link', { name: '펀딩' })).toBeInTheDocument();
 
-    await act(async () => group('판매').click());
+    await act(async () => group('플랫폼').click());
     expect(within(nav()).queryByRole('link', { name: '펀딩' })).not.toBeInTheDocument();
   });
 
   it('한 번에 하나만 열린다', async () => {
     await renderShell(<AdminShell title="대시보드">본문</AdminShell>);
-    await act(async () => group('판매').click());
-    await act(async () => group('정산·기록').click());
+    await act(async () => group('플랫폼').click());
+    await act(async () => group('공통').click());
     expect(within(nav()).queryByRole('link', { name: '펀딩' })).not.toBeInTheDocument();
     expect(within(nav()).getByRole('link', { name: '매출' })).toBeInTheDocument();
   });
@@ -97,13 +99,13 @@ describe('데스크톱 드롭다운', () => {
         <AdminShell title="대시보드">본문</AdminShell>
       </>,
     );
-    await act(async () => group('판매').click());
+    await act(async () => group('플랫폼').click());
     await act(async () => {
       window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
     });
     expect(within(nav()).queryByRole('link', { name: '펀딩' })).not.toBeInTheDocument();
 
-    await act(async () => group('판매').click());
+    await act(async () => group('플랫폼').click());
     await act(async () => {
       document.body.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
     });
@@ -112,7 +114,7 @@ describe('데스크톱 드롭다운', () => {
 
   it('링크를 누르면 닫힌다', async () => {
     await renderShell(<AdminShell title="대시보드">본문</AdminShell>);
-    await act(async () => group('판매').click());
+    await act(async () => group('플랫폼').click());
     await act(async () => {
       within(nav()).getByRole('link', { name: '펀딩' }).click();
     });
@@ -122,15 +124,17 @@ describe('데스크톱 드롭다운', () => {
 
 it('지금 있는 구역만 현재 위치로 표시한다 — 상세 화면에서도 그 구역이 켜진다', async () => {
   pathname = '/admin/bookings/[id]';
-  await renderShell(<AdminShell title="예약 상세">본문</AdminShell>);
+  await renderShell(<AdminShell title="예약 상세" navLine="studio">본문</AdminShell>);
 
   // 현재 구역이 든 묶음 이름이 켜지고, 열면 그 구역 링크가 현재 위치로 표시된다.
-  expect(within(nav()).getByRole('button', { name: '고객 업무' })).toHaveAttribute('data-active', 'true');
-  expect(within(nav()).getByRole('button', { name: '판매' })).not.toHaveAttribute('data-active');
+  // 예약 상세는 자기 라인을 알려 줘야(navLine) 어느 라인의 예약인지 켜진다.
+  expect(within(nav()).getByRole('button', { name: '녹음실' })).toHaveAttribute('data-active', 'true');
+  expect(within(nav()).getByRole('button', { name: '연습실' })).not.toHaveAttribute('data-active');
   await act(async () => {
-    within(nav()).getByRole('button', { name: '고객 업무' }).click();
+    within(nav()).getByRole('button', { name: '녹음실' }).click();
   });
-  expect(within(nav()).getByRole('link', { name: '예약·믹싱' })).toHaveAttribute('aria-current', 'page');
+  expect(within(nav()).getByRole('link', { name: '녹음실 예약' })).toHaveAttribute('aria-current', 'page');
+  expect(within(nav()).getByRole('link', { name: '믹싱·마스터링' })).not.toHaveAttribute('aria-current');
   // '/admin'은 모든 관리자 경로의 접두사라, 잘못 맞히면 상세에서도 대시보드가 켜진다.
   expect(within(nav()).getByRole('link', { name: '대시보드' })).not.toHaveAttribute('aria-current');
 });
@@ -206,11 +210,18 @@ describe('activeAdminNavHref', () => {
     ['/admin/contracts', '/admin/contracts'],
     ['/admin/contracts/[id]', '/admin/contracts'],
     ['/admin/contracts/[id]/edit', '/admin/contracts'],
-    ['/admin/bookings/[id]', '/admin/bookings'],
     ['/admin/funding/[id]', '/admin/funding'],
     ['/admin/subscriptions/new', '/admin/subscriptions'],
   ])('%s → %s', (pathnameInput, expected) => {
     expect(activeAdminNavHref(pathnameInput)).toBe(expected);
+  });
+
+  it('같은 경로를 여럿이 거는 예약은 라인이 가른다 — 라인을 모르면 아무것도 켜지 않는다', () => {
+    expect(activeAdminNavHref('/admin/bookings', 'practice')).toBe('/admin/bookings?line=practice');
+    expect(activeAdminNavHref('/admin/bookings', 'studio')).toBe('/admin/bookings?line=studio');
+    expect(activeAdminNavHref('/admin/bookings/[id]', 'mixing')).toBe('/admin/bookings?line=mixing');
+    expect(activeAdminNavHref('/admin/bookings')).toBeNull();
+    expect(activeAdminNavHref('/admin/bookings', null)).toBeNull();
   });
 
   it('관리자 경로가 아니면 아무것도 켜지 않는다', () => {

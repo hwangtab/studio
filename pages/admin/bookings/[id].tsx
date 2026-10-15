@@ -10,6 +10,7 @@ import {
   setWorkOrderStage,
   type BookingActionResult,
 } from '../../../components/admin/bookingActions';
+import { bookingLineOf } from '../../../lib/booking/line';
 import { AdminShell } from '../../../components/admin/AdminShell';
 import { Button } from '../../../components/ui/Button';
 import { Field, TextArea, TextInput } from '../../../components/ui/Field';
@@ -357,6 +358,7 @@ export default function AdminBookingDetailPage({
     await run(() => refundBooking(booking.id, refundAmount, refundReason.trim()));
   };
 
+  const bookingLine = bookingLineOf(booking);
   const isMixing = booking.orderType === 'mixing';
   const isDeposit = booking.orderType === 'deposit';
   const workOrder = booking.workOrder;
@@ -414,8 +416,9 @@ export default function AdminBookingDetailPage({
       <AdminShell
         title="예약 상세"
         description={`${booking.customerName}님 · ${booking.productName}`}
-        backHref="/admin/bookings"
+        backHref={bookingLine ? `/admin/bookings?line=${bookingLine}` : '/admin/bookings'}
         backLabel="예약 목록"
+        navLine={bookingLine}
       >
         {notice && (
           <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>

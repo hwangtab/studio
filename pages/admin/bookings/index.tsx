@@ -24,6 +24,7 @@ import {
 } from '../../../lib/booking/admin-serialize';
 import { formatKstDateTime } from '../../../lib/booking/format';
 import { kstDateString } from '../../../lib/booking/kst';
+import { BOOKING_LINES, BOOKING_LINE_LABELS, bookingLineOf, parseBookingLine } from '../../../lib/booking/line';
 import { expireStaleOrders } from '../../../lib/booking/service';
 import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
 
@@ -195,9 +196,16 @@ export default function AdminBookingsPage({
   const [blockRoom, setBlockRoom] = useState('');
   const [blockError, setBlockError] = useState<string | null>(null);
 
+  // 메뉴가 연습실 / 녹음실 / 믹싱으로 갈라 걸어 주는 라인. 없으면 전체(예약금 결제 링크 주문 포함).
+  const line = parseBookingLine(router.query.line);
+  const lineBookings = useMemo(
+    () => (line ? bookings.filter((booking) => bookingLineOf(booking) === line) : bookings),
+    [bookings, line],
+  );
+
   const filteredBookings = useMemo(() => {
     const term = search.trim().toLowerCase();
-    return bookings.filter((booking) => {
+    return lineBookings.filter((booking) => {
       const matchesFilter = filter === 'all' || booking.orderStatus === filter;
       const matchesSearch =
         !term ||
@@ -207,15 +215,15 @@ export default function AdminBookingsPage({
         booking.orderNo.toLowerCase().includes(term);
       return matchesFilter && matchesSearch;
     });
-  }, [bookings, filter, search]);
+  }, [lineBookings, filter, search]);
 
   const counts = useMemo(() => {
-    const result: Record<string, number> = { all: bookings.length };
+    const result: Record<string, number> = { all: lineBookings.length };
     for (const status of orderStatusEnum) {
-      result[status] = bookings.filter((b) => b.orderStatus === status).length;
+      result[status] = lineBookings.filter((b) => b.orderStatus === status).length;
     }
     return result;
-  }, [bookings]);
+  }, [lineBookings]);
 
   const mailFailed = useMemo(() => bookings.filter((b) => b.notificationError), [bookings]);
 
@@ -354,6 +362,25 @@ export default function AdminBookingsPage({
                   오래된 예약은 나오지 않습니다.
                 </div>
               )}
+
+              <div className="flex flex-wrap gap-2 mb-4" role="group" aria-label="라인">
+                {[null, ...BOOKING_LINES].map((value) => {
+                  const active = line === value;
+                  const count = value ? bookings.filter((b) => bookingLineOf(b) === value).length : bookings.length;
+                  return (
+                    <Link
+                      key={value ?? 'all'}
+                      href={value ? `/admin/bookings?line=${value}` : '/admin/bookings'}
+                      aria-current={active ? 'true' : undefined}
+                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 ${
+                        active ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      {value ? BOOKING_LINE_LABELS[value] : '전체'} ({count})
+                    </Link>
+                  );
+                })}
+              </div>
 
               <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
                 <div className="flex flex-wrap gap-2">

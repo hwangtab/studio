@@ -5,6 +5,7 @@ import { ChevronDown, X } from 'lucide-react';
 
 import { logoutAdmin } from './contractActions';
 import { Button } from '../ui/Button';
+import { parseBookingLine, type BookingLine } from '../../lib/booking/line';
 
 /**
  * 관리자 화면의 공통 껍데기 — 상단 바(구역 이동 + 로그아웃)와 페이지 머리말.
@@ -26,17 +27,21 @@ import { Button } from '../ui/Button';
 export interface AdminNavItem {
   href: string;
   label: string;
+  /** 같은 화면(`/admin/bookings`)을 라인별로 가르는 구역 — `?line=`과 짝이다. */
+  line?: BookingLine;
 }
 
 /**
- * 상단 바 — 구역이 열둘로 늘어 한 줄에 다 펼치면 눈이 길을 잃어서, 업무가 가까운 것끼리 묶어 드롭다운으로 접었다.
- * 대시보드만 늘 보이는 링크고 나머지는 묶음 이름을 눌러 연다.
+ * 상단 바 — 구역이 열둘로 늘어 한 줄에 다 펼치면 눈이 길을 잃어서, 사업 라인별로 묶어 드롭다운으로 접었다.
+ * 스튜디오는 **연습실 / 녹음실 / 플랫폼** 세 갈래로 돌아간다. 대시보드만 늘 보이는 링크고 나머지는 묶음 이름을 눌러 연다.
  *
- * - 고객 업무: 들어온 일을 받아 처리한다 — 예약·믹싱 → 계약 → 구독(매달 청구) → 결제 링크.
- * - 판매: 스튜디오가 여는 판 — 펀딩 · 공연 · 상점 · 소프트웨어.
- * - 정산·기록: 돈과 기록을 되돌아본다 — 매출 → 아티스트 정산 → 접속기록.
+ * - 연습실: 시간제 예약 · 월 이용 구독 · 이용계약서(계약은 음악연습실 이용계약서다).
+ * - 녹음실: 녹음·성우·축가·커버영상 예약 · 믹싱·마스터링 주문.
+ * - 플랫폼: 펀딩 · 공연 · 상점 · 소프트웨어 · 아티스트(정산·지원).
+ * - 공통: 어느 라인에도 속하지 않는 것 — 매출 · 결제 링크 · 접속기록.
  *
- * 새 구역을 더할 때는 **묶음 하나에 넣는다**(ADMIN_NAV는 여기서 펼친 목록이라 따로 고칠 곳이 없다).
+ * '예약'은 한 화면(`/admin/bookings`)을 `?line=`으로 갈라 연습실·녹음실·믹싱에 나눠 건다. 새 구역을 더할 때는
+ * **묶음 하나에 넣는다**(ADMIN_NAV는 여기서 펼친 목록이라 따로 고칠 곳이 없다).
  */
 export interface AdminNavGroup {
   label: string;
@@ -50,28 +55,35 @@ export const isNavGroup = (entry: AdminNavEntry): entry is AdminNavGroup => 'ite
 export const ADMIN_NAV_ENTRIES: readonly AdminNavEntry[] = [
   { href: '/admin', label: '대시보드' },
   {
-    label: '고객 업무',
+    label: '연습실',
     items: [
-      { href: '/admin/bookings', label: '예약·믹싱' },
-      { href: '/admin/contracts', label: '계약' },
+      { href: '/admin/bookings?line=practice', label: '연습실 예약', line: 'practice' },
       { href: '/admin/subscriptions', label: '구독' },
-      { href: '/admin/payment-links', label: '결제 링크' },
+      { href: '/admin/contracts', label: '계약' },
     ],
   },
   {
-    label: '판매',
+    label: '녹음실',
+    items: [
+      { href: '/admin/bookings?line=studio', label: '녹음실 예약', line: 'studio' },
+      { href: '/admin/bookings?line=mixing', label: '믹싱·마스터링', line: 'mixing' },
+    ],
+  },
+  {
+    label: '플랫폼',
     items: [
       { href: '/admin/funding', label: '펀딩' },
       { href: '/admin/shows', label: '공연' },
       { href: '/admin/shop', label: '상점' },
       { href: '/admin/software', label: '소프트웨어' },
+      { href: '/admin/artists', label: '아티스트' },
     ],
   },
   {
-    label: '정산·기록',
+    label: '공통',
     items: [
       { href: '/admin/revenue', label: '매출' },
-      { href: '/admin/artists', label: '아티스트' },
+      { href: '/admin/payment-links', label: '결제 링크' },
       { href: '/admin/privacy-logs', label: '접속기록' },
     ],
   },
@@ -80,20 +92,25 @@ export const ADMIN_NAV_ENTRIES: readonly AdminNavEntry[] = [
 /** 묶음을 펼친 평면 목록 — 현재 위치 판정과 테스트가 쓴다. */
 export const ADMIN_NAV: readonly AdminNavItem[] = ADMIN_NAV_ENTRIES.flatMap((entry) => (isNavGroup(entry) ? entry.items : [entry]));
 
+const pathOf = (href: string): string => href.split('?')[0];
+
 /**
  * 지금 어느 구역에 있는지. 가장 긴 접두사가 이긴다 — `/admin`은 모든 관리자 경로의
  * 접두사라 먼저 맞히면 상세 화면에서도 '대시보드'가 켜진다.
  *
  * 경계(`/admin/contracts` vs `/admin/contractsX`)를 위해 정확히 같거나 `/`가 뒤따를 때만
  * 맞는 것으로 본다. 라우트 패턴(`router.pathname`)을 받으므로 쿼리·해시는 들어오지 않는다.
+ *
+ * 같은 경로를 여럿이 거는 구역(예약 — 연습실·녹음실·믹싱)은 `line`이 가른다. 라인을 모르면(`line` 없음 —
+ * 대시보드 링크로 연 전체 목록) **어느 쪽도 켜지 않는다**: 임의로 하나를 켜면 다른 라인의 화면에서 틀린 곳이 켜진다.
  */
-export const activeAdminNavHref = (pathname: string): string | null => {
-  const matches = ADMIN_NAV.filter(
-    (item) => pathname === item.href || pathname.startsWith(`${item.href}/`),
-  );
-  return matches.length === 0
-    ? null
-    : matches.reduce((longest, item) => (item.href.length > longest.href.length ? item : longest)).href;
+export const activeAdminNavHref = (pathname: string, line?: BookingLine | null): string | null => {
+  const matches = ADMIN_NAV.filter((item) => pathname === pathOf(item.href) || pathname.startsWith(`${pathOf(item.href)}/`));
+  if (matches.length === 0) return null;
+  const longest = matches.reduce((best, item) => (pathOf(item.href).length > best ? pathOf(item.href).length : best), 0);
+  const candidates = matches.filter((item) => pathOf(item.href).length === longest);
+  if (candidates.length === 1) return candidates[0].href;
+  return candidates.find((item) => item.line && item.line === line)?.href ?? null;
 };
 
 const WIDTH_CLASS = {
@@ -111,6 +128,10 @@ export interface AdminShellProps {
   /** 제목 오른쪽에 붙는 페이지 고유 동작(예: 새 계약 작성). */
   actions?: React.ReactNode;
   width?: keyof typeof WIDTH_CLASS;
+  /**
+   * 예약 상세처럼 `?line=`이 주소에 없는 화면이 자기 라인을 알려 줄 때 쓴다 — 없으면 주소의 `line`을 읽는다.
+   */
+  navLine?: BookingLine | null;
   children: React.ReactNode;
 }
 
@@ -121,10 +142,11 @@ export const AdminShell = ({
   backLabel,
   actions,
   width = 'default',
+  navLine,
   children,
 }: AdminShellProps) => {
   const router = useRouter();
-  const activeHref = activeAdminNavHref(router.pathname);
+  const activeHref = activeAdminNavHref(router.pathname, navLine ?? parseBookingLine(router.query?.line));
 
   const handleLogout = async () => {
     await logoutAdmin();
