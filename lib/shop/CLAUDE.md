@@ -46,10 +46,13 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
   한정판 번호 배정을 한 batch로, 이어서 토스 확정과 같은 확정 메일(디지털 상품이면 내려받기 안내 포함). 재고를 다시 세지 않는다(대기 내내 점유했다).
   **미입금 취소**(`cancelAwaitingShopDeposit`, 관리자·고객 공용)는 `deposit_cancelled`로 닫고 재고를 푼다 — 닫힌 신청은 입금 확인할 수 없다.
   고객이 입금 전에 취소하면(`/api/shop/cancel`이 입금 대기 주문을 이 길로 보낸다) 운영자에게만 알린다.
-- **환불은 운영자가 한다.** 입금으로 확정된 주문은 고객이 셀프 취소할 수 없다(`cancelShopOrder`가 `BANK_PAID_CUSTOMER_CANCEL_MESSAGE`) — `refund_accounts`의
-  종류(`order_kind` CHECK)에 상점이 없어 고객에게 환불 계좌를 받아 둘 곳이 없다. 운영자가 카톡·전화로 계좌를 받아 **먼저 송금하고**, 관리자 "전액 환불"로 기록한다
-  (토스를 부르지 않는다 — `settleRefund`의 계좌 입금 경로). 상점도 환불 계좌 표에 넣으려면 `order_kind` CHECK를 바꾸는 마이그레이션(SQLite는 표 재생성)이 필요하다.
-  주문 확인 메일·취소 메일·주문 확인 화면은 계좌 입금 주문일 때 문구를 바꾼다("입금하신 계좌로").
+- **환불은 운영자가 송금한다 — 계좌는 화면에서 받는다**(마이그레이션 0061: `refund_accounts.order_kind`에 `merch` 추가 — SQLite는 CHECK를 못 고쳐 표를 다시 만들었다).
+  입금으로 확정된 주문은 고객이 주문 확인 화면에서 **환불 계좌**(은행·계좌번호·예금주, `RefundAccountFields`)를 적고 취소한다 — `cancelShopOrder`가 선점 **전에**
+  계좌를 검증·암호화하고(`planBankRefund`, 키가 없거나 형식이 틀리면 주문을 건드리지 않는다), 선점 뒤 `refund_accounts`(kind `merch`)에 저장하고, 토스를 부르지 않고
+  환불 기록만 남긴다(`settleRefund`의 계좌 입금 경로). 돈은 아직 안 나갔다 — 운영자 알림 메일이 "환불 송금 필요"로 오고, 관리자 `/admin/shop/<주문번호>`의
+  **환불 계좌 → 계좌 보기(접속기록) → 송금 후 "송금 완료"**(`mark_refund_sent`)를 누른다. 안 누르면 헬스체크가 48시간 뒤 알린다(예약·공연과 같은 기한: 접수일부터 3영업일).
+  운영자 "전액 환불"(계좌 입금 주문)은 이미 송금한 뒤 기록하는 것이라 계좌를 받지 않는다. 발송 뒤 반품은 고객 셀프 취소가 아니라 운영자 환불로 한다(기존 규칙 그대로).
+  주문 확인 메일·취소 메일·화면 문구는 계좌 입금 주문일 때 "입금하신 계좌로"·"접수일부터 3영업일 이내"로 바뀐다. 파기는 주문의 5년 파기를 따른다(`purgeRefundAccountsOfPurgedOrders`에 `merch` 포함).
 - `tests/payments/sharedCheckout.guard.test.ts`는 `merch`에 `withBank`를 요구한다.
 
 - 승인은 `lib/shop/confirm.ts` — 예약금 결제 링크(`lib/booking/confirmDeposit.ts`)의 안전장치 + **재고 재판정**(아래).

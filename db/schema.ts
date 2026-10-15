@@ -658,6 +658,7 @@ export type FundingPledgeItem = typeof fundingPledgeItems.$inferSelect;
  * 펀딩 확인 페이지에서 취소를 요청할 때 적는다), 다음 단계에서 공연 티켓(show_orders)·연습실/녹음
  * 예약·믹싱 주문(orders)도 계좌 입금을 붙이면 같은 표를 쓴다. 그래서 주문을 FK가 아니라
  * **(`order_kind`, `order_no`)**로 가리킨다 — 공연 주문은 `orders`가 아닌 다른 표에 있다.
+ * `merch`(상점 주문)는 마이그레이션 0061에서 CHECK에 더했다 — SQLite는 CHECK를 고칠 수 없어 표를 다시 만들었다.
  *
  * - **계좌번호만 암호화한다**(`account_number_enc`, lib/crypto/fieldCrypto.ts 형식). 은행명·예금주는
  *   평문이다 — 관리자 화면에서 "누구 앞으로 보내는지"를 키 없이 보여야 하고, 둘만으로는 송금할 수
@@ -671,7 +672,7 @@ export type FundingPledgeItem = typeof fundingPledgeItems.$inferSelect;
  * - 파기는 주문의 5년 파기를 따른다(lib/privacy/orderRetention.ts) — 환불 기록은 전자상거래법상
  *   대금 결제 기록이다. 운영자가 환불 요청을 철회 처리하면 그 자리에서 지운다(더 쓸 데가 없다).
  */
-export const refundAccountOrderKindEnum = ['funding', 'session', 'mixing', 'show'] as const;
+export const refundAccountOrderKindEnum = ['funding', 'session', 'mixing', 'show', 'merch'] as const;
 export const refundAccounts = sqliteTable(
   'refund_accounts',
   {
@@ -688,7 +689,7 @@ export const refundAccounts = sqliteTable(
   },
   (t) => [
     uniqueIndex('refund_accounts_order_uq').on(t.orderKind, t.orderNo),
-    check('refund_accounts_order_kind_check', sql`${t.orderKind} in ('funding', 'session', 'mixing', 'show')`),
+    check('refund_accounts_order_kind_check', sql`${t.orderKind} in ('funding', 'session', 'mixing', 'show', 'merch')`),
   ],
 );
 
@@ -2171,3 +2172,18 @@ export const paymentLinks = sqliteTable('payment_links', {
 });
 
 export type PaymentLinkRow = typeof paymentLinks.$inferSelect;
+
+/**
+ * 결제 링크로 만들어진 주문이 **어느 링크였는지**의 기록(마이그레이션 0061). 링크 주문(`orders.type = 'deposit'`)은 하위 표가 없어
+ * 상품명이 어디에도 남지 않았다 — 같은 고객에게 링크를 여러 개 보내면 입금·환불 때 어느 건인지 알 수 없었다.
+ * `item_name`은 주문 시점의 **스냅샷**이다(링크는 닫혀도 이름이 바뀌지 않지만, 파일 링크는 코드가 바뀔 수 있다). 메모는 링크 표에서 읽는다.
+ * 기존 주문 표에 컬럼을 더하지 않고 따로 둔다(0037과 같은 이유 — 관계 조회가 전체 컬럼을 SELECT한다). 표가 없으면 기록·표시만 빠진다.
+ */
+export const paymentLinkOrders = sqliteTable('payment_link_orders', {
+  orderNo: text('order_no').primaryKey(),
+  slug: text('slug').notNull(),
+  itemName: text('item_name').notNull(),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+}, (t) => [
+  index('payment_link_orders_slug_idx').on(t.slug),
+]);

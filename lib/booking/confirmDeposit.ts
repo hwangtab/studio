@@ -6,6 +6,7 @@ import { formatPriceAmount } from '../../data/pricing';
 import { adminUrl, buildEmailLayout } from '../email/layout';
 import { sendEmail } from '../email/resend';
 import { OPERATOR_EMAIL } from '../operatorContact';
+import { loadPaymentLinkOrderInfo } from '../payments/paymentLinkOrders';
 import { refundIdempotencyKey } from './cancel';
 import { rowsAffectedOf } from './confirm';
 import { findOrderByOrderNo } from './service';
@@ -99,11 +100,14 @@ const autoCancelStaleApproval = async (order: Order, approved: TossPayment): Pro
 /** 운영자에게 가는 결제 알림 한 통. 실패해도 결제 확정은 그대로 — 로그만 남긴다. */
 const notifyOperator = async (order: Order, approved: TossPayment): Promise<void> => {
   try {
+    // 어느 링크였는지(0061) — 없으면(옛 주문·표 전) 생략한다.
+    const link = (await loadPaymentLinkOrderInfo([order.orderNo])).get(order.orderNo);
     const result = await sendEmail({
       to: OPERATOR_EMAIL,
       subject: `[예약금 결제] ${formatPriceAmount(order.totalAmount)}원 — ${order.customerName}`,
       text: [
         '예약금 결제가 완료됐어요.',
+        ...(link ? [`상품: ${link.itemName}${link.memo ? ` (${link.memo})` : ''}`] : []),
         `금액: ${formatPriceAmount(order.totalAmount)}원 (VAT 포함)`,
         `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
         `주문번호: ${order.orderNo}`,
@@ -117,6 +121,7 @@ const notifyOperator = async (order: Order, approved: TossPayment): Promise<void
         preheader: `${order.customerName} · ${formatPriceAmount(order.totalAmount)}원`,
         heading: '예약금 결제가 완료됐어요',
         rows: [
+          ...(link ? [{ label: '상품', value: `${link.itemName}${link.memo ? ` (${link.memo})` : ''}` }] : []),
           { label: '고객', value: order.customerName },
           { label: '연락처', value: order.customerPhone, href: `tel:${order.customerPhone.replace(/[^0-9+]/g, '')}` },
           { label: '이메일', value: order.customerEmail, href: `mailto:${order.customerEmail}` },
