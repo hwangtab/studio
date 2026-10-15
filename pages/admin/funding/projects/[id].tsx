@@ -303,8 +303,20 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
     setNotice(null);
     setSuccess(null);
     setWarnings([]);
+    // 화면이 새 props로 갱신되기 전에 버튼을 풀면, 승인 직후 한 번 더 눌러 낡은 판본(expectedSubmittedAt)으로
+    // 409가 나가고 그 빨간 오류가 방금의 성공 안내를 덮는다. 갱신(replace)이 끝난 뒤에 푼다.
+    try {
+      await runTask(task, successMessage);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const runTask = async (
+    task: () => Promise<{ ok: boolean; message?: string; warnings?: string[] }>,
+    successMessage: string,
+  ) => {
     const result = await task();
-    setBusy(false);
     if (!result.ok) {
       setNotice(result.message ?? '요청을 처리하지 못했습니다.');
     } else {

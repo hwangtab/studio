@@ -8,6 +8,7 @@ import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { getClientIp } from '../../../../../lib/contracts/client-ip';
 import { loadProjectForAdmin } from '../../../../../lib/funding/adminProjects';
 import { setDesignFeePaid, setProductionFee, setProjectService, type ServiceWriteResult } from '../../../../../lib/funding/projectServices';
+import { OPERATOR_NOTE_MAX_LENGTH } from '../../../../../lib/funding/policy';
 import { decideProject, type AdminReviewAction, type DecisionResult } from '../../../../../lib/funding/reviewDecision';
 import { decidePublicStatus, type PublicStatusAction, type PublicStatusResult } from '../../../../../lib/funding/publicStatusDecision';
 import {
@@ -230,6 +231,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const id = String(req.query.id ?? '');
   const b = (typeof req.body === 'object' && req.body) || {};
   const now = new Date();
+
+  // 운영자가 쓰는 글의 상한 — 사유·메모는 개설자 화면과 메일에 그대로 나가고 DB에도 통째로 남는다.
+  for (const field of ['note', 'memo'] as const) {
+    const value = (b as Record<string, unknown>)[field];
+    if (typeof value === 'string' && value.length > OPERATOR_NOTE_MAX_LENGTH) {
+      return res.status(400).json({
+        ok: false,
+        message: `메모·사유는 ${OPERATOR_NOTE_MAX_LENGTH.toLocaleString('ko-KR')}자 이하로 적어 주세요. (지금 ${value.length.toLocaleString('ko-KR')}자)`,
+      });
+    }
+  }
 
   /**
    * 판정 없이 `reviewNote`만 고쳐 쓴다(상태 전이·메일 없음).
