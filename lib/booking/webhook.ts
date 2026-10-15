@@ -1,3 +1,4 @@
+import { removePaymentLinkCalendarEvent } from '../payments/linkCalendar';
 import { and, eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
@@ -419,8 +420,11 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
         // reconcileRefunds를 재사용한다.
         if (order) {
           const paymentRow = order.payments.find((p) => p.paymentKey === payment.paymentKey) ?? order.payments[0];
-          if (paymentRow) await reconcileRefunds(order, paymentRow, payment);
-          else console.error('[booking-webhook] 예약금 취소 대사 스킵 — payments 행 없음', { orderNo: order.orderNo });
+          if (paymentRow) {
+            await reconcileRefunds(order, paymentRow, payment);
+            // 전액 취소면 캘린더의 이용 일정도 지운다(링크 이용 일정 — lib/payments/linkCalendar.ts, 없으면 아무 일도 없다).
+            if (payment.status === 'CANCELED') await removePaymentLinkCalendarEvent(order.orderNo);
+          } else console.error('[booking-webhook] 예약금 취소 대사 스킵 — payments 행 없음', { orderNo: order.orderNo });
         }
       } else if (orderType === 'subscription') {
         // 관리자가 토스 콘솔에서 회차 하나를 취소해도 구독 자체는 유지한다(스펙 §6 관리자 절 —

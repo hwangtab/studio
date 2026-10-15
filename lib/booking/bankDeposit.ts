@@ -17,6 +17,7 @@ import { recordDepositGuideResult, rowsOf, sendDepositGuideEmails, sendDepositWi
 import { allowCustomerDepositGuideMail } from '../payments/depositGuideThrottle';
 import { safeDbErrorSummary } from '../payments/refundAccount';
 import { deliverPostConfirmation, ensureBookingEvent, type BookingOrder } from './confirm';
+import { syncPaymentLinkCalendarEvent } from '../payments/linkCalendar';
 import { loadPaymentLinkOrderInfo } from '../payments/paymentLinkOrders';
 import { sendDepositLinkPaidEmail } from './email';
 import { calendarForService, deleteBookingEvent, renameBookingEvent } from './gcal';
@@ -211,6 +212,8 @@ const confirmDepositLinkBankDeposit = async (order: BookingOrder, now: Date): Pr
   if (rowsOf(claim) === 0) {
     return { ok: false, code: 'invalid_state', message: '이미 확인됐거나 입금을 확인할 수 있는 상태가 아니에요(미입금 취소된 신청은 확정할 수 없어요). 새로고침해 주세요.' };
   }
+  // 이용 일시가 있는 링크면 캘린더에 올린다(실패는 삼키고 기록 — lib/payments/linkCalendar.ts).
+  await syncPaymentLinkCalendarEvent(order.orderNo);
   let failure: string | null = null;
   try {
     failure = await sendDepositLinkPaidEmail({ ...order, status: 'paid' });

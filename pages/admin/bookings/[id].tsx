@@ -299,6 +299,17 @@ export default function AdminBookingDetailPage({
       '입금 안내 재발송에 실패했습니다.',
       `${booking.customerEmail}로 계좌 입금 안내 메일을 다시 보낼까요?`,
     );
+  /** 결제 링크 이용 일정의 구글 캘린더 — 다시 등록(없으면 새로, 있으면 지우고 새로) / 지우기. */
+  const runLinkCalendar = async (action: 'sync_link_calendar' | 'remove_link_calendar', confirmText: string) => {
+    if (!window.confirm(confirmText)) return;
+    setBusy(true);
+    setNotice(null);
+    const result = await postDepositAction(action, '캘린더 처리에 실패했습니다.');
+    setBusy(false);
+    if (result.message) setNotice(result.message);
+    await router.replace(router.asPath, undefined, { scroll: false });
+  };
+
   const handleMarkRefundSent = () =>
     runDeposit('mark_refund_sent', '송금 완료 기록에 실패했습니다.', '환불 계좌로 송금을 마쳤나요?');
 
@@ -651,6 +662,26 @@ export default function AdminBookingDetailPage({
                   <DescriptionRow label="상품" value={booking.productName} />
                   {isDeposit && booking.linkMemo && <DescriptionRow label="링크 메모" value={booking.linkMemo} />}
                   {isDeposit && booking.linkSessionAt && <DescriptionRow label="이용 일시" value={formatKstDateTimeFull(booking.linkSessionAt)} />}
+                  {isDeposit && booking.linkCalendar && (
+                    <DescriptionRow
+                      label="구글 캘린더"
+                      value={(
+                        <span className="inline-flex flex-wrap items-center justify-end gap-2">
+                          <span>{booking.linkCalendar.state === 'registered' ? '등록됨' : booking.linkCalendar.state === 'failed' ? `등록 실패 — ${booking.linkCalendar.error ?? ''}` : '아직 안 올림'}</span>
+                          {(booking.orderStatus === 'paid' || booking.orderStatus === 'partially_refunded') && (
+                            <Button light variant="weak" size="sm" disabled={busy} onClick={() => runLinkCalendar('sync_link_calendar', '구글 캘린더에 이 이용 일정을 (다시) 올릴까요? 이미 올린 일정이 있으면 지우고 새로 올려요.')}>
+                              {booking.linkCalendar.state === 'registered' ? '다시 등록' : '캘린더에 올리기'}
+                            </Button>
+                          )}
+                          {booking.linkCalendar.state === 'registered' && (
+                            <Button light variant="weak" size="sm" disabled={busy} onClick={() => runLinkCalendar('remove_link_calendar', '구글 캘린더에서 이 일정을 지울까요? (환불 등으로 이용하지 않을 때)')}>
+                              캘린더에서 지우기
+                            </Button>
+                          )}
+                        </span>
+                      )}
+                    />
+                  )}
                   {isDeposit ? null : isMixing ? (
                     <>
                       <DescriptionRow label="곡 수" value={workOrder ? `${workOrder.songCount}곡` : '-'} />
