@@ -430,7 +430,7 @@ export default function AdminBookingsPage({
                           <td data-label="일시 / 상품" className="px-4 py-3 whitespace-nowrap">
                             {isMixing
                               ? `${booking.productName} × ${booking.workOrder?.songCount ?? '-'}곡${booking.workOrder?.vocalTuning ? ' (튜닝)' : ''}`
-                              : isDeposit ? '-' : formatKstDateTime(booking.startAt)}
+                              : isDeposit ? (booking.linkSessionAt ? formatKstDateTime(booking.linkSessionAt) : '-') : formatKstDateTime(booking.startAt)}
                           </td>
                           <td data-label="고객" className="px-4 py-3 font-medium text-gray-900">
                             {booking.customerName}

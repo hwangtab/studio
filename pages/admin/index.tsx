@@ -172,7 +172,7 @@ export default function AdminIndexPage({ dashboard, shopQueues, ledgerFrom, ledg
 
             <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
               <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">이번 주 세션</h2>
-              <p className="text-xs text-gray-500 mb-4">오늘부터 {dashboard.upcomingWindowDays}일 안의 확정 예약입니다.</p>
+              <p className="text-xs text-gray-500 mb-4">오늘부터 {dashboard.upcomingWindowDays}일 안의 확정 예약과, 결제된 결제 링크의 이용 일정입니다.</p>
               {dashboard.upcomingSessions.length === 0 ? (
                 <p className="text-sm text-gray-600">예정된 세션이 없습니다.</p>
               ) : (
@@ -182,6 +182,7 @@ export default function AdminIndexPage({ dashboard, shopQueues, ledgerFrom, ledg
                       <span className="font-medium text-gray-900 tabular-nums">{formatKstDateTime(session.startAt)}</span>
                       <span className="text-gray-700">
                         {session.customerName} · {session.productName}
+                        {session.kind === 'link' && <span className="ml-2 rounded bg-amber-100 px-1.5 py-0.5 text-xs font-medium text-amber-800">결제 링크</span>}
                       </span>
                       <Link href={`/admin/bookings/${session.orderId}`} className="text-primary hover:underline">
                         {session.orderNo}

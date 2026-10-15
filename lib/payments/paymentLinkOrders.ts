@@ -17,14 +17,20 @@ import { safeDbErrorSummary } from './refundAccount';
 export interface PaymentLinkOrderInfo {
   slug: string;
   itemName: string;
+  /** 주문 시점의 이용 일시(초)·시간(0062) — 일시 없는 링크는 null. */
+  sessionAt: number | null;
+  sessionHours: number | null;
   /** 링크를 만들 때 적은 운영자 메모(파일 링크·삭제된 행이면 null). */
   memo: string | null;
 }
 
-export const recordPaymentLinkOrder = async (input: { orderNo: string; slug: string; itemName: string }): Promise<void> => {
+export const recordPaymentLinkOrder = async (input: {
+  orderNo: string; slug: string; itemName: string; sessionAt?: number | null; sessionHours?: number | null;
+}): Promise<void> => {
   try {
     await getDb().run(sql`
-      INSERT INTO payment_link_orders (order_no, slug, item_name) VALUES (${input.orderNo}, ${input.slug}, ${input.itemName})
+      INSERT INTO payment_link_orders (order_no, slug, item_name, session_at, session_hours)
+      VALUES (${input.orderNo}, ${input.slug}, ${input.itemName}, ${input.sessionAt ?? null}, ${input.sessionHours ?? null})
       ON CONFLICT (order_no) DO NOTHING
     `);
   } catch (error) {
@@ -37,12 +43,15 @@ export const loadPaymentLinkOrderInfo = async (orderNos: readonly string[]): Pro
   const out = new Map<string, PaymentLinkOrderInfo>();
   if (orderNos.length === 0) return out;
   try {
-    const rows = await getDb().all<{ order_no: string; slug: string; item_name: string; memo: string | null }>(sql`
-      SELECT o.order_no, o.slug, o.item_name, l.memo AS memo
+    const rows = await getDb().all<{ order_no: string; slug: string; item_name: string; session_at: number | null; session_hours: number | null; memo: string | null }>(sql`
+      SELECT o.order_no, o.slug, o.item_name, o.session_at, o.session_hours, l.memo AS memo
       FROM payment_link_orders o LEFT JOIN payment_links l ON l.slug = o.slug
       WHERE o.order_no IN (${sql.join(orderNos.map((n) => sql`${n}`), sql`, `)})
     `);
-    for (const r of rows) out.set(r.order_no, { slug: r.slug, itemName: r.item_name, memo: r.memo ?? null });
+    for (const r of rows) out.set(r.order_no, {
+      slug: r.slug, itemName: r.item_name, memo: r.memo ?? null,
+      sessionAt: r.session_at === null ? null : Number(r.session_at), sessionHours: r.session_hours === null ? null : Number(r.session_hours),
+    });
   } catch (error) {
     console.error('[payment-link-orders] 링크 정보 조회 실패 — "예약금"으로 표시한다', { error: safeDbErrorSummary(error) });
   }

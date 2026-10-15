@@ -109,6 +109,7 @@ export interface AdminBookingListItem {
   createdAt: string;
   /** 결제 링크를 만들 때 적은 운영자 메모(링크 주문만). */
   linkMemo?: string | null;
+  linkSessionAt?: string | null;
 }
 
 const UNPAID_ORDER_STATUSES: ReadonlySet<Order['status']> = new Set(['pending', 'failed', 'expired', 'awaiting_deposit', 'deposit_cancelled']);
@@ -128,7 +129,7 @@ const UNPAID_ORDER_STATUSES: ReadonlySet<Order['status']> = new Set(['pending', 
 export const serializeBookingForAdmin = (
   order: Order & { bookings: Booking[]; payments: Payment[]; workOrders: WorkOrder[] },
   /** 결제 링크 주문의 링크 정보(`payment_link_orders`, 0061 — lib/payments/paymentLinkOrders.ts). 없으면 "예약금" 고정 라벨. */
-  link?: { itemName: string; memo: string | null } | null,
+  link?: { itemName: string; memo: string | null; sessionAt?: number | null } | null,
 ): AdminBookingListItem => {
   const booking = order.bookings[0];
   const workOrder = order.workOrders[0];
@@ -185,6 +186,8 @@ export const serializeBookingForAdmin = (
         : null,
     createdAt: order.createdAt.toISOString(),
     linkMemo: order.type === 'deposit' ? (link?.memo ?? null) : null,
+    // 결제 링크에 적은 이용 일시(0062) — 예약 목록의 "일시" 칸이 '-' 대신 이 시각을 보인다.
+    linkSessionAt: order.type === 'deposit' && link?.sessionAt ? new Date(link.sessionAt * 1000).toISOString() : null,
   };
 };
 
@@ -222,7 +225,7 @@ export interface AdminBookingDetail extends AdminBookingListItem {
 
 export const serializeBookingDetailForAdmin = (
   order: Order & { bookings: Booking[]; payments: (Payment & { refunds: Refund[] })[]; workOrders: WorkOrder[] },
-  link?: { itemName: string; memo: string | null } | null,
+  link?: { itemName: string; memo: string | null; sessionAt?: number | null } | null,
 ): AdminBookingDetail => {
   const base = serializeBookingForAdmin(order, link);
   const booking = order.bookings[0];

@@ -650,6 +650,7 @@ export default function AdminBookingDetailPage({
                 <dl className="space-y-2 text-sm">
                   <DescriptionRow label="상품" value={booking.productName} />
                   {isDeposit && booking.linkMemo && <DescriptionRow label="링크 메모" value={booking.linkMemo} />}
+                  {isDeposit && booking.linkSessionAt && <DescriptionRow label="이용 일시" value={formatKstDateTimeFull(booking.linkSessionAt)} />}
                   {isDeposit ? null : isMixing ? (
                     <>
                       <DescriptionRow label="곡 수" value={workOrder ? `${workOrder.songCount}곡` : '-'} />

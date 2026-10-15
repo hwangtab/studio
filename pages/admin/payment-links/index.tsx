@@ -38,6 +38,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
 const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
 const buttonClass = 'rounded-lg bg-gray-900 px-4 py-2 text-white disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
+const kstFull = (sec: number) => new Date(sec * 1000).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit' });
 const kst = (sec: number) => new Date(sec * 1000).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
 export default function AdminPaymentLinksPage({ links: initialLinks, tableMissing, fileLinks }: Props) {
@@ -47,6 +48,9 @@ export default function AdminPaymentLinksPage({ links: initialLinks, tableMissin
   const [amountText, setAmountText] = useState('');
   const [expiresOn, setExpiresOn] = useState('');
   const [memo, setMemo] = useState('');
+  const [sessionAt, setSessionAt] = useState('');
+  const [sessionHours, setSessionHours] = useState('3');
+  const [blockSlot, setBlockSlot] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [created, setCreated] = useState<string | null>(null);
@@ -66,27 +70,30 @@ export default function AdminPaymentLinksPage({ links: initialLinks, tableMissin
     }
   };
 
-  const post = async (body: Record<string, unknown>): Promise<{ ok?: boolean; message?: string; slug?: string } | null> => {
+  const post = async (body: Record<string, unknown>): Promise<{ ok?: boolean; message?: string; slug?: string; blocked?: boolean; blockReleased?: boolean } | null> => {
     const res = await fetch('/api/admin/payment-links', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-    return (await res.json().catch(() => null)) as { ok?: boolean; message?: string; slug?: string } | null;
+    return (await res.json().catch(() => null)) as { ok?: boolean; message?: string; slug?: string; blocked?: boolean; blockReleased?: boolean } | null;
   };
 
   const create = async (e: React.FormEvent) => {
     e.preventDefault();
     if (busy) return;
-    if (!window.confirm(`${formatPriceAmount(amount)}원(부가세 포함)짜리 링크를 만들까요? 만든 뒤에는 금액을 바꿀 수 없어요.`)) return;
+    const sessionNote = sessionAt ? `\n이용 일시 ${sessionAt.replace('T', ' ')} · ${sessionHours}시간${blockSlot ? ' — 그 시간대를 예약 불가로 막아요' : ' (슬롯은 막지 않아요)'}` : '';
+    if (!window.confirm(`${formatPriceAmount(amount)}원(부가세 포함)짜리 링크를 만들까요? 만든 뒤에는 금액을 바꿀 수 없어요.${sessionNote}`)) return;
     setBusy(true);
     setError(null);
     try {
-      const data = await post({ action: 'create', itemName, totalAmount: amount, expiresOn, memo });
+      const data = await post({ action: 'create', itemName, totalAmount: amount, expiresOn, memo, sessionAt, ...(sessionAt ? { sessionHours, blockSlot } : {}) });
       if (data?.ok && data.slug) {
         setLinks((prev) => [{
           slug: data.slug as string, itemName: itemName.trim(), totalAmount: amount, expiresOn: expiresOn || null,
           memo: memo.trim() || null, closedAt: null, createdAt: Math.floor(Date.now() / 1000), open: true,
+          sessionAt: sessionAt ? Math.floor(new Date(`${sessionAt}:00+09:00`).getTime() / 1000) : null,
+          sessionHours: sessionAt ? Number(sessionHours) : null, blocked: Boolean(data.blocked),
         }, ...prev]);
         setCreated(data.slug);
         await copy(data.slug);
-        setItemName(''); setAmountText(''); setExpiresOn(''); setMemo('');
+        setItemName(''); setAmountText(''); setExpiresOn(''); setMemo(''); setSessionAt(''); setSessionHours('3'); setBlockSlot(true);
       } else setError(data?.message ?? '만들지 못했어요.');
     } finally {
       setBusy(false);
@@ -136,6 +143,17 @@ export default function AdminPaymentLinksPage({ links: initialLinks, tableMissin
             <label className="block">만료일(선택, 이 날 끝까지)
               <input type="date" value={expiresOn} onChange={(e) => setExpiresOn(e.target.value)} className={`mt-1 ${inputClass}`} />
             </label>
+            <label className="block">이용 일시(선택, 한국시간)
+              <input type="datetime-local" step={1800} value={sessionAt} onChange={(e) => setSessionAt(e.target.value)} className={`mt-1 ${inputClass}`} />
+              <span className="mt-1 block text-xs text-gray-600">적으면 결제된 뒤 대시보드 “이번 주 세션”·예약 목록에 이 시각으로 보여요.</span>
+            </label>
+            <label className="block">이용 시간(시간)
+              <input type="number" min={1} max={12} value={sessionHours} onChange={(e) => setSessionHours(e.target.value)} disabled={!sessionAt} className={`mt-1 ${inputClass}`} />
+              <span className="mt-1 flex items-center gap-2 text-xs text-gray-700">
+                <input type="checkbox" checked={blockSlot} onChange={(e) => setBlockSlot(e.target.checked)} disabled={!sessionAt} />
+                그 시간대를 예약 불가로 막기(웹 이중 예약 방지)
+              </span>
+            </label>
             <label className="block sm:col-span-2">메모(선택, 고객에게 안 보여요)
               <input value={memo} onChange={(e) => setMemo(e.target.value)} maxLength={PAYMENT_LINK_LIMITS.memoMax} placeholder="예: 김준호님" className={`mt-1 ${inputClass}`} />
             </label>
@@ -153,6 +171,11 @@ export default function AdminPaymentLinksPage({ links: initialLinks, tableMissin
                 <li key={l.slug} className="flex flex-wrap items-center gap-2 py-3">
                   <div className="min-w-0 flex-1">
                     <p className="font-semibold">{l.itemName} · {formatPriceAmount(l.totalAmount)}원{l.memo && <span className="ml-2 font-normal text-gray-600">({l.memo})</span>}</p>
+                    {l.sessionAt && (
+                      <p className="text-xs font-medium text-gray-800">
+                        이용 {kstFull(l.sessionAt)} · {l.sessionHours}시간 · {l.blocked ? '슬롯 차단 중' : '슬롯 차단 없음'}
+                      </p>
+                    )}
                     <p className="text-xs text-gray-600">
                       {kst(l.createdAt)} 생성 · {l.closedAt ? `${kst(l.closedAt)} 닫음` : l.expiresOn ? (l.open ? `${l.expiresOn}까지` : `${l.expiresOn} 만료`) : '만료일 없음'} · {l.open ? '열림' : '닫힘'}
                     </p>

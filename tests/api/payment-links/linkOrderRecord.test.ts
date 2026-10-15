@@ -44,14 +44,14 @@ beforeEach(async () => {
   jest.clearAllMocks();
 });
 
-const newLink = () => createPaymentLink({ itemName: '보컬 녹음 1프로 (10/17 11:00)', totalAmount: 250000, expiresOn: null, memo: '김준호님' });
+const newLink = () => createPaymentLink({ itemName: '보컬 녹음 1프로 (10/17 11:00)', totalAmount: 250000, expiresOn: null, memo: '김준호님', sessionAt: null, sessionHours: null, blockSlot: false });
 
 it('링크로 주문하면 어느 링크·상품이었는지 남고, 관리자 목록은 "예약금" 대신 그 상품명을 보인다', async () => {
   const { slug } = await newLink();
   const r = await call({ slug, ...customer });
   expect(r.status).toBe(201);
   const info = (await loadPaymentLinkOrderInfo([r.json!.orderNo as string])).get(r.json!.orderNo as string);
-  expect(info).toEqual({ slug, itemName: '보컬 녹음 1프로 (10/17 11:00)', memo: '김준호님' });
+  expect(info).toEqual({ slug, itemName: '보컬 녹음 1프로 (10/17 11:00)', memo: '김준호님', sessionAt: null, sessionHours: null });
 
   const order = await testDb.query.orders.findFirst({ with: { bookings: true, payments: true, workOrders: true } });
   expect(serializeBookingForAdmin(order!, info)).toMatchObject({ productName: '보컬 녹음 1프로 (10/17 11:00)', linkMemo: '김준호님' });
@@ -87,4 +87,15 @@ it('조회가 실패하면 빈 맵 — 화면은 "예약금"으로 내려간다'
   const spy = jest.spyOn(console, 'error').mockImplementation(() => undefined);
   expect((await loadPaymentLinkOrderInfo(['SNB-1'])).size).toBe(0);
   spy.mockRestore();
+});
+
+it('일시가 있는 링크로 주문하면 이용 일시·시간이 주문에 스냅샷으로 남는다 — 대시보드·예약 목록이 읽는다', async () => {
+  const sessionAt = Math.floor(Date.now() / 1000) + 3 * 24 * 3600;
+  const { slug } = await createPaymentLink({ itemName: '보컬 녹음 1프로', totalAmount: 250000, expiresOn: null, memo: null, sessionAt, sessionHours: 3, blockSlot: true });
+  const r = await call({ slug, ...customer });
+  expect(r.status).toBe(201);
+  expect((await loadPaymentLinkOrderInfo([r.json!.orderNo as string])).get(r.json!.orderNo as string)).toMatchObject({ sessionAt, sessionHours: 3 });
+  const order = await testDb.query.orders.findFirst({ with: { bookings: true, payments: true, workOrders: true } });
+  const info = (await loadPaymentLinkOrderInfo([order!.orderNo])).get(order!.orderNo);
+  expect(serializeBookingForAdmin(order!, info).linkSessionAt).toBe(new Date(sessionAt * 1000).toISOString());
 });
