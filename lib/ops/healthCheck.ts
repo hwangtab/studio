@@ -111,8 +111,8 @@ const checkCalendar = async (now: Date): Promise<HealthIssue[]> => {
  * 필드 암호화 키가 실제로 쓸 수 있는 상태인지 — 정산 계좌와 주민등록번호를 저장·조회하는
  * 유일한 수단이다.
  *
- * 키가 없거나 형식이 틀리면 개설자의 정산 정보 저장이 `encryption_unavailable`로 통째로
- * 거부되고(`savePayoutSection` — 계좌만 고치는 저장도 마찬가지다), 이미 저장된 값은 운영자가
+ * 키가 없거나 형식이 틀리면 새 계좌·주민등록번호를 입력한 정산 정보 저장이 `encryption_unavailable`로
+ * 통째로 거부되고(`savePayoutSection` — 계좌를 그대로 두고 번호 칸을 비운 저장만 된다), 이미 저장된 값은 운영자가
  * 조회해도 안 열린다.
  * **그 사실이 DB 어디에도 남지 않는다** — 개설자가 "저장이 안 된다"고 연락해 줄 때까지
  * 아무도 모른다. 캘린더 점검과 같은 이유로 여기서 직접 찔러 본다.
@@ -169,8 +169,8 @@ export const checkFieldCryptoKey = (): HealthIssue | null => {
       title: `필드 암호화 키(${FIELD_CRYPTO_KEY_ENV}) ${state} — 정산 계좌·주민등록번호를 저장·조회할 수 없습니다`,
       detail: [
         `상태: ${state} (code=${code})`,
-        '개설자의 정산 정보 저장이 전부 거부됩니다 — 계좌(은행명·계좌번호·예금주)도 주민등록번호도 ' +
-          '암호화해서만 저장하므로, 계좌만 고치는 저장도 키 없이는 되지 않습니다. 이미 저장된 값은 ' +
+        '개설자가 새 계좌나 주민등록번호를 입력한 정산 정보 저장이 전부 거부됩니다 — 계좌(은행명·계좌번호·예금주)도 ' +
+          '주민등록번호도 암호화해서만 저장하기 때문입니다(등록된 계좌를 그대로 두고 번호 칸을 비운 저장만 됩니다). 이미 저장된 값은 ' +
           '운영자 조회에서 열리지 않고, 그 개설자의 정산 기록은 payout_account_unreadable · ' +
           'resident_number_unreadable로 막힙니다 — 값이 아예 없을 때 나오는 no_payout_account · ' +
           'no_resident_number와 다른 코드입니다.',

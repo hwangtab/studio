@@ -55,6 +55,10 @@ const holderField = () => screen.getByLabelText('예금주', { exact: false });
 const taxField = () => screen.getByLabelText('세금 유형', { exact: false });
 const rrnField = () => screen.getByLabelText('주민등록번호', { exact: false });
 const queryRrnField = () => screen.queryByLabelText('주민등록번호', { exact: false });
+const queryBankField = () => screen.queryByLabelText('은행명', { exact: false });
+const queryAccountField = () => screen.queryByLabelText('계좌번호', { exact: false });
+const queryHolderField = () => screen.queryByLabelText('예금주', { exact: false });
+const changeAccountButton = () => screen.getByRole('button', { name: '계좌 바꾸기' });
 const queryBizNumber = () => screen.queryByLabelText('사업자등록번호', { exact: false });
 const dirtyState = () => screen.getByTestId('dirty').textContent;
 const saveButton = () => screen.getByRole('button', { name: '정산 정보 저장' });
@@ -99,12 +103,12 @@ describe('등록 상태 표시', () => {
     expect(screen.getByText('아직 등록된 계좌가 없어요', { exact: false })).toBeInTheDocument();
   });
 
-  it('등록됐으면 뒤 4자리만 보여 준다 — 계좌 칸은 비어 있고, 사업자 칸은 저장된 값으로 채워진다', () => {
+  it('등록됐으면 뒤 4자리만 보여 주고 계좌 칸은 숨긴다 — 사업자 칸은 저장된 값으로 채워진다', () => {
     renderForm(INVOICE);
-    expect(screen.getByText('9012', { exact: false })).toBeInTheDocument();
-    expect(bankField()).toHaveValue('');
-    expect(accountField()).toHaveValue('');
-    expect(holderField()).toHaveValue('');
+    expect(screen.getByText('등록된 계좌를 그대로 써요 (계좌번호 뒤 4자리 9012).')).toBeInTheDocument();
+    expect(queryBankField()).toBeNull();
+    expect(queryAccountField()).toBeNull();
+    expect(queryHolderField()).toBeNull();
     expect(taxField()).toHaveValue('invoice');
     expect(queryBizNumber()).toHaveValue('753-74-00653');
     expect(screen.getByLabelText('상호', { exact: false })).toHaveValue('스튜디오 놀');
@@ -150,7 +154,6 @@ describe('사업자 칸', () => {
     mockFetchOk({ ok: true, businessWarnings: ['국세청에 등록되지 않은 번호로 나와요. 사업자등록번호를 다시 확인해 주세요.'] });
     renderForm(INVOICE);
     fireEvent.change(queryBizNumber()!, { target: { value: '1208147521' } });
-    fillAccount();
     fireEvent.click(saveButton());
     await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
     expect(screen.getByText('국세청에 등록되지 않은 번호로 나와요', { exact: false })).toBeInTheDocument();
@@ -227,7 +230,6 @@ describe('사업자 칸', () => {
     mockFetchOk();
     renderForm(INVOICE);
     fireEvent.change(taxField(), { target: { value: 'withholding' } });
-    fillAccount();
     fireEvent.click(saveButton());
     await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
     await waitFor(() => expect(dirtyState()).toBe('clean'));
@@ -239,7 +241,6 @@ describe('사업자 칸', () => {
     mockFetchOk({ ok: true, businessProfileRetained: true });
     renderForm(INVOICE);
     fireEvent.change(taxField(), { target: { value: 'withholding' } });
-    fillAccount();
     fireEvent.click(saveButton());
     await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
     expect(screen.getByText('사업자 정보는 정산 대조와 세금 신고에 필요해 남겨 두었어요.')).toBeInTheDocument();
@@ -344,9 +345,11 @@ describe('저장', () => {
         residentNumber: '', business: null,
       },
     });
-    expect(accountField()).toHaveValue('123-456-789012');
+    // 저장하면 등록된 계좌를 그대로 쓰는 상태로 돌아간다 — 입력한 계좌번호는 화면에 남지 않는다.
     await waitFor(() => expect(dirtyState()).toBe('clean'));
-    expect(screen.getByText('9012', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText('등록된 계좌를 그대로 써요 (계좌번호 뒤 4자리 9012).')).toBeInTheDocument();
+    expect(queryAccountField()).toBeNull();
+    expect(document.body.innerHTML).not.toContain('789012');
   });
 
   it('저장 요청이 도는 동안 이어서 친 입력은 응답이 덮어쓰지 않는다', async () => {
@@ -408,7 +411,6 @@ describe('주민등록번호는 원천징수 대상만', () => {
     fireEvent.change(queryBizNumber()!, { target: { value: '7537400653' } });
     fireEvent.change(screen.getByLabelText('상호', { exact: false }), { target: { value: '스튜디오 놀' } });
     fireEvent.change(screen.getByLabelText('대표자명', { exact: false }), { target: { value: '황경하' } });
-    fillAccount();
     fireEvent.click(saveButton());
     await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
     expect(screen.getByText('주민등록번호는 정산 대조와 세금 신고에 필요해 남겨 두었어요.')).toBeInTheDocument();
@@ -429,7 +431,6 @@ describe('주민등록번호는 원천징수 대상만', () => {
     fireEvent.change(queryBizNumber()!, { target: { value: '7537400653' } });
     fireEvent.change(screen.getByLabelText('상호', { exact: false }), { target: { value: '스튜디오 놀' } });
     fireEvent.change(screen.getByLabelText('대표자명', { exact: false }), { target: { value: '황경하' } });
-    fillAccount();
     fireEvent.click(saveButton());
     await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
     fireEvent.change(taxField(), { target: { value: 'withholding' } });
@@ -464,5 +465,99 @@ describe('주민등록번호는 원천징수 대상만', () => {
     await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
     expect(rrnField()).toHaveValue('900101-1234567');
     expect(dirtyState()).toBe('dirty');
+  });
+});
+
+describe('등록된 계좌 그대로 두기', () => {
+  const REGISTERED: EditorPayoutSummary = { ...UNREGISTERED, registered: true, accountLast4: '0123', taxType: 'withholding' };
+
+  it('미등록이면 계좌 칸이 바로 보이고 바꾸기 버튼은 없다', () => {
+    renderForm();
+    expect(bankField()).toBeRequired();
+    expect(accountField()).toBeRequired();
+    expect(holderField()).toBeRequired();
+    expect(screen.queryByRole('button', { name: '계좌 바꾸기' })).toBeNull();
+  });
+
+  it('등록돼 있으면 계좌 없이 keepAccount로 저장한다 — 계좌 칸 값은 실어 보내지 않는다', async () => {
+    const fetchMock = mockFetchOk();
+    renderForm(REGISTERED);
+    expect(screen.getByText('등록된 계좌를 그대로 써요 (계좌번호 뒤 4자리 0123).')).toBeInTheDocument();
+    fireEvent.change(taxField(), { target: { value: 'invoice' } });
+    fireEvent.change(queryBizNumber()!, { target: { value: '7537400653' } });
+    fireEvent.change(screen.getByLabelText('상호', { exact: false }), { target: { value: '스튜디오 놀' } });
+    fireEvent.change(screen.getByLabelText('대표자명', { exact: false }), { target: { value: '황경하' } });
+    fireEvent.click(saveButton());
+    await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
+    expect(JSON.parse((fetchMock.mock.calls[0][1] as { body: string }).body)).toEqual({
+      value: {
+        taxType: 'invoice', keepAccount: true, residentNumber: '',
+        business: { businessNumber: '7537400653', businessName: '스튜디오 놀', representativeName: '황경하' },
+      },
+    });
+    // 뒤 4자리는 그대로다.
+    expect(screen.getByText('등록된 계좌를 그대로 써요 (계좌번호 뒤 4자리 0123).')).toBeInTheDocument();
+    await waitFor(() => expect(dirtyState()).toBe('clean'));
+  });
+
+  it('계좌 바꾸기를 눌러도 입력 전에는 dirty가 아니고, 취소하면 입력이 사라지고 다시 그대로 두기다', () => {
+    renderForm(REGISTERED);
+    fireEvent.click(changeAccountButton());
+    expect(bankField()).toHaveValue('');
+    expect(accountField()).toHaveValue('');
+    expect(holderField()).toHaveValue('');
+    expect(dirtyState()).toBe('clean');
+    fillAccount();
+    expect(dirtyState()).toBe('dirty');
+    fireEvent.click(screen.getByRole('button', { name: '취소' }));
+    expect(queryAccountField()).toBeNull();
+    expect(dirtyState()).toBe('clean');
+    // 다시 열면 빈 칸이다 — 취소한 값이 되살아나지 않는다.
+    fireEvent.click(changeAccountButton());
+    expect(accountField()).toHaveValue('');
+  });
+
+  it('바꾸기로 새 계좌를 저장하면 keepAccount 없이 세 칸을 보내고, 그대로 두기로 돌아와 새 뒤 4자리를 보인다', async () => {
+    const fetchMock = mockFetchOk();
+    renderForm(REGISTERED);
+    fireEvent.click(changeAccountButton());
+    fillAccount('110-222-333444');
+    fireEvent.click(saveButton());
+    await waitFor(() => expect(screen.getByText('저장했어요.')).toBeInTheDocument());
+    expect(JSON.parse((fetchMock.mock.calls[0][1] as { body: string }).body)).toEqual({
+      value: { taxType: 'withholding', bankName: '국민은행', account: '110-222-333444', holder: '황경하', residentNumber: '', business: null },
+    });
+    expect(screen.getByText('등록된 계좌를 그대로 써요 (계좌번호 뒤 4자리 3444).')).toBeInTheDocument();
+    expect(queryAccountField()).toBeNull();
+    await waitFor(() => expect(dirtyState()).toBe('clean'));
+    expect(document.body.innerHTML).not.toContain('333444');
+  });
+
+  it('서버에 그대로 둘 계좌가 없다고 답하면 계좌 칸을 열어 바로 입력하게 한다', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      json: async () => ({ ok: false, code: 'no_payout_account', message: '등록된 계좌가 없어요. 은행명·계좌번호·예금주를 입력해 주세요.' }),
+    }) as unknown as typeof fetch;
+    renderForm(REGISTERED);
+    expect(queryAccountField()).toBeNull();
+    fireEvent.click(saveButton());
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('등록된 계좌가 없어요'));
+    expect(accountField()).toHaveValue('');
+    expect(bankField()).toBeRequired();
+  });
+
+  it('다른 오류면 그대로 두기 상태를 유지한다', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false, json: async () => ({ ok: false, message: '요청이 너무 잦아요.' }),
+    }) as unknown as typeof fetch;
+    renderForm(REGISTERED);
+    fireEvent.click(saveButton());
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('요청이 너무 잦아요'));
+    expect(queryAccountField()).toBeNull();
+  });
+
+  it('뒤 4자리를 모르는 옛 등록이면 숫자 없이 그대로 둔다고 말한다', () => {
+    renderForm({ ...REGISTERED, accountLast4: null });
+    expect(screen.getByText('등록된 계좌를 그대로 써요.')).toBeInTheDocument();
   });
 });
