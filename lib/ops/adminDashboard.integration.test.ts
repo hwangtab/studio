@@ -170,6 +170,30 @@ it('대기열 건수 — 믹싱 착수 대기·작업 중, 구독 카드 대기�
   expect(dash.issues.map((i) => i.title)).toContain('서명 기한이 지난 계약 1건');
 });
 
+describe('서명 기한이 지난 계약 알림', () => {
+  const titles = async () => (await loadAdminDashboard(NOW)).issues.map((i) => i.title);
+
+  // 운영자가 알림을 보고 목록을 열면 sent가 expired로 내려간다 — sent만 세던 때는 재발송·취소 전에 알림이 사라졌다.
+  it('목록이 sent를 expired로 내린 뒤에도 알림이 남는다', async () => {
+    await insertContract('c1', 'expired', '2026-09-10T00:00:00Z');
+    expect(await titles()).toContain('서명 기한이 지난 계약 1건');
+  });
+
+  it('만료 후 30일이 지나면 세지 않는다 — 취소·삭제하지 않은 계약이 영구히 알림에 남지 않게', async () => {
+    await insertContract('old', 'expired', '2026-08-10T00:00:00Z'); // 37일 전
+    await insertContract('edge', 'expired', '2026-08-20T00:00:00Z'); // 27일 전
+    expect(await titles()).toContain('서명 기한이 지난 계약 1건');
+  });
+
+  it('처리하면(재발송·취소) 알림이 내려가고, 파기된 계약은 세지 않는다', async () => {
+    await insertContract('resent', 'sent', '2026-09-20T00:00:00Z'); // 재발송 — 새 기한
+    await insertContract('cancelled', 'cancelled', '2026-09-10T00:00:00Z');
+    await insertContract('purged', 'expired', '2026-09-10T00:00:00Z');
+    await client.execute("UPDATE contracts SET purged_at = unixepoch() WHERE id = 'purged'");
+    expect((await titles()).filter((t) => t.startsWith('서명 기한이 지난 계약'))).toEqual([]);
+  });
+});
+
 it('점검 항목은 크론 메일과 같은 판정식이고 처리하러 갈 링크가 붙는다', async () => {
   await insertContract('c1', 'sent', '2026-09-10T00:00:00Z');
 
