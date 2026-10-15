@@ -25,6 +25,7 @@ import { cancelBookingWithRefund } from './cancel';
 import { cancelPayment } from './toss';
 import { sendDepositRefundEmail } from './email';
 import { canAdminRefund } from './admin-serialize';
+import { createFakeToss } from '../../tests/fakes/fakeToss';
 /* eslint-enable import/first */
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
@@ -189,5 +190,51 @@ describe('화면 판정(canAdminRefund)과 서버가 같다', () => {
     expect(canAdminRefund({ orderType: 'deposit', orderStatus: 'refunded', entityStatus: null, refundableAmount: 0 })).toBe(false);
     // 다른 종류는 여전히 행이 있어야 한다.
     expect(canAdminRefund({ orderType: 'session', orderStatus: 'paid', entityStatus: null, refundableAmount: 1000 })).toBe(false);
+  });
+});
+
+/**
+ * 토스를 흉내 내는 가짜(tests/fakes/fakeToss.ts)로 본 **돈이 실제로 나간 횟수** — 멱등키 재생까지 같다.
+ * 실거래 환불은 검증할 수 없으니, 요청이 몇 번·어떤 키로 나가는지를 여기서 고정한다.
+ */
+describe('가짜 토스로 본 취소 호출', () => {
+  const PK = 'toss-pk';
+  let fake: ReturnType<typeof createFakeToss>;
+
+  beforeEach(async () => {
+    fake = createFakeToss();
+    await fake.confirmPayment({ paymentKey: PK, orderId: 'DEP-1', amount: 110_000 });
+    (cancelPayment as jest.Mock).mockImplementation((input) => fake.cancelPayment(input));
+  });
+
+  const cancelsOf = () => fake._payments.get(PK)?.cancels ?? [];
+
+  it('같은 금액을 동시에 두 번 눌러도 토스 취소는 한 번만 나간다', async () => {
+    await seed();
+    await Promise.all([refund(50_000), refund(50_000)]);
+    expect(cancelsOf()).toHaveLength(1);
+    expect(cancelsOf()[0].cancelAmount).toBe(50_000);
+  });
+
+  it('금액이 다른 부분 환불은 각각 나간다 — 멱등키가 (주문번호, 금액)이라 서로 재생되지 않는다', async () => {
+    await seed();
+    await refund(40_000);
+    await refund(70_000);
+    expect(cancelsOf().map((c) => c.cancelAmount)).toEqual([40_000, 70_000]);
+    expect(await order()).toBe('refunded');
+  });
+
+  // 같은 금액을 두 번째로 환불하면 첫 환불의 멱등키가 재생돼 돈이 안 나가고 성공만 오는 사고를 막는 설계다(cancel.ts REMAINDER_PREFIX).
+  // 운영자에게는 "금액을 다르게 나눠 입력"하라고 안내한다.
+  it('이미 기록된 것과 같은 금액의 두 번째 환불은 거절하고 금액을 다르게 나누라고 안내한다', async () => {
+    await seed();
+    await refund(40_000);
+    const second = await refund(40_000);
+    expect(second).toMatchObject({ ok: false, code: 'invalid_state', message: expect.stringContaining('금액을 다르게') });
+    expect(cancelsOf()).toHaveLength(1);
+    expect(await order()).toBe('partially_refunded');
+    // 1원 달리 나누면 나간다.
+    expect((await refund(39_999)).ok).toBe(true);
+    expect(cancelsOf().map((c) => c.cancelAmount)).toEqual([40_000, 39_999]);
   });
 });
