@@ -8,7 +8,7 @@ import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { remainingRefundable } from '../../../lib/booking/cancel';
 import { isBankDepositPayment } from '../../../lib/payments/bankDeposit';
-import { holderMatchesCustomer, loadRefundAccountSummary } from '../../../lib/payments/refundAccount';
+import { loadRefundAccountSummary } from '../../../lib/payments/refundAccount';
 import { shopLineName } from '../../../lib/shop/catalog';
 import { resolveOrderShipper } from '../../../lib/shop/artistShipping';
 import { getFirstDownloadedAt } from '../../../lib/shop/downloads';
@@ -106,6 +106,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   };
 };
 
+/** 예금주 ↔ 주문자 이름 비교(공백 무시) — refundAccount.ts의 holderMatchesCustomer와 같은 규칙. 그 모듈은 node:crypto를 물고 있어 클라이언트 번들에 못 가져온다. */
+const sameNameIgnoringSpace = (a: string, b: string): boolean => a.replace(/\s+/g, '') === b.replace(/\s+/g, '');
 const kst = (sec: number) => new Date(sec * 1000).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 const PAYMENT_LABEL: Record<string, string> = { pending: '결제 대기', paid: '결제 완료', partially_refunded: '부분 환불', refunded: '환불', auto_cancel_pending: '자동 취소 중', expired: '만료', failed: '결제 실패', awaiting_deposit: '입금 대기', deposit_cancelled: '미입금 취소' };
 const FULFILLMENT_LABEL: Record<string, string> = { preparing: '발송 준비', shipped: '발송함', delivered: '배송 완료', cancelled: '취소' };
@@ -195,7 +197,7 @@ export default function AdminShopOrderPage(p: Props) {
           <section className="mb-6 rounded-2xl border-2 border-orange-300 bg-orange-50 p-4 text-sm text-orange-950 shadow-sm md:p-6">
             <h2 className="mb-2 text-lg font-bold">환불 계좌</h2>
             <p>{p.refundAccount.bankName} · 예금주 {p.refundAccount.accountHolder} (접수 {kst(p.refundAccount.updatedAt)})</p>
-            {!holderMatchesCustomer(p.refundAccount.accountHolder, p.customer.name) && (
+            {!sameNameIgnoringSpace(p.refundAccount.accountHolder, p.customer.name) && (
               <p className="mt-2 font-semibold text-red-700">예금주가 주문자 이름({p.customer.name})과 다릅니다. 가족 계좌일 수 있으니 필요하면 고객에게 확인해 주세요.</p>
             )}
             {accountView ? (
