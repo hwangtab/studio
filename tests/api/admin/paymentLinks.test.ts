@@ -62,3 +62,14 @@ it('닫으면 열리지 않고, 다시 닫기는 409', async () => {
 it('금액을 고치는 액션은 없다 — 알 수 없는 작업은 400', async () => {
   expect((await call({ body: { action: 'update', slug: 'x', totalAmount: 1 } })).status).toBe(400);
 });
+
+it('이용 일시를 넣어 만들면 슬롯이 막히고(blocked), 결제 없이 닫으면 풀린다(blockReleased)', async () => {
+  const at = new Date(Date.now() + 3 * 24 * 3600 * 1000 + 9 * 3600 * 1000).toISOString().slice(0, 13) + ':00';
+  const created = await call({ body: { ...body, sessionAt: at, sessionHours: 3 } });
+  expect(created.status).toBe(201);
+  expect(created.body.blocked).toBe(true);
+  expect(await testDb.query.availabilityBlocks.findMany()).toHaveLength(1);
+  const closed = await call({ body: { action: 'close', slug: created.body.slug } });
+  expect(closed.body).toMatchObject({ ok: true, blockReleased: true });
+  expect(await testDb.query.availabilityBlocks.findMany()).toHaveLength(0);
+});

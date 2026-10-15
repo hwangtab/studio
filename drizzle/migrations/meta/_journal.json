@@ -435,6 +435,13 @@
       "when": 1792047275204,
       "tag": "0061_link_orders_shop_refund_kind",
       "breakpoints": true
+    },
+    {
+      "idx": 62,
+      "version": "6",
+      "when": 1792050455708,
+      "tag": "0062_link_session",
+      "breakpoints": true
     }
   ]
 }

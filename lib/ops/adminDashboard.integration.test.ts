@@ -43,7 +43,7 @@ beforeAll(async () => {
 });
 afterAll(() => client.close());
 beforeEach(async () => {
-  for (const t of ['refunds', 'payments', 'bookings', 'work_orders', 'funding_pledges', 'funding_projects', 'funding_creators', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'social_tokens']) {
+  for (const t of ['refunds', 'payments', 'bookings', 'work_orders', 'funding_pledges', 'funding_projects', 'funding_creators', 'subscription_payments', 'subscriptions', 'orders', 'payment_link_orders', 'contracts', 'social_tokens']) {
     await client.execute(`DELETE FROM ${t}`);
   }
 });
@@ -175,4 +175,45 @@ it('비어 있으면 전부 0·빈 목록이고 실패하지 않는다', async (
   expect(dash.upcomingSessions).toEqual([]);
   expect(dash.socialTokens).toEqual([]);
   expect(Object.values(dash.queues).every((n) => n === 0)).toBe(true);
+});
+
+describe('이번 주 세션 — 결제 링크 이용 일정(0062)', () => {
+  const insertLinkOrder = async (id: string, status: string, sessionIso: string | null, hours = 3) => {
+    await insertOrder(id, 'deposit');
+    await client.execute({ sql: "UPDATE orders SET status = ? WHERE id = ?", args: [status, id] });
+    await client.execute({
+      sql: 'INSERT INTO payment_link_orders (order_no, slug, item_name, session_at, session_hours) VALUES (?, ?, ?, ?, ?)',
+      args: [`NO-${id}`, 'a'.repeat(24), '보컬 녹음 1프로 (10/17 11:00)', sessionIso ? EPOCH(sessionIso) : null, sessionIso ? hours : null],
+    });
+  };
+
+  it('결제된 링크 주문의 이용 일시가 창 안이면 예약 세션과 시각순으로 함께 나온다', async () => {
+    await insertBooking('b1', '2026-09-18T01:00:00Z'); // KST 9/18 10:00
+    await insertLinkOrder('l1', 'paid', '2026-09-17T02:00:00Z'); // KST 9/17 11:00
+    const d = await loadAdminDashboard(NOW);
+    expect(d.upcomingSessions.map((x) => [x.kind, x.orderId])).toEqual([['link', 'l1'], ['booking', 'b1']]);
+    const link = d.upcomingSessions[0];
+    expect(link).toMatchObject({ productName: '보컬 녹음 1프로 (10/17 11:00)', customerName: '홍길동' });
+    expect(new Date(link.endAt).getTime() - new Date(link.startAt).getTime()).toBe(3 * 3600 * 1000);
+  });
+
+  it('결제 전·환불된 링크 주문, 창 밖·일시 없는 링크는 나오지 않는다', async () => {
+    await insertLinkOrder('l-pending', 'pending', '2026-09-17T02:00:00Z');
+    await insertLinkOrder('l-refunded', 'refunded', '2026-09-17T02:00:00Z');
+    await insertLinkOrder('l-far', 'paid', '2026-10-30T02:00:00Z');
+    await insertLinkOrder('l-none', 'paid', null);
+    expect((await loadAdminDashboard(NOW)).upcomingSessions).toEqual([]);
+  });
+
+  it('링크 표가 없는 DB에서도 대시보드는 열린다(그 갈래만 건너뜀)', async () => {
+    await client.execute('ALTER TABLE payment_link_orders RENAME TO payment_link_orders_x');
+    const spy = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    try {
+      await insertBooking('b2', '2026-09-18T01:00:00Z');
+      expect((await loadAdminDashboard(NOW)).upcomingSessions.map((x) => x.orderId)).toEqual(['b2']);
+    } finally {
+      spy.mockRestore();
+      await client.execute('ALTER TABLE payment_link_orders_x RENAME TO payment_link_orders');
+    }
+  });
 });

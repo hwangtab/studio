@@ -21,6 +21,8 @@ import { countPendingFundingPayouts } from '../funding/payout';
  */
 
 export interface UpcomingSession {
+  /** `booking` = 예약 시스템의 확정 세션, `link` = 결제 링크로 결제된 이용(링크에 적은 이용 일시 — 2026-10-15). */
+  kind: 'booking' | 'link';
   orderId: string;
   orderNo: string;
   customerName: string;
@@ -75,7 +77,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
   const from = startOfTodayKst(now);
   const to = new Date(from.getTime() + UPCOMING_WINDOW_DAYS * DAY_MS);
 
-  const [issues, sessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending] = await Promise.all([
+  const [issues, sessions, linkSessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending] = await Promise.all([
     collectDbIssues(now),
     db
       .select({
@@ -90,6 +92,17 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       .innerJoin(orders, eq(orders.id, bookings.orderId))
       .where(and(eq(bookings.status, 'confirmed'), gte(bookings.startAt, from), lt(bookings.startAt, to)))
       .orderBy(asc(bookings.startAt)),
+    // 결제 링크로 결제된 이용(예약 시스템에 행이 없다) — 링크에 적은 이용 일시가 이 창 안인 것. 표가 없는 DB(0062 전)에서도 대시보드는 열린다.
+    db.all<{ order_id: string; order_no: string; customer_name: string; item_name: string; session_at: number; session_hours: number | null }>(sql`
+      SELECT o.id AS order_id, o.order_no, o.customer_name, plo.item_name, plo.session_at, plo.session_hours
+      FROM payment_link_orders plo JOIN orders o ON o.order_no = plo.order_no
+      WHERE o.type = 'deposit' AND o.status IN ('paid', 'partially_refunded')
+        AND plo.session_at IS NOT NULL AND plo.session_at >= ${Math.floor(from.getTime() / 1000)} AND plo.session_at < ${Math.floor(to.getTime() / 1000)}
+      ORDER BY plo.session_at
+    `).catch((error: unknown) => {
+      console.error('[admin-dashboard] 결제 링크 이용 일정 조회 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
+      return [];
+    }),
     db
       .select({ status: workOrders.status, count: sql<number>`count(*)` })
       .from(workOrders)
@@ -118,7 +131,9 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
 
   return {
     issues,
-    upcomingSessions: sessions.map((row) => ({
+    upcomingSessions: [
+      ...sessions.map((row) => ({
+      kind: 'booking' as const,
       orderId: row.orderId,
       orderNo: row.orderNo,
       customerName: row.customerName,
@@ -126,6 +141,16 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       startAt: row.startAt.toISOString(),
       endAt: row.endAt.toISOString(),
     })),
+      ...linkSessions.map((row) => ({
+        kind: 'link' as const,
+        orderId: row.order_id,
+        orderNo: row.order_no,
+        customerName: row.customer_name,
+        productName: row.item_name,
+        startAt: new Date(Number(row.session_at) * 1000).toISOString(),
+        endAt: new Date((Number(row.session_at) + Number(row.session_hours ?? 1) * 3600) * 1000).toISOString(),
+      })),
+    ].sort((a, b) => a.startAt.localeCompare(b.startAt)),
     queues: {
       mixingReceived: countOf(mixingCounts, 'received'),
       mixingInProgress: countOf(mixingCounts, 'in_progress'),

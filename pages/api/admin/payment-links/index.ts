@@ -18,8 +18,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const input = validatePaymentLinkInput(b);
     if (!input.ok) return res.status(400).json({ ok: false, message: input.message });
     try {
-      const { slug } = await createPaymentLink(input.value);
-      return res.status(201).json({ ok: true, slug, path: `/ko/pay/${slug}` });
+      const { slug, blockId } = await createPaymentLink(input.value);
+      return res.status(201).json({ ok: true, slug, path: `/ko/pay/${slug}`, blocked: blockId !== null });
     } catch (error) {
       console.error('[api/admin/payment-links] 생성 실패(마이그레이션 0060 적용 여부 확인)', error instanceof Error ? error.name : 'unknown');
       return res.status(500).json({ ok: false, message: '링크를 만들지 못했어요. 결제 링크 표(마이그레이션 0060)가 적용됐는지 확인해 주세요.' });
@@ -27,8 +27,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   if (b.action === 'close') {
     const slug = typeof b.slug === 'string' ? b.slug : '';
-    const closed = await closePaymentLink(slug);
-    return closed ? res.status(200).json({ ok: true }) : res.status(409).json({ ok: false, message: '이미 닫혔거나 없는 링크예요.' });
+    const { closed, blockReleased } = await closePaymentLink(slug);
+    return closed ? res.status(200).json({ ok: true, blockReleased }) : res.status(409).json({ ok: false, message: '이미 닫혔거나 없는 링크예요.' });
   }
   return res.status(400).json({ ok: false, message: '알 수 없는 작업이에요.' });
 }

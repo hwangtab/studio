@@ -25,7 +25,7 @@ const DASHBOARD: AdminDashboard = {
     { severity: 'medium', title: '서명 기한이 지난 계약 2건', detail: '대상: 박연주' },
   ],
   upcomingSessions: [
-    { orderId: 'o1', orderNo: 'SNB-2', customerName: '홍길동', productName: '보컬 녹음 1프로', startAt: '2026-09-17T05:00:00.000Z', endAt: '2026-09-17T08:00:00.000Z' },
+    { kind: 'booking' as const, orderId: 'o1', orderNo: 'SNB-2', customerName: '홍길동', productName: '보컬 녹음 1프로', startAt: '2026-09-17T05:00:00.000Z', endAt: '2026-09-17T08:00:00.000Z' },
   ],
   queues: {
     mixingReceived: 3,

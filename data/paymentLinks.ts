@@ -22,6 +22,9 @@ export interface PaymentLink {
   totalAmount: number;
   /** 'YYYY-MM-DD'(KST). 이 날 끝까지 유효. */
   expiresOn?: string;
+  /** 이용 일시(초)·시간 — DB 링크만(0062). 옛 파일 링크에는 없다. */
+  sessionAt?: number;
+  sessionHours?: number;
 }
 
 export const PAYMENT_LINKS: Record<string, PaymentLink> = {

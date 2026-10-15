@@ -2168,6 +2168,12 @@ export const paymentLinks = sqliteTable('payment_links', {
   memo: text('memo'),
   /** 운영자가 닫은 시각(초). 닫힌 링크는 열리지 않는다. */
   closedAt: integer('closed_at'),
+  /** 이용 일시(초, 마이그레이션 0062) — 관리자 "이번 주 세션"·예약 목록에 이 시각으로 보인다. 없으면 일시 없는 링크. */
+  sessionAt: integer('session_at'),
+  /** 이용 시간(시간 수). `session_at`과 함께 있다 — 슬롯 차단의 길이. */
+  sessionHours: integer('session_hours'),
+  /** 이 링크가 만든 "예약 불가 블록"(`availability_blocks.id`) — 링크를 닫으면(결제 없이) 같이 지운다. FK 없음(블록은 관리자가 따로 지울 수도 있다). */
+  blockId: text('block_id'),
   createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
 });
 
@@ -2183,6 +2189,9 @@ export const paymentLinkOrders = sqliteTable('payment_link_orders', {
   orderNo: text('order_no').primaryKey(),
   slug: text('slug').notNull(),
   itemName: text('item_name').notNull(),
+  /** 주문 시점의 이용 일시·시간 스냅샷(0062) — 관리자 대시보드가 읽는다. 일시 없는 링크는 NULL. */
+  sessionAt: integer('session_at'),
+  sessionHours: integer('session_hours'),
   createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
 }, (t) => [
   index('payment_link_orders_slug_idx').on(t.slug),
