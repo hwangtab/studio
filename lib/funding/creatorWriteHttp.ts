@@ -37,5 +37,10 @@ export const respondWriteResult = (res: NextApiResponse, result: WriteResult) =>
       ...(result.businessProfileRetained ? { businessProfileRetained: true } : {}),
     });
   }
-  return res.status(STATUS_BY_CODE[result.code]).json({ ok: false, message: result.message });
+  // 계좌 그대로 두기가 거부되면 화면이 계좌 칸을 열어야 한다 — 그 판정에 필요한 코드만 싣는다(다른 응답 모양은 그대로).
+  return res.status(STATUS_BY_CODE[result.code]).json({
+    ok: false,
+    message: result.message,
+    ...(result.code === 'no_payout_account' ? { code: result.code } : {}),
+  });
 };

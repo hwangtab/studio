@@ -123,7 +123,9 @@ describe('POST /api/funding/creator/payout', () => {
     expect(value).not.toHaveProperty('account');
 
     (savePayoutSection as jest.Mock).mockResolvedValue({ ok: false, code: 'no_payout_account', message: '등록된 계좌가 없어요.' });
-    expect((await call(payoutHandler, { value: { ...rest, keepAccount: true } })).status).toBe(400);
+    const denied = await call(payoutHandler, { value: { ...rest, keepAccount: true } });
+    expect(denied.status).toBe(400);
+    expect(denied.json).toEqual({ ok: false, message: '등록된 계좌가 없어요.', code: 'no_payout_account' });
   });
 
   it('Cache-Control: no-store', async () => {

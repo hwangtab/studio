@@ -151,6 +151,8 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
     const result = await savePayoutSection(value);
     if (!result.ok) {
       setSave({ status: 'error', message: result.message });
+      // 그대로 둘 계좌가 서버에 없다(그 사이 지워졌거나 화면이 낡았다) — 계좌 칸을 열어 바로 입력하게 한다.
+      if (keepAccount && result.code === 'no_payout_account') setChangingAccount(true);
       return;
     }
     // 정규화한 값으로 로컬 상태를 되돌리되, **제출 시점의 값과 지금 값이 같을 때만** 되돌린다 — 저장 왕복
@@ -243,7 +245,6 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
             제6조). 수수료는 환불을 뺀 금액을 기준으로 계산하며, 둘 다 개설자가 부담합니다.
           </p>
         </Panel>
-
 
         <Field
           id="payout-tax-type"

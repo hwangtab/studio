@@ -434,7 +434,9 @@ export const validatePayoutSection = (input: unknown): { ok: true; value: Payout
    */
   let accountInput: PayoutAccountInput | PayoutAccountKeep;
   if (d.keepAccount === true) {
-    if (str(d.bankName) || str(d.account) || str(d.holder)) {
+    // 문자열이 아니어도(숫자 등) 값이 실려 왔으면 보낸 것으로 친다. 빠졌거나 빈 문자열만 "안 보냈다"다.
+    const sent = (v: unknown) => v !== undefined && v !== '';
+    if (sent(d.bankName) || sent(d.account) || sent(d.holder)) {
       return fail('등록된 계좌를 그대로 두면서 새 계좌를 함께 보낼 수는 없어요. 화면을 새로고침해 다시 저장해 주세요.');
     }
     accountInput = { keepAccount: true };

@@ -533,6 +533,29 @@ describe('등록된 계좌 그대로 두기', () => {
     expect(document.body.innerHTML).not.toContain('333444');
   });
 
+  it('서버에 그대로 둘 계좌가 없다고 답하면 계좌 칸을 열어 바로 입력하게 한다', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      json: async () => ({ ok: false, code: 'no_payout_account', message: '등록된 계좌가 없어요. 은행명·계좌번호·예금주를 입력해 주세요.' }),
+    }) as unknown as typeof fetch;
+    renderForm(REGISTERED);
+    expect(queryAccountField()).toBeNull();
+    fireEvent.click(saveButton());
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('등록된 계좌가 없어요'));
+    expect(accountField()).toHaveValue('');
+    expect(bankField()).toBeRequired();
+  });
+
+  it('다른 오류면 그대로 두기 상태를 유지한다', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false, json: async () => ({ ok: false, message: '요청이 너무 잦아요.' }),
+    }) as unknown as typeof fetch;
+    renderForm(REGISTERED);
+    fireEvent.click(saveButton());
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('요청이 너무 잦아요'));
+    expect(queryAccountField()).toBeNull();
+  });
+
   it('뒤 4자리를 모르는 옛 등록이면 숫자 없이 그대로 둔다고 말한다', () => {
     renderForm({ ...REGISTERED, accountLast4: null });
     expect(screen.getByText('등록된 계좌를 그대로 써요.')).toBeInTheDocument();

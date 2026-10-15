@@ -261,8 +261,12 @@ describe('validatePayoutSection — 등록된 계좌 그대로 두기(keepAccoun
       // 오류 메시지에 입력값을 넣지 않는다.
       expect(r.ok === false && r.message).not.toContain('123-456');
     }
-    // 빈 칸은 보낸 것으로 치지 않는다.
-    expect(validatePayoutSection({ taxType: 'withholding', keepAccount: true, bankName: ' ', account: '', holder: '' }).ok).toBe(true);
+    // 문자열이 아닌 값도 보낸 것으로 친다.
+    for (const extra of [{ bankName: 123 }, { account: 123456 }, { holder: true }, { account: null }, { bankName: ' ' }]) {
+      expect(validatePayoutSection({ taxType: 'withholding', keepAccount: true, ...extra }).ok).toBe(false);
+    }
+    // 빠졌거나 빈 문자열은 보낸 것으로 치지 않는다.
+    expect(validatePayoutSection({ taxType: 'withholding', keepAccount: true, bankName: '', account: '', holder: '' }).ok).toBe(true);
   });
 
   it('keepAccount가 true가 아니면(빠짐·문자열) 계좌 세 칸이 필수다', () => {
