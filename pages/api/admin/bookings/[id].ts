@@ -78,6 +78,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(404).json({ ok: false, message: '예약을 찾을 수 없습니다.' });
     }
 
+    // 시작도 안 한 세션을 완료·노쇼로 닫으면 안 된다 — 후기 요청 메일과 노쇼 기록의 근거가 사실과 달라진다.
+    // 시작 시각부터는 허용한다(노쇼는 시작 직후에 확정하는 경우가 흔하다).
+    if (booking.startAt.getTime() > Date.now()) {
+      return res.status(409).json({ ok: false, message: '아직 시작하지 않은 예약은 완료·노쇼로 바꿀 수 없습니다. 취소가 필요하면 환불 처리를 이용해 주세요.' });
+    }
+
     try {
       // confirmed에서만 전이 — 읽고 검사한 뒤 쓰는 대신 조건부 UPDATE 한 문장으로 처리해
       // 동시 요청(완료/노쇼 버튼 연타, 다른 탭)이 둘 다 통과하는 것을 막는다

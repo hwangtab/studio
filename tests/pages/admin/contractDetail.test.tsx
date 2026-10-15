@@ -104,3 +104,17 @@ describe('개인정보가 파기된 계약', () => {
     expect(screen.getByRole('button', { name: '복제해서 새 계약' })).toBeInTheDocument();
   });
 });
+
+describe('작업 실행', () => {
+  it('요청이 예외를 던져도 버튼 잠금이 풀리고 안내가 뜬다', async () => {
+    jest.spyOn(window, 'confirm').mockReturnValue(true);
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    (mutateContract as jest.Mock).mockRejectedValue(new Error('network'));
+    renderPage({ status: 'signed', endDate: D('2099-01-01T00:00:00Z') }, 0);
+
+    fireEvent.click(screen.getByRole('button', { name: '완료 메일 재발송' }));
+
+    expect(await screen.findByText(/요청을 처리하지 못했습니다/)).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole('button', { name: '완료 메일 재발송' })).toBeEnabled());
+  });
+});

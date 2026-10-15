@@ -155,14 +155,23 @@ export default function AdminContractDetailPage({
 
     setBusy(true);
     setNotice(null);
-    const result = await task();
-    setBusy(false);
-
-    if (!result.ok) {
-      setNotice(result.message ?? '요청을 처리하지 못했습니다.');
+    // task가 던져도(특히 구독 만들기처럼 run 안에서 async로 감싼 호출) busy가 켜진 채 남지 않게 한다.
+    // 버튼 잠금은 화면이 새 값으로 갱신된 뒤에 푼다 — 그 전에 풀면 낡은 화면에서 한 번 더 눌린다.
+    try {
+      const result = await task();
+      if (!result.ok) {
+        setNotice(result.message ?? '요청을 처리하지 못했습니다.');
+      }
+    } catch (error: unknown) {
+      console.error('[admin/contracts] 요청 처리 중 예외:', error);
+      setNotice('요청을 처리하지 못했습니다. 잠시 후 다시 시도해 주세요.');
     }
-    // 실패해도 새로고침한다 — 거절 사유는 대개 화면이 낡았다는 뜻이다.
-    await router.replace(router.asPath, undefined, { scroll: false });
+    try {
+      // 실패해도 새로고침한다 — 거절 사유는 대개 화면이 낡았다는 뜻이다.
+      await router.replace(router.asPath, undefined, { scroll: false });
+    } finally {
+      setBusy(false);
+    }
   };
 
   const handleCopyLink = async () => {
