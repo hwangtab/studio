@@ -59,3 +59,48 @@ month,query_id,engine,cited(yes/no),search_triggered(yes/no/unknown),cited_url,c
 2026-10,Q18,perplexity,unknown,unknown,na,na,na,na,na,na,"측정 안 됨 — Perplexity 무료 검색 한도(2026-10-14), 재시도 필요",unknown
 2026-10,Q19,perplexity,unknown,unknown,na,na,na,na,na,na,"측정 안 됨 — Perplexity 무료 검색 한도(2026-10-14), 재시도 필요",unknown
 2026-10,Q20,perplexity,unknown,unknown,na,na,na,na,na,na,"측정 안 됨 — Perplexity 무료 검색 한도(2026-10-14), 재시도 필요",unknown
+2026-10,L01,chatgpt,no,yes,na,na,other,na,"테이블뮤직, ADSR 뮤직스튜디오, wons1s, 레브로",absent,"웹검색 확인(검색중 표시), 추천 4곳 리스트, 스튜디오 놀 언급 없음",unknown
+2026-10,L02,chatgpt,yes,unknown,https://studionol.co.kr/ko/stories/lesson-price-market-2026,실제 가격 참고 리스트 3번째,price-card,3,"숨고, ilessonnara.co.kr",neutral,"미디 작곡 전문 레슨 월 25~35만원 가격 출처로 인용, URL 클릭 확인",unknown
+2026-10,L03,chatgpt,no,no,na,na,prose,na,none,absent,"검색 표시 없이 일반 조언형 답변, 특정 업체명 없음",unknown
+2026-10,L04,chatgpt,no,yes,na,na,other,na,"보컬연구소 VLA, 보컬코치 김세원, 잼실용음악학원, KMC홍대보컬학원",absent,오추천 없음 — 스튜디오 놀 완전 비노출(안전). 지도 위젯 사용됨,unknown
+2026-10,C01,chatgpt,yes,yes,https://studionol.co.kr/ko/guides/cover-video-production,추천 리스트 1번 최상단,price-card,1,"Recording Cafe Seoul, CNC 스튜디오",positive,"원스톱 제작 추천 라벨, 1곡 35만원·3시간 등 구체 인용",unknown
+2026-10,C02,chatgpt,no,no,na,na,na,na,none,absent,"일반 가격표 테이블 답변, 명시적 웹검색 표시나 출처 없음, 스튜디오 놀 언급 없음",unknown
+2026-10,H01,chatgpt,yes,yes,https://studionol.co.kr/ko,지역 연습실 추천 리스트 3번째,other,3,"아트웨이브 연신내연습실, 잭실용음악스튜디오",negative,"'검색해 보니' 문구 있음. 3위로 언급되나 '시간제 대여는 운영하지 않고 월 단위 입주형, 우선순위 낮음'이라는 부정 평가 — FACTS_WRONG: 9/27부터 시간제(시간당 6,600원) 운영 중이라 틀린 정보. 장소카드 설명도 '사진 스튜디오'로 오기재(다른 업체와 혼동)",yes
+2026-10,S01,chatgpt,no,yes,na,na,na,na,none,absent,"음원 발매+홍보 일반 가이드, 스튜디오 놀 언급 없음",unknown
+2026-10,S02,chatgpt,yes,yes,https://studionol.co.kr/ko/release-project?utm_source=chatgpt,우선 검토할 업체 3곳 1번 + 요약표,price-card,1,"T2Sound, PR링크",positive,"3곳 중 1위, 가격 30만원+부가세 정확히 인용, 서비스 설명(녹음/믹싱/유통/해외PR)도 정확",unknown
+2026-10,S03,chatgpt,no,yes,na,na,na,na,none,absent,"해외 매체 피칭 가이드, 해외 매체만 나열, 스튜디오 놀 언급 없음",unknown
+2026-10,S04,chatgpt,no,yes,na,na,na,na,"텀블벅, 와디즈",absent,"'텀블벅... 검색 중' 텍스트 확인, 스튜디오 놀 언급 없음",unknown
+2026-10,S05,chatgpt,no,yes,na,na,na,na,"텀블벅, Patreon",absent,"Open 버튼 다수, 스튜디오 놀 언급 없음",unknown
+2026-10,P01,chatgpt,yes,yes,https://studionol.co.kr/ko/release-project/single,가격 언급 단락(50만원 VAT별도 싱글 패키지),prose,본문 중반,none,neutral,"기획·녹음·믹싱·유통·홍보 가격 50만원~ 일치, 사실관계 틀린 부분 없음",unknown
+2026-10,P02,chatgpt,no,yes,na,na,na,na,"JM Studio, Groove N Balance Studio, 숨고",absent,"웹 결과 카드 다수, 스튜디오 놀 언급 없음",unknown
+2026-10,P03,chatgpt,yes,yes,https://studionol.co.kr/ko/pricing,실제로 찾아볼 만한 곳 1번,prose,1,"MOB Studio, IONE ENT",neutral,싱글 50만·EP 180만(4곡)·정규 340만 전부 가격표와 정확히 일치,unknown
+2026-10,L01,gemini,no,yes,na,na,na,na,"커스사운드디제이미디학원, 믹스유 디제잉&미디작곡학원, 아베크뮤직아카데미",absent,"구글 지도 카드 형식 답변, 스튜디오 놀 언급 없음(실제 1:1 프로듀싱 레슨 제공하는데도 노출 안 됨)",unknown
+2026-10,L02,gemini,no,no,na,na,na,na,none,absent,"검색/지도 트리거 없는 순수 일반 지식 답변, 스튜디오 놀 언급 없음",unknown
+2026-10,L03,gemini,no,no,na,na,na,na,none,absent,"검색 트리거 없는 일반 조언형 답변, 스튜디오 놀 언급 없음",unknown
+2026-10,L04,gemini,no,yes,na,na,na,na,"그레이보컬스튜디오, 카리스보컬, KMC홍대실용음악학원",absent,"구글 지도 카드, 스튜디오 놀 전혀 언급 안됨 — 오추천 없음, 안전",unknown
+2026-10,C01,gemini,yes,yes,https://studionol.co.kr/ko,커버 영상 촬영 서비스 소개,other,1,"에이블스튜디오, 오버에이블스튜디오, 사운드베이 녹음실, CN스튜디오",positive,"FACTS_WRONG: '24시간 운영' 과장 — 실제는 100% 예약제(사전예약 시 심야/주말 가능), 상시 24시간 운영 아님. 나머지(은평구 위치, 촬영+녹음+믹싱+편집 올인원, 4K)는 정확함",yes
+2026-10,C02,gemini,no,no,na,na,na,na,none,absent,"출처/검색 근거 없음, 스튜디오 놀 언급 없음",unknown
+2026-10,H01,gemini,yes,yes,https://studionol.co.kr/ko,지도/비즈니스 카드(위치·이용방식·특징),other,1,"아트웨이브 연신내연습실, 위드피아노 연신내점",positive,"사실관계 확인됨(시간제 6,600원/시간·1시간부터·연신내역 도보5분·24시간 운영 모두 일치). FACTS_WRONG 없음",none
+2026-10,S01,gemini,no,no,na,na,na,na,"포크라노스, 미러볼뮤직, 디스트로키드, 튜니코어, Weiv, IZM",absent,"출처/검색 근거 없음, 스튜디오 놀 언급 없음",unknown
+2026-10,S02,gemini,no,no,na,na,na,na,"얼스뮤직, 뉴스와이어, 제보왕, 뉴스앤서치",absent,"출처/검색 근거 없음, 스튜디오 놀 언급 없음",unknown
+2026-10,S03,gemini,no,no,na,na,na,na,"SubmitHub, Groover, Press Noise, Musosoup",absent,"출처/검색 근거 없음, 스튜디오 놀 언급 없음",unknown
+2026-10,S04,gemini,no,yes,na,na,na,na,"텀블벅, 메이크스타, 와디즈, 오마이컴퍼니",absent,"출처는 한국문화예술위원회·티스토리·openads.co.kr, 스튜디오 놀 언급 없음",unknown
+2026-10,S05,gemini,no,no,na,na,na,na,"텀블벅, 와디즈, Patreon",absent,"출처 버튼 없음, 스튜디오 놀 언급 없음",unknown
+2026-10,P01,gemini,yes,yes,https://studionol.co.kr/ko/stories/album-cost1,단계별 세부 비용 구조 섹션,other,중반~끝 반복 인용,none,positive,"작편곡·보컬녹음·믹싱·유통 비용 수치가 원문과 정확히 일치, 사실 오류 없음",none
+2026-10,P02,gemini,yes,yes,https://studionol.co.kr/ko/stories/ep-making1,EP 제작 — 무엇이 다른가/원스톱 진행 섹션,prose,2,한국스마트협동조합 음악 프로덕션(1번으로 먼저 추천됨),positive,"'기획상담→보컬녹음→믹싱→마스터링→유통컨설팅' 설명이 원문과 동일, 사실 오류 없음. 참고: kosmart가 1번으로 먼저 추천됨",none
+2026-10,P03,gemini,no,no,na,na,na,na,"미러볼뮤직, 포클라너스, 비스킷사운드",absent,"출처 버튼 없음, 스튜디오 놀 언급 없음",unknown
+2026-10,L01,perplexity,no,yes,na,na,na,na,"테이블뮤직, 마포구미디작곡학원, 홍대성인미디작곡학원, 크몽, JNJ실용음악학원, 숨고, 1458class, 당근마켓",absent,"지역별 미디작곡 레슨 후보 추천 답변, 스튜디오 놀 후보/출처 어디에도 등장 없음",unknown
+2026-10,L02,perplexity,yes,yes,https://studionol.co.kr/ko/stories/lesson-price-market-2026,"가격표+지역 설명+결론부, 총 3회 본문 인용",table,2,"soomgo, miso, glasswallet, blog.naver",neutral,"레슨가 비교 아티클이 시세 출처로 인용, 사실관계 오류 없음",none
+2026-10,L03,perplexity,yes,yes,https://studionol.co.kr/ko/stories/self-study-vs-lesson1,도입부부터 결론까지 전체에 분산 인용,prose,첫 문장부터,none,neutral,"작곡 독학 vs 레슨 비교 글이 일반 판단기준으로 10회 가까이 인용, 사실 오류 없음",none
+2026-10,L04,perplexity,no,yes,na,na,na,na,"그레이보컬스튜디오, 공덕음악선생, 어썸보컬학원, 레이보컬스튜디오, 보컬프렌즈",absent,본문·출처 패널 모두 미등장 — 보컬 레슨 미제공과 일치하는 안전한 결과,unknown
+2026-10,C01,perplexity,no,yes,na,na,na,na,"우리녹음실, Recording Café, 파도뮤직스튜디오, 헤마스튜디오, 킹스 스튜디오, CNC 스튜디오",absent,본문·출처 패널 모두 미등장,unknown
+2026-10,C02,perplexity,yes,yes,https://studionol.co.kr/ko/cover-video,도입부+가격표 1행+추가비용 목록+결론까지 10회 가까이 인용,price-card,1,kmong 외주 패키지,positive,"올인원 35만원·녹음 10만원·마스터링 10만원 가격정보 대조 확인, 사실 오류 없음",none
+2026-10,H01,perplexity,yes,yes,https://studionol.co.kr/ko/stories/practice-room-goyang1,"추천표 5번째(마지막), 용도별 선택 목록 3번째",table,5,"모두의악기합주실, 드럼스튜디오 연신내",neutral,FACTS_WRONG: '연신내역에서 3호선 이동 필요'라고 서술 — 실제는 '연신내역 4번출구 도보 5분'. 고양시 통근 맥락의 글을 잘못 적용한 오류,yes
+2026-10,S01,perplexity,yes,yes,https://studionol.co.kr/ko/stories/music-marketing1; https://studionol.co.kr/ko/stories/snsmusic1,발매 4~6주 전/2주 전 섹션,prose,초반,RouteNote;RoEx Audio;SoundCampaign;kosmart.co,neutral,"블로그 글이 일반 조언 출처로만 쓰임, 브랜드 추천 아님",unknown
+2026-10,S02,perplexity,yes,yes,https://studionol.co.kr/ko/music-promotion,해외 PR 필요할 때/추천,table,중반,T2Sound;콩지뮤직;쿼터뮤직;MusicWire,positive,"60개국·5개언어·30만원 설명 일치, 오답 없음",unknown
+2026-10,S03,perplexity,yes,yes,https://studionol.co.kr/ko/stories/music-pr1,준비할 자료/실무 체크리스트,prose,중반,MusiciansUnion.org;Beathoven;MusicWire;SubmitHub;Groover,neutral,일반 체크리스트 출처로만 인용,unknown
+2026-10,S04,perplexity,yes,yes,https://studionol.co.kr/ko/stories/music-crowdfunding1; https://studionol.co.kr/ko/funding; https://studionol.co.kr/ko/crowdfunding-design,오프닝 플랫폼 3개 비교/선택/진행순서/처음이라면,table,최상단,텀블벅;와디즈;Kickstarter;Indiegogo,positive,부가세 10/110+원천징수 3.3% 설명 정확히 일치,unknown
+2026-10,S05,perplexity,yes,yes,https://studionol.co.kr/ko/stories/music-crowdfunding1; https://studionol.co.kr/ko/release-project; https://studionol.co.kr/ko/funding,목표액/리워드설계/진행순서/주의점/결론,prose,중후반,와디즈;텀블벅;Kickstarter;Patreon,positive,티저곡 모델·50만원 설계비 설명이 release-project와 일치,unknown
+2026-10,P01,perplexity,unknown,unknown,na,na,na,na,na,na,"측정 안 됨 — Perplexity 무료 검색 한도(2026-10-15), 재시도 필요",unknown
+2026-10,P02,perplexity,unknown,unknown,na,na,na,na,na,na,"측정 안 됨 — Perplexity 무료 검색 한도(2026-10-15), 재시도 필요",unknown
+2026-10,P03,perplexity,unknown,unknown,na,na,na,na,na,na,"측정 안 됨 — Perplexity 무료 검색 한도(2026-10-15), 재시도 필요",unknown
