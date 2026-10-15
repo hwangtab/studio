@@ -53,11 +53,11 @@ month,query_id,engine,cited(yes/no),search_triggered(yes/no/unknown),cited_url,c
 2026-10,Q12,perplexity,yes,yes,https://studionol.co.kr/ko/stories/stem-mixing1,파일 형식 섹션(44.1/48kHz·24bit),prose,"중반, 3번째 인용",none,neutral,"경쟁사 브랜드명 본문 노출 없음, 출처 패널에 해외 사이트 다수",unknown
 2026-10,Q13,perplexity,yes,yes,https://studionol.co.kr/ko/mixing-mastering,업체별 예시 비교표 스튜디오 놀 행,table,"중반, 5행 중 4번째","Peak-Studios, Seoul Archive Studio, 크몽, 숨고",neutral,경쟁 업체 4곳과 나란히 비교표에 등재,unknown
 2026-10,Q14,perplexity,yes,yes,https://studionol.co.kr/ko/mixing-mastering,인트로 요약 + 대표 가격 표 최상단 행,table,"매우 이른 위치, 가격표 최상단","MixingArt, Ark Music, Peak-Studios",positive,"답변 전체 7회 인용, 4쿼리 중 가장 밀도 높음",unknown
-2026-10,Q15,perplexity,unknown,unknown,na,na,na,na,na,na,"측정 안 됨 — Perplexity 무료 검색 한도(2026-10-14), 재시도 필요",unknown
-2026-10,Q16,perplexity,unknown,unknown,na,na,na,na,na,na,"측정 안 됨 — Perplexity 무료 검색 한도(2026-10-14), 재시도 필요",unknown
-2026-10,Q17,perplexity,unknown,unknown,na,na,na,na,na,na,"측정 안 됨 — Perplexity 무료 검색 한도(2026-10-14), 재시도 필요",unknown
-2026-10,Q18,perplexity,unknown,unknown,na,na,na,na,na,na,"측정 안 됨 — Perplexity 무료 검색 한도(2026-10-14), 재시도 필요",unknown
-2026-10,Q19,perplexity,unknown,unknown,na,na,na,na,na,na,"측정 안 됨 — Perplexity 무료 검색 한도(2026-10-14), 재시도 필요",unknown
+2026-10,Q15,perplexity,yes,yes,https://studionol.co.kr/ko/stories/studio-compare1,오프닝 문장+추천표 1위+마무리 추천,table,1,"에이블스튜디오, 하람꾼 스튜디오, 스튜디오세븐, 우리녹음실 사당점",positive,"가격(25만원/3시간, 시간당 10만원) 공개요금과 일치",unknown
+2026-10,Q16,perplexity,yes,yes,https://studionol.co.kr/ko/practice-room,오프닝+월세형 추천표 1위+시간제 목록 1번,table,1,"지상 음악연습실, 연신내 음악연습실, 엘뮤직음악연습실",positive,"월 36만원·보증금 0원 표기, 공개 요금과 일치",unknown
+2026-10,Q17,perplexity,yes,yes,https://studionol.co.kr/ko/recording,오프닝+추천표 1위+용도별 추천 1번,table,1,"서울사운드, 모두의악기 합주실, 티엔뮤직",positive,"가격(25만원/3시간, 시간당 10만원) 공개요금과 일치",unknown
+2026-10,Q18,perplexity,yes,yes,https://studionol.co.kr/ko/stories/practice-room-nodeposit1,오프닝+확인된 사례 표 1위+체크리스트,table,1,"G7음악연습실, MUSIC GROUND 방배점",positive,"월 36만원 공개요금과 일치, 보증금 조건은 교차검증 자료 없어 판정 보류",unknown
+2026-10,Q19,perplexity,no,yes,na,na,na,na,"헤마스튜디오, 파도뮤직스튜디오, 스노우핑거, 아크뮤직, 에이블스튜디오",absent,본문·출처 패널 어디에도 등장 안 함,unknown
 2026-10,Q20,perplexity,unknown,unknown,na,na,na,na,na,na,"측정 안 됨 — Perplexity 무료 검색 한도(2026-10-14), 재시도 필요",unknown
 2026-10,L01,chatgpt,no,yes,na,na,other,na,"테이블뮤직, ADSR 뮤직스튜디오, wons1s, 레브로",absent,"웹검색 확인(검색중 표시), 추천 4곳 리스트, 스튜디오 놀 언급 없음",unknown
 2026-10,L02,chatgpt,yes,unknown,https://studionol.co.kr/ko/stories/lesson-price-market-2026,실제 가격 참고 리스트 3번째,price-card,3,"숨고, ilessonnara.co.kr",neutral,"미디 작곡 전문 레슨 월 25~35만원 가격 출처로 인용, URL 클릭 확인",unknown
