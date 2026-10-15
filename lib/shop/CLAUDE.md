@@ -29,14 +29,15 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
 7. 헤더·푸터 메뉴(`SHOP_NAV_LABEL`), 런타임 사이트맵(`/sitemap-shop.xml` — robots의 `additionalSitemaps`는 `next-sitemap.config.js`가
    `data/shop/policy.ts`의 선언을 읽어 싣는다), `pages/api/llms.ts`·`llms-full.ts`의 상점 절, `/ko/terms` 상품 판매 절은 **이미 `SHOP_SALES_OPEN`에
    묶여 있다 — 켜면 함께 열린다.** 켠 뒤 `/sitemap-shop.xml`이 상품·아티스트 URL을 내는지 한 번 열어 본다.
-8. 최소 금액으로 실결제 → 취소를 한 번씩, **계좌이체로도** 한다(토스 API 키 쌍에 계좌이체가 개통됐는지 이때 확인된다).
+8. 최소 금액으로 실결제 → 취소를 한 번씩 한다(카드·간편결제).
 
-### 결제는 전부 토스다 — 계좌 입금(무통장) 없음
+### 결제 — 지금은 카드·간편결제(토스)뿐, 계좌 직접 입금은 만들 예정 (2026-10-14)
 
-카드·간편결제·**토스 계좌이체**(`PaymentMethodPicker`의 기본 목록 — 2026-10-14부터 전 화면 공통. 계좌번호 폴백(`BankDepositFallback`)은 상점에 없다). 직접 입금은 환불 때 고객 계좌를 받아
-손으로 송금해야 해서 받지 않는다(운영자 결정 2026-10-12, 공연 예매도 같은 날 같은 결정). 그래서 `awaiting_deposit`·
-환불 계좌(`refund_accounts`)·입금 안내 메일이 상점에는 없다. `tests/payments/sharedCheckout.guard.test.ts`가 폼에 직접 입금이
-붙는 것을 막는다.
+운영자 결정(2026-10-14): 토스 계좌이체는 뱅크페이가 떠 고령층이 쓰지 못해 뺐고, 계좌 수단은 우리 계좌번호를 안내하는 직접
+입금으로 한다(공연·펀딩·예약·믹싱은 이미 그렇다). **상점에는 그 흐름이 아직 없다** — `awaiting_deposit` 주문 생성·재고 점유
+(`lib/shop/stock.ts`의 점유 판정에 대기를 넣어야 한다)·운영자 입금 확인(확정 시 시리얼·다운로드·메일)·환불 계좌·안내 메일을 새로
+만들어야 해서 판매 개시(`SHOP_SALES_OPEN`) 전에 별도 작업으로 한다. 그때까지 `ShopOrderForm`은 `withBank`를 주지 않는다
+(`tests/payments/sharedCheckout.guard.test.ts`가 입금 흐름 없이 계좌 줄이 켜지는 것을 막는다).
 
 - 승인은 `lib/shop/confirm.ts` — 예약금 결제 링크(`lib/booking/confirmDeposit.ts`)의 안전장치 + **재고 재판정**(아래).
 - 웹훅(`lib/booking/webhook.ts`)에 `merch` 분기가 있다. **없으면 모르는 type이 `'session'`으로 떨어져 예약 확정으로 간다.**

@@ -214,26 +214,24 @@ describe('폼 안의 결제수단 목록', () => {
     await user.type(screen.getByLabelText(/이메일/), 'a@b.com');
   };
 
-  it('단계가 셋으로 줄었고, 결제수단 목록과 계좌번호 폴백 링크가 폼 안에 있다', async () => {
+  it('단계가 셋으로 줄었고, 결제수단 목록(계좌로 직접 입금 줄 포함)이 폼 안에 있다', async () => {
     const user = userEvent.setup();
     render(<BookingWizard service="recording" products={[PRODUCT]} />);
     // 단계 표시는 Stepper — 화면의 번호 원과 함께 sr-only 요약("3단계 중 1단계: 상품·시간")을 준다.
     expect(screen.getByText('3단계 중 1단계: 상품·시간')).toBeInTheDocument();
     await goToStep3(user);
     expect(screen.getByRole('group', { name: '결제수단' })).toBeInTheDocument();
-    expect(screen.queryByRole('radio', { name: '계좌로 직접 입금' })).toBeNull();
-    expect(screen.getByRole('button', { name: '계좌번호로 직접 보내기' })).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: '계좌로 직접 입금' })).toBeInTheDocument();
+    expect(screen.queryByRole('radio', { name: '계좌이체' })).toBeNull();
   });
 
-  it('폴백 링크를 누르면 목록이 숨고 버튼이 "계좌 안내 받기"가 된다 — 돌아가기로 되돌린다', async () => {
+  it('계좌 줄을 고르면 버튼이 "계좌 안내 받기"가 되고, 카드로 돌아오면 "결제하기"다', async () => {
     const user = userEvent.setup();
     render(<BookingWizard service="recording" products={[PRODUCT]} />);
     await goToStep3(user);
-    await user.click(screen.getByRole('button', { name: '계좌번호로 직접 보내기' }));
-    expect(screen.queryByRole('group', { name: '결제수단' })).toBeNull();
+    await user.click(screen.getByRole('radio', { name: '계좌로 직접 입금' }));
     expect(screen.getByRole('button', { name: '계좌 안내 받기' })).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: /돌아가기/ }));
-    expect(screen.getByRole('group', { name: '결제수단' })).toBeInTheDocument();
+    await user.click(screen.getByRole('radio', { name: '신용·체크카드' }));
     expect(screen.getByRole('button', { name: '결제하기' })).toBeInTheDocument();
   });
 

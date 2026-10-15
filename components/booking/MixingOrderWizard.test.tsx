@@ -199,18 +199,17 @@ describe('폼 안의 결제수단 목록', () => {
     expect(screen.getByText('2단계 중 1단계: 상품·곡 수')).toBeInTheDocument();
     await goToStep2(user);
     expect(screen.getByText('2단계 중 2단계: 주문자 정보')).toBeInTheDocument();
-    // 결제수단 목록과 계좌번호 폴백 링크가 폼 안에 있다 — 직접 입금 줄은 없다.
+    // 결제수단 목록이 폼 안에 있다 — 계좌 줄은 토스 계좌이체가 아니라 직접 입금이다.
     expect(screen.getByRole('group', { name: '결제수단' })).toBeInTheDocument();
-    expect(screen.queryByRole('radio', { name: '계좌로 직접 입금' })).toBeNull();
-    expect(screen.getByRole('button', { name: '계좌번호로 직접 보내기' })).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: '계좌로 직접 입금' })).toBeInTheDocument();
+    expect(screen.queryByRole('radio', { name: '계좌이체' })).toBeNull();
   });
 
-  it('폴백 링크를 누르면 목록이 숨고 버튼이 "계좌 안내 받기"가 된다', async () => {
+  it('계좌 줄을 고르면 버튼이 "계좌 안내 받기"가 된다', async () => {
     const user = userEvent.setup();
     render(<MixingOrderWizard />);
     await goToStep2(user);
-    await user.click(screen.getByRole('button', { name: '계좌번호로 직접 보내기' }));
-    expect(screen.queryByRole('group', { name: '결제수단' })).toBeNull();
+    await user.click(screen.getByRole('radio', { name: '계좌로 직접 입금' }));
     expect(screen.getByRole('button', { name: '계좌 안내 받기' })).toBeInTheDocument();
   });
 

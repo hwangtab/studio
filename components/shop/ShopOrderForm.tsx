@@ -44,7 +44,7 @@ const sellable = (p: ShopProduct): ShopSku[] => p.skus.filter((s) => !s.retired)
 /**
  * 상품 주문 폼 — 수량(옵션별) → 함께 담을 다른 상품(배송비는 주문당 한 번) → 주문자·받는 분·배송지 → 결제수단 → 결제하기.
  *
- * 결제수단은 전부 토스다(카드·간편결제·**토스 계좌이체**) — 상점은 "계좌로 직접 입금"을
+ * 결제수단은 지금 카드·간편결제(토스)뿐이다(토스 계좌이체는 뱅크페이가 떠 2026-10-14에 뺐다 — 계좌 줄은 직접 입금 흐름이 상점에 생길 때 켠다). 상점은 "계좌로 직접 입금"을
  * 받지 않는다(운영자 결정 2026-10-12: 직접 입금은 환불 때 수동 송금이 번거롭다). 공연 예매 폼(ShowBookingForm)과
  * 같은 장치를 쓴다: 위젯 지연 로드, 같은 입력으로 결제창을 다시 열면 만든 주문을 재사용(재고 홀드가 쌓이지 않게).
  * 펀딩 후원 폼에서 가져온 것: 카카오 주소 검색, 이름·연락처·주소 초안 저장(수량은 저장하지 않는다 — 재고가 바뀐다).
@@ -371,7 +371,7 @@ export default function ShopOrderForm({ product, others: candidates, remaining, 
             <PaymentMethodPicker
               name="shop-paymethod"
               value={widget.choice}
-              onChange={widget.setChoice}
+              onChange={(next) => { if (next !== 'bank_transfer') widget.setChoice(next); }} // 직접 입금 줄은 이 화면에 없다
               applePaySupported={widget.applePaySupported}
               confirmLabel="주문이 접수"
             />

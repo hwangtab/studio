@@ -2,6 +2,7 @@ import { CreditCard, Landmark } from 'lucide-react';
 
 import { ChoiceCard } from '../ui/Choice';
 
+import { BANK_ACCOUNT, BANK_ACCOUNT_EN } from '../../lib/payments/bankAccount';
 import { type PaymentChoice, type PaymentChoiceId, visiblePaymentChoices } from '../../lib/payments/paymentChoices';
 
 /**
@@ -10,27 +11,32 @@ import { type PaymentChoice, type PaymentChoiceId, visiblePaymentChoices } from 
  * 그 전엔 SAF2026 캡처를 옮긴 전용 줄이었다. 왼쪽 강조 바·손으로 그린 라디오가 사이트 안에서 이 화면에만 있었다):
  *
  * - 간편결제는 **공식 로고**(대체텍스트 = 서비스 이름), 카드·계좌는 아이콘 + 글자.
+ * - 계좌 줄(`withBank`를 준 화면만) 오른쪽에 작은 보조 문구(은행 · 입금 확인 후 …).
  * - 아래 한 줄에 고른 수단이 무엇을 하는지 적는다.
  *
-
- * 계좌번호 직접 입금은 이 목록에 없다 — 막힌 분의 폴백이다(components/payments/BankDepositFallback.tsx).
+ * 계좌 줄은 토스 계좌이체가 아니라 **우리 계좌번호를 안내하는 직접 입금**이다(2026-10-14 — 토스 계좌이체는 뱅크페이가 떠
+ * 고령층이 쓰지 못했다, lib/payments/paymentChoices.ts).
  *
  * 네이티브 라디오라 화살표 키·스크린리더가 그대로 동작한다. 애플페이는 지원 환경에서만 보인다.
  */
 export default function PaymentMethodPicker({
-  name, value, onChange, applePaySupported, confirmLabel = '확정', locale = 'ko',
+  name, value, onChange, applePaySupported, withBank = false, bankBlockedMessage, confirmLabel = '확정', locale = 'ko',
 }: {
   name: string;
   value: PaymentChoiceId;
   onChange: (next: PaymentChoiceId) => void;
   applePaySupported: boolean;
+  /** 계좌로 직접 입금 줄을 둘지 — 입금 확인 흐름이 있는 화면만(펀딩·예약·믹싱·예약금 링크·공연). */
+  withBank?: boolean;
+  /** 있으면 계좌 줄을 막고 그 이유를 보인다(한정 리워드·시작 임박). */
+  bankBlockedMessage?: string | null;
   /** 결제·입금 확인 뒤 일어나는 일 — "확정", "예약이 확정", "티켓이 발권", "주문이 접수". */
   confirmLabel?: string;
   /** 영어 화면(공연 /en)이면 'en' — confirmLabel도 영어로 넘긴다. 결제창으로 넘기는 값(easyPay)은 그대로 한국어다. */
   locale?: 'ko' | 'en';
 }) {
   const en = locale === 'en';
-  const choices = visiblePaymentChoices({ applePaySupported }).map((c) => (en ? { ...c, label: PAYMENT_LABELS_EN[c.id] ?? c.label } : c));
+  const choices = visiblePaymentChoices({ applePaySupported, withBank }).map((c) => (en ? { ...c, label: PAYMENT_LABELS_EN[c.id] ?? c.label } : c));
   const active = choices.find((c) => c.id === value);
   const hintId = `${name}-hint`;
 
@@ -38,20 +44,38 @@ export default function PaymentMethodPicker({
     // fieldset/legend가 아니라 role="group" — 후원 폼처럼 이미 제목이 있는 fieldset 안에 들어가도 legend·fieldset이 겹치지 않는다.
     <div role="group" className="min-w-0" aria-label={en ? 'Payment method' : '결제수단'} aria-describedby={hintId}>
       <div className="grid gap-2">
-        {choices.map((choice) => (
-          <ChoiceCard
-            key={choice.id}
-            name={name}
-            value={choice.id}
-            checked={choice.id === value}
-            onChange={() => onChange(choice.id)}
-            aria-label={choice.label}
-            title={<ChoiceBody choice={choice} />}
-          />
-        ))}
+        {choices.map((choice) => {
+          const disabled = choice.id === 'bank_transfer' && Boolean(bankBlockedMessage);
+          return (
+            <ChoiceCard
+              key={choice.id}
+              name={name}
+              value={choice.id}
+              checked={choice.id === value}
+              disabled={disabled}
+              onChange={() => onChange(choice.id)}
+              aria-label={choice.label}
+              title={<ChoiceBody choice={choice} />}
+              trailing={
+                choice.id === 'bank_transfer' ? (
+                  // 휴대폰 폭에서는 은행 이름만(나머지는 아래 안내 줄이 말한다).
+                  <span className="whitespace-nowrap text-sm font-normal text-gray-500 dark:text-gray-400">
+                    {disabled ? (en ? 'Unavailable' : '이용 불가') : en ? (
+                      <>{BANK_ACCOUNT_EN.bankName}<span className="hidden sm:inline"> · {confirmLabel} after we confirm</span></>
+                    ) : (
+                      <>{BANK_ACCOUNT.bankName}<span className="hidden sm:inline"> · 입금 확인 후 {confirmLabel}</span></>
+                    )}
+                  </span>
+                ) : undefined
+              }
+            />
+          );
+        })}
       </div>
       <p id={hintId} className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-        {hintFor(active, confirmLabel, en)}
+        {bankBlockedMessage && value !== 'bank_transfer'
+          ? `${hintFor(active, confirmLabel, en)} ${en ? 'Bank transfer' : '계좌 입금'}: ${bankBlockedMessage}`
+          : hintFor(active, confirmLabel, en)}
       </p>
     </div>
   );
@@ -83,7 +107,7 @@ function ChoiceBody({ choice }: { choice: PaymentChoice }) {
 
 const PAYMENT_LABELS_EN: Partial<Record<PaymentChoiceId, string>> = {
   card: 'Credit / debit card',
-  transfer: 'Account transfer (Korean bank account)',
+  bank_transfer: 'Bank transfer (Korean bank account)',
   kakaopay: 'KakaoPay',
   naverpay: 'Naver Pay',
   tosspay: 'Toss Pay',
@@ -94,14 +118,14 @@ const PAYMENT_LABELS_EN: Partial<Record<PaymentChoiceId, string>> = {
 const hintFor = (choice: PaymentChoice | undefined, confirmLabel: string, en = false): string => {
   if (en) {
     if (!choice || choice.id === 'card') return `Choose your card company in the card payment window. Once payment is complete, ${confirmLabel} right away.`;
-    if (choice.id === 'transfer') {
-      return `Pay straight from your Korean bank account. On a PC your bank may ask you to install its security program. Once payment is complete, ${confirmLabel} right away.`;
+    if (choice.id === 'bank_transfer') {
+      return `Send it from a Korean bank or ATM. We show you the account right away, and once we confirm the transfer, ${confirmLabel} and we let you know by email.`;
     }
     return `Goes straight to the ${choice.label} payment window. Once payment is complete, ${confirmLabel} right away.`;
   }
   if (!choice || choice.id === 'card') return `카드 결제창에서 카드사를 골라요. 결제가 끝나면 바로 ${confirmLabel}돼요.`;
-  if (choice.id === 'transfer') {
-    return `내 은행 계좌에서 바로 이체해요. PC에서는 은행 보안 프로그램 설치를 요구할 수 있어요. 결제가 끝나면 바로 ${confirmLabel}돼요.`;
+  if (choice.id === 'bank_transfer') {
+    return `은행 앱이나 ATM에서 직접 보내실 수 있어요. 신청하시면 입금할 계좌를 바로 알려 드리고, 입금을 확인하면 ${confirmLabel}되고 메일로 알려 드려요.`;
   }
   return `${choice.label} 결제창으로 바로 이동해요. 결제가 끝나면 바로 ${confirmLabel}돼요.`;
 };
