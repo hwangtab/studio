@@ -153,12 +153,15 @@ export function FundingPayoutSection({
   busy,
   onRecord,
   onMarkPaid,
+  onResendNotice,
 }: {
   projectId: string;
   payout: AdminPayoutView | null;
   busy: boolean;
   onRecord: () => void;
   onMarkPaid: () => void;
+  /** 개설자에게 가는 정산 안내 메일을 다시 보낸다. 메일 실패 경고만 뜨고 재시도할 길이 없던 자리. 생략하면 버튼을 그리지 않는다. */
+  onResendNotice?: () => void;
 }) {
   const [account, setAccount] = useState<RevealedAccount | null>(null);
   const [accountError, setAccountError] = useState<string | null>(null);
@@ -490,6 +493,11 @@ export function FundingPayoutSection({
             </Button>
           )}
           {recorded?.status === 'paid' && <p className="text-sm text-gray-600">지급 완료로 기록됐습니다. 되돌릴 수 없습니다.</p>}
+          {recorded && onResendNotice && (
+            <Button light variant="weak" disabled={busy} onClick={onResendNotice}>
+              개설자 안내 메일 다시 보내기
+            </Button>
+          )}
         </div>
         {!recorded && (
           <p className="mt-2 text-xs text-amber-700">

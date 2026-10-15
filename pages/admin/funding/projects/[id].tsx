@@ -626,6 +626,19 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
     );
   };
 
+  const handleResendPayoutNotice = () => {
+    const status = payout?.recorded?.status ?? (pendingPayoutFallback ? 'pending' : null);
+    if (!status) return;
+    if (
+      !window.confirm(
+        `${status === 'paid' ? '정산 지급' : '정산 기록'} 안내 메일을 개설자에게 다시 보냅니다. 메일에는 이체 계좌의 은행·예금주가 실립니다. 계속할까요?`,
+      )
+    ) {
+      return;
+    }
+    return run(() => patchFundingProject(project.id, { action: 'resend_payout_notice' }), '개설자에게 안내 메일을 다시 보냈습니다.');
+  };
+
   const handleUnhide = () => {
     if (!window.confirm('다시 노출하면 /funding 목록과 사이트맵에 다시 나타납니다. 다시 노출할까요?')) return;
     return run(() => patchFundingProject(project.id, { action: 'unhide' }), '다시 노출했습니다.');
@@ -946,6 +959,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
               busy={busy}
               onRecord={handleRecordPayout}
               onMarkPaid={handleMarkPayoutPaid}
+              onResendNotice={handleResendPayoutNotice}
             />
           )}
 
