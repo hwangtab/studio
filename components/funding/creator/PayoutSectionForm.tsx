@@ -1,4 +1,4 @@
-import { useEffect, useId, useState, type FormEvent } from 'react';
+import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 
 import { Badge } from '../../ui/Badge';
 import { Button } from '../../ui/Button';
@@ -22,7 +22,8 @@ interface Props {
   /**
    * 지금 등록 상태 — **계좌는 등록 여부와 계좌번호 뒤 4자리, 주민등록번호는 등록 여부뿐이다.** 은행명·예금주·
    * 계좌번호 전체는 서버가 내려보내지 않는다(`types.ts`의 `EditorPayoutSummary` 주석).
-   * 그래서 계좌·주민번호 칸은 늘 빈 채로 시작하고, 개설자는 바꿀 때 다시 입력해 덮어쓴다.
+   * 그래서 계좌가 등록돼 있으면 "그대로 두기"로 시작해 계좌 칸을 숨기고(`keepAccount`), 바꿀 때만 세 칸을 다시
+   * 입력해 덮어쓴다. 주민번호 칸은 늘 빈 채로 시작하고, 비워 두면 등록된 번호가 남는다.
    * 사업자 정보(번호·상호·대표자명)만은 저장된 값으로 채워 시작한다.
    */
   initial: EditorPayoutSummary;
@@ -31,11 +32,11 @@ interface Props {
   onDirtyChange?: (dirty: boolean) => void;
 }
 
-/** 저장 성공 뒤 dirty 판정의 기준이 되는 값. */
+/**
+ * 저장 성공 뒤 dirty 판정의 기준이 되는 값. 계좌 세 칸의 기준은 늘 빈 문자열이다 — 서버가 값을 안 주고,
+ * 저장 뒤에도 비우고 "그대로 두기"로 돌아간다. 그래서 "계좌 바꾸기"를 누르기만 해서는 dirty가 되지 않는다.
+ */
 interface Baseline {
-  bankName: string;
-  account: string;
-  holder: string;
   taxType: EditorTaxType;
   /** 주민등록번호 칸의 기준은 늘 빈 문자열이다 — 서버가 값을 안 주고, 저장 뒤에도 비운다. */
   residentNumber: string;
@@ -81,8 +82,14 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
   const [businessName, setBusinessName] = useState(() => businessFields(initial.business).businessName);
   const [representativeName, setRepresentativeName] = useState(() => businessFields(initial.business).representativeName);
   const [baseline, setBaseline] = useState<Baseline>(() => ({
-    bankName: '', account: '', holder: '', taxType: savedTaxType, residentNumber: '', ...businessFields(initial.business),
+    taxType: savedTaxType, residentNumber: '', ...businessFields(initial.business),
   }));
+  /** 등록된 계좌가 있을 때 "계좌 바꾸기"를 눌렀는가. 미등록이면 계좌 칸이 늘 보이므로 이 값과 무관하다. */
+  const [changingAccount, setChangingAccount] = useState(false);
+  const keepAccount = initial.registered && !changingAccount;
+  // 저장 왕복 뒤 "그 사이 계좌 칸에 이어서 쳤는가"를 판정하려면 응답 시점의 값을 읽어야 한다.
+  const accountInputs = useRef({ bankName, account, holder });
+  accountInputs.current = { bankName, account, holder };
   const [save, setSave] = useState<SaveState>(IDLE_SAVE_STATE);
   /** 마지막 저장 응답의 국세청 안내. `null`이면 저장된 상태에서 다시 만든다. */
   const [savedWarnings, setSavedWarnings] = useState<string[] | null>(null);
@@ -94,9 +101,9 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
 
   // 기준이 `initial`이 아니라 `baseline`인 이유: 계좌·주민번호 칸은 서버 값을 받지 못해 늘 빈 문자열로
   // 시작하므로, 저장에 성공한 뒤에도 `initial`과 비교하면 dirty가 영영 안 풀린다.
-  const dirty = bankName !== baseline.bankName
-    || account !== baseline.account
-    || holder !== baseline.holder
+  const dirty = bankName !== ''
+    || account !== ''
+    || holder !== ''
     || taxType !== baseline.taxType
     || residentNumber !== baseline.residentNumber
     || businessNumber !== baseline.businessNumber
@@ -116,6 +123,12 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
     })
     : []);
 
+  const clearAccountInputs = () => {
+    setBankName('');
+    setAccount('');
+    setHolder('');
+  };
+
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     setSave({ status: 'saving' });
@@ -124,11 +137,12 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
     const business = taxType === 'invoice'
       ? { businessNumber: businessNumber.trim(), businessName: businessName.trim(), representativeName: representativeName.trim() }
       : null;
+    const accountValue = keepAccount
+      ? { keepAccount: true as const }
+      : { bankName: bankName.trim(), account: account.trim(), holder: holder.trim() };
     const value = {
       taxType,
-      bankName: bankName.trim(),
-      account: account.trim(),
-      holder: holder.trim(),
+      ...accountValue,
       // 사업자면 아예 실어 보내지 않는다. 서버도 버리지만(`validatePayoutSection`),
       // 근거가 없는 값을 네트워크에 한 번 더 올릴 이유가 없다.
       residentNumber: taxType === 'withholding' ? residentNumber.replace(/\s/g, '') : '',
@@ -143,9 +157,15 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
     // 동안 입력 칸은 계속 활성이라 그 사이 이어서 친 입력을 응답이 덮어쓰면 조용한 유실이 된다(2026-09-22 회귀).
     const digits = business ? normalizeBusinessNumber(business.businessNumber) ?? business.businessNumber : '';
     const shownNumber = business ? formatBusinessNumber(digits) : '';
-    setBankName((cur) => (cur === bankName ? value.bankName : cur));
-    setAccount((cur) => (cur === account ? value.account : cur));
-    setHolder((cur) => (cur === holder ? value.holder : cur));
+    // 계좌 칸은 비우고 "그대로 두기"로 돌아간다 — 저장된 계좌는 화면에 남아 있을 이유가 없다. 다만 저장 왕복 동안
+    // 계좌 칸에 이어서 친 입력이 있으면 그대로 두고 바꾸기 상태를 유지한다(지금 등록된 계좌와 다른 입력이다).
+    const cur = accountInputs.current;
+    if (cur.bankName === bankName && cur.account === account && cur.holder === holder) {
+      clearAccountInputs();
+      setChangingAccount(false);
+    } else {
+      setChangingAccount(true);
+    }
     // 주민등록번호만은 정규화한 값으로 되돌리지 않고 **비운다** — 저장된 뒤에는 화면에 남아 있을 이유가 없다.
     setResidentNumber((cur) => (cur === residentNumber ? '' : cur));
     if (business) {
@@ -163,9 +183,6 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
     // 기준은 무조건 제출한 값으로 옮긴다 — 이어서 친 입력이 남아 있으면 dirty가 열린 채로 유지된다.
     // 개인으로 저장했으면 사업자 칸의 기준은 그대로 두되, 서버가 사업자 행을 지웠으면 빈 값이 기준이다.
     setBaseline((prev) => ({
-      bankName: value.bankName,
-      account: value.account,
-      holder: value.holder,
       taxType: value.taxType,
       residentNumber: '',
       ...(business
@@ -190,7 +207,7 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
     }
     onSaved({
       registered: true,
-      accountLast4: last4(value.account),
+      accountLast4: accountValue.keepAccount ? initial.accountLast4 : last4(accountValue.account),
       taxType: value.taxType,
       // 서버와 같은 규칙(`savePayoutSection`): 사업자로 저장하면 지워지고, 빈 값이면 기존 값이 남고, 값을 넣었으면
       // 등록된다. 사업자인데 서버가 `residentNumberRetained`를 돌려줬으면 지우지 않은 것이다 — 서버가 실제로 한 일을 따른다.
@@ -227,13 +244,6 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
           </p>
         </Panel>
 
-        <Notice tone="info">
-          {initial.registered
-            ? `계좌가 등록되어 있어요${initial.accountLast4 ? ` (계좌번호 뒤 4자리 ${initial.accountLast4})` : ''}.`
-            : '아직 등록된 계좌가 없어요. 정산을 받기 전에 채워 주세요.'}
-          {' '}
-          보안을 위해 등록한 계좌번호는 화면에 다시 띄우지 않아요. 바꾸시려면 아래에 새로 입력해 저장해 주세요.
-        </Notice>
 
         <Field
           id="payout-tax-type"
@@ -390,35 +400,67 @@ export function PayoutSectionForm({ initial, onSaved, onDirtyChange }: Props) {
           </>
         )}
 
-        <Field id="payout-bank-name" label="은행명" required>
-          <TextInput
-            value={bankName}
-            onChange={(e) => { setBankName(e.target.value); clearSaveStatus(); }}
-            maxLength={CREATOR_LIMITS.payoutBankNameMax}
-            required
-            placeholder="예: 국민은행"
-          />
-        </Field>
-        <Field id="payout-account" label="계좌번호" required hint="숫자와 하이픈(-)만 넣어 주세요.">
-          <TextInput
-            value={account}
-            onChange={(e) => { setAccount(e.target.value); clearSaveStatus(); }}
-            maxLength={CREATOR_LIMITS.payoutAccountMax}
-            required
-            inputMode="numeric"
-            autoComplete="off"
-            placeholder="123-456-789012"
-          />
-        </Field>
-        <Field id="payout-holder" label="예금주" required hint="계좌에 등록된 이름 그대로 적어 주세요.">
-          <TextInput
-            value={holder}
-            onChange={(e) => { setHolder(e.target.value); clearSaveStatus(); }}
-            maxLength={CREATOR_LIMITS.payoutHolderMax}
-            required
-            autoComplete="off"
-          />
-        </Field>
+        {initial.registered ? (
+          <Notice
+            tone="info"
+            title={keepAccount
+              ? `등록된 계좌를 그대로 써요${initial.accountLast4 ? ` (계좌번호 뒤 4자리 ${initial.accountLast4})` : ''}.`
+              : '새 계좌를 입력해 저장하면 등록된 계좌를 바꿔요.'}
+            actions={keepAccount ? (
+              <Button type="button" variant="weak" size="sm" onClick={() => { setChangingAccount(true); clearSaveStatus(); }}>
+                계좌 바꾸기
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => { clearAccountInputs(); setChangingAccount(false); clearSaveStatus(); }}
+              >
+                취소
+              </Button>
+            )}
+          >
+            보안을 위해 등록한 계좌번호는 화면에 다시 띄우지 않아요.
+          </Notice>
+        ) : (
+          <Notice tone="info">
+            아직 등록된 계좌가 없어요. 정산을 받기 전에 채워 주세요. 보안을 위해 등록한 계좌번호는 화면에 다시 띄우지 않아요.
+          </Notice>
+        )}
+        {!keepAccount && (
+          <>
+            <Field id="payout-bank-name" label="은행명" required>
+              <TextInput
+                value={bankName}
+                onChange={(e) => { setBankName(e.target.value); clearSaveStatus(); }}
+                maxLength={CREATOR_LIMITS.payoutBankNameMax}
+                required
+                placeholder="예: 국민은행"
+              />
+            </Field>
+            <Field id="payout-account" label="계좌번호" required hint="숫자와 하이픈(-)만 넣어 주세요.">
+              <TextInput
+                value={account}
+                onChange={(e) => { setAccount(e.target.value); clearSaveStatus(); }}
+                maxLength={CREATOR_LIMITS.payoutAccountMax}
+                required
+                inputMode="numeric"
+                autoComplete="off"
+                placeholder="123-456-789012"
+              />
+            </Field>
+            <Field id="payout-holder" label="예금주" required hint="계좌에 등록된 이름 그대로 적어 주세요.">
+              <TextInput
+                value={holder}
+                onChange={(e) => { setHolder(e.target.value); clearSaveStatus(); }}
+                maxLength={CREATOR_LIMITS.payoutHolderMax}
+                required
+                autoComplete="off"
+              />
+            </Field>
+          </>
+        )}
 
         <div className="flex flex-wrap items-center gap-3">
           <Button type="submit" disabled={save.status === 'saving' || (taxType === 'invoice' && businessUnavailable)}>
