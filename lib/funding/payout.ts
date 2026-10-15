@@ -706,6 +706,39 @@ export const markFundingPayoutPaid = async (id: string, memo: string | null, now
   return result.length > 0;
 };
 
+/**
+ * 모금이 끝났는데 **정산을 아직 기록하지 않은** 프로젝트 id — 대시보드 "정산 기록 대기" 카드와 목록 필터용.
+ *
+ * 정산은 마감 뒤 영업일 14일 안에 운영자가 기록한다(`FUNDING_PAYOUT_BUSINESS_DAYS`). 기록은 운영자가 눌러야 하는데
+ * 대시보드 어디에도 이 일이 없어서, 놓치면 개설자가 문의할 때까지 알 길이 없었다.
+ *
+ * 세는 조건은 기록 쪽 게이트와 맞춘다 — 세지 않아야 할 것을 세면 영영 안 내려가는 카드가 되기 때문이다:
+ * - 승인됐고, 날짜상 마감됐거나 운영자가 종료한 프로젝트(`computeProjectState`가 'closed'와 같은 판정)
+ * - 정산 행이 없다
+ * - 살아 있는 후원의 합계에서 done 환불을 뺀 금액이 0보다 크다 — 받은 돈이 없으면 `nothing_to_pay`로 기록 자체가 거부된다.
+ *   (설계·제작 대금 공제로 실이체액이 0이 되는 정산은 기록하므로, 공제 전 금액으로 본다.)
+ * 개설자 계좌·세금 구분이 없어 기록이 막혀 있는 프로젝트도 센다 — 그 막힘을 풀어 주는 것이 운영자의 일이다.
+ */
+export const listUnrecordedFundingPayoutProjectIds = async (now: Date = new Date()): Promise<string[]> => {
+  const rows = await getDb().all<{ id: string }>(sql`
+    SELECT p.id AS id FROM funding_projects p
+    WHERE p.review_status = 'approved'
+      AND p.status != 'draft'
+      AND (p.status = 'closed' OR p.end_at <= ${Math.floor(now.getTime() / 1000)})
+      AND NOT EXISTS (SELECT 1 FROM funding_project_payouts x WHERE x.project_id = p.id)
+      AND (
+        SELECT COALESCE(SUM(o.total_amount), 0) - COALESCE(SUM((
+          SELECT COALESCE(SUM(r.amount), 0) FROM refunds r JOIN payments pm ON pm.id = r.payment_id
+          WHERE pm.order_id = o.id AND r.status = 'done'
+        )), 0)
+        FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
+        WHERE fp.project_slug = p.slug AND o.status IN (${liveFundingOrderStatusList()})
+      ) > 0
+    ORDER BY p.end_at
+  `);
+  return rows.map((row) => String(row.id));
+};
+
 /** 이체 대기 정산이 있는 프로젝트 id — 대시보드 "이체 대기 펀딩 정산" 카드가 여는 목록의 필터용. */
 export const listPendingFundingPayoutProjectIds = async (): Promise<string[]> =>
   (

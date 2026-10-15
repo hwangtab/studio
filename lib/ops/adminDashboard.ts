@@ -7,7 +7,7 @@ import { unmarkedSessionRange } from '../booking/unmarkedSessions';
 import { terminationCutoff } from '../contracts/status';
 import { collectDbIssues, type HealthIssue } from './healthCheck';
 import { countPendingArtistPayouts } from '../artistSupport/payout';
-import { countPendingFundingPayouts } from '../funding/payout';
+import { countPendingFundingPayouts, listUnrecordedFundingPayoutProjectIds } from '../funding/payout';
 import { countPendingSubmissions } from '../shows/organizer/adminSubmissions';
 
 /**
@@ -59,6 +59,8 @@ export interface AdminDashboard {
     fundingProjectsAwaitingReview: number;
     /** 기록됐지만 아직 개설자에게 이체하지 않은 펀딩 정산. */
     fundingPayoutsPending: number;
+    /** 모금이 끝났고 받은 돈이 있는데 정산을 아직 기록하지 않은 펀딩 프로젝트(마감 뒤 영업일 14일 안에 기록한다). */
+    fundingPayoutsUnrecorded: number;
     /** 계좌 입금 대기 — 통장에서 입금을 확인해 눌러야 확정된다(자동 취소가 없어 방치되면 자리만 잡는다). */
     depositsBooking: number;
     depositsShow: number;
@@ -90,7 +92,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
   const from = startOfTodayKst(now);
   const to = new Date(from.getTime() + UPCOMING_WINDOW_DAYS * DAY_MS);
 
-  const [issues, sessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending, unmarkedRows, terminationRows, depositRows, fundingDepositRows, fundingRefundRows, showSubmissionsAwaitingReview] = await Promise.all([
+  const [issues, sessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending, unrecordedPayoutIds, unmarkedRows, terminationRows, depositRows, fundingDepositRows, fundingRefundRows, showSubmissionsAwaitingReview] = await Promise.all([
     collectDbIssues(now),
     db
       .select({
@@ -126,6 +128,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       .from(fundingProjects)
       .where(eq(fundingProjects.reviewStatus, 'submitted')),
     countPendingFundingPayouts(),
+    listUnrecordedFundingPayoutProjectIds(now),
     db
       .select({ count: sql<number>`count(*)` })
       .from(bookings)
@@ -186,6 +189,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       artistPayoutsPending,
       fundingProjectsAwaitingReview: Number(fundingReviewRows[0]?.count ?? 0),
       fundingPayoutsPending,
+      fundingPayoutsUnrecorded: unrecordedPayoutIds.length,
       depositsBooking: depositCount(depositRows, 'session') + depositCount(depositRows, 'mixing') + depositCount(depositRows, 'deposit'),
       depositsShow: depositCount(depositRows, 'ticket'),
       depositsFunding: Number(fundingDepositRows[0]?.count ?? 0),

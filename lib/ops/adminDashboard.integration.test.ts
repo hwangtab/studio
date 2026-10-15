@@ -148,6 +148,7 @@ it('대기열 건수 — 믹싱 착수 대기·작업 중, 구독 카드 대기�
     artistPayoutsPending: 0,
     fundingProjectsAwaitingReview: 2,
     fundingPayoutsPending: 0,
+    fundingPayoutsUnrecorded: 0,
     depositsBooking: 0,
     depositsShow: 0,
     depositsFunding: 0,
