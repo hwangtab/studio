@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getDb } from '../../../db/client';
 import { orders } from '../../../db/schema';
-import { getPaymentLink } from '../../../data/paymentLinks';
 import { splitInclusiveAmount } from '../../../lib/booking/amounts';
 import { deliverBookingDepositGuide } from '../../../lib/booking/bankDeposit';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
@@ -11,9 +10,11 @@ import { validateCustomerContact } from '../../../lib/booking/validation';
 import { getClientIp } from '../../../lib/contracts/client-ip';
 import { BANK_DEPOSIT_GUIDE_DAYS } from '../../../lib/payments/bankAccount';
 import { AWAITING_DEPOSIT, bankDepositDeadlineOf, isCheckoutPaymentMethod } from '../../../lib/payments/bankDeposit';
+import { findPaymentLink } from '../../../lib/payments/paymentLinks';
 
 /**
- * 예약금 결제 링크의 주문 생성. 금액·품목명은 요청 본문을 보지 않고 **data/paymentLinks.ts에서만** 읽는다.
+ * 예약금 결제 링크의 주문 생성. 금액·품목명은 요청 본문을 보지 않고 **링크 정의(DB 표 payment_links → 옛 파일 data/paymentLinks.ts)에서만** 읽는다.
+ * 링크는 관리자 `/admin/payment-links`·`scripts/pay-link.mjs`가 만든다(lib/payments/paymentLinks.ts).
  *
  * `paymentMethod: 'bank_transfer'`면 토스 홀드(`pending`) 없이 `awaiting_deposit`으로 바로 만들고 입금 안내
  * 메일을 보낸다(lib/payments/bankDeposit.ts — 믹싱 주문 API와 같은 방식). 없으면 토스.
@@ -28,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const body = (typeof req.body === 'object' && req.body !== null ? req.body : {}) as Record<string, unknown>;
   const now = new Date();
-  const link = getPaymentLink(body.slug, now);
+  const link = await findPaymentLink(body.slug, now);
   if (!link) return res.status(404).json({ ok: false, message: '결제 링크를 찾을 수 없어요.' });
 
   const customer = validateCustomerContact(body);

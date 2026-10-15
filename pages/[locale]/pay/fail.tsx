@@ -5,7 +5,7 @@
 import Head from 'next/head';
 
 import { getSiteConfig } from '../../../data/siteConfig';
-import { getPaymentLink } from '../../../data/paymentLinks';
+import { findPaymentLink } from '../../../lib/payments/paymentLinks';
 import { withI18nServerProps } from '../../../lib/getStatic';
 import { useReportPaymentFailureOnMount } from '../../../utils/reportPaymentFailure';
 import { Button } from '../../../components/ui/Button';
@@ -96,7 +96,7 @@ export const getServerSideProps = withI18nServerProps<PayFailProps>(async ({ que
   const safeOrderNo =
     typeof orderId === 'string' && ORDER_NO_PATTERN.test(orderId.toUpperCase()) ? orderId.toUpperCase() : null;
   // 쿼리의 slug를 그대로 경로에 넣지 않는다 — 실제 결제 링크일 때만 되돌아가는 주소를 만든다.
-  const retryHref = typeof slug === 'string' && getPaymentLink(slug) ? `/ko/pay/${slug}` : null;
+  const retryHref = typeof slug === 'string' && (await findPaymentLink(slug)) ? `/ko/pay/${slug}` : null;
   return {
     props: {
       code: safeCode,

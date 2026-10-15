@@ -42,6 +42,7 @@ export const ADMIN_NAV: readonly AdminNavItem[] = [
   { href: '/admin/shop', label: '상점' },
   { href: '/admin/software', label: '소프트웨어' },
   { href: '/admin/subscriptions', label: '구독' },
+  { href: '/admin/payment-links', label: '결제 링크' },
   { href: '/admin/artists', label: '아티스트' },
   { href: '/admin/privacy-logs', label: '접속기록' },
 ] as const;

@@ -3,6 +3,10 @@ import { VOCAL_PACKAGE_PRICE } from './pricing';
 import { VAT_RATE } from '../lib/booking/amounts';
 
 /**
+ * **옛 파일 링크**(읽기 전용). 새 링크는 여기 추가하지 않는다 — 관리자 `/admin/payment-links` 또는 `npx tsx scripts/pay-link.ts create …`가
+ * DB 표 `payment_links`에 바로 만든다(배포 없이 즉시 열린다, 2026-10-15). 조회는 DB → 이 파일 순서다(lib/payments/paymentLinks.ts).
+ * 이 파일의 링크는 계속 동작하고, 닫으려면 `expiresOn`을 지난 날짜로 둔다.
+ *
  * 운영자가 만든 비공개 예약금 결제 링크. 주소는 `/ko/pay/<slug>`.
  *
  * - slug는 추측할 수 없는 무작위 값이다(`node -e "console.log(require('crypto').randomBytes(12).toString('hex'))"`).

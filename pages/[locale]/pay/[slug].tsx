@@ -5,7 +5,7 @@
 import Head from 'next/head';
 
 import { getSiteConfig } from '../../../data/siteConfig';
-import { getPaymentLink } from '../../../data/paymentLinks';
+import { findPaymentLink } from '../../../lib/payments/paymentLinks';
 import { formatPriceAmount } from '../../../data/pricing';
 import { splitInclusiveAmount } from '../../../lib/booking/amounts';
 import { withI18nServerProps } from '../../../lib/getStatic';
@@ -81,7 +81,7 @@ export const getServerSideProps = withI18nServerProps<PayLinkProps>(async ({ par
   res.setHeader('Cache-Control', 'private, no-store');
   if (params?.locale !== 'ko') return { notFound: true };
   const slug = params?.slug;
-  const link = getPaymentLink(slug);
+  const link = await findPaymentLink(slug);
   if (!link || typeof slug !== 'string') return { notFound: true };
   const amounts = splitInclusiveAmount(link.totalAmount);
   return {
