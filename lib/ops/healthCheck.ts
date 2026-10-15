@@ -1,4 +1,4 @@
-import { and, eq, inArray, isNotNull, isNull, lt, or, sql } from 'drizzle-orm';
+import { and, eq, gte, inArray, isNotNull, isNull, lt, or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { adminUrl, buildEmailLayout, escapeHtml } from '../email/layout';
@@ -282,6 +282,15 @@ export const checkFieldKeyRotationPending = async (): Promise<HealthIssue | null
  */
 /** 발송하지 않은 초안을 이 기간 넘게 두면 운영자에게 정리를 청한다(개인정보를 계속 들고 있게 되므로). */
 export const STALE_CONTRACT_DRAFT_DAYS = 90;
+
+/**
+ * "서명 기한이 지난 계약" 알림이 만료 뒤 며칠까지 남는가.
+ *
+ * 운영자가 관리자 계약 목록을 열면 기한 지난 발송 계약이 `expired`로 내려가므로(`expireOverdueContracts`),
+ * `sent`만 세면 재발송·취소를 하기도 전에 알림이 사라졌다. 그래서 `expired`도 센다. 다만 취소·삭제하지
+ * 않은 만료 계약이 영구히 알림에 남지 않도록 만료 뒤 이 기간까지만 센다 — 그 뒤에도 목록에서 처리할 수는 있다.
+ */
+export const STALE_UNSIGNED_CONTRACT_WINDOW_DAYS = 30;
 /** 서명 직후 후처리(PDF·메일)가 끝나는 데 충분한 시간. 이보다 오래 notifiedAt이 비어 있으면 후처리가 죽은 것이다. */
 const SIGNED_NOTIFICATION_GRACE_MS = 30 * 60 * 1000;
 
@@ -336,7 +345,7 @@ export const checkContractHygiene = async (now: Date): Promise<HealthIssue[]> =>
       title: `서명은 끝났지만 후처리 기록이 없는 계약 ${unnotified.length}건`,
       detail:
         '서명 완료 메일·PDF 보관이 끝났다는 기록(notifiedAt)이 없습니다. 서명 직후 처리가 시간 초과 등으로 중단됐을 수 있습니다. ' +
-        '관리자 계약 상세에서 PDF 보관과 메일 발송 여부를 확인하고, 필요하면 "서명본 재발송"을 눌러 주세요.',
+        '관리자 계약 상세에서 PDF 보관과 메일 발송 여부를 확인하고, 필요하면 "완료 메일 재발송"을 눌러 주세요.',
       href: '/admin/contracts',
     });
   }
@@ -1108,13 +1117,24 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   }
 
   /**
-   * 발송했는데 서명되지 않은 채 기한이 지난 계약. 고객이 링크를 놓쳤을 수 있는데,
-   * 지금은 관리자가 목록을 열어야만 보인다.
+   * 발송했는데 서명되지 않은 채 기한이 지난 계약. 고객이 링크를 놓쳤을 수 있다.
+   *
+   * `sent`뿐 아니라 `expired`도 센다 — 목록을 여는 순간 `sent`가 `expired`로 내려가므로, `sent`만 보면
+   * 운영자가 알림을 보고 목록을 연 순간 재발송·취소 전에 알림이 사라진다. 재발송하면 `sent`+새 기한,
+   * 취소하면 `cancelled`라 알림이 자연히 내려간다. 만료 뒤 STALE_UNSIGNED_CONTRACT_WINDOW_DAYS일까지만 센다.
    */
+  const staleWindowStart = new Date(now.getTime() - STALE_UNSIGNED_CONTRACT_WINDOW_DAYS * 24 * 60 * 60 * 1000);
   const staleUnsigned = await db
     .select({ customerName: contracts.customerName })
     .from(contracts)
-    .where(and(eq(contracts.status, 'sent'), lt(contracts.expiresAt, now)));
+    .where(
+      and(
+        inArray(contracts.status, ['sent', 'expired']),
+        lt(contracts.expiresAt, now),
+        gte(contracts.expiresAt, staleWindowStart),
+        isNull(contracts.purgedAt),
+      ),
+    );
 
   if (staleUnsigned.length > 0) {
     issues.push({
@@ -1123,7 +1143,7 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
       title: `서명 기한이 지난 계약 ${staleUnsigned.length}건`,
       detail:
         `대상: ${sample(staleUnsigned.map((row) => row.customerName))}\n` +
-        '고객이 링크를 놓쳤을 수 있습니다. 재발송하거나 계약을 취소해 주세요.',
+        `고객이 링크를 놓쳤을 수 있습니다. 재발송하거나 계약을 취소해 주세요. (만료 후 ${STALE_UNSIGNED_CONTRACT_WINDOW_DAYS}일까지 표시)`,
     });
   }
 
@@ -1156,8 +1176,9 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
 
   issues.push(...(await collectDbIssues(now)));
 
-  // 반드시 collectDbIssues 뒤에 부른다: 이 함수가 기한 지난 발송 계약을 expired로 내리므로, 앞에 오면
-  // collectDbIssues의 "서명 기한이 지난 계약" 알림(고객이 링크를 놓쳤다는 신호)이 사라진다.
+  // collectDbIssues 뒤에 부르는 순서를 유지한다: 이 함수가 기한 지난 발송 계약을 expired로 내린다.
+  // "서명 기한이 지난 계약" 알림은 이제 expired도 세므로 순서에 덜 민감하지만, 같은 실행 안에서
+  // 상태가 바뀌기 전의 값으로 점검하는 쪽이 다른 점검과 일관된다.
   issues.push(...(await checkContractHygiene(now)));
 
   return { issues: sortBySeverity(issues), checkedAt: now };
