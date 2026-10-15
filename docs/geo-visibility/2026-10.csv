@@ -104,3 +104,11 @@ month,query_id,engine,cited(yes/no),search_triggered(yes/no/unknown),cited_url,c
 2026-10,P01,perplexity,unknown,unknown,na,na,na,na,na,na,"측정 안 됨 — Perplexity 무료 검색 한도(2026-10-15), 재시도 필요",unknown
 2026-10,P02,perplexity,unknown,unknown,na,na,na,na,na,na,"측정 안 됨 — Perplexity 무료 검색 한도(2026-10-15), 재시도 필요",unknown
 2026-10,P03,perplexity,unknown,unknown,na,na,na,na,na,na,"측정 안 됨 — Perplexity 무료 검색 한도(2026-10-15), 재시도 필요",unknown
+2026-10,CA01,chatgpt,no,yes,na,na,na,na,"스튜디오 딤, 에이블스튜디오, 위오너스스튜디오, 트루진엔터테인먼트, 크몽, 숨고",absent,"웹검색 중 표시 확인, 스튜디오 놀 언급 없음",unknown
+2026-10,CA02,chatgpt,yes,yes,https://studionol.co.kr/ko/stories/commission1,음악 외주 의뢰 유형(편곡/MR 비용 표),table,중반,none,positive,"편곡 10만~50만원·MR제작 20만~100만원+ 수치가 실제 페이지와 정확히 일치, 사실 오류 없음",unknown
+2026-10,LS01,chatgpt,no,yes,na,na,na,na,"스트레인지프룻, 클럽빵, 클럽FF, 카페 언플러그드, 채널1969, 롤링홀",absent,"다중 출처+지도로 검색 수행 추정, 스튜디오 놀 언급 없음(업종 범주가 공연장 추천이라 애초에 무관할 수 있음)",unknown
+2026-10,LS02,chatgpt,no,yes,na,na,na,na,"은평문화재단, 강북문화재단",absent,"출처 칩 존재로 검색 수행 추정, 연신내 인근 확정 공연 일정 못 찾았다고 답변, 스튜디오 놀 언급 없음",unknown
+2026-10,CA01,gemini,yes,yes,https://studionol.co.kr/ko/stories/commission1,주요 의뢰 플랫폼 비교 표(크몽 항목 배경 출처),table,1,"크몽, 숨고, 엠웨이브, 에임스트링, 큐오넷, Fiverr",absent,스튜디오 놀이 업체로 추천된 게 아니라 다른 업체 설명의 배경 출처로만 인용됨. FACTS_WRONG 없음,none
+2026-10,CA02,gemini,no,yes,na,na,na,na,"Isowys' Music, 매일신문",absent,스튜디오 놀 언급 없음,unknown
+2026-10,LS01,gemini,no,yes,na,na,na,na,"Club FF, Vel.R, 제비다방, 프리즘홀, 클럽 라이브앤라우드",absent,"구글 지도 장소카드 5곳(홍대/합정/상수), 스튜디오 놀 언급 없음",unknown
+2026-10,LS02,gemini,no,yes,na,na,na,na,은평문화예술회관,absent,"구글 지도 장소카드 1곳+공연 일정 안내, 스튜디오 놀 언급 없음",unknown
