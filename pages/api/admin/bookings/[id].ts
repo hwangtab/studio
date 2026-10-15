@@ -78,6 +78,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(404).json({ ok: false, message: '예약을 찾을 수 없습니다.' });
     }
 
+    // 결제가 확정되지 않은 주문의 예약(미정합 — 결제 기록과 주문 상태가 어긋난 건)은 완료·노쇼로 닫지 않는다. 그런 건은 목록에서
+    // 미정합 배지로 먼저 바로잡을 대상이고, 닫아 버리면 후기 요청 메일 판정과 매출이 사실과 달라진다.
+    if (order.status !== 'paid' && order.status !== 'partially_refunded') {
+      return res.status(409).json({ ok: false, message: '결제가 확정되지 않은 주문입니다. 결제 상태를 먼저 확인해 주세요.' });
+    }
+
     // 시작도 안 한 세션을 완료·노쇼로 닫으면 안 된다 — 후기 요청 메일과 노쇼 기록의 근거가 사실과 달라진다.
     // 시작 시각부터는 허용한다(노쇼는 시작 직후에 확정하는 경우가 흔하다).
     if (booking.startAt.getTime() > Date.now()) {

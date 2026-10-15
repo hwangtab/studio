@@ -568,7 +568,9 @@ export default function AdminBookingDetailPage({
             {notificationCopy.detail}
             <span className="block mt-2 text-amber-700">
               {notificationCopy.kind === 'failure'
-                ? '고객이 예약 확정 또는 취소 메일을 받지 못했을 수 있습니다. '
+                ? isDeposit
+                  ? '고객이 입금 확인 또는 환불 안내 메일을 받지 못했을 수 있습니다. '
+                  : '고객이 예약 확정 또는 취소 메일을 받지 못했을 수 있습니다. '
                 : ''}
               {/* 믹싱·마스터링 주문에는 재발송 버튼이 없다(bookings 행이 없어 API도 409를
                   준다). 없는 버튼을 가리키면 운영자가 화면을 뒤지게 되므로 안내를 가른다. */}
@@ -807,7 +809,7 @@ export default function AdminBookingDetailPage({
                 </Button>
               )}
 
-              {!canChangeStatus && !canResend && !canStartWork && !canDeliver && (
+              {!canChangeStatus && !canResend && !canStartWork && !canDeliver && !canRefund && (
                 <p className="text-sm text-gray-500">
                   {isMixing || isDeposit
                     ? '지금 상태에서는 가능한 작업이 없습니다.'

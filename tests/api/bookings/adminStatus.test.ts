@@ -74,6 +74,13 @@ describe('PATCH 완료·노쇼', () => {
     expect(await bookingStatus('future')).toBe('confirmed');
   });
 
+  it('결제가 확정되지 않은 주문의 예약은 닫지 않는다 — 미정합 건', async () => {
+    await insertSession('unpaid', -1);
+    await client.execute("UPDATE orders SET status = 'failed' WHERE id = 'unpaid'");
+    expect((await patch('unpaid', 'no_show')).status).toBe(409);
+    expect(await bookingStatus('unpaid')).toBe('confirmed');
+  });
+
   it('시작한 예약은 노쇼·완료로 바꾼다 — 두 번째는 409', async () => {
     await insertSession('started', -1);
     expect((await patch('started', 'no_show')).status).toBe(200);

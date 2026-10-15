@@ -159,4 +159,10 @@ describe('예약금(deposit) 주문 환불', () => {
     render(<AdminBookingDetailPage booking={{ ...DEPOSIT, orderStatus: 'refunded', refundableAmount: 0 }} />);
     expect(refundForm()).not.toBeInTheDocument();
   });
+
+  it('메일 실패 안내가 예약 확정·취소가 아니라 입금 확인·환불 안내 메일을 말한다', () => {
+    render(<AdminBookingDetailPage booking={{ ...DEPOSIT, notificationError: 'API_ERROR' }} />);
+    expect(screen.getByText(/입금 확인 또는 환불 안내 메일을 받지 못했을 수 있습니다/)).toBeInTheDocument();
+    expect(screen.queryByText(/예약 확정 또는 취소 메일/)).not.toBeInTheDocument();
+  });
 });
