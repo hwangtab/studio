@@ -212,7 +212,7 @@ export default function ShowScanPage({ token, showTitle, showtimeLabel, linkLabe
               autoCorrect="off"
               spellCheck={false}
               placeholder="SNT1:…"
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900 placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-3 text-base text-gray-900 placeholder:text-[#767676] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             />
             <Button light type="submit" fullWidth disabled={busy || !manual.trim()}>확인</Button>
           </form>

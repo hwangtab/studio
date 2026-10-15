@@ -8,11 +8,12 @@ import { cn } from '../../lib/utils';
  */
 export const fieldControlClass = cn(
   'w-full rounded-lg border px-3 py-2 typo-body',
-  // 플레이스홀더 명암을 뒤집지 말 것. 이 저장소는 gray-500을 접근성 때문에 #4b5563으로
-  // 어둡게 조정했고(tailwind.config.ts) gray-400은 스톡 #9ca3af 그대로다. 따라서 라이트
-  // (on #fff)는 gray-500(7.56:1), 다크(on gray-800 #111827)는 gray-400(6.99:1)이 맞다.
-  // 뒤집으면 각각 2.54:1 · 2.35:1로 AA(4.5:1)에 한참 못 미친다.
-  'bg-white text-gray-900 placeholder:text-gray-500',
+  // 라이트 플레이스홀더는 gray-500이 아니라 #767676(on #fff 4.54:1, AA 하한)이다. 이 저장소의
+  // gray-500은 접근성 때문에 #4b5563으로 어둡게 조정돼 있어(tailwind.config.ts) 입력값(gray-900)과
+  // 거의 구분이 안 됐고, "010-1234-5678" 예시가 이미 입력된 값으로 읽혔다(2026-10-15 운영자 지적).
+  // gray-400(#9ca3af)까지 내리면 2.54:1로 AA 미달이니 더 연하게 하지 말 것.
+  // 다크(on gray-800 #111827)는 gray-400(6.99:1)이 맞다.
+  'bg-white text-gray-900 placeholder:text-[#767676]',
   'dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400',
   'border-gray-300 dark:border-gray-600',
   // transition 클래스는 없다. ring은 box-shadow로 그려져 보간하면 포커스 링이 duration만큼
@@ -32,7 +33,7 @@ const invalidClass = 'border-red-500 dark:border-red-500';
  * 붙인다. 반경·포커스 같은 나머지 규칙은 `fieldControlClass`를 그대로 따른다.
  */
 export const lightOnlyControl =
-  'dark:bg-white dark:text-gray-900 dark:border-gray-300 dark:placeholder:text-gray-400 dark:focus-visible:ring-offset-white';
+  'dark:bg-white dark:text-gray-900 dark:border-gray-300 dark:placeholder:text-[#767676] dark:focus-visible:ring-offset-white';
 
 /**
  * `light`는 prop으로 받는다 — 호출부가 `className`으로 넘기면 twMerge 순서상
