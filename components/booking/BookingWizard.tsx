@@ -5,6 +5,7 @@ import { reportPaymentFailure } from '../../utils/reportPaymentFailure';
 import PriceBreakdown from './PriceBreakdown';
 import PaymentMethodPicker from '../payments/PaymentMethodPicker';
 import { usePaymentCheckout } from '../payments/usePaymentCheckout';
+import { useScrollTopOnStep } from '../payments/useScrollTopOnStep';
 import { Button } from '../ui/Button';
 import { computeAmounts } from '../../lib/booking/amounts';
 import { BOOKING_CUSTOMER_DRAFT_KEY, CUSTOMER_DRAFT_FIELDS } from '../../lib/booking/customerDraft';
@@ -100,6 +101,7 @@ export default function BookingWizard({ service, products, initialProductId }: B
   const firstProduct = products.find((p) => p.id === initialProductId) ?? products[0];
 
   const [step, setStep] = useState<Step>(1);
+  useScrollTopOnStep(step);
 
   // Step 1: 상품 · 시간
   const [selectedProductId, setSelectedProductId] = useState(firstProduct.id);

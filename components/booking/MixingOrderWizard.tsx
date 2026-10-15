@@ -6,6 +6,7 @@ import { reportPaymentFailure } from '../../utils/reportPaymentFailure';
 import PriceBreakdown from './PriceBreakdown';
 import PaymentMethodPicker from '../payments/PaymentMethodPicker';
 import { usePaymentCheckout } from '../payments/usePaymentCheckout';
+import { useScrollTopOnStep } from '../payments/useScrollTopOnStep';
 import { Button } from '../ui/Button';
 import { formatPriceAmount, VOCAL_TUNING_ADDON_PRICE } from '../../data/pricing';
 import { CUSTOMER_DRAFT_FIELDS, MIXING_CUSTOMER_DRAFT_KEY } from '../../lib/booking/customerDraft';
@@ -86,6 +87,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
   const firstProduct = getMixingProduct(initialProductId ?? '') ?? MIXING_PRODUCTS[0];
 
   const [step, setStep] = useState<Step>(1);
+  useScrollTopOnStep(step);
   const [mixCompareOpened, setMixCompareOpened] = useState(false);
 
   // Step 1: 상품 · 곡 수 · 튜닝
