@@ -93,15 +93,15 @@ npm run indexnow:changed -- --dry-run
 - 새 `content/funding/<slug>.md`의 slug는 승인된 DB 프로젝트의 slug와 겹치면 안 된다 — 다른 개설자의 후원자 배송지가 노출된다.
 - 마이그레이션 0037·0039·0041~0044는 배포보다 먼저 적용한다 — 결제 확인 경로가 새 표·컬럼을 함께 읽어 순서를 뒤집으면 결제 확인 전체가 깨진다. 0048(결제 공용 환불 계좌 `refund_accounts`)도 먼저 — 결제는 안 깨지지만 환불 계좌 접수·조회가 실패한다.
 
-### 계좌 입금(무통장)은 펀딩·예약·믹싱·공연 공통이다 — 자동 취소 없음, 자원은 잡는다
+### 계좌 입금(무통장)은 펀딩·예약·믹싱·공연·상점 공통이다 — 자동 취소 없음, 자원은 잡는다
 
 **결제수단의 계좌 줄은 "계좌로 직접 입금"(우리 계좌번호 안내)이다. 토스 계좌이체(`method: 'TRANSFER'`)는 쓰지 않는다**
 (운영자 결정 2026-10-14). 은행을 고르면 금융결제원 뱅크페이 결제창이 무조건 떠서, PC에서는 은행 보안 프로그램 설치를,
 모바일에서는 뱅크페이·은행 앱 전환을 요구해 고령층이 사실상 쓰지 못한다(실제 화면으로 확인). 그래서 2026-10-12의
 "공연은 직접 입금을 접고 토스 계좌이체로"를 되돌렸다 — 직접 입금은 환불이 생기면 환불 계좌를 받아 손으로 송금해야 한다는
-부담을 알고 내린 결정이다. 입금 흐름이 있는 화면(펀딩·예약·믹싱·예약금 링크·공연)만 `PaymentMethodPicker`에 `withBank`를 주고,
-입금 확인 경로가 없는 화면(소프트웨어, 상점 — 상점은 입금 흐름을 새로 만들기 전까지)은 주지 않는다 — 가드 테스트가 지킨다.
-결제 실패 화면(`booking/fail`·`funding/fail`·`shows/fail`·`pay/fail`)은 "계좌로 직접 입금" 버튼을 한 번 더 권한다(`FailBankFallback`,
+부담을 알고 내린 결정이다. 입금 흐름이 있는 화면(펀딩·예약·믹싱·예약금 링크·공연·상점)만 `PaymentMethodPicker`에 `withBank`를 주고,
+입금 확인 경로가 없는 화면(소프트웨어 — 키 즉시 발급과 맞지 않는다)은 주지 않는다 — 가드 테스트가 지킨다.
+결제 실패 화면(`booking/fail`·`funding/fail`·`shows/fail`·`shop/fail`·`pay/fail`)은 "계좌로 직접 입금" 버튼을 한 번 더 권한다(`FailBankFallback`,
 폼 주소에 `?bank=1`을 붙여 돌려보내면 폼이 계좌 줄을 고른 채 열린다 — `lib/payments/bankFallback.ts`).
 
 규칙 전체는 `lib/payments/bankDeposit.ts` 머리 주석(공연·예약·믹싱)과 `lib/funding/CLAUDE.md`(펀딩).
@@ -189,7 +189,7 @@ SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이�
 
 ### 상점(음반·굿즈)은 `lib/shop/CLAUDE.md`를 먼저 읽는다
 
-`/ko/shop`. 상품 정의는 `data/shop/catalog.ts`, 재고는 DB(계산값), 결제는 지금 카드·간편결제(토스)뿐(직접 입금 흐름은 아직 없다 — 2026-10-14 결정으로 만들 예정).
+`/ko/shop`. 상품 정의는 `data/shop/catalog.ts`, 재고는 DB(계산값), 결제는 카드·간편결제(토스)와 계좌로 직접 입금(2026-10-14 도입, `lib/shop/bankDeposit.ts`).
 **`SHOP_SALES_OPEN`(data/shop/policy.ts)이 false인 동안 주문을 받지 않는다** — 켜기 전 체크리스트(마이그레이션 0052 → 처리방침
 개정·판본 → 상품·재고 → 켜기 → 메뉴·사이트맵)가 그 파일에 있다. 새 주문 종류를 만들면 `lib/booking/webhook.ts`의 type 분기를
 먼저 넣을 것 — 모르는 type은 예약 확정으로 떨어진다.
@@ -417,7 +417,7 @@ SDK가 `payment()` 경로에서 `isAPIIndividualKey()`를 단언한다 — 위�
 ### 새 결제 흐름은 공용 체크아웃으로 만든다 — 토스 SDK를 직접 쓰지 않는다
 
 결제 화면(펀딩·예약·믹싱·예약금 링크)은 전부 `usePaymentCheckout`(결제창 열기) + `PaymentMethodPicker`(토스 수단 목록) +
-`BankDepositGuide`(계좌 안내)로 같은 모양이다(`PaymentMethodPicker withBank` — 소프트웨어·상점은 입금 확인 흐름이 없어 계좌 줄이 없다).
+`BankDepositGuide`(계좌 안내)로 같은 모양이다(`PaymentMethodPicker withBank` — 소프트웨어는 입금 확인 흐름이 없어 계좌 줄이 없다).
 새 결제 링크·상품을 붙일 때 계좌 줄을 빼먹으면 결제가 막힌 고객이 갈 곳이 없다. 2026-10-06 예약금 결제 링크(`/ko/pay/<slug>`)가 "코드를 가장 적게 쓰는 설계"로, 쓰는 곳 없던 카드
 전용 `TossPaymentWidget`을 골라 계좌 입금 없이 PR까지 나갔다 — 운영자가 보고서가 아니라 화면에서 발견했다.
 

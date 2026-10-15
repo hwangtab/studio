@@ -53,7 +53,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 };
 
 const FULFILLMENT_LABEL: Record<string, string> = { preparing: '발송 준비', shipped: '발송함', delivered: '배송 완료', cancelled: '취소' };
-const STATUS_LABEL: Record<string, string> = { paid: '결제 완료', partially_refunded: '부분 환불', refunded: '환불', auto_cancel_pending: '자동 취소 중' };
+const STATUS_LABEL: Record<string, string> = { paid: '결제 완료', partially_refunded: '부분 환불', refunded: '환불', auto_cancel_pending: '자동 취소 중', awaiting_deposit: '입금 대기', deposit_cancelled: '미입금 취소' };
 const kst = (sec: number) => new Date(sec * 1000).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
 function StockRow({ row }: { row: AdminSkuStockRow }) {

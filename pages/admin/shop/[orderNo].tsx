@@ -7,6 +7,7 @@ import { AdminShell } from '../../../components/admin/AdminShell';
 import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { remainingRefundable } from '../../../lib/booking/cancel';
+import { isBankDepositPayment } from '../../../lib/payments/bankDeposit';
 import { shopLineName } from '../../../lib/shop/catalog';
 import { resolveOrderShipper } from '../../../lib/shop/artistShipping';
 import { getFirstDownloadedAt } from '../../../lib/shop/downloads';
@@ -29,6 +30,8 @@ interface Props {
   totalAmount: number;
   refundable: number;
   paymentMethod: string | null;
+  /** 계좌 입금으로 확정된 주문 — 환불은 토스가 아니라 운영자 송금 뒤 기록이다. */
+  bankPaid: boolean;
   receiptUrl: string | null;
   courier: string | null;
   trackingNumber: string | null;
@@ -72,6 +75,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
       totalAmount: order.totalAmount,
       refundable: remainingRefundable(order, order.payments),
       paymentMethod: payment?.method ?? null,
+      bankPaid: order.payments.some(isBankDepositPayment),
       receiptUrl: payment?.receiptUrl ?? null,
       courier: so.courier,
       trackingNumber: so.trackingNumber,
@@ -83,7 +87,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 };
 
 const kst = (sec: number) => new Date(sec * 1000).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-const PAYMENT_LABEL: Record<string, string> = { pending: '결제 대기', paid: '결제 완료', partially_refunded: '부분 환불', refunded: '환불', auto_cancel_pending: '자동 취소 중', expired: '만료', failed: '결제 실패' };
+const PAYMENT_LABEL: Record<string, string> = { pending: '결제 대기', paid: '결제 완료', partially_refunded: '부분 환불', refunded: '환불', auto_cancel_pending: '자동 취소 중', expired: '만료', failed: '결제 실패', awaiting_deposit: '입금 대기', deposit_cancelled: '미입금 취소' };
 const FULFILLMENT_LABEL: Record<string, string> = { preparing: '발송 준비', shipped: '발송함', delivered: '배송 완료', cancelled: '취소' };
 const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
 const buttonClass = 'rounded-lg bg-gray-900 px-4 py-2 text-white disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
@@ -138,6 +142,18 @@ export default function AdminShopOrderPage(p: Props) {
           <p className="mt-1 text-gray-600">결제수단 {p.paymentMethod ?? '-'}{p.receiptUrl && <> · <a href={p.receiptUrl} target="_blank" rel="noreferrer" className="text-primary hover:underline">영수증</a></>} · 환불 가능 잔액 {formatPriceAmount(p.refundable)}원</p>
         </section>
 
+        {p.status === 'awaiting_deposit' && (
+          <section className="mb-6 rounded-2xl border-2 border-amber-300 bg-amber-50 p-4 text-sm text-amber-950 shadow-sm md:p-6">
+            <h2 className="mb-2 text-lg font-bold">계좌 입금 대기</h2>
+            <p className="mb-3">통장에 <strong>{p.customer.name}</strong> 이름으로 <strong>{formatPriceAmount(p.totalAmount)}원</strong>이 들어왔는지 확인하고 <strong>입금 확인</strong>을 눌러 주세요. 확인하면 주문이 확정되고 고객에게 메일이 가요. 자동 취소는 없어요 — 입금하지 않을 것 같으면 <strong>미입금 취소</strong>로 닫아 재고를 풀어 주세요.</p>
+            <div className="flex flex-wrap gap-2">
+              <button type="button" disabled={busy} onClick={() => act({ action: 'confirm_deposit' }, `${formatPriceAmount(p.totalAmount)}원 입금을 확인했나요? 주문이 확정됩니다.`)} className={buttonClass}>입금 확인</button>
+              <button type="button" disabled={busy} onClick={() => act({ action: 'cancel_deposit' }, '미입금으로 취소할까요? 잡아 둔 재고가 풀립니다.')} className={buttonClass}>미입금 취소</button>
+              <button type="button" disabled={busy} onClick={() => act({ action: 'resend_deposit_guide' })} className={buttonClass}>입금 안내 재발송</button>
+            </div>
+          </section>
+        )}
+
         <section className="mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
           <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-gray-900">{p.ships ? '주문자·받는 분' : '주문자'}</h2>
           {p.ships && <p className="mb-1">발송 {p.shipper.kind === 'artist' ? `아티스트 발송: ${p.shipper.name}` : '스튜디오 발송'}</p>}
@@ -181,7 +197,11 @@ export default function AdminShopOrderPage(p: Props) {
                 고객이 {kst(p.downloadedAt)}에 파일을 내려받았습니다. 환불하면 파일을 받은 채 돈을 돌려주게 됩니다. 파일 문제 등 환불할 사유인지 확인하세요.
               </div>
             )}
-            <p className="mb-3 text-gray-600">토스로 {formatPriceAmount(p.refundable)}원을 돌려주고 주문을 취소합니다. 발송한 뒤라면 반품을 받은 다음에 누르세요. 일부만 돌려줄 때는 토스 콘솔에서 하면 웹훅이 기록을 맞춥니다.</p>
+            {p.bankPaid ? (
+              <p className="mb-3 rounded-lg bg-amber-50 p-3 text-amber-900">계좌로 입금하신 주문이에요. 고객에게 환불 계좌를 받아 <strong>먼저 {formatPriceAmount(p.refundable)}원을 송금한 뒤</strong> 눌러 기록하세요. 토스는 부르지 않습니다. 발송한 뒤라면 반품을 받은 다음에 누르세요.</p>
+            ) : (
+              <p className="mb-3 text-gray-600">토스로 {formatPriceAmount(p.refundable)}원을 돌려주고 주문을 취소합니다. 발송한 뒤라면 반품을 받은 다음에 누르세요. 일부만 돌려줄 때는 토스 콘솔에서 하면 웹훅이 기록을 맞춥니다.</p>
+            )}
             <label className="block">사유<input value={reason} onChange={(e) => setReason(e.target.value)} placeholder="예: 반품 접수(불량)" className={`mt-1 ${inputClass}`} /></label>
             <button type="button" disabled={busy} onClick={() => act({ action: 'refund', reason }, `${p.downloadedAt ? `고객이 ${kst(p.downloadedAt)}에 파일을 내려받았습니다. ` : ''}${formatPriceAmount(p.refundable)}원을 환불할까요? 되돌릴 수 없습니다.`)} className={`mt-3 ${buttonClass}`}>
               전액 환불

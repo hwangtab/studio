@@ -37,7 +37,7 @@ export default function ShopIndexPage({ products, category, soldOut, indexable }
     <>
       <SEO
         title="음반·굿즈 | 스튜디오 놀"
-        description="스튜디오 놀과 아티스트들의 음반·굿즈·디지털 음원을 사이트에서 바로 주문해요. 카드·간편결제·계좌이체로 결제하고, 실물은 택배로 받고 디지털 상품은 바로 내려받아요."
+        description="스튜디오 놀과 아티스트들의 음반·굿즈·디지털 음원을 사이트에서 바로 주문해요. 카드·간편결제·계좌 입금으로 결제하고, 실물은 택배로 받고 디지털 상품은 바로 내려받아요."
         canonical="/ko/shop"
         availableLocales={['ko']}
         robots={indexable ? undefined : 'noindex, follow'}
