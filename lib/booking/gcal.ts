@@ -111,6 +111,66 @@ export const fetchBusyRanges = async (
   return busy.map((b) => ({ start: new Date(b.start), end: new Date(b.end) }));
 };
 
+/** 캘린더 일정 한 건(읽기용) — 사이트가 만들지 않은 일정도 포함한다. 종일 일정은 `allDay`(시각 없음). */
+export interface CalendarEventInfo {
+  id: string;
+  summary: string;
+  description: string;
+  start: Date;
+  end: Date;
+  allDay: boolean;
+}
+
+interface RawCalendarEvent {
+  id?: string; status?: string; summary?: string; description?: string; transparency?: string;
+  start?: { dateTime?: string; date?: string }; end?: { dateTime?: string; date?: string };
+}
+
+const toEventInfo = (e: RawCalendarEvent): CalendarEventInfo | null => {
+  if (!e.id || e.status === 'cancelled') return null;
+  const allDay = !e.start?.dateTime;
+  const start = new Date(e.start?.dateTime ?? (e.start?.date ? `${e.start.date}T00:00:00+09:00` : ''));
+  const end = new Date(e.end?.dateTime ?? (e.end?.date ? `${e.end.date}T00:00:00+09:00` : ''));
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return null;
+  return { id: e.id, summary: e.summary ?? '', description: e.description ?? '', start, end, allDay };
+};
+
+/**
+ * [timeMin, timeMax) 안의 일정 목록(시작순, 반복 일정은 펼쳐서, 취소된 일정 제외). **읽기 전용** — 사이트가 만든 일정과 손으로 넣은 일정을 다 돌려준다.
+ * 실패는 throw. 최대 250건(예약 캘린더라 충분하다).
+ */
+export const listCalendarEvents = async (
+  timeMin: Date, timeMax: Date, calendar: BookingCalendar, room?: string | null,
+): Promise<CalendarEventInfo[]> => {
+  const id = calendarId(calendar, room);
+  const token = await getAccessToken();
+  const params = new URLSearchParams({
+    timeMin: timeMin.toISOString(), timeMax: timeMax.toISOString(), singleEvents: 'true', orderBy: 'startTime', maxResults: '250',
+  });
+  const res = await fetch(`${CAL_API}/calendars/${encodeURIComponent(id)}/events?${params}`, {
+    headers: { Authorization: `Bearer ${token}` },
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+  });
+  if (!res.ok) throw new Error(`캘린더 일정 목록 조회 실패: ${res.status}`);
+  const json = (await res.json()) as { items?: RawCalendarEvent[] };
+  return (json.items ?? []).map(toEventInfo).filter((e): e is CalendarEventInfo => e !== null);
+};
+
+/** 일정 한 건. 없거나(404·410) 취소된 일정이면 null. 그 밖의 실패는 throw. */
+export const getCalendarEvent = async (
+  eventId: string, calendar: BookingCalendar, room?: string | null,
+): Promise<CalendarEventInfo | null> => {
+  const id = calendarId(calendar, room);
+  const token = await getAccessToken();
+  const res = await fetch(`${CAL_API}/calendars/${encodeURIComponent(id)}/events/${encodeURIComponent(eventId)}`, {
+    headers: { Authorization: `Bearer ${token}` },
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+  });
+  if (res.status === 404 || res.status === 410) return null;
+  if (!res.ok) throw new Error(`캘린더 일정 조회 실패: ${res.status}`);
+  return toEventInfo((await res.json()) as RawCalendarEvent);
+};
+
 export const createBookingEvent = async (input: {
   summary: string; description: string; start: Date; end: Date; calendar: BookingCalendar; room?: string | null;
 }): Promise<string> => {

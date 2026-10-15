@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 
 import { MIXING_PRODUCTS, mixingUnitAmount } from '../../lib/booking/mixing-products';
@@ -25,8 +25,27 @@ interface Result {
   orderId?: string;
 }
 
-export const ManualBookingPanel = ({ today, onCreated }: { today: string; onCreated: () => Promise<void> }) => {
+/** 캘린더에만 있던 일정을 사이트로 옮길 때 대시보드가 넘기는 값 — 시각을 채우고, 등록이 끝나면 원래 캘린더 일정을 지운다. */
+export interface ManualBookingPrefill {
+  eventId: string;
+  startAt: string;
+  endAt: string;
+  title: string;
+}
+
+const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
+
+export const ManualBookingPanel = ({
+  today,
+  onCreated,
+  prefill,
+}: {
+  today: string;
+  onCreated: () => Promise<void>;
+  prefill?: ManualBookingPrefill | null;
+}) => {
   const [open, setOpen] = useState(false);
+  const [adoptEventId, setAdoptEventId] = useState<string | null>(null);
   const [kind, setKind] = useState<'session' | 'mixing'>('session');
   const [productId, setProductId] = useState(sessionProducts[0].id);
   const [mixingId, setMixingId] = useState(MIXING_PRODUCTS[0].id);
@@ -44,6 +63,21 @@ export const ManualBookingPanel = ({ today, onCreated }: { today: string; onCrea
   const [note, setNote] = useState('');
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
+
+  useEffect(() => {
+    if (!prefill) return;
+    const start = new Date(prefill.startAt);
+    const end = new Date(prefill.endAt);
+    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return;
+    const kstStart = new Date(start.getTime() + KST_OFFSET_MS);
+    setOpen(true);
+    setKind('session');
+    setDate(kstStart.toISOString().slice(0, 10));
+    setStartHour(kstStart.getUTCHours());
+    setHours(Math.max(1, Math.round((end.getTime() - start.getTime()) / 3_600_000)));
+    setNote(prefill.title);
+    setAdoptEventId(prefill.eventId);
+  }, [prefill]);
 
   const session = sessionProducts.find((p) => p.id === productId) ?? sessionProducts[0];
   const mixing = MIXING_PRODUCTS.find((p) => p.id === mixingId) ?? MIXING_PRODUCTS[0];
@@ -68,6 +102,7 @@ export const ManualBookingPanel = ({ today, onCreated }: { today: string; onCrea
       totalAmount: amount.trim() === '' ? null : Number(amount.replace(/,/g, '')),
       received: received === 'yes',
       method,
+      ...(kind === 'session' && adoptEventId ? { adoptEventId } : {}),
       ...(kind === 'session'
         ? { productId, date, startHour, ...(session.kind === 'hourly' ? { hours } : {}) }
         : { productId: mixingId, songCount, vocalTuning: vocalTuning && mixing.tuningEligible }),
@@ -94,6 +129,7 @@ export const ManualBookingPanel = ({ today, onCreated }: { today: string; onCrea
         setEmail('');
         setAmount('');
         setNote('');
+        setAdoptEventId(null);
         await onCreated();
       }
     } catch {
@@ -116,6 +152,13 @@ export const ManualBookingPanel = ({ today, onCreated }: { today: string; onCrea
 
       {open && (
         <form onSubmit={submit} className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-6">
+          {adoptEventId && (
+            <div className="md:col-span-6">
+              <Notice tone="info">
+                구글 캘린더에 있던 일정을 옮기는 중이에요. 등록이 끝나면 원래 캘린더 일정은 지워지고 사이트 예약에서 새로 동기화돼요. 상품·고객·금액을 채워 주세요.
+              </Notice>
+            </div>
+          )}
           <Field id="mb-kind" label="종류" required className={`md:col-span-2 ${lightOnlyField}`}>
             <Select value={kind} onChange={(e) => setKind(e.target.value as 'session' | 'mixing')} light>
               <option value="session">세션·연습실 예약</option>

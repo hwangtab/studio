@@ -20,6 +20,9 @@ import { countPendingFundingPayouts } from '../funding/payout';
  * 그쪽 장애가 관리자 화면까지 막는다.
  */
 
+import { syncLinkEventsFromCalendar } from '../payments/linkCalendar';
+import { loadUnlinkedCalendarEvents, type UnlinkedCalendarEvent } from './calendarImport';
+
 export interface UpcomingSession {
   /** `booking` = 예약 시스템의 확정 세션, `link` = 결제 링크로 결제된 이용(링크에 적은 이용 일시 — 2026-10-15). */
   kind: 'booking' | 'link';
@@ -41,6 +44,10 @@ export interface AdminDashboard {
   issues: HealthIssue[];
   /** 오늘(KST 0시)부터 7일 안의 확정 세션, 시작 시각순. */
   upcomingSessions: UpcomingSession[];
+  /** 같은 창에서 **캘린더에만 있는** 일정(사이트 미등록) — "사이트에 등록"으로 가져온다(lib/ops/calendarImport.ts). */
+  calendarEvents: UnlinkedCalendarEvent[];
+  /** 캘린더를 못 읽었으면 문구(그 갈래만 비어 있다). */
+  calendarError: string | null;
   queues: {
     mixingReceived: number;
     mixingInProgress: number;
@@ -77,7 +84,10 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
   const from = startOfTodayKst(now);
   const to = new Date(from.getTime() + UPCOMING_WINDOW_DAYS * DAY_MS);
 
-  const [issues, sessions, linkSessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending] = await Promise.all([
+  // 캘린더 → 사이트: 운영자가 캘린더에서 옮기거나 지운 링크 일정을 먼저 주문에 반영한다(아래 "이번 주 세션" 조회가 그 값을 읽는다). 던지지 않는다.
+  await syncLinkEventsFromCalendar(now).catch(() => undefined);
+
+  const [issues, sessions, calendarImport, linkSessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending] = await Promise.all([
     collectDbIssues(now),
     db
       .select({
@@ -92,6 +102,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       .innerJoin(orders, eq(orders.id, bookings.orderId))
       .where(and(eq(bookings.status, 'confirmed'), gte(bookings.startAt, from), lt(bookings.startAt, to)))
       .orderBy(asc(bookings.startAt)),
+    loadUnlinkedCalendarEvents(from, to),
     // 결제 링크로 결제된 이용(예약 시스템에 행이 없다) — 링크에 적은 이용 일시가 이 창 안인 것. 표가 없는 DB(0062 전)에서도 대시보드는 열린다.
     db.all<{ order_id: string; order_no: string; customer_name: string; item_name: string; session_at: number; session_hours: number | null }>(sql`
       SELECT o.id AS order_id, o.order_no, o.customer_name, plo.item_name, plo.session_at, plo.session_hours
@@ -151,6 +162,8 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
         endAt: new Date((Number(row.session_at) + Number(row.session_hours ?? 1) * 3600) * 1000).toISOString(),
       })),
     ].sort((a, b) => a.startAt.localeCompare(b.startAt)),
+    calendarEvents: calendarImport.events,
+    calendarError: calendarImport.error,
     queues: {
       mixingReceived: countOf(mixingCounts, 'received'),
       mixingInProgress: countOf(mixingCounts, 'in_progress'),
