@@ -2,7 +2,7 @@
  * 관리자 첫 화면이 현황을 실제로 그리는지 — 점검 항목·대기열·이번 주 세션·장부 폼.
  * 현황 로딩이 죽어도 다른 관리 화면으로 가는 링크는 남아야 한다.
  */
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 jest.mock('next/router', () => ({ useRouter: () => ({ replace: jest.fn(), asPath: '/admin', pathname: '/admin' }) }));
@@ -94,6 +94,8 @@ it('현황 로딩이 실패하면 오류를 알리되 관리 화면 링크는 �
 
   render(<AdminIndexPage {...result.props} />);
   expect(screen.getByText(/불러오지 못했습니다/)).toBeInTheDocument();
+  // 구역 링크는 묶음(드롭다운) 안에 있다 — 열면 닿는다.
+  fireEvent.click(screen.getByRole('button', { name: '고객 업무' }));
   expect(screen.getByRole('link', { name: '구독' })).toHaveAttribute('href', '/admin/subscriptions');
   expect(screen.queryByText('처리할 일')).not.toBeInTheDocument();
   // 장부는 현황과 무관하다 — 점검이 죽어도 정산 CSV는 받을 수 있어야 한다.

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ChevronDown, X } from 'lucide-react';
@@ -29,24 +29,56 @@ export interface AdminNavItem {
 }
 
 /**
- * 상단 바의 구역. 순서는 쓰는 빈도가 아니라 업무 흐름을 따른다 —
- * 계약을 맺고(계약) → 일을 받고(예약·믹싱) → 모으고(펀딩) → 공연을 올리고(공연) → 매달 청구한다(구독) → 아티스트에게 지급한다(아티스트) → 얼마 벌었는지 본다(매출).
- * 접속기록은 업무가 아니라 그 업무를 되돌아보는 자리라 맨 뒤다.
+ * 상단 바 — 구역이 열둘로 늘어 한 줄에 다 펼치면 눈이 길을 잃어서, 업무가 가까운 것끼리 묶어 드롭다운으로 접었다.
+ * 대시보드만 늘 보이는 링크고 나머지는 묶음 이름을 눌러 연다.
+ *
+ * - 고객 업무: 들어온 일을 받아 처리한다 — 예약·믹싱 → 계약 → 구독(매달 청구) → 결제 링크.
+ * - 판매: 스튜디오가 여는 판 — 펀딩 · 공연 · 상점 · 소프트웨어.
+ * - 정산·기록: 돈과 기록을 되돌아본다 — 매출 → 아티스트 정산 → 접속기록.
+ *
+ * 새 구역을 더할 때는 **묶음 하나에 넣는다**(ADMIN_NAV는 여기서 펼친 목록이라 따로 고칠 곳이 없다).
  */
-export const ADMIN_NAV: readonly AdminNavItem[] = [
+export interface AdminNavGroup {
+  label: string;
+  items: readonly AdminNavItem[];
+}
+
+export type AdminNavEntry = AdminNavItem | AdminNavGroup;
+
+export const isNavGroup = (entry: AdminNavEntry): entry is AdminNavGroup => 'items' in entry;
+
+export const ADMIN_NAV_ENTRIES: readonly AdminNavEntry[] = [
   { href: '/admin', label: '대시보드' },
-  { href: '/admin/contracts', label: '계약' },
-  { href: '/admin/bookings', label: '예약·믹싱' },
-  { href: '/admin/funding', label: '펀딩' },
-  { href: '/admin/shows', label: '공연' },
-  { href: '/admin/shop', label: '상점' },
-  { href: '/admin/software', label: '소프트웨어' },
-  { href: '/admin/subscriptions', label: '구독' },
-  { href: '/admin/payment-links', label: '결제 링크' },
-  { href: '/admin/artists', label: '아티스트' },
-  { href: '/admin/revenue', label: '매출' },
-  { href: '/admin/privacy-logs', label: '접속기록' },
-] as const;
+  {
+    label: '고객 업무',
+    items: [
+      { href: '/admin/bookings', label: '예약·믹싱' },
+      { href: '/admin/contracts', label: '계약' },
+      { href: '/admin/subscriptions', label: '구독' },
+      { href: '/admin/payment-links', label: '결제 링크' },
+    ],
+  },
+  {
+    label: '판매',
+    items: [
+      { href: '/admin/funding', label: '펀딩' },
+      { href: '/admin/shows', label: '공연' },
+      { href: '/admin/shop', label: '상점' },
+      { href: '/admin/software', label: '소프트웨어' },
+    ],
+  },
+  {
+    label: '정산·기록',
+    items: [
+      { href: '/admin/revenue', label: '매출' },
+      { href: '/admin/artists', label: '아티스트' },
+      { href: '/admin/privacy-logs', label: '접속기록' },
+    ],
+  },
+];
+
+/** 묶음을 펼친 평면 목록 — 현재 위치 판정과 테스트가 쓴다. */
+export const ADMIN_NAV: readonly AdminNavItem[] = ADMIN_NAV_ENTRIES.flatMap((entry) => (isNavGroup(entry) ? entry.items : [entry]));
 
 /**
  * 지금 어느 구역에 있는지. 가장 긴 접두사가 이긴다 — `/admin`은 모든 관리자 경로의
@@ -140,6 +172,33 @@ export const AdminShell = ({
     return () => window.removeEventListener('keydown', onKey);
   }, [menuOpen]);
 
+  /**
+   * 데스크톱 드롭다운. 한 번에 하나만 열린다. 바깥을 누르거나 Esc를 누르거나 다른 화면으로 가면 닫힌다
+   * (Esc는 좁은 화면 메뉴와 같은 키 — 아래 effect가 둘을 함께 닫는다).
+   */
+  const [openGroup, setOpenGroup] = useState<string | null>(null);
+  const navRef = useRef<HTMLUListElement>(null);
+  useEffect(() => {
+    setOpenGroup(null);
+  }, [router.pathname]);
+  useEffect(() => {
+    if (openGroup === null) return undefined;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpenGroup(null);
+    };
+    const onPointer = (event: MouseEvent | TouchEvent) => {
+      if (navRef.current && !navRef.current.contains(event.target as Node)) setOpenGroup(null);
+    };
+    window.addEventListener('keydown', onKey);
+    document.addEventListener('mousedown', onPointer);
+    document.addEventListener('touchstart', onPointer);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.removeEventListener('mousedown', onPointer);
+      document.removeEventListener('touchstart', onPointer);
+    };
+  }, [openGroup]);
+
   const activeLabel = ADMIN_NAV.find((item) => item.href === activeHref)?.label ?? '메뉴';
 
   return (
@@ -155,22 +214,62 @@ export const AdminShell = ({
           </Link>
 
           <nav aria-label="관리자 구역" className="hidden lg:block flex-1 min-w-0">
-            <ul className="flex items-center gap-1 whitespace-nowrap">
-              {ADMIN_NAV.map((item) => {
-                const isActive = item.href === activeHref;
+            <ul ref={navRef} className="flex items-center gap-1 whitespace-nowrap">
+              {ADMIN_NAV_ENTRIES.map((entry) => {
+                if (!isNavGroup(entry)) {
+                  const isActive = entry.href === activeHref;
+                  return (
+                    <li key={entry.href}>
+                      <Link
+                        href={entry.href}
+                        aria-current={isActive ? 'page' : undefined}
+                        className={`inline-flex items-center rounded-lg px-3 py-1.5 text-sm transition-colors ${
+                          isActive ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                        }`}
+                      >
+                        {entry.label}
+                      </Link>
+                    </li>
+                  );
+                }
+                const groupActive = entry.items.some((item) => item.href === activeHref);
+                const isOpen = openGroup === entry.label;
                 return (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      aria-current={isActive ? 'page' : undefined}
-                      className={`inline-flex items-center rounded-lg px-3 py-1.5 text-sm transition-colors ${
-                        isActive
-                          ? 'bg-primary/10 text-primary font-semibold'
-                          : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-                      }`}
+                  <li key={entry.label} className="relative">
+                    <button
+                      type="button"
+                      aria-expanded={isOpen}
+                      aria-haspopup="true"
+                      data-active={groupActive ? 'true' : undefined}
+                      onClick={() => setOpenGroup(isOpen ? null : entry.label)}
+                      className={`inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm transition-colors ${
+                        groupActive ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                      } ${isOpen && !groupActive ? 'bg-gray-100 text-gray-900' : ''}`}
                     >
-                      {item.label}
-                    </Link>
+                      {entry.label}
+                      <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+                    </button>
+                    {isOpen && (
+                      <ul className="absolute left-0 top-full z-50 mt-1 min-w-[10rem] rounded-xl border border-gray-200 bg-white p-1.5 shadow-lg">
+                        {entry.items.map((item) => {
+                          const isActive = item.href === activeHref;
+                          return (
+                            <li key={item.href}>
+                              <Link
+                                href={item.href}
+                                aria-current={isActive ? 'page' : undefined}
+                                onClick={() => setOpenGroup(null)}
+                                className={`flex items-center rounded-lg px-3 py-2 text-sm ${
+                                  isActive ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 hover:bg-gray-100'
+                                }`}
+                              >
+                                {item.label}
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
                   </li>
                 );
               })}
@@ -202,21 +301,31 @@ export const AdminShell = ({
         {menuOpen && (
           <div id="admin-mobile-menu" className="lg:hidden border-t border-gray-200 bg-white px-4 pb-4 pt-3">
             <nav aria-label="관리자 구역 메뉴">
-              <ul className="grid grid-cols-2 gap-2">
-                {ADMIN_NAV.map((item) => {
-                  const isActive = item.href === activeHref;
+              <ul className="space-y-4">
+                {ADMIN_NAV_ENTRIES.map((entry) => {
+                  const items = isNavGroup(entry) ? entry.items : [entry];
                   return (
-                    <li key={item.href}>
-                      <Link
-                        href={item.href}
-                        aria-current={isActive ? 'page' : undefined}
-                        onClick={() => setMenuOpen(false)}
-                        className={`flex min-h-[44px] items-center rounded-lg px-3 text-[15px] ${
-                          isActive ? 'bg-primary/10 text-primary font-semibold' : 'bg-gray-50 text-gray-800'
-                        }`}
-                      >
-                        {item.label}
-                      </Link>
+                    <li key={isNavGroup(entry) ? entry.label : entry.href}>
+                      {isNavGroup(entry) && <p className="mb-1.5 px-1 text-xs font-semibold text-gray-500">{entry.label}</p>}
+                      <ul className="grid grid-cols-2 gap-2">
+                        {items.map((item) => {
+                          const isActive = item.href === activeHref;
+                          return (
+                            <li key={item.href}>
+                              <Link
+                                href={item.href}
+                                aria-current={isActive ? 'page' : undefined}
+                                onClick={() => setMenuOpen(false)}
+                                className={`flex min-h-[44px] items-center rounded-lg px-3 text-[15px] ${
+                                  isActive ? 'bg-primary/10 text-primary font-semibold' : 'bg-gray-50 text-gray-800'
+                                }`}
+                              >
+                                {item.label}
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
                     </li>
                   );
                 })}
