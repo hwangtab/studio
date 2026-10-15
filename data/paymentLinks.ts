@@ -23,6 +23,12 @@ export const PAYMENT_LINKS: Record<string, PaymentLink> = {
     itemName: '싱글 음원 제작 예약금',
     totalAmount: 400000,
   },
+  // 김준호님 — 보컬 녹음 1프로(1곡·3시간) 2026-10-17(토) 11:00. 250,000원 + VAT 25,000원 = 275,000원. 녹음일 당일까지만 열린다.
+  '478d0f5260b329a6fcd59a19': {
+    itemName: '보컬 녹음 1프로 (10/17 11:00)',
+    totalAmount: 275000,
+    expiresOn: '2026-10-17',
+  },
 };
 
 const SLUG_PATTERN = /^[0-9a-f]{24}$/;
