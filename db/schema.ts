@@ -297,7 +297,7 @@ export const orders = sqliteTable('orders', {
   customerName: text('customer_name').notNull(),
   customerPhone: text('customer_phone').notNull(),
   customerEmail: text('customer_email').notNull(),
-  /** 상품가(VAT 별도) + VAT = 합계. 서버가 pricing SSOT에서 계산해 저장한다. */
+  /** 공급가 + VAT = 합계. 합계가 화면 표기가(VAT 포함)이고 서버가 pricing SSOT에서 역산해 저장한다(2026-10-15 이전 주문은 공급가에 VAT를 더한 값). */
   itemAmount: integer('item_amount').notNull(),
   vatAmount: integer('vat_amount').notNull(),
   totalAmount: integer('total_amount').notNull(),
@@ -1140,7 +1140,7 @@ export const subscriptions = sqliteTable('subscriptions', {
    * `sub_` + uuid로 만든다(구독 id를 그대로 쓰지 않는 이유 — URL에 노출되는 값이다).
    */
   customerKey: text('customer_key').notNull().unique(),
-  /** 월 상품가(VAT 별도) + VAT = 청구액. 생성 시점 pricing SSOT에서 계산해 고정한다. */
+  /** 월 공급가 + VAT = 청구액. 연습실 월 이용료·레슨은 표기가가 별도라 공급가에 10%를 더하고, 아티스트 구독은 표기가(포함)에서 역산한다. 생성 시점에 고정한다. */
   itemAmount: integer('item_amount').notNull(),
   vatAmount: integer('vat_amount').notNull(),
   totalAmount: integer('total_amount').notNull(),
@@ -1597,7 +1597,7 @@ export const fundingProjectServices = sqliteTable('funding_project_services', {
   projectId: text('project_id').primaryKey().references(() => fundingProjects.id),
   kind: text('kind', { enum: fundingProjectServiceKindEnum }).notNull(),
   /**
-   * 약정한 설계비(공급가, 부가세 별도). 지정 시점의 FUNDING_DESIGN_PRICE를 **복사**한다 —
+   * 약정한 설계비(부가세 포함 — 2026-10-15 이전 약정은 공급가). 지정 시점의 FUNDING_DESIGN_PRICE를 **복사**한다 —
    * 상수가 나중에 바뀌어도 이 프로젝트와 약정한 금액이 바뀌지 않게(후원 행이 결제 당시 단가를
    * 저장하는 것과 같은 이유).
    */
@@ -1605,7 +1605,7 @@ export const fundingProjectServices = sqliteTable('funding_project_services', {
   /** 설계비 입금을 운영자가 확인한 시각. null이면 미입금. */
   designFeePaidAt: integer('design_fee_paid_at', { mode: 'timestamp' }),
   /**
-   * 정산 때 모금액에서 받을 약정 제작비(공급가, 부가세 별도) — 발매 번들 견적처럼 개설자와 합의한
+   * 정산 때 모금액에서 받을 약정 제작비(부가세 포함 — 2026-10-15 이전 약정은 공급가) — 발매 번들 견적처럼 개설자와 합의한
    * 금액을 운영자가 적는다. 0이면 정산에서 뺄 제작비가 없다. 마이그레이션 0041.
    */
   productionFee: integer('production_fee').notNull().default(0),
