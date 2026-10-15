@@ -533,9 +533,9 @@ export default function BookingWizard({ service, products, initialProductId }: B
                 min={minDate}
                 max={maxDate}
                 onChange={handleDateChange}
-                // appearance-none 금지 — iOS Safari는 date 입력의 내용(값·placeholder)을 네이티브 외형으로 그려서,
-                // 끄면 높이 0짜리 빈 알약으로 찌그러진다. 폭 넘침은 min-w-0 max-w-full로 막고, 높이는 min-h로 고정.
-                className="sm:w-56 min-w-0 max-w-full box-border min-h-[2.75rem] text-left"
+                // iOS Safari 폭 넘침·높이 접힘은 styles/globals.css의 date 입력 규칙이 막는다.
+                // min-h는 빈 값일 때도 다른 입력과 높이를 맞추는 안전판.
+                className="sm:w-56 min-h-[2.75rem]"
               />
             </Field>
           </div>

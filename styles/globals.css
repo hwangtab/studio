@@ -115,6 +115,22 @@
     -webkit-tap-highlight-color: rgba(var(--primary-rgb), 0.18);
   }
 
+  /* 날짜·시간 입력은 네이티브 외형을 끈다 — iOS Safari가 외형이 살아 있는 date 입력에
+     box-sizing:content-box·padding 0 0.5em·min-width(날짜 글자 폭)를 작성자 CSS 위에 강제해서,
+     w-full이 내용 폭 100%가 되고 패딩·테두리만큼 오른쪽으로 넘친다(min-w-0·box-border도 덮인다,
+     WebKit RenderThemeIOS adjustInputElementButtonStyle). 외형을 끄면 이 강제가 통째로 빠진다.
+     대신 비어 있는 값 칸이 높이 0으로 접히므로(WebKit bug 198959) 아래에서 높이를 준다.
+     Bootstrap·@tailwindcss/forms와 같은 처방. 2026-10-15 예약 마법사 날짜 칸. */
+  input:is([type='date'], [type='time'], [type='datetime-local'], [type='month']) {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  /* iOS는 값을 가운데 정렬로 그린다 — 다른 입력과 같이 왼쪽으로. */
+  input::-webkit-date-and-time-value {
+    min-height: 1.5em;
+    text-align: left;
+  }
+
   h1,
   h2,
   h3,
