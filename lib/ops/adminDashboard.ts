@@ -64,6 +64,8 @@ export interface AdminDashboard {
     /** 계좌 입금 대기 — 통장에서 입금을 확인해 눌러야 확정된다(자동 취소가 없어 방치되면 자리만 잡는다). */
     depositsBooking: number;
     depositsShow: number;
+    /** 상점 주문(`merch`)의 계좌 입금 대기 — 2026-10-15 상점에 계좌 입금이 들어왔다(#652). 재고를 기한 없이 점유한다. */
+    depositsShop: number;
     depositsFunding: number;
     /** 계좌 입금 후원자의 환불 요청 — 약관 제10조의 3영업일 기한이 있다. */
     fundingRefundRequests: number;
@@ -141,7 +143,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
     db
       .select({ type: orders.type, count: sql<number>`count(*)` })
       .from(orders)
-      .where(and(eq(orders.status, 'awaiting_deposit'), inArray(orders.type, ['session', 'mixing', 'deposit', 'ticket'])))
+      .where(and(eq(orders.status, 'awaiting_deposit'), inArray(orders.type, ['session', 'mixing', 'deposit', 'ticket', 'merch'])))
       .groupBy(orders.type),
     // 펀딩 계좌 입금 대기는 orders.status가 아니라 pending + 결제수단으로 가른다(lib/funding/admin-list.ts와 같은 판정).
     db
@@ -192,6 +194,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       fundingPayoutsUnrecorded: unrecordedPayoutIds.length,
       depositsBooking: depositCount(depositRows, 'session') + depositCount(depositRows, 'mixing') + depositCount(depositRows, 'deposit'),
       depositsShow: depositCount(depositRows, 'ticket'),
+      depositsShop: depositCount(depositRows, 'merch'),
       depositsFunding: Number(fundingDepositRows[0]?.count ?? 0),
       fundingRefundRequests: Number(fundingRefundRows[0]?.count ?? 0),
       showSubmissionsAwaitingReview,

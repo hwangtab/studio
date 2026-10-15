@@ -151,6 +151,7 @@ it('대기열 건수 — 믹싱 착수 대기·작업 중, 구독 카드 대기�
     fundingPayoutsUnrecorded: 0,
     depositsBooking: 0,
     depositsShow: 0,
+    depositsShop: 0,
     depositsFunding: 0,
     fundingRefundRequests: 0,
     showSubmissionsAwaitingReview: 0,
@@ -203,6 +204,8 @@ it('대기열 건수 — 계좌 입금 확인 대기(예약·믹싱·공연·펀
   await insertOrderWith('d3', 'deposit', 'awaiting_deposit');
   await insertOrderWith('d4', 'session', 'deposit_cancelled'); // 닫힌 건은 안 센다
   await insertOrderWith('t1', 'ticket', 'awaiting_deposit');
+  await insertOrderWith('sh1', 'merch', 'awaiting_deposit');
+  await insertOrderWith('sh2', 'merch', 'paid'); // 확정된 상점 주문은 입금 대기가 아니다
   await insertPledge('f1', 'pending', 'bank_transfer', 'online');
   await insertPledge('f2', 'pending', 'bank_transfer', 'manual'); // 수기 등록은 대기가 아니다
   await insertPledge('f3', 'pending', 'card', 'online'); // 토스 홀드
@@ -218,6 +221,7 @@ it('대기열 건수 — 계좌 입금 확인 대기(예약·믹싱·공연·펀
   expect(dash.queues).toMatchObject({
     depositsBooking: 3,
     depositsShow: 1,
+    depositsShop: 1,
     depositsFunding: 1,
     fundingRefundRequests: 1,
     showSubmissionsAwaitingReview: 1,
