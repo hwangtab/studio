@@ -35,6 +35,7 @@ const DASHBOARD: AdminDashboard = {
     subscriptionsPaused: 0,
     contractsAwaitingSignature: 1,
     contractsAwaitingTermination: 2,
+    sessionsAwaitingMark: 3,
     artistPayoutsPending: 0,
     fundingProjectsAwaitingReview: 4,
     fundingPayoutsPending: 2,

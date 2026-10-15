@@ -147,3 +147,32 @@ describe('?work= — 대시보드 믹싱 카드가 여는 목록', () => {
     expect((await listed('received')).bookings.map((b) => b.orderNo)).toEqual(['NO-old']);
   });
 });
+
+describe('?session=unmarked — 완료·노쇼 표시 대기 세션', () => {
+  const NOW_S = Math.floor(Date.now() / 1000);
+  const insertSession = async (id: string, status: string, endOffsetHours: number) => {
+    await insertOrder(id, 'session');
+    await client.execute({
+      sql: `INSERT INTO bookings (id, order_id, product_id, service_type, start_at, end_at, duration_hours, status)
+            VALUES (?, ?, 'recording-pro', 'recording', ?, ?, 3, ?)`,
+      args: [`b-${id}`, id, NOW_S + (endOffsetHours - 3) * 3600, NOW_S + endOffsetHours * 3600, status],
+    });
+  };
+
+  it('끝났고 confirmed인 세션만, 7일 창 안에서 싣는다', async () => {
+    await insertSession('done-today', 'confirmed', -2); // 2시간 전에 끝남 — 대상
+    await insertSession('done-3d', 'confirmed', -72); // 대상
+    await insertSession('too-old', 'confirmed', -24 * 10); // 7일 밖
+    await insertSession('upcoming', 'confirmed', 5); // 아직 안 끝남
+    await insertSession('marked', 'completed', -2); // 이미 표시함
+    await insertSession('noshow', 'no_show', -2);
+    await insertOrder('m1', 'mixing');
+
+    const r = (await getServerSideProps({ query: { session: 'unmarked' } } as never)) as {
+      props: { bookings: Array<{ orderNo: string }>; sessionUnmarked?: boolean };
+    };
+
+    expect(r.props.bookings.map((b) => b.orderNo).sort()).toEqual(['NO-done-3d', 'NO-done-today']);
+    expect(r.props.sessionUnmarked).toBe(true);
+  });
+});

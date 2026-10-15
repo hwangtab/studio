@@ -150,6 +150,7 @@ export default function AdminIndexPage({ dashboard, shopQueues, ledgerFrom, ledg
                 {dashboard.queues.showSubmissionsAwaitingReview !== null && (
                   <QueueCard label="심사 대기 주최자 공연" count={dashboard.queues.showSubmissionsAwaitingReview} href="/admin/shows/submissions" alert />
                 )}
+                <QueueCard label="완료·노쇼 표시 대기 세션" count={dashboard.queues.sessionsAwaitingMark} href="/admin/bookings?session=unmarked" alert />
                 <QueueCard label="믹싱 착수 대기" count={dashboard.queues.mixingReceived} href="/admin/bookings?work=received" alert />
                 <QueueCard label="믹싱 작업 중" count={dashboard.queues.mixingInProgress} href="/admin/bookings?work=in_progress" />
                 <QueueCard label="서명 대기 계약" count={dashboard.queues.contractsAwaitingSignature} href="/admin/contracts?status=sent" />
