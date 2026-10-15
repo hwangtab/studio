@@ -115,6 +115,8 @@ export const getServerSideProps: GetServerSideProps<AdminBookingsPageProps> = as
         with: { bookings: true, payments: true, workOrders: true },
       }),
       getDb().query.availabilityBlocks.findMany({
+        // 끝난 블록은 새 예약에 아무 영향이 없다 — 전량을 읽으면 지난 블록이 쌓여 화면만 길어진다.
+        where: (t, { gte }) => gte(t.endAt, new Date()),
         orderBy: (t, { asc }) => [asc(t.startAt)],
       }),
       getDb()
@@ -307,6 +309,14 @@ export default function AdminBookingsPage({
     }
 
     setBlockMemo('');
+    // 블록은 새 예약만 막는다 — 이미 잡힌 예약은 그대로이니 운영자가 직접 처리해야 한다.
+    if (result.overlapping && result.overlapping.length > 0) {
+      setNotice(
+        `블록은 등록됐지만 같은 시간대에 이미 잡힌 예약이 ${result.overlapping.length}건 있습니다: ` +
+          result.overlapping.map((b) => `${b.customerName}(${b.orderNo})`).join(', ') +
+          '. 예약은 자동으로 취소되지 않으니 고객에게 직접 연락해 주세요.',
+      );
+    }
     await refresh();
   };
 

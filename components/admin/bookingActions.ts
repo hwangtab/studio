@@ -108,7 +108,12 @@ export interface CreateBlockPayload {
   roomNumber?: string;
 }
 
-export const createBlock = async (payload: CreateBlockPayload): Promise<BookingActionResult> => {
+export interface CreateBlockResult extends BookingActionResult {
+  /** 등록은 됐지만 그 시간대에 이미 잡혀 있는 예약. 블록은 새 예약만 막으므로 운영자가 직접 처리해야 한다. */
+  overlapping?: Array<{ orderNo: string; customerName: string; startAt: string; endAt: string }>;
+}
+
+export const createBlock = async (payload: CreateBlockPayload): Promise<CreateBlockResult> => {
   try {
     const response = await fetch('/api/admin/blocks', {
       method: 'POST',
@@ -119,7 +124,8 @@ export const createBlock = async (payload: CreateBlockPayload): Promise<BookingA
     if (!response.ok) {
       return { ok: false, message: await readMessage(response, '블록 등록에 실패했습니다.') };
     }
-    return { ok: true };
+    const body = (await response.json().catch(() => null)) as { overlapping?: CreateBlockResult['overlapping'] } | null;
+    return { ok: true, overlapping: Array.isArray(body?.overlapping) ? body.overlapping : [] };
   } catch {
     return { ok: false, message: '네트워크 오류가 발생했습니다.' };
   }
