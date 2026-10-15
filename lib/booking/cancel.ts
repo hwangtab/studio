@@ -2,7 +2,7 @@ import { eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { bookings, orders, refunds, type Booking, type Order, type Payment, type Refund, type WorkOrder } from '../../db/schema';
-import { sendBookingCancelledEmails, sendMixingOrderCancelledEmails } from './email';
+import { sendBookingCancelledEmails, sendDepositRefundEmail, sendMixingOrderCancelledEmails } from './email';
 import { calendarForService, deleteBookingEvent } from './gcal';
 import { canAdminRefund, isCancelledRemainderRefund } from './admin-serialize';
 import { computeRefund, refundPolicyFor } from './refund-policy';
@@ -653,7 +653,8 @@ const cancelMixingOrder = async (
  *
  * - 0원은 거절한다: 취소할 예약이 없어 "환불 없이 닫기"가 아무 일도 하지 않는다.
  * - 고객 셀프 환불은 없다: 예약금 주문에는 고객 관리 화면이 없다.
- * - 고객 메일은 보내지 않는다: 토스 결제는 토스가 취소 안내를 보내고, 계좌 입금은 운영자가 송금하며 직접 안내한다.
+ * - 고객에게 환불 안내 메일을 보낸다(`sendDepositRefundEmail`). 메일이 실패해도 환불은 이미 끝났으므로 결과를 뒤집지 않고
+ *   `notificationError`에 남겨 관리자 화면이 알린다(다른 취소 경로와 같다).
  */
 const refundDepositOrder = async (
   order: Order & { payments: PaymentWithRefunds[] },
@@ -684,7 +685,11 @@ const refundDepositOrder = async (
   });
   if (failure) return failure;
 
-  return { ok: true, refundAmount: amount, refundVia: isBankDepositPayment(payment) ? 'bank_account' : 'payment' };
+  const refundVia = isBankDepositPayment(payment) ? 'bank_account' : 'payment';
+  await recordNotificationError(
+    order.id, order.orderNo, await sendDepositRefundEmail(order, amount, remaining - amount, refundVia),
+  );
+  return { ok: true, refundAmount: amount, refundVia };
 };
 
 export const cancelBookingWithRefund = async (input: CancelInput): Promise<CancelOutcome> => {

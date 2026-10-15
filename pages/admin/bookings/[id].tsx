@@ -830,7 +830,7 @@ export default function AdminBookingDetailPage({
                   <>
                     예약금 결제 링크 주문의 금액을 돌려줍니다. 취소할 예약은 없고, 부분 환불을 여러 번 나눠 할 수 있습니다.
                     {isBankPaid ? '' : ' 토스 결제는 결제수단으로 취소됩니다.'}
-                    {' '}고객에게 가는 안내 메일은 따로 없으니 필요하면 직접 알려 주세요.
+                    {' '}처리하면 고객에게 환불 안내 메일이 갑니다.
                   </>
                 ) : isRemainderRefund ? (
                   <>

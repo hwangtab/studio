@@ -17,11 +17,13 @@ jest.mock('./toss', () => ({ ...jest.requireActual('./toss'), cancelPayment: jes
 jest.mock('./email', () => ({
   sendBookingCancelledEmails: jest.fn().mockResolvedValue(null),
   sendMixingOrderCancelledEmails: jest.fn().mockResolvedValue(null),
+  sendDepositRefundEmail: jest.fn().mockResolvedValue(null),
 }));
 
 /* eslint-disable import/first */
 import { cancelBookingWithRefund } from './cancel';
 import { cancelPayment } from './toss';
+import { sendDepositRefundEmail } from './email';
 import { canAdminRefund } from './admin-serialize';
 /* eslint-enable import/first */
 
@@ -128,6 +130,41 @@ describe('토스 결제 예약금', () => {
     const [a, b] = await Promise.all([refund(50_000), refund(50_000)]);
     expect([a.ok, b.ok]).toEqual([true, true]);
     expect(await refundRows()).toEqual([{ amount: 50_000, status: 'done' }]);
+  });
+});
+
+describe('고객 환불 안내 메일', () => {
+  const notificationError = async () => (await client.execute("SELECT notification_error AS e FROM orders WHERE id = 'd1'")).rows[0].e;
+
+  it('환불할 때마다 환불액과 남은 결제 금액을 실어 보낸다', async () => {
+    await seed();
+    await refund(40_000);
+    expect(sendDepositRefundEmail).toHaveBeenLastCalledWith(expect.objectContaining({ orderNo: 'DEP-1' }), 40_000, 70_000, 'payment');
+    await refund(70_000);
+    expect(sendDepositRefundEmail).toHaveBeenLastCalledWith(expect.objectContaining({ orderNo: 'DEP-1' }), 70_000, 0, 'payment');
+    expect(await notificationError()).toBeNull();
+  });
+
+  it('메일이 실패해도 환불은 성공이고 사유를 notificationError에 남긴다', async () => {
+    await seed();
+    (sendDepositRefundEmail as jest.Mock).mockResolvedValue('API_ERROR');
+
+    expect((await refund(40_000)).ok).toBe(true);
+    expect(await order()).toBe('partially_refunded');
+    expect(await notificationError()).toBe('API_ERROR');
+  });
+
+  it('환불이 거절되면 메일을 보내지 않는다', async () => {
+    await seed();
+    (cancelPayment as jest.Mock).mockResolvedValue({ ok: false, code: 'X', message: '거절' });
+    await refund(40_000);
+    expect(sendDepositRefundEmail).not.toHaveBeenCalled();
+  });
+
+  it('계좌 입금 건은 송금 기록 뒤 bank_account로 보낸다', async () => {
+    await seed({ paymentKey: 'bank-deposit:DEP-1', method: '계좌 입금' });
+    await refund(110_000);
+    expect(sendDepositRefundEmail).toHaveBeenCalledWith(expect.anything(), 110_000, 0, 'bank_account');
   });
 });
 
