@@ -384,6 +384,9 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
       '메모를 저장했습니다.',
     );
 
+  /** 정산이 기록된 뒤에는 서비스 종류·약정 제작비를 잠근다(서버도 409). 집계가 실패해도 이체 대기 정산이 있으면 잠근다. */
+  const payoutRecorded = Boolean(payout?.recorded) || Boolean(pendingPayoutFallback);
+
   const handleSetService = (kind: 'none' | 'design' | 'release') => {
     if (kind === 'none' && service.available && service.service) {
       // 약정가·입금 기록은 지우지 않고 보존한다(lib/funding/projectServices.ts) — 예전 문구는
@@ -1007,6 +1010,12 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
           <div className="mb-6 rounded-lg border border-gray-300 bg-gray-50 p-4">
             <h2 className="text-lg font-bold text-gray-900 mb-1">스튜디오 서비스</h2>
             <p className="mb-3 text-sm text-gray-600">설계비와 약정 제작비는 정산 때 모금액에서 뺍니다(부가세 포함, 성공 수수료 없음). 설계비를 따로 이미 받았으면 입금 확인을 눌러 두세요 — 정산에서 다시 빼지 않습니다.</p>
+            {service.available && payoutRecorded && (
+              <p role="status" className="mb-3 rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-900">
+                정산이 기록되어 서비스 종류와 약정 제작비는 바꿀 수 없습니다 — 기록된 정산은 바뀌지 않아 고쳐도 지급액에 반영되지 않습니다.
+                설계비 입금 확인은 계속 기록할 수 있습니다.
+              </p>
+            )}
             {!service.available ? (
               <p className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">
                 {service.reason === 'missing_table'
@@ -1027,7 +1036,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
                         key={kind}
                         light
                         variant={current === kind ? 'solid' : 'weak'}
-                        disabled={busy || current === kind}
+                        disabled={busy || current === kind || payoutRecorded}
                         aria-pressed={current === kind}
                         onClick={() => handleSetService(kind)}
                       >
@@ -1070,10 +1079,10 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
                         onChange={(e) => setProductionFee(e.target.value)}
                         light
                         className="w-40 text-sm"
-                        disabled={busy}
+                        disabled={busy || payoutRecorded}
                       />
                       <span className="text-gray-500">원 (부가세 별도 · 정산 때 모금액에서)</span>
-                      <Button light disabled={busy} onClick={handleSaveProductionFee}>저장</Button>
+                      <Button light disabled={busy || payoutRecorded} onClick={handleSaveProductionFee}>저장</Button>
                       {service.service.productionFee > 0 && (
                         <span className="text-xs text-gray-500">
                           공제액 {formatPriceAmount(Math.round(service.service.productionFee * (1 + VAT_RATE)))}원(부가세 포함)

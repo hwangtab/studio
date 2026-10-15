@@ -12,6 +12,12 @@ jest.mock('../../../../lib/funding/publicStatusDecision', () => ({
 jest.mock('../../../../lib/funding/projectServices', () => ({
   setProjectService: jest.fn(),
   setDesignFeePaid: jest.fn(),
+  setProductionFee: jest.fn(),
+}));
+jest.mock('../../../../lib/funding/payout', () => ({
+  loadRecordedFundingPayout: jest.fn().mockResolvedValue(null),
+  markFundingPayoutPaid: jest.fn(),
+  recordFundingPayout: jest.fn(),
 }));
 jest.mock('../../../../lib/funding/revalidate', () => ({ revalidateFundingPaths: jest.fn() }));
 jest.mock('../../../../lib/funding/reviewEmail', () => ({
@@ -29,11 +35,12 @@ jest.mock('../../../../db/client', () => ({ getDb: jest.fn(() => ({ update: mock
 import type { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../../pages/api/admin/funding/projects/[id]';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
+import { loadRecordedFundingPayout } from '../../../../lib/funding/payout';
 import { loadProjectForAdmin } from '../../../../lib/funding/adminProjects';
 import { decideProject } from '../../../../lib/funding/reviewDecision';
 import { decidePublicStatus } from '../../../../lib/funding/publicStatusDecision';
 import { revalidateFundingPaths } from '../../../../lib/funding/revalidate';
-import { setDesignFeePaid, setProjectService } from '../../../../lib/funding/projectServices';
+import { setDesignFeePaid, setProductionFee, setProjectService } from '../../../../lib/funding/projectServices';
 import {
   sendReviewDecisionEmail,
   sendReviewDecisionOperatorFallback,
@@ -593,5 +600,31 @@ describe('메모 동시 저장 — expectedNote', () => {
   it('메모가 없던 칸은 빈 문자열로 맞춘다', async () => {
     const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_internal_note', note: '첫 메모', expectedNote: '' });
     expect(r.status).toBe(200);
+  });
+});
+
+describe('정산 기록 뒤 서비스 잠금', () => {
+  beforeEach(() => {
+    (loadRecordedFundingPayout as jest.Mock).mockResolvedValue({ id: 'pay-1', status: 'pending' });
+  });
+  afterEach(() => {
+    (loadRecordedFundingPayout as jest.Mock).mockResolvedValue(null);
+  });
+
+  it.each([
+    ['set_studio_service', { action: 'set_studio_service', kind: 'release' }, () => setProjectService],
+    ['set_production_fee', { action: 'set_production_fee', productionFee: 2_000_000 }, () => setProductionFee],
+  ])('%s — 정산이 기록돼 있으면 409이고 저장하지 않는다', async (_name, body, target) => {
+    const r = await call('PATCH', { id: 'proj-1' }, body);
+    expect(r.status).toBe(409);
+    expect(String((r.body as { message?: string }).message)).toContain('정산이 이미 기록');
+    expect(target()).not.toHaveBeenCalled();
+  });
+
+  it('설계비 입금 확인은 정산 뒤에도 기록할 수 있다 — 실제로 받은 돈의 기록이다', async () => {
+    (setDesignFeePaid as jest.Mock).mockResolvedValue({ ok: true, service: { kind: 'design', designFee: 500000, designFeePaidAt: null } });
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_design_fee_paid', paid: true });
+    expect(r.status).toBe(200);
+    expect(setDesignFeePaid).toHaveBeenCalled();
   });
 });
