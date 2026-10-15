@@ -207,7 +207,7 @@ export default function AdminShopOrderPage(p: Props) {
             ) : (
               <button type="button" disabled={busy} onClick={showAccount} className={`mt-2 ${buttonClass}`}>계좌 보기</button>
             )}
-            <p className="mt-2 text-xs">"계좌 보기"를 누른 사실은 접속기록에 남습니다.</p>
+            <p className="mt-2 text-xs">“계좌 보기”를 누른 사실은 접속기록에 남습니다.</p>
             {p.refundAccount.refundedAt ? (
               <p className="mt-2 font-semibold">송금 완료: {kst(p.refundAccount.refundedAt)}</p>
             ) : (
@@ -263,7 +263,7 @@ export default function AdminShopOrderPage(p: Props) {
               </div>
             )}
             {p.bankPaid ? (
-              <p className="mb-3 rounded-lg bg-amber-50 p-3 text-amber-900">계좌로 입금하신 주문이에요. 고객에게 환불 계좌를 받아 <strong>먼저 {formatPriceAmount(p.refundable)}원을 송금한 뒤</strong> 눌러 기록하세요(토스는 부르지 않습니다). 고객이 직접 취소하며 계좌를 적었다면 위 "환불 계좌"에서 "송금 완료"를 누르세요. 발송한 뒤라면 반품을 받은 다음에 누르세요.</p>
+              <p className="mb-3 rounded-lg bg-amber-50 p-3 text-amber-900">계좌로 입금하신 주문이에요. 고객에게 환불 계좌를 받아 <strong>먼저 {formatPriceAmount(p.refundable)}원을 송금한 뒤</strong> 눌러 기록하세요(토스는 부르지 않습니다). 고객이 직접 취소하며 계좌를 적었다면 위 “환불 계좌”에서 “송금 완료”를 누르세요. 발송한 뒤라면 반품을 받은 다음에 누르세요.</p>
             ) : (
               <p className="mb-3 text-gray-600">토스로 {formatPriceAmount(p.refundable)}원을 돌려주고 주문을 취소합니다. 발송한 뒤라면 반품을 받은 다음에 누르세요. 일부만 돌려줄 때는 토스 콘솔에서 하면 웹훅이 기록을 맞춥니다.</p>
             )}
