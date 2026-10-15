@@ -206,7 +206,7 @@ it('내부 기록 저장은 set_internal_note로 나간다', async () => {
   render(<AdminFundingProjectDetailPage project={PROJECT} payout={null} service={NO_SERVICE} />);
   fireEvent.change(screen.getByLabelText('내부 기록'), { target: { value: '메모' } });
   fireEvent.click(screen.getByRole('button', { name: '내부 기록 저장' }));
-  expect(patchFundingProject).toHaveBeenCalledWith('proj-1', { action: 'set_internal_note', note: '메모' });
+  expect(patchFundingProject).toHaveBeenCalledWith('proj-1', { action: 'set_internal_note', note: '메모', expectedNote: '' });
   expect(await screen.findByText(/저장했습니다/)).toBeInTheDocument();
 });
 

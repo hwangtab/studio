@@ -269,6 +269,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const project = await loadProjectForAdmin(id);
     if (!project) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없습니다.' });
     const note = typeof b.note === 'string' ? b.note.trim() || null : null;
+    if (typeof b.expectedNote === 'string' && b.expectedNote !== (project.reviewNote ?? '')) {
+      return res.status(409).json({ ok: false, message: '그 사이 메모가 다른 곳에서 바뀌었습니다. 새로고침한 뒤 내용을 확인하고 다시 저장해 주세요.' });
+    }
     if (project.reviewStatus === 'rejected' && !note) {
       return res.status(400).json({
         ok: false,
@@ -287,6 +290,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const project = await loadProjectForAdmin(id);
     if (!project) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없습니다.' });
     const note = typeof b.note === 'string' ? b.note.trim() || null : null;
+    if (typeof b.expectedNote === 'string' && b.expectedNote !== (project.internalNote ?? '')) {
+      return res.status(409).json({ ok: false, message: '그 사이 메모가 다른 곳에서 바뀌었습니다. 새로고침한 뒤 내용을 확인하고 다시 저장해 주세요.' });
+    }
     await getDb().update(fundingProjects).set({ internalNote: note, updatedAt: now }).where(eq(fundingProjects.id, id));
     return res.status(200).json({ ok: true });
   }
