@@ -40,7 +40,9 @@ const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 
 const buttonClass = 'rounded-lg bg-gray-900 px-4 py-2 text-white disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
 const kst = (sec: number) => new Date(sec * 1000).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
-export default function AdminPaymentLinksPage({ links, tableMissing, fileLinks }: Props) {
+export default function AdminPaymentLinksPage({ links: initialLinks, tableMissing, fileLinks }: Props) {
+  // 만든 링크를 목록 맨 위에 바로 보인다(SSR 목록은 새로고침 전엔 낡는다 — 방금 만든 링크가 안 보이면 두 번 만들게 된다).
+  const [links, setLinks] = useState(initialLinks);
   const [itemName, setItemName] = useState('');
   const [amountText, setAmountText] = useState('');
   const [expiresOn, setExpiresOn] = useState('');
@@ -78,6 +80,10 @@ export default function AdminPaymentLinksPage({ links, tableMissing, fileLinks }
     try {
       const data = await post({ action: 'create', itemName, totalAmount: amount, expiresOn, memo });
       if (data?.ok && data.slug) {
+        setLinks((prev) => [{
+          slug: data.slug as string, itemName: itemName.trim(), totalAmount: amount, expiresOn: expiresOn || null,
+          memo: memo.trim() || null, closedAt: null, createdAt: Math.floor(Date.now() / 1000), open: true,
+        }, ...prev]);
         setCreated(data.slug);
         await copy(data.slug);
         setItemName(''); setAmountText(''); setExpiresOn(''); setMemo('');
