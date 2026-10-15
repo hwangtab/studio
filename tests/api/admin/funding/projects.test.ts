@@ -601,3 +601,30 @@ describe('운영자 글 길이 상한', () => {
     expect(decideProject).not.toHaveBeenCalled();
   });
 });
+
+describe('메모 동시 저장 — expectedNote', () => {
+  it.each([
+    ['set_review_note', 'reviewNote'],
+    ['set_internal_note', 'internalNote'],
+  ])('%s: 화면이 본 메모와 지금 메모가 다르면 409이고 덮어쓰지 않는다', async (action, field) => {
+    (loadProjectForAdmin as jest.Mock).mockResolvedValue({ ...BASE_PROJECT, [field]: '다른 운영자가 방금 쓴 메모' });
+    const r = await call('PATCH', { id: 'proj-1' }, { action, note: '내 메모', expectedNote: '처음 본 메모' });
+    expect(r.status).toBe(409);
+    expect(mockSet).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ['set_review_note', 'reviewNote'],
+    ['set_internal_note', 'internalNote'],
+  ])('%s: 본 메모가 그대로면 저장한다', async (action, field) => {
+    (loadProjectForAdmin as jest.Mock).mockResolvedValue({ ...BASE_PROJECT, [field]: '처음 본 메모' });
+    const r = await call('PATCH', { id: 'proj-1' }, { action, note: '내 메모', expectedNote: '처음 본 메모' });
+    expect(r.status).toBe(200);
+    expect(mockSet).toHaveBeenCalledWith(expect.objectContaining({ [field]: '내 메모' }));
+  });
+
+  it('메모가 없던 칸은 빈 문자열로 맞춘다', async () => {
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_internal_note', note: '첫 메모', expectedNote: '' });
+    expect(r.status).toBe(200);
+  });
+});

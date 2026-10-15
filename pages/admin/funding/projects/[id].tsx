@@ -378,7 +378,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
 
   const handleSaveNote = () =>
     run(
-      () => patchFundingProject(project.id, { action: 'set_review_note', note: reviewNote.trim() || undefined }),
+      () => patchFundingProject(project.id, { action: 'set_review_note', note: reviewNote.trim() || undefined, expectedNote: project.reviewNote ?? '' }),
       '메모를 저장했습니다.',
     );
 
@@ -421,7 +421,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
 
   const handleSaveInternalNote = () =>
     run(
-      () => patchFundingProject(project.id, { action: 'set_internal_note', note: internalNote.trim() || undefined }),
+      () => patchFundingProject(project.id, { action: 'set_internal_note', note: internalNote.trim() || undefined, expectedNote: project.internalNote ?? '' }),
       '내부 기록을 저장했습니다.',
     );
 
