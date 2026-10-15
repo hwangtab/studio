@@ -58,6 +58,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       const contract = await createContract(validation.data);
+      console.warn(`[contracts] 관리자 작업 (contractId=${contract.id}, action=create, actor=${auth.actor})`);
       return res.status(201).json({ ok: true, contract: serializeContractForAdmin(contract) });
     } catch (error: unknown) {
       console.error('[API/contracts] Failed to create contract:', error);

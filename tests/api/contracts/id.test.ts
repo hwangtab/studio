@@ -551,3 +551,46 @@ describe('메서드·응답 위생', () => {
     expect(res.setHeader).toHaveBeenCalledWith('Cache-Control', 'no-store');
   });
 });
+
+/**
+ * 변경 행위의 수행자는 서버 로그에 남는다. 열람은 contract_view 접속기록이 남기지만 발송·수정·취소·삭제·종료는
+ * 행위자가 어디에도 없었다. 로그에는 계약 id·행위·수행자만 — 이름·연락처 같은 개인정보는 싣지 않는다.
+ */
+describe('변경 행위의 수행자 로그', () => {
+  let warn: jest.SpyInstance;
+  beforeEach(() => {
+    warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+  });
+  afterEach(() => warn.mockRestore());
+
+  const logged = () => warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('[contracts] 관리자 작업'));
+
+  it('취소·삭제·종료가 성공하면 수행자와 계약 id를 남긴다', async () => {
+    mockFound(contract({ status: 'draft' }));
+    (cancelContract as jest.Mock).mockResolvedValue(contract({ status: 'cancelled' }));
+    await run({ method: 'PATCH', body: { action: 'cancel' } });
+
+    mockFound(contract({ status: 'draft' }));
+    (deleteContract as jest.Mock).mockResolvedValue(true);
+    await run({ method: 'DELETE' });
+
+    mockFound(contract({ status: 'signed' }));
+    (terminateContract as jest.Mock).mockResolvedValue(contract({ status: 'terminated' }));
+    (cancelSubscriptionsOfContract as jest.Mock).mockResolvedValue({ cancelledIds: [], failed: [], notificationFailures: [] });
+    await run({ method: 'PATCH', body: { action: 'terminate', reason: '이용 종료' } });
+
+    expect(logged()).toEqual([
+      '[contracts] 관리자 작업 (contractId=c1, action=cancel, actor=kyungha)',
+      '[contracts] 관리자 작업 (contractId=c1, action=delete, actor=kyungha)',
+      '[contracts] 관리자 작업 (contractId=c1, action=terminate, actor=kyungha)',
+    ]);
+  });
+
+  it('실패(409)한 시도는 남기지 않는다 — 아무것도 바뀌지 않았다', async () => {
+    mockFound(contract({ status: 'draft' }));
+    (cancelContract as jest.Mock).mockResolvedValue(null);
+    await run({ method: 'PATCH', body: { action: 'cancel' } });
+
+    expect(logged()).toEqual([]);
+  });
+});
