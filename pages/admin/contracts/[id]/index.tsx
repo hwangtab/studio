@@ -17,6 +17,8 @@ import { Button } from '../../../../components/ui/Button';
 import { getDb } from '../../../../db/client';
 import { OCCUPYING_STATUSES } from '../../../../lib/billing/service';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
+import { CONTRACT_ADMIN_ACTION_LABELS, type ContractAdminAction } from '../../../../lib/contracts/admin-event-labels';
+import { listContractAdminEvents, type SerializedContractAdminEvent } from '../../../../lib/contracts/admin-events';
 import { recordAdminPrivacyAccess } from '../../../../lib/privacy/accessLog';
 import {
   serializeAttachment,
@@ -48,6 +50,8 @@ interface AdminContractDetailPageProps {
    * "구독 N건이 해지되고 고객에게 안내 메일이 간다"를 미리 말하는 데 쓴다. 조회가 실패하면 0이 아니라 null.
    */
   occupyingSubscriptionCount: number | null;
+  /** 관리자가 이 계약에 한 변경 행위 이력(최신순). 표가 없으면 빈 목록. */
+  adminEvents?: SerializedContractAdminEvent[];
 }
 
 export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps> = async (
@@ -98,6 +102,7 @@ export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps
     })
     .then((rows) => rows.length)
     .catch(() => null);
+  const adminEvents = await listContractAdminEvents(id);
 
   return {
     props: {
@@ -109,6 +114,7 @@ export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps
       auditTrail: serializeAuditTrail(buildAuditTrail(contract)),
       subscriptionId: subscription?.id ?? null,
       occupyingSubscriptionCount,
+      adminEvents,
     },
   };
 };
@@ -140,6 +146,7 @@ export default function AdminContractDetailPage({
   auditTrail,
   subscriptionId,
   occupyingSubscriptionCount,
+  adminEvents = [],
 }: AdminContractDetailPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -488,6 +495,31 @@ export default function AdminContractDetailPage({
           </div>
 
           <AuditTrail trail={auditTrail} />
+
+          {/* 서명 지문(위)은 고객 쪽 증거이고, 이 목록은 관리자가 이 계약에 한 변경이다 — 누가 종료·삭제·취소했는지 묻는 자리. */}
+          <section aria-label="관리자 작업 이력" className="p-4 md:p-8 border-b border-gray-200">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-3">관리자 작업 이력</h2>
+            {adminEvents.length === 0 ? (
+              <p className="text-sm text-gray-500">기록된 변경이 없습니다. (이력은 2026-10-15 이후의 작업부터 남습니다.)</p>
+            ) : (
+              <ol className="space-y-1.5 text-sm text-gray-700">
+                {adminEvents.map((event) => (
+                  <li key={event.id} className="flex flex-wrap items-baseline gap-x-3">
+                    <span className="tabular-nums text-gray-500">{formatDateTime(event.at)}</span>
+                    <span className="font-medium text-gray-900">
+                      {CONTRACT_ADMIN_ACTION_LABELS[event.action as ContractAdminAction] ?? event.action}
+                    </span>
+                    <span className="text-gray-600">{event.actor}</span>
+                    {event.fromStatus !== event.toStatus && (
+                      <span className="text-xs text-gray-500">
+                        {event.fromStatus ? getStatusLabel(event.fromStatus as never) : '-'} → {event.toStatus ? getStatusLabel(event.toStatus as never) : '삭제'}
+                      </span>
+                    )}
+                  </li>
+                ))}
+              </ol>
+            )}
+          </section>
 
           {/* 본문은 1만 px가 넘는다. 펼쳐 두면 아래 '작업'(발송·취소 등)이 그 밑에 묻혀,
               특히 폰에서는 스크롤로 닿기 어려웠다. 첨부 이용수칙과 같이 접어 둔다. */}
