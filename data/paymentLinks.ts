@@ -1,4 +1,6 @@
 import { kstDateString } from '../lib/booking/kst';
+import { VOCAL_PACKAGE_PRICE } from './pricing';
+import { VAT_RATE } from '../lib/booking/amounts';
 
 /**
  * 운영자가 만든 비공개 예약금 결제 링크. 주소는 `/ko/pay/<slug>`.
@@ -22,6 +24,12 @@ export const PAYMENT_LINKS: Record<string, PaymentLink> = {
   '46fee6d8ffa1a69be20324a2': {
     itemName: '싱글 음원 제작 예약금',
     totalAmount: 400000,
+  },
+  // 김준호님 — 보컬 녹음 1프로(1곡·3시간) 2026-10-17(토) 11:00. 상품가에 VAT를 더한 포함액(SSOT 상수에서 계산). 녹음일 당일까지만 열린다.
+  '478d0f5260b329a6fcd59a19': {
+    itemName: '보컬 녹음 1프로 (10/17 11:00)',
+    totalAmount: Math.round(VOCAL_PACKAGE_PRICE * (1 + VAT_RATE)),
+    expiresOn: '2026-10-17',
   },
 };
 

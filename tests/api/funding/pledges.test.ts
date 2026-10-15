@@ -88,7 +88,8 @@ beforeEach(() => {
  */
 it('응답에 holdExpiresAt과 같은 시계의 serverNow가 함께 실린다', async () => {
   (getFundingProject as jest.Mock).mockReturnValue(project);
-  const holdExpiresAt = new Date('2026-10-15T03:15:00Z');
+  // 고정 날짜를 쓰면 그 시각이 지나는 날 테스트가 깨진다(2026-10-15) — 지금 기준 15분 뒤.
+  const holdExpiresAt = new Date(Date.now() + 15 * 60 * 1000);
   (createFundingPledge as jest.Mock).mockResolvedValue({ ok: true, orderNo: 'FND-1', manageToken: 't', holdExpiresAt, amounts: { itemAmount: 4545, vatAmount: 455, totalAmount: 5000 } });
   const r = await call({ ...body, paymentMethod: 'toss' });
   expect(r.status).toBe(201);
