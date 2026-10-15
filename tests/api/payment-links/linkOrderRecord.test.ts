@@ -51,7 +51,7 @@ it('링크로 주문하면 어느 링크·상품이었는지 남고, 관리자 �
   const r = await call({ slug, ...customer });
   expect(r.status).toBe(201);
   const info = (await loadPaymentLinkOrderInfo([r.json!.orderNo as string])).get(r.json!.orderNo as string);
-  expect(info).toEqual({ slug, itemName: '보컬 녹음 1프로 (10/17 11:00)', memo: '김준호님', sessionAt: null, sessionHours: null });
+  expect(info).toEqual({ slug, itemName: '보컬 녹음 1프로 (10/17 11:00)', memo: '김준호님', sessionAt: null, sessionHours: null, gcalEventId: null, gcalError: null });
 
   const order = await testDb.query.orders.findFirst({ with: { bookings: true, payments: true, workOrders: true } });
   expect(serializeBookingForAdmin(order!, info)).toMatchObject({ productName: '보컬 녹음 1프로 (10/17 11:00)', linkMemo: '김준호님' });

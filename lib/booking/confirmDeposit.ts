@@ -6,6 +6,7 @@ import { formatPriceAmount } from '../../data/pricing';
 import { adminUrl, buildEmailLayout } from '../email/layout';
 import { sendEmail } from '../email/resend';
 import { OPERATOR_EMAIL } from '../operatorContact';
+import { syncPaymentLinkCalendarEvent } from '../payments/linkCalendar';
 import { loadPaymentLinkOrderInfo } from '../payments/paymentLinkOrders';
 import { refundIdempotencyKey } from './cancel';
 import { rowsAffectedOf } from './confirm';
@@ -280,6 +281,8 @@ export const confirmDepositPayment = async (
   if (rowsAffectedOf(batchResults[1]) === 0) return autoCancelStaleApproval(order, approved);
 
   await notifyOperator(order, approved);
+  // 이용 일시가 있는 링크면 캘린더에 올린다(실패는 삼키고 기록 — lib/payments/linkCalendar.ts).
+  await syncPaymentLinkCalendarEvent(order.orderNo);
 
   return {
     ok: true,

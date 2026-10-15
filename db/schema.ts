@@ -2192,6 +2192,10 @@ export const paymentLinkOrders = sqliteTable('payment_link_orders', {
   /** 주문 시점의 이용 일시·시간 스냅샷(0062) — 관리자 대시보드가 읽는다. 일시 없는 링크는 NULL. */
   sessionAt: integer('session_at'),
   sessionHours: integer('session_hours'),
+  /** 구글 캘린더(녹음실 "스튜디오 놀 — 예약")에 올린 이용 일정의 이벤트 id(0063) — 환불하면 지운다. 없으면 아직 안 올렸거나 일시 없는 링크. */
+  gcalEventId: text('gcal_event_id'),
+  /** 마지막 캘린더 등록·삭제 실패 사유(성공하면 비운다). 관리자 예약 상세에 보이고 "캘린더 다시 등록"으로 재시도한다. */
+  gcalError: text('gcal_error'),
   createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
 }, (t) => [
   index('payment_link_orders_slug_idx').on(t.slug),

@@ -10,6 +10,7 @@ import { calendarForService, createBookingEvent, deleteBookingEvent, isCalendarA
 import { kstDateString } from '../../../../lib/booking/kst';
 import { cancelAwaitingBookingDeposit, confirmBookingBankDeposit, deliverBookingDepositGuide, retryWaitingEventDelete } from '../../../../lib/booking/bankDeposit';
 import { bankDepositStateOf, isBankDepositPayment } from '../../../../lib/payments/bankDeposit';
+import { removePaymentLinkCalendarEvent, resyncPaymentLinkCalendarEvent } from '../../../../lib/payments/linkCalendar';
 import { markRefundAccountRefunded } from '../../../../lib/payments/refundAccount';
 
 const STATUS_TRANSITIONS = ['completed', 'no_show'] as const;
@@ -272,6 +273,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
         return res.status(500).json({ ok: false, message: '캘린더 재시도에 실패했습니다.' });
       }
+    }
+
+    // 결제 링크 이용 일정의 구글 캘린더 — 다시 등록 / 지우기(환불 등 손으로 처리한 뒤). lib/payments/linkCalendar.ts.
+    if (body.action === 'sync_link_calendar' || body.action === 'remove_link_calendar') {
+      if (order.type !== 'deposit') return res.status(409).json({ ok: false, message: '결제 링크 주문이 아닙니다.' });
+      if (body.action === 'remove_link_calendar') {
+        await removePaymentLinkCalendarEvent(order.orderNo);
+        return res.status(200).json({ ok: true });
+      }
+      const synced = await resyncPaymentLinkCalendarEvent(order.orderNo);
+      return synced.ok ? res.status(200).json({ ok: true }) : res.status(409).json({ ok: false, message: synced.message });
     }
 
     /**
