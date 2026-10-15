@@ -559,6 +559,7 @@ it('expectedSubmittedAt 없이 보낸 판정은 400이고 decideProject를 부�
   }
   expect(decideProject).not.toHaveBeenCalled();
 });
+
 describe('정산 기록 뒤 서비스 잠금', () => {
   beforeEach(() => {
     (loadRecordedFundingPayout as jest.Mock).mockResolvedValue({ id: 'pay-1', status: 'pending' });
@@ -582,5 +583,21 @@ describe('정산 기록 뒤 서비스 잠금', () => {
     const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_design_fee_paid', paid: true });
     expect(r.status).toBe(200);
     expect(setDesignFeePaid).toHaveBeenCalled();
+  });
+});
+
+describe('운영자 글 길이 상한', () => {
+  const TOO_LONG = 'ㄱ'.repeat(5001);
+
+  it.each([
+    ['set_review_note', { action: 'set_review_note', note: TOO_LONG }],
+    ['set_internal_note', { action: 'set_internal_note', note: TOO_LONG }],
+    ['request_changes', { action: 'request_changes', note: TOO_LONG, expectedSubmittedAt: '2026-09-10T00:00:00.000Z' }],
+    ['mark_payout_paid', { action: 'mark_payout_paid', memo: TOO_LONG }],
+  ])('%s — 5,000자를 넘으면 400이고 아무것도 쓰지 않는다', async (_name, body) => {
+    const r = await call('PATCH', { id: 'proj-1' }, body);
+    expect(r.status).toBe(400);
+    expect(String((r.body as { message?: string }).message)).toContain('5,000자');
+    expect(decideProject).not.toHaveBeenCalled();
   });
 });
