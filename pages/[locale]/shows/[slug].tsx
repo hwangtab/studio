@@ -8,6 +8,7 @@ import { localizeShow } from '../../../lib/shows/localize';
 import { getPublicShowBySlug, type PublicShow } from '../../../lib/shows/queries';
 import { fundingMediaDimensions } from '../../../lib/funding/mediaPath';
 import imageMetadata from '../../../utils/imageMetadata.json';
+import { buildPriceSpecification } from '../../../utils/schema/shared';
 
 interface Props {
   show: PublicShow;
@@ -54,6 +55,7 @@ export default function ShowPage({ show, locale }: Props) {
       name: t.name,
       price: t.price,
       priceCurrency: 'KRW',
+      priceSpecification: buildPriceSpecification(t.price),
       url,
       availability:
         (s.remaining[t.id] ?? 0) > 0 && s.saleState === 'open'

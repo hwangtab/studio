@@ -31,7 +31,7 @@ describe('practice-room-hourly', () => {
 
   it('소비자가 6,600원(VAT 포함)이 공급가 6,000 + VAT 600으로 갈린다 (2026-09-27 4,400 → 6,600)', () => {
     expect(PRACTICE_ROOM_HOURLY_PRICE_INCL).toBe(6600);
-    expect(p.unitAmount).toBe(6000);
+    expect(p.unitAmount).toBe(6600); // 표기가 = 청구 단가(공급가는 computeAmounts가 역산)
     expect(splitInclusiveAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL)).toEqual({ itemAmount: 6000, vatAmount: 600, totalAmount: 6600 });
   });
 });

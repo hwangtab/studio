@@ -320,7 +320,7 @@
     },
     "hero": {
       "title": "Yozuv ₩100,000/soat · Mashq xonasi ₩360,000/oy · To'y qo'shig'i ₩350,000",
-      "subtitleLine1": "Mashg‘ulot xonasining soatbay ijarasidan tashqari narxlar QQSsiz haqiqiy narxlardir. Qo‘shimcha to‘lov qo‘llaniladigan barcha holatlar quyida ko‘rsatilgan.",
+      "subtitleLine1": "Mashg‘ulot xonasining oylik ijarasi va darsning oylik to‘lovidan tashqari barcha narxlar QQS bilan va haqiqiy narxlardir. Qo‘shimcha to‘lov qo‘llaniladigan barcha holatlar quyida ko‘rsatilgan.",
       "subtitleLine2": "Quyidagi jadvalda barcha xizmat narxlari bir joyda.",
       "alt": "Studio NOL narxlari",
       "ctaKakao": "KakaoTalk orqali bepul narx oling",
@@ -1221,7 +1221,7 @@
         },
         {
           "q": "Narxi qancha?",
-          "a": "Hammasi kiruvchi paket 350,000 ₩ (QQS hisobga olinmagan) — 2 soat yozuv, ovoz sozlash, mikslash va mastering."
+          "a": "Hammasi kiruvchi paket 350,000 ₩ (QQS bilan) — 2 soat yozuv, ovoz sozlash, mikslash va mastering."
         },
         {
           "q": "Yakuniy faylni qachon olaman?",
@@ -1362,7 +1362,7 @@
       "items": [
         {
           "q": "Yozuv qancha turadi?",
-          "a": "Bitta qo'shiq vokal yozuvi ₩250,000 (3 soat asosida). Soatlik ijara ₩100,000 (kamida 2 soat). Day Lock 4 soat uchun ₩350,000 yoki 8 soat uchun ₩650,000. Barcha narxlar VATsiz."
+          "a": "Bitta qo'shiq vokal yozuvi ₩250,000 (3 soat asosida). Soatlik ijara ₩100,000 (kamida 2 soat). Day Lock 4 soat uchun ₩350,000 yoki 8 soat uchun ₩650,000. Barcha narxlar QQS bilan."
         },
         {
           "q": "Muhandissiz faqat xonani ijaraga olsam bo'ladimi?",
@@ -1446,7 +1446,7 @@
       "items": [
         {
           "q": "Studiya ijarasi qancha turadi?",
-          "a": "Bitta qo'shiq vokal paketi ₩250,000 (3 soat, maxsus muhandis, rejissyorlik va asosiy tahrirlash bilan). Agar faqat soatbay kerak bo'lsa, ₩100,000/soat (kamida 2 soat); uzoq albom ishlari uchun Day Lock 4 soat ₩350,000 yoki 8 soat ₩650,000. Barchasi VATsiz."
+          "a": "Bitta qo'shiq vokal paketi ₩250,000 (3 soat, maxsus muhandis, rejissyorlik va asosiy tahrirlash bilan). Agar faqat soatbay kerak bo'lsa, ₩100,000/soat (kamida 2 soat); uzoq albom ishlari uchun Day Lock 4 soat ₩350,000 yoki 8 soat ₩650,000. Barchasi QQS bilan."
         },
         {
           "q": "Birinchi marta yolg'iz yozsam bo'ladimi?",
@@ -1559,7 +1559,7 @@
       "items": [
         {
           "q": "Miks·mastering narxi qancha?",
-          "a": "Miks trek soniga qarab: 10 trekgacha ₩200,000, 11-30 trek ₩350,000, 31 va undan ko'p trek ₩500,000 — barchasida 2 marta tuzatish bor. Mastering yakka qo'shiq uchun ₩100,000; agar bir yo'la 4 va undan ko'p qo'shiq buyurtma qilsangiz (EP, albom), qo'shiq boshiga ₩80,000. Barcha narxlar VATsiz."
+          "a": "Miks trek soniga qarab: 10 trekgacha ₩200,000, 11-30 trek ₩350,000, 31 va undan ko'p trek ₩500,000 — barchasida 2 marta tuzatish bor. Mastering yakka qo'shiq uchun ₩100,000; agar bir yo'la 4 va undan ko'p qo'shiq buyurtma qilsangiz (EP, albom), qo'shiq boshiga ₩80,000. Barcha narxlar QQS bilan."
         },
         {
           "q": "Ish qancha vaqt oladi?",
@@ -1599,7 +1599,7 @@
     "mixing": {
       "title": "Miks narxlari",
       "subtitle": "Trek soniga qarab uch daraja. Qaysi darajaga tushishingizni bilmasangiz, sessiyani yuboring, aytib beramiz.",
-      "vocalTuneNotice": "Aniq vokal tuning va timing tuzatish qo'shiq boshiga qo'shimcha ₩150,000. Barcha narxlar VATsiz."
+      "vocalTuneNotice": "Aniq vokal tuning va timing tuzatish qo'shiq boshiga qo'shimcha ₩150,000. Barcha narxlar QQS bilan."
     },
     "mastering": {
       "title": "Mastering narxlari",
@@ -1864,7 +1864,7 @@
         },
         {
           "q": "Narxi qancha?",
-          "a": "{{intro}} (VATsiz). Narxlar jadvali bitta — quyidagi oltita narsaning hammasi shunga kiradi. Musiqani tinglab, nechta manzilga yuborish mumkinligini sanab aytganimizdan keyin to'laysiz."
+          "a": "{{intro}} (QQS bilan). Narxlar jadvali bitta — quyidagi oltita narsaning hammasi shunga kiradi. Musiqani tinglab, nechta manzilga yuborish mumkinligini sanab aytganimizdan keyin to'laysiz."
         },
         {
           "q": "Qancha vaqt oladi?",
@@ -2098,7 +2098,7 @@
         },
         {
           "q": "Narxi qancha?",
-          "a": "Soatiga 100,000 ₩ (QQS hisobga olinmagan). Minimal bron — 2 soat."
+          "a": "Soatiga 100,000 ₩ (QQS bilan). Minimal bron — 2 soat."
         },
         {
           "q": "Qanday jihozlardan foydalanasizlar?",
@@ -2164,11 +2164,11 @@
       ],
       "quoteTitle": "Narx ikki qismdan iborat",
       "quoteItems": [
-        "Studiya haqi — soatiga 100 000 KRW (QQS alohida), eng kami 2 soat bron",
+        "Studiya haqi — soatiga 100 000 KRW (QQS bilan), eng kami 2 soat bron",
         "Tanlov haqi — alohida hisoblanadi. Aktyor darajasi, ssenariy hajmi va foydalanish doirasiga bog'liq.",
         "Audiokitob kabi uzun ishlar: Day Lock 4 soat 350 000 KRW yoki 8 soat 650 000 KRW"
       ],
-      "quoteNote": "O'z aktyoringizni olib kelsangiz, faqat studiya haqini to'laysiz — eng kam 2 soat uchun 200 000 KRW (QQS alohida). Ssenariy va maqsadni yuborsangiz, tanlov narxi bepul hisoblanadi.",
+      "quoteNote": "O'z aktyoringizni olib kelsangiz, faqat studiya haqini to'laysiz — eng kam 2 soat uchun 200 000 KRW (QQS bilan). Ssenariy va maqsadni yuborsangiz, tanlov narxi bepul hisoblanadi.",
       "deliveryTitle": "Topshirish spetsifikatsiyasi",
       "deliveryItems": [
         "WAV 24bit/48kHz yoki MP3 320kbps",
@@ -2229,7 +2229,7 @@
         },
         {
           "q": "Ovoz aktyor yollash narxi va taklifi qanday?",
-          "a": "Yozuv xonasi ijarasi (soatiga 100,000 ₩, QQS alohida) va ovoz aktyor yollash to'lovi alohida belgilanadi. Yollash to'lovi aktyor darajasi, matn hajmi va foydalanish ko'lami (YouTube, reklama, korporativ promo va h.k.)ga qarab farqlanadi — matn va maqsadni bildiring, bepul tashqi taklif tayyorlaymiz. KakaoTalk yoki telefon orqali murojaat qilsangiz, tez narx ma'lumoti beramiz."
+          "a": "Yozuv xonasi ijarasi (soatiga 100,000 ₩, QQS bilan) va ovoz aktyor yollash to'lovi alohida belgilanadi. Yollash to'lovi aktyor darajasi, matn hajmi va foydalanish ko'lami (YouTube, reklama, korporativ promo va h.k.)ga qarab farqlanadi — matn va maqsadni bildiring, bepul tashqi taklif tayyorlaymiz. KakaoTalk yoki telefon orqali murojaat qilsangiz, tez narx ma'lumoti beramiz."
         }
       ]
     },
@@ -2271,7 +2271,7 @@
         },
         {
           "q": "Narxi qancha?",
-          "a": "Har qo'shiq uchun qat'iy. Kompozitsiya {{composition}}; aranjirovka ≤10 trek {{small}} · 11–30 trek {{band}} · 31+ trek {{large}}; mavjud qo'shiq uchun maxsus fonogramma {{mr}} (QQSsiz, 2 ta tahrir kiritilgan). Musiqachilar haqiqiy xarajat bo'yicha."
+          "a": "Har qo'shiq uchun qat'iy. Kompozitsiya {{composition}}; aranjirovka ≤10 trek {{small}} · 11–30 trek {{band}} · 31+ trek {{large}}; mavjud qo'shiq uchun maxsus fonogramma {{mr}} (QQS bilan, 2 ta tahrir kiritilgan). Musiqachilar haqiqiy xarajat bo'yicha."
         },
         {
           "q": "Qanday boshlash kerak?",
@@ -2324,7 +2324,7 @@
     },
     "pricing": {
       "title": "Narxlar",
-      "subtitle": "Har qo'shiq uchun, QQSsiz, 2 ta tahrir kiritilgan. Aranjirovka darajalari miks bilan bir xil trek soniga ega.",
+      "subtitle": "Har qo'shiq uchun, QQS bilan, 2 ta tahrir kiritilgan. Aranjirovka darajalari miks bilan bir xil trek soniga ega.",
       "factorsTitle": "Narxga qo'shiladiganlar",
       "factors": [
         {
@@ -2448,7 +2448,7 @@
   "coverVideo": {
     "seo": {
       "title": "Cover video suratga olish · 4K video + audio to'liq paket ₩350K | Studio NOL",
-      "description": "Yeonsinnae stantsiyasi 4-chiqishdan 5 daqiqa yurish. Cover video suratga olish + miks bir seansda. 4K MP4 + WAV/MP3. To'liq paket ₩350,000 (VATsiz).",
+      "description": "Yeonsinnae stantsiyasi 4-chiqishdan 5 daqiqa yurish. Cover video suratga olish + miks bir seansda. 4K MP4 + WAV/MP3. To'liq paket ₩350,000 (QQS bilan).",
       "keywords": "cover video suratga olish, cover qo'shiq, youtube cover video, musiqa studiyasi Seul, Yeonsinnae"
     },
     "hero": {
@@ -2467,7 +2467,7 @@
         },
         {
           "q": "Narxi qancha?",
-          "a": "1 ta qo'shiq, 3 soatlik to'liq paket ₩350,000 (VATsiz). 4K video, WAV va MP3 kiritilgan."
+          "a": "1 ta qo'shiq, 3 soatlik to'liq paket ₩350,000 (QQS bilan). 4K video, WAV va MP3 kiritilgan."
         },
         {
           "q": "Fayllarni qachon olaman?",

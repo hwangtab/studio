@@ -1,6 +1,6 @@
 import { type Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
-import { getSchemaLanguage } from './shared';
+import { buildPriceSpecification, getSchemaLanguage } from './shared';
 import {
   RELEASE_SINGLE_FROM_PRICE,
   RELEASE_EP_FROM_PRICE,
@@ -108,12 +108,8 @@ export const generateReleaseProjectSchema = (
     name: RELEASE_TIER_LABELS[t][locale],
     priceCurrency: 'KRW',
     price: RELEASE_TIER_PRICES[t],
-    priceSpecification: {
-      '@type': 'PriceSpecification',
-      priceCurrency: 'KRW',
-      price: RELEASE_TIER_PRICES[t],
-      valueAddedTaxIncluded: false,
-    },
+    // 2026-10-15부터 발매 티어 가격은 부가세 포함이다.
+    priceSpecification: buildPriceSpecification(RELEASE_TIER_PRICES[t]),
     availability: 'https://schema.org/InStock',
     url: `${siteUrl}/${locale}/release-project/${t}`,
     itemOffered: {

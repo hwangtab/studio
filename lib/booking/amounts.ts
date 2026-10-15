@@ -8,9 +8,20 @@ export interface OrderAmounts {
   totalAmount: number;
 }
 
-/** 사이트 표기는 VAT 별도 — 온라인 청구는 포함액. 상품가가 만원 단위라 VAT는 항상 정수. */
+/**
+ * 세션 상품 금액. 사이트 표기가 곧 청구액이다 — **표기가는 VAT 포함**(운영자 확정 2026-10-15,
+ * 연습실 월 이용료·레슨만 예외로 별도). 포함액을 splitInclusiveAmount로 공급가·VAT에 나눠 저장한다.
+ */
 export const computeAmounts = (product: SessionProduct, hours: number): OrderAmounts => {
-  const itemAmount = product.kind === 'package' ? product.unitAmount : product.unitAmount * hours;
+  const totalAmount = product.kind === 'package' ? product.unitAmount : product.unitAmount * hours;
+  return splitInclusiveAmount(totalAmount);
+};
+
+/**
+ * 공급가(VAT 별도) → 공급가·VAT·합계. **표기가 별도인 상품 전용** — 연습실 월 이용료·레슨(카드 결제)뿐이다.
+ * 현금 입금은 부가세를 받지 않으므로 이 함수를 거치지 않는다.
+ */
+export const addVatToSupply = (itemAmount: number): OrderAmounts => {
   const vatAmount = Math.round(itemAmount * VAT_RATE);
   return { itemAmount, vatAmount, totalAmount: itemAmount + vatAmount };
 };

@@ -1,5 +1,13 @@
 import type { Locale } from './i18n';
 import { generateAggregateOfferSchema, getSchemaLanguage } from '../utils/schema';
+import { buildPriceSpecification } from '../utils/schema/shared';
+
+/**
+ * 부가세 별도 오퍼 — 2026-10-15부터 표시 가격은 전부 VAT 포함이고 이 하나만 예외다
+ * (카드 결제 때 10% 가산, 현금 입금은 부가세 없음). 레슨 월정액은 /pricing 카드에 없다.
+ */
+export const PRICING_VAT_EXCLUDED_OFFER_IDS: readonly string[] = ['practice-room-monthly'];
+const isVatIncluded = (offerId: string) => !PRICING_VAT_EXCLUDED_OFFER_IDS.includes(offerId);
 
 type TranslateFn = (key: string, options?: Record<string, unknown>) => string;
 
@@ -91,7 +99,10 @@ const buildPricingOfferSchema = (
   description: offer.description || '',
   inLanguage: context.schemaLanguage,
   priceCurrency: 'KRW',
-  ...(offer.priceValue > 0 && { price: offer.priceValue }),
+  ...(offer.priceValue > 0 && {
+    price: offer.priceValue,
+    priceSpecification: buildPriceSpecification(offer.priceValue, { vatIncluded: isVatIncluded(offer.id) }),
+  }),
   priceValidUntil: offer.priceValidUntil ?? context.priceValidUntil,
   availability: 'https://schema.org/InStock',
   url: `${context.pricingUrl}#${offer.id}`,
@@ -149,7 +160,7 @@ export const buildPricingPageSchema = ({
   const allOffers = normalizePricingSchemaOffers(pricingData);
   const aggregateOfferSchema = generateAggregateOfferSchema(
     t('pricing.seo.schemaTitle'),
-    allOffers.map((offer) => ({ name: offer.title, priceValue: offer.priceValue })),
+    allOffers.map((offer) => ({ name: offer.title, priceValue: offer.priceValue, vatIncluded: isVatIncluded(offer.id) })),
     locale
   );
 

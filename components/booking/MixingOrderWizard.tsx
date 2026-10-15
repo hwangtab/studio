@@ -75,7 +75,7 @@ const MIXING_STEPS = ['상품·곡 수', '주문자 정보'];
 
 /** 상품 묶음 — 순서는 MIXING_PRODUCTS의 serviceType 순서와 같다(라디오 순서가 곧 화면 순서). */
 const PRODUCT_GROUPS: { serviceType: MixingProduct['serviceType']; label: string; hint?: string }[] = [
-  { serviceType: 'mixing', label: '믹싱', hint: '트랙 수로 골라요. 부가세 별도.' },
+  { serviceType: 'mixing', label: '믹싱', hint: '트랙 수로 골라요. 부가세 포함.' },
   { serviceType: 'mastering', label: '마스터링', hint: '믹스가 끝난 스테레오 파일을 보내 주세요.' },
   { serviceType: 'mixing-mastering', label: '믹싱+마스터링', hint: '두 상품의 합산가 그대로예요.' },
 ];

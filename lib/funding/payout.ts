@@ -330,17 +330,17 @@ export const buildFundingPayoutPreview = async (projectId: string): Promise<Fund
   }
 
   /**
-   * 정산 때 받기로 한 설계비·제작비(개설자 약관 제6조). 부가세 포함으로 뺀다 — 약정은 공급가다.
+   * 정산 때 받기로 한 설계비·제작비(개설자 약관 제6조). 약정액이 곧 **부가세 포함** 금액이라 그대로 뺀다
+   * (2026-10-15 운영자 확정 — 그 전에는 약정이 공급가여서 여기서 10%를 더해 뺐다).
    * 설계비를 정산 밖에서 이미 받았으면(design_fee_paid_at) 다시 빼지 않는다. 직접 개설로 되돌린
    * 행(`none`)은 옛 약정 보존용이라 빼지 않는다.
    */
   const serviceResult = await loadProjectService(projectId);
   const service = serviceResult.available ? serviceResult.service : null;
-  const withVat = (supply: number) => Math.round(supply * (1 + VAT_RATE));
   const charges: FundingServiceCharges = service && service.kind !== 'none'
     ? {
-      designFee: service.designFeePaidAt ? 0 : withVat(service.designFee),
-      productionFee: withVat(service.productionFee),
+      designFee: service.designFeePaidAt ? 0 : service.designFee,
+      productionFee: service.productionFee,
     }
     : { designFee: 0, productionFee: 0 };
 

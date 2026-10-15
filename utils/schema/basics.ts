@@ -3,7 +3,7 @@ import { type Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { LESSON_MONTHLY_PRICE } from '../../data/pricing';
 import { getOperatorPersonId } from './person';
-import { getOfferPriceValidUntil, getSchemaLanguage } from './shared';
+import { buildPriceSpecification, getOfferPriceValidUntil, getSchemaLanguage } from './shared';
 
 export const generateBreadcrumbSchema = (breadcrumbs: Breadcrumb[] | null, siteUrl: string, canonicalUrl?: string) => {
   if (!breadcrumbs || breadcrumbs.length === 0) return null;
@@ -77,6 +77,8 @@ export const generateCourseSchema = (
       // 레슨가를 올리면 JSON-LD만 옛 가격으로 남는다(그 파일 주석이 경고하는 드리프트).
       // 350,000은 레슨·축가·음반기획 세 상품의 우연한 동일값이라 특히 위험하다.
       price: LESSON_MONTHLY_PRICE,
+      // 레슨 월정액은 부가세 별도(카드 결제 때 10% 가산, 현금 입금은 부가세 없음) — 예외 두 가지 중 하나.
+      priceSpecification: buildPriceSpecification(LESSON_MONTHLY_PRICE, { vatIncluded: false, unitCode: 'MON' }),
       // 다른 Offer는 전부 getOfferPriceValidUntil()을 쓰는데 Course만 빠져 있었다.
       // 없으면 Google이 가격을 만료 처리한다.
       priceValidUntil: getOfferPriceValidUntil(),

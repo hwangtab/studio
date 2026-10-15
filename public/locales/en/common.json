@@ -348,7 +348,7 @@
     },
     "hero": {
       "title": "Recording ₩100,000/hr · Practice Room ₩360,000/mo · Wedding Song ₩350,000",
-      "subtitleLine1": "Except hourly practice-room use, prices are actual rates with VAT excluded. Every case where an extra fee applies is listed below.",
+      "subtitleLine1": "Except the practice-room monthly fee and the lesson monthly fee, every price includes VAT and is the actual rate. Every case where an extra fee applies is listed below.",
       "subtitleLine2": "The table right below shows every service rate at a glance.",
       "alt": "Studio NOL Pricing",
       "ctaKakao": "Get a Free Quote on KakaoTalk",
@@ -406,7 +406,7 @@
         },
         {
           "q": "How much does the practice room cost?",
-          "a": "It is {{practiceRoom}} per month with no deposit (maintenance included, VAT excluded). You get 24/7 access and can stay overnight, and a one-year contract takes 50% off the first month."
+          "a": "It is {{practiceRoom}} per month with no deposit (maintenance included, VAT excluded; no VAT on cash deposit). You get 24/7 access and can stay overnight, and a one-year contract takes 50% off the first month."
         },
         {
           "q": "How do I book or request a quote?",
@@ -1249,7 +1249,7 @@
         },
         {
           "q": "How much does it cost?",
-          "a": "The all-in-one package is ₩350,000 (VAT excl.) — includes 2hr recording, vocal tuning, mixing & mastering."
+          "a": "The all-in-one package is ₩350,000 (VAT included) — includes 2hr recording, vocal tuning, mixing & mastering."
         },
         {
           "q": "When will I receive the final file?",
@@ -1390,7 +1390,7 @@
       "items": [
         {
           "q": "How much does recording cost?",
-          "a": "Vocal recording for one song is ₩250,000 (based on 3 hours). Hourly rental is ₩100,000 (2-hour minimum). Day Lock is ₩350,000 for 4 hours or ₩650,000 for 8 hours. All prices exclude VAT."
+          "a": "Vocal recording for one song is ₩250,000 (based on 3 hours). Hourly rental is ₩100,000 (2-hour minimum). Day Lock is ₩350,000 for 4 hours or ₩650,000 for 8 hours. All prices include VAT."
         },
         {
           "q": "Can I rent just the room without an engineer?",
@@ -1474,7 +1474,7 @@
       "items": [
         {
           "q": "How much is studio rental?",
-          "a": "The vocal one-song package is ₩250,000 (3 hours, including a dedicated engineer, directing and basic editing). If you only need it by the hour, that's ₩100,000/hour (2-hour minimum); for longer album work Day Lock is ₩350,000 for 4 hours or ₩650,000 for 8 hours. All prices exclude VAT."
+          "a": "The vocal one-song package is ₩250,000 (3 hours, including a dedicated engineer, directing and basic editing). If you only need it by the hour, that's ₩100,000/hour (2-hour minimum); for longer album work Day Lock is ₩350,000 for 4 hours or ₩650,000 for 8 hours. All prices include VAT."
         },
         {
           "q": "Is it OK if it's my first time recording?",
@@ -1587,7 +1587,7 @@
       "items": [
         {
           "q": "How much do mixing and mastering cost?",
-          "a": "Mixing is priced by track count: ₩200,000 for 10 tracks or fewer, ₩350,000 for 11-30 tracks, and ₩500,000 for 31 or more — all including 2 revisions. Mastering is ₩100,000 for a single, or ₩80,000 per song when you commission 4 or more songs together (EP, full album). All prices exclude VAT."
+          "a": "Mixing is priced by track count: ₩200,000 for 10 tracks or fewer, ₩350,000 for 11-30 tracks, and ₩500,000 for 31 or more — all including 2 revisions. Mastering is ₩100,000 for a single, or ₩80,000 per song when you commission 4 or more songs together (EP, full album). All prices include VAT."
         },
         {
           "q": "How long does it take?",
@@ -1627,7 +1627,7 @@
     "mixing": {
       "title": "Mixing Pricing",
       "subtitle": "Three tiers based on track count. Not sure which applies to you? Send us the session and we'll tell you.",
-      "vocalTuneNotice": "Precise vocal tuning and timing correction adds ₩150,000 per song. All prices exclude VAT."
+      "vocalTuneNotice": "Precise vocal tuning and timing correction adds ₩150,000 per song. All prices include VAT."
     },
     "mastering": {
       "title": "Mastering Pricing",
@@ -1892,7 +1892,7 @@
         },
         {
           "q": "How much is it?",
-          "a": "{{intro}}, excluding VAT. There is one price — all six things below are inside it. We listen to the music and tell you how many outlets we can send to; you pay after that."
+          "a": "{{intro}}, VAT included. There is one price — all six things below are inside it. We listen to the music and tell you how many outlets we can send to; you pay after that."
         },
         {
           "q": "How long does it take?",
@@ -2126,7 +2126,7 @@
         },
         {
           "q": "How much does it cost?",
-          "a": "₩100,000 per hour (VAT excl.). Minimum booking is 2 hours."
+          "a": "₩100,000 per hour (VAT included). Minimum booking is 2 hours."
         },
         {
           "q": "What equipment do you use?",
@@ -2192,11 +2192,11 @@
       ],
       "quoteTitle": "A quote has two parts",
       "quoteItems": [
-        "Studio time — ₩100,000/hour (excl. VAT), 2-hour minimum booking",
+        "Studio time — ₩100,000/hour (VAT included), 2-hour minimum booking",
         "Casting fee — quoted separately, based on the actor's tier, script length, and usage scope",
         "Long-form work such as audiobooks: Day Lock, 4 hours ₩350,000 or 8 hours ₩650,000"
       ],
-      "quoteNote": "If you bring your own voice actor, you only pay for studio time — ₩200,000 for the 2-hour minimum (excl. VAT). Send the script and intended use and the casting quote is free.",
+      "quoteNote": "If you bring your own voice actor, you only pay for studio time — ₩200,000 for the 2-hour minimum (VAT included). Send the script and intended use and the casting quote is free.",
       "deliveryTitle": "Delivery specs",
       "deliveryItems": [
         "WAV 24bit/48kHz or MP3 320kbps",
@@ -2257,7 +2257,7 @@
         },
         {
           "q": "How much does it cost to hire a voice actor, and how is the quote determined?",
-          "a": "Studio rental (₩100,000/hr, excl. VAT) and voice actor fees are quoted separately. Actor fees vary by tier, script length, and usage scope (YouTube, commercial, corporate, etc.). Share your script and intended use and we will provide a free outsourcing estimate. Contact us via KakaoTalk or phone for a quick quote."
+          "a": "Studio rental (₩100,000/hr, VAT included) and voice actor fees are quoted separately. Actor fees vary by tier, script length, and usage scope (YouTube, commercial, corporate, etc.). Share your script and intended use and we will provide a free outsourcing estimate. Contact us via KakaoTalk or phone for a quick quote."
         }
       ]
     },
@@ -2299,7 +2299,7 @@
         },
         {
           "q": "How much does it cost?",
-          "a": "Fixed per song. Composition {{composition}}; arrangement ≤10 tracks {{small}} · 11–30 tracks {{band}} · 31+ tracks {{large}}; a custom backing track for an existing song {{mr}} (VAT excluded, 2 revisions included). Session players are billed at cost."
+          "a": "Fixed per song. Composition {{composition}}; arrangement ≤10 tracks {{small}} · 11–30 tracks {{band}} · 31+ tracks {{large}}; a custom backing track for an existing song {{mr}} (VAT included, 2 revisions included). Session players are billed at cost."
         },
         {
           "q": "How do I start?",
@@ -2352,7 +2352,7 @@
     },
     "pricing": {
       "title": "Prices",
-      "subtitle": "Per song, VAT excluded, 2 revisions included. Arrangement tiers follow the same track counts as mixing.",
+      "subtitle": "Per song, VAT included, 2 revisions included. Arrangement tiers follow the same track counts as mixing.",
       "factorsTitle": "What adds to the price",
       "factors": [
         {
@@ -2476,7 +2476,7 @@
   "coverVideo": {
     "seo": {
       "title": "Cover Video Recording Studio · 4K Video + Audio All-in-One ₩350K | Studio NOL",
-      "description": "5 min walk from Yeonsinnae Station exit 4. Cover song video filming + mixing in one session. 4K MP4 + WAV/MP3 included. All-in-one package ₩350,000 (excl. VAT).",
+      "description": "5 min walk from Yeonsinnae Station exit 4. Cover song video filming + mixing in one session. 4K MP4 + WAV/MP3 included. All-in-one package ₩350,000 (VAT included).",
       "keywords": "cover video recording, cover song studio, youtube cover video, music cover filming, 4k cover video studio, cover recording Seoul, Yeonsinnae recording studio"
     },
     "hero": {
@@ -2495,7 +2495,7 @@
         },
         {
           "q": "How much does it cost?",
-          "a": "₩350,000 (excl. VAT) for a 1-song, 3-hour all-in-one package. Includes 4K video, WAV and MP3."
+          "a": "₩350,000 (VAT included) for a 1-song, 3-hour all-in-one package. Includes 4K video, WAV and MP3."
         },
         {
           "q": "When will I receive my files?",

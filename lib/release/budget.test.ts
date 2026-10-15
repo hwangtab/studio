@@ -52,7 +52,7 @@ describe('발매 예산 — 추가 항목', () => {
     const b = computeReleaseBudget(base);
     expect(b.lines.map((l) => l.id)).toEqual(['bundle']);
     expect(b.total).toBe(SINGLE_BUNDLE_PRICE);
-    expect(b.totalWithVat).toBe(Math.round(SINGLE_BUNDLE_PRICE * 1.1));
+    expect('totalWithVat' in b).toBe(false); // 번들가·옵션가가 전부 VAT 포함이라 합계도 포함액이다
   });
 
   it('큰 편성은 곡마다 믹싱 차액, 편곡은 같은 등급으로 고른 곡 수만큼', () => {

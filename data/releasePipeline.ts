@@ -26,7 +26,7 @@ import { CASES_CHECKED_ON, CROWDFUNDING_CASES, type CrowdfundingCase } from './c
 
 export type ReleaseTierKey = 'single' | 'ep' | 'album';
 
-/** 계산기의 티어별 제작비 — 발매 번들가(= 발매 프로젝트 티어 하한, 부가세 별도). */
+/** 계산기의 티어별 제작비 — 발매 번들가(= 발매 프로젝트 티어 하한, 부가세 포함). */
 export const PIPELINE_BUNDLE_PRICES: Record<ReleaseTierKey, number> = {
   single: SINGLE_BUNDLE_PRICE,
   ep: EP_BUNDLE_PRICE,
@@ -86,7 +86,7 @@ export const releasePipelineCopy = {
       {
         id: 'funding',
         title: '스튜디오 놀 펀딩으로',
-        body: `티저 한 곡을 먼저 만들고, 그 곡으로 스튜디오 놀 펀딩을 열어요. 모금액으로 나머지를 녹음·믹싱하고 홍보해 발매해요. 설계비 ${designFee}(부가세 별도)까지 한 견적으로 드리고, 설계비와 제작비는 펀딩이 끝나 모금액을 정산할 때 모금액에서 받아요. 성공 수수료 없음.`,
+        body: `티저 한 곡을 먼저 만들고, 그 곡으로 스튜디오 놀 펀딩을 열어요. 모금액으로 나머지를 녹음·믹싱하고 홍보해 발매해요. 설계비 ${designFee}(부가세 포함)까지 한 견적으로 드리고, 설계비와 제작비는 펀딩이 끝나 모금액을 정산할 때 모금액에서 받아요. 성공 수수료 없음.`,
         // 예전엔 "음반 펀딩 최근 N건 모금 중앙값" — 펀딩을 고민하는 사람에게 "이만큼은 모아야 한다"는
         // 기준으로 읽혀 뺐다(2026-10-12 운영자, 목표액 계산기 calm과 같은 이유). 중앙값은 펀딩 설계 페이지 계산기에만 남는다.
         stat: '성공 수수료 없음 · 목표에 못 미쳐도 모인 금액으로 진행해요',
@@ -106,7 +106,7 @@ export const releasePipelineCopy = {
         id: 'self',
         title: '직접 준비한 예산으로',
         body: `싱글 ${formatPriceLabel(SINGLE_BUNDLE_PRICE, 'ko')}부터 규모별로 견적해요. 녹음·믹싱·마스터링만 단계별로 맡기는 것도 돼요.`,
-        stat: `EP ${formatPriceLabel(EP_BUNDLE_PRICE, 'ko')}~ · 정규 ${formatPriceLabel(ALBUM_BUNDLE_PRICE, 'ko')}~ (부가세 별도)`,
+        stat: `EP ${formatPriceLabel(EP_BUNDLE_PRICE, 'ko')}~ · 정규 ${formatPriceLabel(ALBUM_BUNDLE_PRICE, 'ko')}~ (부가세 포함)`,
         links: [{ href: '/ko/pricing', label: '요금 전체 보기' }],
       },
     ],
@@ -185,7 +185,7 @@ export const releasePipelineCopy = {
       {
         id: 'design',
         title: '펀딩 설계 대행',
-        body: `스토리·리워드·목표액·페이지를 기획부터 같이 만들어요. 설계비 ${designFee}(부가세 별도), 성공 수수료 없음.`,
+        body: `스토리·리워드·목표액·페이지를 기획부터 같이 만들어요. 설계비 ${designFee}(부가세 포함), 성공 수수료 없음.`,
         href: '/ko/crowdfunding-design',
         label: '설계 대행 보기',
       },
@@ -222,7 +222,7 @@ export const releasePipelineCopy = {
     {
       question: '펀딩으로 하면 비용은 언제, 어떻게 내나요?',
       answer:
-        `펀딩 설계비(${designFee}, 부가세 별도)부터 녹음·믹싱·마스터링, 국내외 매체 홍보, 협력 유통사 연결까지 한 견적으로 드려요. 설계비와 제작비는 펀딩이 끝나고 모금액을 정산할 때 모금액에서 받아요. 모금액이 견적에 못 미치면 모자라는 금액은 차액으로 청구할지 제작 규모를 조정할지 상의해 정해요. 발매 번들 가격 외에 단계를 더한다고 붙는 추가 할인은 없고, 세션 연주비만 연주자 실비로 따로 받아요.`,
+        `펀딩 설계비(${designFee}, 부가세 포함)부터 녹음·믹싱·마스터링, 국내외 매체 홍보, 협력 유통사 연결까지 한 견적으로 드려요. 설계비와 제작비는 펀딩이 끝나고 모금액을 정산할 때 모금액에서 받아요. 모금액이 견적에 못 미치면 모자라는 금액은 차액으로 청구할지 제작 규모를 조정할지 상의해 정해요. 발매 번들 가격 외에 단계를 더한다고 붙는 추가 할인은 없고, 세션 연주비만 연주자 실비로 따로 받아요.`,
     },
     {
       question: '지원사업에 선정되면 꼭 여기서 제작해야 하나요?',

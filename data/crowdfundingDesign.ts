@@ -12,7 +12,7 @@ import { CASES_CHECKED_ON, CASES_SUMMARY } from './crowdfundingCases';
  * (data/buyerIntentHubs.ts가 ko 전용 허브 카피를 두는 방식과 같다).
  *
  * **여기 적는 것은 정본에 있는 사실뿐이다.** 근거:
- * - 가격·구조: data/pricing.ts FUNDING_DESIGN_PRICE(설계비, 부가세 별도) + 모금액에서 떼는
+ * - 가격·구조: data/pricing.ts FUNDING_DESIGN_PRICE(설계비, 부가세 포함) + 모금액에서 떼는
  *   FUNDING_PLATFORM_FEE_PERCENT·FUNDING_PAYMENT_FEE_PERCENT(부가세 포함). 성공 수수료 없음,
  *   펀딩은 스튜디오 놀 펀딩에서만 연다(2026-09-25 운영자 결정). 옛 구조(선불 설계비 + 성공 수수료,
  *   텀블벅 등 외부 플랫폼)는 폐지 — 아래 "진행한 펀딩" 표의 텀블벅 건은 그 시절의 실적이다.
@@ -40,7 +40,7 @@ const casesLine = `성공 ${CASES_SUMMARY.succeededCount}건 · 합계 ${formatP
 export const crowdfundingDesignCopy = {
   seo: {
     title: '크라우드펀딩 설계 대행 — 앨범 펀딩 기획·리워드·페이지 제작 | 스튜디오 놀',
-    description: `음반 크라우드펀딩을 기획부터 페이지 구축까지 대행하고, 스튜디오 놀 펀딩에 엽니다. 설계비 ${designFee}(부가세 별도), 성공 수수료 없음 — 모금액에서는 ${fundingFees}를 뗍니다. 음반 펀딩 수십 건·누적 약 3억원을 진행한 프로듀서가 맡습니다.`,
+    description: `음반 크라우드펀딩을 기획부터 페이지 구축까지 대행하고, 스튜디오 놀 펀딩에 엽니다. 설계비 ${designFee}(부가세 포함), 성공 수수료 없음 — 모금액에서는 ${fundingFees}를 뗍니다. 음반 펀딩 수십 건·누적 약 3억원을 진행한 프로듀서가 맡습니다.`,
     keywords: '크라우드펀딩 대행, 앨범 펀딩, 음반 크라우드펀딩, 펀딩 페이지 제작, 리워드 설계, 인디 앨범 제작비, 음반 제작비 마련, 스튜디오 놀 펀딩',
   },
   hero: {
@@ -56,7 +56,7 @@ export const crowdfundingDesignCopy = {
     serviceCol: '항목',
     valueCol: '내용',
     rows: [
-      { id: 'fee', label: '설계비', value: `${designFee} (부가세 별도) · 정산 때 모금액에서` },
+      { id: 'fee', label: '설계비', value: `${designFee} (부가세 포함) · 정산 때 모금액에서` },
       { id: 'success', label: '성공 수수료', value: '없음' },
       { id: 'funding-fees', label: '모금액에서 떼는 것', value: fundingFees },
       { id: 'platform', label: '플랫폼', value: '스튜디오 놀 펀딩(이 사이트)' },
@@ -135,7 +135,7 @@ export const crowdfundingDesignCopy = {
       },
       {
         question: '비용은 어떻게 되나요?',
-        answer: `설계비 ${designFee}(부가세 별도)이고, 펀딩이 끝나 모금액을 정산할 때 모금액에서 떼요. 성공 수수료는 받지 않아요. 모금액에서는 ${fundingFees}도 떼요. 발매 프로젝트와 함께 맡기시면 설계비와 제작비를 한 견적으로 드리고, 둘 다 정산 때 모금액에서 받아요. 모금액이 견적에 못 미치면 차액 청구나 규모 조정을 상의해 정해요. ${withholdingNote}`,
+        answer: `설계비 ${designFee}(부가세 포함)이고, 펀딩이 끝나 모금액을 정산할 때 모금액에서 떼요. 성공 수수료는 받지 않아요. 모금액에서는 ${fundingFees}도 떼요. 발매 프로젝트와 함께 맡기시면 설계비와 제작비를 한 견적으로 드리고, 둘 다 정산 때 모금액에서 받아요. 모금액이 견적에 못 미치면 차액 청구나 규모 조정을 상의해 정해요. ${withholdingNote}`,
       },
       {
         question: '펀딩이 목표에 못 미치면 어떻게 되나요?',

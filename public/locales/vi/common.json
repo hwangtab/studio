@@ -320,7 +320,7 @@
     },
     "hero": {
       "title": "Thu âm ₩100,000/giờ · Phòng tập ₩360,000/tháng · Đám cưới ₩350,000",
-      "subtitleLine1": "Ngoài giá thuê phòng tập theo giờ, giá là giá thực tế chưa gồm VAT. Mọi trường hợp phát sinh phí đều được nêu bên dưới.",
+      "subtitleLine1": "Ngoài phí thuê phòng tập theo tháng và học phí bài học theo tháng, mọi giá đều đã gồm VAT và là giá thực tế. Mọi trường hợp phát sinh phí đều được nêu bên dưới.",
       "subtitleLine2": "Bảng ngay bên dưới hiển thị toàn bộ đơn giá dịch vụ.",
       "alt": "Bảng giá Studio NOL",
       "ctaKakao": "Nhận báo giá miễn phí qua KakaoTalk",
@@ -1221,7 +1221,7 @@
         },
         {
           "q": "Chi phí là bao nhiêu?",
-          "a": "Gói trọn gói 350.000₩ (chưa VAT) bao gồm 2 giờ thu âm, chỉnh giọng, mix & mastering."
+          "a": "Gói trọn gói 350.000₩ (đã gồm VAT) bao gồm 2 giờ thu âm, chỉnh giọng, mix & mastering."
         },
         {
           "q": "Khi nào nhận được file cuối?",
@@ -1362,7 +1362,7 @@
       "items": [
         {
           "q": "Chi phí thu âm là bao nhiêu?",
-          "a": "Thu âm vocal một bài là ₩250,000 (cơ sở 3 giờ). Thuê theo giờ là ₩100,000 (tối thiểu 2 giờ). Day Lock là ₩350,000 cho 4 giờ hoặc ₩650,000 cho 8 giờ. Tất cả giá chưa bao gồm VAT."
+          "a": "Thu âm vocal một bài là ₩250,000 (cơ sở 3 giờ). Thuê theo giờ là ₩100,000 (tối thiểu 2 giờ). Day Lock là ₩350,000 cho 4 giờ hoặc ₩650,000 cho 8 giờ. Tất cả giá đã bao gồm VAT."
         },
         {
           "q": "Tôi có thể thuê phòng mà không cần kỹ sư không?",
@@ -1446,7 +1446,7 @@
       "items": [
         {
           "q": "Thuê phòng thu bao nhiêu tiền?",
-          "a": "Gói vocal một bài là ₩250,000 (3 giờ, bao gồm kỹ sư chuyên trách, đạo diễn và chỉnh sửa cơ bản). Nếu chỉ cần theo giờ thì ₩100,000/giờ (tối thiểu 2 giờ); với công việc album dài, Day Lock là ₩350,000 cho 4 giờ hoặc ₩650,000 cho 8 giờ. Tất cả giá chưa gồm VAT."
+          "a": "Gói vocal một bài là ₩250,000 (3 giờ, bao gồm kỹ sư chuyên trách, đạo diễn và chỉnh sửa cơ bản). Nếu chỉ cần theo giờ thì ₩100,000/giờ (tối thiểu 2 giờ); với công việc album dài, Day Lock là ₩350,000 cho 4 giờ hoặc ₩650,000 cho 8 giờ. Tất cả giá đã gồm VAT."
         },
         {
           "q": "Lần đầu thu âm một mình có sao không?",
@@ -1559,7 +1559,7 @@
       "items": [
         {
           "q": "Chi phí mixing·mastering là bao nhiêu?",
-          "a": "Mixing tính theo số track: từ 10 track trở xuống ₩200,000, 11-30 track ₩350,000, từ 31 track trở lên ₩500,000, đều gồm 2 lần sửa cơ bản. Mastering single ₩100,000/bài; nếu đặt cùng lúc 4 bài trở lên (EP, album) thì ₩80,000/bài. Tất cả giá chưa gồm VAT."
+          "a": "Mixing tính theo số track: từ 10 track trở xuống ₩200,000, 11-30 track ₩350,000, từ 31 track trở lên ₩500,000, đều gồm 2 lần sửa cơ bản. Mastering single ₩100,000/bài; nếu đặt cùng lúc 4 bài trở lên (EP, album) thì ₩80,000/bài. Tất cả giá đã gồm VAT."
         },
         {
           "q": "Thời gian làm việc mất bao lâu?",
@@ -1599,7 +1599,7 @@
     "mixing": {
       "title": "Bảng giá mixing",
       "subtitle": "Ba mức dựa trên số track. Chưa chắc mình thuộc mức nào? Gửi session cho chúng tôi, chúng tôi sẽ báo.",
-      "vocalTuneNotice": "Nếu cần chỉnh giọng chi tiết và sửa timing, phụ thu ₩150,000/bài. Tất cả giá chưa gồm VAT."
+      "vocalTuneNotice": "Nếu cần chỉnh giọng chi tiết và sửa timing, phụ thu ₩150,000/bài. Tất cả giá đã gồm VAT."
     },
     "mastering": {
       "title": "Bảng giá mastering",
@@ -1864,7 +1864,7 @@
         },
         {
           "q": "Giá bao nhiêu?",
-          "a": "{{intro}} (chưa gồm VAT). Chỉ có một bảng giá — sáu hạng mục bên dưới đều đã nằm trong đó. Chúng tôi nghe bản nhạc, đếm và báo bạn số nơi sẽ gửi, sau đó bạn mới thanh toán."
+          "a": "{{intro}} (đã gồm VAT). Chỉ có một bảng giá — sáu hạng mục bên dưới đều đã nằm trong đó. Chúng tôi nghe bản nhạc, đếm và báo bạn số nơi sẽ gửi, sau đó bạn mới thanh toán."
         },
         {
           "q": "Mất bao lâu?",
@@ -2098,7 +2098,7 @@
         },
         {
           "q": "Chi phí là bao nhiêu?",
-          "a": "100.000₩/giờ (chưa VAT). Đặt tối thiểu 2 giờ."
+          "a": "100.000₩/giờ (đã gồm VAT). Đặt tối thiểu 2 giờ."
         },
         {
           "q": "Sử dụng thiết bị gì?",
@@ -2164,11 +2164,11 @@
       ],
       "quoteTitle": "Báo giá gồm hai phần",
       "quoteItems": [
-        "Phí phòng thu — 100.000 KRW/giờ (chưa VAT), đặt tối thiểu 2 giờ",
+        "Phí phòng thu — 100.000 KRW/giờ (đã gồm VAT), đặt tối thiểu 2 giờ",
         "Phí casting — báo riêng, tùy hạng voice talent, độ dài kịch bản và phạm vi sử dụng",
         "Dự án dài như audiobook: Day Lock 4 giờ 350.000 KRW hoặc 8 giờ 650.000 KRW"
       ],
-      "quoteNote": "Nếu bạn tự dẫn voice talent, bạn chỉ trả phí phòng thu — 200.000 KRW cho mức tối thiểu 2 giờ (chưa VAT). Gửi kịch bản và mục đích sử dụng, báo giá casting là miễn phí.",
+      "quoteNote": "Nếu bạn tự dẫn voice talent, bạn chỉ trả phí phòng thu — 200.000 KRW cho mức tối thiểu 2 giờ (đã gồm VAT). Gửi kịch bản và mục đích sử dụng, báo giá casting là miễn phí.",
       "deliveryTitle": "Thông số bàn giao",
       "deliveryItems": [
         "WAV 24bit/48kHz hoặc MP3 320kbps",
@@ -2229,7 +2229,7 @@
         },
         {
           "q": "Chi phí thuê diễn viên lồng tiếng và báo giá như thế nào?",
-          "a": "Phí sử dụng phòng thu (100.000 KRW/giờ, chưa bao gồm VAT) và phí thuê diễn viên lồng tiếng được tính riêng. Phí thuê diễn viên phụ thuộc vào hạng diễn viên, độ dài kịch bản và phạm vi sử dụng (YouTube, quảng cáo, PR doanh nghiệp, v.v.). Vui lòng cung cấp kịch bản và mục đích sử dụng, chúng tôi sẽ báo giá thuê ngoài miễn phí. Liên hệ qua KakaoTalk hoặc điện thoại để được tư vấn báo giá nhanh chóng."
+          "a": "Phí sử dụng phòng thu (100.000 KRW/giờ, đã bao gồm VAT) và phí thuê diễn viên lồng tiếng được tính riêng. Phí thuê diễn viên phụ thuộc vào hạng diễn viên, độ dài kịch bản và phạm vi sử dụng (YouTube, quảng cáo, PR doanh nghiệp, v.v.). Vui lòng cung cấp kịch bản và mục đích sử dụng, chúng tôi sẽ báo giá thuê ngoài miễn phí. Liên hệ qua KakaoTalk hoặc điện thoại để được tư vấn báo giá nhanh chóng."
         }
       ]
     },
@@ -2271,7 +2271,7 @@
         },
         {
           "q": "Chi phí bao nhiêu?",
-          "a": "Giá cố định theo bài. Sáng tác {{composition}}; phối khí ≤10 track {{small}} · 11–30 track {{band}} · 31+ track {{large}}; nhạc nền đặt riêng cho bài có sẵn {{mr}} (chưa VAT, gồm 2 lần chỉnh sửa). Nhạc công tính phí thực."
+          "a": "Giá cố định theo bài. Sáng tác {{composition}}; phối khí ≤10 track {{small}} · 11–30 track {{band}} · 31+ track {{large}}; nhạc nền đặt riêng cho bài có sẵn {{mr}} (đã gồm VAT, gồm 2 lần chỉnh sửa). Nhạc công tính phí thực."
         },
         {
           "q": "Bắt đầu thế nào?",
@@ -2324,7 +2324,7 @@
     },
     "pricing": {
       "title": "Bảng giá",
-      "subtitle": "Theo bài, chưa VAT, gồm 2 lần chỉnh sửa. Hạng phối khí theo số track giống mix.",
+      "subtitle": "Theo bài, đã gồm VAT, gồm 2 lần chỉnh sửa. Hạng phối khí theo số track giống mix.",
       "factorsTitle": "Khoản cộng thêm",
       "factors": [
         {
@@ -2448,7 +2448,7 @@
   "coverVideo": {
     "seo": {
       "title": "Quay Video Cover · 4K Video + Âm Nhạc Trọn Gói ₩350K | Studio NOL",
-      "description": "Đi bộ 5 phút từ cửa 4 ga Yeonsinnae. Quay video cover + mix trong một buổi. 4K MP4 + WAV/MP3. Gói trọn gói ₩350,000 (chưa VAT).",
+      "description": "Đi bộ 5 phút từ cửa 4 ga Yeonsinnae. Quay video cover + mix trong một buổi. 4K MP4 + WAV/MP3. Gói trọn gói ₩350,000 (đã gồm VAT).",
       "keywords": "quay video cover, thu âm cover, youtube cover video, phòng thu Seoul, Yeonsinnae"
     },
     "hero": {
@@ -2467,7 +2467,7 @@
         },
         {
           "q": "Chi phí là bao nhiêu?",
-          "a": "₩350,000 (chưa VAT) cho gói trọn gói 1 bài, 3 giờ. Bao gồm video 4K, WAV và MP3."
+          "a": "₩350,000 (đã gồm VAT) cho gói trọn gói 1 bài, 3 giờ. Bao gồm video 4K, WAV và MP3."
         },
         {
           "q": "Khi nào nhận được file?",

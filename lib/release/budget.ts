@@ -13,7 +13,6 @@ import {
   SINGLE_BUNDLE_PRICE,
   VOCAL_TUNING_ADDON_PRICE,
 } from '../../data/pricing';
-import { VAT_RATE } from '../booking/amounts';
 
 /**
  * 발매 예산 계산 — 순수 함수. 화면은 components/release/ReleaseBudgetCalculator.tsx.
@@ -52,9 +51,8 @@ export type BudgetLine = { id: string; label: string; amount: number };
 export type ReleaseBudget = {
   tier: ReleaseTier;
   lines: BudgetLine[];
-  /** 부가세 별도 합계. */
+  /** 합계(VAT 포함 — 번들가·옵션가 전부 포함 표기). */
   total: number;
-  totalWithVat: number;
 };
 
 const MIXING_BY_SCALE: Record<TrackScale, number> = { l1: MIXING_LEVEL1_PRICE, l2: MIXING_LEVEL2_PRICE, l3: MIXING_LEVEL3_PRICE };
@@ -95,5 +93,5 @@ export const computeReleaseBudget = (input: ReleaseBudgetInput): ReleaseBudget =
   }
 
   const total = lines.reduce((sum, l) => sum + l.amount, 0);
-  return { tier: bundle.tier, lines, total, totalWithVat: Math.round(total * (1 + VAT_RATE)) };
+  return { tier: bundle.tier, lines, total };
 };

@@ -6,7 +6,7 @@ import {
   MIXING_LEVEL3_PRICE,
   VOCAL_TUNING_ADDON_PRICE,
 } from '../../data/pricing';
-import { VAT_RATE, type OrderAmounts } from './amounts';
+import { splitInclusiveAmount, type OrderAmounts } from './amounts';
 
 export type MixingServiceType = 'mixing' | 'mastering' | 'mixing-mastering';
 
@@ -15,7 +15,7 @@ export interface MixingProduct {
   serviceType: MixingServiceType;
   nameKo: string;
   /**
-   * 곡당 단가(VAT 별도) — data/pricing.ts SSOT. 믹싱+마스터링 통합 상품은 **1~3곡 기준**(싱글
+   * 곡당 단가(VAT 포함) — data/pricing.ts SSOT. 믹싱+마스터링 통합 상품은 **1~3곡 기준**(싱글
    * 마스터링 단가를 더한 값)이다 — 4곡부터의 단가는 mixingUnitAmount()가 곡 수로 정한다.
    */
   unitAmount: number;
@@ -48,7 +48,7 @@ export const MIXING_PRODUCTS: readonly MixingProduct[] = [
 export const MASTERING_PACKAGE_MIN_SONGS = 4;
 
 /**
- * 이 곡 수에서의 곡당 단가(VAT 별도, 튜닝 제외). 서버 계산(service.ts)과 위저드 표시가 같은 함수를
+ * 이 곡 수에서의 곡당 단가(VAT 포함, 튜닝 제외). 서버 계산(service.ts)과 위저드 표시가 같은 함수를
  * 쓴다 — 통합 상품은 곡 수에 따라 마스터링 단가가 바뀌어 단가가 상수가 아니다.
  */
 export const mixingUnitAmount = (product: MixingProduct, songCount: number): number =>
@@ -67,15 +67,14 @@ export const resolveSongCount = (product: MixingProduct, requested: unknown): nu
 };
 
 /**
- * amounts.ts computeAmounts와 같은 VAT 반올림 규칙(원 단위 반올림)을 쓴다 — 두 계산기가
- * 갈라지면 세션·믹싱 주문의 합계 자릿수 처리가 달라 보이는 문제라 규칙을 하나로 묶는다.
+ * 곡당 단가는 VAT 포함 표기가다 — amounts.ts computeAmounts와 같은 splitInclusiveAmount로 나눠
+ * 두 계산기의 반올림이 갈라지지 않게 한다.
  */
 export const computeMixingAmounts = (
   product: MixingProduct,
   songCount: number,
   vocalTuning: boolean,
 ): OrderAmounts => {
-  const itemAmount = mixingUnitAmount(product, songCount) * songCount + (vocalTuning ? VOCAL_TUNING_ADDON_PRICE * songCount : 0);
-  const vatAmount = Math.round(itemAmount * VAT_RATE);
-  return { itemAmount, vatAmount, totalAmount: itemAmount + vatAmount };
+  const totalAmount = mixingUnitAmount(product, songCount) * songCount + (vocalTuning ? VOCAL_TUNING_ADDON_PRICE * songCount : 0);
+  return splitInclusiveAmount(totalAmount);
 };

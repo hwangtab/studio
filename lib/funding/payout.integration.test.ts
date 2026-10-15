@@ -282,11 +282,11 @@ describe('recordFundingPayout — 설계비·제작비 공제 (개설자 약관 
     if (!result.ok) return;
     const base = computeFundingPayout({ grossAmount: 4_000_000, refundAmount: 0, taxType: 'withholding' });
     expect(result.payout.withholdingAmount).toBe(base.withholdingAmount); // 원천징수 기준은 그대로
-    expect(result.payout.designFeeOffsetAmount).toBe(550_000);
-    expect(result.payout.productionFeeOffsetAmount).toBe(1_980_000);
+    expect(result.payout.designFeeOffsetAmount).toBe(500_000);
+    expect(result.payout.productionFeeOffsetAmount).toBe(1_800_000);
     expect(result.payout.shortfallAmount).toBe(0);
-    // 이체 가능액 3,206,925(수수료 352,000 · 부가세 상당액 331,636 · 원천징수 109,439) − 2,530,000
-    expect(result.payout.netAmount).toBe(676_925);
+    // 이체 가능액 3,206,925(수수료 352,000 · 부가세 상당액 331,636 · 원천징수 109,439) − 2,300,000
+    expect(result.payout.netAmount).toBe(906_925);
   });
 
   it('설계비를 정산 밖에서 이미 받았으면 다시 빼지 않는다', async () => {
@@ -317,7 +317,7 @@ describe('recordFundingPayout — 설계비·제작비 공제 (개설자 약관 
     expect(result.payout.netAmount).toBe(0);
     expect(result.payout.shortfallAmount).toBeGreaterThan(0);
     expect(result.payout.designFeeOffsetAmount + result.payout.productionFeeOffsetAmount + result.payout.shortfallAmount)
-      .toBe(550_000 + 1_980_000);
+      .toBe(500_000 + 1_800_000);
   });
 
   /**
@@ -332,7 +332,7 @@ describe('recordFundingPayout — 설계비·제작비 공제 (개설자 약관 
 
     const shown = await buildFundingPayoutPreview(project.id);
     expect(shown!.netAmount).toBe(0);
-    expect(shown!.shortfallAmount).toBe(1_728_268);
+    expect(shown!.shortfallAmount).toBe(1_498_268);
 
     // 확인창을 띄워 둔 사이에 다른 운영자가 약정 제작비를 올렸다(set_production_fee).
     expect(await setProductionFee(project.id, 2_000_000, new Date('2026-02-19T00:00:00Z'), 'other')).toMatchObject({ ok: true });

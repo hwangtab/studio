@@ -320,7 +320,7 @@
     },
     "hero": {
       "title": "Grabación ₩100,000/h · Sala de ensayo ₩360,000/mes · Boda ₩350,000",
-      "subtitleLine1": "Salvo el uso por horas de la sala de ensayo, son tarifas reales con IVA no incluido. Abajo se detalla cada caso con coste adicional.",
+      "subtitleLine1": "Salvo la cuota mensual de la sala de ensayo y la mensualidad de las clases, todos los precios incluyen IVA y son tarifas reales. Abajo se detalla cada caso con coste adicional.",
       "subtitleLine2": "La tabla de abajo muestra todas las tarifas de un vistazo.",
       "alt": "Precios de Studio NOL",
       "ctaKakao": "Cotización gratis por KakaoTalk",
@@ -1221,7 +1221,7 @@
         },
         {
           "q": "¿Cuánto cuesta?",
-          "a": "El paquete todo en uno es ₩350,000 (sin IVA): incluye 2h de grabación, afinación vocal, mezcla y masterización."
+          "a": "El paquete todo en uno es ₩350,000 (IVA incluido): incluye 2h de grabación, afinación vocal, mezcla y masterización."
         },
         {
           "q": "¿Cuándo recibiré el archivo final?",
@@ -1362,7 +1362,7 @@
       "items": [
         {
           "q": "¿Cuánto cuesta la grabación?",
-          "a": "La grabación vocal de una canción cuesta ₩250,000 (basado en 3 horas). El alquiler por hora es ₩100,000 (mínimo 2 horas). Day Lock cuesta ₩350,000 por 4 horas o ₩650,000 por 8 horas. Todos los precios excluyen el IVA."
+          "a": "La grabación vocal de una canción cuesta ₩250,000 (basado en 3 horas). El alquiler por hora es ₩100,000 (mínimo 2 horas). Day Lock cuesta ₩350,000 por 4 horas o ₩650,000 por 8 horas. Todos los precios incluyen el IVA."
         },
         {
           "q": "¿Puedo alquilar solo la sala sin ingeniero?",
@@ -1446,7 +1446,7 @@
       "items": [
         {
           "q": "¿Cuánto cuesta el alquiler del estudio?",
-          "a": "El paquete vocal de una canción cuesta ₩250,000 (3 horas, incluye ingeniero dedicado, dirección y edición básica). Si solo lo necesitas por horas, son ₩100,000/hora (mínimo 2 horas); para trabajos largos de álbum, Day Lock cuesta ₩350,000 por 4 horas o ₩650,000 por 8 horas. Todos los precios excluyen el IVA."
+          "a": "El paquete vocal de una canción cuesta ₩250,000 (3 horas, incluye ingeniero dedicado, dirección y edición básica). Si solo lo necesitas por horas, son ₩100,000/hora (mínimo 2 horas); para trabajos largos de álbum, Day Lock cuesta ₩350,000 por 4 horas o ₩650,000 por 8 horas. Todos los precios incluyen el IVA."
         },
         {
           "q": "¿Está bien si es mi primera vez grabando?",
@@ -1559,7 +1559,7 @@
       "items": [
         {
           "q": "¿Cuánto cuestan la mezcla y la masterización?",
-          "a": "La mezcla se cobra según el número de pistas: ₩200,000 hasta 10 pistas, ₩350,000 entre 11 y 30 pistas, y ₩500,000 con 31 o más — todo con 2 revisiones incluidas. La masterización de un single cuesta ₩100,000; si encargas 4 canciones o más juntas (EP, álbum), sale a ₩80,000 por canción. Todos los precios excluyen el IVA."
+          "a": "La mezcla se cobra según el número de pistas: ₩200,000 hasta 10 pistas, ₩350,000 entre 11 y 30 pistas, y ₩500,000 con 31 o más — todo con 2 revisiones incluidas. La masterización de un single cuesta ₩100,000; si encargas 4 canciones o más juntas (EP, álbum), sale a ₩80,000 por canción. Todos los precios incluyen el IVA."
         },
         {
           "q": "¿Cuánto tarda el trabajo?",
@@ -1599,7 +1599,7 @@
     "mixing": {
       "title": "Precios de mezcla",
       "subtitle": "Tres niveles según el número de pistas. ¿No sabes cuál te corresponde? Envíanos la sesión y te lo decimos.",
-      "vocalTuneNotice": "El ajuste vocal preciso y la corrección de tiempo cuestan ₩150,000 adicionales por canción. Todos los precios excluyen el IVA."
+      "vocalTuneNotice": "El ajuste vocal preciso y la corrección de tiempo cuestan ₩150,000 adicionales por canción. Todos los precios incluyen el IVA."
     },
     "mastering": {
       "title": "Precios de masterización",
@@ -1864,7 +1864,7 @@
         },
         {
           "q": "¿Cuánto cuesta?",
-          "a": "{{intro}} (IVA no incluido). Hay una sola tarifa: las seis cosas de abajo van todas dentro. Escuchamos la música, te decimos a cuántos medios podemos enviarla, y pagas después de eso."
+          "a": "{{intro}} (IVA incluido). Hay una sola tarifa: las seis cosas de abajo van todas dentro. Escuchamos la música, te decimos a cuántos medios podemos enviarla, y pagas después de eso."
         },
         {
           "q": "¿Cuánto tarda?",
@@ -2098,7 +2098,7 @@
         },
         {
           "q": "¿Cuánto cuesta?",
-          "a": "₩100,000 por hora (sin IVA). Reserva mínima de 2 horas."
+          "a": "₩100,000 por hora (IVA incluido). Reserva mínima de 2 horas."
         },
         {
           "q": "¿Qué equipo utilizan?",
@@ -2164,11 +2164,11 @@
       ],
       "quoteTitle": "El presupuesto tiene dos partes",
       "quoteItems": [
-        "Uso del estudio — ₩100,000/hora (IVA no incluido), reserva mínima de 2 horas",
+        "Uso del estudio — ₩100,000/hora (IVA incluido), reserva mínima de 2 horas",
         "Honorario de casting — se presupuesta aparte, según el nivel del locutor, la extensión del guion y el ámbito de uso",
         "Trabajos largos como audiolibros: Day Lock, 4 horas ₩350,000 u 8 horas ₩650,000"
       ],
-      "quoteNote": "Si traes tu propio locutor, solo pagas el uso del estudio: ₩200,000 por el mínimo de 2 horas (IVA no incluido). Envía el guion y su uso y el presupuesto de casting es gratuito.",
+      "quoteNote": "Si traes tu propio locutor, solo pagas el uso del estudio: ₩200,000 por el mínimo de 2 horas (IVA incluido). Envía el guion y su uso y el presupuesto de casting es gratuito.",
       "deliveryTitle": "Especificaciones de entrega",
       "deliveryItems": [
         "WAV 24bit/48kHz o MP3 320kbps",
@@ -2229,7 +2229,7 @@
         },
         {
           "q": "¿Cuánto cuesta contratar a un actor de voz y cómo se obtiene un presupuesto?",
-          "a": "El uso de la sala de grabación (100 000 KRW por hora, IVA no incluido) y los honorarios del actor de voz se presupuestan por separado. Los honorarios varían según el nivel del actor, la extensión del guion y el alcance de uso (YouTube, publicidad, promoción corporativa, etc.). Cuéntenos su guion y el propósito, y le prepararemos un presupuesto gratuito. Contáctenos por KakaoTalk o por teléfono y le responderemos rápidamente."
+          "a": "El uso de la sala de grabación (100 000 KRW por hora, IVA incluido) y los honorarios del actor de voz se presupuestan por separado. Los honorarios varían según el nivel del actor, la extensión del guion y el alcance de uso (YouTube, publicidad, promoción corporativa, etc.). Cuéntenos su guion y el propósito, y le prepararemos un presupuesto gratuito. Contáctenos por KakaoTalk o por teléfono y le responderemos rápidamente."
         }
       ]
     },
@@ -2271,7 +2271,7 @@
         },
         {
           "q": "¿Cuánto cuesta?",
-          "a": "Precio fijo por canción. Composición {{composition}}; arreglo ≤10 pistas {{small}} · 11–30 pistas {{band}} · 31+ pistas {{large}}; pista a medida de una canción existente {{mr}} (sin IVA, 2 revisiones incluidas). Los músicos de sesión se cobran al costo."
+          "a": "Precio fijo por canción. Composición {{composition}}; arreglo ≤10 pistas {{small}} · 11–30 pistas {{band}} · 31+ pistas {{large}}; pista a medida de una canción existente {{mr}} (IVA incluido, 2 revisiones incluidas). Los músicos de sesión se cobran al costo."
         },
         {
           "q": "¿Cómo empiezo?",
@@ -2324,7 +2324,7 @@
     },
     "pricing": {
       "title": "Precios",
-      "subtitle": "Por canción, sin IVA, 2 revisiones incluidas. Los niveles de arreglo siguen las mismas pistas que la mezcla.",
+      "subtitle": "Por canción, IVA incluido, 2 revisiones incluidas. Los niveles de arreglo siguen las mismas pistas que la mezcla.",
       "factorsTitle": "Qué se suma al precio",
       "factors": [
         {
@@ -2448,7 +2448,7 @@
   "coverVideo": {
     "seo": {
       "title": "Grabación de Video Cover · 4K + Audio Todo en Uno ₩350K | Studio NOL",
-      "description": "A 5 min del exit 4 de Yeonsinnae. Filmación de video cover + mezcla en una sesión. 4K MP4 + WAV/MP3. Paquete todo en uno ₩350,000 (sin IVA).",
+      "description": "A 5 min del exit 4 de Yeonsinnae. Filmación de video cover + mezcla en una sesión. 4K MP4 + WAV/MP3. Paquete todo en uno ₩350,000 (IVA incluido).",
       "keywords": "grabación video cover, estudio cover Seoul, youtube cover video, filmación música, estudio grabación Yeonsinnae"
     },
     "hero": {
@@ -2467,7 +2467,7 @@
         },
         {
           "q": "¿Cuánto cuesta?",
-          "a": "₩350,000 (sin IVA) por un paquete todo en uno de 1 canción y 3 horas. Incluye video 4K, WAV y MP3."
+          "a": "₩350,000 (IVA incluido) por un paquete todo en uno de 1 canción y 3 horas. Incluye video 4K, WAV y MP3."
         },
         {
           "q": "¿Cuándo recibiré mis archivos?",

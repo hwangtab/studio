@@ -131,7 +131,7 @@ export type QuoteAnswers = {
   fundingSource?: string;
 };
 
-/** 가격 표기의 부가세 기준 — 연습실 시간제만 VAT 포함이고 나머지(연습실 월세·레슨 포함)는 VAT 별도. */
+/** 가격 표기의 부가세 기준 — 연습실 월 이용료·레슨만 VAT 별도(카드 결제 때 10% 가산, 현금 입금은 부가세 없음)이고 나머지는 전부 VAT 포함. */
 export type VatBasis = 'excluded' | 'included';
 
 export type Estimate = {
@@ -176,7 +176,7 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
       if (a.scale === '1') {
         return {
           priceLabel: won(VOCAL_PACKAGE_PRICE),
-          vat: 'excluded',
+          vat: 'included',
           basis: ['보컬 녹음 1프로 — 3시간, 전담 엔지니어·디렉팅 포함'],
           bookingHref: '/ko/booking/recording?product=recording-pro',
         };
@@ -184,7 +184,7 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
       if (a.scale === '2-3') {
         return {
           priceLabel: range(VOCAL_PACKAGE_PRICE * 2, VOCAL_PACKAGE_PRICE * 3),
-          vat: 'excluded',
+          vat: 'included',
           basis: [
             `곡당 보컬 녹음 1프로(${won(VOCAL_PACKAGE_PRICE)}, 3시간) 기준`,
             `3곡이고 하루 8시간 안에 끝날 분량이면 Day Lock 8시간 ${won(DAY_LOCK_8H_PRICE)}이 더 쌉니다`,
@@ -195,7 +195,7 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
       // 상한을 약속하지 않는다 — 곡당 3시간이면 정규 8곡은 Day Lock 8시간 세 번이다.
       return {
         priceLabel: `${won(DAY_LOCK_8H_PRICE)}부터`,
-        vat: 'excluded',
+        vat: 'included',
         basis: [
           `Day Lock 8시간(${won(DAY_LOCK_8H_PRICE)}) 기준 — 곡당 3시간 안팎이라 8시간에 2~3곡씩 녹음해요`,
           '필요한 날수는 곡 수와 테이크에 따라 상담에서 정해요',
@@ -212,7 +212,7 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
       if (tier) {
         return {
           priceLabel: range(tier[0], tier[0] + MASTERING_SINGLE_PRICE),
-          vat: 'excluded',
+          vat: 'included',
           basis: [`믹싱 ${won(tier[0])} (수정 2회)`, `마스터링까지 맡기면 +${won(MASTERING_SINGLE_PRICE)} (수정 1회)`],
           bookingHref: `/ko/booking/mixing-mastering?product=${tier[1]}`,
         };
@@ -220,7 +220,7 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
       return {
         // 하한은 4곡 이상 묶음 마스터링, 상한은 3곡 이하(곡당 싱글 마스터링) — 2~3곡도 이 범위 안에 든다.
         priceLabel: `곡당 ${range(MIXING_LEVEL1_PRICE + MASTERING_PACKAGE_PRICE, MIXING_LEVEL3_PRICE + MASTERING_SINGLE_PRICE)}`,
-        vat: 'excluded',
+        vat: 'included',
         basis: [
           `믹싱은 곡마다 트랙 수로 ${won(MIXING_LEVEL1_PRICE)}~${won(MIXING_LEVEL3_PRICE)}`,
           `마스터링은 곡당 ${won(MASTERING_SINGLE_PRICE)}, 4곡 이상 함께 맡기면 곡당 ${won(MASTERING_PACKAGE_PRICE)}`,
@@ -234,7 +234,7 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
       if (a.fundingSource === 'funding') {
         return {
           priceLabel: `${won(bundle + FUNDING_DESIGN_PRICE)}부터`,
-          vat: 'excluded',
+          vat: 'included',
           basis: [
             `펀딩 설계비 ${won(FUNDING_DESIGN_PRICE)} + 발매 번들 ${won(bundle)}부터를 합친 한 견적 — 기획·녹음·믹싱·마스터링·디지털 유통 등록·국내외 매체 홍보`,
             '설계비와 제작비는 펀딩이 끝나 모금액을 정산할 때 모금액에서 받아요. 모금액이 견적에 못 미치면 차액 청구나 규모 조정을 상의해 정해요',
@@ -245,7 +245,7 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
       }
       return {
         priceLabel: `${won(bundle)}부터`,
-        vat: 'excluded',
+        vat: 'included',
         basis: [
           '기획·녹음·믹싱·마스터링·디지털 유통 등록·국내외 매체 홍보를 묶은 번들 기준',
           '세션 연주비는 포함되지 않고 연주자 실비만 따로 받아요',
@@ -255,14 +255,14 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
     case 'wedding':
       return {
         priceLabel: won(WEDDING_PACKAGE_PRICE),
-        vat: 'excluded',
+        vat: 'included',
         basis: ['2시간 녹음 + 보컬 튠 + 믹싱·마스터링'],
         bookingHref: '/ko/booking/wedding-song',
       };
     case 'cover':
       return {
         priceLabel: won(COVER_VIDEO_PACKAGE_PRICE),
-        vat: 'excluded',
+        vat: 'included',
         basis: ['3시간 세션 — 촬영·믹싱·편집, 4K 영상과 음원 납품'],
         bookingHref: '/ko/booking/cover-video',
       };
@@ -274,7 +274,7 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
       if (dayLock) {
         return {
           priceLabel: won(dayLock.price),
-          vat: 'excluded',
+          vat: 'included',
           basis: [
             `Day Lock ${hours}시간 기준 — 시간당(${won(VOICEOVER_HOURLY_PRICE)} × ${hours}시간 = ${won(VOICEOVER_HOURLY_PRICE * hours)})보다 쌉니다`,
             '녹음실·전담 엔지니어를 그 시간 동안 통째로 씁니다',
@@ -284,7 +284,7 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
       }
       return {
         priceLabel: won(VOICEOVER_HOURLY_PRICE * hours),
-        vat: 'excluded',
+        vat: 'included',
         basis: [`시간당 ${won(VOICEOVER_HOURLY_PRICE)} × ${hours}시간 (최소 2시간)`],
         bookingHref: '/ko/booking/voice-acting',
       };
@@ -312,7 +312,7 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
     case 'funding':
       return {
         priceLabel: `설계비 ${won(FUNDING_DESIGN_PRICE)}`,
-        vat: 'excluded',
+        vat: 'included',
         basis: [
           '스토리·리워드 설계와 페이지 제작, 스튜디오 놀 펀딩에서 엽니다 — 성공 수수료 없음',
           `모금액에서 플랫폼 ${FUNDING_PLATFORM_FEE_PERCENT}%·결제 ${FUNDING_PAYMENT_FEE_PERCENT}% 수수료(부가세 포함)를 뗍니다`,

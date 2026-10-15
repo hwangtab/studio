@@ -74,7 +74,7 @@ const ReleaseBudgetCalculator = ({ kakaoUrl, id }: { kakaoUrl: string; id?: stri
     `편곡 필요: ${arrangementSongs}곡 · 보컬 튜닝: ${vocalTuning ? '필요' : '없음'}`,
     `제작비 마련: ${sourceLabel}`,
     ...budget.lines.map((l) => `- ${l.label}: ${won(l.amount)}`),
-    `예상 예산: ${won(budget.total)} (부가세 별도)`,
+    `예상 예산: ${won(budget.total)} (부가세 포함)`,
   ].join('\n');
 
   const onKakao = () => {
@@ -179,7 +179,7 @@ const ReleaseBudgetCalculator = ({ kakaoUrl, id }: { kakaoUrl: string; id?: stri
           <div aria-live="polite" aria-atomic="true">
             <p className="text-sm text-gray-500 dark:text-gray-400">예상 예산</p>
             <p className="text-3xl font-bold text-gray-900 dark:text-white">{won(budget.total)}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-5">부가세 별도 · 포함하면 {won(budget.totalWithVat)}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-5">부가세 포함</p>
           </div>
           <dl className="space-y-2 text-sm">
             {budget.lines.map((l) => (

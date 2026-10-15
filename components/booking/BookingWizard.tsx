@@ -49,7 +49,7 @@ const BOOKING_STEPS = ['상품·시간', '날짜·시간', '예약자 정보'];
 /** 안내 박스 안의 글자 링크 — 밑줄은 Notice가 긋고, 여기서는 포커스 링만 준다. */
 const NOTICE_LINK_CLASS = cn('rounded font-semibold', FOCUS_RING);
 
-/** 상품 카드 오른쪽 가격 — 공급가(VAT 별도) 기준. 시간제는 시간당가라 단위를 붙인다. */
+/** 상품 카드 오른쪽 가격 — VAT 포함 판매가 기준(결제 금액과 같다). 시간제는 시간당가라 단위를 붙인다. */
 const productPriceLabel = (p: SessionProduct): string =>
   p.kind === 'hourly' ? `시간당 ${formatPriceAmount(p.unitAmount)}원` : `${formatPriceAmount(p.unitAmount)}원`;
 

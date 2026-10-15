@@ -41,7 +41,7 @@ export interface SessionProduct {
   service: BookingService;
   nameKo: string;
   kind: 'package' | 'hourly';
-  /** 패키지: 상품 전체가, 시간제: 시간당가. **공급가(VAT 별도)** — data/pricing.ts SSOT. */
+  /** 패키지: 상품 전체가, 시간제: 시간당가. **VAT 포함 표기가** — data/pricing.ts SSOT. 공급가·VAT는 computeAmounts가 역산한다. */
   unitAmount: number;
   sessionHours?: number;
   minHours?: number;
@@ -93,17 +93,17 @@ export const SESSION_PRODUCTS: readonly SessionProduct[] = [
   { id: 'wedding-song', service: 'wedding-song', nameKo: '축가 녹음 패키지', kind: 'package', unitAmount: WEDDING_PACKAGE_PRICE, sessionHours: 2 },
   { id: 'cover-video', service: 'cover-video', nameKo: '커버 영상 패키지', kind: 'package', unitAmount: COVER_VIDEO_PACKAGE_PRICE, sessionHours: 3 },
   /**
-   * 음악연습실 시간제 — 24시간, 1시간부터, 무인 셀프 이용. 소비자가는 VAT 포함 6,600원이라
-   * 공급가는 splitInclusiveAmount로 갈라 6,000원(+600 VAT = 6,600 결제). 방 자원이라
+   * 음악연습실 시간제 — 24시간, 1시간부터, 무인 셀프 이용. 소비자가는 VAT 포함 6,600원이고
+   * computeAmounts가 공급가 6,000 + VAT 600으로 나눈다. 방 자원이라
    * 스튜디오 캘린더와 무관하고, 확정 메일에 입장 안내(문·방·와이파이 비밀번호)가 실린다.
    */
   {
     id: 'practice-room-hourly', service: 'practice-room', nameKo: '음악연습실 시간제', kind: 'hourly',
-    unitAmount: splitInclusiveAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL).itemAmount,
+    unitAmount: PRACTICE_ROOM_HOURLY_PRICE_INCL,
     minHours: 1, maxHours: 8, openHour: 0, closeHour: 24, rooms: PRACTICE_ROOM_HOURLY_ROOMS,
   },
-  // 운영자 실결제 검증용 — 200원(+VAT 20원 = 220원 결제). 토스 계좌이체 최소 결제금액이 200원이라 그 위로 잡는다. 가격 SSOT 대상 상품이 아니다.
-  { id: 'smoke-test', service: 'smoke-test', nameKo: '결제 연동 테스트 (운영자용)', kind: 'package', unitAmount: 200, sessionHours: 1 },
+  // 운영자 실결제 검증용 — 220원 결제(공급가 200 + VAT 20). 토스 계좌이체 최소 결제금액이 200원이라 그 위로 잡는다. 가격 SSOT 대상 상품이 아니다.
+  { id: 'smoke-test', service: 'smoke-test', nameKo: '결제 연동 테스트 (운영자용)', kind: 'package', unitAmount: 220, sessionHours: 1 },
 ] as const;
 
 export const getProduct = (id: string): SessionProduct | undefined =>

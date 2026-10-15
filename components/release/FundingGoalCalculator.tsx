@@ -11,7 +11,6 @@ import { Disclosure } from '../ui/Disclosure';
 import { formatPriceAmount, FUNDING_DESIGN_PRICE } from '../../data/pricing';
 import { PIPELINE_BUNDLE_PRICES, releasePipelineCopy, type ReleaseTierKey } from '../../data/releasePipeline';
 import { computeFundingGoal } from '../../lib/funding/goal';
-import { VAT_RATE } from '../../lib/booking/amounts';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 
 const copy = releasePipelineCopy.calculator;
@@ -20,7 +19,6 @@ type DesignKey = 'design' | 'direct';
 const PRODUCTIONS: ProductionKey[] = ['none', 'single', 'ep', 'album'];
 const DESIGNS: DesignKey[] = ['design', 'direct'];
 const productionLabel = (key: ProductionKey) => (key === 'none' ? copy.noProduction : copy.tiers[key]);
-const withVat = (supply: number) => Math.round(supply * (1 + VAT_RATE));
 const won = (n: number) => `${formatPriceAmount(n)}원`;
 
 interface FundingGoalCalculatorProps {
@@ -72,7 +70,7 @@ function PillRadios<K extends string>({ name, legend, options, value, label, onC
  * 목표액 = 정산 후 손에 남는 돈이 (제작비 + 설계비 + 리워드 원가·기타)를 덮는 최소 금액.
  * 작은 펀딩도 같은 식이다 — 제작 없음·직접 개설을 고르면 그 항목이 0으로 빠질 뿐 흐름은 같다.
  * 식은 lib/funding/goal.ts 하나이고, 그 식은 정산 정본(lib/funding/payout.ts)과 원 단위로
- * 대조된다(goal.test.ts). 제작비·설계비는 부가세 별도 상수에 부가세를 붙여 넣는다 — 개인
+ * 대조된다(goal.test.ts). 제작비·설계비 상수는 부가세 포함 표기가라 그대로 넣는다 — 개인
  * 아티스트는 부가세를 돌려받지 못하므로 실제로 나가는 돈 기준이다.
  *
  * 카톡과 경쟁하지 않는다: 결과 버튼은 계산 요약을 클립보드에 복사한 뒤 카카오톡을 연다.
@@ -114,8 +112,8 @@ const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component =
   };
 
   const otherCost = Math.max(0, Number(otherCostInput.replace(/[^0-9]/g, '')) || 0);
-  const production = tier === 'none' ? 0 : withVat(PIPELINE_BUNDLE_PRICES[tier]);
-  const design = designKey === 'design' ? withVat(FUNDING_DESIGN_PRICE) : 0;
+  const production = tier === 'none' ? 0 : PIPELINE_BUNDLE_PRICES[tier];
+  const design = designKey === 'design' ? FUNDING_DESIGN_PRICE : 0;
   const result = computeFundingGoal({ productionCost: production + design, otherCost, withholding });
 
   const summary = [

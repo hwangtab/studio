@@ -9,6 +9,22 @@ export const getOfferPriceValidUntil = (): string => {
   return date.toISOString().split('T')[0];
 };
 
+/**
+ * Offer의 priceSpecification — 모든 Offer가 부가세 기준을 명시한다(2026-10-15 정책).
+ * 표시 가격은 전부 부가세 포함(`valueAddedTaxIncluded: true`)이고, 연습실 월 이용료·프로듀싱 레슨
+ * 월정액만 부가세 별도(`false` — 카드 결제 때 10% 가산, 현금 입금은 부가세 없음)다.
+ */
+export const buildPriceSpecification = (
+  price: number,
+  options: { vatIncluded?: boolean; unitCode?: string } = {}
+) => ({
+  '@type': 'UnitPriceSpecification' as const,
+  price,
+  priceCurrency: 'KRW' as const,
+  valueAddedTaxIncluded: options.vatIncluded ?? true,
+  ...(options.unitCode ? { unitCode: options.unitCode } : {}),
+});
+
 export const OFFER_CATALOG_NAMES: Record<Locale, string> = {
   ko: '스튜디오 서비스', en: 'Studio Services', zh: '工作室服务',
   es: 'Servicios del Estudio', vi: 'Dịch vụ Studio', th: 'บริการสตูดิโอ', uz: 'Studiya xizmatlari',

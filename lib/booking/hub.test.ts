@@ -38,21 +38,20 @@ describe('예약 통합 랜딩(/ko/booking) 목록', () => {
     for (const entry of entries) {
       const product = getProduct(entry.productId);
       if (!product) continue; // 믹싱은 아래에서
-      if (product.id === 'practice-room-hourly') {
-        // 소비자가(VAT 포함)로 보여 준다 — 위저드의 unitAmount는 공급가다.
-        expect(entry.price).toBe(`${formatPriceAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL)}원`);
-      } else {
-        expect(entry.price).toBe(`${formatPriceAmount(product.unitAmount)}원`);
-      }
+      // 표기가는 전부 VAT 포함이고 unitAmount가 곧 그 값이다(2026-10-15).
+      if (product.id === 'practice-room-hourly') expect(product.unitAmount).toBe(PRACTICE_ROOM_HOURLY_PRICE_INCL);
+      expect(entry.price).toBe(`${formatPriceAmount(product.unitAmount)}원`);
     }
     for (const p of MIXING_PRODUCTS) {
       expect(entries.find((e) => e.productId === p.id)?.price).toBe(`${formatPriceAmount(p.unitAmount)}원`);
     }
   });
 
-  it('부가세 포함 표기는 연습실 시간제 그룹 하나뿐이다', () => {
-    const vatIncluded = groups.filter((g) => g.priceNote.includes('부가세 포함')).map((g) => g.id);
-    expect(vatIncluded).toEqual(['practice-room']);
+  it('모든 그룹이 부가세 포함으로 표기한다 — 별도 표기는 이 랜딩에 없다(월 이용료·레슨은 구독 화면)', () => {
+    for (const g of groups) {
+      expect(g.priceNote).toContain('부가세 포함');
+      expect(g.priceNote).not.toContain('별도');
+    }
   });
 
   it('문의형 링크는 전부 ko 경로다', () => {

@@ -59,15 +59,14 @@ const GROUPS: Group[] = [
   {
     icon: '🎹', title: '음악연습실', sub: '보증금 0원 · 24시간',
     rows: [
-      { name: '월 입주', note: '24시간 자유 이용 · 최종가', price: PRACTICE_ROOM_MONTHLY_PRICE, unit: '원 / 월' },
+      { name: '월 입주', note: '24시간 자유 이용 · 부가세 별도', price: PRACTICE_ROOM_MONTHLY_PRICE, unit: '원 / 월' },
       { name: '시간제', note: '1시간부터 · 무인 · 부가세 포함', price: PRACTICE_ROOM_HOURLY_PRICE_INCL, unit: '원 / 시간' },
     ],
   },
 ];
 
 const NOTES = [
-  '녹음·믹싱·마스터링 가격은 VAT(부가가치세) 별도입니다.',
-  '연습실 월 입주는 최종가, 시간제는 부가세 포함 가격입니다.',
+  '표시 가격은 모두 부가세 포함입니다. 다만 연습실 월 입주 이용료는 부가세 별도입니다(카드 결제 시 10% 가산, 현금 입금 시 부가세 없음).',
   '녹음과 연습실 시간제는 studionol.co.kr에서 바로 예약·결제할 수 있습니다.',
   '정확한 견적은 카카오톡 상담으로 안내드립니다.',
 ];

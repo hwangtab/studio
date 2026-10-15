@@ -608,8 +608,8 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           title={t('pricing.practiceRoom.title')}
           subtitle={t(PRACTICE_ROOM_HAS_VACANCY ? 'pricing.practiceRoom.subtitleVacant' : 'pricing.practiceRoom.subtitle', { rooms: PRACTICE_ROOM_VACANT_ROOMS })}
         />
-        {/* 월 이용료는 다른 상품과 같이 VAT 별도다(운영자 확정 2026-10-01). 안내는 priceNote가 맡는다.
-            시간제만 VAT 포함이며 카드 제목에 적혀 있다. */}
+        {/* 월 이용료는 VAT 별도다(운영자 확정 2026-10-01, 2026-10-15 재확인). 나머지 표시 가격은 전부 VAT 포함이라
+            월 이용료만 예외다. 안내는 priceNote가 맡는다. 시간제 카드 제목의 "부가세 포함"은 그 구별을 위해 남겼다. */}
         <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
           {t('pricing.practiceRoom.priceNote')}
         </p>

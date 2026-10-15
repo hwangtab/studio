@@ -115,4 +115,4 @@ faq:
 
 ---
 
-[성인 피아노 입문·처음 시작하는 어른 — 성인 피아노 완성 가이드](/stories/practice-room-piano-beginner-adult1) | [악기 보관 가능한 — 월세 입주 악기 보관 완벽 가이드](/stories/practice-room-storage1) | [교회 찬양팀·성가대 — 예배 보컬·악기 연습 공간 가이드](/stories/practice-room-church1) | [연습실 에티켓 완전 가이드 — 처음 이용하는 분이 꼭 알아야 할 규칙](/stories/practice-room-etiquette1) | [연습실 처음 이용 가이드 — 예약부터 퇴실까지 완벽 설명](/stories/practice-room-first1)
+[성인 피아노 입문·처음 시작하는 어른 — 성인 피아노 완성 가이드](/stories/practice-room-piano-beginner-adult1) | [악기 보관 가능한 — 월 이용료 입주 악기 보관 완벽 가이드](/stories/practice-room-storage1) | [교회 찬양팀·성가대 — 예배 보컬·악기 연습 공간 가이드](/stories/practice-room-church1) | [연습실 에티켓 완전 가이드 — 처음 이용하는 분이 꼭 알아야 할 규칙](/stories/practice-room-etiquette1) | [연습실 처음 이용 가이드 — 예약부터 퇴실까지 완벽 설명](/stories/practice-room-first1)

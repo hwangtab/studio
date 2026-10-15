@@ -5,11 +5,9 @@ import { trackMicroEvent } from '../../utils/analytics';
 import FundingGoalCalculator from './FundingGoalCalculator';
 import { EP_BUNDLE_PRICE, SINGLE_BUNDLE_PRICE, formatPriceAmount, FUNDING_DESIGN_PRICE } from '../../data/pricing';
 import { computeFundingGoal } from '../../lib/funding/goal';
-import { VAT_RATE } from '../../lib/booking/amounts';
 
 jest.mock('../../utils/analytics', () => ({ trackLeadEvent: jest.fn(), trackMicroEvent: jest.fn() }));
 
-const withVat = (n: number) => Math.round(n * (1 + VAT_RATE));
 const won = (n: number) => `${formatPriceAmount(n)}원`;
 const goalFor = (productionCost: number, otherCost = 0) =>
   computeFundingGoal({ productionCost, otherCost, withholding: true }).goal;
@@ -21,12 +19,12 @@ const goalFor = (productionCost: number, otherCost = 0) =>
 describe('펀딩 목표액 계산기', () => {
   it('발매 페이지 기본값은 EP 번들 + 설계비', () => {
     render(<FundingGoalCalculator kakaoUrl="https://open.kakao.com/x" />);
-    expect(screen.getByText(won(goalFor(withVat(EP_BUNDLE_PRICE) + withVat(FUNDING_DESIGN_PRICE))))).toBeInTheDocument();
+    expect(screen.getByText(won(goalFor(EP_BUNDLE_PRICE + FUNDING_DESIGN_PRICE)))).toBeInTheDocument();
   });
 
   it('제작 없음 + 설계 대행이면 설계비만으로 계산한다', () => {
     render(<FundingGoalCalculator kakaoUrl="https://open.kakao.com/x" defaultProduction="none" />);
-    expect(screen.getByText(won(goalFor(withVat(FUNDING_DESIGN_PRICE))))).toBeInTheDocument();
+    expect(screen.getByText(won(goalFor(FUNDING_DESIGN_PRICE)))).toBeInTheDocument();
   });
 
   it('제작 없음 + 직접 개설이면 리워드 원가만으로 계산한다 — 작은 펀딩도 같은 식', () => {
@@ -47,7 +45,7 @@ describe('펀딩 목표액 계산기', () => {
       details.open = true;
       fireEvent(details, new Event('toggle'));
       expect(details.open).toBe(true);
-      expect(screen.getByText(won(goalFor(withVat(SINGLE_BUNDLE_PRICE) + withVat(FUNDING_DESIGN_PRICE))))).toBeInTheDocument();
+      expect(screen.getByText(won(goalFor(SINGLE_BUNDLE_PRICE + FUNDING_DESIGN_PRICE)))).toBeInTheDocument();
       expect(trackMicroEvent).toHaveBeenCalledWith('micro_pipeline_calc', expect.objectContaining({ cta_id: 'pipeline_calc_open' }));
     });
 

@@ -6,7 +6,7 @@ import {
 } from '../../data/pricing';
 import { getSupportedArtist } from '../../data/artists';
 import type { Subscription, subscriptionKindEnum } from '../../db/schema';
-import { splitInclusiveAmount, VAT_RATE, type OrderAmounts } from '../booking/amounts';
+import { addVatToSupply, splitInclusiveAmount, type OrderAmounts } from '../booking/amounts';
 
 export type SubscriptionKind = (typeof subscriptionKindEnum)[number];
 
@@ -24,10 +24,11 @@ export const MONTHLY_ITEM_AMOUNT: Record<Exclude<SubscriptionKind, 'artist-suppo
 /**
  * 월 청구액.
  *
- * 연습실·레슨은 **표기액이 VAT 별도**이고 청구는 포함액이다(연습실 360,000 → 396,000 /
- * 레슨 350,000 → 385,000). 녹음·믹싱 등 다른 상품과 같은 규칙이라 booking/amounts.ts의
- * computeAmounts와 계산이 동일하다. 사이트도 이제 "부가세 별도"로 표기한다(2026-10-01 운영자 확정 —
- * 이전에는 연습실을 '최종가'로 적어 JSON-LD·llms와 이 청구액이 어긋났다). 시간제만 VAT 포함가다.
+ * 연습실 월 이용료·레슨은 **표기액이 VAT 별도**다. 이 정기결제는 카드뿐이라 청구는 10%를 더한
+ * 포함액이다(이용료 360,000 → 396,000 / 레슨 350,000 → 385,000). **현금 입금은 부가세를 받지
+ * 않는다**(운영자 확정 2026-10-15) — 입금은 사이트 밖에서 이뤄지므로 이 함수가 다루지 않는다.
+ * 이 두 상품 외의 모든 상품은 표기가 곧 청구액(VAT 포함)이라 booking/amounts.ts의
+ * computeAmounts가 포함액을 역산한다 — 두 계산이 다른 것은 의도다(2026-10-15 이전에는 같았다).
  *
  * 아티스트 구독은 반대로 **표기액이 VAT 포함**이다("월 1만원"이 곧 청구액). 등급 id가 없거나
  * 모르는 값이면 null — 호출자가 거절해야 한다. 여기서 기본 등급으로 떨어뜨리면 후원자가
@@ -44,8 +45,7 @@ export const subscriptionAmounts = (
     return tier ? splitInclusiveAmount(tier.monthlyTotal) : null;
   }
   const itemAmount = kind === 'practice-room' && contractRent ? contractRent : MONTHLY_ITEM_AMOUNT[kind];
-  const vatAmount = Math.round(itemAmount * VAT_RATE);
-  return { itemAmount, vatAmount, totalAmount: itemAmount + vatAmount };
+  return addVatToSupply(itemAmount);
 };
 
 /** 고정가 상품 전용 — 등급이 없는 종류라 null이 나올 수 없다. 관리자 폼 안내 문구용. */
