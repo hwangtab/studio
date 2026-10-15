@@ -150,15 +150,16 @@ export default function AdminIndexPage({ dashboard, shopQueues, ledgerFrom, ledg
                 {dashboard.queues.showSubmissionsAwaitingReview !== null && (
                   <QueueCard label="심사 대기 주최자 공연" count={dashboard.queues.showSubmissionsAwaitingReview} href="/admin/shows/submissions" alert />
                 )}
-                <QueueCard label="믹싱 착수 대기" count={dashboard.queues.mixingReceived} href="/admin/bookings" alert />
-                <QueueCard label="믹싱 작업 중" count={dashboard.queues.mixingInProgress} href="/admin/bookings" />
-                <QueueCard label="서명 대기 계약" count={dashboard.queues.contractsAwaitingSignature} href="/admin/contracts" />
+                <QueueCard label="믹싱 착수 대기" count={dashboard.queues.mixingReceived} href="/admin/bookings?work=received" alert />
+                <QueueCard label="믹싱 작업 중" count={dashboard.queues.mixingInProgress} href="/admin/bookings?work=in_progress" />
+                <QueueCard label="서명 대기 계약" count={dashboard.queues.contractsAwaitingSignature} href="/admin/contracts?status=sent" />
+                <QueueCard label="종료 처리 필요 계약" count={dashboard.queues.contractsAwaitingTermination} href="/admin/contracts?status=termination" alert />
                 <QueueCard label="카드 등록 대기 구독" count={dashboard.queues.subscriptionsPendingCard} href="/admin/subscriptions" />
                 <QueueCard label="결제 재시도 중 구독" count={dashboard.queues.subscriptionsPastDue} href="/admin/subscriptions" alert />
                 <QueueCard label="정지된 구독" count={dashboard.queues.subscriptionsPaused} href="/admin/subscriptions" alert />
                 <QueueCard label="이체 대기 아티스트 정산" count={dashboard.queues.artistPayoutsPending} href="/admin/artists" alert />
                 <QueueCard label="심사 대기 펀딩 프로젝트" count={dashboard.queues.fundingProjectsAwaitingReview} href="/admin/funding/projects" alert />
-                <QueueCard label="이체 대기 펀딩 정산" count={dashboard.queues.fundingPayoutsPending} href="/admin/funding/projects" alert />
+                <QueueCard label="이체 대기 펀딩 정산" count={dashboard.queues.fundingPayoutsPending} href="/admin/funding/projects?payout=pending" alert />
                 {shopQueues.pendingProducts !== null && (
                   <QueueCard label="심사 대기 상점 상품" count={shopQueues.pendingProducts} href="/admin/shop/products" alert />
                 )}

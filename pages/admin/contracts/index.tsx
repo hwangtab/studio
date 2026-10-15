@@ -20,7 +20,7 @@ import {
   type AdminListContract,
 } from '../../../lib/contracts/serialize';
 import { expireOverdueContracts } from '../../../lib/contracts/service';
-import { getStatusLabel, needsTermination } from '../../../lib/contracts/status';
+import { getStatusLabel, needsTermination, terminationCutoff } from '../../../lib/contracts/status';
 import { formatCurrency, formatShortDate as formatDate } from '../../../lib/contracts/format';
 
 /** 한 화면에 싣는 최대 건수. 넘으면 오래된 계약이 잘린다는 사실을 화면에 알린다. */
@@ -32,8 +32,16 @@ interface AdminContractsPageProps {
   truncated: boolean;
   /** 만료까지 남은 일수를 서버·클라이언트가 같은 기준으로 계산하도록 넘긴다. */
   now: string;
+  /**
+   * `?status=`로 들어와 서버가 그 조건으로만 읽은 목록이면 그 값(계약 상태 또는 `termination`). 이때는 최근 200건이 아니라
+   * 조건에 맞는 계약 전부(상한 200)를 싣는다 — 대시보드 카드의 건수와 화면이 어긋나지 않게 하려는 것이다.
+   */
+  serverFilter?: string;
   error?: string;
 }
+
+/** 대시보드 카드가 보내는 딥링크 값. 계약 상태 + 종료 처리가 필요한 서명 계약. */
+const SERVER_FILTERS = [...contractStatusEnum, 'termination'] as const;
 
 /** 만료까지 남은 일수. 이미 지났으면 0 이하. */
 const daysUntil = (iso: string | null, now: string): number | null => {
@@ -68,12 +76,21 @@ export const getServerSideProps: GetServerSideProps<AdminContractsPageProps> = a
     return { redirect: { destination: '/admin/login', permanent: false } };
   }
 
+  const requested = typeof context.query.status === 'string' ? context.query.status : '';
+  const serverFilter = (SERVER_FILTERS as readonly string[]).includes(requested) ? requested : undefined;
+
   try {
     // 목록을 여는 시점이 곧 만료를 판정할 시점이다(크론 없이 lazy 처리).
     await expireOverdueContracts();
 
     // 한 건 더 읽어 "잘렸는지"를 판별한다.
     const allContracts = await getDb().query.contracts.findMany({
+      where: !serverFilter
+        ? undefined
+        : serverFilter === 'termination'
+          ? (t, { and: all, eq: is, isNull: none, lt: before }) =>
+              all(is(t.status, 'signed'), none(t.terminatedAt), before(t.endDate, terminationCutoff() ?? new Date(0)))
+          : (t, { eq: is }) => is(t.status, serverFilter as (typeof contractStatusEnum)[number]),
       orderBy: (contracts, { desc }) => [desc(contracts.createdAt)],
       limit: LIST_LIMIT + 1,
     });
@@ -82,6 +99,7 @@ export const getServerSideProps: GetServerSideProps<AdminContractsPageProps> = a
       props: {
         contracts: allContracts.slice(0, LIST_LIMIT).map((c) => serializeContractForAdminList(c)),
         truncated: allContracts.length > LIST_LIMIT,
+        ...(serverFilter ? { serverFilter } : {}),
         now: new Date().toISOString(),
       },
     };
@@ -113,6 +131,7 @@ export default function AdminContractsPage({
   contracts,
   truncated,
   now,
+  serverFilter,
   error,
 }: AdminContractsPageProps) {
   const router = useRouter();
@@ -272,16 +291,28 @@ export default function AdminContractsPage({
 
               {truncated && (
                 <div className="mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
-                  최근 {LIST_LIMIT}건만 표시합니다. 아래 검색도 이 목록 안에서만 찾으므로,
+                  {serverFilter ? `이 조건의 계약 중 최근 ${LIST_LIMIT}건만 표시합니다.` : `최근 ${LIST_LIMIT}건만 표시합니다.`} 아래 검색도 이 목록 안에서만 찾으므로,
                   더 오래된 계약은 나오지 않습니다.
                 </div>
               )}
 
               <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
+                {serverFilter ? (
+                  <div className="flex flex-wrap items-center gap-3 text-sm">
+                    <span className="inline-flex rounded-full bg-gray-900 px-3 py-1.5 font-medium text-white">
+                      {serverFilter === 'termination' ? '종료 처리 필요' : getStatusLabel(serverFilter as never)} ({contracts.length})
+                    </span>
+                    <Link href="/admin/contracts" className="text-primary hover:underline">
+                      전체 보기
+                    </Link>
+                  </div>
+                ) : (
                 <div className="flex flex-wrap gap-2">
                   {['all', ...contractStatusEnum].map((status) => (
                     <button
                       key={status}
+                      type="button"
+                      aria-pressed={filter === status}
                       onClick={() => setFilter(status)}
                       className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                         filter === status
@@ -295,6 +326,7 @@ export default function AdminContractsPage({
                     </button>
                   ))}
                 </div>
+                )}
 
                 <TextInput
                   type="text"
@@ -376,7 +408,7 @@ export default function AdminContractsPage({
                             {formatCurrency(contract.monthlyRent)}원
                           </td>
                           <td data-label="서명일" className="px-4 py-3">{formatDate(contract.signedAt)}</td>
-                          <td className="px-4 py-3">
+                          <td data-label="관리" className="px-4 py-3">
                             <div className="flex flex-wrap gap-2">
                               <Link href={`/admin/contracts/${contract.id}`} passHref>
                                 <Button light size="sm" variant="weak">
