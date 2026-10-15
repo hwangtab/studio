@@ -2196,3 +2196,33 @@ export const paymentLinkOrders = sqliteTable('payment_link_orders', {
 }, (t) => [
   index('payment_link_orders_slug_idx').on(t.slug),
 ]);
+
+/**
+ * 수기 매출 — 카톡·전화로 받아 **웹사이트를 거치지 않고 계좌·현금으로 들어온 돈**을 운영자가 적는 장부(0063).
+ * 주문(`orders`)과 연결하지 않는다: 예약 점유·메일·후기 요청을 건드리지 않고 매출 현황에만 합산하기 위해서다
+ * (예약까지 필요하면 수기 예약 등록이 따로 있다). `orders`의 `relations()`에 잇지 않는다(0022 절).
+ *
+ * 금액은 부가세 포함 총액이다. 부가세는 저장 시점에 계산해 둔다(과세 = 총액/11 반올림, 면세·부가세 없음 = 0).
+ * 이름·연락처 칸은 일부러 없다 — 누구인지는 메모에 운영자가 판단해 적는다.
+ */
+export const manualRevenues = sqliteTable('manual_revenues', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  /** 돈을 받은 날(KST 달력, 'YYYY-MM-DD'). 매출 현황은 이 날 0시(KST)를 기준 시각으로 쓴다. */
+  receivedOn: text('received_on').notNull(),
+  /** orderTypeEnum 값 또는 'other'. 유형별 표가 기존 주문과 같은 칸에 합산하도록 같은 키를 쓴다. */
+  type: text('type').notNull(),
+  description: text('description').notNull(),
+  /** 부가세 포함 총액(원). */
+  totalAmount: integer('total_amount').notNull(),
+  vatAmount: integer('vat_amount').notNull().default(0),
+  /** 돌려준 금액(누적). 총액을 넘을 수 없다. */
+  refundedAmount: integer('refunded_amount').notNull().default(0),
+  method: text('method').notNull(),
+  memo: text('memo'),
+  createdBy: text('created_by'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  receivedOnIdx: index('manual_revenues_received_on_idx').on(t.receivedOn),
+}));
+
+export type ManualRevenue = typeof manualRevenues.$inferSelect;

@@ -2,6 +2,7 @@ import { sendEmail, type SendEmailError } from '../email/resend';
 import { adminUrl, buildEmailLayout, escapeHtml, type EmailLayoutRow } from '../email/layout';
 import { loadPaymentLinkOrderInfo } from '../payments/paymentLinkOrders';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
+import { isManualPlaceholderRecipient } from '../privacy/manualPlaceholder';
 import { isPurgedValue } from '../privacy/orderRetention';
 import type { Booking, Order, WorkOrder } from '../../db/schema';
 import { formatPriceAmount } from '../../data/pricing';
@@ -93,6 +94,8 @@ const sendCustomerEmail = async (
   order: Order, params: Parameters<typeof sendEmail>[0],
 ): Promise<SendEmailError | null> => {
   if (isPurgedValue(order.customerEmail)) return null;
+  // 수기 예약에서 이메일을 비운 주문 — 배달될 수 없는 주소라 보내지 않는다(반송이 발신 평판을 깎는다).
+  if (isManualPlaceholderRecipient(order)) return null;
   const r = await sendEmail(params);
   if (r.ok) return null;
   // 지금은 모든 실패 경로가 errorCode를 싣지만, 없더라도 실패는 실패로 센다 —
