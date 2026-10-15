@@ -21,8 +21,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const parsed = parseManualBookingInput(req.body, now);
   if (!parsed.ok) return res.status(400).json({ ok: false, message: parsed.message });
 
+  // 캘린더에만 있던 일정을 가져올 때의 일정 id(구글 일정 id는 소문자·숫자). 모양이 틀리면 무시한다.
+  const rawAdopt = (req.body as Record<string, unknown> | null)?.adoptEventId;
+  const adoptEventId = typeof rawAdopt === 'string' && /^[a-z0-9_]{5,1024}$/.test(rawAdopt) ? rawAdopt : null;
+
   try {
-    const result = await createManualBooking(parsed.value, now);
+    const result = await createManualBooking(parsed.value, now, { adoptEventId });
     if (!result.ok) return res.status(409).json({ ok: false, message: result.message });
     return res.status(201).json({ ok: true, orderId: result.orderId, orderNo: result.orderNo, status: result.status, warnings: result.warnings });
   } catch (error: unknown) {

@@ -7,6 +7,7 @@ import { BANK_DEPOSIT_PAYMENT_METHOD, bankDepositPaymentKey } from '../payments/
 import { splitInclusiveAmount } from './amounts';
 import { confirmBookingBankDeposit, holdBookingOnCalendar } from './bankDeposit';
 import { calendarBlockedRooms } from './calendarGuard';
+import { deleteBookingEvent } from './gcal';
 import { kstDateTime, kstDateString } from './kst';
 import { getMixingProduct, resolveSongCount } from './mixing-products';
 import { getProduct, productHours, resolveHours } from './products';
@@ -132,8 +133,25 @@ export type ManualBookingOutcome =
   | { ok: true; orderId: string; orderNo: string; status: 'paid' | 'awaiting_deposit'; warnings: string[] }
   | { ok: false; message: string };
 
-export const createManualBooking = async (input: ManualBookingInput, now: Date): Promise<ManualBookingOutcome> => {
+/**
+ * @param opts.adoptEventId 캘린더에만 있던 일정을 사이트 예약으로 **가져올 때**(관리자 대시보드 "사이트에 등록") 그 일정의 id.
+ *   캘린더 충돌 검사에서 그 일정 자신을 빼고, 예약이 만들어지면(확정·입금 대기 모두 사이트가 자기 일정을 새로 올리므로) 원래 일정은 지운다 —
+ *   안 지우면 같은 시간에 일정이 두 개가 된다. 지우기가 실패하면 경고만 한다(예약은 이미 만들어졌다).
+ */
+export const createManualBooking = async (
+  input: ManualBookingInput, now: Date, opts: { adoptEventId?: string | null } = {},
+): Promise<ManualBookingOutcome> => {
   const warnings: string[] = [];
+  const adoptEventId = input.kind === 'session' ? (opts.adoptEventId ?? null) : null;
+  const releaseAdoptedEvent = async (): Promise<void> => {
+    if (!adoptEventId) return;
+    try {
+      await deleteBookingEvent(adoptEventId, 'studio');
+    } catch (error) {
+      console.error('[manual-booking] 가져온 캘린더 원본 일정 삭제 실패', { adoptEventId, error: error instanceof Error ? error.message : String(error) });
+      warnings.push('캘린더의 원래 일정을 지우지 못했어요. 같은 시간에 일정이 두 개 보이면 원래 것을 직접 지워 주세요.');
+    }
+  };
   let payload = input.payload;
 
   let orderNo: string;
@@ -146,7 +164,7 @@ export const createManualBooking = async (input: ManualBookingInput, now: Date):
     let excludeRooms: string[] = [];
     if (!isPast) {
       try {
-        const guard = await calendarBlockedRooms(product, startAt, endAt);
+        const guard = await calendarBlockedRooms(product, startAt, endAt, adoptEventId);
         if (guard.blocked) return { ok: false, message: '그 시간대는 운영자 캘린더에 이미 일정이 있어요. 캘린더를 확인해 주세요.' };
         excludeRooms = guard.excludeRooms;
       } catch (error) {
@@ -179,6 +197,7 @@ export const createManualBooking = async (input: ManualBookingInput, now: Date):
 
   if (!input.received) {
     if (input.kind === 'session') await holdBookingOnCalendar(orderNo);
+    await releaseAdoptedEvent();
     return { ok: true, orderId: order.id, orderNo, status: 'awaiting_deposit', warnings };
   }
 
@@ -192,5 +211,6 @@ export const createManualBooking = async (input: ManualBookingInput, now: Date):
   }
   if (confirmed.warnings) warnings.push(...confirmed.warnings);
   if (confirmed.emailSent === false) warnings.push('확정 메일 발송에 실패했어요. 예약 상세에서 재발송할 수 있어요.');
+  await releaseAdoptedEvent();
   return { ok: true, orderId: order.id, orderNo, status: 'paid', warnings };
 };

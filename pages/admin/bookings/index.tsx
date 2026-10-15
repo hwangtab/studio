@@ -182,6 +182,14 @@ export default function AdminBookingsPage({
   error,
 }: AdminBookingsPageProps) {
   const router = useRouter();
+  const { fromEvent, start: fromStart, end: fromEnd, title: fromTitle } = router.query;
+  const prefill = useMemo(
+    () =>
+      typeof fromEvent === 'string' && typeof fromStart === 'string' && typeof fromEnd === 'string'
+        ? { eventId: fromEvent, startAt: fromStart, endAt: fromEnd, title: typeof fromTitle === 'string' ? fromTitle : '' }
+        : null,
+    [fromEvent, fromStart, fromEnd, fromTitle],
+  );
   const [filter, setFilter] = useState<string>('all');
   const [search, setSearch] = useState<string>('');
   const [notice, setNotice] = useState<string | null>(null);
@@ -312,7 +320,7 @@ export default function AdminBookingsPage({
 
       <AdminShell title="예약 관리" description="세션 예약 현황을 확인하고 관리합니다." width="wide">
         <div className="space-y-6">
-          <ManualBookingPanel today={kstDateString(new Date())} onCreated={refresh} />
+          <ManualBookingPanel today={kstDateString(new Date())} onCreated={refresh} prefill={prefill} />
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
             <div className="p-4 md:p-8">
               {notice && (

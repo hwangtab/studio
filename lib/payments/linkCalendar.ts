@@ -2,7 +2,7 @@ import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { kstDateString } from '../booking/kst';
-import { createBookingEvent, deleteBookingEvent } from '../booking/gcal';
+import { createBookingEvent, deleteBookingEvent, getCalendarEvent } from '../booking/gcal';
 import { adminUrl } from '../email/layout';
 import { safeDbErrorSummary } from './refundAccount';
 
@@ -121,4 +121,54 @@ export const resyncPaymentLinkCalendarEvent = async (orderNo: string): Promise<{
   if (!row || row.session_at === null || row.session_hours === null) return { ok: false, message: '이용 일시가 없는 링크 주문이에요.' };
   if (row.status !== 'paid' && row.status !== 'partially_refunded') return { ok: false, message: '결제가 확정된 주문만 캘린더에 올려요.' };
   return { ok: false, message: '캘린더 등록에 실패했어요. 로그와 캘린더 설정(BOOKING_GCAL_ID)을 확인해 주세요.' };
+};
+
+/**
+ * **캘린더 → 사이트**: 우리가 올린 링크 일정을 운영자가 캘린더에서 옮기거나 지웠는지 확인해 주문에 반영한다.
+ * 관리자 대시보드를 열 때 부른다(실시간이 아니다 — 구글 푸시 알림은 쓰지 않는다).
+ *
+ * - **시작·끝이 바뀌었으면** 주문의 이용 일시·시간(`session_at`·`session_hours`)을 캘린더 값으로 맞춘다. 그 링크의 "예약 불가 블록"(`block_id`)도 같은 시간으로
+ *   옮긴다(링크 하나에 주문이 여럿이어도 블록은 하나라, 가장 최근에 옮긴 값을 따른다).
+ * - **일정이 지워졌으면**(404·취소) 환불로 보지 않는다 — `gcal_event_id`를 비우고 `gcal_error`에 "캘린더에서 삭제됨"을 적어 관리자 상세에 보인다(다시 올리거나 무시).
+ * - 대상은 결제된 주문 중 이용 일시가 어제 이후인 것 최대 30건. 한 건이 실패해도 나머지는 본다. 던지지 않는다.
+ * 종일 일정으로 바뀌었으면(시각 없음) 건드리지 않는다.
+ */
+export const syncLinkEventsFromCalendar = async (now: Date = new Date()): Promise<{ moved: number; deleted: number }> => {
+  const result = { moved: 0, deleted: 0 };
+  let rows: Array<{ order_no: string; slug: string; session_at: number; session_hours: number | null; gcal_event_id: string }> = [];
+  try {
+    rows = await getDb().all(sql`
+      SELECT plo.order_no, plo.slug, plo.session_at, plo.session_hours, plo.gcal_event_id
+      FROM payment_link_orders plo JOIN orders o ON o.order_no = plo.order_no
+      WHERE plo.gcal_event_id IS NOT NULL AND plo.session_at IS NOT NULL AND o.status IN ('paid', 'partially_refunded')
+        AND plo.session_at >= ${Math.floor(now.getTime() / 1000) - 24 * 3600}
+      ORDER BY plo.session_at LIMIT 30
+    `);
+  } catch (error) {
+    console.error('[link-calendar] 캘린더 변경 확인 대상 조회 실패 — 건너뜀', { error: safeDbErrorSummary(error) });
+    return result;
+  }
+  for (const row of rows) {
+    try {
+      const event = await getCalendarEvent(row.gcal_event_id, 'studio');
+      if (!event) {
+        await getDb().run(sql`UPDATE payment_link_orders SET gcal_event_id = NULL, gcal_error = ${`캘린더에서 삭제됨(${kstDateString(now)})`} WHERE order_no = ${row.order_no}`);
+        result.deleted += 1;
+        continue;
+      }
+      if (event.allDay) continue;
+      const startSec = Math.floor(event.start.getTime() / 1000);
+      const hours = Math.max(1, Math.round((event.end.getTime() - event.start.getTime()) / 3_600_000));
+      if (startSec === Number(row.session_at) && hours === Number(row.session_hours ?? hours)) continue;
+      await getDb().run(sql`UPDATE payment_link_orders SET session_at = ${startSec}, session_hours = ${hours} WHERE order_no = ${row.order_no}`);
+      await getDb().run(sql`
+        UPDATE availability_blocks SET start_at = ${startSec}, end_at = ${startSec + hours * 3600}
+        WHERE id = (SELECT block_id FROM payment_links WHERE slug = ${row.slug} AND block_id IS NOT NULL)
+      `);
+      result.moved += 1;
+    } catch (error) {
+      console.error('[link-calendar] 캘린더 변경 확인 실패 — 이 건은 건너뜀', { orderNo: row.order_no, error: error instanceof Error ? error.message : String(error) });
+    }
+  }
+  return result;
 };

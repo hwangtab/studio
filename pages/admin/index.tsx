@@ -193,6 +193,34 @@ export default function AdminIndexPage({ dashboard, shopQueues, ledgerFrom, ledg
               )}
             </section>
 
+            {(dashboard.calendarEvents.length > 0 || dashboard.calendarError) && (
+              <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">캘린더에만 있는 일정</h2>
+                <p className="text-xs text-gray-500 mb-4">
+                  녹음실 캘린더에 직접 넣은 일정이라 사이트에는 아직 없어요(웹 예약 시간은 이미 막혀 있어요). “사이트에 등록”을 누르면 시간을 채운 수기 예약 등록 칸이 열려요 — 고객·상품·금액은 거기서 채우세요.
+                </p>
+                {dashboard.calendarError && <p className="text-sm text-amber-800">{dashboard.calendarError}</p>}
+                <ul className="divide-y divide-gray-100">
+                  {dashboard.calendarEvents.map((event) => (
+                    <li key={event.id} className="py-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-sm">
+                      <span className="font-medium text-gray-900 tabular-nums">{event.allDay ? `${formatKstDateTime(event.startAt).slice(0, 14)} 종일` : formatKstDateTime(event.startAt)}</span>
+                      <span className="text-gray-700">{event.summary}<span className="ml-2 rounded bg-sky-100 px-1.5 py-0.5 text-xs font-medium text-sky-800">캘린더</span></span>
+                      {event.adoptable ? (
+                        <Link
+                          href={`/admin/bookings?${new URLSearchParams({ fromEvent: event.id, start: event.startAt, end: event.endAt, title: event.summary }).toString()}`}
+                          className="text-primary hover:underline"
+                        >
+                          사이트에 등록
+                        </Link>
+                      ) : (
+                        <span className="text-xs text-gray-500">종일 일정은 직접 등록해 주세요</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
             {dashboard.socialTokens.length > 0 && (
               <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
                 <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">소셜 발행 토큰</h2>
