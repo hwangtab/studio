@@ -26,7 +26,7 @@ export type MarketRow = {
   item: string;
   /** 시장 쪽. range가 없으면 note만 쓴다(숫자로 말할 수 없는 항목). */
   market: { range?: [number, number]; median?: number; sample?: string; note?: string };
-  /** 스튜디오 놀 단품 가격(부가세 별도). 단품이 없으면 undefined. */
+  /** 스튜디오 놀 단품 가격(부가세 포함). 단품이 없으면 undefined. */
   ours?: [number, number];
   /** 단품을 범위 숫자로 말할 수 없을 때의 표기(예: 단독 홍보 상품). */
   oursLabel?: string;

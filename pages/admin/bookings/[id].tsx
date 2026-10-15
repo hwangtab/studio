@@ -697,7 +697,7 @@ export default function AdminBookingDetailPage({
           <div className="p-4 md:p-8 border-b border-gray-200">
             <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">결제 금액</h2>
             <dl className="space-y-2 text-sm">
-              <DescriptionRow label="상품가" value={`${formatPriceAmount(booking.itemAmount)}원`} />
+              <DescriptionRow label="공급가액" value={`${formatPriceAmount(booking.itemAmount)}원`} />
               <DescriptionRow label="VAT" value={`${formatPriceAmount(booking.vatAmount)}원`} />
               <DescriptionRow
                 label="합계"

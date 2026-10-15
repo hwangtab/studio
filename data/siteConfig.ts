@@ -208,13 +208,13 @@ export const getSiteConfig = (locale: Locale): SiteConfig => {
       googleReviewUrl: 'https://g.page/r/CVZTKO82moj1EAI/review',
     },
     vatNotice: t(locale, {
-      ko: '* 모든 가격은 VAT 별도예요.',
-      en: '* All prices exclude VAT.',
-      zh: '* 所有价格均不含增值税。',
-      es: '* Todos los precios excluyen el IVA.',
-      vi: '* Tất cả giá chưa bao gồm VAT.',
-      th: '* ราคาทั้งหมดไม่รวม VAT',
-      uz: '* Barcha narxlar VATsiz.'
+      ko: '* 연습실 월 이용료·레슨 월정액을 뺀 모든 가격은 VAT 포함이에요.',
+      en: '* All prices include VAT, except the practice-room monthly fee and lesson monthly fee.',
+      zh: '* 除练习室月租与课程月费外，所有价格均含增值税。',
+      es: '* Todos los precios incluyen el IVA, salvo la cuota mensual de la sala y la mensualidad de las clases.',
+      vi: '* Tất cả giá đã gồm VAT, trừ phí thuê phòng tập và học phí bài học theo tháng.',
+      th: '* ราคาทั้งหมดรวม VAT ยกเว้นค่าห้องซ้อมรายเดือนและค่าเรียนรายเดือน',
+      uz: "* Barcha narxlar QQS bilan, oylik ijara va darsning oylik to'lovi bundan mustasno."
     }),
     // 통신판매업 신고번호(2026-09-10 신고 완료, 서울 은평구). 빈 문자열이면 소비처(Footer 등)가
     // 렌더하지 않으므로, 값이 들어온 지금부터 푸터·약관에 자동 표시된다.

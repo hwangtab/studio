@@ -9,7 +9,9 @@ describe('MarketPriceComparison', () => {
     const text = container.textContent ?? '';
     expect(text).not.toMatch(/바르티|모래뮤직|톤스튜디오|에픽사운드|유일사운드|모트|믹싱아트|크몽|숨고/);
     expect(text).toContain('2026-09-26');
-    expect(text).toContain('부가세 별도');
+    expect(text).toContain('스튜디오 놀 가격은 부가세 포함이에요');
+    expect(text).not.toContain('부가세 별도');
+    expect(text).not.toContain('부가세를 더해');
     expect(text).toContain(`싱글 번들은 ${formatPriceLabel(SINGLE_BUNDLE_PRICE, 'ko')}`);
     expect(text).toContain('트랙 10개 이하');
     expect(text).toContain('트랙 수 제한 없는 가격');

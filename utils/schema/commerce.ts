@@ -1,7 +1,7 @@
 import { type Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { PRACTICE_ROOM_HOURLY_PRICE_INCL, PRACTICE_ROOM_MONTHLY_PRICE } from '../../data/pricing';
-import { DEFAULT_SCHEMA_IMAGE, getSchemaLanguage } from './shared';
+import { buildPriceSpecification, DEFAULT_SCHEMA_IMAGE, getSchemaLanguage } from './shared';
 
 export const generatePracticeRoomMonthlyRentSchema = (
   pageUrl: string,
@@ -19,11 +19,11 @@ export const generatePracticeRoomMonthlyRentSchema = (
   type ServiceCopy = { name: string; serviceType: string; description: string; offerName: string; hourlyOfferName: string };
   const copyByLocale: Record<string, ServiceCopy> = {
     ko: {
-      name: '음악연습실 월세 입주 — 스튜디오 놀',
-      serviceType: '음악연습실 월세 입주',
+      name: '음악연습실 월 이용료 입주 — 스튜디오 놀',
+      serviceType: '음악연습실 월 이용료 입주',
       description:
-        '서울 은평구 연신내역 도보 5분 거리 24시간 음악연습실 월세 입주 프로그램. 보증금 없음, 최소 1개월, 개별 도어록·냉난방·방음 설계 포함.',
-      offerName: '음악연습실 월세 입주 (개인 연습실)',
+        '서울 은평구 연신내역 도보 5분 거리 24시간 음악연습실 월 이용료 입주 프로그램. 보증금 없음, 최소 1개월, 개별 도어록·냉난방·방음 설계 포함.',
+      offerName: '음악연습실 월 이용료 입주 (개인 연습실)',
       hourlyOfferName: '시간제 연습실 (시간당, 부가세 포함)',
     },
     en: {
@@ -129,7 +129,7 @@ export const generatePracticeRoomMonthlyRentSchema = (
         price: PRACTICE_ROOM_MONTHLY_PRICE,
         priceCurrency: 'KRW',
         unitCode: 'MON',
-        // 월 이용료 36만원은 VAT 별도(운영자 확정 2026-10-01). 청구는 396,000원(lib/billing/amounts.ts).
+        // 월 이용료 36만원은 VAT 별도(운영자 확정 2026-10-01, 2026-10-15 재확인): 카드 결제는 396,000원(lib/billing/amounts.ts), 현금 입금은 36만원.
         valueAddedTaxIncluded: false,
         unitText: locale === 'ko' ? '월'
           : locale === 'zh' ? '月'
@@ -151,7 +151,7 @@ export const generatePracticeRoomMonthlyRentSchema = (
       // provider와 같은 이유로 참조만 (위 주석 참고).
       seller: { '@id': `${config.url}/#studio` },
     }, {
-      // 시간제 — 2026-09-25 사이트 예약 오픈. **VAT 포함** 소비자가(월세는 별도) — 두 오퍼의
+      // 시간제 — 2026-09-25 사이트 예약 오픈. **VAT 포함** 소비자가(월 이용료는 별도) — 두 오퍼의
       // 과세 표기가 다르다는 것을 여기 남긴다. 예약 액션은 아래 potentialAction.
       '@type': 'Offer',
       '@id': `${pageUrl}#practice-room-hourly`,
@@ -194,6 +194,8 @@ export const generatePracticeRoomMonthlyRentSchema = (
 export interface AggregateOfferInput {
   name: string;
   priceValue: number;
+  /** 기본 true. 연습실 월 이용료·레슨 월정액만 false(VAT 별도). */
+  vatIncluded?: boolean;
 }
 
 export const generateAggregateOfferSchema = (
@@ -233,7 +235,10 @@ export const generateAggregateOfferSchema = (
         '@type': 'Offer',
         name: offer.name,
         // 가격 미정(0) 항목은 price를 생략 — price:0은 "무료"로 오인되어 rich result 왜곡.
-        ...(offer.priceValue > 0 && { price: offer.priceValue }),
+        ...(offer.priceValue > 0 && {
+          price: offer.priceValue,
+          priceSpecification: buildPriceSpecification(offer.priceValue, { vatIncluded: offer.vatIncluded }),
+        }),
         priceCurrency: 'KRW',
       })),
     },

@@ -32,7 +32,7 @@ export const PRACTICE_ROOM_RELATED_GUIDES: PracticeRoomRelatedGuide[] = [
   { slug: 'practice-room-guide1', title: '음악연습실 고르는 법' },
   { slug: 'practice-room-price1', title: '음악연습실 가격 비교' },
   { slug: 'practice-room-rental1', title: '음악연습실 대여 방법' },
-  { slug: 'practice-room-monthly1', title: '음악연습실 월세 입주 가이드' },
+  { slug: 'practice-room-monthly1', title: '음악연습실 월 이용료 입주 가이드' },
   { slug: 'practice-room-soundproof1', title: '방음 음악연습실 선택' },
   { slug: 'practice-room-vocal1', title: '보컬 연습실 활용법' },
   { slug: 'practice-room-startup1', title: '음악연습실 창업 가이드' },

@@ -28,6 +28,7 @@ import { getStudioFaqData } from '../../data/faq';
 import { getSiteConfig } from '../../data/siteConfig';
 import { DAY_LOCK_4H_PRICE, DAY_LOCK_8H_PRICE, RECORDING_HOURLY_PRICE } from '../../data/pricing';
 import { getSchemaLanguage } from '../../utils/schema';
+import { buildPriceSpecification } from '../../utils/schema/shared';
 import { createInViewEnterAnimation } from '../../utils/animationUtils';
 
 import type { NextPageWithLayout } from '../../types';
@@ -94,6 +95,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
         name: locale === 'ko' ? '시간당 레코딩' : 'Hourly Recording',
         priceCurrency: 'KRW',
         price: RECORDING_HOURLY_PRICE,
+        priceSpecification: buildPriceSpecification(RECORDING_HOURLY_PRICE),
         availability: 'https://schema.org/InStock',
         url: `${siteConfig.url}/${locale}/pricing`,
       },
@@ -102,6 +104,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
         name: locale === 'ko' ? 'Day Lock (4시간)' : 'Day Lock (4 hours)',
         priceCurrency: 'KRW',
         price: DAY_LOCK_4H_PRICE,
+        priceSpecification: buildPriceSpecification(DAY_LOCK_4H_PRICE),
         availability: 'https://schema.org/InStock',
         url: `${siteConfig.url}/${locale}/pricing`,
       },
@@ -110,6 +113,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
         name: locale === 'ko' ? 'Day Lock (8시간)' : 'Day Lock (8 hours)',
         priceCurrency: 'KRW',
         price: DAY_LOCK_8H_PRICE,
+        priceSpecification: buildPriceSpecification(DAY_LOCK_8H_PRICE),
         availability: 'https://schema.org/InStock',
         url: `${siteConfig.url}/${locale}/pricing`,
       },

@@ -74,7 +74,7 @@ const faqData = {
     },
     {
       question: '연습실은 어떻게 이용하나요?',
-      answer: `월정액 입주 프로그램(월 36만원~, 부가세 별도)이 기본이에요. 보증금 없이 24시간 출입할 수 있는 방음 개인실이고, 한두 시간만 필요하면 시간제(시간당 ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)}원, 부가세 포함, 1시간부터)로 온라인 결제 후 바로 쓸 수 있어요. 밴드 합주실은 운영하지 않아요.`,
+      answer: `월정액 입주 프로그램(월 36만원~, 부가세 별도 · 현금 입금 시에는 부가세 없음)이 기본이에요. 보증금 없이 24시간 출입할 수 있는 방음 개인실이고, 한두 시간만 필요하면 시간제(시간당 ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)}원, 부가세 포함, 1시간부터)로 온라인 결제 후 바로 쓸 수 있어요. 밴드 합주실은 운영하지 않아요.`,
     },
     // 2026-09-25 — 홈 FAQ가 녹음·믹싱·연습실·축가만 답하고 있었다. ChatGPT는 홈(/ko)을 직접
     // 인용한 적이 있다(GEO 1회차 Q17·Q19). 나머지 주력 상품을 한 문항씩 둔다.
@@ -94,7 +94,7 @@ const faqData = {
     },
     {
       question: '작곡이나 편곡만 의뢰할 수도 있나요?',
-      answer: `네, 작곡(멜로디·코드·구조), 편곡(미디 편곡부터 풀밴드·스트링까지), 보컬용 MR 제작, 그리고 녹음·믹싱·마스터링까지 이어지는 프로듀싱을 한 단계씩 따로 맡길 수 있어요. 작곡 ${krw(COMPOSITION_PRICE)}원, 편곡은 믹싱과 같은 트랙 수 등급으로 10트랙 이하 ${krw(ARRANGEMENT_SMALL_PRICE)}원·11~30트랙 ${krw(ARRANGEMENT_BAND_PRICE)}원·31트랙 이상 ${krw(ARRANGEMENT_LARGE_PRICE)}원, 기존 곡의 맞춤 MR은 ${krw(CUSTOM_MR_PRICE)}원이에요(곡당, 부가세 별도, 수정 2회 포함). 세션 연주비는 연주자에게 드리는 실비만 받아요.`,
+      answer: `네, 작곡(멜로디·코드·구조), 편곡(미디 편곡부터 풀밴드·스트링까지), 보컬용 MR 제작, 그리고 녹음·믹싱·마스터링까지 이어지는 프로듀싱을 한 단계씩 따로 맡길 수 있어요. 작곡 ${krw(COMPOSITION_PRICE)}원, 편곡은 믹싱과 같은 트랙 수 등급으로 10트랙 이하 ${krw(ARRANGEMENT_SMALL_PRICE)}원·11~30트랙 ${krw(ARRANGEMENT_BAND_PRICE)}원·31트랙 이상 ${krw(ARRANGEMENT_LARGE_PRICE)}원, 기존 곡의 맞춤 MR은 ${krw(CUSTOM_MR_PRICE)}원이에요(곡당, 부가세 포함, 수정 2회 포함). 세션 연주비는 연주자에게 드리는 실비만 받아요.`,
     },
     {
       question: '커버 영상도 찍을 수 있나요?',
@@ -492,7 +492,7 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
       items: [
         {
           heading: 'Every Rate Is Published',
-          body: 'Recording, mixing, mastering, lessons, and the practice room all have posted prices on this site — nothing is quote-only. All prices exclude VAT.'
+          body: 'Recording, mixing, mastering, lessons, and the practice room all have posted prices on this site — nothing is quote-only. All prices include VAT, except the practice-room monthly fee and the lesson monthly fee (VAT excluded).'
         },
         {
           heading: 'What Is Not Included',
@@ -554,7 +554,7 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
       items: [
         {
           heading: '所有价格均公开标示',
-          body: '录音、混音、母带处理、课程和练习室的价格都公开标示在本网站上，没有“仅限报价”的项目。所有价格均不含增值税。'
+          body: '录音、混音、母带处理、课程和练习室的价格都公开标示在本网站上，没有“仅限报价”的项目。除练习室月租与课程月费（不含增值税）外，所有价格均含增值税。'
         },
         {
           heading: '不包含的项目',
@@ -616,7 +616,7 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
       items: [
         {
           heading: 'Todas las tarifas están publicadas',
-          body: 'La grabación, la mezcla, la masterización, las clases y la sala de práctica tienen precios publicados en este sitio — nada funciona solo por presupuesto. Todos los precios excluyen el IVA.'
+          body: 'La grabación, la mezcla, la masterización, las clases y la sala de práctica tienen precios publicados en este sitio — nada funciona solo por presupuesto. Todos los precios incluyen el IVA, salvo la cuota mensual de la sala de práctica y la mensualidad de las clases (IVA no incluido).'
         },
         {
           heading: 'Qué no incluye el precio',
@@ -678,7 +678,7 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
       items: [
         {
           heading: 'Mọi mức giá đều được công khai',
-          body: 'Thu âm, mixing, mastering, khóa học và phòng tập đều có giá niêm yết trên trang này — không có mục nào chỉ báo giá riêng. Tất cả giá đều chưa gồm VAT.'
+          body: 'Thu âm, mixing, mastering, khóa học và phòng tập đều có giá niêm yết trên trang này — không có mục nào chỉ báo giá riêng. Tất cả giá đã gồm VAT, trừ phí thuê phòng tập theo tháng và học phí bài học theo tháng (chưa gồm VAT).'
         },
         {
           heading: 'Những gì không nằm trong giá',
@@ -740,7 +740,7 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
       items: [
         {
           heading: 'ทุกราคาเปิดเผยต่อสาธารณะ',
-          body: 'การบันทึกเสียง มิกซ์ มาสเตอริ่ง คอร์สเรียน และห้องซ้อม ล้วนมีราคาที่ระบุไว้บนเว็บไซต์นี้ — ไม่มีรายการใดที่ต้องขอใบเสนอราคาเท่านั้น ราคาทั้งหมดไม่รวม VAT'
+          body: 'การบันทึกเสียง มิกซ์ มาสเตอริ่ง คอร์สเรียน และห้องซ้อม ล้วนมีราคาที่ระบุไว้บนเว็บไซต์นี้ — ไม่มีรายการใดที่ต้องขอใบเสนอราคาเท่านั้น ราคาทั้งหมดรวม VAT ยกเว้นค่าห้องซ้อมรายเดือนและค่าเรียนรายเดือน (ไม่รวม VAT)'
         },
         {
           heading: 'สิ่งที่ไม่รวมอยู่ในราคา',
@@ -802,7 +802,7 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
       items: [
         {
           heading: "Har bir narx e'lon qilingan",
-          body: "Yozuv, miks, mastering, darslar va mashg'ulot xonasining barchasi ushbu saytda e'lon qilingan narxlarga ega — hech narsa faqat so'rov bo'yicha emas. Barcha narxlar VATsiz ko'rsatilgan."
+          body: "Yozuv, miks, mastering, darslar va mashg'ulot xonasining barchasi ushbu saytda e'lon qilingan narxlarga ega — hech narsa faqat so'rov bo'yicha emas. Barcha narxlar QQS bilan ko'rsatilgan, oylik ijara va darsning oylik to'lovi bundan mustasno (QQS alohida)."
         },
         {
           heading: "Narxga kirmaydigan narsalar",

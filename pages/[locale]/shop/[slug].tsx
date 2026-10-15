@@ -11,6 +11,7 @@ import { findShopProductAsync, listPublishedShopProducts } from '../../../lib/sh
 import { getRemainingStock } from '../../../lib/shop/service';
 import { canShareOrder } from '../../../lib/shop/shipper';
 import imageMetadata from '../../../utils/imageMetadata.json';
+import { buildPriceSpecification } from '../../../utils/schema/shared';
 
 interface Props {
   product: ShopProduct;
@@ -54,6 +55,7 @@ export default function ShopProductPage({ product, others, remaining, salesOpen,
       sku: s.id,
       price: s.price,
       priceCurrency: 'KRW',
+      priceSpecification: buildPriceSpecification(s.price),
       url: `${SITE_URL}${path}`,
       ...(remaining
         ? { availability: salesOpen && (remaining[s.id] ?? 0) > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }

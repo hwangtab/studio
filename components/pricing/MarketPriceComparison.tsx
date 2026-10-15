@@ -5,7 +5,6 @@ import {
   MARKET_ROWS,
   MARKET_SURVEY_CHECKED_ON,
 } from '../../data/marketPriceSurvey';
-import { VAT_RATE } from '../../lib/booking/amounts';
 
 const won = (v: number) => formatPriceLabel(v, 'ko');
 const range = ([min, max]: [number, number]) => (min === max ? won(min) : `${won(min)}~${won(max)}`);
@@ -15,10 +14,9 @@ const range = ([min, max]: [number, number]) => (min === max ? won(min) : `${won
  *
  * 비교 광고라 세 가지를 지킨다. 시장 숫자는 docs/market-price-survey-2026-09.md의 공개 요금에서만
  * 온다. 공개 가격이 없는 항목은 숫자를 만들지 않는다. 부가세 기준이 다르다는 것(시장 쪽은 대부분
- * 미표기, 우리는 별도)을 숨기지 않고 우리 번들의 부가세 포함가를 같이 적는다.
+ * 미표기, 우리는 포함)을 숨기지 않고 우리 가격이 부가세 포함이라는 것을 문장으로 적는다.
  */
 const MarketPriceComparison = () => {
-  const bundleWithVat = Math.round(MARKET_COMPARISON_BUNDLE_PRICE * (1 + VAT_RATE));
   return (
     <div className="max-w-5xl mx-auto mt-12">
       <h3 className="typo-card-title text-center text-gray-900 dark:text-white mb-2">따로 맡기면 얼마가 드나요?</h3>
@@ -70,13 +68,13 @@ const MarketPriceComparison = () => {
         </table>
       </div>
       <p className="mt-5 typo-card-body text-gray-800 dark:text-gray-200">
-        스튜디오 놀 싱글 번들은 {won(MARKET_COMPARISON_BUNDLE_PRICE)}, 부가세를 더해 {bundleWithVat.toLocaleString('en-US')}원이에요.
+        스튜디오 놀 싱글 번들은 {won(MARKET_COMPARISON_BUNDLE_PRICE)}, 부가세 포함이에요.
         보컬 녹음 1프로·믹싱·마스터링에 기획·유통 등록·국내외 홍보까지 들어 있고, 번들의 믹싱은 트랙 10개 이하
         기준이에요.
       </p>
       <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
         시장 가격은 {MARKET_SURVEY_CHECKED_ON}에 각 업체의 공개 요금표에서 확인한 값이에요. 업체마다 포함 범위가 다르고
-        대부분 부가세 포함 여부를 적지 않아 대략의 범위로 봐 주세요. 스튜디오 놀 가격은 부가세 별도예요.
+        대부분 부가세 포함 여부를 적지 않아 대략의 범위로 봐 주세요. 스튜디오 놀 가격은 부가세 포함이에요.
       </p>
     </div>
   );

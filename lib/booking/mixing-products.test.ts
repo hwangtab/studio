@@ -27,8 +27,9 @@ describe('믹싱+마스터링 통합 상품 — 가격은 두 단품의 합산 �
     ['mixing-mastering-level2', 'mixing-level2'],
     ['mixing-mastering-level3', 'mixing-level3'],
   ];
+  // 합산 약속은 표기가(합계, VAT 포함) 기준이다 — 공급가는 합계에서 역산해 반올림이 달라질 수 있다.
   const itemAmount = (id: string, songs: number, tuning = false) =>
-    computeMixingAmounts(getMixingProduct(id)!, songs, tuning).itemAmount;
+    computeMixingAmounts(getMixingProduct(id)!, songs, tuning).totalAmount;
 
   it('믹싱 3티어마다 하나씩 있다', () => {
     expect(COMBINED_PRODUCTS.map((p) => p.id)).toEqual(tiers.map(([combined]) => combined));
@@ -84,20 +85,20 @@ describe('resolveSongCount', () => {
 });
 
 describe('computeMixingAmounts', () => {
-  it('튜닝 없이 3곡 · 믹싱 10트랙 이하 = 60만 + VAT 6만', () => {
+  it('튜닝 없이 3곡 · 믹싱 10트랙 이하 = 표기 60만원(VAT 포함) — 공급가 545,455 + VAT 54,545', () => {
     const p = getMixingProduct('mixing-level1')!;
-    expect(computeMixingAmounts(p, 3, false)).toEqual({ itemAmount: 600000, vatAmount: 60000, totalAmount: 660000 });
+    expect(computeMixingAmounts(p, 3, false)).toEqual({ itemAmount: 545455, vatAmount: 54545, totalAmount: 600000 });
   });
-  it('튜닝 포함 2곡 · 믹싱 10트랙 이하 = (200,000+150,000)*2 + VAT', () => {
+  it('튜닝 포함 2곡 · 믹싱 10트랙 이하 = (200,000+150,000)*2 = 700,000 (VAT 포함)', () => {
     const p = getMixingProduct('mixing-level1')!;
     const amounts = computeMixingAmounts(p, 2, true);
-    expect(amounts.itemAmount).toBe(700000);
-    expect(amounts.vatAmount).toBe(70000);
-    expect(amounts.totalAmount).toBe(770000);
+    expect(amounts.totalAmount).toBe(700000);
+    expect(amounts.itemAmount).toBe(636364);
+    expect(amounts.vatAmount).toBe(63636);
   });
   it('마스터링은 튜닝 옵션이 없으므로(tuningEligible=false) true를 넘겨도 계산기는 그대로 더한다 — 방지는 validation의 책임', () => {
     const p = getMixingProduct('mastering-single')!;
     expect(p.tuningEligible).toBe(false);
-    expect(computeMixingAmounts(p, 1, false)).toEqual({ itemAmount: 100000, vatAmount: 10000, totalAmount: 110000 });
+    expect(computeMixingAmounts(p, 1, false)).toEqual({ itemAmount: 90909, vatAmount: 9091, totalAmount: 100000 });
   });
 });

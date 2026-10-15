@@ -13,7 +13,6 @@ import { lightOnlyField } from '../../../../components/ui/adminFieldClass';
 import { formatPriceAmount, FUNDING_DESIGN_PRICE } from '../../../../data/pricing';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { formatKstDateTimeFull } from '../../../../lib/booking/format';
-import { VAT_RATE } from '../../../../lib/booking/amounts';
 import { loadProjectForAdmin, type AdminProjectSummary } from '../../../../lib/funding/adminProjects';
 import { loadProjectService, PROJECT_SERVICE_LABELS, type LoadServiceResult } from '../../../../lib/funding/projectServices';
 import { buildFundingPayoutPreview, recordedVatDeduction } from '../../../../lib/funding/payout';
@@ -376,12 +375,12 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
   const handleSaveProductionFee = () => {
     const amount = Number(productionFee.replace(/[,\s]/g, ''));
     if (!Number.isInteger(amount) || amount < 0) {
-      setNotice('제작비는 0 이상의 원 단위 정수(공급가, 부가세 별도)로 적어 주세요.');
+      setNotice('제작비는 0 이상의 원 단위 정수(부가세 포함)로 적어 주세요.');
       return;
     }
     return run(
       () => patchFundingProject(project.id, { action: 'set_production_fee', productionFee: amount }),
-      `약정 제작비를 ${formatPriceAmount(amount)}원(부가세 별도)으로 저장했습니다. 정산 때 모금액에서 뺍니다.`,
+      `약정 제작비를 ${formatPriceAmount(amount)}원(부가세 포함)으로 저장했습니다. 정산 때 모금액에서 뺍니다.`,
     );
   };
 
@@ -966,8 +965,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
                   <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-gray-700">
                     <dt>약정 설계비</dt>
                     <dd>
-                      {formatPriceAmount(service.service.designFee)}원 (부가세 별도 · 청구액{' '}
-                      {formatPriceAmount(Math.round(service.service.designFee * (1 + VAT_RATE)))}원)
+                      {formatPriceAmount(service.service.designFee)}원 (부가세 포함)
                       {service.service.designFee !== FUNDING_DESIGN_PRICE && (
                         <span className="ml-2 text-xs text-gray-500">현재 정가 {formatPriceAmount(FUNDING_DESIGN_PRICE)}원과 다름 — 지정 당시 금액</span>
                       )}
@@ -991,18 +989,18 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
                       <TextInput
                         type="text"
                         inputMode="numeric"
-                        aria-label="약정 제작비(공급가, 부가세 별도)"
+                        aria-label="약정 제작비(부가세 포함)"
                         value={productionFee}
                         onChange={(e) => setProductionFee(e.target.value)}
                         light
                         className="w-40 text-sm"
                         disabled={busy}
                       />
-                      <span className="text-gray-500">원 (부가세 별도 · 정산 때 모금액에서)</span>
+                      <span className="text-gray-500">원 (부가세 포함 · 정산 때 모금액에서)</span>
                       <Button light disabled={busy} onClick={handleSaveProductionFee}>저장</Button>
                       {service.service.productionFee > 0 && (
                         <span className="text-xs text-gray-500">
-                          공제액 {formatPriceAmount(Math.round(service.service.productionFee * (1 + VAT_RATE)))}원(부가세 포함)
+                          정산 때 {formatPriceAmount(service.service.productionFee)}원을 공제합니다
                         </span>
                       )}
                     </dd>

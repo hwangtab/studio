@@ -52,9 +52,12 @@ import {
   ARTIST_SUPPORT_TIERS,
 } from './pricing';
 import { generateDefaultSchema } from '../utils/schema/business';
+import { LESSON_OFFER_NAMES, PRACTICE_OFFER_NAMES } from '../utils/schema/shared';
 import { generatePracticeRoomMonthlyRentSchema } from '../utils/schema/commerce';
 import { generateReleaseProjectSchema } from '../utils/schema/releaseProject';
 import { generateCourseSchema } from '../utils/schema/basics';
+import { buildStudioServiceSchema } from '../lib/studioServiceSchema';
+import { buildPricingPageSchema, PRICING_VAT_EXCLUDED_OFFER_IDS } from '../lib/pricingSchema';
 import fs from 'fs';
 import path from 'path';
 
@@ -144,7 +147,7 @@ describe('가격 SSOT 정합', () => {
     expect(byId.get('package-cover-video')).toBe(COVER_VIDEO_PACKAGE_PRICE);
     expect(byId.get('package-rental')).toBe(RENTAL_HOURLY_PRICE);
     expect(byId.get('practice-room-monthly')).toBe(PRACTICE_ROOM_MONTHLY_PRICE);
-    // 시간제는 VAT 포함 소비자가가 priceValue다(다른 오퍼는 VAT 별도) — 6,600이 6,000으로 바뀌면 실패
+    // 시간제는 VAT 포함 소비자가가 priceValue다(2026-10-15부터 월 이용료·레슨만 별도) — 6,600이 6,000으로 바뀌면 실패
     expect(byId.get('practice-room-hourly')).toBe(PRACTICE_ROOM_HOURLY_PRICE_INCL);
 
     const d = getPricingData('ko');
@@ -608,5 +611,170 @@ describe('가격 SSOT 정합', () => {
       if (!desc.includes(formatPriceLabel(VOCAL_TUNING_ADDON_PRICE, locale === 'ko' ? 'ko' : 'en'))) misses.push(`${locale}: 오퍼 description에 튜닝 옵션가 없음`);
     }
     expect(misses).toEqual([]);
+  });
+});
+
+/**
+ * 부가세 정책 가드 (운영자 결정 2026-10-15).
+ *
+ * 표시 가격은 전부 부가세 포함이고 청구액과 같다. 예외는 둘 — 연습실 월 이용료(360,000)와
+ * 프로듀싱 레슨 월정액(350,000)은 부가세 별도(카드 결제 때 +10%, 현금 입금은 부가세 없음).
+ * JSON-LD의 모든 Offer는 priceSpecification(UnitPriceSpecification)으로 이를 명시해야 하고,
+ * false는 이 두 상품에만 허용된다. 새 Offer가 priceSpecification 없이 나가면 여기서 선다.
+ */
+describe('JSON-LD Offer 부가세 표기 (2026-10-15 정책)', () => {
+  type Spec = { '@type'?: string; price?: number; priceCurrency?: string; valueAddedTaxIncluded?: boolean };
+  type OfferNode = { '@type': 'Offer'; name?: string; price?: number; itemOffered?: { name?: string }; priceSpecification?: Spec };
+  const nameOf = (o: OfferNode) => o.name ?? o.itemOffered?.name ?? String(o.price);
+
+  const collectOfferNodes = (node: unknown): OfferNode[] => {
+    if (Array.isArray(node)) return node.flatMap(collectOfferNodes);
+    if (node && typeof node === 'object') {
+      const obj = node as Record<string, unknown>;
+      const here = obj['@type'] === 'Offer' ? [obj as unknown as OfferNode] : [];
+      return [...here, ...Object.values(obj).flatMap(collectOfferNodes)];
+    }
+    return [];
+  };
+
+  /**
+   * 가격이 아니라 이름으로 가린다 — 350,000은 레슨·축가·Day Lock 4h가 우연히 같은 값이다.
+   * isExcluded(o)가 true인 Offer만 false(부가세 별도)여야 하고, 나머지는 전부 true여야 한다.
+   */
+  const expectVatPolicy = (label: string, offers: OfferNode[], isExcluded: (o: OfferNode) => boolean = () => false) => {
+    expect(offers.length).toBeGreaterThan(0);
+    for (const o of offers) {
+      const where = `${label}:${nameOf(o)}`;
+      const spec = o.priceSpecification;
+      expect(`${where}:spec`).toBeTruthy();
+      expect(spec).toBeDefined();
+      expect(spec!['@type']).toBe('UnitPriceSpecification');
+      expect(spec!.price).toBe(o.price);
+      expect(spec!.priceCurrency).toBe('KRW');
+      const expected = !isExcluded(o);
+      expect(`${where}:${spec!.valueAddedTaxIncluded}`).toBe(`${where}:${expected}`);
+    }
+  };
+
+  it('전역 EntertainmentBusiness makesOffer·OfferCatalog — 월 이용료·레슨만 false, 나머지는 true', () => {
+    for (const locale of LOCALES) {
+      const schema = generateDefaultSchema(SITE_URL, locale);
+      const offers = collectOfferNodes(schema);
+      const excluded = new Set([PRACTICE_OFFER_NAMES[locale], LESSON_OFFER_NAMES[locale]]);
+      expectVatPolicy(`business:${locale}`, offers, (o) => excluded.has(nameOf(o)));
+      const falseNames = offers.filter((o) => o.priceSpecification?.valueAddedTaxIncluded === false).map(nameOf);
+      expect([...new Set(falseNames)].sort()).toEqual([...excluded].sort());
+    }
+  });
+
+  it('연습실 Service 스키마 — 월 이용료는 false, 시간제는 true', () => {
+    const schema = generatePracticeRoomMonthlyRentSchema(`${SITE_URL}/ko/practice-room`, 'ko') as {
+      offers: OfferNode[];
+    };
+    expect(schema.offers[0].priceSpecification?.valueAddedTaxIncluded).toBe(false);
+    expect(schema.offers[1].priceSpecification?.valueAddedTaxIncluded).toBe(true);
+    expectVatPolicy('practice-room', schema.offers, (o) => o.price === PRACTICE_ROOM_MONTHLY_PRICE);
+  });
+
+  it('발매 프로젝트 티어 Offer는 전부 VAT 포함', () => {
+    for (const tier of [undefined, 'single', 'ep', 'album'] as const) {
+      const offers = collectOfferNodes(generateReleaseProjectSchema(SITE_URL, 'ko', tier));
+      expectVatPolicy(`release:${tier ?? 'hub'}`, offers);
+      expect(offers.every((o) => o.priceSpecification?.valueAddedTaxIncluded === true)).toBe(true);
+    }
+  });
+
+  it('레슨 Course Offer는 월정액이라 false', () => {
+    const schema = generateCourseSchema('프로듀싱 레슨', '미디·작곡', SITE_URL, `${SITE_URL}/images/og.webp`, `${SITE_URL}/ko/lesson`, 'ko');
+    const offers = collectOfferNodes(schema);
+    expectVatPolicy('lesson-course', offers, () => true);
+    expect(offers[0].priceSpecification?.valueAddedTaxIncluded).toBe(false);
+  });
+
+  it('서비스 LP Offer(buildStudioServiceSchema)는 VAT 포함', () => {
+    const schema = buildStudioServiceSchema({
+      locale: 'ko', siteName: '스튜디오 놀', siteUrl: SITE_URL, pageUrl: `${SITE_URL}/ko/recording`,
+      name: '보컬 녹음', description: 'd', serviceType: 'Recording',
+      offerName: '보컬 녹음 1프로', offerPrice: VOCAL_PACKAGE_PRICE, pricingHash: 'recording',
+    });
+    expectVatPolicy('studio-service', collectOfferNodes(schema));
+  });
+
+  it('/pricing 페이지 스키마 — 연습실 월 이용료 오퍼만 false, 나머지는 true (7개 로케일)', () => {
+    for (const locale of LOCALES) {
+      const data = getPricingData(locale);
+      const schema = buildPricingPageSchema({
+        locale, siteUrl: SITE_URL, pricingData: data, t: (k: string) => k,
+      });
+      const offers = collectOfferNodes(schema).filter((o) => o.price !== undefined);
+      const monthlyTitle = data.practiceRoomOffers.find((o) => o.id === 'practice-room-monthly')!.title;
+      expectVatPolicy(`pricing:${locale}`, offers, (o) => o.name === monthlyTitle);
+    }
+    expect([...PRICING_VAT_EXCLUDED_OFFER_IDS]).toEqual(['practice-room-monthly']);
+  });
+});
+
+describe('vatNotice (7개 로케일) — 2026-10-15 정책 문구', () => {
+  it('요약·카드 하단 고지가 "전부 포함, 월 이용료·월정액만 별도, 현금 입금은 부가세 없음"을 말한다 (한국어)', () => {
+    const d = getPricingData('ko');
+    for (const notice of [d.VAT_NOTICE, d.SUMMARY_VAT_NOTICE]) {
+      expect(notice).toContain('부가세 포함');
+      expect(notice).toContain('월 이용료');
+      expect(notice).toContain('월정액');
+      expect(notice).toContain('부가세 별도');
+      expect(notice).toContain('현금 입금');
+    }
+    expect(d.VAT_NOTICE).not.toContain('모든 가격은 VAT');
+  });
+
+  it('모든 로케일에서 고지가 비어 있지 않고 숫자 10%를 말한다', () => {
+    for (const locale of LOCALES) {
+      const d = getPricingData(locale);
+      expect(d.VAT_NOTICE.length).toBeGreaterThan(20);
+      expect(d.VAT_NOTICE).toContain('10%');
+    }
+  });
+});
+
+/**
+ * 카피 가드 — 번역 파일에 "부가세 별도"가 남는 곳은 연습실 월 이용료·레슨 월정액뿐이다(2026-10-15).
+ * 다른 상품 문구가 옛 정책("모든 가격은 VAT 별도")으로 되돌아가면 여기서 선다.
+ */
+describe('common.json 부가세 별도 표기 (2026-10-15 정책)', () => {
+  const flatten = (node: unknown, prefix = ''): Array<[string, string]> => {
+    if (typeof node === 'string') return [[prefix, node]];
+    if (Array.isArray(node)) return node.flatMap((v, i) => flatten(v, `${prefix}.${i}`));
+    if (node && typeof node === 'object') {
+      return Object.entries(node as Record<string, unknown>).flatMap(([k, v]) => flatten(v, prefix ? `${prefix}.${k}` : k));
+    }
+    return [];
+  };
+  const ALLOWED = (key: string, value: string) =>
+    // 연습실 월 이용료 안내·FAQ — {{practiceRoom}}는 월 이용료 상수가 들어가는 자리다.
+    value.includes('{{practiceRoom}}') ||
+    /practiceRoom\.priceNote$/.test(key) ||
+    // 구독료의 아티스트 몫 안내(월 구독 — 공급가 기준).
+    /shareNote$/.test(key);
+
+  it.each(LOCALES)('%s — 별도 표기는 월 이용료 안내에만 있다', (locale) => {
+    const common = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'public', 'locales', locale, 'common.json'), 'utf8'));
+    const excludedPattern =
+      /VAT 별도|부가세 별도|VAT excl|exclude VAT|excluding VAT|excluded|不含增值税|IVA no incluido|sin IVA|excluyen el IVA|chưa gồm VAT|chưa bao gồm VAT|chưa VAT|ไม่รวม VAT|QQSsiz|VATsiz|QQS alohida|QQS hisobga olinmagan/;
+    const hits = flatten(common)
+      .filter(([, v]) => excludedPattern.test(v))
+      .filter(([k, v]) => !ALLOWED(k, v))
+      .map(([k]) => k);
+    expect(hits).toEqual([]);
+  });
+
+  it('한국어 월 이용료 안내에 현금 입금 시 부가세가 없다는 말이 있다', () => {
+    expect(JSON.stringify(koCommon)).toContain('현금 입금 시에는 부가세가 없어요');
+  });
+
+  it('연습실 우리 상품 문구에 "월세"를 쓰지 않는다 (SEO keywords 메타는 검색어라 제외)', () => {
+    const hits = flatten(koCommon)
+      .filter(([k, v]) => v.includes('월세') && !/keywords$/.test(k))
+      .map(([k]) => k);
+    expect(hits).toEqual([]);
   });
 });

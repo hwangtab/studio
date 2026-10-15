@@ -33,6 +33,7 @@ import {
   VOICEOVER_OFFER_NAMES,
   WEDDING_OFFER_NAMES,
   ARRANGEMENT_OFFER_NAMES,
+  buildPriceSpecification,
 } from './shared';
 import { RELEASE_TIER_LABELS } from './releaseProject';
 
@@ -87,19 +88,19 @@ export const generateDefaultSchema = (
   //
   // 가격은 전부 data/pricing.ts 상수, url은 그 가격이 화면에 보이는 페이지다.
   // 이 목록에 상품을 더하거나 빼면 data/pricing.test.ts의 기대 목록도 함께 고칠 것.
-  // vatIncluded: 연습실 시간제만 소비자가(VAT 포함)로 판다 — 나머지는 전부 VAT 별도.
-  const offers: Array<{ name: string; price: number; path: string; validUntil?: string; vatIncluded?: boolean }> = [
+  // vatIncluded: 기본 true(2026-10-15부터 표시 가격은 전부 VAT 포함). 연습실 월 이용료·레슨 월정액만 false(VAT 별도).
+  const offers: Array<{ name: string; price: number; path: string; validUntil?: string; vatIncluded?: boolean; unitCode?: string }> = [
     { name: RECORDING_OFFER_NAMES[locale], price: RECORDING_HOURLY_PRICE, path: '/pricing' },
     { name: VOCAL_PACKAGE_OFFER_NAMES[locale], price: VOCAL_PACKAGE_PRICE, path: '/pricing' },
     { name: MIXING_OFFER_NAMES[locale], price: MIXING_LEVEL1_PRICE, path: '/pricing' },
     { name: RELEASE_TIER_LABELS.single[locale], price: SINGLE_BUNDLE_PRICE, path: '/release-project/single' },
-    { name: PRACTICE_OFFER_NAMES[locale], price: PRACTICE_ROOM_MONTHLY_PRICE, path: '/practice-room' },
-    { name: PRACTICE_HOURLY_OFFER_NAMES[locale], price: PRACTICE_ROOM_HOURLY_PRICE_INCL, path: '/practice-room', vatIncluded: true },
+    { name: PRACTICE_OFFER_NAMES[locale], price: PRACTICE_ROOM_MONTHLY_PRICE, path: '/practice-room', vatIncluded: false, unitCode: 'MON' },
+    { name: PRACTICE_HOURLY_OFFER_NAMES[locale], price: PRACTICE_ROOM_HOURLY_PRICE_INCL, path: '/practice-room', unitCode: 'HUR' },
     // 홍보 도입가는 종료일이 정해져 있다 — 일반 오퍼처럼 +12개월로 주장하면 표시광고법상 허위가 된다.
     { name: RELEASE_PRESS_OFFER_NAMES[locale], price: RELEASE_PRESS_INTRO_PRICE, path: '/music-promotion', validUntil: RELEASE_PRESS_INTRO_ENDS_ON },
     // 전용 LP는 ko 전용이라 다른 로케일은 요금 페이지를 가리킨다(/en/crowdfunding-design은 404).
     { name: FUNDING_DESIGN_OFFER_NAMES[locale], price: FUNDING_DESIGN_PRICE, path: locale === 'ko' ? '/crowdfunding-design' : '/pricing' },
-    { name: LESSON_OFFER_NAMES[locale], price: LESSON_MONTHLY_PRICE, path: '/lesson' },
+    { name: LESSON_OFFER_NAMES[locale], price: LESSON_MONTHLY_PRICE, path: '/lesson', vatIncluded: false, unitCode: 'MON' },
     { name: WEDDING_OFFER_NAMES[locale], price: WEDDING_PACKAGE_PRICE, path: '/wedding-song' },
     { name: VOICEOVER_OFFER_NAMES[locale], price: VOICEOVER_HOURLY_PRICE, path: '/voice-acting' },
     { name: COVER_VIDEO_OFFER_NAMES[locale], price: COVER_VIDEO_PACKAGE_PRICE, path: '/cover-video' },
@@ -113,17 +114,7 @@ export const generateDefaultSchema = (
     priceValidUntil: offer.validUntil ?? priceValidUntil,
     url: `${siteUrl}/${locale}${offer.path}`,
     availability: 'https://schema.org/InStock',
-    ...(offer.vatIncluded
-      ? {
-          priceSpecification: {
-            '@type': 'UnitPriceSpecification',
-            price: offer.price,
-            priceCurrency: 'KRW',
-            unitCode: 'HUR',
-            valueAddedTaxIncluded: true,
-          },
-        }
-      : {}),
+    priceSpecification: buildPriceSpecification(offer.price, { vatIncluded: offer.vatIncluded, unitCode: offer.unitCode }),
     itemOffered: {
       '@type': 'Service',
       name: offer.name,

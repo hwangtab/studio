@@ -62,11 +62,11 @@ export const ARRANGEMENT_BAND_PRICE = 1000000; // 풀밴드 편곡 (11~30트랙)
 export const ARRANGEMENT_LARGE_PRICE = 1200000; // 대편성 편곡 (31트랙 이상, 스트링·브라스·합창) — 시장가(0.8~1.5M+) 아래로 할인
 export const CUSTOM_MR_PRICE = 200000;         // 맞춤 MR (기존 곡 키·템포·길이 맞춤, 축가·행사·커버)
 /**
- * 음악연습실 시간제 — **소비자가 6,600원, VAT 포함.** 다른 상수는 전부 VAT 별도인데 이것만
- * 포함액이다. 처음엔 스페이스클라우드 리스팅(9/25 판매 중지)과 같은 값(시간당 4천4백 원)으로 열었다가,
+ * 음악연습실 시간제 — **소비자가 6,600원, VAT 포함.** (2026-10-15부터 월 이용료·레슨 월정액을 뺀
+ * 모든 표시 가격이 VAT 포함이다.) 처음엔 스페이스클라우드 리스팅(9/25 판매 중지)과 같은 값(시간당 4천4백 원)으로 열었다가,
  * 2026-09-27 운영자 결정("너무 싸다")으로 6,600원으로 올렸다. 공급가·VAT는
  * lib/booking/amounts.ts의 splitInclusiveAmount로 갈라 쓴다 — 6,000 + 600.
- * 월세 입주(PRACTICE_ROOM_MONTHLY_PRICE)와 같아지는 지점은 월 약 55시간이다 — 스토리가 이 숫자를 쓴다.
+ * 월 이용료 입주(PRACTICE_ROOM_MONTHLY_PRICE)와 같아지는 지점은 월 약 55시간이다 — 스토리가 이 숫자를 쓴다.
  */
 export const PRACTICE_ROOM_HOURLY_PRICE_INCL = 6600;
 export const LESSON_MONTHLY_PRICE = 350000;
@@ -126,7 +126,7 @@ export const FUNDING_INDIVIDUAL_PAYOUT_NOTE = `개인 자격으로 정산받으�
 // 크라우드펀딩 설계 대행 — 발매 프로젝트와 별개로도 의뢰받는 독립 상품이라
 // llms.txt(기계가 읽는 상품 목록)와 pricing 부가 서비스가 같은 정본을 본다.
 //
-// 구조(운영자 결정 2026-09-25): 설계비 이 금액(부가세 별도) 하나. 성공 수수료는 받지 않는다.
+// 구조(운영자 결정 2026-09-25): 설계비 이 금액 하나. 부가세 포함이다(2026-10-15 — 그 전에는 별도였다). 성공 수수료는 받지 않는다.
 // 펀딩은 **스튜디오 놀 펀딩(/funding)에서만 연다** — 모금액에서 떼는 수수료는 자체 플랫폼의
 // FUNDING_PLATFORM_FEE_PERCENT·FUNDING_PAYMENT_FEE_PERCENT(둘 다 부가세 포함)이고, 개인 개설자는
 // 여기에 FUNDING_INDIVIDUAL_PAYOUT_NOTE의 공제가 더해진다.
@@ -234,27 +234,19 @@ const tArray = (locale: Locale, dict: { ko: string[]; en: string[]; zh?: string[
 
 export const getPricingData = (locale: Locale) => {
   /**
-   * 요약 표 하단용 — 표에 연습실 시간제(VAT 포함)가 같이 실리므로 "모든 가격"이라
-   * 말하면 같은 표 안에서 모순이 된다(2026-09-25 감사). 상품군 카드 하단은 vatNotice 그대로.
+   * 요약 표·상품군 카드 하단 공용 고지. 2026-10-15 운영자 결정으로 표시 가격은 전부 부가세 포함이고,
+   * 연습실 월 이용료·레슨 월정액만 부가세 별도다(카드 +10%, 현금 입금은 부가세 없음).
    */
   const summaryVatNotice = t(locale, {
-    ko: '연습실 시간제(VAT 포함) 외 모든 가격은 VAT(부가가치세) 별도입니다.',
-    en: 'All prices exclude VAT, except the practice room hourly rate (VAT included).',
-    zh: '除练习室按小时收费（含增值税）外，所有价格均不含增值税 (VAT)。',
-    es: 'Todos los precios excluyen el IVA, salvo la tarifa por hora de la sala de práctica (IVA incluido).',
-    vi: 'Tất cả giá chưa bao gồm VAT, trừ giá theo giờ của phòng tập (đã gồm VAT).',
-    th: 'ราคาทั้งหมดไม่รวม VAT ยกเว้นห้องซ้อมแบบรายชั่วโมง (รวม VAT แล้ว)',
-    uz: "Mashq xonasining soatlik tarifi (QQS kiritilgan) bundan mustasno, barcha narxlar VATsiz.",
+    ko: '연습실 월 이용료와 레슨 월정액을 뺀 모든 가격은 부가세 포함입니다. 월 이용료·월정액은 부가세 별도입니다(카드 결제 시 10% 가산, 현금 입금 시 부가세 없음).',
+    en: 'All prices include VAT, except the practice-room monthly fee and the lesson monthly fee, which exclude VAT (card payment adds 10%; cash deposit carries no VAT).',
+    zh: '除练习室月租与课程月费外，所有价格均含增值税。月租与月费不含增值税（刷卡支付加收10%，现金汇款无增值税）。',
+    es: 'Todos los precios incluyen el IVA, salvo la cuota mensual de la sala de práctica y la mensualidad de las clases, que no lo incluyen (el pago con tarjeta suma un 10%; el depósito en efectivo no lleva IVA).',
+    vi: 'Tất cả giá đã gồm VAT, trừ phí thuê phòng tập theo tháng và học phí bài học theo tháng (chưa gồm VAT; thanh toán thẻ cộng 10%, chuyển khoản tiền mặt không có VAT).',
+    th: 'ราคาทั้งหมดรวม VAT ยกเว้นค่าห้องซ้อมรายเดือนและค่าเรียนรายเดือนที่ไม่รวม VAT (ชำระด้วยบัตรบวกเพิ่ม 10% โอนเงินสดไม่มี VAT)',
+    uz: "Mashq xonasining oylik ijarasi va darsning oylik to'lovidan tashqari barcha narxlar QQS bilan (ular QQSsiz: karta orqali to'lovda 10% qo'shiladi, naqd pul o'tkazmasida QQS yo'q).",
   });
-  const vatNotice = t(locale, {
-    ko: '모든 가격은 VAT(부가가치세) 별도입니다.',
-    en: 'All prices exclude VAT.',
-    zh: '所有价格均不含增值税 (VAT)。',
-    es: 'Todos los precios excluyen el IVA.',
-    vi: 'Tất cả giá chưa bao gồm VAT.',
-    th: 'ราคาทั้งหมดไม่รวม VAT',
-    uz: 'Barcha narxlar VATsiz.',
-  });
+  const vatNotice = summaryVatNotice;
 
   const recordingOffers = [
     {
@@ -961,7 +953,7 @@ export const getPricingData = (locale: Locale) => {
     {
       id: 'practice-room-monthly',
       title: t(locale, {
-        ko: '음악연습실 월세 입주 (24시간·보증금 0원)',
+        ko: '음악연습실 월 이용료 입주 (24시간·보증금 0원)',
         en: 'Music Practice Room Monthly Residency (24/7, no deposit)',
         zh: '音乐练习室月租入住（24小时·免押金）',
         es: 'Sala de Práctica Musical por Mes (24h, sin depósito)',
@@ -1004,8 +996,8 @@ export const getPricingData = (locale: Locale) => {
       }),
     },
     /**
-     * 시간제 — 유일하게 **VAT 포함** 소비자가다(다른 오퍼는 전부 VAT 별도, 카드 하단 VAT_NOTICE가
-     * 그렇게 말한다). 그래서 제목에 "부가세 포함"을 박아 카드만 보고도 헷갈리지 않게 한다.
+     * 시간제 — **VAT 포함** 소비자가다. 2026-10-15 전에는 유일한 포함가라 제목에 "부가세 포함"을 박았고,
+     * 지금은 월 이용료(별도)와 구별해 주는 표기로 남겨 둔다.
      * 결제는 사이트 예약(/ko/booking/practice-room)으로만 받는다 — 네이버 예약 시간제 상품은
      * 사이트 오픈과 함께 내린다(더블부킹). 2026-09-25.
      */
@@ -1026,7 +1018,7 @@ export const getPricingData = (locale: Locale) => {
       priceValue: PRACTICE_ROOM_HOURLY_PRICE_INCL,
       unit: t(locale, { ko: '/ 시간', en: '/ hour', zh: '/ 小时', es: '/ hora', vi: '/ giờ', th: '/ ชั่วโมง', uz: '/ soat' }),
       description: t(locale, {
-        ko: '월세 입주 전 체험이나 며칠만 필요할 때. 사이트에서 빈 시간을 고르고 결제하면 바로 확정되고, 입장 방법이 메일로 갑니다.',
+        ko: '월 이용료 입주 전 체험이나 며칠만 필요할 때. 사이트에서 빈 시간을 고르고 결제하면 바로 확정되고, 입장 방법이 메일로 갑니다.',
         en: 'Try before a monthly residency, or when you only need a few sessions. Pick an open slot on the site, pay, and entry instructions arrive by email.',
         zh: '入住前体验或只需几天时。在网站上选择空闲时段并付款即确认，入场方式将通过邮件发送。',
         es: 'Para probar antes de la residencia mensual o cuando solo necesitas unas sesiones. Elige un horario libre, paga y recibirás las instrucciones de acceso por correo.',
