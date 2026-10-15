@@ -29,6 +29,12 @@ export const PAYMENT_LINKS: Record<string, PaymentLink> = {
   '478d0f5260b329a6fcd59a19': {
     itemName: '보컬 녹음 1프로 (10/17 11:00)',
     totalAmount: Math.round(VOCAL_PACKAGE_PRICE * (1 + VAT_RATE)),
+    expiresOn: '2026-10-14', // 폐기 — VAT를 한 번 더 얹어 잘못 잡았다. 새 링크로 교체(발급한 slug의 금액은 바꾸지 않는다).
+  },
+  // 김준호님 — 보컬 녹음 1프로(1곡·3시간) 2026-10-17(토) 11:00. **VAT 포함 총액이 상품가와 같다**(운영자 확정: 부가세 포함 25만원). 녹음일 당일까지만 열린다.
+  'fed74ccb84b8587112ed5d6f': {
+    itemName: '보컬 녹음 1프로 (10/17 11:00)',
+    totalAmount: VOCAL_PACKAGE_PRICE,
     expiresOn: '2026-10-17',
   },
 };
