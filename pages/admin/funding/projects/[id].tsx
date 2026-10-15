@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { patchFundingProject } from '../../../../components/admin/fundingProjectActions';
@@ -713,6 +714,20 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
                 <dt className="text-gray-500 shrink-0">개설자가 고른 주소</dt>
                 <dd className="font-medium text-right">{project.slug}</dd>
               </div>
+              {project.reviewStatus === 'approved' && (
+                <div className="flex justify-between gap-4">
+                  <dt className="text-gray-500 shrink-0">바로가기</dt>
+                  <dd className="font-medium text-right space-x-3">
+                    {/* 정산 전에 확정 후원·환불·입금 대기를 검산하려면 후원 목록으로, 공개 화면은 개설자가 보는 그대로 확인한다. */}
+                    <Link href={`/admin/funding?slug=${encodeURIComponent(project.slug)}`} className="text-primary hover:underline">
+                      이 프로젝트의 후원 목록
+                    </Link>
+                    <a href={`/ko/funding/${project.slug}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                      공개 페이지
+                    </a>
+                  </dd>
+                </div>
+              )}
               {/* 승인해서 status가 열려도 hidden이면 공개되지 않는다 — "승인했는데 안
                   보인다"의 원인을 이 화면에서 바로 알 수 있어야 한다. */}
               <div className="flex justify-between gap-4">

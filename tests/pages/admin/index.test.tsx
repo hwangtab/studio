@@ -78,7 +78,7 @@ it('점검 항목은 심각도 배지와 처리 링크를, 대기열은 건수�
   expect(screen.getByRole('link', { name: /아티스트 발송 대기 상점 주문\s*2/ })).toBeInTheDocument();
   expect(screen.getByRole('link', { name: /입금 확인 대기 예약·믹싱\s*2/ })).toHaveAttribute('href', '/admin/bookings?deposit=pending');
   expect(screen.getByRole('link', { name: /입금 확인 대기 공연 티켓\s*1/ })).toHaveAttribute('href', '/admin/shows');
-  expect(screen.getByRole('link', { name: /입금 확인 대기 펀딩 후원\s*3/ })).toHaveAttribute('href', '/admin/funding');
+  expect(screen.getByRole('link', { name: /입금 확인 대기 펀딩 후원\s*3/ })).toHaveAttribute('href', '/admin/funding?deposit=pending');
   expect(screen.getByRole('link', { name: /환불 요청 펀딩 후원\s*1/ })).toHaveAttribute('href', '/admin/funding');
   expect(screen.getByRole('link', { name: /심사 대기 주최자 공연\s*4/ })).toHaveAttribute('href', '/admin/shows/submissions');
 

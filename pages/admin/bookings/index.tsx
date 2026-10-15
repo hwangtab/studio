@@ -419,6 +419,8 @@ export default function AdminBookingsPage({
                   {['all', ...orderStatusEnum].map((status) => (
                     <button
                       key={status}
+                      type="button"
+                      aria-pressed={filter === status}
                       onClick={() => setFilter(status)}
                       className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                         filter === status
@@ -535,7 +537,7 @@ export default function AdminBookingsPage({
                               </div>
                             )}
                           </td>
-                          <td className="px-4 py-3">
+                          <td data-label="관리" className="px-4 py-3">
                             <Link href={`/admin/bookings/${booking.id}`} passHref>
                               <Button light size="sm" variant="weak">
                                 상세

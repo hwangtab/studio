@@ -145,7 +145,7 @@ export default function AdminIndexPage({ dashboard, shopQueues, ledgerFrom, ledg
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 <QueueCard label="입금 확인 대기 예약·믹싱" count={dashboard.queues.depositsBooking} href="/admin/bookings?deposit=pending" alert />
                 <QueueCard label="입금 확인 대기 공연 티켓" count={dashboard.queues.depositsShow} href="/admin/shows" alert />
-                <QueueCard label="입금 확인 대기 펀딩 후원" count={dashboard.queues.depositsFunding} href="/admin/funding" alert />
+                <QueueCard label="입금 확인 대기 펀딩 후원" count={dashboard.queues.depositsFunding} href="/admin/funding?deposit=pending" alert />
                 <QueueCard label="환불 요청 펀딩 후원" count={dashboard.queues.fundingRefundRequests} href="/admin/funding" alert />
                 {dashboard.queues.showSubmissionsAwaitingReview !== null && (
                   <QueueCard label="심사 대기 주최자 공연" count={dashboard.queues.showSubmissionsAwaitingReview} href="/admin/shows/submissions" alert />
