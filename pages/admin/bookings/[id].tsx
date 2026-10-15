@@ -13,7 +13,7 @@ import {
 import { bookingLineOf } from '../../../lib/booking/line';
 import { AdminShell } from '../../../components/admin/AdminShell';
 import { Button } from '../../../components/ui/Button';
-import { Field, TextArea, TextInput } from '../../../components/ui/Field';
+import { Field, Select, TextArea, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { getDb } from '../../../db/client';
 import { loadPaymentLinkOrderInfo } from '../../../lib/payments/paymentLinkOrders';
@@ -386,6 +386,41 @@ export default function AdminBookingDetailPage({
   // (gcalEventId·gcalError 둘 다 NULL)에는 배너가 안 떠서 버튼도 같이 사라졌다.
   // gcalMissing은 confirmed에서만 참이므로(admin-serialize) 대기·취소 예약에 등록 버튼이
   // 새로 뜨는 일은 없고, gcalError가 있는 완료·노쇼 예약의 기존 재시도 경로도 그대로다.
+  const canReschedule =
+    !isMixing && !isDeposit && (booking.bookingStatus === 'confirmed' || (booking.bookingStatus === 'pending' && booking.orderStatus === 'awaiting_deposit'));
+  const [rescheduleOpen, setRescheduleOpen] = useState(false);
+  const kstStart = booking.startAt ? new Date(new Date(booking.startAt).getTime() + 9 * 3_600_000) : null;
+  const [newDate, setNewDate] = useState(kstStart ? kstStart.toISOString().slice(0, 10) : '');
+  const [newHour, setNewHour] = useState(kstStart ? kstStart.getUTCHours() : 10);
+  const handleReschedule = async () => {
+    if (!window.confirm(`${newDate} ${String(newHour).padStart(2, '0')}:00 으로 옮길까요?\n구글 캘린더 일정도 함께 옮겨요. 고객에게는 메일이 자동으로 가지 않아요.`)) return;
+    setBusy(true);
+    setNotice(null);
+    try {
+      const response = await fetch(`/api/admin/bookings/${booking.id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ action: 'reschedule', date: newDate, startHour: newHour }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result?.ok) {
+        setNotice(result?.message || '일정 변경에 실패했습니다.');
+      } else {
+        setRescheduleOpen(false);
+        setNotice(
+          Array.isArray(result.warnings) && result.warnings.length > 0
+            ? result.warnings.join(' / ')
+            : '일정을 옮겼어요. 고객에게 알리려면 아래 “알림 재발송”을 눌러 주세요.',
+        );
+      }
+    } catch {
+      setNotice('네트워크 오류가 발생했습니다.');
+    }
+    setBusy(false);
+    await router.replace(router.asPath, undefined, { scroll: false });
+  };
+
   const canRetryGcal =
     !isMixing &&
     booking.bookingStatus !== null &&
@@ -712,6 +747,31 @@ export default function AdminBookingDetailPage({
                         label="이용 시간"
                         value={booking.durationHours ? `${booking.durationHours}시간` : '-'}
                       />
+                      {canReschedule && (
+                        <div className="pt-2">
+                          {rescheduleOpen ? (
+                            <div className="grid grid-cols-2 gap-3 items-end rounded-lg border border-gray-200 p-3">
+                              <Field id="rs-date" label="새 날짜" className={lightOnlyField}>
+                                <TextInput type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)} light />
+                              </Field>
+                              <Field id="rs-hour" label="새 시작 시각" className={lightOnlyField}>
+                                <Select value={newHour} onChange={(e) => setNewHour(Number(e.target.value))} light>
+                                  {Array.from({ length: 24 }, (_, h) => h).map((h) => (
+                                    <option key={h} value={h}>{String(h).padStart(2, '0')}:00</option>
+                                  ))}
+                                </Select>
+                              </Field>
+                              <p className="col-span-2 text-xs text-gray-500">이용 시간({booking.durationHours}시간)·금액은 그대로, 시작만 옮겨요. 겹침과 캘린더를 검사한 뒤 캘린더 일정도 함께 옮깁니다.</p>
+                              <div className="col-span-2 flex gap-2">
+                                <Button light size="sm" disabled={busy || newDate === ''} onClick={handleReschedule}>옮기기</Button>
+                                <Button light variant="weak" size="sm" disabled={busy} onClick={() => setRescheduleOpen(false)}>닫기</Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <Button light variant="weak" size="sm" disabled={busy} onClick={() => setRescheduleOpen(true)}>일정 변경</Button>
+                          )}
+                        </div>
+                      )}
                     </>
                   )}
                   {booking.cancelledAt && (
