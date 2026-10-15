@@ -14,10 +14,13 @@ jest.mock('../../../lib/ops/adminDashboard', () => ({
   loadAdminDashboard: jest.fn(),
 }));
 
+jest.mock('../../../lib/ops/revenueSnapshot', () => ({ loadRevenueSnapshot: jest.fn() }));
+
 import type { GetServerSidePropsContext } from 'next';
 import AdminIndexPage, { getServerSideProps } from '../../../pages/admin/index';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { loadAdminDashboard, type AdminDashboard } from '../../../lib/ops/adminDashboard';
+import { loadRevenueSnapshot, type RevenueSnapshot } from '../../../lib/ops/revenueSnapshot';
 
 const DASHBOARD: AdminDashboard = {
   issues: [
@@ -45,11 +48,17 @@ const DASHBOARD: AdminDashboard = {
   checkedAt: '2026-09-16T03:00:00.000Z',
 };
 
+const REVENUE: RevenueSnapshot = {
+  year: 2026, month: 10, net: 1_250_000, gross: 1_300_000, refunded: 50_000, count: 7,
+  previousNet: 1_000_000, changeRate: 25, directNet: 900_000, brokeredNet: 350_000, manualMissing: false,
+};
+
 const SHOP_QUEUES = { pendingProducts: 2, awaitingShipment: { studio: 5, preorder: 1, artist: 2 } };
 
 beforeEach(() => {
   jest.clearAllMocks();
   (authenticateAdminRequest as jest.Mock).mockResolvedValue({ ok: true });
+  (loadRevenueSnapshot as jest.Mock).mockResolvedValue(REVENUE);
 });
 
 it('점검 항목은 심각도 배지와 처리 링크를, 대기열은 건수를, 세션은 일시·고객·상품을 그린다', () => {
@@ -112,4 +121,35 @@ it('getServerSideProps는 KST 기준 이번 달 1일부터 오늘까지를 장�
   };
   expect(result.props.ledgerFrom).toMatch(/^\d{4}-\d{2}-01$/);
   expect(result.props.ledgerTo.slice(0, 7)).toBe(result.props.ledgerFrom.slice(0, 7));
+});
+
+describe('이번 달 매출 요약', () => {
+  it('순매출·전월 대비·직접/중개 구성을 그리고 매출 현황으로 잇는다', () => {
+    render(<AdminIndexPage dashboard={DASHBOARD} shopQueues={SHOP_QUEUES} revenue={REVENUE} ledgerFrom="2026-10-01" ledgerTo="2026-10-16" />);
+    expect(screen.getByRole('heading', { name: '10월 매출' })).toBeInTheDocument();
+    expect(screen.getByText('1,250,000원')).toBeInTheDocument();
+    expect(screen.getByText(/25\.0% 전월\(1,000,000원\)/)).toBeInTheDocument();
+    expect(screen.getByText('900,000원')).toBeInTheDocument();
+    expect(screen.getByText('350,000원')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /매출 현황/ })).toHaveAttribute('href', '/admin/revenue');
+  });
+
+  it('전월 매출이 없으면 비교하지 않고, 수기 표를 못 읽었으면 알린다', () => {
+    render(
+      <AdminIndexPage dashboard={DASHBOARD} shopQueues={SHOP_QUEUES} revenue={{ ...REVENUE, changeRate: null, previousNet: 0, manualMissing: true }} ledgerFrom="2026-10-01" ledgerTo="2026-10-16" />,
+    );
+    expect(screen.getByText(/전월 매출이 없어/)).toBeInTheDocument();
+    expect(screen.getByText(/직접 받은 매출 표를 읽지 못해/)).toBeInTheDocument();
+  });
+
+  it('매출 조회가 실패해도 첫 화면은 그대로 뜬다 — 카드만 빠진다', async () => {
+    (loadRevenueSnapshot as jest.Mock).mockRejectedValue(new Error('db down'));
+    (loadAdminDashboard as jest.Mock).mockResolvedValue(DASHBOARD);
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    const result = (await getServerSideProps({ query: {} } as unknown as GetServerSidePropsContext)) as { props: React.ComponentProps<typeof AdminIndexPage> };
+    expect(result.props.revenue).toBeNull();
+    render(<AdminIndexPage {...result.props} />);
+    expect(screen.queryByText(/월 매출/)).not.toBeInTheDocument();
+    expect(screen.getByText('처리할 일')).toBeInTheDocument();
+  });
 });
