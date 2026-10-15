@@ -28,6 +28,10 @@ export type ShopCancelOutcome =
   | { ok: true; refundAmount: number }
   | { ok: false; code: 'not_found' | 'invalid_state' | 'shipped' | 'downloaded' | 'toss_failed' | 'recording_failed' | 'temporarily_unavailable'; message: string };
 
+/** 계좌로 입금해 확정된 주문의 고객 셀프 취소 안내 — 환불 계좌를 사람이 받아 송금한다. */
+export const BANK_PAID_CUSTOMER_CANCEL_MESSAGE =
+  '계좌로 입금하신 주문은 환불받으실 계좌를 확인해야 해서 여기서 취소할 수 없어요. 카카오톡이나 010-4255-7893으로 알려 주시면 바로 처리해 드릴게요.';
+
 const DOWNLOADED_MESSAGE = '내려받기를 시작한 주문은 여기서 취소할 수 없어요(전자상거래법 제17조 제2항 제5호). 문의는 카카오톡이나 010-4255-7893으로 해 주세요.';
 
 export const cancelShopOrder = async (input: {
@@ -58,10 +62,14 @@ export const cancelShopOrder = async (input: {
     return { ok: false, code: 'shipped', message: '이미 보낸 주문은 여기서 취소할 수 없어요. 반품은 카카오톡이나 010-4255-7893으로 문의해 주세요.' };
   }
   const payment = order.payments[0];
-  if (!payment || isBankDepositPayment(payment)) {
-    // 상점은 토스 결제만 받는다 — 이 분기에 오면 데이터가 어긋난 것이다.
-    console.error('[shop-cancel] 토스 결제 행이 없는 상점 주문', { orderNo: order.orderNo });
+  if (!payment) {
+    console.error('[shop-cancel] 결제 행이 없는 상점 주문', { orderNo: order.orderNo });
     return { ok: false, code: 'invalid_state', message: '결제 기록을 찾지 못했어요. 010-4255-7893으로 문의해 주세요.' };
+  }
+  // 계좌 입금으로 확정된 주문 — 환불은 운영자가 고객 계좌로 직접 송금한다(lib/shop/bankDeposit.ts 머리 주석). 고객은 여기서 셀프 취소하지
+  // 못하고(환불 계좌를 받아 둘 곳이 없다), 운영자 환불(`requestedBy: 'admin'`)은 토스를 부르지 않고 기록만 남긴다(settleRefund).
+  if (isBankDepositPayment(payment) && input.requestedBy === 'customer') {
+    return { ok: false, code: 'invalid_state', message: BANK_PAID_CUSTOMER_CANCEL_MESSAGE };
   }
 
   const db = getDb();

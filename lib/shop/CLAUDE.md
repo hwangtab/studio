@@ -31,13 +31,26 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
    묶여 있다 — 켜면 함께 열린다.** 켠 뒤 `/sitemap-shop.xml`이 상품·아티스트 URL을 내는지 한 번 열어 본다.
 8. 최소 금액으로 실결제 → 취소를 한 번씩 한다(카드·간편결제).
 
-### 결제 — 지금은 카드·간편결제(토스)뿐, 계좌 직접 입금은 만들 예정 (2026-10-14)
+### 결제 — 카드·간편결제(토스) / 계좌로 직접 입금 (2026-10-14)
 
-운영자 결정(2026-10-14): 토스 계좌이체는 뱅크페이가 떠 고령층이 쓰지 못해 뺐고, 계좌 수단은 우리 계좌번호를 안내하는 직접
-입금으로 한다(공연·펀딩·예약·믹싱은 이미 그렇다). **상점에는 그 흐름이 아직 없다** — `awaiting_deposit` 주문 생성·재고 점유
-(`lib/shop/stock.ts`의 점유 판정에 대기를 넣어야 한다)·운영자 입금 확인(확정 시 시리얼·다운로드·메일)·환불 계좌·안내 메일을 새로
-만들어야 해서 판매 개시(`SHOP_SALES_OPEN`) 전에 별도 작업으로 한다. 그때까지 `ShopOrderForm`은 `withBank`를 주지 않는다
-(`tests/payments/sharedCheckout.guard.test.ts`가 입금 흐름 없이 계좌 줄이 켜지는 것을 막는다).
+운영자 결정(2026-10-14): 토스 계좌이체는 뱅크페이가 떠 고령층이 쓰지 못해 뺐고, 계좌 수단은 우리 계좌번호를 안내하는 직접 입금이다
+(2026-10-12 "상점은 직접 입금을 받지 않는다"를 뒤집었다 — 환불 때 운영자가 고객 계좌를 받아 손으로 송금하는 부담은 알고 내린 결정).
+규칙은 공연·예약과 같다(`lib/payments/bankDeposit.ts` 머리 주석). 상점 고유 사항만 적는다:
+
+- **생성**: `/api/shop/orders`가 `paymentMethod: 'bank_transfer'`를 받으면 `createShopOrder(…, { paymentMethod })`가 주문을 `awaiting_deposit`으로 **바로**
+  만든다(토스 홀드를 거치지 않는다). 입금 안내 메일(고객+운영자, `deliverShopDepositGuide`)을 보내고 **주문 확인 주소**(`/ko/shop/manage/…?token=`)를
+  돌려준다 — 그 화면이 입금 안내(`BankDepositGuide`)다.
+- **재고는 기한 없이 점유한다** — `lib/shop/stock.ts`의 점유 판정에 `awaiting_deposit`이 들어 있다. 화면의 남은 수량·생성 게이트·한정판 번호 게이트가 모두
+  같은 식을 쓴다. `expireStaleShopOrders`(크론)는 `pending`만 봐서 입금 대기를 건드리지 않는다(자동 취소 없음). **새 만료·점유 경로를 만들면 이 규칙을 지킬 것.**
+- **입금 확인**(`confirmShopBankDeposit`, 관리자 `/admin/shop/<주문번호>`의 "입금 확인"): `awaiting_deposit → paid` + 결제 행(`bank-deposit:<주문번호>`) +
+  한정판 번호 배정을 한 batch로, 이어서 토스 확정과 같은 확정 메일(디지털 상품이면 내려받기 안내 포함). 재고를 다시 세지 않는다(대기 내내 점유했다).
+  **미입금 취소**(`cancelAwaitingShopDeposit`, 관리자·고객 공용)는 `deposit_cancelled`로 닫고 재고를 푼다 — 닫힌 신청은 입금 확인할 수 없다.
+  고객이 입금 전에 취소하면(`/api/shop/cancel`이 입금 대기 주문을 이 길로 보낸다) 운영자에게만 알린다.
+- **환불은 운영자가 한다.** 입금으로 확정된 주문은 고객이 셀프 취소할 수 없다(`cancelShopOrder`가 `BANK_PAID_CUSTOMER_CANCEL_MESSAGE`) — `refund_accounts`의
+  종류(`order_kind` CHECK)에 상점이 없어 고객에게 환불 계좌를 받아 둘 곳이 없다. 운영자가 카톡·전화로 계좌를 받아 **먼저 송금하고**, 관리자 "전액 환불"로 기록한다
+  (토스를 부르지 않는다 — `settleRefund`의 계좌 입금 경로). 상점도 환불 계좌 표에 넣으려면 `order_kind` CHECK를 바꾸는 마이그레이션(SQLite는 표 재생성)이 필요하다.
+  주문 확인 메일·취소 메일·주문 확인 화면은 계좌 입금 주문일 때 문구를 바꾼다("입금하신 계좌로").
+- `tests/payments/sharedCheckout.guard.test.ts`는 `merch`에 `withBank`를 요구한다.
 
 - 승인은 `lib/shop/confirm.ts` — 예약금 결제 링크(`lib/booking/confirmDeposit.ts`)의 안전장치 + **재고 재판정**(아래).
 - 웹훅(`lib/booking/webhook.ts`)에 `merch` 분기가 있다. **없으면 모르는 type이 `'session'`으로 떨어져 예약 확정으로 간다.**

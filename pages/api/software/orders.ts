@@ -12,7 +12,7 @@ const FAILURE = {
 
 /**
  * 소프트웨어 주문 생성 — 결제 전 단계. 금액·상품명은 요청이 아니라 카탈로그(data/software/catalog.ts)에서만 읽는다.
- * 결제수단은 전부 토스(카드·간편결제·계좌이체)라 결제수단 칸을 받지 않는다 — 계좌 입금은 키 즉시 발급과 맞지 않는다.
+ * 결제수단은 전부 토스(카드·간편결제)라 결제수단 칸을 받지 않는다 — 계좌 입금은 키 즉시 발급과 맞지 않는다.
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');

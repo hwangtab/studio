@@ -23,6 +23,8 @@ import { latestPendingShipsOn } from '../../lib/shop/preorder';
 import {
   canShareOrder, hasMixedKinds, hasMixedShippers, SHOP_ARTIST_SHARING_NOTICE, SHOP_MIXED_KIND_MESSAGE, SHOP_MIXED_SHIPPER_MESSAGE,
 } from '../../lib/shop/shipper';
+import type { CheckoutPaymentMethod } from '../../lib/payments/bankDeposit';
+import { wantsBankFallback } from '../../lib/payments/bankFallback';
 import { reportPaymentFailure, reportPaymentWindowOpen } from '../../utils/reportPaymentFailure';
 
 /** 남은 수량 — SKU id → 수량. null이면 아직 모른다(DB 조회 실패) — 고를 수는 있고 최종 판정은 주문 생성이 한다. */
@@ -44,8 +46,9 @@ const sellable = (p: ShopProduct): ShopSku[] => p.skus.filter((s) => !s.retired)
 /**
  * 상품 주문 폼 — 수량(옵션별) → 함께 담을 다른 상품(배송비는 주문당 한 번) → 주문자·받는 분·배송지 → 결제수단 → 결제하기.
  *
- * 결제수단은 지금 카드·간편결제(토스)뿐이다(토스 계좌이체는 뱅크페이가 떠 2026-10-14에 뺐다 — 계좌 줄은 직접 입금 흐름이 상점에 생길 때 켠다). 상점은 "계좌로 직접 입금"을
- * 받지 않는다(운영자 결정 2026-10-12: 직접 입금은 환불 때 수동 송금이 번거롭다). 공연 예매 폼(ShowBookingForm)과
+ * 결제수단은 카드·간편결제(토스)와 "계좌로 직접 입금"(우리 계좌번호 안내)이다. 토스 계좌이체는 뱅크페이가 떠 고령층이 쓰지 못해
+ * 2026-10-14에 뺐고, 같은 날 상점에도 직접 입금을 넣었다(2026-10-12 "받지 않는다"를 뒤집음 — 환불 때 운영자가 계좌를 받아 송금한다).
+ * 직접 입금은 주문을 `awaiting_deposit`으로 바로 만들고 입금 안내(주문 확인 화면)로 옮긴다(lib/shop/bankDeposit.ts). 공연 예매 폼(ShowBookingForm)과
  * 같은 장치를 쓴다: 위젯 지연 로드, 같은 입력으로 결제창을 다시 열면 만든 주문을 재사용(재고 홀드가 쌓이지 않게).
  * 펀딩 후원 폼에서 가져온 것: 카카오 주소 검색, 이름·연락처·주소 초안 저장(수량은 저장하지 않는다 — 재고가 바뀐다).
  */
@@ -151,6 +154,32 @@ export default function ShopOrderForm({ product, others: candidates, remaining, 
   const canOrder = salesOpen && lines.length > 0 && !mixedShippers && !mixedKinds;
   const widget = usePaymentCheckout(totals.total, canOrder && armed);
 
+  // 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금. 결제 실패 화면에서 "계좌로 직접 입금"으로 돌아오면 계좌 줄이 골라진 채 연다.
+  const [payMethod, setPayMethod] = useState<CheckoutPaymentMethod>('toss');
+  const usingBank = payMethod === 'bank_transfer';
+  useEffect(() => {
+    if (wantsBankFallback(window.location.search)) setPayMethod('bank_transfer');
+  }, []);
+
+  const submitBankDeposit = async (body: object) => {
+    try {
+      const res = await fetch('/api/shop/orders', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...body, paymentMethod: 'bank_transfer' }),
+      });
+      const data = (await res.json().catch(() => null)) as { ok?: boolean; manageUrl?: string; message?: string } | null;
+      if (res.status === 201 && data?.ok && typeof data.manageUrl === 'string') {
+        // 문서 이동 — 도착지(주문 확인)는 관리 토큰이 실린 비밀 주소다(lib/analytics/privatePaths.ts).
+        window.location.assign(data.manageUrl);
+        return;
+      }
+      setError(data?.message || '신청하지 못했어요. 잠시 후 다시 시도해 주세요.');
+    } catch {
+      setError('네트워크 오류로 신청하지 못했어요. 잠시 후 다시 시도해 주세요.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canOrder || submitting) return;
@@ -181,6 +210,7 @@ export default function ShopOrderForm({ product, others: candidates, remaining, 
             }
           : {}),
       };
+      if (usingBank) return await submitBankDeposit(body);
       const key = JSON.stringify(body);
       let pending = pendingRef.current;
       // 홀드 만료 1분 전까지만 재사용한다 — 결제창을 여는 동안 만료되는 주문을 넘기지 않는다.
@@ -370,9 +400,14 @@ export default function ShopOrderForm({ product, others: candidates, remaining, 
             <h3 className="mb-2 typo-card-meta font-medium text-gray-700 dark:text-gray-300">결제수단</h3>
             <PaymentMethodPicker
               name="shop-paymethod"
-              value={widget.choice}
-              onChange={(next) => { if (next !== 'bank_transfer') widget.setChoice(next); }} // 직접 입금 줄은 이 화면에 없다
+              value={usingBank ? 'bank_transfer' : widget.choice}
+              onChange={(next) => {
+                if (next === 'bank_transfer') { setPayMethod('bank_transfer'); return; }
+                setPayMethod('toss');
+                widget.setChoice(next);
+              }}
               applePaySupported={widget.applePaySupported}
+              withBank
               confirmLabel="주문이 접수"
             />
             {widget.error && <Notice tone="error" className="mt-3">{widget.error}</Notice>}
@@ -390,9 +425,12 @@ export default function ShopOrderForm({ product, others: candidates, remaining, 
           {/* 동의는 결제하기를 누르는 행위로 받는다(공연·펀딩과 같은 규칙) — 체크박스 없이 고지 한 줄 + 접힌 규정. */}
           <div className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
             <p>
-              결제하기를 누르면 교환·환불 규정과{' '}
+              {usingBank ? '계좌 안내 받기' : '결제하기'}를 누르면 교환·환불 규정과{' '}
               <Link href="/ko/privacy-policy" target="_blank" className="underline">개인정보 처리방침</Link>
-              에 동의하는 것으로 봐요. 상품은 결제창을 여는 동안 {Math.floor(SHOP_HOLD_SECONDS / 60)}분간 잡아 둬요.
+              에 동의하는 것으로 봐요.{' '}
+              {usingBank
+                ? '상품은 입금을 확인할 때까지 잡아 두고, 확인되면 주문이 접수돼요.'
+                : `상품은 결제창을 여는 동안 ${Math.floor(SHOP_HOLD_SECONDS / 60)}분간 잡아 둬요.`}
             </p>
             <Disclosure variant="plain" summary="교환·환불 규정 보기" className="mt-1" summaryClassName="text-sm font-medium text-gray-600 dark:text-gray-300" bodyClassName="text-xs">
               <ul className="list-disc space-y-1 pl-5">
@@ -402,8 +440,8 @@ export default function ShopOrderForm({ product, others: candidates, remaining, 
             </Disclosure>
           </div>
 
-          <Button type="submit" fullWidth disabled={!canOrder || !widget.ready || submitting}>
-            {submitting ? '처리 중…' : `${formatPriceAmount(totals.total)}원 · 결제하기`}
+          <Button type="submit" fullWidth disabled={!canOrder || (!usingBank && !widget.ready) || submitting}>
+            {submitting ? '처리 중…' : `${formatPriceAmount(totals.total)}원 · ${usingBank ? '계좌 안내 받기' : '결제하기'}`}
           </Button>
         </>
       )}

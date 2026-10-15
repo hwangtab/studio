@@ -7,6 +7,7 @@ import Head from 'next/head';
 import { Button } from '../../../components/ui/Button';
 import { PageShell } from '../../../components/ui/PageHeader';
 import { ResultCard } from '../../../components/ui/ResultCard';
+import FailBankFallback from '../../../components/payments/FailBankFallback';
 import { getSiteConfig } from '../../../data/siteConfig';
 import { withI18nServerProps } from '../../../lib/getStatic';
 import { findShopProductAsync } from '../../../lib/shop/repository';
@@ -24,11 +25,10 @@ const FAIL_MESSAGES: Record<string, string> = {
   EXCEED_MAX_DAILY_PAYMENT_COUNT: '하루 결제 가능 횟수를 넘었어요. 다른 결제수단을 이용해 주세요.',
   EXCEED_MAX_PAYMENT_AMOUNT: '결제 한도를 넘었어요. 카드사에 문의하거나 다른 결제수단을 이용해 주세요.',
   INVALID_CARD_NUMBER: '카드번호를 다시 확인해 주세요.',
-  NOT_AVAILABLE_BANK: '은행 서비스 시간이 아니에요. 잠시 후 다시 시도하거나 카드·간편결제로 결제해 주세요.',
+  NOT_AVAILABLE_BANK: '은행 서비스 시간이 아니에요. 잠시 후 다시 시도해 주세요.',
   NOT_ENOUGH_BALANCE: '계좌 잔액이 부족해요. 다른 계좌나 결제수단으로 시도해 주세요.',
 };
-// 계좌이체는 PC에서 은행 보안 프로그램 설치 화면이 뜨기도 한다 — 막혔으면 다른 수단으로 돌아오게 늘 알린다.
-const GENERIC_MESSAGE = '결제 진행 중 문제가 생겼어요. 계좌이체가 막혔다면 카드·간편결제로 다시 시도해 주세요.';
+const GENERIC_MESSAGE = '결제 진행 중 문제가 생겼어요. 카드·간편결제로 다시 시도하시거나, 어려우시면 계좌로 직접 입금하실 수 있어요.';
 const CODE_PATTERN = /^[A-Z0-9_]{1,60}$/;
 
 interface Props {
@@ -70,7 +70,9 @@ export default function ShopFailPage({ code, message, orderNo, retryHref }: Prop
             </>
           }
         >
-          <div className="space-y-1 text-center typo-card-meta">
+          {/* 결제가 어려운 분(주로 고령층)의 안전망 — 계좌로 직접 입금(2026-10-14). 돌아갈 상품을 알 때만. */}
+          {retryHref && <FailBankFallback formPath={retryHref} />}
+          <div className="mt-4 space-y-1 text-center typo-card-meta">
             {code && <p>오류 코드: {code}</p>}
             {orderNo && <p>주문번호: {orderNo}</p>}
             <p>결제가 되지 않았으니 안심하고 다시 시도해 주세요. 잡아 둔 상품은 10분 뒤에 풀려요.</p>
