@@ -64,7 +64,9 @@ export type FundingProjectPatchBody =
       expectedProductionFeeOffsetAmount: number;
       expectedShortfallAmount: number;
     }
-  | { action: 'mark_payout_paid'; memo?: string };
+  | { action: 'mark_payout_paid'; memo?: string }
+  /** 기록된 정산(이체 대기면 '정산 기록' 안내, 지급 완료면 '정산 지급' 안내)의 개설자 메일을 다시 보낸다. 상태는 바꾸지 않는다. */
+  | { action: 'resend_payout_notice' };
 
 const readJson = async (r: Response): Promise<{ message?: string; warnings?: string[] }> => {
   try {
