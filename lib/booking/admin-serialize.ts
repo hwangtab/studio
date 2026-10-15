@@ -110,7 +110,7 @@ export interface AdminBookingListItem {
   /** 결제 링크를 만들 때 적은 운영자 메모(링크 주문만). */
   linkMemo?: string | null;
   linkSessionAt?: string | null;
-  /** 링크 이용 일정의 구글 캘린더 상태(0063) — 'registered' 등록됨 · 'failed' 실패 · 'none' 아직 안 올림(일시 없는 링크는 null). */
+  /** 링크 이용 일정의 구글 캘린더 상태(0064) — 'registered' 등록됨 · 'failed' 실패 · 'none' 아직 안 올림(일시 없는 링크는 null). */
   linkCalendar?: { state: 'registered' | 'failed' | 'none'; error: string | null } | null;
 }
 

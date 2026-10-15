@@ -7,7 +7,7 @@ import { adminUrl } from '../email/layout';
 import { safeDbErrorSummary } from './refundAccount';
 
 /**
- * 결제 링크 이용 일정 ↔ 구글 캘린더(녹음실 "스튜디오 놀 — 예약", `BOOKING_GCAL_ID`) — 마이그레이션 0063.
+ * 결제 링크 이용 일정 ↔ 구글 캘린더(녹음실 "스튜디오 놀 — 예약", `BOOKING_GCAL_ID`) — 마이그레이션 0064.
  *
  * 링크 주문은 예약 시스템(`bookings`)에 행이 없어 확정돼도 캘린더에 일정이 안 생겼다. 이용 일시·시간이 있는 링크 주문이 **결제 확정**(카드)되거나
  * **입금 확인**되면 같은 캘린더에 일정을 올린다. 그 캘린더의 일정은 웹 예약 슬롯을 막는다(slots.ts의 freeBusy) — 그래서 링크가 만든

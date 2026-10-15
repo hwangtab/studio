@@ -20,7 +20,7 @@ export interface PaymentLinkOrderInfo {
   /** 주문 시점의 이용 일시(초)·시간(0062) — 일시 없는 링크는 null. */
   sessionAt: number | null;
   sessionHours: number | null;
-  /** 구글 캘린더에 올린 일정의 이벤트 id·마지막 실패 사유(0063) — 관리자 예약 상세가 상태를 보인다. */
+  /** 구글 캘린더에 올린 일정의 이벤트 id·마지막 실패 사유(0064) — 관리자 예약 상세가 상태를 보인다. */
   gcalEventId: string | null;
   gcalError: string | null;
   /** 링크를 만들 때 적은 운영자 메모(파일 링크·삭제된 행이면 null). */

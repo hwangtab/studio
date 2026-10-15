@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 
 import { createBlock, deleteBlock } from '../../../components/admin/bookingActions';
 import { AdminShell } from '../../../components/admin/AdminShell';
+import { ManualBookingPanel } from '../../../components/admin/ManualBookingPanel';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
@@ -22,6 +23,7 @@ import {
   type AdminBookingListItem,
 } from '../../../lib/booking/admin-serialize';
 import { formatKstDateTime } from '../../../lib/booking/format';
+import { kstDateString } from '../../../lib/booking/kst';
 import { expireStaleOrders } from '../../../lib/booking/service';
 import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
 
@@ -310,6 +312,7 @@ export default function AdminBookingsPage({
 
       <AdminShell title="예약 관리" description="세션 예약 현황을 확인하고 관리합니다." width="wide">
         <div className="space-y-6">
+          <ManualBookingPanel today={kstDateString(new Date())} onCreated={refresh} />
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
             <div className="p-4 md:p-8">
               {notice && (

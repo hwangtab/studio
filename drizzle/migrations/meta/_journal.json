@@ -446,8 +446,15 @@
     {
       "idx": 63,
       "version": "6",
-      "when": 1792052534422,
-      "tag": "0063_link_gcal",
+      "when": 1792052608326,
+      "tag": "0063_manual_revenues",
+      "breakpoints": true
+    },
+    {
+      "idx": 64,
+      "version": "6",
+      "when": 1792053444143,
+      "tag": "0064_link_gcal",
       "breakpoints": true
     }
   ]

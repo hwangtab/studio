@@ -6,6 +6,7 @@ import { cleanSupporterMessage } from './messageText';
 import type { FundingPledge, FundingPledgeItem, Order, Payment, Refund } from '../../db/schema';
 import { kstDateString } from '../booking/kst';
 import { generateManageToken } from '../booking/token';
+import { MANUAL_PLACEHOLDER_EMAIL, MANUAL_PLACEHOLDER_PHONE, isManualPlaceholderRecipient } from '../privacy/manualPlaceholder';
 import { PURGED_MARK } from '../privacy/orderRetention';
 import { stripInvisible } from './publicName';
 import { computeFundingAmountsForLines, type FundingAmounts } from './amounts';
@@ -37,8 +38,7 @@ const rowsAffectedOf = (result: unknown): number | undefined => {
  * 실제 수신함도 번호도 아니다 — pages/api/admin/funding/pledges/index.ts가 넣고,
  * [id].ts의 메일 재발송이 이 값을 보고 발송을 막는다. **한 곳만 보도록 여기 모은다.**
  */
-export const MANUAL_PLACEHOLDER_EMAIL = 'manual@studionol.co.kr';
-export const MANUAL_PLACEHOLDER_PHONE = '-';
+export { MANUAL_PLACEHOLDER_EMAIL, MANUAL_PLACEHOLDER_PHONE };
 
 /**
  * 이 주문의 고객 메일 주소가 **실제로 배달될 수 없는 플레이스홀더**인가.
@@ -54,8 +54,7 @@ export const MANUAL_PLACEHOLDER_PHONE = '-';
  * entrySource는 보지 않는다: 배달 가능 여부를 정하는 건 주소뿐이고, 경로를 함께 보면
  * 같은 주소를 다른 경로에서 통과시키는 구멍이 다시 생긴다.
  */
-export const isManualPlaceholderRecipient = (order: { customerEmail: string }): boolean =>
-  order.customerEmail === MANUAL_PLACEHOLDER_EMAIL;
+export { isManualPlaceholderRecipient };
 
 /**
  * 후원 **인원**을 셀 때 쓰는 신원 키(SQL 조각). 기본은 이메일+전화 조합이지만,
