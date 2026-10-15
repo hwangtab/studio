@@ -6,6 +6,7 @@ import Head from 'next/head';
 import { useState } from 'react';
 
 import BankDepositGuide from '../../../../components/payments/BankDepositGuide';
+import RefundAccountFields, { EMPTY_REFUND_ACCOUNT, isRefundAccountFilled, type RefundAccountValue } from '../../../../components/payments/RefundAccountFields';
 import { Button } from '../../../../components/ui/Button';
 import { Notice } from '../../../../components/ui/Notice';
 import { PageShell } from '../../../../components/ui/PageHeader';
@@ -71,13 +72,14 @@ export default function ShopManagePage(props: Props) {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ tone: 'error' | 'success'; text: string } | null>(null);
   const [confirming, setConfirming] = useState(false);
+  const [refundAccount, setRefundAccount] = useState<RefundAccountValue>(EMPTY_REFUND_ACCOUNT);
 
   const cancel = async () => {
     setBusy(true);
     setMessage(null);
     try {
       const res = await fetch('/api/shop/cancel', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ orderNo, token }),
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ orderNo, token, ...(bankPaid ? { refundAccount } : {}) }),
       });
       const data = (await res.json().catch(() => null)) as { ok?: boolean; message?: string } | null;
       if (res.ok && data?.ok) {
@@ -174,18 +176,18 @@ export default function ShopManagePage(props: Props) {
 
         {message && <Notice tone={message.tone} className="mb-4">{message.text}</Notice>}
 
-        {state === 'preparing' && bankPaid && (
-          <p className="typo-card-meta">계좌로 입금하신 주문은 환불받으실 계좌를 확인해야 해서 여기서 취소할 수 없어요. 카카오톡이나 010-4255-7893으로 알려 주시면 바로 처리해 드릴게요.</p>
-        )}
-        {state === 'preparing' && downloadedAt === null && !bankPaid && (
+        {state === 'preparing' && downloadedAt === null && (
           <div className="space-y-3">
             {!confirming ? (
               <Button type="button" variant="weak" fullWidth onClick={() => setConfirming(true)}>주문 취소하기</Button>
             ) : (
               <Panel className="space-y-3">
-                <p className="text-sm text-gray-800 dark:text-gray-200">주문을 취소하고 결제하신 수단으로 전액을 돌려받을까요?</p>
+                <p className="text-sm text-gray-800 dark:text-gray-200">
+                  {bankPaid ? '주문을 취소하고 아래 계좌로 전액을 돌려받을까요?' : '주문을 취소하고 결제하신 수단으로 전액을 돌려받을까요?'}
+                </p>
+                {bankPaid && <RefundAccountFields idPrefix="shop-refund" value={refundAccount} onChange={setRefundAccount} />}
                 <div className="flex gap-2">
-                  <Button type="button" onClick={cancel} disabled={busy}>{busy ? '처리 중…' : '네, 취소할게요'}</Button>
+                  <Button type="button" onClick={cancel} disabled={busy || (bankPaid && !isRefundAccountFilled(refundAccount))}>{busy ? '처리 중…' : '네, 취소할게요'}</Button>
                   <Button type="button" variant="ghost" onClick={() => setConfirming(false)} disabled={busy}>아니요</Button>
                 </div>
               </Panel>

@@ -134,7 +134,9 @@ export const sendShopOrderConfirmedEmails = async (orderNo: string): Promise<voi
         : `${customerName}님, 주문해 주셔서 고마워요. 준비되는 대로 발송하고 운송장 번호를 메일로 알려 드릴게요.`,
       ...(ships && extras.hasDigital ? ['디지털 상품은 주문 확인 페이지에서 내려받을 수 있어요.'] : []),
       bankPaid
-        ? '취소·환불은 카카오톡이나 010-4255-7893으로 알려 주세요. 입금하신 계좌로 돌려드려요.'
+        ? (!ships
+          ? '내려받기 전에는 주문 확인 페이지에서 바로 취소할 수 있어요. 환불받으실 계좌를 적어 주시면 접수일부터 3영업일 이내에 보내 드려요.'
+          : '발송 전에는 주문 확인 페이지에서 바로 취소할 수 있어요. 환불받으실 계좌를 적어 주시면 접수일부터 3영업일 이내에 보내 드려요.')
         : !ships
         ? '내려받기 전에는 주문 확인 페이지에서 바로 취소할 수 있어요. 결제하신 수단으로 전액 돌려드려요.'
         : '발송 전에는 주문 확인 페이지에서 바로 취소할 수 있어요. 결제하신 수단으로 전액 돌려드려요.',
@@ -146,7 +148,7 @@ export const sendShopOrderConfirmedEmails = async (orderNo: string): Promise<voi
       ...amountRows(order),
       ...(ships ? [{ label: '받는 분', value: `${so.recipientName} · ${so.recipientPhone}` }, { label: '배송지', value: addressLine(order) }] : []),
     ],
-    cta: { label: !ships ? '주문 확인·내려받기' : bankPaid ? '주문 확인' : '주문 확인·취소', url: manage },
+    cta: { label: !ships ? '주문 확인·내려받기' : '주문 확인·취소', url: manage },
     notices: [
       ...(extras.hasDigital ? [SHOP_DIGITAL_WITHDRAWAL_NOTICE] : []),
       '이 메일의 버튼 주소가 주문 확인 열쇠예요. 다른 사람에게 전달하지 마세요.',
@@ -233,10 +235,12 @@ export const sendShopCancelledEmails = async (orderNo: string, refundAmount: num
       preheader: `${won(refundAmount)} 환불`,
       heading: '주문이 취소됐어요',
       paragraphs: [
-        bankPaid
+        bankPaid && requestedBy === 'customer'
+          ? `${escapeHtml(order.customerName)}님, 주문 취소를 받았어요. 적어 주신 계좌로 ${won(refundAmount)}을 접수일부터 3영업일 이내에 보내 드릴게요.`
+          : bankPaid
           ? `${escapeHtml(order.customerName)}님, 주문이 취소되어 ${won(refundAmount)}을 입금하신 계좌로 보내 드렸어요.`
           : `${escapeHtml(order.customerName)}님, 주문이 취소되어 ${won(refundAmount)}을 결제하신 수단으로 돌려드렸어요.`,
-        bankPaid ? '은행에 따라 입금이 보이기까지 시간이 걸릴 수 있어요.' : '카드는 카드사 사정에 따라 승인 취소가 보이기까지 며칠 걸릴 수 있어요.',
+        bankPaid ? '송금하면 은행에 따라 입금이 보이기까지 시간이 걸릴 수 있어요.' : '카드는 카드사 사정에 따라 승인 취소가 보이기까지 며칠 걸릴 수 있어요.',
       ],
       rows: [
         { label: '주문번호', value: order.orderNo },
@@ -250,6 +254,10 @@ export const sendShopCancelledEmails = async (orderNo: string, refundAmount: num
   const operatorHtml = buildEmailLayout({
     audience: 'operator',
     heading: requestedBy === 'customer' ? '고객이 상점 주문을 취소했어요' : '상점 주문을 환불했어요',
+    // 계좌로 입금한 고객의 셀프 취소는 돈이 아직 안 나갔다 — 운영자가 환불 계좌로 보내고 "송금 완료"를 눌러야 닫힌다(헬스체크가 48시간 뒤 알린다).
+    ...(bankPaid && requestedBy === 'customer'
+      ? { noticeTone: 'alert' as const, notices: ['계좌로 입금한 주문이라 <strong>환불 송금이 필요해요.</strong> 관리자 주문 화면에서 "계좌 보기"로 환불 계좌를 열어 보내고 "송금 완료"를 눌러 주세요(약속한 기한: 접수일부터 3영업일).'] }
+      : {}),
     rows: [
       { label: '주문번호', value: order.orderNo },
       { label: '주문자', value: `${order.customerName} / ${order.customerPhone}` },
@@ -258,7 +266,7 @@ export const sendShopCancelledEmails = async (orderNo: string, refundAmount: num
     ],
     cta: { label: '관리자에서 보기', url: adminUrl(`/admin/shop/${order.orderNo}`) },
   });
-  const f = await send(OPERATOR_EMAIL, `[상점 취소] ${won(refundAmount)} — ${order.customerName}`, operatorHtml, `상점 주문 ${order.orderNo} 취소 ${won(refundAmount)}`, false);
+  const f = await send(OPERATOR_EMAIL, `[상점 취소] ${won(refundAmount)} — ${order.customerName}${bankPaid && requestedBy === 'customer' ? ' (환불 송금 필요)' : ''}`, operatorHtml, `상점 주문 ${order.orderNo} 취소 ${won(refundAmount)}${bankPaid && requestedBy === 'customer' ? ' — 환불 송금 필요(계좌 입금 주문)' : ''}`, false);
   if (f) failures.push(f);
   await recordNotification(order.id, failures.length ? failures.join(' / ') : null);
 };

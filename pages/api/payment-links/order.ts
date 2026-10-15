@@ -10,6 +10,7 @@ import { validateCustomerContact } from '../../../lib/booking/validation';
 import { getClientIp } from '../../../lib/contracts/client-ip';
 import { BANK_DEPOSIT_GUIDE_DAYS } from '../../../lib/payments/bankAccount';
 import { AWAITING_DEPOSIT, bankDepositDeadlineOf, isCheckoutPaymentMethod } from '../../../lib/payments/bankDeposit';
+import { recordPaymentLinkOrder } from '../../../lib/payments/paymentLinkOrders';
 import { findPaymentLink } from '../../../lib/payments/paymentLinks';
 
 /**
@@ -56,6 +57,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       status: paymentMethod === 'bank_transfer' ? AWAITING_DEPOSIT : 'pending',
     })
     .returning({ createdAt: orders.createdAt });
+
+  // 어느 링크였는지 남긴다(관리자 화면·운영자 알림이 읽는다). 입금 안내 메일보다 먼저 — 메일이 상품명을 읽는다. 실패해도 주문은 그대로다.
+  await recordPaymentLinkOrder({ orderNo, slug: body.slug as string, itemName: link.itemName });
 
   if (paymentMethod === 'bank_transfer') {
     await deliverBookingDepositGuide(orderNo, { throttleCustomer: true });

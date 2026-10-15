@@ -8,6 +8,7 @@ import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { remainingRefundable } from '../../../lib/booking/cancel';
 import { isBankDepositPayment } from '../../../lib/payments/bankDeposit';
+import { loadRefundAccountSummary } from '../../../lib/payments/refundAccount';
 import { shopLineName } from '../../../lib/shop/catalog';
 import { resolveOrderShipper } from '../../../lib/shop/artistShipping';
 import { getFirstDownloadedAt } from '../../../lib/shop/downloads';
@@ -17,7 +18,16 @@ import { findShopOrderByOrderNo } from '../../../lib/shop/service';
 import { normalizeShopOrderNo, shopOrderShips } from '../../../lib/shop/shape';
 import { SHOP_STUDIO_COURIER } from '../../../lib/shop/shipper';
 
+/** 환불 계좌 요약 — 은행명·예금주만. 계좌번호는 props에 싣지 않는다("계좌 보기"가 API로 가져온다). */
+type RefundAccountSummaryProps =
+  | { status: 'present'; bankName: string; accountHolder: string; updatedAt: number; refundedAt: number | null }
+  | { status: 'none' }
+  | { status: 'unavailable' };
+
 interface Props {
+  /** `orders.id` — "계좌 보기" API(`/api/admin/orders/<id>/refund-account`)가 쓴다. */
+  orderId: string;
+  refundAccount: RefundAccountSummaryProps | null;
   orderNo: string;
   status: string;
   fulfillmentStatus: string;
@@ -57,8 +67,18 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   const downloadedAt = so.items.some((i) => i.skuId.startsWith('db-')) ? await getFirstDownloadedAt(order.orderNo).catch(() => null) : null;
   const found = await resolveOrderShipper(order.orderNo);
   const shipper: Props['shipper'] = found.kind === 'artist' ? { kind: 'artist', name: found.creatorName } : { kind: 'studio' };
+  // 계좌 입금으로 확정된 주문의 환불 계좌(고객 셀프 취소로 접수된 것) — 접수된 행이 있을 때만 보인다.
+  let refundAccount: RefundAccountSummaryProps | null = null;
+  if (order.payments.some(isBankDepositPayment)) {
+    const summary = await loadRefundAccountSummary({ kind: 'merch', orderNo: order.orderNo });
+    refundAccount = summary.status === 'present'
+      ? { status: 'present', bankName: summary.bankName, accountHolder: summary.accountHolder, updatedAt: Math.floor(summary.updatedAt.getTime() / 1000), refundedAt: summary.refundedAt ? Math.floor(summary.refundedAt.getTime() / 1000) : null }
+      : summary;
+  }
   return {
     props: {
+      orderId: order.id,
+      refundAccount,
       shipper,
       orderNo: order.orderNo,
       status: order.status,
@@ -86,6 +106,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   };
 };
 
+/** 예금주 ↔ 주문자 이름 비교(공백 무시) — refundAccount.ts의 holderMatchesCustomer와 같은 규칙. 그 모듈은 node:crypto를 물고 있어 클라이언트 번들에 못 가져온다. */
+const sameNameIgnoringSpace = (a: string, b: string): boolean => a.replace(/\s+/g, '') === b.replace(/\s+/g, '');
 const kst = (sec: number) => new Date(sec * 1000).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 const PAYMENT_LABEL: Record<string, string> = { pending: '결제 대기', paid: '결제 완료', partially_refunded: '부분 환불', refunded: '환불', auto_cancel_pending: '자동 취소 중', expired: '만료', failed: '결제 실패', awaiting_deposit: '입금 대기', deposit_cancelled: '미입금 취소' };
 const FULFILLMENT_LABEL: Record<string, string> = { preparing: '발송 준비', shipped: '발송함', delivered: '배송 완료', cancelled: '취소' };
@@ -99,6 +121,7 @@ export default function AdminShopOrderPage(p: Props) {
   const [reason, setReason] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [accountView, setAccountView] = useState<{ bankName: string; accountNumber: string; accountHolder: string } | null>(null);
   const paid = p.status === 'paid' || p.status === 'partially_refunded';
 
   const act = async (body: Record<string, unknown>, confirmText?: string) => {
@@ -110,6 +133,22 @@ export default function AdminShopOrderPage(p: Props) {
       const data = (await res.json().catch(() => null)) as { ok?: boolean; message?: string } | null;
       if (res.ok && data?.ok) window.location.reload();
       else setError(data?.message ?? '처리하지 못했습니다.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  /** 환불 계좌 — 누를 때만 가져와 이 화면 state에만 둔다(props·HTML에 싣지 않는다). */
+  const showAccount = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/admin/orders/${p.orderId}/refund-account`, { credentials: 'same-origin', cache: 'no-store' });
+      const data = (await res.json().catch(() => null)) as { ok?: boolean; account?: { bankName: string; accountNumber: string; accountHolder: string }; message?: string } | null;
+      if (res.ok && data?.ok && data.account) setAccountView(data.account);
+      else setError(data?.message ?? '환불 계좌를 불러오지 못했습니다.');
+    } catch {
+      setError('네트워크 오류가 발생했습니다.');
     } finally {
       setBusy(false);
     }
@@ -152,6 +191,34 @@ export default function AdminShopOrderPage(p: Props) {
               <button type="button" disabled={busy} onClick={() => act({ action: 'resend_deposit_guide' })} className={buttonClass}>입금 안내 재발송</button>
             </div>
           </section>
+        )}
+
+        {p.refundAccount?.status === 'present' && (
+          <section className="mb-6 rounded-2xl border-2 border-orange-300 bg-orange-50 p-4 text-sm text-orange-950 shadow-sm md:p-6">
+            <h2 className="mb-2 text-lg font-bold">환불 계좌</h2>
+            <p>{p.refundAccount.bankName} · 예금주 {p.refundAccount.accountHolder} (접수 {kst(p.refundAccount.updatedAt)})</p>
+            {!sameNameIgnoringSpace(p.refundAccount.accountHolder, p.customer.name) && (
+              <p className="mt-2 font-semibold text-red-700">예금주가 주문자 이름({p.customer.name})과 다릅니다. 가족 계좌일 수 있으니 필요하면 고객에게 확인해 주세요.</p>
+            )}
+            {accountView ? (
+              <div className="mt-2 rounded border border-orange-200 bg-white p-3">
+                <p>{accountView.bankName}</p>
+                <p className="text-lg font-bold tracking-wide">{accountView.accountNumber}</p>
+                <p>예금주 {accountView.accountHolder}</p>
+              </div>
+            ) : (
+              <button type="button" disabled={busy} onClick={showAccount} className={`mt-2 ${buttonClass}`}>계좌 보기</button>
+            )}
+            <p className="mt-2 text-xs">“계좌 보기”를 누른 사실은 접속기록에 남습니다.</p>
+            {p.refundAccount.refundedAt ? (
+              <p className="mt-2 font-semibold">송금 완료: {kst(p.refundAccount.refundedAt)}</p>
+            ) : (
+              <button type="button" disabled={busy} onClick={() => act({ action: 'mark_refund_sent' }, '환불 계좌로 송금을 마쳤나요?')} className={`mt-2 ${buttonClass}`}>송금 완료</button>
+            )}
+          </section>
+        )}
+        {p.refundAccount?.status === 'unavailable' && (
+          <div role="alert" className="mb-4 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">환불 계좌를 불러오지 못했습니다(마이그레이션 0048·0061 확인).</div>
         )}
 
         <section className="mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
@@ -198,7 +265,7 @@ export default function AdminShopOrderPage(p: Props) {
               </div>
             )}
             {p.bankPaid ? (
-              <p className="mb-3 rounded-lg bg-amber-50 p-3 text-amber-900">계좌로 입금하신 주문이에요. 고객에게 환불 계좌를 받아 <strong>먼저 {formatPriceAmount(p.refundable)}원을 송금한 뒤</strong> 눌러 기록하세요. 토스는 부르지 않습니다. 발송한 뒤라면 반품을 받은 다음에 누르세요.</p>
+              <p className="mb-3 rounded-lg bg-amber-50 p-3 text-amber-900">계좌로 입금하신 주문이에요. 고객에게 환불 계좌를 받아 <strong>먼저 {formatPriceAmount(p.refundable)}원을 송금한 뒤</strong> 눌러 기록하세요(토스는 부르지 않습니다). 고객이 직접 취소하며 계좌를 적었다면 위 “환불 계좌”에서 “송금 완료”를 누르세요. 발송한 뒤라면 반품을 받은 다음에 누르세요.</p>
             ) : (
               <p className="mb-3 text-gray-600">토스로 {formatPriceAmount(p.refundable)}원을 돌려주고 주문을 취소합니다. 발송한 뒤라면 반품을 받은 다음에 누르세요. 일부만 돌려줄 때는 토스 콘솔에서 하면 웹훅이 기록을 맞춥니다.</p>
             )}

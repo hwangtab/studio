@@ -97,9 +97,9 @@ export const bankDepositDeadlineOf = (input: { createdAt: Date; startsAt: Date |
 };
 
 /** 환불 계좌 표(`refund_accounts.order_kind`)에 적는 주문 종류. `orders.type` → 표의 값. */
-export const refundAccountKindOf = (orderType: string): 'funding' | 'session' | 'mixing' | 'show' | null => {
+export const refundAccountKindOf = (orderType: string): 'funding' | 'session' | 'mixing' | 'show' | 'merch' | null => {
   if (orderType === 'ticket') return 'show';
-  if (orderType === 'session' || orderType === 'mixing' || orderType === 'funding') return orderType;
+  if (orderType === 'session' || orderType === 'mixing' || orderType === 'funding' || orderType === 'merch') return orderType;
   return null;
 };
 

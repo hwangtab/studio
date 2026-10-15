@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getDb } from '../../../../db/client';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { serializeBookingForAdmin } from '../../../../lib/booking/admin-serialize';
+import { loadPaymentLinkOrderInfo } from '../../../../lib/payments/paymentLinkOrders';
 import { expireStaleOrders } from '../../../../lib/booking/service';
 
 const LIST_LIMIT = 200;
@@ -28,9 +29,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         with: { bookings: true, payments: true, workOrders: true },
       });
 
+      const linkInfo = await loadPaymentLinkOrderInfo(allOrders.filter((o) => o.type === 'deposit').map((o) => o.orderNo));
+
       return res.status(200).json({
         ok: true,
-        bookings: allOrders.map((order) => serializeBookingForAdmin(order)),
+        bookings: allOrders.map((order) => serializeBookingForAdmin(order, linkInfo.get(order.orderNo))),
       });
     } catch (error: unknown) {
       console.error('[API/admin/bookings] Failed to list bookings:', error);

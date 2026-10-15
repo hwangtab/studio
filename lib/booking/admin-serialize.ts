@@ -107,6 +107,8 @@ export interface AdminBookingListItem {
   /** 입금 대기일 때 안내한 기한(ISO) — 안내용이다(자동 취소 없음). */
   depositDeadline: string | null;
   createdAt: string;
+  /** 결제 링크를 만들 때 적은 운영자 메모(링크 주문만). */
+  linkMemo?: string | null;
 }
 
 const UNPAID_ORDER_STATUSES: ReadonlySet<Order['status']> = new Set(['pending', 'failed', 'expired', 'awaiting_deposit', 'deposit_cancelled']);
@@ -125,6 +127,8 @@ const UNPAID_ORDER_STATUSES: ReadonlySet<Order['status']> = new Set(['pending', 
  */
 export const serializeBookingForAdmin = (
   order: Order & { bookings: Booking[]; payments: Payment[]; workOrders: WorkOrder[] },
+  /** 결제 링크 주문의 링크 정보(`payment_link_orders`, 0061 — lib/payments/paymentLinkOrders.ts). 없으면 "예약금" 고정 라벨. */
+  link?: { itemName: string; memo: string | null } | null,
 ): AdminBookingListItem => {
   const booking = order.bookings[0];
   const workOrder = order.workOrders[0];
@@ -141,8 +145,8 @@ export const serializeBookingForAdmin = (
     customerPhone: order.customerPhone,
     customerEmail: order.customerEmail,
     productId: isMixing ? (workOrder?.productId ?? '') : (booking?.productId ?? ''),
-    // 예약금 결제 링크 주문은 품목명 칸이 없다(data/paymentLinks.ts) — 고정 라벨.
-    productName: order.type === 'deposit' ? '예약금' : isMixing ? (mixingProduct?.nameKo ?? workOrder?.serviceType ?? '-') : (product?.nameKo ?? booking?.serviceType ?? '-'),
+    // 예약금 결제 링크 주문은 링크 기록(0061)이 있으면 그 상품명, 없으면(옛 주문) 고정 라벨.
+    productName: order.type === 'deposit' ? (link?.itemName ?? '예약금') : isMixing ? (mixingProduct?.nameKo ?? workOrder?.serviceType ?? '-') : (product?.nameKo ?? booking?.serviceType ?? '-'),
     serviceType: isMixing ? (workOrder?.serviceType ?? '') : (booking?.serviceType ?? ''),
     roomNumber: booking?.roomNumber ?? null,
     startAt: booking ? booking.startAt.toISOString() : null,
@@ -180,6 +184,7 @@ export const serializeBookingForAdmin = (
         ? bankDepositDeadlineOf({ createdAt: order.createdAt, startsAt: booking?.startAt ?? null, guideDays: BANK_DEPOSIT_GUIDE_DAYS }).toISOString()
         : null,
     createdAt: order.createdAt.toISOString(),
+    linkMemo: order.type === 'deposit' ? (link?.memo ?? null) : null,
   };
 };
 
@@ -217,8 +222,9 @@ export interface AdminBookingDetail extends AdminBookingListItem {
 
 export const serializeBookingDetailForAdmin = (
   order: Order & { bookings: Booking[]; payments: (Payment & { refunds: Refund[] })[]; workOrders: WorkOrder[] },
+  link?: { itemName: string; memo: string | null } | null,
 ): AdminBookingDetail => {
-  const base = serializeBookingForAdmin(order);
+  const base = serializeBookingForAdmin(order, link);
   const booking = order.bookings[0];
   const workOrder = order.workOrders[0];
   const payment = latestPaymentOf(order.payments);

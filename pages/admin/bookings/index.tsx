@@ -10,6 +10,7 @@ import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { getDb } from '../../../db/client';
+import { loadPaymentLinkOrderInfo } from '../../../lib/payments/paymentLinkOrders';
 import { and, eq, inArray, sql } from 'drizzle-orm';
 import { orderStatusEnum, orders } from '../../../db/schema';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
@@ -98,9 +99,12 @@ export const getServerSideProps: GetServerSideProps<AdminBookingsPageProps> = as
         .get(),
     ]);
 
+    // 결제 링크 주문의 상품명(0061) — 같은 고객에게 링크를 여럿 보냈을 때 어느 건인지 보이게. 조회 실패는 "예약금"으로 내려간다.
+    const linkInfo = await loadPaymentLinkOrderInfo(allOrders.filter((o) => o.type === 'deposit').map((o) => o.orderNo));
+
     return {
       props: {
-        bookings: (depositPending ? allOrders : allOrders.slice(0, LIST_LIMIT)).map((order) => serializeBookingForAdmin(order)),
+        bookings: (depositPending ? allOrders : allOrders.slice(0, LIST_LIMIT)).map((order) => serializeBookingForAdmin(order, linkInfo.get(order.orderNo))),
         truncated: !depositPending && allOrders.length > LIST_LIMIT,
         depositPending,
         depositPendingCount: Number(pendingCountRow?.n ?? 0),

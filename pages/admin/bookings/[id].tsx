@@ -15,6 +15,7 @@ import { Button } from '../../../components/ui/Button';
 import { Field, TextArea, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { getDb } from '../../../db/client';
+import { loadPaymentLinkOrderInfo } from '../../../lib/payments/paymentLinkOrders';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatPriceAmount } from '../../../data/pricing';
 import {
@@ -68,7 +69,8 @@ export const getServerSideProps: GetServerSideProps<AdminBookingDetailPageProps>
     return { notFound: true };
   }
 
-  const booking = serializeBookingDetailForAdmin(order);
+  const linkInfo = order.type === 'deposit' ? (await loadPaymentLinkOrderInfo([order.orderNo])).get(order.orderNo) : undefined;
+  const booking = serializeBookingDetailForAdmin(order, linkInfo);
 
   // 계좌 입금 건만 — 이름이 같은 다른 신청(이중 확인 방지)과 환불 계좌 요약(복호화 없음).
   const sameNameDeposits =
@@ -647,6 +649,7 @@ export default function AdminBookingDetailPage({
                 </h2>
                 <dl className="space-y-2 text-sm">
                   <DescriptionRow label="상품" value={booking.productName} />
+                  {isDeposit && booking.linkMemo && <DescriptionRow label="링크 메모" value={booking.linkMemo} />}
                   {isDeposit ? null : isMixing ? (
                     <>
                       <DescriptionRow label="곡 수" value={workOrder ? `${workOrder.songCount}곡` : '-'} />
