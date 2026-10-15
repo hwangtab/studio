@@ -7,6 +7,7 @@ import { AdminShell } from '../../../../components/admin/AdminShell';
 import { formatPriceAmount } from '../../../../data/pricing';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { formatKstDateTimeFull } from '../../../../lib/booking/format';
+import { listPendingFundingPayoutProjectIds } from '../../../../lib/funding/payout';
 import { listProjectsForAdmin, type AdminProjectSummary } from '../../../../lib/funding/adminProjects';
 import { loadProjectServiceMap, PROJECT_SERVICE_LABELS, type LoadServiceMapResult } from '../../../../lib/funding/projectServices';
 import type { FundingReviewStatus } from '../../../../lib/funding/reviewTransition';
@@ -15,6 +16,8 @@ interface AdminFundingProjectsPageProps {
   projects: AdminProjectSummary[];
   /** 스튜디오 서비스(마이그레이션 0037). 운영 DB에 테이블이 없으면 available: false. */
   services: LoadServiceMapResult;
+  /** `?payout=pending` — 이체 대기 정산이 있는 프로젝트만. 대시보드 "이체 대기 펀딩 정산" 카드가 온다. */
+  payoutPending?: boolean;
 }
 
 /**
@@ -54,14 +57,17 @@ export const getServerSideProps: GetServerSideProps<AdminFundingProjectsPageProp
     return { redirect: { destination: '/admin/login', permanent: false } };
   }
 
-  const projects = await listProjectsForAdmin();
+  const payoutPending = context.query.payout === 'pending';
+  const all = await listProjectsForAdmin();
+  const pendingIds = payoutPending ? new Set(await listPendingFundingPayoutProjectIds()) : null;
+  const projects = pendingIds ? all.filter((p) => pendingIds.has(p.id)) : all;
   const sorted = [...projects].sort((a, b) => STATUS_PRIORITY[a.reviewStatus] - STATUS_PRIORITY[b.reviewStatus]);
 
   const services = await loadProjectServiceMap();
-  return { props: { projects: sorted, services } };
+  return { props: { projects: sorted, services, ...(payoutPending ? { payoutPending } : {}) } };
 };
 
-export default function AdminFundingProjectsPage({ projects, services }: AdminFundingProjectsPageProps) {
+export default function AdminFundingProjectsPage({ projects, services, payoutPending = false }: AdminFundingProjectsPageProps) {
   return (
     <>
       <Head>
@@ -76,6 +82,16 @@ export default function AdminFundingProjectsPage({ projects, services }: AdminFu
         backLabel="펀딩 목록"
         width="wide"
       >
+        {payoutPending && (
+          <div className="mb-4 flex flex-wrap items-center gap-3 text-sm">
+            <span className="inline-flex rounded-full bg-gray-900 px-3 py-1.5 font-medium text-white">
+              이체 대기 정산 ({projects.length})
+            </span>
+            <Link href="/admin/funding/projects" className="text-primary hover:underline">
+              전체 보기
+            </Link>
+          </div>
+        )}
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="admin-table w-full text-sm text-left">

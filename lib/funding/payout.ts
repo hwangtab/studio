@@ -706,6 +706,15 @@ export const markFundingPayoutPaid = async (id: string, memo: string | null, now
   return result.length > 0;
 };
 
+/** 이체 대기 정산이 있는 프로젝트 id — 대시보드 "이체 대기 펀딩 정산" 카드가 여는 목록의 필터용. */
+export const listPendingFundingPayoutProjectIds = async (): Promise<string[]> =>
+  (
+    await getDb()
+      .select({ projectId: fundingProjectPayouts.projectId })
+      .from(fundingProjectPayouts)
+      .where(eq(fundingProjectPayouts.status, 'pending'))
+  ).map((row) => row.projectId);
+
 /** 기록된 정산 중 아직 이체 안 한 것 — 관리자 대시보드 대기열용. */
 export const countPendingFundingPayouts = async (): Promise<number> => {
   const [row] = await getDb()

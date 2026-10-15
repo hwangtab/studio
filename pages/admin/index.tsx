@@ -143,15 +143,23 @@ export default function AdminIndexPage({ dashboard, shopQueues, ledgerFrom, ledg
             <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
               <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">대기 중</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                <QueueCard label="믹싱 착수 대기" count={dashboard.queues.mixingReceived} href="/admin/bookings" alert />
-                <QueueCard label="믹싱 작업 중" count={dashboard.queues.mixingInProgress} href="/admin/bookings" />
-                <QueueCard label="서명 대기 계약" count={dashboard.queues.contractsAwaitingSignature} href="/admin/contracts" />
+                <QueueCard label="입금 확인 대기 예약·믹싱" count={dashboard.queues.depositsBooking} href="/admin/bookings?deposit=pending" alert />
+                <QueueCard label="입금 확인 대기 공연 티켓" count={dashboard.queues.depositsShow} href="/admin/shows" alert />
+                <QueueCard label="입금 확인 대기 펀딩 후원" count={dashboard.queues.depositsFunding} href="/admin/funding" alert />
+                <QueueCard label="환불 요청 펀딩 후원" count={dashboard.queues.fundingRefundRequests} href="/admin/funding" alert />
+                {dashboard.queues.showSubmissionsAwaitingReview !== null && (
+                  <QueueCard label="심사 대기 주최자 공연" count={dashboard.queues.showSubmissionsAwaitingReview} href="/admin/shows/submissions" alert />
+                )}
+                <QueueCard label="믹싱 착수 대기" count={dashboard.queues.mixingReceived} href="/admin/bookings?work=received" alert />
+                <QueueCard label="믹싱 작업 중" count={dashboard.queues.mixingInProgress} href="/admin/bookings?work=in_progress" />
+                <QueueCard label="서명 대기 계약" count={dashboard.queues.contractsAwaitingSignature} href="/admin/contracts?status=sent" />
+                <QueueCard label="종료 처리 필요 계약" count={dashboard.queues.contractsAwaitingTermination} href="/admin/contracts?status=termination" alert />
                 <QueueCard label="카드 등록 대기 구독" count={dashboard.queues.subscriptionsPendingCard} href="/admin/subscriptions" />
                 <QueueCard label="결제 재시도 중 구독" count={dashboard.queues.subscriptionsPastDue} href="/admin/subscriptions" alert />
                 <QueueCard label="정지된 구독" count={dashboard.queues.subscriptionsPaused} href="/admin/subscriptions" alert />
                 <QueueCard label="이체 대기 아티스트 정산" count={dashboard.queues.artistPayoutsPending} href="/admin/artists" alert />
                 <QueueCard label="심사 대기 펀딩 프로젝트" count={dashboard.queues.fundingProjectsAwaitingReview} href="/admin/funding/projects" alert />
-                <QueueCard label="이체 대기 펀딩 정산" count={dashboard.queues.fundingPayoutsPending} href="/admin/funding/projects" alert />
+                <QueueCard label="이체 대기 펀딩 정산" count={dashboard.queues.fundingPayoutsPending} href="/admin/funding/projects?payout=pending" alert />
                 {shopQueues.pendingProducts !== null && (
                   <QueueCard label="심사 대기 상점 상품" count={shopQueues.pendingProducts} href="/admin/shop/products" alert />
                 )}
@@ -209,24 +217,24 @@ export default function AdminIndexPage({ dashboard, shopQueues, ledgerFrom, ledg
         )}
 
         {/* 장부는 현황 데이터를 쓰지 않는다 — 건강 점검이 죽어도 정산 CSV는 받을 수 있어야 한다. */}
-          <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">토스 결제 장부</h2>
-            <p className="text-xs text-gray-500 mb-4">
-              기간 안에 승인된 카드 결제 전부를 한 CSV로 내려받습니다(예약·믹싱·펀딩·구독). 환불은 같은
-              행에 합산됩니다. 무통장 펀딩과 수기 등록은 펀딩 CSV에 있습니다.
-            </p>
-            <form method="GET" action="/api/admin/orders/export" className="flex flex-wrap items-end gap-3">
-              <Field id="ledger-from" label="시작일" className={lightOnlyField}>
-                <TextInput type="date" name="from" defaultValue={ledgerFrom} required light className="text-sm" />
-              </Field>
-              <Field id="ledger-to" label="종료일" className={lightOnlyField}>
-                <TextInput type="date" name="to" defaultValue={ledgerTo} required light className="text-sm" />
-              </Field>
-              <Button light type="submit" variant="weak">
-                CSV 내려받기
-              </Button>
-            </form>
-          </section>
+        <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">토스 결제 장부</h2>
+          <p className="text-xs text-gray-500 mb-4">
+            기간 안에 승인된 카드 결제 전부를 한 CSV로 내려받습니다(예약·믹싱·펀딩·구독). 환불은 같은
+            행에 합산됩니다. 무통장 펀딩과 수기 등록은 펀딩 CSV에 있습니다.
+          </p>
+          <form method="GET" action="/api/admin/orders/export" className="flex flex-wrap items-end gap-3">
+            <Field id="ledger-from" label="시작일" className={lightOnlyField}>
+              <TextInput type="date" name="from" defaultValue={ledgerFrom} required light className="text-sm" />
+            </Field>
+            <Field id="ledger-to" label="종료일" className={lightOnlyField}>
+              <TextInput type="date" name="to" defaultValue={ledgerTo} required light className="text-sm" />
+            </Field>
+            <Button light type="submit" variant="weak">
+              CSV 내려받기
+            </Button>
+          </form>
+        </section>
       </AdminShell>
     </>
   );
