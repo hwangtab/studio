@@ -8,6 +8,7 @@ import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { getClientIp } from '../../../../../lib/contracts/client-ip';
 import { loadProjectForAdmin } from '../../../../../lib/funding/adminProjects';
 import { setDesignFeePaid, setProductionFee, setProjectService, type ServiceWriteResult } from '../../../../../lib/funding/projectServices';
+import { OPERATOR_NOTE_MAX_LENGTH } from '../../../../../lib/funding/policy';
 import { decideProject, type AdminReviewAction, type DecisionResult } from '../../../../../lib/funding/reviewDecision';
 import { decidePublicStatus, type PublicStatusAction, type PublicStatusResult } from '../../../../../lib/funding/publicStatusDecision';
 import {
@@ -118,7 +119,7 @@ const PAYOUT_RECORD_ERROR: Record<
   no_resident_number: {
     status: 409,
     message:
-      '개설자가 원천징수 대상인데 주민등록번호가 등록되지 않았습니다. 지금 기록하면 세액만 떼고 지급명세서를 낼 수 없습니다 — 개설자에게 정산 정보 구획에서 주민등록번호 등록을 요청해 주세요.',
+      '개설자가 원천징수 대상인데 주민등록번호가 등록되지 않았습니다. 지금 기록하면 세액만 떼고 지급명세서를 낼 수 없습니다 — 개설자에게 개설자 콘솔의 정산 정보 탭(/ko/funding/creator/payout)에서 주민등록번호 등록을 요청해 주세요.',
   },
 };
 
@@ -231,6 +232,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const b = (typeof req.body === 'object' && req.body) || {};
   const now = new Date();
 
+  // 운영자가 쓰는 글의 상한 — 사유·메모는 개설자 화면과 메일에 그대로 나가고 DB에도 통째로 남는다.
+  for (const field of ['note', 'memo'] as const) {
+    const value = (b as Record<string, unknown>)[field];
+    if (typeof value === 'string' && value.length > OPERATOR_NOTE_MAX_LENGTH) {
+      return res.status(400).json({
+        ok: false,
+        message: `메모·사유는 ${OPERATOR_NOTE_MAX_LENGTH.toLocaleString('ko-KR')}자 이하로 적어 주세요. (지금 ${value.length.toLocaleString('ko-KR')}자)`,
+      });
+    }
+  }
+
   /**
    * 판정 없이 `reviewNote`만 고쳐 쓴다(상태 전이·메일 없음).
    *
@@ -257,6 +269,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const project = await loadProjectForAdmin(id);
     if (!project) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없습니다.' });
     const note = typeof b.note === 'string' ? b.note.trim() || null : null;
+    if (typeof b.expectedNote === 'string' && b.expectedNote !== (project.reviewNote ?? '')) {
+      return res.status(409).json({ ok: false, message: '그 사이 메모가 다른 곳에서 바뀌었습니다. 새로고침한 뒤 내용을 확인하고 다시 저장해 주세요.' });
+    }
     if (project.reviewStatus === 'rejected' && !note) {
       return res.status(400).json({
         ok: false,
@@ -275,6 +290,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const project = await loadProjectForAdmin(id);
     if (!project) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없습니다.' });
     const note = typeof b.note === 'string' ? b.note.trim() || null : null;
+    if (typeof b.expectedNote === 'string' && b.expectedNote !== (project.internalNote ?? '')) {
+      return res.status(409).json({ ok: false, message: '그 사이 메모가 다른 곳에서 바뀌었습니다. 새로고침한 뒤 내용을 확인하고 다시 저장해 주세요.' });
+    }
     await getDb().update(fundingProjects).set({ internalNote: note, updatedAt: now }).where(eq(fundingProjects.id, id));
     return res.status(200).json({ ok: true });
   }
@@ -292,6 +310,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 하나뿐이었다(서버 로그에 어느 프로젝트인지도 안 남았다).
      */
     try {
+      /**
+       * 정산이 기록된 뒤에는 서비스 종류·약정 제작비를 바꾸지 못한다. 기록된 정산은 불변이라 이 값을 바꿔도 지급액은
+       * 그대로인데, 화면은 "기록 뒤 숫자가 달라졌습니다"만 띄워서 운영자가 공제를 반영했다고 착각할 수 있다.
+       * 설계비 입금 확인(`set_design_fee_paid`)은 막지 않는다 — 시스템 밖에서 실제로 받은 돈을 기록하는 일이고
+       * 세금계산서 공급 시기의 근거라 정산 뒤에도 생길 수 있다.
+       */
+      if (b.action === 'set_studio_service' || b.action === 'set_production_fee') {
+        if (await loadRecordedFundingPayout(id)) {
+          return res.status(409).json({
+            ok: false,
+            message: '정산이 이미 기록되어 서비스 종류와 약정 제작비는 바꿀 수 없습니다. 기록된 정산은 바뀌지 않으므로 이 값을 고쳐도 지급액에 반영되지 않습니다.',
+          });
+        }
+      }
       if (b.action === 'set_studio_service') {
         const kind = b.kind;
         if (kind !== 'none' && kind !== 'design' && kind !== 'release') {
@@ -611,6 +643,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    * 받을 이유가 없고, 받으면 "다른 프로젝트의 정산 id"를 이 라우트로 보낼 수 있는 경로가
    * 생긴다.
    */
+  /**
+   * 정산 안내 메일 재발송. 기록·지급 처리 직후의 메일이 실패하면 경고와 운영자 폴백 메일만 가고, `already_recorded`/
+   * `already paid` 때문에 같은 버튼을 다시 눌러도 메일은 다시 나가지 않았다 — 계좌·정산액이 담긴 메일이 개설자에게
+   * 안 간 채 이체 대기로 남을 수 있었다. 상태는 바꾸지 않고 메일만 다시 만든다(계좌 복호화는 notifyPayout이 접속기록).
+   */
+  if (b.action === 'resend_payout_notice') {
+    try {
+      const recorded = await loadRecordedFundingPayout(id);
+      if (!recorded) {
+        if (!(await loadProjectForAdmin(id))) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없습니다.' });
+        return res.status(409).json({ ok: false, message: '아직 기록되지 않은 정산입니다. 보낼 안내가 없습니다.' });
+      }
+      const warnings = await notifyPayout(req, auth.actor, id, recorded, recorded.status === 'paid' ? '정산 지급' : '정산 기록');
+      return res.status(200).json({ ok: true, ...(warnings.length > 0 ? { warnings } : {}) });
+    } catch (error: unknown) {
+      console.error(`[funding] 정산 안내 재발송 예외 (id=${id}):`, error);
+      return res.status(500).json({ ok: false, message: '처리하지 못했습니다.' });
+    }
+  }
+
   if (b.action === 'mark_payout_paid') {
     const memo = typeof b.memo === 'string' && b.memo.trim() ? b.memo.trim() : null;
     try {

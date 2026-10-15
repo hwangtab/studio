@@ -343,3 +343,11 @@ export const FUNDING_PRIVACY_SECTION_HEADINGS: readonly string[] = [
   '8. 펀딩 개인정보의 보유·이용 기간',
   '9. 펀딩 개인정보의 처리위탁',
 ];
+
+/**
+ * 운영자가 쓰는 글(개설자에게 가는 메모·사유, 내부 메모, 이체 메모)의 최대 글자 수.
+ *
+ * 서버에 상한이 없어서 수 MB 문자열이 DB와 개설자 메일에 그대로 들어갈 수 있었다. 판정 사유는 개설자 화면과 메일에
+ * 통째로 나가는 문장이라 화면에서 읽을 만한 길이로 막는다.
+ */
+export const OPERATOR_NOTE_MAX_LENGTH = 5000;

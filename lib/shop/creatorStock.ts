@@ -2,7 +2,7 @@ import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { setSkuStock } from './adminQueries';
-import { isMissingTableError } from './fulfillmentMode';
+import { isMissingTableError } from '../dbErrors';
 
 /**
  * 아티스트가 **자기가 직접 보내는 상품**의 총 재고를 넣는다. 스튜디오가 보관·발송하는 상품은 지금처럼 관리자만 정한다.

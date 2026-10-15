@@ -153,12 +153,15 @@ export function FundingPayoutSection({
   busy,
   onRecord,
   onMarkPaid,
+  onResendNotice,
 }: {
   projectId: string;
   payout: AdminPayoutView | null;
   busy: boolean;
   onRecord: () => void;
   onMarkPaid: () => void;
+  /** 개설자에게 가는 정산 안내 메일을 다시 보낸다. 메일 실패 경고만 뜨고 재시도할 길이 없던 자리. 생략하면 버튼을 그리지 않는다. */
+  onResendNotice?: () => void;
 }) {
   const [account, setAccount] = useState<RevealedAccount | null>(null);
   const [accountError, setAccountError] = useState<string | null>(null);
@@ -243,7 +246,7 @@ export function FundingPayoutSection({
     blockers.push('모금이 아직 끝나지 않았습니다. 지금 기록하면 이후 들어온 후원이 정산에서 통째로 빠집니다.');
   }
   if (!payout.hasPayoutAccount) {
-    blockers.push('개설자의 정산 계좌가 등록되지 않았습니다. 개설자 편집 화면의 정산 정보 구획에서 등록을 요청해 주세요.');
+    blockers.push('개설자의 정산 계좌가 등록되지 않았습니다. 개설자에게 개설자 콘솔의 정산 정보 탭(/ko/funding/creator/payout)에서 등록을 요청해 주세요.');
   }
   if (!payout.hasTaxType) {
     blockers.push(
@@ -252,7 +255,7 @@ export function FundingPayoutSection({
   }
   if (payout.needsResidentNumber) {
     blockers.push(
-      '개설자가 원천징수 대상인데 주민등록번호가 등록되지 않았습니다. 지금 기록하면 세액만 떼고 지급명세서를 낼 수 없습니다 — 개설자에게 정산 정보 구획에서 등록을 요청해 주세요.',
+      '개설자가 원천징수 대상인데 주민등록번호가 등록되지 않았습니다. 지금 기록하면 세액만 떼고 지급명세서를 낼 수 없습니다 — 개설자에게 개설자 콘솔의 정산 정보 탭(/ko/funding/creator/payout)에서 등록을 요청해 주세요.',
     );
   }
   if (payout.businessGate === 'missing') {
@@ -490,6 +493,11 @@ export function FundingPayoutSection({
             </Button>
           )}
           {recorded?.status === 'paid' && <p className="text-sm text-gray-600">지급 완료로 기록됐습니다. 되돌릴 수 없습니다.</p>}
+          {recorded && onResendNotice && (
+            <Button light variant="weak" disabled={busy} onClick={onResendNotice}>
+              개설자 안내 메일 다시 보내기
+            </Button>
+          )}
         </div>
         {!recorded && (
           <p className="mt-2 text-xs text-amber-700">

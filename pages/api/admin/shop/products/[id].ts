@@ -20,7 +20,7 @@ import { isStudioShopArtistSlug } from '../../../../../lib/shop/studioArtist';
  */
 
 const DECISION_STATUS: Record<ShopDecisionCode, number> = {
-  not_found: 404, conflict: 409, invalid_slug: 400, duplicate_slug: 400, incomplete: 400, no_artist: 400, no_files: 400, digital_edition: 400, digital_shipper: 400,
+  not_found: 404, conflict: 409, invalid_slug: 400, duplicate_slug: 400, incomplete: 400, no_artist: 400, no_files: 400, digital_edition: 400, digital_shipper: 400, terms_not_agreed: 400,
 };
 const ADMIN_STATUS: Record<ShopAdminCode, number> = {
   not_found: 404, invalid: 400, conflict: 409, incomplete: 400, storage_unavailable: 503,

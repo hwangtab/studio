@@ -2,7 +2,7 @@ import { eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { bookings, orders, refunds, type Booking, type Order, type Payment, type Refund, type WorkOrder } from '../../db/schema';
-import { sendBookingCancelledEmails, sendMixingOrderCancelledEmails } from './email';
+import { sendBookingCancelledEmails, sendDepositRefundEmail, sendMixingOrderCancelledEmails } from './email';
 import { calendarForService, deleteBookingEvent } from './gcal';
 import { canAdminRefund, isCancelledRemainderRefund } from './admin-serialize';
 import { computeRefund, refundPolicyFor } from './refund-policy';
@@ -643,14 +643,61 @@ const cancelMixingOrder = async (
   return { ok: true, refundAmount, refundVia };
 };
 
+/**
+ * 예약금(`orders.type = 'deposit'`) 환불 — 운영자 전용.
+ *
+ * 예약금 결제 링크 주문은 예약·작업 행이 없어 "취소"할 대상이 없다. 그래서 세션·믹싱의 잔액 환불
+ * (이미 취소된 건에 남은 금액을 더 돌려주는 경로)과 **같은 방식**으로, 선점 없이 `settleRefund`의
+ * refunds PK 선점(주문번호·금액)으로 중복을 막는다. 토스 결제는 토스 취소를, 계좌 입금 결제는 운영자가 이미
+ * 보낸 송금을 기록한다(토스를 부르지 않는다 — `isBankDepositPayment`).
+ *
+ * - 0원은 거절한다: 취소할 예약이 없어 "환불 없이 닫기"가 아무 일도 하지 않는다.
+ * - 고객 셀프 환불은 없다: 예약금 주문에는 고객 관리 화면이 없다.
+ * - 고객에게 환불 안내 메일을 보낸다(`sendDepositRefundEmail`). 메일이 실패해도 환불은 이미 끝났으므로 결과를 뒤집지 않고
+ *   `notificationError`에 남겨 관리자 화면이 알린다(다른 취소 경로와 같다).
+ */
+const refundDepositOrder = async (
+  order: Order & { payments: PaymentWithRefunds[] },
+  payment: PaymentWithRefunds | undefined,
+  input: CancelInput,
+): Promise<CancelOutcome> => {
+  if (input.requestedBy !== 'admin') {
+    return { ok: false, code: 'invalid_state', message: '예약금 환불은 운영자만 처리할 수 있어요.' };
+  }
+  if (!payment || !canAdminRefund({ orderType: order.type, orderStatus: order.status, entityStatus: null, refundableAmount: remainingRefundable(order, order.payments) })) {
+    const remaining = remainingRefundable(order, order.payments);
+    if (payment && remaining <= 0 && ['paid', 'partially_refunded', 'refunded'].includes(order.status)) {
+      return { ok: false, code: 'invalid_state', message: FULLY_REFUNDED_MESSAGE };
+    }
+    return { ok: false, code: 'invalid_state', message: '환불할 수 있는 상태가 아니에요.' };
+  }
+
+  const remaining = remainingRefundable(order, order.payments);
+  const amount = input.overrideAmount;
+  if (typeof amount !== 'number' || !Number.isInteger(amount) || amount < 1 || amount > remaining) {
+    return { ok: false, code: 'invalid_state', message: '환불 금액이 올바르지 않아요. 1원 이상, 남은 금액 이하의 정수로 적어 주세요.' };
+  }
+
+  const failure = await settleRefund({
+    order, payment, refundAmount: amount, remaining, input,
+    revertClaim: null,
+    recordFailureLog: '[booking-cancel] 예약금 환불 기록 실패',
+  });
+  if (failure) return failure;
+
+  const refundVia = isBankDepositPayment(payment) ? 'bank_account' : 'payment';
+  await recordNotificationError(
+    order.id, order.orderNo, await sendDepositRefundEmail(order, amount, remaining - amount, refundVia),
+  );
+  return { ok: true, refundAmount: amount, refundVia };
+};
+
 export const cancelBookingWithRefund = async (input: CancelInput): Promise<CancelOutcome> => {
   const order = await findOrderByOrderNo(input.orderNo);
   if (!order) return { ok: false, code: 'not_found', message: '주문을 찾을 수 없어요.' };
 
-  // 예약금 결제 링크 주문은 예약·믹싱 행이 없다 — 이 경로의 환불 로직을 타면 안 된다(환불은 토스 콘솔·계좌 송금).
-  if (order.type === 'deposit') {
-    return { ok: false, code: 'invalid_state', message: '예약금 주문은 여기서 환불할 수 없어요. 토스 콘솔 또는 계좌 송금으로 처리해 주세요.' };
-  }
+  // 예약금 결제 링크 주문은 예약·믹싱 행이 없다 — 세션·믹싱 환불 로직을 타면 안 되고, 선점할 대상 없이 잔액만 돌려주는 전용 경로를 쓴다.
+  if (order.type === 'deposit') return refundDepositOrder(order, order.payments[0], input);
   // 소프트웨어 주문은 라이선스 선점이 따로 있다(lib/software/cancel.ts) — 여기로 오면 세션 예약으로 떨어진다.
   if (order.type === 'software') {
     return { ok: false, code: 'invalid_state', message: '소프트웨어 주문은 소프트웨어 관리 화면에서 환불해 주세요.' };

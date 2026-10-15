@@ -22,6 +22,7 @@ import {
 } from '../../../lib/booking/admin-serialize';
 import { formatKstDateTime } from '../../../lib/booking/format';
 import { expireStaleOrders } from '../../../lib/booking/service';
+import { unmarkedSessionRange } from '../../../lib/booking/unmarkedSessions';
 import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
 
 /** 한 화면에 싣는 최대 건수. 넘으면 오래된 주문이 잘린다는 사실을 화면에 알린다(contracts와 동일). */
@@ -39,6 +40,8 @@ interface AdminBookingsPageProps {
    * 전체 목록은 최근 200건이라 오래된 착수 대기 주문이 밀려나 카드 건수와 화면이 어긋났다.
    */
   workFilter?: 'received' | 'in_progress';
+  /** `?session=unmarked` — 끝난 지 7일 안인데 완료·노쇼 표시가 없는 세션만(`lib/booking/unmarkedSessions.ts`). */
+  sessionUnmarked?: boolean;
   blocks: AdminBlockItem[];
   error?: string;
 }
@@ -52,7 +55,9 @@ export const getServerSideProps: GetServerSideProps<AdminBookingsPageProps> = as
   const depositPending = context.query?.deposit === 'pending';
   const workQuery = context.query?.work;
   const workFilter = workQuery === 'received' || workQuery === 'in_progress' ? workQuery : undefined;
-  const unlimited = depositPending || workFilter !== undefined;
+  const sessionUnmarked = context.query?.session === 'unmarked';
+  const unlimited = depositPending || workFilter !== undefined || sessionUnmarked;
+  const unmarkedRange = unmarkedSessionRange(new Date());
 
   try {
     // 목록을 여는 시점이 곧 만료를 판정할 시점이다 — 크론 없이 lazy 처리(contracts와 동일 관례).
@@ -82,6 +87,13 @@ export const getServerSideProps: GetServerSideProps<AdminBookingsPageProps> = as
         where: depositPending
           ? (ordersTable, { and: all, inArray: within, eq: same }) =>
               all(within(ordersTable.type, ['session', 'mixing', 'deposit']), same(ordersTable.status, 'awaiting_deposit'))
+          : sessionUnmarked
+          ? (ordersTable, { and: all, eq: same }) =>
+              all(
+                same(ordersTable.type, 'session'),
+                sql`EXISTS (SELECT 1 FROM bookings b WHERE b.order_id = ${ordersTable.id} AND b.status = 'confirmed'
+                      AND b.end_at >= ${Math.floor(unmarkedRange.from.getTime() / 1000)} AND b.end_at < ${Math.floor(unmarkedRange.to.getTime() / 1000)})`,
+              )
           : workFilter
           ? (ordersTable, { and: all, eq: same }) =>
               all(
@@ -103,6 +115,8 @@ export const getServerSideProps: GetServerSideProps<AdminBookingsPageProps> = as
         with: { bookings: true, payments: true, workOrders: true },
       }),
       getDb().query.availabilityBlocks.findMany({
+        // 끝난 블록은 새 예약에 아무 영향이 없다 — 전량을 읽으면 지난 블록이 쌓여 화면만 길어진다.
+        where: (t, { gte }) => gte(t.endAt, new Date()),
         orderBy: (t, { asc }) => [asc(t.startAt)],
       }),
       getDb()
@@ -118,6 +132,7 @@ export const getServerSideProps: GetServerSideProps<AdminBookingsPageProps> = as
         truncated: !unlimited && allOrders.length > LIST_LIMIT,
         depositPending,
         ...(workFilter ? { workFilter } : {}),
+        ...(sessionUnmarked ? { sessionUnmarked } : {}),
         depositPendingCount: Number(pendingCountRow?.n ?? 0),
         blocks: allBlocks.map(serializeBlockForAdmin),
       },
@@ -188,6 +203,7 @@ export default function AdminBookingsPage({
   depositPending = false,
   depositPendingCount = 0,
   workFilter,
+  sessionUnmarked = false,
   blocks,
   error,
 }: AdminBookingsPageProps) {
@@ -293,6 +309,14 @@ export default function AdminBookingsPage({
     }
 
     setBlockMemo('');
+    // 블록은 새 예약만 막는다 — 이미 잡힌 예약은 그대로이니 운영자가 직접 처리해야 한다.
+    if (result.overlapping && result.overlapping.length > 0) {
+      setNotice(
+        `블록은 등록됐지만 같은 시간대에 이미 잡힌 예약이 ${result.overlapping.length}건 있습니다: ` +
+          result.overlapping.map((b) => `${b.customerName}(${b.orderNo})`).join(', ') +
+          '. 예약은 자동으로 취소되지 않으니 고객에게 직접 연락해 주세요.',
+      );
+    }
     await refresh();
   };
 
@@ -366,6 +390,14 @@ export default function AdminBookingsPage({
 
               <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
                 <div className="flex flex-wrap gap-2">
+                  {sessionUnmarked && (
+                    <Link
+                      href="/admin/bookings"
+                      className="px-3 py-1.5 rounded-full text-sm font-medium bg-violet-700 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+                    >
+                      완료·노쇼 표시 대기 ({bookings.length}) · 전체 보기
+                    </Link>
+                  )}
                   {workFilter && (
                     <Link
                       href="/admin/bookings"
@@ -387,6 +419,8 @@ export default function AdminBookingsPage({
                   {['all', ...orderStatusEnum].map((status) => (
                     <button
                       key={status}
+                      type="button"
+                      aria-pressed={filter === status}
                       onClick={() => setFilter(status)}
                       className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                         filter === status
@@ -503,7 +537,7 @@ export default function AdminBookingsPage({
                               </div>
                             )}
                           </td>
-                          <td className="px-4 py-3">
+                          <td data-label="관리" className="px-4 py-3">
                             <Link href={`/admin/bookings/${booking.id}`} passHref>
                               <Button light size="sm" variant="weak">
                                 상세

@@ -93,6 +93,14 @@ const QueueCard = ({ label, count, href, alert }: { label: string; count: number
   </Link>
 );
 
+/** 대기열 카드 묶음 — 영역 이름 아래 카드 격자. */
+const QueueGroup = ({ title, children }: { title: string; children: React.ReactNode }) => (
+  <div>
+    <h3 className="mb-2 text-sm font-semibold text-gray-600 dark:text-gray-600">{title}</h3>
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">{children}</div>
+  </div>
+);
+
 export default function AdminIndexPage({ dashboard, shopQueues, ledgerFrom, ledgerTo, error }: AdminIndexPageProps) {
   return (
     <>
@@ -142,39 +150,60 @@ export default function AdminIndexPage({ dashboard, shopQueues, ledgerFrom, ledg
 
             <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
               <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">대기 중</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                <QueueCard label="입금 확인 대기 예약·믹싱" count={dashboard.queues.depositsBooking} href="/admin/bookings?deposit=pending" alert />
-                <QueueCard label="입금 확인 대기 공연 티켓" count={dashboard.queues.depositsShow} href="/admin/shows" alert />
-                <QueueCard label="입금 확인 대기 펀딩 후원" count={dashboard.queues.depositsFunding} href="/admin/funding" alert />
-                <QueueCard label="환불 요청 펀딩 후원" count={dashboard.queues.fundingRefundRequests} href="/admin/funding" alert />
-                {dashboard.queues.showSubmissionsAwaitingReview !== null && (
-                  <QueueCard label="심사 대기 주최자 공연" count={dashboard.queues.showSubmissionsAwaitingReview} href="/admin/shows/submissions" alert />
-                )}
-                <QueueCard label="믹싱 착수 대기" count={dashboard.queues.mixingReceived} href="/admin/bookings?work=received" alert />
-                <QueueCard label="믹싱 작업 중" count={dashboard.queues.mixingInProgress} href="/admin/bookings?work=in_progress" />
-                <QueueCard label="서명 대기 계약" count={dashboard.queues.contractsAwaitingSignature} href="/admin/contracts?status=sent" />
-                <QueueCard label="종료 처리 필요 계약" count={dashboard.queues.contractsAwaitingTermination} href="/admin/contracts?status=termination" alert />
-                <QueueCard label="카드 등록 대기 구독" count={dashboard.queues.subscriptionsPendingCard} href="/admin/subscriptions" />
-                <QueueCard label="결제 재시도 중 구독" count={dashboard.queues.subscriptionsPastDue} href="/admin/subscriptions" alert />
-                <QueueCard label="정지된 구독" count={dashboard.queues.subscriptionsPaused} href="/admin/subscriptions" alert />
-                <QueueCard label="이체 대기 아티스트 정산" count={dashboard.queues.artistPayoutsPending} href="/admin/artists" alert />
-                <QueueCard label="심사 대기 펀딩 프로젝트" count={dashboard.queues.fundingProjectsAwaitingReview} href="/admin/funding/projects" alert />
-                <QueueCard label="이체 대기 펀딩 정산" count={dashboard.queues.fundingPayoutsPending} href="/admin/funding/projects?payout=pending" alert />
-                {shopQueues.pendingProducts !== null && (
-                  <QueueCard label="심사 대기 상점 상품" count={shopQueues.pendingProducts} href="/admin/shop/products" alert />
-                )}
-                {shopQueues.awaitingShipment !== null && (
-                  <>
-                    {/* 스튜디오가 지금 보낼 주문만 — 아티스트가 보낼 주문·예약 발송일이 안 된 주문은 따로 센다(할 일이 아니다). */}
-                    <QueueCard label="발송 대기 상점 주문" count={shopQueues.awaitingShipment.studio} href="/admin/shop" alert />
-                    {shopQueues.awaitingShipment.preorder > 0 && (
-                      <QueueCard label="예약 발송일 전 상점 주문" count={shopQueues.awaitingShipment.preorder} href="/admin/shop" />
-                    )}
-                    {shopQueues.awaitingShipment.artist > 0 && (
-                      <QueueCard label="아티스트 발송 대기 상점 주문" count={shopQueues.awaitingShipment.artist} href="/admin/shop" />
-                    )}
-                  </>
-                )}
+              {/*
+                카드가 스무 장 가까이 한 격자에 섞이면 어디를 봐야 하는지 한눈에 안 들어온다 — 하는 일의 영역별로 묶는다.
+                순서는 돈이 걸린 일(입금·환불)부터, 그다음 업무 흐름(예약 → 계약 → 구독 → 펀딩 → 공연·상점).
+              */}
+              <div className="space-y-6">
+                <QueueGroup title="입금·환불">
+                  <QueueCard label="입금 확인 대기 예약·믹싱" count={dashboard.queues.depositsBooking} href="/admin/bookings?deposit=pending" alert />
+                  <QueueCard label="입금 확인 대기 공연 티켓" count={dashboard.queues.depositsShow} href="/admin/shows" alert />
+                  <QueueCard label="입금 확인 대기 상점 주문" count={dashboard.queues.depositsShop} href="/admin/shop" alert />
+                  <QueueCard label="입금 확인 대기 펀딩 후원" count={dashboard.queues.depositsFunding} href="/admin/funding?deposit=pending" alert />
+                  <QueueCard label="환불 요청 펀딩 후원" count={dashboard.queues.fundingRefundRequests} href="/admin/funding" alert />
+                </QueueGroup>
+
+                <QueueGroup title="예약·믹싱">
+                  <QueueCard label="완료·노쇼 표시 대기 세션" count={dashboard.queues.sessionsAwaitingMark} href="/admin/bookings?session=unmarked" alert />
+                  <QueueCard label="믹싱 착수 대기" count={dashboard.queues.mixingReceived} href="/admin/bookings?work=received" alert />
+                  <QueueCard label="믹싱 작업 중" count={dashboard.queues.mixingInProgress} href="/admin/bookings?work=in_progress" />
+                </QueueGroup>
+
+                <QueueGroup title="계약·구독">
+                  <QueueCard label="서명 대기 계약" count={dashboard.queues.contractsAwaitingSignature} href="/admin/contracts?status=sent" />
+                  <QueueCard label="종료 처리 필요 계약" count={dashboard.queues.contractsAwaitingTermination} href="/admin/contracts?status=termination" alert />
+                  <QueueCard label="카드 등록 대기 구독" count={dashboard.queues.subscriptionsPendingCard} href="/admin/subscriptions" />
+                  <QueueCard label="결제 재시도 중 구독" count={dashboard.queues.subscriptionsPastDue} href="/admin/subscriptions" alert />
+                  <QueueCard label="정지된 구독" count={dashboard.queues.subscriptionsPaused} href="/admin/subscriptions" alert />
+                </QueueGroup>
+
+                <QueueGroup title="펀딩·정산">
+                  <QueueCard label="심사 대기 펀딩 프로젝트" count={dashboard.queues.fundingProjectsAwaitingReview} href="/admin/funding/projects" alert />
+                  <QueueCard label="정산 기록 대기 펀딩 프로젝트" count={dashboard.queues.fundingPayoutsUnrecorded} href="/admin/funding/projects?payout=unrecorded" alert />
+                  <QueueCard label="이체 대기 펀딩 정산" count={dashboard.queues.fundingPayoutsPending} href="/admin/funding/projects?payout=pending" alert />
+                  <QueueCard label="이체 대기 아티스트 정산" count={dashboard.queues.artistPayoutsPending} href="/admin/artists" alert />
+                </QueueGroup>
+
+                <QueueGroup title="공연·상점">
+                  {dashboard.queues.showSubmissionsAwaitingReview !== null && (
+                    <QueueCard label="심사 대기 주최자 공연" count={dashboard.queues.showSubmissionsAwaitingReview} href="/admin/shows/submissions" alert />
+                  )}
+                  {shopQueues.pendingProducts !== null && (
+                    <QueueCard label="심사 대기 상점 상품" count={shopQueues.pendingProducts} href="/admin/shop/products" alert />
+                  )}
+                  {shopQueues.awaitingShipment !== null && (
+                    <>
+                      {/* 스튜디오가 지금 보낼 주문만 — 아티스트가 보낼 주문·예약 발송일이 안 된 주문은 따로 센다(할 일이 아니다). */}
+                      <QueueCard label="발송 대기 상점 주문" count={shopQueues.awaitingShipment.studio} href="/admin/shop" alert />
+                      {shopQueues.awaitingShipment.preorder > 0 && (
+                        <QueueCard label="예약 발송일 전 상점 주문" count={shopQueues.awaitingShipment.preorder} href="/admin/shop" />
+                      )}
+                      {shopQueues.awaitingShipment.artist > 0 && (
+                        <QueueCard label="아티스트 발송 대기 상점 주문" count={shopQueues.awaitingShipment.artist} href="/admin/shop" />
+                      )}
+                    </>
+                  )}
+                </QueueGroup>
               </div>
             </section>
 

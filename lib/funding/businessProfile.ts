@@ -2,6 +2,7 @@ import { and, eq, isNull } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { creatorBusinessProfiles, fundingCreators, fundingProjectPayouts, fundingProjects } from '../../db/schema';
+import { isMissingTableError } from '../dbErrors';
 import { lookupBusinessStatus, type NtsBusinessStatus } from './businessStatus';
 
 /**
@@ -29,7 +30,7 @@ export interface BusinessProfileView {
 }
 
 export const isMissingBusinessTable = (error: unknown): boolean =>
-  /no such table: creator_business_profiles/i.test(String(error));
+  isMissingTableError(error, 'creator_business_profiles');
 
 const iso = (d: Date | null): string | null => (d ? d.toISOString() : null);
 

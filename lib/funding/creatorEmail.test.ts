@@ -23,6 +23,12 @@ describe('buildCreatorLoginText', () => {
   it('요청하지 않았을 때 무엇을 하면 되는지 적는다', () => {
     expect(text).toContain('요청하지 않으셨다면');
   });
+
+  // 펀딩 개설자와 공연 주최자가 같은 메일을 받는다 — 어느 한쪽 말로 쓰지 않는다.
+  it('펀딩·공연 어느 쪽에도 치우치지 않은 말로 쓴다', () => {
+    expect(text).toContain('개설자 콘솔');
+    expect(text).not.toContain('펀딩');
+  });
 });
 
 

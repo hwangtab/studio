@@ -5,6 +5,7 @@ import { fundingCreators, showSubmissions, showTicketTypes, showtimes, shows, sh
 import { createTestDb, type ShowsTestDb } from '../../../tests/helpers/showsDb';
 import { FUNDING_MEDIA_URL_PREFIX } from '../../funding/mediaPath';
 import { emptyDraft, type ShowSubmissionDraft } from './draft';
+import { isPublishable } from '../revalidate';
 import { sendShowReviewResultEmail } from './email';
 import { decideShowSubmission } from './review';
 import { createSubmission, saveSubmission, submitSubmission } from './submissions';
@@ -16,6 +17,10 @@ jest.mock('./email', () => ({
   notifyOperatorShowEdited: jest.fn(async () => {}),
   sendShowReviewResultEmail: jest.fn(async () => {}),
 }));
+jest.mock('../revalidate', () => {
+  const actual = jest.requireActual('../revalidate');
+  return { ...actual, isPublishable: jest.fn(actual.isPublishable) };
+});
 
 const NOW = new Date('2026-10-14T03:00:00Z');
 const FIRST = '2026-11-20T19:00';
@@ -117,6 +122,19 @@ describe('주최자 공연 심사', () => {
     expect(r.approvedDraftJson).toBe(r.draftJson);
     expect(r.approvedAt).not.toBeNull();
     expect(sendShowReviewResultEmail).toHaveBeenCalledWith(s.id, 'approved');
+  });
+
+  it('공개하지 못하면 승인 메일은 "곧 열린다" 판으로 가고 운영자 경고가 남는다', async () => {
+    (isPublishable as jest.Mock).mockReturnValueOnce(false);
+    const s = await submitted();
+    const res = await decideShowSubmission(s.id, 'approve', { slug: 'abc-show' }, NOW);
+    expect(res).toMatchObject({ ok: true, slug: 'abc-show' });
+    expect(res.ok && res.warnings).toEqual([expect.stringContaining('공개하지 못했어요')]);
+    const [show] = await mockDb.select().from(shows).where(eq(shows.slug, 'abc-show'));
+    expect(show.status).toBe('draft');
+    expect((await row(s.id)).reviewStatus).toBe('approved');
+    expect(sendShowReviewResultEmail).toHaveBeenCalledWith(s.id, 'approved_pending');
+    expect(sendShowReviewResultEmail).not.toHaveBeenCalledWith(s.id, 'approved');
   });
 
   it('메일 실패는 warnings로 돌려주고 승인은 유지된다', async () => {

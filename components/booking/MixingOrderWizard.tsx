@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic';
 import { reportPaymentFailure } from '../../utils/reportPaymentFailure';
 
 import PriceBreakdown from './PriceBreakdown';
-import BankDepositFallback from '../payments/BankDepositFallback';
 import PaymentMethodPicker from '../payments/PaymentMethodPicker';
 import { usePaymentCheckout } from '../payments/usePaymentCheckout';
 import { Button } from '../ui/Button';
@@ -180,10 +179,10 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
     // 결제수단 목록은 2단계에만 있다 — 그 전에는 토스 스크립트를 미리 받지 않는다.
   } = usePaymentCheckout(amounts.totalAmount, step === 2);
 
-  /** 결제수단 — 기본은 토스, 결제가 어려운 분만 계좌번호 직접 입금(폴백, 2026-10-14). 믹싱은 잡는 시간대가 없어 막는 조건이 없다. */
+  /** 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금(우리 계좌번호 안내, 토스 계좌이체는 2026-10-14에 뺐다). 믹싱은 잡는 시간대가 없어 막는 조건이 없다. */
   const [payMethod, setPayMethod] = useState<CheckoutPaymentMethod>('toss');
   const usingBank = payMethod === 'bank_transfer';
-  // 결제 실패 화면에서 "계좌번호로 직접 보내기"로 돌아온 경우 — 계좌 안내 모드로 연다(lib/payments/bankFallback.ts).
+  // 결제 실패 화면에서 "계좌로 직접 입금"으로 돌아온 경우 — 계좌 줄이 골라진 채 연다(lib/payments/bankFallback.ts).
   useEffect(() => {
     if (wantsBankFallback(window.location.search)) setPayMethod('bank_transfer');
   }, []);
@@ -287,7 +286,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
        */
       const code = (err as { code?: string } | null)?.code;
       if (code === 'USER_CANCEL' || code === 'PAY_PROCESS_CANCELED') return;
-      setSubmitError('네트워크 오류로 주문 신청에 실패했어요. 잠시 후 다시 시도해 주세요. 결제가 계속 어려우시면 아래 "계좌번호로 직접 보내기"를 이용하실 수 있어요.');
+      setSubmitError('네트워크 오류로 주문 신청에 실패했어요. 잠시 후 다시 시도해 주세요. 결제가 계속 어려우시면 결제수단에서 "계좌로 직접 입금"을 고르실 수 있어요.');
     } finally {
       setSubmitting(false);
     }
@@ -468,28 +467,23 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
               {`${usingBank ? '계좌 안내 받기' : '결제하기'}를 누르면 위 환불 규정에 동의하는 것으로 봅니다.`}
             </p>
 
-            {/* 결제수단 — 기본은 토스(카드·간편결제·계좌이체) 목록이고, 결제가 어려운 분만 목록 아래 링크로
-                "계좌번호로 직접 보내기"를 연다(2026-10-14). 계좌 모드에서는 목록을 숨긴다. */}
+            {/* 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금(우리 계좌번호 안내). 토스 계좌이체는 뱅크페이가 떠
+                고령층이 쓰지 못해 뺐다(2026-10-14). */}
             <div className="pt-2">
               <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200">결제수단</h3>
-              {!usingBank && (
-                <>
-                  <PaymentMethodPicker
-                    name="mixing-paymethod"
-                    value={pickerChoice}
-                    onChange={setPickerChoice}
-                    applePaySupported={applePaySupported}
-                    confirmLabel="주문이 접수"
-                  />
-                  {paymentError && <Notice tone="error" className="mt-3">{paymentError}</Notice>}
-                </>
-              )}
-              <BankDepositFallback
-                active={usingBank}
-                onEnter={() => setPayMethod('bank_transfer')}
-                onLeave={() => setPayMethod('toss')}
+              <PaymentMethodPicker
+                name="mixing-paymethod"
+                value={usingBank ? 'bank_transfer' : pickerChoice}
+                onChange={(next) => {
+                  if (next === 'bank_transfer') { setPayMethod('bank_transfer'); return; }
+                  setPayMethod('toss');
+                  setPickerChoice(next);
+                }}
+                applePaySupported={applePaySupported}
+                withBank
                 confirmLabel="주문이 접수"
               />
+              {paymentError && <Notice tone="error" className="mt-3">{paymentError}</Notice>}
             </div>
 
             <p className="text-sm text-gray-600 dark:text-gray-300">

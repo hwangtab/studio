@@ -67,6 +67,22 @@ it('정상 요청 → 200, sendCreatorLoginEmail이 로그인 링크를 담아 �
   );
 });
 
+it('next=shows는 로그인 링크에 그대로 싣는다(공연 주최자는 공연 탭으로 돌아간다)', async () => {
+  await call({ email: 'creator@example.com', next: 'shows' });
+  const url = (sendCreatorLoginEmail as jest.Mock).mock.calls[0][1] as string;
+  expect(new URL(url).pathname).toBe('/ko/funding/creator/auth');
+  expect(new URL(url).searchParams.get('next')).toBe('shows');
+});
+
+it.each(['https://evil.example', '//evil.example', '/ko/admin', 'SHOWS', 'shows/../x', 123])(
+  '허용 목록 밖의 next(%p)는 버린다',
+  async (next) => {
+    await call({ email: 'creator@example.com', next });
+    const url = (sendCreatorLoginEmail as jest.Mock).mock.calls[0][1] as string;
+    expect(new URL(url).searchParams.has('next')).toBe(false);
+  },
+);
+
 it('메일 발송이 실패해도 200이고 같은 문구다', async () => {
   const ok = await call({ email: 'a@b.com' });
 

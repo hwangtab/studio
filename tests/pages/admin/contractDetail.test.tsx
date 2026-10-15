@@ -104,3 +104,55 @@ describe('개인정보가 파기된 계약', () => {
     expect(screen.getByRole('button', { name: '복제해서 새 계약' })).toBeInTheDocument();
   });
 });
+
+describe('작업 실행', () => {
+  it('요청이 예외를 던져도 버튼 잠금이 풀리고 안내가 뜬다', async () => {
+    jest.spyOn(window, 'confirm').mockReturnValue(true);
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    (mutateContract as jest.Mock).mockRejectedValue(new Error('network'));
+    renderPage({ status: 'signed', endDate: D('2099-01-01T00:00:00Z') }, 0);
+
+    fireEvent.click(screen.getByRole('button', { name: '완료 메일 재발송' }));
+
+    expect(await screen.findByText(/요청을 처리하지 못했습니다/)).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole('button', { name: '완료 메일 재발송' })).toBeEnabled());
+  });
+});
+
+describe('관리자 작업 이력', () => {
+  const renderWithEvents = (adminEvents: Array<{ id: string; action: string; actor: string; fromStatus: string | null; toStatus: string | null; at: string }>) => {
+    const c = baseContract({});
+    render(
+      <AdminContractDetailPage
+        contract={serializeContractForAdmin(c, NOW)}
+        signatures={[]}
+        clauses={[]}
+        attachments={[]}
+        rulesContent=""
+        auditTrail={serializeAuditTrail(buildAuditTrail(c as never))}
+        subscriptionId={null}
+        occupyingSubscriptionCount={0}
+        adminEvents={adminEvents}
+      />,
+    );
+  };
+
+  it('누가 무슨 행위를 했는지, 상태가 바뀐 행위는 전후 상태와 함께 보인다', () => {
+    renderWithEvents([
+      { id: 'e2', action: 'terminate', actor: 'minji', fromStatus: 'signed', toStatus: 'terminated', at: '2026-10-14T05:00:00.000Z' },
+      { id: 'e1', action: 'resend-signed', actor: 'kyungha', fromStatus: 'signed', toStatus: 'signed', at: '2026-10-13T05:00:00.000Z' },
+    ]);
+    const section = screen.getByRole('region', { name: '관리자 작업 이력' });
+    expect(section).toHaveTextContent('이용 종료 처리');
+    expect(section).toHaveTextContent('minji');
+    expect(section).toHaveTextContent('서명완료 → 이용종료');
+    expect(section).toHaveTextContent('완료 메일 재발송');
+    // 상태가 안 바뀐 행위는 화살표를 그리지 않는다.
+    expect(section.textContent?.match(/→/g)).toHaveLength(1);
+  });
+
+  it('이력이 없으면 이력이 2026-10-15 이후 작업부터 남는다고 알린다', () => {
+    renderWithEvents([]);
+    expect(screen.getByRole('region', { name: '관리자 작업 이력' })).toHaveTextContent('기록된 변경이 없습니다');
+  });
+});

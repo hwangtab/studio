@@ -143,12 +143,15 @@ it('대기열 건수 — 믹싱 착수 대기·작업 중, 구독 카드 대기�
     subscriptionsPastDue: 1,
     subscriptionsPaused: 1,
     contractsAwaitingSignature: 1,
+    sessionsAwaitingMark: 0,
     contractsAwaitingTermination: 1, // c3: 서명됐고 종료일(픽스처는 1970)이 지났다
     artistPayoutsPending: 0,
     fundingProjectsAwaitingReview: 2,
     fundingPayoutsPending: 0,
+    fundingPayoutsUnrecorded: 0,
     depositsBooking: 0,
     depositsShow: 0,
+    depositsShop: 0,
     depositsFunding: 0,
     fundingRefundRequests: 0,
     showSubmissionsAwaitingReview: 0,
@@ -201,6 +204,8 @@ it('대기열 건수 — 계좌 입금 확인 대기(예약·믹싱·공연·펀
   await insertOrderWith('d3', 'deposit', 'awaiting_deposit');
   await insertOrderWith('d4', 'session', 'deposit_cancelled'); // 닫힌 건은 안 센다
   await insertOrderWith('t1', 'ticket', 'awaiting_deposit');
+  await insertOrderWith('sh1', 'merch', 'awaiting_deposit');
+  await insertOrderWith('sh2', 'merch', 'paid'); // 확정된 상점 주문은 입금 대기가 아니다
   await insertPledge('f1', 'pending', 'bank_transfer', 'online');
   await insertPledge('f2', 'pending', 'bank_transfer', 'manual'); // 수기 등록은 대기가 아니다
   await insertPledge('f3', 'pending', 'card', 'online'); // 토스 홀드
@@ -216,10 +221,26 @@ it('대기열 건수 — 계좌 입금 확인 대기(예약·믹싱·공연·펀
   expect(dash.queues).toMatchObject({
     depositsBooking: 3,
     depositsShow: 1,
+    depositsShop: 1,
     depositsFunding: 1,
     fundingRefundRequests: 1,
     showSubmissionsAwaitingReview: 1,
   });
+});
+
+it('완료·노쇼 표시 대기 세션 — 끝난 지 7일 안의 confirmed만', async () => {
+  // NOW = 2026-09-16T03:00Z
+  await insertBooking('just-ended', '2026-09-16T00:00:00Z'); // 3시간 길이 → 03:00Z에 끝남 — 경계(미포함)
+  await insertBooking('ended-1', '2026-09-15T00:00:00Z'); // 대상
+  await insertBooking('ended-6d', '2026-09-10T05:00:00Z'); // 대상(끝난 지 5.9일)
+  await insertBooking('too-old', '2026-09-01T00:00:00Z'); // 7일 밖
+  await insertBooking('upcoming', '2026-09-17T05:00:00Z');
+  await insertBooking('completed', '2026-09-15T00:00:00Z', 'completed');
+  await insertBooking('no-show', '2026-09-15T00:00:00Z', 'no_show');
+
+  const dash = await loadAdminDashboard(NOW);
+
+  expect(dash.queues.sessionsAwaitingMark).toBe(2);
 });
 
 it('종료 처리 필요 계약 — 서명됐고 종료일(KST) 다음 날부터, 종료 처리 전인 것만', async () => {

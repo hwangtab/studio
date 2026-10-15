@@ -5,11 +5,14 @@ jest.mock('../../../../lib/funding/projectServices', () => ({
   loadProjectServiceMap: jest.fn().mockResolvedValue({ available: true, byProjectId: {} }),
   PROJECT_SERVICE_LABELS: {},
 }));
-jest.mock('../../../../lib/funding/payout', () => ({ listPendingFundingPayoutProjectIds: jest.fn() }));
+jest.mock('../../../../lib/funding/payout', () => ({
+  listPendingFundingPayoutProjectIds: jest.fn(),
+  listUnrecordedFundingPayoutProjectIds: jest.fn(),
+}));
 
 import { getServerSideProps } from '../../../../pages/admin/funding/projects/index';
 import { listProjectsForAdmin } from '../../../../lib/funding/adminProjects';
-import { listPendingFundingPayoutProjectIds } from '../../../../lib/funding/payout';
+import { listPendingFundingPayoutProjectIds, listUnrecordedFundingPayoutProjectIds } from '../../../../lib/funding/payout';
 
 const project = (id: string) => ({ id, title: id, reviewStatus: 'approved', creatorName: 'x', creatorEmail: 'x@y.z', submittedAt: null, goalAmount: 1 });
 type Result = { props: { projects: Array<{ id: string }>; payoutPending?: boolean } };
@@ -18,6 +21,7 @@ beforeEach(() => {
   jest.clearAllMocks();
   (listProjectsForAdmin as jest.Mock).mockResolvedValue([project('a'), project('b'), project('c')]);
   (listPendingFundingPayoutProjectIds as jest.Mock).mockResolvedValue(['b']);
+  (listUnrecordedFundingPayoutProjectIds as jest.Mock).mockResolvedValue(['c']);
 });
 
 it('?payout=pending이면 이체 대기 정산이 있는 프로젝트만 싣는다', async () => {
@@ -30,5 +34,12 @@ it('필터가 없으면 전부 싣고 정산 조회도 하지 않는다', async 
   const r = (await getServerSideProps({ query: {} } as never)) as Result;
   expect(r.props.projects).toHaveLength(3);
   expect(r.props.payoutPending).toBeUndefined();
+  expect(listPendingFundingPayoutProjectIds).not.toHaveBeenCalled();
+});
+
+it('?payout=unrecorded이면 정산을 아직 기록하지 않은 프로젝트만 싣는다', async () => {
+  const r = (await getServerSideProps({ query: { payout: 'unrecorded' } } as never)) as Result & { props: { payoutUnrecorded?: boolean } };
+  expect(r.props.projects.map((p) => p.id)).toEqual(['c']);
+  expect(r.props.payoutUnrecorded).toBe(true);
   expect(listPendingFundingPayoutProjectIds).not.toHaveBeenCalled();
 });

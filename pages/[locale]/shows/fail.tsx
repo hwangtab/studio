@@ -7,6 +7,7 @@ import Head from 'next/head';
 import { Button } from '../../../components/ui/Button';
 import { PageShell } from '../../../components/ui/PageHeader';
 import { ResultCard } from '../../../components/ui/ResultCard';
+import FailBankFallback from '../../../components/payments/FailBankFallback';
 
 import { getSiteConfig } from '../../../data/siteConfig';
 import { withI18nServerProps } from '../../../lib/getStatic';
@@ -96,7 +97,9 @@ export default function ShowFailPage({ slug, code, message, orderNo, locale }: F
             </>
           }
         >
-          <div className="space-y-1 text-center typo-card-meta">
+          {/* 결제가 어려운 분(주로 고령층)의 안전망 — 계좌로 직접 입금(2026-10-14). 공연을 알 때만. */}
+          {slug && <FailBankFallback formPath={`/ko/shows/${slug}`} />}
+          <div className="mt-4 space-y-1 text-center typo-card-meta">
             {code && <p>오류 코드: {code}</p>}
             {orderNo && <p>주문번호: {orderNo}</p>}
             <p>티켓은 발권되지 않았고 결제 정보도 저장되지 않았어요. 잔여석이 남아 있다면 다시 예매하실 수 있어요.</p>

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useState, type FormEvent } from 'react';
 
+import type { CreatorLoginNext } from '../../lib/funding/creatorLoginNext';
 import { Button } from '../ui/Button';
 import { Field, TextInput } from '../ui/Field';
 import { Notice } from '../ui/Notice';
@@ -9,13 +10,15 @@ interface CreatorLoginFormProps {
   /** 계정을 만드는 조건을 담은 약관 — 펀딩은 개설자 약관, 공연은 주최자 약관. */
   terms: { href: string; label: string; purpose: string; condition: string };
   className?: string;
+  /** 로그인 뒤 돌아갈 콘솔 탭. 공연 안내 페이지는 'shows'(lib/funding/creatorLoginNext.ts). 없으면 펀딩 탭. */
+  next?: CreatorLoginNext;
 }
 
 /**
  * 개설자·주최자 공용 이메일 로그인 폼. 같은 계정(funding_creators)에 같은 매직링크
  * API(/api/funding/creator/login)로 들어온다 — 펀딩 신청과 공연 안내 페이지가 함께 쓴다.
  */
-export default function CreatorLoginForm({ terms, className = 'mt-10' }: CreatorLoginFormProps) {
+export default function CreatorLoginForm({ terms, className = 'mt-10', next }: CreatorLoginFormProps) {
   const [email, setEmail] = useState('');
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +32,7 @@ export default function CreatorLoginForm({ terms, className = 'mt-10' }: Creator
       const res = await fetch('/api/funding/creator/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify(next ? { email, next } : { email }),
       });
       const data = await res.json();
       if (!res.ok) setError(data?.message ?? '잠시 후 다시 시도해 주세요.');

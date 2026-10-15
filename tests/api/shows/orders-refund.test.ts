@@ -65,14 +65,6 @@ describe('POST /api/shows/orders', () => {
     expect((consumeRateLimit as jest.Mock).mock.calls[0][0]).toMatch(/^show_order_create:ip:/);
   });
 
-  it('계좌로 직접 입금 신청은 400 bank_deposit_retired, 주문·좌석 점유가 생기지 않는다(2026-10-12)', async () => {
-    await seed();
-    const r = await call(ordersHandler, { body: { ...body, paymentMethod: 'bank_transfer' } });
-    expect(r.status).toBe(400);
-    expect(r.body.code).toBe('bank_deposit_retired');
-    expect(await testDb.query.orders.findMany()).toHaveLength(0);
-  });
-
   it('검증 실패는 400, 주문은 만들어지지 않는다', async () => {
     await seed();
     const r = await call(ordersHandler, { body: { ...body, refundPolicyAgreed: false } });

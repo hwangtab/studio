@@ -14,7 +14,8 @@ import { parseDraft, type ShowSubmissionDraft } from './draft';
  * warnings로 돌려준다(저장·판정은 메일 때문에 실패하지 않는다).
  */
 
-export type ShowReviewResult = 'approved' | 'changes_requested' | 'rejected';
+/** approved_pending: 승인은 기록됐지만 공개(published)하지 못했다 — 공개 주소를 싣지 않는다. 운영자가 /admin/shows에서 공개해도 메일은 다시 가지 않는다. */
+export type ShowReviewResult = 'approved' | 'approved_pending' | 'changes_requested' | 'rejected';
 
 export interface ShowMailContext {
   submissionId: string;
@@ -95,6 +96,7 @@ export function buildOperatorMail(kind: 'submitted' | 'edited', ctx: ShowMailCon
 
 const REVIEW_SUBJECT: Record<ShowReviewResult, string> = {
   approved: '공연이 승인됐어요',
+  approved_pending: '공연이 승인됐어요',
   changes_requested: '공연 신청 보완 요청',
   rejected: '공연 신청 심사 결과',
 };
@@ -113,6 +115,12 @@ export function buildReviewMail(result: ShowReviewResult, ctx: ShowMailContext):
     paragraphs = [greeting, '제출하신 공연이 승인되어 지금 공개됐어요. 예매를 받을 수 있어요.'];
     cta = { label: '공연 페이지 보기', url };
     textLines = ['제출하신 공연이 승인되어 지금 공개됐어요. 예매를 받을 수 있어요.', '', `공연 페이지: ${url}`];
+  } else if (result === 'approved_pending') {
+    const url = editUrl(ctx.submissionId);
+    const lead = '제출하신 공연이 승인됐어요. 공개 준비를 마치는 대로 곧 공개해요.';
+    paragraphs = [greeting, lead, '공개되면 공연 페이지에서 예매를 받을 수 있어요.'];
+    cta = { label: '콘솔에서 확인하기', url };
+    textLines = [lead, '공개되면 공연 페이지에서 예매를 받을 수 있어요.', '', `콘솔에서 확인하기: ${url}`];
   } else if (result === 'changes_requested') {
     const url = editUrl(ctx.submissionId);
     paragraphs = [greeting, '제출하신 공연에 보완이 필요해요.', noteParagraph(ctx.reviewNote), '편집 화면에서 내용을 고친 뒤 다시 제출해 주세요.'];

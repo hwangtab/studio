@@ -864,11 +864,11 @@ describe('폼 안의 결제수단 목록', () => {
     await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
   };
 
-  it('결제수단 목록과 계좌번호 폴백 링크가 폼 안에 있고, 직접 입금 줄은 없다', () => {
+  it('결제수단 목록에 계좌로 직접 입금 줄이 있고, 토스 계좌이체 줄은 없다', () => {
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
     expect(screen.getByRole('group', { name: '결제수단' })).toBeInTheDocument();
-    expect(screen.queryByRole('radio', { name: /계좌로 직접 입금/ })).toBeNull();
-    expect(screen.getByRole('button', { name: '계좌번호로 직접 보내기' })).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: /계좌로 직접 입금/ })).toBeInTheDocument();
+    expect(screen.queryByRole('radio', { name: '계좌이체' })).toBeNull();
   });
 
   /**
@@ -922,12 +922,12 @@ describe('폼 안의 결제수단 목록', () => {
     expect(screen.getByRole('button', { name: /결제하기/ })).not.toBeDisabled();
   });
 
-  it('결제창을 열지 못하면 계좌번호 폴백을 안내한다', async () => {
+  it('결제창을 열지 못하면 계좌로 직접 입금을 안내한다', async () => {
     requestPayment.mockRejectedValueOnce(Object.assign(new Error('x'), { code: 'SOMETHING' }));
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
     await fill();
     await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
-    expect(await screen.findByRole('alert')).toHaveTextContent('계좌번호로 직접 보내기');
+    expect(await screen.findByRole('alert')).toHaveTextContent('계좌로 직접 입금');
     expect(screen.getByRole('button', { name: /결제하기/ })).not.toBeDisabled();
   });
 });
@@ -1002,22 +1002,19 @@ describe('결제수단 — 계좌로 직접 입금', () => {
     Object.defineProperty(window, 'location', { value: originalLocation, writable: true });
   });
 
-  it('폴백 링크를 누르면 목록이 숨고 버튼이 "계좌 안내 받기"가 된다 — 돌아가기로 되돌린다', async () => {
+  it('계좌를 고르면 버튼이 "계좌 안내 받기"가 되고, 카드로 돌아오면 "결제하기"다', async () => {
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    expect(screen.getByRole('group', { name: '결제수단' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '5,000원 · 결제하기' })).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: '계좌번호로 직접 보내기' }));
-    expect(screen.queryByRole('group', { name: '결제수단' })).toBeNull();
+    await userEvent.click(screen.getByRole('radio', { name: /계좌로 직접 입금/ }));
     expect(screen.getByRole('button', { name: '5,000원 · 계좌 안내 받기' })).toBeInTheDocument();
     expect(screen.getByText(/계좌 안내 받기를 누르면/)).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: /돌아가기/ }));
-    expect(screen.getByRole('group', { name: '결제수단' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('radio', { name: /신용·체크카드/ }));
     expect(screen.getByRole('button', { name: '5,000원 · 결제하기' })).toBeInTheDocument();
   });
 
   it('제출하면 bank_transfer로 신청하고 결제창 없이 펀딩 확인 페이지로 옮긴다', async () => {
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    await userEvent.click(screen.getByRole('button', { name: '계좌번호로 직접 보내기' }));
+    await userEvent.click(screen.getByRole('radio', { name: /계좌로 직접 입금/ }));
     await fillBacker();
     await userEvent.click(screen.getByRole('button', { name: /계좌 안내 받기/ }));
     await waitFor(() => expect(window.location.assign).toHaveBeenCalledWith('/ko/funding/manage/FND-B?token=t'));
@@ -1031,21 +1028,21 @@ describe('결제수단 — 계좌로 직접 입금', () => {
     widgetReady = false;
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
     expect(screen.getByRole('button', { name: /결제하기/ })).toBeDisabled();
-    await userEvent.click(screen.getByRole('button', { name: '계좌번호로 직접 보내기' }));
+    await userEvent.click(screen.getByRole('radio', { name: /계좌로 직접 입금/ }));
     expect(screen.getByRole('button', { name: /계좌 안내 받기/ })).toBeEnabled();
   });
 
-  it('한정 수량 리워드면 폴백 링크 대신 막힌 이유를 한 줄로 알린다', () => {
+  it('한정 수량 리워드면 계좌 입금을 막고 이유를 한 줄로 알린다', () => {
     render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
-    expect(screen.queryByRole('button', { name: '계좌번호로 직접 보내기' })).toBeNull();
+    expect(screen.getByRole('radio', { name: /계좌로 직접 입금/ })).toBeDisabled();
     expect(screen.getByText(/수량이 정해진 리워드는 카드·간편결제로만/)).toBeInTheDocument();
   });
 
   it('계좌를 고른 뒤 한정 리워드로 바꾸면 카드로 되돌린다', async () => {
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    await userEvent.click(screen.getByRole('button', { name: '계좌번호로 직접 보내기' }));
+    await userEvent.click(screen.getByRole('radio', { name: /계좌로 직접 입금/ }));
     await userEvent.click(screen.getByRole('radio', { name: /CD/ }));
-    expect(screen.getByRole('group', { name: '결제수단' })).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: /신용·체크카드/ })).toBeChecked();
     expect(screen.getByRole('button', { name: /결제하기/ })).toBeInTheDocument();
   });
 });

@@ -3,10 +3,11 @@ import { and, asc, eq, gt, gte, inArray, isNull, lt, sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { bookings, contracts, fundingPledges, fundingProjects, orders, socialTokens, subscriptions, workOrders } from '../../db/schema';
 import { getProduct } from '../booking/products';
+import { unmarkedSessionRange } from '../booking/unmarkedSessions';
 import { terminationCutoff } from '../contracts/status';
 import { collectDbIssues, type HealthIssue } from './healthCheck';
 import { countPendingArtistPayouts } from '../artistSupport/payout';
-import { countPendingFundingPayouts } from '../funding/payout';
+import { countPendingFundingPayouts, listUnrecordedFundingPayoutProjectIds } from '../funding/payout';
 import { countPendingSubmissions } from '../shows/organizer/adminSubmissions';
 
 /**
@@ -48,6 +49,8 @@ export interface AdminDashboard {
     subscriptionsPastDue: number;
     subscriptionsPaused: number;
     contractsAwaitingSignature: number;
+    /** 끝난 지 7일 안인데 완료·노쇼 표시가 없는 세션 — 노쇼 고객에게 후기 요청 메일이 가기 전에 표시해야 한다. */
+    sessionsAwaitingMark: number;
     /** 서명됐고 종료일이 지났는데 종료 처리가 없는 계약 — 처리하기 전엔 그 호실로 새 계약을 만들 수 없다. */
     contractsAwaitingTermination: number;
     /** 기록됐지만 아직 이체하지 않은 아티스트 정산. */
@@ -56,9 +59,13 @@ export interface AdminDashboard {
     fundingProjectsAwaitingReview: number;
     /** 기록됐지만 아직 개설자에게 이체하지 않은 펀딩 정산. */
     fundingPayoutsPending: number;
+    /** 모금이 끝났고 받은 돈이 있는데 정산을 아직 기록하지 않은 펀딩 프로젝트(마감 뒤 영업일 14일 안에 기록한다). */
+    fundingPayoutsUnrecorded: number;
     /** 계좌 입금 대기 — 통장에서 입금을 확인해 눌러야 확정된다(자동 취소가 없어 방치되면 자리만 잡는다). */
     depositsBooking: number;
     depositsShow: number;
+    /** 상점 주문(`merch`)의 계좌 입금 대기 — 2026-10-15 상점에 계좌 입금이 들어왔다(#652). 재고를 기한 없이 점유한다. */
+    depositsShop: number;
     depositsFunding: number;
     /** 계좌 입금 후원자의 환불 요청 — 약관 제10조의 3영업일 기한이 있다. */
     fundingRefundRequests: number;
@@ -87,7 +94,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
   const from = startOfTodayKst(now);
   const to = new Date(from.getTime() + UPCOMING_WINDOW_DAYS * DAY_MS);
 
-  const [issues, sessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending, terminationRows, depositRows, fundingDepositRows, fundingRefundRows, showSubmissionsAwaitingReview] = await Promise.all([
+  const [issues, sessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending, unrecordedPayoutIds, unmarkedRows, terminationRows, depositRows, fundingDepositRows, fundingRefundRows, showSubmissionsAwaitingReview] = await Promise.all([
     collectDbIssues(now),
     db
       .select({
@@ -123,6 +130,11 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       .from(fundingProjects)
       .where(eq(fundingProjects.reviewStatus, 'submitted')),
     countPendingFundingPayouts(),
+    listUnrecordedFundingPayoutProjectIds(now),
+    db
+      .select({ count: sql<number>`count(*)` })
+      .from(bookings)
+      .where(and(eq(bookings.status, 'confirmed'), gte(bookings.endAt, unmarkedSessionRange(now).from), lt(bookings.endAt, now))),
     // 판정은 lib/contracts/status.ts의 needsTermination과 같은 경계(terminationCutoff)다.
     db
       .select({ count: sql<number>`count(*)` })
@@ -131,7 +143,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
     db
       .select({ type: orders.type, count: sql<number>`count(*)` })
       .from(orders)
-      .where(and(eq(orders.status, 'awaiting_deposit'), inArray(orders.type, ['session', 'mixing', 'deposit', 'ticket'])))
+      .where(and(eq(orders.status, 'awaiting_deposit'), inArray(orders.type, ['session', 'mixing', 'deposit', 'ticket', 'merch'])))
       .groupBy(orders.type),
     // 펀딩 계좌 입금 대기는 orders.status가 아니라 pending + 결제수단으로 가른다(lib/funding/admin-list.ts와 같은 판정).
     db
@@ -174,12 +186,15 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       subscriptionsPastDue: countOf(subscriptionCounts, 'past_due'),
       subscriptionsPaused: countOf(subscriptionCounts, 'paused'),
       contractsAwaitingSignature: Number(contractRows[0]?.count ?? 0),
+      sessionsAwaitingMark: Number(unmarkedRows[0]?.count ?? 0),
       contractsAwaitingTermination: Number(terminationRows[0]?.count ?? 0),
       artistPayoutsPending,
       fundingProjectsAwaitingReview: Number(fundingReviewRows[0]?.count ?? 0),
       fundingPayoutsPending,
+      fundingPayoutsUnrecorded: unrecordedPayoutIds.length,
       depositsBooking: depositCount(depositRows, 'session') + depositCount(depositRows, 'mixing') + depositCount(depositRows, 'deposit'),
       depositsShow: depositCount(depositRows, 'ticket'),
+      depositsShop: depositCount(depositRows, 'merch'),
       depositsFunding: Number(fundingDepositRows[0]?.count ?? 0),
       fundingRefundRequests: Number(fundingRefundRows[0]?.count ?? 0),
       showSubmissionsAwaitingReview,

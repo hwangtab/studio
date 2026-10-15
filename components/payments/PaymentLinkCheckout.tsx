@@ -7,7 +7,6 @@ import { Button } from '../ui/Button';
 import { Field, TextInput } from '../ui/Field';
 import { Notice } from '../ui/Notice';
 import BankDepositGuide from './BankDepositGuide';
-import BankDepositFallback from './BankDepositFallback';
 import PaymentMethodPicker from './PaymentMethodPicker';
 import { usePaymentCheckout } from './usePaymentCheckout';
 
@@ -17,7 +16,7 @@ type CreateOrderResponse =
 
 /**
  * 예약금 결제 링크의 결제 폼 — 믹싱 주문 위저드의 결제 단계(components/booking/MixingOrderWizard.tsx 2단계)와 같은
- * 구성이다: 주문자 정보 → 결제수단(토스 목록, 막힌 분은 계좌번호 직접 입금 폴백) → 한 번의 제출.
+ * 구성이다: 주문자 정보 → 결제수단(토스 목록 / 계좌로 직접 입금) → 한 번의 제출.
  */
 export default function PaymentLinkCheckout({ slug, totalAmount }: { slug: string; totalAmount: number }) {
   const [customerName, setCustomerName] = useState('');
@@ -32,10 +31,10 @@ export default function PaymentLinkCheckout({ slug, totalAmount }: { slug: strin
     choice: pickerChoice, setChoice: setPickerChoice, applePaySupported,
   } = usePaymentCheckout(totalAmount);
 
-  /** 결제수단 — 기본은 토스, 결제가 어려운 분만 계좌번호 직접 입금(폴백, 2026-10-14). 시작 시각이 없어 막는 조건이 없다. */
+  /** 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금(우리 계좌번호 안내, 토스 계좌이체는 2026-10-14에 뺐다). 시작 시각이 없어 막는 조건이 없다. */
   const [payMethod, setPayMethod] = useState<CheckoutPaymentMethod>('toss');
   const usingBank = payMethod === 'bank_transfer';
-  // 결제 실패 화면에서 "계좌번호로 직접 보내기"로 돌아온 경우 — 계좌 안내 모드로 연다(lib/payments/bankFallback.ts).
+  // 결제 실패 화면에서 "계좌로 직접 입금"으로 돌아온 경우 — 계좌 줄이 골라진 채 연다(lib/payments/bankFallback.ts).
   useEffect(() => {
     if (wantsBankFallback(window.location.search)) setPayMethod('bank_transfer');
   }, []);
@@ -92,7 +91,7 @@ export default function PaymentLinkCheckout({ slug, totalAmount }: { slug: strin
       const code = (err as { code?: string } | null)?.code;
       // 결제창을 닫은 것은 오류가 아니다 — 아무 문구도 띄우지 않는다.
       if (code === 'USER_CANCEL' || code === 'PAY_PROCESS_CANCELED') return;
-      setSubmitError('네트워크 오류로 주문 신청에 실패했어요. 잠시 후 다시 시도해 주세요. 결제가 계속 어려우시면 아래 "계좌번호로 직접 보내기"를 이용하실 수 있어요.');
+      setSubmitError('네트워크 오류로 주문 신청에 실패했어요. 잠시 후 다시 시도해 주세요. 결제가 계속 어려우시면 결제수단에서 "계좌로 직접 입금"을 고르실 수 있어요.');
     } finally {
       setSubmitting(false);
     }
@@ -139,27 +138,22 @@ export default function PaymentLinkCheckout({ slug, totalAmount }: { slug: strin
           />
         </Field>
 
-        {/* 결제수단 — 기본은 토스 목록이고, 결제가 어려운 분만 목록 아래 링크로 계좌번호 직접 입금을 연다(2026-10-14). */}
+        {/* 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금(우리 계좌번호 안내). 토스 계좌이체는 2026-10-14에 뺐다. */}
         <div className="pt-2">
           <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200">결제수단</h3>
-          {!usingBank && (
-            <>
-              <PaymentMethodPicker
-                name="pay-paymethod"
-                value={pickerChoice}
-                onChange={setPickerChoice}
-                applePaySupported={applePaySupported}
-                confirmLabel="예약금 결제가 확정"
-              />
-              {paymentError && <Notice tone="error" className="mt-3">{paymentError}</Notice>}
-            </>
-          )}
-          <BankDepositFallback
-            active={usingBank}
-            onEnter={() => setPayMethod('bank_transfer')}
-            onLeave={() => setPayMethod('toss')}
+          <PaymentMethodPicker
+            name="pay-paymethod"
+            value={usingBank ? 'bank_transfer' : pickerChoice}
+            onChange={(next) => {
+              if (next === 'bank_transfer') { setPayMethod('bank_transfer'); return; }
+              setPayMethod('toss');
+              setPickerChoice(next);
+            }}
+            applePaySupported={applePaySupported}
+            withBank
             confirmLabel="예약금 결제가 확정"
           />
+          {paymentError && <Notice tone="error" className="mt-3">{paymentError}</Notice>}
         </div>
 
         <p className="text-sm text-gray-600 dark:text-gray-300">

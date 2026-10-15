@@ -6,10 +6,15 @@ import { AdminShell } from '../../../components/admin/AdminShell';
 import { CreatorTaxProfilePanel } from '../../../components/admin/CreatorTaxProfilePanel';
 import { Disclosure } from '../../../components/ui/Disclosure';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
+import { describeShopArtistTerms } from '../../../lib/shop/artistTerms';
+import { loadShopArtistTermsStatuses } from '../../../lib/shop/artistTermsAgreement';
 import { listShopArtistsForAdmin, type AdminShopArtistRow } from '../../../lib/shop/artists';
+import { isStudioShopArtistSlug } from '../../../lib/shop/studioArtist';
+
+type ArtistWithTerms = AdminShopArtistRow & { termsLabel: string; termsAgreed: boolean };
 
 interface Props {
-  artists: AdminShopArtistRow[];
+  artists: ArtistWithTerms[];
   error?: string;
 }
 
@@ -17,7 +22,20 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   const auth = await authenticateAdminRequest(context);
   if (!auth.ok) return { redirect: { destination: '/admin/login', permanent: false } };
   try {
-    return { props: { artists: await listShopArtistsForAdmin() } };
+    const rows = await listShopArtistsForAdmin();
+    // 위탁 약관 동의는 따로 읽는다 — 실패해도 목록은 보인다("확인하지 못함"). 표가 없으면 전부 미동의.
+    let statuses: Awaited<ReturnType<typeof loadShopArtistTermsStatuses>> | null = null;
+    try {
+      statuses = await loadShopArtistTermsStatuses(rows.map((r) => r.creatorId));
+    } catch (error: unknown) {
+      console.error('[admin/shop/artists] 위탁 약관 동의 조회 실패:', error);
+    }
+    const artists = rows.map((r) => {
+      const status = statuses?.get(r.creatorId) ?? null;
+      const studio = isStudioShopArtistSlug(r.slug);
+      return { ...r, termsLabel: describeShopArtistTerms(status, studio), termsAgreed: studio || status?.state === 'agreed' };
+    });
+    return { props: { artists } };
   } catch (error: unknown) {
     console.error('[admin/shop/artists] 조회 실패:', error);
     return { props: { artists: [], error: '아티스트를 불러오지 못했습니다.' } };
@@ -69,7 +87,7 @@ function CreateForm() {
   );
 }
 
-function ArtistRow({ artist }: { artist: AdminShopArtistRow }) {
+function ArtistRow({ artist }: { artist: ArtistWithTerms }) {
   const [slug, setSlug] = useState(artist.slug);
   const [linkCurated, setLinkCurated] = useState(artist.curatedSlugLinked);
   const [message, setMessage] = useState<string | null>(null);
@@ -97,10 +115,11 @@ function ArtistRow({ artist }: { artist: AdminShopArtistRow }) {
           {locked && <span className="block text-xs text-gray-500">승인된 상품이 있어 주소를 바꿀 수 없습니다.</span>}
           {message && <span className="block text-xs text-gray-600">{message}</span>}
         </td>
-        <td className="py-2 tabular-nums">{artist.approvedProducts}</td>
+        <td className="py-2 pr-3 tabular-nums">{artist.approvedProducts}</td>
+        <td className={`py-2 text-xs ${artist.termsAgreed ? 'text-gray-700' : 'font-semibold text-red-700'}`}>{artist.termsLabel}</td>
       </tr>
       <tr>
-        <td colSpan={3} className="pb-3">
+        <td colSpan={4} className="pb-3">
           <Disclosure
             summary="사업자 정보"
             variant="plain"
@@ -131,7 +150,7 @@ export default function AdminShopArtistsPage({ artists, error }: Props) {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="text-xs text-gray-500"><tr><th className="py-2 pr-3">아티스트</th><th className="py-2 pr-3">주소</th><th className="py-2">승인 상품</th></tr></thead>
+                <thead className="text-xs text-gray-500"><tr><th className="py-2 pr-3">아티스트</th><th className="py-2 pr-3">주소</th><th className="py-2 pr-3">승인 상품</th><th className="py-2">위탁 약관</th></tr></thead>
                 <tbody>{artists.map((a) => <ArtistRow key={a.creatorId} artist={a} />)}</tbody>
               </table>
             </div>

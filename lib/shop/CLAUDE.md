@@ -29,14 +29,28 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
 7. 헤더·푸터 메뉴(`SHOP_NAV_LABEL`), 런타임 사이트맵(`/sitemap-shop.xml` — robots의 `additionalSitemaps`는 `next-sitemap.config.js`가
    `data/shop/policy.ts`의 선언을 읽어 싣는다), `pages/api/llms.ts`·`llms-full.ts`의 상점 절, `/ko/terms` 상품 판매 절은 **이미 `SHOP_SALES_OPEN`에
    묶여 있다 — 켜면 함께 열린다.** 켠 뒤 `/sitemap-shop.xml`이 상품·아티스트 URL을 내는지 한 번 열어 본다.
-8. 최소 금액으로 실결제 → 취소를 한 번씩, **계좌이체로도** 한다(토스 API 키 쌍에 계좌이체가 개통됐는지 이때 확인된다).
+8. 최소 금액으로 실결제 → 취소를 한 번씩 한다(카드·간편결제).
 
-### 결제는 전부 토스다 — 계좌 입금(무통장) 없음
+### 결제 — 카드·간편결제(토스) / 계좌로 직접 입금 (2026-10-14)
 
-카드·간편결제·**토스 계좌이체**(`PaymentMethodPicker`의 기본 목록 — 2026-10-14부터 전 화면 공통. 계좌번호 폴백(`BankDepositFallback`)은 상점에 없다). 직접 입금은 환불 때 고객 계좌를 받아
-손으로 송금해야 해서 받지 않는다(운영자 결정 2026-10-12, 공연 예매도 같은 날 같은 결정). 그래서 `awaiting_deposit`·
-환불 계좌(`refund_accounts`)·입금 안내 메일이 상점에는 없다. `tests/payments/sharedCheckout.guard.test.ts`가 폼에 직접 입금이
-붙는 것을 막는다.
+운영자 결정(2026-10-14): 토스 계좌이체는 뱅크페이가 떠 고령층이 쓰지 못해 뺐고, 계좌 수단은 우리 계좌번호를 안내하는 직접 입금이다
+(2026-10-12 "상점은 직접 입금을 받지 않는다"를 뒤집었다 — 환불 때 운영자가 고객 계좌를 받아 손으로 송금하는 부담은 알고 내린 결정).
+규칙은 공연·예약과 같다(`lib/payments/bankDeposit.ts` 머리 주석). 상점 고유 사항만 적는다:
+
+- **생성**: `/api/shop/orders`가 `paymentMethod: 'bank_transfer'`를 받으면 `createShopOrder(…, { paymentMethod })`가 주문을 `awaiting_deposit`으로 **바로**
+  만든다(토스 홀드를 거치지 않는다). 입금 안내 메일(고객+운영자, `deliverShopDepositGuide`)을 보내고 **주문 확인 주소**(`/ko/shop/manage/…?token=`)를
+  돌려준다 — 그 화면이 입금 안내(`BankDepositGuide`)다.
+- **재고는 기한 없이 점유한다** — `lib/shop/stock.ts`의 점유 판정에 `awaiting_deposit`이 들어 있다. 화면의 남은 수량·생성 게이트·한정판 번호 게이트가 모두
+  같은 식을 쓴다. `expireStaleShopOrders`(크론)는 `pending`만 봐서 입금 대기를 건드리지 않는다(자동 취소 없음). **새 만료·점유 경로를 만들면 이 규칙을 지킬 것.**
+- **입금 확인**(`confirmShopBankDeposit`, 관리자 `/admin/shop/<주문번호>`의 "입금 확인"): `awaiting_deposit → paid` + 결제 행(`bank-deposit:<주문번호>`) +
+  한정판 번호 배정을 한 batch로, 이어서 토스 확정과 같은 확정 메일(디지털 상품이면 내려받기 안내 포함). 재고를 다시 세지 않는다(대기 내내 점유했다).
+  **미입금 취소**(`cancelAwaitingShopDeposit`, 관리자·고객 공용)는 `deposit_cancelled`로 닫고 재고를 푼다 — 닫힌 신청은 입금 확인할 수 없다.
+  고객이 입금 전에 취소하면(`/api/shop/cancel`이 입금 대기 주문을 이 길로 보낸다) 운영자에게만 알린다.
+- **환불은 운영자가 한다.** 입금으로 확정된 주문은 고객이 셀프 취소할 수 없다(`cancelShopOrder`가 `BANK_PAID_CUSTOMER_CANCEL_MESSAGE`) — `refund_accounts`의
+  종류(`order_kind` CHECK)에 상점이 없어 고객에게 환불 계좌를 받아 둘 곳이 없다. 운영자가 카톡·전화로 계좌를 받아 **먼저 송금하고**, 관리자 "전액 환불"로 기록한다
+  (토스를 부르지 않는다 — `settleRefund`의 계좌 입금 경로). 상점도 환불 계좌 표에 넣으려면 `order_kind` CHECK를 바꾸는 마이그레이션(SQLite는 표 재생성)이 필요하다.
+  주문 확인 메일·취소 메일·주문 확인 화면은 계좌 입금 주문일 때 문구를 바꾼다("입금하신 계좌로").
+- `tests/payments/sharedCheckout.guard.test.ts`는 `merch`에 `withBank`를 요구한다.
 
 - 승인은 `lib/shop/confirm.ts` — 예약금 결제 링크(`lib/booking/confirmDeposit.ts`)의 안전장치 + **재고 재판정**(아래).
 - 웹훅(`lib/booking/webhook.ts`)에 `merch` 분기가 있다. **없으면 모르는 type이 `'session'`으로 떨어져 예약 확정으로 간다.**
@@ -155,6 +169,27 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
   1단계는 운영자가 이 표를 보고 손으로 이체한다 — 정산 기록 표·정산 메일은 아직 없다.
 - 이미 정산한 달의 반품 환불은 그 주문이 표에서 빠질 뿐 자동으로 차감되지 않는다. 다음 정산에서 손으로 뺀다.
   부분 환불 주문은 어느 줄이 환불됐는지 원장이 모르므로 계산에서 빼고 "직접 확인"으로 띄운다.
+
+### 위탁 약관 — 콘솔 전자 동의 (마이그레이션 0059)
+
+아티스트와의 위탁 판매 계약은 개설자 콘솔의 **클릭 동의**로 맺는다(연습실 전자계약 `lib/contracts`는 쓰지 않는다). 본문은
+`lib/shop/artistTerms.ts`의 `SHOP_ARTIST_TERMS_SECTIONS`(순수 모듈 — 정산 비율·원천징수율·택배사·가림 기간·사업자 정보를 상수에서 보간),
+판본은 `SHOP_ARTIST_TERMS_VERSION`. 펀딩 개설자 약관·공연 주최자 약관과 같은 해시 게이트(`content/shopArtistTerms.baseline.test.ts`,
+갱신 `UPDATE_SHOP_ARTIST_TERMS_BASELINE=1` — 판본을 안 올린 내용 변경은 갱신 경로가 거부한다)를 탄다. 제9조가 처리방침 4항이 약속한
+"위탁 계약"이다 — 아티스트에게 주는 항목·가림 기간을 바꾸면 처리방침 4항과 이 약관을 함께 고치고 둘 다 판본을 올린다(테스트가 두 문서의 항목 문자열을 대조한다).
+
+- **기록**: 새 표 `shop_artist_terms_agreements(creator_id, terms_version, agreed_at)`, PK가 두 칸이라 판본마다 한 행이 쌓이고 옛 행은 남는다
+  (`lib/shop/artistTermsAgreement.ts`). 남기는 것은 펀딩·공연 약관 동의와 같은 판본·시각뿐이다(IP를 남기려면 처리방침 13항부터 고친다).
+- **판정**은 "현재 판본 행이 있는가" 하나. 판본을 올리면 모든 아티스트가 다시 동의 화면을 본다.
+- **fail-closed**: 표가 없는 DB는 미동의다 — 콘솔은 동의 화면(저장은 503), 쓰기 API는 403, 아티스트 상품 승인은 `terms_not_agreed`.
+  그래서 순서는 **마이그레이션 → 배포**(뒤집어도 결제·주문은 안 깨지고 아티스트 상점 쓰기·승인만 멈춘다).
+- **동의 전 막는 것(서버)**: 상품 생성·저장·제출·공개 토글(`products`·`products/[id]`), 상품 사진 업로드(`upload?productId=`), 재고 입력(`stock`),
+  발송 처리(`shipping`) — `rejectUnlessShopArtistTermsAgreed`(`creatorWriteHttp.ts`). 화면은 `/ko/funding/creator/shop`이 상품·판매 현황·발송 대신
+  `ArtistTermsConsent`를 보이고, 편집·발송 화면은 상점 탭으로 돌려보낸다(발송 화면은 받는 분 정보를 싣기 전에 판정한다). 프로필 저장은 막지 않는다.
+- **승인 게이트**: `decideShopProduct` 승인(관리자 "바로 승인"도 이 함수를 지난다)이 미동의면 `terms_not_agreed`. **스튜디오 상품 계정
+  (`STUDIO_SHOP_ARTIST_SLUG`)은 예외**(스튜디오 자신이라 위탁 계약이 없다). 이미 승인된 상품은 판본이 바뀌어도 내리지 않는다.
+- **동의 API** `POST /api/funding/creator/shop/terms { version, agreed: true }` — 화면이 본 판본이 지금과 다르면 409, `shop_artists` 행이 없으면 403.
+- 관리자: `/admin/shop/artists` 목록과 상품 심사 상세에 "위탁 약관: 동의(판본·일시) / 옛 판본 동의 / 미동의"(`describeShopArtistTerms`).
 
 ### 발송 주체 — 아티스트가 직접 보내는 상품 (마이그레이션 0057)
 

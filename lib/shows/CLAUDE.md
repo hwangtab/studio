@@ -77,18 +77,15 @@ v2 색 가드(`components/ui/SectionHeading.test.tsx`의 `V2_FILES`)에 공연 �
 - `/ko/shows/scan/<token>`: 토큰은 **소문자 hex**로 발급한다(`scanLink.ts`). base64url이면 소문자가
   되는 순간 해시가 달라져 모든 스캔 링크가 401이다. 경로에 실리는 비밀값은 항상 소문자 안전 알파벳으로.
 
-### 결제수단은 전부 토스다 — 계좌는 토스 계좌이체 (2026-10-12)
+### 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금 (2026-10-14 되돌림)
 
-예매 폼은 카드·간편결제·**토스 계좌이체**만 보인다(`PaymentMethodPicker`의 기본 목록 — 2026-10-14부터 전 화면 공통이고, 다른 서비스의 계좌번호 폴백(`BankDepositFallback`)은 공연에 없다). "계좌로 직접
-입금"은 운영자 결정으로 접었다 — 입금 뒤 환불이 생기면 환불 계좌를 받아 손으로 송금해야 해 번거롭다. 계좌이체는
-토스 결제라 홀드(10분)·승인·환불(토스 취소가 원래 계좌로)이 카드와 같은 길을 간다. `/api/shows/orders`는
-`paymentMethod: 'bank_transfer'`를 400(`bank_deposit_retired`)으로 거절한다 — 화면에서 뺐어도 옛 페이지·직접 호출이 남는다.
-토스 결제위젯 경로(`?pay=widget`)는 2026-10-14에 걷어냈다.
+예매 폼은 카드·간편결제(토스)와 "계좌로 직접 입금"을 보인다(`PaymentMethodPicker withBank`). 2026-10-12에는 직접 입금을 접고
+토스 계좌이체로 바꿨지만, 토스 계좌이체는 은행을 고르면 뱅크페이가 떠 PC 보안 프로그램·앱 전환을 요구해 고령층이 쓰지 못했다.
+그래서 직접 입금을 되살렸다(환불 때 환불 계좌를 받아 손으로 송금하는 번거로움은 알고 내린 결정). 입금 대기 주문은 좌석을 기한
+없이 잡고, 회차 시작 2시간 전부터는 막는다(`bankDepositBlockReason`). `/api/shows/orders`는 `paymentMethod: 'bank_transfer'`를
+받아 입금 안내 메일을 보내고 내 티켓 주소를 돌려준다. 결제 실패 화면(`shows/fail`)이 "계좌로 직접 입금"을 한 번 더 권한다.
 
-- **확인 안 된 것**: 토스 계좌이체의 **부분 취소**(매수 단위 환불)를 실결제로 해 본 적이 없다. 안 되면 일부 매수 환불이
-  토스 오류로 실패한다 — 공개 뒤 최소 매수로 계좌이체 결제·부분 환불을 한 번 할 것.
-- 아래 계좌 입금 절은 **이미 들어온 주문**(2026-10-12 기준 계좌 입금으로 결제된 1건)의 처리 경로다. 신규 신청은 없다.
-  서버 코드(`lib/shows/bankDeposit.ts`·관리자 입금 확인·환불 계좌)는 그 주문이 끝날 때까지 지우지 않는다.
+- 아래 계좌 입금 절이 입금 대기·입금 확인·환불 계좌의 처리 경로다(2026-10-12에 신규 신청을 막았던 동안에도 지우지 않았다).
 
 ### 계좌 입금(무통장) — 좌석은 기한 없이 잡고, 자동 취소는 없다 *(신규 신청 없음, 기존 주문 처리용)*
 
@@ -139,5 +136,7 @@ v2 색 가드(`components/ui/SectionHeading.test.tsx`의 `V2_FILES`)에 공연 �
 - **약관 판본**: `SHOW_ORGANIZER_TERMS_VERSION`(`lib/shows/organizer/policy.ts`), 게이트 `content/showOrganizerTerms.baseline.test.ts`
   (갱신 `UPDATE_SHOW_ORGANIZER_TERMS_BASELINE=1`, 판본을 먼저 올린다). 해시에 조항·수수료·정산·리드타임 상수와 **`refundPolicy.ts`의 환불 구간 줄·각주**가 든다 —
   환불 구간을 바꾸면 주최자 약관 판본도 올려야 한다.
-- 메일은 `lib/shows/organizer/email.ts`(운영자: 새 제출·승인 뒤 수정 / 주최자: 승인·보완 요청·반려). 관리자는 `/admin/shows/submissions`, 처리는 `PATCH /api/admin/shows/submissions/[id]`.
-- **알려진 공백**: 정산 계좌 등록이 승인된 펀딩 프로젝트에 묶여 있어 공연만 하는 주최자는 아직 계좌를 등록할 수 없다(정산은 3단계).
+- 메일은 `lib/shows/organizer/email.ts`(운영자: 새 제출·승인 뒤 수정 / 주최자: 승인·보완 요청·반려). 승인했는데 공개하지 못하면 주최자 메일은
+  `approved_pending`(승인됨·곧 공개, 공개 주소 없음)으로 가고, 운영자가 뒤에 `/admin/shows`에서 공개해도 메일은 다시 가지 않는다. 관리자는 `/admin/shows/submissions`, 처리는 `PATCH /api/admin/shows/submissions/[id]`.
+- 정산 정보(계좌·세금 구분)는 개설자 콘솔의 정산 정보 탭(`/ko/funding/creator/payout`)에서 받는다. 승인된 공연 등록만 있어도 열린다
+  (`hasApprovedEngagement`, `lib/funding/creatorEligibility.ts`). 공연 정산 기록 자체는 3단계다.

@@ -11,6 +11,7 @@ import { loadProjectForCreator } from '../../../../lib/funding/creatorProjectWri
 import { readBodyWithLimit } from '../../../../lib/funding/uploadBody';
 import { getShopArtistByCreator } from '../../../../lib/shop/artists';
 import { loadProductForCreator } from '../../../../lib/shop/creatorProductWrite';
+import { rejectUnlessShopArtistTermsAgreed } from '../../../../lib/shop/creatorWriteHttp';
 import { canCreatorEditShopField, SHOP_CREATOR_LIMITS } from '../../../../lib/shop/productRules';
 import { buildFundingMediaUrl, processCreatorImage, UPLOAD_LIMITS } from '../../../../lib/funding/creatorUpload';
 import { FUNDING_MEDIA_PREFIX, FUNDING_MEDIA_URL_PREFIX } from '../../../../lib/funding/mediaPath';
@@ -67,6 +68,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   let project: Awaited<ReturnType<typeof loadProjectForCreator>> = null;
   let shopProductImageCount: number | null = null;
   if (shopProductId && !shopProfile) {
+    if (!(await rejectUnlessShopArtistTermsAgreed(res, auth.creatorId, 'funding/creator/upload'))) return;
     // 남의 상품이면 404 — 존재 여부를 알려 주지 않는다(creatorProductWrite.ts와 같다).
     let product: Awaited<ReturnType<typeof loadProductForCreator>> = null;
     try {

@@ -25,6 +25,8 @@ export interface SubmissionView {
   reviewNote: string | null;
   draft: ShowSubmissionDraft;
   showSlug: string | null;
+  /** 연결된 공연의 상태(draft·published·cancelled). 승인 전이면 null. */
+  showStatus: string | null;
   submittedAt: Date | null;
 }
 
@@ -65,7 +67,7 @@ export async function listSubmissionsForCreator(creatorId: string) {
 async function loadOwned(creatorId: string, id: string) {
   const db = getDb();
   const [row] = await db
-    .select({ sub: showSubmissions, slug: shows.slug })
+    .select({ sub: showSubmissions, slug: shows.slug, showStatus: shows.status })
     .from(showSubmissions)
     .leftJoin(shows, eq(shows.id, showSubmissions.showId))
     .where(and(eq(showSubmissions.id, id), eq(showSubmissions.creatorId, creatorId)))
@@ -82,6 +84,7 @@ export async function loadSubmissionForCreator(creatorId: string, id: string): P
     reviewNote: row.sub.reviewNote,
     draft: parseDraft(row.sub.draftJson),
     showSlug: row.slug ?? null,
+    showStatus: row.showStatus ?? null,
     submittedAt: row.sub.submittedAt,
   };
 }

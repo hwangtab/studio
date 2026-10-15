@@ -7,7 +7,7 @@ import { sql } from 'drizzle-orm';
 import type { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next';
 
 import { createTestDb, type ShowsTestDb } from '../../helpers/showsDb';
-import { shopPayload } from '../../helpers/shopFixtures';
+import { agreeShopArtistTermsForTest, shopPayload } from '../../helpers/shopFixtures';
 import { fundingCreators, privacyAccessLogs, shopArtists, shopProducts, shopProductSkus, shopSkus } from '../../../db/schema';
 
 let testDb: ShowsTestDb;
@@ -35,6 +35,7 @@ const seed = async () => {
     { id: 'cA', email: 'a@example.com', name: '아티스트A' }, { id: 'cB', email: 'b@example.com', name: '아티스트B' },
   ]);
   await testDb.insert(shopArtists).values([{ creatorId: 'cA', slug: 'artist-a' }, { creatorId: 'cB', slug: 'artist-b' }]);
+  await agreeShopArtistTermsForTest(testDb, 'cA', 'cB');
   const base = { category: 'goods' as const, description: '소개', images: '[]', reviewStatus: 'approved' as const, published: true };
   await testDb.insert(shopProducts).values([
     { id: 'pA', creatorId: 'cA', slug: 'a-goods', title: 'A 굿즈', ...base }, { id: 'pB', creatorId: 'cB', slug: 'b-goods', title: 'B 굿즈', ...base },
@@ -111,7 +112,11 @@ describe('발송할 주문 화면 (SSR)', () => {
   });
 
   it('조회가 실패하면 화면은 오류 안내로 열리고 기록은 없다', async () => {
-    jest.spyOn(testDb, 'all').mockRejectedValueOnce(new Error('연결 끊김'));
+    // 첫 조회(위탁 약관 동의)는 통과시키고 주문 조회만 실패시킨다.
+    const realAll = testDb.all.bind(testDb);
+    jest.spyOn(testDb, 'all')
+      .mockImplementationOnce(((query: Parameters<typeof realAll>[0]) => realAll(query)) as typeof testDb.all)
+      .mockRejectedValueOnce(new Error('연결 끊김'));
     const result = await open();
     expect((result as { props: { loadFailed: boolean } }).props.loadFailed).toBe(true);
     expect(await testDb.select().from(privacyAccessLogs)).toHaveLength(0);

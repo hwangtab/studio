@@ -46,3 +46,32 @@ it('세션 API가 5xx면 "일시적인 오류" 문구를 보여준다(만료 문
   });
   expect(screen.queryByText(/만료됐거나 이미 사용됐어요/)).not.toBeInTheDocument();
 });
+
+describe('로그인 성공 뒤 이동', () => {
+  const assigned: string[] = [];
+  const originalLocation = window.location;
+  beforeEach(() => {
+    assigned.length = 0;
+    Object.defineProperty(window, 'location', {
+      configurable: true,
+      value: { set href(v: string) { assigned.push(v); }, get href() { return 'http://localhost/'; } },
+    });
+  });
+  afterEach(() => {
+    Object.defineProperty(window, 'location', { configurable: true, value: originalLocation });
+  });
+
+  it('next가 없으면 펀딩 탭으로', async () => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: true, status: 200 });
+    render(<CreatorAuth token="raw-token" next={null} />);
+    fireEvent.click(screen.getByRole('button', { name: /로그인하기/ }));
+    await waitFor(() => expect(assigned).toEqual(['/ko/funding/creator']));
+  });
+
+  it('next=shows면 공연 탭으로', async () => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: true, status: 200 });
+    render(<CreatorAuth token="raw-token" next="shows" />);
+    fireEvent.click(screen.getByRole('button', { name: /로그인하기/ }));
+    await waitFor(() => expect(assigned).toEqual(['/ko/funding/creator/shows']));
+  });
+});

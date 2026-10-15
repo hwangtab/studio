@@ -904,7 +904,7 @@ describe('정산 정보 저장 — 승인 뒤에만, 계정 단위로', () => {
     expect(await encOf()).not.toBe(first);
   });
 
-  it('암호화 키가 없으면 계좌만 고치는 저장도 거부한다 — 평문이 들어가는 경로는 없다', async () => {
+  it('암호화 키가 없으면 새 계좌를 입력한 저장은 거부한다 — 평문이 들어가는 경로는 없다', async () => {
     const { creatorId } = await seedProject({ reviewStatus: 'approved' });
     const key = process.env[FIELD_CRYPTO_KEY_ENV];
     delete process.env[FIELD_CRYPTO_KEY_ENV];
@@ -943,6 +943,74 @@ describe('정산 정보 저장 — 승인 뒤에만, 계정 단위로', () => {
 
   it('없는 계정은 not_found다', async () => {
     expect((await savePayoutSection('없는-id', { ...payout })).ok).toBe(false);
+  });
+
+  describe('등록된 계좌 그대로 두기(keepAccount)', () => {
+    const keep = { taxType: 'withholding', keepAccount: true, residentNumber: null, business: null } as const;
+    const accountColumns = async (creatorId: string) => {
+      const [row] = await mockDb.select({
+        enc: schema.fundingCreators.payoutAccountEnc,
+        last4: schema.fundingCreators.payoutAccountLast4,
+        taxType: schema.fundingCreators.taxType,
+      }).from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creatorId));
+      return row;
+    };
+
+    it('등록된 계좌가 없으면 거부하고 아무것도 쓰지 않는다', async () => {
+      const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+      expect(await savePayoutSection(creatorId, keep)).toEqual({ ok: false, code: 'no_payout_account', message: expect.any(String) });
+      expect(await accountColumns(creatorId)).toEqual({ enc: null, last4: null, taxType: null });
+    });
+
+    it('암호문이 공백뿐이면 등록되지 않은 것으로 본다 — loadPayoutSummary와 같은 판정', async () => {
+      const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+      await mockDb.update(schema.fundingCreators).set({ payoutAccountEnc: '   ' })
+        .where(eq(schema.fundingCreators.id, creatorId));
+      expect(await savePayoutSection(creatorId, keep)).toMatchObject({ ok: false, code: 'no_payout_account' });
+    });
+
+    it('계좌 컬럼은 한 글자도 바뀌지 않고, 세금 유형은 바뀐다', async () => {
+      const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+      await savePayoutSection(creatorId, { ...payout });
+      const before = await accountColumns(creatorId);
+      expect(await savePayoutSection(creatorId, { ...keep, taxType: 'invoice' })).toEqual({ ok: true });
+      const after = await accountColumns(creatorId);
+      expect(after.enc).toBe(before.enc);
+      expect(after.last4).toBe('9012');
+      expect(after.taxType).toBe('invoice');
+      expect(decryptPayoutAccount(after.enc!)).toEqual({ bankName: '국민은행', account: '123-456-789012', holder: '황경하' });
+    });
+
+    it('암호화 키가 없어도 계좌를 그대로 두는 저장은 된다 — 암호화할 새 값이 없다', async () => {
+      const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+      await savePayoutSection(creatorId, { ...payout });
+      const before = await accountColumns(creatorId);
+      const key = process.env[FIELD_CRYPTO_KEY_ENV];
+      delete process.env[FIELD_CRYPTO_KEY_ENV];
+      try {
+        expect(await savePayoutSection(creatorId, { ...keep, taxType: 'invoice' })).toEqual({ ok: true });
+      } finally {
+        process.env[FIELD_CRYPTO_KEY_ENV] = key;
+      }
+      expect(await accountColumns(creatorId)).toEqual({ ...before, taxType: 'invoice' });
+    });
+
+    it('키가 없을 때 주민등록번호를 함께 넣으면 여전히 전체를 거부한다', async () => {
+      const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+      await savePayoutSection(creatorId, { ...payout });
+      const before = await accountColumns(creatorId);
+      const key = process.env[FIELD_CRYPTO_KEY_ENV];
+      delete process.env[FIELD_CRYPTO_KEY_ENV];
+      const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+      try {
+        expect(await savePayoutSection(creatorId, { ...keep, taxType: 'withholding', residentNumber: '9901011234567' }))
+          .toMatchObject({ ok: false, code: 'encryption_unavailable' });
+      } finally {
+        error.mockRestore();
+        process.env[FIELD_CRYPTO_KEY_ENV] = key;
+      }
+      expect(await accountColumns(creatorId)).toEqual(before);
+    });
   });
 
   it('계정 단위라 다른 프로젝트(초안)를 열어 둔 상태에서도 저장된다', async () => {
@@ -1449,6 +1517,21 @@ describe('정산 정보 — 사업자 정보·국세청 조회·자격', () => {
     expect((await businessRows(creatorId))[0]).toMatchObject({ ntsStatus: 'unverified', ntsCheckError: 'rate_limited' });
   });
 
+  it('계좌를 그대로 두고 상호만 바꿔 저장한다 — 사업자 행은 바뀌고 계좌 컬럼은 그대로다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, invoice(), { lookup: lookupOk });
+    const accountColumns = async () => (await mockDb.select({
+      enc: schema.fundingCreators.payoutAccountEnc, last4: schema.fundingCreators.payoutAccountLast4,
+    }).from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creatorId)))[0];
+    const before = await accountColumns();
+    const { business } = invoice();
+    expect(await savePayoutSection(creatorId, {
+      taxType: 'invoice', keepAccount: true, residentNumber: null, business: { ...business, businessName: '스튜디오 놀 2' },
+    }, { lookup: lookupOk })).toEqual({ ok: true });
+    expect(await accountColumns()).toEqual(before);
+    expect((await businessRows(creatorId))[0].businessName).toBe('스튜디오 놀 2');
+  });
+
   it('암호화 키가 없으면 사업자 정보도 저장하지 않는다', async () => {
     const { creatorId } = await seedProject({ reviewStatus: 'approved' });
     const key = process.env[FIELD_CRYPTO_KEY_ENV];
@@ -1560,6 +1643,30 @@ describe('정산 정보 — 사업자 정보·국세청 조회·자격', () => {
     await savePayoutSection(invoiced.creatorId, invoice(), { lookup: lookupOk });
     await recordPayout(invoiced.projectId, 0);
     expect(await loadPayoutSummary(invoiced.creatorId)).toMatchObject({ keepsResidentNumber: false, keepsBusinessProfile: true });
+  });
+
+  it('이미 개인인 채로 다시 저장하면(계좌만 고침) 사업자 행을 남겼다고 말하지 않는다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, invoice(), { lookup: lookupOk });
+    await mockDb.insert(schema.shopArtists).values({ creatorId, slug: `artist-${creatorId}` });
+    expect(await savePayoutSection(creatorId, withholding(), { lookup: lookupOk }))
+      .toEqual({ ok: true, businessProfileRetained: true });
+    // 개인 → 개인: 전환이 아니다.
+    expect(await savePayoutSection(creatorId, withholding(), { lookup: lookupOk })).toEqual({ ok: true });
+    expect(await businessRows(creatorId)).toHaveLength(1);
+  });
+
+  it('이미 사업자인 채로 다시 저장하면 주민등록번호를 남겼다고 말하지 않는다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, withholding('9901011234567'), { lookup: lookupOk });
+    await mockDb.insert(schema.shopArtists).values({ creatorId, slug: `artist-${creatorId}` });
+    expect(await savePayoutSection(creatorId, invoice(), { lookup: lookupOk }))
+      .toEqual({ ok: true, residentNumberRetained: true });
+    // 사업자 → 사업자: 전환이 아니다.
+    expect(await savePayoutSection(creatorId, invoice(), { lookup: lookupOk })).toEqual({ ok: true });
+    const [row] = await mockDb.select({ enc: schema.fundingCreators.residentNumberEnc })
+      .from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creatorId));
+    expect(row.enc).toBeTruthy();
   });
 
   it('상점 아티스트면 사업자로 바꿔도 주민등록번호를 남긴다 — 상점 정산은 기록 표가 없다', async () => {

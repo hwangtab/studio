@@ -83,7 +83,10 @@ export default function ShowsHostPage() {
           </Panel>
         </div>
 
-        <CreatorLoginForm terms={{ href: '/ko/shows/organizer-terms', label: '공연 주최자 약관', purpose: '주최자', condition: '등록 조건' }} />
+        <CreatorLoginForm
+          terms={{ href: '/ko/shows/organizer-terms', label: '공연 주최자 약관', purpose: '주최자', condition: '등록 조건' }}
+          next="shows"
+        />
       </PageShell>
     </>
   );

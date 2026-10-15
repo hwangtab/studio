@@ -43,6 +43,48 @@ export const sendDepositLinkPaidEmail = async (order: Order): Promise<string | n
     }),
   });
 
+/**
+ * 예약금 환불 안내 — 운영자가 환불을 처리한 직후 고객에게 간다. 고객 한 통뿐이다(운영자가 직접 누른 일이라 운영자 알림은 불필요).
+ *
+ * 세션·믹싱 취소 메일의 환불 문구(`refundLine`)를 쓰지 않는 이유: 그 문구는 "적어 주신 환불 계좌로 접수일부터 3영업일"인데,
+ * 예약금 주문에는 고객이 환불 계좌를 적는 화면이 없다. 계좌 입금으로 낸 예약금은 운영자가 이미 송금을 마친 뒤에 이 메일이 가므로
+ * "보내 드렸어요"로 말한다. 부분 환불이면 남은 결제 금액을 함께 적어 나머지를 따로 환불받는 것으로 오해하지 않게 한다.
+ * (sendCustomerEmail은 아래에 const로 선언돼 있어, 호출 시점에는 이미 초기화돼 있다.)
+ */
+export const sendDepositRefundEmail = async (
+  order: Order, refundAmount: number, remainingAfter: number, refundVia: 'payment' | 'bank_account',
+): Promise<string | null> => {
+  const amount = `${formatPriceAmount(refundAmount)}원`;
+  const note =
+    refundVia === 'bank_account'
+      ? '계좌 입금으로 결제하신 건이라 스튜디오에서 직접 송금해 드렸어요. 입금 내역이 보이지 않으면 카카오톡 또는 전화(010-4255-7893)로 알려 주세요.'
+      : '결제 수단으로 환불되며, 카드사에 따라 3~5영업일이 걸려요.';
+  const remainingLine = remainingAfter > 0 ? `남은 결제 금액: ${formatPriceAmount(remainingAfter)}원` : null;
+  return sendCustomerEmail(order, {
+    to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
+    subject: `[스튜디오 놀] 예약금이 환불됐어요 — ${amount}`,
+    text: [
+      `${order.customerName}님, 예약금 환불이 처리됐어요.`,
+      `환불 금액: ${amount}`,
+      ...(remainingLine ? [remainingLine] : []),
+      `주문번호: ${order.orderNo}`,
+      '',
+      note,
+    ].join('\n'),
+    html: buildEmailLayout({
+      preheader: `예약금 ${amount}이 환불됐어요.`,
+      heading: '예약금이 환불됐어요',
+      paragraphs: [`${escapeHtml(order.customerName)}님, 예약금 환불이 처리됐어요.`],
+      rows: [
+        { label: '환불 금액', value: amount, emphasis: true },
+        ...(remainingAfter > 0 ? [{ label: '남은 결제 금액', value: `${formatPriceAmount(remainingAfter)}원` }] : []),
+        { label: '주문번호', value: order.orderNo },
+      ],
+      notices: [escapeHtml(note)],
+    }),
+  });
+};
+
 const kstTimeLabel = (d: Date): string => {
   const t = new Date(d.getTime() + 9 * 3600 * 1000);
   return `${kstDateString(d)} ${String(t.getUTCHours()).padStart(2, '0')}:00`;

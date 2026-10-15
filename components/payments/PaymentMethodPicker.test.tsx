@@ -23,10 +23,19 @@ describe('PaymentMethodPicker', () => {
     expect(screen.getByAltText('애플페이')).toBeInTheDocument();
   });
 
-  it('직접 입금 줄은 없다 — 계좌번호 안내는 폴백 링크로만 연다', () => {
-    render(<PaymentMethodPicker name="t" value="card" onChange={() => {}} applePaySupported={false} />);
+  it('계좌 줄은 withBank를 준 화면에만 있고, 오른쪽 보조 문구가 붙는다', () => {
+    const { rerender } = render(<PaymentMethodPicker name="t" value="card" onChange={() => {}} applePaySupported={false} confirmLabel="티켓이 발권" />);
     expect(screen.queryByRole('radio', { name: '계좌로 직접 입금' })).toBeNull();
-    expect(screen.getByRole('radio', { name: '계좌이체' })).toBeInTheDocument();
-    expect(screen.queryByText('카카오뱅크')).toBeNull();
+    expect(screen.queryByRole('radio', { name: '계좌이체' })).toBeNull();
+    rerender(<PaymentMethodPicker name="t" value="card" onChange={() => {}} applePaySupported={false} withBank confirmLabel="티켓이 발권" />);
+    expect(screen.getByRole('radio', { name: '계좌로 직접 입금' })).toBeInTheDocument();
+    expect(screen.getByText('카카오뱅크')).toBeInTheDocument();
+    expect(screen.getByText('· 입금 확인 후 티켓이 발권')).toBeInTheDocument();
+  });
+
+  it('막히면 계좌 줄이 비활성이고 이유를 보인다', () => {
+    render(<PaymentMethodPicker name="t" value="card" onChange={() => {}} applePaySupported={false} withBank bankBlockedMessage="2시간 안이라 안 됩니다." />);
+    expect(screen.getByRole('radio', { name: '계좌로 직접 입금' })).toBeDisabled();
+    expect(screen.getByText(/계좌 입금: 2시간 안이라 안 됩니다\./)).toBeInTheDocument();
   });
 });

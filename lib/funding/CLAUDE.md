@@ -233,7 +233,7 @@ best-effort라 표가 없어도 결제는 깨지지 않지만, 기록이 쌓이�
 (공연·예약·믹싱도 같은 계좌 입금을 쓴다 — 그쪽 규칙은 `lib/payments/bankDeposit.ts`), 펀딩 고유 규칙(한정 리워드
 불가·온라인 판정)은 `lib/funding/bankAccount.ts`다. 결제 공용 부품: 안내 화면
 `components/payments/BankDepositGuide.tsx`(금액·기한·이름·호칭을 props로), 결제수단 고르기
-`components/payments/BankDepositFallback.tsx`(폼의 "계좌번호로 직접 보내기" 폴백 링크 — 2026-10-14부터 계좌 입금은 목록 줄이 아니라 폴백) · `PaymentMethodPicker.tsx`(토스 결제수단 목록 — 루트 CLAUDE.md "토스 키는 두 쌍이다"), 환불 계좌 입력 `components/payments/RefundAccountFields.tsx`,
+`components/payments/PaymentMethodPicker.tsx`(결제수단 목록 — `withBank`가 "계좌로 직접 입금" 줄, 토스 계좌이체는 2026-10-14에 뺐다 — 루트 CLAUDE.md "토스 키는 두 쌍이다"), `FailBankFallback.tsx`(결제 실패 화면의 안내), 환불 계좌 입력 `components/payments/RefundAccountFields.tsx`,
 관리자 "계좌 보기" 핸들러 `lib/payments/refundAccountView.ts`. 펀딩은 결제 행 없이 `funding_pledges.payment_method`로
 가르고, 공연·예약·믹싱은 상태(`awaiting_deposit`)와 결제 행(`bank-deposit:` 키)으로 가른다 — 같은 판정 함수를
 섞어 쓰지 말 것. 약관·처리방침 본문에는 계좌번호를 쓰지 않는다("안내 화면·메일에 표시된 계좌").
@@ -422,6 +422,10 @@ supporterMessage는 후원자가 준 개인정보라 파기 약속이 걸리지�
 저장은 `POST /api/funding/creator/payout` 하나(`savePayoutSection`), 사업자등록증은 `/api/funding/creator/payout/certificate`.
 펀딩 편집기의 정산 탭은 요약(`PayoutSummaryCard`)과 링크뿐이다 — 프로젝트 구획 라우트(`projects/[id]`)는 `section: 'payout'`을 400으로 거부한다.
 같은 폼을 두 곳에 그리면 저장 경로는 하나여도 화면 상태(이탈 가드·국세청 경고)가 두 벌이 된다.
+
+저장된 계좌는 화면에 돌려주지 않는다(뒤 4자리뿐). 그래서 계좌가 등록돼 있으면 폼은 **그대로 두기**로 시작해
+`keepAccount: true`만 보내고(계좌 세 칸 없음), 서버는 계좌 컬럼을 건드리지 않으며 키도 요구하지 않는다 — 주민등록번호
+"빈 칸이면 유지"의 거울이다. 등록된 계좌가 없으면 `no_payout_account`(400). 계좌를 바꿀 때만 세 칸을 다시 입력한다.
 
 ### 개설자 사업자 정보·국세청 조회 (마이그레이션 0058)
 

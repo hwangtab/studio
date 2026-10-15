@@ -20,10 +20,10 @@ export const showFaqItems = (locale: ShowLocale = 'ko'): ShowFaqItem[] => (local
       '결제가 끝나면 예매 완료 화면에 "내 티켓" 링크가 뜨고, 적어 주신 이메일로 QR 티켓을 보내 드립니다. 현장에서 QR을 보여 주시면 됩니다.',
   },
   {
-    question: '계좌이체로 결제할 수 있나요?',
+    question: '계좌로 입금해도 되나요?',
     answer:
-      '네. 결제 수단에서 "계좌이체"를 고르시면 내 은행 계좌에서 바로 이체하고, 결제가 끝나면 QR 티켓을 메일로 보내 드립니다. ' +
-      '환불하시면 이체하신 계좌로 돌아갑니다. PC에서는 은행 보안 프로그램 설치를 요구할 수 있습니다.',
+      '네. 결제 수단에서 "계좌로 직접 입금"을 고르시면 입금하실 계좌를 바로 알려 드리고, 입금이 확인될 때까지 좌석을 잡아 둡니다. ' +
+      '입금이 확인되면 QR 티켓을 메일로 보내 드립니다. 보내는 분 이름은 예매하신 분 성함으로 해 주세요.',
   },
   {
     question: '좌석은 어떻게 정해지나요?',
@@ -57,8 +57,8 @@ const FAQ_EN = (): ShowFaqItem[] => [
   {
     question: 'Can I pay by bank transfer?',
     answer:
-      'Yes, if you have a Korean bank account. Choose “Account transfer” as the payment method to pay straight from your account; once payment is complete, we email your QR ticket. ' +
-      'Refunds go back to the account you paid from. On a PC your bank may ask you to install its security program.',
+      'Yes. Choose “Bank transfer” as the payment method and we will show you the account right away; your seats are held until the transfer is confirmed. ' +
+      'Once it is confirmed, we email your QR ticket. Please send the transfer under the name you booked with.',
   },
   {
     question: 'How are seats assigned?',

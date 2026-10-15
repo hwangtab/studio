@@ -79,6 +79,17 @@ describe('주최자 메일', () => {
     expect(m.html).not.toContain('<script>alert(1)');
   });
 
+  it('승인됐지만 아직 공개 전: 공개 주소 없이 곧 열린다고 알린다', async () => {
+    await sendShowReviewResultEmail('sub1', 'approved_pending');
+    const m = sent();
+    expect(m.subject).toContain('공연이 승인됐어요');
+    expect(m.text).toContain('곧 공개');
+    expect(m.text).not.toContain('지금 공개됐어요');
+    expect(m.html).not.toContain('/ko/shows/night-show');
+    expect(m.text).not.toContain('/ko/shows/night-show');
+    expect(m.html).toContain('/ko/funding/creator/shows/sub1');
+  });
+
   it('보완 요청: 메모 escape + 편집 화면 버튼', async () => {
     await sendShowReviewResultEmail('sub1', 'changes_requested');
     const m = sent();
