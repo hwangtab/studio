@@ -2147,3 +2147,27 @@ export const softwareOrders = sqliteTable('software_orders', {
 });
 
 export type SoftwareOrder = typeof softwareOrders.$inferSelect;
+
+// ─── 결제 링크(예약금·맞춤 결제) ─────────────────────────────────────────────────
+//
+// `/ko/pay/<slug>`의 링크 정의. 예전엔 `data/paymentLinks.ts` 파일에만 있어 링크 한 건마다 PR·배포가 필요했다(2026-10-15).
+// 이제 관리자 화면(`/admin/payment-links`)·`scripts/pay-link.mjs`가 이 표에 바로 만든다 — 배포 없이 즉시 열린다.
+// 파일의 옛 링크는 그대로 동작한다(조회는 이 표 → 파일 순서, lib/payments/paymentLinks.ts). 새 표라 미적용 DB에서는 파일 링크만 돈다.
+// **발급한 링크의 금액은 바꾸지 않는다** — 결제 기록과 어긋난다. 틀렸으면 닫고(`closed_at`) 새로 만든다.
+
+export const paymentLinks = sqliteTable('payment_links', {
+  /** 추측할 수 없는 24자리 소문자 hex. 링크를 아는 사람만 결제한다. */
+  slug: text('slug').primaryKey(),
+  itemName: text('item_name').notNull(),
+  /** VAT 포함 총액(원 정수). 공급가·VAT는 주문 생성 때 분리한다. */
+  totalAmount: integer('total_amount').notNull(),
+  /** 'YYYY-MM-DD'(KST) — 이 날 끝까지 유효. 없으면 닫을 때까지. */
+  expiresOn: text('expires_on'),
+  /** 어느 고객·무슨 건인지 운영자 메모. 고객에게 보이지 않는다. */
+  memo: text('memo'),
+  /** 운영자가 닫은 시각(초). 닫힌 링크는 열리지 않는다. */
+  closedAt: integer('closed_at'),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+});
+
+export type PaymentLinkRow = typeof paymentLinks.$inferSelect;
