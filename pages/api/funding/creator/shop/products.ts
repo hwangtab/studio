@@ -5,7 +5,7 @@ import { isAllowedContactRequestOrigin } from '../../../../../lib/contact/origin
 import { getClientIp } from '../../../../../lib/contracts/client-ip';
 import { authenticateCreatorApi } from '../../../../../lib/funding/creatorAuth';
 import { createDraftProduct, listProductsForCreator } from '../../../../../lib/shop/creatorProductWrite';
-import { respondProductFailure } from '../../../../../lib/shop/creatorWriteHttp';
+import { rejectUnlessShopArtistTermsAgreed, respondProductFailure } from '../../../../../lib/shop/creatorWriteHttp';
 
 /**
  * 아티스트 상품 목록(GET)과 초안 생성(POST). 응답에 내부 메모·내려받기 키는 없다.
@@ -27,6 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).json({ ok: true, products: await listProductsForCreator(auth.creatorId) });
     }
 
+    if (!(await rejectUnlessShopArtistTermsAgreed(res, auth.creatorId, 'funding/creator/shop/products'))) return;
     // 로그인이 "처음 보는 이메일이면 계정 자동 생성"이라 계정 하나만 보면 메일함 N개로 N배가 된다 — IP 한 겹을 더한다.
     const ip = getClientIp(req) ?? 'unknown';
     if (!(await consumeRateLimit(`creator_save:ip:${ip}`, 30, 60)) || !(await consumeRateLimit(`creator_save:${auth.creatorId}`, 30, 60))) {

@@ -1,7 +1,7 @@
 import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { isMissingTableError } from './fulfillmentMode';
+import { isMissingTableError } from '../dbErrors';
 import { getRemainingStock } from './service';
 
 /**

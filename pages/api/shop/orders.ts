@@ -2,6 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { getClientIp } from '../../../lib/contracts/client-ip';
+import { isCheckoutPaymentMethod } from '../../../lib/payments/bankDeposit';
+import { deliverShopDepositGuide } from '../../../lib/shop/bankDeposit';
 import { createShopOrder } from '../../../lib/shop/service';
 import { SHOP_MIXED_KIND_MESSAGE, SHOP_MIXED_SHIPPER_MESSAGE } from '../../../lib/shop/shipper';
 import { validateCreateShopOrderPayload } from '../../../lib/shop/validation';
@@ -18,7 +20,9 @@ const FAILURE: Record<'sales_closed' | 'unknown_item' | 'sold_out' | 'lookup_fai
 
 /**
  * 상점 주문 생성 — 결제 전 단계. 재고를 10분 잡고(`pending`) 서버가 계산한 금액을 돌려준다. 금액·상품명은 요청이
- * 아니라 카탈로그(data/shop/catalog.ts)에서만 읽는다. 결제수단은 전부 토스라 결제수단 칸을 받지 않는다(계좌 입금 없음).
+ * 아니라 카탈로그(data/shop/catalog.ts)에서만 읽는다. 결제수단 칸(`paymentMethod`)이 `bank_transfer`면 "계좌로 직접 입금" —
+ * 입금 대기(`awaiting_deposit`)로 바로 만들어 재고를 기한 없이 잡고, 입금 안내 메일을 보낸 뒤 입금 안내 화면(주문 확인)
+ * 주소를 돌려준다(lib/shop/bankDeposit.ts). 없으면 토스.
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -31,9 +35,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const validated = validateCreateShopOrderPayload(req.body);
   if (!validated.ok) return res.status(400).json({ ok: false, message: validated.message });
 
+  const rawMethod = (req.body as Record<string, unknown>).paymentMethod;
+  if (rawMethod !== undefined && !isCheckoutPaymentMethod(rawMethod))
+    return res.status(400).json({ ok: false, message: '결제 방법을 다시 골라 주세요.' });
+  const paymentMethod = rawMethod ?? 'toss';
+
   try {
-    const result = await createShopOrder(validated.value, new Date());
+    const result = await createShopOrder(validated.value, new Date(), { paymentMethod });
     if (!result.ok) return res.status(FAILURE[result.code].status).json({ ok: false, code: result.code, message: FAILURE[result.code].message });
+    if (paymentMethod === 'bank_transfer') {
+      // 안내 메일(고객+운영자). 실패해도 신청은 성립한다 — 계좌는 이동하는 안내 화면(주문 확인)에 나오고 실패는
+      // notification_error로 관리자 화면에 남는다.
+      await deliverShopDepositGuide(result.orderNo, { throttleCustomer: true });
+      return res.status(201).json({
+        ok: true, orderNo: result.orderNo, totalAmount: result.totalAmount, paymentMethod: 'bank_transfer',
+        manageUrl: `/ko/shop/manage/${result.orderNo}?token=${encodeURIComponent(result.manageToken)}`,
+      });
+    }
     return res.status(201).json({ ok: true, orderNo: result.orderNo, totalAmount: result.totalAmount, orderName: result.orderName });
   } catch (error) {
     console.error('[api/shop/orders] 주문 생성 실패', error);

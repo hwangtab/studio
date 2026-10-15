@@ -6,6 +6,7 @@ import { formatPriceAmount } from '../../data/pricing';
 import { SITE_URL, adminUrl, buildEmailLayout, escapeHtml, type EmailLayoutRow } from '../email/layout';
 import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
+import { isBankDepositPayment } from '../payments/bankDeposit';
 import { resolveOrderShipper } from './artistShipping';
 import { shopLineName } from './catalog';
 import { loadOrderExtras, type OrderExtras } from './orderExtras';
@@ -117,6 +118,8 @@ export const sendShopOrderConfirmedEmails = async (orderNo: string): Promise<voi
   });
   const extra = extraRows(order, extras);
   const ships = shopOrderShips(so);
+  // 계좌로 입금해 확정된 주문은 주문 확인 페이지에서 셀프 취소할 수 없다(lib/shop/cancel.ts) — 취소 안내 문구와 버튼이 달라진다.
+  const bankPaid = order.payments.some(isBankDepositPayment);
 
   // 내려받기 주소는 싣지 않는다 — 메일의 링크를 여는 봇이 "내려받음"을 남기지 않게. 내려받기는 주문 확인 페이지의 버튼에서만 시작된다.
   const customerName = escapeHtml(order.customerName);
@@ -130,7 +133,9 @@ export const sendShopOrderConfirmedEmails = async (orderNo: string): Promise<voi
         ? `${customerName}님, 주문해 주셔서 고마워요. 예약 판매 상품이 있어서 ${escapeHtml(formatShipsOn(extras.latestShipsOn))} 이후에 함께 보내요. 보내면 운송장 번호를 메일로 알려 드릴게요.`
         : `${customerName}님, 주문해 주셔서 고마워요. 준비되는 대로 발송하고 운송장 번호를 메일로 알려 드릴게요.`,
       ...(ships && extras.hasDigital ? ['디지털 상품은 주문 확인 페이지에서 내려받을 수 있어요.'] : []),
-      !ships
+      bankPaid
+        ? '취소·환불은 카카오톡이나 010-4255-7893으로 알려 주세요. 입금하신 계좌로 돌려드려요.'
+        : !ships
         ? '내려받기 전에는 주문 확인 페이지에서 바로 취소할 수 있어요. 결제하신 수단으로 전액 돌려드려요.'
         : '발송 전에는 주문 확인 페이지에서 바로 취소할 수 있어요. 결제하신 수단으로 전액 돌려드려요.',
     ],
@@ -141,7 +146,7 @@ export const sendShopOrderConfirmedEmails = async (orderNo: string): Promise<voi
       ...amountRows(order),
       ...(ships ? [{ label: '받는 분', value: `${so.recipientName} · ${so.recipientPhone}` }, { label: '배송지', value: addressLine(order) }] : []),
     ],
-    cta: { label: !ships ? '주문 확인·내려받기' : '주문 확인·취소', url: manage },
+    cta: { label: !ships ? '주문 확인·내려받기' : bankPaid ? '주문 확인' : '주문 확인·취소', url: manage },
     notices: [
       ...(extras.hasDigital ? [SHOP_DIGITAL_WITHDRAWAL_NOTICE] : []),
       '이 메일의 버튼 주소가 주문 확인 열쇠예요. 다른 사람에게 전달하지 마세요.',
@@ -222,13 +227,16 @@ export const sendShopCancelledEmails = async (orderNo: string, refundAmount: num
   const order = await findShopOrderByOrderNo(orderNo).catch(() => undefined);
   if (!order) return;
   const failures: string[] = [];
+  const bankPaid = order.payments.some(isBankDepositPayment);
   if (order.customerEmail) {
     const html = buildEmailLayout({
       preheader: `${won(refundAmount)} 환불`,
       heading: '주문이 취소됐어요',
       paragraphs: [
-        `${escapeHtml(order.customerName)}님, 주문이 취소되어 ${won(refundAmount)}을 결제하신 수단으로 돌려드렸어요.`,
-        '카드는 카드사 사정에 따라 승인 취소가 보이기까지 며칠 걸릴 수 있어요.',
+        bankPaid
+          ? `${escapeHtml(order.customerName)}님, 주문이 취소되어 ${won(refundAmount)}을 입금하신 계좌로 보내 드렸어요.`
+          : `${escapeHtml(order.customerName)}님, 주문이 취소되어 ${won(refundAmount)}을 결제하신 수단으로 돌려드렸어요.`,
+        bankPaid ? '은행에 따라 입금이 보이기까지 시간이 걸릴 수 있어요.' : '카드는 카드사 사정에 따라 승인 취소가 보이기까지 며칠 걸릴 수 있어요.',
       ],
       rows: [
         { label: '주문번호', value: order.orderNo },

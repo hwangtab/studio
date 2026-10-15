@@ -2,6 +2,7 @@ import { and, eq } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { fundingProjects, shopArtists, showSubmissions } from '../../db/schema';
+import { isMissingTableError } from '../dbErrors';
 
 /** 공연·상점 갈래의 읽기 — 실패는 그 갈래만 "없음"으로 본다(표가 각자 마이그레이션에 달려 있다). */
 const softExists = async (label: string, query: () => Promise<unknown[]>): Promise<boolean> => {
@@ -48,7 +49,7 @@ export const isShopArtist = async (creatorId: string): Promise<boolean> => {
       .where(eq(shopArtists.creatorId, creatorId)).limit(1);
     return Boolean(row);
   } catch (error: unknown) {
-    if (/no such table: shop_artists/i.test(String(error))) return false;
+    if (isMissingTableError(error, 'shop_artists')) return false;
     console.error('[funding] 상점 아티스트 조회 실패 — 주민등록번호를 지우지 않고 남긴다', error);
     return true;
   }

@@ -4,6 +4,7 @@ import { getDb } from '../../db/client';
 import { SHOP_HOLD_SECONDS, SHOP_SALES_OPEN } from '../../data/shop/policy';
 import { splitInclusiveAmount } from '../booking/amounts';
 import { generateManageToken } from '../booking/token';
+import { AWAITING_DEPOSIT, type CheckoutPaymentMethod } from '../payments/bankDeposit';
 import { computeShopTotals } from './amounts';
 import { shopLineName, type ResolvedSku } from './catalog';
 import { findSellableSkuAsync } from './repository';
@@ -17,11 +18,13 @@ export const rowsAffectedOf = (result: unknown): number =>
   (result as { rowsAffected?: number } | undefined)?.rowsAffected ?? 0;
 
 export type CreateShopOrderResult =
-  | { ok: true; orderNo: string; totalAmount: number; orderName: string }
+  | { ok: true; orderNo: string; totalAmount: number; orderName: string; manageToken: string }
   | { ok: false; code: 'sales_closed' | 'unknown_item' | 'sold_out' | 'lookup_failed' | 'shipping_required' | 'mixed_shipper' | 'mixed_kind' };
 
 /**
  * 주문 생성 — 재고를 SHOP_HOLD_SECONDS 동안 잡고(`pending`), 결제 승인(confirmShopOrder)이 `paid`로 바꾼다.
+ * `paymentMethod: 'bank_transfer'`(계좌로 직접 입금)이면 `awaiting_deposit`으로 **바로** 만들고 재고를 **기한 없이** 잡는다
+ * (lib/shop/stock.ts) — 운영자 입금 확인(lib/shop/bankDeposit.ts)이 `paid`로 바꾼다. 토스 홀드 만료 경로는 `pending`만 봐서 건드리지 않는다.
  *
  * 금액·상품명은 요청이 아니라 카탈로그에서만 읽는다. 재고 판정은 **첫 INSERT의 WHERE** 하나에 모든 줄의 게이트를
  * AND로 건다 — 뒤따르는 shop_orders·shop_order_items INSERT는 "주문이 실제로 만들어졌나"만 EXISTS로 본다.
@@ -30,7 +33,7 @@ export type CreateShopOrderResult =
 export const createShopOrder = async (
   input: CreateShopOrderPayload,
   now: Date,
-  opts: { salesOpen?: boolean } = {},
+  opts: { salesOpen?: boolean; paymentMethod?: CheckoutPaymentMethod } = {},
 ): Promise<CreateShopOrderResult> => {
   if (!(opts.salesOpen ?? SHOP_SALES_OPEN)) return { ok: false, code: 'sales_closed' };
 
@@ -60,6 +63,8 @@ export const createShopOrder = async (
   const orderNo = generateShopOrderNo(now);
   const manageToken = generateManageToken();
   const holdExpiresAt = Math.floor(now.getTime() / 1000) + SHOP_HOLD_SECONDS;
+  // 계좌 입금 대기는 홀드가 의미 없다(기한 없는 점유) — 칸은 NOT NULL이라 값만 채운다.
+  const initialStatus = opts.paymentMethod === 'bank_transfer' ? AWAITING_DEPOSIT : 'pending';
 
   // 재고 게이트(SKU별) + 한정판 게이트(상품별 — 남은 번호 수). 화면의 남은 수량과 같은 식이다(lib/shop/stock.ts).
   const gates = sql.join([
@@ -72,7 +77,7 @@ export const createShopOrder = async (
     db.run(sql`
       INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email,
                           item_amount, vat_amount, total_amount, manage_token)
-      SELECT lower(hex(randomblob(16))), ${orderNo}, 'merch', 'pending', ${input.customerName}, ${input.customerPhone},
+      SELECT lower(hex(randomblob(16))), ${orderNo}, 'merch', ${initialStatus}, ${input.customerName}, ${input.customerPhone},
              ${input.customerEmail}, ${itemAmount}, ${vatAmount}, ${totalAmount}, ${manageToken}
       WHERE ${gates}
     `),
@@ -100,7 +105,7 @@ export const createShopOrder = async (
   const firstName = shopLineName(first.product.title, first.sku.optionLabel);
   const totalQty = resolved.reduce((n, r) => n + r.quantity, 0);
   const orderName = (resolved.length === 1 ? `${firstName} ${first.quantity}개` : `${firstName} 외 ${totalQty - first.quantity}개`).slice(0, 100);
-  return { ok: true, orderNo, totalAmount, orderName };
+  return { ok: true, orderNo, totalAmount, orderName, manageToken };
 };
 
 /**

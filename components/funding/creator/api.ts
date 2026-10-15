@@ -8,7 +8,7 @@ import type { RewardInput } from '../../../lib/funding/creatorValidation';
  * 공통으로 판정한다. **실패 메시지는 서버가 준 한국어를 그대로 돌려준다** — 화면은 그
  * 문자열을 다시 쓰지 않는다.
  */
-export type ApiResult<T = Record<string, never>> = { ok: true } & T | { ok: false; message: string };
+export type ApiResult<T = Record<string, never>> = { ok: true } & T | { ok: false; message: string; code?: string };
 
 const FALLBACK_MESSAGE = '연결에 실패했습니다. 잠시 후 다시 시도해 주세요.';
 
@@ -17,7 +17,11 @@ async function send<T = Record<string, never>>(url: string, init: RequestInit): 
     const res = await fetch(url, init);
     const data = await res.json().catch(() => null);
     if (!res.ok || !data || data.ok !== true) {
-      return { ok: false, message: (data && typeof data.message === 'string' && data.message) || FALLBACK_MESSAGE };
+      return {
+        ok: false,
+        message: (data && typeof data.message === 'string' && data.message) || FALLBACK_MESSAGE,
+        ...(data && typeof data.code === 'string' ? { code: data.code } : {}),
+      };
     }
     return data as ApiResult<T>;
   } catch {

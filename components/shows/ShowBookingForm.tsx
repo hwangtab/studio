@@ -14,6 +14,13 @@ import { formatShowWon, showCopy, type ShowLocale } from '../../lib/shows/i18n';
 import { SHOW_HOLD_SECONDS, SHOW_MAX_PER_ORDER_CAP } from '../../lib/shows/limits';
 import type { PublicShow, PublicShowtime } from '../../lib/shows/queries';
 import RefundPolicyList from './RefundPolicyList';
+import {
+  BANK_DEPOSIT_BLOCK_MESSAGES,
+  BANK_DEPOSIT_BLOCK_MESSAGES_EN,
+  bankDepositBlockReason,
+  type CheckoutPaymentMethod,
+} from '../../lib/payments/bankDeposit';
+import { wantsBankFallback } from '../../lib/payments/bankFallback';
 
 interface Props {
   show: PublicShow;
@@ -40,6 +47,7 @@ export default function ShowBookingForm({ show, locale = 'ko' }: Props) {
   const t = copy.form;
   const en = locale === 'en';
   const won = (n: number) => formatShowWon(n, locale);
+  const blockMessages = en ? BANK_DEPOSIT_BLOCK_MESSAGES_EN : BANK_DEPOSIT_BLOCK_MESSAGES;
   const [availability, setAvailability] = useState<Record<string, AvailabilityPatch>>({});
 
   // SSR 페이지는 CDN에 짧게 캐시된다 — 마운트 뒤 잔여석만 다시 읽는다(실패해도 SSR 값으로 동작).
@@ -126,14 +134,51 @@ export default function ShowBookingForm({ show, locale = 'ko' }: Props) {
   const widget = usePaymentCheckout(total, canBook && widgetArmed);
 
   /**
-   * 결제수단은 전부 토스다 — 카드·간편결제·**토스 계좌이체**. "계좌로 직접 입금"(무통장)은 받지 않는다(운영자 결정
-   * 2026-10-12 — 입금 뒤 환불이 생기면 환불 계좌를 받아 손으로 송금해야 해 번거롭다). 계좌이체 환불은 토스 취소가
-   * 원래 계좌로 돌려준다. 서버(`pages/api/shows/orders.ts`)도 직접 입금 신청을 거절한다.
+   * 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금(우리 계좌번호 안내). 토스 계좌이체는 뱅크페이가 떠 고령층이
+   * 쓰지 못해 뺐다(운영자 결정 2026-10-14 — 10/12에 직접 입금을 접고 계좌이체로 바꿨다가 되돌렸다). 직접 입금은 환불이
+   * 생기면 환불 계좌를 받아 손으로 송금한다. 계좌는 회차 시작 2시간 전부터 막는다(입금을 확인하고 티켓을 보낼 시간이
+   * 없다) — 서버(createShowOrder)가 **같은 함수·같은 인자**(회차 시작, 지금)로 다시 판정한다.
    */
+  const [payMethod, setPayMethod] = useState<CheckoutPaymentMethod>('toss');
+  const bankBlocked = showtime ? bankDepositBlockReason({ startsAt: new Date(showtime.startsAt * 1000), now: new Date() }) : null;
+  const usingBank = payMethod === 'bank_transfer' && !bankBlocked;
+  // 결제 실패 화면에서 "계좌로 직접 입금"으로 돌아온 경우 — 계좌 줄이 골라진 채 연다(lib/payments/bankFallback.ts).
+  useEffect(() => {
+    if (wantsBankFallback(window.location.search)) setPayMethod('bank_transfer');
+  }, []);
+
+  const submitBankDeposit = async () => {
+    if (!ticketType || !showtime) return;
+    setSubmitting(true);
+    try {
+      const res = await fetch('/api/shows/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          showtimeId: showtime.id, ticketTypeId: ticketType.id, quantity: qty,
+          buyerName: name, buyerContact: phone, buyerEmail: email,
+          refundPolicyAgreed: true, paymentMethod: 'bank_transfer', locale,
+        }),
+      });
+      const data = (await res.json().catch(() => null)) as { ok?: boolean; manageUrl?: string; message?: string } | null;
+      if (res.status === 201 && data?.ok && typeof data.manageUrl === 'string') {
+        // 문서 이동 — 도착지(내 티켓)는 관리 토큰이 실린 비밀 주소다(lib/analytics/privatePaths.ts).
+        window.location.assign(data.manageUrl);
+        return;
+      }
+      setError(data?.message || t.errBank);
+    } catch {
+      setError(t.errNetworkBank);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canBook || !ticketType || !showtime || submitting) return;
     setError(null);
+    if (usingBank) return submitBankDeposit();
     setSubmitting(true);
     try {
       const key = JSON.stringify([showtime.id, ticketType.id, qty, name.trim(), phone.trim(), email.trim()]);
@@ -288,9 +333,15 @@ export default function ShowBookingForm({ show, locale = 'ko' }: Props) {
             <h3 className="mb-2 typo-card-meta font-medium text-gray-700 dark:text-gray-300">{t.payMethod}</h3>
             <PaymentMethodPicker
               name="show-paymethod"
-              value={widget.choice}
-              onChange={widget.setChoice}
+              value={usingBank ? 'bank_transfer' : widget.choice}
+              onChange={(next) => {
+                if (next === 'bank_transfer') { setPayMethod('bank_transfer'); return; }
+                setPayMethod('toss');
+                widget.setChoice(next);
+              }}
               applePaySupported={widget.applePaySupported}
+              withBank
+              bankBlockedMessage={bankBlocked ? blockMessages[bankBlocked] : null}
               confirmLabel={t.confirmLabel}
               locale={locale}
             />
@@ -307,19 +358,19 @@ export default function ShowBookingForm({ show, locale = 'ko' }: Props) {
           */}
           <div className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
             <p>
-              {t.agreeLead}
+              {t.agreeLead(usingBank)}
               {/* 처리방침은 한국어 원본이 정본이다(영어판 없음) — 영어 화면에서도 /ko 문서로 연결하고 라벨에 (Korean)을 붙인다. */}
               <Link href="/ko/privacy-policy" target="_blank" className="underline">{t.privacy}</Link>
               {t.agreeTail}
-              {t.holdToss(Math.floor(SHOW_HOLD_SECONDS / 60))}
+              {usingBank ? t.holdBank : t.holdToss(Math.floor(SHOW_HOLD_SECONDS / 60))}
             </p>
             <Disclosure variant="plain" summary={t.refundPolicy} className="mt-1" summaryClassName="text-sm font-medium text-gray-600 dark:text-gray-300" bodyClassName="text-xs">
               <RefundPolicyList locale={locale} />
             </Disclosure>
           </div>
 
-          <Button type="submit" fullWidth disabled={!canBook || !widget.ready || submitting}>
-            {submitting ? t.processing : t.submit(won(total))}
+          <Button type="submit" fullWidth disabled={!canBook || (!usingBank && !widget.ready) || submitting}>
+            {submitting ? t.processing : t.submit(won(total), usingBank)}
           </Button>
         </>
       )}

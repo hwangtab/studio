@@ -17,6 +17,7 @@ import { Panel } from '../../../../../components/ui/Panel';
 import { authenticateCreatorRequest } from '../../../../../lib/funding/creatorAuth';
 import { withI18nServerProps } from '../../../../../lib/getStatic';
 import type { ShowSubmissionDraft } from '../../../../../lib/shows/organizer/draft';
+import { isShowPagePublic } from '../../../../../lib/shows/organizer/policy';
 import { loadSubmissionForCreator } from '../../../../../lib/shows/organizer/submissions';
 import { beforePopStateForScroll } from '../../../../../lib/routeScroll';
 
@@ -27,6 +28,8 @@ export interface EditorShowSubmission {
   reviewNote: string | null;
   draft: ShowSubmissionDraft;
   showSlug: string | null;
+  /** 연결된 공연의 상태 — 공개 페이지가 열린 상태에서만 링크를 띄운다(isShowPagePublic). */
+  showStatus: string | null;
 }
 
 interface Props {
@@ -200,7 +203,7 @@ export default function ShowSubmissionEditor({ submission }: Props) {
           <Notice tone="warning" className="mt-3" title="운영자 메모">{submission.reviewNote}</Notice>
         )}
         {notice && <Panel className="mt-3 text-sm">{notice}</Panel>}
-        {reviewStatus === 'approved' && submission.showSlug && (
+        {reviewStatus === 'approved' && submission.showSlug && isShowPagePublic(submission.showStatus) && (
           <Link
             href={`/ko/shows/${encodeURIComponent(submission.showSlug)}`}
             target="_blank"
@@ -305,6 +308,7 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
         reviewNote: view.reviewNote,
         draft: view.draft,
         showSlug: view.showSlug,
+        showStatus: view.showStatus,
       },
     },
   };

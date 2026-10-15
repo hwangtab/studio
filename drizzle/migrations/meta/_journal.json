@@ -414,6 +414,13 @@
       "when": 1791963995456,
       "tag": "0058_creator_business_profiles",
       "breakpoints": true
+    },
+    {
+      "idx": 59,
+      "version": "6",
+      "when": 1791968136250,
+      "tag": "0059_shop_artist_terms_agreements",
+      "breakpoints": true
     }
   ]
 }

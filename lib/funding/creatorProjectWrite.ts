@@ -46,7 +46,7 @@ export type WriteResult =
     }
   | {
       ok: false;
-      code: 'not_found' | 'locked' | 'not_editable' | 'duplicate_slug' | 'too_many' | 'duplicate_reward'
+      code: 'not_found' | 'locked' | 'not_editable' | 'duplicate_slug' | 'too_many' | 'duplicate_reward' | 'no_payout_account'
         | 'encryption_unavailable' | 'story_too_short' | 'business_unavailable';
       message: string;
     };
@@ -402,8 +402,9 @@ export const saveCreatorSection = async (creatorId: string, value: CreatorSectio
  * (`tax_type`·`payout_account_enc`·`payout_account_last4`)을 일부러 빼고 있고, 각자의
  * integration 테스트가 그 사실을 고정한다.
  *
- * 그래서 개설자는 계좌를 "고치는" 것이 아니라 **다시 입력해 덮어쓴다.** 불편을 이유로
- * 값을 실어 보내고 싶어지면 이 주석이 그 이유를 말한다.
+ * 그래서 개설자는 계좌를 "고치는" 것이 아니라 **다시 입력해 덮어쓴다.** 다른 칸만 고칠 때는
+ * 계좌를 그대로 두고 저장한다(`keepAccount`, `savePayoutSection`) — 값을 화면에 돌려주지 않고도
+ * 다시 입력하지 않게 하는 길이 그것이다. 불편을 이유로 값을 실어 보내고 싶어지면 이 주석이 그 이유를 말한다.
  */
 export interface CreatorPayoutSummary {
   registered: boolean;
@@ -543,9 +544,12 @@ export const savePayoutSection = async (
   value: PayoutSection,
   deps: { lookup?: typeof lookupBusinessStatus; now?: Date; deleteBlob?: DeleteBlob } = {},
 ): Promise<WriteResult> => {
-  const [existing] = await getDb().select({ id: fundingCreators.id })
-    .from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
+  const [existing] = await getDb().select({
+    id: fundingCreators.id, taxType: fundingCreators.taxType, payoutAccountEnc: fundingCreators.payoutAccountEnc,
+  }).from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
   if (!existing) return deny('not_found', '개설자 계정을 찾을 수 없어요.');
+  // *Retained 응답은 "이번 저장으로 바꿨지만 지우지 않았다"는 뜻이다 — 같은 구분으로 다시 저장(계좌만 고침)하면 싣지 않는다.
+  const previousTaxType = existing.taxType;
 
   if (!(await hasApprovedEngagement(creatorId))) {
     return deny('not_editable', '프로젝트·공연·상점 중 하나가 승인된 뒤에 정산 정보를 넣을 수 있어요.');
@@ -560,29 +564,40 @@ export const savePayoutSection = async (
    * 담을지가 사람의 기억에 달린다. 거부하면 개설자는 다시 시도해야 하지만, 그 사이에
    * 키가 없다는 사실은 매일 도는 운영 점검(`checkFieldCryptoKey`)이 이미 high로 알린다.
    *
-   * 주민등록번호와 다른 점 하나: 그쪽은 **값이 들어왔을 때만** 암호화 경로를 타지만(빈 칸이면
-   * 기존 값을 유지한다) 계좌는 매번 덮어쓰므로 **정산 구획 저장 전부**가 키를 요구한다.
-   * 키 없이도 되던 "계좌만 고치는 저장"이 이제 안 된다 — `checkFieldCryptoKey`의 안내 문구가
-   * 그 사실을 함께 적는다.
+   * **`keepAccount`면 계좌 컬럼을 건드리지 않는다** — 주민등록번호의 "빈 칸이면 유지"와 같은 뜻이다.
+   * 화면은 저장된 계좌를 돌려받지 못하므로(`CreatorPayoutSummary` 주석), 상호·세금 구분만 고칠 때 계좌를
+   * 다시 입력하게 하지 않으려면 이 길이 있어야 한다. 새로 암호화할 값이 없으니 키도 요구하지 않는다 —
+   * 주민등록번호까지 비운 저장은 키 없이도 된다. 그대로 둘 계좌가 없으면 거부한다. 판정은
+   * `loadPayoutSummary`의 `registered`(그리고 정산의 `hasPayoutAccount`)와 같은 `trim()`이다.
    */
-  let payoutAccountEnc: string;
-  try {
-    payoutAccountEnc = encryptPayoutAccount({
-      bankName: value.bankName,
-      account: value.account,
-      holder: value.holder,
-    });
-  } catch (error) {
-    if (error instanceof FieldCryptoError) {
-      // 계좌번호는 애초에 메시지에 들어 있지 않다. 그래도 코드만 남긴다(주민등록번호 쪽과 같은 규약).
-      console.error('[funding] payout account encryption failed', { code: error.code });
-      return deny(
-        'encryption_unavailable',
-        '서버의 암호화 설정 문제로 정산 정보를 저장할 수 없어요. 이번 저장은 아무것도 반영되지 '
-          + '않았어요. 개설자님이 고치실 수 있는 문제가 아니니 스튜디오 놀에 알려 주세요.',
-      );
+  let accountWrite: { payoutAccountEnc: string; payoutAccountLast4: string | null } | null = null;
+  if (value.keepAccount) {
+    if (!existing.payoutAccountEnc?.trim()) {
+      return deny('no_payout_account', '등록된 계좌가 없어요. 은행명·계좌번호·예금주를 입력해 주세요.');
     }
-    throw error;
+  } else {
+    try {
+      accountWrite = {
+        payoutAccountEnc: encryptPayoutAccount({
+          bankName: value.bankName,
+          account: value.account,
+          holder: value.holder,
+        }),
+        // 평문으로 남는 것은 이 4자리뿐이다 — 근거는 db/schema.ts의 컬럼 주석.
+        payoutAccountLast4: payoutAccountLast4(value.account),
+      };
+    } catch (error) {
+      if (error instanceof FieldCryptoError) {
+        // 계좌번호는 애초에 메시지에 들어 있지 않다. 그래도 코드만 남긴다(주민등록번호 쪽과 같은 규약).
+        console.error('[funding] payout account encryption failed', { code: error.code });
+        return deny(
+          'encryption_unavailable',
+          '서버의 암호화 설정 문제로 정산 정보를 저장할 수 없어요. 이번 저장은 아무것도 반영되지 '
+            + '않았어요. 개설자님이 고치실 수 있는 문제가 아니니 스튜디오 놀에 알려 주세요.',
+        );
+      }
+      throw error;
+    }
   }
 
   /**
@@ -599,10 +614,9 @@ export const savePayoutSection = async (
    *    응답에 실어 화면이 "지워졌다"고 잘못 말하지 않게 한다.
    *    **상점 아티스트도 유지한다**(`isShopArtist`). 상점 정산은 기록 표가 없어(운영자 수기 이체)
    *    원천징수를 이미 했는지 알 수 없다 — 모르는 채로 지우면 되돌릴 수 없다.
-   * 2. **빈 값(`null`)이면 기존 값을 유지한다.** 계좌와 일부러 다르게 둔다. 계좌는 매번
-   *    다시 입력해 덮어쓰게 하지만, 주민등록번호까지 그렇게 하면 은행명 한 글자를 고칠
-   *    때마다 평문이 화면과 네트워크를 한 번 더 지난다. 지우는 수단은 세금 구분을
-   *    사업자로 바꾸는 것 하나뿐이고, 그 사실은 화면이 말한다.
+   * 2. **빈 값(`null`)이면 기존 값을 유지한다.** 계좌의 `keepAccount`와 같은 뜻이다 — 다시 입력하게
+   *    하면 다른 칸 한 글자를 고칠 때마다 평문이 화면과 네트워크를 한 번 더 지난다. 지우는 수단은
+   *    세금 구분을 사업자로 바꾸는 것 하나뿐이고, 그 사실은 화면이 말한다.
    * 3. 값이 오면 **암호화해서만** 넣는다. `encryptField`는 키가 없거나 형식이 틀리면
    *    던진다 — 그 예외를 여기서 삼켜 평문을 넣거나 그냥 넘어가면 안 된다. 저장 전체를
    *    거부하고 `encryption_unavailable`로 알린다.
@@ -613,7 +627,7 @@ export const savePayoutSection = async (
     if (await keepsResidentNumber(creatorId)) {
       // undefined = SET 목록에서 빠진다(아래 주석). 지우지 않고 그대로 둔다.
       residentNumberEnc = undefined;
-      residentNumberRetained = true;
+      residentNumberRetained = previousTaxType === 'withholding';
     } else {
       residentNumberEnc = null;
     }
@@ -717,9 +731,8 @@ export const savePayoutSection = async (
   const db = getDb();
   const creatorUpdate = db.update(fundingCreators).set({
     taxType: value.taxType,
-    payoutAccountEnc,
-    // 평문으로 남는 것은 이 4자리뿐이다 — 근거는 db/schema.ts의 컬럼 주석.
-    payoutAccountLast4: payoutAccountLast4(value.account),
+    // null(= keepAccount)이면 계좌 두 컬럼이 SET 목록에 아예 없다 — 기존 값이 그대로 남는다.
+    ...(accountWrite ?? {}),
     // undefined면 drizzle이 SET 목록에서 빼므로 기존 값이 그대로 남는다(위 2번).
     ...(residentNumberEnc === undefined ? {} : { residentNumberEnc }),
     updatedAt: new Date(),
@@ -745,7 +758,7 @@ export const savePayoutSection = async (
   let businessProfileRetained = false;
   if (value.taxType === 'withholding' && existingBusiness && existingBusiness !== 'unavailable') {
     try {
-      if (await keepsBusinessProfile(creatorId)) businessProfileRetained = true;
+      if (await keepsBusinessProfile(creatorId)) businessProfileRetained = previousTaxType === 'invoice';
       else await deleteBusinessProfile(creatorId, { deleteBlob: deps.deleteBlob });
     } catch {
       console.error('[funding] 개인 전환 뒤 사업자 정보 정리 실패', { creatorId });

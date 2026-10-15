@@ -14,6 +14,9 @@ import { loadProductFulfillmentMode, type ShopFulfillmentMode } from '../../../.
 import { loadProductForCreator, type CreatorProductDetail } from '../../../../lib/shop/creatorProductWrite';
 import { splitShopDescription } from '../../../../lib/shop/creatorValidation';
 import { SHOP_STATUS_LABELS } from '../../../../lib/shop/productRules';
+import { describeShopArtistTerms } from '../../../../lib/shop/artistTerms';
+import { loadShopArtistTermsStatus } from '../../../../lib/shop/artistTermsAgreement';
+import { isStudioShopArtistSlug } from '../../../../lib/shop/studioArtist';
 
 interface Props {
   product: AdminShopProductDetail;
@@ -21,6 +24,8 @@ interface Props {
   editable: CreatorProductDetail;
   /** 발송 주체. `tableMissing`이면 마이그레이션 0057 전이라 바꿀 수 없다. */
   fulfillment: { mode: ShopFulfillmentMode; tableMissing: boolean };
+  /** 위탁 약관 — 현재 판본 동의가 없으면 승인이 `terms_not_agreed`로 거부된다(스튜디오 상품은 해당 없음). */
+  terms: { label: string; ok: boolean };
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
@@ -35,7 +40,13 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     console.error('[admin/shop] 발송 주체 조회 실패:', error);
     return { mode: 'studio' as const, tableMissing: true };
   });
-  return { props: { product, editable, fulfillment } };
+  const studio = isStudioShopArtistSlug(product.artistSlug);
+  const termsStatus = studio ? null : await loadShopArtistTermsStatus(product.creatorId).catch((error: unknown) => {
+    console.error('[admin/shop] 위탁 약관 동의 조회 실패:', error);
+    return null;
+  });
+  const terms = { label: describeShopArtistTerms(termsStatus, studio), ok: studio || termsStatus?.state === 'agreed' };
+  return { props: { product, editable, fulfillment, terms } };
 };
 
 const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
@@ -108,7 +119,7 @@ const parseFiles = (text: string, preview: boolean): Array<{ label: string; key:
     return preview ? { ...base, preview: true as const } : base;
   });
 
-export default function AdminShopProductPage({ product, editable, fulfillment }: Props) {
+export default function AdminShopProductPage({ product, editable, fulfillment, terms }: Props) {
   // 관리자 화면은 항상 밝은 바탕이다. 미리보기에 들어가는 공개 컴포넌트는 dark: 색을 쓰므로, 운영자 기기가
   // 어두운 모드면 흰 바탕에 연한 글씨가 되어 안 보인다 — 이 화면에서는 dark 클래스를 걷는다(Layout이 없어 다시 붙이는 쪽이 없다).
   useEffect(() => { document.documentElement.classList.remove('dark'); }, []);
@@ -166,6 +177,12 @@ export default function AdminShopProductPage({ product, editable, fulfillment }:
         {!product.artistSlug && (
           <div role="alert" className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-900">
             상점 아티스트로 등재되지 않은 계정입니다. <Link href="/admin/shop/artists" className="underline">아티스트 등재</Link>를 먼저 해 주세요.
+          </div>
+        )}
+        {product.artistSlug && (
+          <div role={terms.ok ? undefined : 'alert'} className={`mb-4 rounded-lg p-3 text-sm ${terms.ok ? 'bg-gray-50 text-gray-800' : 'border border-red-300 bg-red-50 text-red-900'}`}>
+            위탁 약관: {terms.label}
+            {!terms.ok && ' — 아티스트가 내 상점 화면에서 현재 판본에 동의하기 전에는 승인할 수 없습니다.'}
           </div>
         )}
         {approved && product.creatorEditedAt && (

@@ -7,6 +7,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { createTestDb, type ShowsTestDb } from '../../../../tests/helpers/showsDb';
 import { fundingCreators, showSubmissions } from '../../../../db/schema';
 import { eq } from 'drizzle-orm';
+import { emptyDraft } from '../../../../lib/shows/organizer/draft';
 
 let mockDb: ShowsTestDb;
 jest.mock('../../../../db/client', () => ({ getDb: () => mockDb }));
@@ -116,5 +117,25 @@ describe('주최자 공연 API', () => {
 
     await mockDb.update(showSubmissions).set({ reviewStatus: 'submitted' }).where(eq(showSubmissions.id, id));
     expect((await call(uploadHandler, { method: 'POST', query: { id, kind: 'photo' }, raw: png })).status).toBe(409);
+  });
+
+  it('이미지가 꽉 찬 신청서(포스터 1 + 출연진 사진 12)도 교체용 업로드는 받는다 — 저장은 여전히 출연진 12명까지', async () => {
+    const c = await seedCreator();
+    login(c);
+    const id = (await call(showsHandler, { method: 'POST' })).json.id as string;
+    const img = (n: string) => `/api/funding/media/${c}-${n}.webp?w=40&h=60`;
+    const performers = Array.from({ length: 12 }, (_, i) => ({ name: `출연 ${i}`, bio: '', photoUrl: img(`p${i}`) }));
+    await mockDb
+      .update(showSubmissions)
+      .set({ draftJson: JSON.stringify({ ...emptyDraft(), posterUrl: img('poster'), performers }) })
+      .where(eq(showSubmissions.id, id));
+    const png = await sharp({ create: { width: 40, height: 60, channels: 3, background: '#888' } }).png().toBuffer();
+
+    expect((await call(uploadHandler, { method: 'POST', query: { id, kind: 'poster' }, raw: png })).status).toBe(200);
+    expect((await call(uploadHandler, { method: 'POST', query: { id, kind: 'photo' }, raw: png })).status).toBe(200);
+
+    const thirteen = [...performers, { name: '출연 12', bio: '', photoUrl: img('p12') }];
+    const saved = await call(showHandler, { method: 'PUT', query: { id }, body: { ...emptyDraft(), posterUrl: img('poster'), performers: thirteen } });
+    expect(saved.status).toBe(400);
   });
 });

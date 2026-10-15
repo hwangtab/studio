@@ -27,7 +27,7 @@ const FAIL_MESSAGES: Record<string, string> = {
   NOT_AVAILABLE_BANK: '은행 서비스 시간이 아니에요. 잠시 후 다시 시도하거나 카드·간편결제로 결제해 주세요.',
   NOT_ENOUGH_BALANCE: '계좌 잔액이 부족해요. 다른 계좌나 결제수단으로 시도해 주세요.',
 };
-const GENERIC_MESSAGE = '결제 진행 중 문제가 생겼어요. 계좌이체가 막혔다면 카드·간편결제로 다시 시도해 주세요.';
+const GENERIC_MESSAGE = '결제 진행 중 문제가 생겼어요. 카드·간편결제로 다시 시도해 주세요.';
 const CODE_PATTERN = /^[A-Z0-9_]{1,60}$/;
 
 interface Props {

@@ -37,3 +37,7 @@ export const shopProductAction = (id: string, action: 'submit' | 'withdraw' | 'p
  */
 export const saveShopProductAsAdmin = (id: string, value: unknown, expectedUpdatedAt: number) =>
   request<{ product: CreatorProductDetail }>('PUT', `/api/admin/shop/products/${encodeURIComponent(id)}`, { value, expectedUpdatedAt });
+
+/** 상점 위탁 약관 동의 — 화면이 보여 준 판본을 함께 보낸다(그 사이 바뀌었으면 서버가 409). */
+export const agreeShopArtistTerms = (version: string) =>
+  request<{ agreedAt: number }>('POST', '/api/funding/creator/shop/terms', { version, agreed: true });

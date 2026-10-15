@@ -5,6 +5,7 @@
 import Head from 'next/head';
 import { useState } from 'react';
 
+import BankDepositGuide from '../../../../components/payments/BankDepositGuide';
 import { Button } from '../../../../components/ui/Button';
 import { Notice } from '../../../../components/ui/Notice';
 import { PageShell } from '../../../../components/ui/PageHeader';
@@ -13,6 +14,8 @@ import { PriceSummary } from '../../../../components/ui/PriceSummary';
 import StatusBadge from '../../../../components/ui/StatusBadge';
 import { getSiteConfig } from '../../../../data/siteConfig';
 import { isTokenMatch } from '../../../../lib/booking/token';
+import { AWAITING_DEPOSIT, DEPOSIT_CANCELLED, isBankDepositPayment } from '../../../../lib/payments/bankDeposit';
+import { shopDepositDeadline } from '../../../../lib/shop/bankDeposit';
 import { withI18nServerProps } from '../../../../lib/getStatic';
 import { shopLineName } from '../../../../lib/shop/catalog';
 import { getFirstDownloadedAt, loadOrderDownloadFiles } from '../../../../lib/shop/downloads';
@@ -25,7 +28,7 @@ import { normalizeShopOrderNo, shopOrderShips } from '../../../../lib/shop/shape
 interface Props {
   orderNo: string;
   token: string;
-  state: 'preparing' | 'shipped' | 'delivered' | 'cancelled' | 'unpaid';
+  state: 'preparing' | 'shipped' | 'delivered' | 'cancelled' | 'unpaid' | 'awaiting_deposit' | 'deposit_cancelled';
   lines: Array<{ label: string; quantity: number; amount: number; serials: string | null }>;
   /** 아직 오지 않은 가장 늦은 발송 예정일(YYYY-MM-DD). 발송 전 예약 주문만. */
   shipsOn: string | null;
@@ -43,6 +46,11 @@ interface Props {
   downloadedAt: number | null;
   /** 일부 환불된 주문 — 디지털 상품은 내려받기를 내주지 않는다(문의로 돌린다). */
   partiallyRefunded: boolean;
+  /** 계좌 입금 대기 주문의 안내 기한(ISO) — 입금 안내 화면이 쓴다. 그 밖에는 null. */
+  depositDeadline: string | null;
+  customerName: string;
+  /** 계좌로 입금해 확정된 주문 — 고객 셀프 취소가 없다(환불 계좌를 운영자가 받는다). */
+  bankPaid: boolean;
 }
 
 const DIGITAL_STATE_LABEL: Partial<Record<Props['state'], string>> = { preparing: '내려받을 수 있어요', delivered: '내려받기 시작' };
@@ -53,10 +61,12 @@ const STATE_LABEL: Record<Props['state'], string> = {
   delivered: '배송 완료',
   cancelled: '취소됨',
   unpaid: '결제 전',
+  awaiting_deposit: '입금 대기',
+  deposit_cancelled: '입금 전 취소',
 };
 
 export default function ShopManagePage(props: Props) {
-  const { orderNo, token, state, lines, shipsOn, shippingFee, totalAmount, recipient, address, courier, trackingNumber, ships, downloads, downloadedAt, partiallyRefunded } = props;
+  const { orderNo, token, state, lines, shipsOn, shippingFee, totalAmount, recipient, address, courier, trackingNumber, ships, downloads, downloadedAt, partiallyRefunded, depositDeadline, customerName, bankPaid } = props;
   const kakaoUrl = getSiteConfig('ko').contact.kakaoUrl;
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ tone: 'error' | 'success'; text: string } | null>(null);
@@ -94,7 +104,7 @@ export default function ShopManagePage(props: Props) {
         <header className="mb-6 text-center">
           <h1 className="typo-page-title text-gray-900 dark:text-white">주문 확인</h1>
           <p className="mt-2 typo-card-meta">주문번호 {orderNo}</p>
-          <StatusBadge tone={state === 'cancelled' || state === 'unpaid' ? 'neutral' : 'active'} className="mt-3">{(!ships && partiallyRefunded && '일부 환불됨') || (!ships && DIGITAL_STATE_LABEL[state]) || STATE_LABEL[state]}</StatusBadge>
+          <StatusBadge tone={state === 'cancelled' || state === 'unpaid' || state === 'deposit_cancelled' ? 'neutral' : 'active'} className="mt-3">{(!ships && partiallyRefunded && '일부 환불됨') || (!ships && DIGITAL_STATE_LABEL[state]) || STATE_LABEL[state]}</StatusBadge>
         </header>
 
         <PriceSummary
@@ -103,6 +113,28 @@ export default function ShopManagePage(props: Props) {
           total={totalAmount}
           totalLabel="결제 금액 (부가세 포함)"
         />
+
+        {state === 'awaiting_deposit' && depositDeadline && (
+          <>
+            <BankDepositGuide amount={totalAmount} deadline={depositDeadline} customerName={customerName} applicantLabel="주문하신 분" />
+            <div className="mb-6 mt-6 space-y-3">
+              {!confirming ? (
+                <Button type="button" variant="weak" fullWidth onClick={() => setConfirming(true)}>입금 전 신청 취소하기</Button>
+              ) : (
+                <Panel className="space-y-3">
+                  <p className="text-sm text-gray-800 dark:text-gray-200">아직 입금 전이에요. 신청을 취소하면 잡아 둔 상품이 풀려요. 취소할까요?</p>
+                  <div className="flex gap-2">
+                    <Button type="button" onClick={cancel} disabled={busy}>{busy ? '처리 중…' : '네, 취소할게요'}</Button>
+                    <Button type="button" variant="ghost" onClick={() => setConfirming(false)} disabled={busy}>아니요</Button>
+                  </div>
+                </Panel>
+              )}
+            </div>
+          </>
+        )}
+        {state === 'deposit_cancelled' && (
+          <p className="mb-6 typo-card-meta">입금 전에 취소된 신청이에요. 이미 입금하셨다면 카카오톡이나 010-4255-7893으로 알려 주세요.</p>
+        )}
 
         {downloads.length > 0 && (
           <div className="mb-6 space-y-2">
@@ -142,7 +174,10 @@ export default function ShopManagePage(props: Props) {
 
         {message && <Notice tone={message.tone} className="mb-4">{message.text}</Notice>}
 
-        {state === 'preparing' && downloadedAt === null && (
+        {state === 'preparing' && bankPaid && (
+          <p className="typo-card-meta">계좌로 입금하신 주문은 환불받으실 계좌를 확인해야 해서 여기서 취소할 수 없어요. 카카오톡이나 010-4255-7893으로 알려 주시면 바로 처리해 드릴게요.</p>
+        )}
+        {state === 'preparing' && downloadedAt === null && !bankPaid && (
           <div className="space-y-3">
             {!confirming ? (
               <Button type="button" variant="weak" fullWidth onClick={() => setConfirming(true)}>주문 취소하기</Button>
@@ -188,6 +223,7 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ params, qu
   const so = order.shopOrder;
   const extras = await loadOrderExtras(order.orderNo, so.items, new Date()).catch(() => null);
   const paid = order.status === 'paid' || order.status === 'partially_refunded' || order.status === 'refunded';
+  const awaitingDeposit = order.status === AWAITING_DEPOSIT;
   // 내려받기 버튼은 결제 완료 주문만 — 일부 환불 주문은 내려받기 API도 거절한다(어느 파일이 환불됐는지 원장이 모른다).
   const live = order.status === 'paid' && so.fulfillmentStatus !== 'cancelled';
   // 디지털 상품 — 목록·첫 내려받기 시각. 조회 실패는 삼킨다(주문 확인 화면이 이것 때문에 깨지면 안 된다). 키는 props에 싣지 않는다.
@@ -200,7 +236,7 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ params, qu
     props: {
       orderNo: order.orderNo,
       token,
-      state: !paid ? 'unpaid' : so.fulfillmentStatus,
+      state: awaitingDeposit ? 'awaiting_deposit' : order.status === DEPOSIT_CANCELLED ? 'deposit_cancelled' : !paid ? 'unpaid' : so.fulfillmentStatus,
       lines: so.items.map((i) => ({ label: shopLineName(i.productTitle, i.optionLabel), quantity: i.quantity, amount: i.unitPrice * i.quantity, serials: extras?.serialsByItem.get(i.id) ?? null })),
       shipsOn: extras?.latestShipsOn ?? null,
       shippingFee: so.shippingFee,
@@ -213,6 +249,9 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ params, qu
       downloads,
       downloadedAt,
       partiallyRefunded: order.status === 'partially_refunded',
+      depositDeadline: awaitingDeposit ? shopDepositDeadline(order.createdAt).toISOString() : null,
+      customerName: order.customerName,
+      bankPaid: order.payments.some(isBankDepositPayment),
     },
   };
 });

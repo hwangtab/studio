@@ -11,12 +11,12 @@ import { AWAITING_DEPOSIT, DEPOSIT_CANCELLED } from './bankDeposit';
 import { safeDbErrorSummary } from './refundAccount';
 
 /**
- * 공연·예약·믹싱 **계좌 입금 주문**의 서버 공용 부품 — 같은 이름 후보, 입금 안내 메일.
+ * 공연·예약·믹싱·상점 **계좌 입금 주문**의 서버 공용 부품 — 같은 이름 후보, 입금 안내 메일.
  * 규칙의 근거는 lib/payments/bankDeposit.ts 머리 주석.
  */
 
 /** 이 함수들이 다루는 주문 종류(`orders.type`). 펀딩은 자기 표로 따로 센다(lib/funding/bankTransfer.ts). */
-const BANK_DEPOSIT_ORDER_TYPES = sql`('session', 'mixing', 'ticket', 'deposit')`;
+const BANK_DEPOSIT_ORDER_TYPES = sql`('session', 'mixing', 'ticket', 'deposit', 'merch')`;
 
 export interface SameNameDepositOrder {
   id: string;

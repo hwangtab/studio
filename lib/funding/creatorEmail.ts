@@ -2,8 +2,9 @@ import { adminUrl, buildEmailLayout, escapeHtml, type EmailLayoutRow } from '../
 import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 
+/** 펀딩 개설자와 공연 주최자가 같은 로그인 메일을 받는다 — 어느 한쪽 말로 쓰지 않는다. */
 export const buildCreatorLoginText = (loginUrl: string): string => [
-  '펀딩 개설 페이지로 들어가는 링크예요.',
+  '스튜디오 놀 개설자 콘솔로 들어가는 링크예요.',
   '',
   loginUrl,
   '',
@@ -15,10 +16,10 @@ export const buildCreatorLoginText = (loginUrl: string): string => [
 
 export const buildCreatorLoginHtml = (loginUrl: string): string =>
   buildEmailLayout({
-    preheader: '펀딩 개설 페이지로 들어가는 링크예요. 15분 동안, 한 번만 쓸 수 있어요.',
-    heading: '펀딩 개설 로그인 링크',
-    paragraphs: ['펀딩 개설 페이지로 들어가는 링크예요.'],
-    cta: { label: '개설 페이지로 들어가기', url: loginUrl },
+    preheader: '개설자 콘솔로 들어가는 링크예요. 15분 동안, 한 번만 쓸 수 있어요.',
+    heading: '개설자 콘솔 로그인 링크',
+    paragraphs: ['스튜디오 놀 개설자 콘솔로 들어가는 링크예요.'],
+    cta: { label: '콘솔로 들어가기', url: loginUrl },
     notices: [
       '이 링크는 <strong>15분 동안, 한 번만</strong> 쓸 수 있어요.',
       '요청하지 않으셨다면 이 메일을 지우셔도 돼요. 링크를 누르지 않으면 아무 일도 일어나지 않아요.',
@@ -30,7 +31,7 @@ export const sendCreatorLoginEmail = async (email: string, loginUrl: string): Pr
   const result = await sendEmail({
     to: email,
     replyTo: CUSTOMER_REPLY_TO,
-    subject: '[스튜디오 놀] 펀딩 개설 로그인 링크',
+    subject: '[스튜디오 놀] 개설자 콘솔 로그인 링크',
     text: buildCreatorLoginText(loginUrl),
     html: buildCreatorLoginHtml(loginUrl),
   });

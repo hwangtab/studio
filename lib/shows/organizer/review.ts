@@ -7,7 +7,7 @@ import { seedShow } from '../seed';
 import { isPublishable, sqlUpdateStatus } from '../revalidate';
 import { validateShowSlug } from '../reservedSlugs';
 import { buildShowDefinition, findSubmitProblems, parseDraft } from './draft';
-import { sendShowReviewResultEmail } from './email';
+import { sendShowReviewResultEmail, type ShowReviewResult } from './email';
 
 export type ShowDecisionAction = 'approve' | 'request_changes' | 'reject';
 export type ShowDecisionCode =
@@ -25,7 +25,7 @@ export type ShowDecisionResult =
 const STALE_VERSION_MESSAGE = '그 사이 주최자가 수정해 다시 제출했어요. 새로고침해 새 판본을 확인해 주세요.';
 const deny = (code: ShowDecisionCode, message: string): ShowDecisionResult => ({ ok: false, code, message });
 
-async function notify(id: string, result: 'approved' | 'changes_requested' | 'rejected'): Promise<string[]> {
+async function notify(id: string, result: ShowReviewResult): Promise<string[]> {
   try {
     await sendShowReviewResultEmail(id, result);
     return [];
@@ -140,6 +140,7 @@ export async function decideShowSubmission(
 
   // 승인은 이미 기록됐다 — 공개 실패는 승인을 되돌리지 않고 알린다.
   const publishFailed = '승인됐지만 공개하지 못했어요. /admin/shows에서 공개해 주세요.';
+  let published = false;
   try {
     const [zones, ticketTypes, showtimeRows] = await Promise.all([
       db.select().from(showZones).where(eq(showZones.showId, showId)),
@@ -148,6 +149,7 @@ export async function decideShowSubmission(
     ]);
     if (isPublishable({ zones, ticketTypes, showtimes: showtimeRows }, now)) {
       await db.run(sqlUpdateStatus(showId, 'published', now));
+      published = true;
     } else {
       warnings.push(publishFailed);
     }
@@ -156,6 +158,7 @@ export async function decideShowSubmission(
     warnings.push(publishFailed);
   }
 
-  warnings.push(...(await notify(id, 'approved')));
+  // 공개하지 못했으면 "지금 공개됐어요"라고 알리지 않는다 — 승인 사실만 알리고 공개 주소는 싣지 않는다.
+  warnings.push(...(await notify(id, published ? 'approved' : 'approved_pending')));
   return warnings.length > 0 ? { ok: true, slug, warnings } : { ok: true, slug };
 }

@@ -6,7 +6,7 @@ import { kstDateString } from '../booking/kst';
 import { getSupportedArtist } from '../../data/artists';
 import { SHOP_PRODUCTS } from '../../data/shop/catalog';
 import { loadArtistShippersByOrder } from './artistShipping';
-import { isMissingTableError } from './fulfillmentMode';
+import { isMissingTableError } from '../dbErrors';
 import { listDbSkusForAdmin } from './dbProducts';
 import { isDbSkuId } from './productRules';
 import { listAllSkusForAdmin } from './repository';

@@ -1,7 +1,7 @@
 import { eq, sql } from 'drizzle-orm';
 
 import { createTestDb, type ShowsTestDb } from '../../tests/helpers/showsDb';
-import { shopPayload } from '../../tests/helpers/shopFixtures';
+import { agreeShopArtistTermsForTest, shopPayload } from '../../tests/helpers/shopFixtures';
 import { fundingCreators, shopArtists, shopProducts, shopProductSkus } from '../../db/schema';
 
 let testDb: ShowsTestDb;
@@ -39,6 +39,7 @@ const value = (creatorId: string, over: Record<string, unknown> = {}) => ({
 const seedArtist = async () => {
   await testDb.insert(fundingCreators).values({ id: 'c1', email: 'c1@example.com', name: '아티스트' });
   await testDb.insert(shopArtists).values({ creatorId: 'c1', slug: 'artist-c1' });
+  await agreeShopArtistTermsForTest(testDb, 'c1');
 };
 
 let errorSpy: jest.SpyInstance;

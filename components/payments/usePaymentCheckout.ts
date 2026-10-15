@@ -63,9 +63,7 @@ export const usePaymentCheckout = (amount: number, enabled = true) => {
       amount: finalAmount ?? amountRef.current,
       successUrl: withApiKeyChannel(params.successUrl),
     });
-    // SDK의 requestPayment는 수단별 오버로드라 합집합을 그대로 못 받는다 — 수단으로 좁혀 부른다.
-    if (request.method === 'TRANSFER') await payment.requestPayment(request);
-    else await payment.requestPayment(request);
+    await payment.requestPayment(request);
   }, [apiClientKey]);
 
   return {

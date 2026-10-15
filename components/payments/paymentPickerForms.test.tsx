@@ -12,7 +12,7 @@ import type { PublicShow } from '../../lib/shows/queries';
 
 /**
  * 네 폼이 우리가 그린 결제수단 목록을 보이고, 고른 수단의 결제창을 **API 개별 연동 키**로 여는지 본다.
- * 토스 결제위젯 경로는 2026-10-14에 걷어냈다. 계좌번호 직접 입금은 목록의 줄이 아니라 폴백 링크(`?bank=1` 포함)다.
+ * 토스 결제위젯 경로는 2026-10-14에 걷어냈다. 계좌 줄은 토스 계좌이체(뱅크페이)가 아니라 우리 계좌번호를 안내하는 직접 입금이다.
  */
 const sdkRequestPayment = jest.fn().mockResolvedValue(undefined);
 const sdkPayment = jest.fn(() => ({ requestPayment: sdkRequestPayment }));
@@ -43,8 +43,8 @@ afterEach(() => {
 
 const lastRequest = () => sdkRequestPayment.mock.calls.at(-1)![0];
 
-// 모든 화면의 목록이 같다 — 직접 입금 줄은 없다(2026-10-14). 계좌이체는 토스 TRANSFER 결제창이다.
-const TOSS_LIST = ['신용·체크카드', '계좌이체', '카카오페이', '네이버페이', '토스페이', '페이코'];
+// 입금 흐름이 있는 네 화면(펀딩·예약·믹싱·공연)의 목록 — 토스 계좌이체(TRANSFER)는 없고 계좌 줄은 직접 입금이다.
+const TOSS_LIST = ['신용·체크카드', '계좌로 직접 입금', '카카오페이', '네이버페이', '토스페이', '페이코'];
 
 const expectPicker = async (groupName = '결제수단', expected = TOSS_LIST) => {
   const group = await screen.findByRole('group', { name: groupName });
@@ -118,16 +118,14 @@ rewards:
     expect(lastRequest().card).toBeUndefined();
   });
 
-  it('폴백 링크로 계좌번호 직접 입금을 열면 토스를 부르지 않고 신청을 만든다 — 버튼은 "계좌 안내 받기"', async () => {
+  it('계좌로 직접 입금을 고르면 토스를 부르지 않고 신청을 만든다 — 버튼은 "계좌 안내 받기"', async () => {
     const assign = jest.fn();
     const realLocation = window.location;
     Object.defineProperty(window, 'location', { value: { ...realLocation, assign, search: '', origin: 'http://localhost' }, configurable: true });
     try {
       render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ mail: null }} />);
       await fill();
-      expect(screen.queryByRole('radio', { name: '계좌로 직접 입금' })).toBeNull();
-      await userEvent.click(await screen.findByRole('button', { name: '계좌번호로 직접 보내기' }));
-      expect(screen.queryByRole('group', { name: '결제수단' })).toBeNull();
+      await userEvent.click(await screen.findByRole('radio', { name: '계좌로 직접 입금' }));
       await userEvent.click(screen.getByRole('button', { name: /계좌 안내 받기/ }));
       await waitFor(() => expect(assign).toHaveBeenCalled());
       const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
@@ -142,7 +140,7 @@ rewards:
     window.history.replaceState({}, '', '/ko/test?bank=1');
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ mail: null }} />);
     expect(await screen.findByRole('button', { name: /계좌 안내 받기/ })).toBeInTheDocument();
-    expect(screen.queryByRole('group', { name: '결제수단' })).toBeNull();
+    expect(await screen.findByRole('radio', { name: '계좌로 직접 입금' })).toBeChecked();
   });
 
   it('결제창을 닫으면(USER_CANCEL) 아무 문구도 띄우지 않는다', async () => {
@@ -245,26 +243,32 @@ describe('ShowBookingForm — 결제수단 목록', () => {
     expect(lastRequest().successUrl).toBe('http://localhost/ko/shows/success?tosskey=api');
   });
 
-  it('계좌이체를 고르면 TRANSFER 결제창을 연다 — 직접 입금 신청(paymentMethod)은 보내지 않는다', async () => {
+  it('계좌로 직접 입금을 고르면 토스를 부르지 않고 신청(paymentMethod: bank_transfer)을 만든 뒤 내 티켓으로 옮긴다', async () => {
+    const assign = jest.fn();
+    const realLocation = window.location;
+    Object.defineProperty(window, 'location', { value: { ...realLocation, assign, search: '', origin: 'http://localhost' }, configurable: true });
     const fetchMock = jest.fn(async (input: RequestInfo | URL) => {
       const url = typeof input === 'string' ? input : input.toString();
-      if (url === '/api/shows/orders') return { ok: true, status: 201, json: async () => ({ ok: true, orderNo: 'TKT-20261024-ABCDEFGH', totalAmount: 25000 }) } as Response;
+      if (url === '/api/shows/orders') return { ok: true, status: 201, json: async () => ({ ok: true, orderNo: 'TKT-20261024-ABCDEFGH', manageUrl: '/ko/shows/manage/TKT-20261024-ABCDEFGH?token=t' }) } as Response;
       return { ok: true, status: 200, json: async () => ({ ok: true }) } as Response;
     });
     global.fetch = fetchMock as unknown as typeof fetch;
-    render(<ShowBookingForm show={show} />);
-    fireEvent.change(screen.getByLabelText(/이름/), { target: { value: '이관객' } });
-    fireEvent.change(screen.getByLabelText(/휴대폰 번호/), { target: { value: '010-1111-2222' } });
-    fireEvent.change(screen.getByLabelText(/이메일/), { target: { value: 'fan@example.com' } });
-    await expectPicker();
-    fireEvent.click(screen.getByRole('radio', { name: '계좌이체' }));
-    await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: /결제하기/ }));
-    });
-    await waitFor(() => expect(sdkRequestPayment).toHaveBeenCalled());
-    expect(lastRequest().method).toBe('TRANSFER');
-    expect('card' in lastRequest()).toBe(false);
-    const call = fetchMock.mock.calls.find((c) => c[0] === '/api/shows/orders') as unknown as [string, RequestInit];
-    expect(JSON.parse(String(call[1].body)).paymentMethod).toBeUndefined();
+    try {
+      render(<ShowBookingForm show={show} />);
+      fireEvent.change(screen.getByLabelText(/이름/), { target: { value: '이관객' } });
+      fireEvent.change(screen.getByLabelText(/휴대폰 번호/), { target: { value: '010-1111-2222' } });
+      fireEvent.change(screen.getByLabelText(/이메일/), { target: { value: 'fan@example.com' } });
+      await expectPicker();
+      fireEvent.click(screen.getByRole('radio', { name: '계좌로 직접 입금' }));
+      await act(async () => {
+        fireEvent.click(screen.getByRole('button', { name: /계좌 안내 받기/ }));
+      });
+      await waitFor(() => expect(assign).toHaveBeenCalledWith('/ko/shows/manage/TKT-20261024-ABCDEFGH?token=t'));
+      const call = fetchMock.mock.calls.find((c) => c[0] === '/api/shows/orders') as unknown as [string, RequestInit];
+      expect(JSON.parse(String(call[1].body)).paymentMethod).toBe('bank_transfer');
+      expect(sdkRequestPayment).not.toHaveBeenCalled();
+    } finally {
+      Object.defineProperty(window, 'location', { value: realLocation, configurable: true });
+    }
   });
 });

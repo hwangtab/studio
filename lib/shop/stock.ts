@@ -10,12 +10,13 @@ import { isDbSkuId } from './productRules';
  * 점유로 세는 주문:
  * - `paid`·`partially_refunded` — 팔린 것.
  * - `auto_cancel_pending` — 승인 뒤 자동 취소 중. 끝나면 `refunded`가 되어 풀린다. 그 사이 다른 사람에게 팔지 않는다.
+ * - `awaiting_deposit` — 계좌로 직접 입금을 신청하고 운영자가 입금을 확인하기 전(2026-10-14 도입). **기한 없이** 점유한다(자동 취소가
+ *   없다 — 입금한 사람에게 "취소됨"이 가는 사고를 막으려는 규칙, lib/payments/bankDeposit.ts). 닫는 길은 운영자 "미입금 취소"와
+ *   고객 "입금 전 신청 취소"(`deposit_cancelled`)뿐이고, 그러면 점유에서 빠진다.
  * - `pending`이고 홀드가 아직 안 끝난 것 — 결제창을 연 사람. 홀드가 지나면 상태와 무관하게 풀린다(공연 좌석과 같은 규칙).
  *
  * 세지 않는 것: `refunded`(취소·환불 — 재고로 돌아온다), `expired`·`failed`. **발송 뒤 반품 환불도 재고로 돌아온다** —
  * 되팔 수 없는 상태면 운영자가 관리자 화면에서 총수량을 줄인다.
- *
- * 계좌 입금(`awaiting_deposit`)은 상점에 없다 — 결제수단은 전부 토스다(운영자 결정 2026-10-12).
  *
  * ── 한정판(`edition_size`가 있는 DB 상품)의 상한 ──
  * 발송 뒤 반품 환불은 재고로 돌아오지만 **번호는 반납하지 않는다**(이미 나간 물건의 번호다). 그래서 재고 계산만으로 팔면 번호 없는
@@ -27,7 +28,7 @@ import { isDbSkuId } from './productRules';
 
 /** "이 주문 줄이 재고를 점유하는가" — 아래 두 집계가 같은 판정을 쓴다(한쪽만 고치면 화면과 결제가 갈린다). */
 const occupyingCondition = (now: Date): SQL => sql`(
-  o.status IN ('paid', 'partially_refunded', 'auto_cancel_pending')
+  o.status IN ('paid', 'partially_refunded', 'auto_cancel_pending', 'awaiting_deposit')
   OR (o.status = 'pending' AND so.hold_expires_at > ${Math.floor(now.getTime() / 1000)})
 )`;
 
