@@ -336,9 +336,12 @@ export default function AdminBookingDetailPage({
     //
     // 하한은 경로마다 다르다. 일반 취소의 0원은 유효한 액션이지만(0% 티어 당일 취소와 동형)
     // 이미 취소된 건의 잔액 환불에서 0원은 아무 일도 하지 않는다 — 서버도 거절한다.
-    const minAmount = isRemainderRefund ? 1 : 0;
+    // 예약금 주문은 취소할 예약이 없어 0원이 아무 일도 하지 않는다 — 서버(refundDepositOrder)도 거절한다.
+    const minAmount = isRemainderRefund || isDeposit ? 1 : 0;
     if (refundInput.trim() === '') {
-      setRefundError('환불 금액을 입력해 주세요. 환불 없이 취소하려면 0을 적어 주세요.');
+      setRefundError(
+        isDeposit ? '환불 금액을 입력해 주세요.' : '환불 금액을 입력해 주세요. 환불 없이 취소하려면 0을 적어 주세요.',
+      );
       return;
     }
     const refundAmount = Number(refundInput);
@@ -354,6 +357,8 @@ export default function AdminBookingDetailPage({
       !window.confirm(
         isBankPaid
           ? `계좌 입금 건입니다 — 토스로 돌려주지 않습니다. 고객 계좌로 송금을 마친 뒤 기록하세요.\n\n${formatPriceAmount(refundAmount)}원 송금을 마쳤다면 환불로 기록할까요? 되돌릴 수 없습니다.`
+          : isDeposit
+          ? `예약금 ${formatPriceAmount(refundAmount)}원을 환불할까요? 결제수단으로 취소되며 되돌릴 수 없습니다.`
           : isRemainderRefund
           ? `${formatPriceAmount(refundAmount)}원을 추가로 환불할까요? 되돌릴 수 없습니다.`
           : refundAmount === 0
@@ -814,14 +819,20 @@ export default function AdminBookingDetailPage({
 
           {canRefund && (
             <div className="pt-6 border-t border-gray-100">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">{isRemainderRefund ? '잔액 환불' : '임의 환불'}</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">{isDeposit ? '예약금 환불' : isRemainderRefund ? '잔액 환불' : '임의 환불'}</h2>
               {isBankPaid && (
                 <p className="mb-2 text-sm font-semibold text-red-700">
                   계좌 입금 건입니다 — 토스로 돌려주지 않습니다. 고객 계좌로 송금을 마친 뒤 기록하세요.
                 </p>
               )}
               <p className="text-sm text-gray-500 mb-4">
-                {isRemainderRefund ? (
+                {isDeposit ? (
+                  <>
+                    예약금 결제 링크 주문의 금액을 돌려줍니다. 취소할 예약은 없고, 부분 환불을 여러 번 나눠 할 수 있습니다.
+                    {isBankPaid ? '' : ' 토스 결제는 결제수단으로 취소됩니다.'}
+                    {' '}고객에게 가는 안내 메일은 따로 없으니 필요하면 직접 알려 주세요.
+                  </>
+                ) : isRemainderRefund ? (
                   <>
                     이미 취소된 {isMixing ? '주문' : '예약'}의 남은 금액을 더 돌려줍니다. 취소 안내는 이미 나갔으므로
                     메일·캘린더 후처리 없이 환불만 처리합니다.
@@ -843,7 +854,7 @@ export default function AdminBookingDetailPage({
                 >
                   <TextInput
                     type="number"
-                    min={isRemainderRefund ? 1 : 0}
+                    min={isRemainderRefund || isDeposit ? 1 : 0}
                     max={booking.refundableAmount}
                     step={1}
                     value={refundInput}

@@ -129,3 +129,34 @@ describe('환불 금액 입력', () => {
     expect(amountInput().value).toBe('137500');
   });
 });
+
+describe('예약금(deposit) 주문 환불', () => {
+  const DEPOSIT: AdminBookingDetail = {
+    ...SESSION, orderType: 'deposit', bookingId: null, bookingStatus: null, workOrder: null,
+    productId: null, productName: '예약금', startAt: null, endAt: null, durationHours: null,
+    orderStatus: 'paid', refundableAmount: 110000, totalAmount: 110000,
+  } as unknown as AdminBookingDetail;
+
+  it('예약 행이 없어도 결제 완료 주문에는 환불 폼이 뜬다', () => {
+    render(<AdminBookingDetailPage booking={DEPOSIT} />);
+    expect(screen.getByText('예약금 환불')).toBeInTheDocument();
+    expect(refundForm()).toBeInTheDocument();
+    expect((screen.getByLabelText(/환불 금액/) as HTMLInputElement).min).toBe('1');
+  });
+
+  it('0원은 막는다 — 취소할 예약이 없어 아무 일도 하지 않는다', () => {
+    jest.spyOn(window, 'confirm').mockReturnValue(true);
+    render(<AdminBookingDetailPage booking={DEPOSIT} />);
+    fireEvent.change(screen.getByLabelText(/환불 금액/), { target: { value: '0' } });
+    fireEvent.change(screen.getByLabelText('환불 사유'), { target: { value: '고객 요청' } });
+    // 브라우저는 min=1이라 입력 단계에서 먼저 막는다. 그 검증을 우회한 제출(스크립트·낡은 화면)도 우리 핸들러가 막아야 한다.
+    fireEvent.submit(refundForm()!.closest('form')!);
+    expect(screen.getByText(/사이의 정수여야/)).toBeInTheDocument();
+    expect(refundBooking).not.toHaveBeenCalled();
+  });
+
+  it('전액 환불된 주문에는 폼이 없다', () => {
+    render(<AdminBookingDetailPage booking={{ ...DEPOSIT, orderStatus: 'refunded', refundableAmount: 0 }} />);
+    expect(refundForm()).not.toBeInTheDocument();
+  });
+});

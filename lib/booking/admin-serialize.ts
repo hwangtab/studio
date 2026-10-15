@@ -298,6 +298,8 @@ export const canAdminRefund = (input: {
 }): boolean => {
   if (!(LIVE_ORDER_STATUSES_FOR_REFUND as readonly string[]).includes(input.orderStatus)) return false;
   if (input.refundableAmount <= 0) return false;
+  // 예약금 결제 링크 주문은 예약·작업 행이 없다 — 붙잡을 대상이 없으니 주문 상태와 잔액만 본다(cancel.ts refundDepositOrder).
+  if (input.orderType === 'deposit') return true;
   if (input.entityStatus === null) return false;
   const allowed: readonly string[] =
     ADMIN_REFUNDABLE_ENTITY_STATUSES[input.orderType === 'mixing' ? 'mixing' : 'session'];
