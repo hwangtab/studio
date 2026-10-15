@@ -292,6 +292,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 하나뿐이었다(서버 로그에 어느 프로젝트인지도 안 남았다).
      */
     try {
+      /**
+       * 정산이 기록된 뒤에는 서비스 종류·약정 제작비를 바꾸지 못한다. 기록된 정산은 불변이라 이 값을 바꿔도 지급액은
+       * 그대로인데, 화면은 "기록 뒤 숫자가 달라졌습니다"만 띄워서 운영자가 공제를 반영했다고 착각할 수 있다.
+       * 설계비 입금 확인(`set_design_fee_paid`)은 막지 않는다 — 시스템 밖에서 실제로 받은 돈을 기록하는 일이고
+       * 세금계산서 공급 시기의 근거라 정산 뒤에도 생길 수 있다.
+       */
+      if (b.action === 'set_studio_service' || b.action === 'set_production_fee') {
+        if (await loadRecordedFundingPayout(id)) {
+          return res.status(409).json({
+            ok: false,
+            message: '정산이 이미 기록되어 서비스 종류와 약정 제작비는 바꿀 수 없습니다. 기록된 정산은 바뀌지 않으므로 이 값을 고쳐도 지급액에 반영되지 않습니다.',
+          });
+        }
+      }
       if (b.action === 'set_studio_service') {
         const kind = b.kind;
         if (kind !== 'none' && kind !== 'design' && kind !== 'release') {
