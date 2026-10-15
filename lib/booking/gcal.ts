@@ -247,3 +247,29 @@ export const renameBookingEvent = async (
   }
   throw new Error('캘린더 이벤트 제목 변경 실패: 이벤트를 찾지 못했습니다(404)');
 };
+
+/**
+ * 이벤트의 시작·종료만 바꾼다 — 관리자 "일정 변경"(lib/booking/reschedule.ts). 삭제 후 재생성이 아니라 PATCH라
+ * 중간에 실패해도 옛 일정이 남아 있다. 후보 캘린더를 차례로 시도한다(rename과 같은 이유). 실패는 throw.
+ */
+export const rescheduleBookingEvent = async (
+  eventId: string, calendar: BookingCalendar, room: string | null | undefined, start: Date, end: Date,
+): Promise<void> => {
+  const ids = candidateCalendarIds(calendar, room);
+  if (ids.length === 0) calendarId(calendar, room); // throw — env 없음
+  const token = await getAccessToken();
+  for (const id of ids) {
+    const res = await fetch(
+      `${CAL_API}/calendars/${encodeURIComponent(id)}/events/${encodeURIComponent(eventId)}`,
+      {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ start: { dateTime: start.toISOString() }, end: { dateTime: end.toISOString() } }),
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      },
+    );
+    if (res.ok) return;
+    if (res.status !== 404) throw new Error(`캘린더 이벤트 시간 변경 실패: ${res.status}`);
+  }
+  throw new Error('캘린더 이벤트 시간 변경 실패: 이벤트를 찾지 못했습니다(404)');
+};

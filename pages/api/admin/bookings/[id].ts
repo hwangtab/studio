@@ -8,6 +8,7 @@ import { cancelBookingWithRefund } from '../../../../lib/booking/cancel';
 import { sendBookingCancelledEmails, sendBookingConfirmedEmails } from '../../../../lib/booking/email';
 import { calendarForService, createBookingEvent, deleteBookingEvent, isCalendarActive } from '../../../../lib/booking/gcal';
 import { kstDateString } from '../../../../lib/booking/kst';
+import { rescheduleBooking } from '../../../../lib/booking/reschedule';
 import { cancelAwaitingBookingDeposit, confirmBookingBankDeposit, deliverBookingDepositGuide, retryWaitingEventDelete } from '../../../../lib/booking/bankDeposit';
 import { bankDepositStateOf, isBankDepositPayment } from '../../../../lib/payments/bankDeposit';
 import { removePaymentLinkCalendarEvent, resyncPaymentLinkCalendarEvent } from '../../../../lib/payments/linkCalendar';
@@ -194,6 +195,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       } catch (error: unknown) {
         console.error('[API/admin/bookings/[id]] Resend notification failed:', error);
         return res.status(500).json({ ok: false, message: '알림 재발송에 실패했습니다.' });
+      }
+    }
+
+    if (body.action === 'reschedule') {
+      if (isMixing || !booking) return res.status(409).json({ ok: false, message: '일정이 있는 세션 예약만 바꿀 수 있습니다.' });
+      try {
+        const result = await rescheduleBooking({ orderId: order.id, date: body.date, startHour: body.startHour });
+        if (!result.ok) {
+          return res.status(result.code === 'not_found' ? 404 : result.code === 'invalid_input' ? 400 : 409).json({ ok: false, message: result.message });
+        }
+        return res.status(200).json({ ok: true, startAt: result.startAt.toISOString(), warnings: result.warnings });
+      } catch (error: unknown) {
+        console.error('[API/admin/bookings/[id]] reschedule failed:', error);
+        return res.status(500).json({ ok: false, message: '일정 변경에 실패했습니다.' });
       }
     }
 
