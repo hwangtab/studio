@@ -16,6 +16,7 @@ jest.mock('../../../lib/contracts/admin-auth', () => ({
 }));
 jest.mock('../../../lib/contracts/serialize', () => ({
   serializeContractForAdmin: jest.fn((contract: { id: string }) => ({ id: contract.id, serialized: true })),
+  serializeContractForAdminList: jest.fn((contract: { id: string }) => ({ id: contract.id, serialized: true })),
 }));
 jest.mock('../../../lib/contracts/service', () => ({
   createContract: jest.fn(),

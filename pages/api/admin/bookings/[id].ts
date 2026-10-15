@@ -303,8 +303,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (body.action === 'delete_waiting_event') {
       // 미입금 취소된 예약에 남은 [입금 대기] 캘린더 일정을 다시 지운다(그 일정이 웹 예약을 막는다).
-      const r = await retryWaitingEventDelete(order.id);
-      return r.ok ? res.status(200).json({ ok: true }) : res.status(409).json({ ok: false, message: r.message });
+      try {
+        const r = await retryWaitingEventDelete(order.id);
+        return r.ok ? res.status(200).json({ ok: true }) : res.status(409).json({ ok: false, message: r.message });
+      } catch (error: unknown) {
+        console.error('[API/admin/bookings/[id]] 입금 대기 일정 삭제 실패:', { orderNo: order.orderNo, error });
+        return res.status(500).json({ ok: false, message: '처리하지 못했습니다. 잠시 후 다시 시도해 주세요.' });
+      }
     }
 
     if (body.action === 'mark_refund_sent') {
@@ -313,7 +318,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (bankDepositStateOf(order) !== 'paid') {
         return res.status(409).json({ ok: false, message: '계좌 입금 주문이 아닙니다.' });
       }
-      await markRefundAccountRefunded({ kind: isMixing ? 'mixing' : 'session', orderNo: order.orderNo }, new Date());
+      const recorded = await markRefundAccountRefunded({ kind: isMixing ? 'mixing' : 'session', orderNo: order.orderNo }, new Date());
+      if (!recorded) return res.status(500).json({ ok: false, message: '송금 완료를 기록하지 못했습니다. 잠시 후 다시 시도해 주세요.' });
       return res.status(200).json({ ok: true });
     }
 

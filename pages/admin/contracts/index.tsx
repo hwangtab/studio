@@ -16,8 +16,8 @@ import { getDb } from '../../../db/client';
 import { contractStatusEnum } from '../../../db/schema';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import {
-  serializeContractForAdmin,
-  type AdminSerializedContract,
+  serializeContractForAdminList,
+  type AdminListContract,
 } from '../../../lib/contracts/serialize';
 import { expireOverdueContracts } from '../../../lib/contracts/service';
 import { getStatusLabel, needsTermination } from '../../../lib/contracts/status';
@@ -27,7 +27,7 @@ import { formatCurrency, formatShortDate as formatDate } from '../../../lib/cont
 const LIST_LIMIT = 200;
 
 interface AdminContractsPageProps {
-  contracts: AdminSerializedContract[];
+  contracts: AdminListContract[];
   /** 잘린 계약이 있다 — 검색도 실린 목록 안에서만 되므로 반드시 알려야 한다. */
   truncated: boolean;
   /** 만료까지 남은 일수를 서버·클라이언트가 같은 기준으로 계산하도록 넘긴다. */
@@ -80,7 +80,7 @@ export const getServerSideProps: GetServerSideProps<AdminContractsPageProps> = a
 
     return {
       props: {
-        contracts: allContracts.slice(0, LIST_LIMIT).map((c) => serializeContractForAdmin(c)),
+        contracts: allContracts.slice(0, LIST_LIMIT).map((c) => serializeContractForAdminList(c)),
         truncated: allContracts.length > LIST_LIMIT,
         now: new Date().toISOString(),
       },
@@ -184,7 +184,7 @@ export default function AdminContractsPage({
    * 발송은 실제로 고객에게 메일이 나가는 동작이라 확인을 받는다. 상세 화면은 이미 확인창을
    * 띄우는데 목록만 곧바로 나가서, 목록에서 잘못 누르면 되돌릴 방법이 없었다.
    */
-  const handleSend = async (contract: AdminSerializedContract) => {
+  const handleSend = async (contract: AdminListContract) => {
     if (
       !window.confirm(`${contract.customerEmail} 주소로 서명 요청 메일을 보냅니다. 계속할까요?`)
     ) {
@@ -193,12 +193,12 @@ export default function AdminContractsPage({
     await withBusy(contract.id, () => mutateContract(contract.id, 'send'));
   };
 
-  const handleResend = async (contract: AdminSerializedContract) => {
+  const handleResend = async (contract: AdminListContract) => {
     if (!window.confirm('재발송하면 기존 서명 링크는 즉시 무효가 됩니다. 계속할까요?')) return;
     await withBusy(contract.id, () => mutateContract(contract.id, 'resend'));
   };
 
-  const handleCopyLink = async (contract: AdminSerializedContract) => {
+  const handleCopyLink = async (contract: AdminListContract) => {
     const copied = await copyToClipboard(contract.signUrl);
     setNotice(copied ? '서명 링크를 복사했습니다.' : '링크 복사에 실패했습니다.');
   };
@@ -404,7 +404,7 @@ export default function AdminContractsPage({
                                 </Button>
                               )}
 
-                              {(contract.status === 'expired' || contract.status === 'cancelled') && (
+                              {(contract.status === 'expired' || contract.status === 'cancelled') && !contract.purgedAt && (
                                 <Button light
                                   size="sm"
                                   disabled={busy}

@@ -21,7 +21,7 @@ import {
   sendCreatorNameChangedEmail,
 } from '../../../../../lib/funding/creatorEmail';
 import {
-  buildFundingPayoutPreview,
+  loadRecordedFundingPayout,
   markFundingPayoutPaid,
   recordFundingPayout,
   type RecordFundingPayoutResult,
@@ -614,14 +614,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (b.action === 'mark_payout_paid') {
     const memo = typeof b.memo === 'string' && b.memo.trim() ? b.memo.trim() : null;
     try {
-      const preview = await buildFundingPayoutPreview(id);
-      if (!preview) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없습니다.' });
-      if (!preview.recorded) {
+      // 집계(buildFundingPayoutPreview)를 거치지 않는다 — 집계가 죽어도 이미 끝낸 이체는 기록할 수 있어야 한다.
+      const recorded = await loadRecordedFundingPayout(id);
+      if (!recorded) {
+        if (!(await loadProjectForAdmin(id))) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없습니다.' });
         return res.status(409).json({ ok: false, message: '아직 기록되지 않은 정산입니다. 먼저 정산을 기록해 주세요.' });
       }
-      const done = await markFundingPayoutPaid(preview.recorded.id, memo, now);
+      const done = await markFundingPayoutPaid(recorded.id, memo, now);
       if (!done) return res.status(409).json({ ok: false, message: '이미 지급 완료로 기록된 정산입니다.' });
-      const warnings = await notifyPayout(req, auth.actor, id, { ...preview.recorded, status: 'paid', paidAt: now, memo }, '정산 지급');
+      const warnings = await notifyPayout(req, auth.actor, id, { ...recorded, status: 'paid', paidAt: now, memo }, '정산 지급');
       return res.status(200).json({ ok: true, ...(warnings.length > 0 ? { warnings } : {}) });
     } catch (error: unknown) {
       console.error(`[funding] markFundingPayoutPaid 예외 (id=${id}):`, error);

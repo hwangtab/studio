@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -179,7 +179,12 @@ export default function AdminBookingDetailPage({
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
 
-  const [refundAmount, setRefundAmount] = useState<number>(booking.totalAmount);
+  // 문자열로 들고 제출 때 숫자로 바꾼다 — 숫자 상태에서는 칸을 비우면 Number('')이 0이 되어, 일반 취소(0원 허용)에서
+  // 빈 칸이 "환불 없이 예약 취소"로 통과했다. 초기값은 총액이 아니라 잔액이다(부분환불 뒤 잔액 환불을 이어 갈 때 총액이 남아 있던 문제).
+  const [refundInput, setRefundInput] = useState<string>(String(booking.refundableAmount));
+  useEffect(() => {
+    setRefundInput(String(booking.refundableAmount));
+  }, [booking.refundableAmount]);
   const [refundReason, setRefundReason] = useState('');
   const [refundError, setRefundError] = useState<string | null>(null);
 
@@ -332,6 +337,11 @@ export default function AdminBookingDetailPage({
     // 하한은 경로마다 다르다. 일반 취소의 0원은 유효한 액션이지만(0% 티어 당일 취소와 동형)
     // 이미 취소된 건의 잔액 환불에서 0원은 아무 일도 하지 않는다 — 서버도 거절한다.
     const minAmount = isRemainderRefund ? 1 : 0;
+    if (refundInput.trim() === '') {
+      setRefundError('환불 금액을 입력해 주세요. 환불 없이 취소하려면 0을 적어 주세요.');
+      return;
+    }
+    const refundAmount = Number(refundInput);
     if (!Number.isInteger(refundAmount) || refundAmount < minAmount || refundAmount > booking.refundableAmount) {
       setRefundError(`환불 금액은 ${minAmount} ~ ${formatPriceAmount(booking.refundableAmount)}원 사이의 정수여야 합니다.`);
       return;
@@ -346,6 +356,8 @@ export default function AdminBookingDetailPage({
           ? `계좌 입금 건입니다 — 토스로 돌려주지 않습니다. 고객 계좌로 송금을 마친 뒤 기록하세요.\n\n${formatPriceAmount(refundAmount)}원 송금을 마쳤다면 환불로 기록할까요? 되돌릴 수 없습니다.`
           : isRemainderRefund
           ? `${formatPriceAmount(refundAmount)}원을 추가로 환불할까요? 되돌릴 수 없습니다.`
+          : refundAmount === 0
+          ? '환불 없이(0원) 예약을 취소할까요? 예약은 즉시 취소되며 고객에게 돌려주는 금액이 없습니다. 되돌릴 수 없습니다.'
           : `${formatPriceAmount(refundAmount)}원을 환불 처리할까요? 예약은 즉시 취소되며 되돌릴 수 없습니다.`,
       )
     ) {
@@ -792,7 +804,9 @@ export default function AdminBookingDetailPage({
 
               {!canChangeStatus && !canResend && !canStartWork && !canDeliver && (
                 <p className="text-sm text-gray-500">
-                  {isMixing ? '지금 상태에서는 가능한 작업이 없습니다.' : '결제 대기 중인 예약에는 가능한 작업이 없습니다.'}
+                  {isMixing || isDeposit
+                    ? '지금 상태에서는 가능한 작업이 없습니다.'
+                    : '결제 대기 중인 예약에는 가능한 작업이 없습니다.'}
                 </p>
               )}
             </div>
@@ -832,8 +846,8 @@ export default function AdminBookingDetailPage({
                     min={isRemainderRefund ? 1 : 0}
                     max={booking.refundableAmount}
                     step={1}
-                    value={refundAmount}
-                    onChange={(e) => setRefundAmount(Number(e.target.value))}
+                    value={refundInput}
+                    onChange={(e) => setRefundInput(e.target.value)}
                     light className="text-sm"
                   />
                 </Field>

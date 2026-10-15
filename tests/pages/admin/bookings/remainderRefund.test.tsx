@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 jest.mock('next/router', () => ({ useRouter: () => ({ replace: jest.fn(), asPath: '/admin/bookings/o1', pathname: '/admin/bookings/[id]' }) }));
@@ -10,6 +10,7 @@ jest.mock('../../../../components/admin/bookingActions', () => ({
 }));
 jest.mock('../../../../lib/contracts/admin-auth', () => ({ authenticateAdminRequest: jest.fn() }));
 
+import { refundBooking } from '../../../../components/admin/bookingActions';
 import AdminBookingDetailPage from '../../../../pages/admin/bookings/[id]';
 import type { AdminBookingDetail } from '../../../../lib/booking/admin-serialize';
 
@@ -85,4 +86,46 @@ it('확정 예약은 종전대로 임의 환불 폼을 띄운다', () => {
   render(<AdminBookingDetailPage booking={SESSION} />);
   expect(screen.getByText('임의 환불')).toBeInTheDocument();
   expect(refundForm()).toBeInTheDocument();
+});
+
+describe('환불 금액 입력', () => {
+  const amountInput = () => screen.getByLabelText(/환불 금액/) as HTMLInputElement;
+  const submit = (reason = '고객 요청') => {
+    fireEvent.change(screen.getByLabelText('환불 사유'), { target: { value: reason } });
+    fireEvent.click(screen.getByRole('button', { name: '환불 처리' }));
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (refundBooking as jest.Mock).mockResolvedValue({ ok: true });
+  });
+
+  // 숫자 상태였을 때는 칸을 비우면 Number('')이 0이 되어 "0원 환불 + 예약 취소"가 그대로 통과했다.
+  it('금액 칸을 비우면 0원으로 처리하지 않고 막는다', () => {
+    const confirm = jest.spyOn(window, 'confirm').mockReturnValue(true);
+    render(<AdminBookingDetailPage booking={SESSION} />);
+    fireEvent.change(amountInput(), { target: { value: '' } });
+    submit();
+
+    expect(screen.getByText(/환불 금액을 입력해 주세요/)).toBeInTheDocument();
+    expect(confirm).not.toHaveBeenCalled();
+    expect(refundBooking).not.toHaveBeenCalled();
+  });
+
+  it('0을 직접 적으면 "환불 없이 취소" 확인문구로 한 번 더 묻는다', async () => {
+    const confirm = jest.spyOn(window, 'confirm').mockReturnValue(true);
+    render(<AdminBookingDetailPage booking={SESSION} />);
+    fireEvent.change(amountInput(), { target: { value: '0' } });
+    submit();
+
+    await waitFor(() => expect(refundBooking).toHaveBeenCalledWith('o1', 0, '고객 요청'));
+    expect(confirm).toHaveBeenCalledWith(expect.stringContaining('환불 없이(0원)'));
+  });
+
+  it('입력 칸의 처음 값은 총액이 아니라 환불 가능한 잔액이다', () => {
+    render(<AdminBookingDetailPage booking={{
+      ...SESSION, bookingStatus: 'cancelled', orderStatus: 'partially_refunded', refundableAmount: 137500,
+    }} />);
+    expect(amountInput().value).toBe('137500');
+  });
 });

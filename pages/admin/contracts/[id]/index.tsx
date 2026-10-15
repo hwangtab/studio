@@ -15,6 +15,7 @@ import { createSubscription as createSubscriptionRequest } from '../../../../com
 import { AdminShell } from '../../../../components/admin/AdminShell';
 import { Button } from '../../../../components/ui/Button';
 import { getDb } from '../../../../db/client';
+import { OCCUPYING_STATUSES } from '../../../../lib/billing/service';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { recordAdminPrivacyAccess } from '../../../../lib/privacy/accessLog';
 import {
@@ -42,6 +43,11 @@ interface AdminContractDetailPageProps {
   auditTrail: SerializedAuditTrail;
   /** 이 계약으로 만든 구독이 있으면 그 id — 있으면 새로 만들지 않고 상세로 안내한다. */
   subscriptionId: string | null;
+  /**
+   * 이용 종료 때 함께 해지되는 구독 수(진행 중인 구독 — 카드 등록 대기·정지 포함). 종료 확인창이
+   * "구독 N건이 해지되고 고객에게 안내 메일이 간다"를 미리 말하는 데 쓴다. 조회가 실패하면 0이 아니라 null.
+   */
+  occupyingSubscriptionCount: number | null;
 }
 
 export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps> = async (
@@ -85,6 +91,13 @@ export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps
       orderBy: (t, { desc }) => [desc(t.createdAt)],
     })
     .catch(() => null);
+  const occupyingSubscriptionCount = await getDb()
+    .query.subscriptions.findMany({
+      columns: { id: true },
+      where: (t, { and: all, eq: is, inArray: within }) => all(is(t.contractId, id), within(t.status, OCCUPYING_STATUSES)),
+    })
+    .then((rows) => rows.length)
+    .catch(() => null);
 
   return {
     props: {
@@ -95,6 +108,7 @@ export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps
       rulesContent: resolveRulesContent(contract.contractAttachments),
       auditTrail: serializeAuditTrail(buildAuditTrail(contract)),
       subscriptionId: subscription?.id ?? null,
+      occupyingSubscriptionCount,
     },
   };
 };
@@ -125,6 +139,7 @@ export default function AdminContractDetailPage({
   rulesContent,
   auditTrail,
   subscriptionId,
+  occupyingSubscriptionCount,
 }: AdminContractDetailPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -162,8 +177,17 @@ export default function AdminContractDetailPage({
    * 위약금(제5조 ③)이 걸린 중도 퇴실인지 정상 만료인지가 분쟁의 쟁점이 된다.
    */
   const handleTerminate = async () => {
+    // 종료는 연결된 구독을 함께 해지하고 고객에게 해지 안내 메일을 보낸다 — 되돌릴 수 없으니 누르기 전에 말한다.
+    // 건수를 못 읽었으면(null) 그 사실을 숨기지 않고 "있을 수 있다"고 알린다.
+    const subscriptionNotice =
+      occupyingSubscriptionCount === null
+        ? '연결된 구독이 있으면 함께 해지되고 고객에게 해지 안내 메일이 나갑니다(건수를 확인하지 못했습니다). 되돌릴 수 없습니다.\n\n'
+        : occupyingSubscriptionCount > 0
+          ? `연결된 구독 ${occupyingSubscriptionCount}건이 함께 해지되고 고객에게 해지 안내 메일이 나갑니다. 되돌릴 수 없습니다.\n\n`
+          : '';
     const reason = window.prompt(
-      '이용 종료 사유를 적어 주세요. 계약서는 그대로 보관되고, 이 호실로 새 계약을 만들 수 있게 됩니다.\n\n' +
+      subscriptionNotice +
+        '이용 종료 사유를 적어 주세요. 계약서는 그대로 보관되고, 이 호실로 새 계약을 만들 수 있게 됩니다.\n\n' +
         '예: 기간 만료 후 종료 / 중도 퇴실(위약금 납부) / 이용료 연체로 해지',
     );
     if (reason === null) return;
@@ -504,7 +528,7 @@ export default function AdminContractDetailPage({
               </Button>
             )}
 
-            {isActionAllowed(contract.status, 'resend') && (
+            {isActionAllowed(contract.status, 'resend') && !contract.purgedAt && (
               <Button light
                 variant={contract.status === 'sent' ? 'weak' : 'solid'}
                 disabled={busy}
@@ -597,9 +621,13 @@ export default function AdminContractDetailPage({
 
             {/* 같은 고객의 재계약·갱신은 14개 항목을 다시 타이핑하는 자리다.
                 발송 후에는 수정이 막히므로(설계상 의도) 복제해서 새로 만드는 길을 준다. */}
-            <Link href={`/admin/contracts/new?from=${contract.id}`} passHref>
-              <Button light variant="weak">복제해서 새 계약</Button>
-            </Link>
+            {contract.purgedAt ? (
+              <p className="self-center text-sm text-gray-500">개인정보가 파기되어 재발송·복제할 수 없습니다.</p>
+            ) : (
+              <Link href={`/admin/contracts/new?from=${contract.id}`} passHref>
+                <Button light variant="weak">복제해서 새 계약</Button>
+              </Link>
+            )}
 
             {isActionAllowed(contract.status, 'terminate') && (
               <Button light variant="ghost" disabled={busy} onClick={handleTerminate}>
