@@ -53,6 +53,18 @@ export async function cancelShowtime(
     WHERE id = ${showtimeId} AND status = 'scheduled'
   `);
 
+  // 마지막 회차까지 취소되면 공연 전체를 취소로 닫는다(별도 "공연 취소" 버튼은 없다 — 운영자 결정 2026-10-16).
+  // 공개 쪽은 shows.status = 'cancelled'를 이미 읽는다(취소 안내·판매 중단). **published만** 넘긴다: draft 공연이 취소로
+  // 바뀌면 getPublicShowBySlug가 draft만 숨기므로 한 번도 열지 않은 공연이 취소 공연으로 공개돼 버린다.
+  // 'ended'(이미 치른) 회차는 취소가 아니므로 남아 있으면 공연은 그대로다. 환불 루프보다 앞에 두어, 환불이 일부
+  // 실패해도(회차는 이미 취소됐다) 공연 상태가 뒤처지지 않는다.
+  await db.run(sql`
+    UPDATE shows SET status = 'cancelled', updated_at = ${nowSec}
+    WHERE status = 'published'
+      AND id = (SELECT show_id FROM showtimes WHERE id = ${showtimeId})
+      AND NOT EXISTS (SELECT 1 FROM showtimes WHERE show_id = shows.id AND status != 'cancelled')
+  `);
+
   // 입금 전인 계좌 입금 신청은 받은 돈이 없다 — 닫고 보류 좌석을 무효로 한다(미입금 취소와 같은 전이).
   const awaiting = (await db.all(sql`
     SELECT DISTINCT so.order_no as orderNo FROM show_orders so

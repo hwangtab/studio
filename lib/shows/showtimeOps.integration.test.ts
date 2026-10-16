@@ -26,6 +26,47 @@ async function seedPaidOrder(db: ShowsTestDb, quantity = 1) {
   return { showtimeId, orderNo: created.orderNo, toss };
 }
 
+describe('cancelShowtime — 마지막 회차가 취소되면 공연도 취소', () => {
+  async function seedShowWithShowtimes(db: ShowsTestDb, status: 'draft' | 'published', extra: Array<{ id: string; status: 'scheduled' | 'cancelled' | 'ended' }>) {
+    await db.insert(shows).values({ id: 'show-1', slug: 's1', title: 't', presenterName: 'p', performers: 'a', ageRating: '전체', runningMinutes: 60, venueName: 'v', venueAddress: 'addr', description: 'd', status });
+    const startsAt = Math.floor(Date.now() / 1000) + 86400 * 15;
+    await db.insert(showtimes).values([{ id: 'st-main', showId: 'show-1', startsAt, salesCloseAt: startsAt - 86400 }, ...extra.map((e) => ({ id: e.id, showId: 'show-1', startsAt, salesCloseAt: startsAt - 86400, status: e.status }))]);
+  }
+  const showStatus = async (db: ShowsTestDb) => (await db.query.shows.findFirst({ where: (s, { eq }) => eq(s.id, 'show-1') }))?.status;
+
+  it('공개 공연의 마지막 예정 회차를 취소하면 공연이 cancelled가 된다', async () => {
+    const { db } = await createTestDb();
+    mockDb = db;
+    await seedShowWithShowtimes(db, 'published', [{ id: 'st-old', status: 'cancelled' }]);
+    await cancelShowtime('st-main', new Date(), createFakeToss());
+    expect(await showStatus(db)).toBe('cancelled');
+  });
+
+  it('다른 회차가 예정이거나 이미 치른(ended) 회차면 공연은 그대로 공개다', async () => {
+    const { db } = await createTestDb();
+    mockDb = db;
+    await seedShowWithShowtimes(db, 'published', [{ id: 'st-2', status: 'scheduled' }]);
+    await cancelShowtime('st-main', new Date(), createFakeToss());
+    expect(await showStatus(db)).toBe('published');
+    await cancelShowtime('st-2', new Date(), createFakeToss());
+    expect(await showStatus(db)).toBe('cancelled');
+
+    const second = await createTestDb();
+    mockDb = second.db;
+    await seedShowWithShowtimes(second.db, 'published', [{ id: 'st-ended', status: 'ended' }]);
+    await cancelShowtime('st-main', new Date(), createFakeToss());
+    expect(await showStatus(second.db)).toBe('published');
+  });
+
+  it('초안 공연은 회차를 모두 취소해도 초안으로 남는다(취소 공연으로 공개되지 않게)', async () => {
+    const { db } = await createTestDb();
+    mockDb = db;
+    await seedShowWithShowtimes(db, 'draft', []);
+    await cancelShowtime('st-main', new Date(), createFakeToss());
+    expect(await showStatus(db)).toBe('draft');
+  });
+});
+
 describe('cancelShowtime', () => {
   it('회차를 취소하면 모든 유효 주문이 전액 환불되고 회차가 cancelled가 된다', async () => {
     const { db } = await createTestDb();

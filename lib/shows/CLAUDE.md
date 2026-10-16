@@ -104,6 +104,13 @@ v2 색 가드(`components/ui/SectionHeading.test.tsx`의 `V2_FILES`)에 공연 �
 - 회차 취소: 입금 전 신청은 닫고 "입금하지 마세요"(`bankNotice: 'not_deposited'`), 계좌로 결제된 주문은 토스로 못
   돌려주므로 티켓을 남겨 두고 "내 티켓에서 환불 계좌를 적어 주세요"(`refund_account_needed`). 입장은 회차 상태가 막는다.
 
+### 공연 전체 취소 = 마지막 회차 취소의 결과 (2026-10-16)
+
+별도 "공연 취소" 버튼은 없다. `cancelShowtime`이 **published 공연의 취소되지 않은 회차가 하나도 안 남으면** `shows.status`를 `cancelled`로 닫는다
+(`ended` 회차가 남아 있으면 그대로, draft는 건드리지 않는다 — draft가 cancelled가 되면 취소 공연으로 공개된다). 공개 쪽은 이미 `cancelled`를 읽는다(판매 중단·취소 안내).
+되돌림은 관리자 `set_status`(`draft`/`published`)가 취소 상태에서도 되고(`sqlUpdateStatus(..., { fromCancelled })`), 공개는 예정된 미래 회차가 있어야 한다.
+주최자 승인 경로의 `sqlUpdateStatus`는 여전히 취소된 공연을 건드리지 않는다.
+
 ### 남은 것(2026-10-03 기준)
 
 - **공용화(설계안 겹 3)**: `MobileStickyCta`·`StatusBadge`는 새 공용 파일로 만들어 공연이 먼저 쓴다(2026-10-04).
