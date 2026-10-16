@@ -2389,6 +2389,7 @@ export const roomTenancies = sqliteTable(
     tenantName: text('tenant_name').notNull(),
     status: text('status', { enum: tenancyStatusEnum }).notNull().default('active'),
     monthlyAmount: integer('monthly_amount').notNull(),
+    /** **실제로 받은** 보증금(원). 연습실 계약은 보증금을 면제한다(계약서 제5조) — 면제면 NULL. 위약금 기준액은 월 이용료와 같아 따로 저장하지 않는다. */
     depositAmount: integer('deposit_amount'),
     startDate: text('start_date').notNull(),
     endDate: text('end_date'),

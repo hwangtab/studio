@@ -179,7 +179,8 @@ describe('importTenancySheet', () => {
     expect(first).toMatchObject({ created: 2, skippedExisting: 0, phoneFilledFromContract: ['조현정'], problems: [] });
     const row = await one(`SELECT private_enc, contract_id FROM room_tenancies WHERE tenant_name = '조현정'`);
     expect(row?.contract_id).toBe('c1');
-    expect((await one(`SELECT deposit_amount FROM room_tenancies WHERE tenant_name = '조현정'`))?.deposit_amount).toBe(360000);
+    // 계약서의 보증금은 면제된 금액(위약 때 내는 기준액)이라 받은 보증금으로 옮기지 않는다.
+    expect((await one(`SELECT deposit_amount FROM room_tenancies WHERE tenant_name = '조현정'`))?.deposit_amount).toBeNull();
     expect(openPrivate(row?.private_enc as string)).toMatchObject({ phone: '010-5696-0000', gender: '여' });
     expect(await importTenancySheet(SHEET)).toMatchObject({ created: 0, skippedExisting: 2 });
     expect(await one(`SELECT COUNT(*) AS n FROM room_tenancy_payments`)).toEqual({ n: 2 });
