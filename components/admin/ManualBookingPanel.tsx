@@ -46,6 +46,7 @@ export const ManualBookingPanel = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [adoptEventId, setAdoptEventId] = useState<string | null>(null);
+  const [adoptWarning, setAdoptWarning] = useState<string | null>(null);
   const [kind, setKind] = useState<'session' | 'mixing'>('session');
   const [productId, setProductId] = useState(sessionProducts[0].id);
   const [mixingId, setMixingId] = useState(MIXING_PRODUCTS[0].id);
@@ -75,7 +76,13 @@ export const ManualBookingPanel = ({
     setDate(kstStart.toISOString().slice(0, 10));
     setStartHour(kstStart.getUTCHours());
     setHours(Math.max(1, Math.round((end.getTime() - start.getTime()) / 3_600_000)));
-    setNote(prefill.title);
+    const kstEnd = new Date(end.getTime() + KST_OFFSET_MS);
+    const clock = (d: Date) => `${String(d.getUTCHours()).padStart(2, '0')}:${String(d.getUTCMinutes()).padStart(2, '0')}`;
+    const original = `${clock(kstStart)}~${clock(kstEnd)}`;
+    // 예약은 시 단위다 — 30분 단위 일정은 시작을 내림·길이를 반올림하므로 원본 시각을 메모와 경고에 남긴다.
+    const exact = kstStart.getUTCMinutes() === 0 && kstEnd.getUTCMinutes() === 0;
+    setNote(exact ? prefill.title : `${prefill.title} (캘린더 원본 ${original})`);
+    setAdoptWarning(exact ? null : `캘린더 원본은 ${original}인데 예약은 시 단위라 시작을 ${String(kstStart.getUTCHours()).padStart(2, '0')}:00으로 채웠어요. 시간을 확인해 주세요 — 등록하면 원본 일정은 지워져요.`);
     setAdoptEventId(prefill.eventId);
   }, [prefill]);
 
@@ -130,6 +137,7 @@ export const ManualBookingPanel = ({
         setAmount('');
         setNote('');
         setAdoptEventId(null);
+        setAdoptWarning(null);
         await onCreated();
       }
     } catch {
@@ -157,6 +165,8 @@ export const ManualBookingPanel = ({
               <Notice tone="info">
                 구글 캘린더에 있던 일정을 옮기는 중이에요. 등록이 끝나면 원래 캘린더 일정은 지워지고 사이트 예약에서 새로 동기화돼요. 상품·고객·금액을 채워 주세요.
               </Notice>
+              {adoptWarning && <Notice tone="warning" className="mt-2">{adoptWarning}</Notice>}
+              <p className="mt-2 text-xs text-gray-500">패키지 상품은 이용 시간이 정해져 있어 캘린더 일정 길이와 다를 수 있어요. 영업시간 밖 시각은 등록되지 않아요.</p>
             </div>
           )}
           <Field id="mb-kind" label="종류" required className={`md:col-span-2 ${lightOnlyField}`}>
