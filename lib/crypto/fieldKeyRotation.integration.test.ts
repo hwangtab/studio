@@ -98,10 +98,19 @@ afterEach(() => {
  * 갈린 것을 못 잡는다 — 갈리면 A를 읽어 B에 쓰고, 값 두 개를 한 번에 잃는다.
  * 새 암호화 필드를 목록에 더하면 여기 seeder도 함께 더해야 한다(없으면 아래 테스트가 선다).
  */
+const seedTenancy = async (enc: string): Promise<string> => {
+  seq += 1;
+  const [row] = await mockDb.insert(schema.roomTenancies).values({
+    kind: 'virtual', tenantName: `입주자${seq}`, monthlyAmount: 33000, startDate: '2026-01-01', billingDay: 1, nextDueOn: '2026-11-01', privateEnc: enc,
+  }).returning();
+  return row.id;
+};
+
 const SEEDERS: Record<string, (enc: string) => Promise<string>> = {
   'funding_creators.resident_number_enc': (enc) => seedCreator(enc),
   'funding_creators.payout_account_enc': (enc) => seedPayoutAccount(enc),
   'refund_accounts.account_number_enc': (enc) => seedRefundAccount(enc),
+  'room_tenancies.private_enc': (enc) => seedTenancy(enc),
 };
 
 it('모든 타깃에 seeder가 있다 — 목록에 더하고 검증을 빠뜨리면 여기서 선다', () => {
