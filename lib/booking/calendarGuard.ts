@@ -13,7 +13,7 @@ export const hasCalendarConflict = async (
     // 캘린더에만 있던 일정을 사이트 예약으로 "가져올 때" — 그 일정 자신은 충돌이 아니다(lib/booking/manualEntry.ts adoptEventId).
     // freeBusy는 일정 id를 모르므로 일정 목록으로 본다. 종일 일정은 freeBusy와 같게 바쁨으로 센다.
     const events = await listCalendarEvents(start, end, calendar, room);
-    return events.some((e) => e.id !== ignoreEventId && e.start < end && e.end > start);
+    return events.some((e) => e.id !== ignoreEventId && !e.transparent && e.start < end && e.end > start);
   }
   const busy = await fetchBusyRanges(start, end, calendar, room);
   return busy.some((b) => b.start < end && b.end > start);

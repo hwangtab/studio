@@ -53,6 +53,18 @@ describe('shows email 본문', () => {
     expect(buildShowtimeCancelledEmail({ ...base, refundCompleted: false }).text).toContain('처리 중');
   });
 
+  it('회차 취소 메일은 실제 환불액으로 말한다 — 부분이면 금액을, 0원이면 전액이라고 쓰지 않는다', () => {
+    const partial = buildShowtimeCancelledEmail({ ...base, refundCompleted: true, refundedAmount: 10000 }).text;
+    expect(partial).toContain('30,000원 중 10,000원을 환불 처리');
+    expect(partial).toContain('입장 처리된 티켓 제외');
+    expect(partial).not.toContain('전액 환불');
+    const none = buildShowtimeCancelledEmail({ ...base, refundCompleted: true, refundedAmount: 0 }).text;
+    expect(none).toContain('환불 대상 금액이 없어요');
+    expect(none).not.toContain('전액');
+    const full = buildShowtimeCancelledEmail({ ...base, refundCompleted: true, refundedAmount: 30000 }).text;
+    expect(full).toContain('전액 환불 처리');
+  });
+
   it('showDateTimeLabel은 KST 연도를 붙인다', () => {
     expect(showDateTimeLabel(Date.UTC(2026, 11, 31, 16, 0) / 1000)).toBe('2027.01.01(금) 01:00');
   });

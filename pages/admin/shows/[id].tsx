@@ -16,6 +16,9 @@ import { holderMatchesCustomer, loadRefundAccountSummary } from '../../../lib/pa
 import { calcRefundAmount, refundRateForNotice } from '../../../lib/shows/refundPolicy';
 import { loadAdminShowDetail, type AdminOrderRow, type AdminShowDetail, type AdminTicketRow, type AdminShowtimeDetail } from '../../../lib/shows/adminQueries';
 import { listReportLinks, type ReportLinkSummary } from '../../../lib/shows/reportLink';
+import { ShowPayoutSection } from '../../../components/admin/ShowPayoutSection';
+import { loadShowPayoutPanel } from '../../../lib/partnerPayouts/showPanel';
+import type { ShowPayoutPanelState } from '../../../lib/partnerPayouts/showView';
 import { REPORT_LINK_DEFAULT_TTL_DAYS, REPORT_LINK_MAX_TTL_DAYS } from '../../../lib/shows/reportLinkLimits';
 
 /** 환불 계좌 요약 — 은행·예금주·시각뿐. 계좌번호는 평문도 암호문도 props에 싣지 않는다("계좌 보기" API로만). */
@@ -37,6 +40,8 @@ interface AdminShowDetailPageProps {
   sameNameDeposits?: Record<string, SameNameDepositOrder[]>;
   /** 기획자 현황 링크 목록. null이면 표(0051)를 읽지 못한 것 — 발급 영역에 적용 전임을 보인다. */
   reportLinks?: ReportLinkSummary[] | null;
+  /** 주최자 정산 절. 표(0067)가 없거나 읽기가 실패해도 이 절만 안내를 보이고 나머지 화면은 열린다. */
+  payout?: ShowPayoutPanelState;
 }
 
 const allOrders = (show: AdminShowDetail): AdminOrderRow[] => show.showtimes.flatMap((t) => t.orders);
@@ -47,7 +52,7 @@ export const getServerSideProps: GetServerSideProps<AdminShowDetailPageProps> = 
   const id = context.params?.id;
   if (typeof id !== 'string') return { notFound: true };
   try {
-    const [show, reportLinks] = await Promise.all([loadAdminShowDetail(id), listReportLinks(id)]);
+    const [show, reportLinks, payout] = await Promise.all([loadAdminShowDetail(id), listReportLinks(id), loadShowPayoutPanel(id)]);
     // 열람 기록 — 주문 명단의 구매자 이름·연락처가 props로 실린다(처리방침 19항). 값은 적지 않는다.
     await logAdminView(context, auth.actor, 'show_admin_view', id, show ? 'success' : 'not_found');
     if (!show) return { notFound: true };
@@ -68,7 +73,7 @@ export const getServerSideProps: GetServerSideProps<AdminShowDetailPageProps> = 
         if (found.length > 0) sameNameDeposits[o.orderNo] = found;
       }
     }));
-    return { props: { show, refundAccounts, sameNameDeposits, reportLinks } };
+    return { props: { show, refundAccounts, sameNameDeposits, reportLinks, payout } };
   } catch (error: unknown) {
     console.error('[admin/shows/[id]] 조회 실패:', error);
     throw error;
@@ -88,7 +93,7 @@ const kstTime = (sec: number | null) => {
   return `${k.getUTCMonth() + 1}/${k.getUTCDate()} ${p(k.getUTCHours())}:${p(k.getUTCMinutes())}`;
 };
 
-export default function AdminShowDetailPage({ show, refundAccounts = {}, sameNameDeposits = {}, reportLinks = null }: AdminShowDetailPageProps) {
+export default function AdminShowDetailPage({ show, refundAccounts = {}, sameNameDeposits = {}, reportLinks = null, payout = { state: 'error' } }: AdminShowDetailPageProps) {
   const router = useRouter();
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -158,6 +163,8 @@ export default function AdminShowDetailPage({ show, refundAccounts = {}, sameNam
         </section>
 
         <ReportLinkSection links={reportLinks} busy={busy} run={run} onIssued={setReportUrl} />
+
+        <ShowPayoutSection showId={show.id} panel={payout} showtimeLabels={Object.fromEntries(show.showtimes.map((t) => [t.id, t.label]))} />
 
         <div className="mb-4 flex items-center gap-3 text-sm text-gray-900">
           <label className="inline-flex items-center gap-2">
@@ -281,6 +288,10 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
   const [linkLabel, setLinkLabel] = useState('');
   const [linkHours, setLinkHours] = useState(12);
   const scheduled = t.status === 'scheduled';
+  // 취소된 회차에 결제가 살아 있는 주문이 남았다 — 앞선 취소 실행이 끊긴 것이라 '환불 이어서 처리'를 보여 준다.
+  const hasRefundPendingOrders = t.status === 'cancelled' && t.orders.some((o) =>
+    (o.orderStatus === 'paid' || o.orderStatus === 'partially_refunded')
+      && o.tickets.some((tk) => (tk.status === 'held' || tk.status === 'issued') && tk.checkedInAt === null));
   const visibleOrders = onlyAwaiting ? t.orders.filter((o) => o.bankDeposit === 'awaiting') : t.orders;
 
   return (
@@ -297,12 +308,16 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
           <a href={`/api/admin/shows/${show.id}/roster?showtimeId=${t.id}`} className="inline-flex items-center rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-800 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70">
             명단 CSV
           </a>
-          {scheduled && (
+          {(scheduled || hasRefundPendingOrders) && (
             <Button light variant="weak" size="sm" disabled={busy} onClick={() =>
               run({ action: 'cancel_showtime', showtimeId: t.id }, {
-                confirm: '이 회차를 취소하고, 결제된 주문을 전부 전액 환불합니다(입장한 티켓 제외). 되돌릴 수 없습니다.',
-                success: '회차를 취소했습니다. 환불 결과는 주문 상태에서 확인하세요.',
+                confirm: scheduled
+                  ? '이 회차를 취소하고, 결제된 주문을 전부 전액 환불합니다(입장한 티켓 제외). 되돌릴 수 없습니다.'
+                  : '앞선 회차 취소에서 환불이 끝나지 않은 주문을 이어서 환불하고 안내 메일을 보냅니다.',
+                success: scheduled ? '회차를 취소했습니다. 환불 결과는 주문 상태에서 확인하세요.' : '남은 주문의 환불을 이어서 처리했습니다.',
               }).then((r) => {
+                const remaining = r?.data?.remainingOrders;
+                if (typeof remaining === 'number' && remaining > 0) window.alert(`한 번에 처리하는 상한을 넘어 ${remaining}건이 남았습니다. "환불 이어서 처리"를 다시 눌러 주세요.`);
                 const failed = r?.data?.failedOrders;
                 if (Array.isArray(failed) && failed.length > 0) window.alert(`환불에 실패한 주문이 있습니다. 토스 콘솔에서 확인하세요: ${failed.join(', ')}`);
                 const bank = r?.data?.bankRefundOrders;
@@ -310,7 +325,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
                 const closed = r?.data?.closedDepositOrders;
                 if (Array.isArray(closed) && closed.length > 0) window.alert(`입금 전이던 계좌 입금 신청 ${closed.length}건을 닫았습니다(받은 돈이 없어 환불은 없습니다): ${closed.join(', ')}`);
               })}>
-              회차 취소
+              {scheduled ? '회차 취소' : '환불 이어서 처리'}
             </Button>
           )}
         </div>

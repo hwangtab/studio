@@ -146,7 +146,7 @@ export const buildShowRefundEmail = (
 
 export const buildShowtimeCancelledEmail = (
   d: Pick<ShowMailData, 'orderNo' | 'manageToken' | 'buyerName' | 'showTitle' | 'startsAtSec' | 'totalAmount' | 'locale'>
-    & { refundCompleted: boolean; bankNotice?: 'refund_account_needed' | 'not_deposited' },
+    & { refundCompleted: boolean; bankNotice?: 'refund_account_needed' | 'not_deposited'; refundedAmount?: number },
 ): { subject: string; text: string; html: string } => {
   if (d.locale === 'en') return buildShowtimeCancelledEmailEn({ ...d, manageUrl: manageUrl(d.orderNo, d.manageToken, 'en') });
   const when = showDateTimeLabel(d.startsAtSec);
@@ -317,7 +317,7 @@ export const sendShowRefundEmail = async (
 /** 회차 취소 안내. 호출부: cancelShowtime 뒤, 대상 주문마다(환불 실패 주문은 refundCompleted:false). */
 export const sendShowtimeCancelledEmail = async (
   orderNo: string,
-  opts: { refundCompleted: boolean; bankNotice?: 'refund_account_needed' | 'not_deposited' },
+  opts: { refundCompleted: boolean; bankNotice?: 'refund_account_needed' | 'not_deposited'; refundedAmount?: number },
 ): Promise<{ sent: boolean }> => {
   const data = await loadShowOrder(orderNo).catch(() => null);
   if (!data?.recipient) return { sent: false };

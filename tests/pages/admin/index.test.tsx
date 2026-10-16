@@ -43,6 +43,10 @@ const DASHBOARD: AdminDashboard = {
     fundingProjectsAwaitingReview: 4,
     fundingPayoutsPending: 2,
     fundingPayoutsToRecord: 1,
+    shopPayoutsToRecord: 2,
+    shopPayoutsPending: 1,
+    showPayoutsToRecord: 3,
+    showPayoutsPending: 2,
     awaitingDeposit: { bookings: 3, shows: 0, shop: 1, funding: 2 },
   },
   socialTokens: [{ platform: 'ig', expiresAt: '2026-09-26T03:00:00.000Z', daysLeft: 10 }],
@@ -165,5 +169,9 @@ describe('놓치기 쉬운 대기열 — 마감 뒤 정산 기록, 계좌 입금
     expect(screen.getByRole('link', { name: /입금 대기 펀딩\s*2/ })).toHaveAttribute('href', '/admin/funding?deposit=pending');
     expect(screen.getByRole('link', { name: /입금 대기 공연 티켓\s*0/ })).toHaveAttribute('href', '/admin/shows');
     expect(screen.getByRole('link', { name: /입금 대기 상점 주문\s*1/ })).toHaveAttribute('href', '/admin/shop');
+    expect(screen.getByRole('link', { name: /정산 기록 대기 상점 \(지난 달\)\s*2/ })).toHaveAttribute('href', '/admin/shop');
+    expect(screen.getByRole('link', { name: /이체 대기 상점 정산\s*1/ })).toHaveAttribute('href', '/admin/shop');
+    expect(screen.getByRole('link', { name: /정산 기록 대기 공연 \(종료됨\)\s*3/ })).toHaveAttribute('href', '/admin/shows');
+    expect(screen.getByRole('link', { name: /이체 대기 공연 정산\s*2/ })).toHaveAttribute('href', '/admin/shows');
   });
 });

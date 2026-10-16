@@ -119,6 +119,8 @@ export interface CalendarEventInfo {
   start: Date;
   end: Date;
   allDay: boolean;
+  /** "바쁨 아님"으로 표시된 일정 — freeBusy는 이런 일정을 바쁨으로 읽지 않는다(월 입주 일정이 쓴다). */
+  transparent: boolean;
 }
 
 interface RawCalendarEvent {
@@ -132,7 +134,7 @@ const toEventInfo = (e: RawCalendarEvent): CalendarEventInfo | null => {
   const start = new Date(e.start?.dateTime ?? (e.start?.date ? `${e.start.date}T00:00:00+09:00` : ''));
   const end = new Date(e.end?.dateTime ?? (e.end?.date ? `${e.end.date}T00:00:00+09:00` : ''));
   if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return null;
-  return { id: e.id, summary: e.summary ?? '', description: e.description ?? '', start, end, allDay };
+  return { id: e.id, summary: e.summary ?? '', description: e.description ?? '', start, end, allDay, transparent: e.transparency === 'transparent' };
 };
 
 /**
@@ -283,6 +285,7 @@ export interface RawEventBody {
   description?: string;
   start: { date?: string; dateTime?: string };
   end: { date?: string; dateTime?: string };
+  transparency?: 'transparent' | 'opaque';
 }
 
 export const createEventOnCalendar = async (calendarIdValue: string, body: RawEventBody): Promise<string> => {

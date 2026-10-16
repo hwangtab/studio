@@ -169,6 +169,18 @@ npm run indexnow:changed -- --dry-run
 수기 매출 삭제가 행 삭제에서 소프트 삭제(누가 언제 지웠는지 남김)로 바뀌었다. 순서를 뒤집으면 **수기 매출 조회·삭제만** 실패한다 —
 매출 현황은 "직접 받은 매출 표를 읽지 못했다" 경고와 함께, 대시보드는 `manualMissing`으로 직접 입금분이 빠진 숫자를 보이고(나머지 매출은 정상), 삭제 버튼은 500이다. 확인은 `PRAGMA table_info(manual_revenues);`.
 
+### 마이그레이션 0067(`partner_payouts`·`partner_payout_adjustments`)도 배포보다 먼저 적용한다
+
+상점(P1)·공연(P2) 정산 기록 표 둘이다. 새 표뿐이고 어떤 `relations()`에도 잇지 않았다 — 순서를 뒤집어도 결제·주문·로그인은 안 깨진다. 깨지는 범위:
+
+- `/admin/shop`의 정산 표가 "마이그레이션 0067 필요" 안내와 함께 예전 읽기 전용 "정산 예정" 표로 되돌아간다(재고·주문 화면은 그대로). 기록·지급 완료·조정 API는 503 `migration_needed`.
+- 대시보드 「정산 기록 대기 상점」「이체 대기 상점 정산」 카드는 0이다(대시보드는 열린다). 정산 뒤 환불 조정은 못 쌓인다 — 환불 자체는 성공하고 로그 `[partner-payouts]`만 남는다(표가 생긴 뒤 그 아티스트의 다음 정산 기록 직전 보충이 메운다).
+- 공연 주최자 정산(P2): `/admin/shows/[id]`의 정산 절만 같은 "마이그레이션 0067 필요" 안내로 열리고(공연 운영 화면은 그대로), `POST /api/admin/shows/[id]/payout`은 503, 대시보드 공연 카드·기한 점검은 건너뛴다. 회차 취소는 평소대로 끝난다(결제 수수료 조정만 못 쌓이고 표가 생긴 뒤 정산 절을 열 때 보충된다). 규칙은 `lib/shows/CLAUDE.md` "주최자 정산 기록".
+- 보존·파기 코드(`lib/partnerPayouts/creatorPayouts.ts`)는 표가 없으면 펀딩 기록만으로 돈다 — 월간 파기 크론이 실패하지 않는다. 확인은 `PRAGMA table_info(partner_payouts);`.
+
+**배포 직후 할 일 없음**(상점 판매가 열리기 전에는 정산할 것도 없다). 규칙은 `lib/shop/CLAUDE.md` "정산", 설계는 `docs/settlement-record-design-2026-10.md`. 공연 정산(P2)·알림 메일/CSV(P3)가 같은 표를 쓴다 — 두 번째 마이그레이션 없이
+`kind='show'`·조정 사유 `showtime_cancel_fee`가 이미 표현된다.
+
 ### 마이그레이션 0035(`public_name`)·0036(`listing_hidden_at`)·0039(`listing_hidden_name`)도 배포보다 먼저 적용한다
 
 `funding_pledges.public_name`(후원자 명단 표시 이름 — 가린 이름·닉네임, `lib/funding/publicName.ts`)이
@@ -360,9 +372,11 @@ drizzle의 libsql 마이그레이터는 적용된 것 중 `created_at`이 가장
 
 ### 운영 DB 마이그레이션 적용 방법 — Turso CLI로 한다
 
-`npm run db:migrate`는 이 맥에서 안 된다. `.env.local`에 TURSO_* 값이 없어 `url: undefined`로
-멈춘다. `vercel env pull`도 답이 아니다. Vercel의 TURSO_* 변수는 Sensitive라 **빈 값**으로
-내려온다(2026-09-26 확인). 이 맥에는 로그인된 Turso CLI가 있으니 그걸 쓴다.
+`npm run db:migrate`(= `scripts/db-migrate.mjs`)가 **유일한 적용 경로**다. 스크립트가 main 병합본인지(브랜치 main·
+HEAD == origin/main) 확인하고, 토큰을 `.env.local`에서 읽지 않고 그 자리에서 1일짜리로 만들어, 적용 예정 목록과
+"when이 작아 조용히 건너뛰어질 목록"을 보여 준 뒤 `--yes`가 있어야 적용한다. 건너뛰어질 것이 있으면 멈춘다.
+`.env.local`의 TURSO_*는 로컬 작업용 **단기(30일) 토큰**이다 — 운영 적용에 쓰지 않는다(`vercel env pull`은 Sensitive라
+빈 값으로 내려온다). 이 맥에는 로그인된 Turso CLI가 있다.
 
 - CLI 위치는 `~/.turso/turso`이고 PATH에 없다. 운영 DB 이름은 **`studio-nol`**이다.
   같은 계정에 `ggac-prod`도 있으니 이름을 헷갈리지 말 것.
@@ -375,16 +389,56 @@ drizzle의 libsql 마이그레이터는 적용된 것 중 `created_at`이 가장
    ~/.turso/turso db shell studio-nol "select count(*), max(created_at) from __drizzle_migrations;"
    node -e "const e=require('./drizzle/migrations/meta/_journal.json').entries;console.log(e.length);e.slice(-3).forEach(x=>console.log(x.tag,x.when))"
    ```
-2. **적용.** 토큰은 파일에 쓰지 않고 명령 안에서 만든다. 토큰 기본값이 **만료 없음**이라
-   `-e 1d`를 반드시 붙인다 — 빼면 쓰고 버린 토큰이 영구히 살아 남는다.
+2. **적용.** 1번 확인까지 스크립트가 대신 한다. 토큰은 파일에 쓰지 않고 스크립트가 만든다(`-e 1d` — 토큰 기본값이
+   **만료 없음**이라 빼면 쓰고 버린 토큰이 영구히 살아 남는다). `npx drizzle-kit migrate`를 직접 부르지 말 것.
    ```bash
-   TURSO_DATABASE_URL=$(~/.turso/turso db show studio-nol --url) \
-   TURSO_AUTH_TOKEN=$(~/.turso/turso db tokens create studio-nol -e 1d) \
-   npx drizzle-kit migrate
+   npm run db:migrate          # 대상·적용 예정·건너뜀 목록만 보여 주고 멈춘다
+   npm run db:migrate -- --yes # 적용
    ```
 3. **확인.** 1번 조회를 다시 돌려 행 수가 저널 수와 같은지 보고, 새 테이블·컬럼은
    `pragma table_info(<테이블>);`로 코드와 대조한다. main CI의 `Migration drift check`도
    다음 push부터 초록이 된다.
+
+**토큰 정책(2026-10-17 회전).** Turso는 토큰 단위 폐기가 없다 — `turso db tokens invalidate`는 키를 돌려 **기존 토큰
+전부**를 무효화한다. 그래서 회전은 전체 교체이고 저트래픽 시간에 한다. 세 벌만 둔다: Vercel Production(rw, 만료 없음),
+GitHub Secret(`--read-only -e 90d`, drift 점검용 — **90일마다 재발급**, 만료되면 main push마다 drift 잡이 unknown/실패),
+`.env.local`(rw `-e 30d`, 로컬 스크립트용). `.env.local` 백업 파일을 만들지 말 것 — 토큰 사본이 늘어난다.
+
+### 운영 DB 백업과 시점 복구 — PITR은 하루뿐이다
+
+운영 Turso 조직의 플랜은 **starter(무료)**라 시점 복구(PITR) 보존이 **1일**이다(Developer 10일·Scaler 30일).
+하루 넘겨 발견한 사고(잘못된 마이그레이션·실수 삭제·토큰 유출)는 PITR로 되돌릴 수 없다. 그래서
+`/api/cron/backup-ledger`(매일 02:30 KST, `lib/ops/ledgerBackup.ts`)가 주문·결제·환불·후원·구독·공연 원장을 표 단위로
+떠서 private Blob `ledger/backup/`에 28일 보관한다(빌링키 원문·관리 토큰은 뺀다). 실패하면 운영자 메일이 온다.
+
+- **PITR 복구**(24시간 안쪽): `~/.turso/turso db create studio-nol-restore --from-db studio-nol --timestamp <RFC3339>`
+  → 새 DB 내용을 확인한 뒤 Vercel env의 `TURSO_DATABASE_URL`·`TURSO_AUTH_TOKEN`을 그쪽으로 교체. 원본은 지우지 않는다.
+- **백업에서 복구**(그 뒤): Blob에서 그날의 `.json.gz`를 받아 표 단위로 되살린다. 백업에 없는 컬럼(빌링키·토큰)은
+  재발급이 전제다 — 구독 카드는 고객이 다시 등록해야 한다.
+- 분기마다 한 번 복구 리허설(백업 파일을 로컬 SQLite에 풀어 행 수 대조)을 한다. 외부 스케줄러는 쓰지 않는다.
+
+### 함수 지역은 도쿄(`hnd1`)다 — DB 옆에 둔다
+
+운영 DB(Turso `studio-nol`)가 `aws-ap-northeast-1`(도쿄)에 있어서, 2026-10-16에 Vercel 함수 기본 지역을
+`iad1` → `hnd1`로 옮겼다. 미국 동부에서는 DB 왕복 한 번이 약 150ms라, 조회를 차례로 여섯 번 하던 펀딩 상태 API가
+CDN이 비었을 때 1.15~2.1초 걸렸다(응원 메시지가 늦게 뜨던 원인, #717). 옮긴 뒤에는 0.10~0.26초다.
+
+- **설정은 `vercel.json`이 아니라 프로젝트 설정에 있다**(`resourceConfig.functionDefaultRegions`, 대시보드 Settings → Functions).
+  바꾸면 **다음 배포부터** 적용된다 — 확인은 응답 헤더 `x-vercel-id`의 가운데 값(`icn1::hnd1::…`).
+- **서울(`icn1`)로 옮기지 말 것.** Turso에는 서울 지역이 없다(`turso db locations`). 함수를 서울에 두면 방문자 쪽 한 번(약 30ms)을
+  아끼는 대신 DB 왕복마다 약 30ms가 붙는다 — 한 요청이 DB를 여러 번 묻는 경로(결제 확인·예약·관리자)에서 더 느리다.
+  Turso가 서울을 열면 DB와 함수를 함께 옮기는 것을 검토한다.
+- **요금은 함수 지역이 아니라 요청이 들어온 CDN 지역으로 매겨진다.** 2026-09-16~10-15 사용량(`vercel usage --group-by region`)에서
+  함수가 `iad1`이었는데도 지역 과금(ISR·Fast Origin Transfer·Fluid CPU)이 전부 "Seoul"로 잡혔다. 지역 이동으로 단가가 바뀌지 않는다.
+- **Blob 저장소도 도쿄다 — `studio-files`(`store_YPoqIWRzeosPPaPv`, private, `hnd1`).** 계약서 PDF·백업·원장 백업·감상실 음원·
+  GSC 스냅샷·소셜 이미지, 펀딩 미디어·서류가 모두 여기 있다. 2026-10-16에 `iad1`의 `seo-snapshots`에서 옮겼다
+  (`scripts/copy-blob-store.mjs`로 40개 복사·해시 대조 → 연결 교체 → 재배포). 이유는 감상실 실측: 곡의 첫 요청(서울 CDN MISS)이
+  iad1에서 1.2~2.6초 → hnd1에서 0.22~0.33초. 연결은 `BLOB_READ_WRITE_TOKEN`·`BLOB_STORE_ID`(SDK는 OIDC가 있으면 그쪽, 없으면 토큰)다.
+  옛 `seo-snapshots`는 프로젝트 연결만 끊고 되돌리기용으로 남겨 뒀다 — **2026-11 중순 이후 지운다**(그 전에 지우지 말 것).
+- **Blob 파일은 주소가 아니라 경로(pathname)로 다룬다.** 주소의 호스트가 저장소 ID라, 주소를 DB에 두고 그 주소로 읽고·지우고·
+  비교하면 저장소를 옮기는 순간 틀어진다 — 계약서 PDF는 고아 정리가 멀쩡한 파일을 지우고 파기가 사본을 남겼을 것이다
+  (`lib/contracts/pdfPath.ts`, #728). 새 Blob 사용처도 경로로 읽고 경로로 비교할 것.
+- 지역과 별개로, **핫 경로에서 DB 조회를 차례로 늘리지 말 것** — 독립 조회는 `db.batch` 한 번으로 보낸다(`aggregateProjectStatus` 참조).
 
 ### 토스 키는 두 쌍이다 — 결제창을 연 키와 같은 쌍으로 승인한다
 
@@ -486,7 +540,9 @@ PATCH가 실패해도 DB는 되돌리지 않고 `gcal_error`에 적는다("캘�
 - **계약 종료일이 지나도 입금이 이어지면 자동 연장**이다(운영자 확정). 퇴실은 운영자가 "퇴실"을 눌러야만 된다(`status`). 시트의 "8일전" 같은 값은 상태가 아니라 남은 일수였다.
 - 날짜는 KST 달력 날짜 문자열. 입금을 기록하면 `next_due_on`이 납부일 기준으로 한 달 넘어간다(말일 보정, `rules.ts`). 같은 예정일을 두 번 기록하지 못하게 조건부 UPDATE.
 - **개인정보(연락처·비상연락처·이메일·사업자번호·성별)는 `private_enc` 한 칸에 JSON째 암호화**(`ENCRYPTED_FIELD_TARGETS`에 등록됨 — 키 회전 대상). 목록·props에는 싣지 않고, 버튼을 누른 순간의 응답으로만 나가며 열람은 접속기록(`tenancy_private_view`)에 남는다. 처리방침 19항과 `FUNDING_TERMS_VERSION`을 함께 올렸다.
-- **구글 캘린더는 DB의 투영**이다: env `TENANCY_GCAL_ID`(별도 캘린더)에 입주자당 최대 둘 — "입금 예정"(다음 입금일, 입금을 기록하면 다음 달로 옮김)과 "계약 종료"(종료일이 오늘 이후일 때만). **예약 캘린더·연습실 캘린더에 올리지 말 것** — 그 캘린더의 일정은 웹 예약 시간을 막는다. env가 없으면 캘린더는 건너뛴다. 어긋나면 "캘린더 전체 다시 맞추기".
+- **구글 캘린더는 DB의 투영**이다: 기존 연습실 캘린더(`PRACTICE_ROOM_GCAL_ID`, 전용 `TENANCY_GCAL_ID`가 있으면 그쪽)에 입주자당 최대 둘 — "입금 예정"(다음 입금일, 입금을 기록하면 다음 달로 옮김)과 "계약 종료"(종료일이 오늘 이후일 때만). **모든 일정은 `transparency: 'transparent'`(바쁨 아님)로 올린다** — 그래야 freeBusy에 안 잡혀 입금일마다 시간제 방(R02)이 막히지 않는다. 이 표시를 빼지 말 것. 녹음실 예약 캘린더에는 올리지 않는다. 어긋나면 "캘린더 전체 다시 맞추기".
+- **알림은 매일 운영 점검 메일(Vercel 크론 `0 23 * * *` = UTC, 한국 아침 8시)과 대시보드 "처리할 일"에 같이 올라온다**(`collectDbIssues`, 이상이 없으면 메일이 안 간다): "월 입주 연체"(입금 예정일 경과), "계약 종료 임박"(7일 안 — 종료일이 지난 자동 연장은 알리지 않는다), "캘린더 동기화 실패". 이름·방·일수만 싣고 연락처는 싣지 않는다. 방 정가(`room_list_price`)는 방의 속성이라 이용료와 다를 수 있다(36만원 방 외에 40·44만원 방).
+- **보증금은 면제**다(연습실 계약서 제5조) — 계약서의 `deposit_amount`는 받은 돈이 아니라 위약금 기준액(월 이용료 1개월분)이라 `room_tenancies.deposit_amount`(실제로 받은 보증금)로 옮기지 않는다. 약정 종료일 전 퇴실이면 퇴실 확인창이 위약금 가능성을 알린다(자동 연장 중 통지 종료는 위약금 없음, 제3조②).
 - 시트 가져오기(`importService.ts`)는 일회성·멱등이다. 전화번호가 빈 사람은 전자계약에서 같은 이름으로 찾아 채운다. 새 방을 늘릴 때 코드 수정은 필요 없다(입주 등록에서 방 번호만 적는다).
 
 ### 메일은 공용 레이아웃으로 — 글자만 보내지 않는다

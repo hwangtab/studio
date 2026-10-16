@@ -1,5 +1,18 @@
 import { getPaymentLink, PAYMENT_LINKS } from './paymentLinks';
 
+describe('파일 링크의 이용 일시', () => {
+  // 2026-10-16 최혜정 건: 품목명에 "(10/17 17:00)"을 적고 이용 일시 필드는 빠뜨려, 결제가 돼도 대시보드·캘린더·예약 불가 블록에 안 올라갔다.
+  it('품목명에 이용 일시("(M/D HH:MM)")를 적은 링크는 sessionAt이 같은 일시여야 한다', () => {
+    for (const [slug, link] of Object.entries(PAYMENT_LINKS)) {
+      const m = /\((\d{1,2})\/(\d{1,2}) (\d{1,2}):(\d{2})\)/.exec(link.itemName);
+      if (!m) continue;
+      expect({ slug, hasSession: link.sessionAt !== undefined && link.sessionHours !== undefined }).toEqual({ slug, hasSession: true });
+      const kst = new Date((link.sessionAt as number) * 1000 + 9 * 3600 * 1000);
+      expect([kst.getUTCMonth() + 1, kst.getUTCDate(), kst.getUTCHours(), kst.getUTCMinutes()]).toEqual([Number(m[1]), Number(m[2]), Number(m[3]), Number(m[4])]);
+    }
+  });
+});
+
 describe('getPaymentLink', () => {
   const [slug] = Object.keys(PAYMENT_LINKS);
 

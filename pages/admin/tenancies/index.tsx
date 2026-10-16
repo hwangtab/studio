@@ -1,5 +1,6 @@
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import { AdminShell } from '../../../components/admin/AdminShell';
@@ -52,7 +53,7 @@ interface FormState {
   billingDay: string;
   hasWindow: '' | 'yes' | 'no';
   furnishings: string;
-  specNote: string;
+  roomListPrice: string;
   note: string;
   phone: string;
   emergencyContact: string;
@@ -63,21 +64,21 @@ interface FormState {
 
 const EMPTY: FormState = {
   kind: 'room', roomNumber: '', tenantName: '', monthlyAmount: '', depositAmount: '', startDate: '', endDate: '', nextDueOn: '', billingDay: '',
-  hasWindow: '', furnishings: '', specNote: '', note: '', phone: '', emergencyContact: '', email: '', businessNumber: '', gender: '',
+  hasWindow: '', furnishings: '', roomListPrice: '', note: '', phone: '', emergencyContact: '', email: '', businessNumber: '', gender: '',
 };
 
 const formOf = (t: TenancyListRow): FormState => ({
   kind: t.kind, roomNumber: t.roomNumber ?? '', tenantName: t.tenantName, monthlyAmount: String(t.monthlyAmount),
   depositAmount: t.depositAmount === null ? '' : String(t.depositAmount), startDate: t.startDate, endDate: t.endDate ?? '', nextDueOn: t.nextDueOn,
   billingDay: String(t.billingDay), hasWindow: t.hasWindow === null ? '' : t.hasWindow ? 'yes' : 'no', furnishings: t.furnishings ?? '',
-  specNote: t.specNote ?? '', note: t.note ?? '', phone: '', emergencyContact: '', email: '', businessNumber: '', gender: '',
+  roomListPrice: t.roomListPrice === null ? '' : String(t.roomListPrice), note: t.note ?? '', phone: '', emergencyContact: '', email: '', businessNumber: '', gender: '',
 });
 
 const inputOf = (f: FormState) => ({
   kind: f.kind, roomNumber: f.roomNumber, tenantName: f.tenantName, monthlyAmount: Number(f.monthlyAmount.replace(/[,\s원]/g, '')),
   depositAmount: f.depositAmount.trim() === '' ? null : Number(f.depositAmount.replace(/[,\s원]/g, '')),
   startDate: f.startDate, endDate: f.endDate || null, nextDueOn: f.nextDueOn, billingDay: f.billingDay || undefined,
-  hasWindow: f.hasWindow === '' ? null : f.hasWindow === 'yes', furnishings: f.furnishings, specNote: f.specNote, note: f.note,
+  hasWindow: f.hasWindow === '' ? null : f.hasWindow === 'yes', furnishings: f.furnishings, roomListPrice: f.roomListPrice.trim() === '' ? null : Number(f.roomListPrice.replace(/[,\s원]/g, '')), note: f.note,
   private: { phone: f.phone, emergencyContact: f.emergencyContact, email: f.email, businessNumber: f.businessNumber, gender: f.gender },
 });
 
@@ -87,6 +88,7 @@ const call = async (url: string, method: 'GET' | 'POST', body?: unknown) => {
 };
 
 export default function AdminTenanciesPage({ rows, today, calendarConfigured, tableMissing }: Props) {
+  const router = useRouter();
   const [form, setForm] = useState<FormState | null>(null);
   const [editing, setEditing] = useState<TenancyListRow | null>(null);
   /** 연락처 등 상세를 불러왔는가 — 안 불러온 채 저장하면 서버가 암호문을 그대로 둔다. */
@@ -105,7 +107,10 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
   const finish = (data: { ok?: boolean; message?: string; calendarError?: string | null }, okText: string) => {
     if (!data.ok) { setNotice(data.message ?? '처리하지 못했어요.'); setBusy(false); return; }
     setNotice(data.calendarError ? `${okText} 다만 캘린더는 맞추지 못했어요: ${data.calendarError}` : okText);
-    window.location.reload();
+    // 하드 새로고침이 아니라 데이터만 다시 읽는다 — 그래야 위 안내(캘린더 오류 등)가 화면에 남는다.
+    setForm(null);
+    setBusy(false);
+    void router.replace(router.asPath, undefined, { scroll: false });
   };
 
   const openNew = () => { setEditing(null); setForm({ ...EMPTY }); setPrivateLoaded(true); };
@@ -142,7 +147,10 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
   };
 
   const end = async (t: TenancyListRow) => {
-    if (!window.confirm(`${t.tenantName}${t.roomNumber ? ` (${t.roomNumber})` : ''} 퇴실 처리할까요? 캘린더 일정이 지워지고 방이 비어요.`)) return;
+    // 계약서 제5조: 보증금은 면제이고, 약정 기간을 채우지 않고 퇴실하면 보증금 상당액(월 이용료 1개월분)이 위약금이다. 자동 연장 중 통지 종료는 위약금이 없다.
+    const early = t.kind === 'room' && t.endDate !== null && today < t.endDate;
+    const penaltyNote = early ? `\n\n⚠ 약정 종료일(${t.endDate}) 전 퇴실이에요. 계약서 제5조에 따라 위약금(보증금 상당액 = 월 이용료 1개월분, ${won(t.monthlyAmount)})이 발생할 수 있어요. 갑의 귀책·계약서가 정한 예외가 아닌지 확인하세요.` : '';
+    if (!window.confirm(`${t.tenantName}${t.roomNumber ? ` (${t.roomNumber})` : ''} 퇴실 처리할까요? 캘린더 일정이 지워지고 방이 비어요.${penaltyNote}`)) return;
     setBusy(true);
     finish(await call(`/api/admin/tenancies/${t.id}`, 'POST', { action: 'end' }), '퇴실 처리했어요.');
   };
@@ -182,7 +190,7 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
               <tr key={t.id} className="border-b border-gray-100 align-top">
                 <td className="py-2 pr-3 font-medium text-gray-900">{virtual ? '비상주' : t.roomNumber}</td>
                 <td className="pr-3 text-gray-900">{t.tenantName}{t.note && <div className="text-xs text-gray-500">{t.note}</div>}</td>
-                <td className="pr-3 tabular-nums">{won(t.monthlyAmount)}</td>
+                <td className="pr-3 tabular-nums">{won(t.monthlyAmount)}{t.roomListPrice !== null && t.roomListPrice !== t.monthlyAmount && <div className="text-xs text-gray-500">방 정가 {won(t.roomListPrice)}</div>}</td>
                 <td className="pr-3 tabular-nums">
                   {t.nextDueOn}
                   {late > 0 ? <div className="text-xs text-red-700">{late}일 연체</div> : daysBetween(today, t.nextDueOn) <= 7 && <div className="text-xs text-amber-700">{daysBetween(today, t.nextDueOn)}일 뒤</div>}
@@ -210,7 +218,7 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
       <Head><title>입주 관리 | Studio NOL 관리자</title><meta name="robots" content="noindex" /></Head>
       <AdminShell title="입주 관리" description="연습실 월 입주자와 비상주 사무실 — 입금 예정일을 구글 캘린더에도 올립니다.">
         {tableMissing && <div className="mb-4 rounded-lg bg-amber-50 p-4 text-sm text-amber-900">입주 표가 아직 없어요(마이그레이션 0066을 먼저 적용하세요).</div>}
-        {!calendarConfigured && <div className="mb-4 rounded-lg bg-amber-50 p-4 text-sm text-amber-900">입주 관리 캘린더가 설정돼 있지 않아 캘린더 일정은 만들어지지 않아요(환경변수 TENANCY_GCAL_ID).</div>}
+        {!calendarConfigured && <div className="mb-4 rounded-lg bg-amber-50 p-4 text-sm text-amber-900">연습실 캘린더가 설정돼 있지 않아 캘린더 일정은 만들어지지 않아요(환경변수 PRACTICE_ROOM_GCAL_ID 또는 TENANCY_GCAL_ID).</div>}
         {notice && <div className="mb-4 rounded-lg bg-blue-50 p-3 text-sm text-blue-800">{notice}</div>}
 
         <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -231,14 +239,14 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
             {form.kind === 'room' && field('방 번호 (R05)', <input className={inputClass} value={form.roomNumber} onChange={(e) => set({ roomNumber: e.target.value })} required />)}
             {field('이름 / 상호', <input className={inputClass} value={form.tenantName} onChange={(e) => set({ tenantName: e.target.value })} required />)}
             {field('월 이용료 (원)', <input className={inputClass} inputMode="numeric" value={form.monthlyAmount} onChange={(e) => set({ monthlyAmount: e.target.value })} required />)}
-            {field('보증금 (원)', <input className={inputClass} inputMode="numeric" value={form.depositAmount} onChange={(e) => set({ depositAmount: e.target.value })} />)}
+            {field('받은 보증금 (원, 면제면 비움)', <input className={inputClass} inputMode="numeric" value={form.depositAmount} onChange={(e) => set({ depositAmount: e.target.value })} />)}
             {field('입주 시작일', <input className={inputClass} type="date" value={form.startDate} onChange={(e) => set({ startDate: e.target.value })} required />)}
             {field('계약 종료일 (없으면 비움)', <input className={inputClass} type="date" value={form.endDate} onChange={(e) => set({ endDate: e.target.value })} />)}
             {field('다음 입금 예정일', <input className={inputClass} type="date" value={form.nextDueOn} onChange={(e) => set({ nextDueOn: e.target.value })} required />)}
             {field('납부일 (비우면 예정일의 일)', <input className={inputClass} inputMode="numeric" value={form.billingDay} onChange={(e) => set({ billingDay: e.target.value })} />)}
             {form.kind === 'room' && field('창', <select className={inputClass} value={form.hasWindow} onChange={(e) => set({ hasWindow: e.target.value as FormState['hasWindow'] })}><option value="">모름</option><option value="yes">있음</option><option value="no">없음</option></select>)}
             {form.kind === 'room' && field('비치 물품', <input className={inputClass} value={form.furnishings} onChange={(e) => set({ furnishings: e.target.value })} />)}
-            {form.kind === 'room' && field('시트의 “가격” 칸(원문)', <input className={inputClass} value={form.specNote} onChange={(e) => set({ specNote: e.target.value })} />)}
+            {form.kind === 'room' && field('방 정가 (원, 모르면 비움)', <input className={inputClass} inputMode="numeric" value={form.roomListPrice} onChange={(e) => set({ roomListPrice: e.target.value })} />)}
             {field('메모·특약', <input className={inputClass} value={form.note} onChange={(e) => set({ note: e.target.value })} />)}
 
             <div className="rounded-xl border border-gray-200 p-3 md:col-span-4">

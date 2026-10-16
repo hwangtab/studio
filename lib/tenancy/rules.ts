@@ -81,7 +81,7 @@ export interface TenancyInput {
   nextDueOn: string;
   hasWindow: boolean | null;
   furnishings: string | null;
-  specNote: string | null;
+  roomListPrice: number | null;
   note: string | null;
   contractId: string | null;
   private: TenancyPrivate;
@@ -97,6 +97,16 @@ const str = (v: unknown, max: number): string | null => {
 
 export const ROOM_RE = /^R\d{2}$/;
 
+/**
+ * 월 입주로 받을 수 없는 방. R02는 시간제 연습실로 팔리고(녹음실과 공유), R03은 녹음실 컨트롤룸이다(운영자 확인 2026-10-16).
+ * 입주 기록은 시간제 예약을 막지 않으므로, 이 방을 월 입주로 등록하면 같은 시간에 시간제 예약이 들어온다.
+ * 정말 월 입주로 돌릴 때는 이 목록에서 빼고, 그 방의 기간 블록을 함께 건다(lib/booking/products.ts PRACTICE_ROOM_HOURLY_ROOMS).
+ */
+export const NON_TENANCY_ROOMS: Readonly<Record<string, string>> = {
+  R02: 'R02는 시간제 연습실(녹음실과 공유)이라 월 입주로 받을 수 없어요.',
+  R03: 'R03은 녹음실 컨트롤룸이라 월 입주로 받을 수 없어요.',
+};
+
 export const parseTenancyInput = (raw: unknown): Parsed => {
   const b = (raw ?? {}) as Record<string, unknown>;
   const kind = b.kind;
@@ -107,6 +117,7 @@ export const parseTenancyInput = (raw: unknown): Parsed => {
   if (kind === 'room') {
     roomNumber = str(b.roomNumber, 10)?.toUpperCase() ?? null;
     if (!roomNumber || !ROOM_RE.test(roomNumber)) return { ok: false, message: '방 번호는 R01 형식으로 적어 주세요.' };
+    if (NON_TENANCY_ROOMS[roomNumber]) return { ok: false, message: NON_TENANCY_ROOMS[roomNumber] };
   }
   const monthlyAmount = Number(b.monthlyAmount);
   if (!Number.isInteger(monthlyAmount) || monthlyAmount < 0 || monthlyAmount > 100_000_000) return { ok: false, message: '월 이용료를 확인해 주세요.' };
@@ -121,6 +132,11 @@ export const parseTenancyInput = (raw: unknown): Parsed => {
   if (!isValidDate(b.nextDueOn)) return { ok: false, message: '다음 입금 예정일을 확인해 주세요.' };
   const billingDay = b.billingDay === undefined || b.billingDay === null || b.billingDay === '' ? Number(b.nextDueOn.slice(8)) : Number(b.billingDay);
   if (!Number.isInteger(billingDay) || billingDay < 1 || billingDay > 31) return { ok: false, message: '납부일은 1~31이에요.' };
+  let roomListPrice: number | null = null;
+  if (b.roomListPrice !== null && b.roomListPrice !== undefined && b.roomListPrice !== '') {
+    roomListPrice = Number(b.roomListPrice);
+    if (!Number.isInteger(roomListPrice) || roomListPrice < 0 || roomListPrice > 100_000_000) return { ok: false, message: '방 정가를 확인해 주세요.' };
+  }
   const p = (b.private ?? {}) as Record<string, unknown>;
   return {
     ok: true,
@@ -128,7 +144,7 @@ export const parseTenancyInput = (raw: unknown): Parsed => {
       kind, roomNumber, tenantName, monthlyAmount, depositAmount,
       startDate: b.startDate, endDate, billingDay, nextDueOn: b.nextDueOn,
       hasWindow: typeof b.hasWindow === 'boolean' ? b.hasWindow : null,
-      furnishings: str(b.furnishings, 200), specNote: str(b.specNote, 100), note: str(b.note, 300),
+      furnishings: str(b.furnishings, 200), roomListPrice, note: str(b.note, 300),
       contractId: str(b.contractId, 64),
       private: {
         phone: str(p.phone, 30) ?? undefined, emergencyContact: str(p.emergencyContact, 60) ?? undefined,

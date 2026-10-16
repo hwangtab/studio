@@ -1526,6 +1526,18 @@ export const privacyAccessActionEnum = [
   'subscription_view',
   'show_admin_view',
   'show_submission_view',
+  /**
+   * 상점·공연 정산 안내 메일을 만들면서 개설자 계좌를 복호화한 일 (lib/partnerPayouts/notify.ts의 sendPartnerPayoutNotice).
+   * `funding_payout_account_email`과 같은 일이지만 대상이 프로젝트 id가 아니라 **정산 기록 id**(`partner_payouts.id`)라 행위를 가른다.
+   * 여기서만 값이 서버 밖으로 나간다 — 메일 본문에 은행명·예금주(계좌번호는 뒤 4자리까지만). 컬럼이 enum 문자열이라 마이그레이션이 필요 없다(DB CHECK 없음).
+   */
+  'partner_payout_account_email',
+  /**
+   * 관리자 상점·공연 정산 CSV 내려받기 (pages/api/admin/partner-payouts/export.ts) — 세무사에게 넘기는 파일.
+   * 수취인 이름과 금액이 한 파일에 담긴다(계좌·주민등록번호·연락처는 싣지 않는다). 대상은 `종류_시작월_종료월`, row_count는 행 수.
+   * 컬럼이 enum 문자열이라 마이그레이션이 필요 없다(DB CHECK 없음).
+   */
+  'partner_payout_export',
 ] as const;
 
 /**
@@ -2264,6 +2276,94 @@ export const manualRevenues = sqliteTable('manual_revenues', {
 
 export type ManualRevenue = typeof manualRevenues.$inferSelect;
 
+// ─── 상점·공연 정산 기록(저널의 partner_payouts) ─────────────────────────────────────────────────
+//
+// 설계: docs/settlement-record-design-2026-10.md. 펀딩 정산 기록(`funding_project_payouts`)과 같은 모양을 상점(P1)·공연(P2)이 같이 쓴다.
+// 전부 **새 표**다 — 기존 표에 컬럼을 더하지 않고 어떤 `relations()`에도 잇지 않는다(orders·funding_pledges 관계 조회가
+// 전체 컬럼을 SELECT해 마이그레이션 전 배포에서 결제 확인이 깨지는 0022 함정). 표가 없으면 정산 화면만 "표 미적용"으로 열린다.
+
+export const partnerPayoutKindEnum = ['shop', 'show'] as const;
+export const partnerPayoutStatusEnum = ['pending', 'paid'] as const;
+/** 정산 뒤에 생긴 돈의 변화의 이유. 공연(P2)의 회차 취소 결제수수료도 이미 여기 있다 — 두 번째 마이그레이션 없이 붙도록. */
+export const partnerPayoutAdjustmentReasonEnum = ['late_refund', 'showtime_cancel_fee', 'manual'] as const;
+
+/**
+ * 정산 기록 — 불변 스냅샷. (kind, subject_key, period)당 한 행(UNIQUE가 이중 기록을 막는다).
+ * - shop: subject_key = 'creator:<id>' | 'file:<slug>', period = 'YYYY-MM'(KST)
+ * - show: subject_key = 공연 id, period = 'all'
+ * 이체 전(`pending`)에 한해 지울 수 있다(다시 기록) — 이체한(`paid`) 기록은 불변이다.
+ * 금액 칸의 의미(상점): gross=판매액(VAT 포함), refund=0(환불된 주문은 애초에 빠진다), shipping=아티스트 직접 발송 주문 배송비,
+ * studio_amount=스튜디오 몫, share_amount=부가세 상당액을 뺀 아티스트 몫, adjustment_amount=이월 조정 합(부호 있음, 아티스트 몫 기준),
+ * shortfall_amount=조정이 몫을 넘어 다음 정산으로 넘긴 음수 이월의 크기, net_amount=실이체액.
+ */
+export const partnerPayouts = sqliteTable('partner_payouts', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  kind: text('kind', { enum: partnerPayoutKindEnum }).notNull(),
+  subjectKey: text('subject_key').notNull(),
+  period: text('period').notNull(),
+  /** DB 개설자면 그 id. 상점 파일 갈래(`file:<slug>`)는 계정이 없어 null — 계좌 열람 버튼이 없다. */
+  creatorId: text('creator_id').references(() => fundingCreators.id),
+  /** 기록 시점의 수취인 이름(스냅샷). */
+  payeeName: text('payee_name').notNull(),
+  /** 기록 시점의 세금 구분(스냅샷) — 개설자가 나중에 바꿔도 이 정산은 그대로다. */
+  taxType: text('tax_type', { enum: fundingCreatorTaxTypeEnum }).notNull(),
+  grossAmount: integer('gross_amount').notNull().default(0),
+  refundAmount: integer('refund_amount').notNull().default(0),
+  shippingAmount: integer('shipping_amount').notNull().default(0),
+  platformFeeAmount: integer('platform_fee_amount').notNull().default(0),
+  paymentFeeAmount: integer('payment_fee_amount').notNull().default(0),
+  studioAmount: integer('studio_amount').notNull().default(0),
+  vatDeductionAmount: integer('vat_deduction_amount').notNull().default(0),
+  shareAmount: integer('share_amount').notNull().default(0),
+  withholdingAmount: integer('withholding_amount').notNull().default(0),
+  adjustmentAmount: integer('adjustment_amount').notNull().default(0),
+  shortfallAmount: integer('shortfall_amount').notNull().default(0),
+  netAmount: integer('net_amount').notNull(),
+  itemCount: integer('item_count').notNull().default(0),
+  status: text('status', { enum: partnerPayoutStatusEnum }).notNull().default('pending'),
+  paidAt: integer('paid_at', { mode: 'timestamp' }),
+  memo: text('memo'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  subjectUnique: uniqueIndex('partner_payouts_subject_unique').on(t.kind, t.subjectKey, t.period),
+  statusIdx: index('partner_payouts_status_idx').on(t.kind, t.status),
+  creatorIdx: index('partner_payouts_creator_idx').on(t.creatorId),
+  kindCheck: check('partner_payouts_kind_check', sql`${t.kind} in ('shop','show')`),
+  statusCheck: check('partner_payouts_status_check', sql`${t.status} in ('pending','paid')`),
+}));
+
+/**
+ * 정산 뒤에 생긴 돈의 변화 — 다음 정산에 싣는다. `applied_payout_id`가 NULL이면 아직 어느 정산에도 안 실렸다.
+ * - amount: 부호 있음. 상점은 **아티스트 몫(VAT 포함) 기준**이다(정산 식이 그 위에서 부가세 상당액·원천징수를 계산한다).
+ * - payee_key: 상점은 정산 대상 키(= subject_key), 공연은 'creator:<id>'.
+ * - source_ref: 주문번호·회차 id·'carryover:<정산 id>'. (kind, payee_key, reason, source_ref)가 UNIQUE라 같은 사건은 한 번만 쌓인다.
+ * - origin_payout_id: 이 조정이 바로잡는 정산(그 정산의 스냅샷에 들어 있던 주문의 환불). 그 정산을 이체 전에 지워 다시 기록하면
+ *   환불이 새 스냅샷에 이미 반영되므로 이 조정도 함께 지워야 이중 공제가 안 된다.
+ */
+export const partnerPayoutAdjustments = sqliteTable('partner_payout_adjustments', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  kind: text('kind', { enum: partnerPayoutKindEnum }).notNull(),
+  payeeKey: text('payee_key').notNull(),
+  amount: integer('amount').notNull(),
+  reason: text('reason', { enum: partnerPayoutAdjustmentReasonEnum }).notNull(),
+  sourceRef: text('source_ref'),
+  memo: text('memo'),
+  originPayoutId: text('origin_payout_id'),
+  appliedPayoutId: text('applied_payout_id'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  sourceUnique: uniqueIndex('partner_payout_adjustments_source_unique').on(t.kind, t.payeeKey, t.reason, t.sourceRef),
+  payeeIdx: index('partner_payout_adjustments_payee_idx').on(t.kind, t.payeeKey, t.appliedPayoutId),
+  appliedIdx: index('partner_payout_adjustments_applied_idx').on(t.appliedPayoutId),
+  originIdx: index('partner_payout_adjustments_origin_idx').on(t.originPayoutId),
+  kindCheck: check('partner_payout_adjustments_kind_check', sql`${t.kind} in ('shop','show')`),
+  reasonCheck: check('partner_payout_adjustments_reason_check', sql`${t.reason} in ('late_refund','showtime_cancel_fee','manual')`),
+}));
+
+export type PartnerPayout = typeof partnerPayouts.$inferSelect;
+export type PartnerPayoutAdjustment = typeof partnerPayoutAdjustments.$inferSelect;
+
 /**
  * 월 입주자(연습실 월세 + 비상주 사무실) — 입주 관리의 **정본**. 예전 스프레드시트(연습실대여현황)를 대체한다.
  *
@@ -2289,6 +2389,7 @@ export const roomTenancies = sqliteTable(
     tenantName: text('tenant_name').notNull(),
     status: text('status', { enum: tenancyStatusEnum }).notNull().default('active'),
     monthlyAmount: integer('monthly_amount').notNull(),
+    /** **실제로 받은** 보증금(원). 연습실 계약은 보증금을 면제한다(계약서 제5조) — 면제면 NULL. 위약금 기준액은 월 이용료와 같아 따로 저장하지 않는다. */
     depositAmount: integer('deposit_amount'),
     startDate: text('start_date').notNull(),
     endDate: text('end_date'),
@@ -2297,8 +2398,8 @@ export const roomTenancies = sqliteTable(
     nextDueOn: text('next_due_on').notNull(),
     hasWindow: integer('has_window', { mode: 'boolean' }),
     furnishings: text('furnishings'),
-    /** 예전 시트의 "가격" 칸(40·44) 원문 — 의미가 확인되지 않아 그대로 보존한다. */
-    specNote: text('spec_note'),
+    /** 방 정가(원). 방의 속성이라 입주자 이용료와 다를 수 있다(기본 36만원 방과 40·44만원 방이 있다). 모르면 NULL. */
+    roomListPrice: integer('room_list_price'),
     /** 특약·메모(예: "1년 계약", "계약금 19만원"). 개인정보를 적지 않는다. */
     note: text('note'),
     contractId: text('contract_id'),

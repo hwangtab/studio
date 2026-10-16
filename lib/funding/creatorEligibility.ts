@@ -1,7 +1,7 @@
 import { and, eq } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { fundingProjects, shopArtists, showSubmissions } from '../../db/schema';
+import { fundingProjects, partnerPayouts, shopArtists, showSubmissions } from '../../db/schema';
 import { isMissingTableError } from '../dbErrors';
 
 /** 공연·상점 갈래의 읽기 — 실패는 그 갈래만 "없음"으로 본다(표가 각자 마이그레이션에 달려 있다). */
@@ -31,15 +31,22 @@ export const hasApprovedEngagement = async (creatorId: string): Promise<boolean>
     .where(and(eq(showSubmissions.creatorId, creatorId), eq(showSubmissions.reviewStatus, 'approved'))).limit(1))) {
     return true;
   }
-  return softExists('상점', () => db.select({ id: shopArtists.creatorId }).from(shopArtists)
-    .where(eq(shopArtists.creatorId, creatorId)).limit(1));
+  if (await softExists('상점', () => db.select({ id: shopArtists.creatorId }).from(shopArtists)
+    .where(eq(shopArtists.creatorId, creatorId)).limit(1))) {
+    return true;
+  }
+  // 상점·공연 정산 기록(`partner_payouts`)이 있는 개설자도 승인된 일이 있었던 계정이다 — 등록이 나중에 내려가도 이미 기록한 정산의
+  // 계좌를 열어 이체할 수 있어야 한다(관리자 계좌 열람 라우트가 이 판정을 선으로 쓴다). 표가 없으면(0067 전) 이 갈래만 없음으로 본다.
+  return softExists('상점·공연 정산 기록', () => db.select({ id: partnerPayouts.id }).from(partnerPayouts)
+    .where(eq(partnerPayouts.creatorId, creatorId)).limit(1));
 };
 
 /**
  * 상점 아티스트로 등록돼 있는가 — 주민등록번호를 지워도 되는지의 판정에 쓴다(`savePayoutSection`).
  *
- * 상점 정산은 기록 표가 없어(운영자 수기 이체) 원천징수를 이미 했는지 알 수 없다. 그래서 상점 아티스트면
- * 사업자로 바꿔도 번호를 남긴다 — 원천징수한 펀딩 정산 기록이 있을 때(`hasWithheldPayout`)와 같은 취급이다.
+ * 상점 정산 기록(`partner_payouts`)은 이제 있지만, **기록을 시작하기 전에 이뤄진 상점 판매대금**은 원천징수를 이미 했는지 기록으로 가릴 수 없다
+ * (처리방침 15항이 이 이유를 그대로 적었다). 그래서 상점 아티스트면 사업자로 바꿔도 번호를 남긴다 — 원천징수한 정산 기록이 있을 때
+ * (`hasWithheldPayout`, 펀딩·상점·공연 기록 모두)와 같은 취급이다. 기록이 쌓인 뒤에도 이 판정을 좁히지 말 것 — 등록이 있는 한 남기는 것이 약속이다.
  * 지우는 쪽은 되돌릴 수 없으므로 판정이 흔들리면 남기는 쪽으로 기운다: 표가 없으면(0053 전) 등록도 없으니
  * 거짓, 그 밖의 읽기 실패는 참.
  */

@@ -1,8 +1,9 @@
 /** @jest-environment node */
-import { occupancyCalendars } from './calendarGuard';
+import { hasCalendarConflict, occupancyCalendars } from './calendarGuard';
+import { isCalendarActive, listCalendarEvents } from './gcal';
 import { occupancyConflictKeys, PRACTICE_ROOM_HOURLY_ROOMS, STUDIO_SHARED_ROOMS } from './products';
 
-jest.mock('./gcal', () => ({ fetchBusyRanges: jest.fn(), isCalendarActive: jest.fn() }));
+jest.mock('./gcal', () => ({ fetchBusyRanges: jest.fn(), isCalendarActive: jest.fn(), listCalendarEvents: jest.fn() }));
 
 /**
  * R02는 레코딩룸이다(2026-09-28 운영자). 녹음과 R02 시간제는 예약·캘린더 모두에서 서로를 막아야
@@ -24,5 +25,18 @@ describe('녹음실과 같은 방(R02)의 겹침 기준', () => {
     expect(occupancyCalendars(null)).toEqual([['studio', null], ['practice-room', 'R02']]);
     expect(occupancyCalendars('R02')).toEqual([['practice-room', 'R02'], ['studio', null]]);
     expect(occupancyCalendars('R05')).toEqual([['practice-room', 'R05']]);
+  });
+});
+
+describe('일정 목록으로 보는 충돌(가져오기·일정 변경)', () => {
+  const at = (h: number) => new Date(`2026-11-14T${String(h).padStart(2, '0')}:00:00+09:00`);
+  const ev = (id: string, transparent: boolean) => ({ id, summary: '', description: '', start: at(0), end: new Date(at(0).getTime() + 86_400_000), allDay: true, transparent });
+
+  it('"바쁨 아님"(월 입주 입금 예정 등) 일정과 자기 일정은 충돌이 아니고, 불투명한 다른 일정은 충돌이다', async () => {
+    (isCalendarActive as jest.Mock).mockReturnValue(true);
+    (listCalendarEvents as jest.Mock).mockResolvedValue([ev('tenancy', true), ev('self', false)]);
+    expect(await hasCalendarConflict('practice-room', at(10), at(12), 'R02', 'self')).toBe(false);
+    (listCalendarEvents as jest.Mock).mockResolvedValue([ev('other', false)]);
+    expect(await hasCalendarConflict('practice-room', at(10), at(12), 'R02', 'self')).toBe(true);
   });
 });

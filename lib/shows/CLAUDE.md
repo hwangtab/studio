@@ -143,7 +143,39 @@ v2 색 가드(`components/ui/SectionHeading.test.tsx`의 `V2_FILES`)에 공연 �
 - **약관 판본**: `SHOW_ORGANIZER_TERMS_VERSION`(`lib/shows/organizer/policy.ts`), 게이트 `content/showOrganizerTerms.baseline.test.ts`
   (갱신 `UPDATE_SHOW_ORGANIZER_TERMS_BASELINE=1`, 판본을 먼저 올린다). 해시에 조항·수수료·정산·리드타임 상수와 **`refundPolicy.ts`의 환불 구간 줄·각주**가 든다 —
   환불 구간을 바꾸면 주최자 약관 판본도 올려야 한다.
+  제7조에 **지급 뒤 환불로 생긴 초과 지급의 반환 요청·상계 조항**이 있다(`show-organizer-terms-2026-10-16`, 기한은 숫자 없이 "요청과 함께 알리는 기한") — 정산 절의 `overpaidAmount` 회수 요청의 계약 근거다.
 - 메일은 `lib/shows/organizer/email.ts`(운영자: 새 제출·승인 뒤 수정 / 주최자: 승인·보완 요청·반려). 승인했는데 공개하지 못하면 주최자 메일은
   `approved_pending`(승인됨·곧 공개, 공개 주소 없음)으로 가고, 운영자가 뒤에 `/admin/shows`에서 공개해도 메일은 다시 가지 않는다. 관리자는 `/admin/shows/submissions`, 처리는 `PATCH /api/admin/shows/submissions/[id]`.
 - 정산 정보(계좌·세금 구분)는 개설자 콘솔의 정산 정보 탭(`/ko/funding/creator/payout`)에서 받는다. 승인된 공연 등록만 있어도 열린다
-  (`hasApprovedEngagement`, `lib/funding/creatorEligibility.ts`). 공연 정산 기록 자체는 3단계다.
+  (`hasApprovedEngagement`, `lib/funding/creatorEligibility.ts`).
+
+### 주최자 정산 기록 (P2, 2026-10-16 — `lib/partnerPayouts/show*.ts`, 설계 `docs/settlement-record-design-2026-10.md`)
+
+관리자 `/admin/shows/[id]`의 「정산」 절(`components/admin/ShowPayoutSection.tsx`) → `POST /api/admin/shows/[id]/payout`(record / mark_paid / delete / set_cancel_fee_waived).
+`partner_payouts`(kind `show`, subject_key = 공연 id, period `all`, **creator_id 필수** — 보존·파기 코드가 이 칸으로 본다). 송금은 운영자가 은행 앱으로, 시스템은 계산하고 기록한다.
+
+- **정산 대상 = 승인된 제출물이 있는 공연만.** `data/shows/*.ts` 직영 공연은 `settleable: false`("정산 대상 아님(직영)"), 기록도 거절(`not_settleable`).
+- **판매액** = 결제 행이 있는 공연 티켓 주문(paid·partially_refunded·refunded)의 합계, **환불** = 그 주문 결제의 `done` 환불 합. 초대권(결제 없음·0원)·입금 대기·만료는 빠진다.
+  부분 환불·회차 취소 전액 환불·계좌 입금 환불이 전부 같은 `refunds` 표에 기록되므로 그 합이 정본이다 — **환불을 기록하는 새 경로를 만들면 `refunds`에 `done` 행을 남길 것.**
+- **계산은 펀딩 식 그대로**(`computeFundingPayoutForProject`, `showCalc.ts`) — 수수료 `FUNDING_PLATFORM_FEE_PERCENT`+`FUNDING_PAYMENT_FEE_PERCENT`(주최자 약관 제6조가 같은 상수를 보간), 개인은 부가세 상당액·원천징수, 사업자는 그대로.
+  **계좌 입금 몫(결제 키 `bank-deposit:`)은 결제 수수료 과세표준에서 뺀다**(토스를 지나지 않은 돈 — 펀딩 `manualGrossAmount`와 같은 이유).
+- **기록은 마지막 회차가 끝난 뒤에만**(`not_ended`). 끝 = 취소되지 않은 회차의 가장 늦은 시작 + 공연 길이, 전부 취소됐으면 마지막 취소 시각(`lastShowEndAt`; 대기열 SQL `listShowPayoutsAwaitingRecord`가 같은 규칙을 적었다 — 함께 바꿀 것).
+  약관 기한(마지막 회차 종료 + 영업일 `FUNDING_PAYOUT_BUSINESS_DAYS`일)을 넘기면 점검 메일 high(`healthCheck.ts`), 기한 안은 대시보드 카드(「정산 기록 대기 공연」「이체 대기 공연 정산」).
+- **막는 조건**: 세금 구분·계좌 없음, 사업자인데 사업자 정보 없음, 주최자 약관 동의 기록(`show_submissions.organizer_terms_version`) 없음, 이미 기록됨, 정산할 금액 없음. **경고만**: 주민등록번호 미등록,
+  계좌 입금 환불을 접수했는데 송금 전(`refund_accounts.refunded_at` NULL), 취소된 회차에 환불이 안 끝난 주문(아직 판매액에 들어 있다 — 환불 뒤에 기록하는 편이 안전).
+- **회차 취소 결제 수수료**(약관 제7조): `cancelShowtime` 끝에서 `showtime_cancel_fee` 조정을 만든다(음수, payee_key `creator:<id>`, source_ref = 회차 id, 환불한 **토스 결제분**×`FUNDING_PAYMENT_FEE_PERCENT`).
+  fail-soft(`safeSyncShowtimeCancelFee` — 던지지 않는다), 멱등(이어서 처리로 다시 불리면 금액만 맞춘다), 정산 기록 직전·정산 절을 열 때 한 번 더 맞춘다. **스튜디오 귀책 면제는 취소 화면이 아니라 정산 절에서**
+  — 반대 부호 `manual` 조정(source_ref `waive:<회차 id>`)을 쌓고/지운다(`setShowtimeCancelFeeWaived`). 취소는 되돌릴 수 없는 화면이라 귀책 판단을 거기 넣지 않았다. 수수료 조정이 이미 정산에 실렸으면 면제를 못 바꾼다(이체 전 기록을 취소하면 풀린다).
+  **이 공연의 회차 조정만** 싣는다 — 같은 주최자의 다른 공연 조정은 그 공연 정산에 간다.
+- **조정은 원천징수까지 뺀 금액에서 뺀다**(펀딩의 설계비·제작비 공제 자리). 모자라면 실지급 0원이고 모자란 만큼은 `shortfall_amount`에 남는다 — **이월하지 않는다**(약관 제7조: 모자라면 주최자에게 청구). 청구·협의 결과는 「지급 완료」 메모에.
+- **기록 뒤 환불은 자동 조정을 만들지 않는다**(상점의 `late_refund`와 달리 — 공연 정산은 공연당 한 번이라 상계할 다음 정산이 없다). 화면이 `drift`(기록 판매·환불 ≠ 지금)를 보이고, 이체 전이면 「기록 취소」 후 다시 기록한다.
+  **이미 지급(`paid`)한 뒤의 차액은 보이고 알린다**(새 표·마이그레이션 없음, `RecordedShowDelta` — `show.ts`):
+  - 지금 판매·환불로 기록의 **세금 유형·실린 조정 그대로** 다시 계산한 실지급액(`currentNetAmount`)과 기록 `net_amount`의 차. 기록이 더 크면 `overpaidAmount`(초과 지급 = 회수 필요), 작으면 `underpaidAmount`(지급 뒤 추가 판매 — 자동 추가 지급 없음, 화면 안내만).
+    세금 유형 변경·새 조정은 섞지 않는다(환불 때문이 아닌 차이가 초과 지급으로 읽히지 않게). 기록 시각 이후 완료된 환불 주문번호가 정산 절에 같이 뜬다(`lateRefundOrders`).
+  - 정산 절: `paid` 기록에 남은 초과 지급이 있으면 호박색 블록 "지급 후 환불로 N원 더 지급됐습니다(회수 필요)" + 「회수 처리 남기기」.
+  - 점검 메일 high(`healthCheck.ts`, `listOverpaidShowPayouts`) — 덮이지 않은 초과 지급이 1원 이상인 `paid` 정산. 이체 전(`pending`)은 대상이 아니다(기록 취소 후 재기록이 답).
+  - **끄는 법 = 메모 줄**: 라우트 액션 `acknowledge_overpayment`{payoutId, amount, memo}가 `partner_payouts.memo` 끝에 `[회수 처리 N원 · 처리자 · YYYY-MM-DD] 메모`를 덧붙인다(`appendPartnerPayoutMemoIfPaid`, 지급 완료 기록만, 금액·상태 불변).
+    점검과 화면은 줄의 `N원` 합(`parseAcknowledgedAmount`, `showOverpayment.ts`)이 지금 초과 지급액을 덮는지로 판정 — 부분 처리는 남은 몫만 울리고, **뒤늦은 환불이 더 생기면 덮이지 않은 몫만큼 다시 울린다.**
+    남은 몫보다 큰 금액은 409(오타로 큰 금액을 적어 이후 경보가 가려지는 것을 막는다). 자유 메모의 `[`·`]`는 괄호로 바꿔 처리 줄을 흉내 내지 못하게 한다. 이 줄 형식을 바꾸면 파서와 기존 메모가 어긋난다.
+  - 회수 자체(주최자에게 요청·상계·반환 받기)는 운영자가 밖에서 한다 — 시스템은 금액을 새로 정하지 않는다.
+- 표(0067)가 없으면 정산 절만 "마이그레이션 필요" 안내로 열린다(공연 운영 화면은 그대로), 대시보드 카드는 0, 회차 취소는 평소대로 끝난다.

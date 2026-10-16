@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
+import { safeSyncShopLateRefundAdjustments } from '../partnerPayouts/shopLateRefund';
 import { DB_SKU_PREFIX } from './productRules';
 import { deleteOrderSerials } from './serials';
 
@@ -30,4 +31,6 @@ export const closeShopFulfillmentOnFullCancel = async (orderNo: string): Promise
   } catch (error) {
     console.error('[shop-webhook] 한정판 번호 반납 확인 실패', { orderNo, error });
   }
+  // 정산 뒤 환불이면 다음 정산에서 뺄 이월 조정을 쌓는다(대사가 주문을 refunded로 옮긴 뒤라 여기서 판정된다). 던지지 않는다.
+  await safeSyncShopLateRefundAdjustments(orderNo);
 };
