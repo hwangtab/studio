@@ -20,11 +20,11 @@ describe('parseTenancySheet', () => {
     expect(skipped).toEqual([]);
   });
   it('방 행: 금액·창·가구·납부일·마지막 입금, 보이지 않는 문자 제거', () => {
-    expect(rows[0].input).toMatchObject({ monthlyAmount: 380000, hasWindow: true, furnishings: '거울', billingDay: 2, endDate: '2025-03-01', specNote: null });
+    expect(rows[0].input).toMatchObject({ monthlyAmount: 380000, hasWindow: true, furnishings: '거울', billingDay: 2, endDate: '2025-03-01', roomListPrice: null });
     expect(rows[0].input.private).toEqual({ phone: '010-0000-0001', gender: '남' });
     expect(rows[0].lastPaid).toEqual({ paidOn: '2026-10-06', amount: 380000 });
     expect(rows[1]).toMatchObject({ needsPhoneLookup: true });
-    expect(rows[1].input).toMatchObject({ hasWindow: false, specNote: '40', note: '1년 계약' });
+    expect(rows[1].input).toMatchObject({ hasWindow: false, roomListPrice: 400000, note: '1년 계약' });
   });
   it('비상주 행: 이메일·사업자번호는 비상연락·특약 칸에서', () => {
     expect(rows[2].input.private).toEqual({ phone: '010-0000-0002', email: 'a@b.kr', businessNumber: '111-11-11111' });

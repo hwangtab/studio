@@ -52,7 +52,7 @@ interface FormState {
   billingDay: string;
   hasWindow: '' | 'yes' | 'no';
   furnishings: string;
-  specNote: string;
+  roomListPrice: string;
   note: string;
   phone: string;
   emergencyContact: string;
@@ -63,21 +63,21 @@ interface FormState {
 
 const EMPTY: FormState = {
   kind: 'room', roomNumber: '', tenantName: '', monthlyAmount: '', depositAmount: '', startDate: '', endDate: '', nextDueOn: '', billingDay: '',
-  hasWindow: '', furnishings: '', specNote: '', note: '', phone: '', emergencyContact: '', email: '', businessNumber: '', gender: '',
+  hasWindow: '', furnishings: '', roomListPrice: '', note: '', phone: '', emergencyContact: '', email: '', businessNumber: '', gender: '',
 };
 
 const formOf = (t: TenancyListRow): FormState => ({
   kind: t.kind, roomNumber: t.roomNumber ?? '', tenantName: t.tenantName, monthlyAmount: String(t.monthlyAmount),
   depositAmount: t.depositAmount === null ? '' : String(t.depositAmount), startDate: t.startDate, endDate: t.endDate ?? '', nextDueOn: t.nextDueOn,
   billingDay: String(t.billingDay), hasWindow: t.hasWindow === null ? '' : t.hasWindow ? 'yes' : 'no', furnishings: t.furnishings ?? '',
-  specNote: t.specNote ?? '', note: t.note ?? '', phone: '', emergencyContact: '', email: '', businessNumber: '', gender: '',
+  roomListPrice: t.roomListPrice === null ? '' : String(t.roomListPrice), note: t.note ?? '', phone: '', emergencyContact: '', email: '', businessNumber: '', gender: '',
 });
 
 const inputOf = (f: FormState) => ({
   kind: f.kind, roomNumber: f.roomNumber, tenantName: f.tenantName, monthlyAmount: Number(f.monthlyAmount.replace(/[,\s원]/g, '')),
   depositAmount: f.depositAmount.trim() === '' ? null : Number(f.depositAmount.replace(/[,\s원]/g, '')),
   startDate: f.startDate, endDate: f.endDate || null, nextDueOn: f.nextDueOn, billingDay: f.billingDay || undefined,
-  hasWindow: f.hasWindow === '' ? null : f.hasWindow === 'yes', furnishings: f.furnishings, specNote: f.specNote, note: f.note,
+  hasWindow: f.hasWindow === '' ? null : f.hasWindow === 'yes', furnishings: f.furnishings, roomListPrice: f.roomListPrice.trim() === '' ? null : Number(f.roomListPrice.replace(/[,\s원]/g, '')), note: f.note,
   private: { phone: f.phone, emergencyContact: f.emergencyContact, email: f.email, businessNumber: f.businessNumber, gender: f.gender },
 });
 
@@ -182,7 +182,7 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
               <tr key={t.id} className="border-b border-gray-100 align-top">
                 <td className="py-2 pr-3 font-medium text-gray-900">{virtual ? '비상주' : t.roomNumber}</td>
                 <td className="pr-3 text-gray-900">{t.tenantName}{t.note && <div className="text-xs text-gray-500">{t.note}</div>}</td>
-                <td className="pr-3 tabular-nums">{won(t.monthlyAmount)}</td>
+                <td className="pr-3 tabular-nums">{won(t.monthlyAmount)}{t.roomListPrice !== null && t.roomListPrice !== t.monthlyAmount && <div className="text-xs text-gray-500">방 정가 {won(t.roomListPrice)}</div>}</td>
                 <td className="pr-3 tabular-nums">
                   {t.nextDueOn}
                   {late > 0 ? <div className="text-xs text-red-700">{late}일 연체</div> : daysBetween(today, t.nextDueOn) <= 7 && <div className="text-xs text-amber-700">{daysBetween(today, t.nextDueOn)}일 뒤</div>}
@@ -238,7 +238,7 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
             {field('납부일 (비우면 예정일의 일)', <input className={inputClass} inputMode="numeric" value={form.billingDay} onChange={(e) => set({ billingDay: e.target.value })} />)}
             {form.kind === 'room' && field('창', <select className={inputClass} value={form.hasWindow} onChange={(e) => set({ hasWindow: e.target.value as FormState['hasWindow'] })}><option value="">모름</option><option value="yes">있음</option><option value="no">없음</option></select>)}
             {form.kind === 'room' && field('비치 물품', <input className={inputClass} value={form.furnishings} onChange={(e) => set({ furnishings: e.target.value })} />)}
-            {form.kind === 'room' && field('시트의 “가격” 칸(원문)', <input className={inputClass} value={form.specNote} onChange={(e) => set({ specNote: e.target.value })} />)}
+            {form.kind === 'room' && field('방 정가 (원, 모르면 비움)', <input className={inputClass} inputMode="numeric" value={form.roomListPrice} onChange={(e) => set({ roomListPrice: e.target.value })} />)}
             {field('메모·특약', <input className={inputClass} value={form.note} onChange={(e) => set({ note: e.target.value })} />)}
 
             <div className="rounded-xl border border-gray-200 p-3 md:col-span-4">

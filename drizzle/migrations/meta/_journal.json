@@ -470,6 +470,20 @@
       "when": 1792122973782,
       "tag": "0066_tenancy",
       "breakpoints": true
+    },
+    {
+      "idx": 67,
+      "version": "6",
+      "when": 1792125455126,
+      "tag": "0067_tenancy_room_price",
+      "breakpoints": true
+    },
+    {
+      "idx": 68,
+      "version": "6",
+      "when": 1792125459271,
+      "tag": "0068_tenancy_drop_spec_note",
+      "breakpoints": true
     }
   ]
 }

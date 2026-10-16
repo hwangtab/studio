@@ -50,7 +50,7 @@ export const createTenancy = async (input: TenancyInput, opts: { lastPaid?: { pa
     .values({
       kind: input.kind, roomNumber: input.roomNumber, tenantName: input.tenantName, monthlyAmount: input.monthlyAmount,
       depositAmount: input.depositAmount, startDate: input.startDate, endDate: input.endDate, billingDay: input.billingDay,
-      nextDueOn: input.nextDueOn, hasWindow: input.hasWindow, furnishings: input.furnishings, specNote: input.specNote,
+      nextDueOn: input.nextDueOn, hasWindow: input.hasWindow, furnishings: input.furnishings, roomListPrice: input.roomListPrice,
       note: input.note, contractId: input.contractId, privateEnc: sealPrivate(input.private),
     })
     .returning({ id: roomTenancies.id });
@@ -69,7 +69,7 @@ export const updateTenancy = async (id: string, input: TenancyInput, opts: { kee
     .set({
       kind: input.kind, roomNumber: input.roomNumber, tenantName: input.tenantName, monthlyAmount: input.monthlyAmount,
       depositAmount: input.depositAmount, startDate: input.startDate, endDate: input.endDate, billingDay: input.billingDay,
-      nextDueOn: input.nextDueOn, hasWindow: input.hasWindow, furnishings: input.furnishings, specNote: input.specNote,
+      nextDueOn: input.nextDueOn, hasWindow: input.hasWindow, furnishings: input.furnishings, roomListPrice: input.roomListPrice,
       note: input.note, contractId: input.contractId,
       // 상세를 열어 보지 않은 채 저장하면(keepPrivate) 암호문을 그대로 둔다 — 빈 값으로 덮어쓰지 않는다.
       ...(opts.keepPrivate ? {} : { privateEnc: sealPrivate(input.private) }),
