@@ -11,7 +11,7 @@ import { Field, Select, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
-import { serializePledgeForAdmin, type AdminPledgeItem } from '../../../lib/funding/admin-serialize';
+import { serializePledgeForAdminList, type AdminPledgeListItem } from '../../../lib/funding/admin-serialize';
 import { aggregateAdminFundingTotals, listFundingOrders, type AdminFundingTotals } from '../../../lib/funding/admin-list';
 import { FULFILLMENT_LABELS } from '../../../lib/funding/fulfillmentLabels';
 import { MAX_MANUAL_ACTUAL_AMOUNT } from '../../../lib/funding/policy';
@@ -41,7 +41,7 @@ interface ProjectOption {
 }
 
 interface AdminFundingPageProps {
-  items: AdminPledgeItem[];
+  items: AdminPledgeListItem[];
   /**
    * 상단 KPI. **목록(items)에서 계산하지 않는다** — items는 최대 200건으로 잘리므로
    * 201건째부터 화면 수치가 공개 진행률과 갈라진다. 집계 SQL이 전건을 센다.
@@ -55,6 +55,8 @@ interface AdminFundingPageProps {
    * 기한으로 거르지 않는다(자동 취소가 없다, lib/funding/admin-list.ts).
    */
   awaitingDepositOnly?: boolean;
+  /** 이름·연락처·이메일·주문번호 검색어(없으면 빈 문자열). */
+  q?: string;
   /** 부수적 실패(프로젝트 md 파싱 등) — 배너로만 알리고 표는 그대로 보여준다. */
   error?: string;
   /** 후원 목록 조회 자체가 실패했을 때만 — 이때는 보여줄 표가 없으므로 전체 화면 오류. */
@@ -70,6 +72,8 @@ export const getServerSideProps: GetServerSideProps<AdminFundingPageProps> = asy
   const slugParam = context.query.slug;
   const slug = typeof slugParam === 'string' && slugParam ? slugParam : null;
   const awaitingDepositOnly = context.query.deposit === 'pending';
+  const qParam = context.query.q;
+  const q = typeof qParam === 'string' ? qParam.trim().slice(0, 60) : '';
 
   // md 한 편이 깨져도(frontmatter 파싱 예외) 관리자 화면 전체가 500이 되면 안 된다 —
   // 후원 목록은 md와 무관하게 DB에서 온다.
@@ -92,16 +96,17 @@ export const getServerSideProps: GetServerSideProps<AdminFundingPageProps> = asy
     // 결제 대기 금액에 남는다.
     const [totals, orders] = await Promise.all([
       aggregateAdminFundingTotals(slug),
-      listFundingOrders(slug, { awaitingDeposit: awaitingDepositOnly }),
+      listFundingOrders(slug, { awaitingDeposit: awaitingDepositOnly, q }),
     ]);
     return {
       props: {
-        items: orders.slice(0, LIST_LIMIT).map((o) => serializePledgeForAdmin(o)),
+        items: orders.slice(0, LIST_LIMIT).map((o) => serializePledgeForAdminList(o)),
         totals,
         truncated: orders.length > LIST_LIMIT,
         projects,
         slug,
         awaitingDepositOnly,
+        q,
         ...(projectsError ? { error: projectsError } : {}),
       },
     };
@@ -132,7 +137,7 @@ const STATUS_LABELS: Record<string, string> = {
 
 const PAYMENT_LABELS: Record<string, string> = { toss: '카드', bank_transfer: '계좌' };
 
-export default function AdminFundingPage({ items, totals, truncated, projects, slug, awaitingDepositOnly = false, error, pledgesError }: AdminFundingPageProps) {
+export default function AdminFundingPage({ items, totals, truncated, projects, slug, awaitingDepositOnly = false, q = '', error, pledgesError }: AdminFundingPageProps) {
   const router = useRouter();
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -194,7 +199,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
       + (Number.isFinite(formAdditionalAmount) ? formAdditionalAmount : 0)
     : null;
 
-  const handleCreateManual = async (e: React.FormEvent | null, acknowledgeExisting = false) => {
+  const handleCreateManual = async (e: React.FormEvent | null, acknowledgeExisting = false, acknowledgePayout = false) => {
     e?.preventDefault();
     setFormError(null);
     if (!acknowledgeExisting) setExistingCandidates([]);
@@ -241,6 +246,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
       displayNamePublic: false,
       adminMemo: formMemo.trim() || undefined,
       ...(acknowledgeExisting ? { acknowledgeExisting: true } : {}),
+      ...(acknowledgePayout ? { acknowledgePayout: true } : {}),
       // 배송 리워드이고 한 칸이라도 적었을 때만 보낸다 — 빈 객체를 보내면 빈 문자열 주소가 남는다.
       ...(needsShipping && Object.values(formShip).some((v) => v.trim() !== '')
         ? { shipping: Object.fromEntries(Object.entries(formShip).map(([k, v]) => [k, v.trim() || undefined])) }
@@ -248,6 +254,13 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
     });
     setBusy(false);
 
+    if (!result.ok && result.code === 'payout_recorded') {
+      // 정산 기록과 모금액이 갈라진다는 경고 — 알고 넣겠다고 하면 같은 입력으로 다시 보낸다.
+      if (window.confirm(`${result.message}\n\n그래도 수기 후원을 등록할까요?`)) {
+        await handleCreateManual(null, acknowledgeExisting, true);
+      }
+      return;
+    }
     if (!result.ok) {
       setFormError(result.message ?? '등록에 실패했습니다.');
       if (result.candidates?.length) setExistingCandidates(result.candidates);
@@ -336,7 +349,8 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
               {truncated && (
                 <div className="mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
                   <strong>목록</strong>은 최근 {LIST_LIMIT}건만 표시합니다. 위 지표는 전건 기준이고,
-                  CSV 내보내기는 건수 상한 없이 확정 건(확정·부분환불) 전량을 싣습니다.
+                  CSV 내보내기는 건수 상한 없이 확정 건(확정·부분환불) 전량을 싣습니다. 오래된 후원은 아래
+                  검색(이름·연락처·이메일·주문번호)으로 찾을 수 있습니다.
                 </div>
               )}
 
@@ -350,6 +364,18 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
                   </Link>
                 </div>
               )}
+
+              <form method="GET" action="/admin/funding" className="mb-4 flex flex-wrap items-center gap-2" role="search">
+                {slug && <input type="hidden" name="slug" value={slug} />}
+                {awaitingDepositOnly && <input type="hidden" name="deposit" value="pending" />}
+                <TextInput type="search" name="q" defaultValue={q} placeholder="이름, 연락처, 이메일, 주문번호 검색" aria-label="후원 검색" light className="w-auto flex-1 min-w-[240px] px-4" />
+                <Button light type="submit" variant="weak">검색</Button>
+                {q && (
+                  <Link href={slug ? `/admin/funding?slug=${encodeURIComponent(slug)}` : '/admin/funding'} className="text-sm text-primary hover:underline">
+                    검색 해제
+                  </Link>
+                )}
+              </form>
 
               <div className="flex flex-wrap gap-2 mb-6">
                 <Link

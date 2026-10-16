@@ -13,11 +13,15 @@ import { listPaymentLinks, type PaymentLinkListRow } from '../../../lib/payments
 
 interface Props {
   links: PaymentLinkListRow[];
+  /** 목록이 상한(200개)에서 잘렸는가. */
+  truncated: boolean;
   /** 표가 아직 없는 DB(마이그레이션 0060 전) — 목록 조회가 실패했다. */
   tableMissing: boolean;
   /** 옛 파일 링크(data/paymentLinks.ts) — 읽기 전용. */
   fileLinks: Array<{ slug: string; itemName: string; totalAmount: number; expiresOn: string | null; open: boolean }>;
 }
+
+const LINK_LIST_LIMIT = 200;
 
 export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
   const auth = await authenticateAdminRequest(context);
@@ -25,7 +29,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   let links: PaymentLinkListRow[] = [];
   let tableMissing = false;
   try {
-    links = await listPaymentLinks();
+    links = await listPaymentLinks(LINK_LIST_LIMIT + 1);
   } catch {
     tableMissing = true;
   }
@@ -33,7 +37,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   const fileLinks = Object.entries(PAYMENT_LINKS).map(([slug, l]) => ({
     slug, itemName: l.itemName, totalAmount: l.totalAmount, expiresOn: l.expiresOn ?? null, open: !(l.expiresOn && today > l.expiresOn),
   }));
-  return { props: { links, tableMissing, fileLinks } };
+  const truncated = links.length > LINK_LIST_LIMIT;
+  return { props: { links: links.slice(0, LINK_LIST_LIMIT), truncated, tableMissing, fileLinks } };
 };
 
 const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
@@ -41,7 +46,7 @@ const buttonClass = 'rounded-lg bg-gray-900 px-4 py-2 text-white disabled:opacit
 const kstFull = (sec: number) => new Date(sec * 1000).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit' });
 const kst = (sec: number) => new Date(sec * 1000).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
-export default function AdminPaymentLinksPage({ links: initialLinks, tableMissing, fileLinks }: Props) {
+export default function AdminPaymentLinksPage({ links: initialLinks, truncated, tableMissing, fileLinks }: Props) {
   // 만든 링크를 목록 맨 위에 바로 보인다(SSR 목록은 새로고침 전엔 낡는다 — 방금 만든 링크가 안 보이면 두 번 만들게 된다).
   const [links, setLinks] = useState(initialLinks);
   const [itemName, setItemName] = useState('');
@@ -165,6 +170,9 @@ export default function AdminPaymentLinksPage({ links: initialLinks, tableMissin
 
         <section className="mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
           <h2 className="mb-3 text-lg font-bold text-gray-900">만든 링크</h2>
+          {truncated && (
+            <p className="mb-3 rounded-lg bg-amber-50 p-3 text-xs text-amber-900">최근 {LINK_LIST_LIMIT}개만 표시합니다. 더 오래된 링크는 이 화면에서 볼 수 없습니다.</p>
+          )}
           {links.length === 0 ? <p className="text-gray-600">아직 없어요.</p> : (
             <ul className="divide-y divide-gray-100">
               {links.map((l) => (

@@ -116,6 +116,16 @@ export const ManualBookingPanel = ({
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
+    // "25만"처럼 숫자가 아닌 금액은 NaN → JSON null이 되어 서버가 표기가로 조용히 등록한다. 보내기 전에 막는다.
+    const amountText = amount.trim().replace(/,/g, '');
+    if (amountText !== '' && !/^\d+$/.test(amountText)) {
+      setResult({ tone: 'error', text: '협의 금액은 숫자만 적어 주세요. (예: 250000)' });
+      return;
+    }
+    if (amountText !== '' && Number(amountText) < 1000) {
+      setResult({ tone: 'error', text: `금액이 너무 작아요(${Number(amountText).toLocaleString('ko-KR')}원). 원 단위로 적어 주세요. 예: 250000` });
+      return;
+    }
     setBusy(true);
     setResult(null);
     const body: Record<string, unknown> = {
@@ -124,7 +134,7 @@ export const ManualBookingPanel = ({
       customerPhone: phone,
       customerEmail: email,
       customerNote: note,
-      totalAmount: amount.trim() === '' ? null : Number(amount.replace(/,/g, '')),
+      totalAmount: amountText === '' ? null : Number(amountText),
       received: received === 'yes',
       method,
       ...(kind === 'session' && adoptEventId ? { adoptEventId } : {}),

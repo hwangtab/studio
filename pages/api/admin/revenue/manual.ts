@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (req.method === 'PATCH') {
       const { id, refundedAmount } = (req.body ?? {}) as { id?: unknown; refundedAmount?: unknown };
       if (typeof id !== 'string' || typeof refundedAmount !== 'number') return res.status(400).json({ ok: false, message: '요청이 올바르지 않습니다.' });
-      const result = await setManualRefund(id, refundedAmount);
+      const result = await setManualRefund(id, refundedAmount, auth.actor);
       if (result === 'not_found') return res.status(404).json({ ok: false, message: '기록을 찾을 수 없습니다.' });
       if (result === 'invalid') return res.status(400).json({ ok: false, message: '환불 금액은 0원 이상, 받은 금액 이하의 정수여야 합니다.' });
       return res.status(200).json({ ok: true });

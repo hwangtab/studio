@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 
 import { AdminShell } from '../../components/admin/AdminShell';
 import { authenticateAdminRequest } from '../../lib/contracts/admin-auth';
+import { ACTION_LABEL } from '../../lib/privacy/accessLogLabels';
 import {
   listPrivacyAccessActors,
   listPrivacyAccessLogs,
@@ -49,23 +50,6 @@ interface AdminPrivacyLogsPageProps {
 }
 
 /** 행위 이름 → 사람이 읽는 말. 없는 값은 원문 그대로 보여 준다(지어내지 않는다). */
-const ACTION_LABEL: Record<string, string> = {
-  funding_resident_number_view: '주민등록번호 조회',
-  funding_resident_number_decrypt_check: '주민등록번호 복호화 점검',
-  funding_payout_account_view: '정산 계좌 조회',
-  funding_payout_account_decrypt_check: '정산 계좌 복호화 점검',
-  funding_payout_account_email: '정산 안내 메일의 계좌 복호화',
-  funding_pledge_export: '펀딩 주문 CSV',
-  sales_ledger_export: '매출장부 CSV',
-  artist_supporter_export: '아티스트 후원자 CSV',
-  funding_creator_shipping_export: '개설자 배송 목록 CSV',
-  contract_pdf_download: '계약서 PDF',
-  contract_view: '계약서 상세 열람',
-  show_roster_export: '공연 명단 CSV',
-  shop_artist_shipping_view: '상점 아티스트 발송 화면 열람',
-  creator_business_certificate_view: '사업자등록증 열람',
-  creator_payout_account_view: '정산 계좌 조회(개설자 단위)',
-};
 
 const RESULT_LABEL: Record<string, string> = {
   success: '성공',

@@ -245,12 +245,26 @@ export default function AdminBookingsPage({
    * (lib/ops/healthCheck.ts)과 같은 판정이어야 화면과 메일이 같은 건수를 말한다.
    */
   const gcalFailed = useMemo(
-    () => bookings.filter((b) => b.gcalError || b.gcalMissing),
+    () => bookings.filter((b) => b.bookingStatus !== 'cancelled' && (b.gcalError || b.gcalMissing)),
+    [bookings],
+  );
+  // 취소했는데 캘린더 일정을 못 지운 예약 — "등록 안 됨"과 반대 문제다(일정이 남아 그 시간을 계속 막는다).
+  const gcalStaleDelete = useMemo(
+    () => bookings.filter((b) => b.bookingStatus === 'cancelled' && b.gcalError?.startsWith('delete: ')),
     [bookings],
   );
 
   // 결제 기록과 주문 상태가 어긋난 건 — 돈이 걸린 문제라 알림 실패보다 위에 둔다(스펙 §10).
   const mismatched = useMemo(() => bookings.filter((b) => b.mismatch), [bookings]);
+
+  // 끝난 블록은 접어 둔다 — 쌓이면 지금 걸린 블록이 목록 아래로 밀린다.
+  const [showPastBlocks, setShowPastBlocks] = useState(false);
+  const { pastBlocks, visibleBlocks } = useMemo(() => {
+    const nowMs = Date.now();
+    const past = blocks.filter((b) => new Date(b.endAt).getTime() <= nowMs);
+    const upcoming = blocks.filter((b) => new Date(b.endAt).getTime() > nowMs);
+    return { pastBlocks: past, visibleBlocks: showPastBlocks ? [...past, ...upcoming] : upcoming };
+  }, [blocks, showPastBlocks]);
 
   const refresh = async () => {
     await router.replace(router.asPath, undefined, { scroll: false });
@@ -284,13 +298,23 @@ export default function AdminBookingsPage({
     }
 
     setBusy(true);
-    const result = await createBlock({
+    const blockInput = {
       date: blockDate,
       startHour: blockStartHour,
       endHour: blockEndHour,
       memo: blockMemo.trim() || undefined,
       roomNumber: blockRoom.trim() || undefined,
-    });
+    };
+    let result = await createBlock(blockInput);
+    if (!result.ok && result.conflict) {
+      // 이미 잡힌 예약과 겹친다 — 그대로 걸면 그 예약은 남은 채 시간만 "휴무"가 된다. 운영자가 알고도 걸겠다고 해야 통과한다.
+      if (window.confirm(`${result.message}\n\n그래도 이 시간을 막을까요?`)) {
+        result = await createBlock({ ...blockInput, force: true });
+      } else {
+        setBusy(false);
+        return;
+      }
+    }
     setBusy(false);
 
     if (!result.ok) {
@@ -353,6 +377,14 @@ export default function AdminBookingsPage({
                   정상이지만 캘린더에는 이 시간이 비어 있습니다 — 그대로 두면 같은 시간에 전화
                   예약을 받아 겹칠 수 있습니다. 상세 화면에서 재시도하거나 캘린더에 직접
                   넣어 주세요.
+                </div>
+              )}
+
+              {gcalStaleDelete.length > 0 && (
+                <div className="mb-4 p-3 bg-amber-50 border border-amber-300 text-amber-900 rounded-lg text-sm">
+                  <strong>취소했지만 캘린더 일정을 지우지 못한 예약이 {gcalStaleDelete.length}건 있습니다</strong> (
+                  {gcalStaleDelete.map((b) => `${b.orderNo} · ${b.customerName}`).join(', ')}). 남은 일정이 그 시간을 계속 막고
+                  있습니다 — 상세 화면의 “캘린더 일정 지우기”를 눌러 주세요.
                 </div>
               )}
 
@@ -616,11 +648,21 @@ export default function AdminBookingsPage({
               <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-lg text-sm">{blockError}</div>
             )}
 
-            {blocks.length === 0 ? (
-              <p className="text-sm text-gray-500">등록된 블록이 없습니다.</p>
+            {pastBlocks.length > 0 && (
+              <button
+                type="button"
+                className="mb-3 text-sm text-primary hover:underline"
+                aria-expanded={showPastBlocks}
+                onClick={() => setShowPastBlocks((v) => !v)}
+              >
+                {showPastBlocks ? '지난 블록 숨기기' : `지난 블록 ${pastBlocks.length}개 보기`}
+              </button>
+            )}
+            {visibleBlocks.length === 0 ? (
+              <p className="text-sm text-gray-500">{blocks.length === 0 ? '등록된 블록이 없습니다.' : '지금 이후의 블록이 없습니다.'}</p>
             ) : (
               <ul className="space-y-2">
-                {blocks.map((block) => (
+                {visibleBlocks.map((block) => (
                   <li
                     key={block.id}
                     className="flex items-center justify-between gap-4 p-3 bg-gray-50 rounded-lg text-sm"

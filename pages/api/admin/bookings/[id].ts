@@ -242,6 +242,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(409).json({ ok: false, message: '재시도할 예약이 없습니다.' });
       }
       if (booking.status === 'cancelled') {
+        // 취소 때 [예약] 일정 삭제가 실패하면 일정이 남아 그 시간을 막고(웹 예약이 캘린더 바쁨을 읽는다) 오류 기록도 영구히 남는다
+        // (lib/booking/cancel.ts `delete:`). 이 경우만 "다시 지우기"를 허용한다 — 등록은 여전히 필요 없다.
+        if (booking.gcalEventId && booking.gcalError?.startsWith('delete: ')) {
+          try {
+            await deleteBookingEvent(booking.gcalEventId, calendarForService(booking.serviceType), booking.roomNumber);
+            await getDb().update(bookings).set({ gcalEventId: null, gcalError: null }).where(eq(bookings.id, booking.id));
+            return res.status(200).json({ ok: true, removed: true });
+          } catch (error: unknown) {
+            console.error('[API/admin/bookings/[id]] 취소된 예약의 캘린더 일정 삭제 재시도 실패:', { bookingId: booking.id, error });
+            return res.status(500).json({ ok: false, message: '캘린더 일정을 지우지 못했습니다. 잠시 뒤 다시 누르거나 구글 캘린더에서 직접 지워 주세요.' });
+          }
+        }
         return res
           .status(409)
           .json({ ok: false, message: '취소된 예약은 캘린더에 등록할 필요가 없습니다.' });

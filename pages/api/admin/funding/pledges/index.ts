@@ -27,7 +27,7 @@ import {
   generateFundingOrderNo,
 } from '../../../../../lib/funding/service';
 import { SEND_PENDING } from '../../../../../lib/ops/notificationSentinel';
-import { findSameNameBankDeposits } from '../../../../../lib/funding/bankTransfer';
+import { findSameNameBankDeposits, loadProjectPayoutState } from '../../../../../lib/funding/bankTransfer';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -104,6 +104,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           ok: false, code: 'existing_deposit_candidates',
           message: `같은 이름으로 들어온 계좌 입금 신청이 ${candidates.length}건 있습니다. 그 신청의 입금이라면 등록하지 말고 그 신청에서 "입금 확인"을 눌러 주세요.`,
           candidates,
+        });
+      }
+    }
+
+    /**
+     * **정산이 이미 기록된(또는 이체된) 프로젝트에 수기 후원을 넣으면 모금액이 정산 기록과 달라진다.** 온라인 계좌 입금의 입금
+     * 확정(bankTransfer.ts)은 확인창과 경고가 있는데 수기 등록은 아무 말이 없었고, 점검 메일(healthCheck)의 늦은 입금 경고도
+     * `entry_source='online'`만 봐서 이 경로는 어느 쪽에도 안 잡혔다. 운영자가 알고 넣겠다고 하면(`acknowledgePayout`) 통과한다.
+     */
+    if (b.acknowledgePayout !== true) {
+      const payoutState = await loadProjectPayoutState(project.slug);
+      if (payoutState !== null) {
+        return res.status(409).json({
+          ok: false,
+          code: 'payout_recorded',
+          message:
+            payoutState.status === 'paid'
+              ? '이 프로젝트는 정산을 이미 이체했어요 — 이 후원을 등록하면 개설자에게 추가로 보낼 몫이 생겨요. 등록한 뒤 정산 패널에서 차액을 확인해 주세요.'
+              : '이 프로젝트는 정산이 기록됐어요 — 이 후원을 등록하면 개설자에게 보낼 금액이 늘어나요. 이체 전에 정산 패널의 계산값을 다시 확인해 주세요.',
         });
       }
     }

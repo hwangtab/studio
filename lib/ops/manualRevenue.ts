@@ -96,13 +96,23 @@ export const createManualRevenue = async (input: ManualRevenueInput, actor: stri
   return row.id;
 };
 
-/** 돌려준 누적 금액을 정한다(덮어쓰기). 총액을 넘으면 거절 — null이면 그 행이 없다. */
-export const setManualRefund = async (id: string, refundedAmount: number): Promise<'ok' | 'not_found' | 'invalid'> => {
+/**
+ * 돌려준 누적 금액을 정한다(덮어쓰기). 총액을 넘으면 거절 — 'not_found'면 그 행이 없다.
+ *
+ * 누가 언제 얼마에서 얼마로 바꿨는지를 메모 끝에 한 줄 남긴다(`actor`를 줄 때) — 이 표에는 수정 이력 칸이 없어, 바꾸고 나면
+ * 이전 값을 알 길이 없었다. 삭제는 행이 사라지므로 남길 곳이 없다(이력이 필요하면 삭제 대신 환불로 0원 처리).
+ */
+export const setManualRefund = async (id: string, refundedAmount: number, actor?: string): Promise<'ok' | 'not_found' | 'invalid'> => {
   const db = getDb();
   const row = await db.query.manualRevenues.findFirst({ where: eq(manualRevenues.id, id) });
   if (!row) return 'not_found';
   if (!Number.isInteger(refundedAmount) || refundedAmount < 0 || refundedAmount > row.totalAmount) return 'invalid';
-  await db.update(manualRevenues).set({ refundedAmount }).where(eq(manualRevenues.id, id));
+  const trail =
+    actor && refundedAmount !== row.refundedAmount
+      ? `[환불 ${row.refundedAmount.toLocaleString('ko-KR')}→${refundedAmount.toLocaleString('ko-KR')}원 · ${actor} · ${kstDateString(new Date())}]`
+      : null;
+  const memo = trail ? `${row.memo ? `${row.memo}\n` : ''}${trail}`.slice(-1000) : row.memo;
+  await db.update(manualRevenues).set({ refundedAmount, memo }).where(eq(manualRevenues.id, id));
   return 'ok';
 };
 

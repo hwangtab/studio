@@ -3,6 +3,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useState } from 'react';
 
+import { Button } from '../../../components/ui/Button';
+import { TextInput } from '../../../components/ui/Field';
 import { AdminShell } from '../../../components/admin/AdminShell';
 import { formatPriceAmount, SHOP_ARTIST_SHARE_PERCENT } from '../../../data/pricing';
 import { SHOP_SALES_OPEN } from '../../../data/shop/policy';
@@ -15,8 +17,14 @@ import {
   type AdminShopArtistSalesRow, type AdminShopOrderRow, type AdminSkuStockRow,
 } from '../../../lib/shop/adminQueries';
 
+const ORDER_LIST_LIMIT = 200;
+
 interface Props {
   orders: AdminShopOrderRow[];
+  /** 주문이 화면 상한(200건)에서 잘렸는가 — 오래된 주문은 검색으로 찾는다. */
+  ordersTruncated?: boolean;
+  /** 주문 검색어. */
+  q?: string;
   skus: AdminSkuStockRow[];
   artistSales: AdminShopArtistSalesRow[];
   /** 정산 표의 달(KST 'YYYY-MM'). */
@@ -44,8 +52,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   const months = { month, prevMonth: shiftMonth(month, -1), nextMonth: shiftMonth(month, 1) };
   const pendingProducts = await countPendingShopProducts();
   try {
-    const [orders, skus, artistSales] = await Promise.all([listAdminShopOrders(), listAdminSkuStock(now), listShopArtistSales(month)]);
-    return { props: { orders, skus, artistSales, ...months, salesOpen: SHOP_SALES_OPEN, pendingProducts } };
+    const qParam = context.query.q;
+    const q = typeof qParam === 'string' ? qParam.trim().slice(0, 60) : '';
+    const [fetched, skus, artistSales] = await Promise.all([listAdminShopOrders(ORDER_LIST_LIMIT + 1, q), listAdminSkuStock(now), listShopArtistSales(month)]);
+    const orders = fetched.slice(0, ORDER_LIST_LIMIT);
+    return { props: { orders, ordersTruncated: fetched.length > ORDER_LIST_LIMIT, q, skus, artistSales, ...months, salesOpen: SHOP_SALES_OPEN, pendingProducts } };
   } catch (error: unknown) {
     console.error('[admin/shop] 조회 실패:', error);
     return { props: { orders: [], skus: [], artistSales: [], ...months, salesOpen: SHOP_SALES_OPEN, pendingProducts, error: '상점 정보를 불러오지 못했습니다. 운영 DB에 마이그레이션 0052가 적용됐는지 확인해 주세요.' } };
@@ -60,6 +71,11 @@ function StockRow({ row }: { row: AdminSkuStockRow }) {
   const [value, setValue] = useState(row.stock === null ? '' : String(row.stock));
   const [state, setState] = useState<string | null>(null);
   const save = async () => {
+    // 재고가 아직 없는 SKU는 칸이 비어 있다 — 비운 채 저장하면 Number('')이 0이라 "품절"로 덮어쓴다.
+    if (value.trim() === '' || !Number.isInteger(Number(value)) || Number(value) < 0) {
+      setState('재고 수(0 이상의 정수)를 입력해 주세요.');
+      return;
+    }
     setState('저장 중…');
     const res = await fetch('/api/admin/shop/stock', {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ skuId: row.skuId, stock: Number(value) }),
@@ -147,7 +163,7 @@ function ArtistSalesSection({ rows, month, prevMonth, nextMonth }: Pick<Props, '
   );
 }
 
-export default function AdminShopPage({ orders, skus, artistSales, month, prevMonth, nextMonth, salesOpen, pendingProducts, error }: Props) {
+export default function AdminShopPage({ orders, ordersTruncated = false, q = '', skus, artistSales, month, prevMonth, nextMonth, salesOpen, pendingProducts, error }: Props) {
   return (
     <>
       <Head>
@@ -189,8 +205,19 @@ export default function AdminShopPage({ orders, skus, artistSales, month, prevMo
 
         <section className="rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
           <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-gray-900">주문</h2>
+          <form method="GET" action="/admin/shop" className="mb-3 flex flex-wrap items-center gap-2" role="search">
+            <input type="hidden" name="month" value={month} />
+            <TextInput type="search" name="q" defaultValue={q} placeholder="주문번호, 이름, 연락처 검색" aria-label="주문 검색" light className="w-auto flex-1 min-w-[220px] px-4" />
+            <Button light type="submit" variant="weak">검색</Button>
+            {q && <Link href={`/admin/shop?month=${month}`} className="text-sm text-primary hover:underline">검색 해제</Link>}
+          </form>
+          {ordersTruncated && (
+            <p className="mb-3 rounded-lg bg-amber-50 p-3 text-xs text-amber-900">
+              최근 {ORDER_LIST_LIMIT}건만 표시합니다. 오래된 주문은 위 검색으로 찾을 수 있습니다.
+            </p>
+          )}
           {orders.length === 0 ? (
-            <p className="text-gray-600">아직 주문이 없습니다.</p>
+            <p className="text-gray-600">{q ? '검색 결과가 없습니다.' : '아직 주문이 없습니다.'}</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left">

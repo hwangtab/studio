@@ -148,7 +148,14 @@ export default function AdminShopProductPage({ product, editable, fulfillment, t
     window.setTimeout(() => window.location.reload(), result.warnings?.length ? 2500 : 600);
   };
 
+  const DECISION_CONFIRM = {
+    approve: '이 상품을 승인할까요? 바로 공개되고 판매가 시작됩니다(주소는 승인할 때 확정됩니다).',
+    request_changes: '보완을 요청할까요? 아티스트에게 메일이 나갑니다.',
+    reject: '이 상품을 반려할까요? 사유가 아티스트에게 메일로 전달됩니다.',
+  } as const;
+
   const decide = (action: 'approve' | 'request_changes' | 'reject') =>
+    !window.confirm(DECISION_CONFIRM[action]) ? undefined :
     run({ action, note: note || undefined, slug: action === 'approve' ? slug || undefined : undefined, expectedSubmittedAt: product.submittedAt },
       action === 'approve' ? '승인했습니다.' : action === 'request_changes' ? '보완을 요청했습니다.' : '반려했습니다.');
 
@@ -271,7 +278,7 @@ export default function AdminShopProductPage({ product, editable, fulfillment, t
             <label className="block md:max-w-md">주소(slug) — 승인할 때 확정됩니다
               <input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="예: my-album" className={`${inputClass} mt-1`} />
             </label>
-            <button type="button" disabled={busy} onClick={() => run({ action: 'approve_now', slug: slug || undefined, expectedUpdatedAt: product.updatedAt }, '승인했습니다.')} className={`${primaryBtn} mt-3`}>바로 승인</button>
+            <button type="button" disabled={busy} onClick={() => { if (window.confirm('심사를 거치지 않고 지금 저장된 내용 그대로 승인할까요? 바로 공개되고 판매가 시작됩니다.')) run({ action: 'approve_now', slug: slug || undefined, expectedUpdatedAt: product.updatedAt }, '승인했습니다.'); }} className={`${primaryBtn} mt-3`}>바로 승인</button>
           </section>
         )}
         {product.reviewNote && (

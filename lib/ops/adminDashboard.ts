@@ -3,7 +3,7 @@ import { and, asc, eq, gt, gte, inArray, lt, sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { bookings, contracts, fundingProjects, orders, socialTokens, subscriptions, workOrders } from '../../db/schema';
 import { getProduct } from '../booking/products';
-import { collectDbIssues, type HealthIssue } from './healthCheck';
+import { checkFieldCryptoKey, checkTossApiKeyPair, collectDbIssues, type HealthIssue } from './healthCheck';
 import { countPendingArtistPayouts } from '../artistSupport/payout';
 import { countPendingFundingPayouts, listFundingProjectsAwaitingPayoutRecord } from '../funding/payout';
 
@@ -86,6 +86,7 @@ export interface AdminDashboard {
 const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
 const DAY_MS = 24 * 60 * 60 * 1000;
 export const UPCOMING_WINDOW_DAYS = 7;
+const LINK_SYNC_WAIT_MS = 3000;
 
 /** KST 달력의 오늘 0시(UTC Date). 이미 시작한 오늘 세션도 목록에 남긴다. */
 const startOfTodayKst = (now: Date): Date => {
@@ -100,7 +101,16 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
   const to = new Date(from.getTime() + UPCOMING_WINDOW_DAYS * DAY_MS);
 
   // 캘린더 → 사이트: 운영자가 캘린더에서 옮기거나 지운 링크 일정을 먼저 주문에 반영한다(아래 "이번 주 세션" 조회가 그 값을 읽는다). 던지지 않는다.
-  await syncLinkEventsFromCalendar(now).catch(() => undefined);
+  // 구글 응답이 느려도 첫 화면이 같이 느려지지 않게 3초까지만 기다린다(못 끝낸 동기화는 뒤에서 계속 돌고, 다음 열람에 반영된다).
+  await new Promise<void>((resolve) => {
+    const timer = setTimeout(resolve, LINK_SYNC_WAIT_MS);
+    syncLinkEventsFromCalendar(now)
+      .catch(() => undefined)
+      .finally(() => {
+        clearTimeout(timer);
+        resolve();
+      });
+  });
 
   const [issues, sessions, calendarImport, linkSessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending, fundingPayoutsToRecord, awaitingDepositRows] = await Promise.all([
     collectDbIssues(now),
@@ -168,8 +178,12 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
   const countOf = (rows: Array<{ status: string; count: number }>, status: string): number =>
     Number(rows.find((row) => row.status === status)?.count ?? 0);
 
+  // 매일 점검 메일에는 있고 화면에는 없던 환경 점검 — 외부 호출이 없는 로컬 검사라 화면에서도 쓴다(토스 키 쌍·필드 암호화 키).
+  // 키가 빠지면 결제·정산 저장이 통째로 안 되는데, 메일을 놓치면 이 화면에서도 아무것도 안 보였다.
+  const envIssues = [checkTossApiKeyPair(), checkFieldCryptoKey()].filter((issue): issue is HealthIssue => issue !== null);
+
   return {
-    issues,
+    issues: [...envIssues, ...issues].sort((a, b) => (a.severity === b.severity ? 0 : a.severity === 'high' ? -1 : 1)),
     upcomingSessions: [
       ...sessions.map((row) => ({
       kind: 'booking' as const,
