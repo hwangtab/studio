@@ -16,7 +16,7 @@ import { getSiteConfig } from '../../../../data/siteConfig';
 import { isTokenMatch } from '../../../../lib/booking/token';
 import { withI18nServerProps } from '../../../../lib/getStatic';
 import { softwareSelfCancelBlocker } from '../../../../lib/software/cancel';
-import { getAnySoftware, latestReleaseOf } from '../../../../lib/software/catalog';
+import { getAnySoftware, latestReleaseOf, softwareDownloadPath } from '../../../../lib/software/catalog';
 import { formatBytes, PLATFORM_LABEL } from '../../../../lib/software/copy';
 import { findSoftwareOrder, normalizeSoftwareOrderNo } from '../../../../lib/software/order';
 import { getDb } from '../../../../db/client';
@@ -184,7 +184,8 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ params, qu
       devices: acts.map((a) => ({ id: a.id, label: a.label ?? `기기 ${a.machineId.slice(0, 6)}`, activatedAt: a.activatedAt.toISOString() })),
     });
   }
-  const product = getAnySoftware(order.item.productSlug);
+  const productSlug = order.item.productSlug;
+  const product = getAnySoftware(productSlug);
   const release = product ? latestReleaseOf(product) : null;
   const blocker = softwareSelfCancelBlocker(order, new Date());
   return {
@@ -197,7 +198,7 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ params, qu
       totalAmount: order.totalAmount,
       licenses: licenses.filter((l) => l.active),
       downloads: release
-        ? release.downloads.map((d) => ({ platform: PLATFORM_LABEL[d.platform], url: d.url, sha256: d.sha256, size: formatBytes(d.sizeBytes), version: release.version }))
+        ? release.downloads.map((d) => ({ platform: PLATFORM_LABEL[d.platform], url: softwareDownloadPath(productSlug, release.version, d.platform), sha256: d.sha256, size: formatBytes(d.sizeBytes), version: release.version }))
         : [],
       cancel: blocker === null ? 'available' : blocker === 'invalid_state' ? 'none' : blocker,
     },

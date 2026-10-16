@@ -9,7 +9,7 @@ import { Panel } from '../../../components/ui/Panel';
 import type { SoftwareProduct } from '../../../data/software/catalog';
 import { SOFTWARE_SALES_OPEN } from '../../../data/software/policy';
 import { withI18nServerProps } from '../../../lib/getStatic';
-import { getPublishedSoftware, trialDaysOf } from '../../../lib/software/catalog';
+import { getPublishedSoftware, softwareDownloadPath, trialDaysOf } from '../../../lib/software/catalog';
 import {
   formatBytes, formatList, localizedProduct, PLATFORM_LABEL, SOFTWARE_COPY, softwarePath, toSoftwareLocale, type SoftwareLocale,
 } from '../../../lib/software/copy';
@@ -68,7 +68,7 @@ export default function SoftwareDetailPage({ softwareLocale: locale, product, sa
               <ul className="mt-4 space-y-3">
                 {latest.downloads.map((d) => (
                   <li key={d.platform}>
-                    <a href={d.url} className={buttonVariants({ variant: 'solid', size: 'md' })} rel="nofollow">
+                    <a href={softwareDownloadPath(product.slug, latest.version, d.platform)} className={buttonVariants({ variant: 'solid', size: 'md' })} rel="nofollow">
                       {t.download(PLATFORM_LABEL[d.platform])} · v{latest.version} · {formatBytes(d.sizeBytes)}
                     </a>
                     <p className="mt-1 break-all font-mono text-xs text-gray-500 dark:text-gray-400">{t.checksum} {d.sha256}</p>
