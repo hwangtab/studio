@@ -12,6 +12,7 @@ import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
 import { FUNDING_PAYOUT_BUSINESS_DAYS } from '../funding/policy';
 import { BANK_DEPOSIT_GUIDE_DAYS } from '../payments/bankAccount';
 import { buildFundingPayoutPreview, businessDaysAfter, listFundingProjectsAwaitingPayoutRecord } from '../funding/payout';
+import { listShowPayoutsAwaitingRecord } from '../partnerPayouts/show';
 import { getAllFundingProjects } from '../funding/projects';
 import { LIVE_FUNDING_ORDER_STATUSES } from '../funding/refundable';
 import { ORDER_LEGAL_RETENTION_YEARS } from '../privacy/orderRetention';
@@ -1173,6 +1174,28 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
     }
   } catch (error: unknown) {
     console.error('[health] 정산 기록 대기 조회 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
+  }
+
+  /**
+   * **마지막 회차가 끝났는데 정산을 기록하지 않은 주최자 공연이 약관 기한(영업일 N일)을 넘긴 경우.** 주최자 약관 제6조가 "정산금은 마지막 회차가 끝난 날부터
+   * 영업일 N일 이내에 보내는 것을 원칙으로 한다"고 약속했다 — 펀딩 규칙과 같은 상수·같은 계산(`businessDaysAfter`, 공휴일은 모르는 근사)이다.
+   * 기한 안은 대시보드 카드로 보이고, 넘기면 여기서 메일로도 알린다. 표(0067)가 없거나 조회가 실패하면 건너뛴다(정산 기록 표가 없으면 기록도 못 한다).
+   */
+  try {
+    const toRecord = await listShowPayoutsAwaitingRecord(now);
+    const overdue = toRecord.filter((s) => now.getTime() > businessDaysAfter(s.endAt, FUNDING_PAYOUT_BUSINESS_DAYS).getTime());
+    if (overdue.length > 0) {
+      issues.push({
+        severity: 'high',
+        href: '/admin/shows',
+        title: `정산 안내 기한(마지막 회차 종료 후 영업일 ${FUNDING_PAYOUT_BUSINESS_DAYS}일)을 넘긴 공연 ${overdue.length}건`,
+        detail:
+          `${sample(overdue.map((s) => s.slug))}\n` +
+          '마지막 회차가 끝났는데 주최자 정산이 아직 기록되지 않았습니다. 공연 상세의 정산 절에서 금액을 확인하고 기록해 주세요(주최자 약관 제6조의 정산 기한).',
+      });
+    }
+  } catch (error: unknown) {
+    console.error('[health] 공연 정산 기록 대기 조회 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
   }
 
   /**

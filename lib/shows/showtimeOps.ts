@@ -5,8 +5,8 @@ import { refundIdempotencyKey, remainingRefundable, type PaymentWithRefunds } fr
 import type { FakeToss } from '../../tests/fakes/fakeToss';
 import { salesCloseAt } from './time';
 import { AWAITING_DEPOSIT, DEPOSIT_CANCELLED, isBankDepositPayment } from '../payments/bankDeposit';
+import { SHOWTIME_CANCEL_REFUND_REASON, safeSyncShowtimeCancelFee } from '../partnerPayouts/showCancelFee';
 
-const SHOWTIME_CANCEL_REFUND_REASON = '공연 회차 취소 환불';
 
 /**
  * 회차 취소 — 살아 있는(paid/partially_refunded) 주문 전부를 **잔액 기준**으로 전액 환불한다.
@@ -119,6 +119,10 @@ export async function cancelShowtime(
       if (!failedOrders.includes(orderNo)) failedOrders.push(orderNo);
     }
   }
+
+  // 주최자 정산에 싣는 회차 취소 결제 수수료 조정(주최자 약관 제7조) — 최선 노력이다. 환불은 이미 끝났으므로 여기서 실패해도 취소를 실패로 만들지 않는다
+  // (safeSync는 던지지 않는다). 못 만들면 정산 기록 직전 보충이 메운다. 이어서 처리(remainingOrders)로 다시 불리면 금액만 맞춘다(멱등).
+  await safeSyncShowtimeCancelFee(showtimeId);
 
   return { refundedOrders, failedOrders, bankRefundOrders, closedDepositOrders, refundedOrderNos, perOrder, remainingOrders };
 

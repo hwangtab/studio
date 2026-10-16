@@ -175,6 +175,7 @@ npm run indexnow:changed -- --dry-run
 
 - `/admin/shop`의 정산 표가 "마이그레이션 0067 필요" 안내와 함께 예전 읽기 전용 "정산 예정" 표로 되돌아간다(재고·주문 화면은 그대로). 기록·지급 완료·조정 API는 503 `migration_needed`.
 - 대시보드 「정산 기록 대기 상점」「이체 대기 상점 정산」 카드는 0이다(대시보드는 열린다). 정산 뒤 환불 조정은 못 쌓인다 — 환불 자체는 성공하고 로그 `[partner-payouts]`만 남는다(표가 생긴 뒤 그 아티스트의 다음 정산 기록 직전 보충이 메운다).
+- 공연 주최자 정산(P2): `/admin/shows/[id]`의 정산 절만 같은 "마이그레이션 0067 필요" 안내로 열리고(공연 운영 화면은 그대로), `POST /api/admin/shows/[id]/payout`은 503, 대시보드 공연 카드·기한 점검은 건너뛴다. 회차 취소는 평소대로 끝난다(결제 수수료 조정만 못 쌓이고 표가 생긴 뒤 정산 절을 열 때 보충된다). 규칙은 `lib/shows/CLAUDE.md` "주최자 정산 기록".
 - 보존·파기 코드(`lib/partnerPayouts/creatorPayouts.ts`)는 표가 없으면 펀딩 기록만으로 돈다 — 월간 파기 크론이 실패하지 않는다. 확인은 `PRAGMA table_info(partner_payouts);`.
 
 **배포 직후 할 일 없음**(상점 판매가 열리기 전에는 정산할 것도 없다). 규칙은 `lib/shop/CLAUDE.md` "정산", 설계는 `docs/settlement-record-design-2026-10.md`. 공연 정산(P2)·알림 메일/CSV(P3)가 같은 표를 쓴다 — 두 번째 마이그레이션 없이
