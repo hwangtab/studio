@@ -15,6 +15,7 @@ import { adminUrl, buildEmailLayout, escapeHtml, strong, type EmailLayoutInput }
 import {
   buildShopDecisionLayout, buildShopEditedLayout, buildShopSubmissionLayout, type ShopMailProduct,
 } from '../lib/shop/reviewEmail';
+import { buildCustomerKeyEmail, buildManualLicenseEmail } from '../lib/software/email';
 
 const samples: { name: string; input: EmailLayoutInput }[] = [
   {
@@ -92,7 +93,14 @@ const showCtx: ShowMailContext = {
   creatorEmail: 'org@example.com',
   slug: 'autumn-night',
 };
+// 소프트웨어 라이선스 메일(lib/software/email.ts) — 이름은 escape되는지 본다.
+const softwareOrder = {
+  orderNo: 'SWR-20261016-AAAAAAAA', manageToken: 'tok', customerName: '김<구매>', totalAmount: 59000,
+  item: { productTitle: '아날로그 하모나이저' }, licenses: [{ licenseKey: 'NOL-7K2QD-M9XAP-4RTVB-HC3WN', status: 'active' }],
+};
 const htmlSamples: { name: string; html: string }[] = [
+  { name: 'software-key', html: buildCustomerKeyEmail(softwareOrder).html },
+  { name: 'software-manual-key', html: buildManualLicenseEmail({ licenseKey: 'NOL-7K2QD-M9XAP-4RTVB-HC3WN', email: 'r@example.com', customerName: '리뷰어 & 매체', productTitle: '아날로그 하모나이저', maxActivations: 3 }).html },
   { name: 'show-operator-submitted', html: buildOperatorMail('submitted', showCtx).html },
   { name: 'show-approved', html: buildReviewMail('approved', showCtx).html },
   { name: 'show-changes-requested', html: buildReviewMail('changes_requested', showCtx).html },

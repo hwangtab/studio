@@ -59,9 +59,11 @@ const post = async (url: string, body: unknown): Promise<{ ok: boolean; data: Re
 };
 
 function IssueForm({ products }: { products: Props['products'] }) {
-  const [form, setForm] = useState({ productSlug: products[0]?.slug ?? '', email: '', customerName: '', note: '', maxActivations: '' });
+  const [mode, setMode] = useState<'manual' | 'order'>('manual');
+  const [form, setForm] = useState({ productSlug: products[0]?.slug ?? '', email: '', customerName: '', note: '', maxActivations: '', orderNo: '' });
+  const [sendEmail, setSendEmail] = useState(true);
   const [busy, setBusy] = useState(false);
-  const [issued, setIssued] = useState<string | null>(null);
+  const [issued, setIssued] = useState<{ key: string; emailed: boolean; mailError: string | null } | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setForm({ ...form, [k]: e.target.value });
 
@@ -69,21 +71,24 @@ function IssueForm({ products }: { products: Props['products'] }) {
     e.preventDefault();
     setBusy(true);
     setMessage(null);
-    const r = await post('/api/admin/software/licenses', form);
+    const body = mode === 'order'
+      ? { orderNo: form.orderNo, note: form.note }
+      : { productSlug: form.productSlug, email: form.email, customerName: form.customerName, note: form.note, maxActivations: form.maxActivations, sendEmail };
+    const r = await post('/api/admin/software/licenses', body);
     setBusy(false);
-    if (r.ok) setIssued(String(r.data?.licenseKey ?? ''));
+    if (r.ok) setIssued({ key: String(r.data?.licenseKey ?? ''), emailed: r.data?.emailed === true, mailError: (r.data?.mailError as string | null) ?? null });
     else setMessage(String(r.data?.message ?? '발급하지 못했습니다.'));
   };
 
-  if (products.length === 0) {
-    return <p className="text-gray-600">data/software/catalog.ts에 상품이 없습니다. 상품을 먼저 올리면 여기서 시험·증정 키를 발급할 수 있습니다.</p>;
-  }
   if (issued) {
     return (
       <div className="space-y-3">
-        <Notice tone="success" light title="발급했습니다">
-          <p className="font-mono text-base tracking-wide">{issued}</p>
-          <p className="mt-1">이 키를 받는 분께 전해 주세요. 아래 목록에서도 다시 볼 수 있습니다.</p>
+        <Notice tone={issued.mailError ? 'warning' : 'success'} light title="발급했습니다">
+          <p className="font-mono text-base tracking-wide">{issued.key}</p>
+          <p className="mt-1">
+            {issued.emailed ? '받는 분에게 키 메일을 보냈습니다.' : issued.mailError ? `키 메일을 보내지 못했습니다(${issued.mailError}) — 목록의 "키 메일 보내기"로 다시 보내 주세요.` : '이 키를 받는 분께 전해 주세요.'}
+            {' '}아래 목록에서도 다시 볼 수 있습니다.
+          </p>
         </Notice>
         <button type="button" className={buttonClass} onClick={() => window.location.reload()}>목록 새로고침</button>
       </div>
@@ -91,30 +96,52 @@ function IssueForm({ products }: { products: Props['products'] }) {
   }
   return (
     <form onSubmit={submit} className="grid gap-3 md:grid-cols-2">
-      <label className="block">
-        <span className="mb-1 block text-xs text-gray-600">상품</span>
-        <select value={form.productSlug} onChange={set('productSlug')} className={inputClass}>
-          {products.map((p) => <option key={p.slug} value={p.slug}>{p.title}{p.published ? '' : ' (비공개)'}</option>)}
+      <label className="block md:col-span-2">
+        <span className="mb-1 block text-xs text-gray-600">발급 종류</span>
+        <select value={mode} onChange={(e) => setMode(e.target.value as 'manual' | 'order')} className={inputClass}>
+          <option value="manual">결제 없이 발급 — 플러그인 시험·리뷰어·증정</option>
+          <option value="order">결제됐는데 라이선스가 없는 주문에 발급</option>
         </select>
       </label>
-      <label className="block">
-        <span className="mb-1 block text-xs text-gray-600">받는 분 이메일</span>
-        <input type="email" required value={form.email} onChange={set('email')} className={inputClass} />
-      </label>
-      <label className="block">
-        <span className="mb-1 block text-xs text-gray-600">이름(선택)</span>
-        <input value={form.customerName} onChange={set('customerName')} maxLength={80} className={inputClass} />
-      </label>
-      <label className="block">
-        <span className="mb-1 block text-xs text-gray-600">기기 수(비우면 상품 기본값)</span>
-        <input type="number" min={1} max={50} inputMode="numeric" value={form.maxActivations} onChange={set('maxActivations')} className={inputClass} />
-      </label>
+      {mode === 'order' ? (
+        <label className="block md:col-span-2">
+          <span className="mb-1 block text-xs text-gray-600">주문번호(SWR-…) — 그 주문의 상품·구매자 이메일로 발급하고 고객에게 키 메일을 보냅니다</span>
+          <input required value={form.orderNo} onChange={set('orderNo')} maxLength={40} className={inputClass} />
+        </label>
+      ) : products.length === 0 ? (
+        <p className="text-gray-600 md:col-span-2">data/software/catalog.ts에 상품이 없습니다. 상품을 먼저 올리면 여기서 시험·증정 키를 발급할 수 있습니다.</p>
+      ) : (
+        <>
+          <label className="block">
+            <span className="mb-1 block text-xs text-gray-600">상품</span>
+            <select value={form.productSlug} onChange={set('productSlug')} className={inputClass}>
+              {products.map((p) => <option key={p.slug} value={p.slug}>{p.title}{p.published ? '' : ' (비공개)'}</option>)}
+            </select>
+          </label>
+          <label className="block">
+            <span className="mb-1 block text-xs text-gray-600">받는 분 이메일</span>
+            <input type="email" required value={form.email} onChange={set('email')} className={inputClass} />
+          </label>
+          <label className="block">
+            <span className="mb-1 block text-xs text-gray-600">이름(선택)</span>
+            <input value={form.customerName} onChange={set('customerName')} maxLength={80} className={inputClass} />
+          </label>
+          <label className="block">
+            <span className="mb-1 block text-xs text-gray-600">기기 수(비우면 상품 기본값)</span>
+            <input type="number" min={1} max={50} inputMode="numeric" value={form.maxActivations} onChange={set('maxActivations')} className={inputClass} />
+          </label>
+          <label className="flex items-center gap-2 text-sm md:col-span-2">
+            <input type="checkbox" checked={sendEmail} onChange={(e) => setSendEmail(e.target.checked)} className="h-4 w-4 accent-primary" />
+            받는 분에게 키와 사용법을 메일로 보내기
+          </label>
+        </>
+      )}
       <label className="block md:col-span-2">
-        <span className="mb-1 block text-xs text-gray-600">메모(선택 — 리뷰어·시험·증정 등)</span>
+        <span className="mb-1 block text-xs text-gray-600">메모(선택)</span>
         <input value={form.note} onChange={set('note')} maxLength={200} className={inputClass} />
       </label>
       <div className="flex items-center gap-3 md:col-span-2">
-        <button type="submit" disabled={busy} className={buttonClass}>{busy ? '발급 중…' : '키 발급'}</button>
+        <button type="submit" disabled={busy || (mode === 'manual' && products.length === 0)} className={buttonClass}>{busy ? '발급 중…' : '키 발급'}</button>
         {message && <span role="alert" className="text-sm text-red-700">{message}</span>}
       </div>
     </form>
@@ -169,6 +196,9 @@ function LicenseRow({ row }: { row: AdminLicenseRow }) {
             <button type="button" className={linkButtonClass} onClick={() => refund(row.orderNo as string)}>주문 전액 환불</button>
           )}
           {row.status === 'active' && (
+            <button type="button" className={linkButtonClass} onClick={() => act({ action: 'email_key' }, `${row.email}로 키 메일을 다시 보낼까요?`)}>키 메일 보내기</button>
+          )}
+          {row.status === 'active' && (
             <button type="button" className={linkButtonClass} onClick={() => act({ action: 'revoke' }, '이 라이선스를 취소할까요? 새 기기 활성화가 막힙니다(이미 활성화한 기기는 계속 돕니다).')}>라이선스 취소</button>
           )}
           {state && <span className="text-xs text-gray-600">{state}</span>}
@@ -195,7 +225,7 @@ export default function AdminSoftwarePage({ licenses, truncated = false, product
 
         <section className="mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
           <h2 className="mb-1 text-lg font-bold text-gray-900 dark:text-gray-900">수동 발급</h2>
-          <p className="mb-3 text-gray-600">결제 없이 키를 만듭니다 — 플러그인 시험, 리뷰어, 증정용. 비공개 상품에도 발급됩니다.</p>
+          <p className="mb-3 text-gray-600">결제 없이 키를 만들거나(플러그인 시험·리뷰어·증정, 비공개 상품도 됨), 결제됐는데 라이선스가 없는 주문을 메웁니다.</p>
           <IssueForm products={products} />
         </section>
 
