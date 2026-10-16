@@ -26,7 +26,8 @@ const has = (n) => argv.includes(`--${n}`);
 const FROM = argOf('from'); const DAYS = Number(argOf('days', '28')); const TC = has('tc');
 const list = (s) => (s ? s.split(',').map((x) => x.trim()).filter(Boolean) : []);
 const PAGES = list(argOf('pages')); const CONTROL = list(argOf('control'));
-if (!FROM || !PAGES.length) { console.error('필수: --from YYYY-MM-DD --pages a,b [--control c,d] [--days 28] [--tc]'); process.exit(1); }
+const SOURCE = argOf('source'); // 예: --source chatgpt.com — sessionSource를 CONTAINS로 더 좁힌다 (리퍼럴 채널별 랜딩 리드 판독)
+if (!FROM || !PAGES.length) { console.error('필수: --from YYYY-MM-DD --pages a,b [--control c,d] [--days 28] [--tc] [--source chatgpt.com]'); process.exit(1); }
 for (const k of ['GA4_PROPERTY_ID', 'GA4_OAUTH_REFRESH_TOKEN', 'GSC_OAUTH_CLIENT_ID', 'GSC_OAUTH_CLIENT_SECRET']) if (!process.env[k]) { console.error(`env 누락: ${k}`); process.exit(1); }
 
 const toPath = (p) => (p.startsWith('/') ? p : `/ko/stories/${p}`);
@@ -45,9 +46,11 @@ const ad = google.analyticsdata({ version: 'v1beta', auth: oauth2 });
 const P = `properties/${process.env.GA4_PROPERTY_ID}`;
 const run = async (body) => (await ad.properties.runReport({ property: P, requestBody: { ...body, dimensionFilter: { andGroup: { expressions: [body.dimensionFilter, BOT] } } } })).data.rows || [];
 const landing = (p) => ({ filter: { fieldName: 'landingPagePlusQueryString', stringFilter: { matchType: 'BEGINS_WITH', value: p } } });
+const sourceFilter = SOURCE ? { filter: { fieldName: 'sessionSource', stringFilter: { matchType: 'CONTAINS', value: SOURCE, caseSensitive: false } } } : null;
+const withSource = (f) => (sourceFilter ? { andGroup: { expressions: [f, sourceFilter] } } : f);
 async function measure(page, win) {
-  const s = await run({ dateRanges: [win], metrics: [{ name: 'sessions' }], dimensionFilter: landing(page) });
-  const l = await run({ dateRanges: [win], metrics: [{ name: 'eventCount' }], dimensionFilter: { andGroup: { expressions: [landing(page), { filter: { fieldName: 'eventName', inListFilter: { values: LEADS } } }] } } });
+  const s = await run({ dateRanges: [win], metrics: [{ name: 'sessions' }], dimensionFilter: withSource(landing(page)) });
+  const l = await run({ dateRanges: [win], metrics: [{ name: 'eventCount' }], dimensionFilter: withSource({ andGroup: { expressions: [landing(page), { filter: { fieldName: 'eventName', inListFilter: { values: LEADS } } }] } }) });
   return { sessions: Number(s[0]?.metricValues[0].value || 0), leads: Number(l[0]?.metricValues[0].value || 0) };
 }
 const sum = (arr) => arr.reduce((a, x) => ({ sessions: a.sessions + x.sessions, leads: a.leads + x.leads }), { sessions: 0, leads: 0 });
@@ -66,7 +69,7 @@ function verdict(observed, expected) {
 }
 const pct = (n, d) => (d ? `${(100 * n / d).toFixed(2)}%` : '-');
 
-console.log(`창: 전 ${pre.startDate}~${pre.endDate} / 후 ${post.startDate}~${post.endDate} (GA4 랜딩 기준, 봇 제외, 리드=${LEADS.join('·')})\n`);
+console.log(`창: 전 ${pre.startDate}~${pre.endDate} / 후 ${post.startDate}~${post.endDate} (GA4 랜딩 기준, 봇 제외, 리드=${LEADS.join('·')}${SOURCE ? `, sessionSource⊇${SOURCE}` : ''})\n`);
 if (!TC) {
   console.log('페이지 | 전 세션→리드 (전환율) | 후 세션→리드 (전환율) | 기대 | 편차 | p | 판정');
   for (const pg of [...PAGES.map((p) => ({ p, role: '' })), ...CONTROL.map((p) => ({ p, role: '대조 ' }))]) {

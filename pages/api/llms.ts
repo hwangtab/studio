@@ -213,7 +213,7 @@ Wedding Song Complete Package is ${krw(WEDDING_PACKAGE_PRICE)} KRW: 2-hour recor
 Yes. Send stems via KakaoTalk, Google Drive or WeTransfer from anywhere in Korea or abroad — no studio visit needed. Mixing ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW/song by track count (two revisions included), mastering ${krw(MASTERING_SINGLE_PRICE)} KRW/song. Delivery in 3–7 business days.
 
 ### Does Studio NOL do voice-over and dubbing recording?
-Yes. Voice-actor casting plus voice-over/dubbing recording at ${krw(RECORDING_HOURLY_PRICE)} KRW/hour (minimum 2 hours). English dubbing is available. Page: /voice-acting
+Yes. Voice-actor casting plus voice-over/dubbing recording at ${krw(VOICEOVER_HOURLY_PRICE)} KRW/hour (**VAT included**, minimum 2 hours). English dubbing is available. Page: /voice-acting
 
 ### Can I record drums or a full band?
 Drum recording is arranged on request through a partner studio; vocals, guitar, bass, keys and other instruments are recorded in-house. Ask via KakaoTalk with your track count.
