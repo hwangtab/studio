@@ -1,4 +1,3 @@
-import { sql } from 'drizzle-orm';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getDb } from '../../../../db/client';
@@ -6,7 +5,7 @@ import { availabilityBlocks } from '../../../../db/schema';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { serializeBlockForAdmin } from '../../../../lib/booking/admin-serialize';
 import { kstDateTime } from '../../../../lib/booking/kst';
-import { occupiedBookingSql } from '../../../../lib/booking/service';
+import { blockConflictsBody, findBlockConflicts } from '../../../../lib/booking/blockConflicts';
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const MEMO_MAX_LENGTH = 200;
@@ -69,22 +68,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
        * 멈춘다. 그래도 걸겠다면(`force: true`) 통과한다 — 예약 취소·이동은 운영자가 따로 한다.
        */
       if (force !== true) {
-        const conflicts = await getDb().all<{ order_no: string; start_at: number }>(sql`
-          SELECT o.order_no, b.start_at
-          FROM bookings b JOIN orders o ON o.id = b.order_id
-          WHERE b.room_number IS ${roomText}
-            AND b.start_at < ${Math.floor(endAtDate.getTime() / 1000)} AND b.end_at > ${Math.floor(startAtDate.getTime() / 1000)}
-            AND ${occupiedBookingSql('b')}
-          ORDER BY b.start_at
-        `);
-        if (conflicts.length > 0) {
-          return res.status(409).json({
-            ok: false,
-            code: 'conflicts',
-            conflicts: conflicts.map((c) => ({ orderNo: c.order_no, startAt: new Date(Number(c.start_at) * 1000).toISOString() })),
-            message: `이 시간에 이미 잡힌 예약이 ${conflicts.length}건 있습니다(${conflicts.map((c) => c.order_no).join(', ')}). 블록은 새 예약만 막고 이 예약은 그대로 남습니다.`,
-          });
-        }
+        const conflicts = await findBlockConflicts({ startAt: startAtDate, endAt: endAtDate, roomNumber: roomText });
+        if (conflicts.length > 0) return res.status(409).json(blockConflictsBody(conflicts));
       }
 
       const [block] = await getDb()

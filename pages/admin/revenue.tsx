@@ -75,7 +75,7 @@ export const getServerSideProps: GetServerSideProps<RevenuePageProps> = async (c
       rows.push(...(await loadManualRevenueRows(window)));
     } catch (manualFailure: unknown) {
       console.error('[admin/revenue] 수기 매출 조회 실패:', manualFailure);
-      manualError = '직접 받은 매출 표를 읽지 못했습니다(마이그레이션 0063 적용 전이거나 조회 오류). 아래 숫자에는 직접 입금분이 빠져 있습니다.';
+      manualError = '직접 받은 매출 표를 읽지 못했습니다(마이그레이션 0063·0065 적용 전이거나 조회 오류). 아래 숫자에는 직접 입금분이 빠져 있습니다.';
     }
     const summary = summarizeRevenue(rows, { year, month, type });
     const range = periodRange(year, month);

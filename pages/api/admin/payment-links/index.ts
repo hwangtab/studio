@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
+import { blockConflictsBody, findBlockConflicts } from '../../../../lib/booking/blockConflicts';
 import { closePaymentLink, createPaymentLink, validatePaymentLinkInput } from '../../../../lib/payments/paymentLinks';
 
 /**
@@ -18,6 +19,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const input = validatePaymentLinkInput(b);
     if (!input.ok) return res.status(400).json({ ok: false, message: input.message });
     try {
+      /**
+       * 이용 시간대를 막는 링크는 이미 잡힌 예약과 겹치는지 먼저 본다 — 겹친 채 블록을 만들면 그 예약은 남은 채 시간만 "휴무"가 된다
+       * (`/api/admin/blocks`와 같은 409 `conflicts` + `force` 규약). 링크 주문은 예약 행이 없어 이 검사만이 이중 예약을 알려 준다.
+       */
+      if (input.value.blockSlot && input.value.sessionAt !== null && input.value.sessionHours !== null && b.force !== true) {
+        const conflicts = await findBlockConflicts({
+          startAt: new Date(input.value.sessionAt * 1000),
+          endAt: new Date((input.value.sessionAt + input.value.sessionHours * 3600) * 1000),
+          roomNumber: null,
+        });
+        if (conflicts.length > 0) return res.status(409).json(blockConflictsBody(conflicts));
+      }
       const { slug, blockId } = await createPaymentLink(input.value);
       return res.status(201).json({ ok: true, slug, path: `/ko/pay/${slug}`, blocked: blockId !== null });
     } catch (error) {

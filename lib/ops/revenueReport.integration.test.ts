@@ -143,6 +143,14 @@ it('수기 매출은 받은 날(KST) 0시 기준으로 같은 모집단에 합�
   expect(sept.byMethod[0].key).toBe('계좌 입금');
   expect(summarizeRevenue(rows, { year: 2026, month: 8 }).totals.net).toBe(10000);
 
-  expect(await deleteManualRevenue(id)).toBe(true);
-  expect(await deleteManualRevenue(id)).toBe(false);
+  // 소프트 삭제 — 매출에서는 빠지지만 행과 지운 사람·시각이 남고, 두 번째 삭제·환불 고치기는 없는 행으로 본다.
+  expect(await deleteManualRevenue(id, 'kyungha')).toBe(true);
+  expect(await deleteManualRevenue(id, 'someone-else')).toBe(false);
+  expect(await setManualRefund(id, 0)).toBe('not_found');
+  const kept = (await client.execute(`SELECT deleted_at, deleted_by FROM manual_revenues WHERE id = '${id}'`)).rows[0];
+  expect(kept.deleted_by).toBe('kyungha');
+  expect(Number(kept.deleted_at)).toBeGreaterThan(0);
+  const after = await loadManualRevenueRows(loadWindow(2026));
+  expect(after.map((r) => r.manualId)).not.toContain(id);
+  expect(summarizeRevenue([...(await loadRevenueRows(loadWindow(2026))), ...after], { year: 2026, month: 9 }).totals.count).toBe(0);
 });

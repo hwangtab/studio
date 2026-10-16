@@ -88,7 +88,7 @@ export const ManualRevenuePanel = ({ today, types, methods, entries, periodLabel
   };
 
   const remove = async (entry: ManualRevenueView) => {
-    if (!window.confirm(`"${entry.description}" ${won(entry.totalAmount)} 기록을 지울까요? 되돌릴 수 없습니다.`)) return;
+    if (!window.confirm(`"${entry.description}" ${won(entry.totalAmount)} 기록을 지울까요? 매출에서 빠지고, 누가 지웠는지는 기록됩니다.`)) return;
     const result = await call('DELETE', { id: entry.id });
     if (!result.ok) return setMessage({ tone: 'error', text: result.message ?? '지우지 못했습니다.' });
     setMessage({ tone: 'success', text: '기록을 지웠습니다.' });

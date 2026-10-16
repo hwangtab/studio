@@ -75,9 +75,9 @@ export default function AdminPaymentLinksPage({ links: initialLinks, truncated, 
     }
   };
 
-  const post = async (body: Record<string, unknown>): Promise<{ ok?: boolean; message?: string; slug?: string; blocked?: boolean; blockReleased?: boolean } | null> => {
+  const post = async (body: Record<string, unknown>): Promise<{ ok?: boolean; message?: string; slug?: string; blocked?: boolean; blockReleased?: boolean; code?: string } | null> => {
     const res = await fetch('/api/admin/payment-links', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-    return (await res.json().catch(() => null)) as { ok?: boolean; message?: string; slug?: string; blocked?: boolean; blockReleased?: boolean } | null;
+    return (await res.json().catch(() => null)) as { ok?: boolean; message?: string; slug?: string; blocked?: boolean; blockReleased?: boolean; code?: string } | null;
   };
 
   const create = async (e: React.FormEvent) => {
@@ -88,7 +88,13 @@ export default function AdminPaymentLinksPage({ links: initialLinks, truncated, 
     setBusy(true);
     setError(null);
     try {
-      const data = await post({ action: 'create', itemName, totalAmount: amount, expiresOn, memo, sessionAt, ...(sessionAt ? { sessionHours, blockSlot } : {}) });
+      const payload = { action: 'create', itemName, totalAmount: amount, expiresOn, memo, sessionAt, ...(sessionAt ? { sessionHours, blockSlot } : {}) };
+      let data = await post(payload);
+      if (data && !data.ok && data.code === 'conflicts') {
+        // 이미 잡힌 예약과 겹친다 — 그대로 막으면 그 예약은 남은 채 시간만 "휴무"가 된다. 알고도 만들겠다고 해야 통과한다(예약 목록의 블록 등록과 같다).
+        if (!window.confirm(`${data.message}\n\n그래도 링크를 만들고 이 시간을 막을까요?`)) return;
+        data = await post({ ...payload, force: true });
+      }
       if (data?.ok && data.slug) {
         setLinks((prev) => [{
           slug: data.slug as string, itemName: itemName.trim(), totalAmount: amount, expiresOn: expiresOn || null,
