@@ -24,4 +24,8 @@ export const ACTION_LABEL: Record<string, string> = {
   refund_account_view: '환불 계좌 조회',
   funding_refund_account_view: '환불 계좌 조회(펀딩)',
   creator_resident_number_view: '주민등록번호 조회(개설자 단위)',
+  booking_view: '예약·믹싱 주문 상세 열람',
+  subscription_view: '구독 상세 열람',
+  show_admin_view: '공연 관리 화면 열람(구매자 연락처)',
+  show_submission_view: '공연 심사 상세 열람',
 };

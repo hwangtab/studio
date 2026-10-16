@@ -466,6 +466,20 @@ PATCH가 실패해도 DB는 되돌리지 않고 `gcal_error`에 적는다("캘�
 자식 행 삭제에도 같은 상태 조건을 건다(검사와 삭제 사이에 상태가 바뀌어 자식만 지워지는 일 방지). 다른 주문 종류에 이 삭제를 넓히지 말 것 — 각각 자식 표·외부 자원(Blob·티켓·라이선스)이 다르다.
 캘린더에서 가져오기(`adoptEventId`)는 **사이트가 올린 일정이 아닌 것만** 지운다 — 요청의 id가 다른 고객의 확정 일정이면 등록 뒤 그 일정이 지워지므로, DB 연결·"주문번호:" 줄을 확인하고 읽지 못하면 거절한다.
 
+### 관리자 매출 현황·수기 등록·메뉴 (2026-10) — 어겨도 에러가 안 나는 것만
+
+- **매출 숫자의 정본은 `lib/ops/revenueReport.ts`**(`/admin/revenue`·대시보드 카드가 같은 `summarizeRevenue`를 쓴다). 승인 시각(KST) 기준, 환불은 `done`만(기간 밖 환불도 같은 결제에서 뺀다).
+  결제 행이 없는 **계좌 입금·수기 펀딩은 `funding_pledges.paid_at`**으로 더하되 환불은 주문이 `refunded`일 때만 전액으로 친다. `smoke-test` 펀딩은 매출 화면에서만 뺀다 —
+  **세무용 결제 장부 CSV(`salesLedger.ts`)는 실제 거래라 빼지 않는다.** 직접 서비스(예약·믹싱·구독·예약금·소프트웨어)와 판매·중개(펀딩·공연·상점, 정산 전 총액)는 합쳐 보이지 않게 가른다.
+  새 `orders.type`을 만들면 `REVENUE_TYPE_LABELS`·`REVENUE_GROUP_OF`·장부 `TYPE_LABELS`에 함께 넣을 것(공연 티켓이 한동안 `ticket`으로 찍혔다).
+- **수기 매출(`manual_revenues`, 0063·0065)은 주문·예약과 연결하지 않는다.** 이름·연락처 칸이 없다(내용에 적는다). 삭제는 소프트 삭제(`deleted_at/by`) — 읽는 곳은 전부 `deleted_at IS NULL`을 본다.
+  환불 변경은 메모에 누가·얼마→얼마를 남긴다. 장부 CSV에는 들어가지 않는다.
+- **수기 예약 등록은 고객 계좌 입금과 같은 함수**(`createBookingOrder`/`createMixingOrder` → `confirmBookingBankDeposit`)를 탄다(`lib/booking/manualEntry.ts`). 점유·캘린더·환불·매출이 웹 예약과 같은 원장이다.
+  이메일을 비우면 `MANUAL_PLACEHOLDER_EMAIL`이 들어가는데 **배달되지 않는 주소**다 — 고객에게 메일을 보내는 새 경로는 `isManualPlaceholderRecipient`(`lib/privacy/manualPlaceholder.ts`)로 먼저 거를 것(반송이 발신 평판을 깎는다).
+- **관리자 메뉴는 `ADMIN_NAV_ENTRIES`(components/admin/AdminShell.tsx) 한 곳**이다 — 연습실 / 녹음실 / 플랫폼 / 공통. 새 구역은 묶음 하나에 넣는다. 예약은 한 화면을 `?line=practice|studio|mixing`으로 갈라 세 곳에 건다(`lib/booking/line.ts`).
+- **개인정보(이름·연락처·이메일·주소)를 props로 싣는 관리자 상세 화면은 열람을 기록한다**: `logAdminView`(`lib/privacy/adminView.ts`) 또는 `recordAdminPrivacyAccess` + `privacyAccessActionEnum` + `accessLogLabels.ts`(열거와 라벨이 어긋나면 테스트가 선다). 값은 적지 않고 대상 id·결과만.
+  목록 화면은 기록하지 않는 대신 **표에 안 나오는 개인정보를 props에 싣지 않는다**(`serializePledgeForAdminList`).
+
 ### 메일은 공용 레이아웃으로 — 글자만 보내지 않는다
 
 사이트가 보내는 메일(고객·운영자·개설자·크론 알림 약 70종)은 전부 `lib/email/layout.ts`의 `buildEmailLayout`
