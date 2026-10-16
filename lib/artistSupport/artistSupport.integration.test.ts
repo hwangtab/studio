@@ -135,6 +135,29 @@ describe('정산', () => {
     expect(p).toMatchObject({ subscriberCount: 2, grossAmount: 20000, refundAmount: 10000, supplyAmount: 9091, shareAmount: 8182, withholdingAmount: 269, netAmount: 7913, recorded: null });
   });
 
+  it('아직 끝나지 않은 달은 기록할 수 없다(period_open) — 그 뒤 결제분이 정산에서 빠진다', async () => {
+    await insertSub('a', 'active', true, null, '2026-09-01T00:00:00Z');
+    await paidCycle('a', 'o-oct', '2026-10');
+    // NOW는 2026-10-05 — 10월은 열려 있고 미래도 당연히 거부, 9월은 닫혔다.
+    expect(await recordArtistPayout('jai', '2026-10', NOW)).toEqual({ ok: false, code: 'period_open' });
+    expect(await recordArtistPayout('jai', '2026-11', NOW)).toEqual({ ok: false, code: 'period_open' });
+    expect((await client.execute('SELECT count(*) AS n FROM artist_payouts')).rows[0].n).toBe(0);
+  });
+
+  it('그 달에 응답을 못 받은 회차(orders pending)가 남아 있으면 기록을 거부한다(unreconciled)', async () => {
+    await insertSub('a', 'active', true, null, '2026-09-01T00:00:00Z');
+    await paidCycle('a', 'o1', '2026-09');
+    await client.execute({
+      sql: `INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email, manage_token, item_amount, vat_amount, total_amount)
+            VALUES ('o-pend', 'NO-pend', 'subscription', 'pending', '실명', '', 'a@b.c', 'tok-pend', 9091, 909, 10000)`,
+      args: [],
+    });
+    await client.execute(`INSERT INTO subscription_payments (id, subscription_id, order_id, cycle_ym, attempt, amount, status, toss_code) VALUES ('sp-pend', 'a', 'o-pend', '2026-09', 2, 10000, 'failed', 'NETWORK_ERROR')`);
+    expect(await recordArtistPayout('jai', '2026-09', NOW)).toEqual({ ok: false, code: 'unreconciled' });
+    await client.execute(`UPDATE orders SET status = 'failed' WHERE id = 'o-pend'`);
+    expect((await recordArtistPayout('jai', '2026-09', NOW)).ok).toBe(true);
+  });
+
   it('기록은 (아티스트, 달)당 한 번이고 지급 완료는 한 방향', async () => {
     await insertSub('a', 'active', true, null, '2026-09-01T00:00:00Z');
     await paidCycle('a', 'o1', '2026-09');

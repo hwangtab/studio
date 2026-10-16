@@ -29,6 +29,7 @@ const contract = (overrides: Record<string, unknown> = {}) => ({
   id: 'c1',
   customerName: '홍길동',
   status: 'signed',
+  signedAt: new Date('2026-09-01T00:00:00Z'),
   purgedAt: null,
   ...overrides,
 });
@@ -112,6 +113,13 @@ describe('리소스·상태 검증', () => {
 
     expect(res.status).toHaveBeenCalledWith(404);
     expect(loadOrRenderContractPdf).not.toHaveBeenCalled();
+  });
+
+  it('이용 종료(terminated)된 계약의 PDF는 200이다 — 3년 보관 약속대로 꺼낼 수 있어야 한다', async () => {
+    mockFound(contract({ status: 'terminated' }));
+    const res = await run();
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(loadOrRenderContractPdf).toHaveBeenCalled();
   });
 
   it('서명되지 않은 계약은 409이고 렌더링하지 않는다', async () => {

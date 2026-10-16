@@ -54,6 +54,7 @@ export default function CreatorAuth({ token, next = null }: Props) {
     // 살아 있으므로, 지우지 않으면 도착지 gtag의 page_referrer에 원문이 그대로 실린다.
     // fetch를 부르기 전에 지워 둔다 — 응답을 기다리는 동안에도 주소창에 토큰이 남아
     // 있을 이유가 없다. **지우지 말 것**: 없어 보여도 이게 유일한 방어선이다.
+    // eslint-disable-next-line no-restricted-syntax -- state.url/as가 ?token=을 물고 있어 보존하면 뒤로가기 때 토큰이 주소창에 재노출된다. 이 화면의 출구는 전부 문서 이동이라 Next 히스토리 상태를 지워도 영향이 없다.
     window.history.replaceState(null, '', '/ko/funding/creator/auth');
     setBusy(true);
     setError(null);

@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { List } from '@/lib/lucide-icons';
 import { extractMarkdownHeadings } from './extractHeadings';
 import { Disclosure } from '../ui/Disclosure';
+import { replaceHashPreservingState } from '../../lib/anchorHistory';
 
 interface TableOfContentsProps {
   content: string;
@@ -32,9 +33,7 @@ const TableOfContents = ({ content, title, className }: TableOfContentsProps) =>
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     target.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'start' });
-    if (typeof history !== 'undefined') {
-      history.replaceState(null, '', `#${id}`);
-    }
+    replaceHashPreservingState(id);
   }, []);
 
   if (headings.length < MIN_HEADINGS) return null;

@@ -27,6 +27,7 @@ import {
   checkDownloadRateLimit,
 } from '../../../../lib/contracts/admin-rate-limit';
 import { IDENTITY_DIGITS, verifyIdentityDigits } from '../../../../lib/contracts/identity';
+import { hasSignedDocument } from '../../../../lib/contracts/status';
 import { loadOrRenderContractPdf } from '../../../../lib/contracts/pdf-storage';
 
 export const config = { maxDuration: 60 };
@@ -66,7 +67,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(404).json({ ok: false, message: '계약서를 찾을 수 없습니다.' });
     }
 
-    if (contract.status !== 'signed') {
+    if (!hasSignedDocument(contract)) {
       return res.status(409).json({
         ok: false,
         message: '서명이 완료된 뒤에 계약서를 받으실 수 있습니다.',

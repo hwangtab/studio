@@ -330,10 +330,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const slug = typeof b.slug === 'string' ? b.slug : undefined;
     // 운영자가 화면에서 본 판본(submittedAt). 없으면 거부한다 — 화면과 API가 같이 배포되고,
     // 빠진 채 받으면 재제출된 못 본 판본을 승인할 수 있다.
-    const expectedSubmittedAt = typeof b.expectedSubmittedAt === 'string' ? b.expectedSubmittedAt : undefined;
-    if (!expectedSubmittedAt) {
+    // null(또는 빈 문자열)은 "한 번도 제출하지 않은/철회된 초안"의 판본이다 — 초안 보관(archive)이 그 경우다.
+    // 필드 자체가 빠진 요청만 거부한다.
+    const rawExpected = b.expectedSubmittedAt;
+    if (rawExpected === undefined || (rawExpected !== null && typeof rawExpected !== 'string')) {
       return res.status(400).json({ ok: false, message: '화면을 새로고침한 뒤 다시 시도해 주세요. (판본 정보 없음)' });
     }
+    const expectedSubmittedAt: string | null = rawExpected === '' ? null : rawExpected;
 
     // libSQL/SQLite가 실제로 던지는 문구("UNIQUE constraint failed: <table>.<column>")를
     // 좁혀 잡는다 — 이 저장소의 다른 곳(lib/booking/confirm.test.ts 등)도 같은 문구를 쓴다.
@@ -618,6 +621,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!preview) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없습니다.' });
       if (!preview.recorded) {
         return res.status(409).json({ ok: false, message: '아직 기록되지 않은 정산입니다. 먼저 정산을 기록해 주세요.' });
+      }
+      // 돈이 실제로 나가는 지점의 가드 — 기록 뒤 환불·수기 등록으로 계산값이 바뀌었으면 기록값 그대로 이체하면 어긋난다.
+      // 헬스체크(일 1회)보다 먼저 막는다. 정산 패널의 "기록 취소(다시 기록)"로 현재 숫자로 다시 기록한 뒤 누른다.
+      if (preview.netAmount !== preview.recorded.netAmount) {
+        return res.status(409).json({
+          ok: false,
+          code: 'amount_changed',
+          message: `기록된 정산액 ${preview.recorded.netAmount.toLocaleString('ko-KR')}원과 현재 계산값 ${preview.netAmount.toLocaleString('ko-KR')}원이 다릅니다. 기록 뒤 환불·수기 등록이 있었습니다 — 정산 패널에서 다시 기록한 뒤 지급 완료를 눌러 주세요.`,
+        });
       }
       const done = await markFundingPayoutPaid(preview.recorded.id, memo, now);
       if (!done) return res.status(409).json({ ok: false, message: '이미 지급 완료로 기록된 정산입니다.' });

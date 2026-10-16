@@ -315,7 +315,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
       return;
     }
     return run(
-      () => patchFundingProject(project.id, { action: 'approve', slug: slug.trim() || undefined, expectedSubmittedAt: project.submittedAt ?? '' }),
+      () => patchFundingProject(project.id, { action: 'approve', slug: slug.trim() || undefined, expectedSubmittedAt: project.submittedAt }),
       `/funding/${effectiveSlug} 주소로 승인했습니다.`,
     );
   };
@@ -328,7 +328,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
       return;
     }
     return run(
-      () => patchFundingProject(project.id, { action: 'request_changes', note: reason.trim(), expectedSubmittedAt: project.submittedAt ?? '' }),
+      () => patchFundingProject(project.id, { action: 'request_changes', note: reason.trim(), expectedSubmittedAt: project.submittedAt }),
       '보완 요청을 보냈습니다.',
     );
   };
@@ -341,7 +341,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
       return;
     }
     if (!window.confirm('반려하면 개설자에게 반려 사실과 사유가 메일로 전달됩니다. 반려할까요?')) return;
-    return run(() => patchFundingProject(project.id, { action: 'reject', note: reason.trim(), expectedSubmittedAt: project.submittedAt ?? '' }), '반려 처리했습니다.');
+    return run(() => patchFundingProject(project.id, { action: 'reject', note: reason.trim(), expectedSubmittedAt: project.submittedAt }), '반려 처리했습니다.');
   };
 
   const handleSaveNote = () =>
@@ -470,7 +470,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
     ) {
       return;
     }
-    return run(() => patchFundingProject(project.id, { action: 'archive', note: reason.trim(), expectedSubmittedAt: project.submittedAt ?? '' }), '보관 처리했습니다.');
+    return run(() => patchFundingProject(project.id, { action: 'archive', note: reason.trim(), expectedSubmittedAt: project.submittedAt }), '보관 처리했습니다.');
   };
 
   const handleClose = () => {

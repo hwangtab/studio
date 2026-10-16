@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { replaceHashPreservingState } from '../../lib/anchorHistory';
 
 export interface AnchorItem {
   id: string;
@@ -64,10 +65,8 @@ export const SectionAnchorNav = ({ items, ariaLabel, className }: SectionAnchorN
         window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       target.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'start' });
       setActiveId(id);
-      // 딥링크·뒤로가기 보존. 스크롤은 위에서 이미 처리했으므로 replaceState로 점프 방지.
-      if (typeof history !== 'undefined') {
-        history.replaceState(null, '', `#${id}`);
-      }
+      // 딥링크·뒤로가기 보존. 스크롤은 위에서 이미 처리했으므로 해시만 바꾼다(Next 히스토리 상태는 지키면서).
+      replaceHashPreservingState(id);
     },
     []
   );
