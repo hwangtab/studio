@@ -24,20 +24,16 @@ import type { GetServerSidePropsContext } from 'next';
 import AdminFundingPage, { getServerSideProps } from '../../../../pages/admin/funding/index';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { aggregateAdminFundingTotals, listFundingOrders } from '../../../../lib/funding/admin-list';
-import type { AdminPledgeItem } from '../../../../lib/funding/admin-serialize';
+import type { AdminPledgeListItem } from '../../../../lib/funding/admin-serialize';
 
 const NOW = new Date('2026-10-15T03:00:00Z');
 
-const ITEM: AdminPledgeItem = {
+const ITEM: AdminPledgeListItem = {
   id: 'o1', orderNo: 'FND-1', projectSlug: 'demo', status: 'paid', paymentMethod: 'toss',
-  entrySource: 'online', customerName: '김후원', customerPhone: '010-1111-2222', customerEmail: 'a@b.com',
-  rewardLabel: 'CD × 1', lines: [{ rewardId: 'cd', rewardTitle: 'CD', unitAmount: 30000, quantity: 1, refundedQuantity: 0 }], additionalAmount: 0, totalAmount: 30000, fulfillmentStatus: 'none',
-  trackingCompany: null, trackingNumber: null, shipping: null, supporterMessage: null, displayNamePublic: false, publicName: null, listingHiddenAt: null, listingHiddenName: null,
-  refundRequestedAt: null,
-  paymentFailCode: null, paymentFailMessage: null, paymentFailedAt: null,
-  downloadedAt: null, paidAt: null, holdExpiresAt: NOW.toISOString(), createdAt: NOW.toISOString(),
-  adminMemo: null, notificationError: null, hasPayment: true, mismatch: false, virtualAccountPayment: false,
-  refundRequested: false, needsReview: false, onlineBankTransfer: false, awaitingDeposit: false,
+  customerName: '김후원', customerPhone: '010-1111-2222',
+  rewardLabel: 'CD × 1', lines: [{ rewardId: 'cd', rewardTitle: 'CD', unitAmount: 30000, quantity: 1, refundedQuantity: 0 }], totalAmount: 30000, fulfillmentStatus: 'none',
+  createdAt: NOW.toISOString(),
+  mismatch: false, refundRequested: false, needsReview: false, awaitingDeposit: false,
 };
 
 const baseProps = {
@@ -67,7 +63,7 @@ it('getServerSideProps가 환불 요청 건에 refundRequested: true를 실어 �
     },
   ]);
   const result = (await getServerSideProps({ query: {} } as unknown as GetServerSidePropsContext)) as {
-    props: { items: AdminPledgeItem[] };
+    props: { items: AdminPledgeListItem[] };
   };
   expect(result.props.items[0].refundRequested).toBe(true);
   // 상태는 여전히 paid다 — 그래서 상태 칸만으로는 절대 드러나지 않는다.
@@ -89,7 +85,7 @@ it('getServerSideProps: 환불이 끝난 건은 refundRequested가 false다', as
     },
   ]);
   const result = (await getServerSideProps({ query: {} } as unknown as GetServerSidePropsContext)) as {
-    props: { items: AdminPledgeItem[] };
+    props: { items: AdminPledgeListItem[] };
   };
   expect(result.props.items[0].refundRequested).toBe(false);
 });
@@ -107,7 +103,7 @@ it('환불이 끝난 건은 배지도 배너도 뜨지 않는다', () => {
   render(
     <AdminFundingPage
       {...baseProps}
-      items={[{ ...ITEM, status: 'refunded', refundRequested: false, refundRequestedAt: '2026-10-14T02:00:00Z' }]}
+      items={[{ ...ITEM, status: 'refunded', refundRequested: false }]}
     />,
   );
   expect(screen.queryByText('환불요청')).not.toBeInTheDocument();
@@ -154,7 +150,7 @@ it('getServerSideProps가 웹훅 메모가 있는 건에 needsReview: true를 �
     },
   ]);
   const result = (await getServerSideProps({ query: {} } as unknown as GetServerSidePropsContext)) as {
-    props: { items: AdminPledgeItem[] };
+    props: { items: AdminPledgeListItem[] };
   };
   expect(result.props.items[0].needsReview).toBe(true);
 });
