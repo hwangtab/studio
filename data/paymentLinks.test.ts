@@ -1,5 +1,15 @@
 import { getPaymentLink, PAYMENT_LINKS } from './paymentLinks';
 
+describe('파일 링크는 늘리지 않는다', () => {
+  // 새 링크는 관리자 /admin/payment-links 또는 `npx tsx scripts/pay-link.ts create …`로 DB에 만든다 — 그래야 이용 일시·예약 불가 블록·캘린더가 자동으로 따라온다.
+  // 파일 링크는 그걸 못 한다(2026-10-16 최혜정 건). 이 목록은 줄기만 해야 한다.
+  it('옛 파일 링크 4개 말고는 없다', () => {
+    expect(Object.keys(PAYMENT_LINKS).sort()).toEqual([
+      '46fee6d8ffa1a69be20324a2', '478d0f5260b329a6fcd59a19', '8519f93ee33960ccc793b0c5', 'fed74ccb84b8587112ed5d6f',
+    ]);
+  });
+});
+
 describe('파일 링크의 이용 일시', () => {
   // 2026-10-16 최혜정 건: 품목명에 "(10/17 17:00)"을 적고 이용 일시 필드는 빠뜨려, 결제가 돼도 대시보드·캘린더·예약 불가 블록에 안 올라갔다.
   it('품목명에 이용 일시("(M/D HH:MM)")를 적은 링크는 sessionAt이 같은 일시여야 한다', () => {

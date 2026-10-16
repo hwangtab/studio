@@ -75,7 +75,7 @@ beforeEach(async () => {
   // refunds가 payments를, subscription_payments가 orders·subscriptions를 참조하므로
   // 참조하는 쪽을 먼저 지운다. refunds가 빠져 있어 테스트끼리 오염된 적이 있다.
   // 공연 표들은 orders를 참조한다 — 앞 describe가 남긴 공연 행이 orders 정리를 FK로 막지 않게 먼저 지운다.
-  for (const table of ['show_tickets', 'show_orders', 'show_ticket_types', 'showtimes', 'show_zones', 'shows', 'refund_accounts', 'software_activations', 'software_licenses', 'refunds', 'payments', 'bookings', 'funding_pledges', 'funding_project_payouts', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'funding_projects', 'funding_creators', 'room_tenancy_payments', 'room_tenancies']) {
+  for (const table of ['show_tickets', 'show_orders', 'show_ticket_types', 'showtimes', 'show_zones', 'shows', 'refund_accounts', 'software_activations', 'software_licenses', 'refunds', 'payments', 'bookings', 'funding_pledges', 'funding_project_payouts', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'funding_projects', 'funding_creators', 'room_tenancy_payments', 'room_tenancies', 'payment_link_orders']) {
     await client.execute(`DELETE FROM ${table}`);
   }
   (fetchBusyRanges as jest.Mock).mockReset().mockResolvedValue([]);
@@ -184,6 +184,31 @@ const insertFundingPledge = async (over: Record<string, unknown> = {}) => {
 const titles = async (): Promise<string[]> => (await runHealthCheck(NOW)).issues.map((i) => i.title);
 
 describe('운영 점검', () => {
+  it('결제 링크: 품목명에 일시가 있는데 이용 일시가 없으면 긴급, 일정이 앞인데 캘린더가 없으면 알린다', async () => {
+    const link = async (id: string, itemName: string, sessionAt: number | null, eventId: string | null) => {
+      await insertOrder({ id, order_no: `SNB-${id}`, manage_token: `tok-${id}`, type: 'deposit', created_at: EPOCH('2026-09-08'), updated_at: EPOCH('2026-09-08') });
+      await client.execute({
+        sql: `INSERT INTO payment_link_orders (order_no, slug, item_name, session_at, gcal_event_id) VALUES (?, 'slug', ?, ?, ?)`,
+        args: [`SNB-${id}`, itemName, sessionAt, eventId],
+      });
+    };
+    const future = EPOCH('2026-09-20');
+    await link('a', '테스트 녹음 1시간 (9/20 17:00)', null, null); // 이용 일시 빠짐 → 긴급
+    await link('b', '싱글 음원 제작 예약금', null, null); // 일시 없는 상품 → 정상
+    await link('c', '보컬 녹음 (9/20 11:00)', future, null); // 캘린더 없음
+    await link('d', '보컬 녹음 (9/21 11:00)', future, 'evt'); // 정상
+    process.env.BOOKING_GCAL_ID = 'cal';
+    const issues = (await runHealthCheck(NOW)).issues;
+    delete process.env.BOOKING_GCAL_ID;
+    const missing = issues.find((i) => i.title.startsWith('이용 일시 없는 결제 링크 주문'));
+    expect(missing).toMatchObject({ severity: 'high', title: '이용 일시 없는 결제 링크 주문 1건' });
+    expect(missing?.detail).toContain('SNB-a');
+    expect(missing?.detail).not.toMatch(/SNB-b|SNB-d/);
+    const noEvent = issues.find((i) => i.title.startsWith('캘린더에 없는 결제 링크 예약'));
+    expect(noEvent?.title).toBe('캘린더에 없는 결제 링크 예약 1건');
+    expect(noEvent?.detail).toContain('SNB-c');
+  });
+
   it('월 입주: 종료 7일 안은 알리고, 지난 종료일(자동 연장)·먼 종료일은 알리지 않으며, 캘린더 오류는 따로 알린다', async () => {
     const ins = (id: string, name: string, end: string | null, err: string | null = null) =>
       client.execute({

@@ -422,6 +422,48 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
     console.error('[health] 월 입주 종료·캘린더 점검 실패 — 건너뜁니다', error instanceof Error ? error.message : String(error));
   }
 
+  /**
+   * 결제 링크 주문이 일정으로 이어지지 않은 건 — 2026-10-16 최혜정 건(파일 링크, 품목명에만 일시를 적고 이용 일시 필드가 없었다)에서
+   * 결제는 됐는데 대시보드·예약 불가 블록·캘린더 어디에도 안 올라갔다. 링크는 계속 새로 만들어지므로 사람이 아니라 점검이 잡는다.
+   * ① 품목명에 일시("(10/17 17:00)")가 있는데 이용 일시가 없는 결제 완료 주문(최근 30일) — 이중 예약 위험이라 high.
+   * ② 이용 일시가 앞으로인데 캘린더 일정이 없는 결제 완료 주문.
+   * 표가 없는 DB(0060·0061·0062 전)에서는 건너뛴다.
+   */
+  try {
+    const noSession = await db.all<{ order_no: string; customer_name: string; item_name: string }>(sql`
+      SELECT plo.order_no, o.customer_name, plo.item_name FROM payment_link_orders plo JOIN orders o ON o.order_no = plo.order_no
+      WHERE o.status IN ('paid', 'partially_refunded') AND plo.session_at IS NULL
+        AND plo.item_name GLOB '*([0-9]*/[0-9]* [0-9]*:[0-9][0-9])*'
+        AND o.created_at > ${Math.floor(now.getTime() / 1000) - 30 * 86400}
+      ORDER BY o.created_at LIMIT 20
+    `);
+    if (noSession.length > 0) {
+      issues.push({
+        severity: 'high',
+        title: `이용 일시 없는 결제 링크 주문 ${noSession.length}건`,
+        detail: `${noSession.map((r) => `${r.order_no} ${r.customer_name} — ${r.item_name}`).join('\n')}\n품목명에 일시가 있는데 이용 일시가 비어 있어 대시보드·예약 불가 블록·캘린더에 안 올라갔습니다. 웹 예약이 그 시간에 들어올 수 있으니 예약 불가 시간을 걸고 이용 일시·캘린더를 채워 주세요. 새 링크는 관리자 “결제 링크” 화면이나 pay-link.ts로 만드세요(파일 링크 금지).`,
+        href: '/admin/payment-links',
+      });
+    }
+    if (isCalendarActive('studio')) {
+      const noEvent = await db.all<{ order_no: string; customer_name: string; item_name: string }>(sql`
+        SELECT plo.order_no, o.customer_name, plo.item_name FROM payment_link_orders plo JOIN orders o ON o.order_no = plo.order_no
+        WHERE o.status IN ('paid', 'partially_refunded') AND plo.session_at IS NOT NULL AND plo.session_at >= ${Math.floor(now.getTime() / 1000)}
+          AND plo.gcal_event_id IS NULL ORDER BY plo.session_at LIMIT 20
+      `);
+      if (noEvent.length > 0) {
+        issues.push({
+          severity: 'medium',
+          title: `캘린더에 없는 결제 링크 예약 ${noEvent.length}건`,
+          detail: `${noEvent.map((r) => `${r.order_no} ${r.customer_name} — ${r.item_name}`).join('\n')}\n예약 상세에서 “캘린더에 올리기”를 눌러 주세요.`,
+          href: '/admin/bookings',
+        });
+      }
+    }
+  } catch (error) {
+    console.error('[health] 결제 링크 일정 점검 실패 — 건너뜁니다', error instanceof Error ? error.message : String(error));
+  }
+
   const rotationPending = await checkFieldKeyRotationPending();
   if (rotationPending) issues.push(rotationPending);
 
