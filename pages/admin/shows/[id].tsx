@@ -12,7 +12,8 @@ import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatKstDeadline } from '../../../lib/payments/bankAccount';
 import { findSameNameDepositOrders, type SameNameDepositOrder } from '../../../lib/payments/bankDepositOrders';
 import { holderMatchesCustomer, loadRefundAccountSummary } from '../../../lib/payments/refundAccount';
-import { loadAdminShowDetail, type AdminOrderRow, type AdminShowDetail, type AdminShowtimeDetail } from '../../../lib/shows/adminQueries';
+import { calcRefundAmount, refundRateForNotice } from '../../../lib/shows/refundPolicy';
+import { loadAdminShowDetail, type AdminOrderRow, type AdminShowDetail, type AdminTicketRow, type AdminShowtimeDetail } from '../../../lib/shows/adminQueries';
 import { listReportLinks, type ReportLinkSummary } from '../../../lib/shows/reportLink';
 import { REPORT_LINK_DEFAULT_TTL_DAYS, REPORT_LINK_MAX_TTL_DAYS } from '../../../lib/shows/reportLinkLimits';
 
@@ -132,11 +133,10 @@ export default function AdminShowDetailPage({ show, refundAccounts = {}, sameNam
         backLabel="공연 목록"
         width="wide"
         actions={
-          show.status !== 'cancelled' && (
-            <Button light variant={show.status === 'published' ? 'weak' : 'solid'} disabled={busy} onClick={toggleStatus}>
-              {show.status === 'published' ? '비공개로 내리기' : '공개하기'}
-            </Button>
-          )
+          // 취소 상태(마지막 회차 취소로 자동)에서도 눌린다 — 새 일정을 잡았다면 공개로 되돌린다(예정된 회차가 없으면 서버가 거절).
+          <Button light variant={show.status === 'published' ? 'weak' : 'solid'} disabled={busy} onClick={toggleStatus}>
+            {show.status === 'published' ? '비공개로 내리기' : '공개하기'}
+          </Button>
         }
       >
         {notice && <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>}
@@ -144,6 +144,9 @@ export default function AdminShowDetailPage({ show, refundAccounts = {}, sameNam
 
         <section className="bg-white rounded-2xl shadow-sm p-4 md:p-6 mb-6 text-sm text-gray-900">
           <p className="mb-2"><strong>상태</strong> {STATUS_LABEL[show.status] ?? show.status}</p>
+          {show.status === 'cancelled' && (
+            <p className="mb-2 text-red-800">모든 회차가 취소돼 공연이 취소 상태입니다. 예매는 닫혀 있고 공개 페이지에는 취소 안내가 나갑니다. 새 회차를 잡았다면 “공개하기”로 다시 열 수 있습니다.</p>
+          )}
           <p className="mb-2"><strong>구역</strong> {show.zones.map((z) => `${z.label}(${z.code}) 정원 ${z.capacity}`).join(' · ')}</p>
           <p>
             <strong>티켓타입</strong>{' '}
@@ -485,15 +488,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
                       <RefundAccountPanel order={o} info={refundAccounts[o.orderNo]} busy={busy} run={run} setNotice={setNotice} />
                     )}
                     {!o.isComp && refundable.length > 0 && (
-                      <Button light variant="weak" size="sm" disabled={busy} onClick={() =>
-                        run({ action: 'refund_tickets', orderNo: o.orderNo, ticketIds: refundable.map((k) => k.id) }, {
-                          confirm: o.bankDeposit === 'paid'
-                            ? `계좌 입금 건입니다 — 토스로 돌려주지 않습니다. 고객 계좌로 송금을 마친 뒤 기록하세요.\n\n${o.orderNo}의 입장 전 티켓 ${refundable.length}장을 환불 완료로 기록합니다. 금액은 취소환불표(공연 임박도)에 따라 계산됩니다.`
-                            : `${o.orderNo}의 입장 전 티켓 ${refundable.length}장을 환불합니다. 금액은 취소환불표(공연 임박도)에 따라 계산됩니다.`,
-                          success: '환불을 처리했습니다.',
-                        })}>
-                        입장 전 티켓 환불
-                      </Button>
+                      <TicketRefundControl order={o} refundable={refundable} startsAt={t.startsAt} showtimeCancelled={t.status === 'cancelled'} busy={busy} run={run} />
                     )}
                   </td>
                 </tr>
@@ -503,6 +498,62 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
         </table>
       </div>
     </section>
+  );
+}
+
+/**
+ * 입장 전 티켓 환불 — 주문의 환불 가능한 티켓(발권·미입장) 중 돌려줄 것을 고른다. 기본은 전부 선택, 최소 한 장.
+ * 금액 미리보기는 서버(lib/shows/refund.ts)와 같은 식이다: 회차가 취소됐으면 100%, 아니면 취소환불표(지금 기준),
+ * 티켓별 단가에서 원 단위 절사한 합. 실제 환불액은 눌렀을 때 서버가 다시 계산한다(미리보기와 시각이 어긋날 수 있다).
+ */
+function TicketRefundControl({ order: o, refundable, startsAt, showtimeCancelled, busy, run }: {
+  order: AdminOrderRow;
+  refundable: AdminTicketRow[];
+  startsAt: number;
+  showtimeCancelled: boolean;
+  busy: boolean;
+  run: Run;
+}) {
+  // 해제한 것만 기억한다 — 환불 뒤 목록이 바뀌어도(없어진 id는 무시) 남은 티켓은 다시 전부 선택으로 시작한다.
+  const [unchecked, setUnchecked] = useState<Set<string>>(new Set());
+  const selected = refundable.filter((k) => !unchecked.has(k.id));
+  const pct = showtimeCancelled ? 100 : refundRateForNotice(new Date(startsAt * 1000), new Date());
+  const amount = selected.reduce((sum, k) => sum + calcRefundAmount(k.unitAmount, pct), 0);
+  const toggle = (id: string) =>
+    setUnchecked((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  const bank = o.bankDeposit === 'paid';
+  const amountText = pct === 0 ? '공연이 시작돼 환불액이 없습니다' : `${amount.toLocaleString('ko-KR')}원(환불률 ${pct}%)`;
+
+  return (
+    <div className="space-y-1.5">
+      {refundable.length > 1 && (
+        <fieldset className="space-y-0.5 text-xs text-gray-800">
+          <legend className="sr-only">환불할 티켓 선택</legend>
+          {refundable.map((k) => (
+            <label key={k.id} className="flex items-center gap-1.5">
+              <input type="checkbox" checked={!unchecked.has(k.id)} onChange={() => toggle(k.id)} disabled={busy}
+                className="h-4 w-4 rounded border-gray-300 accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70" />
+              <span className="font-mono">{k.entryNumber ?? '---'}</span> {k.ticketTypeName} · {k.unitAmount.toLocaleString('ko-KR')}원
+            </label>
+          ))}
+        </fieldset>
+      )}
+      <p className="text-xs text-gray-600">환불 예정 {selected.length}장 · {amountText}</p>
+      <Button light variant="weak" size="sm" disabled={busy || selected.length === 0} onClick={() =>
+        run({ action: 'refund_tickets', orderNo: o.orderNo, ticketIds: selected.map((k) => k.id) }, {
+          confirm: bank
+            ? `계좌 입금 건입니다 — 토스로 돌려주지 않습니다. 고객 계좌로 송금을 마친 뒤 기록하세요.\n\n${o.orderNo}의 입장 전 티켓 ${selected.length}장을 환불 완료로 기록합니다. 금액은 취소환불표(공연 임박도)에 따라 계산됩니다.`
+            : `${o.orderNo}의 입장 전 티켓 ${selected.length}장을 환불합니다. 금액은 취소환불표(공연 임박도)에 따라 계산됩니다.`,
+          success: '환불을 처리했습니다.',
+        })}>
+        입장 전 티켓 환불
+      </Button>
+    </div>
   );
 }
 

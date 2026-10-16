@@ -69,13 +69,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'set_status': {
       const next = b.status;
       if (next !== 'draft' && next !== 'published') return res.status(400).json({ ok: false, message: '상태는 draft 또는 published만 바꿀 수 있습니다.' });
-      if (show.status === 'cancelled') return res.status(409).json({ ok: false, message: '취소된 공연은 상태를 바꿀 수 없습니다.' });
+      // 취소된 공연(마지막 회차가 취소돼 자동으로 닫힌 것)도 되돌릴 수 있다 — 공개는 예정된 미래 회차가 있어야 하므로
+      // 새 일정을 잡은 뒤에만 열리고, 초안으로 내리는 것은 언제든 된다.
       if (next === 'published') {
         if (!isPublishable(show, now)) {
           return res.status(409).json({ ok: false, message: '공개하려면 예정된 회차·구역·티켓타입이 모두 필요합니다.' });
         }
       }
-      await db.run(sqlUpdateStatus(show.id, next, now));
+      await db.run(sqlUpdateStatus(show.id, next, now, { fromCancelled: show.status === 'cancelled' }));
       await revalidateShow(res, show.slug);
       return res.status(200).json({ ok: true });
     }

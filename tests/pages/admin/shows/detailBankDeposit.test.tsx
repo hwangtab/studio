@@ -96,3 +96,44 @@ it('송금 완료가 기록된 주문은 시각을 보이고 버튼이 없다', 
   expect(screen.queryByRole('button', { name: '송금 완료' })).not.toBeInTheDocument();
   expect(screen.getByText(/송금 완료 \d/)).toBeInTheDocument();
 });
+
+describe('입장 전 티켓 환불 — 티켓 선택', () => {
+  const FUTURE = Math.floor(Date.now() / 1000) + 20 * 86400; // 20일 뒤 = 100% 환불 구간
+  const tk = (id: string, n: string) => ({ ...ticket, id, entryNumber: n });
+  const futureShow = (orders: AdminOrderRow[]): AdminShowDetail => {
+    const base = show(orders);
+    return { ...base, showtimes: [{ ...base.showtimes[0], startsAt: FUTURE }] };
+  };
+
+  it('기본은 전부 선택이고 금액을 보이며, 해제한 티켓은 ticketIds에서 빠진다', async () => {
+    const o = order({ totalAmount: 90000, tickets: [tk('t1', '001'), tk('t2', '002'), tk('t3', '003')] });
+    render(<AdminShowDetailPage show={futureShow([o])} />);
+    expect(screen.getByText(/환불 예정 3장 · 90,000원\(환불률 100%\)/)).toBeInTheDocument();
+
+    fireEvent.click(screen.getByLabelText(/002/));
+    expect(screen.getByText(/환불 예정 2장 · 60,000원/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: '입장 전 티켓 환불' }));
+    expect((window.confirm as jest.Mock).mock.calls.pop()[0]).toContain('티켓 2장을 환불합니다');
+    await waitFor(() => expect(postShowAction).toHaveBeenCalledWith('s1', { action: 'refund_tickets', orderNo: 'TKT-1', ticketIds: ['t1', 't3'] }));
+  });
+
+  it('전부 해제하면 버튼이 잠긴다(최소 한 장)', () => {
+    const o = order({ tickets: [tk('t1', '001'), tk('t2', '002')] });
+    render(<AdminShowDetailPage show={futureShow([o])} />);
+    fireEvent.click(screen.getByLabelText(/001/));
+    fireEvent.click(screen.getByLabelText(/002/));
+    expect(screen.getByRole('button', { name: '입장 전 티켓 환불' })).toBeDisabled();
+  });
+
+  it('티켓이 한 장이면 체크박스 없이 버튼만 있다', () => {
+    render(<AdminShowDetailPage show={futureShow([order({ tickets: [tk('t1', '001')] })])} />);
+    expect(screen.queryByRole('checkbox', { name: /001/ })).not.toBeInTheDocument();
+    expect(screen.getByText(/환불 예정 1장/)).toBeInTheDocument();
+  });
+});
+
+it('취소된 공연도 상태 버튼이 있고 안내를 보인다', () => {
+  render(<AdminShowDetailPage show={{ ...show([]), status: 'cancelled' }} />);
+  expect(screen.getByText(/모든 회차가 취소돼 공연이 취소 상태/)).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: '공개하기' })).toBeInTheDocument();
+});

@@ -17,12 +17,17 @@ jest.mock('../../../../db/client', () => ({ getDb: () => mockDb }));
 jest.mock('../../../../lib/contracts/admin-auth', () => ({ authenticateAdminApi: jest.fn() }));
 jest.mock('../../../../lib/booking/toss', () => ({ cancelPayment: jest.fn() }));
 jest.mock('../../../../lib/shows/scanLink', () => ({ issueScanLink: jest.fn(async () => ({ token: 'tok-secret-1234567890', id: 'l1', expiresAt: 1 })), SCAN_LINK_MAX_TTL_HOURS: 72, verifyScanLink: jest.fn(), revokeScanLink: jest.fn(async () => true) }));
+jest.mock('../../../../lib/shows/email', () => ({ sendShowTicketEmail: jest.fn(async () => undefined), notifyShowPaymentToOperator: jest.fn(async () => undefined), sendShowRefundEmail: jest.fn(async () => undefined), sendShowtimeCancelledEmail: jest.fn(async () => undefined) }));
 jest.mock('../../../../lib/privacy/accessLog', () => ({ recordAdminPrivacyAccess: jest.fn(async () => undefined) }));
 
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { recordAdminPrivacyAccess } from '../../../../lib/privacy/accessLog';
 import { revokeScanLink } from '../../../../lib/shows/scanLink';
 import { showScanLinks } from '../../../../db/schema';
+import { cancelPayment } from '../../../../lib/booking/toss';
+import { createFakeToss } from '../../../fakes/fakeToss';
+import { createShowOrder } from '../../../../lib/shows/service';
+import { confirmShowOrder } from '../../../../lib/shows/confirm';
 import handler from '../../../../pages/api/admin/shows/[id]';
 import rosterHandler from '../../../../pages/api/admin/shows/[id]/roster';
 
@@ -92,6 +97,59 @@ describe('관리자 공연 API', () => {
     await mockDb.update(showtimes).set({ status: 'cancelled' }).where(eq(showtimes.id, showtimeId));
     const res = await call(handler, { query: { id: showId }, body: { action: 'set_status', status: 'published' } });
     expect(res.status).toHaveBeenCalledWith(409);
+  });
+
+  it('마지막 회차를 취소하면 공연이 cancelled가 되고, set_status로 초안·공개 모두 되돌릴 수 있다', async () => {
+    await call(handler, { query: { id: showId }, body: { action: 'set_status', status: 'published' } });
+    let res = await call(handler, { query: { id: showId }, body: { action: 'cancel_showtime', showtimeId } });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect((await mockDb.select().from(shows))[0].status).toBe('cancelled');
+
+    // 예정된 회차가 없으면 공개로 못 되돌린다.
+    res = await call(handler, { query: { id: showId }, body: { action: 'set_status', status: 'published' } });
+    expect(res.status).toHaveBeenCalledWith(409);
+    expect((await mockDb.select().from(shows))[0].status).toBe('cancelled');
+
+    res = await call(handler, { query: { id: showId }, body: { action: 'set_status', status: 'draft' } });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect((await mockDb.select().from(shows))[0].status).toBe('draft');
+
+    // 새 일정을 잡았다면(취소 상태에서도) 공개로 되돌아간다.
+    await mockDb.update(shows).set({ status: 'cancelled' });
+    const future = Math.floor(Date.now() / 1000) + 20 * 86400;
+    await mockDb.insert(showtimes).values({ id: 'st-new', showId, startsAt: future, salesCloseAt: future - 86400 });
+    res = await call(handler, { query: { id: showId }, body: { action: 'set_status', status: 'published' } });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect((await mockDb.select().from(shows))[0].status).toBe('published');
+  });
+
+  it('티켓을 골라 부분 환불한다 — 고른 티켓만 환불되고 주문은 부분환불, 나머지를 환불하면 전액환불', async () => {
+    const fake = createFakeToss();
+    (cancelPayment as jest.Mock).mockImplementation((input) => fake.cancelPayment(input));
+    const created = await createShowOrder({ showtimeId, ticketTypeId, quantity: 3, buyerName: '김관객', buyerContact: '010-1111-2222' }, new Date());
+    if (!created.ok) throw new Error('setup failed');
+    const [tt] = await mockDb.select().from(showTicketTypes);
+    await confirmShowOrder({ orderNo: created.orderNo, paymentKey: 'pk-partial', amount: tt.price * 3 }, { trustedByWebhook: false }, fake);
+    const tickets = await mockDb.select().from(showTickets).where(eq(showTickets.orderNo, created.orderNo));
+    expect(tickets).toHaveLength(3);
+
+    let res = await call(handler, { query: { id: showId }, body: { action: 'refund_tickets', orderNo: created.orderNo, ticketIds: [] } });
+    expect(res.status).toHaveBeenCalledWith(409);
+
+    res = await call(handler, { query: { id: showId }, body: { action: 'refund_tickets', orderNo: created.orderNo, ticketIds: [tickets[0].id] } });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json.mock.calls[0][0]).toMatchObject({ ok: true, amount: tt.price, orderStatus: 'partially_refunded' });
+    let rows = await mockDb.select().from(showTickets).where(eq(showTickets.orderNo, created.orderNo));
+    expect(rows.filter((t) => t.status === 'refunded').map((t) => t.id)).toEqual([tickets[0].id]);
+
+    // 이미 환불한 티켓을 다시 고르면 거절된다.
+    res = await call(handler, { query: { id: showId }, body: { action: 'refund_tickets', orderNo: created.orderNo, ticketIds: [tickets[0].id] } });
+    expect(res.status).toHaveBeenCalledWith(409);
+
+    res = await call(handler, { query: { id: showId }, body: { action: 'refund_tickets', orderNo: created.orderNo, ticketIds: [tickets[1].id, tickets[2].id] } });
+    expect(res.json.mock.calls[0][0]).toMatchObject({ ok: true, amount: tt.price * 2, orderStatus: 'refunded' });
+    rows = await mockDb.select().from(showTickets).where(eq(showTickets.orderNo, created.orderNo));
+    expect(rows.every((t) => t.status === 'refunded')).toBe(true);
   });
 
   it('초대권 발급(compQuota 안)과 취소', async () => {

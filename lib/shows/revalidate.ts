@@ -15,9 +15,15 @@ export async function revalidateShow(res: NextApiResponse, slug: string): Promis
   return ok;
 }
 
-/** 공연 공개 상태 변경(취소된 공연은 건드리지 않는다) — 관리자 set_status와 주최자 공연 승인이 함께 쓴다. */
-export const sqlUpdateStatus = (showId: string, status: 'draft' | 'published', now: Date) =>
-  sql`UPDATE shows SET status = ${status}, updated_at = ${Math.floor(now.getTime() / 1000)} WHERE id = ${showId} AND status != 'cancelled'`;
+/**
+ * 공연 공개 상태 변경 — 관리자 set_status와 주최자 공연 승인이 함께 쓴다. 기본은 취소된 공연을 건드리지 않는다
+ * (주최자 승인이 취소된 공연을 되살리면 안 된다). 관리자가 일부러 되돌릴 때만 `fromCancelled`를 준다 — 마지막 회차가
+ * 취소돼 자동으로 'cancelled'가 된 공연을 다시 일정 잡아 열거나 초안으로 내리는 길이다.
+ */
+export const sqlUpdateStatus = (showId: string, status: 'draft' | 'published', now: Date, opts: { fromCancelled?: boolean } = {}) =>
+  opts.fromCancelled
+    ? sql`UPDATE shows SET status = ${status}, updated_at = ${Math.floor(now.getTime() / 1000)} WHERE id = ${showId}`
+    : sql`UPDATE shows SET status = ${status}, updated_at = ${Math.floor(now.getTime() / 1000)} WHERE id = ${showId} AND status != 'cancelled'`;
 
 /** 공개 전제 — 예정된 미래 회차·구역·티켓타입이 모두 있어야 한다. */
 export const isPublishable = (
