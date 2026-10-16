@@ -13,6 +13,8 @@ import { fundingCreators, partnerPayouts, shopArtists, shopProducts, shopProduct
 let testDb: ShowsTestDb;
 jest.mock('../../../../db/client', () => ({ getDb: () => testDb }));
 jest.mock('../../../../data/shop/catalog', () => ({ ...jest.requireActual('../../../../data/shop/catalog'), SHOP_PRODUCTS: [] }));
+const mockSendEmail = jest.fn();
+jest.mock('../../../../lib/email/resend', () => ({ sendEmail: (...args: unknown[]) => mockSendEmail(...args) }));
 const mockAuth = jest.fn();
 jest.mock('../../../../lib/contracts/admin-auth', () => ({ authenticateAdminApi: (...args: unknown[]) => mockAuth(...args) }));
 
@@ -61,6 +63,7 @@ const recordBody = async () => {
 beforeEach(async () => {
   testDb = (await createTestDb()).db;
   mockAuth.mockResolvedValue({ ok: true, actor: 'admin' });
+  mockSendEmail.mockResolvedValue({ ok: true });
   jest.spyOn(console, 'error').mockImplementation(() => undefined);
   await seed();
 });
@@ -104,6 +107,21 @@ describe('record · mark_paid · delete', () => {
     const del = await call({ body: { action: 'delete', id: row.id } });
     expect(del.status).toBe(409);
     expect(await findPartnerPayout('shop', 'creator:c1', '2026-10')).not.toBeNull();
+  });
+
+  it('기록·지급 완료 뒤 수취인 알림이 나가고, 메일이 실패해도 처리는 성공이며 warnings가 실린다', async () => {
+    mockSendEmail.mockResolvedValue({ ok: true });
+    const ok = await call({ body: await recordBody() });
+    expect(ok.status).toBe(200);
+    expect(ok.body.warnings).toBeUndefined();
+    expect(mockSendEmail).toHaveBeenCalledWith(expect.objectContaining({ to: 'c1@example.com', subject: expect.stringContaining('정산 내역을 알려 드려요') }));
+
+    mockSendEmail.mockResolvedValue({ ok: false, errorCode: 'boom' });
+    const paid = await call({ body: { action: 'mark_paid', id: ok.body.payoutId } });
+    expect(paid.status).toBe(200);
+    expect(paid.body.ok).toBe(true);
+    expect(Array.isArray(paid.body.warnings) && (paid.body.warnings as string[]).some((w) => w.includes('boom'))).toBe(true);
+    expect(await findPartnerPayout('shop', 'creator:c1', '2026-10')).toMatchObject({ status: 'paid' });
   });
 
   it('이체 전 기록은 취소할 수 있고 다시 기록된다', async () => {

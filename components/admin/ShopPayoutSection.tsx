@@ -35,16 +35,16 @@ const REASON_LABEL: Record<AdjustmentView['reason'], string> = {
   manual: '수기 조정',
 };
 
-interface ActionResponse { ok?: boolean; message?: string; code?: string }
+interface ActionResponse { ok?: boolean; message?: string; code?: string; warnings?: string[] }
 
-const post = async (body: Record<string, unknown>): Promise<{ ok: boolean; message?: string }> => {
+const post = async (body: Record<string, unknown>): Promise<{ ok: boolean; message?: string; warnings?: string[] }> => {
   try {
     const res = await fetch('/api/admin/shop/payouts', {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify(body),
     });
     const data = (await res.json().catch(() => ({}))) as ActionResponse;
     if (!res.ok || !data.ok) return { ok: false, message: data.message ?? '요청을 처리하지 못했습니다.' };
-    return { ok: true };
+    return { ok: true, warnings: data.warnings };
   } catch {
     return { ok: false, message: '네트워크 오류가 발생했습니다.' };
   }
@@ -80,14 +80,19 @@ export function ShopPayoutSection({ rows, month, prevMonth, nextMonth, otherAdju
 }) {
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [notified, setNotified] = useState<string | null>(null);
   const [accounts, setAccounts] = useState<Record<string, RevealedAccount | 'loading' | { error: string }>>({});
 
-  const run = async (key: string, confirmText: string, action: () => Promise<{ ok: boolean; message?: string }>) => {
+  const run = async (key: string, confirmText: string, action: () => Promise<{ ok: boolean; message?: string; warnings?: string[] }>) => {
     if (!window.confirm(confirmText)) return;
     setBusy(key);
     setMessage(null);
     const result = await action();
-    if (result.ok) window.location.reload();
+    if (result.ok && result.warnings && result.warnings.length > 0) {
+      // 처리는 끝났고 알림만 못 간 경우 — 바로 새로고침하면 이 안내가 사라진다. 운영자가 읽고 직접 새로고침한다.
+      setNotified(`처리는 끝났지만 수취인 알림이 가지 않았습니다. ${result.warnings.join(' / ')}`);
+      setBusy(null);
+    } else if (result.ok) window.location.reload();
     else {
       setMessage(result.message ?? '처리하지 못했습니다.');
       setBusy(null);
@@ -141,6 +146,25 @@ export function ShopPayoutSection({ rows, month, prevMonth, nextMonth, otherAdju
         <strong className="font-semibold"> 정산 기록은 그 시점의 숫자를 고정합니다</strong> — 송금은 은행 앱에서 하고 「지급 완료」로 끝났다고 적어 주세요.
         정산한 달의 주문이 나중에 환불되면 「정산 뒤 환불」 조정이 자동으로 쌓여 다음 정산에서 빠집니다(몫이 모자라면 0원이 되고 나머지는 이월).
       </p>
+      {/* 세무사용 정산 CSV — 수취인 이름과 금액만 담긴다(계좌·주민등록번호·연락처 없음). 내려받으면 접속기록에 남는다. */}
+      <form method="GET" action="/api/admin/partner-payouts/export" className="mb-3 flex flex-wrap items-center gap-2 text-xs text-gray-700" aria-label="정산 CSV 내려받기">
+        <span className="font-semibold text-gray-900">정산 CSV</span>
+        <select name="kind" defaultValue="all" className="rounded-lg border border-gray-300 px-2 py-1" aria-label="구분">
+          <option value="all">상점·공연</option>
+          <option value="shop">상점</option>
+          <option value="show">공연</option>
+        </select>
+        <input type="month" name="from" defaultValue={month} required className="rounded-lg border border-gray-300 px-2 py-1" aria-label="시작 월" />
+        <span aria-hidden="true">~</span>
+        <input type="month" name="to" defaultValue={month} required className="rounded-lg border border-gray-300 px-2 py-1" aria-label="종료 월" />
+        <Button type="submit" light size="sm" variant="weak">내려받기</Button>
+        <span className="text-gray-500">공연은 정산을 기록한 달로 셉니다. 최대 24개월. 내려받은 기록이 남습니다.</span>
+      </form>
+      {notified && (
+        <div role="alert" className="mb-3 rounded-lg border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900">
+          {notified} <button type="button" className="ml-2 text-primary underline" onClick={() => window.location.reload()}>새로고침</button>
+        </div>
+      )}
       {message && <div role="alert" className="mb-3 rounded-lg border border-red-300 bg-red-50 p-3 text-xs text-red-900">{message}</div>}
       {rows.length === 0 ? (
         <p className="text-gray-600">이 달에 발송한 아티스트 상품이 없습니다.</p>
@@ -243,7 +267,7 @@ export function ShopPayoutSection({ rows, month, prevMonth, nextMonth, otherAdju
                             `${r.payeeName}에게 ${won(rec.netAmount)}을 이체했나요? 지급 완료로 기록합니다.${rec.netAmount === 0 ? '\n\n이체할 금액이 0원인 기록입니다(조정으로 상계).' : ''}`,
                             async () => {
                               // 이체 메모(선택) — 이체일·실제 보낸 금액. 기록 행은 불변이라 달라진 것은 여기 적어 둔다.
-                              const memo = window.prompt('이체 메모 (선택 — 이체일, 실제 보낸 금액, 세금계산서 수취 여부 등)', '');
+                              const memo = window.prompt('이체 메모 (선택 — 이체일, 실제 보낸 금액, 세금계산서 수취 여부 등)\n※ 이 메모는 아티스트에게 가는 「정산금을 보냈어요」 메일에 그대로 실립니다. 아티스트에게 보여도 되는 말만 적어 주세요.', '');
                               if (memo === null) return { ok: false, message: '지급 완료 기록을 취소했습니다.' };
                               return post({ action: 'mark_paid', id: rec.id, memo: memo.trim() });
                             },
