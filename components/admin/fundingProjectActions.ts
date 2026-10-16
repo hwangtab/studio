@@ -31,8 +31,8 @@ export interface FundingProjectActionResult {
  *   `close`만 서버가 빈 메모를 거부한다 — 개설자가 "왜 멈췄는지" 알아야 하기 때문이다.
  */
 export type FundingProjectPatchBody =
-  | { action: 'approve'; slug?: string; note?: string; expectedSubmittedAt: string }
-  | { action: 'request_changes' | 'reject' | 'archive'; note: string; expectedSubmittedAt: string }
+  | { action: 'approve'; slug?: string; note?: string; expectedSubmittedAt: string | null }
+  | { action: 'request_changes' | 'reject' | 'archive'; note: string; expectedSubmittedAt: string | null }
   /**
    * `expectedNote`는 화면이 불러온 시점의 메모 원문(없으면 빈 문자열). 서버가 지금 값과 다르면 409 — 두 운영자(또는 탭 둘)가
    * 동시에 저장해 나중 쓰기가 조용히 이기던 것을 막는다. 생략하면 검사하지 않는다.

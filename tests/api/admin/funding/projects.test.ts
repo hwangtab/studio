@@ -628,3 +628,16 @@ describe('메모 동시 저장 — expectedNote', () => {
     expect(r.status).toBe(200);
   });
 });
+
+describe('초안 보관 — 제출 기록이 없는 판본(null)', () => {
+  it("expectedSubmittedAt이 null이나 ''이면 null 판본으로 decideProject를 부른다(400이 아니다)", async () => {
+    (decideProject as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo' });
+    (loadProjectForAdmin as jest.Mock).mockResolvedValue({ ...BASE_PROJECT, reviewStatus: 'draft', submittedAt: null });
+    for (const expected of [null, '']) {
+      (decideProject as jest.Mock).mockClear();
+      const r = await call('PATCH', { id: 'proj-1' }, { action: 'archive', note: '방치된 초안 정리', expectedSubmittedAt: expected });
+      expect(r.status).not.toBe(400);
+      expect(decideProject).toHaveBeenCalledWith('proj-1', 'archive', expect.objectContaining({ expectedSubmittedAt: null }), expect.any(Date));
+    }
+  });
+});

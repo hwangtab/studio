@@ -45,6 +45,7 @@ const contract = (overrides: Record<string, unknown> = {}) => ({
   customerName: '홍길동',
   customerPhone: PHONE,
   status: 'signed',
+  signedAt: new Date('2026-09-01T00:00:00Z'),
   purgedAt: null,
   ...overrides,
 });
@@ -247,6 +248,13 @@ describe('계약 상태', () => {
 
     expect(res.status).toHaveBeenCalledWith(409);
     expect(getDownloadIdentityVerdict).not.toHaveBeenCalled();
+  });
+
+  it('이용 종료(terminated)된 계약의 서명본은 그대로 내려받을 수 있다 — 완료 화면의 안내와 같다', async () => {
+    mockFound(contract({ status: 'terminated' }));
+    const res = await run();
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.setHeader).toHaveBeenCalledWith('Content-Type', 'application/pdf');
   });
 
   it('파기된 계약은 409', async () => {

@@ -6,6 +6,7 @@ import { ARTIST_SUPPORT_SHARE_PERCENT } from '../../data/pricing';
 import { getSupportedArtist, SUPPORTED_ARTISTS, type SupportedArtist } from '../../data/artists';
 import { VAT_RATE } from '../booking/amounts';
 import { computeBusinessIncomeWithholding } from '../withholdingTax';
+import { cycleYmOf } from '../billing/schedule';
 
 /**
  * 아티스트 월 정산(스펙 §10).
@@ -124,17 +125,32 @@ export const buildAllArtistPayoutPreviews = async (period: string): Promise<Arti
 
 export type RecordPayoutResult =
   | { ok: true; payout: ArtistPayout }
-  | { ok: false; code: 'not_found' | 'already_recorded' | 'nothing_to_pay' };
+  /**
+   * period_open: 아직 끝나지 않은 달 — 기록하면 그 뒤 들어온 후원이 어느 정산에도 잡히지 않는다(펀딩 정산의 not_closed와 같은 이유).
+   * unreconciled: 그 달에 토스 응답을 못 받아 pending으로 남은 회차가 있다 — 다음 날 재조회가 끝난 뒤 기록한다.
+   */
+  | { ok: false; code: 'not_found' | 'already_recorded' | 'nothing_to_pay' | 'period_open' | 'unreconciled' };
 
 /**
  * 미리보기 숫자를 그 시점에 고정해 기록한다. 같은 (아티스트, 달)은 한 번만 — 유니크 인덱스가
  * 두 번째 INSERT를 막고, 그 실패를 already_recorded로 돌려준다(경합에서도 안전).
  */
 export const recordArtistPayout = async (artistSlug: string, period: string, now: Date): Promise<RecordPayoutResult> => {
+  // 닫힌 달만 기록한다 — 이번 달(이후)을 기록하면 그 뒤 결제분이 정산에서 영영 빠진다.
+  if (period >= cycleYmOf(now)) return { ok: false, code: 'period_open' };
   const preview = await buildArtistPayoutPreview(artistSlug, period);
   if (!preview) return { ok: false, code: 'not_found' };
   if (preview.recorded) return { ok: false, code: 'already_recorded' };
   if (preview.grossAmount <= 0) return { ok: false, code: 'nothing_to_pay' };
+  // 응답을 못 받은 회차(orders.status='pending')가 그 달에 남아 있으면 금액이 아직 확정이 아니다.
+  // subscription_payments.status는 NETWORK_ERROR 때 이미 failed라 orders 쪽으로 판정한다.
+  const [unresolved] = await getDb()
+    .select({ n: sql<number>`count(*)` })
+    .from(subscriptionPayments)
+    .innerJoin(orders, eq(orders.id, subscriptionPayments.orderId))
+    .innerJoin(subscriptions, eq(subscriptions.id, subscriptionPayments.subscriptionId))
+    .where(and(eq(subscriptions.artistSlug, artistSlug), eq(subscriptionPayments.cycleYm, period), eq(orders.status, 'pending')));
+  if (Number(unresolved?.n ?? 0) > 0) return { ok: false, code: 'unreconciled' };
 
   try {
     const [payout] = await getDb()

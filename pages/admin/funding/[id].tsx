@@ -87,9 +87,8 @@ export const getServerSideProps: GetServerSideProps<AdminFundingDetailPageProps>
       ? { status: 'present' as const, bankName: summary.bankName, accountHolder: summary.accountHolder, updatedAt: summary.updatedAt.toISOString() }
       : summary;
 
-  const depositPayoutWarning = isBank && (order.status === 'pending' || order.status === 'expired')
-    ? payoutWarningOf(await loadProjectPayoutState(order.fundingPledge.projectSlug))
-    : null;
+  // 입금 확인뿐 아니라 환불(전액·줄)도 정산이 기록된 뒤면 개설자 몫이 바뀐다 — 상태와 무관하게 계산해 확인창에 붙인다.
+  const depositPayoutWarning = payoutWarningOf(await loadProjectPayoutState(order.fundingPledge.projectSlug));
 
   return { props: { pledge: serializePledgeForAdmin(order), refundableAmount, paymentWindow, sameNameDeposits, refundAccount, depositPayoutWarning } };
 };
@@ -172,7 +171,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
     isBankTransfer
       ? `${downloadedAfterRequest ? '주의: 이 후원자는 취소를 요청한 뒤 음원을 내려받았습니다(청약철회 제한 대상일 수 있습니다).\n\n' : ''}`
         + `${formatPriceAmount(refundableAmount)}원을 후원자 계좌로 이미 송금했나요? 이 버튼은 송금을 대신하지 않고 "환불 완료"로 기록만 합니다. 후원자에게 환불 안내 메일이 나갑니다.`
-      : `이 펀딩의 남은 금액 ${formatPriceAmount(refundableAmount)}원을 환불할까요? 되돌릴 수 없습니다.`,
+      : `이 펀딩의 남은 금액 ${formatPriceAmount(refundableAmount)}원을 환불할까요? 되돌릴 수 없습니다.${depositPayoutWarning ? `\n\n${depositPayoutWarning}` : ''}`,
   );
 
   /** 계좌 입금 — 입금 확인·미입금 취소·입금 안내 재발송(lib/funding/bankTransfer.ts). */
@@ -210,7 +209,8 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
   const handleRefundLine = (line: AdminPledgeItem['lines'][number]) => {
     const quantity = lineRefundQty[line.rewardId] ?? 1;
     const reason = window.prompt(
-      `${line.rewardTitle} ${quantity}개, ${formatPriceAmount(line.unitAmount * quantity)}원을 환불합니다. 되돌릴 수 없습니다.\n사유를 적어 주세요(후원자 메일에 들어갑니다).`,
+      `${line.rewardTitle} ${quantity}개, ${formatPriceAmount(line.unitAmount * quantity)}원을 환불합니다. 되돌릴 수 없습니다.`
+        + `${depositPayoutWarning ? `\n${depositPayoutWarning}` : ''}\n사유를 적어 주세요(후원자 메일에 들어갑니다).`,
     );
     if (reason === null) return;
     if (!reason.trim()) {

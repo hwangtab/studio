@@ -107,7 +107,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         quantity: typeof b.quantity === 'number' ? b.quantity : Number.NaN,
         reason,
       });
-      if (r.ok) return res.status(200).json({ ok: true, amount: r.amount, orderStatus: r.orderStatus });
+      if (r.ok) return res.status(200).json({ ok: true, amount: r.amount, orderStatus: r.orderStatus, ...(r.warnings?.length ? { message: r.warnings.join(' '), warnings: r.warnings } : {}) });
       const status = { not_found: 404, invalid_state: 409, invalid_quantity: 400, offline_payment: 409, toss_failed: 502, toss_unknown: 504 }[r.code];
       return res.status(status).json({ ok: false, message: r.message });
     }
