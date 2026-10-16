@@ -72,8 +72,15 @@ const REFUND_REASON = '공연 티켓 환불(§11.3 취소환불표)';
  * 한 번 나갔는데 우리 기록은 두 번 다 성공으로 남는다(과소 환불). 티켓 id들(정렬)을 키에
  * 넣으면 어떤 두 환불 호출도 대상 티켓 집합이 다른 한 항상 다른 키가 된다.
  */
-const ticketRefundIdempotencyKey = (orderNo: string, ticketIds: string[]): string =>
-  `tkt-refund:${orderNo}:${[...ticketIds].sort().join(',')}`;
+export const TICKET_ID_TAG_LENGTH = 8;
+/**
+ * 키·태그에는 티켓 id의 앞 8자(정렬)만 싣는다 — 32자 id를 전부 넣으면 5장부터 토스 cancelReason
+ * 200자, 9장부터 Idempotency-Key 300자 한도를 넘어 거절된다(일행 예매 최대 10매, 관리자 '환불'은
+ * 주문 단위 일괄). 주문당 티켓이 ≤10장이라 8자 접두어 충돌은 무시 수준이고, 사람이 태그만 보고도
+ * 어느 티켓인지 읽을 수 있다. 복원은 syncShowCancelsFromToss가 같은 접두어 규칙으로 한다.
+ */
+export const ticketRefundIdempotencyKey = (orderNo: string, ticketIds: string[]): string =>
+  `tkt-refund:${orderNo}:${[...ticketIds].sort().map((id) => id.slice(0, TICKET_ID_TAG_LENGTH)).join(',')}`;
 
 export async function refundShowTickets(
   input: {
@@ -401,7 +408,21 @@ export async function syncShowCancelsFromToss(orderNo: string, tossPayment: Toss
       const tagOrderNo = rest.slice(0, sepIndex);
       const idsPart = rest.slice(sepIndex + 1);
       if (tagOrderNo === orderNo && idsPart.length > 0) {
-        scopedTicketIds = idsPart.split(',');
+        // 태그는 id 접두어(TICKET_ID_TAG_LENGTH자)다 — 이 주문의 refunding 티켓 중 접두어가 맞는 것으로
+        // 복원한다. 한 접두어가 둘 이상에 맞으면(사실상 없다) 범위를 특정할 수 없으므로 종전처럼 주문의
+        // refunding 전부로 폴백한다(null).
+        const prefixes = idsPart.split(',');
+        const refunding = await db.all<{ id: string }>(sql`
+          SELECT id FROM show_tickets WHERE order_no = ${orderNo} AND status = 'refunding'
+        `);
+        const resolved: string[] = [];
+        let ambiguous = false;
+        for (const prefix of prefixes) {
+          const matches = refunding.filter((t) => t.id.startsWith(prefix));
+          if (matches.length > 1) { ambiguous = true; break; }
+          if (matches.length === 1) resolved.push(matches[0].id);
+        }
+        scopedTicketIds = ambiguous ? null : resolved;
       }
     }
   }

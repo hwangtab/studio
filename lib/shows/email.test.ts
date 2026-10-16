@@ -31,10 +31,12 @@ describe('shows email 본문', () => {
     expect(text).toContain('30,000원');
   });
 
-  it('환불 규정 줄은 refundRateForNotice에서 온다', () => {
+  it('환불 규정 줄은 화면·FAQ와 같은 정본(refundTierLines)에서 온다', () => {
     const lines = buildRefundPolicyLines();
-    expect(lines[0]).toContain('100%');
-    expect(lines[4]).toContain('10%');
+    expect(lines[0]).toBe('공연 10일 전까지 100%');
+    expect(lines[3]).toBe('공연 1~2일 전 70%');
+    expect(lines[4]).toBe('공연 당일(시작 전) 10%');
+    expect(lines[5]).toContain('공연 시작 후에는 환불할 수 없습니다');
   });
 
   it('광고성 표현이 없다', () => {
