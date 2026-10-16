@@ -409,7 +409,17 @@ export default function AdminBookingDetailPage({
   const [newDate, setNewDate] = useState(kstStart ? kstStart.toISOString().slice(0, 10) : '');
   const [newHour, setNewHour] = useState(kstStart ? kstStart.getUTCHours() : 10);
   const handleReschedule = async () => {
-    if (!window.confirm(`${newDate} ${String(newHour).padStart(2, '0')}:00 으로 옮길까요?\n구글 캘린더 일정도 함께 옮겨요. 고객에게는 메일이 자동으로 가지 않아요.`)) return;
+    const isPastTarget = new Date(`${newDate}T${String(newHour).padStart(2, '0')}:00:00+09:00`).getTime() <= Date.now();
+    const waiting = booking.orderStatus === 'awaiting_deposit';
+    if (
+      !window.confirm(
+        `${newDate} ${String(newHour).padStart(2, '0')}:00 으로 옮길까요?\n구글 캘린더 일정도 함께 옮겨요. 고객에게는 메일이 자동으로 가지 않아요.` +
+          (isPastTarget ? '\n\n⚠ 이미 지난 시각이에요. 지난 세션을 바로잡는 게 아니라면 날짜를 확인해 주세요.' : '') +
+          (waiting ? '\n\n입금 대기 중이에요 — 이용일이 가까워지면 입금 기한도 짧아져요. 옮긴 뒤 “입금 안내 재발송”으로 새 기한을 알려 주세요.' : ''),
+      )
+    ) {
+      return;
+    }
     setBusy(true);
     setNotice(null);
     try {
