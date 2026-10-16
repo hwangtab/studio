@@ -3,6 +3,7 @@ import { and, eq, inArray, isNotNull, isNull, lt, or } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { contracts, signatures } from '../../db/schema';
+import { contractPdfPathname } from './pdfPath';
 import type { ContractStatus } from './status';
 
 /**
@@ -99,7 +100,8 @@ export const purgeExpiredPersonalData = async (now: Date = new Date()): Promise<
       // PDF를 먼저 지운다. 여기서 실패하면 파기 표식을 남기지 않아 다음 회차에 다시 시도한다
       // — 표식만 찍고 파일이 남으면 파기됐다고 착각하게 된다.
       if (target.pdfUrl) {
-        await del(target.pdfUrl);
+        // 경로로 지운다 — 옛 저장소 주소면 새 저장소의 사본을 못 지우고 남긴다(pdfPath.ts).
+        await del(contractPdfPathname(target.pdfUrl));
       }
 
       await getDb().batch([

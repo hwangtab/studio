@@ -2,6 +2,7 @@ import { get, put } from '@vercel/blob';
 
 import type { Contract, ContractAttachment, ContractClause, Signature } from '../../db/schema';
 import { generateContractPdf } from './pdf';
+import { contractPdfPathname } from './pdfPath';
 import { resolveRulesContent } from './template';
 
 export const uploadContractPdf = async (
@@ -44,7 +45,8 @@ export const loadOrRenderContractPdf = async (
 ): Promise<Buffer> => {
   if (contract.pdfUrl) {
     try {
-      const stored = await get(contract.pdfUrl, { access: 'private' });
+      // 주소가 아니라 경로로 읽는다 — 저장소를 옮겨도 같은 파일을 찾는다(pdfPath.ts).
+      const stored = await get(contractPdfPathname(contract.pdfUrl), { access: 'private' });
       if (stored?.stream) {
         const buffer = Buffer.from(await new Response(stored.stream).arrayBuffer());
         if (buffer.length > 0) return buffer;
