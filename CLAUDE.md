@@ -372,9 +372,11 @@ drizzle의 libsql 마이그레이터는 적용된 것 중 `created_at`이 가장
 
 ### 운영 DB 마이그레이션 적용 방법 — Turso CLI로 한다
 
-`npm run db:migrate`는 이 맥에서 안 된다. `.env.local`에 TURSO_* 값이 없어 `url: undefined`로
-멈춘다. `vercel env pull`도 답이 아니다. Vercel의 TURSO_* 변수는 Sensitive라 **빈 값**으로
-내려온다(2026-09-26 확인). 이 맥에는 로그인된 Turso CLI가 있으니 그걸 쓴다.
+`npm run db:migrate`(= `scripts/db-migrate.mjs`)가 **유일한 적용 경로**다. 스크립트가 main 병합본인지(브랜치 main·
+HEAD == origin/main) 확인하고, 토큰을 `.env.local`에서 읽지 않고 그 자리에서 1일짜리로 만들어, 적용 예정 목록과
+"when이 작아 조용히 건너뛰어질 목록"을 보여 준 뒤 `--yes`가 있어야 적용한다. 건너뛰어질 것이 있으면 멈춘다.
+`.env.local`의 TURSO_*는 로컬 작업용 **단기(30일) 토큰**이다 — 운영 적용에 쓰지 않는다(`vercel env pull`은 Sensitive라
+빈 값으로 내려온다). 이 맥에는 로그인된 Turso CLI가 있다.
 
 - CLI 위치는 `~/.turso/turso`이고 PATH에 없다. 운영 DB 이름은 **`studio-nol`**이다.
   같은 계정에 `ggac-prod`도 있으니 이름을 헷갈리지 말 것.
@@ -387,16 +389,20 @@ drizzle의 libsql 마이그레이터는 적용된 것 중 `created_at`이 가장
    ~/.turso/turso db shell studio-nol "select count(*), max(created_at) from __drizzle_migrations;"
    node -e "const e=require('./drizzle/migrations/meta/_journal.json').entries;console.log(e.length);e.slice(-3).forEach(x=>console.log(x.tag,x.when))"
    ```
-2. **적용.** 토큰은 파일에 쓰지 않고 명령 안에서 만든다. 토큰 기본값이 **만료 없음**이라
-   `-e 1d`를 반드시 붙인다 — 빼면 쓰고 버린 토큰이 영구히 살아 남는다.
+2. **적용.** 1번 확인까지 스크립트가 대신 한다. 토큰은 파일에 쓰지 않고 스크립트가 만든다(`-e 1d` — 토큰 기본값이
+   **만료 없음**이라 빼면 쓰고 버린 토큰이 영구히 살아 남는다). `npx drizzle-kit migrate`를 직접 부르지 말 것.
    ```bash
-   TURSO_DATABASE_URL=$(~/.turso/turso db show studio-nol --url) \
-   TURSO_AUTH_TOKEN=$(~/.turso/turso db tokens create studio-nol -e 1d) \
-   npx drizzle-kit migrate
+   npm run db:migrate          # 대상·적용 예정·건너뜀 목록만 보여 주고 멈춘다
+   npm run db:migrate -- --yes # 적용
    ```
 3. **확인.** 1번 조회를 다시 돌려 행 수가 저널 수와 같은지 보고, 새 테이블·컬럼은
    `pragma table_info(<테이블>);`로 코드와 대조한다. main CI의 `Migration drift check`도
    다음 push부터 초록이 된다.
+
+**토큰 정책(2026-10-17 회전).** Turso는 토큰 단위 폐기가 없다 — `turso db tokens invalidate`는 키를 돌려 **기존 토큰
+전부**를 무효화한다. 그래서 회전은 전체 교체이고 저트래픽 시간에 한다. 세 벌만 둔다: Vercel Production(rw, 만료 없음),
+GitHub Secret(`--read-only -e 90d`, drift 점검용 — **90일마다 재발급**, 만료되면 main push마다 drift 잡이 unknown/실패),
+`.env.local`(rw `-e 30d`, 로컬 스크립트용). `.env.local` 백업 파일을 만들지 말 것 — 토큰 사본이 늘어난다.
 
 ### 운영 DB 백업과 시점 복구 — PITR은 하루뿐이다
 
