@@ -31,6 +31,8 @@ describe('parseTenancyInput', () => {
   it('비상주는 방 번호 없이, 방은 번호 필수', () => {
     expect(parseTenancyInput({ ...ok, kind: 'virtual', roomNumber: 'R01' })).toMatchObject({ ok: true, value: { roomNumber: null } });
     expect(parseTenancyInput({ ...ok, roomNumber: '' })).toMatchObject({ ok: false });
+    expect(parseTenancyInput({ ...ok, roomNumber: 'R02' })).toMatchObject({ ok: false });
+    expect(parseTenancyInput({ ...ok, roomNumber: 'R03' })).toMatchObject({ ok: false });
     expect(parseTenancyInput({ ...ok, startDate: '2026-02-30' })).toMatchObject({ ok: false });
     expect(parseTenancyInput({ ...ok, monthlyAmount: -1 })).toMatchObject({ ok: false });
   });

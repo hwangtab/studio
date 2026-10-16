@@ -1,5 +1,6 @@
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import { AdminShell } from '../../../components/admin/AdminShell';
@@ -87,6 +88,7 @@ const call = async (url: string, method: 'GET' | 'POST', body?: unknown) => {
 };
 
 export default function AdminTenanciesPage({ rows, today, calendarConfigured, tableMissing }: Props) {
+  const router = useRouter();
   const [form, setForm] = useState<FormState | null>(null);
   const [editing, setEditing] = useState<TenancyListRow | null>(null);
   /** 연락처 등 상세를 불러왔는가 — 안 불러온 채 저장하면 서버가 암호문을 그대로 둔다. */
@@ -105,7 +107,10 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
   const finish = (data: { ok?: boolean; message?: string; calendarError?: string | null }, okText: string) => {
     if (!data.ok) { setNotice(data.message ?? '처리하지 못했어요.'); setBusy(false); return; }
     setNotice(data.calendarError ? `${okText} 다만 캘린더는 맞추지 못했어요: ${data.calendarError}` : okText);
-    window.location.reload();
+    // 하드 새로고침이 아니라 데이터만 다시 읽는다 — 그래야 위 안내(캘린더 오류 등)가 화면에 남는다.
+    setForm(null);
+    setBusy(false);
+    void router.replace(router.asPath, undefined, { scroll: false });
   };
 
   const openNew = () => { setEditing(null); setForm({ ...EMPTY }); setPrivateLoaded(true); };
