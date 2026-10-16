@@ -459,6 +459,50 @@ export const buildShowRefundOperatorEmail = (d: ShowRefundOperatorMailData): { s
 };
 
 /** 고객 셀프 환불(pages/api/shows/refund.ts)의 운영자 알림 한 통. 관리자 환불에서는 부르지 않는다. 예외는 삼킨다. */
+/**
+ * 고객 환불 요청이 토스 응답 유실(toss_unknown)로 끝난 경우 — 티켓이 'refunding'에 멈춰 있다. 토스가 실제로 취소했으면
+ * 웹훅이 확정하지만, 요청이 닿기 전에 끊겼으면 아무 경로도 풀지 않으므로 운영자가 '환불 재확인'을 눌러야 한다.
+ */
+export const buildShowRefundUnresolvedOperatorEmail = (
+  d: ShowOperatorMailData & { ticketCount: number },
+): { subject: string; text: string; html: string } => {
+  const when = showDateTimeLabel(d.startsAtSec);
+  const manage = adminUrl(`/admin/shows/${d.showId}`);
+  const lead = `${d.buyerName}님의 티켓 ${d.ticketCount}매 환불 요청이 토스 응답을 받지 못한 채 끝났어요. 티켓은 '환불중'으로 잠겨 있고 고객은 다시 시도할 수 없어요. 관리자 화면에서 "환불 재확인"을 눌러 토스 상태로 확정하거나 되돌려 주세요.`;
+  return {
+    subject: `[공연 예매] 환불 확인 필요 — ${d.showTitle} ${when} · ${d.buyerName}`,
+    text: [lead, `공연: ${d.showTitle}`, `회차: ${when}`, `구매자: ${d.buyerName} / ${d.buyerContact}`, `주문번호: ${d.orderNo}`, `관리자: ${manage}`].join('\n'),
+    html: buildEmailLayout({
+      audience: 'operator',
+      noticeTone: 'alert',
+      notices: ['고객이 다시 환불을 누를 수 없는 상태예요 — <strong>"환불 재확인"</strong>으로 풀어 주세요.'],
+      preheader: `${d.showTitle} ${when} · 환불 ${d.ticketCount}매 확인 필요`,
+      heading: '공연 티켓 환불 — 토스 응답 유실, 확인이 필요해요',
+      paragraphs: [escapeHtml(lead)],
+      rows: [
+        { label: '공연', value: d.showTitle },
+        { label: '회차', value: when },
+        { label: '환불 요청', value: `${d.ticketCount}매`, emphasis: true },
+        { label: '구매자', value: d.buyerName },
+        { label: '연락처', value: d.buyerContact, href: contactHref(d.buyerContact) },
+        { label: '주문번호', value: d.orderNo },
+      ],
+      cta: { label: '관리자에서 환불 재확인', url: manage },
+    }),
+  };
+};
+
+export const notifyShowRefundUnresolvedToOperator = async (orderNo: string, ticketCount: number): Promise<void> => {
+  try {
+    const data = await loadShowOrder(orderNo, { localize: false });
+    if (!data) return;
+    const r = await sendEmail({ to: OPERATOR_EMAIL, ...buildShowRefundUnresolvedOperatorEmail({ ...data, ticketCount }) });
+    if (!r.ok) console.error('[shows-email] 운영자 환불 미확정 알림 발송 실패', { orderNo, code: r.errorCode });
+  } catch (error) {
+    console.error('[shows-email] 운영자 환불 미확정 알림 예외', { orderNo, error: (error as Error).message });
+  }
+};
+
 export const notifyShowRefundToOperator = async (
   orderNo: string,
   refund: { refundedAmount: number; refundedCount: number; refundVia: ShowRefundVia },

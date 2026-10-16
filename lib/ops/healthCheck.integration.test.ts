@@ -1095,11 +1095,15 @@ describe('계약 위생 점검', () => {
 });
 
 describe('계좌 입금(공연·예약·믹싱) 점검', () => {
-  beforeEach(async () => {
+  // 공연 표들은 전역 beforeEach의 정리 목록에 없다 — show_orders가 orders를 참조하므로 여기서 남긴 행은 다음 describe의
+  // 전역 정리(DELETE FROM orders)를 FK로 깨뜨린다. 앞뒤로 지운다.
+  const clearShowTables = async () => {
     for (const t of ['refund_accounts', 'show_tickets', 'show_orders', 'show_ticket_types', 'showtimes', 'show_zones', 'shows']) {
       await client.execute(`DELETE FROM ${t}`);
     }
-  });
+  };
+  beforeEach(clearShowTables);
+  afterEach(clearShowTables);
 
   it('미입금 취소 뒤 지우지 못한 [입금 대기] 일정을 보고한다 — 확정 일정 캘린더 점검과 섞지 않는다', async () => {
     await insertOrder({ status: 'deposit_cancelled' });
@@ -1130,5 +1134,31 @@ describe('계좌 입금(공연·예약·믹싱) 점검', () => {
     const issue = (await runHealthCheck(NOW)).issues.find((i) => i.title.includes('환불 계좌 미접수'))!;
     expect(issue.title).toContain('1건(최장 5일 경과)');
     expect(issue.severity).toBe('high');
+  });
+});
+
+describe('환불 처리 중에 멈춘 공연 티켓', () => {
+  // 공연 표들은 전역 beforeEach의 정리 목록에 없다 — orders를 참조하므로 앞 describe가 남긴 것을 먼저 지우고(FK),
+  // 끝난 뒤에도 지워 다음 describe의 orders 정리를 막지 않는다.
+  const clearShowTables = async () => {
+    for (const t of ['show_tickets', 'show_orders', 'show_ticket_types', 'showtimes', 'show_zones', 'shows']) {
+      await client.execute(`DELETE FROM ${t}`);
+    }
+  };
+  beforeEach(clearShowTables);
+  afterEach(clearShowTables);
+
+  it("show_tickets.status = 'refunding'이 남아 있으면 high로 보고한다(한 요청 안에서 끝나는 상태라 점검에 걸리면 전부 고착)", async () => {
+    await client.execute(`INSERT INTO shows (id, slug, title, presenter_name, performers, age_rating, running_minutes, venue_name, venue_address, description, status) VALUES ('sh-r','sr','t','p','a','전체',60,'v','addr','d','published')`);
+    await client.execute(`INSERT INTO show_zones (id, show_id, code, label, capacity) VALUES ('z-r','sh-r','A','A',10)`);
+    await client.execute(`INSERT INTO showtimes (id, show_id, starts_at, sales_close_at) VALUES ('st-r','sh-r', unixepoch()+86400, unixepoch()+3600)`);
+    await client.execute(`INSERT INTO show_ticket_types (id, show_id, zone_id, name, price) VALUES ('tt-r','sh-r','z-r','일반',10000)`);
+    await insertOrder({ id: 'o-r', order_no: 'TKT-R1', manage_token: 'tr', status: 'paid', type: 'ticket' });
+    await client.execute(`INSERT INTO show_orders (order_no, showtime_id, buyer_name, buyer_contact) VALUES ('TKT-R1','st-r','a','010')`);
+    await client.execute(`INSERT INTO show_tickets (id, order_no, showtime_id, ticket_type_id, code, status, unit_amount) VALUES ('tk-r','TKT-R1','st-r','tt-r','C-R','refunding',10000)`);
+    const issue = (await runHealthCheck(NOW)).issues.find((i) => i.title.includes('환불 처리 중에 멈춘'));
+    expect(issue).toBeDefined();
+    expect(issue!.severity).toBe('high');
+    expect(issue!.detail).toContain('TKT-R1(1장)');
   });
 });

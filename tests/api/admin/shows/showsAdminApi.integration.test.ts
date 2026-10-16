@@ -15,7 +15,7 @@ import { bakkeojiShow } from '../../../../data/shows/bakkeoji-anneun-maeumdeul';
 let mockDb: ShowsTestDb;
 jest.mock('../../../../db/client', () => ({ getDb: () => mockDb }));
 jest.mock('../../../../lib/contracts/admin-auth', () => ({ authenticateAdminApi: jest.fn() }));
-jest.mock('../../../../lib/booking/toss', () => ({ cancelPayment: jest.fn() }));
+jest.mock('../../../../lib/booking/toss', () => ({ cancelPayment: jest.fn(), fetchPayment: jest.fn() }));
 jest.mock('../../../../lib/shows/scanLink', () => ({ issueScanLink: jest.fn(async () => ({ token: 'tok-secret-1234567890', id: 'l1', expiresAt: 1 })), SCAN_LINK_MAX_TTL_HOURS: 72, verifyScanLink: jest.fn(), revokeScanLink: jest.fn(async () => true) }));
 jest.mock('../../../../lib/shows/email', () => ({ sendShowTicketEmail: jest.fn(async () => undefined), notifyShowPaymentToOperator: jest.fn(async () => undefined), sendShowRefundEmail: jest.fn(async () => undefined), sendShowtimeCancelledEmail: jest.fn(async () => undefined) }));
 jest.mock('../../../../lib/privacy/accessLog', () => ({ recordAdminPrivacyAccess: jest.fn(async () => undefined) }));
@@ -24,7 +24,7 @@ import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { recordAdminPrivacyAccess } from '../../../../lib/privacy/accessLog';
 import { revokeScanLink } from '../../../../lib/shows/scanLink';
 import { showScanLinks } from '../../../../db/schema';
-import { cancelPayment } from '../../../../lib/booking/toss';
+import { cancelPayment, fetchPayment } from '../../../../lib/booking/toss';
 import { createFakeToss } from '../../../fakes/fakeToss';
 import { createShowOrder } from '../../../../lib/shows/service';
 import { confirmShowOrder } from '../../../../lib/shows/confirm';
@@ -150,6 +150,26 @@ describe('관리자 공연 API', () => {
     expect(res.json.mock.calls[0][0]).toMatchObject({ ok: true, amount: tt.price * 2, orderStatus: 'refunded' });
     rows = await mockDb.select().from(showTickets).where(eq(showTickets.orderNo, created.orderNo));
     expect(rows.every((t) => t.status === 'refunded')).toBe(true);
+  });
+
+  it('reconcile_refund: refunding에 멈춘 티켓을 토스 상태로 되돌리거나 확정한다(이 공연의 주문만)', async () => {
+    const fake = createFakeToss();
+    (cancelPayment as jest.Mock).mockImplementation((input) => fake.cancelPayment(input));
+    (fetchPayment as jest.Mock).mockImplementation((key: string) => fake.fetchPayment(key));
+    const [tt] = await mockDb.select().from(showTicketTypes);
+    const created = await createShowOrder({ showtimeId, ticketTypeId, quantity: 1, buyerName: '김관객', buyerContact: '010-1111-2222' }, new Date());
+    if (!created.ok) throw new Error('setup failed');
+    await confirmShowOrder({ orderNo: created.orderNo, paymentKey: 'pk-rc', amount: tt.price }, { trustedByWebhook: false }, fake);
+    await mockDb.update(showTickets).set({ status: 'refunding' }).where(eq(showTickets.orderNo, created.orderNo));
+
+    let res = await call(handler, { query: { id: showId }, body: { action: 'reconcile_refund', orderNo: 'TKT-NOPE' } });
+    expect(res.status).toHaveBeenCalledWith(404);
+
+    res = await call(handler, { query: { id: showId }, body: { action: 'reconcile_refund', orderNo: created.orderNo } });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json.mock.calls[0][0]).toMatchObject({ ok: true, result: 'reverted' });
+    const rows = await mockDb.select().from(showTickets).where(eq(showTickets.orderNo, created.orderNo));
+    expect(rows.every((t) => t.status === 'issued')).toBe(true);
   });
 
   it('초대권 발급(compQuota 안)과 취소', async () => {

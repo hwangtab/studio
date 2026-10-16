@@ -16,6 +16,7 @@ export interface FakeToss {
   }): Promise<TossResult>;
   fetchPayment(paymentKey: string): Promise<TossResult>;
   injectFault(key: string, fault: Fault): void;
+  clearFault(key: string): void;
   setInterceptHook(fn: () => Promise<void> | void): void;
   _payments: Map<string, TossPayment>;
 }
@@ -56,6 +57,9 @@ export function createFakeToss(): FakeToss {
     _payments: payments,
     injectFault(key, fault) {
       faults.set(key, fault);
+    },
+    clearFault(key) {
+      faults.delete(key);
     },
     setInterceptHook(fn) {
       interceptHook = fn;
@@ -98,7 +102,9 @@ export function createFakeToss(): FakeToss {
       await runIntercept();
       if (fault) {
         const result: TossResult = { ok: false, code: fault.code, message: fault.message ?? fault.code };
-        cancelReplays.set(replayKey, result);
+        // NETWORK_ERROR는 토스에 닿지 않은 실패다 — 실제 토스는 그 키를 본 적이 없으므로 재생할 응답도 없다.
+        // 다음 호출(같은 멱등키 재시도)이 장애가 걷힌 뒤 정상 처리되는 것을 재현하려면 캐시하지 않아야 한다.
+        if (fault.code !== 'NETWORK_ERROR') cancelReplays.set(replayKey, result);
         return result;
       }
       const existing = payments.get(paymentKey);

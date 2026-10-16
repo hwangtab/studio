@@ -302,6 +302,19 @@ export async function confirmShowOrder(
         // 주문이 paid(또는 이미 그 위에서 부분환불이 시작된) 상태가 아니다 — 이 confirm
         // 시도는 진짜 재생이 아니라 auto-cancel과의 경합에서 졌다. 호출부가 "결제
         // 확인됨"으로 오독하지 않도록 별도 결과로 보고한다.
+        if (current.status === 'refunded') return { status: 'auto_cancel_conflict' };
+        if (current.status === 'auto_cancel_pending') return { status: 'error', code: TOSS_UNRESOLVED_CODE }; // 다른 실행이 취소 중 — 웹훅 재시도
+        // pending/expired/failed인데 payments 행이 있다 = 앞선 자동 취소가 pending_retry로 끝나 선점을 되돌린 상태다.
+        // 여기서 auto_cancel_conflict('자동 환불됨')로 끝내면 아무 경로도 다시 취소를 시도하지 않는다(돈은 캡처된 채).
+        // 지금 다시 시도하고, 또 실패하면 toss_unresolved로 돌려 웹훅이 멱등 키를 회수하고 재시도하게 한다.
+        const retried = await autoCancelShowApproval(order.orderNo, toss, approved.paymentKey);
+        if (retried.status === 'cancelled') return { status: 'auto_cancel_conflict' };
+        if (retried.status === 'pending_retry') return { status: 'error', code: TOSS_UNRESOLVED_CODE };
+        if (retried.status === 'not_eligible') {
+          const again = await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.id, order.id) });
+          return again?.status === 'refunded' ? { status: 'auto_cancel_conflict' } : { status: 'error', code: TOSS_UNRESOLVED_CODE };
+        }
+        // ledger_write_failed — 돈은 돌아갔고 주문은 auto_cancel_pending으로 남아 healthCheck가 잡는다.
         return { status: 'auto_cancel_conflict' };
       }
       // 주문이 paid/partially_refunded다 — 다른 confirmShowOrder 실행(또는 그 재생)이 이미
@@ -347,6 +360,9 @@ export async function confirmShowOrder(
         paymentKey: approved.paymentKey,
         reconcileOutcome: reconciled.status,
       });
+      // 토스 취소가 응답을 못 받았다(선점은 되돌려졌다) — sold_out으로 끝내면 재시도 경로가 없다. toss_unresolved로
+      // 돌려 웹훅이 멱등 키를 회수하고 재전송 때 위 catch 분기가 취소를 다시 시도하게 한다.
+      if (reconciled.status === 'pending_retry') return { status: 'error', code: TOSS_UNRESOLVED_CODE };
     }
     return { status: 'sold_out' };
   }

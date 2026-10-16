@@ -1,3 +1,4 @@
+import { sql } from 'drizzle-orm';
 import { createTestDb, type ShowsTestDb } from '../../tests/helpers/showsDb';
 import { shows, showZones, showtimes, showTicketTypes } from '../../db/schema';
 
@@ -7,6 +8,7 @@ jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 import { createShowOrder } from './service';
 import { confirmShowOrder, autoCancelShowApproval } from './confirm';
 import { createFakeToss } from '../../tests/fakes/fakeToss';
+import { refundIdempotencyKey } from '../booking/cancel';
 
 async function seedTightShow(db: ShowsTestDb, capacity: number) {
   const showId = 'show-1';
@@ -203,5 +205,46 @@ describe('race: 결제확인 vs 자동취소', () => {
       const paymentRows = await db.query.payments.findMany({ where: (p, { eq }) => eq(p.paymentKey, 'pk1') });
       expect(paymentRows.length).toBe(1);
     }
+  });
+});
+
+describe('race: 매진 경합 패자의 자동 취소가 토스 응답 유실로 실패해도 재시도로 환불에 수렴한다', () => {
+  test('sold_out 분기의 pending_retry는 toss_unresolved로 돌아오고(웹훅 재시도 유도), 재전송 confirm이 취소를 다시 시도해 refunded가 된다', async () => {
+    const { db } = await createTestDb();
+    mockDb = db;
+    const { showtimeId, ticketTypeId } = await seedTightShow(db, 2);
+    const toss = createFakeToss();
+    const a = await createShowOrder({ showtimeId, ticketTypeId, quantity: 1, buyerName: 'a', buyerContact: '010' }, new Date());
+    const b = await createShowOrder({ showtimeId, ticketTypeId, quantity: 1, buyerName: 'b', buyerContact: '010' }, new Date());
+    if (!a.ok || !b.ok) throw new Error('setup failed');
+    expect(await confirmShowOrder({ orderNo: a.orderNo, paymentKey: 'pk-a', amount: 10000 }, { trustedByWebhook: false }, toss)).toEqual({ status: 'confirmed' });
+    // b의 승인 왕복 사이에 회차가 취소된다 — 확정 게이트(회차 생존)에 걸려 orders 전이가 0행이 되는 "결제는 캡처, 표는 없음" 경로.
+    await db.run(sql`UPDATE showtimes SET status = 'cancelled' WHERE id = ${showtimeId}`);
+
+    // 패자의 자동 취소가 토스에 닿지 못한다.
+    const autoKey = refundIdempotencyKey(b.orderNo, 10000, 'autocancel');
+    toss.injectFault(`cancel:${autoKey}`, { code: 'NETWORK_ERROR' });
+    const lost = await confirmShowOrder({ orderNo: b.orderNo, paymentKey: 'pk-b', amount: 10000 }, { trustedByWebhook: false }, toss);
+    // 고치기 전에는 sold_out('자동으로 취소돼요')으로 끝나 아무 경로도 다시 취소를 시도하지 않았다.
+    expect(lost).toEqual({ status: 'error', code: 'toss_unresolved' });
+    let order = await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, b.orderNo) });
+    expect(order?.status).toBe('pending'); // 선점은 되돌려졌고 payments 행만 남았다
+    expect(await db.query.payments.findMany({ where: (p, { eq }) => eq(p.paymentKey, 'pk-b') })).toHaveLength(1);
+
+    // 장애가 이어지는 동안의 웹훅 재전송도 toss_unresolved — 멱등 키를 회수하고 다음 재전송을 기다린다.
+    const stillDown = await confirmShowOrder({ orderNo: b.orderNo, paymentKey: 'pk-b', amount: 10000 }, { trustedByWebhook: true }, toss);
+    expect(stillDown).toEqual({ status: 'error', code: 'toss_unresolved' });
+
+    // 장애가 걷힌 뒤의 재전송: payments UNIQUE 충돌 catch 분기가 pending 주문을 보고 자동 취소를 다시 시도한다.
+    toss.clearFault(`cancel:${autoKey}`);
+    const recovered = await confirmShowOrder({ orderNo: b.orderNo, paymentKey: 'pk-b', amount: 10000 }, { trustedByWebhook: true }, toss);
+    expect(recovered).toEqual({ status: 'auto_cancel_conflict' });
+    order = await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, b.orderNo) });
+    expect(order?.status).toBe('refunded');
+    expect(toss._payments.get('pk-b')?.cancels).toHaveLength(1);
+    const tickets = await db.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, b.orderNo) });
+    expect(tickets.every((t) => t.status !== 'issued')).toBe(true);
+    // 승자는 그대로다.
+    expect((await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, a.orderNo) }))?.status).toBe('paid');
   });
 });

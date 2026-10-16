@@ -5,7 +5,7 @@ import { cancelPayment } from '../../../lib/booking/toss';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { isTokenMatch } from '../../../lib/booking/token';
 import { getClientIp } from '../../../lib/contracts/client-ip';
-import { notifyShowRefundToOperator, sendShowRefundEmail } from '../../../lib/shows/email';
+import { notifyShowRefundToOperator, notifyShowRefundUnresolvedToOperator, sendShowRefundEmail } from '../../../lib/shows/email';
 import { refundShowTickets } from '../../../lib/shows/refund';
 import { SHOW_REFUND_REJECT_MESSAGES, SHOW_REFUND_REJECT_MESSAGES_EN } from '../../../lib/shows/refundMessages';
 import { cancelAwaitingShowDeposit, notifyShowDepositWithdrawn } from '../../../lib/shows/bankDeposit';
@@ -82,6 +82,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(200).json({ ok: true, refundAmount: outcome.amount, orderStatus: outcome.orderStatus, refundVia: outcome.refundVia });
   }
   if (outcome.status === 'toss_unknown') {
+    // 티켓이 refunding에 멈춘다 — 웹훅이 확정하지 못하는 경우(요청이 토스에 닿기 전 끊김)는 운영자가 '환불 재확인'으로 풀어야 한다.
+    await notifyShowRefundUnresolvedToOperator(orderNo, ids.length);
     return res.status(202).json({
       ok: false,
       code: 'toss_unknown',
