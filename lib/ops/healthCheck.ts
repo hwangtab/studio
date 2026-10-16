@@ -7,7 +7,8 @@ import { isNotificationSentinel } from './notificationSentinel';
 import { safeDbErrorSummary } from '../payments/refundAccount';
 import { bookings, contracts, fundingPledges, fundingProjectPayouts, fundingProjects, orders, payments, refunds, subscriptionPayments, subscriptions } from '../../db/schema';
 import { calendarForService, calendarIdFor, fetchBusyRanges, isCalendarActive, roomCalendarEnvKey, type BookingCalendar } from '../booking/gcal';
-import { kstToday, overdueDays } from '../tenancy/rules';
+import { tenancyCalendarId } from '../tenancy/calendar';
+import { addDays, daysBetween, kstToday, overdueDays } from '../tenancy/rules';
 import { PRACTICE_ROOM_HOURLY_ROOMS } from '../booking/products';
 import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
 import { FUNDING_PAYOUT_BUSINESS_DAYS } from '../funding/policy';
@@ -384,6 +385,41 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
     }
   } catch (error) {
     console.error('[health] 월 입주 연체 점검 실패 — 건너뜁니다', error instanceof Error ? error.message : String(error));
+  }
+
+  /**
+   * 월 입주 — 계약 종료가 7일 안으로 다가온 입주자와, 구글 캘린더에 일정을 올리지 못한 입주자.
+   * 종료일이 이미 지난 입주자는 자동 연장(운영자 확정)이라 알리지 않는다. 연락처 등은 싣지 않는다.
+   */
+  try {
+    const today = kstToday(now);
+    const soon = await db.all<{ room_number: string | null; tenant_name: string; end_date: string }>(sql`
+      SELECT room_number, tenant_name, end_date FROM room_tenancies
+      WHERE status = 'active' AND end_date IS NOT NULL AND end_date >= ${today} AND end_date <= ${addDays(today, 7)} ORDER BY end_date LIMIT 30
+    `);
+    if (soon.length > 0) {
+      issues.push({
+        severity: 'medium',
+        title: `월 입주 계약 종료 임박 ${soon.length}건`,
+        detail: `${soon.map((t) => `${t.room_number ?? '비상주'} ${t.tenant_name} — ${t.end_date} 종료(${daysBetween(today, t.end_date)}일 뒤)`).join('\n')}\n연장·퇴실 여부를 확인해 주세요. 연장이면 입주 관리에서 종료일을 고치거나 비우세요. 약정 종료일 전 퇴실은 계약서 제5조의 위약금 대상일 수 있어요.`,
+        href: '/admin/tenancies',
+      });
+    }
+    if (tenancyCalendarId()) {
+      const broken = await db.all<{ room_number: string | null; tenant_name: string }>(sql`
+        SELECT room_number, tenant_name FROM room_tenancies WHERE status = 'active' AND gcal_error IS NOT NULL ORDER BY room_number LIMIT 30
+      `);
+      if (broken.length > 0) {
+        issues.push({
+          severity: 'medium',
+          title: `월 입주 캘린더 동기화 실패 ${broken.length}건`,
+          detail: `${broken.map((t) => `${t.room_number ?? '비상주'} ${t.tenant_name}`).join(', ')}\n입주 관리에서 “캘린더 전체 다시 맞추기”를 눌러 주세요. 계속 실패하면 구글 캘린더 권한을 확인해 주세요.`,
+          href: '/admin/tenancies',
+        });
+      }
+    }
+  } catch (error) {
+    console.error('[health] 월 입주 종료·캘린더 점검 실패 — 건너뜁니다', error instanceof Error ? error.message : String(error));
   }
 
   const rotationPending = await checkFieldKeyRotationPending();

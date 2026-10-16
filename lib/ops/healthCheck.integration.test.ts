@@ -184,6 +184,28 @@ const insertFundingPledge = async (over: Record<string, unknown> = {}) => {
 const titles = async (): Promise<string[]> => (await runHealthCheck(NOW)).issues.map((i) => i.title);
 
 describe('운영 점검', () => {
+  it('월 입주: 종료 7일 안은 알리고, 지난 종료일(자동 연장)·먼 종료일은 알리지 않으며, 캘린더 오류는 따로 알린다', async () => {
+    const ins = (id: string, name: string, end: string | null, err: string | null = null) =>
+      client.execute({
+        sql: `INSERT INTO room_tenancies (id, kind, room_number, tenant_name, monthly_amount, start_date, end_date, billing_day, next_due_on, gcal_error)
+              VALUES (?, 'room', ?, ?, 380000, '2026-01-01', ?, 1, '2099-01-01', ?)`,
+        args: [id, `R${id.slice(1).padStart(2, '0')}`, name, end, err],
+      });
+    await ins('t1', '곧종료', '2026-09-15');
+    await ins('t2', '지난종료', '2026-08-01');
+    await ins('t3', '먼종료', '2027-01-01');
+    await ins('t4', '종료없음', null, 'down');
+    process.env.PRACTICE_ROOM_GCAL_ID = 'cal-practice';
+    const issues = (await runHealthCheck(NOW)).issues;
+    delete process.env.PRACTICE_ROOM_GCAL_ID;
+    const soon = issues.find((i) => i.title.startsWith('월 입주 계약 종료 임박'));
+    expect(soon?.title).toBe('월 입주 계약 종료 임박 1건');
+    expect(soon?.detail).toContain('곧종료');
+    expect(soon?.detail).not.toMatch(/지난종료|먼종료/);
+    const cal = issues.find((i) => i.title.startsWith('월 입주 캘린더 동기화 실패'));
+    expect(cal?.detail).toContain('종료없음');
+  });
+
   it('월 입주 입금 예정일이 지난 입주자는 연체로 보고하고, 연락처 등은 싣지 않는다', async () => {
     const ins = (id: string, room: string | null, name: string, due: string, status = 'active') =>
       client.execute({
