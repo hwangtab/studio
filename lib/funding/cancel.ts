@@ -6,7 +6,7 @@ import { VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE, VIRTUAL_ACCOUNT_ERROR_CODE, cance
 import { sendFundingCancelledEmails, sendFundingDepositWithdrawnOperatorEmail } from './email';
 import { SEND_INFLIGHT, SEND_PENDING } from '../ops/notificationSentinel';
 import { assessSelfCancel, canWithdrawBeforeDeposit, CANCEL_BLOCK_MESSAGES } from './policy';
-import { cancelUnpaidBankDeposit } from './bankTransfer';
+import { cancelUnpaidBankDeposit, loadProjectPayoutState, payoutWarningOf } from './bankTransfer';
 import { encryptRefundAccountNumber, markRefundAccountRefunded, safeDbErrorSummary, saveRefundAccount, validateRefundAccount } from '../payments/refundAccount';
 import { isPastFundingEnd } from './projectState';
 import { getFundingProjectOrFailure } from './repository';
@@ -333,5 +333,7 @@ export const cancelFundingPledge = async (input: {
     return { ok: false, code: 'recording_failed', message: '환불은 완료되었으나 기록이 지연되고 있어요. 010-4255-7893으로 확인 부탁드려요.' };
   }
   if (recorded) await notifyCancelled(db, order, project, 'refunded', refundAmount);
-  return { ok: true, mode: 'refunded', refundAmount };
+  // 정산이 이미 기록·이체된 프로젝트의 환불은 개설자에게 청구할 차액을 만든다 — 입금 확인과 같은 경고를 싣는다(운영자 경로만).
+  const payoutWarning = input.requestedBy === 'admin' ? payoutWarningOf(await loadProjectPayoutState(order.fundingPledge.projectSlug)) : null;
+  return { ok: true, mode: 'refunded', refundAmount, ...(payoutWarning ? { warnings: [payoutWarning] } : {}) };
 };

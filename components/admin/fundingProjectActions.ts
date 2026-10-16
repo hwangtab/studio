@@ -31,8 +31,8 @@ export interface FundingProjectActionResult {
  *   `close`만 서버가 빈 메모를 거부한다 — 개설자가 "왜 멈췄는지" 알아야 하기 때문이다.
  */
 export type FundingProjectPatchBody =
-  | { action: 'approve'; slug?: string; note?: string; expectedSubmittedAt: string }
-  | { action: 'request_changes' | 'reject' | 'archive'; note: string; expectedSubmittedAt: string }
+  | { action: 'approve'; slug?: string; note?: string; expectedSubmittedAt: string | null }
+  | { action: 'request_changes' | 'reject' | 'archive'; note: string; expectedSubmittedAt: string | null }
   | { action: 'set_review_note' | 'set_internal_note'; note?: string }
   /** 스튜디오 서비스(운영자 전용, 마이그레이션 0037). lib/funding/projectServices.ts. */
   | { action: 'set_studio_service'; kind: 'none' | 'design' | 'release' }

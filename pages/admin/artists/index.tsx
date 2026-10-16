@@ -139,6 +139,8 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
   const [busy, setBusy] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [periodInput, setPeriodInput] = useState(period);
+  // 아직 끝나지 않은 달은 기록 버튼을 숨긴다(서버 period_open 가드의 보조) — KST 기준 이번 달.
+  const currentPeriod = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 7);
 
   const run = async (key: string, task: () => Promise<{ ok: boolean; message?: string }>, confirmText: string) => {
     if (!window.confirm(confirmText)) return;
@@ -303,7 +305,7 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
                           )}
                         </td>
                         <td className="px-3 py-3 text-right whitespace-nowrap">
-                          {!p.recorded && p.grossAmount > 0 && (
+                          {!p.recorded && p.grossAmount > 0 && p.period < currentPeriod && (
                             <Button
                               light
                               size="sm"

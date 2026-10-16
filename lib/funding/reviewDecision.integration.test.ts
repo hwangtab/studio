@@ -541,6 +541,23 @@ describe('보관(archive)', () => {
     },
   );
 
+  it('제출 기록이 없는 초안은 null 판본으로 보관되고, 그 사이 제출됐으면 conflict다', async () => {
+    const creator = await seedCreator('null-version@example.com');
+    const projectId = await seedProject(creator, { reviewStatus: 'draft', submittedAt: null });
+    const now = new Date('2026-09-18T06:00:00Z');
+
+    const ok = await decideProject(projectId, 'archive', { note: '정리', expectedSubmittedAt: null }, now);
+    expect(ok).toEqual({ ok: true, slug: expect.any(String) });
+    expect((await readProject(projectId)).reviewStatus).toBe('rejected');
+
+    const other = await seedProject(creator, { reviewStatus: 'draft', submittedAt: null });
+    // 운영자가 화면을 연 뒤 개설자가 제출했다 — 못 본 판본이라 null 판본 보관은 거부된다.
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'submitted', submittedAt: new Date('2026-09-18T05:00:00Z') }).where(eq(schema.fundingProjects.id, other));
+    const stale = await decideProject(other, 'archive', { note: '정리', expectedSubmittedAt: null }, now);
+    expect(stale).toMatchObject({ ok: false, code: 'conflict' });
+    expect((await readProject(other)).reviewStatus).toBe('submitted');
+  });
+
   it('승인된 프로젝트는 보관할 수 없다', async () => {
     const creator = await seedCreator('w@example.com');
     const projectId = await seedProject(creator, {
