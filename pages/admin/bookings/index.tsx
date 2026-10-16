@@ -267,7 +267,8 @@ export default function AdminBookingsPage({
   }, [blocks, showPastBlocks]);
 
   const refresh = async () => {
-    await router.replace(router.asPath, undefined, { scroll: false });
+    // 캘린더에서 가져온 등록이 끝났으면 fromEvent 주소를 비운다 — 새로고침하면 지워진 일정으로 칸이 다시 열린다.
+    await router.replace(prefill ? '/admin/bookings' : router.asPath, undefined, { scroll: false });
   };
 
   const handleDeleteBlock = async (block: AdminBlockItem) => {

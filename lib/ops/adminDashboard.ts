@@ -85,7 +85,9 @@ export interface AdminDashboard {
 
 const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
 const DAY_MS = 24 * 60 * 60 * 1000;
-export const UPCOMING_WINDOW_DAYS = 7;
+export // 캘린더에만 있는 일정은 이번 주 세션보다 멀리 본다 — 한 주 밖의 러프한 일정도 웹 예약 시간을 이미 막고 있다.
+const CALENDAR_IMPORT_DAYS = 60;
+const UPCOMING_WINDOW_DAYS = 7;
 const LINK_SYNC_WAIT_MS = 3000;
 
 /** KST 달력의 오늘 0시(UTC Date). 이미 시작한 오늘 세션도 목록에 남긴다. */
@@ -127,7 +129,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       .innerJoin(orders, eq(orders.id, bookings.orderId))
       .where(and(eq(bookings.status, 'confirmed'), gte(bookings.startAt, from), lt(bookings.startAt, to)))
       .orderBy(asc(bookings.startAt)),
-    loadUnlinkedCalendarEvents(from, to),
+    loadUnlinkedCalendarEvents(from, new Date(from.getTime() + CALENDAR_IMPORT_DAYS * DAY_MS)),
     // 결제 링크로 결제된 이용(예약 시스템에 행이 없다) — 링크에 적은 이용 일시가 이 창 안인 것. 표가 없는 DB(0062 전)에서도 대시보드는 열린다.
     db.all<{ order_id: string; order_no: string; customer_name: string; item_name: string; session_at: number; session_hours: number | null }>(sql`
       SELECT o.id AS order_id, o.order_no, o.customer_name, plo.item_name, plo.session_at, plo.session_hours
