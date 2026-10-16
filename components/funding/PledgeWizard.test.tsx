@@ -693,7 +693,9 @@ describe('임시 저장', () => {
     expect(screen.getByLabelText(/^주소\*$/)).toHaveValue('서울시 어딘가');
     expect(screen.getByLabelText(/상세주소/)).toHaveValue('101호');
     expect(screen.getByLabelText(/배송 메모/)).toHaveValue('문 앞');
-  });
+    // 열 칸에 70자 가까이 한 글자씩 친다 — 혼자 돌면 1초지만 전체 스위트와 함께 돌면 기본 5초를
+    // 넘겨 이 테스트만 시간 초과로 떨어졌다(2026-10-16, lib/funding 등 135개 스위트 동시 실행).
+  }, 20_000);
 
   // 동의는 이제 체크박스가 아니라 결제하기를 누르는 행위다 — 되살릴 체크 자체가 없다.
   // 대신 임시 저장이 담는 값이 여전히 DRAFT_FIELDS 10칸뿐인지, 동의 관련 값이 저장소에
