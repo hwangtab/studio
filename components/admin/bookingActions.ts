@@ -109,7 +109,9 @@ export interface CreateBlockPayload {
   roomNumber?: string;
 }
 
-export const createBlock = async (payload: CreateBlockPayload): Promise<BookingActionResult> => {
+export const createBlock = async (
+  payload: CreateBlockPayload & { force?: boolean },
+): Promise<BookingActionResult & { conflict?: boolean }> => {
   try {
     const response = await fetch('/api/admin/blocks', {
       method: 'POST',
@@ -118,7 +120,12 @@ export const createBlock = async (payload: CreateBlockPayload): Promise<BookingA
       body: JSON.stringify(payload),
     });
     if (!response.ok) {
-      return { ok: false, message: await readMessage(response, '블록 등록에 실패했습니다.') };
+      const body = await response.clone().json().catch(() => null);
+      return {
+        ok: false,
+        message: await readMessage(response, '블록 등록에 실패했습니다.'),
+        ...(response.status === 409 && body?.code === 'conflicts' ? { conflict: true } : {}),
+      };
     }
     return { ok: true };
   } catch {

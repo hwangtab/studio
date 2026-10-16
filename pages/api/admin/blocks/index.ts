@@ -1,3 +1,4 @@
+import { sql } from 'drizzle-orm';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getDb } from '../../../../db/client';
@@ -5,6 +6,7 @@ import { availabilityBlocks } from '../../../../db/schema';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { serializeBlockForAdmin } from '../../../../lib/booking/admin-serialize';
 import { kstDateTime } from '../../../../lib/booking/kst';
+import { occupiedBookingSql } from '../../../../lib/booking/service';
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const MEMO_MAX_LENGTH = 200;
@@ -35,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
     }
 
-    const { date, startHour, endHour, memo, roomNumber } = req.body as Record<string, unknown>;
+    const { date, startHour, endHour, memo, roomNumber, force } = req.body as Record<string, unknown>;
     // 빈 값·비문자는 녹음실(NULL). 'R02' 같은 방 번호면 그 방만 막는다(db/schema.ts 주석).
     const roomText = typeof roomNumber === 'string' && /^[A-Z0-9-]{1,8}$/i.test(roomNumber.trim())
       ? roomNumber.trim().toUpperCase() : null;
@@ -61,6 +63,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const memoText = typeof memo === 'string' ? memo.trim().slice(0, MEMO_MAX_LENGTH) : undefined;
 
     try {
+      /**
+       * **이미 잡힌 예약 위에 블록을 걸면 아무 말 없이 성공했다** — 블록은 새 예약만 막지 기존 예약은 그대로라, 고객은 예약했는데
+       * 그 시간이 "휴무"가 된다. 그 자원(녹음실 = room_number NULL, 연습실 = 그 방)을 점유하는 예약이 겹치면 목록을 돌려주고
+       * 멈춘다. 그래도 걸겠다면(`force: true`) 통과한다 — 예약 취소·이동은 운영자가 따로 한다.
+       */
+      if (force !== true) {
+        const conflicts = await getDb().all<{ order_no: string; start_at: number }>(sql`
+          SELECT o.order_no, b.start_at
+          FROM bookings b JOIN orders o ON o.id = b.order_id
+          WHERE b.room_number IS ${roomText}
+            AND b.start_at < ${Math.floor(endAtDate.getTime() / 1000)} AND b.end_at > ${Math.floor(startAtDate.getTime() / 1000)}
+            AND ${occupiedBookingSql('b')}
+          ORDER BY b.start_at
+        `);
+        if (conflicts.length > 0) {
+          return res.status(409).json({
+            ok: false,
+            code: 'conflicts',
+            conflicts: conflicts.map((c) => ({ orderNo: c.order_no, startAt: new Date(Number(c.start_at) * 1000).toISOString() })),
+            message: `이 시간에 이미 잡힌 예약이 ${conflicts.length}건 있습니다(${conflicts.map((c) => c.order_no).join(', ')}). 블록은 새 예약만 막고 이 예약은 그대로 남습니다.`,
+          });
+        }
+      }
+
       const [block] = await getDb()
         .insert(availabilityBlocks)
         .values({ startAt: startAtDate, endAt: endAtDate, memo: memoText || null, roomNumber: roomText })

@@ -131,3 +131,29 @@ it('연습실 캘린더가 비활성이면 재시도는 409로 거절한다 (con
   expect(res.status).toBe(409);
   expect(createBookingEvent).not.toHaveBeenCalled();
 });
+
+describe('취소된 예약의 캘린더 일정 삭제 재시도', () => {
+  it('취소 때 지우지 못한 일정(delete: 오류)은 다시 지우고 오류 기록을 비운다', async () => {
+    await insert({ status: 'cancelled', gcal_event_id: 'ev-stale', gcal_error: 'delete: 500' });
+    const res = await retry();
+    expect(res.status).toBe(200);
+    expect(deleteBookingEvent).toHaveBeenCalledWith('ev-stale', 'studio', null);
+    expect(createBookingEvent).not.toHaveBeenCalled();
+    expect(await bookingRow()).toMatchObject({ gcal_event_id: null, gcal_error: null });
+  });
+
+  it('삭제가 또 실패하면 500이고 기록은 그대로 남아 다시 시도할 수 있다', async () => {
+    await insert({ status: 'cancelled', gcal_event_id: 'ev-stale', gcal_error: 'delete: 500' });
+    (deleteBookingEvent as jest.Mock).mockRejectedValueOnce(new Error('still down'));
+    jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    const res = await retry();
+    expect(res.status).toBe(500);
+    expect(await bookingRow()).toMatchObject({ gcal_event_id: 'ev-stale', gcal_error: 'delete: 500' });
+  });
+
+  it('delete 오류가 아닌 취소 예약은 여전히 거절한다(등록은 필요 없다)', async () => {
+    await insert({ status: 'cancelled', gcal_event_id: null, gcal_error: null });
+    expect((await retry()).status).toBe(409);
+    expect(deleteBookingEvent).not.toHaveBeenCalled();
+  });
+});

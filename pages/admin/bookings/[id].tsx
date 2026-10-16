@@ -429,11 +429,12 @@ export default function AdminBookingDetailPage({
     await router.replace(router.asPath, undefined, { scroll: false });
   };
 
+  // 취소 때 지우지 못한 [예약] 일정 — 등록이 아니라 "다시 지우기"가 필요하다(캘린더에 남은 일정이 그 시간을 계속 막는다).
+  const staleCalendarDelete = !isMixing && booking.bookingStatus === 'cancelled' && booking.gcalError?.startsWith('delete: ') === true;
   const canRetryGcal =
     !isMixing &&
     booking.bookingStatus !== null &&
-    booking.bookingStatus !== 'cancelled' &&
-    (booking.gcalError !== null || booking.gcalMissing);
+    ((booking.bookingStatus !== 'cancelled' && (booking.gcalError !== null || booking.gcalMissing)) || staleCalendarDelete);
 
   // 센티널(`send_pending`·`send_inflight`)과 실제 실패 사유를 갈라 읽는다 — 원문 노출 금지.
   const notificationCopy = describeNotificationError(booking.notificationError);
@@ -631,7 +632,9 @@ export default function AdminBookingDetailPage({
           <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
             {booking.gcalError ? (
               <>
-                <strong className="block mb-1">구글 캘린더 동기화에 실패했습니다</strong>
+                <strong className="block mb-1">
+                  {staleCalendarDelete ? '취소된 예약의 캘린더 일정을 지우지 못했습니다' : '구글 캘린더 동기화에 실패했습니다'}
+                </strong>
                 {booking.gcalError}
               </>
             ) : (
@@ -640,11 +643,17 @@ export default function AdminBookingDetailPage({
               </strong>
             )}
             <span className="block mt-2 text-amber-700">
-              운영자는 구글 캘린더에 직접 일정을 넣지 않으므로, 이 예약 시간이 캘린더에
-              비어 있으면 다른 일정이 겹칠 수 있습니다.{' '}
-              {canRetryGcal
-                ? '아래 “캘린더 재시도”를 눌러 다시 등록해 주세요.'
-                : '캘린더에 직접 넣어 주세요.'}
+              {staleCalendarDelete ? (
+                '캘린더에 남은 [예약] 일정이 이 시간을 계속 막아 새 예약이 들어오지 못합니다. 아래 버튼으로 다시 지워 주세요.'
+              ) : (
+                <>
+                  운영자는 구글 캘린더에 직접 일정을 넣지 않으므로, 이 예약 시간이 캘린더에
+                  비어 있으면 다른 일정이 겹칠 수 있습니다.{' '}
+                  {canRetryGcal
+                    ? '아래 “캘린더 재시도”를 눌러 다시 등록해 주세요.'
+                    : '캘린더에 직접 넣어 주세요.'}
+                </>
+              )}
             </span>
             {canRetryGcal && (
               <Button light
@@ -653,7 +662,7 @@ export default function AdminBookingDetailPage({
                 onClick={handleRetryGcal}
                 className="mt-3"
               >
-                캘린더 재시도
+                {staleCalendarDelete ? '캘린더 일정 지우기' : '캘린더 재시도'}
               </Button>
             )}
           </div>
