@@ -1435,6 +1435,19 @@ export const privacyAccessActionEnum = [
    */
   'funding_pledge_export',
   /**
+   * 관리자 후원 상세 화면 열람 (pages/admin/funding/[id].tsx) — 후원자 이름·연락처·이메일·배송지가
+   * props로 실린다. 대상은 주문 id. 컬럼이 enum 문자열이라 마이그레이션이 필요 없다(DB CHECK 없음).
+   */
+  'funding_pledge_view',
+  /** 관리자 상점 주문 상세 열람 (pages/admin/shop/[orderNo].tsx) — 받는 분 이름·연락처·주소. 대상은 주문번호. */
+  'shop_order_view',
+  /**
+   * 관리자 소프트웨어 라이선스 목록 열람 (pages/admin/software/index.tsx) — 라이선스 받은 사람의 이메일.
+   * 검색 화면이라 행마다 남기지 않고 **화면을 연 한 번에 한 줄**, 건수는 rowCount. 대상은 고정값 `licenses`
+   * (검색어에 이메일이 들어올 수 있어 적지 않는다).
+   */
+  'software_license_list_view',
+  /**
    * 관리자 매출장부 CSV 내려받기 (pages/api/admin/orders/export.ts).
    * 기간 안에 승인된 결제 전부이므로 서비스 구분 없이 이름·연락처·이메일이 실린다.
    * 대상은 기간(`YYYY-MM-DD_YYYY-MM-DD`) — 이 다운로드가 가리키는 것은 한 사람이 아니다.

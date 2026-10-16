@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { AdminShell } from '../../../components/admin/AdminShell';
 import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
+import { recordAdminPrivacyAccess } from '../../../lib/privacy/accessLog';
 import { remainingRefundable } from '../../../lib/booking/cancel';
 import { isBankDepositPayment } from '../../../lib/payments/bankDeposit';
 import { loadRefundAccountSummary } from '../../../lib/payments/refundAccount';
@@ -60,6 +61,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   const orderNo = normalizeShopOrderNo(context.params?.orderNo);
   if (!orderNo) return { notFound: true };
   const order = await findShopOrderByOrderNo(orderNo);
+  // 열람 기록 — 받는 분 이름·연락처·주소가 props로 실리는 화면이다(처리방침 19항). 기록 실패가 화면을 막지 않게
+  // 받는다. 없는 주문을 열려 한 것도 남긴다. 값은 적지 않고 주문번호만.
+  await recordAdminPrivacyAccess(context.req, auth.actor, 'shop_order_view', orderNo, order?.shopOrder ? 'success' : 'not_found').catch(
+    (error: unknown) => console.error('[privacy] 접속기록 호출 실패 — 화면은 계속됩니다', error),
+  );
   if (!order || !order.shopOrder) return { notFound: true };
   const so = order.shopOrder;
   const payment = order.payments[0];
