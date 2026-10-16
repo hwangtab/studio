@@ -9,7 +9,7 @@ jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 
 import { createShowOrder } from './service';
 import { confirmShowOrder } from './confirm';
-import { refundShowTickets, syncShowCancelsFromToss, ticketRefundIdempotencyKey } from './refund';
+import { reconcileShowRefund, refundShowTickets, syncShowCancelsFromToss, ticketRefundIdempotencyKey } from './refund';
 
 async function seedAndPay(db: ShowsTestDb, quantity: number) {
   const showId = 'show-1';
@@ -304,5 +304,61 @@ describe('일괄 환불 — 토스 한도', () => {
     expect(outcome.status).toBe('refunded');
     const refunded = await db.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, orderNo) });
     expect(refunded.every((t) => t.status === 'refunded')).toBe(true);
+  });
+});
+
+describe('reconcileShowRefund — toss_unknown 뒤 고착된 refunding 풀기(재취소 없이 토스에 묻는다)', () => {
+  it('토스에 취소가 없으면(요청이 닿지 않음) refunding 티켓을 issued로 되돌린다 — 고객이 다시 신청할 수 있다', async () => {
+    const { db } = await createTestDb();
+    mockDb = db;
+    const { orderNo, toss } = await seedAndPay(db, 2);
+    const tickets = await db.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, orderNo) });
+    toss.injectFault(`cancel:${ticketRefundIdempotencyKey(orderNo, [tickets[0].id])}`, { code: 'NETWORK_ERROR' });
+    const first = await refundShowTickets({ orderNo, ticketIds: [tickets[0].id], noticeAt: new Date() }, toss);
+    expect(first.status).toBe('toss_unknown');
+    expect((await db.query.showTickets.findFirst({ where: (t, { eq }) => eq(t.id, tickets[0].id) }))?.status).toBe('refunding');
+    // 그 상태에서는 고객도 관리자도 그 티켓을 환불할 수 없다(not_issued).
+    expect(await refundShowTickets({ orderNo, ticketIds: [tickets[0].id], noticeAt: new Date() }, toss)).toMatchObject({ status: 'rejected', reason: 'not_issued' });
+
+    const r = await reconcileShowRefund(orderNo, toss);
+    expect(r).toEqual({ status: 'reverted', tickets: 1 });
+    expect((await db.query.showTickets.findFirst({ where: (t, { eq }) => eq(t.id, tickets[0].id) }))?.status).toBe('issued');
+    expect(toss._payments.get('pk1')?.cancels ?? []).toHaveLength(0); // 재취소를 부르지 않았다
+
+    // 장애가 걷힌 뒤 고객이 다시 신청하면 정상 환불된다.
+    toss.clearFault(`cancel:${ticketRefundIdempotencyKey(orderNo, [tickets[0].id])}`);
+    const again = await refundShowTickets({ orderNo, ticketIds: [tickets[0].id], noticeAt: new Date() }, toss);
+    expect(again.status).toBe('refunded');
+  });
+
+  it('토스에 취소가 실제로 걸렸으면(응답만 유실) 장부에 확정한다 — 태그 범위의 티켓만 refunded', async () => {
+    const { db } = await createTestDb();
+    mockDb = db;
+    const { orderNo, toss } = await seedAndPay(db, 2);
+    const tickets = await db.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, orderNo) });
+    const key = ticketRefundIdempotencyKey(orderNo, [tickets[0].id]);
+    toss.injectFault(`cancel:${key}`, { code: 'NETWORK_ERROR' });
+    await refundShowTickets({ orderNo, ticketIds: [tickets[0].id], noticeAt: new Date() }, toss);
+    // 실제로는 토스가 취소했다 — 토스 쪽 결제에 우리 태그가 붙은 취소가 남아 있다.
+    const pay = toss._payments.get('pk1')!;
+    toss._payments.set('pk1', { ...pay, cancels: [{ transactionKey: 'tx-lost', cancelAmount: 10000, cancelReason: `[#${key}] 공연 티켓 환불` }] });
+
+    const r = await reconcileShowRefund(orderNo, toss);
+    expect(r).toEqual({ status: 'synced', tossCancelled: 10000, recorded: 0 });
+    const after = await db.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, orderNo) });
+    expect(after.find((t) => t.id === tickets[0].id)?.status).toBe('refunded');
+    expect(after.find((t) => t.id === tickets[1].id)?.status).toBe('issued');
+    expect((await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, orderNo) }))?.status).toBe('partially_refunded');
+    const refundRows = await db.query.refunds.findMany({ where: (r2, { eq }) => eq(r2.status, 'done') });
+    expect(refundRows.reduce((sum, x) => sum + x.amount, 0)).toBe(10000);
+  });
+
+  it('refunding도 없고 장부와 토스가 같으면 noop, 재조회 실패면 toss_unknown', async () => {
+    const { db } = await createTestDb();
+    mockDb = db;
+    const { orderNo, toss } = await seedAndPay(db, 1);
+    expect(await reconcileShowRefund(orderNo, toss)).toEqual({ status: 'noop' });
+    toss._payments.delete('pk1'); // 재조회가 NOT_FOUND
+    expect(await reconcileShowRefund(orderNo, toss)).toMatchObject({ status: 'toss_unknown' });
   });
 });

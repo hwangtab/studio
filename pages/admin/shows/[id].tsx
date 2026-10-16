@@ -561,6 +561,15 @@ function TicketRefundControl({ order: o, refundable, startsAt, showtimeCancelled
           ))}
         </fieldset>
       )}
+      {o.tickets.some((k) => k.status === 'refunding') && (
+        <Button light variant="weak" size="sm" disabled={busy} onClick={() =>
+          run({ action: 'reconcile_refund', orderNo: o.orderNo }, {
+            confirm: `${o.orderNo}에 '환불중'으로 멈춘 티켓이 있습니다. 토스에 실제 취소 여부를 물어 장부에 반영하거나(취소됨) 발권 상태로 되돌립니다(취소 안 됨). 재취소는 하지 않습니다.`,
+            success: '환불 상태를 재확인했습니다.',
+          }).then((r) => { const m = r?.data?.message; if (typeof m === 'string') window.alert(m); })}>
+          환불 재확인
+        </Button>
+      )}
       <p className="text-xs text-gray-600">환불 예정 {selected.length}장 · {amountText}</p>
       <Button light variant="weak" size="sm" disabled={busy || selected.length === 0} onClick={() =>
         run({ action: 'refund_tickets', orderNo: o.orderNo, ticketIds: selected.map((k) => k.id) }, {

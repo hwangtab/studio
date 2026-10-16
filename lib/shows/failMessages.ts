@@ -32,14 +32,14 @@ export function confirmFailureMessage(outcome: Exclude<ConfirmOutcome, { status:
     case 'declined':
       return '결제가 승인되지 않았어요. 카드사 확인 후 다시 시도해 주세요.';
     case 'sold_out':
-      return '결제 직후 잔여석이 소진되어 티켓을 발권하지 못했어요. 결제는 자동으로 취소돼요(카드사에 따라 영업일 기준 수일 걸릴 수 있어요).';
+      return '결제 직후 잔여석이 소진되어 티켓을 발권하지 못했어요. 결제 취소를 진행했어요 — 카드사에 따라 영업일 기준 수일 걸릴 수 있고, 취소가 확인되지 않으면 운영자가 확인해 돌려드려요.';
     case 'auto_cancel_conflict':
       return '이 주문은 자동으로 환불 처리됐어요. 다시 예매해 주세요.';
     case 'amount_mismatch':
       return '결제 금액이 주문과 일치하지 않아 확정하지 못했어요.';
     case 'error':
       if (outcome.code === 'toss_unresolved' || outcome.code === 'recording_failed')
-        return '결제 승인 결과를 확인하는 중이에요. 결제가 이뤄졌다면 잠시 뒤 자동으로 확정되고, 확정되지 않으면 자동으로 취소돼요.';
+        return '결제 승인 결과를 확인하는 중이에요. 결제가 이뤄졌다면 잠시 뒤 확정되고, 확정되지 않으면 취소를 진행해요 — 취소가 확인되지 않으면 운영자가 확인해 돌려드려요.';
       if (outcome.code === 'invalid_status') return '이미 만료되었거나 처리할 수 없는 주문이에요. 다시 예매해 주세요.';
       return '결제를 확정하지 못했어요.';
   }
@@ -68,14 +68,14 @@ export function confirmFailureMessageEn(outcome: Exclude<ConfirmOutcome, { statu
     case 'declined':
       return 'The payment was not approved. Please check with your card company and try again.';
     case 'sold_out':
-      return 'Seats sold out right after your payment, so we could not issue your ticket. The payment will be cancelled automatically (it may take a few business days depending on your card company).';
+      return 'Seats sold out right after your payment, so we could not issue your ticket. We have started cancelling the payment — it may take a few business days depending on your card company, and if the cancellation is not confirmed, our staff will check and refund you.';
     case 'auto_cancel_conflict':
       return 'This order was refunded automatically. Please book again.';
     case 'amount_mismatch':
       return 'The payment amount did not match the order, so we could not confirm it.';
     case 'error':
       if (outcome.code === 'toss_unresolved' || outcome.code === 'recording_failed')
-        return 'We are still checking the payment result. If you were charged, the order will be confirmed automatically shortly; if not, it will be cancelled automatically.';
+        return 'We are still checking the payment result. If you were charged, the order will be confirmed shortly; if not, we will cancel the payment — and if the cancellation is not confirmed, our staff will check and refund you.';
       if (outcome.code === 'invalid_status') return 'This order has expired or cannot be processed. Please book again.';
       return 'We could not confirm the payment.';
   }

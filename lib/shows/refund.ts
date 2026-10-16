@@ -473,3 +473,53 @@ export async function syncShowCancelsFromToss(orderNo: string, tossPayment: Toss
     await db.run(sql`UPDATE show_tickets SET status = 'refunded' WHERE order_no = ${orderNo} AND status = 'issued'`);
   }
 }
+
+export type ReconcileShowRefundOutcome =
+  /** 토스에 우리 장부보다 많은 취소가 있었다 — syncShowCancelsFromToss로 확정했다. */
+  | { status: 'synced'; tossCancelled: number; recorded: number }
+  /** 토스에 추가 취소가 없다 = 요청이 닿지 않았다 — refunding 티켓을 issued로 되돌렸다. */
+  | { status: 'reverted'; tickets: number }
+  /** refunding 티켓이 없고 장부와 토스가 같다 — 할 일 없음. */
+  | { status: 'noop' }
+  | { status: 'toss_unknown'; code: string }
+  | { status: 'rejected'; reason: 'not_found' | 'no_payment' | 'bank_deposit' };
+
+/**
+ * `toss_unknown`(토스 응답 유실) 뒤 고착된 `refunding` 티켓을 푼다 — **재취소가 아니라 토스에 묻는다.**
+ *
+ * 선점 조건을 넓혀 다시 cancelPayment를 부르면 같은 주문의 다른 환불 요청과 겹쳐 한 티켓이 두 번 환불될 수
+ * 있다(요청 A{1,2}가 refunding인 사이 요청 B{2,3}가 2번을 다시 잡는 경우). 그래서 결제 행의 paymentKey로
+ * fetchPayment해 ① 토스 취소 합이 우리 done 합보다 크면 그 취소가 실제로 걸린 것이라 syncShowCancelsFromToss로
+ * 확정하고(태그 범위만), ② 같으면 취소가 걸리지 않은 것이라 refunding을 issued로 되돌린다. 관리자 '환불 재확인'과
+ * 운영자 알림이 이 함수를 가리킨다.
+ */
+export async function reconcileShowRefund(
+  orderNo: string,
+  toss: Pick<FakeToss, 'fetchPayment'>,
+): Promise<ReconcileShowRefundOutcome> {
+  const db = getDb();
+  const order = await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, orderNo) });
+  if (!order) return { status: 'rejected', reason: 'not_found' };
+  const payments = await db.query.payments.findMany({ where: (p, { eq }) => eq(p.orderId, order.id), with: { refunds: true } });
+  const payment = payments.find((p) => !isBankDepositPayment(p));
+  if (!payment) return { status: 'rejected', reason: payments.length > 0 ? 'bank_deposit' : 'no_payment' };
+
+  const fetched = await toss.fetchPayment(payment.paymentKey);
+  if (!fetched.ok) return { status: 'toss_unknown', code: fetched.code };
+
+  const tossCancelled = fetched.payment.cancels?.reduce((sum, c) => sum + c.cancelAmount, 0) ?? 0;
+  const recorded = payment.refunds.filter((r) => r.status === 'done').reduce((sum, r) => sum + r.amount, 0);
+  if (tossCancelled > recorded) {
+    await syncShowCancelsFromToss(orderNo, fetched.payment);
+    return { status: 'synced', tossCancelled, recorded };
+  }
+  const reverted = await db.run(sql`
+    UPDATE show_tickets SET status = 'issued' WHERE order_no = ${orderNo} AND status = 'refunding'
+  `);
+  const tickets = rowsAffectedOf(reverted);
+  if (tickets > 0) {
+    console.error('[shows-refund] 토스에 취소가 없어 refunding 티켓을 issued로 되돌림', { orderNo, tickets });
+    return { status: 'reverted', tickets };
+  }
+  return { status: 'noop' };
+}

@@ -4,14 +4,14 @@ import { eq, sql } from 'drizzle-orm';
 import { getDb } from '../../../../db/client';
 import { showTicketTypes, showtimes, showZones } from '../../../../db/schema';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
-import { cancelPayment } from '../../../../lib/booking/toss';
+import { cancelPayment, fetchPayment } from '../../../../lib/booking/toss';
 import { isPublishable, revalidateShow, sqlUpdateStatus } from '../../../../lib/shows/revalidate';
 import { SCAN_LINK_MAX_TTL_HOURS, revokeScanLink } from '../../../../lib/shows/scanLink';
 import { createScanLinkToken } from '../../../../lib/shows/scanAccess';
 import { issueReportLink, REPORT_LINK_MAX_TTL_DAYS, revokeReportLink } from '../../../../lib/shows/reportLink';
 import { undoCheckIn } from '../../../../lib/shows/checkin';
 import { sendShowRefundEmail, sendShowtimeCancelledEmail } from '../../../../lib/shows/email';
-import { refundShowTickets } from '../../../../lib/shows/refund';
+import { reconcileShowRefund, refundShowTickets } from '../../../../lib/shows/refund';
 import { issueCompTickets, revokeCompTicket } from '../../../../lib/shows/service';
 import { cancelShowtime, changeShowtime } from '../../../../lib/shows/showtimeOps';
 import { cancelAwaitingShowDeposit, confirmShowBankDeposit, deliverShowDepositGuide } from '../../../../lib/shows/bankDeposit';
@@ -232,6 +232,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(504).json({ ok: false, message: '토스 응답을 받지 못했습니다. 취소가 이미 됐을 수 있으니 토스 콘솔에서 확인해 주세요.' });
       }
       return res.status(409).json({ ok: false, message: REFUND_REASON_MESSAGE[r.reason] ?? `환불할 수 없습니다(${r.reason}).` });
+    }
+
+    /** 토스 응답 유실로 'refunding'에 멈춘 티켓 — 토스에 물어 확정하거나 되돌린다(재취소 아님, lib/shows/refund.ts reconcileShowRefund). */
+    case 'reconcile_refund': {
+      const orderNo = isNonEmptyString(b.orderNo) ? b.orderNo : '';
+      const showtimeIds = new Set(show.showtimes.map((s) => s.id));
+      const showOrder = orderNo ? await db.query.showOrders.findFirst({ where: (o, { eq }) => eq(o.orderNo, orderNo) }) : undefined;
+      if (!showOrder || !showtimeIds.has(showOrder.showtimeId)) return res.status(404).json({ ok: false, message: '이 공연의 주문이 아닙니다.' });
+      const r = await reconcileShowRefund(orderNo, { fetchPayment });
+      if (r.status === 'toss_unknown') return res.status(504).json({ ok: false, message: `토스 재조회에 실패했습니다(${r.code}). 잠시 뒤 다시 시도해 주세요.` });
+      if (r.status === 'rejected') return res.status(409).json({ ok: false, message: r.reason === 'bank_deposit' ? '계좌 입금 주문은 토스 재확인 대상이 아닙니다.' : '토스 결제 기록이 없는 주문입니다.' });
+      const message = r.status === 'synced'
+        ? `토스에 취소가 있었습니다 — 장부에 반영했습니다(토스 ${r.tossCancelled.toLocaleString('ko-KR')}원 / 기록 ${r.recorded.toLocaleString('ko-KR')}원).`
+        : r.status === 'reverted'
+          ? `토스에 취소가 없었습니다 — 환불중 티켓 ${r.tickets}장을 발권 상태로 되돌렸습니다. 고객이 다시 환불을 신청할 수 있습니다.`
+          : '확인할 것이 없습니다 — 장부와 토스가 같고 환불중 티켓도 없습니다.';
+      return res.status(200).json({ ok: true, result: r.status, message });
     }
 
     /**

@@ -613,10 +613,32 @@ const collectDbIssuesBody = async (db: ReturnType<typeof getDb>, now: Date, issu
   if (stuckShowCancel.length > 0) {
     issues.push({
       severity: 'high',
+      href: '/admin/shows',
       title: `자동 취소가 멈춘 공연 티켓 주문 ${stuckShowCancel.length}건 — 결제 상태 확인 필요`,
       detail: [
         `- ${sample(stuckShowCancel.map((row) => row.orderNo))}`,
         '토스 결제 내역에서 취소 여부를 확인하고, 승인된 채라면 환불하세요.',
+      ].join('\n'),
+    });
+  }
+
+  /**
+   * 환불 요청이 토스 응답 유실로 끝나 'refunding'에 멈춘 공연 티켓. refunding은 한 요청 안에서 초 단위로 끝나는
+   * 상태라 매일 08:00 점검에 걸리는 refunding은 전부 고착이다 — 토스가 실제로 취소했으면 웹훅이 확정하지만,
+   * 요청이 토스에 닿기 전에 끊겼으면 아무 경로도 풀지 않는다(고객은 '환불할 수 없는 상태'만 본다). 관리자 공연
+   * 상세의 "환불 재확인"(lib/shows/refund.ts reconcileShowRefund)이 확정하거나 되돌린다.
+   */
+  const stuckRefunding = await db.all<{ orderNo: string; n: number }>(sql`
+    SELECT order_no AS orderNo, count(*) AS n FROM show_tickets WHERE status = 'refunding' GROUP BY order_no
+  `);
+  if (stuckRefunding.length > 0) {
+    issues.push({
+      severity: 'high',
+      href: '/admin/shows',
+      title: `환불 처리 중에 멈춘 공연 티켓 주문 ${stuckRefunding.length}건 — "환불 재확인" 필요`,
+      detail: [
+        `- ${sample(stuckRefunding.map((row) => `${row.orderNo}(${row.n}장)`))}`,
+        '고객이 다시 환불을 신청할 수 없는 상태입니다. 관리자 > 공연 상세 > 해당 주문의 "환불 재확인"을 누르면 토스 상태로 확정하거나 되돌립니다.',
       ].join('\n'),
     });
   }
@@ -888,7 +910,7 @@ const collectDbIssuesBody = async (db: ReturnType<typeof getDb>, now: Date, issu
    * 토스 콘솔과 대조해야 하는 유일한 유형이라 별도로 센다.
    */
   const paymentMismatch = await db
-    .select({ orderNo: orders.orderNo })
+    .select({ orderNo: orders.orderNo, type: orders.type })
     .from(orders)
     .where(
       and(
@@ -898,12 +920,20 @@ const collectDbIssuesBody = async (db: ReturnType<typeof getDb>, now: Date, issu
     );
 
   if (paymentMismatch.length > 0) {
+    // 공연 티켓은 매진 경합에서 진 승인(돈은 캡처, 표는 없음)의 자동 취소가 실패한 경우가 여기 걸린다 —
+    // 웹훅 재전송이 취소를 다시 시도하지만 재전송 횟수에 한도가 있어 이 점검이 최종 안전망이다.
+    const tickets = paymentMismatch.filter((row) => row.type === 'ticket');
     issues.push({
       severity: 'high',
+      ...(tickets.length > 0 ? { href: '/admin/shows' } : {}),
       title: `결제 기록과 주문 상태가 어긋난 주문 ${paymentMismatch.length}건`,
-      detail:
-        `주문번호: ${sample(paymentMismatch.map((row) => row.orderNo))}\n` +
+      detail: [
+        `주문번호: ${sample(paymentMismatch.map((row) => row.orderNo))}`,
         '토스 콘솔에서 실제 결제·취소 상태를 확인한 뒤 처리해 주세요.',
+        ...(tickets.length > 0
+          ? [`- 공연 티켓 ${tickets.length}건: 잔여석 경합에서 진 결제가 승인된 채 자동 취소에 실패했을 수 있습니다. 토스 콘솔에서 승인 상태면 취소해 주세요.`]
+          : []),
+      ].join('\n'),
     });
   }
 
