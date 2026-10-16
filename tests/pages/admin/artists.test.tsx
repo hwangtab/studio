@@ -52,6 +52,19 @@ it('기록 뒤 환불이 들어와 숫자가 달라지면 경고한다', () => {
   expect(screen.getByText(/기록 23,736원과 다름/)).toBeInTheDocument();
 });
 
+it('이체 대기 기록에만 "기록 취소(다시 기록)" 버튼이 있고, 숫자가 다르면 경고가 그 버튼을 가리킨다', () => {
+  const pending = { id: 'p1', status: 'pending' as const, netAmount: 23736, paidAt: null, memo: null };
+  const { rerender } = render(<AdminArtistsPage {...base} supportOpen previews={[{ ...preview, netAmount: 15824, recorded: pending }]} />);
+  expect(screen.getByRole('button', { name: '기록 취소(다시 기록)' })).toBeInTheDocument();
+  expect(screen.getByText(/로 현재 숫자로 다시 기록/)).toBeInTheDocument();
+
+  rerender(<AdminArtistsPage {...base} supportOpen previews={[{ ...preview, recorded: { ...pending, status: 'paid' } }]} />);
+  expect(screen.queryByRole('button', { name: '기록 취소(다시 기록)' })).not.toBeInTheDocument();
+
+  rerender(<AdminArtistsPage {...base} supportOpen previews={[{ ...preview, recorded: null }]} />);
+  expect(screen.queryByRole('button', { name: '기록 취소(다시 기록)' })).not.toBeInTheDocument();
+});
+
 it('후원자 CSV 링크가 아티스트마다 있다', () => {
   render(<AdminArtistsPage {...base} supportOpen previews={[]} />);
   expect(screen.getByRole('link', { name: 'CSV' })).toHaveAttribute('href', '/api/admin/artists/jai/supporters-export');

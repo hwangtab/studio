@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { AdminShell } from '../../../components/admin/AdminShell';
-import { markPayoutPaid, recordPayout } from '../../../components/admin/artistActions';
+import { deletePendingPayout, markPayoutPaid, recordPayout } from '../../../components/admin/artistActions';
 import { Button } from '../../../components/ui/Button';
 import { Field, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
@@ -298,7 +298,7 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
                           )}
                           {drift && (
                             <span className="block mt-1 text-xs text-red-600">
-                              기록 {formatPriceAmount(p.recorded!.netAmount)}원과 다름 — 뒤늦은 환불
+                              기록 {formatPriceAmount(p.recorded!.netAmount)}원과 다름 — 뒤늦은 환불{p.recorded!.status === 'pending' ? ' ("기록 취소(다시 기록)"로 현재 숫자로 다시 기록)' : ''}
                             </span>
                           )}
                         </td>
@@ -339,6 +339,24 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
                               }
                             >
                               지급 완료
+                            </Button>
+                          )}
+                          {p.recorded?.status === 'pending' && (
+                            <Button
+                              light
+                              size="sm"
+                              variant="weak"
+                              className="ml-2"
+                              disabled={busy === key}
+                              onClick={() =>
+                                run(
+                                  key,
+                                  () => deletePendingPayout(p.recorded!.id),
+                                  `${p.artistName} ${p.period}의 기록(${formatPriceAmount(p.recorded!.netAmount)}원)을 취소할까요?\n\n기록된 금액은 버려지고 이력도 남지 않습니다. 취소한 뒤 "정산 기록"을 눌러 현재 숫자(${formatPriceAmount(p.netAmount)}원)로 다시 기록하세요. 아직 이체하지 않은 기록만 취소할 수 있습니다.`,
+                                )
+                              }
+                            >
+                              기록 취소(다시 기록)
                             </Button>
                           )}
                         </td>

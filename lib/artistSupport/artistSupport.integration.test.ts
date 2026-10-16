@@ -27,7 +27,7 @@ jest.mock('../billing/toss-billing', () => ({ issueBillingKey: jest.fn(), charge
 // eslint-disable-next-line import/first
 import { createSubscription } from '../billing/service';
 // eslint-disable-next-line import/first
-import { buildArtistPayoutPreview, markArtistPayoutPaid, recordArtistPayout } from './payout';
+import { buildArtistPayoutPreview, deleteArtistPayoutIfPending, markArtistPayoutPaid, recordArtistPayout } from './payout';
 // eslint-disable-next-line import/first
 import { countSupporters, listPublicSupporters } from './supporters';
 
@@ -149,6 +149,32 @@ describe('정산', () => {
     expect(await markArtistPayoutPaid(id, null, NOW)).toBe(false);
     const row = (await client.execute('SELECT status, memo, net_amount FROM artist_payouts')).rows[0];
     expect(row).toMatchObject({ status: 'paid', memo: '9/10 이체', net_amount: 7913 });
+  });
+
+  it('이체 전 기록은 지우고 현재 숫자로 다시 기록할 수 있다 — 지급 완료는 지우지 못한다', async () => {
+    await insertSub('a', 'active', true, null, '2026-09-01T00:00:00Z');
+    await paidCycle('a', 'o1', '2026-09');
+    const first = await recordArtistPayout('jai', '2026-09', NOW);
+    const id = first.ok ? first.payout.id : '';
+
+    // 기록 뒤 뒤늦은 전액 환불 — 기록이 남아 있는 동안은 다시 기록할 수 없다.
+    await client.execute("INSERT INTO refunds (id, payment_id, amount, reason, requested_by, status) VALUES ('rl', 'p-o1', 10000, 'r', 'admin', 'done')");
+    expect(await recordArtistPayout('jai', '2026-09', NOW)).toEqual({ ok: false, code: 'already_recorded' });
+
+    expect(await deleteArtistPayoutIfPending(id)).toBe('ok');
+    expect(await deleteArtistPayoutIfPending(id)).toBe('not_found');
+    // 전액 환불이라 현재 숫자로는 기록할 것이 없다.
+    expect(await recordArtistPayout('jai', '2026-09', NOW)).toEqual({ ok: true, payout: expect.objectContaining({ refundAmount: 10000, netAmount: 0 }) });
+    await client.execute('DELETE FROM artist_payouts');
+
+    // 환불을 걷어내고 다시 기록 → 지급 완료 뒤에는 삭제 거절.
+    await client.execute('DELETE FROM refunds');
+    const again = await recordArtistPayout('jai', '2026-09', NOW);
+    expect(again.ok).toBe(true);
+    const id2 = again.ok ? again.payout.id : '';
+    await markArtistPayoutPaid(id2, null, NOW);
+    expect(await deleteArtistPayoutIfPending(id2)).toBe('already_paid');
+    expect((await client.execute('SELECT status FROM artist_payouts')).rows).toHaveLength(1);
   });
 
   it('없는 아티스트는 null', async () => {
