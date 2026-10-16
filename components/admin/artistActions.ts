@@ -29,3 +29,7 @@ export const recordPayout = (artistSlug: string, period: string): Promise<Artist
 /** 이체를 마친 뒤 지급 완료로 올린다. */
 export const markPayoutPaid = (id: string, memo: string): Promise<ArtistActionResult> =>
   post(`/api/admin/artists/payouts/${encodeURIComponent(id)}`, { action: 'mark_paid', memo });
+
+/** 이체 전(pending) 기록을 지운다 — 현재 숫자로 다시 기록하기 위해. 지급 완료는 서버가 거절한다. */
+export const deletePendingPayout = (id: string): Promise<ArtistActionResult> =>
+  post(`/api/admin/artists/payouts/${encodeURIComponent(id)}`, { action: 'delete' });
