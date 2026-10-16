@@ -430,9 +430,11 @@ CDN이 비었을 때 1.15~2.1초 걸렸다(응원 메시지가 늦게 뜨던 원
   Turso가 서울을 열면 DB와 함수를 함께 옮기는 것을 검토한다.
 - **요금은 함수 지역이 아니라 요청이 들어온 CDN 지역으로 매겨진다.** 2026-09-16~10-15 사용량(`vercel usage --group-by region`)에서
   함수가 `iad1`이었는데도 지역 과금(ISR·Fast Origin Transfer·Fluid CPU)이 전부 "Seoul"로 잡혔다. 지역 이동으로 단가가 바뀌지 않는다.
-- **Blob 저장소(`seo-snapshots`, private — 계약서 PDF·백업·감상실 음원·GSC 스냅샷·소셜 이미지, 펀딩 미디어·서류도 여기로 온다)는
-  아직 `iad1`이다 — 도쿄로 옮기는 중(2026-10-16).** 저장소는 지역을 못 바꿔 새로 만들고 `scripts/copy-blob-store.mjs`로 복사한다.
-  이유는 감상실 실측: 곡의 첫 요청이 1.2~2.6초(서울 CDN MISS → iad1 원본), 이후 0.03초. 방문이 드물어 첫 재생이 대개 MISS다.
+- **Blob 저장소도 도쿄다 — `studio-files`(`store_YPoqIWRzeosPPaPv`, private, `hnd1`).** 계약서 PDF·백업·원장 백업·감상실 음원·
+  GSC 스냅샷·소셜 이미지, 펀딩 미디어·서류가 모두 여기 있다. 2026-10-16에 `iad1`의 `seo-snapshots`에서 옮겼다
+  (`scripts/copy-blob-store.mjs`로 40개 복사·해시 대조 → 연결 교체 → 재배포). 이유는 감상실 실측: 곡의 첫 요청(서울 CDN MISS)이
+  iad1에서 1.2~2.6초 → hnd1에서 0.22~0.33초. 연결은 `BLOB_READ_WRITE_TOKEN`·`BLOB_STORE_ID`(SDK는 OIDC가 있으면 그쪽, 없으면 토큰)다.
+  옛 `seo-snapshots`는 프로젝트 연결만 끊고 되돌리기용으로 남겨 뒀다 — **2026-11 중순 이후 지운다**(그 전에 지우지 말 것).
 - **Blob 파일은 주소가 아니라 경로(pathname)로 다룬다.** 주소의 호스트가 저장소 ID라, 주소를 DB에 두고 그 주소로 읽고·지우고·
   비교하면 저장소를 옮기는 순간 틀어진다 — 계약서 PDF는 고아 정리가 멀쩡한 파일을 지우고 파기가 사본을 남겼을 것이다
   (`lib/contracts/pdfPath.ts`, #728). 새 Blob 사용처도 경로로 읽고 경로로 비교할 것.
