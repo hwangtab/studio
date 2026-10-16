@@ -9,7 +9,7 @@ jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 
 import { createShowOrder } from './service';
 import { confirmShowOrder } from './confirm';
-import { refundShowTickets, syncShowCancelsFromToss } from './refund';
+import { refundShowTickets, syncShowCancelsFromToss, ticketRefundIdempotencyKey } from './refund';
 
 async function seedAndPay(db: ShowsTestDb, quantity: number) {
   const showId = 'show-1';
@@ -100,7 +100,7 @@ describe('refundShowTickets', () => {
     const tickets = await db.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, orderNo) });
     // 멱등 키는 finding #2 수정 후 (주문번호, 금액)이 아니라 (주문번호, 정렬된 티켓 id들)로
     // 만들어진다 — 장애 주입 키도 실제 코드가 만드는 키와 같은 형태로 맞춘다.
-    toss.injectFault(`cancel:tkt-refund:${orderNo}:${tickets[0].id}`, { code: 'NETWORK_ERROR' });
+    toss.injectFault(`cancel:${ticketRefundIdempotencyKey(orderNo, [tickets[0].id])}`, { code: 'NETWORK_ERROR' });
     const outcome = await refundShowTickets({ orderNo, ticketIds: [tickets[0].id], noticeAt: new Date() }, toss);
     expect(outcome.status).toBe('toss_unknown');
     const ticket = await db.query.showTickets.findFirst({ where: (t, { eq }) => eq(t.id, tickets[0].id) });
@@ -151,7 +151,7 @@ describe('refundShowTickets', () => {
     mockDb = db;
     const { orderNo, toss } = await seedAndPay(db, 1);
     const tickets = await db.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, orderNo) });
-    toss.injectFault(`cancel:tkt-refund:${orderNo}:${tickets[0].id}`, { code: 'ALREADY_CANCELED_PAYMENT', message: '이미 취소된 결제' });
+    toss.injectFault(`cancel:${ticketRefundIdempotencyKey(orderNo, [tickets[0].id])}`, { code: 'ALREADY_CANCELED_PAYMENT', message: '이미 취소된 결제' });
     const outcome = await refundShowTickets({ orderNo, ticketIds: [tickets[0].id], noticeAt: new Date() }, toss);
     expect(outcome.status).toBe('rejected');
     if (outcome.status === 'rejected') expect(outcome.reason).toBe('toss_failed');
@@ -212,7 +212,7 @@ describe('syncShowCancelsFromToss', () => {
     mockDb = db;
     const { orderNo, toss } = await seedAndPay(db, 1);
     const tickets = await db.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, orderNo) });
-    toss.injectFault(`cancel:tkt-refund:${orderNo}:${tickets[0].id}`, { code: 'NETWORK_ERROR' });
+    toss.injectFault(`cancel:${ticketRefundIdempotencyKey(orderNo, [tickets[0].id])}`, { code: 'NETWORK_ERROR' });
     const outcome = await refundShowTickets({ orderNo, ticketIds: [tickets[0].id], noticeAt: new Date() }, toss);
     expect(outcome.status).toBe('toss_unknown');
 
@@ -220,7 +220,7 @@ describe('syncShowCancelsFromToss', () => {
     // (`tkt-refund:<orderNo>:<정렬된 티켓 id들>`)와 같다.
     await syncShowCancelsFromToss(orderNo, {
       paymentKey: 'pk1', orderId: orderNo, status: 'CANCELED', totalAmount: 10000,
-      cancels: [{ transactionKey: 'tx-late', cancelAmount: 10000, cancelReason: `[#tkt-refund:${orderNo}:${tickets[0].id}] 공연 티켓 환불` }],
+      cancels: [{ transactionKey: 'tx-late', cancelAmount: 10000, cancelReason: `[#${ticketRefundIdempotencyKey(orderNo, [tickets[0].id])}] 공연 티켓 환불` }],
     });
     const ticket = await db.query.showTickets.findFirst({ where: (t, { eq }) => eq(t.id, tickets[0].id) });
     expect(ticket?.status).toBe('refunded');
@@ -246,7 +246,7 @@ describe('syncShowCancelsFromToss — 티켓별 스코프(finding: 광범위 swe
     const [ticketA, ticketB] = tickets;
 
     // A는 NETWORK_ERROR로 응답 없이 'refunding'에 머문다(첫 번째 독립 환불 시도).
-    toss.injectFault(`cancel:tkt-refund:${orderNo}:${ticketA.id}`, { code: 'NETWORK_ERROR' });
+    toss.injectFault(`cancel:${ticketRefundIdempotencyKey(orderNo, [ticketA.id])}`, { code: 'NETWORK_ERROR' });
     const outcomeA = await refundShowTickets({ orderNo, ticketIds: [ticketA.id], noticeAt: new Date() }, toss);
     expect(outcomeA.status).toBe('toss_unknown');
 
@@ -259,12 +259,12 @@ describe('syncShowCancelsFromToss — 티켓별 스코프(finding: 광범위 swe
         syncRan = true;
         await syncShowCancelsFromToss(orderNo, {
           paymentKey: 'pk1', orderId: orderNo, status: 'PARTIAL_CANCELED', totalAmount: 20000,
-          cancels: [{ transactionKey: 'tx-a', cancelAmount: 10000, cancelReason: `[#tkt-refund:${orderNo}:${ticketA.id}] 공연 티켓 환불` }],
+          cancels: [{ transactionKey: 'tx-a', cancelAmount: 10000, cancelReason: `[#${ticketRefundIdempotencyKey(orderNo, [ticketA.id])}] 공연 티켓 환불` }],
         });
       }
     });
     // B의 토스 응답은 그 뒤 확정 거절로 돌아온다(응답 자체는 왔으니 NETWORK_ERROR가 아니다).
-    toss.injectFault(`cancel:tkt-refund:${orderNo}:${ticketB.id}`, { code: 'ALREADY_CANCELED_PAYMENT', message: '이미 취소된 결제' });
+    toss.injectFault(`cancel:${ticketRefundIdempotencyKey(orderNo, [ticketB.id])}`, { code: 'ALREADY_CANCELED_PAYMENT', message: '이미 취소된 결제' });
     const outcomeB = await refundShowTickets({ orderNo, ticketIds: [ticketB.id], noticeAt: new Date() }, toss);
 
     expect(syncRan).toBe(true);
@@ -285,5 +285,24 @@ describe('syncShowCancelsFromToss — 티켓별 스코프(finding: 광범위 swe
     const doneRefunds = await db.query.refunds.findMany({ where: (r, { eq }) => eq(r.status, 'done') });
     const totalRecorded = doneRefunds.reduce((sum: number, r) => sum + r.amount, 0);
     expect(totalRecorded).toBe(10000); // A의 몫만
+  });
+});
+
+describe('일괄 환불 — 토스 한도', () => {
+  it('10장을 한 번에 환불해도 cancelReason 200자·Idempotency-Key 300자 안이다', async () => {
+    const { db } = await createTestDb();
+    mockDb = db;
+    const { orderNo, toss } = await seedAndPay(db, 10);
+    const tickets = await db.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, orderNo) });
+    expect(tickets).toHaveLength(10);
+    const key = ticketRefundIdempotencyKey(orderNo, tickets.map((t) => t.id));
+    expect(key.length).toBeLessThanOrEqual(300);
+    expect(`[#${key}] 공연 티켓 환불`.length).toBeLessThanOrEqual(200);
+
+    // FakeToss가 실제 한도를 검사하므로, 여기서 던지지 않고 refunded가 나오면 토스도 받는다.
+    const outcome = await refundShowTickets({ orderNo, ticketIds: tickets.map((t) => t.id), noticeAt: new Date() }, toss);
+    expect(outcome.status).toBe('refunded');
+    const refunded = await db.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, orderNo) });
+    expect(refunded.every((t) => t.status === 'refunded')).toBe(true);
   });
 });

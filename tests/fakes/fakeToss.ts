@@ -80,6 +80,9 @@ export function createFakeToss(): FakeToss {
       return result;
     },
     async cancelPayment({ paymentKey, cancelAmount, cancelReason, idempotencyKey }) {
+      // 실제 토스 한도 — cancelReason 200자, Idempotency-Key 300자. 넘기면 거절한다(5장 이상 일괄 환불이 여기 걸렸다).
+      if (cancelReason.length > 200) throw new Error(`FakeToss: cancelReason ${cancelReason.length}자 — 토스 한도 200자 초과`);
+      if (idempotencyKey && idempotencyKey.length > 300) throw new Error(`FakeToss: Idempotency-Key ${idempotencyKey.length}자 — 토스 한도 300자 초과`);
       // 실제 cancelPayment는 orderId를 받지 않는다 — 장애 주입 키는 호출자가 넘긴
       // idempotencyKey(없으면 paymentKey)로 건다. 두 실제 호출부(lineRefund.ts,
       // shows/confirm.ts의 autoCancelShowApproval) 모두 idempotencyKey를 채워 보낸다.
