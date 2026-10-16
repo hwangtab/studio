@@ -2385,8 +2385,8 @@ export const roomTenancies = sqliteTable(
     nextDueOn: text('next_due_on').notNull(),
     hasWindow: integer('has_window', { mode: 'boolean' }),
     furnishings: text('furnishings'),
-    /** 예전 시트의 "가격" 칸(40·44) 원문 — 의미가 확인되지 않아 그대로 보존한다. */
-    specNote: text('spec_note'),
+    /** 방 정가(원). 방의 속성이라 입주자 이용료와 다를 수 있다(기본 36만원 방과 40·44만원 방이 있다). 모르면 NULL. */
+    roomListPrice: integer('room_list_price'),
     /** 특약·메모(예: "1년 계약", "계약금 19만원"). 개인정보를 적지 않는다. */
     note: text('note'),
     contractId: text('contract_id'),

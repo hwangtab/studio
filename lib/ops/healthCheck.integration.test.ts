@@ -72,7 +72,7 @@ beforeAll(async () => {
 beforeEach(async () => {
   // refunds가 payments를, subscription_payments가 orders·subscriptions를 참조하므로
   // 참조하는 쪽을 먼저 지운다. refunds가 빠져 있어 테스트끼리 오염된 적이 있다.
-  for (const table of ['software_activations', 'software_licenses', 'refunds', 'payments', 'bookings', 'funding_pledges', 'funding_project_payouts', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'funding_projects', 'funding_creators']) {
+  for (const table of ['software_activations', 'software_licenses', 'refunds', 'payments', 'bookings', 'funding_pledges', 'funding_project_payouts', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'funding_projects', 'funding_creators', 'room_tenancy_payments', 'room_tenancies']) {
     await client.execute(`DELETE FROM ${table}`);
   }
   (fetchBusyRanges as jest.Mock).mockReset().mockResolvedValue([]);
@@ -181,6 +181,25 @@ const insertFundingPledge = async (over: Record<string, unknown> = {}) => {
 const titles = async (): Promise<string[]> => (await runHealthCheck(NOW)).issues.map((i) => i.title);
 
 describe('운영 점검', () => {
+  it('월 입주 입금 예정일이 지난 입주자는 연체로 보고하고, 연락처 등은 싣지 않는다', async () => {
+    const ins = (id: string, room: string | null, name: string, due: string, status = 'active') =>
+      client.execute({
+        sql: `INSERT INTO room_tenancies (id, kind, room_number, tenant_name, status, monthly_amount, start_date, billing_day, next_due_on, private_enc)
+              VALUES (?, ?, ?, ?, ?, 380000, '2026-01-01', 1, ?, 'v2:secret')`,
+        args: [id, room ? 'room' : 'virtual', room, name, status, due],
+      });
+    await ins('t1', 'R05', '연체자', '2026-08-30');
+    await ins('t2', null, '비상주사', '2026-09-01');
+    await ins('t3', 'R06', '정상', '2099-01-01');
+    await ins('t4', 'R07', '퇴실자', '2026-01-01', 'ended');
+    const issue = (await runHealthCheck(NOW)).issues.find((i) => i.title.startsWith('월 입주 연체'));
+    expect(issue?.title).toBe('월 입주 연체 2건');
+    expect(issue?.href).toBe('/admin/tenancies');
+    expect(issue?.detail).toContain('R05 연체자');
+    expect(issue?.detail).toContain('비상주 비상주사');
+    expect(issue?.detail).not.toMatch(/정상|퇴실자|secret/);
+  });
+
   it('아무 문제가 없으면 아무것도 보고하지 않는다 (메일이 안 가는 조건)', async () => {
     await insertOrder();
     await insertBooking();

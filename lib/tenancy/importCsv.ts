@@ -44,6 +44,12 @@ const text = (v: string | undefined): string | null => {
 };
 const dateOf = (v: string | undefined): string | null => (isValidDate((v ?? '').trim()) ? (v as string).trim() : null);
 
+/** 시트의 "가격" 칸은 방 정가를 만원 단위로 적은 것(40 = 40만원). 큰 수면 원 단위로 본다. */
+const listPriceOf = (v: string | undefined): number | null => {
+  const n = won(v);
+  return n === null || n === 0 ? null : n < 10_000 ? n * 10_000 : n;
+};
+
 export interface ImportRow {
   input: TenancyInput;
   lastPaid: { paidOn: string; amount: number } | null;
@@ -95,7 +101,7 @@ export const parseTenancySheet = (csv: string): ImportResult => {
       nextDueOn,
       hasWindow: isVirtual || hasWindowRaw === null ? null : hasWindowRaw === '창',
       furnishings: isVirtual ? null : text(get(r, '피아노')),
-      specNote: isVirtual ? null : text(get(r, '가격')),
+      roomListPrice: isVirtual ? null : listPriceOf(get(r, '가격')),
       note: isVirtual ? null : special,
       contractId: null,
       private: isVirtual
