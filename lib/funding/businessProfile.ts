@@ -3,6 +3,7 @@ import { and, eq, isNull } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { creatorBusinessProfiles, fundingCreators, fundingProjectPayouts, fundingProjects } from '../../db/schema';
 import { isMissingTableError } from '../dbErrors';
+import { hasPartnerInvoicePayout } from '../partnerPayouts/creatorPayouts';
 import { lookupBusinessStatus, type NtsBusinessStatus } from './businessStatus';
 
 /**
@@ -65,6 +66,7 @@ export const loadBusinessProfile = async (creatorId: string): Promise<BusinessPr
 /**
  * 이 개설자에게 **사업자로 정산한 기록**(`withholding_amount = 0`인 펀딩 정산)이 있는가.
  * 있으면 세금 구분을 개인으로 바꿔도 사업자 행을 지우지 않는다 — 이미 받은 세금계산서와 대조할 근거다.
+ * 펀딩 정산 기록에 더해 상점·공연 정산 기록(`partner_payouts`)도 본다.
  *
  * `hasWithheldPayout`(creatorProjectWrite.ts)의 거울이다. 경계도 같다: 정산 기록에 세금 구분 컬럼이 없어
  * "원천징수인데 세액 0원"인 정산도 여기서는 사업자 정산으로 센다(남기는 쪽이라 안전하다). **둘을 함께 바꿀 것.**
@@ -76,7 +78,9 @@ export const hasInvoicePayout = async (creatorId: string): Promise<boolean> => {
     .innerJoin(fundingProjects, eq(fundingProjects.id, fundingProjectPayouts.projectId))
     .where(and(eq(fundingProjects.creatorId, creatorId), eq(fundingProjectPayouts.withholdingAmount, 0)))
     .limit(1);
-  return Boolean(row);
+  if (row) return true;
+  // 상점·공연 정산 기록(`partner_payouts`)도 사업자 정산이면 센다 — 처리방침 14항("사업자 정산(펀딩·상점·공연 어느 쪽이든)"). 같은 `= 0` 경계.
+  return hasPartnerInvoicePayout(creatorId);
 };
 
 /** Blob 키는 반드시 이 접두사 + creatorId/ 아래여야 지운다 — 남의 키·계약서 경로를 지우는 일을 막는다. */

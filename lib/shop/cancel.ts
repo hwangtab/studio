@@ -3,6 +3,7 @@ import { sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { planBankRefund, remainingRefundable, saveCustomerRefundAccount, settleRefund, type CancelInput } from '../booking/cancel';
 import { isBankDepositPayment } from '../payments/bankDeposit';
+import { safeSyncShopLateRefundAdjustments } from '../partnerPayouts/shopLateRefund';
 import { deleteRefundAccount } from '../payments/refundAccount';
 import { sendShopCancelledEmails } from './email';
 import { getFirstDownloadedAt } from './downloads';
@@ -114,6 +115,9 @@ export const cancelShopOrder = async (input: {
     const code = failure.code === 'not_found' ? 'invalid_state' : failure.code;
     return { ok: false, code, message: failure.message };
   }
+
+  // 이미 기록된 정산에 들어 있던 주문이면 다음 정산에서 뺄 이월 조정을 쌓는다(lib/partnerPayouts/shopLateRefund.ts). 실패해도 환불은 성공이다 — 던지지 않는다.
+  await safeSyncShopLateRefundAdjustments(order.orderNo);
 
   // 한정판 번호 반납 — 발송 전(선점 전 preparing) 전액 취소만. 발송 뒤 반품 환불은 번호를 남긴다.
   if (fulfillment === 'preparing') await releaseOrderSerials(order.orderNo, order.shopOrder.items);

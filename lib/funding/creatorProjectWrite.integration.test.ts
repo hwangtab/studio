@@ -1669,6 +1669,40 @@ describe('정산 정보 — 사업자 정보·국세청 조회·자격', () => {
     expect(row.enc).toBeTruthy();
   });
 
+  it('상점·공연 정산 기록(partner_payouts)에서 원천징수한 정산이 있으면 상점 아티스트 등록이 없어도 사업자로 바꿔도 번호가 남는다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, withholding('9901011234567'), { lookup: lookupOk });
+    await mockDb.insert(schema.partnerPayouts).values({
+      kind: 'show', subjectKey: 'show-1', period: 'all', creatorId, payeeName: '가나', taxType: 'withholding',
+      shareAmount: 100_000, withholdingAmount: 3_300, netAmount: 96_700, status: 'paid', paidAt: new Date('2026-10-20T00:00:00Z'),
+    });
+    expect(await loadPayoutSummary(creatorId)).toMatchObject({ keepsResidentNumber: true, keepsBusinessProfile: false });
+    expect(await savePayoutSection(creatorId, invoice(), { lookup: lookupOk })).toEqual({ ok: true, residentNumberRetained: true });
+    const [row] = await mockDb.select({ enc: schema.fundingCreators.residentNumberEnc })
+      .from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creatorId));
+    expect(row.enc).toBeTruthy();
+  });
+
+  it('상점 사업자 정산 기록(세액 0)이 있으면 개인으로 바꿔도 사업자 행을 남긴다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, invoice(), { lookup: lookupOk });
+    await mockDb.insert(schema.partnerPayouts).values({
+      kind: 'shop', subjectKey: `creator:${creatorId}`, period: '2026-10', creatorId, payeeName: '가나', taxType: 'invoice',
+      shareAmount: 100_000, withholdingAmount: 0, netAmount: 100_000, status: 'pending',
+    });
+    expect(await loadPayoutSummary(creatorId)).toMatchObject({ keepsResidentNumber: false, keepsBusinessProfile: true });
+    expect(await savePayoutSection(creatorId, withholding(), { lookup: lookupOk })).toEqual({ ok: true, businessProfileRetained: true });
+    expect(await businessRows(creatorId)).toHaveLength(1);
+  });
+
+  it('정산 기록 표가 없는 DB(0067 전)에서는 펀딩 기록만으로 판정하고 던지지 않는다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, withholding('9901011234567'), { lookup: lookupOk });
+    await client.execute('DROP TABLE partner_payouts');
+    expect(await loadPayoutSummary(creatorId)).toMatchObject({ keepsResidentNumber: false, keepsBusinessProfile: false });
+    expect(await savePayoutSection(creatorId, invoice(), { lookup: lookupOk })).toEqual({ ok: true });
+  });
+
   it('상점 아티스트면 사업자로 바꿔도 주민등록번호를 남긴다 — 상점 정산은 기록 표가 없다', async () => {
     const { creatorId } = await seedProject({ reviewStatus: 'approved' });
     await savePayoutSection(creatorId, withholding('9901011234567'), { lookup: lookupOk });

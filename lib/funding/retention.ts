@@ -7,9 +7,11 @@ import {
   fundingPledges,
   fundingProjectPayouts,
   fundingProjects,
+  partnerPayouts,
   shopArtists,
   showSubmissions,
 } from '../../db/schema';
+import { partnerPayoutsTableExists } from '../partnerPayouts/creatorPayouts';
 import { deleteTaxDocumentBlob, type DeleteBlob } from './businessProfile';
 import { PURGED_MARK } from '../privacy/orderRetention';
 
@@ -185,8 +187,9 @@ export const purgeExpiredFundingPersonalData = async (now: Date = new Date()): P
  * - 심사 중·승인된 공연 등록(`show_submissions`).
  * - 상점 아티스트 등록(`shop_artists`).
  *
- * **공연·상점은 정산 기록 표가 없어 "정산이 끝났다"를 알 수 없다.** 그래서 승인·등록돼 있는 동안은
- * 살아 있는 것으로 본다(정산 표가 생기면 이 조건을 고친다). 두 표가 없는 DB에서는 이 조건이
+ * **공연·상점은 "등록돼 있는 동안"을 살아 있는 것으로 본다**(처리방침 14·15항이 그렇게 약속했다). 상점·공연 정산 기록(`partner_payouts`)이
+ * 생겼지만 이 조건은 일부러 좁히지 않았다 — 등록이 있는 한 다음 정산이 올 수 있고, 기록 전 거래분은 기록으로 가릴 수 없다. 미지급 정산이
+ * 파기를 막는 것은 아래 두 파기 함수의 "신고 의무가 살아 있는 원천징수/사업자 정산" 조건이 따로 맡는다. 두 표가 없는 DB에서는 이 조건이
  * `no such table`로 던지고, 파기는 아무것도 지우지 않은 채 실패로 보고된다.
  */
 export const liveEngagementExists = (creatorIdColumn: AnyColumn): SQL => {
@@ -339,12 +342,26 @@ export const purgeExpiredResidentNumbers = async (now: Date = new Date()): Promi
       );
 
   /**
-   * 아직 신고 의무가 살아 있는 원천징수 — 지급 전이거나, 지급일이 보관 기간 안이다.
-   * 하나라도 있으면 파기하지 않는다.
+   * 상점·공연 정산 기록(`partner_payouts`) — 처리방침 15항이 "원천징수한 정산(펀딩·상점·공연)"의 지급일부터 5년이라고 약속했다.
+   * 경계(`> 0`)와 "가장 나중 지급이 기준"은 위 펀딩 갈래와 똑같다. 이 표가 **없는** DB(마이그레이션 전)에서는 기록도 있을 수 없으므로
+   * 펀딩 갈래만으로 판정한다 — 있는지 모르는 채 진행하지는 않는다(그 밖의 오류는 던져 파기를 멈춘다).
    */
-  const withholdingStillInScope = withheldPayouts(
-    or(isNull(fundingProjectPayouts.paidAt), gte(fundingProjectPayouts.paidAt, reportingBoundary)),
-  );
+  const hasPartnerTable = await partnerPayoutsTableExists();
+  const partnerWithheld = (extra?: SQL) =>
+    db
+      .select({ ok: sql`1` })
+      .from(partnerPayouts)
+      .where(and(eq(partnerPayouts.creatorId, fundingCreators.id), gt(partnerPayouts.withholdingAmount, 0), extra));
+  const anyWithheld = (): SQL =>
+    (hasPartnerTable ? or(exists(withheldPayouts()), exists(partnerWithheld())) : exists(withheldPayouts())) as SQL;
+
+  /**
+   * 아직 신고 의무가 살아 있는 원천징수 — 지급 전이거나, 지급일이 보관 기간 안이다.
+   * 하나라도 있으면 파기하지 않는다. (상점·공연 정산 기록의 미지급 건도 같다.)
+   */
+  const stillInScope = (paidAt: AnyColumn): SQL => or(isNull(paidAt), gte(paidAt, reportingBoundary)) as SQL;
+  const withholdingStillInScope = withheldPayouts(stillInScope(fundingProjectPayouts.paidAt));
+  const partnerStillInScope = hasPartnerTable ? partnerWithheld(stillInScope(partnerPayouts.paidAt)) : null;
 
   const result = await db
     .update(fundingCreators)
@@ -356,9 +373,9 @@ export const purgeExpiredResidentNumbers = async (now: Date = new Date()): Promi
         not(liveEngagementExists(fundingCreators.id)),
         or(
           // (A) 원천징수 기록이 있고, 그중 신고 의무가 살아 있는 것이 없다.
-          and(exists(withheldPayouts()), notExists(withholdingStillInScope)),
+          and(anyWithheld(), notExists(withholdingStillInScope), partnerStillInScope ? notExists(partnerStillInScope) : undefined),
           // (B) 원천징수 기록이 한 번도 없고, 계정이 잠들어 있다.
-          and(notExists(withheldPayouts()), lt(fundingCreators.updatedAt, dormantBoundary)),
+          and(not(anyWithheld()), lt(fundingCreators.updatedAt, dormantBoundary)),
         ),
       ),
     );
@@ -414,9 +431,23 @@ export const purgeExpiredBusinessProfiles = async (
         ),
       );
 
+  // 상점·공연 정산 기록 — 처리방침 14항("사업자 정산(펀딩·상점·공연 어느 쪽이든)"). 표가 없는 DB는 펀딩 갈래만(위 주민등록번호 파기와 같다).
+  const hasPartnerTable = await partnerPayoutsTableExists();
+  const partnerInvoice = (extra?: SQL) =>
+    db
+      .select({ ok: sql`1` })
+      .from(partnerPayouts)
+      .where(and(eq(partnerPayouts.creatorId, creatorBusinessProfiles.creatorId), eq(partnerPayouts.withholdingAmount, 0), extra));
+  const anyInvoice = (): SQL =>
+    (hasPartnerTable ? or(exists(invoicePayouts()), exists(partnerInvoice())) : exists(invoicePayouts())) as SQL;
+
   const invoiceStillInScope = invoicePayouts(
     or(isNull(fundingProjectPayouts.paidAt), gte(fundingProjectPayouts.paidAt, retentionBoundary)),
   );
+  // 아직 지급하지 않았거나 지급일이 보관 기간 안인 상점·공연 사업자 정산 — 하나라도 있으면 파기하지 않는다.
+  const partnerInvoiceStillInScope = hasPartnerTable
+    ? partnerInvoice(or(isNull(partnerPayouts.paidAt), gte(partnerPayouts.paidAt, retentionBoundary)))
+    : null;
 
   const dormantAccount = db
     .select({ ok: sql`1` })
@@ -429,8 +460,8 @@ export const purgeExpiredBusinessProfiles = async (
       and(
         not(liveEngagementExists(creatorBusinessProfiles.creatorId)),
         or(
-          and(exists(invoicePayouts()), notExists(invoiceStillInScope)),
-          and(notExists(invoicePayouts()), exists(dormantAccount)),
+          and(anyInvoice(), notExists(invoiceStillInScope), partnerInvoiceStillInScope ? notExists(partnerInvoiceStillInScope) : undefined),
+          and(not(anyInvoice()), exists(dormantAccount)),
         ),
       ),
     )

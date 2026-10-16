@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "48a071ac-ccb4-4071-8085-db7d79c9ba84",
+  "id": "a9539857-f436-4456-9ede-99345059fcd0",
   "prevId": "50f414e5-a318-409b-aaa1-5d185f003037",
   "tables": {
     "artist_payouts": {
@@ -2525,6 +2525,378 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
+    "partner_payout_adjustments": {
+      "name": "partner_payout_adjustments",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "kind": {
+          "name": "kind",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "payee_key": {
+          "name": "payee_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "amount": {
+          "name": "amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "reason": {
+          "name": "reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_ref": {
+          "name": "source_ref",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "memo": {
+          "name": "memo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "origin_payout_id": {
+          "name": "origin_payout_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "applied_payout_id": {
+          "name": "applied_payout_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch())"
+        }
+      },
+      "indexes": {
+        "partner_payout_adjustments_source_unique": {
+          "name": "partner_payout_adjustments_source_unique",
+          "columns": [
+            "kind",
+            "payee_key",
+            "reason",
+            "source_ref"
+          ],
+          "isUnique": true
+        },
+        "partner_payout_adjustments_payee_idx": {
+          "name": "partner_payout_adjustments_payee_idx",
+          "columns": [
+            "kind",
+            "payee_key",
+            "applied_payout_id"
+          ],
+          "isUnique": false
+        },
+        "partner_payout_adjustments_applied_idx": {
+          "name": "partner_payout_adjustments_applied_idx",
+          "columns": [
+            "applied_payout_id"
+          ],
+          "isUnique": false
+        },
+        "partner_payout_adjustments_origin_idx": {
+          "name": "partner_payout_adjustments_origin_idx",
+          "columns": [
+            "origin_payout_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "partner_payout_adjustments_kind_check": {
+          "name": "partner_payout_adjustments_kind_check",
+          "value": "\"partner_payout_adjustments\".\"kind\" in ('shop','show')"
+        },
+        "partner_payout_adjustments_reason_check": {
+          "name": "partner_payout_adjustments_reason_check",
+          "value": "\"partner_payout_adjustments\".\"reason\" in ('late_refund','showtime_cancel_fee','manual')"
+        }
+      }
+    },
+    "partner_payouts": {
+      "name": "partner_payouts",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "kind": {
+          "name": "kind",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "subject_key": {
+          "name": "subject_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "period": {
+          "name": "period",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "creator_id": {
+          "name": "creator_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "payee_name": {
+          "name": "payee_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "tax_type": {
+          "name": "tax_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "gross_amount": {
+          "name": "gross_amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "refund_amount": {
+          "name": "refund_amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "shipping_amount": {
+          "name": "shipping_amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "platform_fee_amount": {
+          "name": "platform_fee_amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "payment_fee_amount": {
+          "name": "payment_fee_amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "studio_amount": {
+          "name": "studio_amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "vat_deduction_amount": {
+          "name": "vat_deduction_amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "share_amount": {
+          "name": "share_amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "withholding_amount": {
+          "name": "withholding_amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "adjustment_amount": {
+          "name": "adjustment_amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "shortfall_amount": {
+          "name": "shortfall_amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "net_amount": {
+          "name": "net_amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "item_count": {
+          "name": "item_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'pending'"
+        },
+        "paid_at": {
+          "name": "paid_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "memo": {
+          "name": "memo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch())"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch())"
+        }
+      },
+      "indexes": {
+        "partner_payouts_subject_unique": {
+          "name": "partner_payouts_subject_unique",
+          "columns": [
+            "kind",
+            "subject_key",
+            "period"
+          ],
+          "isUnique": true
+        },
+        "partner_payouts_status_idx": {
+          "name": "partner_payouts_status_idx",
+          "columns": [
+            "kind",
+            "status"
+          ],
+          "isUnique": false
+        },
+        "partner_payouts_creator_idx": {
+          "name": "partner_payouts_creator_idx",
+          "columns": [
+            "creator_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "partner_payouts_creator_id_funding_creators_id_fk": {
+          "name": "partner_payouts_creator_id_funding_creators_id_fk",
+          "tableFrom": "partner_payouts",
+          "tableTo": "funding_creators",
+          "columnsFrom": [
+            "creator_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "partner_payouts_kind_check": {
+          "name": "partner_payouts_kind_check",
+          "value": "\"partner_payouts\".\"kind\" in ('shop','show')"
+        },
+        "partner_payouts_status_check": {
+          "name": "partner_payouts_status_check",
+          "value": "\"partner_payouts\".\"status\" in ('pending','paid')"
+        }
+      }
+    },
     "payment_link_orders": {
       "name": "payment_link_orders",
       "columns": {
@@ -3348,13 +3720,6 @@
         "furnishings": {
           "name": "furnishings",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "room_list_price": {
-          "name": "room_list_price",
-          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
