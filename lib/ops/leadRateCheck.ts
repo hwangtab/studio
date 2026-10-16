@@ -183,9 +183,9 @@ export interface LeadRateCheckResult {
 /**
  * 카카오 전환율 급락 여부를 확인한다.
  *
- * env 4개가 하나라도 없으면 조용히 건너뛴다(`skipped` 사유 남김 — 실패 취급 금지,
- * 2026-09-08 기준 Vercel Production에 아직 이 env가 없다). GA4 API 호출 자체가
- * 실패하면(자격 만료 등) "점검이 죽은 것"이므로 throw해 healthCheck가 알리게 한다.
+ * env 4개가 하나라도 없으면 조용히 건너뛴다(`skipped` 사유 남김 — 실패 취급 금지). GA4 API 호출 자체가
+ * 실패하면(자격 만료 등) throw한다 — healthCheck의 runIsolatedCheck가 그것을 "이 점검이 오늘 확인되지
+ * 않았다"는 high 항목으로 바꾼다(다른 점검 결과는 그대로 간다).
  */
 export const runLeadRateCheck = async (
   env: LeadRateEnv = process.env as LeadRateEnv,

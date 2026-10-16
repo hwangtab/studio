@@ -1,5 +1,6 @@
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import { AdminShell } from '../../../components/admin/AdminShell';
@@ -87,6 +88,7 @@ const call = async (url: string, method: 'GET' | 'POST', body?: unknown) => {
 };
 
 export default function AdminTenanciesPage({ rows, today, calendarConfigured, tableMissing }: Props) {
+  const router = useRouter();
   const [form, setForm] = useState<FormState | null>(null);
   const [editing, setEditing] = useState<TenancyListRow | null>(null);
   /** 연락처 등 상세를 불러왔는가 — 안 불러온 채 저장하면 서버가 암호문을 그대로 둔다. */
@@ -105,7 +107,10 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
   const finish = (data: { ok?: boolean; message?: string; calendarError?: string | null }, okText: string) => {
     if (!data.ok) { setNotice(data.message ?? '처리하지 못했어요.'); setBusy(false); return; }
     setNotice(data.calendarError ? `${okText} 다만 캘린더는 맞추지 못했어요: ${data.calendarError}` : okText);
-    window.location.reload();
+    // 하드 새로고침이 아니라 데이터만 다시 읽는다 — 그래야 위 안내(캘린더 오류 등)가 화면에 남는다.
+    setForm(null);
+    setBusy(false);
+    void router.replace(router.asPath, undefined, { scroll: false });
   };
 
   const openNew = () => { setEditing(null); setForm({ ...EMPTY }); setPrivateLoaded(true); };
@@ -210,7 +215,7 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
       <Head><title>입주 관리 | Studio NOL 관리자</title><meta name="robots" content="noindex" /></Head>
       <AdminShell title="입주 관리" description="연습실 월 입주자와 비상주 사무실 — 입금 예정일을 구글 캘린더에도 올립니다.">
         {tableMissing && <div className="mb-4 rounded-lg bg-amber-50 p-4 text-sm text-amber-900">입주 표가 아직 없어요(마이그레이션 0066을 먼저 적용하세요).</div>}
-        {!calendarConfigured && <div className="mb-4 rounded-lg bg-amber-50 p-4 text-sm text-amber-900">입주 관리 캘린더가 설정돼 있지 않아 캘린더 일정은 만들어지지 않아요(환경변수 TENANCY_GCAL_ID).</div>}
+        {!calendarConfigured && <div className="mb-4 rounded-lg bg-amber-50 p-4 text-sm text-amber-900">연습실 캘린더가 설정돼 있지 않아 캘린더 일정은 만들어지지 않아요(환경변수 PRACTICE_ROOM_GCAL_ID 또는 TENANCY_GCAL_ID).</div>}
         {notice && <div className="mb-4 rounded-lg bg-blue-50 p-3 text-sm text-blue-800">{notice}</div>}
 
         <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">

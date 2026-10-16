@@ -9,8 +9,9 @@ import { openPrivate } from './privateData';
 /**
  * 월 입주 → 구글 캘린더. **캘린더는 `room_tenancies`의 투영이다** — 정본은 DB이고, 어긋나면 `syncTenancyCalendar`를 다시 돌리면 맞는다.
  *
- * 별도 캘린더(env `TENANCY_GCAL_ID`)를 쓴다. 예약 캘린더·연습실 캘린더는 "일정이 있으면 그 시간 웹 예약이 막히는" 캘린더라
- * 여기 올리면 시간제 방(R02)이 통째로 막힌다 — 이 일정들은 예약 가능 시간과 무관해야 한다.
+ * 기존 연습실 캘린더(`PRACTICE_ROOM_GCAL_ID`)에 올린다(전용 `TENANCY_GCAL_ID`가 있으면 그쪽). 이 캘린더의 일정은 보통 웹 예약 시간을 막지만,
+ * 모든 일정을 **"바쁨 아님"(`transparency: 'transparent'`)** 으로 올려 freeBusy에 잡히지 않는다 — 안 그러면 입금일마다 시간제 방(R02)이 하루 종일 막힌다.
+ * 이 투명 표시를 빼지 말 것(테스트가 막는다). 녹음실 예약 캘린더(`BOOKING_GCAL_ID`)에는 올리지 않는다.
  *
  * 입주자 한 명당 일정은 최대 둘, 둘 다 종일 일정이다:
  * - **입금 예정**: 다음 입금 예정일(`next_due_on`)에 한 건. 입금을 기록하면 다음 달로 옮겨진다(반복 일정이 아닌 이유: 입금했는지를
@@ -19,12 +20,13 @@ import { openPrivate } from './privateData';
  * 퇴실 처리하면 둘 다 지운다. env가 없으면 아무것도 하지 않는다(`skipped`).
  */
 
-export const tenancyCalendarId = (): string | null => process.env.TENANCY_GCAL_ID || null;
+/** 전용 캘린더(`TENANCY_GCAL_ID`)가 있으면 그것, 없으면 기존 연습실 캘린더(`PRACTICE_ROOM_GCAL_ID`). */
+export const tenancyCalendarId = (): string | null => process.env.TENANCY_GCAL_ID || process.env.PRACTICE_ROOM_GCAL_ID || null;
 
 const won = (n: number) => `${n.toLocaleString('ko-KR')}원`;
 const labelOf = (t: Pick<RoomTenancy, 'kind' | 'roomNumber' | 'tenantName'>) => `${t.kind === 'virtual' ? '비상주' : t.roomNumber} ${t.tenantName}`;
 
-const allDay = (date: string): Pick<RawEventBody, 'start' | 'end'> => ({ start: { date }, end: { date: addDays(date, 1) } });
+const allDay = (date: string): Pick<RawEventBody, 'start' | 'end' | 'transparency'> => ({ start: { date }, end: { date: addDays(date, 1) }, transparency: 'transparent' });
 
 const describe = (t: RoomTenancy): string => {
   let phone = '';

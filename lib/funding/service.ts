@@ -370,96 +370,107 @@ export interface ProjectStatus {
  */
 export const aggregateProjectStatus = async (project: FundingProject, now: Date): Promise<ProjectStatus> => {
   const db = getDb();
-  const totals = await db.all<{ raised: number | null; backers: number | null; persons: number | null }>(sql`
-    SELECT SUM(o.total_amount - CASE WHEN o.status = 'partially_refunded' THEN COALESCE((
-             SELECT SUM(r.amount) FROM refunds r JOIN payments p ON p.id = r.payment_id
-             WHERE p.order_id = o.id AND r.status = 'done'
-           ), 0) ELSE 0 END) AS raised,
-           -- 펀딩 '건수'. 인원이 아니다.
-           COUNT(*) AS backers,
-           -- 펀딩 '인원'. 신원 키는 backerIdentitySql — 수기 등록 플레이스홀더는 주문 단위로
-           -- 떨어뜨린다(연락처 없는 펀딩끼리 한 사람으로 뭉치면 인원이 1로 붕괴한다).
-           COUNT(DISTINCT ${backerIdentitySql()}) AS persons
-    FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
-    WHERE fp.project_slug = ${project.slug} AND ${countedFundingPledgeSql()}
-  `);
-  const claimed = await db.all<{ reward_id: string; qty: number }>(sql`
-    SELECT l.reward_id, SUM(l.quantity) AS qty
-    FROM ${fundingPledgeLinesSql()} l
-    JOIN funding_pledges fp ON fp.id = l.pledge_id JOIN orders o ON o.id = fp.order_id
-    WHERE fp.project_slug = ${project.slug}
-      AND (${countedFundingPledgeSql()} OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
-    GROUP BY l.reward_id
-  `);
+  /**
+   * 다섯 조회를 **한 번의 왕복**(`db.batch`)으로 보낸다. 함수가 iad1에서 돌던 동안 DB(Turso
+   * ap-northeast-1)까지 왕복 한 번이 약 150ms였고, 차례로 기다리면 CDN이 비었을 때 상태 API가
+   * 1.2~2초 걸렸다 — 응원 메시지·후원자 명단은 이 응답으로만 오므로 그만큼 늦게 떴다(2026-10-16 실측).
+   * 같은 날 함수 지역을 hnd1로 옮겨 왕복 자체가 짧아졌지만, 이 조회는 폴링이 부르는 핫 경로라
+   * 왕복 수를 늘리지 말 것.
+   * 한 배치는 한 트랜잭션이라 모금 건수(totals)와 명단 수(listable)가 같은 순간을 본다 — 익명 수가
+   * 두 조회 사이에 들어온 후원 때문에 어긋나지 않는다.
+   */
+  const [totals, claimed, names, listable, anonymousMessageRows] = await db.batch([
+    db.all<{ raised: number | null; backers: number | null; persons: number | null }>(sql`
+      SELECT SUM(o.total_amount - CASE WHEN o.status = 'partially_refunded' THEN COALESCE((
+               SELECT SUM(r.amount) FROM refunds r JOIN payments p ON p.id = r.payment_id
+               WHERE p.order_id = o.id AND r.status = 'done'
+             ), 0) ELSE 0 END) AS raised,
+             -- 펀딩 '건수'. 인원이 아니다.
+             COUNT(*) AS backers,
+             -- 펀딩 '인원'. 신원 키는 backerIdentitySql — 수기 등록 플레이스홀더는 주문 단위로
+             -- 떨어뜨린다(연락처 없는 펀딩끼리 한 사람으로 뭉치면 인원이 1로 붕괴한다).
+             COUNT(DISTINCT ${backerIdentitySql()}) AS persons
+      FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
+      WHERE fp.project_slug = ${project.slug} AND ${countedFundingPledgeSql()}
+    `),
+    db.all<{ reward_id: string; qty: number }>(sql`
+      SELECT l.reward_id, SUM(l.quantity) AS qty
+      FROM ${fundingPledgeLinesSql()} l
+      JOIN funding_pledges fp ON fp.id = l.pledge_id JOIN orders o ON o.id = fp.order_id
+      WHERE fp.project_slug = ${project.slug}
+        AND (${countedFundingPledgeSql()} OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
+      GROUP BY l.reward_id
+    `),
+    /**
+     * 공개 명단. `display_name_public = 1`이 공개 동의다 — 이름과 응원 메시지를 한 단위로 받는다.
+     *
+     * 한동안 메시지에 판본 게이트(`terms_version = FUNDING_TERMS_VERSION`)를 걸어 뒀다. 옛 동의
+     * 문서가 메시지를 "운영자에게만 보입니다"라고 약속했기 때문이다. 그 게이트가 실제로 가린
+     * 것은 **운영자 본인의 후원 1건**뿐이었고, 본인이 2026-09-15에 공개를 지시해 걷어 냈다.
+     * 이후 들어오는 후원은 전부 현재 문서(이름·메시지 공개를 고지한다)에 동의하므로 게이트가
+     * 보호할 대상이 없다.
+     *
+     * 옛 문서로 동의한 후원이 다시 생길 일이 있다면(과거 데이터 이관 등) 그때는 이 자리에
+     * 판본 조건을 되살려야 한다.
+     *
+     * **파기된 건은 아예 뺀다.** 5년이 지나 이름이 `PURGED_MARK`로 덮이면, 펀딩 주문은 영구히
+     * `paid`라 그 행이 계속 이 조회에 걸린다 — BackerWall·SupporterTicker에 "(개인정보 파기됨)"이
+     * 최대 100번 늘어서고, 리워드 전달 표시를 안 한 프로젝트는 응원 메시지까지 그 이름에
+     * 붙는다. 계약 서명 완료 화면(`pages/[locale]/contracts/[id]/complete.tsx`)은 이름 자리를
+     * 다른 문장으로 갈아 끼우는데, 거기는 **한 사람에게 말을 거는 자리**라 대체 문장이 성립한다.
+     * 여기는 사람을 세워 놓는 명단이라 갈아 끼울 문장이 없다 — 표식은 그 자리에 아무도 없다는
+     * 뜻이므로 명단에서 내린다. LIMIT 앞에서 걸러야 남은 100자리가 실제 이름으로 채워진다.
+     *
+     * **표시 이름은 `public_name`이 먼저다**(가린 이름·닉네임, lib/funding/publicName.ts).
+     * 1년 파기가 그 값을 `PURGED_MARK`로 덮으면 결제자 이름이 아직 남아 있어도 명단에서
+     * 내린다 — 실명을 피하려고 닉네임을 고른 사람을 파기 시점에 실명으로 되돌리면 안 된다.
+     *
+     * **운영자가 내린 행(`listing_hidden_at`)도 뺀다.** 공개 동의와 별개의 축이다(db/schema.ts).
+     *
+     * 이름은 내보내기 전에 보이지 않는 문자를 걷는다(`stripInvisible`). 닉네임은 저장할 때
+     * 이미 걸렀지만 결제자 실명 칸은 거르지 않고 저장되고, 명단은 이름을 한 문단에 이어
+     * 그리므로 방향 재정의 문자 하나가 다른 사람의 이름까지 뒤집는다. 걷고 나서 빈 이름은 뺀다.
+     */
+    db.all<{ display_name: string; supporter_message: string | null; paid_at: number | null; created_at: number }>(sql`
+      SELECT COALESCE(fp.public_name, o.customer_name) AS display_name,
+             fp.supporter_message,
+             fp.paid_at, o.created_at
+      FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
+      WHERE fp.project_slug = ${project.slug} AND ${countedFundingPledgeSql()} AND fp.display_name_public = 1
+        AND o.customer_name <> ${PURGED_MARK}
+        AND (fp.public_name IS NULL OR fp.public_name <> ${PURGED_MARK})
+        AND fp.listing_hidden_at IS NULL
+      ORDER BY fp.paid_at DESC, o.created_at DESC LIMIT 100
+    `),
+    // 명단 조회와 **같은 WHERE**에서 LIMIT만 뺀 수. 둘이 갈리면 익명 수가 틀린다.
+    db.all<{ n: number | null }>(sql`
+      SELECT COUNT(*) AS n
+      FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
+      WHERE fp.project_slug = ${project.slug} AND ${countedFundingPledgeSql()} AND fp.display_name_public = 1
+        AND o.customer_name <> ${PURGED_MARK}
+        AND (fp.public_name IS NULL OR fp.public_name <> ${PURGED_MARK})
+        AND fp.listing_hidden_at IS NULL
+    `),
+    /**
+     * 이름 없이 싣는 응원 메시지. `ANONYMOUS_MESSAGE_TERMS_FROM` 판본부터 이름 공개와 메시지 표시가
+     * 갈라졌다 — 이름을 공개하지 않은 후원도 메시지는 "익명"으로 나간다. 옛 판본 후원은 소급하지
+     * 않는다(그때 문서가 "공개 동의한 경우에만"을 약속했다). 운영자 숨김은 여기서도 똑같이 뺀다.
+     */
+    db.all<{ supporter_message: string | null; paid_at: number | null; created_at: number }>(sql`
+      SELECT fp.supporter_message, fp.paid_at, o.created_at
+      FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
+      WHERE fp.project_slug = ${project.slug} AND ${countedFundingPledgeSql()} AND fp.display_name_public = 0
+        AND fp.terms_version LIKE 'funding-terms-%' AND fp.terms_version >= ${ANONYMOUS_MESSAGE_TERMS_FROM}
+        AND fp.supporter_message IS NOT NULL AND TRIM(fp.supporter_message) <> ''
+        AND fp.listing_hidden_at IS NULL
+      ORDER BY fp.paid_at DESC, o.created_at DESC LIMIT 100
+    `),
+  ]);
   const claimedBy = new Map(claimed.map((r) => [r.reward_id, Number(r.qty)]));
   const remaining: Record<string, number | null> = {};
   for (const r of project.rewards) {
     remaining[r.id] = r.totalQuantity === null ? null : Math.max(0, r.totalQuantity - (claimedBy.get(r.id) ?? 0));
   }
-  /**
-   * 공개 명단. `display_name_public = 1`이 공개 동의다 — 이름과 응원 메시지를 한 단위로 받는다.
-   *
-   * 한동안 메시지에 판본 게이트(`terms_version = FUNDING_TERMS_VERSION`)를 걸어 뒀다. 옛 동의
-   * 문서가 메시지를 "운영자에게만 보입니다"라고 약속했기 때문이다. 그 게이트가 실제로 가린
-   * 것은 **운영자 본인의 후원 1건**뿐이었고, 본인이 2026-09-15에 공개를 지시해 걷어 냈다.
-   * 이후 들어오는 후원은 전부 현재 문서(이름·메시지 공개를 고지한다)에 동의하므로 게이트가
-   * 보호할 대상이 없다.
-   *
-   * 옛 문서로 동의한 후원이 다시 생길 일이 있다면(과거 데이터 이관 등) 그때는 이 자리에
-   * 판본 조건을 되살려야 한다.
-   *
-   * **파기된 건은 아예 뺀다.** 5년이 지나 이름이 `PURGED_MARK`로 덮이면, 펀딩 주문은 영구히
-   * `paid`라 그 행이 계속 이 조회에 걸린다 — BackerWall·SupporterTicker에 "(개인정보 파기됨)"이
-   * 최대 100번 늘어서고, 리워드 전달 표시를 안 한 프로젝트는 응원 메시지까지 그 이름에
-   * 붙는다. 계약 서명 완료 화면(`pages/[locale]/contracts/[id]/complete.tsx`)은 이름 자리를
-   * 다른 문장으로 갈아 끼우는데, 거기는 **한 사람에게 말을 거는 자리**라 대체 문장이 성립한다.
-   * 여기는 사람을 세워 놓는 명단이라 갈아 끼울 문장이 없다 — 표식은 그 자리에 아무도 없다는
-   * 뜻이므로 명단에서 내린다. LIMIT 앞에서 걸러야 남은 100자리가 실제 이름으로 채워진다.
-   *
-   * **표시 이름은 `public_name`이 먼저다**(가린 이름·닉네임, lib/funding/publicName.ts).
-   * 1년 파기가 그 값을 `PURGED_MARK`로 덮으면 결제자 이름이 아직 남아 있어도 명단에서
-   * 내린다 — 실명을 피하려고 닉네임을 고른 사람을 파기 시점에 실명으로 되돌리면 안 된다.
-   *
-   * **운영자가 내린 행(`listing_hidden_at`)도 뺀다.** 공개 동의와 별개의 축이다(db/schema.ts).
-   *
-   * 이름은 내보내기 전에 보이지 않는 문자를 걷는다(`stripInvisible`). 닉네임은 저장할 때
-   * 이미 걸렀지만 결제자 실명 칸은 거르지 않고 저장되고, 명단은 이름을 한 문단에 이어
-   * 그리므로 방향 재정의 문자 하나가 다른 사람의 이름까지 뒤집는다. 걷고 나서 빈 이름은 뺀다.
-   */
-  const names = await db.all<{ display_name: string; supporter_message: string | null; paid_at: number | null; created_at: number }>(sql`
-    SELECT COALESCE(fp.public_name, o.customer_name) AS display_name,
-           fp.supporter_message,
-           fp.paid_at, o.created_at
-    FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
-    WHERE fp.project_slug = ${project.slug} AND ${countedFundingPledgeSql()} AND fp.display_name_public = 1
-      AND o.customer_name <> ${PURGED_MARK}
-      AND (fp.public_name IS NULL OR fp.public_name <> ${PURGED_MARK})
-      AND fp.listing_hidden_at IS NULL
-    ORDER BY fp.paid_at DESC, o.created_at DESC LIMIT 100
-  `);
-  // 명단 조회와 **같은 WHERE**에서 LIMIT만 뺀 수. 둘이 갈리면 익명 수가 틀린다.
-  const listable = await db.all<{ n: number | null }>(sql`
-    SELECT COUNT(*) AS n
-    FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
-    WHERE fp.project_slug = ${project.slug} AND ${countedFundingPledgeSql()} AND fp.display_name_public = 1
-      AND o.customer_name <> ${PURGED_MARK}
-      AND (fp.public_name IS NULL OR fp.public_name <> ${PURGED_MARK})
-      AND fp.listing_hidden_at IS NULL
-  `);
-  /**
-   * 이름 없이 싣는 응원 메시지. `ANONYMOUS_MESSAGE_TERMS_FROM` 판본부터 이름 공개와 메시지 표시가
-   * 갈라졌다 — 이름을 공개하지 않은 후원도 메시지는 "익명"으로 나간다. 옛 판본 후원은 소급하지
-   * 않는다(그때 문서가 "공개 동의한 경우에만"을 약속했다). 운영자 숨김은 여기서도 똑같이 뺀다.
-   */
-  const anonymousMessageRows = await db.all<{ supporter_message: string | null; paid_at: number | null; created_at: number }>(sql`
-    SELECT fp.supporter_message, fp.paid_at, o.created_at
-    FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
-    WHERE fp.project_slug = ${project.slug} AND ${countedFundingPledgeSql()} AND fp.display_name_public = 0
-      AND fp.terms_version LIKE 'funding-terms-%' AND fp.terms_version >= ${ANONYMOUS_MESSAGE_TERMS_FROM}
-      AND fp.supporter_message IS NOT NULL AND TRIM(fp.supporter_message) <> ''
-      AND fp.listing_hidden_at IS NULL
-    ORDER BY fp.paid_at DESC, o.created_at DESC LIMIT 100
-  `);
   const listed = names
     .map((n) => ({ ...n, display_name: stripInvisible(n.display_name).trim() }))
     .filter((n) => n.display_name !== '');

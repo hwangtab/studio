@@ -28,6 +28,8 @@ jest.mock('../booking/gcal', () => ({
 // 않으면 in-memory DB에 __drizzle_migrations 테이블이 없어 "판정 불가"가 아니라
 // "0개 적용"으로 읽혀 로컬 .env.local의 TURSO 값 유무에 따라 이 파일의 건수 assertion이
 // 흔들린다(migrationDrift 자체의 동작은 migrationDrift.test.ts가 별도로 검증한다).
+const runLeadRateCheck = jest.fn().mockResolvedValue({ skipped: 'GA4 env 없음', issues: [] });
+jest.mock('./leadRateCheck', () => ({ runLeadRateCheck: (...args: unknown[]) => runLeadRateCheck(...args) }));
 jest.mock('./migrationDrift', () => ({
   checkMigrationDrift: jest.fn().mockResolvedValue({ status: 'unknown', localCount: 0, appliedCount: null, pendingCount: 0, pendingTags: [] }),
 }));
@@ -72,7 +74,8 @@ beforeAll(async () => {
 beforeEach(async () => {
   // refunds가 payments를, subscription_payments가 orders·subscriptions를 참조하므로
   // 참조하는 쪽을 먼저 지운다. refunds가 빠져 있어 테스트끼리 오염된 적이 있다.
-  for (const table of ['show_tickets', 'show_orders', 'software_activations', 'software_licenses', 'refunds', 'payments', 'bookings', 'funding_pledges', 'funding_project_payouts', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'funding_projects', 'funding_creators', 'room_tenancy_payments', 'room_tenancies']) {
+  // 공연 표들은 orders를 참조한다 — 앞 describe가 남긴 공연 행이 orders 정리를 FK로 막지 않게 먼저 지운다.
+  for (const table of ['show_tickets', 'show_orders', 'show_ticket_types', 'showtimes', 'show_zones', 'shows', 'refund_accounts', 'software_activations', 'software_licenses', 'refunds', 'payments', 'bookings', 'funding_pledges', 'funding_project_payouts', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'funding_projects', 'funding_creators', 'room_tenancy_payments', 'room_tenancies']) {
     await client.execute(`DELETE FROM ${table}`);
   }
   (fetchBusyRanges as jest.Mock).mockReset().mockResolvedValue([]);
@@ -1218,5 +1221,36 @@ describe('지급 뒤 환불로 초과 지급된 공연 정산', () => {
     await addRefund('rf1', 100000);
     await client.execute(`UPDATE partner_payouts SET status = 'pending'`);
     expect(await titles()).toEqual(expect.not.arrayContaining([expect.stringContaining(TITLE)]));
+  });
+});
+
+describe('점검 격리 — 한 점검이 던져도 나머지 결과와 실패 항목이 함께 보고된다', () => {
+  it('GA4 점검이 던져도 DB 점검 이슈는 그대로 가고, 실패는 high 항목으로 적힌다', async () => {
+    await insertOrder({ status: 'pending' });
+    await client.execute(`INSERT INTO payments (id, order_id, payment_key) VALUES ('p-iso','o1','pk-iso')`);
+    runLeadRateCheck.mockRejectedValueOnce(new Error('invalid_grant: token revoked'));
+
+    const report = await runHealthCheck(NOW);
+    expect(report.issues.some((i) => i.title.includes('결제 기록과 주문 상태가 어긋난 주문'))).toBe(true);
+    const failed = report.issues.find((i) => i.title.includes('점검 자체가 실패 — 카카오 전환율'))!;
+    expect(failed).toBeDefined();
+    expect(failed.severity).toBe('high');
+    expect(failed.detail).toContain('token revoked');
+  });
+
+  it('DB 점검 안에서 쿼리가 던져도 전체가 reject되지 않고, 앞서 모은 항목은 남고 실패 항목이 덧붙는다', async () => {
+    // bookings 표를 잠시 다른 이름으로 바꿔 캘린더 누락 점검(본문 첫 쿼리)이 던지게 한다 — 미적용 마이그레이션과 같은 모양.
+    await client.execute('ALTER TABLE bookings RENAME TO bookings_hidden');
+    try {
+      const report = await runHealthCheck(NOW);
+      const failed = report.issues.find((i) => i.title.includes('점검 자체가 실패 — DB 점검 나머지'))!;
+      expect(failed).toBeDefined();
+      expect(failed.severity).toBe('high');
+      expect(failed.detail).toContain('no such table');
+      // 격리가 없었다면 runHealthCheck 전체가 reject됐다 — 다른 점검(캘린더·계약 정리·GA4)은 그대로 돌았다.
+      expect(report.checkedAt).toEqual(NOW);
+    } finally {
+      await client.execute('ALTER TABLE bookings_hidden RENAME TO bookings');
+    }
   });
 });

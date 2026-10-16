@@ -4,6 +4,7 @@ import { getDb } from '../../db/client';
 import { adminUrl, buildEmailLayout, escapeHtml } from '../email/layout';
 import { formatKst } from '../email/operatorAlert';
 import { isNotificationSentinel } from './notificationSentinel';
+import { safeDbErrorSummary } from '../payments/refundAccount';
 import { bookings, contracts, fundingPledges, fundingProjectPayouts, fundingProjects, orders, payments, refunds, subscriptionPayments, subscriptions } from '../../db/schema';
 import { calendarForService, calendarIdFor, fetchBusyRanges, isCalendarActive, roomCalendarEnvKey, type BookingCalendar } from '../booking/gcal';
 import { kstToday, overdueDays } from '../tenancy/rules';
@@ -388,6 +389,25 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   const rotationPending = await checkFieldKeyRotationPending();
   if (rotationPending) issues.push(rotationPending);
 
+  // 드리프트 보고는 뒤 쿼리가 던져도 살아남아야 한다 — 미적용 마이그레이션이 바로 그 쿼리를 던지게 하는 원인이라,
+  // 둘이 한 함수에서 같이 죽으면 "표가 없다는 사실은 드리프트 점검이 보고한다"는 전제가 깨진다.
+  issues.push(...(await runIsolatedCheck('마이그레이션 드리프트', async () => {
+    const found: HealthIssue[] = [];
+    await collectMigrationDriftIssue(found);
+    return found;
+  })));
+
+  try {
+    await collectDbIssuesBody(db, now, issues);
+  } catch (error: unknown) {
+    // 이미 push된 이슈(드리프트 등)는 남기고, 나머지가 확인되지 않았다는 사실을 high로 덧붙인다.
+    issues.push(...(await runIsolatedCheck('DB 점검 나머지', async () => { throw error; })));
+  }
+
+  return sortBySeverity(issues);
+};
+
+const collectMigrationDriftIssue = async (issues: HealthIssue[]): Promise<void> => {
   const migrationDrift = await checkMigrationDrift();
   if (migrationDrift.status === 'drift') {
     issues.push({
@@ -401,7 +421,10 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
         '`npm run db:migrate`로 적용해 주세요.',
     });
   }
+};
 
+/** collectDbIssues의 본문 — 쿼리 하나가 던지면 호출부가 그때까지의 이슈를 지키고 실패 항목을 덧붙인다. */
+const collectDbIssuesBody = async (db: ReturnType<typeof getDb>, now: Date, issues: HealthIssue[]): Promise<void> => {
   /**
    * 결제·확정은 정상인데 구글 캘린더에 이벤트가 없는 예약. 운영자 캘린더에는 그 시간이
    * 비어 있으므로, 그대로 두면 같은 시간에 전화 예약을 받아 오프라인 이중예약이 난다.
@@ -1271,13 +1294,38 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   } catch (error: unknown) {
     console.error('[health] 소프트웨어 라이선스 누락 조회 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
   }
-
-  return sortBySeverity(issues);
 };
 
 const sortBySeverity = (issues: HealthIssue[]): HealthIssue[] => {
   const order = { high: 0, medium: 1 };
   return issues.sort((a, b) => order[a.severity] - order[b.severity]);
+};
+
+/**
+ * 점검 하나를 격리해 돌린다 — 던지면 **그 점검이 오늘 확인되지 않았다**는 high 항목으로 바꾼다.
+ *
+ * 전에는 GA4 점검·DB 점검·계약 정리가 격리 없이 직렬이라 하나가 던지면 그때까지 모은 이슈가 통째로 버려지고
+ * 크론 catch가 "운영 점검 실패 + 사유" 한 통만 보냈다. GA4 토큰 폐기처럼 지속되는 실패가 생기면 결제 불일치·
+ * 캘린더 누락 같은 high 이슈가 매일 가지 않고 마케팅 지표 오류로 읽혔다. 관리자 첫 화면도 같은 함수를 써서 함께
+ * 죽었다. 죽은 점검은 medium이 아니라 high다 — medium 사이에 묻히면 "점검이 안 됐다"는 사실을 놓친다.
+ */
+export const runIsolatedCheck = async (label: string, run: () => Promise<HealthIssue[]>): Promise<HealthIssue[]> => {
+  try {
+    return await run();
+  } catch (error: unknown) {
+    const summary = safeDbErrorSummary(error);
+    // drizzle은 "Failed query: <SQL>"로 감싸고 실제 원인(no such table 등)은 cause에 둔다 — 둘 다 싣는다.
+    const cause = error instanceof Error && error.cause instanceof Error ? ` ← ${error.cause.message}` : '';
+    const message = (error instanceof Error ? error.message : String(error)) + cause;
+    console.error(`[healthCheck] 점검 실패 — ${label}`, error);
+    return [{
+      severity: 'high',
+      title: `점검 자체가 실패 — ${label}`,
+      detail:
+        `${summary.name}${summary.code ? ` (${summary.code})` : ''}: ${message.slice(0, 400)}\n` +
+        '이 항목이 보는 문제들은 오늘 확인되지 않았습니다. 반복되면 원인(Turso·GA4 자격·미적용 마이그레이션)을 확인해 주세요.',
+    }];
+  }
 };
 
 export const runHealthCheck = async (now: Date = new Date()): Promise<HealthReport> => {
@@ -1291,19 +1339,18 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
   const tossApiKeys = checkTossApiKeyPair();
   if (tossApiKeys) issues.push(tossApiKeys);
 
-  /**
-   * 카카오 전환율 급락 — 2026-08-13~23 사고(트래픽 정상인데 전환율만 7.5%→1.1%로
-   * 붕괴, 원인 불명·무알림) 재발 방지. GA4 env가 없으면 skip(정상), GA4 호출 자체가
-   * 죽으면 "점검이 죽은 것"이므로 throw해 기존 catch 경로가 운영자에게 알리게 둔다.
-   */
-  const leadRate = await runLeadRateCheck();
-  issues.push(...leadRate.issues);
-
-  issues.push(...(await collectDbIssues(now)));
+  issues.push(...(await runIsolatedCheck('DB 점검(결제·예약·펀딩·구독·공연)', () => collectDbIssues(now))));
 
   // 반드시 collectDbIssues 뒤에 부른다: 이 함수가 기한 지난 발송 계약을 expired로 내리므로, 앞에 오면
   // collectDbIssues의 "서명 기한이 지난 계약" 알림(고객이 링크를 놓쳤다는 신호)이 사라진다.
-  issues.push(...(await checkContractHygiene(now)));
+  issues.push(...(await runIsolatedCheck('계약 정리(기한 지난 발송 계약)', () => checkContractHygiene(now))));
+
+  /**
+   * 카카오 전환율 급락 — 2026-08-13~23 사고(트래픽 정상인데 전환율만 7.5%→1.1%로
+   * 붕괴, 원인 불명·무알림) 재발 방지. GA4 env가 없으면 skip(정상). GA4 호출이 죽으면 위 격리가
+   * high 항목으로 바꾼다 — DB 점검 뒤에 두어 외부 API 장애가 원장 점검을 막지 않게 한다.
+   */
+  issues.push(...(await runIsolatedCheck('카카오 전환율(GA4)', async () => (await runLeadRateCheck()).issues)));
 
   return { issues: sortBySeverity(issues), checkedAt: now };
 };

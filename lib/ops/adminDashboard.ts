@@ -4,7 +4,7 @@ import { and, asc, eq, gt, gte, inArray, lt, sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { bookings, contracts, fundingProjects, orders, socialTokens, subscriptions, workOrders } from '../../db/schema';
 import { getProduct } from '../booking/products';
-import { checkFieldCryptoKey, checkTossApiKeyPair, collectDbIssues, type HealthIssue } from './healthCheck';
+import { checkFieldCryptoKey, checkTossApiKeyPair, collectDbIssues, runIsolatedCheck, type HealthIssue } from './healthCheck';
 import { countPendingArtistPayouts } from '../artistSupport/payout';
 import { countPendingFundingPayouts, listFundingProjectsAwaitingPayoutRecord } from '../funding/payout';
 import { listShopPayoutsAwaitingRecord } from '../partnerPayouts/shop';
@@ -128,7 +128,8 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
   })]);
 
   const [issues, sessions, calendarImport, linkSessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending, fundingPayoutsToRecord, shopPayoutsToRecord, shopPayoutsPending, showPayoutsToRecord, showPayoutsPending, awaitingDepositRows] = await Promise.all([
-    collectDbIssues(now),
+    // 점검 하나가 던져도 첫 화면 전체가 "현황을 불러오지 못했습니다"로 죽지 않게 — 실패는 high 항목으로 보인다.
+    runIsolatedCheck('DB 점검', () => collectDbIssues(now)),
     db
       .select({
         orderId: orders.id,
