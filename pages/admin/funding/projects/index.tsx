@@ -15,6 +15,8 @@ interface AdminFundingProjectsPageProps {
   projects: AdminProjectSummary[];
   /** 스튜디오 서비스(마이그레이션 0037). 운영 DB에 테이블이 없으면 available: false. */
   services: LoadServiceMapResult;
+  /** 서버가 목록을 만든 시각(ms) — 마감 여부 표시용. */
+  nowMs: number;
 }
 
 /**
@@ -58,10 +60,10 @@ export const getServerSideProps: GetServerSideProps<AdminFundingProjectsPageProp
   const sorted = [...projects].sort((a, b) => STATUS_PRIORITY[a.reviewStatus] - STATUS_PRIORITY[b.reviewStatus]);
 
   const services = await loadProjectServiceMap();
-  return { props: { projects: sorted, services } };
+  return { props: { projects: sorted, services, nowMs: Date.now() } };
 };
 
-export default function AdminFundingProjectsPage({ projects, services }: AdminFundingProjectsPageProps) {
+export default function AdminFundingProjectsPage({ projects, services, nowMs }: AdminFundingProjectsPageProps) {
   return (
     <>
       <Head>
@@ -86,6 +88,7 @@ export default function AdminFundingProjectsPage({ projects, services }: AdminFu
                   <th className="px-4 py-3">상태</th>
                   <th className="px-4 py-3">서비스</th>
                   <th className="px-4 py-3">제출 시각</th>
+                  <th className="px-4 py-3">모금·정산</th>
                   <th className="px-4 py-3 rounded-r-lg">목표액</th>
                 </tr>
               </thead>
@@ -131,6 +134,19 @@ export default function AdminFundingProjectsPage({ projects, services }: AdminFu
                     </td>
                     <td data-label="제출 시각" className="px-4 py-3 whitespace-nowrap">
                       {p.submittedAt ? formatKstDateTimeFull(p.submittedAt) : '미제출'}
+                    </td>
+                    <td data-label="모금·정산" className="px-4 py-3 whitespace-nowrap text-xs">
+                      {p.reviewStatus !== 'approved' ? (
+                        <span className="text-gray-400">-</span>
+                      ) : p.payoutState === 'paid' ? (
+                        <span className="font-semibold text-green-700">정산 지급 완료</span>
+                      ) : p.payoutState === 'pending' ? (
+                        <span className="font-semibold text-amber-700">정산 이체 대기</span>
+                      ) : new Date(p.endAt).getTime() < nowMs ? (
+                        <span className="font-semibold text-red-700">마감 · 정산 기록 없음</span>
+                      ) : (
+                        <span className="text-gray-600">모금 중 ({formatKstDateTimeFull(p.endAt).slice(0, 10)}까지)</span>
+                      )}
                     </td>
                     <td data-label="목표액" className="px-4 py-3 whitespace-nowrap">{formatPriceAmount(p.goalAmount)}원</td>
                   </tr>

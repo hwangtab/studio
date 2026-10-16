@@ -20,7 +20,8 @@ const readMessage = async (response: Response, fallback: string): Promise<string
 /** id는 예약(주문) id — /admin/bookings/[id]와 동일한 값. */
 export const setBookingStatus = async (
   id: string,
-  status: 'completed' | 'no_show',
+  /** 'confirmed'는 완료·노쇼를 되돌릴 때만이다. */
+  status: 'completed' | 'no_show' | 'confirmed',
 ): Promise<BookingActionResult> => {
   try {
     const response = await fetch(`/api/admin/bookings/${id}`, {

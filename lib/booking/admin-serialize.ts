@@ -294,7 +294,7 @@ export const LIVE_ORDER_STATUSES_FOR_REFUND = ['paid', 'partially_refunded'] as 
  * cancelSessionBooking·cancelMixingOrder가 같은 것을 본다.
  *
  * `completed`·`no_show`는 넣지 않는다 — cancelSessionBooking이 거절하므로 폼을 띄우면
- * 눌러도 실패하는 죽은 버튼이 된다.
+ * 눌러도 실패하는 죽은 버튼이 된다. 이미 그 상태가 된 예약은 관리자 상세의 "확정으로 되돌리기"로 확정으로 돌린 뒤 환불한다.
  */
 const ADMIN_REFUNDABLE_ENTITY_STATUSES = {
   session: ['confirmed', 'cancelled'],

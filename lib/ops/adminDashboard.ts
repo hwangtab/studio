@@ -5,7 +5,7 @@ import { bookings, contracts, fundingProjects, orders, socialTokens, subscriptio
 import { getProduct } from '../booking/products';
 import { collectDbIssues, type HealthIssue } from './healthCheck';
 import { countPendingArtistPayouts } from '../artistSupport/payout';
-import { countPendingFundingPayouts } from '../funding/payout';
+import { countPendingFundingPayouts, listFundingProjectsAwaitingPayoutRecord } from '../funding/payout';
 
 /**
  * 관리자 첫 화면의 데이터.
@@ -40,6 +40,17 @@ export interface SocialTokenStatus {
   daysLeft: number;
 }
 
+export interface AwaitingDepositCounts {
+  /** 예약·믹싱·예약금 결제 링크. */
+  bookings: number;
+  /** 공연 티켓. */
+  shows: number;
+  /** 상점 주문. */
+  shop: number;
+  /** 펀딩 후원(계좌 입금 신청, 입금 확인 전). */
+  funding: number;
+}
+
 export interface AdminDashboard {
   issues: HealthIssue[];
   /** 오늘(KST 0시)부터 7일 안의 확정 세션, 시작 시각순. */
@@ -61,6 +72,10 @@ export interface AdminDashboard {
     fundingProjectsAwaitingReview: number;
     /** 기록됐지만 아직 개설자에게 이체하지 않은 펀딩 정산. */
     fundingPayoutsPending: number;
+    /** 모금이 끝났는데 정산이 아직 기록되지 않은 프로젝트(살아 있는 후원이 있는 것만). */
+    fundingPayoutsToRecord: number;
+    /** 계좌 입금을 기다리는 주문(자동 취소 없음 — 운영자가 입금을 확인하거나 닫아야 한다). */
+    awaitingDeposit: AwaitingDepositCounts;
   };
   socialTokens: SocialTokenStatus[];
   /** upcomingSessions의 창 길이(일). 화면 문구용 — 페이지가 이 모듈을 값으로 import하지 않게 데이터에 싣는다. */
@@ -87,7 +102,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
   // 캘린더 → 사이트: 운영자가 캘린더에서 옮기거나 지운 링크 일정을 먼저 주문에 반영한다(아래 "이번 주 세션" 조회가 그 값을 읽는다). 던지지 않는다.
   await syncLinkEventsFromCalendar(now).catch(() => undefined);
 
-  const [issues, sessions, calendarImport, linkSessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending] = await Promise.all([
+  const [issues, sessions, calendarImport, linkSessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending, fundingPayoutsToRecord, awaitingDepositRows] = await Promise.all([
     collectDbIssues(now),
     db
       .select({
@@ -135,6 +150,19 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       .from(fundingProjects)
       .where(eq(fundingProjects.reviewStatus, 'submitted')),
     countPendingFundingPayouts(),
+    // 마감 뒤 정산 기록 대기 — 표 조회가 실패해도 대시보드는 열려야 한다(null이면 카드를 숨긴다).
+    listFundingProjectsAwaitingPayoutRecord(now).then((rows) => rows.length).catch((error: unknown) => {
+      console.error('[admin-dashboard] 정산 기록 대기 조회 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
+      return 0;
+    }),
+    db.all<{ kind: string; n: number }>(sql`
+      SELECT CASE WHEN o.type = 'ticket' THEN 'shows' WHEN o.type = 'merch' THEN 'shop'
+                  WHEN o.type = 'funding' THEN 'funding' ELSE 'bookings' END AS kind, COUNT(*) AS n
+      FROM orders o
+      WHERE o.status = 'awaiting_deposit' OR (o.type = 'funding' AND o.status = 'pending'
+        AND EXISTS (SELECT 1 FROM funding_pledges fp WHERE fp.order_id = o.id AND fp.payment_method = 'bank_transfer' AND fp.entry_source = 'online'))
+      GROUP BY kind
+    `),
   ]);
 
   const countOf = (rows: Array<{ status: string; count: number }>, status: string): number =>
@@ -174,6 +202,13 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       artistPayoutsPending,
       fundingProjectsAwaitingReview: Number(fundingReviewRows[0]?.count ?? 0),
       fundingPayoutsPending,
+      fundingPayoutsToRecord,
+      awaitingDeposit: {
+        bookings: Number(awaitingDepositRows.find((r) => r.kind === 'bookings')?.n ?? 0),
+        shows: Number(awaitingDepositRows.find((r) => r.kind === 'shows')?.n ?? 0),
+        shop: Number(awaitingDepositRows.find((r) => r.kind === 'shop')?.n ?? 0),
+        funding: Number(awaitingDepositRows.find((r) => r.kind === 'funding')?.n ?? 0),
+      },
     },
     socialTokens: tokens.map((row) => ({
       platform: row.platform,

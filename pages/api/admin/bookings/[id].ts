@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 
 import { getDb } from '../../../../db/client';
 import { bookings, orders, workOrders } from '../../../../db/schema';
@@ -14,7 +14,11 @@ import { bankDepositStateOf, isBankDepositPayment } from '../../../../lib/paymen
 import { removePaymentLinkCalendarEvent, resyncPaymentLinkCalendarEvent } from '../../../../lib/payments/linkCalendar';
 import { markRefundAccountRefunded } from '../../../../lib/payments/refundAccount';
 
-const STATUS_TRANSITIONS = ['completed', 'no_show'] as const;
+/**
+ * `completed`·`no_show`는 확정 예약에서만, `confirmed`는 그 둘을 **되돌릴 때만**이다. 완료·노쇼가 되면 환불 경로
+ * (cancelSessionBooking)가 닫히는데, 되돌릴 방법이 없어 잘못 누르면 토스 콘솔에서 직접 환불해야 했다.
+ */
+const STATUS_TRANSITIONS = ['completed', 'no_show', 'confirmed'] as const;
 type StatusTransition = (typeof STATUS_TRANSITIONS)[number];
 
 const isStatusTransition = (value: unknown): value is StatusTransition =>
@@ -87,7 +91,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const result = await getDb()
         .update(bookings)
         .set({ status, updatedAt: new Date() })
-        .where(and(eq(bookings.id, booking.id), eq(bookings.status, 'confirmed')));
+        .where(
+          and(
+            eq(bookings.id, booking.id),
+            status === 'confirmed' ? inArray(bookings.status, ['completed', 'no_show']) : eq(bookings.status, 'confirmed'),
+          ),
+        );
 
       if ((result.rowsAffected ?? 0) === 0) {
         return res.status(409).json({

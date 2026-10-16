@@ -702,3 +702,45 @@ export const countPendingFundingPayouts = async (): Promise<number> => {
     .where(eq(fundingProjectPayouts.status, 'pending'));
   return Number(row?.count ?? 0);
 };
+
+export interface FundingProjectAwaitingPayout {
+  id: string;
+  slug: string;
+  title: string;
+  endAt: Date;
+}
+
+/**
+ * **모금이 끝났는데 정산이 아직 기록되지 않은 프로젝트.** 승인된 프로젝트 중 마감이 지났고, 살아 있는 후원
+ * (paid·partially_refunded)이 하나라도 있으며, `funding_project_payouts` 행이 없는 것.
+ *
+ * 대시보드 대기열은 이미 기록된 정산(`pending`)만 세서, 마감 뒤 아무도 기록 버튼을 누르지 않은 프로젝트는 어느 화면에도
+ * 나오지 않았다 — 운영자가 프로젝트를 하나씩 열어 봐야 알 수 있었다. 이 함수가 그 빈칸을 메운다.
+ * 코드가 정산 시점을 강제하지는 않는다(policy.ts `FUNDING_PAYOUT_BUSINESS_DAYS`는 안내 문구용).
+ */
+export const listFundingProjectsAwaitingPayoutRecord = async (now: Date): Promise<FundingProjectAwaitingPayout[]> => {
+  const rows = await getDb().all<{ id: string; slug: string; title: string; end_at: number }>(sql`
+    SELECT p.id, p.slug, p.title, p.end_at
+    FROM funding_projects p
+    WHERE p.review_status = 'approved' AND p.end_at < ${Math.floor(now.getTime() / 1000)}
+      AND NOT EXISTS (SELECT 1 FROM funding_project_payouts x WHERE x.project_id = p.id)
+      AND EXISTS (
+        SELECT 1 FROM funding_pledges fp JOIN orders o ON o.id = fp.order_id
+        WHERE fp.project_slug = p.slug AND o.status IN ('paid', 'partially_refunded')
+      )
+    ORDER BY p.end_at
+  `);
+  return rows.map((r) => ({ id: r.id, slug: r.slug, title: r.title, endAt: new Date(Number(r.end_at) * 1000) }));
+};
+
+/** 마감 뒤 영업일(주말만 뺀다, 공휴일은 모른다) `days`일이 지난 시각 이후인가 — 정산 안내 기한이 넘었는지 보는 데만 쓴다. */
+export const businessDaysAfter = (from: Date, days: number): Date => {
+  const d = new Date(from.getTime());
+  let left = days;
+  while (left > 0) {
+    d.setUTCDate(d.getUTCDate() + 1);
+    const dow = new Date(d.getTime() + 9 * 3600 * 1000).getUTCDay();
+    if (dow !== 0 && dow !== 6) left -= 1;
+  }
+  return d;
+};
