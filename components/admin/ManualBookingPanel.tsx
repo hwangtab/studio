@@ -47,6 +47,7 @@ export const ManualBookingPanel = ({
   const [open, setOpen] = useState(false);
   const [adoptEventId, setAdoptEventId] = useState<string | null>(null);
   const [adoptWarning, setAdoptWarning] = useState<string | null>(null);
+  const [adoptHours, setAdoptHours] = useState<number | null>(null);
   const [kind, setKind] = useState<'session' | 'mixing'>('session');
   const [productId, setProductId] = useState(sessionProducts[0].id);
   const [mixingId, setMixingId] = useState(MIXING_PRODUCTS[0].id);
@@ -75,7 +76,9 @@ export const ManualBookingPanel = ({
     setKind('session');
     setDate(kstStart.toISOString().slice(0, 10));
     setStartHour(kstStart.getUTCHours());
-    setHours(Math.max(1, Math.round((end.getTime() - start.getTime()) / 3_600_000)));
+    const eventHours = Math.max(1, Math.round((end.getTime() - start.getTime()) / 3_600_000));
+    setHours(eventHours);
+    setAdoptHours(eventHours);
     const kstEnd = new Date(end.getTime() + KST_OFFSET_MS);
     const clock = (d: Date) => `${String(d.getUTCHours()).padStart(2, '0')}:${String(d.getUTCMinutes()).padStart(2, '0')}`;
     const original = `${clock(kstStart)}~${clock(kstEnd)}`;
@@ -89,6 +92,21 @@ export const ManualBookingPanel = ({
   const session = sessionProducts.find((p) => p.id === productId) ?? sessionProducts[0];
   const mixing = MIXING_PRODUCTS.find((p) => p.id === mixingId) ?? MIXING_PRODUCTS[0];
   const { openHour, closeHour } = productHours(session);
+  // 캘린더 일정 길이와 고른 상품의 이용 시간이 다르면 알린다 — 패키지는 길이가 고정이고, 시간제는 허용 범위가 있다.
+  const lengthWarning = (() => {
+    if (!adoptEventId || adoptHours === null || kind !== 'session') return null;
+    const { openHour: open, closeHour: close } = productHours(session);
+    if (startHour < open || startHour + (session.kind === 'package' ? (session.sessionHours ?? 1) : hours) > close) {
+      return `이 상품의 영업시간은 ${open}:00~${close}:00예요. 이 시각으로는 등록되지 않아요.`;
+    }
+    if (session.kind === 'package' && session.sessionHours !== adoptHours) {
+      return `캘린더 일정은 ${adoptHours}시간인데 이 상품은 ${session.sessionHours}시간 패키지예요. 등록하면 ${session.sessionHours}시간으로 잡혀요.`;
+    }
+    if (session.kind === 'hourly' && (hours < (session.minHours ?? 1) || hours > (session.maxHours ?? 12))) {
+      return `캘린더 일정(${adoptHours}시간)은 이 상품의 이용 시간 범위(${session.minHours ?? 1}~${session.maxHours ?? 12}시간) 밖이에요.`;
+    }
+    return null;
+  })();
   const effectiveHours = session.kind === 'package' ? (session.sessionHours ?? 1) : hours;
 
   const listPrice = useMemo(() => {
@@ -138,6 +156,7 @@ export const ManualBookingPanel = ({
         setNote('');
         setAdoptEventId(null);
         setAdoptWarning(null);
+        setAdoptHours(null);
         await onCreated();
       }
     } catch {
@@ -166,7 +185,7 @@ export const ManualBookingPanel = ({
                 구글 캘린더에 있던 일정을 옮기는 중이에요. 등록이 끝나면 원래 캘린더 일정은 지워지고 사이트 예약에서 새로 동기화돼요. 상품·고객·금액을 채워 주세요.
               </Notice>
               {adoptWarning && <Notice tone="warning" className="mt-2">{adoptWarning}</Notice>}
-              <p className="mt-2 text-xs text-gray-500">패키지 상품은 이용 시간이 정해져 있어 캘린더 일정 길이와 다를 수 있어요. 영업시간 밖 시각은 등록되지 않아요.</p>
+              {lengthWarning && <Notice tone="warning" className="mt-2">{lengthWarning}</Notice>}
             </div>
           )}
           <Field id="mb-kind" label="종류" required className={`md:col-span-2 ${lightOnlyField}`}>
