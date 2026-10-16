@@ -470,6 +470,13 @@
       "when": 1792122973782,
       "tag": "0066_tenancy",
       "breakpoints": true
+    },
+    {
+      "idx": 67,
+      "version": "6",
+      "when": 1792125214021,
+      "tag": "0067_partner_payouts",
+      "breakpoints": true
     }
   ]
 }

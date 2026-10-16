@@ -169,6 +169,17 @@ npm run indexnow:changed -- --dry-run
 수기 매출 삭제가 행 삭제에서 소프트 삭제(누가 언제 지웠는지 남김)로 바뀌었다. 순서를 뒤집으면 **수기 매출 조회·삭제만** 실패한다 —
 매출 현황은 "직접 받은 매출 표를 읽지 못했다" 경고와 함께, 대시보드는 `manualMissing`으로 직접 입금분이 빠진 숫자를 보이고(나머지 매출은 정상), 삭제 버튼은 500이다. 확인은 `PRAGMA table_info(manual_revenues);`.
 
+### 마이그레이션 0067(`partner_payouts`·`partner_payout_adjustments`)도 배포보다 먼저 적용한다
+
+상점(P1)·공연(P2) 정산 기록 표 둘이다. 새 표뿐이고 어떤 `relations()`에도 잇지 않았다 — 순서를 뒤집어도 결제·주문·로그인은 안 깨진다. 깨지는 범위:
+
+- `/admin/shop`의 정산 표가 "마이그레이션 0067 필요" 안내와 함께 예전 읽기 전용 "정산 예정" 표로 되돌아간다(재고·주문 화면은 그대로). 기록·지급 완료·조정 API는 503 `migration_needed`.
+- 대시보드 「정산 기록 대기 상점」「이체 대기 상점 정산」 카드는 0이다(대시보드는 열린다). 정산 뒤 환불 조정은 못 쌓인다 — 환불 자체는 성공하고 로그 `[partner-payouts]`만 남는다(표가 생긴 뒤 그 아티스트의 다음 정산 기록 직전 보충이 메운다).
+- 보존·파기 코드(`lib/partnerPayouts/creatorPayouts.ts`)는 표가 없으면 펀딩 기록만으로 돈다 — 월간 파기 크론이 실패하지 않는다. 확인은 `PRAGMA table_info(partner_payouts);`.
+
+**배포 직후 할 일 없음**(상점 판매가 열리기 전에는 정산할 것도 없다). 규칙은 `lib/shop/CLAUDE.md` "정산", 설계는 `docs/settlement-record-design-2026-10.md`. 공연 정산(P2)·알림 메일/CSV(P3)가 같은 표를 쓴다 — 두 번째 마이그레이션 없이
+`kind='show'`·조정 사유 `showtime_cancel_fee`가 이미 표현된다.
+
 ### 마이그레이션 0035(`public_name`)·0036(`listing_hidden_at`)·0039(`listing_hidden_name`)도 배포보다 먼저 적용한다
 
 `funding_pledges.public_name`(후원자 명단 표시 이름 — 가린 이름·닉네임, `lib/funding/publicName.ts`)이

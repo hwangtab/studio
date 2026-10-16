@@ -47,6 +47,18 @@ describe('상점 아티스트 정산(computeShopArtistPayout)', () => {
   });
 });
 
+describe('computeShopArtistPayout — adjustmentAmount(이월 조정)', () => {
+  it('비우면 결과가 달라지지 않는다', () => {
+    const base = computeShopArtistPayout({ salesAmount: 20000, refundAmount: 0, taxType: 'withholding' });
+    expect(computeShopArtistPayout({ salesAmount: 20000, refundAmount: 0, taxType: 'withholding', adjustmentAmount: 0 })).toEqual(base);
+  });
+
+  it('몫(VAT 포함)에 더해진 뒤 부가세 상당액·원천징수가 계산되고, 음수가 되면 0으로 자른다', () => {
+    expect(computeShopArtistPayout({ salesAmount: 20000, refundAmount: 0, taxType: 'invoice', adjustmentAmount: -1000 }).netAmount).toBe(10000);
+    expect(computeShopArtistPayout({ salesAmount: 20000, refundAmount: 0, taxType: 'invoice', adjustmentAmount: -99999 })).toMatchObject({ shareAmount: 0, netAmount: 0 });
+  });
+});
+
 describe('kstMonthRange', () => {
   it('KST 달의 시작·끝(초)', () => {
     expect(kstMonthRange('2026-10')).toEqual({
