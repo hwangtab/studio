@@ -241,3 +241,35 @@ export const serializePledgeForAdmin = (o: FundingOrder): AdminPledgeItem => {
     awaitingDeposit: o.status === 'pending' && isOnlineBankTransfer(p),
   };
 };
+
+/**
+ * 목록 화면이 실제로 그리는 필드만. 목록은 최대 200건이 페이지 props(`__NEXT_DATA__`)로 나가므로, 배송지 전문·이메일·응원 메시지·
+ * 운영자 메모처럼 표에 안 나오는 개인정보를 싣지 않는다 — 상세 화면(`serializePledgeForAdmin`)이 한 건씩 싣는다.
+ */
+export type AdminPledgeListItem = Pick<
+  AdminPledgeItem,
+  | 'id' | 'orderNo' | 'status' | 'paymentMethod' | 'customerName' | 'customerPhone' | 'rewardLabel' | 'lines' | 'totalAmount'
+  | 'fulfillmentStatus' | 'createdAt' | 'refundRequested' | 'needsReview' | 'mismatch' | 'awaitingDeposit' | 'projectSlug'
+>;
+
+export const serializePledgeForAdminList = (o: FundingOrder): AdminPledgeListItem => {
+  const full = serializePledgeForAdmin(o);
+  return {
+    id: full.id,
+    orderNo: full.orderNo,
+    status: full.status,
+    paymentMethod: full.paymentMethod,
+    customerName: full.customerName,
+    customerPhone: full.customerPhone,
+    rewardLabel: full.rewardLabel,
+    lines: full.lines,
+    totalAmount: full.totalAmount,
+    fulfillmentStatus: full.fulfillmentStatus,
+    createdAt: full.createdAt,
+    refundRequested: full.refundRequested,
+    needsReview: full.needsReview,
+    mismatch: full.mismatch,
+    awaitingDeposit: full.awaitingDeposit,
+    projectSlug: full.projectSlug,
+  };
+};

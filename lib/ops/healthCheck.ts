@@ -4,11 +4,17 @@ import { getDb } from '../../db/client';
 import { adminUrl, buildEmailLayout, escapeHtml } from '../email/layout';
 import { formatKst } from '../email/operatorAlert';
 import { isNotificationSentinel } from './notificationSentinel';
+import { safeDbErrorSummary } from '../payments/refundAccount';
 import { bookings, contracts, fundingPledges, fundingProjectPayouts, fundingProjects, orders, payments, refunds, subscriptionPayments, subscriptions } from '../../db/schema';
 import { calendarForService, calendarIdFor, fetchBusyRanges, isCalendarActive, roomCalendarEnvKey, type BookingCalendar } from '../booking/gcal';
+import { tenancyCalendarId } from '../tenancy/calendar';
+import { addDays, daysBetween, kstToday, overdueDays } from '../tenancy/rules';
 import { PRACTICE_ROOM_HOURLY_ROOMS } from '../booking/products';
 import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
-import { buildFundingPayoutPreview } from '../funding/payout';
+import { FUNDING_PAYOUT_BUSINESS_DAYS } from '../funding/policy';
+import { BANK_DEPOSIT_GUIDE_DAYS } from '../payments/bankAccount';
+import { buildFundingPayoutPreview, businessDaysAfter, listFundingProjectsAwaitingPayoutRecord } from '../funding/payout';
+import { listOverpaidShowPayouts, listShowPayoutsAwaitingRecord } from '../partnerPayouts/show';
 import { getAllFundingProjects } from '../funding/projects';
 import { LIVE_FUNDING_ORDER_STATUSES } from '../funding/refundable';
 import { ORDER_LEGAL_RETENTION_YEARS } from '../privacy/orderRetention';
@@ -358,9 +364,86 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
    * 밀린 상태는 이미 공개 경로가 조용히 깨져 있다는 뜻이라(폴백이 있는 경로는 옛 동작으로,
    * 없는 경로는 500으로) severity는 high로 둔다.
    */
+  /**
+   * 월 입주자(연습실 월세·비상주)의 입금 예정일이 지났는데 입금 기록이 없는 건 — 연체 관리가 입주 관리의 핵심 용도다.
+   * 이름·방·일수만 싣는다(연락처 등 개인정보는 메일·화면에 싣지 않는다). 표가 없는 DB(0066 전)에서는 건너뛴다.
+   */
+  try {
+    const today = kstToday(now);
+    const late = await db.all<{ room_number: string | null; tenant_name: string; next_due_on: string }>(sql`
+      SELECT room_number, tenant_name, next_due_on FROM room_tenancies
+      WHERE status = 'active' AND next_due_on < ${today} ORDER BY next_due_on LIMIT 30
+    `);
+    if (late.length > 0) {
+      const lines = late.map((t) => `${t.room_number ?? '비상주'} ${t.tenant_name} — ${overdueDays(t.next_due_on, today)}일 연체(예정 ${t.next_due_on})`);
+      issues.push({
+        severity: overdueDays(late[0].next_due_on, today) >= 7 ? 'high' : 'medium',
+        title: `월 입주 연체 ${late.length}건`,
+        detail: `${lines.join('\n')}\n입금을 확인했다면 입주 관리에서 “입금 기록”을 눌러 주세요. 아직이면 입금 요청을 해 주세요.`,
+        href: '/admin/tenancies',
+      });
+    }
+  } catch (error) {
+    console.error('[health] 월 입주 연체 점검 실패 — 건너뜁니다', error instanceof Error ? error.message : String(error));
+  }
+
+  /**
+   * 월 입주 — 계약 종료가 7일 안으로 다가온 입주자와, 구글 캘린더에 일정을 올리지 못한 입주자.
+   * 종료일이 이미 지난 입주자는 자동 연장(운영자 확정)이라 알리지 않는다. 연락처 등은 싣지 않는다.
+   */
+  try {
+    const today = kstToday(now);
+    const soon = await db.all<{ room_number: string | null; tenant_name: string; end_date: string }>(sql`
+      SELECT room_number, tenant_name, end_date FROM room_tenancies
+      WHERE status = 'active' AND end_date IS NOT NULL AND end_date >= ${today} AND end_date <= ${addDays(today, 7)} ORDER BY end_date LIMIT 30
+    `);
+    if (soon.length > 0) {
+      issues.push({
+        severity: 'medium',
+        title: `월 입주 계약 종료 임박 ${soon.length}건`,
+        detail: `${soon.map((t) => `${t.room_number ?? '비상주'} ${t.tenant_name} — ${t.end_date} 종료(${daysBetween(today, t.end_date)}일 뒤)`).join('\n')}\n연장·퇴실 여부를 확인해 주세요. 연장이면 입주 관리에서 종료일을 고치거나 비우세요. 약정 종료일 전 퇴실은 계약서 제5조의 위약금 대상일 수 있어요.`,
+        href: '/admin/tenancies',
+      });
+    }
+    if (tenancyCalendarId()) {
+      const broken = await db.all<{ room_number: string | null; tenant_name: string }>(sql`
+        SELECT room_number, tenant_name FROM room_tenancies WHERE status = 'active' AND gcal_error IS NOT NULL ORDER BY room_number LIMIT 30
+      `);
+      if (broken.length > 0) {
+        issues.push({
+          severity: 'medium',
+          title: `월 입주 캘린더 동기화 실패 ${broken.length}건`,
+          detail: `${broken.map((t) => `${t.room_number ?? '비상주'} ${t.tenant_name}`).join(', ')}\n입주 관리에서 “캘린더 전체 다시 맞추기”를 눌러 주세요. 계속 실패하면 구글 캘린더 권한을 확인해 주세요.`,
+          href: '/admin/tenancies',
+        });
+      }
+    }
+  } catch (error) {
+    console.error('[health] 월 입주 종료·캘린더 점검 실패 — 건너뜁니다', error instanceof Error ? error.message : String(error));
+  }
+
   const rotationPending = await checkFieldKeyRotationPending();
   if (rotationPending) issues.push(rotationPending);
 
+  // 드리프트 보고는 뒤 쿼리가 던져도 살아남아야 한다 — 미적용 마이그레이션이 바로 그 쿼리를 던지게 하는 원인이라,
+  // 둘이 한 함수에서 같이 죽으면 "표가 없다는 사실은 드리프트 점검이 보고한다"는 전제가 깨진다.
+  issues.push(...(await runIsolatedCheck('마이그레이션 드리프트', async () => {
+    const found: HealthIssue[] = [];
+    await collectMigrationDriftIssue(found);
+    return found;
+  })));
+
+  try {
+    await collectDbIssuesBody(db, now, issues);
+  } catch (error: unknown) {
+    // 이미 push된 이슈(드리프트 등)는 남기고, 나머지가 확인되지 않았다는 사실을 high로 덧붙인다.
+    issues.push(...(await runIsolatedCheck('DB 점검 나머지', async () => { throw error; })));
+  }
+
+  return sortBySeverity(issues);
+};
+
+const collectMigrationDriftIssue = async (issues: HealthIssue[]): Promise<void> => {
   const migrationDrift = await checkMigrationDrift();
   if (migrationDrift.status === 'drift') {
     issues.push({
@@ -374,7 +457,10 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
         '`npm run db:migrate`로 적용해 주세요.',
     });
   }
+};
 
+/** collectDbIssues의 본문 — 쿼리 하나가 던지면 호출부가 그때까지의 이슈를 지키고 실패 항목을 덧붙인다. */
+const collectDbIssuesBody = async (db: ReturnType<typeof getDb>, now: Date, issues: HealthIssue[]): Promise<void> => {
   /**
    * 결제·확정은 정상인데 구글 캘린더에 이벤트가 없는 예약. 운영자 캘린더에는 그 시간이
    * 비어 있으므로, 그대로 두면 같은 시간에 전화 예약을 받아 오프라인 이중예약이 난다.
@@ -881,7 +967,7 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   }
 
   /**
-   * 공연·예약·믹싱 **계좌 입금 주문의 환불 송금 대기** — 고객이 셀프 취소하며 환불 계좌를 적은 건. 환불 기록과
+   * 공연·예약·믹싱·상점 **계좌 입금 주문의 환불 송금 대기** — 고객이 셀프 취소하며 환불 계좌를 적은 건. 환불 기록과
    * 좌석·시간대 해제는 취소 순간 끝났지만(lib/booking/cancel.ts·lib/shows/refund.ts) 돈은 운영자가 그 계좌로
    * 직접 보내야 하고, 보낸 사실은 `refund_accounts.refunded_at`("송금 완료")이 든다. 기한은 위 펀딩 점검과 같은
    * 48시간 알람(3영업일 전에 울린다). 표가 없으면(0048 미적용) 이 점검만 건너뛴다.
@@ -889,7 +975,7 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   try {
     const pendingTransfers = await db.all<{ order_no: string; order_kind: string; requested_at: number }>(sql`
       SELECT order_no, order_kind, requested_at FROM refund_accounts
-      WHERE order_kind IN ('session', 'mixing', 'show') AND refunded_at IS NULL
+      WHERE order_kind IN ('session', 'mixing', 'show', 'merch') AND refunded_at IS NULL
     `);
     if (pendingTransfers.length > 0) {
       const overdue = pendingTransfers.filter((r) => now.getTime() - Number(r.requested_at) * 1000 >= REFUND_DUE_MS);
@@ -898,11 +984,11 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
         href: '/admin/bookings',
         title:
           overdue.length > 0
-            ? `계좌 환불 송금 기한이 임박한 공연·예약·믹싱 취소 ${overdue.length}건 (대기 ${pendingTransfers.length}건)`
-            : `계좌 환불 송금을 기다리는 공연·예약·믹싱 취소 ${pendingTransfers.length}건`,
+            ? `계좌 환불 송금 기한이 임박한 공연·예약·믹싱·상점 취소 ${overdue.length}건 (대기 ${pendingTransfers.length}건)`
+            : `계좌 환불 송금을 기다리는 공연·예약·믹싱·상점 취소 ${pendingTransfers.length}건`,
         detail:
           `주문번호: ${sample((overdue.length > 0 ? overdue : pendingTransfers).map((r) => r.order_no))}\n` +
-          '계좌 입금 주문이라 돈이 자동으로 나가지 않습니다. 관리자 상세(예약·믹싱은 예약 관리, 공연은 공연 관리)에서 ' +
+          '계좌 입금 주문이라 돈이 자동으로 나가지 않습니다. 관리자 상세(예약·믹싱은 예약 관리, 공연은 공연 관리, 상점은 상점 관리)에서 ' +
           '"계좌 보기"로 환불 계좌를 열어 송금한 뒤 "송금 완료"를 눌러 주세요(약속한 기한: 접수일부터 3영업일).',
       });
     }
@@ -1127,12 +1213,155 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
     });
   }
 
-  return sortBySeverity(issues);
+  /**
+   * **마감됐는데 정산을 기록하지 않은 프로젝트가 안내 기한(영업일 N일)을 넘긴 경우.** 정산 시점은 코드가 강제하지 않고
+   * 운영자가 기록 버튼을 누르는 방식이라, 잊으면 어느 화면에도 신호가 없었다. 기한 안은 대시보드 대기열 카드로 보이고
+   * (매일 울리지 않게), 기한을 넘기면 여기서 메일로도 알린다. 공휴일은 모르는 근사 계산이다.
+   */
+  try {
+    const toRecord = await listFundingProjectsAwaitingPayoutRecord(now);
+    const overdue = toRecord.filter((p) => now.getTime() > businessDaysAfter(p.endAt, FUNDING_PAYOUT_BUSINESS_DAYS).getTime());
+    if (overdue.length > 0) {
+      issues.push({
+        severity: 'high',
+        href: '/admin/funding/projects',
+        title: `정산 안내 기한(마감 후 영업일 ${FUNDING_PAYOUT_BUSINESS_DAYS}일)을 넘긴 펀딩 프로젝트 ${overdue.length}건`,
+        detail:
+          `${sample(overdue.map((p) => p.slug))}\n` +
+          '모금이 끝났는데 정산이 아직 기록되지 않았습니다. 프로젝트 상세의 정산 패널에서 금액을 확인하고 기록해 주세요.',
+      });
+    }
+  } catch (error: unknown) {
+    console.error('[health] 정산 기록 대기 조회 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
+  }
+
+  /**
+   * **마지막 회차가 끝났는데 정산을 기록하지 않은 주최자 공연이 약관 기한(영업일 N일)을 넘긴 경우.** 주최자 약관 제6조가 "정산금은 마지막 회차가 끝난 날부터
+   * 영업일 N일 이내에 보내는 것을 원칙으로 한다"고 약속했다 — 펀딩 규칙과 같은 상수·같은 계산(`businessDaysAfter`, 공휴일은 모르는 근사)이다.
+   * 기한 안은 대시보드 카드로 보이고, 넘기면 여기서 메일로도 알린다. 표(0067)가 없거나 조회가 실패하면 건너뛴다(정산 기록 표가 없으면 기록도 못 한다).
+   */
+  try {
+    const toRecord = await listShowPayoutsAwaitingRecord(now);
+    const overdue = toRecord.filter((s) => now.getTime() > businessDaysAfter(s.endAt, FUNDING_PAYOUT_BUSINESS_DAYS).getTime());
+    if (overdue.length > 0) {
+      issues.push({
+        severity: 'high',
+        href: '/admin/shows',
+        title: `정산 안내 기한(마지막 회차 종료 후 영업일 ${FUNDING_PAYOUT_BUSINESS_DAYS}일)을 넘긴 공연 ${overdue.length}건`,
+        detail:
+          `${sample(overdue.map((s) => s.slug))}\n` +
+          '마지막 회차가 끝났는데 주최자 정산이 아직 기록되지 않았습니다. 공연 상세의 정산 절에서 금액을 확인하고 기록해 주세요(주최자 약관 제6조의 정산 기한).',
+      });
+    }
+  } catch (error: unknown) {
+    console.error('[health] 공연 정산 기록 대기 조회 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
+  }
+
+  /**
+   * **지급을 마친 공연 정산이 지급 뒤 환불로 초과 지급된 경우.** 공연 정산은 공연당 한 번이라 상점의 `late_refund`처럼 다음 정산에서 상계할 곳이 없다
+   * (계좌 입금 환불이 이체 뒤에 끝난 경우·고객 환불 등). 기록 숫자는 불변이고 돈은 이미 나갔으므로 운영자가 주최자에게 회수를 요청해야 한다.
+   * 끌 수단: 정산 패널의 「회수 처리 남기기」가 메모에 `[회수 처리 N원`을 적고, 그 합이 지금 초과 지급액을 덮으면 사라진다.
+   * 이후 환불이 더 생겨 초과액이 커지면 덮이지 않은 몫만큼 다시 울린다(영구 경보 방지 + 재발 감지). 표(0067)가 없거나 조회가 실패하면 건너뛴다.
+   */
+  try {
+    const overpaid = await listOverpaidShowPayouts();
+    if (overpaid.length > 0) {
+      issues.push({
+        severity: 'high',
+        href: '/admin/shows',
+        title: `지급 뒤 환불로 초과 지급된 공연 정산 ${overpaid.length}건`,
+        detail:
+          `${sample(overpaid.map((o) => `${o.slug}: ${o.remainingAmount.toLocaleString('ko-KR')}원 회수 필요`))}\n` +
+          '지급을 마친 뒤 환불이 생겨 주최자에게 더 지급된 금액이 있습니다. 주최자에게 회수 요청 후 정산 패널 메모로 남기세요(공연 상세 > 정산 > 「회수 처리 남기기」).',
+      });
+    }
+  } catch (error: unknown) {
+    console.error('[health] 공연 정산 초과 지급 조회 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
+  }
+
+  /**
+   * **입금 안내 기한을 넘기고도 입금을 확인하지도 닫지도 않은 계좌 입금 주문.** 자동 취소가 없는 대신(lib/payments/bankDeposit.ts)
+   * 운영자가 닫아야 하는데, 대시보드에도 점검 메일에도 신호가 없어 시간대·좌석·재고를 잡은 채 몇 주씩 남을 수 있었다.
+   */
+  {
+    const cutoff = Math.floor(now.getTime() / 1000) - BANK_DEPOSIT_GUIDE_DAYS * 24 * 60 * 60;
+    const stale = await db.all<{ kind: string; n: number }>(sql`
+      SELECT CASE WHEN o.type = 'ticket' THEN '공연' WHEN o.type = 'merch' THEN '상점'
+                  WHEN o.type = 'funding' THEN '펀딩' ELSE '예약·믹싱' END AS kind, COUNT(*) AS n
+      FROM orders o
+      WHERE o.created_at < ${cutoff}
+        AND (o.status = 'awaiting_deposit' OR (o.type = 'funding' AND o.status = 'pending'
+          AND EXISTS (SELECT 1 FROM funding_pledges fp WHERE fp.order_id = o.id AND fp.payment_method = 'bank_transfer' AND fp.entry_source = 'online')))
+      GROUP BY kind
+    `);
+    const total = stale.reduce((sum, r) => sum + Number(r.n), 0);
+    if (total > 0) {
+      issues.push({
+        severity: 'medium',
+        href: '/admin',
+        title: `입금 안내 기한(${BANK_DEPOSIT_GUIDE_DAYS}일)이 지난 계좌 입금 대기 ${total}건`,
+        detail:
+          `${stale.map((r) => `${r.kind} ${Number(r.n)}건`).join(' · ')}\n` +
+          '통장에서 입금을 확인해 확정하거나, 입금이 없으면 "미입금 취소"로 닫아 주세요. 자동 취소는 없습니다.',
+      });
+    }
+  }
+
+  /**
+   * **결제는 끝났는데 라이선스가 발급되지 않은 소프트웨어 주문.** (운영자가 일부러 취소한 라이선스는 세지 않는다.) 승인 batch가 결제·라이선스를 함께 쓰므로 정상이면 0건이다.
+   * 생기면 고객은 돈을 냈는데 키가 없다 — 확정 순간 운영자 메일이 한 번 가지만 놓치면 신호가 없었다. 표가 없는 DB(0054·0056 전)는 건너뛴다.
+   */
+  try {
+    const [row] = await db.all<{ n: number; sample: string | null }>(sql`
+      SELECT COUNT(*) AS n, MIN(o.order_no) AS sample FROM orders o
+      WHERE o.type = 'software' AND o.status = 'paid'
+        AND NOT EXISTS (SELECT 1 FROM software_licenses l WHERE l.order_no = o.order_no)
+    `);
+    if (Number(row?.n ?? 0) > 0) {
+      issues.push({
+        severity: 'high',
+        href: '/admin/software',
+        title: `결제됐는데 라이선스가 발급되지 않은 소프트웨어 주문 ${Number(row.n)}건`,
+        detail:
+          `예: ${row.sample ?? '-'}\n` +
+          '고객은 결제했는데 키가 없습니다. 관리자 소프트웨어 화면에서 그 주문번호로 수동 발급해 보내 드리거나 환불해 주세요.',
+      });
+    }
+  } catch (error: unknown) {
+    console.error('[health] 소프트웨어 라이선스 누락 조회 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
+  }
 };
 
 const sortBySeverity = (issues: HealthIssue[]): HealthIssue[] => {
   const order = { high: 0, medium: 1 };
   return issues.sort((a, b) => order[a.severity] - order[b.severity]);
+};
+
+/**
+ * 점검 하나를 격리해 돌린다 — 던지면 **그 점검이 오늘 확인되지 않았다**는 high 항목으로 바꾼다.
+ *
+ * 전에는 GA4 점검·DB 점검·계약 정리가 격리 없이 직렬이라 하나가 던지면 그때까지 모은 이슈가 통째로 버려지고
+ * 크론 catch가 "운영 점검 실패 + 사유" 한 통만 보냈다. GA4 토큰 폐기처럼 지속되는 실패가 생기면 결제 불일치·
+ * 캘린더 누락 같은 high 이슈가 매일 가지 않고 마케팅 지표 오류로 읽혔다. 관리자 첫 화면도 같은 함수를 써서 함께
+ * 죽었다. 죽은 점검은 medium이 아니라 high다 — medium 사이에 묻히면 "점검이 안 됐다"는 사실을 놓친다.
+ */
+export const runIsolatedCheck = async (label: string, run: () => Promise<HealthIssue[]>): Promise<HealthIssue[]> => {
+  try {
+    return await run();
+  } catch (error: unknown) {
+    const summary = safeDbErrorSummary(error);
+    // drizzle은 "Failed query: <SQL>"로 감싸고 실제 원인(no such table 등)은 cause에 둔다 — 둘 다 싣는다.
+    const cause = error instanceof Error && error.cause instanceof Error ? ` ← ${error.cause.message}` : '';
+    const message = (error instanceof Error ? error.message : String(error)) + cause;
+    console.error(`[healthCheck] 점검 실패 — ${label}`, error);
+    return [{
+      severity: 'high',
+      title: `점검 자체가 실패 — ${label}`,
+      detail:
+        `${summary.name}${summary.code ? ` (${summary.code})` : ''}: ${message.slice(0, 400)}\n` +
+        '이 항목이 보는 문제들은 오늘 확인되지 않았습니다. 반복되면 원인(Turso·GA4 자격·미적용 마이그레이션)을 확인해 주세요.',
+    }];
+  }
 };
 
 export const runHealthCheck = async (now: Date = new Date()): Promise<HealthReport> => {
@@ -1146,19 +1375,18 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
   const tossApiKeys = checkTossApiKeyPair();
   if (tossApiKeys) issues.push(tossApiKeys);
 
-  /**
-   * 카카오 전환율 급락 — 2026-08-13~23 사고(트래픽 정상인데 전환율만 7.5%→1.1%로
-   * 붕괴, 원인 불명·무알림) 재발 방지. GA4 env가 없으면 skip(정상), GA4 호출 자체가
-   * 죽으면 "점검이 죽은 것"이므로 throw해 기존 catch 경로가 운영자에게 알리게 둔다.
-   */
-  const leadRate = await runLeadRateCheck();
-  issues.push(...leadRate.issues);
-
-  issues.push(...(await collectDbIssues(now)));
+  issues.push(...(await runIsolatedCheck('DB 점검(결제·예약·펀딩·구독·공연)', () => collectDbIssues(now))));
 
   // 반드시 collectDbIssues 뒤에 부른다: 이 함수가 기한 지난 발송 계약을 expired로 내리므로, 앞에 오면
   // collectDbIssues의 "서명 기한이 지난 계약" 알림(고객이 링크를 놓쳤다는 신호)이 사라진다.
-  issues.push(...(await checkContractHygiene(now)));
+  issues.push(...(await runIsolatedCheck('계약 정리(기한 지난 발송 계약)', () => checkContractHygiene(now))));
+
+  /**
+   * 카카오 전환율 급락 — 2026-08-13~23 사고(트래픽 정상인데 전환율만 7.5%→1.1%로
+   * 붕괴, 원인 불명·무알림) 재발 방지. GA4 env가 없으면 skip(정상). GA4 호출이 죽으면 위 격리가
+   * high 항목으로 바꾼다 — DB 점검 뒤에 두어 외부 API 장애가 원장 점검을 막지 않게 한다.
+   */
+  issues.push(...(await runIsolatedCheck('카카오 전환율(GA4)', async () => (await runLeadRateCheck()).issues)));
 
   return { issues: sortBySeverity(issues), checkedAt: now };
 };

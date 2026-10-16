@@ -128,7 +128,7 @@ describe('파기 대상 판정', () => {
     const sig = await sigOf('old');
     expect(sig.signatureData).toBeNull();
     expect(sig.ipAddress).toBeNull();
-    expect(del).toHaveBeenCalledWith('https://blob/x.pdf');
+    expect(del).toHaveBeenCalledWith('x.pdf');
   });
 
   /**

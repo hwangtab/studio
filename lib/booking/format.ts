@@ -19,7 +19,9 @@ export const formatKstDateTime = (isoString: string | null): string => {
   const m = String(kst.getUTCMonth() + 1).padStart(2, '0');
   const d = String(kst.getUTCDate()).padStart(2, '0');
   const hh = String(kst.getUTCHours()).padStart(2, '0');
-  return `${y}.${m}.${d} (${WEEKDAYS[kst.getUTCDay()]}) ${hh}:00`;
+  // 분까지 보인다 — 예약은 정시뿐이라 늘 :00이지만, 결제 링크의 이용 일시(18:30 등)는 아니다(2026-10-15 목록이 18:00으로 보였다).
+  const mm = String(kst.getUTCMinutes()).padStart(2, '0');
+  return `${y}.${m}.${d} (${WEEKDAYS[kst.getUTCDay()]}) ${hh}:${mm}`;
 };
 
 /** 결제 승인·환불 시각처럼 정시가 아닐 수 있는 값 — 분까지 표기. */

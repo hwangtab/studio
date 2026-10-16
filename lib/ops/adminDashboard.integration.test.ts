@@ -32,7 +32,15 @@ const NOW = new Date('2026-09-16T03:00:00Z');
 const EPOCH = (iso: string) => Math.floor(new Date(iso).getTime() / 1000);
 let client: Client;
 
+const ENV_KEYS = ['NEXT_PUBLIC_TOSS_API_CLIENT_KEY', 'TOSS_API_SECRET_KEY', 'FUNDING_FIELD_KEY'] as const;
+const savedEnv: Partial<Record<(typeof ENV_KEYS)[number], string | undefined>> = {};
+
 beforeAll(async () => {
+  // 환경 점검(토스 키 쌍·필드 암호화 키)은 화면에도 올라온다 — 정상 환경을 깔고 시작한다.
+  for (const k of ENV_KEYS) savedEnv[k] = process.env[k];
+  process.env.NEXT_PUBLIC_TOSS_API_CLIENT_KEY = 'live_ck_test';
+  process.env.TOSS_API_SECRET_KEY = 'live_sk_test';
+  process.env.FUNDING_FIELD_KEY = Buffer.alloc(32, 7).toString('base64');
   client = createClient({ url: ':memory:' });
   mockDb = drizzle(client, { schema });
   for (const file of readdirSync(MIGRATIONS).filter((f) => f.endsWith('.sql')).sort()) {
@@ -41,9 +49,15 @@ beforeAll(async () => {
     }
   }
 });
-afterAll(() => client.close());
+afterAll(() => {
+  for (const k of ENV_KEYS) {
+    if (savedEnv[k] === undefined) delete process.env[k];
+    else process.env[k] = savedEnv[k];
+  }
+  client.close();
+});
 beforeEach(async () => {
-  for (const t of ['refunds', 'payments', 'bookings', 'work_orders', 'funding_pledges', 'funding_projects', 'funding_creators', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'social_tokens']) {
+  for (const t of ['partner_payout_adjustments', 'partner_payouts', 'refunds', 'payments', 'bookings', 'work_orders', 'funding_pledges', 'funding_project_payouts', 'funding_projects', 'funding_creators', 'subscription_payments', 'subscriptions', 'orders', 'payment_link_orders', 'contracts', 'social_tokens']) {
     await client.execute(`DELETE FROM ${t}`);
   }
 });
@@ -146,6 +160,12 @@ it('대기열 건수 — 믹싱 착수 대기·작업 중, 구독 카드 대기�
     artistPayoutsPending: 0,
     fundingProjectsAwaitingReview: 2,
     fundingPayoutsPending: 0,
+    fundingPayoutsToRecord: 0,
+    shopPayoutsToRecord: 0,
+    shopPayoutsPending: 0,
+    showPayoutsToRecord: 0,
+    showPayoutsPending: 0,
+    awaitingDeposit: { bookings: 0, shows: 0, shop: 0, funding: 0 },
   });
   expect(dash.issues.map((i) => i.title)).toContain('서명 기한이 지난 계약 1건');
 });
@@ -174,5 +194,300 @@ it('비어 있으면 전부 0·빈 목록이고 실패하지 않는다', async (
   expect(dash.issues).toEqual([]);
   expect(dash.upcomingSessions).toEqual([]);
   expect(dash.socialTokens).toEqual([]);
-  expect(Object.values(dash.queues).every((n) => n === 0)).toBe(true);
+  expect(Object.values(dash.queues).every((n) => (typeof n === 'number' ? n === 0 : Object.values(n).every((m) => m === 0)))).toBe(true);
+});
+
+const insertPledge = async (orderId: string, slug: string, orderStatus: string, method = 'toss', source = 'online') => {
+  await client.execute({
+    sql: `INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email, manage_token,
+            item_amount, vat_amount, total_amount, created_at) VALUES (?, ?, 'funding', ?, '후원', '010', 'a@b.c', ?, 30000, 0, 30000, ?)`,
+    args: [orderId, `NO-${orderId}`, orderStatus, `tok-${orderId}`, EPOCH('2026-09-01T00:00:00Z')],
+  });
+  await client.execute({
+    sql: `INSERT INTO funding_pledges (id, order_id, project_slug, reward_id, reward_title, unit_amount, quantity, payment_method, hold_expires_at, entry_source)
+          VALUES (?, ?, ?, 'r', '리워드', 30000, 1, ?, ?, ?)`,
+    args: [`fp-${orderId}`, orderId, slug, method, EPOCH('2026-09-02T00:00:00Z'), source],
+  });
+};
+
+describe('환경 점검 — 점검 메일에만 있던 것', () => {
+  it('토스 키나 필드 암호화 키가 빠지면 화면의 점검 항목에 high로 올라온다', async () => {
+    delete process.env.TOSS_API_SECRET_KEY;
+    delete process.env.FUNDING_FIELD_KEY;
+    try {
+      const dash = await loadAdminDashboard(NOW);
+      expect(dash.issues.map((i) => [i.severity, i.title.slice(0, 8)])).toEqual(
+        expect.arrayContaining([['high', '토스 API 키'], ['high', '필드 암호화 키']]),
+      );
+    } finally {
+      process.env.TOSS_API_SECRET_KEY = 'live_sk_test';
+      process.env.FUNDING_FIELD_KEY = Buffer.alloc(32, 7).toString('base64');
+    }
+  });
+});
+
+describe('마감 뒤 정산 기록 대기 — 어느 대기열에도 없던 빈칸', () => {
+  const endProject = (id: string) => client.execute({ sql: `UPDATE funding_projects SET end_at = ? WHERE id = ?`, args: [EPOCH('2026-09-10T00:00:00Z'), `fp-${id}`] });
+
+  it('승인됐고 마감됐고 살아 있는 후원이 있으며 정산 행이 없는 프로젝트만 센다', async () => {
+    for (const id of ['a', 'b', 'c', 'd', 'e']) await insertFundingProject(id, 'approved');
+    for (const id of ['a', 'b', 'c', 'e']) await endProject(id); // d는 아직 모금 중
+    await insertPledge('oa', 'slug-a', 'paid'); // 센다
+    await insertPledge('ob', 'slug-b', 'refunded'); // 살아 있는 후원 없음
+    await insertPledge('oc', 'slug-c', 'paid');
+    await client.execute({
+      sql: `INSERT INTO funding_project_payouts (id, project_id, gross_amount, refund_amount, supply_amount, fee_amount, platform_fee_amount, payment_fee_amount,
+              share_amount, withholding_amount, design_fee_offset_amount, production_fee_offset_amount, shortfall_amount, net_amount, backer_count, status)
+            VALUES ('po', 'fp-c', 30000, 0, 27000, 3000, 2000, 1000, 27000, 0, 0, 0, 0, 27000, 1, 'pending')`,
+      args: [],
+    }); // 이미 기록됨
+    await insertPledge('od', 'slug-d', 'paid');
+    // e: 후원 자체가 없다
+
+    const dash = await loadAdminDashboard(NOW);
+
+    expect(dash.queues.fundingPayoutsToRecord).toBe(1);
+    expect(dash.queues.fundingPayoutsPending).toBe(1);
+  });
+
+  it('마감 후 영업일 14일을 넘기면 점검 항목(high)으로도 올라온다', async () => {
+    await insertFundingProject('late', 'approved');
+    await client.execute({ sql: `UPDATE funding_projects SET end_at = ? WHERE id = 'fp-late'`, args: [EPOCH('2026-08-20T00:00:00Z')] });
+    await insertPledge('ol', 'slug-late', 'paid');
+    await insertFundingProject('fresh', 'approved');
+    await endProject('fresh'); // 9/10 마감 — 9/16 현재 영업일 14일 안
+    await insertPledge('of', 'slug-fresh', 'paid');
+
+    const dash = await loadAdminDashboard(NOW);
+
+    const issue = dash.issues.find((i) => i.title.includes('정산 안내 기한'));
+    expect(issue).toMatchObject({ severity: 'high', href: '/admin/funding/projects' });
+    expect(issue?.detail).toContain('slug-late');
+    expect(issue?.detail).not.toContain('slug-fresh');
+    expect(dash.queues.fundingPayoutsToRecord).toBe(2);
+  });
+});
+
+describe('계좌 입금 대기 — 자동 취소가 없는 주문', () => {
+  const insertWaiting = (id: string, type: string, createdIso: string) =>
+    client.execute({
+      sql: `INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email, manage_token,
+              item_amount, vat_amount, total_amount, created_at) VALUES (?, ?, ?, 'awaiting_deposit', '입금', '010', 'a@b.c', ?, 100, 10, 110, ?)`,
+      args: [id, `NO-${id}`, type, `tok-${id}`, EPOCH(createdIso)],
+    });
+
+  it('종류별로 세고, 안내 기한(3일)을 넘긴 것만 점검 항목으로 올린다', async () => {
+    await insertWaiting('w1', 'session', '2026-09-15T00:00:00Z'); // 어제 — 기한 안
+    await insertWaiting('w2', 'mixing', '2026-09-01T00:00:00Z'); // 기한 지남
+    await insertWaiting('w3', 'ticket', '2026-09-01T00:00:00Z'); // 기한 지남
+    await insertWaiting('w4', 'merch', '2026-09-15T00:00:00Z');
+    await insertPledge('wf', 'slug-x', 'pending', 'bank_transfer', 'online');
+    await insertPledge('wm', 'slug-x', 'pending', 'bank_transfer', 'manual'); // 수기 등록은 입금 대기가 아니다
+    await insertPledge('wt', 'slug-x', 'pending', 'toss'); // 토스 결제창 홀드는 아니다
+
+    const dash = await loadAdminDashboard(NOW);
+
+    expect(dash.queues.awaitingDeposit).toEqual({ bookings: 2, shows: 1, shop: 1, funding: 1 });
+    const issue = dash.issues.find((i) => i.title.includes('계좌 입금 대기'));
+    expect(issue?.title).toContain('3건');
+    expect(issue?.detail).toContain('공연 1건');
+    expect(issue?.detail).toContain('예약·믹싱 1건');
+    expect(issue?.detail).toContain('펀딩 1건');
+  });
+});
+
+describe('이번 주 세션 — 결제 링크 이용 일정(0062)', () => {
+  const insertLinkOrder = async (id: string, status: string, sessionIso: string | null, hours = 3) => {
+    await insertOrder(id, 'deposit');
+    await client.execute({ sql: "UPDATE orders SET status = ? WHERE id = ?", args: [status, id] });
+    await client.execute({
+      sql: 'INSERT INTO payment_link_orders (order_no, slug, item_name, session_at, session_hours) VALUES (?, ?, ?, ?, ?)',
+      args: [`NO-${id}`, 'a'.repeat(24), '보컬 녹음 1프로 (10/17 11:00)', sessionIso ? EPOCH(sessionIso) : null, sessionIso ? hours : null],
+    });
+  };
+
+  it('결제된 링크 주문의 이용 일시가 창 안이면 예약 세션과 시각순으로 함께 나온다', async () => {
+    await insertBooking('b1', '2026-09-18T01:00:00Z'); // KST 9/18 10:00
+    await insertLinkOrder('l1', 'paid', '2026-09-17T02:00:00Z'); // KST 9/17 11:00
+    const d = await loadAdminDashboard(NOW);
+    expect(d.upcomingSessions.map((x) => [x.kind, x.orderId])).toEqual([['link', 'l1'], ['booking', 'b1']]);
+    const link = d.upcomingSessions[0];
+    expect(link).toMatchObject({ productName: '보컬 녹음 1프로 (10/17 11:00)', customerName: '홍길동' });
+    expect(new Date(link.endAt).getTime() - new Date(link.startAt).getTime()).toBe(3 * 3600 * 1000);
+  });
+
+  it('결제 전·환불된 링크 주문, 창 밖·일시 없는 링크는 나오지 않는다', async () => {
+    await insertLinkOrder('l-pending', 'pending', '2026-09-17T02:00:00Z');
+    await insertLinkOrder('l-refunded', 'refunded', '2026-09-17T02:00:00Z');
+    await insertLinkOrder('l-far', 'paid', '2026-10-30T02:00:00Z');
+    await insertLinkOrder('l-none', 'paid', null);
+    expect((await loadAdminDashboard(NOW)).upcomingSessions).toEqual([]);
+  });
+
+  it('링크 표가 없는 DB에서도 대시보드는 열린다(그 갈래만 건너뜀)', async () => {
+    await client.execute('ALTER TABLE payment_link_orders RENAME TO payment_link_orders_x');
+    const spy = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    try {
+      await insertBooking('b2', '2026-09-18T01:00:00Z');
+      expect((await loadAdminDashboard(NOW)).upcomingSessions.map((x) => x.orderId)).toEqual(['b2']);
+    } finally {
+      spy.mockRestore();
+      await client.execute('ALTER TABLE payment_link_orders_x RENAME TO payment_link_orders');
+    }
+  });
+});
+
+describe('상점 정산 — 기록 대기(지난 달)·이체 대기 카드', () => {
+  // 기록은 이번 달(2026-11) 이전, 2026-10부터 센다 — NOW 2026-11-20 KST.
+  const NOW_NOV = new Date('2026-11-20T03:00:00Z');
+  const OCT_SHIPPED = EPOCH('2026-10-15T03:00:00Z');
+
+  const seedShopSale = async () => {
+    await client.execute({ sql: `INSERT INTO funding_creators (id, email, name, tax_type, payout_account_enc) VALUES ('sc1', 'sc1@example.com', '아티스트', 'invoice', 'enc')`, args: [] });
+    await client.execute({ sql: `INSERT INTO shop_artists (creator_id, slug) VALUES ('sc1', 'sc1-artist')`, args: [] });
+    await client.execute({ sql: `INSERT INTO shop_products (id, creator_id, slug, category, title, description, images, review_status, published) VALUES ('sp1', 'sc1', 'sp1', 'goods', '상품', '소개', '[]', 'approved', 1)`, args: [] });
+    await client.execute({ sql: `INSERT INTO shop_product_skus (id, product_id, option_label, price, locked_at) VALUES ('db-aaaaaaaaaa', 'sp1', 'A', 20000, 1)`, args: [] });
+    await insertOrder('shop-o1', 'merch');
+    await client.execute({
+      sql: `INSERT INTO shop_orders (order_no, recipient_name, recipient_phone, postcode, address1, subtotal_amount, shipping_fee, hold_expires_at, fulfillment_status, shipped_at)
+            VALUES ('NO-shop-o1', 'x', '010', '03000', '서울', 40000, 0, 0, 'shipped', ?)`,
+      args: [OCT_SHIPPED],
+    });
+    await client.execute({
+      sql: `INSERT INTO shop_order_items (id, order_no, sku_id, product_slug, product_title, unit_price, quantity) VALUES ('si1', 'NO-shop-o1', 'db-aaaaaaaaaa', 'sp1', '상품', 20000, 2)`,
+      args: [],
+    });
+  };
+  const insertShopPayout = (status: 'pending' | 'paid') =>
+    client.execute({
+      sql: `INSERT INTO partner_payouts (id, kind, subject_key, period, creator_id, payee_name, tax_type, net_amount, status)
+            VALUES ('pp1', 'shop', 'creator:sc1', '2026-10', 'sc1', '아티스트', 'invoice', 22000, ?)`,
+      args: [status],
+    });
+
+  afterEach(async () => {
+    for (const t of ['partner_payouts', 'shop_order_items', 'shop_orders', 'shop_product_skus', 'shop_products', 'shop_artists']) {
+      await client.execute(`DELETE FROM ${t}`);
+    }
+  });
+
+  it('지난 달에 판 아티스트가 기록되지 않았으면 기록 대기로 센다. 기록하면 이체 대기로 옮겨 간다', async () => {
+    await seedShopSale();
+    let dash = await loadAdminDashboard(NOW_NOV);
+    expect(dash.queues).toMatchObject({ shopPayoutsToRecord: 1, shopPayoutsPending: 0 });
+
+    await insertShopPayout('pending');
+    dash = await loadAdminDashboard(NOW_NOV);
+    expect(dash.queues).toMatchObject({ shopPayoutsToRecord: 0, shopPayoutsPending: 1 });
+
+    await client.execute(`UPDATE partner_payouts SET status = 'paid', paid_at = 1795000000`);
+    dash = await loadAdminDashboard(NOW_NOV);
+    expect(dash.queues).toMatchObject({ shopPayoutsToRecord: 0, shopPayoutsPending: 0 });
+  });
+
+  it('이번 달 판매는 기록 대기가 아니다(아직 판매 중)', async () => {
+    await seedShopSale();
+    expect((await loadAdminDashboard(new Date('2026-10-20T03:00:00Z'))).queues.shopPayoutsToRecord).toBe(0);
+  });
+
+  it('상점 판매가 없으면 0이고 상점 확장 표를 읽지 않아도 실패하지 않는다', async () => {
+    expect((await loadAdminDashboard(NOW_NOV)).queues).toMatchObject({ shopPayoutsToRecord: 0, shopPayoutsPending: 0 });
+  });
+
+  it('정산 기록 표가 없는 DB(0067 전)에서도 대시보드는 열리고 두 카드는 0이다', async () => {
+    await seedShopSale();
+    await client.execute('ALTER TABLE partner_payouts RENAME TO partner_payouts_x');
+    const spy = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    try {
+      const dash = await loadAdminDashboard(NOW_NOV);
+      expect(dash.queues).toMatchObject({ shopPayoutsToRecord: 0, shopPayoutsPending: 0 });
+      expect(dash.queues.mixingReceived).toBe(0);
+    } finally {
+      spy.mockRestore();
+      await client.execute('ALTER TABLE partner_payouts_x RENAME TO partner_payouts');
+    }
+  });
+});
+
+describe('공연 주최자 정산 — 대기열·기한 점검', () => {
+  const seedShowSale = async (id: string, startIso: string, opts: { organizer?: boolean } = {}) => {
+    const { organizer = true } = opts;
+    const start = EPOCH(startIso);
+    await client.execute({ sql: `INSERT OR IGNORE INTO funding_creators (id, email, name, tax_type, payout_account_enc) VALUES ('hc1', 'hc1@example.com', '주최자', 'invoice', 'enc')`, args: [] });
+    await client.execute({
+      sql: `INSERT INTO shows (id, slug, title, presenter_name, performers, age_rating, running_minutes, venue_name, venue_address, description, status)
+            VALUES (?, ?, ?, 'p', 'a', '전체', 60, 'v', 'addr', 'd', 'published')`,
+      args: [id, `slug-${id}`, id],
+    });
+    await client.execute({ sql: `INSERT INTO showtimes (id, show_id, starts_at, sales_close_at) VALUES (?, ?, ?, ?)`, args: [`st-${id}`, id, start, start - 3600] });
+    if (organizer) {
+      await client.execute({ sql: `INSERT INTO show_submissions (id, creator_id, show_id, draft_json, review_status, organizer_terms_version) VALUES (?, 'hc1', ?, '{}', 'approved', 'v')`, args: [`sub-${id}`, id] });
+    }
+    await insertOrder(`h-${id}`, 'ticket');
+    await client.execute({ sql: `UPDATE orders SET total_amount = 30000 WHERE id = ?`, args: [`h-${id}`] });
+    await client.execute({ sql: `INSERT INTO show_orders (order_no, showtime_id, buyer_name, buyer_contact) VALUES (?, ?, 'x', '010')`, args: [`NO-h-${id}`, `st-${id}`] });
+    await client.execute({ sql: `INSERT INTO payments (id, order_id, payment_key, method) VALUES (?, ?, ?, 'card')`, args: [`hp-${id}`, `h-${id}`, `pk-${id}`] });
+  };
+  const insertShowPayout = (showId: string, status: 'pending' | 'paid') =>
+    client.execute({
+      sql: `INSERT INTO partner_payouts (id, kind, subject_key, period, creator_id, payee_name, tax_type, net_amount, status)
+            VALUES (?, 'show', ?, 'all', 'hc1', '주최자', 'invoice', 1000, ?)`,
+      args: [`pp-${showId}`, showId, status],
+    });
+
+  afterEach(async () => {
+    for (const t of ['partner_payouts', 'payments', 'show_orders', 'show_submissions', 'showtimes', 'shows']) {
+      await client.execute(`DELETE FROM ${t}`);
+    }
+  });
+
+  it('끝났고 정산이 안 기록된 주최자 공연만 기록 대기로 센다(직영·진행 중 제외). 기록하면 이체 대기로 옮겨 간다', async () => {
+    await seedShowSale('done', '2026-09-15T01:00:00Z'); // 9/16 12:00 현재 종료
+    await seedShowSale('direct', '2026-09-10T01:00:00Z', { organizer: false });
+    await seedShowSale('future', '2026-09-30T01:00:00Z');
+    let dash = await loadAdminDashboard(NOW);
+    expect(dash.queues).toMatchObject({ showPayoutsToRecord: 1, showPayoutsPending: 0 });
+
+    await insertShowPayout('done', 'pending');
+    dash = await loadAdminDashboard(NOW);
+    expect(dash.queues).toMatchObject({ showPayoutsToRecord: 0, showPayoutsPending: 1 });
+
+    await client.execute(`UPDATE partner_payouts SET status = 'paid', paid_at = 1795000000`);
+    dash = await loadAdminDashboard(NOW);
+    expect(dash.queues).toMatchObject({ showPayoutsToRecord: 0, showPayoutsPending: 0 });
+  });
+
+  it('마지막 회차 종료 후 영업일 14일을 넘기면 점검 항목(high)으로도 올라온다 — 기한 안은 카드만', async () => {
+    await seedShowSale('late', '2026-08-01T01:00:00Z');
+    await seedShowSale('fresh', '2026-09-15T01:00:00Z');
+    const dash = await loadAdminDashboard(NOW);
+    const issue = dash.issues.find((i) => i.title.includes('정산 안내 기한') && i.title.includes('공연'));
+    expect(issue).toMatchObject({ severity: 'high', href: '/admin/shows' });
+    expect(issue?.title).toContain('영업일 14일');
+    expect(issue?.title).toContain('공연 1건');
+    expect(issue?.detail).toContain('slug-late');
+    expect(issue?.detail).not.toContain('slug-fresh');
+    expect(dash.queues.showPayoutsToRecord).toBe(2);
+  });
+
+  it('기록되면 기한을 넘겼어도 점검 항목에서 빠진다', async () => {
+    await seedShowSale('late', '2026-08-01T01:00:00Z');
+    await insertShowPayout('late', 'pending');
+    const dash = await loadAdminDashboard(NOW);
+    expect(dash.issues.find((i) => i.title.includes('정산 안내 기한') && i.title.includes('공연'))).toBeUndefined();
+  });
+
+  it('정산 기록 표가 없는 DB(0067 전)에서도 대시보드는 열리고 공연 카드는 0이다', async () => {
+    await seedShowSale('late', '2026-08-01T01:00:00Z');
+    await client.execute('ALTER TABLE partner_payouts RENAME TO partner_payouts_x');
+    const spy = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    try {
+      const dash = await loadAdminDashboard(NOW);
+      expect(dash.queues).toMatchObject({ showPayoutsToRecord: 0, showPayoutsPending: 0 });
+      expect(dash.issues.find((i) => i.title.includes('정산 안내 기한') && i.title.includes('공연'))).toBeUndefined();
+    } finally {
+      spy.mockRestore();
+      await client.execute('ALTER TABLE partner_payouts_x RENAME TO partner_payouts');
+    }
+  });
 });

@@ -17,6 +17,8 @@ import { authenticateAdminRequest } from '../../lib/contracts/admin-auth';
  */
 import type { AdminDashboard } from '../../lib/ops/adminDashboard';
 import { loadAdminDashboard } from '../../lib/ops/adminDashboard';
+import type { RevenueSnapshot } from '../../lib/ops/revenueSnapshot';
+import { loadRevenueSnapshot } from '../../lib/ops/revenueSnapshot';
 import { countPendingShopProducts } from '../../lib/shop/adminProducts';
 import { countShopAwaitingShipment, type ShopAwaitingShipmentCounts } from '../../lib/shop/adminQueries';
 
@@ -31,6 +33,8 @@ interface AdminIndexPageProps {
   dashboard: AdminDashboard | null;
   /** 상점 대기 건수 — 표가 없거나 조회가 실패하면 null(그 카드는 숨긴다). */
   shopQueues: { pendingProducts: number | null; awaitingShipment: ShopAwaitingShipmentCounts | null };
+  /** 이번 달 매출 요약 — 조회가 실패하면 null(그 카드는 숨긴다. 매출 때문에 첫 화면이 죽으면 안 된다). */
+  revenue?: RevenueSnapshot | null;
   /** 이번 달 1일·오늘(KST) — 장부 폼의 기본 기간. */
   ledgerFrom: string;
   ledgerTo: string;
@@ -50,15 +54,20 @@ export const getServerSideProps: GetServerSideProps<AdminIndexPageProps> = async
   // 상점 건수는 따로 읽는다 — 상점 표가 없는 DB에서도 대시보드가 그대로 열려야 한다(각 함수가 실패를 삼키고 null).
   const [pendingProducts, awaitingShipment] = await Promise.all([countPendingShopProducts(), countShopAwaitingShipment(now)]);
   const shopQueues = { pendingProducts, awaitingShipment };
+  // 매출도 따로 읽는다 — 결제 표 조회가 느리거나 실패해도 처리할 일 목록은 그대로 떠야 한다.
+  const revenue = await loadRevenueSnapshot(now).catch((error: unknown) => {
+    console.error('[admin] 매출 요약 조회 실패:', error);
+    return null;
+  });
 
   try {
     const dashboard = await loadAdminDashboard(now);
-    return { props: { dashboard, shopQueues, ledgerFrom, ledgerTo: today } };
+    return { props: { dashboard, shopQueues, revenue, ledgerFrom, ledgerTo: today } };
   } catch (error: unknown) {
     // 첫 화면이 죽으면 나머지 관리 화면으로 가는 길까지 막힌다 — 링크는 살려 두고 오류만 알린다.
     console.error('[admin] Failed to load dashboard:', error);
     return {
-      props: { dashboard: null, shopQueues, ledgerFrom, ledgerTo: today, error: '현황을 불러오지 못했습니다. 각 관리 화면은 열 수 있습니다.' },
+      props: { dashboard: null, shopQueues, revenue, ledgerFrom, ledgerTo: today, error: '현황을 불러오지 못했습니다. 각 관리 화면은 열 수 있습니다.' },
     };
   }
 };
@@ -93,7 +102,44 @@ const QueueCard = ({ label, count, href, alert }: { label: string; count: number
   </Link>
 );
 
-export default function AdminIndexPage({ dashboard, shopQueues, ledgerFrom, ledgerTo, error }: AdminIndexPageProps) {
+const won = (value: number) => `${value.toLocaleString('ko-KR')}원`;
+
+const RevenueSummaryCard = ({ revenue }: { revenue: RevenueSnapshot }) => {
+  const rate = revenue.changeRate;
+  return (
+    <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
+      <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
+        <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900">{revenue.month}월 매출</h2>
+        <Link href="/admin/revenue" className="text-sm font-medium text-primary hover:underline">
+          매출 현황 →
+        </Link>
+      </div>
+      <p className="text-3xl font-bold tabular-nums text-gray-900">{won(revenue.net)}</p>
+      <p className="mt-1 text-xs text-gray-500">
+        환불을 뺀 순매출(부가세 포함) · {revenue.count}건
+        {revenue.refunded > 0 ? ` · 환불 -${won(revenue.refunded)}` : ''}
+      </p>
+      <p className={`mt-1 text-sm font-medium ${rate === null ? 'text-gray-500' : rate >= 0 ? 'text-green-700' : 'text-red-700'}`}>
+        {rate === null ? '전월 매출이 없어 비교하지 않습니다' : `${rate >= 0 ? '▲' : '▼'} ${Math.abs(rate).toFixed(1)}% 전월(${won(revenue.previousNet)}) 전체 대비`}
+      </p>
+      <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
+        <div className="rounded-xl border border-gray-200 p-3">
+          <dt className="text-gray-500">스튜디오 직접 서비스</dt>
+          <dd className="mt-0.5 font-semibold tabular-nums text-gray-900">{won(revenue.directNet)}</dd>
+        </div>
+        <div className="rounded-xl border border-gray-200 p-3">
+          <dt className="text-gray-500">판매·중개 (정산 전)</dt>
+          <dd className="mt-0.5 font-semibold tabular-nums text-gray-900">{won(revenue.brokeredNet)}</dd>
+        </div>
+      </dl>
+      {revenue.manualMissing && (
+        <p className="mt-3 text-xs text-amber-800">직접 받은 매출 표를 읽지 못해 그 금액이 빠져 있습니다(마이그레이션 0063 확인).</p>
+      )}
+    </section>
+  );
+};
+
+export default function AdminIndexPage({ dashboard, shopQueues, revenue = null, ledgerFrom, ledgerTo, error }: AdminIndexPageProps) {
   return (
     <>
       <Head>
@@ -103,6 +149,8 @@ export default function AdminIndexPage({ dashboard, shopQueues, ledgerFrom, ledg
 
       <AdminShell title="대시보드">
         {error && <div className="p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">{error}</div>}
+
+        {revenue && <RevenueSummaryCard revenue={revenue} />}
 
         {dashboard && (
           <>
@@ -151,7 +199,16 @@ export default function AdminIndexPage({ dashboard, shopQueues, ledgerFrom, ledg
                 <QueueCard label="정지된 구독" count={dashboard.queues.subscriptionsPaused} href="/admin/subscriptions" alert />
                 <QueueCard label="이체 대기 아티스트 정산" count={dashboard.queues.artistPayoutsPending} href="/admin/artists" alert />
                 <QueueCard label="심사 대기 펀딩 프로젝트" count={dashboard.queues.fundingProjectsAwaitingReview} href="/admin/funding/projects" alert />
+                <QueueCard label="정산 기록 대기 펀딩 (마감됨)" count={dashboard.queues.fundingPayoutsToRecord} href="/admin/funding/projects" alert />
                 <QueueCard label="이체 대기 펀딩 정산" count={dashboard.queues.fundingPayoutsPending} href="/admin/funding/projects" alert />
+                <QueueCard label="입금 대기 예약·믹싱" count={dashboard.queues.awaitingDeposit.bookings} href="/admin/bookings?deposit=pending" alert />
+                <QueueCard label="입금 대기 펀딩" count={dashboard.queues.awaitingDeposit.funding} href="/admin/funding?deposit=pending" alert />
+                <QueueCard label="입금 대기 공연 티켓" count={dashboard.queues.awaitingDeposit.shows} href="/admin/shows" alert />
+                <QueueCard label="입금 대기 상점 주문" count={dashboard.queues.awaitingDeposit.shop} href="/admin/shop" alert />
+                <QueueCard label="정산 기록 대기 상점 (지난 달)" count={dashboard.queues.shopPayoutsToRecord} href="/admin/shop" alert />
+                <QueueCard label="이체 대기 상점 정산" count={dashboard.queues.shopPayoutsPending} href="/admin/shop" alert />
+                <QueueCard label="정산 기록 대기 공연 (종료됨)" count={dashboard.queues.showPayoutsToRecord} href="/admin/shows" alert />
+                <QueueCard label="이체 대기 공연 정산" count={dashboard.queues.showPayoutsPending} href="/admin/shows" alert />
                 {shopQueues.pendingProducts !== null && (
                   <QueueCard label="심사 대기 상점 상품" count={shopQueues.pendingProducts} href="/admin/shop/products" alert />
                 )}
@@ -172,7 +229,7 @@ export default function AdminIndexPage({ dashboard, shopQueues, ledgerFrom, ledg
 
             <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
               <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">이번 주 세션</h2>
-              <p className="text-xs text-gray-500 mb-4">오늘부터 {dashboard.upcomingWindowDays}일 안의 확정 예약입니다.</p>
+              <p className="text-xs text-gray-500 mb-4">오늘부터 {dashboard.upcomingWindowDays}일 안의 확정 예약과, 결제된 결제 링크의 이용 일정입니다.</p>
               {dashboard.upcomingSessions.length === 0 ? (
                 <p className="text-sm text-gray-600">예정된 세션이 없습니다.</p>
               ) : (
@@ -182,6 +239,7 @@ export default function AdminIndexPage({ dashboard, shopQueues, ledgerFrom, ledg
                       <span className="font-medium text-gray-900 tabular-nums">{formatKstDateTime(session.startAt)}</span>
                       <span className="text-gray-700">
                         {session.customerName} · {session.productName}
+                        {session.kind === 'link' && <span className="ml-2 rounded bg-amber-100 px-1.5 py-0.5 text-xs font-medium text-amber-800">결제 링크</span>}
                       </span>
                       <Link href={`/admin/bookings/${session.orderId}`} className="text-primary hover:underline">
                         {session.orderNo}
@@ -191,6 +249,34 @@ export default function AdminIndexPage({ dashboard, shopQueues, ledgerFrom, ledg
                 </ul>
               )}
             </section>
+
+            {(dashboard.calendarEvents.length > 0 || dashboard.calendarError) && (
+              <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">캘린더에만 있는 일정</h2>
+                <p className="text-xs text-gray-500 mb-4">
+                  녹음실 캘린더에 직접 넣은 일정이라 사이트에는 아직 없어요(웹 예약 시간은 이미 막혀 있어요). “사이트에 등록”을 누르면 시간을 채운 수기 예약 등록 칸이 열려요 — 고객·상품·금액은 거기서 채우세요.
+                </p>
+                {dashboard.calendarError && <p className="text-sm text-amber-800">{dashboard.calendarError}</p>}
+                <ul className="divide-y divide-gray-100">
+                  {dashboard.calendarEvents.map((event) => (
+                    <li key={event.id} className="py-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-sm">
+                      <span className="font-medium text-gray-900 tabular-nums">{event.allDay ? `${formatKstDateTime(event.startAt).slice(0, 14)} 종일` : formatKstDateTime(event.startAt)}</span>
+                      <span className="text-gray-700">{event.summary}<span className="ml-2 rounded bg-sky-100 px-1.5 py-0.5 text-xs font-medium text-sky-800">캘린더</span></span>
+                      {event.adoptable ? (
+                        <Link
+                          href={`/admin/bookings?${new URLSearchParams({ fromEvent: event.id, start: event.startAt, end: event.endAt, title: event.summary }).toString()}`}
+                          className="text-primary hover:underline"
+                        >
+                          사이트에 등록
+                        </Link>
+                      ) : (
+                        <span className="text-xs text-gray-500">종일 일정은 직접 등록해 주세요</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
 
             {dashboard.socialTokens.length > 0 && (
               <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8">

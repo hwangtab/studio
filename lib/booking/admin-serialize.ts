@@ -107,6 +107,11 @@ export interface AdminBookingListItem {
   /** 입금 대기일 때 안내한 기한(ISO) — 안내용이다(자동 취소 없음). */
   depositDeadline: string | null;
   createdAt: string;
+  /** 결제 링크를 만들 때 적은 운영자 메모(링크 주문만). */
+  linkMemo?: string | null;
+  linkSessionAt?: string | null;
+  /** 링크 이용 일정의 구글 캘린더 상태(0064) — 'registered' 등록됨 · 'failed' 실패 · 'none' 아직 안 올림(일시 없는 링크는 null). */
+  linkCalendar?: { state: 'registered' | 'failed' | 'none'; error: string | null } | null;
 }
 
 const UNPAID_ORDER_STATUSES: ReadonlySet<Order['status']> = new Set(['pending', 'failed', 'expired', 'awaiting_deposit', 'deposit_cancelled']);
@@ -125,6 +130,8 @@ const UNPAID_ORDER_STATUSES: ReadonlySet<Order['status']> = new Set(['pending', 
  */
 export const serializeBookingForAdmin = (
   order: Order & { bookings: Booking[]; payments: Payment[]; workOrders: WorkOrder[] },
+  /** 결제 링크 주문의 링크 정보(`payment_link_orders`, 0061 — lib/payments/paymentLinkOrders.ts). 없으면 "예약금" 고정 라벨. */
+  link?: { itemName: string; memo: string | null; sessionAt?: number | null; gcalEventId?: string | null; gcalError?: string | null } | null,
 ): AdminBookingListItem => {
   const booking = order.bookings[0];
   const workOrder = order.workOrders[0];
@@ -141,8 +148,8 @@ export const serializeBookingForAdmin = (
     customerPhone: order.customerPhone,
     customerEmail: order.customerEmail,
     productId: isMixing ? (workOrder?.productId ?? '') : (booking?.productId ?? ''),
-    // 예약금 결제 링크 주문은 품목명 칸이 없다(data/paymentLinks.ts) — 고정 라벨.
-    productName: order.type === 'deposit' ? '예약금' : isMixing ? (mixingProduct?.nameKo ?? workOrder?.serviceType ?? '-') : (product?.nameKo ?? booking?.serviceType ?? '-'),
+    // 예약금 결제 링크 주문은 링크 기록(0061)이 있으면 그 상품명, 없으면(옛 주문) 고정 라벨.
+    productName: order.type === 'deposit' ? (link?.itemName ?? '예약금') : isMixing ? (mixingProduct?.nameKo ?? workOrder?.serviceType ?? '-') : (product?.nameKo ?? booking?.serviceType ?? '-'),
     serviceType: isMixing ? (workOrder?.serviceType ?? '') : (booking?.serviceType ?? ''),
     roomNumber: booking?.roomNumber ?? null,
     startAt: booking ? booking.startAt.toISOString() : null,
@@ -180,6 +187,12 @@ export const serializeBookingForAdmin = (
         ? bankDepositDeadlineOf({ createdAt: order.createdAt, startsAt: booking?.startAt ?? null, guideDays: BANK_DEPOSIT_GUIDE_DAYS }).toISOString()
         : null,
     createdAt: order.createdAt.toISOString(),
+    linkMemo: order.type === 'deposit' ? (link?.memo ?? null) : null,
+    // 결제 링크에 적은 이용 일시(0062) — 예약 목록의 "일시" 칸이 '-' 대신 이 시각을 보인다.
+    linkSessionAt: order.type === 'deposit' && link?.sessionAt ? new Date(link.sessionAt * 1000).toISOString() : null,
+    linkCalendar: order.type === 'deposit' && link?.sessionAt
+      ? { state: link.gcalEventId ? 'registered' : link.gcalError ? 'failed' : 'none', error: link.gcalError ?? null }
+      : null,
   };
 };
 
@@ -217,8 +230,9 @@ export interface AdminBookingDetail extends AdminBookingListItem {
 
 export const serializeBookingDetailForAdmin = (
   order: Order & { bookings: Booking[]; payments: (Payment & { refunds: Refund[] })[]; workOrders: WorkOrder[] },
+  link?: { itemName: string; memo: string | null; sessionAt?: number | null; gcalEventId?: string | null; gcalError?: string | null } | null,
 ): AdminBookingDetail => {
-  const base = serializeBookingForAdmin(order);
+  const base = serializeBookingForAdmin(order, link);
   const booking = order.bookings[0];
   const workOrder = order.workOrders[0];
   const payment = latestPaymentOf(order.payments);
@@ -280,7 +294,7 @@ export const LIVE_ORDER_STATUSES_FOR_REFUND = ['paid', 'partially_refunded'] as 
  * cancelSessionBooking·cancelMixingOrder가 같은 것을 본다.
  *
  * `completed`·`no_show`는 넣지 않는다 — cancelSessionBooking이 거절하므로 폼을 띄우면
- * 눌러도 실패하는 죽은 버튼이 된다.
+ * 눌러도 실패하는 죽은 버튼이 된다. 이미 그 상태가 된 예약은 관리자 상세의 "확정으로 되돌리기"로 확정으로 돌린 뒤 환불한다.
  */
 const ADMIN_REFUNDABLE_ENTITY_STATUSES = {
   session: ['confirmed', 'cancelled'],

@@ -1,7 +1,7 @@
 {
  "note": "상점 아티스트가 개설자 콘솔에서 동의하는 위탁 약관(SHOP_ARTIST_TERMS_SECTIONS)의 내용 해시. 내용이 바뀌면 SHOP_ARTIST_TERMS_VERSION을 먼저 올린 뒤 UPDATE_SHOP_ARTIST_TERMS_BASELINE=1 로 갱신할 것.",
- "version": "shop-artist-terms-2026-10-14",
- "hash": "d4a001cd8b2ed74d905798e0655bc474183801cf59f90bc59fb330940dad045b",
+ "version": "shop-artist-terms-2026-10-16",
+ "hash": "0fcc5df86fed087fa68c9ecb5225408e6c26ede346930600b959220410d6d0b0",
  "covers": [
   "lib/shop/artistTerms.ts — SHOP_ARTIST_TERMS_SECTIONS, 받는 분 정보 가림 기간",
   "data/pricing.ts · lib/shop/shipper.ts · data/siteConfig.ts — 본문에 보간되는 정산 비율·원천징수율·스튜디오 택배사·당사자 표시"

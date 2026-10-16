@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 import { AdminShell } from '../../../components/admin/AdminShell';
 import { Button } from '../../../components/ui/Button';
+import { TextInput } from '../../../components/ui/Field';
 import { artistSupportTierLabel, subscriptionOrderName } from '../../../lib/billing/amounts';
 import { getDb } from '../../../db/client';
 import { subscriptionPayments } from '../../../db/schema';
@@ -13,13 +14,15 @@ import { formatPriceAmount } from '../../../data/pricing';
 import { endExpiredSubscriptions } from '../../../lib/billing/service';
 import { serializeSubscription, type SerializedSubscription } from '../../../lib/billing/admin-serialize';
 import { formatKstDateTimeFull } from '../../../lib/booking/format';
-import { eq, sql } from 'drizzle-orm';
+import { eq, or, sql } from 'drizzle-orm';
 
 const LIST_LIMIT = 200;
 
 interface AdminSubscriptionsPageProps {
   subscriptions: (SerializedSubscription & { failedCount: number })[];
   truncated: boolean;
+  /** 이름·연락처·이메일 검색어. 서버에서 걸러 오래된 구독도 찾는다. */
+  q: string;
 }
 
 export const getServerSideProps: GetServerSideProps<AdminSubscriptionsPageProps> = async (context) => {
@@ -31,7 +34,19 @@ export const getServerSideProps: GetServerSideProps<AdminSubscriptionsPageProps>
   await endExpiredSubscriptions(new Date());
 
   const db = getDb();
+  const qParam = context.query.q;
+  const q = typeof qParam === 'string' ? qParam.trim().slice(0, 60) : '';
+  // 부분 일치 — `%`·`_`는 이스케이프한다. 목록은 최근 200건이라 그 밖의 구독은 이 검색이 없으면 열 방법이 없었다.
+  const pattern = q ? `%${q.replace(/[\\%_]/g, (c) => `\\${c}`)}%` : null;
   const rows = await db.query.subscriptions.findMany({
+    where: pattern
+      ? (t) =>
+          or(
+            sql`${t.customerName} LIKE ${pattern} ESCAPE '\\'`,
+            sql`${t.customerPhone} LIKE ${pattern} ESCAPE '\\'`,
+            sql`${t.customerEmail} LIKE ${pattern} ESCAPE '\\'`,
+          )
+      : undefined,
     orderBy: (t, { desc }) => [desc(t.createdAt)],
     limit: LIST_LIMIT + 1,
   });
@@ -53,6 +68,7 @@ export const getServerSideProps: GetServerSideProps<AdminSubscriptionsPageProps>
         failedCount: failedCountBySubscription.get(row.id) ?? 0,
       })),
       truncated,
+      q,
     },
   };
 };
@@ -97,10 +113,25 @@ const KIND_FILTERS = [
   { key: 'artist-support', label: '아티스트' },
 ] as const;
 
-export default function AdminSubscriptionsPage({ subscriptions: allSubscriptions, truncated }: AdminSubscriptionsPageProps) {
+const STATUS_FILTERS = [
+  { key: 'all', label: '전체 상태' },
+  { key: 'attention', label: '손볼 것 (카드 대기·재시도·정지)' },
+  { key: 'active', label: '정상' },
+  { key: 'closed', label: '해지·종료' },
+] as const;
+
+const matchesStatus = (status: string, key: (typeof STATUS_FILTERS)[number]['key']): boolean =>
+  key === 'all' ||
+  (key === 'attention' && ['pending_card', 'past_due', 'paused'].includes(status)) ||
+  (key === 'active' && status === 'active') ||
+  (key === 'closed' && ['cancelled', 'ended'].includes(status));
+
+export default function AdminSubscriptionsPage({ subscriptions: allSubscriptions, truncated, q = '' }: AdminSubscriptionsPageProps) {
   const [kindFilter, setKindFilter] = useState<(typeof KIND_FILTERS)[number]['key']>('all');
-  const subscriptions = kindFilter === 'all' ? allSubscriptions : allSubscriptions.filter((s) => s.kind === kindFilter);
+  const [statusFilter, setStatusFilter] = useState<(typeof STATUS_FILTERS)[number]['key']>('all');
+  const subscriptions = allSubscriptions.filter((s) => (kindFilter === 'all' || s.kind === kindFilter) && matchesStatus(s.status, statusFilter));
   const countOf = (key: string) => (key === 'all' ? allSubscriptions.length : allSubscriptions.filter((s) => s.kind === key).length);
+  const statusCountOf = (key: (typeof STATUS_FILTERS)[number]['key']) => allSubscriptions.filter((s) => matchesStatus(s.status, key)).length;
   return (
     <>
       <Head>
@@ -119,9 +150,35 @@ export default function AdminSubscriptionsPage({ subscriptions: allSubscriptions
       >
         {truncated && (
           <div className="mb-4 p-3 bg-amber-50 text-amber-800 rounded-lg text-sm">
-            최근 {LIST_LIMIT}건만 표시됩니다. 오래된 구독은 목록에서 잘렸습니다.
+            최근 {LIST_LIMIT}건만 표시됩니다. 오래된 구독은 위 검색(이름·연락처·이메일)으로 찾을 수 있습니다.
           </div>
         )}
+
+        <form method="GET" action="/admin/subscriptions" className="mb-4 flex flex-wrap items-center gap-2" role="search">
+          <TextInput type="search" name="q" defaultValue={q} placeholder="이름, 연락처, 이메일 검색" aria-label="구독 검색" light className="w-auto flex-1 min-w-[240px] px-4" />
+          <Button light type="submit" variant="weak">검색</Button>
+          {q && (
+            <Link href="/admin/subscriptions" className="text-sm text-primary hover:underline">
+              검색 해제
+            </Link>
+          )}
+        </form>
+
+        <div className="mb-2 flex flex-wrap gap-2">
+          {STATUS_FILTERS.map((f) => (
+            <button
+              key={f.key}
+              type="button"
+              aria-pressed={statusFilter === f.key}
+              onClick={() => setStatusFilter(f.key)}
+              className={`px-3 py-1.5 rounded-full text-sm ${
+                statusFilter === f.key ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              {f.label} ({statusCountOf(f.key)})
+            </button>
+          ))}
+        </div>
 
         <div className="mb-4 flex flex-wrap gap-2">
           {KIND_FILTERS.map((f) => (
@@ -192,7 +249,7 @@ export default function AdminSubscriptionsPage({ subscriptions: allSubscriptions
                 {subscriptions.length === 0 && (
                   <tr>
                     <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
-                      구독이 없습니다.
+                      {q || statusFilter !== 'all' || kindFilter !== 'all' ? '조건에 맞는 구독이 없습니다.' : '구독이 없습니다.'}
                     </td>
                   </tr>
                 )}

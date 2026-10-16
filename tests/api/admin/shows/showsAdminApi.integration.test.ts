@@ -16,11 +16,19 @@ let mockDb: ShowsTestDb;
 jest.mock('../../../../db/client', () => ({ getDb: () => mockDb }));
 jest.mock('../../../../lib/contracts/admin-auth', () => ({ authenticateAdminApi: jest.fn() }));
 jest.mock('../../../../lib/booking/toss', () => ({ cancelPayment: jest.fn() }));
-jest.mock('../../../../lib/shows/scanLink', () => ({ issueScanLink: jest.fn(async () => ({ token: 'tok-secret-1234567890', id: 'l1', expiresAt: 1 })), SCAN_LINK_MAX_TTL_HOURS: 72, verifyScanLink: jest.fn() }));
+jest.mock('../../../../lib/shows/scanLink', () => ({ issueScanLink: jest.fn(async () => ({ token: 'tok-secret-1234567890', id: 'l1', expiresAt: 1 })), SCAN_LINK_MAX_TTL_HOURS: 72, verifyScanLink: jest.fn(), revokeScanLink: jest.fn(async () => true) }));
+jest.mock('../../../../lib/shows/email', () => ({ sendShowTicketEmail: jest.fn(async () => undefined), notifyShowPaymentToOperator: jest.fn(async () => undefined), sendShowRefundEmail: jest.fn(async () => undefined), sendShowtimeCancelledEmail: jest.fn(async () => undefined) }));
 jest.mock('../../../../lib/privacy/accessLog', () => ({ recordAdminPrivacyAccess: jest.fn(async () => undefined) }));
 
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { recordAdminPrivacyAccess } from '../../../../lib/privacy/accessLog';
+import { revokeScanLink } from '../../../../lib/shows/scanLink';
+import { sendShowtimeCancelledEmail } from '../../../../lib/shows/email';
+import { showScanLinks } from '../../../../db/schema';
+import { cancelPayment } from '../../../../lib/booking/toss';
+import { createFakeToss } from '../../../fakes/fakeToss';
+import { createShowOrder } from '../../../../lib/shows/service';
+import { confirmShowOrder } from '../../../../lib/shows/confirm';
 import handler from '../../../../pages/api/admin/shows/[id]';
 import rosterHandler from '../../../../pages/api/admin/shows/[id]/roster';
 
@@ -92,6 +100,113 @@ describe('관리자 공연 API', () => {
     expect(res.status).toHaveBeenCalledWith(409);
   });
 
+  it('마지막 회차를 취소하면 공연이 cancelled가 되고, set_status로 초안·공개 모두 되돌릴 수 있다', async () => {
+    await call(handler, { query: { id: showId }, body: { action: 'set_status', status: 'published' } });
+    let res = await call(handler, { query: { id: showId }, body: { action: 'cancel_showtime', showtimeId } });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect((await mockDb.select().from(shows))[0].status).toBe('cancelled');
+
+    // 예정된 회차가 없으면 공개로 못 되돌린다.
+    res = await call(handler, { query: { id: showId }, body: { action: 'set_status', status: 'published' } });
+    expect(res.status).toHaveBeenCalledWith(409);
+    expect((await mockDb.select().from(shows))[0].status).toBe('cancelled');
+
+    res = await call(handler, { query: { id: showId }, body: { action: 'set_status', status: 'draft' } });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect((await mockDb.select().from(shows))[0].status).toBe('draft');
+
+    // 새 일정을 잡았다면(취소 상태에서도) 공개로 되돌아간다.
+    await mockDb.update(shows).set({ status: 'cancelled' });
+    const future = Math.floor(Date.now() / 1000) + 20 * 86400;
+    await mockDb.insert(showtimes).values({ id: 'st-new', showId, startsAt: future, salesCloseAt: future - 86400 });
+    res = await call(handler, { query: { id: showId }, body: { action: 'set_status', status: 'published' } });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect((await mockDb.select().from(shows))[0].status).toBe('published');
+  });
+
+  it('티켓을 골라 부분 환불한다 — 고른 티켓만 환불되고 주문은 부분환불, 나머지를 환불하면 전액환불', async () => {
+    const fake = createFakeToss();
+    (cancelPayment as jest.Mock).mockImplementation((input) => fake.cancelPayment(input));
+    const created = await createShowOrder({ showtimeId, ticketTypeId, quantity: 3, buyerName: '김관객', buyerContact: '010-1111-2222' }, new Date());
+    if (!created.ok) throw new Error('setup failed');
+    const [tt] = await mockDb.select().from(showTicketTypes);
+    await confirmShowOrder({ orderNo: created.orderNo, paymentKey: 'pk-partial', amount: tt.price * 3 }, { trustedByWebhook: false }, fake);
+    const tickets = await mockDb.select().from(showTickets).where(eq(showTickets.orderNo, created.orderNo));
+    expect(tickets).toHaveLength(3);
+
+    let res = await call(handler, { query: { id: showId }, body: { action: 'refund_tickets', orderNo: created.orderNo, ticketIds: [] } });
+    expect(res.status).toHaveBeenCalledWith(409);
+
+    res = await call(handler, { query: { id: showId }, body: { action: 'refund_tickets', orderNo: created.orderNo, ticketIds: [tickets[0].id] } });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json.mock.calls[0][0]).toMatchObject({ ok: true, amount: tt.price, orderStatus: 'partially_refunded' });
+    let rows = await mockDb.select().from(showTickets).where(eq(showTickets.orderNo, created.orderNo));
+    expect(rows.filter((t) => t.status === 'refunded').map((t) => t.id)).toEqual([tickets[0].id]);
+
+    // 이미 환불한 티켓을 다시 고르면 거절된다.
+    res = await call(handler, { query: { id: showId }, body: { action: 'refund_tickets', orderNo: created.orderNo, ticketIds: [tickets[0].id] } });
+    expect(res.status).toHaveBeenCalledWith(409);
+
+    res = await call(handler, { query: { id: showId }, body: { action: 'refund_tickets', orderNo: created.orderNo, ticketIds: [tickets[1].id, tickets[2].id] } });
+    expect(res.json.mock.calls[0][0]).toMatchObject({ ok: true, amount: tt.price * 2, orderStatus: 'refunded' });
+    rows = await mockDb.select().from(showTickets).where(eq(showTickets.orderNo, created.orderNo));
+    expect(rows.every((t) => t.status === 'refunded')).toBe(true);
+  });
+
+  it('회차 취소: 토스 취소 뒤 DB 오류로 끊긴 주문은 "환불 이어서 처리"(취소된 회차에 다시 cancel_showtime)로 멱등하게 마감하고 실제 환불액으로 안내한다', async () => {
+    const fake = createFakeToss();
+    (cancelPayment as jest.Mock).mockImplementation((input) => fake.cancelPayment(input));
+    const [tt] = await mockDb.select().from(showTicketTypes);
+    const orderNos: string[] = [];
+    for (const pk of ['pk-r1', 'pk-r2']) {
+      const created = await createShowOrder({ showtimeId, ticketTypeId, quantity: 2, buyerName: '김관객', buyerContact: '010-1111-2222' }, new Date());
+      if (!created.ok) throw new Error('setup failed');
+      await confirmShowOrder({ orderNo: created.orderNo, paymentKey: pk, amount: tt.price * 2 }, { trustedByWebhook: false }, fake);
+      orderNos.push(created.orderNo);
+    }
+    // 둘째 주문은 티켓 한 장이 입장 처리됨 — 부분 환불이 되어야 한다.
+    const secondTickets = await mockDb.select().from(showTickets).where(eq(showTickets.orderNo, orderNos[1]));
+    await mockDb.update(showTickets).set({ checkedInAt: Math.floor(Date.now() / 1000) }).where(eq(showTickets.id, secondTickets[0].id));
+
+    // 첫 실행: 첫 번째 정산 batch만 실패시킨다(토스 취소는 이미 성공).
+    const realBatch = mockDb.batch.bind(mockDb);
+    let calls = 0;
+    const spy = jest.spyOn(mockDb, 'batch').mockImplementation(async (st: unknown) => {
+      calls += 1;
+      if (calls === 1) throw new Error('simulated');
+      return realBatch(st as never);
+    });
+    let res = await call(handler, { query: { id: showId }, body: { action: 'cancel_showtime', showtimeId } });
+    spy.mockRestore();
+    expect(res.status).toHaveBeenCalledWith(200);
+    const first = res.json.mock.calls[0][0];
+    expect(first.failedOrders).toHaveLength(1);
+    const failedOrderNo = first.failedOrders[0];
+    const otherOrderNo = orderNos.find((o) => o !== failedOrderNo)!;
+
+    // 이어서 처리: 회차는 cancelled인데 paid 주문이 남아 있으므로 409가 아니라 재실행이다.
+    (sendShowtimeCancelledEmail as jest.Mock).mockClear();
+    res = await call(handler, { query: { id: showId }, body: { action: 'cancel_showtime', showtimeId } });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json.mock.calls[0][0]).toMatchObject({ ok: true, resumed: true, refundedOrders: 1, failedOrders: [] });
+    // 안내 메일: 이번에 환불한 주문 + 앞선 실행에서 환불만 되고 안내 못 받은 주문 모두에게, 실제 환불액으로.
+    const mailCalls = (sendShowtimeCancelledEmail as jest.Mock).mock.calls as Array<[string, { refundedAmount?: number; refundCompleted: boolean }]>;
+    const byOrder = Object.fromEntries(mailCalls.map(([o, opts]) => [o, opts]));
+    expect(Object.keys(byOrder).sort()).toEqual([...orderNos].sort());
+    expect(byOrder[failedOrderNo].refundCompleted).toBe(true);
+    expect(byOrder[otherOrderNo].refundCompleted).toBe(true);
+    // 둘째 주문은 입장 티켓 한 장을 뺀 한 장 값만 환불됐다 — 어느 실행이 돌려줬든 안내는 실제 환불액이다.
+    expect(byOrder[orderNos[1]].refundedAmount).toBe(tt.price);
+    expect(byOrder[orderNos[0]].refundedAmount).toBe(tt.price * 2);
+    // 토스 취소는 결제당 한 번뿐이다(멱등키 재생).
+    expect(fake._payments.get('pk-r1')?.cancels).toHaveLength(1);
+    expect(fake._payments.get('pk-r2')?.cancels).toHaveLength(1);
+
+    // 환불이 남지 않은 취소 회차에 또 누르면 종전처럼 409.
+    res = await call(handler, { query: { id: showId }, body: { action: 'cancel_showtime', showtimeId } });
+    expect(res.status).toHaveBeenCalledWith(409);
+  });
+
   it('초대권 발급(compQuota 안)과 취소', async () => {
     const res = await call(handler, { query: { id: showId }, body: { action: 'issue_comp', showtimeId, ticketTypeId, quantity: 2, note: '출연진' } });
     expect(res.status).toHaveBeenCalledWith(200);
@@ -132,6 +247,28 @@ describe('관리자 공연 API', () => {
     expect(res.status).toHaveBeenCalledWith(400);
     res = await call(handler, { query: { id: showId }, body: { action: 'issue_scan_link', showtimeId, label: 'a', ttlHours: 999 } });
     expect(res.status).toHaveBeenCalledWith(400);
+  });
+
+  it('스캔 링크는 이 공연의 회차에 걸린 것만 만료 전에 폐기할 수 있다', async () => {
+    await mockDb.insert(showScanLinks).values({ id: 'l-own', showtimeId, tokenHash: 'h-own', label: '현장1', expiresAt: Math.floor(Date.now() / 1000) + 3600 });
+    // 다른 공연의 회차에 걸린 링크 — 이 공연의 관리자 API로는 건드릴 수 없다.
+    await seedShow(mockDb, { ...bakkeojiShow, slug: 'other-show', showtimes: [{ startsAt: new Date(Date.now() + 20 * 86400 * 1000) }] }, { apply: true });
+    const otherShow = (await mockDb.select().from(shows).where(eq(shows.slug, 'other-show')))[0];
+    const otherTime = (await mockDb.select().from(showtimes).where(eq(showtimes.showId, otherShow.id)))[0];
+    await mockDb.insert(showScanLinks).values({ id: 'l-other', showtimeId: otherTime.id, tokenHash: 'h-other', label: '남의 것', expiresAt: Math.floor(Date.now() / 1000) + 3600 });
+
+    let res = await call(handler, { query: { id: showId }, body: { action: 'revoke_scan_link', linkId: 'l-own' } });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(revokeScanLink).toHaveBeenCalledWith('l-own', expect.any(Date));
+
+    (revokeScanLink as jest.Mock).mockClear();
+    res = await call(handler, { query: { id: showId }, body: { action: 'revoke_scan_link', linkId: 'l-other' } });
+    expect(res.status).toHaveBeenCalledWith(409);
+    res = await call(handler, { query: { id: showId }, body: { action: 'revoke_scan_link', linkId: 'nope' } });
+    expect(res.status).toHaveBeenCalledWith(409);
+    res = await call(handler, { query: { id: showId }, body: { action: 'revoke_scan_link' } });
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(revokeScanLink).not.toHaveBeenCalled();
   });
 
   it('회차 시각 변경은 과거를 거부하고 판매마감을 다시 계산한다', async () => {

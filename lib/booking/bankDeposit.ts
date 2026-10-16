@@ -17,6 +17,8 @@ import { recordDepositGuideResult, rowsOf, sendDepositGuideEmails, sendDepositWi
 import { allowCustomerDepositGuideMail } from '../payments/depositGuideThrottle';
 import { safeDbErrorSummary } from '../payments/refundAccount';
 import { deliverPostConfirmation, ensureBookingEvent, type BookingOrder } from './confirm';
+import { syncPaymentLinkCalendarEvent } from '../payments/linkCalendar';
+import { loadPaymentLinkOrderInfo } from '../payments/paymentLinkOrders';
 import { sendDepositLinkPaidEmail } from './email';
 import { calendarForService, deleteBookingEvent, renameBookingEvent } from './gcal';
 import { kstDateString } from './kst';
@@ -52,12 +54,12 @@ const manageUrlOf = (order: { orderNo: string; manageToken: string }): string =>
 const isDepositLink = (order: { type: string }): boolean => order.type === 'deposit';
 
 /** `lines`는 무엇을 신청했나, `holdNote`는 입금 안내에만 붙는 자리 안내(신청 취소 알림에는 싣지 않는다). */
-const summaryOf = (order: BookingOrder): { kindLabel: string; applicantLabel: string; lines: string[]; holdNote?: string } => {
+const summaryOf = (order: BookingOrder, depositItemName?: string | null): { kindLabel: string; applicantLabel: string; lines: string[]; holdNote?: string } => {
   if (isDepositLink(order)) {
-    // 품목명은 DB에 저장하지 않는다(data/paymentLinks.ts) — 고정 문구만.
+    // 품목명은 링크 주문 기록(`payment_link_orders`, 0061)에서 온다 — 없으면(옛 주문·표 전) 고정 문구만.
     return {
       kindLabel: '예약금', applicantLabel: '신청하신 분',
-      lines: [`예약금 ${formatPriceAmount(order.totalAmount)}원 (VAT 포함)`],
+      lines: [...(depositItemName ? [`상품: ${depositItemName}`] : []), `예약금 ${formatPriceAmount(order.totalAmount)}원 (VAT 포함)`],
     };
   }
   if (order.type === 'mixing') {
@@ -90,7 +92,7 @@ export const deliverBookingDepositGuide = async (
 ): Promise<string | null> => {
   const order = await findOrderByOrderNo(orderNo);
   if (!order || order.status !== AWAITING_DEPOSIT) return 'invalid_state';
-  const s = summaryOf(order);
+  const s = summaryOf(order, isDepositLink(order) ? (await loadPaymentLinkOrderInfo([order.orderNo])).get(order.orderNo)?.itemName : null);
   let failure: string | null;
   try {
     const skipCustomer = opts.throttleCustomer ? !(await allowCustomerDepositGuideMail(order.customerEmail)) : false;
@@ -115,7 +117,7 @@ export const notifyBookingDepositWithdrawn = async (orderNo: string): Promise<vo
   try {
     const order = await findOrderByOrderNo(orderNo);
     if (!order) return;
-    const s = summaryOf(order);
+    const s = summaryOf(order, isDepositLink(order) ? (await loadPaymentLinkOrderInfo([order.orderNo])).get(order.orderNo)?.itemName : null);
     await sendDepositWithdrawnOperatorAlert({
       orderNo: order.orderNo, customerName: order.customerName, customerEmail: order.customerEmail,
       customerPhone: order.customerPhone, totalAmount: order.totalAmount,
@@ -210,6 +212,8 @@ const confirmDepositLinkBankDeposit = async (order: BookingOrder, now: Date): Pr
   if (rowsOf(claim) === 0) {
     return { ok: false, code: 'invalid_state', message: '이미 확인됐거나 입금을 확인할 수 있는 상태가 아니에요(미입금 취소된 신청은 확정할 수 없어요). 새로고침해 주세요.' };
   }
+  // 이용 일시가 있는 링크면 캘린더에 올린다(실패는 삼키고 기록 — lib/payments/linkCalendar.ts).
+  await syncPaymentLinkCalendarEvent(order.orderNo);
   let failure: string | null = null;
   try {
     failure = await sendDepositLinkPaidEmail({ ...order, status: 'paid' });

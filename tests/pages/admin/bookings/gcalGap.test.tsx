@@ -60,11 +60,21 @@ it('결제 대기 예약에는 캘린더 재시도 버튼이 뜨지 않는다', 
   expect(retryButton()).not.toBeInTheDocument();
 });
 
-// 취소된 예약의 캘린더 오류(삭제 실패)는 배너로 알리되 재등록 버튼은 주지 않는다 — 기존 판정.
-it('취소된 예약은 배너만 남고 재시도 버튼은 없다', () => {
+// 취소 때 일정 삭제가 실패하면 남은 일정이 그 시간을 계속 막는다 — "등록"이 아니라 "다시 지우기"를 준다.
+it('취소 때 지우지 못한 일정은 "일정 지우기" 배너와 버튼을 준다(등록 재시도는 아니다)', () => {
   render(<AdminBookingDetailPage booking={{ ...SESSION, bookingStatus: 'cancelled', gcalError: 'delete: 500' }} />);
+  expect(screen.getByText(/취소된 예약의 캘린더 일정을 지우지 못했습니다/)).toBeInTheDocument();
+  expect(screen.queryByText(/구글 캘린더 동기화에 실패했습니다/)).not.toBeInTheDocument();
+  expect(screen.getByRole('button', { name: '캘린더 일정 지우기' })).toBeInTheDocument();
+  expect(retryButton()).not.toBeInTheDocument();
+});
+
+// 삭제 실패가 아닌 오류가 남은 취소 예약은 기존대로 배너만 — 다시 등록할 이유가 없다.
+it('삭제 실패가 아닌 오류가 남은 취소 예약은 배너만 남고 버튼은 없다', () => {
+  render(<AdminBookingDetailPage booking={{ ...SESSION, bookingStatus: 'cancelled', gcalError: 'create: 500' }} />);
   expect(screen.getByText(/구글 캘린더 동기화에 실패했습니다/)).toBeInTheDocument();
   expect(retryButton()).not.toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: '캘린더 일정 지우기' })).not.toBeInTheDocument();
 });
 
 // 믹싱·마스터링 주문은 bookings 행이 없어 캘린더 개념 자체가 없다(API도 409를 준다).

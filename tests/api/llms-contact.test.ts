@@ -73,6 +73,29 @@ describe('LLM contact metadata', () => {
     expect(getBody()).toMatch(/Voice Actor Recording[^\n]*100,000 KRW\/hour/);
   });
 
+  it('marks Voice Actor Recording as VAT included, in both the service line and the FAQ', async () => {
+    const { res, getBody } = createResponse();
+
+    await llmsHandler(createRequest(), res);
+    const body = getBody();
+
+    expect(body).toMatch(/Voice Actor Recording[^\n]*VAT included/);
+    expect(body).toMatch(/voice-over\/dubbing recording at [\d,]+ KRW\/hour \(\*\*VAT included\*\*/);
+  });
+
+  it('every "VAT excluded" line is the practice room monthly residency or the producing lesson — never voice-over/dubbing', async () => {
+    const { res, getBody } = createResponse();
+
+    await llmsHandler(createRequest(), res);
+    const body = getBody();
+
+    const excludedLines = body.split('\n').filter((line) => line.includes('VAT excluded'));
+    expect(excludedLines.length).toBeGreaterThan(0);
+    for (const line of excludedLines) {
+      expect(line).not.toMatch(/Voice Actor|voice-over|dubbing/i);
+    }
+  });
+
   it('uses the current mobile number in llms-full.txt', async () => {
     const { res, getBody, getHeader } = createResponse();
 

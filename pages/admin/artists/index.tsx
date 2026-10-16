@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { AdminShell } from '../../../components/admin/AdminShell';
-import { markPayoutPaid, recordPayout } from '../../../components/admin/artistActions';
+import { deletePendingPayout, markPayoutPaid, recordPayout } from '../../../components/admin/artistActions';
 import { Button } from '../../../components/ui/Button';
 import { Field, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
@@ -55,8 +55,12 @@ interface AdminArtistsPageProps {
   artists: Array<{ slug: string; name: string; supportActive: boolean; taxType: string; supporterCount: number }>;
   previews: PreviewRow[];
   history: PayoutHistoryRow[];
+  /** 정산 기록이 상한(120건)에서 잘렸는가. */
+  historyTruncated?: boolean;
   error?: string;
 }
+
+const HISTORY_LIMIT = 120;
 
 /** 기본 정산 대상은 지난달 — 이번 달은 아직 청구가 다 안 돌았다. */
 const previousPeriod = (now: Date): string => {
@@ -78,7 +82,7 @@ export const getServerSideProps: GetServerSideProps<AdminArtistsPageProps> = asy
     const [counts, previews, history] = await Promise.all([
       countSupportersByArtist(),
       buildAllArtistPayoutPreviews(period),
-      listArtistPayouts(),
+      listArtistPayouts(HISTORY_LIMIT + 1),
     ]);
     return {
       props: {
@@ -107,7 +111,8 @@ export const getServerSideProps: GetServerSideProps<AdminArtistsPageProps> = asy
             ? { id: p.recorded.id, status: p.recorded.status, netAmount: p.recorded.netAmount, paidAt: p.recorded.paidAt?.toISOString() ?? null, memo: p.recorded.memo }
             : null,
         })),
-        history: history.map((h) => ({
+        historyTruncated: history.length > HISTORY_LIMIT,
+        history: history.slice(0, HISTORY_LIMIT).map((h) => ({
           id: h.id,
           artistSlug: h.artistSlug,
           artistName: nameOf.get(h.artistSlug) ?? h.artistSlug,
@@ -129,7 +134,7 @@ export const getServerSideProps: GetServerSideProps<AdminArtistsPageProps> = asy
 
 const TAX_LABELS: Record<string, string> = { withholding: '원천징수 3.3%', invoice: '세금계산서' };
 
-export default function AdminArtistsPage({ supportOpen, period, artists, previews, history, error }: AdminArtistsPageProps) {
+export default function AdminArtistsPage({ supportOpen, period, artists, previews, history, historyTruncated = false, error }: AdminArtistsPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -293,7 +298,7 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
                           )}
                           {drift && (
                             <span className="block mt-1 text-xs text-red-600">
-                              기록 {formatPriceAmount(p.recorded!.netAmount)}원과 다름 — 뒤늦은 환불
+                              기록 {formatPriceAmount(p.recorded!.netAmount)}원과 다름 — 뒤늦은 환불{p.recorded!.status === 'pending' ? ' ("기록 취소(다시 기록)"로 현재 숫자로 다시 기록)' : ''}
                             </span>
                           )}
                         </td>
@@ -319,12 +324,39 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
                               onClick={() =>
                                 run(
                                   key,
-                                  () => markPayoutPaid(p.recorded!.id, ''),
-                                  `${p.artistName}에게 ${formatPriceAmount(p.recorded!.netAmount)}원을 이체했나요? 지급 완료로 기록합니다.`,
+                                  async () => {
+                                    // 이체 메모(선택) — 이체일·실제 보낸 금액. 기록 뒤 환불로 금액이 달라졌다면 여기 적어 둔다(기록 행은 불변이다).
+                                    const memo = window.prompt('이체 메모 (선택 — 이체일, 실제 보낸 금액 등)', '');
+                                    if (memo === null) return { ok: false, message: '지급 완료 기록을 취소했습니다.' };
+                                    return markPayoutPaid(p.recorded!.id, memo.trim());
+                                  },
+                                  `${p.artistName}에게 ${formatPriceAmount(p.recorded!.netAmount)}원을 이체했나요? 지급 완료로 기록합니다.${
+                                    p.netAmount !== p.recorded!.netAmount
+                                      ? `\n\n⚠ 지금 계산하면 ${formatPriceAmount(p.netAmount)}원으로 기록과 다릅니다(뒤늦은 환불일 수 있어요). 실제로 이체한 금액을 이어서 묻는 메모에 꼭 적어 주세요.`
+                                      : ''
+                                  }`,
                                 )
                               }
                             >
                               지급 완료
+                            </Button>
+                          )}
+                          {p.recorded?.status === 'pending' && (
+                            <Button
+                              light
+                              size="sm"
+                              variant="weak"
+                              className="ml-2"
+                              disabled={busy === key}
+                              onClick={() =>
+                                run(
+                                  key,
+                                  () => deletePendingPayout(p.recorded!.id),
+                                  `${p.artistName} ${p.period}의 기록(${formatPriceAmount(p.recorded!.netAmount)}원)을 취소할까요?\n\n기록된 금액은 버려지고 이력도 남지 않습니다. 취소한 뒤 "정산 기록"을 눌러 현재 숫자(${formatPriceAmount(p.netAmount)}원)로 다시 기록하세요. 아직 이체하지 않은 기록만 취소할 수 있습니다.`,
+                                )
+                              }
+                            >
+                              기록 취소(다시 기록)
                             </Button>
                           )}
                         </td>
@@ -339,6 +371,9 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
 
         <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
           <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">정산 기록</h2>
+          {historyTruncated && (
+            <p className="mb-3 rounded-lg bg-amber-50 p-3 text-xs text-amber-900">최근 {HISTORY_LIMIT}건만 표시합니다. 더 오래된 정산 기록은 이 화면에서 볼 수 없습니다.</p>
+          )}
           {history.length === 0 ? (
             <p className="text-sm text-gray-600">아직 기록된 정산이 없습니다.</p>
           ) : (

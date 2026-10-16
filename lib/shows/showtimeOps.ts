@@ -5,8 +5,8 @@ import { refundIdempotencyKey, remainingRefundable, type PaymentWithRefunds } fr
 import type { FakeToss } from '../../tests/fakes/fakeToss';
 import { salesCloseAt } from './time';
 import { AWAITING_DEPOSIT, DEPOSIT_CANCELLED, isBankDepositPayment } from '../payments/bankDeposit';
+import { SHOWTIME_CANCEL_REFUND_REASON, safeSyncShowtimeCancelFee } from '../partnerPayouts/showCancelFee';
 
-const SHOWTIME_CANCEL_REFUND_REASON = '공연 회차 취소 환불';
 
 /**
  * 회차 취소 — 살아 있는(paid/partially_refunded) 주문 전부를 **잔액 기준**으로 전액 환불한다.
@@ -44,6 +44,15 @@ export async function cancelShowtime(
   bankRefundOrders: string[];
   /** 입금 전이던 계좌 입금 신청 — 여기서 함께 닫았다(deposit_cancelled, 티켓 void). 입금하지 말라고 알린다. */
   closedDepositOrders: string[];
+  /** 이번 실행에서 토스 환불을 끝낸 주문번호 — 호출부가 안내 메일을 보낼 대상(resume 때 affected와 다르다). */
+  refundedOrderNos: string[];
+  /**
+   * 주문별 결과 — 안내 메일이 실제 환불액으로 말하게 한다. `refunded`는 이번 실행에서 토스로 돌려준 금액,
+   * `skipped`는 토스를 부르지 않은 이유(입장 티켓만 남음 / 이미 전액 환불됨).
+   */
+  perOrder: Record<string, { refunded: number; checkedInValue: number; skipped: 'checked_in_only' | 'already_refunded' | null; final: 'refunded' | 'partially_refunded' | 'unchanged' }>;
+  /** 한 호출당 처리 상한에 걸려 남겨 둔 주문 수 — 운영자가 '환불 이어서 처리'로 잇는다. */
+  remainingOrders: number;
 }> {
   const db = getDb();
   const nowSec = Math.floor(now.getTime() / 1000);
@@ -51,6 +60,18 @@ export async function cancelShowtime(
   await db.run(sql`
     UPDATE showtimes SET status = 'cancelled', cancelled_at = ${nowSec}
     WHERE id = ${showtimeId} AND status = 'scheduled'
+  `);
+
+  // 마지막 회차까지 취소되면 공연 전체를 취소로 닫는다(별도 "공연 취소" 버튼은 없다 — 운영자 결정 2026-10-16).
+  // 공개 쪽은 shows.status = 'cancelled'를 이미 읽는다(취소 안내·판매 중단). **published만** 넘긴다: draft 공연이 취소로
+  // 바뀌면 getPublicShowBySlug가 draft만 숨기므로 한 번도 열지 않은 공연이 취소 공연으로 공개돼 버린다.
+  // 'ended'(이미 치른) 회차는 취소가 아니므로 남아 있으면 공연은 그대로다. 환불 루프보다 앞에 두어, 환불이 일부
+  // 실패해도(회차는 이미 취소됐다) 공연 상태가 뒤처지지 않는다.
+  await db.run(sql`
+    UPDATE shows SET status = 'cancelled', updated_at = ${nowSec}
+    WHERE status = 'published'
+      AND id = (SELECT show_id FROM showtimes WHERE id = ${showtimeId})
+      AND NOT EXISTS (SELECT 1 FROM showtimes WHERE show_id = shows.id AND status != 'cancelled')
   `);
 
   // 입금 전인 계좌 입금 신청은 받은 돈이 없다 — 닫고 보류 좌석을 무효로 한다(미입금 취소와 같은 전이).
@@ -78,13 +99,38 @@ export async function cancelShowtime(
   let refundedOrders = 0;
   const failedOrders: string[] = [];
   const bankRefundOrders: string[] = [];
+  const refundedOrderNos: string[] = [];
+  const perOrder: Awaited<ReturnType<typeof cancelShowtime>>['perOrder'] = {};
 
-  for (const row of rows as Array<{ orderNo: string }>) {
+  // 주문당 Turso 왕복 3회 + 토스 1회 + batch가 직렬이라 함수 시간 한도(60초) 안에서 처리할 수 있는 만큼만 잡고,
+  // 나머지는 호출부의 '환불 이어서 처리'가 같은 함수를 다시 부른다 — showtimes UPDATE는 scheduled에만 걸려 no-op이고
+  // 멱등키가 (주문·잔액)이라 토스가 응답을 재생하므로 다시 돌려도 안전하다.
+  const allRows = rows as Array<{ orderNo: string }>;
+  const batchRows = allRows.slice(0, MAX_ORDERS_PER_RUN);
+  const remainingOrders = allRows.length - batchRows.length;
+
+  for (const row of batchRows) {
     const orderNo = row.orderNo;
+    // 주문 하나의 DB 오류가 나머지 주문의 환불·안내를 막지 않게 한다 — 던진 주문은 failedOrders로 넘기고 계속 간다.
+    try {
+      await settleOne(orderNo);
+    } catch (error) {
+      console.error('[shows-showtimeOps] 회차 취소 환불 중 오류 — 이 주문은 실패로 넘기고 계속', { orderNo, error });
+      if (!failedOrders.includes(orderNo)) failedOrders.push(orderNo);
+    }
+  }
+
+  // 주최자 정산에 싣는 회차 취소 결제 수수료 조정(주최자 약관 제7조) — 최선 노력이다. 환불은 이미 끝났으므로 여기서 실패해도 취소를 실패로 만들지 않는다
+  // (safeSync는 던지지 않는다). 못 만들면 정산 기록 직전 보충이 메운다. 이어서 처리(remainingOrders)로 다시 불리면 금액만 맞춘다(멱등).
+  await safeSyncShowtimeCancelFee(showtimeId);
+
+  return { refundedOrders, failedOrders, bankRefundOrders, closedDepositOrders, refundedOrderNos, perOrder, remainingOrders };
+
+  async function settleOne(orderNo: string): Promise<void> {
     const order = await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, orderNo) });
     if (!order) {
       failedOrders.push(orderNo);
-      continue;
+      return;
     }
 
     const payments = await db.query.payments.findMany({
@@ -107,18 +153,25 @@ export async function cancelShowtime(
     // 값어치를 추가로 뺀다. 0이면(부분환불이 이미 전액을 처리했거나, 남은 몫이 전부
     // 체크인된 티켓뿐인 경우) 취소할 것이 없어 건너뛴다 — 토스도 우리 기록도 건드리지 않는다.
     const remaining = Math.max(0, remainingRefundable(order, payments) - checkedInValue);
-    if (remaining <= 0) continue;
+    if (remaining <= 0) {
+      perOrder[orderNo] = {
+        refunded: 0, checkedInValue,
+        skipped: remainingRefundable(order, payments) <= 0 ? 'already_refunded' : 'checked_in_only',
+        final: 'unchanged',
+      };
+      return;
+    }
 
     const doneRefundedOn = (p: PaymentWithRefunds): number =>
       p.refunds.filter((r) => r.status === 'done').reduce((sum, r) => sum + r.amount, 0);
     const payment = payments.find((p) => doneRefundedOn(p) < order.totalAmount) ?? payments[payments.length - 1];
     if (!payment) {
       failedOrders.push(orderNo);
-      continue;
+      return;
     }
     if (isBankDepositPayment(payment)) {
       bankRefundOrders.push(orderNo);
-      continue;
+      return;
     }
 
     const key = refundIdempotencyKey(orderNo, remaining, 'showtime-cancel');
@@ -135,7 +188,7 @@ export async function cancelShowtime(
         orderNo, code: cancelResult.code, message: cancelResult.message,
       });
       failedOrders.push(orderNo);
-      continue;
+      return;
     }
 
     // 델타 INSERT — refund.ts(refundShowTickets)·funding lineRefund와 같은 패턴. 웹훅이
@@ -172,10 +225,13 @@ export async function cancelShowtime(
     await db.batch(settleStatements as [typeof settleStatements[number], ...typeof settleStatements]);
 
     refundedOrders++;
+    refundedOrderNos.push(orderNo);
+    perOrder[orderNo] = { refunded: remaining, checkedInValue, skipped: null, final: finalOrderStatus };
   }
-
-  return { refundedOrders, failedOrders, bankRefundOrders, closedDepositOrders };
 }
+
+/** 한 호출에서 환불 처리하는 주문 상한(함수 시간 한도 60초 기준). 나머지는 '환불 이어서 처리'로 잇는다. */
+export const MAX_ORDERS_PER_RUN = 40;
 
 /**
  * 회차 시각 변경 — `previous_starts_at`을 보존하고(최초 변경분만, 재변경은 그대로 유지),

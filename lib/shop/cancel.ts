@@ -1,8 +1,10 @@
 import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { remainingRefundable, settleRefund, type CancelInput } from '../booking/cancel';
+import { planBankRefund, remainingRefundable, saveCustomerRefundAccount, settleRefund, type CancelInput } from '../booking/cancel';
 import { isBankDepositPayment } from '../payments/bankDeposit';
+import { safeSyncShopLateRefundAdjustments } from '../partnerPayouts/shopLateRefund';
+import { deleteRefundAccount } from '../payments/refundAccount';
 import { sendShopCancelledEmails } from './email';
 import { getFirstDownloadedAt } from './downloads';
 import { isDbSkuId } from './productRules';
@@ -28,10 +30,6 @@ export type ShopCancelOutcome =
   | { ok: true; refundAmount: number }
   | { ok: false; code: 'not_found' | 'invalid_state' | 'shipped' | 'downloaded' | 'toss_failed' | 'recording_failed' | 'temporarily_unavailable'; message: string };
 
-/** 계좌로 입금해 확정된 주문의 고객 셀프 취소 안내 — 환불 계좌를 사람이 받아 송금한다. */
-export const BANK_PAID_CUSTOMER_CANCEL_MESSAGE =
-  '계좌로 입금하신 주문은 환불받으실 계좌를 확인해야 해서 여기서 취소할 수 없어요. 카카오톡이나 010-4255-7893으로 알려 주시면 바로 처리해 드릴게요.';
-
 const DOWNLOADED_MESSAGE = '내려받기를 시작한 주문은 여기서 취소할 수 없어요(전자상거래법 제17조 제2항 제5호). 문의는 카카오톡이나 010-4255-7893으로 해 주세요.';
 
 export const cancelShopOrder = async (input: {
@@ -39,6 +37,11 @@ export const cancelShopOrder = async (input: {
   requestedBy: 'customer' | 'admin';
   reason: string;
   now: Date;
+  /**
+   * **계좌로 입금해 확정된 주문의 고객 셀프 취소에만** 쓴다 — 환불받을 은행·계좌번호·예금주(lib/payments/refundAccount.ts).
+   * 토스 결제가 없어 운영자가 이 계좌로 직접 송금한다. 관리자 환불은 계좌를 받지 않는다(이미 송금하고 기록하는 것).
+   */
+  refundAccount?: unknown;
 }): Promise<ShopCancelOutcome> => {
   const order = await findShopOrderByOrderNo(input.orderNo);
   if (!order || !order.shopOrder) return { ok: false, code: 'not_found', message: '주문을 찾을 수 없어요.' };
@@ -66,11 +69,14 @@ export const cancelShopOrder = async (input: {
     console.error('[shop-cancel] 결제 행이 없는 상점 주문', { orderNo: order.orderNo });
     return { ok: false, code: 'invalid_state', message: '결제 기록을 찾지 못했어요. 010-4255-7893으로 문의해 주세요.' };
   }
-  // 계좌 입금으로 확정된 주문 — 환불은 운영자가 고객 계좌로 직접 송금한다(lib/shop/bankDeposit.ts 머리 주석). 고객은 여기서 셀프 취소하지
-  // 못하고(환불 계좌를 받아 둘 곳이 없다), 운영자 환불(`requestedBy: 'admin'`)은 토스를 부르지 않고 기록만 남긴다(settleRefund).
-  if (isBankDepositPayment(payment) && input.requestedBy === 'customer') {
-    return { ok: false, code: 'invalid_state', message: BANK_PAID_CUSTOMER_CANCEL_MESSAGE };
-  }
+  // 계좌 입금으로 확정된 주문 — 환불은 운영자가 고객 계좌로 직접 송금한다(lib/shop/bankDeposit.ts 머리 주석). 고객 셀프 취소는 환불 계좌를
+  // 받아 `refund_accounts`(kind 'merch', 0061)에 암호화해 두고, 운영자 환불(`requestedBy: 'admin'`)은 토스를 부르지 않고 기록만 남긴다(settleRefund).
+  // 환불할 돈과 계좌 검증은 **선점 전에** 끝낸다 — 계좌 형식이 틀리거나 암호화 키가 없으면 주문을 건드리지 않고 멈춘다.
+  const remaining = remainingRefundable(order, order.payments);
+  if (remaining <= 0) return { ok: false, code: 'invalid_state', message: '환불할 금액이 남아 있지 않아요.' };
+  const cancelInput: CancelInput = { orderNo: order.orderNo, requestedBy: input.requestedBy, reason: input.reason, now: input.now, refundAccount: input.refundAccount };
+  const bankPlan = planBankRefund(cancelInput, payment, remaining);
+  if ('ok' in bankPlan) return { ok: false, code: bankPlan.code === 'not_found' ? 'invalid_state' : bankPlan.code, message: bankPlan.message };
 
   const db = getDb();
   const claim = await db.run(sql`
@@ -97,21 +103,21 @@ export const cancelShopOrder = async (input: {
     }
   };
 
-  const remaining = remainingRefundable(order, order.payments);
-  if (remaining <= 0) {
-    await revertClaim();
-    return { ok: false, code: 'invalid_state', message: '환불할 금액이 남아 있지 않아요.' };
-  }
+  const saveFailure = await saveCustomerRefundAccount({ kind: 'merch', orderNo: order.orderNo }, bankPlan, input.now, revertClaim);
+  if (saveFailure) return { ok: false, code: saveFailure.code === 'not_found' ? 'invalid_state' : saveFailure.code, message: saveFailure.message };
 
-  const cancelInput: CancelInput = { orderNo: order.orderNo, requestedBy: input.requestedBy, reason: input.reason, now: input.now };
   const failure = await settleRefund({
     order, payment, refundAmount: remaining, remaining, input: cancelInput, revertClaim,
     recordFailureLog: '[shop-cancel] 상점 환불 완료, DB 기록 실패',
+    onBankRecordFailure: bankPlan.kind === 'customer_account' ? () => deleteRefundAccount({ kind: 'merch', orderNo: order.orderNo }) : undefined,
   });
   if (failure) {
     const code = failure.code === 'not_found' ? 'invalid_state' : failure.code;
     return { ok: false, code, message: failure.message };
   }
+
+  // 이미 기록된 정산에 들어 있던 주문이면 다음 정산에서 뺄 이월 조정을 쌓는다(lib/partnerPayouts/shopLateRefund.ts). 실패해도 환불은 성공이다 — 던지지 않는다.
+  await safeSyncShopLateRefundAdjustments(order.orderNo);
 
   // 한정판 번호 반납 — 발송 전(선점 전 preparing) 전액 취소만. 발송 뒤 반품 환불은 번호를 남긴다.
   if (fulfillment === 'preparing') await releaseOrderSerials(order.orderNo, order.shopOrder.items);

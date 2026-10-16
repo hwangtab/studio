@@ -65,7 +65,7 @@ export interface ExistingDepositCandidate {
 
 export const createManualPledge = async (
   body: Record<string, unknown>,
-): Promise<FundingActionResult & { candidates?: ExistingDepositCandidate[] }> => {
+): Promise<FundingActionResult & { candidates?: ExistingDepositCandidate[]; code?: string }> => {
   try {
     const r = await fetch('/api/admin/funding/pledges', {
       method: 'POST',
@@ -74,12 +74,13 @@ export const createManualPledge = async (
       body: JSON.stringify(body),
     });
     if (r.ok) return { ok: true };
-    let json: { message?: string; candidates?: ExistingDepositCandidate[] } = {};
+    let json: { message?: string; code?: string; candidates?: ExistingDepositCandidate[] } = {};
     try { json = await r.json(); } catch { /* 본문 없음 */ }
     return {
       ok: false,
       message: json.message || '등록에 실패했습니다.',
       ...(Array.isArray(json.candidates) ? { candidates: json.candidates } : {}),
+      ...(typeof json.code === 'string' ? { code: json.code } : {}),
     };
   } catch {
     return { ok: false, message: '네트워크 오류' };

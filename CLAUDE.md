@@ -91,7 +91,7 @@ npm run indexnow:changed -- --dry-run
 
 - 오픈 뒤 펀딩 리워드 id·slug·금액은 바꾸지 않는다 — 후원 기록이 문자열로 참조한다. 가격 변경은 새 id로 티어를 추가.
 - 새 `content/funding/<slug>.md`의 slug는 승인된 DB 프로젝트의 slug와 겹치면 안 된다 — 다른 개설자의 후원자 배송지가 노출된다.
-- 마이그레이션 0037·0039·0041~0044는 배포보다 먼저 적용한다 — 결제 확인 경로가 새 표·컬럼을 함께 읽어 순서를 뒤집으면 결제 확인 전체가 깨진다. 0048(결제 공용 환불 계좌 `refund_accounts`)도 먼저 — 결제는 안 깨지지만 환불 계좌 접수·조회가 실패한다.
+- 마이그레이션 0037·0039·0041~0044는 배포보다 먼저 적용한다 — 결제 확인 경로가 새 표·컬럼을 함께 읽어 순서를 뒤집으면 결제 확인 전체가 깨진다. 0048(결제 공용 환불 계좌 `refund_accounts`)도 먼저 — 결제는 안 깨지지만 환불 계좌 접수·조회가 실패한다. 0061(`refund_accounts`에 상점 종류 추가 + `payment_link_orders`)도 먼저 — 안 그러면 상점 계좌 입금 주문의 셀프 취소가 실패하고(주문은 그대로 돌려 두고 멈춘다) 결제 링크 주문에 상품명이 안 남는다. 결제 자체는 안 깨진다.
 
 ### 계좌 입금(무통장)은 펀딩·예약·믹싱·공연·상점 공통이다 — 자동 취소 없음, 자원은 잡는다
 
@@ -163,6 +163,23 @@ npm run indexnow:changed -- --dry-run
 넣어 달라고 연락할 것. 국세청 상태조회 키 env `NTS_BUSINESS_STATUS_API_KEY`(공공데이터포털 "국세청_사업자등록정보
 진위확인 및 상태조회 서비스"의 일반 인증키 Decoding, Production·Preview)는 머지 전에 넣어 두면 머지 푸시가 싣고 간다 — 따로 재배포하지 않는다.
 키가 없어도 저장은 되고 상태가 "미확인(API 키 없음)"으로 남는다. 규칙은 `lib/funding/CLAUDE.md` "개설자 사업자 정보·국세청 조회".
+
+### 마이그레이션 0065(`manual_revenues.deleted_at`·`deleted_by`)도 배포보다 먼저 적용한다
+
+수기 매출 삭제가 행 삭제에서 소프트 삭제(누가 언제 지웠는지 남김)로 바뀌었다. 순서를 뒤집으면 **수기 매출 조회·삭제만** 실패한다 —
+매출 현황은 "직접 받은 매출 표를 읽지 못했다" 경고와 함께, 대시보드는 `manualMissing`으로 직접 입금분이 빠진 숫자를 보이고(나머지 매출은 정상), 삭제 버튼은 500이다. 확인은 `PRAGMA table_info(manual_revenues);`.
+
+### 마이그레이션 0067(`partner_payouts`·`partner_payout_adjustments`)도 배포보다 먼저 적용한다
+
+상점(P1)·공연(P2) 정산 기록 표 둘이다. 새 표뿐이고 어떤 `relations()`에도 잇지 않았다 — 순서를 뒤집어도 결제·주문·로그인은 안 깨진다. 깨지는 범위:
+
+- `/admin/shop`의 정산 표가 "마이그레이션 0067 필요" 안내와 함께 예전 읽기 전용 "정산 예정" 표로 되돌아간다(재고·주문 화면은 그대로). 기록·지급 완료·조정 API는 503 `migration_needed`.
+- 대시보드 「정산 기록 대기 상점」「이체 대기 상점 정산」 카드는 0이다(대시보드는 열린다). 정산 뒤 환불 조정은 못 쌓인다 — 환불 자체는 성공하고 로그 `[partner-payouts]`만 남는다(표가 생긴 뒤 그 아티스트의 다음 정산 기록 직전 보충이 메운다).
+- 공연 주최자 정산(P2): `/admin/shows/[id]`의 정산 절만 같은 "마이그레이션 0067 필요" 안내로 열리고(공연 운영 화면은 그대로), `POST /api/admin/shows/[id]/payout`은 503, 대시보드 공연 카드·기한 점검은 건너뛴다. 회차 취소는 평소대로 끝난다(결제 수수료 조정만 못 쌓이고 표가 생긴 뒤 정산 절을 열 때 보충된다). 규칙은 `lib/shows/CLAUDE.md` "주최자 정산 기록".
+- 보존·파기 코드(`lib/partnerPayouts/creatorPayouts.ts`)는 표가 없으면 펀딩 기록만으로 돈다 — 월간 파기 크론이 실패하지 않는다. 확인은 `PRAGMA table_info(partner_payouts);`.
+
+**배포 직후 할 일 없음**(상점 판매가 열리기 전에는 정산할 것도 없다). 규칙은 `lib/shop/CLAUDE.md` "정산", 설계는 `docs/settlement-record-design-2026-10.md`. 공연 정산(P2)·알림 메일/CSV(P3)가 같은 표를 쓴다 — 두 번째 마이그레이션 없이
+`kind='show'`·조정 사유 `showtime_cancel_fee`가 이미 표현된다.
 
 ### 마이그레이션 0035(`public_name`)·0036(`listing_hidden_at`)·0039(`listing_hidden_name`)도 배포보다 먼저 적용한다
 
@@ -355,9 +372,11 @@ drizzle의 libsql 마이그레이터는 적용된 것 중 `created_at`이 가장
 
 ### 운영 DB 마이그레이션 적용 방법 — Turso CLI로 한다
 
-`npm run db:migrate`는 이 맥에서 안 된다. `.env.local`에 TURSO_* 값이 없어 `url: undefined`로
-멈춘다. `vercel env pull`도 답이 아니다. Vercel의 TURSO_* 변수는 Sensitive라 **빈 값**으로
-내려온다(2026-09-26 확인). 이 맥에는 로그인된 Turso CLI가 있으니 그걸 쓴다.
+`npm run db:migrate`(= `scripts/db-migrate.mjs`)가 **유일한 적용 경로**다. 스크립트가 main 병합본인지(브랜치 main·
+HEAD == origin/main) 확인하고, 토큰을 `.env.local`에서 읽지 않고 그 자리에서 1일짜리로 만들어, 적용 예정 목록과
+"when이 작아 조용히 건너뛰어질 목록"을 보여 준 뒤 `--yes`가 있어야 적용한다. 건너뛰어질 것이 있으면 멈춘다.
+`.env.local`의 TURSO_*는 로컬 작업용 **단기(30일) 토큰**이다 — 운영 적용에 쓰지 않는다(`vercel env pull`은 Sensitive라
+빈 값으로 내려온다). 이 맥에는 로그인된 Turso CLI가 있다.
 
 - CLI 위치는 `~/.turso/turso`이고 PATH에 없다. 운영 DB 이름은 **`studio-nol`**이다.
   같은 계정에 `ggac-prod`도 있으니 이름을 헷갈리지 말 것.
@@ -370,16 +389,56 @@ drizzle의 libsql 마이그레이터는 적용된 것 중 `created_at`이 가장
    ~/.turso/turso db shell studio-nol "select count(*), max(created_at) from __drizzle_migrations;"
    node -e "const e=require('./drizzle/migrations/meta/_journal.json').entries;console.log(e.length);e.slice(-3).forEach(x=>console.log(x.tag,x.when))"
    ```
-2. **적용.** 토큰은 파일에 쓰지 않고 명령 안에서 만든다. 토큰 기본값이 **만료 없음**이라
-   `-e 1d`를 반드시 붙인다 — 빼면 쓰고 버린 토큰이 영구히 살아 남는다.
+2. **적용.** 1번 확인까지 스크립트가 대신 한다. 토큰은 파일에 쓰지 않고 스크립트가 만든다(`-e 1d` — 토큰 기본값이
+   **만료 없음**이라 빼면 쓰고 버린 토큰이 영구히 살아 남는다). `npx drizzle-kit migrate`를 직접 부르지 말 것.
    ```bash
-   TURSO_DATABASE_URL=$(~/.turso/turso db show studio-nol --url) \
-   TURSO_AUTH_TOKEN=$(~/.turso/turso db tokens create studio-nol -e 1d) \
-   npx drizzle-kit migrate
+   npm run db:migrate          # 대상·적용 예정·건너뜀 목록만 보여 주고 멈춘다
+   npm run db:migrate -- --yes # 적용
    ```
 3. **확인.** 1번 조회를 다시 돌려 행 수가 저널 수와 같은지 보고, 새 테이블·컬럼은
    `pragma table_info(<테이블>);`로 코드와 대조한다. main CI의 `Migration drift check`도
    다음 push부터 초록이 된다.
+
+**토큰 정책(2026-10-17 회전).** Turso는 토큰 단위 폐기가 없다 — `turso db tokens invalidate`는 키를 돌려 **기존 토큰
+전부**를 무효화한다. 그래서 회전은 전체 교체이고 저트래픽 시간에 한다. 세 벌만 둔다: Vercel Production(rw, 만료 없음),
+GitHub Secret(`--read-only -e 90d`, drift 점검용 — **90일마다 재발급**, 만료되면 main push마다 drift 잡이 unknown/실패),
+`.env.local`(rw `-e 30d`, 로컬 스크립트용). `.env.local` 백업 파일을 만들지 말 것 — 토큰 사본이 늘어난다.
+
+### 운영 DB 백업과 시점 복구 — PITR은 하루뿐이다
+
+운영 Turso 조직의 플랜은 **starter(무료)**라 시점 복구(PITR) 보존이 **1일**이다(Developer 10일·Scaler 30일).
+하루 넘겨 발견한 사고(잘못된 마이그레이션·실수 삭제·토큰 유출)는 PITR로 되돌릴 수 없다. 그래서
+`/api/cron/backup-ledger`(매일 02:30 KST, `lib/ops/ledgerBackup.ts`)가 주문·결제·환불·후원·구독·공연 원장을 표 단위로
+떠서 private Blob `ledger/backup/`에 28일 보관한다(빌링키 원문·관리 토큰은 뺀다). 실패하면 운영자 메일이 온다.
+
+- **PITR 복구**(24시간 안쪽): `~/.turso/turso db create studio-nol-restore --from-db studio-nol --timestamp <RFC3339>`
+  → 새 DB 내용을 확인한 뒤 Vercel env의 `TURSO_DATABASE_URL`·`TURSO_AUTH_TOKEN`을 그쪽으로 교체. 원본은 지우지 않는다.
+- **백업에서 복구**(그 뒤): Blob에서 그날의 `.json.gz`를 받아 표 단위로 되살린다. 백업에 없는 컬럼(빌링키·토큰)은
+  재발급이 전제다 — 구독 카드는 고객이 다시 등록해야 한다.
+- 분기마다 한 번 복구 리허설(백업 파일을 로컬 SQLite에 풀어 행 수 대조)을 한다. 외부 스케줄러는 쓰지 않는다.
+
+### 함수 지역은 도쿄(`hnd1`)다 — DB 옆에 둔다
+
+운영 DB(Turso `studio-nol`)가 `aws-ap-northeast-1`(도쿄)에 있어서, 2026-10-16에 Vercel 함수 기본 지역을
+`iad1` → `hnd1`로 옮겼다. 미국 동부에서는 DB 왕복 한 번이 약 150ms라, 조회를 차례로 여섯 번 하던 펀딩 상태 API가
+CDN이 비었을 때 1.15~2.1초 걸렸다(응원 메시지가 늦게 뜨던 원인, #717). 옮긴 뒤에는 0.10~0.26초다.
+
+- **설정은 `vercel.json`이 아니라 프로젝트 설정에 있다**(`resourceConfig.functionDefaultRegions`, 대시보드 Settings → Functions).
+  바꾸면 **다음 배포부터** 적용된다 — 확인은 응답 헤더 `x-vercel-id`의 가운데 값(`icn1::hnd1::…`).
+- **서울(`icn1`)로 옮기지 말 것.** Turso에는 서울 지역이 없다(`turso db locations`). 함수를 서울에 두면 방문자 쪽 한 번(약 30ms)을
+  아끼는 대신 DB 왕복마다 약 30ms가 붙는다 — 한 요청이 DB를 여러 번 묻는 경로(결제 확인·예약·관리자)에서 더 느리다.
+  Turso가 서울을 열면 DB와 함수를 함께 옮기는 것을 검토한다.
+- **요금은 함수 지역이 아니라 요청이 들어온 CDN 지역으로 매겨진다.** 2026-09-16~10-15 사용량(`vercel usage --group-by region`)에서
+  함수가 `iad1`이었는데도 지역 과금(ISR·Fast Origin Transfer·Fluid CPU)이 전부 "Seoul"로 잡혔다. 지역 이동으로 단가가 바뀌지 않는다.
+- **Blob 저장소도 도쿄다 — `studio-files`(`store_YPoqIWRzeosPPaPv`, private, `hnd1`).** 계약서 PDF·백업·원장 백업·감상실 음원·
+  GSC 스냅샷·소셜 이미지, 펀딩 미디어·서류가 모두 여기 있다. 2026-10-16에 `iad1`의 `seo-snapshots`에서 옮겼다
+  (`scripts/copy-blob-store.mjs`로 40개 복사·해시 대조 → 연결 교체 → 재배포). 이유는 감상실 실측: 곡의 첫 요청(서울 CDN MISS)이
+  iad1에서 1.2~2.6초 → hnd1에서 0.22~0.33초. 연결은 `BLOB_READ_WRITE_TOKEN`·`BLOB_STORE_ID`(SDK는 OIDC가 있으면 그쪽, 없으면 토큰)다.
+  옛 `seo-snapshots`는 프로젝트 연결만 끊고 되돌리기용으로 남겨 뒀다 — **2026-11 중순 이후 지운다**(그 전에 지우지 말 것).
+- **Blob 파일은 주소가 아니라 경로(pathname)로 다룬다.** 주소의 호스트가 저장소 ID라, 주소를 DB에 두고 그 주소로 읽고·지우고·
+  비교하면 저장소를 옮기는 순간 틀어진다 — 계약서 PDF는 고아 정리가 멀쩡한 파일을 지우고 파기가 사본을 남겼을 것이다
+  (`lib/contracts/pdfPath.ts`, #728). 새 Blob 사용처도 경로로 읽고 경로로 비교할 것.
+- 지역과 별개로, **핫 경로에서 DB 조회를 차례로 늘리지 말 것** — 독립 조회는 `db.batch` 한 번으로 보낸다(`aggregateProjectStatus` 참조).
 
 ### 토스 키는 두 쌍이다 — 결제창을 연 키와 같은 쌍으로 승인한다
 
@@ -434,10 +493,57 @@ SDK가 `payment()` 경로에서 `isAPIIndividualKey()`를 단언한다 — 위�
 
 링크 정의는 DB 표 `payment_links`다. **만드는 길은 둘** — 관리자 `/admin/payment-links`(주소 복사 버튼·닫기), 터미널 `npx tsx scripts/pay-link.ts create --name … --amount <부가세 포함 총액> [--expires YYYY-MM-DD] [--memo …] --yes`
 (`--yes` 없이는 공급가·VAT를 풀어 보여 주는 미리보기만, `list`·`close <slug>`도 있다 — 운영 DB는 로그인된 Turso CLI로 붙는다). 둘 다 **즉시** 열린다.
-- **금액은 부가세 포함 총액이다.** 2026-10-15에 상품가 250,000원에 VAT를 또 얹어 275,000원 링크를 만들어 보냈다가 폐기했다 — 그래서 화면·스크립트가 공급가 + VAT = 총액을 풀어 보여 준다. 2026-10-15부터 사이트 표기가는 대부분 VAT 포함(연습실 월 이용료·레슨 월정액만 별도 — 카드 +10%, 현금 입금은 부가세 없음)이라, 링크를 만들 때 **고객이 내는 돈이 얼마인지부터 확인**할 것 — 표기가에 VAT를 또 얹지 않는다.
+- **금액은 부가세 포함 총액이다.** 2026-10-15에 상품가 250,000원에 VAT를 또 얹어 275,000원 링크를 만들어 보냈다가 폐기했다 — 그래서 화면·스크립트가 공급가 + VAT = 총액을 풀어 보여 준다. 2026-10-15부터 사이트 표기가는 전부 부가세 포함·표기가=청구액이다(예외: 연습실 월 이용료·레슨 월정액 — 별도). 그래도 맞춤 링크는 **고객이 내는 돈이 얼마인지부터 확인**하고 그 금액을 그대로 넣는다.
 - **발급한 링크의 금액은 바꾸지 않는다**(결제 기록과 어긋난다) — 수정 액션 자체가 없다. 틀렸으면 닫고 새로 만든다.
-- 조회는 DB → 옛 파일(`data/paymentLinks.ts`, 읽기 전용) 순서이고, 표가 없는 DB(0060 전)에서는 파일 링크만 돈다. 마이그레이션은 **배포보다 먼저**(안 그러면 관리자에서 만들기가 실패한다 — 결제는 안 깨진다).
-- 링크는 슬롯을 잡지 않는다 — 결제만 받는다. 이용 일시는 캘린더·예약 시스템에서 따로 막는다. 계좌로 입금한 건은 관리자 예약 화면에서 입금 확인을 눌러야 확정된다.
+- 조회는 DB → 옛 파일(`data/paymentLinks.ts`, 읽기 전용) 순서이고, 표가 없는 DB(0060 전)에서는 파일 링크만 돈다. 마이그레이션은 **배포보다 먼저**(안 그러면 관리자에서 만들기가 실패한다 — 결제는 안 깨진다; 0062 전에는 링크 주문 기록(session 칸)과 대시보드 링크 일정만, 0064 전에는 캘린더 등록만 빠진다).
+- **주문에는 어느 링크였는지가 남는다**(`payment_link_orders`, 마이그레이션 0061 — slug·상품명 스냅샷). 관리자 예약 목록·상세가 "예약금" 대신 상품명(+링크 메모)을 보이고, 입금 안내·결제 알림 메일에도 상품명이 실린다. 기록은 best-effort라 표가 없어도 주문은 돈다(그 주문은 "예약금"으로 보인다).
+- **이용 일시·시간을 넣으면(권장) 대시보드·슬롯에 반영된다**(마이그레이션 0062 — `payment_links`·`payment_link_orders`의 `session_at`·`session_hours`, `payment_links.block_id`). 결제된 링크 주문이 관리자 대시보드 "이번 주 세션"(결제 링크 배지)과 예약 목록 "일시" 칸에 그 시각으로 나온다 — 링크 주문은 예약 시스템(`bookings`)에 행이 없어 예전엔 어디에도 안 보였다(2026-10-15). 기본으로 그 시간대를 **"예약 불가 블록"(녹음실)으로 자동 차단**해 웹 이중 예약을 막고(`--no-block`·관리자 체크박스로 끔), 링크를 **결제·입금 대기 없이 닫으면 블록도 풀린다**(결제가 있으면 남는다). 링크가 만료돼 저절로 닫힌 건 블록을 풀지 않는다(자동 해제 크론이 없다) — 안 쓸 링크는 만료를 기다리지 말고 닫는다. 이용 일시 없이 만든 링크는 대시보드·슬롯에 안 보인다(그때는 캘린더를 따로 막는다).
+- **구글 캘린더에도 올라간다**(마이그레이션 0064 — `payment_link_orders.gcal_event_id`·`gcal_error`, `lib/payments/linkCalendar.ts`). 이용 일시가 있는 링크 주문이 **결제 확정(카드)·입금 확인**되면 녹음실 캘린더("스튜디오 놀 — 예약", `BOOKING_GCAL_ID`)에 `[예약] 상품명 — 고객` 일정이 생기고, 토스 웹훅이 전액 취소를 대사하면 지워진다. 그 캘린더의 일정은 웹 예약 슬롯을 막으므로(slots.ts freeBusy) 링크의 "예약 불가 블록"과 같은 시간을 이중으로 막지만 해가 없다. 사이트 → 캘린더 한 방향이다. 등록·삭제 실패는 결제를 막지 않고 `gcal_error`에 남으며, 관리자 예약 상세의 "구글 캘린더" 줄에서 **다시 등록 / 캘린더에서 지우기**로 처리한다(계좌 입금 주문을 운영자가 손으로 환불한 뒤에는 "지우기"를 누른다 — 그 환불 경로에는 웹훅이 없다).
+
+### 구글 캘린더 → 사이트 (대시보드 로드 때 읽는다, 실시간 아님)
+
+관리자 대시보드를 열 때마다 `lib/ops/adminDashboard.ts`가 ① `syncLinkEventsFromCalendar`(결제 링크 일정이 캘린더에서 옮겨졌으면 `session_at`·예약 불가 블록을 따라 옮기고, 지워졌으면 `gcal_error`에 적는다)와
+② `loadUnlinkedCalendarEvents`(`bookings`·`payment_link_orders`에 연결되지 않고 "주문번호:" 줄도 없는 일정 = 운영자가 캘린더에 손으로 넣은 일정)를 돈다.
+후자는 "캘린더에만 있는 일정" 카드로 뜨고, "사이트에 등록"은 `/admin/bookings?fromEvent=…`로 수기 예약 칸을 시간 채운 채 연다.
+등록(`createManualBooking`의 `adoptEventId`)이 끝나면 원래 캘린더 일정을 지우고 사이트 예약으로 새로 동기화한다 — 충돌 검사는 그 일정을 제외한다(자기 자신과 겹치지 않게).
+캘린더 읽기 실패는 대시보드를 막지 않는다(`calendarError`).
+
+### 예약 일정 변경은 시작만 옮긴다 (`lib/booking/reschedule.ts`)
+
+관리자 예약 상세의 "일정 변경"(확정 또는 입금 대기 세션 예약)은 날짜·시작 시각만 옮긴다 — 이용 시간·금액·방은 그대로다(길이를 바꾸면 금액이 달라지니 취소 후 다시 등록).
+캘린더 충돌 검사(자기 일정 제외, 조회 실패는 거절) → 조건부 UPDATE 한 문장(다른 예약·예약 불가 블록과 겹치면 0행) → 캘린더 PATCH 순이고,
+PATCH가 실패해도 DB는 되돌리지 않고 `gcal_error`에 적는다("캘린더 재시도"가 새 일정을 만들고 옛 일정을 지운다). 고객 메일은 자동으로 나가지 않는다 — 운영자가 "알림 재발송".
+
+### 입금 전 취소 기록 삭제 (`lib/booking/deleteUnpaid.ts`)
+
+관리자 예약 상세의 "기록 삭제"는 **돈이 한 번도 오가지 않은** 세션·믹싱 신청(`deposit_cancelled`)만 지운다 — 결제 행·환불 계좌 기록·남은 캘린더 일정이 있으면 거절한다(결제 기록은 매출·환불 장부의 근거).
+자식 행 삭제에도 같은 상태 조건을 건다(검사와 삭제 사이에 상태가 바뀌어 자식만 지워지는 일 방지). 다른 주문 종류에 이 삭제를 넓히지 말 것 — 각각 자식 표·외부 자원(Blob·티켓·라이선스)이 다르다.
+캘린더에서 가져오기(`adoptEventId`)는 **사이트가 올린 일정이 아닌 것만** 지운다 — 요청의 id가 다른 고객의 확정 일정이면 등록 뒤 그 일정이 지워지므로, DB 연결·"주문번호:" 줄을 확인하고 읽지 못하면 거절한다.
+
+### 관리자 매출 현황·수기 등록·메뉴 (2026-10) — 어겨도 에러가 안 나는 것만
+
+- **매출 숫자의 정본은 `lib/ops/revenueReport.ts`**(`/admin/revenue`·대시보드 카드가 같은 `summarizeRevenue`를 쓴다). 승인 시각(KST) 기준, 환불은 `done`만(기간 밖 환불도 같은 결제에서 뺀다).
+  결제 행이 없는 **계좌 입금·수기 펀딩은 `funding_pledges.paid_at`**으로 더하되 환불은 주문이 `refunded`일 때만 전액으로 친다. `smoke-test` 펀딩은 매출 화면에서만 뺀다 —
+  **세무용 결제 장부 CSV(`salesLedger.ts`)는 실제 거래라 빼지 않는다.** 직접 서비스(예약·믹싱·구독·예약금·소프트웨어)와 판매·중개(펀딩·공연·상점, 정산 전 총액)는 합쳐 보이지 않게 가른다.
+  새 `orders.type`을 만들면 `REVENUE_TYPE_LABELS`·`REVENUE_GROUP_OF`·장부 `TYPE_LABELS`에 함께 넣을 것(공연 티켓이 한동안 `ticket`으로 찍혔다).
+- **수기 매출(`manual_revenues`, 0063·0065)은 주문·예약과 연결하지 않는다.** 이름·연락처 칸이 없다(내용에 적는다). 삭제는 소프트 삭제(`deleted_at/by`) — 읽는 곳은 전부 `deleted_at IS NULL`을 본다.
+  환불 변경은 메모에 누가·얼마→얼마를 남긴다. 장부 CSV에는 들어가지 않는다.
+- **수기 예약 등록은 고객 계좌 입금과 같은 함수**(`createBookingOrder`/`createMixingOrder` → `confirmBookingBankDeposit`)를 탄다(`lib/booking/manualEntry.ts`). 점유·캘린더·환불·매출이 웹 예약과 같은 원장이다.
+  이메일을 비우면 `MANUAL_PLACEHOLDER_EMAIL`이 들어가는데 **배달되지 않는 주소**다 — 고객에게 메일을 보내는 새 경로는 `isManualPlaceholderRecipient`(`lib/privacy/manualPlaceholder.ts`)로 먼저 거를 것(반송이 발신 평판을 깎는다).
+- **관리자 메뉴는 `ADMIN_NAV_ENTRIES`(components/admin/AdminShell.tsx) 한 곳**이다 — 연습실 / 녹음실 / 플랫폼 / 공통. 새 구역은 묶음 하나에 넣는다. 예약은 한 화면을 `?line=practice|studio|mixing`으로 갈라 세 곳에 건다(`lib/booking/line.ts`).
+- **개인정보(이름·연락처·이메일·주소)를 props로 싣는 관리자 상세 화면은 열람을 기록한다**: `logAdminView`(`lib/privacy/adminView.ts`) 또는 `recordAdminPrivacyAccess` + `privacyAccessActionEnum` + `accessLogLabels.ts`(열거와 라벨이 어긋나면 테스트가 선다). 값은 적지 않고 대상 id·결과만.
+  목록 화면은 기록하지 않는 대신 **표에 안 나오는 개인정보를 props에 싣지 않는다**(`serializePledgeForAdminList`).
+
+### 월 입주 관리 (`lib/tenancy/`, 관리자 `/admin/tenancies`, 마이그레이션 0066)
+
+연습실 월 입주자(R01…)와 비상주 사무실(`kind='virtual'`, 방 없이 사업자등록 주소만 씀)의 **정본은 DB 표 `room_tenancies`**다. 예전 스프레드시트(연습실대여현황)는 더 쓰지 않는다 — 두 곳을 정본으로 두지 말 것.
+- **계약 종료일이 지나도 입금이 이어지면 자동 연장**이다(운영자 확정). 퇴실은 운영자가 "퇴실"을 눌러야만 된다(`status`). 시트의 "8일전" 같은 값은 상태가 아니라 남은 일수였다.
+- 날짜는 KST 달력 날짜 문자열. 입금을 기록하면 `next_due_on`이 납부일 기준으로 한 달 넘어간다(말일 보정, `rules.ts`). 같은 예정일을 두 번 기록하지 못하게 조건부 UPDATE.
+- **개인정보(연락처·비상연락처·이메일·사업자번호·성별)는 `private_enc` 한 칸에 JSON째 암호화**(`ENCRYPTED_FIELD_TARGETS`에 등록됨 — 키 회전 대상). 목록·props에는 싣지 않고, 버튼을 누른 순간의 응답으로만 나가며 열람은 접속기록(`tenancy_private_view`)에 남는다. 처리방침 19항과 `FUNDING_TERMS_VERSION`을 함께 올렸다.
+- **구글 캘린더는 DB의 투영**이다: 기존 연습실 캘린더(`PRACTICE_ROOM_GCAL_ID`, 전용 `TENANCY_GCAL_ID`가 있으면 그쪽)에 입주자당 최대 둘 — "입금 예정"(다음 입금일, 입금을 기록하면 다음 달로 옮김)과 "계약 종료"(종료일이 오늘 이후일 때만). **모든 일정은 `transparency: 'transparent'`(바쁨 아님)로 올린다** — 그래야 freeBusy에 안 잡혀 입금일마다 시간제 방(R02)이 막히지 않는다. 이 표시를 빼지 말 것. 녹음실 예약 캘린더에는 올리지 않는다. 어긋나면 "캘린더 전체 다시 맞추기".
+- **알림은 매일 운영 점검 메일(Vercel 크론 `0 23 * * *` = UTC, 한국 아침 8시)과 대시보드 "처리할 일"에 같이 올라온다**(`collectDbIssues`, 이상이 없으면 메일이 안 간다): "월 입주 연체"(입금 예정일 경과), "계약 종료 임박"(7일 안 — 종료일이 지난 자동 연장은 알리지 않는다), "캘린더 동기화 실패". 이름·방·일수만 싣고 연락처는 싣지 않는다. 방 정가(`room_list_price`)는 방의 속성이라 이용료와 다를 수 있다(36만원 방 외에 40·44만원 방).
+- **보증금은 면제**다(연습실 계약서 제5조) — 계약서의 `deposit_amount`는 받은 돈이 아니라 위약금 기준액(월 이용료 1개월분)이라 `room_tenancies.deposit_amount`(실제로 받은 보증금)로 옮기지 않는다. 약정 종료일 전 퇴실이면 퇴실 확인창이 위약금 가능성을 알린다(자동 연장 중 통지 종료는 위약금 없음, 제3조②).
+- 시트 가져오기(`importService.ts`)는 일회성·멱등이다. 전화번호가 빈 사람은 전자계약에서 같은 이름으로 찾아 채운다. 새 방을 늘릴 때 코드 수정은 필요 없다(입주 등록에서 방 번호만 적는다).
 
 ### 메일은 공용 레이아웃으로 — 글자만 보내지 않는다
 

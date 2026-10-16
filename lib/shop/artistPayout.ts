@@ -44,11 +44,16 @@ export const computeShopArtistPayout = (input: {
   taxType: 'withholding' | 'invoice';
   /** 아티스트가 직접 보낸 주문의 배송비 합계. 비우면 0. */
   shippingAmount?: number;
+  /**
+   * 정산 뒤 환불 같은 이월 조정의 합(부호 있음, **아티스트 몫(VAT 포함) 기준**) — 몫(share)에 더한 뒤 부가세 상당액·원천징수를 계산한다.
+   * 몫이 음수가 되면 0으로 자른다(남는 음수는 호출부가 다음 정산으로 이월한다 — lib/partnerPayouts/shopCalc.ts). 비우면 0이라 결과가 달라지지 않는다.
+   */
+  adjustmentAmount?: number;
 }): ShopArtistPayout => {
   const netGross = Math.max(0, input.salesAmount - input.refundAmount);
   const shippingAmount = Math.max(0, input.shippingAmount ?? 0);
   const productShare = Math.round((netGross * SHOP_ARTIST_SHARE_PERCENT) / 100);
-  const share = productShare + shippingAmount;
+  const share = Math.max(0, productShare + shippingAmount + Math.trunc(input.adjustmentAmount ?? 0));
   const shareAmount = input.taxType === 'withholding' ? Math.round(share / (1 + VAT_RATE)) : share;
   const vatDeductionAmount = share - shareAmount;
   const withholdingAmount = input.taxType === 'withholding' ? computeBusinessIncomeWithholding(shareAmount).total : 0;

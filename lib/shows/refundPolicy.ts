@@ -13,14 +13,22 @@ const TIERS: RefundTier[] = [
   { minDaysBefore: 0, pct: 10 },
 ];
 
+const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
+/** KST 달력 날짜 번호(자정 경계로 자른다). */
+const kstDay = (d: Date): number => Math.floor((d.getTime() + KST_OFFSET_MS) / DAY_MS);
+
 /**
  * §11.3 취소환불표. 공연 시작 이후(체크인 포함)는 0(환불 불가).
- * daysBefore는 (showtimeStartsAt - noticeAt) / 1일, 내림.
+ *
+ * daysBefore는 **KST 달력 날짜 차**다 — 고객이 동의한 표·FAQ·메일이 전부 '공연 N일 전'·'공연 당일(시작 전)'이라는
+ * 달력 표현이고(소비자분쟁해결기준 공연업 구간과 같다), 판매 마감(time.ts salesCloseAt)도 KST 자정 기준이다.
+ * 24시간 단위로 세면 토요일 18:30 공연을 금요일 20:00에 취소한 것이 '당일'(10%)이 된다 — 표가 약속한 70%보다
+ * 항상 적거나 같게만 나와 고객에게만 불리했다.
  */
 export function refundRateForNotice(showtimeStartsAt: Date, noticeAt: Date): number {
   const diffMs = showtimeStartsAt.getTime() - noticeAt.getTime();
   if (diffMs <= 0) return 0;
-  const daysBefore = Math.floor(diffMs / DAY_MS);
+  const daysBefore = kstDay(showtimeStartsAt) - kstDay(noticeAt);
   for (const tier of TIERS) {
     if (daysBefore >= tier.minDaysBefore) return tier.pct;
   }

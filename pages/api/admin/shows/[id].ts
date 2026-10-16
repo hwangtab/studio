@@ -6,7 +6,7 @@ import { showTicketTypes, showtimes, showZones } from '../../../../db/schema';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { cancelPayment } from '../../../../lib/booking/toss';
 import { isPublishable, revalidateShow, sqlUpdateStatus } from '../../../../lib/shows/revalidate';
-import { SCAN_LINK_MAX_TTL_HOURS } from '../../../../lib/shows/scanLink';
+import { SCAN_LINK_MAX_TTL_HOURS, revokeScanLink } from '../../../../lib/shows/scanLink';
 import { createScanLinkToken } from '../../../../lib/shows/scanAccess';
 import { issueReportLink, REPORT_LINK_MAX_TTL_DAYS, revokeReportLink } from '../../../../lib/shows/reportLink';
 import { undoCheckIn } from '../../../../lib/shows/checkin';
@@ -43,6 +43,9 @@ const REFUND_REASON_MESSAGE: Record<string, string> = {
 
 const isNonEmptyString = (v: unknown): v is string => typeof v === 'string' && v.trim() !== '';
 
+// 회차 취소는 주문당 Turso 왕복·토스 호출이 직렬이라 기본 함수 시간 한도에 걸릴 수 있다 — 다른 돈 경로 라우트와 같은 60초.
+export const config = { maxDuration: 60 };
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
   const auth = await authenticateAdminApi(req, res);
@@ -69,13 +72,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'set_status': {
       const next = b.status;
       if (next !== 'draft' && next !== 'published') return res.status(400).json({ ok: false, message: '상태는 draft 또는 published만 바꿀 수 있습니다.' });
-      if (show.status === 'cancelled') return res.status(409).json({ ok: false, message: '취소된 공연은 상태를 바꿀 수 없습니다.' });
+      // 취소된 공연(마지막 회차가 취소돼 자동으로 닫힌 것)도 되돌릴 수 있다 — 공개는 예정된 미래 회차가 있어야 하므로
+      // 새 일정을 잡은 뒤에만 열리고, 초안으로 내리는 것은 언제든 된다.
       if (next === 'published') {
         if (!isPublishable(show, now)) {
           return res.status(409).json({ ok: false, message: '공개하려면 예정된 회차·구역·티켓타입이 모두 필요합니다.' });
         }
       }
-      await db.run(sqlUpdateStatus(show.id, next, now));
+      await db.run(sqlUpdateStatus(show.id, next, now, { fromCancelled: show.status === 'cancelled' }));
       await revalidateShow(res, show.slug);
       return res.status(200).json({ ok: true });
     }
@@ -111,18 +115,68 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'cancel_showtime': {
       const showtime = showtimeOf(b.showtimeId);
       if (!showtime) return res.status(404).json({ ok: false, message: '회차를 찾을 수 없습니다.' });
-      if (showtime.status !== 'scheduled') return res.status(409).json({ ok: false, message: '예정된 회차만 취소할 수 있습니다.' });
       // 취소 전에 안내 대상(결제가 살아 있는 주문)을 잡아 둔다 — 취소 뒤에는 refunded로 바뀌어 구분이 안 된다.
       const affected = await db.all(sql`
         SELECT DISTINCT so.order_no as orderNo FROM show_orders so
         JOIN orders o ON o.order_no = so.order_no
         WHERE so.showtime_id = ${showtime.id} AND o.status IN ('paid', 'partially_refunded')
       `) as Array<{ orderNo: string }>;
-      const r = await cancelShowtime(showtime.id, now, { cancelPayment });
-      for (const { orderNo } of affected) {
+      // 이미 취소된 회차라도 환불이 남은 주문이 있으면 '이어서 처리'다 — 앞선 실행이 DB 오류·시간 한도로 끊긴 경우.
+      // "환불이 남았다" = 입장 처리되지 않은 티켓이 아직 살아 있다(입장 티켓만 남은 partially_refunded는 정상 마감이다).
+      // cancelShowtime은 다시 돌려도 안전하다(showtimes UPDATE는 scheduled에만, 멱등키는 주문·잔액 기준이라 토스가 재생).
+      const pendingRefund = showtime.status === 'cancelled' && affected.length > 0
+        ? (await db.all(sql`
+            SELECT DISTINCT t.order_no as orderNo FROM show_tickets t
+            JOIN orders o ON o.order_no = t.order_no
+            WHERE t.showtime_id = ${showtime.id} AND o.status IN ('paid', 'partially_refunded')
+              AND t.status IN ('held', 'issued') AND t.checked_in_at IS NULL
+          `) as Array<{ orderNo: string }>)
+        : [];
+      const resume = pendingRefund.length > 0;
+      if (showtime.status !== 'scheduled' && !resume) return res.status(409).json({ ok: false, message: '예정된 회차만 취소할 수 있습니다.' });
+      let r: Awaited<ReturnType<typeof cancelShowtime>>;
+      try {
+        r = await cancelShowtime(showtime.id, now, { cancelPayment });
+      } catch (error) {
+        // 회차는 이미 cancelled로 넘어갔을 수 있다 — 운영자가 '환불 이어서 처리'로 잇게 500 대신 상태를 돌려준다.
+        console.error('[admin-shows] 회차 취소 처리 중단', { showtimeId: showtime.id, error });
+        await revalidateShow(res, show.slug);
+        return res.status(500).json({ ok: false, message: '회차 취소 처리가 중단됐습니다. 환불이 남은 주문은 "환불 이어서 처리"로 다시 돌릴 수 있습니다.' });
+      }
+      // 안내 대상: 이번에 살아 있던 주문 ∪ 이번 실행에서 환불한 주문. 이어서 처리할 때는 앞선 실행이 환불만 하고
+      // 메일을 못 보낸 주문(500으로 끝난 경우)도 있으므로 이 회차의 회차 취소 환불 기록이 있는 주문에도 보낸다 —
+      // 두 번 받는 쪽이 못 받는 쪽보다 낫다.
+      const doneRefundSum = async (orderNo: string): Promise<number> => {
+        const [row] = await db.all(sql`
+          SELECT COALESCE(SUM(rf.amount), 0) AS total FROM refunds rf
+          JOIN payments p ON p.id = rf.payment_id JOIN orders o ON o.id = p.order_id
+          WHERE o.order_no = ${orderNo} AND rf.status = 'done'
+        `) as Array<{ total: number }>;
+        return Number(row?.total ?? 0);
+      };
+      const notifyTargets = new Set<string>([...affected.map((a) => a.orderNo), ...r.refundedOrderNos]);
+      if (resume) {
+        const previouslyRefunded = await db.all(sql`
+          SELECT DISTINCT so.order_no as orderNo FROM show_orders so
+          JOIN orders o ON o.order_no = so.order_no
+          JOIN payments p ON p.order_id = o.id
+          JOIN refunds rf ON rf.payment_id = p.id
+          WHERE so.showtime_id = ${showtime.id} AND rf.reason = '공연 회차 취소 환불' AND rf.status = 'done'
+        `) as Array<{ orderNo: string }>;
+        for (const { orderNo } of previouslyRefunded) notifyTargets.add(orderNo);
+      }
+      for (const orderNo of notifyTargets) {
+        // 처리 상한에 걸려 이번에 손대지 않은 주문은 아직 안내하지 않는다 — 다음 실행이 보낸다.
+        const touched = orderNo in r.perOrder || r.failedOrders.includes(orderNo) || r.bankRefundOrders.includes(orderNo) || !affected.some((a) => a.orderNo === orderNo);
+        if (!touched) continue;
         try {
+          const per = r.perOrder[orderNo];
+          // 이번 실행이 토스로 돌려준 금액이 곧 안내할 금액이다. 이번에 돌려줄 것이 없던 주문(입장 티켓만 남음·앞선 실행이
+          // 이미 환불)과 앞선 실행에서 환불만 되고 안내 못 받은 주문은 장부의 done 환불 합계로 말한다 — 0이면 "환불 대상 없음".
+          const refundedAmount = per && per.skipped === null ? per.refunded : await doneRefundSum(orderNo);
           await sendShowtimeCancelledEmail(orderNo, {
             refundCompleted: !r.failedOrders.includes(orderNo) && !r.bankRefundOrders.includes(orderNo),
+            refundedAmount,
             ...(r.bankRefundOrders.includes(orderNo) ? { bankNotice: 'refund_account_needed' as const } : {}),
           });
         } catch (error) {
@@ -141,8 +195,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // 일부 주문의 환불이 실패해도 회차는 이미 취소됐다 — 실패 주문을 응답에 실어 운영자가 이어서 처리한다.
       // 계좌 입금 주문은 토스로 돌려줄 수 없어 고객이 환불 계좌를 적거나 운영자가 송금 뒤 "환불"로 기록한다.
       return res.status(200).json({
-        ok: true, refundedOrders: r.refundedOrders, failedOrders: r.failedOrders,
-        bankRefundOrders: r.bankRefundOrders, closedDepositOrders: r.closedDepositOrders,
+        ok: true, resumed: resume, refundedOrders: r.refundedOrders, failedOrders: r.failedOrders,
+        bankRefundOrders: r.bankRefundOrders, closedDepositOrders: r.closedDepositOrders, remainingOrders: r.remainingOrders,
       });
     }
 
@@ -229,6 +283,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const token = await createScanLinkToken(showtime.id, label, ttlHours);
       // 토큰 원문은 지금 응답에서만 볼 수 있다(DB에는 해시만 있다) — 화면이 바로 보여 준다.
       return res.status(200).json({ ok: true, path: `/ko/shows/scan/${token}` });
+    }
+
+    case 'revoke_scan_link': {
+      // 유출됐거나 담당자가 바뀐 입장 스캔 링크를 만료 전에 닫는다. 이 공연의 회차에 걸린 링크만 폐기할 수 있다.
+      if (!isNonEmptyString(b.linkId)) return res.status(400).json({ ok: false, message: '링크를 찾을 수 없습니다.' });
+      const link = await db.query.showScanLinks.findFirst({ where: (l, { eq }) => eq(l.id, b.linkId as string) });
+      if (!link || !showtimeOf(link.showtimeId)) return res.status(409).json({ ok: false, message: '이미 폐기됐거나 이 공연의 링크가 아닙니다.' });
+      const ok = await revokeScanLink(link.id, now);
+      return ok ? res.status(200).json({ ok: true }) : res.status(409).json({ ok: false, message: '이미 폐기됐거나 이 공연의 링크가 아닙니다.' });
     }
 
     case 'issue_report_link': {

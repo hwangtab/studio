@@ -29,7 +29,10 @@ export interface AdminShopOrderRow {
 }
 
 /** 최근 주문(결제 대기·만료는 뺀다 — 관리자가 할 일이 없는 주문). */
-export const listAdminShopOrders = async (limit = 200): Promise<AdminShopOrderRow[]> => {
+export const listAdminShopOrders = async (limit = 200, q = ''): Promise<AdminShopOrderRow[]> => {
+  // 주문번호·이름·연락처 부분 검색 — 최근 N건 밖의 오래된 주문을 화면에서 찾는 유일한 길이다. `%`·`_`는 이스케이프한다.
+  const term = q.trim();
+  const like = term ? `%${term.replace(/[\\%_]/g, (c) => `\\${c}`)}%` : null;
   const rows = await getDb().all<{
     order_no: string; status: string; fulfillment_status: string; customer_name: string; total_amount: number;
     item_summary: string | null; created_at: number;
@@ -39,6 +42,7 @@ export const listAdminShopOrders = async (limit = 200): Promise<AdminShopOrderRo
             FROM shop_order_items i WHERE i.order_no = o.order_no) AS item_summary
     FROM orders o JOIN shop_orders so ON so.order_no = o.order_no
     WHERE o.type = 'merch' AND o.status NOT IN ('pending', 'expired', 'failed')
+      ${like === null ? sql`` : sql`AND (o.order_no LIKE ${like} ESCAPE '\\' OR o.customer_name LIKE ${like} ESCAPE '\\' OR o.customer_phone LIKE ${like} ESCAPE '\\')`}
     ORDER BY o.created_at DESC
     LIMIT ${limit}
   `);

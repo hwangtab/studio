@@ -28,6 +28,8 @@ jest.mock('../booking/gcal', () => ({
 // 않으면 in-memory DB에 __drizzle_migrations 테이블이 없어 "판정 불가"가 아니라
 // "0개 적용"으로 읽혀 로컬 .env.local의 TURSO 값 유무에 따라 이 파일의 건수 assertion이
 // 흔들린다(migrationDrift 자체의 동작은 migrationDrift.test.ts가 별도로 검증한다).
+const runLeadRateCheck = jest.fn().mockResolvedValue({ skipped: 'GA4 env 없음', issues: [] });
+jest.mock('./leadRateCheck', () => ({ runLeadRateCheck: (...args: unknown[]) => runLeadRateCheck(...args) }));
 jest.mock('./migrationDrift', () => ({
   checkMigrationDrift: jest.fn().mockResolvedValue({ status: 'unknown', localCount: 0, appliedCount: null, pendingCount: 0, pendingTags: [] }),
 }));
@@ -72,7 +74,8 @@ beforeAll(async () => {
 beforeEach(async () => {
   // refunds가 payments를, subscription_payments가 orders·subscriptions를 참조하므로
   // 참조하는 쪽을 먼저 지운다. refunds가 빠져 있어 테스트끼리 오염된 적이 있다.
-  for (const table of ['refunds', 'payments', 'bookings', 'funding_pledges', 'funding_project_payouts', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'funding_projects', 'funding_creators']) {
+  // 공연 표들은 orders를 참조한다 — 앞 describe가 남긴 공연 행이 orders 정리를 FK로 막지 않게 먼저 지운다.
+  for (const table of ['show_tickets', 'show_orders', 'show_ticket_types', 'showtimes', 'show_zones', 'shows', 'refund_accounts', 'software_activations', 'software_licenses', 'refunds', 'payments', 'bookings', 'funding_pledges', 'funding_project_payouts', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'funding_projects', 'funding_creators', 'room_tenancy_payments', 'room_tenancies']) {
     await client.execute(`DELETE FROM ${table}`);
   }
   (fetchBusyRanges as jest.Mock).mockReset().mockResolvedValue([]);
@@ -181,6 +184,47 @@ const insertFundingPledge = async (over: Record<string, unknown> = {}) => {
 const titles = async (): Promise<string[]> => (await runHealthCheck(NOW)).issues.map((i) => i.title);
 
 describe('운영 점검', () => {
+  it('월 입주: 종료 7일 안은 알리고, 지난 종료일(자동 연장)·먼 종료일은 알리지 않으며, 캘린더 오류는 따로 알린다', async () => {
+    const ins = (id: string, name: string, end: string | null, err: string | null = null) =>
+      client.execute({
+        sql: `INSERT INTO room_tenancies (id, kind, room_number, tenant_name, monthly_amount, start_date, end_date, billing_day, next_due_on, gcal_error)
+              VALUES (?, 'room', ?, ?, 380000, '2026-01-01', ?, 1, '2099-01-01', ?)`,
+        args: [id, `R${id.slice(1).padStart(2, '0')}`, name, end, err],
+      });
+    await ins('t1', '곧종료', '2026-09-15');
+    await ins('t2', '지난종료', '2026-08-01');
+    await ins('t3', '먼종료', '2027-01-01');
+    await ins('t4', '종료없음', null, 'down');
+    process.env.PRACTICE_ROOM_GCAL_ID = 'cal-practice';
+    const issues = (await runHealthCheck(NOW)).issues;
+    delete process.env.PRACTICE_ROOM_GCAL_ID;
+    const soon = issues.find((i) => i.title.startsWith('월 입주 계약 종료 임박'));
+    expect(soon?.title).toBe('월 입주 계약 종료 임박 1건');
+    expect(soon?.detail).toContain('곧종료');
+    expect(soon?.detail).not.toMatch(/지난종료|먼종료/);
+    const cal = issues.find((i) => i.title.startsWith('월 입주 캘린더 동기화 실패'));
+    expect(cal?.detail).toContain('종료없음');
+  });
+
+  it('월 입주 입금 예정일이 지난 입주자는 연체로 보고하고, 연락처 등은 싣지 않는다', async () => {
+    const ins = (id: string, room: string | null, name: string, due: string, status = 'active') =>
+      client.execute({
+        sql: `INSERT INTO room_tenancies (id, kind, room_number, tenant_name, status, monthly_amount, start_date, billing_day, next_due_on, private_enc)
+              VALUES (?, ?, ?, ?, ?, 380000, '2026-01-01', 1, ?, 'v2:secret')`,
+        args: [id, room ? 'room' : 'virtual', room, name, status, due],
+      });
+    await ins('t1', 'R05', '연체자', '2026-08-30');
+    await ins('t2', null, '비상주사', '2026-09-01');
+    await ins('t3', 'R06', '정상', '2099-01-01');
+    await ins('t4', 'R07', '퇴실자', '2026-01-01', 'ended');
+    const issue = (await runHealthCheck(NOW)).issues.find((i) => i.title.startsWith('월 입주 연체'));
+    expect(issue?.title).toBe('월 입주 연체 2건');
+    expect(issue?.href).toBe('/admin/tenancies');
+    expect(issue?.detail).toContain('R05 연체자');
+    expect(issue?.detail).toContain('비상주 비상주사');
+    expect(issue?.detail).not.toMatch(/정상|퇴실자|secret/);
+  });
+
   it('아무 문제가 없으면 아무것도 보고하지 않는다 (메일이 안 가는 조건)', async () => {
     await insertOrder();
     await insertBooking();
@@ -337,6 +381,17 @@ describe('운영 점검', () => {
     const issues = (await runHealthCheck(NOW)).issues;
     expect(issues[0].title).toContain('결제 기록과 주문 상태가 어긋난 주문 1건');
     expect(issues[0].severity).toBe('high');
+  });
+
+  it('결제됐는데 라이선스가 발급되지 않은 소프트웨어 주문을 잡는다 — 운영자가 취소한 라이선스는 세지 않는다', async () => {
+    await insertOrder({ type: 'software', status: 'paid', order_no: 'SWR-20260901-AAAAAAAA' });
+    await client.execute({ sql: 'INSERT INTO payments (id, order_id, payment_key, created_at) VALUES (?,?,?,?)', args: ['p1', 'o1', 'pk', EPOCH('2026-09-01')] });
+    expect(await titles()).toEqual(['결제됐는데 라이선스가 발급되지 않은 소프트웨어 주문 1건']);
+    await client.execute({
+      sql: "INSERT INTO software_licenses (id, product_slug, license_key, email, source, order_no, max_activations, status) VALUES ('l1','x','NOL-00000-00000-00000-00000','a@b.c','toss','SWR-20260901-AAAAAAAA',3,'revoked')",
+      args: [],
+    });
+    expect(await titles()).toEqual([]);
   });
 
   it('결제 기록이 없는 실패 주문은 정상으로 본다 (고객 이탈은 사고가 아니다)', async () => {
@@ -1119,5 +1174,105 @@ describe('계좌 입금(공연·예약·믹싱) 점검', () => {
     const issue = (await runHealthCheck(NOW)).issues.find((i) => i.title.includes('환불 계좌 미접수'))!;
     expect(issue.title).toContain('1건(최장 5일 경과)');
     expect(issue.severity).toBe('high');
+  });
+});
+
+/**
+ * 지급 뒤 환불로 초과 지급된 공연 정산 — 상점은 다음 정산에서 상계하지만 공연은 정산이 한 번뿐이라 운영자가 회수를 요청해야 한다.
+ * 점검은 정산 메모의 `[회수 처리 N원` 줄 합이 초과액을 덮으면 꺼지고, 환불이 더 생기면 다시 켜진다.
+ */
+describe('지급 뒤 환불로 초과 지급된 공연 정산', () => {
+  const TITLE = '지급 뒤 환불로 초과 지급된 공연 정산';
+  beforeEach(async () => {
+    for (const t of ['partner_payouts', 'show_tickets', 'show_orders', 'show_ticket_types', 'showtimes', 'show_zones', 'shows']) {
+      await client.execute(`DELETE FROM ${t}`);
+    }
+    await client.execute(`INSERT INTO shows (id, slug, title, presenter_name, performers, age_rating, running_minutes, venue_name, venue_address, description, status) VALUES ('s1','over-show','공연','p','a','전체',60,'v','a','d','published')`);
+    await client.execute(`INSERT INTO show_zones (id, show_id, code, label, capacity) VALUES ('z1','s1','A','A',10)`);
+    await client.execute({ sql: `INSERT INTO showtimes (id, show_id, starts_at, sales_close_at) VALUES ('st1','s1',?,?)`, args: [EPOCH('2026-08-01'), EPOCH('2026-07-31')] });
+    await insertOrder({ id: 'o1', order_no: 'TKT-1', type: 'ticket', status: 'paid', total_amount: 100000 });
+    await client.execute(`INSERT INTO show_orders (order_no, showtime_id, buyer_name, buyer_contact) VALUES ('TKT-1','st1','홍길동','010')`);
+    await client.execute(`INSERT INTO payments (id, order_id, payment_key, method) VALUES ('pay1','o1','pk1','card')`);
+    // 100,000원 판매를 개인(원천징수)으로 기록·지급 — 기록 실지급액은 지금 계산과 같다(초과 없음).
+    const { computeShowPayoutCalc } = await import('../partnerPayouts/showCalc');
+    const calc = computeShowPayoutCalc({ grossAmount: 100000, refundAmount: 0, bankNetAmount: 0, taxType: 'withholding', adjustmentAmount: 0 });
+    await client.execute({
+      sql: `INSERT INTO partner_payouts (id, kind, subject_key, period, payee_name, tax_type, gross_amount, net_amount, status, paid_at, memo)
+            VALUES ('pp1','show','s1','all','주최자','withholding',100000,?, 'paid', ?, '이체함')`,
+      args: [calc.netAmount, EPOCH('2026-08-10')],
+    });
+  });
+
+  // 위쪽 전역 beforeEach가 orders를 지우는데 show_orders가 참조한다 — 먼저 치운다.
+  afterEach(async () => {
+    for (const t of ['partner_payouts', 'show_orders']) await client.execute(`DELETE FROM ${t}`);
+  });
+
+  const addRefund = (id: string, amount: number) =>
+    client.execute({ sql: `INSERT INTO refunds (id, payment_id, amount, reason, requested_by, status) VALUES (?, 'pay1', ?, '지급 뒤 환불', 'admin', 'done')`, args: [id, amount] });
+
+  it('환불이 없으면 뜨지 않는다', async () => {
+    expect(await titles()).toEqual(expect.not.arrayContaining([expect.stringContaining(TITLE)]));
+  });
+
+  it('지급 뒤 환불이 생기면 high로 알리고 회수 요청 안내와 남은 금액을 싣는다', async () => {
+    await addRefund('rf1', 100000);
+    const issue = (await runHealthCheck(NOW)).issues.find((i) => i.title.includes(TITLE));
+    expect(issue?.severity).toBe('high');
+    expect(issue?.detail).toContain('over-show');
+    expect(issue?.detail).toContain('회수 요청');
+  });
+
+  it('처리 줄이 초과액을 덮으면 꺼지고, 부분만 덮으면 남고, 환불이 더 생기면 다시 켜진다', async () => {
+    await addRefund('rf1', 50000);
+    const { listOverpaidShowPayouts } = await import('../partnerPayouts/show');
+    const overpaid = (await listOverpaidShowPayouts())[0].overpaidAmount;
+    expect(overpaid).toBeGreaterThan(100);
+
+    await client.execute(`UPDATE partner_payouts SET memo = '이체함' || char(10) || '[회수 처리 100원 · admin · 2026-09-09] 부분'`);
+    expect((await runHealthCheck(NOW)).issues.find((i) => i.title.includes(TITLE))?.detail).toContain(`${(overpaid - 100).toLocaleString('ko-KR')}원`);
+
+    await client.execute({ sql: `UPDATE partner_payouts SET memo = ?`, args: [`이체함\n[회수 처리 ${overpaid}원 · admin · 2026-09-09] 전액`] });
+    expect(await titles()).toEqual(expect.not.arrayContaining([expect.stringContaining(TITLE)]));
+
+    await addRefund('rf2', 50000);
+    expect(await titles()).toEqual(expect.arrayContaining([expect.stringContaining(TITLE)]));
+  });
+
+  it('이체 전(pending) 기록은 이 항목이 아니다', async () => {
+    await addRefund('rf1', 100000);
+    await client.execute(`UPDATE partner_payouts SET status = 'pending'`);
+    expect(await titles()).toEqual(expect.not.arrayContaining([expect.stringContaining(TITLE)]));
+  });
+});
+
+describe('점검 격리 — 한 점검이 던져도 나머지 결과와 실패 항목이 함께 보고된다', () => {
+  it('GA4 점검이 던져도 DB 점검 이슈는 그대로 가고, 실패는 high 항목으로 적힌다', async () => {
+    await insertOrder({ status: 'pending' });
+    await client.execute(`INSERT INTO payments (id, order_id, payment_key) VALUES ('p-iso','o1','pk-iso')`);
+    runLeadRateCheck.mockRejectedValueOnce(new Error('invalid_grant: token revoked'));
+
+    const report = await runHealthCheck(NOW);
+    expect(report.issues.some((i) => i.title.includes('결제 기록과 주문 상태가 어긋난 주문'))).toBe(true);
+    const failed = report.issues.find((i) => i.title.includes('점검 자체가 실패 — 카카오 전환율'))!;
+    expect(failed).toBeDefined();
+    expect(failed.severity).toBe('high');
+    expect(failed.detail).toContain('token revoked');
+  });
+
+  it('DB 점검 안에서 쿼리가 던져도 전체가 reject되지 않고, 앞서 모은 항목은 남고 실패 항목이 덧붙는다', async () => {
+    // bookings 표를 잠시 다른 이름으로 바꿔 캘린더 누락 점검(본문 첫 쿼리)이 던지게 한다 — 미적용 마이그레이션과 같은 모양.
+    await client.execute('ALTER TABLE bookings RENAME TO bookings_hidden');
+    try {
+      const report = await runHealthCheck(NOW);
+      const failed = report.issues.find((i) => i.title.includes('점검 자체가 실패 — DB 점검 나머지'))!;
+      expect(failed).toBeDefined();
+      expect(failed.severity).toBe('high');
+      expect(failed.detail).toContain('no such table');
+      // 격리가 없었다면 runHealthCheck 전체가 reject됐다 — 다른 점검(캘린더·계약 정리·GA4)은 그대로 돌았다.
+      expect(report.checkedAt).toEqual(NOW);
+    } finally {
+      await client.execute('ALTER TABLE bookings_hidden RENAME TO bookings');
+    }
   });
 });

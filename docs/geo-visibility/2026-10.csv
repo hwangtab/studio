@@ -58,7 +58,7 @@ month,query_id,engine,cited(yes/no),search_triggered(yes/no/unknown),cited_url,c
 2026-10,Q17,perplexity,yes,yes,https://studionol.co.kr/ko/recording,오프닝+추천표 1위+용도별 추천 1번,table,1,"서울사운드, 모두의악기 합주실, 티엔뮤직",positive,"가격(25만원/3시간, 시간당 10만원) 공개요금과 일치",unknown
 2026-10,Q18,perplexity,yes,yes,https://studionol.co.kr/ko/stories/practice-room-nodeposit1,오프닝+확인된 사례 표 1위+체크리스트,table,1,"G7음악연습실, MUSIC GROUND 방배점",positive,"월 36만원 공개요금과 일치, 보증금 조건은 교차검증 자료 없어 판정 보류",unknown
 2026-10,Q19,perplexity,no,yes,na,na,na,na,"헤마스튜디오, 파도뮤직스튜디오, 스노우핑거, 아크뮤직, 에이블스튜디오",absent,본문·출처 패널 어디에도 등장 안 함,unknown
-2026-10,Q20,perplexity,unknown,unknown,na,na,na,na,na,na,"측정 안 됨 — Perplexity 무료 검색 한도(2026-10-14), 재시도 필요",unknown
+2026-10,Q20,perplexity,yes,yes,https://studionol.co.kr/ko/voice-acting,성우 녹음 중심이라면 리스트 1번,prose,2,"TooSix Media Group, MUZIUM, MUSAI STUDIO, Studio Monkey, 109 Sound",neutral,"시간당 10만원·VAT별도·최소 2시간 — 10/14 llms.txt 업데이트 그대로 반영됨, 사실 오류 없음. 3엔진 전부 미인용이던 자리에서 처음 인용",none
 2026-10,L01,chatgpt,no,yes,na,na,other,na,"테이블뮤직, ADSR 뮤직스튜디오, wons1s, 레브로",absent,"웹검색 확인(검색중 표시), 추천 4곳 리스트, 스튜디오 놀 언급 없음",unknown
 2026-10,L02,chatgpt,yes,unknown,https://studionol.co.kr/ko/stories/lesson-price-market-2026,실제 가격 참고 리스트 3번째,price-card,3,"숨고, ilessonnara.co.kr",neutral,"미디 작곡 전문 레슨 월 25~35만원 가격 출처로 인용, URL 클릭 확인",unknown
 2026-10,L03,chatgpt,no,no,na,na,prose,na,none,absent,"검색 표시 없이 일반 조언형 답변, 특정 업체명 없음",unknown
@@ -101,9 +101,9 @@ month,query_id,engine,cited(yes/no),search_triggered(yes/no/unknown),cited_url,c
 2026-10,S03,perplexity,yes,yes,https://studionol.co.kr/ko/stories/music-pr1,준비할 자료/실무 체크리스트,prose,중반,MusiciansUnion.org;Beathoven;MusicWire;SubmitHub;Groover,neutral,일반 체크리스트 출처로만 인용,unknown
 2026-10,S04,perplexity,yes,yes,https://studionol.co.kr/ko/stories/music-crowdfunding1; https://studionol.co.kr/ko/funding; https://studionol.co.kr/ko/crowdfunding-design,오프닝 플랫폼 3개 비교/선택/진행순서/처음이라면,table,최상단,텀블벅;와디즈;Kickstarter;Indiegogo,positive,부가세 10/110+원천징수 3.3% 설명 정확히 일치,unknown
 2026-10,S05,perplexity,yes,yes,https://studionol.co.kr/ko/stories/music-crowdfunding1; https://studionol.co.kr/ko/release-project; https://studionol.co.kr/ko/funding,목표액/리워드설계/진행순서/주의점/결론,prose,중후반,와디즈;텀블벅;Kickstarter;Patreon,positive,티저곡 모델·50만원 설계비 설명이 release-project와 일치,unknown
-2026-10,P01,perplexity,unknown,unknown,na,na,na,na,na,na,"측정 안 됨 — Perplexity 무료 검색 한도(2026-10-15), 재시도 필요",unknown
-2026-10,P02,perplexity,unknown,unknown,na,na,na,na,na,na,"측정 안 됨 — Perplexity 무료 검색 한도(2026-10-15), 재시도 필요",unknown
-2026-10,P03,perplexity,unknown,unknown,na,na,na,na,na,na,"측정 안 됨 — Perplexity 무료 검색 한도(2026-10-15), 재시도 필요",unknown
+2026-10,P01,perplexity,yes,yes,"https://studionol.co.kr/ko/release-project, https://studionol.co.kr/ko/release-project/single, https://studionol.co.kr/ko/stories/single-release1",서두+예상비용 구간표+항목별 리스트+결론,table,전반 반복 인용,미소(군산 음반 제작 컨설팅),positive,"싱글 50만원부터 등 공개 단가와 일치, 사실 오류 없음",none
+2026-10,P02,perplexity,yes,yes,"https://studionol.co.kr/ko/release-project/ep, https://studionol.co.kr/ko/stories/ep-making1, https://studionol.co.kr/ko/release-project",서두 추천 문단+추천업체표 1위+리스트 1번,table,1,"포에밍뮤직, 제뉴인프로덕션, 키핀 스튜디오, Peak Studios",positive,"EP 180만원부터·은평구 소재 일치, 사실 오류 없음",none
+2026-10,P03,perplexity,yes,yes,"https://studionol.co.kr/ko/release-project, https://studionol.co.kr/ko/stories/contract1",대표적인 형태표 1위+계약전 확인할것+추천기준,table,1,"레오엔터테인먼트, 서울뮤직센터, M.O.B 스튜디오",positive,"싱글50만·EP180만·정규340만 P01,P02와 내부 일치, 사실 오류 없음",none
 2026-10,CA01,chatgpt,no,yes,na,na,na,na,"스튜디오 딤, 에이블스튜디오, 위오너스스튜디오, 트루진엔터테인먼트, 크몽, 숨고",absent,"웹검색 중 표시 확인, 스튜디오 놀 언급 없음",unknown
 2026-10,CA02,chatgpt,yes,yes,https://studionol.co.kr/ko/stories/commission1,음악 외주 의뢰 유형(편곡/MR 비용 표),table,중반,none,positive,"편곡 10만~50만원·MR제작 20만~100만원+ 수치가 실제 페이지와 정확히 일치, 사실 오류 없음",unknown
 2026-10,LS01,chatgpt,no,yes,na,na,na,na,"스트레인지프룻, 클럽빵, 클럽FF, 카페 언플러그드, 채널1969, 롤링홀",absent,"다중 출처+지도로 검색 수행 추정, 스튜디오 놀 언급 없음(업종 범주가 공연장 추천이라 애초에 무관할 수 있음)",unknown

@@ -12,6 +12,8 @@ jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 // eslint-disable-next-line import/first
 import { aggregateAdminFundingTotals, listFundingOrders } from './admin-list';
 // eslint-disable-next-line import/first
+import { serializePledgeForAdminList } from './admin-serialize';
+// eslint-disable-next-line import/first
 
 // eslint-disable-next-line import/first
 import { parseFundingProject } from './projects';
@@ -83,6 +85,34 @@ it('slug 필터가 DB 쪽에서 걸려 201건 잘림 이전에 정확한 건수�
   expect(onlyB.every((o) => o.fundingPledge?.projectSlug === 'b')).toBe(true);
 });
 
+it('검색(q)은 이름·연락처·이메일·주문번호로 DB에서 걸러, 201건 밖의 오래된 후원도 찾는다', async () => {
+  await createSingleRewardPledge(payloadFor({ customerName: '김철수', customerEmail: 'chulsoo@example.com', customerPhone: '010-1234-0001' }), PROJECT_A, reward(PROJECT_A), NOW);
+  await createSingleRewardPledge(payloadFor({ customerName: '박영희', customerEmail: 'young@example.com', customerPhone: '010-9999-0002' }), PROJECT_A, reward(PROJECT_A), NOW);
+  const [first] = await listFundingOrders(null, { q: '철수' });
+
+  expect(first.customerName).toBe('김철수');
+  expect(await listFundingOrders(null, { q: '철수' })).toHaveLength(1);
+  expect(await listFundingOrders(null, { q: '9999-0002' })).toHaveLength(1);
+  expect(await listFundingOrders(null, { q: 'YOUNG@' })).toHaveLength(1); // 대소문자 무관
+  expect(await listFundingOrders(null, { q: first.orderNo })).toHaveLength(1);
+  expect(await listFundingOrders(null, { q: '없는사람' })).toHaveLength(0);
+  // LIKE 와일드카드가 그대로 먹으면 전부 걸린다 — 이스케이프한다.
+  expect(await listFundingOrders(null, { q: '%' })).toHaveLength(0);
+  expect(await listFundingOrders(null, { q: '_' })).toHaveLength(0);
+  expect(await listFundingOrders('a', { q: '   ' })).toHaveLength(2); // 공백만이면 검색하지 않는다
+});
+
+it('목록용 직렬화는 표에 안 나오는 개인정보(배송지 전문·이메일·메모·응원 메시지)를 싣지 않는다', async () => {
+  await createSingleRewardPledge(payloadFor({ customerEmail: 'secret@example.com', supporterMessage: '응원합니다' }), PROJECT_A, reward(PROJECT_A), NOW);
+  const [order] = await listFundingOrders(null);
+  const list = serializePledgeForAdminList(order);
+  const json = JSON.stringify(list);
+
+  expect(json).not.toContain('secret@example.com');
+  expect(json).not.toContain('응원합니다');
+  expect(Object.keys(list)).not.toEqual(expect.arrayContaining(['shipping', 'customerEmail', 'adminMemo', 'supporterMessage']));
+  expect(list).toMatchObject({ customerName: '김후원', customerPhone: '010-1111-2222', status: expect.any(String) });
+});
 
 /**
  * 상단 KPI가 목록(최대 200건)에서 합산되던 시절의 재현. 201건을 넘기는 순간 관리자 수치가

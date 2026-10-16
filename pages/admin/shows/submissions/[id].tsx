@@ -5,12 +5,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { AdminShell } from '../../../../components/admin/AdminShell';
+import { CreatorAccountEditor } from '../../../../components/admin/CreatorAccountEditor';
 import { CreatorTaxProfilePanel } from '../../../../components/admin/CreatorTaxProfilePanel';
 import { patchShowSubmission, type ShowSubmissionActionResult } from '../../../../components/admin/showSubmissionActions';
 import { Button } from '../../../../components/ui/Button';
 import { Notice } from '../../../../components/ui/Notice';
 import { TextArea, TextInput } from '../../../../components/ui/Field';
 import { formatPriceAmount } from '../../../../data/pricing';
+import { logAdminView } from '../../../../lib/privacy/adminView';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { formatKstDateTimeFull } from '../../../../lib/booking/format';
 import { loadSubmissionForAdmin, type AdminSubmissionDetail } from '../../../../lib/shows/organizer/adminSubmissions';
@@ -24,6 +26,8 @@ export const getServerSideProps: GetServerSideProps<AdminShowSubmissionDetailPag
   if (!auth.ok) return { redirect: { destination: '/admin/login', permanent: false } };
   const id = typeof context.params?.id === 'string' ? context.params.id : '';
   const submission = id ? await loadSubmissionForAdmin(id) : null;
+  // 열람 기록 — 주최자 연락처가 props로 실린다(처리방침 19항).
+  if (id) await logAdminView(context, auth.actor, 'show_submission_view', id, submission ? 'success' : 'not_found');
   if (!submission) return { notFound: true };
   return { props: { submission } };
 };
@@ -278,6 +282,7 @@ export default function AdminShowSubmissionDetailPage({ submission }: AdminShowS
             <dl className="space-y-2 text-sm">
               <Row label="이름">{submission.creatorName}</Row>
               <Row label="이메일">{submission.creatorEmail}</Row>
+              <Row label="계정 수정"><CreatorAccountEditor creatorId={submission.creatorId} name={submission.creatorName} email={submission.creatorEmail} /></Row>
               <Row label="제출 시각">{submission.submittedAt ? formatKstDateTimeFull(submission.submittedAt) : '미제출'}</Row>
               <Row label="동의한 약관">{submission.organizerTermsVersion ?? '없음'}</Row>
             </dl>

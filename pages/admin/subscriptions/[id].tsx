@@ -15,6 +15,7 @@ import { Field, TextArea, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { listSubscriptionRefundSummary, type SubscriptionRefundSummary } from '../../../lib/billing/refund';
 import { getSubscriptionWithDetails } from '../../../lib/billing/service';
+import { logAdminView } from '../../../lib/privacy/adminView';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatPriceAmount } from '../../../data/pricing';
 import { artistSupportTierLabel, subscriptionOrderName } from '../../../lib/billing/amounts';
@@ -55,6 +56,9 @@ export const getServerSideProps: GetServerSideProps<AdminSubscriptionDetailPageP
     console.error('[admin/subscriptions/[id]] Failed to load subscription:', error);
     return null;
   });
+
+  // 열람 기록 — 고객 이름·연락처·이메일이 props로 실리는 화면이다(처리방침 19항).
+  await logAdminView(context, auth.actor, 'subscription_view', id, details ? 'success' : 'not_found');
 
   if (!details) {
     return { notFound: true };
@@ -276,7 +280,9 @@ export default function AdminSubscriptionDetailPage({
   const canExtendPause = subscription.status === 'paused' && subscription.pausedReason === 'operator';
   const canPause = subscription.status === 'active' || subscription.status === 'past_due' || canExtendPause;
   const canResume = subscription.status === 'paused';
-  const canCancel = subscription.status === 'active' || subscription.status === 'past_due' || subscription.status === 'paused';
+  // 카드 등록 대기(`pending_card`)도 닫을 수 있어야 한다 — 잘못 만든 구독을 닫지 못하면 같은 계약에 다시 만들 수도 없다(already_exists).
+  const canCancel =
+    subscription.status === 'pending_card' || subscription.status === 'active' || subscription.status === 'past_due' || subscription.status === 'paused';
   const canCardChangeLink =
     subscription.status === 'pending_card' ||
     subscription.status === 'active' ||
@@ -581,7 +587,9 @@ export default function AdminSubscriptionDetailPage({
             <div className="pt-6 border-t border-gray-100">
               <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">해지</h2>
               <p className="text-sm text-gray-500 mb-4">
-                해지하면 다음 결제일부터 청구가 멈춥니다. 이미 결제한 기간은 끝까지 이용할 수 있습니다.
+                {subscription.status === 'pending_card'
+                  ? '카드를 등록하기 전이라 청구된 적이 없습니다. 닫으면 등록 링크가 더는 쓸 수 없고, 고객에게 해지 메일은 가지 않습니다.'
+                  : '해지하면 다음 결제일부터 청구가 멈춥니다. 이미 결제한 기간은 끝까지 이용할 수 있습니다.'}
               </p>
               <form onSubmit={handleCancel} className="space-y-3 max-w-md">
                 <Field id="cancel-reason" label="해지 사유" error={cancelError ?? undefined} className={lightOnlyField}>

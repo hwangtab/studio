@@ -8,12 +8,17 @@ import { AdminShell } from '../../../components/admin/AdminShell';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
+import { logAdminView } from '../../../lib/privacy/adminView';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatKstDeadline } from '../../../lib/payments/bankAccount';
 import { findSameNameDepositOrders, type SameNameDepositOrder } from '../../../lib/payments/bankDepositOrders';
 import { holderMatchesCustomer, loadRefundAccountSummary } from '../../../lib/payments/refundAccount';
-import { loadAdminShowDetail, type AdminOrderRow, type AdminShowDetail, type AdminShowtimeDetail } from '../../../lib/shows/adminQueries';
+import { calcRefundAmount, refundRateForNotice } from '../../../lib/shows/refundPolicy';
+import { loadAdminShowDetail, type AdminOrderRow, type AdminShowDetail, type AdminTicketRow, type AdminShowtimeDetail } from '../../../lib/shows/adminQueries';
 import { listReportLinks, type ReportLinkSummary } from '../../../lib/shows/reportLink';
+import { ShowPayoutSection } from '../../../components/admin/ShowPayoutSection';
+import { loadShowPayoutPanel } from '../../../lib/partnerPayouts/showPanel';
+import type { ShowPayoutPanelState } from '../../../lib/partnerPayouts/showView';
 import { REPORT_LINK_DEFAULT_TTL_DAYS, REPORT_LINK_MAX_TTL_DAYS } from '../../../lib/shows/reportLinkLimits';
 
 /** 환불 계좌 요약 — 은행·예금주·시각뿐. 계좌번호는 평문도 암호문도 props에 싣지 않는다("계좌 보기" API로만). */
@@ -35,6 +40,8 @@ interface AdminShowDetailPageProps {
   sameNameDeposits?: Record<string, SameNameDepositOrder[]>;
   /** 기획자 현황 링크 목록. null이면 표(0051)를 읽지 못한 것 — 발급 영역에 적용 전임을 보인다. */
   reportLinks?: ReportLinkSummary[] | null;
+  /** 주최자 정산 절. 표(0067)가 없거나 읽기가 실패해도 이 절만 안내를 보이고 나머지 화면은 열린다. */
+  payout?: ShowPayoutPanelState;
 }
 
 const allOrders = (show: AdminShowDetail): AdminOrderRow[] => show.showtimes.flatMap((t) => t.orders);
@@ -45,7 +52,9 @@ export const getServerSideProps: GetServerSideProps<AdminShowDetailPageProps> = 
   const id = context.params?.id;
   if (typeof id !== 'string') return { notFound: true };
   try {
-    const [show, reportLinks] = await Promise.all([loadAdminShowDetail(id), listReportLinks(id)]);
+    const [show, reportLinks, payout] = await Promise.all([loadAdminShowDetail(id), listReportLinks(id), loadShowPayoutPanel(id)]);
+    // 열람 기록 — 주문 명단의 구매자 이름·연락처가 props로 실린다(처리방침 19항). 값은 적지 않는다.
+    await logAdminView(context, auth.actor, 'show_admin_view', id, show ? 'success' : 'not_found');
     if (!show) return { notFound: true };
     const refundAccounts: Record<string, ShowRefundAccountInfo> = {};
     const sameNameDeposits: Record<string, SameNameDepositOrder[]> = {};
@@ -64,7 +73,7 @@ export const getServerSideProps: GetServerSideProps<AdminShowDetailPageProps> = 
         if (found.length > 0) sameNameDeposits[o.orderNo] = found;
       }
     }));
-    return { props: { show, refundAccounts, sameNameDeposits, reportLinks } };
+    return { props: { show, refundAccounts, sameNameDeposits, reportLinks, payout } };
   } catch (error: unknown) {
     console.error('[admin/shows/[id]] 조회 실패:', error);
     throw error;
@@ -84,7 +93,7 @@ const kstTime = (sec: number | null) => {
   return `${k.getUTCMonth() + 1}/${k.getUTCDate()} ${p(k.getUTCHours())}:${p(k.getUTCMinutes())}`;
 };
 
-export default function AdminShowDetailPage({ show, refundAccounts = {}, sameNameDeposits = {}, reportLinks = null }: AdminShowDetailPageProps) {
+export default function AdminShowDetailPage({ show, refundAccounts = {}, sameNameDeposits = {}, reportLinks = null, payout = { state: 'error' } }: AdminShowDetailPageProps) {
   const router = useRouter();
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -132,11 +141,10 @@ export default function AdminShowDetailPage({ show, refundAccounts = {}, sameNam
         backLabel="공연 목록"
         width="wide"
         actions={
-          show.status !== 'cancelled' && (
-            <Button light variant={show.status === 'published' ? 'weak' : 'solid'} disabled={busy} onClick={toggleStatus}>
-              {show.status === 'published' ? '비공개로 내리기' : '공개하기'}
-            </Button>
-          )
+          // 취소 상태(마지막 회차 취소로 자동)에서도 눌린다 — 새 일정을 잡았다면 공개로 되돌린다(예정된 회차가 없으면 서버가 거절).
+          <Button light variant={show.status === 'published' ? 'weak' : 'solid'} disabled={busy} onClick={toggleStatus}>
+            {show.status === 'published' ? '비공개로 내리기' : '공개하기'}
+          </Button>
         }
       >
         {notice && <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>}
@@ -144,6 +152,9 @@ export default function AdminShowDetailPage({ show, refundAccounts = {}, sameNam
 
         <section className="bg-white rounded-2xl shadow-sm p-4 md:p-6 mb-6 text-sm text-gray-900">
           <p className="mb-2"><strong>상태</strong> {STATUS_LABEL[show.status] ?? show.status}</p>
+          {show.status === 'cancelled' && (
+            <p className="mb-2 text-red-800">모든 회차가 취소돼 공연이 취소 상태입니다. 예매는 닫혀 있고 공개 페이지에는 취소 안내가 나갑니다. 새 회차를 잡았다면 “공개하기”로 다시 열 수 있습니다.</p>
+          )}
           <p className="mb-2"><strong>구역</strong> {show.zones.map((z) => `${z.label}(${z.code}) 정원 ${z.capacity}`).join(' · ')}</p>
           <p>
             <strong>티켓타입</strong>{' '}
@@ -152,6 +163,8 @@ export default function AdminShowDetailPage({ show, refundAccounts = {}, sameNam
         </section>
 
         <ReportLinkSection links={reportLinks} busy={busy} run={run} onIssued={setReportUrl} />
+
+        <ShowPayoutSection showId={show.id} panel={payout} showtimeLabels={Object.fromEntries(show.showtimes.map((t) => [t.id, t.label]))} />
 
         <div className="mb-4 flex items-center gap-3 text-sm text-gray-900">
           <label className="inline-flex items-center gap-2">
@@ -275,6 +288,10 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
   const [linkLabel, setLinkLabel] = useState('');
   const [linkHours, setLinkHours] = useState(12);
   const scheduled = t.status === 'scheduled';
+  // 취소된 회차에 결제가 살아 있는 주문이 남았다 — 앞선 취소 실행이 끊긴 것이라 '환불 이어서 처리'를 보여 준다.
+  const hasRefundPendingOrders = t.status === 'cancelled' && t.orders.some((o) =>
+    (o.orderStatus === 'paid' || o.orderStatus === 'partially_refunded')
+      && o.tickets.some((tk) => (tk.status === 'held' || tk.status === 'issued') && tk.checkedInAt === null));
   const visibleOrders = onlyAwaiting ? t.orders.filter((o) => o.bankDeposit === 'awaiting') : t.orders;
 
   return (
@@ -291,12 +308,16 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
           <a href={`/api/admin/shows/${show.id}/roster?showtimeId=${t.id}`} className="inline-flex items-center rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-800 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70">
             명단 CSV
           </a>
-          {scheduled && (
+          {(scheduled || hasRefundPendingOrders) && (
             <Button light variant="weak" size="sm" disabled={busy} onClick={() =>
               run({ action: 'cancel_showtime', showtimeId: t.id }, {
-                confirm: '이 회차를 취소하고, 결제된 주문을 전부 전액 환불합니다(입장한 티켓 제외). 되돌릴 수 없습니다.',
-                success: '회차를 취소했습니다. 환불 결과는 주문 상태에서 확인하세요.',
+                confirm: scheduled
+                  ? '이 회차를 취소하고, 결제된 주문을 전부 전액 환불합니다(입장한 티켓 제외). 되돌릴 수 없습니다.'
+                  : '앞선 회차 취소에서 환불이 끝나지 않은 주문을 이어서 환불하고 안내 메일을 보냅니다.',
+                success: scheduled ? '회차를 취소했습니다. 환불 결과는 주문 상태에서 확인하세요.' : '남은 주문의 환불을 이어서 처리했습니다.',
               }).then((r) => {
+                const remaining = r?.data?.remainingOrders;
+                if (typeof remaining === 'number' && remaining > 0) window.alert(`한 번에 처리하는 상한을 넘어 ${remaining}건이 남았습니다. "환불 이어서 처리"를 다시 눌러 주세요.`);
                 const failed = r?.data?.failedOrders;
                 if (Array.isArray(failed) && failed.length > 0) window.alert(`환불에 실패한 주문이 있습니다. 토스 콘솔에서 확인하세요: ${failed.join(', ')}`);
                 const bank = r?.data?.bankRefundOrders;
@@ -304,7 +325,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
                 const closed = r?.data?.closedDepositOrders;
                 if (Array.isArray(closed) && closed.length > 0) window.alert(`입금 전이던 계좌 입금 신청 ${closed.length}건을 닫았습니다(받은 돈이 없어 환불은 없습니다): ${closed.join(', ')}`);
               })}>
-              회차 취소
+              {scheduled ? '회차 취소' : '환불 이어서 처리'}
             </Button>
           )}
         </div>
@@ -361,7 +382,25 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
             </Button>
             {t.scanLinks.length > 0 && (
               <ul className="text-xs text-gray-600 space-y-0.5">
-                {t.scanLinks.map((l) => <li key={l.id}>{l.label} · 만료 {kstTime(l.expiresAt)}{l.revokedAt ? ' · 폐기' : ''}</li>)}
+                {t.scanLinks.map((l) => {
+                  const live = l.revokedAt == null && l.expiresAt > Math.floor(Date.now() / 1000);
+                  return (
+                    <li key={l.id} className="flex flex-wrap items-center gap-2">
+                      <span>
+                        {l.label} · 만료 {kstTime(l.expiresAt)}
+                        {l.revokedAt != null ? ' · 폐기' : !live ? ' · 만료됨' : ''}
+                      </span>
+                      {live && (
+                        <Button light variant="weak" size="sm" disabled={busy} onClick={() => run(
+                          { action: 'revoke_scan_link', linkId: l.id },
+                          { confirm: `${l.label}에게 준 입장 스캔 링크를 폐기합니다. 그 주소로는 더 이상 입장 처리를 할 수 없습니다.`, success: '스캔 링크를 폐기했습니다.' },
+                        )}>
+                          폐기
+                        </Button>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </div>
@@ -467,15 +506,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
                       <RefundAccountPanel order={o} info={refundAccounts[o.orderNo]} busy={busy} run={run} setNotice={setNotice} />
                     )}
                     {!o.isComp && refundable.length > 0 && (
-                      <Button light variant="weak" size="sm" disabled={busy} onClick={() =>
-                        run({ action: 'refund_tickets', orderNo: o.orderNo, ticketIds: refundable.map((k) => k.id) }, {
-                          confirm: o.bankDeposit === 'paid'
-                            ? `계좌 입금 건입니다 — 토스로 돌려주지 않습니다. 고객 계좌로 송금을 마친 뒤 기록하세요.\n\n${o.orderNo}의 입장 전 티켓 ${refundable.length}장을 환불 완료로 기록합니다. 금액은 취소환불표(공연 임박도)에 따라 계산됩니다.`
-                            : `${o.orderNo}의 입장 전 티켓 ${refundable.length}장을 환불합니다. 금액은 취소환불표(공연 임박도)에 따라 계산됩니다.`,
-                          success: '환불을 처리했습니다.',
-                        })}>
-                        입장 전 티켓 환불
-                      </Button>
+                      <TicketRefundControl order={o} refundable={refundable} startsAt={t.startsAt} showtimeCancelled={t.status === 'cancelled'} busy={busy} run={run} />
                     )}
                   </td>
                 </tr>
@@ -485,6 +516,62 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
         </table>
       </div>
     </section>
+  );
+}
+
+/**
+ * 입장 전 티켓 환불 — 주문의 환불 가능한 티켓(발권·미입장) 중 돌려줄 것을 고른다. 기본은 전부 선택, 최소 한 장.
+ * 금액 미리보기는 서버(lib/shows/refund.ts)와 같은 식이다: 회차가 취소됐으면 100%, 아니면 취소환불표(지금 기준),
+ * 티켓별 단가에서 원 단위 절사한 합. 실제 환불액은 눌렀을 때 서버가 다시 계산한다(미리보기와 시각이 어긋날 수 있다).
+ */
+function TicketRefundControl({ order: o, refundable, startsAt, showtimeCancelled, busy, run }: {
+  order: AdminOrderRow;
+  refundable: AdminTicketRow[];
+  startsAt: number;
+  showtimeCancelled: boolean;
+  busy: boolean;
+  run: Run;
+}) {
+  // 해제한 것만 기억한다 — 환불 뒤 목록이 바뀌어도(없어진 id는 무시) 남은 티켓은 다시 전부 선택으로 시작한다.
+  const [unchecked, setUnchecked] = useState<Set<string>>(new Set());
+  const selected = refundable.filter((k) => !unchecked.has(k.id));
+  const pct = showtimeCancelled ? 100 : refundRateForNotice(new Date(startsAt * 1000), new Date());
+  const amount = selected.reduce((sum, k) => sum + calcRefundAmount(k.unitAmount, pct), 0);
+  const toggle = (id: string) =>
+    setUnchecked((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  const bank = o.bankDeposit === 'paid';
+  const amountText = pct === 0 ? '공연이 시작돼 환불액이 없습니다' : `${amount.toLocaleString('ko-KR')}원(환불률 ${pct}%)`;
+
+  return (
+    <div className="space-y-1.5">
+      {refundable.length > 1 && (
+        <fieldset className="space-y-0.5 text-xs text-gray-800">
+          <legend className="sr-only">환불할 티켓 선택</legend>
+          {refundable.map((k) => (
+            <label key={k.id} className="flex items-center gap-1.5">
+              <input type="checkbox" checked={!unchecked.has(k.id)} onChange={() => toggle(k.id)} disabled={busy}
+                className="h-4 w-4 rounded border-gray-300 accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70" />
+              <span className="font-mono">{k.entryNumber ?? '---'}</span> {k.ticketTypeName} · {k.unitAmount.toLocaleString('ko-KR')}원
+            </label>
+          ))}
+        </fieldset>
+      )}
+      <p className="text-xs text-gray-600">환불 예정 {selected.length}장 · {amountText}</p>
+      <Button light variant="weak" size="sm" disabled={busy || selected.length === 0} onClick={() =>
+        run({ action: 'refund_tickets', orderNo: o.orderNo, ticketIds: selected.map((k) => k.id) }, {
+          confirm: bank
+            ? `계좌 입금 건입니다 — 토스로 돌려주지 않습니다. 고객 계좌로 송금을 마친 뒤 기록하세요.\n\n${o.orderNo}의 입장 전 티켓 ${selected.length}장을 환불 완료로 기록합니다. 금액은 취소환불표(공연 임박도)에 따라 계산됩니다.`
+            : `${o.orderNo}의 입장 전 티켓 ${selected.length}장을 환불합니다. 금액은 취소환불표(공연 임박도)에 따라 계산됩니다.`,
+          success: '환불을 처리했습니다.',
+        })}>
+        입장 전 티켓 환불
+      </Button>
+    </div>
   );
 }
 

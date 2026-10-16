@@ -12,7 +12,8 @@ import { normalizeShopOrderNo } from '../../../lib/shop/shape';
 /**
  * 고객 셀프 취소 — 발송 전 주문만, 전액. 인증은 관리 토큰(주문 확인 메일·결제 완료 화면의 주소)이다.
  * 입금 대기(`awaiting_deposit`) 주문은 "입금 전 신청 취소"다 — 받은 돈이 없어 환불이 없고 운영자에게만 알린다.
- * 계좌로 입금해 확정된 주문은 셀프 취소가 안 된다(lib/shop/cancel.ts) — 운영자가 환불 계좌를 받아 처리한다.
+ * 계좌로 입금해 확정된 주문은 취소하면서 **환불 계좌**(`refundAccount`: 은행·계좌번호·예금주)를 함께 받는다(암호화 보관 —
+ * lib/shop/cancel.ts). 토스 결제가 없어 운영자가 그 계좌로 송금하고 관리자 화면에서 "송금 완료"를 누른다.
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -37,7 +38,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(200).json({ ok: true, refundAmount: 0 });
   }
 
-  const result = await cancelShopOrder({ orderNo, requestedBy: 'customer', reason: '고객 셀프 취소(발송 전)', now: new Date() });
+  const result = await cancelShopOrder({
+    orderNo, requestedBy: 'customer', reason: '고객 셀프 취소(발송 전)', now: new Date(), refundAccount: (b as Record<string, unknown>).refundAccount,
+  });
   if (!result.ok) {
     const status = result.code === 'recording_failed' ? 202 : result.code === 'toss_failed' ? 502 : 409;
     return res.status(status).json({ ok: false, code: result.code, message: result.message });

@@ -10,7 +10,7 @@ import { formatBusinessNumber, type NtsLookupError } from '../../lib/funding/bus
 /**
  * 운영자 화면의 개설자 사업자 정보 — 펀딩 프로젝트 상세·공연 등록 상세·상점 아티스트 화면이 같은 패널을 쓴다.
  * 마운트 때 `/api/admin/creators/<id>/tax-profile`에서 읽는다 — 세 화면의 SSR props에 사업자 정보를 싣지 않으려고.
- * 주민등록번호는 여기서 다루지 않는다(펀딩 정산 절의 조회 버튼이 따로 연다). 정산 계좌는 펀딩 프로젝트가 없는
+ * 주민등록번호는 `residentNumber`를 켠 화면(상점 아티스트)에서만, 번호가 저장돼 있을 때 "번호 보기"로 연다(개설자 단위 경로 `/resident-number`; 펀딩은 정산 절의 버튼). 정산 계좌는 펀딩 프로젝트가 없는
  * 공연·상점 개설자도 이체받아야 하므로 이 패널에 "계좌 보기"를 둔다 — 개설자 단위 경로
  * (`/api/admin/creators/<id>/payout-account`)가 누른 순간에만 응답으로 주고 접속기록에 남긴다. 펀딩 프로젝트 상세는
  * 정산 절(`FundingPayoutSection`)에 같은 버튼이 이미 있어 `payoutAccount={false}`로 끈다.
@@ -30,6 +30,7 @@ interface TaxProfileResponse {
   taxType?: TaxType;
   business?: BusinessProfileView | null;
   businessUnavailable?: boolean;
+  hasResidentNumber?: boolean;
 }
 
 const CHECK_ERROR_LABEL: Record<NtsLookupError, string> = {
@@ -55,16 +56,22 @@ export function CreatorTaxProfilePanel({
   creatorId,
   heading = true,
   payoutAccount = true,
+  residentNumber = false,
 }: {
   creatorId: string;
   heading?: boolean;
   /** 정산 계좌 "계좌 보기"를 보일지. 펀딩 프로젝트 상세는 정산 절에 같은 버튼이 있어 끈다. */
   payoutAccount?: boolean;
+  /** 주민등록번호 "번호 보기"를 보일지(번호가 저장된 개설자만). 상점 아티스트 화면이 켠다 — 원천징수 정산에 쓰려고 보관한다. */
+  residentNumber?: boolean;
 }) {
   const [data, setData] = useState<TaxProfileResponse | null>(null);
   const [account, setAccount] = useState<RevealedAccount | null>(null);
   const [accountError, setAccountError] = useState<string | null>(null);
   const [loadingAccount, setLoadingAccount] = useState(false);
+  const [rrn, setRrn] = useState<string | null>(null);
+  const [rrnError, setRrnError] = useState<string | null>(null);
+  const [loadingRrn, setLoadingRrn] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [rechecking, setRechecking] = useState(false);
   const [recheckError, setRecheckError] = useState<string | null>(null);
@@ -117,6 +124,21 @@ export function CreatorTaxProfilePanel({
       setAccountError('네트워크 오류');
     }
     setLoadingAccount(false);
+  };
+
+  /** 주민등록번호도 계좌와 같다 — props에 담지 않고 누른 순간에만 가져와 state에만 둔다(접속기록에 남는다). */
+  const revealResidentNumber = async () => {
+    setLoadingRrn(true);
+    setRrnError(null);
+    try {
+      const r = await fetch(`/api/admin/creators/${encodeURIComponent(creatorId)}/resident-number`, { credentials: 'same-origin' });
+      const body = (await r.json()) as { ok: boolean; message?: string; residentNumber?: string };
+      if (!r.ok || !body.ok || !body.residentNumber) setRrnError(body.message ?? '주민등록번호를 읽지 못했습니다.');
+      else setRrn(body.residentNumber);
+    } catch {
+      setRrnError('네트워크 오류');
+    }
+    setLoadingRrn(false);
   };
 
   const business = data?.business ?? null;
@@ -193,6 +215,22 @@ export function CreatorTaxProfilePanel({
             </Button>
           )}
           {accountError && <p role="alert" className="text-sm text-red-700">{accountError}</p>}
+        </div>
+      )}
+      {residentNumber && data?.hasResidentNumber && (
+        <div className="mt-4 space-y-2">
+          <h3 className="text-base font-bold text-gray-900">주민등록번호</h3>
+          <p className="text-xs text-gray-500">원천징수 지급명세서용으로 보관 중이에요. 누르면 그때 서버에서 가져오고, 조회 사실이 접속기록에 남아요.</p>
+          {rrn ? (
+            <dl className="space-y-2 text-sm">
+              <Row label="주민등록번호"><span className="tabular-nums">{rrn}</span></Row>
+            </dl>
+          ) : (
+            <Button light variant="weak" size="sm" disabled={loadingRrn} onClick={revealResidentNumber}>
+              {loadingRrn ? '불러오는 중…' : '번호 보기'}
+            </Button>
+          )}
+          {rrnError && <p role="alert" className="text-sm text-red-700">{rrnError}</p>}
         </div>
       )}
     </div>

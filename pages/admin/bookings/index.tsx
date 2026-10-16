@@ -6,10 +6,12 @@ import { useRouter } from 'next/router';
 
 import { createBlock, deleteBlock } from '../../../components/admin/bookingActions';
 import { AdminShell } from '../../../components/admin/AdminShell';
+import { ManualBookingPanel } from '../../../components/admin/ManualBookingPanel';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { getDb } from '../../../db/client';
+import { loadPaymentLinkOrderInfo } from '../../../lib/payments/paymentLinkOrders';
 import { and, eq, inArray, sql } from 'drizzle-orm';
 import { orderStatusEnum, orders } from '../../../db/schema';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
@@ -21,6 +23,8 @@ import {
   type AdminBookingListItem,
 } from '../../../lib/booking/admin-serialize';
 import { formatKstDateTime } from '../../../lib/booking/format';
+import { kstDateString } from '../../../lib/booking/kst';
+import { BOOKING_LINES, BOOKING_LINE_LABELS, bookingLineOf, parseBookingLine } from '../../../lib/booking/line';
 import { expireStaleOrders } from '../../../lib/booking/service';
 import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
 
@@ -98,9 +102,12 @@ export const getServerSideProps: GetServerSideProps<AdminBookingsPageProps> = as
         .get(),
     ]);
 
+    // 결제 링크 주문의 상품명(0061) — 같은 고객에게 링크를 여럿 보냈을 때 어느 건인지 보이게. 조회 실패는 "예약금"으로 내려간다.
+    const linkInfo = await loadPaymentLinkOrderInfo(allOrders.filter((o) => o.type === 'deposit').map((o) => o.orderNo));
+
     return {
       props: {
-        bookings: (depositPending ? allOrders : allOrders.slice(0, LIST_LIMIT)).map((order) => serializeBookingForAdmin(order)),
+        bookings: (depositPending ? allOrders : allOrders.slice(0, LIST_LIMIT)).map((order) => serializeBookingForAdmin(order, linkInfo.get(order.orderNo))),
         truncated: !depositPending && allOrders.length > LIST_LIMIT,
         depositPending,
         depositPendingCount: Number(pendingCountRow?.n ?? 0),
@@ -176,6 +183,14 @@ export default function AdminBookingsPage({
   error,
 }: AdminBookingsPageProps) {
   const router = useRouter();
+  const { fromEvent, start: fromStart, end: fromEnd, title: fromTitle } = router.query;
+  const prefill = useMemo(
+    () =>
+      typeof fromEvent === 'string' && typeof fromStart === 'string' && typeof fromEnd === 'string'
+        ? { eventId: fromEvent, startAt: fromStart, endAt: fromEnd, title: typeof fromTitle === 'string' ? fromTitle : '' }
+        : null,
+    [fromEvent, fromStart, fromEnd, fromTitle],
+  );
   const [filter, setFilter] = useState<string>('all');
   const [search, setSearch] = useState<string>('');
   const [notice, setNotice] = useState<string | null>(null);
@@ -189,9 +204,16 @@ export default function AdminBookingsPage({
   const [blockRoom, setBlockRoom] = useState('');
   const [blockError, setBlockError] = useState<string | null>(null);
 
+  // 메뉴가 연습실 / 녹음실 / 믹싱으로 갈라 걸어 주는 라인. 없으면 전체(예약금 결제 링크 주문 포함).
+  const line = parseBookingLine(router.query.line);
+  const lineBookings = useMemo(
+    () => (line ? bookings.filter((booking) => bookingLineOf(booking) === line) : bookings),
+    [bookings, line],
+  );
+
   const filteredBookings = useMemo(() => {
     const term = search.trim().toLowerCase();
-    return bookings.filter((booking) => {
+    return lineBookings.filter((booking) => {
       const matchesFilter = filter === 'all' || booking.orderStatus === filter;
       const matchesSearch =
         !term ||
@@ -201,15 +223,15 @@ export default function AdminBookingsPage({
         booking.orderNo.toLowerCase().includes(term);
       return matchesFilter && matchesSearch;
     });
-  }, [bookings, filter, search]);
+  }, [lineBookings, filter, search]);
 
   const counts = useMemo(() => {
-    const result: Record<string, number> = { all: bookings.length };
+    const result: Record<string, number> = { all: lineBookings.length };
     for (const status of orderStatusEnum) {
-      result[status] = bookings.filter((b) => b.orderStatus === status).length;
+      result[status] = lineBookings.filter((b) => b.orderStatus === status).length;
     }
     return result;
-  }, [bookings]);
+  }, [lineBookings]);
 
   const mailFailed = useMemo(() => bookings.filter((b) => b.notificationError), [bookings]);
 
@@ -223,15 +245,30 @@ export default function AdminBookingsPage({
    * (lib/ops/healthCheck.ts)과 같은 판정이어야 화면과 메일이 같은 건수를 말한다.
    */
   const gcalFailed = useMemo(
-    () => bookings.filter((b) => b.gcalError || b.gcalMissing),
+    () => bookings.filter((b) => b.bookingStatus !== 'cancelled' && (b.gcalError || b.gcalMissing)),
+    [bookings],
+  );
+  // 취소했는데 캘린더 일정을 못 지운 예약 — "등록 안 됨"과 반대 문제다(일정이 남아 그 시간을 계속 막는다).
+  const gcalStaleDelete = useMemo(
+    () => bookings.filter((b) => b.bookingStatus === 'cancelled' && b.gcalError?.startsWith('delete: ')),
     [bookings],
   );
 
   // 결제 기록과 주문 상태가 어긋난 건 — 돈이 걸린 문제라 알림 실패보다 위에 둔다(스펙 §10).
   const mismatched = useMemo(() => bookings.filter((b) => b.mismatch), [bookings]);
 
+  // 끝난 블록은 접어 둔다 — 쌓이면 지금 걸린 블록이 목록 아래로 밀린다.
+  const [showPastBlocks, setShowPastBlocks] = useState(false);
+  const { pastBlocks, visibleBlocks } = useMemo(() => {
+    const nowMs = Date.now();
+    const past = blocks.filter((b) => new Date(b.endAt).getTime() <= nowMs);
+    const upcoming = blocks.filter((b) => new Date(b.endAt).getTime() > nowMs);
+    return { pastBlocks: past, visibleBlocks: showPastBlocks ? [...past, ...upcoming] : upcoming };
+  }, [blocks, showPastBlocks]);
+
   const refresh = async () => {
-    await router.replace(router.asPath, undefined, { scroll: false });
+    // 캘린더에서 가져온 등록이 끝났으면 fromEvent 주소를 비운다 — 새로고침하면 지워진 일정으로 칸이 다시 열린다.
+    await router.replace(prefill ? '/admin/bookings' : router.asPath, undefined, { scroll: false });
   };
 
   const handleDeleteBlock = async (block: AdminBlockItem) => {
@@ -262,13 +299,23 @@ export default function AdminBookingsPage({
     }
 
     setBusy(true);
-    const result = await createBlock({
+    const blockInput = {
       date: blockDate,
       startHour: blockStartHour,
       endHour: blockEndHour,
       memo: blockMemo.trim() || undefined,
       roomNumber: blockRoom.trim() || undefined,
-    });
+    };
+    let result = await createBlock(blockInput);
+    if (!result.ok && result.conflict) {
+      // 이미 잡힌 예약과 겹친다 — 그대로 걸면 그 예약은 남은 채 시간만 "휴무"가 된다. 운영자가 알고도 걸겠다고 해야 통과한다.
+      if (window.confirm(`${result.message}\n\n그래도 이 시간을 막을까요?`)) {
+        result = await createBlock({ ...blockInput, force: true });
+      } else {
+        setBusy(false);
+        return;
+      }
+    }
     setBusy(false);
 
     if (!result.ok) {
@@ -306,6 +353,7 @@ export default function AdminBookingsPage({
 
       <AdminShell title="예약 관리" description="세션 예약 현황을 확인하고 관리합니다." width="wide">
         <div className="space-y-6">
+          <ManualBookingPanel today={kstDateString(new Date())} onCreated={refresh} prefill={prefill} />
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
             <div className="p-4 md:p-8">
               {notice && (
@@ -333,6 +381,14 @@ export default function AdminBookingsPage({
                 </div>
               )}
 
+              {gcalStaleDelete.length > 0 && (
+                <div className="mb-4 p-3 bg-amber-50 border border-amber-300 text-amber-900 rounded-lg text-sm">
+                  <strong>취소했지만 캘린더 일정을 지우지 못한 예약이 {gcalStaleDelete.length}건 있습니다</strong> (
+                  {gcalStaleDelete.map((b) => `${b.orderNo} · ${b.customerName}`).join(', ')}). 남은 일정이 그 시간을 계속 막고
+                  있습니다 — 상세 화면의 “캘린더 일정 지우기”를 눌러 주세요.
+                </div>
+              )}
+
               {mailFailed.length > 0 && (
                 <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-900 rounded-lg text-sm">
                   <strong>알림 발송에 실패한 예약이 {mailFailed.length}건 있습니다</strong> (
@@ -347,6 +403,25 @@ export default function AdminBookingsPage({
                   오래된 예약은 나오지 않습니다.
                 </div>
               )}
+
+              <div className="flex flex-wrap gap-2 mb-4" role="group" aria-label="라인">
+                {[null, ...BOOKING_LINES].map((value) => {
+                  const active = line === value;
+                  const count = value ? bookings.filter((b) => bookingLineOf(b) === value).length : bookings.length;
+                  return (
+                    <Link
+                      key={value ?? 'all'}
+                      href={value ? `/admin/bookings?line=${value}` : '/admin/bookings'}
+                      aria-current={active ? 'true' : undefined}
+                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 ${
+                        active ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      {value ? BOOKING_LINE_LABELS[value] : '전체'} ({count})
+                    </Link>
+                  );
+                })}
+              </div>
 
               <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
                 <div className="flex flex-wrap gap-2">
@@ -426,7 +501,7 @@ export default function AdminBookingsPage({
                           <td data-label="일시 / 상품" className="px-4 py-3 whitespace-nowrap">
                             {isMixing
                               ? `${booking.productName} × ${booking.workOrder?.songCount ?? '-'}곡${booking.workOrder?.vocalTuning ? ' (튜닝)' : ''}`
-                              : isDeposit ? '-' : formatKstDateTime(booking.startAt)}
+                              : isDeposit ? (booking.linkSessionAt ? formatKstDateTime(booking.linkSessionAt) : '-') : formatKstDateTime(booking.startAt)}
                           </td>
                           <td data-label="고객" className="px-4 py-3 font-medium text-gray-900">
                             {booking.customerName}
@@ -574,11 +649,21 @@ export default function AdminBookingsPage({
               <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-lg text-sm">{blockError}</div>
             )}
 
-            {blocks.length === 0 ? (
-              <p className="text-sm text-gray-500">등록된 블록이 없습니다.</p>
+            {pastBlocks.length > 0 && (
+              <button
+                type="button"
+                className="mb-3 text-sm text-primary hover:underline"
+                aria-expanded={showPastBlocks}
+                onClick={() => setShowPastBlocks((v) => !v)}
+              >
+                {showPastBlocks ? '지난 블록 숨기기' : `지난 블록 ${pastBlocks.length}개 보기`}
+              </button>
+            )}
+            {visibleBlocks.length === 0 ? (
+              <p className="text-sm text-gray-500">{blocks.length === 0 ? '등록된 블록이 없습니다.' : '지금 이후의 블록이 없습니다.'}</p>
             ) : (
               <ul className="space-y-2">
-                {blocks.map((block) => (
+                {visibleBlocks.map((block) => (
                   <li
                     key={block.id}
                     className="flex items-center justify-between gap-4 p-3 bg-gray-50 rounded-lg text-sm"

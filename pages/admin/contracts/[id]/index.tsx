@@ -42,6 +42,8 @@ interface AdminContractDetailPageProps {
   auditTrail: SerializedAuditTrail;
   /** 이 계약으로 만든 구독이 있으면 그 id — 있으면 새로 만들지 않고 상세로 안내한다. */
   subscriptionId: string | null;
+  /** 그 구독이 해지·종료됐는가 — 그러면 같은 계약에 새 정기결제 링크를 다시 만들 수 있다(진행 중일 때만 서비스가 중복을 막는다). */
+  subscriptionClosed: boolean;
 }
 
 export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps> = async (
@@ -95,6 +97,7 @@ export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps
       rulesContent: resolveRulesContent(contract.contractAttachments),
       auditTrail: serializeAuditTrail(buildAuditTrail(contract)),
       subscriptionId: subscription?.id ?? null,
+      subscriptionClosed: subscription ? ['cancelled', 'ended'].includes(subscription.status) : false,
     },
   };
 };
@@ -125,6 +128,7 @@ export default function AdminContractDetailPage({
   rulesContent,
   auditTrail,
   subscriptionId,
+  subscriptionClosed,
 }: AdminContractDetailPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -534,35 +538,37 @@ export default function AdminContractDetailPage({
               </Button>
             )}
 
-            {contract.status === 'signed' && (
-              subscriptionId ? (
-                <Link href={`/admin/subscriptions/${subscriptionId}`} passHref>
-                  <Button light variant="weak">정기결제 구독 보기</Button>
-                </Link>
-              ) : (
-                <Button light
-                  variant="weak"
-                  disabled={busy}
-                  onClick={() =>
-                    run(async () => {
-                      const result = await createSubscriptionRequest({
-                        kind: 'practice-room',
-                        contractId: contract.id,
-                        customerName: contract.customerName,
-                        customerPhone: contract.customerPhone,
-                        customerEmail: contract.customerEmail,
-                        billingDay: contract.paymentDay,
-                      });
-                      if (result.ok && result.setupUrl) {
-                        setSubscriptionSetupUrl(result.setupUrl);
-                      }
-                      return result;
-                    }, '이 계약으로 정기결제 구독을 만들까요? 고객에게 카드 등록 안내 메일이 발송됩니다.')
-                  }
-                >
-                  정기결제 링크 만들기
-                </Button>
-              )
+            {contract.status === 'signed' && subscriptionId && (
+              <Link href={`/admin/subscriptions/${subscriptionId}`} passHref>
+                <Button light variant="weak">{subscriptionClosed ? '이전 구독 보기' : '정기결제 구독 보기'}</Button>
+              </Link>
+            )}
+
+            {contract.status === 'signed' && (!subscriptionId || subscriptionClosed) && (
+              <Button light
+                variant="weak"
+                disabled={busy}
+                onClick={() =>
+                  run(async () => {
+                    const result = await createSubscriptionRequest({
+                      kind: 'practice-room',
+                      contractId: contract.id,
+                      customerName: contract.customerName,
+                      customerPhone: contract.customerPhone,
+                      customerEmail: contract.customerEmail,
+                      billingDay: contract.paymentDay,
+                    });
+                    if (result.ok && result.setupUrl) {
+                      setSubscriptionSetupUrl(result.setupUrl);
+                    }
+                    return result;
+                  }, subscriptionClosed
+                    ? '이전 구독은 해지·종료됐습니다. 이 계약으로 정기결제 구독을 새로 만들까요? 고객에게 카드 등록 안내 메일이 발송됩니다.'
+                    : '이 계약으로 정기결제 구독을 만들까요? 고객에게 카드 등록 안내 메일이 발송됩니다.')
+                }
+              >
+                {subscriptionClosed ? '정기결제 링크 다시 만들기' : '정기결제 링크 만들기'}
+              </Button>
             )}
 
             {isActionAllowed(contract.status, 'update') && (

@@ -54,6 +54,7 @@ import {
 } from '../../lib/booking/refund-policy';
 import { buyerIntentHubs, buyerIntentHubSlugs } from '../../data/buyerIntentHubs';
 import { loadShopLlmsSection } from '../../lib/shop/llms';
+import { loadSoftwareLlmsSection } from '../../lib/software/llms';
 import { computeProjectState } from '../../lib/funding/projects';
 import { getListableFundingProjectsAsync } from '../../lib/funding/repository';
 import { getSupportedArtists } from '../../data/artists';
@@ -105,7 +106,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - **Mixing & Mastering**: Professional mixing and mastering, available fully remotely — send stems from anywhere (KakaoTalk / Google Drive / WeTransfer), delivery in 3–7 business days. Dedicated page: /mixing-mastering
 - **Practice Room Residency**: Premium private practice room residency program (monthly subscription). Availability (as of ${PRACTICE_ROOM_AVAILABILITY_UPDATED_ON}): ${PRACTICE_ROOM_HAS_VACANCY ? `${PRACTICE_ROOM_VACANT_ROOMS} room(s) currently available for move-in` : 'fully occupied — waitlist open'}.
 - **Practice Room Hourly**: the same soundproof private room by the hour — ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/hour **VAT included**, from 1 hour up to 8, 24/7, same-day booking allowed. Book online at ${siteUrl}/ko/booking/practice-room (Toss checkout; door, room and Wi-Fi instructions are emailed on payment). This is the only hourly offer on this site — the recording studio is never rented without an engineer.
-- **Voice Actor Recording**: Voice actor casting and voice-over/dubbing recording (English dubbing available). Studio rental ${krw(VOICEOVER_HOURLY_PRICE)} KRW/hour (VAT included, 2-hour minimum); casting fee for voice actor sourcing quoted separately based on talent tier, script length and usage scope (YouTube, ads, corporate, etc.) — free quote on request. Dedicated page: /voice-acting
+- **Voice Actor Recording**: Voice actor casting and voice-over/dubbing recording (English dubbing available). Studio rental ${krw(VOICEOVER_HOURLY_PRICE)} KRW/hour (**VAT included**, 2-hour minimum); casting fee for voice actor sourcing quoted separately based on talent tier, script length and usage scope (YouTube, ads, corporate, etc.) — free quote on request. Dedicated page: /voice-acting
 - **Music Production Lessons**: One-on-one music production lessons (MIDI, mixing, composition) with studio engineers. Vocal and instrument performance lessons are NOT offered.
 - **Composition, Arrangement & Backing-Track (MR) Production**: Topline/melody and chord writing, arrangement from MIDI to full band and strings, custom backing tracks (release, wedding, event), and producing through recording, mixing and mastering by producer Hwang Kyungha. A hummed phone recording and lyrics are enough to start; AI-made demos are accepted as sketches and rebuilt by people. Fixed prices per song, VAT included: composition ${krw(COMPOSITION_PRICE)} KRW; arrangement tiered by track count like mixing — ≤10 tracks ${krw(ARRANGEMENT_SMALL_PRICE)}, 11–30 tracks (full band) ${krw(ARRANGEMENT_BAND_PRICE)}, 31+ tracks (strings/brass/choir) ${krw(ARRANGEMENT_LARGE_PRICE)} KRW; custom backing track for an existing song ${krw(CUSTOM_MR_PRICE)} KRW. 2 revisions included; live session players billed at cost with no booking commission; co-writing credits and shares agreed in writing before work starts. Dedicated page: /composition-arrangement
 - **Cover Video All-in-One Package**: Cover video filming + vocal recording + mixing + 4K editing in one session (studio filming with lighting)
@@ -204,15 +205,19 @@ ${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW per month, VAT excluded (card payment ad
 Wedding Song Complete Package is ${krw(WEDDING_PACKAGE_PRICE)} KRW: 2-hour recording session + vocal tuning + mixing & mastering. Beginners welcome.
 
 ### What are the recording rates?
-- 1프로 (1-song vocal package, 3 hours): ${krw(VOCAL_PACKAGE_PRICE)} KRW
+All prices below are **VAT included**.
+- 1프로 (1-song vocal package, 3 hours, dedicated engineer + vocal directing + basic editing included): ${krw(VOCAL_PACKAGE_PRICE)} KRW
 - Hourly recording (voice acting, instruments, corrections): ${krw(RECORDING_HOURLY_PRICE)} KRW/hour, minimum 2 hours
-- Day Lock: 4 hours ${krw(DAY_LOCK_4H_PRICE)} KRW · 8 hours ${krw(DAY_LOCK_8H_PRICE)} KRW (bookable online)
+- Day Lock (fixed-hour recording, dedicated engineer, bookable online): 4 hours ${krw(DAY_LOCK_4H_PRICE)} KRW · 8 hours ${krw(DAY_LOCK_8H_PRICE)} KRW
 
 ### Can I get mixing and mastering done remotely without visiting?
-Yes. Send stems via KakaoTalk, Google Drive or WeTransfer from anywhere in Korea or abroad — no studio visit needed. Mixing ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW/song by track count (two revisions included), mastering ${krw(MASTERING_SINGLE_PRICE)} KRW/song. Delivery in 3–7 business days.
+Yes. Send stems via KakaoTalk, Google Drive or WeTransfer from anywhere in Korea or abroad — no studio visit needed. Mixing ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW/song by track count (**VAT included**, two revisions included), mastering ${krw(MASTERING_SINGLE_PRICE)} KRW/song. Delivery in 3–7 business days. Mixing is handled directly by studio owner Hwang Kyungha (황경하), who has planned and produced albums awarded at the Korean Music Awards (2017 '선정위원 특별상').
+
+### My home-recorded vocal sounds thin or buried after I tried mixing it myself — can professional mixing fix that?
+Yes — that's the most common reason clients send tracks in. A thin or buried vocal is usually a balance problem (level, EQ carving space against the instrumental, compression for consistency) rather than a performance problem, and it's exactly what the mixing service above addresses. Send the dry vocal, the backing track/MR and a reference track showing the tone you want; two revisions are included per song.
 
 ### Does Studio NOL do voice-over and dubbing recording?
-Yes. Voice-actor casting plus voice-over/dubbing recording at ${krw(RECORDING_HOURLY_PRICE)} KRW/hour (minimum 2 hours). English dubbing is available. Page: /voice-acting
+Yes. Voice-actor casting plus voice-over/dubbing recording at ${krw(VOICEOVER_HOURLY_PRICE)} KRW/hour (**VAT included**, minimum 2 hours). English dubbing is available. Page: /voice-acting
 
 ### Can I record drums or a full band?
 Drum recording is arranged on request through a partner studio; vocals, guitar, bass, keys and other instruments are recorded in-house. Ask via KakaoTalk with your track count.
@@ -521,6 +526,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // 상점(음반·굿즈) — SHOP_SALES_OPEN일 때만 한 절이 붙는다.
   body += await loadShopLlmsSection(siteUrl);
+  // 소프트웨어(플러그인·툴) — SOFTWARE_SALES_OPEN일 때만 한 절이 붙는다.
+  body += loadSoftwareLlmsSection(siteUrl);
 
   // 한국어 상담 상황별 quick-fact 블록 (정의부 주석 참조).
   body += USE_CASE_ANSWERS(siteUrl, await fundingStatusLine(siteUrl)) + '\n';

@@ -131,9 +131,9 @@ export type CancelInput = {
  * 키가 없으면 여기서 멈춰 예약을 건드리지 않는다). 돌려줄 돈이 0원이면(당일 0% 티어) 계좌가 필요 없다.
  * 관리자 환불은 계좌를 받지 않는다 — 운영자가 이미 송금하고 기록하는 것이다.
  */
-type BankRefundPlan = { kind: 'none' } | { kind: 'customer_account'; bankName: string; accountHolder: string; accountNumberEnc: string } | { kind: 'admin_record' };
+export type BankRefundPlan = { kind: 'none' } | { kind: 'customer_account'; bankName: string; accountHolder: string; accountNumberEnc: string } | { kind: 'admin_record' };
 
-const planBankRefund = (input: CancelInput, payment: PaymentWithRefunds, refundAmount: number): BankRefundPlan | CancelFailure => {
+export const planBankRefund = (input: CancelInput, payment: PaymentWithRefunds, refundAmount: number): BankRefundPlan | CancelFailure => {
   if (!isBankDepositPayment(payment)) return { kind: 'none' };
   if (input.requestedBy === 'admin') return { kind: 'admin_record' };
   if (refundAmount <= 0) return { kind: 'none' };
@@ -155,7 +155,7 @@ const planBankRefund = (input: CancelInput, payment: PaymentWithRefunds, refundA
  * 선점에 이긴 뒤 환불 계좌를 저장한다. 실패하면(0048 미적용·DB 장애) 선점을 되돌리고 실패를 돌려준다 —
  * 계좌 없이 취소만 남으면 운영자가 돈을 보낼 곳을 모른다.
  */
-const saveCustomerRefundAccount = async (
+export const saveCustomerRefundAccount = async (
   key: RefundAccountKey, plan: BankRefundPlan, now: Date, revert: () => Promise<void>,
 ): Promise<CancelFailure | null> => {
   if (plan.kind !== 'customer_account') return null;

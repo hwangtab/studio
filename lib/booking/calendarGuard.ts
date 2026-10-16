@@ -1,4 +1,4 @@
-import { fetchBusyRanges, isCalendarActive, type BookingCalendar } from './gcal';
+import { fetchBusyRanges, isCalendarActive, listCalendarEvents, type BookingCalendar } from './gcal';
 import { resourceKindOf, STUDIO_SHARED_ROOMS, type SessionProduct } from './products';
 
 /**
@@ -6,9 +6,15 @@ import { resourceKindOf, STUDIO_SHARED_ROOMS, type SessionProduct } from './prod
  * 조회 실패는 throw — 호출부가 fail-closed로 거절한다.
  */
 export const hasCalendarConflict = async (
-  calendar: BookingCalendar, start: Date, end: Date, room?: string | null,
+  calendar: BookingCalendar, start: Date, end: Date, room?: string | null, ignoreEventId?: string | null,
 ): Promise<boolean> => {
   if (!isCalendarActive(calendar, room)) return false;
+  if (ignoreEventId) {
+    // 캘린더에만 있던 일정을 사이트 예약으로 "가져올 때" — 그 일정 자신은 충돌이 아니다(lib/booking/manualEntry.ts adoptEventId).
+    // freeBusy는 일정 id를 모르므로 일정 목록으로 본다. 종일 일정은 freeBusy와 같게 바쁨으로 센다.
+    const events = await listCalendarEvents(start, end, calendar, room);
+    return events.some((e) => e.id !== ignoreEventId && !e.transparent && e.start < end && e.end > start);
+  }
   const busy = await fetchBusyRanges(start, end, calendar, room);
   return busy.some((b) => b.start < end && b.end > start);
 };
@@ -24,8 +30,10 @@ export const occupancyCalendars = (room: string | null): Array<[BookingCalendar,
 };
 
 /** 그 자원을 점유하는 캘린더 중 하나라도 [start, end)와 겹치는가. 조회 실패는 throw. */
-export const hasOccupancyCalendarConflict = async (room: string | null, start: Date, end: Date): Promise<boolean> => {
-  const flags = await Promise.all(occupancyCalendars(room).map(([cal, r]) => hasCalendarConflict(cal, start, end, r)));
+export const hasOccupancyCalendarConflict = async (
+  room: string | null, start: Date, end: Date, ignoreEventId?: string | null,
+): Promise<boolean> => {
+  const flags = await Promise.all(occupancyCalendars(room).map(([cal, r]) => hasCalendarConflict(cal, start, end, r, ignoreEventId)));
   return flags.some(Boolean);
 };
 
@@ -38,13 +46,13 @@ export const hasOccupancyCalendarConflict = async (room: string | null, start: D
  * 일부만 바쁘면 그 방들을 배정에서 빼고(createBookingOrder excludeRooms) 나머지로 진행한다.
  */
 export const calendarBlockedRooms = async (
-  product: SessionProduct, start: Date, end: Date,
+  product: SessionProduct, start: Date, end: Date, ignoreEventId?: string | null,
 ): Promise<{ blocked: boolean; excludeRooms: string[] }> => {
   if (resourceKindOf(product) !== 'rooms') {
-    return { blocked: await hasOccupancyCalendarConflict(null, start, end), excludeRooms: [] };
+    return { blocked: await hasOccupancyCalendarConflict(null, start, end, ignoreEventId), excludeRooms: [] };
   }
   const rooms = product.rooms ?? [];
-  const flags = await Promise.all(rooms.map((room) => hasOccupancyCalendarConflict(room, start, end)));
+  const flags = await Promise.all(rooms.map((room) => hasOccupancyCalendarConflict(room, start, end, ignoreEventId)));
   const excludeRooms = rooms.filter((_, i) => flags[i]);
   return { blocked: rooms.length > 0 && excludeRooms.length === rooms.length, excludeRooms };
 };

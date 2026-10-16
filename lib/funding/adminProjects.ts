@@ -1,7 +1,7 @@
 import { desc, eq } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { fundingCreators, fundingProjects, fundingRewards } from '../../db/schema';
+import { fundingCreators, fundingProjectPayouts, fundingProjects, fundingRewards } from '../../db/schema';
 import type { FundingReviewStatus } from './reviewTransition';
 
 /**
@@ -26,6 +26,8 @@ export interface AdminProjectSummary {
   goalAmount: number;
   startAt: string;
   endAt: string;
+  /** 정산 기록 상태 — 목록(`listProjectsForAdmin`)만 채운다. 'none' = 아직 기록 없음. */
+  payoutState?: 'none' | 'pending' | 'paid';
 }
 
 /**
@@ -108,7 +110,21 @@ export const listProjectsForAdmin = async (
     ? await query.where(eq(fundingProjects.reviewStatus, filter.reviewStatus))
     : await query;
 
-  return rows.map(({ project, creator }) => toSummary(project, creator));
+  // 정산 기록 상태 — 마감된 프로젝트가 정산 대기인지 한눈에 보이게 한다. 표 조회가 실패해도 목록은 그대로 연다.
+  const payoutByProject = new Map<string, 'pending' | 'paid'>();
+  try {
+    const payouts = await getDb()
+      .select({ projectId: fundingProjectPayouts.projectId, status: fundingProjectPayouts.status })
+      .from(fundingProjectPayouts);
+    for (const p of payouts) payoutByProject.set(p.projectId, p.status === 'paid' ? 'paid' : 'pending');
+  } catch (error: unknown) {
+    console.error('[admin-projects] 정산 기록 상태 조회 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
+  }
+
+  return rows.map(({ project, creator }) => ({
+    ...toSummary(project, creator),
+    payoutState: payoutByProject.get(project.id) ?? 'none',
+  }));
 };
 
 /** id로 단건 조회. 상태 무관 — 심사 화면은 draft·submitted 어느 쪽이든 열어 봐야 한다. */

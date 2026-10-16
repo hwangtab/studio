@@ -22,7 +22,7 @@ import type { ShowLocale } from './i18n';
 import { showTranslationFor } from './localize';
 import { loadShowOrderLocale } from './orderLocale';
 import { ticketQrPngBase64 } from './qr';
-import { refundRateForNotice } from './refundPolicy';
+import { refundTierLines } from './refundPolicy';
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr').replace(/\/+$/, '');
 const KST_OFFSET_SEC = 9 * 3600;
@@ -37,21 +37,13 @@ const manageUrl = (orderNo: string, token: string, locale: ShowLocale = 'ko'): s
   `${SITE_URL}/${locale}/shows/manage/${orderNo}?token=${token}`;
 
 /**
- * 환불 규정 요약 — 표를 베끼지 않고 refundRateForNotice를 날짜별로 불러 만든다.
- * 규정이 바뀌면 메일 문구도 따라간다(lib/shows/refundPolicy.ts가 정본).
+ * 환불 규정 요약 — 화면·FAQ와 같은 정본(refundTierLines)을 쓴다. 날짜를 흉내 내어 역산하던 방식은
+ * 달력 기준 계산에서 구간이 어긋난다.
  */
-export const buildRefundPolicyLines = (): string[] => {
-  const start = new Date('2030-01-31T00:00:00Z');
-  const at = (daysBefore: number) => new Date(start.getTime() - (daysBefore + 0.5) * 86400000);
-  const rate = (d: number) => refundRateForNotice(start, at(d));
-  return [
-    `공연 10일 전까지 ${rate(10)}%`,
-    `9~7일 전 ${rate(7)}%`,
-    `6~3일 전 ${rate(3)}%`,
-    `2~1일 전 ${rate(1)}%`,
-    `공연 당일 ${rate(0)}%, 공연 시작 후에는 환불할 수 없습니다`,
-  ];
-};
+export const buildRefundPolicyLines = (): string[] => [
+  ...refundTierLines().map((line) => line.replace(' — ', ' ')),
+  '공연 시작 후에는 환불할 수 없습니다',
+];
 
 export interface ShowMailTicket {
   code: string;
@@ -154,7 +146,7 @@ export const buildShowRefundEmail = (
 
 export const buildShowtimeCancelledEmail = (
   d: Pick<ShowMailData, 'orderNo' | 'manageToken' | 'buyerName' | 'showTitle' | 'startsAtSec' | 'totalAmount' | 'locale'>
-    & { refundCompleted: boolean; bankNotice?: 'refund_account_needed' | 'not_deposited' },
+    & { refundCompleted: boolean; bankNotice?: 'refund_account_needed' | 'not_deposited'; refundedAmount?: number },
 ): { subject: string; text: string; html: string } => {
   if (d.locale === 'en') return buildShowtimeCancelledEmailEn({ ...d, manageUrl: manageUrl(d.orderNo, d.manageToken, 'en') });
   const when = showDateTimeLabel(d.startsAtSec);
@@ -325,7 +317,7 @@ export const sendShowRefundEmail = async (
 /** 회차 취소 안내. 호출부: cancelShowtime 뒤, 대상 주문마다(환불 실패 주문은 refundCompleted:false). */
 export const sendShowtimeCancelledEmail = async (
   orderNo: string,
-  opts: { refundCompleted: boolean; bankNotice?: 'refund_account_needed' | 'not_deposited' },
+  opts: { refundCompleted: boolean; bankNotice?: 'refund_account_needed' | 'not_deposited'; refundedAmount?: number },
 ): Promise<{ sent: boolean }> => {
   const data = await loadShowOrder(orderNo).catch(() => null);
   if (!data?.recipient) return { sent: false };

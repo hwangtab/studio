@@ -428,6 +428,69 @@
       "when": 1792039631368,
       "tag": "0060_pay_links",
       "breakpoints": true
+    },
+    {
+      "idx": 61,
+      "version": "6",
+      "when": 1792047275204,
+      "tag": "0061_link_orders_shop_refund_kind",
+      "breakpoints": true
+    },
+    {
+      "idx": 62,
+      "version": "6",
+      "when": 1792050455708,
+      "tag": "0062_link_session",
+      "breakpoints": true
+    },
+    {
+      "idx": 63,
+      "version": "6",
+      "when": 1792052608326,
+      "tag": "0063_manual_revenues",
+      "breakpoints": true
+    },
+    {
+      "idx": 64,
+      "version": "6",
+      "when": 1792053444143,
+      "tag": "0064_link_gcal",
+      "breakpoints": true
+    },
+    {
+      "idx": 65,
+      "version": "6",
+      "when": 1792113407245,
+      "tag": "0065_manual_revenues_soft_delete",
+      "breakpoints": true
+    },
+    {
+      "idx": 66,
+      "version": "6",
+      "when": 1792122973782,
+      "tag": "0066_tenancy",
+      "breakpoints": true
+    },
+    {
+      "idx": 67,
+      "version": "6",
+      "when": 1792125214021,
+      "tag": "0067_partner_payouts",
+      "breakpoints": true
+    },
+    {
+      "idx": 68,
+      "version": "6",
+      "when": 1792126071907,
+      "tag": "0068_tenancy_room_price",
+      "breakpoints": true
+    },
+    {
+      "idx": 69,
+      "version": "6",
+      "when": 1792126072837,
+      "tag": "0069_tenancy_drop_spec_note",
+      "breakpoints": true
     }
   ]
 }

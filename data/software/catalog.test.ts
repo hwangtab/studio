@@ -2,6 +2,7 @@ import { SOFTWARE_FIXTURE_PRODUCTS } from '../../tests/helpers/softwareFixtures'
 import { SOFTWARE_PRODUCTS, type SoftwareProduct } from './catalog';
 import { SOFTWARE_LICENSE_PUBLIC_KEYS } from './publicKeys';
 import { SOFTWARE_RESERVED_SLUGS } from './policy';
+import { isSafeObjectKey } from '../../lib/funding/objectKey';
 
 const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const VERSION = /^\d+\.\d+\.\d+$/;
@@ -46,8 +47,8 @@ const problemsOf = (products: readonly SoftwareProduct[]): string[] => {
         out.push(`${p.slug}: releases는 최신이 맨 앞이어야 한다(${prev.version} 다음 ${r.version})`);
       for (const d of r.downloads) {
         if (!p.platforms.includes(d.platform)) out.push(`${p.slug} ${r.version}: 상품에 없는 OS(${d.platform})의 설치 파일`);
-        if (!/^https:\/\//.test(d.url)) out.push(`${p.slug} ${r.version}: 설치 파일 주소는 https`);
-        if (!d.url.includes(r.version)) out.push(`${p.slug} ${r.version}: 설치 파일 주소에 버전을 박을 것(같은 경로에 덮어쓰지 않는다)`);
+        if (!d.objectKey.startsWith(`software/${p.slug}/${r.version}/`) || !isSafeObjectKey(d.objectKey))
+          out.push(`${p.slug} ${r.version}: 설치 파일 키는 software/${p.slug}/${r.version}/<파일> (같은 키에 덮어쓰지 않는다)`);
         if (!/^[0-9a-f]{64}$/.test(d.sha256)) out.push(`${p.slug} ${r.version}: sha256은 소문자 hex 64자`);
         if (!Number.isInteger(d.sizeBytes) || d.sizeBytes <= 0) out.push(`${p.slug} ${r.version}: sizeBytes`);
       }
@@ -70,14 +71,14 @@ describe('소프트웨어 카탈로그', () => {
       ...SOFTWARE_FIXTURE_PRODUCTS[0],
       slug: 'manage',
       releases: [
-        { version: '1.0.0', date: '2026-10-20', notes: [], notesEn: [], downloads: [{ platform: 'macos', url: 'https://x/plugin.dmg', sha256: 'ABC', sizeBytes: 1 }] },
+        { version: '1.0.0', date: '2026-10-20', notes: [], notesEn: [], downloads: [{ platform: 'macos', objectKey: 'software/manage/plugin.dmg', sha256: 'ABC', sizeBytes: 1 }] },
         { version: '1.1.0', date: '2026-11-01', notes: [], notesEn: [], downloads: [] },
       ],
     };
     const problems = problemsOf([bad]).join('\n');
     expect(problems).toMatch('예약어');
     expect(problems).toMatch('최신이 맨 앞');
-    expect(problems).toMatch('버전을 박을 것');
+    expect(problems).toMatch('설치 파일 키는');
     expect(problems).toMatch('sha256');
   });
 

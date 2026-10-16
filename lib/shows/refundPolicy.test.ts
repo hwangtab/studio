@@ -33,6 +33,27 @@ describe('refundRateForNotice', () => {
     expect(refundRateForNotice(showtime, notice)).toBe(10);
   });
 
+  // 달력(KST) 기준 — 표·FAQ·메일이 약속한 '공연 N일 전'과 같은 셈법이어야 한다.
+  it('전날 저녁(20:00 KST) 취소는 23시간 전이어도 1일 전 — 70%', () => {
+    const notice = new Date('2026-10-09T11:00:00Z'); // 전날 20:00 KST
+    expect(refundRateForNotice(showtime, notice)).toBe(70);
+  });
+
+  it('당일 새벽(00:30 KST) 취소는 당일 — 10%', () => {
+    const notice = new Date('2026-10-09T15:30:00Z'); // 당일 00:30 KST
+    expect(refundRateForNotice(showtime, notice)).toBe(10);
+  });
+
+  it('10일 전 밤 23:00 KST 취소는 10일 전 — 100%', () => {
+    const notice = new Date('2026-09-30T14:00:00Z'); // 9/30 23:00 KST
+    expect(refundRateForNotice(showtime, notice)).toBe(100);
+  });
+
+  it('KST 자정을 넘기면 하루가 줄어든다 — 3일 전 23:59는 80%, 2일 전 00:00은 70%', () => {
+    expect(refundRateForNotice(showtime, new Date('2026-10-07T14:59:00Z'))).toBe(80); // 10/7 23:59 KST
+    expect(refundRateForNotice(showtime, new Date('2026-10-07T15:00:00Z'))).toBe(70); // 10/8 00:00 KST
+  });
+
   it('시작 이후는 0%(환불 불가)', () => {
     const notice = new Date('2026-10-10T11:00:00Z');
     expect(refundRateForNotice(showtime, notice)).toBe(0);

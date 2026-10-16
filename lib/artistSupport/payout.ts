@@ -172,6 +172,25 @@ export const markArtistPayoutPaid = async (id: string, memo: string | null, now:
   return result.length > 0;
 };
 
+export type DeletePayoutResult = 'ok' | 'not_found' | 'already_paid';
+
+/**
+ * 기록만 하고 아직 이체 전(pending)인 정산을 지운다 — 기록 뒤 뒤늦은 환불로 숫자가 달라졌을 때 현재 숫자로 다시 기록하려는 길.
+ * 조건부 DELETE 한 문장이라, 같은 순간 "지급 완료"가 먼저 들어가면 지우지 못한다(이체한 기록은 불변).
+ * 지워진 기록의 이력은 남기지 않는다(artist_payouts에 여유 컬럼이 없다) — 다시 기록하면 새 행이 된다.
+ */
+export const deleteArtistPayoutIfPending = async (id: string): Promise<DeletePayoutResult> => {
+  const db = getDb();
+  const deleted = await db
+    .delete(artistPayouts)
+    .where(and(eq(artistPayouts.id, id), eq(artistPayouts.status, 'pending')))
+    .returning({ id: artistPayouts.id });
+  if (deleted.length > 0) return 'ok';
+  // 못 지웠다 — 없는 행인지, 이미 지급 완료인지 구분해 돌려준다.
+  const row = await db.query.artistPayouts.findFirst({ where: (t, { eq: is }) => is(t.id, id), columns: { id: true } });
+  return row ? 'already_paid' : 'not_found';
+};
+
 export const listArtistPayouts = async (limit = 120): Promise<ArtistPayout[]> =>
   getDb().query.artistPayouts.findMany({ orderBy: (t, { desc }) => [desc(t.period), desc(t.createdAt)], limit });
 

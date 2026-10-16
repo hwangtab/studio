@@ -1,6 +1,8 @@
 import { sendEmail, type SendEmailError } from '../email/resend';
 import { adminUrl, buildEmailLayout, escapeHtml, type EmailLayoutRow } from '../email/layout';
+import { loadPaymentLinkOrderInfo } from '../payments/paymentLinkOrders';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
+import { isManualPlaceholderRecipient } from '../privacy/manualPlaceholder';
 import { isPurgedValue } from '../privacy/orderRetention';
 import type { Booking, Order, WorkOrder } from '../../db/schema';
 import { formatPriceAmount } from '../../data/pricing';
@@ -19,12 +21,15 @@ const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr')
  * 관리 링크는 없다(deposit 주문엔 예약 확인 페이지가 없다). 실패하면 사유, 성공이면 null.
  * (sendCustomerEmail은 아래에 const로 선언돼 있어, 호출 시점에는 이미 초기화돼 있다.)
  */
-export const sendDepositLinkPaidEmail = async (order: Order): Promise<string | null> =>
-  sendCustomerEmail(order, {
+export const sendDepositLinkPaidEmail = async (order: Order): Promise<string | null> => {
+  // 어느 링크였는지(0061) — 고객이 "무슨 결제"인지 알아보게 한다. 없으면 생략.
+  const itemName = (await loadPaymentLinkOrderInfo([order.orderNo])).get(order.orderNo)?.itemName;
+  return sendCustomerEmail(order, {
     to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
     subject: '[스튜디오 놀] 입금이 확인됐어요 — 예약금',
     text: [
       `${order.customerName}님, 예약금 입금이 확인됐어요.`,
+      ...(itemName ? [`상품: ${itemName}`] : []),
       `금액: ${formatPriceAmount(order.totalAmount)}원 (VAT 포함)`,
       `주문번호: ${order.orderNo}`,
       '',
@@ -36,12 +41,14 @@ export const sendDepositLinkPaidEmail = async (order: Order): Promise<string | n
       heading: '예약금 입금이 확인됐어요',
       paragraphs: [`${escapeHtml(order.customerName)}님, 예약금 입금이 확인됐어요.`],
       rows: [
+        ...(itemName ? [{ label: '상품', value: itemName }] : []),
         { label: '금액', value: `${formatPriceAmount(order.totalAmount)}원 (VAT 포함)`, emphasis: true },
         { label: '주문번호', value: order.orderNo },
       ],
       notices: ['환불 등 문의는 카카오톡 또는 전화(010-4255-7893)로 해 주세요.'],
     }),
   });
+};
 
 const kstTimeLabel = (d: Date): string => {
   const t = new Date(d.getTime() + 9 * 3600 * 1000);
@@ -87,6 +94,8 @@ const sendCustomerEmail = async (
   order: Order, params: Parameters<typeof sendEmail>[0],
 ): Promise<SendEmailError | null> => {
   if (isPurgedValue(order.customerEmail)) return null;
+  // 수기 예약에서 이메일을 비운 주문 — 배달될 수 없는 주소라 보내지 않는다(반송이 발신 평판을 깎는다).
+  if (isManualPlaceholderRecipient(order)) return null;
   const r = await sendEmail(params);
   if (r.ok) return null;
   // 지금은 모든 실패 경로가 errorCode를 싣지만, 없더라도 실패는 실패로 센다 —

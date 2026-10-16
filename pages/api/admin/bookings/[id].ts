@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 
 import { getDb } from '../../../../db/client';
 import { bookings, orders, workOrders } from '../../../../db/schema';
@@ -8,11 +8,19 @@ import { cancelBookingWithRefund } from '../../../../lib/booking/cancel';
 import { sendBookingCancelledEmails, sendBookingConfirmedEmails } from '../../../../lib/booking/email';
 import { calendarForService, createBookingEvent, deleteBookingEvent, isCalendarActive } from '../../../../lib/booking/gcal';
 import { kstDateString } from '../../../../lib/booking/kst';
+import { deleteUnpaidCancelledOrder } from '../../../../lib/booking/deleteUnpaid';
+import { rescheduleBooking } from '../../../../lib/booking/reschedule';
 import { cancelAwaitingBookingDeposit, confirmBookingBankDeposit, deliverBookingDepositGuide, retryWaitingEventDelete } from '../../../../lib/booking/bankDeposit';
 import { bankDepositStateOf, isBankDepositPayment } from '../../../../lib/payments/bankDeposit';
+import { removePaymentLinkCalendarEvent, resyncPaymentLinkCalendarEvent } from '../../../../lib/payments/linkCalendar';
+import { recordLinkBankRefund } from '../../../../lib/payments/linkRefund';
 import { markRefundAccountRefunded } from '../../../../lib/payments/refundAccount';
 
-const STATUS_TRANSITIONS = ['completed', 'no_show'] as const;
+/**
+ * `completed`·`no_show`는 확정 예약에서만, `confirmed`는 그 둘을 **되돌릴 때만**이다. 완료·노쇼가 되면 환불 경로
+ * (cancelSessionBooking)가 닫히는데, 되돌릴 방법이 없어 잘못 누르면 토스 콘솔에서 직접 환불해야 했다.
+ */
+const STATUS_TRANSITIONS = ['completed', 'no_show', 'confirmed'] as const;
 type StatusTransition = (typeof STATUS_TRANSITIONS)[number];
 
 const isStatusTransition = (value: unknown): value is StatusTransition =>
@@ -85,7 +93,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const result = await getDb()
         .update(bookings)
         .set({ status, updatedAt: new Date() })
-        .where(and(eq(bookings.id, booking.id), eq(bookings.status, 'confirmed')));
+        .where(
+          and(
+            eq(bookings.id, booking.id),
+            status === 'confirmed' ? inArray(bookings.status, ['completed', 'no_show']) : eq(bookings.status, 'confirmed'),
+          ),
+        );
 
       if ((result.rowsAffected ?? 0) === 0) {
         return res.status(409).json({
@@ -149,6 +162,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
+    // 예약금 결제 링크 주문의 계좌 직접 입금분 환불 기록 — 송금은 운영자가 손으로 마쳤고 여기선 장부만 남긴다(lib/payments/linkRefund.ts).
+    // 카드(토스) 결제 링크는 토스 콘솔에서 취소한다 — 기록만 남기면 돈은 그대로인데 장부만 바뀐다.
+    if (body.action === 'record_link_refund') {
+      const reasonText = typeof body.reason === 'string' ? body.reason.trim() : '';
+      if (reasonText === '') return res.status(400).json({ ok: false, message: '환불 사유를 입력해 주세요.' });
+      if (reasonText.length > 500) return res.status(400).json({ ok: false, message: '환불 사유가 너무 깁니다.' });
+      if (typeof body.amount !== 'number') return res.status(400).json({ ok: false, message: '환불 금액이 올바르지 않습니다.' });
+      try {
+        const r = await recordLinkBankRefund({ orderId: order.id, amount: body.amount, reason: reasonText, now: new Date() });
+        if (!r.ok) return res.status(r.code === 'not_found' ? 404 : r.code === 'invalid_amount' ? 400 : 409).json({ ok: false, code: r.code, message: r.message });
+        return res.status(200).json({ ok: true, refundAmount: r.refundAmount });
+      } catch (error: unknown) {
+        console.error('[API/admin/bookings/[id]] 링크 주문 환불 기록 실패:', { orderNo: order.orderNo, error });
+        return res.status(500).json({ ok: false, message: '환불 기록에 실패했습니다.' });
+      }
+    }
+
     if (body.action === 'resend-notification') {
       if (!booking) {
         return res.status(409).json({ ok: false, message: '재발송할 예약이 없습니다.' });
@@ -196,6 +226,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
 
+    if (body.action === 'delete_unpaid_record') {
+      try {
+        const result = await deleteUnpaidCancelledOrder(order.id);
+        if (!result.ok) return res.status(result.code === 'not_found' ? 404 : 409).json({ ok: false, message: result.message });
+        return res.status(200).json({ ok: true });
+      } catch (error: unknown) {
+        console.error('[API/admin/bookings/[id]] delete unpaid failed:', error);
+        return res.status(500).json({ ok: false, message: '삭제에 실패했습니다.' });
+      }
+    }
+
+    if (body.action === 'reschedule') {
+      if (isMixing || !booking) return res.status(409).json({ ok: false, message: '일정이 있는 세션 예약만 바꿀 수 있습니다.' });
+      try {
+        const result = await rescheduleBooking({ orderId: order.id, date: body.date, startHour: body.startHour });
+        if (!result.ok) {
+          return res.status(result.code === 'not_found' ? 404 : result.code === 'invalid_input' ? 400 : 409).json({ ok: false, message: result.message });
+        }
+        return res.status(200).json({ ok: true, startAt: result.startAt.toISOString(), warnings: result.warnings });
+      } catch (error: unknown) {
+        console.error('[API/admin/bookings/[id]] reschedule failed:', error);
+        return res.status(500).json({ ok: false, message: '일정 변경에 실패했습니다.' });
+      }
+    }
+
     if (body.action === 'retry-gcal') {
       // 믹싱은 슬롯·캘린더 개념이 없다 — retry 대상 자체가 없다.
       if (isMixing) {
@@ -205,6 +260,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(409).json({ ok: false, message: '재시도할 예약이 없습니다.' });
       }
       if (booking.status === 'cancelled') {
+        // 취소 때 [예약] 일정 삭제가 실패하면 일정이 남아 그 시간을 막고(웹 예약이 캘린더 바쁨을 읽는다) 오류 기록도 영구히 남는다
+        // (lib/booking/cancel.ts `delete:`). 이 경우만 "다시 지우기"를 허용한다 — 등록은 여전히 필요 없다.
+        if (booking.gcalEventId && booking.gcalError?.startsWith('delete: ')) {
+          try {
+            await deleteBookingEvent(booking.gcalEventId, calendarForService(booking.serviceType), booking.roomNumber);
+            await getDb().update(bookings).set({ gcalEventId: null, gcalError: null }).where(eq(bookings.id, booking.id));
+            return res.status(200).json({ ok: true, removed: true });
+          } catch (error: unknown) {
+            console.error('[API/admin/bookings/[id]] 취소된 예약의 캘린더 일정 삭제 재시도 실패:', { bookingId: booking.id, error });
+            return res.status(500).json({ ok: false, message: '캘린더 일정을 지우지 못했습니다. 잠시 뒤 다시 누르거나 구글 캘린더에서 직접 지워 주세요.' });
+          }
+        }
         return res
           .status(409)
           .json({ ok: false, message: '취소된 예약은 캘린더에 등록할 필요가 없습니다.' });
@@ -272,6 +339,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
         return res.status(500).json({ ok: false, message: '캘린더 재시도에 실패했습니다.' });
       }
+    }
+
+    // 결제 링크 이용 일정의 구글 캘린더 — 다시 등록 / 지우기(환불 등 손으로 처리한 뒤). lib/payments/linkCalendar.ts.
+    if (body.action === 'sync_link_calendar' || body.action === 'remove_link_calendar') {
+      if (order.type !== 'deposit') return res.status(409).json({ ok: false, message: '결제 링크 주문이 아닙니다.' });
+      if (body.action === 'remove_link_calendar') {
+        await removePaymentLinkCalendarEvent(order.orderNo);
+        return res.status(200).json({ ok: true });
+      }
+      const synced = await resyncPaymentLinkCalendarEvent(order.orderNo);
+      return synced.ok ? res.status(200).json({ ok: true }) : res.status(409).json({ ok: false, message: synced.message });
     }
 
     /**

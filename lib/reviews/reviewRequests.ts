@@ -6,6 +6,7 @@ import { getSiteConfig } from '../../data/siteConfig';
 import { buildEmailLayout, escapeHtml } from '../email/layout';
 import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL, OPERATOR_INBOX } from '../operatorContact';
+import { isManualPlaceholderRecipient } from '../privacy/manualPlaceholder';
 import { isPurgedValue } from '../privacy/orderRetention';
 import { getProduct } from '../booking/products';
 import { getMixingProduct } from '../booking/mixing-products';
@@ -213,7 +214,7 @@ export const runReviewRequests = async (now: Date): Promise<ReviewRunResult> => 
   const result: ReviewRunResult = { sent: 0, skipped: 0, failed: [] };
 
   for (const c of candidates) {
-    if (isPurgedValue(c.customerEmail)) {
+    if (isPurgedValue(c.customerEmail) || isManualPlaceholderRecipient(c)) {
       result.skipped += 1;
       continue;
     }

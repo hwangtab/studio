@@ -10,7 +10,8 @@
  *   `data/software/catalog.baseline.test.ts`가 지우기·금액 변경을 막는다.
  * - slug는 소문자·숫자·하이픈. `manage`·`success`·`fail`·`find`는 페이지 이름이라 쓸 수 없다.
  * - `releases`는 **최신이 맨 앞**이다(`latest` API·화면이 첫 항목을 최신으로 읽는다). 버전은 `1.2.3` 형식,
- *   설치 파일 주소는 버전이 박힌 새 경로로 올린다(같은 경로에 덮어쓰지 않는다 — sha256이 어긋난다).
+ *   설치 파일은 R2 `software/<slug>/<version>/`에 올린다(`scripts/software/publish-installer.mjs` — 같은 키 덮어쓰기를 거부한다,
+ *   sha256이 어긋나므로). 화면은 `/api/software/download/<slug>/<version>/<platform>`을 걸고, 그 경로가 10분짜리 서명 주소로 보낸다.
  * - 체험판과 정식판은 같은 설치 파일이다. 라이선스 파일이 들어오면 정식으로 바뀐다.
  *
  * ## 상품 예시 (복사해서 SOFTWARE_PRODUCTS에 넣는다)
@@ -34,7 +35,8 @@
  *   prices: [{ id: 'example-plugin-v1', krw: 59000, usdCents: 4900 }],
  *   releases: [{
  *     version: '1.0.0', date: '2026-11-01', notes: ['첫 공개'], notesEn: ['First release'],
- *     downloads: [{ platform: 'macos', url: 'https://…/example-plugin-1.0.0.dmg', sha256: '<64자 hex>', sizeBytes: 12345678 }],
+ *     // downloads 줄은 `node --env-file=.env.local scripts/software/publish-installer.mjs …`가 출력한 것을 그대로 붙인다.
+ *     downloads: [{ platform: 'macos', objectKey: 'software/example-plugin/1.0.0/example-plugin-1.0.0.dmg', sha256: '<64자 hex>', sizeBytes: 12345678 }],
  *   }],
  *   published: true,
  * }
@@ -56,7 +58,8 @@ export interface SoftwarePrice {
 
 export interface SoftwareDownload {
   platform: SoftwarePlatform;
-  url: string;
+  /** R2 객체 키 — `software/<slug>/<version>/<파일 이름>`. 버킷은 비공개라 화면은 다운로드 API를 거친다. */
+  objectKey: string;
   /** 설치 파일의 SHA-256(소문자 hex 64자). */
   sha256: string;
   sizeBytes: number;

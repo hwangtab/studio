@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { loadShopLlmsSection } from '../../lib/shop/llms';
+import { loadSoftwareLlmsSection } from '../../lib/software/llms';
 import { truncateToByteLimit } from '../../lib/llms/truncate';
 import { getAllStories, getStoryAvailableLocales } from '../../lib/stories';
 import { getSiteConfig } from '../../data/siteConfig';
@@ -78,6 +79,10 @@ ${renderPriceFacts(2)}
   // 상점(음반·굿즈) — ko 전용 상점이라 ko·전체 판에만. SHOP_SALES_OPEN일 때만 붙는다.
   if (!requestedLocale || requestedLocale === 'ko') {
     body += await loadShopLlmsSection(siteUrl);
+  }
+  // 소프트웨어 — 화면이 ko·en 두 벌이라 ko·en·전체 판에. SOFTWARE_SALES_OPEN일 때만.
+  if (!requestedLocale || requestedLocale === 'ko' || requestedLocale === 'en') {
+    body += loadSoftwareLlmsSection(siteUrl);
   }
 
   // 포트폴리오 상세 — 프로듀싱 크레딧은 "황경하/스튜디오 놀 작업물" 류 AI 쿼리의

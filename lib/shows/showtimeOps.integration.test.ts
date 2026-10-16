@@ -26,6 +26,47 @@ async function seedPaidOrder(db: ShowsTestDb, quantity = 1) {
   return { showtimeId, orderNo: created.orderNo, toss };
 }
 
+describe('cancelShowtime — 마지막 회차가 취소되면 공연도 취소', () => {
+  async function seedShowWithShowtimes(db: ShowsTestDb, status: 'draft' | 'published', extra: Array<{ id: string; status: 'scheduled' | 'cancelled' | 'ended' }>) {
+    await db.insert(shows).values({ id: 'show-1', slug: 's1', title: 't', presenterName: 'p', performers: 'a', ageRating: '전체', runningMinutes: 60, venueName: 'v', venueAddress: 'addr', description: 'd', status });
+    const startsAt = Math.floor(Date.now() / 1000) + 86400 * 15;
+    await db.insert(showtimes).values([{ id: 'st-main', showId: 'show-1', startsAt, salesCloseAt: startsAt - 86400 }, ...extra.map((e) => ({ id: e.id, showId: 'show-1', startsAt, salesCloseAt: startsAt - 86400, status: e.status }))]);
+  }
+  const showStatus = async (db: ShowsTestDb) => (await db.query.shows.findFirst({ where: (s, { eq }) => eq(s.id, 'show-1') }))?.status;
+
+  it('공개 공연의 마지막 예정 회차를 취소하면 공연이 cancelled가 된다', async () => {
+    const { db } = await createTestDb();
+    mockDb = db;
+    await seedShowWithShowtimes(db, 'published', [{ id: 'st-old', status: 'cancelled' }]);
+    await cancelShowtime('st-main', new Date(), createFakeToss());
+    expect(await showStatus(db)).toBe('cancelled');
+  });
+
+  it('다른 회차가 예정이거나 이미 치른(ended) 회차면 공연은 그대로 공개다', async () => {
+    const { db } = await createTestDb();
+    mockDb = db;
+    await seedShowWithShowtimes(db, 'published', [{ id: 'st-2', status: 'scheduled' }]);
+    await cancelShowtime('st-main', new Date(), createFakeToss());
+    expect(await showStatus(db)).toBe('published');
+    await cancelShowtime('st-2', new Date(), createFakeToss());
+    expect(await showStatus(db)).toBe('cancelled');
+
+    const second = await createTestDb();
+    mockDb = second.db;
+    await seedShowWithShowtimes(second.db, 'published', [{ id: 'st-ended', status: 'ended' }]);
+    await cancelShowtime('st-main', new Date(), createFakeToss());
+    expect(await showStatus(second.db)).toBe('published');
+  });
+
+  it('초안 공연은 회차를 모두 취소해도 초안으로 남는다(취소 공연으로 공개되지 않게)', async () => {
+    const { db } = await createTestDb();
+    mockDb = db;
+    await seedShowWithShowtimes(db, 'draft', []);
+    await cancelShowtime('st-main', new Date(), createFakeToss());
+    expect(await showStatus(db)).toBe('draft');
+  });
+});
+
 describe('cancelShowtime', () => {
   it('회차를 취소하면 모든 유효 주문이 전액 환불되고 회차가 cancelled가 된다', async () => {
     const { db } = await createTestDb();
@@ -134,5 +175,83 @@ describe('changeShowtime', () => {
     const after = await db.query.showtimes.findFirst({ where: (s, { eq }) => eq(s.id, showtimeId) });
     expect(after?.previousStartsAt).toBe(before!.startsAt);
     expect(after?.startsAt).toBe(Math.floor(newStartsAt.getTime() / 1000));
+  });
+});
+
+describe('cancelShowtime — 중간 실패와 이어서 처리', () => {
+  async function seedTwoPaidOrders(db: ShowsTestDb) {
+    const showId = 'show-1';
+    await db.insert(shows).values({ id: showId, slug: 's1', title: 't', presenterName: 'p', performers: 'a', ageRating: '전체', runningMinutes: 60, venueName: 'v', venueAddress: 'addr', description: 'd', status: 'published' });
+    await db.insert(showZones).values({ id: 'zone-1', showId, code: 'A', label: 'A', capacity: 10 });
+    const showtimeId = 'showtime-1';
+    const startsAt = Math.floor(Date.now() / 1000) + 86400 * 15;
+    await db.insert(showtimes).values({ id: showtimeId, showId, startsAt, salesCloseAt: startsAt - 86400 });
+    await db.insert(showTicketTypes).values({ id: 'type-1', showId, zoneId: 'zone-1', name: '일반', price: 10000 });
+    const toss = createFakeToss();
+    const orderNos: string[] = [];
+    for (const pk of ['pk-a', 'pk-b', 'pk-c']) {
+      const created = await createShowOrder({ showtimeId, ticketTypeId: 'type-1', quantity: 1, buyerName: 'a', buyerContact: '010' }, new Date());
+      if (!created.ok) throw new Error('setup failed');
+      await confirmShowOrder({ orderNo: created.orderNo, paymentKey: pk, amount: 10000 }, { trustedByWebhook: false }, toss);
+      orderNos.push(created.orderNo);
+    }
+    return { showtimeId, orderNos, toss };
+  }
+
+  it('한 주문의 batch가 던져도 나머지 주문은 환불되고, 다시 돌리면 그 주문이 토스 재생으로 기록된다(refunds 1행)', async () => {
+    const { db } = await createTestDb();
+    mockDb = db;
+    const { showtimeId, orderNos, toss } = await seedTwoPaidOrders(db);
+
+    // 두 번째 주문의 정산 batch(INSERT refunds 포함)만 한 번 실패시킨다 — 토스 취소는 이미 성공한 뒤다.
+    // 정산 batch는 주문마다 한 번 돈다(입금 대기 주문이 없으므로 다른 batch 호출은 없다) — 두 번째 호출만 실패시킨다.
+    const realBatch = db.batch.bind(db);
+    let calls = 0;
+    const spy = jest.spyOn(db, 'batch').mockImplementation(async (statements: unknown) => {
+      calls += 1;
+      if (calls === 2) throw new Error('simulated db failure');
+      return realBatch(statements as never);
+    });
+
+    const first = await cancelShowtime(showtimeId, new Date(), toss);
+    spy.mockRestore();
+    expect(first.refundedOrderNos).toHaveLength(2);
+    expect(first.failedOrders).toHaveLength(1);
+    const failedOrderNo = first.failedOrders[0];
+    const failedPk = ['pk-a', 'pk-b', 'pk-c'][orderNos.indexOf(failedOrderNo)];
+    expect(first.perOrder[first.refundedOrderNos[0]]).toMatchObject({ refunded: 10000, final: 'refunded' });
+    // 회차는 취소됐고 실패한 주문은 토스에서만 취소된 상태다.
+    expect((await db.query.showtimes.findFirst({ where: (s, { eq }) => eq(s.id, showtimeId) }))?.status).toBe('cancelled');
+    expect((await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, failedOrderNo) }))?.status).toBe('paid');
+    expect(toss._payments.get(failedPk)?.cancels).toHaveLength(1);
+
+    const second = await cancelShowtime(showtimeId, new Date(), toss);
+    expect(second.refundedOrderNos).toEqual([failedOrderNo]);
+    expect(second.failedOrders).toEqual([]);
+    expect((await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, failedOrderNo) }))?.status).toBe('refunded');
+    // 토스는 같은 멱등키를 재생했으므로 그 결제의 취소는 여전히 한 번뿐이고 refunds도 주문당 한 줄이다.
+    expect(toss._payments.get(failedPk)?.cancels).toHaveLength(1);
+    const refundRows = await db.query.refunds.findMany({ where: (r, { eq }) => eq(r.status, 'done') });
+    expect(refundRows).toHaveLength(3);
+  });
+
+  it('주문별 결과에 실제 환불액이 실린다 — 체크인 티켓이 섞이면 부분, 전부 체크인이면 0·checked_in_only', async () => {
+    const { db } = await createTestDb();
+    mockDb = db;
+    const { showtimeId, orderNo, toss } = await seedPaidOrder(db, 2);
+    const tickets = await db.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, orderNo) });
+    await db.run(sql`UPDATE show_tickets SET status = 'issued', checked_in_at = unixepoch() WHERE id = ${tickets[0].id}`);
+    await db.run(sql`UPDATE show_tickets SET status = 'issued' WHERE id = ${tickets[1].id}`);
+
+    const r = await cancelShowtime(showtimeId, new Date(), toss);
+    expect(r.perOrder[orderNo]).toMatchObject({ refunded: 10000, checkedInValue: 10000, final: 'partially_refunded', skipped: null });
+
+    const all = await createTestDb();
+    mockDb = all.db;
+    const paid = await seedPaidOrder(all.db, 1);
+    await all.db.run(sql`UPDATE show_tickets SET status = 'issued', checked_in_at = unixepoch() WHERE order_no = ${paid.orderNo}`);
+    const r2 = await cancelShowtime(paid.showtimeId, new Date(), paid.toss);
+    expect(r2.perOrder[paid.orderNo]).toMatchObject({ refunded: 0, skipped: 'checked_in_only', final: 'unchanged' });
+    expect(r2.refundedOrderNos).toEqual([]);
   });
 });

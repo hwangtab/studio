@@ -20,7 +20,8 @@ const readMessage = async (response: Response, fallback: string): Promise<string
 /** id는 예약(주문) id — /admin/bookings/[id]와 동일한 값. */
 export const setBookingStatus = async (
   id: string,
-  status: 'completed' | 'no_show',
+  /** 'confirmed'는 완료·노쇼를 되돌릴 때만이다. */
+  status: 'completed' | 'no_show' | 'confirmed',
 ): Promise<BookingActionResult> => {
   try {
     const response = await fetch(`/api/admin/bookings/${id}`, {
@@ -53,6 +54,29 @@ export const refundBooking = async (
     const result = await response.json().catch(() => ({}));
     if (!response.ok || !result?.ok) {
       return { ok: false, message: result?.message || '환불 처리에 실패했습니다.' };
+    }
+    return { ok: true, refundAmount: result.refundAmount };
+  } catch {
+    return { ok: false, message: '네트워크 오류가 발생했습니다.' };
+  }
+};
+
+/** 예약금 결제 링크 주문의 계좌 입금분 환불 기록 — 송금은 이미 마친 뒤다(lib/payments/linkRefund.ts). */
+export const recordLinkRefund = async (
+  id: string,
+  amount: number,
+  reason: string,
+): Promise<BookingActionResult & { refundAmount?: number }> => {
+  try {
+    const response = await fetch(`/api/admin/bookings/${id}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({ action: 'record_link_refund', amount, reason }),
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || !result?.ok) {
+      return { ok: false, message: result?.message || '환불 기록에 실패했습니다.' };
     }
     return { ok: true, refundAmount: result.refundAmount };
   } catch {
@@ -108,7 +132,9 @@ export interface CreateBlockPayload {
   roomNumber?: string;
 }
 
-export const createBlock = async (payload: CreateBlockPayload): Promise<BookingActionResult> => {
+export const createBlock = async (
+  payload: CreateBlockPayload & { force?: boolean },
+): Promise<BookingActionResult & { conflict?: boolean }> => {
   try {
     const response = await fetch('/api/admin/blocks', {
       method: 'POST',
@@ -117,7 +143,12 @@ export const createBlock = async (payload: CreateBlockPayload): Promise<BookingA
       body: JSON.stringify(payload),
     });
     if (!response.ok) {
-      return { ok: false, message: await readMessage(response, '블록 등록에 실패했습니다.') };
+      const body = await response.clone().json().catch(() => null);
+      return {
+        ok: false,
+        message: await readMessage(response, '블록 등록에 실패했습니다.'),
+        ...(response.status === 409 && body?.code === 'conflicts' ? { conflict: true } : {}),
+      };
     }
     return { ok: true };
   } catch {

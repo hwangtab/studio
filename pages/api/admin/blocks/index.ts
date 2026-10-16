@@ -5,6 +5,7 @@ import { availabilityBlocks } from '../../../../db/schema';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { serializeBlockForAdmin } from '../../../../lib/booking/admin-serialize';
 import { kstDateTime } from '../../../../lib/booking/kst';
+import { blockConflictsBody, findBlockConflicts } from '../../../../lib/booking/blockConflicts';
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const MEMO_MAX_LENGTH = 200;
@@ -35,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
     }
 
-    const { date, startHour, endHour, memo, roomNumber } = req.body as Record<string, unknown>;
+    const { date, startHour, endHour, memo, roomNumber, force } = req.body as Record<string, unknown>;
     // 빈 값·비문자는 녹음실(NULL). 'R02' 같은 방 번호면 그 방만 막는다(db/schema.ts 주석).
     const roomText = typeof roomNumber === 'string' && /^[A-Z0-9-]{1,8}$/i.test(roomNumber.trim())
       ? roomNumber.trim().toUpperCase() : null;
@@ -61,6 +62,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const memoText = typeof memo === 'string' ? memo.trim().slice(0, MEMO_MAX_LENGTH) : undefined;
 
     try {
+      /**
+       * **이미 잡힌 예약 위에 블록을 걸면 아무 말 없이 성공했다** — 블록은 새 예약만 막지 기존 예약은 그대로라, 고객은 예약했는데
+       * 그 시간이 "휴무"가 된다. 그 자원(녹음실 = room_number NULL, 연습실 = 그 방)을 점유하는 예약이 겹치면 목록을 돌려주고
+       * 멈춘다. 그래도 걸겠다면(`force: true`) 통과한다 — 예약 취소·이동은 운영자가 따로 한다.
+       */
+      if (force !== true) {
+        const conflicts = await findBlockConflicts({ startAt: startAtDate, endAt: endAtDate, roomNumber: roomText });
+        if (conflicts.length > 0) return res.status(409).json(blockConflictsBody(conflicts));
+      }
+
       const [block] = await getDb()
         .insert(availabilityBlocks)
         .values({ startAt: startAtDate, endAt: endAtDate, memo: memoText || null, roomNumber: roomText })

@@ -111,6 +111,68 @@ export const fetchBusyRanges = async (
   return busy.map((b) => ({ start: new Date(b.start), end: new Date(b.end) }));
 };
 
+/** 캘린더 일정 한 건(읽기용) — 사이트가 만들지 않은 일정도 포함한다. 종일 일정은 `allDay`(시각 없음). */
+export interface CalendarEventInfo {
+  id: string;
+  summary: string;
+  description: string;
+  start: Date;
+  end: Date;
+  allDay: boolean;
+  /** "바쁨 아님"으로 표시된 일정 — freeBusy는 이런 일정을 바쁨으로 읽지 않는다(월 입주 일정이 쓴다). */
+  transparent: boolean;
+}
+
+interface RawCalendarEvent {
+  id?: string; status?: string; summary?: string; description?: string; transparency?: string;
+  start?: { dateTime?: string; date?: string }; end?: { dateTime?: string; date?: string };
+}
+
+const toEventInfo = (e: RawCalendarEvent): CalendarEventInfo | null => {
+  if (!e.id || e.status === 'cancelled') return null;
+  const allDay = !e.start?.dateTime;
+  const start = new Date(e.start?.dateTime ?? (e.start?.date ? `${e.start.date}T00:00:00+09:00` : ''));
+  const end = new Date(e.end?.dateTime ?? (e.end?.date ? `${e.end.date}T00:00:00+09:00` : ''));
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return null;
+  return { id: e.id, summary: e.summary ?? '', description: e.description ?? '', start, end, allDay, transparent: e.transparency === 'transparent' };
+};
+
+/**
+ * [timeMin, timeMax) 안의 일정 목록(시작순, 반복 일정은 펼쳐서, 취소된 일정 제외). **읽기 전용** — 사이트가 만든 일정과 손으로 넣은 일정을 다 돌려준다.
+ * 실패는 throw. 최대 250건(예약 캘린더라 충분하다).
+ */
+export const listCalendarEvents = async (
+  timeMin: Date, timeMax: Date, calendar: BookingCalendar, room?: string | null,
+): Promise<CalendarEventInfo[]> => {
+  const id = calendarId(calendar, room);
+  const token = await getAccessToken();
+  const params = new URLSearchParams({
+    timeMin: timeMin.toISOString(), timeMax: timeMax.toISOString(), singleEvents: 'true', orderBy: 'startTime', maxResults: '250',
+  });
+  const res = await fetch(`${CAL_API}/calendars/${encodeURIComponent(id)}/events?${params}`, {
+    headers: { Authorization: `Bearer ${token}` },
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+  });
+  if (!res.ok) throw new Error(`캘린더 일정 목록 조회 실패: ${res.status}`);
+  const json = (await res.json()) as { items?: RawCalendarEvent[] };
+  return (json.items ?? []).map(toEventInfo).filter((e): e is CalendarEventInfo => e !== null);
+};
+
+/** 일정 한 건. 없거나(404·410) 취소된 일정이면 null. 그 밖의 실패는 throw. */
+export const getCalendarEvent = async (
+  eventId: string, calendar: BookingCalendar, room?: string | null,
+): Promise<CalendarEventInfo | null> => {
+  const id = calendarId(calendar, room);
+  const token = await getAccessToken();
+  const res = await fetch(`${CAL_API}/calendars/${encodeURIComponent(id)}/events/${encodeURIComponent(eventId)}`, {
+    headers: { Authorization: `Bearer ${token}` },
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+  });
+  if (res.status === 404 || res.status === 410) return null;
+  if (!res.ok) throw new Error(`캘린더 일정 조회 실패: ${res.status}`);
+  return toEventInfo((await res.json()) as RawCalendarEvent);
+};
+
 export const createBookingEvent = async (input: {
   summary: string; description: string; start: Date; end: Date; calendar: BookingCalendar; room?: string | null;
 }): Promise<string> => {
@@ -186,4 +248,81 @@ export const renameBookingEvent = async (
     if (res.status !== 404) throw new Error(`캘린더 이벤트 제목 변경 실패: ${res.status}`);
   }
   throw new Error('캘린더 이벤트 제목 변경 실패: 이벤트를 찾지 못했습니다(404)');
+};
+
+/**
+ * 이벤트의 시작·종료만 바꾼다 — 관리자 "일정 변경"(lib/booking/reschedule.ts). 삭제 후 재생성이 아니라 PATCH라
+ * 중간에 실패해도 옛 일정이 남아 있다. 후보 캘린더를 차례로 시도한다(rename과 같은 이유). 실패는 throw.
+ */
+export const rescheduleBookingEvent = async (
+  eventId: string, calendar: BookingCalendar, room: string | null | undefined, start: Date, end: Date,
+): Promise<void> => {
+  const ids = candidateCalendarIds(calendar, room);
+  if (ids.length === 0) calendarId(calendar, room); // throw — env 없음
+  const token = await getAccessToken();
+  for (const id of ids) {
+    const res = await fetch(
+      `${CAL_API}/calendars/${encodeURIComponent(id)}/events/${encodeURIComponent(eventId)}`,
+      {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ start: { dateTime: start.toISOString() }, end: { dateTime: end.toISOString() } }),
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      },
+    );
+    if (res.ok) return;
+    if (res.status !== 404) throw new Error(`캘린더 이벤트 시간 변경 실패: ${res.status}`);
+  }
+  throw new Error('캘린더 이벤트 시간 변경 실패: 이벤트를 찾지 못했습니다(404)');
+};
+
+/**
+ * 캘린더 id를 **직접 받는** 일정 쓰기 — 예약 캘린더(env로 해석되는 자원 캘린더)가 아닌 별도 캘린더(월 입주 관리,
+ * lib/tenancy/calendar.ts)가 쓴다. 예약 캘린더와 달리 이 일정들은 웹 예약 가능 시간에 영향을 주지 않는다.
+ */
+export interface RawEventBody {
+  summary: string;
+  description?: string;
+  start: { date?: string; dateTime?: string };
+  end: { date?: string; dateTime?: string };
+  transparency?: 'transparent' | 'opaque';
+}
+
+export const createEventOnCalendar = async (calendarIdValue: string, body: RawEventBody): Promise<string> => {
+  const token = await getAccessToken();
+  const res = await fetch(`${CAL_API}/calendars/${encodeURIComponent(calendarIdValue)}/events`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+  });
+  if (!res.ok) throw new Error(`캘린더 일정 생성 실패: ${res.status}`);
+  return (await res.json()).id as string;
+};
+
+/** 일정을 고친다. 일정이 없으면(404·410) false — 호출부가 새로 만든다. 그 밖의 실패는 throw. */
+export const patchEventOnCalendar = async (calendarIdValue: string, eventId: string, body: RawEventBody): Promise<boolean> => {
+  const token = await getAccessToken();
+  const res = await fetch(`${CAL_API}/calendars/${encodeURIComponent(calendarIdValue)}/events/${encodeURIComponent(eventId)}`, {
+    method: 'PATCH',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+  });
+  if (res.status === 404 || res.status === 410) return false;
+  if (!res.ok) throw new Error(`캘린더 일정 수정 실패: ${res.status}`);
+  const json = (await res.json()) as { status?: string };
+  return json.status !== 'cancelled';
+};
+
+/** 일정을 지운다. 이미 없으면 성공으로 본다. */
+export const deleteEventOnCalendar = async (calendarIdValue: string, eventId: string): Promise<void> => {
+  const token = await getAccessToken();
+  const res = await fetch(`${CAL_API}/calendars/${encodeURIComponent(calendarIdValue)}/events/${encodeURIComponent(eventId)}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+  });
+  if (res.ok || res.status === 404 || res.status === 410) return;
+  throw new Error(`캘린더 일정 삭제 실패: ${res.status}`);
 };

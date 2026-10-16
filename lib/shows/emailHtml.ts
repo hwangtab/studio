@@ -102,12 +102,18 @@ export const showRefundViaSentence = (refundVia: ShowRefundVia | undefined): str
  */
 export const showtimeCancelledRefundSentence = (d: {
   totalAmount: number; refundCompleted: boolean; bankNotice?: 'refund_account_needed' | 'not_deposited';
+  /** 실제로 돌려준 금액. 없으면(옛 호출) 전액으로 간주. 0이면 입장 처리된 티켓만 남아 환불 대상이 없던 주문. */
+  refundedAmount?: number;
 }): string => {
   if (d.bankNotice === 'not_deposited') return '입금 전인 신청은 함께 취소됐어요. 입금하지 않으셔도 돼요. 이미 보내셨다면 이 메일에 회신해 주세요 — 확인해 돌려드려요.';
   if (d.bankNotice === 'refund_account_needed') return `계좌로 입금하신 ${formatPriceAmount(d.totalAmount)}원은 전액 돌려드려요. 아래 "주문 내역 보기"에서 환불받을 계좌를 적어 주시면 3영업일 이내에 보내 드려요.`;
-  return d.refundCompleted
-    ? `결제하신 ${formatPriceAmount(d.totalAmount)}원은 전액 환불 처리됐어요. 카드사에 따라 취소 반영까지 영업일 기준 며칠이 걸릴 수 있어요.`
-    : '환불은 접수되어 처리 중이에요. 완료되면 다시 안내드려요.';
+  if (!d.refundCompleted) return '환불은 접수되어 처리 중이에요. 완료되면 다시 안내드려요.';
+  const refunded = d.refundedAmount ?? d.totalAmount;
+  // 체크인된 티켓은 환불 대상이 아니다(고객이 동의한 환불 규정 각주) — 전액이라고 쓰면 거짓이 된다.
+  if (refunded <= 0) return '이 주문에는 환불 대상 금액이 없어요 — 입장 처리된 티켓은 환불 대상이 아니에요. 궁금한 점은 이 메일에 회신해 주세요.';
+  if (refunded < d.totalAmount)
+    return `결제하신 ${formatPriceAmount(d.totalAmount)}원 중 ${formatPriceAmount(refunded)}원을 환불 처리했어요(입장 처리된 티켓 제외). 카드사에 따라 취소 반영까지 영업일 기준 며칠이 걸릴 수 있어요.`;
+  return `결제하신 ${formatPriceAmount(d.totalAmount)}원은 전액 환불 처리됐어요. 카드사에 따라 취소 반영까지 영업일 기준 며칠이 걸릴 수 있어요.`;
 };
 
 export const buildShowRefundEmailHtml = (d: {
@@ -137,7 +143,7 @@ export const buildShowRefundEmailHtml = (d: {
 
 export const buildShowtimeCancelledEmailHtml = (d: {
   buyerName: string; showTitle: string; when: string; orderNo: string; totalAmount: number; refundCompleted: boolean; manageUrl: string; contact: string;
-  bankNotice?: 'refund_account_needed' | 'not_deposited';
+  bankNotice?: 'refund_account_needed' | 'not_deposited'; refundedAmount?: number;
 }): string => {
   return buildEmailLayout({
     preheader: `${d.showTitle} ${d.when} 회차가 취소됐어요.`,

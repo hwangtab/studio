@@ -4,21 +4,26 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import {
+  recordLinkRefund,
   refundBooking,
   resendBookingNotification,
   setBookingStatus,
   setWorkOrderStage,
   type BookingActionResult,
 } from '../../../components/admin/bookingActions';
+import { bookingLineOf } from '../../../lib/booking/line';
 import { AdminShell } from '../../../components/admin/AdminShell';
 import { Button } from '../../../components/ui/Button';
-import { Field, TextArea, TextInput } from '../../../components/ui/Field';
+import { Field, Select, TextArea, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { getDb } from '../../../db/client';
+import { loadPaymentLinkOrderInfo } from '../../../lib/payments/paymentLinkOrders';
+import { logAdminView } from '../../../lib/privacy/adminView';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatPriceAmount } from '../../../data/pricing';
 import {
   canAdminRefund,
+  LIVE_ORDER_STATUSES_FOR_REFUND,
   serializeBookingDetailForAdmin,
   type AdminBookingDetail,
 } from '../../../lib/booking/admin-serialize';
@@ -64,11 +69,15 @@ export const getServerSideProps: GetServerSideProps<AdminBookingDetailPageProps>
       return null;
     });
 
+  // 열람 기록 — 고객 이름·연락처·이메일이 props로 실리는 화면이다(처리방침 19항). 없는 주문을 열려 한 것도 남기고, 값은 적지 않는다.
+  await logAdminView(context, auth.actor, 'booking_view', id, order ? 'success' : 'not_found');
+
   if (!order) {
     return { notFound: true };
   }
 
-  const booking = serializeBookingDetailForAdmin(order);
+  const linkInfo = order.type === 'deposit' ? (await loadPaymentLinkOrderInfo([order.orderNo])).get(order.orderNo) : undefined;
+  const booking = serializeBookingDetailForAdmin(order, linkInfo);
 
   // 계좌 입금 건만 — 이름이 같은 다른 신청(이중 확인 방지)과 환불 계좌 요약(복호화 없음).
   const sameNameDeposits =
@@ -179,7 +188,7 @@ export default function AdminBookingDetailPage({
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
 
-  const [refundAmount, setRefundAmount] = useState<number>(booking.totalAmount);
+  const [refundAmount, setRefundAmount] = useState<number>(Math.min(booking.totalAmount, booking.refundableAmount));
   const [refundReason, setRefundReason] = useState('');
   const [refundError, setRefundError] = useState<string | null>(null);
 
@@ -204,10 +213,16 @@ export default function AdminBookingDetailPage({
       '이 예약을 완료 처리할까요?',
     );
 
+  const handleRevertStatus = () =>
+    run(
+      () => setBookingStatus(booking.id, 'confirmed'),
+      '완료·노쇼 처리를 취소하고 확정 상태로 되돌릴까요? 되돌린 뒤에는 환불·취소를 진행할 수 있습니다.',
+    );
+
   const handleNoShow = () =>
     run(
       () => setBookingStatus(booking.id, 'no_show'),
-      '이 예약을 노쇼로 처리할까요? 환불이 필요하면 별도로 임의 환불을 진행해 주세요.',
+      '이 예약을 노쇼로 처리할까요? 처리하면 환불 화면이 닫힙니다. 환불이 필요하면 먼저 취소하거나, 처리 뒤 "확정으로 되돌리기"로 되돌린 다음 환불해 주세요.',
     );
 
   const handleResend = () => run(() => resendBookingNotification(booking.id));
@@ -297,6 +312,17 @@ export default function AdminBookingDetailPage({
       '입금 안내 재발송에 실패했습니다.',
       `${booking.customerEmail}로 계좌 입금 안내 메일을 다시 보낼까요?`,
     );
+  /** 결제 링크 이용 일정의 구글 캘린더 — 다시 등록(없으면 새로, 있으면 지우고 새로) / 지우기. */
+  const runLinkCalendar = async (action: 'sync_link_calendar' | 'remove_link_calendar', confirmText: string) => {
+    if (!window.confirm(confirmText)) return;
+    setBusy(true);
+    setNotice(null);
+    const result = await postDepositAction(action, '캘린더 처리에 실패했습니다.');
+    setBusy(false);
+    if (result.message) setNotice(result.message);
+    await router.replace(router.asPath, undefined, { scroll: false });
+  };
+
   const handleMarkRefundSent = () =>
     runDeposit('mark_refund_sent', '송금 완료 기록에 실패했습니다.', '환불 계좌로 송금을 마쳤나요?');
 
@@ -331,7 +357,7 @@ export default function AdminBookingDetailPage({
     //
     // 하한은 경로마다 다르다. 일반 취소의 0원은 유효한 액션이지만(0% 티어 당일 취소와 동형)
     // 이미 취소된 건의 잔액 환불에서 0원은 아무 일도 하지 않는다 — 서버도 거절한다.
-    const minAmount = isRemainderRefund ? 1 : 0;
+    const minAmount = isRemainderRefund || isDeposit ? 1 : 0;
     if (!Number.isInteger(refundAmount) || refundAmount < minAmount || refundAmount > booking.refundableAmount) {
       setRefundError(`환불 금액은 ${minAmount} ~ ${formatPriceAmount(booking.refundableAmount)}원 사이의 정수여야 합니다.`);
       return;
@@ -342,7 +368,9 @@ export default function AdminBookingDetailPage({
     }
     if (
       !window.confirm(
-        isBankPaid
+        booking.orderType === 'deposit'
+          ? `계좌로 직접 입금받은 링크 주문입니다 — 이 화면은 송금을 하지 않고 기록만 남깁니다.\n\n${formatPriceAmount(refundAmount)}원 송금을 이미 마쳤다면 환불로 기록할까요? 되돌릴 수 없습니다.`
+          : isBankPaid
           ? `계좌 입금 건입니다 — 토스로 돌려주지 않습니다. 고객 계좌로 송금을 마친 뒤 기록하세요.\n\n${formatPriceAmount(refundAmount)}원 송금을 마쳤다면 환불로 기록할까요? 되돌릴 수 없습니다.`
           : isRemainderRefund
           ? `${formatPriceAmount(refundAmount)}원을 추가로 환불할까요? 되돌릴 수 없습니다.`
@@ -352,15 +380,22 @@ export default function AdminBookingDetailPage({
       return;
     }
 
-    await run(() => refundBooking(booking.id, refundAmount, refundReason.trim()));
+    await run(() =>
+      booking.orderType === 'deposit'
+        ? recordLinkRefund(booking.id, refundAmount, refundReason.trim())
+        : refundBooking(booking.id, refundAmount, refundReason.trim()),
+    );
   };
 
+  const bookingLine = bookingLineOf(booking);
   const isMixing = booking.orderType === 'mixing';
   const isDeposit = booking.orderType === 'deposit';
   const workOrder = booking.workOrder;
 
   // 완료·노쇼·캘린더·재발송은 슬롯이 있는 세션 예약만의 개념(API도 믹싱엔 409를 준다).
   const canChangeStatus = !isMixing && booking.bookingStatus === 'confirmed';
+  // 완료·노쇼는 환불 경로를 닫는다 — 잘못 눌렀거나 환불이 필요해지면 확정으로 되돌릴 수 있어야 한다.
+  const canRevertStatus = !isMixing && (booking.bookingStatus === 'completed' || booking.bookingStatus === 'no_show');
   // 입금 전에 취소된 계좌 입금 신청은 보낼 알림이 없다(API도 409).
   const canResend = !isMixing && booking.bookingStatus !== null && booking.bookingStatus !== 'pending' && booking.bankDeposit !== 'cancelled';
   // 취소된 예약은 캘린더에 다시 등록할 이유가 없다 — API도 같은 가드를 둔다
@@ -371,11 +406,59 @@ export default function AdminBookingDetailPage({
   // (gcalEventId·gcalError 둘 다 NULL)에는 배너가 안 떠서 버튼도 같이 사라졌다.
   // gcalMissing은 confirmed에서만 참이므로(admin-serialize) 대기·취소 예약에 등록 버튼이
   // 새로 뜨는 일은 없고, gcalError가 있는 완료·노쇼 예약의 기존 재시도 경로도 그대로다.
+  const canReschedule =
+    !isMixing && !isDeposit && (booking.bookingStatus === 'confirmed' || (booking.bookingStatus === 'pending' && booking.orderStatus === 'awaiting_deposit'));
+  const [rescheduleOpen, setRescheduleOpen] = useState(false);
+  const kstStart = booking.startAt ? new Date(new Date(booking.startAt).getTime() + 9 * 3_600_000) : null;
+  const [newDate, setNewDate] = useState(kstStart ? kstStart.toISOString().slice(0, 10) : '');
+  const [newHour, setNewHour] = useState(kstStart ? kstStart.getUTCHours() : 10);
+  const handleReschedule = async () => {
+    const isPastTarget = new Date(`${newDate}T${String(newHour).padStart(2, '0')}:00:00+09:00`).getTime() <= Date.now();
+    const waiting = booking.orderStatus === 'awaiting_deposit';
+    if (
+      !window.confirm(
+        `${newDate} ${String(newHour).padStart(2, '0')}:00 으로 옮길까요?\n구글 캘린더 일정도 함께 옮겨요. 고객에게는 메일이 자동으로 가지 않아요.` +
+          (isPastTarget ? '\n\n⚠ 이미 지난 시각이에요. 지난 세션을 바로잡는 게 아니라면 날짜를 확인해 주세요.' : '') +
+          (waiting ? '\n\n입금 대기 중이에요 — 이용일이 가까워지면 입금 기한도 짧아져요. 옮긴 뒤 “입금 안내 재발송”으로 새 기한을 알려 주세요.' : ''),
+      )
+    ) {
+      return;
+    }
+    setBusy(true);
+    setNotice(null);
+    try {
+      const response = await fetch(`/api/admin/bookings/${booking.id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ action: 'reschedule', date: newDate, startHour: newHour }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result?.ok) {
+        setNotice(result?.message || '일정 변경에 실패했습니다.');
+      } else {
+        setRescheduleOpen(false);
+        setNotice(
+          Array.isArray(result.warnings) && result.warnings.length > 0
+            ? result.warnings.join(' / ')
+            : booking.orderStatus === 'awaiting_deposit'
+              ? '일정을 옮겼어요. 입금 대기 중이라 “알림 재발송”은 없습니다 — 새 일정을 알리려면 “입금 안내 재발송”을 눌러 주세요.'
+              : '일정을 옮겼어요. 고객에게 알리려면 아래 “알림 재발송”을 눌러 주세요.',
+        );
+      }
+    } catch {
+      setNotice('네트워크 오류가 발생했습니다.');
+    }
+    setBusy(false);
+    await router.replace(router.asPath, undefined, { scroll: false });
+  };
+
+  // 취소 때 지우지 못한 [예약] 일정 — 등록이 아니라 "다시 지우기"가 필요하다(캘린더에 남은 일정이 그 시간을 계속 막는다).
+  const staleCalendarDelete = !isMixing && booking.bookingStatus === 'cancelled' && booking.gcalError?.startsWith('delete: ') === true;
   const canRetryGcal =
     !isMixing &&
     booking.bookingStatus !== null &&
-    booking.bookingStatus !== 'cancelled' &&
-    (booking.gcalError !== null || booking.gcalMissing);
+    ((booking.bookingStatus !== 'cancelled' && (booking.gcalError !== null || booking.gcalMissing)) || staleCalendarDelete);
 
   // 센티널(`send_pending`·`send_inflight`)과 실제 실패 사유를 갈라 읽는다 — 원문 노출 금지.
   const notificationCopy = describeNotificationError(booking.notificationError);
@@ -401,6 +484,13 @@ export default function AdminBookingDetailPage({
   });
   const isRemainderRefund =
     (isMixing ? workOrder?.status : booking.bookingStatus) === 'cancelled';
+  /**
+   * 예약금 결제 링크 주문 중 **계좌로 직접 입금받은 건**만 환불 기록 폼을 띄운다(예약·작업 행이 없어 canAdminRefund는 항상 false).
+   * 카드(토스) 링크 주문은 토스 콘솔에서 취소한다 — 서버(lib/payments/linkRefund.ts)도 계좌 입금분만 받는다.
+   */
+  const canRecordLinkRefund =
+    isDeposit && isBankPaid && LIVE_ORDER_STATUSES_FOR_REFUND.some((status) => status === booking.orderStatus) && booking.refundableAmount > 0;
+  const showRefundForm = canRefund || canRecordLinkRefund;
 
   return (
     <>
@@ -412,8 +502,9 @@ export default function AdminBookingDetailPage({
       <AdminShell
         title="예약 상세"
         description={`${booking.customerName}님 · ${booking.productName}`}
-        backHref="/admin/bookings"
+        backHref={bookingLine ? `/admin/bookings?line=${bookingLine}` : '/admin/bookings'}
         backLabel="예약 목록"
+        navLine={bookingLine}
       >
         {notice && (
           <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>
@@ -449,6 +540,26 @@ export default function AdminBookingDetailPage({
                 <Button type="button" variant="weak" className="mt-2" disabled={busy}
                   onClick={() => runDeposit('delete_waiting_event', '캘린더 일정을 지우지 못했습니다.', '남은 [입금 대기] 캘린더 일정을 지울까요?')}>
                   대기 일정 지우기
+                </Button>
+              </div>
+            )}
+            {!booking.gcalError?.startsWith('waiting_delete: ') && (
+              <div className="mt-3">
+                <p className="text-xs text-gray-500">돈이 오간 적 없는 기록이에요. 테스트로 만들었거나 잘못 올렸다면 목록에서 지울 수 있어요(되돌릴 수 없어요).</p>
+                <Button type="button" variant="weak" className="mt-2" disabled={busy}
+                  onClick={async () => {
+                    if (!window.confirm(`${booking.orderNo} 기록을 완전히 삭제할까요? 되돌릴 수 없어요.`)) return;
+                    setBusy(true);
+                    setNotice(null);
+                    const result = await postDepositAction('delete_unpaid_record', '삭제에 실패했습니다.');
+                    setBusy(false);
+                    if (result.ok) {
+                      await router.replace('/admin/bookings');
+                    } else {
+                      setNotice(result.message ?? '삭제에 실패했습니다.');
+                    }
+                  }}>
+                  기록 삭제
                 </Button>
               </div>
             )}
@@ -572,7 +683,9 @@ export default function AdminBookingDetailPage({
           <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
             {booking.gcalError ? (
               <>
-                <strong className="block mb-1">구글 캘린더 동기화에 실패했습니다</strong>
+                <strong className="block mb-1">
+                  {staleCalendarDelete ? '취소된 예약의 캘린더 일정을 지우지 못했습니다' : '구글 캘린더 동기화에 실패했습니다'}
+                </strong>
                 {booking.gcalError}
               </>
             ) : (
@@ -581,11 +694,17 @@ export default function AdminBookingDetailPage({
               </strong>
             )}
             <span className="block mt-2 text-amber-700">
-              운영자는 구글 캘린더에 직접 일정을 넣지 않으므로, 이 예약 시간이 캘린더에
-              비어 있으면 다른 일정이 겹칠 수 있습니다.{' '}
-              {canRetryGcal
-                ? '아래 “캘린더 재시도”를 눌러 다시 등록해 주세요.'
-                : '캘린더에 직접 넣어 주세요.'}
+              {staleCalendarDelete ? (
+                '캘린더에 남은 [예약] 일정이 이 시간을 계속 막아 새 예약이 들어오지 못합니다. 아래 버튼으로 다시 지워 주세요.'
+              ) : (
+                <>
+                  운영자는 구글 캘린더에 직접 일정을 넣지 않으므로, 이 예약 시간이 캘린더에
+                  비어 있으면 다른 일정이 겹칠 수 있습니다.{' '}
+                  {canRetryGcal
+                    ? '아래 “캘린더 재시도”를 눌러 다시 등록해 주세요.'
+                    : '캘린더에 직접 넣어 주세요.'}
+                </>
+              )}
             </span>
             {canRetryGcal && (
               <Button light
@@ -594,7 +713,7 @@ export default function AdminBookingDetailPage({
                 onClick={handleRetryGcal}
                 className="mt-3"
               >
-                캘린더 재시도
+                {staleCalendarDelete ? '캘린더 일정 지우기' : '캘린더 재시도'}
               </Button>
             )}
           </div>
@@ -647,6 +766,28 @@ export default function AdminBookingDetailPage({
                 </h2>
                 <dl className="space-y-2 text-sm">
                   <DescriptionRow label="상품" value={booking.productName} />
+                  {isDeposit && booking.linkMemo && <DescriptionRow label="링크 메모" value={booking.linkMemo} />}
+                  {isDeposit && booking.linkSessionAt && <DescriptionRow label="이용 일시" value={formatKstDateTimeFull(booking.linkSessionAt)} />}
+                  {isDeposit && booking.linkCalendar && (
+                    <DescriptionRow
+                      label="구글 캘린더"
+                      value={(
+                        <span className="inline-flex flex-wrap items-center justify-end gap-2">
+                          <span>{booking.linkCalendar.state === 'registered' ? '등록됨' : booking.linkCalendar.state === 'failed' ? `등록 실패 — ${booking.linkCalendar.error ?? ''}` : '아직 안 올림'}</span>
+                          {(booking.orderStatus === 'paid' || booking.orderStatus === 'partially_refunded') && (
+                            <Button light variant="weak" size="sm" disabled={busy} onClick={() => runLinkCalendar('sync_link_calendar', '구글 캘린더에 이 이용 일정을 (다시) 올릴까요? 이미 올린 일정이 있으면 지우고 새로 올려요.')}>
+                              {booking.linkCalendar.state === 'registered' ? '다시 등록' : '캘린더에 올리기'}
+                            </Button>
+                          )}
+                          {booking.linkCalendar.state === 'registered' && (
+                            <Button light variant="weak" size="sm" disabled={busy} onClick={() => runLinkCalendar('remove_link_calendar', '구글 캘린더에서 이 일정을 지울까요? (환불 등으로 이용하지 않을 때)')}>
+                              캘린더에서 지우기
+                            </Button>
+                          )}
+                        </span>
+                      )}
+                    />
+                  )}
                   {isDeposit ? null : isMixing ? (
                     <>
                       <DescriptionRow label="곡 수" value={workOrder ? `${workOrder.songCount}곡` : '-'} />
@@ -674,6 +815,31 @@ export default function AdminBookingDetailPage({
                         label="이용 시간"
                         value={booking.durationHours ? `${booking.durationHours}시간` : '-'}
                       />
+                      {canReschedule && (
+                        <div className="pt-2">
+                          {rescheduleOpen ? (
+                            <div className="grid grid-cols-2 gap-3 items-end rounded-lg border border-gray-200 p-3">
+                              <Field id="rs-date" label="새 날짜" className={lightOnlyField}>
+                                <TextInput type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)} light />
+                              </Field>
+                              <Field id="rs-hour" label="새 시작 시각" className={lightOnlyField}>
+                                <Select value={newHour} onChange={(e) => setNewHour(Number(e.target.value))} light>
+                                  {Array.from({ length: 24 }, (_, h) => h).map((h) => (
+                                    <option key={h} value={h}>{String(h).padStart(2, '0')}:00</option>
+                                  ))}
+                                </Select>
+                              </Field>
+                              <p className="col-span-2 text-xs text-gray-500">이용 시간({booking.durationHours}시간)·금액은 그대로, 시작만 옮겨요. 겹침과 캘린더를 검사한 뒤 캘린더 일정도 함께 옮깁니다.</p>
+                              <div className="col-span-2 flex gap-2">
+                                <Button light size="sm" disabled={busy || newDate === ''} onClick={handleReschedule}>옮기기</Button>
+                                <Button light variant="weak" size="sm" disabled={busy} onClick={() => setRescheduleOpen(false)}>닫기</Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <Button light variant="weak" size="sm" disabled={busy} onClick={() => setRescheduleOpen(true)}>일정 변경</Button>
+                          )}
+                        </div>
+                      )}
                     </>
                   )}
                   {booking.cancelledAt && (
@@ -773,6 +939,12 @@ export default function AdminBookingDetailPage({
                 </>
               )}
 
+              {canRevertStatus && (
+                <Button light variant="weak" disabled={busy} onClick={handleRevertStatus}>
+                  확정으로 되돌리기
+                </Button>
+              )}
+
               {canStartWork && (
                 <Button light disabled={busy} onClick={handleStartWork}>
                   작업 시작
@@ -790,24 +962,30 @@ export default function AdminBookingDetailPage({
                 </Button>
               )}
 
-              {!canChangeStatus && !canResend && !canStartWork && !canDeliver && (
+              {!canChangeStatus && !canRevertStatus && !canResend && !canStartWork && !canDeliver && (
                 <p className="text-sm text-gray-500">
-                  {isMixing ? '지금 상태에서는 가능한 작업이 없습니다.' : '결제 대기 중인 예약에는 가능한 작업이 없습니다.'}
+                  {isMixing
+                    ? '지금 상태에서는 가능한 작업이 없습니다.'
+                    : isDeposit
+                      ? '예약금 결제 링크 주문입니다. 이 화면에서는 작업이 없습니다 — 카드(토스) 결제의 환불은 토스 콘솔에서 취소하세요(이 화면에서는 환불할 수 없고, 취소하면 웹훅이 기록합니다). 계좌로 직접 입금받은 주문은 고객 계좌로 송금한 뒤 아래 “환불 기록”에서 기록합니다.'
+                      : '결제 대기 중인 예약에는 가능한 작업이 없습니다.'}
                 </p>
               )}
             </div>
           </div>
 
-          {canRefund && (
+          {showRefundForm && (
             <div className="pt-6 border-t border-gray-100">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">{isRemainderRefund ? '잔액 환불' : '임의 환불'}</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">{isDeposit ? '환불 기록' : isRemainderRefund ? '잔액 환불' : '임의 환불'}</h2>
               {isBankPaid && (
                 <p className="mb-2 text-sm font-semibold text-red-700">
                   계좌 입금 건입니다 — 토스로 돌려주지 않습니다. 고객 계좌로 송금을 마친 뒤 기록하세요.
                 </p>
               )}
               <p className="text-sm text-gray-500 mb-4">
-                {isRemainderRefund ? (
+                {isDeposit ? (
+                  <>고객 계좌로 송금을 마친 금액을 장부에 기록합니다. 이 화면은 돈을 보내지 않으며, 기록하면 매출 현황에 환불로 잡힙니다. 이용 일정을 취소하는 것이 아니므로 구글 캘린더 일정은 위의 “캘린더에서 지우기”로 따로 지워 주세요.</>
+                ) : isRemainderRefund ? (
                   <>
                     이미 취소된 {isMixing ? '주문' : '예약'}의 남은 금액을 더 돌려줍니다. 취소 안내는 이미 나갔으므로
                     메일·캘린더 후처리 없이 환불만 처리합니다.
@@ -829,7 +1007,7 @@ export default function AdminBookingDetailPage({
                 >
                   <TextInput
                     type="number"
-                    min={isRemainderRefund ? 1 : 0}
+                    min={isRemainderRefund || isDeposit ? 1 : 0}
                     max={booking.refundableAmount}
                     step={1}
                     value={refundAmount}

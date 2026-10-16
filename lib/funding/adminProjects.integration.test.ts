@@ -137,8 +137,11 @@ describe('listProjectsForAdmin', () => {
           'id', 'slug', 'title', 'reviewStatus', 'status', 'hidden',
           'submittedAt', 'approvedAt', 'creatorName', 'creatorEmail',
           'goalAmount', 'startAt', 'endAt',
+          // 정산 기록 상태(없음·이체 대기·지급 완료) 하나뿐이다 — 금액·계좌는 싣지 않는다.
+          'payoutState',
         ].sort(),
       );
+      expect(['none', 'pending', 'paid']).toContain(summary.payoutState);
     }
     const serialized = JSON.stringify(list);
     expect(serialized).not.toContain('taxType');

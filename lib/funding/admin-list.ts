@@ -1,4 +1,4 @@
-import { sql } from 'drizzle-orm';
+import { or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { fundingPledges } from '../../db/schema';
@@ -31,7 +31,14 @@ export const listFundingOrders = async (
    * **기간·기한으로 거르지 않는다** — 계좌 입금은 자동 취소가 없어 기한이 지난 신청도 입금이
    * 들어올 수 있고, 운영자는 그 전부를 통장과 대조해야 한다. 조건은 DB 쪽에 둔다(위 주석과 같은 이유).
    */
-  filter: { awaitingDeposit?: boolean } = {},
+  filter: {
+    awaitingDeposit?: boolean;
+    /**
+     * 이름·연락처·이메일·주문번호 부분 검색. 목록은 최근 201건까지만 읽어서 오래된 후원은 이 검색이 없으면 화면으로
+     * 열 방법이 없었다(주소를 손으로 쳐야 했다). 조건은 DB 쪽에 둔다(위 주석과 같은 이유). `%`·`_`는 이스케이프한다.
+     */
+    q?: string;
+  } = {},
 ): Promise<FundingOrder[]> => {
   const db = getDb();
   const rows = await db.query.orders.findMany({
@@ -44,9 +51,19 @@ export const listFundingOrders = async (
         .select({ id: fundingPledges.orderId })
         .from(fundingPledges)
         .where(pledgeConditions.length > 0 ? and(...pledgeConditions) : undefined);
+      const term = filter.q?.trim();
+      const escaped = term ? `%${term.replace(/[\\%_]/g, (c) => `\\${c}`)}%` : null;
       return and(
         e(t.type, 'funding'),
         ...(filter.awaitingDeposit ? [e(t.status, 'pending')] : []),
+        ...(escaped
+          ? [or(
+              sql`${t.customerName} LIKE ${escaped} ESCAPE '\\'`,
+              sql`${t.customerPhone} LIKE ${escaped} ESCAPE '\\'`,
+              sql`${t.customerEmail} LIKE ${escaped} ESCAPE '\\'`,
+              sql`${t.orderNo} LIKE ${escaped} ESCAPE '\\'`,
+            )]
+          : []),
         inArray(t.id, pledgeOrderIds),
       );
     },

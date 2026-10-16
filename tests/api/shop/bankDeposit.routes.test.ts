@@ -28,6 +28,8 @@ import adminHandler from '../../../pages/api/admin/shop/orders/[orderNo]';
 import { findShopOrderByOrderNo } from '../../../lib/shop/service';
 import { sendEmail } from '../../../lib/email/resend';
 import { cancelPayment } from '../../../lib/booking/toss';
+import { loadRefundAccountSummary } from '../../../lib/payments/refundAccount';
+import { FIELD_CRYPTO_KEY_ENV } from '../../../lib/crypto/fieldCrypto';
 /* eslint-enable import/first */
 
 function call(handler: (req: NextApiRequest, res: NextApiResponse) => unknown, req: Partial<NextApiRequest>) {
@@ -43,6 +45,7 @@ function call(handler: (req: NextApiRequest, res: NextApiResponse) => unknown, r
 }
 
 beforeEach(async () => {
+  process.env[FIELD_CRYPTO_KEY_ENV] = Buffer.alloc(32, 7).toString('base64');
   testDb = (await createTestDb()).db;
   await testDb.insert(shopSkus).values([{ id: 'test-cd-std', productSlug: 'test-cd', stock: 3 }]);
   jest.spyOn(console, 'error').mockImplementation(() => undefined);
@@ -90,14 +93,33 @@ describe('POST /api/shop/cancel — 입금 전 신청 취소', () => {
     expect(cancelPayment).not.toHaveBeenCalled();
   });
 
-  it('입금으로 확정된 주문은 고객이 취소할 수 없다 — 409와 안내', async () => {
+  it('입금으로 확정된 주문은 환불 계좌 없이는 취소할 수 없다 — 409와 안내, 주문은 그대로', async () => {
     const o = await bankOrder();
     const token = new URL(o.manageUrl, 'http://x').searchParams.get('token');
     await call(adminHandler, { query: { orderNo: o.orderNo }, body: { action: 'confirm_deposit' } });
     const r = await call(cancelHandler, { body: { orderNo: o.orderNo, token } });
     expect(r.status).toBe(409);
-    expect(String(r.body.message)).toContain('환불받으실 계좌');
+    expect(String(r.body.message)).toContain('환불받을 은행');
     expect((await findShopOrderByOrderNo(o.orderNo))!.status).toBe('paid');
+  });
+
+  it('입금으로 확정된 주문도 환불 계좌를 적으면 취소된다 — 송금 완료는 운영자가 따로 표시', async () => {
+    const o = await bankOrder();
+    const token = new URL(o.manageUrl, 'http://x').searchParams.get('token');
+    await call(adminHandler, { query: { orderNo: o.orderNo }, body: { action: 'confirm_deposit' } });
+    const r = await call(cancelHandler, { body: { orderNo: o.orderNo, token, refundAccount: { bankName: '국민은행', accountNumber: '123-456-789012', accountHolder: '김구매' } } });
+    expect(r.status).toBe(200);
+    expect((await findShopOrderByOrderNo(o.orderNo))!.status).toBe('refunded');
+    expect(cancelPayment).not.toHaveBeenCalled();
+    expect(await loadRefundAccountSummary({ kind: 'merch', orderNo: o.orderNo })).toMatchObject({ status: 'present', refundedAt: null });
+    expect((await call(adminHandler, { query: { orderNo: o.orderNo }, body: { action: 'mark_refund_sent' } })).status).toBe(200);
+    expect(await loadRefundAccountSummary({ kind: 'merch', orderNo: o.orderNo })).toMatchObject({ status: 'present', refundedAt: expect.any(Date) });
+  });
+
+  it('송금 완료 표시는 계좌 입금 주문에서만 — 토스 주문은 409', async () => {
+    const r0 = await call(ordersHandler, { body: shopPayload([{ skuId: 'test-cd-std', quantity: 1 }]) });
+    const r = await call(adminHandler, { query: { orderNo: r0.body.orderNo as string }, body: { action: 'mark_refund_sent' } });
+    expect(r.status).toBe(409);
   });
 });
 
