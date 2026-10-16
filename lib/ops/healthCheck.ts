@@ -6,6 +6,7 @@ import { formatKst } from '../email/operatorAlert';
 import { isNotificationSentinel } from './notificationSentinel';
 import { bookings, contracts, fundingPledges, fundingProjectPayouts, fundingProjects, orders, payments, refunds, subscriptionPayments, subscriptions } from '../../db/schema';
 import { calendarForService, calendarIdFor, fetchBusyRanges, isCalendarActive, roomCalendarEnvKey, type BookingCalendar } from '../booking/gcal';
+import { kstToday, overdueDays } from '../tenancy/rules';
 import { PRACTICE_ROOM_HOURLY_ROOMS } from '../booking/products';
 import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
 import { FUNDING_PAYOUT_BUSINESS_DAYS } from '../funding/policy';
@@ -361,6 +362,29 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
    * 밀린 상태는 이미 공개 경로가 조용히 깨져 있다는 뜻이라(폴백이 있는 경로는 옛 동작으로,
    * 없는 경로는 500으로) severity는 high로 둔다.
    */
+  /**
+   * 월 입주자(연습실 월세·비상주)의 입금 예정일이 지났는데 입금 기록이 없는 건 — 연체 관리가 입주 관리의 핵심 용도다.
+   * 이름·방·일수만 싣는다(연락처 등 개인정보는 메일·화면에 싣지 않는다). 표가 없는 DB(0066 전)에서는 건너뛴다.
+   */
+  try {
+    const today = kstToday(now);
+    const late = await db.all<{ room_number: string | null; tenant_name: string; next_due_on: string }>(sql`
+      SELECT room_number, tenant_name, next_due_on FROM room_tenancies
+      WHERE status = 'active' AND next_due_on < ${today} ORDER BY next_due_on LIMIT 30
+    `);
+    if (late.length > 0) {
+      const lines = late.map((t) => `${t.room_number ?? '비상주'} ${t.tenant_name} — ${overdueDays(t.next_due_on, today)}일 연체(예정 ${t.next_due_on})`);
+      issues.push({
+        severity: overdueDays(late[0].next_due_on, today) >= 7 ? 'high' : 'medium',
+        title: `월 입주 연체 ${late.length}건`,
+        detail: `${lines.join('\n')}\n입금을 확인했다면 입주 관리에서 “입금 기록”을 눌러 주세요. 아직이면 입금 요청을 해 주세요.`,
+        href: '/admin/tenancies',
+      });
+    }
+  } catch (error) {
+    console.error('[health] 월 입주 연체 점검 실패 — 건너뜁니다', error instanceof Error ? error.message : String(error));
+  }
+
   const rotationPending = await checkFieldKeyRotationPending();
   if (rotationPending) issues.push(rotationPending);
 

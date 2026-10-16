@@ -5,6 +5,7 @@ import { getDb } from '../../../../../db/client';
 import { isMissingTableError } from '../../../../../lib/dbErrors';
 import { recordShowPayout, SHOW_PAYOUT_PERIOD, type RecordShowPayoutResult, type ShowPayoutBlocker } from '../../../../../lib/partnerPayouts/show';
 import { setShowtimeCancelFeeWaived, type SetWaivedResult } from '../../../../../lib/partnerPayouts/showCancelFee';
+import { sendPartnerPayoutNotice } from '../../../../../lib/partnerPayouts/notify';
 import { deletePartnerPayoutIfPending, getPartnerPayoutById, markPartnerPayoutPaid } from '../../../../../lib/partnerPayouts/store';
 
 /**
@@ -84,7 +85,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const f = failure(result);
         return res.status(f.status).json(f.body);
       }
-      return res.status(200).json({ ok: true, payoutId: result.payout.id });
+      // 기록은 이미 DB에 있다 — 수취인 알림 실패는 warnings로만 올린다(상점 정산·펀딩 notifyPayout과 같은 계약).
+      const warnings = await sendPartnerPayoutNotice(result.payout.id, 'recorded', { req, actor: auth.actor });
+      return res.status(200).json({ ok: true, payoutId: result.payout.id, ...(warnings.length > 0 ? { warnings } : {}) });
     }
 
     if (b.action === 'mark_paid' || b.action === 'delete') {
@@ -97,9 +100,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (b.action === 'mark_paid') {
         const memo = typeof b.memo === 'string' && b.memo.trim() ? b.memo.trim().slice(0, 500) : null;
         const done = await markPartnerPayoutPaid(row.id, memo, now);
-        return done
-          ? res.status(200).json({ ok: true })
-          : res.status(409).json({ ok: false, message: '이미 지급 완료로 기록된 정산입니다. 새로고침해 주세요.' });
+        if (done) {
+          const warnings = await sendPartnerPayoutNotice(row.id, 'paid', { req, actor: auth.actor });
+          return res.status(200).json({ ok: true, ...(warnings.length > 0 ? { warnings } : {}) });
+        }
+        return res.status(409).json({ ok: false, message: '이미 지급 완료로 기록된 정산입니다. 새로고침해 주세요.' });
       }
       const outcome = await deletePartnerPayoutIfPending(row.id);
       if (outcome === 'ok') return res.status(200).json({ ok: true });

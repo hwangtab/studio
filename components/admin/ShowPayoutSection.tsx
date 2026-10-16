@@ -25,7 +25,7 @@ const BLOCKER_LABEL: Record<string, string> = {
   terms_not_agreed: '주최자 약관 동의 기록이 없습니다',
 };
 
-interface ActionResponse { ok?: boolean; message?: string }
+interface ActionResponse { ok?: boolean; message?: string; warnings?: string[] }
 interface RevealedAccount { bankName: string; account: string; holder: string }
 
 export function ShowPayoutSection({ showId, panel, showtimeLabels }: {
@@ -36,27 +36,32 @@ export function ShowPayoutSection({ showId, panel, showtimeLabels }: {
 }) {
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [notified, setNotified] = useState<string | null>(null);
   const [account, setAccount] = useState<RevealedAccount | 'loading' | { error: string } | null>(null);
 
-  const post = async (body: Record<string, unknown>): Promise<{ ok: boolean; message?: string }> => {
+  const post = async (body: Record<string, unknown>): Promise<{ ok: boolean; message?: string; warnings?: string[] }> => {
     try {
       const res = await fetch(`/api/admin/shows/${encodeURIComponent(showId)}/payout`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify(body),
       });
       const data = (await res.json().catch(() => ({}))) as ActionResponse;
       if (!res.ok || !data.ok) return { ok: false, message: data.message ?? '요청을 처리하지 못했습니다.' };
-      return { ok: true };
+      return { ok: true, warnings: data.warnings };
     } catch {
       return { ok: false, message: '네트워크 오류가 발생했습니다.' };
     }
   };
 
-  const run = async (key: string, confirmText: string | null, action: () => Promise<{ ok: boolean; message?: string }>) => {
+  const run = async (key: string, confirmText: string | null, action: () => Promise<{ ok: boolean; message?: string; warnings?: string[] }>) => {
     if (confirmText && !window.confirm(confirmText)) return;
     setBusy(key);
     setMessage(null);
     const result = await action();
-    if (result.ok) window.location.reload();
+    if (result.ok && result.warnings && result.warnings.length > 0) {
+      // 처리는 끝났고 알림만 못 간 경우 — 바로 새로고침하면 이 안내가 사라진다. 운영자가 읽고 직접 새로고침한다.
+      setNotified(`처리는 끝났지만 수취인 알림이 가지 않았습니다. ${result.warnings.join(' / ')}`);
+      setBusy(null);
+    } else if (result.ok) window.location.reload();
     else {
       setMessage(result.message ?? '처리하지 못했습니다.');
       setBusy(null);
@@ -105,6 +110,11 @@ export function ShowPayoutSection({ showId, panel, showtimeLabels }: {
         판매액에서 환불된 금액을 먼저 뺀 뒤 플랫폼·결제 수수료를 떼고(주최자 약관 제6조), 개인은 부가세 상당액과 원천징수를 더 뺍니다.
         <strong className="font-semibold"> 정산 기록은 그 시점의 숫자를 고정합니다</strong> — 송금은 은행 앱에서 하고 「지급 완료」로 끝났다고 적어 주세요.
       </p>
+      {notified && (
+        <div role="alert" className="mb-3 rounded-lg border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900">
+          {notified} <button type="button" className="ml-2 text-primary underline" onClick={() => window.location.reload()}>새로고침</button>
+        </div>
+      )}
       {message && <div role="alert" className="mb-3 rounded-lg border border-red-300 bg-red-50 p-3 text-xs text-red-900">{message}</div>}
 
       {!v.ended && !rec ? (

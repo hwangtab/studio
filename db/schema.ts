@@ -1526,6 +1526,18 @@ export const privacyAccessActionEnum = [
   'subscription_view',
   'show_admin_view',
   'show_submission_view',
+  /**
+   * 상점·공연 정산 안내 메일을 만들면서 개설자 계좌를 복호화한 일 (lib/partnerPayouts/notify.ts의 sendPartnerPayoutNotice).
+   * `funding_payout_account_email`과 같은 일이지만 대상이 프로젝트 id가 아니라 **정산 기록 id**(`partner_payouts.id`)라 행위를 가른다.
+   * 여기서만 값이 서버 밖으로 나간다 — 메일 본문에 은행명·예금주(계좌번호는 뒤 4자리까지만). 컬럼이 enum 문자열이라 마이그레이션이 필요 없다(DB CHECK 없음).
+   */
+  'partner_payout_account_email',
+  /**
+   * 관리자 상점·공연 정산 CSV 내려받기 (pages/api/admin/partner-payouts/export.ts) — 세무사에게 넘기는 파일.
+   * 수취인 이름과 금액이 한 파일에 담긴다(계좌·주민등록번호·연락처는 싣지 않는다). 대상은 `종류_시작월_종료월`, row_count는 행 수.
+   * 컬럼이 enum 문자열이라 마이그레이션이 필요 없다(DB CHECK 없음).
+   */
+  'partner_payout_export',
 ] as const;
 
 /**
@@ -2385,8 +2397,8 @@ export const roomTenancies = sqliteTable(
     nextDueOn: text('next_due_on').notNull(),
     hasWindow: integer('has_window', { mode: 'boolean' }),
     furnishings: text('furnishings'),
-    /** 예전 시트의 "가격" 칸(40·44) 원문 — 의미가 확인되지 않아 그대로 보존한다. */
-    specNote: text('spec_note'),
+    /** 방 정가(원). 방의 속성이라 입주자 이용료와 다를 수 있다(기본 36만원 방과 40·44만원 방이 있다). 모르면 NULL. */
+    roomListPrice: integer('room_list_price'),
     /** 특약·메모(예: "1년 계약", "계약금 19만원"). 개인정보를 적지 않는다. */
     note: text('note'),
     contractId: text('contract_id'),

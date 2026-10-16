@@ -477,6 +477,20 @@
       "when": 1792125214021,
       "tag": "0067_partner_payouts",
       "breakpoints": true
+    },
+    {
+      "idx": 68,
+      "version": "6",
+      "when": 1792126071907,
+      "tag": "0068_tenancy_room_price",
+      "breakpoints": true
+    },
+    {
+      "idx": 69,
+      "version": "6",
+      "when": 1792126072837,
+      "tag": "0069_tenancy_drop_spec_note",
+      "breakpoints": true
     }
   ]
 }

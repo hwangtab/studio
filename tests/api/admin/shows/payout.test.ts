@@ -14,6 +14,9 @@ jest.mock('../../../../db/client', () => ({ getDb: () => testDb }));
 const mockAuth = jest.fn();
 jest.mock('../../../../lib/contracts/admin-auth', () => ({ authenticateAdminApi: (...args: unknown[]) => mockAuth(...args) }));
 
+const mockNotify = jest.fn();
+jest.mock('../../../../lib/partnerPayouts/notify', () => ({ sendPartnerPayoutNotice: (...args: unknown[]) => mockNotify(...args) }));
+
 /* eslint-disable import/first */
 import handler from '../../../../pages/api/admin/shows/[id]/payout';
 import { buildShowPayoutPreview } from '../../../../lib/partnerPayouts/show';
@@ -59,6 +62,7 @@ const recordBody = async (id = 's1') => {
 beforeEach(async () => {
   testDb = (await createTestDb()).db;
   mockAuth.mockResolvedValue({ ok: true, actor: 'admin' });
+  mockNotify.mockReset().mockResolvedValue([]);
   jest.spyOn(console, 'error').mockImplementation(() => undefined);
   await testDb.insert(fundingCreators).values({ id: 'c1', email: 'c1@example.com', name: '주최자', taxType: 'withholding', payoutAccountEnc: 'enc', residentNumberEnc: 'enc' });
   await seedShow('s1', PAST);
@@ -91,6 +95,19 @@ describe('기록 → 지급 완료 / 취소', () => {
     expect(await findPartnerPayout('show', 's1', 'all')).toMatchObject({ id: r.body.payoutId, creatorId: 'c1', status: 'pending' });
     const again = await call({ body: await recordBody() });
     expect(again).toMatchObject({ status: 409, body: { code: 'already_recorded' } });
+  });
+
+  it('기록·지급 완료 뒤 수취인 안내 메일을 부르고, 못 보냈으면 응답에 warnings가 실린다(처리는 성공)', async () => {
+    const rec = await call({ body: await recordBody() });
+    expect(rec.status).toBe(200);
+    expect(rec.body.warnings).toBeUndefined();
+    expect(mockNotify).toHaveBeenCalledWith(rec.body.payoutId, 'recorded', expect.objectContaining({ actor: 'admin' }));
+
+    mockNotify.mockResolvedValueOnce(['수취인 메일 발송 실패']);
+    const paid = await call({ body: { action: 'mark_paid', payoutId: rec.body.payoutId, memo: '이체함' } });
+    expect(paid).toMatchObject({ status: 200, body: { ok: true, warnings: ['수취인 메일 발송 실패'] } });
+    expect(mockNotify).toHaveBeenLastCalledWith(rec.body.payoutId, 'paid', expect.anything());
+    expect(await findPartnerPayout('show', 's1', 'all')).toMatchObject({ status: 'paid' });
   });
 
   it('금액이 다르면 409 amount_changed', async () => {

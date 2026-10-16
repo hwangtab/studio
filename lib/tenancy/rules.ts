@@ -81,7 +81,7 @@ export interface TenancyInput {
   nextDueOn: string;
   hasWindow: boolean | null;
   furnishings: string | null;
-  specNote: string | null;
+  roomListPrice: number | null;
   note: string | null;
   contractId: string | null;
   private: TenancyPrivate;
@@ -121,6 +121,11 @@ export const parseTenancyInput = (raw: unknown): Parsed => {
   if (!isValidDate(b.nextDueOn)) return { ok: false, message: '다음 입금 예정일을 확인해 주세요.' };
   const billingDay = b.billingDay === undefined || b.billingDay === null || b.billingDay === '' ? Number(b.nextDueOn.slice(8)) : Number(b.billingDay);
   if (!Number.isInteger(billingDay) || billingDay < 1 || billingDay > 31) return { ok: false, message: '납부일은 1~31이에요.' };
+  let roomListPrice: number | null = null;
+  if (b.roomListPrice !== null && b.roomListPrice !== undefined && b.roomListPrice !== '') {
+    roomListPrice = Number(b.roomListPrice);
+    if (!Number.isInteger(roomListPrice) || roomListPrice < 0 || roomListPrice > 100_000_000) return { ok: false, message: '방 정가를 확인해 주세요.' };
+  }
   const p = (b.private ?? {}) as Record<string, unknown>;
   return {
     ok: true,
@@ -128,7 +133,7 @@ export const parseTenancyInput = (raw: unknown): Parsed => {
       kind, roomNumber, tenantName, monthlyAmount, depositAmount,
       startDate: b.startDate, endDate, billingDay, nextDueOn: b.nextDueOn,
       hasWindow: typeof b.hasWindow === 'boolean' ? b.hasWindow : null,
-      furnishings: str(b.furnishings, 200), specNote: str(b.specNote, 100), note: str(b.note, 300),
+      furnishings: str(b.furnishings, 200), roomListPrice, note: str(b.note, 300),
       contractId: str(b.contractId, 64),
       private: {
         phone: str(p.phone, 30) ?? undefined, emergencyContact: str(p.emergencyContact, 60) ?? undefined,

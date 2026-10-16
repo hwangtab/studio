@@ -29,4 +29,6 @@ export const ACTION_LABEL: Record<string, string> = {
   subscription_view: '구독 상세 열람',
   show_admin_view: '공연 관리 화면 열람(구매자 연락처)',
   show_submission_view: '공연 심사 상세 열람',
+  partner_payout_account_email: '상점·공연 정산 안내 메일의 계좌 복호화',
+  partner_payout_export: '상점·공연 정산 CSV',
 };
