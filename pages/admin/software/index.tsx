@@ -7,6 +7,7 @@ import { Notice } from '../../../components/ui/Notice';
 import { SOFTWARE_PRODUCTS } from '../../../data/software/catalog';
 import { SOFTWARE_SALES_OPEN } from '../../../data/software/policy';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
+import { recordAdminPrivacyAccess } from '../../../lib/privacy/accessLog';
 import { listAdminLicenses, type AdminLicenseRow } from '../../../lib/software/service';
 
 const LICENSE_LIST_LIMIT = 100;
@@ -28,9 +29,17 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   const products = SOFTWARE_PRODUCTS.map((p) => ({ slug: p.slug, title: p.title, published: p.published }));
   try {
     const fetched = await listAdminLicenses(q, LICENSE_LIST_LIMIT + 1);
+    // 열람 기록 — 라이선스 받은 사람의 이메일이 실린다. 검색 화면이라 행마다가 아니라 화면을 연 한 번에 한 줄,
+    // 건수만 적는다(검색어는 이메일일 수 있어 적지 않는다). 기록 실패가 화면을 막지 않는다.
+    await recordAdminPrivacyAccess(context.req, auth.actor, 'software_license_list_view', 'licenses', 'success', Math.min(fetched.length, LICENSE_LIST_LIMIT)).catch(
+      (error: unknown) => console.error('[privacy] 접속기록 호출 실패 — 화면은 계속됩니다', error),
+    );
     return { props: { licenses: fetched.slice(0, LICENSE_LIST_LIMIT), truncated: fetched.length > LICENSE_LIST_LIMIT, products, q, salesOpen: SOFTWARE_SALES_OPEN } };
   } catch (error: unknown) {
     console.error('[admin/software] 조회 실패:', error);
+    await recordAdminPrivacyAccess(context.req, auth.actor, 'software_license_list_view', 'licenses', 'error').catch(
+      (e: unknown) => console.error('[privacy] 접속기록 호출 실패 — 화면은 계속됩니다', e),
+    );
     return { props: { licenses: [], products, q, salesOpen: SOFTWARE_SALES_OPEN, error: '라이선스를 불러오지 못했습니다. 운영 DB에 마이그레이션 0054가 적용됐는지 확인해 주세요.' } };
   }
 };

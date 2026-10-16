@@ -10,6 +10,7 @@ import { Field, Select, TextArea, TextInput } from '../../../components/ui/Field
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
+import { recordAdminPrivacyAccess } from '../../../lib/privacy/accessLog';
 import { formatKstDateTime, formatKstDateTimeFull } from '../../../lib/booking/format';
 import { serializePledgeForAdmin, type AdminPledgeItem } from '../../../lib/funding/admin-serialize';
 import { FULFILLMENT_LABELS, FULFILLMENT_STATUS_ORDER } from '../../../lib/funding/fulfillmentLabels';
@@ -53,10 +54,20 @@ export const getServerSideProps: GetServerSideProps<AdminFundingDetailPageProps>
   const { id } = context.query;
   if (typeof id !== 'string') return { notFound: true };
 
+  let loadFailed = false;
   const order = await findFundingOrderById(id).catch((error: unknown) => {
     console.error('[admin/funding/[id]] Failed to load pledge:', error);
+    loadFailed = true;
     return undefined;
   });
+
+  // 열람 기록 — 후원자 이름·연락처·배송지가 props로 실리는 화면이다(처리방침 19항). 기록 실패가 화면을 막지 않게
+  // 받고, 인증을 통과한 시도만 남긴다(없는 주문을 열려 한 것도 기록, 조회 오류는 error). 값은 적지 않는다.
+  await recordAdminPrivacyAccess(
+    context.req, auth.actor, 'funding_pledge_view', id,
+    loadFailed ? 'error' : order?.fundingPledge ? 'success' : 'not_found',
+  ).catch((error: unknown) => console.error('[privacy] 접속기록 호출 실패 — 화면은 계속됩니다', error));
+
   if (!order || !order.fundingPledge) return { notFound: true };
 
   // 취소 로직과 같은 헬퍼를 쓴다 — 화면이 보여주는 잔액과 실제 환불액이 갈리면 관리자가
