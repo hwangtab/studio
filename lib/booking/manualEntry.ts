@@ -52,6 +52,7 @@ type Parsed = { ok: true; value: ManualBookingInput } | { ok: false; message: st
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const MAX_AMOUNT = 100_000_000;
+const MIN_AMOUNT = 1_000;
 
 const fail = (message: string): Parsed => ({ ok: false, message });
 
@@ -83,6 +84,8 @@ export const parseManualBookingInput = (raw: unknown, now: Date): Parsed => {
     if (typeof b.totalAmount !== 'number' || !Number.isInteger(b.totalAmount) || b.totalAmount <= 0 || b.totalAmount > MAX_AMOUNT) {
       return fail('금액은 1원 이상의 정수여야 해요. 자릿수를 확인해 주세요.');
     }
+    // "25만"이 입력칸에서 25로 줄어드는 사고를 막는다 — 실제 상품 중 가장 싼 것도 6,600원이다. 원 단위로 적어야 한다.
+    if (b.totalAmount < MIN_AMOUNT) return fail(`금액이 너무 작아요(${b.totalAmount.toLocaleString('ko-KR')}원). 원 단위로 적어 주세요. 예: 250000`);
     totalAmount = b.totalAmount;
   }
 

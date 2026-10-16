@@ -78,6 +78,7 @@ describe('parseManualBookingInput', () => {
     ['받았는지 미선택', { received: undefined }],
     ['모르는 방법', { method: '카드' }],
     ['0원', { totalAmount: 0 }],
+    ['"25만"이 25로 줄어든 금액', { totalAmount: 25 }],
     ['너무 먼 날짜', { date: '2030-01-01' }],
   ])('거절: %s', (_n, over) => {
     expect(parseManualBookingInput(session(over), NOW).ok).toBe(false);

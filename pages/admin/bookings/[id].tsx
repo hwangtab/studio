@@ -182,7 +182,7 @@ export default function AdminBookingDetailPage({
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
 
-  const [refundAmount, setRefundAmount] = useState<number>(booking.totalAmount);
+  const [refundAmount, setRefundAmount] = useState<number>(Math.min(booking.totalAmount, booking.refundableAmount));
   const [refundReason, setRefundReason] = useState('');
   const [refundError, setRefundError] = useState<string | null>(null);
 
@@ -419,7 +419,9 @@ export default function AdminBookingDetailPage({
         setNotice(
           Array.isArray(result.warnings) && result.warnings.length > 0
             ? result.warnings.join(' / ')
-            : '일정을 옮겼어요. 고객에게 알리려면 아래 “알림 재발송”을 눌러 주세요.',
+            : booking.orderStatus === 'awaiting_deposit'
+              ? '일정을 옮겼어요. 입금 대기 중이라 “알림 재발송”은 없습니다 — 새 일정을 알리려면 “입금 안내 재발송”을 눌러 주세요.'
+              : '일정을 옮겼어요. 고객에게 알리려면 아래 “알림 재발송”을 눌러 주세요.',
         );
       }
     } catch {
@@ -913,7 +915,11 @@ export default function AdminBookingDetailPage({
 
               {!canChangeStatus && !canRevertStatus && !canResend && !canStartWork && !canDeliver && (
                 <p className="text-sm text-gray-500">
-                  {isMixing ? '지금 상태에서는 가능한 작업이 없습니다.' : '결제 대기 중인 예약에는 가능한 작업이 없습니다.'}
+                  {isMixing
+                    ? '지금 상태에서는 가능한 작업이 없습니다.'
+                    : isDeposit
+                      ? '예약금 결제 링크 주문입니다. 이 화면에서는 작업이 없습니다 — 환불이 필요하면 카드는 토스 콘솔에서, 계좌 입금은 고객 계좌로 직접 송금해 처리하세요(이 화면에는 기록되지 않습니다).'
+                      : '결제 대기 중인 예약에는 가능한 작업이 없습니다.'}
                 </p>
               )}
             </div>
