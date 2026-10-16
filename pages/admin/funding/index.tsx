@@ -199,7 +199,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
       + (Number.isFinite(formAdditionalAmount) ? formAdditionalAmount : 0)
     : null;
 
-  const handleCreateManual = async (e: React.FormEvent | null, acknowledgeExisting = false) => {
+  const handleCreateManual = async (e: React.FormEvent | null, acknowledgeExisting = false, acknowledgePayout = false) => {
     e?.preventDefault();
     setFormError(null);
     if (!acknowledgeExisting) setExistingCandidates([]);
@@ -246,6 +246,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
       displayNamePublic: false,
       adminMemo: formMemo.trim() || undefined,
       ...(acknowledgeExisting ? { acknowledgeExisting: true } : {}),
+      ...(acknowledgePayout ? { acknowledgePayout: true } : {}),
       // 배송 리워드이고 한 칸이라도 적었을 때만 보낸다 — 빈 객체를 보내면 빈 문자열 주소가 남는다.
       ...(needsShipping && Object.values(formShip).some((v) => v.trim() !== '')
         ? { shipping: Object.fromEntries(Object.entries(formShip).map(([k, v]) => [k, v.trim() || undefined])) }
@@ -253,6 +254,13 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
     });
     setBusy(false);
 
+    if (!result.ok && result.code === 'payout_recorded') {
+      // 정산 기록과 모금액이 갈라진다는 경고 — 알고 넣겠다고 하면 같은 입력으로 다시 보낸다.
+      if (window.confirm(`${result.message}\n\n그래도 수기 후원을 등록할까요?`)) {
+        await handleCreateManual(null, acknowledgeExisting, true);
+      }
+      return;
+    }
     if (!result.ok) {
       setFormError(result.message ?? '등록에 실패했습니다.');
       if (result.candidates?.length) setExistingCandidates(result.candidates);

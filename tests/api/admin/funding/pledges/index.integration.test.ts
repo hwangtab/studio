@@ -496,3 +496,38 @@ describe('수기 등록 — 같은 이름의 계좌 입금 신청 후보', () =>
     expect(r.status).toBe(201);
   });
 });
+
+describe('정산이 기록된 프로젝트에 수기 후원을 넣을 때', () => {
+  const seedPayout = async (status: 'pending' | 'paid') => {
+    await client.execute(`INSERT INTO funding_creators (id, email, name) VALUES ('fc1', 'c@x.y', '개설자')`);
+    await client.execute({
+      sql: `INSERT INTO funding_projects (id, slug, creator_id, title, summary, content, cover_url, goal_amount, start_at, end_at, review_status)
+            VALUES ('fp1', 'demo', 'fc1', '데모', '요약', '본문', 'https://x/c.webp', 100000, 1, 2, 'approved')`,
+      args: [],
+    });
+    await client.execute({
+      sql: `INSERT INTO funding_project_payouts (id, project_id, gross_amount, refund_amount, supply_amount, fee_amount, platform_fee_amount, payment_fee_amount,
+              share_amount, withholding_amount, design_fee_offset_amount, production_fee_offset_amount, shortfall_amount, net_amount, backer_count, status)
+            VALUES ('po1', 'fp1', 30000, 0, 27000, 3000, 2000, 1000, 27000, 0, 0, 0, 0, 27000, 1, ?)`,
+      args: [status],
+    });
+  };
+  afterEach(async () => {
+    for (const t of ['funding_project_payouts', 'funding_projects', 'funding_creators']) await client.execute(`DELETE FROM ${t}`);
+  });
+
+  it.each(['pending', 'paid'] as const)('정산이 %s이면 409(payout_recorded)로 멈추고 아무것도 만들지 않는다', async (status) => {
+    await seedPayout(status);
+    const r = await call(VALID_BODY);
+    expect(r.status).toBe(409);
+    expect(r.body.code).toBe('payout_recorded');
+    expect(r.body.message).toContain(status === 'paid' ? '이미 이체' : '정산이 기록됐어요');
+    expect((await client.execute('SELECT COUNT(*) AS n FROM orders')).rows[0].n).toBe(0);
+  });
+
+  it('알고 넣겠다고(acknowledgePayout) 하면 등록된다', async () => {
+    await seedPayout('paid');
+    const r = await call({ ...VALID_BODY, acknowledgePayout: true });
+    expect(r.status).toBe(201);
+  });
+});
