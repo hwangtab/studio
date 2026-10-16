@@ -44,6 +44,12 @@ export const PAYMENT_LINKS: Record<string, PaymentLink> = {
     totalAmount: VOCAL_PACKAGE_PRICE,
     expiresOn: '2026-10-17',
   },
+  // 테스트 녹음 1시간 — 2026-10-17(토) 17:00~18:00. 10만원(부가세 포함, 운영자 확정). 연락처는 저장소에 두지 않고 링크 주소의 ?phone=으로 미리 채운다. 녹음일 당일까지만 열린다.
+  '8519f93ee33960ccc793b0c5': {
+    itemName: '테스트 녹음 1시간 (10/17 17:00)',
+    totalAmount: 100000,
+    expiresOn: '2026-10-17',
+  },
 };
 
 const SLUG_PATTERN = /^[0-9a-f]{24}$/;

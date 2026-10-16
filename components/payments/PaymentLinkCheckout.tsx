@@ -38,6 +38,11 @@ export default function PaymentLinkCheckout({ slug, totalAmount }: { slug: strin
   useEffect(() => {
     if (wantsBankFallback(window.location.search)) setPayMethod('bank_transfer');
   }, []);
+  // 링크 주소의 ?phone=으로 연락처를 미리 채운다(운영자가 받는 사람에게 맞춰 만든 링크). 숫자·하이픈만 받는다.
+  useEffect(() => {
+    const phone = new URLSearchParams(window.location.search).get('phone');
+    if (phone && /^[0-9-]{9,13}$/.test(phone)) setCustomerPhone(phone);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
