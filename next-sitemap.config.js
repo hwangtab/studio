@@ -53,6 +53,14 @@ const SHOP_SALES_OPEN = (() => {
   return m[1] === 'true';
 })();
 
+// 소프트웨어도 같은 방식(data/software/policy.ts의 SOFTWARE_SALES_OPEN 선언을 읽는다).
+const SOFTWARE_SALES_OPEN = (() => {
+  const src = fs.readFileSync(path.join(__dirname, 'data/software/policy.ts'), 'utf8');
+  const m = src.match(/export const SOFTWARE_SALES_OPEN\s*=\s*(true|false)\s*;/);
+  if (!m) throw new Error('data/software/policy.ts에서 SOFTWARE_SALES_OPEN 선언을 읽지 못했습니다.');
+  return m[1] === 'true';
+})();
+
 const buildTimestamp = new Date().toISOString();
 
 // Map of marketing pages to their representative OG images.
@@ -138,6 +146,8 @@ module.exports = {
     // 소프트웨어 — 판매를 열기 전(SOFTWARE_SALES_OPEN=false)엔 noindex다. SSR이라 지금은 열거되지 않지만 정적으로
     // 바뀌어도 실리지 않게 막아 둔다. 판매를 열 때 런타임 사이트맵을 붙인다(lib/software/CLAUDE.md).
     '/*/software', '/*/software/*',
+    // 런타임 소프트웨어 사이트맵(pages/sitemap-software.xml.ts) — 페이지가 아니라 사이트맵이다.
+    '/sitemap-software.xml',
     // 비공개 감상실 — 비밀번호로 들어오는 발매 전 음원 페이지(noindex). SSR이라 지금은 열거되지 않지만
     // 정적 페이지로 바뀌는 순간 실리지 않게 미리 막아 둔다.
     '/*/press/*',
@@ -210,6 +220,7 @@ module.exports = {
       `${SITE_URL}/sitemap-shows.xml`,
       // 판매를 열 때(SHOP_SALES_OPEN=true)만 robots에 싣는다. 닫힌 동안은 라우트도 빈 urlset을 낸다.
       ...(SHOP_SALES_OPEN ? [`${SITE_URL}/sitemap-shop.xml`] : []),
+      ...(SOFTWARE_SALES_OPEN ? [`${SITE_URL}/sitemap-software.xml`] : []),
     ],
     transformRobotsTxt: async (_config, robotsTxt) => {
       const cleaned = robotsTxt.replace(/# Host[\r\n]+Host:[^\r\n]*[\r\n]*/g, '');

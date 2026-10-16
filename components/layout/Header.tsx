@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { ARTISTS_NAV_LISTED } from '../../data/navFlags';
 import { SHOP_NAV_LABEL, SHOP_SALES_OPEN } from '../../data/shop/policy';
+import { SOFTWARE_NAV_LABEL, SOFTWARE_SALES_OPEN } from '../../data/software/policy';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { getSiteConfig } from '../../data/siteConfig';
@@ -138,6 +139,8 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
       items: [
         { label: t('nav.about'), href: `/${locale}/about` },
         { label: t('nav.portfolio'), href: `/${locale}/portfolio` },
+        // 판매를 열 때(SOFTWARE_SALES_OPEN)만, 화면이 있는 ko·en에서만.
+        ...(SOFTWARE_SALES_OPEN && (locale === 'ko' || locale === 'en') ? [{ label: SOFTWARE_NAV_LABEL[locale], href: `/${locale}/software` }] : []),
         { label: t('nav.equipment'), href: `/${locale}/studio-info` },
         { label: t('nav.contact'), href: `/${locale}/contact` },
       ]

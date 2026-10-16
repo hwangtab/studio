@@ -17,3 +17,7 @@ export const latestReleaseOf = (product: SoftwareProduct): SoftwareRelease | nul
 export const trialDaysOf = (product: SoftwareProduct): number => product.trialDays ?? SOFTWARE_DEFAULT_TRIAL_DAYS;
 
 export const maxActivationsOf = (product: SoftwareProduct): number => product.maxActivations ?? SOFTWARE_DEFAULT_MAX_ACTIVATIONS;
+
+/** 설치 파일 내려받기 경로(다운로드 API가 서명 주소로 보낸다). */
+export const softwareDownloadPath = (slug: string, version: string, platform: string): string =>
+  `/api/software/download/${encodeURIComponent(slug)}/${encodeURIComponent(version)}/${encodeURIComponent(platform)}`;

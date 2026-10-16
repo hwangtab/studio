@@ -31,3 +31,6 @@ export const SOFTWARE_SELF_CANCEL_DAYS = 7;
  * (2026-10-14 감사 재현: 한도 2인 키로 파일 10개). 정상 사용(컴퓨터 교체·재설치)은 한 달에 몇 번이면 충분하다.
  */
 export const SOFTWARE_DEACTIVATIONS_PER_30_DAYS = 5;
+
+/** 헤더·푸터 메뉴 이름(ko·en 화면만 있다). 판매를 열 때(SOFTWARE_SALES_OPEN)만 메뉴에 나온다. */
+export const SOFTWARE_NAV_LABEL: Readonly<Record<'ko' | 'en', string>> = { ko: '소프트웨어', en: 'Software' };

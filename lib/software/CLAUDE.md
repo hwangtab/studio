@@ -25,8 +25,12 @@
    구매 폼·구매 내역·메일·`lib/software/cancel.ts`와 같은 약속이어야 한다 — 한쪽을 바꾸면 다른 쪽도.
 4. 개인정보 처리방침 — **반영됨**(2026-10-14, `funding-terms-2026-10-14-r2`): 1항 수집 항목, 2항 목적, 3항 보유, 4항 Resend 업무, 18항 ④·⑭.
 5. 상품을 `data/software/catalog.ts`에 올린다 — 가격은 `prices` **맨 앞이 지금 가격**. 기준선 갱신(`UPDATE_SOFTWARE_CATALOG_BASELINE=1`).
-6. `SOFTWARE_SALES_OPEN = true`로 배포 → 메뉴·런타임 사이트맵·`pages/api/llms.ts`를 그때 붙인다.
-7. 최소 금액으로 실결제 → 키 수령 → 활성화 전 셀프 환불 → 키 거절까지 한 바퀴, 카드·간편결제·계좌이체 각 1건.
+   설치 파일은 코드서명·공증을 마친 최종본을 `node --env-file=.env.local scripts/software/publish-installer.mjs --slug … --version … --platform … --file …`로
+   R2(펀딩·상점과 같은 비공개 버킷, `software/<slug>/<version>/`)에 올리고, 스크립트가 찍은 `downloads` 줄을 붙인다. 같은 키 덮어쓰기는 거부한다.
+   화면·구매 내역은 `/api/software/download/<slug>/<version>/<platform>`(카탈로그 키로 10분 서명 주소에 302, 인증 없음 — 체험판과 같은 파일)을 건다.
+6. `SOFTWARE_SALES_OPEN = true`로 배포 — 이 한 줄로 헤더·푸터 메뉴(스튜디오 묶음, ko·en), 런타임 사이트맵(`/sitemap-software.xml`, robots에 실림),
+   llms.txt·llms-full(ko·en)의 소프트웨어 절, 목록·상세의 색인 허용, 이용약관 소프트웨어 절이 함께 켜진다.
+7. 최소 금액으로 실결제 → 키 수령 → 활성화 전 셀프 환불 → 키 거절까지 한 바퀴, 카드·간편결제 각 1건.
 
 ## 바꾸면 안 되는 것 (어겨도 에러가 안 나는 것)
 
