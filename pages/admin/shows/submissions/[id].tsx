@@ -12,6 +12,7 @@ import { Button } from '../../../../components/ui/Button';
 import { Notice } from '../../../../components/ui/Notice';
 import { TextArea, TextInput } from '../../../../components/ui/Field';
 import { formatPriceAmount } from '../../../../data/pricing';
+import { logAdminView } from '../../../../lib/privacy/adminView';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { formatKstDateTimeFull } from '../../../../lib/booking/format';
 import { loadSubmissionForAdmin, type AdminSubmissionDetail } from '../../../../lib/shows/organizer/adminSubmissions';
@@ -25,6 +26,8 @@ export const getServerSideProps: GetServerSideProps<AdminShowSubmissionDetailPag
   if (!auth.ok) return { redirect: { destination: '/admin/login', permanent: false } };
   const id = typeof context.params?.id === 'string' ? context.params.id : '';
   const submission = id ? await loadSubmissionForAdmin(id) : null;
+  // 열람 기록 — 주최자 연락처가 props로 실린다(처리방침 19항).
+  if (id) await logAdminView(context, auth.actor, 'show_submission_view', id, submission ? 'success' : 'not_found');
   if (!submission) return { notFound: true };
   return { props: { submission } };
 };

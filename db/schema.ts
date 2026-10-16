@@ -1516,6 +1516,14 @@ export const privacyAccessActionEnum = [
    * 컬럼이 enum 문자열이라 마이그레이션이 필요 없다(DB CHECK 없음).
    */
   'creator_resident_number_view',
+  /**
+   * 관리자 상세 화면 열람 — 고객 이름·연락처·이메일이 props로 실리는 화면들이다(처리방침 19항). 대상은 각각 주문 id(예약·믹싱·예약금),
+   * 구독 id, 공연 id(주문 명단의 구매자 연락처), 공연 심사 id(주최자 연락처). 컬럼이 enum 문자열이라 마이그레이션이 필요 없다(DB CHECK 없음).
+   */
+  'booking_view',
+  'subscription_view',
+  'show_admin_view',
+  'show_submission_view',
 ] as const;
 
 /**

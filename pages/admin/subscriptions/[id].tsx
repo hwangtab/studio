@@ -15,6 +15,7 @@ import { Field, TextArea, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { listSubscriptionRefundSummary, type SubscriptionRefundSummary } from '../../../lib/billing/refund';
 import { getSubscriptionWithDetails } from '../../../lib/billing/service';
+import { logAdminView } from '../../../lib/privacy/adminView';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatPriceAmount } from '../../../data/pricing';
 import { artistSupportTierLabel, subscriptionOrderName } from '../../../lib/billing/amounts';
@@ -55,6 +56,9 @@ export const getServerSideProps: GetServerSideProps<AdminSubscriptionDetailPageP
     console.error('[admin/subscriptions/[id]] Failed to load subscription:', error);
     return null;
   });
+
+  // 열람 기록 — 고객 이름·연락처·이메일이 props로 실리는 화면이다(처리방침 19항).
+  await logAdminView(context, auth.actor, 'subscription_view', id, details ? 'success' : 'not_found');
 
   if (!details) {
     return { notFound: true };

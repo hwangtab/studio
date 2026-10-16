@@ -8,6 +8,7 @@ import { AdminShell } from '../../../components/admin/AdminShell';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
+import { logAdminView } from '../../../lib/privacy/adminView';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatKstDeadline } from '../../../lib/payments/bankAccount';
 import { findSameNameDepositOrders, type SameNameDepositOrder } from '../../../lib/payments/bankDepositOrders';
@@ -47,6 +48,8 @@ export const getServerSideProps: GetServerSideProps<AdminShowDetailPageProps> = 
   if (typeof id !== 'string') return { notFound: true };
   try {
     const [show, reportLinks] = await Promise.all([loadAdminShowDetail(id), listReportLinks(id)]);
+    // 열람 기록 — 주문 명단의 구매자 이름·연락처가 props로 실린다(처리방침 19항). 값은 적지 않는다.
+    await logAdminView(context, auth.actor, 'show_admin_view', id, show ? 'success' : 'not_found');
     if (!show) return { notFound: true };
     const refundAccounts: Record<string, ShowRefundAccountInfo> = {};
     const sameNameDeposits: Record<string, SameNameDepositOrder[]> = {};

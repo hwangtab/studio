@@ -18,6 +18,7 @@ import { Field, Select, TextArea, TextInput } from '../../../components/ui/Field
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { getDb } from '../../../db/client';
 import { loadPaymentLinkOrderInfo } from '../../../lib/payments/paymentLinkOrders';
+import { logAdminView } from '../../../lib/privacy/adminView';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatPriceAmount } from '../../../data/pricing';
 import {
@@ -67,6 +68,9 @@ export const getServerSideProps: GetServerSideProps<AdminBookingDetailPageProps>
       console.error('[admin/bookings/[id]] Failed to load order:', error);
       return null;
     });
+
+  // 열람 기록 — 고객 이름·연락처·이메일이 props로 실리는 화면이다(처리방침 19항). 없는 주문을 열려 한 것도 남기고, 값은 적지 않는다.
+  await logAdminView(context, auth.actor, 'booking_view', id, order ? 'success' : 'not_found');
 
   if (!order) {
     return { notFound: true };
