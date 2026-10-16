@@ -44,6 +44,15 @@ export async function cancelShowtime(
   bankRefundOrders: string[];
   /** 입금 전이던 계좌 입금 신청 — 여기서 함께 닫았다(deposit_cancelled, 티켓 void). 입금하지 말라고 알린다. */
   closedDepositOrders: string[];
+  /** 이번 실행에서 토스 환불을 끝낸 주문번호 — 호출부가 안내 메일을 보낼 대상(resume 때 affected와 다르다). */
+  refundedOrderNos: string[];
+  /**
+   * 주문별 결과 — 안내 메일이 실제 환불액으로 말하게 한다. `refunded`는 이번 실행에서 토스로 돌려준 금액,
+   * `skipped`는 토스를 부르지 않은 이유(입장 티켓만 남음 / 이미 전액 환불됨).
+   */
+  perOrder: Record<string, { refunded: number; checkedInValue: number; skipped: 'checked_in_only' | 'already_refunded' | null; final: 'refunded' | 'partially_refunded' | 'unchanged' }>;
+  /** 한 호출당 처리 상한에 걸려 남겨 둔 주문 수 — 운영자가 '환불 이어서 처리'로 잇는다. */
+  remainingOrders: number;
 }> {
   const db = getDb();
   const nowSec = Math.floor(now.getTime() / 1000);
@@ -90,13 +99,34 @@ export async function cancelShowtime(
   let refundedOrders = 0;
   const failedOrders: string[] = [];
   const bankRefundOrders: string[] = [];
+  const refundedOrderNos: string[] = [];
+  const perOrder: Awaited<ReturnType<typeof cancelShowtime>>['perOrder'] = {};
 
-  for (const row of rows as Array<{ orderNo: string }>) {
+  // 주문당 Turso 왕복 3회 + 토스 1회 + batch가 직렬이라 함수 시간 한도(60초) 안에서 처리할 수 있는 만큼만 잡고,
+  // 나머지는 호출부의 '환불 이어서 처리'가 같은 함수를 다시 부른다 — showtimes UPDATE는 scheduled에만 걸려 no-op이고
+  // 멱등키가 (주문·잔액)이라 토스가 응답을 재생하므로 다시 돌려도 안전하다.
+  const allRows = rows as Array<{ orderNo: string }>;
+  const batchRows = allRows.slice(0, MAX_ORDERS_PER_RUN);
+  const remainingOrders = allRows.length - batchRows.length;
+
+  for (const row of batchRows) {
     const orderNo = row.orderNo;
+    // 주문 하나의 DB 오류가 나머지 주문의 환불·안내를 막지 않게 한다 — 던진 주문은 failedOrders로 넘기고 계속 간다.
+    try {
+      await settleOne(orderNo);
+    } catch (error) {
+      console.error('[shows-showtimeOps] 회차 취소 환불 중 오류 — 이 주문은 실패로 넘기고 계속', { orderNo, error });
+      if (!failedOrders.includes(orderNo)) failedOrders.push(orderNo);
+    }
+  }
+
+  return { refundedOrders, failedOrders, bankRefundOrders, closedDepositOrders, refundedOrderNos, perOrder, remainingOrders };
+
+  async function settleOne(orderNo: string): Promise<void> {
     const order = await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, orderNo) });
     if (!order) {
       failedOrders.push(orderNo);
-      continue;
+      return;
     }
 
     const payments = await db.query.payments.findMany({
@@ -119,18 +149,25 @@ export async function cancelShowtime(
     // 값어치를 추가로 뺀다. 0이면(부분환불이 이미 전액을 처리했거나, 남은 몫이 전부
     // 체크인된 티켓뿐인 경우) 취소할 것이 없어 건너뛴다 — 토스도 우리 기록도 건드리지 않는다.
     const remaining = Math.max(0, remainingRefundable(order, payments) - checkedInValue);
-    if (remaining <= 0) continue;
+    if (remaining <= 0) {
+      perOrder[orderNo] = {
+        refunded: 0, checkedInValue,
+        skipped: remainingRefundable(order, payments) <= 0 ? 'already_refunded' : 'checked_in_only',
+        final: 'unchanged',
+      };
+      return;
+    }
 
     const doneRefundedOn = (p: PaymentWithRefunds): number =>
       p.refunds.filter((r) => r.status === 'done').reduce((sum, r) => sum + r.amount, 0);
     const payment = payments.find((p) => doneRefundedOn(p) < order.totalAmount) ?? payments[payments.length - 1];
     if (!payment) {
       failedOrders.push(orderNo);
-      continue;
+      return;
     }
     if (isBankDepositPayment(payment)) {
       bankRefundOrders.push(orderNo);
-      continue;
+      return;
     }
 
     const key = refundIdempotencyKey(orderNo, remaining, 'showtime-cancel');
@@ -147,7 +184,7 @@ export async function cancelShowtime(
         orderNo, code: cancelResult.code, message: cancelResult.message,
       });
       failedOrders.push(orderNo);
-      continue;
+      return;
     }
 
     // 델타 INSERT — refund.ts(refundShowTickets)·funding lineRefund와 같은 패턴. 웹훅이
@@ -184,10 +221,13 @@ export async function cancelShowtime(
     await db.batch(settleStatements as [typeof settleStatements[number], ...typeof settleStatements]);
 
     refundedOrders++;
+    refundedOrderNos.push(orderNo);
+    perOrder[orderNo] = { refunded: remaining, checkedInValue, skipped: null, final: finalOrderStatus };
   }
-
-  return { refundedOrders, failedOrders, bankRefundOrders, closedDepositOrders };
 }
+
+/** 한 호출에서 환불 처리하는 주문 상한(함수 시간 한도 60초 기준). 나머지는 '환불 이어서 처리'로 잇는다. */
+export const MAX_ORDERS_PER_RUN = 40;
 
 /**
  * 회차 시각 변경 — `previous_starts_at`을 보존하고(최초 변경분만, 재변경은 그대로 유지),
