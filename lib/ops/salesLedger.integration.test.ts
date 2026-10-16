@@ -155,3 +155,12 @@ describe('validateLedgerRange', () => {
     expect(validateLedgerRange({ from: '2026-01-01', to: '2026-12-31' })).toBeNull();
   });
 });
+
+it('공연 티켓 결제는 날것의 ticket이 아니라 한글 라벨로 싣는다', async () => {
+  await insertOrder('t', 'ticket');
+  await insertPayment('pt', 't', '2026-09-04T03:00:00Z');
+
+  const [row] = await listSalesLedgerRows({ from: '2026-09-01', to: '2026-09-30' });
+
+  expect(row).toMatchObject({ type: '공연 티켓', description: '공연 티켓' });
+});

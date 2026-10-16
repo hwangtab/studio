@@ -207,10 +207,16 @@ export default function AdminBookingDetailPage({
       '이 예약을 완료 처리할까요?',
     );
 
+  const handleRevertStatus = () =>
+    run(
+      () => setBookingStatus(booking.id, 'confirmed'),
+      '완료·노쇼 처리를 취소하고 확정 상태로 되돌릴까요? 되돌린 뒤에는 환불·취소를 진행할 수 있습니다.',
+    );
+
   const handleNoShow = () =>
     run(
       () => setBookingStatus(booking.id, 'no_show'),
-      '이 예약을 노쇼로 처리할까요? 환불이 필요하면 별도로 임의 환불을 진행해 주세요.',
+      '이 예약을 노쇼로 처리할까요? 처리하면 환불 화면이 닫힙니다. 환불이 필요하면 먼저 취소하거나, 처리 뒤 "확정으로 되돌리기"로 되돌린 다음 환불해 주세요.',
     );
 
   const handleResend = () => run(() => resendBookingNotification(booking.id));
@@ -376,6 +382,8 @@ export default function AdminBookingDetailPage({
 
   // 완료·노쇼·캘린더·재발송은 슬롯이 있는 세션 예약만의 개념(API도 믹싱엔 409를 준다).
   const canChangeStatus = !isMixing && booking.bookingStatus === 'confirmed';
+  // 완료·노쇼는 환불 경로를 닫는다 — 잘못 눌렀거나 환불이 필요해지면 확정으로 되돌릴 수 있어야 한다.
+  const canRevertStatus = !isMixing && (booking.bookingStatus === 'completed' || booking.bookingStatus === 'no_show');
   // 입금 전에 취소된 계좌 입금 신청은 보낼 알림이 없다(API도 409).
   const canResend = !isMixing && booking.bookingStatus !== null && booking.bookingStatus !== 'pending' && booking.bankDeposit !== 'cancelled';
   // 취소된 예약은 캘린더에 다시 등록할 이유가 없다 — API도 같은 가드를 둔다
@@ -871,6 +879,12 @@ export default function AdminBookingDetailPage({
                 </>
               )}
 
+              {canRevertStatus && (
+                <Button light variant="weak" disabled={busy} onClick={handleRevertStatus}>
+                  확정으로 되돌리기
+                </Button>
+              )}
+
               {canStartWork && (
                 <Button light disabled={busy} onClick={handleStartWork}>
                   작업 시작
@@ -888,7 +902,7 @@ export default function AdminBookingDetailPage({
                 </Button>
               )}
 
-              {!canChangeStatus && !canResend && !canStartWork && !canDeliver && (
+              {!canChangeStatus && !canRevertStatus && !canResend && !canStartWork && !canDeliver && (
                 <p className="text-sm text-gray-500">
                   {isMixing ? '지금 상태에서는 가능한 작업이 없습니다.' : '결제 대기 중인 예약에는 가능한 작업이 없습니다.'}
                 </p>

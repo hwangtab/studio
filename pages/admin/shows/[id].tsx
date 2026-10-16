@@ -361,7 +361,25 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
             </Button>
             {t.scanLinks.length > 0 && (
               <ul className="text-xs text-gray-600 space-y-0.5">
-                {t.scanLinks.map((l) => <li key={l.id}>{l.label} · 만료 {kstTime(l.expiresAt)}{l.revokedAt ? ' · 폐기' : ''}</li>)}
+                {t.scanLinks.map((l) => {
+                  const live = l.revokedAt == null && l.expiresAt > Math.floor(Date.now() / 1000);
+                  return (
+                    <li key={l.id} className="flex flex-wrap items-center gap-2">
+                      <span>
+                        {l.label} · 만료 {kstTime(l.expiresAt)}
+                        {l.revokedAt != null ? ' · 폐기' : !live ? ' · 만료됨' : ''}
+                      </span>
+                      {live && (
+                        <Button light variant="weak" size="sm" disabled={busy} onClick={() => run(
+                          { action: 'revoke_scan_link', linkId: l.id },
+                          { confirm: `${l.label}에게 준 입장 스캔 링크를 폐기합니다. 그 주소로는 더 이상 입장 처리를 할 수 없습니다.`, success: '스캔 링크를 폐기했습니다.' },
+                        )}>
+                          폐기
+                        </Button>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </div>

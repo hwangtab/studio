@@ -42,6 +42,8 @@ const DASHBOARD: AdminDashboard = {
     artistPayoutsPending: 0,
     fundingProjectsAwaitingReview: 4,
     fundingPayoutsPending: 2,
+    fundingPayoutsToRecord: 1,
+    awaitingDeposit: { bookings: 3, shows: 0, shop: 1, funding: 2 },
   },
   socialTokens: [{ platform: 'ig', expiresAt: '2026-09-26T03:00:00.000Z', daysLeft: 10 }],
   upcomingWindowDays: 7,
@@ -151,5 +153,17 @@ describe('이번 달 매출 요약', () => {
     render(<AdminIndexPage {...result.props} />);
     expect(screen.queryByText(/월 매출/)).not.toBeInTheDocument();
     expect(screen.getByText('처리할 일')).toBeInTheDocument();
+  });
+});
+
+describe('놓치기 쉬운 대기열 — 마감 뒤 정산 기록, 계좌 입금 대기', () => {
+  it('정산 기록 대기와 종류별 입금 대기를 건수·이동 링크와 함께 그린다', () => {
+    render(<AdminIndexPage dashboard={DASHBOARD} shopQueues={SHOP_QUEUES} ledgerFrom="2026-09-01" ledgerTo="2026-09-16" />);
+
+    expect(screen.getByRole('link', { name: /정산 기록 대기 펀딩 \(마감됨\)\s*1/ })).toHaveAttribute('href', '/admin/funding/projects');
+    expect(screen.getByRole('link', { name: /입금 대기 예약·믹싱\s*3/ })).toHaveAttribute('href', '/admin/bookings?deposit=pending');
+    expect(screen.getByRole('link', { name: /입금 대기 펀딩\s*2/ })).toHaveAttribute('href', '/admin/funding?deposit=pending');
+    expect(screen.getByRole('link', { name: /입금 대기 공연 티켓\s*0/ })).toHaveAttribute('href', '/admin/shows');
+    expect(screen.getByRole('link', { name: /입금 대기 상점 주문\s*1/ })).toHaveAttribute('href', '/admin/shop');
   });
 });

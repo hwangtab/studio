@@ -199,7 +199,12 @@ export default function AdminIndexPage({ dashboard, shopQueues, revenue = null, 
                 <QueueCard label="정지된 구독" count={dashboard.queues.subscriptionsPaused} href="/admin/subscriptions" alert />
                 <QueueCard label="이체 대기 아티스트 정산" count={dashboard.queues.artistPayoutsPending} href="/admin/artists" alert />
                 <QueueCard label="심사 대기 펀딩 프로젝트" count={dashboard.queues.fundingProjectsAwaitingReview} href="/admin/funding/projects" alert />
+                <QueueCard label="정산 기록 대기 펀딩 (마감됨)" count={dashboard.queues.fundingPayoutsToRecord} href="/admin/funding/projects" alert />
                 <QueueCard label="이체 대기 펀딩 정산" count={dashboard.queues.fundingPayoutsPending} href="/admin/funding/projects" alert />
+                <QueueCard label="입금 대기 예약·믹싱" count={dashboard.queues.awaitingDeposit.bookings} href="/admin/bookings?deposit=pending" alert />
+                <QueueCard label="입금 대기 펀딩" count={dashboard.queues.awaitingDeposit.funding} href="/admin/funding?deposit=pending" alert />
+                <QueueCard label="입금 대기 공연 티켓" count={dashboard.queues.awaitingDeposit.shows} href="/admin/shows" alert />
+                <QueueCard label="입금 대기 상점 주문" count={dashboard.queues.awaitingDeposit.shop} href="/admin/shop" alert />
                 {shopQueues.pendingProducts !== null && (
                   <QueueCard label="심사 대기 상점 상품" count={shopQueues.pendingProducts} href="/admin/shop/products" alert />
                 )}

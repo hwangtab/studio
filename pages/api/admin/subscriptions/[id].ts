@@ -147,6 +147,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ ok: false, message: '해지 사유를 입력해 주세요.' });
       }
 
+      // 카드 등록 전(`pending_card`)에 닫는 구독은 한 번도 시작하지 않았다 — 고객에게 "이용 가능 기한" 해지 메일을 보내지 않는다
+      // (잘못 적은 주소로 만든 구독을 닫는 경우가 대표적이라 엉뚱한 사람에게 갈 수 있다). 운영자 알림은 그대로 나간다.
+      const before = await getDb().query.subscriptions.findFirst({ where: eq(subscriptions.id, id) });
+      const neverStarted = before?.status === 'pending_card';
+
       const result = await cancelSubscription(id, { requestedBy: 'admin', reason: reasonText }, now);
       if (!result.ok) {
         return res
@@ -155,7 +160,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       const endsAt = result.subscription.endsAt ?? now;
-      const notificationError = await sendSubscriptionCancelledEmail(result.subscription, { endsAt });
+      const notificationError = neverStarted ? null : await sendSubscriptionCancelledEmail(result.subscription, { endsAt });
       await sendSubscriptionOperatorAlert(result.subscription, 'cancelled', `사유: ${reasonText}`);
       if (notificationError) {
         await getDb().update(subscriptions).set({ notificationError }).where(eq(subscriptions.id, id));

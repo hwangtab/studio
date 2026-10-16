@@ -16,11 +16,13 @@ let mockDb: ShowsTestDb;
 jest.mock('../../../../db/client', () => ({ getDb: () => mockDb }));
 jest.mock('../../../../lib/contracts/admin-auth', () => ({ authenticateAdminApi: jest.fn() }));
 jest.mock('../../../../lib/booking/toss', () => ({ cancelPayment: jest.fn() }));
-jest.mock('../../../../lib/shows/scanLink', () => ({ issueScanLink: jest.fn(async () => ({ token: 'tok-secret-1234567890', id: 'l1', expiresAt: 1 })), SCAN_LINK_MAX_TTL_HOURS: 72, verifyScanLink: jest.fn() }));
+jest.mock('../../../../lib/shows/scanLink', () => ({ issueScanLink: jest.fn(async () => ({ token: 'tok-secret-1234567890', id: 'l1', expiresAt: 1 })), SCAN_LINK_MAX_TTL_HOURS: 72, verifyScanLink: jest.fn(), revokeScanLink: jest.fn(async () => true) }));
 jest.mock('../../../../lib/privacy/accessLog', () => ({ recordAdminPrivacyAccess: jest.fn(async () => undefined) }));
 
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { recordAdminPrivacyAccess } from '../../../../lib/privacy/accessLog';
+import { revokeScanLink } from '../../../../lib/shows/scanLink';
+import { showScanLinks } from '../../../../db/schema';
 import handler from '../../../../pages/api/admin/shows/[id]';
 import rosterHandler from '../../../../pages/api/admin/shows/[id]/roster';
 
@@ -132,6 +134,28 @@ describe('관리자 공연 API', () => {
     expect(res.status).toHaveBeenCalledWith(400);
     res = await call(handler, { query: { id: showId }, body: { action: 'issue_scan_link', showtimeId, label: 'a', ttlHours: 999 } });
     expect(res.status).toHaveBeenCalledWith(400);
+  });
+
+  it('스캔 링크는 이 공연의 회차에 걸린 것만 만료 전에 폐기할 수 있다', async () => {
+    await mockDb.insert(showScanLinks).values({ id: 'l-own', showtimeId, tokenHash: 'h-own', label: '현장1', expiresAt: Math.floor(Date.now() / 1000) + 3600 });
+    // 다른 공연의 회차에 걸린 링크 — 이 공연의 관리자 API로는 건드릴 수 없다.
+    await seedShow(mockDb, { ...bakkeojiShow, slug: 'other-show', showtimes: [{ startsAt: new Date(Date.now() + 20 * 86400 * 1000) }] }, { apply: true });
+    const otherShow = (await mockDb.select().from(shows).where(eq(shows.slug, 'other-show')))[0];
+    const otherTime = (await mockDb.select().from(showtimes).where(eq(showtimes.showId, otherShow.id)))[0];
+    await mockDb.insert(showScanLinks).values({ id: 'l-other', showtimeId: otherTime.id, tokenHash: 'h-other', label: '남의 것', expiresAt: Math.floor(Date.now() / 1000) + 3600 });
+
+    let res = await call(handler, { query: { id: showId }, body: { action: 'revoke_scan_link', linkId: 'l-own' } });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(revokeScanLink).toHaveBeenCalledWith('l-own', expect.any(Date));
+
+    (revokeScanLink as jest.Mock).mockClear();
+    res = await call(handler, { query: { id: showId }, body: { action: 'revoke_scan_link', linkId: 'l-other' } });
+    expect(res.status).toHaveBeenCalledWith(409);
+    res = await call(handler, { query: { id: showId }, body: { action: 'revoke_scan_link', linkId: 'nope' } });
+    expect(res.status).toHaveBeenCalledWith(409);
+    res = await call(handler, { query: { id: showId }, body: { action: 'revoke_scan_link' } });
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(revokeScanLink).not.toHaveBeenCalled();
   });
 
   it('회차 시각 변경은 과거를 거부하고 판매마감을 다시 계산한다', async () => {

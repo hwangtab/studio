@@ -43,7 +43,7 @@ beforeAll(async () => {
 });
 afterAll(() => client.close());
 beforeEach(async () => {
-  for (const t of ['refunds', 'payments', 'bookings', 'work_orders', 'funding_pledges', 'funding_projects', 'funding_creators', 'subscription_payments', 'subscriptions', 'orders', 'payment_link_orders', 'contracts', 'social_tokens']) {
+  for (const t of ['refunds', 'payments', 'bookings', 'work_orders', 'funding_pledges', 'funding_project_payouts', 'funding_projects', 'funding_creators', 'subscription_payments', 'subscriptions', 'orders', 'payment_link_orders', 'contracts', 'social_tokens']) {
     await client.execute(`DELETE FROM ${t}`);
   }
 });
@@ -146,6 +146,8 @@ it('대기열 건수 — 믹싱 착수 대기·작업 중, 구독 카드 대기�
     artistPayoutsPending: 0,
     fundingProjectsAwaitingReview: 2,
     fundingPayoutsPending: 0,
+    fundingPayoutsToRecord: 0,
+    awaitingDeposit: { bookings: 0, shows: 0, shop: 0, funding: 0 },
   });
   expect(dash.issues.map((i) => i.title)).toContain('서명 기한이 지난 계약 1건');
 });
@@ -174,7 +176,90 @@ it('비어 있으면 전부 0·빈 목록이고 실패하지 않는다', async (
   expect(dash.issues).toEqual([]);
   expect(dash.upcomingSessions).toEqual([]);
   expect(dash.socialTokens).toEqual([]);
-  expect(Object.values(dash.queues).every((n) => n === 0)).toBe(true);
+  expect(Object.values(dash.queues).every((n) => (typeof n === 'number' ? n === 0 : Object.values(n).every((m) => m === 0)))).toBe(true);
+});
+
+const insertPledge = async (orderId: string, slug: string, orderStatus: string, method = 'toss', source = 'online') => {
+  await client.execute({
+    sql: `INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email, manage_token,
+            item_amount, vat_amount, total_amount, created_at) VALUES (?, ?, 'funding', ?, '후원', '010', 'a@b.c', ?, 30000, 0, 30000, ?)`,
+    args: [orderId, `NO-${orderId}`, orderStatus, `tok-${orderId}`, EPOCH('2026-09-01T00:00:00Z')],
+  });
+  await client.execute({
+    sql: `INSERT INTO funding_pledges (id, order_id, project_slug, reward_id, reward_title, unit_amount, quantity, payment_method, hold_expires_at, entry_source)
+          VALUES (?, ?, ?, 'r', '리워드', 30000, 1, ?, ?, ?)`,
+    args: [`fp-${orderId}`, orderId, slug, method, EPOCH('2026-09-02T00:00:00Z'), source],
+  });
+};
+
+describe('마감 뒤 정산 기록 대기 — 어느 대기열에도 없던 빈칸', () => {
+  const endProject = (id: string) => client.execute({ sql: `UPDATE funding_projects SET end_at = ? WHERE id = ?`, args: [EPOCH('2026-09-10T00:00:00Z'), `fp-${id}`] });
+
+  it('승인됐고 마감됐고 살아 있는 후원이 있으며 정산 행이 없는 프로젝트만 센다', async () => {
+    for (const id of ['a', 'b', 'c', 'd', 'e']) await insertFundingProject(id, 'approved');
+    for (const id of ['a', 'b', 'c', 'e']) await endProject(id); // d는 아직 모금 중
+    await insertPledge('oa', 'slug-a', 'paid'); // 센다
+    await insertPledge('ob', 'slug-b', 'refunded'); // 살아 있는 후원 없음
+    await insertPledge('oc', 'slug-c', 'paid');
+    await client.execute({
+      sql: `INSERT INTO funding_project_payouts (id, project_id, gross_amount, refund_amount, supply_amount, fee_amount, platform_fee_amount, payment_fee_amount,
+              share_amount, withholding_amount, design_fee_offset_amount, production_fee_offset_amount, shortfall_amount, net_amount, backer_count, status)
+            VALUES ('po', 'fp-c', 30000, 0, 27000, 3000, 2000, 1000, 27000, 0, 0, 0, 0, 27000, 1, 'pending')`,
+      args: [],
+    }); // 이미 기록됨
+    await insertPledge('od', 'slug-d', 'paid');
+    // e: 후원 자체가 없다
+
+    const dash = await loadAdminDashboard(NOW);
+
+    expect(dash.queues.fundingPayoutsToRecord).toBe(1);
+    expect(dash.queues.fundingPayoutsPending).toBe(1);
+  });
+
+  it('마감 후 영업일 14일을 넘기면 점검 항목(high)으로도 올라온다', async () => {
+    await insertFundingProject('late', 'approved');
+    await client.execute({ sql: `UPDATE funding_projects SET end_at = ? WHERE id = 'fp-late'`, args: [EPOCH('2026-08-20T00:00:00Z')] });
+    await insertPledge('ol', 'slug-late', 'paid');
+    await insertFundingProject('fresh', 'approved');
+    await endProject('fresh'); // 9/10 마감 — 9/16 현재 영업일 14일 안
+    await insertPledge('of', 'slug-fresh', 'paid');
+
+    const dash = await loadAdminDashboard(NOW);
+
+    const issue = dash.issues.find((i) => i.title.includes('정산 안내 기한'));
+    expect(issue).toMatchObject({ severity: 'high', href: '/admin/funding/projects' });
+    expect(issue?.detail).toContain('slug-late');
+    expect(issue?.detail).not.toContain('slug-fresh');
+    expect(dash.queues.fundingPayoutsToRecord).toBe(2);
+  });
+});
+
+describe('계좌 입금 대기 — 자동 취소가 없는 주문', () => {
+  const insertWaiting = (id: string, type: string, createdIso: string) =>
+    client.execute({
+      sql: `INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email, manage_token,
+              item_amount, vat_amount, total_amount, created_at) VALUES (?, ?, ?, 'awaiting_deposit', '입금', '010', 'a@b.c', ?, 100, 10, 110, ?)`,
+      args: [id, `NO-${id}`, type, `tok-${id}`, EPOCH(createdIso)],
+    });
+
+  it('종류별로 세고, 안내 기한(3일)을 넘긴 것만 점검 항목으로 올린다', async () => {
+    await insertWaiting('w1', 'session', '2026-09-15T00:00:00Z'); // 어제 — 기한 안
+    await insertWaiting('w2', 'mixing', '2026-09-01T00:00:00Z'); // 기한 지남
+    await insertWaiting('w3', 'ticket', '2026-09-01T00:00:00Z'); // 기한 지남
+    await insertWaiting('w4', 'merch', '2026-09-15T00:00:00Z');
+    await insertPledge('wf', 'slug-x', 'pending', 'bank_transfer', 'online');
+    await insertPledge('wm', 'slug-x', 'pending', 'bank_transfer', 'manual'); // 수기 등록은 입금 대기가 아니다
+    await insertPledge('wt', 'slug-x', 'pending', 'toss'); // 토스 결제창 홀드는 아니다
+
+    const dash = await loadAdminDashboard(NOW);
+
+    expect(dash.queues.awaitingDeposit).toEqual({ bookings: 2, shows: 1, shop: 1, funding: 1 });
+    const issue = dash.issues.find((i) => i.title.includes('계좌 입금 대기'));
+    expect(issue?.title).toContain('3건');
+    expect(issue?.detail).toContain('공연 1건');
+    expect(issue?.detail).toContain('예약·믹싱 1건');
+    expect(issue?.detail).toContain('펀딩 1건');
+  });
 });
 
 describe('이번 주 세션 — 결제 링크 이용 일정(0062)', () => {

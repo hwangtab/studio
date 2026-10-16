@@ -8,7 +8,9 @@ import { bookings, contracts, fundingPledges, fundingProjectPayouts, fundingProj
 import { calendarForService, calendarIdFor, fetchBusyRanges, isCalendarActive, roomCalendarEnvKey, type BookingCalendar } from '../booking/gcal';
 import { PRACTICE_ROOM_HOURLY_ROOMS } from '../booking/products';
 import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
-import { buildFundingPayoutPreview } from '../funding/payout';
+import { FUNDING_PAYOUT_BUSINESS_DAYS } from '../funding/policy';
+import { BANK_DEPOSIT_GUIDE_DAYS } from '../payments/bankAccount';
+import { buildFundingPayoutPreview, businessDaysAfter, listFundingProjectsAwaitingPayoutRecord } from '../funding/payout';
 import { getAllFundingProjects } from '../funding/projects';
 import { LIVE_FUNDING_ORDER_STATUSES } from '../funding/refundable';
 import { ORDER_LEGAL_RETENTION_YEARS } from '../privacy/orderRetention';
@@ -1125,6 +1127,56 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
         `대상: ${sample(staleUnsigned.map((row) => row.customerName))}\n` +
         '고객이 링크를 놓쳤을 수 있습니다. 재발송하거나 계약을 취소해 주세요.',
     });
+  }
+
+  /**
+   * **마감됐는데 정산을 기록하지 않은 프로젝트가 안내 기한(영업일 N일)을 넘긴 경우.** 정산 시점은 코드가 강제하지 않고
+   * 운영자가 기록 버튼을 누르는 방식이라, 잊으면 어느 화면에도 신호가 없었다. 기한 안은 대시보드 대기열 카드로 보이고
+   * (매일 울리지 않게), 기한을 넘기면 여기서 메일로도 알린다. 공휴일은 모르는 근사 계산이다.
+   */
+  try {
+    const toRecord = await listFundingProjectsAwaitingPayoutRecord(now);
+    const overdue = toRecord.filter((p) => now.getTime() > businessDaysAfter(p.endAt, FUNDING_PAYOUT_BUSINESS_DAYS).getTime());
+    if (overdue.length > 0) {
+      issues.push({
+        severity: 'high',
+        href: '/admin/funding/projects',
+        title: `정산 안내 기한(마감 후 영업일 ${FUNDING_PAYOUT_BUSINESS_DAYS}일)을 넘긴 펀딩 프로젝트 ${overdue.length}건`,
+        detail:
+          `${sample(overdue.map((p) => p.slug))}\n` +
+          '모금이 끝났는데 정산이 아직 기록되지 않았습니다. 프로젝트 상세의 정산 패널에서 금액을 확인하고 기록해 주세요.',
+      });
+    }
+  } catch (error: unknown) {
+    console.error('[health] 정산 기록 대기 조회 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
+  }
+
+  /**
+   * **입금 안내 기한을 넘기고도 입금을 확인하지도 닫지도 않은 계좌 입금 주문.** 자동 취소가 없는 대신(lib/payments/bankDeposit.ts)
+   * 운영자가 닫아야 하는데, 대시보드에도 점검 메일에도 신호가 없어 시간대·좌석·재고를 잡은 채 몇 주씩 남을 수 있었다.
+   */
+  {
+    const cutoff = Math.floor(now.getTime() / 1000) - BANK_DEPOSIT_GUIDE_DAYS * 24 * 60 * 60;
+    const stale = await db.all<{ kind: string; n: number }>(sql`
+      SELECT CASE WHEN o.type = 'ticket' THEN '공연' WHEN o.type = 'merch' THEN '상점'
+                  WHEN o.type = 'funding' THEN '펀딩' ELSE '예약·믹싱' END AS kind, COUNT(*) AS n
+      FROM orders o
+      WHERE o.created_at < ${cutoff}
+        AND (o.status = 'awaiting_deposit' OR (o.type = 'funding' AND o.status = 'pending'
+          AND EXISTS (SELECT 1 FROM funding_pledges fp WHERE fp.order_id = o.id AND fp.payment_method = 'bank_transfer' AND fp.entry_source = 'online')))
+      GROUP BY kind
+    `);
+    const total = stale.reduce((sum, r) => sum + Number(r.n), 0);
+    if (total > 0) {
+      issues.push({
+        severity: 'medium',
+        href: '/admin',
+        title: `입금 안내 기한(${BANK_DEPOSIT_GUIDE_DAYS}일)이 지난 계좌 입금 대기 ${total}건`,
+        detail:
+          `${stale.map((r) => `${r.kind} ${Number(r.n)}건`).join(' · ')}\n` +
+          '통장에서 입금을 확인해 확정하거나, 입금이 없으면 "미입금 취소"로 닫아 주세요. 자동 취소는 없습니다.',
+      });
+    }
   }
 
   return sortBySeverity(issues);

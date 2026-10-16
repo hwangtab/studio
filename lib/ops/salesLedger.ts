@@ -63,6 +63,7 @@ const TYPE_LABELS: Record<string, string> = {
   funding: '펀딩',
   subscription: '구독',
   deposit: '예약금',
+  ticket: '공연 티켓',
   merch: '상점',
   software: '소프트웨어',
 };
@@ -180,6 +181,9 @@ const describeOrder = (order: LedgerOrder): string => {
     case 'merch':
       // 품목은 shop_order_items에 있지만 여기서 관계를 싣지 않는다 — 마이그레이션 0052 전 DB에서 장부 전체가 깨진다.
       return '상점(음반·굿즈)';
+    case 'ticket':
+      // 회차·좌석은 show_orders/show_tickets에 있지만 여기서 관계를 싣지 않는다 — 공연 표(0045)가 없는 DB에서 장부 전체가 깨진다.
+      return '공연 티켓';
     case 'software':
       // 품목은 software_orders에 있지만 관계를 싣지 않는다 — 마이그레이션 0056 전 DB에서 장부 전체가 깨진다.
       return '소프트웨어 라이선스';

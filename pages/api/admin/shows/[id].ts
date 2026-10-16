@@ -6,7 +6,7 @@ import { showTicketTypes, showtimes, showZones } from '../../../../db/schema';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { cancelPayment } from '../../../../lib/booking/toss';
 import { isPublishable, revalidateShow, sqlUpdateStatus } from '../../../../lib/shows/revalidate';
-import { SCAN_LINK_MAX_TTL_HOURS } from '../../../../lib/shows/scanLink';
+import { SCAN_LINK_MAX_TTL_HOURS, revokeScanLink } from '../../../../lib/shows/scanLink';
 import { createScanLinkToken } from '../../../../lib/shows/scanAccess';
 import { issueReportLink, REPORT_LINK_MAX_TTL_DAYS, revokeReportLink } from '../../../../lib/shows/reportLink';
 import { undoCheckIn } from '../../../../lib/shows/checkin';
@@ -229,6 +229,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const token = await createScanLinkToken(showtime.id, label, ttlHours);
       // 토큰 원문은 지금 응답에서만 볼 수 있다(DB에는 해시만 있다) — 화면이 바로 보여 준다.
       return res.status(200).json({ ok: true, path: `/ko/shows/scan/${token}` });
+    }
+
+    case 'revoke_scan_link': {
+      // 유출됐거나 담당자가 바뀐 입장 스캔 링크를 만료 전에 닫는다. 이 공연의 회차에 걸린 링크만 폐기할 수 있다.
+      if (!isNonEmptyString(b.linkId)) return res.status(400).json({ ok: false, message: '링크를 찾을 수 없습니다.' });
+      const link = await db.query.showScanLinks.findFirst({ where: (l, { eq }) => eq(l.id, b.linkId as string) });
+      if (!link || !showtimeOf(link.showtimeId)) return res.status(409).json({ ok: false, message: '이미 폐기됐거나 이 공연의 링크가 아닙니다.' });
+      const ok = await revokeScanLink(link.id, now);
+      return ok ? res.status(200).json({ ok: true }) : res.status(409).json({ ok: false, message: '이미 폐기됐거나 이 공연의 링크가 아닙니다.' });
     }
 
     case 'issue_report_link': {
