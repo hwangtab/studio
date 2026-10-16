@@ -21,10 +21,11 @@ import { confirmShowOrder } from '../shows/confirm';
 import { refundShowTickets } from '../shows/refund';
 import { cancelShowtime } from '../shows/showtimeOps';
 import { hasPartnerInvoicePayout, hasPartnerWithheldPayout } from './creatorPayouts';
-import { buildShowPayoutPreview, listShowPayoutsAwaitingRecord, recordShowPayout, lastShowEndAt } from './show';
+import { buildShowPayoutPreview, listOverpaidShowPayouts, listShowPayoutsAwaitingRecord, recordShowPayout, lastShowEndAt } from './show';
 import { computeShowtimeCancelFee, setShowtimeCancelFeeWaived, syncShowtimeCancelFee } from './showCancelFee';
 import { loadShowPayoutPanel } from './showPanel';
-import { deletePartnerPayoutIfPending, findPartnerPayout, markPartnerPayoutPaid } from './store';
+import { appendPartnerPayoutMemoIfPaid, deletePartnerPayoutIfPending, findPartnerPayout, markPartnerPayoutPaid } from './store';
+import { formatAckLine, parseAcknowledgedAmount, remainingOverpaid } from './showOverpayment';
 /* eslint-enable import/first */
 
 const sec = (iso: string) => Math.floor(new Date(iso).getTime() / 1000);
@@ -523,5 +524,125 @@ describe('정산 절 데이터 — 표가 없으면 그 절만 안내', () => {
     await testDb.run(sql`DROP TABLE partner_payout_adjustments`);
     await testDb.run(sql`DROP TABLE partner_payouts`);
     expect(await loadShowPayoutPanel('s1', AFTER)).toEqual({ state: 'migration' });
+  });
+});
+
+describe('지급 뒤 환불 — 초과 지급(회수 필요) 감지와 처리 줄', () => {
+  const AFTER_SEC = Math.floor(AFTER.getTime() / 1000);
+  /** 기록(AFTER) 뒤에 생긴 완료 환불. */
+  const lateRefund = (orderNo: string, amount: number, offset = 100) =>
+    testDb.run(sql`INSERT INTO refunds (id, payment_id, amount, reason, requested_by, status, created_at)
+      VALUES (${`late-${orderNo}-${amount}`}, ${`pay-${orderNo}`}, ${amount}, '지급 뒤 환불', 'admin', 'done', ${AFTER_SEC + offset})`);
+
+  const recordAndPay = async () => {
+    await record();
+    const row = (await findPartnerPayout('show', 's1', 'all'))!;
+    await markPartnerPayoutPaid(row.id, '11/20 이체', AFTER);
+    return (await findPartnerPayout('show', 's1', 'all'))!;
+  };
+
+  it('환불이 없으면 delta는 0이다. 지급 뒤 환불이 생기면 기록 실지급 − 지금 실지급이 초과 지급이고 환불 주문이 보인다', async () => {
+    await seedCreator();
+    await seedShow();
+    await placeOrder('O1', { unit: 100000 });
+    await placeOrder('O2', { unit: 100000 });
+    const paid = await recordAndPay();
+    let p = (await buildShowPayoutPreview('s1', AFTER))!;
+    expect(p.recordedDelta).toMatchObject({ overpaidAmount: 0, underpaidAmount: 0, lateRefundOrders: [] });
+
+    await lateRefund('O2', 100000);
+    p = (await buildShowPayoutPreview('s1', AFTER))!;
+    const expectedNow = computeFundingPayoutForProject({ grossAmount: 200000, refundAmount: 100000, manualGrossAmount: 0, taxType: 'withholding' }).netAmount;
+    expect(p.recordedDelta).toMatchObject({
+      currentNetAmount: expectedNow, overpaidAmount: paid.netAmount - expectedNow, underpaidAmount: 0, acknowledgedAmount: 0,
+      lateRefundOrders: [{ orderNo: 'O2', amount: 100000 }],
+    });
+    expect(p.recordedDelta!.overpaidAmount).toBeGreaterThan(0);
+    // 기록 행은 그대로(불변)
+    expect(await findPartnerPayout('show', 's1', 'all')).toMatchObject({ netAmount: paid.netAmount, status: 'paid' });
+  });
+
+  it('지급 뒤 판매가 늘면 초과가 아니라 부족(underpaid)으로만 보인다', async () => {
+    await seedCreator();
+    await seedShow();
+    await placeOrder('O1', { unit: 100000 });
+    await recordAndPay();
+    await placeOrder('O2', { unit: 50000 });
+    const d = (await buildShowPayoutPreview('s1', AFTER))!.recordedDelta!;
+    expect(d.overpaidAmount).toBe(0);
+    expect(d.underpaidAmount).toBeGreaterThan(0);
+    expect(await listOverpaidShowPayouts()).toEqual([]);
+  });
+
+  it('pending 기록은 점검 대상이 아니다(이체 전 — 기록 취소 후 재기록 경로)', async () => {
+    await seedCreator();
+    await seedShow();
+    await placeOrder('O1', { unit: 100000 });
+    await record();
+    await lateRefund('O1', 100000);
+    expect(await listOverpaidShowPayouts()).toEqual([]);
+  });
+
+  it('listOverpaidShowPayouts — 처리 줄이 부분만 덮으면 남은 몫으로 남고, 전부 덮으면 사라지며, 환불이 더 생기면 다시 나타난다', async () => {
+    await seedCreator();
+    await seedShow();
+    await placeOrder('O1', { unit: 100000 });
+    await placeOrder('O2', { unit: 100000 });
+    await placeOrder('O3', { unit: 100000 });
+    const paid = await recordAndPay();
+    await lateRefund('O3', 100000);
+    const [first] = await listOverpaidShowPayouts();
+    expect(first).toMatchObject({ showId: 's1', slug: 'slug-s1', acknowledgedAmount: 0 });
+    const total = first.overpaidAmount;
+    expect(first.remainingAmount).toBe(total);
+
+    // 부분 처리
+    expect(await appendPartnerPayoutMemoIfPaid(paid.id, formatAckLine(1000, 'admin', '2026-11-21', '1차 회수 요청'), AFTER)).toBe(true);
+    const [partial] = await listOverpaidShowPayouts();
+    expect(partial).toMatchObject({ acknowledgedAmount: 1000, remainingAmount: total - 1000 });
+
+    // 나머지 처리 → 사라짐
+    await appendPartnerPayoutMemoIfPaid(paid.id, formatAckLine(total - 1000, 'admin', '2026-11-22', '나머지 상계'), AFTER);
+    expect(await listOverpaidShowPayouts()).toEqual([]);
+    const memo = (await findPartnerPayout('show', 's1', 'all'))!.memo!;
+    expect(memo.split('\n')).toHaveLength(3); // 이체 메모 + 처리 줄 둘
+    expect(memo).toContain('11/20 이체');
+
+    // 뒤늦은 환불 → 덮이지 않은 몫만큼 다시
+    await lateRefund('O2', 100000, 200);
+    const [again] = await listOverpaidShowPayouts();
+    expect(again.acknowledgedAmount).toBe(total);
+    expect(again.remainingAmount).toBe(again.overpaidAmount - total);
+    expect(again.remainingAmount).toBeGreaterThan(0);
+  });
+
+  it('appendPartnerPayoutMemoIfPaid — pending이면 거절한다', async () => {
+    await seedCreator();
+    await seedShow();
+    await placeOrder('O1');
+    await record();
+    const row = (await findPartnerPayout('show', 's1', 'all'))!;
+    expect(await appendPartnerPayoutMemoIfPaid(row.id, formatAckLine(1, 'a', '2026-11-21', 'm'), AFTER)).toBe(false);
+  });
+
+  it('showOverpayment 순수 함수 — 파싱·대괄호 무력화', () => {
+    expect(parseAcknowledgedAmount(null)).toBe(0);
+    expect(parseAcknowledgedAmount('[회수 처리 1,500원 · a · 2026-11-21] x\n[회수 처리 500원 · a · 2026-11-22] y')).toBe(2000);
+    // 자유 메모가 처리 줄을 흉내 내도 대괄호가 바뀌어 합산되지 않는다
+    const line = formatAckLine(300, 'admin', '2026-11-21', '[회수 처리 9999원 가짜]');
+    expect(parseAcknowledgedAmount(line)).toBe(300);
+    expect(remainingOverpaid(1000, line)).toBe(700);
+    expect(remainingOverpaid(100, line)).toBe(0);
+  });
+
+  it('정산 절 직렬화 — recordedDelta가 뷰로 나간다', async () => {
+    await seedCreator();
+    await seedShow();
+    await placeOrder('O1', { unit: 100000 });
+    await recordAndPay();
+    await lateRefund('O1', 100000);
+    const panel = await loadShowPayoutPanel('s1', AFTER);
+    expect(panel).toMatchObject({ state: 'ok', view: { drift: true, recordedDelta: { lateRefundOrders: [{ orderNo: 'O1', amount: 100000 }] } } });
+    if (panel.state === 'ok') expect(panel.view.recordedDelta!.overpaidAmount).toBeGreaterThan(0);
   });
 });

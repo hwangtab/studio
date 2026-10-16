@@ -50,6 +50,19 @@ export const markPartnerPayoutPaid = async (id: string, memo: string | null, now
   return result.length > 0;
 };
 
+/**
+ * 지급을 마친(paid) 기록의 메모 끝에 한 줄을 덧붙인다(조건부 UPDATE — 한 문장이라 동시에 눌러도 서로의 줄을 덮지 않는다).
+ * 금액·상태는 건드리지 않는다. 공연 정산의 「회수 처리」 줄이 쓴다(`showOverpayment.ts`). pending이면 false.
+ */
+export const appendPartnerPayoutMemoIfPaid = async (id: string, line: string, now: Date): Promise<boolean> => {
+  const result = await getDb()
+    .update(partnerPayouts)
+    .set({ memo: sql`CASE WHEN ${partnerPayouts.memo} IS NULL OR ${partnerPayouts.memo} = '' THEN ${line} ELSE ${partnerPayouts.memo} || char(10) || ${line} END`, updatedAt: now })
+    .where(and(eq(partnerPayouts.id, id), eq(partnerPayouts.status, 'paid')))
+    .returning({ id: partnerPayouts.id });
+  return result.length > 0;
+};
+
 export type DeletePartnerPayoutResult = 'ok' | 'not_found' | 'already_paid' | 'adjustment_applied';
 
 /**

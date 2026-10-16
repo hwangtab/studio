@@ -1155,6 +1155,75 @@ describe('계좌 입금(공연·예약·믹싱) 점검', () => {
   });
 });
 
+/**
+ * 지급 뒤 환불로 초과 지급된 공연 정산 — 상점은 다음 정산에서 상계하지만 공연은 정산이 한 번뿐이라 운영자가 회수를 요청해야 한다.
+ * 점검은 정산 메모의 `[회수 처리 N원` 줄 합이 초과액을 덮으면 꺼지고, 환불이 더 생기면 다시 켜진다.
+ */
+describe('지급 뒤 환불로 초과 지급된 공연 정산', () => {
+  const TITLE = '지급 뒤 환불로 초과 지급된 공연 정산';
+  beforeEach(async () => {
+    for (const t of ['partner_payouts', 'show_tickets', 'show_orders', 'show_ticket_types', 'showtimes', 'show_zones', 'shows']) {
+      await client.execute(`DELETE FROM ${t}`);
+    }
+    await client.execute(`INSERT INTO shows (id, slug, title, presenter_name, performers, age_rating, running_minutes, venue_name, venue_address, description, status) VALUES ('s1','over-show','공연','p','a','전체',60,'v','a','d','published')`);
+    await client.execute(`INSERT INTO show_zones (id, show_id, code, label, capacity) VALUES ('z1','s1','A','A',10)`);
+    await client.execute({ sql: `INSERT INTO showtimes (id, show_id, starts_at, sales_close_at) VALUES ('st1','s1',?,?)`, args: [EPOCH('2026-08-01'), EPOCH('2026-07-31')] });
+    await insertOrder({ id: 'o1', order_no: 'TKT-1', type: 'ticket', status: 'paid', total_amount: 100000 });
+    await client.execute(`INSERT INTO show_orders (order_no, showtime_id, buyer_name, buyer_contact) VALUES ('TKT-1','st1','홍길동','010')`);
+    await client.execute(`INSERT INTO payments (id, order_id, payment_key, method) VALUES ('pay1','o1','pk1','card')`);
+    // 100,000원 판매를 개인(원천징수)으로 기록·지급 — 기록 실지급액은 지금 계산과 같다(초과 없음).
+    const { computeShowPayoutCalc } = await import('../partnerPayouts/showCalc');
+    const calc = computeShowPayoutCalc({ grossAmount: 100000, refundAmount: 0, bankNetAmount: 0, taxType: 'withholding', adjustmentAmount: 0 });
+    await client.execute({
+      sql: `INSERT INTO partner_payouts (id, kind, subject_key, period, payee_name, tax_type, gross_amount, net_amount, status, paid_at, memo)
+            VALUES ('pp1','show','s1','all','주최자','withholding',100000,?, 'paid', ?, '이체함')`,
+      args: [calc.netAmount, EPOCH('2026-08-10')],
+    });
+  });
+
+  // 위쪽 전역 beforeEach가 orders를 지우는데 show_orders가 참조한다 — 먼저 치운다.
+  afterEach(async () => {
+    for (const t of ['partner_payouts', 'show_orders']) await client.execute(`DELETE FROM ${t}`);
+  });
+
+  const addRefund = (id: string, amount: number) =>
+    client.execute({ sql: `INSERT INTO refunds (id, payment_id, amount, reason, requested_by, status) VALUES (?, 'pay1', ?, '지급 뒤 환불', 'admin', 'done')`, args: [id, amount] });
+
+  it('환불이 없으면 뜨지 않는다', async () => {
+    expect(await titles()).toEqual(expect.not.arrayContaining([expect.stringContaining(TITLE)]));
+  });
+
+  it('지급 뒤 환불이 생기면 high로 알리고 회수 요청 안내와 남은 금액을 싣는다', async () => {
+    await addRefund('rf1', 100000);
+    const issue = (await runHealthCheck(NOW)).issues.find((i) => i.title.includes(TITLE));
+    expect(issue?.severity).toBe('high');
+    expect(issue?.detail).toContain('over-show');
+    expect(issue?.detail).toContain('회수 요청');
+  });
+
+  it('처리 줄이 초과액을 덮으면 꺼지고, 부분만 덮으면 남고, 환불이 더 생기면 다시 켜진다', async () => {
+    await addRefund('rf1', 50000);
+    const { listOverpaidShowPayouts } = await import('../partnerPayouts/show');
+    const overpaid = (await listOverpaidShowPayouts())[0].overpaidAmount;
+    expect(overpaid).toBeGreaterThan(100);
+
+    await client.execute(`UPDATE partner_payouts SET memo = '이체함' || char(10) || '[회수 처리 100원 · admin · 2026-09-09] 부분'`);
+    expect((await runHealthCheck(NOW)).issues.find((i) => i.title.includes(TITLE))?.detail).toContain(`${(overpaid - 100).toLocaleString('ko-KR')}원`);
+
+    await client.execute({ sql: `UPDATE partner_payouts SET memo = ?`, args: [`이체함\n[회수 처리 ${overpaid}원 · admin · 2026-09-09] 전액`] });
+    expect(await titles()).toEqual(expect.not.arrayContaining([expect.stringContaining(TITLE)]));
+
+    await addRefund('rf2', 50000);
+    expect(await titles()).toEqual(expect.arrayContaining([expect.stringContaining(TITLE)]));
+  });
+
+  it('이체 전(pending) 기록은 이 항목이 아니다', async () => {
+    await addRefund('rf1', 100000);
+    await client.execute(`UPDATE partner_payouts SET status = 'pending'`);
+    expect(await titles()).toEqual(expect.not.arrayContaining([expect.stringContaining(TITLE)]));
+  });
+});
+
 describe('점검 격리 — 한 점검이 던져도 나머지 결과와 실패 항목이 함께 보고된다', () => {
   it('GA4 점검이 던져도 DB 점검 이슈는 그대로 가고, 실패는 high 항목으로 적힌다', async () => {
     await insertOrder({ status: 'pending' });
