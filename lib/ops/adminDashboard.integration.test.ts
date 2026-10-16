@@ -32,7 +32,15 @@ const NOW = new Date('2026-09-16T03:00:00Z');
 const EPOCH = (iso: string) => Math.floor(new Date(iso).getTime() / 1000);
 let client: Client;
 
+const ENV_KEYS = ['NEXT_PUBLIC_TOSS_API_CLIENT_KEY', 'TOSS_API_SECRET_KEY', 'FUNDING_FIELD_KEY'] as const;
+const savedEnv: Partial<Record<(typeof ENV_KEYS)[number], string | undefined>> = {};
+
 beforeAll(async () => {
+  // 환경 점검(토스 키 쌍·필드 암호화 키)은 화면에도 올라온다 — 정상 환경을 깔고 시작한다.
+  for (const k of ENV_KEYS) savedEnv[k] = process.env[k];
+  process.env.NEXT_PUBLIC_TOSS_API_CLIENT_KEY = 'live_ck_test';
+  process.env.TOSS_API_SECRET_KEY = 'live_sk_test';
+  process.env.FUNDING_FIELD_KEY = Buffer.alloc(32, 7).toString('base64');
   client = createClient({ url: ':memory:' });
   mockDb = drizzle(client, { schema });
   for (const file of readdirSync(MIGRATIONS).filter((f) => f.endsWith('.sql')).sort()) {
@@ -41,7 +49,13 @@ beforeAll(async () => {
     }
   }
 });
-afterAll(() => client.close());
+afterAll(() => {
+  for (const k of ENV_KEYS) {
+    if (savedEnv[k] === undefined) delete process.env[k];
+    else process.env[k] = savedEnv[k];
+  }
+  client.close();
+});
 beforeEach(async () => {
   for (const t of ['refunds', 'payments', 'bookings', 'work_orders', 'funding_pledges', 'funding_project_payouts', 'funding_projects', 'funding_creators', 'subscription_payments', 'subscriptions', 'orders', 'payment_link_orders', 'contracts', 'social_tokens']) {
     await client.execute(`DELETE FROM ${t}`);
@@ -191,6 +205,22 @@ const insertPledge = async (orderId: string, slug: string, orderStatus: string, 
     args: [`fp-${orderId}`, orderId, slug, method, EPOCH('2026-09-02T00:00:00Z'), source],
   });
 };
+
+describe('환경 점검 — 점검 메일에만 있던 것', () => {
+  it('토스 키나 필드 암호화 키가 빠지면 화면의 점검 항목에 high로 올라온다', async () => {
+    delete process.env.TOSS_API_SECRET_KEY;
+    delete process.env.FUNDING_FIELD_KEY;
+    try {
+      const dash = await loadAdminDashboard(NOW);
+      expect(dash.issues.map((i) => [i.severity, i.title.slice(0, 8)])).toEqual(
+        expect.arrayContaining([['high', '토스 API 키'], ['high', '필드 암호화 키']]),
+      );
+    } finally {
+      process.env.TOSS_API_SECRET_KEY = 'live_sk_test';
+      process.env.FUNDING_FIELD_KEY = Buffer.alloc(32, 7).toString('base64');
+    }
+  });
+});
 
 describe('마감 뒤 정산 기록 대기 — 어느 대기열에도 없던 빈칸', () => {
   const endProject = (id: string) => client.execute({ sql: `UPDATE funding_projects SET end_at = ? WHERE id = ?`, args: [EPOCH('2026-09-10T00:00:00Z'), `fp-${id}`] });

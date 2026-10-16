@@ -133,7 +133,9 @@ it('수기 매출은 받은 날(KST) 0시 기준으로 같은 모집단에 합�
 
   expect(await setManualRefund(id, 300000)).toBe('invalid');
   expect(await setManualRefund('nope', 1)).toBe('not_found');
-  expect(await setManualRefund(id, 75000)).toBe('ok');
+  expect(await setManualRefund(id, 75000, 'kyungha')).toBe('ok');
+  const memo = String((await client.execute(`SELECT memo FROM manual_revenues WHERE id = '${id}'`)).rows[0].memo);
+  expect(memo).toMatch(/\[환불 0→75,000원 · kyungha · \d{4}-\d{2}-\d{2}\]/);
 
   const rows = [...(await loadRevenueRows(loadWindow(2026))), ...(await loadManualRevenueRows(loadWindow(2026)))];
   const sept = summarizeRevenue(rows, { year: 2026, month: 9 });
