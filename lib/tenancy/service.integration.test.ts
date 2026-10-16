@@ -80,7 +80,7 @@ describe('createTenancy', () => {
   it('캘린더에 입금 예정·계약 종료 일정을 올리고 id를 저장한다', async () => {
     const r = await createTenancy(input());
     if (!r.ok) throw new Error(r.message);
-    expect(createEventOnCalendar).toHaveBeenCalledWith('cal-tenancy', expect.objectContaining({ summary: expect.stringContaining('[입금 예정] R05 조현정'), start: { date: '2026-11-14' }, end: { date: '2026-11-15' } }));
+    expect(createEventOnCalendar).toHaveBeenCalledWith('cal-tenancy', expect.objectContaining({ summary: expect.stringContaining('[입금 예정] R05 조현정'), start: { date: '2026-11-14' }, end: { date: '2026-11-15' }, transparency: 'transparent' }));
     expect(await one(`SELECT due_event_id, end_event_id FROM room_tenancies WHERE id = '${r.id}'`)).toEqual({ due_event_id: 'evt-due', end_event_id: 'evt-end' });
   });
 
@@ -91,8 +91,13 @@ describe('createTenancy', () => {
     if (r.ok) expect(String((await one(`SELECT gcal_error FROM room_tenancies WHERE id = '${r.id}'`))?.gcal_error)).toContain('down');
   });
 
-  it('캘린더가 설정되지 않았으면 건너뛴다', async () => {
+  it('전용 캘린더가 없으면 연습실 캘린더를 쓰고, 둘 다 없으면 건너뛴다', async () => {
     delete process.env.TENANCY_GCAL_ID;
+    process.env.PRACTICE_ROOM_GCAL_ID = 'cal-practice';
+    await createTenancy(input({ tenantName: '연습실캘린더' , roomNumber: 'R06' }));
+    expect(createEventOnCalendar).toHaveBeenCalledWith('cal-practice', expect.anything());
+    jest.mocked(createEventOnCalendar).mockClear();
+    delete process.env.PRACTICE_ROOM_GCAL_ID;
     const r = await createTenancy(input());
     expect(r).toMatchObject({ ok: true, calendarError: null });
     expect(createEventOnCalendar).not.toHaveBeenCalled();
