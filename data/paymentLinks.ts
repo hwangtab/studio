@@ -37,18 +37,25 @@ export const PAYMENT_LINKS: Record<string, PaymentLink> = {
     itemName: '보컬 녹음 1프로 (10/17 11:00)',
     totalAmount: Math.round(VOCAL_PACKAGE_PRICE * (1 + VAT_RATE)),
     expiresOn: '2026-10-14', // 폐기 — VAT를 한 번 더 얹어 잘못 잡았다. 새 링크로 교체(발급한 slug의 금액은 바꾸지 않는다).
+    sessionAt: 1792202400, // 2026-10-17 11:00 KST, 3시간(폐기된 링크지만 품목명과 같은 일시를 둔다)
+    sessionHours: 3,
   },
   // 김준호님 — 보컬 녹음 1프로(1곡·3시간) 2026-10-17(토) 11:00. **VAT 포함 총액이 상품가와 같다**(운영자 확정: 부가세 포함 25만원). 녹음일 당일까지만 열린다.
   'fed74ccb84b8587112ed5d6f': {
     itemName: '보컬 녹음 1프로 (10/17 11:00)',
     totalAmount: VOCAL_PACKAGE_PRICE,
     expiresOn: '2026-10-17',
+    sessionAt: 1792202400, // 2026-10-17 11:00 KST, 3시간
+    sessionHours: 3,
   },
   // 테스트 녹음 1시간 — 2026-10-17(토) 17:00~18:00. 10만원(부가세 포함, 운영자 확정). 연락처는 저장소에 두지 않고 링크 주소의 ?phone=으로 미리 채운다. 녹음일 당일까지만 열린다.
   '8519f93ee33960ccc793b0c5': {
     itemName: '테스트 녹음 1시간 (10/17 17:00)',
     totalAmount: 100000,
     expiresOn: '2026-10-17',
+    // 이용 일시를 담아야 이 링크로 들어오는 주문이 이용 일정으로 기록되고(대시보드·캘린더) 있다 — 2026-10-17 17:00 KST, 1시간.
+    sessionAt: 1792224000,
+    sessionHours: 1,
   },
 };
 
