@@ -1,6 +1,6 @@
 import type { PartnerPayout } from '../../db/schema';
 import { serializeAdjustment, type AdjustmentView } from './shopView';
-import type { ShowCancelFeeInfo, ShowPayoutBlocker, ShowPayoutPreview, ShowPayoutTaxType, ShowPayoutWarning } from './show';
+import type { RecordedShowDelta, ShowCancelFeeInfo, ShowPayoutBlocker, ShowPayoutPreview, ShowPayoutTaxType, ShowPayoutWarning } from './show';
 
 /**
  * 관리자 `/admin/shows/[id]` 정산 절이 받는 직렬화 판 — **순수**(db를 import하지 않는다. 클라이언트 컴포넌트가 타입만 가져간다).
@@ -60,6 +60,8 @@ export interface ShowPayoutView {
   appliedAdjustments: AdjustmentView[];
   /** 기록 뒤 판매·환불이 바뀌었는가(기록의 판매액·환불액 ≠ 지금 집계). 기록이 없으면 false. */
   drift: boolean;
+  /** 기록이 있을 때: 지금 계산한 실지급액과 초과·부족 지급(지급 뒤 환불 → 회수). 기록이 없으면 null. */
+  recordedDelta: RecordedShowDelta | null;
 }
 
 export const serializeShowPayoutRecord = (p: PartnerPayout): ShowPayoutRecordView => ({
@@ -113,6 +115,7 @@ export const serializeShowPayoutPreview = (p: ShowPayoutPreview): ShowPayoutView
   recorded: p.recorded ? serializeShowPayoutRecord(p.recorded) : null,
   appliedAdjustments: p.appliedAdjustments.map(serializeAdjustment),
   drift: p.recorded ? p.recorded.grossAmount !== p.grossAmount || p.recorded.refundAmount !== p.refundAmount : false,
+  recordedDelta: p.recordedDelta,
 });
 
 /** 페이지가 정산 절에 넘기는 상태 — 표(0067)가 없으면 나머지 화면은 그대로 열리고 이 절만 안내를 보인다. */

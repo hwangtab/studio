@@ -12,6 +12,7 @@ import { computeShowPayoutCalc } from './showCalc';
 import { SHOW_CANCEL_WAIVE_PREFIX, showCancelPayeeKey, syncShowtimeCancelFee } from './showCancelFee';
 import { listAppliedAdjustments } from './adjustments';
 import { findPartnerPayout } from './store';
+import { parseAcknowledgedAmount } from './showOverpayment';
 
 /**
  * 공연 주최자 정산 — 미리보기·기록(`docs/settlement-record-design-2026-10.md` §3·§5·§6).
@@ -99,7 +100,40 @@ export interface ShowPayoutPreview {
   /** 이미 기록된 정산. 있으면 그 값이 정본이고 위 숫자는 참고용이다. */
   recorded: PartnerPayout | null;
   appliedAdjustments: PartnerPayoutAdjustment[];
+  /** 기록이 있을 때만: 기록 뒤 판매·환불이 바뀌어 지금 계산한 실지급액과의 차이. */
+  recordedDelta: RecordedShowDelta | null;
 }
+
+/**
+ * 기록된 정산(스냅샷) vs 지금 계산. 기록에 실린 조정과 세금 유형을 그대로 두고 판매·환불만 지금 값으로 다시 계산한다 —
+ * 세금 유형 변경이나 새 조정이 섞이면 "환불 때문"이 아닌 차이가 초과 지급으로 읽힌다.
+ * 초과 지급 = 기록 실지급 − 지금 실지급(양수일 때만; 지급 뒤 환불이 줄 몫을 줄였다). 부족 = 반대(지급 뒤 추가 판매 — 자동 처리하지 않고 보여만 준다).
+ */
+export interface RecordedShowDelta {
+  currentNetAmount: number;
+  overpaidAmount: number;
+  underpaidAmount: number;
+  /** 이미 처리 줄(`[회수 처리 N원`)로 덮인 합. */
+  acknowledgedAmount: number;
+  /** 기록 시각 이후 완료된 환불이 있는 주문(주문번호·환불 합). */
+  lateRefundOrders: { orderNo: string; amount: number }[];
+}
+
+export const computeRecordedShowDelta = (
+  recorded: Pick<PartnerPayout, 'taxType' | 'adjustmentAmount' | 'netAmount' | 'memo'>,
+  sales: ShowSales,
+): Omit<RecordedShowDelta, 'lateRefundOrders'> => {
+  const calc = computeShowPayoutCalc({
+    grossAmount: sales.grossAmount, refundAmount: sales.refundAmount,
+    bankNetAmount: sales.bankGrossAmount - sales.bankRefundAmount,
+    taxType: recorded.taxType === 'invoice' ? 'invoice' : 'withholding', adjustmentAmount: recorded.adjustmentAmount,
+  });
+  const diff = recorded.netAmount - calc.netAmount;
+  return {
+    currentNetAmount: calc.netAmount, overpaidAmount: Math.max(0, diff), underpaidAmount: Math.max(0, -diff),
+    acknowledgedAmount: parseAcknowledgedAmount(recorded.memo),
+  };
+};
 
 interface CreatorFacts {
   id: string;
@@ -237,7 +271,7 @@ export const buildShowPayoutPreview = async (showId: string, now: Date = new Dat
     lastEndAt, ended, dueBy, itemCount: 0, grossAmount: 0, refundAmount: 0, netSalesAmount: 0, platformFeeAmount: 0, paymentFeeAmount: 0,
     vatDeductionAmount: 0, shareAmount: 0, withholdingAmount: 0, adjustments: [], adjustmentAmount: 0, adjustmentOffsetAmount: 0,
     shortfallAmount: 0, netAmount: 0, cancelFees: [], refundAccountPendingCount: 0, refundDueCancelledOrderCount: 0,
-    blockers: [], warnings: [], recorded: null, appliedAdjustments: [],
+    blockers: [], warnings: [], recorded: null, appliedAdjustments: [], recordedDelta: null,
   };
 
   const organizer = await loadOrganizer(showId);
@@ -320,7 +354,40 @@ export const buildShowPayoutPreview = async (showId: string, now: Date = new Dat
     adjustments: unapplied, adjustmentAmount, adjustmentOffsetAmount: calc.adjustmentOffsetAmount, shortfallAmount: calc.shortfallAmount,
     netAmount: calc.netAmount, cancelFees, refundAccountPendingCount, refundDueCancelledOrderCount,
     blockers, warnings, recorded, appliedAdjustments,
+    recordedDelta: recorded ? { ...computeRecordedShowDelta(recorded, sales), lateRefundOrders: await loadLateRefundOrders(showId, recorded.createdAt) } : null,
   };
+};
+
+/** 기록 시각 이후 완료된 환불이 있는 주문 — 회수 요청 때 어느 주문인지 보이게. 기록과 같은 초의 환불은 기록에 반영됐을 수 있어 뺀다(엄격히 이후). */
+const loadLateRefundOrders = async (showId: string, recordedAt: Date): Promise<{ orderNo: string; amount: number }[]> => {
+  const rows = await getDb().all<{ order_no: string; amount: number }>(sql`
+    SELECT o.order_no AS order_no, SUM(rf.amount) AS amount
+    FROM refunds rf JOIN payments p ON p.id = rf.payment_id JOIN orders o ON o.id = p.order_id
+    WHERE rf.status = 'done' AND rf.created_at > ${Math.floor(recordedAt.getTime() / 1000)} AND ${paidShowOrderFilter(showId)}
+    GROUP BY o.order_no ORDER BY MIN(rf.created_at), o.order_no
+  `);
+  return rows.map((r) => ({ orderNo: r.order_no, amount: Number(r.amount) }));
+};
+
+export interface OverpaidShowPayout { showId: string; slug: string; title: string; overpaidAmount: number; acknowledgedAmount: number; remainingAmount: number }
+
+/**
+ * **지급을 마친(paid) 공연 정산 가운데 지금 계산이 기록보다 작아 더 지급된 것** — 점검 메일의 소스. 처리 줄로 덮이지 않은 몫(`remainingAmount`)이 1원 이상인 것만.
+ * 표(0067)가 없으면 던진다 — 호출부가 삼킨다.
+ */
+export const listOverpaidShowPayouts = async (): Promise<OverpaidShowPayout[]> => {
+  const rows = await getDb().all<{ id: string }>(sql`SELECT subject_key AS id FROM partner_payouts WHERE kind = 'show' AND period = ${SHOW_PAYOUT_PERIOD} AND status = 'paid'`);
+  const out: OverpaidShowPayout[] = [];
+  for (const { id } of rows) {
+    const recorded = await findPartnerPayout('show', id, SHOW_PAYOUT_PERIOD);
+    if (!recorded) continue;
+    const [show] = await getDb().all<{ slug: string; title: string }>(sql`SELECT slug, title FROM shows WHERE id = ${id}`);
+    if (!show) continue;
+    const d = computeRecordedShowDelta(recorded, await loadShowSales(id));
+    const remainingAmount = Math.max(0, d.overpaidAmount - d.acknowledgedAmount);
+    if (remainingAmount >= 1) out.push({ showId: id, slug: show.slug, title: show.title, overpaidAmount: d.overpaidAmount, acknowledgedAmount: d.acknowledgedAmount, remainingAmount });
+  }
+  return out;
 };
 
 /**

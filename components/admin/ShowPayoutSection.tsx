@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import { Button } from '../ui/Button';
 import { formatPriceAmount } from '../../data/pricing';
+import { remainingOverpaid } from '../../lib/partnerPayouts/showOverpayment';
 import type { ShowPayoutPanelState, ShowPayoutView } from '../../lib/partnerPayouts/showView';
 
 /**
@@ -101,6 +102,8 @@ export function ShowPayoutSection({ showId, panel, showtimeLabels }: {
   const rec = v.recorded;
   const blocked = v.blockers.filter((b) => b !== 'already_recorded' && b !== 'nothing_to_pay' && b !== 'not_ended');
   const canRecord = !rec && v.ended && v.taxType !== null && !v.blockers.includes('nothing_to_pay');
+  const delta = rec ? v.recordedDelta : null;
+  const remaining = delta ? remainingOverpaid(delta.overpaidAmount, rec?.memo) : 0;
   const hasCharge = v.adjustmentAmount !== 0 || v.cancelFees.length > 0;
 
   return frame(
@@ -189,7 +192,44 @@ export function ShowPayoutSection({ showId, panel, showtimeLabels }: {
       {rec && v.drift && (
         <p className="mt-2 text-xs text-red-600">
           기록 뒤 판매·환불이 바뀌었습니다(지금 판매 {won(v.grossAmount)} · 환불 {won(v.refundAmount)}, 기록 판매 {won(rec.grossAmount)} · 환불 {won(rec.refundAmount)}).
-          {rec.status === 'pending' ? ' 이체 전이라면 「기록 취소」 후 다시 기록하세요.' : ' 이미 이체한 정산이라 차액은 따로 정산해야 합니다.'}
+          {rec.status === 'pending' ? ' 이체 전이라면 「기록 취소」 후 다시 기록하세요.' : delta && delta.overpaidAmount === 0 && delta.underpaidAmount === 0 ? ' 실지급액은 그대로입니다.' : ''}
+        </p>
+      )}
+
+      {rec?.status === 'paid' && delta && remaining > 0 && (
+        <div role="alert" className="mt-2 rounded-lg border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900">
+          <p className="font-semibold">지급 후 환불로 {won(remaining)} 더 지급됐습니다(회수 필요)</p>
+          <p className="mt-1">
+            기록 실지급 {won(rec.netAmount)} → 지금 계산 {won(delta.currentNetAmount)}.
+            {delta.acknowledgedAmount > 0 ? ` 이미 회수 처리를 남긴 금액 ${won(delta.acknowledgedAmount)}을 뺀 몫입니다.` : ''}
+            {' '}정산은 공연당 한 번이라 다음 정산에서 빼 줄 곳이 없습니다 — 주최자에게 회수를 요청한 뒤 아래 버튼으로 메모를 남기세요.
+          </p>
+          {delta.lateRefundOrders.length > 0 && (
+            <p className="mt-1">기록 뒤 환불된 주문: {delta.lateRefundOrders.map((o) => `${o.orderNo}(${won(o.amount)})`).join(', ')}</p>
+          )}
+          <button
+            type="button" disabled={busy !== null}
+            className="mt-2 text-primary underline disabled:opacity-50"
+            onClick={() => run('ack', null, async () => {
+              const amountText = window.prompt('회수 요청을 처리한 금액(원)', String(remaining));
+              if (amountText === null) return { ok: false, message: '회수 처리 기록을 취소했습니다.' };
+              const amount = Number(amountText.replace(/,/g, '').trim());
+              if (!Number.isSafeInteger(amount) || amount < 1) return { ok: false, message: '금액을 1원 이상의 숫자로 적어 주세요.' };
+              const memo = window.prompt('메모 (필수 — 회수 요청 방법·일자, 상계·반환 합의 등)', '');
+              if (memo === null || !memo.trim()) return { ok: false, message: '메모를 적어 주세요.' };
+              return post({ action: 'acknowledge_overpayment', payoutId: rec.id, amount, memo: memo.trim() });
+            })}
+          >
+            회수 처리 남기기
+          </button>
+        </div>
+      )}
+      {rec?.status === 'paid' && delta && delta.overpaidAmount > 0 && remaining === 0 && (
+        <p className="mt-2 text-xs text-gray-600">지급 후 환불로 더 지급된 {won(delta.overpaidAmount)}은 회수 처리 메모로 남겨져 있습니다.</p>
+      )}
+      {rec?.status === 'paid' && delta && delta.underpaidAmount > 0 && (
+        <p className="mt-2 rounded-lg bg-gray-50 p-2 text-xs text-gray-700">
+          지급 뒤 판매가 늘어 지금 계산은 기록보다 {won(delta.underpaidAmount)} 많습니다 — 자동으로 추가 지급하지 않으니 필요하면 주최자와 협의해 따로 보내고 메모에 적어 두세요.
         </p>
       )}
 
@@ -250,7 +290,7 @@ export function ShowPayoutSection({ showId, panel, showtimeLabels }: {
           </Button>
         )}
       </div>
-      {rec?.memo && <p className="mt-1 text-xs text-gray-500">메모: {rec.memo}</p>}
+      {rec?.memo && <p className="mt-1 whitespace-pre-line text-xs text-gray-500">메모: {rec.memo}</p>}
       {rec?.paidAt && <p className="mt-1 text-xs text-gray-500">지급 {new Date(rec.paidAt).toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' })}</p>}
       {account && account !== 'loading' && (
         'error' in account ? (

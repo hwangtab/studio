@@ -12,7 +12,7 @@ import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
 import { FUNDING_PAYOUT_BUSINESS_DAYS } from '../funding/policy';
 import { BANK_DEPOSIT_GUIDE_DAYS } from '../payments/bankAccount';
 import { buildFundingPayoutPreview, businessDaysAfter, listFundingProjectsAwaitingPayoutRecord } from '../funding/payout';
-import { listShowPayoutsAwaitingRecord } from '../partnerPayouts/show';
+import { listOverpaidShowPayouts, listShowPayoutsAwaitingRecord } from '../partnerPayouts/show';
 import { getAllFundingProjects } from '../funding/projects';
 import { LIVE_FUNDING_ORDER_STATUSES } from '../funding/refundable';
 import { ORDER_LEGAL_RETENTION_YEARS } from '../privacy/orderRetention';
@@ -1196,6 +1196,28 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
     }
   } catch (error: unknown) {
     console.error('[health] 공연 정산 기록 대기 조회 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
+  }
+
+  /**
+   * **지급을 마친 공연 정산이 지급 뒤 환불로 초과 지급된 경우.** 공연 정산은 공연당 한 번이라 상점의 `late_refund`처럼 다음 정산에서 상계할 곳이 없다
+   * (계좌 입금 환불이 이체 뒤에 끝난 경우·고객 환불 등). 기록 숫자는 불변이고 돈은 이미 나갔으므로 운영자가 주최자에게 회수를 요청해야 한다.
+   * 끌 수단: 정산 패널의 「회수 처리 남기기」가 메모에 `[회수 처리 N원`을 적고, 그 합이 지금 초과 지급액을 덮으면 사라진다.
+   * 이후 환불이 더 생겨 초과액이 커지면 덮이지 않은 몫만큼 다시 울린다(영구 경보 방지 + 재발 감지). 표(0067)가 없거나 조회가 실패하면 건너뛴다.
+   */
+  try {
+    const overpaid = await listOverpaidShowPayouts();
+    if (overpaid.length > 0) {
+      issues.push({
+        severity: 'high',
+        href: '/admin/shows',
+        title: `지급 뒤 환불로 초과 지급된 공연 정산 ${overpaid.length}건`,
+        detail:
+          `${sample(overpaid.map((o) => `${o.slug}: ${o.remainingAmount.toLocaleString('ko-KR')}원 회수 필요`))}\n` +
+          '지급을 마친 뒤 환불이 생겨 주최자에게 더 지급된 금액이 있습니다. 주최자에게 회수 요청 후 정산 패널 메모로 남기세요(공연 상세 > 정산 > 「회수 처리 남기기」).',
+      });
+    }
+  } catch (error: unknown) {
+    console.error('[health] 공연 정산 초과 지급 조회 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
   }
 
   /**

@@ -3,10 +3,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { getDb } from '../../../../../db/client';
 import { isMissingTableError } from '../../../../../lib/dbErrors';
-import { recordShowPayout, SHOW_PAYOUT_PERIOD, type RecordShowPayoutResult, type ShowPayoutBlocker } from '../../../../../lib/partnerPayouts/show';
+import { computeRecordedShowDelta, loadShowSales, recordShowPayout, SHOW_PAYOUT_PERIOD, type RecordShowPayoutResult, type ShowPayoutBlocker } from '../../../../../lib/partnerPayouts/show';
 import { setShowtimeCancelFeeWaived, type SetWaivedResult } from '../../../../../lib/partnerPayouts/showCancelFee';
 import { sendPartnerPayoutNotice } from '../../../../../lib/partnerPayouts/notify';
-import { deletePartnerPayoutIfPending, getPartnerPayoutById, markPartnerPayoutPaid } from '../../../../../lib/partnerPayouts/store';
+import { formatAckLine, remainingOverpaid } from '../../../../../lib/partnerPayouts/showOverpayment';
+import { appendPartnerPayoutMemoIfPaid, deletePartnerPayoutIfPending, getPartnerPayoutById, markPartnerPayoutPaid } from '../../../../../lib/partnerPayouts/store';
 
 /**
  * 관리자 — 공연 주최자 정산 기록·지급·취소 (docs/settlement-record-design-2026-10.md). `pages/api/admin/shop/payouts.ts`와 같은 틀.
@@ -15,6 +16,8 @@ import { deletePartnerPayoutIfPending, getPartnerPayoutById, markPartnerPayoutPa
  * - `record`    { expected: { netAmount, adjustmentAmount } } — 화면이 보여 준 금액과 지금 계산한 값이 다르면 409 `amount_changed`.
  * - `mark_paid` { payoutId, memo? } — 이체를 마친 뒤. pending → paid 한 방향.
  * - `delete`    { payoutId } — 이체 전(pending) 기록만. 실렸던 조정이 풀린다.
+ * - `acknowledge_overpayment` { payoutId, amount, memo } — 지급 뒤 환불로 더 지급된 몫을 주최자에게 회수 요청했음을 메모에 한 줄로 남긴다(`[회수 처리 N원 · …]`).
+ *   금액은 지금 초과 지급액 중 아직 처리 줄로 덮이지 않은 몫 이하여야 한다. 점검은 그 줄들의 합으로 처리 여부를 판정한다.
  * - `set_cancel_fee_waived` { showtimeId, waived } — 회차 취소 결제 수수료를 스튜디오 귀책으로 면제/되돌림(아직 정산에 안 실린 것만).
  * 계좌는 이 라우트가 다루지 않는다 — 개설자 단위 열람 라우트(`/api/admin/creators/[creatorId]/payout-account`, 접속기록)를 버튼으로 쓴다.
  */
@@ -111,6 +114,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (outcome === 'already_paid') return res.status(409).json({ ok: false, message: '이미 이체를 마친 기록은 취소할 수 없습니다.' });
       if (outcome === 'adjustment_applied') return res.status(409).json({ ok: false, message: '이 정산에 연결된 조정이 이미 다른 정산에 실려 있어 취소할 수 없습니다.' });
       return res.status(404).json({ ok: false, message: '정산 기록을 찾지 못했습니다.' });
+    }
+
+    if (b.action === 'acknowledge_overpayment') {
+      const amount = toInt(b.amount);
+      const memoText = typeof b.memo === 'string' ? b.memo.trim() : '';
+      if (typeof b.payoutId !== 'string' || !b.payoutId || amount === null || amount < 1 || !memoText || memoText.length > 300) {
+        return res.status(400).json({ ok: false, message: '잘못된 요청입니다. 처리 금액(1원 이상)과 메모(300자 이내)가 필요합니다.' });
+      }
+      const row = await getPartnerPayoutById(b.payoutId);
+      if (!row || row.kind !== 'show' || row.subjectKey !== show.id || row.period !== SHOW_PAYOUT_PERIOD) {
+        return res.status(404).json({ ok: false, message: '정산 기록을 찾지 못했습니다.' });
+      }
+      if (row.status !== 'paid') return res.status(409).json({ ok: false, message: '지급 완료된 정산만 회수 처리를 남길 수 있습니다. 이체 전이라면 기록을 취소하고 다시 기록하세요.' });
+      const delta = computeRecordedShowDelta(row, await loadShowSales(show.id));
+      const remaining = remainingOverpaid(delta.overpaidAmount, row.memo);
+      if (remaining < 1) return res.status(409).json({ ok: false, message: '회수할 초과 지급이 없습니다(이미 처리했거나 환불이 없습니다). 새로고침해 주세요.' });
+      // 오타로 큰 금액을 적으면 이후 환불이 더 생겨도 점검이 안 울린다 — 지금 남은 몫을 넘기지 못하게 한다.
+      if (amount > remaining) return res.status(409).json({ ok: false, message: `처리 금액이 남은 초과 지급액(${remaining.toLocaleString('ko-KR')}원)보다 큽니다.` });
+      const dateKst = now.toLocaleDateString('sv-SE', { timeZone: 'Asia/Seoul' });
+      const line = formatAckLine(amount, auth.actor, dateKst, memoText);
+      if ((row.memo?.length ?? 0) + line.length + 1 > 4000) return res.status(409).json({ ok: false, message: '메모가 너무 길어 더 덧붙일 수 없습니다.' });
+      const done = await appendPartnerPayoutMemoIfPaid(row.id, line, now);
+      if (!done) return res.status(409).json({ ok: false, message: '정산 상태가 바뀌었습니다. 새로고침해 주세요.' });
+      return res.status(200).json({ ok: true });
     }
 
     if (b.action === 'set_cancel_fee_waived') {

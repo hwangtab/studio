@@ -167,3 +167,58 @@ describe('수수료 면제·표 미적용', () => {
     expect(r).toMatchObject({ status: 503, body: { code: 'migration_needed' } });
   });
 });
+
+describe('acknowledge_overpayment — 지급 뒤 환불 회수 처리 줄', () => {
+  const paidOut = async () => {
+    const payoutId = (await call({ body: await recordBody() })).body.payoutId as string;
+    await call({ body: { action: 'mark_paid', payoutId, memo: '이체함' } });
+    return payoutId;
+  };
+  const refundAll = () => testDb.run(sql`INSERT INTO refunds (id, payment_id, amount, reason, requested_by, status) VALUES ('rf-late', 'p-s1', 50000, '지급 뒤 환불', 'admin', 'done')`);
+
+  it('인증 없으면 401, 입력이 틀리면 400(금액·메모·payoutId)', async () => {
+    const payoutId = await paidOut();
+    mockAuth.mockResolvedValueOnce({ ok: false });
+    expect((await call({ body: { action: 'acknowledge_overpayment', payoutId, amount: 1, memo: 'm' } })).status).toBe(401);
+    for (const body of [
+      { action: 'acknowledge_overpayment', amount: 1, memo: 'm' },
+      { action: 'acknowledge_overpayment', payoutId, amount: 0, memo: 'm' },
+      { action: 'acknowledge_overpayment', payoutId, amount: 1.5, memo: 'm' },
+      { action: 'acknowledge_overpayment', payoutId, amount: '100', memo: 'm' },
+      { action: 'acknowledge_overpayment', payoutId, amount: 1, memo: '  ' },
+      { action: 'acknowledge_overpayment', payoutId, amount: 1, memo: 'x'.repeat(301) },
+    ]) expect((await call({ body })).status).toBe(400);
+  });
+
+  it('다른 공연·상점 정산 id는 404, 이체 전(pending)은 409, 초과 지급이 없으면 409', async () => {
+    await seedShow('s2', PAST);
+    const other = (await call({ query: { id: 's2' }, body: await recordBody('s2') })).body.payoutId as string;
+    await call({ query: { id: 's2' }, body: { action: 'mark_paid', payoutId: other } });
+    expect((await call({ body: { action: 'acknowledge_overpayment', payoutId: other, amount: 1, memo: 'm' } })).status).toBe(404);
+
+    const pending = (await call({ body: await recordBody() })).body.payoutId as string;
+    expect((await call({ body: { action: 'acknowledge_overpayment', payoutId: pending, amount: 1, memo: 'm' } })).status).toBe(409);
+    await call({ body: { action: 'mark_paid', payoutId: pending } });
+    const none = await call({ body: { action: 'acknowledge_overpayment', payoutId: pending, amount: 1, memo: 'm' } });
+    expect(none).toMatchObject({ status: 409, body: { message: expect.stringContaining('회수할 초과 지급이 없습니다') } });
+  });
+
+  it('초과 지급이 있으면 줄을 덧붙이고(이체 메모 보존), 남은 몫보다 큰 금액은 409, 남은 몫을 다 덮은 뒤에는 더 못 남긴다', async () => {
+    const payoutId = await paidOut();
+    await refundAll();
+    const row = (await findPartnerPayout('show', 's1', 'all'))!;
+    const delta = (await buildShowPayoutPreview('s1'))!.recordedDelta!;
+    expect(delta.overpaidAmount).toBeGreaterThan(1000);
+
+    expect((await call({ body: { action: 'acknowledge_overpayment', payoutId, amount: delta.overpaidAmount + 1, memo: '큰 금액' } })).status).toBe(409);
+    const partial = await call({ body: { action: 'acknowledge_overpayment', payoutId, amount: 1000, memo: '[회수 처리 9999원] 1차 요청' } });
+    expect(partial.status).toBe(200);
+    const after = (await findPartnerPayout('show', 's1', 'all'))!;
+    expect(after.netAmount).toBe(row.netAmount);
+    expect(after.memo).toMatch(/^이체함\n\[회수 처리 1000원 · admin · \d{4}-\d{2}-\d{2}\] \(회수 처리 9999원\) 1차 요청$/);
+    expect(((await buildShowPayoutPreview('s1'))!.recordedDelta!).acknowledgedAmount).toBe(1000);
+
+    expect((await call({ body: { action: 'acknowledge_overpayment', payoutId, amount: delta.overpaidAmount - 1000, memo: '나머지' } })).status).toBe(200);
+    expect((await call({ body: { action: 'acknowledge_overpayment', payoutId, amount: 1, memo: '더' } })).status).toBe(409);
+  });
+});
