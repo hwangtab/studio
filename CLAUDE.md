@@ -398,6 +398,19 @@ drizzle의 libsql 마이그레이터는 적용된 것 중 `created_at`이 가장
    `pragma table_info(<테이블>);`로 코드와 대조한다. main CI의 `Migration drift check`도
    다음 push부터 초록이 된다.
 
+### 운영 DB 백업과 시점 복구 — PITR은 하루뿐이다
+
+운영 Turso 조직의 플랜은 **starter(무료)**라 시점 복구(PITR) 보존이 **1일**이다(Developer 10일·Scaler 30일).
+하루 넘겨 발견한 사고(잘못된 마이그레이션·실수 삭제·토큰 유출)는 PITR로 되돌릴 수 없다. 그래서
+`/api/cron/backup-ledger`(매일 02:30 KST, `lib/ops/ledgerBackup.ts`)가 주문·결제·환불·후원·구독·공연 원장을 표 단위로
+떠서 private Blob `ledger/backup/`에 28일 보관한다(빌링키 원문·관리 토큰은 뺀다). 실패하면 운영자 메일이 온다.
+
+- **PITR 복구**(24시간 안쪽): `~/.turso/turso db create studio-nol-restore --from-db studio-nol --timestamp <RFC3339>`
+  → 새 DB 내용을 확인한 뒤 Vercel env의 `TURSO_DATABASE_URL`·`TURSO_AUTH_TOKEN`을 그쪽으로 교체. 원본은 지우지 않는다.
+- **백업에서 복구**(그 뒤): Blob에서 그날의 `.json.gz`를 받아 표 단위로 되살린다. 백업에 없는 컬럼(빌링키·토큰)은
+  재발급이 전제다 — 구독 카드는 고객이 다시 등록해야 한다.
+- 분기마다 한 번 복구 리허설(백업 파일을 로컬 SQLite에 풀어 행 수 대조)을 한다. 외부 스케줄러는 쓰지 않는다.
+
 ### 토스 키는 두 쌍이다 — 결제창을 연 키와 같은 쌍으로 승인한다
 
 같은 MID(studkol3wd)에 키 쌍 둘이 공존한다. v2 SDK는 두 갈래이고 갈래마다 요구하는 키가 다르다.
