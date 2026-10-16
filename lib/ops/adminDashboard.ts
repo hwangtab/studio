@@ -7,6 +7,8 @@ import { getProduct } from '../booking/products';
 import { checkFieldCryptoKey, checkTossApiKeyPair, collectDbIssues, type HealthIssue } from './healthCheck';
 import { countPendingArtistPayouts } from '../artistSupport/payout';
 import { countPendingFundingPayouts, listFundingProjectsAwaitingPayoutRecord } from '../funding/payout';
+import { listShopPayoutsAwaitingRecord } from '../partnerPayouts/shop';
+import { countPendingPartnerPayouts } from '../partnerPayouts/store';
 
 /**
  * 관리자 첫 화면의 데이터.
@@ -75,6 +77,10 @@ export interface AdminDashboard {
     fundingPayoutsPending: number;
     /** 모금이 끝났는데 정산이 아직 기록되지 않은 프로젝트(살아 있는 후원이 있는 것만). */
     fundingPayoutsToRecord: number;
+    /** 이번 달 이전 달 가운데 판매가 있었는데 정산이 기록되지 않은 상점 아티스트×달 쌍. 표(0066)가 없거나 조회가 실패하면 0. */
+    shopPayoutsToRecord: number;
+    /** 기록됐지만 아직 이체하지 않은 상점 정산. 표(0066)가 없거나 조회가 실패하면 0. */
+    shopPayoutsPending: number;
     /** 계좌 입금을 기다리는 주문(자동 취소 없음 — 운영자가 입금을 확인하거나 닫아야 한다). */
     awaitingDeposit: AwaitingDepositCounts;
   };
@@ -116,7 +122,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
     setTimeout(resolve, LINK_SYNC_WAIT_MS).unref?.();
   })]);
 
-  const [issues, sessions, calendarImport, linkSessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending, fundingPayoutsToRecord, awaitingDepositRows] = await Promise.all([
+  const [issues, sessions, calendarImport, linkSessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending, fundingPayoutsToRecord, shopPayoutsToRecord, shopPayoutsPending, awaitingDepositRows] = await Promise.all([
     collectDbIssues(now),
     db
       .select({
@@ -167,6 +173,15 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
     // 마감 뒤 정산 기록 대기 — 표 조회가 실패해도 대시보드는 열려야 한다(null이면 카드를 숨긴다).
     listFundingProjectsAwaitingPayoutRecord(now).then((rows) => rows.length).catch((error: unknown) => {
       console.error('[admin-dashboard] 정산 기록 대기 조회 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
+      return 0;
+    }),
+    // 상점 정산 — 표(0066)가 없거나 조회가 실패해도 대시보드는 열려야 한다(0이면 카드가 안 뜬다). 상점은 기한 알림이 없다(위탁 약관은 "알린다"만 정한다).
+    listShopPayoutsAwaitingRecord(now).then((rows) => rows.length).catch((error: unknown) => {
+      console.error('[admin-dashboard] 상점 정산 기록 대기 조회 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
+      return 0;
+    }),
+    countPendingPartnerPayouts('shop').catch((error: unknown) => {
+      console.error('[admin-dashboard] 상점 이체 대기 조회 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
       return 0;
     }),
     db.all<{ kind: string; n: number }>(sql`
@@ -221,6 +236,8 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       fundingProjectsAwaitingReview: Number(fundingReviewRows[0]?.count ?? 0),
       fundingPayoutsPending,
       fundingPayoutsToRecord,
+      shopPayoutsToRecord,
+      shopPayoutsPending,
       awaitingDeposit: {
         bookings: Number(awaitingDepositRows.find((r) => r.kind === 'bookings')?.n ?? 0),
         shows: Number(awaitingDepositRows.find((r) => r.kind === 'shows')?.n ?? 0),

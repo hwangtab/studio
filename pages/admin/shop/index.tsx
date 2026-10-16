@@ -6,11 +6,18 @@ import { useState } from 'react';
 import { Button } from '../../../components/ui/Button';
 import { TextInput } from '../../../components/ui/Field';
 import { AdminShell } from '../../../components/admin/AdminShell';
+import { ShopPayoutSection } from '../../../components/admin/ShopPayoutSection';
 import { formatPriceAmount, SHOP_ARTIST_SHARE_PERCENT } from '../../../data/pricing';
 import { SHOP_SALES_OPEN } from '../../../data/shop/policy';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { kstDateString } from '../../../lib/booking/kst';
 import { kstMonthRange } from '../../../lib/shop/artistPayout';
+import { isMissingTableError } from '../../../lib/dbErrors';
+import { listAllUnappliedAdjustments } from '../../../lib/partnerPayouts/adjustments';
+import { buildShopPayoutPreviews } from '../../../lib/partnerPayouts/shop';
+import {
+  serializeAdjustment, serializeShopPayoutPreview, type AdjustmentView, type ShopPayoutRowView,
+} from '../../../lib/partnerPayouts/shopView';
 import { countPendingShopProducts } from '../../../lib/shop/adminProducts';
 import {
   listAdminShopOrders, listAdminSkuStock, listShopArtistSales,
@@ -26,7 +33,14 @@ interface Props {
   /** 주문 검색어. */
   q?: string;
   skus: AdminSkuStockRow[];
+  /** 정산 기록 표(0066)를 못 읽었을 때만 채운다 — 예전 "정산 예정" 표로 되돌아간다. */
   artistSales: AdminShopArtistSalesRow[];
+  /** 아티스트 정산 표(기록·조정 포함). 표가 없거나 읽지 못하면 null. */
+  payoutRows: ShopPayoutRowView[] | null;
+  /** 정산 기록 표를 읽지 못한 이유 — 'migration_needed'(0066 미적용)이면 안내 문구를 띄운다. */
+  payoutsError: 'migration_needed' | 'error' | null;
+  /** 이 달 표에 행이 없는 수취인의 미적용 조정. */
+  otherAdjustments: Array<AdjustmentView & { payeeName: string | null }>;
   /** 정산 표의 달(KST 'YYYY-MM'). */
   month: string;
   prevMonth: string;
@@ -54,12 +68,30 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   try {
     const qParam = context.query.q;
     const q = typeof qParam === 'string' ? qParam.trim().slice(0, 60) : '';
-    const [fetched, skus, artistSales] = await Promise.all([listAdminShopOrders(ORDER_LIST_LIMIT + 1, q), listAdminSkuStock(now), listShopArtistSales(month)]);
+    const [fetched, skus] = await Promise.all([listAdminShopOrders(ORDER_LIST_LIMIT + 1, q), listAdminSkuStock(now)]);
     const orders = fetched.slice(0, ORDER_LIST_LIMIT);
-    return { props: { orders, ordersTruncated: fetched.length > ORDER_LIST_LIMIT, q, skus, artistSales, ...months, salesOpen: SHOP_SALES_OPEN, pendingProducts } };
+    // 정산 표는 별도 try — 정산 기록 표(0066)가 없는 DB에서도 재고·주문 화면은 그대로 열려야 한다. 못 읽으면 예전 "정산 예정" 표로 되돌아간다.
+    let payoutRows: ShopPayoutRowView[] | null = null;
+    let payoutsError: Props['payoutsError'] = null;
+    let otherAdjustments: Props['otherAdjustments'] = [];
+    let artistSales: AdminShopArtistSalesRow[] = [];
+    try {
+      const previews = await buildShopPayoutPreviews(month);
+      payoutRows = previews.map(serializeShopPayoutPreview);
+      const names = new Map(previews.map((p) => [p.subjectKey, p.payeeName]));
+      otherAdjustments = (await listAllUnappliedAdjustments('shop'))
+        .filter((a) => !previews.some((p) => p.subjectKey === a.payeeKey))
+        .map((a) => ({ ...serializeAdjustment(a), payeeName: names.get(a.payeeKey) ?? null }));
+    } catch (payoutError: unknown) {
+      payoutRows = null;
+      payoutsError = isMissingTableError(payoutError) ? 'migration_needed' : 'error';
+      if (payoutsError === 'error') console.error('[admin/shop] 정산 표 조회 실패 — 예전 정산 예정 표로 대신합니다:', payoutError);
+      artistSales = await listShopArtistSales(month);
+    }
+    return { props: { orders, ordersTruncated: fetched.length > ORDER_LIST_LIMIT, q, skus, artistSales, payoutRows, payoutsError, otherAdjustments, ...months, salesOpen: SHOP_SALES_OPEN, pendingProducts } };
   } catch (error: unknown) {
     console.error('[admin/shop] 조회 실패:', error);
-    return { props: { orders: [], skus: [], artistSales: [], ...months, salesOpen: SHOP_SALES_OPEN, pendingProducts, error: '상점 정보를 불러오지 못했습니다. 운영 DB에 마이그레이션 0052가 적용됐는지 확인해 주세요.' } };
+    return { props: { orders: [], skus: [], artistSales: [], payoutRows: null, payoutsError: null, otherAdjustments: [], ...months, salesOpen: SHOP_SALES_OPEN, pendingProducts, error: '상점 정보를 불러오지 못했습니다. 운영 DB에 마이그레이션 0052가 적용됐는지 확인해 주세요.' } };
   }
 };
 
@@ -163,7 +195,7 @@ function ArtistSalesSection({ rows, month, prevMonth, nextMonth }: Pick<Props, '
   );
 }
 
-export default function AdminShopPage({ orders, ordersTruncated = false, q = '', skus, artistSales, month, prevMonth, nextMonth, salesOpen, pendingProducts, error }: Props) {
+export default function AdminShopPage({ orders, ordersTruncated = false, q = '', skus, artistSales, payoutRows, payoutsError, otherAdjustments, month, prevMonth, nextMonth, salesOpen, pendingProducts, error }: Props) {
   return (
     <>
       <Head>
@@ -201,7 +233,19 @@ export default function AdminShopPage({ orders, ordersTruncated = false, q = '',
           )}
         </section>
 
-        <ArtistSalesSection rows={artistSales} month={month} prevMonth={prevMonth} nextMonth={nextMonth} />
+        {payoutsError === 'migration_needed' && (
+          <div role="status" className="mb-4 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
+            정산 기록 표가 아직 없습니다 — 운영 DB에 마이그레이션 0066(partner_payouts)을 적용하면 정산 기록·지급 완료·이월 조정을 쓸 수 있습니다. 그동안은 아래 예전 「정산 예정」 표로 계산만 보입니다.
+          </div>
+        )}
+        {payoutsError === 'error' && (
+          <div role="alert" className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-900">정산 기록을 불러오지 못해 예전 「정산 예정」 표로 대신합니다. 잠시 뒤 새로고침해 주세요.</div>
+        )}
+        {payoutRows ? (
+          <ShopPayoutSection rows={payoutRows} month={month} prevMonth={prevMonth} nextMonth={nextMonth} otherAdjustments={otherAdjustments} />
+        ) : (
+          <ArtistSalesSection rows={artistSales} month={month} prevMonth={prevMonth} nextMonth={nextMonth} />
+        )}
 
         <section className="rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
           <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-gray-900">주문</h2>

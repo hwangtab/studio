@@ -66,6 +66,26 @@ describe('hasApprovedEngagement', () => {
     expect(await hasApprovedEngagement(c)).toBe(false);
   });
 
+  it('상점·공연 정산 기록(partner_payouts)이 있으면 승인된 일이 없어도 참 — 이미 기록한 정산의 계좌를 열 수 있어야 한다', async () => {
+    const c = await seedCreator();
+    expect(await hasApprovedEngagement(c)).toBe(false);
+    await mockDb.insert(schema.partnerPayouts).values({
+      kind: 'show', subjectKey: 'show-1', period: 'all', creatorId: c, payeeName: '가나', taxType: 'withholding', netAmount: 1,
+    });
+    expect(await hasApprovedEngagement(c)).toBe(true);
+  });
+
+  it('정산 기록 표가 없는 DB(0066 전)에서는 그 갈래만 없음으로 본다', async () => {
+    const c = await seedCreator();
+    await client.execute('DROP TABLE partner_payouts');
+    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      expect(await hasApprovedEngagement(c)).toBe(false);
+    } finally {
+      error.mockRestore();
+    }
+  });
+
   it('공연 표가 없는 DB에서도 상점 갈래는 참', async () => {
     const c = await seedCreator();
     await mockDb.insert(schema.shopArtists).values({ creatorId: c, slug: 'artist' });

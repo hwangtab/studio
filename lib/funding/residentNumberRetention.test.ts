@@ -16,7 +16,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import * as schema from '../../db/schema';
-import { fundingCreators, fundingProjectPayouts, fundingProjects, shopArtists, showSubmissions } from '../../db/schema';
+import { fundingCreators, fundingProjectPayouts, fundingProjects, partnerPayouts, shopArtists, showSubmissions } from '../../db/schema';
 
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
@@ -117,6 +117,7 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
+  await client.execute('DELETE FROM partner_payouts');
   await client.execute('DELETE FROM shop_artists');
   await client.execute('DELETE FROM show_submissions');
   await client.execute('DELETE FROM funding_project_payouts');
@@ -341,5 +342,99 @@ describe('파기 범위', () => {
 
     expect((await purgeExpiredResidentNumbers(NOW)).purged).toBe(1);
     expect((await purgeExpiredResidentNumbers(NOW)).purged).toBe(0);
+  });
+});
+
+/**
+ * 상점·공연 정산 기록(`partner_payouts`) — 처리방침 15항: "원천징수한 정산(펀딩·상점·공연)이 있으면 그 정산의 지급일부터 5년".
+ * 펀딩 갈래와 같은 경계(`withholding_amount > 0`)·같은 기준(가장 나중 지급, 미지급이면 보관)이어야 한다.
+ */
+const addPartnerPayout = async (opts: {
+  creatorId: string; kind?: 'shop' | 'show'; withholdingAmount: number; paidAt: string | null; subjectKey?: string;
+}) => {
+  seq += 1;
+  await mockDb.insert(partnerPayouts).values({
+    kind: opts.kind ?? 'shop',
+    subjectKey: opts.subjectKey ?? `creator:${opts.creatorId}`,
+    period: opts.kind === 'show' ? 'all' : `2026-0${(seq % 8) + 1}`,
+    creatorId: opts.creatorId,
+    payeeName: '수취인',
+    taxType: 'withholding',
+    shareAmount: 100_000,
+    withholdingAmount: opts.withholdingAmount,
+    netAmount: 100_000 - opts.withholdingAmount,
+    status: opts.paidAt ? 'paid' : 'pending',
+    paidAt: opts.paidAt ? d(opts.paidAt) : null,
+  });
+};
+
+describe('상점·공연 정산 기록도 원천징수 기록으로 센다 (partner_payouts)', () => {
+  it('상점 정산만 원천징수한 개설자: 지급 후 보관 기간 안이면, 계정이 1년 넘게 잠들어도 번호를 보관한다', async () => {
+    await addCreator({ id: 'c1', updatedAt: '2022-01-01' });
+    await addPartnerPayout({ creatorId: 'c1', withholdingAmount: 726, paidAt: '2024-01-01' });
+
+    expect((await purgeExpiredResidentNumbers(NOW)).purged).toBe(0);
+    expect((await creatorOf('c1')).residentNumberEnc).toBe(ENC);
+  });
+
+  it('공연 정산만 원천징수한 개설자도 같다', async () => {
+    await addCreator({ id: 'c1', updatedAt: '2022-01-01' });
+    await addPartnerPayout({ creatorId: 'c1', kind: 'show', withholdingAmount: 33_000, paidAt: '2025-06-01' });
+
+    expect((await purgeExpiredResidentNumbers(NOW)).purged).toBe(0);
+  });
+
+  it('지급 후 보관 기간이 지났으면 파기한다', async () => {
+    await addCreator({ id: 'c1' });
+    await addPartnerPayout({ creatorId: 'c1', withholdingAmount: 726, paidAt: '2020-01-01' });
+
+    expect((await purgeExpiredResidentNumbers(NOW)).purged).toBe(1);
+    expect((await creatorOf('c1')).residentNumberEnc).toBeNull();
+  });
+
+  it('펀딩·상점 어느 쪽이든 가장 나중 지급이 기준이다', async () => {
+    await addCreator({ id: 'c1' });
+    await addProject({ id: 'p1', creatorId: 'c1', reviewStatus: 'approved' });
+    await addPayout({ projectId: 'p1', withholdingAmount: 33_000, paidAt: '2020-01-01' });
+    await addPartnerPayout({ creatorId: 'c1', withholdingAmount: 726, paidAt: '2024-01-01' });
+
+    expect((await purgeExpiredResidentNumbers(NOW)).purged).toBe(0);
+  });
+
+  it('아직 지급하지 않은 상점·공연 원천징수 정산이 있으면 파기하지 않는다', async () => {
+    await addCreator({ id: 'c1', updatedAt: '2020-01-01' });
+    await addPartnerPayout({ creatorId: 'c1', withholdingAmount: 726, paidAt: '2020-01-01' });
+    await addPartnerPayout({ creatorId: 'c1', withholdingAmount: 726, paidAt: null });
+
+    expect((await purgeExpiredResidentNumbers(NOW)).purged).toBe(0);
+    expect((await creatorOf('c1')).residentNumberEnc).toBe(ENC);
+  });
+
+  it('원천징수액이 0인 상점 정산(사업자·이월 0원)은 기산점이 되지 않는다 — 펀딩과 같은 경계', async () => {
+    await addCreator({ id: 'c1', updatedAt: '2026-08-01' });
+    await addPartnerPayout({ creatorId: 'c1', withholdingAmount: 0, paidAt: '2020-01-01' });
+
+    // (B) 휴면 기간(1년)이 안 지났으므로 보관.
+    expect((await purgeExpiredResidentNumbers(NOW)).purged).toBe(0);
+  });
+
+  it('다른 개설자의 최근 상점 정산은 이 개설자를 붙잡지 않는다', async () => {
+    await addCreator({ id: 'c1' });
+    await addPartnerPayout({ creatorId: 'c1', withholdingAmount: 726, paidAt: '2020-01-01' });
+    await addCreator({ id: 'c2' });
+    await addPartnerPayout({ creatorId: 'c2', withholdingAmount: 726, paidAt: '2024-01-01' });
+
+    expect((await purgeExpiredResidentNumbers(NOW)).purged).toBe(1);
+    expect((await creatorOf('c1')).residentNumberEnc).toBeNull();
+    expect((await creatorOf('c2')).residentNumberEnc).toBe(ENC);
+  });
+
+  it('file:<slug> 정산(creator_id 없음)은 어느 개설자도 붙잡지 않는다', async () => {
+    await addCreator({ id: 'c1', updatedAt: '2022-01-01' });
+    await mockDb.insert(partnerPayouts).values({
+      kind: 'shop', subjectKey: 'file:fa', period: '2026-09', creatorId: null, payeeName: '파일', taxType: 'invoice',
+      netAmount: 1, status: 'pending', withholdingAmount: 0,
+    });
+    expect((await purgeExpiredResidentNumbers(NOW)).purged).toBe(1);
   });
 });

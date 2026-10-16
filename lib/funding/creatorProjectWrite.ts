@@ -12,6 +12,7 @@ import {
   type BusinessProfileView, type DeleteBlob, deleteBusinessProfile, deleteTaxDocumentBlob, hasInvoicePayout,
   loadBusinessProfile,
 } from './businessProfile';
+import { hasPartnerWithheldPayout } from '../partnerPayouts/creatorPayouts';
 import { hasApprovedEngagement, isShopArtist } from './creatorEligibility';
 import { getFundingProject } from './projects';
 import { isFundingSlugTaken, isSlugConflictError, isUniqueConflictError } from './slugOccupancy';
@@ -467,7 +468,10 @@ export const hasWithheldPayout = async (creatorId: string): Promise<boolean> => 
     .innerJoin(fundingProjects, eq(fundingProjects.id, fundingProjectPayouts.projectId))
     .where(and(eq(fundingProjects.creatorId, creatorId), gt(fundingProjectPayouts.withholdingAmount, 0)))
     .limit(1);
-  return Boolean(row);
+  if (row) return true;
+  // 상점·공연 정산 기록(`partner_payouts`)도 같은 취급이다 — 처리방침 15항이 "펀딩·상점·공연 어느 쪽의 정산이든" 보관한다고 약속했다.
+  // 같은 `> 0` 경계(lib/partnerPayouts/creatorPayouts.ts). 표가 없으면 거짓, 읽기 실패는 참(남긴다).
+  return hasPartnerWithheldPayout(creatorId);
 };
 
 /**

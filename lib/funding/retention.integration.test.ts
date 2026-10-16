@@ -5,8 +5,8 @@
  * 주민등록번호 파기(`residentNumberRetention.test.ts`)의 거울이다 — 기산점은 **사업자 정산**
  * (`withholding_amount = 0`)의 지급 시각, 정산 기록이 없으면 계정 최종 활동.
  *
- * 공연·상점은 정산 기록 표가 없어 "정산이 끝났다"를 알 수 없으므로, 승인된 공연 등록·상점 아티스트가
- * 있는 동안은 지우지 않는다.
+ * 공연·상점은 "등록돼 있는 동안"을 살아 있는 것으로 보므로 승인된 공연 등록·상점 아티스트가 있는 동안은 지우지 않는다.
+ * 상점·공연 정산 기록(`partner_payouts`)은 펀딩 기록과 함께 기산점이 된다(아래 describe).
  */
 
 import { createClient, type Client } from '@libsql/client';
@@ -21,6 +21,7 @@ import {
   fundingCreators,
   fundingProjectPayouts,
   fundingProjects,
+  partnerPayouts,
   shopArtists,
   showSubmissions,
 } from '../../db/schema';
@@ -119,6 +120,7 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
+  await client.execute('DELETE FROM partner_payouts');
   await client.execute('DELETE FROM creator_business_profiles');
   await client.execute('DELETE FROM shop_artists');
   await client.execute('DELETE FROM show_submissions');
@@ -280,6 +282,72 @@ describe('파기 범위', () => {
     await addCreator({ id: 'c1', updatedAt: '2024-01-01' });
     expect((await purge()).purged).toBe(1);
     expect((await purge()).purged).toBe(0);
+  });
+});
+
+const addPartnerPayout = async (opts: { creatorId: string; kind?: 'shop' | 'show'; withholdingAmount: number; paidAt: string | null }) => {
+  seq += 1;
+  await mockDb.insert(partnerPayouts).values({
+    kind: opts.kind ?? 'shop',
+    subjectKey: `creator:${opts.creatorId}`,
+    period: `2026-0${(seq % 8) + 1}`,
+    creatorId: opts.creatorId,
+    payeeName: '수취인',
+    taxType: 'invoice',
+    shareAmount: 100_000,
+    withholdingAmount: opts.withholdingAmount,
+    netAmount: 100_000 - opts.withholdingAmount,
+    status: opts.paidAt ? 'paid' : 'pending',
+    paidAt: opts.paidAt ? d(opts.paidAt) : null,
+  });
+};
+
+describe('상점·공연 사업자 정산 기록(partner_payouts)도 세금계산서 대조 근거로 센다', () => {
+  it(`상점 사업자 정산만 있는 개설자: 지급 후 ${BUSINESS_PROFILE_RETENTION_YEARS}년 안이면, 계정이 1년 넘게 잠들어도 남긴다`, async () => {
+    await addCreator({ id: 'c1', updatedAt: '2022-01-01' });
+    await addPartnerPayout({ creatorId: 'c1', withholdingAmount: 0, paidAt: '2024-01-01' });
+
+    expect((await purge()).purged).toBe(0);
+    expect(await profileOf('c1')).toBeDefined();
+  });
+
+  it('공연 사업자 정산도 같고, 보관 기간이 지났으면 지운다', async () => {
+    await addCreator({ id: 'c1', updatedAt: '2022-01-01' });
+    await addPartnerPayout({ creatorId: 'c1', kind: 'show', withholdingAmount: 0, paidAt: '2025-01-01' });
+    expect((await purge()).purged).toBe(0);
+
+    await client.execute('DELETE FROM partner_payouts');
+    await addPartnerPayout({ creatorId: 'c1', kind: 'show', withholdingAmount: 0, paidAt: '2020-01-01' });
+    expect((await purge()).purged).toBe(1);
+    expect(await profileOf('c1')).toBeUndefined();
+  });
+
+  it('아직 지급하지 않은 상점 사업자 정산이 있으면 남긴다', async () => {
+    await addCreator({ id: 'c1' });
+    await addPartnerPayout({ creatorId: 'c1', withholdingAmount: 0, paidAt: '2020-01-01' });
+    await addPartnerPayout({ creatorId: 'c1', withholdingAmount: 0, paidAt: null });
+
+    expect((await purge()).purged).toBe(0);
+    expect(await profileOf('c1')).toBeDefined();
+  });
+
+  it('펀딩·상점 중 가장 나중 지급이 기준이다', async () => {
+    await addCreator({ id: 'c1' });
+    await addProject({ id: 'p1', creatorId: 'c1', reviewStatus: 'approved' });
+    await addPayout({ projectId: 'p1', withholdingAmount: 0, paidAt: '2020-01-01' });
+    await addPartnerPayout({ creatorId: 'c1', withholdingAmount: 0, paidAt: '2024-01-01' });
+
+    expect((await purge()).purged).toBe(0);
+  });
+
+  it('원천징수한 상점 정산(세액 > 0)은 사업자 정산이 아니다 — 사업자 기록이 없는 것과 같다', async () => {
+    await addCreator({ id: 'c1', updatedAt: '2026-08-01' });
+    await addPartnerPayout({ creatorId: 'c1', withholdingAmount: 726, paidAt: '2020-01-01' });
+
+    // (B) 휴면 1년이 안 지났으므로 남는다 — 정산 기록이 기산점이 되어 지워지지 않는다.
+    expect((await purge()).purged).toBe(0);
+    await client.execute("UPDATE funding_creators SET updated_at = 1577836800 WHERE id = 'c1'"); // 2020-01-01
+    expect((await purge()).purged).toBe(1);
   });
 });
 

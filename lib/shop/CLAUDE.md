@@ -169,10 +169,28 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
   부가세 상당액과 원천징수 3.3%를 뺀다(펀딩 정산과 같은 이유). `/admin/shop`의 "아티스트 정산 예정"이 그 달(KST)에 **발송한** 결제 완료 주문만
   센다 — 파일 갈래는 키 `file:<slug>`(세금 유형은 `data/artists`), DB 갈래는 `creator:<id>`(`sku_id → shop_product_skus → shop_products.creator_id`,
   세금 유형은 `funding_creators.tax_type`, 비어 있으면 "계산하지 않음"). DB 갈래는 별도 try라 실패해도 파일 갈래 표는 나온다.
-  1단계는 운영자가 이 표를 보고 손으로 이체한다 — 정산 기록 표·정산 메일은 아직 없다.
-  (위탁 약관 제7조·처리방침 14·15항은 2026-10-16부터 "달 단위 정산·이월·정산 기록 보관"을 조건형으로 약속한다 — 기록 표가 생기는 P1에서 코드가 그 약속을 따라가야 한다, `docs/settlement-record-design-2026-10.md` §7·§8.)
-- 이미 정산한 달의 반품 환불은 그 주문이 표에서 빠질 뿐 자동으로 차감되지 않는다. 다음 정산에서 손으로 뺀다.
-  부분 환불 주문은 어느 줄이 환불됐는지 원장이 모르므로 계산에서 빼고 "직접 확인"으로 띄운다.
+  **정산은 이제 기록한다**(P1, 마이그레이션 `0066_partner_payouts` — 설계 `docs/settlement-record-design-2026-10.md`): 시스템은 계산하고 기록하고, **송금은 운영자가 은행 앱으로** 한 뒤 "지급 완료"를 누른다.
+  `/admin/shop`의 같은 표(`components/admin/ShopPayoutSection.tsx`) 각 행에 [정산 기록] [지급 완료] [기록 취소(이체 전)] [계좌 보기] [조정 추가]. 규칙은 `lib/partnerPayouts/`에 있다:
+  - **단위는 아티스트 × 달(KST)**: `partner_payouts(kind='shop', subject_key='creator:<id>'|'file:<slug>', period='YYYY-MM')`, `UNIQUE(kind, subject_key, period)`가 이중 기록을 막는다(`already_recorded`).
+    기록은 **불변 스냅샷**이다(금액·세금 구분·수취인 이름). 이체 전(`pending`)에 한해 "기록 취소"로 지우고 다시 기록한다 — 이체한 기록은 못 지운다.
+    미리보기 `buildShopPayoutPreview(s)` → `recordShopPayout(subjectKey, period, now, expected)` → `markPartnerPayoutPaid(id, memo, now)` / `deletePartnerPayoutIfPending(id)`(`store.ts`).
+    `expected`(화면이 보여 준 실이체액·조정액)가 지금 계산과 다르면 `amount_changed`로 거절한다(펀딩 정산과 같은 낙관적 대조).
+  - **막는 조건**(펀딩과 같은 틀, 미리보기가 `blockers`로 보인다): 세금 구분 없음 · 정산 계좌 없음 · 사업자인데 사업자 정보 없음/못 읽음 · 위탁 약관 현재 판본 미동의 · 이미 기록 · 판매 없음.
+    **주민등록번호 미등록은 막지 않고 경고**(지급명세서 때 필요하지 송금에는 불필요). 계좌·번호는 **존재만** 본다 — 값은 props에 안 나가고, "계좌 보기"는 개설자 단위 열람 라우트(`/api/admin/creators/<id>/payout-account`, 접속기록)를 버튼으로 쓴다.
+    **파일 갈래 아티스트(`file:<slug>`)는 계정이 없어** 계좌·약관·사업자 막음이 없고 `creator_id`는 NULL, 계좌 보기 버튼이 없다(기록·지급 완료는 된다).
+  - **이월 조정**(`partner_payout_adjustments`, 부호 있음, **아티스트 몫(VAT 포함) 기준**): 정산 뒤 환불 등을 다음 정산에 싣는다. 기록할 때 그 수취인의 미적용 조정이 한 batch로 그 정산에 실리고(`applied_payout_id`),
+    기록 취소 때 풀린다. 몫이 모자라 음수가 되면 **실이체 0원 + 남은 음수는 다음 정산으로 이월**(새 조정 `carryover:<정산 id>` + 기록의 `shortfall_amount`). 계산은 `computeShopArtistPayout`의 `adjustmentAmount`(몫에 더한 뒤 부가세 상당액·원천징수) — `shopCalc.ts`.
+  - **정산 뒤 환불 자동 조정**(`shopLateRefund.ts`, reason `late_refund`): 전액 환불로 `refunded`가 된 주문이 **이미 기록된 정산의 스냅샷에 들어 있었으면**(발송 달 기록 + 기록 시각 ≥ 발송, 환불 완결 시각 ≥ 기록 시각) −(판매가×55% + 아티스트 직접 발송이면 배송비) 조정을 쌓는다.
+    호출처는 `cancelShopOrder` 끝과 웹훅 전액 취소 대사(`closeShopFulfillmentOnFullCancel`)이고, `(kind, payee_key, reason, source_ref=주문번호)` UNIQUE라 멱등이다. **환불은 이 조정이 실패해도 성공한다**(`safeSync…`가 던지지 않고 로그 `[partner-payouts]`) —
+    못 쌓은 조정은 그 아티스트의 다음 정산 기록 직전 보충(`syncShopLateRefundAdjustments({ subjectKey })`)이 메운다. **부분 환불(`partially_refunded`)은 만들지 않는다**(원장이 어느 줄인지 모른다 — 정산 예정 표의 "직접 확인"과 같다).
+    이체 전 기록을 지우면 그 정산을 바로잡던 환불 조정(`origin_payout_id`)도 지워진다(다시 기록하는 스냅샷이 이미 반영 — 이중 공제 방지). 그 조정이 다른 달 정산에 이미 실렸으면 취소를 거절한다(`adjustment_applied`).
+    시스템이 만든 조정은 지우지 않는다 — 잘못 생긴 것은 반대 부호의 **수기 조정**(`add_adjustment`)으로 상쇄한다.
+  - **표가 없는 DB(0066 전)**: 정산 표는 "마이그레이션 0066 필요" 안내와 함께 예전 읽기 전용 "정산 예정" 표로 되돌아가고 `/admin/shop`의 재고·주문은 그대로다. 환불 경로는 조용히 건너뛰고, 대시보드 두 카드는 0, API는 503 `migration_needed`.
+  - 대시보드: 「정산 기록 대기 상점(지난 달)」(이번 달 이전 `SHOP_PAYOUT_RECORD_FROM_MONTH`(2026-10)부터 판매가 있었는데 기록이 없는 아티스트×달, 최대 12달) · 「이체 대기 상점 정산」. **기한 알림(헬스체크)은 없다** — 위탁 약관은 시기를 "스튜디오가 따로 알린다"고만 한다(권장: 매월 10일까지 전월분, 코드로 강제하지 않는다).
+  - 정산 안내 메일·CSV는 아직 없다(P3). 보존·파기 코드는 이 표를 본다(`lib/partnerPayouts/creatorPayouts.ts` — 루트·`lib/funding/CLAUDE.md`).
+  (위탁 약관 제7조·처리방침 14·15항은 2026-10-16부터 "달 단위 정산·이월·정산 기록 보관"을 약속한다 — 코드가 그 약속을 따라가는 곳이 위 규칙이다.)
+- 이미 정산한 달의 반품 환불은 위 "정산 뒤 환불 자동 조정"으로 다음 정산에서 빠진다. 기록 전(미기록 달)에 환불된 주문은 그냥 표에서 빠진다.
+  부분 환불 주문은 어느 줄이 환불됐는지 원장이 모르므로 계산에서 빼고 "직접 확인"으로 띄운다(조정도 만들지 않는다 — 운영자가 수기 조정으로 맞춘다).
 
 ### 위탁 약관 — 콘솔 전자 동의 (마이그레이션 0059)
 
@@ -304,7 +322,7 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
   화면은 `<audio preload="none">`(재생 전에는 한 바이트도 받지 않는다). 302 목적지가 R2라 CSP `media-src`에 R2 오리진이 열려 있다(`middleware.ts`).
 - **큰 파일**은 함수 한도(4.5MB) 때문에 웹에서 올리지 않는다: 운영자가 R2에 `shop/` 접두사로 올리고 관리자 상품 화면(`set_digital_files`)에서 라벨·키를 넣는다.
 - **정산 예정 표**: 배송 없는 주문은 발송이 없어 결제 승인 월(`payments.approved_at`)로 센다. 내려받기 전 주문은 고객이 철회할 수 있어 세지 않고 "철회 가능 N건"으로만 표시한다
-  (정산 기록 표는 아직 없다).
+  (내려받은 뒤에는 그 주문의 결제 승인 월 정산에 들어간다 — 이미 그 달을 기록했다면 기록 시각 이후 내려받은 주문은 그 스냅샷에 없다. 기록 규칙은 위 "정산" 절.)
 
 ### 화면
 
