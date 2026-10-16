@@ -1,4 +1,4 @@
-import { eq, sql } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { bookings, orders, reviewRequests, workOrders } from '../../db/schema';
@@ -34,10 +34,10 @@ export const deleteUnpaidCancelledOrder = async (orderId: string): Promise<Delet
   if (refundAccounts.length > 0) return { ok: false, code: 'not_allowed', message: '환불 계좌 기록이 있어 삭제할 수 없어요.' };
 
   await db.batch([
-    db.delete(reviewRequests).where(eq(reviewRequests.orderId, order.id)),
-    db.delete(bookings).where(eq(bookings.orderId, order.id)),
-    db.delete(workOrders).where(eq(workOrders.orderId, order.id)),
-    // 마지막 가드: 그 사이 상태가 바뀌었으면(0행) 주문은 남는다.
+    // 자식 행에도 같은 상태 조건을 건다 — 검사와 삭제 사이에 주문 상태가 바뀌었으면 자식만 지워지고 주문이 남는 일이 없게.
+    db.delete(reviewRequests).where(sql`${reviewRequests.orderId} = ${order.id} AND ${order.id} IN (SELECT id FROM orders WHERE status = 'deposit_cancelled')`),
+    db.delete(bookings).where(sql`${bookings.orderId} = ${order.id} AND ${order.id} IN (SELECT id FROM orders WHERE status = 'deposit_cancelled')`),
+    db.delete(workOrders).where(sql`${workOrders.orderId} = ${order.id} AND ${order.id} IN (SELECT id FROM orders WHERE status = 'deposit_cancelled')`),
     db.delete(orders).where(sql`${orders.id} = ${order.id} AND ${orders.status} = 'deposit_cancelled'`),
   ]);
   console.warn('[admin] 입금 전 취소 기록 삭제', { orderNo: order.orderNo, type: order.type });

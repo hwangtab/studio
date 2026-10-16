@@ -17,6 +17,7 @@ jest.mock('./gcal', () => ({
   ...jest.requireActual('./gcal'),
   createBookingEvent: jest.fn().mockResolvedValue('evt-confirmed'),
   deleteBookingEvent: jest.fn().mockResolvedValue(undefined),
+  getCalendarEvent: jest.fn(),
   renameBookingEvent: jest.fn().mockResolvedValue(undefined),
 }));
 jest.mock('./email', () => ({
@@ -30,6 +31,7 @@ import { calendarBlockedRooms } from './calendarGuard';
 import { createManualBooking, parseManualBookingInput } from './manualEntry';
 import { createBookingOrder } from './service';
 import { sendBookingConfirmedEmails } from './email';
+import { deleteBookingEvent, getCalendarEvent } from './gcal';
 import { MANUAL_PLACEHOLDER_EMAIL } from '../privacy/manualPlaceholder';
 /* eslint-enable import/first */
 
@@ -87,6 +89,33 @@ describe('parseManualBookingInput', () => {
   it('연락처·이메일을 비우면 플레이스홀더로 채운다', () => {
     const v = make({ customerPhone: '', customerEmail: '' });
     expect(v.payload).toMatchObject({ customerPhone: '-', customerEmail: MANUAL_PLACEHOLDER_EMAIL });
+  });
+});
+
+describe('createManualBooking — 캘린더 일정 가져오기(adoptEventId)', () => {
+  const ev = (description = '') => ({ id: 'evt-x', summary: '러프', description, start: NOW, end: NOW, allDay: false });
+
+  it('손으로 넣은 일정이면 등록 뒤 원본을 지운다', async () => {
+    (getCalendarEvent as jest.Mock).mockResolvedValue(ev());
+    const r = await createManualBooking(make(), NOW, { adoptEventId: 'evt-x' });
+    expect(r.ok).toBe(true);
+    expect(deleteBookingEvent).toHaveBeenCalledWith('evt-x', 'studio');
+  });
+
+  it('사이트가 올린 일정(주문번호 줄)이면 거절하고 아무것도 만들지 않는다', async () => {
+    (getCalendarEvent as jest.Mock).mockResolvedValue(ev('주문번호: SNB-1'));
+    const r = await createManualBooking(make(), NOW, { adoptEventId: 'evt-x' });
+    expect(r).toMatchObject({ ok: false });
+    expect(deleteBookingEvent).not.toHaveBeenCalled();
+    expect(await one(`SELECT COUNT(*) AS n FROM orders`)).toEqual({ n: 0 });
+  });
+
+  it('이미 없는 일정이거나 확인에 실패하면 거절한다', async () => {
+    (getCalendarEvent as jest.Mock).mockResolvedValueOnce(null);
+    expect(await createManualBooking(make(), NOW, { adoptEventId: 'evt-x' })).toMatchObject({ ok: false });
+    (getCalendarEvent as jest.Mock).mockRejectedValueOnce(new Error('down'));
+    expect(await createManualBooking(make(), NOW, { adoptEventId: 'evt-x' })).toMatchObject({ ok: false });
+    expect(await one(`SELECT COUNT(*) AS n FROM orders`)).toEqual({ n: 0 });
   });
 });
 
