@@ -33,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (req.method === 'DELETE') {
       const { id } = (req.body ?? {}) as { id?: unknown };
       if (typeof id !== 'string') return res.status(400).json({ ok: false, message: '요청이 올바르지 않습니다.' });
-      const deleted = await deleteManualRevenue(id);
+      const deleted = await deleteManualRevenue(id, auth.actor);
       return deleted ? res.status(200).json({ ok: true }) : res.status(404).json({ ok: false, message: '기록을 찾을 수 없습니다.' });
     }
 
@@ -41,6 +41,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ ok: false, message: 'Method Not Allowed' });
   } catch (error: unknown) {
     console.error('[API/admin/revenue/manual] 실패:', error);
-    return res.status(500).json({ ok: false, message: '처리하지 못했습니다. 마이그레이션 0063이 적용됐는지 확인해 주세요.' });
+    return res.status(500).json({ ok: false, message: '처리하지 못했습니다. 마이그레이션 0063·0065가 적용됐는지 확인해 주세요.' });
   }
 }

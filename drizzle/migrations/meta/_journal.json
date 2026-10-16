@@ -456,6 +456,13 @@
       "when": 1792053444143,
       "tag": "0064_link_gcal",
       "breakpoints": true
+    },
+    {
+      "idx": 65,
+      "version": "6",
+      "when": 1792113407245,
+      "tag": "0065_manual_revenues_soft_delete",
+      "breakpoints": true
     }
   ]
 }

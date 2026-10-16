@@ -13,6 +13,7 @@ import { rescheduleBooking } from '../../../../lib/booking/reschedule';
 import { cancelAwaitingBookingDeposit, confirmBookingBankDeposit, deliverBookingDepositGuide, retryWaitingEventDelete } from '../../../../lib/booking/bankDeposit';
 import { bankDepositStateOf, isBankDepositPayment } from '../../../../lib/payments/bankDeposit';
 import { removePaymentLinkCalendarEvent, resyncPaymentLinkCalendarEvent } from '../../../../lib/payments/linkCalendar';
+import { recordLinkBankRefund } from '../../../../lib/payments/linkRefund';
 import { markRefundAccountRefunded } from '../../../../lib/payments/refundAccount';
 
 /**
@@ -158,6 +159,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       } catch (error: unknown) {
         console.error('[API/admin/bookings/[id]] Refund failed:', error);
         return res.status(500).json({ ok: false, message: '환불 처리 중 오류가 발생했습니다.' });
+      }
+    }
+
+    // 예약금 결제 링크 주문의 계좌 직접 입금분 환불 기록 — 송금은 운영자가 손으로 마쳤고 여기선 장부만 남긴다(lib/payments/linkRefund.ts).
+    // 카드(토스) 결제 링크는 토스 콘솔에서 취소한다 — 기록만 남기면 돈은 그대로인데 장부만 바뀐다.
+    if (body.action === 'record_link_refund') {
+      const reasonText = typeof body.reason === 'string' ? body.reason.trim() : '';
+      if (reasonText === '') return res.status(400).json({ ok: false, message: '환불 사유를 입력해 주세요.' });
+      if (reasonText.length > 500) return res.status(400).json({ ok: false, message: '환불 사유가 너무 깁니다.' });
+      if (typeof body.amount !== 'number') return res.status(400).json({ ok: false, message: '환불 금액이 올바르지 않습니다.' });
+      try {
+        const r = await recordLinkBankRefund({ orderId: order.id, amount: body.amount, reason: reasonText, now: new Date() });
+        if (!r.ok) return res.status(r.code === 'not_found' ? 404 : r.code === 'invalid_amount' ? 400 : 409).json({ ok: false, code: r.code, message: r.message });
+        return res.status(200).json({ ok: true, refundAmount: r.refundAmount });
+      } catch (error: unknown) {
+        console.error('[API/admin/bookings/[id]] 링크 주문 환불 기록 실패:', { orderNo: order.orderNo, error });
+        return res.status(500).json({ ok: false, message: '환불 기록에 실패했습니다.' });
       }
     }
 

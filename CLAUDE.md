@@ -164,6 +164,11 @@ npm run indexnow:changed -- --dry-run
 진위확인 및 상태조회 서비스"의 일반 인증키 Decoding, Production·Preview)는 머지 전에 넣어 두면 머지 푸시가 싣고 간다 — 따로 재배포하지 않는다.
 키가 없어도 저장은 되고 상태가 "미확인(API 키 없음)"으로 남는다. 규칙은 `lib/funding/CLAUDE.md` "개설자 사업자 정보·국세청 조회".
 
+### 마이그레이션 0065(`manual_revenues.deleted_at`·`deleted_by`)도 배포보다 먼저 적용한다
+
+수기 매출 삭제가 행 삭제에서 소프트 삭제(누가 언제 지웠는지 남김)로 바뀌었다. 순서를 뒤집으면 **수기 매출 조회·삭제만** 실패한다 —
+매출 현황은 "직접 받은 매출 표를 읽지 못했다" 경고와 함께, 대시보드는 `manualMissing`으로 직접 입금분이 빠진 숫자를 보이고(나머지 매출은 정상), 삭제 버튼은 500이다. 확인은 `PRAGMA table_info(manual_revenues);`.
+
 ### 마이그레이션 0035(`public_name`)·0036(`listing_hidden_at`)·0039(`listing_hidden_name`)도 배포보다 먼저 적용한다
 
 `funding_pledges.public_name`(후원자 명단 표시 이름 — 가린 이름·닉네임, `lib/funding/publicName.ts`)이

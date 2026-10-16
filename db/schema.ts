@@ -2245,6 +2245,9 @@ export const manualRevenues = sqliteTable('manual_revenues', {
   memo: text('memo'),
   createdBy: text('created_by'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  /** 소프트 삭제(마이그레이션 0065) — 누가 언제 지웠는지 남긴다. 값이 있으면 모든 조회가 건너뛴다. */
+  deletedAt: integer('deleted_at', { mode: 'timestamp' }),
+  deletedBy: text('deleted_by'),
 }, (t) => ({
   receivedOnIdx: index('manual_revenues_received_on_idx').on(t.receivedOn),
 }));

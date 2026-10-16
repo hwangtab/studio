@@ -5,7 +5,7 @@ import { loadManualRevenueRows } from './manualRevenue';
  * 관리자 첫 화면의 이번 달 매출 요약 — 매출 현황(`/admin/revenue`)과 **같은 집계**(summarizeRevenue)를 쓴다.
  * 숫자가 두 벌이면 첫 화면과 상세가 다른 매출을 말하게 된다. 전월 대비를 위해 지난달부터 이번 달 끝까지만 읽는다.
  *
- * 수기 매출 표(마이그레이션 0063)를 못 읽으면 `manualMissing`으로 알린다 — 그 숫자에는 직접 받은 돈이 빠져 있다.
+ * 수기 매출 표(마이그레이션 0063·소프트 삭제 칸 0065)를 못 읽으면 `manualMissing`으로 알린다 — 그 숫자에는 직접 받은 돈이 빠져 있다.
  */
 export interface RevenueSnapshot {
   year: number;

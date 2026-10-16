@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import {
+  recordLinkRefund,
   refundBooking,
   resendBookingNotification,
   setBookingStatus,
@@ -21,6 +22,7 @@ import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatPriceAmount } from '../../../data/pricing';
 import {
   canAdminRefund,
+  LIVE_ORDER_STATUSES_FOR_REFUND,
   serializeBookingDetailForAdmin,
   type AdminBookingDetail,
 } from '../../../lib/booking/admin-serialize';
@@ -351,7 +353,7 @@ export default function AdminBookingDetailPage({
     //
     // 하한은 경로마다 다르다. 일반 취소의 0원은 유효한 액션이지만(0% 티어 당일 취소와 동형)
     // 이미 취소된 건의 잔액 환불에서 0원은 아무 일도 하지 않는다 — 서버도 거절한다.
-    const minAmount = isRemainderRefund ? 1 : 0;
+    const minAmount = isRemainderRefund || isDeposit ? 1 : 0;
     if (!Number.isInteger(refundAmount) || refundAmount < minAmount || refundAmount > booking.refundableAmount) {
       setRefundError(`환불 금액은 ${minAmount} ~ ${formatPriceAmount(booking.refundableAmount)}원 사이의 정수여야 합니다.`);
       return;
@@ -362,7 +364,9 @@ export default function AdminBookingDetailPage({
     }
     if (
       !window.confirm(
-        isBankPaid
+        booking.orderType === 'deposit'
+          ? `계좌로 직접 입금받은 링크 주문입니다 — 이 화면은 송금을 하지 않고 기록만 남깁니다.\n\n${formatPriceAmount(refundAmount)}원 송금을 이미 마쳤다면 환불로 기록할까요? 되돌릴 수 없습니다.`
+          : isBankPaid
           ? `계좌 입금 건입니다 — 토스로 돌려주지 않습니다. 고객 계좌로 송금을 마친 뒤 기록하세요.\n\n${formatPriceAmount(refundAmount)}원 송금을 마쳤다면 환불로 기록할까요? 되돌릴 수 없습니다.`
           : isRemainderRefund
           ? `${formatPriceAmount(refundAmount)}원을 추가로 환불할까요? 되돌릴 수 없습니다.`
@@ -372,7 +376,11 @@ export default function AdminBookingDetailPage({
       return;
     }
 
-    await run(() => refundBooking(booking.id, refundAmount, refundReason.trim()));
+    await run(() =>
+      booking.orderType === 'deposit'
+        ? recordLinkRefund(booking.id, refundAmount, refundReason.trim())
+        : refundBooking(booking.id, refundAmount, refundReason.trim()),
+    );
   };
 
   const bookingLine = bookingLineOf(booking);
@@ -462,6 +470,13 @@ export default function AdminBookingDetailPage({
   });
   const isRemainderRefund =
     (isMixing ? workOrder?.status : booking.bookingStatus) === 'cancelled';
+  /**
+   * 예약금 결제 링크 주문 중 **계좌로 직접 입금받은 건**만 환불 기록 폼을 띄운다(예약·작업 행이 없어 canAdminRefund는 항상 false).
+   * 카드(토스) 링크 주문은 토스 콘솔에서 취소한다 — 서버(lib/payments/linkRefund.ts)도 계좌 입금분만 받는다.
+   */
+  const canRecordLinkRefund =
+    isDeposit && isBankPaid && LIVE_ORDER_STATUSES_FOR_REFUND.some((status) => status === booking.orderStatus) && booking.refundableAmount > 0;
+  const showRefundForm = canRefund || canRecordLinkRefund;
 
   return (
     <>
@@ -938,23 +953,25 @@ export default function AdminBookingDetailPage({
                   {isMixing
                     ? '지금 상태에서는 가능한 작업이 없습니다.'
                     : isDeposit
-                      ? '예약금 결제 링크 주문입니다. 이 화면에서는 작업이 없습니다 — 환불이 필요하면 카드는 토스 콘솔에서, 계좌 입금은 고객 계좌로 직접 송금해 처리하세요(이 화면에는 기록되지 않습니다).'
+                      ? '예약금 결제 링크 주문입니다. 이 화면에서는 작업이 없습니다 — 카드(토스) 결제의 환불은 토스 콘솔에서 취소하세요(이 화면에서는 환불할 수 없고, 취소하면 웹훅이 기록합니다). 계좌로 직접 입금받은 주문은 고객 계좌로 송금한 뒤 아래 “환불 기록”에서 기록합니다.'
                       : '결제 대기 중인 예약에는 가능한 작업이 없습니다.'}
                 </p>
               )}
             </div>
           </div>
 
-          {canRefund && (
+          {showRefundForm && (
             <div className="pt-6 border-t border-gray-100">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">{isRemainderRefund ? '잔액 환불' : '임의 환불'}</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">{isDeposit ? '환불 기록' : isRemainderRefund ? '잔액 환불' : '임의 환불'}</h2>
               {isBankPaid && (
                 <p className="mb-2 text-sm font-semibold text-red-700">
                   계좌 입금 건입니다 — 토스로 돌려주지 않습니다. 고객 계좌로 송금을 마친 뒤 기록하세요.
                 </p>
               )}
               <p className="text-sm text-gray-500 mb-4">
-                {isRemainderRefund ? (
+                {isDeposit ? (
+                  <>고객 계좌로 송금을 마친 금액을 장부에 기록합니다. 이 화면은 돈을 보내지 않으며, 기록하면 매출 현황에 환불로 잡힙니다. 이용 일정을 취소하는 것이 아니므로 구글 캘린더 일정은 위의 “캘린더에서 지우기”로 따로 지워 주세요.</>
+                ) : isRemainderRefund ? (
                   <>
                     이미 취소된 {isMixing ? '주문' : '예약'}의 남은 금액을 더 돌려줍니다. 취소 안내는 이미 나갔으므로
                     메일·캘린더 후처리 없이 환불만 처리합니다.
@@ -976,7 +993,7 @@ export default function AdminBookingDetailPage({
                 >
                   <TextInput
                     type="number"
-                    min={isRemainderRefund ? 1 : 0}
+                    min={isRemainderRefund || isDeposit ? 1 : 0}
                     max={booking.refundableAmount}
                     step={1}
                     value={refundAmount}
