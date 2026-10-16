@@ -187,7 +187,12 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
     시스템이 만든 조정은 지우지 않는다 — 잘못 생긴 것은 반대 부호의 **수기 조정**(`add_adjustment`)으로 상쇄한다.
   - **표가 없는 DB(0067 전)**: 정산 표는 "마이그레이션 0067 필요" 안내와 함께 예전 읽기 전용 "정산 예정" 표로 되돌아가고 `/admin/shop`의 재고·주문은 그대로다. 환불 경로는 조용히 건너뛰고, 대시보드 두 카드는 0, API는 503 `migration_needed`.
   - 대시보드: 「정산 기록 대기 상점(지난 달)」(이번 달 이전 `SHOP_PAYOUT_RECORD_FROM_MONTH`(2026-10)부터 판매가 있었는데 기록이 없는 아티스트×달, 최대 12달) · 「이체 대기 상점 정산」. **기한 알림(헬스체크)은 없다** — 위탁 약관은 시기를 "스튜디오가 따로 알린다"고만 한다(권장: 매월 10일까지 전월분, 코드로 강제하지 않는다).
-  - 정산 안내 메일·CSV는 아직 없다(P3). 보존·파기 코드는 이 표를 본다(`lib/partnerPayouts/creatorPayouts.ts` — 루트·`lib/funding/CLAUDE.md`).
+  - **정산 안내 메일**(P3, `lib/partnerPayouts/notify.ts`의 `sendPartnerPayoutNotice(payoutId, 'recorded'|'paid', { req, actor })` — 종류(shop/show)를 가리지 않는 단일 진입점, 공연 라우트도 이 한 줄이면 된다): 기록·지급 완료 뒤 수취인(개설자 이메일)에게 펀딩 `payoutEmail`과 같은 틀로 보낸다.
+    **계좌는 은행명·예금주·뒤 4자리뿐**(번호 전체 금지), 계좌를 연 일은 접속기록 `partner_payout_account_email`(대상 = 정산 기록 id)에 남는다. **운영자 메모는 지급 완료 메일에만 실린다**(펀딩과 같다 — 화면의 메모 입력 문구가 "아티스트에게 보여도 되는 말만"이라고 안내한다).
+    **메일 실패는 기록·지급을 실패시키지 않는다**: 함수는 던지지 않고 `warnings`를 돌려주며 라우트가 응답에 `warnings`로 싣고(화면은 새로고침하지 않고 안내를 띄운다) 운영자 폴백 메일을 보낸다. 계정 없는 수취인(`file:<slug>`)·수기 플레이스홀더 주소(`isManualPlaceholderRecipient`)에는 보내지 않고 "직접 알려 달라"는 warning만 낸다.
+  - **정산 CSV**(P3, `GET /api/admin/partner-payouts/export?kind=shop|show|all&from=YYYY-MM&to=YYYY-MM`, 최대 24개월, `lib/partnerPayouts/export.ts`): 세무사용. 열은 상수 목록 하나로 고정(`PARTNER_PAYOUT_EXPORT_COLUMNS`) — **수취인 이름·금액·상태뿐이고 주민등록번호·계좌·이메일·연락처는 싣지 않는다**(새 칸을 `select *`로 흘려 넣지 말 것).
+    기준월은 상점 = 정산 달(`period`), 공연 = 정산을 기록한 달(KST, `period`가 'all'이라). 내려받음은 접속기록 `partner_payout_export`(대상 `종류_시작월_종료월`, 행 수만 — 성공·오류 모두, 형식 400은 안 남김). 진입점: `/admin/shop` 정산 절의 폼, `/admin/revenue` 결제 내역 링크.
+  - 보존·파기 코드는 이 표를 본다(`lib/partnerPayouts/creatorPayouts.ts` — 루트·`lib/funding/CLAUDE.md`).
   (위탁 약관 제7조·처리방침 14·15항은 2026-10-16부터 "달 단위 정산·이월·정산 기록 보관"을 약속한다 — 코드가 그 약속을 따라가는 곳이 위 규칙이다.)
 - 이미 정산한 달의 반품 환불은 위 "정산 뒤 환불 자동 조정"으로 다음 정산에서 빠진다. 기록 전(미기록 달)에 환불된 주문은 그냥 표에서 빠진다.
   부분 환불 주문은 어느 줄이 환불됐는지 원장이 모르므로 계산에서 빼고 "직접 확인"으로 띄운다(조정도 만들지 않는다 — 운영자가 수기 조정으로 맞춘다).

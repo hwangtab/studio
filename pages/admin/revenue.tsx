@@ -131,6 +131,15 @@ const csvHref = (summary: RevenueSummary) => {
   return `/api/admin/orders/export?from=${from}&to=${to}`;
 };
 
+/** 세무사용 상점·공연 정산 CSV — 같은 기간을 달 단위로(연 전체면 1~12월). 수취인 이름·금액만 실린다. */
+const payoutCsvHref = (summary: RevenueSummary) => {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const { year, month } = summary;
+  const from = month === 'all' ? `${year}-01` : `${year}-${pad(month)}`;
+  const to = month === 'all' ? `${year}-12` : from;
+  return `/api/admin/partner-payouts/export?kind=all&from=${from}&to=${to}`;
+};
+
 const Delta = ({ rate, label }: { rate: number | null; label: string }) => {
   if (rate === null) return <p className="mt-1 text-xs text-gray-500">{label}: 비교할 매출 없음</p>;
   const up = rate >= 0;
@@ -379,6 +388,9 @@ export default function AdminRevenuePage({ summary, type, years, nowYear, nowMon
                 <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900">결제 내역</h2>
                 <a href={csvHref(summary)} className="text-sm font-medium text-primary hover:underline">
                   이 기간 장부 CSV 내려받기
+                </a>
+                <a href={payoutCsvHref(summary)} className="text-sm font-medium text-primary hover:underline">
+                  이 기간 상점·공연 정산 CSV
                 </a>
               </div>
               <p className="mb-4 text-xs text-gray-500">

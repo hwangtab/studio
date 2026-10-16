@@ -21,7 +21,7 @@ import type { FundingPayoutAccountMasked } from './payoutAccount';
  * 호출부(관리자 API)가 그것을 warnings로 화면에 보여주고 운영자 폴백 알림을 보낸다.
  * `reviewEmail.ts`·`creatorEmail.ts`와 같은 규약이다.
  */
-const accountValue = (account: FundingPayoutAccountMasked | null): string => {
+export const accountValue = (account: FundingPayoutAccountMasked | null): string => {
   if (!account) return '등록된 계좌 정보를 읽지 못했어요.';
   /**
    * 은행명·예금주는 암호문 안에 있어 서버가 키로 열어야 나온다(`payoutAccount.ts`). 열지

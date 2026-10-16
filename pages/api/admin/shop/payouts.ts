@@ -6,6 +6,7 @@ import { addManualAdjustment, deleteUnappliedManualAdjustment } from '../../../.
 import {
   isValidShopSubjectKey, recordShopPayout, type RecordShopPayoutResult, type ShopPayoutBlocker,
 } from '../../../../lib/partnerPayouts/shop';
+import { sendPartnerPayoutNotice } from '../../../../lib/partnerPayouts/notify';
 import { deletePartnerPayoutIfPending, getPartnerPayoutById, markPartnerPayoutPaid } from '../../../../lib/partnerPayouts/store';
 
 /**
@@ -14,6 +15,7 @@ import { deletePartnerPayoutIfPending, getPartnerPayoutById, markPartnerPayoutPa
  *
  * - `record`        { subjectKey, period, expected: { netAmount, adjustmentAmount } } — 화면이 보여 준 금액과 지금 계산한 값이 다르면 409 `amount_changed`.
  * - `mark_paid`     { id, memo? } — 이체를 마친 뒤. pending → paid 한 방향.
+ *   두 액션 모두 DB 반영 뒤 수취인에게 알림 메일을 보내고(`sendPartnerPayoutNotice`), 못 보냈으면 응답에 `warnings`가 실린다 — 처리 자체는 성공이다.
  * - `delete`        { id } — 이체 전(pending) 기록만. 실렸던 조정이 풀린다.
  * - `add_adjustment`    { subjectKey, amount, memo } — 수기 조정(아티스트 몫 기준, 부호 있음).
  * - `delete_adjustment` { id } — 아직 안 실린 수기 조정만.
@@ -75,7 +77,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const f = failure(result);
         return res.status(f.status).json(f.body);
       }
-      return res.status(200).json({ ok: true, payoutId: result.payout.id });
+      // 기록은 이미 DB에 있다 — 알림 실패는 warnings로만 올린다(펀딩 notifyPayout과 같은 계약).
+      const warnings = await sendPartnerPayoutNotice(result.payout.id, 'recorded', { req, actor: auth.actor });
+      return res.status(200).json({ ok: true, payoutId: result.payout.id, ...(warnings.length > 0 ? { warnings } : {}) });
     }
 
     if (b.action === 'mark_paid' || b.action === 'delete') {
@@ -87,9 +91,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (b.action === 'mark_paid') {
         const memo = typeof b.memo === 'string' && b.memo.trim() ? b.memo.trim().slice(0, 500) : null;
         const done = await markPartnerPayoutPaid(b.id, memo, now);
-        return done
-          ? res.status(200).json({ ok: true })
-          : res.status(409).json({ ok: false, message: '이미 지급 완료로 기록된 정산입니다. 새로고침해 주세요.' });
+        if (!done) return res.status(409).json({ ok: false, message: '이미 지급 완료로 기록된 정산입니다. 새로고침해 주세요.' });
+        const warnings = await sendPartnerPayoutNotice(b.id, 'paid', { req, actor: auth.actor });
+        return res.status(200).json({ ok: true, ...(warnings.length > 0 ? { warnings } : {}) });
       }
       const outcome = await deletePartnerPayoutIfPending(b.id);
       if (outcome === 'ok') return res.status(200).json({ ok: true });
