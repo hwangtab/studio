@@ -480,6 +480,15 @@ PATCH가 실패해도 DB는 되돌리지 않고 `gcal_error`에 적는다("캘�
 - **개인정보(이름·연락처·이메일·주소)를 props로 싣는 관리자 상세 화면은 열람을 기록한다**: `logAdminView`(`lib/privacy/adminView.ts`) 또는 `recordAdminPrivacyAccess` + `privacyAccessActionEnum` + `accessLogLabels.ts`(열거와 라벨이 어긋나면 테스트가 선다). 값은 적지 않고 대상 id·결과만.
   목록 화면은 기록하지 않는 대신 **표에 안 나오는 개인정보를 props에 싣지 않는다**(`serializePledgeForAdminList`).
 
+### 월 입주 관리 (`lib/tenancy/`, 관리자 `/admin/tenancies`, 마이그레이션 0066)
+
+연습실 월 입주자(R01…)와 비상주 사무실(`kind='virtual'`, 방 없이 사업자등록 주소만 씀)의 **정본은 DB 표 `room_tenancies`**다. 예전 스프레드시트(연습실대여현황)는 더 쓰지 않는다 — 두 곳을 정본으로 두지 말 것.
+- **계약 종료일이 지나도 입금이 이어지면 자동 연장**이다(운영자 확정). 퇴실은 운영자가 "퇴실"을 눌러야만 된다(`status`). 시트의 "8일전" 같은 값은 상태가 아니라 남은 일수였다.
+- 날짜는 KST 달력 날짜 문자열. 입금을 기록하면 `next_due_on`이 납부일 기준으로 한 달 넘어간다(말일 보정, `rules.ts`). 같은 예정일을 두 번 기록하지 못하게 조건부 UPDATE.
+- **개인정보(연락처·비상연락처·이메일·사업자번호·성별)는 `private_enc` 한 칸에 JSON째 암호화**(`ENCRYPTED_FIELD_TARGETS`에 등록됨 — 키 회전 대상). 목록·props에는 싣지 않고, 버튼을 누른 순간의 응답으로만 나가며 열람은 접속기록(`tenancy_private_view`)에 남는다. 처리방침 19항과 `FUNDING_TERMS_VERSION`을 함께 올렸다.
+- **구글 캘린더는 DB의 투영**이다: env `TENANCY_GCAL_ID`(별도 캘린더)에 입주자당 최대 둘 — "입금 예정"(다음 입금일, 입금을 기록하면 다음 달로 옮김)과 "계약 종료"(종료일이 오늘 이후일 때만). **예약 캘린더·연습실 캘린더에 올리지 말 것** — 그 캘린더의 일정은 웹 예약 시간을 막는다. env가 없으면 캘린더는 건너뛴다. 어긋나면 "캘린더 전체 다시 맞추기".
+- 시트 가져오기(`importService.ts`)는 일회성·멱등이다. 전화번호가 빈 사람은 전자계약에서 같은 이름으로 찾아 채운다. 새 방을 늘릴 때 코드 수정은 필요 없다(입주 등록에서 방 번호만 적는다).
+
 ### 메일은 공용 레이아웃으로 — 글자만 보내지 않는다
 
 사이트가 보내는 메일(고객·운영자·개설자·크론 알림 약 70종)은 전부 `lib/email/layout.ts`의 `buildEmailLayout`

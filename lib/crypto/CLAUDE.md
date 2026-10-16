@@ -5,9 +5,9 @@
 ### 암호화 필드 — 키를 잃으면 값도 잃는다
 
 이 저장소에 DB 필드 단위 암호화가 생겼다(`lib/crypto/fieldCrypto.ts`, AES-256-GCM).
-지금 쓰는 곳은 셋이다 — `funding_creators.resident_number_enc`(원천징수 대상 개설자의 주민등록번호,
+지금 쓰는 곳은 넷이다 — `funding_creators.resident_number_enc`(원천징수 대상 개설자의 주민등록번호,
 저장 시 암호화가 법적 의무라 예외가 없다), `funding_creators.payout_account_enc`(정산 계좌),
-`refund_accounts.account_number_enc`(계좌 입금 주문의 환불 계좌번호 — 결제 공용, 마이그레이션 0048).
+`refund_accounts.account_number_enc`(계좌 입금 주문의 환불 계좌번호 — 결제 공용, 마이그레이션 0048), `room_tenancies.private_enc`(월 입주자 연락처 등 JSON, 마이그레이션 0066).
 목록의 정본은 `ENCRYPTED_FIELD_TARGETS`다.
 개설자 사업자 정보(`creator_business_profiles`의 사업자등록번호·상호·대표자명)는 일부러 평문이다 — 이유는 `db/schema.ts`의 그 표 주석.
 
