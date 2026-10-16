@@ -9,8 +9,12 @@ import { SOFTWARE_SALES_OPEN } from '../../../data/software/policy';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { listAdminLicenses, type AdminLicenseRow } from '../../../lib/software/service';
 
+const LICENSE_LIST_LIMIT = 100;
+
 interface Props {
   licenses: AdminLicenseRow[];
+  /** 최근 100건에서 잘렸는가 — 오래된 라이선스는 검색으로 찾는다. */
+  truncated?: boolean;
   products: { slug: string; title: string; published: boolean }[];
   q: string;
   salesOpen: boolean;
@@ -23,7 +27,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   const q = typeof context.query.q === 'string' ? context.query.q.slice(0, 100) : '';
   const products = SOFTWARE_PRODUCTS.map((p) => ({ slug: p.slug, title: p.title, published: p.published }));
   try {
-    return { props: { licenses: await listAdminLicenses(q), products, q, salesOpen: SOFTWARE_SALES_OPEN } };
+    const fetched = await listAdminLicenses(q, LICENSE_LIST_LIMIT + 1);
+    return { props: { licenses: fetched.slice(0, LICENSE_LIST_LIMIT), truncated: fetched.length > LICENSE_LIST_LIMIT, products, q, salesOpen: SOFTWARE_SALES_OPEN } };
   } catch (error: unknown) {
     console.error('[admin/software] 조회 실패:', error);
     return { props: { licenses: [], products, q, salesOpen: SOFTWARE_SALES_OPEN, error: '라이선스를 불러오지 못했습니다. 운영 DB에 마이그레이션 0054가 적용됐는지 확인해 주세요.' } };
@@ -164,7 +169,7 @@ function LicenseRow({ row }: { row: AdminLicenseRow }) {
   );
 }
 
-export default function AdminSoftwarePage({ licenses, products, q, salesOpen, error }: Props) {
+export default function AdminSoftwarePage({ licenses, truncated = false, products, q, salesOpen, error }: Props) {
   return (
     <>
       <Head>
@@ -193,6 +198,11 @@ export default function AdminSoftwarePage({ licenses, products, q, salesOpen, er
               <button type="submit" className={buttonClass}>찾기</button>
             </form>
           </div>
+          {truncated && (
+            <p className="mb-3 rounded-lg bg-amber-50 p-3 text-xs text-amber-900">
+              최근 {LICENSE_LIST_LIMIT}건만 표시합니다. 더 오래된 라이선스는 위 검색(이메일·키·주문번호)으로 찾을 수 있습니다.
+            </p>
+          )}
           {licenses.length === 0 ? (
             <p className="text-gray-600">{q ? '찾는 라이선스가 없습니다.' : '아직 발급한 라이선스가 없습니다.'}</p>
           ) : (
