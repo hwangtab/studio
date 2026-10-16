@@ -75,6 +75,9 @@ export default function ShowsHostPage() {
               <li>
                 회차가 취소되면 그 회차의 티켓을 산 관객에게 전액을 환불해요. 이때 결제 수수료는 스튜디오 잘못으로 취소된 경우가 아니면 주최자가 부담해요.
               </li>
+              <li>
+                정산금을 보낸 뒤에 환불이 생겨 받은 금액이 정산 기준을 넘으면, 그 차액은 스튜디오가 알려 드리는 기한 안에 돌려주셔야 해요.
+              </li>
             </ul>
             <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
               자세한 내용은{' '}
