@@ -1385,6 +1385,8 @@ export const pressOptouts = sqliteTable('press_optouts', {
  * 접속기록이 새면 필드 암호화가 통째로 무의미해진다 — 이 표는 감사 대상이지 사본이 아니다.
  */
 export const privacyAccessActionEnum = [
+  /** 월 입주자의 연락처·비상연락처 등 암호화 상세 열람 (pages/api/admin/tenancies/[id]/private.ts). 값은 적지 않는다. */
+  'tenancy_private_view',
   /** 관리자 화면의 주민등록번호 조회 버튼 (pages/api/admin/funding/projects/[id]/resident-number.ts). */
   'funding_resident_number_view',
   /**
@@ -2349,3 +2351,70 @@ export const partnerPayoutAdjustments = sqliteTable('partner_payout_adjustments'
 
 export type PartnerPayout = typeof partnerPayouts.$inferSelect;
 export type PartnerPayoutAdjustment = typeof partnerPayoutAdjustments.$inferSelect;
+
+/**
+ * 월 입주자(연습실 월세 + 비상주 사무실) — 입주 관리의 **정본**. 예전 스프레드시트(연습실대여현황)를 대체한다.
+ *
+ * - `kind = 'room'`은 방(R01…)에 실제로 입주한 사람, `'virtual'`은 방 없이 사업자등록 주소만 쓰는 비상주(비대면)다.
+ *   비상주는 `room_number`가 NULL이고 시간제 예약·방 점유와 무관하다.
+ * - **날짜는 KST 달력 날짜 `YYYY-MM-DD` 문자열**로 둔다(시각이 아니라 날짜 개념이고, 타임존 밀림이 없다).
+ * - 계약 종료일이 지나도 입금이 이어지면 자동 연장이다 — `status`는 `ended`를 운영자가 눌러야만 바뀐다.
+ * - **개인정보(연락처·비상연락처·이메일·사업자등록번호·성별)는 `private_enc` 한 칸에 JSON을 통째로 암호화**한다
+ *   (lib/crypto, ENCRYPTED_FIELD_TARGETS에 등록). 화면 props에는 싣지 않고 버튼을 누른 순간의 응답으로만 나간다.
+ *   이름은 목록·캘린더 제목에 쓰므로 평문이다.
+ * - 다음 입금 예정일(`next_due_on`)이 정본이고, 입금을 기록하면 한 달씩 넘어간다(납부일 `billing_day` 기준, 말일 보정).
+ * - 구글 캘린더 일정 id는 여기 저장해 수정·퇴실 때 따라가게 한다(lib/tenancy/calendar.ts). 캘린더는 이 표의 투영이다.
+ */
+export const tenancyKindEnum = ['room', 'virtual'] as const;
+export const tenancyStatusEnum = ['active', 'ended'] as const;
+
+export const roomTenancies = sqliteTable(
+  'room_tenancies',
+  {
+    id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+    kind: text('kind', { enum: tenancyKindEnum }).notNull(),
+    roomNumber: text('room_number'),
+    tenantName: text('tenant_name').notNull(),
+    status: text('status', { enum: tenancyStatusEnum }).notNull().default('active'),
+    monthlyAmount: integer('monthly_amount').notNull(),
+    depositAmount: integer('deposit_amount'),
+    startDate: text('start_date').notNull(),
+    endDate: text('end_date'),
+    endedOn: text('ended_on'),
+    billingDay: integer('billing_day').notNull(),
+    nextDueOn: text('next_due_on').notNull(),
+    hasWindow: integer('has_window', { mode: 'boolean' }),
+    furnishings: text('furnishings'),
+    /** 예전 시트의 "가격" 칸(40·44) 원문 — 의미가 확인되지 않아 그대로 보존한다. */
+    specNote: text('spec_note'),
+    /** 특약·메모(예: "1년 계약", "계약금 19만원"). 개인정보를 적지 않는다. */
+    note: text('note'),
+    contractId: text('contract_id'),
+    /** 암호화 JSON: { phone, emergencyContact, email, businessNumber, gender }. */
+    privateEnc: text('private_enc'),
+    dueEventId: text('due_event_id'),
+    endEventId: text('end_event_id'),
+    gcalError: text('gcal_error'),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => [index('room_tenancies_status_idx').on(t.status, t.nextDueOn)],
+);
+
+export const roomTenancyPayments = sqliteTable(
+  'room_tenancy_payments',
+  {
+    id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+    tenancyId: text('tenancy_id').notNull().references(() => roomTenancies.id),
+    paidOn: text('paid_on').notNull(),
+    amount: integer('amount').notNull(),
+    /** 이 입금이 채운 입금 예정일 — 어느 달 치인지. */
+    forDueOn: text('for_due_on'),
+    memo: text('memo'),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => [index('room_tenancy_payments_tenancy_idx').on(t.tenancyId, t.paidOn)],
+);
+
+export type RoomTenancy = typeof roomTenancies.$inferSelect;
+export type RoomTenancyPayment = typeof roomTenancyPayments.$inferSelect;

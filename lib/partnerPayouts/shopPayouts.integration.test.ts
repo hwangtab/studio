@@ -431,7 +431,7 @@ describe('정산 뒤 환불 → late_refund 조정', () => {
   });
 });
 
-describe('표가 없는 DB(마이그레이션 0066 전)', () => {
+describe('표가 없는 DB(마이그레이션 0067 전)', () => {
   it('정산 표 조회는 "no such table"로 던져 화면이 안내를 띄운다 — 판매 집계는 그대로', async () => {
     await seedCreator();
     await placeOrder('SHP-1');

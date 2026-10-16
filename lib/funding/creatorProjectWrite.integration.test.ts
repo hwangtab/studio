@@ -1695,7 +1695,7 @@ describe('정산 정보 — 사업자 정보·국세청 조회·자격', () => {
     expect(await businessRows(creatorId)).toHaveLength(1);
   });
 
-  it('정산 기록 표가 없는 DB(0066 전)에서는 펀딩 기록만으로 판정하고 던지지 않는다', async () => {
+  it('정산 기록 표가 없는 DB(0067 전)에서는 펀딩 기록만으로 판정하고 던지지 않는다', async () => {
     const { creatorId } = await seedProject({ reviewStatus: 'approved' });
     await savePayoutSection(creatorId, withholding('9901011234567'), { lookup: lookupOk });
     await client.execute('DROP TABLE partner_payouts');

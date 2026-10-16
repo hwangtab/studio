@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "c5c3983c-9ff3-47f6-911a-f3c7c31b9009",
+  "id": "50f414e5-a318-409b-aaa1-5d185f003037",
   "prevId": "311a5ae6-1c1f-4d49-9c17-9b82ccb40b0b",
   "tables": {
     "artist_payouts": {
@@ -2525,378 +2525,6 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "partner_payout_adjustments": {
-      "name": "partner_payout_adjustments",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "kind": {
-          "name": "kind",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "payee_key": {
-          "name": "payee_key",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "amount": {
-          "name": "amount",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "reason": {
-          "name": "reason",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "source_ref": {
-          "name": "source_ref",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "memo": {
-          "name": "memo",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "origin_payout_id": {
-          "name": "origin_payout_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "applied_payout_id": {
-          "name": "applied_payout_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(unixepoch())"
-        }
-      },
-      "indexes": {
-        "partner_payout_adjustments_source_unique": {
-          "name": "partner_payout_adjustments_source_unique",
-          "columns": [
-            "kind",
-            "payee_key",
-            "reason",
-            "source_ref"
-          ],
-          "isUnique": true
-        },
-        "partner_payout_adjustments_payee_idx": {
-          "name": "partner_payout_adjustments_payee_idx",
-          "columns": [
-            "kind",
-            "payee_key",
-            "applied_payout_id"
-          ],
-          "isUnique": false
-        },
-        "partner_payout_adjustments_applied_idx": {
-          "name": "partner_payout_adjustments_applied_idx",
-          "columns": [
-            "applied_payout_id"
-          ],
-          "isUnique": false
-        },
-        "partner_payout_adjustments_origin_idx": {
-          "name": "partner_payout_adjustments_origin_idx",
-          "columns": [
-            "origin_payout_id"
-          ],
-          "isUnique": false
-        }
-      },
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {
-        "partner_payout_adjustments_kind_check": {
-          "name": "partner_payout_adjustments_kind_check",
-          "value": "\"partner_payout_adjustments\".\"kind\" in ('shop','show')"
-        },
-        "partner_payout_adjustments_reason_check": {
-          "name": "partner_payout_adjustments_reason_check",
-          "value": "\"partner_payout_adjustments\".\"reason\" in ('late_refund','showtime_cancel_fee','manual')"
-        }
-      }
-    },
-    "partner_payouts": {
-      "name": "partner_payouts",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "kind": {
-          "name": "kind",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "subject_key": {
-          "name": "subject_key",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "period": {
-          "name": "period",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "creator_id": {
-          "name": "creator_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "payee_name": {
-          "name": "payee_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "tax_type": {
-          "name": "tax_type",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "gross_amount": {
-          "name": "gross_amount",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 0
-        },
-        "refund_amount": {
-          "name": "refund_amount",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 0
-        },
-        "shipping_amount": {
-          "name": "shipping_amount",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 0
-        },
-        "platform_fee_amount": {
-          "name": "platform_fee_amount",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 0
-        },
-        "payment_fee_amount": {
-          "name": "payment_fee_amount",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 0
-        },
-        "studio_amount": {
-          "name": "studio_amount",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 0
-        },
-        "vat_deduction_amount": {
-          "name": "vat_deduction_amount",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 0
-        },
-        "share_amount": {
-          "name": "share_amount",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 0
-        },
-        "withholding_amount": {
-          "name": "withholding_amount",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 0
-        },
-        "adjustment_amount": {
-          "name": "adjustment_amount",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 0
-        },
-        "shortfall_amount": {
-          "name": "shortfall_amount",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 0
-        },
-        "net_amount": {
-          "name": "net_amount",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "item_count": {
-          "name": "item_count",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 0
-        },
-        "status": {
-          "name": "status",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'pending'"
-        },
-        "paid_at": {
-          "name": "paid_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "memo": {
-          "name": "memo",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(unixepoch())"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(unixepoch())"
-        }
-      },
-      "indexes": {
-        "partner_payouts_subject_unique": {
-          "name": "partner_payouts_subject_unique",
-          "columns": [
-            "kind",
-            "subject_key",
-            "period"
-          ],
-          "isUnique": true
-        },
-        "partner_payouts_status_idx": {
-          "name": "partner_payouts_status_idx",
-          "columns": [
-            "kind",
-            "status"
-          ],
-          "isUnique": false
-        },
-        "partner_payouts_creator_idx": {
-          "name": "partner_payouts_creator_idx",
-          "columns": [
-            "creator_id"
-          ],
-          "isUnique": false
-        }
-      },
-      "foreignKeys": {
-        "partner_payouts_creator_id_funding_creators_id_fk": {
-          "name": "partner_payouts_creator_id_funding_creators_id_fk",
-          "tableFrom": "partner_payouts",
-          "tableTo": "funding_creators",
-          "columnsFrom": [
-            "creator_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {
-        "partner_payouts_kind_check": {
-          "name": "partner_payouts_kind_check",
-          "value": "\"partner_payouts\".\"kind\" in ('shop','show')"
-        },
-        "partner_payouts_status_check": {
-          "name": "partner_payouts_status_check",
-          "value": "\"partner_payouts\".\"status\" in ('pending','paid')"
-        }
-      }
-    },
     "payment_link_orders": {
       "name": "payment_link_orders",
       "columns": {
@@ -3619,6 +3247,272 @@
           "name": "review_requests_kind_ref_id_pk"
         }
       },
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "room_tenancies": {
+      "name": "room_tenancies",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "kind": {
+          "name": "kind",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "room_number": {
+          "name": "room_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "tenant_name": {
+          "name": "tenant_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'active'"
+        },
+        "monthly_amount": {
+          "name": "monthly_amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "deposit_amount": {
+          "name": "deposit_amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "end_date": {
+          "name": "end_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "ended_on": {
+          "name": "ended_on",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "billing_day": {
+          "name": "billing_day",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "next_due_on": {
+          "name": "next_due_on",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "has_window": {
+          "name": "has_window",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "furnishings": {
+          "name": "furnishings",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "spec_note": {
+          "name": "spec_note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "note": {
+          "name": "note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "contract_id": {
+          "name": "contract_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "private_enc": {
+          "name": "private_enc",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "due_event_id": {
+          "name": "due_event_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "end_event_id": {
+          "name": "end_event_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "gcal_error": {
+          "name": "gcal_error",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch())"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch())"
+        }
+      },
+      "indexes": {
+        "room_tenancies_status_idx": {
+          "name": "room_tenancies_status_idx",
+          "columns": [
+            "status",
+            "next_due_on"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "room_tenancy_payments": {
+      "name": "room_tenancy_payments",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "tenancy_id": {
+          "name": "tenancy_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "paid_on": {
+          "name": "paid_on",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "amount": {
+          "name": "amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "for_due_on": {
+          "name": "for_due_on",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "memo": {
+          "name": "memo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch())"
+        }
+      },
+      "indexes": {
+        "room_tenancy_payments_tenancy_idx": {
+          "name": "room_tenancy_payments_tenancy_idx",
+          "columns": [
+            "tenancy_id",
+            "paid_on"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "room_tenancy_payments_tenancy_id_room_tenancies_id_fk": {
+          "name": "room_tenancy_payments_tenancy_id_room_tenancies_id_fk",
+          "tableFrom": "room_tenancy_payments",
+          "tableTo": "room_tenancies",
+          "columnsFrom": [
+            "tenancy_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {}
     },

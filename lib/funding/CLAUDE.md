@@ -448,7 +448,7 @@ supporterMessage는 후원자가 준 개인정보라 파기 약속이 걸리지�
   남긴 값은 월간 크론의 `purgeExpiredBusinessProfiles`·`purgeExpiredResidentNumbers`(`retention.ts`)가 지급 시각부터 5년(기록이
   없으면 1년 휴면) 뒤 지우고, 어느 행도 참조하지 않는 사본 파일은 `purgeOrphanTaxDocuments`가 지운다. 한쪽 판정만 바꾸면 전환 때
   남긴 값을 파기가 너무 일찍 지우거나 영영 안 지운다 — 셋을 함께 고칠 것.
-- **상점 아티스트의 주민등록번호·사업자 정보는 `shop_artists` 행이 있는 한 남는다.** 상점 정산 기록 표(`partner_payouts`, 마이그레이션 0066)가 생겼지만
+- **상점 아티스트의 주민등록번호·사업자 정보는 `shop_artists` 행이 있는 한 남는다.** 상점 정산 기록 표(`partner_payouts`, 마이그레이션 0067)가 생겼지만
   **이 규칙은 좁히지 않았다** — 기록을 시작하기 전에 이뤄진 상점 판매대금은 원천징수·세금계산서 여부를 기록으로 가릴 수 없고, 처리방침 14·15항이 "상점 아티스트로 등록된 개설자는 지우지 않고 보관"을 그대로 약속한다.
   그래서 전환 때 지우지 않고(`isShopArtist`), 파기 쪽도 `liveEngagementExists`가 상점 아티스트를 진행 중으로 보아 지우지 않는다.
 - **상점·공연 정산 기록(`partner_payouts`)은 펀딩 정산 기록과 똑같이 센다**(처리방침 14·15항: "펀딩·상점·공연 어느 쪽이든"). 판정 모듈은 `lib/partnerPayouts/creatorPayouts.ts` 하나다:
@@ -457,6 +457,6 @@ supporterMessage는 후원자가 준 개인정보라 파기 약속이 걸리지�
   - 자동 파기(`purgeExpiredResidentNumbers`·`purgeExpiredBusinessProfiles`)는 양쪽 표를 합쳐 "원천징수/사업자 기록이 있다", "그중 미지급이거나 지급일이 5년 안인 것이 있다(= 가장 나중 지급이 기준)"를 판정한다.
     미지급 상점·공연 정산이 있으면 파기하지 않는다. 기록이 한 번도 없을 때만 (B) 1년 휴면 경로다.
   - `hasApprovedEngagement`(creatorEligibility.ts)는 정산 기록이 있는 개설자도 참으로 본다 — 등록이 내려가도 이미 기록한 정산의 계좌를 열어 이체할 수 있게.
-  - **표가 없는 DB(0066 전)**: 개설자 단위 판정은 거짓(기록이 있을 수 없다), 파기는 펀딩 갈래만으로 돈다(`partnerPayoutsTableExists`). 표 확인이 `no such table`이 아닌 이유로 실패하면 던져 파기를 멈추고,
+  - **표가 없는 DB(0067 전)**: 개설자 단위 판정은 거짓(기록이 있을 수 없다), 파기는 펀딩 갈래만으로 돈다(`partnerPayoutsTableExists`). 표 확인이 `no such table`이 아닌 이유로 실패하면 던져 파기를 멈추고,
     개설자 단위 판정은 참(= 지우지 않고 남긴다)으로 기운다. 모르면 남긴다.
   - 정산 기록 표는 계정이 남아 있는 동안 보관하고 자동 파기 절차를 두지 않는다(펀딩 정산 기록과 같다 — 처리방침 14항).

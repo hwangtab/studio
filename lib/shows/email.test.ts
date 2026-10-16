@@ -31,10 +31,12 @@ describe('shows email 본문', () => {
     expect(text).toContain('30,000원');
   });
 
-  it('환불 규정 줄은 refundRateForNotice에서 온다', () => {
+  it('환불 규정 줄은 화면·FAQ와 같은 정본(refundTierLines)에서 온다', () => {
     const lines = buildRefundPolicyLines();
-    expect(lines[0]).toContain('100%');
-    expect(lines[4]).toContain('10%');
+    expect(lines[0]).toBe('공연 10일 전까지 100%');
+    expect(lines[3]).toBe('공연 1~2일 전 70%');
+    expect(lines[4]).toBe('공연 당일(시작 전) 10%');
+    expect(lines[5]).toContain('공연 시작 후에는 환불할 수 없습니다');
   });
 
   it('광고성 표현이 없다', () => {
@@ -49,6 +51,18 @@ describe('shows email 본문', () => {
   it('회차 취소 메일은 환불 완료 여부에 따라 문구가 갈린다', () => {
     expect(buildShowtimeCancelledEmail({ ...base, refundCompleted: true }).text).toContain('전액 환불 처리');
     expect(buildShowtimeCancelledEmail({ ...base, refundCompleted: false }).text).toContain('처리 중');
+  });
+
+  it('회차 취소 메일은 실제 환불액으로 말한다 — 부분이면 금액을, 0원이면 전액이라고 쓰지 않는다', () => {
+    const partial = buildShowtimeCancelledEmail({ ...base, refundCompleted: true, refundedAmount: 10000 }).text;
+    expect(partial).toContain('30,000원 중 10,000원을 환불 처리');
+    expect(partial).toContain('입장 처리된 티켓 제외');
+    expect(partial).not.toContain('전액 환불');
+    const none = buildShowtimeCancelledEmail({ ...base, refundCompleted: true, refundedAmount: 0 }).text;
+    expect(none).toContain('환불 대상 금액이 없어요');
+    expect(none).not.toContain('전액');
+    const full = buildShowtimeCancelledEmail({ ...base, refundCompleted: true, refundedAmount: 30000 }).text;
+    expect(full).toContain('전액 환불 처리');
   });
 
   it('showDateTimeLabel은 KST 연도를 붙인다', () => {

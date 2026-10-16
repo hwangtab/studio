@@ -36,7 +36,7 @@ export const hasApprovedEngagement = async (creatorId: string): Promise<boolean>
     return true;
   }
   // 상점·공연 정산 기록(`partner_payouts`)이 있는 개설자도 승인된 일이 있었던 계정이다 — 등록이 나중에 내려가도 이미 기록한 정산의
-  // 계좌를 열어 이체할 수 있어야 한다(관리자 계좌 열람 라우트가 이 판정을 선으로 쓴다). 표가 없으면(0066 전) 이 갈래만 없음으로 본다.
+  // 계좌를 열어 이체할 수 있어야 한다(관리자 계좌 열람 라우트가 이 판정을 선으로 쓴다). 표가 없으면(0067 전) 이 갈래만 없음으로 본다.
   return softExists('상점·공연 정산 기록', () => db.select({ id: partnerPayouts.id }).from(partnerPayouts)
     .where(eq(partnerPayouts.creatorId, creatorId)).limit(1));
 };

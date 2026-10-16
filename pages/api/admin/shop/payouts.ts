@@ -20,7 +20,7 @@ import { deletePartnerPayoutIfPending, getPartnerPayoutById, markPartnerPayoutPa
  * 계좌는 이 라우트가 다루지 않는다 — 개설자 단위 열람 라우트(`/api/admin/creators/[creatorId]/payout-account`, 접속기록)를 버튼으로 쓴다.
  */
 
-const MIGRATION_MESSAGE = '정산 기록 표가 아직 없습니다. 운영 DB에 마이그레이션 0066(partner_payouts)을 먼저 적용해 주세요.';
+const MIGRATION_MESSAGE = '정산 기록 표가 아직 없습니다. 운영 DB에 마이그레이션 0067(partner_payouts)을 먼저 적용해 주세요.';
 
 const BLOCKER_MESSAGE: Record<ShopPayoutBlocker | 'invalid' | 'not_found' | 'adjustments_changed', { status: number; message: string }> = {
   invalid: { status: 400, message: '정산 대상이나 달 형식이 올바르지 않습니다.' },

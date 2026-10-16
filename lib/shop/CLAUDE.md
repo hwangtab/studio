@@ -169,7 +169,7 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
   부가세 상당액과 원천징수 3.3%를 뺀다(펀딩 정산과 같은 이유). `/admin/shop`의 "아티스트 정산 예정"이 그 달(KST)에 **발송한** 결제 완료 주문만
   센다 — 파일 갈래는 키 `file:<slug>`(세금 유형은 `data/artists`), DB 갈래는 `creator:<id>`(`sku_id → shop_product_skus → shop_products.creator_id`,
   세금 유형은 `funding_creators.tax_type`, 비어 있으면 "계산하지 않음"). DB 갈래는 별도 try라 실패해도 파일 갈래 표는 나온다.
-  **정산은 이제 기록한다**(P1, 마이그레이션 `0066_partner_payouts` — 설계 `docs/settlement-record-design-2026-10.md`): 시스템은 계산하고 기록하고, **송금은 운영자가 은행 앱으로** 한 뒤 "지급 완료"를 누른다.
+  **정산은 이제 기록한다**(P1, 마이그레이션 `0067_partner_payouts` — 설계 `docs/settlement-record-design-2026-10.md`): 시스템은 계산하고 기록하고, **송금은 운영자가 은행 앱으로** 한 뒤 "지급 완료"를 누른다.
   `/admin/shop`의 같은 표(`components/admin/ShopPayoutSection.tsx`) 각 행에 [정산 기록] [지급 완료] [기록 취소(이체 전)] [계좌 보기] [조정 추가]. 규칙은 `lib/partnerPayouts/`에 있다:
   - **단위는 아티스트 × 달(KST)**: `partner_payouts(kind='shop', subject_key='creator:<id>'|'file:<slug>', period='YYYY-MM')`, `UNIQUE(kind, subject_key, period)`가 이중 기록을 막는다(`already_recorded`).
     기록은 **불변 스냅샷**이다(금액·세금 구분·수취인 이름). 이체 전(`pending`)에 한해 "기록 취소"로 지우고 다시 기록한다 — 이체한 기록은 못 지운다.
@@ -185,7 +185,7 @@ false면 주문 API(`/api/shop/orders`)가 409 `sales_closed`로 거절하고, �
     못 쌓은 조정은 그 아티스트의 다음 정산 기록 직전 보충(`syncShopLateRefundAdjustments({ subjectKey })`)이 메운다. **부분 환불(`partially_refunded`)은 만들지 않는다**(원장이 어느 줄인지 모른다 — 정산 예정 표의 "직접 확인"과 같다).
     이체 전 기록을 지우면 그 정산을 바로잡던 환불 조정(`origin_payout_id`)도 지워진다(다시 기록하는 스냅샷이 이미 반영 — 이중 공제 방지). 그 조정이 다른 달 정산에 이미 실렸으면 취소를 거절한다(`adjustment_applied`).
     시스템이 만든 조정은 지우지 않는다 — 잘못 생긴 것은 반대 부호의 **수기 조정**(`add_adjustment`)으로 상쇄한다.
-  - **표가 없는 DB(0066 전)**: 정산 표는 "마이그레이션 0066 필요" 안내와 함께 예전 읽기 전용 "정산 예정" 표로 되돌아가고 `/admin/shop`의 재고·주문은 그대로다. 환불 경로는 조용히 건너뛰고, 대시보드 두 카드는 0, API는 503 `migration_needed`.
+  - **표가 없는 DB(0067 전)**: 정산 표는 "마이그레이션 0067 필요" 안내와 함께 예전 읽기 전용 "정산 예정" 표로 되돌아가고 `/admin/shop`의 재고·주문은 그대로다. 환불 경로는 조용히 건너뛰고, 대시보드 두 카드는 0, API는 503 `migration_needed`.
   - 대시보드: 「정산 기록 대기 상점(지난 달)」(이번 달 이전 `SHOP_PAYOUT_RECORD_FROM_MONTH`(2026-10)부터 판매가 있었는데 기록이 없는 아티스트×달, 최대 12달) · 「이체 대기 상점 정산」. **기한 알림(헬스체크)은 없다** — 위탁 약관은 시기를 "스튜디오가 따로 알린다"고만 한다(권장: 매월 10일까지 전월분, 코드로 강제하지 않는다).
   - 정산 안내 메일·CSV는 아직 없다(P3). 보존·파기 코드는 이 표를 본다(`lib/partnerPayouts/creatorPayouts.ts` — 루트·`lib/funding/CLAUDE.md`).
   (위탁 약관 제7조·처리방침 14·15항은 2026-10-16부터 "달 단위 정산·이월·정산 기록 보관"을 약속한다 — 코드가 그 약속을 따라가는 곳이 위 규칙이다.)

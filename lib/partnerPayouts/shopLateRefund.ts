@@ -189,7 +189,7 @@ export const syncShopLateRefundAdjustments = async (target: { orderNo: string } 
 
 /**
  * 환불 경로용 — **절대 던지지 않는다.** 환불은 이미 끝났고, 조정을 못 만든 것은 로그로 남긴다(`[partner-payouts]`). 못 만든 조정은
- * 그 아티스트의 다음 정산 기록 직전 보충(`syncShopLateRefundAdjustments({ subjectKey })`)이 메운다. 표가 없는 DB(0066 전)는 조용히 건너뛴다.
+ * 그 아티스트의 다음 정산 기록 직전 보충(`syncShopLateRefundAdjustments({ subjectKey })`)이 메운다. 표가 없는 DB(0067 전)는 조용히 건너뛴다.
  */
 export const safeSyncShopLateRefundAdjustments = async (orderNo: string): Promise<void> => {
   try {

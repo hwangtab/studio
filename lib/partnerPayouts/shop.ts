@@ -115,7 +115,7 @@ const groupBy = <T>(items: readonly T[], keyOf: (item: T) => string): Map<string
 
 /**
  * 한 달의 정산 미리보기들. `keys`를 주면 그 대상만(없는 대상은 결과에서 빠진다), 비우면 **그 달에 판 아티스트 + 그 달 기록이 있는 아티스트** 전부.
- * 표(0066)가 없으면 던진다 — 호출부가 `isMissingTableError`로 "표 미적용" 안내를 띄운다.
+ * 표(0067)가 없으면 던진다 — 호출부가 `isMissingTableError`로 "표 미적용" 안내를 띄운다.
  */
 const assemblePreviews = async (period: string, keys?: readonly string[]): Promise<ShopPayoutPreview[]> => {
   if (!kstMonthRange(period)) return [];
@@ -317,7 +317,7 @@ const AWAITING_RECORD_MAX_MONTHS = 12;
 
 /**
  * **이번 달 이전**의 달 가운데 판매가 있었는데 정산이 기록되지 않은 (아티스트, 달) 쌍 — 대시보드 「정산 기록 대기(상점)」.
- * 이번 달은 아직 판매가 끝나지 않았으니 세지 않는다. 표(0066)가 없거나 조회가 실패하면 던진다(대시보드가 0으로 삼킨다).
+ * 이번 달은 아직 판매가 끝나지 않았으니 세지 않는다. 표(0067)가 없거나 조회가 실패하면 던진다(대시보드가 0으로 삼킨다).
  */
 export const listShopPayoutsAwaitingRecord = async (now: Date): Promise<Array<{ subjectKey: string; payeeName: string; period: string }>> => {
   const current = kstDateString(now).slice(0, 7);

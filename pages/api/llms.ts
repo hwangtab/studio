@@ -205,9 +205,10 @@ ${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW per month, VAT excluded (card payment ad
 Wedding Song Complete Package is ${krw(WEDDING_PACKAGE_PRICE)} KRW: 2-hour recording session + vocal tuning + mixing & mastering. Beginners welcome.
 
 ### What are the recording rates?
-- 1프로 (1-song vocal package, 3 hours): ${krw(VOCAL_PACKAGE_PRICE)} KRW
+All prices below are **VAT included**.
+- 1프로 (1-song vocal package, 3 hours, dedicated engineer + vocal directing + basic editing included): ${krw(VOCAL_PACKAGE_PRICE)} KRW
 - Hourly recording (voice acting, instruments, corrections): ${krw(RECORDING_HOURLY_PRICE)} KRW/hour, minimum 2 hours
-- Day Lock: 4 hours ${krw(DAY_LOCK_4H_PRICE)} KRW · 8 hours ${krw(DAY_LOCK_8H_PRICE)} KRW (bookable online)
+- Day Lock (fixed-hour recording, dedicated engineer, bookable online): 4 hours ${krw(DAY_LOCK_4H_PRICE)} KRW · 8 hours ${krw(DAY_LOCK_8H_PRICE)} KRW
 
 ### Can I get mixing and mastering done remotely without visiting?
 Yes. Send stems via KakaoTalk, Google Drive or WeTransfer from anywhere in Korea or abroad — no studio visit needed. Mixing ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW/song by track count (two revisions included), mastering ${krw(MASTERING_SINGLE_PRICE)} KRW/song. Delivery in 3–7 business days.

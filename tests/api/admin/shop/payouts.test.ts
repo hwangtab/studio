@@ -139,13 +139,13 @@ describe('record · mark_paid · delete', () => {
     expect((await call({ body: { action: 'delete', id: show.id } })).status).toBe(404);
   });
 
-  it('표가 없는 DB(0066 전)는 503 migration_needed', async () => {
+  it('표가 없는 DB(0067 전)는 503 migration_needed', async () => {
     await testDb.run(sql`DROP TABLE partner_payout_adjustments`);
     await testDb.run(sql`DROP TABLE partner_payouts`);
     const r = await call({ body: { action: 'record', subjectKey: 'creator:c1', period: '2026-10', expected: { netAmount: 1, adjustmentAmount: 0 } } });
     expect(r.status).toBe(503);
     expect(r.body).toMatchObject({ code: 'migration_needed' });
-    expect(String(r.body.message)).toContain('0066');
+    expect(String(r.body.message)).toContain('0067');
   });
 });
 

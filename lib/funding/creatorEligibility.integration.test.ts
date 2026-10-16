@@ -75,7 +75,7 @@ describe('hasApprovedEngagement', () => {
     expect(await hasApprovedEngagement(c)).toBe(true);
   });
 
-  it('정산 기록 표가 없는 DB(0066 전)에서는 그 갈래만 없음으로 본다', async () => {
+  it('정산 기록 표가 없는 DB(0067 전)에서는 그 갈래만 없음으로 본다', async () => {
     const c = await seedCreator();
     await client.execute('DROP TABLE partner_payouts');
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});

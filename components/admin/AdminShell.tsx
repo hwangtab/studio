@@ -60,6 +60,7 @@ export const ADMIN_NAV_ENTRIES: readonly AdminNavEntry[] = [
       { href: '/admin/bookings?line=practice', label: '연습실 예약', line: 'practice' },
       { href: '/admin/subscriptions', label: '구독' },
       { href: '/admin/contracts', label: '계약' },
+      { href: '/admin/tenancies', label: '입주 관리' },
     ],
   },
   {

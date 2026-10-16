@@ -273,3 +273,53 @@ export const rescheduleBookingEvent = async (
   }
   throw new Error('캘린더 이벤트 시간 변경 실패: 이벤트를 찾지 못했습니다(404)');
 };
+
+/**
+ * 캘린더 id를 **직접 받는** 일정 쓰기 — 예약 캘린더(env로 해석되는 자원 캘린더)가 아닌 별도 캘린더(월 입주 관리,
+ * lib/tenancy/calendar.ts)가 쓴다. 예약 캘린더와 달리 이 일정들은 웹 예약 가능 시간에 영향을 주지 않는다.
+ */
+export interface RawEventBody {
+  summary: string;
+  description?: string;
+  start: { date?: string; dateTime?: string };
+  end: { date?: string; dateTime?: string };
+}
+
+export const createEventOnCalendar = async (calendarIdValue: string, body: RawEventBody): Promise<string> => {
+  const token = await getAccessToken();
+  const res = await fetch(`${CAL_API}/calendars/${encodeURIComponent(calendarIdValue)}/events`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+  });
+  if (!res.ok) throw new Error(`캘린더 일정 생성 실패: ${res.status}`);
+  return (await res.json()).id as string;
+};
+
+/** 일정을 고친다. 일정이 없으면(404·410) false — 호출부가 새로 만든다. 그 밖의 실패는 throw. */
+export const patchEventOnCalendar = async (calendarIdValue: string, eventId: string, body: RawEventBody): Promise<boolean> => {
+  const token = await getAccessToken();
+  const res = await fetch(`${CAL_API}/calendars/${encodeURIComponent(calendarIdValue)}/events/${encodeURIComponent(eventId)}`, {
+    method: 'PATCH',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+  });
+  if (res.status === 404 || res.status === 410) return false;
+  if (!res.ok) throw new Error(`캘린더 일정 수정 실패: ${res.status}`);
+  const json = (await res.json()) as { status?: string };
+  return json.status !== 'cancelled';
+};
+
+/** 일정을 지운다. 이미 없으면 성공으로 본다. */
+export const deleteEventOnCalendar = async (calendarIdValue: string, eventId: string): Promise<void> => {
+  const token = await getAccessToken();
+  const res = await fetch(`${CAL_API}/calendars/${encodeURIComponent(calendarIdValue)}/events/${encodeURIComponent(eventId)}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+  });
+  if (res.ok || res.status === 404 || res.status === 410) return;
+  throw new Error(`캘린더 일정 삭제 실패: ${res.status}`);
+};

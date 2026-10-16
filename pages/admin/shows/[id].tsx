@@ -281,6 +281,10 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
   const [linkLabel, setLinkLabel] = useState('');
   const [linkHours, setLinkHours] = useState(12);
   const scheduled = t.status === 'scheduled';
+  // 취소된 회차에 결제가 살아 있는 주문이 남았다 — 앞선 취소 실행이 끊긴 것이라 '환불 이어서 처리'를 보여 준다.
+  const hasRefundPendingOrders = t.status === 'cancelled' && t.orders.some((o) =>
+    (o.orderStatus === 'paid' || o.orderStatus === 'partially_refunded')
+      && o.tickets.some((tk) => (tk.status === 'held' || tk.status === 'issued') && tk.checkedInAt === null));
   const visibleOrders = onlyAwaiting ? t.orders.filter((o) => o.bankDeposit === 'awaiting') : t.orders;
 
   return (
@@ -297,12 +301,16 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
           <a href={`/api/admin/shows/${show.id}/roster?showtimeId=${t.id}`} className="inline-flex items-center rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-800 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70">
             명단 CSV
           </a>
-          {scheduled && (
+          {(scheduled || hasRefundPendingOrders) && (
             <Button light variant="weak" size="sm" disabled={busy} onClick={() =>
               run({ action: 'cancel_showtime', showtimeId: t.id }, {
-                confirm: '이 회차를 취소하고, 결제된 주문을 전부 전액 환불합니다(입장한 티켓 제외). 되돌릴 수 없습니다.',
-                success: '회차를 취소했습니다. 환불 결과는 주문 상태에서 확인하세요.',
+                confirm: scheduled
+                  ? '이 회차를 취소하고, 결제된 주문을 전부 전액 환불합니다(입장한 티켓 제외). 되돌릴 수 없습니다.'
+                  : '앞선 회차 취소에서 환불이 끝나지 않은 주문을 이어서 환불하고 안내 메일을 보냅니다.',
+                success: scheduled ? '회차를 취소했습니다. 환불 결과는 주문 상태에서 확인하세요.' : '남은 주문의 환불을 이어서 처리했습니다.',
               }).then((r) => {
+                const remaining = r?.data?.remainingOrders;
+                if (typeof remaining === 'number' && remaining > 0) window.alert(`한 번에 처리하는 상한을 넘어 ${remaining}건이 남았습니다. "환불 이어서 처리"를 다시 눌러 주세요.`);
                 const failed = r?.data?.failedOrders;
                 if (Array.isArray(failed) && failed.length > 0) window.alert(`환불에 실패한 주문이 있습니다. 토스 콘솔에서 확인하세요: ${failed.join(', ')}`);
                 const bank = r?.data?.bankRefundOrders;
@@ -310,7 +318,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
                 const closed = r?.data?.closedDepositOrders;
                 if (Array.isArray(closed) && closed.length > 0) window.alert(`입금 전이던 계좌 입금 신청 ${closed.length}건을 닫았습니다(받은 돈이 없어 환불은 없습니다): ${closed.join(', ')}`);
               })}>
-              회차 취소
+              {scheduled ? '회차 취소' : '환불 이어서 처리'}
             </Button>
           )}
         </div>

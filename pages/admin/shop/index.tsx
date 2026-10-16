@@ -33,11 +33,11 @@ interface Props {
   /** 주문 검색어. */
   q?: string;
   skus: AdminSkuStockRow[];
-  /** 정산 기록 표(0066)를 못 읽었을 때만 채운다 — 예전 "정산 예정" 표로 되돌아간다. */
+  /** 정산 기록 표(0067)를 못 읽었을 때만 채운다 — 예전 "정산 예정" 표로 되돌아간다. */
   artistSales: AdminShopArtistSalesRow[];
   /** 아티스트 정산 표(기록·조정 포함). 표가 없거나 읽지 못하면 null. */
   payoutRows: ShopPayoutRowView[] | null;
-  /** 정산 기록 표를 읽지 못한 이유 — 'migration_needed'(0066 미적용)이면 안내 문구를 띄운다. */
+  /** 정산 기록 표를 읽지 못한 이유 — 'migration_needed'(0067 미적용)이면 안내 문구를 띄운다. */
   payoutsError: 'migration_needed' | 'error' | null;
   /** 이 달 표에 행이 없는 수취인의 미적용 조정. */
   otherAdjustments: Array<AdjustmentView & { payeeName: string | null }>;
@@ -70,7 +70,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     const q = typeof qParam === 'string' ? qParam.trim().slice(0, 60) : '';
     const [fetched, skus] = await Promise.all([listAdminShopOrders(ORDER_LIST_LIMIT + 1, q), listAdminSkuStock(now)]);
     const orders = fetched.slice(0, ORDER_LIST_LIMIT);
-    // 정산 표는 별도 try — 정산 기록 표(0066)가 없는 DB에서도 재고·주문 화면은 그대로 열려야 한다. 못 읽으면 예전 "정산 예정" 표로 되돌아간다.
+    // 정산 표는 별도 try — 정산 기록 표(0067)가 없는 DB에서도 재고·주문 화면은 그대로 열려야 한다. 못 읽으면 예전 "정산 예정" 표로 되돌아간다.
     let payoutRows: ShopPayoutRowView[] | null = null;
     let payoutsError: Props['payoutsError'] = null;
     let otherAdjustments: Props['otherAdjustments'] = [];
@@ -235,7 +235,7 @@ export default function AdminShopPage({ orders, ordersTruncated = false, q = '',
 
         {payoutsError === 'migration_needed' && (
           <div role="status" className="mb-4 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
-            정산 기록 표가 아직 없습니다 — 운영 DB에 마이그레이션 0066(partner_payouts)을 적용하면 정산 기록·지급 완료·이월 조정을 쓸 수 있습니다. 그동안은 아래 예전 「정산 예정」 표로 계산만 보입니다.
+            정산 기록 표가 아직 없습니다 — 운영 DB에 마이그레이션 0067(partner_payouts)을 적용하면 정산 기록·지급 완료·이월 조정을 쓸 수 있습니다. 그동안은 아래 예전 「정산 예정」 표로 계산만 보입니다.
           </div>
         )}
         {payoutsError === 'error' && (

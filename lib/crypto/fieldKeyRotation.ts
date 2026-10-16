@@ -2,7 +2,7 @@ import { and, eq, isNotNull } from 'drizzle-orm';
 import type { SQLiteColumn, SQLiteTable } from 'drizzle-orm/sqlite-core';
 
 import { getDb } from '../../db/client';
-import { fundingCreators, refundAccounts } from '../../db/schema';
+import { fundingCreators, refundAccounts, roomTenancies } from '../../db/schema';
 import { recordPrivacyAccess, type PrivacyAccessAction } from '../privacy/accessLog';
 import {
   FieldCryptoError,
@@ -77,6 +77,13 @@ export const ENCRYPTED_FIELD_TARGETS: readonly EncryptedFieldTarget[] = [
     idField: 'id',
     valueField: 'payoutAccountEnc',
   }),
+  // 월 입주자의 연락처·비상연락처·이메일·사업자번호·성별(JSON 통째) — 마이그레이션 0066.
+  defineTarget({
+    label: 'room_tenancies.private_enc',
+    table: roomTenancies,
+    idField: 'id',
+    valueField: 'privateEnc',
+  }),
   // 계좌 입금 주문의 환불 계좌번호 — 결제 공용(마이그레이션 0048, lib/payments/refundAccount.ts).
   defineTarget({
     label: 'refund_accounts.account_number_enc',
@@ -99,6 +106,7 @@ const ROTATION_ACCESS_ACTIONS: Record<string, PrivacyAccessAction> = {
   'funding_creators.payout_account_enc': 'funding_payout_account_decrypt_check',
   // 환불 계좌는 점검용 이름을 따로 두지 않았다 — 조회와 같은 이름에 수행자(rotation-cli)가 경로를 가른다.
   'refund_accounts.account_number_enc': 'refund_account_view',
+  'room_tenancies.private_enc': 'tenancy_private_view',
 };
 
 /**

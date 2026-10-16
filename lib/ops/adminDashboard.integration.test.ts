@@ -392,7 +392,7 @@ describe('상점 정산 — 기록 대기(지난 달)·이체 대기 카드', ()
     expect((await loadAdminDashboard(NOW_NOV)).queues).toMatchObject({ shopPayoutsToRecord: 0, shopPayoutsPending: 0 });
   });
 
-  it('정산 기록 표가 없는 DB(0066 전)에서도 대시보드는 열리고 두 카드는 0이다', async () => {
+  it('정산 기록 표가 없는 DB(0067 전)에서도 대시보드는 열리고 두 카드는 0이다', async () => {
     await seedShopSale();
     await client.execute('ALTER TABLE partner_payouts RENAME TO partner_payouts_x');
     const spy = jest.spyOn(console, 'error').mockImplementation(() => undefined);
