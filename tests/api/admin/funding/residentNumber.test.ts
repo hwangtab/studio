@@ -1,6 +1,9 @@
 /** @jest-environment node */
 jest.mock('../../../../lib/contracts/admin-auth', () => ({ authenticateAdminApi: jest.fn() }));
-jest.mock('../../../../lib/funding/residentNumber', () => ({ loadFundingResidentNumber: jest.fn() }));
+jest.mock('../../../../lib/funding/residentNumber', () => ({
+  RESIDENT_NUMBER_CRYPTO_ERROR_MESSAGE: jest.requireActual('../../../../lib/funding/residentNumber').RESIDENT_NUMBER_CRYPTO_ERROR_MESSAGE,
+  loadFundingResidentNumber: jest.fn(),
+}));
 jest.mock('../../../../lib/funding/payoutAccount', () => ({ isApprovedFundingProject: jest.fn() }));
 jest.mock('../../../../lib/privacy/accessLog', () => ({ recordAdminPrivacyAccess: jest.fn() }));
 

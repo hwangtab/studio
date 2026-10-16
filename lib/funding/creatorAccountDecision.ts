@@ -83,9 +83,8 @@ export const decideCreatorAccount = async (
   input: { value: string; reason: string },
   now: Date = new Date(),
 ): Promise<CreatorAccountResult> => {
-  // 입구가 프로젝트인 이유: 운영자가 개설자를 찾는 화면이 심사 상세다(별도 개설자 관리
-  // 화면을 만들지 않는다). 계정은 프로젝트가 아니라 개설자에 속하므로, 여기서 한 번
-  // 프로젝트 → 개설자로 건너간 뒤로는 프로젝트를 다시 보지 않는다.
+  // 입구가 프로젝트인 이유: 운영자가 개설자를 찾는 화면이 심사 상세다. 계정은 프로젝트가
+  // 아니라 개설자에 속하므로, 여기서 한 번 프로젝트 → 개설자로 건너간 뒤로는 프로젝트를 다시 보지 않는다.
   const [row] = await getDb()
     .select({ creator: fundingCreators })
     .from(fundingProjects)
@@ -93,8 +92,30 @@ export const decideCreatorAccount = async (
     .where(eq(fundingProjects.id, projectId))
     .limit(1);
   if (!row) return deny('not_found', '프로젝트를 찾을 수 없습니다.');
-  const creator = row.creator;
+  return applyCreatorAccount(row.creator, action, input, now);
+};
 
+/**
+ * 개설자 id로 바로 고치는 입구 — 펀딩 프로젝트가 없는 공연·상점 개설자용.
+ * 판정·안전장치(이메일 중복, 토큰 삭제, session_version 증가)는 프로젝트 입구와 **같은 함수**를 지난다.
+ */
+export const decideCreatorAccountByCreatorId = async (
+  creatorId: string,
+  action: CreatorAccountAction,
+  input: { value: string; reason: string },
+  now: Date = new Date(),
+): Promise<CreatorAccountResult> => {
+  const [creator] = await getDb().select().from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
+  if (!creator) return deny('not_found', '개설자를 찾을 수 없습니다.');
+  return applyCreatorAccount(creator, action, input, now);
+};
+
+const applyCreatorAccount = async (
+  creator: typeof fundingCreators.$inferSelect,
+  action: CreatorAccountAction,
+  input: { value: string; reason: string },
+  now: Date,
+): Promise<CreatorAccountResult> => {
   const reason = input.reason?.trim() ?? '';
   // 남의 계정 정보를 바꾸는 일이라 사유를 강제한다. 저장하지는 않지만(위 주석) 메일과
   // 서버 로그로 남으므로, 비어 있으면 그 두 곳 모두 "왜 바꿨는지"가 사라진다.

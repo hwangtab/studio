@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { AdminShell } from '../../../../components/admin/AdminShell';
+import { CreatorAccountEditor } from '../../../../components/admin/CreatorAccountEditor';
 import { CreatorTaxProfilePanel } from '../../../../components/admin/CreatorTaxProfilePanel';
 import { patchShowSubmission, type ShowSubmissionActionResult } from '../../../../components/admin/showSubmissionActions';
 import { Button } from '../../../../components/ui/Button';
@@ -278,6 +279,7 @@ export default function AdminShowSubmissionDetailPage({ submission }: AdminShowS
             <dl className="space-y-2 text-sm">
               <Row label="이름">{submission.creatorName}</Row>
               <Row label="이메일">{submission.creatorEmail}</Row>
+              <Row label="계정 수정"><CreatorAccountEditor creatorId={submission.creatorId} name={submission.creatorName} email={submission.creatorEmail} /></Row>
               <Row label="제출 시각">{submission.submittedAt ? formatKstDateTimeFull(submission.submittedAt) : '미제출'}</Row>
               <Row label="동의한 약관">{submission.organizerTermsVersion ?? '없음'}</Row>
             </dl>

@@ -20,4 +20,5 @@ export const ACTION_LABEL: Record<string, string> = {
   creator_payout_account_view: '정산 계좌 조회(개설자 단위)',
   refund_account_view: '환불 계좌 조회',
   funding_refund_account_view: '환불 계좌 조회(펀딩)',
+  creator_resident_number_view: '주민등록번호 조회(개설자 단위)',
 };

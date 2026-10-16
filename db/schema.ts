@@ -1496,6 +1496,13 @@ export const privacyAccessActionEnum = [
    * 컬럼이 enum 문자열이라 마이그레이션이 필요 없다(DB CHECK 없음).
    */
   'creator_payout_account_view',
+  /**
+   * 개설자 단위 주민등록번호 조회 (pages/api/admin/creators/[creatorId]/resident-number.ts).
+   * 펀딩 프로젝트 없이 공연·상점으로만 정산받는 개설자(상점 아티스트는 원천징수 때문에 번호를 보관한다)의 번호를 연다.
+   * `funding_resident_number_view`와 같은 일이지만 대상이 프로젝트 id가 아니라 creatorId라 행위를 가른다.
+   * 컬럼이 enum 문자열이라 마이그레이션이 필요 없다(DB CHECK 없음).
+   */
+  'creator_resident_number_view',
 ] as const;
 
 /**
