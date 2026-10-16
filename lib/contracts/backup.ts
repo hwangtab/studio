@@ -1,6 +1,7 @@
 import { del, list, put } from '@vercel/blob';
 
 import { getDb } from '../../db/client';
+import { contractPdfPathname } from './pdfPath';
 
 /**
  * 백업 보관 기간.
@@ -108,8 +109,10 @@ const removeOrphanPdfs = async (
   contracts: ReadonlyArray<{ pdfUrl: string | null }>,
   now: Date,
 ): Promise<number> => {
+  // 주소가 아니라 경로로 맞춘다. 주소의 호스트는 저장소 ID라, 저장소를 옮기면 DB의 옛 주소와
+  // 새 저장소의 주소가 갈려 멀쩡한 계약서가 전부 고아로 잡힌다(pdfPath.ts).
   const referenced = new Set(
-    contracts.map((c) => c.pdfUrl).filter((url): url is string => Boolean(url)),
+    contracts.map((c) => c.pdfUrl).filter((url): url is string => Boolean(url)).map(contractPdfPathname),
   );
 
   const { blobs } = await list({ prefix: PDF_PREFIX });
@@ -119,7 +122,7 @@ const removeOrphanPdfs = async (
     (b) =>
       b.pathname.endsWith('.pdf') &&
       !b.pathname.startsWith(BACKUP_PREFIX) &&
-      !referenced.has(b.url) &&
+      !referenced.has(b.pathname) &&
       new Date(b.uploadedAt) < grace,
   );
 
