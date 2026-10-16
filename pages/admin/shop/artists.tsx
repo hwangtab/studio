@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useState, type FormEvent } from 'react';
 
 import { AdminShell } from '../../../components/admin/AdminShell';
+import { CreatorAccountEditor } from '../../../components/admin/CreatorAccountEditor';
 import { CreatorTaxProfilePanel } from '../../../components/admin/CreatorTaxProfilePanel';
 import { Disclosure } from '../../../components/ui/Disclosure';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
@@ -105,7 +106,7 @@ function ArtistRow({ artist }: { artist: ArtistWithTerms }) {
   return (
     <>
       <tr className="border-t border-gray-100 align-top">
-        <td className="py-2 pr-3">{artist.name}<span className="block text-xs text-gray-500">{artist.email}</span></td>
+        <td className="py-2 pr-3">{artist.name}<span className="block text-xs text-gray-500">{artist.email}</span><CreatorAccountEditor creatorId={artist.creatorId} name={artist.name} email={artist.email} /></td>
         <td className="py-2 pr-3">
           <div className="flex flex-wrap items-center gap-2">
             <input value={slug} onChange={(e) => setSlug(e.target.value)} disabled={locked} aria-label={`${artist.name} 주소`} className={`${inputClass} w-48`} />
@@ -125,7 +126,7 @@ function ArtistRow({ artist }: { artist: ArtistWithTerms }) {
             variant="plain"
             onToggle={(e) => { if (e.currentTarget.open) setTaxOpened(true); }}
           >
-            {taxOpened && <CreatorTaxProfilePanel creatorId={artist.creatorId} heading={false} />}
+            {taxOpened && <CreatorTaxProfilePanel creatorId={artist.creatorId} heading={false} residentNumber />}
           </Disclosure>
         </td>
       </tr>

@@ -2,12 +2,14 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { consumeRateLimit } from '../../../../../lib/booking/rate-limit';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
+import { hasCreatorResidentNumber } from '../../../../../lib/funding/residentNumber';
 import { loadBusinessProfile, loadCreatorTaxType, refreshBusinessStatus } from '../../../../../lib/funding/businessProfile';
 
 /**
  * 운영자 화면의 개설자 사업자 정보 패널(`components/admin/CreatorTaxProfilePanel.tsx`)이 읽고 쓰는 곳.
  *
- * GET — 세금 구분 + 사업자 요약. 계좌·주민등록번호는 싣지 않는다(그건 펀딩 정산 절의 조회 버튼이 따로 연다).
+ * GET — 세금 구분 + 사업자 요약 + 주민등록번호 보관 여부(`hasResidentNumber`, 불리언뿐). 계좌·주민등록번호 값은 싣지 않는다
+ *   (조회 버튼이 따로 연다 — `resident-number.ts`·`payout-account.ts`).
  * POST `{ action: 'recheck' }` — 저장된 번호로 국세청 상태를 다시 조회해 상태 칸만 갱신한다.
  *   국세청 API 일일 한도를 버튼 연타로 쓰지 않게 개설자당 시간당 20회로 막는다.
  */
@@ -47,6 +49,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       taxType: creator.taxType,
       business: business === 'unavailable' ? null : business,
       businessUnavailable: business === 'unavailable',
+      // 값도 암호문도 아니라 있는지만 — 패널이 조회 버튼을 보일지 정한다.
+      hasResidentNumber: await hasCreatorResidentNumber(creatorId),
     });
   } catch (error: unknown) {
     console.error(`[admin/creators] 사업자 정보 처리 실패 (creatorId=${creatorId}):`, error);
