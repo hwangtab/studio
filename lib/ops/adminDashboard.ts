@@ -1,3 +1,4 @@
+import { waitUntil } from '@vercel/functions';
 import { and, asc, eq, gt, gte, inArray, lt, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
@@ -104,15 +105,16 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
 
   // 캘린더 → 사이트: 운영자가 캘린더에서 옮기거나 지운 링크 일정을 먼저 주문에 반영한다(아래 "이번 주 세션" 조회가 그 값을 읽는다). 던지지 않는다.
   // 구글 응답이 느려도 첫 화면이 같이 느려지지 않게 3초까지만 기다린다(못 끝낸 동기화는 뒤에서 계속 돌고, 다음 열람에 반영된다).
-  await new Promise<void>((resolve) => {
-    const timer = setTimeout(resolve, LINK_SYNC_WAIT_MS);
-    syncLinkEventsFromCalendar(now)
-      .catch(() => undefined)
-      .finally(() => {
-        clearTimeout(timer);
-        resolve();
-      });
-  });
+  const linkSync = syncLinkEventsFromCalendar(now).catch(() => undefined);
+  // 응답을 보낸 뒤에도 끝까지 돌게 등록한다 — 서버리스는 응답 후 대기 중 작업을 멈출 수 있다.
+  try {
+    waitUntil(linkSync);
+  } catch {
+    // 요청 컨텍스트 밖(테스트·스크립트)에서는 등록하지 않는다 — 아래 대기만으로 충분하다.
+  }
+  await Promise.race([linkSync, new Promise<void>((resolve) => {
+    setTimeout(resolve, LINK_SYNC_WAIT_MS).unref?.();
+  })]);
 
   const [issues, sessions, calendarImport, linkSessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending, fundingPayoutsToRecord, awaitingDepositRows] = await Promise.all([
     collectDbIssues(now),
