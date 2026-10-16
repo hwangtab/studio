@@ -147,7 +147,10 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
   };
 
   const end = async (t: TenancyListRow) => {
-    if (!window.confirm(`${t.tenantName}${t.roomNumber ? ` (${t.roomNumber})` : ''} 퇴실 처리할까요? 캘린더 일정이 지워지고 방이 비어요.`)) return;
+    // 계약서 제5조: 보증금은 면제이고, 약정 기간을 채우지 않고 퇴실하면 보증금 상당액(월 이용료 1개월분)이 위약금이다. 자동 연장 중 통지 종료는 위약금이 없다.
+    const early = t.kind === 'room' && t.endDate !== null && today < t.endDate;
+    const penaltyNote = early ? `\n\n⚠ 약정 종료일(${t.endDate}) 전 퇴실이에요. 계약서 제5조에 따라 위약금(보증금 상당액 = 월 이용료 1개월분, ${won(t.monthlyAmount)})이 발생할 수 있어요. 갑의 귀책·계약서가 정한 예외가 아닌지 확인하세요.` : '';
+    if (!window.confirm(`${t.tenantName}${t.roomNumber ? ` (${t.roomNumber})` : ''} 퇴실 처리할까요? 캘린더 일정이 지워지고 방이 비어요.${penaltyNote}`)) return;
     setBusy(true);
     finish(await call(`/api/admin/tenancies/${t.id}`, 'POST', { action: 'end' }), '퇴실 처리했어요.');
   };
@@ -236,7 +239,7 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
             {form.kind === 'room' && field('방 번호 (R05)', <input className={inputClass} value={form.roomNumber} onChange={(e) => set({ roomNumber: e.target.value })} required />)}
             {field('이름 / 상호', <input className={inputClass} value={form.tenantName} onChange={(e) => set({ tenantName: e.target.value })} required />)}
             {field('월 이용료 (원)', <input className={inputClass} inputMode="numeric" value={form.monthlyAmount} onChange={(e) => set({ monthlyAmount: e.target.value })} required />)}
-            {field('보증금 (원)', <input className={inputClass} inputMode="numeric" value={form.depositAmount} onChange={(e) => set({ depositAmount: e.target.value })} />)}
+            {field('받은 보증금 (원, 면제면 비움)', <input className={inputClass} inputMode="numeric" value={form.depositAmount} onChange={(e) => set({ depositAmount: e.target.value })} />)}
             {field('입주 시작일', <input className={inputClass} type="date" value={form.startDate} onChange={(e) => set({ startDate: e.target.value })} required />)}
             {field('계약 종료일 (없으면 비움)', <input className={inputClass} type="date" value={form.endDate} onChange={(e) => set({ endDate: e.target.value })} />)}
             {field('다음 입금 예정일', <input className={inputClass} type="date" value={form.nextDueOn} onChange={(e) => set({ nextDueOn: e.target.value })} required />)}

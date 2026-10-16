@@ -28,12 +28,12 @@ export const importTenancySheet = async (csv: string): Promise<ImportSummary> =>
     if (seen.has(key)) { summary.skippedExisting += 1; continue; }
     const input = { ...row.input };
     if (row.needsPhoneLookup) {
-      const found = await db.select({ id: contracts.id, phone: contracts.customerPhone, deposit: contracts.depositAmount }).from(contracts)
+      const found = await db.select({ id: contracts.id, phone: contracts.customerPhone }).from(contracts)
         .where(eq(contracts.customerName, input.tenantName)).orderBy(desc(contracts.createdAt)).limit(1);
       if (found[0]) {
         input.private = { ...input.private, phone: found[0].phone };
         input.contractId = found[0].id;
-        if (input.depositAmount === null && found[0].deposit > 0) input.depositAmount = found[0].deposit;
+        // 계약서의 deposit_amount는 받은 돈이 아니다 — 제5조: 보증금은 면제이고 중도 퇴실 때 내는 위약금(월 이용료 1개월분)의 기준액일 뿐이다.
         summary.phoneFilledFromContract.push(input.tenantName);
       }
     }
