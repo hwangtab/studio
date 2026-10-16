@@ -146,4 +146,26 @@ v2 색 가드(`components/ui/SectionHeading.test.tsx`의 `V2_FILES`)에 공연 �
 - 메일은 `lib/shows/organizer/email.ts`(운영자: 새 제출·승인 뒤 수정 / 주최자: 승인·보완 요청·반려). 승인했는데 공개하지 못하면 주최자 메일은
   `approved_pending`(승인됨·곧 공개, 공개 주소 없음)으로 가고, 운영자가 뒤에 `/admin/shows`에서 공개해도 메일은 다시 가지 않는다. 관리자는 `/admin/shows/submissions`, 처리는 `PATCH /api/admin/shows/submissions/[id]`.
 - 정산 정보(계좌·세금 구분)는 개설자 콘솔의 정산 정보 탭(`/ko/funding/creator/payout`)에서 받는다. 승인된 공연 등록만 있어도 열린다
-  (`hasApprovedEngagement`, `lib/funding/creatorEligibility.ts`). 공연 정산 기록 자체는 3단계다.
+  (`hasApprovedEngagement`, `lib/funding/creatorEligibility.ts`).
+
+### 주최자 정산 기록 (P2, 2026-10-16 — `lib/partnerPayouts/show*.ts`, 설계 `docs/settlement-record-design-2026-10.md`)
+
+관리자 `/admin/shows/[id]`의 「정산」 절(`components/admin/ShowPayoutSection.tsx`) → `POST /api/admin/shows/[id]/payout`(record / mark_paid / delete / set_cancel_fee_waived).
+`partner_payouts`(kind `show`, subject_key = 공연 id, period `all`, **creator_id 필수** — 보존·파기 코드가 이 칸으로 본다). 송금은 운영자가 은행 앱으로, 시스템은 계산하고 기록한다.
+
+- **정산 대상 = 승인된 제출물이 있는 공연만.** `data/shows/*.ts` 직영 공연은 `settleable: false`("정산 대상 아님(직영)"), 기록도 거절(`not_settleable`).
+- **판매액** = 결제 행이 있는 공연 티켓 주문(paid·partially_refunded·refunded)의 합계, **환불** = 그 주문 결제의 `done` 환불 합. 초대권(결제 없음·0원)·입금 대기·만료는 빠진다.
+  부분 환불·회차 취소 전액 환불·계좌 입금 환불이 전부 같은 `refunds` 표에 기록되므로 그 합이 정본이다 — **환불을 기록하는 새 경로를 만들면 `refunds`에 `done` 행을 남길 것.**
+- **계산은 펀딩 식 그대로**(`computeFundingPayoutForProject`, `showCalc.ts`) — 수수료 `FUNDING_PLATFORM_FEE_PERCENT`+`FUNDING_PAYMENT_FEE_PERCENT`(주최자 약관 제6조가 같은 상수를 보간), 개인은 부가세 상당액·원천징수, 사업자는 그대로.
+  **계좌 입금 몫(결제 키 `bank-deposit:`)은 결제 수수료 과세표준에서 뺀다**(토스를 지나지 않은 돈 — 펀딩 `manualGrossAmount`와 같은 이유).
+- **기록은 마지막 회차가 끝난 뒤에만**(`not_ended`). 끝 = 취소되지 않은 회차의 가장 늦은 시작 + 공연 길이, 전부 취소됐으면 마지막 취소 시각(`lastShowEndAt`; 대기열 SQL `listShowPayoutsAwaitingRecord`가 같은 규칙을 적었다 — 함께 바꿀 것).
+  약관 기한(마지막 회차 종료 + 영업일 `FUNDING_PAYOUT_BUSINESS_DAYS`일)을 넘기면 점검 메일 high(`healthCheck.ts`), 기한 안은 대시보드 카드(「정산 기록 대기 공연」「이체 대기 공연 정산」).
+- **막는 조건**: 세금 구분·계좌 없음, 사업자인데 사업자 정보 없음, 주최자 약관 동의 기록(`show_submissions.organizer_terms_version`) 없음, 이미 기록됨, 정산할 금액 없음. **경고만**: 주민등록번호 미등록,
+  계좌 입금 환불을 접수했는데 송금 전(`refund_accounts.refunded_at` NULL), 취소된 회차에 환불이 안 끝난 주문(아직 판매액에 들어 있다 — 환불 뒤에 기록하는 편이 안전).
+- **회차 취소 결제 수수료**(약관 제7조): `cancelShowtime` 끝에서 `showtime_cancel_fee` 조정을 만든다(음수, payee_key `creator:<id>`, source_ref = 회차 id, 환불한 **토스 결제분**×`FUNDING_PAYMENT_FEE_PERCENT`).
+  fail-soft(`safeSyncShowtimeCancelFee` — 던지지 않는다), 멱등(이어서 처리로 다시 불리면 금액만 맞춘다), 정산 기록 직전·정산 절을 열 때 한 번 더 맞춘다. **스튜디오 귀책 면제는 취소 화면이 아니라 정산 절에서**
+  — 반대 부호 `manual` 조정(source_ref `waive:<회차 id>`)을 쌓고/지운다(`setShowtimeCancelFeeWaived`). 취소는 되돌릴 수 없는 화면이라 귀책 판단을 거기 넣지 않았다. 수수료 조정이 이미 정산에 실렸으면 면제를 못 바꾼다(이체 전 기록을 취소하면 풀린다).
+  **이 공연의 회차 조정만** 싣는다 — 같은 주최자의 다른 공연 조정은 그 공연 정산에 간다.
+- **조정은 원천징수까지 뺀 금액에서 뺀다**(펀딩의 설계비·제작비 공제 자리). 모자라면 실지급 0원이고 모자란 만큼은 `shortfall_amount`에 남는다 — **이월하지 않는다**(약관 제7조: 모자라면 주최자에게 청구). 청구·협의 결과는 「지급 완료」 메모에.
+- **기록 뒤 환불은 자동 조정을 만들지 않는다**(상점의 `late_refund`와 달리). 화면이 `drift`(기록 판매·환불 ≠ 지금)를 보이고, 이체 전이면 「기록 취소」 후 다시 기록한다. 이미 이체한 뒤의 차액은 운영자가 따로 처리한다.
+- 표(0067)가 없으면 정산 절만 "마이그레이션 필요" 안내로 열린다(공연 운영 화면은 그대로), 대시보드 카드는 0, 회차 취소는 평소대로 끝난다.
