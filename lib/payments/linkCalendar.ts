@@ -148,9 +148,13 @@ export const syncLinkEventsFromCalendar = async (now: Date = new Date()): Promis
     console.error('[link-calendar] 캘린더 변경 확인 대상 조회 실패 — 건너뜀', { error: safeDbErrorSummary(error) });
     return result;
   }
-  for (const row of rows) {
+  // 조회는 한꺼번에(대시보드를 열 때마다 도므로 30건을 줄 세우면 느리다), 반영은 한 건씩.
+  const events = await Promise.all(rows.map((row) => getCalendarEvent(row.gcal_event_id, 'studio').then((event) => ({ event }), (error: unknown) => ({ error }))));
+  for (const [i, row] of rows.entries()) {
     try {
-      const event = await getCalendarEvent(row.gcal_event_id, 'studio');
+      const fetched = events[i];
+      if ('error' in fetched) throw fetched.error;
+      const event = fetched.event;
       if (!event) {
         await getDb().run(sql`UPDATE payment_link_orders SET gcal_event_id = NULL, gcal_error = ${`캘린더에서 삭제됨(${kstDateString(now)})`} WHERE order_no = ${row.order_no}`);
         result.deleted += 1;

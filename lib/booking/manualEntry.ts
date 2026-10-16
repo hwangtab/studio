@@ -7,7 +7,7 @@ import { BANK_DEPOSIT_PAYMENT_METHOD, bankDepositPaymentKey } from '../payments/
 import { splitInclusiveAmount } from './amounts';
 import { confirmBookingBankDeposit, holdBookingOnCalendar } from './bankDeposit';
 import { calendarBlockedRooms } from './calendarGuard';
-import { deleteBookingEvent } from './gcal';
+import { deleteBookingEvent, getCalendarEvent } from './gcal';
 import { kstDateTime, kstDateString } from './kst';
 import { getMixingProduct, resolveSongCount } from './mixing-products';
 import { getProduct, productHours, resolveHours } from './products';
@@ -155,6 +155,25 @@ export const createManualBooking = async (
       warnings.push('캘린더의 원래 일정을 지우지 못했어요. 같은 시간에 일정이 두 개 보이면 원래 것을 직접 지워 주세요.');
     }
   };
+  if (adoptEventId) {
+    // 가져올 일정은 **사이트가 올린 일정이 아니어야 한다** — 요청의 id가 다른 고객의 확정 일정이면 등록이 끝난 뒤 그 일정을 지워 버린다.
+    // 읽지 못해도 거절한다(fail-closed): 지울 수 있는 일정인지 모르는 채 진행하지 않는다.
+    try {
+      const db = getDb();
+      const linked = [
+        ...(await db.all<{ id: string }>(sql`SELECT id FROM bookings WHERE gcal_event_id = ${adoptEventId} LIMIT 1`)),
+        ...(await db.all<{ id: string }>(sql`SELECT order_no AS id FROM payment_link_orders WHERE gcal_event_id = ${adoptEventId} LIMIT 1`).catch(() => [])),
+      ];
+      const event = await getCalendarEvent(adoptEventId, 'studio');
+      if (!event) return { ok: false, message: '캘린더의 원래 일정이 이미 없어요. 대시보드를 새로고침해 주세요.' };
+      if (linked.length > 0 || /주문번호:/.test(event.description)) {
+        return { ok: false, message: '이 일정은 이미 사이트 예약에 연결돼 있어 가져올 수 없어요.' };
+      }
+    } catch (error) {
+      console.error('[manual-booking] 가져올 캘린더 일정 확인 실패 — 거절', error instanceof Error ? error.message : String(error));
+      return { ok: false, message: '캘린더의 원래 일정을 확인하지 못해 등록하지 않았어요. 잠시 뒤 다시 시도해 주세요.' };
+    }
+  }
   let payload = input.payload;
 
   let orderNo: string;
