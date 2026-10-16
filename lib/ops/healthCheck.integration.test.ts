@@ -72,7 +72,7 @@ beforeAll(async () => {
 beforeEach(async () => {
   // refunds가 payments를, subscription_payments가 orders·subscriptions를 참조하므로
   // 참조하는 쪽을 먼저 지운다. refunds가 빠져 있어 테스트끼리 오염된 적이 있다.
-  for (const table of ['refunds', 'payments', 'bookings', 'funding_pledges', 'funding_project_payouts', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'funding_projects', 'funding_creators']) {
+  for (const table of ['software_activations', 'software_licenses', 'refunds', 'payments', 'bookings', 'funding_pledges', 'funding_project_payouts', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'funding_projects', 'funding_creators']) {
     await client.execute(`DELETE FROM ${table}`);
   }
   (fetchBusyRanges as jest.Mock).mockReset().mockResolvedValue([]);
@@ -337,6 +337,17 @@ describe('운영 점검', () => {
     const issues = (await runHealthCheck(NOW)).issues;
     expect(issues[0].title).toContain('결제 기록과 주문 상태가 어긋난 주문 1건');
     expect(issues[0].severity).toBe('high');
+  });
+
+  it('결제됐는데 라이선스가 발급되지 않은 소프트웨어 주문을 잡는다 — 운영자가 취소한 라이선스는 세지 않는다', async () => {
+    await insertOrder({ type: 'software', status: 'paid', order_no: 'SWR-20260901-AAAAAAAA' });
+    await client.execute({ sql: 'INSERT INTO payments (id, order_id, payment_key, created_at) VALUES (?,?,?,?)', args: ['p1', 'o1', 'pk', EPOCH('2026-09-01')] });
+    expect(await titles()).toEqual(['결제됐는데 라이선스가 발급되지 않은 소프트웨어 주문 1건']);
+    await client.execute({
+      sql: "INSERT INTO software_licenses (id, product_slug, license_key, email, source, order_no, max_activations, status) VALUES ('l1','x','NOL-00000-00000-00000-00000','a@b.c','toss','SWR-20260901-AAAAAAAA',3,'revoked')",
+      args: [],
+    });
+    expect(await titles()).toEqual([]);
   });
 
   it('결제 기록이 없는 실패 주문은 정상으로 본다 (고객 이탈은 사고가 아니다)', async () => {

@@ -1179,6 +1179,30 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
     }
   }
 
+  /**
+   * **결제는 끝났는데 라이선스가 발급되지 않은 소프트웨어 주문.** (운영자가 일부러 취소한 라이선스는 세지 않는다.) 승인 batch가 결제·라이선스를 함께 쓰므로 정상이면 0건이다.
+   * 생기면 고객은 돈을 냈는데 키가 없다 — 확정 순간 운영자 메일이 한 번 가지만 놓치면 신호가 없었다. 표가 없는 DB(0054·0056 전)는 건너뛴다.
+   */
+  try {
+    const [row] = await db.all<{ n: number; sample: string | null }>(sql`
+      SELECT COUNT(*) AS n, MIN(o.order_no) AS sample FROM orders o
+      WHERE o.type = 'software' AND o.status = 'paid'
+        AND NOT EXISTS (SELECT 1 FROM software_licenses l WHERE l.order_no = o.order_no)
+    `);
+    if (Number(row?.n ?? 0) > 0) {
+      issues.push({
+        severity: 'high',
+        href: '/admin/software',
+        title: `결제됐는데 라이선스가 발급되지 않은 소프트웨어 주문 ${Number(row.n)}건`,
+        detail:
+          `예: ${row.sample ?? '-'}\n` +
+          '고객은 결제했는데 키가 없습니다. 관리자 소프트웨어 화면에서 그 주문번호로 수동 발급해 보내 드리거나 환불해 주세요.',
+      });
+    }
+  } catch (error: unknown) {
+    console.error('[health] 소프트웨어 라이선스 누락 조회 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
+  }
+
   return sortBySeverity(issues);
 };
 
