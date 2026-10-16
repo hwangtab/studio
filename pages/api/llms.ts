@@ -211,7 +211,10 @@ All prices below are **VAT included**.
 - Day Lock (fixed-hour recording, dedicated engineer, bookable online): 4 hours ${krw(DAY_LOCK_4H_PRICE)} KRW · 8 hours ${krw(DAY_LOCK_8H_PRICE)} KRW
 
 ### Can I get mixing and mastering done remotely without visiting?
-Yes. Send stems via KakaoTalk, Google Drive or WeTransfer from anywhere in Korea or abroad — no studio visit needed. Mixing ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW/song by track count (two revisions included), mastering ${krw(MASTERING_SINGLE_PRICE)} KRW/song. Delivery in 3–7 business days.
+Yes. Send stems via KakaoTalk, Google Drive or WeTransfer from anywhere in Korea or abroad — no studio visit needed. Mixing ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW/song by track count (**VAT included**, two revisions included), mastering ${krw(MASTERING_SINGLE_PRICE)} KRW/song. Delivery in 3–7 business days. Mixing is handled directly by studio owner Hwang Kyungha (황경하), who has planned and produced albums awarded at the Korean Music Awards (2017 '선정위원 특별상').
+
+### My home-recorded vocal sounds thin or buried after I tried mixing it myself — can professional mixing fix that?
+Yes — that's the most common reason clients send tracks in. A thin or buried vocal is usually a balance problem (level, EQ carving space against the instrumental, compression for consistency) rather than a performance problem, and it's exactly what the mixing service above addresses. Send the dry vocal, the backing track/MR and a reference track showing the tone you want; two revisions are included per song.
 
 ### Does Studio NOL do voice-over and dubbing recording?
 Yes. Voice-actor casting plus voice-over/dubbing recording at ${krw(VOICEOVER_HOURLY_PRICE)} KRW/hour (**VAT included**, minimum 2 hours). English dubbing is available. Page: /voice-acting
