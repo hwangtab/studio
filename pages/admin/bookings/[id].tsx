@@ -511,6 +511,26 @@ export default function AdminBookingDetailPage({
                 </Button>
               </div>
             )}
+            {!booking.gcalError?.startsWith('waiting_delete: ') && (
+              <div className="mt-3">
+                <p className="text-xs text-gray-500">돈이 오간 적 없는 기록이에요. 테스트로 만들었거나 잘못 올렸다면 목록에서 지울 수 있어요(되돌릴 수 없어요).</p>
+                <Button type="button" variant="weak" className="mt-2" disabled={busy}
+                  onClick={async () => {
+                    if (!window.confirm(`${booking.orderNo} 기록을 완전히 삭제할까요? 되돌릴 수 없어요.`)) return;
+                    setBusy(true);
+                    setNotice(null);
+                    const result = await postDepositAction('delete_unpaid_record', '삭제에 실패했습니다.');
+                    setBusy(false);
+                    if (result.ok) {
+                      await router.replace('/admin/bookings');
+                    } else {
+                      setNotice(result.message ?? '삭제에 실패했습니다.');
+                    }
+                  }}>
+                  기록 삭제
+                </Button>
+              </div>
+            )}
           </div>
         )}
 
