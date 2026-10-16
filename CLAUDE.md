@@ -417,6 +417,29 @@ GitHub Secret(`--read-only -e 90d`, drift 점검용 — **90일마다 재발급*
   재발급이 전제다 — 구독 카드는 고객이 다시 등록해야 한다.
 - 분기마다 한 번 복구 리허설(백업 파일을 로컬 SQLite에 풀어 행 수 대조)을 한다. 외부 스케줄러는 쓰지 않는다.
 
+### 함수 지역은 도쿄(`hnd1`)다 — DB 옆에 둔다
+
+운영 DB(Turso `studio-nol`)가 `aws-ap-northeast-1`(도쿄)에 있어서, 2026-10-16에 Vercel 함수 기본 지역을
+`iad1` → `hnd1`로 옮겼다. 미국 동부에서는 DB 왕복 한 번이 약 150ms라, 조회를 차례로 여섯 번 하던 펀딩 상태 API가
+CDN이 비었을 때 1.15~2.1초 걸렸다(응원 메시지가 늦게 뜨던 원인, #717). 옮긴 뒤에는 0.10~0.26초다.
+
+- **설정은 `vercel.json`이 아니라 프로젝트 설정에 있다**(`resourceConfig.functionDefaultRegions`, 대시보드 Settings → Functions).
+  바꾸면 **다음 배포부터** 적용된다 — 확인은 응답 헤더 `x-vercel-id`의 가운데 값(`icn1::hnd1::…`).
+- **서울(`icn1`)로 옮기지 말 것.** Turso에는 서울 지역이 없다(`turso db locations`). 함수를 서울에 두면 방문자 쪽 한 번(약 30ms)을
+  아끼는 대신 DB 왕복마다 약 30ms가 붙는다 — 한 요청이 DB를 여러 번 묻는 경로(결제 확인·예약·관리자)에서 더 느리다.
+  Turso가 서울을 열면 DB와 함수를 함께 옮기는 것을 검토한다.
+- **요금은 함수 지역이 아니라 요청이 들어온 CDN 지역으로 매겨진다.** 2026-09-16~10-15 사용량(`vercel usage --group-by region`)에서
+  함수가 `iad1`이었는데도 지역 과금(ISR·Fast Origin Transfer·Fluid CPU)이 전부 "Seoul"로 잡혔다. 지역 이동으로 단가가 바뀌지 않는다.
+- **Blob 저장소도 도쿄다 — `studio-files`(`store_YPoqIWRzeosPPaPv`, private, `hnd1`).** 계약서 PDF·백업·원장 백업·감상실 음원·
+  GSC 스냅샷·소셜 이미지, 펀딩 미디어·서류가 모두 여기 있다. 2026-10-16에 `iad1`의 `seo-snapshots`에서 옮겼다
+  (`scripts/copy-blob-store.mjs`로 40개 복사·해시 대조 → 연결 교체 → 재배포). 이유는 감상실 실측: 곡의 첫 요청(서울 CDN MISS)이
+  iad1에서 1.2~2.6초 → hnd1에서 0.22~0.33초. 연결은 `BLOB_READ_WRITE_TOKEN`·`BLOB_STORE_ID`(SDK는 OIDC가 있으면 그쪽, 없으면 토큰)다.
+  옛 `seo-snapshots`는 프로젝트 연결만 끊고 되돌리기용으로 남겨 뒀다 — **2026-11 중순 이후 지운다**(그 전에 지우지 말 것).
+- **Blob 파일은 주소가 아니라 경로(pathname)로 다룬다.** 주소의 호스트가 저장소 ID라, 주소를 DB에 두고 그 주소로 읽고·지우고·
+  비교하면 저장소를 옮기는 순간 틀어진다 — 계약서 PDF는 고아 정리가 멀쩡한 파일을 지우고 파기가 사본을 남겼을 것이다
+  (`lib/contracts/pdfPath.ts`, #728). 새 Blob 사용처도 경로로 읽고 경로로 비교할 것.
+- 지역과 별개로, **핫 경로에서 DB 조회를 차례로 늘리지 말 것** — 독립 조회는 `db.batch` 한 번으로 보낸다(`aggregateProjectStatus` 참조).
+
 ### 토스 키는 두 쌍이다 — 결제창을 연 키와 같은 쌍으로 승인한다
 
 같은 MID(studkol3wd)에 키 쌍 둘이 공존한다. v2 SDK는 두 갈래이고 갈래마다 요구하는 키가 다르다.
