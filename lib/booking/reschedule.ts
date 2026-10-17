@@ -103,7 +103,7 @@ export const rescheduleBooking = async (input: { orderId: string; date: unknown;
       warnings.push('예약은 옮겼지만 구글 캘린더 일정을 옮기지 못했어요. 아래 “캘린더 재시도”를 눌러 주세요.');
     }
   } else if (isCalendarActive(calendar, room)) {
-    warnings.push('이 예약은 구글 캘린더에 올라 있지 않아요. “캘린더 재시도”로 올려 주세요.');
+    warnings.push(waitingDeposit ? '이 예약은 아직 구글 캘린더에 일정이 없어요. 입금 확인 때 올라가요.' : '이 예약은 구글 캘린더에 올라 있지 않아요. “캘린더 재시도”로 올려 주세요.');
   }
   return { ok: true, startAt, endAt, warnings };
 };

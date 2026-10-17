@@ -6,6 +6,7 @@ import { MANUAL_PLACEHOLDER_EMAIL, MANUAL_PLACEHOLDER_PHONE } from '../privacy/m
 import { splitInclusiveAmount } from './amounts';
 import { calendarForService, isCalendarActive, renameBookingEvent } from './gcal';
 import { getProduct } from './products';
+import { MIN_AMOUNT } from './manualEntry';
 import { normalizeKoreanMobile } from './validation';
 
 /**
@@ -38,7 +39,10 @@ export const updateAwaitingOrderDetails = async (orderId: string, input: ManualE
   if (emailRaw !== '' && (!isEmail(emailRaw) || emailRaw.length > 254)) return { ok: false, message: '이메일 형식이 올바르지 않아요.' };
   const email = emailRaw === '' ? MANUAL_PLACEHOLDER_EMAIL : emailRaw;
   const amount = Number(input.totalAmount);
-  if (!Number.isInteger(amount) || amount < 0 || amount > 100_000_000) return { ok: false, message: '금액을 확인해 주세요(부가세 포함 총액).' };
+  // 빈 칸·null은 Number()가 0으로 읽는다 — 0원으로 입금 확인되면 0원 결제가 기록되므로 막는다. 너무 작은 금액(원 단위 오입력)도 수기 등록과 같은 기준으로 막는다.
+  if (input.totalAmount === null || input.totalAmount === '' || !Number.isInteger(amount) || amount < MIN_AMOUNT || amount > 100_000_000) {
+    return { ok: false, message: `금액을 확인해 주세요(부가세 포함 총액, ${MIN_AMOUNT.toLocaleString('ko-KR')}원 이상 원 단위).` };
+  }
 
   const db = getDb();
   const order = await db.query.orders.findFirst({ where: (t, { eq }) => eq(t.id, orderId), with: { bookings: true } });
@@ -55,15 +59,23 @@ export const updateAwaitingOrderDetails = async (orderId: string, input: ManualE
   if (Number(updated.rowsAffected) === 0) return { ok: false, message: '방금 상태가 바뀌었어요. 새로고침 후 다시 시도해 주세요.' };
 
   const warnings: string[] = [];
-  if (name !== order.customerName && booking.gcalEventId) {
+  const detailsChanged = name !== order.customerName || phone !== order.customerPhone || email !== order.customerEmail;
+  if (detailsChanged && booking.gcalEventId) {
     const calendar = calendarForService(booking.serviceType);
     if (isCalendarActive(calendar, booking.roomNumber)) {
       try {
         const productName = getProduct(booking.productId)?.nameKo ?? booking.serviceType;
-        await renameBookingEvent(booking.gcalEventId, calendar, booking.roomNumber, `[입금 대기] ${productName}${booking.roomNumber ? ` ${booking.roomNumber}` : ''} — ${name}`);
+        // 제목(고객 이름)과 설명(연락처)을 함께 바꾼다 — 설명에 옛 플레이스홀더 연락처가 남지 않게(ensureBookingEvent와 같은 모양).
+        const description = [
+          `상품: ${productName} (${booking.durationHours}시간)${booking.roomNumber ? ` · 방 ${booking.roomNumber}` : ''}`,
+          `고객: ${name} / ${phone} / ${email}`,
+          `주문번호: ${order.orderNo}`,
+          `요청사항: ${booking.customerNote ?? '없음'}`,
+        ].join('\n');
+        await renameBookingEvent(booking.gcalEventId, calendar, booking.roomNumber, `[입금 대기] ${productName}${booking.roomNumber ? ` ${booking.roomNumber}` : ''} — ${name}`, description);
       } catch (error) {
         console.error('[manual-edit] 캘린더 제목 변경 실패', { orderId, error: error instanceof Error ? error.message : String(error) });
-        warnings.push('고객 정보는 고쳤지만 캘린더 일정 제목은 못 바꿨어요(이름만 다릅니다).');
+        warnings.push('고객 정보는 고쳤지만 캘린더 일정은 못 바꿨어요(이름·연락처가 옛 값으로 남아 있어요).');
       }
     }
   }
