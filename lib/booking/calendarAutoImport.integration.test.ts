@@ -70,6 +70,14 @@ describe('guessNameFromTitle', () => {
   });
 });
 
+describe('예약이 아닌 일정 제외', () => {
+  const plan = (summary: string) => planAutoImport({ summary, startAt: new Date('2026-10-20T14:00:00+09:00').toISOString(), endAt: new Date('2026-10-20T16:00:00+09:00').toISOString(), allDay: false }, NOW);
+  it('휴무·점검·회의 같은 제목과 [제외]·! 표시는 가져오지 않는다', () => {
+    for (const t of ['휴무 13-18시', '장비 점검', '[제외] 개인 일정', '!조희정 녹음', '팀 미팅', '청소']) expect(plan(t)).toBeNull();
+    expect(plan('조희정 녹음')).not.toBeNull();
+  });
+});
+
 describe('planAutoImport', () => {
   const p = (s: string, e: string) => planAutoImport({ startAt: new Date(s).toISOString(), endAt: new Date(e).toISOString(), allDay: false }, NOW);
   it('시 단위 일정은 그대로, 30분 단위는 덮는 시 단위로 만들고 원본 시각을 남긴다', () => {
@@ -141,6 +149,13 @@ describe('autoImportCalendarEvents', () => {
     expect(r).toMatchObject({ imported: 0 });
     expect(r.failed).toHaveLength(1);
     expect(await one(`SELECT COUNT(*) AS n FROM orders`)).toEqual({ n: 0 });
+  });
+
+  it('원본 삭제가 실패하면 예약 메모에 남기고, 그 일정은 다시 가져오지 않도록 표시한다', async () => {
+    (deleteBookingEvent as jest.Mock).mockRejectedValueOnce(new Error('5xx'));
+    mockLoad.mockResolvedValue({ error: null, events: [ev('stuck', '남을 녹음', '2026-10-29T14:00:00+09:00', '2026-10-29T15:00:00+09:00')] });
+    await autoImportCalendarEvents(NOW);
+    expect(String((await one(`SELECT customer_note FROM bookings`))?.customer_note)).toContain('[원본 일정이 남아 있음: stuck]');
   });
 
   it('일정 설명(운영자 메모)은 예약 메모에 보존된다', async () => {

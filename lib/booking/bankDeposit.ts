@@ -1,3 +1,4 @@
+import { MANUAL_PLACEHOLDER_EMAIL } from '../privacy/manualPlaceholder';
 import { randomUUID } from 'node:crypto';
 
 import { sql } from 'drizzle-orm';
@@ -291,11 +292,13 @@ export const confirmBookingBankDeposit = async (input: { orderId: string; now: D
   }
 
   const fresh = (await findById(order.id)) ?? order;
-  const emailSent = await deliverPostConfirmation(fresh);
+  // 이미 지난 세션이면 고객에게 "예약이 확정됐어요" 메일을 보내지 않는다 — 수기 등록(manualEntry)과 같은 기준이다. 캘린더·확정 처리는 그대로 한다.
+  const sessionPast = fresh.type === 'session' && !!fresh.bookings[0] && fresh.bookings[0].startAt.getTime() <= input.now.getTime();
+  const emailSent = await deliverPostConfirmation(sessionPast ? { ...fresh, customerEmail: MANUAL_PLACEHOLDER_EMAIL } : fresh);
   const warnings: string[] = [];
   const booking = fresh.bookings[0];
   if (booking && booking.startAt.getTime() <= input.now.getTime()) {
-    warnings.push('이용 시작 시각이 이미 지난 예약이에요 — 고객과 이용 여부를 확인하고, 이용하지 못했다면 환불해 주세요.');
+    warnings.push('이용 시작 시각이 이미 지난 예약이에요 — 확정 메일은 보내지 않았어요. 고객과 이용 여부를 확인하고, 이용하지 못했다면 환불해 주세요.');
   }
   return { ok: true, emailSent, ...(warnings.length ? { warnings } : {}) };
 };

@@ -41,6 +41,13 @@ export const guessNameFromTitle = (title: string): string => {
   return (cleaned || title.trim() || '캘린더 일정').slice(0, 50);
 };
 
+/**
+ * 예약이 아닌 일정을 가져오지 않게 하는 표시 — 제목이 `!`로 시작하거나 `[제외]`를 담거나, 휴무·점검·공사·청소·정비·마감·예약불가·회의·미팅이면 건너뛴다.
+ * 안 그러면 운영자가 웹 예약을 막으려고 넣은 "휴무 13~18시"가 입금 대기 예약으로 바뀌고, 그 예약을 "미입금 취소"하면 막아 둔 시간이 풀린다(감사 2026-10-18).
+ * 건너뛴 일정은 대시보드 "캘린더에만 있는 일정" 카드에 남는다.
+ */
+export const AUTO_IMPORT_EXCLUDE = /^\s*[!！]|\[제외\]|휴무|휴일|점검|공사|청소|정비|마감|예약\s*불가|사용\s*불가|회의|미팅/u;
+
 export interface AutoImportPlan {
   date: string;
   startHour: number;
@@ -54,8 +61,9 @@ const clock = (d: Date): string => {
 };
 
 /** 일정이 자동 등록 대상인가 — 대상이면 만들 예약 모양을, 아니면 null(그대로 카드에 남는다). */
-export const planAutoImport = (event: Pick<UnlinkedCalendarEvent, 'startAt' | 'endAt' | 'allDay'>, now: Date): AutoImportPlan | null => {
+export const planAutoImport = (event: Pick<UnlinkedCalendarEvent, 'startAt' | 'endAt' | 'allDay'> & { summary?: string }, now: Date): AutoImportPlan | null => {
   if (event.allDay) return null;
+  if (event.summary && AUTO_IMPORT_EXCLUDE.test(event.summary)) return null;
   const start = new Date(event.startAt);
   const end = new Date(event.endAt);
   if (end.getTime() <= now.getTime() || end <= start) return null;
@@ -106,13 +114,14 @@ export const autoImportCalendarEvents = async (now: Date = new Date()): Promise<
     const plan = planAutoImport(event, now);
     if (!plan) { result.skipped += 1; continue; }
     if (result.imported >= MAX_IMPORT_PER_RUN || attempts >= MAX_ATTEMPTS_PER_RUN) break;
-    attempts += 1;
+    // 시도 횟수는 DB 충돌 확인을 통과한 뒤에만 센다 — 계속 충돌하는 일정이 시도 예산을 다 써서 뒤의 정상 일정이 영영 못 들어오지 않게.
     const name = guessNameFromTitle(event.summary);
     // 일정 설명(운영자가 적은 메모)도 보존한다 — 일정이 지워지므로 여기 안 남기면 사라진다.
     const detail = event.description.replace(/\s+/g, ' ').trim().slice(0, 200);
     const note = [AUTO_IMPORT_NOTE_MARK, event.summary, plan.originalRange ? `(캘린더 원본 ${plan.originalRange})` : null, detail ? `· 메모: ${detail}` : null, '— 고객·금액을 확인해 주세요'].filter(Boolean).join(' ');
     try {
       if (await hasDbConflict(plan)) { result.skipped += 1; continue; }
+      attempts += 1;
       const outcome = await createManualBooking(
         {
           kind: 'session', customerName: name, customerPhone: MANUAL_PLACEHOLDER_PHONE, customerEmail: MANUAL_PLACEHOLDER_EMAIL,

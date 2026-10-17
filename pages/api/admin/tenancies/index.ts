@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { recordAdminPrivacyAccess } from '../../../../lib/privacy/accessLog';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { importTenancySheet } from '../../../../lib/tenancy/importService';
 import { syncAllTenancyCalendars, tenancyCalendarId } from '../../../../lib/tenancy/calendar';
@@ -31,6 +32,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     if (body.action === 'sync_all') {
       if (!tenancyCalendarId()) return res.status(409).json({ ok: false, message: '입주 관리 캘린더가 설정돼 있지 않아요(TENANCY_GCAL_ID).' });
+      // 전체 동기화는 모든 입주자의 연락처를 복호화해 일정 설명에 옮긴다 — 열람과 같은 무게로 접속기록에 남긴다.
+      await recordAdminPrivacyAccess(req, auth.actor, 'tenancy_private_view', 'sync_all', 'success').catch(() => undefined);
       return res.status(200).json({ ok: true, ...(await syncAllTenancyCalendars()) });
     }
     return res.status(400).json({ ok: false, message: '알 수 없는 요청이에요.' });

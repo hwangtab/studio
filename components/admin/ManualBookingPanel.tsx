@@ -76,7 +76,9 @@ export const ManualBookingPanel = ({
     setKind('session');
     setDate(kstStart.toISOString().slice(0, 10));
     setStartHour(kstStart.getUTCHours());
-    const eventHours = Math.max(1, Math.round((end.getTime() - start.getTime()) / 3_600_000));
+    // 덮는 시 단위(시작은 내림, 끝은 올림) — 반올림하면 13:45~15:15가 13~15시가 돼 15:00~15:15가 어디에도 안 막힌다.
+    const kstEndForHours = new Date(end.getTime() + KST_OFFSET_MS);
+    const eventHours = Math.max(1, kstEndForHours.getUTCHours() + (kstEndForHours.getUTCMinutes() > 0 ? 1 : 0) - kstStart.getUTCHours());
     setHours(eventHours);
     setAdoptHours(eventHours);
     const kstEnd = new Date(end.getTime() + KST_OFFSET_MS);

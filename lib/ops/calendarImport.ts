@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { listCalendarEvents } from '../booking/gcal';
+import { LEFTOVER_ORIGINAL_MARK } from '../booking/manualEntry';
 
 /**
  * **캘린더에만 있는 일정**(사이트에 등록되지 않은 일정) — 관리자 대시보드 "이번 주 세션" 아래에 보여 주고 "사이트에 등록"으로 가져온다.
@@ -37,6 +38,11 @@ export const loadUnlinkedCalendarEvents = async (
       db.all<{ id: string }>(sql`SELECT gcal_event_id AS id FROM payment_link_orders WHERE gcal_event_id IS NOT NULL`).catch(() => []),
     ]);
     const linked = new Set(linkedRows.flat().map((r) => r.id));
+    // 사이트 예약을 만들었지만 원본 일정을 못 지운 경우(예약 메모에 id가 적혀 있다) — 그 일정을 다시 가져오면 같은 일이 두 번 예약된다.
+    const leftovers = await db
+      .all<{ note: string }>(sql`SELECT customer_note AS note FROM bookings WHERE customer_note LIKE ${`%${LEFTOVER_ORIGINAL_MARK}%`}`)
+      .catch(() => []);
+    for (const { note } of leftovers) for (const m of note.matchAll(/\[원본 일정이 남아 있음: ([^\]\s]+)\]/g)) linked.add(m[1]);
     return {
       events: events
         // "바쁨 아님"으로 표시한 일정(알림·참고용)은 예약 가능 시간을 막지 않으므로 예약이 아니다 — 가져오지도 카드에 올리지도 않는다.
