@@ -1,8 +1,12 @@
 import { MANUAL_PLACEHOLDER_EMAIL, MANUAL_PLACEHOLDER_PHONE } from '../privacy/manualPlaceholder';
 import { loadUnlinkedCalendarEvents, type UnlinkedCalendarEvent } from '../ops/calendarImport';
-import { kstDateString } from './kst';
+import { sql } from 'drizzle-orm';
+
+import { getDb } from '../../db/client';
+import { kstDateString, kstDateTime } from './kst';
 import { createManualBooking } from './manualEntry';
-import { getProduct, productHours } from './products';
+import { getProduct, occupancyConflictKeys, productHours } from './products';
+import { occupiedBookingSql } from './service';
 
 /**
  * **캘린더에 손으로 넣은 일정 → 사이트 예약 자동 등록.** 운영자는 "캘린더에 넣으면 사이트에도 들어가야 한다"고 기대한다(2026-10-17).
@@ -24,7 +28,8 @@ import { getProduct, productHours } from './products';
 export const AUTO_IMPORT_NOTE_MARK = '[캘린더 자동 등록]';
 export const AUTO_IMPORT_PRODUCT_ID = 'recording-hourly';
 export const AUTO_IMPORT_WINDOW_DAYS = 60;
-const MAX_PER_RUN = 10;
+const MAX_IMPORT_PER_RUN = 10;
+const MAX_ATTEMPTS_PER_RUN = 30;
 const KST_OFFSET_MS = 9 * 3600 * 1000;
 
 /** "조희정 녹음" → "조희정". 꼬리의 서비스 말(녹음·레코딩·믹싱·예약)과 대괄호 머리말을 걷어 낸다. 비면 제목 전체. */
@@ -70,6 +75,25 @@ export const planAutoImport = (event: Pick<UnlinkedCalendarEvent, 'startAt' | 'e
   return { date, startHour, hours, originalRange: exact ? null : `${clock(start)}~${clock(end)}` };
 };
 
+/**
+ * 그 시간대가 **DB에서** 이미 점유돼 있는가(다른 예약·예약 불가 블록) — 등록을 시도하기 전에 읽기만으로 거른다.
+ * `createBookingOrder`는 주문 행을 먼저 만들고 겹침을 검사해 실패하면 `failed` 주문을 남기므로, 매 대시보드 열람마다 같은 충돌 일정을
+ * 시도하면 실패 주문이 계속 쌓인다(감사 2026-10-18). 충돌하는 일정은 건너뛰어 카드에 남긴다.
+ */
+const hasDbConflict = async (plan: AutoImportPlan): Promise<boolean> => {
+  const start = Math.floor(kstDateTime(plan.date, plan.startHour).getTime() / 1000);
+  const end = Math.floor(kstDateTime(plan.date, plan.startHour + plan.hours).getTime() / 1000);
+  const keys = occupancyConflictKeys(null);
+  const roomMatch = sql.join(keys.map((k) => (k === null ? sql`b.room_number IS NULL` : sql`b.room_number = ${k}`)), sql` OR `);
+  const rows = await getDb().all<{ n: number }>(sql`
+    SELECT (
+      (SELECT COUNT(*) FROM bookings b WHERE (${roomMatch}) AND b.start_at < ${end} AND b.end_at > ${start} AND ${occupiedBookingSql('b')})
+      + (SELECT COUNT(*) FROM availability_blocks ab WHERE ab.room_number IS NULL AND ab.start_at < ${end} AND ab.end_at > ${start})
+    ) AS n
+  `);
+  return Number(rows[0]?.n ?? 0) > 0;
+};
+
 export type AutoImportResult = { imported: number; skipped: number; failed: Array<{ eventId: string; reason: string }>; disabled: boolean };
 
 export const autoImportCalendarEvents = async (now: Date = new Date()): Promise<AutoImportResult> => {
@@ -77,13 +101,18 @@ export const autoImportCalendarEvents = async (now: Date = new Date()): Promise<
   if (process.env.CALENDAR_AUTO_IMPORT === 'off') return { ...result, disabled: true };
   const { events, error } = await loadUnlinkedCalendarEvents(now, new Date(now.getTime() + AUTO_IMPORT_WINDOW_DAYS * 86_400_000));
   if (error) return result;
+  let attempts = 0;
   for (const event of events) {
     const plan = planAutoImport(event, now);
     if (!plan) { result.skipped += 1; continue; }
-    if (result.imported + result.failed.length >= MAX_PER_RUN) break;
+    if (result.imported >= MAX_IMPORT_PER_RUN || attempts >= MAX_ATTEMPTS_PER_RUN) break;
+    attempts += 1;
     const name = guessNameFromTitle(event.summary);
-    const note = [AUTO_IMPORT_NOTE_MARK, event.summary, plan.originalRange ? `(캘린더 원본 ${plan.originalRange})` : null, '— 고객·금액을 확인해 주세요'].filter(Boolean).join(' ');
+    // 일정 설명(운영자가 적은 메모)도 보존한다 — 일정이 지워지므로 여기 안 남기면 사라진다.
+    const detail = event.description.replace(/\s+/g, ' ').trim().slice(0, 200);
+    const note = [AUTO_IMPORT_NOTE_MARK, event.summary, plan.originalRange ? `(캘린더 원본 ${plan.originalRange})` : null, detail ? `· 메모: ${detail}` : null, '— 고객·금액을 확인해 주세요'].filter(Boolean).join(' ');
     try {
+      if (await hasDbConflict(plan)) { result.skipped += 1; continue; }
       const outcome = await createManualBooking(
         {
           kind: 'session', customerName: name, customerPhone: MANUAL_PLACEHOLDER_PHONE, customerEmail: MANUAL_PLACEHOLDER_EMAIL,
@@ -95,9 +124,12 @@ export const autoImportCalendarEvents = async (now: Date = new Date()): Promise<
           },
         },
         now,
-        { adoptEventId: event.id },
+        { adoptEventId: event.id, expectEventWindow: { startAt: event.startAt, endAt: event.endAt } },
       );
-      if (outcome.ok) result.imported += 1;
+      if (outcome.ok) {
+        result.imported += 1;
+        if (outcome.warnings.length > 0) console.warn('[calendar-auto-import] 등록은 됐지만 경고', { eventId: event.id, warnings: outcome.warnings });
+      }
       else result.failed.push({ eventId: event.id, reason: outcome.message });
     } catch (error) {
       result.failed.push({ eventId: event.id, reason: error instanceof Error ? error.message : String(error) });

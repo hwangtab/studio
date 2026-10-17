@@ -6,7 +6,7 @@ jest.mock('../booking/gcal', () => ({ listCalendarEvents: (...a: unknown[]) => m
 jest.mock('../../db/client', () => ({ getDb: () => ({ all: (...a: unknown[]) => mockAll(...a) }) }));
 
 const ev = (id: string, extra: Record<string, unknown> = {}) => ({
-  id, summary: id, description: '', allDay: false,
+  id, summary: id, description: '', allDay: false, transparent: false,
   start: new Date('2026-10-20T02:00:00Z'), end: new Date('2026-10-20T05:00:00Z'), ...extra,
 });
 
@@ -24,6 +24,13 @@ describe('loadUnlinkedCalendarEvents', () => {
     expect(events.map((e) => e.id)).toEqual(['b', 'd']);
     expect(events.find((e) => e.id === 'd')?.adoptable).toBe(false);
     expect(events.find((e) => e.id === 'b')?.adoptable).toBe(true);
+  });
+
+  it('"바쁨 아님"으로 표시한 일정은 예약이 아니므로 목록에 올리지 않는다', async () => {
+    mockList.mockResolvedValue([ev('free', { transparent: true }), ev('busy')]);
+    mockAll.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
+    const { events } = await loadUnlinkedCalendarEvents(new Date(), new Date());
+    expect(events.map((e) => e.id)).toEqual(['busy']);
   });
 
   it('캘린더 실패는 던지지 않고 error를 돌려준다', async () => {

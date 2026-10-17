@@ -310,7 +310,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const eventId = await createBookingEvent({
           calendar,
           room: booking.roomNumber,
-          summary: `[예약] ${booking.serviceType}${booking.roomNumber ? ` ${booking.roomNumber}` : ''} — ${order.customerName}`,
+          // 입금 대기 예약은 확정이 아니다 — 캘린더에서 확정으로 보이지 않게 [입금 대기]로 올린다(lib/booking/confirm.ts ensureBookingEvent와 같은 말).
+          summary: `${order.status === 'awaiting_deposit' ? '[입금 대기]' : '[예약]'} ${booking.serviceType}${booking.roomNumber ? ` ${booking.roomNumber}` : ''} — ${order.customerName}`,
           description: [
             `상품: ${booking.productId} (${booking.durationHours}시간)`,
             `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,

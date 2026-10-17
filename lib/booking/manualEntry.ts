@@ -7,7 +7,7 @@ import { BANK_DEPOSIT_PAYMENT_METHOD, bankDepositPaymentKey } from '../payments/
 import { splitInclusiveAmount } from './amounts';
 import { confirmBookingBankDeposit, holdBookingOnCalendar } from './bankDeposit';
 import { calendarBlockedRooms } from './calendarGuard';
-import { deleteBookingEvent, getCalendarEvent } from './gcal';
+import { deleteBookingEvent, getCalendarEvent, isCalendarActive } from './gcal';
 import { kstDateTime, kstDateString } from './kst';
 import { getMixingProduct, resolveSongCount } from './mixing-products';
 import { getProduct, productHours, resolveHours } from './products';
@@ -52,7 +52,7 @@ type Parsed = { ok: true; value: ManualBookingInput } | { ok: false; message: st
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const MAX_AMOUNT = 100_000_000;
-const MIN_AMOUNT = 1_000;
+export const MIN_AMOUNT = 1_000;
 
 const fail = (message: string): Parsed => ({ ok: false, message });
 
@@ -142,12 +142,18 @@ export type ManualBookingOutcome =
  *   안 지우면 같은 시간에 일정이 두 개가 된다. 지우기가 실패하면 경고만 한다(예약은 이미 만들어졌다).
  */
 export const createManualBooking = async (
-  input: ManualBookingInput, now: Date, opts: { adoptEventId?: string | null } = {},
+  input: ManualBookingInput, now: Date, opts: { adoptEventId?: string | null; expectEventWindow?: { startAt: string; endAt: string } } = {},
 ): Promise<ManualBookingOutcome> => {
   const warnings: string[] = [];
   const adoptEventId = input.kind === 'session' ? (opts.adoptEventId ?? null) : null;
-  const releaseAdoptedEvent = async (): Promise<void> => {
+  const releaseAdoptedEvent = async (orderId: string): Promise<void> => {
     if (!adoptEventId) return;
+    // 사이트가 자기 일정을 새로 올리지 못했으면(구글 오류는 삼켜진다) 원본을 지우지 않는다 — 지우면 그 시간이 캘린더에서 사라지고 실패 기록도 없다.
+    const row = await getDb().all<{ gcal_event_id: string | null }>(sql`SELECT gcal_event_id FROM bookings WHERE order_id = ${orderId} LIMIT 1`);
+    if (!row[0]?.gcal_event_id && isCalendarActive('studio')) {
+      warnings.push('새 캘린더 일정을 올리지 못해 캘린더의 원래 일정을 그대로 두었어요. 예약 상세에서 “캘린더 재시도” 뒤 원래 일정을 직접 지워 주세요.');
+      return;
+    }
     try {
       await deleteBookingEvent(adoptEventId, 'studio');
     } catch (error) {
@@ -168,6 +174,10 @@ export const createManualBooking = async (
       if (!event) return { ok: false, message: '캘린더의 원래 일정이 이미 없어요. 대시보드를 새로고침해 주세요.' };
       if (linked.length > 0 || /주문번호:/.test(event.description)) {
         return { ok: false, message: '이 일정은 이미 사이트 예약에 연결돼 있어 가져올 수 없어요.' };
+      }
+      // 자동 등록은 목록을 읽은 뒤 일정이 구글에서 옮겨졌을 수 있다 — 시간이 달라졌으면 옛 시간으로 예약을 만들고 옮겨진 일정을 지우게 되므로 거절한다.
+      if (opts.expectEventWindow && (event.start.toISOString() !== opts.expectEventWindow.startAt || event.end.toISOString() !== opts.expectEventWindow.endAt)) {
+        return { ok: false, message: '캘린더 일정의 시간이 그새 바뀌었어요. 다음에 다시 시도해요.' };
       }
     } catch (error) {
       console.error('[manual-booking] 가져올 캘린더 일정 확인 실패 — 거절', error instanceof Error ? error.message : String(error));
@@ -219,7 +229,7 @@ export const createManualBooking = async (
 
   if (!input.received) {
     if (input.kind === 'session') await holdBookingOnCalendar(orderNo);
-    await releaseAdoptedEvent();
+    await releaseAdoptedEvent(order.id);
     return { ok: true, orderId: order.id, orderNo, status: 'awaiting_deposit', warnings };
   }
 
@@ -233,6 +243,6 @@ export const createManualBooking = async (
   }
   if (confirmed.warnings) warnings.push(...confirmed.warnings);
   if (confirmed.emailSent === false) warnings.push('확정 메일 발송에 실패했어요. 예약 상세에서 재발송할 수 있어요.');
-  await releaseAdoptedEvent();
+  await releaseAdoptedEvent(order.id);
   return { ok: true, orderId: order.id, orderNo, status: 'paid', warnings };
 };

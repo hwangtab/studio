@@ -146,16 +146,25 @@ export const listCalendarEvents = async (
 ): Promise<CalendarEventInfo[]> => {
   const id = calendarId(calendar, room);
   const token = await getAccessToken();
-  const params = new URLSearchParams({
-    timeMin: timeMin.toISOString(), timeMax: timeMax.toISOString(), singleEvents: 'true', orderBy: 'startTime', maxResults: '250',
-  });
-  const res = await fetch(`${CAL_API}/calendars/${encodeURIComponent(id)}/events?${params}`, {
-    headers: { Authorization: `Bearer ${token}` },
-    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-  });
-  if (!res.ok) throw new Error(`캘린더 일정 목록 조회 실패: ${res.status}`);
-  const json = (await res.json()) as { items?: RawCalendarEvent[] };
-  return (json.items ?? []).map(toEventInfo).filter((e): e is CalendarEventInfo => e !== null);
+  const items: RawCalendarEvent[] = [];
+  // 250건을 넘으면 다음 쪽을 이어 읽는다(최대 4쪽 = 1,000건) — 한 쪽만 읽으면 뒤쪽 일정이 목록·충돌 검사에서 조용히 빠진다.
+  let pageToken: string | undefined;
+  for (let page = 0; page < 4; page += 1) {
+    const params = new URLSearchParams({
+      timeMin: timeMin.toISOString(), timeMax: timeMax.toISOString(), singleEvents: 'true', orderBy: 'startTime', maxResults: '250',
+      ...(pageToken ? { pageToken } : {}),
+    });
+    const res = await fetch(`${CAL_API}/calendars/${encodeURIComponent(id)}/events?${params}`, {
+      headers: { Authorization: `Bearer ${token}` },
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    });
+    if (!res.ok) throw new Error(`캘린더 일정 목록 조회 실패: ${res.status}`);
+    const json = (await res.json()) as { items?: RawCalendarEvent[]; nextPageToken?: string };
+    items.push(...(json.items ?? []));
+    pageToken = json.nextPageToken;
+    if (!pageToken) break;
+  }
+  return items.map(toEventInfo).filter((e): e is CalendarEventInfo => e !== null);
 };
 
 /** 일정 한 건. 없거나(404·410) 취소된 일정이면 null. 그 밖의 실패는 throw. */
@@ -229,7 +238,7 @@ export const deleteBookingEvent = async (
  * 후보 캘린더를 차례로 시도한다(삭제와 같은 이유). 실패는 throw.
  */
 export const renameBookingEvent = async (
-  eventId: string, calendar: BookingCalendar, room: string | null | undefined, summary: string,
+  eventId: string, calendar: BookingCalendar, room: string | null | undefined, summary: string, description?: string,
 ): Promise<void> => {
   const ids = candidateCalendarIds(calendar, room);
   if (ids.length === 0) calendarId(calendar, room); // throw — env 없음
@@ -240,7 +249,7 @@ export const renameBookingEvent = async (
       {
         method: 'PATCH',
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ summary }),
+        body: JSON.stringify(description === undefined ? { summary } : { summary, description }),
         signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       },
     );

@@ -16,6 +16,7 @@ import { listCalendarEvents } from '../booking/gcal';
 export interface UnlinkedCalendarEvent {
   id: string;
   summary: string;
+  description: string;
   startAt: string;
   endAt: string;
   allDay: boolean;
@@ -38,9 +39,10 @@ export const loadUnlinkedCalendarEvents = async (
     const linked = new Set(linkedRows.flat().map((r) => r.id));
     return {
       events: events
-        .filter((e) => !linked.has(e.id) && !/주문번호:/.test(e.description))
+        // "바쁨 아님"으로 표시한 일정(알림·참고용)은 예약 가능 시간을 막지 않으므로 예약이 아니다 — 가져오지도 카드에 올리지도 않는다.
+        .filter((e) => !linked.has(e.id) && !e.transparent && !/주문번호:/.test(e.description))
         .map((e) => ({
-          id: e.id, summary: e.summary || '(제목 없음)', startAt: e.start.toISOString(), endAt: e.end.toISOString(),
+          id: e.id, summary: e.summary || '(제목 없음)', description: e.description, startAt: e.start.toISOString(), endAt: e.end.toISOString(),
           allDay: e.allDay, adoptable: !e.allDay,
         })),
       error: null,
