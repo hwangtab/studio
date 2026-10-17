@@ -5,6 +5,7 @@ import { generateContractPdf } from './pdf';
 import { contractPdfPathname } from './pdfPath';
 import { resolveRulesContent } from './template';
 
+/** 반환값은 Blob 경로(`contracts/<id>.pdf`) — `contracts.pdf_url`에 그대로 들어간다. */
 export const uploadContractPdf = async (
   contractId: string,
   pdfBuffer: Buffer,
@@ -19,7 +20,9 @@ export const uploadContractPdf = async (
     allowOverwrite: true,
   });
 
-  return blob.url;
+  // 주소가 아니라 경로를 남긴다 — 주소의 호스트는 저장소 ID라 저장소를 옮기면 죽은 주소가 된다(pdfPath.ts).
+  // 옛 행은 전체 주소였고 2026-10-17에 경로로 바꿨다. 읽는 쪽은 둘 다 받는다.
+  return blob.pathname;
 };
 
 export type ContractWithRelations = Contract & {
