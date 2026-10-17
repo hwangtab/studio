@@ -178,7 +178,7 @@ describe('updateAwaitingOrderDetails', () => {
     expect(renameBookingEvent).toHaveBeenCalledWith('evt-hold', 'studio', null, expect.any(String), expect.stringContaining('010-1234-5678'));
     (renameBookingEvent as jest.Mock).mockClear();
     await updateAwaitingOrderDetails(id, { customerName: '조희정님', customerPhone: '', customerEmail: '', totalAmount: 330000 });
-    expect(renameBookingEvent).toHaveBeenCalledWith('evt-hold', 'studio', null, expect.stringContaining('조희정님'));
+    expect(renameBookingEvent).toHaveBeenCalledWith('evt-hold', 'studio', null, expect.stringContaining('조희정님'), expect.stringContaining('조희정님'));
   });
 
   it('입금 확인된 주문·잘못된 값은 거절한다', async () => {
