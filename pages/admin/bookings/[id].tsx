@@ -406,6 +406,36 @@ export default function AdminBookingDetailPage({
   // (gcalEventId·gcalError 둘 다 NULL)에는 배너가 안 떠서 버튼도 같이 사라졌다.
   // gcalMissing은 confirmed에서만 참이므로(admin-serialize) 대기·취소 예약에 등록 버튼이
   // 새로 뜨는 일은 없고, gcalError가 있는 완료·노쇼 예약의 기존 재시도 경로도 그대로다.
+  const canEditDetails = !isMixing && !isDeposit && booking.orderStatus === 'awaiting_deposit';
+  const [editOpen, setEditOpen] = useState(false);
+  const [editName, setEditName] = useState(booking.customerName);
+  const [editPhone, setEditPhone] = useState(booking.customerPhone === '-' ? '' : booking.customerPhone);
+  const [editEmail, setEditEmail] = useState(booking.customerEmail === 'manual@studionol.co.kr' ? '' : booking.customerEmail);
+  const [editAmount, setEditAmount] = useState(String(booking.totalAmount));
+  const handleEditDetails = async () => {
+    setBusy(true);
+    setNotice(null);
+    try {
+      const response = await fetch(`/api/admin/bookings/${booking.id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ action: 'update_details', customerName: editName, customerPhone: editPhone, customerEmail: editEmail, totalAmount: Number(editAmount.replace(/[,\s원]/g, '')) }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result?.ok) {
+        setNotice(result?.message || '수정에 실패했습니다.');
+      } else {
+        setEditOpen(false);
+        setNotice(Array.isArray(result.warnings) && result.warnings.length > 0 ? result.warnings.join(' / ') : '고객 정보와 금액을 고쳤어요.');
+      }
+    } catch {
+      setNotice('네트워크 오류가 발생했습니다.');
+    }
+    setBusy(false);
+    await router.replace(router.asPath, undefined, { scroll: false });
+  };
+
   const canReschedule =
     !isMixing && !isDeposit && (booking.bookingStatus === 'confirmed' || (booking.bookingStatus === 'pending' && booking.orderStatus === 'awaiting_deposit'));
   const [rescheduleOpen, setRescheduleOpen] = useState(false);
@@ -758,6 +788,25 @@ export default function AdminBookingDetailPage({
                   <DescriptionRow label="전화번호" value={booking.customerPhone} />
                   <DescriptionRow label="이메일" value={booking.customerEmail} />
                 </dl>
+                {canEditDetails && (
+                  <div className="pt-3">
+                    {editOpen ? (
+                      <div className="grid grid-cols-2 gap-3 rounded-lg border border-gray-200 p-3">
+                        <Field id="ed-name" label="이름" className={lightOnlyField}><TextInput value={editName} onChange={(e) => setEditName(e.target.value)} light /></Field>
+                        <Field id="ed-amount" label="금액 (부가세 포함, 원)" className={lightOnlyField}><TextInput inputMode="numeric" value={editAmount} onChange={(e) => setEditAmount(e.target.value)} light /></Field>
+                        <Field id="ed-phone" label="연락처 (비우면 기록만)" className={lightOnlyField}><TextInput value={editPhone} onChange={(e) => setEditPhone(e.target.value)} light /></Field>
+                        <Field id="ed-email" label="이메일 (적으면 안내 메일이 가요)" className={lightOnlyField}><TextInput value={editEmail} onChange={(e) => setEditEmail(e.target.value)} light /></Field>
+                        <p className="col-span-2 text-xs text-gray-500">입금 확인 전의 예약만 고칠 수 있어요. 결제 기록이 생긴 뒤에는 바꾸지 않아요.</p>
+                        <div className="col-span-2 flex gap-2">
+                          <Button light size="sm" disabled={busy || editName.trim() === ''} onClick={handleEditDetails}>저장</Button>
+                          <Button light variant="weak" size="sm" disabled={busy} onClick={() => setEditOpen(false)}>닫기</Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <Button light variant="weak" size="sm" disabled={busy} onClick={() => setEditOpen(true)}>고객 정보·금액 수정</Button>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div>
