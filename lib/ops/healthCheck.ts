@@ -464,6 +464,28 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
     console.error('[health] 결제 링크 일정 점검 실패 — 건너뜁니다', error instanceof Error ? error.message : String(error));
   }
 
+  /**
+   * 캘린더에서 자동 등록된 예약(lib/booking/calendarAutoImport.ts)이 고객·금액 확인 없이 입금 대기로 남아 있는 건 — 운영자가 예약 상세에서
+   * 고객 정보·금액을 채우고(또는 입금 확인) 마무리해야 한다. 이용 시작이 앞날인 것만 센다.
+   */
+  try {
+    const pendingImports = await db.all<{ order_id: string; customer_name: string; start_at: number }>(sql`
+      SELECT o.id AS order_id, o.customer_name, b.start_at FROM bookings b JOIN orders o ON o.id = b.order_id
+      WHERE o.status = 'awaiting_deposit' AND b.customer_note LIKE '%[캘린더 자동 등록]%' AND b.start_at >= ${Math.floor(now.getTime() / 1000)}
+      ORDER BY b.start_at LIMIT 20
+    `);
+    if (pendingImports.length > 0) {
+      issues.push({
+        severity: 'medium',
+        title: `캘린더에서 자동 등록된 예약 확인 필요 ${pendingImports.length}건`,
+        detail: `${pendingImports.map((r) => `${r.customer_name} — ${formatKst(new Date(Number(r.start_at) * 1000))}`).join('\n')}\n캘린더에 넣은 일정이 입금 대기 예약으로 자동 등록됐어요. 예약 상세의 “고객 정보·금액 수정”으로 연락처·금액을 채우고, 돈을 받았으면 “입금 확인”을 눌러 주세요.`,
+        href: '/admin/bookings',
+      });
+    }
+  } catch (error) {
+    console.error('[health] 자동 등록 예약 점검 실패 — 건너뜁니다', error instanceof Error ? error.message : String(error));
+  }
+
   const rotationPending = await checkFieldKeyRotationPending();
   if (rotationPending) issues.push(rotationPending);
 

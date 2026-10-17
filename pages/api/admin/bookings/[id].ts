@@ -8,6 +8,7 @@ import { cancelBookingWithRefund } from '../../../../lib/booking/cancel';
 import { sendBookingCancelledEmails, sendBookingConfirmedEmails } from '../../../../lib/booking/email';
 import { calendarForService, createBookingEvent, deleteBookingEvent, isCalendarActive } from '../../../../lib/booking/gcal';
 import { kstDateString } from '../../../../lib/booking/kst';
+import { updateAwaitingOrderDetails } from '../../../../lib/booking/manualEdit';
 import { deleteUnpaidCancelledOrder } from '../../../../lib/booking/deleteUnpaid';
 import { rescheduleBooking } from '../../../../lib/booking/reschedule';
 import { cancelAwaitingBookingDeposit, confirmBookingBankDeposit, deliverBookingDepositGuide, retryWaitingEventDelete } from '../../../../lib/booking/bankDeposit';
@@ -223,6 +224,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       } catch (error: unknown) {
         console.error('[API/admin/bookings/[id]] Resend notification failed:', error);
         return res.status(500).json({ ok: false, message: '알림 재발송에 실패했습니다.' });
+      }
+    }
+
+    if (body.action === 'update_details') {
+      try {
+        const result = await updateAwaitingOrderDetails(order.id, {
+          customerName: body.customerName, customerPhone: body.customerPhone, customerEmail: body.customerEmail, totalAmount: body.totalAmount,
+        });
+        if (!result.ok) return res.status(409).json({ ok: false, message: result.message });
+        return res.status(200).json({ ok: true, warnings: result.warnings });
+      } catch (error: unknown) {
+        console.error('[API/admin/bookings/[id]] update_details failed:', error);
+        return res.status(500).json({ ok: false, message: '수정에 실패했습니다.' });
       }
     }
 

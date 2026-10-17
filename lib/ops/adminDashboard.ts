@@ -24,6 +24,7 @@ import { countPendingPartnerPayouts } from '../partnerPayouts/store';
  * 그쪽 장애가 관리자 화면까지 막는다.
  */
 
+import { autoImportCalendarEvents } from '../booking/calendarAutoImport';
 import { syncLinkEventsFromCalendar } from '../payments/linkCalendar';
 import { loadUnlinkedCalendarEvents, type UnlinkedCalendarEvent } from './calendarImport';
 
@@ -116,7 +117,8 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
 
   // 캘린더 → 사이트: 운영자가 캘린더에서 옮기거나 지운 링크 일정을 먼저 주문에 반영한다(아래 "이번 주 세션" 조회가 그 값을 읽는다). 던지지 않는다.
   // 구글 응답이 느려도 첫 화면이 같이 느려지지 않게 3초까지만 기다린다(못 끝낸 동기화는 뒤에서 계속 돌고, 다음 열람에 반영된다).
-  const linkSync = syncLinkEventsFromCalendar(now).catch(() => undefined);
+  // 같은 자리에서 캘린더에 손으로 넣은 일정도 사이트 예약으로 자동 등록한다(lib/booking/calendarAutoImport.ts) — 아래 "캘린더에만 있는 일정" 카드는 자동으로 못 가져온 것만 남는다.
+  const linkSync = Promise.all([syncLinkEventsFromCalendar(now).catch(() => undefined), autoImportCalendarEvents(now).catch(() => undefined)]);
   // 응답을 보낸 뒤에도 끝까지 돌게 등록한다 — 서버리스는 응답 후 대기 중 작업을 멈출 수 있다.
   try {
     waitUntil(linkSync);

@@ -184,6 +184,17 @@ const insertFundingPledge = async (over: Record<string, unknown> = {}) => {
 const titles = async (): Promise<string[]> => (await runHealthCheck(NOW)).issues.map((i) => i.title);
 
 describe('운영 점검', () => {
+  it('캘린더에서 자동 등록돼 입금 대기로 남은 앞날 예약은 확인 필요로 알린다', async () => {
+    await insertOrder({ id: 'oa', order_no: 'SNB-oa', manage_token: 'tok-oa', status: 'awaiting_deposit', customer_name: '조희정' });
+    await insertBooking({ id: 'ba', order_id: 'oa', status: 'pending', customer_note: '[캘린더 자동 등록] 조희정 녹음 — 고객·금액을 확인해 주세요', start_at: EPOCH('2026-09-20T05:00:00Z'), end_at: EPOCH('2026-09-20T08:00:00Z') });
+    await insertOrder({ id: 'ob', order_no: 'SNB-ob', manage_token: 'tok-ob', status: 'awaiting_deposit', customer_name: '일반입금대기' });
+    await insertBooking({ id: 'bb', order_id: 'ob', status: 'pending', customer_note: null, start_at: EPOCH('2026-09-21T05:00:00Z'), end_at: EPOCH('2026-09-21T08:00:00Z') });
+    const issue = (await runHealthCheck(NOW)).issues.find((i) => i.title.startsWith('캘린더에서 자동 등록된 예약'));
+    expect(issue?.title).toBe('캘린더에서 자동 등록된 예약 확인 필요 1건');
+    expect(issue?.detail).toContain('조희정');
+    expect(issue?.detail).not.toContain('일반입금대기');
+  });
+
   it('결제 링크: 품목명에 일시가 있는데 이용 일시가 없으면 긴급, 일정이 앞인데 캘린더가 없으면 알린다', async () => {
     const link = async (id: string, itemName: string, sessionAt: number | null, eventId: string | null) => {
       await insertOrder({ id, order_no: `SNB-${id}`, manage_token: `tok-${id}`, type: 'deposit', created_at: EPOCH('2026-09-08'), updated_at: EPOCH('2026-09-08') });

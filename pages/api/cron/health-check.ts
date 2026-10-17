@@ -9,6 +9,7 @@
  */
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { autoImportCalendarEvents } from '../../../lib/booking/calendarAutoImport';
 import { isCronAuthorized } from '../../../lib/cron/auth';
 import { sendEmail } from '../../../lib/email/resend';
 import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
@@ -25,6 +26,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    // 캘린더에 손으로 넣은 일정을 사이트에 자동 등록한다(대시보드를 안 연 날도). 실패해도 점검은 계속한다.
+    await autoImportCalendarEvents().catch((error: unknown) => console.error('[cron/health-check] 캘린더 자동 등록 실패', error));
+
     const report = await runHealthCheck();
 
     // 이상이 없으면 아무것도 보내지 않는다. 매일 "정상입니다"를 보내면 사람이 곧 안 읽게
