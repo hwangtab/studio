@@ -1,7 +1,7 @@
 /**
  * 계약서 PDF의 Blob **경로**(`contracts/<id>.pdf`).
  *
- * `contracts.pdf_url`에는 업로드 때 받은 전체 주소가 들어 있다 — 호스트가 곧 Blob 저장소 ID다
+ * `contracts.pdf_url`에는 2026-10-17 전까지 업로드 때 받은 전체 주소가 들어갔다(지금은 경로) — 호스트가 곧 Blob 저장소 ID다
  * (`<store>.private.blob.vercel-storage.com`). 주소로 읽고·지우고·비교하면 저장소를 옮기는 순간
  * 세 곳이 함께 틀어진다.
  *
