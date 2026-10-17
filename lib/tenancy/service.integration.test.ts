@@ -183,6 +183,15 @@ describe('importTenancySheet', () => {
     expect((await one(`SELECT deposit_amount FROM room_tenancies WHERE tenant_name = '조현정'`))?.deposit_amount).toBeNull();
     expect(openPrivate(row?.private_enc as string)).toMatchObject({ phone: '010-5696-0000', gender: '여' });
     expect(await importTenancySheet(SHEET)).toMatchObject({ created: 0, skippedExisting: 2 });
-    expect(await one(`SELECT COUNT(*) AS n FROM room_tenancy_payments`)).toEqual({ n: 2 });
+    // 감사: 시간제 방(R02)은 가져오기에서도 거절하고, 같은 이름의 다른 방 계약 연락처는 쓰지 않는다.
+    const banned = await importTenancySheet(SHEET.replace('R05,,X,아이맥,조현정', 'R02,,X,아이맥,김민수').replace('2026-10-14', '2026-10-15'));
+    expect(banned.problems.join()).toContain('R02');
+    await mockDb.insert(schema.contracts).values({
+      id: 'c2', title: '다른 방', customerName: '박동명', customerEmail: 'x@y.z', customerPhone: '010-9999-0000', roomNumber: 'R09',
+      startDate: new Date('2026-10-14'), endDate: new Date('2027-10-13'), monthlyRent: 1, depositAmount: 1, content: 'x', status: 'signed', signToken: 'tok-c2', expiresAt: new Date('2099-01-01'),
+    });
+    const other = await importTenancySheet(SHEET.replace('R05,,X,아이맥,조현정', 'R06,,X,아이맥,박동명').replace('2026-10-14', '2026-10-16'));
+    expect(other.phoneFilledFromContract).toEqual([]);
+    expect(await one(`SELECT COUNT(*) AS n FROM room_tenancy_payments`)).toEqual({ n: 3 }); // 처음 두 건 + 위 박동명 가져오기(R02는 거절돼 0건)
   });
 });

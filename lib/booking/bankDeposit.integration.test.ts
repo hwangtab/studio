@@ -120,6 +120,18 @@ describe('예약 계좌 입금 — 시간대 점유', () => {
   });
 });
 
+describe('예약 계좌 입금 — 이미 지난 세션의 입금 확인', () => {
+  it('확정은 하되 고객에게 "예약이 확정됐어요" 메일은 보내지 않는다', async () => {
+    const bank = await createBank();
+    const order = await orderOf(bank.orderNo);
+    const later = new Date(NOW.getTime() + 400 * 86_400_000); // 예약 시각이 한참 지난 뒤
+    const r = await confirmBookingBankDeposit({ orderId: String(order!.id), now: later });
+    expect(r).toMatchObject({ ok: true });
+    expect((await orderOf(bank.orderNo))?.status).toBe('paid');
+    expect(sendBookingConfirmedEmails).not.toHaveBeenCalledWith(expect.objectContaining({ customerEmail: 'bank@example.com' }), expect.anything());
+  });
+});
+
 describe('예약 계좌 입금 — 입금 확인', () => {
   it('한 번만 확정하고, 결제 행을 남기고, 예약을 confirmed로·확정 메일·캘린더를 토스와 같은 후처리로 돈다', async () => {
     const bank = await createBank();

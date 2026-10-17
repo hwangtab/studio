@@ -53,6 +53,7 @@ type Parsed = { ok: true; value: ManualBookingInput } | { ok: false; message: st
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const MAX_AMOUNT = 100_000_000;
 export const MIN_AMOUNT = 1_000;
+export const LEFTOVER_ORIGINAL_MARK = '[원본 일정이 남아 있음: ';
 
 const fail = (message: string): Parsed => ({ ok: false, message });
 
@@ -146,17 +147,26 @@ export const createManualBooking = async (
 ): Promise<ManualBookingOutcome> => {
   const warnings: string[] = [];
   const adoptEventId = input.kind === 'session' ? (opts.adoptEventId ?? null) : null;
+  // 남은 원본 일정의 id를 예약 메모에 적어 둔다 — 안 그러면 그 예약을 취소·옮긴 뒤 다음 자동 등록이 남은 원본을 새 예약으로 다시 만든다.
+  // 감지(`loadUnlinkedCalendarEvents`)가 이 표시를 읽어 그 일정을 건너뛰고, 운영 점검이 "원본 일정 남음"으로 알린다(`LEFTOVER_ORIGINAL_MARK`).
+  const markLeftoverOriginal = async (orderId: string): Promise<void> => {
+    await getDb()
+      .run(sql`UPDATE bookings SET customer_note = substr(coalesce(customer_note, '') || ${` ${LEFTOVER_ORIGINAL_MARK}${adoptEventId}]`}, 1, 700) WHERE order_id = ${orderId}`)
+      .catch(() => undefined);
+  };
   const releaseAdoptedEvent = async (orderId: string): Promise<void> => {
     if (!adoptEventId) return;
     // 사이트가 자기 일정을 새로 올리지 못했으면(구글 오류는 삼켜진다) 원본을 지우지 않는다 — 지우면 그 시간이 캘린더에서 사라지고 실패 기록도 없다.
     const row = await getDb().all<{ gcal_event_id: string | null }>(sql`SELECT gcal_event_id FROM bookings WHERE order_id = ${orderId} LIMIT 1`);
     if (!row[0]?.gcal_event_id && isCalendarActive('studio')) {
       warnings.push('새 캘린더 일정을 올리지 못해 캘린더의 원래 일정을 그대로 두었어요. 예약 상세에서 “캘린더 재시도” 뒤 원래 일정을 직접 지워 주세요.');
+      await markLeftoverOriginal(orderId);
       return;
     }
     try {
       await deleteBookingEvent(adoptEventId, 'studio');
     } catch (error) {
+      await markLeftoverOriginal(orderId);
       console.error('[manual-booking] 가져온 캘린더 원본 일정 삭제 실패', { adoptEventId, error: error instanceof Error ? error.message : String(error) });
       warnings.push('캘린더의 원래 일정을 지우지 못했어요. 같은 시간에 일정이 두 개 보이면 원래 것을 직접 지워 주세요.');
     }

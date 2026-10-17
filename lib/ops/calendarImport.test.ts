@@ -18,7 +18,7 @@ describe('loadUnlinkedCalendarEvents', () => {
 
   it('사이트가 올린 일정(id 연결·주문번호 줄)은 거르고 나머지만 돌려준다', async () => {
     mockList.mockResolvedValue([ev('a'), ev('b'), ev('c', { description: '주문번호: SNB-1' }), ev('d', { allDay: true })]);
-    mockAll.mockResolvedValueOnce([{ id: 'a' }]).mockResolvedValueOnce([]);
+    mockAll.mockResolvedValueOnce([{ id: 'a' }]).mockResolvedValueOnce([]).mockResolvedValueOnce([]);
     const { events, error } = await loadUnlinkedCalendarEvents(new Date(), new Date());
     expect(error).toBeNull();
     expect(events.map((e) => e.id)).toEqual(['b', 'd']);
@@ -28,9 +28,16 @@ describe('loadUnlinkedCalendarEvents', () => {
 
   it('"바쁨 아님"으로 표시한 일정은 예약이 아니므로 목록에 올리지 않는다', async () => {
     mockList.mockResolvedValue([ev('free', { transparent: true }), ev('busy')]);
-    mockAll.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
+    mockAll.mockResolvedValueOnce([]).mockResolvedValueOnce([]).mockResolvedValueOnce([]);
     const { events } = await loadUnlinkedCalendarEvents(new Date(), new Date());
     expect(events.map((e) => e.id)).toEqual(['busy']);
+  });
+
+  it('원본 일정을 못 지운 예약의 메모에 id가 있으면 그 일정은 다시 가져오지 않는다', async () => {
+    mockList.mockResolvedValue([ev('stuck'), ev('fresh')]);
+    mockAll.mockResolvedValueOnce([]).mockResolvedValueOnce([]).mockResolvedValueOnce([{ note: '[캘린더 자동 등록] x [원본 일정이 남아 있음: stuck]' }]);
+    const { events } = await loadUnlinkedCalendarEvents(new Date(), new Date());
+    expect(events.map((e) => e.id)).toEqual(['fresh']);
   });
 
   it('캘린더 실패는 던지지 않고 error를 돌려준다', async () => {

@@ -486,6 +486,24 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
     console.error('[health] 자동 등록 예약 점검 실패 — 건너뜁니다', error instanceof Error ? error.message : String(error));
   }
 
+  /** 캘린더에서 자동 등록하면서 원본 일정을 못 지운 예약 — 캘린더에 같은 시간 일정이 둘 보인다(감사 2026-10-18). */
+  try {
+    const leftover = await db.all<{ customer_name: string; note: string }>(sql`
+      SELECT o.customer_name, b.customer_note AS note FROM bookings b JOIN orders o ON o.id = b.order_id
+      WHERE b.customer_note LIKE '%[원본 일정이 남아 있음:%' AND b.status IN ('pending', 'confirmed') AND b.start_at >= ${Math.floor(now.getTime() / 1000)} LIMIT 20
+    `);
+    if (leftover.length > 0) {
+      issues.push({
+        severity: 'medium',
+        title: `캘린더에 원본 일정이 남은 예약 ${leftover.length}건`,
+        detail: `${leftover.map((r) => r.customer_name).join(', ')}\n사이트에 예약은 만들어졌지만 캘린더의 원래 일정을 지우지 못했습니다. 같은 시간에 일정이 둘 보이면 원래 것을 직접 지워 주세요.`,
+        href: '/admin/bookings',
+      });
+    }
+  } catch (error) {
+    console.error('[health] 원본 일정 잔존 점검 실패 — 건너뜁니다', error instanceof Error ? error.message : String(error));
+  }
+
   const rotationPending = await checkFieldKeyRotationPending();
   if (rotationPending) issues.push(rotationPending);
 

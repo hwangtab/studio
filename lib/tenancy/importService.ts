@@ -1,8 +1,9 @@
-import { desc, eq } from 'drizzle-orm';
+import { and, desc, eq } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { contracts, roomTenancies } from '../../db/schema';
 import { parseTenancySheet } from './importCsv';
+import { NON_TENANCY_ROOMS } from './rules';
 import { createTenancy } from './service';
 
 /**
@@ -27,9 +28,15 @@ export const importTenancySheet = async (csv: string): Promise<ImportSummary> =>
     const key = `${row.input.roomNumber ?? 'V'}|${row.input.tenantName}|${row.input.startDate}`;
     if (seen.has(key)) { summary.skippedExisting += 1; continue; }
     const input = { ...row.input };
+    // 시간제 방(R02)·컨트롤룸(R03)은 월 입주로 받지 않는다 — 등록 화면과 같은 규칙이다(가져오기가 검증을 건너뛰면 시간제 예약과 겹친다).
+    if (input.roomNumber && NON_TENANCY_ROOMS[input.roomNumber]) {
+      summary.problems.push(`${input.roomNumber} ${input.tenantName}: ${NON_TENANCY_ROOMS[input.roomNumber]}`);
+      continue;
+    }
     if (row.needsPhoneLookup) {
       const found = await db.select({ id: contracts.id, phone: contracts.customerPhone }).from(contracts)
-        .where(eq(contracts.customerName, input.tenantName)).orderBy(desc(contracts.createdAt)).limit(1);
+        // 이름만으로 찾으면 동명이인(다른 종류의 계약)의 연락처가 들어온다 — 같은 방의 계약만 쓴다.
+        .where(and(eq(contracts.customerName, input.tenantName), eq(contracts.roomNumber, input.roomNumber ?? ''))).orderBy(desc(contracts.createdAt)).limit(1);
       if (found[0]) {
         input.private = { ...input.private, phone: found[0].phone };
         input.contractId = found[0].id;
