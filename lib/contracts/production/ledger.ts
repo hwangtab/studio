@@ -163,7 +163,11 @@ export interface ProductionLedger {
   stages: StageState[];
   /** 곡마다: 1차 완성본 수령(마지막 수령·교체), 녹음 세션 마침, 보정 전달. */
   songs: Array<{ sourceReceivedAt: Date | null; recordingCompleted: boolean; tuningDelivered: boolean }>;
-  refund: { lines: RefundLine[]; deduction: number; refundable: number };
+  /**
+   * 해지 정산. `extras`는 동의한 추가 비용(제6조)과 무료 횟수를 넘은 수정 요금 — 이미 쓴 실비·이행한 수정이라
+   * 해지해도 돌려주지 않는다(운영자 결정 2026-10-18). `deduction`은 항목표 공제 + extras.
+   */
+  refund: { lines: RefundLine[]; extras: number; deduction: number; refundable: number };
   unresponsive: { since: Date | null; days: number; exceeded: boolean };
   todos: Todo[];
 }
@@ -333,7 +337,8 @@ export const computeProductionLedger = (input: {
     const ratio = kickedOff ? itemRatio(item.milestones) : 0;
     return { key: item.key, label: item.label, amount: item.amount, ratio, deducted: Math.round(item.amount * ratio) };
   });
-  const deduction = lines.reduce((sum, line) => sum + line.deducted, 0);
+  const refundExtras = extraCosts + revisionFees;
+  const deduction = lines.reduce((sum, line) => sum + line.deducted, 0) + refundExtras;
 
   // ── 의뢰인 무응답(제10조 5항) ────────────────────────────────────────────
   const lastContact = last(of('client_contacted'));
@@ -376,7 +381,7 @@ export const computeProductionLedger = (input: {
     },
     stages,
     songs,
-    refund: { lines, deduction, refundable: Math.max(0, received - deduction) },
+    refund: { lines, extras: refundExtras, deduction, refundable: Math.max(0, received - deduction) },
     unresponsive: {
       since: unresponsiveSince,
       days: unresponsiveDays,
@@ -427,6 +432,13 @@ const buildTodos = (ledger: ProductionLedger, terms: ProductionTerms, today: num
 
   if (findStage(ledger, 'mastering')?.approved && payments.paidInFull && !work.finalDeliveredAt) {
     todos.push({ severity: 'info', message: '마스터링 승인과 잔금 입금이 끝났어요. 최종 파일을 인도해 주세요.' });
+  }
+  if (work.finalDeliveredAt) {
+    // 완료일이 개인정보 보관 3년의 기산점이다(제13조) — 완료 처리를 하지 않으면 파기 시계가 돌지 않는다.
+    todos.push({
+      severity: 'warn',
+      message: '최종 파일을 인도했어요. 일이 다 끝났으면 "완료 처리"를 눌러 주세요 — 완료일부터 3년 뒤 개인정보를 파기해요(제13조).',
+    });
   }
   if (work.delayExceeded && !work.finalDeliveredAt) {
     todos.push({

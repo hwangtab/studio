@@ -192,6 +192,27 @@ describe('해지 정산(제10조 3항 — 운영자 결정 경계)', () => {
     expect(deducted).toEqual({ arrangement: 500_000, recording: 200_000, tuning: 0, mixmaster: 200_000, planning: 30_000 });
   });
 
+  it('동의한 추가 비용과 무료 횟수를 넘은 수정 요금은 해지해도 돌려주지 않는다', () => {
+    const base = [
+      ev('payment_received', '2026-11-03T09:00:00', { amount: terms.amount.deposit }),
+      ev('kickoff', '2026-11-05T09:00:00'),
+      ev('stage_delivered', '2026-11-10T09:00:00', { stage: 'arrangement' }),
+    ];
+    const without = ledgerAt('2026-11-20T09:00:00', base);
+    const withExtra = ledgerAt('2026-11-20T09:00:00', [
+      ...base,
+      ev('extra_cost_agreed', '2026-11-12T09:00:00', { amount: 300_000, data: { note: '세션 실비' } }),
+      ev('payment_received', '2026-11-13T09:00:00', { amount: 300_000 }),
+    ]);
+    expect(withExtra.refund.extras).toBe(300_000);
+    expect(withExtra.refund.refundable).toBe(without.refund.refundable);
+  });
+
+  it('최종 파일을 인도하면 완료 처리를 할 일로 올린다(개인정보 보관 기산점)', () => {
+    const ledger = ledgerAt('2026-12-20T09:00:00', [ev('final_delivered', '2026-12-18T09:00:00')]);
+    expect(ledger.todos.map((t) => t.message)).toContainEqual(expect.stringContaining('완료 처리'));
+  });
+
   it('공제액이 받은 금액보다 커도 추가로 청구하지 않는다 — 환불 0원', () => {
     const ledger = ledgerAt('2026-12-20T09:00:00', [
       ev('payment_received', '2026-11-03T09:00:00', { amount: 575_000 }),

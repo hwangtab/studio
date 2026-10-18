@@ -1,4 +1,4 @@
-import { and, eq, exists, gt, inArray, isNull, not, or, sql } from 'drizzle-orm';
+import { and, eq, exists, gt, isNull, not, or, sql } from 'drizzle-orm';
 import type { drizzle } from 'drizzle-orm/libsql';
 
 import type * as schema from '../../../db/schema';
@@ -114,9 +114,8 @@ export const buildFinalizeStatement = (
     .where(
       and(
         eq(productionContracts.id, input.contractId),
-        // 만료로 내려간 계약도 받는다 — 서명은 만료 전에만 기록되므로(위 contractAwaitingSignature), 서명자가 모두
-        // 서명했다면 성립 직전에 만료 처리와 겹친 것이다.
-        inArray(productionContracts.status, ['sent', 'expired']),
+        eq(productionContracts.status, 'sent'),
+        isNull(productionContracts.purgedAt),
         not(
           exists(
             db

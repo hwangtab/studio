@@ -36,7 +36,10 @@ jest.mock('../admin-rate-limit', () => ({
   resetIdentityAttempts: jest.fn().mockResolvedValue(undefined),
 }));
 
+jest.mock('../admin-auth', () => ({ authenticateAdminApi: jest.fn().mockResolvedValue({ ok: true, actor: 'kyungha' }) }));
+
 import progressHandler from '../../../pages/api/contracts/production/[id]/progress';
+import adminContractHandler from '../../../pages/api/contracts/production/[id]';
 import { createProductionContract, expireOverdueProductionContracts, sendProductionContract } from './service';
 import { completeStalledProductionContract } from './finalize';
 import { loadProgressContext, recordProgressEvent, runProductionDeadlines, sendEventNotice } from './progress';
@@ -94,6 +97,16 @@ const record = async (id: string, event: EventInput) => {
 const approveMixing = async (id: string) => {
   await record(id, input({ type: 'stage_delivered', stage: 'mixing' }));
   await record(id, input({ type: 'stage_approved', stage: 'mixing', data: { mode: 'proxy' } }));
+};
+
+const callAdmin = async (id: string, body: Record<string, unknown>) => {
+  const res: Record<string, jest.Mock> = {};
+  res.status = jest.fn().mockReturnValue(res);
+  res.json = jest.fn().mockReturnValue(res);
+  res.setHeader = jest.fn().mockReturnValue(res);
+  const req = { method: 'PATCH', query: { id }, headers: {}, socket: {}, body } as unknown as NextApiRequest;
+  await adminContractHandler(req, res as unknown as NextApiResponse);
+  return { status: res.status.mock.calls[0][0] as number, body: res.json.mock.calls[0][0] };
 };
 
 const callProgress = async (id: string, body: Record<string, unknown>, cookie = '') => {
@@ -433,5 +446,82 @@ describe('서명 뒤 성립이 멈춘 계약', () => {
     const after = await mockDb.query.productionContracts.findFirst({ where: (t, { eq }) => eq(t.id, id) });
     expect(after).toMatchObject({ status: 'signed', signedAt });
     expect(after!.contentHash).toBeTruthy();
+  });
+});
+
+describe('두 번째 점검(2026-10-18)', () => {
+  it('옛 결과물에 대한 승인은 그 사이 새 결과물이 나갔으면 받지 않는다', async () => {
+    const { id } = await signedContract(new Date());
+    const first = await record(id, input({ type: 'stage_delivered', stage: 'mixing' }));
+    await record(id, input({ type: 'revision_requested', stage: 'mixing', data: { note: '보컬 크게' } }));
+    await record(id, input({ type: 'stage_delivered', stage: 'mixing' }));
+    const stale = await recordProgressEvent(
+      id,
+      input({ type: 'stage_approved', stage: 'mixing', data: { mode: 'explicit', deliveryEventId: first.id } }),
+      { actor: 'client', ip: null },
+    );
+    expect(stale).toMatchObject({ ok: false, status: 409 });
+    expect(findStage((await loadProgressContext(id))!.ledger, 'mixing')!.approved).toBeNull();
+  });
+
+  it('통지가 나가지 않은 결과물에는 간주 승인을 기록하지 않는다(크론이 읽은 뒤 바뀐 경우)', async () => {
+    const { id } = await signedContract(kst('2026-11-02T10:00:00'));
+    mockSendEmail.mockResolvedValueOnce({ ok: false, errorCode: 'UNDELIVERABLE_ADDRESS' });
+    const delivery = await record(id, input({ type: 'stage_delivered', stage: 'arrangement', occurredAt: kst('2026-11-10T09:00:00') }));
+    const deemed = await recordProgressEvent(
+      id,
+      input({ type: 'stage_approved', stage: 'arrangement', occurredAt: kst('2026-11-18T00:00:00'), data: { mode: 'deemed', deliveryEventId: delivery.id } }),
+      { actor: 'system', ip: null },
+    );
+    expect(deemed).toMatchObject({ ok: false, status: 409 });
+  });
+
+  it('파기된 계약·만료된 계약은 성립을 잇지 않는다', async () => {
+    const { id } = await createProductionContract({
+      kind: 'single',
+      title: '파기된 계약',
+      clientName: '홍길동',
+      clientStageName: null,
+      clientEmail: 'g@example.com',
+      clientPhone: '010-1234-5678',
+      guardian: null,
+      terms: buildDefaultProductionTerms('single', 1),
+    });
+    await sendProductionContract(id, { allowedStatuses: ['draft'], adminActor: 'kyungha', ipAddress: null, userAgent: 'jest' });
+    await client.execute({ sql: "UPDATE production_contract_signers SET status = 'signed', signed_at = 1700000000 WHERE contract_id = ?", args: [id] });
+    const load = () => mockDb.query.productionContracts.findFirst({ where: (t, { eq }) => eq(t.id, id), with: { signers: true } });
+
+    await client.execute({ sql: "UPDATE production_contracts SET status = 'expired' WHERE id = ?", args: [id] });
+    expect(await completeStalledProductionContract((await load())!)).toBe(false);
+
+    await client.execute({ sql: "UPDATE production_contracts SET status = 'sent', purged_at = unixepoch() WHERE id = ?", args: [id] });
+    expect(await completeStalledProductionContract((await load())!)).toBe(false);
+    expect((await load())!.status).toBe('sent');
+  });
+
+  it('해지한 계약은 잘못 넣은 기록의 무효 처리만 받는다', async () => {
+    const { id } = await signedContract(new Date());
+    await record(id, input({ type: 'payment_received', amount: 575_000 }));
+    const wrong = await record(id, input({ type: 'kickoff' }));
+    await client.execute({ sql: "UPDATE production_contracts SET status = 'terminated' WHERE id = ?", args: [id] });
+
+    expect(await recordProgressEvent(id, input({ type: 'note', data: { note: 'x' } }), admin)).toMatchObject({ ok: false });
+    expect(await recordProgressEvent(id, input({ type: 'void', voidsEventId: wrong.id, data: { reason: '착수 전이었다' } }), admin)).toMatchObject({ ok: true });
+    expect((await loadProgressContext(id))!.ledger.refund.refundable).toBe(575_000);
+  });
+
+  it('완료일은 체결일·최종 인도일보다 앞설 수 없다', async () => {
+    const { id } = await signedContract(kst('2026-10-01T10:00:00'));
+    await client.execute({ sql: "INSERT INTO production_contract_events (id, contract_id, seq, type, occurred_at, recorded_at, actor) VALUES ('fd1', ?, 1, 'final_delivered', ?, ?, 'admin:kyungha')", args: [id, Math.floor(kst('2026-10-10T10:00:00').getTime() / 1000), Math.floor(Date.now() / 1000)] });
+
+    expect((await callAdmin(id, { action: 'complete', closedOn: '2025-10-10' })).status).toBe(400);
+    expect((await callAdmin(id, { action: 'complete', closedOn: '2026-10-05' })).status).toBe(400);
+    expect((await callAdmin(id, { action: 'complete', closedOn: '2026-10-10' })).status).toBe(200);
+  });
+
+  it('파기된 계약에는 체결 메일을 다시 보내지 않는다', async () => {
+    const { id } = await signedContract(new Date());
+    await client.execute({ sql: "UPDATE production_contracts SET status = 'completed', purged_at = unixepoch() WHERE id = ?", args: [id] });
+    expect((await callAdmin(id, { action: 'resend-signed' })).status).toBe(409);
   });
 });

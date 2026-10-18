@@ -15,7 +15,7 @@ import {
   encryptRefundAccountNumber,
   loadRefundAccountSummary,
   safeDbErrorSummary,
-  saveRefundAccount,
+  saveRefundAccountIfAbsent,
   validateRefundAccount,
 } from '../../../../../lib/payments/refundAccount';
 
@@ -106,14 +106,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.error('[API/contracts/production/progress] Refund account encryption unavailable');
         return res.status(503).json({ ok: false, message: '지금은 계좌를 받을 수 없어요. 010-4255-7893으로 연락해 주세요.' });
       }
+      let saved: boolean;
       try {
-        await saveRefundAccount(
+        saved = await saveRefundAccountIfAbsent(
           { kind: 'production', orderNo: id },
           { bankName: account.value.bankName, accountNumberEnc, accountHolder: account.value.accountHolder, requestedAt: new Date() },
         );
       } catch (error: unknown) {
         console.error('[API/contracts/production/progress] Refund account save failed', safeDbErrorSummary(error));
         return res.status(500).json({ ok: false, message: '계좌를 저장하지 못했어요. 잠시 후 다시 시도해 주세요.' });
+      }
+      if (!saved) {
+        return res.status(409).json({ ok: false, message: '환불 계좌를 이미 받았어요. 바꾸려면 010-4255-7893으로 연락해 주세요.' });
       }
       return res.status(200).json({ ok: true });
     }

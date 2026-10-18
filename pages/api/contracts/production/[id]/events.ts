@@ -46,6 +46,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const context = await loadProgressContext(id);
       const event = context?.events.find((e) => e.id === body.eventId);
       if (!context || !event) return res.status(404).json({ ok: false, message: '기록을 찾을 수 없습니다.' });
+      // 진행 중 계약에만 — 해지·완료된 계약의 의뢰인은 진행 페이지에서 답할 수 없는데 기한이 적힌 메일이 나간다.
+      if (context.contract.status !== 'signed' || context.contract.purgedAt) {
+        return res.status(409).json({ ok: false, message: '진행 중인 계약에만 통지를 다시 보냅니다.' });
+      }
       if (!EVENT_SPEC[event.type].notifies) return res.status(409).json({ ok: false, message: '통지하지 않는 기록입니다.' });
       if (event.noticeStatus === 'sent') return res.status(409).json({ ok: false, message: '이미 통지가 나간 기록입니다.' });
       // 무효로 한 기록, 그리고 이미 다음 결과물·답이 나온 전달은 다시 알리지 않는다 — 지금 대기 중인 결과물이 아닌

@@ -169,7 +169,7 @@ const buildContent = (
         heading: `${stageName(terms, event.stage, event.song)} 단계가 승인됐어요`,
         paragraphs: [
           mode === 'deemed'
-            ? `${name}님, ${escapeHtml(stageName(terms, event.stage, event.song))} 결과물을 전달한 날부터 ${terms.deemedApprovalDays}일 동안 수정 요청이 없어 승인된 것으로 처리했어요(계약서 제5조 5항).`
+            ? `${name}님, ${escapeHtml(stageName(terms, event.stage, event.song))} 결과물 확인 기한(${terms.deemedApprovalDays}일)까지 수정 요청이 없어 승인된 것으로 처리했어요(계약서 제5조 5항).`
             : `${name}님, ${escapeHtml(stageName(terms, event.stage, event.song))} 단계 승인을 기록했어요.`,
         ],
         notices: balance,

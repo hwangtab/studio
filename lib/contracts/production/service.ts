@@ -466,11 +466,9 @@ export const finalizeProductionContractIfComplete = async (contractId: string, n
     where: eq(productionContracts.id, contractId),
     with: { signers: true },
   });
-  if (
-    !contract ||
-    (contract.status !== 'sent' && contract.status !== 'expired') ||
-    contract.signers.some((signer) => signer.status === 'pending')
-  ) {
+  // 만료 처리는 서명 대기 서명자가 남은 계약만 내리므로(expireOverdueProductionContracts), 모두 서명한 계약은
+  // 늘 'sent'에서 여기로 온다. 파기된 계약은 이을 본문이 없다.
+  if (!contract || contract.status !== 'sent' || contract.purgedAt || contract.signers.some((signer) => signer.status === 'pending')) {
     return false;
   }
 
