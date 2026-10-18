@@ -4,7 +4,7 @@ import { waitUntil } from '@vercel/functions';
 import { getDb } from '../../../../db/client';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { getClientIp } from '../../../../lib/contracts/client-ip';
-import { loadProgressContext } from '../../../../lib/contracts/production/progress';
+import { loadProgressContext, sendTerminationNotice } from '../../../../lib/contracts/production/progress';
 import { serializeProductionContractForAdmin } from '../../../../lib/contracts/production/serialize';
 import {
   cancelProductionContract,
@@ -20,6 +20,7 @@ import {
   type ProductionContractAction,
 } from '../../../../lib/contracts/production/status';
 import { kstDay as kstDayOf } from '../../../../lib/contracts/production/ledger';
+import { formatTerminationReason, isTerminationCause } from '../../../../lib/contracts/production/termination';
 import { validateProductionContractPayload } from '../../../../lib/contracts/production/validation';
 import { recordAdminPrivacyAccess } from '../../../../lib/privacy/accessLog';
 
@@ -164,16 +165,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return (await closeProductionContract(id, { kind: 'completed', at })) ? res.status(200).json({ ok: true }) : stale();
       }
 
-      const { reason } = body;
+      const { reason, cause } = body;
+      // 누구의 사정인지가 정산 조항을 가른다(제10조 3·4·5항) — 사유 글보다 먼저 받는다.
+      if (!isTerminationCause(cause)) {
+        return res.status(400).json({ ok: false, message: '해지 사유 구분(의뢰인 사정·의뢰인 무응답/지체·스튜디오 사정)을 골라 주세요.' });
+      }
       if (typeof reason !== 'string' || reason.trim() === '') {
         return res.status(400).json({ ok: false, message: '해지 사유를 입력해 주세요.' });
       }
       if (reason.length > 500) {
         return res.status(400).json({ ok: false, message: '해지 사유가 너무 깁니다.' });
       }
-      return (await closeProductionContract(id, { kind: 'terminated', at, reason: reason.trim() }))
-        ? res.status(200).json({ ok: true })
-        : stale();
+      const terminated = await closeProductionContract(id, {
+        kind: 'terminated',
+        at,
+        reason: formatTerminationReason(cause, reason.trim()),
+      });
+      if (!terminated) return stale();
+      waitUntil(sendTerminationNotice(id));
+      return res.status(200).json({ ok: true });
     } catch (error: unknown) {
       console.error(`[API/contracts/production/[id]] Action "${action}" failed:`, error);
       return res.status(500).json({ ok: false, message: '요청을 처리하지 못했습니다.' });

@@ -44,6 +44,12 @@ describe('제작 계약서 본문', () => {
     );
   });
 
+  it('제10조에 추가 비용·초과 수정 요금의 정산 규칙을 적는다 — 의뢰인 사정은 공제, 스튜디오 사정은 공제하지 않음', () => {
+    const content = buildProductionContent(base, template);
+    expect(content).toContain('의뢰인이 동의한 추가 비용(제6조) 및 이미 이행한 초과 수정의 요금(제5조 제3항)을 공제하고');
+    expect(content).toContain('이 경우 추가 비용과 초과 수정의 요금은 공제하지 않는다.');
+  });
+
   it('환불 항목표에 다섯 항목과 합계를 싣는다', () => {
     const content = buildProductionContent(base, template);
     expect(content).toContain('| 편곡 (제2조 2호) | 500,000원 |');

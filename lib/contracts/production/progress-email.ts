@@ -9,6 +9,7 @@ import { STAGE_LABEL, type ProductionStage } from './event-spec';
 import { deemedBaseDay, findStage, kstDayStart, parseEventData, songOf, type ProductionLedger, type Todo } from './ledger';
 import { productionAdminUrl } from './links';
 import { REVISION_STAGES, songLabel, type ProductionTerms, type RevisionStage } from './terms';
+import { TERMINATION_CAUSE_LABEL, TERMINATION_CLAUSE, type TerminationCause } from './termination';
 
 /**
  * 진행 통지 메일. 기록 하나에 메일 하나다 — 이 메일이 나갔다는 사실(notice_status = sent)이 "언제 알렸는가"의
@@ -56,6 +57,9 @@ const buildContent = (
   const linkRow: ContractEmailRow[] = data.link ? [{ label: '파일', value: data.link, href: data.link }] : [];
   const { payments, work } = ledger;
   const remaining = Math.max(0, payments.totalDue - payments.received);
+  const multi = terms.songs.length > 1;
+  /** 곡마다 일어나는 기록(1차 완성본·녹음)의 곡 이름 — 여러 곡이면 붙인다. 안 붙이면 같은 메일이 곡 수만큼 간다. */
+  const songPrefix = multi ? `${escapeHtml(songLabel(terms, songOf(event)))} ` : '';
 
   switch (event.type) {
     case 'payment_received':
@@ -73,13 +77,13 @@ const buildContent = (
     case 'source_received':
     case 'source_replaced':
       return {
-        subject: event.type === 'source_received' ? '1차 완성본을 받았어요' : '1차 완성본 교체를 기록했어요',
-        heading: event.type === 'source_received' ? '1차 완성본을 받았어요' : '1차 완성본 교체를 기록했어요',
+        subject: `${songPrefix}${event.type === 'source_received' ? '1차 완성본을 받았어요' : '1차 완성본 교체를 기록했어요'}`,
+        heading: `${songPrefix}${event.type === 'source_received' ? '1차 완성본을 받았어요' : '1차 완성본 교체를 기록했어요'}`,
         paragraphs: [
-          `${name}님, 보내 주신 1차 완성본을 받았어요.`,
+          `${name}님, 보내 주신 ${songPrefix}1차 완성본을 받았어요.`,
           event.type === 'source_replaced'
-            ? '1차 완성본을 바꾸면 작업 기간은 교체한 날부터 다시 셉니다(계약서 제4조 2항).'
-            : `작업 기간은 계약금 입금과 1차 완성본 수령이 모두 끝난 날부터 약 ${terms.workWeeks}주예요(계약서 제4조).`,
+            ? '1차 완성본을 바꾸면 작업 기간은 교체한 날부터 다시 계산해요(계약서 제4조 2항).'
+            : `작업 기간은 계약금 입금과 ${multi ? '모든 수록곡의 ' : ''}1차 완성본 수령이 모두 끝난 날부터 약 ${terms.workWeeks}주예요(계약서 제4조).`,
         ],
         rows: [...(work.dueOn ? [{ label: '작업 완료 예정', value: `${formatDate(work.dueOn)} 무렵` }] : []), ...linkRow, ...noteRow],
         ctaLabel: '작업 진행 보기',
@@ -124,16 +128,16 @@ const buildContent = (
         notices: [
           // 제5조 5항 — 이 문장이 빠진 전달 메일은 간주 승인의 근거가 되지 못한다.
           `<strong>${escapeHtml(lastDay)}까지 수정 요청이 없으면 이 단계는 승인된 것으로 봐요</strong>(계약서 제5조 5항, ${terms.deemedApprovalDays}일).`,
-          '수정 요청은 한 번에 정리해 보내 주시면 1회로 셉니다(계약서 제5조 2항).',
+          '수정 요청은 한 번에 정리해 보내 주시면 1회로 계산해요(계약서 제5조 2항).',
         ],
         ctaLabel: '확인하고 승인·수정 요청하기',
       };
     }
     case 'recording_completed':
       return {
-        subject: '보컬 녹음을 마쳤어요',
-        heading: '보컬 녹음을 마쳤어요',
-        paragraphs: [`${name}님, 보컬 녹음 세션을 마쳤어요. 다음은 음정·박자 보정과 믹싱이에요.`],
+        subject: `${songPrefix}보컬 녹음을 마쳤어요`,
+        heading: `${songPrefix}보컬 녹음을 마쳤어요`,
+        paragraphs: [`${name}님, ${songPrefix}보컬 녹음 세션을 마쳤어요. 다음은 음정·박자 보정과 믹싱이에요.`],
         rows: noteRow,
         ctaLabel: '작업 진행 보기',
       };
@@ -224,7 +228,7 @@ const buildContent = (
       return {
         subject: '발매됐어요',
         heading: '발매를 축하드려요',
-        paragraphs: [`${name}님, 곡이 발매됐어요.`],
+        paragraphs: [`${name}님, ${multi ? '음반이' : '곡이'} 발매됐어요.`],
         rows: noteRow,
         ctaLabel: '작업 진행 보기',
       };
@@ -234,7 +238,9 @@ const buildContent = (
         heading: '계약 해지 통지',
         paragraphs: [
           `${name}님, 음원 제작 용역 계약서 제10조 5항에 따라 계약 해지를 통지해요.`,
-          '정산은 계약서 제10조 3항의 항목표에 따라 진행한 작업분을 공제하고 남은 금액을 돌려드려요.',
+          work.kickedOff
+            ? '해지하면 계약서 제10조 3항에 따라 진행한 작업분과 동의한 추가 비용·이행한 초과 수정의 요금을 공제하고 남은 금액을 돌려드려요.'
+            : '아직 작업을 시작하기 전이라, 해지하면 받은 금액을 모두 돌려드려요(계약서 제10조 2항).',
         ],
         rows: [...noteRow, { label: '받은 금액', value: won(payments.received) }],
         ctaLabel: '작업 진행 보기',
@@ -322,7 +328,9 @@ export const sendDueReminderEmail = async (
           rows: [
             {
               label: reminder.kind === 'deposit_due' ? '계약금' : '남은 금액',
-              value: won(reminder.kind === 'deposit_due' ? terms.amount.deposit : remaining),
+              value: won(
+                reminder.kind === 'deposit_due' ? Math.max(0, terms.amount.deposit - ledger.payments.received) : remaining,
+              ),
               emphasis: true,
             },
             { label: '입금 계좌', value: `${terms.payment.bank} ${terms.payment.account} (예금주 ${terms.payment.holder})` },
@@ -339,6 +347,48 @@ export const sendDueReminderEmail = async (
       cta: { label: '작업 진행 보기', url: progressUrl },
     }),
     text: [...content.paragraphs.map((p) => p.replace(/<[^>]+>/g, '')), ...content.rows.map((r) => `${r.label}: ${r.value}`), '', progressUrl].join('\n'),
+  });
+};
+
+/**
+ * 해지 안내 — 해지 처리 직후 의뢰인에게 한 번. 어느 조항으로 정산하는지, 돌려받을 금액, 환불 계좌를 알려 줄 곳을
+ * 담는다. 환불 계좌는 진행 페이지에서만 받으므로 이 메일이 없으면 의뢰인이 그 사실을 알 길이 없다.
+ */
+export const sendTerminationEmail = async (
+  contract: ProductionContract,
+  ledger: ProductionLedger,
+  cause: TerminationCause,
+  progressUrl: string,
+): Promise<SendContractEmailResult> => {
+  const name = escapeHtml(contract.clientName);
+  const { refund, payments, work } = ledger;
+  const basis = !work.kickedOff
+    ? '아직 작업을 시작하기 전이라 받은 금액을 모두 돌려드려요(계약서 제10조 2항).'
+    : cause === 'studio'
+      ? '진행한 작업분만 공제하고 남은 금액을 돌려드려요(계약서 제10조 4항).'
+      : `진행한 작업분과 동의한 추가 비용·이행한 초과 수정의 요금을 공제하고 남은 금액을 돌려드려요(계약서 ${TERMINATION_CLAUSE[cause]}).`;
+  const paragraphs = [
+    `${name}님, 음원 제작 계약을 해지했어요(${escapeHtml(TERMINATION_CAUSE_LABEL[cause])}).`,
+    basis,
+    refund.refundable > 0
+      ? '<strong>진행 페이지에서 환불받을 계좌를 알려 주세요.</strong> 확인하는 대로 보내 드려요.'
+      : '돌려드릴 금액은 없어요.',
+  ];
+  const rows: ContractEmailRow[] = [
+    { label: '받은 금액', value: won(payments.received) },
+    { label: '공제', value: won(Math.min(refund.deduction, payments.received)) },
+    { label: '돌려받을 금액', value: won(refund.refundable), emphasis: true },
+  ];
+  return sendEmail({
+    to: contract.clientEmail,
+    subject: '[스튜디오 놀] 계약이 해지됐어요',
+    html: buildContractEmailHtml({
+      heading: '계약이 해지됐어요',
+      paragraphs,
+      rows,
+      cta: { label: refund.refundable > 0 ? '환불 계좌 알려 주기' : '진행 내용 보기', url: progressUrl },
+    }),
+    text: [...paragraphs.map((p) => p.replace(/<[^>]+>/g, '')), ...rows.map((r) => `${r.label}: ${r.value}`), '', progressUrl].join('\n'),
   });
 };
 

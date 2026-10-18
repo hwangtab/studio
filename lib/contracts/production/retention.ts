@@ -1,5 +1,5 @@
 import { del } from '@vercel/blob';
-import { and, eq, inArray, isNull, lt, or } from 'drizzle-orm';
+import { and, eq, inArray, isNull, lt, or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../../db/client';
 import { productionContractEvents, productionContracts, productionContractSigners, refundAccounts } from '../../../db/schema';
@@ -110,10 +110,15 @@ export const purgeExpiredProductionPersonalData = async (
               inArray(productionContractSigners.role, ['client', 'guardian']),
             ),
           ),
-        // 진행 기록은 종류·날짜·금액을 남기고(운영 기록), 메모·결과물 링크·수정 요청 내용(data_json)과 IP를 지운다.
+        // 진행 기록은 종류·날짜·금액과 승인 방식·정지 사유·근거 기록 같은 운영 값을 남기고, 사람이 쓴 글(메모·결과물
+        // 링크·수정 요청 내용·무효 사유)과 IP를 지운다. data_json을 통째로 비우면 간주 승인이 "대리 기록"으로 읽힌다.
         getDb()
           .update(productionContractEvents)
-          .set({ dataJson: null, actorIp: null, noticeError: null })
+          .set({
+            dataJson: sql`json_remove(${productionContractEvents.dataJson}, '$.note', '$.link', '$.reason')`,
+            actorIp: null,
+            noticeError: null,
+          })
           .where(eq(productionContractEvents.contractId, target.id)),
         // 해지 환불 계좌(결제 공용 표, 0072). 은행·예금주도 개인정보라 덮지 않고 행을 지운다(결제 쪽 파기와 같다).
         getDb()

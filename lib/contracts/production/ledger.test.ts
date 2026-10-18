@@ -162,12 +162,69 @@ describe('작업 기간(제4조)', () => {
 });
 
 describe('해지 정산(제10조 3항 — 운영자 결정 경계)', () => {
-  it('착수 전이면 받은 금액 전액을 돌려준다', () => {
+  it('착수 전이면 받은 금액 전액을 돌려준다 — 동의한 추가 비용이 있어도(제10조 2항)', () => {
+    const ledger = ledgerAt('2026-11-10T09:00:00', [
+      ev('payment_received', '2026-11-03T09:00:00', { amount: 575_000 }),
+      ev('extra_cost_agreed', '2026-11-04T09:00:00', { amount: 200_000, data: { note: '세션' } }),
+    ]);
+    expect(ledger.refund).toMatchObject({ extras: 0, deduction: 0, refundable: 575_000 });
+  });
+
+  it('착수 기록이 없어도 결과물을 전달했으면 착수한 것으로 본다(제10조 1항)', () => {
     const ledger = ledgerAt('2026-11-10T09:00:00', [
       ev('payment_received', '2026-11-03T09:00:00', { amount: 575_000 }),
       ev('stage_delivered', '2026-11-05T09:00:00', { stage: 'arrangement' }),
     ]);
-    expect(ledger.refund).toMatchObject({ deduction: 0, refundable: 575_000 });
+    expect(ledger.work.kickedOff).toBe(true);
+    expect(ledger.refund.deduction).toBeGreaterThan(0);
+  });
+
+  it('초과 수정 요금은 다시 전달까지 마친 수정만 공제한다', () => {
+    const base = [
+      ev('payment_received', '2026-11-03T09:00:00', { amount: 575_000 }),
+      ev('kickoff', '2026-11-04T09:00:00'),
+      ev('stage_delivered', '2026-11-05T09:00:00', { stage: 'mastering' }),
+      ev('revision_requested', '2026-11-06T09:00:00', { stage: 'mastering' }),
+      ev('stage_delivered', '2026-11-07T09:00:00', { stage: 'mastering' }),
+      ev('revision_requested', '2026-11-08T09:00:00', { stage: 'mastering' }),
+    ];
+    // 무료 1회 + 초과 1회 요청 — 초과분을 아직 다시 전달하지 않았다.
+    expect(ledgerAt('2026-11-09T09:00:00', base).refund.extras).toBe(0);
+    const redelivered = ledgerAt('2026-11-10T09:00:00', [...base, ev('stage_delivered', '2026-11-09T09:00:00', { stage: 'mastering' })]);
+    expect(redelivered.refund.extras).toBe(terms.extraRevisionFees.mastering);
+  });
+
+  it('스튜디오 사정 해지(제10조 4항)는 추가 비용·초과 수정 요금을 공제하지 않는다', () => {
+    const events = [
+      ev('payment_received', '2026-11-03T09:00:00', { amount: 875_000 }),
+      ev('kickoff', '2026-11-04T09:00:00'),
+      ev('extra_cost_agreed', '2026-11-05T09:00:00', { amount: 300_000, data: { note: '세션' } }),
+    ];
+    const client = computeProductionLedger({ terms, signedAt: SIGNED, events, now: kst('2026-11-10T09:00:00'), terminationCause: 'client' });
+    const studio = computeProductionLedger({ terms, signedAt: SIGNED, events, now: kst('2026-11-10T09:00:00'), terminationCause: 'studio' });
+    expect(client.refund.extras).toBe(300_000);
+    expect(studio.refund.extras).toBe(0);
+    expect(studio.refund.refundable).toBe(client.refund.refundableIfStudio);
+  });
+
+  it('계약금이 0원이면 체결로 계약금 조건이 채워진다', () => {
+    const free = { ...terms, amount: { ...terms.amount, deposit: 0, balance: terms.amount.total } };
+    const ledger = computeProductionLedger({
+      terms: free,
+      signedAt: SIGNED,
+      events: [ev('source_received', '2026-11-04T09:00:00')],
+      now: kst('2026-11-20T09:00:00'),
+    });
+    expect(ledger.payments.depositOverdueDays).toBe(0);
+    expect(ledger.work.startedOn).not.toBeNull();
+  });
+
+  it('연락 뒤 의뢰인이 입금하면 무응답으로 세지 않는다', () => {
+    const ledger = ledgerAt('2026-12-30T09:00:00', [
+      ev('client_contacted', '2026-11-10T09:00:00'),
+      ev('payment_received', '2026-11-11T09:00:00', { amount: 100_000 }),
+    ]);
+    expect(ledger.unresponsive.since).toBeNull();
   });
 
   it('착수 후 편곡 1차 시안 전달이면 편곡 전액 + 기획 30%를 공제한다', () => {

@@ -152,12 +152,14 @@ const isRevisionStage = (stage: ProductionStage | null): stage is RevisionStage 
  * 화면 버튼과 무관하게 서버가 판정한다. 의뢰인 진행 페이지의 승인·수정 요청도 같은 판정을 지난다.
  */
 export const checkEventAllowed = (
-  contract: Pick<ProductionContract, 'status'>,
+  contract: Pick<ProductionContract, 'status' | 'purgedAt'>,
   ledger: ProductionLedger,
   allEvents: readonly ProductionContractEvent[],
   input: EventInput,
 ): string | null => {
-  // 해지한 계약은 잘못 넣은 기록을 무효로 하는 것만 받는다 — 그 기록이 환불 정산을 바꾸기 때문이다.
+  if (contract.purgedAt) return '개인정보를 파기한 계약에는 기록하지 않습니다.';
+  // 해지한 계약은 잘못 넣은 기록을 무효로 하는 것만 받는다 — 그 기록이 환불 정산을 바꾸기 때문이다(송금을 마친
+  // 계약은 API가 막는다 — 보낸 금액과 화면의 금액이 갈린다).
   if (contract.status === 'terminated' && input.type === 'void') return checkVoid(allEvents, input);
   if (contract.status !== 'signed') return '진행 중(체결된) 계약에만 기록할 수 있습니다.';
   if (input.song !== null && input.song >= ledger.songs.length) return '계약에 없는 곡입니다.';
