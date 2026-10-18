@@ -11,6 +11,13 @@ export const productionSignPath = (contractId: string, token: string, locale = '
 export const productionCompletePath = (contractId: string, token: string, locale = 'ko'): string =>
   `/${locale}/contracts/production/${contractId}/complete?token=${encodeURIComponent(token)}`;
 
+/** 의뢰인 진행 페이지 — 진행 기록·결과물 링크·승인·수정 요청(연락처 뒷자리 확인 후 쿠키). */
+export const productionProgressPath = (contractId: string, token: string, locale = 'ko'): string =>
+  `/${locale}/contracts/production/${contractId}/progress?token=${encodeURIComponent(token)}`;
+
+export const buildProductionProgressUrl = (contractId: string, token: string): string =>
+  `${SITE_URL}${productionProgressPath(contractId, token)}`;
+
 export const buildProductionSignUrl = (contractId: string, token: string): string =>
   `${SITE_URL}${productionSignPath(contractId, token)}`;
 

@@ -109,3 +109,36 @@ describe('저장 형식', () => {
     expect(() => parseStoredTerms(JSON.stringify({ version: 2 }))).toThrow();
   });
 });
+
+describe('해지 정산 경계(제10조 3항)', () => {
+  it('기본 경계는 운영자 결정(2026-10-18)과 같다', () => {
+    const byKey = Object.fromEntries(buildDefaultProductionTerms().refundSchedule.map((item) => [item.key, item.milestones]));
+    expect(byKey).toEqual({
+      arrangement: [{ event: 'arrangement_delivered', ratio: 1 }],
+      recording: [{ event: 'recording_completed', ratio: 1 }],
+      tuning: [{ event: 'tuning_delivered', ratio: 1 }],
+      mixmaster: [{ event: 'mixing_delivered', ratio: 1 }],
+      planning: [
+        { event: 'kickoff', ratio: 0.3 },
+        { event: 'distribution_submitted', ratio: 1 },
+      ],
+    });
+  });
+
+  it('마지막 경계가 100%가 아니거나 내림차순이면 거부한다 — 정산을 끝낼 수 없는 표', () => {
+    const terms = clone();
+    terms.refundSchedule[4].milestones = [{ event: 'kickoff', ratio: 0.3 }];
+    expect(fields(terms)).toContain('terms.refundSchedule.planning.milestones');
+    terms.refundSchedule[4].milestones = [
+      { event: 'distribution_submitted', ratio: 1 },
+      { event: 'kickoff', ratio: 0.3 },
+    ];
+    expect(fields(terms)).toContain('terms.refundSchedule.planning.milestones');
+  });
+
+  it('모르는 사건 이름을 거부한다', () => {
+    const terms = clone() as unknown as { refundSchedule: Array<{ milestones: unknown }> };
+    terms.refundSchedule[0].milestones = [{ event: 'whenever', ratio: 1 }];
+    expect(fields(terms)).toContain('terms.refundSchedule.arrangement.milestones');
+  });
+});

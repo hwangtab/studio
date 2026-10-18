@@ -40,6 +40,10 @@
       "schedule": "0 2 * * *"
     },
     {
+      "path": "/api/cron/production-contract-deadlines",
+      "schedule": "0 1 * * *"
+    },
+    {
       "path": "/api/cron/expire-show-orders",
       "schedule": "30 18 * * *"
     },

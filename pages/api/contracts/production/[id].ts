@@ -4,6 +4,7 @@ import { waitUntil } from '@vercel/functions';
 import { getDb } from '../../../../db/client';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { getClientIp } from '../../../../lib/contracts/client-ip';
+import { loadProgressContext } from '../../../../lib/contracts/production/progress';
 import { serializeProductionContractForAdmin } from '../../../../lib/contracts/production/serialize';
 import {
   cancelProductionContract,
@@ -141,6 +142,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       if (action === 'complete') {
+        // 정상 종결은 최종 인도가 기록된 계약만. 인도 전에 완료로 닫으면 진행 기록을 더 남길 수 없고(기록은 진행 중
+        // 계약에만), 완료일이 개인정보 보관 기간의 기산점이라 그 시계도 작업이 끝나기 전에 돌기 시작한다.
+        const progress = await loadProgressContext(id);
+        if (!progress?.ledger.work.finalDeliveredAt) {
+          return res.status(409).json({ ok: false, message: '최종 파일 인도를 기록한 뒤에 완료 처리할 수 있습니다.' });
+        }
         return (await closeProductionContract(id, { kind: 'completed', at })) ? res.status(200).json({ ok: true }) : stale();
       }
 

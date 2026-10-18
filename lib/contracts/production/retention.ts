@@ -2,7 +2,7 @@ import { del } from '@vercel/blob';
 import { and, eq, inArray, isNull, lt, or } from 'drizzle-orm';
 
 import { getDb } from '../../../db/client';
-import { productionContracts, productionContractSigners } from '../../../db/schema';
+import { productionContractEvents, productionContracts, productionContractSigners } from '../../../db/schema';
 import { contractPdfPathname } from '../pdfPath';
 import { canonicalTermsJson, parseStoredTerms } from './terms';
 
@@ -108,6 +108,11 @@ export const purgeExpiredProductionPersonalData = async (
               inArray(productionContractSigners.role, ['client', 'guardian']),
             ),
           ),
+        // 진행 기록은 종류·날짜·금액을 남기고(운영 기록), 메모·결과물 링크·수정 요청 내용(data_json)과 IP를 지운다.
+        getDb()
+          .update(productionContractEvents)
+          .set({ dataJson: null, actorIp: null, noticeError: null })
+          .where(eq(productionContractEvents.contractId, target.id)),
       ]);
       purged += 1;
     } catch (error: unknown) {

@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import { getDb } from '../../../db/client';
 import { productionContracts } from '../../../db/schema';
 import { sendProductionOperatorNotification, sendProductionSignedEmail } from './email';
-import { buildProductionCompleteUrl } from './links';
+import { buildProductionCompleteUrl, buildProductionProgressUrl } from './links';
 import { renderProductionPdf, uploadProductionPdf } from './pdf-storage';
 import { recordProductionNotificationResult } from './service';
 import { parseStoredTerms } from './terms';
@@ -53,7 +53,7 @@ export const finalizeSignedProductionContract = async (contractId: string): Prom
   try {
     const terms = parseStoredTerms(contract.termsJson);
     const [clientResult, operatorResult] = await Promise.all([
-      sendProductionSignedEmail(contract, terms, pdf, completeUrl),
+      sendProductionSignedEmail(contract, terms, pdf, completeUrl, buildProductionProgressUrl(contract.id, clientSigner.signToken)),
       sendProductionOperatorNotification(contract, terms, true),
     ]);
     if (!clientResult.ok) problems.push(`체결 메일 발송 실패 (${clientResult.errorCode ?? 'UNKNOWN'})`);

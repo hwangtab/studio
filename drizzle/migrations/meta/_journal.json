@@ -498,6 +498,13 @@
       "when": 1792300581409,
       "tag": "0070_production_contracts",
       "breakpoints": true
+    },
+    {
+      "idx": 71,
+      "version": "6",
+      "when": 1792303996455,
+      "tag": "0071_production_contract_events",
+      "breakpoints": true
     }
   ]
 }

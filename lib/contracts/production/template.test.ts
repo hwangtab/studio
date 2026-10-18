@@ -32,8 +32,15 @@ describe('제작 계약서 본문', () => {
     expect(content).toContain('10일 이내에 의뢰인의 수정 요청이 없으면');
   });
 
-  it('제10조 3항에 편곡 완료 기준(1차 시안 전달)을 적는다 — 해지 정산의 계약상 근거', () => {
-    expect(buildProductionContent(base, template)).toContain('편곡(제2조 2호)은 스튜디오가 1차 시안을 전달한 때 완료된 것으로 본다');
+  it('제10조 3항에 항목별 작업분 경계를 적는다 — 해지 정산의 계약상 근거(운영자 결정 2026-10-18)', () => {
+    const content = buildProductionContent(base, template);
+    expect(content).toContain('편곡(제2조 2호)은 스튜디오가 편곡 1차 시안을 전달한 때 완료된 것으로 본다.');
+    expect(content).toContain('믹싱·마스터링(제2조 5호)은 스튜디오가 믹싱 1차 결과물을 전달한 때 완료된 것으로 본다.');
+    expect(content).toContain('보컬 녹음(제2조 3호)은 보컬 녹음 세션을 마친 때 완료된 것으로 본다.');
+    expect(content).toContain('보컬 음정·박자 보정(제2조 4호)은 스튜디오가 보정 결과물을 전달한 때 완료된 것으로 본다.');
+    expect(content).toContain(
+      '기획 상담·유통 등록·발매 홍보(제2조 1·6·7호)는 착수한 때 그 금액의 30%를, 유통 등록을 마친 때 전액을 작업분으로 본다.',
+    );
   });
 
   it('환불 항목표에 다섯 항목과 합계를 싣는다', () => {

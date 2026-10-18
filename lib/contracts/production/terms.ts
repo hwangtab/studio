@@ -22,11 +22,34 @@ export type RefundItemKey = (typeof REFUND_ITEM_KEYS)[number];
 export const REVISION_STAGES = ['arrangement', 'mixing', 'mastering'] as const;
 export type RevisionStage = (typeof REVISION_STAGES)[number];
 
+/**
+ * 해지 정산(제10조 3항)에서 "작업분"으로 보는 시점. 진행 기록(events)의 사건 이름과 같다 — 정산 계산
+ * (ledger.ts)이 이 이름으로 기록을 찾는다.
+ */
+export const REFUND_MILESTONE_EVENTS = [
+  'kickoff',
+  'arrangement_delivered',
+  'recording_completed',
+  'tuning_delivered',
+  'mixing_delivered',
+  'mastering_delivered',
+  'distribution_submitted',
+] as const;
+export type RefundMilestoneEvent = (typeof REFUND_MILESTONE_EVENTS)[number];
+
+/** 이 사건이 기록되면 그 항목 금액의 ratio만큼을 작업분으로 본다. 같은 항목의 경계는 비율 오름차순. */
+export interface RefundMilestone {
+  event: RefundMilestoneEvent;
+  ratio: number;
+}
+
 export interface RefundItem {
   key: RefundItemKey;
   /** 계약서 제10조 항목표에 그대로 인쇄된다. */
   label: string;
   amount: number;
+  /** 작업분으로 보는 경계. 마지막 경계의 ratio가 1이면 그때 그 항목이 완료다. */
+  milestones: RefundMilestone[];
 }
 
 export interface ProductionTerms {
@@ -82,6 +105,22 @@ const REFUND_LABELS: Record<RefundItemKey, string> = {
 const BUNDLE_SPLIT = { recording: 0.4, mixmaster: 0.4 } as const;
 
 /**
+ * 해지 정산 경계 — 운영자 결정(2026-10-18). 결과물이 나간 시점이면 그 작업의 대부분이 끝났다고 본다:
+ * 편곡은 1차 시안, 믹싱·마스터링은 믹싱 1차, 보정은 보정본을 전달한 때, 녹음은 세션을 마친 때 전액.
+ * 기획·유통·홍보는 착수(기획 상담) 때 30%, 유통 등록을 마친 때 전액.
+ */
+const DEFAULT_MILESTONES: Record<RefundItemKey, RefundMilestone[]> = {
+  arrangement: [{ event: 'arrangement_delivered', ratio: 1 }],
+  recording: [{ event: 'recording_completed', ratio: 1 }],
+  tuning: [{ event: 'tuning_delivered', ratio: 1 }],
+  mixmaster: [{ event: 'mixing_delivered', ratio: 1 }],
+  planning: [
+    { event: 'kickoff', ratio: 0.3 },
+    { event: 'distribution_submitted', ratio: 1 },
+  ],
+};
+
+/**
  * 초과 수정 요금(회당, 부가세 포함). 계약 전용 값이다 — 사이트에도 싣게 되면 data/pricing.ts로 올린다
  * (그쪽 가격 리터럴 스캔은 lib/를 보지 않는다).
  */
@@ -125,7 +164,12 @@ export const buildDefaultProductionTerms = (): ProductionTerms => {
     revisions: { arrangement: 2, mixing: 2, mastering: 1 },
     extraRevisionFees: { ...DEFAULT_EXTRA_REVISION_FEES },
     deemedApprovalDays: 7,
-    refundSchedule: REFUND_ITEM_KEYS.map((key) => ({ key, label: REFUND_LABELS[key], amount: amounts[key] })),
+    refundSchedule: REFUND_ITEM_KEYS.map((key) => ({
+      key,
+      label: REFUND_LABELS[key],
+      amount: amounts[key],
+      milestones: DEFAULT_MILESTONES[key].map((milestone) => ({ ...milestone })),
+    })),
     clientUnresponsiveDays: 30,
     paymentDelayDays: 14,
     studioDelayWeeks: 4,
@@ -197,6 +241,37 @@ export const validateProductionTerms = (raw: unknown): TermsValidation => {
   };
 
   const money = { min: 0, max: MAX_AMOUNT };
+
+  /**
+   * 경계는 하나 이상, 사건 이름은 정해진 것만, 비율은 0 초과 1 이하로 오름차순이고 마지막은 1이어야 한다 —
+   * 끝까지 가도 항목이 완료되지 않는 경계표는 정산을 끝낼 수 없다.
+   */
+  const readMilestones = (raw: unknown, field: string): RefundMilestone[] => {
+    if (!Array.isArray(raw) || raw.length === 0 || raw.length > 5) {
+      push(field, '정산 경계는 1~5개여야 합니다.');
+      return [];
+    }
+    const milestones: RefundMilestone[] = [];
+    for (const entry of raw) {
+      const event = isRecord(entry) ? entry.event : undefined;
+      const ratio = isRecord(entry) ? entry.ratio : undefined;
+      if (typeof event !== 'string' || !(REFUND_MILESTONE_EVENTS as readonly string[]).includes(event)) {
+        push(field, '알 수 없는 정산 경계입니다.');
+        return [];
+      }
+      if (typeof ratio !== 'number' || !(ratio > 0 && ratio <= 1)) {
+        push(field, '정산 비율은 0보다 크고 1 이하여야 합니다.');
+        return [];
+      }
+      milestones.push({ event: event as RefundMilestoneEvent, ratio });
+    }
+    const ascending = milestones.every((m, i) => i === 0 || m.ratio > milestones[i - 1].ratio);
+    if (!ascending || milestones[milestones.length - 1].ratio !== 1) {
+      push(field, '정산 비율은 오름차순이고 마지막 경계가 100%여야 합니다.');
+      return [];
+    }
+    return milestones;
+  };
   const days = { min: 1, max: 90 };
 
   const songTitle = readText(raw.songTitle, 'terms.songTitle', { maxLength: 100, required: false });
@@ -267,6 +342,7 @@ export const validateProductionTerms = (raw: unknown): TermsValidation => {
         key,
         label: REFUND_LABELS[key],
         amount: readInt(item, 'amount', `terms.refundSchedule.${key}`, money),
+        milestones: readMilestones(item.milestones, `terms.refundSchedule.${key}.milestones`),
       });
     });
     const sum = refundSchedule.reduce((acc, item) => acc + item.amount, 0);

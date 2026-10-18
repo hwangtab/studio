@@ -9,7 +9,7 @@ import { getDb } from '../../../../../db/client';
 import { formatCurrency, formatDate } from '../../../../../lib/contracts/format';
 import { IDENTITY_DIGITS } from '../../../../../lib/contracts/identity';
 import { denyContractPageCaching } from '../../../../../lib/contracts/page-cache';
-import { productionSignPath } from '../../../../../lib/contracts/production/links';
+import { productionProgressPath, productionSignPath } from '../../../../../lib/contracts/production/links';
 import { getEffectiveProductionStatus, hasSignedDocument } from '../../../../../lib/contracts/production/status';
 import { parseStoredTerms } from '../../../../../lib/contracts/production/terms';
 import { withI18nServerProps } from '../../../../../lib/getStatic';
@@ -32,6 +32,8 @@ interface CompletePageProps {
   locale: string;
   contract: CompleteViewContract | null;
   downloadUrl: string;
+  /** 진행 페이지 주소(토큰 포함). 파기된 계약은 빈 문자열. */
+  progressPath: string;
   purged: boolean;
   unavailable?: 'not-found' | 'error';
   /** 진행이 끝난 계약 — 서명본은 그대로 받을 수 있다. */
@@ -45,7 +47,7 @@ export const getServerSideProps = withI18nServerProps<CompletePageProps>(async (
 
   const { locale, id } = context.params as { locale: string; id: string };
   const { token } = context.query;
-  const empty = { locale, contract: null, downloadUrl: '', purged: false };
+  const empty = { locale, contract: null, downloadUrl: '', progressPath: '', purged: false };
 
   if (!id || typeof token !== 'string' || token.trim() === '') {
     return { props: { ...empty, unavailable: 'not-found' as const } };
@@ -82,6 +84,7 @@ export const getServerSideProps = withI18nServerProps<CompletePageProps>(async (
           signedAt: contract.signedAt ? contract.signedAt.toISOString() : null,
         },
         downloadUrl: `/api/contracts/production/${contract.id}/download?token=${encodeURIComponent(token)}`,
+        progressPath: contract.purgedAt ? '' : productionProgressPath(contract.id, token, locale),
         purged: contract.purgedAt !== null,
         ...(status === 'completed' || status === 'terminated' ? { closed: status } : {}),
       },
@@ -96,6 +99,7 @@ export default function ProductionContractCompletePage({
   locale,
   contract,
   downloadUrl,
+  progressPath,
   purged,
   unavailable,
   closed,
@@ -248,6 +252,15 @@ export default function ProductionContractCompletePage({
                 </Notice>
               )}
             </>
+          )}
+
+          {progressPath && (
+            <Button asChild light size="lg" fullWidth className="mt-6">
+              {/* 같은 비공개 경로 안의 이동이라도 문서 이동으로 간다(아래 홈 링크와 같은 이유). */}
+              <a href={progressPath} rel="noreferrer">
+                작업 진행 보기
+              </a>
+            </Button>
           )}
 
           {/* 문서 이동으로 나간다 — 클라이언트 전환이면 토큰이 실린 주소가 측정 스크립트에 page_view로 남는다

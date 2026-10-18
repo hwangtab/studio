@@ -81,6 +81,8 @@ export const sendProductionSignedEmail = async (
   terms: ProductionTerms,
   pdfBuffer: Buffer | undefined,
   completeUrl: string,
+  /** 의뢰인 진행 페이지 — 결과물 확인·승인·수정 요청을 여기서 한다. */
+  progressUrl: string,
 ): Promise<SendContractEmailResult> => {
   const html = buildContractEmailHtml({
     heading: '계약이 체결되었습니다',
@@ -90,7 +92,11 @@ export const sendProductionSignedEmail = async (
         ? '서명본 계약서를 이 메일에 PDF로 첨부했습니다. 보관해 주세요.'
         : '서명본 계약서는 아래 버튼에서 받으실 수 있습니다.',
     ],
-    rows: [...termRows(terms), { label: '체결일', value: formatDate(contract.signedAt), emphasis: true }],
+    rows: [
+      ...termRows(terms),
+      { label: '체결일', value: formatDate(contract.signedAt), emphasis: true },
+      { label: '작업 진행', value: '진행 페이지 열기 (결과물 확인·승인·수정 요청)', href: progressUrl },
+    ],
     cta: { label: '계약서 PDF 다시 받기', url: completeUrl },
     notices: [
       // 제3조 — 계약금 기한은 체결일부터 센다. 체결 메일이 그 안내를 겸한다.
@@ -113,6 +119,7 @@ export const sendProductionSignedEmail = async (
     '',
     ...(pdfBuffer ? ['서명본 계약서를 PDF로 첨부했습니다.'] : []),
     `계약서 다시 받기: ${completeUrl}`,
+    `작업 진행(결과물 확인·승인·수정 요청): ${progressUrl}`,
     ...FOOTER,
   ].join('\n');
 

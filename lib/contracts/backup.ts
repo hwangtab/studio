@@ -45,7 +45,7 @@ export const backupContracts = async (now: Date = new Date()): Promise<BackupRes
 
   // 제작 계약도 같은 파일에 뜬다(같은 이유 — Turso가 유일본이다). 토큰은 서명자 행에 있어 거기서 뺀다.
   // 템플릿 사본은 싣는다: 서명 때 본문을 그 사본으로 완성하므로, 복구한 서명 대기 계약에 필요하다.
-  const production = await getDb().query.productionContracts.findMany({ with: { signers: true } });
+  const production = await getDb().query.productionContracts.findMany({ with: { signers: true, events: true } });
   const sanitizedProduction = production.map(({ signers, ...rest }) => ({
     ...rest,
     signers: signers.map(({ signToken: _signToken, ...signer }) => signer),

@@ -17,7 +17,17 @@
 - 만 19세 미만은 막는다(연습실 `validateSignerDetails` 재사용). 법정대리인 행은 스키마에만 있다.
 - 9.4의 환불 경계 중 편곡(1차 시안 전달 = 완료)은 템플릿 제10조 3항에 들어갔다. 나머지는 2단계 계산 때 정한다.
 
-남은 것: 2단계(진행 기록·의뢰인 진행 페이지·기한 크론·환불 계산), 3단계.
+**2단계(진행 기록) 구현됨** — `production_contract_events`(0071), `ledger.ts`(순수 계산), `events.ts`·`event-spec.ts`(기록 규칙),
+`progress.ts`(기록·통지·기한 크론), 의뢰인 진행 페이지 `/ko/contracts/production/[id]/progress`, 관리자 상세의 "진행" 영역,
+크론 `/api/cron/production-contract-deadlines`(매일 10:00 KST). 이 문서와 다른 점:
+
+- 해지 정산 경계는 계약마다 `terms.refundSchedule[].milestones`로 굳고, 제10조 3항 문장도 같은 데이터로 만든다(운영자 결정
+  2026-10-18: 편곡 1차 시안·믹싱 1차·보정 전달·녹음 세션 마침 = 전액, 기획·유통·홍보 = 착수 30% / 유통 등록 전액).
+- 입금은 `payment_received` 하나(계약금·잔금은 누계로 판정). 기한 안내 발송도 `reminder_sent` 기록으로 남긴다.
+- 진행 페이지는 연락처 뒷자리 확인 뒤 30일 쿠키(HMAC, `ADMIN_SESSION_SECRET`에서 용도 분리).
+- 완료 처리는 최종 인도 기록이 있어야 한다.
+
+남은 것: 3단계(견적 요청서 → 초안, EP·정규 kind, 법정대리인, 환불 계좌 접수).
 
 ## 0. 이 설계가 정해 둔 기본값
 
