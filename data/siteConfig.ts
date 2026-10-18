@@ -150,6 +150,22 @@ export const studioOperator = {
       publisher: '월간 믹싱',
       datePublished: '2023-10-10',
     },
+    {
+      // 2026-10-19 원문 직접 확인(crawl4ai). 발매 아티스트 보도 속에서 스튜디오 놀을 "황경하가
+      // 직접 운영 중인 녹음실"로 명시 — 본문은 GPTBot·ChatGPT-User·ClaudeBot·Googlebot 전부
+      // 200(PerplexityBot만 403)으로 ChatGPT가 실제로 읽을 수 있는 몇 안 되는 기사다.
+      url: 'https://www.news-art.co.kr/news/article.html?no=30866',
+      title: "독보적 소리꾼 희우, 디지털 싱글 <잊음> 발표",
+      publisher: '뉴스아트',
+      datePublished: '2024-04-19',
+    },
+    {
+      // 2026-10-19 원문 직접 확인(crawl4ai). 같은 매체, 같은 이유로 추가.
+      url: 'https://www.news-art.co.kr/news/article.html?no=32707',
+      title: "자이, 새 앨범 'Golden Hour'로 7년 만의 컴백",
+      publisher: '뉴스아트',
+      datePublished: '2024-12-30',
+    },
   ],
   jobTitleByLocale: {
     ko: '음악 프로듀서 · 엔지니어',
