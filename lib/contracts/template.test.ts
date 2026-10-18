@@ -39,6 +39,12 @@ describe('계약서 본문 생성', () => {
     expect(content).toContain('| 2 | 두 번째 특약 |');
   });
 
+  it('이름의 강조·체크박스 문법은 글자 그대로 남긴다', () => {
+    const html = renderMarkdown(buildContractContent({ ...baseData, customerName: '**홍** [x] _길_ `동`' }));
+    expect(html).toContain('<td> **홍** [x] _길_ `동` </td>');
+    expect(html).not.toContain('checkbox');
+  });
+
   it('이용자가 적은 값 안의 자리표시자는 다시 채우지 않는다', () => {
     const content = buildContractContent({ ...baseData, customerAddress: '서울 {{specialTerms}} {{monthlyRent}}', specialTerms: ['특약 하나'] });
     expect(content).toContain('서울 {{specialTerms}} {{monthlyRent}}');
@@ -123,10 +129,10 @@ describe('계약서 본문 생성', () => {
     // 템플릿에는 운영자 주소 행이 먼저 나오므로, 이용자 주소를 고유 문자열로 특정한다.
     const content = buildContractContent({
       ...baseData,
-      customerAddress: 'AUDIT_ADDR\n| 특약 | 없음 |',
+      customerAddress: 'AUDITADDR\n| 특약 | 없음 |',
     });
 
-    const row = content.split('\n').find((line) => line.includes('AUDIT_ADDR')) ?? '';
+    const row = content.split('\n').find((line) => line.includes('AUDITADDR')) ?? '';
     expect(row).toContain('<br>');
     expect(row.replace(/\\\|/g, '').split('|').length - 1).toBe(3);
   });
@@ -288,7 +294,7 @@ describe('서명자가 적은 링크·이미지', () => {
     buildContractContent({
       ...baseData,
       customerAddress:
-        'AUDIT_ADDR ![](https://attacker.example/p.png) [상세](https://attacker.example/x) https://attacker.example/bare',
+        'AUDITADDR ![](https://attacker.example/p.png) [상세](https://attacker.example/x) https://attacker.example/bare',
     }),
   );
 
@@ -299,7 +305,7 @@ describe('서명자가 적은 링크·이미지', () => {
   });
 
   it('적힌 글자는 그대로 남는다', () => {
-    const cell = html.match(/<td>[^<]*AUDIT_ADDR[\s\S]*?<\/td>/)?.[0] ?? '';
+    const cell = html.match(/<td>[^<]*AUDITADDR[\s\S]*?<\/td>/)?.[0] ?? '';
     expect(cell).toContain('상세');
     expect(cell).toContain('https://attacker.example/bare');
   });
@@ -308,15 +314,16 @@ describe('서명자가 적은 링크·이미지', () => {
 describe('치환 패턴이 든 입력', () => {
   /** 문자열 치환은 `$'`를 "일치한 곳 뒤 전부"로 해석한다 — 템플릿 뒷부분이 셀 안으로 끌려 들어온다. */
   it.each(["$'", '$&', '$`', '$$'])('%s 를 적은 주소가 글자 그대로 들어간다', (pattern) => {
-    const content = buildContractContent({ ...baseData, customerAddress: `AUDIT_ADDR ${pattern} 끝` });
-    const row = content.split('\n').find((line) => line.includes('AUDIT_ADDR')) ?? '';
+    const content = buildContractContent({ ...baseData, customerAddress: `AUDITADDR ${pattern} 끝` });
+    const row = content.split('\n').find((line) => line.includes('AUDITADDR')) ?? '';
 
-    expect(row).toContain(`AUDIT_ADDR ${pattern} 끝`);
+    // 백틱은 코드 문법이라 이스케이프된 채 들어간다(escapeTableCell) — 화면에는 그대로 보인다.
+    expect(row).toContain(`AUDITADDR ${pattern.replace('`', '\\`')} 끝`);
     expect(row.replace(/\\\|/g, '').split('|').length - 1).toBe(3);
   });
 
   it('특약에 적은 $&도 글자 그대로 들어간다', () => {
-    const content = buildContractContent({ ...baseData, specialTerms: ['AUDIT_TERM $& 끝'] });
-    expect(content).toContain('| 1 | AUDIT_TERM $& 끝 |');
+    const content = buildContractContent({ ...baseData, specialTerms: ['AUDITTERM $& 끝'] });
+    expect(content).toContain('| 1 | AUDITTERM $& 끝 |');
   });
 });

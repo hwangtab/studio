@@ -289,7 +289,7 @@ export const buildProgressNoticeContent = buildContent;
 
 export interface DueReminder {
   kind: 'deemed_approval_soon' | 'deposit_due' | 'balance_due';
-  /** 간주 승인 안내가 가리키는 결과물 전달 기록. */
+  /** 안내가 가리키는 기록 — 간주 승인은 결과물 전달, 잔금은 마스터링 승인. 같은 기록에는 한 번만 보낸다. */
   refEventId?: string;
   stage?: RevisionStage;
   song?: number | null;

@@ -1,4 +1,4 @@
-import { buildProductionContent, findUnfilledPlaceholders, readProductionTemplate } from './template';
+import { buildProductionContent, describeRefundMilestones, findUnfilledPlaceholders, readProductionTemplate } from './template';
 import { buildDefaultProductionTerms } from './terms';
 
 const template = readProductionTemplate();
@@ -100,6 +100,18 @@ describe('EP·정규 계약서(release-template.md)', () => {
   it('곡마다 일어나는 정산 경계는 "그 곡의 몫"으로 적는다 — 음반 전체 경계는 그대로', () => {
     expect(content).toContain('편곡(제2조 2호)은 곡마다 스튜디오가 편곡 1차 시안을 전달한 때 그 곡의 몫(항목 금액을 곡 수로 나눈 금액)이 완료된 것으로 본다.');
     expect(content).toContain('기획 상담·유통 등록·발매 홍보(제2조 1·6·7호)는 착수한 때 그 금액의 30%를');
+  });
+
+  it('곡별 경계와 음반 전체 경계가 섞인 항목도 "곡마다 … 그 곡 몫"으로 적는다 — 정산 계산과 같은 말', () => {
+    const custom = {
+      ...terms,
+      refundSchedule: terms.refundSchedule.map((item) =>
+        item.key === 'mixmaster'
+          ? { ...item, milestones: [{ event: 'mixing_delivered' as const, ratio: 0.7 }, { event: 'mastering_delivered' as const, ratio: 1 }] }
+          : item,
+      ),
+    };
+    expect(describeRefundMilestones(custom)).toContain('곡마다 스튜디오가 믹싱 1차 결과물을 전달한 때 그 곡 몫의 70%를');
   });
 
   it('곡 수와 무관한 조항은 싱글 계약서와 글자 하나 다르지 않다', () => {

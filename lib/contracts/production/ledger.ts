@@ -109,7 +109,7 @@ export interface StageState {
   freeRemaining: number;
   extraRevisions: number;
   extraFee: number;
-  approved: { mode: ApprovalMode; at: Date } | null;
+  approved: { mode: ApprovalMode; at: Date; eventId: string } | null;
   /** 결과물이 나갔고 아직 답이 없다. */
   pending: PendingApproval | null;
   /** 수정 요청을 받아 다음 결과물을 만드는 중. */
@@ -243,7 +243,7 @@ export const computeProductionLedger = (input: {
       freeRemaining: Math.max(0, terms.revisions[stage] - revisions.length),
       extraRevisions,
       extraFee: extraRevisions * terms.extraRevisionFees[stage],
-      approved: approval ? { mode: parseEventData(approval).mode ?? 'proxy', at: approval.occurredAt } : null,
+      approved: approval ? { mode: parseEventData(approval).mode ?? 'proxy', at: approval.occurredAt, eventId: approval.id } : null,
       pending,
       revising: !approval && isAfter(lastRevision, lastDelivery),
     };
@@ -308,23 +308,29 @@ export const computeProductionLedger = (input: {
   // ── 해지 정산(제10조 3항) ────────────────────────────────────────────────
   const kickedOff = of('kickoff').length > 0;
   /**
-   * 경계에 닿은 정도(0~1). 곡마다 일어나는 사건은 닿은 곡의 비율(4곡 중 2곡 = 0.5) — 계약서 제10조 3항 "곡마다 …
-   * 그 곡의 몫"과 같은 말이다. 음반 전체 사건은 0 아니면 1.
+   * 그 곡에서 경계에 닿았는가. 곡마다 일어나는 사건은 그 곡의 기록을, 음반 전체 사건(착수·마스터링·유통)은 모든 곡에
+   * 같은 답을 준다.
    */
-  const songsWith = (match: (song: number) => boolean) =>
-    Array.from({ length: songCount }, (_, song) => song).filter(match).length / songCount;
-  const reached: Record<RefundMilestoneEvent, number> = {
-    kickoff: kickedOff ? 1 : 0,
-    arrangement_delivered: songsWith((song) => of('stage_delivered', 'arrangement', song).length > 0),
-    recording_completed: songsWith((song) => songs[song].recordingCompleted),
-    tuning_delivered: songsWith((song) => songs[song].tuningDelivered),
-    mixing_delivered: songsWith((song) => of('stage_delivered', 'mixing', song).length > 0),
-    mastering_delivered: of('stage_delivered', 'mastering').length > 0 ? 1 : 0,
-    distribution_submitted: of('distribution_submitted').length > 0 ? 1 : 0,
+  const reachedFor: Record<RefundMilestoneEvent, (song: number) => boolean> = {
+    kickoff: () => kickedOff,
+    arrangement_delivered: (song) => of('stage_delivered', 'arrangement', song).length > 0,
+    recording_completed: (song) => songs[song].recordingCompleted,
+    tuning_delivered: (song) => songs[song].tuningDelivered,
+    mixing_delivered: (song) => of('stage_delivered', 'mixing', song).length > 0,
+    mastering_delivered: () => of('stage_delivered', 'mastering').length > 0,
+    distribution_submitted: () => of('distribution_submitted').length > 0,
   };
+  /**
+   * 항목의 작업분 비율 = 곡마다 (닿은 경계 중 가장 큰 비율)의 평균. 계약서 제10조 3항 "곡마다 … 그 곡 몫의 N%"와
+   * 같은 말이다(template.ts describeRefundMilestones). 곡이 하나면 그냥 닿은 경계 중 가장 큰 비율이다.
+   */
+  const itemRatio = (milestones: ProductionTerms['refundSchedule'][number]['milestones']) =>
+    Array.from({ length: songCount }, (_, song) =>
+      milestones.reduce((best, m) => (reachedFor[m.event](song) ? Math.max(best, m.ratio) : best), 0),
+    ).reduce((sum, ratio) => sum + ratio, 0) / songCount;
   // 착수 전 해지는 받은 금액 전액 환불(제10조 2항) — 경계를 보지 않는다.
   const lines: RefundLine[] = terms.refundSchedule.map((item) => {
-    const ratio = kickedOff ? item.milestones.reduce((best, m) => Math.max(best, m.ratio * reached[m.event]), 0) : 0;
+    const ratio = kickedOff ? itemRatio(item.milestones) : 0;
     return { key: item.key, label: item.label, amount: item.amount, ratio, deducted: Math.round(item.amount * ratio) };
   });
   const deduction = lines.reduce((sum, line) => sum + line.deducted, 0);
@@ -365,7 +371,7 @@ export const computeProductionLedger = (input: {
       delayDays,
       delayExceeded: delayDays >= terms.studioDelayWeeks * 7,
       finalDeliveredAt: finalDelivered?.occurredAt ?? null,
-      distributionSubmitted: reached.distribution_submitted === 1,
+      distributionSubmitted: reachedFor.distribution_submitted(0),
       released: of('released').length > 0,
     },
     stages,

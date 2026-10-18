@@ -71,8 +71,9 @@ export const describeRefundMilestones = (terms: ProductionTerms): string => {
   const multi = terms.songs.length > 1;
   return terms.refundSchedule
     .map(({ key, milestones }) => {
-      // 여러 곡 계약에서 곡마다 일어나는 경계는 그 곡의 몫(항목 금액 ÷ 곡 수)만 작업분으로 센다(ledger.ts).
-      const perSong = multi && milestones.every((m) => PER_SONG_MILESTONES.has(m.event));
+      // 여러 곡 계약에서 곡마다 일어나는 경계가 하나라도 있으면 곡마다 그 곡의 몫(항목 금액 ÷ 곡 수)으로 센다 —
+      // 음반 전체 경계(마스터링 등)는 모든 곡에 같이 닿는다(ledger.ts itemRatio와 같은 계산).
+      const perSong = multi && milestones.some((m) => PER_SONG_MILESTONES.has(m.event));
       if (milestones.length === 1) {
         return perSong
           ? `${ITEM_SUBJECT[key]} 곡마다 ${EVENT_PHRASE[milestones[0].event]} 그 곡의 몫(항목 금액을 곡 수로 나눈 금액)이 완료된 것으로 본다.`

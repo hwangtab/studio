@@ -62,6 +62,20 @@ describe('제작 계약서 PDF HTML', () => {
     expect(html.match(/미동의/g)).toHaveLength(PRODUCTION_REQUIRED_CLAUSES.length - 2);
   });
 
+  it('법정대리인이 있으면 대리인의 동의도 서명자 이름을 붙여 남긴다', () => {
+    const withGuardian = buildProductionPdfHtml({
+      contract,
+      terms,
+      clauses: PRODUCTION_REQUIRED_CLAUSES,
+      signers: [
+        signer({ role: 'client', name: '홍길동', email: 'g@example.com', agreedClauses: JSON.stringify(['revisions']) }),
+        signer({ role: 'guardian', name: '홍부모', email: 'p@example.com', agreedClauses: JSON.stringify(['revisions', 'rights']) }),
+      ],
+    });
+    expect(withGuardian.match(/의뢰인 ✓ 동의/g)).toHaveLength(1);
+    expect(withGuardian.match(/법정대리인 ✓ 동의/g)).toHaveLength(2);
+  });
+
   it('본인 확인과 문서 지문을 문서 안에 남긴다', () => {
     expect(html).toContain('연락처 뒷자리 대조 완료');
     expect(html).toContain(`p1:${'a'.repeat(64)}`);

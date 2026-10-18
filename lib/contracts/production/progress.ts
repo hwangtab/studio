@@ -209,8 +209,10 @@ const sendDueReminders = async (context: ProgressContext, today: number, now: Da
   if (!payments.depositMetAt && payments.depositLastDay && kstDay(payments.depositLastDay) - 1 === today) {
     due.push({ kind: 'deposit_due', lastDay: payments.depositLastDay });
   }
+  // 잔금 기한은 마스터링 승인에서 나온다 — 그 승인을 무효로 하고 다시 승인하면 기한도 새로 생기니 안내도 그 승인마다.
+  const masteringApproval = ledger.stages.find((s) => s.stage === 'mastering')?.approved ?? null;
   if (!payments.paidInFull && payments.balanceLastDay && kstDay(payments.balanceLastDay) - 1 === today) {
-    due.push({ kind: 'balance_due', lastDay: payments.balanceLastDay });
+    due.push({ kind: 'balance_due', refEventId: masteringApproval?.eventId, lastDay: payments.balanceLastDay });
   }
 
   const token = clientToken(context);

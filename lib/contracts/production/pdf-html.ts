@@ -64,18 +64,28 @@ const renderSigner = (signer: ProductionContractSigner): string => {
 export const buildProductionPdfHtml = (input: BuildProductionPdfInput): string => {
   const { contract, terms, clauses, signers, fontFaceCss = '', sealCss = '' } = input;
 
-  const clientSigner = signers.find((signer) => signer.role === 'client');
-  const agreedKeys = new Set<string>(
-    clientSigner?.agreedClauses ? (JSON.parse(clientSigner.agreedClauses) as string[]) : [],
-  );
-  const agreedAt = clientSigner?.signedAt ?? null;
+  // 동의는 서명자마다 따로 받는다 — 법정대리인이 있으면 대리인의 동의도 서명본에 남아야 한다(의뢰인 것만 찍으면
+  // 대리인이 무엇에 동의했는지가 PDF에서 사라진다).
+  const consenters = signers
+    .filter((signer) => signer.role === 'client' || signer.role === 'guardian')
+    .sort((a, b) => SIGNER_ORDER.indexOf(a.role) - SIGNER_ORDER.indexOf(b.role))
+    .map((signer) => ({
+      label: signer.role === 'guardian' ? '법정대리인' : '의뢰인',
+      keys: new Set<string>(signer.agreedClauses ? (JSON.parse(signer.agreedClauses) as string[]) : []),
+      at: signer.signedAt ?? null,
+    }));
+  const named = consenters.length > 1;
 
   const clausesHtml = clauses
     .map((clause) => {
-      const agreed = agreedKeys.has(clause.key) && agreedAt;
+      const marks = consenters.map(({ label, keys, at }) => {
+        const agreed = keys.has(clause.key) && at;
+        const who = named ? `${label} ` : '';
+        return `<span class="${agreed ? 'agreed' : 'not-agreed'}">${who}${agreed ? `✓ 동의 (${formatDateTime(at)})` : '미동의'}</span>`;
+      });
       return `<div class="agreement">
           <span><strong>${escapeHtml(clause.clauseNumber)}</strong> ${escapeHtml(clause.title)}</span>
-          <span class="${agreed ? 'agreed' : 'not-agreed'}">${agreed ? `✓ 동의 (${formatDateTime(agreedAt)})` : '미동의'}</span>
+          <span>${marks.join('<br />')}</span>
         </div>`;
     })
     .join('');
