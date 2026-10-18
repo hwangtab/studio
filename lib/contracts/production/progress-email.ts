@@ -6,9 +6,9 @@ import { buildContractEmailHtml, type ContractEmailRow } from '../email-template
 import { formatCurrency, formatDate } from '../format';
 import { escapeHtml } from '../html-escape';
 import { STAGE_LABEL, type ProductionStage } from './event-spec';
-import { kstDay, kstDayStart, parseEventData, type ProductionLedger, type Todo } from './ledger';
+import { findStage, kstDay, kstDayStart, parseEventData, type ProductionLedger, type Todo } from './ledger';
 import { productionAdminUrl } from './links';
-import { REVISION_STAGES, type ProductionTerms, type RevisionStage } from './terms';
+import { REVISION_STAGES, songLabel, type ProductionTerms, type RevisionStage } from './terms';
 
 /**
  * 진행 통지 메일. 기록 하나에 메일 하나다 — 이 메일이 나갔다는 사실(notice_status = sent)이 "언제 알렸는가"의
@@ -30,7 +30,12 @@ interface NoticeContent {
 const isRevisionStage = (stage: string | null): stage is RevisionStage =>
   stage !== null && (REVISION_STAGES as readonly string[]).includes(stage);
 
-const stageName = (stage: string | null) => (stage ? STAGE_LABEL[stage as ProductionStage] ?? stage : '');
+/** 단계 이름 — 여러 곡 계약에서 곡마다 일어나는 단계면 곡 이름을 붙인다("2번 곡 「제목」 믹싱"). */
+const stageName = (terms: Pick<ProductionTerms, 'songs'>, stage: string | null, song: number | null = null) => {
+  if (!stage) return '';
+  const label = STAGE_LABEL[stage as ProductionStage] ?? stage;
+  return terms.songs.length > 1 && stage !== 'mastering' ? `${songLabel(terms, song ?? 0)} ${label}` : label;
+};
 const won = (amount: number) => `${formatCurrency(amount)}원`;
 
 const buildContent = (
@@ -85,22 +90,23 @@ const buildContent = (
       const stage = event.stage;
       if (!isRevisionStage(stage)) {
         return {
-          subject: `${stageName(stage)} 결과물을 보내 드려요`,
-          heading: `${stageName(stage)} 결과물을 보내 드려요`,
-          paragraphs: [`${name}님, ${escapeHtml(stageName(stage))} 결과물을 전달해요.`],
+          subject: `${stageName(terms, stage, event.song)} 결과물을 보내 드려요`,
+          heading: `${stageName(terms, stage, event.song)} 결과물을 보내 드려요`,
+          paragraphs: [`${name}님, ${escapeHtml(stageName(terms, stage, event.song))} 결과물을 전달해요.`],
           rows: [...linkRow, ...noteRow],
           ctaLabel: '작업 진행 보기',
         };
       }
-      const state = ledger.stages[stage];
+      const state = findStage(ledger, stage, event.song);
+      if (!state) return null;
       // 장부는 이 전달을 반영해 계산된다 — 그래도 통지를 다시 보낼 때 그 사이 수정 요청이 들어왔을 수 있어
       // 장부의 대기 상태가 아니라 이 전달 기록의 날짜로 기한을 센다.
       const lastDay = formatDate(kstDayStart(kstDay(event.occurredAt) + terms.deemedApprovalDays));
       return {
-        subject: `${stageName(stage)} 결과물을 보내 드려요 — ${lastDay}까지 확인해 주세요`,
-        heading: `${stageName(stage)} 결과물을 보내 드려요`,
+        subject: `${stageName(terms, stage, event.song)} 결과물을 보내 드려요 — ${lastDay}까지 확인해 주세요`,
+        heading: `${stageName(terms, stage, event.song)} 결과물을 보내 드려요`,
         paragraphs: [
-          `${name}님, ${escapeHtml(stageName(stage))} ${state.deliveries}차 결과물을 전달해요. 들어 보시고 진행 페이지에서 승인하거나 수정을 요청해 주세요.`,
+          `${name}님, ${escapeHtml(stageName(terms, stage, event.song))} ${state.deliveries}차 결과물을 전달해요. 들어 보시고 진행 페이지에서 승인하거나 수정을 요청해 주세요.`,
         ],
         rows: [
           ...linkRow,
@@ -126,12 +132,13 @@ const buildContent = (
       };
     case 'revision_requested': {
       if (!isRevisionStage(event.stage)) return null;
-      const state = ledger.stages[event.stage];
+      const state = findStage(ledger, event.stage, event.song);
+      if (!state) return null;
       const extra = state.revisions > terms.revisions[event.stage];
       return {
-        subject: `${stageName(event.stage)} 수정 요청을 받았어요`,
-        heading: `${stageName(event.stage)} 수정 요청을 받았어요`,
-        paragraphs: [`${name}님, ${escapeHtml(stageName(event.stage))} ${state.revisions}회차 수정 요청을 접수했어요. 반영해서 다시 보내 드릴게요.`],
+        subject: `${stageName(terms, event.stage, event.song)} 수정 요청을 받았어요`,
+        heading: `${stageName(terms, event.stage, event.song)} 수정 요청을 받았어요`,
+        paragraphs: [`${name}님, ${escapeHtml(stageName(terms, event.stage, event.song))} ${state.revisions}회차 수정 요청을 접수했어요. 반영해서 다시 보내 드릴게요.`],
         rows: [
           ...noteRow,
           extra
@@ -149,12 +156,12 @@ const buildContent = (
           ? [`잔금 <strong>${escapeHtml(won(remaining))}</strong>을 ${escapeHtml(formatDate(payments.balanceLastDay))}까지 보내 주세요. 입금을 확인한 뒤 최종 파일을 드려요(계약서 제5조 6항).`]
           : [];
       return {
-        subject: `${stageName(event.stage)} 단계가 승인됐어요`,
-        heading: `${stageName(event.stage)} 단계가 승인됐어요`,
+        subject: `${stageName(terms, event.stage, event.song)} 단계가 승인됐어요`,
+        heading: `${stageName(terms, event.stage, event.song)} 단계가 승인됐어요`,
         paragraphs: [
           mode === 'deemed'
-            ? `${name}님, ${escapeHtml(stageName(event.stage))} 결과물을 전달한 날부터 ${terms.deemedApprovalDays}일 동안 수정 요청이 없어 승인된 것으로 처리했어요(계약서 제5조 5항).`
-            : `${name}님, ${escapeHtml(stageName(event.stage))} 단계 승인을 기록했어요.`,
+            ? `${name}님, ${escapeHtml(stageName(terms, event.stage, event.song))} 결과물을 전달한 날부터 ${terms.deemedApprovalDays}일 동안 수정 요청이 없어 승인된 것으로 처리했어요(계약서 제5조 5항).`
+            : `${name}님, ${escapeHtml(stageName(terms, event.stage, event.song))} 단계 승인을 기록했어요.`,
         ],
         notices: balance,
         ctaLabel: '작업 진행 보기',
@@ -275,6 +282,7 @@ export interface DueReminder {
   /** 간주 승인 안내가 가리키는 결과물 전달 기록. */
   refEventId?: string;
   stage?: RevisionStage;
+  song?: number | null;
   lastDay: Date;
 }
 
@@ -292,9 +300,9 @@ export const sendDueReminderEmail = async (
   const content =
     reminder.kind === 'deemed_approval_soon'
       ? {
-          subject: `${stageName(reminder.stage ?? null)} 결과물 확인 기한이 ${lastDay}이에요`,
+          subject: `${stageName(terms, reminder.stage ?? null, reminder.song ?? null)} 결과물 확인 기한이 ${lastDay}이에요`,
           paragraphs: [
-            `${name}님, ${escapeHtml(stageName(reminder.stage ?? null))} 결과물 확인 기한이 다가와요. <strong>${escapeHtml(lastDay)}까지 수정 요청이 없으면 승인된 것으로 봐요</strong>(계약서 제5조 5항).`,
+            `${name}님, ${escapeHtml(stageName(terms, reminder.stage ?? null, reminder.song ?? null))} 결과물 확인 기한이 다가와요. <strong>${escapeHtml(lastDay)}까지 수정 요청이 없으면 승인된 것으로 봐요</strong>(계약서 제5조 5항).`,
           ],
           rows: [] as ContractEmailRow[],
         }

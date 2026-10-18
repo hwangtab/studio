@@ -1,7 +1,7 @@
 import validator from 'validator';
 
 import { CONTROL_CHARS, type ValidationError } from '../validation';
-import { validateProductionTerms, type ProductionTerms } from './terms';
+import { SONG_COUNT_RANGE, validateProductionTerms, type ProductionKind, type ProductionTerms } from './terms';
 
 /**
  * 관리자가 제작 계약을 만들거나 고칠 때 보내는 값.
@@ -18,6 +18,8 @@ export interface GuardianInput {
 }
 
 export interface ProductionContractPayload {
+  /** 싱글·EP·정규 — 계약서 문안과 곡 수 범위를 고른다. */
+  kind: ProductionKind;
   title: string;
   clientName: string;
   clientStageName: string | null;
@@ -115,7 +117,10 @@ export const validateProductionContractPayload = (
     }
   }
 
-  const terms = validateProductionTerms(payload.terms);
+  // 종류를 모르면 곡 수를 검증할 수 없다. 값이 없으면 싱글(1단계 API 호환).
+  const kind = (payload.kind ?? 'single') as ProductionKind;
+  if (!(kind in SONG_COUNT_RANGE)) push('kind', '계약 종류(싱글·EP·정규)를 골라 주세요.');
+  const terms = validateProductionTerms(payload.terms, kind in SONG_COUNT_RANGE ? kind : 'single');
   if (!terms.ok) errors.push(...terms.errors);
 
   if (errors.length > 0 || !terms.ok) return { ok: false, errors };
@@ -123,6 +128,7 @@ export const validateProductionContractPayload = (
   return {
     ok: true,
     data: {
+      kind,
       title: title as string,
       clientName: clientName as string,
       clientStageName,

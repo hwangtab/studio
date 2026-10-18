@@ -8,7 +8,7 @@ import { escapeHtml } from '../html-escape';
 import { IDENTITY_DIGITS } from '../identity';
 import { SIGN_TOKEN_TTL_DAYS } from '../status';
 import { productionAdminUrl } from './links';
-import type { ProductionTerms } from './terms';
+import { releaseTitle, type ProductionTerms } from './terms';
 
 /**
  * 제작 계약 메일. 레이아웃은 연습실 계약 메일과 같은 것(email-template.ts)을 쓴다 — 서명 요청은 피싱과
@@ -18,16 +18,16 @@ import type { ProductionTerms } from './terms';
 const CONTRACT_NAME = '음원 제작 용역 계약서';
 
 /** 링크를 누르기 전에 조건을 확인할 수 있게 메일 본문에도 적는다(연습실과 같은 원칙). */
-const termRows = (terms: ProductionTerms): ContractEmailRow[] => [
-  { label: '본 곡', value: terms.songTitle ?? '1곡 (제목 미정)' },
+const termRows = (contract: Pick<ProductionContract, 'kind'>, terms: ProductionTerms): ContractEmailRow[] => [
+  { label: contract.kind === 'single' ? '본 곡' : '음반', value: releaseTitle(contract.kind, terms) },
   { label: '계약금액', value: `${formatCurrency(terms.amount.total)}원 (부가세 포함)`, emphasis: true },
   { label: '계약금', value: `${formatCurrency(terms.amount.deposit)}원 · 체결 후 ${terms.amount.depositDueDays}일 이내` },
   { label: '잔금', value: `${formatCurrency(terms.amount.balance)}원 · 최종 마스터 승인 후 ${terms.amount.balanceDueDays}일 이내` },
   { label: '작업 기간', value: `약 ${terms.workWeeks}주 (계약금 입금·1차 완성본 수령 후)` },
 ];
 
-const termLines = (terms: ProductionTerms): string[] =>
-  termRows(terms).map((row) => `${row.label}: ${row.value}`);
+const termLines = (contract: Pick<ProductionContract, 'kind'>, terms: ProductionTerms): string[] =>
+  termRows(contract, terms).map((row) => `${row.label}: ${row.value}`);
 
 const accountLine = (terms: ProductionTerms): string =>
   `입금 계좌: ${terms.payment.bank} ${terms.payment.account} (예금주 ${terms.payment.holder})`;
@@ -45,7 +45,7 @@ export const sendProductionSignRequestEmail = async (
       `${escapeHtml(contract.clientName)}님, 안녕하세요. 스튜디오 놀입니다.`,
       `아래 조건을 확인하신 뒤 ${strong('계약서 서명하기')}를 눌러 서명해 주세요. 스튜디오는 이미 서명했습니다.`,
     ],
-    rows: termRows(terms),
+    rows: termRows(contract, terms),
     cta: { label: '계약서 서명하기', url: signUrl },
     notices: [
       `이 링크는 <strong>${SIGN_TOKEN_TTL_DAYS}일간</strong> 유효합니다. 기한이 지나면 다시 보내 드립니다.`,
@@ -59,7 +59,7 @@ export const sendProductionSignRequestEmail = async (
     '',
     `${contract.clientName}님, 안녕하세요. 스튜디오 놀입니다.`,
     '',
-    ...termLines(terms),
+    ...termLines(contract, terms),
     '',
     `아래 링크에서 계약서를 확인하고 서명해 주세요. (${SIGN_TOKEN_TTL_DAYS}일간 유효)`,
     signUrl,
@@ -90,7 +90,7 @@ export const sendProductionGuardianSignRequestEmail = async (
   const html = buildContractEmailHtml({
     heading: `${CONTRACT_NAME} 법정대리인 서명 요청`,
     paragraphs: [`${escapeHtml(guardian.name)}님, 안녕하세요. 스튜디오 놀입니다.`, escapeHtml(intro)],
-    rows: [{ label: '의뢰인', value: contract.clientName, emphasis: true }, ...termRows(terms)],
+    rows: [{ label: '의뢰인', value: contract.clientName, emphasis: true }, ...termRows(contract, terms)],
     cta: { label: '계약서 확인하고 서명하기', url: signUrl },
     notices: [
       `이 링크는 <strong>${SIGN_TOKEN_TTL_DAYS}일간</strong> 유효합니다.`,
@@ -104,7 +104,7 @@ export const sendProductionGuardianSignRequestEmail = async (
     intro,
     '',
     `의뢰인: ${contract.clientName}`,
-    ...termLines(terms),
+    ...termLines(contract, terms),
     '',
     `아래 링크에서 계약서를 확인하고 서명해 주세요. (${SIGN_TOKEN_TTL_DAYS}일간 유효)`,
     signUrl,
@@ -138,7 +138,7 @@ export const sendProductionSignedEmail = async (
         : '서명본 계약서는 아래 버튼에서 받으실 수 있습니다.',
     ],
     rows: [
-      ...termRows(terms),
+      ...termRows(contract, terms),
       { label: '체결일', value: formatDate(contract.signedAt), emphasis: true },
       ...(progressUrl ? [{ label: '작업 진행', value: '진행 페이지 열기 (결과물 확인·승인·수정 요청)', href: progressUrl }] : []),
     ],
@@ -156,7 +156,7 @@ export const sendProductionSignedEmail = async (
     '',
     `${recipient.name}님, 모든 당사자의 서명이 끝나 계약이 체결되었습니다.`,
     '',
-    ...termLines(terms),
+    ...termLines(contract, terms),
     `체결일: ${formatDate(contract.signedAt)}`,
     '',
     `계약금 ${formatCurrency(terms.amount.deposit)}원을 체결일로부터 ${terms.amount.depositDueDays}일 이내에 입금해 주세요.`,
@@ -195,7 +195,7 @@ export const sendProductionOperatorNotification = async (
       ...(contract.clientStageName ? [{ label: '활동명', value: contract.clientStageName }] : []),
       { label: '이메일', value: contract.clientEmail },
       { label: '연락처', value: contract.clientPhone },
-      ...termRows(terms),
+      ...termRows(contract, terms),
       ...(signed ? [{ label: '체결일', value: formatDate(contract.signedAt) }] : []),
     ],
     cta: { label: '관리자 화면에서 보기', url: productionAdminUrl(contract.id) },
@@ -207,7 +207,7 @@ export const sendProductionOperatorNotification = async (
     `의뢰인: ${contract.clientName}`,
     `이메일: ${contract.clientEmail}`,
     `연락처: ${contract.clientPhone}`,
-    ...termLines(terms),
+    ...termLines(contract, terms),
     ...(signed ? [`체결일: ${formatDate(contract.signedAt)}`] : []),
   ].join('\n');
 

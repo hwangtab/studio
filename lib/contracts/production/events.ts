@@ -7,8 +7,8 @@ import {
   type ProductionContractEvent,
   type ProductionEventType,
 } from '../../../db/schema';
-import { EVENT_SPEC, type ProductionStage } from './event-spec';
-import type { EventData, PauseCause, ProductionLedger } from './ledger';
+import { EVENT_SPEC, isPerSongEvent, type ProductionStage } from './event-spec';
+import { findStage, type EventData, type PauseCause, type ProductionLedger } from './ledger';
 import { REVISION_STAGES, type RevisionStage } from './terms';
 
 /**
@@ -25,6 +25,8 @@ import { REVISION_STAGES, type RevisionStage } from './terms';
 export interface EventInput {
   type: ProductionEventType;
   stage: ProductionStage | null;
+  /** 곡 번호(0부터) — 곡마다 일어나는 사건만(isPerSongEvent). 그 밖에는 null. */
+  song: number | null;
   amount: number | null;
   occurredAt: Date;
   data: EventData;
@@ -63,6 +65,17 @@ export const parseAdminEventInput = (
     stage = raw.stage as ProductionStage;
   }
 
+  // 곡마다 일어나는 사건은 곡 번호를 받는다. 곡이 하나인 계약은 폼이 보내지 않으니 1번 곡(0)이다. 범위는
+  // 장부의 곡 수를 아는 checkEventAllowed가 본다.
+  let song: number | null = null;
+  if (isPerSongEvent(type as ProductionEventType, stage)) {
+    const given = raw.song;
+    if (given !== undefined && given !== null && given !== '' && (typeof given !== 'number' || !Number.isInteger(given) || given < 0 || given > 50)) {
+      return { ok: false, message: '곡을 골라 주세요.' };
+    }
+    song = typeof given === 'number' ? given : 0;
+  }
+
   let amount: number | null = null;
   if (spec.amount) {
     if (typeof raw.amount !== 'number' || !Number.isInteger(raw.amount) || raw.amount <= 0 || raw.amount > 100_000_000) {
@@ -98,7 +111,7 @@ export const parseAdminEventInput = (
     return { ok: false, message: `일어난 때는 지금부터 ${MAX_BACKDATE_DAYS}일 전 사이로 입력해 주세요.` };
   }
 
-  return { ok: true, input: { type: type as ProductionEventType, stage, amount, occurredAt, data, voidsEventId: null } };
+  return { ok: true, input: { type: type as ProductionEventType, stage, song, amount, occurredAt, data, voidsEventId: null } };
 };
 
 const parseOccurredAt = (value: unknown, now: Date): Date | null => {
@@ -123,7 +136,7 @@ export const parseVoidInput = (
   if (reason.length > MAX_NOTE) return { ok: false, message: `사유는 ${MAX_NOTE}자 이내로 적어 주세요.` };
   return {
     ok: true,
-    input: { type: 'void', stage: null, amount: null, occurredAt: now, data: { reason }, voidsEventId: raw.eventId },
+    input: { type: 'void', stage: null, song: null, amount: null, occurredAt: now, data: { reason }, voidsEventId: raw.eventId },
   };
 };
 
@@ -143,29 +156,32 @@ export const checkEventAllowed = (
   input: EventInput,
 ): string | null => {
   if (contract.status !== 'signed') return '진행 중(체결된) 계약에만 기록할 수 있습니다.';
+  if (input.song !== null && input.song >= ledger.songs.length) return '계약에 없는 곡입니다.';
 
   const has = (type: ProductionEventType) => ledger.events.some((event) => event.type === type);
+  const song = input.song ?? 0;
+  const songState = ledger.songs[song];
 
   switch (input.type) {
     case 'source_received':
-      return has('source_received') ? '1차 완성본은 이미 받았습니다. 바꿨다면 "1차 완성본 교체"로 기록해 주세요.' : null;
+      return songState?.sourceReceivedAt ? '그 곡의 1차 완성본은 이미 받았습니다. 바꿨다면 "1차 완성본 교체"로 기록해 주세요.' : null;
     case 'source_replaced':
-      return has('source_received') ? null : '먼저 "1차 완성본 수령"을 기록해 주세요.';
+      return songState?.sourceReceivedAt ? null : '먼저 그 곡의 "1차 완성본 수령"을 기록해 주세요.';
     case 'kickoff':
       return has('kickoff') ? '착수는 이미 기록했습니다.' : null;
     case 'recording_completed':
-      return has('recording_completed') ? '보컬 녹음 세션 마침은 이미 기록했습니다.' : null;
+      return songState?.recordingCompleted ? '그 곡의 보컬 녹음 세션 마침은 이미 기록했습니다.' : null;
     case 'stage_delivered':
-      if (isRevisionStage(input.stage) && ledger.stages[input.stage].approved) {
+      if (isRevisionStage(input.stage) && findStage(ledger, input.stage, input.song)?.approved) {
         return `${STAGE_NAME[input.stage]}은(는) 이미 승인됐습니다.`;
       }
       return null;
     case 'revision_requested':
     case 'stage_approved': {
       if (!isRevisionStage(input.stage)) return '단계를 골라 주세요.';
-      const state = ledger.stages[input.stage];
-      if (!state.pending) {
-        return state.approved
+      const state = findStage(ledger, input.stage, input.song);
+      if (!state?.pending) {
+        return state?.approved
           ? `${STAGE_NAME[input.stage]}은(는) 이미 승인됐습니다.`
           : `${STAGE_NAME[input.stage]} 결과물이 전달된 뒤에 기록할 수 있습니다.`;
       }
@@ -177,7 +193,7 @@ export const checkEventAllowed = (
       return ledger.work.openPause ? null : '정지 중인 구간이 없습니다.';
     case 'final_delivered':
       // 제5조 6항: 잔금 지급을 확인한 뒤 인도한다.
-      if (!ledger.stages.mastering.approved) return '마스터링 승인 뒤에 최종 파일을 인도할 수 있습니다.';
+      if (!findStage(ledger, 'mastering')?.approved) return '마스터링 승인 뒤에 최종 파일을 인도할 수 있습니다.';
       if (!ledger.payments.paidInFull) {
         return `잔금이 들어오기 전에는 최종 파일을 인도하지 않습니다(제5조 6항). 남은 금액 ${(ledger.payments.totalDue - ledger.payments.received).toLocaleString('ko-KR')}원.`;
       }
@@ -217,6 +233,7 @@ export const appendProductionEvent = async (
         seq: sql`(SELECT COALESCE(MAX(${productionContractEvents.seq}), 0) + 1 FROM ${productionContractEvents} WHERE ${productionContractEvents.contractId} = ${contractId})`,
         type: input.type,
         stage: input.stage,
+        song: input.song,
         amount: input.amount,
         dataJson: Object.keys(input.data).length > 0 ? JSON.stringify(input.data) : null,
         occurredAt: input.occurredAt,

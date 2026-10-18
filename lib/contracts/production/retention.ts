@@ -81,8 +81,8 @@ export const purgeExpiredProductionPersonalData = async (
             clientBirthdate: null,
             clientAddress: null,
             content: PURGED_MARK,
-            // 곡 제목은 사람을 가리킬 수 있다(발매 전 곡이면 더욱). 금액·기한 조건은 운영 기록으로 남긴다.
-            termsJson: canonicalTermsJson({ ...terms, songTitle: null }),
+            // 곡·음반 제목은 사람을 가리킬 수 있다(발매 전 곡이면 더욱). 곡 수·금액·기한 조건은 운영 기록으로 남긴다.
+            termsJson: canonicalTermsJson({ ...terms, albumTitle: null, songs: terms.songs.map(() => ({ title: null })) }),
             terminationReason: null,
             notificationError: null,
             pdfUrl: null,

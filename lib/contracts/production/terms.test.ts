@@ -1,5 +1,6 @@
 import {
   ARRANGEMENT_SMALL_PRICE,
+  EP_BUNDLE_PER_SONG_PRICE,
   SINGLE_BUNDLE_PRICE,
   VOCAL_TUNING_ADDON_PRICE,
 } from '../../../data/pricing';
@@ -8,6 +9,7 @@ import {
   canonicalTermsJson,
   parseStoredTerms,
   REFUND_ITEM_KEYS,
+  releaseTitle,
   validateProductionTerms,
   type ProductionTerms,
 } from './terms';
@@ -87,9 +89,9 @@ describe('입력 규칙', () => {
 
   it('곡 제목은 비워도 된다(제목 미정)', () => {
     const terms = clone();
-    terms.songTitle = '   ';
+    terms.songs = [{ title: '   ' }];
     const result = validateProductionTerms(terms);
-    expect(result.ok && result.data.songTitle).toBeNull();
+    expect(result.ok && result.data.songs).toEqual([{ title: null }]);
   });
 });
 
@@ -106,7 +108,7 @@ describe('저장 형식', () => {
   });
 
   it('모르는 버전은 읽지 않고 던진다 — 빈 금액으로 계약서를 만들지 않게', () => {
-    expect(() => parseStoredTerms(JSON.stringify({ version: 2 }))).toThrow();
+    expect(() => parseStoredTerms(JSON.stringify({ version: 9 }))).toThrow();
   });
 });
 
@@ -140,5 +142,33 @@ describe('해지 정산 경계(제10조 3항)', () => {
     const terms = clone() as unknown as { refundSchedule: Array<{ milestones: unknown }> };
     terms.refundSchedule[0].milestones = [{ event: 'whenever', ratio: 1 }];
     expect(fields(terms)).toContain('terms.refundSchedule.arrangement.milestones');
+  });
+});
+
+describe('여러 곡(EP·정규, 0073)', () => {
+  it('EP 기본 조건은 곡 수 배다 — 곡마다 편곡 + EP 번들 곡당 단가 + 보정', () => {
+    const terms = buildDefaultProductionTerms('ep', 4);
+    expect(terms.songs).toHaveLength(4);
+    expect(terms.amount.total).toBe((ARRANGEMENT_SMALL_PRICE + VOCAL_TUNING_ADDON_PRICE) * 4 + EP_BUNDLE_PER_SONG_PRICE * 4);
+    expect(terms.refundSchedule.reduce((sum, item) => sum + item.amount, 0)).toBe(terms.amount.total);
+    expect(validateProductionTerms(terms, 'ep').ok).toBe(true);
+  });
+
+  it('종류마다 곡 수 범위를 지킨다 — 싱글 1곡, EP 2~7곡, 정규 6~20곡', () => {
+    expect(validateProductionTerms(buildDefaultProductionTerms('single'), 'ep').ok).toBe(false);
+    expect(validateProductionTerms(buildDefaultProductionTerms('ep', 4), 'single').ok).toBe(false);
+    expect(validateProductionTerms(buildDefaultProductionTerms('album', 8), 'album').ok).toBe(true);
+    expect(buildDefaultProductionTerms('album', 3).songs).toHaveLength(6);
+  });
+
+  it('v1(곡 제목 하나)로 저장된 조건은 곡 하나짜리 v2로 읽는다', () => {
+    const { songs: _songs, albumTitle: _albumTitle, ...rest } = buildDefaultProductionTerms();
+    const v1 = JSON.stringify({ ...rest, version: 1, songTitle: '파도' });
+    expect(parseStoredTerms(v1)).toMatchObject({ version: 2, albumTitle: null, songs: [{ title: '파도' }] });
+  });
+
+  it('발매 이름 — 싱글은 곡 제목, EP·정규는 음반 제목과 곡 수', () => {
+    expect(releaseTitle('single', { albumTitle: null, songs: [{ title: '파도' }] })).toBe('파도');
+    expect(releaseTitle('ep', { albumTitle: '바다', songs: [{ title: null }, { title: null }, { title: null }] })).toBe('바다 (EP · 3곡)');
   });
 });

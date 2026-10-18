@@ -9,15 +9,17 @@ describe('견적 요약 되읽기', () => {
     const parsed = parseQuoteSummary(summaryOf({ service: 'release', scale: 'single', readiness: 'demo', fundingSource: 'self', timing: '1m' }));
     expect(parsed).toEqual({
       code: 'NOL-AB12CD',
+      kind: 'single',
       answers: { service: 'release', scale: 'single', readiness: 'demo', fundingSource: 'self' },
       warnings: [],
     });
   });
 
-  it('EP·아이디어 단계·펀딩이면 경고한다', () => {
+  it('EP 견적은 EP 계약으로 옮기고, 아이디어 단계·펀딩이면 경고한다', () => {
     const parsed = parseQuoteSummary(summaryOf({ service: 'release', scale: 'ep', readiness: 'idea', fundingSource: 'funding', timing: '3m' }))!;
-    expect(parsed.warnings).toHaveLength(3);
-    expect(parsed.warnings.join(' ')).toMatch(/EP·정규.*1차 완성본.*크라우드펀딩/s);
+    expect(parsed.kind).toBe('ep');
+    expect(parsed.warnings).toHaveLength(2);
+    expect(parsed.warnings.join(' ')).toMatch(/1차 완성본.*크라우드펀딩/s);
   });
 
   it('발매가 아닌 견적이면 경고한다', () => {

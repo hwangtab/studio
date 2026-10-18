@@ -13,6 +13,7 @@ import ProductionContractForm, {
 import { createProductionContractRequest } from '../../../../components/admin/productionContractActions';
 import { Button } from '../../../../components/ui/Button';
 import { parseQuoteSummary, titleWithQuoteCode } from '../../../../lib/contracts/production/quote-prefill';
+import { buildDefaultProductionTerms, type ProductionKind } from '../../../../lib/contracts/production/terms';
 import { getDb } from '../../../../db/client';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import type { ValidationError } from '../../../../lib/contracts/validation';
@@ -62,7 +63,11 @@ export const getServerSideProps: GetServerSideProps<NewProductionContractPagePro
  * 견적 요약 붙여 넣기 — 카톡으로 받은 견적 요청서 요약에서 견적 번호를 제목에 남기고, 계약과 어긋나는 답을
  * 경고한다(lib/contracts/production/quote-prefill.ts). 금액은 건드리지 않는다.
  */
-function QuotePaste({ onApply }: { onApply: (code: string | null, warnings: string[]) => void }) {
+function QuotePaste({
+  onApply,
+}: {
+  onApply: (code: string | null, kind: ProductionKind | null, warnings: string[]) => void;
+}) {
   const [text, setText] = useState('');
   const [error, setError] = useState<string | null>(null);
   return (
@@ -87,7 +92,7 @@ function QuotePaste({ onApply }: { onApply: (code: string | null, warnings: stri
               return;
             }
             setError(null);
-            onApply(parsed.code, parsed.warnings);
+            onApply(parsed.code, parsed.kind, parsed.warnings);
           }}
         >
           채우기
@@ -149,11 +154,22 @@ export default function NewProductionContractPage({ initialValues, copiedFrom }:
               </div>
             )}
             <QuotePaste
-              onApply={(code, warnings) => {
-                setSeed((prev) => ({
-                  version: prev.version + 1,
-                  values: { ...prev.values, title: titleWithQuoteCode(prev.values.title, prev.values.clientName, code) },
-                }));
+              onApply={(code, kind, warnings) => {
+                setSeed((prev) => {
+                  // 발매 규모가 정해지면 그 종류의 기본 조건으로 시작한다(EP 4곡·정규 8곡 — 곡 수는 폼에서 고친다).
+                  const nextKind = kind ?? prev.values.kind;
+                  const terms =
+                    nextKind === prev.values.kind ? prev.values.terms : buildDefaultProductionTerms(nextKind, nextKind === 'ep' ? 4 : 8);
+                  return {
+                    version: prev.version + 1,
+                    values: {
+                      ...prev.values,
+                      kind: nextKind,
+                      terms,
+                      title: titleWithQuoteCode(prev.values.title, prev.values.clientName, code),
+                    },
+                  };
+                });
                 setQuoteWarnings(warnings);
               }}
             />

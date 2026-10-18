@@ -73,3 +73,13 @@ export const EVENT_SPEC: Record<ProductionEventType, EventSpec> = {
 export const ADMIN_EVENT_TYPES = (Object.keys(EVENT_SPEC) as ProductionEventType[]).filter(
   (type) => !EVENT_SPEC[type].internal,
 );
+
+/**
+ * 곡마다 일어나는 사건인가 — 1차 완성본 수령·교체, 녹음 세션 마침, 그리고 마스터링을 뺀 단계의 전달·수정 요청·승인.
+ * 이 사건만 곡 번호(events.song)를 가진다. 마스터링은 음반 전체다.
+ */
+export const isPerSongEvent = (type: ProductionEventType, stage: string | null): boolean =>
+  type === 'source_received' ||
+  type === 'source_replaced' ||
+  type === 'recording_completed' ||
+  ((type === 'stage_delivered' || type === 'revision_requested' || type === 'stage_approved') && stage !== null && stage !== 'mastering');

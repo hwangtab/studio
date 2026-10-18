@@ -35,6 +35,7 @@ import {
 } from '../../../../../lib/contracts/production/status';
 import { loadProgressContext } from '../../../../../lib/contracts/production/progress';
 import { buildAdminProgressView, type AdminProgressView } from '../../../../../lib/contracts/production/progress-view';
+import { releaseTitle } from '../../../../../lib/contracts/production/terms';
 import { recordAdminPrivacyAccess } from '../../../../../lib/privacy/accessLog';
 
 interface ProductionContractDetailProps {
@@ -198,7 +199,7 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
 
       <AdminShell
         title="제작 계약 상세"
-        description={`${contract.clientName}님 · ${terms.songTitle ?? '곡 제목 미정'}`}
+        description={`${contract.clientName}님 · ${releaseTitle(contract.kind, terms)}`}
         backHref="/admin/contracts/production"
         backLabel="제작 계약 목록"
       >
@@ -255,7 +256,7 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
               <div>
                 <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">계약 조건</h2>
                 <dl className="space-y-2 text-sm">
-                  <Row label="본 곡" value={terms.songTitle ?? '제목 미정'} />
+                  <Row label={contract.kind === 'single' ? '본 곡' : '음반'} value={releaseTitle(contract.kind, terms)} />
                   <Row label="계약금액" value={`${formatCurrency(terms.amount.total)}원`} />
                   <Row label="계약금" value={`${formatCurrency(terms.amount.deposit)}원 (체결 후 ${terms.amount.depositDueDays}일)`} />
                   <Row label="잔금" value={`${formatCurrency(terms.amount.balance)}원 (최종 승인 후 ${terms.amount.balanceDueDays}일)`} />

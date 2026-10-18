@@ -18,7 +18,7 @@ import { EVENT_SPEC } from './event-spec';
 import { computeProductionLedger, kstDay, kstDayStart, parseEventData, type ProductionLedger } from './ledger';
 import { buildProductionProgressUrl } from './links';
 import { sendDueReminderEmail, sendProgressNotice, type DueReminder } from './progress-email';
-import { parseStoredTerms, REVISION_STAGES, type ProductionTerms } from './terms';
+import { parseStoredTerms, type ProductionTerms } from './terms';
 
 /**
  * 진행 기록의 서비스 층 — 기록 남기기·통지·기한 처리. 판정은 ledger.ts(순수), 쓰기 규칙은 events.ts, 문구는
@@ -133,14 +133,14 @@ export const runProductionDeadlines = async (now: Date = new Date()): Promise<De
       let context = await loadProgressContext(id, now);
       if (!context) continue;
 
-      for (const stage of REVISION_STAGES) {
-        const pending = context.ledger.stages[stage].pending;
+      for (const { stage, song, pending } of context.ledger.stages) {
         if (!pending || !pending.noticeSent || today < pending.deemedFromDay) continue;
         const recorded = await recordProgressEvent(
           id,
           {
             type: 'stage_approved',
             stage,
+            song,
             amount: null,
             occurredAt: kstDayStart(pending.deemedFromDay),
             data: { mode: 'deemed', deliveryEventId: pending.deliveryEventId },
@@ -178,10 +178,9 @@ const sendDueReminders = async (context: ProgressContext, today: number, now: Da
   );
 
   const due: DueReminder[] = [];
-  for (const stage of REVISION_STAGES) {
-    const pending = ledger.stages[stage].pending;
+  for (const { stage, song, pending } of ledger.stages) {
     if (pending?.noticeSent && pending.deemedFromDay - 2 === today) {
-      due.push({ kind: 'deemed_approval_soon', refEventId: pending.deliveryEventId, stage, lastDay: pending.lastDayToRespond });
+      due.push({ kind: 'deemed_approval_soon', refEventId: pending.deliveryEventId, stage, song, lastDay: pending.lastDayToRespond });
     }
   }
   const { payments } = ledger;
@@ -206,6 +205,7 @@ const sendDueReminders = async (context: ProgressContext, today: number, now: Da
       {
         type: 'reminder_sent',
         stage: null,
+        song: null,
         amount: null,
         occurredAt: now,
         data: { kind: reminder.kind, refEventId: reminder.refEventId, ...(mail.ok ? {} : { reason: mail.errorCode ?? 'UNKNOWN' }) },
