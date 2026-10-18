@@ -380,6 +380,18 @@ describe('법정대리인 서명', () => {
     expect(result.ok).toBe(false);
   });
 
+  it('의뢰인과 같은 이메일을 대리인 이메일로 받지 않는다 — 대리인 링크가 의뢰인에게 가지 않게', () => {
+    const result = validateProductionContractPayload({
+      ...WITH_GUARDIAN,
+      guardian: { ...WITH_GUARDIAN.guardian, email: WITH_GUARDIAN.clientEmail.toUpperCase() },
+    });
+    expect(result.ok).toBe(false);
+  });
+
+  it('계약 종류는 정해진 셋만 — 객체의 상속 키는 통과하지 않는다', () => {
+    expect(validateProductionContractPayload({ ...WITH_GUARDIAN, kind: 'toString' }).ok).toBe(false);
+  });
+
   it('둘이 동시에 마지막 성립을 시도해도 한 번만 성립한다', async () => {
     const { id } = await createProductionContract(WITH_GUARDIAN);
     await sendAsOperator(id);

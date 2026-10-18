@@ -76,6 +76,19 @@ export const activeEvents = (events: readonly ProductionContractEvent[]): Produc
   return ordered(events.filter((e) => e.type !== 'void' && !voided.has(e.id)));
 };
 
+/**
+ * 간주 승인 기한을 세기 시작하는 날 — 전달한 날과 통지가 실제로 나간 날 중 늦은 날(제5조 5항). 통지가 실패했다가
+ * 나중에 다시 나갔거나 전달을 소급해 기록했으면, 의뢰인이 알게 된 날부터 세야 7일을 온전히 받는다. 통지를 아직
+ * 보내지 않았으면 `notifyingAt`(지금 보내는 중이면 그 시각)을 쓴다.
+ */
+export const deemedBaseDay = (
+  delivery: Pick<ProductionContractEvent, 'occurredAt' | 'noticeSentAt'>,
+  notifyingAt: Date | null = null,
+): number => {
+  const noticeAt = delivery.noticeSentAt ?? notifyingAt;
+  return Math.max(kstDay(delivery.occurredAt), noticeAt ? kstDay(noticeAt) : -Infinity);
+};
+
 export interface PendingApproval {
   deliveryEventId: string;
   deliveredAt: Date;
@@ -197,14 +210,22 @@ export const computeProductionLedger = (input: {
     const pick = (type: ProductionContractEvent['type']) => of(type, stage, song ?? undefined);
     const deliveries = pick('stage_delivered');
     const revisions = pick('revision_requested');
-    const approval = last(pick('stage_approved'));
+    // 승인은 효력 있는 결과물에 걸려 있어야 한다 — 그 전달을 무효로 했으면 승인도 근거를 잃는다. 근거 전달 id가
+    // 없는 옛 대리 승인은 그보다 앞선 전달이 하나라도 남아 있으면 인정한다.
+    const deliveryIds = new Set(deliveries.map((d) => d.id));
+    const approval = last(
+      pick('stage_approved').filter((a) => {
+        const ref = parseEventData(a).deliveryEventId;
+        return ref ? deliveryIds.has(ref) : deliveries.some((d) => isAfter(a, d));
+      }),
+    );
     const lastDelivery = last(deliveries);
     const lastRevision = last(revisions);
 
     const extraRevisions = Math.max(0, revisions.length - terms.revisions[stage]);
     let pending: PendingApproval | null = null;
     if (!approval && lastDelivery && isAfter(lastDelivery, lastRevision)) {
-      const lastDay = kstDay(lastDelivery.occurredAt) + terms.deemedApprovalDays;
+      const lastDay = deemedBaseDay(lastDelivery) + terms.deemedApprovalDays;
       pending = {
         deliveryEventId: lastDelivery.id,
         deliveredAt: lastDelivery.occurredAt,
@@ -263,18 +284,21 @@ export const computeProductionLedger = (input: {
       ? Math.max(kstDay(depositEvent.occurredAt), ...songs.map((song) => kstDay(song.sourceReceivedAt as Date)))
       : null;
 
-  // 정지 구간: 시작 기록부터 다음 종료 기록(없으면 오늘)까지. 의뢰인 사유만 예정일을 미룬다(제4조 2항).
+  // 정지 구간: 시작 기록부터 다음 종료 기록(없으면 오늘)까지. 의뢰인 사유만 예정일을 미룬다(제4조 2항). 작업 기간이
+  // 시작되기 전의 정지는 미룰 예정일이 없으니 시작일 앞부분을 잘라 센다.
   let clientPauseDays = 0;
   let openPause: { cause: PauseCause; since: Date } | null = null;
+  const pausedDays = (from: Date, toDay: number) =>
+    startDay === null ? 0 : Math.max(0, toDay - Math.max(kstDay(from), startDay));
   for (const event of events) {
     if (event.type === 'pause_started' && !openPause) {
       openPause = { cause: parseEventData(event).cause ?? 'client', since: event.occurredAt };
     } else if (event.type === 'pause_ended' && openPause) {
-      if (openPause.cause === 'client') clientPauseDays += kstDay(event.occurredAt) - kstDay(openPause.since);
+      if (openPause.cause === 'client') clientPauseDays += pausedDays(openPause.since, kstDay(event.occurredAt));
       openPause = null;
     }
   }
-  if (openPause?.cause === 'client') clientPauseDays += today - kstDay(openPause.since);
+  if (openPause?.cause === 'client') clientPauseDays += pausedDays(openPause.since, today);
 
   const finalDelivered = last(of('final_delivered'));
   const dueDay = startDay !== null ? startDay + terms.workWeeks * 7 + clientPauseDays : null;

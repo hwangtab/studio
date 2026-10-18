@@ -33,6 +33,7 @@ import {
   hasSignedDocument,
   isProductionActionAllowed,
 } from '../../../../../lib/contracts/production/status';
+import { completeStalledProductionContract } from '../../../../../lib/contracts/production/finalize';
 import { loadProgressContext } from '../../../../../lib/contracts/production/progress';
 import { buildAdminProgressView, type AdminProgressView } from '../../../../../lib/contracts/production/progress-view';
 import { releaseTitle } from '../../../../../lib/contracts/production/terms';
@@ -56,12 +57,22 @@ export const getServerSideProps: GetServerSideProps<ProductionContractDetailProp
   const { id } = context.query;
   if (typeof id !== 'string') return { notFound: true };
 
-  const contract = await getDb()
-    .query.productionContracts.findFirst({ where: (t, { eq }) => eq(t.id, id), with: { signers: true } })
-    .catch((error: unknown) => {
-      console.error('[admin/contracts/production/[id]] Failed to load contract:', error);
-      return null;
-    });
+  const load = () =>
+    getDb()
+      .query.productionContracts.findFirst({ where: (t, { eq }) => eq(t.id, id), with: { signers: true } })
+      .catch((error: unknown) => {
+        console.error('[admin/contracts/production/[id]] Failed to load contract:', error);
+        return null;
+      });
+  let contract = await load();
+  // 서명은 모두 끝났는데 성립에서 멈춘 계약(서명 직후 오류)은 여기서 마저 끝낸다.
+  const recovered = contract
+    ? await completeStalledProductionContract(contract).catch((error: unknown) => {
+        console.error('[admin/contracts/production/[id]] Stalled finalize failed:', error);
+        return false;
+      })
+    : false;
+  if (recovered) contract = await load();
 
   // 개인정보를 여는 화면이다(처리방침 접속기록). 기록 실패가 화면을 막지 않는다.
   await recordAdminPrivacyAccess(context.req, auth.actor, 'production_contract_view', id, contract ? 'success' : 'not_found').catch(

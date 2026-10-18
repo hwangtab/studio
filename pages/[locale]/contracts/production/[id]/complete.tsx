@@ -9,6 +9,7 @@ import { getDb } from '../../../../../db/client';
 import { formatCurrency, formatDate } from '../../../../../lib/contracts/format';
 import { IDENTITY_DIGITS } from '../../../../../lib/contracts/identity';
 import { denyContractPageCaching } from '../../../../../lib/contracts/page-cache';
+import { completeStalledProductionContract } from '../../../../../lib/contracts/production/finalize';
 import { productionProgressPath, productionSignPath } from '../../../../../lib/contracts/production/links';
 import { getEffectiveProductionStatus, hasSignedDocument } from '../../../../../lib/contracts/production/status';
 import { parseStoredTerms, releaseTitle } from '../../../../../lib/contracts/production/terms';
@@ -58,10 +59,13 @@ export const getServerSideProps = withI18nServerProps<CompletePageProps>(async (
   }
 
   try {
-    const contract = await getDb().query.productionContracts.findFirst({
-      where: (t, { eq }) => eq(t.id, id),
-      with: { signers: true },
-    });
+    const load = () =>
+      getDb().query.productionContracts.findFirst({ where: (t, { eq }) => eq(t.id, id), with: { signers: true } });
+    let contract = await load();
+    // 서명은 모두 끝났는데 성립에서 멈춘 계약(서명 직후 오류)은 여기서 마저 끝낸다.
+    if (contract?.signers.some((signer) => signer.signToken === token) && (await completeStalledProductionContract(contract))) {
+      contract = await load();
+    }
     const linkSigner = contract?.signers.find(
       (signer) => (signer.role === 'client' || signer.role === 'guardian') && signer.signToken === token,
     );

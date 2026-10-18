@@ -1,11 +1,12 @@
+import { waitUntil } from '@vercel/functions';
 import { eq } from 'drizzle-orm';
 
 import { getDb } from '../../../db/client';
-import { productionContracts } from '../../../db/schema';
+import { productionContracts, type ProductionContract, type ProductionContractSigner } from '../../../db/schema';
 import { sendProductionOperatorNotification, sendProductionSignedEmail } from './email';
 import { buildProductionCompleteUrl, buildProductionProgressUrl } from './links';
 import { renderProductionPdf, uploadProductionPdf } from './pdf-storage';
-import { recordProductionNotificationResult } from './service';
+import { finalizeProductionContractIfComplete, recordProductionNotificationResult } from './service';
 import { parseStoredTerms } from './terms';
 
 /**
@@ -73,4 +74,26 @@ export const finalizeSignedProductionContract = async (contractId: string): Prom
   }
 
   await recordProductionNotificationResult(contract.id, problems.length > 0 ? problems.join(' / ') : null);
+};
+
+/**
+ * 서명자는 모두 서명했는데 성립하지 못한 계약을 마저 성립시킨다. 성립시켰으면 true.
+ *
+ * 성립은 서명 요청이 서명 쓰기 뒤에 따로 한다(finalizeProductionContractIfComplete). 그 사이 DB 오류가 나면 서명은
+ * 남고 계약은 서명 대기에 머문다 — 다시 서명할 수도, 재발송으로 풀 수도 없다. 그래서 완료 화면·관리자 상세가 열릴
+ * 때 이 함수를 불러 이어서 끝낸다. 계약일은 그때가 아니라 마지막 서명 시각이다.
+ */
+export const completeStalledProductionContract = async (
+  contract: Pick<ProductionContract, 'id' | 'status'> & { signers: Array<Pick<ProductionContractSigner, 'status' | 'signedAt'>> },
+): Promise<boolean> => {
+  if ((contract.status !== 'sent' && contract.status !== 'expired') || contract.signers.some((s) => s.status === 'pending')) {
+    return false;
+  }
+  const lastSignedAt = contract.signers.reduce<Date | null>(
+    (latest, s) => (s.signedAt && (!latest || s.signedAt > latest) ? s.signedAt : latest),
+    null,
+  );
+  if (!lastSignedAt || !(await finalizeProductionContractIfComplete(contract.id, lastSignedAt))) return false;
+  waitUntil(finalizeSignedProductionContract(contract.id));
+  return true;
 };

@@ -13,6 +13,7 @@ import { grantPortalAccess, hasPortalAccess } from '../../../../../lib/contracts
 import { loadProgressContext, recordProgressEvent, sendEventNotice } from '../../../../../lib/contracts/production/progress';
 import {
   encryptRefundAccountNumber,
+  loadRefundAccountSummary,
   safeDbErrorSummary,
   saveRefundAccount,
   validateRefundAccount,
@@ -89,6 +90,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
       const account = validateRefundAccount(body);
       if (!account.ok) return res.status(400).json({ ok: false, message: account.message });
+      // 한 번 받은 계좌는 여기서 바꾸지 않는다. 다시 쓰면 공용 저장이 송금 완료 표시(refunded_at)를 지워 운영자
+      // 화면에 송금 버튼이 되살아나고, 운영자가 계좌를 연 사이 바뀌면 다른 계좌에 송금 완료가 찍힌다.
+      const existing = await loadRefundAccountSummary({ kind: 'production', orderNo: id });
+      if (existing.status === 'unavailable') {
+        return res.status(503).json({ ok: false, message: '지금은 계좌를 받을 수 없어요. 010-4255-7893으로 연락해 주세요.' });
+      }
+      if (existing.status === 'present') {
+        return res.status(409).json({ ok: false, message: '환불 계좌를 이미 받았어요. 바꾸려면 010-4255-7893으로 연락해 주세요.' });
+      }
       let accountNumberEnc: string;
       try {
         accountNumberEnc = encryptRefundAccountNumber(account.value.accountNumber);

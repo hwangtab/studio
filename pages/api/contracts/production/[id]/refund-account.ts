@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getDb } from '../../../../../db/client';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
-import { markRefundAccountRefunded } from '../../../../../lib/payments/refundAccount';
+import { loadRefundAccountSummary, markRefundAccountRefunded } from '../../../../../lib/payments/refundAccount';
 import { handleRefundAccountView } from '../../../../../lib/payments/refundAccountView';
 
 /**
@@ -40,6 +40,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const id = typeof req.query.id === 'string' ? req.query.id : '';
   if (!id) return res.status(400).json({ ok: false, message: '잘못된 요청이에요.' });
-  await markRefundAccountRefunded({ kind: 'production', orderNo: id }, new Date());
+  const key = { kind: 'production', orderNo: id } as const;
+  const summary = await loadRefundAccountSummary(key);
+  if (summary.status !== 'present') return res.status(409).json({ ok: false, message: '접수된 환불 계좌가 없어요.' });
+  if (summary.refundedAt) return res.status(409).json({ ok: false, message: '이미 송금 완료로 기록했어요.' });
+  await markRefundAccountRefunded(key, new Date());
   return res.status(200).json({ ok: true });
 }

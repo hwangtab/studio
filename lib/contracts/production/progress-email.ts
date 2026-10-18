@@ -6,7 +6,7 @@ import { buildContractEmailHtml, type ContractEmailRow } from '../email-template
 import { formatCurrency, formatDate } from '../format';
 import { escapeHtml } from '../html-escape';
 import { STAGE_LABEL, type ProductionStage } from './event-spec';
-import { findStage, kstDay, kstDayStart, parseEventData, type ProductionLedger, type Todo } from './ledger';
+import { deemedBaseDay, findStage, kstDayStart, parseEventData, songOf, type ProductionLedger, type Todo } from './ledger';
 import { productionAdminUrl } from './links';
 import { REVISION_STAGES, songLabel, type ProductionTerms, type RevisionStage } from './terms';
 
@@ -43,8 +43,14 @@ const buildContent = (
   terms: ProductionTerms,
   event: ProductionContractEvent,
   ledger: ProductionLedger,
+  now: Date = new Date(),
 ): NoticeContent | null => {
   const data = parseEventData(event);
+  /** 이 기록이 그 (단계, 곡)의 몇 번째 효력 있는 같은 종류 기록인가 — 통지를 나중에 다시 보내도 그때의 차수다. */
+  const ordinal = () =>
+    ledger.events
+      .filter((e) => e.type === event.type && e.stage === event.stage && (event.stage === 'mastering' || songOf(e) === songOf(event)))
+      .findIndex((e) => e.id === event.id) + 1;
   const name = escapeHtml(contract.clientName);
   const noteRow: ContractEmailRow[] = data.note ? [{ label: '메모', value: data.note }] : [];
   const linkRow: ContractEmailRow[] = data.link ? [{ label: '파일', value: data.link, href: data.link }] : [];
@@ -99,14 +105,15 @@ const buildContent = (
       }
       const state = findStage(ledger, stage, event.song);
       if (!state) return null;
-      // 장부는 이 전달을 반영해 계산된다 — 그래도 통지를 다시 보낼 때 그 사이 수정 요청이 들어왔을 수 있어
-      // 장부의 대기 상태가 아니라 이 전달 기록의 날짜로 기한을 센다.
-      const lastDay = formatDate(kstDayStart(kstDay(event.occurredAt) + terms.deemedApprovalDays));
+      // 기한은 전달한 날과 이 통지가 나가는 날 중 늦은 날부터 센다 — 장부(deemedBaseDay)와 같은 기준이다. 통지가
+      // 실패했다가 다시 나가면 의뢰인은 그날부터 온전한 기간을 받는다.
+      const lastDay = formatDate(kstDayStart(deemedBaseDay(event, now) + terms.deemedApprovalDays));
+      const nth = ordinal() || state.deliveries;
       return {
         subject: `${stageName(terms, stage, event.song)} 결과물을 보내 드려요 — ${lastDay}까지 확인해 주세요`,
         heading: `${stageName(terms, stage, event.song)} 결과물을 보내 드려요`,
         paragraphs: [
-          `${name}님, ${escapeHtml(stageName(terms, stage, event.song))} ${state.deliveries}차 결과물을 전달해요. 들어 보시고 진행 페이지에서 승인하거나 수정을 요청해 주세요.`,
+          `${name}님, ${escapeHtml(stageName(terms, stage, event.song))} ${nth}차 결과물을 전달해요. 들어 보시고 진행 페이지에서 승인하거나 수정을 요청해 주세요.`,
         ],
         rows: [
           ...linkRow,
@@ -116,7 +123,7 @@ const buildContent = (
         ],
         notices: [
           // 제5조 5항 — 이 문장이 빠진 전달 메일은 간주 승인의 근거가 되지 못한다.
-          `<strong>${escapeHtml(lastDay)}까지 수정 요청이 없으면 이 단계는 승인된 것으로 봐요</strong>(계약서 제5조 5항, 전달한 날부터 ${terms.deemedApprovalDays}일).`,
+          `<strong>${escapeHtml(lastDay)}까지 수정 요청이 없으면 이 단계는 승인된 것으로 봐요</strong>(계약서 제5조 5항, ${terms.deemedApprovalDays}일).`,
           '수정 요청은 한 번에 정리해 보내 주시면 1회로 셉니다(계약서 제5조 2항).',
         ],
         ctaLabel: '확인하고 승인·수정 요청하기',
@@ -134,16 +141,18 @@ const buildContent = (
       if (!isRevisionStage(event.stage)) return null;
       const state = findStage(ledger, event.stage, event.song);
       if (!state) return null;
-      const extra = state.revisions > terms.revisions[event.stage];
+      const nth = ordinal() || state.revisions;
+      const extra = nth > terms.revisions[event.stage];
+      const freeRemaining = Math.max(0, terms.revisions[event.stage] - nth);
       return {
         subject: `${stageName(terms, event.stage, event.song)} 수정 요청을 받았어요`,
         heading: `${stageName(terms, event.stage, event.song)} 수정 요청을 받았어요`,
-        paragraphs: [`${name}님, ${escapeHtml(stageName(terms, event.stage, event.song))} ${state.revisions}회차 수정 요청을 접수했어요. 반영해서 다시 보내 드릴게요.`],
+        paragraphs: [`${name}님, ${escapeHtml(stageName(terms, event.stage, event.song))} ${nth}회차 수정 요청을 접수했어요. 반영해서 다시 보내 드릴게요.`],
         rows: [
           ...noteRow,
           extra
             ? { label: '추가 요금', value: `무료 ${terms.revisions[event.stage]}회를 넘어 ${won(terms.extraRevisionFees[event.stage])}이 더해져요`, emphasis: true }
-            : { label: '남은 무료 수정', value: `${state.freeRemaining}회` },
+            : { label: '남은 무료 수정', value: `${freeRemaining}회` },
         ],
         ctaLabel: '작업 진행 보기',
       };
@@ -242,8 +251,9 @@ export const sendProgressNotice = async (
   event: ProductionContractEvent,
   ledger: ProductionLedger,
   progressUrl: string,
+  now: Date = new Date(),
 ): Promise<SendContractEmailResult | null> => {
-  const content = buildContent(contract, terms, event, ledger);
+  const content = buildContent(contract, terms, event, ledger, now);
   if (!content) return null;
 
   const html = buildContractEmailHtml({

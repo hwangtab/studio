@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -48,8 +48,12 @@ export const getServerSideProps: GetServerSideProps<NewProductionContractPagePro
       const copied = productionContractToFormValues(source, source.signers.find((signer) => signer.role === 'guardian') ?? null);
       return {
         props: {
-          // 제목·곡 제목은 옮기지 않는다 — 다음 곡 계약에 옛 제목이 남으면 고치는 것을 잊기 쉽다.
-          initialValues: { ...copied, title: '', terms: { ...copied.terms, songTitle: null } },
+          // 제목·곡 제목·음반 제목은 옮기지 않는다 — 다음 계약에 옛 제목이 남으면 고치는 것을 잊기 쉽다.
+          initialValues: {
+            ...copied,
+            title: '',
+            terms: { ...copied.terms, albumTitle: null, songs: copied.terms.songs.map(() => ({ title: null })) },
+          },
           copiedFrom: source.clientName,
         },
       };
@@ -73,7 +77,7 @@ function QuotePaste({
   return (
     <details className="mb-6 rounded-lg border border-gray-200 p-4 text-sm">
       <summary className="cursor-pointer font-medium text-gray-900">견적 요청서 요약 붙여 넣기 (선택)</summary>
-      <p className="mt-2 text-gray-500">카톡으로 받은 “[스튜디오 놀 견적 요청 NOL-…]” 글을 붙여 넣으면 견적 번호를 계약 제목에 남겨요. 폼을 새로 채우므로 다른 칸보다 먼저 쓰세요.</p>
+      <p className="mt-2 text-gray-500">카톡으로 받은 “[스튜디오 놀 견적 요청 NOL-…]” 글을 붙여 넣으면 견적 번호를 계약 제목에 남겨요. 입력한 칸은 그대로 두고, 발매 규모가 다르면 금액을 그 종류의 기본 조건으로 바꿔요.</p>
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
@@ -105,8 +109,13 @@ function QuotePaste({
 
 export default function NewProductionContractPage({ initialValues, copiedFrom }: NewProductionContractPageProps) {
   const router = useRouter();
-  // 견적을 붙여 넣으면 폼을 새 초기값으로 다시 그린다(key) — 폼은 처음 받은 값만 상태로 들고 있다.
+  // 견적을 붙여 넣으면 폼을 새 초기값으로 다시 그린다(key). 그때 이미 입력한 값을 잃지 않게 폼의 지금 값을
+  // 따라 들고 있다가(latest) 그 위에 견적을 얹는다.
   const [seed, setSeed] = useState({ version: 0, values: initialValues });
+  const latest = useRef(initialValues);
+  const trackValues = useCallback((values: ProductionContractFormValues) => {
+    latest.current = values;
+  }, []);
   const [quoteWarnings, setQuoteWarnings] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<ValidationError[]>([]);
@@ -155,21 +164,19 @@ export default function NewProductionContractPage({ initialValues, copiedFrom }:
             )}
             <QuotePaste
               onApply={(code, kind, warnings) => {
-                setSeed((prev) => {
-                  // 발매 규모가 정해지면 그 종류의 기본 조건으로 시작한다(EP 4곡·정규 8곡 — 곡 수는 폼에서 고친다).
-                  const nextKind = kind ?? prev.values.kind;
-                  const terms =
-                    nextKind === prev.values.kind ? prev.values.terms : buildDefaultProductionTerms(nextKind, nextKind === 'ep' ? 4 : 8);
-                  return {
-                    version: prev.version + 1,
-                    values: {
-                      ...prev.values,
-                      kind: nextKind,
-                      terms,
-                      title: titleWithQuoteCode(prev.values.title, prev.values.clientName, code),
-                    },
-                  };
-                });
+                const current = latest.current;
+                // 발매 규모가 바뀌면 그 종류의 기본 조건으로 시작한다(EP 4곡·정규 8곡 — 곡 수는 폼에서 고친다).
+                const nextKind = kind ?? current.kind;
+                const terms =
+                  nextKind === current.kind ? current.terms : buildDefaultProductionTerms(nextKind, nextKind === 'ep' ? 4 : 8);
+                const values = {
+                  ...current,
+                  kind: nextKind,
+                  terms,
+                  title: titleWithQuoteCode(current.title, current.clientName, code),
+                };
+                latest.current = values;
+                setSeed((prev) => ({ version: prev.version + 1, values }));
                 setQuoteWarnings(warnings);
               }}
             />
@@ -191,6 +198,7 @@ export default function NewProductionContractPage({ initialValues, copiedFrom }:
               generalError={generalError}
               onSubmit={handleSubmit}
               onCancel={() => router.push('/admin/contracts/production')}
+              onChange={trackValues}
             />
           </div>
         </div>

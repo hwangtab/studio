@@ -79,7 +79,9 @@ export const getServerSideProps = withI18nServerProps<ProductionSignPageProps>(a
     }
 
     await recordProductionSignerView(linkSigner.id, token, getClientIp(context.req));
-    const ownPhone = linkSigner.role === 'client' ? contract.clientPhone : (linkSigner.phone ?? '');
+    // 서명자마다 연락처 뒷자리가 본인 확인의 정답이다 — 내 번호만이 아니라 상대(의뢰인·법정대리인) 번호도 가린다.
+    // 의뢰인 화면에 대리인 번호가 보이면 미성년 의뢰인이 대리인 링크까지 혼자 열 수 있다.
+    const identityPhones = [contract.clientPhone, ...contract.signers.map((signer) => signer.phone ?? '')].filter(Boolean);
 
     return {
       props: {
@@ -89,8 +91,8 @@ export const getServerSideProps = withI18nServerProps<ProductionSignPageProps>(a
           id: contract.id,
           title: contract.title,
           clientName: contract.clientName,
-          // 이 서명자의 연락처는 본인 확인의 정답이라 본문에서도 가린다. 서명본에는 전체 번호가 들어간다.
-          content: maskIdentityDigitsInContent(contract.content, ownPhone),
+          // 서명자들의 연락처는 본인 확인의 정답이라 본문에서도 가린다. 서명본에는 전체 번호가 들어간다.
+          content: identityPhones.reduce((content, phone) => maskIdentityDigitsInContent(content, phone), contract.content),
         },
         signer: {
           role: linkSigner.role === 'guardian' ? ('guardian' as const) : ('client' as const),

@@ -39,6 +39,12 @@ describe('계약서 본문 생성', () => {
     expect(content).toContain('| 2 | 두 번째 특약 |');
   });
 
+  it('이용자가 적은 값 안의 자리표시자는 다시 채우지 않는다', () => {
+    const content = buildContractContent({ ...baseData, customerAddress: '서울 {{specialTerms}} {{monthlyRent}}', specialTerms: ['특약 하나'] });
+    expect(content).toContain('서울 {{specialTerms}} {{monthlyRent}}');
+    expect(content.match(/특약 하나/g)).toHaveLength(1);
+  });
+
   it('특약사항의 파이프 문자가 표를 깨뜨리지 않게 이스케이프한다', () => {
     const content = buildContractContent({ ...baseData, specialTerms: ['A | B'] });
     expect(content).toContain('A \\| B');
