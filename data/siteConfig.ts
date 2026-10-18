@@ -123,7 +123,7 @@ export const studioOperator = {
   // 검증할 수 있는 근거다.
   pressCoverage: [
     {
-      // 전부 2026-07-28 원문 직접 확인.
+      // 앞 세 건(이 항목부터 한겨레21까지) 2026-07-28 원문 직접 확인.
       url: 'https://www.nocutnews.co.kr/news/4741803',
       title: '가난·페미니즘·강제철거 반대… 한대음을 빛낸 수상소감',
       publisher: '노컷뉴스',
