@@ -1,0 +1,64 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { waitUntil } from '@vercel/functions';
+
+import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
+import { getClientIp } from '../../../../../lib/contracts/client-ip';
+import { EVENT_SPEC } from '../../../../../lib/contracts/production/event-spec';
+import { parseAdminEventInput, parseVoidInput } from '../../../../../lib/contracts/production/events';
+import { loadProgressContext, recordProgressEvent, sendEventNotice } from '../../../../../lib/contracts/production/progress';
+
+/**
+ * 관리자 진행 기록(제작 계약 상세 화면).
+ *
+ * - action=record: 기록 추가. 통지 대상이면 응답 뒤 의뢰인 메일(waitUntil).
+ * - action=void: 앞 기록 무효(사유 필수). 기록은 지우지 않는다.
+ * - action=resend-notice: 실패한 통지를 다시 보낸다. 결과물 전달은 이 통지가 나가야 간주 승인이 성립한다.
+ */
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  res.setHeader('Cache-Control', 'no-store');
+
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
+    return res.status(405).json({ ok: false, message: 'Method not allowed' });
+  }
+
+  const auth = await authenticateAdminApi(req, res);
+  if (!auth.ok) {
+    return res.status(401).json({ ok: false, message: 'Unauthorized' });
+  }
+
+  const { id } = req.query;
+  if (typeof id !== 'string') {
+    return res.status(400).json({ ok: false, message: '잘못된 계약 ID입니다.' });
+  }
+  if (typeof req.body !== 'object' || req.body === null || Array.isArray(req.body)) {
+    return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
+  }
+
+  const body = req.body as Record<string, unknown>;
+  const actor = { actor: `admin:${auth.actor}`, ip: getClientIp(req) };
+
+  try {
+    if (body.action === 'resend-notice') {
+      const context = await loadProgressContext(id);
+      const event = context?.events.find((e) => e.id === body.eventId);
+      if (!context || !event) return res.status(404).json({ ok: false, message: '기록을 찾을 수 없습니다.' });
+      if (!EVENT_SPEC[event.type].notifies) return res.status(409).json({ ok: false, message: '통지하지 않는 기록입니다.' });
+      if (event.noticeStatus === 'sent') return res.status(409).json({ ok: false, message: '이미 통지가 나간 기록입니다.' });
+      waitUntil(sendEventNotice(id, event.id));
+      return res.status(200).json({ ok: true, message: '통지를 다시 보내는 중입니다. 잠시 후 새로고침해 결과를 확인해 주세요.' });
+    }
+
+    const parsed = body.action === 'void' ? parseVoidInput(body) : parseAdminEventInput(body);
+    if (!parsed.ok) return res.status(400).json({ ok: false, message: parsed.message });
+
+    const recorded = await recordProgressEvent(id, parsed.input, actor);
+    if (!recorded.ok) return res.status(recorded.status).json({ ok: false, message: recorded.message });
+
+    if (EVENT_SPEC[recorded.event.type].notifies) waitUntil(sendEventNotice(id, recorded.event.id));
+    return res.status(200).json({ ok: true });
+  } catch (error: unknown) {
+    console.error('[API/contracts/production/[id]/events] Failed:', error);
+    return res.status(500).json({ ok: false, message: '기록하지 못했습니다.' });
+  }
+}

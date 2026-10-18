@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import { formatCurrency, formatDate } from '../format';
 import { escapeTableCell } from '../html-escape';
-import type { ProductionTerms } from './terms';
+import type { ProductionTerms, RefundItemKey, RefundMilestoneEvent } from './terms';
 
 /**
  * 제작 계약서 본문 만들기. 연습실 template.ts와 같은 규칙을 따른다 — 사용자 값은 표 셀 이스케이프,
@@ -27,6 +27,43 @@ export interface ProductionTemplateData {
   /** 계약일. 서명 순간에 확정된다(초안을 만든 날이 아니다). */
   contractDate: string;
 }
+
+/** 항목을 주어로 쓸 때의 이름(조사 포함). 제10조 3항 문장에 들어간다. */
+const ITEM_SUBJECT: Record<RefundItemKey, string> = {
+  arrangement: '편곡(제2조 2호)은',
+  recording: '보컬 녹음(제2조 3호)은',
+  tuning: '보컬 음정·박자 보정(제2조 4호)은',
+  mixmaster: '믹싱·마스터링(제2조 5호)은',
+  planning: '기획 상담·유통 등록·발매 홍보(제2조 1·6·7호)는',
+};
+
+const EVENT_PHRASE: Record<RefundMilestoneEvent, string> = {
+  kickoff: '착수한 때',
+  arrangement_delivered: '스튜디오가 편곡 1차 시안을 전달한 때',
+  recording_completed: '보컬 녹음 세션을 마친 때',
+  tuning_delivered: '스튜디오가 보정 결과물을 전달한 때',
+  mixing_delivered: '스튜디오가 믹싱 1차 결과물을 전달한 때',
+  mastering_delivered: '스튜디오가 마스터링 결과물을 전달한 때',
+  distribution_submitted: '유통 등록을 마친 때',
+};
+
+/**
+ * 제10조 3항의 "작업분" 경계를 문장으로 쓴다. 정산 계산(ledger.ts)이 같은 terms를 읽으므로, 의뢰인이 서명한
+ * 문장과 시스템이 계산하는 공제액이 한 데이터에서 나온다.
+ *
+ * 예) "편곡(제2조 2호)은 스튜디오가 편곡 1차 시안을 전달한 때 완료된 것으로 본다. 기획 상담·…는 착수한 때
+ *      그 금액의 30%를, 유통 등록을 마친 때 전액을 작업분으로 본다."
+ */
+export const describeRefundMilestones = (terms: ProductionTerms): string =>
+  terms.refundSchedule
+    .map(({ key, milestones }) => {
+      if (milestones.length === 1) return `${ITEM_SUBJECT[key]} ${EVENT_PHRASE[milestones[0].event]} 완료된 것으로 본다.`;
+      const parts = milestones.map(({ event, ratio }) =>
+        ratio === 1 ? `${EVENT_PHRASE[event]} 전액을` : `${EVENT_PHRASE[event]} 그 금액의 ${Math.round(ratio * 100)}%를`,
+      );
+      return `${ITEM_SUBJECT[key]} ${parts.join(', ')} 작업분으로 본다.`;
+    })
+    .join(' ');
 
 export const buildProductionContent = (data: ProductionTemplateData, template: string): string => {
   const { terms } = data;
@@ -71,6 +108,7 @@ export const buildProductionContent = (data: ProductionTemplateData, template: s
     '{{studioDelayWeeks}}': String(terms.studioDelayWeeks),
     '{{credits}}': escapeTableCell(terms.credits),
     '{{refundRows}}': refundRows,
+    '{{refundMilestones}}': describeRefundMilestones(terms),
     '{{contractDate}}': formatDate(data.contractDate),
   };
 

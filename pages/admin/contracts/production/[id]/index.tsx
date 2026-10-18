@@ -13,6 +13,7 @@ import {
   type ProductionActionResult,
 } from '../../../../../components/admin/productionContractActions';
 import ContractContent from '../../../../../components/contracts/ContractContent';
+import ProductionProgressPanel from '../../../../../components/admin/ProductionProgressPanel';
 import { Button } from '../../../../../components/ui/Button';
 import { getDb } from '../../../../../db/client';
 import { authenticateAdminRequest } from '../../../../../lib/contracts/admin-auth';
@@ -28,11 +29,15 @@ import {
   hasSignedDocument,
   isProductionActionAllowed,
 } from '../../../../../lib/contracts/production/status';
+import { loadProgressContext } from '../../../../../lib/contracts/production/progress';
+import { buildAdminProgressView, type AdminProgressView } from '../../../../../lib/contracts/production/progress-view';
 import { recordAdminPrivacyAccess } from '../../../../../lib/privacy/accessLog';
 
 interface ProductionContractDetailProps {
   contract: AdminSerializedProductionContract;
   fingerprint: ProductionFingerprintVerdict;
+  /** 체결된 계약의 진행(장부). 체결 전에는 null. */
+  progress: AdminProgressView | null;
 }
 
 export const getServerSideProps: GetServerSideProps<ProductionContractDetailProps> = async (context) => {
@@ -58,10 +63,13 @@ export const getServerSideProps: GetServerSideProps<ProductionContractDetailProp
 
   if (!contract) return { notFound: true };
 
+  const progress = hasSignedDocument(contract.status) && !contract.purgedAt ? await loadProgressContext(id) : null;
+
   return {
     props: {
       contract: serializeProductionContractForAdmin(contract),
       fingerprint: verifyStoredProductionContract(contract),
+      progress: progress ? buildAdminProgressView(progress.terms, progress.ledger, progress.events) : null,
     },
   };
 };
@@ -104,7 +112,7 @@ const FingerprintLine = ({ verdict }: { verdict: ProductionFingerprintVerdict })
   }
 };
 
-export default function ProductionContractDetailPage({ contract, fingerprint }: ProductionContractDetailProps) {
+export default function ProductionContractDetailPage({ contract, fingerprint, progress }: ProductionContractDetailProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -304,6 +312,10 @@ export default function ProductionContractDetailPage({ contract, fingerprint }: 
           </details>
         </div>
 
+        {progress && (
+          <ProductionProgressPanel contractId={contract.id} view={progress} editable={contract.status === 'signed'} />
+        )}
+
         <div className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
           <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">작업</h2>
           <div className="flex flex-wrap gap-3">
@@ -330,6 +342,18 @@ export default function ProductionContractDetailPage({ contract, fingerprint }: 
                 onClick={async () => setNotice((await copyToClipboard(contract.signUrl)) ? '서명 링크를 복사했습니다.' : '링크 복사에 실패했습니다.')}
               >
                 서명 링크 복사
+              </Button>
+            )}
+
+            {contract.progressUrl && (
+              <Button
+                light
+                variant="secondary"
+                onClick={async () =>
+                  setNotice((await copyToClipboard(contract.progressUrl)) ? '진행 페이지 링크를 복사했습니다.' : '링크 복사에 실패했습니다.')
+                }
+              >
+                진행 페이지 링크 복사
               </Button>
             )}
 

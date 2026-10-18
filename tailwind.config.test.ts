@@ -219,7 +219,9 @@ const LIGHT_FIXED = (rel: string) =>
   rel.startsWith('components/admin/') ||
   rel.startsWith('components/contracts/') ||
   // 제작 계약(contracts/production/[id]/…)도 같은 두 장이다 — 종이처럼 밝은 서명·완료 화면.
-  /^pages\/\[locale\]\/contracts\/(production\/)?\[id\]\/(sign|complete)\.tsx$/.test(rel);
+  /^pages\/\[locale\]\/contracts\/(production\/)?\[id\]\/(sign|complete)\.tsx$/.test(rel) ||
+  // 제작 계약 진행 페이지 — 서명·완료 화면과 같은 종이 바탕의 연속이다.
+  rel === 'pages/[locale]/contracts/production/[id]/progress.tsx';
 
 /**
  * 한 줄 안에서 **문제 토큰이 들어 있는 문자열 리터럴 구간**만 돌려준다.

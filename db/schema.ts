@@ -395,7 +395,93 @@ export const productionContractSigners = sqliteTable(
 
 export const productionContractsRelations = relations(productionContracts, ({ many }) => ({
   signers: many(productionContractSigners),
+  events: many(productionContractEvents),
 }));
+
+/**
+ * 진행 기록 — 체결 뒤 작업이 어떻게 흘렀는지를 쌓는 장부. **추가만 하고 고치지 않는다.**
+ *
+ * 계약서의 절반은 날짜로 집행된다(7일 간주 승인, 14일 지체, 30일 무응답, 4주 지연, 8주 작업 기간). 그 날짜를
+ * 증명할 기록이 없으면 조항이 있어도 분쟁에서 쓸 수 없다. 그래서 잘못 적은 기록도 지우지 않고 `void` 사건으로
+ * 무효를 남긴다 — 고쳐지지 않은 기록만 증거가 된다. UPDATE는 의뢰인 통지 결과(notice_*)에만 허용한다
+ * (lib/contracts/production/events.ts).
+ *
+ * occurred_at(일어난 때)과 recorded_at(적은 때)을 나눈다. 입금을 다음 날 확인해 적으면 둘이 다르고, 화면은
+ * 그 차이를 "소급"으로 드러낸다.
+ */
+export const productionEventTypeEnum = [
+  'payment_received',
+  'source_received',
+  'source_replaced',
+  'kickoff',
+  'stage_delivered',
+  'recording_completed',
+  'revision_requested',
+  'stage_approved',
+  'pause_started',
+  'pause_ended',
+  'extra_cost_agreed',
+  'client_contacted',
+  'client_responded',
+  'final_delivered',
+  'distribution_submitted',
+  'released',
+  'termination_notice',
+  'reminder_sent',
+  'note',
+  'void',
+] as const;
+
+export const productionEventNoticeStatusEnum = ['none', 'pending', 'sent', 'failed'] as const;
+
+export const productionContractEvents = sqliteTable(
+  'production_contract_events',
+  {
+    id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+    contractId: text('contract_id')
+      .notNull()
+      .references(() => productionContracts.id, { onDelete: 'cascade' }),
+    /** 계약 안 순번. (contract_id, seq) UNIQUE라 동시 기록이 같은 번호를 잡으면 하나가 실패한다. */
+    seq: integer('seq').notNull(),
+    type: text('type', { enum: productionEventTypeEnum }).notNull(),
+    /** arrangement·recording·tuning·mixing·mastering 중 하나(해당하는 사건만). */
+    stage: text('stage'),
+    amount: integer('amount'),
+    /** 사건별 부가 값(JSON) — 결과물 링크, 메모, 정지 사유, 간주 승인의 근거 전달 id 등. 파기 대상이다. */
+    dataJson: text('data_json'),
+    occurredAt: integer('occurred_at', { mode: 'timestamp' }).notNull(),
+    recordedAt: integer('recorded_at', { mode: 'timestamp' }).notNull(),
+    /** `admin:<계정>` / `client` / `system`(기한 크론). */
+    actor: text('actor').notNull(),
+    actorIp: text('actor_ip'),
+    /** void 사건이 무효로 돌리는 기록. */
+    voidsEventId: text('voids_event_id'),
+    /** 의뢰인 통지 메일. 결과물 전달의 `sent`가 간주 승인(제5조 5항)의 근거다. */
+    noticeStatus: text('notice_status', { enum: productionEventNoticeStatusEnum }).notNull().default('none'),
+    noticeSentAt: integer('notice_sent_at', { mode: 'timestamp' }),
+    noticeError: text('notice_error'),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => [
+    uniqueIndex('production_contract_events_seq_uq').on(t.contractId, t.seq),
+    check(
+      'production_contract_events_type_check',
+      sql`${t.type} in ('payment_received','source_received','source_replaced','kickoff','stage_delivered','recording_completed','revision_requested','stage_approved','pause_started','pause_ended','extra_cost_agreed','client_contacted','client_responded','final_delivered','distribution_submitted','released','termination_notice','reminder_sent','note','void')`,
+    ),
+    check('production_contract_events_notice_check', sql`${t.noticeStatus} in ('none','pending','sent','failed')`),
+  ],
+);
+
+export const productionContractEventsRelations = relations(productionContractEvents, ({ one }) => ({
+  contract: one(productionContracts, {
+    fields: [productionContractEvents.contractId],
+    references: [productionContracts.id],
+  }),
+}));
+
+export type ProductionContractEvent = typeof productionContractEvents.$inferSelect;
+export type ProductionEventType = (typeof productionEventTypeEnum)[number];
+
 
 export const productionContractSignersRelations = relations(productionContractSigners, ({ one }) => ({
   contract: one(productionContracts, {

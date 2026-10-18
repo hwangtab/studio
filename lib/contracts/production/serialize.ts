@@ -1,8 +1,8 @@
 import type { ProductionContract, ProductionContractSigner } from '../../../db/schema';
 import type { Serialized } from '../serialize';
 import { parseStoredClauses, type ProductionClause } from './clauses';
-import { buildProductionSignUrl } from './links';
-import { getEffectiveProductionStatus } from './status';
+import { buildProductionProgressUrl, buildProductionSignUrl } from './links';
+import { getEffectiveProductionStatus, hasSignedDocument } from './status';
 import { parseStoredTerms, type ProductionTerms } from './terms';
 
 /**
@@ -22,6 +22,8 @@ export interface AdminSerializedProductionContract
   signers: SerializedProductionSigner[];
   /** 서명 대기·만료 상태에서만 채운다. 그 밖에는 빈 문자열. */
   signUrl: string;
+  /** 체결된 뒤 의뢰인 진행 페이지 주소(카톡으로 직접 보낼 때). 그 밖에는 빈 문자열. */
+  progressUrl: string;
 }
 
 const SIGNER_ORDER: readonly ProductionContractSigner['role'][] = ['operator', 'client', 'guardian'];
@@ -57,6 +59,7 @@ export const serializeProductionContractForAdmin = (
     // 계약서 서명란과 같은 순서(스튜디오 → 의뢰인 → 대리인). DB 조회 순서는 보장되지 않는다.
     signers: [...signers].sort((a, b) => SIGNER_ORDER.indexOf(a.role) - SIGNER_ORDER.indexOf(b.role)).map(serializeProductionSigner),
     signUrl: (status === 'sent' || status === 'expired') && clientToken ? buildProductionSignUrl(contract.id, clientToken) : '',
+    progressUrl: hasSignedDocument(status) && clientToken && !contract.purgedAt ? buildProductionProgressUrl(contract.id, clientToken) : '',
     sentAt: iso(contract.sentAt),
     expiresAt: iso(contract.expiresAt),
     signedAt: iso(contract.signedAt),
