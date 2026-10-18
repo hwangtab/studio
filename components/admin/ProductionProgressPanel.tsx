@@ -213,11 +213,14 @@ export default function ProductionProgressPanel({
   contractId,
   view,
   editable,
+  voidable = editable,
 }: {
   contractId: string;
   view: AdminProgressView;
   /** 진행 중(signed)일 때만 기록을 더한다. */
   editable: boolean;
+  /** 잘못 넣은 기록을 무효로 할 수 있는가 — 진행 중이거나 해지한 계약(환불 정산을 바로잡는다). */
+  voidable?: boolean;
 }) {
   const router = useRouter();
   const [notice, setNotice] = useState<string | null>(null);
@@ -304,6 +307,13 @@ export default function ProductionProgressPanel({
                   <td className="py-1.5 text-right">{formatCurrency(line.deducted)}원</td>
                 </tr>
               ))}
+              {refund.extras > 0 && (
+                <tr className="border-b border-gray-100">
+                  <td className="py-1.5">추가 비용·추가 수정 (이미 쓴 몫)</td>
+                  <td className="py-1.5 text-right text-gray-500">100%</td>
+                  <td className="py-1.5 text-right">{formatCurrency(refund.extras)}원</td>
+                </tr>
+              )}
             </tbody>
           </table>
           <p className="mt-2">
@@ -345,9 +355,9 @@ export default function ProductionProgressPanel({
                       {item.noticeError ? ` (${item.noticeError})` : ''}
                     </span>
                   )}
-                  {editable && !item.voided && item.type !== 'void' && (
+                  {voidable && !item.voided && item.type !== 'void' && (
                     <span className="ml-auto flex gap-2">
-                      {(item.noticeStatus === 'failed' || item.noticeStatus === 'pending') && (
+                      {editable && (item.noticeStatus === 'failed' || item.noticeStatus === 'pending') && (
                         <button type="button" className="text-primary underline" onClick={() => resendNotice(item)}>
                           통지 다시 보내기
                         </button>

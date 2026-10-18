@@ -84,11 +84,11 @@ export const finalizeSignedProductionContract = async (contractId: string): Prom
  * 때 이 함수를 불러 이어서 끝낸다. 계약일은 그때가 아니라 마지막 서명 시각이다.
  */
 export const completeStalledProductionContract = async (
-  contract: Pick<ProductionContract, 'id' | 'status'> & { signers: Array<Pick<ProductionContractSigner, 'status' | 'signedAt'>> },
+  contract: Pick<ProductionContract, 'id' | 'status' | 'purgedAt'> & {
+    signers: Array<Pick<ProductionContractSigner, 'status' | 'signedAt'>>;
+  },
 ): Promise<boolean> => {
-  if ((contract.status !== 'sent' && contract.status !== 'expired') || contract.signers.some((s) => s.status === 'pending')) {
-    return false;
-  }
+  if (contract.status !== 'sent' || contract.purgedAt || contract.signers.some((s) => s.status === 'pending')) return false;
   const lastSignedAt = contract.signers.reduce<Date | null>(
     (latest, s) => (s.signedAt && (!latest || s.signedAt > latest) ? s.signedAt : latest),
     null,

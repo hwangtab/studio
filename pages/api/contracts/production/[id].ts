@@ -19,6 +19,7 @@ import {
   getEffectiveProductionStatus,
   type ProductionContractAction,
 } from '../../../../lib/contracts/production/status';
+import { kstDay as kstDayOf } from '../../../../lib/contracts/production/ledger';
 import { validateProductionContractPayload } from '../../../../lib/contracts/production/validation';
 import { recordAdminPrivacyAccess } from '../../../../lib/privacy/accessLog';
 
@@ -121,6 +122,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       if (action === 'resend-signed') {
+        // 파기된 계약은 다시 만들 본문이 없다 — 파기 표식으로 PDF를 새로 만들고 메일이 표식 주소로 나간다.
+        if (contract.purgedAt) return res.status(409).json({ ok: false, message: '개인정보를 파기한 계약입니다.' });
         // 상태·토큰은 그대로 두고 PDF·체결 메일만 다시 만든다(연습실과 같다). finalize는 Chromium 체인을
         // 끌어오므로 쓸 때만 불러온다.
         const { finalizeSignedProductionContract } = await import('../../../../lib/contracts/production/finalize');
@@ -141,12 +144,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ ok: false, message: '끝난 날은 오늘이나 그 이전 날짜(YYYY-MM-DD)로 입력해 주세요.' });
       }
 
+      // 끝난 날은 개인정보 보관 기간의 기산점이다(제13조) — 체결일보다 앞설 수 없다. 연도를 잘못 넣으면 파기가
+      // 약속보다 앞당겨진다.
+      if (contract.signedAt && kstDayOf(at) < kstDayOf(contract.signedAt)) {
+        return res.status(400).json({ ok: false, message: '끝난 날은 계약 체결일 이후여야 합니다.' });
+      }
+
       if (action === 'complete') {
         // 정상 종결은 최종 인도가 기록된 계약만. 인도 전에 완료로 닫으면 진행 기록을 더 남길 수 없고(기록은 진행 중
         // 계약에만), 완료일이 개인정보 보관 기간의 기산점이라 그 시계도 작업이 끝나기 전에 돌기 시작한다.
         const progress = await loadProgressContext(id);
-        if (!progress?.ledger.work.finalDeliveredAt) {
+        const deliveredAt = progress?.ledger.work.finalDeliveredAt;
+        if (!deliveredAt) {
           return res.status(409).json({ ok: false, message: '최종 파일 인도를 기록한 뒤에 완료 처리할 수 있습니다.' });
+        }
+        if (kstDayOf(at) < kstDayOf(deliveredAt)) {
+          return res.status(400).json({ ok: false, message: '완료일은 최종 파일을 인도한 날 이후여야 합니다.' });
         }
         return (await closeProductionContract(id, { kind: 'completed', at })) ? res.status(200).json({ ok: true }) : stale();
       }

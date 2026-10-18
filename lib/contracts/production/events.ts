@@ -157,6 +157,8 @@ export const checkEventAllowed = (
   allEvents: readonly ProductionContractEvent[],
   input: EventInput,
 ): string | null => {
+  // 해지한 계약은 잘못 넣은 기록을 무효로 하는 것만 받는다 — 그 기록이 환불 정산을 바꾸기 때문이다.
+  if (contract.status === 'terminated' && input.type === 'void') return checkVoid(allEvents, input);
   if (contract.status !== 'signed') return '진행 중(체결된) 계약에만 기록할 수 있습니다.';
   if (input.song !== null && input.song >= ledger.songs.length) return '계약에 없는 곡입니다.';
 
@@ -192,6 +194,15 @@ export const checkEventAllowed = (
           ? `${STAGE_NAME[input.stage]}은(는) 이미 승인됐습니다.`
           : `${STAGE_NAME[input.stage]} 결과물이 전달된 뒤에 기록할 수 있습니다.`;
       }
+      // 답은 지금 확인을 기다리는 그 결과물에 대한 것이어야 한다. 화면(또는 크론)이 장부를 읽은 뒤 새 결과물이
+      // 나갔다면 옛 결과물에 대한 답이 보지도 않은 새 결과물을 승인하게 된다.
+      if (input.data.deliveryEventId && input.data.deliveryEventId !== state.pending.deliveryEventId) {
+        return '그 사이 새 결과물이 전달됐습니다. 새로고침한 뒤 다시 확인해 주세요.';
+      }
+      // 간주 승인은 통지가 나갔고 기한이 지난 전달에만(제5조 5항) — 크론이 읽은 뒤 바뀐 상태로 다시 본다.
+      if (input.data.mode === 'deemed' && (!state.pending.noticeSent || kstDay(input.occurredAt) < state.pending.deemedFromDay)) {
+        return '간주 승인 기한이 아직 지나지 않았거나 통지가 나가지 않았습니다.';
+      }
       if (input.occurredAt.getTime() < state.pending.deliveredAt.getTime()) {
         return '결과물을 전달하기 전 시각으로는 기록할 수 없습니다.';
       }
@@ -217,15 +228,18 @@ export const checkEventAllowed = (
         return `잔금이 들어오기 전에는 최종 파일을 인도하지 않습니다(제5조 6항). 남은 금액 ${(ledger.payments.totalDue - ledger.payments.received).toLocaleString('ko-KR')}원.`;
       }
       return has('final_delivered') ? '최종 파일 인도는 이미 기록했습니다.' : null;
-    case 'void': {
-      const target = allEvents.find((event) => event.id === input.voidsEventId);
-      if (!target || target.type === 'void') return '무효로 할 기록을 찾을 수 없습니다.';
-      if (allEvents.some((event) => event.type === 'void' && event.voidsEventId === target.id)) return '이미 무효 처리한 기록입니다.';
-      return null;
-    }
+    case 'void':
+      return checkVoid(allEvents, input);
     default:
       return null;
   }
+};
+
+const checkVoid = (allEvents: readonly ProductionContractEvent[], input: EventInput): string | null => {
+  const target = allEvents.find((event) => event.id === input.voidsEventId);
+  if (!target || target.type === 'void') return '무효로 할 기록을 찾을 수 없습니다.';
+  if (allEvents.some((event) => event.type === 'void' && event.voidsEventId === target.id)) return '이미 무효 처리한 기록입니다.';
+  return null;
 };
 
 /** 믹싱이 승인되지 않은 곡의 번호(1부터). */

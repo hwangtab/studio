@@ -350,7 +350,12 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
         {refundAccount && <ProductionRefundAccountPanel contractId={contract.id} summary={refundAccount} />}
 
         {progress && (
-          <ProductionProgressPanel contractId={contract.id} view={progress} editable={contract.status === 'signed'} />
+          <ProductionProgressPanel
+            contractId={contract.id}
+            view={progress}
+            editable={contract.status === 'signed'}
+            voidable={contract.status === 'signed' || contract.status === 'terminated'}
+          />
         )}
 
         <div className="bg-white rounded-2xl shadow-sm p-4 md:p-8">

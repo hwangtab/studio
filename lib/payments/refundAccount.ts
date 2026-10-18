@@ -106,6 +106,22 @@ export const saveRefundAccount = async (
       refunded_at = NULL, updated_at = unixepoch()`);
 };
 
+/**
+ * 계좌가 아직 없을 때만 저장한다. 저장했으면 true, 이미 있었으면 false — 한 번 받은 계좌를 고객이 다시 쓰지 못하게
+ * 하는 경로(제작 계약 해지 환불)가 "확인 후 저장" 사이에 동시 제출로 덮어쓰이지 않게 한 문장으로 한다.
+ */
+export const saveRefundAccountIfAbsent = async (
+  key: RefundAccountKey,
+  value: { bankName: string; accountNumberEnc: string; accountHolder: string; requestedAt: Date },
+): Promise<boolean> => {
+  const requestedAt = Math.floor(value.requestedAt.getTime() / 1000);
+  const result = await getDb().run(sql`
+    INSERT INTO refund_accounts (id, order_kind, order_no, bank_name, account_number_enc, account_holder, requested_at)
+    VALUES (lower(hex(randomblob(16))), ${key.kind}, ${key.orderNo}, ${value.bankName}, ${value.accountNumberEnc}, ${value.accountHolder}, ${requestedAt})
+    ON CONFLICT (order_kind, order_no) DO NOTHING`);
+  return (result.rowsAffected ?? 0) > 0;
+};
+
 /** 운영자가 송금을 마치고 기록한 시각을 남긴다. 계좌가 없으면 아무 일도 없다. 실패는 삼키고 로그만. */
 export const markRefundAccountRefunded = async (key: RefundAccountKey, at: Date): Promise<void> => {
   try {
