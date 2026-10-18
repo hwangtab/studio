@@ -293,6 +293,23 @@ SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이�
 - 사본 저장이 실패해도 계약 생성은 막지 않는다(로그만). 보호가 조용히 빠질 수 있으니 `[contracts/template-snapshot]`
   로그가 보이면 표 적용 여부를 확인한다.
 
+### 음원 제작 용역 전자계약은 `lib/contracts/production/`에 있다 (마이그레이션 0070)
+
+연습실 계약과 서명 원칙(템플릿 사본·조건부 batch·버전 접두사 지문·연락처 뒷자리)을 같이 쓰되 표는 따로다
+(`production_contracts`·`production_contract_signers`). 설계·남은 단계는 `docs/production-contract-design-2026-10.md`.
+어겨도 에러가 안 나는 것:
+
+- **고객 화면·API는 `/contracts/` 아래에 둔다**(`/ko/contracts/production/…`, `/api/contracts/production/…`). 그 경로의
+  no-store 헤더(next.config.mjs)·측정 제외(lib/analytics/privatePaths.ts)·사이트맵 제외를 그대로 받는다. 다른 곳으로
+  옮기면 네 군데를 모두 고쳐야 한다.
+- **PDF Blob 접두사는 `production-contracts/`다**(`lib/contracts/pdfPath.ts`). 백업 크론의 고아 정리가 `contracts/` 아래에서
+  contracts 표가 가리키지 않는 PDF를 지우므로, 같은 접두사에 두면 제작 계약서가 지워진다.
+- **계약 조건은 `terms_json`으로 계약마다 굳는다.** 기한·수정 횟수를 계산하는 코드는 코드 상수가 아니라 그 계약의 terms를
+  읽을 것. 금액 기본값만 `data/pricing.ts` 상수에서 온다.
+- **발송 = 운영자 서명.** 서명 API는 운영자 서명이 없는 계약의 의뢰인 서명을 받지 않는다(계약서 제14조 "양 당사자 서명으로 성립").
+- 템플릿(`single-template.md`) 제13조(개인정보 3년)·처리방침 ⑫·`retention.ts`가 같은 약속을 한다. 한쪽을 바꾸면 셋 다,
+  처리방침은 `FUNDING_TERMS_VERSION`도.
+
 ### 후기 요청 메일은 처리방침이 허용한 주문에만 간다 (마이그레이션 0038)
 
 `/api/cron/review-requests`(매일 11:00 KST)가 녹음 세션 다음 날·믹싱 납품 다음 날 고객에게

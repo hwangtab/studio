@@ -20,13 +20,14 @@ const nextConfig = {
   outputFileTracingIncludes: {
     '/api/contracts/**': [
       './lib/contracts/*.md',
+      './lib/contracts/production/*.md',
       './lib/fonts/pretendard-variable-full.woff2',
       './public/images/contract-seal.png',
       // externalize만으로는 .br 바이너리가 추적되지 않는다(코드에서 동적으로 참조).
       './node_modules/@sparticuz/chromium/bin/**',
     ],
-    '/[locale]/contracts/**': ['./lib/contracts/*.md'],
-    '/admin/contracts/**': ['./lib/contracts/*.md'],
+    '/[locale]/contracts/**': ['./lib/contracts/*.md', './lib/contracts/production/*.md'],
+    '/admin/contracts/**': ['./lib/contracts/*.md', './lib/contracts/production/*.md'],
     // 펀딩 프로젝트 md는 런타임에 fs로 읽는다(getFundingProject) — 계약서 md와 같은 이유로
     // 이 목록에 없으면 서버리스 번들에서 빠져 배포판에서만 프로젝트가 통째로 사라진다.
     '/api/funding/**': ['./content/funding/*.md'],

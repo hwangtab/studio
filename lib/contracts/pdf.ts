@@ -68,9 +68,12 @@ export const blockExternalRequests = async (page: Page): Promise<void> => {
   });
 };
 
-export const generateContractPdf = async (
-  input: Omit<BuildContractPdfInput, 'fontFaceCss' | 'sealCss'>,
-): Promise<Buffer> => {
+/**
+ * 계약서 HTML을 A4 PDF로 인쇄한다. 연습실·제작 계약이 함께 쓰는 유일한 Chromium 경로다 — 외부 요청 차단·
+ * 폰트 대기·쪽 번호가 한 곳에 있어야 두 계약서가 같은 보호를 받는다. html에는 폰트·도장이 이미 들어 있어야 한다
+ * (buildFontFaceCss·buildSealCss).
+ */
+export const renderContractHtmlToPdf = async (html: string): Promise<Buffer> => {
   const browser = await puppeteer.launch(
     isServerless()
       ? {
@@ -88,12 +91,6 @@ export const generateContractPdf = async (
   try {
     const page = await browser.newPage();
     await blockExternalRequests(page);
-    const html = buildContractPdfHtml({
-      ...input,
-      fontFaceCss: buildFontFaceCss(),
-      sealCss: buildSealCss(),
-    });
-
     await page.setContent(html, { waitUntil: 'load' });
     // 인라인 base64 폰트가 실제로 적용된 뒤에 인쇄해야 두부(□) 렌더링을 피한다.
     await page.evaluateHandle('document.fonts.ready');
@@ -114,3 +111,14 @@ export const generateContractPdf = async (
     await browser.close();
   }
 };
+
+export const generateContractPdf = async (
+  input: Omit<BuildContractPdfInput, 'fontFaceCss' | 'sealCss'>,
+): Promise<Buffer> =>
+  renderContractHtmlToPdf(
+    buildContractPdfHtml({
+      ...input,
+      fontFaceCss: buildFontFaceCss(),
+      sealCss: buildSealCss(),
+    }),
+  );

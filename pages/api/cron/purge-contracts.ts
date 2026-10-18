@@ -10,6 +10,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
 import { isCronAuthorized } from '../../../lib/cron/auth';
+import { purgeExpiredProductionPersonalData } from '../../../lib/contracts/production/retention';
 import { purgeExpiredPersonalData, RETENTION_YEARS } from '../../../lib/contracts/retention';
 import { buildOperatorAlertHtml } from '../../../lib/email/operatorAlert';
 import { sendEmail } from '../../../lib/email/resend';
@@ -24,6 +25,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const result = await purgeExpiredPersonalData();
+    // 제작 계약(계약서 제13조 — 끝난 날부터 3년)도 같은 크론에서 파기한다. 실패 건수는 아래 알림에 합친다.
+    const production = await purgeExpiredProductionPersonalData();
     // 월 입주 기록(퇴실 3년 개인정보·5년 전체)도 같은 달 크론에서 파기한다. 실패해도 계약 파기 결과를 가리지 않는다.
     const tenancy = await purgeEndedTenancies().catch((error: unknown) => {
       console.error('[cron/purge-contracts] 월 입주 기록 파기 실패', error instanceof Error ? error.name : 'unknown');
@@ -37,10 +40,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 사람이 알아야 한다. 예전에는 로그만 남기고 200을 돌려줘서 크론은 성공으로 기록됐고,
      * 아무도 로그를 보지 않으면 약속이 조용히 깨진 채로 남았다.
      */
-    if (result.failed > 0) {
+    if (result.failed > 0 || production.failed > 0) {
       const message =
         `${RETENTION_YEARS}년이 지난 계약의 개인정보 파기가 일부 실패했습니다.\n\n` +
-        `성공 ${result.purged}건 / 실패 ${result.failed}건\n\n` +
+        `연습실 계약: 성공 ${result.purged}건 / 실패 ${result.failed}건\n` +
+        `제작 계약: 성공 ${production.purged}건 / 실패 ${production.failed}건\n\n` +
         '계약서 제12조로 약속한 파기이므로 확인이 필요합니다. ' +
         '다음 주기에 다시 시도하지만, 반복되면 Turso와 Blob 설정을 확인해 주세요.';
 
@@ -54,8 +58,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           title: `${RETENTION_YEARS}년이 지난 계약의 개인정보 파기가 일부 실패했습니다`,
           cron: 'cron/purge-contracts',
           rows: [
-            { label: '성공', value: `${result.purged}건` },
-            { label: '실패', value: `${result.failed}건`, emphasis: true },
+            { label: '연습실 계약 성공', value: `${result.purged}건` },
+            { label: '연습실 계약 실패', value: `${result.failed}건`, emphasis: result.failed > 0 },
+            { label: '제작 계약 성공', value: `${production.purged}건` },
+            { label: '제작 계약 실패', value: `${production.failed}건`, emphasis: production.failed > 0 },
           ],
           hints: [
             '계약서 제12조로 약속한 파기이므로 확인이 필요합니다.',
@@ -65,10 +71,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }).catch(() => {});
 
       // 크론 실행 자체를 실패로 남긴다. 재시도는 안전하다 — 이미 파기된 건은 건너뛴다.
-      return res.status(500).json({ ok: false, ...result });
+      return res.status(500).json({ ok: false, ...result, production });
     }
 
-    return res.status(200).json({ ok: true, ...result, tenancy });
+    return res.status(200).json({ ok: true, ...result, production, tenancy });
   } catch (error: unknown) {
     const detail = error instanceof Error ? error.message : String(error);
     console.error('[cron/purge-contracts] Failed:', error);

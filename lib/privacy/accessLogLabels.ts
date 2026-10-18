@@ -19,6 +19,8 @@ export const ACTION_LABEL: Record<string, string> = {
   funding_creator_shipping_export: '개설자 배송 목록 CSV',
   contract_pdf_download: '계약서 PDF',
   contract_view: '계약서 상세 열람',
+  production_contract_pdf_download: '제작 계약서 PDF',
+  production_contract_view: '제작 계약서 상세 열람',
   show_roster_export: '공연 명단 CSV',
   shop_artist_shipping_view: '상점 아티스트 발송 화면 열람',
   creator_business_certificate_view: '사업자등록증 열람',

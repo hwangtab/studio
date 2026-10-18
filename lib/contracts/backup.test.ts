@@ -10,7 +10,12 @@ jest.mock('@vercel/blob', () => ({
 
 let mockContracts: Array<{ id: string; pdfUrl: string | null; signToken: string }> = [];
 jest.mock('../../db/client', () => ({
-  getDb: () => ({ query: { contracts: { findMany: async () => mockContracts } } }),
+  getDb: () => ({
+    query: {
+      contracts: { findMany: async () => mockContracts },
+      productionContracts: { findMany: async () => [] },
+    },
+  }),
 }));
 
 // eslint-disable-next-line import/first

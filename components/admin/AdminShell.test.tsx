@@ -210,6 +210,9 @@ describe('activeAdminNavHref', () => {
     ['/admin/contracts', '/admin/contracts'],
     ['/admin/contracts/[id]', '/admin/contracts'],
     ['/admin/contracts/[id]/edit', '/admin/contracts'],
+    // 제작 계약은 '/admin/contracts' 아래 경로지만 메뉴 항목이 따로 있다 — 가장 긴 접두사가 이긴다.
+    ['/admin/contracts/production', '/admin/contracts/production'],
+    ['/admin/contracts/production/[id]', '/admin/contracts/production'],
     ['/admin/funding/[id]', '/admin/funding'],
     ['/admin/subscriptions/new', '/admin/subscriptions'],
   ])('%s → %s', (pathnameInput, expected) => {

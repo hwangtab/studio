@@ -18,7 +18,7 @@ import {
   draftKey,
   readDraft,
   writeDraft,
-} from '../../pages/[locale]/contracts/[id]/sign';
+} from './sign-draft';
 
 const CONTRACT = 'c-1';
 const OTHER = 'c-2';

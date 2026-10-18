@@ -105,11 +105,11 @@ export interface ContractFingerprintInput {
  * 잘려 나간 만큼 재계산 값이 달라진다. 그러면 아무것도 변조되지 않았는데도 대조가 늘
  * 실패해, 무결성 검증이 있으나 없으나 같아진다.
  */
-const toSeconds = (date: Date | null): string =>
+export const toSeconds = (date: Date | null): string =>
   date ? String(Math.floor(date.getTime() / 1000)) : '';
 
 /** 길이를 앞에 붙여 값의 경계를 못 박는다. 붙이지 않으면 값 안에 구분자를 심어 흉내낼 수 있다. */
-const sized = (label: string, value: string | null): string => {
+export const sized = (label: string, value: string | null): string => {
   const text = value ?? '';
   return `${label}:${text.length}:${text}`;
 };
