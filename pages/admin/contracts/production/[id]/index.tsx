@@ -14,6 +14,10 @@ import {
 } from '../../../../../components/admin/productionContractActions';
 import ContractContent from '../../../../../components/contracts/ContractContent';
 import ProductionProgressPanel from '../../../../../components/admin/ProductionProgressPanel';
+import ProductionRefundAccountPanel, {
+  type RefundAccountSummaryProps,
+} from '../../../../../components/admin/ProductionRefundAccountPanel';
+import { loadRefundAccountSummary } from '../../../../../lib/payments/refundAccount';
 import { Button } from '../../../../../components/ui/Button';
 import { getDb } from '../../../../../db/client';
 import { authenticateAdminRequest } from '../../../../../lib/contracts/admin-auth';
@@ -38,6 +42,8 @@ interface ProductionContractDetailProps {
   fingerprint: ProductionFingerprintVerdict;
   /** 체결된 계약의 진행(장부). 체결 전에는 null. */
   progress: AdminProgressView | null;
+  /** 해지된 계약의 환불 계좌 요약(은행·예금주만). 해지가 아니면 null. */
+  refundAccount: RefundAccountSummaryProps | null;
 }
 
 export const getServerSideProps: GetServerSideProps<ProductionContractDetailProps> = async (context) => {
@@ -65,11 +71,24 @@ export const getServerSideProps: GetServerSideProps<ProductionContractDetailProp
 
   const progress = hasSignedDocument(contract.status) && !contract.purgedAt ? await loadProgressContext(id) : null;
 
+  let refundAccount: RefundAccountSummaryProps | null = null;
+  if (progress && contract.status === 'terminated') {
+    const summary = await loadRefundAccountSummary({ kind: 'production', orderNo: id });
+    refundAccount = {
+      refundable: progress.ledger.refund.refundable,
+      account:
+        summary.status === 'present'
+          ? { bankName: summary.bankName, accountHolder: summary.accountHolder, refundedAt: summary.refundedAt?.toISOString() ?? null }
+          : null,
+    };
+  }
+
   return {
     props: {
       contract: serializeProductionContractForAdmin(contract),
       fingerprint: verifyStoredProductionContract(contract),
       progress: progress ? buildAdminProgressView(progress.terms, progress.ledger, progress.events) : null,
+      refundAccount,
     },
   };
 };
@@ -112,7 +131,7 @@ const FingerprintLine = ({ verdict }: { verdict: ProductionFingerprintVerdict })
   }
 };
 
-export default function ProductionContractDetailPage({ contract, fingerprint, progress }: ProductionContractDetailProps) {
+export default function ProductionContractDetailPage({ contract, fingerprint, progress, refundAccount }: ProductionContractDetailProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -276,7 +295,11 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
                   )}
                   <dl className="space-y-0.5 text-gray-600">
                     <dt className="font-semibold text-gray-900">{ROLE_LABEL[signer.role]}</dt>
-                    <dd>서명자: {signer.name}</dd>
+                    <dd>
+                      서명자: {signer.name}
+                      {signer.relation ? ` (${signer.relation})` : ''}
+                      {signer.phone ? ` · ${signer.phone}` : ''}
+                    </dd>
                     {signer.adminActor && <dd>관리자 계정: {signer.adminActor} (발송 = 운영자 서명, 직인)</dd>}
                     <dd>서명: {signer.status === 'signed' ? formatDateTime(signer.signedAt) : '대기'}</dd>
                     <dd>IP: {signer.ipAddress || '-'}</dd>
@@ -312,6 +335,8 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
           </details>
         </div>
 
+        {refundAccount && <ProductionRefundAccountPanel contractId={contract.id} summary={refundAccount} />}
+
         {progress && (
           <ProductionProgressPanel contractId={contract.id} view={progress} editable={contract.status === 'signed'} />
         )}
@@ -326,7 +351,9 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
                 onClick={() =>
                   run(
                     () => mutateProductionContract(contract.id, 'send'),
-                    `스튜디오 대표로 이 계약서에 서명하고 ${contract.clientEmail} 주소로 서명 요청을 보냅니다.\n` +
+                    `스튜디오 대표로 이 계약서에 서명하고 ${[contract.clientEmail, contract.signers.find((s) => s.role === 'guardian')?.email]
+                      .filter(Boolean)
+                      .join(', ')} 주소로 서명 요청을 보냅니다.\n` +
                       '발송한 뒤에는 내용을 고칠 수 없습니다. 계속할까요?',
                   )
                 }
@@ -342,6 +369,18 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
                 onClick={async () => setNotice((await copyToClipboard(contract.signUrl)) ? '서명 링크를 복사했습니다.' : '링크 복사에 실패했습니다.')}
               >
                 서명 링크 복사
+              </Button>
+            )}
+
+            {contract.status === 'sent' && contract.guardianSignUrl && (
+              <Button
+                light
+                variant="secondary"
+                onClick={async () =>
+                  setNotice((await copyToClipboard(contract.guardianSignUrl)) ? '법정대리인 서명 링크를 복사했습니다.' : '링크 복사에 실패했습니다.')
+                }
+              >
+                법정대리인 서명 링크 복사
               </Button>
             )}
 

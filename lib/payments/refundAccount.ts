@@ -11,7 +11,7 @@ export type { RefundAccountOrderKind };
  * 계좌 입금 주문의 **환불 계좌** — 결제 공용(`refund_accounts`, 마이그레이션 0048).
  *
  * 주문은 (`order_kind`, `order_no`)로 가리킨다 — 펀딩·예약·믹싱은 `orders`, 공연은 `show_orders`에
- * 있어 FK 하나로 묶을 수 없다. 지금 쓰는 곳은 펀딩뿐이다: 후원자가 펀딩 확인 페이지에서 취소를 요청할
+ * 있어 FK 하나로 묶을 수 없다. 지금 쓰는 곳은 펀딩과 제작 계약 해지 환불(production — 진행 페이지, 0072)이다. 펀딩은 후원자가 펀딩 확인 페이지에서 취소를 요청할
  * 때 적고(lib/funding/cancel.ts), 운영자가 송금하려고 "계좌 보기"를 누를 때만 복호화한다
  * (pages/api/admin/funding/pledges/[id]/refund-account.ts). 계좌번호만 암호화하고 은행명·예금주는
  * 평문이다 — 이유는 db/schema.ts의 표 주석.

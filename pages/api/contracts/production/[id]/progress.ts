@@ -12,6 +12,12 @@ import { productionRateLimitKey } from '../../../../../lib/contracts/production/
 import { grantPortalAccess, hasPortalAccess } from '../../../../../lib/contracts/production/portal-session';
 import { loadProgressContext, recordProgressEvent, sendEventNotice } from '../../../../../lib/contracts/production/progress';
 import { REVISION_STAGES, type RevisionStage } from '../../../../../lib/contracts/production/terms';
+import {
+  encryptRefundAccountNumber,
+  safeDbErrorSummary,
+  saveRefundAccount,
+  validateRefundAccount,
+} from '../../../../../lib/payments/refundAccount';
 
 const LOCKED = '본인 확인에 너무 여러 번 실패했어요. 잠시 후 다시 시도하거나 010-4255-7893으로 연락해 주세요.';
 const THROTTLED = '본인 확인 시도가 너무 많아요. 잠시 후 다시 시도해 주세요.';
@@ -44,6 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const client = context?.contract.signers.find((s) => s.role === 'client' && s.signToken === token);
     if (!context || !client) return res.status(404).json({ ok: false, message: '계약을 찾을 수 없어요.' });
     if (context.contract.purgedAt) return res.status(409).json({ ok: false, message: '보관 기간이 지나 파기된 계약이에요.' });
+    // 진행 페이지는 의뢰인 링크로만 연다(승인·수정 요청·환불 계좌는 의뢰인의 행위다).
 
     if (body.action === 'unlock') {
       const rateKey = `progress:${productionRateLimitKey(id)}`;
@@ -66,11 +73,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).json({ ok: true });
     }
 
-    if (body.action !== 'approve' && body.action !== 'revision') {
+    if (body.action !== 'approve' && body.action !== 'revision' && body.action !== 'refund-account') {
       return res.status(400).json({ ok: false, message: '잘못된 요청이에요.' });
     }
     if (!hasPortalAccess(req, id, token)) {
       return res.status(401).json({ ok: false, message: '본인 확인이 필요해요. 페이지를 새로고침해 주세요.' });
+    }
+
+    /**
+     * 해지된 계약의 환불 계좌(제10조 3·4항 정산). 결제 공용 refund_accounts에 (production, 계약 id)로 넣는다 —
+     * 계좌번호는 암호화하고(lib/crypto/CLAUDE.md), 로그·응답에 싣지 않는다. 돌려받을 금액이 있을 때만 받는다.
+     */
+    if (body.action === 'refund-account') {
+      if (context.contract.status !== 'terminated' || context.ledger.refund.refundable <= 0) {
+        return res.status(409).json({ ok: false, message: '돌려받을 금액이 있는 해지 계약에서만 환불 계좌를 받아요.' });
+      }
+      const account = validateRefundAccount(body);
+      if (!account.ok) return res.status(400).json({ ok: false, message: account.message });
+      let accountNumberEnc: string;
+      try {
+        accountNumberEnc = encryptRefundAccountNumber(account.value.accountNumber);
+      } catch {
+        console.error('[API/contracts/production/progress] Refund account encryption unavailable');
+        return res.status(503).json({ ok: false, message: '지금은 계좌를 받을 수 없어요. 010-4255-7893으로 연락해 주세요.' });
+      }
+      try {
+        await saveRefundAccount(
+          { kind: 'production', orderNo: id },
+          { bankName: account.value.bankName, accountNumberEnc, accountHolder: account.value.accountHolder, requestedAt: new Date() },
+        );
+      } catch (error: unknown) {
+        console.error('[API/contracts/production/progress] Refund account save failed', safeDbErrorSummary(error));
+        return res.status(500).json({ ok: false, message: '계좌를 저장하지 못했어요. 잠시 후 다시 시도해 주세요.' });
+      }
+      return res.status(200).json({ ok: true });
     }
 
     const stage = body.stage;

@@ -9,12 +9,22 @@ import { validateProductionTerms, type ProductionTerms } from './terms';
  * 생년월일·주소는 받지 않는다 — 연습실과 같이 서명자가 서명 화면에서 직접 채운다
  * (lib/contracts/validation.ts validateSignerDetails 주석). API로 들어와도 무시한다.
  */
+/** 미성년 의뢰인의 법정대리인. 운영자가 계약을 만들 때 적는다(대리인에게 따로 서명 링크가 간다). */
+export interface GuardianInput {
+  name: string;
+  relation: string;
+  email: string;
+  phone: string;
+}
+
 export interface ProductionContractPayload {
   title: string;
   clientName: string;
   clientStageName: string | null;
   clientEmail: string;
   clientPhone: string;
+  /** 있으면 의뢰인이 미성년이어도 서명할 수 있고, 대리인 서명까지 끝나야 계약이 성립한다(계약서 제14조). */
+  guardian: GuardianInput | null;
   terms: ProductionTerms;
 }
 
@@ -63,6 +73,48 @@ export const validateProductionContractPayload = (
     push('clientPhone', '올바른 휴대폰 번호가 아닙니다. (예: 010-1234-5678)');
   }
 
+  /**
+   * 법정대리인. 값이 오면 네 칸을 모두 받는다 — 연락처는 대리인의 본인 확인 기준이고, 의뢰인과 같은 번호면
+   * 뒷자리 확인이 서로를 구별하지 못하므로 막는다.
+   */
+  let guardian: GuardianInput | null = null;
+  const rawGuardian = payload.guardian;
+  if (rawGuardian !== undefined && rawGuardian !== null) {
+    if (typeof rawGuardian !== 'object' || Array.isArray(rawGuardian)) {
+      push('guardian', '법정대리인 정보 형식이 올바르지 않습니다.');
+    } else {
+      const g = rawGuardian as Record<string, unknown>;
+      const read = (key: keyof GuardianInput, max: number): string | null => {
+        const value = g[key];
+        const field = `guardian.${key}`;
+        if (typeof value !== 'string' || value.trim() === '') {
+          push(field, '필수 항목입니다.');
+          return null;
+        }
+        const trimmed = value.trim();
+        if (trimmed.length > max) {
+          push(field, `${max}자 이내로 입력해 주세요.`);
+          return null;
+        }
+        if (CONTROL_CHARS.test(trimmed)) {
+          push(field, '줄바꿈이나 보이지 않는 문자는 사용할 수 없습니다.');
+          return null;
+        }
+        return trimmed;
+      };
+      const name = read('name', MAX_NAME_LENGTH);
+      const relation = read('relation', 20);
+      const email = read('email', MAX_NAME_LENGTH * 2);
+      const phone = read('phone', 32);
+      if (email && !validator.isEmail(email)) push('guardian.email', '올바른 이메일 주소가 아닙니다.');
+      if (phone && !validator.isMobilePhone(phone, 'ko-KR')) push('guardian.phone', '올바른 휴대폰 번호가 아닙니다.');
+      if (phone && clientPhone && phone.replace(/\D/g, '') === clientPhone.replace(/\D/g, '')) {
+        push('guardian.phone', '의뢰인과 다른 번호여야 합니다 — 각자 자기 번호로 본인 확인을 합니다.');
+      }
+      if (name && relation && email && phone) guardian = { name, relation, email, phone };
+    }
+  }
+
   const terms = validateProductionTerms(payload.terms);
   if (!terms.ok) errors.push(...terms.errors);
 
@@ -76,6 +128,7 @@ export const validateProductionContractPayload = (
       clientStageName,
       clientEmail: clientEmail as string,
       clientPhone: clientPhone as string,
+      guardian,
       terms: terms.data,
     },
   };

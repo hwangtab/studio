@@ -29,13 +29,14 @@ export const getServerSideProps: GetServerSideProps<EditProductionContractPagePr
   const { id } = context.query;
   if (typeof id !== 'string') return { notFound: true };
 
-  const contract = await getDb().query.productionContracts.findFirst({ where: (t, { eq }) => eq(t.id, id) });
+  const contract = await getDb().query.productionContracts.findFirst({ where: (t, { eq }) => eq(t.id, id), with: { signers: true } });
   if (!contract) return { notFound: true };
   if (contract.status !== 'draft') {
     return { redirect: { destination: `/admin/contracts/production/${id}`, permanent: false } };
   }
 
-  return { props: { id, initialValues: productionContractToFormValues(contract) } };
+  const guardian = contract.signers.find((signer) => signer.role === 'guardian') ?? null;
+  return { props: { id, initialValues: productionContractToFormValues(contract, guardian) } };
 };
 
 export default function EditProductionContractPage({ id, initialValues }: EditProductionContractPageProps) {

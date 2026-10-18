@@ -304,7 +304,14 @@ export type SignerDetailsResult =
  * 둘 다 필수다. 생년월일은 동명이인을 가르는 유일한 항목이고, 주소는 계약서 제10조(원상회복·
  * 물품 회수 통지)와 제9조(해지 통지)가 전제하는 연락 수단이다.
  */
-export const validateSignerDetails = (payload: Record<string, unknown>): SignerDetailsResult => {
+export const validateSignerDetails = (
+  payload: Record<string, unknown>,
+  /**
+   * 법정대리인이 함께 서명하는 계약(제작 계약 — 운영자가 대리인을 지정한 경우)만 미성년자를 받는다.
+   * 연습실 계약은 대리인 서명 경로가 없어 기본값(막음) 그대로다.
+   */
+  options: { allowMinor?: boolean } = {},
+): SignerDetailsResult => {
   const errors: ValidationError[] = [];
   const push = (field: string, message: string) => errors.push({ field, message });
 
@@ -347,7 +354,7 @@ export const validateSignerDetails = (payload: Record<string, unknown>): SignerD
       } else {
         // 계약 당사자는 성년이어야 한다(민법상 미성년자 계약은 취소될 수 있다).
         const age = (now.getTime() - birth.getTime()) / (365.2425 * 24 * 60 * 60 * 1000);
-        if (age < 19) {
+        if (age < 19 && !options.allowMinor) {
           push('customerBirthdate', '만 19세 미만은 온라인으로 계약할 수 없습니다. 운영자에게 문의해 주세요.');
         } else if (age > 120) {
           push('customerBirthdate', '생년월일을 다시 확인해 주세요.');

@@ -51,10 +51,11 @@ const signedContract = async (signedAt: Date): Promise<{ id: string; token: stri
     clientStageName: null,
     clientEmail: 'g@example.com',
     clientPhone: '010-1234-5678',
+    guardian: null,
     terms: buildDefaultProductionTerms(),
   });
   const sent = await sendProductionContract(id, { allowedStatuses: ['draft'], adminActor: 'kyungha', ipAddress: null, userAgent: 'jest' });
-  const token = new URL(sent!.signUrl).searchParams.get('token')!;
+  const token = new URL(sent!.signUrls.client!).searchParams.get('token')!;
   await client.execute({
     sql: "UPDATE production_contracts SET status = 'signed', signed_at = ? WHERE id = ?",
     args: [Math.floor(signedAt.getTime() / 1000), id],
@@ -225,5 +226,43 @@ describe('의뢰인 진행 API', () => {
     const result = await callProgress(id, { action: 'unlock', token, identityDigits: '0000' });
     expect(result.status).toBe(400);
     expect(result.cookie).toBe('');
+  });
+});
+
+describe('해지 환불 계좌', () => {
+  beforeAll(() => {
+    process.env.FUNDING_FIELD_KEY = Buffer.alloc(32, 7).toString('base64');
+  });
+
+  const terminatedWithRefund = async () => {
+    const { id, token } = await signedContract(new Date());
+    await record(id, input({ type: 'payment_received', amount: 575_000 }));
+    await record(id, input({ type: 'kickoff' }));
+    await client.execute({ sql: "UPDATE production_contracts SET status = 'terminated' WHERE id = ?", args: [id] });
+    const { cookie } = await callProgress(id, { action: 'unlock', token, identityDigits: '5678' });
+    return { id, token, cookie };
+  };
+  const account = { bankName: '카카오뱅크', accountNumber: '3333-01-1234567', accountHolder: '홍길동' };
+
+  it('해지 계약에서 돌려받을 금액이 있으면 계좌를 받아 번호를 암호화해 둔다', async () => {
+    const { id, token, cookie } = await terminatedWithRefund();
+    const result = await callProgress(id, { action: 'refund-account', token, ...account }, cookie);
+    expect(result.status).toBe(200);
+
+    const row = (await client.execute({ sql: "SELECT * FROM refund_accounts WHERE order_kind = 'production' AND order_no = ?", args: [id] })).rows[0];
+    expect(row.bank_name).toBe('카카오뱅크');
+    expect(String(row.account_number_enc)).toMatch(/^v2:/);
+    expect(String(row.account_number_enc)).not.toContain('1234567');
+  });
+
+  it('진행 중인 계약에서는 받지 않는다', async () => {
+    const { id, token } = await signedContract(new Date());
+    const { cookie } = await callProgress(id, { action: 'unlock', token, identityDigits: '5678' });
+    expect((await callProgress(id, { action: 'refund-account', token, ...account }, cookie)).status).toBe(409);
+  });
+
+  it('본인 확인 쿠키가 없으면 받지 않는다', async () => {
+    const { id, token } = await terminatedWithRefund();
+    expect((await callProgress(id, { action: 'refund-account', token, ...account })).status).toBe(401);
   });
 });

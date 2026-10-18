@@ -38,6 +38,8 @@ interface CompletePageProps {
   unavailable?: 'not-found' | 'error';
   /** 진행이 끝난 계약 — 서명본은 그대로 받을 수 있다. */
   closed?: 'completed' | 'terminated';
+  /** 이 사람은 서명했고, 다른 당사자(의뢰인·법정대리인)의 서명을 기다린다 — 아직 계약 전이다. */
+  waitingFor?: string;
 }
 
 const OPERATOR_PHONE = '010-4255-7893';
@@ -58,14 +60,21 @@ export const getServerSideProps = withI18nServerProps<CompletePageProps>(async (
       where: (t, { eq }) => eq(t.id, id),
       with: { signers: true },
     });
-    const clientSigner = contract?.signers.find((signer) => signer.role === 'client' && signer.signToken === token);
+    const linkSigner = contract?.signers.find(
+      (signer) => (signer.role === 'client' || signer.role === 'guardian') && signer.signToken === token,
+    );
     // 토큰 불일치와 부재를 같은 화면으로 묶는다 — 어느 쪽인지 알려 주면 계약 id의 존재가 새어 나간다.
-    if (!contract || !clientSigner) {
+    if (!contract || !linkSigner) {
       return { props: { ...empty, unavailable: 'not-found' as const } };
     }
 
-    // 서명 전이면 아무것도 싣지 않고 서명 화면으로 보낸다(반대 방향은 sign.tsx가 맡는다).
     const status = getEffectiveProductionStatus(contract);
+    // 내 서명은 끝났고 상대 서명을 기다린다 — 계약 정보는 싣지 않고 그 사실만 알린다.
+    if (status === 'sent' && linkSigner.status === 'signed') {
+      const other = contract.signers.find((signer) => signer.status === 'pending' && signer.role !== 'operator');
+      return { props: { ...empty, waitingFor: other?.role === 'guardian' ? '법정대리인' : '의뢰인' } };
+    }
+    // 서명 전이면 아무것도 싣지 않고 서명 화면으로 보낸다(반대 방향은 sign.tsx가 맡는다).
     if (!hasSignedDocument(status)) {
       return { redirect: { destination: productionSignPath(id, token, locale), permanent: false } };
     }
@@ -84,7 +93,8 @@ export const getServerSideProps = withI18nServerProps<CompletePageProps>(async (
           signedAt: contract.signedAt ? contract.signedAt.toISOString() : null,
         },
         downloadUrl: `/api/contracts/production/${contract.id}/download?token=${encodeURIComponent(token)}`,
-        progressPath: contract.purgedAt ? '' : productionProgressPath(contract.id, token, locale),
+        // 진행 페이지는 의뢰인 링크로만 연다(승인·수정 요청은 의뢰인의 행위다).
+        progressPath: contract.purgedAt || linkSigner.role !== 'client' ? '' : productionProgressPath(contract.id, token, locale),
         purged: contract.purgedAt !== null,
         ...(status === 'completed' || status === 'terminated' ? { closed: status } : {}),
       },
@@ -103,10 +113,26 @@ export default function ProductionContractCompletePage({
   purged,
   unavailable,
   closed,
+  waitingFor,
 }: CompletePageProps) {
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [identityDigits, setIdentityDigits] = useState('');
+
+  if (waitingFor) {
+    return (
+      <>
+        <Head>
+          <title>서명 완료 | Studio NOL</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Head>
+        <ContractNotice
+          title="서명이 접수됐어요"
+          description={`${waitingFor}의 서명까지 끝나면 계약이 체결되고, 서명본 PDF를 메일로 보내 드려요.`}
+        />
+      </>
+    );
+  }
 
   if (unavailable || !contract) {
     const isError = unavailable === 'error';

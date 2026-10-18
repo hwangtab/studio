@@ -2,7 +2,7 @@ import { del } from '@vercel/blob';
 import { and, eq, inArray, isNull, lt, or } from 'drizzle-orm';
 
 import { getDb } from '../../../db/client';
-import { productionContractEvents, productionContracts, productionContractSigners } from '../../../db/schema';
+import { productionContractEvents, productionContracts, productionContractSigners, refundAccounts } from '../../../db/schema';
 import { contractPdfPathname } from '../pdfPath';
 import { canonicalTermsJson, parseStoredTerms } from './terms';
 
@@ -96,6 +96,8 @@ export const purgeExpiredProductionPersonalData = async (
           .set({
             name: PURGED_MARK,
             email: PURGED_MARK,
+            phone: null,
+            relation: null,
             signatureData: null,
             ipAddress: null,
             userAgent: null,
@@ -113,6 +115,10 @@ export const purgeExpiredProductionPersonalData = async (
           .update(productionContractEvents)
           .set({ dataJson: null, actorIp: null, noticeError: null })
           .where(eq(productionContractEvents.contractId, target.id)),
+        // 해지 환불 계좌(결제 공용 표, 0072). 은행·예금주도 개인정보라 덮지 않고 행을 지운다(결제 쪽 파기와 같다).
+        getDb()
+          .delete(refundAccounts)
+          .where(and(eq(refundAccounts.orderKind, 'production'), eq(refundAccounts.orderNo, target.id))),
       ]);
       purged += 1;
     } catch (error: unknown) {

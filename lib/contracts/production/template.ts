@@ -23,6 +23,8 @@ export interface ProductionTemplateData {
   /** 서명 전에는 비어 있다 — 서명자가 채운다. */
   clientBirthdate?: string | null;
   clientAddress?: string | null;
+  /** 미성년 의뢰인의 법정대리인(운영자가 적은 값). 없으면 그 칸이 계약서에 나오지 않는다. */
+  guardian?: { name: string; relation: string | null; phone: string | null } | null;
   terms: ProductionTerms;
   /** 계약일. 서명 순간에 확정된다(초안을 만든 날이 아니다). */
   contractDate: string;
@@ -77,7 +79,25 @@ export const buildProductionContent = (data: ProductionTemplateData, template: s
     `| **합계** | **${won(terms.amount.total)}원** |`,
   ].join('\n');
 
+  const { guardian } = data;
+  const guardianSection = guardian
+    ? [
+        '',
+        '**법정대리인** — 의뢰인이 미성년자이므로 함께 서명한다(제14조).',
+        '',
+        '| 구분 | 내용 |',
+        '|---|---|',
+        `| 성명 | ${cell(guardian.name)} |`,
+        `| 관계 | ${cell(guardian.relation)} |`,
+        `| 연락처 | ${cell(guardian.phone)} |`,
+        '',
+      ].join('\n')
+    : '';
+  const guardianSignatureRow = guardian ? `| **법정대리인** ${cell(guardian.name)} (${cell(guardian.relation)}) | (전자서명) |` : '';
+
   const replacements: Record<string, string> = {
+    '{{guardianSection}}': guardianSection,
+    '{{guardianSignatureRow}}': guardianSignatureRow,
     '{{clientName}}': cell(data.clientName),
     '{{clientStageName}}': cell(data.clientStageName, '-'),
     '{{clientBirthdate}}': cell(data.clientBirthdate),

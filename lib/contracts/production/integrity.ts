@@ -17,8 +17,12 @@ import type { ProductionClause } from './clauses';
  *
  * 형식을 바꾸면 버전을 올리고 옛 builder를 남긴다. 지우면 그 버전으로 서명된 계약이 전부 검증 불가가 된다.
  */
-type ProductionFingerprintVersion = 'p1';
-const FINGERPRINT_VERSION: ProductionFingerprintVersion = 'p1';
+/**
+ * p2(0072): 서명자의 연락처·관계를 덮는다 — 법정대리인 칸이 계약서에 인쇄되기 때문이다. p1으로 서명된 계약은
+ * p1 그대로 재계산한다(레지스트리에서 지우면 그 계약이 전부 검증 불가가 된다).
+ */
+type ProductionFingerprintVersion = 'p1' | 'p2';
+const FINGERPRINT_VERSION: ProductionFingerprintVersion = 'p2';
 
 /** 서명자 순서를 고정한다 — 배열 순서가 DB 조회 순서에 따라 바뀌면 같은 문서의 지문이 달라진다. */
 const ROLE_ORDER: Record<ProductionContractSigner['role'], number> = { operator: 0, client: 1, guardian: 2 };
@@ -26,7 +30,8 @@ const ROLE_ORDER: Record<ProductionContractSigner['role'], number> = { operator:
 export type ProductionFingerprintSigner = Pick<
   ProductionContractSigner,
   'role' | 'name' | 'email' | 'signedAt' | 'ipAddress' | 'signatureData' | 'identityVerifiedAt' | 'adminActor'
->;
+> &
+  Partial<Pick<ProductionContractSigner, 'phone' | 'relation'>>;
 
 export interface ProductionFingerprintInput {
   contract: Pick<
@@ -51,10 +56,13 @@ export interface ProductionFingerprintInput {
   signedAt: Date;
 }
 
-const buildCanonicalForm = ({ contract, clauses, signers, signedAt }: ProductionFingerprintInput): string => {
+const buildCanonicalForm = (
+  { contract, clauses, signers, signedAt }: ProductionFingerprintInput,
+  version: ProductionFingerprintVersion,
+): string => {
   const ordered = [...signers].sort((a, b) => ROLE_ORDER[a.role] - ROLE_ORDER[b.role]);
   return [
-    `fingerprint:${FINGERPRINT_VERSION}`,
+    `fingerprint:${version}`,
     `contract:${contract.id}`,
     `kind:${contract.kind}`,
     sized('title', contract.title),
@@ -80,6 +88,9 @@ const buildCanonicalForm = ({ contract, clauses, signers, signedAt }: Production
       sized(`signer[${index}].role`, signer.role),
       sized(`signer[${index}].name`, signer.name),
       sized(`signer[${index}].email`, signer.email),
+      ...(version === 'p2'
+        ? [sized(`signer[${index}].phone`, signer.phone ?? null), sized(`signer[${index}].relation`, signer.relation ?? null)]
+        : []),
       sized(`signer[${index}].adminActor`, signer.adminActor),
       `signer[${index}].signedAt:${toSeconds(signer.signedAt)}`,
       `signer[${index}].identityVerifiedAt:${toSeconds(signer.identityVerifiedAt)}`,
@@ -91,8 +102,11 @@ const buildCanonicalForm = ({ contract, clauses, signers, signedAt }: Production
 
 const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('hex');
 
+const fingerprintFor = (version: ProductionFingerprintVersion, input: ProductionFingerprintInput): string =>
+  `${version}:${sha256(buildCanonicalForm(input, version))}`;
+
 export const computeProductionFingerprint = (input: ProductionFingerprintInput): string =>
-  `${FINGERPRINT_VERSION}:${sha256(buildCanonicalForm(input))}`;
+  fingerprintFor(FINGERPRINT_VERSION, input);
 
 export type ProductionFingerprintCheck =
   | { status: 'match'; fingerprint: string }
@@ -110,8 +124,9 @@ export const verifyProductionFingerprint = (
   if (!stored) return { status: 'unverifiable', reason: 'none', stored: null };
   const match = /^(p\d+):([0-9a-f]{64})$/.exec(stored.trim());
   if (!match) return { status: 'unverifiable', reason: 'malformed', stored };
-  if (match[1] !== FINGERPRINT_VERSION) return { status: 'unverifiable', reason: 'unknown-version', stored };
+  const version = match[1];
+  if (version !== 'p1' && version !== 'p2') return { status: 'unverifiable', reason: 'unknown-version', stored };
 
-  const actual = computeProductionFingerprint(input);
+  const actual = fingerprintFor(version, input);
   return actual === stored.trim() ? { status: 'match', fingerprint: stored } : { status: 'mismatch', expected: stored, actual };
 };

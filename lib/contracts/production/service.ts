@@ -1,24 +1,28 @@
 import { randomUUID } from 'node:crypto';
 
-import { and, eq, inArray, isNull, lte, or } from 'drizzle-orm';
+import { and, eq, inArray, isNull, lte, or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../../db/client';
 import {
   productionContracts,
   productionContractSigners,
   type ProductionContract,
+  type ProductionContractSigner,
   type ProductionContractStatus,
 } from '../../../db/schema';
 import { resetIdentityAttempts } from '../admin-rate-limit';
 import { computeExpiresAt } from '../status';
 import { hashTemplate } from '../template-snapshot';
 import { generateSignToken } from '../token';
-import { PRODUCTION_REQUIRED_CLAUSES } from './clauses';
+import { parseStoredClauses, PRODUCTION_REQUIRED_CLAUSES } from './clauses';
 import {
+  sendProductionGuardianSignRequestEmail,
   sendProductionOperatorNotification,
   sendProductionSignRequestEmail,
 } from './email';
-import { buildProductionSignUrl, productionRateLimitKey } from './links';
+import { computeProductionFingerprint } from './integrity';
+import { buildProductionSignUrl, productionSignerRateLimitKey } from './links';
+import { buildFinalizeStatement } from './sign-transaction';
 import { buildProductionContent, readProductionTemplate } from './template';
 import { canonicalTermsJson, parseStoredTerms } from './terms';
 import type { ProductionContractPayload } from './validation';
@@ -59,11 +63,21 @@ const buildDraftContent = (data: ProductionContractPayload, template: string): s
       clientName: data.clientName,
       clientStageName: data.clientStageName,
       clientPhone: data.clientPhone,
+      guardian: data.guardian,
       terms: data.terms,
       contractDate: new Date().toISOString(),
     },
     template,
   );
+
+const guardianRow = (contractId: string, guardian: NonNullable<ProductionContractPayload['guardian']>) => ({
+  contractId,
+  role: 'guardian' as const,
+  name: guardian.name,
+  email: guardian.email,
+  phone: guardian.phone,
+  relation: guardian.relation,
+});
 
 /**
  * 초안을 만든다. 메일은 보내지 않는다(발송은 별도 행위이고, 그것이 곧 운영자 서명이다).
@@ -102,6 +116,7 @@ export const createProductionContract = async (data: ProductionContractPayload):
       .values([
         { contractId, role: 'operator', name: OPERATOR_SIGNER.name, email: OPERATOR_SIGNER.email },
         { contractId, role: 'client', name: data.clientName, email: data.clientEmail },
+        ...(data.guardian ? [guardianRow(contractId, data.guardian)] : []),
       ]),
   ]);
 
@@ -123,6 +138,7 @@ export const updateDraftProductionContract = async (
   const template = readProductionTemplate();
   const now = new Date();
   const stillDraft = and(eq(productionContracts.id, contractId), eq(productionContracts.status, 'draft'));
+  const draftIds = getDb().select({ id: productionContracts.id }).from(productionContracts).where(stillDraft);
 
   const [updatedRows] = await getDb().batch([
     getDb()
@@ -152,20 +168,41 @@ export const updateDraftProductionContract = async (
         and(
           eq(productionContractSigners.contractId, contractId),
           eq(productionContractSigners.role, 'client'),
-          inArray(
-            productionContractSigners.contractId,
-            getDb().select({ id: productionContracts.id }).from(productionContracts).where(stillDraft),
-          ),
+          inArray(productionContractSigners.contractId, draftIds),
         ),
       ),
+    // 법정대리인은 지우고 다시 넣는다(없앴거나 바꿨을 수 있다). 둘 다 "아직 초안"에 건다 — 발송된 계약의 서명자를
+    // 바꾸면 서명 링크를 받은 사람과 계약서의 대리인이 갈린다.
+    getDb()
+      .delete(productionContractSigners)
+      .where(
+        and(
+          eq(productionContractSigners.contractId, contractId),
+          eq(productionContractSigners.role, 'guardian'),
+          inArray(productionContractSigners.contractId, draftIds),
+        ),
+      ),
+    ...(data.guardian
+      ? [
+          getDb().run(sql`
+            INSERT INTO production_contract_signers (id, contract_id, role, name, email, phone, relation)
+            SELECT lower(hex(randomblob(16))), ${contractId}, 'guardian', ${data.guardian.name}, ${data.guardian.email},
+                   ${data.guardian.phone}, ${data.guardian.relation}
+            WHERE EXISTS (SELECT 1 FROM production_contracts WHERE id = ${contractId} AND status = 'draft')
+          `),
+        ]
+      : []),
   ]);
 
   return updatedRows[0] ?? null;
 };
 
+export type ExternalSignerRole = 'client' | 'guardian';
+
 export interface SendProductionResult {
   contract: ProductionContract;
-  signUrl: string;
+  /** 이번 발송으로 새 링크가 나간 서명자(아직 서명하지 않은 의뢰인·법정대리인)별 서명 주소. */
+  signUrls: Partial<Record<ExternalSignerRole, string>>;
 }
 
 /**
@@ -175,7 +212,9 @@ export interface SendProductionResult {
  *
  * 1. 계약 행을 조건부로 sent로 바꾼다(허용 상태 + 쿨다운 + 파기 전). 이 UPDATE 하나가 "이번 발송은 내 것"이라는
  *    판정이다. 같은 초에 들어온 두 번째 요청은 쿨다운에 걸려 0행이 되고, 그러면 아무것도 더 쓰지 않는다.
- * 2. 판정을 얻은 요청만 의뢰인 토큰을 새로 발급하고(옛 링크 즉시 무효), 운영자 서명이 아직이면 기록한다.
+ * 2. 판정을 얻은 요청만 아직 서명하지 않은 의뢰인·법정대리인에게 **각자 다른** 토큰을 새로 발급하고(옛 링크
+ *    즉시 무효), 운영자 서명이 아직이면 기록한다. 이미 서명한 사람의 토큰은 그대로 둔다 — 완료·진행 페이지가
+ *    그 토큰으로 열린다.
  *
  * 2를 1과 한 batch에 넣고 "계약이 방금 sent가 됐는가"를 조건으로 걸 수도 있지만, 그 조건을 SQL로 쓰면
  * 같은 초의 연타를 구별하지 못한다. 2가 실패하면 계약은 sent인데 링크가 옛것으로 남는다 — 재발송으로
@@ -208,12 +247,12 @@ export const sendProductionContract = async (
 
   if (!claimed) return null;
 
-  const signToken = generateSignToken();
-  await getDb().batch([
+  const tokens: Record<ExternalSignerRole, string> = { client: generateSignToken(), guardian: generateSignToken() };
+  const rotate = (role: ExternalSignerRole) =>
     getDb()
       .update(productionContractSigners)
       .set({
-        signToken,
+        signToken: tokens[role],
         // 새 링크의 열람 기록은 처음부터 센다(연습실 markContractSent와 같은 이유 — 옛 링크를 메일 스캐너가
         // 먼저 연 기록이 "최초 열람"으로 남으면 서명자의 열람이 아니게 된다).
         firstViewedAt: null,
@@ -225,10 +264,15 @@ export const sendProductionContract = async (
       .where(
         and(
           eq(productionContractSigners.contractId, contractId),
-          eq(productionContractSigners.role, 'client'),
+          eq(productionContractSigners.role, role),
           eq(productionContractSigners.status, 'pending'),
         ),
-      ),
+      )
+      .returning({ role: productionContractSigners.role });
+
+  const [clientRows, guardianRows] = await getDb().batch([
+    rotate('client'),
+    rotate('guardian'),
     // 운영자 서명은 첫 발송 때 한 번만 남는다. 재발송은 같은 문서를 다시 보내는 것이라 서명을 다시 받지 않는다.
     getDb()
       .update(productionContractSigners)
@@ -250,9 +294,14 @@ export const sendProductionContract = async (
   ]);
 
   // 잠긴 링크를 푸는 유일한 수단이 재발송이다(연습실과 같다). 새 토큰이 나가므로 옛 시도를 이어 셀 이유도 없다.
-  await resetIdentityAttempts(productionRateLimitKey(contractId));
+  await Promise.all(
+    (['client', 'guardian'] as const).map((role) => resetIdentityAttempts(productionSignerRateLimitKey(contractId, role))),
+  );
 
-  return { contract: claimed, signUrl: buildProductionSignUrl(contractId, signToken) };
+  const signUrls: SendProductionResult['signUrls'] = {};
+  if (clientRows.length > 0) signUrls.client = buildProductionSignUrl(contractId, tokens.client);
+  if (guardianRows.length > 0) signUrls.guardian = buildProductionSignUrl(contractId, tokens.guardian);
+  return { contract: claimed, signUrls };
 };
 
 /** 알림 결과를 계약에 남긴다 — 메일은 응답 뒤에 나가므로 실패가 화면에 드러날 길이 이것뿐이다. */
@@ -267,20 +316,29 @@ export const recordProductionNotificationResult = async (contractId: string, err
   }
 };
 
-/** 서명 요청 메일(의뢰인) + 운영자 알림. 실패는 계약에 기록한다. */
+/** 서명 요청 메일(새 링크가 나간 의뢰인·법정대리인) + 운영자 알림. 실패는 계약에 기록한다. */
 export const sendProductionSignRequestNotifications = async (
   contract: ProductionContract,
-  signUrl: string,
+  signUrls: SendProductionResult['signUrls'],
 ): Promise<void> => {
   try {
     const terms = parseStoredTerms(contract.termsJson);
-    const [clientResult, operatorResult] = await Promise.all([
-      sendProductionSignRequestEmail(contract, terms, signUrl),
+    const guardian = signUrls.guardian
+      ? await getDb().query.productionContractSigners.findFirst({
+          where: and(eq(productionContractSigners.contractId, contract.id), eq(productionContractSigners.role, 'guardian')),
+        })
+      : undefined;
+    const [clientResult, guardianResult, operatorResult] = await Promise.all([
+      signUrls.client ? sendProductionSignRequestEmail(contract, terms, signUrls.client) : null,
+      signUrls.guardian && guardian
+        ? sendProductionGuardianSignRequestEmail(contract, terms, guardian, signUrls.guardian)
+        : null,
       sendProductionOperatorNotification(contract, terms, false),
     ]);
 
     const problems = [
-      clientResult.ok ? null : `서명 요청 메일 발송 실패 (${clientResult.errorCode ?? 'UNKNOWN'})`,
+      clientResult && !clientResult.ok ? `서명 요청 메일 발송 실패 (${clientResult.errorCode ?? 'UNKNOWN'})` : null,
+      guardianResult && !guardianResult.ok ? `법정대리인 서명 요청 메일 발송 실패 (${guardianResult.errorCode ?? 'UNKNOWN'})` : null,
       operatorResult.ok ? null : `운영자 알림 메일 발송 실패 (${operatorResult.errorCode ?? 'UNKNOWN'})`,
     ].filter((problem): problem is string => problem !== null);
 
@@ -359,18 +417,46 @@ export const closeProductionContract = async (
  */
 export const buildSignedProductionContent = (
   contract: ProductionContract,
-  details: { clientBirthdate: string; clientAddress: string },
+  signers: readonly ProductionContractSigner[],
   signedAt: Date,
-): string =>
-  buildProductionContent(
+): string => {
+  const guardian = signers.find((signer) => signer.role === 'guardian');
+  return buildProductionContent(
     {
       clientName: contract.clientName,
       clientStageName: contract.clientStageName,
       clientPhone: contract.clientPhone,
-      clientBirthdate: details.clientBirthdate,
-      clientAddress: details.clientAddress,
+      clientBirthdate: contract.clientBirthdate,
+      clientAddress: contract.clientAddress,
+      guardian: guardian ? { name: guardian.name, relation: guardian.relation, phone: guardian.phone } : null,
       terms: parseStoredTerms(contract.termsJson),
       contractDate: signedAt.toISOString(),
     },
     contract.template,
   );
+};
+
+/**
+ * 모두 서명했으면 계약을 성립시킨다. 성립시켰으면 true(이 요청이 체결 메일·PDF를 맡는다).
+ *
+ * 서명 요청마다 서명 쓰기 뒤에 부른다. 상태를 **다시 읽어** 본문을 완성하고 지문을 계산한다 — 의뢰인과
+ * 법정대리인이 동시에 서명하면 각 요청이 처음 읽은 상태에는 상대 서명이 없기 때문이다. 둘 다 여기까지 오면
+ * 같은 상태로 같은 지문을 만들고, 조건부 UPDATE가 먼저 온 하나만 받는다.
+ */
+export const finalizeProductionContractIfComplete = async (contractId: string, now: Date = new Date()): Promise<boolean> => {
+  const contract = await getDb().query.productionContracts.findFirst({
+    where: eq(productionContracts.id, contractId),
+    with: { signers: true },
+  });
+  if (!contract || contract.status !== 'sent' || contract.signers.some((signer) => signer.status === 'pending')) return false;
+
+  const content = buildSignedProductionContent(contract, contract.signers, now);
+  const contentHash = computeProductionFingerprint({
+    contract: { ...contract, content },
+    clauses: parseStoredClauses(contract.clausesJson),
+    signers: contract.signers,
+    signedAt: now,
+  });
+  const result = await buildFinalizeStatement(getDb(), { contractId, now, content, contentHash });
+  return (result.rowsAffected ?? 0) > 0;
+};

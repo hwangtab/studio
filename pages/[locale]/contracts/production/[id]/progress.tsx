@@ -15,6 +15,7 @@ import { loadProgressContext } from '../../../../../lib/contracts/production/pro
 import { buildClientProgressView, type ProgressView, type StageView } from '../../../../../lib/contracts/production/progress-view';
 import { hasSignedDocument } from '../../../../../lib/contracts/production/status';
 import { withI18nServerProps } from '../../../../../lib/getStatic';
+import { loadRefundAccountSummary } from '../../../../../lib/payments/refundAccount';
 
 interface ProgressPageProps {
   locale: string;
@@ -27,6 +28,11 @@ interface ProgressPageProps {
   /** 진행이 끝난 계약 — 승인·수정 버튼이 없다. */
   closed: boolean;
   view: ProgressView | null;
+  /**
+   * 해지된 계약의 환불(제10조 정산). 돌려받을 금액과, 이미 적은 계좌의 은행·예금주(계좌번호는 싣지 않는다 —
+   * lib/crypto/CLAUDE.md). 해지가 아니면 null.
+   */
+  refund: { refundable: number; account: { bankName: string; accountHolder: string; refunded: boolean } | null } | null;
   unavailable?: 'not-found' | 'error';
 }
 
@@ -52,6 +58,7 @@ export const getServerSideProps = withI18nServerProps<ProgressPageProps>(async (
     locked: true,
     closed: false,
     view: null,
+    refund: null,
   };
   if (!id || typeof token !== 'string' || token.trim() === '') {
     return { props: { ...empty, unavailable: 'not-found' as const } };
@@ -68,6 +75,17 @@ export const getServerSideProps = withI18nServerProps<ProgressPageProps>(async (
     }
 
     const locked = !hasPortalAccess(context.req, id, token);
+    let refund: ProgressPageProps['refund'] = null;
+    if (!locked && progress.contract.status === 'terminated') {
+      const summary = await loadRefundAccountSummary({ kind: 'production', orderNo: id });
+      refund = {
+        refundable: progress.ledger.refund.refundable,
+        account:
+          summary.status === 'present'
+            ? { bankName: summary.bankName, accountHolder: summary.accountHolder, refunded: summary.refundedAt !== null }
+            : null,
+      };
+    }
     return {
       props: {
         ...empty,
@@ -76,6 +94,7 @@ export const getServerSideProps = withI18nServerProps<ProgressPageProps>(async (
         locked,
         closed: progress.contract.status !== 'signed',
         view: locked ? null : buildClientProgressView(progress.terms, progress.ledger),
+        refund,
       },
     };
   } catch (error: unknown) {
@@ -228,6 +247,77 @@ function StageCard({
   );
 }
 
+function RefundSection({
+  contractId,
+  token,
+  refund,
+  onDone,
+}: {
+  contractId: string;
+  token: string;
+  refund: NonNullable<ProgressPageProps['refund']>;
+  onDone: () => Promise<void>;
+}) {
+  const [bankName, setBankName] = useState('');
+  const [accountNumber, setAccountNumber] = useState('');
+  const [accountHolder, setAccountHolder] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const submit = async () => {
+    setBusy(true);
+    setError(null);
+    const result = await post(contractId, { action: 'refund-account', token, bankName, accountNumber, accountHolder });
+    setBusy(false);
+    if (!result.ok) {
+      setError(result.message ?? '접수하지 못했어요.');
+      return;
+    }
+    await onDone();
+  };
+
+  return (
+    <section className="bg-white dark:bg-white rounded-2xl shadow-sm p-6 md:p-8">
+      <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-2">환불</h2>
+      <p className="text-sm text-gray-700 dark:text-gray-700">
+        계약이 해지되어 진행한 작업분을 빼고 <strong>{formatCurrency(refund.refundable)}원</strong>을 돌려드려요(계약서 제10조).
+      </p>
+      {refund.refundable <= 0 ? null : refund.account ? (
+        <p className="mt-3 text-sm text-gray-600 dark:text-gray-600">
+          {refund.account.refunded
+            ? `${refund.account.bankName} (예금주 ${refund.account.accountHolder}) 계좌로 보내 드렸어요.`
+            : `${refund.account.bankName} (예금주 ${refund.account.accountHolder}) 계좌를 받았어요. 확인 후 보내 드릴게요.`}
+        </p>
+      ) : (
+        <div className="mt-4 space-y-3">
+          {(
+            [
+              ['refund-bank', '은행', bankName, setBankName, '예: 카카오뱅크'],
+              ['refund-account', '계좌번호', accountNumber, setAccountNumber, '숫자와 하이픈(-)'],
+              ['refund-holder', '예금주', accountHolder, setAccountHolder, ''],
+            ] as const
+          ).map(([inputId, label, value, setter, placeholder]) => (
+            <div key={inputId}>
+              <label htmlFor={inputId} className="block text-sm text-gray-700 dark:text-gray-700 mb-1">
+                {label}
+              </label>
+              <TextInput id={inputId} light value={value} placeholder={placeholder} autoComplete="off" onChange={(e) => setter(e.target.value)} />
+            </div>
+          ))}
+          <Button light disabled={busy || !bankName || !accountNumber || !accountHolder} onClick={submit}>
+            {busy ? '접수 중…' : '환불 계좌 보내기'}
+          </Button>
+          {error && (
+            <Notice tone="error" light>
+              {error}
+            </Notice>
+          )}
+        </div>
+      )}
+    </section>
+  );
+}
+
 export default function ProductionProgressPage({
   locale,
   token,
@@ -237,6 +327,7 @@ export default function ProductionProgressPage({
   locked,
   closed,
   view,
+  refund,
   unavailable,
 }: ProgressPageProps) {
   const router = useRouter();
@@ -320,6 +411,8 @@ export default function ProductionProgressPage({
             </div>
           ) : (
             <>
+              {refund && <RefundSection contractId={contractId} token={token} refund={refund} onDone={reload} />}
+
               <section className="bg-white dark:bg-white rounded-2xl shadow-sm p-6 md:p-8 space-y-4">
                 <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900">단계별 확인</h2>
                 {closed && (
