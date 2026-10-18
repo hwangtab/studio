@@ -55,6 +55,8 @@ const MAIN_EXEMPT: Record<string, string> = {
   'pages/[locale]/press/sabbaha-slung.tsx': '비공개 감상실(자기 머리·꼬리를 그린다)',
   'pages/[locale]/contracts/[id]/sign.tsx': '계약 서명 — 라이트 고정 법적 문서 화면(design-system §1)',
   'pages/[locale]/contracts/[id]/complete.tsx': '계약 완료 — 라이트 고정 법적 문서 화면(design-system §1)',
+  'pages/[locale]/contracts/production/[id]/sign.tsx': '제작 계약 서명 — 연습실 계약 서명 화면과 같은 라이트 고정 법적 문서',
+  'pages/[locale]/contracts/production/[id]/complete.tsx': '제작 계약 완료 — 연습실 계약 완료 화면과 같은 라이트 고정 법적 문서',
 };
 
 const MIN_H_SCREEN_EXEMPT: Record<string, string> = {
@@ -62,6 +64,8 @@ const MIN_H_SCREEN_EXEMPT: Record<string, string> = {
   'pages/[locale]/press/sabbaha-slung.tsx': '비공개 감상실(자기 바탕을 그린다)',
   'pages/[locale]/contracts/[id]/sign.tsx': '계약 서명 — 종이처럼 보이는 라이트 고정 바탕(design-system §1)',
   'pages/[locale]/contracts/[id]/complete.tsx': '계약 완료 — 종이처럼 보이는 라이트 고정 바탕(design-system §1)',
+  'pages/[locale]/contracts/production/[id]/sign.tsx': '제작 계약 서명 — 연습실과 같은 라이트 고정 바탕(design-system §1)',
+  'pages/[locale]/contracts/production/[id]/complete.tsx': '제작 계약 완료 — 연습실과 같은 라이트 고정 바탕(design-system §1)',
 };
 
 const hasV2 = (src: string) => /\.designEdition\s*=\s*'v2'/.test(src);

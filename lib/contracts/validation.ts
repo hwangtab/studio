@@ -104,7 +104,7 @@ const addMonths = (date: Date, months: number): Date => {
  * (Trojan Source). 계약서는 "보이는 대로 합의한 것"이 되어야 하므로 방향을 건드리는
  * 문자는 모두 막는다.
  */
-const CONTROL_CHARS =
+export const CONTROL_CHARS =
   // 아래 둘째 줄은 "글자처럼 보이지만 빈칸"인 문자들이다(한글 채움 U+115F·1160·3164·FFA0, 점자 빈칸 U+2800,
   // 결합 그래핀 결합 방지 U+034F, 크메르 고유 모음 U+17B4·17B5). 이름·주소 칸에 넣으면 눈으로는 같은데 값이
   // 다른 문자열이 되어 동명이인 판단과 계약서 인쇄를 속인다(2026-10-02 코드리뷰).

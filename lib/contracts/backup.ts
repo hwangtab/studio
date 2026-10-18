@@ -1,7 +1,7 @@
 import { del, list, put } from '@vercel/blob';
 
 import { getDb } from '../../db/client';
-import { contractPdfPathname } from './pdfPath';
+import { contractPdfPathname, PRODUCTION_PDF_PREFIX } from './pdfPath';
 
 /**
  * 백업 보관 기간.
@@ -43,6 +43,14 @@ export const backupContracts = async (now: Date = new Date()): Promise<BackupRes
   // 안전하므로(유출 상황일 수 있다) 토큰까지 되살릴 이유가 없다.
   const sanitized = all.map(({ signToken: _signToken, ...rest }) => rest);
 
+  // 제작 계약도 같은 파일에 뜬다(같은 이유 — Turso가 유일본이다). 토큰은 서명자 행에 있어 거기서 뺀다.
+  // 템플릿 사본은 싣는다: 서명 때 본문을 그 사본으로 완성하므로, 복구한 서명 대기 계약에 필요하다.
+  const production = await getDb().query.productionContracts.findMany({ with: { signers: true } });
+  const sanitizedProduction = production.map(({ signers, ...rest }) => ({
+    ...rest,
+    signers: signers.map(({ signToken: _signToken, ...signer }) => signer),
+  }));
+
   const stamp = now.toISOString().slice(0, 19).replace(/[:T]/g, '-');
 
   /**
@@ -59,7 +67,11 @@ export const backupContracts = async (now: Date = new Date()): Promise<BackupRes
   try {
     const blob = await put(
       `${BACKUP_PREFIX}${stamp}.json`,
-      JSON.stringify({ exportedAt: now.toISOString(), contracts: sanitized }, null, 2),
+      JSON.stringify(
+        { exportedAt: now.toISOString(), contracts: sanitized, productionContracts: sanitizedProduction },
+        null,
+        2,
+      ),
       { access: 'private', contentType: 'application/json', addRandomSuffix: false },
     );
     blobPath = blob.pathname;
@@ -71,7 +83,8 @@ export const backupContracts = async (now: Date = new Date()): Promise<BackupRes
   // 새 백업이 써진 뒤에만 오래된 백업을 지운다. 쓰기가 계속 실패하는데 정리만 돌면 28일 뒤
   // 백업이 하나도 남지 않는다(2026-10-02 리뷰). 고아 PDF 정리는 백업과 무관해 그대로 돈다.
   const removedBackups = backupError ? 0 : await removeExpiredBackups(now);
-  const removedOrphanPdfs = await removeOrphanPdfs(all, now);
+  const removedOrphanPdfs =
+    (await removeOrphanPdfs(all, PDF_PREFIX, now)) + (await removeOrphanPdfs(production, PRODUCTION_PDF_PREFIX, now));
 
   // 정리를 마친 뒤에 실패를 알린다. 호출부(크론)가 운영자에게 메일을 보낸다.
   if (backupError) throw backupError;
@@ -107,6 +120,11 @@ const removeExpiredBackups = async (now: Date): Promise<number> => {
  */
 const removeOrphanPdfs = async (
   contracts: ReadonlyArray<{ pdfUrl: string | null }>,
+  /**
+   * 이 접두사 아래만 본다. 연습실(`contracts/`)과 제작 계약(`production-contracts/`)을 따로 부른다 — 한 접두사에
+   * 두 표의 PDF를 섞으면, 한쪽 표만 넘긴 호출이 다른 쪽의 멀쩡한 계약서를 고아로 잡아 지운다.
+   */
+  prefix: string,
   now: Date,
 ): Promise<number> => {
   // 주소가 아니라 경로로 맞춘다. 주소의 호스트는 저장소 ID라, 저장소를 옮기면 DB의 옛 주소와
@@ -115,7 +133,7 @@ const removeOrphanPdfs = async (
     contracts.map((c) => c.pdfUrl).filter((url): url is string => Boolean(url)).map(contractPdfPathname),
   );
 
-  const { blobs } = await list({ prefix: PDF_PREFIX });
+  const { blobs } = await list({ prefix });
   const grace = new Date(now.getTime() - ORPHAN_GRACE_HOURS * 60 * 60 * 1000);
 
   const orphans = blobs.filter(

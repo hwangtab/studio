@@ -19,7 +19,7 @@ const walk = (dir: string): string[] =>
   });
 
 /** 메일이 아닌 HTML 문서(PDF 원본·웹 페이지)를 만드는 파일. */
-const NOT_EMAIL_HTML = new Set(['lib/contracts/pdf-html.ts', 'lib/press/page.ts']);
+const NOT_EMAIL_HTML = new Set(['lib/contracts/pdf-html.ts', 'lib/contracts/production/pdf-html.ts', 'lib/press/page.ts']);
 
 describe('메일 공용 레이아웃 가드', () => {
   it('sendEmail의 html은 필수 인자다 — 글자만 보내는 메일은 타입 검사에서 서고, 이 단언은 그 조건이 느슨해지는 것을 막는다', () => {

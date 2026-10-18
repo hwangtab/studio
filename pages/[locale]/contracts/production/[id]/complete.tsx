@@ -1,0 +1,267 @@
+import React, { useState } from 'react';
+import Head from 'next/head';
+
+import ContractNotice from '../../../../../components/contracts/ContractNotice';
+import { Button } from '../../../../../components/ui/Button';
+import { TextInput } from '../../../../../components/ui/Field';
+import { Notice } from '../../../../../components/ui/Notice';
+import { getDb } from '../../../../../db/client';
+import { formatCurrency, formatDate } from '../../../../../lib/contracts/format';
+import { IDENTITY_DIGITS } from '../../../../../lib/contracts/identity';
+import { denyContractPageCaching } from '../../../../../lib/contracts/page-cache';
+import { productionSignPath } from '../../../../../lib/contracts/production/links';
+import { getEffectiveProductionStatus, hasSignedDocument } from '../../../../../lib/contracts/production/status';
+import { parseStoredTerms } from '../../../../../lib/contracts/production/terms';
+import { withI18nServerProps } from '../../../../../lib/getStatic';
+
+/**
+ * 화면이 그리는 값만 싣는다. 생년월일·주소·연락처가 든 서명본은 연락처 뒷자리를 확인한 뒤 PDF로만 준다
+ * (연습실 complete.tsx와 같은 원칙 — props는 HTML에 그대로 실린다).
+ */
+interface CompleteViewContract {
+  clientName: string;
+  songTitle: string | null;
+  total: number;
+  deposit: number;
+  depositDueDays: number;
+  account: string;
+  signedAt: string | null;
+}
+
+interface CompletePageProps {
+  locale: string;
+  contract: CompleteViewContract | null;
+  downloadUrl: string;
+  purged: boolean;
+  unavailable?: 'not-found' | 'error';
+  /** 진행이 끝난 계약 — 서명본은 그대로 받을 수 있다. */
+  closed?: 'completed' | 'terminated';
+}
+
+const OPERATOR_PHONE = '010-4255-7893';
+
+export const getServerSideProps = withI18nServerProps<CompletePageProps>(async (context) => {
+  denyContractPageCaching(context.res);
+
+  const { locale, id } = context.params as { locale: string; id: string };
+  const { token } = context.query;
+  const empty = { locale, contract: null, downloadUrl: '', purged: false };
+
+  if (!id || typeof token !== 'string' || token.trim() === '') {
+    return { props: { ...empty, unavailable: 'not-found' as const } };
+  }
+
+  try {
+    const contract = await getDb().query.productionContracts.findFirst({
+      where: (t, { eq }) => eq(t.id, id),
+      with: { signers: true },
+    });
+    const clientSigner = contract?.signers.find((signer) => signer.role === 'client' && signer.signToken === token);
+    // 토큰 불일치와 부재를 같은 화면으로 묶는다 — 어느 쪽인지 알려 주면 계약 id의 존재가 새어 나간다.
+    if (!contract || !clientSigner) {
+      return { props: { ...empty, unavailable: 'not-found' as const } };
+    }
+
+    // 서명 전이면 아무것도 싣지 않고 서명 화면으로 보낸다(반대 방향은 sign.tsx가 맡는다).
+    const status = getEffectiveProductionStatus(contract);
+    if (!hasSignedDocument(status)) {
+      return { redirect: { destination: productionSignPath(id, token, locale), permanent: false } };
+    }
+
+    const terms = parseStoredTerms(contract.termsJson);
+    return {
+      props: {
+        locale,
+        contract: {
+          clientName: contract.clientName,
+          songTitle: terms.songTitle,
+          total: terms.amount.total,
+          deposit: terms.amount.deposit,
+          depositDueDays: terms.amount.depositDueDays,
+          account: `${terms.payment.bank} ${terms.payment.account} (예금주 ${terms.payment.holder})`,
+          signedAt: contract.signedAt ? contract.signedAt.toISOString() : null,
+        },
+        downloadUrl: `/api/contracts/production/${contract.id}/download?token=${encodeURIComponent(token)}`,
+        purged: contract.purgedAt !== null,
+        ...(status === 'completed' || status === 'terminated' ? { closed: status } : {}),
+      },
+    };
+  } catch (error: unknown) {
+    console.error('[contracts/production/[id]/complete] Failed to load contract:', error);
+    return { props: { ...empty, unavailable: 'error' as const } };
+  }
+});
+
+export default function ProductionContractCompletePage({
+  locale,
+  contract,
+  downloadUrl,
+  purged,
+  unavailable,
+  closed,
+}: CompletePageProps) {
+  const [downloading, setDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
+  const [identityDigits, setIdentityDigits] = useState('');
+
+  if (unavailable || !contract) {
+    const isError = unavailable === 'error';
+    const title = isError ? '계약서를 여는 중 문제가 생겼습니다' : '계약서를 찾을 수 없습니다';
+    return (
+      <>
+        <Head>
+          <title>{`${title} | Studio NOL`}</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Head>
+        <ContractNotice
+          title={title}
+          description={
+            isError
+              ? '잠시 후 다시 시도해 주세요. 서명은 이미 접수되었을 수 있으니, 계속 같은 화면이 나오면 아래 번호로 알려 주세요.'
+              : '링크가 만료되었거나 주소가 잘못되었습니다. 메일에 포함된 링크를 다시 확인해 주세요.'
+          }
+        />
+      </>
+    );
+  }
+
+  /** 링크로 바로 이동하지 않고 받아서 저장한다 — 실패가 JSON 한 줄짜리 흰 화면으로 보이지 않게(연습실과 같다). */
+  const handleDownload = async () => {
+    setDownloading(true);
+    setDownloadError(null);
+    try {
+      const response = await fetch(downloadUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identityDigits }),
+      });
+      if (!response.ok) {
+        const message = await response
+          .json()
+          .then((body) => (typeof body?.message === 'string' ? body.message : null))
+          .catch(() => null);
+        setDownloadError(message ?? '계약서를 받지 못했습니다. 잠시 후 다시 시도해 주세요.');
+        return;
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${contract.clientName}_음원제작용역계약서.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch {
+      setDownloadError('연결이 끊겼습니다. 잠시 후 다시 시도해 주세요.');
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  return (
+    <>
+      <Head>
+        <title>계약 체결 완료 | Studio NOL</title>
+        <meta name="robots" content="noindex, nofollow" />
+        <meta name="referrer" content="no-referrer" />
+      </Head>
+
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-50 flex items-center justify-center px-4 py-12">
+        <div className="bg-white dark:bg-white rounded-2xl shadow-sm p-8 md:p-12 max-w-lg w-full text-center">
+          <div className="w-16 h-16 bg-green-100 dark:bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg className="w-8 h-8 text-green-600 dark:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+
+          <p className="text-gray-400 dark:text-gray-400 text-sm font-medium mb-2">스튜디오 놀</p>
+          <h1 className="typo-page-title text-gray-900 dark:text-gray-900 mb-3">계약 체결 완료</h1>
+          <p className="text-gray-600 dark:text-gray-600 mb-8 leading-relaxed">
+            <span className="block">
+              {purged ? '체결이 완료된 계약입니다.' : `${contract.clientName}님, 음원 제작 용역 계약이 체결되었어요.`}
+            </span>
+            <span className="block">
+              {purged ? '보관 기간이 지나 개인정보를 파기했어요.' : '서명본 PDF와 계약금 안내를 메일로도 보내 드려요.'}
+            </span>
+          </p>
+
+          {closed && (
+            <p className="mb-8 rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700 dark:border-gray-200 dark:bg-gray-50 dark:text-gray-700">
+              이 계약은 <strong>{closed === 'completed' ? '작업이 완료' : '해지'}</strong>되었어요. 서명본은 그대로 보관되며 아래에서
+              내려받을 수 있어요.
+            </p>
+          )}
+
+          <div className="bg-gray-50 dark:bg-gray-50 rounded-xl p-6 text-left mb-8">
+            <dl className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
+              <dt className="text-gray-500 dark:text-gray-500">본 곡</dt>
+              <dd className="text-gray-900 dark:text-gray-900 font-medium text-right">{contract.songTitle ?? '1곡 (제목 미정)'}</dd>
+              <dt className="text-gray-500 dark:text-gray-500">계약금액</dt>
+              <dd className="text-gray-900 dark:text-gray-900 font-medium text-right">{formatCurrency(contract.total)}원</dd>
+              <dt className="text-gray-500 dark:text-gray-500">체결일</dt>
+              <dd className="text-gray-900 dark:text-gray-900 font-medium text-right">{formatDate(contract.signedAt)}</dd>
+            </dl>
+            {!closed && !purged && (
+              <p className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-200 text-sm text-gray-700 dark:text-gray-700 leading-relaxed">
+                계약금 <strong>{formatCurrency(contract.deposit)}원</strong>을 체결일로부터 {contract.depositDueDays}일 이내에
+                입금해 주세요.
+                <span className="block mt-1 text-gray-500 dark:text-gray-500">{contract.account}</span>
+              </p>
+            )}
+          </div>
+
+          {purged ? (
+            <p className="text-sm text-gray-600 dark:text-gray-600 bg-gray-50 dark:bg-gray-50 rounded-xl p-4 mb-6 leading-relaxed">
+              <span className="block">보관 기간(3년)이 지나 계약 원본과 개인정보를 파기했어요.</span>
+              <span className="block">문의는 {OPERATOR_PHONE}으로 연락해 주세요.</span>
+            </p>
+          ) : (
+            <>
+              <label
+                htmlFor="download-identity-digits"
+                className="block text-left text-sm text-gray-600 dark:text-gray-600 mb-2"
+              >
+                본인 확인을 위해 계약서에 등록된 연락처 뒤 {IDENTITY_DIGITS}자리를 입력해 주세요.
+              </label>
+              <TextInput
+                id="download-identity-digits"
+                type="text"
+                inputMode="numeric"
+                autoComplete="off"
+                maxLength={IDENTITY_DIGITS}
+                value={identityDigits}
+                onChange={(event) => setIdentityDigits(event.target.value.replace(/\D/g, ''))}
+                placeholder="0000"
+                aria-invalid={downloadError ? true : undefined}
+                invalid={Boolean(downloadError)}
+                light
+                className="mb-4 px-4 py-3 text-center text-lg tracking-[0.5em]"
+              />
+              <Button light size="lg" fullWidth disabled={downloading || identityDigits.length !== IDENTITY_DIGITS} onClick={handleDownload}>
+                {downloading ? '준비 중…' : '계약서 PDF 내려받기'}
+              </Button>
+              {downloadError && (
+                <Notice tone="error" light className="mt-3">
+                  <span className="block">{downloadError}</span>
+                  <span className="block">계약서는 메일로도 보내 드렸어요. 급하시면 {OPERATOR_PHONE}으로 연락해 주세요.</span>
+                </Notice>
+              )}
+            </>
+          )}
+
+          {/* 문서 이동으로 나간다 — 클라이언트 전환이면 토큰이 실린 주소가 측정 스크립트에 page_view로 남는다
+              (lib/analytics/privatePaths.ts). */}
+          <Button asChild light size="lg" variant="weak" fullWidth className="mt-6">
+            <a href={`/${locale}`} rel="noreferrer">
+              스튜디오 홈으로
+            </a>
+          </Button>
+        </div>
+      </main>
+    </>
+  );
+}
+
+// 디자인 판 — lib/designEdition.ts
+ProductionContractCompletePage.designEdition = 'v2';

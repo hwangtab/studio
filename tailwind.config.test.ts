@@ -210,7 +210,7 @@ const BRAND_TEXT_RE = /(?<![-\w])((?:[a-z-]+:)*)text-(primary|secondary|accent)(
 
 /**
  * 라이트 고정 화면. 정본(docs/design-system.md §1 다크모드)이 면제하는 계약 라우트는
- * 서명·완료 **두 장뿐**이다. 예전엔 `rel.includes('/contracts/')`로 계약 경로 전체를
+ * 서명·완료 **두 장뿐**이다(연습실·제작 계약 각각). 예전엔 `rel.includes('/contracts/')`로 계약 경로 전체를
  * 면제해서, 앞으로 생길 일반 다크 테마 라우트(예: contracts/index.tsx)까지 조용히
  * 가드 밖으로 나갈 판이었다.
  */
@@ -218,7 +218,8 @@ const LIGHT_FIXED = (rel: string) =>
   rel.startsWith('pages/admin/') ||
   rel.startsWith('components/admin/') ||
   rel.startsWith('components/contracts/') ||
-  /^pages\/\[locale\]\/contracts\/\[id\]\/(sign|complete)\.tsx$/.test(rel);
+  // 제작 계약(contracts/production/[id]/…)도 같은 두 장이다 — 종이처럼 밝은 서명·완료 화면.
+  /^pages\/\[locale\]\/contracts\/(production\/)?\[id\]\/(sign|complete)\.tsx$/.test(rel);
 
 /**
  * 한 줄 안에서 **문제 토큰이 들어 있는 문자열 리터럴 구간**만 돌려준다.

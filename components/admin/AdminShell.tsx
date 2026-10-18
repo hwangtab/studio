@@ -68,6 +68,7 @@ export const ADMIN_NAV_ENTRIES: readonly AdminNavEntry[] = [
     items: [
       { href: '/admin/bookings?line=studio', label: '녹음실 예약', line: 'studio' },
       { href: '/admin/bookings?line=mixing', label: '믹싱·마스터링', line: 'mixing' },
+      { href: '/admin/contracts/production', label: '제작 계약' },
     ],
   },
   {

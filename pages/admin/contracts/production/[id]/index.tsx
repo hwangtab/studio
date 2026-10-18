@@ -1,0 +1,412 @@
+import React, { useState } from 'react';
+import type { GetServerSideProps } from 'next';
+import Head from 'next/head';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+
+import { AdminShell } from '../../../../../components/admin/AdminShell';
+import { copyToClipboard } from '../../../../../components/admin/contractActions';
+import {
+  deleteProductionContractRequest,
+  downloadProductionPdf,
+  mutateProductionContract,
+  type ProductionActionResult,
+} from '../../../../../components/admin/productionContractActions';
+import ContractContent from '../../../../../components/contracts/ContractContent';
+import { Button } from '../../../../../components/ui/Button';
+import { getDb } from '../../../../../db/client';
+import { authenticateAdminRequest } from '../../../../../lib/contracts/admin-auth';
+import { formatCurrency, formatDate, formatDateTime } from '../../../../../lib/contracts/format';
+import { verifyStoredProductionContract, type ProductionFingerprintVerdict } from '../../../../../lib/contracts/production/audit';
+import {
+  serializeProductionContractForAdmin,
+  type AdminSerializedProductionContract,
+  type SerializedProductionSigner,
+} from '../../../../../lib/contracts/production/serialize';
+import {
+  getProductionStatusLabel,
+  hasSignedDocument,
+  isProductionActionAllowed,
+} from '../../../../../lib/contracts/production/status';
+import { recordAdminPrivacyAccess } from '../../../../../lib/privacy/accessLog';
+
+interface ProductionContractDetailProps {
+  contract: AdminSerializedProductionContract;
+  fingerprint: ProductionFingerprintVerdict;
+}
+
+export const getServerSideProps: GetServerSideProps<ProductionContractDetailProps> = async (context) => {
+  const auth = await authenticateAdminRequest(context);
+  if (!auth.ok) {
+    return { redirect: { destination: '/admin/login', permanent: false } };
+  }
+
+  const { id } = context.query;
+  if (typeof id !== 'string') return { notFound: true };
+
+  const contract = await getDb()
+    .query.productionContracts.findFirst({ where: (t, { eq }) => eq(t.id, id), with: { signers: true } })
+    .catch((error: unknown) => {
+      console.error('[admin/contracts/production/[id]] Failed to load contract:', error);
+      return null;
+    });
+
+  // 개인정보를 여는 화면이다(처리방침 접속기록). 기록 실패가 화면을 막지 않는다.
+  await recordAdminPrivacyAccess(context.req, auth.actor, 'production_contract_view', id, contract ? 'success' : 'not_found').catch(
+    (error: unknown) => console.error('[privacy] 접속기록 호출 실패 — 화면은 계속됩니다', error),
+  );
+
+  if (!contract) return { notFound: true };
+
+  return {
+    props: {
+      contract: serializeProductionContractForAdmin(contract),
+      fingerprint: verifyStoredProductionContract(contract),
+    },
+  };
+};
+
+const STATUS_CLASS: Record<string, string> = {
+  draft: 'bg-gray-100 text-gray-700',
+  sent: 'bg-blue-100 text-blue-700',
+  signed: 'bg-green-100 text-green-700',
+  completed: 'bg-gray-200 text-gray-700',
+  terminated: 'bg-gray-200 text-gray-600',
+  cancelled: 'bg-red-100 text-red-700',
+  expired: 'bg-amber-100 text-amber-700',
+};
+
+const ROLE_LABEL: Record<SerializedProductionSigner['role'], string> = {
+  operator: '스튜디오 (운영자)',
+  client: '의뢰인',
+  guardian: '법정대리인',
+};
+
+const Row = ({ label, value }: { label: string; value: React.ReactNode }) => (
+  <div className="flex justify-between gap-4">
+    <dt className="text-gray-500 shrink-0">{label}</dt>
+    <dd className="font-medium text-right">{value}</dd>
+  </div>
+);
+
+const FingerprintLine = ({ verdict }: { verdict: ProductionFingerprintVerdict }) => {
+  switch (verdict.kind) {
+    case 'unsigned':
+      return <span className="text-gray-400">아직 체결되지 않았습니다</span>;
+    case 'purged':
+      return <span className="text-gray-500">개인정보 파기로 대조하지 않습니다 ({verdict.short})</span>;
+    case 'match':
+      return <span className="text-green-700">일치 — 서명 당시 문서 그대로입니다 ({verdict.short})</span>;
+    case 'mismatch':
+      return <strong className="text-red-700">불일치 — 서명 뒤 값이 바뀌었을 수 있습니다. 즉시 확인하세요 ({verdict.short})</strong>;
+    default:
+      return <span className="text-amber-700">대조할 수 없습니다 ({verdict.reason})</span>;
+  }
+};
+
+export default function ProductionContractDetailPage({ contract, fingerprint }: ProductionContractDetailProps) {
+  const router = useRouter();
+  const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
+  const { terms } = contract;
+  const allowed = (action: Parameters<typeof isProductionActionAllowed>[1]) =>
+    isProductionActionAllowed(contract.status, action);
+
+  /** 요청 → 결과 안내 → 새로고침. 실패해도 새로고침한다 — 거절 사유는 대개 화면이 낡았다는 뜻이다. */
+  const run = async (task: () => Promise<ProductionActionResult>, confirmText?: string) => {
+    if (confirmText && !window.confirm(confirmText)) return;
+    setBusy(true);
+    setNotice(null);
+    const result = await task();
+    setBusy(false);
+    setNotice(result.ok ? (result.message ?? null) : (result.message ?? '요청을 처리하지 못했습니다.'));
+    await router.replace(router.asPath, undefined, { scroll: false });
+  };
+
+  /** 끝난 날(KST)을 받는다. 보관 기간의 기산점이라 실제 날짜를 넣는다 — 비우면 오늘. */
+  const askClosedOn = (question: string): string | null => {
+    const today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Seoul' });
+    const value = window.prompt(question, today);
+    return value === null ? null : value.trim();
+  };
+
+  const handleComplete = () => {
+    const closedOn = askClosedOn('최종 인도를 마친 날(YYYY-MM-DD)을 확인해 주세요. 이 날부터 3년 뒤 개인정보를 파기합니다.');
+    if (closedOn === null) return;
+    void run(() => mutateProductionContract(contract.id, 'complete', { closedOn }));
+  };
+
+  const handleTerminate = () => {
+    const reason = window.prompt(
+      '해지 사유를 적어 주세요. 누구의 사정으로 끝났는지가 환불 정산의 근거가 됩니다.\n\n예: 의뢰인 사정으로 착수 후 해지(편곡 1차 시안 전달 후) / 대금 14일 지체로 통지 후 해지',
+    );
+    if (reason === null) return;
+    if (reason.trim() === '') {
+      setNotice('해지 사유를 입력해 주세요.');
+      return;
+    }
+    const closedOn = askClosedOn('해지한 날(YYYY-MM-DD)을 확인해 주세요.');
+    if (closedOn === null) return;
+    void run(() => mutateProductionContract(contract.id, 'terminate', { reason: reason.trim(), closedOn }));
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm('이 계약을 삭제할까요? 되돌릴 수 없습니다.')) return;
+    setBusy(true);
+    const result = await deleteProductionContractRequest(contract.id);
+    setBusy(false);
+    if (!result.ok) {
+      setNotice(result.message ?? '삭제하지 못했습니다.');
+      return;
+    }
+    await router.replace('/admin/contracts/production');
+  };
+
+  return (
+    <>
+      <Head>
+        <title>{`${contract.clientName}님 제작 계약 | Studio NOL`}</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Head>
+
+      <AdminShell
+        title="제작 계약 상세"
+        description={`${contract.clientName}님 · ${terms.songTitle ?? '곡 제목 미정'}`}
+        backHref="/admin/contracts/production"
+        backLabel="제작 계약 목록"
+      >
+        {notice && <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>}
+
+        {/* 메일·PDF는 응답 뒤에 처리돼 실패가 화면에 흔적을 남기지 않는다. 남겨 둔 사유를 띄운다. */}
+        {contract.notificationError && (
+          <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
+            <strong className="block mb-1">알림 처리에 문제가 있었습니다</strong>
+            {contract.notificationError}
+            <span className="block mt-2 text-amber-700">
+              {contract.status === 'sent' || contract.status === 'expired'
+                ? '의뢰인이 메일을 받지 못했을 수 있습니다. 재발송하거나 서명 링크를 직접 전달해 주세요.'
+                : '의뢰인이 체결 메일을 받지 못했을 수 있습니다. 아래 “완료 메일 재발송”을 눌러 주세요.'}
+            </span>
+          </div>
+        )}
+
+        {contract.purgedAt && (
+          <div className="mb-4 p-4 bg-gray-100 border border-gray-300 text-gray-700 rounded-lg text-sm">
+            <strong className="block mb-1">보관 기간이 지나 개인정보가 파기된 계약입니다</strong>
+            {formatDate(contract.purgedAt)}에 의뢰인 정보·본문·서명 기록을 지웠습니다. 금액·날짜만 운영 기록으로 남아 있습니다.
+          </div>
+        )}
+
+        {contract.status === 'signed' && !contract.pdfUrl && !contract.purgedAt && (
+          <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
+            <strong className="block mb-1">서명본 PDF가 보관되지 않았습니다</strong>
+            아래 “PDF 다운로드”를 누르면 계약 내용으로 다시 만들어 받을 수 있습니다.
+          </div>
+        )}
+
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+          <div className="p-4 md:p-8 border-b border-gray-200">
+            <div className="flex flex-wrap items-center gap-3 mb-5">
+              <span className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${STATUS_CLASS[contract.status]}`}>
+                {getProductionStatusLabel(contract.status)}
+              </span>
+              <span className="text-gray-400 text-xs font-mono">{contract.id}</span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">의뢰인</h2>
+                <dl className="space-y-2 text-sm">
+                  <Row label="성명" value={contract.clientName} />
+                  <Row label="활동명" value={contract.clientStageName || '-'} />
+                  <Row label="생년월일" value={contract.clientBirthdate || '-'} />
+                  <Row label="이메일" value={contract.clientEmail} />
+                  <Row label="연락처" value={contract.clientPhone} />
+                  <Row label="주소" value={contract.clientAddress || '-'} />
+                </dl>
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">계약 조건</h2>
+                <dl className="space-y-2 text-sm">
+                  <Row label="본 곡" value={terms.songTitle ?? '제목 미정'} />
+                  <Row label="계약금액" value={`${formatCurrency(terms.amount.total)}원`} />
+                  <Row label="계약금" value={`${formatCurrency(terms.amount.deposit)}원 (체결 후 ${terms.amount.depositDueDays}일)`} />
+                  <Row label="잔금" value={`${formatCurrency(terms.amount.balance)}원 (최종 승인 후 ${terms.amount.balanceDueDays}일)`} />
+                  <Row label="작업 기간" value={`약 ${terms.workWeeks}주`} />
+                  <Row
+                    label="무료 수정"
+                    value={`편곡 ${terms.revisions.arrangement} · 믹싱 ${terms.revisions.mixing} · 마스터링 ${terms.revisions.mastering}회`}
+                  />
+                </dl>
+              </div>
+            </div>
+
+            <div className="mt-6 pt-6 border-t border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+              <dl className="space-y-2">
+                <Row label="작성일" value={formatDateTime(contract.createdAt)} />
+                <Row label="발송일" value={formatDateTime(contract.sentAt)} />
+                <Row label="링크 만료" value={contract.status === 'sent' ? formatDateTime(contract.expiresAt) : '-'} />
+              </dl>
+              <dl className="space-y-2">
+                <Row label="체결일" value={formatDateTime(contract.signedAt)} />
+                {contract.completedAt && <Row label="완료일" value={formatDate(contract.completedAt)} />}
+                {contract.terminatedAt && <Row label="해지일" value={formatDate(contract.terminatedAt)} />}
+                {contract.terminationReason && <Row label="해지 사유" value={contract.terminationReason} />}
+              </dl>
+            </div>
+          </div>
+
+          {/* 감사추적 — "서명한 적 없다"는 주장에 내놓을 기록. 서명자마다 열람·본인 확인·서명 정황을 보인다. */}
+          <div className="p-4 md:p-8 border-b border-gray-200">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">서명 기록</h2>
+            <div className="space-y-4">
+              {contract.signers.map((signer) => (
+                <div key={signer.id} className="flex flex-wrap items-start gap-4 p-4 bg-gray-50 rounded-lg text-sm">
+                  {signer.signatureData && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={signer.signatureData} alt="서명" className="max-h-20 border border-gray-200 rounded-lg bg-white" />
+                  )}
+                  <dl className="space-y-0.5 text-gray-600">
+                    <dt className="font-semibold text-gray-900">{ROLE_LABEL[signer.role]}</dt>
+                    <dd>서명자: {signer.name}</dd>
+                    {signer.adminActor && <dd>관리자 계정: {signer.adminActor} (발송 = 운영자 서명, 직인)</dd>}
+                    <dd>서명: {signer.status === 'signed' ? formatDateTime(signer.signedAt) : '대기'}</dd>
+                    <dd>IP: {signer.ipAddress || '-'}</dd>
+                    {signer.role !== 'operator' && (
+                      <>
+                        <dd>
+                          열람: {signer.firstViewedAt ? `처음 ${formatDateTime(signer.firstViewedAt)} · ${signer.viewCount}회` : '기록 없음'}
+                          {signer.firstViewedIp ? ` (처음 연 IP ${signer.firstViewedIp})` : ''}
+                        </dd>
+                        <dd>
+                          본인 확인:{' '}
+                          {signer.identityVerifiedAt ? `연락처 뒷자리 대조 완료 (${formatDateTime(signer.identityVerifiedAt)})` : '기록 없음'}
+                        </dd>
+                      </>
+                    )}
+                  </dl>
+                </div>
+              ))}
+            </div>
+            <p className="mt-4 text-sm">
+              문서 지문: <FingerprintLine verdict={fingerprint} />
+            </p>
+            <p className="mt-1 text-xs text-gray-400">
+              열람 기록은 “이 링크가 이 시각에 이 IP에서 열렸다”로만 읽습니다 — 메일 보안 스캐너가 먼저 열 수 있습니다.
+            </p>
+          </div>
+
+          <details className="p-4 md:p-8">
+            <summary className="text-lg font-bold text-gray-900 dark:text-gray-900 cursor-pointer">계약서 본문</summary>
+            <div className="mt-4">
+              <ContractContent content={contract.content} size="sm" />
+            </div>
+          </details>
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">작업</h2>
+          <div className="flex flex-wrap gap-3">
+            {allowed('send') && (
+              <Button
+                light
+                disabled={busy}
+                onClick={() =>
+                  run(
+                    () => mutateProductionContract(contract.id, 'send'),
+                    `스튜디오 대표로 이 계약서에 서명하고 ${contract.clientEmail} 주소로 서명 요청을 보냅니다.\n` +
+                      '발송한 뒤에는 내용을 고칠 수 없습니다. 계속할까요?',
+                  )
+                }
+              >
+                {busy ? '처리 중...' : '서명하고 발송'}
+              </Button>
+            )}
+
+            {contract.status === 'sent' && contract.signUrl && (
+              <Button
+                light
+                variant="secondary"
+                onClick={async () => setNotice((await copyToClipboard(contract.signUrl)) ? '서명 링크를 복사했습니다.' : '링크 복사에 실패했습니다.')}
+              >
+                서명 링크 복사
+              </Button>
+            )}
+
+            {allowed('resend') && (
+              <Button
+                light
+                variant={contract.status === 'sent' ? 'weak' : 'solid'}
+                disabled={busy}
+                onClick={() => run(() => mutateProductionContract(contract.id, 'resend'), '재발송하면 기존 서명 링크는 즉시 무효가 됩니다. 계속할까요?')}
+              >
+                재발송
+              </Button>
+            )}
+
+            {allowed('update') && (
+              <Link href={`/admin/contracts/production/${contract.id}/edit`} passHref>
+                <Button light variant="weak">수정</Button>
+              </Link>
+            )}
+
+            {hasSignedDocument(contract.status) && !contract.purgedAt && (
+              <Button light disabled={busy} onClick={() => run(() => downloadProductionPdf(contract.id, contract.clientName))}>
+                PDF 다운로드
+              </Button>
+            )}
+
+            {allowed('resend-signed') && !contract.purgedAt && (
+                <Button
+                  light
+                  variant="weak"
+                  disabled={busy}
+                  onClick={() =>
+                    run(
+                      () => mutateProductionContract(contract.id, 'resend-signed'),
+                      '체결 메일과 PDF를 의뢰인에게 다시 보냅니다. 계약 내용과 링크는 그대로입니다. 계속할까요?',
+                    )
+                  }
+                >
+                  완료 메일 재발송
+                </Button>
+            )}
+
+            {allowed('complete') && (
+              <Button light variant="weak" disabled={busy} onClick={handleComplete}>
+                완료 처리 (최종 인도)
+              </Button>
+            )}
+
+            {allowed('cancel') && (
+              <Button
+                light
+                variant="ghost"
+                disabled={busy}
+                onClick={() => run(() => mutateProductionContract(contract.id, 'cancel'), '이 계약을 취소할까요? 서명 링크가 무효가 됩니다.')}
+              >
+                계약 취소
+              </Button>
+            )}
+
+            <Link href={`/admin/contracts/production/new?from=${contract.id}`} passHref>
+              <Button light variant="weak">복제해서 새 계약</Button>
+            </Link>
+
+            {allowed('terminate') && (
+              <Button light variant="ghost" disabled={busy} onClick={handleTerminate}>
+                해지 처리
+              </Button>
+            )}
+
+            {allowed('delete') && (
+              <Button light variant="ghost" className="text-red-600 hover:bg-red-50" disabled={busy} onClick={handleDelete}>
+                삭제
+              </Button>
+            )}
+          </div>
+        </div>
+      </AdminShell>
+    </>
+  );
+}

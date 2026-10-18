@@ -244,6 +244,172 @@ export const contractTemplateSnapshots = sqliteTable('contract_template_snapshot
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
 });
 
+// ─── 제작 용역 계약 (음원 제작) ───────────────────────────────────────────────
+//
+// 연습실 계약(contracts)과 같은 서명 원칙을 따르되 표는 따로 둔다. contracts는 호실·기간·월세가
+// NOT NULL이고 호실 충돌·구독·이용수칙이 전부 연습실 전제라, 제작 계약을 끼우면 빈 값과 예외 분기가
+// 곳곳에 생긴다. 새 표만 더하므로 기존 조회는 이 마이그레이션 전후로 달라지지 않는다.
+// 설계: docs/production-contract-design-2026-10.md, 코드: lib/contracts/production/.
+
+/** 계약 종류. EP·정규는 값과 템플릿을 더해 올린다 — CHECK도 함께 늘린다(SQLite는 표 재생성). */
+export const productionContractKindEnum = ['single'] as const;
+
+/**
+ * 연습실 계약과 같은 전이에 completed가 더해졌다. 제작 계약은 "이용 기간"이 아니라 결과물 인도로
+ * 끝나므로, 정상 종결(completed)과 중도 해지(terminated)를 나눠 적는다. 둘 다 개인정보 보관 기간의
+ * 기산점이다(lib/contracts/production/retention.ts).
+ */
+export const productionContractStatusEnum = [
+  'draft',
+  'sent',
+  'signed',
+  'cancelled',
+  'expired',
+  'completed',
+  'terminated',
+] as const;
+
+export const productionSignerRoleEnum = ['operator', 'client', 'guardian'] as const;
+export const productionSignerStatusEnum = ['pending', 'signed'] as const;
+
+export const productionContracts = sqliteTable(
+  'production_contracts',
+  {
+    id: text('id').primaryKey(),
+    kind: text('kind', { enum: productionContractKindEnum }).notNull(),
+    status: text('status', { enum: productionContractStatusEnum }).notNull().default('draft'),
+    /** 관리자용 제목. 이름이 들어가기 쉬운 자유 입력이라 파기 대상이다. */
+    title: text('title').notNull(),
+
+    clientName: text('client_name').notNull(),
+    /** 활동명. 크레딧·유통 정보에 쓰는 이름이라 운영자가 적는다(없으면 비움). */
+    clientStageName: text('client_stage_name'),
+    clientEmail: text('client_email').notNull(),
+    /** 뒷자리가 본인 확인의 기준이다(lib/contracts/identity.ts). */
+    clientPhone: text('client_phone').notNull(),
+    /** 서명 화면에서 본인이 채운다 — 운영자가 알 수 없는 값이다(연습실과 같다). */
+    clientBirthdate: text('client_birthdate'),
+    clientAddress: text('client_address'),
+
+    /**
+     * 계약 조건 전부(lib/contracts/production/terms.ts의 ProductionTerms, JSON).
+     *
+     * 금액·분할·수정 횟수·기한 일수를 계약마다 굳힌다. 정본 상수(data/pricing.ts)가 바뀌어도 이미 맺은
+     * 계약의 조건과 기한 계산은 그대로여야 하기 때문이다. 발송 뒤에는 바뀌지 않는다.
+     */
+    termsJson: text('terms_json').notNull(),
+    /** 목록·정렬용 사본(= terms.amount.total). 지문이 둘의 일치를 덮는다. */
+    totalAmount: integer('total_amount').notNull(),
+    /** 서명 때 개별 동의를 받는 조항 목록의 계약 시점 사본(JSON). 코드의 목록이 바뀌어도 이 계약은 그대로다. */
+    clausesJson: text('clauses_json').notNull(),
+
+    /**
+     * 본문을 만든 템플릿 원문과 그 sha256.
+     *
+     * 서명 때 서명자가 채운 값으로 본문을 다시 만든다. 그 사이 템플릿 파일이 바뀌면 읽은 조항과 서명에 묶이는
+     * 조항이 달라지므로(연습실 0046과 같은 이유) 사본으로 완성한다. 연습실은 표가 나중에 생겨 별도 표에
+     * 두었지만, 여기는 표와 함께 생기므로 컬럼으로 둔다 — 사본 없는 계약이 처음부터 없다.
+     */
+    template: text('template').notNull(),
+    templateHash: text('template_hash').notNull(),
+    content: text('content').notNull(),
+    /** 서명 시점 문서의 지문 `p1:<sha256>`(lib/contracts/production/integrity.ts). */
+    contentHash: text('content_hash'),
+
+    sentAt: integer('sent_at', { mode: 'timestamp' }),
+    /** 서명 링크 만료. 발송 때 정하고 재발송하면 갱신한다. */
+    expiresAt: integer('expires_at', { mode: 'timestamp' }),
+    /** 필요한 서명자가 모두 서명한 시각 = 계약 성립 시각. */
+    signedAt: integer('signed_at', { mode: 'timestamp' }),
+
+    /** Blob 경로(`production-contracts/<id>.pdf`). 연습실 PDF와 접두사를 나눈다 — lib/contracts/backup.ts 주석. */
+    pdfUrl: text('pdf_url'),
+    pdfGeneratedAt: integer('pdf_generated_at', { mode: 'timestamp' }),
+
+    notificationError: text('notification_error'),
+    notifiedAt: integer('notified_at', { mode: 'timestamp' }),
+
+    /** 최종 인도로 정상 종결한 시각. */
+    completedAt: integer('completed_at', { mode: 'timestamp' }),
+    terminatedAt: integer('terminated_at', { mode: 'timestamp' }),
+    terminationReason: text('termination_reason'),
+    purgedAt: integer('purged_at', { mode: 'timestamp' }),
+
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => [
+    index('production_contracts_status_idx').on(t.status, t.createdAt),
+    check('production_contracts_kind_check', sql`${t.kind} in ('single')`),
+    check(
+      'production_contracts_status_check',
+      sql`${t.status} in ('draft','sent','signed','cancelled','expired','completed','terminated')`,
+    ),
+  ],
+);
+
+/**
+ * 서명자 한 사람당 한 행 — 운영자·의뢰인·(미성년이면) 법정대리인.
+ *
+ * 연습실 계약은 운영자 서명을 기록하지 않고 PDF에 직인만 찍는다. 이 계약서는 "양 당사자가 전자서명한 때
+ * 성립"이라고 적으므로 운영자의 서명 행위(발송 버튼)도 행으로 남긴다. 토큰을 서명자마다 두는 것은
+ * 대리인이 별도 링크로 서명하게 될 때를 위해서다 — 운영자 행은 토큰이 없다.
+ */
+export const productionContractSigners = sqliteTable(
+  'production_contract_signers',
+  {
+    id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+    contractId: text('contract_id')
+      .notNull()
+      .references(() => productionContracts.id, { onDelete: 'cascade' }),
+    role: text('role', { enum: productionSignerRoleEnum }).notNull(),
+    status: text('status', { enum: productionSignerStatusEnum }).notNull().default('pending'),
+    name: text('name').notNull(),
+    email: text('email').notNull(),
+    /** 이 서명자의 서명 링크 토큰. 재발송하면 바뀐다(옛 링크 즉시 무효). */
+    signToken: text('sign_token').unique(),
+    identityVerifiedAt: integer('identity_verified_at', { mode: 'timestamp' }),
+    /** 열람 기록 — 연습실 contracts의 같은 이름 컬럼과 같은 뜻(lib/contracts/view-log.ts 주석). */
+    firstViewedAt: integer('first_viewed_at', { mode: 'timestamp' }),
+    lastViewedAt: integer('last_viewed_at', { mode: 'timestamp' }),
+    viewCount: integer('view_count').notNull().default(0),
+    firstViewedIp: text('first_viewed_ip'),
+    /** 서명할 때 체크한 조항 키 목록(JSON). 동의 시각은 signedAt과 같다(한 트랜잭션). */
+    agreedClauses: text('agreed_clauses'),
+    signedAt: integer('signed_at', { mode: 'timestamp' }),
+    ipAddress: text('ip_address'),
+    userAgent: text('user_agent'),
+    /** 서명 이미지 data URL. 운영자는 직인(CONTRACT_SEAL_BASE64)을 쓰므로 비어 있다. */
+    signatureData: text('signature_data'),
+    /** 운영자 행: 서명(발송)한 관리자 계정의 사람별 식별자(lib/contracts/admin-accounts.ts). */
+    adminActor: text('admin_actor'),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => [
+    uniqueIndex('production_contract_signers_role_uq').on(t.contractId, t.role),
+    check('production_contract_signers_role_check', sql`${t.role} in ('operator','client','guardian')`),
+    check('production_contract_signers_status_check', sql`${t.status} in ('pending','signed')`),
+  ],
+);
+
+export const productionContractsRelations = relations(productionContracts, ({ many }) => ({
+  signers: many(productionContractSigners),
+}));
+
+export const productionContractSignersRelations = relations(productionContractSigners, ({ one }) => ({
+  contract: one(productionContracts, {
+    fields: [productionContractSigners.contractId],
+    references: [productionContracts.id],
+  }),
+}));
+
+export type ProductionContract = typeof productionContracts.$inferSelect;
+export type NewProductionContract = typeof productionContracts.$inferInsert;
+export type ProductionContractSigner = typeof productionContractSigners.$inferSelect;
+export type ProductionContractStatus = (typeof productionContractStatusEnum)[number];
+export type ProductionSignerRole = (typeof productionSignerRoleEnum)[number];
+
 // ─── 예약·결제 (Phase 1: 세션 예약) ───────────────────────────────────────────
 
 export const orderStatusEnum = [
@@ -1487,6 +1653,10 @@ export const privacyAccessActionEnum = [
    * 목록 화면은 남기지 않는다 — 한 줄마다 기록하면 노이즈뿐이고, 상세를 열어야 전체 개인정보가 보인다.
    */
   'contract_view',
+  /** 제작 계약 상세 열람 (pages/admin/contracts/production/[id]/index.tsx, API GET). contract_view와 같은 이유. 대상은 계약 id. */
+  'production_contract_view',
+  /** 관리자 제작 계약서 PDF 내려받기 (pages/api/contracts/production/[id]/pdf.ts). contract_pdf_download와 같은 이유. */
+  'production_contract_pdf_download',
   /**
    * 관리자 공연 명단 CSV 내려받기 (pages/api/admin/shows/[id]/roster.ts).
    * 구매자 이름·연락처가 회차 단위로 실린다. 대상은 회차 id. 컬럼은 enum 문자열이라

@@ -16,3 +16,11 @@ export const contractPdfPathname = (pdfUrl: string): string => {
   if (!/^https?:\/\//i.test(pdfUrl)) return pdfUrl.replace(/^\/+/, '');
   return decodeURIComponent(new URL(pdfUrl).pathname).replace(/^\/+/, '');
 };
+
+/**
+ * 제작 계약서 PDF의 Blob 접두사(`production-contracts/<id>.pdf`).
+ *
+ * 연습실 PDF(`contracts/`)와 나눈다. 백업 크론의 고아 정리(backup.ts removeOrphanPdfs)는 접두사 아래에서
+ * 해당 표가 가리키지 않는 PDF를 지우므로, 같은 접두사에 두면 멀쩡한 제작 계약서가 고아로 잡혀 지워진다.
+ */
+export const PRODUCTION_PDF_PREFIX = 'production-contracts/';

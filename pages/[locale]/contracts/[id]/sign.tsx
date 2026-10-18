@@ -1,11 +1,12 @@
 import ContractNotice from '../../../../components/contracts/ContractNotice';
 import { withI18nServerProps } from '../../../../lib/getStatic';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Markdown from 'markdown-to-jsx';
 
 import ContractContent from '../../../../components/contracts/ContractContent';
+import { SignaturePad, type SignaturePadHandle } from '../../../../components/contracts/SignaturePad';
 import { Button } from '../../../../components/ui/Button';
 import { Field, TextInput } from '../../../../components/ui/Field';
 import { lightOnlyField } from '../../../../components/ui/adminFieldClass';
@@ -23,12 +24,10 @@ import { CONTRACT_MARKDOWN_OPTIONS } from '../../../../lib/contracts/html-escape
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
 import { expireOverdueContracts } from '../../../../lib/contracts/service';
 import { getEffectiveStatus } from '../../../../lib/contracts/status';
+import { clearDraft, readDraft, writeDraft } from '../../../../lib/contracts/sign-draft';
 import { resolveRulesContent } from '../../../../lib/contracts/template';
 import { recordContractView } from '../../../../lib/contracts/view-log';
 import { Notice } from '../../../../components/ui/Notice';
-
-/** 점 하나만 찍고 제출하는 것을 막기 위한 최소 획 점 개수. */
-const MIN_STROKE_POINTS = 12;
 
 type UnavailableReason =
   | 'expired'
@@ -173,77 +172,6 @@ export const getServerSideProps = withI18nServerProps<SignPageProps>(async (cont
 /** 계약서 페이지는 종이처럼 항상 밝다 — 컨트롤은 `light` prop, 래퍼는 이 클래스로 되돌린다. */
 const LIGHT_FIELD = lightOnlyField;
 
-/**
- * 입력하던 생년월일·주소를 이 탭에만 잠깐 보관한다.
- *
- * 이 페이지는 `Cache-Control: no-store`다(page-cache.ts — 계약 본문이 공유 캐시에 남으면
- * 재발송·취소로 링크를 죽여도 옛 계약이 계속 서빙된다). 그 헤더가 붙은 페이지는 bfcache에
- * 들어가지 않으므로, 뒤로가기나 앱 전환 후 복귀가 전부 전체 재로드가 된다 — 되돌아온 화면은
- * 복원된 상태가 아니라 빈 화면이다.
- *
- * 하필 이 페이지는 폰에서 16화면이 넘고(계약서 12쪽), 입력란은 14화면쯤 내려가야 나온다.
- * 주소를 정확히 적으려고 지도·메모 앱을 열었다 돌아오는 것은 흔한 동선인데, 그때마다
- * 스크롤과 타이핑을 처음부터 다시 하게 된다. 헤더도 길이도 줄일 수 없으니 입력값을 살린다.
- *
- * 담는 것은 생년월일·주소뿐이다. **동의 체크와 연락처 뒷자리, 서명은 담지 않는다** —
- * 앞의 둘은 사람이 그 자리에서 해야 하는 의사표시이고(복원된 체크는 동의한 행위가 아니다),
- * 뒷자리는 본인확인 수단, 서명은 서명 그 자체라 기기에 남길 것이 아니다. 생년월일·주소는
- * 계약서에 인쇄되는 사실 정보라 다시 입력해도 같은 값이고, 아낄 수 있는 것은 타이핑뿐이다.
- *
- * sessionStorage라 탭을 닫으면 사라지고, 같은 탭에서 이미 계약 본문이 보이고 있으므로
- * 노출면이 넓어지지 않는다. 계약마다 키를 나눠 다른 계약의 값이 새지 않게 한다.
- */
-export const draftKey = (contractId: string) => `studionol:contract-draft:${contractId}`;
-
-export interface SignDraft {
-  customerBirthdate?: string;
-  customerAddress?: string;
-}
-
-/** 저장소를 못 쓰는 환경(사생활 보호 모드·차단 설정)에서는 조용히 포기한다. */
-export const readDraft = (contractId: string): SignDraft => {
-  try {
-    const raw = window.sessionStorage.getItem(draftKey(contractId));
-    if (!raw) return {};
-    const parsed: unknown = JSON.parse(raw);
-    if (!parsed || typeof parsed !== 'object') return {};
-    const { customerBirthdate, customerAddress } = parsed as SignDraft;
-    return {
-      ...(typeof customerBirthdate === 'string' ? { customerBirthdate } : {}),
-      ...(typeof customerAddress === 'string' ? { customerAddress } : {}),
-    };
-  } catch {
-    return {};
-  }
-};
-
-export const writeDraft = (contractId: string, draft: SignDraft): void => {
-  try {
-    // 받은 객체를 그대로 직렬화하지 않고 두 항목만 골라 담는다. 타입은 컴파일 때만
-    // 막아 주므로, 호출부가 하나 더 실어 보내면 뒷자리나 서명이 조용히 저장소에 남는다.
-    // 담지 않기로 한 것을 담지 않는 책임은 호출부가 아니라 여기에 둔다.
-    const stored: SignDraft = {
-      ...(typeof draft.customerBirthdate === 'string'
-        ? { customerBirthdate: draft.customerBirthdate }
-        : {}),
-      ...(typeof draft.customerAddress === 'string'
-        ? { customerAddress: draft.customerAddress }
-        : {}),
-    };
-    window.sessionStorage.setItem(draftKey(contractId), JSON.stringify(stored));
-  } catch {
-    // 용량 초과·차단. 임시 저장은 편의 기능이라 실패해도 서명에는 지장이 없다.
-  }
-};
-
-export const clearDraft = (contractId: string): void => {
-  try {
-    window.sessionStorage.removeItem(draftKey(contractId));
-  } catch {
-    // 위와 같다.
-  }
-};
-
 export default function ContractSignPage({
   locale,
   token,
@@ -255,9 +183,7 @@ export default function ContractSignPage({
   error,
 }: SignPageProps) {
   const router = useRouter();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const drawingRef = useRef(false);
-  const pointCountRef = useRef(0);
+  const signaturePadRef = useRef<SignaturePadHandle>(null);
 
   const [hasSigned, setHasSigned] = useState(false);
   const [customerBirthdate, setCustomerBirthdate] = useState('');
@@ -301,124 +227,6 @@ export default function ContractSignPage({
     writeDraft(contract.id, { customerBirthdate, customerAddress });
   }, [contract, customerBirthdate, customerAddress]);
 
-  /**
-   * 캔버스 해상도를 화면에 보이는 크기에 맞춘다.
-   *
-   * 내부 해상도를 고정해 두고 CSS로 늘리면 가로세로 비율이 어긋난다. 좌표를 축별로
-   * 따로 보정하면 찍히는 위치는 맞지만 획 자체가 늘어나, 모바일에서는 서명이 가로로
-   * 두 배가량 늘어난 채 저장된다. 서명은 필적이라 형태가 달라지면 안 된다.
-   *
-   * 표시 크기 × devicePixelRatio로 잡고 컨텍스트를 같은 배율로 확대하면, 비율은
-   * 그대로면서 고해상도 화면에서도 선이 또렷하다. 이후 그리기 좌표는 CSS 픽셀이다.
-   */
-  const setupCanvas = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const rect = canvas.getBoundingClientRect();
-    if (rect.width === 0 || rect.height === 0) return;
-
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = Math.round(rect.width * dpr);
-    canvas.height = Math.round(rect.height * dpr);
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    // 해상도를 바꾸면 컨텍스트 상태가 초기화되므로 매번 다시 지정한다.
-    ctx.scale(dpr, dpr);
-    ctx.lineWidth = 2.5;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.strokeStyle = '#111827';
-
-    pointCountRef.current = 0;
-    setHasSigned(false);
-  }, []);
-
-  useEffect(() => {
-    setupCanvas();
-
-    const canvas = canvasRef.current;
-    if (!canvas || typeof ResizeObserver === 'undefined') return;
-
-    // 화면을 회전하면 표시 크기가 바뀐다. 그대로 두면 그 순간부터 다시 비율이 어긋나므로
-    // 캔버스를 다시 잡는다(그리던 내용은 지워지고 사용자가 다시 서명한다).
-    let lastWidth = canvas.getBoundingClientRect().width;
-    const observer = new ResizeObserver(() => {
-      const width = canvas.getBoundingClientRect().width;
-      if (Math.abs(width - lastWidth) < 1) return;
-      lastWidth = width;
-      setupCanvas();
-    });
-
-    observer.observe(canvas);
-    return () => observer.disconnect();
-  }, [setupCanvas, contract]);
-
-  /** 컨텍스트가 dpr 배율로 확대돼 있으므로 좌표는 CSS 픽셀 그대로 쓴다. */
-  const getCoordinates = (
-    event: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>,
-  ) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return { x: 0, y: 0 };
-
-    const rect = canvas.getBoundingClientRect();
-    const point = 'touches' in event ? event.touches[0] ?? event.changedTouches[0] : event;
-
-    return { x: point.clientX - rect.left, y: point.clientY - rect.top };
-  };
-
-  const startDrawing = useCallback(
-    (event: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-      event.preventDefault();
-      const ctx = canvasRef.current?.getContext('2d');
-      if (!ctx) return;
-
-      const { x, y } = getCoordinates(event);
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-      drawingRef.current = true;
-    },
-    [],
-  );
-
-  const draw = useCallback(
-    (event: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-      event.preventDefault();
-      if (!drawingRef.current) return;
-
-      const ctx = canvasRef.current?.getContext('2d');
-      if (!ctx) return;
-
-      const { x, y } = getCoordinates(event);
-      ctx.lineTo(x, y);
-      ctx.stroke();
-
-      pointCountRef.current += 1;
-      if (pointCountRef.current >= MIN_STROKE_POINTS && !hasSigned) {
-        setHasSigned(true);
-      }
-    },
-    [hasSigned],
-  );
-
-  const stopDrawing = useCallback(() => {
-    drawingRef.current = false;
-  }, []);
-
-  const clearSignature = () => {
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext('2d');
-    if (!canvas || !ctx) return;
-
-    // 컨텍스트가 dpr 배율로 확대돼 있어 CSS 픽셀 기준으로 지운다.
-    const rect = canvas.getBoundingClientRect();
-    ctx.clearRect(0, 0, rect.width, rect.height);
-    pointCountRef.current = 0;
-    setHasSigned(false);
-  };
-
   const handleSubmit = async () => {
     if (!contract) return;
     if (!detailsReady) {
@@ -442,8 +250,8 @@ export default function ContractSignPage({
       return;
     }
 
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const signatureData = signaturePadRef.current?.toDataURL();
+    if (!signatureData) return;
 
     setSubmitting(true);
     setSubmitError(null);
@@ -454,7 +262,7 @@ export default function ContractSignPage({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           token,
-          signatureData: canvas.toDataURL('image/png'),
+          signatureData,
           agreements: [...clauses.map((c) => c.id), ...attachments.map((a) => a.id)],
           identityDigits,
           identityConfirmed,
@@ -773,29 +581,7 @@ export default function ContractSignPage({
                   아래 영역에 마우스나 손가락으로 서명해 주세요.
                 </p>
 
-                <div className="border-2 border-dashed border-gray-300 dark:border-gray-300 rounded-xl overflow-hidden bg-white dark:bg-white">
-                  {/* 해상도는 마운트 후 표시 크기에 맞춰 잡는다(setupCanvas). 여기서
-                      width/height를 고정하면 화면 비율과 어긋나 서명이 늘어난다. */}
-                  <canvas
-                    ref={canvasRef}
-                    className="block w-full h-[180px] md:h-[200px] touch-none cursor-crosshair"
-                    onMouseDown={startDrawing}
-                    onMouseMove={draw}
-                    onMouseUp={stopDrawing}
-                    onMouseLeave={stopDrawing}
-                    onTouchStart={startDrawing}
-                    onTouchMove={draw}
-                    onTouchEnd={stopDrawing}
-                  />
-                </div>
-
-                <button
-                  type="button"
-                  onClick={clearSignature}
-                  className="mt-3 text-sm text-gray-500 dark:text-gray-500 hover:text-gray-700 underline"
-                >
-                  서명 지우기
-                </button>
+                <SignaturePad ref={signaturePadRef} onSignedChange={setHasSigned} />
               </div>
 
               {submitError && (

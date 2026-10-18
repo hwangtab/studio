@@ -101,7 +101,7 @@ export const buildSealCss = (): string => {
   return cachedSealCss;
 };
 
-const renderSignatureImage = (signatureData: string | null): string => {
+export const renderSignatureImage = (signatureData: string | null): string => {
   if (!signatureData) {
     return '<p style="color: #999;">서명 이미지가 없습니다.</p>';
   }
@@ -122,6 +122,62 @@ const renderSignatureImage = (signatureData: string | null): string => {
 
   return `<img src="${escapeHtml(signatureData)}" alt="서명" style="max-height: 80px; border: 1px solid #e5e5e5; border-radius: 6px;" />`;
 };
+
+/**
+ * 계약서 PDF의 공용 서식(폰트·도장 CSS 제외). 연습실·제작 계약서가 같은 값을 써서 두 문서가 같은 모양으로
+ * 인쇄된다 — 조문이 쪽 경계에서 쪼개지지 않게 하는 규칙도 여기 있다.
+ */
+export const CONTRACT_PDF_BASE_CSS = `
+    @page { size: A4; margin: 18mm 16mm; }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+      font-size: 11.5px;
+      line-height: 1.7;
+      color: #1a1a1a;
+      margin: 0;
+    }
+    h1 { font-size: 20px; margin: 0 0 8px; }
+    h2 { font-size: 14px; margin: 20px 0 10px; border-bottom: 2px solid #111; padding-bottom: 5px; }
+    h3 { font-size: 12.5px; margin: 14px 0 6px; }
+    p { margin: 6px 0; }
+    blockquote {
+      margin: 10px 0;
+      padding: 10px 14px;
+      background: #f6f8fa;
+      border-left: 3px solid #d4d4d4;
+    }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    th, td { border: 1px solid #d4d4d4; padding: 7px 9px; text-align: left; vertical-align: top; }
+    th { background: #f5f5f5; }
+    ol, ul { margin: 6px 0; padding-left: 20px; }
+    li { margin: 3px 0; }
+    hr { border: none; border-top: 1px solid #e5e5e5; margin: 18px 0; }
+    /* 조문이 페이지 경계에서 쪼개지지 않도록 */
+    h2, h3 { break-after: avoid; }
+    table, blockquote { break-inside: avoid; }
+    .page-break { break-before: page; }
+    .agreement {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 6px;
+      padding: 8px 10px;
+      background: #f9f9f9;
+      border-radius: 5px;
+    }
+    .agreed { color: #16a34a; white-space: nowrap; }
+    .not-agreed { color: #dc2626; white-space: nowrap; }
+    .signature-box {
+      margin-top: 24px;
+      padding: 16px;
+      border: 1px solid #d4d4d4;
+      border-radius: 8px;
+      background: #fafafa;
+      break-inside: avoid;
+    }
+    .meta { color: #666; font-size: 10.5px; }
+`;
 
 export interface BuildContractPdfInput {
   contract: Contract;
@@ -219,55 +275,7 @@ export const buildContractPdfHtml = (input: BuildContractPdfInput): string => {
   <style>
     ${fontFaceCss}
     ${sealCss}
-    @page { size: A4; margin: 18mm 16mm; }
-    * { box-sizing: border-box; }
-    body {
-      font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
-      font-size: 11.5px;
-      line-height: 1.7;
-      color: #1a1a1a;
-      margin: 0;
-    }
-    h1 { font-size: 20px; margin: 0 0 8px; }
-    h2 { font-size: 14px; margin: 20px 0 10px; border-bottom: 2px solid #111; padding-bottom: 5px; }
-    h3 { font-size: 12.5px; margin: 14px 0 6px; }
-    p { margin: 6px 0; }
-    blockquote {
-      margin: 10px 0;
-      padding: 10px 14px;
-      background: #f6f8fa;
-      border-left: 3px solid #d4d4d4;
-    }
-    table { width: 100%; border-collapse: collapse; margin: 12px 0; }
-    th, td { border: 1px solid #d4d4d4; padding: 7px 9px; text-align: left; vertical-align: top; }
-    th { background: #f5f5f5; }
-    ol, ul { margin: 6px 0; padding-left: 20px; }
-    li { margin: 3px 0; }
-    hr { border: none; border-top: 1px solid #e5e5e5; margin: 18px 0; }
-    /* 조문이 페이지 경계에서 쪼개지지 않도록 */
-    h2, h3 { break-after: avoid; }
-    table, blockquote { break-inside: avoid; }
-    .page-break { break-before: page; }
-    .agreement {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 6px;
-      padding: 8px 10px;
-      background: #f9f9f9;
-      border-radius: 5px;
-    }
-    .agreed { color: #16a34a; white-space: nowrap; }
-    .not-agreed { color: #dc2626; white-space: nowrap; }
-    .signature-box {
-      margin-top: 24px;
-      padding: 16px;
-      border: 1px solid #d4d4d4;
-      border-radius: 8px;
-      background: #fafafa;
-      break-inside: avoid;
-    }
-    .meta { color: #666; font-size: 10.5px; }
+    ${CONTRACT_PDF_BASE_CSS}
   </style>
 </head>
 <body>
