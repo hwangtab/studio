@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { formatCurrency, formatDate } from '../format';
+import { fillPlaceholders } from '../placeholders';
 import { escapeTableCell } from '../html-escape';
 import { KIND_LABEL, PER_SONG_MILESTONES, type ProductionKind, type ProductionTerms, type RefundItemKey, type RefundMilestoneEvent } from './terms';
 
@@ -115,54 +116,50 @@ export const buildProductionContent = (data: ProductionTemplateData, template: s
   const guardianSignatureRow = guardian ? `| **법정대리인** ${cell(guardian.name)} (${cell(guardian.relation)}) | (전자서명) |` : '';
 
   const replacements: Record<string, string> = {
-    '{{guardianSection}}': guardianSection,
-    '{{guardianSignatureRow}}': guardianSignatureRow,
-    '{{clientName}}': cell(data.clientName),
-    '{{clientStageName}}': cell(data.clientStageName, '-'),
-    '{{clientBirthdate}}': cell(data.clientBirthdate),
-    '{{clientPhone}}': cell(data.clientPhone),
-    '{{clientAddress}}': cell(data.clientAddress),
-    '{{songTitle}}': terms.songs[0]?.title ? escapeTableCell(terms.songs[0].title) : '1곡 (제목 미정)',
-    '{{albumTitle}}': terms.albumTitle ? escapeTableCell(terms.albumTitle) : '제목 미정',
-    '{{releaseKind}}': KIND_LABEL[data.kind],
-    '{{songCount}}': String(terms.songs.length),
-    '{{songRows}}': terms.songs
+    guardianSection,
+    guardianSignatureRow,
+    clientName: cell(data.clientName),
+    clientStageName: cell(data.clientStageName, '-'),
+    clientBirthdate: cell(data.clientBirthdate),
+    clientPhone: cell(data.clientPhone),
+    clientAddress: cell(data.clientAddress),
+    songTitle: terms.songs[0]?.title ? escapeTableCell(terms.songs[0].title) : '1곡 (제목 미정)',
+    albumTitle: terms.albumTitle ? escapeTableCell(terms.albumTitle) : '제목 미정',
+    releaseKind: KIND_LABEL[data.kind],
+    songCount: String(terms.songs.length),
+    songRows: terms.songs
       .map((song, index) => `| ${index + 1} | ${song.title ? escapeTableCell(song.title) : '제목 미정'} |`)
       .join('\n'),
-    '{{recordingHoursTotal}}': String(terms.scope.recordingHours * terms.songs.length),
-    '{{total}}': won(terms.amount.total),
-    '{{deposit}}': won(terms.amount.deposit),
-    '{{balance}}': won(terms.amount.balance),
-    '{{depositDueDays}}': String(terms.amount.depositDueDays),
-    '{{balanceDueDays}}': String(terms.amount.balanceDueDays),
-    '{{bank}}': escapeTableCell(terms.payment.bank),
-    '{{account}}': escapeTableCell(terms.payment.account),
-    '{{holder}}': escapeTableCell(terms.payment.holder),
-    '{{workWeeks}}': String(terms.workWeeks),
-    '{{arrangementTracks}}': String(terms.scope.arrangementTracks),
-    '{{recordingHours}}': String(terms.scope.recordingHours),
-    '{{mixingTracks}}': String(terms.scope.mixingTracks),
-    '{{revArrangement}}': String(terms.revisions.arrangement),
-    '{{revMixing}}': String(terms.revisions.mixing),
-    '{{revMastering}}': String(terms.revisions.mastering),
-    '{{feeArrangement}}': won(terms.extraRevisionFees.arrangement),
-    '{{feeMixing}}': won(terms.extraRevisionFees.mixing),
-    '{{feeMastering}}': won(terms.extraRevisionFees.mastering),
-    '{{deemedApprovalDays}}': String(terms.deemedApprovalDays),
-    '{{clientUnresponsiveDays}}': String(terms.clientUnresponsiveDays),
-    '{{paymentDelayDays}}': String(terms.paymentDelayDays),
-    '{{studioDelayWeeks}}': String(terms.studioDelayWeeks),
-    '{{credits}}': escapeTableCell(terms.credits),
-    '{{refundRows}}': refundRows,
-    '{{refundMilestones}}': describeRefundMilestones(terms),
-    '{{contractDate}}': formatDate(data.contractDate),
+    recordingHoursTotal: String(terms.scope.recordingHours * terms.songs.length),
+    total: won(terms.amount.total),
+    deposit: won(terms.amount.deposit),
+    balance: won(terms.amount.balance),
+    depositDueDays: String(terms.amount.depositDueDays),
+    balanceDueDays: String(terms.amount.balanceDueDays),
+    bank: escapeTableCell(terms.payment.bank),
+    account: escapeTableCell(terms.payment.account),
+    holder: escapeTableCell(terms.payment.holder),
+    workWeeks: String(terms.workWeeks),
+    arrangementTracks: String(terms.scope.arrangementTracks),
+    recordingHours: String(terms.scope.recordingHours),
+    mixingTracks: String(terms.scope.mixingTracks),
+    revArrangement: String(terms.revisions.arrangement),
+    revMixing: String(terms.revisions.mixing),
+    revMastering: String(terms.revisions.mastering),
+    feeArrangement: won(terms.extraRevisionFees.arrangement),
+    feeMixing: won(terms.extraRevisionFees.mixing),
+    feeMastering: won(terms.extraRevisionFees.mastering),
+    deemedApprovalDays: String(terms.deemedApprovalDays),
+    clientUnresponsiveDays: String(terms.clientUnresponsiveDays),
+    paymentDelayDays: String(terms.paymentDelayDays),
+    studioDelayWeeks: String(terms.studioDelayWeeks),
+    credits: escapeTableCell(terms.credits),
+    refundRows: refundRows,
+    refundMilestones: describeRefundMilestones(terms),
+    contractDate: formatDate(data.contractDate),
   };
 
-  let content = template;
-  for (const [placeholder, value] of Object.entries(replacements)) {
-    content = content.replaceAll(placeholder, () => value);
-  }
-  return content;
+  return fillPlaceholders(template, replacements);
 };
 
 /** 템플릿에 남은 자리표시자. 테스트가 "모든 변수가 채워졌다"를 확인하는 데 쓴다. */

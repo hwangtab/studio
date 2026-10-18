@@ -65,6 +65,12 @@ describe('제작 계약서 본문', () => {
     expect(content.match(/## 제14조/g)).toHaveLength(1);
   });
 
+  it('서명자가 적은 값 안의 자리표시자는 다시 채우지 않는다 — 주소로 환불표 행을 끼워 넣을 수 없다', () => {
+    const content = buildProductionContent({ ...base, clientAddress: '서울 {{refundRows}} {{contractDate}}' }, template);
+    expect(content).toContain('서울 {{refundRows}} {{contractDate}}');
+    expect(content.match(/\| \*\*합계\*\* \|/g)).toHaveLength(1);
+  });
+
   it('서명 전 초안은 생년월일·주소 칸을 비운다', () => {
     const content = buildProductionContent({ ...base, clientBirthdate: null, clientAddress: null }, template);
     expect(content).toContain('| 생년월일 |  |');

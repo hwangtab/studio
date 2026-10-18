@@ -322,6 +322,14 @@ SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이�
   CASCADE로 지워지지 않는다 — **마이그레이터 밖에서 SQL을 손으로 돌릴 땐 `PRAGMA foreign_keys=OFF`를 먼저.**
 - EP·정규 계약서(`release-template.md`)는 싱글 문안에서 곡 수 문장만 바꾼 것이다. 공통 조항을 고치면 두 파일을 같이 —
   template.test.ts가 어긋남을 잡는다.
+- **간주 승인 기한은 전달일과 통지가 실제로 나간 날 중 늦은 날부터 센다**(`deemedBaseDay`). 장부와 전달 메일이 같은
+  함수를 쓴다 — 통지가 실패했다가 다시 나가면 의뢰인은 그날부터 7일을 받는다. 기한이 지난 뒤의 수정 요청은 크론이
+  아직 승인을 기록하지 않았어도 거절한다.
+- **판정을 거치는 진행 기록은 `recordProgressEvent`로만 넣는다.** 판정한 장부의 다음 순번으로 INSERT해 그 사이 다른
+  기록이 들어왔으면 UNIQUE(contract_id, seq)가 막고 다시 판정한다(낙관적 잠금) — 같은 결과물에 승인·수정 요청이 동시에
+  두 번 와도 하나만 남는 이유다. `appendProductionEvent`를 직접 부르는 새 경로를 만들지 말 것(기한 안내 기록만 예외).
+- **계약서 자리표시자는 `fillPlaceholders`(lib/contracts/placeholders.ts)로 한 번에 채운다**(연습실·제작 공통). 차례로
+  replaceAll 하면 서명자가 주소에 적은 `{{…}}`가 다시 치환돼 표가 깨진다.
 - 템플릿(`single-template.md`) 제13조(개인정보 3년)·처리방침 ⑫·`retention.ts`가 같은 약속을 한다. 한쪽을 바꾸면 셋 다,
   처리방침은 `FUNDING_TERMS_VERSION`도.
 

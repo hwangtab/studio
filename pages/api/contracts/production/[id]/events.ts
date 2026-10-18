@@ -6,6 +6,9 @@ import { getClientIp } from '../../../../../lib/contracts/client-ip';
 import { EVENT_SPEC } from '../../../../../lib/contracts/production/event-spec';
 import { parseAdminEventInput, parseVoidInput } from '../../../../../lib/contracts/production/events';
 import { loadProgressContext, recordProgressEvent, sendEventNotice } from '../../../../../lib/contracts/production/progress';
+import { REVISION_STAGES } from '../../../../../lib/contracts/production/terms';
+
+const REVISION_STAGE_SET: ReadonlySet<string> = new Set(REVISION_STAGES);
 
 /**
  * 관리자 진행 기록(제작 계약 상세 화면).
@@ -45,6 +48,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!context || !event) return res.status(404).json({ ok: false, message: '기록을 찾을 수 없습니다.' });
       if (!EVENT_SPEC[event.type].notifies) return res.status(409).json({ ok: false, message: '통지하지 않는 기록입니다.' });
       if (event.noticeStatus === 'sent') return res.status(409).json({ ok: false, message: '이미 통지가 나간 기록입니다.' });
+      // 무효로 한 기록, 그리고 이미 다음 결과물·답이 나온 전달은 다시 알리지 않는다 — 지금 대기 중인 결과물이 아닌
+      // 전달을 알리면 메일의 기한·수정 횟수가 지금 상태와 어긋난다.
+      if (!context.ledger.events.some((e) => e.id === event.id)) {
+        return res.status(409).json({ ok: false, message: '무효로 한 기록은 통지하지 않습니다.' });
+      }
+      if (
+        event.type === 'stage_delivered' &&
+        REVISION_STAGE_SET.has(event.stage ?? '') &&
+        !context.ledger.stages.some((s) => s.pending?.deliveryEventId === event.id)
+      ) {
+        return res.status(409).json({ ok: false, message: '이미 답을 받았거나 새 결과물이 나간 전달입니다.' });
+      }
       waitUntil(sendEventNotice(id, event.id));
       return res.status(200).json({ ok: true, message: '통지를 다시 보내는 중입니다. 잠시 후 새로고침해 결과를 확인해 주세요.' });
     }

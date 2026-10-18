@@ -31,7 +31,7 @@ const delivery = {
 
 describe('결과물 전달 통지', () => {
   const ledger = computeProductionLedger({ terms, signedAt: kst('2026-11-02T10:00:00'), events: [delivery], now: kst('2026-11-10T23:31:00') });
-  const content = buildProgressNoticeContent(contract, terms, delivery, ledger)!;
+  const content = buildProgressNoticeContent(contract, terms, delivery, ledger, kst('2026-11-10T23:31:00'))!;
   const all = [content.subject, ...content.paragraphs, ...(content.notices ?? []), ...(content.rows ?? []).map((r) => `${r.label}: ${r.value}`)].join('\n');
 
   it('제5조 5항의 간주 승인 문장과 그 기한(KST 날짜)을 반드시 싣는다', () => {
@@ -39,6 +39,11 @@ describe('결과물 전달 통지', () => {
     expect(all).toContain('제5조 5항');
     // 밤 11시 30분 전달 → 기한은 11/17(전달일 다음 날부터 7일째).
     expect(all).toContain('2026년 11월 17일까지');
+  });
+
+  it('통지가 늦게 나가면(재발송) 기한은 통지한 날부터 센다', () => {
+    const late = buildProgressNoticeContent(contract, terms, delivery, ledger, kst('2026-11-20T10:00:00'))!;
+    expect(late.subject).toContain('2026년 11월 27일까지');
   });
 
   it('남은 무료 수정과 초과 요금을 알린다', () => {

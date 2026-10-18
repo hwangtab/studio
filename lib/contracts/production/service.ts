@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 
-import { and, eq, inArray, isNull, lte, or, sql } from 'drizzle-orm';
+import { and, eq, exists, inArray, isNull, lte, or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../../db/client';
 import {
@@ -48,7 +48,21 @@ export const expireOverdueProductionContracts = async (now: Date = new Date()): 
     const result = await getDb()
       .update(productionContracts)
       .set({ status: 'expired', updatedAt: now })
-      .where(and(eq(productionContracts.status, 'sent'), lte(productionContracts.expiresAt, now)));
+      .where(
+        and(
+          eq(productionContracts.status, 'sent'),
+          lte(productionContracts.expiresAt, now),
+          // 서명자가 모두 서명한 계약은 성립을 기다리는 중이다 — 만료로 내리지 않는다.
+          exists(
+            getDb()
+              .select({ ok: sql`1` })
+              .from(productionContractSigners)
+              .where(
+                and(eq(productionContractSigners.contractId, productionContracts.id), eq(productionContractSigners.status, 'pending')),
+              ),
+          ),
+        ),
+      );
     return result.rowsAffected ?? 0;
   } catch (error: unknown) {
     console.error('[contracts/production/service] Failed to expire overdue contracts:', error);
@@ -452,7 +466,13 @@ export const finalizeProductionContractIfComplete = async (contractId: string, n
     where: eq(productionContracts.id, contractId),
     with: { signers: true },
   });
-  if (!contract || contract.status !== 'sent' || contract.signers.some((signer) => signer.status === 'pending')) return false;
+  if (
+    !contract ||
+    (contract.status !== 'sent' && contract.status !== 'expired') ||
+    contract.signers.some((signer) => signer.status === 'pending')
+  ) {
+    return false;
+  }
 
   const content = buildSignedProductionContent(contract, contract.signers, now);
   const contentHash = computeProductionFingerprint({

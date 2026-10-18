@@ -10,6 +10,7 @@ import {
 import {
   appendProductionEvent,
   checkEventAllowed,
+  EventSeqConflictError,
   loadProductionEvents,
   recordNoticeResult,
   type EventInput,
@@ -50,8 +51,8 @@ const clientToken = (context: ProgressContext): string | null =>
  * 기록 하나의 통지 메일을 보내고 결과를 그 기록에 남긴다. 장부는 이 기록까지 반영해 다시 계산한다 — 메일에
  * 들어가는 남은 금액·기한이 방금 기록을 포함해야 한다.
  */
-export const sendEventNotice = async (contractId: string, eventId: string): Promise<void> => {
-  const context = await loadProgressContext(contractId);
+export const sendEventNotice = async (contractId: string, eventId: string, now: Date = new Date()): Promise<void> => {
+  const context = await loadProgressContext(contractId, now);
   const event = context?.events.find((e) => e.id === eventId);
   if (!context || !event || !EVENT_SPEC[event.type].notifies) return;
 
@@ -67,11 +68,13 @@ export const sendEventNotice = async (contractId: string, eventId: string): Prom
       event,
       context.ledger,
       buildProductionProgressUrl(contractId, token),
+      now,
     );
     if (!result) return;
     await recordNoticeResult(
       eventId,
       result.ok ? { ok: true } : { ok: false, error: `${result.errorCode ?? 'UNKNOWN'}${result.errorDetail ? `: ${result.errorDetail}` : ''}` },
+      now,
     );
   } catch (error: unknown) {
     console.error('[contracts/production/progress] Notice failed:', error);
@@ -90,14 +93,33 @@ export const recordProgressEvent = async (
   input: EventInput,
   actor: { actor: string; ip: string | null },
 ): Promise<RecordResult> => {
-  const context = await loadProgressContext(contractId);
-  if (!context) return { ok: false, status: 404, message: '계약을 찾을 수 없습니다.' };
+  // 판정한 장부의 다음 순번으로 넣는다. 그 사이 다른 기록이 들어왔으면(같은 결과물에 동시 승인·수정 요청, 크론의
+  // 간주 승인과 의뢰인 요청이 겹친 경우) 새 장부로 다시 판정한다 — 두 번째 요청은 대개 여기서 거절된다.
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const context = await loadProgressContext(contractId);
+    if (!context) return { ok: false, status: 404, message: '계약을 찾을 수 없습니다.' };
 
-  const refusal = checkEventAllowed(context.contract, context.ledger, context.events, input);
-  if (refusal) return { ok: false, status: 409, message: refusal };
+    const refusal = checkEventAllowed(context.contract, context.ledger, context.events, input);
+    if (refusal) return { ok: false, status: 409, message: refusal };
 
-  const event = await appendProductionEvent(contractId, input, actor);
-  return { ok: true, event };
+    const nextSeq = context.events.reduce((max, e) => Math.max(max, e.seq), 0) + 1;
+    try {
+      const event = await appendProductionEvent(contractId, withDeliveryRef(input, context.ledger), actor, new Date(), nextSeq);
+      return { ok: true, event };
+    } catch (error: unknown) {
+      if (!(error instanceof EventSeqConflictError)) throw error;
+    }
+  }
+  return { ok: false, status: 409, message: '다른 기록과 겹쳤습니다. 새로고침한 뒤 다시 시도해 주세요.' };
+};
+
+/** 승인·수정 요청은 어느 결과물에 대한 답인지 남긴다 — 그 전달을 무효로 하면 답도 근거를 잃는다(ledger). */
+const withDeliveryRef = (input: EventInput, ledger: ProductionLedger): EventInput => {
+  if ((input.type !== 'stage_approved' && input.type !== 'revision_requested') || input.data.deliveryEventId) return input;
+  const stage = ledger.stages.find(
+    (s) => s.stage === input.stage && (s.stage === 'mastering' || s.song === (input.song ?? 0)),
+  );
+  return stage?.pending ? { ...input, data: { ...input.data, deliveryEventId: stage.pending.deliveryEventId } } : input;
 };
 
 export interface DeadlineRunResult {
@@ -150,7 +172,7 @@ export const runProductionDeadlines = async (now: Date = new Date()): Promise<De
         );
         if (recorded.ok) {
           result.deemedApprovals += 1;
-          await sendEventNotice(id, recorded.event.id);
+          await sendEventNotice(id, recorded.event.id, now);
         }
       }
 

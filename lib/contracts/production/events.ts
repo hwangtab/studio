@@ -8,7 +8,7 @@ import {
   type ProductionEventType,
 } from '../../../db/schema';
 import { EVENT_SPEC, isPerSongEvent, type ProductionStage } from './event-spec';
-import { findStage, type EventData, type PauseCause, type ProductionLedger } from './ledger';
+import { findStage, kstDay, type EventData, type PauseCause, type ProductionLedger } from './ledger';
 import { REVISION_STAGES, type RevisionStage } from './terms';
 
 /**
@@ -19,7 +19,9 @@ import { REVISION_STAGES, type RevisionStage } from './terms';
  *    개인정보 파기(retention.ts: 메모·링크·IP만 지우고 기록 자체는 남긴다).
  * 2. **기록 가능 여부는 장부(ledger)로 판정한다.** 화면이 버튼을 숨겨도 서버가 다시 본다 — 예컨대 잔금 전 최종
  *    인도(제5조 6항), 결과물 없이 승인.
- * 3. 순번(seq)은 INSERT 안에서 정한다. 동시 기록이 같은 번호를 잡으면 UNIQUE가 하나를 막고, 한 번 다시 시도한다.
+ * 3. 순번(seq)은 (contract_id, seq) UNIQUE다. 판정을 거치는 기록(recordProgressEvent)은 **판정에 쓴 장부의 다음
+ *    번호**로 넣는다 — 그 사이 다른 기록이 들어왔으면 UNIQUE가 막고, 새 장부로 다시 판정한다(낙관적 잠금). 같은
+ *    결과물에 승인·수정 요청이 동시에 두 번 들어와도 하나만 남는 이유다.
  */
 
 export interface EventInput {
@@ -175,6 +177,11 @@ export const checkEventAllowed = (
       if (isRevisionStage(input.stage) && findStage(ledger, input.stage, input.song)?.approved) {
         return `${STAGE_NAME[input.stage]}은(는) 이미 승인됐습니다.`;
       }
+      // 마스터링은 음반 전체를 한 번에 한다 — 모든 곡의 믹싱이 승인된 뒤다. 그 전에 마스터링이 승인되면 잔금
+      // 기한(제3조)이 덜 끝난 음반에서 시작된다.
+      if (input.stage === 'mastering' && unapprovedMixes(ledger).length > 0) {
+        return `모든 곡의 믹싱이 승인된 뒤에 마스터링을 전달할 수 있습니다(남은 곡: ${unapprovedMixes(ledger).join(', ')}번).`;
+      }
       return null;
     case 'revision_requested':
     case 'stage_approved': {
@@ -185,15 +192,27 @@ export const checkEventAllowed = (
           ? `${STAGE_NAME[input.stage]}은(는) 이미 승인됐습니다.`
           : `${STAGE_NAME[input.stage]} 결과물이 전달된 뒤에 기록할 수 있습니다.`;
       }
+      if (input.occurredAt.getTime() < state.pending.deliveredAt.getTime()) {
+        return '결과물을 전달하기 전 시각으로는 기록할 수 없습니다.';
+      }
+      // 제5조 5항: 기한이 지나면 승인으로 본다 — 기한 점검(하루 한 번)이 아직 기록하지 않았어도 그 뒤의 수정 요청은
+      // 받지 않는다. 통지가 나가지 않은 전달은 기한이 성립하지 않으니 예외다.
+      if (input.type === 'revision_requested' && state.pending.noticeSent && kstDay(input.occurredAt) >= state.pending.deemedFromDay) {
+        return `확인 기한이 지나 ${STAGE_NAME[input.stage]}은(는) 승인된 것으로 봅니다(제5조 5항).`;
+      }
       return null;
     }
     case 'pause_started':
       return ledger.work.openPause ? '이미 정지 중입니다. 먼저 "작업 정지 끝"을 기록해 주세요.' : null;
     case 'pause_ended':
-      return ledger.work.openPause ? null : '정지 중인 구간이 없습니다.';
+      if (!ledger.work.openPause) return '정지 중인 구간이 없습니다.';
+      return input.occurredAt.getTime() < ledger.work.openPause.since.getTime()
+        ? '정지를 시작한 때보다 앞선 시각으로는 끝을 기록할 수 없습니다.'
+        : null;
     case 'final_delivered':
       // 제5조 6항: 잔금 지급을 확인한 뒤 인도한다.
       if (!findStage(ledger, 'mastering')?.approved) return '마스터링 승인 뒤에 최종 파일을 인도할 수 있습니다.';
+      if (unapprovedMixes(ledger).length > 0) return `믹싱이 승인되지 않은 곡이 있습니다(${unapprovedMixes(ledger).join(', ')}번).`;
       if (!ledger.payments.paidInFull) {
         return `잔금이 들어오기 전에는 최종 파일을 인도하지 않습니다(제5조 6항). 남은 금액 ${(ledger.payments.totalDue - ledger.payments.received).toLocaleString('ko-KR')}원.`;
       }
@@ -209,6 +228,10 @@ export const checkEventAllowed = (
   }
 };
 
+/** 믹싱이 승인되지 않은 곡의 번호(1부터). */
+const unapprovedMixes = (ledger: ProductionLedger): number[] =>
+  ledger.stages.filter((s) => s.stage === 'mixing' && !s.approved).map((s) => (s.song ?? 0) + 1);
+
 export const loadProductionEvents = (contractId: string): Promise<ProductionContractEvent[]> =>
   getDb()
     .select()
@@ -216,21 +239,42 @@ export const loadProductionEvents = (contractId: string): Promise<ProductionCont
     .where(eq(productionContractEvents.contractId, contractId))
     .orderBy(productionContractEvents.seq);
 
+/** 판정에 쓴 장부 뒤에 다른 기록이 먼저 들어왔다(expectedSeq 충돌). */
+export class EventSeqConflictError extends Error {
+  constructor() {
+    super('production event seq conflict');
+    this.name = 'EventSeqConflictError';
+  }
+}
+
+const isUniqueViolation = (error: unknown): boolean => {
+  for (let e: unknown = error; e instanceof Error; e = (e as { cause?: unknown }).cause) {
+    if (/UNIQUE/i.test(e.message)) return true;
+  }
+  return false;
+};
+
 /**
  * 기록을 하나 추가한다. 통지 대상이면 notice_status를 pending으로 넣고, 메일은 호출부가 보낸다(sendEventNotice).
+ *
+ * `expectedSeq`를 주면 그 번호로만 넣는다 — 이미 있으면 EventSeqConflictError(다시 판정하라는 뜻). 없으면 다음
+ * 번호를 INSERT 안에서 정하고, 동시 기록과 겹치면 한 번 다시 시도한다(판정이 필요 없는 기한 안내 기록).
  */
 export const appendProductionEvent = async (
   contractId: string,
   input: EventInput,
   actor: { actor: string; ip: string | null },
   now: Date = new Date(),
+  expectedSeq: number | null = null,
 ): Promise<ProductionContractEvent> => {
   const insert = () =>
     getDb()
       .insert(productionContractEvents)
       .values({
         contractId,
-        seq: sql`(SELECT COALESCE(MAX(${productionContractEvents.seq}), 0) + 1 FROM ${productionContractEvents} WHERE ${productionContractEvents.contractId} = ${contractId})`,
+        seq:
+          expectedSeq ??
+          sql`(SELECT COALESCE(MAX(${productionContractEvents.seq}), 0) + 1 FROM ${productionContractEvents} WHERE ${productionContractEvents.contractId} = ${contractId})`,
         type: input.type,
         stage: input.stage,
         song: input.song,
@@ -249,12 +293,11 @@ export const appendProductionEvent = async (
     const [event] = await insert();
     return event;
   } catch (error: unknown) {
+    if (!isUniqueViolation(error)) throw error;
+    if (expectedSeq !== null) throw new EventSeqConflictError();
     // 같은 순번을 동시에 잡았다 — 한 번만 다시 시도한다.
-    if (error instanceof Error && /UNIQUE/i.test(error.message)) {
-      const [event] = await insert();
-      return event;
-    }
-    throw error;
+    const [event] = await insert();
+    return event;
   }
 };
 
@@ -262,12 +305,13 @@ export const appendProductionEvent = async (
 export const recordNoticeResult = async (
   eventId: string,
   result: { ok: true } | { ok: false; error: string },
+  sentAt: Date = new Date(),
 ): Promise<void> => {
   await getDb()
     .update(productionContractEvents)
     .set(
       result.ok
-        ? { noticeStatus: 'sent', noticeSentAt: new Date(), noticeError: null }
+        ? { noticeStatus: 'sent', noticeSentAt: sentAt, noticeError: null }
         : { noticeStatus: 'failed', noticeError: result.error },
     )
     .where(eq(productionContractEvents.id, eventId));

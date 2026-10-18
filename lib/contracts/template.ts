@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { formatCurrency, formatDate } from './format';
+import { fillPlaceholders } from './placeholders';
 import { escapeTableCell } from './html-escape';
 
 export interface ContractTemplateData {
@@ -37,30 +38,22 @@ export const buildContractContent = (
   data: ContractTemplateData,
   template: string = readContractTemplate(),
 ): string => {
-  let content = template;
-
   // 아래 값은 모두 마크다운 표의 셀 안에 들어간다. 파이프·개행까지 막지 않으면
   // 이름 한 줄로 계약서에 없던 칸과 문구를 심을 수 있다.
   const replacements: Record<string, string> = {
-    '{{customerName}}': escapeTableCell(data.customerName),
-    '{{customerBirthdate}}': data.customerBirthdate ? escapeTableCell(data.customerBirthdate) : '',
-    '{{customerPhone}}': escapeTableCell(data.customerPhone),
-    '{{customerAddress}}': data.customerAddress ? escapeTableCell(data.customerAddress) : '',
-    '{{roomNumber}}': escapeTableCell(data.roomNumber),
-    '{{roomArea}}': data.roomArea ? escapeTableCell(data.roomArea) : '3m × 2m',
-    '{{startDate}}': formatDate(data.startDate),
-    '{{endDate}}': formatDate(data.endDate),
-    '{{monthlyRent}}': formatCurrency(data.monthlyRent),
-    '{{depositAmount}}': formatCurrency(data.depositAmount),
-    '{{paymentDay}}': String(data.paymentDay ?? 1),
-    '{{contractDate}}': formatDate(data.contractDate),
+    customerName: escapeTableCell(data.customerName),
+    customerBirthdate: data.customerBirthdate ? escapeTableCell(data.customerBirthdate) : '',
+    customerPhone: escapeTableCell(data.customerPhone),
+    customerAddress: data.customerAddress ? escapeTableCell(data.customerAddress) : '',
+    roomNumber: escapeTableCell(data.roomNumber),
+    roomArea: data.roomArea ? escapeTableCell(data.roomArea) : '3m × 2m',
+    startDate: formatDate(data.startDate),
+    endDate: formatDate(data.endDate),
+    monthlyRent: formatCurrency(data.monthlyRent),
+    depositAmount: formatCurrency(data.depositAmount),
+    paymentDay: String(data.paymentDay ?? 1),
+    contractDate: formatDate(data.contractDate),
   };
-
-  // 치환값은 함수로 넘긴다. 문자열로 넘기면 replace가 `$'`·`$&` 같은 패턴을 해석해, 주소에
-  // `$'`를 적은 서명자가 템플릿 뒷부분(파이프·개행 포함)을 셀 안으로 끌어올 수 있다.
-  for (const [placeholder, value] of Object.entries(replacements)) {
-    content = content.replaceAll(placeholder, () => value);
-  }
 
   // 특약사항도 표 셀에 들어간다 — 위 필드들과 같은 escapeTableCell을 쓴다.
   // escapeMarkdown만으로는 파이프·개행만 막고 꺾쇠는 통과시켜, 특약 문구가
@@ -68,9 +61,10 @@ export const buildContractContent = (
   const termsRows = (data.specialTerms ?? [])
     .map((term, index) => `| ${index + 1} | ${escapeTableCell(term)} |`)
     .join('\n');
-  content = content.replace('{{specialTerms}}', () => termsRows || '| 1 | |\n| 2 | |\n| 3 | |');
+  replacements.specialTerms = termsRows || '| 1 | |\n| 2 | |\n| 3 | |';
 
-  return content;
+  // 한 번에 치환한다(placeholders.ts) — 차례로 치환하면 서명자가 주소에 적은 `{{…}}`가 뒤 차례에서 다시 채워진다.
+  return fillPlaceholders(template, replacements);
 };
 
 /**

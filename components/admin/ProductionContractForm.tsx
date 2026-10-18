@@ -120,6 +120,8 @@ interface ProductionContractFormProps {
   generalError?: string | null;
   onSubmit: (values: ProductionContractFormValues) => void;
   onCancel: () => void;
+  /** 입력이 바뀔 때마다 — 폼 밖에서 지금 값을 이어 쓸 때(견적 붙여 넣기). */
+  onChange?: (values: ProductionContractFormValues) => void;
 }
 
 export default function ProductionContractForm({
@@ -130,8 +132,15 @@ export default function ProductionContractForm({
   generalError,
   onSubmit,
   onCancel,
+  onChange,
 }: ProductionContractFormProps) {
   const [values, setValues] = useState<ProductionContractFormValues>(initialValues);
+  // 곡 수는 입력 중엔 글자 그대로 들고 있다가 범위 안일 때만 반영한다 — 키마다 범위로 묶으면 "12"를 칠 수 없다.
+  const [songCountText, setSongCountText] = useState<string | null>(null);
+
+  useEffect(() => {
+    onChange?.(values);
+  }, [values, onChange]);
 
   const isDirty = useMemo(() => JSON.stringify(values) !== JSON.stringify(initialValues), [values, initialValues]);
 
@@ -290,11 +299,23 @@ export default function ProductionContractForm({
                   light
                   inputMode="numeric"
                   className="text-sm"
-                  value={String(terms.songs.length)}
+                  value={songCountText ?? String(terms.songs.length)}
                   onChange={(e) => {
                     const range = SONG_COUNT_RANGE[values.kind];
-                    const count = Math.min(Math.max(digits(e.target.value), range.min), range.max);
-                    setTerms((t) => ({ ...t, songs: resizeSongs(t.songs, count) }));
+                    const text = e.target.value.replace(/\D/g, '');
+                    setSongCountText(text);
+                    const count = Number(text);
+                    if (text !== '' && count >= range.min && count <= range.max) {
+                      setTerms((t) => ({ ...t, songs: resizeSongs(t.songs, count) }));
+                    }
+                  }}
+                  onBlur={() => {
+                    const range = SONG_COUNT_RANGE[values.kind];
+                    if (songCountText !== null && songCountText !== '') {
+                      const count = Math.min(Math.max(Number(songCountText), range.min), range.max);
+                      setTerms((t) => ({ ...t, songs: resizeSongs(t.songs, count) }));
+                    }
+                    setSongCountText(null);
                   }}
                 />
               </Field>

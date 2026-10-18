@@ -17,7 +17,18 @@ const mockSendEmail = jest.fn().mockResolvedValue({ ok: true });
 
 jest.mock('../../../db/client', () => ({ getDb: () => mockDb }));
 jest.mock('../../email/resend', () => ({ sendEmail: (...args: unknown[]) => mockSendEmail(...args) }));
-jest.mock('@vercel/functions', () => ({ waitUntil: (promise: Promise<unknown>) => promise }));
+const mockBackground: Array<Promise<unknown>> = [];
+jest.mock('@vercel/functions', () => ({
+  waitUntil: (promise: Promise<unknown>) => {
+    mockBackground.push(promise);
+    return promise;
+  },
+}));
+// 성립 후처리의 PDF는 크로미움이 필요하다 — 여기서는 실패로 두고(메일은 그대로 나간다) 성립 여부만 본다.
+jest.mock('./pdf-storage', () => ({
+  renderProductionPdf: jest.fn().mockRejectedValue(new Error('no chromium in jest')),
+  uploadProductionPdf: jest.fn(),
+}));
 jest.mock('../admin-rate-limit', () => ({
   getDownloadIdentityVerdict: jest.fn().mockResolvedValue('ok'),
   reserveDownloadIdentityAttempt: jest.fn().mockResolvedValue('ok'),
@@ -26,7 +37,8 @@ jest.mock('../admin-rate-limit', () => ({
 }));
 
 import progressHandler from '../../../pages/api/contracts/production/[id]/progress';
-import { createProductionContract, sendProductionContract } from './service';
+import { createProductionContract, expireOverdueProductionContracts, sendProductionContract } from './service';
+import { completeStalledProductionContract } from './finalize';
 import { loadProgressContext, recordProgressEvent, runProductionDeadlines, sendEventNotice } from './progress';
 import { buildDefaultProductionTerms } from './terms';
 import type { EventInput } from './events';
@@ -70,11 +82,18 @@ const signedContract = async (
   return { id, token };
 };
 
+/** 기록하고 통지한다 — 통지는 그 일이 일어난 때 나간 것으로 본다(기한 계산이 실제 시계에 묶이지 않게). */
 const record = async (id: string, event: EventInput) => {
   const result = await recordProgressEvent(id, event, admin);
   if (!result.ok) throw new Error(result.message);
-  await sendEventNotice(id, result.event.id);
+  await sendEventNotice(id, result.event.id, event.occurredAt);
   return result.event;
+};
+
+/** 마스터링 앞 단계 — 모든 곡의 믹싱 승인(제2조 순서). */
+const approveMixing = async (id: string) => {
+  await record(id, input({ type: 'stage_delivered', stage: 'mixing' }));
+  await record(id, input({ type: 'stage_approved', stage: 'mixing', data: { mode: 'proxy' } }));
 };
 
 const callProgress = async (id: string, body: Record<string, unknown>, cookie = '') => {
@@ -129,6 +148,7 @@ describe('진행 기록 쓰기', () => {
 
   it('잔금 전에는 최종 파일 인도를 기록할 수 없다(제5조 6항)', async () => {
     const { id } = await signedContract(new Date());
+    await approveMixing(id);
     await record(id, input({ type: 'stage_delivered', stage: 'mastering' }));
     await record(id, input({ type: 'stage_approved', stage: 'mastering', data: { mode: 'proxy' } }));
     await record(id, input({ type: 'payment_received', amount: 575_000 }));
@@ -216,6 +236,7 @@ describe('의뢰인 진행 API', () => {
 
   it('무료 횟수를 넘는 수정 요청은 추가 요금 동의를 받는다(제5조 3항)', async () => {
     const { id, token } = await signedContract(new Date());
+    await approveMixing(id);
     await record(id, input({ type: 'stage_delivered', stage: 'mastering' }));
     await record(id, input({ type: 'revision_requested', stage: 'mastering', data: { note: '1회차' } }));
     const second = await record(id, input({ type: 'stage_delivered', stage: 'mastering' }));
@@ -249,6 +270,17 @@ describe('해지 환불 계좌', () => {
     return { id, token, cookie };
   };
   const account = { bankName: '카카오뱅크', accountNumber: '3333-01-1234567', accountHolder: '홍길동' };
+
+  it('한 번 받은 계좌는 다시 받지 않는다 — 송금 완료 표시가 지워지지 않게', async () => {
+    const { id, token, cookie } = await terminatedWithRefund();
+    expect((await callProgress(id, { action: 'refund-account', token, ...account }, cookie)).status).toBe(200);
+    await client.execute({ sql: "UPDATE refund_accounts SET refunded_at = unixepoch() WHERE order_no = ?", args: [id] });
+    const again = await callProgress(id, { action: 'refund-account', token, ...account, accountHolder: '김철수' }, cookie);
+    expect(again.status).toBe(409);
+    const row = (await client.execute({ sql: 'SELECT account_holder, refunded_at FROM refund_accounts WHERE order_no = ?', args: [id] })).rows[0];
+    expect(row.account_holder).toBe('홍길동');
+    expect(row.refunded_at).not.toBeNull();
+  });
 
   it('해지 계약에서 돌려받을 금액이 있으면 계좌를 받아 번호를 암호화해 둔다', async () => {
     const { id, token, cookie } = await terminatedWithRefund();
@@ -302,5 +334,104 @@ describe('EP — 곡마다 진행', () => {
     const ledger = (await loadProgressContext(id, kst('2026-11-18T12:00:00')))!.ledger;
     expect(findStage(ledger, 'mixing', 0)?.approved).toMatchObject({ mode: 'deemed' });
     expect(findStage(ledger, 'mixing', 1)?.approved).toBeNull();
+  });
+});
+
+describe('기한·순서·동시 기록(2026-10-18 점검)', () => {
+  it('통지가 실패했다가 나중에 나가면 간주 승인 기한은 그날부터 센다', async () => {
+    const { id } = await signedContract(kst('2026-11-02T10:00:00'));
+    mockSendEmail.mockResolvedValueOnce({ ok: false, errorCode: 'UNDELIVERABLE_ADDRESS' });
+    const delivery = await record(id, input({ type: 'stage_delivered', stage: 'arrangement', occurredAt: kst('2026-11-10T09:00:00') }));
+    await sendEventNotice(id, delivery.id, kst('2026-11-20T10:00:00'));
+
+    expect((await runProductionDeadlines(kst('2026-11-21T10:00:00'))).deemedApprovals).toBe(0);
+    expect((await runProductionDeadlines(kst('2026-11-27T12:00:00'))).deemedApprovals).toBe(0);
+    expect((await runProductionDeadlines(kst('2026-11-28T10:00:00'))).deemedApprovals).toBe(1);
+  });
+
+  it('간주 기한이 지난 뒤의 수정 요청은 받지 않는다(크론이 아직 돌지 않았어도)', async () => {
+    const { id } = await signedContract(kst('2026-11-02T10:00:00'));
+    await record(id, input({ type: 'stage_delivered', stage: 'arrangement', occurredAt: kst('2026-11-10T09:00:00') }));
+    const late = await recordProgressEvent(
+      id,
+      input({ type: 'revision_requested', stage: 'arrangement', occurredAt: kst('2026-11-18T08:00:00'), data: { note: '늦은 요청' } }),
+      admin,
+    );
+    expect(late).toMatchObject({ ok: false, message: expect.stringContaining('제5조 5항') });
+    const inTime = await recordProgressEvent(
+      id,
+      input({ type: 'revision_requested', stage: 'arrangement', occurredAt: kst('2026-11-17T23:00:00'), data: { note: '기한 안' } }),
+      admin,
+    );
+    expect(inTime.ok).toBe(true);
+  });
+
+  it('같은 결과물에 승인이 동시에 두 번 와도 하나만 남는다', async () => {
+    const { id, token } = await signedContract(new Date());
+    const delivery = await record(id, input({ type: 'stage_delivered', stage: 'mixing' }));
+    const { cookie } = await callProgress(id, { action: 'unlock', token, identityDigits: '5678' });
+    const body = { action: 'approve', token, stage: 'mixing', deliveryEventId: delivery.id };
+    const results = await Promise.all([callProgress(id, body, cookie), callProgress(id, body, cookie)]);
+    expect(results.map((r) => r.status).sort()).toEqual([200, 409]);
+    const context = await loadProgressContext(id);
+    expect(context!.events.filter((e) => e.type === 'stage_approved')).toHaveLength(1);
+  });
+
+  it('전달을 무효로 하면 그 전달의 승인도 효력을 잃고, 다시 전달할 수 있다', async () => {
+    const { id } = await signedContract(new Date());
+    const delivery = await record(id, input({ type: 'stage_delivered', stage: 'arrangement' }));
+    await record(id, input({ type: 'stage_approved', stage: 'arrangement', data: { mode: 'proxy' } }));
+    await record(id, input({ type: 'void', voidsEventId: delivery.id, data: { reason: '잘못 올린 파일' } }));
+
+    const context = await loadProgressContext(id);
+    expect(findStage(context!.ledger, 'arrangement')).toMatchObject({ deliveries: 0, approved: null });
+    expect((await recordProgressEvent(id, input({ type: 'stage_delivered', stage: 'arrangement' }), admin)).ok).toBe(true);
+  });
+
+  it('믹싱이 승인되지 않은 곡이 있으면 마스터링을 전달할 수 없다', async () => {
+    const { id } = await signedContract(new Date(), { kind: 'ep', songs: 2 });
+    await record(id, input({ type: 'stage_delivered', stage: 'mixing', song: 0 }));
+    await record(id, input({ type: 'stage_approved', stage: 'mixing', song: 0, data: { mode: 'proxy' } }));
+    const refused = await recordProgressEvent(id, input({ type: 'stage_delivered', stage: 'mastering' }), admin);
+    expect(refused).toMatchObject({ ok: false, message: expect.stringContaining('2번') });
+  });
+
+  it('작업 정지 끝은 시작보다 앞선 시각으로 기록할 수 없다', async () => {
+    const { id } = await signedContract(new Date());
+    const now = Date.now();
+    await record(id, input({ type: 'pause_started', occurredAt: new Date(now - 60_000), data: { cause: 'client' } }));
+    const refused = await recordProgressEvent(id, input({ type: 'pause_ended', occurredAt: new Date(now - 3 * 86_400_000) }), admin);
+    expect(refused).toMatchObject({ ok: false, status: 409 });
+  });
+});
+
+describe('서명 뒤 성립이 멈춘 계약', () => {
+  it('서명자가 모두 서명했으면 만료로 내리지 않고, 화면을 열 때 마지막 서명 시각으로 성립시킨다', async () => {
+    const { id } = await createProductionContract({
+      kind: 'single',
+      title: '멈춘 계약',
+      clientName: '홍길동',
+      clientStageName: null,
+      clientEmail: 'g@example.com',
+      clientPhone: '010-1234-5678',
+      guardian: null,
+      terms: buildDefaultProductionTerms('single', 1),
+    });
+    await sendProductionContract(id, { allowedStatuses: ['draft'], adminActor: 'kyungha', ipAddress: null, userAgent: 'jest' });
+    const signedAt = kst('2026-10-17T15:00:00');
+    await client.execute({
+      sql: "UPDATE production_contract_signers SET status = 'signed', signed_at = ? WHERE contract_id = ?",
+      args: [Math.floor(signedAt.getTime() / 1000), id],
+    });
+    await client.execute({ sql: 'UPDATE production_contracts SET expires_at = 1 WHERE id = ?', args: [id] });
+
+    expect(await expireOverdueProductionContracts()).toBe(0);
+    const contract = await mockDb.query.productionContracts.findFirst({ where: (t, { eq }) => eq(t.id, id), with: { signers: true } });
+    expect(await completeStalledProductionContract(contract!)).toBe(true);
+    await Promise.allSettled(mockBackground.splice(0));
+
+    const after = await mockDb.query.productionContracts.findFirst({ where: (t, { eq }) => eq(t.id, id) });
+    expect(after).toMatchObject({ status: 'signed', signedAt });
+    expect(after!.contentHash).toBeTruthy();
   });
 });

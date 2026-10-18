@@ -113,14 +113,18 @@ export const validateProductionContractPayload = (
       if (phone && clientPhone && phone.replace(/\D/g, '') === clientPhone.replace(/\D/g, '')) {
         push('guardian.phone', '의뢰인과 다른 번호여야 합니다 — 각자 자기 번호로 본인 확인을 합니다.');
       }
+      if (email && clientEmail && email.toLowerCase() === clientEmail.toLowerCase()) {
+        push('guardian.email', '의뢰인과 다른 이메일이어야 합니다 — 법정대리인 서명 링크는 대리인에게만 가야 합니다.');
+      }
       if (name && relation && email && phone) guardian = { name, relation, email, phone };
     }
   }
 
   // 종류를 모르면 곡 수를 검증할 수 없다. 값이 없으면 싱글(1단계 API 호환).
   const kind = (payload.kind ?? 'single') as ProductionKind;
-  if (!(kind in SONG_COUNT_RANGE)) push('kind', '계약 종류(싱글·EP·정규)를 골라 주세요.');
-  const terms = validateProductionTerms(payload.terms, kind in SONG_COUNT_RANGE ? kind : 'single');
+  const knownKind = Object.prototype.hasOwnProperty.call(SONG_COUNT_RANGE, kind);
+  if (!knownKind) push('kind', '계약 종류(싱글·EP·정규)를 골라 주세요.');
+  const terms = validateProductionTerms(payload.terms, knownKind ? kind : 'single');
   if (!terms.ok) errors.push(...terms.errors);
 
   if (errors.length > 0 || !terms.ok) return { ok: false, errors };
