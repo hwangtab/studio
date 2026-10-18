@@ -121,10 +121,12 @@ export interface CalendarEventInfo {
   allDay: boolean;
   /** "바쁨 아님"으로 표시된 일정 — freeBusy는 이런 일정을 바쁨으로 읽지 않는다(월 입주 일정이 쓴다). */
   transparent: boolean;
+  /** 반복 일정의 한 회차 — 회차마다 예약을 만들면 시리즈가 조각나므로 자동 등록하지 않는다. */
+  recurring: boolean;
 }
 
 interface RawCalendarEvent {
-  id?: string; status?: string; summary?: string; description?: string; transparency?: string;
+  id?: string; status?: string; summary?: string; description?: string; transparency?: string; recurringEventId?: string;
   start?: { dateTime?: string; date?: string }; end?: { dateTime?: string; date?: string };
 }
 
@@ -134,7 +136,7 @@ const toEventInfo = (e: RawCalendarEvent): CalendarEventInfo | null => {
   const start = new Date(e.start?.dateTime ?? (e.start?.date ? `${e.start.date}T00:00:00+09:00` : ''));
   const end = new Date(e.end?.dateTime ?? (e.end?.date ? `${e.end.date}T00:00:00+09:00` : ''));
   if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return null;
-  return { id: e.id, summary: e.summary ?? '', description: e.description ?? '', start, end, allDay, transparent: e.transparency === 'transparent' };
+  return { id: e.id, summary: e.summary ?? '', description: e.description ?? '', start, end, allDay, transparent: e.transparency === 'transparent', recurring: !!e.recurringEventId };
 };
 
 /**

@@ -5,6 +5,7 @@
 export const ACTION_LABEL: Record<string, string> = {
   funding_resident_number_view: '주민등록번호 조회',
   tenancy_private_view: '월 입주자 연락처 열람',
+  tenancy_calendar_export: '월 입주자 연락처의 캘린더 내보내기',
   funding_resident_number_decrypt_check: '주민등록번호 복호화 점검',
   funding_payout_account_view: '정산 계좌 조회',
   funding_payout_account_decrypt_check: '정산 계좌 복호화 점검',

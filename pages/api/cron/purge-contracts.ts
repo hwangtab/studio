@@ -13,6 +13,7 @@ import { isCronAuthorized } from '../../../lib/cron/auth';
 import { purgeExpiredPersonalData, RETENTION_YEARS } from '../../../lib/contracts/retention';
 import { buildOperatorAlertHtml } from '../../../lib/email/operatorAlert';
 import { sendEmail } from '../../../lib/email/resend';
+import { purgeEndedTenancies } from '../../../lib/tenancy/retention';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -23,6 +24,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const result = await purgeExpiredPersonalData();
+    // 월 입주 기록(퇴실 3년 개인정보·5년 전체)도 같은 달 크론에서 파기한다. 실패해도 계약 파기 결과를 가리지 않는다.
+    const tenancy = await purgeEndedTenancies().catch((error: unknown) => {
+      console.error('[cron/purge-contracts] 월 입주 기록 파기 실패', error instanceof Error ? error.name : 'unknown');
+      return null;
+    });
 
     /**
      * 일부라도 실패하면 알린다.
@@ -62,7 +68,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(500).json({ ok: false, ...result });
     }
 
-    return res.status(200).json({ ok: true, ...result });
+    return res.status(200).json({ ok: true, ...result, tenancy });
   } catch (error: unknown) {
     const detail = error instanceof Error ? error.message : String(error);
     console.error('[cron/purge-contracts] Failed:', error);

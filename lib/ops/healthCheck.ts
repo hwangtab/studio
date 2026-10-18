@@ -407,7 +407,7 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
     }
     if (tenancyCalendarId()) {
       const broken = await db.all<{ room_number: string | null; tenant_name: string }>(sql`
-        SELECT room_number, tenant_name FROM room_tenancies WHERE status = 'active' AND gcal_error IS NOT NULL ORDER BY room_number LIMIT 30
+        SELECT room_number, tenant_name FROM room_tenancies WHERE gcal_error IS NOT NULL ORDER BY room_number LIMIT 30
       `);
       if (broken.length > 0) {
         issues.push({
@@ -490,7 +490,8 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   try {
     const leftover = await db.all<{ customer_name: string; note: string }>(sql`
       SELECT o.customer_name, b.customer_note AS note FROM bookings b JOIN orders o ON o.id = b.order_id
-      WHERE b.customer_note LIKE '%[원본 일정이 남아 있음:%' AND b.status IN ('pending', 'confirmed') AND b.start_at >= ${Math.floor(now.getTime() / 1000)} LIMIT 20
+      -- 취소된 예약도 센다 — 취소해도 남은 원본 일정은 그 시간을 계속 막고, 표시가 가려 어디에도 안 보이게 된다.
+      WHERE b.customer_note LIKE '%[원본 일정이 남아 있음:%' AND b.start_at >= ${Math.floor(now.getTime() / 1000)} LIMIT 20
     `);
     if (leftover.length > 0) {
       issues.push({

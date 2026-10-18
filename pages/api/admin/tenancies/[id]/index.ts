@@ -1,9 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
+import { recordAdminPrivacyAccess } from '../../../../../lib/privacy/accessLog';
+import { safeDbErrorSummary } from '../../../../../lib/payments/refundAccount';
 import { syncTenancyCalendar } from '../../../../../lib/tenancy/calendar';
 import { parseTenancyInput } from '../../../../../lib/tenancy/rules';
 import { endTenancy, listPayments, recordPayment, reopenTenancy, updateTenancy } from '../../../../../lib/tenancy/service';
+
+const logExport = (req: NextApiRequest, actor: string, targetId: string) =>
+  recordAdminPrivacyAccess(req, actor, 'tenancy_calendar_export', targetId, 'success').catch(() => undefined);
 
 /** GET 입금 이력 · POST { action: 'update' | 'payment' | 'end' | 'reopen' | 'sync' } */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -24,28 +29,35 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       case 'update': {
         const parsed = parseTenancyInput(body.input);
         if (!parsed.ok) return res.status(400).json({ ok: false, message: parsed.message });
-        return done(await updateTenancy(id, parsed.value, { keepPrivate: body.keepPrivate === true }));
+        const updated = await updateTenancy(id, parsed.value, { keepPrivate: body.keepPrivate === true });
+        if (updated.ok) await logExport(req, auth.actor, id);
+        return done(updated);
       }
       case 'payment': {
         const amount = body.amount === undefined || body.amount === '' || body.amount === null ? undefined : Number(body.amount);
-        return done(await recordPayment(id, {
+        const paid = await recordPayment(id, {
           paidOn: typeof body.paidOn === 'string' && body.paidOn ? body.paidOn : undefined, amount,
           memo: typeof body.memo === 'string' && body.memo.trim() ? body.memo.trim().slice(0, 200) : null,
-        }));
+        });
+        if (paid.ok) await logExport(req, auth.actor, id);
+        return done(paid);
       }
       case 'end':
         return done(await endTenancy(id, typeof body.endedOn === 'string' && body.endedOn ? body.endedOn : undefined));
       case 'reopen':
-        return done(await reopenTenancy(id));
+        const reopened = await reopenTenancy(id);
+        if (reopened.ok) await logExport(req, auth.actor, id);
+        return done(reopened);
       case 'sync': {
         const r = await syncTenancyCalendar(id);
+        if (r.ok && !r.skipped) await logExport(req, auth.actor, id);
         return res.status(r.ok ? 200 : 502).json(r.ok ? { ok: true, skipped: r.skipped ?? false } : { ok: false, message: r.error });
       }
       default:
         return res.status(400).json({ ok: false, message: '알 수 없는 요청이에요.' });
     }
   } catch (error) {
-    console.error('[API/admin/tenancies/[id]] 실패', error instanceof Error ? error.message : String(error));
+    console.error('[API/admin/tenancies/[id]] 실패', safeDbErrorSummary(error));
     return res.status(500).json({ ok: false, message: '처리하지 못했어요.' });
   }
 }

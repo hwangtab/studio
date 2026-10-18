@@ -134,6 +134,21 @@ describe('autoImportCalendarEvents', () => {
     expect(await one(`SELECT COUNT(*) AS n FROM orders WHERE status = 'failed'`)).toEqual({ n: 0 });
   });
 
+  it('최근 만들어진 고아 failed 주문(동시 실행의 진 쪽)은 정리하고, 실제 고객·오래된 것은 건드리지 않는다', async () => {
+    const ins = (id: string, email: string, createdAgoSec: number) => client.execute({
+      sql: `INSERT INTO orders (id, order_no, type, customer_name, customer_phone, customer_email, item_amount, vat_amount, total_amount, manage_token, status, created_at)
+            VALUES (?, ?, 'session', '고객', '-', ?, 1, 0, 1, ?, 'failed', unixepoch() - ?)`,
+      args: [id, `SNB-${id}`, email, `tok-${id}`, createdAgoSec],
+    });
+    await ins('orphan', 'manual@studionol.co.kr', 5);
+    await ins('real', 'real@example.com', 5);
+    await ins('old', 'manual@studionol.co.kr', 3600);
+    mockLoad.mockResolvedValue({ error: null, events: [ev('trg', '정리 트리거', '2026-10-30T14:00:00+09:00', '2026-10-30T15:00:00+09:00')] });
+    await autoImportCalendarEvents(new Date());
+    const ids = (await client.execute(`SELECT id FROM orders WHERE status = 'failed' ORDER BY id`)).rows.map((r) => r.id);
+    expect(ids).toEqual(['old', 'real']);
+  });
+
   it('새 [입금 대기] 일정을 못 올리면 원래 일정을 지우지 않는다', async () => {
     (createBookingEvent as jest.Mock).mockRejectedValueOnce(new Error('google down'));
     mockLoad.mockResolvedValue({ error: null, events: [ev('keep', '보존 녹음', '2026-10-26T14:00:00+09:00', '2026-10-26T15:00:00+09:00')] });
@@ -156,6 +171,23 @@ describe('autoImportCalendarEvents', () => {
     mockLoad.mockResolvedValue({ error: null, events: [ev('stuck', '남을 녹음', '2026-10-29T14:00:00+09:00', '2026-10-29T15:00:00+09:00')] });
     await autoImportCalendarEvents(NOW);
     expect(String((await one(`SELECT customer_note FROM bookings`))?.customer_note)).toContain('[원본 일정이 남아 있음: stuck]');
+  });
+
+  it('반복 일정의 회차는 가져오지 않고, 프리뷰 배포에서는 아무것도 하지 않는다', async () => {
+    mockLoad.mockResolvedValue({ error: null, events: [{ ...ev('rec', '정기 녹음', '2026-10-31T14:00:00+09:00', '2026-10-31T15:00:00+09:00'), recurring: true }] });
+    expect(await autoImportCalendarEvents(NOW)).toMatchObject({ imported: 0, skipped: 1 });
+    mockLoad.mockResolvedValue({ error: null, events: [ev('prev', '프리뷰 녹음', '2026-10-31T14:00:00+09:00', '2026-10-31T15:00:00+09:00')] });
+    process.env.VERCEL_ENV = 'preview';
+    const r = await autoImportCalendarEvents(NOW);
+    delete process.env.VERCEL_ENV;
+    expect(r).toMatchObject({ disabled: true, imported: 0 });
+    expect(deleteBookingEvent).not.toHaveBeenCalled();
+  });
+
+  it('원본을 정상적으로 지웠으면 임시 표시를 걷는다(지우는 동안만 남는다)', async () => {
+    mockLoad.mockResolvedValue({ error: null, events: [ev('ok1', '정상 녹음', '2026-11-02T14:00:00+09:00', '2026-11-02T15:00:00+09:00')] });
+    await autoImportCalendarEvents(NOW);
+    expect(String((await one(`SELECT customer_note FROM bookings`))?.customer_note)).not.toContain('원본 일정이 남아 있음');
   });
 
   it('일정 설명(운영자 메모)은 예약 메모에 보존된다', async () => {

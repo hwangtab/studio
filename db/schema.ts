@@ -1387,6 +1387,8 @@ export const pressOptouts = sqliteTable('press_optouts', {
 export const privacyAccessActionEnum = [
   /** 월 입주자의 연락처·비상연락처 등 암호화 상세 열람 (pages/api/admin/tenancies/[id]/private.ts). 값은 적지 않는다. */
   'tenancy_private_view',
+  /** 월 입주자의 연락처를 복호화해 **구글 캘린더 일정 설명으로 내보낸 일** — 값이 서버를 떠나므로 열람과 따로 남긴다(lib/tenancy/calendar.ts). */
+  'tenancy_calendar_export',
   /** 관리자 화면의 주민등록번호 조회 버튼 (pages/api/admin/funding/projects/[id]/resident-number.ts). */
   'funding_resident_number_view',
   /**

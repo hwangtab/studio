@@ -30,6 +30,10 @@ export const deleteUnpaidCancelledOrder = async (orderId: string): Promise<Delet
   if (order.bookings.some((b) => b.gcalEventId)) {
     return { ok: false, code: 'not_allowed', message: '구글 캘린더에 남은 일정이 있어요. 먼저 “대기 일정 지우기”를 눌러 주세요.' };
   }
+  // 원본 일정이 남은 예약은 지우지 않는다 — 표시(메모)가 사라지면 다음 자동 등록이 그 원본을 새 예약으로 되살린다.
+  if (order.bookings.some((b) => (b.customerNote ?? '').includes('[원본 일정이 남아 있음:'))) {
+    return { ok: false, code: 'not_allowed', message: '캘린더에 원래 일정이 남아 있어요. 캘린더에서 그 일정을 먼저 지운 뒤 삭제해 주세요.' };
+  }
   const refundAccounts = await db.all<{ id: string }>(sql`SELECT id FROM refund_accounts WHERE order_no = ${order.orderNo} LIMIT 1`);
   if (refundAccounts.length > 0) return { ok: false, code: 'not_allowed', message: '환불 계좌 기록이 있어 삭제할 수 없어요.' };
 

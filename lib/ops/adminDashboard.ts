@@ -61,7 +61,8 @@ export interface AdminDashboard {
   /** 오늘(KST 0시)부터 7일 안의 확정 세션, 시작 시각순. */
   upcomingSessions: UpcomingSession[];
   /** 같은 창에서 **캘린더에만 있는** 일정(사이트 미등록) — "사이트에 등록"으로 가져온다(lib/ops/calendarImport.ts). */
-  calendarEvents: UnlinkedCalendarEvent[];
+  /** 화면에 싣는 목록 — 일정 설명(개인정보가 있을 수 있다)은 뺀다. */
+  calendarEvents: Array<Omit<UnlinkedCalendarEvent, 'description'>>;
   /** 캘린더를 못 읽었으면 문구(그 갈래만 비어 있다). */
   calendarError: string | null;
   queues: {
@@ -240,7 +241,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
         endAt: new Date((Number(row.session_at) + Number(row.session_hours ?? 1) * 3600) * 1000).toISOString(),
       })),
     ].sort((a, b) => a.startAt.localeCompare(b.startAt)),
-    calendarEvents: calendarImport.events,
+    calendarEvents: calendarImport.events.map(({ description: _description, ...rest }) => rest),
     calendarError: calendarImport.error,
     queues: {
       mixingReceived: countOf(mixingCounts, 'received'),
