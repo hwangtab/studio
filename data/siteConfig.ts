@@ -120,9 +120,10 @@ export const studioOperator = {
   ],
   // 운영자를 다룬 제3자 언론 보도. sameAs(본인이 관리하는 프로필)와 성격이 다르므로
   // JSON-LD에서도 Person.subjectOf로 따로 낸다 — 수상·이력 주장을 사이트 밖에서
-  // 검증할 수 있는 근거다. 전부 2026-07-28 원문 직접 확인.
+  // 검증할 수 있는 근거다.
   pressCoverage: [
     {
+      // 앞 세 건(이 항목부터 한겨레21까지) 2026-07-28 원문 직접 확인.
       url: 'https://www.nocutnews.co.kr/news/4741803',
       title: '가난·페미니즘·강제철거 반대… 한대음을 빛낸 수상소감',
       publisher: '노컷뉴스',
@@ -139,6 +140,15 @@ export const studioOperator = {
       title: '민중음악이 구리다고요?',
       publisher: '한겨레21',
       datePublished: '2017-11-02',
+    },
+    {
+      // 2026-10-18 원문 직접 확인. 앞 세 건과 달리 사회·활동 이력이 아니라 믹싱 엔지니어로서의
+      // 정체성·장비·작업 방식을 직접 다룬 업계지 인터뷰 — Person.knowsAbout의 "믹싱"을
+      // 사이트 밖에서 검증하는 근거.
+      url: 'https://mixing.co.kr/21283',
+      title: '뮤지션을 위한 좋은 장비와 편안한 제작 환경을, 스튜디오 놀(NoL)',
+      publisher: '월간 믹싱',
+      datePublished: '2023-10-10',
     },
   ],
   jobTitleByLocale: {
