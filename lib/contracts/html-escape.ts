@@ -28,11 +28,15 @@ export const escapeHtml = (unsafe: string): string =>
  *
  * 그래서 HTML 엔티티 대신 마크다운의 백슬래시 이스케이프를 쓴다. `\<`는 렌더러가 리터럴
  * 꺾쇠로 취급해 태그가 되지 않고, 화면에는 사용자가 입력한 그대로 보인다.
+ *
+ * 강조·체크박스·코드 문법(`*`·`_`·`~`·`` ` ``·`[`·`]`)도 같은 방식으로 막는다. 곡 제목 `[x]`가 체크된 체크박스로,
+ * `**…**`가 굵은 글씨로 바뀌면 계약서에 적힌 글자가 입력한 글자와 달라진다.
  */
 export const escapeTableCell = (unsafe: string): string =>
   unsafe
     // 백슬래시를 먼저 — 나중에 하면 아래에서 붙인 이스케이프까지 다시 이스케이프한다.
     .replace(/\\/g, '\\\\')
+    .replace(/[*_~`[\]]/g, (char) => `\\${char}`)
     .replace(/\|/g, '\\|')
     .replace(/</g, '\\<')
     .replace(/>/g, '\\>')

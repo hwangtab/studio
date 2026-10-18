@@ -261,6 +261,52 @@ describe('여러 곡(EP)', () => {
     expect(arrangement.deducted).toBe(Math.round(arrangement.amount / 2));
   });
 
+  it('항목에 경계가 여럿이면 곡마다 가장 큰 경계를 고른 뒤 곡 수로 나눈다 — 계약서 "곡마다 … 그 곡 몫의 N%"', () => {
+    const custom = {
+      ...ep,
+      refundSchedule: ep.refundSchedule.map((item) =>
+        item.key === 'arrangement'
+          ? { ...item, milestones: [{ event: 'arrangement_delivered' as const, ratio: 0.5 }, { event: 'mixing_delivered' as const, ratio: 1 }] }
+          : item,
+      ),
+    };
+    const events = [
+      ev('payment_received', '2026-11-03T09:00:00', { amount: ep.amount.deposit }),
+      ev('kickoff', '2026-11-05T09:00:00'),
+      ...[0, 1, 2, 3].map((song) => ev('stage_delivered', '2026-11-10T09:00:00', { stage: 'arrangement', song })),
+      ev('stage_delivered', '2026-11-12T09:00:00', { stage: 'mixing', song: 0 }),
+    ];
+    const ledger = computeProductionLedger({ terms: custom, signedAt: SIGNED, events, now: kst('2026-11-20T09:00:00') });
+    // 1번 곡 100% + 나머지 셋 50% → (1 + 0.5 × 3) / 4
+    expect(ledger.refund.lines.find((line) => line.key === 'arrangement')!.ratio).toBe(0.625);
+  });
+
+  it('곡별 경계와 음반 전체 경계가 섞이면 음반 전체 경계는 모든 곡에 닿는다', () => {
+    const custom = {
+      ...ep,
+      refundSchedule: ep.refundSchedule.map((item) =>
+        item.key === 'mixmaster'
+          ? { ...item, milestones: [{ event: 'mixing_delivered' as const, ratio: 0.7 }, { event: 'mastering_delivered' as const, ratio: 1 }] }
+          : item,
+      ),
+    };
+    const base = [ev('payment_received', '2026-11-03T09:00:00', { amount: ep.amount.deposit }), ev('kickoff', '2026-11-05T09:00:00')];
+    const mixedOne = computeProductionLedger({
+      terms: custom,
+      signedAt: SIGNED,
+      events: [...base, ev('stage_delivered', '2026-11-12T09:00:00', { stage: 'mixing', song: 0 })],
+      now: kst('2026-11-20T09:00:00'),
+    });
+    expect(mixedOne.refund.lines.find((line) => line.key === 'mixmaster')!.ratio).toBeCloseTo(0.175);
+    const mastered = computeProductionLedger({
+      terms: custom,
+      signedAt: SIGNED,
+      events: [...base, ev('stage_delivered', '2026-11-15T09:00:00', { stage: 'mastering' })],
+      now: kst('2026-11-20T09:00:00'),
+    });
+    expect(mastered.refund.lines.find((line) => line.key === 'mixmaster')!.ratio).toBe(1);
+  });
+
   it('할 일에 곡 이름을 붙인다', () => {
     const titled = { ...ep, songs: ep.songs.map((song, i) => (i === 1 ? { title: '파도' } : song)) };
     const ledger = computeProductionLedger({
