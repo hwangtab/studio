@@ -7,6 +7,7 @@ import { EVENT_SPEC } from '../../../../../lib/contracts/production/event-spec';
 import { parseAdminEventInput, parseVoidInput } from '../../../../../lib/contracts/production/events';
 import { loadProgressContext, recordProgressEvent, sendEventNotice } from '../../../../../lib/contracts/production/progress';
 import { REVISION_STAGES } from '../../../../../lib/contracts/production/terms';
+import { loadRefundAccountSummary } from '../../../../../lib/payments/refundAccount';
 
 const REVISION_STAGE_SET: ReadonlySet<string> = new Set(REVISION_STAGES);
 
@@ -70,6 +71,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const parsed = body.action === 'void' ? parseVoidInput(body) : parseAdminEventInput(body);
     if (!parsed.ok) return res.status(400).json({ ok: false, message: parsed.message });
+
+    // 해지 환불을 이미 보냈으면 정산을 바꾸는 무효 처리를 받지 않는다 — 보낸 금액과 의뢰인 화면의 금액이 갈린다.
+    if (body.action === 'void') {
+      const refund = await loadRefundAccountSummary({ kind: 'production', orderNo: id });
+      if (refund.status === 'present' && refund.refundedAt) {
+        return res.status(409).json({ ok: false, message: '환불을 이미 보낸 계약입니다. 정산을 바꾸려면 의뢰인과 먼저 협의해 주세요.' });
+      }
+    }
 
     const recorded = await recordProgressEvent(id, parsed.input, actor);
     if (!recorded.ok) return res.status(recorded.status).json({ ok: false, message: recorded.message });

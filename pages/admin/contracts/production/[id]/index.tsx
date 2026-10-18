@@ -99,7 +99,7 @@ export const getServerSideProps: GetServerSideProps<ProductionContractDetailProp
     props: {
       contract: serializeProductionContractForAdmin(contract),
       fingerprint: verifyStoredProductionContract(contract),
-      progress: progress ? buildAdminProgressView(progress.terms, progress.ledger, progress.events) : null,
+      progress: progress ? buildAdminProgressView(progress.terms, progress.ledger, progress.events, contract.status === 'signed') : null,
       refundAccount,
     },
   };
@@ -176,8 +176,18 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
   };
 
   const handleTerminate = () => {
+    // 누구의 사정인지가 정산 조항을 가른다 — 스튜디오 사정(제10조 4항)이면 추가 비용·초과 수정 요금도 돌려준다.
+    const causeInput = window.prompt(
+      '누구의 사정으로 해지하나요? 번호를 적어 주세요.\n\n1 — 의뢰인 사정 (제10조 3항)\n2 — 의뢰인 무응답·대금 지체, 통지 후 해지 (제10조 5항)\n3 — 스튜디오 사정 (제10조 4항, 제12조 2항 지연 포함)',
+    );
+    if (causeInput === null) return;
+    const cause = ({ '1': 'client', '2': 'client_default', '3': 'studio' } as const)[causeInput.trim() as '1' | '2' | '3'];
+    if (!cause) {
+      setNotice('해지 사유 구분은 1·2·3 중 하나로 적어 주세요.');
+      return;
+    }
     const reason = window.prompt(
-      '해지 사유를 적어 주세요. 누구의 사정으로 끝났는지가 환불 정산의 근거가 됩니다.\n\n예: 의뢰인 사정으로 착수 후 해지(편곡 1차 시안 전달 후) / 대금 14일 지체로 통지 후 해지',
+      '해지 사유를 적어 주세요.\n\n예: 편곡 1차 시안 전달 후 의뢰인 요청으로 해지 / 대금 14일 지체로 통지 후 해지',
     );
     if (reason === null) return;
     if (reason.trim() === '') {
@@ -186,7 +196,7 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
     }
     const closedOn = askClosedOn('해지한 날(YYYY-MM-DD)을 확인해 주세요.');
     if (closedOn === null) return;
-    void run(() => mutateProductionContract(contract.id, 'terminate', { reason: reason.trim(), closedOn }));
+    void run(() => mutateProductionContract(contract.id, 'terminate', { cause, reason: reason.trim(), closedOn }));
   };
 
   const handleDelete = async () => {

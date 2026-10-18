@@ -4,6 +4,7 @@
  * 제작 계약 개인정보 파기(계약서 제13조 3항 — 끝난 날부터 3년). 실제 SQLite에서 대상 선정과 지우는 범위를 본다.
  */
 import { createClient, type Client } from '@libsql/client';
+import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/libsql';
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -119,6 +120,25 @@ describe('제작 계약 개인정보 파기', () => {
     const operator = purged!.signers.find((s) => s.role === 'operator');
     expect(client).toMatchObject({ name: '(개인정보 파기됨)', signatureData: null, ipAddress: null });
     expect(operator).toMatchObject({ name: '스튜디오 놀 대표 황경하', ipAddress: '198.51.100.1' });
+  });
+
+  it('진행 기록은 사람이 쓴 글만 지우고 승인 방식 같은 운영 값은 남긴다', async () => {
+    await seed('c3', 'terminated', { terminatedAt: OLD });
+    await mockDb.insert(schema.productionContractEvents).values({
+      contractId: 'c3',
+      seq: 1,
+      type: 'stage_approved',
+      stage: 'mixing',
+      dataJson: JSON.stringify({ mode: 'deemed', deliveryEventId: 'd1', note: '홍길동 메모', link: 'https://drive.example.com/x' }),
+      occurredAt: OLD,
+      recordedAt: OLD,
+      actor: 'system',
+      actorIp: '203.0.113.7',
+    });
+    await purgeExpiredProductionPersonalData(NOW);
+    const [event] = await mockDb.select().from(schema.productionContractEvents).where(eq(schema.productionContractEvents.contractId, 'c3'));
+    expect(JSON.parse(event.dataJson!)).toEqual({ mode: 'deemed', deliveryEventId: 'd1' });
+    expect(event.actorIp).toBeNull();
   });
 
   it('끝난 날을 소급해 적은 새 기록은 만들자마자 파기되지 않는다', async () => {

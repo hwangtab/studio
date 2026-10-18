@@ -180,8 +180,13 @@ function StageCard({
       {stage.pending && !stage.approved && (
         <div className="mt-4 rounded-lg bg-gray-50 dark:bg-gray-50 p-4 text-sm text-gray-700 dark:text-gray-700">
           <p>
-            {formatDate(stage.pending.deliveredAt)}에 결과물을 보내 드렸어요.{' '}
-            <strong>{formatDate(stage.pending.lastDayToRespond)}까지</strong> 수정 요청이 없으면 승인된 것으로 봐요(계약서 제5조 5항).
+            {formatDate(stage.pending.deliveredAt)}에 결과물을 보내 드렸어요.
+            {!closed && (
+              <>
+                {' '}
+                <strong>{formatDate(stage.pending.lastDayToRespond)}까지</strong> 수정 요청이 없으면 승인된 것으로 봐요(계약서 제5조 5항).
+              </>
+            )}
           </p>
           {stage.pending.link && (
             <a href={stage.pending.link} target="_blank" rel="noreferrer noopener" className="mt-2 inline-block text-primary underline">
@@ -281,7 +286,13 @@ function RefundSection({
     <section className="bg-white dark:bg-white rounded-2xl shadow-sm p-6 md:p-8">
       <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-2">환불</h2>
       <p className="text-sm text-gray-700 dark:text-gray-700">
-        계약이 해지되어 진행한 작업분을 빼고 <strong>{formatCurrency(refund.refundable)}원</strong>을 돌려드려요(계약서 제10조).
+        {refund.refundable > 0 ? (
+          <>
+            계약이 해지되어 계약서 제10조에 따라 정산한 <strong>{formatCurrency(refund.refundable)}원</strong>을 돌려드려요.
+          </>
+        ) : (
+          '계약이 해지되었고, 계약서 제10조에 따라 정산한 결과 돌려드릴 금액은 없어요.'
+        )}
       </p>
       {refund.refundable <= 0 ? null : refund.account ? (
         <p className="mt-3 text-sm text-gray-600 dark:text-gray-600">
@@ -437,24 +448,32 @@ export default function ProductionProgressPage({
                 <dl className="grid grid-cols-2 gap-y-2 gap-x-4 text-sm">
                   <dt className="text-gray-500 dark:text-gray-500">받은 금액</dt>
                   <dd className="text-right font-medium text-gray-900 dark:text-gray-900">{formatCurrency(view.payments.received)}원</dd>
-                  <dt className="text-gray-500 dark:text-gray-500">남은 금액</dt>
-                  <dd className="text-right font-medium text-gray-900 dark:text-gray-900">{formatCurrency(view.payments.remaining)}원</dd>
-                  {!view.payments.depositMetAt && view.payments.depositLastDay && (
+                  {!closed && (
+                    <>
+                      <dt className="text-gray-500 dark:text-gray-500">남은 금액</dt>
+                      <dd className="text-right font-medium text-gray-900 dark:text-gray-900">{formatCurrency(view.payments.remaining)}원</dd>
+                    </>
+                  )}
+                  {!closed && !view.payments.depositMetAt && view.payments.depositLastDay && (
                     <>
                       <dt className="text-gray-500 dark:text-gray-500">계약금 기한</dt>
                       <dd className="text-right font-medium text-gray-900 dark:text-gray-900">{formatDate(view.payments.depositLastDay)}</dd>
                     </>
                   )}
-                  {!view.payments.paidInFull && view.payments.balanceLastDay && (
+                  {!closed && !view.payments.paidInFull && view.payments.balanceLastDay && (
                     <>
                       <dt className="text-gray-500 dark:text-gray-500">잔금 기한</dt>
                       <dd className="text-right font-medium text-gray-900 dark:text-gray-900">{formatDate(view.payments.balanceLastDay)}</dd>
                     </>
                   )}
-                  <dt className="text-gray-500 dark:text-gray-500">작업 완료 예정</dt>
-                  <dd className="text-right font-medium text-gray-900 dark:text-gray-900">
-                    {view.work.dueOn ? `${formatDate(view.work.dueOn)} 무렵` : '계약금·1차 완성본을 받은 뒤 정해져요'}
-                  </dd>
+                  {!closed && (
+                    <>
+                      <dt className="text-gray-500 dark:text-gray-500">작업 완료 예정</dt>
+                      <dd className="text-right font-medium text-gray-900 dark:text-gray-900">
+                        {view.work.dueOn ? `${formatDate(view.work.dueOn)} 무렵` : '계약금·1차 완성본을 받은 뒤 정해져요'}
+                      </dd>
+                    </>
+                  )}
                 </dl>
               </section>
 

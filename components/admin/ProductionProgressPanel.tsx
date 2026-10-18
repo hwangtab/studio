@@ -309,7 +309,7 @@ export default function ProductionProgressPanel({
               ))}
               {refund.extras > 0 && (
                 <tr className="border-b border-gray-100">
-                  <td className="py-1.5">추가 비용·추가 수정 (이미 쓴 몫)</td>
+                  <td className="py-1.5">추가 비용·이행한 초과 수정 (제10조 3항)</td>
                   <td className="py-1.5 text-right text-gray-500">100%</td>
                   <td className="py-1.5 text-right">{formatCurrency(refund.extras)}원</td>
                 </tr>
@@ -320,7 +320,11 @@ export default function ProductionProgressPanel({
             {refund.kickedOff ? '착수 후' : '착수 전 — 받은 금액 전액 환불(제10조 2항)'} · 받은 금액 {formatCurrency(refund.received)}원 − 공제{' '}
             {formatCurrency(refund.deduction)}원 = <strong>환불 {formatCurrency(refund.refundable)}원</strong>
           </p>
-          <p className="mt-1 text-gray-500">스튜디오 사정으로 해지하면 제10조 4항 — 같은 공제표를 쓰되 해지 사유를 함께 기록하세요.</p>
+          <p className="mt-1 text-gray-500">
+            {refund.kickedOff
+              ? `스튜디오 사정으로 해지하면(제10조 4항) 추가 비용·초과 수정 요금은 공제하지 않아 환불 ${formatCurrency(refund.refundableIfStudio)}원이에요.`
+              : '착수 전에는 해지 사유와 관계없이 받은 금액 전액이에요.'}
+          </p>
         </details>
       </div>
 

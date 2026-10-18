@@ -159,11 +159,13 @@ export const buildAdminProgressView = (
   terms: ProductionTerms,
   ledger: ProductionLedger,
   allEvents: readonly ProductionContractEvent[],
+  /** 진행 중(signed)인가 — 끝난 계약에는 할 일을 올리지 않는다(완료 처리·재전달 같은 지난 할 일이 남지 않게). */
+  active = true,
 ): AdminProgressView => {
   const voided = new Set(allEvents.filter((e) => e.type === 'void' && e.voidsEventId).map((e) => e.voidsEventId as string));
   return {
     ...buildView(terms, ledger, toTimeline(terms, allEvents, voided).reverse()),
-    todos: ledger.todos,
+    todos: active ? ledger.todos : [],
     refund: { ...ledger.refund, received: ledger.payments.received, kickedOff: ledger.work.kickedOff },
   };
 };

@@ -21,10 +21,25 @@ const CONTRACT_NAME = '음원 제작 용역 계약서';
 const termRows = (contract: Pick<ProductionContract, 'kind'>, terms: ProductionTerms): ContractEmailRow[] => [
   { label: contract.kind === 'single' ? '본 곡' : '음반', value: releaseTitle(contract.kind, terms) },
   { label: '계약금액', value: `${formatCurrency(terms.amount.total)}원 (부가세 포함)`, emphasis: true },
-  { label: '계약금', value: `${formatCurrency(terms.amount.deposit)}원 · 체결 후 ${terms.amount.depositDueDays}일 이내` },
+  {
+    label: '계약금',
+    value: terms.amount.deposit > 0 ? `${formatCurrency(terms.amount.deposit)}원 · 체결 후 ${terms.amount.depositDueDays}일 이내` : '없음',
+  },
   { label: '잔금', value: `${formatCurrency(terms.amount.balance)}원 · 최종 마스터 승인 후 ${terms.amount.balanceDueDays}일 이내` },
-  { label: '작업 기간', value: `약 ${terms.workWeeks}주 (계약금 입금·1차 완성본 수령 후)` },
+  { label: '작업 기간', value: `약 ${terms.workWeeks}주 (${workStartPhrase(terms)} 후)` },
 ];
+
+/** 작업 기간이 시작되는 조건(제4조 1항) — 여러 곡이면 모든 수록곡의 1차 완성본, 계약금이 없으면 1차 완성본만. */
+const workStartPhrase = (terms: ProductionTerms): string => {
+  const source = terms.songs.length > 1 ? '모든 수록곡의 1차 완성본 수령' : '1차 완성본 수령';
+  return terms.amount.deposit > 0 ? `계약금 입금·${source}` : source;
+};
+
+/** 체결 메일의 계약금 안내. 계약금이 없으면 null. */
+const depositLine = (terms: ProductionTerms): string | null =>
+  terms.amount.deposit > 0
+    ? `계약금 ${formatCurrency(terms.amount.deposit)}원을 체결일로부터 ${terms.amount.depositDueDays}일 이내에 입금해 주세요.`
+    : null;
 
 const termLines = (contract: Pick<ProductionContract, 'kind'>, terms: ProductionTerms): string[] =>
   termRows(contract, terms).map((row) => `${row.label}: ${row.value}`);
@@ -145,9 +160,13 @@ export const sendProductionSignedEmail = async (
     cta: { label: '계약서 PDF 다시 받기', url: completeUrl },
     notices: [
       // 제3조 — 계약금 기한은 체결일부터 센다. 체결 메일이 그 안내를 겸한다.
-      `계약금 <strong>${formatCurrency(terms.amount.deposit)}원</strong>을 체결일로부터 ${terms.amount.depositDueDays}일 이내에 입금해 주세요.`,
-      escapeHtml(accountLine(terms)),
-      '작업 기간은 계약금 입금과 1차 완성본을 모두 받은 날부터 셉니다.',
+      ...(terms.amount.deposit > 0
+        ? [
+            `계약금 <strong>${formatCurrency(terms.amount.deposit)}원</strong>을 체결일로부터 ${terms.amount.depositDueDays}일 이내에 입금해 주세요.`,
+            escapeHtml(accountLine(terms)),
+          ]
+        : []),
+      `작업 기간은 ${workStartPhrase(terms).replace('·', '과 ')}이 모두 끝난 날부터 셉니다.`,
     ],
   });
 
@@ -159,9 +178,7 @@ export const sendProductionSignedEmail = async (
     ...termLines(contract, terms),
     `체결일: ${formatDate(contract.signedAt)}`,
     '',
-    `계약금 ${formatCurrency(terms.amount.deposit)}원을 체결일로부터 ${terms.amount.depositDueDays}일 이내에 입금해 주세요.`,
-    accountLine(terms),
-    '',
+    ...(depositLine(terms) ? [depositLine(terms) as string, accountLine(terms), ''] : []),
     ...(pdfBuffer ? ['서명본 계약서를 PDF로 첨부했습니다.'] : []),
     `계약서 다시 받기: ${completeUrl}`,
     ...(progressUrl ? [`작업 진행(결과물 확인·승인·수정 요청): ${progressUrl}`] : []),

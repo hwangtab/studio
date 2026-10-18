@@ -1,4 +1,5 @@
 import type { ProductionContractEvent } from '../../../db/schema';
+import type { TerminationCause } from './termination';
 import {
   songLabel,
   type ProductionTerms,
@@ -109,6 +110,8 @@ export interface StageState {
   freeRemaining: number;
   extraRevisions: number;
   extraFee: number;
+  /** 무료 횟수를 넘은 수정 중 다시 전달까지 마친 것의 요금 — 해지 정산의 공제 대상. */
+  performedExtraFee: number;
   approved: { mode: ApprovalMode; at: Date; eventId: string } | null;
   /** 결과물이 나갔고 아직 답이 없다. */
   pending: PendingApproval | null;
@@ -164,10 +167,11 @@ export interface ProductionLedger {
   /** 곡마다: 1차 완성본 수령(마지막 수령·교체), 녹음 세션 마침, 보정 전달. */
   songs: Array<{ sourceReceivedAt: Date | null; recordingCompleted: boolean; tuningDelivered: boolean }>;
   /**
-   * 해지 정산. `extras`는 동의한 추가 비용(제6조)과 무료 횟수를 넘은 수정 요금 — 이미 쓴 실비·이행한 수정이라
-   * 해지해도 돌려주지 않는다(운영자 결정 2026-10-18). `deduction`은 항목표 공제 + extras.
+   * 해지 정산(제10조). `extras`는 동의한 추가 비용(제6조)과 이행한 초과 수정 요금(제5조 3항) — 착수 후 의뢰인
+   * 사정의 해지(3·5항)에서만 돌려주지 않는다(3항). 착수 전(2항)·스튜디오 사정(4항)은 0이다. `deduction`은
+   * 항목표 공제 + extras. 해지 전에는 의뢰인 사정으로 가정하고, 스튜디오 사정이면 얼마인지 `refundableIfStudio`로 함께 준다.
    */
-  refund: { lines: RefundLine[]; extras: number; deduction: number; refundable: number };
+  refund: { lines: RefundLine[]; extras: number; deduction: number; refundable: number; refundableIfStudio: number };
   unresponsive: { since: Date | null; days: number; exceeded: boolean };
   todos: Todo[];
 }
@@ -191,6 +195,8 @@ export const computeProductionLedger = (input: {
   signedAt: Date | null;
   events: readonly ProductionContractEvent[];
   now: Date;
+  /** 해지한 계약의 해지 사유(termination.ts). 진행 중이면 비운다. */
+  terminationCause?: TerminationCause | null;
 }): ProductionLedger => {
   const { terms, signedAt, now } = input;
   const events = activeEvents(input.events);
@@ -227,6 +233,8 @@ export const computeProductionLedger = (input: {
     const lastRevision = last(revisions);
 
     const extraRevisions = Math.max(0, revisions.length - terms.revisions[stage]);
+    // 이행한 수정 = 그 뒤에 결과물을 다시 전달한 수정 요청. 해지 정산은 이행한 초과 수정만 공제한다(제10조 3항).
+    const performedRevisions = revisions.filter((r) => deliveries.some((d) => isAfter(d, r))).length;
     let pending: PendingApproval | null = null;
     if (!approval && lastDelivery && isAfter(lastDelivery, lastRevision)) {
       const lastDay = deemedBaseDay(lastDelivery) + terms.deemedApprovalDays;
@@ -247,6 +255,7 @@ export const computeProductionLedger = (input: {
       freeRemaining: Math.max(0, terms.revisions[stage] - revisions.length),
       extraRevisions,
       extraFee: extraRevisions * terms.extraRevisionFees[stage],
+      performedExtraFee: Math.max(0, performedRevisions - terms.revisions[stage]) * terms.extraRevisionFees[stage],
       approved: approval ? { mode: parseEventData(approval).mode ?? 'proxy', at: approval.occurredAt, eventId: approval.id } : null,
       pending,
       revising: !approval && isAfter(lastRevision, lastDelivery),
@@ -271,9 +280,12 @@ export const computeProductionLedger = (input: {
   const totalDue = terms.amount.total + extraCosts + revisionFees;
 
   let running = 0;
-  const depositEvent = payments.find((e) => (running += e.amount ?? 0) >= terms.amount.deposit) ?? null;
+  // 계약금이 0원인 계약은 체결로 계약금 조건이 채워진 것으로 본다(입금 기록을 기다리면 작업 기간이 시작되지 않는다).
+  const depositEvent =
+    terms.amount.deposit > 0 ? (payments.find((e) => (running += e.amount ?? 0) >= terms.amount.deposit) ?? null) : null;
+  const depositMetAt = depositEvent?.occurredAt ?? (terms.amount.deposit === 0 ? signedAt : null);
   const depositLastDay = signedAt ? kstDay(signedAt) + terms.amount.depositDueDays : null;
-  const depositOverdueDays = !depositEvent && depositLastDay !== null ? Math.max(0, today - depositLastDay) : 0;
+  const depositOverdueDays = !depositMetAt && depositLastDay !== null ? Math.max(0, today - depositLastDay) : 0;
 
   const masteringApproval = findStage({ stages }, 'mastering')?.approved ?? null;
   const balanceLastDay = masteringApproval ? kstDay(masteringApproval.at) + terms.amount.balanceDueDays : null;
@@ -284,8 +296,8 @@ export const computeProductionLedger = (input: {
   // 계약금 입금과 **모든 곡**의 1차 완성본 수령이 끝난 날부터 센다(제4조 1항).
   const allSources = songs.every((song) => song.sourceReceivedAt !== null);
   const startDay =
-    depositEvent && allSources
-      ? Math.max(kstDay(depositEvent.occurredAt), ...songs.map((song) => kstDay(song.sourceReceivedAt as Date)))
+    depositMetAt && allSources
+      ? Math.max(kstDay(depositMetAt), ...songs.map((song) => kstDay(song.sourceReceivedAt as Date)))
       : null;
 
   // 정지 구간: 시작 기록부터 다음 종료 기록(없으면 오늘)까지. 의뢰인 사유만 예정일을 미룬다(제4조 2항). 작업 기간이
@@ -310,7 +322,9 @@ export const computeProductionLedger = (input: {
   const delayDays = dueDay !== null ? Math.max(0, endDay - dueDay) : 0;
 
   // ── 해지 정산(제10조 3항) ────────────────────────────────────────────────
-  const kickedOff = of('kickoff').length > 0;
+  // 착수(제10조 1항)는 기록이 없어도 결과물 전달·녹음이 있었다면 이미 일어난 것이다 — 착수 기록을 빠뜨린 채
+  // 해지하면 받은 금액 전액이 환불로 잡히던 문제.
+  const kickedOff = of('kickoff').length > 0 || of('stage_delivered').length > 0 || of('recording_completed').length > 0;
   /**
    * 그 곡에서 경계에 닿았는가. 곡마다 일어나는 사건은 그 곡의 기록을, 음반 전체 사건(착수·마스터링·유통)은 모든 곡에
    * 같은 답을 준다.
@@ -337,8 +351,12 @@ export const computeProductionLedger = (input: {
     const ratio = kickedOff ? itemRatio(item.milestones) : 0;
     return { key: item.key, label: item.label, amount: item.amount, ratio, deducted: Math.round(item.amount * ratio) };
   });
-  const refundExtras = extraCosts + revisionFees;
-  const deduction = lines.reduce((sum, line) => sum + line.deducted, 0) + refundExtras;
+  // 3항 — 착수 후 의뢰인 사정의 해지에서만. 해지 전에는 의뢰인 사정으로 가정한다(관리자 미리보기).
+  const performedFees = stages.reduce((sum, state) => sum + state.performedExtraFee, 0);
+  const extrasForClientCause = kickedOff ? extraCosts + performedFees : 0;
+  const refundExtras = input.terminationCause === 'studio' ? 0 : extrasForClientCause;
+  const workDeduction = lines.reduce((sum, line) => sum + line.deducted, 0);
+  const deduction = workDeduction + refundExtras;
 
   // ── 의뢰인 무응답(제10조 5항) ────────────────────────────────────────────
   const lastContact = last(of('client_contacted'));
@@ -347,7 +365,12 @@ export const computeProductionLedger = (input: {
         (e) =>
           e.occurredAt.getTime() >= lastContact.occurredAt.getTime() &&
           e.id !== lastContact.id &&
-          (e.actor === 'client' || e.type === 'client_responded' || e.type === 'revision_requested'),
+          (e.actor === 'client' ||
+            e.type === 'client_responded' ||
+            e.type === 'revision_requested' ||
+            e.type === 'payment_received' ||
+            e.type === 'source_received' ||
+            e.type === 'source_replaced'),
       )
     : true;
   const unresponsiveSince = lastContact && !clientActivityAfter ? lastContact.occurredAt : null;
@@ -360,7 +383,7 @@ export const computeProductionLedger = (input: {
       totalDue,
       extraCosts,
       revisionFees,
-      depositMetAt: depositEvent?.occurredAt ?? null,
+      depositMetAt,
       depositLastDay: depositLastDay !== null ? kstDayStart(depositLastDay) : null,
       depositOverdueDays,
       balanceLastDay: balanceLastDay !== null ? kstDayStart(balanceLastDay) : null,
@@ -381,7 +404,13 @@ export const computeProductionLedger = (input: {
     },
     stages,
     songs,
-    refund: { lines, extras: refundExtras, deduction, refundable: Math.max(0, received - deduction) },
+    refund: {
+      lines,
+      extras: refundExtras,
+      deduction,
+      refundable: Math.max(0, received - deduction),
+      refundableIfStudio: Math.max(0, received - workDeduction),
+    },
     unresponsive: {
       since: unresponsiveSince,
       days: unresponsiveDays,

@@ -40,6 +40,7 @@ jest.mock('../admin-auth', () => ({ authenticateAdminApi: jest.fn().mockResolved
 
 import progressHandler from '../../../pages/api/contracts/production/[id]/progress';
 import adminContractHandler from '../../../pages/api/contracts/production/[id]';
+import eventsHandler from '../../../pages/api/contracts/production/[id]/events';
 import { createProductionContract, expireOverdueProductionContracts, sendProductionContract } from './service';
 import { completeStalledProductionContract } from './finalize';
 import { loadProgressContext, recordProgressEvent, runProductionDeadlines, sendEventNotice } from './progress';
@@ -523,5 +524,45 @@ describe('두 번째 점검(2026-10-18)', () => {
     const { id } = await signedContract(new Date());
     await client.execute({ sql: "UPDATE production_contracts SET status = 'completed', purged_at = unixepoch() WHERE id = ?", args: [id] });
     expect((await callAdmin(id, { action: 'resend-signed' })).status).toBe(409);
+  });
+});
+
+describe('해지 처리(2026-10-19)', () => {
+  beforeAll(() => {
+    process.env.FUNDING_FIELD_KEY = Buffer.alloc(32, 7).toString('base64');
+  });
+
+  it('해지 사유 구분을 받아 사유에 적고, 의뢰인에게 환불액과 계좌 안내를 보낸다', async () => {
+    const { id } = await signedContract(new Date());
+    await record(id, input({ type: 'payment_received', amount: 575_000 }));
+    expect((await callAdmin(id, { action: 'terminate', reason: '의뢰인 요청' })).status).toBe(400);
+
+    mockSendEmail.mockClear();
+    expect((await callAdmin(id, { action: 'terminate', cause: 'client', reason: '의뢰인 요청' })).status).toBe(200);
+    await Promise.allSettled(mockBackground.splice(0));
+
+    const contract = await mockDb.query.productionContracts.findFirst({ where: (t, { eq }) => eq(t.id, id) });
+    expect(contract).toMatchObject({ status: 'terminated', terminationReason: '[의뢰인 사정] 의뢰인 요청' });
+    const mail = mockSendEmail.mock.calls.map(([arg]) => arg as { subject: string; text: string }).find((m) => m.subject.includes('해지'));
+    expect(mail?.text).toContain('제10조 2항');
+    expect(mail?.text).toContain('575,000원');
+    expect(mail?.text).toContain('환불받을 계좌');
+  });
+
+  it('환불을 보낸 뒤에는 정산을 바꾸는 무효 처리를 받지 않는다', async () => {
+    const { id } = await signedContract(new Date());
+    const payment = await record(id, input({ type: 'payment_received', amount: 575_000 }));
+    await client.execute({ sql: "UPDATE production_contracts SET status = 'terminated' WHERE id = ?", args: [id] });
+    await client.execute({
+      sql: "INSERT INTO refund_accounts (id, order_kind, order_no, bank_name, account_number_enc, account_holder, requested_at, refunded_at) VALUES ('ra1', 'production', ?, '카카오뱅크', 'v2:x', '홍길동', unixepoch(), unixepoch())",
+      args: [id],
+    });
+    const res: Record<string, jest.Mock> = {};
+    res.status = jest.fn().mockReturnValue(res);
+    res.json = jest.fn().mockReturnValue(res);
+    res.setHeader = jest.fn().mockReturnValue(res);
+    const req = { method: 'POST', query: { id }, headers: {}, socket: {}, body: { action: 'void', eventId: payment.id, reason: '중복' } } as unknown as NextApiRequest;
+    await eventsHandler(req, res as unknown as NextApiResponse);
+    expect(res.status.mock.calls[0][0]).toBe(409);
   });
 });
