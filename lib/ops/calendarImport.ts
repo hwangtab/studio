@@ -18,6 +18,8 @@ export interface UnlinkedCalendarEvent {
   id: string;
   summary: string;
   description: string;
+  /** 반복 일정의 한 회차 — 자동 등록 대상이 아니다. */
+  recurring: boolean;
   startAt: string;
   endAt: string;
   allDay: boolean;
@@ -33,14 +35,15 @@ export const loadUnlinkedCalendarEvents = async (
     if (events.length === 0) return { events: [], error: null };
     const db = getDb();
     const linkedRows = await Promise.all([
-      db.all<{ id: string }>(sql`SELECT gcal_event_id AS id FROM bookings WHERE gcal_event_id IS NOT NULL`),
+      // 창(from~) 안의 일정만 비교하면 되므로 끝난 예약은 읽지 않는다 — 예약은 지우지 않아 전체를 읽으면 열람마다 표가 커진다.
+      db.all<{ id: string }>(sql`SELECT gcal_event_id AS id FROM bookings WHERE gcal_event_id IS NOT NULL AND end_at >= ${Math.floor(from.getTime() / 1000) - 86400}`),
       // 표가 없는 DB(0064 전)에서는 이 조회만 실패한다 — 그때는 링크 일정을 못 거르므로 건너뛴다.
-      db.all<{ id: string }>(sql`SELECT gcal_event_id AS id FROM payment_link_orders WHERE gcal_event_id IS NOT NULL`).catch(() => []),
+      db.all<{ id: string }>(sql`SELECT gcal_event_id AS id FROM payment_link_orders WHERE gcal_event_id IS NOT NULL AND session_at >= ${Math.floor(from.getTime() / 1000) - 86400}`).catch(() => []),
     ]);
     const linked = new Set(linkedRows.flat().map((r) => r.id));
     // 사이트 예약을 만들었지만 원본 일정을 못 지운 경우(예약 메모에 id가 적혀 있다) — 그 일정을 다시 가져오면 같은 일이 두 번 예약된다.
     const leftovers = await db
-      .all<{ note: string }>(sql`SELECT customer_note AS note FROM bookings WHERE customer_note LIKE ${`%${LEFTOVER_ORIGINAL_MARK}%`}`)
+      .all<{ note: string }>(sql`SELECT customer_note AS note FROM bookings WHERE customer_note LIKE ${`%${LEFTOVER_ORIGINAL_MARK}%`} AND end_at >= ${Math.floor(from.getTime() / 1000) - 86400}`)
       .catch(() => []);
     for (const { note } of leftovers) for (const m of note.matchAll(/\[원본 일정이 남아 있음: ([^\]\s]+)\]/g)) linked.add(m[1]);
     return {
@@ -48,7 +51,7 @@ export const loadUnlinkedCalendarEvents = async (
         // "바쁨 아님"으로 표시한 일정(알림·참고용)은 예약 가능 시간을 막지 않으므로 예약이 아니다 — 가져오지도 카드에 올리지도 않는다.
         .filter((e) => !linked.has(e.id) && !e.transparent && !/주문번호:/.test(e.description))
         .map((e) => ({
-          id: e.id, summary: e.summary || '(제목 없음)', description: e.description, startAt: e.start.toISOString(), endAt: e.end.toISOString(),
+          id: e.id, summary: e.summary || '(제목 없음)', description: e.description, recurring: e.recurring, startAt: e.start.toISOString(), endAt: e.end.toISOString(),
           allDay: e.allDay, adoptable: !e.allDay,
         })),
       error: null,

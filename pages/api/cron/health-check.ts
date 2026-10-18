@@ -10,6 +10,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { autoImportCalendarEvents } from '../../../lib/booking/calendarAutoImport';
+import { waitUntil } from '@vercel/functions';
+
 import { isCronAuthorized } from '../../../lib/cron/auth';
 import { sendEmail } from '../../../lib/email/resend';
 import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
@@ -17,6 +19,8 @@ import { buildOperatorAlertHtml } from '../../../lib/email/operatorAlert';
 import { buildHealthReportHtml, formatHealthReport, runHealthCheck } from '../../../lib/ops/healthCheck';
 
 export const config = { maxDuration: 60 };
+
+const IMPORT_BUDGET_MS = 15_000;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -27,7 +31,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     // 캘린더에 손으로 넣은 일정을 사이트에 자동 등록한다(대시보드를 안 연 날도). 실패해도 점검은 계속한다.
-    await autoImportCalendarEvents().catch((error: unknown) => console.error('[cron/health-check] 캘린더 자동 등록 실패', error));
+    // **시간 예산**을 둔다 — 구글이 느려지면 자동 등록이 60초(maxDuration)를 다 써서 운영 점검 메일과 실패 알림이 통째로 안 나갈 수 있다(감사 2026-10-18).
+    // 예산을 넘긴 등록은 응답 뒤에도 끝까지 돌게 waitUntil에 맡긴다.
+    const importing = autoImportCalendarEvents().catch((error: unknown) => console.error('[cron/health-check] 캘린더 자동 등록 실패', error instanceof Error ? error.name : 'unknown'));
+    try {
+      waitUntil(importing);
+    } catch {
+      // 요청 컨텍스트 밖(테스트)에서는 등록하지 않는다.
+    }
+    await Promise.race([importing, new Promise<void>((resolve) => { setTimeout(resolve, IMPORT_BUDGET_MS).unref?.(); })]);
 
     const report = await runHealthCheck();
 

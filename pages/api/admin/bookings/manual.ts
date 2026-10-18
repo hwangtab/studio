@@ -1,3 +1,4 @@
+import { safeDbErrorSummary } from '../../../../lib/payments/refundAccount';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
@@ -30,7 +31,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!result.ok) return res.status(409).json({ ok: false, message: result.message });
     return res.status(201).json({ ok: true, orderId: result.orderId, orderNo: result.orderNo, status: result.status, warnings: result.warnings });
   } catch (error: unknown) {
-    console.error('[API/admin/bookings/manual] 실패:', error);
+    // drizzle 오류 메시지에는 바인딩된 값(고객 이름·연락처·메모)이 실린다 — 이름과 코드만 남긴다.
+    console.error('[API/admin/bookings/manual] 실패:', safeDbErrorSummary(error));
     return res.status(500).json({ ok: false, message: '등록하지 못했습니다. 예약 목록에 반쯤 만들어진 주문이 없는지 확인해 주세요.' });
   }
 }

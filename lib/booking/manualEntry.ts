@@ -163,10 +163,15 @@ export const createManualBooking = async (
       await markLeftoverOriginal(orderId);
       return;
     }
+    // 지우기 **전에** 표시한다 — 지우는 도중 함수가 멈추면(서버리스 종료) 표시가 남아 그 예약을 취소해도 원본이 새 예약으로 되살아나지 않는다.
+    // 지우기가 끝나면 표시를 걷는다.
+    await markLeftoverOriginal(orderId);
     try {
       await deleteBookingEvent(adoptEventId, 'studio');
+      await getDb()
+        .run(sql`UPDATE bookings SET customer_note = trim(replace(customer_note, ${` ${LEFTOVER_ORIGINAL_MARK}${adoptEventId}]`}, '')) WHERE order_id = ${orderId}`)
+        .catch(() => undefined);
     } catch (error) {
-      await markLeftoverOriginal(orderId);
       console.error('[manual-booking] 가져온 캘린더 원본 일정 삭제 실패', { adoptEventId, error: error instanceof Error ? error.message : String(error) });
       warnings.push('캘린더의 원래 일정을 지우지 못했어요. 같은 시간에 일정이 두 개 보이면 원래 것을 직접 지워 주세요.');
     }

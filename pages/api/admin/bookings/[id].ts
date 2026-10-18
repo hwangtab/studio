@@ -15,7 +15,7 @@ import { cancelAwaitingBookingDeposit, confirmBookingBankDeposit, deliverBooking
 import { bankDepositStateOf, isBankDepositPayment } from '../../../../lib/payments/bankDeposit';
 import { removePaymentLinkCalendarEvent, resyncPaymentLinkCalendarEvent } from '../../../../lib/payments/linkCalendar';
 import { recordLinkBankRefund } from '../../../../lib/payments/linkRefund';
-import { markRefundAccountRefunded } from '../../../../lib/payments/refundAccount';
+import { markRefundAccountRefunded, safeDbErrorSummary } from '../../../../lib/payments/refundAccount';
 
 /**
  * `completed`·`no_show`는 확정 예약에서만, `confirmed`는 그 둘을 **되돌릴 때만**이다. 완료·노쇼가 되면 환불 경로
@@ -235,7 +235,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (!result.ok) return res.status(409).json({ ok: false, message: result.message });
         return res.status(200).json({ ok: true, warnings: result.warnings });
       } catch (error: unknown) {
-        console.error('[API/admin/bookings/[id]] update_details failed:', error);
+        console.error('[API/admin/bookings/[id]] update_details failed:', safeDbErrorSummary(error)); // 바인딩된 고객 정보를 로그에 싣지 않는다
         return res.status(500).json({ ok: false, message: '수정에 실패했습니다.' });
       }
     }

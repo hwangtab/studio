@@ -1,3 +1,4 @@
+import { safeDbErrorSummary } from '../payments/refundAccount';
 import { MANUAL_PLACEHOLDER_EMAIL, MANUAL_PLACEHOLDER_PHONE } from '../privacy/manualPlaceholder';
 import { loadUnlinkedCalendarEvents, type UnlinkedCalendarEvent } from '../ops/calendarImport';
 import { sql } from 'drizzle-orm';
@@ -46,7 +47,7 @@ export const guessNameFromTitle = (title: string): string => {
  * 안 그러면 운영자가 웹 예약을 막으려고 넣은 "휴무 13~18시"가 입금 대기 예약으로 바뀌고, 그 예약을 "미입금 취소"하면 막아 둔 시간이 풀린다(감사 2026-10-18).
  * 건너뛴 일정은 대시보드 "캘린더에만 있는 일정" 카드에 남는다.
  */
-export const AUTO_IMPORT_EXCLUDE = /^\s*[!！]|\[제외\]|휴무|휴일|점검|공사|청소|정비|마감|예약\s*불가|사용\s*불가|회의|미팅/u;
+export const AUTO_IMPORT_EXCLUDE = /^\s*[!！]|\[제외\]|휴무|휴일|점검|공사|청소|정비|마감|예약\s*불가|사용\s*불가|회의|미팅|레슨|합주|개인/u;
 
 export interface AutoImportPlan {
   date: string;
@@ -61,8 +62,8 @@ const clock = (d: Date): string => {
 };
 
 /** 일정이 자동 등록 대상인가 — 대상이면 만들 예약 모양을, 아니면 null(그대로 카드에 남는다). */
-export const planAutoImport = (event: Pick<UnlinkedCalendarEvent, 'startAt' | 'endAt' | 'allDay'> & { summary?: string }, now: Date): AutoImportPlan | null => {
-  if (event.allDay) return null;
+export const planAutoImport = (event: Pick<UnlinkedCalendarEvent, 'startAt' | 'endAt' | 'allDay'> & { summary?: string; recurring?: boolean }, now: Date): AutoImportPlan | null => {
+  if (event.allDay || event.recurring) return null;
   if (event.summary && AUTO_IMPORT_EXCLUDE.test(event.summary)) return null;
   const start = new Date(event.startAt);
   const end = new Date(event.endAt);
@@ -102,11 +103,28 @@ const hasDbConflict = async (plan: AutoImportPlan): Promise<boolean> => {
   return Number(rows[0]?.n ?? 0) > 0;
 };
 
+/**
+ * 동시에 돈 두 실행(대시보드 연타·대시보드와 크론)이 같은 일정을 등록하려다 진 쪽은 `createBookingOrder`가 `failed` 주문을 남긴다 — 예약 행이 없고
+ * 이 자동 등록의 플레이스홀더 고객인 최근 주문만 지운다(실제 고객의 실패 기록·결제가 있는 주문은 건드리지 않는다).
+ */
+const purgeOrphanFailedImportOrders = async (now: Date): Promise<void> => {
+  await getDb()
+    .run(sql`
+      DELETE FROM orders
+      WHERE status = 'failed' AND type = 'session' AND customer_email = ${MANUAL_PLACEHOLDER_EMAIL} AND created_at >= ${Math.floor(now.getTime() / 1000) - 600}
+        AND NOT EXISTS (SELECT 1 FROM bookings b WHERE b.order_id = orders.id)
+        AND NOT EXISTS (SELECT 1 FROM payments p WHERE p.order_id = orders.id)
+    `)
+    .catch(() => undefined);
+};
+
 export type AutoImportResult = { imported: number; skipped: number; failed: Array<{ eventId: string; reason: string }>; disabled: boolean };
 
 export const autoImportCalendarEvents = async (now: Date = new Date()): Promise<AutoImportResult> => {
   const result: AutoImportResult = { imported: 0, skipped: 0, failed: [], disabled: false };
   if (process.env.CALENDAR_AUTO_IMPORT === 'off') return { ...result, disabled: true };
+  // 프리뷰·개발 배포는 운영 캘린더 키와 DB를 가질 수 있다 — 거기서 대시보드를 열었다고 진짜 일정을 지우면 안 된다(감사 2026-10-18).
+  if (process.env.VERCEL_ENV && process.env.VERCEL_ENV !== 'production') return { ...result, disabled: true };
   const { events, error } = await loadUnlinkedCalendarEvents(now, new Date(now.getTime() + AUTO_IMPORT_WINDOW_DAYS * 86_400_000));
   if (error) return result;
   let attempts = 0;
@@ -141,9 +159,12 @@ export const autoImportCalendarEvents = async (now: Date = new Date()): Promise<
       }
       else result.failed.push({ eventId: event.id, reason: outcome.message });
     } catch (error) {
-      result.failed.push({ eventId: event.id, reason: error instanceof Error ? error.message : String(error) });
+      // 오류 메시지에는 바인딩된 값(일정 제목에서 짐작한 이름·메모)이 실릴 수 있다 — 이름과 코드만 남긴다.
+      const s = safeDbErrorSummary(error);
+      result.failed.push({ eventId: event.id, reason: `${s.name}${s.code ? ` ${s.code}` : ''}` });
     }
   }
   if (result.failed.length > 0) console.warn('[calendar-auto-import] 자동 등록하지 못한 일정', result.failed);
+  if (result.imported > 0 || result.failed.length > 0) await purgeOrphanFailedImportOrders(now);
   return result;
 };
