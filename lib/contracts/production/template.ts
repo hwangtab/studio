@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import { formatCurrency, formatDate } from '../format';
 import { escapeTableCell } from '../html-escape';
-import type { ProductionTerms, RefundItemKey, RefundMilestoneEvent } from './terms';
+import { KIND_LABEL, PER_SONG_MILESTONES, type ProductionKind, type ProductionTerms, type RefundItemKey, type RefundMilestoneEvent } from './terms';
 
 /**
  * 제작 계약서 본문 만들기. 연습실 template.ts와 같은 규칙을 따른다 — 사용자 값은 표 셀 이스케이프,
@@ -12,9 +12,17 @@ import type { ProductionTerms, RefundItemKey, RefundMilestoneEvent } from './ter
  * 템플릿 파일은 배포 파일 트레이싱에 걸려 있어야 한다(next.config.mjs outputFileTracingIncludes).
  */
 
-/** 현재 템플릿 원문. 새 계약을 만들 때만 읽는다 — 만든 계약은 저장된 사본(production_contracts.template)을 쓴다. */
-export const readProductionTemplate = (): string =>
-  readFileSync(path.join(process.cwd(), 'lib', 'contracts', 'production', 'single-template.md'), 'utf-8');
+/**
+ * 현재 템플릿 원문. 새 계약을 만들 때만 읽는다 — 만든 계약은 저장된 사본(production_contracts.template)을 쓴다.
+ *
+ * 싱글은 single-template.md, EP·정규는 release-template.md. 뒤쪽은 앞쪽에서 곡 수가 들어가는 문장만 바꾼
+ * 판이다 — 공통 조항을 고치면 두 파일을 함께 고친다(template.test.ts가 공통 조항이 같은지 본다).
+ */
+export const readProductionTemplate = (kind: ProductionKind = 'single'): string =>
+  readFileSync(
+    path.join(process.cwd(), 'lib', 'contracts', 'production', kind === 'single' ? 'single-template.md' : 'release-template.md'),
+    'utf-8',
+  );
 
 export interface ProductionTemplateData {
   clientName: string;
@@ -23,6 +31,8 @@ export interface ProductionTemplateData {
   /** 서명 전에는 비어 있다 — 서명자가 채운다. */
   clientBirthdate?: string | null;
   clientAddress?: string | null;
+  /** 계약 종류 — EP·정규 문안의 자리표시자(종류 이름)에 쓴다. */
+  kind: ProductionKind;
   /** 미성년 의뢰인의 법정대리인(운영자가 적은 값). 없으면 그 칸이 계약서에 나오지 않는다. */
   guardian?: { name: string; relation: string | null; phone: string | null } | null;
   terms: ProductionTerms;
@@ -56,16 +66,25 @@ const EVENT_PHRASE: Record<RefundMilestoneEvent, string> = {
  * 예) "편곡(제2조 2호)은 스튜디오가 편곡 1차 시안을 전달한 때 완료된 것으로 본다. 기획 상담·…는 착수한 때
  *      그 금액의 30%를, 유통 등록을 마친 때 전액을 작업분으로 본다."
  */
-export const describeRefundMilestones = (terms: ProductionTerms): string =>
-  terms.refundSchedule
+export const describeRefundMilestones = (terms: ProductionTerms): string => {
+  const multi = terms.songs.length > 1;
+  return terms.refundSchedule
     .map(({ key, milestones }) => {
-      if (milestones.length === 1) return `${ITEM_SUBJECT[key]} ${EVENT_PHRASE[milestones[0].event]} 완료된 것으로 본다.`;
+      // 여러 곡 계약에서 곡마다 일어나는 경계는 그 곡의 몫(항목 금액 ÷ 곡 수)만 작업분으로 센다(ledger.ts).
+      const perSong = multi && milestones.every((m) => PER_SONG_MILESTONES.has(m.event));
+      if (milestones.length === 1) {
+        return perSong
+          ? `${ITEM_SUBJECT[key]} 곡마다 ${EVENT_PHRASE[milestones[0].event]} 그 곡의 몫(항목 금액을 곡 수로 나눈 금액)이 완료된 것으로 본다.`
+          : `${ITEM_SUBJECT[key]} ${EVENT_PHRASE[milestones[0].event]} 완료된 것으로 본다.`;
+      }
+      const share = perSong ? '그 곡 몫의' : '그 금액의';
       const parts = milestones.map(({ event, ratio }) =>
-        ratio === 1 ? `${EVENT_PHRASE[event]} 전액을` : `${EVENT_PHRASE[event]} 그 금액의 ${Math.round(ratio * 100)}%를`,
+        ratio === 1 ? `${EVENT_PHRASE[event]} ${perSong ? '그 곡 몫 ' : ''}전액을` : `${EVENT_PHRASE[event]} ${share} ${Math.round(ratio * 100)}%를`,
       );
-      return `${ITEM_SUBJECT[key]} ${parts.join(', ')} 작업분으로 본다.`;
+      return `${ITEM_SUBJECT[key]} ${perSong ? '곡마다 ' : ''}${parts.join(', ')} 작업분으로 본다.`;
     })
     .join(' ');
+};
 
 export const buildProductionContent = (data: ProductionTemplateData, template: string): string => {
   const { terms } = data;
@@ -103,7 +122,14 @@ export const buildProductionContent = (data: ProductionTemplateData, template: s
     '{{clientBirthdate}}': cell(data.clientBirthdate),
     '{{clientPhone}}': cell(data.clientPhone),
     '{{clientAddress}}': cell(data.clientAddress),
-    '{{songTitle}}': terms.songTitle ? escapeTableCell(terms.songTitle) : '1곡 (제목 미정)',
+    '{{songTitle}}': terms.songs[0]?.title ? escapeTableCell(terms.songs[0].title) : '1곡 (제목 미정)',
+    '{{albumTitle}}': terms.albumTitle ? escapeTableCell(terms.albumTitle) : '제목 미정',
+    '{{releaseKind}}': KIND_LABEL[data.kind],
+    '{{songCount}}': String(terms.songs.length),
+    '{{songRows}}': terms.songs
+      .map((song, index) => `| ${index + 1} | ${song.title ? escapeTableCell(song.title) : '제목 미정'} |`)
+      .join('\n'),
+    '{{recordingHoursTotal}}': String(terms.scope.recordingHours * terms.songs.length),
     '{{total}}': won(terms.amount.total),
     '{{deposit}}': won(terms.amount.deposit),
     '{{balance}}': won(terms.amount.balance),

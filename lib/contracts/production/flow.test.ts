@@ -29,7 +29,13 @@ jest.mock('../admin-rate-limit', () => ({
 // 위 mock이 걸린 뒤에 불러온다.
 import signHandler from '../../../pages/api/contracts/production/[id]/sign';
 import { verifyStoredProductionContract } from './audit';
-import { cancelProductionContract, createProductionContract, finalizeProductionContractIfComplete, sendProductionContract } from './service';
+import {
+  cancelProductionContract,
+  createProductionContract,
+  finalizeProductionContractIfComplete,
+  sendProductionContract,
+  updateDraftProductionContract,
+} from './service';
 import { validateProductionContractPayload } from './validation';
 import { buildProductionSignStatements } from './sign-transaction';
 import { buildDefaultProductionTerms } from './terms';
@@ -52,6 +58,7 @@ const signaturePng = (): string => {
 };
 
 const PAYLOAD = {
+  kind: 'single' as const,
   title: '홍길동님 음원 제작 용역 계약',
   clientName: '홍길동',
   clientStageName: '길동밴드',
@@ -381,5 +388,29 @@ describe('법정대리인 서명', () => {
     await callSign(id, { token: t.guardian, identityDigits: '4321' });
     // 이미 성립한 뒤 다시 불러도 아무것도 바꾸지 않는다.
     expect(await finalizeProductionContractIfComplete(id)).toBe(false);
+  });
+});
+
+describe('EP 계약 체결', () => {
+  it('EP 문안으로 만들고, 서명하면 수록곡이 든 본문으로 성립하며 지문이 맞는다', async () => {
+    const terms = buildDefaultProductionTerms('ep', 4);
+    terms.albumTitle = '바다';
+    const { id } = await createProductionContract({ ...PAYLOAD, kind: 'ep', terms });
+    await sendAsOperator(id);
+    expect(await callSign(id, { token: await clientToken(id) })).toEqual({ status: 200, body: { ok: true } });
+
+    const signed = await loadContract(id);
+    expect(signed?.kind).toBe('ep');
+    expect(signed?.content).toContain('| 음반 | 바다 (EP · 4곡) |');
+    expect(signed?.content).toContain('곡마다 편곡');
+    expect(verifyStoredProductionContract(signed!)).toMatchObject({ kind: 'match' });
+  });
+
+  it('초안에서 싱글 → EP로 바꾸면 EP 문안으로 다시 뜬다', async () => {
+    const { id } = await createProductionContract(PAYLOAD);
+    await updateDraftProductionContract(id, { ...PAYLOAD, kind: 'ep', terms: buildDefaultProductionTerms('ep', 3) });
+    const draft = await loadContract(id);
+    expect(draft?.kind).toBe('ep');
+    expect(draft?.content).toContain('EP 음반(3곡)');
   });
 });

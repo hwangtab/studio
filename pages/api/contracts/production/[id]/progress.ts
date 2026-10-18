@@ -11,7 +11,6 @@ import { IDENTITY_DIGITS, verifyIdentityDigits } from '../../../../../lib/contra
 import { productionRateLimitKey } from '../../../../../lib/contracts/production/links';
 import { grantPortalAccess, hasPortalAccess } from '../../../../../lib/contracts/production/portal-session';
 import { loadProgressContext, recordProgressEvent, sendEventNotice } from '../../../../../lib/contracts/production/progress';
-import { REVISION_STAGES, type RevisionStage } from '../../../../../lib/contracts/production/terms';
 import {
   encryptRefundAccountNumber,
   safeDbErrorSummary,
@@ -109,12 +108,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).json({ ok: true });
     }
 
-    const stage = body.stage;
-    if (typeof stage !== 'string' || !(REVISION_STAGES as readonly string[]).includes(stage)) {
-      return res.status(400).json({ ok: false, message: '단계를 확인할 수 없어요.' });
-    }
-    const state = context.ledger.stages[stage as RevisionStage];
-    if (!state.pending || state.pending.deliveryEventId !== body.deliveryEventId) {
+    // 답하는 결과물(전달 기록)로 (단계, 곡)을 찾는다 — 그 전달이 지금도 답을 기다리는 것이어야 한다. 화면을 연 뒤
+    // 새 결과물이 나갔다면 옛 전달은 더 이상 대기가 아니라 여기서 걸린다.
+    const state = context.ledger.stages.find(
+      (s) => s.pending !== null && s.pending.deliveryEventId === body.deliveryEventId,
+    );
+    if (!state?.pending || (typeof body.stage === 'string' && body.stage !== state.stage)) {
       return res.status(409).json({ ok: false, message: '그 사이 진행 상황이 바뀌었어요. 페이지를 새로고침해 주세요.' });
     }
 
@@ -132,7 +131,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       id,
       {
         type: body.action === 'approve' ? 'stage_approved' : 'revision_requested',
-        stage: stage as RevisionStage,
+        stage: state.stage,
+        song: state.song,
         amount: null,
         occurredAt: new Date(),
         data:

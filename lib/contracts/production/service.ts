@@ -64,6 +64,7 @@ const buildDraftContent = (data: ProductionContractPayload, template: string): s
       clientStageName: data.clientStageName,
       clientPhone: data.clientPhone,
       guardian: data.guardian,
+      kind: data.kind,
       terms: data.terms,
       contractDate: new Date().toISOString(),
     },
@@ -86,7 +87,7 @@ const guardianRow = (contractId: string, guardian: NonNullable<ProductionContrac
  * 운영자가 서명하지 않은 문서의 서명 링크는 존재할 이유가 없다.
  */
 export const createProductionContract = async (data: ProductionContractPayload): Promise<ProductionContract> => {
-  const template = readProductionTemplate();
+  const template = readProductionTemplate(data.kind);
   const contractId = randomUUID();
   const now = new Date();
 
@@ -95,7 +96,7 @@ export const createProductionContract = async (data: ProductionContractPayload):
       .insert(productionContracts)
       .values({
         id: contractId,
-        kind: 'single',
+        kind: data.kind,
         status: 'draft',
         title: data.title,
         clientName: data.clientName,
@@ -135,7 +136,8 @@ export const updateDraftProductionContract = async (
   contractId: string,
   data: ProductionContractPayload,
 ): Promise<ProductionContract | null> => {
-  const template = readProductionTemplate();
+  // 초안에서는 종류를 바꿀 수 있다(싱글 → EP 등) — 그 종류의 계약서 문안을 다시 뜬다.
+  const template = readProductionTemplate(data.kind);
   const now = new Date();
   const stillDraft = and(eq(productionContracts.id, contractId), eq(productionContracts.status, 'draft'));
   const draftIds = getDb().select({ id: productionContracts.id }).from(productionContracts).where(stillDraft);
@@ -144,6 +146,7 @@ export const updateDraftProductionContract = async (
     getDb()
       .update(productionContracts)
       .set({
+        kind: data.kind,
         title: data.title,
         clientName: data.clientName,
         clientStageName: data.clientStageName,
@@ -429,6 +432,7 @@ export const buildSignedProductionContent = (
       clientBirthdate: contract.clientBirthdate,
       clientAddress: contract.clientAddress,
       guardian: guardian ? { name: guardian.name, relation: guardian.relation, phone: guardian.phone } : null,
+      kind: contract.kind,
       terms: parseStoredTerms(contract.termsJson),
       contractDate: signedAt.toISOString(),
     },

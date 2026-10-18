@@ -5,7 +5,7 @@ import { Button } from '../ui/Button';
 import { Field, TextInput } from '../ui/Field';
 import { lightOnlyField } from '../ui/adminFieldClass';
 import { formatCurrency, formatDate, formatDateTime } from '../../lib/contracts/format';
-import { ADMIN_EVENT_TYPES, EVENT_SPEC, STAGE_LABEL } from '../../lib/contracts/production/event-spec';
+import { ADMIN_EVENT_TYPES, EVENT_SPEC, isPerSongEvent, STAGE_LABEL } from '../../lib/contracts/production/event-spec';
 import type { AdminProgressView, TimelineItem } from '../../lib/contracts/production/progress-view';
 import type { ProductionEventType } from '../../db/schema';
 
@@ -55,9 +55,18 @@ const Row = ({ label, value }: { label: string; value: React.ReactNode }) => (
   </div>
 );
 
-function RecordForm({ contractId, onDone }: { contractId: string; onDone: (message: string | null) => Promise<void> }) {
+function RecordForm({
+  contractId,
+  songLabels,
+  onDone,
+}: {
+  contractId: string;
+  songLabels: string[];
+  onDone: (message: string | null) => Promise<void>;
+}) {
   const [type, setType] = useState<ProductionEventType>('payment_received');
   const [stage, setStage] = useState('');
+  const [song, setSong] = useState(0);
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
   const [link, setLink] = useState('');
@@ -66,6 +75,8 @@ function RecordForm({ contractId, onDone }: { contractId: string; onDone: (messa
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const spec = EVENT_SPEC[type];
+  // 곡마다 일어나는 기록이고 곡이 둘 이상이면 곡을 고른다(마스터링은 음반 전체라 곡이 없다 — 단계를 고른 뒤에 판정).
+  const needsSong = songLabels.length > 1 && isPerSongEvent(type, spec.stages ? stage || null : null);
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -75,6 +86,7 @@ function RecordForm({ contractId, onDone }: { contractId: string; onDone: (messa
       action: 'record',
       type,
       stage: spec.stages ? stage : undefined,
+      song: needsSong ? song : undefined,
       amount: spec.amount ? Number(amount.replace(/[^0-9]/g, '')) : undefined,
       note,
       link: spec.link ? link : undefined,
@@ -124,6 +136,22 @@ function RecordForm({ contractId, onDone }: { contractId: string; onDone: (messa
               {spec.stages.map((value) => (
                 <option key={value} value={value}>
                   {STAGE_LABEL[value]}
+                </option>
+              ))}
+            </select>
+          </Field>
+        )}
+        {needsSong && (
+          <Field label="곡" id="event-song" className={lightOnlyField}>
+            <select
+              id="event-song"
+              value={song}
+              onChange={(e) => setSong(Number(e.target.value))}
+              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
+            >
+              {songLabels.map((label, index) => (
+                <option key={label} value={index}>
+                  {label}
                 </option>
               ))}
             </select>
@@ -246,7 +274,7 @@ export default function ProductionProgressPanel({
 
         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3">
           {view.stages.map((stage) => (
-            <div key={stage.stage} className="p-3 bg-gray-50 rounded-lg text-sm">
+            <div key={`${stage.stage}-${stage.song ?? "album"}`} className="p-3 bg-gray-50 rounded-lg text-sm">
               <p className="font-semibold">{stage.label}</p>
               <p className="text-gray-600">
                 전달 {stage.deliveries} · 수정 {stage.revisions} · 무료 남음 {stage.freeRemaining}
@@ -289,7 +317,7 @@ export default function ProductionProgressPanel({
       {editable && (
         <div className="p-4 md:p-8 border-b border-gray-200">
           <h3 className="font-bold text-gray-900 dark:text-gray-900 mb-3">기록 추가</h3>
-          <RecordForm contractId={contractId} onDone={refresh} />
+          <RecordForm contractId={contractId} songLabels={view.songLabels} onDone={refresh} />
         </div>
       )}
 

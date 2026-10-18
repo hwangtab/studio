@@ -251,8 +251,11 @@ export const contractTemplateSnapshots = sqliteTable('contract_template_snapshot
 // 곳곳에 생긴다. 새 표만 더하므로 기존 조회는 이 마이그레이션 전후로 달라지지 않는다.
 // 설계: docs/production-contract-design-2026-10.md, 코드: lib/contracts/production/.
 
-/** 계약 종류. EP·정규는 값과 템플릿을 더해 올린다 — CHECK도 함께 늘린다(SQLite는 표 재생성). */
-export const productionContractKindEnum = ['single'] as const;
+/**
+ * 계약 종류. single = 싱글(1곡, single-template.md), ep·album = 여러 곡(release-template.md, 0073).
+ * 곡 수·곡명은 terms.songs에 있다 — 종류는 계약서 문안과 기본 조건을 고르는 값이다.
+ */
+export const productionContractKindEnum = ['single', 'ep', 'album'] as const;
 
 /**
  * 연습실 계약과 같은 전이에 completed가 더해졌다. 제작 계약은 "이용 기간"이 아니라 결과물 인도로
@@ -340,7 +343,7 @@ export const productionContracts = sqliteTable(
   },
   (t) => [
     index('production_contracts_status_idx').on(t.status, t.createdAt),
-    check('production_contracts_kind_check', sql`${t.kind} in ('single')`),
+    check('production_contracts_kind_check', sql`${t.kind} in ('single','ep','album')`),
     check(
       'production_contracts_status_check',
       sql`${t.status} in ('draft','sent','signed','cancelled','expired','completed','terminated')`,
@@ -453,6 +456,11 @@ export const productionContractEvents = sqliteTable(
     type: text('type', { enum: productionEventTypeEnum }).notNull(),
     /** arrangement·recording·tuning·mixing·mastering 중 하나(해당하는 사건만). */
     stage: text('stage'),
+    /**
+     * 곡 번호(0부터, 0073). 곡별 단계(편곡·녹음·보정·믹싱)와 곡별 1차 완성본에만 쓴다. 마스터링·입금처럼 음반 전체
+     * 사건은 비운다. 0073 전 싱글 기록은 비어 있고 1번 곡(0)으로 읽는다(ledger.ts songOf).
+     */
+    song: integer('song'),
     amount: integer('amount'),
     /** 사건별 부가 값(JSON) — 결과물 링크, 메모, 정지 사유, 간주 승인의 근거 전달 id 등. 파기 대상이다. */
     dataJson: text('data_json'),

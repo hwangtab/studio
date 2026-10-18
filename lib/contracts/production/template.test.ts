@@ -3,6 +3,7 @@ import { buildDefaultProductionTerms } from './terms';
 
 const template = readProductionTemplate();
 const base = {
+  kind: 'single' as const,
   clientName: '홍길동',
   clientStageName: '길동밴드',
   clientPhone: '010-1234-5678',
@@ -68,5 +69,41 @@ describe('제작 계약서 본문', () => {
     const content = buildProductionContent({ ...base, clientBirthdate: null, clientAddress: null }, template);
     expect(content).toContain('| 생년월일 |  |');
     expect(content).toContain('| 주소 |  |');
+  });
+});
+
+describe('EP·정규 계약서(release-template.md)', () => {
+  const release = readProductionTemplate('ep');
+  const terms = buildDefaultProductionTerms('ep', 4);
+  terms.albumTitle = '바다';
+  terms.songs[1] = { title: '파도' };
+  const content = buildProductionContent({ ...base, kind: 'ep', terms }, release);
+
+  it('자리표시자를 하나도 남기지 않는다', () => {
+    expect(findUnfilledPlaceholders(content)).toEqual([]);
+  });
+
+  it('음반·곡 수·수록곡 표·곡당/합계 녹음 시간을 적는다', () => {
+    expect(content).toContain('의뢰인의 EP 음반(4곡)의 제작·발매');
+    expect(content).toContain('| 음반 | 바다 (EP · 4곡) |');
+    expect(content).toContain('| 2 | 파도 |');
+    expect(content).toContain('| 3 | 제목 미정 |');
+    expect(content).toContain('곡마다 3시간, 합계 12시간');
+  });
+
+  it('곡마다 일어나는 정산 경계는 "그 곡의 몫"으로 적는다 — 음반 전체 경계는 그대로', () => {
+    expect(content).toContain('편곡(제2조 2호)은 곡마다 스튜디오가 편곡 1차 시안을 전달한 때 그 곡의 몫(항목 금액을 곡 수로 나눈 금액)이 완료된 것으로 본다.');
+    expect(content).toContain('기획 상담·유통 등록·발매 홍보(제2조 1·6·7호)는 착수한 때 그 금액의 30%를');
+  });
+
+  it('곡 수와 무관한 조항은 싱글 계약서와 글자 하나 다르지 않다', () => {
+    const single = readProductionTemplate('single');
+    const section = (text: string, heading: string) => {
+      const start = text.indexOf(`## ${heading}`);
+      return text.slice(start, text.indexOf('\n## ', start + 1));
+    };
+    for (const heading of ['제3조', '제8조', '제9조', '제10조', '제12조', '제13조', '제14조']) {
+      expect(section(release, heading)).toBe(section(single, heading));
+    }
   });
 });

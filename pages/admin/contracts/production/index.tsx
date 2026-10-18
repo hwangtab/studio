@@ -10,7 +10,7 @@ import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { formatCurrency, formatShortDate } from '../../../../lib/contracts/format';
 import { expireOverdueProductionContracts } from '../../../../lib/contracts/production/service';
 import { getEffectiveProductionStatus, getProductionStatusLabel } from '../../../../lib/contracts/production/status';
-import { parseStoredTerms } from '../../../../lib/contracts/production/terms';
+import { parseStoredTerms, releaseTitle } from '../../../../lib/contracts/production/terms';
 import type { ProductionContractStatus } from '../../../../db/schema';
 
 /** 한 화면에 싣는 최대 건수. 넘으면 잘린다는 사실을 알린다(연습실 목록과 같다). */
@@ -22,7 +22,7 @@ interface ListRow {
   status: ProductionContractStatus;
   clientName: string;
   clientStageName: string | null;
-  songTitle: string | null;
+  releaseLabel: string;
   totalAmount: number;
   createdAt: string;
   sentAt: string | null;
@@ -58,7 +58,7 @@ export const getServerSideProps: GetServerSideProps<ProductionContractsPageProps
           status: getEffectiveProductionStatus(contract),
           clientName: contract.clientName,
           clientStageName: contract.clientStageName,
-          songTitle: parseStoredTerms(contract.termsJson).songTitle,
+          releaseLabel: releaseTitle(contract.kind, parseStoredTerms(contract.termsJson)),
           totalAmount: contract.totalAmount,
           createdAt: contract.createdAt.toISOString(),
           sentAt: contract.sentAt?.toISOString() ?? null,
@@ -125,7 +125,7 @@ export default function ProductionContractsPage({ rows, truncated, error }: Prod
                       {row.clientName}
                       {row.clientStageName && <span className="text-gray-500"> ({row.clientStageName})</span>}
                     </span>
-                    <span className="text-sm text-gray-600">{row.songTitle ?? '곡 제목 미정'}</span>
+                    <span className="text-sm text-gray-600">{row.releaseLabel}</span>
                     <span className="text-sm text-gray-600">{formatCurrency(row.totalAmount)}원</span>
                     {row.notificationError && <span className="text-xs font-medium text-amber-700">메일 실패</span>}
                     <span className="ml-auto text-xs text-gray-400">

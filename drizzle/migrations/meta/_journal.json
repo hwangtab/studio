@@ -512,6 +512,13 @@
       "when": 1792308656621,
       "tag": "0072_production_guardian_refund",
       "breakpoints": true
+    },
+    {
+      "idx": 73,
+      "version": "6",
+      "when": 1792310362448,
+      "tag": "0073_production_release_kinds",
+      "breakpoints": true
     }
   ]
 }

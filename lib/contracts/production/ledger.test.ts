@@ -1,5 +1,5 @@
 import type { ProductionContractEvent, ProductionEventType } from '../../../db/schema';
-import { computeProductionLedger, kstDay, type EventData } from './ledger';
+import { computeProductionLedger, findStage, kstDay, type EventData } from './ledger';
 import { buildDefaultProductionTerms } from './terms';
 
 const terms = buildDefaultProductionTerms();
@@ -21,6 +21,7 @@ const ev = (
     seq,
     type,
     stage: null,
+    song: null,
     amount: null,
     dataJson: data ? JSON.stringify(data) : null,
     occurredAt: kst(at),
@@ -73,7 +74,7 @@ describe('대금(제3조)', () => {
       ev('revision_requested', '2026-11-13T09:00:00', { stage: 'mastering' }), // 마스터링 무료 1회 → 이건 초과
       ev('extra_cost_agreed', '2026-11-14T09:00:00', { amount: 120_000, data: { note: '세션 기타' } }),
     ]);
-    expect(ledger.stages.mastering).toMatchObject({ revisions: 2, freeRemaining: 0, extraRevisions: 1, extraFee: 30_000 });
+    expect(findStage(ledger, 'mastering')!).toMatchObject({ revisions: 2, freeRemaining: 0, extraRevisions: 1, extraFee: 30_000 });
     expect(ledger.payments.totalDue).toBe(1_150_000 + 30_000 + 120_000);
   });
 });
@@ -81,7 +82,7 @@ describe('대금(제3조)', () => {
 describe('수정·승인(제5조)', () => {
   it('전달 뒤 답이 없으면 대기이고, 기한은 전달일 다음 날부터 7일째 날이다', () => {
     const ledger = ledgerAt('2026-11-12T09:00:00', [ev('stage_delivered', '2026-11-10T23:30:00', { stage: 'arrangement' })]);
-    const pending = ledger.stages.arrangement.pending!;
+    const pending = findStage(ledger, 'arrangement')!.pending!;
     // 밤 11시 30분 전달이어도 그날(11/10)이 전달일이다 — 경과 시간으로 자르지 않는다.
     expect(kstDay(pending.lastDayToRespond)).toBe(kstDay(kst('2026-11-17T00:00:00')));
     expect(pending.deemedFromDay).toBe(kstDay(kst('2026-11-18T00:00:00')));
@@ -92,14 +93,14 @@ describe('수정·승인(제5조)', () => {
       ev('stage_delivered', '2026-11-10T09:00:00', { stage: 'mixing' }),
       ev('revision_requested', '2026-11-11T09:00:00', { stage: 'mixing', actor: 'client' }),
     ]);
-    expect(ledger.stages.mixing).toMatchObject({ pending: null, revising: true, freeRemaining: 1 });
+    expect(findStage(ledger, 'mixing')!).toMatchObject({ pending: null, revising: true, freeRemaining: 1 });
   });
 
   it('전달 통지가 나가지 않았으면 대기는 남되 근거 없음으로 표시하고 경고한다', () => {
     const ledger = ledgerAt('2026-11-12T09:00:00', [
       ev('stage_delivered', '2026-11-10T09:00:00', { stage: 'arrangement', noticeStatus: 'failed' }),
     ]);
-    expect(ledger.stages.arrangement.pending?.noticeSent).toBe(false);
+    expect(findStage(ledger, 'arrangement')!.pending?.noticeSent).toBe(false);
     expect(ledger.todos).toContainEqual(expect.objectContaining({ severity: 'alert', message: expect.stringContaining('통지') }));
   });
 
@@ -108,7 +109,7 @@ describe('수정·승인(제5조)', () => {
       ev('stage_delivered', '2026-11-20T09:00:00', { stage: 'mastering' }),
       ev('stage_approved', '2026-11-21T09:00:00', { stage: 'mastering', data: { mode: 'explicit' } }),
     ]);
-    expect(ledger.stages.mastering.approved).toMatchObject({ mode: 'explicit' });
+    expect(findStage(ledger, 'mastering')!.approved).toMatchObject({ mode: 'explicit' });
     expect(kstDay(ledger.payments.balanceLastDay!)).toBe(kstDay(kst('2026-11-28T00:00:00')));
     expect(ledger.payments.balanceOverdueDays).toBe(3);
   });
@@ -119,7 +120,7 @@ describe('수정·승인(제5조)', () => {
       delivered,
       ev('void', '2026-11-11T09:00:00', { voidsEventId: delivered.id, data: { reason: '잘못 기록' } }),
     ]);
-    expect(ledger.stages.arrangement).toMatchObject({ deliveries: 0, pending: null });
+    expect(findStage(ledger, 'arrangement')!).toMatchObject({ deliveries: 0, pending: null });
   });
 });
 
@@ -215,5 +216,59 @@ describe('의뢰인 무응답(제10조 5항)', () => {
       ev('client_responded', '2026-11-12T09:00:00'),
     ]);
     expect(ledger.unresponsive.since).toBeNull();
+  });
+});
+
+describe('여러 곡(EP)', () => {
+  const ep = buildDefaultProductionTerms('ep', 4);
+  const epLedger = (now: string, events: ProductionContractEvent[]) =>
+    computeProductionLedger({ terms: ep, signedAt: SIGNED, events, now: kst(now) });
+
+  it('편곡·믹싱은 곡마다 따로 세고, 마스터링은 음반 하나다', () => {
+    const ledger = epLedger('2026-11-12T09:00:00', [
+      ev('stage_delivered', '2026-11-10T09:00:00', { stage: 'arrangement', song: 1 }),
+      ev('revision_requested', '2026-11-11T09:00:00', { stage: 'arrangement', song: 1 }),
+      ev('stage_delivered', '2026-11-11T10:00:00', { stage: 'arrangement', song: 2 }),
+    ]);
+    expect(ledger.stages).toHaveLength(4 * 2 + 1);
+    expect(findStage(ledger, 'arrangement', 1)).toMatchObject({ revising: true, revisions: 1 });
+    expect(findStage(ledger, 'arrangement', 2)?.pending).not.toBeNull();
+    expect(findStage(ledger, 'arrangement', 0)).toMatchObject({ deliveries: 0, pending: null });
+    expect(findStage(ledger, 'mastering')).toMatchObject({ song: null });
+  });
+
+  it('작업 기간은 모든 곡의 1차 완성본을 받아야 시작한다', () => {
+    const base = [
+      ev('payment_received', '2026-11-03T09:00:00', { amount: ep.amount.deposit }),
+      ev('source_received', '2026-11-04T09:00:00', { song: 0 }),
+      ev('source_received', '2026-11-04T09:00:00', { song: 1 }),
+      ev('source_received', '2026-11-05T09:00:00', { song: 2 }),
+    ];
+    expect(epLedger('2026-11-10T09:00:00', base).work.startedOn).toBeNull();
+    const ledger = epLedger('2026-11-10T09:00:00', [...base, ev('source_received', '2026-11-08T09:00:00', { song: 3 })]);
+    expect(ledger.work.startedOn).toEqual(kst('2026-11-08T00:00:00'));
+  });
+
+  it('해지 정산은 경계에 닿은 곡의 비율만큼 — 4곡 중 2곡 편곡 시안이면 편곡 금액의 절반', () => {
+    const ledger = epLedger('2026-11-20T09:00:00', [
+      ev('payment_received', '2026-11-03T09:00:00', { amount: ep.amount.deposit }),
+      ev('kickoff', '2026-11-05T09:00:00'),
+      ev('stage_delivered', '2026-11-10T09:00:00', { stage: 'arrangement', song: 0 }),
+      ev('stage_delivered', '2026-11-11T09:00:00', { stage: 'arrangement', song: 3 }),
+    ]);
+    const arrangement = ledger.refund.lines.find((line) => line.key === 'arrangement')!;
+    expect(arrangement.ratio).toBe(0.5);
+    expect(arrangement.deducted).toBe(Math.round(arrangement.amount / 2));
+  });
+
+  it('할 일에 곡 이름을 붙인다', () => {
+    const titled = { ...ep, songs: ep.songs.map((song, i) => (i === 1 ? { title: '파도' } : song)) };
+    const ledger = computeProductionLedger({
+      terms: titled,
+      signedAt: SIGNED,
+      now: kst('2026-11-12T09:00:00'),
+      events: [ev('stage_delivered', '2026-11-10T09:00:00', { stage: 'mixing', song: 1, noticeStatus: 'failed' })],
+    });
+    expect(ledger.todos.map((t) => t.message).join('\n')).toContain('2번 곡 「파도」 믹싱 결과물 전달 통지');
   });
 });

@@ -30,11 +30,13 @@ import { createProductionContract, sendProductionContract } from './service';
 import { loadProgressContext, recordProgressEvent, runProductionDeadlines, sendEventNotice } from './progress';
 import { buildDefaultProductionTerms } from './terms';
 import type { EventInput } from './events';
+import { findStage } from './ledger';
 
 const kst = (local: string) => new Date(`${local}+09:00`);
 
 const input = (overrides: Partial<EventInput> & Pick<EventInput, 'type'>): EventInput => ({
   stage: null,
+  song: null,
   amount: null,
   occurredAt: new Date(),
   data: {},
@@ -44,15 +46,19 @@ const input = (overrides: Partial<EventInput> & Pick<EventInput, 'type'>): Event
 const admin = { actor: 'admin:kyungha', ip: null };
 
 /** 체결된 계약 하나를 만든다(서명 API는 flow.test.ts가 본다 — 여기서는 상태만 맞춘다). */
-const signedContract = async (signedAt: Date): Promise<{ id: string; token: string }> => {
+const signedContract = async (
+  signedAt: Date,
+  release: { kind: 'single' | 'ep' | 'album'; songs: number } = { kind: 'single', songs: 1 },
+): Promise<{ id: string; token: string }> => {
   const { id } = await createProductionContract({
+    kind: release.kind,
     title: '테스트 계약',
     clientName: '홍길동',
     clientStageName: null,
     clientEmail: 'g@example.com',
     clientPhone: '010-1234-5678',
     guardian: null,
-    terms: buildDefaultProductionTerms(),
+    terms: buildDefaultProductionTerms(release.kind, release.songs),
   });
   const sent = await sendProductionContract(id, { allowedStatuses: ['draft'], adminActor: 'kyungha', ipAddress: null, userAgent: 'jest' });
   const token = new URL(sent!.signUrls.client!).searchParams.get('token')!;
@@ -153,7 +159,7 @@ describe('기한 크론', () => {
     const context = await loadProgressContext(id, kst('2026-11-18T12:00:00'));
     const approval = context!.events.find((e) => e.type === 'stage_approved')!;
     expect(approval).toMatchObject({ actor: 'system', occurredAt: kst('2026-11-18T00:00:00'), noticeStatus: 'sent' });
-    expect(context!.ledger.stages.arrangement.approved).toMatchObject({ mode: 'deemed' });
+    expect(findStage(context!.ledger, 'arrangement')!.approved).toMatchObject({ mode: 'deemed' });
   });
 
   it('전달 통지가 실패한 전달에는 간주 승인을 남기지 않고 운영자 할 일로 올린다', async () => {
@@ -193,7 +199,7 @@ describe('의뢰인 진행 API', () => {
     const approved = await callProgress(id, { action: 'approve', token, stage: 'arrangement', deliveryEventId: delivery.id }, unlocked.cookie);
     expect(approved.status).toBe(200);
     const context = await loadProgressContext(id);
-    expect(context!.ledger.stages.arrangement.approved).toMatchObject({ mode: 'explicit' });
+    expect(findStage(context!.ledger, 'arrangement')!.approved).toMatchObject({ mode: 'explicit' });
     expect(context!.events.at(-1)).toMatchObject({ actor: 'client' });
   });
 
@@ -264,5 +270,37 @@ describe('해지 환불 계좌', () => {
   it('본인 확인 쿠키가 없으면 받지 않는다', async () => {
     const { id, token } = await terminatedWithRefund();
     expect((await callProgress(id, { action: 'refund-account', token, ...account })).status).toBe(401);
+  });
+});
+
+describe('EP — 곡마다 진행', () => {
+  it('곡마다 결과물·승인을 따로 기록하고, 의뢰인은 그 곡의 전달에 답한다', async () => {
+    const { id, token } = await signedContract(new Date(), { kind: 'ep', songs: 3 });
+    const song0 = await record(id, input({ type: 'stage_delivered', stage: 'arrangement', song: 0 }));
+    await record(id, input({ type: 'stage_delivered', stage: 'arrangement', song: 2 }));
+    const { cookie } = await callProgress(id, { action: 'unlock', token, identityDigits: '5678' });
+
+    expect((await callProgress(id, { action: 'approve', token, stage: 'arrangement', deliveryEventId: song0.id }, cookie)).status).toBe(200);
+    const context = await loadProgressContext(id);
+    expect(findStage(context!.ledger, 'arrangement', 0)?.approved).toMatchObject({ mode: 'explicit' });
+    expect(findStage(context!.ledger, 'arrangement', 2)?.pending).not.toBeNull();
+    expect(context!.events.at(-1)).toMatchObject({ type: 'stage_approved', song: 0 });
+  });
+
+  it('계약에 없는 곡 번호는 받지 않는다', async () => {
+    const { id } = await signedContract(new Date(), { kind: 'ep', songs: 3 });
+    const result = await recordProgressEvent(id, input({ type: 'stage_delivered', stage: 'mixing', song: 5 }), admin);
+    expect(result).toMatchObject({ ok: false, message: '계약에 없는 곡입니다.' });
+  });
+
+  it('간주 승인도 곡마다 — 기한이 지난 곡만 기록한다', async () => {
+    const { id } = await signedContract(kst('2026-11-02T10:00:00'), { kind: 'ep', songs: 2 });
+    await record(id, input({ type: 'stage_delivered', stage: 'mixing', song: 0, occurredAt: kst('2026-11-10T09:00:00') }));
+    await record(id, input({ type: 'stage_delivered', stage: 'mixing', song: 1, occurredAt: kst('2026-11-14T09:00:00') }));
+
+    expect((await runProductionDeadlines(kst('2026-11-18T10:00:00'))).deemedApprovals).toBe(1);
+    const ledger = (await loadProgressContext(id, kst('2026-11-18T12:00:00')))!.ledger;
+    expect(findStage(ledger, 'mixing', 0)?.approved).toMatchObject({ mode: 'deemed' });
+    expect(findStage(ledger, 'mixing', 1)?.approved).toBeNull();
   });
 });

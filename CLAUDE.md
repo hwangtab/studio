@@ -317,6 +317,11 @@ SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이�
   지문을 쓰면 동시 서명에서 한쪽 서명이 지문에서 빠진다.
 - **마이그레이션 0072는 배포 직후 바로 적용한다**(`production_contract_signers`에 컬럼 추가 — 관계 조회가 전체 컬럼을
   SELECT해 적용 전에는 제작 계약 화면이 깨진다. 연습실·결제 경로는 무관). `refund_accounts` 재생성도 함께다(0061과 같은 방식).
+- **마이그레이션 0073(EP·정규)도 배포 직후 바로 적용한다.** `production_contracts`를 다시 만들어 kind CHECK를 넓히고
+  `production_contract_events.song`을 더한다. 표 재생성은 libsql 마이그레이터가 외래 키를 끈 채 돌려서 서명자·기록이
+  CASCADE로 지워지지 않는다 — **마이그레이터 밖에서 SQL을 손으로 돌릴 땐 `PRAGMA foreign_keys=OFF`를 먼저.**
+- EP·정규 계약서(`release-template.md`)는 싱글 문안에서 곡 수 문장만 바꾼 것이다. 공통 조항을 고치면 두 파일을 같이 —
+  template.test.ts가 어긋남을 잡는다.
 - 템플릿(`single-template.md`) 제13조(개인정보 3년)·처리방침 ⑫·`retention.ts`가 같은 약속을 한다. 한쪽을 바꾸면 셋 다,
   처리방침은 `FUNDING_TERMS_VERSION`도.
 

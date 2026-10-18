@@ -11,7 +11,7 @@ import { IDENTITY_DIGITS } from '../../../../../lib/contracts/identity';
 import { denyContractPageCaching } from '../../../../../lib/contracts/page-cache';
 import { productionProgressPath, productionSignPath } from '../../../../../lib/contracts/production/links';
 import { getEffectiveProductionStatus, hasSignedDocument } from '../../../../../lib/contracts/production/status';
-import { parseStoredTerms } from '../../../../../lib/contracts/production/terms';
+import { parseStoredTerms, releaseTitle } from '../../../../../lib/contracts/production/terms';
 import { withI18nServerProps } from '../../../../../lib/getStatic';
 
 /**
@@ -20,7 +20,9 @@ import { withI18nServerProps } from '../../../../../lib/getStatic';
  */
 interface CompleteViewContract {
   clientName: string;
-  songTitle: string | null;
+  /** 발매물 이름(싱글은 곡 제목, EP·정규는 음반 제목과 곡 수). */
+  releaseLabel: string;
+  isSingle: boolean;
   total: number;
   deposit: number;
   depositDueDays: number;
@@ -85,7 +87,8 @@ export const getServerSideProps = withI18nServerProps<CompletePageProps>(async (
         locale,
         contract: {
           clientName: contract.clientName,
-          songTitle: terms.songTitle,
+          releaseLabel: releaseTitle(contract.kind, terms),
+          isSingle: contract.kind === 'single',
           total: terms.amount.total,
           deposit: terms.amount.deposit,
           depositDueDays: terms.amount.depositDueDays,
@@ -225,8 +228,8 @@ export default function ProductionContractCompletePage({
 
           <div className="bg-gray-50 dark:bg-gray-50 rounded-xl p-6 text-left mb-8">
             <dl className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
-              <dt className="text-gray-500 dark:text-gray-500">본 곡</dt>
-              <dd className="text-gray-900 dark:text-gray-900 font-medium text-right">{contract.songTitle ?? '1곡 (제목 미정)'}</dd>
+              <dt className="text-gray-500 dark:text-gray-500">{contract.isSingle ? '본 곡' : '음반'}</dt>
+              <dd className="text-gray-900 dark:text-gray-900 font-medium text-right">{contract.releaseLabel}</dd>
               <dt className="text-gray-500 dark:text-gray-500">계약금액</dt>
               <dd className="text-gray-900 dark:text-gray-900 font-medium text-right">{formatCurrency(contract.total)}원</dd>
               <dt className="text-gray-500 dark:text-gray-500">체결일</dt>

@@ -14,6 +14,7 @@ import { hasPortalAccess } from '../../../../../lib/contracts/production/portal-
 import { loadProgressContext } from '../../../../../lib/contracts/production/progress';
 import { buildClientProgressView, type ProgressView, type StageView } from '../../../../../lib/contracts/production/progress-view';
 import { hasSignedDocument } from '../../../../../lib/contracts/production/status';
+import { releaseTitle } from '../../../../../lib/contracts/production/terms';
 import { withI18nServerProps } from '../../../../../lib/getStatic';
 import { loadRefundAccountSummary } from '../../../../../lib/payments/refundAccount';
 
@@ -22,7 +23,7 @@ interface ProgressPageProps {
   token: string;
   contractId: string;
   clientName: string;
-  songTitle: string | null;
+  releaseLabel: string | null;
   /** 연락처 뒷자리를 아직 확인하지 않았다 — 진행 내용을 싣지 않는다. */
   locked: boolean;
   /** 진행이 끝난 계약 — 승인·수정 버튼이 없다. */
@@ -54,7 +55,7 @@ export const getServerSideProps = withI18nServerProps<ProgressPageProps>(async (
     token: typeof token === 'string' ? token : '',
     contractId: id,
     clientName: '',
-    songTitle: null,
+    releaseLabel: null,
     locked: true,
     closed: false,
     view: null,
@@ -90,7 +91,7 @@ export const getServerSideProps = withI18nServerProps<ProgressPageProps>(async (
       props: {
         ...empty,
         clientName: progress.contract.clientName,
-        songTitle: progress.terms.songTitle,
+        releaseLabel: releaseTitle(progress.contract.kind, progress.terms),
         locked,
         closed: progress.contract.status !== 'signed',
         view: locked ? null : buildClientProgressView(progress.terms, progress.ledger),
@@ -201,11 +202,11 @@ function StageCard({
 
           {!closed && mode === 'revision' && (
             <div className="mt-4 space-y-3">
-              <label htmlFor={`note-${stage.stage}`} className="block text-sm text-gray-700 dark:text-gray-700">
+              <label htmlFor={`note-${stage.stage}-${stage.song ?? "album"}`} className="block text-sm text-gray-700 dark:text-gray-700">
                 수정할 내용을 한 번에 정리해 적어 주세요. 한 번 보낸 요청이 1회로 셉니다(계약서 제5조 2항).
               </label>
               <textarea
-                id={`note-${stage.stage}`}
+                id={`note-${stage.stage}-${stage.song ?? "album"}`}
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
                 rows={5}
@@ -323,7 +324,7 @@ export default function ProductionProgressPage({
   token,
   contractId,
   clientName,
-  songTitle,
+  releaseLabel,
   locked,
   closed,
   view,
@@ -380,7 +381,7 @@ export default function ProductionProgressPage({
         <div className="max-w-2xl mx-auto px-4 space-y-6">
           <div className="bg-white dark:bg-white rounded-2xl shadow-sm p-6 md:p-8">
             <p className="text-sm font-medium text-gray-400 dark:text-gray-400">스튜디오 놀 · 음원 제작</p>
-            <h1 className="typo-page-title text-gray-900 dark:text-gray-900 mt-1">{songTitle ?? '작업 진행'}</h1>
+            <h1 className="typo-page-title text-gray-900 dark:text-gray-900 mt-1">{releaseLabel ?? '작업 진행'}</h1>
             <p className="mt-2 text-gray-600 dark:text-gray-600">{clientName}님의 작업 진행 상황이에요.</p>
           </div>
 
@@ -420,7 +421,7 @@ export default function ProductionProgressPage({
                 )}
                 {view.stages.map((stage) => (
                   <StageCard
-                    key={stage.stage}
+                    key={`${stage.stage}-${stage.song ?? "album"}`}
                     stage={stage}
                     contractId={contractId}
                     token={token}

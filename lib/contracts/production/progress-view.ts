@@ -1,7 +1,7 @@
 import type { ProductionContractEvent } from '../../../db/schema';
-import { EVENT_SPEC, STAGE_LABEL, type ProductionStage } from './event-spec';
-import { parseEventData, type ProductionLedger, type Todo } from './ledger';
-import { REVISION_STAGES, type ProductionTerms, type RevisionStage } from './terms';
+import { EVENT_SPEC, isPerSongEvent, STAGE_LABEL, type ProductionStage } from './event-spec';
+import { parseEventData, stageTitle, type ProductionLedger, type Todo } from './ledger';
+import { songLabel, type ProductionTerms, type RevisionStage } from './terms';
 
 /**
  * 장부 → 화면 props(JSON). getServerSideProps가 돌려주는 값은 HTML에 그대로 실리므로, 의뢰인 화면에는 의뢰인이
@@ -29,6 +29,9 @@ export interface TimelineItem {
 
 export interface StageView {
   stage: RevisionStage;
+  /** 곡 번호(0부터). 마스터링(음반 전체)은 null. */
+  song: number | null;
+  /** 화면 이름 — 여러 곡이면 곡 이름이 붙는다. */
   label: string;
   deliveries: number;
   revisions: number;
@@ -55,6 +58,8 @@ export interface ProgressView {
   stages: StageView[];
   timeline: TimelineItem[];
   extraRevisionFee: Record<RevisionStage, number>;
+  /** 곡 이름(순번대로). 곡이 하나면 길이 1 — 화면이 곡 선택을 숨긴다. */
+  songLabels: string[];
 }
 
 export interface AdminProgressView extends ProgressView {
@@ -64,7 +69,19 @@ export interface AdminProgressView extends ProgressView {
 
 const iso = (date: Date | null) => (date ? date.toISOString() : null);
 
-const toTimeline = (events: readonly ProductionContractEvent[], voidedIds: Set<string>): TimelineItem[] =>
+/** 기록 줄의 단계·곡 이름. 여러 곡이면 곡마다 일어나는 기록에 곡 이름을 붙인다(1차 완성본 수령 같은 단계 없는 기록도). */
+const timelineStage = (terms: Pick<ProductionTerms, 'songs'>, event: ProductionContractEvent): string | null => {
+  const stage = event.stage ? STAGE_LABEL[event.stage as ProductionStage] ?? event.stage : null;
+  if (terms.songs.length === 1 || !isPerSongEvent(event.type, event.stage)) return stage;
+  const song = songLabel(terms, event.song ?? 0);
+  return stage ? `${song} ${stage}` : song;
+};
+
+const toTimeline = (
+  terms: Pick<ProductionTerms, 'songs'>,
+  events: readonly ProductionContractEvent[],
+  voidedIds: Set<string>,
+): TimelineItem[] =>
   events.map((event) => {
     const data = parseEventData(event);
     return {
@@ -72,7 +89,7 @@ const toTimeline = (events: readonly ProductionContractEvent[], voidedIds: Set<s
       type: event.type,
       // 폼 이름의 "(의뢰인 대신 기록)"은 관리자가 남긴 경우에만 맞는 말이다 — 의뢰인·자동 기록에서는 뗀다.
       label: event.actor.startsWith('admin:') ? EVENT_SPEC[event.type].label : EVENT_SPEC[event.type].label.replace(/ \(의뢰인 대신 기록\)$/, ''),
-      stage: event.stage ? STAGE_LABEL[event.stage as ProductionStage] ?? event.stage : null,
+      stage: timelineStage(terms, event),
       amount: event.amount,
       occurredAt: event.occurredAt.toISOString(),
       backdated: Math.abs(event.recordedAt.getTime() - event.occurredAt.getTime()) > 24 * 60 * 60 * 1000,
@@ -108,12 +125,12 @@ const buildView = (terms: ProductionTerms, ledger: ProductionLedger, timeline: T
       paused: work.openPause !== null,
       finalDeliveredAt: iso(work.finalDeliveredAt),
     },
-    stages: REVISION_STAGES.map((stage) => {
-      const state = stages[stage];
+    stages: stages.map((state) => {
       const delivery = state.pending ? findEvent(state.pending.deliveryEventId) : undefined;
       return {
-        stage,
-        label: STAGE_LABEL[stage],
+        stage: state.stage,
+        song: state.song,
+        label: stageTitle(terms, state.stage, state.song),
         deliveries: state.deliveries,
         revisions: state.revisions,
         freeRemaining: state.freeRemaining,
@@ -133,6 +150,7 @@ const buildView = (terms: ProductionTerms, ledger: ProductionLedger, timeline: T
     }),
     timeline,
     extraRevisionFee: terms.extraRevisionFees,
+    songLabels: terms.songs.map((_, index) => songLabel(terms, index)),
   };
 };
 
@@ -144,7 +162,7 @@ export const buildAdminProgressView = (
 ): AdminProgressView => {
   const voided = new Set(allEvents.filter((e) => e.type === 'void' && e.voidsEventId).map((e) => e.voidsEventId as string));
   return {
-    ...buildView(terms, ledger, toTimeline(allEvents, voided).reverse()),
+    ...buildView(terms, ledger, toTimeline(terms, allEvents, voided).reverse()),
     todos: ledger.todos,
     refund: { ...ledger.refund, received: ledger.payments.received, kickedOff: ledger.work.kickedOff },
   };
@@ -156,7 +174,7 @@ export const buildClientProgressView = (terms: ProductionTerms, ledger: Producti
   return buildView(
     terms,
     ledger,
-    toTimeline(visible, new Set())
+    toTimeline(terms, visible, new Set())
       .map((item) => ({ ...item, actor: item.actor === 'client' ? 'client' : 'studio', noticeError: null }))
       .reverse(),
   );

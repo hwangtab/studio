@@ -1,6 +1,6 @@
 import type { ProductionContractEvent } from '../../../db/schema';
 import {
-  REVISION_STAGES,
+  songLabel,
   type ProductionTerms,
   type RefundItemKey,
   type RefundMilestoneEvent,
@@ -14,7 +14,17 @@ import {
  * 기한은 전부 **그 계약의 terms**에서 읽는다(코드 상수가 아니다). 날짜는 KST 달력 날짜로 센다 — 경과 시간으로
  * 자르면 밤늦게 전달한 건이 하루 밀린다(후기 요청 크론과 같은 이유). 기간은 민법의 초일 불산입을 따른다:
  * "전달한 날부터 7일 이내"는 전달일 다음 날부터 세어 7일째 날이 끝날 때까지다.
+ *
+ * 여러 곡(EP·정규, 0073): 편곡·녹음·보정·믹싱과 1차 완성본은 **곡마다**, 마스터링·입금·착수·인도·유통은 음반 전체다.
+ * 곡마다 일어나는 단계는 (단계, 곡)마다 수정 횟수·승인·간주 승인 기한을 따로 센다. 0073 전 싱글 기록은 곡 번호가
+ * 비어 있고 1번 곡(0)으로 읽는다(songOf).
  */
+
+/** 곡마다 일어나는 단계. 나머지(마스터링)는 음반 전체다. */
+export const PER_SONG_STAGES: ReadonlySet<string> = new Set(['arrangement', 'recording', 'tuning', 'mixing']);
+
+/** 기록의 곡 번호. 곡별 사건인데 비어 있으면(0073 전 싱글) 1번 곡이다. */
+export const songOf = (event: Pick<ProductionContractEvent, 'song'>): number => event.song ?? 0;
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
@@ -78,6 +88,9 @@ export interface PendingApproval {
 }
 
 export interface StageState {
+  stage: RevisionStage;
+  /** 곡 번호(0부터). 마스터링(음반 전체)은 null. */
+  song: number | null;
   deliveries: number;
   revisions: number;
   freeRemaining: number;
@@ -130,18 +143,31 @@ export interface ProductionLedger {
     delayDays: number;
     delayExceeded: boolean;
     finalDeliveredAt: Date | null;
-    recordingCompleted: boolean;
-    tuningDelivered: boolean;
     distributionSubmitted: boolean;
     released: boolean;
   };
-  stages: Record<RevisionStage, StageState>;
+  /** (단계, 곡)마다 하나 — 곡 순서대로 편곡·믹싱, 마지막에 음반 마스터링. findStage로 찾는다. */
+  stages: StageState[];
+  /** 곡마다: 1차 완성본 수령(마지막 수령·교체), 녹음 세션 마침, 보정 전달. */
+  songs: Array<{ sourceReceivedAt: Date | null; recordingCompleted: boolean; tuningDelivered: boolean }>;
   refund: { lines: RefundLine[]; deduction: number; refundable: number };
   unresponsive: { since: Date | null; days: number; exceeded: boolean };
   todos: Todo[];
 }
 
 const STAGE_NAME: Record<RevisionStage, string> = { arrangement: '편곡', mixing: '믹싱', mastering: '마스터링' };
+
+/** (단계, 곡)의 상태. 마스터링은 곡을 무시한다(음반 전체). 곡별 단계에 곡이 없으면 1번 곡. */
+export const findStage = (
+  ledger: Pick<ProductionLedger, 'stages'>,
+  stage: RevisionStage,
+  song: number | null = null,
+): StageState | undefined =>
+  ledger.stages.find((s) => s.stage === stage && (stage === 'mastering' ? true : s.song === (song ?? 0)));
+
+/** 화면·메일에 쓰는 단계 이름 — 여러 곡이면 곡 이름을 붙인다("2번 곡 「제목」 편곡"). */
+export const stageTitle = (terms: Pick<ProductionTerms, 'songs'>, stage: RevisionStage, song: number | null): string =>
+  stage === 'mastering' || terms.songs.length === 1 ? STAGE_NAME[stage] : `${songLabel(terms, song ?? 0)} ${STAGE_NAME[stage]}`;
 
 export const computeProductionLedger = (input: {
   terms: ProductionTerms;
@@ -152,53 +178,71 @@ export const computeProductionLedger = (input: {
   const { terms, signedAt, now } = input;
   const events = activeEvents(input.events);
   const today = kstDay(now);
-  const of = (type: ProductionContractEvent['type'], stage?: string) =>
-    events.filter((e) => e.type === type && (stage === undefined || e.stage === stage));
+  const songCount = Math.max(1, terms.songs.length);
+  const of = (type: ProductionContractEvent['type'], stage?: string, song?: number) =>
+    events.filter(
+      (e) => e.type === type && (stage === undefined || e.stage === stage) && (song === undefined || songOf(e) === song),
+    );
   const last = (list: ProductionContractEvent[]) => list[list.length - 1] ?? null;
 
-  // ── 단계별 수정·승인(제5조) ──────────────────────────────────────────────
-  const stages = Object.fromEntries(
-    REVISION_STAGES.map((stage): [RevisionStage, StageState] => {
-      const deliveries = of('stage_delivered', stage);
-      const revisions = of('revision_requested', stage);
-      const approval = last(of('stage_approved', stage));
-      const lastDelivery = last(deliveries);
-      const lastRevision = last(revisions);
+  // ── 단계별 수정·승인(제5조) — 편곡·믹싱은 곡마다, 마스터링은 음반 전체 ──────────
+  const stageKeys: Array<{ stage: RevisionStage; song: number | null }> = [
+    ...Array.from({ length: songCount }, (_, song) => [
+      { stage: 'arrangement' as const, song },
+      { stage: 'mixing' as const, song },
+    ]).flat(),
+    { stage: 'mastering', song: null },
+  ];
+  const stages: StageState[] = stageKeys.map(({ stage, song }) => {
+    const pick = (type: ProductionContractEvent['type']) => of(type, stage, song ?? undefined);
+    const deliveries = pick('stage_delivered');
+    const revisions = pick('revision_requested');
+    const approval = last(pick('stage_approved'));
+    const lastDelivery = last(deliveries);
+    const lastRevision = last(revisions);
 
-      const extraRevisions = Math.max(0, revisions.length - terms.revisions[stage]);
-      let pending: PendingApproval | null = null;
-      if (!approval && lastDelivery && isAfter(lastDelivery, lastRevision)) {
-        const lastDay = kstDay(lastDelivery.occurredAt) + terms.deemedApprovalDays;
-        pending = {
-          deliveryEventId: lastDelivery.id,
-          deliveredAt: lastDelivery.occurredAt,
-          lastDayToRespond: kstDayStart(lastDay),
-          deemedFromDay: lastDay + 1,
-          noticeSent: lastDelivery.noticeStatus === 'sent',
-        };
-      }
+    const extraRevisions = Math.max(0, revisions.length - terms.revisions[stage]);
+    let pending: PendingApproval | null = null;
+    if (!approval && lastDelivery && isAfter(lastDelivery, lastRevision)) {
+      const lastDay = kstDay(lastDelivery.occurredAt) + terms.deemedApprovalDays;
+      pending = {
+        deliveryEventId: lastDelivery.id,
+        deliveredAt: lastDelivery.occurredAt,
+        lastDayToRespond: kstDayStart(lastDay),
+        deemedFromDay: lastDay + 1,
+        noticeSent: lastDelivery.noticeStatus === 'sent',
+      };
+    }
 
-      return [
-        stage,
-        {
-          deliveries: deliveries.length,
-          revisions: revisions.length,
-          freeRemaining: Math.max(0, terms.revisions[stage] - revisions.length),
-          extraRevisions,
-          extraFee: extraRevisions * terms.extraRevisionFees[stage],
-          approved: approval ? { mode: parseEventData(approval).mode ?? 'proxy', at: approval.occurredAt } : null,
-          pending,
-          revising: !approval && isAfter(lastRevision, lastDelivery),
-        },
-      ];
-    }),
-  ) as Record<RevisionStage, StageState>;
+    return {
+      stage,
+      song,
+      deliveries: deliveries.length,
+      revisions: revisions.length,
+      freeRemaining: Math.max(0, terms.revisions[stage] - revisions.length),
+      extraRevisions,
+      extraFee: extraRevisions * terms.extraRevisionFees[stage],
+      approved: approval ? { mode: parseEventData(approval).mode ?? 'proxy', at: approval.occurredAt } : null,
+      pending,
+      revising: !approval && isAfter(lastRevision, lastDelivery),
+    };
+  });
+
+  // ── 곡별 상태 ─────────────────────────────────────────────────────────
+  // 1차 완성본은 교체했으면 교체한 날부터 다시 센다(제4조 2항) — events가 시간순이라 마지막 수령·교체가 기준이다.
+  const songs = Array.from({ length: songCount }, (_, song) => ({
+    sourceReceivedAt: last([...of('source_received', undefined, song), ...of('source_replaced', undefined, song)].sort(
+      (a, b) => a.occurredAt.getTime() - b.occurredAt.getTime() || a.seq - b.seq,
+    ))?.occurredAt ?? null,
+    recordingCompleted: of('recording_completed', undefined, song).length > 0,
+    tuningDelivered: of('stage_delivered', 'tuning', song).length > 0,
+  }));
 
   // ── 대금(제3조·제10조 5항) ───────────────────────────────────────────────
   const payments = of('payment_received');
   const received = payments.reduce((sum, e) => sum + (e.amount ?? 0), 0);
   const extraCosts = of('extra_cost_agreed').reduce((sum, e) => sum + (e.amount ?? 0), 0);
-  const revisionFees = REVISION_STAGES.reduce((sum, stage) => sum + stages[stage].extraFee, 0);
+  const revisionFees = stages.reduce((sum, state) => sum + state.extraFee, 0);
   const totalDue = terms.amount.total + extraCosts + revisionFees;
 
   let running = 0;
@@ -206,16 +250,18 @@ export const computeProductionLedger = (input: {
   const depositLastDay = signedAt ? kstDay(signedAt) + terms.amount.depositDueDays : null;
   const depositOverdueDays = !depositEvent && depositLastDay !== null ? Math.max(0, today - depositLastDay) : 0;
 
-  const masteringApproval = stages.mastering.approved;
+  const masteringApproval = findStage({ stages }, 'mastering')?.approved ?? null;
   const balanceLastDay = masteringApproval ? kstDay(masteringApproval.at) + terms.amount.balanceDueDays : null;
   const paidInFull = received >= totalDue;
   const balanceOverdueDays = !paidInFull && balanceLastDay !== null ? Math.max(0, today - balanceLastDay) : 0;
 
   // ── 작업 기간(제4조) ─────────────────────────────────────────────────────
-  // 교체했으면 교체한 날부터 다시 센다(제4조 2항) — events가 시간순이라 마지막 수령·교체 기록이 기준이다.
-  const latestSource = last(events.filter((e) => e.type === 'source_received' || e.type === 'source_replaced'));
+  // 계약금 입금과 **모든 곡**의 1차 완성본 수령이 끝난 날부터 센다(제4조 1항).
+  const allSources = songs.every((song) => song.sourceReceivedAt !== null);
   const startDay =
-    depositEvent && latestSource ? Math.max(kstDay(depositEvent.occurredAt), kstDay(latestSource.occurredAt)) : null;
+    depositEvent && allSources
+      ? Math.max(kstDay(depositEvent.occurredAt), ...songs.map((song) => kstDay(song.sourceReceivedAt as Date)))
+      : null;
 
   // 정지 구간: 시작 기록부터 다음 종료 기록(없으면 오늘)까지. 의뢰인 사유만 예정일을 미룬다(제4조 2항).
   let clientPauseDays = 0;
@@ -237,20 +283,24 @@ export const computeProductionLedger = (input: {
 
   // ── 해지 정산(제10조 3항) ────────────────────────────────────────────────
   const kickedOff = of('kickoff').length > 0;
-  const milestoneReached: Record<RefundMilestoneEvent, boolean> = {
-    kickoff: kickedOff,
-    arrangement_delivered: of('stage_delivered', 'arrangement').length > 0,
-    recording_completed: of('recording_completed').length > 0,
-    tuning_delivered: of('stage_delivered', 'tuning').length > 0,
-    mixing_delivered: of('stage_delivered', 'mixing').length > 0,
-    mastering_delivered: of('stage_delivered', 'mastering').length > 0,
-    distribution_submitted: of('distribution_submitted').length > 0,
+  /**
+   * 경계에 닿은 정도(0~1). 곡마다 일어나는 사건은 닿은 곡의 비율(4곡 중 2곡 = 0.5) — 계약서 제10조 3항 "곡마다 …
+   * 그 곡의 몫"과 같은 말이다. 음반 전체 사건은 0 아니면 1.
+   */
+  const songsWith = (match: (song: number) => boolean) =>
+    Array.from({ length: songCount }, (_, song) => song).filter(match).length / songCount;
+  const reached: Record<RefundMilestoneEvent, number> = {
+    kickoff: kickedOff ? 1 : 0,
+    arrangement_delivered: songsWith((song) => of('stage_delivered', 'arrangement', song).length > 0),
+    recording_completed: songsWith((song) => songs[song].recordingCompleted),
+    tuning_delivered: songsWith((song) => songs[song].tuningDelivered),
+    mixing_delivered: songsWith((song) => of('stage_delivered', 'mixing', song).length > 0),
+    mastering_delivered: of('stage_delivered', 'mastering').length > 0 ? 1 : 0,
+    distribution_submitted: of('distribution_submitted').length > 0 ? 1 : 0,
   };
   // 착수 전 해지는 받은 금액 전액 환불(제10조 2항) — 경계를 보지 않는다.
   const lines: RefundLine[] = terms.refundSchedule.map((item) => {
-    const ratio = kickedOff
-      ? item.milestones.reduce((best, m) => (milestoneReached[m.event] && m.ratio > best ? m.ratio : best), 0)
-      : 0;
+    const ratio = kickedOff ? item.milestones.reduce((best, m) => Math.max(best, m.ratio * reached[m.event]), 0) : 0;
     return { key: item.key, label: item.label, amount: item.amount, ratio, deducted: Math.round(item.amount * ratio) };
   });
   const deduction = lines.reduce((sum, line) => sum + line.deducted, 0);
@@ -291,12 +341,11 @@ export const computeProductionLedger = (input: {
       delayDays,
       delayExceeded: delayDays >= terms.studioDelayWeeks * 7,
       finalDeliveredAt: finalDelivered?.occurredAt ?? null,
-      recordingCompleted: milestoneReached.recording_completed,
-      tuningDelivered: milestoneReached.tuning_delivered,
-      distributionSubmitted: milestoneReached.distribution_submitted,
+      distributionSubmitted: reached.distribution_submitted === 1,
       released: of('released').length > 0,
     },
     stages,
+    songs,
     refund: { lines, deduction, refundable: Math.max(0, received - deduction) },
     unresponsive: {
       since: unresponsiveSince,
@@ -333,20 +382,20 @@ const buildTodos = (ledger: ProductionLedger, terms: ProductionTerms, today: num
   }
   if (!work.startedOn && payments.depositMetAt) todos.push({ severity: 'info', message: '1차 완성본을 받으면 기록해 주세요. 그날부터 작업 기간을 셉니다.' });
 
-  for (const stage of REVISION_STAGES) {
-    const state = stages[stage];
+  for (const state of stages) {
+    const name = stageTitle(terms, state.stage, state.song);
     if (state.pending && !state.pending.noticeSent) {
       todos.push({
         severity: 'alert',
-        message: `${STAGE_NAME[stage]} 결과물 전달 통지가 의뢰인에게 가지 않았어요. 통지를 다시 보내야 간주 승인이 성립해요.`,
+        message: `${name} 결과물 전달 통지가 의뢰인에게 가지 않았어요. 통지를 다시 보내야 간주 승인이 성립해요.`,
       });
     } else if (state.pending && today >= state.pending.deemedFromDay) {
-      todos.push({ severity: 'info', message: `${STAGE_NAME[stage]} 승인 간주 기한이 지났어요. 오늘 기한 점검에서 기록돼요.` });
+      todos.push({ severity: 'info', message: `${name} 승인 간주 기한이 지났어요. 오늘 기한 점검에서 기록돼요.` });
     }
-    if (state.revising) todos.push({ severity: 'info', message: `${STAGE_NAME[stage]} 수정 요청을 반영해 다시 전달해 주세요.` });
+    if (state.revising) todos.push({ severity: 'info', message: `${name} 수정 요청을 반영해 다시 전달해 주세요.` });
   }
 
-  if (stages.mastering.approved && payments.paidInFull && !work.finalDeliveredAt) {
+  if (findStage(ledger, 'mastering')?.approved && payments.paidInFull && !work.finalDeliveredAt) {
     todos.push({ severity: 'info', message: '마스터링 승인과 잔금 입금이 끝났어요. 최종 파일을 인도해 주세요.' });
   }
   if (work.delayExceeded && !work.finalDeliveredAt) {

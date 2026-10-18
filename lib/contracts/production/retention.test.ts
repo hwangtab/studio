@@ -29,7 +29,7 @@ const seed = async (
   status: schema.ProductionContractStatus,
   dates: { completedAt?: Date; terminatedAt?: Date; updatedAt?: Date; createdAt?: Date },
 ) => {
-  const terms = { ...buildDefaultProductionTerms(), songTitle: '미공개 곡' };
+  const terms = { ...buildDefaultProductionTerms(), songs: [{ title: '미공개 곡' }] };
   await mockDb.insert(schema.productionContracts).values({
     id,
     kind: 'single',
@@ -112,7 +112,7 @@ describe('제작 계약 개인정보 파기', () => {
       pdfUrl: null,
       totalAmount: 1_150_000,
     });
-    expect(parseStoredTerms(purged!.termsJson).songTitle).toBeNull();
+    expect(parseStoredTerms(purged!.termsJson).songs).toEqual([{ title: null }]);
     expect(purged?.terminatedAt?.toISOString()).toBe(OLD.toISOString());
 
     const client = purged!.signers.find((s) => s.role === 'client');
