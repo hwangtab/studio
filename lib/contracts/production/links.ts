@@ -29,3 +29,7 @@ export const productionAdminUrl = (contractId: string): string =>
 
 /** 시도 제한 키 접두사. 연습실 계약 id와 같은 저장소(rate_limits)를 쓰므로 이름을 나눈다. */
 export const productionRateLimitKey = (contractId: string): string => `production:${contractId}`;
+
+/** 서명 화면의 본인 확인 시도 제한 키 — 서명자마다 따로 센다(한 사람의 오타가 다른 사람을 잠그지 않게). */
+export const productionSignerRateLimitKey = (contractId: string, role: 'client' | 'guardian'): string =>
+  `${productionRateLimitKey(contractId)}:${role}`;

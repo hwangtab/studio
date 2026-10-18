@@ -29,7 +29,8 @@ jest.mock('../admin-rate-limit', () => ({
 // 위 mock이 걸린 뒤에 불러온다.
 import signHandler from '../../../pages/api/contracts/production/[id]/sign';
 import { verifyStoredProductionContract } from './audit';
-import { cancelProductionContract, createProductionContract, sendProductionContract } from './service';
+import { cancelProductionContract, createProductionContract, finalizeProductionContractIfComplete, sendProductionContract } from './service';
+import { validateProductionContractPayload } from './validation';
 import { buildProductionSignStatements } from './sign-transaction';
 import { buildDefaultProductionTerms } from './terms';
 
@@ -56,6 +57,7 @@ const PAYLOAD = {
   clientStageName: '길동밴드',
   clientEmail: 'gildong@example.com',
   clientPhone: '010-1234-5678',
+  guardian: null,
   terms: buildDefaultProductionTerms(),
 };
 
@@ -131,7 +133,8 @@ describe('제작 계약 체결 흐름', () => {
   it('발송은 운영자 서명을 남기고 의뢰인 링크를 연다', async () => {
     const { id } = await createProductionContract(PAYLOAD);
     const sent = await sendAsOperator(id);
-    expect(sent?.signUrl).toContain(`/ko/contracts/production/${id}/sign?token=`);
+    expect(sent?.signUrls.client).toContain(`/ko/contracts/production/${id}/sign?token=`);
+    expect(sent?.signUrls.guardian).toBeUndefined();
 
     const loaded = await loadContract(id);
     const operator = loaded?.signers.find((signer) => signer.role === 'operator');
@@ -158,7 +161,7 @@ describe('제작 계약 체결 흐름', () => {
     expect(loaded?.status).toBe('signed');
     expect(loaded?.clientBirthdate).toBe('1990-05-15');
     expect(loaded?.content).toContain('서울시 은평구 대조동 1-1');
-    expect(loaded?.contentHash).toMatch(/^p1:[0-9a-f]{64}$/);
+    expect(loaded?.contentHash).toMatch(/^p2:[0-9a-f]{64}$/);
     expect(loaded?.signers.find((signer) => signer.role === 'client')?.agreedClauses).toBe(JSON.stringify(ALL_CLAUSES));
     expect(verifyStoredProductionContract(loaded!)).toMatchObject({ kind: 'match' });
   });
@@ -263,13 +266,10 @@ describe('서명 쓰기 묶음의 조건', () => {
         ipAddress: null,
         userAgent: 'jest',
         agreedClauseKeys: ALL_CLAUSES,
-        clientBirthdate: '1990-05-15',
-        clientAddress: '주소',
-        content: '본문',
-        contentHash: 'p1:' + '0'.repeat(64),
+        clientDetails: { clientBirthdate: '1990-05-15', clientAddress: '주소' },
       }),
     );
-    return [signerResult.rowsAffected, contractResult.rowsAffected];
+    return [signerResult.rowsAffected, contractResult?.rowsAffected];
   };
 
   it('그 사이 취소됐으면 서명자 행도 계약도 그대로다 — 반쪽 상태를 남기지 않는다', async () => {
@@ -301,5 +301,85 @@ describe('서명 쓰기 묶음의 조건', () => {
     const { id } = await createProductionContract(PAYLOAD);
     await sendAsOperator(id);
     expect(await run(id, await clientToken(id))).toEqual([1, 1]);
+  });
+});
+
+/** 미성년 의뢰인 — 운영자가 법정대리인을 지정하면 대리인에게 따로 링크가 가고, 둘 다 서명해야 성립한다(제14조). */
+describe('법정대리인 서명', () => {
+  const WITH_GUARDIAN = {
+    ...PAYLOAD,
+    guardian: { name: '홍아버지', relation: '부', email: 'father@example.com', phone: '010-9999-4321' },
+  };
+  const minorBirthdate = `${new Date().getFullYear() - 16}-03-01`;
+
+  const tokens = async (id: string) => {
+    const contract = await loadContract(id);
+    const of = (role: string) => contract!.signers.find((s) => s.role === role)!.signToken!;
+    return { client: of('client'), guardian: of('guardian') };
+  };
+
+  it('발송하면 의뢰인과 대리인이 각자 다른 링크를 받는다', async () => {
+    const { id } = await createProductionContract(WITH_GUARDIAN);
+    const sent = await sendAsOperator(id);
+    expect(sent?.signUrls.client).toBeDefined();
+    expect(sent?.signUrls.guardian).toBeDefined();
+    expect(sent?.signUrls.client).not.toBe(sent?.signUrls.guardian);
+    expect((await loadContract(id))?.content).toContain('**법정대리인** — 의뢰인이 미성년자이므로 함께 서명한다');
+  });
+
+  it('미성년 의뢰인이 서명해도 대리인 서명 전에는 성립하지 않고, 대리인이 서명하면 성립한다', async () => {
+    const { id } = await createProductionContract(WITH_GUARDIAN);
+    await sendAsOperator(id);
+    const { client: clientT, guardian: guardianT } = await tokens(id);
+
+    expect(await callSign(id, { token: clientT, clientBirthdate: minorBirthdate })).toEqual({ status: 200, body: { ok: true } });
+    expect((await loadContract(id))?.status).toBe('sent');
+
+    expect(await callSign(id, { token: guardianT, identityDigits: '4321' })).toEqual({ status: 200, body: { ok: true } });
+    const signed = await loadContract(id);
+    expect(signed?.status).toBe('signed');
+    expect(signed?.contentHash).toMatch(/^p2:/);
+    expect(signed?.content).toContain(minorBirthdate);
+    expect(verifyStoredProductionContract(signed!)).toMatchObject({ kind: 'match' });
+  });
+
+  it('대리인이 먼저 서명해도 같다 — 마지막 서명이 성립시킨다', async () => {
+    const { id } = await createProductionContract(WITH_GUARDIAN);
+    await sendAsOperator(id);
+    const t = await tokens(id);
+    await callSign(id, { token: t.guardian, identityDigits: '4321' });
+    expect((await loadContract(id))?.status).toBe('sent');
+    await callSign(id, { token: t.client, clientBirthdate: minorBirthdate });
+    expect(verifyStoredProductionContract((await loadContract(id))!)).toMatchObject({ kind: 'match' });
+  });
+
+  it('대리인은 자기 연락처로 본인 확인을 한다 — 의뢰인 번호 뒷자리로는 안 된다', async () => {
+    const { id } = await createProductionContract(WITH_GUARDIAN);
+    await sendAsOperator(id);
+    const result = await callSign(id, { token: (await tokens(id)).guardian, identityDigits: '5678' });
+    expect(result.status).toBe(400);
+  });
+
+  it('대리인이 없는 계약은 여전히 미성년 의뢰인을 받지 않고, 대리인 서명을 안내한다', async () => {
+    const { id } = await createProductionContract(PAYLOAD);
+    await sendAsOperator(id);
+    const result = await callSign(id, { token: await clientToken(id), clientBirthdate: minorBirthdate });
+    expect(result.status).toBe(400);
+    expect(JSON.stringify(result.body)).toContain('법정대리인');
+  });
+
+  it('의뢰인과 같은 번호를 대리인 연락처로 받지 않는다', () => {
+    const result = validateProductionContractPayload({ ...WITH_GUARDIAN, guardian: { ...WITH_GUARDIAN.guardian, phone: '010-1234-5678' } });
+    expect(result.ok).toBe(false);
+  });
+
+  it('둘이 동시에 마지막 성립을 시도해도 한 번만 성립한다', async () => {
+    const { id } = await createProductionContract(WITH_GUARDIAN);
+    await sendAsOperator(id);
+    const t = await tokens(id);
+    await callSign(id, { token: t.client, clientBirthdate: minorBirthdate });
+    await callSign(id, { token: t.guardian, identityDigits: '4321' });
+    // 이미 성립한 뒤 다시 불러도 아무것도 바꾸지 않는다.
+    expect(await finalizeProductionContractIfComplete(id)).toBe(false);
   });
 });

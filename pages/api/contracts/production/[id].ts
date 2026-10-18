@@ -116,7 +116,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (!result) {
           return res.status(409).json({ ok: false, message: '방금 처리된 요청입니다. 잠시 후 상태를 확인해 주세요.' });
         }
-        waitUntil(sendProductionSignRequestNotifications(result.contract, result.signUrl));
+        waitUntil(sendProductionSignRequestNotifications(result.contract, result.signUrls));
         return res.status(200).json({ ok: true });
       }
 

@@ -35,6 +35,7 @@ export const finalizeSignedProductionContract = async (contractId: string): Prom
 
   // 메일에는 API가 아니라 완료 화면을 건다 — 내려받기에 연락처 뒷자리가 필요하고, 그 입력을 받는 곳이 완료 화면이다.
   const completeUrl = buildProductionCompleteUrl(contract.id, clientSigner.signToken);
+  const guardian = contract.signers.find((signer) => signer.role === 'guardian' && signer.signToken);
   const problems: string[] = [];
 
   let pdf: Buffer | undefined;
@@ -52,11 +53,19 @@ export const finalizeSignedProductionContract = async (contractId: string): Prom
 
   try {
     const terms = parseStoredTerms(contract.termsJson);
-    const [clientResult, operatorResult] = await Promise.all([
+    const [clientResult, guardianResult, operatorResult] = await Promise.all([
       sendProductionSignedEmail(contract, terms, pdf, completeUrl, buildProductionProgressUrl(contract.id, clientSigner.signToken)),
+      // 법정대리인도 서명본을 받는다 — 자기 링크(자기 연락처 뒷자리로 내려받기)로.
+      guardian?.signToken
+        ? sendProductionSignedEmail(contract, terms, pdf, buildProductionCompleteUrl(contract.id, guardian.signToken), null, {
+            name: guardian.name,
+            email: guardian.email,
+          })
+        : null,
       sendProductionOperatorNotification(contract, terms, true),
     ]);
     if (!clientResult.ok) problems.push(`체결 메일 발송 실패 (${clientResult.errorCode ?? 'UNKNOWN'})`);
+    if (guardianResult && !guardianResult.ok) problems.push(`법정대리인 체결 메일 발송 실패 (${guardianResult.errorCode ?? 'UNKNOWN'})`);
     if (!operatorResult.ok) problems.push(`운영자 알림 메일 발송 실패 (${operatorResult.errorCode ?? 'UNKNOWN'})`);
   } catch (error: unknown) {
     console.error('[contracts/production/finalize] Failed to send signed emails:', error);

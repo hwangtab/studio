@@ -44,8 +44,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       where: (t, { eq }) => eq(t.id, id),
       with: { signers: true },
     });
-    const clientSigner = contract?.signers.find((signer) => signer.role === 'client' && signer.signToken === token);
-    if (!contract || !clientSigner) {
+    const linkSigner = contract?.signers.find(
+      (signer) => (signer.role === 'client' || signer.role === 'guardian') && signer.signToken === token,
+    );
+    if (!contract || !linkSigner) {
       return res.status(404).json({ ok: false, message: '계약서를 찾을 수 없습니다.' });
     }
     if (!hasSignedDocument(contract.status)) {
@@ -59,7 +61,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // 잠김 여부만 먼저 읽고(카운터를 올리지 않는다), 형식이 맞는 시도만 원자적으로 예약한다 — 연습실과 같은 순서.
-    const rateKey = productionRateLimitKey(contract.id);
+    const rateKey = `${productionRateLimitKey(contract.id)}:${linkSigner.role}`;
     const verdict = await getDownloadIdentityVerdict(rateKey);
     if (verdict !== 'ok') {
       return res.status(429).json({ ok: false, message: verdict === 'locked' ? LOCKED_MESSAGE : THROTTLED_MESSAGE });
@@ -67,7 +69,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const identity = verifyIdentityDigits(
       (req.body as { identityDigits?: unknown } | undefined)?.identityDigits,
-      contract.clientPhone,
+      // 각자 자기 번호로 — 법정대리인은 운영자가 적은 대리인 연락처.
+      linkSigner.role === 'client' ? contract.clientPhone : (linkSigner.phone ?? ''),
     );
     if (identity.ok || identity.reason === 'mismatch') {
       const reserved = await reserveDownloadIdentityAttempt(rateKey);

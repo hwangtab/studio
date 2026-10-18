@@ -366,6 +366,13 @@ export const productionContractSigners = sqliteTable(
     status: text('status', { enum: productionSignerStatusEnum }).notNull().default('pending'),
     name: text('name').notNull(),
     email: text('email').notNull(),
+    /**
+     * 법정대리인 행만 쓴다(0072) — 대리인의 본인 확인(연락처 뒷자리)과 계약서 인쇄. 의뢰인 연락처는
+     * production_contracts.client_phone이 정본이다(행이 둘이면 어긋난다).
+     */
+    phone: text('phone'),
+    /** 법정대리인과 의뢰인의 관계(예: 부, 모, 후견인). */
+    relation: text('relation'),
     /** 이 서명자의 서명 링크 토큰. 재발송하면 바뀐다(옛 링크 즉시 무효). */
     signToken: text('sign_token').unique(),
     identityVerifiedAt: integer('identity_verified_at', { mode: 'timestamp' }),
@@ -924,7 +931,7 @@ export type FundingPledgeItem = typeof fundingPledgeItems.$inferSelect;
  * - 파기는 주문의 5년 파기를 따른다(lib/privacy/orderRetention.ts) — 환불 기록은 전자상거래법상
  *   대금 결제 기록이다. 운영자가 환불 요청을 철회 처리하면 그 자리에서 지운다(더 쓸 데가 없다).
  */
-export const refundAccountOrderKindEnum = ['funding', 'session', 'mixing', 'show', 'merch'] as const;
+export const refundAccountOrderKindEnum = ['funding', 'session', 'mixing', 'show', 'merch', 'production'] as const;
 export const refundAccounts = sqliteTable(
   'refund_accounts',
   {
@@ -941,7 +948,8 @@ export const refundAccounts = sqliteTable(
   },
   (t) => [
     uniqueIndex('refund_accounts_order_uq').on(t.orderKind, t.orderNo),
-    check('refund_accounts_order_kind_check', sql`${t.orderKind} in ('funding', 'session', 'mixing', 'show', 'merch')`),
+    // production(0072): 제작 계약 해지 환불 — order_no 자리에 계약 id. 파기는 lib/contracts/production/retention.ts가 한다.
+    check('refund_accounts_order_kind_check', sql`${t.orderKind} in ('funding', 'session', 'mixing', 'show', 'merch', 'production')`),
   ],
 );
 

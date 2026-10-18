@@ -25,6 +25,8 @@ export interface ProductionContractFormValues {
   clientStageName: string;
   clientEmail: string;
   clientPhone: string;
+  /** null이면 법정대리인 없음(성년 의뢰인). */
+  guardian: { name: string; relation: string; email: string; phone: string } | null;
   terms: ProductionTerms;
 }
 
@@ -34,6 +36,7 @@ export const emptyProductionFormValues = (): ProductionContractFormValues => ({
   clientStageName: '',
   clientEmail: '',
   clientPhone: '',
+  guardian: null,
   terms: buildDefaultProductionTerms(),
 });
 
@@ -48,12 +51,15 @@ export const productionContractToFormValues = (contract: {
   clientEmail: string;
   clientPhone: string;
   termsJson: string;
-}): ProductionContractFormValues => ({
+}, guardian?: { name: string; relation: string | null; email: string; phone: string | null } | null): ProductionContractFormValues => ({
   title: contract.title,
   clientName: contract.clientName,
   clientStageName: contract.clientStageName ?? '',
   clientEmail: contract.clientEmail,
   clientPhone: contract.clientPhone,
+  guardian: guardian
+    ? { name: guardian.name, relation: guardian.relation ?? '', email: guardian.email, phone: guardian.phone ?? '' }
+    : null,
   terms: parseStoredTerms(contract.termsJson),
 });
 
@@ -63,6 +69,14 @@ export const toProductionPayload = (values: ProductionContractFormValues): Recor
   clientStageName: values.clientStageName.trim() || undefined,
   clientEmail: values.clientEmail.trim(),
   clientPhone: values.clientPhone.trim(),
+  guardian: values.guardian
+    ? {
+        name: values.guardian.name.trim(),
+        relation: values.guardian.relation.trim(),
+        email: values.guardian.email.trim(),
+        phone: values.guardian.phone.trim(),
+      }
+    : null,
   terms: { ...values.terms, songTitle: values.terms.songTitle?.trim() || null },
 });
 
@@ -168,6 +182,43 @@ export default function ProductionContractForm({
             <TextInput light className="text-sm" value={values.clientPhone} onChange={(e) => set('clientPhone', e.target.value)} autoComplete="off" />
           </Field>
         </div>
+      </section>
+
+      <section>
+        <label className="flex items-start gap-2 text-sm text-gray-800">
+          <input
+            type="checkbox"
+            className="mt-0.5 h-4 w-4 accent-primary"
+            checked={values.guardian !== null}
+            onChange={(e) => set('guardian', e.target.checked ? { name: '', relation: '', email: '', phone: '' } : null)}
+          />
+          <span>
+            의뢰인이 미성년자예요 — 법정대리인이 함께 서명해야 계약이 성립해요(제14조). 대리인에게 따로 서명 링크가 가고,
+            대리인은 자기 연락처 뒷자리로 본인 확인을 해요.
+          </span>
+        </label>
+        {values.guardian && (
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+            {(
+              [
+                ['name', '법정대리인 성명', ''],
+                ['relation', '관계', '예: 부, 모, 후견인'],
+                ['email', '법정대리인 이메일', '이 주소로 대리인 서명 링크가 갑니다.'],
+                ['phone', '법정대리인 연락처', '뒤 4자리가 대리인의 본인 확인에 쓰입니다. 의뢰인과 다른 번호여야 해요.'],
+              ] as const
+            ).map(([key, label, hint]) => (
+              <Field key={key} label={label} id={`guardian.${key}`} error={errorMap[`guardian.${key}`]} hint={hint || undefined} required className={ADMIN_FIELD}>
+                <TextInput
+                  light
+                  className="text-sm"
+                  autoComplete="off"
+                  value={values.guardian?.[key] ?? ''}
+                  onChange={(e) => setValues((prev) => (prev.guardian ? { ...prev, guardian: { ...prev.guardian, [key]: e.target.value } } : prev))}
+                />
+              </Field>
+            ))}
+          </div>
+        )}
       </section>
 
       <section>

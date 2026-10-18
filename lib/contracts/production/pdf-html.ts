@@ -41,7 +41,7 @@ const renderSigner = (signer: ProductionContractSigner): string => {
       : renderSignatureImage(signer.signatureData);
 
   const lines = [
-    `서명자: ${escapeHtml(signer.name)}`,
+    `서명자: ${escapeHtml(signer.name)}${signer.relation ? ` (의뢰인의 ${escapeHtml(signer.relation)})` : ''}`,
     signer.role === 'operator' ? '' : `이메일: ${escapeHtml(signer.email)}`,
     `서명 일시: ${formatDateTime(signer.signedAt)}`,
     `IP 주소: ${escapeHtml(signer.ipAddress || '-')}`,

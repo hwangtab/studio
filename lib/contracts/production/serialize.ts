@@ -20,8 +20,10 @@ export interface AdminSerializedProductionContract
   terms: ProductionTerms;
   clauses: ProductionClause[];
   signers: SerializedProductionSigner[];
-  /** 서명 대기·만료 상태에서만 채운다. 그 밖에는 빈 문자열. */
+  /** 서명 대기·만료 상태에서 의뢰인이 아직 서명하지 않았을 때만 채운다. 그 밖에는 빈 문자열. */
   signUrl: string;
+  /** 같은 조건의 법정대리인 서명 링크(대리인이 지정된 계약만). */
+  guardianSignUrl: string;
   /** 체결된 뒤 의뢰인 진행 페이지 주소(카톡으로 직접 보낼 때). 그 밖에는 빈 문자열. */
   progressUrl: string;
 }
@@ -49,7 +51,12 @@ export const serializeProductionContractForAdmin = (
 ): AdminSerializedProductionContract => {
   const { template: _template, termsJson, clausesJson, signers, ...rest } = contract;
   const status = getEffectiveProductionStatus(contract, now);
-  const clientToken = signers.find((signer) => signer.role === 'client')?.signToken ?? null;
+  const client = signers.find((signer) => signer.role === 'client');
+  const guardian = signers.find((signer) => signer.role === 'guardian');
+  const clientToken = client?.signToken ?? null;
+  const awaiting = status === 'sent' || status === 'expired';
+  const pendingLink = (signer: ProductionContractSigner | undefined) =>
+    awaiting && signer?.status === 'pending' && signer.signToken ? buildProductionSignUrl(contract.id, signer.signToken) : '';
 
   return {
     ...rest,
@@ -58,7 +65,8 @@ export const serializeProductionContractForAdmin = (
     clauses: parseStoredClauses(clausesJson),
     // 계약서 서명란과 같은 순서(스튜디오 → 의뢰인 → 대리인). DB 조회 순서는 보장되지 않는다.
     signers: [...signers].sort((a, b) => SIGNER_ORDER.indexOf(a.role) - SIGNER_ORDER.indexOf(b.role)).map(serializeProductionSigner),
-    signUrl: (status === 'sent' || status === 'expired') && clientToken ? buildProductionSignUrl(contract.id, clientToken) : '',
+    signUrl: pendingLink(client),
+    guardianSignUrl: pendingLink(guardian),
     progressUrl: hasSignedDocument(status) && clientToken && !contract.purgedAt ? buildProductionProgressUrl(contract.id, clientToken) : '',
     sentAt: iso(contract.sentAt),
     expiresAt: iso(contract.expiresAt),

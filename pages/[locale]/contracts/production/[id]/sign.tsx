@@ -28,6 +28,8 @@ interface ProductionSignPageProps {
   token: string;
   /** 화면이 그리는 값만 싣는다 — props는 __NEXT_DATA__로 HTML에 그대로 실린다(연습실 sign.tsx 주석). */
   contract: { id: string; title: string; clientName: string; content: string } | null;
+  /** 이 링크의 서명자. 법정대리인은 생년월일·주소를 채우지 않는다(의뢰인 정보다). */
+  signer: { role: 'client' | 'guardian'; name: string; relation: string | null } | null;
   clauses: ProductionClause[];
   unavailable?: UnavailableReason;
   error?: string;
@@ -49,7 +51,7 @@ export const getServerSideProps = withI18nServerProps<ProductionSignPageProps>(a
     return { notFound: true };
   }
 
-  const empty = { locale, token, contract: null, clauses: [] };
+  const empty = { locale, token, contract: null, signer: null, clauses: [] };
 
   try {
     await expireOverdueProductionContracts();
@@ -58,22 +60,26 @@ export const getServerSideProps = withI18nServerProps<ProductionSignPageProps>(a
       where: (t, { eq }) => eq(t.id, id),
       with: { signers: true },
     });
-    const clientSigner = contract?.signers.find((signer) => signer.role === 'client' && signer.signToken === token);
+    const linkSigner = contract?.signers.find(
+      (signer) => (signer.role === 'client' || signer.role === 'guardian') && signer.signToken === token,
+    );
 
     // 대부분 재발송으로 무효가 된 옛 링크를 누른 당사자다 — "찾을 수 없다" 대신 할 일을 알려 준다.
-    if (!contract || !clientSigner) {
+    if (!contract || !linkSigner) {
       return { props: { ...empty, unavailable: 'superseded' as const } };
     }
 
     const status = getEffectiveProductionStatus(contract);
-    if (hasSignedDocument(status)) {
+    // 이 사람은 이미 서명했다 — 상대(의뢰인·대리인) 서명을 기다리는 중이어도 완료 화면이 맞는 자리다.
+    if (hasSignedDocument(status) || (status === 'sent' && linkSigner.status === 'signed')) {
       return { redirect: { destination: productionCompletePath(id, token, locale), permanent: false } };
     }
     if (status !== 'sent') {
       return { props: { ...empty, unavailable: status === 'cancelled' ? ('cancelled' as const) : ('expired' as const) } };
     }
 
-    await recordProductionSignerView(clientSigner.id, token, getClientIp(context.req));
+    await recordProductionSignerView(linkSigner.id, token, getClientIp(context.req));
+    const ownPhone = linkSigner.role === 'client' ? contract.clientPhone : (linkSigner.phone ?? '');
 
     return {
       props: {
@@ -83,8 +89,13 @@ export const getServerSideProps = withI18nServerProps<ProductionSignPageProps>(a
           id: contract.id,
           title: contract.title,
           clientName: contract.clientName,
-          // 연락처는 본인 확인의 정답이라 본문에서도 가린다. 서명본에는 전체 번호가 들어간다.
-          content: maskIdentityDigitsInContent(contract.content, contract.clientPhone),
+          // 이 서명자의 연락처는 본인 확인의 정답이라 본문에서도 가린다. 서명본에는 전체 번호가 들어간다.
+          content: maskIdentityDigitsInContent(contract.content, ownPhone),
+        },
+        signer: {
+          role: linkSigner.role === 'guardian' ? ('guardian' as const) : ('client' as const),
+          name: linkSigner.name,
+          relation: linkSigner.relation,
         },
         clauses: parseStoredClauses(contract.clausesJson),
       },
@@ -126,6 +137,7 @@ export default function ProductionContractSignPage({
   locale,
   token,
   contract,
+  signer,
   clauses,
   unavailable,
   error,
@@ -145,7 +157,8 @@ export default function ProductionContractSignPage({
 
   const allAgreed = contract !== null && clauses.every((clause) => agreements[clause.key]);
   const identityReady = identityDigits.length === IDENTITY_DIGITS && identityConfirmed;
-  const detailsReady = clientBirthdate !== '' && clientAddress.trim() !== '';
+  const isGuardian = signer?.role === 'guardian';
+  const detailsReady = isGuardian || (clientBirthdate !== '' && clientAddress.trim() !== '');
   const ready = detailsReady && allAgreed && identityReady && hasSigned;
 
   // 앱 전환으로 다시 열려도 생년월일·주소를 다시 치지 않게(lib/contracts/sign-draft.ts 주석). 마운트 뒤에 읽는다.
@@ -211,8 +224,7 @@ export default function ProductionContractSignPage({
           agreements: clauses.map((clause) => clause.key),
           identityDigits,
           identityConfirmed,
-          clientBirthdate,
-          clientAddress: clientAddress.trim(),
+          ...(isGuardian ? {} : { clientBirthdate, clientAddress: clientAddress.trim() }),
         }),
       });
       const result = await response.json().catch(() => ({}));
@@ -276,13 +288,18 @@ export default function ProductionContractSignPage({
               <p className="text-white/70 dark:text-white/70 text-sm font-medium mb-1">스튜디오 놀 · 서울 은평구 대조동</p>
               <h1 className="typo-page-title text-white dark:text-white">음원 제작 용역 계약서</h1>
               <p className="text-white dark:text-white/80 mt-2">
-                {contract.clientName}님, 아래 내용을 확인하고 서명해 주세요. 스튜디오는 이미 서명했어요.
+                {isGuardian && signer
+                  ? `${signer.name}님, ${contract.clientName}님의 법정대리인(${signer.relation ?? '보호자'})으로 아래 계약에 함께 서명해 주세요. 스튜디오는 이미 서명했어요.`
+                  : `${contract.clientName}님, 아래 내용을 확인하고 서명해 주세요. 스튜디오는 이미 서명했어요.`}
               </p>
             </div>
 
             <div className="p-6 md:p-10">
               <ContractContent content={contract.content} />
 
+              {/* 생년월일·주소는 의뢰인 본인 정보다 — 법정대리인 화면에서는 받지 않는다. */}
+              {!isGuardian && (
+                <>
               <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
                 <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-2">의뢰인 정보</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-600 mb-4 leading-relaxed">
@@ -313,6 +330,9 @@ export default function ProductionContractSignPage({
                 </div>
               </div>
 
+                </>
+              )}
+
               <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
                 <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-4">필수 동의</h2>
                 <div className="space-y-3">
@@ -338,7 +358,7 @@ export default function ProductionContractSignPage({
               <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
                 <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-2">본인 확인</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-600 mb-4">
-                  계약서에 등록된 연락처의 뒤 {IDENTITY_DIGITS}자리를 입력해 주세요.
+                  계약서에 등록된 {isGuardian ? '법정대리인님 ' : ''}연락처의 뒤 {IDENTITY_DIGITS}자리를 입력해 주세요.
                   <span className="block mt-1 text-gray-500 dark:text-gray-500">
                     본인 확인을 위해 위 계약서에서는 이 자리를 가려 두었어요. 서명이 끝난 계약서에는 전체 번호가 기재돼요.
                   </span>

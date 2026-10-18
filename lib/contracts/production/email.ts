@@ -1,4 +1,4 @@
-import type { ProductionContract } from '../../../db/schema';
+import type { ProductionContract, ProductionContractSigner } from '../../../db/schema';
 import { sendEmail } from '../../email/resend';
 import { OPERATOR_EMAIL } from '../../operatorContact';
 import type { SendContractEmailResult } from '../email';
@@ -76,18 +76,63 @@ export const sendProductionSignRequestEmail = async (
   });
 };
 
+/**
+ * 법정대리인에게 가는 서명 요청. 의뢰인 메일과 같은 조건 요약에, 누구의 계약에 왜 서명하는지를 먼저 밝힌다.
+ * 본인 확인은 대리인 자신의 연락처 뒷자리다.
+ */
+export const sendProductionGuardianSignRequestEmail = async (
+  contract: ProductionContract,
+  terms: ProductionTerms,
+  guardian: Pick<ProductionContractSigner, 'name' | 'email' | 'relation'>,
+  signUrl: string,
+): Promise<SendContractEmailResult> => {
+  const intro = `${contract.clientName}님은 미성년자라, 법정대리인(${guardian.relation ?? '보호자'})께서 함께 서명해 주셔야 계약이 성립해요(계약서 제14조).`;
+  const html = buildContractEmailHtml({
+    heading: `${CONTRACT_NAME} 법정대리인 서명 요청`,
+    paragraphs: [`${escapeHtml(guardian.name)}님, 안녕하세요. 스튜디오 놀입니다.`, escapeHtml(intro)],
+    rows: [{ label: '의뢰인', value: contract.clientName, emphasis: true }, ...termRows(terms)],
+    cta: { label: '계약서 확인하고 서명하기', url: signUrl },
+    notices: [
+      `이 링크는 <strong>${SIGN_TOKEN_TTL_DAYS}일간</strong> 유효합니다.`,
+      `본인 확인을 위해 서명 화면에서 <strong>법정대리인님 연락처 뒤 ${IDENTITY_DIGITS}자리</strong>를 입력하게 됩니다.`,
+    ],
+  });
+  const text = [
+    `[${CONTRACT_NAME} 법정대리인 서명 요청]`,
+    '',
+    `${guardian.name}님, 안녕하세요. 스튜디오 놀입니다.`,
+    intro,
+    '',
+    `의뢰인: ${contract.clientName}`,
+    ...termLines(terms),
+    '',
+    `아래 링크에서 계약서를 확인하고 서명해 주세요. (${SIGN_TOKEN_TTL_DAYS}일간 유효)`,
+    signUrl,
+    ...FOOTER,
+  ].join('\n');
+
+  return sendEmail({
+    to: guardian.email,
+    subject: `[스튜디오 놀] ${contract.clientName}님 ${CONTRACT_NAME} — 법정대리인 서명 요청`,
+    html,
+    text,
+  });
+};
+
 export const sendProductionSignedEmail = async (
   contract: ProductionContract,
   terms: ProductionTerms,
   pdfBuffer: Buffer | undefined,
   completeUrl: string,
-  /** 의뢰인 진행 페이지 — 결과물 확인·승인·수정 요청을 여기서 한다. */
-  progressUrl: string,
+  /** 의뢰인 진행 페이지 — 결과물 확인·승인·수정 요청을 여기서 한다. 법정대리인 메일에는 없다. */
+  progressUrl: string | null,
+  /** 받는 사람. 기본은 의뢰인 — 법정대리인에게도 같은 서명본을 보낸다(각자 보관, 계약서 제14조). */
+  recipient: { name: string; email: string } = { name: contract.clientName, email: contract.clientEmail },
 ): Promise<SendContractEmailResult> => {
   const html = buildContractEmailHtml({
     heading: '계약이 체결되었습니다',
     paragraphs: [
-      `${escapeHtml(contract.clientName)}님, 계약서 서명이 접수되어 계약이 체결되었습니다.`,
+      `${escapeHtml(recipient.name)}님, 모든 당사자의 서명이 끝나 계약이 체결되었습니다.`,
       pdfBuffer
         ? '서명본 계약서를 이 메일에 PDF로 첨부했습니다. 보관해 주세요.'
         : '서명본 계약서는 아래 버튼에서 받으실 수 있습니다.',
@@ -95,7 +140,7 @@ export const sendProductionSignedEmail = async (
     rows: [
       ...termRows(terms),
       { label: '체결일', value: formatDate(contract.signedAt), emphasis: true },
-      { label: '작업 진행', value: '진행 페이지 열기 (결과물 확인·승인·수정 요청)', href: progressUrl },
+      ...(progressUrl ? [{ label: '작업 진행', value: '진행 페이지 열기 (결과물 확인·승인·수정 요청)', href: progressUrl }] : []),
     ],
     cta: { label: '계약서 PDF 다시 받기', url: completeUrl },
     notices: [
@@ -109,7 +154,7 @@ export const sendProductionSignedEmail = async (
   const text = [
     '[계약 체결 안내]',
     '',
-    `${contract.clientName}님, 계약서 서명이 접수되어 계약이 체결되었습니다.`,
+    `${recipient.name}님, 모든 당사자의 서명이 끝나 계약이 체결되었습니다.`,
     '',
     ...termLines(terms),
     `체결일: ${formatDate(contract.signedAt)}`,
@@ -119,12 +164,12 @@ export const sendProductionSignedEmail = async (
     '',
     ...(pdfBuffer ? ['서명본 계약서를 PDF로 첨부했습니다.'] : []),
     `계약서 다시 받기: ${completeUrl}`,
-    `작업 진행(결과물 확인·승인·수정 요청): ${progressUrl}`,
+    ...(progressUrl ? [`작업 진행(결과물 확인·승인·수정 요청): ${progressUrl}`] : []),
     ...FOOTER,
   ].join('\n');
 
   return sendEmail({
-    to: contract.clientEmail,
+    to: recipient.email,
     subject: `[스튜디오 놀] ${contract.clientName}님, ${CONTRACT_NAME}가 체결되었습니다`,
     html,
     text,

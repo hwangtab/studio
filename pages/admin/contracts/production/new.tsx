@@ -11,6 +11,8 @@ import ProductionContractForm, {
   type ProductionContractFormValues,
 } from '../../../../components/admin/ProductionContractForm';
 import { createProductionContractRequest } from '../../../../components/admin/productionContractActions';
+import { Button } from '../../../../components/ui/Button';
+import { parseQuoteSummary, titleWithQuoteCode } from '../../../../lib/contracts/production/quote-prefill';
 import { getDb } from '../../../../db/client';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import type { ValidationError } from '../../../../lib/contracts/validation';
@@ -34,14 +36,15 @@ export const getServerSideProps: GetServerSideProps<NewProductionContractPagePro
   const { from } = context.query;
   if (typeof from === 'string' && from.trim() !== '') {
     const source = await getDb()
-      .query.productionContracts.findFirst({ where: (t, { eq }) => eq(t.id, from) })
+      .query.productionContracts.findFirst({ where: (t, { eq }) => eq(t.id, from), with: { signers: true } })
       .catch((error: unknown) => {
         console.error('[admin/contracts/production/new] Failed to load source contract:', error);
         return null;
       });
     // 파기된 계약은 이름 자리에 표식이 들어 있다 — 복제할 값이 없다.
     if (source && !source.purgedAt) {
-      const copied = productionContractToFormValues(source);
+      // 같은 의뢰인의 다음 곡이면 법정대리인도 그대로다 — 함께 옮긴다.
+      const copied = productionContractToFormValues(source, source.signers.find((signer) => signer.role === 'guardian') ?? null);
       return {
         props: {
           // 제목·곡 제목은 옮기지 않는다 — 다음 곡 계약에 옛 제목이 남으면 고치는 것을 잊기 쉽다.
@@ -55,8 +58,51 @@ export const getServerSideProps: GetServerSideProps<NewProductionContractPagePro
   return { props: { initialValues: emptyProductionFormValues() } };
 };
 
+/**
+ * 견적 요약 붙여 넣기 — 카톡으로 받은 견적 요청서 요약에서 견적 번호를 제목에 남기고, 계약과 어긋나는 답을
+ * 경고한다(lib/contracts/production/quote-prefill.ts). 금액은 건드리지 않는다.
+ */
+function QuotePaste({ onApply }: { onApply: (code: string | null, warnings: string[]) => void }) {
+  const [text, setText] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  return (
+    <details className="mb-6 rounded-lg border border-gray-200 p-4 text-sm">
+      <summary className="cursor-pointer font-medium text-gray-900">견적 요청서 요약 붙여 넣기 (선택)</summary>
+      <p className="mt-2 text-gray-500">카톡으로 받은 “[스튜디오 놀 견적 요청 NOL-…]” 글을 붙여 넣으면 견적 번호를 계약 제목에 남겨요. 폼을 새로 채우므로 다른 칸보다 먼저 쓰세요.</p>
+      <textarea
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        rows={6}
+        className="mt-3 w-full rounded-lg border border-gray-300 bg-white p-3 text-sm text-gray-900"
+      />
+      <div className="mt-2 flex items-center gap-3">
+        <Button
+          light
+          type="button"
+          variant="weak"
+          onClick={() => {
+            const parsed = parseQuoteSummary(text);
+            if (!parsed) {
+              setError('견적 요청서 요약 형식이 아니에요.');
+              return;
+            }
+            setError(null);
+            onApply(parsed.code, parsed.warnings);
+          }}
+        >
+          채우기
+        </Button>
+        {error && <span className="text-red-600">{error}</span>}
+      </div>
+    </details>
+  );
+}
+
 export default function NewProductionContractPage({ initialValues, copiedFrom }: NewProductionContractPageProps) {
   const router = useRouter();
+  // 견적을 붙여 넣으면 폼을 새 초기값으로 다시 그린다(key) — 폼은 처음 받은 값만 상태로 들고 있다.
+  const [seed, setSeed] = useState({ version: 0, values: initialValues });
+  const [quoteWarnings, setQuoteWarnings] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<ValidationError[]>([]);
   const [generalError, setGeneralError] = useState<string | null>(null);
@@ -102,9 +148,27 @@ export default function NewProductionContractPage({ initialValues, copiedFrom }:
                 {copiedFrom}님의 계약을 복제했습니다. <strong>곡 제목과 금액을 확인해 주세요.</strong>
               </div>
             )}
+            <QuotePaste
+              onApply={(code, warnings) => {
+                setSeed((prev) => ({
+                  version: prev.version + 1,
+                  values: { ...prev.values, title: titleWithQuoteCode(prev.values.title, prev.values.clientName, code) },
+                }));
+                setQuoteWarnings(warnings);
+              }}
+            />
+            {quoteWarnings.length > 0 && (
+              <ul className="mb-6 space-y-2">
+                {quoteWarnings.map((warning) => (
+                  <li key={warning} className="p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
+                    {warning}
+                  </li>
+                ))}
+              </ul>
+            )}
             <ProductionContractForm
-              key={copiedFrom ?? 'new'}
-              initialValues={initialValues}
+              key={`${copiedFrom ?? 'new'}-${seed.version}`}
+              initialValues={seed.values}
               submitLabel="작성중으로 저장"
               submitting={submitting}
               errors={errors}
