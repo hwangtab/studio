@@ -157,6 +157,7 @@ it('대기열 건수 — 믹싱 착수 대기·작업 중, 구독 카드 대기�
     subscriptionsPastDue: 1,
     subscriptionsPaused: 1,
     contractsAwaitingSignature: 1,
+    contractsAwaitingTermination: 1, // c3: 서명됐고 종료일(픽스처는 1970)이 지났다
     artistPayoutsPending: 0,
     fundingProjectsAwaitingReview: 2,
     fundingPayoutsPending: 0,
@@ -168,6 +169,25 @@ it('대기열 건수 — 믹싱 착수 대기·작업 중, 구독 카드 대기�
     awaitingDeposit: { bookings: 0, shows: 0, shop: 0, funding: 0 },
   });
   expect(dash.issues.map((i) => i.title)).toContain('서명 기한이 지난 계약 1건');
+});
+
+it('종료 처리 필요 계약 — 서명됐고 종료일(KST) 다음 날부터, 종료 처리 전인 것만', async () => {
+  // NOW = KST 2026-09-16 12:00. endDate는 UTC 자정(=KST 달력 날짜)으로 저장된다.
+  const insertSigned = async (id: string, endIso: string, terminated = false) => {
+    await insertContract(id, 'signed', '2026-12-31T00:00:00Z');
+    await client.execute({
+      sql: 'UPDATE contracts SET end_date = ?, terminated_at = ? WHERE id = ?',
+      args: [EPOCH(endIso), terminated ? EPOCH('2026-09-01T00:00:00Z') : null, id],
+    });
+  };
+  await insertSigned('over', '2026-09-15T00:00:00Z'); // 어제 종료 — 대상
+  await insertSigned('today', '2026-09-16T00:00:00Z'); // 종료일 당일 — 아직 이용 기간
+  await insertSigned('future', '2026-10-01T00:00:00Z');
+  await insertSigned('done', '2026-09-01T00:00:00Z', true); // 종료 처리됨
+
+  const dash = await loadAdminDashboard(NOW);
+
+  expect(dash.queues.contractsAwaitingTermination).toBe(1);
 });
 
 describe('서명 기한이 지난 계약 알림', () => {

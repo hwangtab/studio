@@ -100,6 +100,21 @@ export const needsTermination = (
   return nowKey > endKey;
 };
 
+/**
+ * `needsTermination`을 SQL로 물을 때의 경계. `endDate < 이 값`인 서명 계약이 종료 처리 대상이다.
+ *
+ * endDate는 UTC 자정(=KST 달력 날짜)으로 저장되므로, 경계는 "KST 오늘 날짜의 UTC 자정"이다 —
+ * 종료일 당일은 아직 이용 기간이라 포함하지 않는다(위 판정의 `nowKey > endKey`와 같다).
+ */
+export const terminationCutoff = (now: Date | string = new Date()): Date | null => {
+  const key = kstDateKey(now);
+  if (key === null) return null;
+  const year = Math.floor(key / 10000);
+  const month = Math.floor((key % 10000) / 100);
+  const day = key % 100;
+  return new Date(Date.UTC(year, month - 1, day));
+};
+
 export const getStatusLabel = (status: ContractStatus): string => STATUS_LABEL[status] ?? status;
 
 export const isActionAllowed = (status: ContractStatus, action: ContractAction): boolean =>

@@ -39,6 +39,7 @@ const DASHBOARD: AdminDashboard = {
     subscriptionsPastDue: 2,
     subscriptionsPaused: 0,
     contractsAwaitingSignature: 1,
+    contractsAwaitingTermination: 2,
     artistPayoutsPending: 0,
     fundingProjectsAwaitingReview: 4,
     fundingPayoutsPending: 2,
@@ -75,6 +76,8 @@ it('점검 항목은 심각도 배지와 처리 링크를, 대기열은 건수�
   expect(screen.getByText('서명 기한이 지난 계약 2건')).toBeInTheDocument();
 
   expect(screen.getByRole('link', { name: /믹싱 착수 대기\s*3/ })).toHaveAttribute('href', '/admin/bookings');
+  expect(screen.getByRole('link', { name: /서명 대기 계약\s*1/ })).toHaveAttribute('href', '/admin/contracts?status=sent');
+  expect(screen.getByRole('link', { name: /종료 처리 필요 계약\s*2/ })).toHaveAttribute('href', '/admin/contracts?status=termination');
   expect(screen.getByRole('link', { name: /결제 재시도 중 구독\s*2/ })).toBeInTheDocument();
   expect(screen.getByRole('link', { name: /심사 대기 펀딩 프로젝트\s*4/ })).toHaveAttribute('href', '/admin/funding/projects');
   expect(screen.getByRole('link', { name: /심사 대기 상점 상품\s*2/ })).toHaveAttribute('href', '/admin/shop/products');
