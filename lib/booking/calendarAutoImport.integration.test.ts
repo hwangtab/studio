@@ -48,10 +48,10 @@ afterAll(() => client.close());
 beforeEach(async () => {
   for (const t of ['refunds', 'payments', 'work_orders', 'bookings', 'orders']) await client.execute(`DELETE FROM ${t}`);
   jest.clearAllMocks();
-  delete process.env.CALENDAR_AUTO_IMPORT;
+  process.env.CALENDAR_AUTO_IMPORT = 'on'; // 운영 배포(VERCEL_ENV=production) 밖에서도 돌려 보려면 명시해야 한다
   (calendarBlockedRooms as jest.Mock).mockResolvedValue({ blocked: false, excludeRooms: [] });
   (getCalendarEvent as jest.Mock).mockImplementation(async (id: string) => {
-    const hit = (mockLoad.mock.results[0]?.value as Promise<{ events: Array<{ id: string; startAt: string; endAt: string }> }> | undefined);
+    const hit = (mockLoad.mock.results[mockLoad.mock.results.length - 1]?.value as Promise<{ events: Array<{ id: string; startAt: string; endAt: string }> }> | undefined);
     const events = hit ? (await hit).events : [];
     const e = events.find((x) => x.id === id);
     return { id, summary: '', description: '', start: new Date(e?.startAt ?? NOW), end: new Date(e?.endAt ?? NOW), allDay: false, transparent: false };
@@ -177,15 +177,38 @@ describe('autoImportCalendarEvents', () => {
     mockLoad.mockResolvedValue({ error: null, events: [{ ...ev('rec', '정기 녹음', '2026-10-31T14:00:00+09:00', '2026-10-31T15:00:00+09:00'), recurring: true }] });
     expect(await autoImportCalendarEvents(NOW)).toMatchObject({ imported: 0, skipped: 1 });
     mockLoad.mockResolvedValue({ error: null, events: [ev('prev', '프리뷰 녹음', '2026-10-31T14:00:00+09:00', '2026-10-31T15:00:00+09:00')] });
-    process.env.VERCEL_ENV = 'preview';
-    const r = await autoImportCalendarEvents(NOW);
+    // 운영(VERCEL_ENV=production)이 아니고 명시적으로 켜지도 않았으면 — 프리뷰·로컬 dev 모두 — 아무것도 하지 않는다.
+    delete process.env.CALENDAR_AUTO_IMPORT;
+    for (const vercelEnv of ['preview', 'development', undefined]) {
+      if (vercelEnv) process.env.VERCEL_ENV = vercelEnv; else delete process.env.VERCEL_ENV;
+      expect(await autoImportCalendarEvents(NOW)).toMatchObject({ disabled: true, imported: 0 });
+    }
     delete process.env.VERCEL_ENV;
-    expect(r).toMatchObject({ disabled: true, imported: 0 });
     expect(deleteBookingEvent).not.toHaveBeenCalled();
+    process.env.VERCEL_ENV = 'production';
+    expect((await autoImportCalendarEvents(NOW)).imported).toBe(1);
+    delete process.env.VERCEL_ENV;
   });
 
   it('원본을 정상적으로 지웠으면 임시 표시를 걷는다(지우는 동안만 남는다)', async () => {
     mockLoad.mockResolvedValue({ error: null, events: [ev('ok1', '정상 녹음', '2026-11-02T14:00:00+09:00', '2026-11-02T15:00:00+09:00')] });
+    await autoImportCalendarEvents(NOW);
+    expect(String((await one(`SELECT customer_note FROM bookings`))?.customer_note)).not.toContain('원본 일정이 남아 있음');
+  });
+
+  it('사람·팀 이름에 낱말이 들어간 제목은 가져오고, 낱말 자체인 제목만 제외한다', () => {
+    const plan = (summary: string) => planAutoImport({ summary, startAt: new Date('2026-10-20T14:00:00+09:00').toISOString(), endAt: new Date('2026-10-20T16:00:00+09:00').toISOString(), allDay: false }, NOW);
+    for (const t of ['정비아 녹음', '공사랑 녹음', '청소년 합창단 녹음', '개인 녹음 김철수', '합주 녹음 밴드A']) expect(plan(t)).not.toBeNull();
+    for (const t of ['정비', '점검 14-16', '휴무일', '팀 회의', '마감']) expect(plan(t)).toBeNull();
+  });
+
+  it('원본이 이미 사라졌으면(운영자가 직접 지움) 남은 표시를 걷고, 메모가 없던 예약은 NULL로 돌아온다', async () => {
+    mockLoad.mockResolvedValue({ error: null, events: [ev('gone', '표시 녹음', '2026-11-03T14:00:00+09:00', '2026-11-03T15:00:00+09:00')] });
+    (deleteBookingEvent as jest.Mock).mockRejectedValueOnce(new Error('5xx'));
+    await autoImportCalendarEvents(NOW);
+    expect(String((await one(`SELECT customer_note FROM bookings`))?.customer_note)).toContain('[원본 일정이 남아 있음: gone]');
+    (getCalendarEvent as jest.Mock).mockResolvedValue(null); // 구글에서 원본이 사라졌다
+    mockLoad.mockResolvedValue({ error: null, events: [] });
     await autoImportCalendarEvents(NOW);
     expect(String((await one(`SELECT customer_note FROM bookings`))?.customer_note)).not.toContain('원본 일정이 남아 있음');
   });
@@ -199,8 +222,8 @@ describe('autoImportCalendarEvents', () => {
   it('env로 끌 수 있고, 캘린더를 못 읽으면 아무것도 하지 않는다', async () => {
     process.env.CALENDAR_AUTO_IMPORT = 'off';
     expect(await autoImportCalendarEvents(NOW)).toMatchObject({ disabled: true, imported: 0 });
-    delete process.env.CALENDAR_AUTO_IMPORT;
-    mockLoad.mockResolvedValue({ error: '캘린더를 읽지 못했어요.', events: [] });
+    process.env.CALENDAR_AUTO_IMPORT = 'on';
+    mockLoad.mockResolvedValue({ error: '캘린더 읽지 못했어요.', events: [] });
     expect(await autoImportCalendarEvents(NOW)).toMatchObject({ imported: 0 });
     expect(await one(`SELECT COUNT(*) AS n FROM orders`)).toEqual({ n: 0 });
   });

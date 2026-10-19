@@ -1,6 +1,8 @@
 import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
+import { deleteEventOnCalendar } from '../booking/gcal';
+import { tenancyCalendarId } from './calendar';
 
 /**
  * 월 입주 기록의 보관 기간 — 퇴실일(`ended_on`)로부터 **3년**이면 개인정보(`private_enc`: 연락처·비상연락처·이메일·사업자번호·성별)를 비우고,
@@ -23,10 +25,13 @@ export const purgeEndedTenancies = async (now: Date = new Date()): Promise<{ per
     UPDATE room_tenancies SET private_enc = NULL, updated_at = unixepoch()
     WHERE status = 'ended' AND private_enc IS NOT NULL AND ended_on IS NOT NULL AND ended_on < ${yearsAgo(now, TENANCY_PERSONAL_DATA_YEARS)}
   `);
-  const old = await db.all<{ id: string }>(sql`
-    SELECT id FROM room_tenancies WHERE status = 'ended' AND ended_on IS NOT NULL AND ended_on < ${yearsAgo(now, TENANCY_RECORD_YEARS)}
+  const old = await db.all<{ id: string; due: string | null; end: string | null }>(sql`
+    SELECT id, due_event_id AS due, end_event_id AS end FROM room_tenancies WHERE status = 'ended' AND ended_on IS NOT NULL AND ended_on < ${yearsAgo(now, TENANCY_RECORD_YEARS)}
   `);
-  for (const { id } of old) {
+  const calId = tenancyCalendarId();
+  for (const { id, due, end } of old) {
+    // 퇴실 때 캘린더 일정 삭제가 실패했다면 연락처가 적힌 일정이 구글에 남는다 — 행을 지우기 전에 한 번 더 지워 본다(실패해도 파기는 계속한다).
+    if (calId) for (const eventId of [due, end]) if (eventId) await deleteEventOnCalendar(calId, eventId).catch(() => undefined);
     await db.batch([db.run(sql`DELETE FROM room_tenancy_payments WHERE tenancy_id = ${id}`), db.run(sql`DELETE FROM room_tenancies WHERE id = ${id}`)]);
   }
   return { personalCleared: Number(cleared.rowsAffected), recordsDeleted: old.length };

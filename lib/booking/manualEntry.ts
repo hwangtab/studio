@@ -151,7 +151,8 @@ export const createManualBooking = async (
   // 감지(`loadUnlinkedCalendarEvents`)가 이 표시를 읽어 그 일정을 건너뛰고, 운영 점검이 "원본 일정 남음"으로 알린다(`LEFTOVER_ORIGINAL_MARK`).
   const markLeftoverOriginal = async (orderId: string): Promise<void> => {
     await getDb()
-      .run(sql`UPDATE bookings SET customer_note = substr(coalesce(customer_note, '') || ${` ${LEFTOVER_ORIGINAL_MARK}${adoptEventId}]`}, 1, 700) WHERE order_id = ${orderId}`)
+      // 메모는 400자까지만 남기고 표시를 붙인다 — 표시가 잘리면(닫는 `]`이 사라지면) 지우기도 읽기도 못 한다(감사). 일정 id는 200자 이하로 검증된다.
+      .run(sql`UPDATE bookings SET customer_note = substr(coalesce(customer_note, ''), 1, 400) || ${` ${LEFTOVER_ORIGINAL_MARK}${adoptEventId}]`} WHERE order_id = ${orderId}`)
       .catch(() => undefined);
   };
   const releaseAdoptedEvent = async (orderId: string): Promise<void> => {
@@ -169,7 +170,7 @@ export const createManualBooking = async (
     try {
       await deleteBookingEvent(adoptEventId, 'studio');
       await getDb()
-        .run(sql`UPDATE bookings SET customer_note = trim(replace(customer_note, ${` ${LEFTOVER_ORIGINAL_MARK}${adoptEventId}]`}, '')) WHERE order_id = ${orderId}`)
+        .run(sql`UPDATE bookings SET customer_note = NULLIF(trim(replace(customer_note, ${` ${LEFTOVER_ORIGINAL_MARK}${adoptEventId}]`}, '')), '') WHERE order_id = ${orderId}`)
         .catch(() => undefined);
     } catch (error) {
       console.error('[manual-booking] 가져온 캘린더 원본 일정 삭제 실패', { adoptEventId, error: error instanceof Error ? error.message : String(error) });

@@ -74,6 +74,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(500).json({ ok: false, ...result, production });
     }
 
+    // 월 입주 기록 파기가 실패하면 알린다 — 처리방침 19항에서 "퇴실 3년·5년 뒤 지운다"고 약속했으므로 조용히 200으로 끝나면 안 된다(감사 2026-10-19).
+    if (tenancy === null) {
+      await sendEmail({
+        to: OPERATOR_EMAIL,
+        subject: '[Studio NOL] 월 입주 기록 파기 실패',
+        text: '퇴실 후 3년(개인정보)·5년(기록 전체)이 지난 월 입주 기록의 파기가 실패했습니다.\n\n처리방침 19항으로 약속한 파기이므로 확인이 필요합니다. 다음 주기에 다시 시도하지만 반복되면 Turso 연결과 room_tenancies 표를 확인해 주세요.',
+        html: buildOperatorAlertHtml({
+          title: '월 입주 기록 파기가 실패했습니다',
+          cron: 'cron/purge-contracts',
+          hints: ['처리방침 19항으로 약속한 파기(퇴실 3년 개인정보·5년 기록 전체)입니다.', '반복되면 Turso 연결과 room_tenancies 표를 확인해 주세요.'],
+        }),
+      }).catch(() => {});
+      return res.status(500).json({ ok: false, ...result, production, tenancy });
+    }
+
     return res.status(200).json({ ok: true, ...result, production, tenancy });
   } catch (error: unknown) {
     const detail = error instanceof Error ? error.message : String(error);

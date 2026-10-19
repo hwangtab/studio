@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { recordAdminPrivacyAccess } from '../../../../../lib/privacy/accessLog';
 import { safeDbErrorSummary } from '../../../../../lib/payments/refundAccount';
-import { syncTenancyCalendar } from '../../../../../lib/tenancy/calendar';
+import { syncTenancyCalendar, tenancyCalendarId } from '../../../../../lib/tenancy/calendar';
 import { parseTenancyInput } from '../../../../../lib/tenancy/rules';
 import { endTenancy, listPayments, recordPayment, reopenTenancy, updateTenancy } from '../../../../../lib/tenancy/service';
 
@@ -30,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const parsed = parseTenancyInput(body.input);
         if (!parsed.ok) return res.status(400).json({ ok: false, message: parsed.message });
         const updated = await updateTenancy(id, parsed.value, { keepPrivate: body.keepPrivate === true });
-        if (updated.ok) await logExport(req, auth.actor, id);
+        if (updated.ok && tenancyCalendarId()) await logExport(req, auth.actor, id);
         return done(updated);
       }
       case 'payment': {
@@ -39,14 +39,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           paidOn: typeof body.paidOn === 'string' && body.paidOn ? body.paidOn : undefined, amount,
           memo: typeof body.memo === 'string' && body.memo.trim() ? body.memo.trim().slice(0, 200) : null,
         });
-        if (paid.ok) await logExport(req, auth.actor, id);
+        if (paid.ok && tenancyCalendarId()) await logExport(req, auth.actor, id);
         return done(paid);
       }
       case 'end':
         return done(await endTenancy(id, typeof body.endedOn === 'string' && body.endedOn ? body.endedOn : undefined));
       case 'reopen':
         const reopened = await reopenTenancy(id);
-        if (reopened.ok) await logExport(req, auth.actor, id);
+        if (reopened.ok && tenancyCalendarId()) await logExport(req, auth.actor, id);
         return done(reopened);
       case 'sync': {
         const r = await syncTenancyCalendar(id);

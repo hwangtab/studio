@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!parsed.ok) return res.status(400).json({ ok: false, message: parsed.message });
       const result = await createTenancy(parsed.value);
       // 등록은 연락처를 복호화해 캘린더 일정 설명에 내보낸다(캘린더가 설정된 경우) — 접속기록에 남긴다.
-      if (result.ok) await logExport(req, auth.actor, result.id);
+      if (result.ok && tenancyCalendarId()) await logExport(req, auth.actor, result.id);
       return res.status(result.ok ? 200 : 409).json(result);
     }
     if (body.action === 'import') {
@@ -42,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!tenancyCalendarId()) return res.status(409).json({ ok: false, message: '입주 관리 캘린더가 설정돼 있지 않아요(TENANCY_GCAL_ID).' });
       // 전체 동기화는 모든 입주자의 연락처를 복호화해 일정 설명에 옮긴다 — 값이 서버를 떠나므로 열람과 따로 남긴다.
       const synced = await syncAllTenancyCalendars();
-      await logExport(req, auth.actor, 'sync_all', synced.total);
+      if (!synced.skipped) await logExport(req, auth.actor, 'sync_all', synced.total);
       return res.status(200).json({ ok: true, ...synced });
     }
     return res.status(400).json({ ok: false, message: '알 수 없는 요청이에요.' });
