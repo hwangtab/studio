@@ -44,6 +44,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const summary = await loadRefundAccountSummary(key);
   if (summary.status !== 'present') return res.status(409).json({ ok: false, message: '접수된 환불 계좌가 없어요.' });
   if (summary.refundedAt) return res.status(409).json({ ok: false, message: '이미 송금 완료로 기록했어요.' });
-  await markRefundAccountRefunded(key, new Date());
+  // 기록이 실패했는데 ok를 돌려주면 새로고침해도 버튼이 그대로라 운영자가 이중 송금할 수 있다.
+  const recorded = await markRefundAccountRefunded(key, new Date());
+  if (!recorded) return res.status(500).json({ ok: false, message: '송금 완료를 기록하지 못했습니다. 잠시 후 다시 시도해 주세요.' });
   return res.status(200).json({ ok: true });
 }
