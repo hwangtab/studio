@@ -93,7 +93,8 @@ describe('parseManualBookingInput', () => {
 });
 
 describe('createManualBooking — 캘린더 일정 가져오기(adoptEventId)', () => {
-  const ev = (description = '') => ({ id: 'evt-x', summary: '러프', description, start: NOW, end: NOW, allDay: false });
+  // make()의 예약(2026-11-20 14:00, 3시간)과 같은 시간대의 일정 — 가져오기는 예약이 일정 전체를 덮어야 한다.
+  const ev = (description = '') => ({ id: 'evt-x', summary: '러프', description, start: new Date('2026-11-20T14:00:00+09:00'), end: new Date('2026-11-20T17:00:00+09:00'), allDay: false });
 
   it('손으로 넣은 일정이면 등록 뒤 원본을 지운다', async () => {
     (getCalendarEvent as jest.Mock).mockResolvedValue(ev());
