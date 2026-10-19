@@ -11,7 +11,7 @@ import { syncTenancyCalendar } from './calendar';
  * (정본은 DB). 개인정보는 `private_enc`로만 저장하고, 목록 조회는 그 칸을 읽지 않는다.
  */
 
-export type TenancyListRow = Omit<RoomTenancy, 'privateEnc'> & { hasPrivate: boolean; lastPaidOn: string | null; lastPaidAmount: number | null };
+export type TenancyListRow = Omit<RoomTenancy, 'privateEnc' | 'createdAt' | 'updatedAt'> & { hasPrivate: boolean; lastPaidOn: string | null; lastPaidAmount: number | null };
 
 export type ServiceResult<T = object> = ({ ok: true; calendarError?: string | null } & T) | { ok: false; message: string };
 
@@ -43,7 +43,8 @@ export const listTenancies = async (): Promise<TenancyListRow[]> => {
   const payments = await db.select().from(roomTenancyPayments).orderBy(desc(roomTenancyPayments.paidOn), desc(roomTenancyPayments.createdAt));
   const last = new Map<string, { paidOn: string; amount: number }>();
   for (const p of payments) if (!last.has(p.tenancyId)) last.set(p.tenancyId, { paidOn: p.paidOn, amount: p.amount });
-  return rows.map(({ privateEnc, ...rest }) => ({
+  // Date 컬럼(createdAt·updatedAt)은 Next 페이지 props로 직렬화되지 않는다(dev에서 오류) — 화면이 안 쓰므로 뺀다.
+  return rows.map(({ privateEnc, createdAt: _createdAt, updatedAt: _updatedAt, ...rest }) => ({
     ...rest, hasPrivate: !!privateEnc, lastPaidOn: last.get(rest.id)?.paidOn ?? null, lastPaidAmount: last.get(rest.id)?.amount ?? null,
   }));
 };

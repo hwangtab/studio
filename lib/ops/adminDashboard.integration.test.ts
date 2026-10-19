@@ -508,3 +508,19 @@ describe('공연 주최자 정산 — 대기열·기한 점검', () => {
     }
   });
 });
+
+describe('첫 화면 조회 격리', () => {
+  it('조회 하나(소셜 토큰)가 던져도 화면은 뜨고, 그 칸은 비며, 어떤 칸이 비었는지 이슈로 보인다', async () => {
+    await client.execute('ALTER TABLE social_tokens RENAME TO social_tokens_hidden');
+    try {
+      const dash = await loadAdminDashboard(new Date('2026-09-10T00:00:00Z'));
+      expect(dash.socialTokens).toEqual([]);
+      const issue = dash.issues.find((i) => i.title.includes('첫 화면 현황 일부를 불러오지 못했습니다'));
+      expect(issue).toBeDefined();
+      expect(issue!.title).toContain('소셜 토큰');
+      expect(issue!.severity).toBe('high');
+    } finally {
+      await client.execute('ALTER TABLE social_tokens_hidden RENAME TO social_tokens');
+    }
+  });
+});

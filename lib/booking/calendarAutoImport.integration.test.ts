@@ -26,6 +26,7 @@ import { calendarBlockedRooms } from './calendarGuard';
 import { createBookingEvent, deleteBookingEvent, getCalendarEvent, renameBookingEvent } from './gcal';
 import { AUTO_IMPORT_NOTE_MARK, autoImportCalendarEvents, guessNameFromTitle, planAutoImport } from './calendarAutoImport';
 import { updateAwaitingOrderDetails } from './manualEdit';
+import { createManualBooking, parseManualBookingInput } from './manualEntry';
 /* eslint-enable import/first */
 
 let client: Client;
@@ -226,6 +227,17 @@ describe('autoImportCalendarEvents', () => {
   it('이름의 제어·양방향 문자는 걷는다', () => {
     expect(guessNameFromTitle('김철수\n녹음')).toBe('김철수');
     expect(guessNameFromTitle('\u202e나쁜이름')).toBe('나쁜이름');
+  });
+
+  it('수기로 가져올 때 예약이 일정 전체를 덮지 못하면 거절한다(3시간 일정을 2시간으로 등록하면 원본만 지워지는 문제)', async () => {
+    (getCalendarEvent as jest.Mock).mockResolvedValue({ id: 'c3', summary: '', description: '', start: new Date('2026-11-05T14:00:00+09:00'), end: new Date('2026-11-05T17:00:00+09:00'), allDay: false, transparent: false });
+    const short = parseManualBookingInput({ kind: 'session', productId: 'recording-hourly', date: '2026-11-05', startHour: 14, hours: 2, customerName: '가', customerPhone: '', customerEmail: '', received: false, method: '계좌 입금' }, NOW);
+    if (!short.ok) throw new Error(short.message);
+    expect(await createManualBooking(short.value, NOW, { adoptEventId: 'c3' })).toMatchObject({ ok: false });
+    expect(deleteBookingEvent).not.toHaveBeenCalled();
+    const full = parseManualBookingInput({ kind: 'session', productId: 'recording-hourly', date: '2026-11-05', startHour: 14, hours: 3, customerName: '가', customerPhone: '', customerEmail: '', received: false, method: '계좌 입금' }, NOW);
+    if (!full.ok) throw new Error(full.message);
+    expect(await createManualBooking(full.value, NOW, { adoptEventId: 'c3' })).toMatchObject({ ok: true });
   });
 
   it('일정 설명(운영자 메모)은 예약 메모에 보존된다', async () => {

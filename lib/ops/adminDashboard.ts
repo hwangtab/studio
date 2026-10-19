@@ -132,6 +132,18 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
     setTimeout(resolve, LINK_SYNC_WAIT_MS).unref?.();
   })]);
 
+  /**
+   * 화면의 다른 조회 하나가 던져도 첫 화면 전체가 "현황을 불러오지 못했습니다"로 죽지 않게 — 실패한 조회는 폴백으로 채우고
+   * 어떤 칸이 비었는지 이슈 한 줄로 보인다(점검 격리 runIsolatedCheck와 같은 원칙). 이미 .catch가 있는 조회는 그대로 둔다.
+   */
+  const failed: string[] = [];
+  const guard = <T,>(label: string, promise: Promise<T>, fallback: T, sink: string[]): Promise<T> =>
+    promise.catch((error: unknown) => {
+      console.error(`[admin-dashboard] ${label} 조회 실패 — 폴백으로 채운다`, error instanceof Error ? error.name : 'unknown');
+      sink.push(label);
+      return fallback;
+    });
+
   // 환불이 끝나면(refunded) 꺼져야 한다 — 요청 시각은 환불 뒤에도 남으므로 paid만 센다(admin-serialize.refundRequested).
   // 약관 제10조의 3영업일 기한이 있는 건이다. 조회가 실패해도 대시보드는 열려야 한다(0이면 카드가 안 뜬다).
   const fundingRefundRequestsPromise = db
@@ -148,7 +160,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
   const [issues, sessions, calendarImport, linkSessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending, fundingPayoutsToRecord, shopPayoutsToRecord, shopPayoutsPending, showPayoutsToRecord, showPayoutsPending, awaitingDepositRows] = await Promise.all([
     // 점검 하나가 던져도 첫 화면 전체가 "현황을 불러오지 못했습니다"로 죽지 않게 — 실패는 high 항목으로 보인다.
     runIsolatedCheck('DB 점검', () => collectDbIssues(now)),
-    db
+    guard('이번 주 확정 세션', db
       .select({
         orderId: orders.id,
         orderNo: orders.orderNo,
@@ -160,8 +172,8 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       .from(bookings)
       .innerJoin(orders, eq(orders.id, bookings.orderId))
       .where(and(eq(bookings.status, 'confirmed'), gte(bookings.startAt, from), lt(bookings.startAt, to)))
-      .orderBy(asc(bookings.startAt)),
-    loadUnlinkedCalendarEvents(from, new Date(from.getTime() + CALENDAR_IMPORT_DAYS * DAY_MS)),
+      .orderBy(asc(bookings.startAt)), [], failed),
+    guard('캘린더 미등록 일정', loadUnlinkedCalendarEvents(from, new Date(from.getTime() + CALENDAR_IMPORT_DAYS * DAY_MS)), { events: [], error: '현황 조회 실패' }, failed),
     // 결제 링크로 결제된 이용(예약 시스템에 행이 없다) — 링크에 적은 이용 일시가 이 창 안인 것. 표가 없는 DB(0062 전)에서도 대시보드는 열린다.
     db.all<{ order_id: string; order_no: string; customer_name: string; item_name: string; session_at: number; session_hours: number | null }>(sql`
       SELECT o.id AS order_id, o.order_no, o.customer_name, plo.item_name, plo.session_at, plo.session_hours
@@ -173,27 +185,27 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       console.error('[admin-dashboard] 결제 링크 이용 일정 조회 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
       return [];
     }),
-    db
+    guard('믹싱 작업 대기열', db
       .select({ status: workOrders.status, count: sql<number>`count(*)` })
       .from(workOrders)
       .where(inArray(workOrders.status, ['received', 'in_progress']))
-      .groupBy(workOrders.status),
-    db
+      .groupBy(workOrders.status), [], failed),
+    guard('구독 대기열', db
       .select({ status: subscriptions.status, count: sql<number>`count(*)` })
       .from(subscriptions)
       .where(inArray(subscriptions.status, ['pending_card', 'past_due', 'paused']))
-      .groupBy(subscriptions.status),
-    db
+      .groupBy(subscriptions.status), [], failed),
+    guard('서명 대기 계약', db
       .select({ count: sql<number>`count(*)` })
       .from(contracts)
-      .where(and(eq(contracts.status, 'sent'), gt(contracts.expiresAt, now))),
-    db.select({ platform: socialTokens.platform, expiresAt: socialTokens.expiresAt }).from(socialTokens),
-    countPendingArtistPayouts(),
-    db
+      .where(and(eq(contracts.status, 'sent'), gt(contracts.expiresAt, now))), [], failed),
+    guard('소셜 토큰', db.select({ platform: socialTokens.platform, expiresAt: socialTokens.expiresAt }).from(socialTokens), [], failed),
+    guard('아티스트 정산 대기', countPendingArtistPayouts(), 0, failed),
+    guard('펀딩 심사 대기', db
       .select({ count: sql<number>`count(*)` })
       .from(fundingProjects)
-      .where(eq(fundingProjects.reviewStatus, 'submitted')),
-    countPendingFundingPayouts(),
+      .where(eq(fundingProjects.reviewStatus, 'submitted')), [], failed),
+    guard('펀딩 정산 대기', countPendingFundingPayouts(), 0, failed),
     // 마감 뒤 정산 기록 대기 — 표 조회가 실패해도 대시보드는 열려야 한다(null이면 카드를 숨긴다).
     listFundingProjectsAwaitingPayoutRecord(now).then((rows) => rows.length).catch((error: unknown) => {
       console.error('[admin-dashboard] 정산 기록 대기 조회 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
@@ -217,14 +229,14 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       console.error('[admin-dashboard] 공연 이체 대기 조회 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
       return 0;
     }),
-    db.all<{ kind: string; n: number }>(sql`
+    guard('계좌 입금 대기', db.all<{ kind: string; n: number }>(sql`
       SELECT CASE WHEN o.type = 'ticket' THEN 'shows' WHEN o.type = 'merch' THEN 'shop'
                   WHEN o.type = 'funding' THEN 'funding' ELSE 'bookings' END AS kind, COUNT(*) AS n
       FROM orders o
       WHERE o.status = 'awaiting_deposit' OR (o.type = 'funding' AND o.status = 'pending'
         AND EXISTS (SELECT 1 FROM funding_pledges fp WHERE fp.order_id = o.id AND fp.payment_method = 'bank_transfer' AND fp.entry_source = 'online'))
       GROUP BY kind
-    `),
+    `), [], failed),
   ]);
 
   const countOf = (rows: Array<{ status: string; count: number }>, status: string): number =>
@@ -233,6 +245,13 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
   // 매일 점검 메일에는 있고 화면에는 없던 환경 점검 — 외부 호출이 없는 로컬 검사라 화면에서도 쓴다(토스 키 쌍·필드 암호화 키).
   // 키가 빠지면 결제·정산 저장이 통째로 안 되는데, 메일을 놓치면 이 화면에서도 아무것도 안 보였다.
   const envIssues = [checkTossApiKeyPair(), checkFieldCryptoKey()].filter((issue): issue is HealthIssue => issue !== null);
+  if (failed.length > 0) {
+    envIssues.push({
+      severity: 'high',
+      title: `첫 화면 현황 일부를 불러오지 못했습니다 — ${failed.join(', ')}`,
+      detail: '해당 칸은 0 또는 비어 있게 보입니다(실제 값이 아닙니다). 반복되면 Turso 연결·미적용 마이그레이션을 확인해 주세요.',
+    });
+  }
 
   return {
     issues: [...envIssues, ...issues].sort((a, b) => (a.severity === b.severity ? 0 : a.severity === 'high' ? -1 : 1)),

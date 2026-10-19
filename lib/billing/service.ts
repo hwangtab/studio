@@ -386,6 +386,8 @@ export interface ChargeCycleResult {
    * 것이 아니므로 호출부는 고객에게 '결제 실패' 메일을 보내지 말고 운영자에게만 알린다.
    */
   held?: boolean;
+  /** 보류의 원인이 된 pending 회차의 시도 시각 — 호출부가 "새 보류"(첫날)에만 운영자에게 알리고 그 뒤는 36시간 점검에 맡긴다. */
+  heldSince?: Date;
   /** 토스가 응답하지 못했다(NETWORK_ERROR·CONFIG_ERROR·5xx) — 거절이 아니라 승인 여부 미상. orders는 pending으로 남아 재조회 대상. */
   unresolved?: boolean;
   paymentKey?: string;
@@ -472,6 +474,7 @@ export const chargeCycle = async (
       return {
         ok: false,
         held: true,
+        heldSince: row.attemptedAt,
         status: subscription.status,
         tossCode: refetched.code,
         message: '이전 결제 상태를 확인하지 못해 청구를 보류했어요. 잠시 후 다시 시도해 주세요.',
