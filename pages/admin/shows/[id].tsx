@@ -573,7 +573,7 @@ function TicketRefundControl({ order: o, refundable, startsAt, showtimeCancelled
       {o.tickets.some((k) => k.status === 'refunding') && (
         <Button light variant="weak" size="sm" disabled={busy} onClick={() =>
           run({ action: 'reconcile_refund', orderNo: o.orderNo }, {
-            confirm: `${o.orderNo}에 '환불중'으로 멈춘 티켓이 있습니다. 토스에 실제 취소 여부를 물어 장부에 반영하거나(취소됨) 발권 상태로 되돌립니다(취소 안 됨). 재취소는 하지 않습니다.\n\n고객이 방금 환불을 신청했을 수 있으면 1분 뒤에 누르세요 — 진행 중인 요청을 되돌리면 그 티켓이 두 번 환불될 수 있습니다.`,
+            confirm: `${o.orderNo}에 '환불중'으로 멈춘 티켓이 있습니다. 토스에 실제 취소 여부를 물어 장부에 반영하거나(취소됨) 발권 상태로 되돌립니다(취소 안 됨). 재취소는 하지 않습니다. 방금(2분 안) 시작된 환불은 손대지 않습니다.`,
             success: '환불 상태를 재확인했습니다.',
           }).then((r) => { const m = r?.data?.message; if (typeof m === 'string') window.alert(m); })}>
           환불 재확인

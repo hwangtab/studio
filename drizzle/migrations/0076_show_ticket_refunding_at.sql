@@ -1,0 +1,1 @@
+ALTER TABLE `show_tickets` ADD `refunding_at` integer;

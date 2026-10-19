@@ -2130,6 +2130,8 @@ export const showTickets = sqliteTable('show_tickets', {
   compensatedAt: integer('compensated_at'),
   checkedInAt: integer('checked_in_at'),
   checkedInBy: text('checked_in_by'),
+  /** 'refunding' 선점 시각(unixepoch). 환불 재확인이 "방금 시작된(토스 응답 대기 중) 환불"을 되돌리지 않게 가른다 — lib/shows/refund.ts. issued로 되돌릴 때 NULL. */
+  refundingAt: integer('refunding_at'),
   createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
 }, (t) => ({
   statusCheck: check('show_tickets_status_check', sql`${t.status} in ('held','issued','refunding','refunded','void')`),

@@ -164,6 +164,14 @@ npm run indexnow:changed -- --dry-run
 진위확인 및 상태조회 서비스"의 일반 인증키 Decoding, Production·Preview)는 머지 전에 넣어 두면 머지 푸시가 싣고 간다 — 따로 재배포하지 않는다.
 키가 없어도 저장은 되고 상태가 "미확인(API 키 없음)"으로 남는다. 규칙은 `lib/funding/CLAUDE.md` "개설자 사업자 정보·국세청 조회".
 
+### 마이그레이션 0076(`show_tickets.refunding_at`)도 배포보다 먼저 적용한다
+
+공연 티켓 환불 선점('refunding') 시각이다. 관리자 '환불 재확인'(`reconcileShowRefund`)이 선점 뒤 120초 안의 티켓은 "토스 응답 대기 중"으로
+보고 되돌리지 않는다(`REFUNDING_GRACE_SECONDS`) — 되돌린 직후 그 취소가 성공하면 같은 티켓이 두 번 환불되던 창을 막는다. NULL(0076 이전
+선점)은 오래된 것으로 본다. 순서를 뒤집으면 `show_tickets`를 읽는 모든 경로(예매 확정·티켓 화면·체크인·환불)가 `no such column:
+refunding_at`으로 깨진다 — 관계 조회가 전체 컬럼을 SELECT한다. 확인은 `PRAGMA table_info(show_tickets);`. 머지 직후 Vercel 빌드가
+끝나기 전에 `npm run db:migrate -- --yes`를 돌릴 것(빌드 3~4분, 적용 수 초).
+
 ### 마이그레이션 0065(`manual_revenues.deleted_at`·`deleted_by`)도 배포보다 먼저 적용한다
 
 수기 매출 삭제가 행 삭제에서 소프트 삭제(누가 언제 지웠는지 남김)로 바뀌었다. 순서를 뒤집으면 **수기 매출 조회·삭제만** 실패한다 —
