@@ -171,12 +171,17 @@ describe('관리자 예약 API — 계좌 입금', () => {
     const b = await createBank();
     await admin(b.id, 'confirm_deposit');
     jest.spyOn(console, 'error').mockImplementation(() => {});
-    await client.execute('ALTER TABLE refund_accounts RENAME TO refund_accounts_x');
+    await client.execute({
+      sql: `INSERT INTO refund_accounts (id, order_kind, order_no, bank_name, account_number_enc, account_holder, requested_at) VALUES ('ra','session',?,'국민','enc','김입금', unixepoch())`,
+      args: [b.orderNo],
+    });
+    // 환불 계좌는 접수돼 있고(없으면 409) 송금 시각 UPDATE만 실패하는 경우 — 표를 통째로 없애면 계좌 확인 단계에서 먼저 409로 멈춘다.
+    await client.execute(`CREATE TRIGGER refund_sent_fail BEFORE UPDATE ON refund_accounts BEGIN SELECT RAISE(ABORT, 'boom'); END`);
     try {
       const res = await admin(b.id, 'mark_refund_sent');
       expect(res.status).toBe(500);
     } finally {
-      await client.execute('ALTER TABLE refund_accounts_x RENAME TO refund_accounts');
+      await client.execute('DROP TRIGGER refund_sent_fail');
     }
   });
 });
