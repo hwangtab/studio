@@ -166,6 +166,45 @@ export const studioOperator = {
       publisher: '뉴스아트',
       datePublished: '2024-12-30',
     },
+    {
+      // 2026-10-19 원문 직접 확인(crawl4ai). "녹음, 믹싱, 마스터링: 스튜디오 놀"을 제작사
+      // (한국스마트협동조합)와 별도로 명시 — 소유 관계 주장 없이 작업 크레딧만 표기.
+      url: 'https://www.news-art.co.kr/news/article.html?no=29670',
+      title: '세민, 첫 정규앨범 <여린잎> 발매',
+      publisher: '뉴스아트',
+      datePublished: '2024-01-11',
+    },
+    {
+      // 2026-10-19 원문 직접 확인(crawl4ai). "믹싱, 마스터링: 황경하 (@스튜디오 놀)"로 개인
+      // 귀속, kosmart 언급 없음.
+      url: 'https://www.news-art.co.kr/news/article.html?no=32765',
+      title: '삼각전파사 《디스토피아 2025》 인터뷰: 디스토피아의 음악적 연대기',
+      publisher: '뉴스아트',
+      datePublished: '2025-04-20',
+    },
+    {
+      // 2026-10-19 원문 직접 확인(crawl4ai). "믹싱은 스튜디오 놀(황경하)"로 개인 귀속.
+      url: 'https://www.news-art.co.kr/news/article.html?no=32942',
+      title: "'트로트 순례자'와 '한국 록의 고고학자', 서울에서 한 장의 음반을 빚다",
+      publisher: '뉴스아트',
+      datePublished: '2026-06-22',
+    },
+    {
+      // 2026-10-19 원문 직접 확인(crawl4ai). "서울 은평구 스튜디오 놀에서의 녹음과 믹싱" —
+      // 장소·공정 설명, 소유 관계 주장 없음.
+      url: 'https://www.news-art.co.kr/news/article.html?no=32724',
+      title: '전쟁과 폭력에 저항하는 12인의 음악가들, 평화를 노래하다 - 『이름을 모르는 먼 곳의 그대에게』 발매',
+      publisher: '뉴스아트',
+      datePublished: '2025-02-07',
+    },
+    {
+      // 2026-10-19 원문 직접 확인(crawl4ai). "스튜디오 놀에서 진행된 레코딩과 믹싱" —
+      // 장소·공정 설명, 소유 관계 주장 없음.
+      url: 'https://www.news-art.co.kr/news/article.html?no=32698',
+      title: "허정혁 '바람 한 점' 발매 - 봄날의 속삭임을 담아낸 서정적 포크",
+      publisher: '뉴스아트',
+      datePublished: '2024-12-13',
+    },
   ],
   jobTitleByLocale: {
     ko: '음악 프로듀서 · 엔지니어',
