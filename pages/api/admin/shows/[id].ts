@@ -14,6 +14,7 @@ import { sendShowRefundEmail, sendShowtimeCancelledEmail } from '../../../../lib
 import { reconcileShowRefund, refundShowTickets } from '../../../../lib/shows/refund';
 import { issueCompTickets, revokeCompTicket } from '../../../../lib/shows/service';
 import { cancelShowtime, changeShowtime } from '../../../../lib/shows/showtimeOps';
+import { SHOWTIME_CANCEL_REFUND_REASON } from '../../../../lib/shows/refundReasons';
 import { cancelAwaitingShowDeposit, confirmShowBankDeposit, deliverShowDepositGuide } from '../../../../lib/shows/bankDeposit';
 import { AWAITING_DEPOSIT, bankDepositStateOf } from '../../../../lib/payments/bankDeposit';
 import { markRefundAccountRefunded } from '../../../../lib/payments/refundAccount';
@@ -130,6 +131,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             JOIN orders o ON o.order_no = t.order_no
             WHERE t.showtime_id = ${showtime.id} AND o.status IN ('paid', 'partially_refunded')
               AND t.status IN ('held', 'issued') AND t.checked_in_at IS NULL
+              -- 계좌 입금 주문은 토스로 돌려줄 수 없어 고객이 환불 계좌를 적을 때까지 issued로 남는 것이 정상이다 — 이어서 처리 대상이 아니다.
+              AND NOT EXISTS (SELECT 1 FROM payments p WHERE p.order_id = o.id AND p.payment_key LIKE 'bank-deposit:%')
           `) as Array<{ orderNo: string }>)
         : [];
       const resume = pendingRefund.length > 0;
@@ -143,40 +146,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         await revalidateShow(res, show.slug);
         return res.status(500).json({ ok: false, message: '회차 취소 처리가 중단됐습니다. 환불이 남은 주문은 "환불 이어서 처리"로 다시 돌릴 수 있습니다.' });
       }
-      // 안내 대상: 이번에 살아 있던 주문 ∪ 이번 실행에서 환불한 주문. 이어서 처리할 때는 앞선 실행이 환불만 하고
-      // 메일을 못 보낸 주문(500으로 끝난 경우)도 있으므로 이 회차의 회차 취소 환불 기록이 있는 주문에도 보낸다 —
-      // 두 번 받는 쪽이 못 받는 쪽보다 낫다.
-      const doneRefundSum = async (orderNo: string): Promise<number> => {
+      // 안내 대상 — 첫 실행: 살아 있던 주문 전부(환불·실패·계좌 입금·입장 티켓만 남음). 이어서 처리: **이번 실행이 손댄
+      // 주문만**(환불 성공·실패). 앞선 실행이 이미 안내한 주문에 다시 보내지 않는다 — 계좌 입금 주문은 고객이 환불 계좌를
+      // 적을 때까지 paid로 남아 매번 '이어서 처리' 대상처럼 보이므로, 그 주문에 누를 때마다 메일이 가는 것을 막는다.
+      const showtimeCancelRefundSum = async (orderNo: string): Promise<number> => {
         const [row] = await db.all(sql`
           SELECT COALESCE(SUM(rf.amount), 0) AS total FROM refunds rf
           JOIN payments p ON p.id = rf.payment_id JOIN orders o ON o.id = p.order_id
-          WHERE o.order_no = ${orderNo} AND rf.status = 'done'
+          WHERE o.order_no = ${orderNo} AND rf.status = 'done' AND rf.reason = ${SHOWTIME_CANCEL_REFUND_REASON}
         `) as Array<{ total: number }>;
         return Number(row?.total ?? 0);
       };
-      const notifyTargets = new Set<string>([...affected.map((a) => a.orderNo), ...r.refundedOrderNos]);
-      if (resume) {
-        const previouslyRefunded = await db.all(sql`
-          SELECT DISTINCT so.order_no as orderNo FROM show_orders so
-          JOIN orders o ON o.order_no = so.order_no
-          JOIN payments p ON p.order_id = o.id
-          JOIN refunds rf ON rf.payment_id = p.id
-          WHERE so.showtime_id = ${showtime.id} AND rf.reason = '공연 회차 취소 환불' AND rf.status = 'done'
-        `) as Array<{ orderNo: string }>;
-        for (const { orderNo } of previouslyRefunded) notifyTargets.add(orderNo);
-      }
+      const notifyTargets = new Set<string>(
+        resume ? [...r.refundedOrderNos, ...r.failedOrders] : [...affected.map((a) => a.orderNo), ...r.refundedOrderNos],
+      );
       for (const orderNo of notifyTargets) {
         // 처리 상한에 걸려 이번에 손대지 않은 주문은 아직 안내하지 않는다 — 다음 실행이 보낸다.
-        const touched = orderNo in r.perOrder || r.failedOrders.includes(orderNo) || r.bankRefundOrders.includes(orderNo) || !affected.some((a) => a.orderNo === orderNo);
+        const touched = orderNo in r.perOrder || r.failedOrders.includes(orderNo) || r.bankRefundOrders.includes(orderNo);
         if (!touched) continue;
         try {
           const per = r.perOrder[orderNo];
           // 이번 실행이 토스로 돌려준 금액이 곧 안내할 금액이다. 이번에 돌려줄 것이 없던 주문(입장 티켓만 남음·앞선 실행이
-          // 이미 환불)과 앞선 실행에서 환불만 되고 안내 못 받은 주문은 장부의 done 환불 합계로 말한다 — 0이면 "환불 대상 없음".
-          const refundedAmount = per && per.skipped === null ? per.refunded : await doneRefundSum(orderNo);
+          // 이미 환불)은 이 회차 취소로 돌려준 합계로 말한다 — 0이면 "환불 대상 없음".
+          const refundedAmount = per && per.skipped === null ? per.refunded : await showtimeCancelRefundSum(orderNo);
           await sendShowtimeCancelledEmail(orderNo, {
             refundCompleted: !r.failedOrders.includes(orderNo) && !r.bankRefundOrders.includes(orderNo),
             refundedAmount,
+            checkedInExcluded: (per?.checkedInValue ?? 0) > 0,
             ...(r.bankRefundOrders.includes(orderNo) ? { bankNotice: 'refund_account_needed' as const } : {}),
           });
         } catch (error) {

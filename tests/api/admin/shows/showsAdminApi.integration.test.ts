@@ -204,15 +204,19 @@ describe('관리자 공연 API', () => {
     const failedOrderNo = first.failedOrders[0];
     const otherOrderNo = orderNos.find((o) => o !== failedOrderNo)!;
 
+    // 첫 실행의 안내: 살아 있던 두 주문 모두(실패한 주문은 '처리 중'으로).
+    const firstMails = (sendShowtimeCancelledEmail as jest.Mock).mock.calls.map((c) => c[0] as string);
+    expect([...firstMails].sort()).toEqual([...orderNos].sort());
+
     // 이어서 처리: 회차는 cancelled인데 paid 주문이 남아 있으므로 409가 아니라 재실행이다.
-    (sendShowtimeCancelledEmail as jest.Mock).mockClear();
     res = await call(handler, { query: { id: showId }, body: { action: 'cancel_showtime', showtimeId } });
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json.mock.calls[0][0]).toMatchObject({ ok: true, resumed: true, refundedOrders: 1, failedOrders: [] });
-    // 안내 메일: 이번에 환불한 주문 + 앞선 실행에서 환불만 되고 안내 못 받은 주문 모두에게, 실제 환불액으로.
+    // 안내 메일: 이어서 처리에서는 이번에 손댄 주문(실패했던 것)에만 — 앞선 실행이 이미 안내한 주문에 다시 보내지 않는다.
     const mailCalls = (sendShowtimeCancelledEmail as jest.Mock).mock.calls as Array<[string, { refundedAmount?: number; refundCompleted: boolean }]>;
-    const byOrder = Object.fromEntries(mailCalls.map(([o, opts]) => [o, opts]));
-    expect(Object.keys(byOrder).sort()).toEqual([...orderNos].sort());
+    expect(mailCalls.filter(([o]) => o === otherOrderNo)).toHaveLength(1);
+    expect(mailCalls.filter(([o]) => o === failedOrderNo)).toHaveLength(2); // 첫 실행 '처리 중' + 이번 실행 완료
+    const byOrder = Object.fromEntries(mailCalls.map(([o, opts]) => [o, opts])); // 마지막 호출 기준
     expect(byOrder[failedOrderNo].refundCompleted).toBe(true);
     expect(byOrder[otherOrderNo].refundCompleted).toBe(true);
     // 둘째 주문은 입장 티켓 한 장을 뺀 한 장 값만 환불됐다 — 어느 실행이 돌려줬든 안내는 실제 환불액이다.

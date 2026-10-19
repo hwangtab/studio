@@ -54,9 +54,11 @@ describe('shows email 본문', () => {
   });
 
   it('회차 취소 메일은 실제 환불액으로 말한다 — 부분이면 금액을, 0원이면 전액이라고 쓰지 않는다', () => {
-    const partial = buildShowtimeCancelledEmail({ ...base, refundCompleted: true, refundedAmount: 10000 }).text;
+    const partial = buildShowtimeCancelledEmail({ ...base, refundCompleted: true, refundedAmount: 10000, checkedInExcluded: true }).text;
     expect(partial).toContain('30,000원 중 10,000원을 환불 처리');
     expect(partial).toContain('입장 처리된 티켓 제외');
+    // 입장 티켓이 없는데 부분이면(회차 취소 전 고객이 일부 환불받음) 그 괄호를 쓰지 않는다.
+    expect(buildShowtimeCancelledEmail({ ...base, refundCompleted: true, refundedAmount: 10000 }).text).toContain('이미 환불된 금액 제외');
     expect(partial).not.toContain('전액 환불');
     const none = buildShowtimeCancelledEmail({ ...base, refundCompleted: true, refundedAmount: 0 }).text;
     expect(none).toContain('환불 대상 금액이 없어요');
