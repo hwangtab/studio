@@ -114,10 +114,15 @@ export default function AdminPaymentLinksPage({ links: initialLinks, truncated, 
   const close = async (slug: string, name: string) => {
     if (!window.confirm(`"${name}" 링크를 닫을까요? 닫으면 열리지 않고, 되돌릴 수 없어요.`)) return;
     setBusy(true);
-    const data = await post({ action: 'close', slug });
-    setBusy(false);
-    if (data?.ok) window.location.reload();
-    else setError(data?.message ?? '닫지 못했어요.');
+    try {
+      const data = await post({ action: 'close', slug });
+      if (data?.ok) window.location.reload();
+      else setError(data?.message ?? '닫지 못했어요.');
+    } catch {
+      setError('네트워크 오류로 닫지 못했어요.');
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (

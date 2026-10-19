@@ -74,11 +74,21 @@ const formOf = (t: TenancyListRow): FormState => ({
   roomListPrice: t.roomListPrice === null ? '' : String(t.roomListPrice), note: t.note ?? '', phone: '', emergencyContact: '', email: '', businessNumber: '', gender: '',
 });
 
+/**
+ * 금액 칸을 숫자로 — 쉼표·공백·`원`·`₩`만 걷고 **숫자만 남을 때만** 받는다. "36만원"은 걷고 나면 "36만"이라 숫자가 아니다 —
+ * 예전엔 NaN이 JSON에서 null이 돼 서버가 0원으로 저장했다(감사 2026-10-19). 빈 칸은 null, 숫자가 아니면 undefined(= 잘못된 값).
+ */
+const parseWon = (text: string): number | null | undefined => {
+  const cleaned = text.replace(/[,\s원₩]/g, '');
+  if (cleaned === '') return null;
+  return /^\d{1,12}$/.test(cleaned) ? Number(cleaned) : undefined;
+};
+
 const inputOf = (f: FormState) => ({
-  kind: f.kind, roomNumber: f.roomNumber, tenantName: f.tenantName, monthlyAmount: Number(f.monthlyAmount.replace(/[,\s원]/g, '')),
-  depositAmount: f.depositAmount.trim() === '' ? null : Number(f.depositAmount.replace(/[,\s원]/g, '')),
+  kind: f.kind, roomNumber: f.roomNumber, tenantName: f.tenantName, monthlyAmount: parseWon(f.monthlyAmount),
+  depositAmount: parseWon(f.depositAmount),
   startDate: f.startDate, endDate: f.endDate || null, nextDueOn: f.nextDueOn, billingDay: f.billingDay || undefined,
-  hasWindow: f.hasWindow === '' ? null : f.hasWindow === 'yes', furnishings: f.furnishings, roomListPrice: f.roomListPrice.trim() === '' ? null : Number(f.roomListPrice.replace(/[,\s원]/g, '')), note: f.note,
+  hasWindow: f.hasWindow === '' ? null : f.hasWindow === 'yes', furnishings: f.furnishings, roomListPrice: parseWon(f.roomListPrice), note: f.note,
   private: { phone: f.phone, emergencyContact: f.emergencyContact, email: f.email, businessNumber: f.businessNumber, gender: f.gender },
 });
 
@@ -130,6 +140,12 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form || busy) return;
+    const bad = ([['월 이용료', form.monthlyAmount, false], ['보증금', form.depositAmount, true], ['방 정가', form.roomListPrice, true]] as const)
+      .find(([, text, optional]) => parseWon(text) === undefined || (!optional && parseWon(text) === null));
+    if (bad) {
+      setNotice(`${bad[0]}은 숫자로만 적어 주세요(예: 360000). “36만원” 같은 표기는 받지 않아요.`);
+      return;
+    }
     setBusy(true);
     const data = editing
       ? await call(`/api/admin/tenancies/${editing.id}`, 'POST', { action: 'update', input: inputOf(form), keepPrivate: !privateLoaded })
@@ -217,7 +233,7 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
     <>
       <Head><title>입주 관리 | Studio NOL 관리자</title><meta name="robots" content="noindex" /></Head>
       <AdminShell title="입주 관리" description="연습실 월 입주자와 비상주 사무실 — 입금 예정일을 구글 캘린더에도 올립니다.">
-        {tableMissing && <div className="mb-4 rounded-lg bg-amber-50 p-4 text-sm text-amber-900">입주 표가 아직 없어요(마이그레이션 0066을 먼저 적용하세요).</div>}
+        {tableMissing && <div className="mb-4 rounded-lg bg-amber-50 p-4 text-sm text-amber-900">입주 기록을 읽지 못했어요 — 마이그레이션 0066 전이거나 DB 문제예요. 서버 로그를 확인해 주세요.</div>}
         {!calendarConfigured && <div className="mb-4 rounded-lg bg-amber-50 p-4 text-sm text-amber-900">연습실 캘린더가 설정돼 있지 않아 캘린더 일정은 만들어지지 않아요(환경변수 PRACTICE_ROOM_GCAL_ID 또는 TENANCY_GCAL_ID).</div>}
         {notice && <div className="mb-4 rounded-lg bg-blue-50 p-3 text-sm text-blue-800">{notice}</div>}
 

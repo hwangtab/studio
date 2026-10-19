@@ -191,6 +191,14 @@ export const createManualBooking = async (
       if (linked.length > 0 || /주문번호:/.test(event.description)) {
         return { ok: false, message: '이 일정은 이미 사이트 예약에 연결돼 있어 가져올 수 없어요.' };
       }
+      // 예약이 가져온 일정 전체를 덮어야 한다 — 아니면 등록하면서 원본을 지워 덮지 못한 시간이 어디에도 안 막힌다(예: 3시간 일정을 2시간 상품으로 등록, 감사).
+      if (input.kind === 'session') {
+        const bookingStart = kstDateTime(input.payload.date, input.payload.startHour);
+        const bookingEnd = kstDateTime(input.payload.date, input.payload.startHour + (input.payload.hours ?? 0));
+        if (event.start < bookingStart || event.end > bookingEnd) {
+          return { ok: false, message: '예약 시간이 캘린더 일정보다 짧아요. 일정 전체를 덮는 시간으로 맞춰 등록해 주세요(안 그러면 덮지 못한 시간이 열려요).' };
+        }
+      }
       // 자동 등록은 목록을 읽은 뒤 일정이 구글에서 옮겨졌을 수 있다 — 시간이 달라졌으면 옛 시간으로 예약을 만들고 옮겨진 일정을 지우게 되므로 거절한다.
       if (opts.expectEventWindow && (event.start.toISOString() !== opts.expectEventWindow.startAt || event.end.toISOString() !== opts.expectEventWindow.endAt)) {
         return { ok: false, message: '캘린더 일정의 시간이 그새 바뀌었어요. 다음에 다시 시도해요.' };
