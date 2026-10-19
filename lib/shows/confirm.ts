@@ -519,7 +519,9 @@ export async function autoCancelShowApproval(
   // 재조회 결과가 실제로 이 주문·이 paymentKey의 것인지 확인한다 — confirmShowOrder의
   // ALREADY_PROCESSED_PAYMENT 재조회 검증과 같은 판정이다. 페이로드나 호출자 주장을
   // 그대로 믿지 않는다.
-  if (!alreadyCancelledInToss && (approved.paymentKey !== paymentKey || approved.orderId !== order.orderNo || approved.status !== 'DONE')) {
+  // PARTIAL_CANCELED(콘솔에서 일부만 취소)도 남은 금액은 취소할 수 있다 — DONE만 받으면 영영 pending_retry로 돈다.
+  const cancellable = approved.status === 'DONE' || approved.status === 'PARTIAL_CANCELED';
+  if (!alreadyCancelledInToss && (approved.paymentKey !== paymentKey || approved.orderId !== order.orderNo || !cancellable)) {
     console.error('[shows-confirm] 자동 취소 재조회 검증 불일치 — 취소하지 않는다(재시도 대상)', {
       orderNo,
       paymentKey,

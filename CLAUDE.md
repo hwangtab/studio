@@ -425,8 +425,8 @@ drizzle의 libsql 마이그레이터는 적용된 것 중 `created_at`이 가장
 ### 운영 DB 마이그레이션 적용 방법 — Turso CLI로 한다
 
 `npm run db:migrate`(= `scripts/db-migrate.mjs`)가 **유일한 적용 경로**다. 스크립트가 main 병합본인지(브랜치 main·
-HEAD == origin/main) 확인하고, 토큰을 `.env.local`에서 읽지 않고 그 자리에서 1일짜리로 만들어, 적용 예정 목록과
-"when이 작아 조용히 건너뛰어질 목록"을 보여 준 뒤 `--yes`가 있어야 적용한다. 건너뛰어질 것이 있으면 멈춘다.
+HEAD == origin/main) 확인하고, Turso CLI 세션으로 적용 예정 목록과 "when이 작아 조용히 건너뛰어질 목록"을 보여 준 뒤,
+`--yes`가 있을 때만 그 자리에서 1일짜리 토큰을 만들어 적용한다(미리 보기는 토큰을 만들지 않는다). 건너뛰어질 것이 있으면 멈춘다.
 `.env.local`의 TURSO_*는 로컬 작업용 **단기(30일) 토큰**이다 — 운영 적용에 쓰지 않는다(`vercel env pull`은 Sensitive라
 빈 값으로 내려온다). 이 맥에는 로그인된 Turso CLI가 있다.
 
@@ -460,8 +460,10 @@ GitHub Secret(`--read-only -e 90d`, drift 점검용 — **90일마다 재발급*
 
 운영 Turso 조직의 플랜은 **starter(무료)**라 시점 복구(PITR) 보존이 **1일**이다(Developer 10일·Scaler 30일).
 하루 넘겨 발견한 사고(잘못된 마이그레이션·실수 삭제·토큰 유출)는 PITR로 되돌릴 수 없다. 그래서
-`/api/cron/backup-ledger`(매일 02:30 KST, `lib/ops/ledgerBackup.ts`)가 주문·결제·환불·후원·구독·공연 원장을 표 단위로
-떠서 private Blob `ledger/backup/`에 28일 보관한다(빌링키 원문·관리 토큰은 뺀다). 실패하면 운영자 메일이 온다.
+`/api/cron/backup-ledger`(매일 02:30 KST, `lib/ops/ledgerBackup.ts`)가 주문·결제·환불·예약·결제 링크·후원·구독·입주·정산·공연·
+상점 원장을 표 단위로 떠서 private Blob `ledger/backup/`에 28일 보관한다. 자격증명·상시 토큰은 뺀다(빌링키 원문·raw_response·
+구독 manage/setup 토큰·customer_key·주문 manage_token·티켓 code, 토스 원문의 secret) — 그래서 **복구 때 관리 링크·티켓 QR은
+전부 재발급·재발송이 전제**다. 백업 실패와 옛 백업 정리 실패는 각각 운영자 메일이 온다.
 
 - **PITR 복구**(24시간 안쪽): `~/.turso/turso db create studio-nol-restore --from-db studio-nol --timestamp <RFC3339>`
   → 새 DB 내용을 확인한 뒤 Vercel env의 `TURSO_DATABASE_URL`·`TURSO_AUTH_TOKEN`을 그쪽으로 교체. 원본은 지우지 않는다.
