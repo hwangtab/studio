@@ -20,7 +20,7 @@ jest.mock('../booking/gcal', () => ({
 import { createEventOnCalendar, deleteEventOnCalendar, patchEventOnCalendar } from '../booking/gcal';
 import { importTenancySheet } from './importService';
 import { openPrivate } from './privateData';
-import { parseTenancyInput } from './rules';
+import { kstToday, parseTenancyInput } from './rules';
 import { createTenancy, endTenancy, listTenancies, recordPayment, reopenTenancy, updateTenancy } from './service';
 import { syncTenancyCalendar } from './calendar';
 /* eslint-enable import/first */
@@ -104,14 +104,46 @@ describe('createTenancy', () => {
   });
 });
 
+describe('동시 요청·잘못된 값 (4차 감사)', () => {
+  it('같은 방 동시 등록은 DB 유일 인덱스가 하나만 통과시킨다', async () => {
+    const [a, b] = await Promise.all([createTenancy(input({ tenantName: 'A' })), createTenancy(input({ tenantName: 'B' }))]);
+    expect([a.ok, b.ok].filter(Boolean)).toHaveLength(1);
+    expect(await one(`SELECT COUNT(*) AS n FROM room_tenancies WHERE status = 'active' AND room_number = 'R05'`)).toEqual({ n: 1 });
+    const loser = a.ok ? b : a;
+    expect(loser).toMatchObject({ ok: false });
+  });
+
+  it('퇴실한 두 사람을 동시에 되돌려도 활성은 하나다', async () => {
+    const a = await createTenancy(input({ tenantName: 'A' }));
+    if (!a.ok) throw new Error(a.message);
+    await endTenancy(a.id, '2026-10-01');
+    const b = await createTenancy(input({ tenantName: 'B' }));
+    if (!b.ok) throw new Error(b.message);
+    await endTenancy(b.id, '2026-10-02');
+    const [x, y] = await Promise.all([reopenTenancy(a.id), reopenTenancy(b.id)]);
+    expect([x.ok, y.ok].filter(Boolean)).toHaveLength(1);
+  });
+
+  it('말이 안 되는 날짜(0001년·9999년·2020년 이전)는 입금·퇴실에서 거절한다', async () => {
+    const r = await createTenancy(input());
+    if (!r.ok) throw new Error(r.message);
+    for (const d of ['0001-01-01', '9999-12-31', '2016-11-05']) {
+      expect(await recordPayment(r.id, { paidOn: d })).toMatchObject({ ok: false });
+      expect(await endTenancy(r.id, d)).toMatchObject({ ok: false });
+    }
+    expect(await one(`SELECT status FROM room_tenancies WHERE id = '${r.id}'`)).toEqual({ status: 'active' });
+  });
+});
+
 describe('recordPayment', () => {
   it('입금 예정일을 한 달 넘기고 일정을 옮기며 이력을 남긴다', async () => {
     const r = await createTenancy(input());
     if (!r.ok) throw new Error(r.message);
-    const p = await recordPayment(r.id, { paidOn: '2026-11-13' });
+    const today = kstToday(); // 입금일은 2020년 이후·내일까지만 받는다(말이 안 되는 날짜 거절)
+    const p = await recordPayment(r.id, { paidOn: today });
     expect(p).toMatchObject({ ok: true, nextDueOn: '2026-12-14' });
     expect(patchEventOnCalendar).toHaveBeenCalledWith('cal-tenancy', 'evt-due', expect.objectContaining({ start: { date: '2026-12-14' } }));
-    expect(await one(`SELECT paid_on, amount, for_due_on FROM room_tenancy_payments`)).toEqual({ paid_on: '2026-11-13', amount: 360000, for_due_on: '2026-11-14' });
+    expect(await one(`SELECT paid_on, amount, for_due_on FROM room_tenancy_payments`)).toEqual({ paid_on: today, amount: 360000, for_due_on: '2026-11-14' });
   });
 
   it('말일 납부일은 달 길이에 맞춘다', async () => {
@@ -124,7 +156,7 @@ describe('recordPayment', () => {
   it('퇴실한 사람에게는 기록하지 않는다', async () => {
     const r = await createTenancy(input());
     if (!r.ok) throw new Error(r.message);
-    await endTenancy(r.id, '2026-12-01');
+    await endTenancy(r.id, kstToday());
     expect(await recordPayment(r.id, {})).toMatchObject({ ok: false });
   });
 });
@@ -133,7 +165,7 @@ describe('endTenancy / reopenTenancy', () => {
   it('퇴실하면 일정을 지우고 방이 비며, 되돌릴 때 그새 다른 사람이 들어왔으면 거절한다', async () => {
     const a = await createTenancy(input());
     if (!a.ok) throw new Error(a.message);
-    expect(await endTenancy(a.id, '2026-12-01')).toMatchObject({ ok: true });
+    expect(await endTenancy(a.id, kstToday())).toMatchObject({ ok: true });
     expect(deleteEventOnCalendar).toHaveBeenCalledWith('cal-tenancy', 'evt-due');
     expect(deleteEventOnCalendar).toHaveBeenCalledWith('cal-tenancy', 'evt-end');
     expect(await one(`SELECT due_event_id, end_event_id, status FROM room_tenancies WHERE id = '${a.id}'`)).toEqual({ due_event_id: null, end_event_id: null, status: 'ended' });

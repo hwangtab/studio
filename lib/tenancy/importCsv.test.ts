@@ -34,3 +34,20 @@ describe('parseTenancySheet', () => {
     expect(parseTenancySheet('a,b\n1,2').skipped[0].reason).toContain('머리글');
   });
 });
+
+describe('금액·길이 엄격 파싱 (4차 감사)', () => {
+  const head = '방,가격,창,피아노,이름, 계약액,연체여부,대여시작일,종료일확인,계약종료일,최종입금일,최종입금액,입금예정일,전화번호,성별,비상연락, 보증금,특약';
+  const row = (amount: string, name = '홍길동') => `${head}\nR05,,X,,${name},"${amount}",,2026-10-14,,,2026-10-14,"₩360,000",2026-11-14,,여,,,`;
+  it('소수·음수·지수 표기·글자 섞인 금액은 읽지 않고 그 행을 건너뛴다', () => {
+    for (const bad of ['360,000.50', '-360000', '1e9', '40만', '99999999999999999999999']) {
+      const r = parseTenancySheet(row(bad));
+      expect(r.rows).toHaveLength(0);
+      expect(r.skipped).toHaveLength(1);
+    }
+    expect(parseTenancySheet(row('₩360,000')).rows[0].input.monthlyAmount).toBe(360000);
+  });
+  it('이름은 100자로 자르고 서로게이트 쌍을 쪼개지 않는다', () => {
+    const name = '😀'.repeat(150);
+    expect(Array.from(parseTenancySheet(row('360000', name)).rows[0].input.tenantName)).toHaveLength(100);
+  });
+});

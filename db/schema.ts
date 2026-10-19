@@ -2685,7 +2685,11 @@ export const roomTenancies = sqliteTable(
     createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
     updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   },
-  (t) => [index('room_tenancies_status_idx').on(t.status, t.nextDueOn)],
+  (t) => [
+    index('room_tenancies_status_idx').on(t.status, t.nextDueOn),
+    // 같은 방에 입주 중인 사람은 하나 — 확인 후 쓰는 코드(`roomTaken`)는 동시 요청에 뚫리므로(감사 2026-10-19) DB가 마지막으로 막는다. 비상주(방 없음)·퇴실은 제외.
+    uniqueIndex('room_tenancies_active_room_uq').on(t.roomNumber).where(sql`status = 'active' AND room_number IS NOT NULL`),
+  ],
 );
 
 export const roomTenancyPayments = sqliteTable(

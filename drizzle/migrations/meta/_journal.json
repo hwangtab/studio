@@ -519,6 +519,13 @@
       "when": 1792310362448,
       "tag": "0073_production_release_kinds",
       "breakpoints": true
+    },
+    {
+      "idx": 74,
+      "version": "6",
+      "when": 1792382541954,
+      "tag": "0074_tenancy_active_room_unique",
+      "breakpoints": true
     }
   ]
 }
