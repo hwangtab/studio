@@ -165,6 +165,7 @@ it('대기열 건수 — 믹싱 착수 대기·작업 중, 구독 카드 대기�
     shopPayoutsPending: 0,
     showPayoutsToRecord: 0,
     showPayoutsPending: 0,
+    fundingRefundRequests: 0,
     awaitingDeposit: { bookings: 0, shows: 0, shop: 0, funding: 0 },
     sessionsAwaitingMark: 0,
     showSubmissionsAwaitingReview: 0,
@@ -295,6 +296,22 @@ describe('계좌 입금 대기 — 자동 취소가 없는 주문', () => {
     expect(issue?.detail).toContain('공연 1건');
     expect(issue?.detail).toContain('예약·믹싱 1건');
     expect(issue?.detail).toContain('펀딩 1건');
+  });
+});
+
+describe('펀딩 환불 요청 대기열', () => {
+  it('결제된 후원의 환불 요청만 센다 — 환불이 끝났거나 요청이 없는 건은 세지 않는다', async () => {
+    await insertPledge('rq1', 'slug-x', 'paid');
+    await insertPledge('rq2', 'slug-x', 'refunded');
+    await insertPledge('rq3', 'slug-x', 'paid');
+    await client.execute({
+      sql: `UPDATE funding_pledges SET refund_requested_at = ? WHERE order_id IN ('rq1', 'rq2')`,
+      args: [EPOCH('2026-09-10T00:00:00Z')],
+    });
+
+    const dash = await loadAdminDashboard(NOW);
+
+    expect(dash.queues.fundingRefundRequests).toBe(1);
   });
 });
 
@@ -528,4 +545,20 @@ it('주최자 공연 심사 대기 — submitted만 세고, 표를 못 읽으면
   } finally {
     await client.execute('ALTER TABLE show_submissions_x RENAME TO show_submissions');
   }
+});
+
+describe('첫 화면 조회 격리', () => {
+  it('조회 하나(소셜 토큰)가 던져도 화면은 뜨고, 그 칸은 비며, 어떤 칸이 비었는지 이슈로 보인다', async () => {
+    await client.execute('ALTER TABLE social_tokens RENAME TO social_tokens_hidden');
+    try {
+      const dash = await loadAdminDashboard(new Date('2026-09-10T00:00:00Z'));
+      expect(dash.socialTokens).toEqual([]);
+      const issue = dash.issues.find((i) => i.title.includes('첫 화면 현황 일부를 불러오지 못했습니다'));
+      expect(issue).toBeDefined();
+      expect(issue!.title).toContain('소셜 토큰');
+      expect(issue!.severity).toBe('high');
+    } finally {
+      await client.execute('ALTER TABLE social_tokens_hidden RENAME TO social_tokens');
+    }
+  });
 });

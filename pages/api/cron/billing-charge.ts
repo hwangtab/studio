@@ -73,6 +73,9 @@ type ChargeSummary = {
   errors: Array<{ subscriptionId: string; message: string }>;
 };
 
+/** 보류 알림을 보내는 창 — 보류 원인 회차의 시도 뒤 이 시간 안에만. 그 뒤는 healthCheck의 36시간 미청구 점검이 맡는다. */
+const HELD_ALERT_WINDOW_MS = 36 * 60 * 60 * 1000;
+
 const processOne = async (sub: Subscription, now: Date, summary: ChargeSummary): Promise<void> => {
   const cycleYm = cycleYmOf(now);
 
@@ -107,8 +110,13 @@ const processOne = async (sub: Subscription, now: Date, summary: ChargeSummary):
   summary.failed += 1;
   if (result.held) {
     // 청구를 시도조차 못 했다 — 카드 거절이 아니므로 고객 '결제 실패' 메일은 보내지 않는다.
+    // 운영자 알림은 보류 **첫날**만 — 같은 보류가 이어지면 36시간 미청구 점검(healthCheck)이 high로 올리므로 매일 같은
+    // 메일을 또 보내지 않는다(운영자 결정 2026-10-19).
     summary.held += 1;
-    await sendSubscriptionOperatorAlert(sub, 'charge_held', `${result.message ?? ''} (토스 코드 ${result.tossCode ?? '-'})`);
+    const heldAgeMs = result.heldSince ? now.getTime() - result.heldSince.getTime() : 0;
+    if (heldAgeMs < HELD_ALERT_WINDOW_MS) {
+      await sendSubscriptionOperatorAlert(sub, 'charge_held', `${result.message ?? ''} (토스 코드 ${result.tossCode ?? '-'})`);
+    }
     return;
   }
   const paused = result.status === 'paused';

@@ -47,6 +47,7 @@ const DASHBOARD: AdminDashboard = {
     shopPayoutsPending: 1,
     showPayoutsToRecord: 3,
     showPayoutsPending: 2,
+    fundingRefundRequests: 1,
     awaitingDeposit: { bookings: 3, shows: 0, shop: 1, funding: 2 },
     sessionsAwaitingMark: 3,
     showSubmissionsAwaitingReview: 2,
@@ -169,7 +170,9 @@ describe('놓치기 쉬운 대기열 — 마감 뒤 정산 기록, 계좌 입금
   it('정산 기록 대기와 종류별 입금 대기를 건수·이동 링크와 함께 그린다', () => {
     render(<AdminIndexPage dashboard={DASHBOARD} shopQueues={SHOP_QUEUES} ledgerFrom="2026-09-01" ledgerTo="2026-09-16" />);
 
-    expect(screen.getByRole('link', { name: /정산 기록 대기 펀딩 \(마감됨\)\s*1/ })).toHaveAttribute('href', '/admin/funding/projects');
+    expect(screen.getByRole('link', { name: /정산 기록 대기 펀딩 \(마감됨\)\s*1/ })).toHaveAttribute('href', '/admin/funding/projects?payout=record');
+    expect(screen.getByRole('link', { name: /이체 대기 펀딩 정산\s*2/ })).toHaveAttribute('href', '/admin/funding/projects?payout=pending');
+    expect(screen.getByRole('link', { name: /환불 요청 펀딩 후원\s*1/ })).toHaveAttribute('href', '/admin/funding');
     expect(screen.getByRole('link', { name: /입금 대기 예약·믹싱\s*3/ })).toHaveAttribute('href', '/admin/bookings?deposit=pending');
     expect(screen.getByRole('link', { name: /입금 대기 펀딩\s*2/ })).toHaveAttribute('href', '/admin/funding?deposit=pending');
     expect(screen.getByRole('link', { name: /입금 대기 공연 티켓\s*0/ })).toHaveAttribute('href', '/admin/shows');
