@@ -120,6 +120,8 @@ beforeEach(() => {
   (sendFundingPayoutPaidEmail as jest.Mock).mockResolvedValue(null);
   (sendFundingPayoutOperatorFallback as jest.Mock).mockResolvedValue(null);
   (recordAdminPrivacyAccess as jest.Mock).mockResolvedValue(undefined);
+  // clearAllMocks는 구현을 남긴다 — 앞 시험이 넣은 "금액이 바뀐 집계"가 뒤 시험으로 새지 않게 매번 되돌린다.
+  (buildFundingPayoutPreview as jest.Mock).mockReset();
 });
 
 afterEach(() => jest.restoreAllMocks());
