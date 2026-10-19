@@ -57,7 +57,7 @@ afterAll(() => {
   client.close();
 });
 beforeEach(async () => {
-  for (const t of ['partner_payout_adjustments', 'partner_payouts', 'refunds', 'payments', 'bookings', 'work_orders', 'funding_pledges', 'funding_project_payouts', 'funding_projects', 'funding_creators', 'subscription_payments', 'subscriptions', 'orders', 'payment_link_orders', 'contracts', 'social_tokens']) {
+  for (const t of ['show_submissions', 'partner_payout_adjustments', 'partner_payouts', 'refunds', 'payments', 'bookings', 'work_orders', 'funding_pledges', 'funding_project_payouts', 'funding_projects', 'funding_creators', 'subscription_payments', 'subscriptions', 'orders', 'payment_link_orders', 'contracts', 'social_tokens']) {
     await client.execute(`DELETE FROM ${t}`);
   }
 });
@@ -168,6 +168,8 @@ it('대기열 건수 — 믹싱 착수 대기·작업 중, 구독 카드 대기�
     showPayoutsPending: 0,
     fundingRefundRequests: 0,
     awaitingDeposit: { bookings: 0, shows: 0, shop: 0, funding: 0 },
+    sessionsAwaitingMark: 0,
+    showSubmissionsAwaitingReview: 0,
   });
   expect(dash.issues.map((i) => i.title)).toContain('서명 기한이 지난 계약 1건');
 });
@@ -239,7 +241,7 @@ it('비어 있으면 전부 0·빈 목록이고 실패하지 않는다', async (
   expect(dash.issues).toEqual([]);
   expect(dash.upcomingSessions).toEqual([]);
   expect(dash.socialTokens).toEqual([]);
-  expect(Object.values(dash.queues).every((n) => (typeof n === 'number' ? n === 0 : Object.values(n).every((m) => m === 0)))).toBe(true);
+  expect(Object.values(dash.queues).every((n) => (typeof n === 'number' ? n === 0 : n !== null && Object.values(n).every((m) => m === 0)))).toBe(true);
 });
 
 const insertPledge = async (orderId: string, slug: string, orderStatus: string, method = 'toss', source = 'online') => {
@@ -551,6 +553,42 @@ describe('공연 주최자 정산 — 대기열·기한 점검', () => {
       await client.execute('ALTER TABLE partner_payouts_x RENAME TO partner_payouts');
     }
   });
+});
+
+it('완료·노쇼 표시 대기 세션 — 끝난 지 7일 안의 confirmed만', async () => {
+  // NOW = 2026-09-16T03:00Z
+  await insertBooking('just-ended', '2026-09-16T00:00:00Z'); // 3시간 길이 → 03:00Z에 끝남 — 경계(미포함)
+  await insertBooking('ended-1', '2026-09-15T00:00:00Z'); // 대상
+  await insertBooking('ended-6d', '2026-09-10T05:00:00Z'); // 대상(끝난 지 5.9일)
+  await insertBooking('too-old', '2026-09-01T00:00:00Z'); // 7일 밖
+  await insertBooking('upcoming', '2026-09-17T05:00:00Z');
+  await insertBooking('completed', '2026-09-15T00:00:00Z', 'completed');
+  await insertBooking('no-show', '2026-09-15T00:00:00Z', 'no_show');
+
+  const dash = await loadAdminDashboard(NOW);
+
+  expect(dash.queues.sessionsAwaitingMark).toBe(2);
+});
+
+it('주최자 공연 심사 대기 — submitted만 세고, 표를 못 읽으면 null(카드 숨김)이다', async () => {
+  await client.execute({ sql: `INSERT INTO funding_creators (id, email, name) VALUES ('cr', 'cr@example.com', '주최자')`, args: [] });
+  const insertSubmission = async (id: string, reviewStatus: string) => {
+    await client.execute({
+      sql: `INSERT INTO show_submissions (id, creator_id, draft_json, review_status) VALUES (?, 'cr', '{}', ?)`,
+      args: [id, reviewStatus],
+    });
+  };
+  await insertSubmission('a', 'submitted');
+  await insertSubmission('b', 'draft');
+  expect((await loadAdminDashboard(NOW)).queues.showSubmissionsAwaitingReview).toBe(1);
+
+  jest.spyOn(console, 'error').mockImplementation(() => undefined);
+  await client.execute('ALTER TABLE show_submissions RENAME TO show_submissions_x');
+  try {
+    expect((await loadAdminDashboard(NOW)).queues.showSubmissionsAwaitingReview).toBeNull();
+  } finally {
+    await client.execute('ALTER TABLE show_submissions_x RENAME TO show_submissions');
+  }
 });
 
 describe('첫 화면 조회 격리', () => {

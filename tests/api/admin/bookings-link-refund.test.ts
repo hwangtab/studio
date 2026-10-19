@@ -12,7 +12,10 @@ let client: Awaited<ReturnType<typeof createTestDb>>['client'];
 jest.mock('../../../db/client', () => ({ getDb: () => testDb }));
 jest.mock('../../../lib/contracts/admin-auth', () => ({ authenticateAdminApi: jest.fn().mockResolvedValue({ ok: true }) }));
 
+jest.mock('../../../lib/booking/email', () => ({ ...jest.requireActual('../../../lib/booking/email'), sendDepositRefundEmail: jest.fn().mockResolvedValue(null) }));
+
 /* eslint-disable import/first */
+import { sendDepositRefundEmail } from '../../../lib/booking/email';
 import handler from '../../../pages/api/admin/bookings/[id]';
 import { loadRevenueRows, loadWindow } from '../../../lib/ops/revenueReport';
 /* eslint-enable import/first */
@@ -39,6 +42,7 @@ const orderStatus = async (id: string) => String((await client.execute({ sql: 'S
 const refundTotal = async () => Number((await client.execute(`SELECT COALESCE(SUM(amount),0) AS n FROM refunds WHERE status = 'done'`)).rows[0].n);
 
 beforeEach(async () => {
+  jest.clearAllMocks();
   const t = await createTestDb();
   testDb = t.db;
   client = t.client;
@@ -68,7 +72,7 @@ it('기록한 환불을 매출 집계가 읽는다', async () => {
   expect(rows.find((r) => r.orderNo === 'LNK-a')).toMatchObject({ gross: 100000, refunded: 40000 });
 });
 
-it('토스(카드) 결제 링크 주문은 기록하지 않는다 — 토스 콘솔에서 취소한다', async () => {
+it('토스(카드) 결제 링크 주문은 기록하지 않는다 — 토스 취소는 action refund(예약금 환불)로 한다', async () => {
   await seed('t', 'tgen_toss_key');
   const r = await post('t', { action: 'record_link_refund', amount: 1000, reason: '카드' });
   expect(r.status).toBe(409);
@@ -80,4 +84,21 @@ it('토스(카드) 결제 링크 주문은 기록하지 않는다 — 토스 콘
 it('입금 확인 전(awaiting_deposit) 주문은 기록하지 않는다', async () => {
   await seed('w', 'bank-deposit:LNK-w', 'awaiting_deposit');
   expect((await post('w', { action: 'record_link_refund', amount: 1000, reason: 'x' })).status).toBe(409);
+});
+
+it('기록하면 고객에게 환불 안내 메일이 가고(남은 금액 포함), 메일이 실패해도 환불 기록은 남는다', async () => {
+  await seed('m', 'bank-deposit:LNK-m');
+  expect((await post('m', { action: 'record_link_refund', amount: 30000, reason: '일정 변경' })).status).toBe(200);
+  expect(sendDepositRefundEmail).toHaveBeenLastCalledWith(expect.objectContaining({ orderNo: 'LNK-m' }), 30000, 70000, 'bank_account');
+
+  (sendDepositRefundEmail as jest.Mock).mockResolvedValueOnce('API_ERROR');
+  expect((await post('m', { action: 'record_link_refund', amount: 10000, reason: '추가' })).status).toBe(200);
+  expect(await refundTotal()).toBe(40000);
+  expect(String((await client.execute("SELECT notification_error AS e FROM orders WHERE id = 'm'")).rows[0].e)).toBe('API_ERROR');
+});
+
+it('기록이 거절되면 메일을 보내지 않는다', async () => {
+  await seed('n', 'bank-deposit:LNK-n');
+  expect((await post('n', { action: 'record_link_refund', amount: 0, reason: '영' })).status).toBe(400);
+  expect(sendDepositRefundEmail).not.toHaveBeenCalled();
 });

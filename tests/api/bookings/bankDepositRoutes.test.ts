@@ -149,4 +149,39 @@ describe('관리자 예약 API — 계좌 입금', () => {
     expect((await admin(b.id, 'mark_refund_sent')).status).toBe(200);
     expect((await client.execute('SELECT refunded_at FROM refund_accounts')).rows[0].refunded_at).not.toBeNull();
   });
+
+  it('mark_refund_sent: 두 번 눌러도 첫 송금 시각이 남는다', async () => {
+    const b = await createBank();
+    await admin(b.id, 'confirm_deposit');
+    await client.execute({
+      sql: `INSERT INTO refund_accounts (id, order_kind, order_no, bank_name, account_number_enc, account_holder, requested_at) VALUES ('ra','session',?,'국민','enc','김입금', unixepoch())`,
+      args: [b.orderNo],
+    });
+    await admin(b.id, 'mark_refund_sent');
+    const first = (await client.execute('SELECT refunded_at FROM refund_accounts')).rows[0].refunded_at;
+    await client.execute('UPDATE refund_accounts SET refunded_at = refunded_at - 1000');
+    const backdated = (await client.execute('SELECT refunded_at FROM refund_accounts')).rows[0].refunded_at;
+    expect((await admin(b.id, 'mark_refund_sent')).status).toBe(200);
+    expect((await client.execute('SELECT refunded_at FROM refund_accounts')).rows[0].refunded_at).toBe(backdated);
+    expect(backdated).not.toBe(first);
+  });
+
+  // 예전엔 기록이 실패해도 ok:true — 새로고침해도 버튼이 그대로라 운영자가 이중 송금할 수 있었다.
+  it('mark_refund_sent: 송금 완료를 기록하지 못하면 성공이라 하지 않는다(500)', async () => {
+    const b = await createBank();
+    await admin(b.id, 'confirm_deposit');
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    await client.execute({
+      sql: `INSERT INTO refund_accounts (id, order_kind, order_no, bank_name, account_number_enc, account_holder, requested_at) VALUES ('ra','session',?,'국민','enc','김입금', unixepoch())`,
+      args: [b.orderNo],
+    });
+    // 환불 계좌는 접수돼 있고(없으면 409) 송금 시각 UPDATE만 실패하는 경우 — 표를 통째로 없애면 계좌 확인 단계에서 먼저 409로 멈춘다.
+    await client.execute(`CREATE TRIGGER refund_sent_fail BEFORE UPDATE ON refund_accounts BEGIN SELECT RAISE(ABORT, 'boom'); END`);
+    try {
+      const res = await admin(b.id, 'mark_refund_sent');
+      expect(res.status).toBe(500);
+    } finally {
+      await client.execute('DROP TRIGGER refund_sent_fail');
+    }
+  });
 });
