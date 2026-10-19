@@ -143,7 +143,7 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
   const [busy, setBusy] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [periodInput, setPeriodInput] = useState(period);
-  
+
   const run = async (key: string, task: () => Promise<{ ok: boolean; message?: string }>, confirmText: string) => {
     if (!window.confirm(confirmText)) return;
     setBusy(key);

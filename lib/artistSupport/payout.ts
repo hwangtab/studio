@@ -7,6 +7,9 @@ import { getSupportedArtist, SUPPORTED_ARTISTS, type SupportedArtist } from '../
 import { VAT_RATE } from '../booking/amounts';
 import { computeBusinessIncomeWithholding } from '../withholdingTax';
 import { cycleYmOf } from '../billing/schedule';
+
+/** 토스에 주문이 없다는 재조회 응답을 '요청이 닿지 못했다'로 확정하기까지 기다리는 시간(chargeCycle과 같다). */
+const NOT_FOUND_SETTLE_MS = 30 * 60 * 1000;
 import { fetchPaymentByOrderId } from '../billing/toss-billing';
 import { reconcileSubscriptionPaymentFromToss } from '../billing/service';
 
@@ -145,7 +148,7 @@ export const recordArtistPayout = async (artistSlug: string, period: string, now
   // 해지·정지되면 아무도 다시 묻지 않아 정산이 영구히 막힌다 — 그래서 여기서 직접 토스에 묻는다: 승인됐으면 반영, 토스에 없거나
   // 승인이 아니면 failed 확정, 재조회 자체가 안 되면 unreconciled로 남긴다.
   const unresolvedOrders = await getDb()
-    .select({ orderId: orders.id, orderNo: orders.orderNo })
+    .select({ orderId: orders.id, orderNo: orders.orderNo, attemptedAt: subscriptionPayments.attemptedAt })
     .from(subscriptionPayments)
     .innerJoin(orders, eq(orders.id, subscriptionPayments.orderId))
     .innerJoin(subscriptions, eq(subscriptions.id, subscriptionPayments.subscriptionId))
@@ -153,13 +156,16 @@ export const recordArtistPayout = async (artistSlug: string, period: string, now
   let stillUnresolved = 0;
   for (const row of unresolvedOrders) {
     const fetched = await fetchPaymentByOrderId(row.orderNo);
+    // 방금 낸 요청은 토스에 아직 안 적혔을 수 있다 — chargeCycle과 같은 30분 유예 뒤에만 '없음'을 failed로 본다.
+    const stale = now.getTime() - row.attemptedAt.getTime() >= NOT_FOUND_SETTLE_MS;
     if (fetched.ok && fetched.payment.status === 'DONE') {
+      // reconcile은 금액 불일치·batch 실패를 조용히 삼킨다 — 반영됐는지는 주문 상태를 다시 읽어 판정한다.
       await reconcileSubscriptionPaymentFromToss(fetched.payment, now);
-    } else if ((fetched.ok && fetched.payment.status !== 'DONE') || (!fetched.ok && fetched.code === 'NOT_FOUND_PAYMENT')) {
+    } else if ((fetched.ok && fetched.payment.status !== 'DONE') || (!fetched.ok && fetched.code === 'NOT_FOUND_PAYMENT' && stale)) {
       await getDb().run(sql`UPDATE orders SET status = 'failed', updated_at = unixepoch() WHERE id = ${row.orderId} AND status = 'pending'`);
-    } else {
-      stillUnresolved += 1;
     }
+    const [after] = await getDb().select({ status: orders.status }).from(orders).where(eq(orders.id, row.orderId));
+    if (after?.status === 'pending') stillUnresolved += 1;
   }
   if (stillUnresolved > 0) return { ok: false, code: 'unreconciled' };
 

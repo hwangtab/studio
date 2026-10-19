@@ -154,7 +154,7 @@ describe('정산', () => {
             VALUES ('o-pend', 'NO-pend', 'subscription', 'pending', '실명', '', 'a@b.c', 'tok-pend', 9091, 909, 10000)`,
       args: [],
     });
-    await client.execute(`INSERT INTO subscription_payments (id, subscription_id, order_id, cycle_ym, attempt, amount, status, toss_code) VALUES ('sp-pend', 'a', 'o-pend', '2026-09', 2, 10000, 'failed', 'NETWORK_ERROR')`);
+    await client.execute(`INSERT INTO subscription_payments (id, subscription_id, order_id, cycle_ym, attempt, amount, status, toss_code, attempted_at) VALUES ('sp-pend', 'a', 'o-pend', '2026-09', 2, 10000, 'failed', 'NETWORK_ERROR', ${Math.floor(new Date('2026-09-28T00:00:00Z').getTime() / 1000)})`);
     // 기록 직전에 토스에 직접 묻는다 — 재조회가 안 되면 unreconciled.
     (fetchPaymentByOrderId as jest.Mock).mockResolvedValue({ ok: false, code: 'NETWORK_ERROR', message: 'timeout' });
     expect(await recordArtistPayout('jai', '2026-09', NOW)).toEqual({ ok: false, code: 'unreconciled' });

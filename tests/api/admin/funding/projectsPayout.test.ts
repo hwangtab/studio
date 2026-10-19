@@ -326,13 +326,17 @@ describe('mark_payout_paid', () => {
   });
 
   it('기록값과 현재 계산값이 다르면 409(amount_changed)로 한 번 멈추고, acknowledgeAmountChanged면 기록한다', async () => {
+    (loadRecordedFundingPayout as jest.Mock).mockResolvedValue(PAYOUT);
     (buildFundingPayoutPreview as jest.Mock).mockResolvedValue(previewWith(PAYOUT, PAYOUT.netAmount - 10_000));
     (markFundingPayoutPaid as jest.Mock).mockResolvedValue(true);
     const blocked = await call({ action: 'mark_payout_paid' });
     expect(blocked.status).toBe(409);
     expect(blocked.body).toMatchObject({ code: 'amount_changed', recordedNetAmount: PAYOUT.netAmount, currentNetAmount: PAYOUT.netAmount - 10_000 });
     expect(markFundingPayoutPaid).not.toHaveBeenCalled();
-    const ok = await call({ action: 'mark_payout_paid', acknowledgeAmountChanged: true });
+    // 확인창과 클릭 사이에 금액이 또 바뀌었으면(본 값 ≠ 지금 값) 다시 409.
+    const stale = await call({ action: 'mark_payout_paid', acknowledgedNetAmount: PAYOUT.netAmount - 20_000 });
+    expect(stale.status).toBe(409);
+    const ok = await call({ action: 'mark_payout_paid', acknowledgedNetAmount: PAYOUT.netAmount - 10_000 });
     expect(ok.status).toBe(200);
     expect(markFundingPayoutPaid).toHaveBeenCalled();
   });
@@ -354,7 +358,8 @@ describe('mark_payout_paid', () => {
     const r = await call({ action: 'mark_payout_paid' });
     expect(r.status).toBe(200);
     expect(markFundingPayoutPaid).toHaveBeenCalledWith('pay-1', null, expect.any(Date));
-    expect(buildFundingPayoutPreview).not.toHaveBeenCalled();
+    // 금액 불일치 가드가 집계를 한 번 묻지만, 집계가 죽어도 가드를 건너뛰고 기록은 된다.
+    expect(buildFundingPayoutPreview).toHaveBeenCalled();
   });
 });
 

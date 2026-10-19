@@ -626,9 +626,9 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
         const first = await patchFundingProject(project.id, { action: 'mark_payout_paid', memo: memo.trim() || undefined });
         // 기록값과 현재 계산값이 다르면 서버가 한 번 멈춘다 — 차이를 보여 주고 운영자가 확인하면 그대로 기록한다
         // (펀딩 정산은 기록 취소 경로가 없어 막다른 409로 두면 영영 지급 완료를 못 적는다).
-        if (!first.ok && first.code === 'amount_changed') {
+        if (!first.ok && first.code === 'amount_changed' && typeof first.currentNetAmount === 'number') {
           if (!window.confirm(`${first.message}\n\n이 차이를 알고 이체했습니다 — 지급 완료로 기록할까요?`)) return { ok: false, message: '지급 완료 기록을 취소했습니다.' };
-          return patchFundingProject(project.id, { action: 'mark_payout_paid', memo: memo.trim() || undefined, acknowledgeAmountChanged: true });
+          return patchFundingProject(project.id, { action: 'mark_payout_paid', memo: memo.trim() || undefined, acknowledgedNetAmount: first.currentNetAmount });
         }
         return first;
       },

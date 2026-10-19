@@ -12,6 +12,8 @@ export interface FundingProjectActionResult {
   warnings?: string[];
   /** 서버가 준 오류 코드(예: amount_changed) — 화면이 확인 뒤 다시 보낼지 가른다. */
   code?: string;
+  /** amount_changed 때 서버가 함께 준 현재 계산값. */
+  currentNetAmount?: number;
 }
 
 /**
@@ -70,12 +72,12 @@ export type FundingProjectPatchBody =
       expectedProductionFeeOffsetAmount: number;
       expectedShortfallAmount: number;
     }
-  /** acknowledgeAmountChanged: 기록값과 현재 계산값이 달라도 운영자가 차이를 알고 이체했다고 확인한 경우. */
-  | { action: 'mark_payout_paid'; memo?: string; acknowledgeAmountChanged?: boolean }
+  /** acknowledgedNetAmount: 기록값과 현재 계산값이 다를 때 운영자가 확인창에서 본 현재값 — 서버가 지금 값과 같을 때만 통과. */
+  | { action: 'mark_payout_paid'; memo?: string; acknowledgedNetAmount?: number }
   /** 기록된 정산(이체 대기면 '정산 기록' 안내, 지급 완료면 '정산 지급' 안내)의 개설자 메일을 다시 보낸다. 상태는 바꾸지 않는다. */
   | { action: 'resend_payout_notice' };
 
-const readJson = async (r: Response): Promise<{ message?: string; warnings?: string[]; code?: string }> => {
+const readJson = async (r: Response): Promise<{ message?: string; warnings?: string[]; code?: string; currentNetAmount?: number }> => {
   try {
     return await r.json();
   } catch {
@@ -95,7 +97,7 @@ export const patchFundingProject = async (
       body: JSON.stringify(body),
     });
     const result = await readJson(r);
-    if (!r.ok) return { ok: false, message: result.message || '처리에 실패했습니다.', ...(typeof result.code === 'string' ? { code: result.code } : {}) };
+    if (!r.ok) return { ok: false, message: result.message || '처리에 실패했습니다.', ...(typeof result.code === 'string' ? { code: result.code } : {}), ...(typeof result.currentNetAmount === 'number' ? { currentNetAmount: result.currentNetAmount } : {}) };
     return { ok: true, ...(result.warnings && result.warnings.length > 0 ? { warnings: result.warnings } : {}) };
   } catch {
     return { ok: false, message: '네트워크 오류' };

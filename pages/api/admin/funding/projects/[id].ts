@@ -26,6 +26,7 @@ import {
   markFundingPayoutPaid,
   recordFundingPayout,
   type RecordFundingPayoutResult,
+  buildFundingPayoutPreview,
 } from '../../../../../lib/funding/payout';
 import { loadFundingPayoutAccountMasked } from '../../../../../lib/funding/payoutAccount';
 import { recordAdminPrivacyAccess } from '../../../../../lib/privacy/accessLog';
@@ -676,16 +677,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(409).json({ ok: false, message: '아직 기록되지 않은 정산입니다. 먼저 정산을 기록해 주세요.' });
       }
       // 돈이 실제로 나가는 지점의 가드 — 기록 뒤 환불·수기 등록으로 계산값이 바뀌었으면 기록값 그대로 이체하면 어긋난다.
-      // 헬스체크(일 1회)보다 먼저 막는다. 정산 패널의 "기록 취소(다시 기록)"로 현재 숫자로 다시 기록한 뒤 누른다.
-      // 펀딩 정산은 프로젝트당 한 번만 기록되고 기록 취소 경로가 없다 — 그래서 막다른 409가 아니라, 두 금액을 보여 주고
-      // 운영자가 "이 차이를 알고 이체했다"고 확인(acknowledgeAmountChanged)하면 통과시킨다. 차액은 정산 패널·헬스체크가 남긴다.
-      if (preview.netAmount !== recorded.netAmount && b.acknowledgeAmountChanged !== true) {
+      // 헬스체크(일 1회)보다 먼저 막는다. 펀딩 정산은 프로젝트당 한 번만 기록되고 기록 취소 경로가 없어 막다른 409로 두지 않고,
+      // 두 금액을 보여 준 뒤 운영자가 **그때 본 현재값**(acknowledgedNetAmount)을 되돌려 보내면 통과시킨다 — 확인창과 클릭 사이에
+      // 금액이 또 바뀌면 다시 409다(record_payout의 expected 대조와 같은 원칙). 집계가 죽으면 가드를 건너뛴다(위 주석).
+      let currentNetAmount: number | null = null;
+      try {
+        currentNetAmount = (await buildFundingPayoutPreview(id))?.netAmount ?? null;
+      } catch (error: unknown) {
+        console.error(`[funding] 지급 완료 가드용 집계 실패 — 가드 없이 진행 (id=${id})`, error instanceof Error ? error.name : 'unknown');
+      }
+      const acknowledged = typeof b.acknowledgedNetAmount === 'number' && b.acknowledgedNetAmount === currentNetAmount;
+      if (currentNetAmount !== null && currentNetAmount !== recorded.netAmount && !acknowledged) {
         return res.status(409).json({
           ok: false,
           code: 'amount_changed',
           recordedNetAmount: recorded.netAmount,
-          currentNetAmount: preview.netAmount,
-          message: `기록된 정산액 ${recorded.netAmount.toLocaleString('ko-KR')}원과 현재 계산값 ${preview.netAmount.toLocaleString('ko-KR')}원이 다릅니다(기록 뒤 환불·수기 등록·세금 유형 변경). 실제로 이체한 금액을 확인한 뒤 다시 눌러 주세요.`,
+          currentNetAmount,
+          message: `기록된 정산액 ${recorded.netAmount.toLocaleString('ko-KR')}원과 현재 계산값 ${currentNetAmount.toLocaleString('ko-KR')}원이 다릅니다(기록 뒤 환불·수기 등록·세금 유형 변경). 실제로 이체한 금액을 확인한 뒤 다시 눌러 주세요.`,
         });
       }
       const done = await markFundingPayoutPaid(recorded.id, memo, now);
