@@ -1,4 +1,4 @@
-import { and, eq, sql } from 'drizzle-orm';
+import { and, eq, isNull, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { refundAccounts, type RefundAccountOrderKind } from '../../db/schema';
@@ -122,12 +122,22 @@ export const saveRefundAccountIfAbsent = async (
   return (result.rowsAffected ?? 0) > 0;
 };
 
-/** 운영자가 송금을 마치고 기록한 시각을 남긴다. 계좌가 없으면 아무 일도 없다. 실패는 삼키고 로그만. */
-export const markRefundAccountRefunded = async (key: RefundAccountKey, at: Date): Promise<void> => {
+/**
+ * 운영자가 송금을 마치고 기록한 시각을 남긴다. 계좌가 없으면 아무 일도 없다.
+ * 예외는 던지지 않고 로그만 남기되 **성공 여부를 돌려준다** — 환불 흐름(펀딩 취소)은 이 기록이 실패해도 이어 가지만,
+ * 관리자의 "송금 완료" 버튼은 실패를 성공으로 보여 주면 운영자가 이중 송금한다(새로고침해도 버튼이 그대로라서).
+ * 이미 기록된 건은 시각을 덮어쓰지 않는다(`refunded_at IS NULL`) — 같은 요청이 두 번 와도 첫 송금 시각이 남는다.
+ */
+export const markRefundAccountRefunded = async (key: RefundAccountKey, at: Date): Promise<boolean> => {
   try {
-    await getDb().update(refundAccounts).set({ refundedAt: at, updatedAt: at }).where(whereKey(key));
+    await getDb()
+      .update(refundAccounts)
+      .set({ refundedAt: at, updatedAt: at })
+      .where(and(whereKey(key), isNull(refundAccounts.refundedAt)));
+    return true;
   } catch (error) {
     console.error('[refund-account] 송금 완료 시각 기록 실패', { kind: key.kind, orderNo: key.orderNo, error: safeDbErrorSummary(error) });
+    return false;
   }
 };
 

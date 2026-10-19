@@ -5,7 +5,7 @@ import { getDb } from '../../../../db/client';
 import { bookings, orders, workOrders } from '../../../../db/schema';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { cancelBookingWithRefund } from '../../../../lib/booking/cancel';
-import { sendBookingCancelledEmails, sendBookingConfirmedEmails } from '../../../../lib/booking/email';
+import { sendBookingCancelledEmails, sendBookingConfirmedEmails, sendDepositRefundEmail } from '../../../../lib/booking/email';
 import { calendarForService, createBookingEvent, deleteBookingEvent, isCalendarActive } from '../../../../lib/booking/gcal';
 import { kstDateString } from '../../../../lib/booking/kst';
 import { updateAwaitingOrderDetails } from '../../../../lib/booking/manualEdit';
@@ -87,6 +87,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(404).json({ ok: false, message: '예약을 찾을 수 없습니다.' });
     }
 
+    // 완료·노쇼로 **닫는** 경우에만 아래 두 가드를 건다 — 확정으로 되돌리는 쪽은 이미 닫힌 예약을 여는 일이라 막을 이유가 없다.
+    if (status !== 'confirmed') {
+      // 결제가 확정되지 않은 주문의 예약(미정합 — 결제 기록과 주문 상태가 어긋난 건)은 완료·노쇼로 닫지 않는다. 그런 건은 목록에서
+      // 미정합 배지로 먼저 바로잡을 대상이고, 닫아 버리면 후기 요청 메일 판정과 매출이 사실과 달라진다.
+      if (order.status !== 'paid' && order.status !== 'partially_refunded') {
+        return res.status(409).json({ ok: false, message: '결제가 확정되지 않은 주문입니다. 결제 상태를 먼저 확인해 주세요.' });
+      }
+      // 시작도 안 한 세션을 완료·노쇼로 닫으면 안 된다 — 후기 요청 메일과 노쇼 기록의 근거가 사실과 달라진다.
+      // 시작 시각부터는 허용한다(노쇼는 시작 직후에 확정하는 경우가 흔하다).
+      if (booking.startAt.getTime() > Date.now()) {
+        return res.status(409).json({ ok: false, message: '아직 시작하지 않은 예약은 완료·노쇼로 바꿀 수 없습니다. 취소가 필요하면 환불 처리를 이용해 주세요.' });
+      }
+    }
+
     try {
       // confirmed에서만 전이 — 읽고 검사한 뒤 쓰는 대신 조건부 UPDATE 한 문장으로 처리해
       // 동시 요청(완료/노쇼 버튼 연타, 다른 탭)이 둘 다 통과하는 것을 막는다
@@ -164,7 +178,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // 예약금 결제 링크 주문의 계좌 직접 입금분 환불 기록 — 송금은 운영자가 손으로 마쳤고 여기선 장부만 남긴다(lib/payments/linkRefund.ts).
-    // 카드(토스) 결제 링크는 토스 콘솔에서 취소한다 — 기록만 남기면 돈은 그대로인데 장부만 바뀐다.
+    // 카드(토스) 결제 링크는 여기가 아니라 action 'refund'로 토스 취소를 부른다 — 기록만 남기면 돈은 그대로인데 장부만 바뀐다.
     if (body.action === 'record_link_refund') {
       const reasonText = typeof body.reason === 'string' ? body.reason.trim() : '';
       if (reasonText === '') return res.status(400).json({ ok: false, message: '환불 사유를 입력해 주세요.' });
@@ -173,6 +187,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       try {
         const r = await recordLinkBankRefund({ orderId: order.id, amount: body.amount, reason: reasonText, now: new Date() });
         if (!r.ok) return res.status(r.code === 'not_found' ? 404 : r.code === 'invalid_amount' ? 400 : 409).json({ ok: false, code: r.code, message: r.message });
+        // 송금은 이미 끝났고 장부도 남았다 — 안내 메일이 실패해도 환불 기록을 뒤집지 않고 notificationError에 남긴다(카드 환불 경로와 같다).
+        try {
+          const mailError = await sendDepositRefundEmail(order, r.refundAmount, r.remainingAfter, 'bank_account');
+          await getDb().update(orders).set({ notificationError: mailError }).where(eq(orders.id, order.id));
+        } catch (mailFailure: unknown) {
+          console.error('[API/admin/bookings/[id]] 링크 환불 안내 메일 처리 실패(환불 기록은 완료됨):', { orderNo: order.orderNo, error: mailFailure });
+        }
         return res.status(200).json({ ok: true, refundAmount: r.refundAmount });
       } catch (error: unknown) {
         console.error('[API/admin/bookings/[id]] 링크 주문 환불 기록 실패:', { orderNo: order.orderNo, error });
@@ -396,8 +417,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (body.action === 'delete_waiting_event') {
       // 미입금 취소된 예약에 남은 [입금 대기] 캘린더 일정을 다시 지운다(그 일정이 웹 예약을 막는다).
-      const r = await retryWaitingEventDelete(order.id);
-      return r.ok ? res.status(200).json({ ok: true }) : res.status(409).json({ ok: false, message: r.message });
+      try {
+        const r = await retryWaitingEventDelete(order.id);
+        return r.ok ? res.status(200).json({ ok: true }) : res.status(409).json({ ok: false, message: r.message });
+      } catch (error: unknown) {
+        console.error('[API/admin/bookings/[id]] 입금 대기 일정 삭제 실패:', { orderNo: order.orderNo, error });
+        return res.status(500).json({ ok: false, message: '처리하지 못했습니다. 잠시 후 다시 시도해 주세요.' });
+      }
     }
 
     if (body.action === 'mark_refund_sent') {
@@ -406,7 +432,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (bankDepositStateOf(order) !== 'paid') {
         return res.status(409).json({ ok: false, message: '계좌 입금 주문이 아닙니다.' });
       }
-      await markRefundAccountRefunded({ kind: isMixing ? 'mixing' : 'session', orderNo: order.orderNo }, new Date());
+      const recorded = await markRefundAccountRefunded({ kind: isMixing ? 'mixing' : 'session', orderNo: order.orderNo }, new Date());
+      if (!recorded) return res.status(500).json({ ok: false, message: '송금 완료를 기록하지 못했습니다. 잠시 후 다시 시도해 주세요.' });
       return res.status(200).json({ ok: true });
     }
 

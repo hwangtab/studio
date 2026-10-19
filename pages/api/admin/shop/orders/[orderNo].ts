@@ -53,7 +53,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (b.action === 'mark_refund_sent') {
     const order = await findShopOrderByOrderNo(orderNo);
     if (!order || !order.payments.some(isBankDepositPayment)) return res.status(409).json({ ok: false, message: '계좌 입금 주문이 아닙니다.' });
-    await markRefundAccountRefunded({ kind: 'merch', orderNo }, new Date());
+    const recorded = await markRefundAccountRefunded({ kind: 'merch', orderNo }, new Date());
+    if (!recorded) return res.status(500).json({ ok: false, message: '송금 완료를 기록하지 못했습니다. 잠시 후 다시 시도해 주세요.' });
     return res.status(200).json({ ok: true });
   }
   if (b.action === 'refund') {

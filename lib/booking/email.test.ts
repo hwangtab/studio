@@ -5,6 +5,7 @@ import {
   sendBookingCancelledEmails,
   sendBookingConfirmedEmails,
   sendDepositLinkPaidEmail,
+  sendDepositRefundEmail,
   sendMixingOrderCancelledEmails,
   sendMixingOrderConfirmedEmails,
 } from './email';
@@ -159,5 +160,41 @@ describe('HTML 메일', () => {
     await sendDepositLinkPaidEmail(order);
     expect(calls()[0].html).toContain('예약금 입금이 확인됐어요');
     expect(calls()[0].html).toContain('220,000원');
+  });
+});
+
+describe('예약금 환불 안내 메일', () => {
+  it('환불 금액·주문번호를 싣고 회신 주소를 붙인다 — 토스 결제는 결제 수단 환불 문구', async () => {
+    expect(await sendDepositRefundEmail(order, 40000, 70000, 'payment')).toBeNull();
+    const call = customerCall();
+    expect(call.to).toBe('singer@studio.test');
+    expect(call.replyTo).toBe('hello@studionol.co.kr');
+    expect(call.subject).toBe('[스튜디오 놀] 예약금이 환불됐어요 — 40,000원');
+    expect(String(call.text)).toContain('환불 금액: 40,000원');
+    expect(String(call.text)).toContain('남은 결제 금액: 70,000원');
+    expect(String(call.text)).toContain('결제 수단으로 환불되며');
+    expect(String(call.html)).toContain('남은 결제 금액');
+  });
+
+  it('전액 환불이면 남은 결제 금액을 적지 않는다', async () => {
+    await sendDepositRefundEmail(order, 110000, 0, 'payment');
+    expect(String(customerCall().text)).not.toContain('남은 결제 금액');
+  });
+
+  // 예약금 주문에는 고객이 환불 계좌를 적는 화면이 없다 — 세션·믹싱의 "적어 주신 환불 계좌로 3영업일" 문구를 쓰면 거짓이 된다.
+  it('계좌 입금 건은 운영자가 직접 송금했다고 말하고, 환불 계좌 접수 문구를 쓰지 않는다', async () => {
+    await sendDepositRefundEmail(order, 110000, 0, 'bank_account');
+    const text = String(customerCall().text);
+    expect(text).toContain('직접 송금해 드렸어요');
+    expect(text).not.toContain('적어 주신 환불 계좌');
+    // 푸터가 "발송 전용, 회신 대신 번호로 연락"이라고 안내하므로 본문도 회신을 권하지 않는다.
+    expect(text).not.toContain('회신');
+    expect(text).toContain('010-4255-7893');
+  });
+
+  it('파기된 주문에는 보내지 않고 실패로도 세지 않는다', async () => {
+    const purged = { ...order, customerEmail: '(개인정보 파기됨)' } as unknown as Order;
+    expect(await sendDepositRefundEmail(purged, 1000, 0, 'payment')).toBeNull();
+    expect(sendEmail).not.toHaveBeenCalled();
   });
 });

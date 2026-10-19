@@ -11,11 +11,11 @@ import { isBankDepositPayment } from './bankDeposit';
  * `refunds` 행(done) + 주문 상태(partially_refunded/refunded) — 예약·믹싱·공연·상점 계좌 환불과 같은 모양이라
  * 매출 장부·매출 현황이 그대로 읽는다. 환불 계좌 표(`refund_accounts`)는 링크 주문에 접수 화면이 없어 건드리지 않는다.
  *
- * **토스 결제 링크 주문은 받지 않는다**(`not_bank_deposit`) — 그 환불은 토스 콘솔에서 취소하고 웹훅 대사가 기록한다.
+ * **토스 결제 링크 주문은 받지 않는다**(`not_bank_deposit`) — 그 환불은 `cancelBookingWithRefund`의 예약금 경로(lib/booking/cancel.ts `refundDepositOrder`)가 토스 취소와 함께 기록한다.
  * 여기서 기록만 남기면 돈은 그대로인데 장부만 환불로 바뀐다.
  */
 export type LinkRefundResult =
-  | { ok: true; refundAmount: number }
+  | { ok: true; refundAmount: number; /** 이번 환불 뒤 남은 결제 금액 — 고객 안내 메일이 부분 환불을 설명할 때 쓴다. */ remainingAfter: number }
   | { ok: false; code: 'not_found' | 'invalid_state' | 'not_bank_deposit' | 'invalid_amount'; message: string };
 
 export const recordLinkBankRefund = async (input: {
@@ -33,7 +33,7 @@ export const recordLinkBankRefund = async (input: {
   if (order.type !== 'deposit') return { ok: false, code: 'invalid_state', message: '결제 링크 주문이 아닙니다.' };
   const payment = order.payments.find(isBankDepositPayment);
   if (!payment) {
-    return { ok: false, code: 'not_bank_deposit', message: '계좌로 직접 입금한 주문만 여기서 기록할 수 있어요. 카드 결제는 토스 콘솔에서 취소해 주세요.' };
+    return { ok: false, code: 'not_bank_deposit', message: '계좌로 직접 입금한 주문만 여기서 기록할 수 있어요. 카드 결제는 “예약금 환불”로 토스 취소를 부르세요.' };
   }
   if (order.status !== 'paid' && order.status !== 'partially_refunded') {
     return { ok: false, code: 'invalid_state', message: '입금이 확인된 주문만 환불을 기록할 수 있어요.' };
@@ -67,5 +67,5 @@ export const recordLinkBankRefund = async (input: {
   if ((inserted.rowsAffected ?? 0) === 0) {
     return { ok: false, code: 'invalid_amount', message: '환불 가능 잔액이 바뀌었어요. 새로고침 후 다시 확인해 주세요.' };
   }
-  return { ok: true, refundAmount: input.amount };
+  return { ok: true, refundAmount: input.amount, remainingAfter: remaining - input.amount };
 };
