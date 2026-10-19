@@ -1,8 +1,9 @@
-import { desc, eq } from 'drizzle-orm';
+import { and, desc, eq, gte, lt } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { contractAdminEvents } from '../../db/schema';
-import type { ContractAdminAction } from './admin-event-labels';
+import { contractAdminEvents, contracts } from '../../db/schema';
+import { kstDateTime } from '../booking/kst';
+import { CONTRACT_ADMIN_ACTION_LABELS, type ContractAdminAction } from './admin-event-labels';
 
 /**
  * 관리자의 계약 변경 행위 이력 — 누가·언제·무슨 행위를 했는가(db/schema.ts `contractAdminEvents`).
@@ -75,4 +76,95 @@ export const listContractAdminEvents = async (contractId: string): Promise<Seria
     console.error(`[contracts/admin-events] 이력 조회 실패 (contractId=${contractId}):`, error);
     return [];
   }
+};
+
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+export interface ContractEventFilter {
+  actor?: string;
+  action?: string;
+  contractId?: string;
+  /** KST 달력 날짜(YYYY-MM-DD), 양 끝 포함. */
+  from?: string;
+  to?: string;
+  limit: number;
+}
+
+export interface ContractEventListRow extends SerializedContractAdminEvent {
+  contractId: string;
+  /** 계약이 아직 있으면 그 호실. 삭제된 초안이면 null — 이름·연락처는 목록에 싣지 않는다. */
+  roomNumber: string | null;
+}
+
+/**
+ * 전체 이력 검색(관리자 "작업 이력" 화면·CSV). 최신순, `limit`건까지.
+ *
+ * **표가 없으면 던진다** — 계약 상세의 한 건 조회(`listContractAdminEvents`)와 달리 이 화면은 이력이 목적이라
+ * "기록이 없다"로 보이면 마이그레이션 전이라는 사실을 숨긴다. 호출부가 잡아 적용 방법을 알린다.
+ * 계약의 이름·연락처는 읽지 않는다(호실만) — 이 목록은 `contract_view` 접속기록을 남기지 않는 자리다.
+ */
+export const searchContractAdminEvents = async (filter: ContractEventFilter): Promise<ContractEventListRow[]> => {
+  const conditions = [];
+  if (filter.actor) conditions.push(eq(contractAdminEvents.actor, filter.actor));
+  if (filter.action) conditions.push(eq(contractAdminEvents.action, filter.action));
+  if (filter.contractId) conditions.push(eq(contractAdminEvents.contractId, filter.contractId));
+  if (filter.from && DATE_RE.test(filter.from)) conditions.push(gte(contractAdminEvents.at, kstDateTime(filter.from, 0)));
+  if (filter.to && DATE_RE.test(filter.to)) conditions.push(lt(contractAdminEvents.at, kstDateTime(filter.to, 24)));
+
+  const rows = await getDb()
+    .select({ event: contractAdminEvents, roomNumber: contracts.roomNumber })
+    .from(contractAdminEvents)
+    .leftJoin(contracts, eq(contracts.id, contractAdminEvents.contractId))
+    .where(conditions.length > 0 ? and(...conditions) : undefined)
+    .orderBy(desc(contractAdminEvents.at))
+    .limit(filter.limit);
+
+  return rows.map(({ event, roomNumber }) => ({
+    id: event.id,
+    contractId: event.contractId,
+    action: event.action,
+    actor: event.actor,
+    fromStatus: event.fromStatus,
+    toStatus: event.toStatus,
+    at: event.at.toISOString(),
+    roomNumber: roomNumber ?? null,
+  }));
+};
+
+/** 필터 선택지용 — 이력에 나온 수행자 목록. 표가 없으면 빈 목록. */
+export const listContractEventActors = async (): Promise<string[]> => {
+  try {
+    const rows = await getDb()
+      .selectDistinct({ actor: contractAdminEvents.actor })
+      .from(contractAdminEvents)
+      .orderBy(contractAdminEvents.actor);
+    return rows.map((row) => row.actor);
+  } catch {
+    return [];
+  }
+};
+
+/**
+ * 쿼리스트링 → 필터. 화면과 CSV가 같은 규칙을 쓴다(둘이 다르면 화면에서 본 건수와 내려받은 건수가 갈린다).
+ * 모르는 행위 값·형식이 틀린 날짜는 조용히 무시한다 — 잘못된 URL이 500이 되지 않게.
+ */
+export const parseContractEventFilter = (
+  query: Record<string, string | string[] | undefined>,
+  limit: number,
+): ContractEventFilter => {
+  const one = (key: string): string | undefined => {
+    const value = query[key];
+    return typeof value === 'string' && value.trim() ? value.trim().slice(0, 64) : undefined;
+  };
+  const action = one('action');
+  const from = one('from');
+  const to = one('to');
+  return {
+    actor: one('actor'),
+    action: action && Object.prototype.hasOwnProperty.call(CONTRACT_ADMIN_ACTION_LABELS, action) ? action : undefined,
+    contractId: one('contract'),
+    from: from && DATE_RE.test(from) ? from : undefined,
+    to: to && DATE_RE.test(to) ? to : undefined,
+    limit,
+  };
 };

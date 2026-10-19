@@ -232,9 +232,14 @@ export default function AdminContractsPage({
         description="전자계약 현황을 확인하고 관리합니다."
         width="wide"
         actions={
-          <Link href="/admin/contracts/new" passHref>
-            <Button light>새 계약 작성</Button>
-          </Link>
+          <>
+            <Link href="/admin/contracts/history" passHref>
+              <Button light variant="weak">작업 이력</Button>
+            </Link>
+            <Link href="/admin/contracts/new" passHref>
+              <Button light>새 계약 작성</Button>
+            </Link>
+          </>
         }
       >
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
