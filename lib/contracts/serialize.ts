@@ -101,3 +101,23 @@ export const serializeAttachment = (attachment: ContractAttachment): SerializedA
     createdAt: attachment.createdAt.toISOString(),
   };
 };
+
+/**
+ * 목록용 — 상세를 열어야 보이는 개인정보(생년월일·주소)와 본문 전체를 뺀다.
+ *
+ * 목록은 `contract_view` 접속기록을 남기지 않는다(한 줄마다 기록하면 노이즈뿐이라는 판단,
+ * db/schema.ts의 contract_view 주석). 그 전제는 "목록에는 전체 개인정보가 없다"인데, 예전엔 목록도
+ * `serializeContractForAdmin`을 써서 200건 분량의 생년월일·주소·본문이 `__NEXT_DATA__`와
+ * GET /api/contracts 응답에 실렸다 — 상세 열람만 기록되고 목록으로는 기록 없이 전량 열람이 됐다.
+ * 목록에 새 칸이 필요해도 이 제외 목록을 줄이지 말고, 상세에서 읽도록 한다.
+ */
+export type AdminListContract = Omit<AdminSerializedContract, 'customerBirthdate' | 'customerAddress' | 'content'>;
+
+export const serializeContractForAdminList = (
+  contract: Contract,
+  now: Date = new Date(),
+): AdminListContract => {
+  const { customerBirthdate: _birthdate, customerAddress: _address, content: _content, ...rest } =
+    serializeContractForAdmin(contract, now);
+  return rest;
+};

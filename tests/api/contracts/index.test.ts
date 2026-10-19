@@ -14,8 +14,10 @@ jest.mock('../../../db/client', () => ({ getDb: jest.fn() }));
 jest.mock('../../../lib/contracts/admin-auth', () => ({
   authenticateAdminApi: jest.fn(),
 }));
+jest.mock('../../../lib/contracts/admin-events', () => ({ recordContractChange: jest.fn().mockResolvedValue(undefined) }));
 jest.mock('../../../lib/contracts/serialize', () => ({
   serializeContractForAdmin: jest.fn((contract: { id: string }) => ({ id: contract.id, serialized: true })),
+  serializeContractForAdminList: jest.fn((contract: { id: string }) => ({ id: contract.id, serialized: true })),
 }));
 jest.mock('../../../lib/contracts/service', () => ({
   createContract: jest.fn(),

@@ -21,7 +21,7 @@ jest.mock('../../data/artists', () => {
     getSupportedArtist: (slug: string) => artists.find((a) => a.slug === slug) ?? null,
   };
 });
-jest.mock('../billing/email', () => ({ sendSubscriptionOperatorAlert: jest.fn().mockResolvedValue(null) }));
+jest.mock('../billing/email', () => ({ sendSubscriptionOperatorAlert: jest.fn().mockResolvedValue(null), sendSubscriptionActivatedEmail: jest.fn().mockResolvedValue(null), subscriptionManageUrl: () => 'https://studionol.co.kr/m' }));
 jest.mock('../billing/toss-billing', () => ({ issueBillingKey: jest.fn(), chargeBillingKey: jest.fn(), fetchPaymentByOrderId: jest.fn() }));
 
 // eslint-disable-next-line import/first

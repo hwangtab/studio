@@ -526,6 +526,13 @@
       "when": 1792382541954,
       "tag": "0074_tenancy_active_room_unique",
       "breakpoints": true
+    },
+    {
+      "idx": 75,
+      "version": "6",
+      "when": 1792391033127,
+      "tag": "0075_contract_admin_events",
+      "breakpoints": true
     }
   ]
 }

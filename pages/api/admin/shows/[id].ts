@@ -136,7 +136,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           `) as Array<{ orderNo: string }>)
         : [];
       const resume = pendingRefund.length > 0;
-      if (showtime.status !== 'scheduled' && !resume) return res.status(409).json({ ok: false, message: '예정된 회차만 취소할 수 있습니다.' });
+      // 안내 메일 전체 재발송 — 첫 실행이 시간 한도·500으로 끊겨 메일이 한 통도 안 나간 경우. 취소된 회차에서만, 운영자가 명시할 때만.
+      const renotify = showtime.status === 'cancelled' && b.notifyAll === true;
+      if (showtime.status !== 'scheduled' && !resume && !renotify) return res.status(409).json({ ok: false, message: '예정된 회차만 취소할 수 있습니다.' });
       let r: Awaited<ReturnType<typeof cancelShowtime>>;
       try {
         r = await cancelShowtime(showtime.id, now, { cancelPayment });
@@ -157,12 +159,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         `) as Array<{ total: number }>;
         return Number(row?.total ?? 0);
       };
-      const notifyTargets = new Set<string>(
-        resume ? [...r.refundedOrderNos, ...r.failedOrders] : [...affected.map((a) => a.orderNo), ...r.refundedOrderNos],
-      );
+      // 이어서 처리: 이번에 환불이 끝난 주문만(토스 거절이 반복되는 주문에 '처리 중' 메일을 누를 때마다 보내지 않는다).
+      // 전체 재발송(notifyAll): 이 회차의 살아 있던 주문 + 회차 취소로 환불된 주문 전부를 지금 상태로 다시 안내한다.
+      let notifyTargets: Set<string>;
+      if (renotify) {
+        const everyone = await db.all(sql`
+          SELECT DISTINCT so.order_no as orderNo FROM show_orders so
+          JOIN orders o ON o.order_no = so.order_no
+          LEFT JOIN payments p ON p.order_id = o.id
+          LEFT JOIN refunds rf ON rf.payment_id = p.id AND rf.reason = ${SHOWTIME_CANCEL_REFUND_REASON} AND rf.status = 'done'
+          WHERE so.showtime_id = ${showtime.id} AND (o.status IN ('paid', 'partially_refunded') OR rf.id IS NOT NULL)
+        `) as Array<{ orderNo: string }>;
+        notifyTargets = new Set(everyone.map((e) => e.orderNo));
+      } else {
+        notifyTargets = new Set<string>(resume ? r.refundedOrderNos : [...affected.map((a) => a.orderNo), ...r.refundedOrderNos]);
+      }
       for (const orderNo of notifyTargets) {
-        // 처리 상한에 걸려 이번에 손대지 않은 주문은 아직 안내하지 않는다 — 다음 실행이 보낸다.
-        const touched = orderNo in r.perOrder || r.failedOrders.includes(orderNo) || r.bankRefundOrders.includes(orderNo);
+        // 처리 상한에 걸려 이번에 손대지 않은 주문은 아직 안내하지 않는다 — 다음 실행이 보낸다(전체 재발송은 예외).
+        const touched = renotify || orderNo in r.perOrder || r.failedOrders.includes(orderNo) || r.bankRefundOrders.includes(orderNo);
         if (!touched) continue;
         try {
           const per = r.perOrder[orderNo];
@@ -191,7 +205,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // 일부 주문의 환불이 실패해도 회차는 이미 취소됐다 — 실패 주문을 응답에 실어 운영자가 이어서 처리한다.
       // 계좌 입금 주문은 토스로 돌려줄 수 없어 고객이 환불 계좌를 적거나 운영자가 송금 뒤 "환불"로 기록한다.
       return res.status(200).json({
-        ok: true, resumed: resume, refundedOrders: r.refundedOrders, failedOrders: r.failedOrders,
+        ok: true, resumed: resume, renotified: renotify ? notifyTargets.size : 0, refundedOrders: r.refundedOrders, failedOrders: r.failedOrders,
         bankRefundOrders: r.bankRefundOrders, closedDepositOrders: r.closedDepositOrders, remainingOrders: r.remainingOrders,
       });
     }

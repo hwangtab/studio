@@ -150,6 +150,77 @@ export const studioOperator = {
       publisher: '월간 믹싱',
       datePublished: '2023-10-10',
     },
+    {
+      // 2026-10-19 원문 직접 확인. 발행인·편집인 홍기혜(황경하·kosmart와 무관, 2001년 창간
+      // 독립 매체) — 뉴스아트 건(아래 주석)과 달리 진짜 제3자 매체다. 음반 〈젠트리피케이션〉
+      // 선정위원회 특별상 수상 현장에서 "제작자 황경하 씨"를 직접 인용. GPTBot·ChatGPT-User·
+      // ClaudeBot·Googlebot·PerplexityBot 전부 200(리다이렉트 추적 기준)으로 AI가 읽을 수 있다.
+      url: 'https://pressian.com/pages/articles/151794',
+      title: "'헌법 제1조' 윤민석, 한국대중음악상 수상",
+      publisher: '프레시안',
+      datePublished: '2017-03-01',
+    },
+    {
+      // 2026-10-20 원문 직접 확인. 한국대중음악상 공식 사이트의 〈젠트리피케이션〉(선정위원회
+      // 특별상 수상작) 프로젝트 페이지 — "제작자 황경하의 프로듀싱은 섬세하고 치밀"이라고
+      // 직접 평한다. 공식 curl은 Cloudflare 챌린지로 403이 뜨지만 crawl4ai(실제 브라우저
+      // 렌더링)로는 통과해 내용을 확인했다 — 단순 User-Agent 차단이 아니라 JS 챌린지라
+      // GPTBot 등 일반 크롤러가 통과하는지는 확인하지 못했다.
+      url: 'https://koreanmusicawards.com/project/various-artists/',
+      title: 'Various Artists — 한국대중음악상시상식',
+      publisher: '한국대중음악상',
+      datePublished: '2017-02-28',
+    },
+    {
+      // 2026-10-20 원문 직접 확인. "자립본부 황경하씨"를 직접 인용, 자립음악생산조합의
+      // 공간 운영 방식을 설명. GPTBot·ChatGPT-User·ClaudeBot·Googlebot·PerplexityBot
+      // 전부 200.
+      url: 'https://www.hani.co.kr/arti/culture/music/770139.html',
+      title: '인디 뮤지션들 홍대앞 떠나 망명했지만…',
+      publisher: '한겨레',
+      datePublished: '2016-11-14',
+    },
+    {
+      // 2026-10-20 원문 직접 확인. "공연 기획자 황경하씨"로 소개, 자립심 페스티벌·테이크
+      // 아웃드로잉 컴필레이션 앨범 제작 과정을 다룸. GPTBot·ChatGPT-User·ClaudeBot은 403,
+      // Googlebot·PerplexityBot은 200 — 이 매체는 OpenAI·Anthropic 크롤러를 막는다.
+      url: 'https://www.sisain.co.kr/news/articleView.html?idxno=25563',
+      title: '테이크아웃드로잉을 사운드로 기록하다',
+      publisher: '시사IN',
+      datePublished: '2016-03-18',
+    },
+    {
+      // 2026-10-20 원문 직접 확인. 제14회 한국대중음악상 시상식 사진 기사 — "젠트리피케이션
+      // 앨범 황경하 프로듀서가... 수상소감을 말하고 있다" 캡션. 전부 200.
+      url: 'https://tvreport.co.kr/star/article/533545/',
+      title: '[T포토] 황경하 "리쌍, 평범한 가장의 삶 짓밟지 말길"',
+      publisher: 'TV리포트',
+      datePublished: '2017-02-28',
+    },
+    {
+      // 2026-10-20 원문 직접 확인. 서울대학교 학보(대학신문) — 자립음악생산조합 운영위원
+      // 황경하 인터뷰, 정기장터 '레코드폐허' 기획 설명. GPTBot·ChatGPT-User·ClaudeBot은
+      // 403, Googlebot·PerplexityBot은 200.
+      url: 'https://www.snunews.com/news/articleView.html?idxno=15933',
+      title: '메마른 땅 위 지지대 없는 음악을 심는 이들',
+      publisher: '대학신문(서울대학교)',
+      datePublished: '2016-05-15',
+    },
+    {
+      // 2026-10-20 원문 직접 확인. 독립 음악 웹진(2006년 창간)의 다른 아티스트 리뷰 2건
+      // 안에서 황경하를 자립음악 운동의 맥락으로 언급 — 그를 다룬 글은 아니고 언급이라
+      // 비중은 약하지만 kosmart와 무관한 진짜 제3자다. 전부 200.
+      url: 'http://musicy.kr/?c=review&s=1&gp=1&ob=idx&gbn=viewok&ix=5941',
+      title: '[Single-Out #171-1] 그랙다니 「Airplane (feat. Sonia Calico)」',
+      publisher: '음악취향Y',
+      datePublished: '2017-11-13',
+    },
+    {
+      url: 'http://musicy.kr/?c=review&s=1&gp=1&ob=idx&gbn=viewok&ix=6103',
+      title: '[Single-Out #189-3] 아날로그소년 「노점가」',
+      publisher: '음악취향Y',
+      datePublished: '2018-03-19',
+    },
   ],
   // 뉴스아트(news-art.co.kr) 기사 7건을 여기 추가했다가(PR #746·#752) 뺐다(2026-10-19).
   // 뉴스아트의 발행 정보(기사 하단, 전 페이지 공통)는 "발행인: 한국스마트협동조합 서인형 |

@@ -17,9 +17,10 @@ import { getDb } from '../../db/client';
  * 되돌리기 쉽다. 아직 적용되지 않은 마이그레이션의 표는 건너뛰고 결과에 적는다(백업이 그것 때문에 죽지 않게).
  */
 export const LEDGER_BACKUP_TABLES = [
-  'orders', 'payments', 'refunds', 'refund_accounts', 'work_orders', 'bookings',
+  'orders', 'payments', 'refunds', 'refund_accounts', 'work_orders', 'bookings', 'payment_link_orders',
   'funding_pledges', 'funding_pledge_items', 'funding_project_payouts',
-  'subscriptions', 'subscription_payments', 'billing_keys', 'room_tenancies', 'artist_payouts',
+  'subscriptions', 'subscription_payments', 'billing_keys', 'room_tenancies', 'room_tenancy_payments', 'artist_payouts',
+  'partner_payouts', 'partner_payout_adjustments', 'manual_revenues',
   'show_orders', 'show_order_locales', 'show_tickets',
   'shop_orders', 'shop_order_items', 'software_orders',
 ] as const;

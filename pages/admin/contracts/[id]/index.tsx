@@ -15,7 +15,10 @@ import { createSubscription as createSubscriptionRequest } from '../../../../com
 import { AdminShell } from '../../../../components/admin/AdminShell';
 import { Button } from '../../../../components/ui/Button';
 import { getDb } from '../../../../db/client';
+import { OCCUPYING_STATUSES } from '../../../../lib/billing/service';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
+import { CONTRACT_ADMIN_ACTION_LABELS, type ContractAdminAction } from '../../../../lib/contracts/admin-event-labels';
+import { listContractAdminEvents, type SerializedContractAdminEvent } from '../../../../lib/contracts/admin-events';
 import { recordAdminPrivacyAccess } from '../../../../lib/privacy/accessLog';
 import {
   serializeAttachment,
@@ -44,6 +47,13 @@ interface AdminContractDetailPageProps {
   subscriptionId: string | null;
   /** 그 구독이 해지·종료됐는가 — 그러면 같은 계약에 새 정기결제 링크를 다시 만들 수 있다(진행 중일 때만 서비스가 중복을 막는다). */
   subscriptionClosed: boolean;
+  /**
+   * 이용 종료 때 함께 해지되는 구독 수(진행 중인 구독 — 카드 등록 대기·정지 포함). 종료 확인창이
+   * "구독 N건이 해지되고 고객에게 안내 메일이 간다"를 미리 말하는 데 쓴다. 조회가 실패하면 0이 아니라 null.
+   */
+  occupyingSubscriptionCount: number | null;
+  /** 관리자가 이 계약에 한 변경 행위 이력(최신순). 표가 없으면 빈 목록. */
+  adminEvents?: SerializedContractAdminEvent[];
 }
 
 export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps> = async (
@@ -87,6 +97,14 @@ export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps
       orderBy: (t, { desc }) => [desc(t.createdAt)],
     })
     .catch(() => null);
+  const occupyingSubscriptionCount = await getDb()
+    .query.subscriptions.findMany({
+      columns: { id: true },
+      where: (t, { and: all, eq: is, inArray: within }) => all(is(t.contractId, id), within(t.status, OCCUPYING_STATUSES)),
+    })
+    .then((rows) => rows.length)
+    .catch(() => null);
+  const adminEvents = await listContractAdminEvents(id);
 
   return {
     props: {
@@ -98,6 +116,8 @@ export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps
       auditTrail: serializeAuditTrail(buildAuditTrail(contract)),
       subscriptionId: subscription?.id ?? null,
       subscriptionClosed: subscription ? ['cancelled', 'ended'].includes(subscription.status) : false,
+      occupyingSubscriptionCount,
+      adminEvents,
     },
   };
 };
@@ -129,6 +149,8 @@ export default function AdminContractDetailPage({
   auditTrail,
   subscriptionId,
   subscriptionClosed,
+  occupyingSubscriptionCount,
+  adminEvents = [],
 }: AdminContractDetailPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -166,8 +188,17 @@ export default function AdminContractDetailPage({
    * 위약금(제5조 ③)이 걸린 중도 퇴실인지 정상 만료인지가 분쟁의 쟁점이 된다.
    */
   const handleTerminate = async () => {
+    // 종료는 연결된 구독을 함께 해지하고 고객에게 해지 안내 메일을 보낸다 — 되돌릴 수 없으니 누르기 전에 말한다.
+    // 건수를 못 읽었으면(null) 그 사실을 숨기지 않고 "있을 수 있다"고 알린다.
+    const subscriptionNotice =
+      occupyingSubscriptionCount === null
+        ? '연결된 구독이 있으면 함께 해지되고 고객에게 해지 안내 메일이 나갑니다(건수를 확인하지 못했습니다). 되돌릴 수 없습니다.\n\n'
+        : occupyingSubscriptionCount > 0
+          ? `연결된 구독 ${occupyingSubscriptionCount}건이 함께 해지되고 고객에게 해지 안내 메일이 나갑니다. 되돌릴 수 없습니다.\n\n`
+          : '';
     const reason = window.prompt(
-      '이용 종료 사유를 적어 주세요. 계약서는 그대로 보관되고, 이 호실로 새 계약을 만들 수 있게 됩니다.\n\n' +
+      subscriptionNotice +
+        '이용 종료 사유를 적어 주세요. 계약서는 그대로 보관되고, 이 호실로 새 계약을 만들 수 있게 됩니다.\n\n' +
         '예: 기간 만료 후 종료 / 중도 퇴실(위약금 납부) / 이용료 연체로 해지',
     );
     if (reason === null) return;
@@ -460,6 +491,31 @@ export default function AdminContractDetailPage({
 
           <AuditTrail trail={auditTrail} />
 
+          {/* 서명 지문(위)은 고객 쪽 증거이고, 이 목록은 관리자가 이 계약에 한 변경이다 — 누가 종료·삭제·취소했는지 묻는 자리. */}
+          <section aria-label="관리자 작업 이력" className="p-4 md:p-8 border-b border-gray-200">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-3">관리자 작업 이력</h2>
+            {adminEvents.length === 0 ? (
+              <p className="text-sm text-gray-500">기록된 변경이 없습니다. (이력은 2026-10-15 이후의 작업부터 남습니다.)</p>
+            ) : (
+              <ol className="space-y-1.5 text-sm text-gray-700">
+                {adminEvents.map((event) => (
+                  <li key={event.id} className="flex flex-wrap items-baseline gap-x-3">
+                    <span className="tabular-nums text-gray-500">{formatDateTime(event.at)}</span>
+                    <span className="font-medium text-gray-900">
+                      {CONTRACT_ADMIN_ACTION_LABELS[event.action as ContractAdminAction] ?? event.action}
+                    </span>
+                    <span className="text-gray-600">{event.actor}</span>
+                    {event.fromStatus !== event.toStatus && (
+                      <span className="text-xs text-gray-500">
+                        {event.fromStatus ? getStatusLabel(event.fromStatus as never) : '-'} → {event.toStatus ? getStatusLabel(event.toStatus as never) : '삭제'}
+                      </span>
+                    )}
+                  </li>
+                ))}
+              </ol>
+            )}
+          </section>
+
           {/* 본문은 1만 px가 넘는다. 펼쳐 두면 아래 '작업'(발송·취소 등)이 그 밑에 묻혀,
               특히 폰에서는 스크롤로 닿기 어려웠다. 첨부 이용수칙과 같이 접어 둔다. */}
           <details className="p-4 md:p-8 border-b border-gray-200">
@@ -508,7 +564,7 @@ export default function AdminContractDetailPage({
               </Button>
             )}
 
-            {isActionAllowed(contract.status, 'resend') && (
+            {isActionAllowed(contract.status, 'resend') && !contract.purgedAt && (
               <Button light
                 variant={contract.status === 'sent' ? 'weak' : 'solid'}
                 disabled={busy}
@@ -603,9 +659,13 @@ export default function AdminContractDetailPage({
 
             {/* 같은 고객의 재계약·갱신은 14개 항목을 다시 타이핑하는 자리다.
                 발송 후에는 수정이 막히므로(설계상 의도) 복제해서 새로 만드는 길을 준다. */}
-            <Link href={`/admin/contracts/new?from=${contract.id}`} passHref>
-              <Button light variant="weak">복제해서 새 계약</Button>
-            </Link>
+            {contract.purgedAt ? (
+              <p className="self-center text-sm text-gray-500">개인정보가 파기되어 재발송·복제할 수 없습니다.</p>
+            ) : (
+              <Link href={`/admin/contracts/new?from=${contract.id}`} passHref>
+                <Button light variant="weak">복제해서 새 계약</Button>
+              </Link>
+            )}
 
             {isActionAllowed(contract.status, 'terminate') && (
               <Button light variant="ghost" disabled={busy} onClick={handleTerminate}>

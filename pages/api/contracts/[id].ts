@@ -3,6 +3,7 @@ import { waitUntil } from '@vercel/functions';
 
 import { getDb } from '../../../db/client';
 import { authenticateAdminApi } from '../../../lib/contracts/admin-auth';
+import { recordContractChange, type ContractAdminAction } from '../../../lib/contracts/admin-events';
 import {
   serializeAttachment,
   serializeClause,
@@ -76,6 +77,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // 만료 기한이 지났다면 DB 반영 여부와 무관하게 만료된 것으로 취급한다.
   const effectiveStatus = getEffectiveStatus(contract);
 
+  /** 변경 행위 이력(서버 로그 + contract_admin_events). 성공한 변경 직전에만 부른다 — 실패한 시도는 남기지 않는다. */
+  const record = (action: ContractAdminAction, toStatus: string | null, fromStatus: string | null = toStatus) =>
+    recordContractChange({ contractId: id, action, actor: auth.actor, fromStatus, toStatus });
+
   if (req.method === 'GET') {
     return res.status(200).json({
       ok: true,
@@ -130,6 +135,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             message: '계약 상태가 바뀌어 수정할 수 없습니다. 새로고침 후 확인해 주세요.',
           });
         }
+        await record('update', effectiveStatus);
         return res.status(200).json({ ok: true, contract: serializeContractForAdmin(updated) });
       }
 
@@ -147,6 +153,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // 러너도 ESM 파싱에서 막힌다. 실제로 재발송할 때만 불러온다.
         const { finalizeSignedContract } = await import('../../../lib/contracts/finalize');
         waitUntil(finalizeSignedContract(id));
+        await record('resend-signed', effectiveStatus);
         return res.status(200).json({
           ok: true,
           contract: serializeContractForAdmin(contract),
@@ -196,6 +203,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           console.error('[contracts] Failed to cancel subscriptions of terminated contract:', error);
           warnings.push('계약은 종료됐지만 연결된 구독 해지에 실패했습니다. 구독 화면에서 직접 해지해 주세요.');
         }
+        await record('terminate', 'terminated', effectiveStatus);
         return res.status(200).json({
           ok: true,
           contract: serializeContractForAdmin(terminated),
@@ -213,6 +221,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             message: '계약 상태가 바뀌어 취소할 수 없습니다. 새로고침 후 확인해 주세요.',
           });
         }
+        await record('cancel', 'cancelled', effectiveStatus);
         return res.status(200).json({ ok: true, contract: serializeContractForAdmin(cancelled) });
       }
 
@@ -245,6 +254,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       waitUntil(sendContractNotifications(result.contract, result.signUrl));
 
+      await record(action as ContractAdminAction, 'sent', effectiveStatus);
       return res.status(200).json({ ok: true, contract: serializeContractForAdmin(result.contract) });
     } catch (error: unknown) {
       console.error(`[API/contracts/[id]] Action "${action}" failed:`, error);
@@ -268,6 +278,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           message: '계약 상태가 바뀌어 삭제할 수 없습니다. 새로고침 후 확인해 주세요.',
         });
       }
+      await record('delete', null, effectiveStatus);
       return res.status(200).json({ ok: true });
     } catch (error: unknown) {
       console.error('[API/contracts/[id]] Failed to delete contract:', error);

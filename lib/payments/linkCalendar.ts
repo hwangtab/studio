@@ -93,29 +93,47 @@ export const syncPaymentLinkCalendarEvent = async (orderNo: string): Promise<str
 };
 
 /** 환불된 링크 주문의 일정을 캘린더에서 지운다. 올린 적 없으면 아무것도 안 한다. */
-export const removePaymentLinkCalendarEvent = async (orderNo: string): Promise<void> => {
+export const removePaymentLinkCalendarEvent = async (orderNo: string): Promise<boolean> => {
   let row: LinkOrderRow | null;
   try {
     row = await loadRow(orderNo);
   } catch (error) {
     console.error('[link-calendar] 링크 주문 조회 실패 — 건너뜀', { orderNo, error: safeDbErrorSummary(error) });
-    return;
+    return false;
   }
-  if (!row?.gcal_event_id) return;
+  if (!row?.gcal_event_id) return true;
   try {
     await deleteBookingEvent(row.gcal_event_id, 'studio');
     await recordResult(orderNo, null, null);
+    return true;
   } catch (error) {
     const detail = error instanceof Error ? error.message : String(error);
     console.error('[link-calendar] 캘린더 삭제 실패', { orderNo, detail });
     await recordResult(orderNo, undefined, `delete(${kstDateString(new Date())}): ${detail}`);
+    return false;
   }
 };
 
 /** 관리자 "캘린더 다시 등록" — 올린 일정이 있으면 지우고(옛 id가 없는 캘린더면 404도 성공) 새로 올린다. */
 export const resyncPaymentLinkCalendarEvent = async (orderNo: string): Promise<{ ok: true; eventId: string } | { ok: false; message: string }> => {
-  await removePaymentLinkCalendarEvent(orderNo);
+  // **새 일정을 먼저 만들고 옛 일정을 지운다** — 지우고 만들면 만들기가 실패했을 때 캘린더에 이 예약이 통째로 없어진다(retry-gcal·입금 확인이 이미 같은 순서를 지킨다, 감사 2026-10-19).
+  const before = await loadRow(orderNo).catch(() => null);
+  const oldEventId = before?.gcal_event_id ?? null;
+  if (oldEventId) await recordResult(orderNo, null, null); // 새로 만들 수 있게 id를 비운다(옛 id는 변수에 있다)
   const eventId = await syncPaymentLinkCalendarEvent(orderNo);
+  if (oldEventId) {
+    if (eventId) {
+      try {
+        await deleteBookingEvent(oldEventId, 'studio');
+      } catch (error) {
+        // 새 일정은 올라갔다 — 옛 일정 삭제 실패는 중복 하나가 남는 정도라 실패로 되돌리지 않고 기록만 한다.
+        console.error('[link-calendar] 옛 일정 삭제 실패(새 일정은 등록됨)', { orderNo, error: safeDbErrorSummary(error) });
+      }
+    } else {
+      await recordResult(orderNo, oldEventId, null); // 만들기가 실패했다 — 옛 일정 id를 되돌려 일정이 사라지지 않게
+      await getDb().run(sql`UPDATE payment_link_orders SET gcal_error = ${`resync(${kstDateString(new Date())}): 새 일정을 만들지 못해 옛 일정을 그대로 둠`} WHERE order_no = ${orderNo}`).catch(() => undefined);
+    }
+  }
   if (eventId) return { ok: true, eventId };
   const row = await loadRow(orderNo).catch(() => null);
   if (!row || row.session_at === null || row.session_hours === null) return { ok: false, message: '이용 일시가 없는 링크 주문이에요.' };

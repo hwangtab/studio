@@ -86,6 +86,23 @@ it('삭제가 실패하면 id를 남기고 사유를 적는다(관리자가 재�
   expect(await info()).toMatchObject({ gcalEventId: 'evt-1', gcalError: expect.stringContaining('delete') });
 });
 
+it('삭제 결과를 true/false로 돌려준다(실패를 성공으로 말하지 않게)', async () => {
+  await seed();
+  await syncPaymentLinkCalendarEvent('SNB-1');
+  (deleteBookingEvent as jest.Mock).mockRejectedValueOnce(new Error('503'));
+  expect(await removePaymentLinkCalendarEvent('SNB-1')).toBe(false);
+  expect(await removePaymentLinkCalendarEvent('SNB-1')).toBe(true);
+});
+
+it('다시 등록 — 새 일정 만들기가 실패해도 옛 일정은 남는다(만들고 나서 지운다, 감사 2026-10-19)', async () => {
+  await seed();
+  await syncPaymentLinkCalendarEvent('SNB-1');
+  (createBookingEvent as jest.Mock).mockRejectedValue(new Error('quota'));
+  expect(await resyncPaymentLinkCalendarEvent('SNB-1')).toMatchObject({ ok: false });
+  expect(deleteBookingEvent).not.toHaveBeenCalled();
+  expect(await info()).toMatchObject({ gcalEventId: 'evt-1' });
+});
+
 it('다시 등록 — 옛 일정을 지우고 새로 올린다. 일시 없는 링크·미결제는 안내', async () => {
   await seed();
   await syncPaymentLinkCalendarEvent('SNB-1');

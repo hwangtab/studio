@@ -328,6 +328,15 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
               {scheduled ? '회차 취소' : '환불 이어서 처리'}
             </Button>
           )}
+          {t.status === 'cancelled' && (
+            <Button light variant="weak" size="sm" disabled={busy} onClick={() =>
+              run({ action: 'cancel_showtime', showtimeId: t.id, notifyAll: true }, {
+                confirm: '이 회차의 모든 주문(환불된 것 포함)에 회차 취소 안내 메일을 지금 상태로 다시 보냅니다. 앞선 처리가 중간에 끊겨 메일이 나가지 않았을 때만 쓰세요 — 이미 받은 사람은 한 번 더 받습니다.',
+                success: '안내 메일을 다시 보냈습니다.',
+              })}>
+              안내 메일 전체 재발송
+            </Button>
+          )}
         </div>
       </div>
 
@@ -564,7 +573,7 @@ function TicketRefundControl({ order: o, refundable, startsAt, showtimeCancelled
       {o.tickets.some((k) => k.status === 'refunding') && (
         <Button light variant="weak" size="sm" disabled={busy} onClick={() =>
           run({ action: 'reconcile_refund', orderNo: o.orderNo }, {
-            confirm: `${o.orderNo}에 '환불중'으로 멈춘 티켓이 있습니다. 토스에 실제 취소 여부를 물어 장부에 반영하거나(취소됨) 발권 상태로 되돌립니다(취소 안 됨). 재취소는 하지 않습니다.`,
+            confirm: `${o.orderNo}에 '환불중'으로 멈춘 티켓이 있습니다. 토스에 실제 취소 여부를 물어 장부에 반영하거나(취소됨) 발권 상태로 되돌립니다(취소 안 됨). 재취소는 하지 않습니다.\n\n고객이 방금 환불을 신청했을 수 있으면 1분 뒤에 누르세요 — 진행 중인 요청을 되돌리면 그 티켓이 두 번 환불될 수 있습니다.`,
             success: '환불 상태를 재확인했습니다.',
           }).then((r) => { const m = r?.data?.message; if (typeof m === 'string') window.alert(m); })}>
           환불 재확인
