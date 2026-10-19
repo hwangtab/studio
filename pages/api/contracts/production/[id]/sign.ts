@@ -123,6 +123,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(409).json({ ok: false, message: '이미 서명이 처리된 계약입니다.', status: 'signed' });
     }
 
+    // 각자 자기 번호로 확인한다 — 의뢰인은 계약서의 의뢰인 연락처, 대리인은 운영자가 적은 대리인 연락처.
+    // 형식이 틀린 입력은 세지 않는다 — 세면 링크를 아는 제3자가 빈 요청으로 서명 링크를 잠근다(연습실과 같다).
+    const identity = verifyIdentityDigits(identityDigits, role === 'client' ? contract.clientPhone : (signer.phone ?? ''));
+    if (!identity.ok && identity.reason === 'malformed') {
+      return res.status(400).json({
+        ok: false,
+        message: `계약서에 등록된 ${role === 'guardian' ? '법정대리인 ' : ''}연락처 뒤 ${IDENTITY_DIGITS}자리를 정확히 입력해 주세요.`,
+      });
+    }
+
     const rateKey = productionSignerRateLimitKey(contract.id, role);
     const attempt = await checkIdentityAttempt(rateKey);
     if (attempt === 'locked') {
@@ -135,8 +145,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(429).json({ ok: false, message: '본인 확인 시도가 너무 많습니다. 잠시 후 다시 시도해 주세요.' });
     }
 
-    // 각자 자기 번호로 확인한다 — 의뢰인은 계약서의 의뢰인 연락처, 대리인은 운영자가 적은 대리인 연락처.
-    const identity = verifyIdentityDigits(identityDigits, role === 'client' ? contract.clientPhone : (signer.phone ?? ''));
     if (!identity.ok) {
       const message =
         identity.reason === 'unverifiable'

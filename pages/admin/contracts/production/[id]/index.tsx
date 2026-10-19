@@ -234,7 +234,9 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
             <span className="block mt-2 text-amber-700">
               {contract.status === 'sent' || contract.status === 'expired'
                 ? '의뢰인이 메일을 받지 못했을 수 있습니다. 재발송하거나 서명 링크를 직접 전달해 주세요.'
-                : '의뢰인이 체결 메일을 받지 못했을 수 있습니다. 아래 “완료 메일 재발송”을 눌러 주세요.'}
+                : contract.status === 'terminated'
+                  ? '의뢰인이 해지 안내(환불액·환불 계좌 입력)를 받지 못했을 수 있습니다. 아래 “해지 안내 재발송”을 눌러 주세요.'
+                  : '의뢰인이 체결 메일을 받지 못했을 수 있습니다. 아래 “완료 메일 재발송”을 눌러 주세요.'}
             </span>
           </div>
         )}
@@ -460,6 +462,21 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
                 >
                   완료 메일 재발송
                 </Button>
+            )}
+            {allowed('resend-termination') && !contract.purgedAt && (
+              <Button
+                light
+                variant="weak"
+                disabled={busy}
+                onClick={() =>
+                  run(
+                    () => mutateProductionContract(contract.id, 'resend-termination'),
+                    '해지 안내(환불액·환불 계좌 입력 안내)를 의뢰인에게 다시 보냅니다. 계속할까요?',
+                  )
+                }
+              >
+                해지 안내 재발송
+              </Button>
             )}
 
             {allowed('complete') && (

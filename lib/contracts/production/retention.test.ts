@@ -122,6 +122,13 @@ describe('제작 계약 개인정보 파기', () => {
     expect(operator).toMatchObject({ name: '스튜디오 놀 대표 황경하', ipAddress: '198.51.100.1' });
   });
 
+  it('해지 사유 글은 지우되 사유 구분(누구의 사정)은 남긴다 — 정산 조항을 가르는 운영 값', async () => {
+    await seed('c4', 'terminated', { terminatedAt: OLD });
+    await mockDb.update(schema.productionContracts).set({ terminationReason: '[스튜디오 사정] 홍길동 관련 사정' }).where(eq(schema.productionContracts.id, 'c4'));
+    await purgeExpiredProductionPersonalData(NOW);
+    expect((await load('c4'))?.terminationReason).toBe('[스튜디오 사정] (개인정보 파기됨)');
+  });
+
   it('진행 기록은 사람이 쓴 글만 지우고 승인 방식 같은 운영 값은 남긴다', async () => {
     await seed('c3', 'terminated', { terminatedAt: OLD });
     await mockDb.insert(schema.productionContractEvents).values({

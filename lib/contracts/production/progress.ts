@@ -19,7 +19,7 @@ import { EVENT_SPEC } from './event-spec';
 import { computeProductionLedger, kstDay, kstDayStart, parseEventData, type ProductionLedger } from './ledger';
 import { buildProductionProgressUrl } from './links';
 import { sendDueReminderEmail, sendProgressNotice, sendTerminationEmail, type DueReminder } from './progress-email';
-import { recordProductionNotificationResult } from './service';
+import { recordProductionNotificationError } from './service';
 import { parseTerminationCause } from './termination';
 import { parseStoredTerms, type ProductionTerms } from './terms';
 
@@ -98,10 +98,10 @@ export const sendTerminationNotice = async (contractId: string): Promise<void> =
     const token = context ? clientToken(context) : null;
     if (!context || context.contract.status !== 'terminated' || !cause || !token) return;
     const result = await sendTerminationEmail(context.contract, context.ledger, cause, buildProductionProgressUrl(contractId, token));
-    if (!result.ok) await recordProductionNotificationResult(contractId, `해지 안내 메일 실패: ${result.errorCode ?? 'UNKNOWN'}`);
+    await recordProductionNotificationError(contractId, result.ok ? null : `해지 안내 메일 실패: ${result.errorCode ?? 'UNKNOWN'}`);
   } catch (error: unknown) {
     console.error('[contracts/production/progress] Termination notice failed:', error);
-    await recordProductionNotificationResult(contractId, '해지 안내 메일 발송 중 오류').catch(() => undefined);
+    await recordProductionNotificationError(contractId, '해지 안내 메일 발송 중 오류');
   }
 };
 

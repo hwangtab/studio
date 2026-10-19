@@ -85,3 +85,16 @@ describe('관리자 기록 입력', () => {
     expect(parseVoidInput({ eventId: 'e1', reason: '잘못 기록' }, now).ok).toBe(true);
   });
 });
+
+describe('여러 곡 메일의 곡 이름', () => {
+  it('제목·머리글에는 곡 이름을 그대로, 본문에는 escape해서 싣는다', () => {
+    const ep = buildDefaultProductionTerms('ep', 2);
+    ep.songs[1] = { title: "Don't & Go" };
+    const source = { ...delivery, id: 's1', type: 'source_received', stage: null, song: 1 } as ProductionContractEvent;
+    const ledger = computeProductionLedger({ terms: ep, signedAt: kst('2026-11-02T10:00:00'), events: [source], now: kst('2026-11-10T23:31:00') });
+    const content = buildProgressNoticeContent(contract, ep, source, ledger, kst('2026-11-10T23:31:00'))!;
+    expect(content.subject).toContain("2번 곡 「Don't & Go」");
+    expect(content.heading).toContain("「Don't & Go」");
+    expect(content.paragraphs[0]).toContain('Don&#039;t &amp; Go');
+  });
+});

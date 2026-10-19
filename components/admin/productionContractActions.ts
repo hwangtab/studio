@@ -42,7 +42,15 @@ const request = async (path: string, init: RequestInit, fallback: string): Promi
 export const createProductionContractRequest = (payload: Record<string, unknown>) =>
   request('', { method: 'POST', body: JSON.stringify(payload) }, '계약 생성에 실패했습니다.');
 
-export type ProductionMutation = 'update' | 'send' | 'resend' | 'resend-signed' | 'cancel' | 'complete' | 'terminate';
+export type ProductionMutation =
+  | 'update'
+  | 'send'
+  | 'resend'
+  | 'resend-signed'
+  | 'resend-termination'
+  | 'cancel'
+  | 'complete'
+  | 'terminate';
 
 export const mutateProductionContract = (
   contractId: string,

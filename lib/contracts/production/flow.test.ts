@@ -149,6 +149,16 @@ describe('제작 계약 체결 흐름', () => {
     expect(operator).toMatchObject({ status: 'signed', adminActor: 'kyungha', ipAddress: '198.51.100.1' });
   });
 
+  it('형식이 틀린 뒷자리(빈 값 등)는 본인 확인 시도로 세지 않는다 — 링크를 아는 제3자가 잠그지 못하게', async () => {
+    const { checkIdentityAttempt } = jest.requireMock('../admin-rate-limit') as { checkIdentityAttempt: jest.Mock };
+    const { id } = await createProductionContract(PAYLOAD);
+    await sendAsOperator(id);
+    checkIdentityAttempt.mockClear();
+    const res = await callSign(id, { token: await clientToken(id), identityDigits: '' });
+    expect(res.status).toBe(400);
+    expect(checkIdentityAttempt).not.toHaveBeenCalled();
+  });
+
   it('같은 순간의 두 번째 발송은 아무것도 바꾸지 않는다 — 먼저 보낸 메일의 링크가 살아 있다', async () => {
     const { id } = await createProductionContract(PAYLOAD);
     await sendAsOperator(id);

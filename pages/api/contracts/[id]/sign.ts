@@ -106,6 +106,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 뒷자리를 맞추게 해, 링크를 알게 된 제3자를 걸러낸다. 네 자리뿐이라 대입이 가능하므로
      * 시도 횟수도 제한한다.
      */
+    // 형식이 틀린 입력(빈 값·네 자리가 아님)은 세지 않는다 — 세면 링크를 아는 제3자가 빈 요청 스무 번으로 당사자의
+    // 서명 링크를 잠근다(다운로드 쪽과 같은 이유). 정답 여부는 아래에서 센 뒤에야 알려 준다.
+    const identity = verifyIdentityDigits(identityDigits, contract.customerPhone);
+    if (!identity.ok && identity.reason === 'malformed') {
+      return res.status(400).json({ ok: false, message: `계약서에 등록된 연락처 뒤 ${IDENTITY_DIGITS}자리를 정확히 입력해 주세요.` });
+    }
+
     const attemptVerdict = await checkIdentityAttempt(contract.id);
     if (attemptVerdict === 'locked') {
       return res.status(429).json({
@@ -121,7 +128,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
-    const identity = verifyIdentityDigits(identityDigits, contract.customerPhone);
     if (!identity.ok) {
       const message =
         identity.reason === 'unverifiable'

@@ -71,7 +71,7 @@ export const getServerSideProps = withI18nServerProps<ProductionSignPageProps>(a
 
     const status = getEffectiveProductionStatus(contract);
     // 이 사람은 이미 서명했다 — 상대(의뢰인·대리인) 서명을 기다리는 중이어도 완료 화면이 맞는 자리다.
-    if (hasSignedDocument(status) || (status === 'sent' && linkSigner.status === 'signed')) {
+    if (hasSignedDocument(status) || ((status === 'sent' || status === 'expired') && linkSigner.status === 'signed')) {
       return { redirect: { destination: productionCompletePath(id, token, locale), permanent: false } };
     }
     if (status !== 'sent') {
