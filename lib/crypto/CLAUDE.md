@@ -58,6 +58,9 @@
 
 #### 키 회전 절차 — 순서가 틀리면 데이터를 잃는다
 
+**옛 키는 회전 뒤 28일 이상 보관한다.** 원장 일일 백업(`lib/ops/ledgerBackup.ts`, 28일 보관)에는 `refund_accounts.account_number_enc`·
+`room_tenancies.private_enc` 같은 암호문이 그대로 들어 있다 — 옛 키를 바로 버리면 회전 전 백업은 복호화할 수 없다.
+
 키를 바꾸는 수단은 `scripts/rotate-field-key.mjs` 하나다(엔진은 `lib/crypto/fieldKeyRotation.ts`).
 **옛 키와 새 키가 동시에 살아 있는 구간**이 반드시 있어야 하고, 그 구간을 건너뛰면 값을 잃는다.
 

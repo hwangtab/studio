@@ -2449,11 +2449,15 @@
         },
         {
           "q": "Can I bring an AI-generated demo?",
-          "a": "Yes. We treat an AI demo as a sketch of direction and do not use it as is. The song is re-arranged and performed by people so the rights are clear for release."
+          "a": "Yes. We often receive songs made with Suno or Udio. We treat an AI demo as a sketch of direction and do not use it as is. The song is re-arranged and performed by people for release, and rewriting the melody and lyrics as well makes the human share of the work clearer. We check the current copyright and collecting-society rules for AI songs with you during the consultation."
         },
         {
           "q": "Can the same team continue into recording and release?",
           "a": "Yes. Recording, mixing and mastering follow at the published prices, and if you go on to distribution and promotion we bundle it as a release project. Arrangement and mixing share the same track-count tiers, so the total can be added up in advance, and the person who arranged the song also directs the recording and mixes it."
+        },
+        {
+          "q": "Can I keep the AI instrumental and just re-record the vocals?",
+          "a": "Yes. Send the instrumental with the vocal removed, and we record a real vocal over it and finish it with mixing and mastering. Separated instrumentals often keep traces of the AI vocal or smeared highs, in which case rebuilding the backing track works better, so we listen first and decide with you before recording. Recording and mixing follow the rates on the pricing page."
         }
       ]
     },

@@ -5,7 +5,7 @@ import { getDb } from '../../../../db/client';
 import { bookings, orders, workOrders } from '../../../../db/schema';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { cancelBookingWithRefund } from '../../../../lib/booking/cancel';
-import { sendBookingCancelledEmails, sendBookingConfirmedEmails } from '../../../../lib/booking/email';
+import { sendBookingCancelledEmails, sendBookingConfirmedEmails, sendDepositRefundEmail } from '../../../../lib/booking/email';
 import { calendarForService, createBookingEvent, deleteBookingEvent, isCalendarActive } from '../../../../lib/booking/gcal';
 import { kstDateString } from '../../../../lib/booking/kst';
 import { updateAwaitingOrderDetails } from '../../../../lib/booking/manualEdit';
@@ -15,7 +15,7 @@ import { cancelAwaitingBookingDeposit, confirmBookingBankDeposit, deliverBooking
 import { bankDepositStateOf, isBankDepositPayment } from '../../../../lib/payments/bankDeposit';
 import { removePaymentLinkCalendarEvent, resyncPaymentLinkCalendarEvent } from '../../../../lib/payments/linkCalendar';
 import { recordLinkBankRefund } from '../../../../lib/payments/linkRefund';
-import { markRefundAccountRefunded, safeDbErrorSummary } from '../../../../lib/payments/refundAccount';
+import { loadRefundAccountSummary, markRefundAccountRefunded, safeDbErrorSummary } from '../../../../lib/payments/refundAccount';
 
 /**
  * `completed`·`no_show`는 확정 예약에서만, `confirmed`는 그 둘을 **되돌릴 때만**이다. 완료·노쇼가 되면 환불 경로
@@ -85,6 +85,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     if (!booking) {
       return res.status(404).json({ ok: false, message: '예약을 찾을 수 없습니다.' });
+    }
+
+    // 완료·노쇼로 **닫는** 경우에만 아래 두 가드를 건다 — 확정으로 되돌리는 쪽은 이미 닫힌 예약을 여는 일이라 막을 이유가 없다.
+    if (status !== 'confirmed') {
+      // 결제가 확정되지 않은 주문의 예약(미정합 — 결제 기록과 주문 상태가 어긋난 건)은 완료·노쇼로 닫지 않는다. 그런 건은 목록에서
+      // 미정합 배지로 먼저 바로잡을 대상이고, 닫아 버리면 후기 요청 메일 판정과 매출이 사실과 달라진다.
+      if (order.status !== 'paid' && order.status !== 'partially_refunded') {
+        return res.status(409).json({ ok: false, message: '결제가 확정되지 않은 주문입니다. 결제 상태를 먼저 확인해 주세요.' });
+      }
+      // 시작도 안 한 세션을 완료·노쇼로 닫으면 안 된다 — 후기 요청 메일과 노쇼 기록의 근거가 사실과 달라진다.
+      // 시작 시각부터는 허용한다(노쇼는 시작 직후에 확정하는 경우가 흔하다).
+      if (booking.startAt.getTime() > Date.now()) {
+        return res.status(409).json({ ok: false, message: '아직 시작하지 않은 예약은 완료·노쇼로 바꿀 수 없습니다. 취소가 필요하면 환불 처리를 이용해 주세요.' });
+      }
     }
 
     try {
@@ -164,7 +178,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // 예약금 결제 링크 주문의 계좌 직접 입금분 환불 기록 — 송금은 운영자가 손으로 마쳤고 여기선 장부만 남긴다(lib/payments/linkRefund.ts).
-    // 카드(토스) 결제 링크는 토스 콘솔에서 취소한다 — 기록만 남기면 돈은 그대로인데 장부만 바뀐다.
+    // 카드(토스) 결제 링크는 여기가 아니라 action 'refund'로 토스 취소를 부른다 — 기록만 남기면 돈은 그대로인데 장부만 바뀐다.
     if (body.action === 'record_link_refund') {
       const reasonText = typeof body.reason === 'string' ? body.reason.trim() : '';
       if (reasonText === '') return res.status(400).json({ ok: false, message: '환불 사유를 입력해 주세요.' });
@@ -173,6 +187,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       try {
         const r = await recordLinkBankRefund({ orderId: order.id, amount: body.amount, reason: reasonText, now: new Date() });
         if (!r.ok) return res.status(r.code === 'not_found' ? 404 : r.code === 'invalid_amount' ? 400 : 409).json({ ok: false, code: r.code, message: r.message });
+        // 송금은 이미 끝났고 장부도 남았다 — 안내 메일이 실패해도 환불 기록을 뒤집지 않고 notificationError에 남긴다(카드 환불 경로와 같다).
+        try {
+          const mailError = await sendDepositRefundEmail(order, r.refundAmount, r.remainingAfter, 'bank_account');
+          await getDb().update(orders).set({ notificationError: mailError }).where(eq(orders.id, order.id));
+        } catch (mailFailure: unknown) {
+          console.error('[API/admin/bookings/[id]] 링크 환불 안내 메일 처리 실패(환불 기록은 완료됨):', { orderNo: order.orderNo, error: mailFailure });
+        }
         return res.status(200).json({ ok: true, refundAmount: r.refundAmount });
       } catch (error: unknown) {
         console.error('[API/admin/bookings/[id]] 링크 주문 환불 기록 실패:', { orderNo: order.orderNo, error });
@@ -273,6 +294,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!booking) {
         return res.status(409).json({ ok: false, message: '재시도할 예약이 없습니다.' });
       }
+      // 토스 결제 대기(pending) 주문은 15분 홀드라 만료되면 취소되는데, 그 사이 올린 [예약] 일정은 만료 뒤에도 남아 시간을 막는다(감사 2026-10-19).
+      if (order.status === 'pending') {
+        return res.status(409).json({ ok: false, message: '결제가 끝나지 않은 주문은 캘린더에 올리지 않아요. 결제 확정 뒤에 다시 시도해 주세요.' });
+      }
       if (booking.status === 'cancelled') {
         // 취소 때 [예약] 일정 삭제가 실패하면 일정이 남아 그 시간을 막고(웹 예약이 캘린더 바쁨을 읽는다) 오류 기록도 영구히 남는다
         // (lib/booking/cancel.ts `delete:`). 이 경우만 "다시 지우기"를 허용한다 — 등록은 여전히 필요 없다.
@@ -360,8 +385,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (body.action === 'sync_link_calendar' || body.action === 'remove_link_calendar') {
       if (order.type !== 'deposit') return res.status(409).json({ ok: false, message: '결제 링크 주문이 아닙니다.' });
       if (body.action === 'remove_link_calendar') {
-        await removePaymentLinkCalendarEvent(order.orderNo);
-        return res.status(200).json({ ok: true });
+        // 구글 삭제가 실패하면 성공이라 말하지 않는다 — 화면이 "지웠다"고 믿으면 남은 일정이 시간을 계속 막는다.
+        const removed = await removePaymentLinkCalendarEvent(order.orderNo);
+        return removed ? res.status(200).json({ ok: true }) : res.status(502).json({ ok: false, message: '구글 캘린더에서 일정을 지우지 못했어요. 잠시 뒤 다시 시도해 주세요.' });
       }
       const synced = await resyncPaymentLinkCalendarEvent(order.orderNo);
       return synced.ok ? res.status(200).json({ ok: true }) : res.status(409).json({ ok: false, message: synced.message });
@@ -396,8 +422,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (body.action === 'delete_waiting_event') {
       // 미입금 취소된 예약에 남은 [입금 대기] 캘린더 일정을 다시 지운다(그 일정이 웹 예약을 막는다).
-      const r = await retryWaitingEventDelete(order.id);
-      return r.ok ? res.status(200).json({ ok: true }) : res.status(409).json({ ok: false, message: r.message });
+      try {
+        const r = await retryWaitingEventDelete(order.id);
+        return r.ok ? res.status(200).json({ ok: true }) : res.status(409).json({ ok: false, message: r.message });
+      } catch (error: unknown) {
+        console.error('[API/admin/bookings/[id]] 입금 대기 일정 삭제 실패:', { orderNo: order.orderNo, error });
+        return res.status(500).json({ ok: false, message: '처리하지 못했습니다. 잠시 후 다시 시도해 주세요.' });
+      }
     }
 
     if (body.action === 'mark_refund_sent') {
@@ -406,7 +437,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (bankDepositStateOf(order) !== 'paid') {
         return res.status(409).json({ ok: false, message: '계좌 입금 주문이 아닙니다.' });
       }
-      await markRefundAccountRefunded({ kind: isMixing ? 'mixing' : 'session', orderNo: order.orderNo }, new Date());
+      // 환불 계좌가 접수된 주문만 — 접수가 없는데 ok를 돌려주면 송금한 적 없는 환불이 "송금 완료"로 보인다(감사).
+      const refundKey = { kind: isMixing ? 'mixing' : 'session', orderNo: order.orderNo } as const;
+      const account = await loadRefundAccountSummary(refundKey);
+      if (account.status !== 'present') {
+        return res.status(409).json({ ok: false, message: account.status === 'none' ? '접수된 환불 계좌가 없어요.' : '환불 계좌를 읽지 못했어요. 잠시 뒤 다시 시도해 주세요.' });
+      }
+      const recorded = await markRefundAccountRefunded(refundKey, new Date());
+      if (!recorded) return res.status(500).json({ ok: false, message: '송금 완료를 기록하지 못했습니다. 잠시 후 다시 시도해 주세요.' });
       return res.status(200).json({ ok: true });
     }
 

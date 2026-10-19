@@ -116,8 +116,9 @@ export const recordPayment = async (id: string, input: { paidOn?: string; amount
 
 export const endTenancy = async (id: string, endedOn: string = kstToday()): Promise<ServiceResult> => {
   if (!isValidDate(endedOn) || !isPlausibleDate(endedOn, new Date(), 31)) return { ok: false, message: '퇴실일을 확인해 주세요(2020년 이후, 한 달 안).' };
-  const r = await getDb().run(sql`UPDATE room_tenancies SET status = 'ended', ended_on = ${endedOn}, updated_at = unixepoch() WHERE id = ${id} AND status = 'active'`);
-  if (Number(r.rowsAffected) === 0) return { ok: false, message: '입주 중인 기록이 아니에요.' };
+  // 퇴실일이 입주 시작일보다 앞서면 거절한다 — 그런 오타가 들어가면 파기 크론이 입금 이력까지 지운다(감사 2026-10-19).
+  const r = await getDb().run(sql`UPDATE room_tenancies SET status = 'ended', ended_on = ${endedOn}, updated_at = unixepoch() WHERE id = ${id} AND status = 'active' AND start_date <= ${endedOn}`);
+  if (Number(r.rowsAffected) === 0) return { ok: false, message: '입주 중인 기록이 아니거나, 퇴실일이 입주 시작일보다 앞서요.' };
   return { ok: true, ...(await calendarNote(id)) };
 };
 

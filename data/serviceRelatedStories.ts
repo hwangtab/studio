@@ -83,11 +83,11 @@ export const serviceRelatedStorySlugs: Record<ServiceKey, readonly string[]> = {
   ],
   // 작곡·편곡 의뢰 LP — 편곡 방법(미디·오케스트레이션·보컬 편곡), 프로듀서 협업, 자작곡 완성.
   'composition-arrangement': [
+    'suno-ai-song-rework1', // AI(Suno)로 만든 곡을 다시 편곡·녹음하려는 의뢰 — 2026-10 상담에서 늘어난 상황
     'arrangement1',
     'midi-arrangement1',
     'orchestration1',
     'vocal-arrangement1',
-    'beatmaker1',
     'original-song1',
   ],
   'cover-video': [

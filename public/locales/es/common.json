@@ -2421,11 +2421,15 @@
         },
         {
           "q": "¿Puedo traer un demo generado con IA?",
-          "a": "Sí. Tratamos el demo de IA como un boceto de dirección y no lo usamos tal cual. La canción se rearregla e interpreta por personas para que los derechos queden claros al lanzar."
+          "a": "Sí. Recibimos a menudo canciones hechas con Suno o Udio. Usamos la demo de IA solo como boceto de la dirección, nunca tal cual. Personas la vuelven a arreglar e interpretar para publicarla, y si también se reescriben la melodía y la letra, la parte creada por personas queda más clara. En la consulta revisamos contigo la situación actual de derechos de autor y registro de canciones con IA."
         },
         {
           "q": "¿El mismo equipo puede seguir con grabación y lanzamiento?",
           "a": "Sí. Grabación, mezcla y masterización siguen a los precios publicados, y si continúas con distribución y promoción lo agrupamos como proyecto de lanzamiento. Arreglo y mezcla comparten niveles por pistas, así que el total se suma de antemano, y quien arregló la canción también dirige la grabación y la mezcla."
+        },
+        {
+          "q": "¿Puedo conservar la base de IA y regrabar solo la voz?",
+          "a": "Sí. Envíanos la base sin la voz; grabamos una voz real encima y la terminamos con mezcla y masterización. Las bases separadas suelen conservar restos de la voz de IA o agudos borrosos, y en ese caso conviene rehacer la base, así que la escuchamos primero y lo decidimos contigo antes de grabar. Grabación y mezcla siguen las tarifas de la página de precios."
         }
       ]
     },

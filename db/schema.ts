@@ -511,6 +511,40 @@ export type ProductionContractSigner = typeof productionContractSigners.$inferSe
 export type ProductionContractStatus = (typeof productionContractStatusEnum)[number];
 export type ProductionSignerRole = (typeof productionSignerRoleEnum)[number];
 
+/**
+ * 관리자가 계약에 한 **변경 행위**의 이력(발송·재발송·수정·취소·삭제·종료·완료 메일 재발송·생성).
+ *
+ * 열람은 `privacy_access_logs`의 `contract_view`가 남기지만, 변경은 행위자가 어디에도 없었다 — 누가 종료·삭제했는지 물을 수단이
+ * 서버 로그(보존 기간이 짧다)뿐이었다. 접속기록 표는 개인정보를 *여는* 행위의 기록이라 변경 행위를 섞지 않는다.
+ *
+ * - **개인정보를 담지 않는다.** 계약 id·행위·수행자 id·상태 변화뿐이다. 종료 사유 같은 자유 서술은 이미 `contracts`에 있고,
+ *   이 표에 복사하면 계약 파기(`purgedAt`) 때 같이 지워지지 않는 사본이 된다.
+ * - **계약 FK를 걸지 않는다.** 초안 삭제 행위 자체를 기록하는데, FK가 있으면 그 계약 행이 사라지는 순간 이력도 함께 사라지거나
+ *   삭제가 막힌다. 계약 id는 UUID라 재사용되지 않는다.
+ * - 새 표라 `contracts`에 컬럼을 더하는 것과 달리 마이그레이션 전 배포가 계약 화면을 깨뜨리지 않는다(0037·0046과 같다).
+ *   쓰기는 실패해도 던지지 않고 읽기는 표가 없으면 빈 목록이다(`lib/contracts/admin-events.ts`).
+ */
+export const contractAdminEvents = sqliteTable(
+  'contract_admin_events',
+  {
+    id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+    contractId: text('contract_id').notNull(),
+    /** `create`·`update`·`send`·`resend`·`cancel`·`delete`·`terminate`·`resend-signed`. */
+    action: text('action').notNull(),
+    /** 가드가 돌려준 수행자 id(`authenticateAdminApi`의 actor). 이름·이메일은 적지 않는다. */
+    actor: text('actor').notNull(),
+    /** 행위 직전·직후 계약 상태. 상태가 안 바뀌는 행위(수정·완료 메일 재발송)는 둘이 같다. 생성은 from이 null. */
+    fromStatus: text('from_status'),
+    toStatus: text('to_status'),
+    at: integer('at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => ({
+    contractIdx: index('contract_admin_events_contract_idx').on(t.contractId, t.at),
+  }),
+);
+
+export type ContractAdminEvent = typeof contractAdminEvents.$inferSelect;
+
 // ─── 예약·결제 (Phase 1: 세션 예약) ───────────────────────────────────────────
 
 export const orderStatusEnum = [
@@ -2096,6 +2130,8 @@ export const showTickets = sqliteTable('show_tickets', {
   compensatedAt: integer('compensated_at'),
   checkedInAt: integer('checked_in_at'),
   checkedInBy: text('checked_in_by'),
+  /** 'refunding' 선점 시각(unixepoch). 환불 재확인이 "방금 시작된(토스 응답 대기 중) 환불"을 되돌리지 않게 가른다 — lib/shows/refund.ts. issued로 되돌릴 때 NULL. */
+  refundingAt: integer('refunding_at'),
   createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
 }, (t) => ({
   statusCheck: check('show_tickets_status_check', sql`${t.status} in ('held','issued','refunding','refunded','void')`),

@@ -10,6 +10,7 @@ import {
   getStatusLabel,
   isActionAllowed,
   needsTermination,
+  terminationCutoff,
   type ContractStatus,
 } from './status';
 
@@ -199,5 +200,25 @@ describe('hasSignedDocument — 내려받을 서명본이 있는 상태', () => 
     ['terminated', null, false],
   ] as const)('%s / signedAt=%s → %s', (status, at, expected) => {
     expect(hasSignedDocument({ status, signedAt: at })).toBe(expected);
+  });
+});
+
+describe('terminationCutoff — SQL 경계가 needsTermination과 같은 답을 낸다', () => {
+  const endDate = new Date('2026-09-30T00:00:00.000Z');
+  const instants = [
+    '2026-09-30T00:01:00.000Z', // KST 9/30 오전
+    '2026-09-30T14:59:00.000Z', // KST 9/30 23:59
+    '2026-09-30T15:00:00.000Z', // KST 10/1 00:00
+    '2026-10-05T00:00:00.000Z',
+    '2026-09-29T20:00:00.000Z',
+  ];
+
+  it.each(instants)('%s', (iso) => {
+    const now = new Date(iso);
+    const cutoff = terminationCutoff(now);
+    expect(cutoff).not.toBeNull();
+    expect(endDate.getTime() < cutoff!.getTime()).toBe(
+      needsTermination({ status: 'signed', endDate, terminatedAt: null }, now),
+    );
   });
 });

@@ -23,6 +23,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       await expireStaleOrders(new Date());
 
       const allOrders = await getDb().query.orders.findMany({
+        // 예약 목록의 모집단은 화면 SSR(pages/admin/bookings/index.tsx)과 같다 — session·mixing, 그리고 결제 링크(deposit)는
+        // 계좌 입금 흐름과 결제 완료·환불 건만. 후원·구독·티켓 주문까지 섞으면 '세션'으로 직렬화되고 200건 상한을 잠식한다.
+        where: (ordersTable, { and: all, or: either, inArray: within }) =>
+          either(
+            within(ordersTable.type, ['session', 'mixing']),
+            all(
+              within(ordersTable.type, ['deposit']),
+              within(ordersTable.status, ['awaiting_deposit', 'deposit_cancelled', 'paid', 'partially_refunded', 'refunded']),
+            ),
+          ),
         orderBy: (ordersTable, { desc }) => [desc(ordersTable.createdAt)],
         limit: LIST_LIMIT,
         // payments를 함께 읽는다 — 주문 상태와 결제 기록의 미정합(스펙 §10) 판정에 쓴다.

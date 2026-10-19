@@ -17,7 +17,8 @@ import { insertAdjustmentIfAbsent } from './adjustments';
  * 되돌릴 수 없고 환불·메일을 한 번에 일으키는 화면이라, 귀책 판단은 정산 기록 직전(공연 화면의 정산 절)에 하는 편이 실수를 고칠 수 있다.
  */
 
-export const SHOWTIME_CANCEL_REFUND_REASON = '공연 회차 취소 환불';
+import { SHOWTIME_CANCEL_REFUND_REASON } from '../shows/refundReasons';
+export { SHOWTIME_CANCEL_REFUND_REASON };
 export const SHOW_CANCEL_WAIVE_PREFIX = 'waive:';
 export const showCancelPayeeKey = (creatorId: string): string => `creator:${creatorId}`;
 

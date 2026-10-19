@@ -9,7 +9,7 @@ jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 
 import { createShowOrder } from './service';
 import { confirmShowOrder } from './confirm';
-import { reconcileShowRefund, refundShowTickets, syncShowCancelsFromToss, ticketRefundIdempotencyKey } from './refund';
+import { REFUNDING_GRACE_SECONDS, reconcileShowRefund, refundShowTickets, syncShowCancelsFromToss, ticketRefundIdempotencyKey } from './refund';
 
 async function seedAndPay(db: ShowsTestDb, quantity: number) {
   const showId = 'show-1';
@@ -320,8 +320,15 @@ describe('reconcileShowRefund — toss_unknown 뒤 고착된 refunding 풀기(�
     // 그 상태에서는 고객도 관리자도 그 티켓을 환불할 수 없다(not_issued).
     expect(await refundShowTickets({ orderNo, ticketIds: [tickets[0].id], noticeAt: new Date() }, toss)).toMatchObject({ status: 'rejected', reason: 'not_issued' });
 
+    // 선점 직후에는 "진행 중"으로 보고 되돌리지 않는다 — 토스 응답이 아직 올 수 있다.
+    expect(await reconcileShowRefund(orderNo, toss)).toEqual({ status: 'in_flight', tickets: 1 });
+    expect((await db.query.showTickets.findFirst({ where: (t, { eq }) => eq(t.id, tickets[0].id) }))?.status).toBe('refunding');
+
+    // 유예가 지나면(토스 호출은 12초에 끊긴다) 요청이 끝난 것이므로 되돌린다.
+    await db.run(sql`UPDATE show_tickets SET refunding_at = refunding_at - ${REFUNDING_GRACE_SECONDS + 1} WHERE id = ${tickets[0].id}`);
     const r = await reconcileShowRefund(orderNo, toss);
     expect(r).toEqual({ status: 'reverted', tickets: 1 });
+    expect((await db.query.showTickets.findFirst({ where: (t, { eq }) => eq(t.id, tickets[0].id) }))?.refundingAt).toBeNull();
     expect((await db.query.showTickets.findFirst({ where: (t, { eq }) => eq(t.id, tickets[0].id) }))?.status).toBe('issued');
     expect(toss._payments.get('pk1')?.cancels ?? []).toHaveLength(0); // 재취소를 부르지 않았다
 
@@ -391,6 +398,36 @@ describe('reconcileShowRefund — 두 환불이 모두 응답을 잃었고 둘 �
     expect(second.status).toBe('noop');
     rows = await db.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, orderNo) });
     expect(rows.every((t) => t.status === 'refunded')).toBe(true); // 돈이 나간 티켓이 issued로 되살아나지 않는다
+  });
+
+  it('refunding_at이 NULL인 티켓(0076 이전 선점)은 오래된 것으로 보고 되돌린다', async () => {
+    const { db } = await createTestDb();
+    mockDb = db;
+    const { orderNo, toss } = await seedAndPay(db, 1);
+    const [a] = await db.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, orderNo) });
+    toss.injectFault(`cancel:${ticketRefundIdempotencyKey(orderNo, [a.id])}`, { code: 'NETWORK_ERROR' });
+    await refundShowTickets({ orderNo, ticketIds: [a.id], noticeAt: new Date() }, toss);
+    await db.run(sql`UPDATE show_tickets SET refunding_at = NULL WHERE id = ${a.id}`);
+    expect(await reconcileShowRefund(orderNo, toss)).toEqual({ status: 'reverted', tickets: 1 });
+  });
+
+  it('두 환불 중 하나는 토스에 취소가 있고 하나는 방금 선점된 것이면 — 앞은 확정, 뒤는 손대지 않는다', async () => {
+    const { db } = await createTestDb();
+    mockDb = db;
+    const { orderNo, toss } = await seedAndPay(db, 2);
+    const [a, b] = await db.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, orderNo) });
+    const keyA = ticketRefundIdempotencyKey(orderNo, [a.id]);
+    toss.injectFault(`cancel:${keyA}`, { code: 'NETWORK_ERROR' });
+    toss.injectFault(`cancel:${ticketRefundIdempotencyKey(orderNo, [b.id])}`, { code: 'NETWORK_ERROR' });
+    await refundShowTickets({ orderNo, ticketIds: [a.id], noticeAt: new Date() }, toss);
+    await refundShowTickets({ orderNo, ticketIds: [b.id], noticeAt: new Date() }, toss);
+    const pay = toss._payments.get('pk1')!;
+    toss._payments.set('pk1', { ...pay, cancels: [{ transactionKey: 'tx-a', cancelAmount: 10000, cancelReason: `[#${keyA}] 공연 티켓 환불` }] });
+
+    expect(await reconcileShowRefund(orderNo, toss)).toMatchObject({ status: 'synced', tossCancelled: 10000, recorded: 0 });
+    const rows = await db.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, orderNo) });
+    expect(rows.find((t) => t.id === a.id)?.status).toBe('refunded');
+    expect(rows.find((t) => t.id === b.id)?.status).toBe('refunding'); // 방금 선점 — 두지, 되돌리지 않는다
   });
 
   it('진행 중인 환불을 재확인이 되돌렸어도, 뒤늦게 성공한 토스 취소의 기록 단계가 그 티켓을 refunded로 넘긴다', async () => {

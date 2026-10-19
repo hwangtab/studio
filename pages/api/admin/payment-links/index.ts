@@ -12,7 +12,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   res.setHeader('Cache-Control', 'no-store');
   const auth = await authenticateAdminApi(req, res);
   if (!auth.ok) return res.status(401).json({ ok: false, message: 'Unauthorized' });
-  if (req.method !== 'POST') return res.status(405).json({ ok: false });
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
+    return res.status(405).json({ ok: false });
+  }
 
   const b = ((typeof req.body === 'object' && req.body) || {}) as Record<string, unknown>;
   if (b.action === 'create') {

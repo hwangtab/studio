@@ -1,15 +1,18 @@
 import { waitUntil } from '@vercel/functions';
-import { and, asc, eq, gt, gte, inArray, lt, sql } from 'drizzle-orm';
+import { and, asc, eq, gt, gte, inArray, isNull, lt, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { bookings, contracts, fundingPledges, fundingProjects, orders, socialTokens, subscriptions, workOrders } from '../../db/schema';
 import { getProduct } from '../booking/products';
+import { unmarkedSessionRange } from '../booking/unmarkedSessions';
+import { terminationCutoff } from '../contracts/status';
 import { checkFieldCryptoKey, checkTossApiKeyPair, collectDbIssues, runIsolatedCheck, type HealthIssue } from './healthCheck';
 import { countPendingArtistPayouts } from '../artistSupport/payout';
 import { countPendingFundingPayouts, listFundingProjectsAwaitingPayoutRecord } from '../funding/payout';
 import { listShopPayoutsAwaitingRecord } from '../partnerPayouts/shop';
 import { listShowPayoutsAwaitingRecord } from '../partnerPayouts/show';
 import { countPendingPartnerPayouts } from '../partnerPayouts/store';
+import { countPendingSubmissions } from '../shows/organizer/adminSubmissions';
 
 /**
  * 관리자 첫 화면의 데이터.
@@ -72,6 +75,8 @@ export interface AdminDashboard {
     subscriptionsPastDue: number;
     subscriptionsPaused: number;
     contractsAwaitingSignature: number;
+    /** 서명됐고 종료일이 지났는데 종료 처리가 없는 계약 — 처리하기 전엔 그 호실로 새 계약을 만들 수 없다. */
+    contractsAwaitingTermination: number;
     /** 기록됐지만 아직 이체하지 않은 아티스트 정산. */
     artistPayoutsPending: number;
     /** 개설자가 제출해 운영자 승인을 기다리는 펀딩 프로젝트. */
@@ -92,6 +97,10 @@ export interface AdminDashboard {
     fundingRefundRequests: number;
     /** 계좌 입금을 기다리는 주문(자동 취소 없음 — 운영자가 입금을 확인하거나 닫아야 한다). */
     awaitingDeposit: AwaitingDepositCounts;
+    /** 끝난 지 7일 안인데 완료·노쇼 표시가 없는 세션 — 노쇼 고객에게 후기 요청 메일이 가기 전에 표시해야 한다. */
+    sessionsAwaitingMark: number;
+    /** 주최자가 제출해 운영자 심사를 기다리는 공연. 표(0055)가 없으면 null — 그 카드는 숨긴다. */
+    showSubmissionsAwaitingReview: number | null;
   };
   socialTokens: SocialTokenStatus[];
   /** upcomingSessions의 창 길이(일). 화면 문구용 — 페이지가 이 모듈을 값으로 import하지 않게 데이터에 싣는다. */
@@ -157,7 +166,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       return 0;
     });
 
-  const [issues, sessions, calendarImport, linkSessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending, fundingPayoutsToRecord, shopPayoutsToRecord, shopPayoutsPending, showPayoutsToRecord, showPayoutsPending, awaitingDepositRows] = await Promise.all([
+const [issues, sessions, calendarImport, linkSessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending, fundingPayoutsToRecord, shopPayoutsToRecord, shopPayoutsPending, showPayoutsToRecord, showPayoutsPending, awaitingDepositRows, unmarkedRows, showSubmissionsAwaitingReview] = await Promise.all([
     // 점검 하나가 던져도 첫 화면 전체가 "현황을 불러오지 못했습니다"로 죽지 않게 — 실패는 high 항목으로 보인다.
     runIsolatedCheck('DB 점검', () => collectDbIssues(now)),
     guard('이번 주 확정 세션', db
@@ -237,7 +246,22 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
         AND EXISTS (SELECT 1 FROM funding_pledges fp WHERE fp.order_id = o.id AND fp.payment_method = 'bank_transfer' AND fp.entry_source = 'online'))
       GROUP BY kind
     `), [], failed),
+    guard('완료·노쇼 대기 세션', db
+      .select({ count: sql<number>`count(*)` })
+      .from(bookings)
+      .where(and(eq(bookings.status, 'confirmed'), gte(bookings.endAt, unmarkedSessionRange(now).from), lt(bookings.endAt, now))), [{ count: 0 }], failed),
+    // 표(0055)가 없거나 조회가 실패해도 대시보드는 열려야 한다 — null이면 그 카드만 숨긴다.
+    countPendingSubmissions().catch((error: unknown) => {
+      console.error('[admin-dashboard] 공연 심사 대기 건수를 읽지 못했습니다 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
+      return null;
+    }),
   ]);
+
+  // 판정은 lib/contracts/status.ts의 needsTermination과 같은 경계(terminationCutoff)다.
+  const terminationRows = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(contracts)
+    .where(and(eq(contracts.status, 'signed'), isNull(contracts.terminatedAt), lt(contracts.endDate, terminationCutoff(now) ?? from)));
 
   const countOf = (rows: Array<{ status: string; count: number }>, status: string): number =>
     Number(rows.find((row) => row.status === status)?.count ?? 0);
@@ -284,6 +308,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       subscriptionsPastDue: countOf(subscriptionCounts, 'past_due'),
       subscriptionsPaused: countOf(subscriptionCounts, 'paused'),
       contractsAwaitingSignature: Number(contractRows[0]?.count ?? 0),
+      contractsAwaitingTermination: Number(terminationRows[0]?.count ?? 0),
       artistPayoutsPending,
       fundingProjectsAwaitingReview: Number(fundingReviewRows[0]?.count ?? 0),
       fundingPayoutsPending,
@@ -299,6 +324,8 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
         shop: Number(awaitingDepositRows.find((r) => r.kind === 'shop')?.n ?? 0),
         funding: Number(awaitingDepositRows.find((r) => r.kind === 'funding')?.n ?? 0),
       },
+      sessionsAwaitingMark: Number(unmarkedRows[0]?.count ?? 0),
+      showSubmissionsAwaitingReview,
     },
     socialTokens: tokens.map((row) => ({
       platform: row.platform,
