@@ -150,6 +150,16 @@ export const studioOperator = {
       publisher: '월간 믹싱',
       datePublished: '2023-10-10',
     },
+    {
+      // 2026-10-19 원문 직접 확인. 발행인·편집인 홍기혜(황경하·kosmart와 무관, 2001년 창간
+      // 독립 매체) — 뉴스아트 건(아래 주석)과 달리 진짜 제3자 매체다. 음반 〈젠트리피케이션〉
+      // 선정위원회 특별상 수상 현장에서 "제작자 황경하 씨"를 직접 인용. GPTBot·ChatGPT-User·
+      // ClaudeBot·Googlebot·PerplexityBot 전부 200(리다이렉트 추적 기준)으로 AI가 읽을 수 있다.
+      url: 'https://pressian.com/pages/articles/151794',
+      title: "'헌법 제1조' 윤민석, 한국대중음악상 수상",
+      publisher: '프레시안',
+      datePublished: '2017-03-01',
+    },
   ],
   // 뉴스아트(news-art.co.kr) 기사 7건을 여기 추가했다가(PR #746·#752) 뺐다(2026-10-19).
   // 뉴스아트의 발행 정보(기사 하단, 전 페이지 공통)는 "발행인: 한국스마트협동조합 서인형 |
