@@ -9,7 +9,7 @@ import { CUSTOMER_REPLY_TO } from '../operatorContact';
 import { OPERATOR_EMAIL } from '../operatorContact';
 import type { Subscription } from '../../db/schema';
 import { formatPriceAmount } from '../../data/pricing';
-import { subscriptionOrderName } from './amounts';
+import { subscriptionOrderName, resumeChargeLabel } from './amounts';
 
 export { CUSTOMER_REPLY_TO };
 
@@ -81,7 +81,7 @@ export const sendSubscriptionSetupEmail = (
       : '아래 버튼에서 새 카드를 등록하시면 카드만 교체되며, 이번에는 결제되지 않아요. 다음 결제일부터 새 카드로 청구돼요.'
     : isPaused
       // 결제 실패 정지의 재등록 — issueCardChangeToken이 'initial'로 발급한다. 등록 즉시 밀린 달치가 결제되고 재개된다.
-      ? '아래 버튼에서 새 카드를 등록하시면 즉시 밀린 달치가 결제되고 정기결제가 다시 시작돼요. 이후 매월 같은 날 자동으로 결제돼요.'
+      ? `아래 버튼에서 새 카드를 등록하시면 즉시 ${resumeChargeLabel(sub.kind)}가 결제되고 정기결제가 다시 시작돼요. 이후 매월 같은 날 자동으로 결제돼요.`
       : '아래 버튼에서 카드를 등록하면 즉시 첫 달치가 결제되고, 이후 매월 같은 날 자동으로 결제돼요.';
   return sendCustomerEmail(sub, 'setup', {
     to: sub.customerEmail,
@@ -122,16 +122,21 @@ export const sendSubscriptionSetupEmail = (
 /** 카드 등록 + 첫 결제 성공 확정. */
 export const sendSubscriptionActivatedEmail = (
   sub: Pick<Subscription, 'kind' | 'artistSlug' | 'customerEmail' | 'customerName' | 'billingDay'>,
-  input: { manageUrl: string; amount: number },
-): Promise<string | null> =>
-  sendCustomerEmail(sub, 'activated', {
+  /** resumed: 결제 실패로 정지됐던 구독이 재등록 + 결제로 다시 시작된 경우 — 화면(resumed)과 같은 말을 한다. */
+  input: { manageUrl: string; amount: number; resumed?: boolean },
+): Promise<string | null> => {
+  const lead = input.resumed
+    ? `${resumeChargeLabel(sub.kind)} 결제가 완료되어 정기결제가 다시 시작됐어요.`
+    : '카드 등록과 첫 결제가 완료되어 정기결제가 시작됐어요.';
+  const heading = input.resumed ? '정기결제가 다시 시작됐어요' : '정기결제가 시작됐어요';
+  return sendCustomerEmail(sub, 'activated', {
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
-    subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} 정기결제가 시작됐어요`,
+    subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} ${heading}`,
     html: customerHtml({
-      preheader: '카드 등록과 첫 결제가 완료됐어요.',
-      heading: '정기결제가 시작됐어요',
-      paragraphs: [`${greet(sub)} ${product(sub)} 카드 등록과 첫 결제가 완료되어 정기결제가 시작됐어요.`],
+      preheader: input.resumed ? `${resumeChargeLabel(sub.kind)} 결제가 완료됐어요.` : '카드 등록과 첫 결제가 완료됐어요.',
+      heading,
+      paragraphs: [`${greet(sub)} ${product(sub)} ${lead}`],
       rows: [
         { label: '이번 결제', value: `${formatPriceAmount(input.amount)}원 (VAT 포함)`, emphasis: true },
         { label: '다음 결제일', value: `매월 ${sub.billingDay}일` },
@@ -139,7 +144,7 @@ export const sendSubscriptionActivatedEmail = (
       cta: { label: '구독 조회·해지', url: input.manageUrl },
     }),
     text: [
-      `${sub.customerName}님, 카드 등록과 첫 결제가 완료되어 정기결제가 시작됐어요.`,
+      `${sub.customerName}님, ${lead}`,
       `이번 결제: ${formatPriceAmount(input.amount)}원 (VAT 포함)`,
       `다음 결제일: 매월 ${sub.billingDay}일`,
       '',
@@ -147,6 +152,7 @@ export const sendSubscriptionActivatedEmail = (
       '문의: 010-4255-7893',
     ].join('\n'),
   });
+};
 
 /** 매월 결제 완료. */
 export const sendSubscriptionChargedEmail = (
