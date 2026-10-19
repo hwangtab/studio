@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -189,6 +189,10 @@ export default function AdminBookingDetailPage({
   const [notice, setNotice] = useState<string | null>(null);
 
   const [refundAmount, setRefundAmount] = useState<number>(Math.min(booking.totalAmount, booking.refundableAmount));
+  // 금액 수정·부분 환불 뒤 소프트 새로고침으로 값이 바뀌어도 폼은 다시 마운트되지 않는다 — 기본값을 새 환불 가능 금액에 맞춘다.
+  useEffect(() => {
+    setRefundAmount(Math.min(booking.totalAmount, booking.refundableAmount));
+  }, [booking.totalAmount, booking.refundableAmount]);
   const [refundReason, setRefundReason] = useState('');
   const [refundError, setRefundError] = useState<string | null>(null);
 
@@ -795,7 +799,7 @@ export default function AdminBookingDetailPage({
                         <Field id="ed-name" label="이름" className={lightOnlyField}><TextInput value={editName} onChange={(e) => setEditName(e.target.value)} light /></Field>
                         <Field id="ed-amount" label="금액 (부가세 포함, 원)" className={lightOnlyField}><TextInput inputMode="numeric" value={editAmount} onChange={(e) => setEditAmount(e.target.value)} light /></Field>
                         <Field id="ed-phone" label="연락처 (비우면 기록만)" className={lightOnlyField}><TextInput value={editPhone} onChange={(e) => setEditPhone(e.target.value)} light /></Field>
-                        <Field id="ed-email" label="이메일 (적으면 안내 메일이 가요)" className={lightOnlyField}><TextInput value={editEmail} onChange={(e) => setEditEmail(e.target.value)} light /></Field>
+                        <Field id="ed-email" label="이메일 (저장만 해요 — 안내 메일은 “입금 안내 재발송”으로)" className={lightOnlyField}><TextInput value={editEmail} onChange={(e) => setEditEmail(e.target.value)} light /></Field>
                         <p className="col-span-2 text-xs text-gray-500">입금 확인 전의 예약만 고칠 수 있어요. 결제 기록이 생긴 뒤에는 바꾸지 않아요.</p>
                         <div className="col-span-2 flex gap-2">
                           <Button light size="sm" disabled={busy || editName.trim() === ''} onClick={handleEditDetails}>저장</Button>

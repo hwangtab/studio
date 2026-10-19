@@ -107,6 +107,9 @@ export const ManualBookingPanel = ({
     if (session.kind === 'package' && session.sessionHours !== adoptHours) {
       return `캘린더 일정은 ${adoptHours}시간인데 이 상품은 ${session.sessionHours}시간 패키지예요. 등록하면 ${session.sessionHours}시간으로 잡혀요.`;
     }
+    if (session.kind === 'hourly' && hours < adoptHours) {
+      return `캘린더 일정은 ${adoptHours}시간인데 ${hours}시간으로 잡혀요. 등록하면 원래 일정이 지워지니 일정 전체를 덮는 시간으로 맞춰 주세요.`;
+    }
     if (session.kind === 'hourly' && (hours < (session.minHours ?? 1) || hours > (session.maxHours ?? 12))) {
       return `캘린더 일정(${adoptHours}시간)은 이 상품의 이용 시간 범위(${session.minHours ?? 1}~${session.maxHours ?? 12}시간) 밖이에요.`;
     }
@@ -218,7 +221,8 @@ export const ManualBookingPanel = ({
                   onChange={(e) => {
                     setProductId(e.target.value);
                     const next = sessionProducts.find((p) => p.id === e.target.value);
-                    if (next?.kind === 'hourly') setHours(next.minHours ?? 1);
+                    // 캘린더 일정을 가져오는 중이면 그 길이를 지킨다(허용 범위 안에서) — 안 그러면 3시간 일정이 2시간으로 줄고 원본은 지워진다.
+                    if (next?.kind === 'hourly') setHours(adoptHours !== null ? Math.min(Math.max(adoptHours, next.minHours ?? 1), next.maxHours ?? 12) : next.minHours ?? 1);
                     if (next) setStartHour(Math.min(Math.max(startHour, productHours(next).openHour), productHours(next).closeHour - 1));
                   }}
                   light

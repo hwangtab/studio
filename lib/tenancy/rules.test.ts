@@ -28,6 +28,10 @@ describe('parseTenancyInput', () => {
     const r = parseTenancyInput(ok);
     expect(r.ok && r.value).toMatchObject({ roomNumber: 'R05', tenantName: '조현정', billingDay: 14, endDate: null });
   });
+  it('월 이용료가 null·빈 값·글자 섞임이면 0원으로 저장하지 않고 거절한다(감사)', () => {
+    for (const bad of [null, undefined, '', '36만', NaN, 0, 999]) expect(parseTenancyInput({ ...ok, monthlyAmount: bad })).toMatchObject({ ok: false });
+    expect(parseTenancyInput({ ...ok, monthlyAmount: 33000 })).toMatchObject({ ok: true });
+  });
   it('비상주는 방 번호 없이, 방은 번호 필수', () => {
     expect(parseTenancyInput({ ...ok, kind: 'virtual', roomNumber: 'R01' })).toMatchObject({ ok: true, value: { roomNumber: null } });
     expect(parseTenancyInput({ ...ok, roomNumber: '' })).toMatchObject({ ok: false });

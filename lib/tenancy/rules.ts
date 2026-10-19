@@ -122,8 +122,9 @@ export const parseTenancyInput = (raw: unknown): Parsed => {
     if (!roomNumber || !ROOM_RE.test(roomNumber)) return { ok: false, message: '방 번호는 R01 형식으로 적어 주세요.' };
     if (NON_TENANCY_ROOMS[roomNumber]) return { ok: false, message: NON_TENANCY_ROOMS[roomNumber] };
   }
-  const monthlyAmount = Number(b.monthlyAmount);
-  if (!Number.isInteger(monthlyAmount) || monthlyAmount < 0 || monthlyAmount > 100_000_000) return { ok: false, message: '월 이용료를 확인해 주세요.' };
+  // null·빈 값은 Number()가 0으로 읽는다 — 0원 월 이용료가 조용히 저장되지 않게 먼저 거른다.
+  const monthlyAmount = b.monthlyAmount === null || b.monthlyAmount === undefined || b.monthlyAmount === '' ? NaN : Number(b.monthlyAmount);
+  if (!Number.isInteger(monthlyAmount) || monthlyAmount < 1_000 || monthlyAmount > 100_000_000) return { ok: false, message: '월 이용료를 확인해 주세요.' };
   let depositAmount: number | null = null;
   if (b.depositAmount !== null && b.depositAmount !== undefined && b.depositAmount !== '') {
     depositAmount = Number(b.depositAmount);
