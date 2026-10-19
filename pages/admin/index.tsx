@@ -193,7 +193,8 @@ export default function AdminIndexPage({ dashboard, shopQueues, revenue = null, 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 <QueueCard label="믹싱 착수 대기" count={dashboard.queues.mixingReceived} href="/admin/bookings" alert />
                 <QueueCard label="믹싱 작업 중" count={dashboard.queues.mixingInProgress} href="/admin/bookings" />
-                <QueueCard label="서명 대기 계약" count={dashboard.queues.contractsAwaitingSignature} href="/admin/contracts" />
+                <QueueCard label="서명 대기 계약" count={dashboard.queues.contractsAwaitingSignature} href="/admin/contracts?status=sent" />
+                <QueueCard label="종료 처리 필요 계약" count={dashboard.queues.contractsAwaitingTermination} href="/admin/contracts?status=termination" alert />
                 <QueueCard label="카드 등록 대기 구독" count={dashboard.queues.subscriptionsPendingCard} href="/admin/subscriptions" />
                 <QueueCard label="결제 재시도 중 구독" count={dashboard.queues.subscriptionsPastDue} href="/admin/subscriptions" alert />
                 <QueueCard label="정지된 구독" count={dashboard.queues.subscriptionsPaused} href="/admin/subscriptions" alert />

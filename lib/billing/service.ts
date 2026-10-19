@@ -48,7 +48,7 @@ export type ChargeReason = 'scheduled' | 'retry' | 'manual' | 'first';
 /** 카드 등록 링크가 유효한 상태들 — 이미 끝난 구독의 링크로는 카드를 못 넣는다. */
 const SETUP_ALLOWED_STATUSES: SubscriptionStatus[] = ['pending_card', 'active', 'past_due', 'paused'];
 /** 같은 계약에 구독을 새로 못 만드는 상태들(진행 중인 청구가 이미 있다). */
-const OCCUPYING_STATUSES: SubscriptionStatus[] = ['pending_card', 'active', 'past_due', 'paused'];
+export const OCCUPYING_STATUSES: SubscriptionStatus[] = ['pending_card', 'active', 'past_due', 'paused'];
 /**
  * 승인 결과를 반영하며 `active`로 전이시켜도 되는 상태들 — **해지·종료는 되살리지 않는다.**
  *
