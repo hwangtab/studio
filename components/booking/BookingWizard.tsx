@@ -90,7 +90,7 @@ interface CreateBookingResponse {
   paymentMethod?: CheckoutPaymentMethod;
 }
 
-/** '보컬 녹음 1프로' + '2026-09-10' + 14 → '보컬 녹음 1프로 (9/10 14:00)' */
+/** '보컬 녹음 3시간' + '2026-09-10' + 14 → '보컬 녹음 3시간 (9/10 14:00)' */
 const formatOrderName = (nameKo: string, date: string, startHour: number): string => {
   const [, monthStr, dayStr] = date.split('-');
   const hh = String(startHour).padStart(2, '0');

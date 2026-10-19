@@ -32,7 +32,7 @@ const BOOKING_DATE = new Date(Date.now() + 10 * 24 * 60 * 60 * 1000 + 9 * 60 * 6
 const PRODUCT: SessionProduct = {
   id: 'recording-pro',
   service: 'recording',
-  nameKo: '보컬 녹음 1프로',
+  nameKo: '보컬 녹음 3시간',
   kind: 'package',
   unitAmount: 250000,
   sessionHours: 3,

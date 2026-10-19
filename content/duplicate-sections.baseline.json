@@ -3,9 +3,9 @@
   "minChars": 80,
   "minFiles": 2,
   "groups": {
-    "56530e306ad1": {
+    "40bf824d10a7": {
       "title": "스튜디오 놀을 선택하는 이유",
-      "chars": 194,
+      "chars": 200,
       "count": 7
     },
     "576dfdf9590f": {
@@ -48,15 +48,15 @@
       "chars": 111,
       "count": 7
     },
-    "d577b1b67576": {
-      "title": "서비스 및 요금",
-      "chars": 123,
-      "count": 6
-    },
     "a9218496eb2a": {
       "title": "권역별 안내",
       "chars": 104,
       "count": 7
+    },
+    "cb8ac35bff5a": {
+      "title": "서비스 및 요금",
+      "chars": 120,
+      "count": 6
     },
     "cd3786008424": {
       "title": "이용 방법",
@@ -108,9 +108,14 @@
       "chars": 140,
       "count": 3
     },
-    "17eadd83c0f0": {
+    "b97df1a782e8": {
       "title": "스튜디오 놀을 선택하는 이유",
-      "chars": 193,
+      "chars": 199,
+      "count": 2
+    },
+    "1f0b947efe60": {
+      "title": "스튜디오 놀을 선택하는 이유",
+      "chars": 191,
       "count": 2
     },
     "4e3d1ac64a0b": {
@@ -121,11 +126,6 @@
     "c88f76cc0af2": {
       "title": "발라드 피아노 난이도별 추천 연습곡",
       "chars": 188,
-      "count": 2
-    },
-    "02884c59bc0c": {
-      "title": "스튜디오 놀을 선택하는 이유",
-      "chars": 185,
       "count": 2
     },
     "7bf7aa975eaf": {

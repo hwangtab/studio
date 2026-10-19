@@ -148,7 +148,7 @@ export default function AdminPaymentLinksPage({ links: initialLinks, truncated, 
           <h2 className="mb-3 text-lg font-bold text-gray-900">새 링크</h2>
           <form onSubmit={create} className="grid gap-3 sm:grid-cols-2">
             <label className="block sm:col-span-2">상품명(고객에게 보여요)
-              <input value={itemName} onChange={(e) => setItemName(e.target.value)} maxLength={PAYMENT_LINK_LIMITS.itemNameMax} required placeholder="예: 보컬 녹음 1프로 (10/17 11:00)" className={`mt-1 ${inputClass}`} />
+              <input value={itemName} onChange={(e) => setItemName(e.target.value)} maxLength={PAYMENT_LINK_LIMITS.itemNameMax} required placeholder="예: 보컬 녹음 3시간 (10/17 11:00)" className={`mt-1 ${inputClass}`} />
             </label>
             <label className="block">금액 — <strong>부가세 포함 총액</strong>(원)
               <input value={amountText} onChange={(e) => setAmountText(e.target.value)} inputMode="numeric" required placeholder="250000" className={`mt-1 ${inputClass}`} />

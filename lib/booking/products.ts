@@ -84,7 +84,7 @@ export const occupancyConflictKeys = (room: string | null): Array<string | null>
 };
 
 export const SESSION_PRODUCTS: readonly SessionProduct[] = [
-  { id: 'recording-pro', service: 'recording', nameKo: '보컬 녹음 1프로', kind: 'package', unitAmount: VOCAL_PACKAGE_PRICE, sessionHours: 3 },
+  { id: 'recording-pro', service: 'recording', nameKo: '보컬 녹음 3시간', kind: 'package', unitAmount: VOCAL_PACKAGE_PRICE, sessionHours: 3 },
   { id: 'recording-hourly', service: 'recording', nameKo: '시간당 레코딩', kind: 'hourly', unitAmount: RECORDING_HOURLY_PRICE, minHours: 2, maxHours: 8 },
   // Day Lock — 긴 녹음을 묶은 고정 시간 패키지(2026-09-26 재편). 환불 규정은 service가 recording이라 녹음과 같다.
   { id: 'recording-daylock-4h', service: 'recording', nameKo: 'Day Lock 4시간', kind: 'package', unitAmount: DAY_LOCK_4H_PRICE, sessionHours: DAY_LOCK_4H_HOURS },

@@ -128,7 +128,7 @@ it('이번 주 세션은 KST 오늘 0시부터 7일 안의 확정 예약만, 시
   const dash = await loadAdminDashboard(NOW);
 
   expect(dash.upcomingSessions.map((s) => s.orderNo)).toEqual(['NO-today-morning', 'NO-tomorrow']);
-  expect(dash.upcomingSessions[0]).toMatchObject({ customerName: '홍길동', productName: '보컬 녹음 1프로' });
+  expect(dash.upcomingSessions[0]).toMatchObject({ customerName: '홍길동', productName: '보컬 녹음 3시간' });
 });
 
 it('대기열 건수 — 믹싱 착수 대기·작업 중, 구독 카드 대기·재시도·정지, 서명 대기 계약', async () => {
@@ -365,7 +365,7 @@ describe('이번 주 세션 — 결제 링크 이용 일정(0062)', () => {
     await client.execute({ sql: "UPDATE orders SET status = ? WHERE id = ?", args: [status, id] });
     await client.execute({
       sql: 'INSERT INTO payment_link_orders (order_no, slug, item_name, session_at, session_hours) VALUES (?, ?, ?, ?, ?)',
-      args: [`NO-${id}`, 'a'.repeat(24), '보컬 녹음 1프로 (10/17 11:00)', sessionIso ? EPOCH(sessionIso) : null, sessionIso ? hours : null],
+      args: [`NO-${id}`, 'a'.repeat(24), '보컬 녹음 3시간 (10/17 11:00)', sessionIso ? EPOCH(sessionIso) : null, sessionIso ? hours : null],
     });
   };
 
@@ -375,7 +375,7 @@ describe('이번 주 세션 — 결제 링크 이용 일정(0062)', () => {
     const d = await loadAdminDashboard(NOW);
     expect(d.upcomingSessions.map((x) => [x.kind, x.orderId])).toEqual([['link', 'l1'], ['booking', 'b1']]);
     const link = d.upcomingSessions[0];
-    expect(link).toMatchObject({ productName: '보컬 녹음 1프로 (10/17 11:00)', customerName: '홍길동' });
+    expect(link).toMatchObject({ productName: '보컬 녹음 3시간 (10/17 11:00)', customerName: '홍길동' });
     expect(new Date(link.endAt).getTime() - new Date(link.startAt).getTime()).toBe(3 * 3600 * 1000);
   });
 

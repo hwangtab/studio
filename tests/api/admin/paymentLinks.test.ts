@@ -31,7 +31,7 @@ beforeEach(async () => {
   mockAuth.mockResolvedValue({ ok: true });
 });
 
-const body = { action: 'create', itemName: '보컬 녹음 1프로 (10/17 11:00)', totalAmount: 250000, expiresOn: '', memo: '김준호님' };
+const body = { action: 'create', itemName: '보컬 녹음 3시간 (10/17 11:00)', totalAmount: 250000, expiresOn: '', memo: '김준호님' };
 
 it('관리자 인증이 없으면 401이고 아무것도 만들지 않는다', async () => {
   mockAuth.mockResolvedValue({ ok: false });

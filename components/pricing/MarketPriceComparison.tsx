@@ -69,7 +69,7 @@ const MarketPriceComparison = () => {
       </div>
       <p className="mt-5 typo-card-body text-gray-800 dark:text-gray-200">
         스튜디오 놀 싱글 번들은 {won(MARKET_COMPARISON_BUNDLE_PRICE)}, 부가세 포함이에요.
-        보컬 녹음 1프로·믹싱·마스터링에 기획·유통 등록·국내외 홍보까지 들어 있고, 번들의 믹싱은 트랙 10개 이하
+        보컬 녹음 3시간·믹싱·마스터링에 기획·유통 등록·국내외 홍보까지 들어 있고, 번들의 믹싱은 트랙 10개 이하
         기준이에요.
       </p>
       <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">

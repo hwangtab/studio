@@ -108,7 +108,7 @@ describe('가격 SSOT 정합', () => {
   });
 
   it('Day Lock은 같은 시간의 시간당 요금보다 싸고, 시간이 길수록 시간당 단가가 내려간다', () => {
-    // 할인 역할을 못 하면 상품이 존재할 이유가 없다 — 옛 6시간 50만원이 보컬 1프로와 같은 단가였던 문제.
+    // 할인 역할을 못 하면 상품이 존재할 이유가 없다 — 옛 6시간 50만원이 보컬 녹음 3시간 패키지와 같은 단가였던 문제.
     expect(DAY_LOCK_SAVINGS.h4).toBeGreaterThan(0);
     expect(DAY_LOCK_SAVINGS.h8).toBeGreaterThan(DAY_LOCK_SAVINGS.h4);
     expect(DAY_LOCK_8H_PRICE / 8).toBeLessThan(DAY_LOCK_4H_PRICE / 4);
@@ -695,7 +695,7 @@ describe('JSON-LD Offer 부가세 표기 (2026-10-15 정책)', () => {
     const schema = buildStudioServiceSchema({
       locale: 'ko', siteName: '스튜디오 놀', siteUrl: SITE_URL, pageUrl: `${SITE_URL}/ko/recording`,
       name: '보컬 녹음', description: 'd', serviceType: 'Recording',
-      offerName: '보컬 녹음 1프로', offerPrice: VOCAL_PACKAGE_PRICE, pricingHash: 'recording',
+      offerName: '보컬 녹음 3시간', offerPrice: VOCAL_PACKAGE_PRICE, pricingHash: 'recording',
     });
     expectVatPolicy('studio-service', collectOfferNodes(schema));
   });

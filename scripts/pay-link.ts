@@ -3,7 +3,7 @@
  * 맞춤 결제 링크(`/ko/pay/<slug>`) 발급·조회·닫기 — **배포 없이 즉시 열린다**(운영 DB `payment_links`에 바로 쓴다).
  * 관리자 화면 `/admin/payment-links`와 **같은 코드**(lib/payments/paymentLinks.ts)를 부른다 — 규칙·슬롯 차단이 한 벌이다.
  *
- *   npx tsx scripts/pay-link.ts create --name "보컬 녹음 1프로" --amount 250000 --session "2026-10-17 11:00" --hours 3 --memo 김준호님 --yes
+ *   npx tsx scripts/pay-link.ts create --name "보컬 녹음 3시간" --amount 250000 --session "2026-10-17 11:00" --hours 3 --memo 김준호님 --yes
  *   npx tsx scripts/pay-link.ts list
  *   npx tsx scripts/pay-link.ts close <slug>
  *

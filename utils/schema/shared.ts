@@ -34,9 +34,9 @@ export const RECORDING_OFFER_NAMES: Record<Locale, string> = {
   es: 'Servicio de Grabación', vi: 'Dịch vụ thu âm', th: 'บริการบันทึกเสียง', uz: 'Yozuv xizmati',
 };
 export const VOCAL_PACKAGE_OFFER_NAMES: Record<Locale, string> = {
-  ko: '보컬 녹음 1프로 (1곡 패키지)', en: 'Vocal Recording 1-Song Package', zh: '人声录音1首套餐',
-  es: 'Paquete de Grabación Vocal (1 canción)', vi: 'Gói thu âm vocal (1 bài)',
-  th: 'แพ็กเกจอัดเสียงร้อง (1 เพลง)', uz: "Vokal yozish paketi (1 qo'shiq)",
+  ko: '보컬 녹음 3시간 (곡 수 상관없이)', en: 'Vocal Recording 3-Hour Package', zh: '人声录音3小时套餐',
+  es: 'Paquete de Grabación Vocal (3 horas)', vi: 'Gói thu âm vocal (3 giờ)',
+  th: 'แพ็กเกจอัดเสียงร้อง (3 ชั่วโมง)', uz: "Vokal yozish paketi (3 soat)",
 };
 export const MIXING_OFFER_NAMES: Record<Locale, string> = {
   ko: '믹싱 & 마스터링', en: 'Mixing & Mastering', zh: '混音与母带',

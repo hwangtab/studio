@@ -35,7 +35,7 @@ const GROUPS: Group[] = [
   {
     icon: '🎙️', title: '보컬 녹음', sub: '전담 엔지니어 진행',
     rows: [
-      { name: '보컬 녹음 1프로', note: '1곡 · 3시간 기준', price: VOCAL_PACKAGE_PRICE },
+      { name: '보컬 녹음 3시간', note: '곡 수 상관없이', price: VOCAL_PACKAGE_PRICE },
       { name: '시간당 레코딩', note: '최소 2시간부터', price: RECORDING_HOURLY_PRICE },
       { name: 'Day Lock 4시간', note: `시간당보다 ${formatPriceAmount(DAY_LOCK_SAVINGS.h4)}원 적게`, price: DAY_LOCK_4H_PRICE },
       { name: 'Day Lock 8시간', note: `시간당보다 ${formatPriceAmount(DAY_LOCK_SAVINGS.h8)}원 적게`, price: DAY_LOCK_8H_PRICE },

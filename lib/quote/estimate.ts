@@ -177,7 +177,7 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
         return {
           priceLabel: won(VOCAL_PACKAGE_PRICE),
           vat: 'included',
-          basis: ['보컬 녹음 1프로 — 3시간, 전담 엔지니어·디렉팅 포함'],
+          basis: ['보컬 녹음 3시간 — 전담 엔지니어·디렉팅 포함, 곡 수 상관없이 같은 금액'],
           bookingHref: '/ko/booking/recording?product=recording-pro',
         };
       }
@@ -186,7 +186,7 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
           priceLabel: range(VOCAL_PACKAGE_PRICE * 2, VOCAL_PACKAGE_PRICE * 3),
           vat: 'included',
           basis: [
-            `곡당 보컬 녹음 1프로(${won(VOCAL_PACKAGE_PRICE)}, 3시간) 기준`,
+            `곡마다 보컬 녹음 3시간(${won(VOCAL_PACKAGE_PRICE)})씩 잡은 금액 — 준비가 잘 돼 있으면 3시간에 2곡 이상도 녹음해요`,
             `3곡이고 하루 8시간 안에 끝날 분량이면 Day Lock 8시간 ${won(DAY_LOCK_8H_PRICE)}이 더 쌉니다`,
           ],
           bookingHref: '/ko/booking/recording',

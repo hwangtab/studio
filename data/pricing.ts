@@ -17,9 +17,11 @@ import type { Locale } from '../lib/i18n';
 // 한쪽을 바꾸면 다른 쪽도 함께 움직여야 한다 (data/pricing.test.ts가 강제).
 // ─────────────────────────────────────────────────────────────────────────────
 export const RECORDING_HOURLY_PRICE = 100000;
-export const VOCAL_PACKAGE_PRICE = 250000; // 보컬 녹음 1프로(1곡·3시간)
+// 보컬 녹음 3시간 — 곡 수와 상관없이 3시간 25만원(운영자 확인 2026-10-19: 2~3곡을 녹음해도, 1시간 만에 끝나도 같은 금액).
+// 예전 이름 "1프로"는 고객이 시간인지 곡인지 몰라 "곡당으로는 안 파나요?" 문의가 잦아 바꿨다 — 카피에 다시 쓰지 말 것.
+export const VOCAL_PACKAGE_PRICE = 250000;
 // Day Lock — 긴 녹음을 시간당보다 싸게 묶는 패키지(2026-09-26 운영자 결정으로 6시간 50만원에서 재편).
-// 6시간 50만원은 시간당 8.3만원으로 보컬 1곡 패키지(3시간 25만원)와 같은 단가라 할인 역할을 못 했다.
+// 6시간 50만원은 시간당 8.3만원으로 보컬 녹음 3시간 패키지(25만원)와 같은 단가라 할인 역할을 못 했다.
 // 시간당 요금과의 차액은 카피에 리터럴로 적지 않는다 — DAY_LOCK_SAVINGS로 계산한다.
 export const DAY_LOCK_4H_HOURS = 4;
 export const DAY_LOCK_8H_HOURS = 8;
@@ -251,29 +253,29 @@ export const getPricingData = (locale: Locale) => {
   const recordingOffers = [
     {
       id: "recording-pro",
-      title: t(locale, { ko: "보컬 녹음 1프로", en: "Vocal Recording (1 Song)", zh: "人声录音 (1首)", es: "Grabación Vocal (1 Canción)", vi: "Thu âm vocal (1 bài)", th: "อัดเสียงร้อง (1 เพลง)", uz: "Vokal yozuvi (1 qo\'shiq)" }),
-      subtitle: t(locale, { ko: "전담 엔지니어, 3시간 기준", en: "Dedicated engineer, 3-hour session", zh: "专属工程师, 3小时基准", es: "Ingeniero dedicado, sesión de 3 horas", vi: "Kỹ sư chuyên trách, buổi 3 giờ", th: "วิศวกรประจำ, เซสชัน 3 ชั่วโมง", uz: "Maxsus muhandis, 3 soatlik seans" }),
+      title: t(locale, { ko: "보컬 녹음 3시간", en: "Vocal Recording (3 Hours)", zh: "人声录音 (3小时)", es: "Grabación Vocal (3 horas)", vi: "Thu âm vocal (3 giờ)", th: "อัดเสียงร้อง (3 ชั่วโมง)", uz: "Vokal yozuvi (3 soat)" }),
+      subtitle: t(locale, { ko: "곡 수 상관없이 · 전담 엔지니어", en: "Any number of songs · dedicated engineer", zh: "不限曲数 · 专属工程师", es: "Cualquier número de canciones · ingeniero dedicado", vi: "Không giới hạn số bài · kỹ sư chuyên trách", th: "กี่เพลงก็ได้ · วิศวกรประจำ", uz: "Qo\'shiqlar soni cheklanmagan · maxsus muhandis" }),
       priceDisplay: t(locale, { ko: "250,000원", en: "₩250,000", zh: "₩250,000", es: "₩250,000", vi: "₩250,000", th: "₩250,000", uz: "₩250,000" }),
       priceValue: 250000,
-      unit: t(locale, { ko: "/ 1프로", en: "/ song", zh: "/ 首", es: "/ canción", vi: "/ bài", th: "/ เพลง", uz: "/ qo\'shiq" }),
+      unit: t(locale, { ko: "/ 3시간", en: "/ 3 hours", zh: "/ 3小时", es: "/ 3 horas", vi: "/ 3 giờ", th: "/ 3 ชั่วโมง", uz: "/ 3 soat" }),
       description: t(locale, {
-        ko: "보컬 1곡 녹음을 위한 기본 패키지입니다. 전담 엔지니어 진행, 3시간 기준.",
-        en: "Standard package for recording 1 vocal song. Dedicated engineer, based on 3 hours.",
-        zh: "录制1首人声歌曲的基本套餐。专属工程师陪同，以3小时为基准。",
-        es: "Paquete estándar para grabar 1 canción vocal. Ingeniero dedicado, basado en 3 horas.",
-        vi: "Gói cơ bản cho thu âm 1 bài vocal. Kỹ sư chuyên trách, cơ sở 3 giờ.",
-        th: "แพ็กเกจมาตรฐานสำหรับอัด 1 เพลงร้อง วิศวกรเสียงประจำ อ้างอิงตาม 3 ชั่วโมง",
-        uz: "1 ta vokal qo\'shiq yozish uchun standart paket. Maxsus muhandis, 3 soat asosida."
+        ko: "전담 엔지니어와 3시간 동안 녹음해요. 곡 수는 상관없어요 — 보통 1곡이면 충분하고, 준비가 잘 돼 있으면 2~3곡도 같은 금액이에요. 일찍 끝나도 금액은 같아요.",
+        en: "Three hours with a dedicated engineer. Record as many songs as you can — one song usually fits comfortably, and well-prepared singers often finish 2–3 for the same price. The price stays the same if you finish early.",
+        zh: "专属工程师陪同录音3小时，不限曲数——通常1首歌绰绰有余，准备充分的话2~3首也是同一价格。提前结束价格不变。",
+        es: "Tres horas con un ingeniero dedicado. Graba las canciones que quieras: una canción suele caber de sobra y, si vienes bien preparado, 2–3 canciones cuestan lo mismo. El precio no cambia si terminas antes.",
+        vi: "3 giờ thu âm cùng kỹ sư chuyên trách, không giới hạn số bài — thường 1 bài là đủ, chuẩn bị tốt thì 2–3 bài vẫn cùng giá. Xong sớm giá vẫn không đổi.",
+        th: "อัดเสียง 3 ชั่วโมงกับวิศวกรเสียงประจำ กี่เพลงก็ได้ — ปกติ 1 เพลงก็เหลือเวลา ถ้าเตรียมมาดี 2–3 เพลงก็ราคาเดิม เสร็จก่อนเวลาราคาก็ไม่เปลี่ยน",
+        uz: "Maxsus muhandis bilan 3 soatlik yozuv, qo\'shiqlar soni cheklanmagan — odatda 1 qo\'shiqqa bemalol yetadi, yaxshi tayyorlansangiz 2–3 qo\'shiq ham shu narxda. Erta tugasa ham narx o\'zgarmaydi."
       }),
       recommended: true,
       features: tArray(locale, {
-        ko: ["전담 엔지니어 진행", "보컬 디렉팅·마이크 포지셔닝 포함", "테이크 선별 및 기본 편집 포함", "3시간 기준 (추가 시 시간당 레코딩 요금 적용)"],
-        en: ["Dedicated engineer included", "Vocal directing & mic positioning", "Take selection & basic editing", "Based on 3 hours (hourly rate applies for extra time)"],
-        zh: ["专属工程师陪同", "含人声指导及麦克风定位", "含录音片段筛选及基本剪辑", "以3小时为基准（超时按小时计费）"],
-        es: ["Ingeniero dedicado incluido", "Dirección vocal y posicionamiento de micrófono", "Selección de tomas y edición básica", "Basado en 3 horas (tarifa por hora si se excede)"],
-        vi: ["Kỹ sư chuyên trách", "Đạo diễn vocal & định vị mic", "Chọn take & chỉnh sửa cơ bản", "Cơ sở 3 giờ (vượt giờ tính theo giờ)"],
-        th: ["วิศวกรเสียงประจำ", "กำกับการร้องและจัดตำแหน่งไมค์", "คัดเลือก take และตัดต่อเบื้องต้น", "อ้างอิง 3 ชั่วโมง (เกินคิดรายชั่วโมง)"],
-        uz: ["Maxsus muhandis bilan", "Vokal direktori va mikrofon joylashuvi", "Take tanlash va asosiy tahrirlash", "3 soat asosida (ortiqcha vaqt soatlik tarif)"]
+        ko: ["전담 엔지니어 진행", "보컬 디렉팅·마이크 포지셔닝 포함", "테이크 선별 및 기본 편집 포함", "3시간을 넘기면 시간당 레코딩 요금 적용"],
+        en: ["Dedicated engineer included", "Vocal directing & mic positioning", "Take selection & basic editing", "Hourly rate applies beyond 3 hours"],
+        zh: ["专属工程师陪同", "含人声指导及麦克风定位", "含录音片段筛选及基本剪辑", "超过3小时按小时计费"],
+        es: ["Ingeniero dedicado incluido", "Dirección vocal y posicionamiento de micrófono", "Selección de tomas y edición básica", "Tarifa por hora a partir de las 3 horas"],
+        vi: ["Kỹ sư chuyên trách", "Đạo diễn vocal & định vị mic", "Chọn take & chỉnh sửa cơ bản", "Quá 3 giờ tính theo giờ"],
+        th: ["วิศวกรเสียงประจำ", "กำกับการร้องและจัดตำแหน่งไมค์", "คัดเลือก take และตัดต่อเบื้องต้น", "เกิน 3 ชั่วโมงคิดรายชั่วโมง"],
+        uz: ["Maxsus muhandis bilan", "Vokal direktori va mikrofon joylashuvi", "Take tanlash va asosiy tahrirlash", "3 soatdan oshsa soatlik tarif"]
       }),
     },
     {
@@ -744,7 +746,7 @@ export const getPricingData = (locale: Locale) => {
         uz: `Bitta qo'shiq rejalashtirishdan tarqatish va PRgacha birga olib boriladi. Reliz rejasi bo'lmasa ham yozuv, miks va masteringni bir yo'la topshirish uchun ishlatish mumkin: tarqatish va PRdan foydalanmasangiz ham narx o'zgarmaydi va alohida buyurtma qilingandagi ${singleLineItemTotalIntl} yig'indisidan past. Batafsil vokal tuning va ritm tuzatish — har bir qo'shiq uchun +${vocalTuningIntl} (ixtiyoriy).`
       }),
       features: tArray(locale, {
-        ko: ['기획 · 방향 디렉팅', '보컬 녹음 1프로 (3시간, 전담 엔지니어)', '믹싱 10트랙 이하 (수정 2회)', '싱글 마스터링 (수정 1회)', '디지털 유통 등록 (멜론·스포티파이·애플뮤직·유튜브뮤직)', `발매 홍보 — 국내 음악 매체 + 해외 매체·라디오·플레이리스트 피칭`, `제작 단가 합계 ${singleLineItemTotalKo} 대비 약 9% 할인`],
+        ko: ['기획 · 방향 디렉팅', '보컬 녹음 3시간 (전담 엔지니어)', '믹싱 10트랙 이하 (수정 2회)', '싱글 마스터링 (수정 1회)', '디지털 유통 등록 (멜론·스포티파이·애플뮤직·유튜브뮤직)', `발매 홍보 — 국내 음악 매체 + 해외 매체·라디오·플레이리스트 피칭`, `제작 단가 합계 ${singleLineItemTotalKo} 대비 약 9% 할인`],
         en: ['Concept planning & direction', 'Vocal Recording 1 Song (3h, dedicated engineer)', 'Mixing ≤10 Tracks (2 revisions)', 'Single Mastering (1 revision)', 'Digital distribution (Melon, Spotify, Apple Music, YouTube Music)', `Release promotion — pitched to Korean music outlets and international media, radio & playlist curators`, `~9% off the ${singleLineItemTotalIntl} production line-item total`],
         zh: ['策划 · 方向指导', '人声录音1首（3小时，专属工程师）', '混音 ≤10轨（含2次修改）', '单曲母带（含1次修改）', '数字发行登记（Melon·Spotify·Apple Music·YouTube Music）', `发行宣传 — 面向韩国音乐媒体及海外媒体·电台·歌单策展人推介`, `比制作单项合计 ${singleLineItemTotalIntl} 便宜约9%`],
         es: ['Planificación de concepto y dirección', 'Grabación vocal 1 canción (3h, ingeniero dedicado)', 'Mezcla ≤10 pistas (2 revisiones)', 'Masterización de sencillo (1 revisión)', 'Distribución digital (Melon, Spotify, Apple Music, YouTube Music)', `Promoción de lanzamiento — envío a medios musicales coreanos, medios internacionales, radios y curadores de playlists`, `~9% de descuento sobre la suma de producción (${singleLineItemTotalIntl})`],
@@ -786,7 +788,7 @@ export const getPricingData = (locale: Locale) => {
         uz: `To'liq EP rejalashtirishdan tarqatish va PRgacha birga olib boriladi. Har bir qo'shiq ${epPerSongIntl} — ishlab chiqarish yig'indisi ${epLineItemTotalIntl} dan past, albom rejasi, treklist kuratsiyasi, tarqatish va matbuotga yuborish ham kiradi. Boshqa qo'shiq soni har bir qo'shiq narxi bo'yicha hisoblanadi.`
       }),
       features: tArray(locale, {
-        ko: ['앨범 기획 · 트랙리스트 큐레이션', '보컬 녹음 1프로 × 4곡 (곡당 3시간, 전담 엔지니어)', '믹싱 10트랙 이하 × 4곡 (곡당 수정 2회)', 'EP 마스터링 × 4곡 (앨범 톤·라우드니스 통일)', '디지털 유통 등록 (멜론·스포티파이·애플뮤직·유튜브뮤직)', `발매 홍보 — 국내 음악 매체 + 해외 매체·라디오·플레이리스트 피칭`, `제작 단가 합계 ${epLineItemTotalKo} 대비 약 15% 할인`, '11트랙 이상 편성은 믹싱 차액 별도'],
+        ko: ['앨범 기획 · 트랙리스트 큐레이션', '보컬 녹음 3시간 × 4회 (곡마다 한 번, 전담 엔지니어)', '믹싱 10트랙 이하 × 4곡 (곡당 수정 2회)', 'EP 마스터링 × 4곡 (앨범 톤·라우드니스 통일)', '디지털 유통 등록 (멜론·스포티파이·애플뮤직·유튜브뮤직)', `발매 홍보 — 국내 음악 매체 + 해외 매체·라디오·플레이리스트 피칭`, `제작 단가 합계 ${epLineItemTotalKo} 대비 약 15% 할인`, '11트랙 이상 편성은 믹싱 차액 별도'],
         en: ['Album planning & tracklist curation', 'Vocal Recording 1 Song × 4 (3h each, dedicated engineer)', 'Mixing ≤10 Tracks × 4 (2 revisions each)', 'EP Mastering × 4 (album-wide tone & loudness)', 'Digital distribution (Melon, Spotify, Apple Music, YouTube Music)', `Release promotion — pitched to Korean music outlets and international media, radio & playlist curators`, `~15% off the ${epLineItemTotalIntl} production line-item total`, '11+ track arrangements billed at the mixing difference'],
         zh: ['专辑策划 · 曲目编排', '人声录音1首 × 4（各 3 小时，专属工程师）', '混音 ≤10轨 × 4（各含2次修改）', 'EP 母带 × 4（全专辑音色·响度统一）', '数字发行登记（Melon·Spotify·Apple Music·YouTube Music）', `发行宣传 — 面向韩国音乐媒体及海外媒体·电台·歌单策展人推介`, `比制作单项合计 ${epLineItemTotalIntl} 便宜约 15%`, '11轨以上编制按混音差额另计'],
         es: ['Planificación del álbum y curaduría del tracklist', 'Grabación vocal 1 canción × 4 (3h cada una, ingeniero dedicado)', 'Mezcla ≤10 pistas × 4 (2 revisiones cada una)', 'Masterización EP × 4 (tono y loudness unificados)', 'Distribución digital (Melon, Spotify, Apple Music, YouTube Music)', `Promoción de lanzamiento — envío a medios musicales coreanos, medios internacionales, radios y curadores de playlists`, `~15% de descuento sobre la suma de producción ${epLineItemTotalIntl}`, 'Arreglos de 11+ pistas se facturan por la diferencia de mezcla'],
@@ -828,7 +830,7 @@ export const getPricingData = (locale: Locale) => {
         uz: `To'liq albom rejalashtirishdan tarqatish va PRgacha birga olib boriladi. Har bir qo'shiq ${albumPerSongIntl} — ishlab chiqarish yig'indisi ${albumLineItemTotalIntl} dan past, A&R konsalting, treklist ketma-ketligi, tarqatish va matbuotga yuborish ham kiradi. Boshqa qo'shiq soni har bir qo'shiq narxi bo'yicha hisoblanadi.`
       }),
       features: tArray(locale, {
-        ko: ['A&R 컨설팅 · 트랙리스트 시퀀스 설계', '보컬 녹음 1프로 × 8곡 (곡당 3시간, 전담 엔지니어)', '믹싱 10트랙 이하 × 8곡 (곡당 수정 2회)', '정규 마스터링 × 8곡 (앨범 톤·라우드니스 통일)', '디지털 유통 등록 (멜론·스포티파이·애플뮤직·유튜브뮤직)', `발매 홍보 — 국내 음악 매체 + 해외 매체·라디오·플레이리스트 피칭`, `제작 단가 합계 ${albumLineItemTotalKo} 대비 약 20% 할인`, '11트랙 이상 편성은 믹싱 차액 별도'],
+        ko: ['A&R 컨설팅 · 트랙리스트 시퀀스 설계', '보컬 녹음 3시간 × 8회 (곡마다 한 번, 전담 엔지니어)', '믹싱 10트랙 이하 × 8곡 (곡당 수정 2회)', '정규 마스터링 × 8곡 (앨범 톤·라우드니스 통일)', '디지털 유통 등록 (멜론·스포티파이·애플뮤직·유튜브뮤직)', `발매 홍보 — 국내 음악 매체 + 해외 매체·라디오·플레이리스트 피칭`, `제작 단가 합계 ${albumLineItemTotalKo} 대비 약 20% 할인`, '11트랙 이상 편성은 믹싱 차액 별도'],
         en: ['A&R consulting & tracklist sequencing', 'Vocal Recording 1 Song × 8 (3h each, dedicated engineer)', 'Mixing ≤10 Tracks × 8 (2 revisions each)', 'Album Mastering × 8 (album-wide tone & loudness)', 'Digital distribution (Melon, Spotify, Apple Music, YouTube Music)', `Release promotion — pitched to Korean music outlets and international media, radio & playlist curators`, `~20% off the ${albumLineItemTotalIntl} production line-item total`, '11+ track arrangements billed at the mixing difference'],
         zh: ['A&R 咨询 · 曲序设计', '人声录音1首 × 8（各 3 小时，专属工程师）', '混音 ≤10轨 × 8（各含2次修改）', '专辑母带 × 8（全专辑音色·响度统一）', '数字发行登记（Melon·Spotify·Apple Music·YouTube Music）', `发行宣传 — 面向韩国音乐媒体及海外媒体·电台·歌单策展人推介`, `比制作单项合计 ${albumLineItemTotalIntl} 便宜约 20%`, '11轨以上编制按混音差额另计'],
         es: ['Consultoría A&R y secuenciación del tracklist', 'Grabación vocal 1 canción × 8 (3h cada una, ingeniero dedicado)', 'Mezcla ≤10 pistas × 8 (2 revisiones cada una)', 'Masterización de álbum × 8 (tono y loudness unificados)', 'Distribución digital (Melon, Spotify, Apple Music, YouTube Music)', `Promoción de lanzamiento — envío a medios musicales coreanos, medios internacionales, radios y curadores de playlists`, `~20% de descuento sobre la suma de producción ${albumLineItemTotalIntl}`, 'Arreglos de 11+ pistas se facturan por la diferencia de mezcla'],

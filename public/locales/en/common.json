@@ -398,7 +398,7 @@
       "items": [
         {
           "q": "How much does recording cost?",
-          "a": "A one-song vocal package (3 hours) is {{vocalPackage}}; hourly recording is {{recordingHourly}} per hour with a 2-hour minimum. {{vatNotice}}"
+          "a": "A 3-hour vocal package is {{vocalPackage}} (any number of songs); hourly recording is {{recordingHourly}} per hour with a 2-hour minimum. {{vatNotice}}"
         },
         {
           "q": "How much do mixing and mastering cost?",
@@ -1040,7 +1040,7 @@
     "cta": {
       "recording": {
         "title": "Considering vocal recording or a wedding song?",
-        "descriptionLine1": "Vocal session ₩250,000 (3 hours, 1 song) · Wedding-song package ₩350,000.",
+        "descriptionLine1": "Vocal session ₩250,000 (3 hours, any number of songs) · Wedding-song package ₩350,000.",
         "descriptionLine2": "A dedicated engineer guides directing, take selection, and mixing.",
         "primaryText": "View Recording Service",
         "secondaryText": "Inquiry",
@@ -1375,7 +1375,7 @@
   "recording": {
     "seo": {
       "title": "Recording Studio Rental — Yeonsinnae Vocal Recording | Studio NOL",
-      "description": "Recording studio in Yeonsinnae, Eunpyeong-gu, Seoul. Vocal recording from ₩250,000/song, hourly rental ₩100,000. A dedicated engineer runs every session. Book demo, single, album or cover recording.",
+      "description": "Recording studio in Yeonsinnae, Eunpyeong-gu, Seoul. Vocal recording ₩250,000 for 3 hours (any number of songs), hourly rental ₩100,000. A dedicated engineer runs every session. Book demo, single, album or cover recording.",
       "keywords": "recording studio, recording studio rental, vocal recording, recording studio Seoul, Yeonsinnae recording studio, demo recording, hourly recording, English-speaking recording studio Seoul"
     },
     "hero": {
@@ -1390,7 +1390,7 @@
       "items": [
         {
           "q": "How much does recording cost?",
-          "a": "Vocal recording for one song is ₩250,000 (based on 3 hours). Hourly rental is ₩100,000 (2-hour minimum). Day Lock is ₩350,000 for 4 hours or ₩650,000 for 8 hours. All prices include VAT."
+          "a": "A 3-hour vocal recording session is ₩250,000, however many songs you record. Hourly rental is ₩100,000 (2-hour minimum). Day Lock is ₩350,000 for 4 hours or ₩650,000 for 8 hours. All prices include VAT."
         },
         {
           "q": "Can I rent just the room without an engineer?",
@@ -1474,7 +1474,11 @@
       "items": [
         {
           "q": "How much is studio rental?",
-          "a": "The vocal one-song package is ₩250,000 (3 hours, including a dedicated engineer, directing and basic editing). If you only need it by the hour, that's ₩100,000/hour (2-hour minimum); for longer album work Day Lock is ₩350,000 for 4 hours or ₩650,000 for 8 hours. All prices include VAT."
+          "a": "The 3-hour vocal package is ₩250,000 (including a dedicated engineer, directing and basic editing), and within those 3 hours the price is the same however many songs you record. If you only need it by the hour, that's ₩100,000/hour (2-hour minimum); for longer album work Day Lock is ₩350,000 for 4 hours or ₩650,000 for 8 hours. All prices include VAT."
+        },
+        {
+          "q": "Do you charge per song?",
+          "a": "No — vocal recording is sold as a 3-hour block for ₩250,000. Record two or three songs in that time and the price stays the same, and it stays the same if you finish early. One song usually fits comfortably in 3 hours. Beyond 3 hours, ₩100,000 per hour is added; for many songs over a long day, Day Lock (4 or 8 hours) costs less."
         },
         {
           "q": "Is it OK if it's my first time recording?",
@@ -1543,7 +1547,7 @@
           "Cost",
           "No extra cost once you own the gear",
           "Usually a higher hourly rate",
-          "One vocal song {{vocal}} (3 hours) · {{hourly}} per hour"
+          "3-hour vocal session {{vocal}} · {{hourly}} per hour"
         ],
         [
           "What comes next",

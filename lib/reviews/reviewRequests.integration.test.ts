@@ -205,7 +205,7 @@ describe('발송', () => {
   it('메일에는 구글·네이버 링크가 있고 혜택이나 별점 유도는 없다', () => {
     const mail = buildReviewRequestEmail({
       kind: 'session', refId: 'r', orderId: 'o', customerName: '홍길동', customerEmail: 'a@b.kr',
-      serviceLabel: '보컬 녹음 1프로', dateLabel: '2026-10-04', endedAt: new Date('2026-10-04T06:00:00Z'),
+      serviceLabel: '보컬 녹음 3시간', dateLabel: '2026-10-04', endedAt: new Date('2026-10-04T06:00:00Z'),
     });
     expect(mail.text).toContain('https://g.page/r/');
     expect(mail.text).toContain('naver.me');

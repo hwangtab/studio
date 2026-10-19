@@ -28,10 +28,10 @@ beforeEach(async () => {
 const now = new Date('2026-10-15T03:00:00Z'); // KST 12:00 10/15
 
 describe('validatePaymentLinkInput', () => {
-  const ok = { itemName: ' 보컬 녹음 1프로 ', totalAmount: 250000, expiresOn: '2026-10-17', memo: ' 김준호님 ' };
+  const ok = { itemName: ' 보컬 녹음 3시간 ', totalAmount: 250000, expiresOn: '2026-10-17', memo: ' 김준호님 ' };
 
   it('이름·메모는 다듬고 금액은 부가세 포함 정수로 받는다', () => {
-    expect(validatePaymentLinkInput(ok, now)).toEqual({ ok: true, value: { itemName: '보컬 녹음 1프로', totalAmount: 250000, expiresOn: '2026-10-17', memo: '김준호님', sessionAt: null, sessionHours: null, blockSlot: false } });
+    expect(validatePaymentLinkInput(ok, now)).toEqual({ ok: true, value: { itemName: '보컬 녹음 3시간', totalAmount: 250000, expiresOn: '2026-10-17', memo: '김준호님', sessionAt: null, sessionHours: null, blockSlot: false } });
     expect(validatePaymentLinkInput({ ...ok, totalAmount: '250000', expiresOn: '', memo: '' }, now)).toMatchObject({ ok: true, value: { totalAmount: 250000, expiresOn: null, memo: null, sessionAt: null, sessionHours: null, blockSlot: false } });
   });
 
@@ -83,9 +83,9 @@ describe('이용 일시 입력 검증', () => {
 
 describe('발급·조회·닫기', () => {
   it('만든 링크는 바로 열린다 — slug는 24자리 hex, 금액·이름은 저장한 값 그대로', async () => {
-    const { slug } = await createPaymentLink({ itemName: '보컬 녹음 1프로', totalAmount: 250000, expiresOn: null, memo: null, sessionAt: null, sessionHours: null, blockSlot: false });
+    const { slug } = await createPaymentLink({ itemName: '보컬 녹음 3시간', totalAmount: 250000, expiresOn: null, memo: null, sessionAt: null, sessionHours: null, blockSlot: false });
     expect(slug).toMatch(/^[0-9a-f]{24}$/);
-    expect(await findPaymentLink(slug, now)).toEqual({ itemName: '보컬 녹음 1프로', totalAmount: 250000 });
+    expect(await findPaymentLink(slug, now)).toEqual({ itemName: '보컬 녹음 3시간', totalAmount: 250000 });
   });
 
   it('만료일 당일 끝까지 열리고 다음 날부터 닫힌다(KST)', async () => {
@@ -138,7 +138,7 @@ describe('옛 파일 링크와의 호환', () => {
 
 describe('이용 일시·슬롯 차단(0062)', () => {
   const sessionAt = Math.floor(new Date('2026-10-17T02:00:00Z').getTime() / 1000); // KST 10/17 11:00
-  const withSession = { itemName: '보컬 녹음 1프로', totalAmount: 250000, expiresOn: null, memo: '김준호님', sessionAt, sessionHours: 3, blockSlot: true };
+  const withSession = { itemName: '보컬 녹음 3시간', totalAmount: 250000, expiresOn: null, memo: '김준호님', sessionAt, sessionHours: 3, blockSlot: true };
 
   it('이용 일시가 있으면 같은 시각의 예약 불가 블록(녹음실)이 함께 만들어지고 링크가 그 id를 안다', async () => {
     const { slug, blockId } = await createPaymentLink(withSession);

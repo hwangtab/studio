@@ -370,7 +370,7 @@
       "items": [
         {
           "q": "Yozib olish qancha turadi?",
-          "a": "Bitta qo'shiq uchun vokal paketi (3 soat) — {{vocalPackage}}; soatlik yozuv — soatiga {{recordingHourly}}, eng kami 2 soat. {{vatNotice}}"
+          "a": "3 soatlik vokal paketi — {{vocalPackage}} (qo'shiqlar soni cheklanmagan); soatlik yozuv — soatiga {{recordingHourly}}, eng kami 2 soat. {{vatNotice}}"
         },
         {
           "q": "Miks va mastering qancha turadi?",
@@ -1017,7 +1017,7 @@
     "cta": {
       "recording": {
         "title": "Vokal yozish yoki to'y qo'shig'ini o'ylayapsizmi?",
-        "descriptionLine1": "Vokal sessiyasi ₩250,000 (3 soat, 1 qo'shiq) · To'y qo'shig'i to'liq paketi ₩350,000.",
+        "descriptionLine1": "Vokal sessiyasi ₩250,000 (3 soat, qo'shiqlar soni cheklanmagan) · To'y qo'shig'i to'liq paketi ₩350,000.",
         "descriptionLine2": "Mas'ul muhandis rejissyorlik, take tanlash va miks bo'yicha hamkorlik qiladi.",
         "primaryText": "Yozib olish xizmatini ko'rish",
         "secondaryText": "So'rov",
@@ -1347,7 +1347,7 @@
   "recording": {
     "seo": {
       "title": "Ovoz yozish studiyasi ijarasi — Yeonsinnae vokal yozuvi | Studio NOL",
-      "description": "Seul, Eunpyeong-gu, Yeonsinnae'dagi yozuv studiyasi. Vokal yozuvi ₩250,000/qo'shiqdan, soatlik ijara ₩100,000. Har bir seansni maxsus muhandis boshqaradi. Demo, singl, albom yoki cover yozuvini bron qiling.",
+      "description": "Seul, Eunpyeong-gu, Yeonsinnae'dagi yozuv studiyasi. Vokal yozuvi 3 soat uchun ₩250,000 (qo'shiqlar soni cheklanmagan), soatlik ijara ₩100,000. Har bir seansni maxsus muhandis boshqaradi. Demo, singl, albom yoki cover yozuvini bron qiling.",
       "keywords": "yozuv studiyasi, yozuv studiyasi ijarasi, vokal yozuvi, Seul yozuv studiyasi, Yeonsinnae yozuv studiyasi, demo yozuvi, soatlik yozuv"
     },
     "hero": {
@@ -1362,7 +1362,7 @@
       "items": [
         {
           "q": "Yozuv qancha turadi?",
-          "a": "Bitta qo'shiq vokal yozuvi ₩250,000 (3 soat asosida). Soatlik ijara ₩100,000 (kamida 2 soat). Day Lock 4 soat uchun ₩350,000 yoki 8 soat uchun ₩650,000. Barcha narxlar QQS bilan."
+          "a": "3 soatlik vokal yozuvi ₩250,000 — nechta qo'shiq yozsangiz ham. Soatlik ijara ₩100,000 (kamida 2 soat). Day Lock 4 soat uchun ₩350,000 yoki 8 soat uchun ₩650,000. Barcha narxlar QQS bilan."
         },
         {
           "q": "Muhandissiz faqat xonani ijaraga olsam bo'ladimi?",
@@ -1446,7 +1446,11 @@
       "items": [
         {
           "q": "Studiya ijarasi qancha turadi?",
-          "a": "Bitta qo'shiq vokal paketi ₩250,000 (3 soat, maxsus muhandis, rejissyorlik va asosiy tahrirlash bilan). Agar faqat soatbay kerak bo'lsa, ₩100,000/soat (kamida 2 soat); uzoq albom ishlari uchun Day Lock 4 soat ₩350,000 yoki 8 soat ₩650,000. Barchasi QQS bilan."
+          "a": "3 soatlik vokal paketi ₩250,000 (maxsus muhandis, rejissyorlik va asosiy tahrirlash bilan), shu 3 soat ichida nechta qo'shiq yozsangiz ham narx bir xil. Agar faqat soatbay kerak bo'lsa, ₩100,000/soat (kamida 2 soat); uzoq albom ishlari uchun Day Lock 4 soat ₩350,000 yoki 8 soat ₩650,000. Barcha narxlar QQS bilan."
+        },
+        {
+          "q": "Har bir qo'shiq uchun alohida narx bormi?",
+          "a": "Yo'q — vokal yozuvi 3 soatlik blok sifatida ₩250,000 ga sotiladi. Shu vaqt ichida 2–3 qo'shiq yozsangiz ham, erta tugasa ham narx o'zgarmaydi. Odatda 1 qo'shiqqa 3 soat bemalol yetadi. 3 soatdan oshsa, har soatiga ₩100,000 qo'shiladi; uzoq kunda ko'p qo'shiq yozsangiz, Day Lock (4 yoki 8 soat) arzonroq."
         },
         {
           "q": "Birinchi marta yolg'iz yozsam bo'ladimi?",
@@ -1515,7 +1519,7 @@
           "Xarajat",
           "Uskuna olingach qo'shimcha xarajat yo'q",
           "Soatbay narx odatda yuqoriroq",
-          "Bitta vokal qo'shiq {{vocal}} (3 soat) · soatiga {{hourly}}"
+          "3 soatlik vokal sessiyasi {{vocal}} · soatiga {{hourly}}"
         ],
         [
           "Keyingi ishlar",

@@ -30,7 +30,7 @@ describe('QuoteWizard', () => {
     expect(mockMicro).toHaveBeenCalledWith('micro_quote_start', expect.objectContaining({ component: 'QuoteWizard' }));
   });
 
-  it('녹음 1곡이면 1프로 가격과 예약 링크가 나오고, 카톡 클릭은 견적 코드와 함께 리드로 잡힌다', () => {
+  it('녹음 1곡이면 3시간 패키지 가격과 예약 링크가 나오고, 카톡 클릭은 견적 코드와 함께 리드로 잡힌다', () => {
     render(<QuoteWizard kakaoUrl={KAKAO} />);
     pick('보컬·악기 녹음');
     pick('1곡');

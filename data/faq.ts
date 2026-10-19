@@ -30,7 +30,7 @@ const faqData = {
     },
     {
       question: '녹음실 이용 요금은 얼마인가요?',
-      answer: `보컬 녹음 1프로(1곡 패키지)는 250,000원이며 3시간 기준 전담 엔지니어 진행이에요. 시간당 레코딩은 100,000원(최소 2시간, 성우·악기 추가·보정 등), Day Lock은 4시간 ${formatPriceAmount(DAY_LOCK_4H_PRICE)}원, 8시간 ${formatPriceAmount(DAY_LOCK_8H_PRICE)}원으로 장시간 앨범 작업에 적합해요.`,
+      answer: `보컬 녹음 3시간은 250,000원이고 전담 엔지니어가 진행해요. 곡 단위가 아니라 3시간 단위라 그 안에 2~3곡을 녹음해도, 일찍 끝나도 금액이 같아요. 시간당 레코딩은 100,000원(최소 2시간, 성우·악기 추가·보정 등), Day Lock은 4시간 ${formatPriceAmount(DAY_LOCK_4H_PRICE)}원, 8시간 ${formatPriceAmount(DAY_LOCK_8H_PRICE)}원으로 장시간 앨범 작업에 적합해요.`,
     },
     {
       question: '믹싱 서비스 가격은 어떻게 되나요?',

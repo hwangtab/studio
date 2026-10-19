@@ -156,7 +156,7 @@ rewards:
 
 describe('BookingWizard — 결제수단 목록', () => {
   const PRODUCT: SessionProduct = {
-    id: 'recording-pro', service: 'recording', nameKo: '보컬 녹음 1프로', kind: 'package', unitAmount: 250000, sessionHours: 3,
+    id: 'recording-pro', service: 'recording', nameKo: '보컬 녹음 3시간', kind: 'package', unitAmount: 250000, sessionHours: 3,
   };
   beforeEach(() => {
     global.fetch = jest.fn(async (input: RequestInfo | URL) => {

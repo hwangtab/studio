@@ -370,7 +370,7 @@
       "items": [
         {
           "q": "Chi phí thu âm là bao nhiêu?",
-          "a": "Gói thu âm giọng hát 1 bài (3 giờ) là {{vocalPackage}}; thu âm theo giờ là {{recordingHourly}}/giờ, tối thiểu 2 giờ. {{vatNotice}}"
+          "a": "Gói thu âm giọng hát 3 giờ là {{vocalPackage}} (không giới hạn số bài); thu âm theo giờ là {{recordingHourly}}/giờ, tối thiểu 2 giờ. {{vatNotice}}"
         },
         {
           "q": "Chi phí mixing và mastering là bao nhiêu?",
@@ -1017,7 +1017,7 @@
     "cta": {
       "recording": {
         "title": "Đang cân nhắc thu âm vocal hoặc bài hát đám cưới?",
-        "descriptionLine1": "Buổi thu vocal ₩250,000 (3 giờ, 1 bài) · Trọn gói bài hát đám cưới ₩350,000.",
+        "descriptionLine1": "Buổi thu vocal ₩250,000 (3 giờ, không giới hạn số bài) · Trọn gói bài hát đám cưới ₩350,000.",
         "descriptionLine2": "Kỹ sư chuyên trách hướng dẫn, chọn take và mix.",
         "primaryText": "Xem dịch vụ thu âm",
         "secondaryText": "Liên hệ",
@@ -1347,7 +1347,7 @@
   "recording": {
     "seo": {
       "title": "Cho thuê phòng thu — Thu âm vocal tại Yeonsinnae | Studio NOL",
-      "description": "Phòng thu tại Yeonsinnae, Eunpyeong-gu, Seoul. Thu âm vocal từ ₩250,000/bài, thuê theo giờ ₩100,000. Kỹ sư chuyên trách điều hành mỗi buổi thu. Đặt lịch thu demo, single, album hoặc cover.",
+      "description": "Phòng thu tại Yeonsinnae, Eunpyeong-gu, Seoul. Thu âm vocal ₩250,000 cho 3 giờ (không giới hạn số bài), thuê theo giờ ₩100,000. Kỹ sư chuyên trách điều hành mỗi buổi thu. Đặt lịch thu demo, single, album hoặc cover.",
       "keywords": "phòng thu, cho thuê phòng thu, thu âm vocal, phòng thu Seoul, phòng thu Yeonsinnae, thu demo, thu âm theo giờ"
     },
     "hero": {
@@ -1362,7 +1362,7 @@
       "items": [
         {
           "q": "Chi phí thu âm là bao nhiêu?",
-          "a": "Thu âm vocal một bài là ₩250,000 (cơ sở 3 giờ). Thuê theo giờ là ₩100,000 (tối thiểu 2 giờ). Day Lock là ₩350,000 cho 4 giờ hoặc ₩650,000 cho 8 giờ. Tất cả giá đã bao gồm VAT."
+          "a": "Buổi thu vocal 3 giờ là ₩250,000, thu bao nhiêu bài cũng vậy. Thuê theo giờ là ₩100,000 (tối thiểu 2 giờ). Day Lock là ₩350,000 cho 4 giờ hoặc ₩650,000 cho 8 giờ. Tất cả giá đã bao gồm VAT."
         },
         {
           "q": "Tôi có thể thuê phòng mà không cần kỹ sư không?",
@@ -1446,7 +1446,11 @@
       "items": [
         {
           "q": "Thuê phòng thu bao nhiêu tiền?",
-          "a": "Gói vocal một bài là ₩250,000 (3 giờ, bao gồm kỹ sư chuyên trách, đạo diễn và chỉnh sửa cơ bản). Nếu chỉ cần theo giờ thì ₩100,000/giờ (tối thiểu 2 giờ); với công việc album dài, Day Lock là ₩350,000 cho 4 giờ hoặc ₩650,000 cho 8 giờ. Tất cả giá đã gồm VAT."
+          "a": "Gói vocal 3 giờ là ₩250,000 (bao gồm kỹ sư chuyên trách, đạo diễn và chỉnh sửa cơ bản), trong 3 giờ đó thu bao nhiêu bài giá vẫn như nhau. Nếu chỉ cần theo giờ thì ₩100,000/giờ (tối thiểu 2 giờ); với công việc album dài, Day Lock là ₩350,000 cho 4 giờ hoặc ₩650,000 cho 8 giờ. Tất cả giá đã bao gồm VAT."
+        },
+        {
+          "q": "Có tính giá theo từng bài không?",
+          "a": "Không — thu âm vocal được bán theo khối 3 giờ với giá ₩250,000. Thu 2–3 bài trong thời gian đó giá vẫn giữ nguyên, xong sớm cũng vậy. Thường 1 bài là đủ trong 3 giờ. Quá 3 giờ cộng thêm ₩100,000 mỗi giờ; nếu thu nhiều bài trong một ngày dài, Day Lock (4 hoặc 8 giờ) rẻ hơn."
         },
         {
           "q": "Lần đầu thu âm một mình có sao không?",
@@ -1515,7 +1519,7 @@
           "Chi phí",
           "Không tốn thêm sau khi đã có thiết bị",
           "Giá theo giờ thường cao hơn",
-          "Một bài giọng hát {{vocal}} (3 giờ) · {{hourly}} mỗi giờ"
+          "Buổi thu vocal 3 giờ {{vocal}} · {{hourly}} mỗi giờ"
         ],
         [
           "Công việc tiếp theo",

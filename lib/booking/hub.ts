@@ -78,7 +78,7 @@ export const buildBookingHub = (): BookingHubGroup[] => {
       priceNote: '부가세 포함',
       href: '/ko/booking/recording',
       entries: [
-        sessionEntry('recording-pro', '1곡 · 전담 엔지니어 포함'),
+        sessionEntry('recording-pro', '곡 수 상관없이 · 전담 엔지니어 포함'),
         sessionEntry('recording-hourly', `최소 ${getProduct('recording-hourly')?.minHours}시간부터 · 보정·악기 추가에도`, '시간당 녹음'),
         sessionEntry('recording-daylock-4h', '긴 작업을 묶은 고정 시간 패키지'),
         sessionEntry('recording-daylock-8h', '긴 작업을 묶은 고정 시간 패키지'),
