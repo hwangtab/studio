@@ -28,26 +28,26 @@ const top = sh('git', ['rev-parse', '--show-toplevel']);
 if (path.resolve(top) !== path.resolve(process.cwd())) fail(`저장소 루트(${top})에서 실행할 것.`);
 const branch = sh('git', ['rev-parse', '--abbrev-ref', 'HEAD']);
 if (branch !== 'main') fail(`현재 브랜치가 '${branch}'다 — 마이그레이션은 main 병합본에서만 적용한다(브랜치의 when이 운영 max가 되면 뒤의 main 마이그레이션이 영영 건너뛰어진다).`);
-sh('git', ['fetch', '--quiet', 'origin', 'main']);
+try { sh('git', ['fetch', '--quiet', 'origin', 'main']); } catch (error) { fail(`origin/main을 가져오지 못했다(네트워크?): ${error instanceof Error ? error.message.split('\n')[0] : String(error)}`); }
 const head = sh('git', ['rev-parse', 'HEAD']);
 const originMain = sh('git', ['rev-parse', 'origin/main']);
 if (head !== originMain) fail(`HEAD(${head.slice(0, 10)})가 origin/main(${originMain.slice(0, 10)})과 다르다 — git pull 뒤 다시.`);
 if (sh('git', ['status', '--porcelain', '--', 'drizzle/migrations']) !== '') fail('drizzle/migrations에 커밋되지 않은 변경이 있다.');
 
-// 2) 토큰은 지금 만든다(1일 만료). .env.local의 TURSO_*는 쓰지 않는다.
-let url; let token;
+// 2) 대상 확인·대조는 CLI 세션으로만 한다(토큰 불필요). 토큰은 실제 적용 직전(--yes)에만 만든다 — 미리 보기마다
+//    운영 전권 토큰이 하나씩 생기지 않게.
+let url; let shellOut;
 try {
   url = sh(TURSO, ['db', 'show', DB_NAME, '--url']);
-  token = sh(TURSO, ['db', 'tokens', 'create', DB_NAME, '-e', '1d']);
+  // turso shell 출력은 표 형식이라 13자리 밀리초 값만 긁는다(created_at은 저널 when과 같은 밀리초).
+  shellOut = sh(TURSO, ['db', 'shell', DB_NAME, 'select created_at from __drizzle_migrations;']);
 } catch (error) {
-  fail(`Turso CLI 실패 — 로그인(~/.turso/turso auth login) 상태를 확인할 것: ${error instanceof Error ? error.message : String(error)}`);
+  fail(`Turso CLI 실패 — 로그인(~/.turso/turso auth login) 상태를 확인할 것: ${error instanceof Error ? error.message.split('\n')[0] : String(error)}`);
 }
 const host = url.replace(/^libsql:\/\//, '');
 
 // 3) 저널 vs 운영 __drizzle_migrations 대조
 const journal = JSON.parse(readFileSync(path.join(top, 'drizzle/migrations/meta/_journal.json'), 'utf8'));
-// turso shell 출력은 표 형식이라 13자리 밀리초 값만 긁는다(created_at은 저널 when과 같은 밀리초).
-const shellOut = sh(TURSO, ['db', 'shell', DB_NAME, 'select created_at from __drizzle_migrations;']);
 const applied = shellOut.match(/\d{13}/g)?.map(Number) ?? [];
 const maxApplied = applied.length ? Math.max(...applied) : 0;
 const pending = journal.entries.filter((e) => !applied.includes(e.when));
@@ -66,7 +66,13 @@ if (willSkip.length) {
 if (willRun.length === 0) { console.log('\n적용할 것이 없다.'); process.exit(0); }
 if (!yes) { console.log('\n위 목록을 적용하려면 --yes 를 붙여 다시 실행.'); process.exit(0); }
 
-// 4) 적용
+// 4) 적용 — 토큰은 여기서만, 1일 만료로 만든다.
+let token;
+try {
+  token = sh(TURSO, ['db', 'tokens', 'create', DB_NAME, '-e', '1d']);
+} catch (error) {
+  fail(`토큰 발급 실패: ${error instanceof Error ? error.message.split('\n')[0] : String(error)}`);
+}
 const r = spawnSync(path.join(top, 'node_modules/.bin/drizzle-kit'), ['migrate'], {
   stdio: 'inherit', env: { ...process.env, TURSO_DATABASE_URL: url, TURSO_AUTH_TOKEN: token },
 });

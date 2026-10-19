@@ -355,16 +355,6 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   const issues: HealthIssue[] = [];
 
   /**
-   * 로컬에 커밋된 마이그레이션이 운영 DB에 아직 적용되지 않은 경우 — 2026-09-21
-   * 사고(셀프 개설 0017~0019가 사흘간 미적용 배포) 재발 방지. 판정 자체는
-   * lib/ops/migrationDrift.ts. env가 없으면 'unknown'을 돌려주는데, 이 화면·크론이
-   * 실행되는 시점엔 이미 getDb() 위 줄이 같은 env로 성공했으므로 여기서 'unknown'이
-   * 나올 일은 없다 — 그래도 값으로 구분해 오해를 막는다.
-   *
-   * 밀린 상태는 이미 공개 경로가 조용히 깨져 있다는 뜻이라(폴백이 있는 경로는 옛 동작으로,
-   * 없는 경로는 500으로) severity는 high로 둔다.
-   */
-  /**
    * 월 입주자(연습실 월세·비상주)의 입금 예정일이 지났는데 입금 기록이 없는 건 — 연체 관리가 입주 관리의 핵심 용도다.
    * 이름·방·일수만 싣는다(연락처 등 개인정보는 메일·화면에 싣지 않는다). 표가 없는 DB(0066 전)에서는 건너뛴다.
    */
@@ -526,6 +516,16 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   return sortBySeverity(issues);
 };
 
+/**
+ * 로컬에 커밋된 마이그레이션이 운영 DB에 아직 적용되지 않은 경우 — 2026-09-21
+ * 사고(셀프 개설 0017~0019가 사흘간 미적용 배포) 재발 방지. 판정 자체는
+ * lib/ops/migrationDrift.ts. env가 없으면 'unknown'을 돌려주는데, 이 화면·크론이
+ * 실행되는 시점엔 이미 getDb() 위 줄이 같은 env로 성공했으므로 여기서 'unknown'이
+ * 나올 일은 없다 — 그래도 값으로 구분해 오해를 막는다.
+ *
+ * 밀린 상태는 이미 공개 경로가 조용히 깨져 있다는 뜻이라(폴백이 있는 경로는 옛 동작으로,
+ * 없는 경로는 500으로) severity는 high로 둔다.
+ */
 const collectMigrationDriftIssue = async (issues: HealthIssue[]): Promise<void> => {
   const migrationDrift = await checkMigrationDrift();
   if (migrationDrift.status === 'drift') {

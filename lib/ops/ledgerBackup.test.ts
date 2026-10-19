@@ -34,7 +34,8 @@ describe('backupLedger', () => {
     mockDb = db;
     await db.run(sql`INSERT INTO orders (id, order_no, type, status, customer_name, customer_email, customer_phone, manage_token, item_amount, vat_amount, total_amount)
       VALUES ('o1','SNB-1','session','paid','홍길동','a@b.c','010','SECRET-MANAGE',100,10,110)`);
-    await db.run(sql`INSERT INTO payments (id, order_id, payment_key) VALUES ('p1','o1','pk-1')`);
+    await db.run(sql`INSERT INTO payments (id, order_id, payment_key, raw_response) VALUES ('p1','o1','pk-1','{"paymentKey":"pk-1","secret":"VA-SECRET","totalAmount":110}')`);
+    await db.run(sql`INSERT INTO bookings (id, order_id, product_id, service_type, start_at, end_at, duration_hours, status) VALUES ('b1','o1','recording-pro','recording',1760000000,1760003600,1,'confirmed')`);
     await db.run(sql`INSERT INTO subscriptions (id, kind, customer_name, customer_phone, customer_email, customer_key, manage_token, item_amount, vat_amount, total_amount, billing_day, status)
       VALUES ('s1','lesson','김수강','010','s@b.c','CUSTOMER-SECRET','MANAGE-SECRET',300000,30000,330000,5,'active')`);
     await db.run(sql`INSERT INTO billing_keys (id, subscription_id, billing_key, card_company, raw_response) VALUES ('bk1','s1','BILLING-SECRET','현대','{"billingKey":"BILLING-SECRET"}')`);
@@ -49,6 +50,8 @@ describe('backupLedger', () => {
     const body = JSON.parse(gunzipSync(put.mock.calls[0][1] as Buffer).toString('utf8')) as { tables: Record<string, Array<Record<string, unknown>>> };
     expect(Object.keys(body.tables).sort()).toEqual([...LEDGER_BACKUP_TABLES].sort());
     expect(body.tables.orders[0]).toMatchObject({ order_no: 'SNB-1', customer_name: '홍길동' });
+    expect(body.tables.bookings).toHaveLength(1); // 예약의 날짜·상품 없이는 결제 원장만으로 복구할 수 없다
+    expect(body.tables.payments[0].raw_response).toContain('"paymentKey":"pk-1"');
     expect(JSON.stringify(body)).not.toContain('SECRET');
     expect(body.tables.billing_keys[0]).toMatchObject({ card_company: '현대' });
     expect(body.tables.billing_keys[0]).not.toHaveProperty('billing_key');
@@ -64,8 +67,16 @@ describe('backupLedger', () => {
     ] });
     const result = await backupLedger(NOW);
     expect(result.removedBackups).toBe(1);
+    expect(result.cleanupFailures).toBe(0);
     expect(del).toHaveBeenCalledTimes(1);
     expect(del).toHaveBeenCalledWith('u-old');
+
+    // 정리가 실패해도 백업은 성공이다 — 던지지 않고 결과에만 적는다.
+    del.mockRejectedValueOnce(new Error('blob del down'));
+    const partial = await backupLedger(NOW);
+    expect(partial).toMatchObject({ removedBackups: 0, cleanupFailures: 1 });
+    list.mockRejectedValueOnce(new Error('blob list down'));
+    expect(await backupLedger(NOW)).toMatchObject({ removedBackups: 0, cleanupFailures: 1 });
 
     del.mockClear();
     put.mockRejectedValueOnce(new Error('blob down'));
