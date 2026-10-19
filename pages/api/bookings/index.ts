@@ -14,7 +14,10 @@ import { BANK_DEPOSIT_BLOCK_MESSAGES, bankDepositBlockReason, isCheckoutPaymentM
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
-  if (req.method !== 'POST') return res.status(405).json({ ok: false });
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
+    return res.status(405).json({ ok: false });
+  }
 
   const ip = getClientIp(req) ?? 'unknown';
   if (!(await consumeRateLimit(`booking_create:ip:${ip}`, 10, 3600)))

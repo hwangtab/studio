@@ -114,14 +114,21 @@ describe('동시 요청·잘못된 값 (4차 감사)', () => {
   });
 
   it('퇴실한 두 사람을 동시에 되돌려도 활성은 하나다', async () => {
-    const a = await createTenancy(input({ tenantName: 'A' }));
+    const a = await createTenancy(input({ tenantName: 'A', startDate: '2026-09-01' }));
     if (!a.ok) throw new Error(a.message);
     await endTenancy(a.id, '2026-10-01');
-    const b = await createTenancy(input({ tenantName: 'B' }));
+    const b = await createTenancy(input({ tenantName: 'B', startDate: '2026-09-01' }));
     if (!b.ok) throw new Error(b.message);
     await endTenancy(b.id, '2026-10-02');
     const [x, y] = await Promise.all([reopenTenancy(a.id), reopenTenancy(b.id)]);
     expect([x.ok, y.ok].filter(Boolean)).toHaveLength(1);
+  });
+
+  it('퇴실일이 입주 시작일보다 앞서면 거절한다(파기 크론이 입금 이력까지 지우는 오타 방지)', async () => {
+    const r = await createTenancy(input({ startDate: '2026-09-01' }));
+    if (!r.ok) throw new Error(r.message);
+    expect(await endTenancy(r.id, '2026-08-31')).toMatchObject({ ok: false });
+    expect(await endTenancy(r.id, '2026-09-01')).toMatchObject({ ok: true });
   });
 
   it('말이 안 되는 날짜(0001년·9999년·2020년 이전)는 입금·퇴실에서 거절한다', async () => {

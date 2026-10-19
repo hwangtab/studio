@@ -44,7 +44,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const message =
         `${RETENTION_YEARS}년이 지난 계약의 개인정보 파기가 일부 실패했습니다.\n\n` +
         `연습실 계약: 성공 ${result.purged}건 / 실패 ${result.failed}건\n` +
-        `제작 계약: 성공 ${production.purged}건 / 실패 ${production.failed}건\n\n` +
+        `제작 계약: 성공 ${production.purged}건 / 실패 ${production.failed}건\n` +
+        `월 입주 기록: ${tenancy === null ? '실패(표·연결 확인 필요)' : `개인정보 ${tenancy.personalCleared}건 비움 / 기록 ${tenancy.recordsDeleted}건 삭제`}\n\n` +
         '계약서 제12조로 약속한 파기이므로 확인이 필요합니다. ' +
         '다음 주기에 다시 시도하지만, 반복되면 Turso와 Blob 설정을 확인해 주세요.';
 
