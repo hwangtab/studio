@@ -3,25 +3,33 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getClientIp } from '../../../lib/contracts/client-ip';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { sendSubscriptionCancelledEmail, sendSubscriptionOperatorAlert } from '../../../lib/billing/email';
-import { cancelSubscription, findSubscriptionForManage, firstPaidAtOf } from '../../../lib/billing/service';
+import { cancelSubscription, findSubscriptionForManage, firstPaidAtOf, paidCycleCountOf } from '../../../lib/billing/service';
 
-/** 청약철회 기간 — 첫 결제 후 7일(lib/booking/refund-policy.ts ARTIST_SUPPORT_REFUND_POLICY_LINES). */
-const WITHDRAWAL_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
+/** 청약철회 기간 — 첫 결제 후 7일(lib/booking/refund-policy.ts ARTIST_SUPPORT_REFUND_POLICY_LINES). KST 달력 날짜로 센다. */
+const WITHDRAWAL_WINDOW_DAYS = 7;
+const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
+const kstDayNumber = (d: Date): number => Math.floor((d.getTime() + KST_OFFSET_MS) / (24 * 60 * 60 * 1000));
+const kstDateLabel = (d: Date): string => new Date(d.getTime() + KST_OFFSET_MS).toISOString().slice(0, 10);
 
 /**
  * 해지 시점의 환불 판정 힌트 — 환불은 자동 실행이 아니라 관리자 화면의 회차 환불이므로(refund-policy.ts),
- * 운영자가 약속을 이행할 트리거는 이 알림뿐이다. 고객 메일에도 같은 사실을 한 줄 적는다.
+ * 운영자가 약속을 이행할 트리거는 이 알림뿐이다. 고객 메일에도 같은 사실을 한 줄 적는다(정책 문구 밖의 기한은 약속하지 않는다).
+ * "7일 이내"는 첫날을 세지 않는 보통의 날짜 계산 — 결제일 + 7일의 KST 24:00까지다(168시간으로 자르면 하루 가까이 먼저 끊긴다).
  */
-const refundHint = (kind: string, firstPaidAt: Date | null, now: Date): { operator: string; customer?: string } => {
+const refundHint = (kind: string, firstPaidAt: Date | null, paidCycles: number, now: Date): { operator: string; customer?: string } => {
   if (kind === 'artist-support') {
-    if (firstPaidAt && now.getTime() - firstPaidAt.getTime() <= WITHDRAWAL_WINDOW_MS)
+    if (firstPaidAt && kstDayNumber(now) - kstDayNumber(firstPaidAt) <= WITHDRAWAL_WINDOW_DAYS)
       return {
-        operator: `첫 결제(${firstPaidAt.toISOString().slice(0, 10)}) 후 7일 이내 해지 — 전액 환불 대상. 관리자 > 구독 상세에서 회차를 환불해 주세요.`,
-        customer: '첫 결제 후 7일 이내 해지라 결제하신 금액은 전액 환불해 드려요. 영업일 기준 3일 안에 처리돼요.',
+        operator: `첫 결제(${kstDateLabel(firstPaidAt)}) 후 7일 이내 해지 — 전액 환불 대상. 관리자 > 구독 상세에서 회차를 환불해 주세요.`,
+        customer: '첫 결제 후 7일 이내 해지라 결제하신 금액은 전액 환불해 드려요.',
       };
     return { operator: '첫 결제 후 7일이 지난 해지 — 남은 기간 일할 환급은 고객 요청 시 처리.' };
   }
-  if (kind === 'lesson') return { operator: '첫 수업 전 해지면 전액 환불 대상 — 수업 시작 여부를 확인해 주세요.' };
+  if (kind === 'lesson') {
+    return paidCycles <= 1
+      ? { operator: '첫 수업 전 해지면 전액 환불 대상 — 수업 시작 여부를 확인해 주세요.' }
+      : { operator: `결제 ${paidCycles}회차 뒤 해지 — 잔여 회차 환불은 상담으로 안내.` };
+  }
   return { operator: '연습실은 임대차 계약서(제2조·제4조·제9조)에 따릅니다.' };
 };
 
@@ -60,7 +68,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.error('[subscriptions/cancel] 첫 결제 시각 조회 실패 — 환불 힌트 없이 알린다', { id, error });
     return null;
   });
-  const hint = refundHint(result.subscription.kind, firstPaidAt, now);
+  const paidCycles = await paidCycleCountOf(id).catch(() => 0);
+  const hint = refundHint(result.subscription.kind, firstPaidAt, paidCycles, now);
   const emailError = await sendSubscriptionCancelledEmail(result.subscription, { endsAt, refundNote: hint.customer });
   if (emailError) console.error('[subscriptions/cancel] 해지 확인 메일 발송 실패', { id, emailError });
   // 셀프 해지는 운영자가 알아야 환불 약속(청약철회·첫 수업 전)을 지킬 수 있다 — 관리자 해지·계약 종료와 같은 알림.

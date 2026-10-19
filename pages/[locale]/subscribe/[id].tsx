@@ -1,3 +1,4 @@
+import { resumeChargeLabel } from '../../../lib/billing/amounts';
 /* eslint-disable @next/next/no-html-link-for-pages --
  * private 페이지(URL에 관리 토큰·paymentKey·orderId가 실린다)의 이탈 링크는 next/link가
  * 아니라 문서 이동이어야 한다. 클라 전환으로 공개 페이지에 나갔다 뒤로가기 하면, 그 사이
@@ -90,7 +91,7 @@ function SubscribeSetupOk(props: OkProps) {
           <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">
             {setupMode === 'initial'
               ? status === 'paused'
-                ? '카드 등록과 동시에 밀린 달치가 결제되고 정기결제가 다시 시작돼요.'
+                ? `카드 등록과 동시에 ${resumeChargeLabel(kind)}가 결제되고 정기결제가 다시 시작돼요.`
                 : '카드 등록과 동시에 첫 달치가 결제돼요.'
               : '카드만 교체되며 결제되지 않아요.'}
           </p>

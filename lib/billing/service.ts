@@ -285,7 +285,7 @@ export type CompleteCardSetupResult =
   | { ok: true; status: SubscriptionStatus; charged: boolean; paymentKey?: string; resumed?: boolean }
   | {
       ok: false;
-      code: 'not_found' | 'used' | 'expired' | 'invalid_state' | 'customer_key_mismatch' | 'issue_failed' | 'first_charge_failed';
+      code: 'not_found' | 'used' | 'expired' | 'invalid_state' | 'customer_key_mismatch' | 'issue_failed' | 'first_charge_failed' | 'first_charge_unresolved';
       message: string;
     };
 
@@ -330,7 +330,12 @@ export const completeCardSetup = async (
 
   // setupToken 무효화는 발급 성공 시점에 한다(1회성, 스펙 §9). 첫 결제가 실패해도 되살리지
   // 않는다 — 키는 이미 붙었고, 다시 시도할 사람은 관리자가 새 링크를 내주면 된다.
-  const wasChangeMode = subscription.setupMode === 'change';
+  // 결제 방식은 링크를 만든 순간이 아니라 **등록을 마치는 지금** 상태로 판정한다. 링크 발급 뒤 재시도가 다 실패해 결제 실패
+  // 정지가 됐으면 'change' 링크라도 미납분을 걷고 재개해야 하고(아니면 카드만 바뀐 채 영영 정지), 반대로 'initial' 링크를
+  // 받은 사이 운영자가 재개해 이번 달이 이미 결제됐으면 또 걷지 않는다.
+  const resumesByPayment = subscription.status === 'paused' && subscription.pausedReason === 'payment_failed';
+  const chargesNow = subscription.status === 'pending_card' || resumesByPayment;
+  const wasChangeMode = !chargesNow;
   await db
     .update(subscriptions)
     .set({ billingKeyId: key.id, setupToken: null, setupTokenExpiresAt: null, setupMode: 'initial', updatedAt: now })
@@ -354,6 +359,14 @@ export const completeCardSetup = async (
 
   const charged = await chargeCycle(subscription.id, now, { reason: 'first' });
   if (!charged.ok) {
+    if (charged.unresolved || charged.held) {
+      // 거절이 아니라 응답을 못 받았다 — "다른 카드로"라고 안내하면 고객이 카드를 다시 등록하고, 뒤늦은 승인이 오면 두 번 묶인다.
+      return {
+        ok: false,
+        code: 'first_charge_unresolved',
+        message: '카드는 등록됐고 결제 승인 결과를 확인하는 중이에요. 승인이 확인되면 메일로 알려드려요 — 다른 카드를 다시 등록하지 않으셔도 돼요.',
+      };
+    }
     return {
       ok: false,
       code: 'first_charge_failed',
@@ -373,6 +386,8 @@ export interface ChargeCycleResult {
    * 것이 아니므로 호출부는 고객에게 '결제 실패' 메일을 보내지 말고 운영자에게만 알린다.
    */
   held?: boolean;
+  /** 토스가 응답하지 못했다(NETWORK_ERROR·CONFIG_ERROR·5xx) — 거절이 아니라 승인 여부 미상. orders는 pending으로 남아 재조회 대상. */
+  unresolved?: boolean;
   paymentKey?: string;
   tossCode?: string;
   message?: string;
@@ -607,7 +622,7 @@ export const chargeCycle = async (
     // 첫 결제 실패는 구독이 시작되지 않은 것이다 — 재시도 일정을 걸지 않고 pending_card로
     // 남겨 고객이 다른 카드로 다시 등록하게 한다(스펙 §6).
     if (options.reason === 'first') {
-      return { ok: false, status: subscription.status, tossCode: toss.code, message: toss.message, cycleYm, attempt };
+      return { ok: false, status: subscription.status, tossCode: toss.code, message: toss.message, cycleYm, attempt, ...(isInternalError ? { unresolved: true } : {}) };
     }
 
     /**
@@ -764,6 +779,15 @@ export const firstPaidAtOf = async (subscriptionId: string): Promise<Date | null
     .orderBy(asc(subscriptionPayments.paidAt))
     .limit(1);
   return row?.paidAt ?? null;
+};
+
+/** 결제가 승인된 회차 수 — 셀프 해지 운영자 힌트(레슨 '첫 수업 전 전액 환불')를 첫 결제 뒤에만 붙이는 데 쓴다. */
+export const paidCycleCountOf = async (subscriptionId: string): Promise<number> => {
+  const [row] = await getDb()
+    .select({ n: sql<number>`count(*)` })
+    .from(subscriptionPayments)
+    .where(and(eq(subscriptionPayments.subscriptionId, subscriptionId), eq(subscriptionPayments.status, 'paid')));
+  return Number(row?.n ?? 0);
 };
 
 export const cancelSubscription = async (
@@ -1337,11 +1361,22 @@ const recordDuplicateApproval = async (
         .where(and(eq(subscriptionPayments.id, subscriptionPayment.id), inArray(subscriptionPayments.status, ['pending', 'failed']))),
     ]);
   } catch (error) {
-    console.error('[billing] 같은 달 이중 승인 — 기록 실패, 수동 대사 필요', {
-      orderNo: order.orderNo,
-      paymentKey: payment.paymentKey,
-      error,
-    });
+    // paymentKey가 이미 있으면 다른 실행(형제 웹훅·cron)이 먼저 기록한 것 — 그쪽이 알렸다. 없으면 진짜 기록 실패라 돈이 두 번
+    // 나갔는데 어디에도 드러나지 않는다(회차가 paid가 아니라 헬스체크 이중 paid 점검에도 안 걸린다) — 반드시 사람에게 알린다.
+    let existing: unknown;
+    try { existing = await db.query.payments.findFirst({ where: (t, { eq: is }) => is(t.paymentKey, payment.paymentKey) }); } catch { /* 아래에서 알린다 */ }
+    console.error('[billing] 같은 달 이중 승인 — 기록 실패, 수동 대사 필요', { orderNo: order.orderNo, paymentKey: payment.paymentKey, error });
+    if (!existing) {
+      await sendSubscriptionOperatorAlert(
+        subscription,
+        'duplicate_approval',
+        [
+          `${subscriptionPayment.cycleYm}분이 이미 결제돼 있는데 ${formatPriceAmount(order.totalAmount)}원 승인이 한 번 더 도착했고, 장부 기록까지 실패했어요.`,
+          '토스 콘솔에서 이 결제를 확인해 환불하고, 장부는 수동으로 맞춰 주세요.',
+          `주문번호 ${order.orderNo} / paymentKey ${payment.paymentKey}`,
+        ].join('\n'),
+      );
+    }
     return;
   }
   const notificationError = await sendSubscriptionOperatorAlert(

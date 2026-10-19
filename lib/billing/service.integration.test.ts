@@ -769,6 +769,23 @@ describe('카드 재등록', () => {
     expect(paid.rows.map((r) => r.cycle_ym)).toEqual(['2026-03', '2026-04']); // 실패했던 4월분을 걷었다
   });
 
+  it("링크를 past_due일 때('change') 받았어도 등록을 마칠 때 결제 실패 정지면 미납분을 걷고 재개한다 — 판정은 완료 시점", async () => {
+    const { created } = await activated();
+    chargeBillingKey.mockResolvedValue(chargeFail());
+    await chargeCycle(created.id, new Date('2026-04-05T00:00:00Z'), { reason: 'scheduled' }); // past_due
+    const token = await issueCardChangeToken(created.id, new Date('2026-04-05T01:00:00Z'));
+    if (!token.ok) throw new Error('unreachable');
+    expect(token.setupMode).toBe('change');
+    for (const day of ['2026-04-06', '2026-04-09']) await chargeCycle(created.id, new Date(`${day}T00:00:00Z`), { reason: 'retry' });
+    expect((await findSubscriptionById(created.id))!).toMatchObject({ status: 'paused', pausedReason: 'payment_failed' });
+
+    issueBillingKey.mockResolvedValue(issuedOk('bkey_late'));
+    chargeBillingKey.mockResolvedValue(chargeOk('pay_late'));
+    const sub = (await findSubscriptionById(created.id))!;
+    const setup = await completeCardSetup({ id: created.id, token: token.setupToken, authKey: 'auth_late', customerKey: sub.customerKey }, new Date('2026-04-10T00:00:00Z'));
+    expect(setup).toMatchObject({ ok: true, charged: true, status: 'active', resumed: true });
+  });
+
   it('운영자 정지 구독의 카드 교체는 결제·재개 없이 끝나고 운영자에게 알린다', async () => {
     const { created } = await activated();
     await pauseSubscription(created.id, PAUSE_UNTIL, new Date('2026-04-01T00:00:00Z'));

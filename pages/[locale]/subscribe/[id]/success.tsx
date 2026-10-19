@@ -9,6 +9,7 @@ import { withI18nServerProps } from '../../../../lib/getStatic';
 import Head from 'next/head';
 
 import { formatPriceAmount } from '../../../../data/pricing';
+import { resumeChargeLabel } from '../../../../lib/billing/amounts';
 import { Button } from '../../../../components/ui/Button';
 import { PageShell } from '../../../../components/ui/PageHeader';
 import { ResultCard, type ResultTone } from '../../../../components/ui/ResultCard';
@@ -23,6 +24,7 @@ import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
 type Outcome = 'activated' | 'resumed' | 'card_changed' | 'card_changed_paused' | 'first_charge_failed' | 'error';
 
 interface SuccessProps {
+  kind?: string;
   outcome: Outcome;
   message?: string;
   amount?: number;
@@ -44,7 +46,7 @@ const RESULT_COPY: Record<
   resumed: {
     tone: 'success',
     title: '정기결제가 다시 시작됐어요',
-    description: ({ amount }) => `밀린 달치 결제 완료 ${typeof amount === 'number' ? `${formatPriceAmount(amount)}원` : ''}`,
+    description: ({ amount, kind }) => `${resumeChargeLabel(kind ?? '')} 결제 완료 ${typeof amount === 'number' ? `${formatPriceAmount(amount)}원` : ''}`,
     note: ({ billingDay }) => (typeof billingDay === 'number' ? `다음 결제일: 매월 ${billingDay}일` : null),
   },
   card_changed: {
@@ -142,6 +144,10 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
   const result = await completeCardSetup({ id, token, authKey, customerKey }, now);
 
   if (!result.ok) {
+    if (result.code === 'first_charge_unresolved') {
+      // 토스가 응답하지 못했다(5xx·시간 초과) — 거절이 아니다. 승인 웹훅이 오면 활성화되고, 안 오면 다음 재조회가 정리한다.
+      return { props: { outcome: 'first_charge_failed', message: result.message } };
+    }
     if (result.code === 'first_charge_failed') {
       // 카드는 등록됐지만 첫 결제가 거부된 상태 — 구독은 pending_card로 남아 조용히
       // 방치될 수 있으므로 운영자에게 바로 알린다(스펙 §6).
@@ -169,6 +175,7 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
   const emailError = await sendSubscriptionActivatedEmail(subscription, {
     manageUrl,
     amount: subscription.totalAmount,
+    resumed: result.resumed === true,
   });
   if (emailError) {
     console.error('[subscribe] 카드 등록 확정 메일 발송 실패', { subscriptionId: id, emailError });
@@ -177,6 +184,7 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
   return {
     props: {
       outcome: result.resumed ? 'resumed' : 'activated',
+      kind: subscription.kind,
       amount: subscription.totalAmount,
       billingDay: subscription.billingDay,
       manageUrl,

@@ -169,3 +169,19 @@ describe('구독 메일 HTML — 공용 레이아웃', () => {
     expect(mail.html).toContain('운영 알림');
   });
 });
+
+describe('sendSubscriptionActivatedEmail — 재개', () => {
+  it('재개(resumed)면 제목·본문이 "다시 시작"과 걷은 회차 이름으로 바뀐다 — 레슨은 밀린 달치, 후원은 이번 달치', async () => {
+    const { sendSubscriptionActivatedEmail } = await import('./email');
+    await sendSubscriptionActivatedEmail(sub({ kind: 'lesson' }), { manageUrl: 'https://studionol.co.kr/m', amount: 330000, resumed: true });
+    let mail = lastCall();
+    expect(mail.subject).toContain('다시 시작됐어요');
+    expect(mail.text).toContain('밀린 달치 결제가 완료되어');
+    expect(mail.text).not.toContain('첫 결제');
+    await sendSubscriptionActivatedEmail(sub({ kind: 'artist-support', artistSlug: 'jai' }), { manageUrl: 'https://studionol.co.kr/m', amount: 10000, resumed: true });
+    mail = lastCall();
+    expect(mail.text).toContain('이번 달치 결제가 완료되어');
+    await sendSubscriptionActivatedEmail(sub({ kind: 'lesson' }), { manageUrl: 'https://studionol.co.kr/m', amount: 330000 });
+    expect(lastCall().subject).toContain('정기결제가 시작됐어요');
+  });
+});

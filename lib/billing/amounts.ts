@@ -81,3 +81,9 @@ export const artistSupportTierLabel = (tierId: string | null | undefined): strin
   (tierId && getArtistSupportTier(tierId)?.label) || null;
 
 export { ARTIST_SUPPORT_TIERS };
+
+/**
+ * 결제 실패 정지 뒤 카드를 다시 등록할 때 걷는 회차의 이름 — 연습실·레슨은 실패했던 달(밀린 달치)을, 아티스트 후원은
+ * 이번 달치를 걷는다(lib/billing/service.ts bindsToUnpaidCycle). 등록 화면·안내 메일·완료 화면이 같은 말을 써야 한다.
+ */
+export const resumeChargeLabel = (kind: string): string => (kind === 'artist-support' ? '이번 달치' : '밀린 달치');
