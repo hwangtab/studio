@@ -15,6 +15,7 @@ jest.mock('../../../db/client', () => ({ getDb: jest.fn() }));
 jest.mock('../../../lib/contracts/admin-auth', () => ({
   authenticateAdminApi: jest.fn(),
 }));
+jest.mock('../../../lib/contracts/admin-events', () => ({ recordContractChange: jest.fn().mockResolvedValue(undefined) }));
 jest.mock('../../../lib/contracts/serialize', () => ({
   serializeContractForAdmin: jest.fn((contract: { id: string }) => ({ id: contract.id, serialized: true })),
   serializeSignature: jest.fn((s: unknown) => s),
@@ -54,6 +55,7 @@ import { waitUntil } from '@vercel/functions';
 import { getDb } from '../../../db/client';
 import { recordAdminPrivacyAccess } from '../../../lib/privacy/accessLog';
 import { authenticateAdminApi } from '../../../lib/contracts/admin-auth';
+import { recordContractChange } from '../../../lib/contracts/admin-events';
 import { describeRoomConflict } from '../../../lib/contracts/conflict';
 import handler from '../../../pages/api/contracts/[id]';
 import {
@@ -553,19 +555,11 @@ describe('메서드·응답 위생', () => {
 });
 
 /**
- * 변경 행위의 수행자는 서버 로그에 남는다. 열람은 contract_view 접속기록이 남기지만 발송·수정·취소·삭제·종료는
- * 행위자가 어디에도 없었다. 로그에는 계약 id·행위·수행자만 — 이름·연락처 같은 개인정보는 싣지 않는다.
+ * 변경 행위의 수행자는 이력(서버 로그 + contract_admin_events)에 남는다. 열람은 contract_view 접속기록이 남기지만
+ * 발송·수정·취소·삭제·종료는 행위자가 어디에도 없었다. 이력에는 계약 id·행위·수행자·상태 변화만 — 개인정보는 싣지 않는다.
  */
-describe('변경 행위의 수행자 로그', () => {
-  let warn: jest.SpyInstance;
-  beforeEach(() => {
-    warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
-  });
-  afterEach(() => warn.mockRestore());
-
-  const logged = () => warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('[contracts] 관리자 작업'));
-
-  it('취소·삭제·종료가 성공하면 수행자와 계약 id를 남긴다', async () => {
+describe('변경 행위 이력', () => {
+  it('취소·삭제·종료가 성공하면 수행자와 상태 변화를 남긴다', async () => {
     mockFound(contract({ status: 'draft' }));
     (cancelContract as jest.Mock).mockResolvedValue(contract({ status: 'cancelled' }));
     await run({ method: 'PATCH', body: { action: 'cancel' } });
@@ -579,10 +573,10 @@ describe('변경 행위의 수행자 로그', () => {
     (cancelSubscriptionsOfContract as jest.Mock).mockResolvedValue({ cancelledIds: [], failed: [], notificationFailures: [] });
     await run({ method: 'PATCH', body: { action: 'terminate', reason: '이용 종료' } });
 
-    expect(logged()).toEqual([
-      '[contracts] 관리자 작업 (contractId=c1, action=cancel, actor=kyungha)',
-      '[contracts] 관리자 작업 (contractId=c1, action=delete, actor=kyungha)',
-      '[contracts] 관리자 작업 (contractId=c1, action=terminate, actor=kyungha)',
+    expect((recordContractChange as jest.Mock).mock.calls.map((c) => c[0])).toEqual([
+      { contractId: 'c1', action: 'cancel', actor: 'kyungha', fromStatus: 'draft', toStatus: 'cancelled' },
+      { contractId: 'c1', action: 'delete', actor: 'kyungha', fromStatus: 'draft', toStatus: null },
+      { contractId: 'c1', action: 'terminate', actor: 'kyungha', fromStatus: 'signed', toStatus: 'terminated' },
     ]);
   });
 
@@ -591,6 +585,6 @@ describe('변경 행위의 수행자 로그', () => {
     (cancelContract as jest.Mock).mockResolvedValue(null);
     await run({ method: 'PATCH', body: { action: 'cancel' } });
 
-    expect(logged()).toEqual([]);
+    expect(recordContractChange).not.toHaveBeenCalled();
   });
 });

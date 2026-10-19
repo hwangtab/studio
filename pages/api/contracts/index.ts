@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getDb } from '../../../db/client';
 import { authenticateAdminApi } from '../../../lib/contracts/admin-auth';
+import { recordContractChange } from '../../../lib/contracts/admin-events';
 import { serializeContractForAdmin, serializeContractForAdminList } from '../../../lib/contracts/serialize';
 import { createContract, expireOverdueContracts, findRoomConflict } from '../../../lib/contracts/service';
 import { describeRoomConflict } from '../../../lib/contracts/conflict';
@@ -58,7 +59,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       const contract = await createContract(validation.data);
-      console.warn(`[contracts] 관리자 작업 (contractId=${contract.id}, action=create, actor=${auth.actor})`);
+      await recordContractChange({ contractId: contract.id, action: 'create', actor: auth.actor, fromStatus: null, toStatus: 'draft' });
       return res.status(201).json({ ok: true, contract: serializeContractForAdmin(contract) });
     } catch (error: unknown) {
       console.error('[API/contracts] Failed to create contract:', error);
