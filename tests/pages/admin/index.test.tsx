@@ -48,6 +48,8 @@ const DASHBOARD: AdminDashboard = {
     showPayoutsToRecord: 3,
     showPayoutsPending: 2,
     awaitingDeposit: { bookings: 3, shows: 0, shop: 1, funding: 2 },
+    sessionsAwaitingMark: 3,
+    showSubmissionsAwaitingReview: 2,
   },
   socialTokens: [{ platform: 'ig', expiresAt: '2026-09-26T03:00:00.000Z', daysLeft: 10 }],
   upcomingWindowDays: 7,
@@ -74,7 +76,10 @@ it('점검 항목은 심각도 배지와 처리 링크를, 대기열은 건수�
   expect(screen.getByRole('link', { name: /구독이 끝난 뒤에 들어온 결제/ })).toHaveAttribute('href', '/admin/subscriptions');
   expect(screen.getByText('서명 기한이 지난 계약 2건')).toBeInTheDocument();
 
-  expect(screen.getByRole('link', { name: /믹싱 착수 대기\s*3/ })).toHaveAttribute('href', '/admin/bookings');
+  expect(screen.getByRole('link', { name: /믹싱 착수 대기\s*3/ })).toHaveAttribute('href', '/admin/bookings?work=received');
+  expect(screen.getByRole('link', { name: /믹싱 작업 중\s*1/ })).toHaveAttribute('href', '/admin/bookings?work=in_progress');
+  expect(screen.getByRole('link', { name: /완료·노쇼 표시 대기 세션\s*3/ })).toHaveAttribute('href', '/admin/bookings?session=unmarked');
+  expect(screen.getByRole('link', { name: /심사 대기 주최자 공연\s*2/ })).toHaveAttribute('href', '/admin/shows/submissions');
   expect(screen.getByRole('link', { name: /결제 재시도 중 구독\s*2/ })).toBeInTheDocument();
   expect(screen.getByRole('link', { name: /심사 대기 펀딩 프로젝트\s*4/ })).toHaveAttribute('href', '/admin/funding/projects');
   expect(screen.getByRole('link', { name: /심사 대기 상점 상품\s*2/ })).toHaveAttribute('href', '/admin/shop/products');

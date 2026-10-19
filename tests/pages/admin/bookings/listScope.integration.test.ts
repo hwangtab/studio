@@ -45,6 +45,8 @@ beforeAll(async () => {
 });
 afterAll(() => client.close());
 beforeEach(async () => {
+  await client.execute('DELETE FROM bookings');
+  await client.execute('DELETE FROM work_orders');
   await client.execute('DELETE FROM orders');
 });
 
@@ -100,4 +102,78 @@ it('?deposit=pending은 입금 대기 session·mixing만 상한 없이 싣고 �
 
   const all = (await getServerSideProps({ query: {} } as never)) as { props: { depositPendingCount: number } };
   expect(all.props.depositPendingCount).toBe(206);
+});
+
+describe('?session=unmarked — 완료·노쇼 표시 대기 세션', () => {
+  const NOW_S = Math.floor(Date.now() / 1000);
+  const insertSession = async (id: string, status: string, endOffsetHours: number) => {
+    await insertOrder(id, 'session');
+    await client.execute({
+      sql: `INSERT INTO bookings (id, order_id, product_id, service_type, start_at, end_at, duration_hours, status)
+            VALUES (?, ?, 'recording-pro', 'recording', ?, ?, 3, ?)`,
+      args: [`b-${id}`, id, NOW_S + (endOffsetHours - 3) * 3600, NOW_S + endOffsetHours * 3600, status],
+    });
+  };
+
+  it('끝났고 confirmed인 세션만, 7일 창 안에서 싣는다', async () => {
+    await insertSession('done-today', 'confirmed', -2); // 2시간 전에 끝남 — 대상
+    await insertSession('done-3d', 'confirmed', -72); // 대상
+    await insertSession('too-old', 'confirmed', -24 * 10); // 7일 밖
+    await insertSession('upcoming', 'confirmed', 5); // 아직 안 끝남
+    await insertSession('marked', 'completed', -2); // 이미 표시함
+    await insertSession('noshow', 'no_show', -2);
+    await insertOrder('m1', 'mixing');
+
+    const r = (await getServerSideProps({ query: { session: 'unmarked' } } as never)) as {
+      props: { bookings: Array<{ orderNo: string }>; sessionUnmarked?: boolean };
+    };
+
+    expect(r.props.bookings.map((b) => b.orderNo).sort()).toEqual(['NO-done-3d', 'NO-done-today']);
+    expect(r.props.sessionUnmarked).toBe(true);
+  });
+});
+
+describe('?work= — 대시보드 믹싱 카드가 여는 목록', () => {
+  const insertWork = async (orderId: string, status: string) => {
+    await client.execute({
+      sql: `INSERT INTO work_orders (id, order_id, product_id, service_type, song_count, status) VALUES (?, ?, 'mixing-level1', 'mixing', 1, ?)`,
+      args: [`w-${orderId}`, orderId, status],
+    });
+  };
+  const listed = async (work: string) => {
+    const r = (await getServerSideProps({ query: { work } } as never)) as {
+      props: { bookings: Array<{ orderNo: string }>; truncated: boolean };
+    };
+    return r.props;
+  };
+
+  it('그 단계의 믹싱 주문만, 건수 제한 없이 싣는다', async () => {
+    await insertOrder('m1', 'mixing');
+    await insertWork('m1', 'received');
+    await insertOrder('m2', 'mixing');
+    await insertWork('m2', 'in_progress');
+    await insertOrder('m3', 'mixing');
+    await insertWork('m3', 'received');
+    await insertOrder('s1', 'session');
+
+    expect((await listed('received')).bookings.map((b) => b.orderNo).sort()).toEqual(['NO-m1', 'NO-m3']);
+    expect((await listed('in_progress')).bookings.map((b) => b.orderNo)).toEqual(['NO-m2']);
+    expect((await listed('received')).truncated).toBe(false);
+  });
+
+  it('모르는 값은 무시하고 평소 목록을 연다', async () => {
+    await insertOrder('s1', 'session');
+    const r = (await getServerSideProps({ query: { work: 'x' } } as never)) as { props: { bookings: unknown[]; workFilter?: string } };
+    expect(r.props.bookings).toHaveLength(1);
+    expect(r.props.workFilter).toBeUndefined();
+  });
+
+  it('주문이 200건을 넘어도 오래된 착수 대기가 밀려나지 않는다', async () => {
+    await insertOrder('old', 'mixing');
+    await insertWork('old', 'received');
+    await client.execute("UPDATE orders SET created_at = 1000 WHERE id = 'old'");
+    for (let i = 0; i < 205; i++) await insertOrder(`s${i}`, 'session');
+
+    expect((await listed('received')).bookings.map((b) => b.orderNo)).toEqual(['NO-old']);
+  });
 });

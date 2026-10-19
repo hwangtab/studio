@@ -26,6 +26,7 @@ import { formatKstDateTime } from '../../../lib/booking/format';
 import { kstDateString } from '../../../lib/booking/kst';
 import { BOOKING_LINES, BOOKING_LINE_LABELS, bookingLineOf, parseBookingLine } from '../../../lib/booking/line';
 import { expireStaleOrders } from '../../../lib/booking/service';
+import { unmarkedSessionRange } from '../../../lib/booking/unmarkedSessions';
 import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
 
 /** 한 화면에 싣는 최대 건수. 넘으면 오래된 주문이 잘린다는 사실을 화면에 알린다(contracts와 동일). */
@@ -38,6 +39,13 @@ interface AdminBookingsPageProps {
   depositPending?: boolean;
   /** 계좌 입금 대기 세션·믹싱 주문 수(전 기간). */
   depositPendingCount?: number;
+  /**
+   * `?work=received|in_progress` — 그 단계의 믹싱·마스터링 주문만(기간·건수 제한 없음). 대시보드 "믹싱 착수 대기·작업 중" 카드가 오는 곳이다.
+   * 전체 목록은 최근 200건이라 오래된 착수 대기 주문이 밀려나 카드 건수와 화면이 어긋났다.
+   */
+  workFilter?: 'received' | 'in_progress';
+  /** `?session=unmarked` — 끝난 지 7일 안인데 완료·노쇼 표시가 없는 세션만(`lib/booking/unmarkedSessions.ts`). */
+  sessionUnmarked?: boolean;
   blocks: AdminBlockItem[];
   error?: string;
 }
@@ -49,6 +57,12 @@ export const getServerSideProps: GetServerSideProps<AdminBookingsPageProps> = as
   }
 
   const depositPending = context.query?.deposit === 'pending';
+  const workQuery = context.query?.work;
+  const workFilter = workQuery === 'received' || workQuery === 'in_progress' ? workQuery : undefined;
+  const sessionUnmarked = context.query?.session === 'unmarked';
+  // 조건이 걸린 목록은 건수 제한이 없다 — 대시보드 카드 건수와 화면이 같아야 한다.
+  const unlimited = depositPending || workFilter !== undefined || sessionUnmarked;
+  const unmarkedRange = unmarkedSessionRange(new Date());
 
   try {
     // 목록을 여는 시점이 곧 만료를 판정할 시점이다 — 크론 없이 lazy 처리(contracts와 동일 관례).
@@ -78,6 +92,19 @@ export const getServerSideProps: GetServerSideProps<AdminBookingsPageProps> = as
         where: depositPending
           ? (ordersTable, { and: all, inArray: within, eq: same }) =>
               all(within(ordersTable.type, ['session', 'mixing', 'deposit']), same(ordersTable.status, 'awaiting_deposit'))
+          : sessionUnmarked
+          ? (ordersTable, { and: all, eq: same }) =>
+              all(
+                same(ordersTable.type, 'session'),
+                sql`EXISTS (SELECT 1 FROM bookings b WHERE b.order_id = ${ordersTable.id} AND b.status = 'confirmed'
+                      AND b.end_at >= ${Math.floor(unmarkedRange.from.getTime() / 1000)} AND b.end_at < ${Math.floor(unmarkedRange.to.getTime() / 1000)})`,
+              )
+          : workFilter
+          ? (ordersTable, { and: all, eq: same }) =>
+              all(
+                same(ordersTable.type, 'mixing'),
+                sql`EXISTS (SELECT 1 FROM work_orders w WHERE w.order_id = ${ordersTable.id} AND w.status = ${workFilter})`,
+              )
           : (ordersTable, { and: all, or: either, inArray: within }) =>
               either(
                 within(ordersTable.type, ['session', 'mixing']),
@@ -87,7 +114,7 @@ export const getServerSideProps: GetServerSideProps<AdminBookingsPageProps> = as
                 ),
               ),
         orderBy: (ordersTable, { desc }) => [desc(ordersTable.createdAt)],
-        limit: depositPending ? undefined : LIST_LIMIT + 1,
+        limit: unlimited ? undefined : LIST_LIMIT + 1,
         // payments를 함께 읽는다 — 주문 상태와 결제 기록의 미정합(스펙 §10) 판정에 쓴다.
         // workOrders는 믹싱·마스터링 주문(Phase 2)의 상태·곡 수·튜닝 여부를 싣는다.
         with: { bookings: true, payments: true, workOrders: true },
@@ -107,9 +134,11 @@ export const getServerSideProps: GetServerSideProps<AdminBookingsPageProps> = as
 
     return {
       props: {
-        bookings: (depositPending ? allOrders : allOrders.slice(0, LIST_LIMIT)).map((order) => serializeBookingForAdmin(order, linkInfo.get(order.orderNo))),
-        truncated: !depositPending && allOrders.length > LIST_LIMIT,
+        bookings: (unlimited ? allOrders : allOrders.slice(0, LIST_LIMIT)).map((order) => serializeBookingForAdmin(order, linkInfo.get(order.orderNo))),
+        truncated: !unlimited && allOrders.length > LIST_LIMIT,
         depositPending,
+        ...(workFilter ? { workFilter } : {}),
+        ...(sessionUnmarked ? { sessionUnmarked } : {}),
         depositPendingCount: Number(pendingCountRow?.n ?? 0),
         blocks: allBlocks.map(serializeBlockForAdmin),
       },
@@ -179,6 +208,8 @@ export default function AdminBookingsPage({
   truncated,
   depositPending = false,
   depositPendingCount = 0,
+  workFilter,
+  sessionUnmarked = false,
   blocks,
   error,
 }: AdminBookingsPageProps) {
@@ -425,6 +456,22 @@ export default function AdminBookingsPage({
 
               <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
                 <div className="flex flex-wrap gap-2">
+                  {sessionUnmarked && (
+                    <Link
+                      href="/admin/bookings"
+                      className="px-3 py-1.5 rounded-full text-sm font-medium bg-violet-700 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+                    >
+                      완료·노쇼 표시 대기 ({bookings.length}) · 전체 보기
+                    </Link>
+                  )}
+                  {workFilter && (
+                    <Link
+                      href="/admin/bookings"
+                      className="px-3 py-1.5 rounded-full text-sm font-medium bg-violet-700 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+                    >
+                      {workFilter === 'received' ? '믹싱 착수 대기' : '믹싱 작업 중'} ({bookings.length}) · 전체 보기
+                    </Link>
+                  )}
                   <Link
                     href={depositPending ? '/admin/bookings' : '/admin/bookings?deposit=pending'}
                     className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 ${
@@ -438,6 +485,8 @@ export default function AdminBookingsPage({
                   {['all', ...orderStatusEnum].map((status) => (
                     <button
                       key={status}
+                      type="button"
+                      aria-pressed={filter === status}
                       onClick={() => setFilter(status)}
                       className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                         filter === status
@@ -554,7 +603,7 @@ export default function AdminBookingsPage({
                               </div>
                             )}
                           </td>
-                          <td className="px-4 py-3">
+                          <td data-label="관리" className="px-4 py-3">
                             <Link href={`/admin/bookings/${booking.id}`} passHref>
                               <Button light size="sm" variant="weak">
                                 상세

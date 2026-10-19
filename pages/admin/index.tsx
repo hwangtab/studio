@@ -191,8 +191,8 @@ export default function AdminIndexPage({ dashboard, shopQueues, revenue = null, 
             <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
               <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">대기 중</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                <QueueCard label="믹싱 착수 대기" count={dashboard.queues.mixingReceived} href="/admin/bookings" alert />
-                <QueueCard label="믹싱 작업 중" count={dashboard.queues.mixingInProgress} href="/admin/bookings" />
+                <QueueCard label="믹싱 착수 대기" count={dashboard.queues.mixingReceived} href="/admin/bookings?work=received" alert />
+                <QueueCard label="믹싱 작업 중" count={dashboard.queues.mixingInProgress} href="/admin/bookings?work=in_progress" />
                 <QueueCard label="서명 대기 계약" count={dashboard.queues.contractsAwaitingSignature} href="/admin/contracts" />
                 <QueueCard label="카드 등록 대기 구독" count={dashboard.queues.subscriptionsPendingCard} href="/admin/subscriptions" />
                 <QueueCard label="결제 재시도 중 구독" count={dashboard.queues.subscriptionsPastDue} href="/admin/subscriptions" alert />
@@ -223,6 +223,10 @@ export default function AdminIndexPage({ dashboard, shopQueues, revenue = null, 
                       <QueueCard label="아티스트 발송 대기 상점 주문" count={shopQueues.awaitingShipment.artist} href="/admin/shop" />
                     )}
                   </>
+                )}
+                <QueueCard label="완료·노쇼 표시 대기 세션" count={dashboard.queues.sessionsAwaitingMark} href="/admin/bookings?session=unmarked" alert />
+                {dashboard.queues.showSubmissionsAwaitingReview !== null && (
+                  <QueueCard label="심사 대기 주최자 공연" count={dashboard.queues.showSubmissionsAwaitingReview} href="/admin/shows/submissions" alert />
                 )}
               </div>
             </section>
