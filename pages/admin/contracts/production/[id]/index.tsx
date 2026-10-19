@@ -170,9 +170,11 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
   };
 
   const handleComplete = () => {
-    const closedOn = askClosedOn('최종 인도를 마친 날(YYYY-MM-DD)을 확인해 주세요. 이 날부터 3년 뒤 개인정보를 파기합니다.');
-    if (closedOn === null) return;
-    void run(() => mutateProductionContract(contract.id, 'complete', { closedOn }));
+    // 완료일은 기록된 최종 인도일로 정해진다(개인정보 3년 보관의 기산점, 제13조).
+    void run(
+      () => mutateProductionContract(contract.id, 'complete'),
+      '완료 처리할까요? 완료일은 최종 파일을 인도한 날로 기록되고, 그날부터 3년 뒤 개인정보를 파기합니다.',
+    );
   };
 
   const handleTerminate = () => {

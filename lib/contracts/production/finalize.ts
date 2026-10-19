@@ -14,7 +14,8 @@ import { parseStoredTerms } from './terms';
  *
  * 서명 응답을 보낸 뒤(waitUntil) 실행되므로 여기서 던진 오류는 사용자에게 보이지 않는다. 단계를 따로 감싸
  * PDF가 실패해도 메일은 나가게 하고, 실패는 notification_error에 남겨 관리자 화면에 드러낸다. PDF는 관리자
- * 화면의 "완료 메일 재발송"으로 다시 만들 수 있다.
+ * 화면의 "완료 메일 재발송"(진행 중·완료 계약)으로 다시 만들 수 있다. 해지한 계약은 서명본을 완료 화면에서
+ * 그때그때 만들어 내려받는다.
  */
 export const finalizeSignedProductionContract = async (contractId: string): Promise<void> => {
   const contract = await getDb().query.productionContracts.findFirst({

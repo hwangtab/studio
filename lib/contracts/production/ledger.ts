@@ -190,6 +190,22 @@ export const findStage = (
 export const stageTitle = (terms: Pick<ProductionTerms, 'songs'>, stage: RevisionStage, song: number | null): string =>
   stage === 'mastering' || terms.songs.length === 1 ? STAGE_NAME[stage] : `${songLabel(terms, song ?? 0)} ${STAGE_NAME[stage]}`;
 
+/** 날짜 구간들([시작일, 끝일), KST 일련번호)이 덮는 날수 — 겹치는 날은 한 번, `fromDay` 앞은 뺀다. */
+const coveredDays = (intervals: ReadonlyArray<[number, number]>, fromDay: number): number => {
+  const clipped = intervals
+    .map(([start, end]) => [Math.max(start, fromDay), end] as [number, number])
+    .filter(([start, end]) => end > start)
+    .sort((a, b) => a[0] - b[0]);
+  let total = 0;
+  let cursor = -Infinity;
+  for (const [start, end] of clipped) {
+    const from = Math.max(start, cursor);
+    if (end > from) total += end - from;
+    cursor = Math.max(cursor, end);
+  }
+  return total;
+};
+
 export const computeProductionLedger = (input: {
   terms: ProductionTerms;
   signedAt: Date | null;
@@ -216,6 +232,9 @@ export const computeProductionLedger = (input: {
     ]).flat(),
     { stage: 'mastering', song: null },
   ];
+  // 의뢰인 피드백 대기(제4조 2항): 결과물을 전달한 날부터 의뢰인이 답한 날(수정 요청·승인, 간주 승인 포함)까지.
+  // 답 없이 다음 결과물이 나가면 그날까지, 아직 답이 없으면 오늘까지. 작업 기간에서 빼는 구간이다.
+  const feedbackWaits: Array<[number, number]> = [];
   const stages: StageState[] = stageKeys.map(({ stage, song }) => {
     const pick = (type: ProductionContractEvent['type']) => of(type, stage, song ?? undefined);
     const deliveries = pick('stage_delivered');
@@ -235,6 +254,15 @@ export const computeProductionLedger = (input: {
     const extraRevisions = Math.max(0, revisions.length - terms.revisions[stage]);
     // 이행한 수정 = 그 뒤에 결과물을 다시 전달한 수정 요청. 해지 정산은 이행한 초과 수정만 공제한다(제10조 3항).
     const performedRevisions = revisions.filter((r) => deliveries.some((d) => isAfter(d, r))).length;
+    const responses = [...revisions, ...pick('stage_approved')];
+    deliveries.forEach((delivery, index) => {
+      const next = deliveries[index + 1] ?? null;
+      const answer = responses
+        .filter((r) => isAfter(r, delivery) && (next === null || isAfter(next, r)))
+        .sort((a, b) => a.occurredAt.getTime() - b.occurredAt.getTime())[0];
+      const end = answer ?? next;
+      feedbackWaits.push([kstDay(delivery.occurredAt), end ? kstDay(end.occurredAt) : today]);
+    });
     let pending: PendingApproval | null = null;
     if (!approval && lastDelivery && isAfter(lastDelivery, lastRevision)) {
       const lastDay = deemedBaseDay(lastDelivery) + terms.deemedApprovalDays;
@@ -300,21 +328,21 @@ export const computeProductionLedger = (input: {
       ? Math.max(kstDay(depositMetAt), ...songs.map((song) => kstDay(song.sourceReceivedAt as Date)))
       : null;
 
-  // 정지 구간: 시작 기록부터 다음 종료 기록(없으면 오늘)까지. 의뢰인 사유만 예정일을 미룬다(제4조 2항). 작업 기간이
-  // 시작되기 전의 정지는 미룰 예정일이 없으니 시작일 앞부분을 잘라 센다.
-  let clientPauseDays = 0;
+  // 의뢰인 사유로 미루는 구간(제4조 2항): 운영자가 기록한 의뢰인 사유 정지(시작~끝, 없으면 오늘)와 피드백 대기.
+  // 겹치는 날은 한 번만 센다(여러 곡의 결과물을 동시에 기다리는 날). 작업 기간이 시작되기 전은 미룰 예정일이 없으니
+  // 시작일 앞부분을 잘라 센다. 스튜디오 사유 정지는 미루지 않는다.
+  const clientWaits: Array<[number, number]> = [...feedbackWaits];
   let openPause: { cause: PauseCause; since: Date } | null = null;
-  const pausedDays = (from: Date, toDay: number) =>
-    startDay === null ? 0 : Math.max(0, toDay - Math.max(kstDay(from), startDay));
   for (const event of events) {
     if (event.type === 'pause_started' && !openPause) {
       openPause = { cause: parseEventData(event).cause ?? 'client', since: event.occurredAt };
     } else if (event.type === 'pause_ended' && openPause) {
-      if (openPause.cause === 'client') clientPauseDays += pausedDays(openPause.since, kstDay(event.occurredAt));
+      if (openPause.cause === 'client') clientWaits.push([kstDay(openPause.since), kstDay(event.occurredAt)]);
       openPause = null;
     }
   }
-  if (openPause?.cause === 'client') clientPauseDays += pausedDays(openPause.since, today);
+  if (openPause?.cause === 'client') clientWaits.push([kstDay(openPause.since), today]);
+  const clientPauseDays = startDay === null ? 0 : coveredDays(clientWaits, startDay);
 
   const finalDelivered = last(of('final_delivered'));
   const dueDay = startDay !== null ? startDay + terms.workWeeks * 7 + clientPauseDays : null;
@@ -397,7 +425,8 @@ export const computeProductionLedger = (input: {
       clientPauseDays,
       openPause,
       delayDays,
-      delayExceeded: delayDays >= terms.studioDelayWeeks * 7,
+      // "N주 이상 지연"은 그 기간이 다 지난 뒤에 성립한다(초일불산입) — 마지막 날 당일은 아직이다.
+      delayExceeded: delayDays > terms.studioDelayWeeks * 7,
       finalDeliveredAt: finalDelivered?.occurredAt ?? null,
       distributionSubmitted: reachedFor.distribution_submitted(0),
       released: of('released').length > 0,
@@ -414,7 +443,7 @@ export const computeProductionLedger = (input: {
     unresponsive: {
       since: unresponsiveSince,
       days: unresponsiveDays,
-      exceeded: unresponsiveDays >= terms.clientUnresponsiveDays,
+      exceeded: unresponsiveDays > terms.clientUnresponsiveDays,
     },
     todos: [],
   };
@@ -430,18 +459,18 @@ const buildTodos = (ledger: ProductionLedger, terms: ProductionTerms, today: num
 
   if (payments.depositOverdueDays > 0) {
     todos.push({
-      severity: payments.depositOverdueDays >= delayLimit ? 'alert' : 'warn',
+      severity: payments.depositOverdueDays > delayLimit ? 'alert' : 'warn',
       message:
         `계약금 기한이 ${payments.depositOverdueDays}일 지났어요.` +
-        (payments.depositOverdueDays >= delayLimit ? ` ${delayLimit}일 이상 지체 — 통지 후 해지할 수 있어요(제10조 5항).` : ''),
+        (payments.depositOverdueDays > delayLimit ? ` ${delayLimit}일 이상 지체 — 통지 후 해지할 수 있어요(제10조 5항).` : ''),
     });
   }
   if (payments.balanceOverdueDays > 0) {
     todos.push({
-      severity: payments.balanceOverdueDays >= delayLimit ? 'alert' : 'warn',
+      severity: payments.balanceOverdueDays > delayLimit ? 'alert' : 'warn',
       message:
         `잔금 기한이 ${payments.balanceOverdueDays}일 지났어요.` +
-        (payments.balanceOverdueDays >= delayLimit ? ` ${delayLimit}일 이상 지체 — 통지 후 해지할 수 있어요(제10조 5항).` : ''),
+        (payments.balanceOverdueDays > delayLimit ? ` ${delayLimit}일 이상 지체 — 통지 후 해지할 수 있어요(제10조 5항).` : ''),
     });
   }
   if (!work.startedOn && payments.depositMetAt) todos.push({ severity: 'info', message: '1차 완성본을 받으면 기록해 주세요. 그날부터 작업 기간을 셉니다.' });
@@ -463,7 +492,8 @@ const buildTodos = (ledger: ProductionLedger, terms: ProductionTerms, today: num
     todos.push({ severity: 'info', message: '마스터링 승인과 잔금 입금이 끝났어요. 최종 파일을 인도해 주세요.' });
   }
   if (work.finalDeliveredAt) {
-    // 완료일이 개인정보 보관 3년의 기산점이다(제13조) — 완료 처리를 하지 않으면 파기 시계가 돌지 않는다.
+    // 진행이 끝났으면 완료로 닫아 둔다 — 완료일은 최종 인도일로 기록되고(제13조 보관 기산점), 닫지 않으면 진행 중
+    // 계약으로 남아 기한 점검·할 일에 계속 오른다(파기는 retention.ts가 최종 인도일 기준으로 따로 챙긴다).
     todos.push({
       severity: 'warn',
       message: '최종 파일을 인도했어요. 일이 다 끝났으면 "완료 처리"를 눌러 주세요 — 완료일부터 3년 뒤 개인정보를 파기해요(제13조).',

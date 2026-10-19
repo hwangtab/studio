@@ -81,8 +81,10 @@ export const getServerSideProps = withI18nServerProps<CompletePageProps>(async (
     // 상대가 기한 안에 서명하지 않아 만료로 보이는 때도 같다 — 내 서명은 끝났으니 "링크 만료"를 보일 사람이 아니다.
     if ((status === 'sent' || status === 'expired') && linkSigner.status === 'signed') {
       const other = contract.signers.find((signer) => signer.status === 'pending' && signer.role !== 'operator');
+      // 모두 서명했는데 체결 처리만 남은 계약(성립 단계가 다시 실패한 드문 경우) — 기다릴 서명자가 없다.
+      if (!other) return { props: { ...empty, unavailable: 'error' as const } };
       return {
-        props: { ...empty, waitingFor: other?.role === 'guardian' ? '법정대리인' : '의뢰인', waitingExpired: status === 'expired' },
+        props: { ...empty, waitingFor: other.role === 'guardian' ? '법정대리인' : '의뢰인', waitingExpired: status === 'expired' },
       };
     }
     // 서명 전이면 아무것도 싣지 않고 서명 화면으로 보낸다(반대 방향은 sign.tsx가 맡는다).

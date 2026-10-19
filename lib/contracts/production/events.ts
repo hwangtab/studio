@@ -174,7 +174,9 @@ export const checkEventAllowed = (
     case 'source_replaced':
       return songState?.sourceReceivedAt ? null : '먼저 그 곡의 "1차 완성본 수령"을 기록해 주세요.';
     case 'kickoff':
-      return has('kickoff') ? '착수는 이미 기록했습니다.' : null;
+      if (has('kickoff')) return '착수는 이미 기록했습니다.';
+      // 착수는 1차 완성본을 받은 뒤의 일이다(제10조 1항) — 받기 전에 기록하면 착수 전 해지(전액 환불)가 공제로 바뀐다.
+      return ledger.songs.some((s) => s.sourceReceivedAt) ? null : '1차 완성본을 받은 뒤에 착수를 기록할 수 있습니다(제10조 1항).';
     case 'recording_completed':
       return songState?.recordingCompleted ? '그 곡의 보컬 녹음 세션 마침은 이미 기록했습니다.' : null;
     case 'stage_delivered':

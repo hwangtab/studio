@@ -45,6 +45,8 @@ const renderSigner = (signer: ProductionContractSigner): string => {
     signer.role === 'operator' ? '' : `이메일: ${escapeHtml(signer.email)}`,
     `서명 일시: ${formatDateTime(signer.signedAt)}`,
     `IP 주소: ${escapeHtml(signer.ipAddress || '-')}`,
+    // 제13조 2항 — 서명 시 접속한 브라우저 정보도 서명본에 기재한다.
+    signer.userAgent ? `브라우저: ${escapeHtml(signer.userAgent.slice(0, 200))}` : '',
     signer.identityVerifiedAt
       ? `본인 확인: 계약서 등록 연락처 뒷자리 대조 완료 (${formatDateTime(signer.identityVerifiedAt)})`
       : '',
