@@ -43,6 +43,7 @@ interface AdminFundingDetailPageProps {
    * 늦은 입금 확정이 기록된 정산과 어긋나게 만든다는 것을 "입금 확인" 확인창에 싣는다.
    */
   depositPayoutWarning?: string | null;
+  refundPayoutWarning?: string | null;
 }
 
 export const getServerSideProps: GetServerSideProps<AdminFundingDetailPageProps> = async (context) => {
@@ -87,10 +88,12 @@ export const getServerSideProps: GetServerSideProps<AdminFundingDetailPageProps>
       ? { status: 'present' as const, bankName: summary.bankName, accountHolder: summary.accountHolder, updatedAt: summary.updatedAt.toISOString() }
       : summary;
 
-  // 입금 확인뿐 아니라 환불(전액·줄)도 정산이 기록된 뒤면 개설자 몫이 바뀐다 — 상태와 무관하게 계산해 확인창에 붙인다.
-  const depositPayoutWarning = payoutWarningOf(await loadProjectPayoutState(order.fundingPledge.projectSlug));
+  // 입금 확인뿐 아니라 환불(전액·줄)도 정산이 기록된 뒤면 개설자 몫이 바뀐다 — 방향이 반대라 문구를 따로 둔다.
+  const payoutState = await loadProjectPayoutState(order.fundingPledge.projectSlug);
+  const depositPayoutWarning = payoutWarningOf(payoutState, 'deposit');
+  const refundPayoutWarning = payoutWarningOf(payoutState, 'refund');
 
-  return { props: { pledge: serializePledgeForAdmin(order), refundableAmount, paymentWindow, sameNameDeposits, refundAccount, depositPayoutWarning } };
+  return { props: { pledge: serializePledgeForAdmin(order), refundableAmount, paymentWindow, sameNameDeposits, refundAccount, depositPayoutWarning, refundPayoutWarning } };
 };
 
 const STATUS_LABELS: Record<string, string> = {
@@ -112,7 +115,7 @@ const DescriptionRow = ({ label, value }: { label: string; value: React.ReactNod
   </div>
 );
 
-export default function AdminFundingDetailPage({ pledge, refundableAmount, paymentWindow = null, sameNameDeposits = [], refundAccount = null, depositPayoutWarning = null }: AdminFundingDetailPageProps) {
+export default function AdminFundingDetailPage({ pledge, refundableAmount, paymentWindow = null, sameNameDeposits = [], refundAccount = null, depositPayoutWarning = null, refundPayoutWarning = null }: AdminFundingDetailPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -170,8 +173,8 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
     () => patchPledge(pledge.id, { action: 'refund', reason: isBankTransfer ? '계좌 송금 환불' : '관리자 환불' }),
     isBankTransfer
       ? `${downloadedAfterRequest ? '주의: 이 후원자는 취소를 요청한 뒤 음원을 내려받았습니다(청약철회 제한 대상일 수 있습니다).\n\n' : ''}`
-        + `${formatPriceAmount(refundableAmount)}원을 후원자 계좌로 이미 송금했나요? 이 버튼은 송금을 대신하지 않고 "환불 완료"로 기록만 합니다. 후원자에게 환불 안내 메일이 나갑니다.`
-      : `이 펀딩의 남은 금액 ${formatPriceAmount(refundableAmount)}원을 환불할까요? 되돌릴 수 없습니다.${depositPayoutWarning ? `\n\n${depositPayoutWarning}` : ''}`,
+        + `${formatPriceAmount(refundableAmount)}원을 후원자 계좌로 이미 송금했나요? 이 버튼은 송금을 대신하지 않고 "환불 완료"로 기록만 합니다. 후원자에게 환불 안내 메일이 나갑니다.${refundPayoutWarning ? `\n\n${refundPayoutWarning}` : ''}`
+      : `이 펀딩의 남은 금액 ${formatPriceAmount(refundableAmount)}원을 환불할까요? 되돌릴 수 없습니다.${refundPayoutWarning ? `\n\n${refundPayoutWarning}` : ''}`,
   );
 
   /** 계좌 입금 — 입금 확인·미입금 취소·입금 안내 재발송(lib/funding/bankTransfer.ts). */
@@ -210,7 +213,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
     const quantity = lineRefundQty[line.rewardId] ?? 1;
     const reason = window.prompt(
       `${line.rewardTitle} ${quantity}개, ${formatPriceAmount(line.unitAmount * quantity)}원을 환불합니다. 되돌릴 수 없습니다.`
-        + `${depositPayoutWarning ? `\n${depositPayoutWarning}` : ''}\n사유를 적어 주세요(후원자 메일에 들어갑니다).`,
+        + `${refundPayoutWarning ? `\n${refundPayoutWarning}` : ''}\n사유를 적어 주세요(후원자 메일에 들어갑니다).`,
     );
     if (reason === null) return;
     if (!reason.trim()) {

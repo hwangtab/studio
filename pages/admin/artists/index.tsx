@@ -50,6 +50,8 @@ interface PayoutHistoryRow {
 }
 
 interface AdminArtistsPageProps {
+  /** KST 기준 이번 달(YYYY-MM) — 서버가 내려준다(렌더 중 Date.now()면 hydration이 어긋난다). 이 달 이후는 기록 버튼을 숨긴다. */
+  currentPeriod?: string;
   supportOpen: boolean;
   period: string;
   artists: Array<{ slug: string; name: string; supportActive: boolean; taxType: string; supporterCount: number }>;
@@ -86,6 +88,7 @@ export const getServerSideProps: GetServerSideProps<AdminArtistsPageProps> = asy
     ]);
     return {
       props: {
+        currentPeriod: cycleYmOf(new Date()),
         supportOpen: isArtistSupportOpen(),
         period,
         artists: SUPPORTED_ARTISTS.map((a) => ({
@@ -127,21 +130,19 @@ export const getServerSideProps: GetServerSideProps<AdminArtistsPageProps> = asy
   } catch (error: unknown) {
     console.error('[admin/artists] Failed to load:', error);
     return {
-      props: { supportOpen: isArtistSupportOpen(), period, artists: [], previews: [], history: [], error: '아티스트 현황을 불러오지 못했습니다.' },
+      props: { currentPeriod: cycleYmOf(new Date()), supportOpen: isArtistSupportOpen(), period, artists: [], previews: [], history: [], error: '아티스트 현황을 불러오지 못했습니다.' },
     };
   }
 };
 
 const TAX_LABELS: Record<string, string> = { withholding: '원천징수 3.3%', invoice: '세금계산서' };
 
-export default function AdminArtistsPage({ supportOpen, period, artists, previews, history, historyTruncated = false, error }: AdminArtistsPageProps) {
+export default function AdminArtistsPage({ supportOpen, period, artists, previews, history, historyTruncated = false, error, currentPeriod = '9999-12' }: AdminArtistsPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [periodInput, setPeriodInput] = useState(period);
-  // 아직 끝나지 않은 달은 기록 버튼을 숨긴다(서버 period_open 가드의 보조) — KST 기준 이번 달.
-  const currentPeriod = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 7);
-
+  
   const run = async (key: string, task: () => Promise<{ ok: boolean; message?: string }>, confirmText: string) => {
     if (!window.confirm(confirmText)) return;
     setBusy(key);

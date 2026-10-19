@@ -12,7 +12,7 @@ const RECORD_ERROR: Record<string, { status: number; message: string }> = {
   already_recorded: { status: 409, message: '이미 기록된 정산입니다.' },
   nothing_to_pay: { status: 409, message: '그 달에 결제된 회차가 없어 정산할 것이 없습니다.' },
   period_open: { status: 409, message: '아직 끝나지 않은 달은 기록할 수 없습니다. 다음 달 1일 이후에 기록해 주세요 — 지금 기록하면 그 뒤 들어온 후원이 정산에서 빠집니다.' },
-  unreconciled: { status: 409, message: '그 달에 결제 응답을 아직 확인하지 못한 회차가 있습니다. 다음 날 재조회가 끝난 뒤 기록해 주세요.' },
+  unreconciled: { status: 409, message: '그 달에 토스 응답을 확인하지 못한 회차가 있어 토스에 다시 물었지만 아직 답을 못 받았습니다. 잠시 뒤 다시 눌러 주세요.' },
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

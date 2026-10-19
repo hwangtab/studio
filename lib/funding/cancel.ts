@@ -222,10 +222,12 @@ export const cancelFundingPledge = async (input: {
     const downloadedAfterRequest = Boolean(
       pledge.refundRequestedAt && pledge.downloadedAt && pledge.downloadedAt.getTime() > pledge.refundRequestedAt.getTime(),
     );
-    return {
-      ok: true, mode: 'recorded', refundAmount,
-      ...(downloadedAfterRequest ? { warnings: ['이 후원자는 취소를 요청한 뒤 음원을 내려받았어요 — 환불 기록은 했어요. 청약철회 제한 여부를 확인해 주세요.'] } : {}),
-    };
+    const recordedPayoutWarning = payoutWarningOf(await loadProjectPayoutState(order.fundingPledge.projectSlug), 'refund');
+    const recordedWarnings = [
+      ...(downloadedAfterRequest ? ['이 후원자는 취소를 요청한 뒤 음원을 내려받았어요 — 환불 기록은 했어요. 청약철회 제한 여부를 확인해 주세요.'] : []),
+      ...(recordedPayoutWarning ? [recordedPayoutWarning] : []),
+    ];
+    return { ok: true, mode: 'recorded', refundAmount, ...(recordedWarnings.length ? { warnings: recordedWarnings } : {}) };
   }
 
   // 잔액이 0이면 토스를 아예 부르지 않는다 — 부르면 취소 금액 0(또는 초과)으로 거절되거나,
@@ -334,6 +336,6 @@ export const cancelFundingPledge = async (input: {
   }
   if (recorded) await notifyCancelled(db, order, project, 'refunded', refundAmount);
   // 정산이 이미 기록·이체된 프로젝트의 환불은 개설자에게 청구할 차액을 만든다 — 입금 확인과 같은 경고를 싣는다(운영자 경로만).
-  const payoutWarning = input.requestedBy === 'admin' ? payoutWarningOf(await loadProjectPayoutState(order.fundingPledge.projectSlug)) : null;
+  const payoutWarning = input.requestedBy === 'admin' ? payoutWarningOf(await loadProjectPayoutState(order.fundingPledge.projectSlug), 'refund') : null;
   return { ok: true, mode: 'refunded', refundAmount, ...(payoutWarning ? { warnings: [payoutWarning] } : {}) };
 };

@@ -677,11 +677,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
       // 돈이 실제로 나가는 지점의 가드 — 기록 뒤 환불·수기 등록으로 계산값이 바뀌었으면 기록값 그대로 이체하면 어긋난다.
       // 헬스체크(일 1회)보다 먼저 막는다. 정산 패널의 "기록 취소(다시 기록)"로 현재 숫자로 다시 기록한 뒤 누른다.
-      if (preview.netAmount !== recorded.netAmount) {
+      // 펀딩 정산은 프로젝트당 한 번만 기록되고 기록 취소 경로가 없다 — 그래서 막다른 409가 아니라, 두 금액을 보여 주고
+      // 운영자가 "이 차이를 알고 이체했다"고 확인(acknowledgeAmountChanged)하면 통과시킨다. 차액은 정산 패널·헬스체크가 남긴다.
+      if (preview.netAmount !== recorded.netAmount && b.acknowledgeAmountChanged !== true) {
         return res.status(409).json({
           ok: false,
           code: 'amount_changed',
-          message: `기록된 정산액 ${recorded.netAmount.toLocaleString('ko-KR')}원과 현재 계산값 ${preview.netAmount.toLocaleString('ko-KR')}원이 다릅니다. 기록 뒤 환불·수기 등록이 있었습니다 — 정산 패널에서 다시 기록한 뒤 지급 완료를 눌러 주세요.`,
+          recordedNetAmount: recorded.netAmount,
+          currentNetAmount: preview.netAmount,
+          message: `기록된 정산액 ${recorded.netAmount.toLocaleString('ko-KR')}원과 현재 계산값 ${preview.netAmount.toLocaleString('ko-KR')}원이 다릅니다(기록 뒤 환불·수기 등록·세금 유형 변경). 실제로 이체한 금액을 확인한 뒤 다시 눌러 주세요.`,
         });
       }
       const done = await markFundingPayoutPaid(recorded.id, memo, now);

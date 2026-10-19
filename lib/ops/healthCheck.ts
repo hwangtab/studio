@@ -1297,10 +1297,10 @@ const collectDbIssuesBody = async (db: ReturnType<typeof getDb>, now: Date, issu
     issues.push({
       severity: 'high',
       href: '/admin/funding/projects',
-      title: `정산 이체 뒤에 확정된 계좌 입금 ${lateDeposits.length}건`,
+      title: `정산 이체 뒤에 확정된 후원 ${lateDeposits.length}건(늦은 입금·수기 등록)`,
       detail:
         `${sample(lateDeposits.map((r) => `${r.slug} · ${r.order_no}`))}\n` +
-        '정산을 이체한 뒤 늦은 계좌 입금을 확정해 모금액이 늘었습니다. 개설자에게 추가로 보낼 몫을 ' +
+        '정산을 이체한 뒤 후원이 확정돼(늦은 계좌 입금·현장 수기 등록) 모금액이 늘었습니다. 개설자에게 추가로 보낼 몫을 ' +
         '정산 패널에서 계산해 처리해 주세요. 이 항목은 확정 후 30일 동안 보고됩니다.',
     });
   }

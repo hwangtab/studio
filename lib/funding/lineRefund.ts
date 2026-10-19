@@ -172,6 +172,6 @@ export const refundFundingLine = async (input: {
   }
 
   // 정산이 이미 기록·이체된 프로젝트면 개설자에게 청구할 차액이 생긴다 — 입금 확인·전액 환불과 같은 경고.
-  const payoutWarning = payoutWarningOf(await loadProjectPayoutState(pledge.projectSlug));
+  const payoutWarning = payoutWarningOf(await loadProjectPayoutState(pledge.projectSlug), 'refund');
   return { ok: true, amount, orderStatus, ...(payoutWarning ? { warnings: [payoutWarning] } : {}) };
 };

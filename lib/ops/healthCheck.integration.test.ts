@@ -1106,7 +1106,7 @@ describe('기록된 정산액과 현재 계산값의 드리프트', () => {
  * 확정 뒤 30일 동안만 보고한다(영구 경보 방지).
  */
 describe('정산 이체 뒤에 확정된 계좌 입금', () => {
-  const LATE_TITLE = '정산 이체 뒤에 확정된 계좌 입금';
+  const LATE_TITLE = '정산 이체 뒤에 확정된 후원';
   const seed = async (bankPaidAt: number) => {
     await client.execute(`INSERT INTO funding_creators (id, email, name) VALUES ('crl', 'l@example.com', '개설자')`);
     await client.execute(

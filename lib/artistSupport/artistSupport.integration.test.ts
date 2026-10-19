@@ -27,6 +27,8 @@ jest.mock('../billing/toss-billing', () => ({ issueBillingKey: jest.fn(), charge
 // eslint-disable-next-line import/first
 import { createSubscription } from '../billing/service';
 // eslint-disable-next-line import/first
+import { fetchPaymentByOrderId } from '../billing/toss-billing';
+// eslint-disable-next-line import/first
 import { buildArtistPayoutPreview, deleteArtistPayoutIfPending, markArtistPayoutPaid, recordArtistPayout } from './payout';
 // eslint-disable-next-line import/first
 import { countSupporters, listPublicSupporters } from './supporters';
@@ -153,9 +155,14 @@ describe('정산', () => {
       args: [],
     });
     await client.execute(`INSERT INTO subscription_payments (id, subscription_id, order_id, cycle_ym, attempt, amount, status, toss_code) VALUES ('sp-pend', 'a', 'o-pend', '2026-09', 2, 10000, 'failed', 'NETWORK_ERROR')`);
+    // 기록 직전에 토스에 직접 묻는다 — 재조회가 안 되면 unreconciled.
+    (fetchPaymentByOrderId as jest.Mock).mockResolvedValue({ ok: false, code: 'NETWORK_ERROR', message: 'timeout' });
     expect(await recordArtistPayout('jai', '2026-09', NOW)).toEqual({ ok: false, code: 'unreconciled' });
-    await client.execute(`UPDATE orders SET status = 'failed' WHERE id = 'o-pend'`);
+    expect((await client.execute(`SELECT status FROM orders WHERE id = 'o-pend'`)).rows[0].status).toBe('pending');
+    // 토스에 그 주문이 없으면(요청이 닿지 않았음) failed로 확정하고 기록을 진행한다 — 구독이 해지돼 chargeCycle이 다시 묻지 않아도 막히지 않는다.
+    (fetchPaymentByOrderId as jest.Mock).mockResolvedValue({ ok: false, code: 'NOT_FOUND_PAYMENT', message: 'none', httpStatus: 404 });
     expect((await recordArtistPayout('jai', '2026-09', NOW)).ok).toBe(true);
+    expect((await client.execute(`SELECT status FROM orders WHERE id = 'o-pend'`)).rows[0].status).toBe('failed');
   });
 
   it('기록은 (아티스트, 달)당 한 번이고 지급 완료는 한 방향', async () => {
