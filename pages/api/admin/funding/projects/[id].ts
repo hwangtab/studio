@@ -637,13 +637,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   /**
-   * 지급 표시 — pending → paid 한 방향. 되돌리지 않는다.
-   *
-   * 정산 id를 요청 본문으로 받지 않고 프로젝트에서 찾는다. 정산은 프로젝트당 하나뿐이라
-   * 받을 이유가 없고, 받으면 "다른 프로젝트의 정산 id"를 이 라우트로 보낼 수 있는 경로가
-   * 생긴다.
-   */
-  /**
    * 정산 안내 메일 재발송. 기록·지급 처리 직후의 메일이 실패하면 경고와 운영자 폴백 메일만 가고, `already_recorded`/
    * `already paid` 때문에 같은 버튼을 다시 눌러도 메일은 다시 나가지 않았다 — 계좌·정산액이 담긴 메일이 개설자에게
    * 안 간 채 이체 대기로 남을 수 있었다. 상태는 바꾸지 않고 메일만 다시 만든다(계좌 복호화는 notifyPayout이 접속기록).
@@ -663,6 +656,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   }
 
+  /**
+   * 지급 표시 — pending → paid 한 방향. 되돌리지 않는다.
+   *
+   * 정산 id를 요청 본문으로 받지 않고 프로젝트에서 찾는다. 정산은 프로젝트당 하나뿐이라
+   * 받을 이유가 없고, 받으면 "다른 프로젝트의 정산 id"를 이 라우트로 보낼 수 있는 경로가
+   * 생긴다.
+   */
   if (b.action === 'mark_payout_paid') {
     const memo = typeof b.memo === 'string' && b.memo.trim() ? b.memo.trim() : null;
     try {
