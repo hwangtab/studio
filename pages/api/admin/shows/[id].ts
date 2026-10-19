@@ -253,6 +253,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const r = await reconcileShowRefund(orderNo, { fetchPayment });
       if (r.status === 'toss_unknown') return res.status(504).json({ ok: false, message: `토스 재조회에 실패했습니다(${r.code}). 잠시 뒤 다시 시도해 주세요.` });
       if (r.status === 'rejected') return res.status(409).json({ ok: false, message: r.reason === 'bank_deposit' ? '계좌 입금 주문은 토스 재확인 대상이 아닙니다.' : '토스 결제 기록이 없는 주문입니다.' });
+      if (r.status === 'in_flight') return res.status(409).json({ ok: false, message: `환불중 티켓 ${r.tickets}장은 방금 시작된 환불이라(토스 응답 대기) 손대지 않았습니다. 2분 뒤 다시 눌러 주세요.` });
       const message = r.status === 'synced'
         ? `토스에 취소가 있었습니다 — 장부에 반영했습니다(토스 ${r.tossCancelled.toLocaleString('ko-KR')}원 / 기록 ${r.recorded.toLocaleString('ko-KR')}원).`
         : r.status === 'reverted'

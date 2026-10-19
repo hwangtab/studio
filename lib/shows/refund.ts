@@ -183,7 +183,7 @@ export async function refundShowTickets(
     sql`, `,
   );
   const claim = await db.run(sql`
-    UPDATE show_tickets SET status = 'refunding'
+    UPDATE show_tickets SET status = 'refunding', refunding_at = unixepoch()
     WHERE order_no = ${input.orderNo}
       AND id IN (${ticketIdList})
       AND status = 'issued' AND checked_in_at IS NULL
@@ -196,7 +196,7 @@ export async function refundShowTickets(
   const revertClaim = async (): Promise<void> => {
     try {
       await db.run(sql`
-        UPDATE show_tickets SET status = 'issued'
+        UPDATE show_tickets SET status = 'issued', refunding_at = NULL
         WHERE order_no = ${input.orderNo}
           AND id IN (${ticketIdList})
           AND status = 'refunding'
@@ -488,7 +488,17 @@ export type ReconcileShowRefundOutcome =
   /** refunding 티켓이 없고 장부와 토스가 같다 — 할 일 없음. */
   | { status: 'noop' }
   | { status: 'toss_unknown'; code: string }
+  /** 되돌릴 후보가 전부 방금(REFUNDING_GRACE_SECONDS 안) 선점된 것뿐이라 손대지 않았다 — 잠시 뒤 다시. */
+  | { status: 'in_flight'; tickets: number }
   | { status: 'rejected'; reason: 'not_found' | 'no_payment' | 'bank_deposit' };
+
+/**
+ * 재확인이 되돌리지 않는 "진행 중" 창. refundShowTickets의 토스 호출은 12초(lib/booking/toss.ts REQUEST_TIMEOUT_MS)에
+ * 끊기므로, 선점 뒤 이 시간이 지나도록 refunding이면 그 요청은 끝났다(응답 유실 → 고착). 그 안의 티켓을 되돌리면
+ * 뒤늦게 성공한 취소와 겹쳐 같은 티켓이 두 번 환불될 수 있어 손대지 않는다. refunding_at이 NULL인 행(0076 이전 선점)은
+ * 전부 오래된 것으로 본다.
+ */
+export const REFUNDING_GRACE_SECONDS = 120;
 
 /**
  * `toss_unknown`(토스 응답 유실) 뒤 고착된 `refunding` 티켓을 푼다 — **재취소가 아니라 토스에 묻는다.**
@@ -512,7 +522,7 @@ export async function reconcileShowRefund(
     if (payments.length === 0) return { status: 'rejected', reason: 'no_payment' };
     // 계좌 입금 주문은 토스에 물을 것이 없다 — refunding은 기록 batch 실패로만 남으므로 그냥 되돌린다(고객이 다시 신청한다).
     const revertedBank = rowsAffectedOf(await db.run(sql`
-      UPDATE show_tickets SET status = 'issued' WHERE order_no = ${orderNo} AND status = 'refunding'
+      UPDATE show_tickets SET status = 'issued', refunding_at = NULL WHERE order_no = ${orderNo} AND status = 'refunding'
     `));
     return revertedBank > 0 ? { status: 'reverted', tickets: revertedBank } : { status: 'rejected', reason: 'bank_deposit' };
   }
@@ -520,8 +530,8 @@ export async function reconcileShowRefund(
   const fetched = await toss.fetchPayment(payment.paymentKey);
   if (!fetched.ok) return { status: 'toss_unknown', code: fetched.code };
 
-  const refunding = await db.all<{ id: string }>(sql`
-    SELECT id FROM show_tickets WHERE order_no = ${orderNo} AND status = 'refunding'
+  const refunding = await db.all<{ id: string; refundingAt: number | null }>(sql`
+    SELECT id, refunding_at AS refundingAt FROM show_tickets WHERE order_no = ${orderNo} AND status = 'refunding'
   `);
   // 토스의 **모든** 취소 태그에서 이 주문의 refunding 티켓을 복원한다 — 마지막 취소만 보면, 두 환불(A·B)이 다 응답을
   // 잃고 둘 다 실제로 취소된 경우 A가 refunding에 남았다가 다음 재확인에서 "토스에 취소 없음"으로 오판돼 issued로
@@ -545,18 +555,23 @@ export async function reconcileShowRefund(
   if (tossCancelled > recorded) return { status: 'synced', tossCancelled, recorded };
 
   // 토스에 어느 취소 태그에도 들지 않은 refunding만 되돌린다 — 그 요청은 토스에 닿지 않은 것이다.
-  const untagged = refunding.map((t) => t.id).filter((id) => !taggedIds.has(id));
+  // 단, 방금 선점된 것(토스 응답을 아직 기다리는 요청)은 제외한다 — 되돌린 직후 그 취소가 성공하면 이중 환불이다.
+  const nowSec = Math.floor(Date.now() / 1000);
+  const untaggedAll = refunding.filter((t) => !taggedIds.has(t.id));
+  const inFlight = untaggedAll.filter((t) => t.refundingAt != null && nowSec - t.refundingAt < REFUNDING_GRACE_SECONDS);
+  const untagged = untaggedAll.filter((t) => !inFlight.includes(t)).map((t) => t.id);
   if (untagged.length > 0) {
     const reverted = rowsAffectedOf(await db.run(sql`
-      UPDATE show_tickets SET status = 'issued'
+      UPDATE show_tickets SET status = 'issued', refunding_at = NULL
       WHERE order_no = ${orderNo} AND status = 'refunding' AND id IN (${sql.join(untagged.map((id) => sql`${id}`), sql`, `)})
     `));
     if (reverted > 0) {
-      console.error('[shows-refund] 토스에 취소가 없어 refunding 티켓을 issued로 되돌림', { orderNo, tickets: reverted });
+      console.error('[shows-refund] 토스에 취소가 없어 refunding 티켓을 issued로 되돌림', { orderNo, tickets: reverted, inFlight: inFlight.length });
       return { status: 'reverted', tickets: reverted };
     }
   }
-  return taggedIds.size > 0 ? { status: 'synced', tossCancelled, recorded } : { status: 'noop' };
+  if (taggedIds.size > 0) return { status: 'synced', tossCancelled, recorded };
+  return inFlight.length > 0 ? { status: 'in_flight', tickets: inFlight.length } : { status: 'noop' };
 }
 
 /** `tkt-refund:<orderNo>:<id접두어,…>` 태그를 이 주문의 후보 티켓 id로 복원한다. 접두어가 둘 이상에 맞으면 그 접두어는 버린다. */
