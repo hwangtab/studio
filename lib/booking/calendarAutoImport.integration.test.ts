@@ -213,6 +213,21 @@ describe('autoImportCalendarEvents', () => {
     expect(String((await one(`SELECT customer_note FROM bookings`))?.customer_note)).not.toContain('원본 일정이 남아 있음');
   });
 
+  it('진행 중인 일정도 다른 바쁜 일정과 겹치면 가져오지 않는다(캘린더 충돌 검사를 건너뛰지 않는다)', async () => {
+    (calendarBlockedRooms as jest.Mock).mockResolvedValue({ blocked: true, excludeRooms: [] });
+    const start = new Date(NOW.getTime() - 3600_000).toISOString(); // 한 시간 전에 시작해 아직 안 끝난 일정
+    const end = new Date(NOW.getTime() + 3600_000).toISOString();
+    mockLoad.mockResolvedValue({ error: null, events: [ev('ongoing', '진행 중 녹음', start, end)] });
+    const r = await autoImportCalendarEvents(NOW);
+    expect(r.imported).toBe(0);
+    expect(await one(`SELECT COUNT(*) AS n FROM orders`)).toEqual({ n: 0 });
+  });
+
+  it('이름의 제어·양방향 문자는 걷는다', () => {
+    expect(guessNameFromTitle('김철수\n녹음')).toBe('김철수');
+    expect(guessNameFromTitle('\u202e나쁜이름')).toBe('나쁜이름');
+  });
+
   it('일정 설명(운영자 메모)은 예약 메모에 보존된다', async () => {
     mockLoad.mockResolvedValue({ error: null, events: [{ ...ev('desc', '메모 녹음', '2026-10-28T14:00:00+09:00', '2026-10-28T15:00:00+09:00'), description: '보컬 2곡\n연락: 지인 소개' }] });
     await autoImportCalendarEvents(NOW);

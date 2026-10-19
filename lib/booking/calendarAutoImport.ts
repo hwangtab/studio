@@ -37,10 +37,12 @@ const KST_OFFSET_MS = 9 * 3600 * 1000;
 /** "조희정 녹음" → "조희정". 꼬리의 서비스 말(녹음·레코딩·믹싱·예약)과 대괄호 머리말을 걷어 낸다. 비면 제목 전체. */
 export const guessNameFromTitle = (title: string): string => {
   const cleaned = title
+    // 제어 문자·양방향 제어 문자(U+202A-202E, U+2066-2069)는 이름·캘린더 제목을 속일 수 있으니 걷는다.
+    .replace(/[\u0000-\u001F\u007F\u202A-\u202E\u2066-\u2069]/g, ' ')
     .replace(/^\s*\[[^\]]*\]\s*/, '')
     .replace(/\s*(녹음|레코딩|믹싱|마스터링|예약|세션)\s*$/u, '')
     .trim();
-  return (cleaned || title.trim() || '캘린더 일정').slice(0, 50);
+  return Array.from(cleaned || title.replace(/[\u0000-\u001F\u007F\u202A-\u202E\u2066-\u2069]/g, ' ').trim() || '캘린더 일정').slice(0, 50).join('').trim();
 };
 
 /**
@@ -162,18 +164,19 @@ export const autoImportCalendarEvents = async (now: Date = new Date()): Promise<
     const name = guessNameFromTitle(event.summary);
     // 일정 설명(운영자가 적은 메모)도 보존한다 — 일정이 지워지므로 여기 안 남기면 사라진다.
     const detail = event.description.replace(/\s+/g, ' ').trim().slice(0, 200);
-    const note = [AUTO_IMPORT_NOTE_MARK, event.summary, plan.originalRange ? `(캘린더 원본 ${plan.originalRange})` : null, detail ? `· 메모: ${detail}` : null, '— 고객·금액을 확인해 주세요'].filter(Boolean).join(' ');
+    const safeSummary = event.summary.replace(/[\u0000-\u001F\u007F\u202A-\u202E\u2066-\u2069]/g, ' ').trim();
+    const note = [AUTO_IMPORT_NOTE_MARK, safeSummary, plan.originalRange ? `(캘린더 원본 ${plan.originalRange})` : null, detail ? `· 메모: ${detail}` : null, '— 고객·금액을 확인해 주세요'].filter(Boolean).join(' ');
     try {
       if (await hasDbConflict(plan)) { result.skipped += 1; continue; }
       attempts += 1;
       const outcome = await createManualBooking(
         {
           kind: 'session', customerName: name, customerPhone: MANUAL_PLACEHOLDER_PHONE, customerEmail: MANUAL_PLACEHOLDER_EMAIL,
-          customerNote: note.slice(0, 500), totalAmount: null, received: false, method: '계좌 입금',
+          customerNote: Array.from(note).slice(0, 500).join(''), totalAmount: null, received: false, method: '계좌 입금',
           payload: {
             productId: AUTO_IMPORT_PRODUCT_ID, hours: plan.hours, date: plan.date, startHour: plan.startHour,
             customerName: name, customerPhone: MANUAL_PLACEHOLDER_PHONE, customerEmail: MANUAL_PLACEHOLDER_EMAIL,
-            customerNote: note.slice(0, 500), refundPolicyAgreed: true,
+            customerNote: Array.from(note).slice(0, 500).join(''), refundPolicyAgreed: true,
           },
         },
         now,

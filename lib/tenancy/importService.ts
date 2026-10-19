@@ -3,7 +3,7 @@ import { and, desc, eq } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { contracts, roomTenancies } from '../../db/schema';
 import { parseTenancySheet } from './importCsv';
-import { NON_TENANCY_ROOMS } from './rules';
+import { NON_TENANCY_ROOMS, parseTenancyInput } from './rules';
 import { createTenancy } from './service';
 
 /**
@@ -28,6 +28,12 @@ export const importTenancySheet = async (csv: string): Promise<ImportSummary> =>
     const key = `${row.input.roomNumber ?? 'V'}|${row.input.tenantName}|${row.input.startDate}`;
     if (seen.has(key)) { summary.skippedExisting += 1; continue; }
     const input = { ...row.input };
+    // 등록 화면과 같은 검증(금액 범위·방 번호·길이·날짜)을 거친다 — 가져오기가 건너뛰면 잘못된 값이 그대로 저장되고 캘린더에까지 나간다(감사 2026-10-19).
+    const validated = parseTenancyInput(input);
+    if (!validated.ok) {
+      summary.problems.push(`${input.roomNumber ?? '비상주'} ${input.tenantName}: ${validated.message}`);
+      continue;
+    }
     // 시간제 방(R02)·컨트롤룸(R03)은 월 입주로 받지 않는다 — 등록 화면과 같은 규칙이다(가져오기가 검증을 건너뛰면 시간제 예약과 겹친다).
     if (input.roomNumber && NON_TENANCY_ROOMS[input.roomNumber]) {
       summary.problems.push(`${input.roomNumber} ${input.tenantName}: ${NON_TENANCY_ROOMS[input.roomNumber]}`);

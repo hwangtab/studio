@@ -210,7 +210,8 @@ export const createManualBooking = async (
     const isPast = startAt.getTime() <= now.getTime();
 
     let excludeRooms: string[] = [];
-    if (!isPast) {
+    // 이미 끝난 일정만 캘린더 충돌 검사를 건너뛴다 — 진행 중인 일정(시작은 지났고 끝은 아직)은 다른 바쁜 일정과 겹칠 수 있으므로 검사한다(감사 2026-10-19).
+    if (endAt.getTime() > now.getTime()) {
       try {
         const guard = await calendarBlockedRooms(product, startAt, endAt, adoptEventId);
         if (guard.blocked) return { ok: false, message: '그 시간대는 운영자 캘린더에 이미 일정이 있어요. 캘린더를 확인해 주세요.' };
@@ -219,8 +220,9 @@ export const createManualBooking = async (
         console.error('[manual-booking] 캘린더 확인 실패 — 거절', error);
         return { ok: false, message: '캘린더를 확인하지 못해 등록하지 않았어요. 잠시 뒤 다시 시도해 주세요.' };
       }
-    } else {
-      warnings.push('이미 지난 일정이라 고객에게 확정 메일을 보내지 않았어요.');
+    }
+    if (isPast) {
+      warnings.push('이미 지난 일정이라 고객에게 확정 메일을 보내지 않았어요(시작된 일정 포함).');
       payload = { ...input.payload, customerEmail: MANUAL_PLACEHOLDER_EMAIL };
     }
 

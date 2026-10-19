@@ -3,7 +3,7 @@ import { and, asc, desc, eq, ne, sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { roomTenancies, roomTenancyPayments, type RoomTenancy } from '../../db/schema';
 import { sealPrivate } from './privateData';
-import { addMonthsOnBillingDay, isValidDate, kstToday, type TenancyInput } from './rules';
+import { addMonthsOnBillingDay, isPlausibleDate, isValidDate, kstToday, type TenancyInput } from './rules';
 import { syncTenancyCalendar } from './calendar';
 
 /**
@@ -18,6 +18,12 @@ export type ServiceResult<T = object> = ({ ok: true; calendarError?: string | nu
 const calendarNote = async (id: string): Promise<{ calendarError: string | null }> => {
   const r = await syncTenancyCalendar(id);
   return { calendarError: r.ok ? null : r.error };
+};
+
+/** DB의 부분 유일 인덱스(`room_tenancies_active_room_uq`)가 동시 요청의 두 번째 쓰기를 막았는가 — drizzle은 원인 오류를 `cause`에 싣는다. */
+const isActiveRoomConflict = (error: unknown): boolean => {
+  const text = (e: unknown): string => (e instanceof Error ? `${e.message} ${text((e as { cause?: unknown }).cause)}` : typeof e === 'string' ? e : '');
+  return /UNIQUE constraint failed/i.test(text(error));
 };
 
 /** 활성 입주자가 같은 방에 둘이 되면 안 된다(비상주는 방이 없어 제외). */
@@ -45,15 +51,21 @@ export const listTenancies = async (): Promise<TenancyListRow[]> => {
 export const createTenancy = async (input: TenancyInput, opts: { lastPaid?: { paidOn: string; amount: number } } = {}): Promise<ServiceResult<{ id: string }>> => {
   if (await roomTaken(input.roomNumber)) return { ok: false, message: `${input.roomNumber}에 이미 입주 중인 사람이 있어요. 먼저 퇴실 처리해 주세요.` };
   const db = getDb();
-  const [row] = await db
-    .insert(roomTenancies)
-    .values({
+  let row: { id: string };
+  try {
+    [row] = await db
+      .insert(roomTenancies)
+      .values({
       kind: input.kind, roomNumber: input.roomNumber, tenantName: input.tenantName, monthlyAmount: input.monthlyAmount,
       depositAmount: input.depositAmount, startDate: input.startDate, endDate: input.endDate, billingDay: input.billingDay,
       nextDueOn: input.nextDueOn, hasWindow: input.hasWindow, furnishings: input.furnishings, roomListPrice: input.roomListPrice,
       note: input.note, contractId: input.contractId, privateEnc: sealPrivate(input.private),
     })
-    .returning({ id: roomTenancies.id });
+      .returning({ id: roomTenancies.id });
+  } catch (error) {
+    if (isActiveRoomConflict(error)) return { ok: false, message: `${input.roomNumber}에 이미 입주 중인 사람이 있어요(방금 다른 요청이 먼저 등록했어요).` };
+    throw error;
+  }
   if (opts.lastPaid) {
     await db.insert(roomTenancyPayments).values({ tenancyId: row.id, paidOn: opts.lastPaid.paidOn, amount: opts.lastPaid.amount, memo: '가져오기(기존 시트의 최종 입금)' });
   }
@@ -64,9 +76,10 @@ export const updateTenancy = async (id: string, input: TenancyInput, opts: { kee
   const current = await getDb().query.roomTenancies.findFirst({ where: (c, { eq: e }) => e(c.id, id) });
   if (!current) return { ok: false, message: '입주 기록을 찾을 수 없어요.' };
   if (current.status === 'active' && (await roomTaken(input.roomNumber, id))) return { ok: false, message: `${input.roomNumber}에 이미 입주 중인 사람이 있어요.` };
-  await getDb()
-    .update(roomTenancies)
-    .set({
+  try {
+    await getDb()
+      .update(roomTenancies)
+      .set({
       kind: input.kind, roomNumber: input.roomNumber, tenantName: input.tenantName, monthlyAmount: input.monthlyAmount,
       depositAmount: input.depositAmount, startDate: input.startDate, endDate: input.endDate, billingDay: input.billingDay,
       nextDueOn: input.nextDueOn, hasWindow: input.hasWindow, furnishings: input.furnishings, roomListPrice: input.roomListPrice,
@@ -75,7 +88,11 @@ export const updateTenancy = async (id: string, input: TenancyInput, opts: { kee
       ...(opts.keepPrivate ? {} : { privateEnc: sealPrivate(input.private) }),
       updatedAt: new Date(),
     })
-    .where(eq(roomTenancies.id, id));
+      .where(eq(roomTenancies.id, id));
+  } catch (error) {
+    if (isActiveRoomConflict(error)) return { ok: false, message: `${input.roomNumber}에 이미 입주 중인 사람이 있어요.` };
+    throw error;
+  }
   return { ok: true, ...(await calendarNote(id)) };
 };
 
@@ -85,7 +102,7 @@ export const recordPayment = async (id: string, input: { paidOn?: string; amount
   const t = await db.query.roomTenancies.findFirst({ where: (c, { eq: e }) => e(c.id, id) });
   if (!t || t.status !== 'active') return { ok: false, message: '입주 중인 기록만 입금을 기록할 수 있어요.' };
   const paidOn = input.paidOn ?? kstToday();
-  if (!isValidDate(paidOn)) return { ok: false, message: '입금일을 확인해 주세요.' };
+  if (!isValidDate(paidOn) || !isPlausibleDate(paidOn, new Date(), 1)) return { ok: false, message: '입금일을 확인해 주세요(2020년 이후, 내일까지).' };
   const amount = input.amount ?? t.monthlyAmount;
   if (!Number.isInteger(amount) || amount < 0 || amount > 100_000_000) return { ok: false, message: '입금액을 확인해 주세요.' };
   const nextDueOn = addMonthsOnBillingDay(t.nextDueOn, 1, t.billingDay);
@@ -97,7 +114,7 @@ export const recordPayment = async (id: string, input: { paidOn?: string; amount
 };
 
 export const endTenancy = async (id: string, endedOn: string = kstToday()): Promise<ServiceResult> => {
-  if (!isValidDate(endedOn)) return { ok: false, message: '퇴실일을 확인해 주세요.' };
+  if (!isValidDate(endedOn) || !isPlausibleDate(endedOn, new Date(), 31)) return { ok: false, message: '퇴실일을 확인해 주세요(2020년 이후, 한 달 안).' };
   const r = await getDb().run(sql`UPDATE room_tenancies SET status = 'ended', ended_on = ${endedOn}, updated_at = unixepoch() WHERE id = ${id} AND status = 'active'`);
   if (Number(r.rowsAffected) === 0) return { ok: false, message: '입주 중인 기록이 아니에요.' };
   return { ok: true, ...(await calendarNote(id)) };
@@ -108,7 +125,12 @@ export const reopenTenancy = async (id: string): Promise<ServiceResult> => {
   const t = await getDb().query.roomTenancies.findFirst({ where: (c, { eq: e }) => e(c.id, id) });
   if (!t || t.status !== 'ended') return { ok: false, message: '퇴실한 기록이 아니에요.' };
   if (await roomTaken(t.roomNumber, id)) return { ok: false, message: `${t.roomNumber}에 지금 다른 입주자가 있어 되돌릴 수 없어요.` };
-  await getDb().update(roomTenancies).set({ status: 'active', endedOn: null, updatedAt: new Date() }).where(eq(roomTenancies.id, id));
+  try {
+    await getDb().update(roomTenancies).set({ status: 'active', endedOn: null, updatedAt: new Date() }).where(eq(roomTenancies.id, id));
+  } catch (error) {
+    if (isActiveRoomConflict(error)) return { ok: false, message: `${t.roomNumber}에 지금 다른 입주자가 있어 되돌릴 수 없어요.` };
+    throw error;
+  }
   return { ok: true, ...(await calendarNote(id)) };
 };
 

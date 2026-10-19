@@ -34,6 +34,9 @@ export const rescheduleBooking = async (input: { orderId: string; date: unknown;
   if (typeof input.date !== 'string' || !DATE_RE.test(input.date) || !isRealDate(input.date)) {
     return fail('invalid_input', '날짜 형식이 올바르지 않아요.');
   }
+  if (input.date < '2025-01-01' || input.date > kstDateString(new Date(Date.now() + 366 * 24 * 3600 * 1000))) {
+    return fail('invalid_input', '날짜 범위를 확인해 주세요(2025년 이후, 1년 안).');
+  }
   if (typeof input.startHour !== 'number' || !Number.isInteger(input.startHour)) return fail('invalid_input', '시작 시각이 올바르지 않아요.');
 
   const db = getDb();

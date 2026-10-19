@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX `room_tenancies_active_room_uq` ON `room_tenancies` (`room_number`) WHERE status = 'active' AND room_number IS NOT NULL;

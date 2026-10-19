@@ -13,6 +13,9 @@ export const isValidDate = (value: unknown): value is string => {
   return t.getUTCFullYear() === y && t.getUTCMonth() === m - 1 && t.getUTCDate() === d;
 };
 
+/** 운영에서 쓸 법한 날짜인가 — 2020-01-01 이후, 오늘로부터 `futureDays`일 이내. 오타(0001·9999년)가 일정 변경·퇴실·입금 기록에 들어가 파기 크론이 기록을 지우는 일을 막는다. */
+export const isPlausibleDate = (value: string, now: Date, futureDays: number): boolean => value >= '2020-01-01' && value <= addDays(kstToday(now), futureDays);
+
 export const kstToday = (now: Date = new Date()): string => new Date(now.getTime() + KST_OFFSET_MS).toISOString().slice(0, 10);
 
 const daysInMonth = (y: number, m: number): number => new Date(Date.UTC(y, m, 0)).getUTCDate();

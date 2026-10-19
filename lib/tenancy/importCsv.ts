@@ -29,9 +29,15 @@ export const parseCsv = (text: string): string[][] => {
   return rows;
 };
 
+/**
+ * 금액 칸 — `₩`·쉼표·공백만 걷고 **숫자만 남을 때만** 읽는다. 모든 비숫자를 걷으면 "360,000.50"이 36,000,050이 되고 "-360000"의 부호가 사라진다(감사).
+ * 소수·음수·지수 표기·숫자가 아닌 글자가 섞이면 null(그 행은 빠진 값으로 건너뛴다).
+ */
 const won = (v: string | undefined): number | null => {
-  const digits = (v ?? '').replace(/[^\d]/g, '');
-  return digits === '' ? null : Number(digits);
+  const cleaned = (v ?? '').replace(/[₩,\s]/g, '');
+  if (cleaned === '') return null;
+  if (!/^\d{1,12}$/.test(cleaned)) return null;
+  return Number(cleaned);
 };
 /** 전화번호에는 보이지 않는 방향 문자(U+202C 등)가 섞여 들어온다. */
 const phoneOf = (v: string | undefined): string | undefined => {
@@ -42,6 +48,9 @@ const text = (v: string | undefined): string | null => {
   const t = (v ?? '').trim();
   return t === '' ? null : t;
 };
+
+/** 이름·상호는 100자, 메모는 300자로 자른다(등록 화면과 같은 한도). 글자 수는 서로게이트 쌍을 쪼개지 않게 센다. */
+const clip = (v: string | null, max: number): string | null => (v === null ? null : Array.from(v).slice(0, max).join(''));
 const dateOf = (v: string | undefined): string | null => (isValidDate((v ?? '').trim()) ? (v as string).trim() : null);
 
 /** 시트의 "가격" 칸은 방 정가를 만원 단위로 적은 것(40 = 40만원). 큰 수면 원 단위로 본다. */
@@ -92,7 +101,7 @@ export const parseTenancySheet = (csv: string): ImportResult => {
     const input: TenancyInput = {
       kind: isVirtual ? 'virtual' : 'room',
       roomNumber: isVirtual ? null : first,
-      tenantName: name,
+      tenantName: clip(name, 100) ?? name,
       monthlyAmount: monthly,
       depositAmount: won(get(r, '보증금')),
       startDate,
@@ -100,9 +109,9 @@ export const parseTenancySheet = (csv: string): ImportResult => {
       billingDay: Number(nextDueOn.slice(8)),
       nextDueOn,
       hasWindow: isVirtual || hasWindowRaw === null ? null : hasWindowRaw === '창',
-      furnishings: isVirtual ? null : text(get(r, '피아노')),
+      furnishings: isVirtual ? null : clip(text(get(r, '피아노')), 200),
       roomListPrice: isVirtual ? null : listPriceOf(get(r, '가격')),
-      note: isVirtual ? null : special,
+      note: isVirtual ? null : clip(special, 300),
       contractId: null,
       private: isVirtual
         ? { phone, email: emergency ?? undefined, businessNumber: special ?? undefined }
