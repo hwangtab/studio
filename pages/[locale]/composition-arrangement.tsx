@@ -127,7 +127,7 @@ const CompositionArrangement: NextPageWithLayout<CompositionArrangementProps> = 
   );
 
   const faqItems = React.useMemo(
-    () => createTranslatedQaItems(t, 'compositionArrangement.faq.items', 7),
+    () => createTranslatedQaItems(t, 'compositionArrangement.faq.items', 8),
     [t]
   );
 
