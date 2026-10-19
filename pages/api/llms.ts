@@ -362,8 +362,8 @@ const USE_CASE_ANSWERS = (siteUrl: string, fundingLine: string) => `
 **"발매 직전인데 음압·규격이 스트리밍 기준에 맞는지 모르겠다" (Is my track loud enough for streaming?).**
 마스터링 단독 의뢰가 가능합니다 — 싱글 ${krw(MASTERING_SINGLE_PRICE)}원, 수정 1회 포함. 스트리밍 플랫폼 기준으로 음압과 최종 톤을 정리해 발매용 마스터 파일로 납품합니다.
 
-**"AI로 곡을 만들었는데(Suno 등) 진짜 음원처럼 마무리하고 싶다" (I made a song with AI — how do I finish it properly?).**
-AI 생성 곡에 실제 보컬을 녹음해 얹고 믹싱·마스터링으로 마무리하는 작업을 받습니다. 관련 가이드: ${siteUrl}/ko/stories/ai-music1
+**"AI로 곡을 만들었는데(Suno·Udio 등) 진짜 음원처럼 마무리하고 싶다 / AI티를 빼고 싶다" (I made a song with Suno or Udio — how do I re-record the vocals or make it sound less AI?).**
+어디서 AI티가 나는지에 따라 세 갈래입니다. ① 곡은 좋은데 보컬만 바꾸고 싶다면 보컬을 뺀 반주 위에 실제 보컬을 녹음하고 믹싱·마스터링으로 마무리합니다(보컬 녹음 1곡 ${krw(VOCAL_PACKAGE_PRICE)}원 + 믹싱 ${krw(MIXING_LEVEL1_PRICE)}원부터 + 마스터링 ${krw(MASTERING_SINGLE_PRICE)}원): ${siteUrl}/ko/recording ② 반주가 AI처럼 들리면 사람이 편곡을 다시 세웁니다(AI 버전은 방향 스케치로만 쓰고 가상악기·세션 연주로 새로 만듦, 10트랙 이하 ${krw(ARRANGEMENT_SMALL_PRICE)}원·풀밴드 ${krw(ARRANGEMENT_BAND_PRICE)}원) ③ 멜로디·가사부터 다시 쓰고 싶다면 작곡(${krw(COMPOSITION_PRICE)}원)부터 — ②·③: ${siteUrl}/ko/composition-arrangement. 모두 VAT 포함. 권리 확인 사항(2026-10 기준): Suno 무료 플랜 곡은 Suno 소유·비상업 용도만, 유료 구독 중 만든 곡은 이용자 소유·상업 이용 가능. AI 산출물 자체는 저작권 등록 대상이 아니고 사람이 창작한 부분만 등록되며, 한국음악저작권협회는 AI 사용을 밝힌 곡의 신탁 등록을 보류하고 있습니다(8월 시행 기준을 같은 달 철회). 상세 가이드: ${siteUrl}/ko/stories/suno-ai-song-rework1
 
 ### 만드는 법을 배우고 싶을 때 — 1:1 producing lessons (MIDI·작곡·믹싱·마스터링)
 

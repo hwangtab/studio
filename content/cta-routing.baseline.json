@@ -7151,6 +7151,11 @@
    "cta": "recording",
    "price": "recording-pro"
   },
+  "suno-ai-song-rework1": {
+   "category": "production",
+   "cta": "arrangement",
+   "price": "arrangement-small"
+  },
   "suseo1": {
    "category": "region",
    "cta": "practice",
