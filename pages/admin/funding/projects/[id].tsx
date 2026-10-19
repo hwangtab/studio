@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { patchFundingProject } from '../../../../components/admin/fundingProjectActions';
@@ -15,7 +16,7 @@ import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { formatKstDateTimeFull } from '../../../../lib/booking/format';
 import { loadProjectForAdmin, type AdminProjectSummary } from '../../../../lib/funding/adminProjects';
 import { loadProjectService, PROJECT_SERVICE_LABELS, type LoadServiceResult } from '../../../../lib/funding/projectServices';
-import { buildFundingPayoutPreview, recordedVatDeduction } from '../../../../lib/funding/payout';
+import { buildFundingPayoutPreview, loadRecordedFundingPayout, recordedVatDeduction } from '../../../../lib/funding/payout';
 import { computeProjectState } from '../../../../lib/funding/projectState';
 import { normalizeFundingSlug } from '../../../../lib/funding/reservedSlugs';
 import type { FundingReviewStatus } from '../../../../lib/funding/reviewTransition';
@@ -69,6 +70,12 @@ interface AdminFundingProjectDetailPageProps {
    * 조회 실패 시 null이다 — 정산 계산이 죽어도 심사 화면 자체는 열려야 한다.
    */
   payout: AdminPayoutView | null;
+  /**
+   * 정산 집계가 실패했을 때(`payout === null`)에도 **이미 기록된 이체 대기 정산**이 있으면 그 최소 정보.
+   * 지급 완료 처리는 기록된 행만 있으면 되는데, 집계 실패 때 화면이 그 버튼까지 같이 지워 이체를 끝낸 뒤에도
+   * 지급 완료를 기록할 수 없었다. 집계가 살아 있으면 항상 null이다(그때는 `payout.recorded`가 정본).
+   */
+  pendingPayoutFallback?: { netAmount: number } | null;
   /**
    * 스튜디오 서비스(설계 대행·발매 프로젝트 연계). `project`의 형제 필드 — 별도 테이블이고
    * (마이그레이션 0037) 운영 DB에 아직 없으면 `{ available: false }`로 화면만 "미적용"을 띄운다.
@@ -156,6 +163,17 @@ const loadPayoutView = async (projectId: string): Promise<AdminPayoutView | null
   }
 };
 
+/** 집계 없이 기록된 이체 대기 정산만 읽는다 — `pendingPayoutFallback` 주석 참고. 이것도 실패하면 null. */
+const loadPendingPayoutFallback = async (projectId: string): Promise<{ netAmount: number } | null> => {
+  try {
+    const recorded = await loadRecordedFundingPayout(projectId);
+    return recorded && recorded.status === 'pending' ? { netAmount: recorded.netAmount } : null;
+  } catch (error: unknown) {
+    console.error(`[admin] 기록된 정산 조회 실패 (id=${projectId}):`, error);
+    return null;
+  }
+};
+
 export const getServerSideProps: GetServerSideProps<AdminFundingProjectDetailPageProps> = async (context) => {
   const auth = await authenticateAdminRequest(context);
   if (!auth.ok) {
@@ -170,6 +188,8 @@ export const getServerSideProps: GetServerSideProps<AdminFundingProjectDetailPag
 
   // 승인 전에는 후원도 정산도 있을 수 없다 — 쓸모없는 집계 질의를 돌리지 않는다.
   const payout = project.reviewStatus === 'approved' ? await loadPayoutView(id) : null;
+  const pendingPayoutFallback =
+    project.reviewStatus === 'approved' && payout === null ? await loadPendingPayoutFallback(id) : null;
 
   const service = await loadProjectService(id);
 
@@ -177,6 +197,7 @@ export const getServerSideProps: GetServerSideProps<AdminFundingProjectDetailPag
     props: {
       service,
       payout,
+      pendingPayoutFallback,
       project: {
         id: project.id,
         slug: project.slug,
@@ -228,7 +249,7 @@ const REVIEW_STATUS_LABELS: Record<FundingReviewStatus, string> = {
  * 운영자가 이 화면에서 바로 알아야 한다. */
 const PROJECT_STATUS_LABELS: Record<string, string> = { auto: '공개중', draft: '비공개(작성중)', closed: '종료' };
 
-export default function AdminFundingProjectDetailPage({ project, payout, service }: AdminFundingProjectDetailPageProps) {
+export default function AdminFundingProjectDetailPage({ project, payout, pendingPayoutFallback, service }: AdminFundingProjectDetailPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -282,8 +303,20 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
     setNotice(null);
     setSuccess(null);
     setWarnings([]);
+    // 화면이 새 props로 갱신되기 전에 버튼을 풀면, 승인 직후 한 번 더 눌러 낡은 판본(expectedSubmittedAt)으로
+    // 409가 나가고 그 빨간 오류가 방금의 성공 안내를 덮는다. 갱신(replace)이 끝난 뒤에 푼다.
+    try {
+      await runTask(task, successMessage);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const runTask = async (
+    task: () => Promise<{ ok: boolean; message?: string; warnings?: string[] }>,
+    successMessage: string,
+  ) => {
     const result = await task();
-    setBusy(false);
     if (!result.ok) {
       setNotice(result.message ?? '요청을 처리하지 못했습니다.');
     } else {
@@ -346,9 +379,12 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
 
   const handleSaveNote = () =>
     run(
-      () => patchFundingProject(project.id, { action: 'set_review_note', note: reviewNote.trim() || undefined }),
+      () => patchFundingProject(project.id, { action: 'set_review_note', note: reviewNote.trim() || undefined, expectedNote: project.reviewNote ?? '' }),
       '메모를 저장했습니다.',
     );
+
+  /** 정산이 기록된 뒤에는 서비스 종류·약정 제작비를 잠근다(서버도 409). 집계가 실패해도 이체 대기 정산이 있으면 잠근다. */
+  const payoutRecorded = Boolean(payout?.recorded) || Boolean(pendingPayoutFallback);
 
   const handleSetService = (kind: 'none' | 'design' | 'release') => {
     if (kind === 'none' && service.available && service.service) {
@@ -386,7 +422,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
 
   const handleSaveInternalNote = () =>
     run(
-      () => patchFundingProject(project.id, { action: 'set_internal_note', note: internalNote.trim() || undefined }),
+      () => patchFundingProject(project.id, { action: 'set_internal_note', note: internalNote.trim() || undefined, expectedNote: project.internalNote ?? '' }),
       '내부 기록을 저장했습니다.',
     );
 
@@ -574,7 +610,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
   };
 
   const handleMarkPayoutPaid = () => {
-    const recorded = payout?.recorded;
+    const recorded = payout?.recorded?.status === 'pending' ? payout.recorded : pendingPayoutFallback;
     if (!recorded) return;
     const memo = window.prompt('이체 메모를 적어 주세요 (선택 — 개설자에게 가는 메일에 함께 나갑니다).');
     if (memo === null) return;
@@ -589,6 +625,19 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
       () => patchFundingProject(project.id, { action: 'mark_payout_paid', memo: memo.trim() || undefined }),
       '지급 완료로 기록하고 개설자에게 알렸습니다.',
     );
+  };
+
+  const handleResendPayoutNotice = () => {
+    const status = payout?.recorded?.status ?? (pendingPayoutFallback ? 'pending' : null);
+    if (!status) return;
+    if (
+      !window.confirm(
+        `${status === 'paid' ? '정산 지급' : '정산 기록'} 안내 메일을 개설자에게 다시 보냅니다. 메일에는 이체 계좌의 은행·예금주가 실립니다. 계속할까요?`,
+      )
+    ) {
+      return;
+    }
+    return run(() => patchFundingProject(project.id, { action: 'resend_payout_notice' }), '개설자에게 안내 메일을 다시 보냈습니다.');
   };
 
   const handleUnhide = () => {
@@ -680,6 +729,20 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
                 <dt className="text-gray-500 shrink-0">개설자가 고른 주소</dt>
                 <dd className="font-medium text-right">{project.slug}</dd>
               </div>
+              {project.reviewStatus === 'approved' && (
+                <div className="flex justify-between gap-4">
+                  <dt className="text-gray-500 shrink-0">바로가기</dt>
+                  <dd className="font-medium text-right space-x-3">
+                    {/* 정산 전에 확정 후원·환불·입금 대기를 검산하려면 후원 목록으로, 공개 화면은 개설자가 보는 그대로 확인한다. */}
+                    <Link href={`/admin/funding?slug=${encodeURIComponent(project.slug)}`} className="text-primary hover:underline">
+                      이 프로젝트의 후원 목록
+                    </Link>
+                    <a href={`/ko/funding/${project.slug}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                      공개 페이지
+                    </a>
+                  </dd>
+                </div>
+              )}
               {/* 승인해서 status가 열려도 hidden이면 공개되지 않는다 — "승인했는데 안
                   보인다"의 원인을 이 화면에서 바로 알 수 있어야 한다. */}
               <div className="flex justify-between gap-4">
@@ -891,6 +954,19 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
 
           {project.reviewStatus === 'approved' && <CreatorTaxProfilePanel creatorId={project.creator.id} payoutAccount={false} />}
 
+          {project.reviewStatus === 'approved' && payout === null && pendingPayoutFallback && (
+            <div role="alert" className="mb-6 rounded-xl border border-amber-300 bg-amber-50 p-4">
+              <h2 className="text-lg font-bold text-gray-900 mb-1">이체 대기 정산이 기록되어 있습니다</h2>
+              <p className="mb-3 text-sm text-amber-900">
+                정산 집계를 불러오지 못해 상세 내역은 볼 수 없지만, 기록된 실이체액 {formatPriceAmount(pendingPayoutFallback.netAmount)}원을
+                이체하셨다면 지급 완료로 기록할 수 있습니다. 집계는 새로고침 후 다시 시도해 주세요.
+              </p>
+              <Button light variant="secondary" disabled={busy} onClick={handleMarkPayoutPaid}>
+                지급 완료로 표시
+              </Button>
+            </div>
+          )}
+
           {project.reviewStatus === 'approved' && (
             <FundingPayoutSection
               projectId={project.id}
@@ -898,6 +974,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
               busy={busy}
               onRecord={handleRecordPayout}
               onMarkPaid={handleMarkPayoutPaid}
+              onResendNotice={handleResendPayoutNotice}
             />
           )}
 
@@ -932,6 +1009,12 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
           <div className="mb-6 rounded-lg border border-gray-300 bg-gray-50 p-4">
             <h2 className="text-lg font-bold text-gray-900 mb-1">스튜디오 서비스</h2>
             <p className="mb-3 text-sm text-gray-600">설계비와 약정 제작비는 정산 때 모금액에서 뺍니다(부가세 포함, 성공 수수료 없음). 설계비를 따로 이미 받았으면 입금 확인을 눌러 두세요 — 정산에서 다시 빼지 않습니다.</p>
+            {service.available && payoutRecorded && (
+              <p role="status" className="mb-3 rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-900">
+                정산이 기록되어 서비스 종류와 약정 제작비는 바꿀 수 없습니다 — 기록된 정산은 바뀌지 않아 고쳐도 지급액에 반영되지 않습니다.
+                설계비 입금 확인은 계속 기록할 수 있습니다.
+              </p>
+            )}
             {!service.available ? (
               <p className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">
                 {service.reason === 'missing_table'
@@ -952,7 +1035,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
                         key={kind}
                         light
                         variant={current === kind ? 'solid' : 'weak'}
-                        disabled={busy || current === kind}
+                        disabled={busy || current === kind || payoutRecorded}
                         aria-pressed={current === kind}
                         onClick={() => handleSetService(kind)}
                       >
@@ -994,10 +1077,10 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
                         onChange={(e) => setProductionFee(e.target.value)}
                         light
                         className="w-40 text-sm"
-                        disabled={busy}
+                        disabled={busy || payoutRecorded}
                       />
                       <span className="text-gray-500">원 (부가세 포함 · 정산 때 모금액에서)</span>
-                      <Button light disabled={busy} onClick={handleSaveProductionFee}>저장</Button>
+                      <Button light disabled={busy || payoutRecorded} onClick={handleSaveProductionFee}>저장</Button>
                       {service.service.productionFee > 0 && (
                         <span className="text-xs text-gray-500">
                           정산 때 {formatPriceAmount(service.service.productionFee)}원을 공제합니다

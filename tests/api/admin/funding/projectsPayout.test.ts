@@ -23,6 +23,7 @@ jest.mock('../../../../lib/funding/reviewEmail', () => ({
 }));
 jest.mock('../../../../lib/funding/payout', () => ({
   buildFundingPayoutPreview: jest.fn(),
+  loadRecordedFundingPayout: jest.fn(),
   markFundingPayoutPaid: jest.fn(),
   recordFundingPayout: jest.fn(),
 }));
@@ -41,6 +42,7 @@ import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { loadProjectForAdmin } from '../../../../lib/funding/adminProjects';
 import {
   buildFundingPayoutPreview,
+  loadRecordedFundingPayout,
   markFundingPayoutPaid,
   recordFundingPayout,
 } from '../../../../lib/funding/payout';
@@ -278,7 +280,6 @@ describe('record_payout', () => {
 });
 
 describe('mark_payout_paid', () => {
-  const previewWith = (recorded: unknown) => ({ projectId: 'proj-1', recorded });
 
   it('인증 없으면 401', async () => {
     (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: false });
@@ -288,20 +289,21 @@ describe('mark_payout_paid', () => {
   });
 
   it('기록이 없으면 409 — 먼저 기록해야 한다', async () => {
-    (buildFundingPayoutPreview as jest.Mock).mockResolvedValue(previewWith(null));
+    (loadRecordedFundingPayout as jest.Mock).mockResolvedValue(null);
     const r = await call({ action: 'mark_payout_paid' });
     expect(r.status).toBe(409);
     expect(markFundingPayoutPaid).not.toHaveBeenCalled();
   });
 
   it('없는 프로젝트 → 404', async () => {
-    (buildFundingPayoutPreview as jest.Mock).mockResolvedValue(null);
+    (loadRecordedFundingPayout as jest.Mock).mockResolvedValue(null);
+    (loadProjectForAdmin as jest.Mock).mockResolvedValue(null);
     const r = await call({ action: 'mark_payout_paid' });
     expect(r.status).toBe(404);
   });
 
   it('지급 표시 성공 → 200, 메모를 함께 저장하고 개설자에게 메일', async () => {
-    (buildFundingPayoutPreview as jest.Mock).mockResolvedValue(previewWith(PAYOUT));
+    (loadRecordedFundingPayout as jest.Mock).mockResolvedValue(PAYOUT);
     (markFundingPayoutPaid as jest.Mock).mockResolvedValue(true);
     const r = await call({ action: 'mark_payout_paid', memo: ' 9/30 이체 ' });
     expect(r.status).toBe(200);
@@ -316,19 +318,30 @@ describe('mark_payout_paid', () => {
 
   /** pending → paid 한 방향. 두 번째는 실패해야 하고, 되돌리는 경로는 없다. */
   it('두 번 누르면 두 번째는 409', async () => {
-    (buildFundingPayoutPreview as jest.Mock).mockResolvedValue(previewWith(PAYOUT));
+    (loadRecordedFundingPayout as jest.Mock).mockResolvedValue(PAYOUT);
     (markFundingPayoutPaid as jest.Mock).mockResolvedValueOnce(true).mockResolvedValueOnce(false);
     expect((await call({ action: 'mark_payout_paid' })).status).toBe(200);
     expect((await call({ action: 'mark_payout_paid' })).status).toBe(409);
   });
 
   it('메일이 실패해도 200', async () => {
-    (buildFundingPayoutPreview as jest.Mock).mockResolvedValue(previewWith(PAYOUT));
+    (loadRecordedFundingPayout as jest.Mock).mockResolvedValue(PAYOUT);
     (markFundingPayoutPaid as jest.Mock).mockResolvedValue(true);
     (sendFundingPayoutPaidEmail as jest.Mock).mockResolvedValue('creator:send_failed');
     const r = await call({ action: 'mark_payout_paid' });
     expect(r.status).toBe(200);
     expect(r.body.warnings).toContain('creator:send_failed');
+  });
+
+  // 정산 집계가 죽어도(서비스 표·사업자 표 조회 실패 등) 이미 끝낸 이체는 기록할 수 있어야 한다.
+  it('정산 집계가 실패해도 지급 완료를 기록한다', async () => {
+    (buildFundingPayoutPreview as jest.Mock).mockRejectedValue(new Error('no such table: funding_project_services'));
+    (loadRecordedFundingPayout as jest.Mock).mockResolvedValue(PAYOUT);
+    (markFundingPayoutPaid as jest.Mock).mockResolvedValue(true);
+    const r = await call({ action: 'mark_payout_paid' });
+    expect(r.status).toBe(200);
+    expect(markFundingPayoutPaid).toHaveBeenCalledWith('pay-1', null, expect.any(Date));
+    expect(buildFundingPayoutPreview).not.toHaveBeenCalled();
   });
 });
 
@@ -384,7 +397,7 @@ describe('정산 안내 메일의 계좌 복호화도 접속기록에 남는다'
   });
 
   it('지급 표시에서도 남는다', async () => {
-    (buildFundingPayoutPreview as jest.Mock).mockResolvedValue({ recorded: PAYOUT, netAmount: PAYOUT.netAmount });
+    (loadRecordedFundingPayout as jest.Mock).mockResolvedValue(PAYOUT);
     (markFundingPayoutPaid as jest.Mock).mockResolvedValue(true);
     await call({ action: 'mark_payout_paid' });
     expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(
@@ -423,5 +436,53 @@ describe.each([
     expect(r.status).toBe(503);
     expect(String(r.body.message)).toContain('다시 등록해 달라고 요청해 주세요');
     expect(String(r.body.message)).not.toContain('재등록을 요청하지 마세요');
+  });
+});
+
+describe('resend_payout_notice — 정산 안내 메일 재발송', () => {
+  it('이체 대기 정산이면 "정산 기록" 안내를 다시 보내고 상태는 건드리지 않는다', async () => {
+    (loadRecordedFundingPayout as jest.Mock).mockResolvedValue(PAYOUT);
+    const r = await call({ action: 'resend_payout_notice' });
+    expect(r.status).toBe(200);
+    expect(sendFundingPayoutRecordedEmail).toHaveBeenCalledWith('creator@example.com', '데모 프로젝트', PAYOUT, expect.anything());
+    expect(sendFundingPayoutPaidEmail).not.toHaveBeenCalled();
+    expect(markFundingPayoutPaid).not.toHaveBeenCalled();
+  });
+
+  it('지급 완료 정산이면 "정산 지급" 안내를 보낸다', async () => {
+    const paid = { ...PAYOUT, status: 'paid' as const, paidAt: new Date('2026-10-05T00:00:00Z') };
+    (loadRecordedFundingPayout as jest.Mock).mockResolvedValue(paid);
+    const r = await call({ action: 'resend_payout_notice' });
+    expect(r.status).toBe(200);
+    expect(sendFundingPayoutPaidEmail).toHaveBeenCalledWith('creator@example.com', '데모 프로젝트', paid, expect.anything());
+    expect(sendFundingPayoutRecordedEmail).not.toHaveBeenCalled();
+  });
+
+  it('계좌가 담긴 메일이라 계좌 복호화를 접속기록에 남긴다', async () => {
+    (loadRecordedFundingPayout as jest.Mock).mockResolvedValue(PAYOUT);
+    await call({ action: 'resend_payout_notice' });
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'kyungha', 'funding_payout_account_email', 'proj-1', expect.any(String));
+  });
+
+  it('메일이 또 실패하면 200이되 경고를 돌려준다', async () => {
+    (loadRecordedFundingPayout as jest.Mock).mockResolvedValue(PAYOUT);
+    (sendFundingPayoutRecordedEmail as jest.Mock).mockResolvedValue('creator:send_failed');
+    const r = await call({ action: 'resend_payout_notice' });
+    expect(r.status).toBe(200);
+    expect(r.body.warnings).toContain('creator:send_failed');
+  });
+
+  it('기록된 정산이 없으면 409, 프로젝트가 없으면 404 — 메일은 보내지 않는다', async () => {
+    (loadRecordedFundingPayout as jest.Mock).mockResolvedValue(null);
+    expect((await call({ action: 'resend_payout_notice' })).status).toBe(409);
+    (loadProjectForAdmin as jest.Mock).mockResolvedValue(null);
+    expect((await call({ action: 'resend_payout_notice' })).status).toBe(404);
+    expect(sendFundingPayoutRecordedEmail).not.toHaveBeenCalled();
+  });
+
+  it('인증이 없으면 401', async () => {
+    (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: false });
+    expect((await call({ action: 'resend_payout_notice' })).status).toBe(401);
+    expect(sendFundingPayoutRecordedEmail).not.toHaveBeenCalled();
   });
 });
