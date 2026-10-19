@@ -5,7 +5,8 @@ import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { kstDateString, kstDateTime } from './kst';
-import { createManualBooking } from './manualEntry';
+import { getCalendarEvent } from './gcal';
+import { createManualBooking, LEFTOVER_ORIGINAL_MARK } from './manualEntry';
 import { getProduct, occupancyConflictKeys, productHours } from './products';
 import { occupiedBookingSql } from './service';
 
@@ -47,7 +48,8 @@ export const guessNameFromTitle = (title: string): string => {
  * 안 그러면 운영자가 웹 예약을 막으려고 넣은 "휴무 13~18시"가 입금 대기 예약으로 바뀌고, 그 예약을 "미입금 취소"하면 막아 둔 시간이 풀린다(감사 2026-10-18).
  * 건너뛴 일정은 대시보드 "캘린더에만 있는 일정" 카드에 남는다.
  */
-export const AUTO_IMPORT_EXCLUDE = /^\s*[!！]|\[제외\]|휴무|휴일|점검|공사|청소|정비|마감|예약\s*불가|사용\s*불가|회의|미팅|레슨|합주|개인/u;
+// 한글 낱말이 **통째로** 그 말일 때만 맞춘다(앞뒤가 한글이 아니어야 한다) — "정비아 녹음"·"공사랑 녹음"·"청소년 합창단"은 사람 이름·팀 이름이라 가져온다.
+export const AUTO_IMPORT_EXCLUDE = /^\s*[!！]|\[제외\]|(?<![가-힣])(?:휴무일?|휴관|휴일|점검|공사|청소|정비|마감|예약\s*불가|사용\s*불가|회의|미팅|레슨)(?![가-힣])/u;
 
 export interface AutoImportPlan {
   date: string;
@@ -118,15 +120,39 @@ const purgeOrphanFailedImportOrders = async (now: Date): Promise<void> => {
     .catch(() => undefined);
 };
 
+/**
+ * 원본 일정이 이미 사라졌는데 예약 메모에 남은 `[원본 일정이 남아 있음: id]` 표시를 걷는다 — 운영자가 구글에서 원본을 직접 지웠다면 표시가 남아 있을 이유가 없다
+ * (안 걷으면 "기록 삭제"가 영영 거절되고 운영 점검 알림이 시작일이 지날 때까지 매일 뜬다, 감사). 앞날 예약의 표시만 최대 10건 확인한다.
+ */
+const clearResolvedLeftoverMarks = async (): Promise<void> => {
+  try {
+    const rows = await getDb().all<{ id: string; note: string }>(sql`
+      SELECT id, customer_note AS note FROM bookings WHERE customer_note LIKE ${`%${LEFTOVER_ORIGINAL_MARK}%`} AND end_at >= unixepoch() LIMIT 10
+    `);
+    for (const row of rows) {
+      for (const m of row.note.matchAll(/ ?\[원본 일정이 남아 있음: ([^\]\s]+)\]/g)) {
+        const event = await getCalendarEvent(m[1], 'studio');
+        if (event) continue;
+        await getDb().run(sql`UPDATE bookings SET customer_note = NULLIF(trim(replace(customer_note, ${m[0]}, '')), '') WHERE id = ${row.id}`);
+      }
+    }
+  } catch (error) {
+    console.error('[calendar-auto-import] 원본 표시 정리 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
+  }
+};
+
 export type AutoImportResult = { imported: number; skipped: number; failed: Array<{ eventId: string; reason: string }>; disabled: boolean };
 
 export const autoImportCalendarEvents = async (now: Date = new Date()): Promise<AutoImportResult> => {
   const result: AutoImportResult = { imported: 0, skipped: 0, failed: [], disabled: false };
   if (process.env.CALENDAR_AUTO_IMPORT === 'off') return { ...result, disabled: true };
   // 프리뷰·개발 배포는 운영 캘린더 키와 DB를 가질 수 있다 — 거기서 대시보드를 열었다고 진짜 일정을 지우면 안 된다(감사 2026-10-18).
-  if (process.env.VERCEL_ENV && process.env.VERCEL_ENV !== 'production') return { ...result, disabled: true };
+  // 운영 배포에서만 돈다(`CALENDAR_AUTO_IMPORT=on`으로 명시하면 그 밖에서도 — 테스트·점검용). 로컬 `next dev`/`next start`는 VERCEL_ENV가 없어도 운영 캘린더 키를 읽을 수 있으므로
+  // "VERCEL_ENV가 있고 운영이 아님"만 막으면 구멍이 난다(감사 2026-10-19).
+  if (process.env.VERCEL_ENV !== 'production' && process.env.CALENDAR_AUTO_IMPORT !== 'on') return { ...result, disabled: true };
   const { events, error } = await loadUnlinkedCalendarEvents(now, new Date(now.getTime() + AUTO_IMPORT_WINDOW_DAYS * 86_400_000));
   if (error) return result;
+  await clearResolvedLeftoverMarks();
   let attempts = 0;
   for (const event of events) {
     const plan = planAutoImport(event, now);

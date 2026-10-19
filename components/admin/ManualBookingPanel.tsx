@@ -78,7 +78,10 @@ export const ManualBookingPanel = ({
     setStartHour(kstStart.getUTCHours());
     // 덮는 시 단위(시작은 내림, 끝은 올림) — 반올림하면 13:45~15:15가 13~15시가 돼 15:00~15:15가 어디에도 안 막힌다.
     const kstEndForHours = new Date(end.getTime() + KST_OFFSET_MS);
-    const eventHours = Math.max(1, kstEndForHours.getUTCHours() + (kstEndForHours.getUTCMinutes() > 0 ? 1 : 0) - kstStart.getUTCHours());
+    // 자정(24시)에 끝나거나 자정을 넘기는 일정은 끝 시각을 24로 본다 — 안 그러면 22~24시가 1시간(0-22)으로 계산돼 23~24시가 안 막힌다.
+    const endsNextDay = kstEndForHours.getUTCDate() !== kstStart.getUTCDate();
+    const endHourOfDay = endsNextDay ? 24 : kstEndForHours.getUTCHours() + (kstEndForHours.getUTCMinutes() > 0 ? 1 : 0);
+    const eventHours = Math.max(1, Math.min(24, endHourOfDay) - kstStart.getUTCHours());
     setHours(eventHours);
     setAdoptHours(eventHours);
     const kstEnd = new Date(end.getTime() + KST_OFFSET_MS);
