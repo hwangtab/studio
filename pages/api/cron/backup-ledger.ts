@@ -25,6 +25,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const result = await backupLedger();
+    if (result.cleanupFailures > 0) {
+      // 백업은 됐다. 다만 기한 지난 사본을 못 지웠다 — 개인정보가 든 파일이라 조용히 넘기지 않는다.
+      await sendEmail({
+        to: OPERATOR_EMAIL,
+        subject: '[Studio NOL] 원장 백업은 됐으나 옛 백업 정리 실패',
+        text: `오늘 백업(${result.backupPath})은 저장됐습니다.\n\n28일이 지난 백업 ${result.cleanupFailures}건을 지우지 못했습니다. Blob 저장소 ledger/backup/ 에서 직접 확인해 주세요.`,
+        html: buildOperatorAlertHtml({
+          title: '원장 백업은 됐으나 옛 백업 정리에 실패했습니다',
+          cron: 'cron/backup-ledger',
+          summary: `오늘 백업(${result.backupPath})은 저장됐습니다.`,
+          reason: `28일이 지난 백업 ${result.cleanupFailures}건을 지우지 못했습니다.`,
+          hints: ['Blob 저장소 ledger/backup/ 에서 직접 확인해 주세요. 개인정보가 든 파일이라 기한을 넘겨 두지 않습니다.'],
+        }),
+      }).catch(() => {});
+    }
     return res.status(200).json({ ok: true, ...result });
   } catch (error: unknown) {
     const detail = error instanceof Error ? error.message : String(error);
