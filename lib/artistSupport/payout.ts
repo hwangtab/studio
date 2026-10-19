@@ -52,7 +52,7 @@ export const computeArtistPayout = (input: {
   };
 };
 
-export const PERIOD_PATTERN = /^\d{4}-(0[1-9]|1[0-2])$/;
+export { PERIOD_PATTERN } from './period';
 
 export interface ArtistPayoutPreview extends PayoutBreakdown {
   artistSlug: string;
