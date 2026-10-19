@@ -169,7 +169,7 @@ export const buildShowRefundEmailEn = (d: {
 };
 
 const cancelledRefundSentence = (d: {
-  totalAmount: number; refundCompleted: boolean; bankNotice?: 'refund_account_needed' | 'not_deposited'; refundedAmount?: number;
+  totalAmount: number; refundCompleted: boolean; bankNotice?: 'refund_account_needed' | 'not_deposited'; refundedAmount?: number; checkedInExcluded?: boolean;
 }): string => {
   if (d.bankNotice === 'not_deposited')
     return 'Your request that had not yet been paid has been cancelled too. You do not need to transfer anything. If you already sent money, please contact us and we will return it.';
@@ -179,13 +179,13 @@ const cancelledRefundSentence = (d: {
   const refunded = d.refundedAmount ?? d.totalAmount;
   if (refunded <= 0) return 'There is no refundable amount on this order — tickets that were already checked in are not refundable. Reply to this email if you have any questions.';
   if (refunded < d.totalAmount)
-    return `${won(refunded)} of the ${won(d.totalAmount)} you paid has been refunded (checked-in tickets excluded). Depending on your card company, it may take a few business days to appear.`;
+    return `${won(refunded)} of the ${won(d.totalAmount)} you paid has been refunded (${d.checkedInExcluded ? 'checked-in tickets excluded' : 'amounts already refunded excluded'}). Depending on your card company, it may take a few business days to appear.`;
   return `The full ${won(d.totalAmount)} you paid has been refunded. Depending on your card company, it may take a few business days to appear.`;
 };
 
 export const buildShowtimeCancelledEmailEn = (d: {
   orderNo: string; manageUrl: string; buyerName: string; showTitle: string; startsAtSec: number; totalAmount: number;
-  refundCompleted: boolean; bankNotice?: 'refund_account_needed' | 'not_deposited'; refundedAmount?: number;
+  refundCompleted: boolean; bankNotice?: 'refund_account_needed' | 'not_deposited'; refundedAmount?: number; checkedInExcluded?: boolean;
 }): { subject: string; text: string; html: string } => {
   const when = showDateTimeLabelEn(d.startsAtSec);
   const sentence = cancelledRefundSentence(d);

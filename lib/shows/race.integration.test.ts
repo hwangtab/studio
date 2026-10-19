@@ -248,3 +248,29 @@ describe('race: 매진 경합 패자의 자동 취소가 토스 응답 유실로
     expect((await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, a.orderNo) }))?.status).toBe('paid');
   });
 });
+
+describe('autoCancelShowApproval — 토스에서는 이미 취소됐는데 응답만 잃은 경우', () => {
+  test('재조회가 CANCELED(취소 합 = 결제액)이면 다시 취소하지 않고 장부만 적어 refunded로 마감한다', async () => {
+    const { db } = await createTestDb();
+    mockDb = db;
+    const { showtimeId, ticketTypeId } = await seedTightShow(db, 2);
+    const toss = createFakeToss();
+    const a = await createShowOrder({ showtimeId, ticketTypeId, quantity: 1, buyerName: 'a', buyerContact: '010' }, new Date());
+    if (!a.ok) throw new Error('setup failed');
+    await db.run(sql`UPDATE showtimes SET status = 'cancelled' WHERE id = ${showtimeId}`);
+    const autoKey = refundIdempotencyKey(a.orderNo, 10000, 'autocancel');
+    toss.injectFault(`cancel:${autoKey}`, { code: 'NETWORK_ERROR' });
+    expect(await confirmShowOrder({ orderNo: a.orderNo, paymentKey: 'pk-x', amount: 10000 }, { trustedByWebhook: false }, toss)).toEqual({ status: 'error', code: 'toss_unresolved' });
+    // 실제로는 토스가 취소를 처리했다 — 결제가 CANCELED로 남아 있다.
+    const pay = toss._payments.get('pk-x')!;
+    toss._payments.set('pk-x', { ...pay, status: 'CANCELED', cancels: [{ transactionKey: 'tx-lost', cancelAmount: 10000, cancelReason: `[#${autoKey}] 자동 취소` }] });
+    toss.clearFault(`cancel:${autoKey}`);
+
+    const retry = await confirmShowOrder({ orderNo: a.orderNo, paymentKey: 'pk-x', amount: 10000 }, { trustedByWebhook: true }, toss);
+    expect(retry).toEqual({ status: 'auto_cancel_conflict' }); // 고치기 전에는 status !== 'DONE'으로 영영 toss_unresolved
+    expect((await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, a.orderNo) }))?.status).toBe('refunded');
+    expect(toss._payments.get('pk-x')?.cancels).toHaveLength(1); // 재취소 없음
+    const refundRows = await db.query.refunds.findMany();
+    expect(refundRows).toHaveLength(1);
+  });
+});

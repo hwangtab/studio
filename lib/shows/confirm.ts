@@ -510,10 +510,16 @@ export async function autoCancelShowApproval(
     return { status: 'pending_retry' };
   }
   const approved = fetched.payment;
+  // 앞선 자동 취소가 토스에서는 성공했는데 응답만 잃은 경우 — 결제가 이미 CANCELED이고 취소 합이 결제액이면 다시 취소할 것이
+  // 없다. 장부 기록만 하고 끝낸다(없으면 매 재전송마다 status !== 'DONE'으로 pending_retry → 웹훅 500이 재전송 한도까지 반복).
+  const alreadyCancelledTotal = approved.cancels?.reduce((sum, c) => sum + c.cancelAmount, 0) ?? 0;
+  const alreadyCancelledInToss =
+    approved.paymentKey === paymentKey && approved.orderId === order.orderNo &&
+    (approved.status === 'CANCELED' || approved.status === 'PARTIAL_CANCELED') && alreadyCancelledTotal >= approved.totalAmount;
   // 재조회 결과가 실제로 이 주문·이 paymentKey의 것인지 확인한다 — confirmShowOrder의
   // ALREADY_PROCESSED_PAYMENT 재조회 검증과 같은 판정이다. 페이로드나 호출자 주장을
   // 그대로 믿지 않는다.
-  if (approved.paymentKey !== paymentKey || approved.orderId !== order.orderNo || approved.status !== 'DONE') {
+  if (!alreadyCancelledInToss && (approved.paymentKey !== paymentKey || approved.orderId !== order.orderNo || approved.status !== 'DONE')) {
     console.error('[shows-confirm] 자동 취소 재조회 검증 불일치 — 취소하지 않는다(재시도 대상)', {
       orderNo,
       paymentKey,
@@ -540,19 +546,23 @@ export async function autoCancelShowApproval(
     return { status: 'not_eligible' };
   }
 
-  const idempotencyKey = refundIdempotencyKey(orderNo, remaining, 'autocancel');
-  const cancelled = await toss.cancelPayment({
-    paymentKey,
-    cancelReason: `[#${idempotencyKey}] ${AUTO_CANCEL_REASON}`,
-    cancelAmount: remaining,
-    idempotencyKey,
-  });
-  if (!cancelled.ok) {
-    await revertClaim();
-    return { status: 'pending_retry' };
+  let cancelledPayment: TossPayment;
+  if (alreadyCancelledInToss) {
+    cancelledPayment = approved;
+  } else {
+    const idempotencyKey = refundIdempotencyKey(orderNo, remaining, 'autocancel');
+    const cancelled = await toss.cancelPayment({
+      paymentKey,
+      cancelReason: `[#${idempotencyKey}] ${AUTO_CANCEL_REASON}`,
+      cancelAmount: remaining,
+      idempotencyKey,
+    });
+    if (!cancelled.ok) {
+      await revertClaim();
+      return { status: 'pending_retry' };
+    }
+    cancelledPayment = cancelled.payment;
   }
-
-  const cancelledPayment = cancelled.payment;
   const transactionKey = cancelledPayment.cancels?.[cancelledPayment.cancels.length - 1]?.transactionKey ?? null;
   const paymentId = randomUUID().replace(/-/g, '');
   const approvedAtSec = cancelledPayment.approvedAt ? Math.floor(new Date(cancelledPayment.approvedAt).getTime() / 1000) : null;

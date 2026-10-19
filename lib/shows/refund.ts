@@ -8,6 +8,7 @@ import type { TossPayment } from '../booking/toss';
 import { calcRefundAmount, refundRateForNotice } from './refundPolicy';
 import { rowsAffectedOf } from './service';
 import { parseLeadingTag } from './tossCodes';
+import { SHOWTIME_CANCEL_REFUND_REASON, SHOWTIME_CANCEL_TAG_PREFIX } from './refundReasons';
 import type { ShowRefundVia } from './emailHtml';
 import { isBankDepositPayment } from '../payments/bankDeposit';
 import {
@@ -228,9 +229,11 @@ export async function refundShowTickets(
         paymentId: payment.id, amount: totalAmount, reason: `${REFUND_REASON} — 계좌 입금(환불 계좌로 송금)`,
         requestedBy, status: 'done',
       }),
+      // issued도 함께 — 토스 응답을 기다리는 사이 운영자의 '환불 재확인'이 선점을 issued로 되돌렸을 수 있다. 이 id들은
+      // 방금 토스가 돌려준 바로 그 티켓이라 범위가 정확하다.
       db.run(sql`
         UPDATE show_tickets SET status = 'refunded'
-        WHERE order_no = ${input.orderNo} AND id IN (${ticketIdList}) AND status = 'refunding'
+        WHERE order_no = ${input.orderNo} AND id IN (${ticketIdList}) AND status IN ('refunding', 'issued')
       `),
     ];
     try {
@@ -307,7 +310,7 @@ export async function refundShowTickets(
       UPDATE show_tickets SET status = 'refunded'
       WHERE order_no = ${input.orderNo}
         AND id IN (${ticketIdList})
-        AND status = 'refunding'
+        AND status IN ('refunding', 'issued')
     `),
   ];
   await db.batch(recordStatements as [typeof recordStatements[number], ...typeof recordStatements]);
@@ -422,7 +425,10 @@ export async function syncShowCancelsFromToss(orderNo: string, tossPayment: Toss
           if (matches.length > 1) { ambiguous = true; break; }
           if (matches.length === 1) resolved.push(matches[0].id);
         }
-        scopedTicketIds = ambiguous ? null : resolved;
+        // 모호하면 아무것도 확정하지 않는다 — 주문의 refunding 전부를 쓸어 담는 것이 바로 이 함수가 막으려던 일이다.
+        // 남은 refunding은 healthCheck가 알리고 운영자가 '환불 재확인'으로 푼다.
+        if (ambiguous) console.error('[shows-refund] 태그 접두어가 둘 이상의 티켓에 맞아 확정을 보류', { orderNo, prefixes });
+        scopedTicketIds = ambiguous ? [] : resolved;
       }
     }
   }
@@ -431,7 +437,7 @@ export async function syncShowCancelsFromToss(orderNo: string, tossPayment: Toss
     INSERT INTO refunds (id, payment_id, amount, reason, requested_by, toss_transaction_key, status)
     SELECT lower(hex(randomblob(16))), ${paymentRow.id},
            ${cancelledTotal} - COALESCE((SELECT SUM(amount) FROM refunds WHERE payment_id = ${paymentRow.id} AND status = 'done'), 0),
-           ${tag ? `토스 취소 대사(${tag})` : '토스 외부 취소 동기화'}, ${tag ? 'admin' : 'webhook'},
+           ${tag ? (tag.startsWith(SHOWTIME_CANCEL_TAG_PREFIX) ? SHOWTIME_CANCEL_REFUND_REASON : `토스 취소 대사(${tag})`) : '토스 외부 취소 동기화'}, ${tag ? 'admin' : 'webhook'},
            ${lastCancel?.transactionKey ?? null}, 'done'
     WHERE ${cancelledTotal} > COALESCE((SELECT SUM(amount) FROM refunds WHERE payment_id = ${paymentRow.id} AND status = 'done'), 0)
   `);
@@ -502,24 +508,67 @@ export async function reconcileShowRefund(
   if (!order) return { status: 'rejected', reason: 'not_found' };
   const payments = await db.query.payments.findMany({ where: (p, { eq }) => eq(p.orderId, order.id), with: { refunds: true } });
   const payment = payments.find((p) => !isBankDepositPayment(p));
-  if (!payment) return { status: 'rejected', reason: payments.length > 0 ? 'bank_deposit' : 'no_payment' };
+  if (!payment) {
+    if (payments.length === 0) return { status: 'rejected', reason: 'no_payment' };
+    // 계좌 입금 주문은 토스에 물을 것이 없다 — refunding은 기록 batch 실패로만 남으므로 그냥 되돌린다(고객이 다시 신청한다).
+    const revertedBank = rowsAffectedOf(await db.run(sql`
+      UPDATE show_tickets SET status = 'issued' WHERE order_no = ${orderNo} AND status = 'refunding'
+    `));
+    return revertedBank > 0 ? { status: 'reverted', tickets: revertedBank } : { status: 'rejected', reason: 'bank_deposit' };
+  }
 
   const fetched = await toss.fetchPayment(payment.paymentKey);
   if (!fetched.ok) return { status: 'toss_unknown', code: fetched.code };
+
+  const refunding = await db.all<{ id: string }>(sql`
+    SELECT id FROM show_tickets WHERE order_no = ${orderNo} AND status = 'refunding'
+  `);
+  // 토스의 **모든** 취소 태그에서 이 주문의 refunding 티켓을 복원한다 — 마지막 취소만 보면, 두 환불(A·B)이 다 응답을
+  // 잃고 둘 다 실제로 취소된 경우 A가 refunding에 남았다가 다음 재확인에서 "토스에 취소 없음"으로 오판돼 issued로
+  // 되살아난다(돈은 나갔는데 표가 살아 있고, 다시 환불하면 이중 환불).
+  const taggedIds = new Set<string>();
+  for (const c of fetched.payment.cancels ?? []) {
+    for (const id of ticketIdsFromTag(parseLeadingTag(c.cancelReason), orderNo, refunding.map((t) => t.id))) taggedIds.add(id);
+  }
 
   const tossCancelled = fetched.payment.cancels?.reduce((sum, c) => sum + c.cancelAmount, 0) ?? 0;
   const recorded = payment.refunds.filter((r) => r.status === 'done').reduce((sum, r) => sum + r.amount, 0);
   if (tossCancelled > recorded) {
     await syncShowCancelsFromToss(orderNo, fetched.payment);
-    return { status: 'synced', tossCancelled, recorded };
   }
-  const reverted = await db.run(sql`
-    UPDATE show_tickets SET status = 'issued' WHERE order_no = ${orderNo} AND status = 'refunding'
-  `);
-  const tickets = rowsAffectedOf(reverted);
-  if (tickets > 0) {
-    console.error('[shows-refund] 토스에 취소가 없어 refunding 티켓을 issued로 되돌림', { orderNo, tickets });
-    return { status: 'reverted', tickets };
+  if (taggedIds.size > 0) {
+    await db.run(sql`
+      UPDATE show_tickets SET status = 'refunded'
+      WHERE order_no = ${orderNo} AND status = 'refunding' AND id IN (${sql.join([...taggedIds].map((id) => sql`${id}`), sql`, `)})
+    `);
   }
-  return { status: 'noop' };
+  if (tossCancelled > recorded) return { status: 'synced', tossCancelled, recorded };
+
+  // 토스에 어느 취소 태그에도 들지 않은 refunding만 되돌린다 — 그 요청은 토스에 닿지 않은 것이다.
+  const untagged = refunding.map((t) => t.id).filter((id) => !taggedIds.has(id));
+  if (untagged.length > 0) {
+    const reverted = rowsAffectedOf(await db.run(sql`
+      UPDATE show_tickets SET status = 'issued'
+      WHERE order_no = ${orderNo} AND status = 'refunding' AND id IN (${sql.join(untagged.map((id) => sql`${id}`), sql`, `)})
+    `));
+    if (reverted > 0) {
+      console.error('[shows-refund] 토스에 취소가 없어 refunding 티켓을 issued로 되돌림', { orderNo, tickets: reverted });
+      return { status: 'reverted', tickets: reverted };
+    }
+  }
+  return taggedIds.size > 0 ? { status: 'synced', tossCancelled, recorded } : { status: 'noop' };
 }
+
+/** `tkt-refund:<orderNo>:<id접두어,…>` 태그를 이 주문의 후보 티켓 id로 복원한다. 접두어가 둘 이상에 맞으면 그 접두어는 버린다. */
+const ticketIdsFromTag = (tag: string | null, orderNo: string, candidates: string[]): string[] => {
+  if (!tag || !tag.startsWith('tkt-refund:')) return [];
+  const rest = tag.slice('tkt-refund:'.length);
+  const sep = rest.indexOf(':');
+  if (sep === -1 || rest.slice(0, sep) !== orderNo) return [];
+  const out: string[] = [];
+  for (const prefix of rest.slice(sep + 1).split(',')) {
+    const matches = candidates.filter((id) => id.startsWith(prefix));
+    if (matches.length === 1) out.push(matches[0]);
+  }
+  return out;
+};

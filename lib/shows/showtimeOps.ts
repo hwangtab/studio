@@ -105,18 +105,21 @@ export async function cancelShowtime(
   // 주문당 Turso 왕복 3회 + 토스 1회 + batch가 직렬이라 함수 시간 한도(60초) 안에서 처리할 수 있는 만큼만 잡고,
   // 나머지는 호출부의 '환불 이어서 처리'가 같은 함수를 다시 부른다 — showtimes UPDATE는 scheduled에만 걸려 no-op이고
   // 멱등키가 (주문·잔액)이라 토스가 응답을 재생하므로 다시 돌려도 안전하다.
-  const allRows = rows as Array<{ orderNo: string }>;
-  const batchRows = allRows.slice(0, MAX_ORDERS_PER_RUN);
-  const remainingOrders = allRows.length - batchRows.length;
-
-  for (const row of batchRows) {
+  // 상한은 **토스 취소를 실제로 부르는 주문** 수로 센다 — 계좌 입금·입장 티켓만 남은 주문처럼 토스를 안 부르는 주문이
+  // 앞 칸을 차지하면, 그런 주문이 40건을 넘는 순간 나머지는 '이어서 처리'를 아무리 눌러도 영영 차례가 오지 않는다.
+  let tossAttempts = 0;
+  let remainingOrders = 0;
+  for (const row of rows as Array<{ orderNo: string }>) {
     const orderNo = row.orderNo;
     // 주문 하나의 DB 오류가 나머지 주문의 환불·안내를 막지 않게 한다 — 던진 주문은 failedOrders로 넘기고 계속 간다.
     try {
-      await settleOne(orderNo);
+      const outcome = await settleOne(orderNo, tossAttempts >= MAX_ORDERS_PER_RUN);
+      if (outcome === 'deferred') remainingOrders += 1;
+      if (outcome === 'toss') tossAttempts += 1;
     } catch (error) {
       console.error('[shows-showtimeOps] 회차 취소 환불 중 오류 — 이 주문은 실패로 넘기고 계속', { orderNo, error });
       if (!failedOrders.includes(orderNo)) failedOrders.push(orderNo);
+      tossAttempts += 1;
     }
   }
 
@@ -126,11 +129,12 @@ export async function cancelShowtime(
 
   return { refundedOrders, failedOrders, bankRefundOrders, closedDepositOrders, refundedOrderNos, perOrder, remainingOrders };
 
-  async function settleOne(orderNo: string): Promise<void> {
+  /** 'toss' = 토스 취소를 불렀다(상한에 센다) / 'deferred' = 상한에 걸려 이번엔 손대지 않음 / 'skipped' = 토스 없이 끝남. */
+  async function settleOne(orderNo: string, capReached: boolean): Promise<'toss' | 'deferred' | 'skipped'> {
     const order = await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, orderNo) });
     if (!order) {
       failedOrders.push(orderNo);
-      return;
+      return 'skipped';
     }
 
     const payments = await db.query.payments.findMany({
@@ -154,12 +158,18 @@ export async function cancelShowtime(
     // 체크인된 티켓뿐인 경우) 취소할 것이 없어 건너뛴다 — 토스도 우리 기록도 건드리지 않는다.
     const remaining = Math.max(0, remainingRefundable(order, payments) - checkedInValue);
     if (remaining <= 0) {
+      // 돌려줄 돈은 없어도 회차는 취소됐다 — 입장 안 된 살아 있는 티켓은 무효로 넘긴다(웹훅이 먼저 대사해 부분환불로만 둔 경우
+      // issued 티켓이 남아 '환불 이어서 처리' 판정과 입장 검사에 계속 걸린다).
+      await db.run(sql`
+        UPDATE show_tickets SET status = 'void'
+        WHERE order_no = ${orderNo} AND status IN ('held', 'issued') AND checked_in_at IS NULL
+      `);
       perOrder[orderNo] = {
         refunded: 0, checkedInValue,
         skipped: remainingRefundable(order, payments) <= 0 ? 'already_refunded' : 'checked_in_only',
         final: 'unchanged',
       };
-      return;
+      return 'skipped';
     }
 
     const doneRefundedOn = (p: PaymentWithRefunds): number =>
@@ -167,12 +177,13 @@ export async function cancelShowtime(
     const payment = payments.find((p) => doneRefundedOn(p) < order.totalAmount) ?? payments[payments.length - 1];
     if (!payment) {
       failedOrders.push(orderNo);
-      return;
+      return 'skipped';
     }
     if (isBankDepositPayment(payment)) {
       bankRefundOrders.push(orderNo);
-      return;
+      return 'skipped';
     }
+    if (capReached) return 'deferred';
 
     const key = refundIdempotencyKey(orderNo, remaining, 'showtime-cancel');
     const cancelResult = await toss.cancelPayment({
@@ -188,7 +199,7 @@ export async function cancelShowtime(
         orderNo, code: cancelResult.code, message: cancelResult.message,
       });
       failedOrders.push(orderNo);
-      return;
+      return 'toss';
     }
 
     // 델타 INSERT — refund.ts(refundShowTickets)·funding lineRefund와 같은 패턴. 웹훅이
@@ -227,6 +238,7 @@ export async function cancelShowtime(
     refundedOrders++;
     refundedOrderNos.push(orderNo);
     perOrder[orderNo] = { refunded: remaining, checkedInValue, skipped: null, final: finalOrderStatus };
+    return 'toss';
   }
 }
 
