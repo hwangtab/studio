@@ -75,6 +75,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // 해지 환불을 이미 보냈으면 정산을 바꾸는 무효 처리를 받지 않는다 — 보낸 금액과 의뢰인 화면의 금액이 갈린다.
     if (body.action === 'void') {
       const refund = await loadRefundAccountSummary({ kind: 'production', orderNo: id });
+      if (refund.status === 'unavailable') {
+        return res.status(503).json({ ok: false, message: '환불 기록을 확인하지 못했습니다. 잠시 후 다시 시도해 주세요.' });
+      }
       if (refund.status === 'present' && refund.refundedAt) {
         return res.status(409).json({ ok: false, message: '환불을 이미 보낸 계약입니다. 정산을 바꾸려면 의뢰인과 먼저 협의해 주세요.' });
       }

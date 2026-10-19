@@ -322,6 +322,18 @@ export const sendProductionContract = async (
 };
 
 /** 알림 결과를 계약에 남긴다 — 메일은 응답 뒤에 나가므로 실패가 화면에 드러날 길이 이것뿐이다. */
+/**
+ * 알림 오류 칸만 고친다(보낸 시각은 그대로) — 해지 안내처럼 체결 메일이 아닌 메일의 결과. notifiedAt을 덮으면
+ * 체결 메일을 보낸 시각이 사라진다.
+ */
+export const recordProductionNotificationError = async (contractId: string, error: string | null): Promise<void> => {
+  try {
+    await getDb().update(productionContracts).set({ notificationError: error }).where(eq(productionContracts.id, contractId));
+  } catch (dbError: unknown) {
+    console.error('[contracts/production/service] Failed to record notification error:', dbError);
+  }
+};
+
 export const recordProductionNotificationResult = async (contractId: string, error: string | null): Promise<void> => {
   try {
     await getDb()

@@ -43,6 +43,8 @@ interface CompletePageProps {
   closed?: 'completed' | 'terminated';
   /** 이 사람은 서명했고, 다른 당사자(의뢰인·법정대리인)의 서명을 기다린다 — 아직 계약 전이다. */
   waitingFor?: string;
+  /** 상대 서명 기한이 지났다 — 내 서명은 남아 있고, 스튜디오가 상대에게 다시 보내면 이어서 체결된다. */
+  waitingExpired?: boolean;
 }
 
 const OPERATOR_PHONE = '010-4255-7893';
@@ -76,9 +78,12 @@ export const getServerSideProps = withI18nServerProps<CompletePageProps>(async (
 
     const status = getEffectiveProductionStatus(contract);
     // 내 서명은 끝났고 상대 서명을 기다린다 — 계약 정보는 싣지 않고 그 사실만 알린다.
-    if (status === 'sent' && linkSigner.status === 'signed') {
+    // 상대가 기한 안에 서명하지 않아 만료로 보이는 때도 같다 — 내 서명은 끝났으니 "링크 만료"를 보일 사람이 아니다.
+    if ((status === 'sent' || status === 'expired') && linkSigner.status === 'signed') {
       const other = contract.signers.find((signer) => signer.status === 'pending' && signer.role !== 'operator');
-      return { props: { ...empty, waitingFor: other?.role === 'guardian' ? '법정대리인' : '의뢰인' } };
+      return {
+        props: { ...empty, waitingFor: other?.role === 'guardian' ? '법정대리인' : '의뢰인', waitingExpired: status === 'expired' },
+      };
     }
     // 서명 전이면 아무것도 싣지 않고 서명 화면으로 보낸다(반대 방향은 sign.tsx가 맡는다).
     if (!hasSignedDocument(status)) {
@@ -121,6 +126,7 @@ export default function ProductionContractCompletePage({
   unavailable,
   closed,
   waitingFor,
+  waitingExpired,
 }: CompletePageProps) {
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
@@ -135,7 +141,11 @@ export default function ProductionContractCompletePage({
         </Head>
         <ContractNotice
           title="서명이 접수됐어요"
-          description={`${waitingFor}의 서명까지 끝나면 계약이 체결되고, 서명본 PDF를 메일로 보내 드려요.`}
+          description={
+            waitingExpired
+              ? `${waitingFor}의 서명 기한이 지났어요. 스튜디오가 ${waitingFor}에게 서명 링크를 다시 보내면 이어서 계약이 체결돼요. 문의 ${OPERATOR_PHONE}`
+              : `${waitingFor}의 서명까지 끝나면 계약이 체결되고, 서명본 PDF를 메일로 보내 드려요.`
+          }
         />
       </>
     );

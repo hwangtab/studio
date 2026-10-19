@@ -24,7 +24,7 @@ import { formatTerminationReason, isTerminationCause } from '../../../../lib/con
 import { validateProductionContractPayload } from '../../../../lib/contracts/production/validation';
 import { recordAdminPrivacyAccess } from '../../../../lib/privacy/accessLog';
 
-const MUTABLE_ACTIONS = ['update', 'send', 'resend', 'resend-signed', 'cancel', 'complete', 'terminate'] as const;
+const MUTABLE_ACTIONS = ['update', 'send', 'resend', 'resend-signed', 'resend-termination', 'cancel', 'complete', 'terminate'] as const;
 type MutableAction = (typeof MUTABLE_ACTIONS)[number];
 
 const isMutableAction = (value: unknown): value is MutableAction =>
@@ -133,6 +133,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           ok: true,
           message: '체결 메일을 다시 보내는 중입니다. 잠시 후 새로고침해 결과를 확인해 주세요.',
         });
+      }
+
+      if (action === 'resend-termination') {
+        if (contract.purgedAt) return res.status(409).json({ ok: false, message: '개인정보를 파기한 계약입니다.' });
+        waitUntil(sendTerminationNotice(id));
+        return res.status(200).json({ ok: true, message: '해지 안내 메일을 다시 보내는 중입니다. 잠시 후 새로고침해 결과를 확인해 주세요.' });
       }
 
       if (action === 'cancel') {

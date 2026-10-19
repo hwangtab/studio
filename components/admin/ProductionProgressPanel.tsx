@@ -264,11 +264,23 @@ export default function ProductionProgressPanel({
             <Row label="받은 금액" value={`${formatCurrency(payments.received)}원`} />
             <Row label="받을 금액(추가 포함)" value={`${formatCurrency(payments.totalDue)}원`} />
             <Row label="남은 금액" value={`${formatCurrency(payments.remaining)}원`} />
-            <Row label="계약금" value={payments.depositMetAt ? `입금 ${formatDate(payments.depositMetAt)}` : `기한 ${formatDate(payments.depositLastDay)}`} />
+            <Row
+              label="계약금"
+              value={
+                payments.deposit === 0
+                  ? '없음'
+                  : payments.depositMetAt
+                    ? `입금 ${formatDate(payments.depositMetAt)}`
+                    : `기한 ${formatDate(payments.depositLastDay)}`
+              }
+            />
             <Row label="잔금 기한" value={payments.balanceLastDay ? formatDate(payments.balanceLastDay) : '마스터링 승인 후'} />
           </dl>
           <dl className="space-y-2">
-            <Row label="작업 기간 시작" value={work.startedOn ? formatDate(work.startedOn) : '계약금·1차 완성본 대기'} />
+            <Row
+              label="작업 기간 시작"
+              value={work.startedOn ? formatDate(work.startedOn) : payments.deposit === 0 ? '1차 완성본 대기' : '계약금·1차 완성본 대기'}
+            />
             <Row label="완료 예정" value={work.dueOn ? formatDate(work.dueOn) : '-'} />
             <Row label="지연" value={work.delayDays > 0 ? `${work.delayDays}일` : '-'} />
             <Row label="상태" value={work.paused ? '정지 중' : work.finalDeliveredAt ? `최종 인도 ${formatDate(work.finalDeliveredAt)}` : '진행'} />

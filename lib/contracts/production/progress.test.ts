@@ -566,3 +566,54 @@ describe('해지 처리(2026-10-19)', () => {
     expect(res.status.mock.calls[0][0]).toBe(409);
   });
 });
+
+describe('네 번째 점검(2026-10-19)', () => {
+  it('서명 전 계약의 진행 페이지는 열지 않는다 — 연락처 뒷자리를 맞혀 보는 창구가 되지 않게', async () => {
+    const { id } = await createProductionContract({
+      kind: 'single',
+      title: '서명 전',
+      clientName: '홍길동',
+      clientStageName: null,
+      clientEmail: 'g@example.com',
+      clientPhone: '010-1234-5678',
+      guardian: null,
+      terms: buildDefaultProductionTerms('single', 1),
+    });
+    const sent = await sendProductionContract(id, { allowedStatuses: ['draft'], adminActor: 'kyungha', ipAddress: null, userAgent: 'jest' });
+    const token = new URL(sent!.signUrls.client!).searchParams.get('token')!;
+    const result = await callProgress(id, { action: 'unlock', token, identityDigits: '5678' });
+    expect(result.status).toBe(409);
+    expect(result.cookie).toBe('');
+  });
+
+  it('승인에는 메모를 남기지 않는다', async () => {
+    const { id, token } = await signedContract(new Date());
+    const delivery = await record(id, input({ type: 'stage_delivered', stage: 'mixing' }));
+    const { cookie } = await callProgress(id, { action: 'unlock', token, identityDigits: '5678' });
+    const result = await callProgress(id, { action: 'approve', token, stage: 'mixing', deliveryEventId: delivery.id, note: '보컬 크게(쓰다 취소한 글)' }, cookie);
+    expect(result.status).toBe(200);
+    const approval = (await loadProgressContext(id))!.events.find((e) => e.type === 'stage_approved')!;
+    expect(JSON.parse(approval.dataJson!)).not.toHaveProperty('note');
+  });
+
+  it('해지 안내는 해지한 계약에만 다시 보내고, 해지한 계약에는 체결 메일을 다시 보내지 않는다', async () => {
+    const { id } = await signedContract(new Date());
+    expect((await callAdmin(id, { action: 'resend-termination' })).status).toBe(409);
+    await callAdmin(id, { action: 'terminate', cause: 'studio', reason: '장비 고장' });
+    await Promise.allSettled(mockBackground.splice(0));
+    expect((await callAdmin(id, { action: 'resend-signed' })).status).toBe(409);
+    expect((await callAdmin(id, { action: 'resend-termination' })).status).toBe(200);
+    await Promise.allSettled(mockBackground.splice(0));
+  });
+
+  it('해지 안내가 실패하면 알림 오류만 남기고 체결 메일을 보낸 시각은 그대로 둔다', async () => {
+    const { id } = await signedContract(new Date());
+    await client.execute({ sql: 'UPDATE production_contracts SET notified_at = 1700000000 WHERE id = ?', args: [id] });
+    mockSendEmail.mockResolvedValueOnce({ ok: false, errorCode: 'UNDELIVERABLE_ADDRESS' });
+    await callAdmin(id, { action: 'terminate', cause: 'client', reason: '의뢰인 요청' });
+    await Promise.allSettled(mockBackground.splice(0));
+    const contract = await mockDb.query.productionContracts.findFirst({ where: (t, { eq }) => eq(t.id, id) });
+    expect(contract?.notificationError).toContain('해지 안내');
+    expect(contract?.notifiedAt?.getTime()).toBe(1700000000 * 1000);
+  });
+});

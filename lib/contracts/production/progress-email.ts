@@ -59,7 +59,9 @@ const buildContent = (
   const remaining = Math.max(0, payments.totalDue - payments.received);
   const multi = terms.songs.length > 1;
   /** 곡마다 일어나는 기록(1차 완성본·녹음)의 곡 이름 — 여러 곡이면 붙인다. 안 붙이면 같은 메일이 곡 수만큼 간다. */
-  const songPrefix = multi ? `${escapeHtml(songLabel(terms, songOf(event)))} ` : '';
+  // 제목·머리글은 그대로(제목은 일반 텍스트, 머리글은 레이아웃이 escape한다), 본문 문단에만 escape한 값을 쓴다.
+  const songPlain = multi ? `${songLabel(terms, songOf(event))} ` : '';
+  const songPrefix = escapeHtml(songPlain);
 
   switch (event.type) {
     case 'payment_received':
@@ -77,13 +79,13 @@ const buildContent = (
     case 'source_received':
     case 'source_replaced':
       return {
-        subject: `${songPrefix}${event.type === 'source_received' ? '1차 완성본을 받았어요' : '1차 완성본 교체를 기록했어요'}`,
-        heading: `${songPrefix}${event.type === 'source_received' ? '1차 완성본을 받았어요' : '1차 완성본 교체를 기록했어요'}`,
+        subject: `${songPlain}${event.type === 'source_received' ? '1차 완성본을 받았어요' : '1차 완성본 교체를 기록했어요'}`,
+        heading: `${songPlain}${event.type === 'source_received' ? '1차 완성본을 받았어요' : '1차 완성본 교체를 기록했어요'}`,
         paragraphs: [
           `${name}님, 보내 주신 ${songPrefix}1차 완성본을 받았어요.`,
           event.type === 'source_replaced'
             ? '1차 완성본을 바꾸면 작업 기간은 교체한 날부터 다시 계산해요(계약서 제4조 2항).'
-            : `작업 기간은 계약금 입금과 ${multi ? '모든 수록곡의 ' : ''}1차 완성본 수령이 모두 끝난 날부터 약 ${terms.workWeeks}주예요(계약서 제4조).`,
+            : `작업 기간은 ${terms.amount.deposit > 0 ? '계약금 입금과 ' : ''}${multi ? '모든 수록곡의 ' : ''}1차 완성본 수령이 끝난 날부터 약 ${terms.workWeeks}주예요(계약서 제4조).`,
         ],
         rows: [...(work.dueOn ? [{ label: '작업 완료 예정', value: `${formatDate(work.dueOn)} 무렵` }] : []), ...linkRow, ...noteRow],
         ctaLabel: '작업 진행 보기',
@@ -135,8 +137,8 @@ const buildContent = (
     }
     case 'recording_completed':
       return {
-        subject: `${songPrefix}보컬 녹음을 마쳤어요`,
-        heading: `${songPrefix}보컬 녹음을 마쳤어요`,
+        subject: `${songPlain}보컬 녹음을 마쳤어요`,
+        heading: `${songPlain}보컬 녹음을 마쳤어요`,
         paragraphs: [`${name}님, ${songPrefix}보컬 녹음 세션을 마쳤어요. 다음은 음정·박자 보정과 믹싱이에요.`],
         rows: noteRow,
         ctaLabel: '작업 진행 보기',

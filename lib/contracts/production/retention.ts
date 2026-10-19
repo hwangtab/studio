@@ -4,6 +4,7 @@ import { and, eq, inArray, isNull, lt, or, sql } from 'drizzle-orm';
 import { getDb } from '../../../db/client';
 import { productionContractEvents, productionContracts, productionContractSigners, refundAccounts } from '../../../db/schema';
 import { contractPdfPathname } from '../pdfPath';
+import { formatTerminationReason, parseTerminationCause } from './termination';
 import { canonicalTermsJson, parseStoredTerms } from './terms';
 
 /**
@@ -41,7 +42,12 @@ export const purgeExpiredProductionPersonalData = async (
   const boundary = getProductionRetentionBoundary(now);
 
   const targets = await getDb()
-    .select({ id: productionContracts.id, pdfUrl: productionContracts.pdfUrl, termsJson: productionContracts.termsJson })
+    .select({
+      id: productionContracts.id,
+      pdfUrl: productionContracts.pdfUrl,
+      termsJson: productionContracts.termsJson,
+      terminationReason: productionContracts.terminationReason,
+    })
     .from(productionContracts)
     .where(
       and(
@@ -68,6 +74,8 @@ export const purgeExpiredProductionPersonalData = async (
       if (target.pdfUrl) await del(contractPdfPathname(target.pdfUrl));
 
       const terms = parseStoredTerms(target.termsJson);
+      // 사유 글은 지우되 해지 사유 구분(누구의 사정)은 남긴다 — 정산 조항(제10조 3·4항)을 가르는 운영 값이다.
+      const cause = parseTerminationCause(target.terminationReason);
 
       await getDb().batch([
         getDb()
@@ -83,7 +91,7 @@ export const purgeExpiredProductionPersonalData = async (
             content: PURGED_MARK,
             // 곡·음반 제목은 사람을 가리킬 수 있다(발매 전 곡이면 더욱). 곡 수·금액·기한 조건은 운영 기록으로 남긴다.
             termsJson: canonicalTermsJson({ ...terms, albumTitle: null, songs: terms.songs.map(() => ({ title: null })) }),
-            terminationReason: null,
+            terminationReason: cause ? formatTerminationReason(cause, PURGED_MARK) : null,
             notificationError: null,
             pdfUrl: null,
             purgedAt: now,

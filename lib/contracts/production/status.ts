@@ -16,6 +16,7 @@ export type ProductionContractAction =
   | 'send'
   | 'resend'
   | 'resend-signed'
+  | 'resend-termination'
   | 'cancel'
   | 'update'
   | 'delete'
@@ -30,7 +31,9 @@ const ALLOWED_STATUSES: Record<ProductionContractAction, readonly ProductionCont
    * 취소한 계약을 되살리는 것은 새 의사표시라 새 계약으로 만드는 편이 기록이 깨끗하다.
    */
   resend: ['sent', 'expired'],
-  'resend-signed': ['signed', 'completed', 'terminated'],
+  // 해지한 계약에는 체결 메일("계약금을 입금해 주세요")을 다시 보내지 않는다 — 해지 안내를 다시 보낸다.
+  'resend-signed': ['signed', 'completed'],
+  'resend-termination': ['terminated'],
   cancel: ['draft', 'sent', 'expired'],
   // 발송 후에는 본문을 고칠 수 없다. 바꿔야 하면 취소하고 새로 만든다.
   update: ['draft'],
@@ -44,6 +47,7 @@ const ACTION_LABEL: Record<ProductionContractAction, string> = {
   send: '발송',
   resend: '재발송',
   'resend-signed': '완료 메일 재발송',
+  'resend-termination': '해지 안내 재발송',
   cancel: '취소',
   update: '수정',
   delete: '삭제',

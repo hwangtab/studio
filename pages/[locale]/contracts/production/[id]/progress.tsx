@@ -156,8 +156,8 @@ function StageCard({
       token,
       stage: stage.stage,
       deliveryEventId: stage.pending.deliveryEventId,
-      note,
-      acceptFee,
+      // 메모는 수정 요청에만 — 쓰다 취소한 수정 요청 글이 승인 기록에 남지 않게.
+      ...(action === 'revision' ? { note, acceptFee } : {}),
     });
     setBusy(false);
     if (!result.ok) {
@@ -236,7 +236,15 @@ function StageCard({
                 <Button light disabled={busy || note.trim() === '' || (needsFee && !acceptFee)} onClick={() => submit('revision')}>
                   수정 요청 보내기
                 </Button>
-                <Button light variant="weak" disabled={busy} onClick={() => setMode('idle')}>
+                <Button
+                  light
+                  variant="weak"
+                  disabled={busy}
+                  onClick={() => {
+                    setMode('idle');
+                    setNote('');
+                  }}
+                >
                   취소
                 </Button>
               </div>
@@ -470,7 +478,11 @@ export default function ProductionProgressPage({
                     <>
                       <dt className="text-gray-500 dark:text-gray-500">작업 완료 예정</dt>
                       <dd className="text-right font-medium text-gray-900 dark:text-gray-900">
-                        {view.work.dueOn ? `${formatDate(view.work.dueOn)} 무렵` : '계약금·1차 완성본을 받은 뒤 정해져요'}
+                        {view.work.dueOn
+                          ? `${formatDate(view.work.dueOn)} 무렵`
+                          : view.payments.deposit === 0
+                            ? '1차 완성본을 받은 뒤 정해져요'
+                            : '계약금·1차 완성본을 받은 뒤 정해져요'}
                       </dd>
                     </>
                   )}

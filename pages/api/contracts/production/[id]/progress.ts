@@ -10,6 +10,7 @@ import { getClientIp } from '../../../../../lib/contracts/client-ip';
 import { IDENTITY_DIGITS, verifyIdentityDigits } from '../../../../../lib/contracts/identity';
 import { productionRateLimitKey } from '../../../../../lib/contracts/production/links';
 import { grantPortalAccess, hasPortalAccess } from '../../../../../lib/contracts/production/portal-session';
+import { hasSignedDocument } from '../../../../../lib/contracts/production/status';
 import { loadProgressContext, recordProgressEvent, sendEventNotice } from '../../../../../lib/contracts/production/progress';
 import {
   encryptRefundAccountNumber,
@@ -51,6 +52,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!context || !client) return res.status(404).json({ ok: false, message: '계약을 찾을 수 없어요.' });
     if (context.contract.purgedAt) return res.status(409).json({ ok: false, message: '보관 기간이 지나 파기된 계약이에요.' });
     // 진행 페이지는 의뢰인 링크로만 연다(승인·수정 요청·환불 계좌는 의뢰인의 행위다).
+
+    // 진행 페이지는 체결된 계약에만 있다. 서명 전에 열어 두면 연락처 뒷자리를 맞혀 보는 창구가 되어, 서명 화면의
+    // 누적 잠금(20회 → 재발송)을 비켜 간다.
+    if (!hasSignedDocument(context.contract.status)) {
+      return res.status(409).json({ ok: false, message: '계약이 체결된 뒤에 진행 페이지를 열 수 있어요.' });
+    }
 
     if (body.action === 'unlock') {
       const rateKey = `progress:${productionRateLimitKey(id)}`;
@@ -151,7 +158,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         occurredAt: new Date(),
         data:
           body.action === 'approve'
-            ? { mode: 'explicit', deliveryEventId: state.pending.deliveryEventId, ...(note ? { note } : {}) }
+            ? // 승인에는 메모를 남기지 않는다 — 화면이 남긴 수정 요청 글이 승인 기록에 섞이지 않게(길이 제한도 수정 요청에만 있다).
+              { mode: 'explicit', deliveryEventId: state.pending.deliveryEventId }
             : { note, deliveryEventId: state.pending.deliveryEventId },
         voidsEventId: null,
       },

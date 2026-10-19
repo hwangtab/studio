@@ -166,7 +166,7 @@ export const sendProductionSignedEmail = async (
             escapeHtml(accountLine(terms)),
           ]
         : []),
-      `작업 기간은 ${workStartPhrase(terms).replace('·', '과 ')}이 모두 끝난 날부터 셉니다.`,
+      `작업 기간은 ${workStartPhrase(terms).replace('·', '과 ')}이 끝난 날부터 셉니다.`,
     ],
   });
 
