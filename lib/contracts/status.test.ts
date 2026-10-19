@@ -2,6 +2,7 @@
 
 import { contractStatusEnum } from '../../db/schema';
 import {
+  hasSignedDocument,
   SIGN_TOKEN_TTL_DAYS,
   checkAction,
   computeExpiresAt,
@@ -182,6 +183,23 @@ describe('상태 라벨', () => {
 
   it('스키마 enum과 라벨 대상이 어긋나지 않는다', () => {
     expect(contractStatusEnum).toContain('terminated');
+  });
+});
+
+describe('hasSignedDocument — 내려받을 서명본이 있는 상태', () => {
+  const signedAt = new Date('2026-09-01T00:00:00Z');
+  it.each([
+    ['signed', signedAt, true],
+    ['terminated', signedAt, true],
+    ['sent', null, false],
+    ['draft', null, false],
+    ['cancelled', null, false],
+    ['expired', null, false],
+    // 서명 시각이 없는 signed/terminated는 데이터 오류다 — 내주지 않는다.
+    ['signed', null, false],
+    ['terminated', null, false],
+  ] as const)('%s / signedAt=%s → %s', (status, at, expected) => {
+    expect(hasSignedDocument({ status, signedAt: at })).toBe(expected);
   });
 });
 

@@ -1,4 +1,4 @@
-import { and, eq, sql } from 'drizzle-orm';
+import { and, eq, sql, isNull } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { fundingProjects } from '../../db/schema';
@@ -50,7 +50,8 @@ const deny = (code: Exclude<DecisionResult, { ok: true }>['code'], message: stri
 export const decideProject = async (
   projectId: string,
   action: AdminReviewAction,
-  input: { note?: string; slug?: string; expectedSubmittedAt?: string },
+  /** expectedSubmittedAt: 운영자가 본 판본. null = 제출 기록이 없는 초안(한 번도 제출 안 함·철회됨). undefined = 검사 안 함. */
+  input: { note?: string; slug?: string; expectedSubmittedAt?: string | null },
   now: Date = new Date(),
 ): Promise<DecisionResult> => {
   const project = await loadProjectForAdmin(projectId);
@@ -63,18 +64,23 @@ export const decideProject = async (
    * `updatedAt`은 쓰지 않는다 — 운영자 본인의 메모 저장도 그 값을 올려, 메모만 달고 승인해도
    * 충돌이 난다. 값이 없으면(라이브러리 호출) 검사하지 않는다 — API 라우트가 필수로 요구한다.
    */
-  const expectedSubmittedAtMs =
-    input.expectedSubmittedAt === undefined ? undefined : new Date(input.expectedSubmittedAt).getTime();
+  const expectedSubmittedAtMs: number | null | undefined =
+    input.expectedSubmittedAt === undefined ? undefined
+      : input.expectedSubmittedAt === null ? null
+        : new Date(input.expectedSubmittedAt).getTime();
   if (expectedSubmittedAtMs !== undefined) {
     const currentMs = project.submittedAt ? new Date(project.submittedAt).getTime() : null;
-    if (Number.isNaN(expectedSubmittedAtMs) || currentMs !== expectedSubmittedAtMs) {
+    // null 판본은 "아직 제출 기록이 없다"와만 맞는다 — 그 사이 제출됐으면 못 본 판본이라 충돌이다.
+    if ((expectedSubmittedAtMs !== null && Number.isNaN(expectedSubmittedAtMs)) || currentMs !== expectedSubmittedAtMs) {
       return deny('conflict', STALE_VERSION_MESSAGE);
     }
   }
   const versionCondition =
     expectedSubmittedAtMs === undefined
       ? undefined
-      : eq(fundingProjects.submittedAt, new Date(expectedSubmittedAtMs));
+      : expectedSubmittedAtMs === null
+        ? isNull(fundingProjects.submittedAt)
+        : eq(fundingProjects.submittedAt, new Date(expectedSubmittedAtMs));
 
   const next = nextReviewStatus(project.reviewStatus, action);
   if (!next) return deny('conflict', '지금 상태에서는 그 판정을 할 수 없어요.');

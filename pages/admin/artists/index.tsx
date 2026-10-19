@@ -12,7 +12,8 @@ import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { SUPPORTED_ARTISTS } from '../../../data/artists';
 import { ARTIST_SUPPORT_SHARE_PERCENT, formatPriceAmount } from '../../../data/pricing';
 import { isArtistSupportOpen } from '../../../lib/artistSupport/open';
-import { buildAllArtistPayoutPreviews, listArtistPayouts, PERIOD_PATTERN } from '../../../lib/artistSupport/payout';
+import { buildAllArtistPayoutPreviews, listArtistPayouts } from '../../../lib/artistSupport/payout';
+import { PERIOD_PATTERN } from '../../../lib/artistSupport/period';
 import { countSupportersByArtist } from '../../../lib/artistSupport/supporters';
 import { cycleYmOf } from '../../../lib/billing/schedule';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
@@ -50,6 +51,8 @@ interface PayoutHistoryRow {
 }
 
 interface AdminArtistsPageProps {
+  /** KST 기준 이번 달(YYYY-MM) — 서버가 내려준다(렌더 중 Date.now()면 hydration이 어긋난다). 이 달 이후는 기록 버튼을 숨긴다. */
+  currentPeriod?: string;
   supportOpen: boolean;
   period: string;
   artists: Array<{ slug: string; name: string; supportActive: boolean; taxType: string; supporterCount: number }>;
@@ -86,6 +89,7 @@ export const getServerSideProps: GetServerSideProps<AdminArtistsPageProps> = asy
     ]);
     return {
       props: {
+        currentPeriod: cycleYmOf(new Date()),
         supportOpen: isArtistSupportOpen(),
         period,
         artists: SUPPORTED_ARTISTS.map((a) => ({
@@ -127,14 +131,14 @@ export const getServerSideProps: GetServerSideProps<AdminArtistsPageProps> = asy
   } catch (error: unknown) {
     console.error('[admin/artists] Failed to load:', error);
     return {
-      props: { supportOpen: isArtistSupportOpen(), period, artists: [], previews: [], history: [], error: '아티스트 현황을 불러오지 못했습니다.' },
+      props: { currentPeriod: cycleYmOf(new Date()), supportOpen: isArtistSupportOpen(), period, artists: [], previews: [], history: [], error: '아티스트 현황을 불러오지 못했습니다.' },
     };
   }
 };
 
 const TAX_LABELS: Record<string, string> = { withholding: '원천징수 3.3%', invoice: '세금계산서' };
 
-export default function AdminArtistsPage({ supportOpen, period, artists, previews, history, historyTruncated = false, error }: AdminArtistsPageProps) {
+export default function AdminArtistsPage({ supportOpen, period, artists, previews, history, historyTruncated = false, error, currentPeriod = '9999-12' }: AdminArtistsPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -303,7 +307,7 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
                           )}
                         </td>
                         <td className="px-3 py-3 text-right whitespace-nowrap">
-                          {!p.recorded && p.grossAmount > 0 && (
+                          {!p.recorded && p.grossAmount > 0 && p.period < currentPeriod && (
                             <Button
                               light
                               size="sm"

@@ -120,6 +120,8 @@ beforeEach(() => {
   (sendFundingPayoutPaidEmail as jest.Mock).mockResolvedValue(null);
   (sendFundingPayoutOperatorFallback as jest.Mock).mockResolvedValue(null);
   (recordAdminPrivacyAccess as jest.Mock).mockResolvedValue(undefined);
+  // clearAllMocks는 구현을 남긴다 — 앞 시험이 넣은 "금액이 바뀐 집계"가 뒤 시험으로 새지 않게 매번 되돌린다.
+  (buildFundingPayoutPreview as jest.Mock).mockReset();
 });
 
 afterEach(() => jest.restoreAllMocks());
@@ -280,6 +282,7 @@ describe('record_payout', () => {
 });
 
 describe('mark_payout_paid', () => {
+  const previewWith = (recorded: unknown, netAmount: number = PAYOUT.netAmount) => ({ projectId: 'proj-1', recorded, netAmount });
 
   it('인증 없으면 401', async () => {
     (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: false });
@@ -324,6 +327,22 @@ describe('mark_payout_paid', () => {
     expect((await call({ action: 'mark_payout_paid' })).status).toBe(409);
   });
 
+  it('기록값과 현재 계산값이 다르면 409(amount_changed)로 한 번 멈추고, acknowledgeAmountChanged면 기록한다', async () => {
+    (loadRecordedFundingPayout as jest.Mock).mockResolvedValue(PAYOUT);
+    (buildFundingPayoutPreview as jest.Mock).mockResolvedValue(previewWith(PAYOUT, PAYOUT.netAmount - 10_000));
+    (markFundingPayoutPaid as jest.Mock).mockResolvedValue(true);
+    const blocked = await call({ action: 'mark_payout_paid' });
+    expect(blocked.status).toBe(409);
+    expect(blocked.body).toMatchObject({ code: 'amount_changed', recordedNetAmount: PAYOUT.netAmount, currentNetAmount: PAYOUT.netAmount - 10_000 });
+    expect(markFundingPayoutPaid).not.toHaveBeenCalled();
+    // 확인창과 클릭 사이에 금액이 또 바뀌었으면(본 값 ≠ 지금 값) 다시 409.
+    const stale = await call({ action: 'mark_payout_paid', acknowledgedNetAmount: PAYOUT.netAmount - 20_000 });
+    expect(stale.status).toBe(409);
+    const ok = await call({ action: 'mark_payout_paid', acknowledgedNetAmount: PAYOUT.netAmount - 10_000 });
+    expect(ok.status).toBe(200);
+    expect(markFundingPayoutPaid).toHaveBeenCalled();
+  });
+
   it('메일이 실패해도 200', async () => {
     (loadRecordedFundingPayout as jest.Mock).mockResolvedValue(PAYOUT);
     (markFundingPayoutPaid as jest.Mock).mockResolvedValue(true);
@@ -341,7 +360,8 @@ describe('mark_payout_paid', () => {
     const r = await call({ action: 'mark_payout_paid' });
     expect(r.status).toBe(200);
     expect(markFundingPayoutPaid).toHaveBeenCalledWith('pay-1', null, expect.any(Date));
-    expect(buildFundingPayoutPreview).not.toHaveBeenCalled();
+    // 금액 불일치 가드가 집계를 한 번 묻지만, 집계가 죽어도 가드를 건너뛰고 기록은 된다.
+    expect(buildFundingPayoutPreview).toHaveBeenCalled();
   });
 });
 

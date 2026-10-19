@@ -10,6 +10,10 @@ export interface FundingProjectActionResult {
   ok: boolean;
   message?: string;
   warnings?: string[];
+  /** 서버가 준 오류 코드(예: amount_changed) — 화면이 확인 뒤 다시 보낼지 가른다. */
+  code?: string;
+  /** amount_changed 때 서버가 함께 준 현재 계산값. */
+  currentNetAmount?: number;
 }
 
 /**
@@ -31,8 +35,8 @@ export interface FundingProjectActionResult {
  *   `close`만 서버가 빈 메모를 거부한다 — 개설자가 "왜 멈췄는지" 알아야 하기 때문이다.
  */
 export type FundingProjectPatchBody =
-  | { action: 'approve'; slug?: string; note?: string; expectedSubmittedAt: string }
-  | { action: 'request_changes' | 'reject' | 'archive'; note: string; expectedSubmittedAt: string }
+  | { action: 'approve'; slug?: string; note?: string; expectedSubmittedAt: string | null }
+  | { action: 'request_changes' | 'reject' | 'archive'; note: string; expectedSubmittedAt: string | null }
   /**
    * `expectedNote`는 화면이 불러온 시점의 메모 원문(없으면 빈 문자열). 서버가 지금 값과 다르면 409 — 두 운영자(또는 탭 둘)가
    * 동시에 저장해 나중 쓰기가 조용히 이기던 것을 막는다. 생략하면 검사하지 않는다.
@@ -68,11 +72,12 @@ export type FundingProjectPatchBody =
       expectedProductionFeeOffsetAmount: number;
       expectedShortfallAmount: number;
     }
-  | { action: 'mark_payout_paid'; memo?: string }
+  /** acknowledgedNetAmount: 기록값과 현재 계산값이 다를 때 운영자가 확인창에서 본 현재값 — 서버가 지금 값과 같을 때만 통과. */
+  | { action: 'mark_payout_paid'; memo?: string; acknowledgedNetAmount?: number }
   /** 기록된 정산(이체 대기면 '정산 기록' 안내, 지급 완료면 '정산 지급' 안내)의 개설자 메일을 다시 보낸다. 상태는 바꾸지 않는다. */
   | { action: 'resend_payout_notice' };
 
-const readJson = async (r: Response): Promise<{ message?: string; warnings?: string[] }> => {
+const readJson = async (r: Response): Promise<{ message?: string; warnings?: string[]; code?: string; currentNetAmount?: number }> => {
   try {
     return await r.json();
   } catch {
@@ -92,7 +97,7 @@ export const patchFundingProject = async (
       body: JSON.stringify(body),
     });
     const result = await readJson(r);
-    if (!r.ok) return { ok: false, message: result.message || '처리에 실패했습니다.' };
+    if (!r.ok) return { ok: false, message: result.message || '처리에 실패했습니다.', ...(typeof result.code === 'string' ? { code: result.code } : {}), ...(typeof result.currentNetAmount === 'number' ? { currentNetAmount: result.currentNetAmount } : {}) };
     return { ok: true, ...(result.warnings && result.warnings.length > 0 ? { warnings: result.warnings } : {}) };
   } catch {
     return { ok: false, message: '네트워크 오류' };

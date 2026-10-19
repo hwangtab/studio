@@ -55,12 +55,18 @@ export const loadProjectPayoutState = async (projectSlug: string): Promise<Proje
   }
 };
 
-export const payoutWarningOf = (state: ProjectPayoutState): string | null =>
-  state === null
-    ? null
-    : state.status === 'paid'
-      ? '이 프로젝트는 정산을 이미 이체했어요 — 이 입금을 확정하면 개설자에게 추가로 보낼 몫이 생겨요. 정산 패널에서 차액을 확인해 주세요.'
-      : '이 프로젝트는 정산이 기록됐어요 — 확정하면 개설자에게 보낼 금액이 늘어나요. 이체 전에 정산 패널의 계산값을 다시 확인해 주세요.';
+/** context: 'deposit' = 입금 확인·수기 등록(개설자 몫이 는다) / 'refund' = 환불(개설자 몫이 줄고, 이체 뒤면 회수할 차액이 생긴다). */
+export const payoutWarningOf = (state: ProjectPayoutState, context: 'deposit' | 'refund' = 'deposit'): string | null => {
+  if (state === null) return null;
+  if (context === 'refund') {
+    return state.status === 'paid'
+      ? '이 프로젝트는 정산을 이미 이체했어요 — 이 환불만큼 개설자에게 회수할 차액이 생겨요. 정산 패널에서 차액을 확인하고 개설자에게 청구해 주세요.'
+      : '이 프로젝트는 정산이 기록됐어요 — 환불하면 개설자에게 보낼 금액이 줄어요. 이체 전에 정산 패널의 계산값을 다시 확인해 주세요.';
+  }
+  return state.status === 'paid'
+    ? '이 프로젝트는 정산을 이미 이체했어요 — 이 입금을 확정하면 개설자에게 추가로 보낼 몫이 생겨요. 정산 패널에서 차액을 확인해 주세요.'
+    : '이 프로젝트는 정산이 기록됐어요 — 확정하면 개설자에게 보낼 금액이 늘어나요. 이체 전에 정산 패널의 계산값을 다시 확인해 주세요.';
+};
 
 /**
  * **입금 확인** — 운영자가 통장에서 입금을 확인하고 누른다. `pending`(그리고 늦은 입금을 위해

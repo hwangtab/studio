@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getDb } from '../../../../db/client';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
+import { hasSignedDocument } from '../../../../lib/contracts/status';
 import { loadOrRenderContractPdf } from '../../../../lib/contracts/pdf-storage';
 import { recordAdminPrivacyAccess, type PrivacyAccessResult } from '../../../../lib/privacy/accessLog';
 
@@ -55,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(404).json({ ok: false, message: '계약을 찾을 수 없습니다.' });
     }
 
-    if (contract.status !== 'signed') {
+    if (!hasSignedDocument(contract)) {
       return res.status(409).json({ ok: false, message: '서명이 완료된 계약만 PDF로 받을 수 있습니다.' });
     }
 

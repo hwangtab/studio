@@ -348,7 +348,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
       return;
     }
     return run(
-      () => patchFundingProject(project.id, { action: 'approve', slug: slug.trim() || undefined, expectedSubmittedAt: project.submittedAt ?? '' }),
+      () => patchFundingProject(project.id, { action: 'approve', slug: slug.trim() || undefined, expectedSubmittedAt: project.submittedAt }),
       `/funding/${effectiveSlug} 주소로 승인했습니다.`,
     );
   };
@@ -361,7 +361,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
       return;
     }
     return run(
-      () => patchFundingProject(project.id, { action: 'request_changes', note: reason.trim(), expectedSubmittedAt: project.submittedAt ?? '' }),
+      () => patchFundingProject(project.id, { action: 'request_changes', note: reason.trim(), expectedSubmittedAt: project.submittedAt }),
       '보완 요청을 보냈습니다.',
     );
   };
@@ -374,7 +374,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
       return;
     }
     if (!window.confirm('반려하면 개설자에게 반려 사실과 사유가 메일로 전달됩니다. 반려할까요?')) return;
-    return run(() => patchFundingProject(project.id, { action: 'reject', note: reason.trim(), expectedSubmittedAt: project.submittedAt ?? '' }), '반려 처리했습니다.');
+    return run(() => patchFundingProject(project.id, { action: 'reject', note: reason.trim(), expectedSubmittedAt: project.submittedAt }), '반려 처리했습니다.');
   };
 
   const handleSaveNote = () =>
@@ -506,7 +506,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
     ) {
       return;
     }
-    return run(() => patchFundingProject(project.id, { action: 'archive', note: reason.trim(), expectedSubmittedAt: project.submittedAt ?? '' }), '보관 처리했습니다.');
+    return run(() => patchFundingProject(project.id, { action: 'archive', note: reason.trim(), expectedSubmittedAt: project.submittedAt }), '보관 처리했습니다.');
   };
 
   const handleClose = () => {
@@ -622,7 +622,16 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
       return;
     }
     return run(
-      () => patchFundingProject(project.id, { action: 'mark_payout_paid', memo: memo.trim() || undefined }),
+      async () => {
+        const first = await patchFundingProject(project.id, { action: 'mark_payout_paid', memo: memo.trim() || undefined });
+        // 기록값과 현재 계산값이 다르면 서버가 한 번 멈춘다 — 차이를 보여 주고 운영자가 확인하면 그대로 기록한다
+        // (펀딩 정산은 기록 취소 경로가 없어 막다른 409로 두면 영영 지급 완료를 못 적는다).
+        if (!first.ok && first.code === 'amount_changed' && typeof first.currentNetAmount === 'number') {
+          if (!window.confirm(`${first.message}\n\n이 차이를 알고 이체했습니다 — 지급 완료로 기록할까요?`)) return { ok: false, message: '지급 완료 기록을 취소했습니다.' };
+          return patchFundingProject(project.id, { action: 'mark_payout_paid', memo: memo.trim() || undefined, acknowledgedNetAmount: first.currentNetAmount });
+        }
+        return first;
+      },
       '지급 완료로 기록하고 개설자에게 알렸습니다.',
     );
   };

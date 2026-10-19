@@ -6,6 +6,12 @@ import { ARTIST_SUPPORT_SHARE_PERCENT } from '../../data/pricing';
 import { getSupportedArtist, SUPPORTED_ARTISTS, type SupportedArtist } from '../../data/artists';
 import { VAT_RATE } from '../booking/amounts';
 import { computeBusinessIncomeWithholding } from '../withholdingTax';
+import { cycleYmOf } from '../billing/schedule';
+
+/** 토스에 주문이 없다는 재조회 응답을 '요청이 닿지 못했다'로 확정하기까지 기다리는 시간(chargeCycle과 같다). */
+const NOT_FOUND_SETTLE_MS = 30 * 60 * 1000;
+import { fetchPaymentByOrderId } from '../billing/toss-billing';
+import { reconcileSubscriptionPaymentFromToss } from '../billing/service';
 
 /**
  * 아티스트 월 정산(스펙 §10).
@@ -49,7 +55,7 @@ export const computeArtistPayout = (input: {
   };
 };
 
-export const PERIOD_PATTERN = /^\d{4}-(0[1-9]|1[0-2])$/;
+export { PERIOD_PATTERN } from './period';
 
 export interface ArtistPayoutPreview extends PayoutBreakdown {
   artistSlug: string;
@@ -124,13 +130,45 @@ export const buildAllArtistPayoutPreviews = async (period: string): Promise<Arti
 
 export type RecordPayoutResult =
   | { ok: true; payout: ArtistPayout }
-  | { ok: false; code: 'not_found' | 'already_recorded' | 'nothing_to_pay' };
+  /**
+   * period_open: 아직 끝나지 않은 달 — 기록하면 그 뒤 들어온 후원이 어느 정산에도 잡히지 않는다(펀딩 정산의 not_closed와 같은 이유).
+   * unreconciled: 그 달에 토스 응답을 못 받아 pending으로 남은 회차가 있다 — 다음 날 재조회가 끝난 뒤 기록한다.
+   */
+  | { ok: false; code: 'not_found' | 'already_recorded' | 'nothing_to_pay' | 'period_open' | 'unreconciled' };
 
 /**
  * 미리보기 숫자를 그 시점에 고정해 기록한다. 같은 (아티스트, 달)은 한 번만 — 유니크 인덱스가
  * 두 번째 INSERT를 막고, 그 실패를 already_recorded로 돌려준다(경합에서도 안전).
  */
 export const recordArtistPayout = async (artistSlug: string, period: string, now: Date): Promise<RecordPayoutResult> => {
+  // 닫힌 달만 기록한다 — 이번 달(이후)을 기록하면 그 뒤 결제분이 정산에서 영영 빠진다.
+  if (period >= cycleYmOf(now)) return { ok: false, code: 'period_open' };
+  // 응답을 못 받은 회차(orders.status='pending')가 그 달에 남아 있으면 금액이 아직 확정이 아니다. subscription_payments.status는
+  // NETWORK_ERROR 때 이미 failed라 orders 쪽으로 판정한다. 이 대사는 평소 chargeCycle이 다음 청구 때 하지만, 그 사이 구독이
+  // 해지·정지되면 아무도 다시 묻지 않아 정산이 영구히 막힌다 — 그래서 여기서 직접 토스에 묻는다: 승인됐으면 반영, 토스에 없거나
+  // 승인이 아니면 failed 확정, 재조회 자체가 안 되면 unreconciled로 남긴다.
+  const unresolvedOrders = await getDb()
+    .select({ orderId: orders.id, orderNo: orders.orderNo, attemptedAt: subscriptionPayments.attemptedAt })
+    .from(subscriptionPayments)
+    .innerJoin(orders, eq(orders.id, subscriptionPayments.orderId))
+    .innerJoin(subscriptions, eq(subscriptions.id, subscriptionPayments.subscriptionId))
+    .where(and(eq(subscriptions.artistSlug, artistSlug), eq(subscriptionPayments.cycleYm, period), eq(orders.status, 'pending')));
+  let stillUnresolved = 0;
+  for (const row of unresolvedOrders) {
+    const fetched = await fetchPaymentByOrderId(row.orderNo);
+    // 방금 낸 요청은 토스에 아직 안 적혔을 수 있다 — chargeCycle과 같은 30분 유예 뒤에만 '없음'을 failed로 본다.
+    const stale = now.getTime() - row.attemptedAt.getTime() >= NOT_FOUND_SETTLE_MS;
+    if (fetched.ok && fetched.payment.status === 'DONE') {
+      // reconcile은 금액 불일치·batch 실패를 조용히 삼킨다 — 반영됐는지는 주문 상태를 다시 읽어 판정한다.
+      await reconcileSubscriptionPaymentFromToss(fetched.payment, now);
+    } else if ((fetched.ok && fetched.payment.status !== 'DONE') || (!fetched.ok && fetched.code === 'NOT_FOUND_PAYMENT' && stale)) {
+      await getDb().run(sql`UPDATE orders SET status = 'failed', updated_at = unixepoch() WHERE id = ${row.orderId} AND status = 'pending'`);
+    }
+    const [after] = await getDb().select({ status: orders.status }).from(orders).where(eq(orders.id, row.orderId));
+    if (after?.status === 'pending') stillUnresolved += 1;
+  }
+  if (stillUnresolved > 0) return { ok: false, code: 'unreconciled' };
+
   const preview = await buildArtistPayoutPreview(artistSlug, period);
   if (!preview) return { ok: false, code: 'not_found' };
   if (preview.recorded) return { ok: false, code: 'already_recorded' };

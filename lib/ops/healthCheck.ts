@@ -1305,7 +1305,7 @@ const collectDbIssuesBody = async (db: ReturnType<typeof getDb>, now: Date, issu
   }
 
   /**
-   * **이체를 마친 정산 뒤에 확정된 계좌 입금.** 위 드리프트 점검은 이체 전(`pending`) 정산만 본다 —
+   * **이체를 마친 정산 뒤에 확정된 후원(늦은 계좌 입금·현장 수기 등록).** 위 드리프트 점검은 이체 전(`pending`) 정산만 본다 —
    * 이체 뒤의 차이는 끌 수단이 없어서다. 그런데 계좌 입금은 자동 취소가 없어 마감·정산 뒤에도 늦은
    * 입금이 확정될 수 있고, 그러면 개설자에게 **추가로 보낼 몫**이 생긴다(확정 화면이 경고하지만
    * 그 경고를 놓치면 아무도 모른다). 확정 시각이 최근 30일 안인 건만 센다 — 그보다 오래된 건은 이미
@@ -1319,7 +1319,6 @@ const collectDbIssuesBody = async (db: ReturnType<typeof getDb>, now: Date, issu
     JOIN funding_projects p ON p.slug = fp.project_slug
     JOIN funding_project_payouts pp ON pp.project_id = p.id
     WHERE pp.status = 'paid' AND pp.paid_at IS NOT NULL
-      AND fp.payment_method = 'bank_transfer' AND fp.entry_source = 'online'
       AND fp.paid_at IS NOT NULL AND fp.paid_at > pp.paid_at
       AND fp.paid_at > ${Math.floor(now.getTime() / 1000) - LATE_DEPOSIT_WINDOW_S}
       AND o.status IN (${sql.join(LIVE_FUNDING_ORDER_STATUSES.map((st) => sql`${st}`), sql`, `)})
@@ -1328,10 +1327,10 @@ const collectDbIssuesBody = async (db: ReturnType<typeof getDb>, now: Date, issu
     issues.push({
       severity: 'high',
       href: '/admin/funding/projects',
-      title: `정산 이체 뒤에 확정된 계좌 입금 ${lateDeposits.length}건`,
+      title: `정산 이체 뒤에 확정된 후원 ${lateDeposits.length}건(늦은 입금·수기 등록)`,
       detail:
         `${sample(lateDeposits.map((r) => `${r.slug} · ${r.order_no}`))}\n` +
-        '정산을 이체한 뒤 늦은 계좌 입금을 확정해 모금액이 늘었습니다. 개설자에게 추가로 보낼 몫을 ' +
+        '정산을 이체한 뒤 후원이 확정돼(늦은 계좌 입금·현장 수기 등록) 모금액이 늘었습니다. 개설자에게 추가로 보낼 몫을 ' +
         '정산 패널에서 계산해 처리해 주세요. 이 항목은 확정 후 30일 동안 보고됩니다.',
     });
   }

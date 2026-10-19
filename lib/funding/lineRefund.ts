@@ -5,6 +5,7 @@ import { getDb } from '../../db/client';
 import { refunds } from '../../db/schema';
 import { cancelPayment } from '../booking/toss';
 import { sendFundingLineRefundEmails } from './email';
+import { loadProjectPayoutState, payoutWarningOf } from './bankTransfer';
 import { pledgeLines } from './pledgeLines';
 import { getFundingProjectAsync } from './repository';
 import { liveFundingOrderStatusList, remainingRefundable } from './refundable';
@@ -36,7 +37,7 @@ import { findFundingOrderByOrderNo } from './service';
  */
 
 export type LineRefundOutcome =
-  | { ok: true; amount: number; orderStatus: 'paid' | 'partially_refunded' | 'refunded' }
+  | { ok: true; amount: number; orderStatus: 'paid' | 'partially_refunded' | 'refunded'; warnings?: string[] }
   | { ok: false; code: 'not_found' | 'invalid_state' | 'invalid_quantity' | 'offline_payment' | 'toss_failed' | 'toss_unknown'; message: string };
 
 export const refundFundingLine = async (input: {
@@ -170,5 +171,7 @@ export const refundFundingLine = async (input: {
     console.error('[funding-line-refund] 알림 메일 예외', { orderNo: order.orderNo, error });
   }
 
-  return { ok: true, amount, orderStatus };
+  // 정산이 이미 기록·이체된 프로젝트면 개설자에게 청구할 차액이 생긴다 — 입금 확인·전액 환불과 같은 경고.
+  const payoutWarning = payoutWarningOf(await loadProjectPayoutState(pledge.projectSlug), 'refund');
+  return { ok: true, amount, orderStatus, ...(payoutWarning ? { warnings: [payoutWarning] } : {}) };
 };

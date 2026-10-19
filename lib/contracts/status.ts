@@ -159,3 +159,11 @@ export const getEffectiveStatus = (
   contract: Pick<Contract, 'status' | 'expiresAt'>,
   now: Date = new Date(),
 ): ContractStatus => (isExpired(contract, now) ? 'expired' : contract.status);
+
+/**
+ * 내려받을 서명본이 있는가 — 서명 완료(signed)와 이용 종료(terminated) 둘 다다. 종료는 이용 관계만 끝낸 것이라
+ * 본문·서명·PDF가 그대로 남고(제12조 ④ 3년 보관), 완료 화면도 "내려받을 수 있다"고 안내한다. `signedAt`은 서명
+ * 트랜잭션이 항상 채우므로 그 유무로 한 번 더 확인한다.
+ */
+export const hasSignedDocument = (c: { status: ContractStatus; signedAt: Date | null }): boolean =>
+  c.signedAt !== null && (c.status === 'signed' || c.status === 'terminated');

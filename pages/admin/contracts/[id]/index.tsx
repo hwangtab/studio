@@ -351,7 +351,7 @@ export default function AdminContractDetailPage({
           </div>
         )}
 
-        {contract.status === 'signed' && !contract.pdfUrl && !contract.purgedAt && (
+        {(contract.status === 'signed' || contract.status === 'terminated') && !contract.pdfUrl && !contract.purgedAt && (
           <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
             <strong className="block mb-1">서명본 PDF가 보관되지 않았습니다</strong>
             아래 “PDF 다운로드”를 누르면 계약 내용으로 다시 만들어 받을 수 있습니다.
@@ -633,7 +633,7 @@ export default function AdminContractDetailPage({
               </Link>
             )}
 
-            {contract.status === 'signed' && !contract.purgedAt && (
+            {(contract.status === 'signed' || contract.status === 'terminated') && !contract.purgedAt && (
               <Button light
                 disabled={busy}
                 onClick={() => run(() => downloadContractPdf(contract.id, contract.customerName))}

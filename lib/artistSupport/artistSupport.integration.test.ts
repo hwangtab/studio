@@ -27,6 +27,8 @@ jest.mock('../billing/toss-billing', () => ({ issueBillingKey: jest.fn(), charge
 // eslint-disable-next-line import/first
 import { createSubscription } from '../billing/service';
 // eslint-disable-next-line import/first
+import { fetchPaymentByOrderId } from '../billing/toss-billing';
+// eslint-disable-next-line import/first
 import { buildArtistPayoutPreview, deleteArtistPayoutIfPending, markArtistPayoutPaid, recordArtistPayout } from './payout';
 // eslint-disable-next-line import/first
 import { countSupporters, listPublicSupporters } from './supporters';
@@ -133,6 +135,34 @@ describe('정산', () => {
 
     const p = await buildArtistPayoutPreview('jai', '2026-09');
     expect(p).toMatchObject({ subscriberCount: 2, grossAmount: 20000, refundAmount: 10000, supplyAmount: 9091, shareAmount: 8182, withholdingAmount: 269, netAmount: 7913, recorded: null });
+  });
+
+  it('아직 끝나지 않은 달은 기록할 수 없다(period_open) — 그 뒤 결제분이 정산에서 빠진다', async () => {
+    await insertSub('a', 'active', true, null, '2026-09-01T00:00:00Z');
+    await paidCycle('a', 'o-oct', '2026-10');
+    // NOW는 2026-10-05 — 10월은 열려 있고 미래도 당연히 거부, 9월은 닫혔다.
+    expect(await recordArtistPayout('jai', '2026-10', NOW)).toEqual({ ok: false, code: 'period_open' });
+    expect(await recordArtistPayout('jai', '2026-11', NOW)).toEqual({ ok: false, code: 'period_open' });
+    expect((await client.execute('SELECT count(*) AS n FROM artist_payouts')).rows[0].n).toBe(0);
+  });
+
+  it('그 달에 응답을 못 받은 회차(orders pending)가 남아 있으면 기록을 거부한다(unreconciled)', async () => {
+    await insertSub('a', 'active', true, null, '2026-09-01T00:00:00Z');
+    await paidCycle('a', 'o1', '2026-09');
+    await client.execute({
+      sql: `INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email, manage_token, item_amount, vat_amount, total_amount)
+            VALUES ('o-pend', 'NO-pend', 'subscription', 'pending', '실명', '', 'a@b.c', 'tok-pend', 9091, 909, 10000)`,
+      args: [],
+    });
+    await client.execute(`INSERT INTO subscription_payments (id, subscription_id, order_id, cycle_ym, attempt, amount, status, toss_code, attempted_at) VALUES ('sp-pend', 'a', 'o-pend', '2026-09', 2, 10000, 'failed', 'NETWORK_ERROR', ${Math.floor(new Date('2026-09-28T00:00:00Z').getTime() / 1000)})`);
+    // 기록 직전에 토스에 직접 묻는다 — 재조회가 안 되면 unreconciled.
+    (fetchPaymentByOrderId as jest.Mock).mockResolvedValue({ ok: false, code: 'NETWORK_ERROR', message: 'timeout' });
+    expect(await recordArtistPayout('jai', '2026-09', NOW)).toEqual({ ok: false, code: 'unreconciled' });
+    expect((await client.execute(`SELECT status FROM orders WHERE id = 'o-pend'`)).rows[0].status).toBe('pending');
+    // 토스에 그 주문이 없으면(요청이 닿지 않았음) failed로 확정하고 기록을 진행한다 — 구독이 해지돼 chargeCycle이 다시 묻지 않아도 막히지 않는다.
+    (fetchPaymentByOrderId as jest.Mock).mockResolvedValue({ ok: false, code: 'NOT_FOUND_PAYMENT', message: 'none', httpStatus: 404 });
+    expect((await recordArtistPayout('jai', '2026-09', NOW)).ok).toBe(true);
+    expect((await client.execute(`SELECT status FROM orders WHERE id = 'o-pend'`)).rows[0].status).toBe('failed');
   });
 
   it('기록은 (아티스트, 달)당 한 번이고 지급 완료는 한 방향', async () => {

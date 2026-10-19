@@ -23,6 +23,13 @@
           "error"
         ]
       }
+    ],
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "CallExpression[callee.property.name=/^(replaceState|pushState)$/][arguments.0.type='Literal'][arguments.0.value=null]",
+        "message": "history.replaceState/pushState(null, …)은 Next 라우터의 히스토리 상태를 지워 뒤로가기가 화면을 안 바꾼다. lib/anchorHistory.ts의 replaceHashPreservingState나 {...window.history.state, …}를 쓸 것."
+      }
     ]
   },
   "overrides": [
@@ -44,6 +51,17 @@
       "rules": {
         "@typescript-eslint/no-require-imports": "off",
         "no-console": "off"
+      }
+    },
+    {
+      "files": [
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "tests/**/*.ts",
+        "tests/**/*.tsx"
+      ],
+      "rules": {
+        "no-restricted-syntax": "off"
       }
     }
   ]

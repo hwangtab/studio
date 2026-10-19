@@ -451,7 +451,7 @@ export default function AdminContractsPage({
                                 </Button>
                               )}
 
-                              {contract.status === 'signed' && !contract.purgedAt && (
+                              {(contract.status === 'signed' || contract.status === 'terminated') && !contract.purgedAt && (
                                 <Button light
                                   size="sm"
                                   disabled={busy}
