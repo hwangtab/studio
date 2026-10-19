@@ -2,7 +2,7 @@ import { waitUntil } from '@vercel/functions';
 import { and, asc, eq, gt, gte, inArray, lt, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { bookings, contracts, fundingProjects, orders, socialTokens, subscriptions, workOrders } from '../../db/schema';
+import { bookings, contracts, fundingPledges, fundingProjects, orders, socialTokens, subscriptions, workOrders } from '../../db/schema';
 import { getProduct } from '../booking/products';
 import { checkFieldCryptoKey, checkTossApiKeyPair, collectDbIssues, runIsolatedCheck, type HealthIssue } from './healthCheck';
 import { countPendingArtistPayouts } from '../artistSupport/payout';
@@ -88,6 +88,8 @@ export interface AdminDashboard {
     showPayoutsToRecord: number;
     /** 기록됐지만 아직 이체하지 않은 공연 정산. 표(0067)가 없거나 조회가 실패하면 0. */
     showPayoutsPending: number;
+    /** 계좌 입금 후원자의 환불 요청 — 약관 제10조의 3영업일 기한이 있다. 환불이 끝난 건은 세지 않는다. */
+    fundingRefundRequests: number;
     /** 계좌 입금을 기다리는 주문(자동 취소 없음 — 운영자가 입금을 확인하거나 닫아야 한다). */
     awaitingDeposit: AwaitingDepositCounts;
   };
@@ -129,6 +131,19 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
   await Promise.race([linkSync, new Promise<void>((resolve) => {
     setTimeout(resolve, LINK_SYNC_WAIT_MS).unref?.();
   })]);
+
+  // 환불이 끝나면(refunded) 꺼져야 한다 — 요청 시각은 환불 뒤에도 남으므로 paid만 센다(admin-serialize.refundRequested).
+  // 약관 제10조의 3영업일 기한이 있는 건이다. 조회가 실패해도 대시보드는 열려야 한다(0이면 카드가 안 뜬다).
+  const fundingRefundRequestsPromise = db
+    .select({ count: sql<number>`count(*)` })
+    .from(fundingPledges)
+    .innerJoin(orders, eq(orders.id, fundingPledges.orderId))
+    .where(and(eq(orders.status, 'paid'), sql`${fundingPledges.refundRequestedAt} IS NOT NULL`))
+    .then((rows) => Number(rows[0]?.count ?? 0))
+    .catch((error: unknown) => {
+      console.error('[admin-dashboard] 펀딩 환불 요청 조회 실패 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
+      return 0;
+    });
 
   const [issues, sessions, calendarImport, linkSessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending, fundingPayoutsToRecord, shopPayoutsToRecord, shopPayoutsPending, showPayoutsToRecord, showPayoutsPending, awaitingDepositRows] = await Promise.all([
     // 점검 하나가 던져도 첫 화면 전체가 "현황을 불러오지 못했습니다"로 죽지 않게 — 실패는 high 항목으로 보인다.
@@ -258,6 +273,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       shopPayoutsPending,
       showPayoutsToRecord,
       showPayoutsPending,
+      fundingRefundRequests: await fundingRefundRequestsPromise,
       awaitingDeposit: {
         bookings: Number(awaitingDepositRows.find((r) => r.kind === 'bookings')?.n ?? 0),
         shows: Number(awaitingDepositRows.find((r) => r.kind === 'shows')?.n ?? 0),

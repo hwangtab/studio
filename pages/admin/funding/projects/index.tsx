@@ -7,6 +7,7 @@ import { AdminShell } from '../../../../components/admin/AdminShell';
 import { formatPriceAmount } from '../../../../data/pricing';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { formatKstDateTimeFull } from '../../../../lib/booking/format';
+import { listFundingProjectsAwaitingPayoutRecord, listPendingFundingPayoutProjectIds } from '../../../../lib/funding/payout';
 import { listProjectsForAdmin, type AdminProjectSummary } from '../../../../lib/funding/adminProjects';
 import { loadProjectServiceMap, PROJECT_SERVICE_LABELS, type LoadServiceMapResult } from '../../../../lib/funding/projectServices';
 import type { FundingReviewStatus } from '../../../../lib/funding/reviewTransition';
@@ -17,6 +18,11 @@ interface AdminFundingProjectsPageProps {
   services: LoadServiceMapResult;
   /** 서버가 목록을 만든 시각(ms) — 마감 여부 표시용. */
   nowMs: number;
+  /**
+   * `?payout=pending`(이체 대기 정산이 있는 프로젝트) 또는 `?payout=record`(마감됐는데 정산이 아직 기록되지 않은 프로젝트).
+   * 대시보드 카드가 온다 — 필터 없는 전체 목록에서는 오래된 건이 묻혀 카드 건수와 화면이 어긋났다.
+   */
+  payoutFilter?: 'pending' | 'record';
 }
 
 /**
@@ -56,14 +62,23 @@ export const getServerSideProps: GetServerSideProps<AdminFundingProjectsPageProp
     return { redirect: { destination: '/admin/login', permanent: false } };
   }
 
-  const projects = await listProjectsForAdmin();
+  const payoutFilter = context.query.payout === 'pending' || context.query.payout === 'record' ? context.query.payout : null;
+  const all = await listProjectsForAdmin();
+  const filterIds = payoutFilter
+    ? new Set(
+        payoutFilter === 'pending'
+          ? await listPendingFundingPayoutProjectIds()
+          : (await listFundingProjectsAwaitingPayoutRecord(new Date())).map((row) => row.id),
+      )
+    : null;
+  const projects = filterIds ? all.filter((p) => filterIds.has(p.id)) : all;
   const sorted = [...projects].sort((a, b) => STATUS_PRIORITY[a.reviewStatus] - STATUS_PRIORITY[b.reviewStatus]);
 
   const services = await loadProjectServiceMap();
-  return { props: { projects: sorted, services, nowMs: Date.now() } };
+  return { props: { projects: sorted, services, nowMs: Date.now(), ...(payoutFilter ? { payoutFilter } : {}) } };
 };
 
-export default function AdminFundingProjectsPage({ projects, services, nowMs }: AdminFundingProjectsPageProps) {
+export default function AdminFundingProjectsPage({ projects, services, nowMs, payoutFilter }: AdminFundingProjectsPageProps) {
   return (
     <>
       <Head>
@@ -78,6 +93,16 @@ export default function AdminFundingProjectsPage({ projects, services, nowMs }: 
         backLabel="펀딩 목록"
         width="wide"
       >
+        {payoutFilter && (
+          <div className="mb-4 flex flex-wrap items-center gap-3 text-sm">
+            <span className="inline-flex rounded-full bg-gray-900 px-3 py-1.5 font-medium text-white">
+              {payoutFilter === 'pending' ? '이체 대기 정산' : '정산 기록 대기'} ({projects.length})
+            </span>
+            <Link href="/admin/funding/projects" className="text-primary hover:underline">
+              전체 보기
+            </Link>
+          </div>
+        )}
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="admin-table w-full text-sm text-left">
