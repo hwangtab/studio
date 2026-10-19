@@ -370,7 +370,7 @@
       "items": [
         {
           "q": "¿Cuánto cuesta grabar?",
-          "a": "El paquete vocal de una canción (3 horas) cuesta {{vocalPackage}}; la grabación por horas son {{recordingHourly}} por hora, con un mínimo de 2 horas. {{vatNotice}}"
+          "a": "El paquete vocal de 3 horas cuesta {{vocalPackage}} (cualquier número de canciones); la grabación por horas son {{recordingHourly}} por hora, con un mínimo de 2 horas. {{vatNotice}}"
         },
         {
           "q": "¿Cuánto cuestan la mezcla y la masterización?",
@@ -1017,7 +1017,7 @@
     "cta": {
       "recording": {
         "title": "¿Considerando grabación vocal o canción de boda?",
-        "descriptionLine1": "Sesión vocal ₩250,000 (3 h, 1 canción) · Paquete completo canción de boda ₩350,000.",
+        "descriptionLine1": "Sesión vocal ₩250,000 (3 h, cualquier número de canciones) · Paquete completo canción de boda ₩350,000.",
         "descriptionLine2": "Un ingeniero dedicado dirige, selecciona tomas y mezcla.",
         "primaryText": "Ver Servicio de Grabación",
         "secondaryText": "Consulta",
@@ -1347,7 +1347,7 @@
   "recording": {
     "seo": {
       "title": "Alquiler de estudio de grabación — Grabación vocal en Yeonsinnae | Studio NOL",
-      "description": "Estudio de grabación en Yeonsinnae, Eunpyeong-gu, Seúl. Grabación vocal desde ₩250,000/canción, alquiler por hora ₩100,000. Un ingeniero dedicado dirige cada sesión. Reserva grabación de demo, single, álbum o cover.",
+      "description": "Estudio de grabación en Yeonsinnae, Eunpyeong-gu, Seúl. Grabación vocal ₩250,000 por 3 horas (cualquier número de canciones), alquiler por hora ₩100,000. Un ingeniero dedicado dirige cada sesión. Reserva grabación de demo, single, álbum o cover.",
       "keywords": "estudio de grabación, alquiler de estudio de grabación, grabación vocal, estudio de grabación Seúl, estudio de grabación Yeonsinnae, grabación de demo, grabación por hora"
     },
     "hero": {
@@ -1362,7 +1362,7 @@
       "items": [
         {
           "q": "¿Cuánto cuesta la grabación?",
-          "a": "La grabación vocal de una canción cuesta ₩250,000 (basado en 3 horas). El alquiler por hora es ₩100,000 (mínimo 2 horas). Day Lock cuesta ₩350,000 por 4 horas o ₩650,000 por 8 horas. Todos los precios incluyen el IVA."
+          "a": "La sesión de grabación vocal de 3 horas cuesta ₩250,000, grabes las canciones que grabes. El alquiler por hora es ₩100,000 (mínimo 2 horas). Day Lock cuesta ₩350,000 por 4 horas o ₩650,000 por 8 horas. Todos los precios incluyen el IVA."
         },
         {
           "q": "¿Puedo alquilar solo la sala sin ingeniero?",
@@ -1446,7 +1446,11 @@
       "items": [
         {
           "q": "¿Cuánto cuesta el alquiler del estudio?",
-          "a": "El paquete vocal de una canción cuesta ₩250,000 (3 horas, incluye ingeniero dedicado, dirección y edición básica). Si solo lo necesitas por horas, son ₩100,000/hora (mínimo 2 horas); para trabajos largos de álbum, Day Lock cuesta ₩350,000 por 4 horas o ₩650,000 por 8 horas. Todos los precios incluyen el IVA."
+          "a": "El paquete vocal de 3 horas cuesta ₩250,000 (incluye ingeniero dedicado, dirección y edición básica) y, dentro de esas 3 horas, el precio es el mismo sin importar cuántas canciones grabes. Si solo lo necesitas por horas, son ₩100,000/hora (mínimo 2 horas); para trabajos largos de álbum, Day Lock cuesta ₩350,000 por 4 horas o ₩650,000 por 8 horas. Todos los precios incluyen el IVA."
+        },
+        {
+          "q": "¿Cobran por canción?",
+          "a": "No: la grabación vocal se vende en bloques de 3 horas por ₩250,000. Si grabas dos o tres canciones en ese tiempo, el precio no cambia, y tampoco si terminas antes. Una canción suele caber de sobra en 3 horas. A partir de las 3 horas se suman ₩100,000 por hora; para muchas canciones en una jornada larga, Day Lock (4 u 8 horas) sale más barato."
         },
         {
           "q": "¿Está bien si es mi primera vez grabando?",
@@ -1515,7 +1519,7 @@
           "Coste",
           "Sin coste extra una vez tienes el equipo",
           "Tarifa por hora normalmente más alta",
-          "Una canción de voz {{vocal}} (3 horas) · {{hourly}} por hora"
+          "Sesión vocal de 3 horas {{vocal}} · {{hourly}} por hora"
         ],
         [
           "Lo que sigue",

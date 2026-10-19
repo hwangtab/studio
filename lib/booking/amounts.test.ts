@@ -44,7 +44,7 @@ describe('resolveHours', () => {
 });
 
 describe('computeAmounts', () => {
-  it('1프로 표기가 25만원(VAT 포함) = 청구 250,000 — 공급가 227,273 + VAT 22,727', () => {
+  it('보컬 녹음 3시간 표기가 25만원(VAT 포함) = 청구 250,000 — 공급가 227,273 + VAT 22,727', () => {
     expect(computeAmounts(getProduct('recording-pro')!, 3)).toEqual({
       itemAmount: 227273, vatAmount: 22727, totalAmount: 250000,
     });

@@ -30,7 +30,7 @@ const DASHBOARD: AdminDashboard = {
   calendarEvents: [],
   calendarError: null,
   upcomingSessions: [
-    { kind: 'booking' as const, orderId: 'o1', orderNo: 'SNB-2', customerName: '홍길동', productName: '보컬 녹음 1프로', startAt: '2026-09-17T05:00:00.000Z', endAt: '2026-09-17T08:00:00.000Z' },
+    { kind: 'booking' as const, orderId: 'o1', orderNo: 'SNB-2', customerName: '홍길동', productName: '보컬 녹음 3시간', startAt: '2026-09-17T05:00:00.000Z', endAt: '2026-09-17T08:00:00.000Z' },
   ],
   queues: {
     mixingReceived: 3,
@@ -93,7 +93,7 @@ it('점검 항목은 심각도 배지와 처리 링크를, 대기열은 건수�
   expect(screen.getByRole('link', { name: /아티스트 발송 대기 상점 주문\s*2/ })).toBeInTheDocument();
 
   expect(screen.getByText('2026.09.17 (목) 14:00')).toBeInTheDocument();
-  expect(screen.getByText('홍길동 · 보컬 녹음 1프로')).toBeInTheDocument();
+  expect(screen.getByText('홍길동 · 보컬 녹음 3시간')).toBeInTheDocument();
   expect(screen.getByRole('link', { name: 'SNB-2' })).toHaveAttribute('href', '/admin/bookings/o1');
 
   expect(screen.getByLabelText('시작일')).toHaveValue('2026-09-01');

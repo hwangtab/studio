@@ -172,7 +172,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
               <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-2.5 text-base">
                 {[
                   'English booking & communication (KakaoTalk / email / phone)',
-                  `Vocal recording from ₩${formatPriceAmount(RECORDING_HOURLY_PRICE)}/hour · single-song package ₩${formatPriceAmount(VOCAL_PACKAGE_PRICE)} (3 hrs)`,
+                  `Vocal recording from ₩${formatPriceAmount(RECORDING_HOURLY_PRICE)}/hour · 3-hour vocal package ₩${formatPriceAmount(VOCAL_PACKAGE_PRICE)} (any number of songs)`,
                   '5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line 6)',
                   'Reply within 24 hours · mixing, mastering & release production available',
                 ].map((fact, i) => (

@@ -28,7 +28,7 @@ const seed = async (status = 'paid', session: { at: number | null; hours: number
   await testDb.run(sql`INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email, manage_token, item_amount, vat_amount, total_amount)
     VALUES ('o1', 'SNB-1', 'deposit', ${status}, '김준호', '010-5606-4595', 'k@example.com', 't', 227273, 22727, 250000)`);
   await testDb.run(sql`INSERT INTO payment_link_orders (order_no, slug, item_name, session_at, session_hours)
-    VALUES ('SNB-1', ${'a'.repeat(24)}, '보컬 녹음 1프로 (10/17 11:00)', ${session.at}, ${session.hours})`);
+    VALUES ('SNB-1', ${'a'.repeat(24)}, '보컬 녹음 3시간 (10/17 11:00)', ${session.at}, ${session.hours})`);
 };
 const info = async () => (await loadPaymentLinkOrderInfo(['SNB-1'])).get('SNB-1')!;
 
@@ -37,7 +37,7 @@ it('결제된 링크 주문은 녹음실 캘린더에 이용 시각·시간으�
   expect(await syncPaymentLinkCalendarEvent('SNB-1')).toBe('evt-1');
   const call = (createBookingEvent as jest.Mock).mock.calls[0][0];
   expect(call.calendar).toBe('studio');
-  expect(call.summary).toBe('[예약] 보컬 녹음 1프로 (10/17 11:00) — 김준호');
+  expect(call.summary).toBe('[예약] 보컬 녹음 3시간 (10/17 11:00) — 김준호');
   expect(call.start.getTime()).toBe(SESSION * 1000);
   expect(call.end.getTime()).toBe((SESSION + 3 * 3600) * 1000);
   expect(call.description).toContain('SNB-1');

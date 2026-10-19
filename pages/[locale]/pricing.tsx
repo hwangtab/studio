@@ -61,7 +61,7 @@ const BOOKING_ENTRY: Record<string, { href: string; kind: 'reserve' | 'order' }>
   'recording-pro': { href: '/ko/booking/recording', kind: 'reserve' },
   'recording-hourly': { href: '/ko/booking/recording', kind: 'reserve' },
   // Day Lock은 위저드에 같은 id의 상품이 있어 ?product=로 그 상품을 미리 고른다.
-  // 쿼리가 없으면 위저드는 첫 상품(보컬 1프로)을 고르므로 결과 금액이 카드와 달라진다.
+  // 쿼리가 없으면 위저드는 첫 상품(보컬 녹음 3시간)을 고르므로 결과 금액이 카드와 달라진다.
   'recording-daylock-4h': { href: '/ko/booking/recording?product=recording-daylock-4h', kind: 'reserve' },
   'recording-daylock-8h': { href: '/ko/booking/recording?product=recording-daylock-8h', kind: 'reserve' },
   'package-wedding': { href: '/ko/booking/wedding-song', kind: 'reserve' },
