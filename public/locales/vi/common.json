@@ -2425,11 +2425,15 @@
         },
         {
           "q": "Tôi mang demo tạo bằng AI được không?",
-          "a": "Được. Chúng tôi coi demo AI là bản phác thảo định hướng và không dùng nguyên bản. Bài hát được phối lại và chơi bởi người để quyền lợi rõ ràng khi phát hành."
+          "a": "Được. Chúng tôi thường nhận các bài làm bằng Suno hoặc Udio. Bản demo AI chỉ được dùng như bản phác thảo định hướng, không dùng nguyên vẹn. Con người phối lại và chơi lại để thành bản phát hành, và nếu viết lại cả giai điệu và lời, phần sáng tác của con người sẽ rõ ràng hơn. Tình hình bản quyền và đăng ký bài hát AI hiện nay sẽ được kiểm tra cùng bạn khi tư vấn."
         },
         {
           "q": "Cùng đội có thể tiếp tục thu âm và phát hành không?",
           "a": "Có. Thu âm, mix, master theo giá công khai, và nếu tiếp tục phân phối, quảng bá thì gói thành dự án phát hành. Phối khí và mix cùng hạng track nên tổng tính trước được, người phối bài cũng chỉ đạo thu âm và mix."
+        },
+        {
+          "q": "Có thể giữ nguyên phần nhạc nền AI và chỉ thu lại giọng hát không?",
+          "a": "Được. Bạn gửi file nhạc nền đã tách giọng, chúng tôi thu giọng hát thật lên đó rồi hoàn thiện bằng mixing và mastering. Nhạc nền tách ra thường còn sót giọng AI hoặc dải cao bị nhòe, khi đó làm lại nhạc nền sẽ tốt hơn, nên chúng tôi nghe trước và cùng bạn quyết định trước khi thu. Thu âm và mixing tính theo bảng giá."
         }
       ]
     },

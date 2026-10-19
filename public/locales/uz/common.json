@@ -2425,11 +2425,15 @@
         },
         {
           "q": "AI yaratgan demoni olib kelsam bo'ladimi?",
-          "a": "Bo'ladi. AI demosini yo'nalish eskizi deb qabul qilamiz va aynan o'zini ishlatmaymiz. Qo'shiq odamlar tomonidan qayta aranjirovka qilinadi va ijro etiladi, shunda reliz uchun huquqlar aniq bo'ladi."
+          "a": "Ha. Suno yoki Udio bilan yaratilgan qo'shiqlarni tez-tez qabul qilamiz. AI demo faqat yo'nalish eskizi sifatida ishlatiladi, o'zicha ishlatilmaydi. Qo'shiq odamlar tomonidan qayta aranjirovka qilinib, ijro etiladi va relizga tayyorlanadi; ohang va matn ham qayta yozilsa, inson ijodi ulushi yanada aniq bo'ladi. AI qo'shiqlarining mualliflik huquqi va ro'yxatga olish holatini maslahat paytida birga tekshiramiz."
         },
         {
           "q": "Shu jamoa yozuv va relizni ham davom ettira oladimi?",
           "a": "Ha. Yozuv, miks va mastering e'lon qilingan narxlarda davom etadi, distribyutsiya va targ'ibotga o'tsangiz reliz loyihasi sifatida birlashtiramiz. Aranjirovka va miks bir xil trek darajalarida, shuning uchun umumiy summani oldindan hisoblash mumkin; qo'shiqni aranjirovka qilgan odam yozuvni ham boshqaradi va miks qiladi."
+        },
+        {
+          "q": "AI akkompanementini qoldirib, faqat vokalni qayta yozsa bo'ladimi?",
+          "a": "Ha. Vokali olib tashlangan akkompanement faylini yuborasiz, biz ustiga haqiqiy vokal yozamiz va miksing hamda masteringda yakunlaymiz. Ajratilgan akkompanementda ko'pincha AI vokal qoldiqlari yoki xira yuqori chastotalar qoladi — bunda akkompanementni qayta yaratish yaxshiroq, shuning uchun yozishdan oldin tinglab, birga hal qilamiz. Yozish va miksing narxlar sahifasidagi tariflar bo'yicha."
         }
       ]
     },
