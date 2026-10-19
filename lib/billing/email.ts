@@ -343,10 +343,11 @@ export type SubscriptionAlertKind =
   | 'paused_late_approval'
   | 'duplicate_approval'
   | 'charge_held'
-  | 'card_changed_while_paused';
+  | 'card_changed_while_paused'
+  | 'first_charge_unresolved';
 
 /** 사람이 판단해야 하는 사건(돈이 이미 움직였거나 첫 결제가 막힌 경우) — 알림 블록을 붉은 톤으로. */
-const ALERT_KINDS: SubscriptionAlertKind[] = ['first_charge_failed', 'late_approval', 'paused_late_approval', 'duplicate_approval', 'cancelled'];
+const ALERT_KINDS: SubscriptionAlertKind[] = ['first_charge_failed', 'late_approval', 'paused_late_approval', 'duplicate_approval', 'cancelled', 'first_charge_unresolved'];
 
 /** 운영자 알림. kind는 발생 사건을 나타낸다. */
 export const sendSubscriptionOperatorAlert = (
@@ -375,6 +376,9 @@ export const sendSubscriptionOperatorAlert = (
     charge_held: '청구 보류 — 지난 회차 상태 확인 실패',
     // 운영자 정지 상태에서 고객이 카드를 새로 등록한 경우. 자동 재개하지 않으므로 사람이 정한다.
     card_changed_while_paused: '정지 구독의 카드 교체됨 — 재개 여부 판단',
+    // 첫 결제·재개 결제가 토스 응답 없이 끝났다. 승인 웹훅이 오면 살아나지만, 요청이 토스에 닿지 않았으면 아무도 다시 묻지 않는다
+    // (pending_card·paused는 청구 cron 대상이 아니다) — 사람이 토스 콘솔을 확인해야 한다.
+    first_charge_unresolved: '첫 결제 응답 미상 — 토스 콘솔 확인 필요',
   };
 
   return sendEmail({

@@ -109,12 +109,15 @@ export async function cancelShowtime(
   // 앞 칸을 차지하면, 그런 주문이 40건을 넘는 순간 나머지는 '이어서 처리'를 아무리 눌러도 영영 차례가 오지 않는다.
   let tossAttempts = 0;
   let remainingOrders = 0;
-  for (const row of rows as Array<{ orderNo: string }>) {
+  const allRows = rows as Array<{ orderNo: string }>;
+  for (const [index, row] of allRows.entries()) {
+    // 상한에 닿으면 바로 끊는다 — 미뤄질 주문마다 DB를 세 번 오가면 수백 건에서 함수 시간 한도를 넘긴다. 남은 주문은 다음 실행이
+    // 처음부터 다시 훑는다(계좌 입금·입장 티켓만 남은 주문이 뒤에 있어도 그때 처리된다).
+    if (tossAttempts >= MAX_ORDERS_PER_RUN) { remainingOrders = allRows.length - index; break; }
     const orderNo = row.orderNo;
     // 주문 하나의 DB 오류가 나머지 주문의 환불·안내를 막지 않게 한다 — 던진 주문은 failedOrders로 넘기고 계속 간다.
     try {
-      const outcome = await settleOne(orderNo, tossAttempts >= MAX_ORDERS_PER_RUN);
-      if (outcome === 'deferred') remainingOrders += 1;
+      const outcome = await settleOne(orderNo, false);
       if (outcome === 'toss') tossAttempts += 1;
     } catch (error) {
       console.error('[shows-showtimeOps] 회차 취소 환불 중 오류 — 이 주문은 실패로 넘기고 계속', { orderNo, error });

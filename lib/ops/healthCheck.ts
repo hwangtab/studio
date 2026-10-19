@@ -873,6 +873,27 @@ const collectDbIssuesBody = async (db: ReturnType<typeof getDb>, now: Date, issu
    * 연속 놓친 뒤 뜨는 값이고, 정상 재시도는 next_billing_at을 D+1·D+3으로 옮기므로 걸리지 않는다.
    * CRON_SECRET 소실은 이 점검도 같은 인증을 타므로 여기서는 못 잡는다 — Vercel 크론 대시보드가 유일하다.
    */
+  /**
+   * 구독 회차 주문이 pending인 채 오래 남은 것 — 첫 결제·재개 결제가 토스 응답 없이 끝났는데 승인 웹훅도 오지 않은 경우다.
+   * pending_card·paused 구독은 청구 cron 대상이 아니라 아무 경로도 그 주문을 다시 묻지 않고, 결제 어긋남 점검은 payments 행이
+   * 있어야 걸린다(이 경우엔 없다). 36시간: 토스 웹훅 재전송과 다음 날 재조회가 끝나고도 남은 것만.
+   */
+  const stalePendingSubscriptionOrders = await db
+    .select({ orderNo: orders.orderNo })
+    .from(orders)
+    .where(and(eq(orders.type, 'subscription'), eq(orders.status, 'pending'), lt(orders.createdAt, new Date(now.getTime() - 36 * 60 * 60 * 1000))));
+  if (stalePendingSubscriptionOrders.length > 0) {
+    issues.push({
+      severity: 'high',
+      href: '/admin/subscriptions',
+      title: `승인 결과를 확인하지 못한 구독 회차 주문 ${stalePendingSubscriptionOrders.length}건(36시간 이상 pending)`,
+      detail: [
+        `주문번호: ${sample(stalePendingSubscriptionOrders.map((row) => row.orderNo))}`,
+        '토스 콘솔에서 이 주문번호의 결제가 있는지 확인하세요. 승인돼 있으면 관리자 > 구독 상세의 수동 결제(재조회 대사)로 반영되고, 없으면 고객에게 카드 재등록 링크를 보내 주세요.',
+      ].join('\n'),
+    });
+  }
+
   const overdueBilling = await db
     .select({ id: subscriptions.id, nextBillingAt: subscriptions.nextBillingAt })
     .from(subscriptions)

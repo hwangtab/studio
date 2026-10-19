@@ -21,7 +21,7 @@ import {
 import { completeCardSetup, getSubscriptionWithDetails } from '../../../../lib/billing/service';
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
 
-type Outcome = 'activated' | 'resumed' | 'card_changed' | 'card_changed_paused' | 'first_charge_failed' | 'error';
+type Outcome = 'activated' | 'resumed' | 'card_changed' | 'card_changed_paused' | 'first_charge_failed' | 'first_charge_pending' | 'error';
 
 interface SuccessProps {
   kind?: string;
@@ -61,6 +61,14 @@ const RESULT_COPY: Record<
     title: '카드 등록이 완료됐어요',
     description: () => '이번 결제는 없어요. 정기결제가 멈춰 있는 상태라 재개 여부는 담당자가 확인한 뒤 안내드려요.',
     note: () => '문의: 010-4255-7893',
+  },
+  // 토스가 응답하지 못했다(5xx·시간 초과) — 거절이 아니다. 승인 웹훅이 오면 활성화 메일이 간다. 다른 카드 재등록을 권하면
+  // 뒤늦은 승인과 두 번 묶이므로 권하지 않는다.
+  first_charge_pending: {
+    tone: 'pending',
+    title: '카드는 등록됐고 결제 승인 결과를 확인하는 중이에요',
+    description: ({ message }) => message,
+    note: () => '승인이 확인되면 메일로 알려드려요. 다른 카드를 다시 등록하지 않으셔도 돼요. 문의: 010-4255-7893',
   },
   first_charge_failed: {
     tone: 'error',
@@ -145,8 +153,14 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
 
   if (!result.ok) {
     if (result.code === 'first_charge_unresolved') {
-      // 토스가 응답하지 못했다(5xx·시간 초과) — 거절이 아니다. 승인 웹훅이 오면 활성화되고, 안 오면 다음 재조회가 정리한다.
-      return { props: { outcome: 'first_charge_failed', message: result.message } };
+      // 토스가 응답하지 못했다(5xx·시간 초과) — 거절이 아니다. 승인 웹훅이 오면 활성화된다. 요청이 토스에 닿지 않았으면 아무
+      // 경로도 다시 묻지 않으므로(pending_card·paused는 청구 cron 대상이 아니다) 운영자에게 바로 알린다.
+      const details = await getSubscriptionWithDetails(id);
+      if (details) {
+        const alertError = await sendSubscriptionOperatorAlert(details.subscription, 'first_charge_unresolved', result.message);
+        if (alertError) console.error('[subscribe] 첫 결제 응답 미상 운영자 알림 발송 실패', { subscriptionId: id, alertError });
+      }
+      return { props: { outcome: 'first_charge_pending', message: result.message } };
     }
     if (result.code === 'first_charge_failed') {
       // 카드는 등록됐지만 첫 결제가 거부된 상태 — 구독은 pending_card로 남아 조용히

@@ -27,9 +27,12 @@ jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
  */
 const sendSubscriptionOperatorAlert = jest.fn().mockResolvedValue(null);
 const sendSubscriptionCancelledEmail = jest.fn().mockResolvedValue(null);
+const sendSubscriptionActivatedEmail = jest.fn().mockResolvedValue(null);
 jest.mock('./email', () => ({
   sendSubscriptionOperatorAlert: (...args: unknown[]) => sendSubscriptionOperatorAlert(...args),
   sendSubscriptionCancelledEmail: (...args: unknown[]) => sendSubscriptionCancelledEmail(...args),
+  sendSubscriptionActivatedEmail: (...args: unknown[]) => sendSubscriptionActivatedEmail(...args),
+  subscriptionManageUrl: (sub: { id: string }) => `https://studionol.co.kr/ko/subscribe/manage/${sub.id}?token=t`,
 }));
 
 const issueBillingKey = jest.fn();

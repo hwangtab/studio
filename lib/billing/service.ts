@@ -31,7 +31,7 @@ import {
   retryAtFor,
   scheduleForPaidCycle,
 } from './schedule';
-import { sendSubscriptionCancelledEmail, sendSubscriptionOperatorAlert } from './email';
+import { sendSubscriptionActivatedEmail, sendSubscriptionCancelledEmail, sendSubscriptionOperatorAlert, subscriptionManageUrl } from './email';
 import { chargeBillingKey, fetchPaymentByOrderId, issueBillingKey, type TossPayment } from './toss-billing';
 import {
   generateCustomerKey,
@@ -786,10 +786,12 @@ export const firstPaidAtOf = async (subscriptionId: string): Promise<Date | null
 
 /** 결제가 승인된 회차 수 — 셀프 해지 운영자 힌트(레슨 '첫 수업 전 전액 환불')를 첫 결제 뒤에만 붙이는 데 쓴다. */
 export const paidCycleCountOf = async (subscriptionId: string): Promise<number> => {
+  // 회차(cycle_ym) 단위로 센다 — 같은 달 이중 승인은 두 행이고, 환불된 회차는 subscription_payments가 paid로 남는다.
   const [row] = await getDb()
-    .select({ n: sql<number>`count(*)` })
+    .select({ n: sql<number>`count(DISTINCT ${subscriptionPayments.cycleYm})` })
     .from(subscriptionPayments)
-    .where(and(eq(subscriptionPayments.subscriptionId, subscriptionId), eq(subscriptionPayments.status, 'paid')));
+    .innerJoin(orders, eq(orders.id, subscriptionPayments.orderId))
+    .where(and(eq(subscriptionPayments.subscriptionId, subscriptionId), eq(subscriptionPayments.status, 'paid'), inArray(orders.status, ['paid', 'partially_refunded'])));
   return Number(row?.n ?? 0);
 };
 
@@ -1370,7 +1372,7 @@ const recordDuplicateApproval = async (
     try { existing = await db.query.payments.findFirst({ where: (t, { eq: is }) => is(t.paymentKey, payment.paymentKey) }); } catch { /* 아래에서 알린다 */ }
     console.error('[billing] 같은 달 이중 승인 — 기록 실패, 수동 대사 필요', { orderNo: order.orderNo, paymentKey: payment.paymentKey, error });
     if (!existing) {
-      await sendSubscriptionOperatorAlert(
+      const alertError = await sendSubscriptionOperatorAlert(
         subscription,
         'duplicate_approval',
         [
@@ -1379,6 +1381,8 @@ const recordDuplicateApproval = async (
           `주문번호 ${order.orderNo} / paymentKey ${payment.paymentKey}`,
         ].join('\n'),
       );
+      // 이 분기는 웹훅에 200을 돌려줘 재전송이 없다 — 이 알림이 이중 결제를 알 유일한 경로라 실패도 남긴다.
+      if (alertError) console.error('[billing] 이중 승인 기록 실패 알림 발송 실패', { orderNo: order.orderNo, alertError });
     }
     return;
   }
@@ -1549,6 +1553,18 @@ export const reconcileSubscriptionPaymentFromToss = async (payment: TossPayment,
       orderNo: order.orderNo,
       paymentKey: payment.paymentKey,
     });
+  }
+
+  // 첫 결제·재개 결제가 응답 미상으로 끝났다가 뒤늦은 DONE으로 살아난 경우 — 고객은 "승인이 확인되면 메일로 알려드려요"를 받았다.
+  // 그 약속을 여기서 지킨다(해지·종료 구독의 뒤늦은 승인은 아래 운영자 알림 경로다).
+  const wasStarting = subscription.status === 'pending_card' || (subscription.status === 'paused' && subscription.pausedReason === 'payment_failed');
+  if (!keepsPause && wasStarting && rowsAffectedOf(batchResults[3]) !== 0) {
+    const emailError = await sendSubscriptionActivatedEmail(subscription, {
+      manageUrl: subscriptionManageUrl(subscription),
+      amount: order.totalAmount,
+      resumed: subscription.status === 'paused',
+    });
+    if (emailError) console.error('[billing] 뒤늦은 승인 활성화 메일 발송 실패', { subscriptionId: subscription.id, emailError });
   }
 
   // 운영자 정지를 지킨 경우 — 돈은 들어왔고 이용기간도 전진했는데 구독은 정지 그대로다.
