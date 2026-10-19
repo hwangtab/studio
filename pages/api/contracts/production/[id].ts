@@ -20,7 +20,7 @@ import {
   type ProductionContractAction,
 } from '../../../../lib/contracts/production/status';
 import { kstDay as kstDayOf } from '../../../../lib/contracts/production/ledger';
-import { formatTerminationReason, isTerminationCause } from '../../../../lib/contracts/production/termination';
+import { formatTerminationReason, isTerminationCause, parseTerminationCause } from '../../../../lib/contracts/production/termination';
 import { validateProductionContractPayload } from '../../../../lib/contracts/production/validation';
 import { recordAdminPrivacyAccess } from '../../../../lib/privacy/accessLog';
 
@@ -137,6 +137,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       if (action === 'resend-termination') {
         if (contract.purgedAt) return res.status(409).json({ ok: false, message: '개인정보를 파기한 계약입니다.' });
+        if (!parseTerminationCause(contract.terminationReason)) {
+          return res.status(409).json({ ok: false, message: '해지 사유 구분이 없어 해지 안내를 보낼 수 없습니다.' });
+        }
         waitUntil(sendTerminationNotice(id));
         return res.status(200).json({ ok: true, message: '해지 안내 메일을 다시 보내는 중입니다. 잠시 후 새로고침해 결과를 확인해 주세요.' });
       }
@@ -165,10 +168,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (!deliveredAt) {
           return res.status(409).json({ ok: false, message: '최종 파일 인도를 기록한 뒤에 완료 처리할 수 있습니다.' });
         }
-        if (kstDayOf(at) < kstDayOf(deliveredAt)) {
-          return res.status(400).json({ ok: false, message: '완료일은 최종 파일을 인도한 날 이후여야 합니다.' });
-        }
-        return (await closeProductionContract(id, { kind: 'completed', at })) ? res.status(200).json({ ok: true }) : stale();
+        // 완료일은 최종 인도일이다 — 계약서 제13조·처리방침이 "최종 인도로 끝난 날부터 3년"을 약속한다. 완료 버튼을
+        // 누른 날로 두면 그만큼 더 오래 보관하게 된다.
+        return (await closeProductionContract(id, { kind: 'completed', at: deliveredAt }))
+          ? res.status(200).json({ ok: true })
+          : stale();
       }
 
       const { reason, cause } = body;
@@ -181,6 +185,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
       if (reason.length > 500) {
         return res.status(400).json({ ok: false, message: '해지 사유가 너무 깁니다.' });
+      }
+      // 제10조 5항 해지는 요건(무응답 30일 또는 대금 14일 지체)과 그 뒤의 서면 통지가 있어야 한다.
+      if (cause === 'client_default') {
+        const progress = await loadProgressContext(id);
+        const ledger = progress?.ledger;
+        const limit = progress?.terms.paymentDelayDays ?? 0;
+        const grounds =
+          !!ledger &&
+          (ledger.unresponsive.exceeded ||
+            ledger.payments.depositOverdueDays > limit ||
+            ledger.payments.balanceOverdueDays > limit);
+        const noticed = !!ledger?.events.some((e) => e.type === 'termination_notice');
+        if (!grounds || !noticed) {
+          return res.status(409).json({
+            ok: false,
+            message: !grounds
+              ? '무응답 30일·대금 14일 지체 요건이 아직 아닙니다(제10조 5항). 의뢰인 사정이면 1번으로 처리해 주세요.'
+              : '제10조 5항 해지는 먼저 "해지 통지"를 기록해 의뢰인에게 알린 뒤에 할 수 있습니다.',
+          });
+        }
       }
       const terminated = await closeProductionContract(id, {
         kind: 'terminated',

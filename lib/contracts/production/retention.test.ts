@@ -129,6 +129,24 @@ describe('제작 계약 개인정보 파기', () => {
     expect((await load('c4'))?.terminationReason).toBe('[스튜디오 사정] (개인정보 파기됨)');
   });
 
+  it('완료 처리를 빠뜨린 계약도 최종 인도일부터 3년이면 파기한다', async () => {
+    await seed('c5', 'signed', {});
+    await mockDb.insert(schema.productionContractEvents).values({
+      contractId: 'c5', seq: 1, type: 'final_delivered', occurredAt: OLD, recordedAt: OLD, actor: 'admin:kyungha',
+    });
+    await purgeExpiredProductionPersonalData(NOW);
+    expect((await load('c5'))?.purgedAt).not.toBeNull();
+  });
+
+  it('보내지 않고 버려진 초안과 아무도 열지 않아 서명 대기로 남은 만료 계약도 파기한다', async () => {
+    await seed('c6', 'draft', { updatedAt: OLD });
+    await seed('c7', 'sent', {});
+    await mockDb.update(schema.productionContracts).set({ expiresAt: OLD }).where(eq(schema.productionContracts.id, 'c7'));
+    await purgeExpiredProductionPersonalData(NOW);
+    expect((await load('c6'))?.purgedAt).not.toBeNull();
+    expect((await load('c7'))?.purgedAt).not.toBeNull();
+  });
+
   it('진행 기록은 사람이 쓴 글만 지우고 승인 방식 같은 운영 값은 남긴다', async () => {
     await seed('c3', 'terminated', { terminatedAt: OLD });
     await mockDb.insert(schema.productionContractEvents).values({

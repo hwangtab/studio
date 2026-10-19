@@ -278,6 +278,7 @@ describe('해지 환불 계좌', () => {
   const terminatedWithRefund = async () => {
     const { id, token } = await signedContract(new Date());
     await record(id, input({ type: 'payment_received', amount: 575_000 }));
+    await record(id, input({ type: 'source_received' }));
     await record(id, input({ type: 'kickoff' }));
     await client.execute({ sql: "UPDATE production_contracts SET status = 'terminated' WHERE id = ?", args: [id] });
     const { cookie } = await callProgress(id, { action: 'unlock', token, identityDigits: '5678' });
@@ -503,6 +504,7 @@ describe('두 번째 점검(2026-10-18)', () => {
   it('해지한 계약은 잘못 넣은 기록의 무효 처리만 받는다', async () => {
     const { id } = await signedContract(new Date());
     await record(id, input({ type: 'payment_received', amount: 575_000 }));
+    await record(id, input({ type: 'source_received' }));
     const wrong = await record(id, input({ type: 'kickoff' }));
     await client.execute({ sql: "UPDATE production_contracts SET status = 'terminated' WHERE id = ?", args: [id] });
 
@@ -511,13 +513,27 @@ describe('두 번째 점검(2026-10-18)', () => {
     expect((await loadProgressContext(id))!.ledger.refund.refundable).toBe(575_000);
   });
 
-  it('완료일은 체결일·최종 인도일보다 앞설 수 없다', async () => {
+  it('완료일은 최종 인도일로 기록하고, 해지일은 체결일보다 앞설 수 없다', async () => {
     const { id } = await signedContract(kst('2026-10-01T10:00:00'));
-    await client.execute({ sql: "INSERT INTO production_contract_events (id, contract_id, seq, type, occurred_at, recorded_at, actor) VALUES ('fd1', ?, 1, 'final_delivered', ?, ?, 'admin:kyungha')", args: [id, Math.floor(kst('2026-10-10T10:00:00').getTime() / 1000), Math.floor(Date.now() / 1000)] });
+    const deliveredAt = kst('2026-10-10T10:00:00');
+    await client.execute({ sql: "INSERT INTO production_contract_events (id, contract_id, seq, type, occurred_at, recorded_at, actor) VALUES ('fd1', ?, 1, 'final_delivered', ?, ?, 'admin:kyungha')", args: [id, Math.floor(deliveredAt.getTime() / 1000), Math.floor(Date.now() / 1000)] });
+    expect((await callAdmin(id, { action: 'complete', closedOn: '2026-10-15' })).status).toBe(200);
+    const completed = await mockDb.query.productionContracts.findFirst({ where: (t, { eq }) => eq(t.id, id) });
+    expect(completed?.completedAt?.getTime()).toBe(deliveredAt.getTime());
 
-    expect((await callAdmin(id, { action: 'complete', closedOn: '2025-10-10' })).status).toBe(400);
-    expect((await callAdmin(id, { action: 'complete', closedOn: '2026-10-05' })).status).toBe(400);
-    expect((await callAdmin(id, { action: 'complete', closedOn: '2026-10-10' })).status).toBe(200);
+    const other = await signedContract(kst('2026-10-01T10:00:00'));
+    expect((await callAdmin(other.id, { action: 'terminate', cause: 'client', reason: 'x', closedOn: '2025-10-10' })).status).toBe(400);
+  });
+
+  it('제10조 5항 해지는 요건과 해지 통지가 있어야 한다', async () => {
+    const { id } = await signedContract(new Date());
+    const refused = await callAdmin(id, { action: 'terminate', cause: 'client_default', reason: '연락 두절' });
+    expect(refused.status).toBe(409);
+  });
+
+  it('1차 완성본을 받기 전에는 착수를 기록할 수 없다(제10조 1항)', async () => {
+    const { id } = await signedContract(new Date());
+    expect(await recordProgressEvent(id, input({ type: 'kickoff' }), admin)).toMatchObject({ ok: false, status: 409 });
   });
 
   it('파기된 계약에는 체결 메일을 다시 보내지 않는다', async () => {

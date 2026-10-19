@@ -52,9 +52,10 @@ describe('대금(제3조)', () => {
     expect(ledger.todos.map((t) => t.message)).toContainEqual(expect.stringContaining('계약금 기한이 2일 지났어요'));
   });
 
-  it('14일 이상 지체면 해지 통지 가능으로 올린다(제10조 5항)', () => {
-    const ledger = ledgerAt('2026-11-19T09:00:00', []);
-    expect(ledger.todos.find((t) => t.message.includes('계약금'))).toMatchObject({ severity: 'alert' });
+  it('14일 이상 지체면 해지 통지 가능으로 올린다(제10조 5항) — 14일째 날이 다 지난 다음 날부터(초일불산입)', () => {
+    // 기한 11/5 → 지체 11/6부터. 14일째인 11/19는 아직, 11/20부터 성립.
+    expect(ledgerAt('2026-11-19T23:00:00', []).todos.find((t) => t.message.includes('계약금'))).toMatchObject({ severity: 'warn' });
+    expect(ledgerAt('2026-11-20T00:30:00', []).todos.find((t) => t.message.includes('계약금'))).toMatchObject({ severity: 'alert' });
   });
 
   it('나눠 들어온 입금이 계약금에 닿은 날을 계약금 입금일로 본다', () => {
@@ -153,9 +154,10 @@ describe('작업 기간(제4조)', () => {
     expect(studio.work.dueOn).toEqual(kst('2026-12-31T00:00:00'));
   });
 
-  it('예정일을 4주 넘기면 의뢰인 해지 가능으로 올린다(제12조 2항)', () => {
-    const ledger = ledgerAt('2027-01-28T09:00:00', started);
-    expect(ledger.work.delayDays).toBe(28);
+  it('예정일을 4주 넘기면 의뢰인 해지 가능으로 올린다(제12조 2항) — 28일째 날이 다 지난 다음 날부터', () => {
+    expect(ledgerAt('2027-01-28T09:00:00', started).work.delayExceeded).toBe(false);
+    const ledger = ledgerAt('2027-01-29T09:00:00', started);
+    expect(ledger.work.delayDays).toBe(29);
     expect(ledger.work.delayExceeded).toBe(true);
     expect(ledger.todos).toContainEqual(expect.objectContaining({ severity: 'alert', message: expect.stringContaining('제12조 2항') }));
   });
@@ -383,6 +385,20 @@ describe('여러 곡(EP)', () => {
       now: kst('2026-11-20T09:00:00'),
     });
     expect(mastered.refund.lines.find((line) => line.key === 'mixmaster')!.ratio).toBe(1);
+  });
+
+  it('결과물을 보내고 의뢰인 답을 기다린 날은 작업 기간에서 빼 예정일을 미룬다(제4조 2항)', () => {
+    const base = [
+      ev('payment_received', '2026-11-03T09:00:00', { amount: terms.amount.deposit }),
+      ev('source_received', '2026-11-03T10:00:00'),
+    ];
+    const plain = ledgerAt('2026-12-01T09:00:00', base);
+    const waited = ledgerAt('2026-12-01T09:00:00', [
+      ...base,
+      ev('stage_delivered', '2026-11-10T09:00:00', { stage: 'arrangement' }),
+      ev('revision_requested', '2026-11-15T09:00:00', { stage: 'arrangement' }),
+    ]);
+    expect(kstDay(waited.work.dueOn!) - kstDay(plain.work.dueOn!)).toBe(5);
   });
 
   it('할 일에 곡 이름을 붙인다', () => {

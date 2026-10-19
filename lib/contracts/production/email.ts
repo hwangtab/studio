@@ -63,7 +63,7 @@ export const sendProductionSignRequestEmail = async (
     rows: termRows(contract, terms),
     cta: { label: '계약서 서명하기', url: signUrl },
     notices: [
-      `이 링크는 <strong>${SIGN_TOKEN_TTL_DAYS}일간</strong> 유효합니다. 기한이 지나면 다시 보내 드립니다.`,
+      `이 링크는 <strong>${SIGN_TOKEN_TTL_DAYS}일간</strong> 유효합니다. 기한이 지나면 스튜디오에 알려 주세요. 다시 보내 드립니다.`,
       `본인 확인을 위해 서명 화면에서 <strong>연락처 뒤 ${IDENTITY_DIGITS}자리</strong>를 입력하게 됩니다.`,
       '서명이 끝나면 서명본 PDF와 계약금 입금 안내를 메일로 보내 드립니다.',
     ],

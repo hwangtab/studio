@@ -9,7 +9,7 @@ import { canonicalTermsJson, parseStoredTerms } from './terms';
 
 /**
  * 계약서 제13조 3항이 약속한 보관 기간 — 계약이 끝난 날(최종 인도 또는 해지)부터 3년.
- * 고칠 때는 single-template.md 제13조와 처리방침(data/privacyPolicy.ts)도 함께 고친다.
+ * 고칠 때는 single-template.md·release-template.md 제13조와 처리방침(data/privacyPolicy.ts)도 함께 고친다.
  */
 export const PRODUCTION_RETENTION_YEARS = 3;
 
@@ -26,11 +26,13 @@ export const getProductionRetentionBoundary = (now: Date = new Date()): Date => 
  * 보관 기간이 지난 제작 계약의 개인정보를 파기한다. 매월 purge-contracts 크론이 연습실 파기와 함께 부른다.
  *
  * 기산점은 상태마다 다르다.
- * - completed: 최종 인도로 끝난 날(completedAt)
+ * - completed: 최종 인도일(completedAt — 완료 처리가 최종 인도일로 기록한다)
  * - terminated: 해지한 날(terminatedAt)
- * - cancelled·expired: 체결되지 않은 계약 — 마지막으로 바뀐 날(updatedAt, 취소·만료 시각)
+ * - signed인데 최종 인도를 마친 계약: 최종 인도일(완료 처리를 빠뜨려도 약속한 날에 파기된다)
+ * - sent·expired: 서명 링크 만료 시각(expiresAt — 아무도 열지 않아 'sent'로 남은 계약 포함)
+ * - cancelled·draft: 마지막으로 바뀐 날(updatedAt — 취소한 계약, 보내지 않고 버려진 초안)
  *
- * signed(진행 중)는 대상이 아니다. 작업이 끝나지 않았는데 연락처를 지우면 인도도 정산도 못 한다.
+ * 최종 인도 전의 signed(진행 중)는 대상이 아니다. 작업이 끝나지 않았는데 연락처를 지우면 인도도 정산도 못 한다.
  *
  * 계약 행은 남긴다(연습실과 같다). 금액·날짜·상태처럼 사람을 가리키지 않는 값은 "이런 계약이 있었다"는 운영
  * 기록으로 쓴다. 지우는 것은 이름·활동명·연락처·주소·생년월일, 그 값이 박힌 본문과 PDF, 서명 이미지·IP·단말
@@ -54,10 +56,17 @@ export const purgeExpiredProductionPersonalData = async (
         or(
           and(eq(productionContracts.status, 'completed'), lt(productionContracts.completedAt, boundary)),
           and(eq(productionContracts.status, 'terminated'), lt(productionContracts.terminatedAt, boundary)),
+          // 최종 인도까지 했는데 완료 처리를 빠뜨린 계약 — 약속은 "최종 인도로 끝난 날부터 3년"이다(제13조).
           and(
-            inArray(productionContracts.status, ['cancelled', 'expired']),
-            lt(productionContracts.updatedAt, boundary),
+            eq(productionContracts.status, 'signed'),
+            sql`EXISTS (SELECT 1 FROM production_contract_events f WHERE f.contract_id = ${productionContracts.id}
+              AND f.type = 'final_delivered' AND f.occurred_at < ${Math.floor(boundary.getTime() / 1000)}
+              AND NOT EXISTS (SELECT 1 FROM production_contract_events v WHERE v.type = 'void' AND v.voids_event_id = f.id))`,
           ),
+          // 체결되지 않은 계약: 만료는 만료 시각부터(아무도 열지 않아 상태가 'sent'로 남아 있어도), 취소·버려진 초안은
+          // 마지막으로 고친 날부터.
+          and(inArray(productionContracts.status, ['sent', 'expired']), lt(productionContracts.expiresAt, boundary)),
+          and(inArray(productionContracts.status, ['cancelled', 'draft']), lt(productionContracts.updatedAt, boundary)),
         ),
         // 기록을 만든 지도 그만큼 지났어야 한다 — 끝난 날을 소급해 적은 계약이 만들자마자 파기되지 않게.
         lt(productionContracts.createdAt, boundary),

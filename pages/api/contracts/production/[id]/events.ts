@@ -73,7 +73,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!parsed.ok) return res.status(400).json({ ok: false, message: parsed.message });
 
     // 해지 환불을 이미 보냈으면 정산을 바꾸는 무효 처리를 받지 않는다 — 보낸 금액과 의뢰인 화면의 금액이 갈린다.
-    if (body.action === 'void') {
+    // 환불은 해지한 계약에만 있다 — 진행 중 계약의 무효 처리는 환불 기록과 무관하게 받는다.
+    const terminated = body.action === 'void' && (await loadProgressContext(id))?.contract.status === 'terminated';
+    if (terminated) {
       const refund = await loadRefundAccountSummary({ kind: 'production', orderNo: id });
       if (refund.status === 'unavailable') {
         return res.status(503).json({ ok: false, message: '환불 기록을 확인하지 못했습니다. 잠시 후 다시 시도해 주세요.' });

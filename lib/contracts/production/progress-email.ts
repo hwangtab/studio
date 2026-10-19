@@ -361,6 +361,8 @@ export const sendTerminationEmail = async (
   ledger: ProductionLedger,
   cause: TerminationCause,
   progressUrl: string,
+  /** 환불 계좌 접수 상태 — 재발송 때 이미 받은 계좌를 다시 묻지 않는다. */
+  refundStage: 'none' | 'received' | 'refunded' = 'none',
 ): Promise<SendContractEmailResult> => {
   const name = escapeHtml(contract.clientName);
   const { refund, payments, work } = ledger;
@@ -372,9 +374,13 @@ export const sendTerminationEmail = async (
   const paragraphs = [
     `${name}님, 음원 제작 계약을 해지했어요(${escapeHtml(TERMINATION_CAUSE_LABEL[cause])}).`,
     basis,
-    refund.refundable > 0
-      ? '<strong>진행 페이지에서 환불받을 계좌를 알려 주세요.</strong> 확인하는 대로 보내 드려요.'
-      : '돌려드릴 금액은 없어요.',
+    refund.refundable <= 0
+      ? '돌려드릴 금액은 없어요.'
+      : refundStage === 'refunded'
+        ? '알려 주신 계좌로 환불을 보내 드렸어요.'
+        : refundStage === 'received'
+          ? '알려 주신 환불 계좌를 받았어요. 확인하는 대로 보내 드려요.'
+          : '<strong>진행 페이지에서 환불받을 계좌를 알려 주세요.</strong> 확인하는 대로 보내 드려요.',
   ];
   const rows: ContractEmailRow[] = [
     { label: '받은 금액', value: won(payments.received) },
@@ -388,7 +394,7 @@ export const sendTerminationEmail = async (
       heading: '계약이 해지됐어요',
       paragraphs,
       rows,
-      cta: { label: refund.refundable > 0 ? '환불 계좌 알려 주기' : '진행 내용 보기', url: progressUrl },
+      cta: { label: refund.refundable > 0 && refundStage === 'none' ? '환불 계좌 알려 주기' : '진행 내용 보기', url: progressUrl },
     }),
     text: [...paragraphs.map((p) => p.replace(/<[^>]+>/g, '')), ...rows.map((r) => `${r.label}: ${r.value}`), '', progressUrl].join('\n'),
   });

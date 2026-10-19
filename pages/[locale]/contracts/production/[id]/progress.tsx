@@ -181,7 +181,8 @@ function StageCard({
         <div className="mt-4 rounded-lg bg-gray-50 dark:bg-gray-50 p-4 text-sm text-gray-700 dark:text-gray-700">
           <p>
             {formatDate(stage.pending.deliveredAt)}에 결과물을 보내 드렸어요.
-            {!closed && (
+            {/* 통지가 아직 안 나간 전달은 기한이 성립하지 않는다(통지가 나가는 날부터 다시 정해진다). */}
+            {!closed && stage.pending.noticeSent && (
               <>
                 {' '}
                 <strong>{formatDate(stage.pending.lastDayToRespond)}까지</strong> 수정 요청이 없으면 승인된 것으로 봐요(계약서 제5조 5항).

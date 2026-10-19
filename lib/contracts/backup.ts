@@ -7,7 +7,7 @@ import { contractPdfPathname, PRODUCTION_PDF_PREFIX } from './pdfPath';
  * 백업 보관 기간.
  *
  * 복구는 대개 사고 직후에 필요하므로 길게 쌓을 이유가 없다. 백업에는 이름·연락처가
- * 그대로 들어 있어, 오래 두면 계약서 제12조로 약속한 파기가 사본에서 무의미해진다.
+ * 그대로 들어 있어, 오래 두면 계약서(연습실 제12조·제작 제13조)로 약속한 파기가 사본에서 무의미해진다.
  */
 const BACKUP_RETENTION_DAYS = 28;
 
