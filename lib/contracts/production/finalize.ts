@@ -64,7 +64,8 @@ export const finalizeSignedProductionContract = async (contractId: string): Prom
             email: guardian.email,
           })
         : null,
-      sendProductionOperatorNotification(contract, terms, true),
+      // 의뢰인 서명에 연락처 대조 기록이 없으면 링크 계약으로 체결된 것이다(sign-transaction.ts — 하지 않은 확인은 남기지 않는다).
+      sendProductionOperatorNotification(contract, terms, true, clientSigner.identityVerifiedAt === null),
     ]);
     if (!clientResult.ok) problems.push(`체결 메일 발송 실패 (${clientResult.errorCode ?? 'UNKNOWN'})`);
     if (guardianResult && !guardianResult.ok) problems.push(`법정대리인 체결 메일 발송 실패 (${guardianResult.errorCode ?? 'UNKNOWN'})`);

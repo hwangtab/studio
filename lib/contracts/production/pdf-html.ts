@@ -4,6 +4,7 @@ import { escapeHtml } from '../html-escape';
 import { renderMarkdown } from '../markdown';
 import { CONTRACT_PDF_BASE_CSS, renderSignatureImage } from '../pdf-html';
 import type { ProductionClause } from './clauses';
+import { IDENTITY_CONFIRMED_KEY } from './open-link';
 import { contractNameFor, isOneSongKind, isSinglePayment, releaseTitle, type ProductionTerms } from './terms';
 
 export interface BuildProductionPdfInput {
@@ -51,8 +52,12 @@ const renderSigner = (signer: ProductionContractSigner): string => {
       ? `본인 확인: 계약서 등록 연락처 뒷자리 대조 완료 (${formatDateTime(signer.identityVerifiedAt)})`
       : signer.role === 'client'
         ? // 링크 계약(open-link.ts) — 의뢰인이 서명할 때 자기 정보를 적었고 대조할 번호가 없었다.
-          '본인 확인: 연락처 대조 없음 — 스튜디오가 1:1로 전달한 서명 링크로 서명하며 의뢰인이 직접 정보를 입력'
+          '본인 확인: 연락처 대조 없음 — 스튜디오가 발송한 서명 링크로 서명하며 의뢰인이 성명·연락처·이메일을 직접 입력'
         : '',
+    // 서명 화면의 "본인이 계약 당사자임을 확인" 체크(2026-10-20부터 기록) — 링크 계약에서는 사실상 유일한 신원 진술이다.
+    signer.role !== 'operator' && signer.agreedClauses?.includes(`"${IDENTITY_CONFIRMED_KEY}"`)
+      ? `당사자 확인: 본인이 계약 당사자임을 확인하고 전자서명에 동의 (${formatDateTime(signer.signedAt)})`
+      : '',
   ].filter(Boolean);
 
   return `<div style="margin-top: 10px;">
@@ -113,7 +118,7 @@ export const buildProductionPdfHtml = (input: BuildProductionPdfInput): string =
 </head>
 <body>
   <h1>${contractNameFor(contract.kind)}</h1>
-  <p class="meta">${escapeHtml(contract.title)} · 계약번호 ${escapeHtml(contract.id)}</p>
+  <p class="meta">계약번호 ${escapeHtml(contract.id)}</p>
 
   <h2>계약 요약</h2>
   <table>

@@ -180,7 +180,8 @@ describe('제작 계약 체결 흐름', () => {
     expect(loaded?.clientBirthdate).toBe('1990-05-15');
     expect(loaded?.content).toContain('서울시 은평구 대조동 1-1');
     expect(loaded?.contentHash).toMatch(/^p2:[0-9a-f]{64}$/);
-    expect(loaded?.signers.find((signer) => signer.role === 'client')?.agreedClauses).toBe(JSON.stringify(ALL_CLAUSES));
+    // 동의 기록에는 조항 키와 "본인이 계약 당사자임을 확인" 체크가 함께 남는다(서명본 PDF에 찍힌다).
+    expect(loaded?.signers.find((signer) => signer.role === 'client')?.agreedClauses).toBe(JSON.stringify([...ALL_CLAUSES, 'identity-confirmed']));
     expect(verifyStoredProductionContract(loaded!)).toMatchObject({ kind: 'match' });
   });
 
@@ -483,7 +484,11 @@ describe('링크 계약 — 의뢰인 정보를 서명할 때 받는다', () => 
     expect(missing.status).toBe(400);
     expect((missing.body.errors as Array<{ field: string }>).map((e) => e.field)).toEqual(['clientName', 'clientEmail', 'clientPhone']);
 
-    const signed = await callSign(id, { token: await clientToken(id), identityDigits: undefined, ...CLIENT });
+    // 이름·연락처와 생년월일 오류를 한 번에 돌려준다(두 번 제출하지 않아도 다 보이게).
+    const both = await callSign(id, { token: await clientToken(id), identityDigits: undefined, clientBirthdate: '' });
+    expect((both.body.errors as Array<{ field: string }>).map((e) => e.field).sort()).toEqual(['clientBirthdate', 'clientEmail', 'clientName', 'clientPhone']);
+
+    const signed = await callSign(id, { token: await clientToken(id), identityDigits: undefined, ...CLIENT, clientPhone: '01098765432', clientEmail: 'Client@Example.com' });
     expect(signed).toEqual({ status: 200, body: { ok: true } });
 
     const contract = await loadContract(id);

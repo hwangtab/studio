@@ -8,7 +8,7 @@ import { IDENTITY_DIGITS, verifyIdentityDigits } from '../../../../../lib/contra
 import { parseStoredClauses } from '../../../../../lib/contracts/production/clauses';
 import { finalizeSignedProductionContract } from '../../../../../lib/contracts/production/finalize';
 import { productionSignerRateLimitKey } from '../../../../../lib/contracts/production/links';
-import { isOpenProductionContract, validateOpenLinkClient, type OpenLinkClientInput } from '../../../../../lib/contracts/production/open-link';
+import { IDENTITY_CONFIRMED_KEY, isOpenProductionContract, validateOpenLinkClient, type OpenLinkClientInput } from '../../../../../lib/contracts/production/open-link';
 import { finalizeProductionContractIfComplete } from '../../../../../lib/contracts/production/service';
 import { buildProductionSignStatements } from '../../../../../lib/contracts/production/sign-transaction';
 import { checkProductionAction, getEffectiveProductionStatus } from '../../../../../lib/contracts/production/status';
@@ -81,38 +81,43 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const role = signer.role;
     const hasGuardian = contract.signers.some((s) => s.role === 'guardian');
 
+    // 링크 계약(open-link.ts) — 의뢰인이 이름·이메일·연락처를 여기서 채운다. 본인 확인 대조 번호가 없다.
+    const openLink = role === 'client' && isOpenProductionContract(contract);
+
     // 의뢰인만 생년월일·주소를 채운다. 대리인이 지정된 계약이면 미성년이어도 받는다.
+    // 링크 계약의 이름·연락처·이메일 오류와 함께 **한 번에** 돌려준다 — 나눠 주면 두 번 제출해야 다 보인다.
     let clientDetails: { clientBirthdate: string; clientAddress: string } | undefined;
+    let openClient: OpenLinkClientInput | undefined;
     if (role === 'client') {
+      const fieldErrors: Array<{ field: string; message: string }> = [];
       const details = validateSignerDetails(
         { customerBirthdate: body.clientBirthdate, customerAddress: body.clientAddress },
         { allowMinor: hasGuardian },
       );
       if (!details.ok) {
-        return res.status(400).json({
-          ok: false,
-          message: '입력하신 정보를 확인해 주세요.',
-          errors: details.errors.map((error) => ({
+        fieldErrors.push(
+          ...details.errors.map((error) => ({
             field: error.field === 'customerBirthdate' ? 'clientBirthdate' : 'clientAddress',
-            // 대리인 없는 계약의 미성년 차단은 운영자가 대리인을 지정해야 풀린다 — 그 사실을 알려 준다.
+            // 대리인 없는 계약의 미성년 차단은 운영자가 대리인을 지정해야 풀린다 — 그 사실을 알려 준다. 링크 계약은 대리인을
+            // 넣을 수 없어(validation.ts) 대리인이 함께 서명하는 새 계약서를 보내야 한다.
             message: error.message.includes('19세')
-              ? `만 19세 미만이면 법정대리인이 함께 서명해야 해요. ${OPERATOR_PHONE}으로 연락해 주시면 대리인 서명을 준비해 드려요.`
+              ? openLink
+                ? `만 19세 미만이면 법정대리인이 함께 서명해야 해요. ${OPERATOR_PHONE}으로 연락해 주시면 법정대리인과 함께 서명하는 계약서를 새로 보내 드려요.`
+                : `만 19세 미만이면 법정대리인이 함께 서명해야 해요. ${OPERATOR_PHONE}으로 연락해 주시면 대리인 서명을 준비해 드려요.`
               : error.message,
           })),
-        });
+        );
+      } else {
+        clientDetails = { clientBirthdate: details.data.customerBirthdate, clientAddress: details.data.customerAddress };
       }
-      clientDetails = { clientBirthdate: details.data.customerBirthdate, clientAddress: details.data.customerAddress };
-    }
-
-    // 링크 계약(open-link.ts) — 의뢰인이 이름·이메일·연락처를 여기서 채운다. 본인 확인 대조 번호가 없다.
-    const openLink = role === 'client' && isOpenProductionContract(contract);
-    let openClient: OpenLinkClientInput | undefined;
-    if (openLink) {
-      const client = validateOpenLinkClient(body);
-      if (!client.ok) {
-        return res.status(400).json({ ok: false, message: '입력하신 정보를 확인해 주세요.', errors: client.errors });
+      if (openLink) {
+        const client = validateOpenLinkClient(body);
+        if (!client.ok) fieldErrors.push(...client.errors);
+        else openClient = client.data;
       }
-      openClient = client.data;
+      if (fieldErrors.length > 0) {
+        return res.status(400).json({ ok: false, message: '입력하신 정보를 확인해 주세요.', errors: fieldErrors });
+      }
     }
 
     const effectiveStatus = getEffectiveProductionStatus(contract);
@@ -149,7 +154,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const rateKey = productionSignerRateLimitKey(contract.id, role);
-    const attempt = await checkIdentityAttempt(rateKey);
+    // 링크 계약은 맞힐 번호가 없어 시도를 셀 이유가 없다 — 세면 빈 요청 반복으로 링크만 잠긴다.
+    const attempt = openLink ? 'ok' : await checkIdentityAttempt(rateKey);
     if (attempt === 'locked') {
       return res.status(429).json({
         ok: false,
@@ -186,7 +192,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         signatureData,
         ipAddress: getClientIp(req),
         userAgent: String(req.headers['user-agent'] || ''),
-        agreedClauseKeys: clauses.map((clause) => clause.key),
+        // "본인이 계약 당사자임을 확인" 체크도 동의 기록에 남긴다 — 링크 계약에서는 사실상 유일한 신원 진술이다(서명본 PDF에 찍힌다).
+        agreedClauseKeys: [...clauses.map((clause) => clause.key), IDENTITY_CONFIRMED_KEY],
         clientDetails,
         openClient,
       }),

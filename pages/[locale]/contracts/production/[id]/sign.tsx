@@ -80,7 +80,7 @@ export const getServerSideProps = withI18nServerProps<ProductionSignPageProps>(a
       return { props: { ...empty, unavailable: status === 'cancelled' ? ('cancelled' as const) : ('expired' as const) } };
     }
 
-    await recordProductionSignerView(linkSigner.id, token, getClientIp(context.req));
+    await recordProductionSignerView(linkSigner.id, token, getClientIp(context.req), new Date(), String(context.req.headers['user-agent'] || ''));
     // 서명자마다 연락처 뒷자리가 본인 확인의 정답이다 — 내 번호만이 아니라 상대(의뢰인·법정대리인) 번호도 가린다.
     // 의뢰인 화면에 대리인 번호가 보이면 미성년 의뢰인이 대리인 링크까지 혼자 열 수 있다.
     const identityPhones = [contract.clientPhone, ...contract.signers.map((signer) => signer.phone ?? '')].filter(Boolean);
@@ -128,7 +128,7 @@ const UNAVAILABLE_COPY: Record<UnavailableReason, { headTitle: string; title: st
     headTitle: '사용할 수 없는 링크',
     title: '이 서명 링크는 더 이상 사용할 수 없습니다',
     description:
-      '계약서를 다시 보내 드렸다면 가장 최근에 받으신 메일의 링크를 열어 주세요. 최근 메일이 없다면 운영자에게 재발송을 요청해 주세요.',
+      '계약서를 다시 보내 드렸다면 가장 최근에 받으신 링크(메일 또는 카카오톡)를 열어 주세요. 최근 링크가 없다면 운영자에게 재발송을 요청해 주세요.',
   },
   cancelled: {
     headTitle: '취소된 계약',
@@ -162,6 +162,7 @@ export default function ProductionContractSignPage({
   const [openStageName, setOpenStageName] = useState('');
   const [openEmail, setOpenEmail] = useState('');
   const [openPhone, setOpenPhone] = useState('');
+  const [openEmailConfirm, setOpenEmailConfirm] = useState('');
   const [identityConfirmed, setIdentityConfirmed] = useState(false);
   const [agreements, setAgreements] = useState<Record<string, boolean>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -171,7 +172,19 @@ export default function ProductionContractSignPage({
   const isGuardian = signer?.role === 'guardian';
   const openLink = !isGuardian && contract?.openLink === true;
   const identityReady = (openLink || identityDigits.length === IDENTITY_DIGITS) && identityConfirmed;
-  const openReady = !openLink || (openName.trim() !== '' && openEmail.trim() !== '' && openPhone.trim() !== '');
+  // 이메일은 두 번 받는다 — 서명본 PDF(생년월일·주소·서명 포함)가 이 주소로 가고, 서명 뒤에는 고칠 수 없다.
+  const emailMismatch = openLink && openEmailConfirm.trim() !== '' && openEmailConfirm.trim().toLowerCase() !== openEmail.trim().toLowerCase();
+  const openReady =
+    !openLink ||
+    (openName.trim() !== '' && openEmail.trim() !== '' && openPhone.trim() !== '' && openEmailConfirm.trim() !== '' && !emailMismatch);
+  /** 칸을 고치면 그 칸의 서버 오류를 지운다 — 고친 뒤에도 옛 오류가 남아 있으면 무엇이 틀렸는지 헷갈린다. */
+  const clearFieldError = (field: string) =>
+    setDetailErrors((prev) => {
+      if (!(field in prev)) return prev;
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
   const detailsReady = isGuardian || (clientBirthdate !== '' && clientAddress.trim() !== '' && openReady);
   const ready = detailsReady && allAgreed && identityReady && hasSigned;
 
@@ -181,16 +194,22 @@ export default function ProductionContractSignPage({
     const draft = readDraft(contract.id);
     if (draft.customerBirthdate) setClientBirthdate(draft.customerBirthdate);
     if (draft.customerAddress) setClientAddress(draft.customerAddress);
+    // 링크 계약의 이름·활동명·연락처·이메일도 — 카톡 인앱 브라우저에서 앱을 오가면 다시 열린다(sign-draft.ts).
+    if (draft.clientName) setOpenName(draft.clientName);
+    if (draft.clientStageName) setOpenStageName(draft.clientStageName);
+    if (draft.clientPhone) setOpenPhone(draft.clientPhone);
+    if (draft.clientEmail) setOpenEmail(draft.clientEmail);
   }, [contract]);
 
   useEffect(() => {
     if (!contract) return;
-    if (clientBirthdate === '' && clientAddress === '') {
+    const values = { customerBirthdate: clientBirthdate, customerAddress: clientAddress, clientName: openName, clientStageName: openStageName, clientPhone: openPhone, clientEmail: openEmail };
+    if (Object.values(values).every((value) => value === '')) {
       clearDraft(contract.id);
       return;
     }
-    writeDraft(contract.id, { customerBirthdate: clientBirthdate, customerAddress: clientAddress });
-  }, [contract, clientBirthdate, clientAddress]);
+    writeDraft(contract.id, values);
+  }, [contract, clientBirthdate, clientAddress, openName, openStageName, openPhone, openEmail]);
 
   if (unavailable) {
     const copy = UNAVAILABLE_COPY[unavailable];
@@ -213,7 +232,7 @@ export default function ProductionContractSignPage({
           <title>{`${title} | Studio NOL`}</title>
           <meta name="robots" content="noindex, nofollow" />
         </Head>
-        <ContractNotice title={title} description={error || '잘못된 링크입니다. 메일에 포함된 링크를 다시 확인해 주세요.'} />
+        <ContractNotice title={title} description={error || '잘못된 링크입니다. 메일이나 카카오톡으로 받은 링크를 다시 확인해 주세요.'} />
       </>
     );
   }
@@ -281,17 +300,100 @@ export default function ProductionContractSignPage({
   };
 
   const pendingHint = !detailsReady
-    ? '생년월일과 주소를 입력해 주세요.'
+    ? openLink && !openReady
+      ? emailMismatch
+        ? '이메일 확인 칸이 위의 이메일과 같지 않아요.'
+        : '성명·휴대폰 번호·이메일(확인 포함)을 입력해 주세요.'
+      : '생년월일과 주소를 입력해 주세요.'
     : !allAgreed
       ? '모든 동의 항목에 체크해 주세요.'
       : !identityReady
         ? '본인 확인을 완료해 주세요.'
         : '서명을 입력해 주세요.';
 
+  const clientInfo = (
+              <div className={openLink ? 'mb-10 border-b border-gray-200 dark:border-gray-200 pb-8' : 'mt-10 border-t border-gray-200 dark:border-gray-200 pt-8'}>
+                <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-2">의뢰인 정보</h2>
+                <p className="text-sm text-gray-600 dark:text-gray-600 mb-4 leading-relaxed">
+                  아래 항목은 계약서에 그대로 기재돼요. 정확히 입력해 주세요.
+                  {openLink && ' 서명한 계약서(PDF)는 적어 주신 이메일로 보내 드려요. 이메일이 틀리면 다른 사람에게 갈 수 있으니 한 번 더 확인해 주세요.'}
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {openLink && (
+                    <>
+                      <Field id="clientName" label="성명(실명)" required error={detailErrors.clientName} className={lightOnlyField}>
+                        <TextInput value={openName} onChange={(e) => { setOpenName(e.target.value); clearFieldError('clientName'); }} autoComplete="name" light className="px-4 py-3" />
+                      </Field>
+                      <Field id="clientStageName" label="활동명" error={detailErrors.clientStageName} className={lightOnlyField}>
+                        <TextInput value={openStageName} onChange={(e) => { setOpenStageName(e.target.value); clearFieldError('clientStageName'); }} placeholder="없으면 비워 두세요" autoComplete="nickname" light className="px-4 py-3" />
+                      </Field>
+                      <Field id="clientPhone" label="휴대폰 번호" required error={detailErrors.clientPhone} className={lightOnlyField}>
+                        <TextInput
+                          type="tel"
+                          inputMode="tel"
+                          value={openPhone}
+                          onChange={(e) => { setOpenPhone(e.target.value); clearFieldError('clientPhone'); }}
+                          placeholder="010-1234-5678"
+                          autoComplete="tel"
+                          light
+                          className="px-4 py-3"
+                        />
+                      </Field>
+                      <Field id="clientEmail" label="이메일" required error={detailErrors.clientEmail} className={lightOnlyField}>
+                        <TextInput
+                          type="email"
+                          inputMode="email"
+                          value={openEmail}
+                          onChange={(e) => { setOpenEmail(e.target.value); clearFieldError('clientEmail'); }}
+                          placeholder="name@example.com"
+                          autoComplete="email"
+                          light
+                          className="px-4 py-3"
+                        />
+                      </Field>
+                      <Field id="clientEmailConfirm" label="이메일 확인" required error={emailMismatch ? '위에 적은 이메일과 같지 않아요.' : undefined} className={lightOnlyField}>
+                        <TextInput
+                          type="email"
+                          inputMode="email"
+                          value={openEmailConfirm}
+                          onChange={(e) => setOpenEmailConfirm(e.target.value)}
+                          placeholder="이메일을 한 번 더 적어 주세요"
+                          autoComplete="off"
+                          light
+                          className="px-4 py-3"
+                        />
+                      </Field>
+                    </>
+                  )}
+                  <Field id="clientBirthdate" label="생년월일" required error={detailErrors.clientBirthdate} className={lightOnlyField}>
+                    <TextInput
+                      type="date"
+                      value={clientBirthdate}
+                      onChange={(e) => { setClientBirthdate(e.target.value); clearFieldError('clientBirthdate'); }}
+                      max={new Date().toISOString().slice(0, 10)}
+                      autoComplete="bday"
+                      light
+                      className="px-4 py-3 [color-scheme:light]"
+                    />
+                  </Field>
+                  <Field id="clientAddress" label="주소" required error={detailErrors.clientAddress} className={lightOnlyField}>
+                    <TextInput
+                      value={clientAddress}
+                      onChange={(e) => { setClientAddress(e.target.value); clearFieldError('clientAddress'); }}
+                      placeholder="예: 서울시 은평구 대조동 00-0"
+                      autoComplete="street-address"
+                      light
+                      className="px-4 py-3"
+                    />
+                  </Field>
+                </div>
+              </div>
+  );
+
   return (
     <>
       <Head>
-        <title>{`${contract.title} — 서명 요청 | Studio NOL`}</title>
+        <title>{`${contract.contractName} — 서명 요청 | Studio NOL`}</title>
         <meta name="robots" content="noindex, nofollow" />
         {/* URL에 서명 토큰이 있다. 외부로 나가는 요청에 Referer로 실리지 않게 막는다. */}
         <meta name="referrer" content="no-referrer" />
@@ -307,83 +409,17 @@ export default function ProductionContractSignPage({
               <p className="text-white dark:text-white/80 mt-2">
                 {isGuardian && signer
                   ? `${signer.name}님, ${contract.clientName}님의 법정대리인(${signer.relation ?? '보호자'})으로 아래 계약에 함께 서명해 주세요. 스튜디오는 이미 서명했어요.`
-                  : `${contract.clientName}님, 아래 내용을 확인하고 서명해 주세요. 스튜디오는 이미 서명했어요.`}
+                  : `${contract.clientName ? `${contract.clientName}님, ` : ''}아래 내용을 확인하고 서명해 주세요. 스튜디오는 이미 서명했어요.`}
               </p>
             </div>
 
             <div className="p-6 md:p-10">
+              {/* 링크 계약은 의뢰인이 누구인지 서명 전에는 모른다 — 입력 칸을 본문 위에 둔다(본문을 끝까지 내려야 나오면 헷갈린다). */}
+              {openLink && clientInfo}
               <ContractContent content={contract.content} />
 
               {/* 생년월일·주소는 의뢰인 본인 정보다 — 법정대리인 화면에서는 받지 않는다. */}
-              {!isGuardian && (
-                <>
-              <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
-                <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-2">의뢰인 정보</h2>
-                <p className="text-sm text-gray-600 dark:text-gray-600 mb-4 leading-relaxed">
-                  아래 항목은 계약서에 그대로 기재돼요. 정확히 입력해 주세요.
-                  {openLink && ' 서명한 계약서는 적어 주신 이메일로 보내 드려요.'}
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {openLink && (
-                    <>
-                      <Field id="clientName" label="성명(실명)" required error={detailErrors.clientName} className={lightOnlyField}>
-                        <TextInput value={openName} onChange={(e) => setOpenName(e.target.value)} autoComplete="name" light className="px-4 py-3" />
-                      </Field>
-                      <Field id="clientStageName" label="활동명" error={detailErrors.clientStageName} className={lightOnlyField}>
-                        <TextInput value={openStageName} onChange={(e) => setOpenStageName(e.target.value)} placeholder="없으면 비워 두세요" light className="px-4 py-3" />
-                      </Field>
-                      <Field id="clientPhone" label="휴대폰 번호" required error={detailErrors.clientPhone} className={lightOnlyField}>
-                        <TextInput
-                          type="tel"
-                          inputMode="tel"
-                          value={openPhone}
-                          onChange={(e) => setOpenPhone(e.target.value)}
-                          placeholder="010-1234-5678"
-                          autoComplete="tel"
-                          light
-                          className="px-4 py-3"
-                        />
-                      </Field>
-                      <Field id="clientEmail" label="이메일" required error={detailErrors.clientEmail} className={lightOnlyField}>
-                        <TextInput
-                          type="email"
-                          inputMode="email"
-                          value={openEmail}
-                          onChange={(e) => setOpenEmail(e.target.value)}
-                          placeholder="name@example.com"
-                          autoComplete="email"
-                          light
-                          className="px-4 py-3"
-                        />
-                      </Field>
-                    </>
-                  )}
-                  <Field id="clientBirthdate" label="생년월일" required error={detailErrors.clientBirthdate} className={lightOnlyField}>
-                    <TextInput
-                      type="date"
-                      value={clientBirthdate}
-                      onChange={(e) => setClientBirthdate(e.target.value)}
-                      max={new Date().toISOString().slice(0, 10)}
-                      autoComplete="bday"
-                      light
-                      className="px-4 py-3 [color-scheme:light]"
-                    />
-                  </Field>
-                  <Field id="clientAddress" label="주소" required error={detailErrors.clientAddress} className={lightOnlyField}>
-                    <TextInput
-                      value={clientAddress}
-                      onChange={(e) => setClientAddress(e.target.value)}
-                      placeholder="예: 서울시 은평구 대조동 00-0"
-                      autoComplete="street-address"
-                      light
-                      className="px-4 py-3"
-                    />
-                  </Field>
-                </div>
-              </div>
-
-                </>
-              )}
+              {!isGuardian && !openLink && clientInfo}
 
               <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
                 <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-4">필수 동의</h2>
@@ -421,6 +457,12 @@ export default function ProductionContractSignPage({
 
               <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
                 <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-2">본인 확인</h2>
+                {openLink && (
+                  <p className="text-sm text-gray-600 dark:text-gray-600 mb-4">
+                    이 계약은 연락처 대조 없이, 스튜디오가 보내 드린 링크로 서명해요. 링크를 받은 본인만 서명해 주세요 — 다른 사람에게
+                    링크를 전달하지 마세요.
+                  </p>
+                )}
                 {!openLink && (
                 <>
                 <p className="text-sm text-gray-600 dark:text-gray-600 mb-4">

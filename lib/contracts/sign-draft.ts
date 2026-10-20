@@ -16,7 +16,7 @@
  * 주소를 정확히 적으려고 지도·메모 앱을 열었다 돌아오는 것은 흔한 동선인데, 그때마다
  * 스크롤과 타이핑을 처음부터 다시 하게 된다. 헤더도 길이도 줄일 수 없으니 입력값을 살린다.
  *
- * 담는 것은 생년월일·주소뿐이다. **동의 체크와 연락처 뒷자리, 서명은 담지 않는다** —
+ * 담는 것은 생년월일·주소(와 링크 계약의 이름·연락처·이메일)뿐이다. **동의 체크와 연락처 뒷자리, 서명은 담지 않는다** —
  * 앞의 둘은 사람이 그 자리에서 해야 하는 의사표시이고(복원된 체크는 동의한 행위가 아니다),
  * 뒷자리는 본인확인 수단, 서명은 서명 그 자체라 기기에 남길 것이 아니다. 생년월일·주소는
  * 계약서에 인쇄되는 사실 정보라 다시 입력해도 같은 값이고, 아낄 수 있는 것은 타이핑뿐이다.
@@ -29,7 +29,21 @@ export const draftKey = (contractId: string) => `studionol:contract-draft:${cont
 export interface SignDraft {
   customerBirthdate?: string;
   customerAddress?: string;
+  /**
+   * 링크 계약(제작 계약, open-link.ts)에서 의뢰인이 적는 이름·활동명·연락처·이메일. 생년월일·주소와 같이 계약서에
+   * 인쇄되는 사실 정보라 같은 원칙으로 담는다 — 연락처는 여기서 본인 확인 수단이 아니다(그 계약은 대조하지 않는다).
+   */
+  clientName?: string;
+  clientStageName?: string;
+  clientPhone?: string;
+  clientEmail?: string;
 }
+
+/** 담는 항목 — 이 목록 밖의 값은 읽지도 쓰지도 않는다(아래 writeDraft 주석). */
+const DRAFT_FIELDS = ['customerBirthdate', 'customerAddress', 'clientName', 'clientStageName', 'clientPhone', 'clientEmail'] as const;
+
+const pickDraft = (source: Record<string, unknown>): SignDraft =>
+  Object.fromEntries(DRAFT_FIELDS.filter((key) => typeof source[key] === 'string').map((key) => [key, source[key]])) as SignDraft;
 
 /** 저장소를 못 쓰는 환경(사생활 보호 모드·차단 설정)에서는 조용히 포기한다. */
 export const readDraft = (contractId: string): SignDraft => {
@@ -38,11 +52,7 @@ export const readDraft = (contractId: string): SignDraft => {
     if (!raw) return {};
     const parsed: unknown = JSON.parse(raw);
     if (!parsed || typeof parsed !== 'object') return {};
-    const { customerBirthdate, customerAddress } = parsed as SignDraft;
-    return {
-      ...(typeof customerBirthdate === 'string' ? { customerBirthdate } : {}),
-      ...(typeof customerAddress === 'string' ? { customerAddress } : {}),
-    };
+    return pickDraft(parsed as Record<string, unknown>);
   } catch {
     return {};
   }
@@ -50,17 +60,10 @@ export const readDraft = (contractId: string): SignDraft => {
 
 export const writeDraft = (contractId: string, draft: SignDraft): void => {
   try {
-    // 받은 객체를 그대로 직렬화하지 않고 두 항목만 골라 담는다. 타입은 컴파일 때만
+    // 받은 객체를 그대로 직렬화하지 않고 정한 항목만 골라 담는다(DRAFT_FIELDS). 타입은 컴파일 때만
     // 막아 주므로, 호출부가 하나 더 실어 보내면 뒷자리나 서명이 조용히 저장소에 남는다.
     // 담지 않기로 한 것을 담지 않는 책임은 호출부가 아니라 여기에 둔다.
-    const stored: SignDraft = {
-      ...(typeof draft.customerBirthdate === 'string'
-        ? { customerBirthdate: draft.customerBirthdate }
-        : {}),
-      ...(typeof draft.customerAddress === 'string'
-        ? { customerAddress: draft.customerAddress }
-        : {}),
-    };
+    const stored: SignDraft = pickDraft(draft as Record<string, unknown>);
     window.sessionStorage.setItem(draftKey(contractId), JSON.stringify(stored));
   } catch {
     // 용량 초과·차단. 임시 저장은 편의 기능이라 실패해도 서명에는 지장이 없다.
