@@ -78,6 +78,8 @@ npx tsx scripts/contract-link.ts create --kind mixmaster --tracks 30 [--total N]
 npx tsx scripts/contract-link.ts list                                                             # 최근 20건 — 상태(만료 포함)·발송·만료·열람·링크
 npx tsx scripts/contract-link.ts resend <계약 id>                                                 # 만료·재전송 — 옛 링크 무효, 새 링크
 npx tsx scripts/contract-link.ts cancel <계약 id>
+npx tsx scripts/contract-link.ts events <계약 id>                                                 # 진행 기록 타임라인(최근 30건, 무효·통지 결과 포함)
+npx tsx scripts/contract-link.ts log <계약 id> --type payment_received --amount 225000 [--stage --song --note --link --at "YYYY-MM-DD HH:mm" --cause] [--yes]   # 진행 기록 — 관리자 API와 같은 검증·통지, --void <기록 id> --note 사유
 
 # IndexNow 변경분 제출 — 전량 반복 제출 금지, CI(main push)가 diff로 바뀐 URL만 자동 제출한다.
 # 문구·링크·가격·구조가 안 바뀐 순수 디자인 커밋은 메시지에 `[skip-indexnow]`를 붙인다 — 그 커밋에서만 바뀐
