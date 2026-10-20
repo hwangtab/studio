@@ -1,4 +1,5 @@
 import ContractNotice from '../../../../components/contracts/ContractNotice';
+import { focusFirstMissing, MISSING_RING, type MissingItem } from '../../../../components/contracts/missingGuide';
 import { withI18nServerProps } from '../../../../lib/getStatic';
 import React, { useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
@@ -195,6 +196,8 @@ export default function ContractSignPage({
   const [showRules, setShowRules] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  // 서명 버튼을 눌렀는데 빠진 게 있으면 켠다 — 그때부터 빠진 칸을 빨갛게 표시한다(components/contracts/missingGuide.ts).
+  const [showMissing, setShowMissing] = useState(false);
 
   const allAgreed =
     contract !== null &&
@@ -203,6 +206,18 @@ export default function ContractSignPage({
 
   const identityReady = identityDigits.length === IDENTITY_DIGITS && identityConfirmed;
   const detailsReady = customerBirthdate !== '' && customerAddress.trim() !== '';
+
+  /** 빠진 항목 — 화면 위에서 아래 순서. */
+  const missing: MissingItem[] = [
+    ...(!customerBirthdate ? [{ id: 'customerBirthdate', label: '생년월일' }] : []),
+    ...(!customerAddress.trim() ? [{ id: 'customerAddress', label: '주소' }] : []),
+    ...clauses.filter((clause) => !agreements[clause.id]).map((clause) => ({ id: `clause-${clause.id}`, label: `${clause.clauseNumber} 동의 체크` })),
+    ...attachments.filter((a) => !agreements[a.id]).map((a) => ({ id: `attachment-${a.id}`, label: `「${a.title}」 동의 체크` })),
+    ...(identityDigits.length !== IDENTITY_DIGITS ? [{ id: 'identityDigits', label: `연락처 뒤 ${IDENTITY_DIGITS}자리` }] : []),
+    ...(!identityConfirmed ? [{ id: 'identity-confirmed', label: '본인 확인 체크' }] : []),
+    ...(!hasSigned ? [{ id: 'signature-pad', label: '서명' }] : []),
+  ];
+  const isMissing = (id: string) => showMissing && missing.some((item) => item.id === id);
 
   /**
    * 입력하던 값을 되살린다.
@@ -457,7 +472,7 @@ export default function ContractSignPage({
                     id="customerBirthdate"
                     label="생년월일"
                     required
-                    error={detailErrors.customerBirthdate}
+                    error={detailErrors.customerBirthdate ?? (isMissing('customerBirthdate') ? '입력해 주세요.' : undefined)}
                     className={LIGHT_FIELD}
                   >
                     <TextInput
@@ -476,7 +491,7 @@ export default function ContractSignPage({
                     id="customerAddress"
                     label="주소"
                     required
-                    error={detailErrors.customerAddress}
+                    error={detailErrors.customerAddress ?? (isMissing('customerAddress') ? '입력해 주세요.' : undefined)}
                     className={LIGHT_FIELD}
                   >
                     <TextInput
@@ -498,7 +513,8 @@ export default function ContractSignPage({
                   {clauses.map((clause) => (
                     <label
                       key={clause.id}
-                      className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100"
+                      id={`clause-${clause.id}`}
+                      className={`flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 ${isMissing(`clause-${clause.id}`) ? MISSING_RING : ''}`}
                     >
                       <input
                         type="checkbox"
@@ -518,7 +534,8 @@ export default function ContractSignPage({
                   {attachments.map((attachment) => (
                     <label
                       key={attachment.id}
-                      className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100"
+                      id={`attachment-${attachment.id}`}
+                      className={`flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 ${isMissing(`attachment-${attachment.id}`) ? MISSING_RING : ''}`}
                     >
                       <input
                         type="checkbox"
@@ -557,11 +574,16 @@ export default function ContractSignPage({
                   }
                   placeholder={'0'.repeat(IDENTITY_DIGITS)}
                   aria-label={`연락처 뒤 ${IDENTITY_DIGITS}자리`}
+                  id="identityDigits"
+                  invalid={isMissing('identityDigits') || undefined}
                   light
                   className="w-32 text-center tracking-[0.4em] text-lg px-4 py-3 [color-scheme:light]"
                 />
 
-                <label className="mt-5 flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100">
+                <label
+                  id="identity-confirmed"
+                  className={`mt-5 flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 ${isMissing('identity-confirmed') ? MISSING_RING : ''}`}
+                >
                   <input
                     type="checkbox"
                     className="mt-1 h-5 w-5 shrink-0 accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary/70 focus-visible:ring-offset-white"
@@ -581,7 +603,9 @@ export default function ContractSignPage({
                   아래 영역에 마우스나 손가락으로 서명해 주세요.
                 </p>
 
-                <SignaturePad ref={signaturePadRef} onSignedChange={setHasSigned} />
+                <div id="signature-pad" tabIndex={-1} className={`rounded-xl ${isMissing('signature-pad') ? MISSING_RING : ''}`}>
+                  <SignaturePad ref={signaturePadRef} onSignedChange={setHasSigned} />
+                </div>
               </div>
 
               {submitError && (
@@ -591,15 +615,28 @@ export default function ContractSignPage({
               )}
 
               <div className="mt-8">
+                {/* 버튼은 늘 눌린다 — 빠진 게 있으면 그 자리로 옮기고 표시한다(missingGuide.ts). */}
+                {showMissing && missing.length > 0 && (
+                  <p role="alert" className="mb-3 text-center text-sm font-medium text-red-600 dark:text-red-600">
+                    아직 남은 항목: {missing.map((item) => item.label).join(', ')}
+                  </p>
+                )}
                 <Button light
                   size="lg"
                   fullWidth
-                  disabled={submitting || !detailsReady || !allAgreed || !identityReady || !hasSigned}
-                  onClick={handleSubmit}
+                  disabled={submitting}
+                  onClick={() => {
+                    if (missing.length > 0) {
+                      setShowMissing(true);
+                      focusFirstMissing(missing);
+                      return;
+                    }
+                    void handleSubmit();
+                  }}
                 >
                   {submitting ? '처리 중...' : '계약서 서명 완료'}
                 </Button>
-                {!submitting && (!detailsReady || !allAgreed || !identityReady || !hasSigned) && (
+                {!submitting && !showMissing && (!detailsReady || !allAgreed || !identityReady || !hasSigned) && (
                   <p className="mt-3 text-center text-sm text-gray-500 dark:text-gray-500">
                     {!detailsReady
                       ? '생년월일과 주소를 입력해 주세요.'
