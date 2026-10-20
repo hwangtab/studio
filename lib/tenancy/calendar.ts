@@ -3,7 +3,7 @@ import { eq, sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { roomTenancies, type RoomTenancy } from '../../db/schema';
 import { createEventOnCalendar, deleteEventOnCalendar, patchEventOnCalendar, type RawEventBody } from '../booking/gcal';
-import { addDays, kstToday } from './rules';
+import { addDays, currentTermEnd, kstToday } from './rules';
 import { openPrivate } from './privateData';
 
 /**
@@ -16,7 +16,8 @@ import { openPrivate } from './privateData';
  * 입주자 한 명당 일정은 최대 둘, 둘 다 종일 일정이다:
  * - **입금 예정**: 다음 입금 예정일(`next_due_on`)에 한 건. 입금을 기록하면 다음 달로 옮겨진다(반복 일정이 아닌 이유: 입금했는지를
  *   반복 일정은 모른다). 예정일이 지났는데 그 자리에 그대로 있으면 연체다.
- * - **계약 종료**: 종료일이 오늘 이후일 때만. 종료일이 지났는데 계속 이용 중이면(자동 연장) 만들지 않는다.
+ * - **계약 종료**: 현재 계약 기간의 종료일(`currentTermEnd`). 약정 만료일이 지났어도 입금이 이어지면 계약서 제3조①에 따라 1개월씩
+ *   자동 갱신되므로, 일정은 갱신된 기간의 종료일로 옮겨 간다(`rollRenewedTenancyCalendars`가 매일 운영 점검 크론에서 옮긴다).
  * 퇴실 처리하면 둘 다 지운다. env가 없으면 아무것도 하지 않는다(`skipped`).
  */
 
@@ -63,7 +64,8 @@ export const syncTenancyCalendar = async (id: string, now: Date = new Date()): P
   const ids: Record<Slot, string | null> = { due: t.dueEventId, end: t.endEventId };
   try {
     const wantDue = t.status === 'active';
-    const wantEnd = t.status === 'active' && !!t.endDate && t.endDate >= today;
+    const term = t.status === 'active' && t.endDate ? currentTermEnd(t.endDate, today) : null;
+    const wantEnd = term !== null;
     if (wantDue) {
       ids.due = await upsert(calId, ids.due, {
         summary: `[입금 예정] ${labelOf(t)} ${won(t.monthlyAmount)}`, description: describe(t), ...allDay(t.nextDueOn),
@@ -73,7 +75,12 @@ export const syncTenancyCalendar = async (id: string, now: Date = new Date()): P
       ids.due = null;
     }
     if (wantEnd) {
-      ids.end = await upsert(calId, ids.end, { summary: `[계약 종료] ${labelOf(t)}`, description: describe(t), ...allDay(t.endDate as string) });
+      const renewed = term.renewals > 0;
+      ids.end = await upsert(calId, ids.end, {
+        summary: `[계약 종료${renewed ? '·자동 갱신 중' : ''}] ${labelOf(t)}`,
+        description: renewed ? `${describe(t)}\n약정 만료일 ${t.endDate} 이후 ${term.renewals}회 자동 갱신됨(계약서 제3조①). 종료하려면 퇴실 처리.` : describe(t),
+        ...allDay(term.end),
+      });
     } else if (ids.end) {
       await deleteEventOnCalendar(calId, ids.end);
       ids.end = null;
@@ -99,4 +106,26 @@ export const syncAllTenancyCalendars = async (now: Date = new Date()): Promise<{
     if (!r.ok) failed += 1;
   }
   return { total: rows.length, failed, skipped: false };
+};
+
+/**
+ * 자동 갱신으로 현재 기간의 종료일이 어제와 달라진 입주자(또는 갱신 중인데 종료 일정이 없는 입주자)의 캘린더만 다시 맞춘다.
+ * 매일 운영 점검 크론이 부른다. 던지지 않고 실패는 `gcal_error`에 남는다(점검 메일이 알린다).
+ */
+export const rollRenewedTenancyCalendars = async (now: Date = new Date()): Promise<{ synced: number; failed: number }> => {
+  if (!tenancyCalendarId()) return { synced: 0, failed: 0 };
+  const today = kstToday(now);
+  const yesterday = addDays(today, -1);
+  const rows = await getDb().select({ id: roomTenancies.id, endDate: roomTenancies.endDate, endEventId: roomTenancies.endEventId }).from(roomTenancies)
+    .where(sql`status = 'active' AND end_date IS NOT NULL AND end_date < ${today}`);
+  let synced = 0;
+  let failed = 0;
+  for (const row of rows) {
+    const end = row.endDate as string;
+    if (row.endEventId && currentTermEnd(end, today).end === currentTermEnd(end, yesterday).end) continue;
+    const r = await syncTenancyCalendar(row.id, now);
+    if (r.ok) synced += 1;
+    else failed += 1;
+  }
+  return { synced, failed };
 };

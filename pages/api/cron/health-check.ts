@@ -13,6 +13,7 @@ import { autoImportCalendarEvents } from '../../../lib/booking/calendarAutoImpor
 import { waitUntil } from '@vercel/functions';
 
 import { isCronAuthorized } from '../../../lib/cron/auth';
+import { rollRenewedTenancyCalendars } from '../../../lib/tenancy/calendar';
 import { sendEmail } from '../../../lib/email/resend';
 import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
 import { buildOperatorAlertHtml } from '../../../lib/email/operatorAlert';
@@ -40,6 +41,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // 요청 컨텍스트 밖(테스트)에서는 등록하지 않는다.
     }
     await Promise.race([importing, new Promise<void>((resolve) => { setTimeout(resolve, IMPORT_BUDGET_MS).unref?.(); })]);
+
+    // 월 입주 자동 갱신(계약서 제3조①)으로 현재 기간 종료일이 바뀐 입주자의 캘린더 종료 일정을 옮긴다. 실패는 gcal_error로 남아 아래 점검이 알린다.
+    await rollRenewedTenancyCalendars().catch((error: unknown) => console.error('[cron/health-check] 월 입주 갱신 일정 이동 실패', error instanceof Error ? error.name : 'unknown'));
 
     const report = await runHealthCheck();
 
