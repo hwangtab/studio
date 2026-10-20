@@ -1,4 +1,4 @@
-import { addMonthsOnBillingDay, daysBetween, flagsOf, overdueDays, parseTenancyInput } from './rules';
+import { addMonthsOnBillingDay, currentTermEnd, daysBetween, flagsOf, overdueDays, parseTenancyInput } from './rules';
 
 describe('addMonthsOnBillingDay', () => {
   it('납부일을 유지하고 말일은 보정한다', () => {
@@ -39,5 +39,20 @@ describe('parseTenancyInput', () => {
     expect(parseTenancyInput({ ...ok, roomNumber: 'R03' })).toMatchObject({ ok: false });
     expect(parseTenancyInput({ ...ok, startDate: '2026-02-30' })).toMatchObject({ ok: false });
     expect(parseTenancyInput({ ...ok, monthlyAmount: -1 })).toMatchObject({ ok: false });
+  });
+});
+
+describe('currentTermEnd', () => {
+  it('약정 기간 안이면 그대로, 지났으면 1개월씩 갱신된 현재 기간의 종료일', () => {
+    expect(currentTermEnd('2026-10-31', '2026-10-16')).toEqual({ end: '2026-10-31', renewals: 0 });
+    expect(currentTermEnd('2026-10-16', '2026-10-16')).toEqual({ end: '2026-10-16', renewals: 0 });
+    expect(currentTermEnd('2026-10-14', '2026-10-16')).toEqual({ end: '2026-11-14', renewals: 1 });
+    expect(currentTermEnd('2026-04-25', '2026-10-16')).toEqual({ end: '2026-10-25', renewals: 6 });
+    expect(currentTermEnd('2026-04-25', '2026-10-25')).toEqual({ end: '2026-10-25', renewals: 6 });
+    expect(currentTermEnd('2026-04-25', '2026-10-26')).toEqual({ end: '2026-11-25', renewals: 7 });
+  });
+  it('말일은 달마다 보정하되 원래 일(日)로 돌아온다', () => {
+    expect(currentTermEnd('2026-01-31', '2026-02-01')).toEqual({ end: '2026-02-28', renewals: 1 });
+    expect(currentTermEnd('2026-01-31', '2026-03-01')).toEqual({ end: '2026-03-31', renewals: 2 });
   });
 });

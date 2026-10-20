@@ -194,10 +194,14 @@ describe('updateTenancy', () => {
     expect(openPrivate((await one(`SELECT private_enc FROM room_tenancies WHERE id = '${r.id}'`))?.private_enc as string)).toEqual({ phone: '010-9999-9999' });
   });
 
-  it('계약 종료일이 지난 입주자는 종료 일정을 만들지 않는다(자동 연장)', async () => {
+  it('계약 종료일이 지난 입주자는 자동 갱신된 현재 기간의 종료일로 종료 일정을 만든다(제3조①)', async () => {
     const r = await createTenancy(input({ endDate: '2026-04-25' }));
     if (!r.ok) throw new Error(r.message);
-    expect(createEventOnCalendar).toHaveBeenCalledTimes(1);
+    const bodies = (createEventOnCalendar as jest.Mock).mock.calls.map((c) => c[1]);
+    const end = bodies.find((b) => String(b.summary).startsWith('[계약 종료'));
+    expect(end).toBeDefined();
+    expect(end.summary).toContain('자동 갱신 중');
+    expect(end.start.date >= '2026-04-26').toBe(true);
     expect(await syncTenancyCalendar(r.id, new Date('2026-10-16T00:00:00Z'))).toEqual({ ok: true });
   });
 });

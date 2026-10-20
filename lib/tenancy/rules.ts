@@ -44,12 +44,28 @@ export const daysBetween = (from: string, to: string): number => {
 /** 입금 예정일이 오늘보다 앞이면 연체 일수(1~), 아니면 0. */
 export const overdueDays = (nextDueOn: string, today: string): number => Math.max(0, daysBetween(nextDueOn, today));
 
+/**
+ * 지금 진행 중인 계약 기간의 종료일. 연습실 계약서 제3조①: 만료일까지 어느 쪽도 종료를 통지하지 않으면 같은 조건으로 1개월씩 자동 갱신된다.
+ * DB의 `end_date`는 처음 약정 만료일로 그대로 두고(위약금 판단의 근거), 갱신된 현재 기간의 종료일은 여기서 계산한다.
+ * `renewals`는 지금까지 갱신된 횟수(약정 기간 안이면 0).
+ */
+export const currentTermEnd = (endDate: string, today: string): { end: string; renewals: number } => {
+  if (endDate >= today) return { end: endDate, renewals: 0 };
+  const day = Number(endDate.slice(8));
+  const [ey, em] = endDate.split('-').map(Number);
+  const [ty, tm] = today.split('-').map(Number);
+  let n = Math.max(1, (ty * 12 + tm) - (ey * 12 + em));
+  while (n > 1 && addMonthsOnBillingDay(endDate, n - 1, day) >= today) n -= 1;
+  while (addMonthsOnBillingDay(endDate, n, day) < today) n += 1;
+  return { end: addMonthsOnBillingDay(endDate, n, day), renewals: n };
+};
+
 export type TenancyFlag = 'overdue' | 'due_soon' | 'contract_passed' | 'contract_soon';
 
 export const DUE_SOON_DAYS = 7;
 export const CONTRACT_SOON_DAYS = 30;
 
-/** 목록에 띄울 주의 표시. 종료일이 지났는데 계속 입금 중이면 자동 연장이라 `contract_passed`(정보)로만 알린다. */
+/** 목록에 띄울 주의 표시. 종료일이 지났는데 계속 입금 중이면 계약서 제3조①의 자동 갱신이라 `contract_passed`(정보)로만 알린다(현재 기간 종료일은 `currentTermEnd`). */
 export const flagsOf = (t: { status: string; nextDueOn: string; endDate: string | null }, today: string): TenancyFlag[] => {
   if (t.status !== 'active') return [];
   const flags: TenancyFlag[] = [];

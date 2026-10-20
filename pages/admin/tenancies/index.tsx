@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { AdminShell } from '../../../components/admin/AdminShell';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { tenancyCalendarId } from '../../../lib/tenancy/calendar';
-import { daysBetween, flagsOf, kstToday, overdueDays, type TenancyFlag } from '../../../lib/tenancy/rules';
+import { currentTermEnd, daysBetween, flagsOf, kstToday, overdueDays, type TenancyFlag } from '../../../lib/tenancy/rules';
 import { listTenancies, type TenancyListRow } from '../../../lib/tenancy/service';
 
 interface Props {
@@ -37,7 +37,7 @@ const btnPrimary = 'rounded-lg bg-gray-900 px-4 py-2 text-white disabled:opacity
 const FLAG_LABEL: Record<TenancyFlag, { text: string; cls: string }> = {
   overdue: { text: '연체', cls: 'bg-red-100 text-red-800' },
   due_soon: { text: '입금 임박', cls: 'bg-amber-100 text-amber-800' },
-  contract_passed: { text: '종료일 경과(연장 중)', cls: 'bg-gray-100 text-gray-700' },
+  contract_passed: { text: '자동 갱신 중', cls: 'bg-gray-100 text-gray-700' },
   contract_soon: { text: '종료 임박', cls: 'bg-sky-100 text-sky-800' },
 };
 
@@ -211,7 +211,13 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
                   {t.nextDueOn}
                   {late > 0 ? <div className="text-xs text-red-700">{late}일 연체</div> : daysBetween(today, t.nextDueOn) <= 7 && <div className="text-xs text-amber-700">{daysBetween(today, t.nextDueOn)}일 뒤</div>}
                 </td>
-                <td className="pr-3 tabular-nums">{t.endDate ?? '-'}</td>
+                <td className="pr-3 tabular-nums">
+                  {t.endDate ?? '-'}
+                  {t.status === 'active' && t.endDate && t.endDate < today && (() => {
+                    const term = currentTermEnd(t.endDate, today);
+                    return <div className="text-xs text-gray-500">갱신 {term.renewals}회 · 이번 기간 {term.end}까지</div>;
+                  })()}
+                </td>
                 <td className="pr-3 tabular-nums text-gray-600">{t.lastPaidOn ?? '-'}{t.lastPaidAmount !== null && t.lastPaidAmount !== t.monthlyAmount && <div className="text-xs">{won(t.lastPaidAmount)}</div>}</td>
                 <td className="space-x-1 whitespace-nowrap py-1 text-right">
                   {flags.map((f) => <span key={f} className={`mr-1 inline-block rounded px-1.5 py-0.5 text-xs font-medium ${FLAG_LABEL[f].cls}`}>{FLAG_LABEL[f].text}</span>)}
