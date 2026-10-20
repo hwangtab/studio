@@ -278,6 +278,12 @@ export default function AdminBookingDetailPage({
       const result = await response.json().catch(() => ({}));
       if (!response.ok || !result?.ok) return { ok: false, message: result?.message || fallback };
       const warnings: string[] = Array.isArray(result.warnings) ? result.warnings : [];
+      // 성공해도 눈에 보이는 변화가 없으면 눌렀는지조차 알 수 없다(2026-10-20 "프리징 됐다") — 결과를 한 줄로 알린다.
+      if (action === 'confirm_deposit') {
+        const mail = result.emailSent === true ? '확정 메일을 보냈어요.' : result.emailSent === false ? '확정 메일 발송에 실패했어요 — 고객에게 직접 알려 주세요.' : '';
+        return { ok: true, message: ['입금을 확인했어요.', mail, ...warnings].filter(Boolean).join(' ') };
+      }
+      if (action === 'cancel_unpaid_deposit') return { ok: true, message: '미입금 신청을 닫았어요.' };
       if (warnings.length > 0) return { ok: true, message: warnings.join(' / ') };
       if (action === 'resend_deposit_guide' && result.notificationError) {
         return { ok: true, message: '입금 안내 메일 발송에 실패했습니다. 고객에게 직접 연락해 주세요.' };
@@ -297,6 +303,8 @@ export default function AdminBookingDetailPage({
     setBusy(false);
     if (result.message) setNotice(result.message);
     await router.replace(router.asPath, undefined, { scroll: false });
+    // 결과 안내가 화면 위쪽에 뜨므로 아래에서 누른 경우에도 보이게 올린다.
+    if (result.message) window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleConfirmDeposit = () =>
@@ -569,7 +577,7 @@ export default function AdminBookingDetailPage({
               통장에 실제로 입금됐는지 먼저 확인한 뒤 “입금 확인”을 누르세요. {isDeposit ? '이 신청은 자동으로 취소되지 않습니다.' : `이 신청은 ${isMixing ? '주문' : '시간대'}을 잡아 둔 채 자동으로 취소되지 않습니다.`}
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
-              <Button light disabled={busy} onClick={handleConfirmDeposit}>입금 확인</Button>
+              <Button light disabled={busy} onClick={handleConfirmDeposit}>{busy ? '처리 중…' : '입금 확인'}</Button>
               <Button light variant="weak" disabled={busy} onClick={handleCancelUnpaid}>미입금 취소</Button>
               <Button light variant="weak" disabled={busy} onClick={handleResendDepositGuide}>입금 안내 재발송</Button>
             </div>
