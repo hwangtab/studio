@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import ContractContent from '../../../../../components/contracts/ContractContent';
+import { focusFirstMissing, MISSING_RING, type MissingItem } from '../../../../../components/contracts/missingGuide';
 import ContractNotice from '../../../../../components/contracts/ContractNotice';
 import { SignaturePad, type SignaturePadHandle } from '../../../../../components/contracts/SignaturePad';
 import { Button } from '../../../../../components/ui/Button';
@@ -163,6 +164,8 @@ export default function ProductionContractSignPage({
   const [openEmail, setOpenEmail] = useState('');
   const [openPhone, setOpenPhone] = useState('');
   const [openEmailConfirm, setOpenEmailConfirm] = useState('');
+  // 서명 버튼을 눌렀는데 빠진 게 있으면 켠다 — 그때부터 빠진 칸을 빨갛게 표시한다(처음부터 빨간 화면을 보이지 않게).
+  const [showMissing, setShowMissing] = useState(false);
   const [identityConfirmed, setIdentityConfirmed] = useState(false);
   const [agreements, setAgreements] = useState<Record<string, boolean>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -187,6 +190,26 @@ export default function ProductionContractSignPage({
     });
   const detailsReady = isGuardian || (clientBirthdate !== '' && clientAddress.trim() !== '' && openReady);
   const ready = detailsReady && allAgreed && identityReady && hasSigned;
+
+  /** 빠진 항목 — 화면 위에서 아래 순서(components/contracts/missingGuide.ts). */
+  const missing: MissingItem[] = [
+    ...(openLink && !openName.trim() ? [{ id: 'clientName', label: '성명' }] : []),
+    ...(openLink && !openEmail.trim() ? [{ id: 'clientEmail', label: '이메일' }] : []),
+    ...(openLink && (!openEmailConfirm.trim() || emailMismatch)
+      ? [{ id: 'clientEmailConfirm', label: emailMismatch ? '이메일 확인(이메일과 다름)' : '이메일 확인' }]
+      : []),
+    ...(openLink && !openPhone.trim() ? [{ id: 'clientPhone', label: '휴대폰 번호' }] : []),
+    ...(!isGuardian && !clientBirthdate ? [{ id: 'clientBirthdate', label: '생년월일' }] : []),
+    ...(!isGuardian && !clientAddress.trim() ? [{ id: 'clientAddress', label: '주소' }] : []),
+    ...clauses
+      .filter((clause) => !agreements[clause.key])
+      .map((clause) => ({ id: `clause-${clause.key}`, label: clause.points ? `${clause.title} 체크` : `${clause.clauseNumber} 동의 체크` })),
+    ...(!openLink && identityDigits.length !== IDENTITY_DIGITS ? [{ id: 'identityDigits', label: `연락처 뒤 ${IDENTITY_DIGITS}자리` }] : []),
+    ...(!identityConfirmed ? [{ id: 'identity-confirmed', label: '본인 확인 체크' }] : []),
+    ...(!hasSigned ? [{ id: 'signature-pad', label: '서명' }] : []),
+  ];
+  const isMissing = (id: string) => showMissing && missing.some((item) => item.id === id);
+  const requiredError = (id: string, message = '입력해 주세요.') => (isMissing(id) ? message : undefined);
 
   // 앱 전환으로 다시 열려도 생년월일·주소를 다시 치지 않게(lib/contracts/sign-draft.ts 주석). 마운트 뒤에 읽는다.
   useEffect(() => {
@@ -321,13 +344,13 @@ export default function ProductionContractSignPage({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {openLink && (
                     <>
-                      <Field id="clientName" label="성명(실명)" required error={detailErrors.clientName} className={lightOnlyField}>
+                      <Field id="clientName" label="성명(실명)" required error={detailErrors.clientName ?? requiredError('clientName')} className={lightOnlyField}>
                         <TextInput value={openName} onChange={(e) => { setOpenName(e.target.value); clearFieldError('clientName'); }} autoComplete="name" light className="px-4 py-3" />
                       </Field>
                       <Field id="clientStageName" label="활동명" error={detailErrors.clientStageName} className={lightOnlyField}>
                         <TextInput value={openStageName} onChange={(e) => { setOpenStageName(e.target.value); clearFieldError('clientStageName'); }} placeholder="없으면 비워 두세요" autoComplete="nickname" light className="px-4 py-3" />
                       </Field>
-                      <Field id="clientEmail" label="이메일" required error={detailErrors.clientEmail} className={lightOnlyField}>
+                      <Field id="clientEmail" label="이메일" required error={detailErrors.clientEmail ?? requiredError('clientEmail')} className={lightOnlyField}>
                         <TextInput
                           type="email"
                           inputMode="email"
@@ -339,7 +362,7 @@ export default function ProductionContractSignPage({
                           className="px-4 py-3"
                         />
                       </Field>
-                      <Field id="clientEmailConfirm" label="이메일 확인" required error={emailMismatch ? '이메일 칸과 같지 않아요.' : undefined} className={lightOnlyField}>
+                      <Field id="clientEmailConfirm" label="이메일 확인" required error={emailMismatch ? '이메일 칸과 같지 않아요.' : requiredError('clientEmailConfirm', '이메일을 한 번 더 적어 주세요.')} className={lightOnlyField}>
                         <TextInput
                           type="email"
                           inputMode="email"
@@ -351,7 +374,7 @@ export default function ProductionContractSignPage({
                           className="px-4 py-3"
                         />
                       </Field>
-                      <Field id="clientPhone" label="휴대폰 번호" required error={detailErrors.clientPhone} className={lightOnlyField}>
+                      <Field id="clientPhone" label="휴대폰 번호" required error={detailErrors.clientPhone ?? requiredError('clientPhone')} className={lightOnlyField}>
                         <TextInput
                           type="tel"
                           inputMode="tel"
@@ -365,7 +388,7 @@ export default function ProductionContractSignPage({
                       </Field>
                     </>
                   )}
-                  <Field id="clientBirthdate" label="생년월일" required error={detailErrors.clientBirthdate} className={lightOnlyField}>
+                  <Field id="clientBirthdate" label="생년월일" required error={detailErrors.clientBirthdate ?? requiredError('clientBirthdate')} className={lightOnlyField}>
                     <TextInput
                       type="date"
                       value={clientBirthdate}
@@ -376,7 +399,7 @@ export default function ProductionContractSignPage({
                       className="px-4 py-3 [color-scheme:light]"
                     />
                   </Field>
-                  <Field id="clientAddress" label="주소" required error={detailErrors.clientAddress} className={lightOnlyField}>
+                  <Field id="clientAddress" label="주소" required error={detailErrors.clientAddress ?? requiredError('clientAddress')} className={lightOnlyField}>
                     <TextInput
                       value={clientAddress}
                       onChange={(e) => { setClientAddress(e.target.value); clearFieldError('clientAddress'); }}
@@ -427,7 +450,8 @@ export default function ProductionContractSignPage({
                   {clauses.map((clause) => (
                     <label
                       key={clause.key}
-                      className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100"
+                      id={`clause-${clause.key}`}
+                      className={`flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 ${isMissing(`clause-${clause.key}`) ? MISSING_RING : ''}`}
                     >
                       <input
                         type="checkbox"
@@ -480,12 +504,17 @@ export default function ProductionContractSignPage({
                   onChange={(e) => setIdentityDigits(e.target.value.replace(/\D/g, '').slice(0, IDENTITY_DIGITS))}
                   placeholder={'0'.repeat(IDENTITY_DIGITS)}
                   aria-label={`연락처 뒤 ${IDENTITY_DIGITS}자리`}
+                  id="identityDigits"
+                  invalid={isMissing('identityDigits') || undefined}
                   light
                   className="w-32 text-center tracking-[0.4em] text-lg px-4 py-3 [color-scheme:light]"
                 />
                 </>
                 )}
-                <label className="mt-5 flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100">
+                <label
+                  id="identity-confirmed"
+                  className={`mt-5 flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 ${isMissing('identity-confirmed') ? MISSING_RING : ''}`}
+                >
                   <input
                     type="checkbox"
                     className={CHECKBOX_CLASS}
@@ -502,7 +531,9 @@ export default function ProductionContractSignPage({
               <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
                 <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-2">전자서명</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-600 mb-4">아래 영역에 마우스나 손가락으로 서명해 주세요.</p>
-                <SignaturePad ref={signaturePadRef} onSignedChange={setHasSigned} />
+                <div id="signature-pad" tabIndex={-1} className={`rounded-xl ${isMissing('signature-pad') ? MISSING_RING : ''}`}>
+                  <SignaturePad ref={signaturePadRef} onSignedChange={setHasSigned} />
+                </div>
               </div>
 
               {submitError && (
@@ -512,10 +543,29 @@ export default function ProductionContractSignPage({
               )}
 
               <div className="mt-8">
-                <Button light size="lg" fullWidth disabled={submitting || !ready} onClick={handleSubmit}>
+                {/* 버튼은 늘 눌린다 — 빠진 게 있으면 그 자리로 옮기고 표시한다(missingGuide.ts). */}
+                {showMissing && missing.length > 0 && (
+                  <p role="alert" className="mb-3 text-center text-sm font-medium text-red-600 dark:text-red-600">
+                    아직 남은 항목: {missing.map((item) => item.label).join(', ')}
+                  </p>
+                )}
+                <Button
+                  light
+                  size="lg"
+                  fullWidth
+                  disabled={submitting}
+                  onClick={() => {
+                    if (!ready) {
+                      setShowMissing(true);
+                      focusFirstMissing(missing);
+                      return;
+                    }
+                    void handleSubmit();
+                  }}
+                >
                   {submitting ? '처리 중...' : '계약서 서명 완료'}
                 </Button>
-                {!submitting && !ready && (
+                {!submitting && !ready && !showMissing && (
                   <p className="mt-3 text-center text-sm text-gray-500 dark:text-gray-500">{pendingHint}</p>
                 )}
               </div>
