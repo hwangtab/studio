@@ -358,7 +358,8 @@ export const sendProductionSignRequestNotifications = async (
         })
       : undefined;
     const [clientResult, guardianResult, operatorResult] = await Promise.all([
-      signUrls.client ? sendProductionSignRequestEmail(contract, terms, signUrls.client) : null,
+      // 링크 계약은 의뢰인 이메일을 모른다 — 운영자가 관리자 화면에서 링크를 복사해 카카오톡으로 건넨다(open-link.ts).
+      signUrls.client && contract.clientEmail ? sendProductionSignRequestEmail(contract, terms, signUrls.client) : null,
       signUrls.guardian && guardian
         ? sendProductionGuardianSignRequestEmail(contract, terms, guardian, signUrls.guardian)
         : null,

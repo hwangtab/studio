@@ -34,9 +34,12 @@ export interface ProductionContractFormValues {
   /** null이면 법정대리인 없음(성년 의뢰인). */
   guardian: { name: string; relation: string; email: string; phone: string } | null;
   terms: ProductionTerms;
+  /** 의뢰인 정보를 서명할 때 받는다(링크 계약, open-link.ts) — 의뢰인 칸을 비우고 링크를 카카오톡으로 건넨다. */
+  openLink: boolean;
 }
 
 export const emptyProductionFormValues = (): ProductionContractFormValues => ({
+  openLink: false,
   kind: 'single',
   title: '',
   clientName: '',
@@ -70,9 +73,12 @@ export const productionContractToFormValues = (contract: {
     ? { name: guardian.name, relation: guardian.relation ?? '', email: guardian.email, phone: guardian.phone ?? '' }
     : null,
   terms: parseStoredTerms(contract.termsJson),
+  // 의뢰인 연락처가 비어 있으면 링크 계약이다(open-link.ts isOpenProductionContract와 같은 판정).
+  openLink: contract.clientPhone.trim() === '',
 });
 
 export const toProductionPayload = (values: ProductionContractFormValues): Record<string, unknown> => ({
+  openLink: values.openLink,
   kind: values.kind,
   title: values.title.trim(),
   clientName: values.clientName.trim(),
@@ -233,8 +239,13 @@ export default function ProductionContractForm({
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    const title =
-      values.title.trim() || (values.clientName.trim() ? `${values.clientName.trim()}님 ${serviceName} 용역 계약` : '');
+    // 링크 계약은 의뢰인 이름을 모른다 — 서명 뒤 목록에서 구별되게 만든 날을 붙인다.
+    const fallback = values.openLink
+      ? `${serviceName} 용역 계약 (카톡 링크 ${new Date().toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' })})`
+      : values.clientName.trim()
+        ? `${values.clientName.trim()}님 ${serviceName} 용역 계약`
+        : '';
+    const title = values.title.trim() || fallback;
     onSubmit({ ...values, title });
   };
 
@@ -242,6 +253,19 @@ export default function ProductionContractForm({
     <form onSubmit={handleSubmit} className="space-y-8">
       <section>
         <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">의뢰인</h2>
+        <label className="mb-4 flex items-start gap-2 text-sm text-gray-800">
+          <input
+            type="checkbox"
+            className="mt-0.5 h-4 w-4 accent-primary"
+            checked={values.openLink}
+            onChange={(e) => setValues((prev) => ({ ...prev, openLink: e.target.checked, guardian: e.target.checked ? null : prev.guardian }))}
+          />
+          <span>
+            의뢰인 정보를 아직 몰라요 — <strong>서명할 때 의뢰인이 직접 적게</strong> 해요. 발송하면 메일 대신 서명 링크만 만들어지고,
+            상세 화면에서 링크를 복사해 카카오톡으로 보내면 돼요. 연락처 뒷자리 본인 확인은 하지 않아요(링크를 받은 사람이 서명자).
+          </span>
+        </label>
+        {!values.openLink && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Field label="성명(실명)" id="clientName" error={errorMap.clientName} required className={ADMIN_FIELD}>
             <TextInput light className="text-sm" value={values.clientName} onChange={(e) => set('clientName', e.target.value)} autoComplete="off" />
@@ -256,8 +280,10 @@ export default function ProductionContractForm({
             <TextInput light className="text-sm" value={values.clientPhone} onChange={(e) => set('clientPhone', e.target.value)} autoComplete="off" />
           </Field>
         </div>
+        )}
       </section>
 
+      {!values.openLink && (
       <section>
         <label className="flex items-start gap-2 text-sm text-gray-800">
           <input
@@ -294,6 +320,7 @@ export default function ProductionContractForm({
           </div>
         )}
       </section>
+      )}
 
       <section>
         <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">계약 종류</h2>

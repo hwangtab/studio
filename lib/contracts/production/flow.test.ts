@@ -452,3 +452,54 @@ describe('믹싱·마스터링 계약 체결', () => {
     expect(verifyStoredProductionContract(signed!)).toMatchObject({ kind: 'match' });
   });
 });
+
+describe('링크 계약 — 의뢰인 정보를 서명할 때 받는다', () => {
+  const OPEN = { ...PAYLOAD, kind: 'mixmaster' as const, title: '믹싱·마스터링 용역 계약 (카톡 링크)', terms: buildDefaultProductionTerms('mixmaster') };
+  const openPayload = () => {
+    const result = validateProductionContractPayload({ ...OPEN, clientName: '', clientEmail: '', clientPhone: '', openLink: true });
+    if (!result.ok) throw new Error(JSON.stringify(result.errors));
+    return result.data;
+  };
+  const CLIENT = { clientName: '김의뢰', clientStageName: '물결', clientEmail: 'client@example.com', clientPhone: '010-9876-5432' };
+
+  it('의뢰인 칸 없이 만들고, 대리인은 받지 않는다', () => {
+    expect(openPayload()).toMatchObject({ clientName: '', clientEmail: '', clientPhone: '', openLink: true });
+    const withGuardian = validateProductionContractPayload({
+      ...OPEN,
+      openLink: true,
+      guardian: { name: '김보호', relation: '모', email: 'g@example.com', phone: '010-1111-2222' },
+    });
+    expect(withGuardian.ok).toBe(false);
+  });
+
+  it('서명 전 본문은 의뢰인 칸을 "(서명할 때 입력)"으로 보이고, 의뢰인이 정보를 적으면 뒷자리 확인 없이 서명·성립한다', async () => {
+    const { id } = await createProductionContract(openPayload());
+    expect((await loadContract(id))?.content).toContain('| 성명(실명) | (서명할 때 입력) |');
+    await sendAsOperator(id);
+
+    // 정보를 빠뜨리면 막는다.
+    const missing = await callSign(id, { token: await clientToken(id), identityDigits: undefined });
+    expect(missing.status).toBe(400);
+    expect((missing.body.errors as Array<{ field: string }>).map((e) => e.field)).toEqual(['clientName', 'clientEmail', 'clientPhone']);
+
+    const signed = await callSign(id, { token: await clientToken(id), identityDigits: undefined, ...CLIENT });
+    expect(signed).toEqual({ status: 200, body: { ok: true } });
+
+    const contract = await loadContract(id);
+    expect(contract).toMatchObject({ status: 'signed', clientName: '김의뢰', clientStageName: '물결', clientEmail: 'client@example.com', clientPhone: '010-9876-5432' });
+    expect(contract?.content).toContain('| 성명(실명) | 김의뢰 |');
+    expect(contract?.content).toContain('| 연락처 | 010-9876-5432 |');
+    const signer = contract?.signers.find((s) => s.role === 'client');
+    expect(signer).toMatchObject({ name: '김의뢰', email: 'client@example.com', identityVerifiedAt: null });
+    expect(verifyStoredProductionContract(contract!)).toMatchObject({ kind: 'match' });
+  });
+
+  it('의뢰인 정보가 있는 계약은 여전히 뒷자리 확인을 하고, 서명자가 의뢰인 칸을 바꾸지 못한다', async () => {
+    const { id } = await createProductionContract(PAYLOAD);
+    await sendAsOperator(id);
+    const wrong = await callSign(id, { token: await clientToken(id), identityDigits: '0000', ...CLIENT });
+    expect(wrong.status).toBe(400);
+    expect(await callSign(id, { token: await clientToken(id), ...CLIENT })).toEqual({ status: 200, body: { ok: true } });
+    expect(await loadContract(id)).toMatchObject({ clientName: '홍길동', clientPhone: '010-1234-5678' });
+  });
+});

@@ -21,6 +21,11 @@ export interface ProductionSignStatementInput {
    * 끝난 때라, 성립 단계(buildFinalizeStatement)가 이 값으로 본문을 완성한다.
    */
   clientDetails?: { clientBirthdate: string; clientAddress: string };
+  /**
+   * 링크 계약(open-link.ts)에서만 — 의뢰인이 서명 화면에서 적은 이름·활동명·이메일·연락처. 계약 행과 의뢰인
+   * 서명자 행(이름·이메일은 서명란과 지문에 들어간다)에 함께 적는다. 비어 있던 계약에만 적는다(조건 참조).
+   */
+  openClient?: { clientName: string; clientStageName: string | null; clientEmail: string; clientPhone: string };
 }
 
 /**
@@ -56,7 +61,10 @@ export const buildProductionSignStatements = (db: Database, input: ProductionSig
     .set({
       status: 'signed',
       signedAt: now,
-      identityVerifiedAt: now,
+      // 링크 계약은 연락처 뒷자리 대조를 하지 않는다 — 하지 않은 확인을 기록하지 않는다(서명본 PDF가 이 값으로 적는다).
+      identityVerifiedAt: input.openClient ? null : now,
+      // 의뢰인 연락처는 계약 행이 정본이다(서명자 행 phone은 법정대리인만 쓴다, schema.ts).
+      ...(input.openClient ? { name: input.openClient.clientName, email: input.openClient.clientEmail } : {}),
       ipAddress: input.ipAddress,
       userAgent: input.userAgent,
       signatureData: input.signatureData,
@@ -92,8 +100,16 @@ export const buildProductionSignStatements = (db: Database, input: ProductionSig
     signerStatement,
     db
       .update(productionContracts)
-      .set({ ...input.clientDetails, updatedAt: now })
-      .where(and(eq(productionContracts.id, contractId), eq(productionContracts.status, 'sent'), signerSignedWithThisToken)),
+      .set({ ...input.clientDetails, ...(input.openClient ?? {}), updatedAt: now })
+      .where(
+        and(
+          eq(productionContracts.id, contractId),
+          eq(productionContracts.status, 'sent'),
+          signerSignedWithThisToken,
+          // 링크 계약의 의뢰인 칸은 비어 있을 때만 채운다 — 운영자가 적은 의뢰인을 서명자가 덮어쓰지 못하게.
+          ...(input.openClient ? [eq(productionContracts.clientPhone, '')] : []),
+        ),
+      ),
   ] as const;
 };
 

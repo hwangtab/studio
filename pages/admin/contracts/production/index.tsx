@@ -56,7 +56,7 @@ export const getServerSideProps: GetServerSideProps<ProductionContractsPageProps
         rows: contracts.slice(0, LIST_LIMIT).map((contract) => ({
           id: contract.id,
           status: getEffectiveProductionStatus(contract),
-          clientName: contract.clientName,
+          clientName: contract.clientName || '의뢰인 미정(카톡 링크)',
           clientStageName: contract.clientStageName,
           releaseLabel: releaseTitle(contract.kind, parseStoredTerms(contract.termsJson)),
           totalAmount: contract.totalAmount,

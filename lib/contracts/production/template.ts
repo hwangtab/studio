@@ -128,10 +128,11 @@ export const buildProductionContent = (data: ProductionTemplateData, template: s
   const replacements: Record<string, string> = {
     guardianSection,
     guardianSignatureRow,
-    clientName: cell(data.clientName),
+    // 링크 계약(open-link.ts)은 서명 전에 이름·연락처가 비어 있다 — 의뢰인이 서명 화면에서 채운다.
+    clientName: cell(data.clientName, '(서명할 때 입력)'),
     clientStageName: cell(data.clientStageName, '-'),
     clientBirthdate: cell(data.clientBirthdate),
-    clientPhone: cell(data.clientPhone),
+    clientPhone: cell(data.clientPhone, '(서명할 때 입력)'),
     clientAddress: cell(data.clientAddress),
     songTitle: terms.songs[0]?.title ? escapeTableCell(terms.songs[0].title) : '1곡 (제목 미정)',
     albumTitle: terms.albumTitle ? escapeTableCell(terms.albumTitle) : '제목 미정',
