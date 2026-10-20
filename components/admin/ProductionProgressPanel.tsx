@@ -372,7 +372,7 @@ export default function ProductionProgressPanel({
                     </span>
                   )}
                   {voidable && !item.voided && item.type !== 'void' && (
-                    <span className="ml-auto flex gap-2">
+                    <span className="ml-auto flex flex-wrap gap-2">
                       {editable && (item.noticeStatus === 'failed' || item.noticeStatus === 'pending') && (
                         <button type="button" className="text-primary underline" onClick={() => resendNotice(item)}>
                           통지 다시 보내기

@@ -545,7 +545,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
                     const available = line.quantity - line.refundedQuantity;
                     return (
                       <li key={line.rewardId} className="flex flex-wrap items-center gap-2 text-sm">
-                        <span className="min-w-0 flex-1 text-gray-800">
+                        <span className="w-full min-w-0 text-gray-800 sm:w-auto sm:flex-1">
                           {line.rewardTitle} × {line.quantity}{line.refundedQuantity > 0 ? ` (${line.refundedQuantity}개 환불됨)` : ''} · {formatPriceAmount(line.unitAmount)}원
                         </span>
                         {available > 0 && (

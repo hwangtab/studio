@@ -190,7 +190,44 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
   );
 
   const table = (list: TenancyListRow[], virtual: boolean) => (
-    <div className="overflow-x-auto">
+    <>
+    {/* 모바일은 표 대신 카드 — 표는 칸이 좁아 날짜가 글자 중간에서 꺾이고 버튼이 화면 밖으로 밀렸다(2026-10-20). */}
+    <ul className="space-y-3 md:hidden">
+      {list.map((t) => {
+        const flags = flagsOf(t, today);
+        const late = overdueDays(t.nextDueOn, today);
+        const term = t.status === 'active' && t.endDate && t.endDate < today ? currentTermEnd(t.endDate, today) : null;
+        return (
+          <li key={t.id} className="rounded-xl border border-gray-200 p-3 text-sm">
+            <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+              <span className="font-semibold text-gray-900">{virtual ? '비상주' : t.roomNumber} · {t.tenantName}</span>
+              <span className="flex flex-wrap gap-1">
+                {flags.map((f) => <span key={f} className={`inline-block whitespace-nowrap rounded px-1.5 py-0.5 text-xs font-medium ${FLAG_LABEL[f].cls}`}>{FLAG_LABEL[f].text}</span>)}
+                {t.gcalError && <span title={t.gcalError} className="inline-block whitespace-nowrap rounded bg-amber-100 px-1.5 py-0.5 text-xs text-amber-800">캘린더 오류</span>}
+              </span>
+            </div>
+            {t.note && <div className="mt-0.5 text-xs text-gray-500">{t.note}</div>}
+            <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
+              <dt className="text-gray-500">월 이용료</dt>
+              <dd className="tabular-nums text-gray-900">{won(t.monthlyAmount)}{t.roomListPrice !== null && t.roomListPrice !== t.monthlyAmount && <span className="ml-1 text-xs text-gray-500">(방 정가 {won(t.roomListPrice)})</span>}</dd>
+              <dt className="text-gray-500">다음 입금</dt>
+              <dd className="tabular-nums text-gray-900">{t.nextDueOn}{late > 0 ? <span className="ml-1 text-xs text-red-700">{late}일 연체</span> : daysBetween(today, t.nextDueOn) <= 7 && <span className="ml-1 text-xs text-amber-700">{daysBetween(today, t.nextDueOn)}일 뒤</span>}</dd>
+              <dt className="text-gray-500">계약 종료</dt>
+              <dd className="tabular-nums text-gray-900">{t.endDate ?? '-'}{term && <div className="text-xs text-gray-500">갱신 {term.renewals}회 · 이번 기간 {term.end}까지</div>}</dd>
+              <dt className="text-gray-500">최근 입금</dt>
+              <dd className="tabular-nums text-gray-600">{t.lastPaidOn ?? '-'}{t.lastPaidAmount !== null && t.lastPaidAmount !== t.monthlyAmount && <span className="ml-1 text-xs">({won(t.lastPaidAmount)})</span>}</dd>
+            </dl>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <button type="button" className={btn} disabled={busy} onClick={() => pay(t)}>입금 기록</button>
+              <button type="button" className={btn} disabled={busy} onClick={() => openEdit(t)}>상세·수정</button>
+              <button type="button" className={btn} disabled={busy} onClick={() => end(t)}>퇴실</button>
+            </div>
+          </li>
+        );
+      })}
+      {list.length === 0 && <li className="py-4 text-gray-500">없음</li>}
+    </ul>
+    <div className="hidden overflow-x-auto md:block">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-gray-200 text-left text-gray-500">
@@ -207,7 +244,7 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
                 <td className="py-2 pr-3 font-medium text-gray-900">{virtual ? '비상주' : t.roomNumber}</td>
                 <td className="pr-3 text-gray-900">{t.tenantName}{t.note && <div className="text-xs text-gray-500">{t.note}</div>}</td>
                 <td className="pr-3 tabular-nums">{won(t.monthlyAmount)}{t.roomListPrice !== null && t.roomListPrice !== t.monthlyAmount && <div className="text-xs text-gray-500">방 정가 {won(t.roomListPrice)}</div>}</td>
-                <td className="pr-3 tabular-nums">
+                <td className="whitespace-nowrap pr-3 tabular-nums">
                   {t.nextDueOn}
                   {late > 0 ? <div className="text-xs text-red-700">{late}일 연체</div> : daysBetween(today, t.nextDueOn) <= 7 && <div className="text-xs text-amber-700">{daysBetween(today, t.nextDueOn)}일 뒤</div>}
                 </td>
@@ -233,7 +270,9 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
         </tbody>
       </table>
     </div>
+    </>
   );
+
 
   return (
     <>
@@ -288,7 +327,7 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
                 </div>
               )}
             </div>
-            <div className="flex gap-2 md:col-span-4">
+            <div className="flex flex-wrap gap-2 md:col-span-4">
               <button type="submit" className={btnPrimary} disabled={busy}>저장</button>
               <button type="button" className={btn} onClick={() => setForm(null)} disabled={busy}>닫기</button>
             </div>
