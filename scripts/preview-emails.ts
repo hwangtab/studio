@@ -100,7 +100,7 @@ const softwareOrder = {
   item: { productTitle: '아날로그 하모나이저' }, licenses: [{ licenseKey: 'NOL-7K2QD-M9XAP-4RTVB-HC3WN', status: 'active' }],
 };
 // 세션 연주자 등록 메일(lib/sessionMusicians/email.ts) — 활동명은 escape되는지, 운영자 알림에 연락처가 없는지 본다.
-const sessionLink = manageLinkUrl('A'.repeat(43));
+const sessionLink = manageLinkUrl('a'.repeat(64));
 const htmlSamples: { name: string; html: string }[] = [
   { name: 'session-received', html: buildRegistrationMail('received', '김<베이스> & 밴드', sessionLink).html },
   { name: 'session-already', html: buildRegistrationMail('already', '김<베이스> & 밴드', sessionLink).html },

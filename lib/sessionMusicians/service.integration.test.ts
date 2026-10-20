@@ -107,7 +107,7 @@ const rows = async () => (await client.execute('SELECT * FROM session_musicians'
 /** 마지막 접수 확인·재발송 메일(고객 앞)에서 관리 토큰을 꺼낸다. */
 const tokenFromMail = (): string => {
   const customerCall = sendEmailMock.mock.calls.map((c) => c[0]).filter((m) => m.to === 'player@example.com').pop();
-  const match = /\/manage\/([A-Za-z0-9_-]{43})/.exec(customerCall.text);
+  const match = /\/manage\/([0-9a-f]{64})/.exec(customerCall.text);
   if (!match) throw new Error('메일에서 관리 링크를 찾지 못했다');
   return match[1];
 };
@@ -131,9 +131,10 @@ describe('POST /api/session-musicians', () => {
     expect(String(row.manage_token_hash)).toMatch(/^[0-9a-f]{64}$/);
   });
 
-  it('관리 토큰은 해시만 저장되고 메일의 원문과 짝이 맞는다', async () => {
+  it('관리 토큰은 해시만 저장되고 메일의 원문과 짝이 맞는다 — 소문자 hex라 미들웨어의 소문자 308에 깨지지 않는다', async () => {
     await call(indexHandler, { body: form() });
     const token = tokenFromMail();
+    expect(token).toBe(token.toLowerCase());
     const [row] = await rows();
     expect(row.manage_token_hash).toBe(hashManageToken(token));
     expect(JSON.stringify(row)).not.toContain(token);
@@ -257,7 +258,7 @@ describe('/api/session-musicians/manage', () => {
 
   it('틀린 토큰·형식이 아닌 토큰은 같은 404', async () => {
     await register();
-    const wrong = await call(manageHandler, { method: 'GET', headers: { 'x-manage-token': 'A'.repeat(43) } });
+    const wrong = await call(manageHandler, { method: 'GET', headers: { 'x-manage-token': 'a'.repeat(64) } });
     const malformed = await call(manageHandler, { method: 'GET', headers: { 'x-manage-token': 'short' } });
     const missing = await call(manageHandler, { method: 'GET' });
     expect([wrong.status, malformed.status, missing.status]).toEqual([404, 404, 404]);
@@ -320,7 +321,7 @@ describe('표가 없는 DB(마이그레이션 0077 전)', () => {
     const registered = await call(indexHandler, { body: form() });
     expect(registered.status).toBe(503);
     expect(registered.body).toMatchObject({ code: 'migration_needed' });
-    const managed = await call(manageHandler, { method: 'GET', headers: { 'x-manage-token': 'A'.repeat(43) } });
+    const managed = await call(manageHandler, { method: 'GET', headers: { 'x-manage-token': 'a'.repeat(64) } });
     expect(managed.status).toBe(503);
   });
 });

@@ -120,7 +120,7 @@ describe('sendSessionMusicianReconfirmNotices', () => {
     expect(mail.to).toBe('due@example.org');
     expect(mail.subject).toContain('아직 세션 연주');
     expect(mail.text).toContain('활동명-due');
-    const token = /\/manage\/([A-Za-z0-9_-]{43})/.exec(mail.text)![1];
+    const token = /\/manage\/([0-9a-f]{64})/.exec(mail.text)![1];
     const after = await row('due');
     expect(after.manage_token_hash).toBe(hashManageToken(token));
     expect(after.manage_token_hash).not.toBe('old-token-hash-due');
