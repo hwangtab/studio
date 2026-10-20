@@ -12,7 +12,7 @@ import { denyContractPageCaching } from '../../../../../lib/contracts/page-cache
 import { completeStalledProductionContract } from '../../../../../lib/contracts/production/finalize';
 import { productionProgressPath, productionSignPath } from '../../../../../lib/contracts/production/links';
 import { getEffectiveProductionStatus, hasSignedDocument } from '../../../../../lib/contracts/production/status';
-import { contractNameFor, isOneSongKind, parseStoredTerms, releaseTitle } from '../../../../../lib/contracts/production/terms';
+import { contractNameFor, depositWordFor, isOneSongKind, parseStoredTerms, releaseTitle } from '../../../../../lib/contracts/production/terms';
 import { withI18nServerProps } from '../../../../../lib/getStatic';
 
 /**
@@ -26,6 +26,8 @@ interface CompleteViewContract {
   isSingle: boolean;
   /** "음원 제작 용역 계약" 또는 "믹싱·마스터링 용역 계약". */
   contractName: string;
+  /** "계약금" 또는(50만원 이하 일시불) "대금". */
+  depositWord: string;
   total: number;
   deposit: number;
   depositDueDays: number;
@@ -103,6 +105,7 @@ export const getServerSideProps = withI18nServerProps<CompletePageProps>(async (
           releaseLabel: releaseTitle(contract.kind, terms),
           isSingle: isOneSongKind(contract.kind),
           contractName: contractNameFor(contract.kind).replace(/서$/, ''),
+          depositWord: depositWordFor(terms),
           total: terms.amount.total,
           deposit: terms.amount.deposit,
           depositDueDays: terms.amount.depositDueDays,
@@ -234,7 +237,7 @@ export default function ProductionContractCompletePage({
               {purged ? '체결이 완료된 계약입니다.' : `${contract.clientName}님, ${contract.contractName}이 체결되었어요.`}
             </span>
             <span className="block">
-              {purged ? '보관 기간이 지나 개인정보를 파기했어요.' : '서명본 PDF와 계약금 안내를 메일로도 보내 드려요.'}
+              {purged ? '보관 기간이 지나 개인정보를 파기했어요.' : '서명본 PDF와 입금 안내를 메일로도 보내 드려요.'}
             </span>
           </p>
 
@@ -256,7 +259,7 @@ export default function ProductionContractCompletePage({
             </dl>
             {!closed && !purged && (
               <p className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-200 text-sm text-gray-700 dark:text-gray-700 leading-relaxed">
-                계약금 <strong>{formatCurrency(contract.deposit)}원</strong>을 체결일로부터 {contract.depositDueDays}일 이내에
+                {contract.depositWord} <strong>{formatCurrency(contract.deposit)}원</strong>을 체결일로부터 {contract.depositDueDays}일 이내에
                 입금해 주세요.
                 <span className="block mt-1 text-gray-500 dark:text-gray-500">{contract.account}</span>
               </p>

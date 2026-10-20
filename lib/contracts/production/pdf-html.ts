@@ -4,7 +4,7 @@ import { escapeHtml } from '../html-escape';
 import { renderMarkdown } from '../markdown';
 import { CONTRACT_PDF_BASE_CSS, renderSignatureImage } from '../pdf-html';
 import type { ProductionClause } from './clauses';
-import { contractNameFor, isOneSongKind, releaseTitle, type ProductionTerms } from './terms';
+import { contractNameFor, isOneSongKind, isSinglePayment, releaseTitle, type ProductionTerms } from './terms';
 
 export interface BuildProductionPdfInput {
   contract: ProductionContract;
@@ -122,7 +122,9 @@ export const buildProductionPdfHtml = (input: BuildProductionPdfInput): string =
     <tr><th>연락처</th><td>${escapeHtml(contract.clientPhone)}</td></tr>
     <tr><th>${isOneSongKind(contract.kind) ? '본 곡' : '음반'}</th><td>${escapeHtml(releaseTitle(contract.kind, terms))}</td></tr>
     <tr><th>계약금액</th><td>${formatCurrency(terms.amount.total)}원 (부가세 포함)</td></tr>
-    <tr><th>계약금 · 잔금</th><td>${formatCurrency(terms.amount.deposit)}원 · ${formatCurrency(terms.amount.balance)}원</td></tr>
+    ${isSinglePayment(terms)
+      ? `<tr><th>대금 지급</th><td>일시불 (체결 후 ${terms.amount.depositDueDays}일 이내)</td></tr>`
+      : `<tr><th>계약금 · 잔금</th><td>${formatCurrency(terms.amount.deposit)}원 · ${formatCurrency(terms.amount.balance)}원</td></tr>`}
   </table>
 
   <h2>계약 본문</h2>
