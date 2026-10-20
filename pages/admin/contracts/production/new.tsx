@@ -54,7 +54,8 @@ export const getServerSideProps: GetServerSideProps<NewProductionContractPagePro
             title: '',
             terms: { ...copied.terms, albumTitle: null, songs: copied.terms.songs.map(() => ({ title: null })) },
           },
-          copiedFrom: source.clientName,
+          // 링크 계약은 의뢰인 이름이 비어 있다 — 빈 문자열이면 복제 안내가 아예 안 뜨므로 표식을 둔다.
+          copiedFrom: source.clientName || '-',
         },
       };
     }
@@ -159,7 +160,7 @@ export default function NewProductionContractPage({ initialValues, copiedFrom }:
           <div className="p-4 md:p-8">
             {copiedFrom && (
               <div className="mb-6 p-3 bg-blue-50 border border-blue-200 text-blue-900 rounded-lg text-sm">
-                {copiedFrom}님의 계약을 복제했습니다. <strong>곡 제목과 금액을 확인해 주세요.</strong>
+                {copiedFrom === '-' ? '링크' : `${copiedFrom}님의`} 계약을 복제했습니다. <strong>곡 제목과 금액을 확인해 주세요.</strong>
               </div>
             )}
             <QuotePaste

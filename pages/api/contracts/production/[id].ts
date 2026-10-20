@@ -119,7 +119,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           return res.status(409).json({ ok: false, message: '방금 처리된 요청입니다. 잠시 후 상태를 확인해 주세요.' });
         }
         waitUntil(sendProductionSignRequestNotifications(result.contract, result.signUrls));
-        return res.status(200).json({ ok: true });
+        // 링크 계약은 의뢰인 메일이 나가지 않는다 — 운영자가 링크를 직접 보내야 한다는 것을 바로 알린다(open-link.ts).
+        return res.status(200).json(
+          result.contract.clientEmail
+            ? { ok: true }
+            : { ok: true, message: '서명 링크를 만들었어요. 메일은 나가지 않으니 "서명 링크 복사"로 카카오톡에 보내 주세요.' },
+        );
       }
 
       if (action === 'resend-signed') {

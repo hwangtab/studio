@@ -204,7 +204,7 @@ export const sendProductionSignedEmail = async (
     html,
     text,
     attachments: pdfBuffer
-      ? [{ filename: `${contract.clientName}_음원제작용역계약서.pdf`, content: pdfBuffer.toString('base64') }]
+      ? [{ filename: `${contract.clientName}_${contractNameFor(contract.kind).replace(/[·\s]/g, '')}.pdf`, content: pdfBuffer.toString('base64') }]
       : undefined,
   });
 };
@@ -214,36 +214,51 @@ export const sendProductionOperatorNotification = async (
   contract: ProductionContract,
   terms: ProductionTerms,
   signed: boolean,
+  /**
+   * 링크 계약(open-link.ts)을 의뢰인이 연락처 대조 없이 서명해 체결했는가. 링크가 다른 사람에게 넘어갔으면 아무 이름으로나
+   * 서명할 수 있으므로, 운영자가 카톡 상대와 이름이 맞는지 확인하라고 눈에 띄게 알린다.
+   */
+  openLinkSigned = false,
 ): Promise<SendContractEmailResult> => {
   const statusText = signed ? '체결 (의뢰인 서명 완료)' : '발송 (의뢰인 서명 대기)';
+  // 링크 계약은 서명 전에 의뢰인 이름·연락처가 비어 있다 — 빈 칸 대신 무엇인지 말하고, 어느 건인지 제목으로 구별한다.
+  const who = contract.clientName || '의뢰인 미정(카톡 링크)';
+  const blank = (value: string) => value || '서명할 때 의뢰인이 입력';
 
   const html = buildContractEmailHtml({
     heading: `제작 계약 ${statusText}`,
-    paragraphs: [`${escapeHtml(contract.clientName)}님의 제작 계약이 ${statusText} 상태입니다.`],
+    paragraphs: [`${escapeHtml(contract.clientName ? `${contract.clientName}님의` : '의뢰인 정보를 서명 때 받는')} 제작 계약이 ${statusText} 상태입니다.`],
     rows: [
-      { label: '의뢰인', value: contract.clientName, emphasis: true },
+      { label: '의뢰인', value: who, emphasis: true },
       ...(contract.clientStageName ? [{ label: '활동명', value: contract.clientStageName }] : []),
-      { label: '이메일', value: contract.clientEmail },
-      { label: '연락처', value: contract.clientPhone },
+      { label: '계약', value: contract.title },
+      { label: '이메일', value: blank(contract.clientEmail) },
+      { label: '연락처', value: blank(contract.clientPhone) },
       ...termRows(contract, terms),
       ...(signed ? [{ label: '체결일', value: formatDate(contract.signedAt) }] : []),
     ],
+    notices: openLinkSigned
+      ? ['연락처 대조 없이 서명 링크로 체결됐어요. 카카오톡으로 링크를 보낸 상대와 이 이름·연락처가 맞는지 확인해 주세요.']
+      : undefined,
+    noticeTone: openLinkSigned ? 'alert' : undefined,
     cta: { label: '관리자 화면에서 보기', url: productionAdminUrl(contract.id) },
   });
 
   const text = [
     `제작 계약 ${statusText}`,
     '',
-    `의뢰인: ${contract.clientName}`,
-    `이메일: ${contract.clientEmail}`,
-    `연락처: ${contract.clientPhone}`,
+    `의뢰인: ${who}`,
+    `계약: ${contract.title}`,
+    `이메일: ${blank(contract.clientEmail)}`,
+    `연락처: ${blank(contract.clientPhone)}`,
     ...termLines(contract, terms),
     ...(signed ? [`체결일: ${formatDate(contract.signedAt)}`] : []),
+    ...(openLinkSigned ? ['', '※ 연락처 대조 없이 서명 링크로 체결됐어요. 카톡 상대와 이름·연락처가 맞는지 확인해 주세요.'] : []),
   ].join('\n');
 
   return sendEmail({
     to: OPERATOR_EMAIL,
-    subject: `[스튜디오 놀] ${contract.clientName}님 제작 계약 ${statusText}`,
+    subject: `[스튜디오 놀] ${who}${contract.clientName ? '님' : ''} 제작 계약 ${statusText}${openLinkSigned ? ' — 본인 확인 필요' : ''}`,
     html,
     text,
   });

@@ -12,6 +12,7 @@ import { denyContractPageCaching } from '../../../../../lib/contracts/page-cache
 import { completeStalledProductionContract } from '../../../../../lib/contracts/production/finalize';
 import { productionProgressPath, productionSignPath } from '../../../../../lib/contracts/production/links';
 import { getEffectiveProductionStatus, hasSignedDocument } from '../../../../../lib/contracts/production/status';
+import { maskEmail } from '../../../../../lib/contracts/production/open-link';
 import { contractNameFor, depositWordFor, isOneSongKind, parseStoredTerms, releaseTitle } from '../../../../../lib/contracts/production/terms';
 import { withI18nServerProps } from '../../../../../lib/getStatic';
 
@@ -28,6 +29,10 @@ interface CompleteViewContract {
   contractName: string;
   /** "계약금" 또는(50만원 이하 일시불) "대금". */
   depositWord: string;
+  /** 서명본을 보낸 이메일(가린 값) — 링크 계약은 의뢰인이 서명 때 적은 주소라, 틀렸으면 바로 알아채게 보인다. */
+  maskedEmail: string;
+  /** 링크 계약으로 서명했는가(연락처 대조 없음) — 내려받기 안내를 "서명할 때 적으신 번호"로 바꾼다. */
+  openLinkSigned: boolean;
   total: number;
   deposit: number;
   depositDueDays: number;
@@ -106,6 +111,9 @@ export const getServerSideProps = withI18nServerProps<CompletePageProps>(async (
           isSingle: isOneSongKind(contract.kind),
           contractName: contractNameFor(contract.kind).replace(/서$/, ''),
           depositWord: depositWordFor(terms),
+          // 이 링크의 서명자에게 간 주소 — 법정대리인 링크면 대리인 주소다.
+          maskedEmail: maskEmail(linkSigner.role === 'guardian' ? linkSigner.email : contract.clientEmail),
+          openLinkSigned: linkSigner.role === 'client' && linkSigner.identityVerifiedAt === null,
           total: terms.amount.total,
           deposit: terms.amount.deposit,
           depositDueDays: terms.amount.depositDueDays,
@@ -173,7 +181,7 @@ export default function ProductionContractCompletePage({
           description={
             isError
               ? '잠시 후 다시 시도해 주세요. 서명은 이미 접수되었을 수 있으니, 계속 같은 화면이 나오면 아래 번호로 알려 주세요.'
-              : '링크가 만료되었거나 주소가 잘못되었습니다. 메일에 포함된 링크를 다시 확인해 주세요.'
+              : '링크가 만료되었거나 주소가 잘못되었습니다. 메일이나 카카오톡으로 받은 링크를 다시 확인해 주세요.'
           }
         />
       </>
@@ -237,7 +245,14 @@ export default function ProductionContractCompletePage({
               {purged ? '체결이 완료된 계약입니다.' : `${contract.clientName}님, ${contract.contractName}이 체결되었어요.`}
             </span>
             <span className="block">
-              {purged ? '보관 기간이 지나 개인정보를 파기했어요.' : '서명본 PDF와 입금 안내를 메일로도 보내 드려요.'}
+              {purged ? (
+                '보관 기간이 지나 개인정보를 파기했어요.'
+              ) : (
+                <>
+                  서명본 PDF와 입금 안내를 <strong>{contract.maskedEmail}</strong>(으)로 보내 드려요.
+                  <span className="block mt-1 text-gray-500 dark:text-gray-500">주소가 틀렸다면 바로 {OPERATOR_PHONE}으로 알려 주세요.</span>
+                </>
+              )}
             </span>
           </p>
 
@@ -277,7 +292,7 @@ export default function ProductionContractCompletePage({
                 htmlFor="download-identity-digits"
                 className="block text-left text-sm text-gray-600 dark:text-gray-600 mb-2"
               >
-                본인 확인을 위해 계약서에 등록된 연락처 뒤 {IDENTITY_DIGITS}자리를 입력해 주세요.
+                본인 확인을 위해 {contract.openLinkSigned ? '서명할 때 적으신 휴대폰 번호' : '계약서에 등록된 연락처'} 뒤 {IDENTITY_DIGITS}자리를 입력해 주세요.
               </label>
               <TextInput
                 id="download-identity-digits"

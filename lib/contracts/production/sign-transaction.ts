@@ -52,6 +52,9 @@ export const buildProductionSignStatements = (db: Database, input: ProductionSig
           eq(productionContracts.id, contractId),
           eq(productionContracts.status, 'sent'),
           or(isNull(productionContracts.expiresAt), gt(productionContracts.expiresAt, now)),
+          // 링크 계약은 의뢰인 칸이 아직 비어 있을 때만 서명을 받는다 — 서명자 행만 signed가 되고 계약 행이 비어 있는 채로
+          // 성립하는 일이 없게, 아래 계약 행 UPDATE와 같은 조건을 서명자 문장에도 건다(둘이 함께 0행이 된다).
+          ...(input.openClient ? [eq(productionContracts.clientPhone, '')] : []),
         ),
       ),
   );

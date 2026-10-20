@@ -16,6 +16,9 @@ import { CONTROL_CHARS, type ValidationError } from '../validation';
 export const isOpenProductionContract = (contract: Pick<ProductionContract, 'clientPhone'>): boolean =>
   contract.clientPhone.trim() === '';
 
+/** 서명자 동의 기록(agreed_clauses)에 남기는 "본인이 계약 당사자임을 확인" 체크의 키. 조항 키와 겹치지 않는다. */
+export const IDENTITY_CONFIRMED_KEY = 'identity-confirmed';
+
 export interface OpenLinkClientInput {
   clientName: string;
   clientStageName: string | null;
@@ -24,6 +27,20 @@ export interface OpenLinkClientInput {
 }
 
 const MAX_NAME_LENGTH = 60;
+
+/** 이메일을 가려 보인다 — ab***@gmail.com. 완료 화면이 "어느 주소로 보냈는지"를 알리되 주소 전체를 HTML에 싣지 않는다. */
+export const maskEmail = (email: string): string => {
+  const [local, domain] = email.split('@');
+  if (!local || !domain) return email ? '***' : '';
+  return `${local.slice(0, Math.min(2, local.length))}***@${domain}`;
+};
+
+/** 휴대폰 번호를 010-1234-5678 꼴로 — 하이픈 없이 적어도 계약서에 같은 모양으로 인쇄되게. 모양이 다르면 그대로 둔다. */
+export const normalizeMobile = (phone: string): string => {
+  const digits = phone.replace(/\D/g, '');
+  if (/^01\d{8,9}$/.test(digits)) return digits.length === 10 ? `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}` : `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
+  return phone;
+};
 
 /** 서명 화면에서 의뢰인이 채운 이름·활동명·이메일·연락처. 관리자 작성 폼과 같은 규칙(validation.ts). */
 export const validateOpenLinkClient = (
@@ -56,5 +73,5 @@ export const validateOpenLinkClient = (
     errors.push({ field: 'clientPhone', message: '올바른 휴대폰 번호가 아닙니다. (예: 010-1234-5678)' });
   }
   if (errors.length > 0 || !clientName || !clientEmail || !clientPhone) return { ok: false, errors };
-  return { ok: true, data: { clientName, clientStageName, clientEmail, clientPhone } };
+  return { ok: true, data: { clientName, clientStageName, clientEmail: clientEmail.toLowerCase(), clientPhone: normalizeMobile(clientPhone) } };
 };

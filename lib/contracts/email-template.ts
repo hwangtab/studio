@@ -24,6 +24,8 @@ export interface ContractEmailInput {
   cta?: ContractEmailCta;
   /** 링크 유효기간·본인 확인처럼 미리 알아야 하는 것 */
   notices?: string[];
+  /** 안내 박스 색 — 'alert'는 운영자가 꼭 확인해야 하는 것(공용 레이아웃과 같다). */
+  noticeTone?: 'alert';
 }
 
 export const buildContractEmailHtml = (input: ContractEmailInput): string =>
@@ -33,4 +35,5 @@ export const buildContractEmailHtml = (input: ContractEmailInput): string =>
     rows: input.rows,
     cta: input.cta,
     notices: input.notices,
+    ...(input.noticeTone ? { noticeTone: input.noticeTone } : {}),
   });

@@ -273,8 +273,8 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
                   <Row label="성명" value={contract.clientName || '서명할 때 의뢰인이 입력'} />
                   <Row label="활동명" value={contract.clientStageName || '-'} />
                   <Row label="생년월일" value={contract.clientBirthdate || '-'} />
-                  <Row label="이메일" value={contract.clientEmail} />
-                  <Row label="연락처" value={contract.clientPhone} />
+                  <Row label="이메일" value={contract.clientEmail || '서명할 때 의뢰인이 입력'} />
+                  <Row label="연락처" value={contract.clientPhone || '서명할 때 의뢰인이 입력'} />
                   <Row label="주소" value={contract.clientAddress || '-'} />
                 </dl>
               </div>
@@ -283,9 +283,18 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
                 <dl className="space-y-2 text-sm">
                   <Row label={isOneSongKind(contract.kind) ? '본 곡' : '음반'} value={releaseTitle(contract.kind, terms)} />
                   <Row label="계약금액" value={`${formatCurrency(terms.amount.total)}원`} />
-                  <Row label="계약금" value={`${formatCurrency(terms.amount.deposit)}원 (체결 후 ${terms.amount.depositDueDays}일)`} />
-                  <Row label="잔금" value={`${formatCurrency(terms.amount.balance)}원 (최종 승인 후 ${terms.amount.balanceDueDays}일)`} />
-                  <Row label="작업 기간" value={`약 ${terms.workWeeks}주`} />
+                  {terms.amount.balance === 0 ? (
+                    <Row label="대금 지급" value={`일시불 (체결 후 ${terms.amount.depositDueDays}일)`} />
+                  ) : (
+                    <>
+                      <Row label="계약금" value={`${formatCurrency(terms.amount.deposit)}원 (체결 후 ${terms.amount.depositDueDays}일)`} />
+                      <Row label="잔금" value={`${formatCurrency(terms.amount.balance)}원 (최종 승인 후 ${terms.amount.balanceDueDays}일)`} />
+                    </>
+                  )}
+                  <Row
+                    label="납품 기한"
+                    value={`${terms.firstDeliveryBusinessDays ? `믹싱 1차 ${terms.firstDeliveryBusinessDays}영업일 · ` : ''}최종 ${terms.workWeeks}주 이내`}
+                  />
                   <Row
                     label="무료 수정"
                     value={`${terms.scope.arrangementTracks > 0 ? `편곡 ${terms.revisions.arrangement} · ` : ''}믹싱 ${terms.revisions.mixing} · 마스터링 ${terms.revisions.mastering}회`}
@@ -298,7 +307,10 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
               <dl className="space-y-2">
                 <Row label="작성일" value={formatDateTime(contract.createdAt)} />
                 <Row label="발송일" value={formatDateTime(contract.sentAt)} />
-                <Row label="링크 만료" value={contract.status === 'sent' ? formatDateTime(contract.expiresAt) : '-'} />
+                <Row
+                  label="링크 만료"
+                  value={contract.status === 'sent' || contract.status === 'expired' ? `${formatDateTime(contract.expiresAt)}${contract.status === 'expired' ? ' (만료됨 — 재발송하면 새 링크)' : ''}` : '-'}
+                />
               </dl>
               <dl className="space-y-2">
                 <Row label="체결일" value={formatDateTime(contract.signedAt)} />
@@ -322,7 +334,7 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
                   <dl className="space-y-0.5 text-gray-600">
                     <dt className="font-semibold text-gray-900">{ROLE_LABEL[signer.role]}</dt>
                     <dd>
-                      서명자: {signer.name}
+                      서명자: {signer.name || '(서명할 때 의뢰인이 입력)'}
                       {signer.relation ? ` (${signer.relation})` : ''}
                       {signer.phone ? ` · ${signer.phone}` : ''}
                     </dd>
@@ -337,7 +349,11 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
                         </dd>
                         <dd>
                           본인 확인:{' '}
-                          {signer.identityVerifiedAt ? `연락처 뒷자리 대조 완료 (${formatDateTime(signer.identityVerifiedAt)})` : '기록 없음'}
+                          {signer.identityVerifiedAt
+                            ? `연락처 뒷자리 대조 완료 (${formatDateTime(signer.identityVerifiedAt)})`
+                            : signer.status === 'signed' && signer.role === 'client'
+                              ? '연락처 대조 없음 — 링크 계약(카톡 상대와 이름·연락처가 맞는지 확인해 주세요)'
+                              : '기록 없음'}
                         </dd>
                       </>
                     )}
@@ -434,7 +450,14 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
                 light
                 variant={contract.status === 'sent' ? 'weak' : 'solid'}
                 disabled={busy}
-                onClick={() => run(() => mutateProductionContract(contract.id, 'resend'), '재발송하면 기존 서명 링크는 즉시 무효가 됩니다. 계속할까요?')}
+                onClick={() =>
+                  run(
+                    () => mutateProductionContract(contract.id, 'resend'),
+                    contract.clientEmail
+                      ? '재발송하면 기존 서명 링크는 즉시 무효가 됩니다. 계속할까요?'
+                      : '재발송하면 기존 서명 링크는 즉시 무효가 됩니다. 메일은 나가지 않으니 새 링크를 "서명 링크 복사"로 카카오톡에 다시 보내야 해요. 계속할까요?',
+                  )
+                }
               >
                 재발송
               </Button>
