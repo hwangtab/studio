@@ -460,6 +460,38 @@ export default function AdminBookingDetailPage({
 
   const canReschedule =
     !isMixing && !isDeposit && (booking.bookingStatus === 'confirmed' || (booking.bookingStatus === 'pending' && booking.orderStatus === 'awaiting_deposit'));
+  // 입금 확인이 끝난 계좌 입금 세션 예약의 금액 정정 — 환불 기록이 없을 때만(refundableAmount === totalAmount). 토스(카드)는 승인 금액과 어긋나 못 고친다.
+  const canAdjustPaidAmount = !isMixing && !isDeposit && booking.orderStatus === 'paid' && isBankPaid && booking.refundableAmount === booking.totalAmount;
+  const [adjustOpen, setAdjustOpen] = useState(false);
+  const [adjustAmount, setAdjustAmount] = useState(String(booking.totalAmount));
+  const [adjustReason, setAdjustReason] = useState('');
+  const handleAdjustPaidAmount = async () => {
+    const next = Number(adjustAmount.replace(/[,\s원]/g, ''));
+    if (!window.confirm(`금액을 ${formatPriceAmount(booking.totalAmount)}원 → ${Number.isFinite(next) ? formatPriceAmount(next) : adjustAmount}원으로 정정할까요?\n\n매출 현황과 환불 가능 금액이 함께 바뀌고, 사유와 함께 기록이 남습니다. 고객에게 메일은 가지 않습니다.`)) return;
+    setBusy(true);
+    setNotice(null);
+    try {
+      const response = await fetch(`/api/admin/bookings/${booking.id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ action: 'update_paid_amount', totalAmount: next, reason: adjustReason }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result?.ok) {
+        setNotice(result?.message || '금액 정정에 실패했습니다.');
+      } else {
+        setAdjustOpen(false);
+        setAdjustReason('');
+        setNotice(`금액을 ${formatPriceAmount(result.from)}원에서 ${formatPriceAmount(result.to)}원으로 정정했어요.`);
+      }
+    } catch {
+      setNotice('네트워크 오류가 발생했습니다.');
+    }
+    setBusy(false);
+    await router.replace(router.asPath, undefined, { scroll: false });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
   const [rescheduleOpen, setRescheduleOpen] = useState(false);
   const kstStart = booking.startAt ? new Date(new Date(booking.startAt).getTime() + 9 * 3_600_000) : null;
   const [newDate, setNewDate] = useState(kstStart ? kstStart.toISOString().slice(0, 10) : '');
@@ -822,7 +854,7 @@ export default function AdminBookingDetailPage({
                         <Field id="ed-amount" label="금액 (부가세 포함, 원)" className={lightOnlyField}><TextInput inputMode="numeric" value={editAmount} onChange={(e) => setEditAmount(e.target.value)} light /></Field>
                         <Field id="ed-phone" label="연락처 (비우면 기록만)" className={lightOnlyField}><TextInput value={editPhone} onChange={(e) => setEditPhone(e.target.value)} light /></Field>
                         <Field id="ed-email" label="이메일 (저장만 해요 — 안내 메일은 “입금 안내 재발송”으로)" className={lightOnlyField}><TextInput value={editEmail} onChange={(e) => setEditEmail(e.target.value)} light /></Field>
-                        <p className="col-span-2 text-xs text-gray-500">입금 확인 전의 예약만 고칠 수 있어요. 결제 기록이 생긴 뒤에는 바꾸지 않아요.</p>
+                        <p className="col-span-2 text-xs text-gray-500">입금 확인 전의 예약만 여기서 고쳐요. 입금 확인 뒤에는 결제 금액 칸의 “금액 정정”을 쓰세요.</p>
                         <div className="col-span-2 flex flex-wrap gap-2">
                           <Button light size="sm" disabled={busy || editName.trim() === ''} onClick={handleEditDetails}>저장</Button>
                           <Button light variant="weak" size="sm" disabled={busy} onClick={() => setEditOpen(false)}>닫기</Button>
@@ -945,6 +977,24 @@ export default function AdminBookingDetailPage({
                 value={<span className="text-base">{formatPriceAmount(booking.totalAmount)}원</span>}
               />
             </dl>
+
+            {canAdjustPaidAmount && (
+              <div className="mt-3">
+                {adjustOpen ? (
+                  <div className="grid grid-cols-1 gap-3 rounded-lg border border-gray-200 p-3 sm:grid-cols-2">
+                    <Field id="adj-amount" label="바꿀 금액 (부가세 포함, 원)" className={lightOnlyField}><TextInput inputMode="numeric" value={adjustAmount} onChange={(e) => setAdjustAmount(e.target.value)} light /></Field>
+                    <Field id="adj-reason" label="정정 사유 (기록에 남아요)" className={lightOnlyField}><TextInput value={adjustReason} onChange={(e) => setAdjustReason(e.target.value)} placeholder="예: 협의 금액을 잘못 넣음" light /></Field>
+                    <p className="text-xs text-gray-500 sm:col-span-2">계좌로 받은 돈과 기록이 다를 때만 쓰세요. 매출·환불 가능 금액이 바뀌고, 고객에게 메일은 가지 않아요. 환불이 한 번이라도 있으면 정정할 수 없어요.</p>
+                    <div className="flex flex-wrap gap-2 sm:col-span-2">
+                      <Button light size="sm" disabled={busy || adjustReason.trim().length < 2} onClick={handleAdjustPaidAmount}>정정</Button>
+                      <Button light variant="weak" size="sm" disabled={busy} onClick={() => setAdjustOpen(false)}>닫기</Button>
+                    </div>
+                  </div>
+                ) : (
+                  <Button light variant="weak" size="sm" disabled={busy} onClick={() => setAdjustOpen(true)}>금액 정정</Button>
+                )}
+              </div>
+            )}
 
             {booking.payment && (
               <dl className="mt-4 pt-4 border-t border-gray-100 space-y-2 text-sm">

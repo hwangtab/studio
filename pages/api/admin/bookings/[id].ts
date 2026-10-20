@@ -9,6 +9,7 @@ import { sendBookingCancelledEmails, sendBookingConfirmedEmails, sendDepositRefu
 import { calendarForService, createBookingEvent, deleteBookingEvent, isCalendarActive } from '../../../../lib/booking/gcal';
 import { kstDateString } from '../../../../lib/booking/kst';
 import { updateAwaitingOrderDetails } from '../../../../lib/booking/manualEdit';
+import { adjustPaidBankDepositAmount } from '../../../../lib/booking/paidAmount';
 import { deleteUnpaidCancelledOrder } from '../../../../lib/booking/deleteUnpaid';
 import { rescheduleBooking } from '../../../../lib/booking/reschedule';
 import { cancelAwaitingBookingDeposit, confirmBookingBankDeposit, deliverBookingDepositGuide, retryWaitingEventDelete } from '../../../../lib/booking/bankDeposit';
@@ -258,6 +259,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       } catch (error: unknown) {
         console.error('[API/admin/bookings/[id]] update_details failed:', safeDbErrorSummary(error)); // 바인딩된 고객 정보를 로그에 싣지 않는다
         return res.status(500).json({ ok: false, message: '수정에 실패했습니다.' });
+      }
+    }
+
+    // 입금 확인이 끝난 세션 예약의 금액 정정 — 사유와 함께 결제 행에 흔적을 남긴다(lib/booking/paidAmount.ts).
+    if (body.action === 'update_paid_amount') {
+      try {
+        const result = await adjustPaidBankDepositAmount({ orderId: order.id, totalAmount: body.totalAmount, reason: body.reason, actor: auth.actor });
+        if (!result.ok) return res.status(409).json({ ok: false, message: result.message });
+        return res.status(200).json({ ok: true, from: result.from, to: result.to });
+      } catch (error: unknown) {
+        console.error('[API/admin/bookings/[id]] update_paid_amount failed:', safeDbErrorSummary(error));
+        return res.status(500).json({ ok: false, message: '금액 정정에 실패했습니다.' });
       }
     }
 
