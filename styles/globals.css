@@ -43,6 +43,11 @@
     --hero-title-glow: rgb(255 255 255 / 0.25);
   }
 
+  /* `.dark`가 없으면(관리자 화면·라이트 선호) 입력칸·선택 상자 같은 기본 컨트롤도 라이트로 — 시스템이 다크여도 흰 화면에 검은 선택 상자가 뜨지 않게. */
+  :root:not(.dark) {
+    color-scheme: light;
+  }
+
   .dark {
     --glass-tint: rgba(17, 24, 39, 0.72);
     --glass-tint-menu: rgba(17, 24, 39, 0.88);

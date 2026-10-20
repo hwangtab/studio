@@ -217,7 +217,7 @@ function ReportLinkSection({ links, busy, run, onIssued }: {
   return (
     <section className={`bg-white rounded-2xl shadow-sm p-4 md:p-6 mb-6 text-sm text-gray-900 space-y-3 ${lightOnlyField}`}>
       <div>
-        <h2 className="font-semibold text-gray-900">기획자 현황 링크</h2>
+        <h2 className="text-base font-semibold text-gray-900">기획자 현황 링크</h2>
         <p className="text-gray-600 mt-1">로그인 없이 이 공연의 회차별 판매·초대·입장 수와 판매 금액만 보는 링크입니다. 예매자 이름·연락처는 보이지 않습니다.</p>
       </div>
       {links === null ? (
