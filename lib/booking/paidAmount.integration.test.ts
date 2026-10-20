@@ -79,11 +79,20 @@ describe('adjustPaidBankDepositAmount', () => {
     expect((await one(`SELECT total_amount FROM orders WHERE id='o1'`))?.total_amount).toBe(300000);
   });
 
-  it('입금 대기·믹싱·잘못된 금액·사유 없음·같은 금액은 거절한다', async () => {
+  it('믹싱 주문과 예약금 링크 주문도 정정된다 — 금액은 orders에만 있다', async () => {
+    for (const type of ['mixing', 'deposit']) {
+      await client.execute(`DELETE FROM payments`);
+      await client.execute(`DELETE FROM orders`);
+      await seed({ type });
+      expect(await adjustPaidBankDepositAmount({ orderId: 'o1', totalAmount: 450000, reason: '협의가 정정', actor: 'admin' })).toEqual({ ok: true, from: 300000, to: 450000 });
+    }
+  });
+
+  it('입금 대기·다른 주문 종류·잘못된 금액·사유 없음·같은 금액은 거절한다', async () => {
     await seed({ status: 'awaiting_deposit', paymentKey: null });
     expect(await adjustPaidBankDepositAmount({ orderId: 'o1', totalAmount: 500000, reason: '사유입니다', actor: 'admin' })).toMatchObject({ ok: false });
     await client.execute(`DELETE FROM orders`);
-    await seed({ type: 'mixing' });
+    await seed({ type: 'ticket' });
     expect(await adjustPaidBankDepositAmount({ orderId: 'o1', totalAmount: 500000, reason: '사유입니다', actor: 'admin' })).toMatchObject({ ok: false });
     await client.execute(`DELETE FROM payments`);
     await client.execute(`DELETE FROM orders`);
