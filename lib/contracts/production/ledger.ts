@@ -1,6 +1,7 @@
 import type { ProductionContractEvent } from '../../../db/schema';
 import type { TerminationCause } from './termination';
 import {
+  depositWordFor,
   songLabel,
   type ProductionTerms,
   type RefundItemKey,
@@ -460,11 +461,32 @@ const buildTodos = (ledger: ProductionLedger, terms: ProductionTerms, today: num
   const { payments, work, stages, unresponsive } = ledger;
   const delayLimit = terms.paymentDelayDays;
 
+  const depositWord = depositWordFor(terms);
+  /**
+   * 입금 기한 이틀 전·하루 전 — 고객 기한 안내 메일(전날 아침, 기한 크론)보다 먼저 운영자가 본다. 입금 확인은 운영자가
+   * 손으로 기록하므로, 이미 받은 돈을 기록하지 않으면 입금한 고객에게 독촉이 간다(운영 점검 2026-10-20).
+   */
+  const daysLeft = (last: Date | null): number | null => (last ? kstDay(last) - today : null);
+  const depositLeft = payments.depositMetAt ? null : daysLeft(payments.depositLastDay);
+  if (depositLeft !== null && depositLeft >= 1 && depositLeft <= 2) {
+    todos.push({
+      severity: 'info',
+      message: `${depositWord} 입금 기한이 ${depositLeft}일 남았어요. 입금이 들어왔으면 "입금 확인"을 기록해 주세요 — 기록이 없으면 기한 전날 고객에게 입금 안내가 가요.`,
+    });
+  }
+  const balanceLeft = payments.paidInFull ? null : daysLeft(payments.balanceLastDay);
+  if (balanceLeft !== null && balanceLeft >= 1 && balanceLeft <= 2) {
+    todos.push({
+      severity: 'info',
+      message: `잔금 입금 기한이 ${balanceLeft}일 남았어요. 입금이 들어왔으면 "입금 확인"을 기록해 주세요 — 기록이 없으면 기한 전날 고객에게 입금 안내가 가요.`,
+    });
+  }
+
   if (payments.depositOverdueDays > 0) {
     todos.push({
       severity: payments.depositOverdueDays > delayLimit ? 'alert' : 'warn',
       message:
-        `계약금 기한이 ${payments.depositOverdueDays}일 지났어요.` +
+        `${depositWord} 기한이 ${payments.depositOverdueDays}일 지났어요.` +
         (payments.depositOverdueDays > delayLimit ? ` ${delayLimit}일 이상 지체 — 통지 후 해지할 수 있어요(제10조 5항).` : ''),
     });
   }

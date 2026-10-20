@@ -155,6 +155,16 @@ describe('진행 기록', () => {
   const ledgerAt = (now: string, events: ProductionContractEvent[]) =>
     computeProductionLedger({ terms, signedAt: kst('2026-10-20T10:00:00'), events, now: kst(now) });
 
+  it('입금 기한 이틀 전·하루 전에 운영자 할 일 — 고객 안내(전날)보다 먼저, 기록하면 사라진다', () => {
+    // 체결 10/20, 대금 기한 3일 → 10/23. 10/21이면 이틀 남았다.
+    const todo = (now: string, events: ProductionContractEvent[] = []) =>
+      ledgerAt(now, events).todos.map((t) => t.message).find((m) => m.includes('입금 기한이'));
+    expect(todo('2026-10-21T10:00:00')).toContain('대금 입금 기한이 2일 남았어요');
+    expect(todo('2026-10-22T10:00:00')).toContain('1일 남았어요');
+    expect(todo('2026-10-20T11:00:00')).toBeUndefined(); // 3일 전에는 아직
+    expect(todo('2026-10-21T10:00:00', [ev('payment_received', '2026-10-21T09:00:00', { amount: 300_000 })])).toBeUndefined();
+  });
+
   it('편곡 단계를 만들지 않는다 — 믹싱(곡)과 마스터링만', () => {
     expect(ledgerAt('2026-10-21T10:00:00', []).stages.map((s) => s.stage)).toEqual(['mixing', 'mastering']);
   });
