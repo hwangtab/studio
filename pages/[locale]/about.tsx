@@ -1,6 +1,7 @@
 import React from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import ServiceLinkPill from '../../components/ui/ServiceLinkPill';
 import { Phone, Mail, MapPin, Music, Activity, Award, Headphones, Lightbulb, Banknote, Palette, Globe, Megaphone, Calendar, Users, Clock, MessageCircle } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +16,7 @@ import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
 import { getServicesData } from '../../data/services';
+import { SESSION_MUSICIAN_PATH } from '../../data/sessionMusicians';
 import { getHubLocaleContent } from '../../data/faq';
 import { Section } from '../../components/ui/Section';
 import type { LucideIcon } from '@/lib/lucide-icons';
@@ -188,6 +190,16 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
             />
           ))}
         </div>
+
+        {/* 전문가 연계(세션 연주자) 카드 아래 — 연주자가 스스로 등록하는 입구. ko 전용(연주자는 국내 섭외 대상). */}
+        {locale === 'ko' && (
+          <p className="typo-card-body text-center">
+            세션 연주자로 함께하고 싶으신가요?{' '}
+            <Link href={SESSION_MUSICIAN_PATH} prefetch={false} className="font-medium text-primary underline dark:text-primary-lighter">
+              세션 연주자 등록하기
+            </Link>
+          </p>
+        )}
       </Section>
 
       <Section variant="default">

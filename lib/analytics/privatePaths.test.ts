@@ -102,7 +102,12 @@ describe('isPrivateAnalyticsPath', () => {
       '/:locale(ko|en|zh|es|vi|th|uz)/shop/manage/:path*',
       '/:locale(ko|en|zh|es|vi|th|uz)/software/(success|fail|find)',
       '/:locale(ko|en|zh|es|vi|th|uz)/software/manage/:path*',
+      '/:locale(ko|en|zh|es|vi|th|uz)/session-musicians/manage/:path*',
     ]);
+    // 세션 연주자: 본인 관리(경로에 토큰)만 비공개다 — 등록 화면·접수 완료는 측정 대상.
+    expect(isPrivateAnalyticsPath('/ko/session-musicians/manage/abc')).toBe(true);
+    expect(isPrivateAnalyticsPath('/ko/session-musicians')).toBe(false);
+    expect(isPrivateAnalyticsPath('/ko/session-musicians/thanks')).toBe(false);
     // 상점은 결과·관리 화면만 비공개다 — 목록·상품 상세는 측정 대상.
     expect(isPrivateAnalyticsPath('/ko/shop/success?paymentKey=x')).toBe(true);
     expect(isPrivateAnalyticsPath('/ko/shop/manage/SHP-20261012-AAAAAAAA?token=t')).toBe(true);

@@ -106,11 +106,21 @@ const seedTenancy = async (enc: string): Promise<string> => {
   return row.id;
 };
 
+const seedSessionMusician = async (enc: string): Promise<string> => {
+  seq += 1;
+  const [row] = await mockDb.insert(schema.sessionMusicians).values({
+    stageName: `연주자${seq}`, primaryInstrument: 'bass', sampleLinksJson: '[]', adultConfirmed: true, privateEnc: enc,
+    emailHash: `hash-${seq}`, manageTokenHash: `token-${seq}`, consentVersion: 'test',
+  }).returning();
+  return row.id;
+};
+
 const SEEDERS: Record<string, (enc: string) => Promise<string>> = {
   'funding_creators.resident_number_enc': (enc) => seedCreator(enc),
   'funding_creators.payout_account_enc': (enc) => seedPayoutAccount(enc),
   'refund_accounts.account_number_enc': (enc) => seedRefundAccount(enc),
   'room_tenancies.private_enc': (enc) => seedTenancy(enc),
+  'session_musicians.private_enc': (enc) => seedSessionMusician(enc),
 };
 
 it('모든 타깃에 seeder가 있다 — 목록에 더하고 검증을 빠뜨리면 여기서 선다', () => {

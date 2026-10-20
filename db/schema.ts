@@ -1687,6 +1687,10 @@ export const pressOptouts = sqliteTable('press_optouts', {
  * 접속기록이 새면 필드 암호화가 통째로 무의미해진다 — 이 표는 감사 대상이지 사본이 아니다.
  */
 export const privacyAccessActionEnum = [
+  /** 세션 연주자 등록 상세 열람(활동명·소개·샘플 링크·운영자 메모) (pages/admin/session-musicians/[id].tsx). 연락처는 싣지 않는다. */
+  'session_musician_view',
+  /** 세션 연주자의 실명·휴대전화·이메일·카카오톡 ID 복호화 열람 (pages/api/admin/session-musicians/[id]/private.ts). 키 회전 CLI가 여는 일도 이 이름이다(수행자 rotation-cli). 값은 적지 않는다. */
+  'session_musician_private_view',
   /** 월 입주자의 연락처·비상연락처 등 암호화 상세 열람 (pages/api/admin/tenancies/[id]/private.ts). 값은 적지 않는다. */
   'tenancy_private_view',
   /** 월 입주자의 연락처를 복호화해 **구글 캘린더 일정 설명으로 내보낸 일** — 값이 서버를 떠나므로 열람과 따로 남긴다(lib/tenancy/calendar.ts). */
@@ -2745,3 +2749,70 @@ export const roomTenancyPayments = sqliteTable(
 
 export type RoomTenancy = typeof roomTenancies.$inferSelect;
 export type RoomTenancyPayment = typeof roomTenancyPayments.$inferSelect;
+
+/**
+ * 세션 연주자 등록 명단 — 운영자만 보는 **비공개** 섭외 명단(마이그레이션 0077).
+ * 설계: docs/session-musician-registration-design-2026-10.md
+ *
+ * - 사이트에 공개하지 않는다. 등록은 섭외 약속이 아니고, 맞는 프로젝트가 생기면 운영자가 먼저 연락한다.
+ * - **어떤 `relations()`에도 잇지 않는다.** 그래서 마이그레이션 → 배포 순서가 뒤집혀도 다른 화면은 안 깨진다
+ *   (표가 없으면 등록 API는 503 `migration_needed`, 관리자 화면은 적용 안내).
+ * - **개인정보(실명·휴대전화·이메일·카카오톡 ID)는 `private_enc` 한 칸에 JSON째 암호화**한다
+ *   (lib/crypto, `ENCRYPTED_FIELD_TARGETS`에 등록 — 키 회전 대상). 화면 props·운영자 알림 메일에는 싣지 않고,
+ *   버튼을 누른 순간의 응답으로만 나간다. 활동명·악기·소개·샘플 링크는 목록에 쓰므로 평문이다.
+ * - `email_hash`는 소문자·공백 정규화한 이메일의 HMAC(중복 등록 판정용 — 평문 이메일을 검색 키로 두지 않는다).
+ * - `manage_token_hash`는 본인 관리 링크 토큰의 sha256이다. 원문은 접수 메일에만 있고 DB엔 없다.
+ * - 보유 기간은 `last_confirmed_at`(등록·수정·재확인 중 나중)부터 2년이다. 1년 9개월째 재확인 메일을 한 번 보내고
+ *   (`reconfirm_sent_at`), 2년이 지나면 월간 파기 크론(purge-contracts)이 **행을 지운다**. 본인 삭제도 행 삭제다.
+ * - `operator_memo`는 개인정보로 취급한다(행과 함께 지워진다).
+ */
+export const sessionMusicianStatusEnum = ['new', 'reviewed', 'active', 'inactive'] as const;
+export const sessionMusicianReadingEnum = ['chart', 'staff', 'none'] as const;
+
+export const sessionMusicians = sqliteTable(
+  'session_musicians',
+  {
+    id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+    stageName: text('stage_name').notNull(),
+    primaryInstrument: text('primary_instrument').notNull(),
+    /** JSON 배열: ["electric-guitar","bass", {"other":"우쿨렐레"}] */
+    instrumentsJson: text('instruments_json'),
+    genresJson: text('genres_json'),
+    yearsExperience: integer('years_experience'),
+    reading: text('reading', { enum: sessionMusicianReadingEnum }),
+    remoteRecording: integer('remote_recording', { mode: 'boolean' }),
+    region: text('region'),
+    bio: text('bio'),
+    /** JSON 배열: [{ url, label }] — https만, 1~5개. 임베드하지 않고 링크로만 연다. */
+    sampleLinksJson: text('sample_links_json').notNull(),
+    /** 희망 단가 메모(선택, 참고용). 화면에 금액을 약속하지 않는다. */
+    rateNote: text('rate_note'),
+    /** 만 19세 이상 확인(체크) — 만 19세 미만은 받지 않는다. */
+    adultConfirmed: integer('adult_confirmed', { mode: 'boolean' }).notNull(),
+    /** 암호화 JSON: { realName, phone, email, kakaoId }. */
+    privateEnc: text('private_enc').notNull(),
+    emailHash: text('email_hash').notNull(),
+    manageTokenHash: text('manage_token_hash').notNull(),
+    status: text('status', { enum: sessionMusicianStatusEnum }).notNull().default('new'),
+    /** 운영자 메모 — 개인정보로 취급한다(행과 함께 지워진다). */
+    operatorMemo: text('operator_memo'),
+    /** 동의 당시의 처리방침 판본(FUNDING_TERMS_VERSION). */
+    consentVersion: text('consent_version').notNull(),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+    /** 보유 기간 기산점 — 등록·본인 수정·재확인 중 나중. */
+    lastConfirmedAt: integer('last_confirmed_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+    /** 1년 9개월 재확인 메일을 보낸 시각. 같은 기간에 한 번만 보내려는 표시 — 본인이 확인하면 NULL로 돌린다. */
+    reconfirmSentAt: integer('reconfirm_sent_at', { mode: 'timestamp' }),
+  },
+  (t) => [
+    uniqueIndex('session_musicians_email_hash_uq').on(t.emailHash),
+    uniqueIndex('session_musicians_manage_token_uq').on(t.manageTokenHash),
+    index('session_musicians_status_idx').on(t.status, t.createdAt),
+    index('session_musicians_confirmed_idx').on(t.lastConfirmedAt),
+    check('session_musicians_status_check', sql`${t.status} in ('new','reviewed','active','inactive')`),
+    check('session_musicians_reading_check', sql`${t.reading} is null or ${t.reading} in ('chart','staff','none')`),
+  ],
+);
+
+export type SessionMusician = typeof sessionMusicians.$inferSelect;

@@ -13,6 +13,8 @@ import { listShopPayoutsAwaitingRecord } from '../partnerPayouts/shop';
 import { listShowPayoutsAwaitingRecord } from '../partnerPayouts/show';
 import { countPendingPartnerPayouts } from '../partnerPayouts/store';
 import { countPendingSubmissions } from '../shows/organizer/adminSubmissions';
+import { countNewSessionMusicians } from '../sessionMusicians/repository';
+import { isMissingTableError } from '../dbErrors';
 
 /**
  * 관리자 첫 화면의 데이터.
@@ -101,6 +103,8 @@ export interface AdminDashboard {
     sessionsAwaitingMark: number;
     /** 주최자가 제출해 운영자 심사를 기다리는 공연. 표(0055)가 없으면 null — 그 카드는 숨긴다. */
     showSubmissionsAwaitingReview: number | null;
+    /** 아직 열어 보지 않은 새 세션 연주자 등록(status='new'). 표(0077)가 없으면 null — 그 카드는 숨긴다. */
+    sessionMusiciansNew: number | null;
   };
   socialTokens: SocialTokenStatus[];
   /** upcomingSessions의 창 길이(일). 화면 문구용 — 페이지가 이 모듈을 값으로 import하지 않게 데이터에 싣는다. */
@@ -166,7 +170,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       return 0;
     });
 
-const [issues, sessions, calendarImport, linkSessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending, fundingPayoutsToRecord, shopPayoutsToRecord, shopPayoutsPending, showPayoutsToRecord, showPayoutsPending, awaitingDepositRows, unmarkedRows, showSubmissionsAwaitingReview] = await Promise.all([
+const [issues, sessions, calendarImport, linkSessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending, fundingPayoutsToRecord, shopPayoutsToRecord, shopPayoutsPending, showPayoutsToRecord, showPayoutsPending, awaitingDepositRows, unmarkedRows, showSubmissionsAwaitingReview, sessionMusiciansNew] = await Promise.all([
     // 점검 하나가 던져도 첫 화면 전체가 "현황을 불러오지 못했습니다"로 죽지 않게 — 실패는 high 항목으로 보인다.
     runIsolatedCheck('DB 점검', () => collectDbIssues(now)),
     guard('이번 주 확정 세션', db
@@ -255,6 +259,13 @@ const [issues, sessions, calendarImport, linkSessions, mixingCounts, subscriptio
       console.error('[admin-dashboard] 공연 심사 대기 건수를 읽지 못했습니다 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
       return null;
     }),
+    // 새 세션 연주자 등록 — 표(0077)가 없거나 조회가 실패해도 대시보드는 열려야 한다. null이면 그 카드만 숨긴다.
+    countNewSessionMusicians().catch((error: unknown) => {
+      if (!isMissingTableError(error, 'session_musicians')) {
+        console.error('[admin-dashboard] 새 세션 연주자 등록 건수를 읽지 못했습니다 — 건너뜁니다', error instanceof Error ? error.name : 'unknown');
+      }
+      return null;
+    }),
   ]);
 
   // 판정은 lib/contracts/status.ts의 needsTermination과 같은 경계(terminationCutoff)다.
@@ -326,6 +337,7 @@ const [issues, sessions, calendarImport, linkSessions, mixingCounts, subscriptio
       },
       sessionsAwaitingMark: Number(unmarkedRows[0]?.count ?? 0),
       showSubmissionsAwaitingReview,
+      sessionMusiciansNew,
     },
     socialTokens: tokens.map((row) => ({
       platform: row.platform,

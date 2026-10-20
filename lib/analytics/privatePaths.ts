@@ -53,6 +53,9 @@ const PRIVATE_ROUTE_BODIES: ReadonlyArray<readonly [body: string, hasSubPath: bo
   // 소프트웨어. success·fail은 토스 paymentKey·orderId, manage는 관리 토큰. find(링크 다시 받기)는 이메일을 받는 폼이라 뺀다. 목록·상세는 측정 대상.
   ['software/(success|fail|find)', false],
   ['software/manage', true],
+  // 세션 연주자 본인 관리. `/manage/<토큰>` — 경로의 토큰 하나로 등록 정보(연락처 포함)를 보고 고치고 지운다.
+  // 등록 화면·접수 완료(`session-musicians`, `session-musicians/thanks`)는 비밀값이 없어 측정 대상이라 manage만 좁힌다.
+  ['session-musicians/manage', true],
 ];
 
 const LOCALE_GROUP = '(ko|en|zh|es|vi|th|uz)';
@@ -166,6 +169,7 @@ export const PRIVATE_PAGE_ROUTES: readonly string[] = [
   '/[locale]/software/fail',
   '/[locale]/software/find',
   '/[locale]/software/manage/[orderNo]',
+  '/[locale]/session-musicians/manage/[token]',
 ];
 
 export const isPrivatePageRoute = (pathname: string): boolean => PRIVATE_PAGE_ROUTES.includes(pathname);
