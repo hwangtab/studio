@@ -3,12 +3,14 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { sessionMusicianStatusEnum } from '../../../../../db/schema';
 import { SESSION_LIMITS } from '../../../../../data/sessionMusicians';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
+import { recordAdminPrivacyAccess } from '../../../../../lib/privacy/accessLog';
 import { deleteSessionMusicianById, isSessionMusicianTableMissing, updateOperatorFields } from '../../../../../lib/sessionMusicians/repository';
 import { cleanMultiline } from '../../../../../lib/sessionMusicians/validate';
 
 /**
  * PATCH { status?, operatorMemo? } — 운영자 상태·메모. 본인 입력(프로필)은 건드리지 않는다.
  * DELETE — 등록 즉시 삭제(행 삭제). 관리 링크를 잃은 본인이 삭제를 요구할 때(열람·정정·삭제권) 쓴다.
+ *   누가 언제 지웠는지 접속기록(`session_musician_delete`)에 남긴다 — 삭제 요구를 처리한 근거다. 지운 값은 적지 않는다.
  * 메모는 개인정보로 취급한다 — 행과 함께 지워지고 알림 메일에 싣지 않는다.
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -24,6 +26,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     if (req.method === 'DELETE') {
       const deleted = await deleteSessionMusicianById(id);
+      await recordAdminPrivacyAccess(req, auth.actor, 'session_musician_delete', id, deleted ? 'success' : 'not_found').catch((error: unknown) => {
+        console.error('[privacy] 접속기록 호출 실패 — 삭제는 이미 끝났습니다', error);
+      });
       return deleted ? res.status(200).json({ ok: true }) : res.status(404).json({ ok: false, message: '등록 기록을 찾을 수 없어요.' });
     }
 

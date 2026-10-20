@@ -1693,6 +1693,8 @@ export const privacyAccessActionEnum = [
   'session_musician_view',
   /** 세션 연주자의 실명·휴대전화·이메일·카카오톡 ID 복호화 열람 (pages/api/admin/session-musicians/[id]/private.ts). 키 회전 CLI가 여는 일도 이 이름이다(수행자 rotation-cli). 값은 적지 않는다. */
   'session_musician_private_view',
+  /** 세션 연주자 등록을 관리자가 지운 일(관리 링크를 잃은 본인의 삭제 요구 처리 — pages/api/admin/session-musicians/[id]/index.ts DELETE). 지운 값은 적지 않는다. */
+  'session_musician_delete',
   /** 월 입주자의 연락처·비상연락처 등 암호화 상세 열람 (pages/api/admin/tenancies/[id]/private.ts). 값은 적지 않는다. */
   'tenancy_private_view',
   /** 월 입주자의 연락처를 복호화해 **구글 캘린더 일정 설명으로 내보낸 일** — 값이 서버를 떠나므로 열람과 따로 남긴다(lib/tenancy/calendar.ts). */

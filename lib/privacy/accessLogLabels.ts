@@ -7,6 +7,7 @@ export const ACTION_LABEL: Record<string, string> = {
   tenancy_private_view: '월 입주자 연락처 열람',
   session_musician_view: '세션 연주자 등록 상세 열람',
   session_musician_private_view: '세션 연주자 연락처 열람',
+  session_musician_delete: '세션 연주자 등록 삭제',
   tenancy_calendar_export: '월 입주자 연락처의 캘린더 내보내기',
   funding_resident_number_decrypt_check: '주민등록번호 복호화 점검',
   funding_payout_account_view: '정산 계좌 조회',
