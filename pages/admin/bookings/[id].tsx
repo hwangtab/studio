@@ -815,7 +815,7 @@ export default function AdminBookingDetailPage({
                         <Field id="ed-phone" label="연락처 (비우면 기록만)" className={lightOnlyField}><TextInput value={editPhone} onChange={(e) => setEditPhone(e.target.value)} light /></Field>
                         <Field id="ed-email" label="이메일 (저장만 해요 — 안내 메일은 “입금 안내 재발송”으로)" className={lightOnlyField}><TextInput value={editEmail} onChange={(e) => setEditEmail(e.target.value)} light /></Field>
                         <p className="col-span-2 text-xs text-gray-500">입금 확인 전의 예약만 고칠 수 있어요. 결제 기록이 생긴 뒤에는 바꾸지 않아요.</p>
-                        <div className="col-span-2 flex gap-2">
+                        <div className="col-span-2 flex flex-wrap gap-2">
                           <Button light size="sm" disabled={busy || editName.trim() === ''} onClick={handleEditDetails}>저장</Button>
                           <Button light variant="weak" size="sm" disabled={busy} onClick={() => setEditOpen(false)}>닫기</Button>
                         </div>
@@ -897,7 +897,7 @@ export default function AdminBookingDetailPage({
                                 </Select>
                               </Field>
                               <p className="col-span-2 text-xs text-gray-500">이용 시간({booking.durationHours}시간)·금액은 그대로, 시작만 옮겨요. 겹침과 캘린더를 검사한 뒤 캘린더 일정도 함께 옮깁니다.</p>
-                              <div className="col-span-2 flex gap-2">
+                              <div className="col-span-2 flex flex-wrap gap-2">
                                 <Button light size="sm" disabled={busy || newDate === ''} onClick={handleReschedule}>옮기기</Button>
                                 <Button light variant="weak" size="sm" disabled={busy} onClick={() => setRescheduleOpen(false)}>닫기</Button>
                               </div>

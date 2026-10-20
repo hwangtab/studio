@@ -366,7 +366,7 @@ export const AdminShell = ({
         )}
       </header>
 
-      <main className={`${WIDTH_CLASS[width]} mx-auto px-4 py-6 md:py-10`}>
+      <main className={`${WIDTH_CLASS[width]} mx-auto break-keep break-words px-4 py-6 md:py-10`}>
         <div className="mb-6">
           {backHref && (
             <Link href={backHref} className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-primary mb-2">

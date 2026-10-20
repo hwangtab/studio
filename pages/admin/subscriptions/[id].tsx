@@ -520,7 +520,7 @@ export default function AdminSubscriptionDetailPage({
                       light className="min-h-0 text-sm"
                     />
                   </Field>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     <Button light type="submit" disabled={busy}>
                       환불 실행
                     </Button>

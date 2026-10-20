@@ -96,7 +96,7 @@ export default function NewLessonSubscriptionPage() {
               </div>
               <p className="mt-2 text-xs text-gray-500">카톡으로 보내는 것이 주 채널입니다.</p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3">
               <Button light onClick={() => router.push('/admin/subscriptions')}>목록으로</Button>
               <Button light
                 variant="weak"

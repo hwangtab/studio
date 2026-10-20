@@ -105,7 +105,7 @@ export function CreatorAccountEditor({
       {action === 'set_creator_email' && (
         <p className="text-xs text-gray-600">이메일을 바꾸면 이 개설자의 로그인 링크와 열린 세션이 모두 끊겨요.</p>
       )}
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <Button type="submit" light variant="weak" size="sm" disabled={busy}>{busy ? '저장 중…' : '변경'}</Button>
         <button type="button" onClick={() => setOpen(false)} className="text-xs text-gray-600 underline">닫기</button>
         {message && <span role="alert" className="text-xs text-red-700">{message}</span>}
