@@ -8,7 +8,7 @@ import { escapeHtml } from '../html-escape';
 import { IDENTITY_DIGITS } from '../identity';
 import { SIGN_TOKEN_TTL_DAYS } from '../status';
 import { productionAdminUrl } from './links';
-import { contractNameFor, isOneSongKind, releaseTitle, sourceLabelFor, type ProductionKind, type ProductionTerms } from './terms';
+import { contractNameFor, depositWordFor, isMixMasterKind, isOneSongKind, isSinglePayment, releaseTitle, sourceLabelFor, type ProductionKind, type ProductionTerms } from './terms';
 
 /**
  * 제작 계약 메일. 레이아웃은 연습실 계약 메일과 같은 것(email-template.ts)을 쓴다 — 서명 요청은 피싱과
@@ -19,13 +19,24 @@ import { contractNameFor, isOneSongKind, releaseTitle, sourceLabelFor, type Prod
 const termRows = (contract: Pick<ProductionContract, 'kind'>, terms: ProductionTerms): ContractEmailRow[] => [
   { label: isOneSongKind(contract.kind) ? '본 곡' : '음반', value: releaseTitle(contract.kind, terms) },
   { label: '계약금액', value: `${formatCurrency(terms.amount.total)}원 (부가세 포함)`, emphasis: true },
-  {
-    label: '계약금',
-    value: terms.amount.deposit > 0 ? `${formatCurrency(terms.amount.deposit)}원 · 체결 후 ${terms.amount.depositDueDays}일 이내` : '없음',
-  },
-  { label: '잔금', value: `${formatCurrency(terms.amount.balance)}원 · 최종 마스터 승인 후 ${terms.amount.balanceDueDays}일 이내` },
-  { label: '작업 기간', value: `약 ${terms.workWeeks}주 (${workStartPhrase(terms, contract.kind)} 후)` },
+  // 50만원 이하는 한 번에 받는다(terms.ts SINGLE_PAYMENT_MAX) — 계약금·잔금 줄 대신 일시불 한 줄.
+  ...(isSinglePayment(terms)
+    ? [{ label: '대금 지급', value: `일시불 · 체결 후 ${terms.amount.depositDueDays}일 이내` }]
+    : [
+        {
+          label: '계약금',
+          value: terms.amount.deposit > 0 ? `${formatCurrency(terms.amount.deposit)}원 · 체결 후 ${terms.amount.depositDueDays}일 이내` : '없음',
+        },
+        { label: '잔금', value: `${formatCurrency(terms.amount.balance)}원 · 최종 마스터 승인 후 ${terms.amount.balanceDueDays}일 이내` },
+      ]),
+  { label: '납품 기한', value: deliveryPhrase(terms, contract.kind) },
 ];
+
+/** 납품 기한(제4조 1항) 한 줄 — 믹싱·마스터링은 1차 결과물 기한도. */
+const deliveryPhrase = (terms: ProductionTerms, kind: ProductionKind): string =>
+  isMixMasterKind(kind)
+    ? `믹싱 1차 ${terms.firstDeliveryBusinessDays ?? 7}영업일 · 최종 마스터 ${terms.workWeeks}주 이내 (${workStartPhrase(terms, kind)} 후)`
+    : `최종 마스터 ${terms.workWeeks}주 이내 (${workStartPhrase(terms, kind)} 후)`;
 
 /**
  * 작업 기간이 시작되는 조건(제4조 1항) — 여러 곡이면 모든 수록곡의 1차 완성본, 계약금이 없으면 1차 완성본만.
@@ -34,13 +45,13 @@ const termRows = (contract: Pick<ProductionContract, 'kind'>, terms: ProductionT
 const workStartPhrase = (terms: ProductionTerms, kind: ProductionKind): string => {
   const label = sourceLabelFor(kind);
   const source = terms.songs.length > 1 ? `모든 수록곡의 ${label} 수령` : `${label} 수령`;
-  return terms.amount.deposit > 0 ? `계약금 입금·${source}` : source;
+  return terms.amount.deposit > 0 ? `${depositWordFor(terms)} 입금·${source}` : source;
 };
 
 /** 체결 메일의 계약금 안내. 계약금이 없으면 null. */
 const depositLine = (terms: ProductionTerms): string | null =>
   terms.amount.deposit > 0
-    ? `계약금 ${formatCurrency(terms.amount.deposit)}원을 체결일로부터 ${terms.amount.depositDueDays}일 이내에 입금해 주세요.`
+    ? `${depositWordFor(terms)} ${formatCurrency(terms.amount.deposit)}원을 체결일로부터 ${terms.amount.depositDueDays}일 이내에 입금해 주세요.`
     : null;
 
 const termLines = (contract: Pick<ProductionContract, 'kind'>, terms: ProductionTerms): string[] =>
@@ -67,7 +78,7 @@ export const sendProductionSignRequestEmail = async (
     notices: [
       `이 링크는 <strong>${SIGN_TOKEN_TTL_DAYS}일간</strong> 유효합니다. 기한이 지나면 스튜디오에 알려 주세요. 다시 보내 드립니다.`,
       `본인 확인을 위해 서명 화면에서 <strong>연락처 뒤 ${IDENTITY_DIGITS}자리</strong>를 입력하게 됩니다.`,
-      '서명이 끝나면 서명본 PDF와 계약금 입금 안내를 메일로 보내 드립니다.',
+      '서명이 끝나면 서명본 PDF와 입금 안내를 메일로 보내 드립니다.',
     ],
   });
 
@@ -164,11 +175,11 @@ export const sendProductionSignedEmail = async (
       // 제3조 — 계약금 기한은 체결일부터 센다. 체결 메일이 그 안내를 겸한다.
       ...(terms.amount.deposit > 0
         ? [
-            `계약금 <strong>${formatCurrency(terms.amount.deposit)}원</strong>을 체결일로부터 ${terms.amount.depositDueDays}일 이내에 입금해 주세요.`,
+            `${depositWordFor(terms)} <strong>${formatCurrency(terms.amount.deposit)}원</strong>을 체결일로부터 ${terms.amount.depositDueDays}일 이내에 입금해 주세요.`,
             escapeHtml(accountLine(terms)),
           ]
         : []),
-      `작업 기간은 ${workStartPhrase(terms, contract.kind).replace('·', '과 ')}이 끝난 날부터 셉니다.`,
+      `납품 기한은 ${workStartPhrase(terms, contract.kind).replace('·', '과 ')}이 끝난 날부터 셉니다.`,
     ],
   });
 

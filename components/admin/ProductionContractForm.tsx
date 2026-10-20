@@ -10,6 +10,7 @@ import {
   isMixMasterKind,
   isOneSongKind,
   KIND_LABEL,
+  splitPayment,
   parseStoredTerms,
   SONG_COUNT_RANGE,
   type ProductionKind,
@@ -179,7 +180,12 @@ export default function ProductionContractForm({
   const setAmount = (key: 'total' | 'deposit', raw: string) =>
     setValues((prev) => {
       const terms = prev.terms;
-      const amount = { ...terms.amount, [key]: digits(raw) };
+      // 계약금액을 바꾸면 계약금도 규칙대로 — 50만원 이하는 한 번에(계약금 = 계약금액), 넘으면 절반(terms.ts splitPayment).
+      // 그 뒤 계약금 칸을 직접 고칠 수 있다.
+      const amount =
+        key === 'total'
+          ? { ...terms.amount, total: digits(raw), deposit: splitPayment(digits(raw)).deposit }
+          : { ...terms.amount, [key]: digits(raw) };
       const refundSchedule =
         isMixMasterKind(prev.kind) && key === 'total' && terms.refundSchedule.length === 1
           ? [{ ...terms.refundSchedule[0], amount: amount.total }]
@@ -394,7 +400,11 @@ export default function ProductionContractForm({
               <TextInput light className="text-sm" value={terms.songs[0]?.title ?? ''} onChange={(e) => setSongTitle(0, e.target.value)} />
             </Field>
           )}
-          {numberInput('terms.workWeeks', '작업 기간(주)', terms.workWeeks, (raw) => setTerms((t) => ({ ...t, workWeeks: digits(raw) })))}
+          {numberInput('terms.workWeeks', '최종 납품 기한(주 이내)', terms.workWeeks, (raw) => setTerms((t) => ({ ...t, workWeeks: digits(raw) })))}
+          {mixMaster &&
+            numberInput('terms.firstDeliveryBusinessDays', '믹싱 1차 납품 기한(영업일 이내)', terms.firstDeliveryBusinessDays ?? 7, (raw) =>
+              setTerms((t) => ({ ...t, firstDeliveryBusinessDays: digits(raw) })),
+            )}
           {/* 믹싱·마스터링 계약은 편곡·녹음이 범위에 없다 — 0으로 두고 칸을 숨긴다. */}
           {!mixMaster &&
             numberInput('terms.scope.arrangementTracks', '곡당 편곡 트랙 수(이하)', terms.scope.arrangementTracks, (raw) =>

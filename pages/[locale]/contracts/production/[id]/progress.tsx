@@ -14,7 +14,7 @@ import { hasPortalAccess } from '../../../../../lib/contracts/production/portal-
 import { loadProgressContext } from '../../../../../lib/contracts/production/progress';
 import { buildClientProgressView, type ProgressView, type StageView } from '../../../../../lib/contracts/production/progress-view';
 import { hasSignedDocument } from '../../../../../lib/contracts/production/status';
-import { isMixMasterKind, releaseTitle, sourceLabelFor } from '../../../../../lib/contracts/production/terms';
+import { depositWordFor, isMixMasterKind, releaseTitle, sourceLabelFor } from '../../../../../lib/contracts/production/terms';
 import { withI18nServerProps } from '../../../../../lib/getStatic';
 import { loadRefundAccountSummary } from '../../../../../lib/payments/refundAccount';
 
@@ -28,6 +28,8 @@ interface ProgressPageProps {
   serviceLabel: string;
   /** 의뢰인이 처음 보내는 자료 — "1차 완성본" 또는 "작업 파일"(sourceLabelFor). */
   sourceLabel: string;
+  /** "계약금" 또는(50만원 이하 일시불) "대금". */
+  depositWord: string;
   /** 연락처 뒷자리를 아직 확인하지 않았다 — 진행 내용을 싣지 않는다. */
   locked: boolean;
   /** 진행이 끝난 계약 — 승인·수정 버튼이 없다. */
@@ -62,6 +64,7 @@ export const getServerSideProps = withI18nServerProps<ProgressPageProps>(async (
     releaseLabel: null,
     serviceLabel: '음원 제작',
     sourceLabel: '1차 완성본',
+    depositWord: '계약금',
     locked: true,
     closed: false,
     view: null,
@@ -100,6 +103,7 @@ export const getServerSideProps = withI18nServerProps<ProgressPageProps>(async (
         releaseLabel: releaseTitle(progress.contract.kind, progress.terms),
         serviceLabel: isMixMasterKind(progress.contract.kind) ? '믹싱·마스터링' : '음원 제작',
         sourceLabel: sourceLabelFor(progress.contract.kind),
+        depositWord: depositWordFor(progress.terms),
         locked,
         closed: progress.contract.status !== 'signed',
         view: locked ? null : buildClientProgressView(progress.terms, progress.ledger),
@@ -355,6 +359,7 @@ export default function ProductionProgressPage({
   releaseLabel,
   serviceLabel,
   sourceLabel,
+  depositWord,
   locked,
   closed,
   view,
@@ -475,7 +480,7 @@ export default function ProductionProgressPage({
                   )}
                   {!closed && !view.payments.depositMetAt && view.payments.depositLastDay && (
                     <>
-                      <dt className="text-gray-500 dark:text-gray-500">계약금 기한</dt>
+                      <dt className="text-gray-500 dark:text-gray-500">{depositWord} 기한</dt>
                       <dd className="text-right font-medium text-gray-900 dark:text-gray-900">{formatDate(view.payments.depositLastDay)}</dd>
                     </>
                   )}
@@ -487,13 +492,13 @@ export default function ProductionProgressPage({
                   )}
                   {!closed && (
                     <>
-                      <dt className="text-gray-500 dark:text-gray-500">작업 완료 예정</dt>
+                      <dt className="text-gray-500 dark:text-gray-500">납품 기한</dt>
                       <dd className="text-right font-medium text-gray-900 dark:text-gray-900">
                         {view.work.dueOn
-                          ? `${formatDate(view.work.dueOn)} 무렵`
+                          ? `${formatDate(view.work.dueOn)}까지`
                           : view.payments.deposit === 0
                             ? `${sourceLabel}을 받은 뒤 정해져요`
-                            : `계약금·${sourceLabel}을 받은 뒤 정해져요`}
+                            : `${depositWord}·${sourceLabel}을 받은 뒤 정해져요`}
                       </dd>
                     </>
                   )}

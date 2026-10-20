@@ -46,6 +46,24 @@ export const isOneSongKind = (kind: ProductionKind): boolean => kind === 'single
 /** 믹싱·마스터링만 하는 계약인가 — 편곡·녹음·유통·홍보가 범위에 없다(mixmaster-template.md). */
 export const isMixMasterKind = (kind: ProductionKind): boolean => kind === 'mixmaster';
 
+/**
+ * 이 금액 이하 계약은 계약금·잔금으로 나누지 않고 한 번에 받는다(운영자 결정 2026-10-20). 체결 후 계약금 기한
+ * 안에 전액 — 계약금 = 계약금액, 잔금 = 0. 엔진은 그대로 돌아간다(잔금이 없으면 입금 확인 = 전액).
+ */
+export const SINGLE_PAYMENT_MAX = 500_000;
+
+/** 계약금액을 계약금·잔금으로 나눈다 — 위 금액 이하면 한 번에, 넘으면 절반씩. */
+export const splitPayment = (total: number): { deposit: number; balance: number } => {
+  const deposit = total <= SINGLE_PAYMENT_MAX ? total : Math.round(total / 2);
+  return { deposit, balance: total - deposit };
+};
+
+/** 잔금 없이 한 번에 받는 계약인가. */
+export const isSinglePayment = (terms: Pick<ProductionTerms, 'amount'>): boolean => terms.amount.balance === 0;
+
+/** 체결 후 먼저 받는 돈의 이름 — 한 번에 받으면 "대금", 나눠 받으면 "계약금". 계약서·메일·화면이 같은 말을 쓴다. */
+export const depositWordFor = (terms: Pick<ProductionTerms, 'amount'>): string => (isSinglePayment(terms) ? '대금' : '계약금');
+
 /** 계약서 이름 — 메일 제목·PDF·서명 화면에 쓴다. */
 export const contractNameFor = (kind: ProductionKind): string =>
   isMixMasterKind(kind) ? '믹싱·마스터링 용역 계약서' : '음원 제작 용역 계약서';
@@ -137,8 +155,13 @@ export interface ProductionTerms {
     balanceDueDays: number;
   };
   payment: { bank: string; account: string; holder: string };
-  /** 작업 기간(주). 계약금 입금과 1차 완성본 수령이 모두 끝난 날부터. */
+  /** 작업 기간(주). 계약금 입금과 1차 완성본 수령이 모두 끝난 날부터 — 최종 마스터 납품 기한이다(제4조 1항). */
   workWeeks: number;
+  /**
+   * 믹싱·마스터링 계약만 — 믹싱 1차 결과물의 납품 기한(영업일, 제4조 1항). 사이트 약속(파일 수령 후 3~7영업일)의 끝값이
+   * 기본이다. 제작 계약에는 없다(1차 결과물이 편곡 시안이라 성격이 다르다). 이 필드가 생기기 전 계약은 없다.
+   */
+  firstDeliveryBusinessDays?: number;
   /** 무료 수정 횟수 — 편곡·믹싱은 곡마다, 마스터링은 음반 전체에 대해. */
   revisions: Record<RevisionStage, number>;
   extraRevisionFees: Record<RevisionStage, number>;
@@ -237,11 +260,10 @@ export const mixingPriceForTracks = (tracks: number): number =>
 export const applyMixMasterTracks = (terms: ProductionTerms, tracks: number): ProductionTerms => {
   const mixing = mixingPriceForTracks(tracks);
   const total = mixing + MASTERING_SINGLE_PRICE;
-  const deposit = Math.round(total / 2);
   return {
     ...terms,
     scope: { ...terms.scope, mixingTracks: tracks },
-    amount: { ...terms.amount, total, deposit, balance: total - deposit },
+    amount: { ...terms.amount, total, ...splitPayment(total) },
     refundSchedule: [
       {
         key: 'mixmaster',
@@ -272,6 +294,7 @@ const MIXMASTER_BASE = (): ProductionTerms => {
       holder: BANK_ACCOUNT.accountHolder,
     },
     workWeeks: DEFAULT_WORK_WEEKS.mixmaster,
+    firstDeliveryBusinessDays: 7,
     revisions: { arrangement: 0, mixing: 2, mastering: 1 },
     extraRevisionFees: { arrangement: 0, mixing: DEFAULT_EXTRA_REVISION_FEES.mixing, mastering: DEFAULT_EXTRA_REVISION_FEES.mastering },
     deemedApprovalDays: 7,
@@ -302,7 +325,7 @@ export const buildDefaultProductionTerms = (kind: ProductionKind = 'single', son
   const count = Math.min(Math.max(songCount, SONG_COUNT_RANGE[kind].min), SONG_COUNT_RANGE[kind].max);
   const bundle = BUNDLE_PER_SONG[kind] * count;
   const total = (ARRANGEMENT_SMALL_PRICE + VOCAL_TUNING_ADDON_PRICE) * count + bundle;
-  const deposit = Math.round(total / 2);
+  const { deposit } = splitPayment(total);
   const recording = Math.round(bundle * BUNDLE_SPLIT.recording);
   const mixmaster = Math.round(bundle * BUNDLE_SPLIT.mixmaster);
 
@@ -482,6 +505,13 @@ export const validateProductionTerms = (raw: unknown, kind: ProductionKind = 'si
   };
 
   const workWeeks = readInt(raw, 'workWeeks', 'terms.workWeeks', { min: 1, max: 52 });
+  // 믹싱·마스터링만 1차 결과물 납품 기한을 둔다(제4조 1항). 다른 종류로 와도 버린다 — 계약서에 인쇄될 자리가 없다.
+  const firstDeliveryBusinessDays = mixMaster
+    ? readInt(raw, 'firstDeliveryBusinessDays', 'terms.firstDeliveryBusinessDays', { min: 1, max: 60 })
+    : undefined;
+  if (mixMaster && firstDeliveryBusinessDays !== undefined && workWeeks > 0 && firstDeliveryBusinessDays > workWeeks * 5) {
+    push('terms.firstDeliveryBusinessDays', '1차 결과물 기한이 최종 납품 기한보다 길 수 없습니다.');
+  }
 
   const revisions = Object.fromEntries(
     REVISION_STAGES.map((stage) => [stage, readInt(raw.revisions, stage, `terms.revisions.${stage}`, { min: 0, max: 10 })]),
@@ -544,6 +574,7 @@ export const validateProductionTerms = (raw: unknown, kind: ProductionKind = 'si
       amount,
       payment,
       workWeeks,
+      ...(firstDeliveryBusinessDays !== undefined ? { firstDeliveryBusinessDays } : {}),
       revisions,
       extraRevisionFees,
       deemedApprovalDays,

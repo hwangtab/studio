@@ -8,7 +8,7 @@ import { escapeHtml } from '../html-escape';
 import { STAGE_LABEL, type ProductionStage } from './event-spec';
 import { deemedBaseDay, findStage, kstDayStart, parseEventData, songOf, type ProductionLedger, type Todo } from './ledger';
 import { productionAdminUrl } from './links';
-import { contractNameFor, isMixMasterKind, REVISION_STAGES, songLabel, sourceLabelFor, type ProductionTerms, type RevisionStage } from './terms';
+import { contractNameFor, depositWordFor, isMixMasterKind, REVISION_STAGES, songLabel, sourceLabelFor, type ProductionTerms, type RevisionStage } from './terms';
 import { TERMINATION_CAUSE_LABEL, TERMINATION_CLAUSE, type TerminationCause } from './termination';
 
 /**
@@ -88,7 +88,7 @@ const buildContent = (
           `${name}님, 보내 주신 ${songPrefix}${source}을 받았어요.`,
           event.type === 'source_replaced'
             ? `${source}을 바꾸면 작업 기간은 교체한 날부터 다시 계산해요(계약서 제4조 2항).`
-            : `작업 기간은 ${terms.amount.deposit > 0 ? '계약금 입금과 ' : ''}${multi ? '모든 수록곡의 ' : ''}${source} 수령이 끝난 날부터 약 ${terms.workWeeks}주예요(계약서 제4조).`,
+            : `납품 기한은 ${terms.amount.deposit > 0 ? `${depositWordFor(terms)} 입금과 ` : ''}${multi ? '모든 수록곡의 ' : ''}${source} 수령이 끝난 날부터 ${mixMaster ? `믹싱 1차 ${terms.firstDeliveryBusinessDays ?? 7}영업일, ` : ''}최종 마스터 ${terms.workWeeks}주 이내예요(계약서 제4조).`,
         ],
         rows: [...(work.dueOn ? [{ label: '작업 완료 예정', value: `${formatDate(work.dueOn)} 무렵` }] : []), ...linkRow, ...noteRow],
         ctaLabel: '작업 진행 보기',
@@ -328,11 +328,11 @@ export const sendDueReminderEmail = async (
           rows: [] as ContractEmailRow[],
         }
       : {
-          subject: `${reminder.kind === 'deposit_due' ? '계약금' : '잔금'} 입금 기한이 ${lastDay}이에요`,
-          paragraphs: [`${name}님, ${reminder.kind === 'deposit_due' ? '계약금' : '잔금'} 입금 기한이 내일이에요.`],
+          subject: `${reminder.kind === 'deposit_due' ? depositWordFor(terms) : '잔금'} 입금 기한이 ${lastDay}이에요`,
+          paragraphs: [`${name}님, ${reminder.kind === 'deposit_due' ? depositWordFor(terms) : '잔금'} 입금 기한이 내일이에요.`],
           rows: [
             {
-              label: reminder.kind === 'deposit_due' ? '계약금' : '남은 금액',
+              label: reminder.kind === 'deposit_due' ? depositWordFor(terms) : '남은 금액',
               value: won(
                 reminder.kind === 'deposit_due' ? Math.max(0, terms.amount.deposit - ledger.payments.received) : remaining,
               ),

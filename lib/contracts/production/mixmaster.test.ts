@@ -21,8 +21,9 @@ const content = buildProductionContent(
 );
 
 describe('기본 조건', () => {
-  it('사이트 정가 그대로 — 믹싱(10트랙 이하) 200,000 + 싱글 마스터링 100,000, 계약금 절반', () => {
-    expect(terms.amount).toMatchObject({ total: 300_000, deposit: 150_000, balance: 150_000 });
+  it('사이트 정가 그대로 — 믹싱(10트랙 이하) 200,000 + 싱글 마스터링 100,000, 50만원 이하라 한 번에', () => {
+    expect(terms.amount).toMatchObject({ total: 300_000, deposit: 300_000, balance: 0 });
+    expect(terms.firstDeliveryBusinessDays).toBe(7);
     expect(terms.songs).toHaveLength(1);
     expect(terms.scope).toEqual({ arrangementTracks: 0, recordingHours: 0, mixingTracks: 10 });
     expect(terms.revisions).toEqual({ arrangement: 0, mixing: 2, mastering: 1 });
@@ -44,8 +45,10 @@ describe('기본 조건', () => {
 
   it('트랙 수가 가격 구간을 정한다 — 10 이하 / 11~30 / 31 이상, 항목표·경계가 함께 맞는다', () => {
     const at = (tracks: number) => applyMixMasterTracks(terms, tracks);
-    expect(at(10).amount).toMatchObject({ total: 300_000, deposit: 150_000 });
-    expect(at(30).amount).toMatchObject({ total: 450_000, deposit: 225_000, balance: 225_000 });
+    expect(at(10).amount).toMatchObject({ total: 300_000, deposit: 300_000, balance: 0 });
+    expect(at(30).amount).toMatchObject({ total: 450_000, deposit: 450_000, balance: 0 });
+    // 50만원을 넘으면 계약금·잔금 절반씩.
+    expect(at(31).amount).toMatchObject({ total: 600_000, deposit: 300_000, balance: 300_000 });
     expect(at(30).scope.mixingTracks).toBe(30);
     expect(at(30).refundSchedule[0]).toMatchObject({ amount: 450_000, milestones: [{ event: 'mixing_delivered', ratio: 0.78 }, { event: 'mastering_delivered', ratio: 1 }] });
     expect(at(31).amount.total).toBe(600_000);
@@ -80,6 +83,39 @@ describe('계약서 본문', () => {
     expect(content).not.toContain('유통 등록 대행');
     expect(content).not.toContain('1차 완성본');
     expect(content).toContain('**믹싱 2회, 마스터링 1회**');
+  });
+
+  it('50만원 이하는 계약금·잔금 없이 한 번에 — 요약표·제3조·제5조 6항이 그렇게 말한다', () => {
+    expect(content).toContain('| 대금 지급 | 300,000원 일시불 — 계약 체결일로부터 3일 이내 |');
+    expect(content).toContain('2. 의뢰인은 계약금액 전액을 계약 체결일로부터 3일 이내에 한 번에 지급한다.');
+    expect(content).toContain('6. 스튜디오는 최종 마스터가 승인되고 대금 지급이 확인되면 최종 마스터 파일을 인도한다.');
+    expect(content).not.toContain('잔금');
+    expect(content).not.toContain('계약금:');
+  });
+
+  it('납품 기한이 있다 — 믹싱 1차 7영업일, 최종 마스터 2주 이내', () => {
+    expect(content).toContain('| 납품 기한 | 대금 입금과 작업 파일 수령일부터 믹싱 1차 결과물 7영업일 이내, 최종 마스터 2주 이내 |');
+    expect(content).toContain('믹싱 1차 결과물을 **7영업일 이내**에 전달하고, 최종 마스터를 **2주 이내**에 인도한다(납품 기한).');
+  });
+
+  it('50만원을 넘으면 계약금·잔금으로 나눈다', () => {
+    const big = applyMixMasterTracks(terms, 31);
+    const text = buildProductionContent(
+      { kind: 'mixmaster', clientName: '홍길동', clientStageName: null, clientPhone: '010-1234-5678', terms: big, contractDate: '2026-10-20T03:00:00.000Z' },
+      template,
+    );
+    expect(text).toContain('| 계약금 | 300,000원 — 계약 체결일로부터 3일 이내 |');
+    expect(text).toContain('   - 잔금: **300,000원**, 최종 마스터 승인일부터 7일 이내(최종 마스터 파일 인도 전)');
+    expect(text).toContain('6. 잔금은 최종 마스터 승인일부터 7일 이내에 지급한다. 스튜디오는 잔금 지급을 확인한 후 최종 마스터 파일을 인도한다.');
+    expect(text).toContain('계약금 입금과 작업 파일 수령일부터');
+  });
+
+  it('1차 결과물 기한은 믹싱·마스터링에만 — 필수이고 최종 기한보다 길 수 없다', () => {
+    const { firstDeliveryBusinessDays: _drop, ...without } = terms;
+    expect(validateProductionTerms(without, 'mixmaster').ok).toBe(false);
+    expect(validateProductionTerms({ ...terms, firstDeliveryBusinessDays: 11 }, 'mixmaster').ok).toBe(false);
+    const single = validateProductionTerms({ ...buildDefaultProductionTerms('single'), firstDeliveryBusinessDays: 7 }, 'single');
+    expect(single.ok && single.data.firstDeliveryBusinessDays).toBeUndefined();
   });
 
   it('제10조 3항 문장이 항목표 경계에서 나온다', () => {

@@ -4,7 +4,7 @@ import path from 'node:path';
 import { formatCurrency, formatDate } from '../format';
 import { fillPlaceholders } from '../placeholders';
 import { escapeTableCell } from '../html-escape';
-import { isMixMasterKind, KIND_LABEL, PER_SONG_MILESTONES, type ProductionKind, type ProductionTerms, type RefundItemKey, type RefundMilestoneEvent } from './terms';
+import { depositWordFor, isMixMasterKind, isSinglePayment, KIND_LABEL, PER_SONG_MILESTONES, type ProductionKind, type ProductionTerms, type RefundItemKey, type RefundMilestoneEvent } from './terms';
 
 /**
  * 제작 계약서 본문 만들기. 연습실 template.ts와 같은 규칙을 따른다 — 사용자 값은 표 셀 이스케이프,
@@ -125,7 +125,38 @@ export const buildProductionContent = (data: ProductionTemplateData, template: s
     : '';
   const guardianSignatureRow = guardian ? `| **법정대리인** ${cell(guardian.name)} (${cell(guardian.relation)}) | (전자서명) |` : '';
 
+  // 대금 지급(제3조 2항·요약표·제5조 6항) — 한 번에 받는 계약(잔금 0, terms.ts SINGLE_PAYMENT_MAX)은 계약금·잔금을 말하지 않는다.
+  const single = isSinglePayment(terms);
+  const { amount } = terms;
+  const paymentSummaryRows = single
+    ? `| 대금 지급 | ${won(amount.total)}원 일시불 — 계약 체결일로부터 ${amount.depositDueDays}일 이내 |`
+    : [
+        `| 계약금 | ${won(amount.deposit)}원 — 계약 체결일로부터 ${amount.depositDueDays}일 이내 |`,
+        `| 잔금 | ${won(amount.balance)}원 — 최종 마스터 승인일부터 ${amount.balanceDueDays}일 이내 |`,
+      ].join('\n');
+  const paymentTerms = single
+    ? `의뢰인은 계약금액 전액을 계약 체결일로부터 ${amount.depositDueDays}일 이내에 한 번에 지급한다.`
+    : [
+        '의뢰인은 다음과 같이 지급한다.',
+        `   - 계약금: **${won(amount.deposit)}원**, 계약 체결일로부터 ${amount.depositDueDays}일 이내`,
+        `   - 잔금: **${won(amount.balance)}원**, 최종 마스터 승인일부터 ${amount.balanceDueDays}일 이내(최종 마스터 파일 인도 전)`,
+      ].join('\n');
+  const finalPaymentClause = single
+    ? '스튜디오는 최종 마스터가 승인되고 대금 지급이 확인되면'
+    : `잔금은 최종 마스터 승인일부터 ${amount.balanceDueDays}일 이내에 지급한다. 스튜디오는 잔금 지급을 확인한 후`;
+  // 납품 기한(제4조 1항) — 요약표 한 줄. 믹싱·마스터링은 1차 결과물 기한도 함께.
+  const depositWord = depositWordFor(terms);
+  const deliverySummary = isMixMasterKind(data.kind)
+    ? `${depositWord} 입금과 작업 파일 수령일부터 믹싱 1차 결과물 ${terms.firstDeliveryBusinessDays ?? 7}영업일 이내, 최종 마스터 ${terms.workWeeks}주 이내`
+    : `${depositWord} 입금과 ${terms.songs.length > 1 ? '모든 수록곡의 ' : ''}1차 완성본 수령일부터 최종 마스터 ${terms.workWeeks}주 이내`;
+
   const replacements: Record<string, string> = {
+    paymentSummaryRows,
+    paymentTerms,
+    finalPaymentClause,
+    depositWord,
+    deliverySummary,
+    firstDeliveryBusinessDays: String(terms.firstDeliveryBusinessDays ?? 7),
     guardianSection,
     guardianSignatureRow,
     // 링크 계약(open-link.ts)은 서명 전에 이름·연락처가 비어 있다 — 의뢰인이 서명 화면에서 채운다.
