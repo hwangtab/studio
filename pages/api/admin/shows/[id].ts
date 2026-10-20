@@ -17,6 +17,7 @@ import { cancelShowtime, changeShowtime } from '../../../../lib/shows/showtimeOp
 import { SHOWTIME_CANCEL_REFUND_REASON } from '../../../../lib/shows/refundReasons';
 import { cancelAwaitingShowDeposit, confirmShowBankDeposit, deliverShowDepositGuide } from '../../../../lib/shows/bankDeposit';
 import { AWAITING_DEPOSIT, bankDepositStateOf } from '../../../../lib/payments/bankDeposit';
+import { adjustPaidBankDepositAmount } from '../../../../lib/booking/paidAmount';
 import { markRefundAccountRefunded } from '../../../../lib/payments/refundAccount';
 
 /**
@@ -266,6 +267,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 계좌 입금(lib/shows/bankDeposit.ts) — 입금 확인(발권·티켓 메일) · 미입금 취소 · 입금 안내 재발송 ·
      * 환불 송금 완료. 판정은 고객 화면과 같은 bankDepositStateOf.
      */
+    // 입금 확인이 끝난 계좌 입금 주문의 금액 정정 — 장당 금액을 새 총액에 비례 배분한다(lib/booking/paidAmount.ts).
+    case 'update_paid_amount': {
+      const orderNo = isNonEmptyString(b.orderNo) ? b.orderNo : '';
+      const showtimeIds = new Set(show.showtimes.map((s) => s.id));
+      const showOrder = orderNo ? await db.query.showOrders.findFirst({ where: (o, { eq }) => eq(o.orderNo, orderNo) }) : undefined;
+      if (!showOrder || !showtimeIds.has(showOrder.showtimeId)) return res.status(404).json({ ok: false, message: '이 공연의 주문이 아닙니다.' });
+      const r = await adjustPaidBankDepositAmount({ orderNo, totalAmount: b.totalAmount, reason: b.reason, actor: auth.actor });
+      if (!r.ok) return res.status(409).json({ ok: false, message: r.message });
+      await revalidateShow(res, show.slug);
+      return res.status(200).json({ ok: true, from: r.from, to: r.to });
+    }
+
     case 'confirm_deposit':
     case 'cancel_unpaid_deposit':
     case 'resend_deposit_guide':

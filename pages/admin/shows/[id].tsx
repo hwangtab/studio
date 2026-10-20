@@ -11,6 +11,7 @@ import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { logAdminView } from '../../../lib/privacy/adminView';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatKstDeadline } from '../../../lib/payments/bankAccount';
+import { PaidAmountCorrection } from '../../../components/admin/PaidAmountCorrection';
 import { findSameNameDepositOrders, type SameNameDepositOrder } from '../../../lib/payments/bankDepositOrders';
 import { holderMatchesCustomer, loadRefundAccountSummary } from '../../../lib/payments/refundAccount';
 import { calcRefundAmount, refundRateForNotice } from '../../../lib/shows/refundPolicy';
@@ -513,6 +514,16 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
                     )}
                     {o.bankDeposit === 'paid' && refundAccounts[o.orderNo] && (
                       <RefundAccountPanel order={o} info={refundAccounts[o.orderNo]} busy={busy} run={run} setNotice={setNotice} />
+                    )}
+                    {o.bankDeposit === 'paid' && !o.isComp && o.orderStatus === 'paid' && (
+                      <div className="mb-2">
+                        <PaidAmountCorrection
+                          totalAmount={o.totalAmount}
+                          busy={busy}
+                          note="계좌로 받은 돈과 기록이 다를 때(할인·일부 감면 등) 쓰세요. 장당 금액이 새 총액에 비례해 다시 나뉘어 환불 계산도 실제로 받은 돈 기준이 돼요. 티켓·QR은 그대로예요."
+                          onSubmit={(amount, reason) => run({ action: 'update_paid_amount', orderNo: o.orderNo, totalAmount: amount, reason }, { success: '금액을 정정했습니다.' })}
+                        />
+                      </div>
                     )}
                     {!o.isComp && refundable.length > 0 && (
                       <TicketRefundControl order={o} refundable={refundable} startsAt={t.startsAt} showtimeCancelled={t.status === 'cancelled'} busy={busy} run={run} />
