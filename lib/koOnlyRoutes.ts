@@ -58,6 +58,9 @@ export const KO_ONLY_ROUTE_RULES: readonly KoOnlyRouteRule[] = [
   { segment: 'quote', hasIndexPage: true, literalSiblings: [] },
   // 공연 주최자 안내(2026-10-14) — shows 세그먼트의 나머지(목록·[slug]·success·fail 등)는 다국어/SSR이라 host 하나만 ko 전용.
   { segment: 'shows', hasIndexPage: false, literalSiblings: [], onlyPages: ['host'] },
+  // 세션 연주자 등록(2026-10-20) — 연주자는 국내 섭외 대상이라 ko 전용. index·thanks는 ko 단일 정적 페이지,
+  // manage/[token]은 3단 경로라 이 판정 밖이다(SSR로 비-ko를 ko로 리다이렉트).
+  { segment: 'session-musicians', hasIndexPage: true, literalSiblings: ['manage'] },
 ];
 
 /**

@@ -1,6 +1,7 @@
 import React from 'react';
 import { ARTISTS_NAV_LISTED } from '../../data/navFlags';
 import { SHOP_NAV_LABEL, SHOP_SALES_OPEN } from '../../data/shop/policy';
+import { SESSION_MUSICIAN_NAV_LABEL, SESSION_MUSICIAN_PATH } from '../../data/sessionMusicians';
 import { SOFTWARE_NAV_LABEL, SOFTWARE_SALES_OPEN } from '../../data/software/policy';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
@@ -174,6 +175,7 @@ export const Footer = ({ locale, bottomBarSpace = false }: FooterProps) => {
               {SOFTWARE_SALES_OPEN && (locale === 'ko' || locale === 'en') && <FooterLink href={`/${locale}/software`}>{SOFTWARE_NAV_LABEL[locale]}</FooterLink>}
               <FooterLink href={`/${locale}/pricing`}>{t('nav.pricing')}</FooterLink>
               <FooterLink href={`/${locale}/contact`}>{t('nav.contact')}</FooterLink>
+              {locale === 'ko' && <FooterLink href={SESSION_MUSICIAN_PATH}>{SESSION_MUSICIAN_NAV_LABEL}</FooterLink>}
             </ul>
             <SubHeading>{t('footer.sections.content')}</SubHeading>
             <ul className="flex flex-col">

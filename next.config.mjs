@@ -334,6 +334,13 @@ const nextConfig = {
           { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
         ],
       },
+      // 세션 연주자 본인 관리 — 경로의 관리 토큰 하나로 등록 정보(연락처 포함)를 보고 고치고 지운다. 등록 화면·접수 완료는 공개라 넣지 않는다.
+      {
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/session-musicians/manage/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
+        ],
+      },
       {
         source: '/:locale(ko|en|zh|es|vi|th|uz)/shop/manage/:path*',
         headers: [

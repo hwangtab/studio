@@ -49,6 +49,8 @@ const PRIVATE_PAGE_FILES = [
   'pages/[locale]/software/fail.tsx',
   'pages/[locale]/software/find.tsx',
   'pages/[locale]/software/manage/[orderNo].tsx',
+  // 세션 연주자 본인 관리 — 경로의 관리 토큰 하나로 등록 정보(연락처 포함)를 열고 고치고 지운다.
+  'pages/[locale]/session-musicians/manage/[token].tsx',
 ];
 
 const read = (file: string) => readFileSync(path.join(process.cwd(), file), 'utf-8');
