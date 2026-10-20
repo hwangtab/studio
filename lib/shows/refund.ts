@@ -520,11 +520,17 @@ export async function reconcileShowRefund(
   const payment = payments.find((p) => !isBankDepositPayment(p));
   if (!payment) {
     if (payments.length === 0) return { status: 'rejected', reason: 'no_payment' };
-    // 계좌 입금 주문은 토스에 물을 것이 없다 — refunding은 기록 batch 실패로만 남으므로 그냥 되돌린다(고객이 다시 신청한다).
+    // 계좌 입금 주문은 토스에 물을 것이 없다 — refunding은 기록 batch 실패로만 남으므로 되돌린다(고객이 다시 신청한다).
+    // 단 선점 뒤 유예 안(환불 계좌 저장·batch 진행 중)의 티켓은 두지 않으면, 되돌린 자리에 두 요청의 환불 기록이 겹친다.
+    const cutoff = Math.floor(Date.now() / 1000) - REFUNDING_GRACE_SECONDS;
     const revertedBank = rowsAffectedOf(await db.run(sql`
-      UPDATE show_tickets SET status = 'issued', refunding_at = NULL WHERE order_no = ${orderNo} AND status = 'refunding'
+      UPDATE show_tickets SET status = 'issued', refunding_at = NULL
+      WHERE order_no = ${orderNo} AND status = 'refunding' AND (refunding_at IS NULL OR refunding_at < ${cutoff})
     `));
-    return revertedBank > 0 ? { status: 'reverted', tickets: revertedBank } : { status: 'rejected', reason: 'bank_deposit' };
+    if (revertedBank > 0) return { status: 'reverted', tickets: revertedBank };
+    const inFlightBank = await db.all<{ n: number }>(sql`SELECT count(*) AS n FROM show_tickets WHERE order_no = ${orderNo} AND status = 'refunding'`);
+    const n = Number(inFlightBank[0]?.n ?? 0);
+    return n > 0 ? { status: 'in_flight', tickets: n } : { status: 'rejected', reason: 'bank_deposit' };
   }
 
   const fetched = await toss.fetchPayment(payment.paymentKey);
