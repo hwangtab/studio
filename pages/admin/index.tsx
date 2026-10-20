@@ -230,6 +230,9 @@ export default function AdminIndexPage({ dashboard, shopQueues, revenue = null, 
                 {dashboard.queues.showSubmissionsAwaitingReview !== null && (
                   <QueueCard label="심사 대기 주최자 공연" count={dashboard.queues.showSubmissionsAwaitingReview} href="/admin/shows/submissions" alert />
                 )}
+                {dashboard.queues.sessionMusiciansNew !== null && (
+                  <QueueCard label="새 세션 연주자 등록" count={dashboard.queues.sessionMusiciansNew} href="/admin/session-musicians?status=new" alert />
+                )}
               </div>
             </section>
 

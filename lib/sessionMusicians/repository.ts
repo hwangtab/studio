@@ -210,6 +210,11 @@ export const updateOperatorFields = async (
   return result.rowsAffected > 0;
 };
 
+export const deleteSessionMusicianById = async (id: string): Promise<boolean> => {
+  const result = await getDb().delete(sessionMusicians).where(eq(sessionMusicians.id, id));
+  return result.rowsAffected > 0;
+};
+
 /** 대시보드 "처리할 일" — 아직 열어 보지 않은 새 등록 수. */
 export const countNewSessionMusicians = async (): Promise<number> => {
   const [row] = await getDb()

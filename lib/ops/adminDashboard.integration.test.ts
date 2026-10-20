@@ -170,6 +170,7 @@ it('대기열 건수 — 믹싱 착수 대기·작업 중, 구독 카드 대기�
     awaitingDeposit: { bookings: 0, shows: 0, shop: 0, funding: 0 },
     sessionsAwaitingMark: 0,
     showSubmissionsAwaitingReview: 0,
+    sessionMusiciansNew: 0,
   });
   expect(dash.issues.map((i) => i.title)).toContain('서명 기한이 지난 계약 1건');
 });
@@ -588,6 +589,29 @@ it('주최자 공연 심사 대기 — submitted만 세고, 표를 못 읽으면
     expect((await loadAdminDashboard(NOW)).queues.showSubmissionsAwaitingReview).toBeNull();
   } finally {
     await client.execute('ALTER TABLE show_submissions_x RENAME TO show_submissions');
+  }
+});
+
+it('새 세션 연주자 등록 — status=new만 세고, 표를 못 읽으면 null(카드 숨김)이다', async () => {
+  const insert = async (id: string, status: string) => {
+    await client.execute({
+      sql: `INSERT INTO session_musicians (id, stage_name, primary_instrument, sample_links_json, adult_confirmed, private_enc, email_hash, manage_token_hash, status, consent_version)
+            VALUES (?, '연주자', 'bass', '[]', 1, 'enc', ?, ?, ?, 'test')`,
+      args: [id, `h-${id}`, `t-${id}`, status],
+    });
+  };
+  await insert('a', 'new');
+  await insert('b', 'new');
+  await insert('c', 'reviewed');
+  expect((await loadAdminDashboard(NOW)).queues.sessionMusiciansNew).toBe(2);
+
+  jest.spyOn(console, 'error').mockImplementation(() => undefined);
+  await client.execute('ALTER TABLE session_musicians RENAME TO session_musicians_x');
+  try {
+    expect((await loadAdminDashboard(NOW)).queues.sessionMusiciansNew).toBeNull();
+  } finally {
+    await client.execute('ALTER TABLE session_musicians_x RENAME TO session_musicians');
+    await client.execute('DELETE FROM session_musicians');
   }
 });
 
