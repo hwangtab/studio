@@ -460,8 +460,8 @@ export default function AdminBookingDetailPage({
 
   const canReschedule =
     !isMixing && !isDeposit && (booking.bookingStatus === 'confirmed' || (booking.bookingStatus === 'pending' && booking.orderStatus === 'awaiting_deposit'));
-  // 입금 확인이 끝난 계좌 입금 세션 예약의 금액 정정 — 환불 기록이 없을 때만(refundableAmount === totalAmount). 토스(카드)는 승인 금액과 어긋나 못 고친다.
-  const canAdjustPaidAmount = !isMixing && !isDeposit && booking.orderStatus === 'paid' && isBankPaid && booking.refundableAmount === booking.totalAmount;
+  // 입금 확인이 끝난 계좌 입금 주문(예약·믹싱·예약금 링크)의 금액 정정 — 환불 기록이 없을 때만(refundableAmount === totalAmount). 토스(카드)는 승인 금액과 어긋나 못 고친다.
+  const canAdjustPaidAmount = booking.orderStatus === 'paid' && isBankPaid && booking.refundableAmount === booking.totalAmount;
   const [adjustOpen, setAdjustOpen] = useState(false);
   const [adjustAmount, setAdjustAmount] = useState(String(booking.totalAmount));
   const [adjustReason, setAdjustReason] = useState('');
