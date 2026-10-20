@@ -133,11 +133,17 @@ describe('상태·메모·삭제', () => {
     expect((await call(detailHandler, 'PATCH', id, {})).status).toBe(400);
   });
 
-  it('DELETE는 행을 지운다', async () => {
+  it('DELETE는 행을 지우고 누가 지웠는지 접속기록(session_musician_delete)에 남긴다', async () => {
     const id = await seed();
     expect((await call(detailHandler, 'DELETE', id)).status).toBe(200);
     expect(await getSessionMusician(id)).toBeNull();
     expect((await call(detailHandler, 'DELETE', id)).status).toBe(404);
+
+    const logs = (await client.execute('SELECT action, target_id, result, actor FROM privacy_access_logs ORDER BY rowid')).rows;
+    expect(logs.map((row) => ({ action: row.action, target_id: row.target_id, result: row.result, actor: row.actor }))).toEqual([
+      { action: 'session_musician_delete', target_id: id, result: 'success', actor: 'kyungha' },
+      { action: 'session_musician_delete', target_id: id, result: 'not_found', actor: 'kyungha' },
+    ]);
   });
 
   it('인증이 없으면 401', async () => {
