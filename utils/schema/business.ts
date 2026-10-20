@@ -16,7 +16,7 @@ import {
   WEDDING_PACKAGE_PRICE,
   ARRANGEMENT_SMALL_PRICE,
 } from '../../data/pricing';
-import { buildOperatorPersonNode, getOperatorPersonId } from './person';
+import { buildOperatorPersonNode, getOperatorPersonId, getOperatorPressRecordNodes } from './person';
 import {
   COVER_VIDEO_OFFER_NAMES,
   DEFAULT_SCHEMA_IMAGE,
@@ -293,6 +293,11 @@ export const generateDefaultSchema = (
       // /author는 여기에 description을 더한 같은 @id 노드를 추가로 낸다 — 값이 충돌하지
       // 않는 병합이라 안전하다(utils/schema/person.ts buildOperatorPersonNode 주석 참고).
       buildOperatorPersonNode(siteUrl, locale),
+      // 수상 사실을 뒷받침하는 공식 기록(kind: 'record') — Person.subjectOf에는 안 들어가고
+      // (utils/schema/person.ts getOperatorPressCoverage 주석 참조) 독립 WebPage 노드가
+      // mentions로 Person을 역참조한다. 2026-10-20 Opus 리뷰: subjectOf에 넣으면 같은
+      // 파일이 음악취향Y를 뺀 기준과 모순된다.
+      ...getOperatorPressRecordNodes(siteUrl),
     ],
   };
 };

@@ -131,6 +131,17 @@ const AuthorPage: NextPageWithLayout<AuthorPageProps> = ({ locale }) => {
               <span className="text-gray-900 dark:text-gray-50">
                 {award.title}
                 <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">〈{award.work}〉</span>
+                {award.evidenceUrl && (
+                  <a
+                    href={award.evidenceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-2 inline-flex items-center gap-1 text-sm text-primary dark:text-primary-lighter hover:underline"
+                  >
+                    <ExternalLink size={12} aria-hidden="true" />
+                    {profile.headings.awardEvidence}
+                  </a>
+                )}
               </span>
             </li>
           ))}
