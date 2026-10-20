@@ -40,6 +40,24 @@
 import { execFileSync } from 'node:child_process';
 import { homedir } from 'node:os';
 
+/**
+ * 메일 키(RESEND_API_KEY) 등은 .env.local에서 읽는다 — 이 스크립트는 운영자 알림·의뢰인 통지 메일을 실제로 보낸다(관리자 화면과
+ * 같은 코드). 읽지 않으면 메일이 RESEND_API_KEY_MISSING으로 실패하고 그 실패가 계약의 알림 오류로 남는다(2026-10-20 실제로 났다).
+ * 파일이 없으면 넘어간다 — 그때 메일은 실패로 기록되고 관리자 화면에서 다시 보낼 수 있다.
+ */
+{
+  // DB 접속은 .env.local이 아니라 로그인된 Turso CLI가 정한다(connect) — .env.local의 토큰은 만료(30일)될 수 있고 다른 DB를
+  // 가리킬 수도 있다. 실행할 때 직접 준 TURSO_* 값만 남긴다.
+  const given = { url: process.env.TURSO_DATABASE_URL, token: process.env.TURSO_AUTH_TOKEN };
+  try {
+    process.loadEnvFile('.env.local');
+  } catch {
+    // .env.local 없음
+  }
+  if (given.url === undefined) delete process.env.TURSO_DATABASE_URL;
+  if (given.token === undefined) delete process.env.TURSO_AUTH_TOKEN;
+}
+
 const TURSO = `${homedir()}/.turso/turso`;
 const DB_NAME = 'studio-nol';
 const args = process.argv.slice(2);
