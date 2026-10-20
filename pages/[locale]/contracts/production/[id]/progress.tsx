@@ -11,6 +11,7 @@ import { IDENTITY_DIGITS } from '../../../../../lib/contracts/identity';
 import { denyContractPageCaching } from '../../../../../lib/contracts/page-cache';
 import { productionSignPath } from '../../../../../lib/contracts/production/links';
 import { hasPortalAccess } from '../../../../../lib/contracts/production/portal-session';
+import { ensureContractPaymentLink } from '../../../../../lib/contracts/production/payment-link';
 import { loadProgressContext } from '../../../../../lib/contracts/production/progress';
 import { buildClientProgressView, type ProgressView, type StageView } from '../../../../../lib/contracts/production/progress-view';
 import { hasSignedDocument } from '../../../../../lib/contracts/production/status';
@@ -30,6 +31,8 @@ interface ProgressPageProps {
   sourceLabel: string;
   /** "계약금" 또는(50만원 이하 일시불) "대금". */
   depositWord: string;
+  /** 지금 받을 돈의 결제 페이지(payment-link.ts). 없으면 버튼이 없다. 확인 전(locked)에는 싣지 않는다. */
+  payment: { url: string; amount: number; label: string } | null;
   /** 연락처 뒷자리를 아직 확인하지 않았다 — 진행 내용을 싣지 않는다. */
   locked: boolean;
   /** 진행이 끝난 계약 — 승인·수정 버튼이 없다. */
@@ -65,6 +68,7 @@ export const getServerSideProps = withI18nServerProps<ProgressPageProps>(async (
     serviceLabel: '음원 제작',
     sourceLabel: '1차 완성본',
     depositWord: '계약금',
+    payment: null,
     locked: true,
     closed: false,
     view: null,
@@ -107,6 +111,11 @@ export const getServerSideProps = withI18nServerProps<ProgressPageProps>(async (
         locked,
         closed: progress.contract.status !== 'signed',
         view: locked ? null : buildClientProgressView(progress.terms, progress.ledger),
+        payment: await (async () => {
+          if (locked || progress.contract.status !== 'signed') return null;
+          const link = await ensureContractPaymentLink(progress.contract.id);
+          return link ? { url: link.url, amount: link.amount, label: link.purpose === 'deposit' ? depositWordFor(progress.terms) : '잔금' } : null;
+        })(),
         refund,
       },
     };
@@ -360,6 +369,7 @@ export default function ProductionProgressPage({
   serviceLabel,
   sourceLabel,
   depositWord,
+  payment,
   locked,
   closed,
   view,
@@ -503,6 +513,14 @@ export default function ProductionProgressPage({
                     </>
                   )}
                 </dl>
+                {!closed && payment && (
+                  <Button asChild className="mt-5 w-full">
+                    {/* 카드·간편결제·계좌 입금 — 결제되면 이 기록에 입금이 자동으로 남는다(payment-link.ts). */}
+                    <a href={payment.url}>
+                      {payment.label} {formatCurrency(payment.amount)}원 결제하기
+                    </a>
+                  </Button>
+                )}
               </section>
 
               <section className="bg-white dark:bg-white rounded-2xl shadow-sm p-6 md:p-8">

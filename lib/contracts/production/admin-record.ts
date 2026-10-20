@@ -1,6 +1,7 @@
 import type { ProductionContractEvent } from '../../../db/schema';
 import { loadRefundAccountSummary } from '../../payments/refundAccount';
 import { parseAdminEventInput, parseVoidInput } from './events';
+import { ensureContractPaymentLink } from './payment-link';
 import { loadProgressContext, recordProgressEvent } from './progress';
 
 /**
@@ -35,5 +36,9 @@ export const recordAdminProgress = async (
   }
 
   const recorded = await recordProgressEvent(contractId, parsed.input, actor);
-  return recorded.ok ? { ok: true, event: recorded.event } : { ok: false, status: recorded.status, message: recorded.message };
+  if (!recorded.ok) return { ok: false, status: recorded.status, message: recorded.message };
+  // 받을 돈이 바뀌었을 수 있다(계좌 입금을 직접 기록, 추가 비용 동의, 마스터링 승인, 잘못 넣은 입금의 무효) — 열린 결제 링크를
+  // 지금 받을 돈에 맞춘다. 이미 받은 돈의 링크가 열려 있으면 또 결제된다(payment-link.ts). 실패는 삼킨다.
+  await ensureContractPaymentLink(contractId);
+  return { ok: true, event: recorded.event };
 };

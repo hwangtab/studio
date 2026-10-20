@@ -19,6 +19,7 @@ import { allowCustomerDepositGuideMail } from '../payments/depositGuideThrottle'
 import { safeDbErrorSummary } from '../payments/refundAccount';
 import { deliverPostConfirmation, ensureBookingEvent, type BookingOrder } from './confirm';
 import { syncPaymentLinkCalendarEvent } from '../payments/linkCalendar';
+import { isContractPaymentOrder, recordContractPaymentFromLinkOrder } from '../contracts/production/payment-link';
 import { loadPaymentLinkOrderInfo } from '../payments/paymentLinkOrders';
 import { sendDepositLinkPaidEmail } from './email';
 import { calendarForService, deleteBookingEvent, renameBookingEvent } from './gcal';
@@ -215,6 +216,16 @@ const confirmDepositLinkBankDeposit = async (order: BookingOrder, now: Date): Pr
   }
   // 이용 일시가 있는 링크면 캘린더에 올린다(실패는 삼키고 기록 — lib/payments/linkCalendar.ts).
   await syncPaymentLinkCalendarEvent(order.orderNo);
+  // 계약 대금 결제 링크면 계약 진행 기록에 입금을 남기고, 의뢰인에게는 계약의 "입금을 확인했어요" 메일(남은 금액·기한 포함)이
+  // 간다 — 결제 링크의 일반 입금 확인 메일은 보내지 않는다(같은 소식이 두 통 가지 않게, payment-link.ts).
+  if (await isContractPaymentOrder(order.orderNo)) {
+    const outcome = await recordContractPaymentFromLinkOrder(order.orderNo, now);
+    if (outcome === 'failed' || outcome === 'refused') {
+      console.error('[booking-bank-deposit] 계약 결제 입금 기록 실패 — 계약 상세에서 "입금 확인"을 직접 기록해 주세요', { orderNo: order.orderNo, outcome });
+      return { ok: true, warnings: ['입금은 확인했지만 계약 진행 기록에 남기지 못했어요. 계약 상세에서 "입금 확인"을 직접 기록해 주세요.'] };
+    }
+    return { ok: true, emailSent: outcome === 'recorded' };
+  }
   let failure: string | null = null;
   try {
     failure = await sendDepositLinkPaidEmail({ ...order, status: 'paid' });

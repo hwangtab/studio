@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { waitUntil } from '@vercel/functions';
 
 import { getDb } from '../../../../db/client';
+import { closeContractPaymentLinks } from '../../../../lib/contracts/production/payment-link';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { getClientIp } from '../../../../lib/contracts/client-ip';
 import { loadProgressContext, sendTerminationNotice } from '../../../../lib/contracts/production/progress';
@@ -150,7 +151,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       if (action === 'cancel') {
-        return (await cancelProductionContract(id)) ? res.status(200).json({ ok: true }) : stale();
+        if (!(await cancelProductionContract(id))) return stale();
+        // 끝난 계약의 결제 링크는 닫는다 — 열려 있으면 취소한 계약 대금을 받을 수 있다(payment-link.ts).
+        await closeContractPaymentLinks(id);
+        return res.status(200).json({ ok: true });
       }
 
       // complete | terminate
@@ -175,9 +179,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
         // 완료일은 최종 인도일이다 — 계약서 제13조·처리방침이 "최종 인도로 끝난 날부터 3년"을 약속한다. 완료 버튼을
         // 누른 날로 두면 그만큼 더 오래 보관하게 된다.
-        return (await closeProductionContract(id, { kind: 'completed', at: deliveredAt }))
-          ? res.status(200).json({ ok: true })
-          : stale();
+        if (!(await closeProductionContract(id, { kind: 'completed', at: deliveredAt }))) return stale();
+        await closeContractPaymentLinks(id);
+        return res.status(200).json({ ok: true });
       }
 
       const { reason, cause } = body;
@@ -217,6 +221,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         reason: formatTerminationReason(cause, reason.trim()),
       });
       if (!terminated) return stale();
+      await closeContractPaymentLinks(id);
       waitUntil(sendTerminationNotice(id));
       return res.status(200).json({ ok: true });
     } catch (error: unknown) {

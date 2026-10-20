@@ -7,6 +7,7 @@ import { adminUrl, buildEmailLayout } from '../email/layout';
 import { sendEmail } from '../email/resend';
 import { OPERATOR_EMAIL } from '../operatorContact';
 import { syncPaymentLinkCalendarEvent } from '../payments/linkCalendar';
+import { recordContractPaymentFromLinkOrder } from '../contracts/production/payment-link';
 import { loadPaymentLinkOrderInfo } from '../payments/paymentLinkOrders';
 import { refundIdempotencyKey } from './cancel';
 import { rowsAffectedOf } from './confirm';
@@ -283,6 +284,8 @@ export const confirmDepositPayment = async (
   await notifyOperator(order, approved);
   // 이용 일시가 있는 링크면 캘린더에 올린다(실패는 삼키고 기록 — lib/payments/linkCalendar.ts).
   await syncPaymentLinkCalendarEvent(order.orderNo);
+  // 계약 대금 결제 링크였으면 계약 진행 기록에 입금을 남긴다(아니면 아무 일도 없다 — lib/contracts/production/payment-link.ts).
+  await recordContractPaymentFromLinkOrder(order.orderNo);
 
   return {
     ok: true,

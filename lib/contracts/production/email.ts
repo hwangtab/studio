@@ -156,6 +156,8 @@ export const sendProductionSignedEmail = async (
   progressUrl: string | null,
   /** 받는 사람. 기본은 의뢰인 — 법정대리인에게도 같은 서명본을 보낸다(각자 보관, 계약서 제14조). */
   recipient: { name: string; email: string } = { name: contract.clientName, email: contract.clientEmail },
+  /** 대금 결제 페이지(payment-link.ts) — 있으면 버튼이 결제로 간다(카드·간편결제·계좌). 없으면 계좌 안내만. */
+  payUrl: string | null = null,
 ): Promise<SendContractEmailResult> => {
   const html = buildContractEmailHtml({
     heading: '계약이 체결되었습니다',
@@ -170,15 +172,20 @@ export const sendProductionSignedEmail = async (
       { label: '체결일', value: formatDate(contract.signedAt), emphasis: true },
       ...(progressUrl ? [{ label: '작업 진행', value: '진행 페이지 열기 (결과물 확인·승인·수정 요청)', href: progressUrl }] : []),
     ],
-    cta: { label: '계약서 PDF 다시 받기', url: completeUrl },
+    cta: payUrl
+      ? { label: `${depositWordFor(terms)} ${formatCurrency(terms.amount.deposit)}원 결제하기`, url: payUrl }
+      : { label: '계약서 PDF 다시 받기', url: completeUrl },
     notices: [
       // 제3조 — 계약금 기한은 체결일부터 센다. 체결 메일이 그 안내를 겸한다.
       ...(terms.amount.deposit > 0
         ? [
-            `${depositWordFor(terms)} <strong>${formatCurrency(terms.amount.deposit)}원</strong>을 체결일로부터 ${terms.amount.depositDueDays}일 이내에 입금해 주세요.`,
+            payUrl
+              ? `${depositWordFor(terms)} <strong>${formatCurrency(terms.amount.deposit)}원</strong>을 체결일로부터 ${terms.amount.depositDueDays}일 이내에 결제해 주세요 — 위 버튼에서 카드·간편결제·계좌 입금 중 고를 수 있어요.`
+              : `${depositWordFor(terms)} <strong>${formatCurrency(terms.amount.deposit)}원</strong>을 체결일로부터 ${terms.amount.depositDueDays}일 이내에 입금해 주세요.`,
             escapeHtml(accountLine(terms)),
           ]
         : []),
+      ...(payUrl ? [`계약서 PDF 다시 받기: <a href="${escapeHtml(completeUrl)}">완료 화면 열기</a>`] : []),
       `납품 기한은 ${workStartPhrase(terms, contract.kind).replace('·', '과 ')}이 끝난 날부터 셉니다.`,
     ],
   });
@@ -191,7 +198,7 @@ export const sendProductionSignedEmail = async (
     ...termLines(contract, terms),
     `체결일: ${formatDate(contract.signedAt)}`,
     '',
-    ...(depositLine(terms) ? [depositLine(terms) as string, accountLine(terms), ''] : []),
+    ...(depositLine(terms) ? [depositLine(terms) as string, ...(payUrl ? [`결제하기(카드·간편결제·계좌): ${payUrl}`] : []), accountLine(terms), ''] : []),
     ...(pdfBuffer ? ['서명본 계약서를 PDF로 첨부했습니다.'] : []),
     `계약서 다시 받기: ${completeUrl}`,
     ...(progressUrl ? [`작업 진행(결과물 확인·승인·수정 요청): ${progressUrl}`] : []),

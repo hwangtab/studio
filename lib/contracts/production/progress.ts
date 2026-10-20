@@ -264,7 +264,12 @@ const sendDueReminders = async (context: ProgressContext, today: number, now: Da
     if (sentKeys.has(`${reminder.kind}:${reminder.refEventId ?? ''}`)) continue;
     // 실패해도 기록한다(사유와 함께) — 기한 전날에만 보내는 안내라 다음 날 다시 보낼 기회가 없고, 보내려 했다는
     // 사실과 실패가 운영자 화면에 남아야 한다.
-    const mail = await sendDueReminderEmail(contract, context.terms, ledger, reminder, buildProductionProgressUrl(contract.id, token));
+    // 입금 기한 안내에는 결제 페이지를 단다 — 순환 import를 피해 쓸 때만 불러온다(payment-link.ts가 이 파일을 쓴다).
+    const payUrl =
+      reminder.kind === 'deemed_approval_soon'
+        ? null
+        : ((await (await import('./payment-link')).ensureContractPaymentLink(contract.id, now))?.url ?? null);
+    const mail = await sendDueReminderEmail(contract, context.terms, ledger, reminder, buildProductionProgressUrl(contract.id, token), payUrl);
     await appendProductionEvent(
       contract.id,
       {

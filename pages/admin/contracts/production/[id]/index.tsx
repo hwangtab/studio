@@ -36,6 +36,7 @@ import {
 import { completeStalledProductionContract } from '../../../../../lib/contracts/production/finalize';
 import { loadProgressContext } from '../../../../../lib/contracts/production/progress';
 import { buildAdminProgressView, type AdminProgressView } from '../../../../../lib/contracts/production/progress-view';
+import { ensureContractPaymentLink, listContractPaymentLinks } from '../../../../../lib/contracts/production/payment-link';
 import { isOneSongKind, releaseTitle } from '../../../../../lib/contracts/production/terms';
 import { recordAdminPrivacyAccess } from '../../../../../lib/privacy/accessLog';
 
@@ -46,6 +47,8 @@ interface ProductionContractDetailProps {
   progress: AdminProgressView | null;
   /** 해지된 계약의 환불 계좌 요약(은행·예금주만). 해지가 아니면 null. */
   refundAccount: RefundAccountSummaryProps | null;
+  /** 계약 대금 결제 링크(payment-link.ts) — 최신순. 열린 것이 지금 받을 돈의 링크다. */
+  paymentLinks: Array<{ url: string; purpose: 'deposit' | 'balance'; amount: number; open: boolean; paid: boolean; createdAt: string }>;
 }
 
 export const getServerSideProps: GetServerSideProps<ProductionContractDetailProps> = async (context) => {
@@ -95,8 +98,22 @@ export const getServerSideProps: GetServerSideProps<ProductionContractDetailProp
     };
   }
 
+  // 진행 중 계약이면 지금 받을 돈의 링크를 맞춰 둔다(운영자가 바로 복사해 보낼 수 있게). 끝난 계약은 열린 링크를 닫는다.
+  if (contract.status === 'signed' || contract.status === 'completed' || contract.status === 'terminated' || contract.status === 'cancelled') {
+    await ensureContractPaymentLink(contract.id);
+  }
+  const paymentLinks = (await listContractPaymentLinks(contract.id)).map((link) => ({
+    url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr'}/ko/pay/${link.slug}`,
+    purpose: link.purpose,
+    amount: Number(link.amount),
+    open: link.closed_at === null,
+    paid: Number(link.paid_orders) > 0,
+    createdAt: new Date(Number(link.created_at) * 1000).toISOString(),
+  }));
+
   return {
     props: {
+      paymentLinks,
       contract: serializeProductionContractForAdmin(contract),
       fingerprint: verifyStoredProductionContract(contract),
       progress: progress ? buildAdminProgressView(progress.terms, progress.ledger, progress.events, contract.status === 'signed') : null,
@@ -143,7 +160,7 @@ const FingerprintLine = ({ verdict }: { verdict: ProductionFingerprintVerdict })
   }
 };
 
-export default function ProductionContractDetailPage({ contract, fingerprint, progress, refundAccount }: ProductionContractDetailProps) {
+export default function ProductionContractDetailPage({ contract, fingerprint, progress, refundAccount, paymentLinks }: ProductionContractDetailProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -378,6 +395,38 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
         </div>
 
         {refundAccount && <ProductionRefundAccountPanel contractId={contract.id} summary={refundAccount} />}
+
+        {paymentLinks.length > 0 && (
+          <div className="bg-white rounded-2xl shadow-sm p-4 md:p-8 mb-6">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-2">결제 링크</h2>
+            <p className="text-sm text-gray-600 mb-4">
+              카드·간편결제·계좌 입금으로 받는 계약 대금 링크예요. 결제되면 진행 기록에 입금이 자동으로 남고 링크가 닫혀요. 계좌로 직접 받으면
+              아래 진행 기록에서 “입금 확인”을 남기면 열린 링크가 남은 금액에 맞게 바뀌어요.
+            </p>
+            <ul className="space-y-2 text-sm">
+              {paymentLinks.map((link) => (
+                <li key={link.url} className="flex flex-wrap items-center gap-3 rounded-lg bg-gray-50 p-3">
+                  <span className="font-semibold text-gray-900">{link.purpose === 'deposit' ? '대금·계약금' : '잔금'}</span>
+                  <span className="tabular-nums">{formatCurrency(link.amount)}원</span>
+                  <span className={link.paid ? 'text-green-700' : link.open ? 'text-blue-700' : 'text-gray-500'}>
+                    {link.paid ? '결제됨' : link.open ? '열림 — 결제 대기' : '닫힘'}
+                  </span>
+                  <span className="text-gray-500">{formatDateTime(link.createdAt)}</span>
+                  {link.open && (
+                    <Button
+                      light
+                      size="sm"
+                      variant="secondary"
+                      onClick={async () => setNotice((await copyToClipboard(link.url)) ? '결제 링크를 복사했습니다.' : '링크 복사에 실패했습니다.')}
+                    >
+                      결제 링크 복사
+                    </Button>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {progress && (
           <ProductionProgressPanel
