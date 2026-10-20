@@ -4,6 +4,7 @@ import { eq } from 'drizzle-orm';
 import { getDb } from '../../../db/client';
 import { productionContracts, type ProductionContract, type ProductionContractSigner } from '../../../db/schema';
 import { sendProductionOperatorNotification, sendProductionSignedEmail } from './email';
+import { ensureContractPaymentLink } from './payment-link';
 import { buildProductionCompleteUrl, buildProductionProgressUrl } from './links';
 import { renderProductionPdf, uploadProductionPdf } from './pdf-storage';
 import { finalizeProductionContractIfComplete, recordProductionNotificationResult } from './service';
@@ -53,10 +54,21 @@ export const finalizeSignedProductionContract = async (contractId: string): Prom
   }
   if (!pdf) problems.push('PDF 생성 실패');
 
+  // 대금 결제 페이지를 연다(계약금 또는 일시불 전액) — 체결 메일 버튼이 결제로 간다. 실패해도 계좌 안내는 그대로 나간다.
+  const payLink = await ensureContractPaymentLink(contract.id);
+
   try {
     const terms = parseStoredTerms(contract.termsJson);
     const [clientResult, guardianResult, operatorResult] = await Promise.all([
-      sendProductionSignedEmail(contract, terms, pdf, completeUrl, buildProductionProgressUrl(contract.id, clientSigner.signToken)),
+      sendProductionSignedEmail(
+        contract,
+        terms,
+        pdf,
+        completeUrl,
+        buildProductionProgressUrl(contract.id, clientSigner.signToken),
+        undefined,
+        payLink?.purpose === 'deposit' ? payLink.url : null,
+      ),
       // 법정대리인도 서명본을 받는다 — 자기 링크(자기 연락처 뒷자리로 내려받기)로.
       guardian?.signToken
         ? sendProductionSignedEmail(contract, terms, pdf, buildProductionCompleteUrl(contract.id, guardian.signToken), null, {

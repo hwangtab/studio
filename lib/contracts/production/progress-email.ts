@@ -314,6 +314,8 @@ export const sendDueReminderEmail = async (
   ledger: ProductionLedger,
   reminder: DueReminder,
   progressUrl: string,
+  /** 입금 기한 안내면 그 금액의 결제 페이지(payment-link.ts) — 있으면 버튼이 결제로 간다. */
+  payUrl: string | null = null,
 ): Promise<SendContractEmailResult> => {
   const name = escapeHtml(contract.clientName);
   const lastDay = formatDate(reminder.lastDay);
@@ -353,9 +355,16 @@ export const sendDueReminderEmail = async (
       heading: content.subject,
       paragraphs: content.paragraphs,
       rows: content.rows,
-      cta: { label: '작업 진행 보기', url: progressUrl },
+      // 입금 안내는 결제 페이지로 바로(카드·간편결제·계좌) — 진행 페이지에도 같은 버튼이 있다.
+      cta: payUrl && reminder.kind !== 'deemed_approval_soon' ? { label: '결제하기', url: payUrl } : { label: '작업 진행 보기', url: progressUrl },
     }),
-    text: [...content.paragraphs.map((p) => p.replace(/<[^>]+>/g, '')), ...content.rows.map((r) => `${r.label}: ${r.value}`), '', progressUrl].join('\n'),
+    text: [
+      ...content.paragraphs.map((p) => p.replace(/<[^>]+>/g, '')),
+      ...content.rows.map((r) => `${r.label}: ${r.value}`),
+      '',
+      ...(payUrl && reminder.kind !== 'deemed_approval_soon' ? [`결제하기: ${payUrl}`] : []),
+      progressUrl,
+    ].join('\n'),
   });
 };
 

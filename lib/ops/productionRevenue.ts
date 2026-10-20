@@ -3,7 +3,7 @@ import { and, eq, gte, inArray, lt } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { productionContractEvents, refundAccounts } from '../../db/schema';
 import { splitInclusiveAmount } from '../booking/amounts';
-import { activeEvents, computeProductionLedger } from '../contracts/production/ledger';
+import { activeEvents, computeProductionLedger, parseEventData } from '../contracts/production/ledger';
 import { isMixMasterKind, parseStoredTerms } from '../contracts/production/terms';
 import { parseTerminationCause } from '../contracts/production/termination';
 import type { RevenueRow } from './revenueReport';
@@ -54,8 +54,10 @@ export const loadProductionRevenueRows = async (range: { from: Date; toExclusive
   const rows: RevenueRow[] = [];
   for (const contract of contracts) {
     const terms = parseStoredTerms(contract.termsJson);
+    // 결제 링크로 받은 입금(data.orderNo)은 결제 행(payments)으로 이미 매출에 잡힌다 — 여기서는 빼서 두 번 세지 않는다.
+    // 환불 차감도 직접 기록한 입금에만 건다(링크 결제의 환불은 결제 행의 refunds로 잡힌다).
     const payments = activeEvents(contract.events)
-      .filter((e) => e.type === 'payment_received' && (e.amount ?? 0) > 0)
+      .filter((e) => e.type === 'payment_received' && (e.amount ?? 0) > 0 && !parseEventData(e).orderNo)
       .sort((a, b) => a.occurredAt.getTime() - b.occurredAt.getTime());
 
     let refundLeft = 0;

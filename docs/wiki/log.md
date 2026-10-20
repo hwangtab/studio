@@ -215,3 +215,8 @@
 - 축소: 디자인 카드에서 "비용은 별도입니다" 삭제 — 외주 연결 사실만 남김
 - **이후 기준**: 이 저장소의 카피 감사는 (1) 다른 페이지와 모순되는 서술, (2) 기술적으로 거짓인 주장,
   (3) 문법 오류, (4) 정본에 없는 서비스까지만 손댄다. 최상급·감성 표현·비교 우위 문구는 대상이 아니다.
+
+## 2026-10-20 · ingest · 링크 계약 운영 (코드·CLAUDE.md)
+- 신설: concepts/link-contract-operations.md — 링크 계약 end-to-end 운영 가이드 (생성 두 방법·기본 조건·고객 화면·본인 확인 미실시의 의미·체결 후 할 일·링크 관리·매출 반영·주의사항)
+- 갱신: index.md Concepts 등록
+- 소스: CLAUDE.md, scripts/contract-link.ts, lib/contracts/production/{open-link,terms,clauses,ledger,event-spec,email}.ts, lib/ops/{healthCheck,productionRevenue}.ts, data/pricing.ts

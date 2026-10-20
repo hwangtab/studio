@@ -13,6 +13,8 @@ import { completeStalledProductionContract } from '../../../../../lib/contracts/
 import { productionProgressPath, productionSignPath } from '../../../../../lib/contracts/production/links';
 import { getEffectiveProductionStatus, hasSignedDocument } from '../../../../../lib/contracts/production/status';
 import { maskEmail } from '../../../../../lib/contracts/production/open-link';
+import { ensureContractPaymentLink } from '../../../../../lib/contracts/production/payment-link';
+import { loadProgressContext } from '../../../../../lib/contracts/production/progress';
 import { contractNameFor, depositWordFor, isOneSongKind, parseStoredTerms, releaseTitle } from '../../../../../lib/contracts/production/terms';
 import { withI18nServerProps } from '../../../../../lib/getStatic';
 
@@ -46,6 +48,10 @@ interface CompletePageProps {
   downloadUrl: string;
   /** 진행 페이지 주소(토큰 포함). 파기된 계약은 빈 문자열. */
   progressPath: string;
+  /** 지금 받을 돈의 결제 페이지(payment-link.ts) — 의뢰인 링크·진행 중 계약에만. 없으면 계좌 안내만. */
+  payment: { url: string; amount: number; label: string } | null;
+  /** 계약금(일시불이면 대금)을 이미 받았는가 — 받았으면 입금 안내를 보이지 않는다. */
+  depositPaid: boolean;
   purged: boolean;
   unavailable?: 'not-found' | 'error';
   /** 진행이 끝난 계약 — 서명본은 그대로 받을 수 있다. */
@@ -63,7 +69,7 @@ export const getServerSideProps = withI18nServerProps<CompletePageProps>(async (
 
   const { locale, id } = context.params as { locale: string; id: string };
   const { token } = context.query;
-  const empty = { locale, contract: null, downloadUrl: '', progressPath: '', purged: false };
+  const empty = { locale, contract: null, downloadUrl: '', progressPath: '', payment: null, depositPaid: false, purged: false };
 
   if (!id || typeof token !== 'string' || token.trim() === '') {
     return { props: { ...empty, unavailable: 'not-found' as const } };
@@ -102,9 +108,17 @@ export const getServerSideProps = withI18nServerProps<CompletePageProps>(async (
     }
 
     const terms = parseStoredTerms(contract.termsJson);
+    // 결제 페이지는 의뢰인에게만(법정대리인 화면에는 두지 않는다) — 진행 중 계약이면 지금 받을 돈의 링크를 연다.
+    const payLink =
+      linkSigner.role === 'client' && status === 'signed' && !contract.purgedAt ? await ensureContractPaymentLink(contract.id) : null;
+    const depositPaid = Boolean((await loadProgressContext(contract.id))?.ledger.payments.depositMetAt);
     return {
       props: {
         locale,
+        depositPaid,
+        payment: payLink
+          ? { url: payLink.url, amount: payLink.amount, label: payLink.purpose === 'deposit' ? depositWordFor(terms) : '잔금' }
+          : null,
         contract: {
           clientName: contract.clientName,
           releaseLabel: releaseTitle(contract.kind, terms),
@@ -138,6 +152,8 @@ export default function ProductionContractCompletePage({
   contract,
   downloadUrl,
   progressPath,
+  payment,
+  depositPaid,
   purged,
   unavailable,
   closed,
@@ -272,7 +288,19 @@ export default function ProductionContractCompletePage({
               <dt className="text-gray-500 dark:text-gray-500">체결일</dt>
               <dd className="text-gray-900 dark:text-gray-900 font-medium text-right">{formatDate(contract.signedAt)}</dd>
             </dl>
-            {!closed && !purged && (
+            {!closed && !purged && payment && (
+              <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-200 text-sm text-gray-700 dark:text-gray-700 leading-relaxed">
+                <p>
+                  {payment.label} <strong>{formatCurrency(payment.amount)}원</strong>을 체결일로부터 {contract.depositDueDays}일 이내에
+                  결제해 주세요. 카드·간편결제·계좌 입금 중에서 고를 수 있어요.
+                </p>
+                <Button asChild className="mt-3 w-full">
+                  <a href={payment.url}>{payment.label} {formatCurrency(payment.amount)}원 결제하기</a>
+                </Button>
+                <span className="block mt-2 text-gray-500 dark:text-gray-500">계좌로 직접 보내셔도 돼요: {contract.account}</span>
+              </div>
+            )}
+            {!closed && !purged && !payment && !depositPaid && (
               <p className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-200 text-sm text-gray-700 dark:text-gray-700 leading-relaxed">
                 {contract.depositWord} <strong>{formatCurrency(contract.deposit)}원</strong>을 체결일로부터 {contract.depositDueDays}일 이내에
                 입금해 주세요.

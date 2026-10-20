@@ -50,6 +50,8 @@ export interface EventData {
   kind?: ReminderKind;
   refEventId?: string;
   reason?: string;
+  /** 결제 링크로 받은 입금 — 그 주문번호(payment-link.ts). 같은 주문을 두 번 기록하지 않고, 매출에서 결제 행과 겹쳐 세지 않는다. */
+  orderNo?: string;
 }
 
 export type ReminderKind = 'deemed_approval_soon' | 'deposit_due' | 'balance_due';

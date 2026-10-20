@@ -78,6 +78,8 @@ npx tsx scripts/contract-link.ts create --kind mixmaster --tracks 30 [--total N]
 npx tsx scripts/contract-link.ts list                                                             # 최근 20건 — 상태(만료 포함)·발송·만료·열람·링크
 npx tsx scripts/contract-link.ts resend <계약 id>                                                 # 만료·재전송 — 옛 링크 무효, 새 링크
 npx tsx scripts/contract-link.ts cancel <계약 id>
+npx tsx scripts/contract-link.ts events <계약 id>                                                 # 진행 기록 타임라인(최근 30건, 무효·통지 결과 포함)
+npx tsx scripts/contract-link.ts log <계약 id> --type payment_received --amount 225000 [--stage --song --note --link --at "YYYY-MM-DD HH:mm" --cause] [--yes]   # 진행 기록 — 관리자 API와 같은 검증·통지, --void <기록 id> --note 사유
 
 # IndexNow 변경분 제출 — 전량 반복 제출 금지, CI(main push)가 diff로 바뀐 URL만 자동 제출한다.
 # 문구·링크·가격·구조가 안 바뀐 순수 디자인 커밋은 메시지에 `[skip-indexnow]`를 붙인다 — 그 커밋에서만 바뀐
@@ -356,6 +358,13 @@ SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이�
 - **서명 화면의 동의는 체크 하나다**(2026-10-20, `clauses.ts` `buildProductionClauses`) — 중요 조항 요약(간주 승인 N일·착수 후 해지
   공제·발매 후 포트폴리오)을 보여 주고 한 번에 받는다. 서명이 곧 모든 조항 동의라 조항마다 받지 않는다. 요약 문장(`points`)은
   지문에 들어간다(없는 옛 계약의 지문은 그대로). 옛 다섯 항목 계약은 저장된 사본(`clauses_json`) 그대로다.
+- **계약 대금은 결제 링크로 받는다**(2026-10-20, `payment-link.ts`, 마이그레이션 0079 `production_contract_payment_links`) — 체결되면
+  지금 받을 돈(계약금·일시불 전액, 마스터링 승인 뒤 잔금)의 결제 링크를 열고(`ensureContractPaymentLink`, 여러 번 불러도 같다),
+  결제가 확정되면(`confirmDeposit`·계좌 입금 확인) 진행 기록에 `payment_received`(data.orderNo, actor `system:payment`)를 **한 번만**
+  남기고 링크를 닫는다. **결제 링크는 여러 번 결제될 수 있다 — 받을 돈이 바뀌면 열린 링크를 닫고 새로 만드는 규칙을 깨지 말 것**
+  (관리자 기록 뒤 `recordAdminProgress`가 맞춘다). 링크 결제는 결제 행으로 매출에 잡히므로 `productionRevenue`는 data.orderNo 기록을 뺀다.
+  계약 결제 주문의 계좌 입금 확인은 결제 링크의 일반 입금 메일 대신 계약 통지 메일을 보낸다(두 통 가지 않게).
+  **0079는 배포 직후 적용한다** — 전에는 결제 링크가 안 생길 뿐 서명·체결·결제 링크 주문은 그대로 돈다(전부 실패를 삼킨다).
 - **간주 승인 기한은 전달일과 통지가 실제로 나간 날 중 늦은 날부터 센다**(`deemedBaseDay`). 장부와 전달 메일이 같은
   함수를 쓴다 — 통지가 실패했다가 다시 나가면 의뢰인은 그날부터 7일을 받는다. 기한이 지난 뒤의 수정 요청은 크론이
   아직 승인을 기록하지 않았어도 거절한다.

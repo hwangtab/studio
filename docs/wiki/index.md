@@ -19,6 +19,7 @@
 - [[concepts/pricing-offers]] — 서비스별 가격 및 오퍼 구조 (레코딩·믹싱·마스터링·연습실·레슨·부가서비스)
 - [[concepts/marketing-channels]] — 마케팅 채널 전략 (숏폼·네이버·당근·인플루언서·추천 유도)
 - [[concepts/revenue-growth]] — 매출 성장 전략 (교육 다각화·가동률 극대화·영상 서비스·B2B·멤버십)
+- [[concepts/link-contract-operations]] — 링크 계약 운영 가이드 (카톡 전자계약: 만드는 법·기본 조건·고객 화면·체결 후 할 일·링크 관리·매출 반영·주의)
 
 ## Decisions
 - [[decisions/story-content-strategy]] — 스토리 콘텐츠 고도화·전문화·강화 전략 채택 + P0 실행 (2026-07-18): 역피라미드 재배분·실명 저자성·플래그십 20편·근접중복 스캔 603페어

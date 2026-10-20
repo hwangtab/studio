@@ -3,11 +3,10 @@ import { waitUntil } from '@vercel/functions';
 
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { getClientIp } from '../../../../../lib/contracts/client-ip';
+import { recordAdminProgress } from '../../../../../lib/contracts/production/admin-record';
 import { EVENT_SPEC } from '../../../../../lib/contracts/production/event-spec';
-import { parseAdminEventInput, parseVoidInput } from '../../../../../lib/contracts/production/events';
-import { loadProgressContext, recordProgressEvent, sendEventNotice } from '../../../../../lib/contracts/production/progress';
+import { loadProgressContext, sendEventNotice } from '../../../../../lib/contracts/production/progress';
 import { REVISION_STAGES } from '../../../../../lib/contracts/production/terms';
-import { loadRefundAccountSummary } from '../../../../../lib/payments/refundAccount';
 
 const REVISION_STAGE_SET: ReadonlySet<string> = new Set(REVISION_STAGES);
 
@@ -69,23 +68,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).json({ ok: true, message: '통지를 다시 보내는 중입니다. 잠시 후 새로고침해 결과를 확인해 주세요.' });
     }
 
-    const parsed = body.action === 'void' ? parseVoidInput(body) : parseAdminEventInput(body);
-    if (!parsed.ok) return res.status(400).json({ ok: false, message: parsed.message });
-
-    // 해지 환불을 이미 보냈으면 정산을 바꾸는 무효 처리를 받지 않는다 — 보낸 금액과 의뢰인 화면의 금액이 갈린다.
-    // 환불은 해지한 계약에만 있다 — 진행 중 계약의 무효 처리는 환불 기록과 무관하게 받는다.
-    const terminated = body.action === 'void' && (await loadProgressContext(id))?.contract.status === 'terminated';
-    if (terminated) {
-      const refund = await loadRefundAccountSummary({ kind: 'production', orderNo: id });
-      if (refund.status === 'unavailable') {
-        return res.status(503).json({ ok: false, message: '환불 기록을 확인하지 못했습니다. 잠시 후 다시 시도해 주세요.' });
-      }
-      if (refund.status === 'present' && refund.refundedAt) {
-        return res.status(409).json({ ok: false, message: '환불을 이미 보낸 계약입니다. 정산을 바꾸려면 의뢰인과 먼저 협의해 주세요.' });
-      }
-    }
-
-    const recorded = await recordProgressEvent(id, parsed.input, actor);
+    // 입력 파싱·해지 환불 확인·장부 판정은 scripts/contract-link.ts(log)와 공용이다.
+    const recorded = await recordAdminProgress(id, body.action === 'void' ? 'void' : 'record', body, actor);
     if (!recorded.ok) return res.status(recorded.status).json({ ok: false, message: recorded.message });
 
     if (EVENT_SPEC[recorded.event.type].notifies) waitUntil(sendEventNotice(id, recorded.event.id));
