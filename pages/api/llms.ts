@@ -97,7 +97,7 @@ const BASE_SECTIONS = (siteUrl: string) => `# Studio NOL (${siteUrl.replace(/^ht
 
 Studio NOL (스튜디오 놀) is a professional music production studio located in Yeonsinnae, Eunpyeong-gu, Seoul, Korea.
 Established in ${STUDIO_FOUNDING_YEAR} and now in year ${yearsInOperation} of operation, the studio offers recording, mixing, mastering, practice room residency, producer-led album release projects, standalone music release PR, and reward crowdfunding for the records it produces.
-It is owned and operated by Hwang Kyungha (황경하), a music producer and audio engineer with 15 years of experience, who has planned and produced albums awarded at the Korean Music Awards (2017 제14회 한국대중음악상 '선정위원 특별상') and the Red Awards (2015, 2017, 2019, 2024).
+It is owned and operated by Hwang Kyungha (황경하), a music producer and audio engineer with 15 years of experience, who has planned and produced works recognized at the Korean Music Awards (2017 제14회 한국대중음악상 '선정위원 특별상') and the Red Awards (2015, 2017, 2019; the 2024 Red Award is self-reported and not yet independently verified).
 The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line 6).
 
 ## Primary Services
@@ -196,7 +196,7 @@ Studio NOL is at 3F, 2-1 Tongil-ro 71-gil (Daejo-dong), Eunpyeong-gu, Seoul, rig
 Take Exit 4 of Yeonsinnae Station (Seoul Metro Line 3 / Line 6), walk straight toward Dongmyeong Girls' High School. The studio is on the 3rd floor of the building right after the school. Total walk: ~5 minutes.
 
 ### How does the practice room work, and are there band rehearsal rooms?
-The practice room runs as a **monthly residency** (${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month VAT excluded — card payment adds 10% VAT, cash deposit has no VAT; ₩0 deposit) and is **also available hourly** (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/hour VAT included, from 1 hour, 24/7, same-day; book at ${siteUrl}/ko/booking/practice-room). Band rehearsal rooms are NOT operated. The recording studio is separate and available hourly (${krw(RECORDING_HOURLY_PRICE)} KRW/hour) or as the 1프로 package (${krw(VOCAL_PACKAGE_PRICE)} KRW for 3 hours / 1 song).
+The practice room runs as a **monthly residency** (${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month VAT excluded — card payment adds 10% VAT, cash deposit has no VAT; ₩0 deposit) and is **also available hourly** (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/hour VAT included, from 1 hour, 24/7, same-day; book at ${siteUrl}/ko/booking/practice-room). Band rehearsal rooms are NOT operated. The recording studio is separate and available hourly (${krw(RECORDING_HOURLY_PRICE)} KRW/hour) or as the 3-hour vocal recording package (${krw(VOCAL_PACKAGE_PRICE)} KRW flat for 3 hours, any number of songs — not priced per song).
 
 ### What is the practice room residency fee?
 ${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW per month, VAT excluded (card payment adds 10% VAT; cash deposit has no VAT; ₩0 deposit, minimum 1 month). 1-year contracts get 50% off the first month. Includes 24/7 access, soundproof private room (STC 60+), personal gear storage, free monthly recording session (1 hour), and additional benefits.
@@ -363,7 +363,7 @@ const USE_CASE_ANSWERS = (siteUrl: string, fundingLine: string) => `
 마스터링 단독 의뢰가 가능합니다 — 싱글 ${krw(MASTERING_SINGLE_PRICE)}원, 수정 1회 포함. 스트리밍 플랫폼 기준으로 음압과 최종 톤을 정리해 발매용 마스터 파일로 납품합니다.
 
 **"AI로 곡을 만들었는데(Suno·Udio 등) 진짜 음원처럼 마무리하고 싶다 / AI티를 빼고 싶다" (I made a song with Suno or Udio — how do I re-record the vocals or make it sound less AI?).**
-어디서 AI티가 나는지에 따라 세 갈래입니다. ① 곡은 좋은데 보컬만 바꾸고 싶다면 보컬을 뺀 반주 위에 실제 보컬을 녹음하고 믹싱·마스터링으로 마무리합니다(보컬 녹음 1곡 ${krw(VOCAL_PACKAGE_PRICE)}원 + 믹싱 ${krw(MIXING_LEVEL1_PRICE)}원부터 + 마스터링 ${krw(MASTERING_SINGLE_PRICE)}원): ${siteUrl}/ko/recording ② 반주가 AI처럼 들리면 사람이 편곡을 다시 세웁니다(AI 버전은 방향 스케치로만 쓰고 가상악기·세션 연주로 새로 만듦, 10트랙 이하 ${krw(ARRANGEMENT_SMALL_PRICE)}원·풀밴드 ${krw(ARRANGEMENT_BAND_PRICE)}원) ③ 멜로디·가사부터 다시 쓰고 싶다면 작곡(${krw(COMPOSITION_PRICE)}원)부터 — ②·③: ${siteUrl}/ko/composition-arrangement. 모두 VAT 포함. 권리 확인 사항(2026-10 기준): Suno 무료 플랜 곡은 Suno 소유·비상업 용도만, 유료 구독 중 만든 곡은 이용자 소유·상업 이용 가능. AI 산출물 자체는 저작권 등록 대상이 아니고 사람이 창작한 부분만 등록되며, 한국음악저작권협회는 AI 사용을 밝힌 곡의 신탁 등록을 보류하고 있습니다(8월 시행 기준을 같은 달 철회). 상세 가이드: ${siteUrl}/ko/stories/suno-ai-song-rework1
+어디서 AI티가 나는지에 따라 세 갈래입니다. ① 곡은 좋은데 보컬만 바꾸고 싶다면 보컬을 뺀 반주 위에 실제 보컬을 녹음하고 믹싱·마스터링으로 마무리합니다(보컬 녹음 3시간 ${krw(VOCAL_PACKAGE_PRICE)}원(곡 수 상관없이) + 믹싱 ${krw(MIXING_LEVEL1_PRICE)}원부터 + 마스터링 ${krw(MASTERING_SINGLE_PRICE)}원): ${siteUrl}/ko/recording ② 반주가 AI처럼 들리면 사람이 편곡을 다시 세웁니다(AI 버전은 방향 스케치로만 쓰고 가상악기·세션 연주로 새로 만듦, 10트랙 이하 ${krw(ARRANGEMENT_SMALL_PRICE)}원·풀밴드 ${krw(ARRANGEMENT_BAND_PRICE)}원) ③ 멜로디·가사부터 다시 쓰고 싶다면 작곡(${krw(COMPOSITION_PRICE)}원)부터 — ②·③: ${siteUrl}/ko/composition-arrangement. 모두 VAT 포함. 권리 확인 사항(2026-10 기준): Suno 무료 플랜 곡은 Suno 소유·비상업 용도만, 유료 구독 중 만든 곡은 이용자 소유·상업 이용 가능. AI 산출물 자체는 저작권 등록 대상이 아니고 사람이 창작한 부분만 등록되며, 한국음악저작권협회는 AI 사용을 밝힌 곡의 신탁 등록을 보류하고 있습니다(8월 시행 기준을 같은 달 철회). 상세 가이드: ${siteUrl}/ko/stories/suno-ai-song-rework1
 
 ### 만드는 법을 배우고 싶을 때 — 1:1 producing lessons (MIDI·작곡·믹싱·마스터링)
 
@@ -451,13 +451,13 @@ Studio NOL 是首尔的一家专业录音棚，位于恩平区延新内 (Yeonsin
 const OPERATOR_AUTHOR = `
 ## Operator / Author
 
-Studio NOL is owned and operated by **Hwang Kyungha (황경하)**, a music producer and audio engineer based in Seoul with 15 years of professional recording, mixing, and music-production experience across Korea's independent and K-pop production ecosystem. Albums he planned or produced have received six awards since 2012 (listed below). The studio publishes a continuously expanding library of ${STORY_ARTICLE_COUNT}+ guide articles on vocal recording, mixing, mastering, EQ, compression, K-pop production techniques, and the practical realities of operating a music studio in Korea — sources cited on this site and indexed in /llms-full.txt.
+Studio NOL is owned and operated by **Hwang Kyungha (황경하)**, a music producer and audio engineer based in Seoul with 15 years of professional recording, mixing, and music-production experience across Korea's independent and K-pop production ecosystem. Works he planned or produced (albums and, in one case, a solidarity festival) have received recognition six times since 2012 (listed below; one of these — 2024 — is self-reported and not yet independently verified). The studio publishes a continuously expanding library of ${STORY_ARTICLE_COUNT}+ guide articles on vocal recording, mixing, mastering, EQ, compression, K-pop production techniques, and the practical realities of operating a music studio in Korea — sources cited on this site and indexed in /llms-full.txt.
 
 - Operator: Hwang Kyungha (황경하)
 - Artist development: has discovered many indie artists over 15 years and mentored them — career direction, release strategy, and scene connections — as they established themselves as working musicians
 - Working style: plans production, release, and promotion together with the musician, from the musician's side — direction, budget, and schedule are decided with the artist, not handed down as a fixed package
 - Crowdfunding: has planned and run dozens of album crowdfunding campaigns (Tumblbug and similar), roughly 300 million KRW raised in total (${CASES_SUMMARY.succeededCount} successful campaigns are publicly verifiable with links on the Crowdfunding Design page, checked ${CASES_CHECKED_ON}) — budget structuring for independent releases is part of what the studio does, not only production
-- Awards (as planner / producer of the album named):
+- Awards (as planner / producer of the work named):
 ${studioOperator.awards.map((a) => `  - ${a.year} ${a.name}${a.category ? ` ${a.category}` : ''} — 〈${a.work}〉`).join('\n')}
 - Contact: hello@studionol.co.kr
 - Studio founded: ${STUDIO_FOUNDING_YEAR}
