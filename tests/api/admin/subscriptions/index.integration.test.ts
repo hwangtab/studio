@@ -19,7 +19,7 @@ jest.mock('../../../../lib/contracts/admin-auth', () => ({
 
 const issueBillingKey = jest.fn();
 const chargeBillingKey = jest.fn();
-jest.mock('../../../../lib/billing/toss-billing', () => ({
+jest.mock('../../../../lib/billing/toss-billing', () => ({ ...jest.requireActual('../../../../lib/billing/toss-billing'),
   issueBillingKey: (...args: unknown[]) => issueBillingKey(...args),
   chargeBillingKey: (...args: unknown[]) => chargeBillingKey(...args),
 }));

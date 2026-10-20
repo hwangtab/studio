@@ -13,6 +13,13 @@ const REQUEST_TIMEOUT_MS = 12000; // booking/toss.ts와 같은 기준
 
 export type { TossPayment, TossResult };
 
+/**
+ * 토스가 아직 끝내지 않은 결제 상태 — 이 상태를 "승인 안 됨 = failed"로 확정하면, 뒤에 DONE이 되었을 때 장부에는 failed로 남아
+ * 반영할 길이 없다(빌링 승인은 동기라 드물지만, 재조회가 그 틈을 볼 수는 있다). 대사하는 쪽은 이 상태면 pending을 그대로 둔다.
+ */
+export const TOSS_IN_PROGRESS_STATUSES = new Set(['READY', 'IN_PROGRESS', 'WAITING_FOR_DEPOSIT']);
+export const isTossPaymentInProgress = (status: string): boolean => TOSS_IN_PROGRESS_STATUSES.has(status);
+
 export interface BillingCard {
   company?: string;
   numberMasked?: string;

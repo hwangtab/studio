@@ -25,7 +25,7 @@ jest.mock('../payments/bankDepositOrders', () => ({
 /* eslint-disable import/first */
 import { createShowOrder, expireStaleShowOrders } from './service';
 import { cancelAwaitingShowDeposit, confirmShowBankDeposit, deliverShowDepositGuide } from './bankDeposit';
-import { refundShowTickets } from './refund';
+import { REFUNDING_GRACE_SECONDS, reconcileShowRefund, refundShowTickets } from './refund';
 import { cancelShowtime } from './showtimeOps';
 import { getShowOrderForManage } from './queries';
 import { loadAdminShowDetail } from './adminQueries';
@@ -224,6 +224,19 @@ describe('공연 계좌 입금 — 리뷰 회귀', () => {
     expect((await ticketsOf(orderNo))[0].status).toBe('issued');
     expect(await refundedAt(orderNo)).toBeUndefined();
     expect((await orderRow(orderNo))?.status).toBe('paid');
+  });
+
+  it('환불 재확인은 방금 선점된 계좌 환불(refunding)을 되돌리지 않고, 유예가 지난 것만 되돌린다', async () => {
+    await seed(mockDb);
+    const orderNo = await paid(1);
+    const [tk] = await ticketsOf(orderNo);
+    // 선점만 남고 batch가 끝나지 않은 상태를 흉내 낸다(기록 batch 진행 중).
+    await mockDb.run(sql`UPDATE show_tickets SET status = 'refunding', refunding_at = unixepoch() WHERE id = ${tk.id}`);
+    expect(await reconcileShowRefund(orderNo, { fetchPayment: jest.fn() })).toEqual({ status: 'in_flight', tickets: 1 });
+    expect((await ticketsOf(orderNo))[0].status).toBe('refunding');
+    await mockDb.run(sql`UPDATE show_tickets SET refunding_at = refunding_at - ${REFUNDING_GRACE_SECONDS + 1} WHERE id = ${tk.id}`);
+    expect(await reconcileShowRefund(orderNo, { fetchPayment: jest.fn() })).toEqual({ status: 'reverted', tickets: 1 });
+    expect((await ticketsOf(orderNo))[0].status).toBe('issued');
   });
 });
 

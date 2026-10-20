@@ -32,7 +32,7 @@ import {
   scheduleForPaidCycle,
 } from './schedule';
 import { sendSubscriptionActivatedEmail, sendSubscriptionCancelledEmail, sendSubscriptionOperatorAlert, subscriptionManageUrl } from './email';
-import { chargeBillingKey, fetchPaymentByOrderId, issueBillingKey, type TossPayment } from './toss-billing';
+import { chargeBillingKey, fetchPaymentByOrderId, isTossPaymentInProgress, issueBillingKey, type TossPayment } from './toss-billing';
 import {
   generateCustomerKey,
   generateManageToken,
@@ -482,6 +482,17 @@ export const chargeCycle = async (
     }
     if (refetched.payment.status === 'DONE') {
       await reconcileSubscriptionPaymentFromToss(refetched.payment, now);
+    } else if (isTossPaymentInProgress(refetched.payment.status)) {
+      // 토스가 아직 끝내지 않았다 — failed로 확정하면 뒤늦은 DONE을 반영할 길이 없다. 재조회 실패와 같이 청구를 보류한다.
+      console.error('[billing] pending 회차가 토스에서 아직 진행 중 — 청구 보류', { subscriptionId, orderNo: row.orderNo, status: refetched.payment.status });
+      return {
+        ok: false,
+        held: true,
+        heldSince: row.attemptedAt,
+        status: subscription.status,
+        tossCode: refetched.payment.status,
+        message: '이전 결제가 아직 처리 중이라 청구를 보류했어요. 잠시 후 다시 시도해 주세요.',
+      };
     } else {
       // 토스도 승인하지 않았다(만료·취소·거절) — 이제야 failed로 확정해도 안전하다.
       await db.run(

@@ -22,7 +22,7 @@ jest.mock('../../data/artists', () => {
   };
 });
 jest.mock('../billing/email', () => ({ sendSubscriptionOperatorAlert: jest.fn().mockResolvedValue(null), sendSubscriptionActivatedEmail: jest.fn().mockResolvedValue(null), subscriptionManageUrl: () => 'https://studionol.co.kr/m' }));
-jest.mock('../billing/toss-billing', () => ({ issueBillingKey: jest.fn(), chargeBillingKey: jest.fn(), fetchPaymentByOrderId: jest.fn() }));
+jest.mock('../billing/toss-billing', () => ({ ...jest.requireActual('../billing/toss-billing'), issueBillingKey: jest.fn(), chargeBillingKey: jest.fn(), fetchPaymentByOrderId: jest.fn() }));
 
 // eslint-disable-next-line import/first
 import { createSubscription } from '../billing/service';
@@ -157,6 +157,10 @@ describe('정산', () => {
     await client.execute(`INSERT INTO subscription_payments (id, subscription_id, order_id, cycle_ym, attempt, amount, status, toss_code, attempted_at) VALUES ('sp-pend', 'a', 'o-pend', '2026-09', 2, 10000, 'failed', 'NETWORK_ERROR', ${Math.floor(new Date('2026-09-28T00:00:00Z').getTime() / 1000)})`);
     // 기록 직전에 토스에 직접 묻는다 — 재조회가 안 되면 unreconciled.
     (fetchPaymentByOrderId as jest.Mock).mockResolvedValue({ ok: false, code: 'NETWORK_ERROR', message: 'timeout' });
+    expect(await recordArtistPayout('jai', '2026-09', NOW)).toEqual({ ok: false, code: 'unreconciled' });
+    expect((await client.execute(`SELECT status FROM orders WHERE id = 'o-pend'`)).rows[0].status).toBe('pending');
+    // 토스가 아직 처리 중이면(IN_PROGRESS) failed로 확정하지 않는다 — 뒤늦은 DONE을 반영할 길이 사라진다.
+    (fetchPaymentByOrderId as jest.Mock).mockResolvedValue({ ok: true, payment: { paymentKey: 'pk-pend', orderId: 'NO-pend', status: 'IN_PROGRESS', totalAmount: 10000 } });
     expect(await recordArtistPayout('jai', '2026-09', NOW)).toEqual({ ok: false, code: 'unreconciled' });
     expect((await client.execute(`SELECT status FROM orders WHERE id = 'o-pend'`)).rows[0].status).toBe('pending');
     // 토스에 그 주문이 없으면(요청이 닿지 않았음) failed로 확정하고 기록을 진행한다 — 구독이 해지돼 chargeCycle이 다시 묻지 않아도 막히지 않는다.
