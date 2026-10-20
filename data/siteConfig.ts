@@ -144,24 +144,32 @@ export const studioOperator = {
     { year: '2012–2015', title: '51플러스 페스티벌', role: 'plan', kind: 'project' },
     { year: '2011–2016', title: '레코드폐허', role: 'plan', kind: 'project' },
   ],
-  // 운영자를 다룬 제3자 언론 보도. sameAs(본인이 관리하는 프로필)와 성격이 다르므로
-  // JSON-LD에서도 Person.subjectOf로 따로 낸다 — 수상·이력 주장을 사이트 밖에서
-  // 검증할 수 있는 근거다.
+  // 운영자를 다룬 제3자 언론 보도 + 수상 사실을 뒷받침하는 공식 기록. sameAs(본인이
+  // 관리하는 프로필)와 성격이 다르므로 JSON-LD에서도 Person.subjectOf로 따로 낸다.
+  //
+  // kind 필드로 둘을 구분한다(2026-10-20 추가 — Opus 리뷰가 지적한 "제3자 보도인가,
+  // 수상 증빙인가"를 매번 재검토하다 추가→삭제가 세 번 반복된 문제의 처방):
+  //   'coverage' — 그를 다룬 보도. /author "언론 보도" 목록에 보이고 NewsArticle로 나간다.
+  //   'record'   — 수상 사실을 뒷받침하는 공식 기록·펀딩 페이지. 그를 "다룬" 글이 아니라
+  //                "언급"만 할 수 있다. /author 목록에는 안 보이고 WebPage로 나간다.
   pressCoverage: [
     {
       // 앞 세 건(이 항목부터 한겨레21까지) 2026-07-28 원문 직접 확인.
+      kind: 'coverage',
       url: 'https://www.nocutnews.co.kr/news/4741803',
       title: '가난·페미니즘·강제철거 반대… 한대음을 빛낸 수상소감',
       publisher: '노컷뉴스',
       datePublished: '2017-03-01',
     },
     {
+      kind: 'coverage',
       url: 'https://www.khan.co.kr/article/201606251956021',
       title: '천 번을 들어줘야 4200원, 먹고 살 수 있습니까?',
       publisher: '경향신문',
       datePublished: '2016-06-25',
     },
     {
+      kind: 'coverage',
       url: 'https://h21.hani.co.kr/arti/society/society_general/44394.html',
       title: '민중음악이 구리다고요?',
       publisher: '한겨레21',
@@ -177,8 +185,10 @@ export const studioOperator = {
       title: "'헌법 제1조' 윤민석, 한국대중음악상 수상",
       publisher: '프레시안',
       datePublished: '2017-03-01',
+      kind: 'coverage',
     },
     {
+      kind: 'record',
       // 2026-10-19 원문 직접 확인. 한국대중음악상 공식 사이트의 〈젠트리피케이션〉(선정위원회
       // 특별상 수상작) 프로젝트 페이지 — "제작자 황경하의 프로듀싱은 섬세하고 치밀"이라고
       // 직접 평한다. 공식 curl은 Cloudflare 챌린지로 403이 뜨지만 crawl4ai(실제 브라우저
@@ -195,6 +205,7 @@ export const studioOperator = {
       // 2026-10-19 원문 직접 확인. "자립본부 황경하씨"를 직접 인용, 자립음악생산조합의
       // 공간 운영 방식을 설명. GPTBot·ChatGPT-User·ClaudeBot·Googlebot·PerplexityBot
       // 전부 200.
+      kind: 'coverage',
       url: 'https://www.hani.co.kr/arti/culture/music/770139.html',
       title: '인디 뮤지션들 홍대앞 떠나 망명했지만…',
       publisher: '한겨레',
@@ -204,6 +215,7 @@ export const studioOperator = {
       // 2026-10-19 원문 직접 확인. "공연 기획자 황경하씨"로 소개, 자립심 페스티벌·테이크
       // 아웃드로잉 컴필레이션 앨범 제작 과정을 다룸. GPTBot·ChatGPT-User·ClaudeBot은 403,
       // Googlebot·PerplexityBot은 200 — 이 매체는 OpenAI·Anthropic 크롤러를 막는다.
+      kind: 'coverage',
       url: 'https://www.sisain.co.kr/news/articleView.html?idxno=25563',
       title: '테이크아웃드로잉을 사운드로 기록하다',
       publisher: '시사IN',
@@ -212,6 +224,7 @@ export const studioOperator = {
     {
       // 2026-10-19 원문 직접 확인. 제14회 한국대중음악상 시상식 사진 기사 — "젠트리피케이션
       // 앨범 황경하 프로듀서가... 수상소감을 말하고 있다" 캡션. 전부 200.
+      kind: 'coverage',
       url: 'https://tvreport.co.kr/star/article/533545/',
       title: '[T포토] 황경하 "리쌍, 평범한 가장의 삶 짓밟지 말길"',
       publisher: 'TV리포트',
@@ -220,7 +233,10 @@ export const studioOperator = {
     {
       // 2026-10-20 원문 직접 확인. 레드어워드 공식 기록(문화연대·노동당 문화예술위원회 계열,
       // 황경하·kosmart와 무관). "주목할 만한 연대" 2019년 선정의 변 — 고 김용균 노동자
-      // 추모 음반 "몸의 중심" 참여 음악가 명단에 황경하가 직접 나온다.
+      // 추모 음반 "몸의 중심" 참여 음악가 명단에 황경하가 직접 나온다. kind는 record다 —
+      // 이 수상자 명단 글은 황경하를 "다룬" 글이 아니라 9명 넘는 참여 음악가 중 한 명으로
+      // "언급"하는 공식 기록이다.
+      kind: 'record',
       url: 'https://redawards.tistory.com/50',
       title: "2019 레드 어워드 '주목할 만한 연대'부문 선정의 변",
       publisher: '레드어워드',
@@ -232,7 +248,10 @@ export const studioOperator = {
       // 기록의 "주목할 만한 연대" 부문에 테이크 아웃 드로잉 연대 축제 〈대망명〉의
       // 기획자로 황경하가 직접 나온다(awards 배열 참조 — work는 "대망명"으로 이미
       // 수정됨). 시상식 실제 개최는 2016-02-13(본문 맥락상, "2015"는 회차 이름).
-      // datePublished는 이 글이 블로그에 올라간 날짜(2019-08-26, 소급 게시).
+      // datePublished는 이 글이 블로그에 올라간 날짜(2019-08-26, 소급 게시). kind는
+      // record — 10개 부문 23개 수상작을 나열하는 결과 발표 글이라 황경하를 "다룬" 글은
+      // 아니다.
+      kind: 'record',
       url: 'https://redawards.tistory.com/22',
       title: '2015 레드 어워드, 10개 부문 23개 수상작 발표',
       publisher: '레드어워드',
@@ -243,6 +262,7 @@ export const studioOperator = {
       // 기획한 예술해방전선 황경하 디렉터는..."을 직접 인용한 독립 기사. 2024 레드어워드
       // 항목은 이 기사만으로는 press로 못 올렸지만(아래 awards 주석 참조), 이 기사
       // 자체는 "황경하가 이 프로젝트를 기획했다"를 다룬 제3자 보도로서 유효하다.
+      kind: 'coverage',
       url: 'https://sports.khan.co.kr/article/202412020551003',
       title: "'이름을 모르는 먼 곳의 그대에게' 평화 노래한 음악가들 여정, 아카이브 웹사이트 다시 만난다",
       publisher: '스포츠경향',

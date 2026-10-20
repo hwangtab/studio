@@ -16,14 +16,19 @@ export const getOperatorProfileUrl = (siteUrl: string, locale: Locale): string =
   `${siteUrl}/${locale}/author`;
 
 /**
- * Person.subjectOf — 운영자를 다룬 제3자 언론 보도.
+ * Person.subjectOf — 운영자를 다룬 제3자 언론 보도 + 수상 사실을 뒷받침하는 공식 기록.
  *
  * sameAs(본인이 관리하는 프로필)와 구분한다. 수상 이력 같은 자기주장을 사이트 밖에서
  * 검증할 수 있는 근거라, AI 엔진의 entity 신뢰도에 직접 작용한다.
+ *
+ * kind로 schema.org 타입을 가른다(2026-10-20 추가) — 'coverage'(그를 다룬 보도)는
+ * NewsArticle, 'record'(수상 결과 발표·펀딩 페이지처럼 그를 "언급"만 하는 공식 기록)는
+ * WebPage. 전부 NewsArticle로 내보내면 뉴스 기사가 아닌 걸 기사라고 주장하는 셈이라
+ * 타입을 분리했다 — `data/siteConfig.ts`의 pressCoverage 배열 머리 주석 참조.
  */
 export const getOperatorPressCoverage = () =>
   (studioOperator.pressCoverage ?? []).map((article) => ({
-    '@type': 'NewsArticle',
+    '@type': article.kind === 'record' ? 'WebPage' : 'NewsArticle',
     headline: article.title,
     url: article.url,
     datePublished: article.datePublished,

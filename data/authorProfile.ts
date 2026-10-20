@@ -124,11 +124,15 @@ export const getAuthorProfile = (locale: Locale) => ({
     { label: t(locale, { ko: '네이버 바이브 아티스트 페이지', en: 'Artist page on NAVER VIBE' }), url: getOperatorProfileUrlById('vibe') },
   ],
   // 제3자 보도 — 수상 이력을 사이트 밖에서 검증할 수 있는 근거. siteConfig가 단일 소스.
-  pressCoverage: studioOperator.pressCoverage.map((article) => ({
-    url: article.url,
-    title: article.title,
-    meta: `${article.publisher} · ${article.datePublished}`,
-  })),
+  // kind: 'record'(수상 결과 발표 등 그를 "언급"만 하는 공식 기록)는 "언론 보도" 목록이
+  // 아니므로 제외한다 — JSON-LD subjectOf에는 여전히 실린다(utils/schema/person.ts).
+  pressCoverage: studioOperator.pressCoverage
+    .filter((article) => article.kind !== 'record')
+    .map((article) => ({
+      url: article.url,
+      title: article.title,
+      meta: `${article.publisher} · ${article.datePublished}`,
+    })),
   headings: {
     about: t(locale, { ko: '소개', en: 'About' }),
     expertise: t(locale, { ko: '전문 분야', en: 'Expertise' }),
