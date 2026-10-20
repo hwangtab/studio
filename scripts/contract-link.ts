@@ -12,6 +12,10 @@
  *   npx tsx scripts/contract-link.ts list                  # 최근 20건 — 상태(만료 포함)·발송일·만료·열람·서명 대기 링크
  *   npx tsx scripts/contract-link.ts resend <계약 id>      # 만료됐거나 다시 보낼 링크 — 옛 링크는 즉시 무효, 새 링크 출력
  *   npx tsx scripts/contract-link.ts cancel <계약 id>
+ *   npx tsx scripts/contract-link.ts events <계약 id>      # 진행 기록 타임라인(최근 30건, 무효 표시·통지 결과 포함)
+ *   npx tsx scripts/contract-link.ts log <계약 id> --type payment_received --amount 225000 [--yes]   # 진행 기록 남기기
+ *   npx tsx scripts/contract-link.ts log <계약 id> --type stage_delivered --stage mixing --song 1 --at "2026-10-20 14:30" --yes
+ *   npx tsx scripts/contract-link.ts log <계약 id> --void <기록 id> --note "사유" --yes
  *
  * - mixmaster: `--tracks N`으로 믹싱 가격 구간이 정해진다(10 이하 / 11~30 / 31 이상 + 싱글 마스터링, data/pricing.ts —
  *   applyMixMasterTracks). 정가와 다른 금액은 `--total N`(부가세 포함). 50만원 이하는 일시불, 넘으면 계약금·잔금 절반씩
@@ -23,6 +27,13 @@
  * - 발송하면 관리자 화면과 같이 운영자 알림 메일이 나간다(링크 계약은 의뢰인 메일은 없다).
  * - `--yes` 없이는 미리보기만. 발송은 스튜디오 대표 서명이다 — 서명 기록의 서명자는 `CONTRACT_ACTOR`(기본 kyungha)에
  *   " (scripts/contract-link.ts)"를 붙여 남긴다. 발송한 계약은 고칠 수 없다 — 틀렸으면 cancel하고 새로 만든다.
+ *
+ * - `log`: 관리자 상세의 "진행 기록"과 **같은 코드**(lib/contracts/production/admin-record.ts — 입력 검증·해지 환불 확인·장부 판정·
+ *   기록)를 지나고, 통지 대상 기록이면 의뢰인 메일도 같이 나간다(sendEventNotice). 받는 종류는 관리자 폼과 같다
+ *   (adminEventTypesFor). `--song`은 1부터(여러 곡 계약), `--at`은 KST("YYYY-MM-DD HH:mm", 기본 지금, 미래·120일 전 이전은 거절).
+ *   `--yes` 없이는 미리보기 — 장부가 거절할 기록이면 미리보기에서도 사유가 나온다. 기록의 수행자는 `admin:<CONTRACT_ACTOR>
+ *   (scripts/contract-link.ts)`로 남는다. 틀린 기록은 지우지 않고 `--void`(사유 필수)로 무효 처리한다.
+ * - `events`: 읽기 전용. 무효 처리된 기록은 [무효]로 표시한다.
  *
  * 접속: pay-link.ts와 같다(TURSO_* 또는 로그인된 Turso CLI로 만료 1일 토큰, 파일에 쓰지 않는다).
  */
@@ -47,7 +58,7 @@ const connect = () => {
 };
 
 const USAGE =
-  '사용법:\n  create --kind mixmaster --tracks N [--total N] [--first-days N] [--weeks N] [--deposit-days N] [--song 제목] [--memo 메모] [--title 제목] [--yes]\n  create --kind single|ep|album [--songs N] [--song 제목] [--album 제목] [--weeks N] [--deposit-days N] [--memo 메모] [--title 제목] [--yes]\n  list\n  resend <계약 id>\n  cancel <계약 id>';
+  '사용법:\n  create --kind mixmaster --tracks N [--total N] [--first-days N] [--weeks N] [--deposit-days N] [--song 제목] [--memo 메모] [--title 제목] [--yes]\n  create --kind single|ep|album [--songs N] [--song 제목] [--album 제목] [--weeks N] [--deposit-days N] [--memo 메모] [--title 제목] [--yes]\n  list\n  resend <계약 id>\n  cancel <계약 id>\n  events <계약 id>\n  log <계약 id> --type <기록 종류> [--stage mixing|mastering|arrangement|tuning] [--song N(1부터)] [--amount N] [--note 내용] [--link https://…] [--at "YYYY-MM-DD HH:mm"(KST)] [--cause client|studio] [--yes]\n  log <계약 id> --void <기록 id> --note 사유 [--yes]';
 
 /** 양의 정수 옵션. 잘못 적으면 조용히 기본값으로 가지 않고 멈춘다. */
 const intFlag = (name: string): number | undefined => {
@@ -190,6 +201,128 @@ const main = async (): Promise<void> => {
     const { getDb } = await import('../db/client');
     const row = await getDb().query.productionContracts.findFirst({ where: (c, { eq }) => eq(c.id, id), columns: { status: true } });
     console.log(row ? `취소할 수 없는 상태입니다(${row.status}) — 체결된 계약은 관리자 화면에서 해지합니다.` : '그런 계약이 없습니다. list로 id를 확인해 주세요.');
+    return;
+  }
+
+  if (command === 'events' || command === 'log') {
+    const id = args[1] ?? '';
+    if (!ID_PATTERN.test(id)) throw new Error(`사용법: ${command} <계약 id>\n${USAGE}`);
+    connect();
+    const progress = await import('../lib/contracts/production/progress');
+    const spec = await import('../lib/contracts/production/event-spec');
+    const context = await progress.loadProgressContext(id);
+    if (!context) throw new Error('그런 계약이 없습니다. list로 id를 확인해 주세요.');
+    const mixMaster = spec.isMixMasterTerms(context.terms);
+    const kstTime = (iso: string): string =>
+      new Date(iso).toLocaleString('sv-SE', { timeZone: 'Asia/Seoul' }).slice(0, 16);
+
+    if (command === 'events') {
+      const { buildAdminProgressView } = await import('../lib/contracts/production/progress-view');
+      const view = buildAdminProgressView(context.terms, context.ledger, context.events, context.contract.status === 'signed');
+      const NOTICE: Record<string, string> = { none: '', pending: '통지 대기', sent: '통지 완료', failed: '통지 실패' };
+      console.log(`${context.contract.title}\n${context.contract.clientName || '(의뢰인 미정)'} · 계약 상태 ${context.contract.status}\n`);
+      for (const item of view.timeline.slice(0, 30)) {
+        const parts = [
+          kstTime(item.occurredAt),
+          item.voided ? '[무효]' : '',
+          item.label,
+          item.stage ?? '',
+          item.amount !== null ? won(item.amount) : '',
+          item.note ? `"${item.note}"` : '',
+          item.link ?? '',
+          `by ${item.actor}`,
+          NOTICE[item.noticeStatus] ?? item.noticeStatus,
+          item.noticeError ? `(${item.noticeError})` : '',
+        ];
+        console.log(parts.filter(Boolean).join('  '));
+        console.log(`      id ${item.id}`);
+      }
+      if (view.timeline.length === 0) console.log('아직 기록이 없습니다.');
+      else if (view.timeline.length > 30) console.log(`… 이전 ${view.timeline.length - 30}건은 관리자 화면에서 확인해 주세요.`);
+      return;
+    }
+
+    // log — 관리자 기록 API와 같은 함수(recordAdminProgress)를 지난다. 미리보기에서는 같은 파서·판정만 읽기로 돌린다.
+    const voidId = flag('void');
+    const type = flag('type');
+    if (voidId !== undefined && type !== undefined) throw new Error('--void와 --type은 함께 쓰지 않습니다.');
+    if (voidId === undefined && type === undefined) throw new Error(`--type(기록 종류) 또는 --void(무효로 할 기록 id)가 필요합니다.\n${USAGE}`);
+    const allowed = spec.adminEventTypesFor(mixMaster);
+    if (type !== undefined && !(allowed as readonly string[]).includes(type)) {
+      throw new Error(
+        `--type은 다음 중 하나입니다:\n${allowed.map((t) => `  ${t.padEnd(22)} ${spec.eventLabelFor(t, mixMaster)}`).join('\n')}`,
+      );
+    }
+    const amountRaw = flag('amount');
+    const songRaw = intFlag('song');
+    const atRaw = flag('at');
+    if (atRaw !== undefined && !/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(atRaw)) throw new Error('--at은 KST "YYYY-MM-DD HH:mm" 형식입니다.');
+    const body: Record<string, unknown> =
+      voidId !== undefined
+        ? { eventId: voidId, reason: flag('note') }
+        : {
+            type,
+            stage: flag('stage'),
+            song: songRaw !== undefined ? songRaw - 1 : undefined,
+            amount: amountRaw !== undefined ? Number(amountRaw) : undefined,
+            note: flag('note'),
+            link: flag('link'),
+            cause: flag('cause'),
+            occurredAt: atRaw?.replace(' ', 'T'),
+          };
+    const action = voidId !== undefined ? 'void' : 'record';
+    const eventsModule = await import('../lib/contracts/production/events');
+    const parsed = action === 'void' ? eventsModule.parseVoidInput(body) : eventsModule.parseAdminEventInput(body);
+    if (!parsed.ok) {
+      console.error(parsed.message);
+      process.exit(1);
+    }
+    const refusal = eventsModule.checkEventAllowed(context.contract, context.ledger, context.events, parsed.input);
+    if (refusal) {
+      console.error(`기록할 수 없습니다: ${refusal}`);
+      process.exit(1);
+    }
+
+    const input = parsed.input;
+    const notifies = spec.EVENT_SPEC[input.type].notifies;
+    const { songLabel } = await import('../lib/contracts/production/terms');
+    console.log(`계약     ${context.contract.title}`);
+    console.log(`의뢰인   ${context.contract.clientName || '(의뢰인 미정)'}`);
+    console.log(`기록     ${spec.eventLabelFor(input.type, mixMaster)}${input.voidsEventId ? ` (무효로 할 기록 ${input.voidsEventId})` : ''}`);
+    if (input.stage) console.log(`단계     ${spec.STAGE_LABEL[input.stage]}`);
+    if (input.song !== null && context.terms.songs.length > 1) console.log(`곡       ${songLabel(context.terms, input.song)}`);
+    if (input.amount !== null) console.log(`금액     ${won(input.amount)}`);
+    const note = input.data.note ?? input.data.reason;
+    if (note) console.log(`내용     ${note}`);
+    if (input.data.link) console.log(`링크     ${input.data.link}`);
+    if (input.data.cause) console.log(`사유     ${input.data.cause === 'client' ? '의뢰인' : '스튜디오'}`);
+    console.log(`일어난 때 ${kstTime(input.occurredAt.toISOString())} (KST)`);
+    console.log(`의뢰인 메일 ${notifies ? '나감 — 통지 메일이 의뢰인에게 발송됩니다' : '없음'}`);
+    if (!has('yes')) {
+      console.log('\n미리보기입니다. 맞으면 --yes를 붙여 다시 실행하세요.');
+      return;
+    }
+
+    const { recordAdminProgress } = await import('../lib/contracts/production/admin-record');
+    const recorded = await recordAdminProgress(id, action, body, {
+      actor: `admin:${process.env.CONTRACT_ACTOR ?? 'kyungha'} (scripts/contract-link.ts)`,
+      ip: null,
+    });
+    if (!recorded.ok) {
+      console.error(`기록하지 못했습니다(${recorded.status}): ${recorded.message}`);
+      process.exit(1);
+    }
+    console.log(`\n기록했습니다 (기록 id ${recorded.event.id})`);
+    if (spec.EVENT_SPEC[recorded.event.type].notifies) {
+      // API는 응답 뒤(waitUntil)에 보내지만 스크립트는 끝나기 전에 보내고 결과를 확인한다.
+      await progress.sendEventNotice(id, recorded.event.id);
+      const after = (await progress.loadProgressContext(id))?.events.find((e) => e.id === recorded.event.id);
+      console.log(
+        after?.noticeStatus === 'sent'
+          ? '의뢰인에게 통지 메일을 보냈습니다.'
+          : `통지 메일이 나가지 않았습니다(${after?.noticeStatus}${after?.noticeError ? `: ${after.noticeError}` : ''}) — 관리자 화면에서 "통지 다시 보내기"를 누르세요.`,
+      );
+    }
     return;
   }
 
