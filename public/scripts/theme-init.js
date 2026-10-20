@@ -25,7 +25,10 @@
     var storageKey = 'darkMode';
     var storedPreference = localStorage.getItem(storageKey);
     var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var shouldUseDark = storedPreference === 'true' || (storedPreference === null && prefersDark);
+    // 관리자 화면은 라이트 고정이다 — 휴대폰이 다크 모드면 제목(text-gray-900)이 흰 카드 위에서 흰색이 돼 안 보였다(2026-10-20).
+    // 저장된 선호는 건드리지 않는다(사이트로 돌아가면 그대로). components/Layout.tsx가 같은 판정을 쓴다.
+    var isAdminPath = pathSegments[1] === 'admin';
+    var shouldUseDark = !isAdminPath && (storedPreference === 'true' || (storedPreference === null && prefersDark));
 
     document.documentElement.classList.toggle('dark', shouldUseDark);
 

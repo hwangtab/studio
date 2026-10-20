@@ -29,6 +29,17 @@ interface LayoutProps {
 // 영향 없어 정적 처리로 충분. 헤더 스타일이 바뀌면 styles/globals.css의 page-main
 // 또는 이 className을 같이 조정.
 
+/** 저장된 선호(localStorage) 또는 시스템 설정으로 다크 모드를 쓰는가 — public/scripts/theme-init.js와 같은 판정. */
+const readPreferredDark = (): boolean => {
+  let stored: string | null = null;
+  try {
+    stored = localStorage.getItem('darkMode');
+  } catch {
+    // 저장소가 막힌 브라우저는 시스템 설정만 본다.
+  }
+  return stored === 'true' || (stored === null && typeof window.matchMedia === 'function' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+};
+
 const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   const router = useRouter();
   const { t } = useTranslation('common', { lng: locale });
@@ -38,16 +49,26 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   const headerRef = useRef<HTMLElement | null>(null);
 
 
+  // 관리자 화면은 라이트 고정이다. 다크 모드 휴대폰에서 `.dark`가 붙으면 text-gray-900 제목이 흰 카드 위에서 흰색이 되고
+  // 칸 이름·본문은 연한 회색이 된다(관리자 쪽 `dark:text-gray-900` 짝을 빠뜨린 곳마다 깨졌다). 그래서 관리자에서는 `.dark`를
+  // 걷고 저장된 선호(localStorage)는 건드리지 않는다 — 사이트로 돌아오면 원래 선호로 복원한다(public/scripts/theme-init.js와 같은 판정).
+
+  const isAdminPage = isAdminRoute(router.pathname);
+
   // Consolidated Theme Management
   useEffect(() => {
     if (typeof document === 'undefined') return;
-    setIsDarkMode(document.documentElement.classList.contains('dark'));
+    if (isAdminPage) {
+      document.documentElement.classList.remove('dark');
+      return;
+    }
+    setIsDarkMode(readPreferredDark());
     setHasThemeLoaded(true);
-  }, []);
+  }, [isAdminPage]);
 
   // Theme 적용 및 theme-color 동적 갱신
   useEffect(() => {
-    if (!hasThemeLoaded || typeof document === 'undefined') return;
+    if (!hasThemeLoaded || isAdminPage || typeof document === 'undefined') return;
 
     // 2. Apply Theme
     if (isDarkMode) {
@@ -71,7 +92,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
 
     // 4. Sync Lang
     document.documentElement.lang = locale;
-  }, [isDarkMode, hasThemeLoaded, locale]);
+  }, [isDarkMode, hasThemeLoaded, isAdminPage, locale]);
 
   const toggleDarkMode = () => {
     setIsDarkMode((prev) => !prev);
@@ -141,7 +162,6 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
    * 더해져, 화면보다 80px + 푸터 높이만큼 길어져 있었다. 로그인 카드가 화면 정중앙이 아니라
    * 40px쯤 아래로 밀려 보이던 것이 그 때문이다.
    */
-  const isAdminPage = isAdminRoute(router.pathname);
 
   /**
    * 결제·관리 화면도 사이트 껍데기를 두르지 않는다.
