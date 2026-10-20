@@ -2540,6 +2540,28 @@ export const paymentLinks = sqliteTable('payment_links', {
 export type PaymentLinkRow = typeof paymentLinks.$inferSelect;
 
 /**
+ * 제작·믹싱 계약 ↔ 결제 링크(마이그레이션 0079). 계약이 체결되면 대금(계약금 또는 일시불 전액)을, 마스터링이 승인되면 잔금을
+ * 결제 링크(`/ko/pay/<slug>`)로 받는다 — 카드·간편결제·계좌 입금을 결제 링크가 그대로 처리하고, 결제가 확정되면 이 표로 계약을
+ * 찾아 진행 기록에 입금을 남긴다(lib/contracts/production/payment-link.ts). 표가 없는 DB(0079 전)에서도 계약·서명은 돈다
+ * (링크가 안 생길 뿐이다).
+ */
+export const productionContractPaymentLinks = sqliteTable(
+  'production_contract_payment_links',
+  {
+    slug: text('slug').primaryKey(),
+    contractId: text('contract_id')
+      .notNull()
+      .references(() => productionContracts.id, { onDelete: 'cascade' }),
+    /** deposit = 계약금(일시불이면 전액), balance = 잔금(추가 비용·초과 수정 요금 포함 남은 금액). */
+    purpose: text('purpose', { enum: ['deposit', 'balance'] }).notNull(),
+    /** 링크를 만들 때의 금액(VAT 포함) — 남은 금액이 바뀌면 옛 링크를 닫고 새로 만든다. */
+    amount: integer('amount').notNull(),
+    createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+  },
+  (t) => [index('production_contract_payment_links_contract_idx').on(t.contractId)],
+);
+
+/**
  * 결제 링크로 만들어진 주문이 **어느 링크였는지**의 기록(마이그레이션 0061). 링크 주문(`orders.type = 'deposit'`)은 하위 표가 없어
  * 상품명이 어디에도 남지 않았다 — 같은 고객에게 링크를 여러 개 보내면 입금·환불 때 어느 건인지 알 수 없었다.
  * `item_name`은 주문 시점의 **스냅샷**이다(링크는 닫혀도 이름이 바뀌지 않지만, 파일 링크는 코드가 바뀔 수 있다). 메모는 링크 표에서 읽는다.
