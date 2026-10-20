@@ -97,10 +97,30 @@ describe('adjustPaidBankDepositAmount', () => {
     await client.execute(`DELETE FROM payments`);
     await client.execute(`DELETE FROM orders`);
     await seed();
-    expect(await adjustPaidBankDepositAmount({ orderId: 'o1', totalAmount: 0, reason: '사유입니다', actor: 'admin' })).toMatchObject({ ok: false });
+    expect(await adjustPaidBankDepositAmount({ orderId: 'o1', totalAmount: 500, reason: '사유입니다', actor: 'admin' })).toMatchObject({ ok: false }); // 오입력 가드(1~999원)
+    expect(await adjustPaidBankDepositAmount({ orderId: 'o1', totalAmount: -1000, reason: '사유입니다', actor: 'admin' })).toMatchObject({ ok: false });
     expect(await adjustPaidBankDepositAmount({ orderId: 'o1', totalAmount: 500000, reason: '', actor: 'admin' })).toMatchObject({ ok: false });
     expect(await adjustPaidBankDepositAmount({ orderId: 'o1', totalAmount: 300000, reason: '사유입니다', actor: 'admin' })).toMatchObject({ ok: false });
     expect((await one(`SELECT total_amount FROM orders WHERE id='o1'`))?.total_amount).toBe(300000);
+  });
+});
+
+describe('0원(완전 무료) 정정', () => {
+  it('세션 주문을 0원으로 정정하고 다시 올릴 수도 있다', async () => {
+    await seed();
+    expect(await adjustPaidBankDepositAmount({ orderId: 'o1', totalAmount: 0, reason: '전액 할인', actor: 'admin' })).toEqual({ ok: true, from: 300000, to: 0 });
+    expect(await one(`SELECT item_amount, vat_amount, total_amount FROM orders WHERE id='o1'`)).toEqual({ item_amount: 0, vat_amount: 0, total_amount: 0 });
+    expect(await adjustPaidBankDepositAmount({ orderId: 'o1', totalAmount: 100000, reason: '다시 올림', actor: 'admin' })).toMatchObject({ ok: true, to: 100000 });
+  });
+
+  it('티켓 주문을 0원으로 정정하면 장당 금액이 모두 0이 된다', async () => {
+    await seed({ type: 'ticket' });
+    for (const i of [0, 1]) {
+      await client.executeMultiple(`PRAGMA foreign_keys = OFF; INSERT INTO show_tickets (id, order_no, showtime_id, ticket_type_id, code, status, issued_by, unit_amount, compensated_amount) VALUES ('z${i}', 'SNB-T-1', 'st1', 'tt1', 'zc${i}', 'issued', 'customer', 25000, 0); PRAGMA foreign_keys = ON;`);
+    }
+    expect(await adjustPaidBankDepositAmount({ orderId: 'o1', totalAmount: 0, reason: '전액 무료', actor: 'admin' })).toMatchObject({ ok: true, to: 0 });
+    const rows = (await client.execute(`SELECT unit_amount FROM show_tickets WHERE order_no='SNB-T-1'`)).rows as unknown as { unit_amount: number }[];
+    expect(rows.map((r) => Number(r.unit_amount))).toEqual([0, 0]);
   });
 });
 

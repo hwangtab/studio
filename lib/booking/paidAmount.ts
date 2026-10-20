@@ -78,8 +78,9 @@ export const adjustPaidBankDepositAmount = async (input: {
   now?: Date;
 }): Promise<PaidAmountResult> => {
   const amount = Number(input.totalAmount);
-  if (input.totalAmount === null || input.totalAmount === '' || !Number.isInteger(amount) || amount < MIN_AMOUNT || amount > 100_000_000) {
-    return { ok: false, message: `금액을 확인해 주세요(부가세 포함 총액, ${MIN_AMOUNT.toLocaleString('ko-KR')}원 이상 원 단위).` };
+  // 0원(완전 무료)은 허용한다 — 전액 할인·초대에 가까운 경우(운영자 요청 2026-10-20). 1~999원은 "250000"을 "250"으로 적는 식의 오입력이라 막는다.
+  if (input.totalAmount === null || input.totalAmount === '' || !Number.isInteger(amount) || amount < 0 || (amount > 0 && amount < MIN_AMOUNT) || amount > 100_000_000) {
+    return { ok: false, message: `금액을 확인해 주세요(부가세 포함 총액, 0원 또는 ${MIN_AMOUNT.toLocaleString('ko-KR')}원 이상 원 단위).` };
   }
   const reason = typeof input.reason === 'string' ? input.reason.trim() : '';
   if (reason.length < 2 || reason.length > 200) return { ok: false, message: '정정 사유를 2~200자로 적어 주세요.' };

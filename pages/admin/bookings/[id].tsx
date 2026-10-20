@@ -467,7 +467,7 @@ export default function AdminBookingDetailPage({
   const [adjustReason, setAdjustReason] = useState('');
   const handleAdjustPaidAmount = async () => {
     const next = Number(adjustAmount.replace(/[,\s원]/g, ''));
-    if (!window.confirm(`금액을 ${formatPriceAmount(booking.totalAmount)}원 → ${Number.isFinite(next) ? formatPriceAmount(next) : adjustAmount}원으로 정정할까요?\n\n매출 현황과 환불 가능 금액이 함께 바뀌고, 사유와 함께 기록이 남습니다. 고객에게 메일은 가지 않습니다.`)) return;
+    if (!window.confirm(`${next === 0 ? '0원(완전 무료)으로 정정하면 이 주문의 매출이 0원이 되고 환불할 돈도 없어요.\n\n' : ''}금액을 ${formatPriceAmount(booking.totalAmount)}원 → ${Number.isFinite(next) ? formatPriceAmount(next) : adjustAmount}원으로 정정할까요?\n\n매출 현황과 환불 가능 금액이 함께 바뀌고, 사유와 함께 기록이 남습니다. 고객에게 메일은 가지 않습니다.`)) return;
     setBusy(true);
     setNotice(null);
     try {
@@ -982,7 +982,7 @@ export default function AdminBookingDetailPage({
               <div className="mt-3">
                 {adjustOpen ? (
                   <div className="grid grid-cols-1 gap-3 rounded-lg border border-gray-200 p-3 sm:grid-cols-2">
-                    <Field id="adj-amount" label="바꿀 금액 (부가세 포함, 원)" className={lightOnlyField}><TextInput inputMode="numeric" value={adjustAmount} onChange={(e) => setAdjustAmount(e.target.value)} light /></Field>
+                    <Field id="adj-amount" label="바꿀 금액 (부가세 포함, 원 — 무료면 0)" className={lightOnlyField}><TextInput inputMode="numeric" value={adjustAmount} onChange={(e) => setAdjustAmount(e.target.value)} light /></Field>
                     <Field id="adj-reason" label="정정 사유 (기록에 남아요)" className={lightOnlyField}><TextInput value={adjustReason} onChange={(e) => setAdjustReason(e.target.value)} placeholder="예: 협의 금액을 잘못 넣음" light /></Field>
                     <p className="text-xs text-gray-500 sm:col-span-2">계좌로 받은 돈과 기록이 다를 때만 쓰세요. 매출·환불 가능 금액이 바뀌고, 고객에게 메일은 가지 않아요. 환불이 한 번이라도 있으면 정정할 수 없어요.</p>
                     <div className="flex flex-wrap gap-2 sm:col-span-2">
