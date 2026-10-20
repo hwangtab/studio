@@ -2484,7 +2484,7 @@
   "coverVideo": {
     "seo": {
       "title": "Cover Video Recording Studio · 4K Video + Audio All-in-One ₩350K | Studio NOL",
-      "description": "5 min walk from Yeonsinnae Station exit 4. Cover song video filming + mixing in one session. 4K MP4 + WAV/MP3 included. All-in-one package ₩350,000 (VAT included).",
+      "description": "5 min walk from Yeonsinnae Station exit 4. Cover song video filming + basic mixing in one session. 4K MP4 + WAV/MP3 included. All-in-one package ₩350,000 (VAT included).",
       "keywords": "cover video recording, cover song studio, youtube cover video, music cover filming, 4k cover video studio, cover recording Seoul, Yeonsinnae recording studio"
     },
     "hero": {
@@ -2499,7 +2499,7 @@
       "items": [
         {
           "q": "Can I film and record at the same time?",
-          "a": "Yes. Studio recording and video filming happen simultaneously in one session. Filming, mixing, and editing are all included."
+          "a": "Yes. Studio recording and video filming happen simultaneously in one session. Filming, basic mixing (level balancing), and editing are all included."
         },
         {
           "q": "How much does it cost?",
@@ -2559,7 +2559,7 @@
         },
         {
           "title": "Mixing & Editing",
-          "description": "Vocal tuning, mixing, and video editing are completed together."
+          "description": "Basic mixing (level balancing) and video editing are completed together. Vocal tuning is not included."
         },
         {
           "title": "Final Delivery",
@@ -2586,6 +2586,10 @@
         {
           "q": "Can I choose the editing style?",
           "a": "Basic editing (cut editing, titles, color grading) is included. Specific requests can be discussed during consultation."
+        },
+        {
+          "q": "Can I record the cover song without the video?",
+          "a": "Yes, as a regular recording session (vocal recording, 3 hours, ₩250,000, any number of songs). The All-in-One package includes only basic mixing that balances levels, and no vocal tuning. Tuning or full mixing and mastering can be ordered separately."
         },
         {
           "q": "What if 3 hours isn't enough?",

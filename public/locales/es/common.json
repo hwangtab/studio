@@ -2456,7 +2456,7 @@
   "coverVideo": {
     "seo": {
       "title": "Grabación de Video Cover · 4K + Audio Todo en Uno ₩350K | Studio NOL",
-      "description": "A 5 min del exit 4 de Yeonsinnae. Filmación de video cover + mezcla en una sesión. 4K MP4 + WAV/MP3. Paquete todo en uno ₩350,000 (IVA incluido).",
+      "description": "A 5 min del exit 4 de Yeonsinnae. Filmación de video cover + mezcla básica en una sesión. 4K MP4 + WAV/MP3. Paquete todo en uno ₩350,000 (IVA incluido).",
       "keywords": "grabación video cover, estudio cover Seoul, youtube cover video, filmación música, estudio grabación Yeonsinnae"
     },
     "hero": {
@@ -2471,7 +2471,7 @@
       "items": [
         {
           "q": "¿Puedo filmar y grabar al mismo tiempo?",
-          "a": "Sí. La grabación en estudio y la filmación de video ocurren simultáneamente. Filmación, mezcla y edición están incluidas."
+          "a": "Sí. La grabación en estudio y la filmación de video ocurren simultáneamente. Filmación, mezcla básica (equilibrio de niveles) y edición están incluidas."
         },
         {
           "q": "¿Cuánto cuesta?",
@@ -2531,7 +2531,7 @@
         },
         {
           "title": "Mezcla y Edición",
-          "description": "Afinación vocal, mezcla y edición de video se completan juntas."
+          "description": "La mezcla básica (equilibrio de niveles) y la edición de video se completan juntas. No incluye afinación vocal."
         },
         {
           "title": "Entrega Final",
@@ -2558,6 +2558,10 @@
         {
           "q": "¿Puedo elegir el estilo de edición?",
           "a": "La edición básica (corte, títulos, corrección de color) está incluida. Los pedidos específicos se discuten en la consulta."
+        },
+        {
+          "q": "¿Puedo grabar solo la canción cover, sin video?",
+          "a": "Sí, como una sesión de grabación normal (grabación vocal, 3 horas, ₩250,000, sin importar el número de canciones). La mezcla del paquete todo en uno es solo una mezcla básica que equilibra los niveles y no incluye afinación vocal. La afinación o una mezcla y masterización completas se contratan por separado."
         },
         {
           "q": "¿Qué pasa si 3 horas no son suficientes?",

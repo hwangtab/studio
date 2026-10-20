@@ -2456,7 +2456,7 @@
   "coverVideo": {
     "seo": {
       "title": "Cover video suratga olish · 4K video + audio to'liq paket ₩350K | Studio NOL",
-      "description": "Yeonsinnae stantsiyasi 4-chiqishdan 5 daqiqa yurish. Cover video suratga olish + miks bir seansda. 4K MP4 + WAV/MP3. To'liq paket ₩350,000 (QQS bilan).",
+      "description": "Yeonsinnae stantsiyasi 4-chiqishdan 5 daqiqa yurish. Cover video suratga olish + oddiy miks bir seansda. 4K MP4 + WAV/MP3. To'liq paket ₩350,000 (QQS bilan).",
       "keywords": "cover video suratga olish, cover qo'shiq, youtube cover video, musiqa studiyasi Seul, Yeonsinnae"
     },
     "hero": {
@@ -2471,7 +2471,7 @@
       "items": [
         {
           "q": "Suratga olish va yozishni bir vaqtda qilish mumkinmi?",
-          "a": "Ha. Studiya yozuvi va video suratga olish bir seansda bir vaqtda amalga oshiriladi. Suratga olish, miks va montaj kiritilgan."
+          "a": "Ha. Studiya yozuvi va video suratga olish bir seansda bir vaqtda amalga oshiriladi. Suratga olish, oddiy miks (balansni sozlash) va montaj kiritilgan."
         },
         {
           "q": "Narxi qancha?",
@@ -2531,7 +2531,7 @@
         },
         {
           "title": "Miks & Montaj",
-          "description": "Vokal tuning, miks va video montaj birgalikda yakunlanadi."
+          "description": "Oddiy miks (balansni sozlash) va video montaj birgalikda yakunlanadi. Vokal tuning kiritilmagan."
         },
         {
           "title": "Yakuniy Topshirish",
@@ -2558,6 +2558,10 @@
         {
           "q": "Montaj uslubini tanlash mumkinmi?",
           "a": "Asosiy montaj (kesish, sarlavhalar, rang tuzatish) kiritilgan. Maxsus talablar maslahatda muhokama qilinadi."
+        },
+        {
+          "q": "Videosiz faqat cover qo'shiqni yozish mumkinmi?",
+          "a": "Ha, oddiy yozuv xizmati sifatida (vokal yozuvi, 3 soat, ₩250,000, qo'shiqlar soni cheklanmagan). To'liq paketdagi miks faqat balansni sozlaydigan oddiy miks bo'lib, vokal tuningni o'z ichiga olmaydi. Tuning yoki to'liq miks va mastering alohida buyurtma qilinadi."
         },
         {
           "q": "3 soat yetarli bo'lmasa nima bo'ladi?",
