@@ -22,6 +22,7 @@ import {
   type RevenueSummary,
   type Totals,
 } from '../../lib/ops/revenueReport';
+import { loadProductionRevenueRows } from '../../lib/ops/productionRevenue';
 
 /**
  * 매출 현황 — 월·연 단위 순매출, 전기 대비, 월별 추이, 유형·펀딩 프로젝트·결제수단별 구성.
@@ -69,6 +70,8 @@ export const getServerSideProps: GetServerSideProps<RevenuePageProps> = async (c
   try {
     const window = loadWindow(year);
     const rows = await loadRevenueRows(window);
+    // 제작·믹싱 계약의 입금 기록 — 결제 행이 없어 위 조회에 안 잡힌다(productionRevenue.ts).
+    rows.push(...(await loadProductionRevenueRows(window)));
     // 수기 매출은 따로 읽는다 — 표가 없는 DB(0063 전)에서도 나머지 매출은 보여야 한다. 대신 빠졌다는 사실을 화면에 올린다.
     let manualError: string | null = null;
     try {

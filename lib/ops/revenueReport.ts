@@ -25,6 +25,8 @@ import { fundingPledges, payments } from '../../db/schema';
 export const REVENUE_TYPE_LABELS: Record<string, string> = {
   session: '세션 예약',
   mixing: '믹싱·마스터링',
+  // 제작 계약(싱글·EP·정규, production_contracts) — 입금 기록으로 집계한다(productionRevenue.ts).
+  production: '음원 제작',
   subscription: '구독',
   deposit: '예약금',
   software: '소프트웨어',
@@ -43,6 +45,7 @@ export type RevenueGroup = 'direct' | 'brokered';
 export const REVENUE_GROUP_OF: Record<string, RevenueGroup> = {
   session: 'direct',
   mixing: 'direct',
+  production: 'direct',
   subscription: 'direct',
   deposit: 'direct',
   software: 'direct',

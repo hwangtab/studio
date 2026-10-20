@@ -356,6 +356,87 @@ export const checkContractHygiene = async (now: Date): Promise<HealthIssue[]> =>
     });
   }
 
+  issues.push(...(await checkProductionContracts(now)));
+  return issues;
+};
+
+/** 서명 대기 링크가 이 안에 만료되면 알린다 — 카톡으로 건넨 링크는 메일 독촉이 없어 운영자가 다시 챙겨야 한다. */
+const PRODUCTION_LINK_EXPIRY_WARN_MS = 2 * 24 * 60 * 60 * 1000;
+/** 서명 없이 만료된 링크를 이 기간 동안 알린다(그 뒤에는 관리자 목록에서 본다). */
+const PRODUCTION_EXPIRED_RECENT_MS = 3 * 24 * 60 * 60 * 1000;
+
+/**
+ * 제작·믹싱 계약(production_contracts) — 운영 점검(2026-10-20)에서 헬스체크가 이 표를 보지 않던 것을 메운다.
+ *
+ * 1. 서명은 끝났는데 후처리(서명본 PDF·체결 메일) 기록이 없는 계약 — 연습실 계약과 같은 점검.
+ * 2. 후처리·알림이 실패했다고 기록된 계약(notification_error) — 관리자 상세에만 보여 놓치기 쉽다.
+ * 3. 의뢰인이 아직 서명하지 않은 링크의 만료 임박·최근 만료 — 링크 계약은 카톡으로 건네 자동 독촉이 없다.
+ *
+ * 표가 없는 DB(0070 전)에서도 나머지 점검이 돌게 감싼다.
+ */
+const checkProductionContracts = async (now: Date): Promise<HealthIssue[]> => {
+  const issues: HealthIssue[] = [];
+  try {
+    const nowSec = Math.floor(now.getTime() / 1000);
+    const graceSec = nowSec - Math.floor(SIGNED_NOTIFICATION_GRACE_MS / 1000);
+    const [unnotified, failed, expiring, expired] = await Promise.all([
+      getDb().all<{ id: string }>(sql`
+        SELECT id FROM production_contracts
+        WHERE status = 'signed' AND notified_at IS NULL AND signed_at IS NOT NULL AND signed_at < ${graceSec} AND purged_at IS NULL`),
+      getDb().all<{ id: string }>(sql`
+        SELECT id FROM production_contracts
+        WHERE notification_error IS NOT NULL AND status IN ('sent', 'signed', 'completed', 'terminated') AND purged_at IS NULL`),
+      getDb().all<{ id: string }>(sql`
+        SELECT id FROM production_contracts
+        WHERE status = 'sent' AND expires_at IS NOT NULL AND expires_at > ${nowSec}
+          AND expires_at <= ${nowSec + Math.floor(PRODUCTION_LINK_EXPIRY_WARN_MS / 1000)}`),
+      getDb().all<{ id: string }>(sql`
+        SELECT id FROM production_contracts
+        WHERE status IN ('sent', 'expired') AND signed_at IS NULL AND expires_at IS NOT NULL AND expires_at <= ${nowSec}
+          AND expires_at > ${nowSec - Math.floor(PRODUCTION_EXPIRED_RECENT_MS / 1000)}`),
+    ]);
+    const href = '/admin/contracts/production';
+    if (unnotified.length > 0) {
+      issues.push({
+        severity: 'high',
+        title: `서명은 끝났지만 후처리 기록이 없는 제작·믹싱 계약 ${unnotified.length}건`,
+        detail: '서명본 PDF·체결 메일이 끝났다는 기록이 없습니다. 계약 상세에서 확인하고 필요하면 "완료 메일 재발송"을 눌러 주세요.',
+        href,
+      });
+    }
+    if (failed.length > 0) {
+      issues.push({
+        severity: 'medium',
+        title: `메일·PDF 처리에 실패한 제작·믹싱 계약 ${failed.length}건`,
+        detail: '계약 상세 맨 위의 오류 안내를 확인하고, 해당 메일을 다시 보내 주세요.',
+        href,
+      });
+    }
+    if (expiring.length > 0) {
+      issues.push({
+        severity: 'medium',
+        title: `이틀 안에 만료되는 서명 대기 링크 ${expiring.length}건`,
+        detail: '의뢰인이 아직 서명하지 않았습니다. 카톡으로 한 번 더 안내하거나, 만료되면 재발송해 새 링크를 보내 주세요.',
+        href,
+      });
+    }
+    if (expired.length > 0) {
+      issues.push({
+        severity: 'medium',
+        title: `서명 없이 만료된 계약 링크 ${expired.length}건(최근 3일)`,
+        detail: '진행할 계약이면 계약 상세에서 재발송해 새 링크를 카톡으로 보내 주세요(또는 scripts/contract-link.ts resend).',
+        href,
+      });
+    }
+  } catch (error: unknown) {
+    console.error('[ops/healthCheck] 제작 계약 점검 실패:', error);
+    issues.push({
+      severity: 'medium',
+      title: '제작·믹싱 계약 점검을 하지 못했습니다',
+      detail: error instanceof Error ? error.message : String(error),
+      href: '/admin/contracts/production',
+    });
+  }
   return issues;
 };
 

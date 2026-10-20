@@ -329,7 +329,11 @@ export const sendDueReminderEmail = async (
         }
       : {
           subject: `${reminder.kind === 'deposit_due' ? depositWordFor(terms) : '잔금'} 입금 기한이 ${lastDay}이에요`,
-          paragraphs: [`${name}님, ${reminder.kind === 'deposit_due' ? depositWordFor(terms) : '잔금'} 입금 기한이 내일이에요.`],
+          paragraphs: [
+            `${name}님, ${reminder.kind === 'deposit_due' ? depositWordFor(terms) : '잔금'} 입금 기한이 내일이에요.`,
+            // 입금 확인은 스튜디오가 손으로 기록한다 — 이미 보낸 고객이 독촉으로 읽지 않게(운영 점검 2026-10-20).
+            '이미 보내셨다면 확인하는 대로 기록할게요. 이 메일은 무시하셔도 돼요.',
+          ],
           rows: [
             {
               label: reminder.kind === 'deposit_due' ? depositWordFor(terms) : '남은 금액',

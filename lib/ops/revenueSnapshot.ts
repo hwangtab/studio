@@ -1,3 +1,4 @@
+import { loadProductionRevenueRows } from './productionRevenue';
 import { kstYearMonth, loadRevenueRows, periodRange, previousPeriod, summarizeRevenue } from './revenueReport';
 import { loadManualRevenueRows } from './manualRevenue';
 
@@ -29,6 +30,8 @@ export const loadRevenueSnapshot = async (now: Date): Promise<RevenueSnapshot> =
   const range = { from: periodRange(prev.year, prev.month).from, toExclusive: periodRange(year, month).toExclusive };
 
   const rows = await loadRevenueRows(range);
+  // 제작·믹싱 계약의 입금 기록(결제 행이 없다 — productionRevenue.ts).
+  rows.push(...(await loadProductionRevenueRows(range, now)));
   let manualMissing = false;
   try {
     rows.push(...(await loadManualRevenueRows(range)));
