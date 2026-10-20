@@ -43,7 +43,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await Promise.race([importing, new Promise<void>((resolve) => { setTimeout(resolve, IMPORT_BUDGET_MS).unref?.(); })]);
 
     // 월 입주 자동 갱신(계약서 제3조①)으로 현재 기간 종료일이 바뀐 입주자의 캘린더 종료 일정을 옮긴다. 실패는 gcal_error로 남아 아래 점검이 알린다.
-    await rollRenewedTenancyCalendars().catch((error: unknown) => console.error('[cron/health-check] 월 입주 갱신 일정 이동 실패', error instanceof Error ? error.name : 'unknown'));
+    // 자동 등록과 같은 이유로 시간 예산을 둔다 — 구글이 느리면 이 단계가 운영 점검 메일을 막는다. 넘긴 일은 waitUntil이 끝까지 돌린다.
+    const rolling = rollRenewedTenancyCalendars().catch((error: unknown) => console.error('[cron/health-check] 월 입주 갱신 일정 이동 실패', error instanceof Error ? error.name : 'unknown'));
+    try {
+      waitUntil(rolling);
+    } catch {
+      // 요청 컨텍스트 밖(테스트)에서는 기다리지 않아도 된다.
+    }
+    await Promise.race([rolling, new Promise<void>((resolve) => { setTimeout(resolve, IMPORT_BUDGET_MS).unref?.(); })]);
 
     const report = await runHealthCheck();
 
