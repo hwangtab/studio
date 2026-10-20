@@ -15,7 +15,7 @@ let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 
 /* eslint-disable import/first */
-import { adjustPaidBankDepositAmount } from './paidAmount';
+import { adjustPaidBankDepositAmount, allocateProportionally } from './paidAmount';
 /* eslint-enable import/first */
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
@@ -34,7 +34,7 @@ beforeAll(async () => {
 });
 afterAll(() => client.close());
 beforeEach(async () => {
-  for (const t of ['refunds', 'payments', 'bookings', 'orders']) await client.execute(`DELETE FROM ${t}`);
+  for (const t of ['refunds', 'payments', 'show_tickets', 'bookings', 'orders']) await client.execute(`DELETE FROM ${t}`);
 });
 
 const seed = async (opts: { status?: string; paymentKey?: string | null; type?: string } = {}) => {
@@ -101,5 +101,63 @@ describe('adjustPaidBankDepositAmount', () => {
     expect(await adjustPaidBankDepositAmount({ orderId: 'o1', totalAmount: 500000, reason: '', actor: 'admin' })).toMatchObject({ ok: false });
     expect(await adjustPaidBankDepositAmount({ orderId: 'o1', totalAmount: 300000, reason: '사유입니다', actor: 'admin' })).toMatchObject({ ok: false });
     expect((await one(`SELECT total_amount FROM orders WHERE id='o1'`))?.total_amount).toBe(300000);
+  });
+});
+
+describe('allocateProportionally', () => {
+  it('합이 총액과 정확히 같고 비례한다', () => {
+    expect(allocateProportionally(100000, [25000, 25000, 25000, 25000, 25000])).toEqual([20000, 20000, 20000, 20000, 20000]);
+    expect(allocateProportionally(50000, [30000, 20000])).toEqual([30000, 20000]);
+    expect(allocateProportionally(10000, [1, 1, 1])).toEqual([3334, 3333, 3333]);
+    expect(allocateProportionally(1000, [0, 0])).toEqual([500, 500]);
+    expect(allocateProportionally(7, [])).toEqual([]);
+    const split = allocateProportionally(123457, [30000, 20000, 20000]);
+    expect(split.reduce((a, b) => a + b, 0)).toBe(123457);
+  });
+});
+
+describe('공연 티켓·상점 주문 정정', () => {
+  const seedTickets = async (units: number[], tail: { status?: string; compensated?: number } = {}) => {
+    await seed({ type: 'ticket' });
+    for (const [i, u] of units.entries()) {
+      // 공연·회차·티켓타입 행을 만들지 않고 장 행만 넣는다(외래 키 검사를 그 문장 동안만 끈다) — 이 시험이 보는 것은 금액 정정이다.
+      await client.executeMultiple(`PRAGMA foreign_keys = OFF; INSERT INTO show_tickets (id, order_no, showtime_id, ticket_type_id, code, status, issued_by, unit_amount, compensated_amount)
+        VALUES ('t${i}', 'SNB-T-1', 'st1', 'tt1', 'code${i}', '${i === units.length - 1 && tail.status ? tail.status : 'issued'}', 'customer', ${u}, ${i === units.length - 1 ? tail.compensated ?? 0 : 0}); PRAGMA foreign_keys = ON;`);
+    }
+  };
+  const units = async () => ((await client.execute(`SELECT unit_amount FROM show_tickets WHERE order_no='SNB-T-1' ORDER BY id`)).rows as unknown as { unit_amount: number }[]).map((r) => Number(r.unit_amount));
+
+  it('티켓 주문은 장당 금액이 새 총액에 비례 배분되고 기록에 장별 변경이 남는다', async () => {
+    await seedTickets([25000, 25000, 25000, 25000, 25000]);
+    await client.execute(`UPDATE orders SET total_amount = 125000 WHERE id = 'o1'`);
+    const r = await adjustPaidBankDepositAmount({ orderNo: 'SNB-T-1', totalAmount: 100000, reason: '지인 할인', actor: 'admin' });
+    expect(r).toEqual({ ok: true, from: 125000, to: 100000 });
+    expect(await units()).toEqual([20000, 20000, 20000, 20000, 20000]);
+    const audit = JSON.parse(String((await one(`SELECT raw_response FROM payments WHERE id='p1'`))?.raw_response));
+    expect(audit.amountAdjustments[0].tickets).toHaveLength(5);
+  });
+
+  it('티켓 종류별 단가가 달라도 비례를 지킨다', async () => {
+    await seedTickets([30000, 20000]);
+    await client.execute(`UPDATE orders SET total_amount = 50000 WHERE id = 'o1'`);
+    await adjustPaidBankDepositAmount({ orderId: 'o1', totalAmount: 40000, reason: '일부 감면', actor: 'admin' });
+    expect(await units()).toEqual([24000, 16000]);
+  });
+
+  it('환불 중·환불된 티켓이나 보상 기록이 있으면 거절하고 아무것도 바꾸지 않는다', async () => {
+    await seedTickets([25000, 25000], { status: 'refunded' });
+    expect(await adjustPaidBankDepositAmount({ orderId: 'o1', totalAmount: 40000, reason: '사유입니다', actor: 'admin' })).toMatchObject({ ok: false });
+    expect(await units()).toEqual([25000, 25000]);
+    await client.execute(`DELETE FROM show_tickets`);
+    await client.execute(`DELETE FROM payments`);
+    await client.execute(`DELETE FROM orders`);
+    await seedTickets([25000, 25000], { compensated: 1000 });
+    expect(await adjustPaidBankDepositAmount({ orderId: 'o1', totalAmount: 40000, reason: '사유입니다', actor: 'admin' })).toMatchObject({ ok: false });
+  });
+
+  it('상점 주문은 orders 총액만 바뀐다', async () => {
+    await seed({ type: 'merch' });
+    expect(await adjustPaidBankDepositAmount({ orderNo: 'SNB-T-1', totalAmount: 270000, reason: '10% 할인', actor: 'admin' })).toEqual({ ok: true, from: 300000, to: 270000 });
+    expect((await one(`SELECT total_amount FROM orders WHERE id='o1'`))?.total_amount).toBe(270000);
   });
 });

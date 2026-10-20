@@ -8,6 +8,7 @@ import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { recordAdminPrivacyAccess } from '../../../lib/privacy/accessLog';
 import { remainingRefundable } from '../../../lib/booking/cancel';
+import { PaidAmountCorrection } from '../../../components/admin/PaidAmountCorrection';
 import { isBankDepositPayment } from '../../../lib/payments/bankDeposit';
 import { loadRefundAccountSummary } from '../../../lib/payments/refundAccount';
 import { shopLineName } from '../../../lib/shop/catalog';
@@ -259,6 +260,19 @@ export default function AdminShopOrderPage(p: Props) {
             {p.fulfillmentStatus === 'shipped' && (
               <button type="button" disabled={busy} onClick={() => act({ action: 'deliver' })} className={`mt-3 ${buttonClass}`}>배송 완료로 표시</button>
             )}
+          </section>
+        )}
+
+        {p.status === 'paid' && p.bankPaid && p.refundable === p.totalAmount && (
+          <section className="mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
+            <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-gray-900">금액 정정</h2>
+            <p className="mb-2 text-gray-600">할인했거나 받은 돈이 기록과 다를 때 쓰세요. 주문 줄은 정가 기록 그대로 두므로 <strong>아티스트 정산은 정가 기준 그대로</strong>예요(할인은 스튜디오 부담) — 아티스트와 나누려면 정산 조정으로 따로 반영하세요.</p>
+            <PaidAmountCorrection
+              totalAmount={p.totalAmount}
+              busy={busy}
+              note="매출 현황과 환불 가능 금액이 바뀌어요. 배송비·주문 줄은 그대로예요."
+              onSubmit={(amount, why) => act({ action: 'update_paid_amount', totalAmount: amount, reason: why })}
+            />
           </section>
         )}
 

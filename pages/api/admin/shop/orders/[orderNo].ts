@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { cancelAwaitingShopDeposit, confirmShopBankDeposit, deliverShopDepositGuide } from '../../../../../lib/shop/bankDeposit';
 import { cancelShopOrder } from '../../../../../lib/shop/cancel';
+import { adjustPaidBankDepositAmount } from '../../../../../lib/booking/paidAmount';
 import { isBankDepositPayment } from '../../../../../lib/payments/bankDeposit';
 import { markRefundAccountRefunded } from '../../../../../lib/payments/refundAccount';
 import { findShopOrderByOrderNo } from '../../../../../lib/shop/service';
@@ -56,6 +57,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const recorded = await markRefundAccountRefunded({ kind: 'merch', orderNo }, new Date());
     if (!recorded) return res.status(500).json({ ok: false, message: '송금 완료를 기록하지 못했습니다. 잠시 후 다시 시도해 주세요.' });
     return res.status(200).json({ ok: true });
+  }
+  // 입금 확인이 끝난 계좌 입금 주문의 금액 정정 — 주문 줄은 정가 기록 그대로, 아티스트 정산은 정가 기준(lib/booking/paidAmount.ts).
+  if (b.action === 'update_paid_amount') {
+    const result = await adjustPaidBankDepositAmount({ orderNo, totalAmount: b.totalAmount, reason: b.reason, actor: auth.actor });
+    return result.ok ? res.status(200).json({ ok: true, from: result.from, to: result.to }) : res.status(409).json({ ok: false, message: result.message });
   }
   if (b.action === 'refund') {
     const reason = typeof b.reason === 'string' && b.reason.trim() ? b.reason.trim().slice(0, 200) : '관리자 환불';
