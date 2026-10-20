@@ -72,6 +72,11 @@ UPDATE_FUNDING_TERMS_BASELINE=1 npx jest content/fundingTerms.baseline.test.ts  
 npx jest content/showOrganizerTerms.baseline.test.ts
 UPDATE_SHOW_ORGANIZER_TERMS_BASELINE=1 npx jest content/showOrganizerTerms.baseline.test.ts   # 버전을 올린 뒤 갱신
 
+# 링크 계약(의뢰인 정보를 서명할 때 받는 제작·믹싱·마스터링 계약) — 카카오톡으로 보낼 서명 링크를 바로 만든다
+npx tsx scripts/contract-link.ts create --kind mixmaster --tracks 30 [--total N] [--song 제목]   # 미리보기, --yes로 발송
+npx tsx scripts/contract-link.ts list                                                             # 최근 20건 + 서명 대기 링크
+npx tsx scripts/contract-link.ts cancel <계약 id>
+
 # IndexNow 변경분 제출 — 전량 반복 제출 금지, CI(main push)가 diff로 바뀐 URL만 자동 제출한다.
 # 문구·링크·가격·구조가 안 바뀐 순수 디자인 커밋은 메시지에 `[skip-indexnow]`를 붙인다 — 그 커밋에서만 바뀐
 # 파일은 제출에서 빠진다(2026-10-05 UI 정제가 모양만 바꿨는데 14 URL이 제출됐다). 본문이 바뀐 커밋엔 붙이지 말 것.
