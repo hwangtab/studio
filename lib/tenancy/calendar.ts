@@ -109,20 +109,21 @@ export const syncAllTenancyCalendars = async (now: Date = new Date()): Promise<{
 };
 
 /**
- * 자동 갱신으로 현재 기간의 종료일이 어제와 달라진 입주자(또는 갱신 중인데 종료 일정이 없는 입주자)의 캘린더만 다시 맞춘다.
+ * 자동 갱신으로 현재 기간의 종료일이 사흘 전과 달라진 입주자(또는 갱신 중인데 종료 일정이 없는 입주자)의 캘린더만 다시 맞춘다.
  * 매일 운영 점검 크론이 부른다. 던지지 않고 실패는 `gcal_error`에 남는다(점검 메일이 알린다).
  */
 export const rollRenewedTenancyCalendars = async (now: Date = new Date()): Promise<{ synced: number; failed: number }> => {
   if (!tenancyCalendarId()) return { synced: 0, failed: 0 };
   const today = kstToday(now);
-  const yesterday = addDays(today, -1);
+  // 크론이 며칠 빠져도 다음 실행이 따라잡도록 사흘 전과 비교한다.
+  const before = addDays(today, -3);
   const rows = await getDb().select({ id: roomTenancies.id, endDate: roomTenancies.endDate, endEventId: roomTenancies.endEventId }).from(roomTenancies)
     .where(sql`status = 'active' AND end_date IS NOT NULL AND end_date < ${today}`);
   let synced = 0;
   let failed = 0;
   for (const row of rows) {
     const end = row.endDate as string;
-    if (row.endEventId && currentTermEnd(end, today).end === currentTermEnd(end, yesterday).end) continue;
+    if (row.endEventId && currentTermEnd(end, today).end === currentTermEnd(end, before).end) continue;
     const r = await syncTenancyCalendar(row.id, now);
     if (r.ok) synced += 1;
     else failed += 1;
