@@ -4,6 +4,8 @@ import {
   EP_BUNDLE_PER_SONG_PRICE,
   MASTERING_SINGLE_PRICE,
   MIXING_LEVEL1_PRICE,
+  MIXING_LEVEL2_PRICE,
+  MIXING_LEVEL3_PRICE,
   SINGLE_BUNDLE_PRICE,
   VOCAL_TUNING_ADDON_PRICE,
 } from '../../../data/pricing';
@@ -220,6 +222,41 @@ const DEFAULT_WORK_WEEKS: Record<ProductionKind, number> = { single: 8, ep: 12, 
  * 해지 정산은 믹싱 1차를 전달하면 믹싱 몫(정가 비율), 마스터링을 전달하면 전액을 작업분으로 본다.
  */
 const buildDefaultMixMasterTerms = (): ProductionTerms => {
+  return applyMixMasterTracks(MIXMASTER_BASE(), 10);
+};
+
+/** 트랙 수 → 믹싱 정가(사이트 표기: 10트랙 이하 / 11~30트랙 / 31트랙 이상, data/pricing.ts). */
+export const mixingPriceForTracks = (tracks: number): number =>
+  tracks <= 10 ? MIXING_LEVEL1_PRICE : tracks <= 30 ? MIXING_LEVEL2_PRICE : MIXING_LEVEL3_PRICE;
+
+/**
+ * 믹싱·마스터링 조건을 트랙 수에 맞춘다 — 믹싱 정가 + 싱글 마스터링, 계약금 절반, 항목표 금액 = 계약금액,
+ * 믹싱 1차 전달 경계는 그 금액에서 믹싱이 차지하는 비율. 작성 폼(트랙 수를 바꿀 때)과 링크 계약 스크립트
+ * (scripts/contract-link.ts)가 같은 계산을 쓴다. 정가와 다른 금액은 이 뒤에 계약금액을 고친다.
+ */
+export const applyMixMasterTracks = (terms: ProductionTerms, tracks: number): ProductionTerms => {
+  const mixing = mixingPriceForTracks(tracks);
+  const total = mixing + MASTERING_SINGLE_PRICE;
+  const deposit = Math.round(total / 2);
+  return {
+    ...terms,
+    scope: { ...terms.scope, mixingTracks: tracks },
+    amount: { ...terms.amount, total, deposit, balance: total - deposit },
+    refundSchedule: [
+      {
+        key: 'mixmaster',
+        label: refundLabelFor('mixmaster', 'mixmaster'),
+        amount: total,
+        milestones: [
+          { event: 'mixing_delivered', ratio: Math.round((mixing / total) * 100) / 100 },
+          { event: 'mastering_delivered', ratio: 1 },
+        ],
+      },
+    ],
+  };
+};
+
+const MIXMASTER_BASE = (): ProductionTerms => {
   const total = MIXING_LEVEL1_PRICE + MASTERING_SINGLE_PRICE;
   const deposit = Math.round(total / 2);
   const mixingShare = Math.round((MIXING_LEVEL1_PRICE / total) * 100) / 100;

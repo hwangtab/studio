@@ -5,6 +5,7 @@ import { Field, TextInput } from '../ui/Field';
 import { lightOnlyField } from '../ui/adminFieldClass';
 import type { ValidationError } from '../../lib/contracts/validation';
 import {
+  applyMixMasterTracks,
   buildDefaultProductionTerms,
   isMixMasterKind,
   isOneSongKind,
@@ -399,9 +400,18 @@ export default function ProductionContractForm({
             numberInput('terms.scope.arrangementTracks', '곡당 편곡 트랙 수(이하)', terms.scope.arrangementTracks, (raw) =>
               setTerms((t) => ({ ...t, scope: { ...t.scope, arrangementTracks: digits(raw) } })),
             )}
-          {numberInput('terms.scope.mixingTracks', '곡당 믹싱 트랙 수(이하)', terms.scope.mixingTracks, (raw) =>
-            setTerms((t) => ({ ...t, scope: { ...t.scope, mixingTracks: digits(raw) } })),
-          )}
+          {mixMaster
+            ? // 믹싱·마스터링은 트랙 수가 곧 가격 구간이다 — 바꾸면 금액·계약금·항목표가 정가로 다시 맞춰진다.
+              numberInput(
+                'terms.scope.mixingTracks',
+                '믹싱 트랙 수(이하)',
+                terms.scope.mixingTracks,
+                (raw) => setTerms((t) => applyMixMasterTracks(t, digits(raw))),
+                '바꾸면 금액이 정가로: 10 이하 20만 · 11~30 35만 · 31 이상 50만 + 마스터링 10만',
+              )
+            : numberInput('terms.scope.mixingTracks', '곡당 믹싱 트랙 수(이하)', terms.scope.mixingTracks, (raw) =>
+                setTerms((t) => ({ ...t, scope: { ...t.scope, mixingTracks: digits(raw) } })),
+              )}
           {!mixMaster &&
             numberInput('terms.scope.recordingHours', '곡당 보컬 녹음 시간', terms.scope.recordingHours, (raw) =>
               setTerms((t) => ({ ...t, scope: { ...t.scope, recordingHours: digits(raw) } })),

@@ -2,7 +2,7 @@ import type { ProductionContractEvent, ProductionEventType } from '../../../db/s
 import { adminEventTypesFor, eventLabelFor, eventStagesFor, isMixMasterTerms } from './event-spec';
 import { computeProductionLedger, findStage } from './ledger';
 import { buildProductionContent, findUnfilledPlaceholders, readProductionTemplate } from './template';
-import { buildDefaultProductionTerms, contractNameFor, releaseTitle, validateProductionTerms } from './terms';
+import { applyMixMasterTracks, buildDefaultProductionTerms, contractNameFor, releaseTitle, validateProductionTerms } from './terms';
 
 /** 믹싱·마스터링 계약(1곡) — 제작 계약 엔진에 종류 하나를 더한 것. 범위·착수·발매 조항이 다르고 조 번호는 같다. */
 
@@ -40,6 +40,16 @@ describe('기본 조건', () => {
         ],
       },
     ]);
+  });
+
+  it('트랙 수가 가격 구간을 정한다 — 10 이하 / 11~30 / 31 이상, 항목표·경계가 함께 맞는다', () => {
+    const at = (tracks: number) => applyMixMasterTracks(terms, tracks);
+    expect(at(10).amount).toMatchObject({ total: 300_000, deposit: 150_000 });
+    expect(at(30).amount).toMatchObject({ total: 450_000, deposit: 225_000, balance: 225_000 });
+    expect(at(30).scope.mixingTracks).toBe(30);
+    expect(at(30).refundSchedule[0]).toMatchObject({ amount: 450_000, milestones: [{ event: 'mixing_delivered', ratio: 0.78 }, { event: 'mastering_delivered', ratio: 1 }] });
+    expect(at(31).amount.total).toBe(600_000);
+    expect(validateProductionTerms(at(45), 'mixmaster').ok).toBe(true);
   });
 
   it('검증을 통과하고, 제작 계약의 다섯 항목표는 받지 않는다', () => {
