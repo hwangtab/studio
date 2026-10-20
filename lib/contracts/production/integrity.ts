@@ -82,6 +82,8 @@ const buildCanonicalForm = (
       sized(`clause[${index}].key`, clause.key),
       sized(`clause[${index}].number`, clause.clauseNumber),
       sized(`clause[${index}].title`, clause.title),
+      // 요약 문장은 있을 때만 — 옛 계약(points 없음)의 지문 문자열이 바뀌지 않게.
+      ...(clause.points ? clause.points.map((point, p) => sized(`clause[${index}].point[${p}]`, point)) : []),
     ]),
     `signerCount:${ordered.length}`,
     ...ordered.flatMap((signer, index) => [

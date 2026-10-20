@@ -186,3 +186,23 @@ describe('진행 기록', () => {
     expect(eventLabelFor('kickoff', false)).toBe('착수 (기획 상담·편곡 시작)');
   });
 });
+
+describe('동의 항목 지문', () => {
+  it('요약 문장이 지문에 들어가고, 요약이 없는 옛 항목의 지문 문자열은 그대로다', async () => {
+    const { buildProductionClauses, LEGACY_PRODUCTION_CLAUSES } = await import('./clauses');
+    const { computeProductionFingerprint } = await import('./integrity');
+    const base = {
+      contract: {
+        id: 'c', kind: 'mixmaster' as const, title: 't', clientName: 'a', clientStageName: null, clientEmail: 'a@b.c', clientPhone: '010-1111-2222',
+        clientBirthdate: null, clientAddress: null, termsJson: '{}', content: 'x', templateHash: 'h',
+      },
+      signers: [],
+      signedAt: new Date('2026-10-20T00:00:00Z'),
+    };
+    const fp = (clauses: Parameters<typeof computeProductionFingerprint>[0]['clauses']) =>
+      computeProductionFingerprint({ ...base, clauses } as unknown as Parameters<typeof computeProductionFingerprint>[0]);
+    const now = buildProductionClauses({ deemedApprovalDays: 7 });
+    expect(fp(now)).not.toBe(fp([{ ...now[0], points: [...now[0].points!.slice(0, 2), '바뀐 문장'] }]));
+    expect(fp(LEGACY_PRODUCTION_CLAUSES)).toBe(fp(LEGACY_PRODUCTION_CLAUSES.map((c) => ({ ...c, points: undefined }))));
+  });
+});

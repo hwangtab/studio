@@ -68,7 +68,8 @@ const PAYLOAD = {
   terms: buildDefaultProductionTerms(),
 };
 
-const ALL_CLAUSES = ['revisions', 'rights', 'refund', 'portfolio', 'privacy'];
+// 새 계약은 중요 조항 요약 하나를 한 번에 확인받는다(clauses.ts buildProductionClauses, 2026-10-20).
+const ALL_CLAUSES = ['key-terms'];
 
 const callSign = async (contractId: string, body: Record<string, unknown>) => {
   const res: Record<string, jest.Mock> = {};
@@ -501,5 +502,17 @@ describe('링크 계약 — 의뢰인 정보를 서명할 때 받는다', () => 
     expect(wrong.status).toBe(400);
     expect(await callSign(id, { token: await clientToken(id), ...CLIENT })).toEqual({ status: 200, body: { ok: true } });
     expect(await loadContract(id)).toMatchObject({ clientName: '홍길동', clientPhone: '010-1234-5678' });
+  });
+});
+
+describe('동의 항목 — 중요 조항 요약 하나', () => {
+  it('새 계약은 체크 하나(간주 승인·해지 공제·포트폴리오 요약)를 떠 두고, 기한은 그 계약의 terms에서 온다', async () => {
+    const terms = buildDefaultProductionTerms('mixmaster');
+    terms.deemedApprovalDays = 5;
+    const { id } = await createProductionContract({ ...PAYLOAD, kind: 'mixmaster', terms });
+    const clauses = JSON.parse((await loadContract(id))!.clausesJson);
+    expect(clauses).toHaveLength(1);
+    expect(clauses[0]).toMatchObject({ key: 'key-terms', clauseNumber: '제5·10·11조' });
+    expect(clauses[0].points[0]).toContain('5일 안에 수정 요청이 없으면');
   });
 });

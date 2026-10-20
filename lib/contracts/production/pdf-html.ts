@@ -89,7 +89,9 @@ export const buildProductionPdfHtml = (input: BuildProductionPdfInput): string =
         return `<span class="${agreed ? 'agreed' : 'not-agreed'}">${who}${agreed ? `✓ 동의 (${formatDateTime(at)})` : '미동의'}</span>`;
       });
       return `<div class="agreement">
-          <span><strong>${escapeHtml(clause.clauseNumber)}</strong> ${escapeHtml(clause.title)}</span>
+          <span><strong>${escapeHtml(clause.clauseNumber)}</strong> ${escapeHtml(clause.title)}${
+            clause.points ? `<ul style="margin: 4px 0 0; padding-left: 16px;">${clause.points.map((point) => `<li>${escapeHtml(point)}</li>`).join('')}</ul>` : ''
+          }</span>
           <span>${marks.join('<br />')}</span>
         </div>`;
     })

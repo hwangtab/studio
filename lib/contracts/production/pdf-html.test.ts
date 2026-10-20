@@ -1,7 +1,7 @@
 /** @jest-environment node */
 
 import type { ProductionContract, ProductionContractSigner } from '../../../db/schema';
-import { PRODUCTION_REQUIRED_CLAUSES } from './clauses';
+import { LEGACY_PRODUCTION_CLAUSES } from './clauses';
 import { buildProductionPdfHtml } from './pdf-html';
 import { buildDefaultProductionTerms, canonicalTermsJson } from './terms';
 
@@ -37,7 +37,7 @@ const signer = (overrides: Partial<ProductionContractSigner>) =>
 const html = buildProductionPdfHtml({
   contract,
   terms,
-  clauses: PRODUCTION_REQUIRED_CLAUSES,
+  clauses: LEGACY_PRODUCTION_CLAUSES,
   signers: [
     signer({ role: 'client', name: '홍길동', email: 'g@example.com', identityVerifiedAt: signedAt, agreedClauses: JSON.stringify(['revisions', 'rights']) }),
     signer({ role: 'operator', name: '스튜디오 놀 대표 황경하', email: 'hello@studionol.co.kr', adminActor: 'kyungha' }),
@@ -59,14 +59,14 @@ describe('제작 계약서 PDF HTML', () => {
 
   it('체크한 조항만 동의로 적는다', () => {
     expect(html.match(/✓ 동의/g)).toHaveLength(2);
-    expect(html.match(/미동의/g)).toHaveLength(PRODUCTION_REQUIRED_CLAUSES.length - 2);
+    expect(html.match(/미동의/g)).toHaveLength(LEGACY_PRODUCTION_CLAUSES.length - 2);
   });
 
   it('법정대리인이 있으면 대리인의 동의도 서명자 이름을 붙여 남긴다', () => {
     const withGuardian = buildProductionPdfHtml({
       contract,
       terms,
-      clauses: PRODUCTION_REQUIRED_CLAUSES,
+      clauses: LEGACY_PRODUCTION_CLAUSES,
       signers: [
         signer({ role: 'client', name: '홍길동', email: 'g@example.com', agreedClauses: JSON.stringify(['revisions']) }),
         signer({ role: 'guardian', name: '홍부모', email: 'p@example.com', agreedClauses: JSON.stringify(['revisions', 'rights']) }),
