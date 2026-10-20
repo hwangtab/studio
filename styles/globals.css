@@ -330,6 +330,64 @@
   }
 }
 
+/* 예약 목록처럼 행이 많은 표 — 모바일에서 한 행을 4줄로 줄인다(7줄 카드는 34건이 화면 1만 2천 px였다).
+   .admin-table과 함께 쓴다. 칸 이름은 data-label로 찾으므로 그 이름과 이 규칙이 짝이다(pages/admin/bookings/index.tsx).
+   1줄 일시 | 상태 · 2줄 고객 · 3줄 유형 상품 · 4줄 금액 | 상세 버튼. */
+@media (max-width: 767px) {
+  .admin-table-compact tr {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    column-gap: 0.5rem;
+    row-gap: 0.125rem;
+    align-items: center;
+    padding: 0.625rem 0.875rem;
+  }
+  .admin-table-compact td[data-label] {
+    padding: 0;
+  }
+  .admin-table-compact td[data-label]::before {
+    display: none;
+  }
+  .admin-table-compact td[data-label="일시 / 상품"] {
+    grid-column: 1 / span 2;
+    grid-row: 1;
+    font-weight: 600;
+  }
+  .admin-table-compact td[data-label="상태"] {
+    grid-column: 3;
+    grid-row: 1 / span 3;
+    align-self: start;
+    text-align: right;
+  }
+  .admin-table-compact td[data-label="고객"] {
+    grid-column: 1 / span 2;
+    grid-row: 2;
+  }
+  .admin-table-compact td[data-label="고객"] > div {
+    display: inline;
+    margin-left: 0.5rem;
+  }
+  .admin-table-compact td[data-label="유형"] {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  .admin-table-compact td[data-label="상품"] {
+    grid-column: 2;
+    grid-row: 3;
+    color: rgb(75 85 99);
+  }
+  .admin-table-compact td[data-label="금액"] {
+    grid-column: 1 / span 2;
+    grid-row: 4;
+    font-weight: 600;
+  }
+  .admin-table-compact td[data-label="관리"] {
+    grid-column: 3;
+    grid-row: 4;
+    justify-self: end;
+  }
+}
+
 @layer components {
   /* 카드 빛 효과(스펙큘러 포인터 하이라이트)는 2026-10-09 TDS 대조에서 걷었다 — 장식 효과는 버튼과 내용에서 눈을 뺏는다.
      카드는 항상 positioning/stacking 컨텍스트(내부 배지·오버레이의 기준). */

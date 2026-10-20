@@ -511,7 +511,7 @@ export default function AdminBookingsPage({
               </div>
 
               <div className="overflow-x-auto">
-                <table className="admin-table w-full text-sm text-left">
+                <table className="admin-table admin-table-compact w-full text-sm text-left">
                   <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
                     <tr>
                       <th className="px-4 py-3 rounded-l-lg">유형</th>
