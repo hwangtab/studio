@@ -96,10 +96,14 @@ export const getAuthorProfile = (locale: Locale) => ({
   // 수상·작업 연보는 siteConfig.studioOperator가 단일 소스 — 여기선 라벨만 붙인다.
   // 목록 형식을 쓰는 이유: 같은 수상 한 건을 문장으로 늘여 쓰면 자랑으로 읽히지만,
   // 연도별로 늘어놓으면 이력으로 읽힌다.
+  // evidenceUrl이 있는 항목만 /author 수상 목록에 "출처" 링크가 붙는다 — kind: 'record'로
+  // 뺀 pressCoverage 항목(수상 결과 발표 등)은 "언론 보도" 목록에 더 이상 안 보이므로,
+  // 그 근거가 이 수상뿐인 항목(2015·2019 레드어워드)의 근거를 화면에서 잃지 않게 한다.
   awards: studioOperator.awards.map((award) => ({
     year: award.year,
     title: award.category ? `${award.name} ${award.category}` : award.name,
     work: award.work,
+    evidenceUrl: 'evidenceUrl' in award ? award.evidenceUrl : undefined,
   })),
   credits: {
     albums: studioOperator.credits.filter((credit) => credit.kind === 'album').map((credit) => ({
@@ -137,6 +141,7 @@ export const getAuthorProfile = (locale: Locale) => ({
     about: t(locale, { ko: '소개', en: 'About' }),
     expertise: t(locale, { ko: '전문 분야', en: 'Expertise' }),
     award: t(locale, { ko: '수상', en: 'Awards' }),
+    awardEvidence: t(locale, { ko: '출처', en: 'Source' }),
     credits: t(locale, { ko: '작업 연보', en: 'Selected works' }),
     creditAlbums: t(locale, { ko: '음반', en: 'Records' }),
     creditProjects: t(locale, { ko: '기획·전시·축제', en: 'Projects, exhibitions, festivals' }),

@@ -16,24 +16,45 @@ export const getOperatorProfileUrl = (siteUrl: string, locale: Locale): string =
   `${siteUrl}/${locale}/author`;
 
 /**
- * Person.subjectOf — 운영자를 다룬 제3자 언론 보도 + 수상 사실을 뒷받침하는 공식 기록.
+ * Person.subjectOf — 운영자를 다룬 제3자 언론 보도(kind: 'coverage'만).
  *
- * sameAs(본인이 관리하는 프로필)와 구분한다. 수상 이력 같은 자기주장을 사이트 밖에서
- * 검증할 수 있는 근거라, AI 엔진의 entity 신뢰도에 직접 작용한다.
- *
- * kind로 schema.org 타입을 가른다(2026-10-20 추가) — 'coverage'(그를 다룬 보도)는
- * NewsArticle, 'record'(수상 결과 발표·펀딩 페이지처럼 그를 "언급"만 하는 공식 기록)는
- * WebPage. 전부 NewsArticle로 내보내면 뉴스 기사가 아닌 걸 기사라고 주장하는 셈이라
- * 타입을 분리했다 — `data/siteConfig.ts`의 pressCoverage 배열 머리 주석 참조.
+ * sameAs(본인이 관리하는 프로필)와 구분한다. subjectOf의 schema.org 정의는 "이 사람을
+ * 주제로 다룬 CreativeWork"라, kind: 'record'(수상 결과 발표 등 그를 "언급"만 하는 공식
+ * 기록)는 여기 넣지 않는다 — 넣으면 `data/siteConfig.ts`가 음악취향Y 2건을 뺀 이유
+ * ("스쳐 언급만 해서 subjectOf 의미에 안 맞는다")와 같은 자리에서 모순된다(2026-10-20
+ * Opus 리뷰). record는 아래 getOperatorPressRecordNodes가 mentions로 따로 낸다.
  */
 export const getOperatorPressCoverage = () =>
-  (studioOperator.pressCoverage ?? []).map((article) => ({
-    '@type': article.kind === 'record' ? 'WebPage' : 'NewsArticle',
-    headline: article.title,
-    url: article.url,
-    datePublished: article.datePublished,
-    publisher: { '@type': 'Organization', name: article.publisher },
-  }));
+  (studioOperator.pressCoverage ?? [])
+    .filter((article) => article.kind !== 'record')
+    .map((article) => ({
+      '@type': 'NewsArticle',
+      headline: article.title,
+      url: article.url,
+      datePublished: article.datePublished,
+      publisher: { '@type': 'Organization', name: article.publisher },
+    }));
+
+/**
+ * 수상 사실을 뒷받침하는 공식 기록(kind: 'record')을 독립 WebPage 노드로.
+ *
+ * subjectOf가 아니라 `mentions`(역방향 — "이 글이 그를 언급한다")로 Person을 가리킨다.
+ * 그를 다룬 글이 아니라 다른 주제(앨범 수상·결과 발표)를 다루며 그를 언급만 하므로,
+ * subjectOf에 넣으면 schema.org 정의와 어긋난다(위 getOperatorPressCoverage 주석 참고).
+ * 유일한 소비처는 generateDefaultSchema — @graph에 Person 노드와 나란히 심는다.
+ */
+export const getOperatorPressRecordNodes = (siteUrl: string) =>
+  (studioOperator.pressCoverage ?? [])
+    .filter((article) => article.kind === 'record')
+    .map((article) => ({
+      '@type': 'WebPage',
+      '@id': article.url,
+      name: article.title,
+      url: article.url,
+      datePublished: article.datePublished,
+      publisher: { '@type': 'Organization', name: article.publisher },
+      mentions: { '@id': getOperatorPersonId(siteUrl) },
+    }));
 
 /** 운영자 Person entity의 canonical @id — locale 독립(다국어 alternate가 한 entity로 묶인다). */
 export const getOperatorPersonId = (siteUrl: string): string => `${siteUrl}/#person-hwang`;

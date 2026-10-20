@@ -84,6 +84,10 @@ export const studioOperator = {
   //   'self'       — 본인 진술. 시상 자체의 실재는 확인했으나(레드어워드=문화연대·노동당 계열,
   //                  '연대'·'현장' 부문 실재) 연도별 수상자 명단이 공개 색인에 없다.
   //                  공식 기록 URL을 찾으면 source를 'press'로 올리고 근거를 pressCoverage에 추가할 것.
+  // evidenceUrl(2026-10-20 추가) — source: 'press' 항목의 근거 URL. /author 수상 목록에
+  // "출처" 링크로 뜬다. kind: 'record'로 뺀 pressCoverage 항목(수상 결과 발표 등)은
+  // /author "언론 보도" 목록에는 더 이상 안 보이므로, 그 근거가 이 수상뿐인 항목은
+  // evidenceUrl이 없으면 화면에서 근거를 확인할 길이 아예 없어진다(2026-10-20 Opus 리뷰).
   awards: [
     // 2026-10-20 Opus 재검증으로 press→self 되돌림. 스포츠경향·벅스뮤직 두 소스는 이
     // 작품의 "기획자가 황경하"라는 사실만 확인해 준다(이미 credits 배열이 담고 있는
@@ -95,10 +99,10 @@ export const studioOperator = {
     // 2026-10-20 공식 기록 확인(redawards.tistory.com/50, "2019 레드 어워드 '주목할 만한
     // 연대'부문 선정의 변") — 고 김용균 노동자 추모 음반 "몸의 중심"에 참여한 음악가 명단에
     // 황경하가 직접 나온다. pressCoverage에 추가, source를 press로 올림.
-    { year: '2019', name: '레드어워드', category: '주목할만한 연대', work: '몸의 중심', source: 'press' },
+    { year: '2019', name: '레드어워드', category: '주목할만한 연대', work: '몸의 중심', source: 'press', evidenceUrl: 'https://redawards.tistory.com/50' },
     // 〈젠트리피케이션〉(자립음악생산조합 기획·제작, 2016.10.05 발매)으로 제14회 한국대중음악상
     // '선정위원 특별상' 공동 수상. 같은 해 '최우수 포크 음반'은 후보 등재.
-    { year: '2017', name: '한국대중음악상', category: '선정위원 특별상', work: '젠트리피케이션', source: 'press' },
+    { year: '2017', name: '한국대중음악상', category: '선정위원 특별상', work: '젠트리피케이션', source: 'press', evidenceUrl: 'https://koreanmusicawards.com/project/various-artists/' },
     // 2026-10-20 press→self 되돌림(2차 재검증). 레드어워드 공식 결과 보고
     // (redawards.tistory.com/27)는 "콜트콜텍 투쟁 10주년 기념음반"을 현장부문
     // 수상작으로 명시하지만 황경하 이름은 없다. 황경하의 프로듀서 역할을 확인했던
@@ -117,7 +121,7 @@ export const studioOperator = {
     // 토요일"이라 적지만 2015-02-13은 금요일이고(2016-02-13이 토요일), 본문에 2015년
     // 11월 민중총궐기·"올해 12월 2016 레드어워드" 언급이 있어 시상식 실제 개최는
     // 2016-02-13으로 보인다 — "2015"는 회차 이름(제n회 레드어워드)이다.
-    { year: '2015', name: '레드어워드', category: '주목할만한 연대', work: '대망명', source: 'press' },
+    { year: '2015', name: '레드어워드', category: '주목할만한 연대', work: '대망명', source: 'press', evidenceUrl: 'https://redawards.tistory.com/22' },
     { year: '2012', name: '다음뮤직 이달의 음반', category: '', work: 'No Control', source: 'self' },
   ],
   // 작업 연보 — 기획·제작·프로듀싱 크레딧. kind로 음반/그 외를 나눈다(프로필 페이지가 두 그룹으로 렌더).

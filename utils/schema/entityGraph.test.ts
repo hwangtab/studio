@@ -119,6 +119,32 @@ describe('엔티티 그래프 — 운영자 Person을 커머셜 페이지에서 
     expect(offers.priceValidUntil).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });
 
+  it('Person.subjectOf는 kind: "record" 항목을 싣지 않는다 — 전부 NewsArticle', () => {
+    // subjectOf의 schema.org 정의는 "이 사람을 주제로 다룬 글"이다. 수상 결과 발표 같은
+    // record는 그를 언급만 하므로 여기 들어가면 안 된다(2026-10-20 Opus 리뷰).
+    const [person] = findById(generateDefaultSchema(SITE, 'ko')['@graph'], '#person-hwang');
+    const subjectOf = person.subjectOf as Node[];
+    const coverageCount = studioOperator.pressCoverage.filter((a) => a.kind !== 'record').length;
+    expect(subjectOf).toHaveLength(coverageCount);
+    for (const article of subjectOf) {
+      expect(article['@type']).toBe('NewsArticle');
+    }
+  });
+
+  it('kind: "record" 항목은 독립 WebPage 노드로 Person을 mentions한다', () => {
+    const graph = generateDefaultSchema(SITE, 'ko')['@graph'] as Node[];
+    const recordUrls = studioOperator.pressCoverage
+      .filter((a) => a.kind === 'record')
+      .map((a) => a.url);
+    expect(recordUrls.length).toBeGreaterThan(0);
+    const recordNodes = graph.filter((n) => recordUrls.includes(n['@id'] as string));
+    expect(recordNodes).toHaveLength(recordUrls.length);
+    for (const node of recordNodes) {
+      expect(node['@type']).toBe('WebPage');
+      expect(node.mentions).toEqual({ '@id': personId });
+    }
+  });
+
   it('/author 프로필은 완전 노드를 다시 만들지 않고 @id로 참조만 한다', () => {
     // 예전엔 같은 @id의 완전 노드가 두 개였고 "값이 같으니 안전하다"고 봤다. 그러나
     // JSON-LD node-map 병합을 엄격히 하는 소비자는 배열 속성(award·sameAs·subjectOf)을
