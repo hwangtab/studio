@@ -436,3 +436,19 @@ describe('EP 계약 체결', () => {
     expect(draft?.content).toContain('EP 음반(3곡)');
   });
 });
+
+describe('믹싱·마스터링 계약 체결', () => {
+  it('믹싱·마스터링 문안으로 만들고(마이그레이션 0078의 kind CHECK), 서명하면 성립하며 지문이 맞는다', async () => {
+    const terms = buildDefaultProductionTerms('mixmaster');
+    terms.songs = [{ title: '물결' }];
+    const { id } = await createProductionContract({ ...PAYLOAD, kind: 'mixmaster', terms });
+    await sendAsOperator(id);
+    expect(await callSign(id, { token: await clientToken(id) })).toEqual({ status: 200, body: { ok: true } });
+
+    const signed = await loadContract(id);
+    expect(signed?.kind).toBe('mixmaster');
+    expect(signed?.content).toContain('# 믹싱·마스터링 용역 계약서');
+    expect(signed?.content).toContain('| 본 곡 | 물결 |');
+    expect(verifyStoredProductionContract(signed!)).toMatchObject({ kind: 'match' });
+  });
+});

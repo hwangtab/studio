@@ -2,6 +2,8 @@ import {
   ALBUM_BUNDLE_PER_SONG_PRICE,
   ARRANGEMENT_SMALL_PRICE,
   EP_BUNDLE_PER_SONG_PRICE,
+  MASTERING_SINGLE_PRICE,
+  MIXING_LEVEL1_PRICE,
   SINGLE_BUNDLE_PRICE,
   VOCAL_TUNING_ADDON_PRICE,
 } from '../../../data/pricing';
@@ -28,12 +30,39 @@ export const SONG_COUNT_RANGE: Record<ProductionKind, { min: number; max: number
   single: { min: 1, max: 1 },
   ep: { min: 2, max: 7 },
   album: { min: 6, max: 20 },
+  mixmaster: { min: 1, max: 1 },
 };
 
-export const KIND_LABEL: Record<ProductionKind, string> = { single: '싱글', ep: 'EP', album: '정규 앨범' };
+export const KIND_LABEL: Record<ProductionKind, string> = { single: '싱글', ep: 'EP', album: '정규 앨범', mixmaster: '믹싱·마스터링' };
+
+/**
+ * 곡이 하나인 종류 — 음반 제목이 없고 곡 제목이 곧 화면 이름이다. 싱글 제작과 믹싱·마스터링(1곡)이 여기 든다.
+ * `kind === 'single'`로 "곡 하나"를 판정하던 자리는 이 함수를 쓴다 — 믹싱·마스터링이 EP처럼 읽히지 않게.
+ */
+export const isOneSongKind = (kind: ProductionKind): boolean => kind === 'single' || kind === 'mixmaster';
+
+/** 믹싱·마스터링만 하는 계약인가 — 편곡·녹음·유통·홍보가 범위에 없다(mixmaster-template.md). */
+export const isMixMasterKind = (kind: ProductionKind): boolean => kind === 'mixmaster';
+
+/** 계약서 이름 — 메일 제목·PDF·서명 화면에 쓴다. */
+export const contractNameFor = (kind: ProductionKind): string =>
+  isMixMasterKind(kind) ? '믹싱·마스터링 용역 계약서' : '음원 제작 용역 계약서';
+
+/**
+ * 의뢰인이 처음 보내는 자료의 이름. 제작 계약은 가이드 음원("1차 완성본", 제1조), 믹싱·마스터링 계약은
+ * 녹음이 끝난 트랙별 파일("작업 파일", 제1조)이다. 진행 기록의 `source_received`가 이것을 받은 날이다.
+ */
+export const sourceLabelFor = (kind: ProductionKind): string => (isMixMasterKind(kind) ? '작업 파일' : '1차 완성본');
 
 export const REFUND_ITEM_KEYS = ['arrangement', 'recording', 'tuning', 'mixmaster', 'planning'] as const;
 export type RefundItemKey = (typeof REFUND_ITEM_KEYS)[number];
+
+/**
+ * 종류별 환불 항목표의 항목(순서 고정). 제작 계약은 제2조 각 호를 하나씩 가리키는 다섯 항목, 믹싱·마스터링 계약은
+ * 제2조 전체인 한 항목이다 — 그 안의 믹싱·마스터링 경계는 milestones가 나눈다.
+ */
+export const refundItemKeysFor = (kind: ProductionKind): readonly RefundItemKey[] =>
+  isMixMasterKind(kind) ? ['mixmaster'] : REFUND_ITEM_KEYS;
 
 export const REVISION_STAGES = ['arrangement', 'mixing', 'mastering'] as const;
 export type RevisionStage = (typeof REVISION_STAGES)[number];
@@ -123,6 +152,10 @@ export interface ProductionTerms {
   credits: string;
 }
 
+/** 제10조 항목표에 인쇄되는 이름. 믹싱·마스터링 계약은 조항 번호가 달라(제2조 전체) 따로 둔다. */
+export const refundLabelFor = (kind: ProductionKind, key: RefundItemKey): string =>
+  isMixMasterKind(kind) && key === 'mixmaster' ? '믹싱·마스터링 (제2조)' : REFUND_LABELS[key];
+
 const REFUND_LABELS: Record<RefundItemKey, string> = {
   arrangement: '편곡 (제2조 2호)',
   recording: '보컬 녹음 (제2조 3호)',
@@ -166,9 +199,10 @@ const DEFAULT_EXTRA_REVISION_FEES: Record<RevisionStage, number> = {
 };
 
 const DEFAULT_CREDITS = 'Arranged by 황경하 / Recorded · Mixed by 스튜디오 놀';
+const MIXMASTER_CREDITS = 'Mixed · Mastered by 스튜디오 놀';
 
-/** 곡당 번들 단가 — 싱글 번들, EP·정규 번들의 곡당 값(정본 상수). */
-const BUNDLE_PER_SONG: Record<ProductionKind, number> = {
+/** 곡당 번들 단가 — 싱글 번들, EP·정규 번들의 곡당 값(정본 상수). 믹싱·마스터링은 번들이 아니라 아래에서 따로 만든다. */
+const BUNDLE_PER_SONG: Record<Exclude<ProductionKind, 'mixmaster'>, number> = {
   single: SINGLE_BUNDLE_PRICE,
   ep: EP_BUNDLE_PER_SONG_PRICE,
   album: ALBUM_BUNDLE_PER_SONG_PRICE,
@@ -178,13 +212,56 @@ const BUNDLE_PER_SONG: Record<ProductionKind, number> = {
  * 작업 기간 기본값(주). 싱글 8주는 계약서 원문, EP·정규는 곡 수를 고려한 출발값이다 — **운영자 확인 필요**
  * (EP·정규 계약서 초안 검토와 함께). 작성 폼에서 계약마다 고친다.
  */
-const DEFAULT_WORK_WEEKS: Record<ProductionKind, number> = { single: 8, ep: 12, album: 20 };
+const DEFAULT_WORK_WEEKS: Record<ProductionKind, number> = { single: 8, ep: 12, album: 20, mixmaster: 2 };
+
+/**
+ * 믹싱·마스터링 계약의 기본 조건 — 사이트 정가(믹싱 10트랙 이하 + 싱글 마스터링, data/pricing.ts) 그대로.
+ * 작업 기간 2주: 사이트 약속은 파일 수령 후 3~7영업일 완성본이고, 수정 2회를 주고받는 시간을 더했다.
+ * 해지 정산은 믹싱 1차를 전달하면 믹싱 몫(정가 비율), 마스터링을 전달하면 전액을 작업분으로 본다.
+ */
+const buildDefaultMixMasterTerms = (): ProductionTerms => {
+  const total = MIXING_LEVEL1_PRICE + MASTERING_SINGLE_PRICE;
+  const deposit = Math.round(total / 2);
+  const mixingShare = Math.round((MIXING_LEVEL1_PRICE / total) * 100) / 100;
+  return {
+    version: 2,
+    albumTitle: null,
+    songs: [{ title: null }],
+    scope: { arrangementTracks: 0, recordingHours: 0, mixingTracks: 10 },
+    amount: { total, deposit, balance: total - deposit, depositDueDays: 3, balanceDueDays: 7 },
+    payment: {
+      bank: BANK_ACCOUNT.bankName,
+      account: BANK_ACCOUNT.accountNumber,
+      holder: BANK_ACCOUNT.accountHolder,
+    },
+    workWeeks: DEFAULT_WORK_WEEKS.mixmaster,
+    revisions: { arrangement: 0, mixing: 2, mastering: 1 },
+    extraRevisionFees: { arrangement: 0, mixing: DEFAULT_EXTRA_REVISION_FEES.mixing, mastering: DEFAULT_EXTRA_REVISION_FEES.mastering },
+    deemedApprovalDays: 7,
+    refundSchedule: [
+      {
+        key: 'mixmaster',
+        label: refundLabelFor('mixmaster', 'mixmaster'),
+        amount: total,
+        milestones: [
+          { event: 'mixing_delivered', ratio: mixingShare },
+          { event: 'mastering_delivered', ratio: 1 },
+        ],
+      },
+    ],
+    clientUnresponsiveDays: 30,
+    paymentDelayDays: 14,
+    studioDelayWeeks: 2,
+    credits: MIXMASTER_CREDITS,
+  };
+};
 
 /**
  * 기본 조건. 계약금액은 정본 상수의 곡 수 배다 — 곡마다 소편성 편곡 + 번들 곡당 단가 + 보컬 보정.
  * 작성 폼이 이 값으로 시작하고, 운영자가 견적에 맞춰 고친다.
  */
 export const buildDefaultProductionTerms = (kind: ProductionKind = 'single', songCount = 1): ProductionTerms => {
+  if (kind === 'mixmaster') return buildDefaultMixMasterTerms();
   const count = Math.min(Math.max(songCount, SONG_COUNT_RANGE[kind].min), SONG_COUNT_RANGE[kind].max);
   const bundle = BUNDLE_PER_SONG[kind] * count;
   const total = (ARRANGEMENT_SMALL_PRICE + VOCAL_TUNING_ADDON_PRICE) * count + bundle;
@@ -325,8 +402,8 @@ export const validateProductionTerms = (raw: unknown, kind: ProductionKind = 'si
   };
   const days = { min: 1, max: 90 };
 
-  // 싱글은 음반 제목을 받지 않는다 — 곡 제목이 곧 발매 제목이다.
-  const albumTitle = kind === 'single' ? null : readText(raw.albumTitle, 'terms.albumTitle', { maxLength: 100, required: false });
+  // 곡이 하나인 종류(싱글·믹싱·마스터링)는 음반 제목을 받지 않는다 — 곡 제목이 곧 발매 제목이다.
+  const albumTitle = isOneSongKind(kind) ? null : readText(raw.albumTitle, 'terms.albumTitle', { maxLength: 100, required: false });
   const range = SONG_COUNT_RANGE[kind];
   const songs: ProductionSong[] = [];
   if (!Array.isArray(raw.songs) || raw.songs.length < range.min || raw.songs.length > range.max) {
@@ -337,9 +414,11 @@ export const validateProductionTerms = (raw: unknown, kind: ProductionKind = 'si
     });
   }
 
+  // 믹싱·마스터링 계약은 편곡·녹음이 범위에 없다 — 0을 받는다(계약서에 인쇄되지 않는다).
+  const mixMaster = isMixMasterKind(kind);
   const scope = {
-    arrangementTracks: readInt(raw.scope, 'arrangementTracks', 'terms.scope.arrangementTracks', { min: 1, max: 200 }),
-    recordingHours: readInt(raw.scope, 'recordingHours', 'terms.scope.recordingHours', { min: 1, max: 100 }),
+    arrangementTracks: readInt(raw.scope, 'arrangementTracks', 'terms.scope.arrangementTracks', { min: mixMaster ? 0 : 1, max: 200 }),
+    recordingHours: readInt(raw.scope, 'recordingHours', 'terms.scope.recordingHours', { min: mixMaster ? 0 : 1, max: 100 }),
     mixingTracks: readInt(raw.scope, 'mixingTracks', 'terms.scope.mixingTracks', { min: 1, max: 200 }),
   };
 
@@ -385,15 +464,16 @@ export const validateProductionTerms = (raw: unknown, kind: ProductionKind = 'si
   const credits = readText(raw.credits, 'terms.credits', { maxLength: 200, required: true }) ?? '';
 
   /**
-   * 항목표는 다섯 항목이 정해진 순서로 한 번씩 — 제10조가 제2조의 각 호를 하나씩 가리키기 때문이다.
-   * 항목을 빼거나 늘리면 어느 작업분이 어느 금액인지가 조항과 어긋난다. 라벨은 서버가 다시 붙인다
-   * (클라이언트가 보낸 라벨을 그대로 인쇄하지 않는다).
+   * 항목표는 종류별로 정해진 항목이 정해진 순서로 한 번씩 — 제10조가 제2조의 각 호를 하나씩 가리키기 때문이다
+   * (제작 다섯 항목, 믹싱·마스터링 한 항목 — refundItemKeysFor). 항목을 빼거나 늘리면 어느 작업분이 어느 금액인지가
+   * 조항과 어긋난다. 라벨은 서버가 다시 붙인다(클라이언트가 보낸 라벨을 그대로 인쇄하지 않는다).
    */
+  const itemKeys = refundItemKeysFor(kind);
   const refundSchedule: RefundItem[] = [];
-  if (!Array.isArray(raw.refundSchedule) || raw.refundSchedule.length !== REFUND_ITEM_KEYS.length) {
-    push('terms.refundSchedule', `환불 항목표는 ${REFUND_ITEM_KEYS.length}개 항목이어야 합니다.`);
+  if (!Array.isArray(raw.refundSchedule) || raw.refundSchedule.length !== itemKeys.length) {
+    push('terms.refundSchedule', `환불 항목표는 ${itemKeys.length}개 항목이어야 합니다.`);
   } else {
-    REFUND_ITEM_KEYS.forEach((key, index) => {
+    itemKeys.forEach((key, index) => {
       const item = (raw.refundSchedule as unknown[])[index];
       if (!isRecord(item) || item.key !== key) {
         push(`terms.refundSchedule.${key}`, '환불 항목의 순서나 이름이 올바르지 않습니다.');
@@ -401,13 +481,13 @@ export const validateProductionTerms = (raw: unknown, kind: ProductionKind = 'si
       }
       refundSchedule.push({
         key,
-        label: REFUND_LABELS[key],
+        label: refundLabelFor(kind, key),
         amount: readInt(item, 'amount', `terms.refundSchedule.${key}`, money),
         milestones: readMilestones(item.milestones, `terms.refundSchedule.${key}.milestones`),
       });
     });
     const sum = refundSchedule.reduce((acc, item) => acc + item.amount, 0);
-    if (refundSchedule.length === REFUND_ITEM_KEYS.length && amount.total > 0 && sum !== amount.total) {
+    if (refundSchedule.length === itemKeys.length && amount.total > 0 && sum !== amount.total) {
       push(
         'terms.refundSchedule',
         `환불 항목표 합계(${sum.toLocaleString('ko-KR')}원)가 계약금액(${amount.total.toLocaleString('ko-KR')}원)과 같아야 합니다.`,
@@ -485,8 +565,8 @@ export const songLabel = (terms: Pick<ProductionTerms, 'songs'>, index: number):
   return title ? `${index + 1}번 곡 「${title}」` : `${index + 1}번 곡`;
 };
 
-/** 발매물의 화면 이름 — 싱글은 곡 제목, EP·정규는 음반 제목과 곡 수. */
+/** 발매물의 화면 이름 — 곡이 하나인 종류(싱글·믹싱·마스터링)는 곡 제목, EP·정규는 음반 제목과 곡 수. */
 export const releaseTitle = (kind: ProductionKind, terms: Pick<ProductionTerms, 'albumTitle' | 'songs'>): string => {
-  if (kind === 'single') return terms.songs[0]?.title ?? '1곡 (제목 미정)';
+  if (isOneSongKind(kind)) return terms.songs[0]?.title ?? '1곡 (제목 미정)';
   return `${terms.albumTitle ?? '제목 미정'} (${KIND_LABEL[kind]} · ${terms.songs.length}곡)`;
 };

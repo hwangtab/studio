@@ -225,9 +225,12 @@ export const computeProductionLedger = (input: {
   const last = (list: ProductionContractEvent[]) => list[list.length - 1] ?? null;
 
   // ── 단계별 수정·승인(제5조) — 편곡·믹싱은 곡마다, 마스터링은 음반 전체 ──────────
+  // 편곡이 범위에 없는 계약(믹싱·마스터링, scope.arrangementTracks = 0)은 편곡 단계를 만들지 않는다 —
+  // 만들면 영영 끝나지 않는 "편곡" 카드가 의뢰인·관리자 진행 화면에 남는다.
+  const hasArrangement = terms.scope.arrangementTracks > 0;
   const stageKeys: Array<{ stage: RevisionStage; song: number | null }> = [
     ...Array.from({ length: songCount }, (_, song) => [
-      { stage: 'arrangement' as const, song },
+      ...(hasArrangement ? [{ stage: 'arrangement' as const, song }] : []),
       { stage: 'mixing' as const, song },
     ]).flat(),
     { stage: 'mastering', song: null },

@@ -12,7 +12,7 @@ import { denyContractPageCaching } from '../../../../../lib/contracts/page-cache
 import { completeStalledProductionContract } from '../../../../../lib/contracts/production/finalize';
 import { productionProgressPath, productionSignPath } from '../../../../../lib/contracts/production/links';
 import { getEffectiveProductionStatus, hasSignedDocument } from '../../../../../lib/contracts/production/status';
-import { parseStoredTerms, releaseTitle } from '../../../../../lib/contracts/production/terms';
+import { contractNameFor, isOneSongKind, parseStoredTerms, releaseTitle } from '../../../../../lib/contracts/production/terms';
 import { withI18nServerProps } from '../../../../../lib/getStatic';
 
 /**
@@ -24,6 +24,8 @@ interface CompleteViewContract {
   /** 발매물 이름(싱글은 곡 제목, EP·정규는 음반 제목과 곡 수). */
   releaseLabel: string;
   isSingle: boolean;
+  /** "음원 제작 용역 계약" 또는 "믹싱·마스터링 용역 계약". */
+  contractName: string;
   total: number;
   deposit: number;
   depositDueDays: number;
@@ -99,7 +101,8 @@ export const getServerSideProps = withI18nServerProps<CompletePageProps>(async (
         contract: {
           clientName: contract.clientName,
           releaseLabel: releaseTitle(contract.kind, terms),
-          isSingle: contract.kind === 'single',
+          isSingle: isOneSongKind(contract.kind),
+          contractName: contractNameFor(contract.kind).replace(/서$/, ''),
           total: terms.amount.total,
           deposit: terms.amount.deposit,
           depositDueDays: terms.amount.depositDueDays,
@@ -228,7 +231,7 @@ export default function ProductionContractCompletePage({
           <h1 className="typo-page-title text-gray-900 dark:text-gray-900 mb-3">계약 체결 완료</h1>
           <p className="text-gray-600 dark:text-gray-600 mb-8 leading-relaxed">
             <span className="block">
-              {purged ? '체결이 완료된 계약입니다.' : `${contract.clientName}님, 음원 제작 용역 계약이 체결되었어요.`}
+              {purged ? '체결이 완료된 계약입니다.' : `${contract.clientName}님, ${contract.contractName}이 체결되었어요.`}
             </span>
             <span className="block">
               {purged ? '보관 기간이 지나 개인정보를 파기했어요.' : '서명본 PDF와 계약금 안내를 메일로도 보내 드려요.'}

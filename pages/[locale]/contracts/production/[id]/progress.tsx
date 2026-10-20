@@ -14,7 +14,7 @@ import { hasPortalAccess } from '../../../../../lib/contracts/production/portal-
 import { loadProgressContext } from '../../../../../lib/contracts/production/progress';
 import { buildClientProgressView, type ProgressView, type StageView } from '../../../../../lib/contracts/production/progress-view';
 import { hasSignedDocument } from '../../../../../lib/contracts/production/status';
-import { releaseTitle } from '../../../../../lib/contracts/production/terms';
+import { isMixMasterKind, releaseTitle, sourceLabelFor } from '../../../../../lib/contracts/production/terms';
 import { withI18nServerProps } from '../../../../../lib/getStatic';
 import { loadRefundAccountSummary } from '../../../../../lib/payments/refundAccount';
 
@@ -24,6 +24,10 @@ interface ProgressPageProps {
   contractId: string;
   clientName: string;
   releaseLabel: string | null;
+  /** 머리 줄의 서비스 이름 — "음원 제작" 또는 "믹싱·마스터링". */
+  serviceLabel: string;
+  /** 의뢰인이 처음 보내는 자료 — "1차 완성본" 또는 "작업 파일"(sourceLabelFor). */
+  sourceLabel: string;
   /** 연락처 뒷자리를 아직 확인하지 않았다 — 진행 내용을 싣지 않는다. */
   locked: boolean;
   /** 진행이 끝난 계약 — 승인·수정 버튼이 없다. */
@@ -56,6 +60,8 @@ export const getServerSideProps = withI18nServerProps<ProgressPageProps>(async (
     contractId: id,
     clientName: '',
     releaseLabel: null,
+    serviceLabel: '음원 제작',
+    sourceLabel: '1차 완성본',
     locked: true,
     closed: false,
     view: null,
@@ -92,6 +98,8 @@ export const getServerSideProps = withI18nServerProps<ProgressPageProps>(async (
         ...empty,
         clientName: progress.contract.clientName,
         releaseLabel: releaseTitle(progress.contract.kind, progress.terms),
+        serviceLabel: isMixMasterKind(progress.contract.kind) ? '믹싱·마스터링' : '음원 제작',
+        sourceLabel: sourceLabelFor(progress.contract.kind),
         locked,
         closed: progress.contract.status !== 'signed',
         view: locked ? null : buildClientProgressView(progress.terms, progress.ledger),
@@ -345,6 +353,8 @@ export default function ProductionProgressPage({
   contractId,
   clientName,
   releaseLabel,
+  serviceLabel,
+  sourceLabel,
   locked,
   closed,
   view,
@@ -400,7 +410,7 @@ export default function ProductionProgressPage({
       <main className="min-h-screen bg-gray-50 dark:bg-gray-50 py-8 md:py-12">
         <div className="max-w-2xl mx-auto px-4 space-y-6">
           <div className="bg-white dark:bg-white rounded-2xl shadow-sm p-6 md:p-8">
-            <p className="text-sm font-medium text-gray-400 dark:text-gray-400">스튜디오 놀 · 음원 제작</p>
+            <p className="text-sm font-medium text-gray-400 dark:text-gray-400">스튜디오 놀 · {serviceLabel}</p>
             <h1 className="typo-page-title text-gray-900 dark:text-gray-900 mt-1">{releaseLabel ?? '작업 진행'}</h1>
             <p className="mt-2 text-gray-600 dark:text-gray-600">{clientName}님의 작업 진행 상황이에요.</p>
           </div>
@@ -482,8 +492,8 @@ export default function ProductionProgressPage({
                         {view.work.dueOn
                           ? `${formatDate(view.work.dueOn)} 무렵`
                           : view.payments.deposit === 0
-                            ? '1차 완성본을 받은 뒤 정해져요'
-                            : '계약금·1차 완성본을 받은 뒤 정해져요'}
+                            ? `${sourceLabel}을 받은 뒤 정해져요`
+                            : `계약금·${sourceLabel}을 받은 뒤 정해져요`}
                       </dd>
                     </>
                   )}

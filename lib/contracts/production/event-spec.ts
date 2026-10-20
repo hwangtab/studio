@@ -75,6 +75,35 @@ export const ADMIN_EVENT_TYPES = (Object.keys(EVENT_SPEC) as ProductionEventType
 );
 
 /**
+ * 편곡이 범위에 없는 계약(믹싱·마스터링 — terms.scope.arrangementTracks = 0)인가. 장부(ledger.ts)와 화면이 계약 종류
+ * 대신 이 값을 본다 — 장부는 종류를 받지 않고 terms만 읽는다.
+ */
+export const isMixMasterTerms = (terms: { scope: { arrangementTracks: number } }): boolean => terms.scope.arrangementTracks === 0;
+
+/** 믹싱·마스터링 계약에서 쓰지 않는 기록 — 녹음·유통 등록·발매가 범위 밖이다(mixmaster-template.md 제2조·제9조). */
+const MIXMASTER_HIDDEN_TYPES: ReadonlySet<ProductionEventType> = new Set(['recording_completed', 'distribution_submitted', 'released']);
+
+/** 믹싱·마스터링 계약에서 이름이 다른 기록 — 처음 받는 자료가 "작업 파일"이고 착수는 믹싱 시작이다(제1조·제10조 1항). */
+const MIXMASTER_LABEL: Partial<Record<ProductionEventType, string>> = {
+  source_received: '작업 파일 수령',
+  source_replaced: '작업 파일 교체',
+  kickoff: '착수 (믹싱 시작)',
+};
+
+export const eventLabelFor = (type: ProductionEventType, mixMaster: boolean): string =>
+  (mixMaster ? MIXMASTER_LABEL[type] : undefined) ?? EVENT_SPEC[type].label;
+
+export const adminEventTypesFor = (mixMaster: boolean): ProductionEventType[] =>
+  mixMaster ? ADMIN_EVENT_TYPES.filter((type) => !MIXMASTER_HIDDEN_TYPES.has(type)) : ADMIN_EVENT_TYPES;
+
+/** 기록 종류의 단계 선택지 — 믹싱·마스터링 계약은 믹싱·마스터링만. */
+export const eventStagesFor = (type: ProductionEventType, mixMaster: boolean): readonly ProductionStage[] | undefined => {
+  const stages = EVENT_SPEC[type].stages;
+  if (!stages || !mixMaster) return stages;
+  return stages.filter((stage) => stage === 'mixing' || stage === 'mastering');
+};
+
+/**
  * 곡마다 일어나는 사건인가 — 1차 완성본 수령·교체, 녹음 세션 마침, 그리고 마스터링을 뺀 단계의 전달·수정 요청·승인.
  * 이 사건만 곡 번호(events.song)를 가진다. 마스터링은 음반 전체다.
  */

@@ -252,10 +252,12 @@ export const contractTemplateSnapshots = sqliteTable('contract_template_snapshot
 // 설계: docs/production-contract-design-2026-10.md, 코드: lib/contracts/production/.
 
 /**
- * 계약 종류. single = 싱글(1곡, single-template.md), ep·album = 여러 곡(release-template.md, 0073).
+ * 계약 종류. single = 싱글(1곡, single-template.md), ep·album = 여러 곡(release-template.md, 0073),
+ * mixmaster = 믹싱·마스터링만 1곡(mixmaster-template.md, 0078 — 녹음·편곡이 끝난 파일을 받아 믹싱·마스터링).
  * 곡 수·곡명은 terms.songs에 있다 — 종류는 계약서 문안과 기본 조건을 고르는 값이다.
+ * `mixing`이 아니라 `mixmaster`인 이유: 온라인 믹싱 주문(orders.type·refund_accounts.order_kind)이 이미 `mixing`을 쓴다.
  */
-export const productionContractKindEnum = ['single', 'ep', 'album'] as const;
+export const productionContractKindEnum = ['single', 'ep', 'album', 'mixmaster'] as const;
 
 /**
  * 연습실 계약과 같은 전이에 completed가 더해졌다. 제작 계약은 "이용 기간"이 아니라 결과물 인도로
@@ -343,7 +345,7 @@ export const productionContracts = sqliteTable(
   },
   (t) => [
     index('production_contracts_status_idx').on(t.status, t.createdAt),
-    check('production_contracts_kind_check', sql`${t.kind} in ('single','ep','album')`),
+    check('production_contracts_kind_check', sql`${t.kind} in ('single','ep','album','mixmaster')`),
     check(
       'production_contracts_status_check',
       sql`${t.status} in ('draft','sent','signed','cancelled','expired','completed','terminated')`,

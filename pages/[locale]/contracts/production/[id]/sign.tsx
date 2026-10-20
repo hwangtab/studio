@@ -17,6 +17,7 @@ import { parseStoredClauses, type ProductionClause } from '../../../../../lib/co
 import { productionCompletePath } from '../../../../../lib/contracts/production/links';
 import { expireOverdueProductionContracts } from '../../../../../lib/contracts/production/service';
 import { getEffectiveProductionStatus, hasSignedDocument } from '../../../../../lib/contracts/production/status';
+import { contractNameFor } from '../../../../../lib/contracts/production/terms';
 import { recordProductionSignerView } from '../../../../../lib/contracts/production/view-log';
 import { clearDraft, readDraft, writeDraft } from '../../../../../lib/contracts/sign-draft';
 import { withI18nServerProps } from '../../../../../lib/getStatic';
@@ -27,7 +28,7 @@ interface ProductionSignPageProps {
   locale: string;
   token: string;
   /** 화면이 그리는 값만 싣는다 — props는 __NEXT_DATA__로 HTML에 그대로 실린다(연습실 sign.tsx 주석). */
-  contract: { id: string; title: string; clientName: string; content: string } | null;
+  contract: { id: string; title: string; clientName: string; content: string; contractName: string } | null;
   /** 이 링크의 서명자. 법정대리인은 생년월일·주소를 채우지 않는다(의뢰인 정보다). */
   signer: { role: 'client' | 'guardian'; name: string; relation: string | null } | null;
   clauses: ProductionClause[];
@@ -91,6 +92,7 @@ export const getServerSideProps = withI18nServerProps<ProductionSignPageProps>(a
           id: contract.id,
           title: contract.title,
           clientName: contract.clientName,
+          contractName: contractNameFor(contract.kind),
           // 서명자들의 연락처는 본인 확인의 정답이라 본문에서도 가린다. 서명본에는 전체 번호가 들어간다.
           content: identityPhones.reduce((content, phone) => maskIdentityDigitsInContent(content, phone), contract.content),
         },
@@ -288,7 +290,7 @@ export default function ProductionContractSignPage({
             <div className="bg-primary p-6 md:p-8">
               {/* 사이트 헤더가 없으므로 여기서 보낸 곳을 밝힌다 — 메일로 들어온 사람이 피싱과 구별할 근거다. */}
               <p className="text-white/70 dark:text-white/70 text-sm font-medium mb-1">스튜디오 놀 · 서울 은평구 대조동</p>
-              <h1 className="typo-page-title text-white dark:text-white">음원 제작 용역 계약서</h1>
+              <h1 className="typo-page-title text-white dark:text-white">{contract.contractName}</h1>
               <p className="text-white dark:text-white/80 mt-2">
                 {isGuardian && signer
                   ? `${signer.name}님, ${contract.clientName}님의 법정대리인(${signer.relation ?? '보호자'})으로 아래 계약에 함께 서명해 주세요. 스튜디오는 이미 서명했어요.`

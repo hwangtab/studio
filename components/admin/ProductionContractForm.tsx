@@ -6,6 +6,8 @@ import { lightOnlyField } from '../ui/adminFieldClass';
 import type { ValidationError } from '../../lib/contracts/validation';
 import {
   buildDefaultProductionTerms,
+  isMixMasterKind,
+  isOneSongKind,
   KIND_LABEL,
   parseStoredTerms,
   SONG_COUNT_RANGE,
@@ -87,7 +89,7 @@ export const toProductionPayload = (values: ProductionContractFormValues): Recor
     : null,
   terms: {
     ...values.terms,
-    albumTitle: values.kind === 'single' ? null : values.terms.albumTitle?.trim() || null,
+    albumTitle: isOneSongKind(values.kind) ? null : values.terms.albumTitle?.trim() || null,
     songs: values.terms.songs.map((song) => ({ title: song.title?.trim() || null })),
   },
 });
@@ -99,7 +101,7 @@ const digits = (raw: string): number => Number(raw.replace(/[^0-9]/g, '') || '0'
 const STAGE_LABEL: Record<RevisionStage, string> = { arrangement: '편곡', mixing: '믹싱', mastering: '마스터링' };
 
 /** 종류를 처음 고를 때의 곡 수 — 번들 가격의 기준 곡 수(EP 4곡, 정규 8곡, data/pricing.ts). */
-const DEFAULT_SONG_COUNT: Record<ProductionKind, number> = { single: 1, ep: 4, album: 8 };
+const DEFAULT_SONG_COUNT: Record<ProductionKind, number> = { single: 1, ep: 4, album: 8, mixmaster: 1 };
 
 /** 곡 목록을 n곡으로 — 있던 제목은 남긴다. */
 const resizeSongs = (songs: ProductionTerms['songs'], count: number) =>
@@ -163,11 +165,19 @@ export default function ProductionContractForm({
   const setTerms = (update: (terms: ProductionTerms) => ProductionTerms) =>
     setValues((prev) => ({ ...prev, terms: update(prev.terms) }));
 
-  /** 계약금액·계약금이 바뀌면 잔금이 따라간다. */
+  /**
+   * 계약금액·계약금이 바뀌면 잔금이 따라간다. 믹싱·마스터링 계약은 환불 항목이 계약금액 전체인 한 항목이라
+   * 그 금액도 따라간다(항목표 합계 = 계약금액, 제10조).
+   */
   const setAmount = (key: 'total' | 'deposit', raw: string) =>
-    setTerms((terms) => {
+    setValues((prev) => {
+      const terms = prev.terms;
       const amount = { ...terms.amount, [key]: digits(raw) };
-      return { ...terms, amount: { ...amount, balance: Math.max(0, amount.total - amount.deposit) } };
+      const refundSchedule =
+        isMixMasterKind(prev.kind) && key === 'total' && terms.refundSchedule.length === 1
+          ? [{ ...terms.refundSchedule[0], amount: amount.total }]
+          : terms.refundSchedule;
+      return { ...prev, terms: { ...terms, refundSchedule, amount: { ...amount, balance: Math.max(0, amount.total - amount.deposit) } } };
     });
 
   /**
@@ -175,15 +185,19 @@ export default function ProductionContractForm({
    * 라디오 한 번에 날리지 않게, 기본값 채우기는 따로 누른다(fillDefaults).
    */
   const changeKind = (kind: ProductionKind) =>
-    setValues((prev) => ({
-      ...prev,
-      kind,
-      terms: {
-        ...prev.terms,
-        albumTitle: kind === 'single' ? null : prev.terms.albumTitle,
-        songs: resizeSongs(prev.terms.songs, kind === prev.kind ? prev.terms.songs.length : DEFAULT_SONG_COUNT[kind]),
-      },
-    }));
+    setValues((prev) => {
+      const songs = resizeSongs(prev.terms.songs, kind === prev.kind ? prev.terms.songs.length : DEFAULT_SONG_COUNT[kind]);
+      // 제작 ↔ 믹싱·마스터링은 조건의 모양이 다르다(환불 항목 5개 ↔ 1개, 편곡·녹음 범위 유무, 크레딧) — 그 종류의
+      // 기본 조건으로 바꾼다. 곡 제목·입금 계좌는 남긴다.
+      if (isMixMasterKind(kind) !== isMixMasterKind(prev.kind)) {
+        return { ...prev, kind, terms: { ...buildDefaultProductionTerms(kind, songs.length), songs, payment: prev.terms.payment } };
+      }
+      return {
+        ...prev,
+        kind,
+        terms: { ...prev.terms, albumTitle: isOneSongKind(kind) ? null : prev.terms.albumTitle, songs },
+      };
+    });
 
   const setSongTitle = (index: number, title: string) =>
     setTerms((t) => ({ ...t, songs: t.songs.map((song, i) => (i === index ? { title } : song)) }));
@@ -199,7 +213,11 @@ export default function ProductionContractForm({
     }));
 
   const { terms } = values;
+  const mixMaster = isMixMasterKind(values.kind);
+  const serviceName = mixMaster ? '믹싱·마스터링' : '음원 제작';
   const refundSum = terms.refundSchedule.reduce((sum, item) => sum + item.amount, 0);
+  // 편곡이 없는 계약은 편곡 수정 칸을 숨긴다(값은 0으로 남는다).
+  const revisionStages = (Object.keys(STAGE_LABEL) as RevisionStage[]).filter((stage) => !(mixMaster && stage === 'arrangement'));
 
   const numberInput = (
     id: string,
@@ -216,7 +234,7 @@ export default function ProductionContractForm({
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     const title =
-      values.title.trim() || (values.clientName.trim() ? `${values.clientName.trim()}님 음원 제작 용역 계약` : '');
+      values.title.trim() || (values.clientName.trim() ? `${values.clientName.trim()}님 ${serviceName} 용역 계약` : '');
     onSubmit({ ...values, title });
   };
 
@@ -284,11 +302,12 @@ export default function ProductionContractForm({
             <label key={kind} className="flex items-center gap-2">
               <input type="radio" className="h-4 w-4 accent-primary" name="kind" checked={values.kind === kind} onChange={() => changeKind(kind)} />
               {KIND_LABEL[kind]}
-              {kind !== 'single' && ` (${SONG_COUNT_RANGE[kind].min}~${SONG_COUNT_RANGE[kind].max}곡)`}
+              {!isOneSongKind(kind) && ` (${SONG_COUNT_RANGE[kind].min}~${SONG_COUNT_RANGE[kind].max}곡)`}
+              {isMixMasterKind(kind) && ' (1곡)'}
             </label>
           ))}
         </div>
-        {values.kind !== 'single' && (
+        {!isOneSongKind(values.kind) && (
           <div className="mt-4 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Field label="음반 제목" id="terms.albumTitle" error={errorMap['terms.albumTitle']} hint="미정이면 비워 두세요." className={ADMIN_FIELD}>
@@ -342,21 +361,24 @@ export default function ProductionContractForm({
       <section>
         <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">작업 범위</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {values.kind === 'single' && (
+          {isOneSongKind(values.kind) && (
             <Field label="곡 제목" id="terms.songs.0" error={errorMap['terms.songs.0']} hint="미정이면 비워 두세요. 계약서에 “1곡 (제목 미정)”으로 적힙니다." className={ADMIN_FIELD}>
               <TextInput light className="text-sm" value={terms.songs[0]?.title ?? ''} onChange={(e) => setSongTitle(0, e.target.value)} />
             </Field>
           )}
           {numberInput('terms.workWeeks', '작업 기간(주)', terms.workWeeks, (raw) => setTerms((t) => ({ ...t, workWeeks: digits(raw) })))}
-          {numberInput('terms.scope.arrangementTracks', '곡당 편곡 트랙 수(이하)', terms.scope.arrangementTracks, (raw) =>
-            setTerms((t) => ({ ...t, scope: { ...t.scope, arrangementTracks: digits(raw) } })),
-          )}
+          {/* 믹싱·마스터링 계약은 편곡·녹음이 범위에 없다 — 0으로 두고 칸을 숨긴다. */}
+          {!mixMaster &&
+            numberInput('terms.scope.arrangementTracks', '곡당 편곡 트랙 수(이하)', terms.scope.arrangementTracks, (raw) =>
+              setTerms((t) => ({ ...t, scope: { ...t.scope, arrangementTracks: digits(raw) } })),
+            )}
           {numberInput('terms.scope.mixingTracks', '곡당 믹싱 트랙 수(이하)', terms.scope.mixingTracks, (raw) =>
             setTerms((t) => ({ ...t, scope: { ...t.scope, mixingTracks: digits(raw) } })),
           )}
-          {numberInput('terms.scope.recordingHours', '곡당 보컬 녹음 시간', terms.scope.recordingHours, (raw) =>
-            setTerms((t) => ({ ...t, scope: { ...t.scope, recordingHours: digits(raw) } })),
-          )}
+          {!mixMaster &&
+            numberInput('terms.scope.recordingHours', '곡당 보컬 녹음 시간', terms.scope.recordingHours, (raw) =>
+              setTerms((t) => ({ ...t, scope: { ...t.scope, recordingHours: digits(raw) } })),
+            )}
         </div>
       </section>
 
@@ -404,14 +426,14 @@ export default function ProductionContractForm({
       <section>
         <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">수정 (제5조)</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {(Object.keys(STAGE_LABEL) as RevisionStage[]).map((stage) => (
+          {revisionStages.map((stage) => (
             <React.Fragment key={stage}>
               {numberInput(`terms.revisions.${stage}`, `${STAGE_LABEL[stage]} 무료 수정(${stage === 'mastering' ? '음반 전체' : '곡당'} 회)`, terms.revisions[stage], (raw) =>
                 setTerms((t) => ({ ...t, revisions: { ...t.revisions, [stage]: digits(raw) } })),
               )}
             </React.Fragment>
           ))}
-          {(Object.keys(STAGE_LABEL) as RevisionStage[]).map((stage) => (
+          {revisionStages.map((stage) => (
             <React.Fragment key={`fee-${stage}`}>
               {numberInput(`terms.extraRevisionFees.${stage}`, `${STAGE_LABEL[stage]} 초과 수정(회당 원)`, terms.extraRevisionFees[stage], (raw) =>
                 setTerms((t) => ({ ...t, extraRevisionFees: { ...t.extraRevisionFees, [stage]: digits(raw) } })),
@@ -460,7 +482,7 @@ export default function ProductionContractForm({
       </section>
 
       <section>
-        <Field label="계약 제목" id="title" error={errorMap.title} hint="비워 두면 “○○○님 음원 제작 용역 계약”으로 저장됩니다." className={ADMIN_FIELD}>
+        <Field label="계약 제목" id="title" error={errorMap.title} hint={`비워 두면 “○○○님 ${serviceName} 용역 계약”으로 저장됩니다.`} className={ADMIN_FIELD}>
           <TextInput light className="text-sm" value={values.title} onChange={(e) => set('title', e.target.value)} />
         </Field>
       </section>

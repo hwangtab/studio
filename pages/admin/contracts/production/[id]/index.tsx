@@ -36,7 +36,7 @@ import {
 import { completeStalledProductionContract } from '../../../../../lib/contracts/production/finalize';
 import { loadProgressContext } from '../../../../../lib/contracts/production/progress';
 import { buildAdminProgressView, type AdminProgressView } from '../../../../../lib/contracts/production/progress-view';
-import { releaseTitle } from '../../../../../lib/contracts/production/terms';
+import { isOneSongKind, releaseTitle } from '../../../../../lib/contracts/production/terms';
 import { recordAdminPrivacyAccess } from '../../../../../lib/privacy/accessLog';
 
 interface ProductionContractDetailProps {
@@ -281,14 +281,14 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
               <div>
                 <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">계약 조건</h2>
                 <dl className="space-y-2 text-sm">
-                  <Row label={contract.kind === 'single' ? '본 곡' : '음반'} value={releaseTitle(contract.kind, terms)} />
+                  <Row label={isOneSongKind(contract.kind) ? '본 곡' : '음반'} value={releaseTitle(contract.kind, terms)} />
                   <Row label="계약금액" value={`${formatCurrency(terms.amount.total)}원`} />
                   <Row label="계약금" value={`${formatCurrency(terms.amount.deposit)}원 (체결 후 ${terms.amount.depositDueDays}일)`} />
                   <Row label="잔금" value={`${formatCurrency(terms.amount.balance)}원 (최종 승인 후 ${terms.amount.balanceDueDays}일)`} />
                   <Row label="작업 기간" value={`약 ${terms.workWeeks}주`} />
                   <Row
                     label="무료 수정"
-                    value={`편곡 ${terms.revisions.arrangement} · 믹싱 ${terms.revisions.mixing} · 마스터링 ${terms.revisions.mastering}회`}
+                    value={`${terms.scope.arrangementTracks > 0 ? `편곡 ${terms.revisions.arrangement} · ` : ''}믹싱 ${terms.revisions.mixing} · 마스터링 ${terms.revisions.mastering}회`}
                   />
                 </dl>
               </div>

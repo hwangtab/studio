@@ -5,7 +5,7 @@ import { Button } from '../ui/Button';
 import { Field, TextInput } from '../ui/Field';
 import { lightOnlyField } from '../ui/adminFieldClass';
 import { formatCurrency, formatDate, formatDateTime } from '../../lib/contracts/format';
-import { ADMIN_EVENT_TYPES, EVENT_SPEC, isPerSongEvent, STAGE_LABEL } from '../../lib/contracts/production/event-spec';
+import { adminEventTypesFor, EVENT_SPEC, eventLabelFor, eventStagesFor, isPerSongEvent, STAGE_LABEL } from '../../lib/contracts/production/event-spec';
 import type { AdminProgressView, TimelineItem } from '../../lib/contracts/production/progress-view';
 import type { ProductionEventType } from '../../db/schema';
 
@@ -58,10 +58,13 @@ const Row = ({ label, value }: { label: string; value: React.ReactNode }) => (
 function RecordForm({
   contractId,
   songLabels,
+  mixMaster,
   onDone,
 }: {
   contractId: string;
   songLabels: string[];
+  /** 믹싱·마스터링 계약 — 편곡·녹음·유통 기록과 단계를 숨기고 이름을 바꾼다(event-spec.ts). */
+  mixMaster: boolean;
   onDone: (message: string | null) => Promise<void>;
 }) {
   const [type, setType] = useState<ProductionEventType>('payment_received');
@@ -74,7 +77,7 @@ function RecordForm({
   const [occurredAt, setOccurredAt] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const spec = EVENT_SPEC[type];
+  const spec = { ...EVENT_SPEC[type], stages: eventStagesFor(type, mixMaster) };
   // 곡마다 일어나는 기록이고 곡이 둘 이상이면 곡을 고른다(마스터링은 음반 전체라 곡이 없다 — 단계를 고른 뒤에 판정).
   const needsSong = songLabels.length > 1 && isPerSongEvent(type, spec.stages ? stage || null : null);
 
@@ -117,9 +120,9 @@ function RecordForm({
             }}
             className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
           >
-            {ADMIN_EVENT_TYPES.map((value) => (
+            {adminEventTypesFor(mixMaster).map((value) => (
               <option key={value} value={value}>
-                {EVENT_SPEC[value].label}
+                {eventLabelFor(value, mixMaster)}
               </option>
             ))}
           </select>
@@ -279,7 +282,7 @@ export default function ProductionProgressPanel({
           <dl className="space-y-2">
             <Row
               label="작업 기간 시작"
-              value={work.startedOn ? formatDate(work.startedOn) : payments.deposit === 0 ? '1차 완성본 대기' : '계약금·1차 완성본 대기'}
+              value={work.startedOn ? formatDate(work.startedOn) : payments.deposit === 0 ? `${view.mixMaster ? '작업 파일' : '1차 완성본'} 대기` : `계약금·${view.mixMaster ? '작업 파일' : '1차 완성본'} 대기`}
             />
             <Row label="완료 예정" value={work.dueOn ? formatDate(work.dueOn) : '-'} />
             <Row label="지연" value={work.delayDays > 0 ? `${work.delayDays}일` : '-'} />
@@ -343,7 +346,7 @@ export default function ProductionProgressPanel({
       {editable && (
         <div className="p-4 md:p-8 border-b border-gray-200">
           <h3 className="font-bold text-gray-900 dark:text-gray-900 mb-3">기록 추가</h3>
-          <RecordForm contractId={contractId} songLabels={view.songLabels} onDone={refresh} />
+          <RecordForm contractId={contractId} songLabels={view.songLabels} mixMaster={view.mixMaster} onDone={refresh} />
         </div>
       )}
 
