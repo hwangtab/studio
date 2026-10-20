@@ -399,9 +399,21 @@ export default function ProductionContractSignPage({
                         checked={agreements[clause.key] || false}
                         onChange={(e) => setAgreements((prev) => ({ ...prev, [clause.key]: e.target.checked }))}
                       />
-                      <span className="text-gray-700 dark:text-gray-700">
-                        <span className="font-semibold">{clause.clauseNumber}</span> {clause.title}에 동의해요.
-                      </span>
+                      {clause.points ? (
+                        // 새 계약은 중요 조항 요약 하나를 한 번에 확인받는다(clauses.ts buildProductionClauses).
+                        <span className="text-gray-700 dark:text-gray-700">
+                          <span className="font-semibold">{clause.title}</span> — 아래 내용을 확인했고 동의해요.
+                          <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-gray-600 dark:text-gray-600">
+                            {clause.points.map((point) => (
+                              <li key={point}>{point}</li>
+                            ))}
+                          </ul>
+                        </span>
+                      ) : (
+                        <span className="text-gray-700 dark:text-gray-700">
+                          <span className="font-semibold">{clause.clauseNumber}</span> {clause.title}에 동의해요.
+                        </span>
+                      )}
                     </label>
                   ))}
                 </div>

@@ -14,7 +14,7 @@ import { resetIdentityAttempts } from '../admin-rate-limit';
 import { computeExpiresAt } from '../status';
 import { hashTemplate } from '../template-snapshot';
 import { generateSignToken } from '../token';
-import { parseStoredClauses, PRODUCTION_REQUIRED_CLAUSES } from './clauses';
+import { buildProductionClauses, parseStoredClauses } from './clauses';
 import {
   sendProductionGuardianSignRequestEmail,
   sendProductionOperatorNotification,
@@ -119,7 +119,7 @@ export const createProductionContract = async (data: ProductionContractPayload):
         clientPhone: data.clientPhone,
         termsJson: canonicalTermsJson(data.terms),
         totalAmount: data.terms.amount.total,
-        clausesJson: JSON.stringify(PRODUCTION_REQUIRED_CLAUSES),
+        clausesJson: JSON.stringify(buildProductionClauses(data.terms)),
         template,
         templateHash: hashTemplate(template),
         content: buildDraftContent(data, template),
@@ -169,7 +169,7 @@ export const updateDraftProductionContract = async (
         termsJson: canonicalTermsJson(data.terms),
         totalAmount: data.terms.amount.total,
         // 동의 항목도 지금 목록으로 다시 뜬다. 아직 아무도 서명하지 않은 문서다.
-        clausesJson: JSON.stringify(PRODUCTION_REQUIRED_CLAUSES),
+        clausesJson: JSON.stringify(buildProductionClauses(data.terms)),
         template,
         templateHash: hashTemplate(template),
         content: buildDraftContent(data, template),
