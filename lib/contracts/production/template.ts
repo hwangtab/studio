@@ -4,7 +4,7 @@ import path from 'node:path';
 import { formatCurrency, formatDate } from '../format';
 import { fillPlaceholders } from '../placeholders';
 import { escapeTableCell } from '../html-escape';
-import { KIND_LABEL, PER_SONG_MILESTONES, type ProductionKind, type ProductionTerms, type RefundItemKey, type RefundMilestoneEvent } from './terms';
+import { isMixMasterKind, KIND_LABEL, PER_SONG_MILESTONES, type ProductionKind, type ProductionTerms, type RefundItemKey, type RefundMilestoneEvent } from './terms';
 
 /**
  * 제작 계약서 본문 만들기. 연습실 template.ts와 같은 규칙을 따른다 — 사용자 값은 표 셀 이스케이프,
@@ -18,12 +18,18 @@ import { KIND_LABEL, PER_SONG_MILESTONES, type ProductionKind, type ProductionTe
  *
  * 싱글은 single-template.md, EP·정규는 release-template.md. 뒤쪽은 앞쪽에서 곡 수가 들어가는 문장만 바꾼
  * 판이다 — 공통 조항을 고치면 두 파일을 함께 고친다(template.test.ts가 공통 조항이 같은지 본다).
+ * 믹싱·마스터링(1곡)은 mixmaster-template.md. 범위·착수·발매 조항이 다르지만 **조 번호는 제작 계약과 같다** —
+ * 진행 기록·메일이 "제5조 5항", "제10조 1항"처럼 조항을 가리키므로 번호를 바꾸지 말 것.
  */
+const TEMPLATE_FILE: Record<ProductionKind, string> = {
+  single: 'single-template.md',
+  ep: 'release-template.md',
+  album: 'release-template.md',
+  mixmaster: 'mixmaster-template.md',
+};
+
 export const readProductionTemplate = (kind: ProductionKind = 'single'): string =>
-  readFileSync(
-    path.join(process.cwd(), 'lib', 'contracts', 'production', kind === 'single' ? 'single-template.md' : 'release-template.md'),
-    'utf-8',
-  );
+  readFileSync(path.join(process.cwd(), 'lib', 'contracts', 'production', TEMPLATE_FILE[kind]), 'utf-8');
 
 export interface ProductionTemplateData {
   clientName: string;
@@ -67,7 +73,10 @@ const EVENT_PHRASE: Record<RefundMilestoneEvent, string> = {
  * 예) "편곡(제2조 2호)은 스튜디오가 편곡 1차 시안을 전달한 때 완료된 것으로 본다. 기획 상담·…는 착수한 때
  *      그 금액의 30%를, 유통 등록을 마친 때 전액을 작업분으로 본다."
  */
-export const describeRefundMilestones = (terms: ProductionTerms): string => {
+export const describeRefundMilestones = (terms: ProductionTerms, kind: ProductionKind = 'single'): string => {
+  // 믹싱·마스터링 계약은 항목이 제2조 전체 하나라 "제2조 5호"가 아니라 "제2조"를 가리킨다.
+  const subject = (key: RefundItemKey) =>
+    isMixMasterKind(kind) && key === 'mixmaster' ? '믹싱·마스터링(제2조)은' : ITEM_SUBJECT[key];
   const multi = terms.songs.length > 1;
   return terms.refundSchedule
     .map(({ key, milestones }) => {
@@ -76,14 +85,14 @@ export const describeRefundMilestones = (terms: ProductionTerms): string => {
       const perSong = multi && milestones.some((m) => PER_SONG_MILESTONES.has(m.event));
       if (milestones.length === 1) {
         return perSong
-          ? `${ITEM_SUBJECT[key]} 곡마다 ${EVENT_PHRASE[milestones[0].event]} 그 곡의 몫(항목 금액을 곡 수로 나눈 금액)이 완료된 것으로 본다.`
-          : `${ITEM_SUBJECT[key]} ${EVENT_PHRASE[milestones[0].event]} 완료된 것으로 본다.`;
+          ? `${subject(key)} 곡마다 ${EVENT_PHRASE[milestones[0].event]} 그 곡의 몫(항목 금액을 곡 수로 나눈 금액)이 완료된 것으로 본다.`
+          : `${subject(key)} ${EVENT_PHRASE[milestones[0].event]} 완료된 것으로 본다.`;
       }
       const share = perSong ? '그 곡 몫의' : '그 금액의';
       const parts = milestones.map(({ event, ratio }) =>
         ratio === 1 ? `${EVENT_PHRASE[event]} ${perSong ? '그 곡 몫 ' : ''}전액을` : `${EVENT_PHRASE[event]} ${share} ${Math.round(ratio * 100)}%를`,
       );
-      return `${ITEM_SUBJECT[key]} ${perSong ? '곡마다 ' : ''}${parts.join(', ')} 작업분으로 본다.`;
+      return `${subject(key)} ${perSong ? '곡마다 ' : ''}${parts.join(', ')} 작업분으로 본다.`;
     })
     .join(' ');
 };
@@ -156,7 +165,7 @@ export const buildProductionContent = (data: ProductionTemplateData, template: s
     studioDelayWeeks: String(terms.studioDelayWeeks),
     credits: escapeTableCell(terms.credits),
     refundRows: refundRows,
-    refundMilestones: describeRefundMilestones(terms),
+    refundMilestones: describeRefundMilestones(terms, data.kind),
     contractDate: formatDate(data.contractDate),
   };
 

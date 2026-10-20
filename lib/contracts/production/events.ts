@@ -165,6 +165,10 @@ export const checkEventAllowed = (
   if (input.song !== null && input.song >= ledger.songs.length) return '계약에 없는 곡입니다.';
 
   const has = (type: ProductionEventType) => ledger.events.some((event) => event.type === type);
+  // 편곡이 범위에 없는 계약(믹싱·마스터링)에는 편곡 단계가 장부에 없다 — 그 단계의 기록은 받지 않는다.
+  if (input.stage === 'arrangement' && !ledger.stages.some((state) => state.stage === 'arrangement')) {
+    return '이 계약에는 편곡 단계가 없습니다.';
+  }
   const song = input.song ?? 0;
   const songState = ledger.songs[song];
 

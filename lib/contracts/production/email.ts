@@ -8,30 +8,32 @@ import { escapeHtml } from '../html-escape';
 import { IDENTITY_DIGITS } from '../identity';
 import { SIGN_TOKEN_TTL_DAYS } from '../status';
 import { productionAdminUrl } from './links';
-import { releaseTitle, type ProductionTerms } from './terms';
+import { contractNameFor, isOneSongKind, releaseTitle, sourceLabelFor, type ProductionKind, type ProductionTerms } from './terms';
 
 /**
  * 제작 계약 메일. 레이아웃은 연습실 계약 메일과 같은 것(email-template.ts)을 쓴다 — 서명 요청은 피싱과
  * 구별되어야 하므로 보내는 곳·계약 조건·문의 전화가 드러나는 같은 틀을 유지한다.
  */
 
-const CONTRACT_NAME = '음원 제작 용역 계약서';
-
 /** 링크를 누르기 전에 조건을 확인할 수 있게 메일 본문에도 적는다(연습실과 같은 원칙). */
 const termRows = (contract: Pick<ProductionContract, 'kind'>, terms: ProductionTerms): ContractEmailRow[] => [
-  { label: contract.kind === 'single' ? '본 곡' : '음반', value: releaseTitle(contract.kind, terms) },
+  { label: isOneSongKind(contract.kind) ? '본 곡' : '음반', value: releaseTitle(contract.kind, terms) },
   { label: '계약금액', value: `${formatCurrency(terms.amount.total)}원 (부가세 포함)`, emphasis: true },
   {
     label: '계약금',
     value: terms.amount.deposit > 0 ? `${formatCurrency(terms.amount.deposit)}원 · 체결 후 ${terms.amount.depositDueDays}일 이내` : '없음',
   },
   { label: '잔금', value: `${formatCurrency(terms.amount.balance)}원 · 최종 마스터 승인 후 ${terms.amount.balanceDueDays}일 이내` },
-  { label: '작업 기간', value: `약 ${terms.workWeeks}주 (${workStartPhrase(terms)} 후)` },
+  { label: '작업 기간', value: `약 ${terms.workWeeks}주 (${workStartPhrase(terms, contract.kind)} 후)` },
 ];
 
-/** 작업 기간이 시작되는 조건(제4조 1항) — 여러 곡이면 모든 수록곡의 1차 완성본, 계약금이 없으면 1차 완성본만. */
-const workStartPhrase = (terms: ProductionTerms): string => {
-  const source = terms.songs.length > 1 ? '모든 수록곡의 1차 완성본 수령' : '1차 완성본 수령';
+/**
+ * 작업 기간이 시작되는 조건(제4조 1항) — 여러 곡이면 모든 수록곡의 1차 완성본, 계약금이 없으면 1차 완성본만.
+ * 믹싱·마스터링 계약은 "1차 완성본"이 아니라 "작업 파일"이다(sourceLabelFor).
+ */
+const workStartPhrase = (terms: ProductionTerms, kind: ProductionKind): string => {
+  const label = sourceLabelFor(kind);
+  const source = terms.songs.length > 1 ? `모든 수록곡의 ${label} 수령` : `${label} 수령`;
   return terms.amount.deposit > 0 ? `계약금 입금·${source}` : source;
 };
 
@@ -55,7 +57,7 @@ export const sendProductionSignRequestEmail = async (
   signUrl: string,
 ): Promise<SendContractEmailResult> => {
   const html = buildContractEmailHtml({
-    heading: `${CONTRACT_NAME} 서명 요청`,
+    heading: `${contractNameFor(contract.kind)} 서명 요청`,
     paragraphs: [
       `${escapeHtml(contract.clientName)}님, 안녕하세요. 스튜디오 놀입니다.`,
       `아래 조건을 확인하신 뒤 ${strong('계약서 서명하기')}를 눌러 서명해 주세요. 스튜디오는 이미 서명했습니다.`,
@@ -70,7 +72,7 @@ export const sendProductionSignRequestEmail = async (
   });
 
   const text = [
-    `[${CONTRACT_NAME} 서명 요청]`,
+    `[${contractNameFor(contract.kind)} 서명 요청]`,
     '',
     `${contract.clientName}님, 안녕하세요. 스튜디오 놀입니다.`,
     '',
@@ -85,7 +87,7 @@ export const sendProductionSignRequestEmail = async (
 
   return sendEmail({
     to: contract.clientEmail,
-    subject: `[스튜디오 놀] ${contract.clientName}님, ${CONTRACT_NAME} 서명 요청`,
+    subject: `[스튜디오 놀] ${contract.clientName}님, ${contractNameFor(contract.kind)} 서명 요청`,
     html,
     text,
   });
@@ -103,7 +105,7 @@ export const sendProductionGuardianSignRequestEmail = async (
 ): Promise<SendContractEmailResult> => {
   const intro = `${contract.clientName}님은 미성년자라, 법정대리인(${guardian.relation ?? '보호자'})께서 함께 서명해 주셔야 계약이 성립해요(계약서 제14조).`;
   const html = buildContractEmailHtml({
-    heading: `${CONTRACT_NAME} 법정대리인 서명 요청`,
+    heading: `${contractNameFor(contract.kind)} 법정대리인 서명 요청`,
     paragraphs: [`${escapeHtml(guardian.name)}님, 안녕하세요. 스튜디오 놀입니다.`, escapeHtml(intro)],
     rows: [{ label: '의뢰인', value: contract.clientName, emphasis: true }, ...termRows(contract, terms)],
     cta: { label: '계약서 확인하고 서명하기', url: signUrl },
@@ -113,7 +115,7 @@ export const sendProductionGuardianSignRequestEmail = async (
     ],
   });
   const text = [
-    `[${CONTRACT_NAME} 법정대리인 서명 요청]`,
+    `[${contractNameFor(contract.kind)} 법정대리인 서명 요청]`,
     '',
     `${guardian.name}님, 안녕하세요. 스튜디오 놀입니다.`,
     intro,
@@ -128,7 +130,7 @@ export const sendProductionGuardianSignRequestEmail = async (
 
   return sendEmail({
     to: guardian.email,
-    subject: `[스튜디오 놀] ${contract.clientName}님 ${CONTRACT_NAME} — 법정대리인 서명 요청`,
+    subject: `[스튜디오 놀] ${contract.clientName}님 ${contractNameFor(contract.kind)} — 법정대리인 서명 요청`,
     html,
     text,
   });
@@ -166,7 +168,7 @@ export const sendProductionSignedEmail = async (
             escapeHtml(accountLine(terms)),
           ]
         : []),
-      `작업 기간은 ${workStartPhrase(terms).replace('·', '과 ')}이 끝난 날부터 셉니다.`,
+      `작업 기간은 ${workStartPhrase(terms, contract.kind).replace('·', '과 ')}이 끝난 날부터 셉니다.`,
     ],
   });
 
@@ -187,7 +189,7 @@ export const sendProductionSignedEmail = async (
 
   return sendEmail({
     to: recipient.email,
-    subject: `[스튜디오 놀] ${contract.clientName}님, ${CONTRACT_NAME}가 체결되었습니다`,
+    subject: `[스튜디오 놀] ${contract.clientName}님, ${contractNameFor(contract.kind)}가 체결되었습니다`,
     html,
     text,
     attachments: pdfBuffer

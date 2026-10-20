@@ -93,7 +93,7 @@ export default function ProductionContractsPage({ rows, truncated, error }: Prod
 
       <AdminShell
         title="제작 계약"
-        description="음원 제작 용역 계약 — 작성, 서명하고 발송, 체결 확인"
+        description="음원 제작·믹싱·마스터링 용역 계약 — 작성, 서명하고 발송, 체결 확인"
         actions={
           <Link href="/admin/contracts/production/new" passHref>
             <Button light>새 제작 계약</Button>

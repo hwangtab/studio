@@ -8,7 +8,7 @@ import { escapeHtml } from '../html-escape';
 import { STAGE_LABEL, type ProductionStage } from './event-spec';
 import { deemedBaseDay, findStage, kstDayStart, parseEventData, songOf, type ProductionLedger, type Todo } from './ledger';
 import { productionAdminUrl } from './links';
-import { REVISION_STAGES, songLabel, type ProductionTerms, type RevisionStage } from './terms';
+import { contractNameFor, isMixMasterKind, REVISION_STAGES, songLabel, sourceLabelFor, type ProductionTerms, type RevisionStage } from './terms';
 import { TERMINATION_CAUSE_LABEL, TERMINATION_CLAUSE, type TerminationCause } from './termination';
 
 /**
@@ -62,6 +62,9 @@ const buildContent = (
   // 제목·머리글은 그대로(제목은 일반 텍스트, 머리글은 레이아웃이 escape한다), 본문 문단에만 escape한 값을 쓴다.
   const songPlain = multi ? `${songLabel(terms, songOf(event))} ` : '';
   const songPrefix = escapeHtml(songPlain);
+  // 의뢰인이 처음 보내는 자료의 이름 — 제작은 "1차 완성본", 믹싱·마스터링은 "작업 파일"(제1조).
+  const source = sourceLabelFor(contract.kind);
+  const mixMaster = isMixMasterKind(contract.kind);
 
   switch (event.type) {
     case 'payment_received':
@@ -79,13 +82,13 @@ const buildContent = (
     case 'source_received':
     case 'source_replaced':
       return {
-        subject: `${songPlain}${event.type === 'source_received' ? '1차 완성본을 받았어요' : '1차 완성본 교체를 기록했어요'}`,
-        heading: `${songPlain}${event.type === 'source_received' ? '1차 완성본을 받았어요' : '1차 완성본 교체를 기록했어요'}`,
+        subject: `${songPlain}${event.type === 'source_received' ? `${source}을 받았어요` : `${source} 교체를 기록했어요`}`,
+        heading: `${songPlain}${event.type === 'source_received' ? `${source}을 받았어요` : `${source} 교체를 기록했어요`}`,
         paragraphs: [
-          `${name}님, 보내 주신 ${songPrefix}1차 완성본을 받았어요.`,
+          `${name}님, 보내 주신 ${songPrefix}${source}을 받았어요.`,
           event.type === 'source_replaced'
-            ? '1차 완성본을 바꾸면 작업 기간은 교체한 날부터 다시 계산해요(계약서 제4조 2항).'
-            : `작업 기간은 ${terms.amount.deposit > 0 ? '계약금 입금과 ' : ''}${multi ? '모든 수록곡의 ' : ''}1차 완성본 수령이 끝난 날부터 약 ${terms.workWeeks}주예요(계약서 제4조).`,
+            ? `${source}을 바꾸면 작업 기간은 교체한 날부터 다시 계산해요(계약서 제4조 2항).`
+            : `작업 기간은 ${terms.amount.deposit > 0 ? '계약금 입금과 ' : ''}${multi ? '모든 수록곡의 ' : ''}${source} 수령이 끝난 날부터 약 ${terms.workWeeks}주예요(계약서 제4조).`,
         ],
         rows: [...(work.dueOn ? [{ label: '작업 완료 예정', value: `${formatDate(work.dueOn)} 무렵` }] : []), ...linkRow, ...noteRow],
         ctaLabel: '작업 진행 보기',
@@ -94,7 +97,7 @@ const buildContent = (
       return {
         subject: '작업을 시작했어요',
         heading: '작업을 시작했어요',
-        paragraphs: [`${name}님, 기획 상담·편곡 작업을 시작했어요(계약서 제10조 1항의 "착수").`],
+        paragraphs: [`${name}님, ${mixMaster ? '믹싱' : '기획 상담·편곡'} 작업을 시작했어요(계약서 제10조 1항의 "착수").`],
         rows: noteRow,
         ctaLabel: '작업 진행 보기',
       };
@@ -214,7 +217,7 @@ const buildContent = (
       return {
         subject: '최종 파일을 보내 드려요',
         heading: '최종 파일을 보내 드려요',
-        paragraphs: [`${name}님, 최종 마스터 WAV·MP3 파일을 전달해요. 이어서 유통 등록을 진행할게요.`],
+        paragraphs: [`${name}님, 최종 마스터 WAV·MP3 파일을 전달해요.${mixMaster ? '' : ' 이어서 유통 등록을 진행할게요.'}`],
         rows: [...linkRow, ...noteRow],
         ctaLabel: '작업 진행 보기',
       };
@@ -239,7 +242,7 @@ const buildContent = (
         subject: '계약 해지 통지',
         heading: '계약 해지 통지',
         paragraphs: [
-          `${name}님, 음원 제작 용역 계약서 제10조 5항에 따라 계약 해지를 통지해요.`,
+          `${name}님, ${contractNameFor(contract.kind)} 제10조 5항에 따라 계약 해지를 통지해요.`,
           work.kickedOff
             ? '해지하면 계약서 제10조 3항에 따라 진행한 작업분과 동의한 추가 비용·이행한 초과 수정의 요금을 공제하고 남은 금액을 돌려드려요.'
             : '아직 작업을 시작하기 전이라, 해지하면 받은 금액을 모두 돌려드려요(계약서 제10조 2항).',
@@ -372,7 +375,7 @@ export const sendTerminationEmail = async (
       ? '진행한 작업분만 공제하고 남은 금액을 돌려드려요(계약서 제10조 4항).'
       : `진행한 작업분과 동의한 추가 비용·이행한 초과 수정의 요금을 공제하고 남은 금액을 돌려드려요(계약서 ${TERMINATION_CLAUSE[cause]}).`;
   const paragraphs = [
-    `${name}님, 음원 제작 계약을 해지했어요(${escapeHtml(TERMINATION_CAUSE_LABEL[cause])}).`,
+    `${name}님, ${isMixMasterKind(contract.kind) ? '믹싱·마스터링' : '음원 제작'} 계약을 해지했어요(${escapeHtml(TERMINATION_CAUSE_LABEL[cause])}).`,
     basis,
     refund.refundable <= 0
       ? '돌려드릴 금액은 없어요.'
