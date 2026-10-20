@@ -8,6 +8,7 @@ import { IDENTITY_DIGITS, verifyIdentityDigits } from '../../../../../lib/contra
 import { parseStoredClauses } from '../../../../../lib/contracts/production/clauses';
 import { finalizeSignedProductionContract } from '../../../../../lib/contracts/production/finalize';
 import { productionSignerRateLimitKey } from '../../../../../lib/contracts/production/links';
+import { isOpenProductionContract, validateOpenLinkClient, type OpenLinkClientInput } from '../../../../../lib/contracts/production/open-link';
 import { finalizeProductionContractIfComplete } from '../../../../../lib/contracts/production/service';
 import { buildProductionSignStatements } from '../../../../../lib/contracts/production/sign-transaction';
 import { checkProductionAction, getEffectiveProductionStatus } from '../../../../../lib/contracts/production/status';
@@ -103,6 +104,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       clientDetails = { clientBirthdate: details.data.customerBirthdate, clientAddress: details.data.customerAddress };
     }
 
+    // 링크 계약(open-link.ts) — 의뢰인이 이름·이메일·연락처를 여기서 채운다. 본인 확인 대조 번호가 없다.
+    const openLink = role === 'client' && isOpenProductionContract(contract);
+    let openClient: OpenLinkClientInput | undefined;
+    if (openLink) {
+      const client = validateOpenLinkClient(body);
+      if (!client.ok) {
+        return res.status(400).json({ ok: false, message: '입력하신 정보를 확인해 주세요.', errors: client.errors });
+      }
+      openClient = client.data;
+    }
+
     const effectiveStatus = getEffectiveProductionStatus(contract);
     const allowed = checkProductionAction(effectiveStatus, 'sign');
     if (!allowed.ok) {
@@ -125,7 +137,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // 각자 자기 번호로 확인한다 — 의뢰인은 계약서의 의뢰인 연락처, 대리인은 운영자가 적은 대리인 연락처.
     // 형식이 틀린 입력은 세지 않는다 — 세면 링크를 아는 제3자가 빈 요청으로 서명 링크를 잠근다(연습실과 같다).
-    const identity = verifyIdentityDigits(identityDigits, role === 'client' ? contract.clientPhone : (signer.phone ?? ''));
+    // 링크 계약은 대조할 번호가 없어 이 단계를 건너뛴다 — 링크를 1:1로 받은 사람이 서명자라는 전제(open-link.ts).
+    const identity = openLink
+      ? ({ ok: true } as const)
+      : verifyIdentityDigits(identityDigits, role === 'client' ? contract.clientPhone : (signer.phone ?? ''));
     if (!identity.ok && identity.reason === 'malformed') {
       return res.status(400).json({
         ok: false,
@@ -173,6 +188,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         userAgent: String(req.headers['user-agent'] || ''),
         agreedClauseKeys: clauses.map((clause) => clause.key),
         clientDetails,
+        openClient,
       }),
     );
 

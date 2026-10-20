@@ -18,6 +18,7 @@ import { productionCompletePath } from '../../../../../lib/contracts/production/
 import { expireOverdueProductionContracts } from '../../../../../lib/contracts/production/service';
 import { getEffectiveProductionStatus, hasSignedDocument } from '../../../../../lib/contracts/production/status';
 import { contractNameFor } from '../../../../../lib/contracts/production/terms';
+import { isOpenProductionContract } from '../../../../../lib/contracts/production/open-link';
 import { recordProductionSignerView } from '../../../../../lib/contracts/production/view-log';
 import { clearDraft, readDraft, writeDraft } from '../../../../../lib/contracts/sign-draft';
 import { withI18nServerProps } from '../../../../../lib/getStatic';
@@ -28,7 +29,7 @@ interface ProductionSignPageProps {
   locale: string;
   token: string;
   /** 화면이 그리는 값만 싣는다 — props는 __NEXT_DATA__로 HTML에 그대로 실린다(연습실 sign.tsx 주석). */
-  contract: { id: string; title: string; clientName: string; content: string; contractName: string } | null;
+  contract: { id: string; title: string; clientName: string; content: string; contractName: string; openLink: boolean } | null;
   /** 이 링크의 서명자. 법정대리인은 생년월일·주소를 채우지 않는다(의뢰인 정보다). */
   signer: { role: 'client' | 'guardian'; name: string; relation: string | null } | null;
   clauses: ProductionClause[];
@@ -93,6 +94,8 @@ export const getServerSideProps = withI18nServerProps<ProductionSignPageProps>(a
           title: contract.title,
           clientName: contract.clientName,
           contractName: contractNameFor(contract.kind),
+          // 링크 계약 — 의뢰인이 이름·이메일·연락처를 여기서 채우고 뒷자리 확인을 하지 않는다(open-link.ts).
+          openLink: isOpenProductionContract(contract),
           // 서명자들의 연락처는 본인 확인의 정답이라 본문에서도 가린다. 서명본에는 전체 번호가 들어간다.
           content: identityPhones.reduce((content, phone) => maskIdentityDigitsInContent(content, phone), contract.content),
         },
@@ -154,15 +157,22 @@ export default function ProductionContractSignPage({
   const [clientAddress, setClientAddress] = useState('');
   const [detailErrors, setDetailErrors] = useState<Record<string, string>>({});
   const [identityDigits, setIdentityDigits] = useState('');
+  // 링크 계약에서 의뢰인이 채우는 칸.
+  const [openName, setOpenName] = useState('');
+  const [openStageName, setOpenStageName] = useState('');
+  const [openEmail, setOpenEmail] = useState('');
+  const [openPhone, setOpenPhone] = useState('');
   const [identityConfirmed, setIdentityConfirmed] = useState(false);
   const [agreements, setAgreements] = useState<Record<string, boolean>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const allAgreed = contract !== null && clauses.every((clause) => agreements[clause.key]);
-  const identityReady = identityDigits.length === IDENTITY_DIGITS && identityConfirmed;
   const isGuardian = signer?.role === 'guardian';
-  const detailsReady = isGuardian || (clientBirthdate !== '' && clientAddress.trim() !== '');
+  const openLink = !isGuardian && contract?.openLink === true;
+  const identityReady = (openLink || identityDigits.length === IDENTITY_DIGITS) && identityConfirmed;
+  const openReady = !openLink || (openName.trim() !== '' && openEmail.trim() !== '' && openPhone.trim() !== '');
+  const detailsReady = isGuardian || (clientBirthdate !== '' && clientAddress.trim() !== '' && openReady);
   const ready = detailsReady && allAgreed && identityReady && hasSigned;
 
   // 앱 전환으로 다시 열려도 생년월일·주소를 다시 치지 않게(lib/contracts/sign-draft.ts 주석). 마운트 뒤에 읽는다.
@@ -229,6 +239,9 @@ export default function ProductionContractSignPage({
           identityDigits,
           identityConfirmed,
           ...(isGuardian ? {} : { clientBirthdate, clientAddress: clientAddress.trim() }),
+          ...(openLink
+            ? { clientName: openName.trim(), clientStageName: openStageName.trim(), clientEmail: openEmail.trim(), clientPhone: openPhone.trim() }
+            : {}),
         }),
       });
       const result = await response.json().catch(() => ({}));
@@ -307,9 +320,44 @@ export default function ProductionContractSignPage({
               <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
                 <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-2">의뢰인 정보</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-600 mb-4 leading-relaxed">
-                  아래 두 항목은 계약서에 그대로 기재돼요. 정확히 입력해 주세요.
+                  아래 항목은 계약서에 그대로 기재돼요. 정확히 입력해 주세요.
+                  {openLink && ' 서명한 계약서는 적어 주신 이메일로 보내 드려요.'}
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {openLink && (
+                    <>
+                      <Field id="clientName" label="성명(실명)" required error={detailErrors.clientName} className={lightOnlyField}>
+                        <TextInput value={openName} onChange={(e) => setOpenName(e.target.value)} autoComplete="name" light className="px-4 py-3" />
+                      </Field>
+                      <Field id="clientStageName" label="활동명" error={detailErrors.clientStageName} className={lightOnlyField}>
+                        <TextInput value={openStageName} onChange={(e) => setOpenStageName(e.target.value)} placeholder="없으면 비워 두세요" light className="px-4 py-3" />
+                      </Field>
+                      <Field id="clientPhone" label="휴대폰 번호" required error={detailErrors.clientPhone} className={lightOnlyField}>
+                        <TextInput
+                          type="tel"
+                          inputMode="tel"
+                          value={openPhone}
+                          onChange={(e) => setOpenPhone(e.target.value)}
+                          placeholder="010-1234-5678"
+                          autoComplete="tel"
+                          light
+                          className="px-4 py-3"
+                        />
+                      </Field>
+                      <Field id="clientEmail" label="이메일" required error={detailErrors.clientEmail} className={lightOnlyField}>
+                        <TextInput
+                          type="email"
+                          inputMode="email"
+                          value={openEmail}
+                          onChange={(e) => setOpenEmail(e.target.value)}
+                          placeholder="name@example.com"
+                          autoComplete="email"
+                          light
+                          className="px-4 py-3"
+                        />
+                      </Field>
+                    </>
+                  )}
                   <Field id="clientBirthdate" label="생년월일" required error={detailErrors.clientBirthdate} className={lightOnlyField}>
                     <TextInput
                       type="date"
@@ -361,6 +409,8 @@ export default function ProductionContractSignPage({
 
               <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
                 <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-2">본인 확인</h2>
+                {!openLink && (
+                <>
                 <p className="text-sm text-gray-600 dark:text-gray-600 mb-4">
                   계약서에 등록된 {isGuardian ? '법정대리인님 ' : ''}연락처의 뒤 {IDENTITY_DIGITS}자리를 입력해 주세요.
                   <span className="block mt-1 text-gray-500 dark:text-gray-500">
@@ -379,6 +429,8 @@ export default function ProductionContractSignPage({
                   light
                   className="w-32 text-center tracking-[0.4em] text-lg px-4 py-3 [color-scheme:light]"
                 />
+                </>
+                )}
                 <label className="mt-5 flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100">
                   <input
                     type="checkbox"

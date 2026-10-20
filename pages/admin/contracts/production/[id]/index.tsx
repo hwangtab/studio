@@ -216,13 +216,13 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
   return (
     <>
       <Head>
-        <title>{`${contract.clientName}님 제작 계약 | Studio NOL`}</title>
+        <title>{`${contract.clientName || '의뢰인 미정'}님 제작 계약 | Studio NOL`}</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
       <AdminShell
         title="제작 계약 상세"
-        description={`${contract.clientName}님 · ${releaseTitle(contract.kind, terms)}`}
+        description={`${contract.clientName ? `${contract.clientName}님` : '의뢰인 정보는 서명할 때 받아요(카톡 링크)'} · ${releaseTitle(contract.kind, terms)}`}
         backHref="/admin/contracts/production"
         backLabel="제작 계약 목록"
       >
@@ -270,7 +270,7 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
               <div>
                 <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">의뢰인</h2>
                 <dl className="space-y-2 text-sm">
-                  <Row label="성명" value={contract.clientName} />
+                  <Row label="성명" value={contract.clientName || '서명할 때 의뢰인이 입력'} />
                   <Row label="활동명" value={contract.clientStageName || '-'} />
                   <Row label="생년월일" value={contract.clientBirthdate || '-'} />
                   <Row label="이메일" value={contract.clientEmail} />
@@ -382,9 +382,11 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
                 onClick={() =>
                   run(
                     () => mutateProductionContract(contract.id, 'send'),
-                    `스튜디오 대표로 이 계약서에 서명하고 ${[contract.clientEmail, contract.signers.find((s) => s.role === 'guardian')?.email]
-                      .filter(Boolean)
-                      .join(', ')} 주소로 서명 요청을 보냅니다.\n` +
+                    (contract.clientEmail
+                      ? `스튜디오 대표로 이 계약서에 서명하고 ${[contract.clientEmail, contract.signers.find((s) => s.role === 'guardian')?.email]
+                          .filter(Boolean)
+                          .join(', ')} 주소로 서명 요청을 보냅니다.\n`
+                      : '스튜디오 대표로 이 계약서에 서명하고 서명 링크를 만듭니다. 메일은 나가지 않아요 — "서명 링크 복사"로 카카오톡에 보내 주세요.\n') +
                       '발송한 뒤에는 내용을 고칠 수 없습니다. 계속할까요?',
                   )
                 }

@@ -28,6 +28,11 @@ export interface ProductionContractPayload {
   /** 있으면 의뢰인이 미성년이어도 서명할 수 있고, 대리인 서명까지 끝나야 계약이 성립한다(계약서 제14조). */
   guardian: GuardianInput | null;
   terms: ProductionTerms;
+  /**
+   * 의뢰인 정보를 서명할 때 받는 계약(링크 계약). 운영자가 이름·연락처를 모르는 채 링크를 카카오톡으로 건넨다 —
+   * 의뢰인 칸은 빈 문자열로 저장되고 서명 화면에서 의뢰인이 채운다(open-link.ts). 법정대리인은 지정할 수 없다.
+   */
+  openLink?: boolean;
 }
 
 export type ProductionPayloadValidation =
@@ -61,11 +66,13 @@ export const validateProductionContractPayload = (
     return trimmed;
   };
 
+  // 링크 계약은 의뢰인 칸을 받지 않는다(서명자가 채운다) — 보내도 버린다. 반쯤 채운 값이 계약서에 섞이지 않게.
+  const openLink = payload.openLink === true;
   const title = readString('title', MAX_TITLE_LENGTH);
-  const clientName = readString('clientName', MAX_NAME_LENGTH);
-  const clientStageName = readString('clientStageName', MAX_NAME_LENGTH, false);
-  const clientEmail = readString('clientEmail', MAX_NAME_LENGTH * 2);
-  const clientPhone = readString('clientPhone', 32);
+  const clientName = openLink ? '' : readString('clientName', MAX_NAME_LENGTH);
+  const clientStageName = openLink ? null : readString('clientStageName', MAX_NAME_LENGTH, false);
+  const clientEmail = openLink ? '' : readString('clientEmail', MAX_NAME_LENGTH * 2);
+  const clientPhone = openLink ? '' : readString('clientPhone', 32);
 
   if (clientEmail && !validator.isEmail(clientEmail)) {
     push('clientEmail', '올바른 이메일 주소가 아닙니다.');
@@ -81,7 +88,10 @@ export const validateProductionContractPayload = (
    */
   let guardian: GuardianInput | null = null;
   const rawGuardian = payload.guardian;
-  if (rawGuardian !== undefined && rawGuardian !== null) {
+  // 링크 계약은 의뢰인이 누구인지 서명 전에는 모른다 — 대리인을 짝지을 수 없다. 미성년 의뢰인은 서명 화면이 막는다.
+  if (openLink && rawGuardian !== undefined && rawGuardian !== null) {
+    push('guardian', '의뢰인 정보를 서명할 때 받는 계약에는 법정대리인을 지정할 수 없습니다.');
+  } else if (rawGuardian !== undefined && rawGuardian !== null) {
     if (typeof rawGuardian !== 'object' || Array.isArray(rawGuardian)) {
       push('guardian', '법정대리인 정보 형식이 올바르지 않습니다.');
     } else {
@@ -140,6 +150,7 @@ export const validateProductionContractPayload = (
       clientPhone: clientPhone as string,
       guardian,
       terms: terms.data,
+      openLink,
     },
   };
 };

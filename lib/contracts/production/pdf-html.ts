@@ -49,7 +49,10 @@ const renderSigner = (signer: ProductionContractSigner): string => {
     signer.userAgent ? `브라우저: ${escapeHtml(signer.userAgent.slice(0, 200))}` : '',
     signer.identityVerifiedAt
       ? `본인 확인: 계약서 등록 연락처 뒷자리 대조 완료 (${formatDateTime(signer.identityVerifiedAt)})`
-      : '',
+      : signer.role === 'client'
+        ? // 링크 계약(open-link.ts) — 의뢰인이 서명할 때 자기 정보를 적었고 대조할 번호가 없었다.
+          '본인 확인: 연락처 대조 없음 — 스튜디오가 1:1로 전달한 서명 링크로 서명하며 의뢰인이 직접 정보를 입력'
+        : '',
   ].filter(Boolean);
 
   return `<div style="margin-top: 10px;">
