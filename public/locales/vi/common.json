@@ -2456,7 +2456,7 @@
   "coverVideo": {
     "seo": {
       "title": "Quay Video Cover · 4K Video + Âm Nhạc Trọn Gói ₩350K | Studio NOL",
-      "description": "Đi bộ 5 phút từ cửa 4 ga Yeonsinnae. Quay video cover + mix trong một buổi. 4K MP4 + WAV/MP3. Gói trọn gói ₩350,000 (đã gồm VAT).",
+      "description": "Đi bộ 5 phút từ cửa 4 ga Yeonsinnae. Quay video cover + mix cơ bản trong một buổi. 4K MP4 + WAV/MP3. Gói trọn gói ₩350,000 (đã gồm VAT).",
       "keywords": "quay video cover, thu âm cover, youtube cover video, phòng thu Seoul, Yeonsinnae"
     },
     "hero": {
@@ -2471,7 +2471,7 @@
       "items": [
         {
           "q": "Có thể quay và thu âm cùng lúc không?",
-          "a": "Có. Thu âm và quay video diễn ra đồng thời trong một buổi. Quay phim, mix và dựng phim đều được bao gồm."
+          "a": "Có. Thu âm và quay video diễn ra đồng thời trong một buổi. Quay phim, mix cơ bản (cân chỉnh âm lượng) và dựng phim đều được bao gồm."
         },
         {
           "q": "Chi phí là bao nhiêu?",
@@ -2531,7 +2531,7 @@
         },
         {
           "title": "Mix & Dựng Phim",
-          "description": "Chỉnh giọng, mix và dựng video hoàn thành cùng nhau."
+          "description": "Mix cơ bản (cân chỉnh âm lượng) và dựng video hoàn thành cùng nhau. Không bao gồm chỉnh giọng."
         },
         {
           "title": "Giao Hàng Cuối Cùng",
@@ -2558,6 +2558,10 @@
         {
           "q": "Có thể chọn phong cách dựng phim không?",
           "a": "Dựng phim cơ bản (cắt cảnh, phụ đề, chỉnh màu) đã bao gồm. Yêu cầu đặc biệt có thể thảo luận trước."
+        },
+        {
+          "q": "Có thể chỉ thu âm bài cover mà không quay video không?",
+          "a": "Có, thực hiện như buổi thu âm thông thường (thu giọng 3 giờ, ₩250,000, không giới hạn số bài). Phần mix của gói trọn gói chỉ là mix cơ bản cân chỉnh âm lượng và không bao gồm chỉnh giọng. Chỉnh giọng hoặc mix & mastering đầy đủ được đặt riêng."
         },
         {
           "q": "Nếu 3 giờ không đủ thì sao?",
