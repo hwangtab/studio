@@ -302,7 +302,7 @@ export default function ProductionContractSignPage({
   const pendingHint = !detailsReady
     ? openLink && !openReady
       ? emailMismatch
-        ? '이메일 확인 칸이 위의 이메일과 같지 않아요.'
+        ? '이메일 확인 칸이 이메일과 같지 않아요.'
         : '성명·휴대폰 번호·이메일(확인 포함)을 입력해 주세요.'
       : '생년월일과 주소를 입력해 주세요.'
     : !allAgreed
@@ -327,18 +327,6 @@ export default function ProductionContractSignPage({
                       <Field id="clientStageName" label="활동명" error={detailErrors.clientStageName} className={lightOnlyField}>
                         <TextInput value={openStageName} onChange={(e) => { setOpenStageName(e.target.value); clearFieldError('clientStageName'); }} placeholder="없으면 비워 두세요" autoComplete="nickname" light className="px-4 py-3" />
                       </Field>
-                      <Field id="clientPhone" label="휴대폰 번호" required error={detailErrors.clientPhone} className={lightOnlyField}>
-                        <TextInput
-                          type="tel"
-                          inputMode="tel"
-                          value={openPhone}
-                          onChange={(e) => { setOpenPhone(e.target.value); clearFieldError('clientPhone'); }}
-                          placeholder="010-1234-5678"
-                          autoComplete="tel"
-                          light
-                          className="px-4 py-3"
-                        />
-                      </Field>
                       <Field id="clientEmail" label="이메일" required error={detailErrors.clientEmail} className={lightOnlyField}>
                         <TextInput
                           type="email"
@@ -351,7 +339,7 @@ export default function ProductionContractSignPage({
                           className="px-4 py-3"
                         />
                       </Field>
-                      <Field id="clientEmailConfirm" label="이메일 확인" required error={emailMismatch ? '위에 적은 이메일과 같지 않아요.' : undefined} className={lightOnlyField}>
+                      <Field id="clientEmailConfirm" label="이메일 확인" required error={emailMismatch ? '이메일 칸과 같지 않아요.' : undefined} className={lightOnlyField}>
                         <TextInput
                           type="email"
                           inputMode="email"
@@ -359,6 +347,18 @@ export default function ProductionContractSignPage({
                           onChange={(e) => setOpenEmailConfirm(e.target.value)}
                           placeholder="이메일을 한 번 더 적어 주세요"
                           autoComplete="off"
+                          light
+                          className="px-4 py-3"
+                        />
+                      </Field>
+                      <Field id="clientPhone" label="휴대폰 번호" required error={detailErrors.clientPhone} className={lightOnlyField}>
+                        <TextInput
+                          type="tel"
+                          inputMode="tel"
+                          value={openPhone}
+                          onChange={(e) => { setOpenPhone(e.target.value); clearFieldError('clientPhone'); }}
+                          placeholder="010-1234-5678"
+                          autoComplete="tel"
                           light
                           className="px-4 py-3"
                         />

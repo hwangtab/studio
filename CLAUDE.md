@@ -74,7 +74,9 @@ UPDATE_SHOW_ORGANIZER_TERMS_BASELINE=1 npx jest content/showOrganizerTerms.basel
 
 # 링크 계약(의뢰인 정보를 서명할 때 받는 제작·믹싱·마스터링 계약) — 카카오톡으로 보낼 서명 링크를 바로 만든다
 npx tsx scripts/contract-link.ts create --kind mixmaster --tracks 30 [--total N] [--song 제목]   # 미리보기, --yes로 발송
-npx tsx scripts/contract-link.ts list                                                             # 최근 20건 + 서명 대기 링크
+#   --memo "카톡 홍길동" 으로 누구에게 보낸 링크인지 남긴다(제목 끝, 의뢰인에게 안 보임). --deposit-days·--weeks·--first-days
+npx tsx scripts/contract-link.ts list                                                             # 최근 20건 — 상태(만료 포함)·발송·만료·열람·링크
+npx tsx scripts/contract-link.ts resend <계약 id>                                                 # 만료·재전송 — 옛 링크 무효, 새 링크
 npx tsx scripts/contract-link.ts cancel <계약 id>
 
 # IndexNow 변경분 제출 — 전량 반복 제출 금지, CI(main push)가 diff로 바뀐 URL만 자동 제출한다.
