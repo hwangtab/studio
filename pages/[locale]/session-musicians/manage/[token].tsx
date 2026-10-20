@@ -240,7 +240,9 @@ export default function SessionMusicianManagePage() {
   );
 }
 
-export const getServerSideProps = withI18nServerProps<Record<string, never>>(async ({ params, res }) => {
+type Props = Record<string, never>;
+
+export const getServerSideProps = withI18nServerProps<Props>(async ({ params, res }) => {
   res.setHeader('Cache-Control', 'private, no-store');
   res.setHeader('Referrer-Policy', 'no-referrer');
   if (params?.locale !== 'ko') {
