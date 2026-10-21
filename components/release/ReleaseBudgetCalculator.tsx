@@ -96,7 +96,7 @@ const ReleaseBudgetCalculator = ({ kakaoUrl, id }: { kakaoUrl: string; id?: stri
   };
 
   return (
-    <div id={id} className="scroll-mt-24 glass-card rounded-2xl p-6 sm:p-8 max-w-4xl mx-auto">
+    <div id={id} className="scroll-mt-24 glass-card rounded-2xl p-6 sm:p-8 max-w-5xl mx-auto">
       <h3 className="typo-card-title text-gray-900 dark:text-white mb-1">내 발매 예산 계산해 보기</h3>
       <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">곡 수와 편성을 고르면 공개한 정가로 바로 계산돼요.</p>
       <div className="grid gap-8 md:grid-cols-2">

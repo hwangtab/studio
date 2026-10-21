@@ -211,6 +211,14 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
             </div>
           ))}
         </div>
+        {/* 발매 예산 계산기 — 티어 카드의 "~부터"를 본 자리에서 "내 경우엔?"을 바로 계산한다. 펼친 채(2026-10-12 운영자).
+            티어 카드 바로 아래에 붙이고 상담·단가 안내 문구는 계산기 뒤로 — 사이에 두면 계산기가 떠 보였다(2026-10-21 운영자).
+            발매 카톡 상담 대부분이 견적·예산 질문이다. ko 전용. 티어 페이지·발매 글의 입구가 #release-budget로 온다. */}
+        {isKo && (
+          <div className="mt-6">
+            <ReleaseBudgetCalculator kakaoUrl={siteConfig.contact.kakaoUrl} id="release-budget" />
+          </div>
+        )}
         <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-8 max-w-2xl mx-auto">
           {t('releaseProject.tiers.footNotePre')}{' '}
           <strong>{t('releaseProject.tiers.footNoteHighlight')}</strong>{' '}
@@ -220,13 +228,6 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           </Link>
           {t('releaseProject.tiers.footNotePost')}
         </p>
-        {/* 발매 예산 계산기 — 티어 카드의 "~부터"를 본 자리에서 "내 경우엔?"을 바로 계산한다. 펼친 채(2026-10-12 운영자).
-            발매 카톡 상담 대부분이 견적·예산 질문이다. ko 전용. 티어 페이지·발매 글의 입구가 #release-budget로 온다. */}
-        {isKo && (
-          <div className="mt-12">
-            <ReleaseBudgetCalculator kakaoUrl={siteConfig.contact.kakaoUrl} id="release-budget" />
-          </div>
-        )}
 
         {/* M1: 3티어 비교표 — 결정 보조 */}
         <div className="mt-16">
