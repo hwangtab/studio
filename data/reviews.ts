@@ -77,21 +77,22 @@ export const getReviews = (locale: Locale) => {
     },
     {
       // 네이버 플레이스 방문자 리뷰(2026-07-07, soulwon05 블로그) — 본인(가원) 동의로 추가.
-      // 전문 발췌·인용이 아니라 요약이고, 원문은 sourceUrl로 링크한다(ReviewSection이 렌더).
-      // 2026-10-21 추가.
+      // 2026-10-21: 처음엔 요약으로 넣었으나, 가원 님이 "원문을 마음대로 인용해도 좋다"고
+      // 추가로 허락해 원문 문장을 그대로(따옴표 안 내용 편집 없음) 옮겼다. ko는 원문 그대로,
+      // 나머지 로케일은 그 문장의 번역. sourceUrl로 원문 전체를 추가로 링크한다.
       id: 'review-5',
       author: t(locale, { ko: "가원", en: "Ga-won", zh: "Ga-won", es: "Ga-won", vi: "Ga-won", th: "Ga-won", uz: "Ga-won" }),
       rating: 5,
       categoryKey: 'practice',
       category: t(locale, { ko: "음악연습실", en: "Music Practice Room", zh: "音乐练习室", es: "Sala de Práctica Musical", vi: "Phòng tập nhạc", th: "ห้องซ้อมดนตรี", uz: "Musiqa mashg’ulot xonasi" }),
       content: t(locale, {
-        ko: "컴퓨터·오디오 인터페이스·마이크·피아노까지 다 세팅돼 있어서 입실하자마자 바로 작업할 수 있었어요. 입주자 혜택인 월 1시간 무료 녹음도 시간이 다 됐는데 괜찮다며 거의 2시간을 봐주셔서, 엔지니어보다는 프로듀서처럼 제 보컬에 맞는 키와 감정까지 디렉팅해주신 덕에 혼자 생각했던 것보다 훨씬 좋은 결과가 나왔습니다.",
-        en: "The computer, audio interface, mic, and piano were all already set up, so I could start working right after moving in. Even for the monthly 1-hour free recording perk, when my time was up they said it was fine and kept going for almost 2 hours — directing my key and emotional delivery more like a producer than an engineer, so the result turned out far better than I'd imagined alone.",
-        zh: "电脑、音频接口、麦克风、钢琴都已经配好，入住后马上就能开始工作。入住者福利每月1小时免费录音，时间到了对方也说没关系，几乎录了2个小时 — 比起工程师更像制作人，帮我调好调性和情感表达，结果比我自己想的好得多。",
-        es: "El ordenador, la interfaz de audio, el micrófono y el piano ya estaban listos, así que pude empezar a trabajar justo al entrar. Incluso con la hora gratis mensual, cuando se acabó el tiempo dijeron que no importaba y siguieron casi 2 horas, dirigiendo mi tonalidad y emoción más como un productor que un ingeniero — el resultado fue mucho mejor de lo que imaginaba.",
-        vi: "Máy tính, audio interface, mic, piano đều đã chuẩn bị sẵn, nên vào là làm việc được ngay. Ưu đãi 1 giờ thu âm miễn phí mỗi tháng, hết giờ anh vẫn nói không sao và thu gần 2 giờ — chỉ đạo key và cảm xúc giống producer hơn kỹ sư, nên kết quả tốt hơn nhiều so với tôi tự nghĩ.",
-        th: "คอมพิวเตอร์ ออดิโออินเตอร์เฟส ไมค์ เปียโน เซ็ตพร้อมหมดแล้ว เข้าไปก็ทำงานได้เลย สิทธิ์อัดฟรี 1 ชั่วโมงต่อเดือน พอหมดเวลาเขาก็บอกไม่เป็นไรแล้วอัดต่ออีกเกือบ 2 ชั่วโมง กำกับคีย์และอารมณ์เหมือนโปรดิวเซอร์มากกว่าวิศวกร ผลลัพธ์ดีกว่าที่คิดไว้เองมาก",
-        uz: "Kompyuter, audio interfeys, mikrofon, pianino — hammasi tayyor edi, kirib darrov ishlay oldim. Oyiga 1 soat bepul yozuv imkonida ham, vaqtim tugaganida muammo yo‘q deb deyarli 2 soat davom ettirdi — muhandisdan ko‘ra prodyuser kabi tonnalik va hissiyotni yo‘naltirdi, natija o‘zim o‘ylagandan ancha yaxshi chiqdi."
+        ko: "연습실에 입실할 때도 컴퓨터 탁자 피아노 오인페 마이크 스피커 의자 조명 다 마련해주셔서 장비가 완전히 다 마련된 채로 몸만 들어가면 되었다!!! ...엔지니어시라기보다는 프로듀서에 가깝게 보컬테크닉적인 부분이라던지 감정 같은 것, 곡의 색채에 맞는 프로듀싱을 해주셔서 지도하에 따라가며 녹음했더니 기대 이상의 결과가 나왔다.",
+        en: "When I moved into the practice room, the computer, desk, piano, audio interface, mic, speakers, chair, and lighting were all already set up, so I just had to walk in with nothing. [...] More like a producer than an engineer, they directed things like vocal technique and emotion to match the song's color, and following that direction while recording gave me a result beyond what I expected.",
+        zh: "入住练习室时，电脑、桌子、钢琴、音频接口、麦克风、音箱、椅子、灯光全都已经准备好了，人去就能直接用！[...] 比起工程师更像制作人，指导了声乐技巧、情感之类符合歌曲色彩的内容，跟着这个方向录音后，得到了超出预期的结果。",
+        es: "Cuando me instalé en la sala de práctica, el ordenador, la mesa, el piano, la interfaz de audio, el micrófono, los altavoces, la silla y la iluminación ya estaban todos preparados, así que solo tuve que entrar. [...] Más como un productor que un ingeniero, dirigió cosas como la técnica vocal y la emoción para encajar con el color de la canción, y seguir esa dirección mientras grababa dio un resultado mejor de lo que esperaba.",
+        vi: "Khi vào phòng tập, máy tính, bàn, piano, audio interface, mic, loa, ghế, đèn đều đã chuẩn bị sẵn, chỉ cần đi vào là dùng được! [...] Giống producer hơn là kỹ sư, anh chỉ đạo về kỹ thuật hát, cảm xúc sao cho hợp với màu sắc bài hát, và khi thu theo sự chỉ đạo đó, kết quả vượt ngoài mong đợi.",
+        th: "ตอนเข้าห้องซ้อม คอมพิวเตอร์ โต๊ะ เปียโน ออดิโออินเตอร์เฟส ไมค์ ลำโพง เก้าอี้ ไฟ เตรียมพร้อมไว้หมดแล้ว แค่เดินตัวเปล่าเข้าไปก็ใช้ได้เลย! [...] เหมือนโปรดิวเซอร์มากกว่าวิศวกร กำกับเรื่องเทคนิคการร้องและอารมณ์ให้เข้ากับสีสันของเพลง ทำตามคำแนะนำนั้นแล้วผลลัพธ์ดีเกินคาด",
+        uz: "Mashg‘ulot xonasiga kirganimda kompyuter, stol, pianino, audio interfeys, mikrofon, dinamik, stul, yorug‘lik — hammasi tayyor edi, shunchaki kirib bordim! [...] Muhandisdan ko‘ra prodyuser kabi, vokal texnikasi va qo‘shiq kayfiyatiga mos hissiyotni yo‘naltirdi, shu yo‘nalishga ergashib yozib olganimda kutganimdan ham yaxshi natija chiqdi."
       }),
       sourceUrl: 'https://blog.naver.com/soulwon05/224339683075',
       datePublished: "2026-07-07"
