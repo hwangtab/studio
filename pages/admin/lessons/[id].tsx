@@ -16,6 +16,7 @@ import { LESSON_STATUS_LABEL, getEffectiveLessonStatus } from '../../../lib/cont
 import { hasDraftMarker } from '../../../lib/contracts/lesson/template';
 import { listLessonContractsFor } from '../../../lib/contracts/lesson/service';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
+import { refundOf } from '../../../lib/lessons/refund';
 import { ENROLLMENT_STATUS_LABELS, PAYMENT_METHODS, PAY_METHOD_LABELS, SESSION_STATUS_LABELS, WEEKDAY_LABELS, arrearsOf, progressOf, weekdayOf } from '../../../lib/lessons/rules';
 import { getEnrollmentDetail } from '../../../lib/lessons/service';
 
@@ -167,6 +168,7 @@ export default function AdminLessonDetailPage({ found, today, enrollment, sessio
   const progress = progressOf(sessions);
   const active = enrollment.status === 'active';
   const paid = payments.reduce((sum, p) => sum + p.amount, 0);
+  const refund = refundOf({ consumed: progress.consumed, courseMonths: enrollment.courseWeeks / 4, monthlyAmount: enrollment.monthlyAmount, paidNet: payments.reduce((sum, p) => sum + p.amount - p.vatAmount, 0) });
   const due = arrearsOf({ payMethod: enrollment.payMethod, monthlyAmount: enrollment.monthlyAmount, sessions, payments, today });
 
   return (
@@ -317,7 +319,7 @@ export default function AdminLessonDetailPage({ found, today, enrollment, sessio
                         </div>
                       </div>
                       {c.blockedByDraftText && (c.status === 'draft' || c.status === 'expired') && (
-                        <p className="mt-2 rounded-lg bg-amber-50 p-2 text-xs text-amber-900">문안에 확정 전 조항(제9조 환불)이 남아 있어 보낼 수 없어요 — 교습비 반환 기준을 법률 확인한 뒤 문안을 확정해야 해요.</p>
+                        <p className="mt-2 rounded-lg bg-amber-50 p-2 text-xs text-amber-900">문안에 확정 전 표시가 남아 있어 보낼 수 없어요 — 계약을 취소하고 새로 만들어 주세요.</p>
                       )}
                     </li>
                   ))}
@@ -342,6 +344,10 @@ export default function AdminLessonDetailPage({ found, today, enrollment, sessio
           <section className="mt-6 rounded-2xl bg-white p-4 shadow-sm md:p-6">
             <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-gray-900">중도 종료</h2>
             <p className="mb-3 text-sm text-gray-600">남은 예정 회차를 취소하고 막아 둔 시간을 풀어요. 환불은 수납 기록·구독 환불에서 따로 처리해 주세요.</p>
+            <div className="mb-3 rounded-lg bg-gray-50 p-3 text-sm text-gray-800">
+              <p className="font-semibold">지금 해지하면 환불 기준액 <span className="text-primary-700">{won(refund.refund)}</span>{enrollment.payMethod === 'card' && refund.refund > 0 ? ` (카드는 부가세 포함 ${won(Math.round(refund.refund * 1.1))} 취소)` : ''}</p>
+              <p className="mt-1 text-xs text-gray-600">{refund.note} · 진행 {progress.consumed}회(결석 포함) · 낸 수강료(부가세 제외) {won(payments.reduce((sum, p) => sum + p.amount - p.vatAmount, 0))} − 스튜디오 몫 {won(refund.retained)}.{refund.shortfall > 0 ? ` 낸 돈이 ${won(refund.shortfall)} 모자라요.` : ''} 계약서 제9조(시행령 별표 4) 기준이에요. 해지 통지를 받은 날부터 5일 안에 보내야 하고, 오늘 수업을 아직 표시하지 않았다면 먼저 표시한 뒤 보세요.</p>
+            </div>
             <Button light variant="weak" disabled={busy} onClick={() => { const reason = window.prompt('중도 종료 사유를 적어 주세요.'); if (reason && reason.trim().length >= 2 && window.confirm('남은 회차를 모두 취소하고 수강을 종료할까요? 되돌릴 수 없어요.')) void post({ action: 'end', reason }, '종료했어요.'); }}>중도 종료</Button>
           </section>
         )}

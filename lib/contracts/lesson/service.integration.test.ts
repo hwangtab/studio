@@ -92,6 +92,8 @@ describe('발송', () => {
   it('확정 전 문안이 남아 있으면 발송하지 않고 메일도 보내지 않는다', async () => {
     const created = await createLessonContract(await enrollment(), INPUT, 'admin');
     const id = created.ok ? created.contract.id : '';
+    // 현재 템플릿은 확정돼 있다 — 표시가 붙은 문안을 흉내 내 발송 막이가 여전히 서는지 본다.
+    await client.execute({ sql: 'UPDATE lesson_contracts SET content = content || ? WHERE id = ?', args: [`\n${DRAFT_MARKER} — 시험】`, id] });
     const result = await sendLessonContract(id, { adminActor: 'admin', ipAddress: '9.9.9.9' });
     expect(result).toMatchObject({ ok: false, code: 'draft_text' });
     expect((await row(id)).status).toBe('draft');

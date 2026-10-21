@@ -113,7 +113,7 @@ export type SendLessonResult =
 
 /**
  * 발송한다 — **운영자가 서명하는 행위이기도 하다.** draft → sent(첫 발송), sent·expired → sent(재발송, 새 토큰으로 옛 링크 즉시 무효).
- * **확정 전 표시가 남은 본문은 발송하지 않는다**(template.ts DRAFT_MARKER) — 환불 조항을 법률 확인하기 전에 실제로 나가는 일이 없게.
+ * **확정 전 표시가 남은 본문은 발송하지 않는다**(template.ts DRAFT_MARKER) — 확정되지 않은 조항이 실제로 나가는 일이 없게(제9조는 2026-10-21 시행령 별표 4 기준으로 확정돼 지금 템플릿에는 표시가 없다).
  * 메일이 실패해도 계약은 sent이고 링크를 돌려준다(운영자가 카톡으로 보낼 수 있게).
  */
 export const sendLessonContract = async (contractId: string, options: { adminActor: string; ipAddress: string | null }): Promise<SendLessonResult> => {
@@ -125,7 +125,7 @@ export const sendLessonContract = async (contractId: string, options: { adminAct
   if (!allowed.ok) return { ok: false, code: 'invalid_state', message: allowed.message };
   // 발송 전 본문을 지금 템플릿으로 다시 만들지 않는다(초안을 고칠 때 이미 떴다) — 표시가 남아 있으면 거절한다.
   if (hasDraftMarker(current.content) || hasDraftMarker(current.template)) {
-    return { ok: false, code: 'draft_text', message: '계약서 문안에 확정 전 조항(제9조 환불)이 남아 있어 보낼 수 없어요. 교습비 반환 기준을 법률 확인한 뒤 문안을 확정해야 해요.' };
+    return { ok: false, code: 'draft_text', message: '계약서 문안에 확정 전 표시가 남아 있어 보낼 수 없어요. 계약을 취소하고 새로 만들어 주세요.' };
   }
   const now = new Date();
   const token = generateSignToken();
