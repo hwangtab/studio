@@ -7,7 +7,6 @@ import { ChoiceCard, ChoiceGroup } from '../ui/Choice';
 import { Checkbox } from '../ui/Checkbox';
 import { Field, TextInput } from '../ui/Field';
 import { Panel } from '../ui/Panel';
-import { Disclosure } from '../ui/Disclosure';
 import { formatPriceAmount, FUNDING_DESIGN_PRICE } from '../../data/pricing';
 import { PIPELINE_BUNDLE_PRICES, releasePipelineCopy, type ReleaseTierKey } from '../../data/releasePipeline';
 import { computeFundingGoal } from '../../lib/funding/goal';
@@ -23,19 +22,12 @@ const won = (n: number) => `${formatPriceAmount(n)}원`;
 
 interface FundingGoalCalculatorProps {
   kakaoUrl: string;
-  /** 처음 고른 제작 규모. 발매 페이지는 EP, 펀딩 설계 페이지는 "제작 없음"으로 연다. */
+  /** 처음 고른 제작 규모. 펀딩 설계 페이지는 "제작 없음"으로 연다. */
   defaultProduction?: ProductionKey;
   /** 어느 페이지에서 쓰였는지 — 이벤트 component 값을 가른다. */
   component?: string;
   /** 배경. 펀딩 설계 페이지는 앞 절(진행 과정)에 이어 붙이려고 alternate로 쓴다. */
   variant?: 'default' | 'alternate';
-  /**
-   * 발매 페이지용. 펀딩을 아직 정하지 않은 방문자가 대부분이라 한 줄로 접어 두고(#funding-goal로 오면 펼침),
-   * 공제 내역은 "계산 내역 보기"로 접고, 다른 펀딩 모금 중앙값 비교는 싣지 않는다 — 큰 목표액과 공제 줄이
-   * 가격표보다 먼저 보여 "이만큼 모아야 한다"는 압박이 됐다(2026-10-12 운영자). 펀딩 설계 페이지는 펀딩할
-   * 사람이 오는 곳이라 펼친 그대로 쓴다.
-   */
-  calm?: boolean;
 }
 
 /** 알약형 라디오 한 벌 — 제작 규모와 개설 방식이 같은 모양이다. 모양은 ChoiceGroup/ChoiceCard(variant="pill")가 소유한다. */
@@ -65,7 +57,11 @@ function PillRadios<K extends string>({ name, legend, options, value, label, onC
 }
 
 /**
- * 펀딩 목표액 계산기 — 발매 페이지의 ko 전용 절(설계 §5-3).
+ * 펀딩 목표액 계산기 — 펀딩 설계 페이지(/crowdfunding-design)의 절.
+ *
+ * 처음엔 발매 페이지의 ko 전용 절이었다(설계 §5-3). 2026-10-12에 가격표보다 먼저 큰 목표액을 보여 압박이 된다는
+ * 지적으로 접어 두었다가(calm), 접은 뒤 일주일 동안 펼친 사람이 0명이라 2026-10-22에 발매 페이지에서 뺐다.
+ * 발매 페이지에선 발매 예산 계산기(ReleaseBudgetCalculator)가 "크라우드펀딩"을 고르면 이 절로 보낸다.
  *
  * 목표액 = 정산 후 손에 남는 돈이 (제작비 + 설계비 + 리워드 원가·기타)를 덮는 최소 금액.
  * 작은 펀딩도 같은 식이다 — 제작 없음·직접 개설을 고르면 그 항목이 0으로 빠질 뿐 흐름은 같다.
@@ -75,35 +71,13 @@ function PillRadios<K extends string>({ name, legend, options, value, label, onC
  *
  * 카톡과 경쟁하지 않는다: 결과 버튼은 계산 요약을 클립보드에 복사한 뒤 카카오톡을 연다.
  */
-const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component = 'FundingGoalCalculator', variant = 'default', calm = false }: FundingGoalCalculatorProps) => {
+const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component = 'FundingGoalCalculator', variant = 'default' }: FundingGoalCalculatorProps) => {
   const [tier, setTier] = React.useState<ProductionKey>(defaultProduction);
   const [designKey, setDesignKey] = React.useState<DesignKey>('design');
   const [otherCostInput, setOtherCostInput] = React.useState('');
   const [withholding, setWithholding] = React.useState(true);
   const [copied, setCopied] = React.useState(false);
   const usedRef = React.useRef(false);
-  const [open, setOpen] = React.useState(false);
-  const openedRef = React.useRef(false);
-
-  // 접힌 계산기는 #funding-goal로 들어오면(같은 페이지의 "목표액 계산해 보기" 링크 포함) 펼친다.
-  React.useEffect(() => {
-    if (!calm) return undefined;
-    const sync = () => {
-      if (window.location.hash === `#${copy.anchorId}`) setOpen(true);
-    };
-    sync();
-    window.addEventListener('hashchange', sync);
-    return () => window.removeEventListener('hashchange', sync);
-  }, [calm]);
-
-  const onToggle = (e: React.SyntheticEvent<HTMLDetailsElement>) => {
-    const next = e.currentTarget.open;
-    setOpen(next);
-    if (next && !openedRef.current) {
-      openedRef.current = true;
-      trackMicroEvent('micro_pipeline_calc', { locale: 'ko', component, cta_id: 'pipeline_calc_open' });
-    }
-  };
 
   const markUsed = () => {
     if (usedRef.current) return;
@@ -166,7 +140,7 @@ const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component =
   );
 
   const calculator = (
-      <div className={calm ? 'grid gap-8 md:grid-cols-2 pt-2' : 'glass-card rounded-2xl p-6 sm:p-8 max-w-3xl mx-auto grid gap-8 md:grid-cols-2'}>
+      <div className="glass-card rounded-2xl p-6 sm:p-8 max-w-3xl mx-auto grid gap-8 md:grid-cols-2">
         <div className="space-y-6">
           <PillRadios
             name="funding-goal-tier"
@@ -208,20 +182,11 @@ const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component =
           />
         </div>
 
-        {/* calm에선 내역이 접혀 있어 짧다 — 왼쪽 열 높이로 늘이면 아래가 빈 칸으로 남는다. */}
-        <Panel variant="inset" padding="default" aria-live="polite" className={calm ? 'self-start' : undefined}>
+        <Panel variant="inset" padding="default" aria-live="polite">
           <p className="text-sm text-gray-500 dark:text-gray-400">{copy.resultLabel}</p>
           <p className="text-3xl font-bold text-gray-900 dark:text-white mb-5">{won(result.goal)}</p>
-          {calm ? (
-            <Disclosure variant="plain" summary={copy.breakdownSummary}>
-              {breakdown}
-            </Disclosure>
-          ) : (
-            <>
-              {breakdown}
-              <p className="mt-5 text-sm text-gray-500 dark:text-gray-400">{copy.compare}</p>
-            </>
-          )}
+          {breakdown}
+          <p className="mt-5 text-sm text-gray-500 dark:text-gray-400">{copy.compare}</p>
         </Panel>
 
         <div className="md:col-span-2 flex flex-col items-center gap-3">
@@ -246,24 +211,8 @@ const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component =
 
   return (
     <Section variant={variant} id={copy.anchorId} className="scroll-mt-24">
-      {calm ? (
-        <Disclosure
-          open={open}
-          onToggle={onToggle}
-          summary={copy.collapsedSummary}
-          className="glass-card max-w-3xl mx-auto"
-          summaryClassName="text-base px-6 py-4"
-          bodyClassName="px-6 pb-6"
-        >
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">{copy.calmSubtitle}</p>
-          {calculator}
-        </Disclosure>
-      ) : (
-        <>
-          <SectionHeading title={copy.title} subtitle={copy.subtitle} className="mb-10" />
-          {calculator}
-        </>
-      )}
+      <SectionHeading title={copy.title} subtitle={copy.subtitle} className="mb-10" />
+      {calculator}
     </Section>
   );
 };

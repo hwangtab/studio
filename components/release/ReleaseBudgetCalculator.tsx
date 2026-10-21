@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { MessageCircle } from '@/lib/lucide-icons';
 import { Button } from '../ui/Button';
 import { ChoiceCard, ChoiceGroup } from '../ui/Choice';
@@ -192,9 +193,9 @@ const ReleaseBudgetCalculator = ({ kakaoUrl, id }: { kakaoUrl: string; id?: stri
           {fundingSource === 'funding' && (
             <p className="mt-4 text-sm text-gray-700 dark:text-gray-300">
               설계비와 제작비는 펀딩이 끝나 모금액을 정산할 때 모금액에서 받아요.{' '}
-              <a href="#funding-goal" className="font-semibold text-primary underline underline-offset-4 dark:text-primary-lighter">
+              <Link href="/ko/crowdfunding-design#funding-goal" prefetch={false} className="font-semibold text-primary underline underline-offset-4 dark:text-primary-lighter">
                 목표액 계산해 보기
-              </a>
+              </Link>
             </p>
           )}
           {fundingSource === 'grant' && (

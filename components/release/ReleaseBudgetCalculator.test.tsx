@@ -27,7 +27,7 @@ describe('발매 예산 계산기', () => {
     fireEvent.change(screen.getByLabelText('몇 곡을 내시나요?'), { target: { value: '4' } });
     fireEvent.click(screen.getByLabelText('크라우드펀딩'));
     expect(screen.getByText(won(EP_BUNDLE_PRICE + FUNDING_DESIGN_PRICE))).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: '목표액 계산해 보기' })).toHaveAttribute('href', '#funding-goal');
+    expect(screen.getByRole('link', { name: '목표액 계산해 보기' })).toHaveAttribute('href', '/ko/crowdfunding-design#funding-goal');
     expect(trackMicroEvent).toHaveBeenCalledTimes(1);
     expect(trackMicroEvent).toHaveBeenCalledWith('micro_release_budget', expect.objectContaining({ component: 'ReleaseBudgetCalculator' }));
   });
