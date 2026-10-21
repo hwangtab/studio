@@ -167,7 +167,7 @@ export default function ContractCompletePage({
         <meta name="referrer" content="no-referrer" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 dark:bg-gray-50 flex items-center justify-center px-4 py-12">
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-50 [color-scheme:light] flex items-center justify-center px-4 py-12">
         <div className="bg-white dark:bg-white rounded-2xl shadow-sm p-8 md:p-12 max-w-lg w-full text-center">
           <div className="w-16 h-16 bg-green-100 dark:bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <svg className="w-8 h-8 text-green-600 dark:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

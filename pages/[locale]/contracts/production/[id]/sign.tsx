@@ -446,7 +446,7 @@ export default function ProductionContractSignPage({
         <meta name="referrer" content="no-referrer" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 dark:bg-gray-50 py-8 md:py-12">
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-50 [color-scheme:light] py-8 md:py-12">
         <div className="max-w-3xl mx-auto px-4">
           <div className="bg-white dark:bg-white rounded-2xl shadow-sm overflow-hidden">
             <div className="bg-primary p-6 md:p-8">
