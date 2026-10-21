@@ -41,15 +41,15 @@ const pay = async (id: string, type: string, total: number, iso: string) => {
 
 it('이번 달·전월 순매출과 직접/중개 구성, 수기 매출 합산을 한 번에 돌려준다', async () => {
   await pay('a', 'session', 110000, '2026-10-05T03:00:00Z'); // 이번 달 직접
-  await pay('b', 'funding', 50000, '2026-10-06T03:00:00Z'); // 이번 달 중개
+  await pay('b', 'funding', 50000, '2026-10-06T03:00:00Z'); // 이번 달 중개 — 매출은 수수료 5.5%(2,750원)만
   await pay('c', 'session', 100000, '2026-09-20T03:00:00Z'); // 전월
   await pay('d', 'session', 999999, '2026-08-20T03:00:00Z'); // 전전월 — 읽지 않는다
   await client.execute(`INSERT INTO manual_revenues (id, received_on, type, description, total_amount, vat_amount, method) VALUES ('m1', '2026-10-10', 'mixing', '직접 입금', 30000, 2727, '계좌 입금')`);
 
   const snap = await loadRevenueSnapshot(new Date('2026-10-15T03:00:00Z'));
 
-  expect(snap).toMatchObject({ year: 2026, month: 10, net: 190000, count: 3, previousNet: 100000, directNet: 140000, brokeredNet: 50000, manualMissing: false });
-  expect(snap.changeRate).toBeCloseTo(90, 5);
+  expect(snap).toMatchObject({ year: 2026, month: 10, net: 142750, count: 3, previousNet: 100000, directNet: 140000, brokeredNet: 2750, manualMissing: false });
+  expect(snap.changeRate).toBeCloseTo(42.75, 5);
 });
 
 it('수기 매출 표가 없으면 나머지로 계산하고 manualMissing을 켠다', async () => {

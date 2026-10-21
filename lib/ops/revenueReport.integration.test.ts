@@ -80,8 +80,9 @@ it('토스 결제와 결제 행 없는 펀딩을 함께 싣고, 같은 주문을
   const s = summarizeRevenue(rows, { year: 2026, month: 9 });
 
   expect(rows.map((r) => r.orderNo).sort()).toEqual(['NO-f1', 'NO-f2', 'NO-f3', 'NO-f4', 'NO-t']);
-  expect(s.totals).toMatchObject({ count: 5, gross: 110000 + 30000 * 4, refunded: 30000, fullyRefundedCount: 1 });
-  expect(s.byProject[0]).toMatchObject({ key: 'rally', count: 4, net: 90000 });
+  // 펀딩은 결제액이 아니라 플랫폼 수수료 5.5%(30,000원 → 1,650원)만 매출이다.
+  expect(s.totals).toMatchObject({ count: 5, gross: 110000 + 1650 * 4, refunded: 1650, fullyRefundedCount: 1 });
+  expect(s.byProject[0]).toMatchObject({ key: 'rally', count: 4, net: 1650 * 3 });
   expect(s.byMethod.map((l) => l.key).sort()).toEqual(['계좌 입금', '수기 등록', '카드']);
 });
 

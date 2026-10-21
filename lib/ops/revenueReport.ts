@@ -2,6 +2,7 @@ import { and, gte, isNotNull, lt } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { fundingPledges, payments } from '../../db/schema';
+import { applyPlatformFees } from './platformFee';
 
 /**
  * 관리자 매출 현황의 집계 — 결제 장부(`salesLedger.ts`)와 **같은 모집단·같은 환불 규칙**에,
@@ -30,17 +31,20 @@ export const REVENUE_TYPE_LABELS: Record<string, string> = {
   subscription: '구독',
   deposit: '예약금',
   software: '소프트웨어',
-  funding: '펀딩',
-  ticket: '공연 티켓',
-  merch: '상점',
+  // 연습실 월 입주 수납(room_tenancy_payments) — 결제 행이 없어 tenancyRevenue.ts가 따로 읽는다.
+  tenancy: '연습실 월 입주',
+  // 펀딩·공연·상점은 **플랫폼 수수료 몫**만 매출이다(platformFee.ts).
+  funding: '펀딩 수수료',
+  ticket: '공연 수수료',
+  merch: '상점 수수료',
   other: '기타',
 };
 
 export type RevenueGroup = 'direct' | 'brokered';
 
 /**
- * 직접 서비스 = 스튜디오가 제공한 용역의 대가. 판매·중개 = 개설자·주최자·아티스트에게 정산하는 돈이
- * 섞인 결제액이다 — 수수료를 뗀 스튜디오 몫이 아니라 **정산 전 총액**이라 합쳐 보면 매출이 부풀어 보인다.
+ * 직접 서비스 = 스튜디오가 제공한 용역의 대가. 판매·중개 = 개설자·주최자·아티스트에게 정산하는 돈이 섞인 결제 중
+ * **스튜디오 몫(플랫폼 수수료)** 만 매출로 센다(platformFee.ts) — 정산해 줄 돈까지 올리면 매출이 부풀어 보인다.
  */
 export const REVENUE_GROUP_OF: Record<string, RevenueGroup> = {
   session: 'direct',
@@ -49,6 +53,7 @@ export const REVENUE_GROUP_OF: Record<string, RevenueGroup> = {
   subscription: 'direct',
   deposit: 'direct',
   software: 'direct',
+  tenancy: 'direct',
   funding: 'brokered',
   ticket: 'brokered',
   merch: 'brokered',
@@ -57,7 +62,7 @@ export const REVENUE_GROUP_OF: Record<string, RevenueGroup> = {
 
 export const REVENUE_GROUP_LABELS: Record<RevenueGroup, string> = {
   direct: '스튜디오 직접 서비스',
-  brokered: '판매·중개 (정산 전 결제액)',
+  brokered: '판매·중개 수수료 (정산 몫 제외)',
 };
 
 /** 운영자 결제 검증용 프로젝트 — 건수·금액에 섞이지 않게 뺀다(content/funding/smoke-test.md). */
@@ -79,6 +84,9 @@ export interface RevenueRow {
   refunded: number;
   /** true = 결제 행이 없는 계좌 입금·수기 펀딩·수기 매출. */
   offline: boolean;
+  /** 판매·중개 행이 수수료 몫으로 바뀐 경우 원래 결제액(부가세 포함)과 적용 비율. 화면이 "결제액 → 수수료"를 보인다. */
+  sourceGross?: number;
+  feeRate?: number;
   /** 수기 매출(`manual_revenues`) 행의 id. 있으면 화면에서 환불·삭제를 할 수 있다. */
   manualId?: string;
   /** 수기 매출의 내용. */
@@ -326,5 +334,5 @@ export const loadRevenueRows = async (range: PeriodRange): Promise<RevenueRow[]>
     });
   }
 
-  return [...byOrder.values()];
+  return applyPlatformFees([...byOrder.values()]);
 };

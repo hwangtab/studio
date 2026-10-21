@@ -20,7 +20,7 @@ export const LEDGER_BACKUP_TABLES = [
   'orders', 'payments', 'refunds', 'refund_accounts', 'work_orders', 'bookings', 'payment_link_orders',
   'funding_pledges', 'funding_pledge_items', 'funding_project_payouts',
   'subscriptions', 'subscription_payments', 'billing_keys', 'room_tenancies', 'room_tenancy_payments', 'artist_payouts',
-  'partner_payouts', 'partner_payout_adjustments', 'manual_revenues',
+  'partner_payouts', 'partner_payout_adjustments', 'manual_revenues', 'studio_expenses',
   'show_orders', 'show_order_locales', 'show_tickets',
   'shop_orders', 'shop_order_items', 'software_orders',
 ] as const;

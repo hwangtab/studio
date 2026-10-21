@@ -665,7 +665,9 @@ PATCH가 실패해도 DB는 되돌리지 않고 `gcal_error`에 적는다("캘�
 
 - **매출 숫자의 정본은 `lib/ops/revenueReport.ts`**(`/admin/revenue`·대시보드 카드가 같은 `summarizeRevenue`를 쓴다). 승인 시각(KST) 기준, 환불은 `done`만(기간 밖 환불도 같은 결제에서 뺀다).
   결제 행이 없는 **계좌 입금·수기 펀딩은 `funding_pledges.paid_at`**으로 더하되 환불은 주문이 `refunded`일 때만 전액으로 친다. `smoke-test` 펀딩은 매출 화면에서만 뺀다 —
-  **세무용 결제 장부 CSV(`salesLedger.ts`)는 실제 거래라 빼지 않는다.** 직접 서비스(예약·믹싱·구독·예약금·소프트웨어)와 판매·중개(펀딩·공연·상점, 정산 전 총액)는 합쳐 보이지 않게 가른다.
+  **세무용 결제 장부 CSV(`salesLedger.ts`)는 실제 거래라 빼지 않는다.** 직접 서비스(예약·믹싱·구독·예약금·소프트웨어·**연습실 월 입주**)와 판매·중개(펀딩·공연·상점)는 가르되, **판매·중개의 매출은 결제액이 아니라 스튜디오 몫(플랫폼 수수료)** 이다(`lib/ops/platformFee.ts`, 운영자 결정 2026-10-21 — 정산해 줄 돈까지 매출에 올리면 부풀어 보인다).
+  펀딩·공연은 순결제액 × `FUNDING_PLATFORM_FEE_PERCENT`(5.5%), 상점은 아티스트 상품 판매가의 `100 − SHOP_ARTIST_SHARE_PERCENT`%·스튜디오 자체 상품 전액·배송비는 발송하는 쪽(`artistPayout.ts`와 같은 규칙). 결제(PG) 수수료는 비용이라 매출에서 더하거나 빼지 않는다. 행에는 원래 결제액이 `sourceGross`로 남는다.
+  **정산 규칙(수수료율·아티스트 몫)을 바꾸면 이 파일의 비율도 같이** — 정산 기록의 실제 금액과는 반올림·부분 환불에서 몇 원 다를 수 있는 발생 기준 추정이다.
   새 `orders.type`을 만들면 `REVENUE_TYPE_LABELS`·`REVENUE_GROUP_OF`·장부 `TYPE_LABELS`에 함께 넣을 것(공연 티켓이 한동안 `ticket`으로 찍혔다).
 - **수기 매출(`manual_revenues`, 0063·0065)은 주문·예약과 연결하지 않는다.** 이름·연락처 칸이 없다(내용에 적는다). 삭제는 소프트 삭제(`deleted_at/by`) — 읽는 곳은 전부 `deleted_at IS NULL`을 본다.
   환불 변경은 메모에 누가·얼마→얼마를 남긴다. 장부 CSV에는 들어가지 않는다.
@@ -674,6 +676,13 @@ PATCH가 실패해도 DB는 되돌리지 않고 `gcal_error`에 적는다("캘�
 - **관리자 메뉴는 `ADMIN_NAV_ENTRIES`(components/admin/AdminShell.tsx) 한 곳**이다 — 연습실 / 녹음실 / 플랫폼 / 공통. 새 구역은 묶음 하나에 넣는다. 예약은 한 화면을 `?line=practice|studio|mixing`으로 갈라 세 곳에 건다(`lib/booking/line.ts`).
 - **개인정보(이름·연락처·이메일·주소)를 props로 싣는 관리자 상세 화면은 열람을 기록한다**: `logAdminView`(`lib/privacy/adminView.ts`) 또는 `recordAdminPrivacyAccess` + `privacyAccessActionEnum` + `accessLogLabels.ts`(열거와 라벨이 어긋나면 테스트가 선다). 값은 적지 않고 대상 id·결과만.
   목록 화면은 기록하지 않는 대신 **표에 안 나오는 개인정보를 props에 싣지 않는다**(`serializePledgeForAdminList`).
+
+### 연습실 손익 = 월 입주 수입 − 지출 항목 (마이그레이션 0080 `studio_expenses`)
+
+월 입주 수납(`room_tenancy_payments`)은 결제 행이 없어 매출 현황에서 통째로 빠져 있었다(2026-10 수납 12건 378만 원) — `lib/ops/tenancyRevenue.ts`가 입금일(KST) 기준 매출 행(유형 `tenancy`, 직접 서비스)으로 읽는다. 부가세는 나누지 않는다(수납 금액의 부가세 포함 여부 기록이 없다).
+임대료·청소비 같은 **지출은 관리자 `/admin/expenses`에 적는다**(`lib/ops/expenses.ts`). 매달 같은 금액이면 "매달 반복"으로 한 번만(시작 달부터 끝나는 달까지 센다, 31일은 짧은 달 말일로 보정). 구분이 "연습실"인 지출만 매출 현황의 연습실 순수익에서 빼고 "스튜디오 전체"는 참고로만 보인다.
+- **순서는 마이그레이션 0080 → 배포.** 뒤집어도 결제·매출은 안 깨지고 손익 칸만 "지출 표 미적용"으로 열린다(대시보드 카드는 지출을 빼지 않은 입주 수입만 보인다). 월 입주 표(0066)를 못 읽으면 월 입주 수입이 빠졌다고 알린다.
+- 수기 매출 유형(`MANUAL_TYPES`)에서 `tenancy`는 뺐다 — 수기로 또 적으면 두 번 센다.
 
 ### 월 입주 관리 (`lib/tenancy/`, 관리자 `/admin/tenancies`, 마이그레이션 0066)
 

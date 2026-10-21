@@ -45,7 +45,7 @@ it('순매출·환불·전월 대비와 직접/중개 구성을 그린다', () =
 
 it('유형별 표의 유형 이름은 그 유형만 보는 링크이고, 기간 칩이 연·월로 이동한다', () => {
   render(<AdminRevenuePage {...props()} />);
-  expect(screen.getByRole('link', { name: '펀딩' })).toHaveAttribute('href', '/admin/revenue?year=2026&month=10&type=funding');
+  expect(screen.getByRole('link', { name: '펀딩 수수료' })).toHaveAttribute('href', '/admin/revenue?year=2026&month=10&type=funding');
   expect(screen.getByRole('link', { name: '2025년' })).toHaveAttribute('href', '/admin/revenue?year=2025&month=10');
   expect(screen.getByRole('link', { name: '연 전체' })).toHaveAttribute('href', '/admin/revenue?year=2026&month=all');
 });
@@ -78,4 +78,36 @@ it('이번 기간 수기 기록을 목록으로 보여 준다', () => {
   const item = screen.getAllByText(/녹음 3시간 — 김OO/).map((el) => el.closest('li')).find(Boolean) as HTMLElement;
   expect(within(item).getByText(/275,000원/)).toBeInTheDocument();
   expect(within(item).getByRole('button', { name: '삭제' })).toBeInTheDocument();
+});
+
+describe('연습실 손익', () => {
+  const practice = (over: Record<string, unknown> = {}) => ({
+    income: 3_786_000,
+    incomeCount: 12,
+    expense: { total: 1_060_000, byCategory: [{ category: 'rent', label: '임대료', amount: 1_000_000 }, { category: 'cleaning', label: '청소비', amount: 60_000 }] },
+    studioExpenseTotal: 20_000,
+    ...over,
+  });
+
+  it('월 입주 수입에서 지출을 빼 순수익을 보인다', () => {
+    render(<AdminRevenuePage {...props({ practice: practice() })} />);
+    expect(screen.getByRole('heading', { name: /연습실 손익/ })).toBeInTheDocument();
+    expect(screen.getByText('3,786,000원')).toBeInTheDocument();
+    expect(screen.getByText('− 임대료')).toBeInTheDocument();
+    expect(screen.getByText('-1,060,000원')).toBeInTheDocument();
+    expect(screen.getByText('2,726,000원')).toBeInTheDocument(); // 순수익
+    expect(screen.getByText(/스튜디오 전체 지출 20,000원/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /지출 관리/ })).toHaveAttribute('href', '/admin/expenses');
+  });
+
+  it('지출 표를 못 읽으면 순수익을 지어내지 않고 사유를 알린다', () => {
+    render(<AdminRevenuePage {...props({ practice: practice({ expense: null }), practiceNotice: '지출 표를 읽지 못했습니다(마이그레이션 0080).' })} />);
+    expect(screen.getByText(/지출 표를 읽지 못했습니다/)).toBeInTheDocument();
+    expect(screen.queryByText('연습실 순수익')).not.toBeInTheDocument();
+  });
+
+  it('판매·중개는 수수료만 매출로 잡는다고 안내한다', () => {
+    render(<AdminRevenuePage {...props()} />);
+    expect(screen.getAllByText(/플랫폼 수수료/).length).toBeGreaterThan(0);
+  });
 });
