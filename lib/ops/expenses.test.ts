@@ -54,7 +54,7 @@ describe('summarizeExpenses', () => {
 });
 
 describe('isExpenseCheckViolation', () => {
-  it('0083 전 CHECK 위반(메시지·원인 코드)을 알아본다', () => {
+  it('0084 전 CHECK 위반(메시지·원인 코드)을 알아본다', () => {
     expect(isExpenseCheckViolation(new Error('CHECK constraint failed: studio_expenses_scope_check'))).toBe(true);
     const wrapped = Object.assign(new Error('Failed query: insert ...'), { cause: Object.assign(new Error('x'), { code: 'SQLITE_CONSTRAINT_CHECK' }) });
     expect(isExpenseCheckViolation(wrapped)).toBe(true);

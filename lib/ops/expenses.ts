@@ -24,13 +24,13 @@ export const EXPENSE_CATEGORY_LABELS: Record<string, string> = {
   loan_principal: '대출 원금 상환',
 };
 
-/** 손익(수익 계산)에서 빼는 항목 — 매출 현황에 "손익에 넣지 않는 지출"로 따로 보인다(마이그레이션 0083). */
+/** 손익(수익 계산)에서 빼는 항목 — 매출 현황에 "손익에 넣지 않는 지출"로 따로 보인다(마이그레이션 0084). */
 export const NON_OPERATING_EXPENSE_CATEGORIES: readonly string[] = ['loan_principal'];
 export const isNonOperatingCategory = (category: string): boolean => NON_OPERATING_EXPENSE_CATEGORIES.includes(category);
 
 /**
  * 구분 = 지출이 속한 사업 분야(lib/ops/businessLine.ts). 저장값 'studio'는 예전 "스튜디오 전체"를 데이터 이전 없이 **공통**으로 이름만 바꾼 것이다.
- * 'recording'·'platform'은 마이그레이션 0083의 CHECK가 받아 준다 — 그 전에는 저장이 실패한다(API가 알린다).
+ * 'recording'·'platform'은 마이그레이션 0084의 CHECK가 받아 준다 — 그 전에는 저장이 실패한다(API가 알린다).
  */
 export const EXPENSE_SCOPE_LABELS: Record<string, string> = {
   practice: '연습실',
@@ -39,8 +39,8 @@ export const EXPENSE_SCOPE_LABELS: Record<string, string> = {
   studio: '공통(분야 나누기 어려운 비용)',
 };
 
-/** 마이그레이션 0083 전 DB의 CHECK가 받지 않는 값. */
-export const EXPENSE_VALUES_NEEDING_0083 = { categories: ['loan_principal'], scopes: ['recording', 'platform'] } as const;
+/** 마이그레이션 0084 전 DB의 CHECK가 받지 않는 값. */
+export const EXPENSE_VALUES_NEEDING_0084 = { categories: ['loan_principal'], scopes: ['recording', 'platform'] } as const;
 
 /** 한 건 상한 — 자릿수 실수를 걸러내는 안전판이지 사업 한도가 아니다. */
 export const EXPENSE_MAX_AMOUNT = 100_000_000;
@@ -183,7 +183,7 @@ export const summarizeExpenses = (occurrences: readonly ExpenseOccurrence[], sco
   };
 };
 
-/** 마이그레이션 0083 전 DB에서 새 구분·항목을 저장하려다 CHECK에 걸린 오류인가. */
+/** 마이그레이션 0084 전 DB에서 새 구분·항목을 저장하려다 CHECK에 걸린 오류인가. */
 export const isExpenseCheckViolation = (error: unknown): boolean => {
   const text = (e: unknown): string => (e instanceof Error ? `${e.message} ${(e as { code?: unknown }).code ?? ''}` : '');
   const all = `${text(error)} ${text((error as { cause?: unknown } | null)?.cause)}`;

@@ -38,7 +38,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   } catch {
     tableMissing = true;
   }
-  // 분야 지정 표(0083)가 없으면 빈 지정 — 모두 기본(녹음·제작)으로 보인다.
+  // 분야 지정 표(0084)가 없으면 빈 지정 — 모두 기본(녹음·제작)으로 보인다.
   const lines = await loadPaymentLinkLines(rows.map((r) => r.slug));
   const links: LinkView[] = rows.map((r) => {
     const found = lines.get(r.slug);

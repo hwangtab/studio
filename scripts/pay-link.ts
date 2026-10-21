@@ -13,7 +13,7 @@
  *   **그 시간대를 "예약 불가 블록"으로 자동 차단한다**(웹 이중 예약 방지) — 막지 않으려면 `--no-block`. 링크를 결제 없이 `close`하면 블록도 풀린다.
  * - `--expires YYYY-MM-DD`: 그날 끝까지만 열린다. `--memo`: 운영자 메모(고객에게 안 보인다).
  * - `--line practice|recording|platform|other`: 매출 현황의 사업 분야(lib/ops/businessLine.ts). 비우면 녹음·제작으로 센다.
- *   분야는 따로 둔 표(마이그레이션 0083)에 적는다 — 표가 없으면 링크는 만들고 분야만 저장하지 못했다고 알린다.
+ *   분야는 따로 둔 표(마이그레이션 0084)에 적는다 — 표가 없으면 링크는 만들고 분야만 저장하지 못했다고 알린다.
  *
  * 접속: `TURSO_DATABASE_URL`·`TURSO_AUTH_TOKEN`이 있으면 그걸 쓰고, 없으면 로그인된 Turso CLI(`~/.turso/turso`, DB `studio-nol`)로
  * 만료 1일 토큰을 만들어 쓴다(루트 CLAUDE.md "운영 DB 마이그레이션 적용 방법"). 토큰은 파일에 쓰지 않는다.
@@ -85,7 +85,7 @@ const main = async (): Promise<void> => {
     if (businessLine) {
       const { saveLineAssignment } = await import('../lib/ops/businessLineStore');
       if (!(await saveLineAssignment('payment_link', slug, businessLine, 'cli'))) {
-        console.warn('매출 분야는 저장하지 못했습니다(마이그레이션 0083 적용 전) — 녹음·제작으로 셉니다.');
+        console.warn('매출 분야는 저장하지 못했습니다(마이그레이션 0084 적용 전) — 녹음·제작으로 셉니다.');
       }
     }
     return;

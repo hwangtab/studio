@@ -42,11 +42,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (conflicts.length > 0) return res.status(409).json(blockConflictsBody(conflicts));
       }
       const { slug, blockId } = await createPaymentLink(input.value);
-      // 분야는 따로 둔 표(마이그레이션 0083)에 적는다 — 실패해도 링크는 열려 있고, 녹음·제작으로 센다고 알린다.
+      // 분야는 따로 둔 표(마이그레이션 0084)에 적는다 — 실패해도 링크는 열려 있고, 녹음·제작으로 센다고 알린다.
       const lineSaved = businessLine === null || (await saveLineAssignment('payment_link', slug, businessLine, auth.actor));
       return res.status(201).json({
         ok: true, slug, path: `/ko/pay/${slug}`, blocked: blockId !== null,
-        ...(lineSaved ? {} : { warning: '링크는 만들었지만 매출 분야는 저장하지 못했어요(마이그레이션 0083 적용 전). 녹음·제작으로 셉니다.' }),
+        ...(lineSaved ? {} : { warning: '링크는 만들었지만 매출 분야는 저장하지 못했어요(마이그레이션 0084 적용 전). 녹음·제작으로 셉니다.' }),
       });
     } catch (error) {
       console.error('[api/admin/payment-links] 생성 실패(마이그레이션 0060 적용 여부 확인)', error instanceof Error ? error.name : 'unknown');

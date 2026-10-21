@@ -2624,7 +2624,7 @@ export type ManualRevenue = typeof manualRevenues.$inferSelect;
  * — 임대료처럼 매달 같은 값을 매번 적지 않게. 금액은 부가세 포함 지출액. 소프트 삭제(수기 매출과 같은 이유 — 누가 언제 지웠는지 남긴다).
  * 새 표뿐이고 어떤 `relations()`에도 잇지 않는다(0022 함정) — 표가 없는 DB에서는 손익 칸만 "지출 표 미적용"으로 열린다.
  */
-// 0083: 'loan_principal'(대출 원금 상환 — 손익에 넣지 않는 지출), 구분에 'recording'(녹음·제작)·'platform'(플랫폼). 'studio'는 저장값을 두고 이름만 "공통"으로 바꿨다.
+// 0084: 'loan_principal'(대출 원금 상환 — 손익에 넣지 않는 지출), 구분에 'recording'(녹음·제작)·'platform'(플랫폼). 'studio'는 저장값을 두고 이름만 "공통"으로 바꿨다.
 export const expenseCategoryEnum = ['rent', 'cleaning', 'utilities', 'maintenance', 'supplies', 'other', 'loan_principal'] as const;
 export const expenseScopeEnum = ['practice', 'studio', 'recording', 'platform'] as const;
 export const studioExpenses = sqliteTable('studio_expenses', {
@@ -2654,7 +2654,7 @@ export const studioExpenses = sqliteTable('studio_expenses', {
 export type StudioExpense = typeof studioExpenses.$inferSelect;
 
 /**
- * 매출 행의 **사업 분야 지정**(마이그레이션 0083) — 결제 링크(`subject_kind = 'payment_link'`, subject_id = slug)와
+ * 매출 행의 **사업 분야 지정**(마이그레이션 0084) — 결제 링크(`subject_kind = 'payment_link'`, subject_id = slug)와
  * 수기 매출(`'manual_revenue'`, subject_id = manual_revenues.id)에 운영자가 고른 분야를 적는다. 없으면 유형의 기본 분야(lib/ops/businessLine.ts).
  *
  * `payment_links`·`manual_revenues`에 컬럼을 더하지 않고 따로 둔 이유는 배포 순서다(0037·0061과 같다): 그 두 표는 결제 링크 결제 화면·
@@ -2810,6 +2810,23 @@ export const lessonContracts = sqliteTable('lesson_contracts', {
 }));
 
 export type LessonContract = typeof lessonContracts.$inferSelect;
+
+/**
+ * 레슨 수강생에게 보낸 안내 메일 기록(마이그레이션 0083) — 수업 전날 일정 안내. (kind, ref_id)가 유일해 같은 회차에 두 번 보내지 않는다.
+ * **기록을 먼저 넣고 보낸다**(크론이 겹쳐도 한 통만) — 실패는 `error`에 남기고 다시 보내지 않는다(수업 전날 한 번뿐인 안내라 늦은 재발송이 오히려 혼란이다).
+ * 새 표뿐이고 어떤 `relations()`에도 잇지 않는다(0022 함정).
+ */
+export const lessonReminderKindEnum = ['session'] as const;
+export const lessonReminders = sqliteTable('lesson_reminders', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  kind: text('kind', { enum: lessonReminderKindEnum }).notNull(),
+  /** kind='session'이면 lesson_sessions.id. */
+  refId: text('ref_id').notNull(),
+  sentAt: integer('sent_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  error: text('error'),
+}, (t) => ({
+  kindRefUq: uniqueIndex('lesson_reminders_kind_ref_uq').on(t.kind, t.refId),
+}));
 export type LessonEnrollment = typeof lessonEnrollments.$inferSelect;
 export type LessonSession = typeof lessonSessions.$inferSelect;
 export type LessonPayment = typeof lessonPayments.$inferSelect;

@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "aa4955ac-8983-49a3-9fb5-8f6754be6ab1",
+  "id": "40b86e9f-e69d-4b5e-8ca5-20ba2e3aae3c",
   "prevId": "265ec081-32e1-46b9-abae-21d23a46fa1c",
   "tables": {
     "artist_payouts": {
@@ -2886,6 +2886,61 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
+    "lesson_reminders": {
+      "name": "lesson_reminders",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "kind": {
+          "name": "kind",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ref_id": {
+          "name": "ref_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "sent_at": {
+          "name": "sent_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch())"
+        },
+        "error": {
+          "name": "error",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "lesson_reminders_kind_ref_uq": {
+          "name": "lesson_reminders_kind_ref_uq",
+          "columns": [
+            "kind",
+            "ref_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
     "lesson_sessions": {
       "name": "lesson_sessions",
       "columns": {
@@ -4993,69 +5048,6 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {}
-    },
-    "revenue_line_assignments": {
-      "name": "revenue_line_assignments",
-      "columns": {
-        "subject_kind": {
-          "name": "subject_kind",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "subject_id": {
-          "name": "subject_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "business_line": {
-          "name": "business_line",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "created_by": {
-          "name": "created_by",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(unixepoch())"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "revenue_line_assignments_subject_kind_subject_id_pk": {
-          "columns": [
-            "subject_kind",
-            "subject_id"
-          ],
-          "name": "revenue_line_assignments_subject_kind_subject_id_pk"
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraints": {
-        "revenue_line_assignments_subject_check": {
-          "name": "revenue_line_assignments_subject_check",
-          "value": "\"revenue_line_assignments\".\"subject_kind\" in ('payment_link','manual_revenue')"
-        },
-        "revenue_line_assignments_line_check": {
-          "name": "revenue_line_assignments_line_check",
-          "value": "\"revenue_line_assignments\".\"business_line\" in ('practice','recording','platform','other')"
-        }
-      }
     },
     "review_requests": {
       "name": "review_requests",
@@ -8271,11 +8263,11 @@
       "checkConstraints": {
         "studio_expenses_category_check": {
           "name": "studio_expenses_category_check",
-          "value": "\"studio_expenses\".\"category\" in ('rent','cleaning','utilities','maintenance','supplies','other','loan_principal')"
+          "value": "\"studio_expenses\".\"category\" in ('rent','cleaning','utilities','maintenance','supplies','other')"
         },
         "studio_expenses_scope_check": {
           "name": "studio_expenses_scope_check",
-          "value": "\"studio_expenses\".\"scope\" in ('practice','studio','recording','platform')"
+          "value": "\"studio_expenses\".\"scope\" in ('practice','studio')"
         }
       }
     },

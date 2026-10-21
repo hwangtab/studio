@@ -2,7 +2,7 @@
 
 /**
  * 분야 판정을 실제 SQLite(in-memory, 전체 마이그레이션)로 고정한다 — 세션 예약의 연습실/녹음, 결제 링크의 지정·제작 계약 우선,
- * 구독 종류, 수기 매출 지정. 그리고 분야 지정 표(0083)가 없는 DB에서도 매출 조회가 던지지 않고 기본 분야로 떨어지는지.
+ * 구독 종류, 수기 매출 지정. 그리고 분야 지정 표(0084)가 없는 DB에서도 매출 조회가 던지지 않고 기본 분야로 떨어지는지.
  */
 import { createClient, type Client } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
@@ -66,7 +66,7 @@ const seed = async (c: Client) => {
 const lineMap = (rows: Array<{ orderNo: string; type: string; line?: string }>) =>
   Object.fromEntries(rows.map((r) => [r.orderNo, lineOfRow(r as Parameters<typeof lineOfRow>[0])]));
 
-describe('마이그레이션 0083 적용 후', () => {
+describe('마이그레이션 0084 적용 후', () => {
   beforeAll(async () => {
     client = createClient({ url: ':memory:' });
     mockDb = drizzle(client, { schema });
@@ -102,11 +102,11 @@ describe('마이그레이션 0083 적용 후', () => {
   });
 });
 
-describe('마이그레이션 0083 전(분야 지정 표 없음 · 지출 CHECK 옛 값)', () => {
+describe('마이그레이션 0084 전(분야 지정 표 없음 · 지출 CHECK 옛 값)', () => {
   beforeAll(async () => {
     client = createClient({ url: ':memory:' });
     mockDb = drizzle(client, { schema });
-    await migrate(client, '0083_');
+    await migrate(client, '0084_');
     await seed(client);
   });
   afterAll(() => client.close());

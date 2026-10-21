@@ -32,7 +32,7 @@ export interface ManualRevenueInput {
   vatMode: VatMode;
   method: ManualMethod;
   memo: string | null;
-  /** 사업 분야(선택). 비우면 유형의 기본 분야(lib/ops/businessLine.ts) — 따로 둔 표에 적는다(businessLineStore.ts, 0083). */
+  /** 사업 분야(선택). 비우면 유형의 기본 분야(lib/ops/businessLine.ts) — 따로 둔 표에 적는다(businessLineStore.ts, 0084). */
   businessLine?: BusinessLine | null;
 }
 
@@ -160,7 +160,7 @@ export const loadManualRevenueRows = async (range: { from: Date; toExclusive: Da
   const rows = await getDb().query.manualRevenues.findMany({
     where: (t, { and, gte, lt, isNull }) => and(gte(t.receivedOn, from), lt(t.receivedOn, to), isNull(t.deletedAt)),
   });
-  // 분야 지정은 따로 둔 표에서 읽는다(0083 전이면 빈 지정 — 유형의 기본 분야로 센다).
+  // 분야 지정은 따로 둔 표에서 읽는다(0084 전이면 빈 지정 — 유형의 기본 분야로 센다).
   const lines = await loadLineAssignments('manual_revenue', rows.map((r) => r.id));
   return rows.map((r) => {
     const row = manualRevenueRow(r);

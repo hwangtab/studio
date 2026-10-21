@@ -6,7 +6,7 @@ import type { BusinessLine } from './businessLine';
 import { parseBusinessLine } from './businessLine';
 
 /**
- * 분야 지정 표(`revenue_line_assignments`, 마이그레이션 0083)의 읽기·쓰기. **raw SQL로만** 다룬다 — 표가 없는 DB(0083 전)에서
+ * 분야 지정 표(`revenue_line_assignments`, 마이그레이션 0084)의 읽기·쓰기. **raw SQL로만** 다룬다 — 표가 없는 DB(0084 전)에서
  * 읽기는 빈 지정을 돌려주고(행은 유형의 기본 분야로 떨어진다), 쓰기는 false를 돌려준다. 결제 링크·수기 매출 자체의 생성은 막지 않는다.
  */
 export type LineSubjectKind = 'payment_link' | 'manual_revenue';
@@ -25,7 +25,7 @@ export const loadLineAssignments = async (kind: LineSubjectKind, ids: readonly s
       if (line) out.set(r.subject_id, line);
     }
   } catch (error) {
-    console.error('[revenue/line] 분야 지정 조회 실패(마이그레이션 0083 전일 수 있음) — 기본 분야로 셉니다:', safeDbErrorSummary(error));
+    console.error('[revenue/line] 분야 지정 조회 실패(마이그레이션 0084 전일 수 있음) — 기본 분야로 셉니다:', safeDbErrorSummary(error));
   }
   return out;
 };
@@ -40,7 +40,7 @@ export const saveLineAssignment = async (kind: LineSubjectKind, id: string, line
     `);
     return true;
   } catch (error) {
-    console.error('[revenue/line] 분야 지정 저장 실패(마이그레이션 0083 전일 수 있음):', safeDbErrorSummary(error));
+    console.error('[revenue/line] 분야 지정 저장 실패(마이그레이션 0084 전일 수 있음):', safeDbErrorSummary(error));
     return false;
   }
 };

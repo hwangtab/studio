@@ -20,9 +20,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const id = await createExpense(parsed.value, auth.actor);
         return res.status(201).json({ ok: true, id });
       } catch (error: unknown) {
-        // 새 구분(녹음·제작·플랫폼)·항목(대출 원금)은 마이그레이션 0083의 CHECK가 받아 준다 — 그 전에는 여기서 걸린다.
+        // 새 구분(녹음·제작·플랫폼)·항목(대출 원금)은 마이그레이션 0084의 CHECK가 받아 준다 — 그 전에는 여기서 걸린다.
         if (isExpenseCheckViolation(error)) {
-          return res.status(503).json({ ok: false, message: '이 구분·항목은 아직 저장할 수 없어요(마이그레이션 0083 적용 전). 연습실·공통과 기존 항목은 저장됩니다.' });
+          return res.status(503).json({ ok: false, message: '이 구분·항목은 아직 저장할 수 없어요(마이그레이션 0084 적용 전). 연습실·공통과 기존 항목은 저장됩니다.' });
         }
         throw error;
       }
