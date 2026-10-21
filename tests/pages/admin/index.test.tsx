@@ -53,6 +53,7 @@ const DASHBOARD: AdminDashboard = {
     sessionsAwaitingMark: 3,
     showSubmissionsAwaitingReview: 2,
     sessionMusiciansNew: 3,
+    lessons: { unmarked: 1, today: 2 },
   },
   socialTokens: [{ platform: 'ig', expiresAt: '2026-09-26T03:00:00.000Z', daysLeft: 10 }],
   upcomingWindowDays: 7,

@@ -2,6 +2,7 @@ import { loadProductionRevenueRows } from './productionRevenue';
 import { kstYearMonth, loadRevenueRows, periodRange, previousPeriod, summarizeRevenue } from './revenueReport';
 import { loadManualRevenueRows } from './manualRevenue';
 import { loadTenancyRevenueRows } from './tenancyRevenue';
+import { loadLessonRevenueRows } from './lessonRevenue';
 import { loadExpenseOccurrences, summarizeExpenses } from './expenses';
 
 /**
@@ -54,6 +55,13 @@ export const loadRevenueSnapshot = async (now: Date): Promise<RevenueSnapshot> =
   } catch (error: unknown) {
     console.error('[admin/dashboard] 월 입주 수입 조회 실패:', error);
     tenancyMissing = true;
+  }
+
+  // 레슨 계좌·현금 수납(lesson_payments). 못 읽으면(마이그레이션 0081 전) 그 금액이 빠진다 — 카드 레슨은 위 결제 행에 이미 있다.
+  try {
+    rows.push(...(await loadLessonRevenueRows(range)));
+  } catch (error: unknown) {
+    console.error('[admin/dashboard] 레슨 수납 조회 실패(마이그레이션 0081 전일 수 있음):', error);
   }
 
   const summary = summarizeRevenue(rows, { year, month });

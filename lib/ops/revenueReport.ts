@@ -2,6 +2,7 @@ import { and, gte, isNotNull, lt } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { fundingPledges, payments } from '../../db/schema';
+import { reclassifyLessonSubscriptions } from './lessonRevenue';
 import { applyPlatformFees } from './platformFee';
 
 /**
@@ -29,6 +30,8 @@ export const REVENUE_TYPE_LABELS: Record<string, string> = {
   // 제작 계약(싱글·EP·정규, production_contracts) — 입금 기록으로 집계한다(productionRevenue.ts).
   production: '음원 제작',
   subscription: '구독',
+  // 프로듀싱 레슨 — 카드 구독 결제(레슨 구독의 주문)와 계좌·현금 수납(lesson_payments)을 한 유형으로(lessonRevenue.ts).
+  lesson: '프로듀싱 레슨',
   deposit: '예약금',
   software: '소프트웨어',
   // 연습실 월 입주(room_tenancies, 발생 기준) — 결제 행이 없어 tenancyRevenue.ts가 따로 읽는다.
@@ -51,6 +54,7 @@ export const REVENUE_GROUP_OF: Record<string, RevenueGroup> = {
   mixing: 'direct',
   production: 'direct',
   subscription: 'direct',
+  lesson: 'direct',
   deposit: 'direct',
   software: 'direct',
   tenancy: 'direct',
@@ -334,5 +338,5 @@ export const loadRevenueRows = async (range: PeriodRange): Promise<RevenueRow[]>
     });
   }
 
-  return applyPlatformFees([...byOrder.values()]);
+  return applyPlatformFees(await reclassifyLessonSubscriptions([...byOrder.values()]));
 };
