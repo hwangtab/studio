@@ -34,6 +34,7 @@ interface LessonRowView {
   unmarked: number;
   lastPaidOn: string | null;
   paidTotal: number;
+  arrears: number;
 }
 
 interface Props {
@@ -63,6 +64,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
       unmarked: r.unmarked,
       lastPaidOn: r.lastPaidOn,
       paidTotal: r.paidTotal,
+      arrears: r.arrears,
     }));
     return { props: { rows, today, unavailable: null } };
   } catch (error: unknown) {
@@ -122,7 +124,7 @@ export default function AdminLessonsPage({ rows, today, unavailable }: Props) {
         <span className="flex flex-wrap gap-1">
           {r.status !== 'active' && <span className="rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-700">{ENROLLMENT_STATUS_LABELS[r.status]}</span>}
           {r.unmarked > 0 && <span className="rounded bg-amber-100 px-1.5 py-0.5 text-xs font-medium text-amber-800">표시 대기 {r.unmarked}</span>}
-          {r.status === 'active' && r.payMethod !== 'card' && r.lastPaidOn === null && <span className="rounded bg-red-100 px-1.5 py-0.5 text-xs font-medium text-red-800">수납 기록 없음</span>}
+          {r.arrears > 0 && <span className="rounded bg-red-100 px-1.5 py-0.5 text-xs font-medium text-red-800">미수 {won(r.arrears)}</span>}
         </span>
       </div>
       <p className="mt-1 text-xs text-gray-600">

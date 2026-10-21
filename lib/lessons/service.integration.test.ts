@@ -157,6 +157,15 @@ describe('목록·대시보드 큐', () => {
   });
 });
 
+describe('미수금', () => {
+  it('시작된 회차의 달 수만큼 못 받았으면 목록에 미수로 나오고, 수납을 기록하면 사라진다', async () => {
+    const id = await create({ startDate: '2026-10-07' }); // 10/7·10/14·10/21 이 도래 → 한 달 치
+    expect((await listEnrollments(NOW))[0].arrears).toBe(350000);
+    await recordLessonPayment(id, { paidOn: '2026-10-07', amount: 350000, vatAmount: 0, periodLabel: '10월', method: '현금', memo: null, receiptIssued: false }, 'admin');
+    expect((await listEnrollments(NOW))[0].arrears).toBe(0);
+  });
+});
+
 describe('수납·매출', () => {
   it('계좌·현금 수납이 레슨 매출 행이 되고, 지우면 빠진다', async () => {
     const id = await create();

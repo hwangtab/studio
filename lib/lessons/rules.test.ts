@@ -1,4 +1,4 @@
-import { addDays, kstMoment, overlaps, parseEnrollmentInput, parsePaymentInput, progressOf, sessionDates, slotRange, weekdayOf } from './rules';
+import { addDays, arrearsOf, kstMoment, overlaps, parseEnrollmentInput, parsePaymentInput, progressOf, sessionDates, slotRange, weekdayOf } from './rules';
 
 describe('회차 날짜·시각', () => {
   it('첫 수업일부터 매주 같은 요일로 과정 길이만큼', () => {
@@ -50,5 +50,36 @@ describe('progressOf', () => {
   it('결석은 소화된 회차로 세고 휴강·중도 종료 취소는 세지 않는다', () => {
     expect(progressOf([{ status: 'done' }, { status: 'absent' }, { status: 'scheduled' }, { status: 'studio_cancelled' }, { status: 'dropped' }]))
       .toEqual({ total: 3, consumed: 2, done: 1, absent: 1, scheduled: 1 });
+  });
+});
+
+describe('arrearsOf — 계좌·현금 선불 미수금', () => {
+  const weekly = (start: string, n: number, doneUpTo: string) => sessionDates(start, n).map((on) => ({ scheduledOn: on, status: on <= doneUpTo ? 'done' : 'scheduled' }));
+  const base = { payMethod: 'bank', monthlyAmount: 350000, today: '2026-10-21' };
+
+  it('시작 전 3일 안이면 한 달 치를 받았어야 하고, 더 먼저는 아직이다', () => {
+    expect(arrearsOf({ ...base, sessions: weekly('2026-10-23', 12, ''), payments: [] })).toMatchObject({ monthsDue: 1, arrears: 350000 });
+    expect(arrearsOf({ ...base, sessions: weekly('2026-11-10', 12, ''), payments: [] })).toMatchObject({ monthsDue: 0, arrears: 0 });
+  });
+
+  it('진행한 회차 4개마다 한 달 치 — 5번째 수업이 되면 두 달째', () => {
+    const four = weekly('2026-09-30', 12, '2026-10-21'); // 9/30·10/7·10/14·10/21 → 4회 진행
+    expect(arrearsOf({ ...base, sessions: four, payments: [{ amount: 350000, vatAmount: 0 }] }).arrears).toBe(0);
+    const five = weekly('2026-09-23', 12, '2026-10-21'); // 5회 진행
+    expect(arrearsOf({ ...base, sessions: five, payments: [{ amount: 350000, vatAmount: 0 }] })).toMatchObject({ monthsDue: 2, arrears: 350000 });
+  });
+
+  it('과정 일괄 선불은 몇 달 치를 덮고, 부가세는 받은 돈에서 뺀다', () => {
+    const sessions = weekly('2026-09-02', 12, '2026-10-21'); // 8회 진행 → 2개월
+    expect(arrearsOf({ ...base, sessions, payments: [{ amount: 1050000, vatAmount: 0 }] }).arrears).toBe(0);
+    expect(arrearsOf({ ...base, sessions, payments: [{ amount: 385000, vatAmount: 35000 }] })).toMatchObject({ paidNet: 350000, arrears: 350000 });
+  });
+
+  it('카드는 구독이 청구하므로 0, 결석·진행 회차는 세고 휴강·취소는 세지 않는다', () => {
+    expect(arrearsOf({ ...base, payMethod: 'card', sessions: weekly('2026-09-02', 12, '2026-10-21'), payments: [] }).arrears).toBe(0);
+    const sessions = [
+      { scheduledOn: '2026-10-07', status: 'absent' }, { scheduledOn: '2026-10-14', status: 'studio_cancelled' }, { scheduledOn: '2026-10-21', status: 'dropped' }, { scheduledOn: '2026-10-28', status: 'scheduled' },
+    ];
+    expect(arrearsOf({ ...base, sessions, payments: [] })).toMatchObject({ monthsDue: 1 }); // 결석 1회만 시작된 회차
   });
 });

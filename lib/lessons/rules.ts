@@ -119,3 +119,30 @@ export const progressOf = (sessions: ReadonlyArray<{ status: string }>): { total
   const absent = live.filter((s) => s.status === 'absent').length;
   return { total: live.length, consumed: done + absent, done, absent, scheduled: live.filter((s) => s.status === 'scheduled').length };
 };
+
+export interface ArrearsInput {
+  payMethod: string;
+  monthlyAmount: number;
+  sessions: ReadonlyArray<{ status: string; scheduledOn: string }>;
+  payments: ReadonlyArray<{ amount: number; vatAmount: number }>;
+  today: string;
+}
+
+/**
+ * 계좌·현금 선불 수강의 **미수금** — 월 4회를 한 달 치로 보고, 이미 시작된(진행했거나 날짜가 도래한) 회차의 달 수만큼 수강료를 받았어야 한다.
+ * 첫 회차 전에는 시작 3일 전부터 한 달 치를 받아야 한다. 받은 돈은 부가세를 뺀 값으로 센다(수강료는 공급가 기준). 카드는 구독이 청구하므로 0.
+ * 과정 일괄 선불(12주치를 한 번에)은 받은 돈이 몇 달 치를 덮으므로 미수가 안 생긴다 — 기록의 "기간" 표기는 계산에 쓰지 않는다.
+ */
+export const arrearsOf = (input: ArrearsInput): { monthsDue: number; expected: number; paidNet: number; arrears: number } => {
+  if (input.payMethod === 'card') return { monthsDue: 0, expected: 0, paidNet: 0, arrears: 0 };
+  const live = input.sessions.filter((s) => s.status !== 'studio_cancelled' && s.status !== 'dropped');
+  const started = live.filter((s) => s.status === 'done' || s.status === 'absent' || (s.status === 'scheduled' && s.scheduledOn <= input.today)).length;
+  const firstOn = live.map((s) => s.scheduledOn).sort()[0];
+  const maxMonths = Math.max(1, Math.ceil(live.length / 4));
+  const monthsDue = started > 0
+    ? Math.min(maxMonths, Math.ceil(started / 4))
+    : firstOn && firstOn <= addDays(input.today, 3) ? 1 : 0;
+  const expected = monthsDue * input.monthlyAmount;
+  const paidNet = input.payments.reduce((sum, p) => sum + p.amount - p.vatAmount, 0);
+  return { monthsDue, expected, paidNet, arrears: Math.max(0, expected - paidNet) };
+};
