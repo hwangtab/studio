@@ -27,6 +27,7 @@ import {
 } from '../privacy/orderRetention';
 import { expireOverdueContracts } from '../contracts/service';
 import { runLeadRateCheck } from './leadRateCheck';
+import { collectRevenueIssues } from './revenueChecks';
 import { checkMigrationDrift } from './migrationDrift';
 import {
   FIELD_CRYPTO_KEY_ENV, FIELD_CRYPTO_VERSION, FieldCryptoError,
@@ -616,6 +617,9 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   } catch (error) {
     console.error('[health] 원본 일정 잔존 점검 실패 — 건너뜁니다', error instanceof Error ? error.message : String(error));
   }
+
+  // 매출 현황이 조용히 틀리는 경우 — 수기 매출 중복 의심·링크 기록 없는 예약금·연습실 구독/입주 이중 집계(revenueChecks.ts). 각 점검은 스스로 실패를 삼킨다.
+  issues.push(...(await runIsolatedCheck('매출 집계 점검', () => collectRevenueIssues(now))));
 
   const rotationPending = await checkFieldKeyRotationPending();
   if (rotationPending) issues.push(rotationPending);

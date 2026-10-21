@@ -95,7 +95,8 @@ export default function AdminExpensesPage({ expenses, today, unavailable, monthL
   const router = useRouter();
   const [spentOn, setSpentOn] = useState(today);
   const [category, setCategory] = useState('rent');
-  const [scope, setScope] = useState('practice');
+  // 기본은 공통 — 분야를 따지지 않고 적은 지출이 한 분야(예전 기본값 연습실)의 수익에서 빠지지 않게.
+  const [scope, setScope] = useState('studio');
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
   const [repeatMonthly, setRepeatMonthly] = useState(false);
@@ -103,6 +104,8 @@ export default function AdminExpensesPage({ expenses, today, unavailable, monthL
   const [memo, setMemo] = useState('');
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  /** 구분·항목·메모를 고치는 중인 지출. */
+  const [editing, setEditing] = useState<{ id: string; scope: string; category: string; memo: string } | null>(null);
 
   const refresh = () => router.replace(router.asPath, undefined, { scroll: false });
 
@@ -128,6 +131,20 @@ export default function AdminExpensesPage({ expenses, today, unavailable, monthL
     const result = await call('DELETE', { id: e.id });
     setBusy(false);
     if (!result.ok) setNotice(result.message ?? '지우지 못했습니다.');
+    await refresh();
+  };
+
+  const saveEdit = async () => {
+    if (!editing) return;
+    setBusy(true);
+    const result = await call('PATCH', { id: editing.id, scope: editing.scope, category: editing.category, memo: editing.memo });
+    setBusy(false);
+    if (!result.ok) {
+      setNotice(result.message ?? '고치지 못했습니다.');
+      return;
+    }
+    setEditing(null);
+    setNotice('고쳤어요. 구분·항목을 바꿨다면 누가·언제 바꿨는지 메모에 남았습니다.');
     await refresh();
   };
 
@@ -184,7 +201,7 @@ export default function AdminExpensesPage({ expenses, today, unavailable, monthL
           </div>
           <p className="mt-2 text-xs text-gray-500">
             구분이 연습실·녹음·제작·플랫폼이면 그 분야의 수익에서 빠지고, “공통”은 어느 분야에도 나누지 않고 전체 수익에서만 빠집니다.
-            항목이 “대출 원금 상환”이면 수익에서 빼지 않고 현금 흐름 참고로만 보입니다(이자는 비용이라 다른 항목으로 적어 주세요). 잘못 적었으면 지우고 다시 적어 주세요.
+            항목이 “대출 원금 상환”이면 수익에서 빼지 않고 현금 흐름 참고로만 보입니다(이자는 비용이라 다른 항목으로 적어 주세요). 구분·항목은 목록에서 고칠 수 있고, 금액이 틀렸으면 지우고 다시 적어 주세요.
           </p>
         </section>
 
@@ -224,8 +241,31 @@ export default function AdminExpensesPage({ expenses, today, unavailable, monthL
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-semibold tabular-nums">{won(e.amount)}{e.repeatMonthly ? ' / 월' : ''}</span>
                     {e.repeatMonthly && !e.repeatUntil && <Button light variant="weak" size="sm" disabled={busy} onClick={() => endRepeat(e)}>반복 끝내기</Button>}
+                    <Button light variant="weak" size="sm" disabled={busy} onClick={() => setEditing({ id: e.id, scope: e.scope, category: e.category, memo: e.memo ?? '' })}>구분·항목 고치기</Button>
                     <Button light variant="weak" size="sm" disabled={busy} onClick={() => remove(e)}>삭제</Button>
                   </div>
+                  {editing?.id === e.id && (
+                    <div className="grid w-full grid-cols-1 gap-3 rounded-xl bg-gray-50 p-3 md:grid-cols-3">
+                      <Field id={`exp-edit-scope-${e.id}`} label="구분" className={lightOnlyField}>
+                        <Select value={editing.scope} onChange={(ev) => setEditing({ ...editing, scope: ev.target.value })} light>
+                          {Object.entries(EXPENSE_SCOPE_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+                        </Select>
+                      </Field>
+                      <Field id={`exp-edit-category-${e.id}`} label="항목" className={lightOnlyField}>
+                        <Select value={editing.category} onChange={(ev) => setEditing({ ...editing, category: ev.target.value })} light>
+                          {Object.entries(EXPENSE_CATEGORY_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+                        </Select>
+                      </Field>
+                      <Field id={`exp-edit-memo-${e.id}`} label="메모" className={lightOnlyField}>
+                        <TextInput value={editing.memo} maxLength={1000} onChange={(ev) => setEditing({ ...editing, memo: ev.target.value })} light />
+                      </Field>
+                      <div className="flex gap-2 md:col-span-3">
+                        <Button light size="sm" disabled={busy} onClick={saveEdit}>{busy ? '저장 중…' : '고친 내용 저장'}</Button>
+                        <Button light variant="weak" size="sm" disabled={busy} onClick={() => setEditing(null)}>취소</Button>
+                      </div>
+                      <p className="text-xs text-gray-500 md:col-span-3">금액·날짜·반복은 여기서 못 고칩니다(틀렸으면 지우고 다시 적어 주세요). 구분을 바꾸면 지난 달 손익에도 소급됩니다.</p>
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>

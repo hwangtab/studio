@@ -2,10 +2,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { kstDateString } from '../../../../lib/booking/kst';
-import { createExpense, deleteExpense, endExpenseRepeat, isExpenseCheckViolation, parseExpenseInput } from '../../../../lib/ops/expenses';
+import { createExpense, deleteExpense, endExpenseRepeat, isExpenseCheckViolation, parseExpenseInput, updateExpenseClassification } from '../../../../lib/ops/expenses';
 
 /**
- * 지출 항목 등록·삭제·반복 끝내기. 규칙은 lib/ops/expenses.ts. 개인정보를 받지 않는 장부라 접속기록 대상이 아니다.
+ * 지출 항목 등록·삭제·반복 끝내기·구분/항목/메모 고치기. 규칙은 lib/ops/expenses.ts. 개인정보를 받지 않는 장부라 접속기록 대상이 아니다.
+ * PATCH는 `repeatUntil`이 있으면 반복 끝내기, `scope`·`category`·`memo` 중 하나가 있으면 분류 고치기(메모에 변경 기록이 붙는다).
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -29,9 +30,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if (req.method === 'PATCH') {
-      const { id, repeatUntil } = (req.body ?? {}) as { id?: unknown; repeatUntil?: unknown };
-      if (typeof id !== 'string' || typeof repeatUntil !== 'string') return res.status(400).json({ ok: false, message: '요청이 올바르지 않습니다.' });
-      const ended = await endExpenseRepeat(id, repeatUntil);
+      const b = (req.body ?? {}) as { id?: unknown; repeatUntil?: unknown; scope?: unknown; category?: unknown; memo?: unknown };
+      if (typeof b.id !== 'string') return res.status(400).json({ ok: false, message: '요청이 올바르지 않습니다.' });
+      if ('scope' in b || 'category' in b || 'memo' in b) {
+        const pick = (v: unknown) => (typeof v === 'string' ? v : undefined);
+        const memo = b.memo === null ? null : pick(b.memo);
+        if (typeof memo === 'string' && memo.trim().length > 1000) return res.status(400).json({ ok: false, message: '메모는 1,000자까지 적을 수 있습니다.' });
+        try {
+          const result = await updateExpenseClassification(b.id, { scope: pick(b.scope), category: pick(b.category), memo }, auth.actor);
+          if (result === 'not_found') return res.status(404).json({ ok: false, message: '기록을 찾을 수 없습니다.' });
+          if (result === 'invalid') return res.status(400).json({ ok: false, message: '구분·항목을 다시 골라 주세요.' });
+          return res.status(200).json({ ok: true, unchanged: result === 'unchanged' });
+        } catch (error: unknown) {
+          if (isExpenseCheckViolation(error)) {
+            return res.status(503).json({ ok: false, message: '이 구분·항목은 아직 저장할 수 없어요(마이그레이션 0084 적용 전). 연습실·공통과 기존 항목은 저장됩니다.' });
+          }
+          throw error;
+        }
+      }
+      if (typeof b.repeatUntil !== 'string') return res.status(400).json({ ok: false, message: '요청이 올바르지 않습니다.' });
+      const ended = await endExpenseRepeat(b.id, b.repeatUntil);
       return ended ? res.status(200).json({ ok: true }) : res.status(404).json({ ok: false, message: '반복 지출을 찾을 수 없거나 날짜가 올바르지 않습니다.' });
     }
 

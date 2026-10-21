@@ -47,7 +47,7 @@ const seed = async (c: Client) => {
       sql: `INSERT INTO bookings (id, order_id, product_id, service_type, start_at, end_at, duration_hours, status) VALUES (?, ?, 'p', ?, ?, ?, 2, 'confirmed')`,
       args: [`b-${orderId}`, orderId, serviceType, EPOCH('2026-10-06T03:00:00Z'), EPOCH('2026-10-06T05:00:00Z')],
     });
-  for (const [id, type, total] of [['sp', 'session', 22000], ['sr', 'session', 110000], ['d1', 'deposit', 300000], ['d2', 'deposit', 500000], ['d3', 'deposit', 200000], ['d4', 'deposit', 90000], ['sub', 'subscription', 396000], ['art', 'subscription', 10000]] as const) {
+  for (const [id, type, total] of [['sp', 'session', 22000], ['sr', 'session', 110000], ['nb', 'session', 33000], ['d1', 'deposit', 300000], ['d2', 'deposit', 500000], ['d3', 'deposit', 200000], ['d4', 'deposit', 90000], ['sub', 'subscription', 396000], ['art', 'subscription', 10000], ['unk', 'subscription', 5000]] as const) {
     await order(id, type, total);
     await pay(id);
   }
@@ -57,8 +57,9 @@ const seed = async (c: Client) => {
     INSERT INTO payment_link_orders (order_no, slug, item_name) VALUES ('NO-d1', 'link-practice', '연습실 이용료'), ('NO-d2', 'link-production', '싱글 계약금'), ('NO-d3', 'link-plain', '녹음 3시간');
     INSERT INTO production_contract_payment_links (slug, contract_id, purpose, amount) VALUES ('link-production', 'pc1', 'deposit', 500000);
     INSERT INTO subscriptions (id, kind, customer_name, customer_phone, customer_email, customer_key, manage_token, item_amount, vat_amount, total_amount, billing_day, status)
-      VALUES ('s1','practice-room','x','-','a@b.c','sub_1','m1',360000,36000,396000,1,'active'), ('s2','artist-support','x','-','a@b.c','sub_2','m2',9091,909,10000,1,'active');
-    INSERT INTO subscription_payments (id, subscription_id, order_id, cycle_ym, attempt, amount, status) VALUES ('sp1','s1','sub','2026-10',1,396000,'paid'), ('sp2','s2','art','2026-10',1,10000,'paid');
+      VALUES ('s1','practice-room','x','-','a@b.c','sub_1','m1',360000,36000,396000,1,'active'), ('s2','artist-support','x','-','a@b.c','sub_2','m2',9091,909,10000,1,'active'),
+        ('s3','mystery-kind','x','-','a@b.c','sub_3','m3',4545,455,5000,1,'active');
+    INSERT INTO subscription_payments (id, subscription_id, order_id, cycle_ym, attempt, amount, status) VALUES ('sp1','s1','sub','2026-10',1,396000,'paid'), ('sp2','s2','art','2026-10',1,10000,'paid'), ('sp3','s3','unk','2026-10',1,5000,'paid');
     INSERT INTO manual_revenues (id, received_on, type, description, total_amount, vat_amount, method) VALUES ('m1', '2026-10-10', 'session', '현금 녹음', 50000, 0, '현금'), ('m2', '2026-10-11', 'other', '대관', 70000, 0, '현금');
     PRAGMA foreign_keys = ON;`);
 };
@@ -83,7 +84,10 @@ describe('마이그레이션 0084 적용 후', () => {
     expect(await saveLineAssignment('manual_revenue', 'm2', 'practice', 'admin')).toBe(true); // 덮어쓰기
     expect((await loadLineAssignments('manual_revenue', ['m1', 'm2'])).get('m2')).toBe('practice');
     expect(await loadPaymentLinkLines(['link-production', 'link-practice', 'link-plain'])).toEqual(
-      new Map([['link-production', { line: 'recording', fixed: true }], ['link-practice', { line: 'practice', fixed: false }]]),
+      new Map([
+        ['link-production', { line: 'recording', fixed: true, type: 'production' }],
+        ['link-practice', { line: 'practice', fixed: false, by: 'admin', at: expect.any(Number) }],
+      ]),
     );
 
     const rows = await loadRevenueRows(RANGE);
@@ -96,7 +100,12 @@ describe('마이그레이션 0084 적용 후', () => {
       'NO-d4': 'recording', // 링크 기록이 없는 옛 주문
       'NO-sub': 'practice', // 연습실 월 이용료 구독
       'NO-art': 'platform', // 아티스트 구독
+      'NO-nb': 'recording', // 예약 행이 없는 세션 주문 — 기본(녹음·제작)
+      'NO-unk': 'other', // 모르는 구독 종류 — 기타
     });
+    // 제작 계약 링크 결제는 유형도 계약 종류(음원 제작)로 옮긴다 — 유형별 표에서 '예약금'과 갈라지지 않게.
+    const types = Object.fromEntries(rows.map((r) => [r.orderNo, r.type]));
+    expect(types).toMatchObject({ 'NO-d1': 'deposit', 'NO-d2': 'production', 'NO-d3': 'deposit', 'NO-unk': 'subscription' });
     const manual = await loadManualRevenueRows(RANGE);
     expect(Object.fromEntries(manual.map((r) => [r.manualId, lineOfRow(r)]))).toEqual({ m1: 'recording', m2: 'practice' });
   });

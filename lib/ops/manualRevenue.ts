@@ -3,8 +3,9 @@ import { and, eq, isNull } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { manualRevenues, type ManualRevenue } from '../../db/schema';
 import { kstDateString } from '../booking/kst';
-import { parseBusinessLine, type BusinessLine } from './businessLine';
-import { loadLineAssignments } from './businessLineStore';
+import { BUSINESS_LINE_LABELS, lineOfType, parseBusinessLine, type BusinessLine } from './businessLine';
+import { clearLineAssignment, loadLineAssignments, saveLineAssignment } from './businessLineStore';
+import { DUPLICATE_ACK_MARKER } from './manualRevenueDuplicates';
 import { REVENUE_TYPE_LABELS, type RevenueRow } from './revenueReport';
 
 /**
@@ -105,6 +106,9 @@ export const createManualRevenue = async (input: ManualRevenueInput, actor: stri
   return row.id;
 };
 
+/** 메모 끝에 한 줄을 붙인다(1,000자 상한 — 넘으면 앞을 버린다). */
+const appendMemo = (memo: string | null, line: string): string => `${memo ? `${memo}\n` : ''}${line}`.slice(-1000);
+
 /**
  * 돌려준 누적 금액을 정한다(덮어쓰기). 총액을 넘으면 거절 — 'not_found'면 그 행이 없다.
  *
@@ -120,9 +124,41 @@ export const setManualRefund = async (id: string, refundedAmount: number, actor?
     actor && refundedAmount !== row.refundedAmount
       ? `[환불 ${row.refundedAmount.toLocaleString('ko-KR')}→${refundedAmount.toLocaleString('ko-KR')}원 · ${actor} · ${kstDateString(new Date())}]`
       : null;
-  const memo = trail ? `${row.memo ? `${row.memo}\n` : ''}${trail}`.slice(-1000) : row.memo;
+  const memo = trail ? appendMemo(row.memo, trail) : row.memo;
   await db.update(manualRevenues).set({ refundedAmount, memo }).where(and(eq(manualRevenues.id, id), isNull(manualRevenues.deletedAt)));
   return 'ok';
+};
+
+/**
+ * 분야를 바꾼다(`line = null`이면 지정을 지워 유형의 기본 분야로). 분야는 따로 둔 표(0084)에 있어 그 표가 없으면 'unavailable'.
+ * 바꾸기 전·후와 누가·언제를 메모 끝에 남긴다 — 분야 지정 표에는 이력 칸이 없다(businessLineStore.ts).
+ */
+export const setManualRevenueLine = async (id: string, line: BusinessLine | null, actor: string): Promise<'ok' | 'not_found' | 'unavailable' | 'unchanged'> => {
+  const db = getDb();
+  const row = await db.query.manualRevenues.findFirst({ where: and(eq(manualRevenues.id, id), isNull(manualRevenues.deletedAt)) });
+  if (!row) return 'not_found';
+  const assigned = (await loadLineAssignments('manual_revenue', [id])).get(id) ?? null;
+  const before = assigned ?? lineOfType(row.type);
+  const after = line ?? lineOfType(row.type);
+  if (assigned === line) return 'unchanged';
+  const saved = line === null ? await clearLineAssignment('manual_revenue', id) : await saveLineAssignment('manual_revenue', id, line, actor);
+  if (!saved) return 'unavailable';
+  if (before !== after) {
+    const trail = `[분야 변경 ${BUSINESS_LINE_LABELS[before]}→${BUSINESS_LINE_LABELS[after]}${line === null ? '(유형대로)' : ''} · ${actor} · ${kstDateString(new Date())}]`;
+    await db.update(manualRevenues).set({ memo: appendMemo(row.memo, trail) }).where(and(eq(manualRevenues.id, id), isNull(manualRevenues.deletedAt)));
+  }
+  return 'ok';
+};
+
+/** 중복 의심(manualRevenueDuplicates.ts)을 확인했다는 표시 — 메모에 `[중복 아님]`을 붙인다. 이미 있으면 그대로. */
+export const acknowledgeManualDuplicate = async (id: string, actor: string): Promise<boolean> => {
+  const db = getDb();
+  const row = await db.query.manualRevenues.findFirst({ where: and(eq(manualRevenues.id, id), isNull(manualRevenues.deletedAt)) });
+  if (!row) return false;
+  if (row.memo?.includes(DUPLICATE_ACK_MARKER)) return true;
+  await db.update(manualRevenues).set({ memo: appendMemo(row.memo, `${DUPLICATE_ACK_MARKER} ${actor} · ${kstDateString(new Date())}`) })
+    .where(and(eq(manualRevenues.id, id), isNull(manualRevenues.deletedAt)));
+  return true;
 };
 
 /**

@@ -1,5 +1,5 @@
 import { loadProductionRevenueRows } from './productionRevenue';
-import { kstYearMonth, loadRevenueRows, periodRange, previousPeriod, summarizeRevenue } from './revenueReport';
+import { kstYearMonth, loadRevenueRows, periodRange, previousPeriod, summarizeRevenue, type RevenueRow } from './revenueReport';
 import { loadManualRevenueRows } from './manualRevenue';
 import { loadTenancyRevenueRows } from './tenancyRevenue';
 import { loadLessonRevenueRows } from './lessonRevenue';
@@ -34,10 +34,45 @@ export interface RevenueSnapshot {
   tenancyMissing: boolean;
 }
 
-export const loadRevenueSnapshot = async (now: Date): Promise<RevenueSnapshot> => {
+/** 범위 — 지난달 1일부터 이번 달 끝까지(KST). loadRevenueSnapshot이 이만큼만 읽는다. */
+export const snapshotRange = (now: Date): { from: Date; toExclusive: Date } => {
   const { year, month } = kstYearMonth(now);
   const prev = previousPeriod(year, month) as { year: number; month: number };
-  const range = { from: periodRange(prev.year, prev.month).from, toExclusive: periodRange(year, month).toExclusive };
+  return { from: periodRange(prev.year, prev.month).from, toExclusive: periodRange(year, month).toExclusive };
+};
+
+/**
+ * 읽은 행·지출로 요약을 만든다(순수 함수). 매출 현황(`/admin/revenue`)과 같은 summarizeRevenue·computeBusinessPnl을 쓴다 —
+ * revenueSnapshot.test.ts가 같은 달의 두 숫자가 같은지 고정한다.
+ */
+export const buildRevenueSnapshot = (
+  rows: RevenueRow[],
+  expenses: ExpenseOccurrence[] | null,
+  meta: { year: number; month: number; manualMissing: boolean; tenancyMissing: boolean },
+): RevenueSnapshot => {
+  const { year, month } = meta;
+  const summary = summarizeRevenue(rows, { year, month });
+  const pnl = computeBusinessPnl(summary.byLine, expenses);
+  return {
+    year,
+    month,
+    net: summary.totals.net,
+    gross: summary.totals.gross,
+    refunded: summary.totals.refunded,
+    count: summary.totals.count,
+    previousNet: summary.previous.net,
+    changeRate: summary.changeRate,
+    manualMissing: meta.manualMissing,
+    lines: pnl.lines.map((l) => ({ line: l.line, label: l.label, net: l.revenue, expense: l.expense, profit: l.profit })),
+    commonExpense: pnl.commonExpense,
+    totalProfit: pnl.totalProfit,
+    tenancyMissing: meta.tenancyMissing,
+  };
+};
+
+export const loadRevenueSnapshot = async (now: Date): Promise<RevenueSnapshot> => {
+  const { year, month } = kstYearMonth(now);
+  const range = snapshotRange(now);
 
   const rows = await loadRevenueRows(range);
   // 제작·믹싱 계약의 입금 기록(결제 행이 없다 — productionRevenue.ts).
@@ -53,7 +88,7 @@ export const loadRevenueSnapshot = async (now: Date): Promise<RevenueSnapshot> =
   // 연습실 월 입주 수납 — 결제 행이 없어 위 조회에 안 잡힌다(tenancyRevenue.ts). 못 읽으면 그 사실을 알린다.
   let tenancyMissing = false;
   try {
-    rows.push(...(await loadTenancyRevenueRows(range)));
+    rows.push(...(await loadTenancyRevenueRows(range, now)));
   } catch (error: unknown) {
     console.error('[admin/dashboard] 월 입주 수입 조회 실패:', error);
     tenancyMissing = true;
@@ -66,27 +101,11 @@ export const loadRevenueSnapshot = async (now: Date): Promise<RevenueSnapshot> =
     console.error('[admin/dashboard] 레슨 수납 조회 실패(마이그레이션 0081 전일 수 있음):', error);
   }
 
-  const summary = summarizeRevenue(rows, { year, month });
   let expenses: ExpenseOccurrence[] | null = null;
   try {
-    expenses = await loadExpenseOccurrences(periodRange(year, month));
+    expenses = await loadExpenseOccurrences(periodRange(year, month), now);
   } catch (error: unknown) {
     console.error('[admin/dashboard] 지출 조회 실패(마이그레이션 0080 전일 수 있음):', error);
   }
-  const pnl = computeBusinessPnl(summary.byLine, expenses);
-  return {
-    year,
-    month,
-    net: summary.totals.net,
-    gross: summary.totals.gross,
-    refunded: summary.totals.refunded,
-    count: summary.totals.count,
-    previousNet: summary.previous.net,
-    changeRate: summary.changeRate,
-    manualMissing,
-    lines: pnl.lines.map((l) => ({ line: l.line, label: l.label, net: l.revenue, expense: l.expense, profit: l.profit })),
-    commonExpense: pnl.commonExpense,
-    totalProfit: pnl.totalProfit,
-    tenancyMissing,
-  };
+  return buildRevenueSnapshot(rows, expenses, { year, month, manualMissing, tenancyMissing });
 };

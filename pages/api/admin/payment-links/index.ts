@@ -3,19 +3,53 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { blockConflictsBody, findBlockConflicts } from '../../../../lib/booking/blockConflicts';
 import { closePaymentLink, createPaymentLink, validatePaymentLinkInput } from '../../../../lib/payments/paymentLinks';
-import { parseBusinessLine } from '../../../../lib/ops/businessLine';
-import { saveLineAssignment } from '../../../../lib/ops/businessLineStore';
+import { sql } from 'drizzle-orm';
+
+import { getDb } from '../../../../db/client';
+import { BUSINESS_LINE_LABELS, parseBusinessLine } from '../../../../lib/ops/businessLine';
+import { loadPaymentLinkLines, saveLineAssignment } from '../../../../lib/ops/businessLineStore';
+import { safeDbErrorSummary } from '../../../../lib/payments/dbErrorSummary';
 
 /**
- * 관리자 결제 링크 — `create`(새 링크, 즉시 열린다) · `close`(닫기, 되돌릴 수 없다). 규칙은 lib/payments/paymentLinks.ts.
+ * 관리자 결제 링크 — POST `create`(새 링크, 즉시 열린다) · `close`(닫기, 되돌릴 수 없다), PATCH(매출 분야 바꾸기). 규칙은 lib/payments/paymentLinks.ts.
  * 금액은 VAT 포함 총액이다. 발급한 링크의 금액을 고치는 액션은 없다(틀렸으면 닫고 새로 만든다).
+ *
+ * 분야 변경은 이미 받은 결제에도 소급된다(매출은 링크의 분야로 센다 — businessLineStore.ts). 제작·믹싱 계약 링크는 녹음·제작으로 고정이라 거절한다.
+ * 바꾼 사람·시각은 분야 지정 표의 `created_by`·`created_at`(마지막으로 정한 사람·시각)에 남고, 바꾸기 전 값은 서버 로그에 남긴다 —
+ * 링크 메모는 예약 목록·캘린더 일정에 그대로 실리므로 이력을 거기에 붙이지 않는다.
  */
+const changeLinkLine = async (req: NextApiRequest, res: NextApiResponse, actor: string) => {
+  const b = ((typeof req.body === 'object' && req.body) || {}) as Record<string, unknown>;
+  const slug = typeof b.slug === 'string' ? b.slug : '';
+  const line = parseBusinessLine(b.businessLine);
+  if (!slug || !line) return res.status(400).json({ ok: false, message: '링크와 분야를 다시 골라 주세요.' });
+  let exists = false;
+  try {
+    exists = (await getDb().all<{ slug: string }>(sql`SELECT slug FROM payment_links WHERE slug = ${slug}`)).length > 0;
+  } catch (error) {
+    console.error('[api/admin/payment-links] 링크 조회 실패:', safeDbErrorSummary(error));
+    return res.status(500).json({ ok: false, message: '링크를 찾지 못했어요. 결제 링크 표(마이그레이션 0060)를 확인해 주세요.' });
+  }
+  if (!exists) return res.status(404).json({ ok: false, message: '없는 링크예요(옛 파일 링크는 분야를 바꿀 수 없어요).' });
+  const current = (await loadPaymentLinkLines([slug])).get(slug);
+  if (current?.fixed) {
+    return res.status(409).json({ ok: false, message: '제작·믹싱 계약의 결제 링크라 분야가 녹음·제작으로 고정돼 있어요(계약 대금은 녹음·제작 매출입니다).' });
+  }
+  const before = current?.line ?? 'recording';
+  if (!(await saveLineAssignment('payment_link', slug, line, actor))) {
+    return res.status(503).json({ ok: false, message: '분야를 저장하지 못했어요(마이그레이션 0084 적용 전이거나 조회 오류).' });
+  }
+  console.warn(`[api/admin/payment-links] 분야 변경 ${slug}: ${BUSINESS_LINE_LABELS[before]}→${BUSINESS_LINE_LABELS[line]} (${actor})`);
+  return res.status(200).json({ ok: true, line, lineLabel: BUSINESS_LINE_LABELS[line], before });
+};
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
   const auth = await authenticateAdminApi(req, res);
   if (!auth.ok) return res.status(401).json({ ok: false, message: 'Unauthorized' });
+  if (req.method === 'PATCH') return changeLinkLine(req, res, auth.actor);
   if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
+    res.setHeader('Allow', 'POST, PATCH');
     return res.status(405).json({ ok: false });
   }
 
