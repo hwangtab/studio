@@ -1,8 +1,9 @@
-import { and, eq, gte, isNull } from 'drizzle-orm';
+import { and, eq, gte, isNull, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { studioExpenses, type StudioExpense } from '../../db/schema';
 import { kstDateString } from '../booking/kst';
+import { appendMemoLine, MEMO_CONFLICT, retryOnMemoConflict } from './memoTrail';
 
 /**
  * 지출 항목 — 임대료·청소비·공과금처럼 스튜디오가 쓴 돈(db/schema.ts `studioExpenses`, 마이그레이션 0080).
@@ -243,19 +244,26 @@ export const updateExpenseClassification = async (
   if (change.scope !== undefined && !(change.scope in EXPENSE_SCOPE_LABELS)) return 'invalid';
   if (change.category !== undefined && !(change.category in EXPENSE_CATEGORY_LABELS)) return 'invalid';
   const db = getDb();
-  const [row] = await db.select().from(studioExpenses).where(and(eq(studioExpenses.id, id), isNull(studioExpenses.deletedAt)));
-  if (!row) return 'not_found';
-  const scope = change.scope ?? row.scope;
-  const category = change.category ?? row.category;
-  const memoInput = change.memo === undefined ? row.memo : change.memo === null || change.memo.trim() === '' ? null : change.memo.trim().slice(0, 1000);
-  const notes: string[] = [];
-  if (scope !== row.scope) notes.push(`구분 ${EXPENSE_SCOPE_LABELS[row.scope]?.replace(/\(.*\)$/, '') ?? row.scope}→${EXPENSE_SCOPE_LABELS[scope].replace(/\(.*\)$/, '')}`);
-  if (category !== row.category) notes.push(`항목 ${EXPENSE_CATEGORY_LABELS[row.category] ?? row.category}→${EXPENSE_CATEGORY_LABELS[category]}`);
-  if (notes.length === 0 && memoInput === row.memo) return 'unchanged';
-  const trail = notes.length > 0 ? `[${notes.join(' · ')} · ${actor} · ${kstDateString(now)}]` : null;
-  const memo = trail ? `${memoInput ? `${memoInput}\n` : ''}${trail}`.slice(-1000) : memoInput;
-  await db.update(studioExpenses)
-    .set({ scope: scope as StudioExpense['scope'], category: category as StudioExpense['category'], memo })
-    .where(and(eq(studioExpenses.id, id), isNull(studioExpenses.deletedAt)));
-  return 'ok';
+  return retryOnMemoConflict<'ok' | 'not_found' | 'invalid' | 'unchanged'>(async () => {
+    const [row] = await db.select().from(studioExpenses).where(and(eq(studioExpenses.id, id), isNull(studioExpenses.deletedAt)));
+    if (!row) return 'not_found';
+    const scope = change.scope ?? row.scope;
+    const category = change.category ?? row.category;
+    const memoInput = change.memo === undefined ? row.memo : change.memo === null || change.memo.trim() === '' ? null : change.memo.trim().slice(0, 1000);
+    const notes: string[] = [];
+    if (scope !== row.scope) notes.push(`구분 ${EXPENSE_SCOPE_LABELS[row.scope]?.replace(/\(.*\)$/, '') ?? row.scope}→${EXPENSE_SCOPE_LABELS[scope].replace(/\(.*\)$/, '')}`);
+    if (category !== row.category) notes.push(`항목 ${EXPENSE_CATEGORY_LABELS[row.category] ?? row.category}→${EXPENSE_CATEGORY_LABELS[category]}`);
+    if (notes.length === 0 && memoInput === row.memo) return 'unchanged';
+    const trail = notes.length > 0 ? `[${notes.join(' · ')} · ${actor} · ${kstDateString(now)}]` : null;
+    const memo = trail ? appendMemoLine(memoInput, trail) : memoInput;
+    // 읽은 값 그대로일 때만 쓴다 — 그 사이 다른 요청이 구분·항목·메모를 바꿨으면 0행이고, 다시 읽어 계산한다(그 요청의 기록 줄을 덮어쓰지 않게).
+    const updated = await db.update(studioExpenses)
+      .set({ scope: scope as StudioExpense['scope'], category: category as StudioExpense['category'], memo })
+      .where(and(
+        eq(studioExpenses.id, id), isNull(studioExpenses.deletedAt),
+        eq(studioExpenses.scope, row.scope), eq(studioExpenses.category, row.category), sql`${studioExpenses.memo} IS ${row.memo}`,
+      ))
+      .returning({ id: studioExpenses.id });
+    return updated.length > 0 ? 'ok' : MEMO_CONFLICT;
+  });
 };

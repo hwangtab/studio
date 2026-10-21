@@ -75,6 +75,10 @@ export const ManualRevenuePanel = ({ today, types, methods, entries, periodLabel
   const [businessLine, setBusinessLine] = useState('');
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ tone: 'success' | 'error'; text: string } | null>(null);
+  /** 요청이 진행 중인 행 id — 그 행의 분야 선택·버튼을 잠근다(같은 행에 요청이 겹치지 않게). */
+  const [busyRows, setBusyRows] = useState<ReadonlySet<string>>(new Set());
+  /** 행마다 마지막 실패 사유 — 그 행 아래에 보인다. */
+  const [rowErrors, setRowErrors] = useState<Record<string, string>>({});
 
   const refresh = () => router.replace(router.asPath);
 
@@ -103,38 +107,52 @@ export const ManualRevenuePanel = ({ today, types, methods, entries, periodLabel
     await refresh();
   };
 
+  /** 한 행에 대한 요청을 감싼다 — 진행 중이면 잠그고, 실패하면 그 행 아래에 사유를 보인다. 성공하면 위쪽 안내에 `success`를 띄우고 다시 읽는다. */
+  const runRow = async (id: string, request: () => Promise<{ ok: boolean; message?: string }>, success: string, failure: string) => {
+    if (busyRows.has(id)) return;
+    setBusyRows((prev) => new Set(prev).add(id));
+    setRowErrors((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+    try {
+      const result = await request();
+      if (!result.ok) {
+        setRowErrors((prev) => ({ ...prev, [id]: result.message ?? failure }));
+        return;
+      }
+      setMessage({ tone: 'success', text: success });
+      await refresh();
+    } finally {
+      setBusyRows((prev) => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
+    }
+  };
+
   const setRefund = async (entry: ManualRevenueView) => {
     const input = window.prompt(`돌려준 금액(누적, 원) — 받은 금액 ${won(entry.totalAmount)} 이하`, String(entry.refundedAmount));
     if (input === null) return;
-    const result = await call('PATCH', { id: entry.id, refundedAmount: Number(input.replace(/,/g, '')) });
-    if (!result.ok) return setMessage({ tone: 'error', text: result.message ?? '처리하지 못했습니다.' });
-    setMessage({ tone: 'success', text: '환불 금액을 고쳤습니다.' });
-    await refresh();
+    await runRow(entry.id, () => call('PATCH', { id: entry.id, refundedAmount: Number(input.replace(/,/g, '')) }), '환불 금액을 고쳤습니다.', '처리하지 못했습니다.');
   };
 
   const changeLine = async (entry: ManualRevenueView, next: string) => {
     const label = next === '' ? `유형대로(${BUSINESS_LINE_LABELS[lineOfType(entry.typeKey ?? 'other')]})` : BUSINESS_LINE_LABELS[next as BusinessLine];
     if (!window.confirm(`"${entry.description}"의 분야를 ${label}(으)로 바꿀까요? 바꾼 사람·날짜가 메모에 남습니다.`)) return;
-    const result = await call('PATCH', { id: entry.id, businessLine: next });
-    if (!result.ok) return setMessage({ tone: 'error', text: result.message ?? '분야를 바꾸지 못했습니다.' });
-    setMessage({ tone: 'success', text: `분야를 ${label}(으)로 바꿨습니다.` });
-    await refresh();
+    await runRow(entry.id, () => call('PATCH', { id: entry.id, businessLine: next }), `분야를 ${label}(으)로 바꿨습니다.`, '분야를 바꾸지 못했습니다.');
   };
 
   const ackDuplicate = async (entry: ManualRevenueView) => {
     if (!window.confirm(`"${entry.description}"은(는) ${entry.duplicateOf}와 다른 거래가 맞나요? 메모에 [중복 아님]을 남기고 더 묻지 않습니다.`)) return;
-    const result = await call('PATCH', { id: entry.id, action: 'ackDuplicate' });
-    if (!result.ok) return setMessage({ tone: 'error', text: result.message ?? '처리하지 못했습니다.' });
-    setMessage({ tone: 'success', text: '중복 아님으로 표시했습니다.' });
-    await refresh();
+    await runRow(entry.id, () => call('PATCH', { id: entry.id, action: 'ackDuplicate' }), '중복 아님으로 표시했습니다.', '처리하지 못했습니다.');
   };
 
   const remove = async (entry: ManualRevenueView) => {
     if (!window.confirm(`"${entry.description}" ${won(entry.totalAmount)} 기록을 지울까요? 매출에서 빠지고, 누가 지웠는지는 기록됩니다.`)) return;
-    const result = await call('DELETE', { id: entry.id });
-    if (!result.ok) return setMessage({ tone: 'error', text: result.message ?? '지우지 못했습니다.' });
-    setMessage({ tone: 'success', text: '기록을 지웠습니다.' });
-    await refresh();
+    await runRow(entry.id, () => call('DELETE', { id: entry.id }), '기록을 지웠습니다.', '지우지 못했습니다.');
   };
 
   return (
@@ -192,7 +210,13 @@ export const ManualRevenuePanel = ({ today, types, methods, entries, periodLabel
           <Field
             id="mr-line"
             label="분야"
-            hint={type === 'session' ? '연습실 시간제면 분야를 연습실로 고르세요 · 비우면 유형으로 정해요' : '비우면 유형으로 정해요'}
+            hint={
+              businessLine === 'practice'
+                ? '연습실 월 입주 이용료는 자동으로 매출에 잡혀요 — 시간제·기타 수입만 적으세요'
+                : type === 'session'
+                  ? '연습실 시간제면 분야를 연습실로 고르세요 · 비우면 유형으로 정해요'
+                  : '비우면 유형으로 정해요'
+            }
             className={`md:col-span-2 ${lightOnlyField}`}>
             <Select value={businessLine} onChange={(e) => setBusinessLine(e.target.value)} light>
               <option value="">유형대로 ({BUSINESS_LINE_LABELS[lineOfType(type)]})</option>
@@ -238,9 +262,14 @@ export const ManualRevenuePanel = ({ today, types, methods, entries, periodLabel
                 {entry.duplicateOf && (
                   <p className="mt-1 text-xs font-medium text-amber-800">
                     중복 의심: {entry.duplicateOf}{' '}
-                    <button type="button" onClick={() => ackDuplicate(entry)} className="ml-1 text-primary underline">
+                    <button type="button" onClick={() => ackDuplicate(entry)} disabled={busyRows.has(entry.id)} className="ml-1 text-primary underline disabled:cursor-not-allowed disabled:opacity-50">
                       중복 아님
                     </button>
+                  </p>
+                )}
+                {rowErrors[entry.id] && (
+                  <p role="alert" className="mt-1 text-xs font-medium text-red-700">
+                    {rowErrors[entry.id]}
                   </p>
                 )}
               </div>
@@ -250,7 +279,8 @@ export const ManualRevenuePanel = ({ today, types, methods, entries, periodLabel
                     aria-label={`${entry.description} 분야`}
                     value={entry.assignedLine ?? ''}
                     onChange={(e) => changeLine(entry, e.target.value)}
-                    className="rounded-lg border border-gray-300 bg-white px-2 py-1 text-xs text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
+                    disabled={busyRows.has(entry.id)}
+                    className="rounded-lg disabled:cursor-not-allowed disabled:opacity-50 border border-gray-300 bg-white px-2 py-1 text-xs text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
                   >
                     <option value="">유형대로 ({BUSINESS_LINE_LABELS[lineOfType(entry.typeKey)]})</option>
                     {BUSINESS_LINES.map((line) => (
@@ -264,10 +294,10 @@ export const ManualRevenuePanel = ({ today, types, methods, entries, periodLabel
                   {won(entry.totalAmount)}
                   {entry.refundedAmount > 0 && <span className="text-red-700"> (환불 -{won(entry.refundedAmount)})</span>}
                 </span>
-                <button type="button" onClick={() => setRefund(entry)} className="text-xs text-primary hover:underline">
+                <button type="button" onClick={() => setRefund(entry)} disabled={busyRows.has(entry.id)} className="text-xs text-primary hover:underline disabled:cursor-not-allowed disabled:opacity-50">
                   환불 기록
                 </button>
-                <button type="button" onClick={() => remove(entry)} className="text-xs text-red-700 hover:underline">
+                <button type="button" onClick={() => remove(entry)} disabled={busyRows.has(entry.id)} className="text-xs text-red-700 hover:underline disabled:cursor-not-allowed disabled:opacity-50">
                   삭제
                 </button>
               </div>
