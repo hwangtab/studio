@@ -1,4 +1,4 @@
-import { expandExpenses, parseExpenseInput, summarizeExpenses, type ExpenseOccurrence } from './expenses';
+import { EXPENSE_SCOPE_LABELS, expandExpenses, isExpenseCheckViolation, parseExpenseInput, summarizeExpenses, type ExpenseOccurrence } from './expenses';
 
 const row = (over: Partial<Parameters<typeof expandExpenses>[0][number]> & { id: string; spentOn: string }) => ({
   category: 'rent', scope: 'practice', description: '임대료', amount: 1_000_000, repeatMonthly: false, repeatUntil: null as string | null, ...over,
@@ -36,13 +36,43 @@ describe('summarizeExpenses', () => {
       { expenseId: 'b', on: '2026-10-05', category: 'cleaning', scope: 'practice', description: '', amount: 50_000, repeat: false },
       { expenseId: 'c', on: '2026-10-06', category: 'supplies', scope: 'studio', description: '', amount: 30_000, repeat: false },
     ];
-    expect(summarizeExpenses(occ, 'practice')).toEqual({ total: 1_050_000, byCategory: [{ category: 'rent', label: '임대료', amount: 1_000_000 }, { category: 'cleaning', label: '청소비', amount: 50_000 }] });
+    expect(summarizeExpenses(occ, 'practice')).toEqual({ total: 1_050_000, byCategory: [{ category: 'rent', label: '임대료', amount: 1_000_000 }, { category: 'cleaning', label: '청소비', amount: 50_000 }], nonOperatingTotal: 0 });
     expect(summarizeExpenses(occ).total).toBe(1_080_000);
+  });
+
+  it('대출 원금 상환은 손익 합계에서 빼고 따로 모은다', () => {
+    const occ: ExpenseOccurrence[] = [
+      { expenseId: 'a', on: '2026-10-01', category: 'rent', scope: 'studio', description: '', amount: 2_000_000, repeat: true },
+      { expenseId: 'b', on: '2026-10-10', category: 'loan_principal', scope: 'studio', description: '', amount: 400_000, repeat: true },
+      { expenseId: 'c', on: '2026-10-10', category: 'utilities', scope: 'recording', description: '', amount: 80_000, repeat: false },
+    ];
+    expect(summarizeExpenses(occ, 'studio')).toMatchObject({ total: 2_000_000, nonOperatingTotal: 400_000 });
+    expect(summarizeExpenses(occ, 'studio').byCategory.map((c) => c.category)).toEqual(['rent']);
+    expect(summarizeExpenses(occ, 'recording')).toMatchObject({ total: 80_000, nonOperatingTotal: 0 });
+    expect(summarizeExpenses(occ)).toMatchObject({ total: 2_080_000, nonOperatingTotal: 400_000 });
+  });
+});
+
+describe('isExpenseCheckViolation', () => {
+  it('0084 전 CHECK 위반(메시지·원인 코드)을 알아본다', () => {
+    expect(isExpenseCheckViolation(new Error('CHECK constraint failed: studio_expenses_scope_check'))).toBe(true);
+    const wrapped = Object.assign(new Error('Failed query: insert ...'), { cause: Object.assign(new Error('x'), { code: 'SQLITE_CONSTRAINT_CHECK' }) });
+    expect(isExpenseCheckViolation(wrapped)).toBe(true);
+    expect(isExpenseCheckViolation(new Error('no such table: studio_expenses'))).toBe(false);
   });
 });
 
 describe('parseExpenseInput', () => {
   const ok = { spentOn: '2026-10-05', category: 'rent', scope: 'practice', description: '10월 임대료', amount: 1000000 };
+  it('새 구분(녹음·제작·플랫폼·공통)과 대출 원금 항목을 받고, 모르는 구분은 거절한다', () => {
+    for (const scope of ['practice', 'recording', 'platform', 'studio']) {
+      expect(parseExpenseInput({ ...ok, scope }, '2026-10-21')).toMatchObject({ ok: true, value: { scope } });
+    }
+    expect(parseExpenseInput({ ...ok, category: 'loan_principal' }, '2026-10-21')).toMatchObject({ ok: true, value: { category: 'loan_principal' } });
+    expect(parseExpenseInput({ ...ok, scope: 'common' }, '2026-10-21').ok).toBe(false);
+    expect(parseExpenseInput({ ...ok, scope: 'other' }, '2026-10-21').ok).toBe(false);
+    expect(EXPENSE_SCOPE_LABELS.studio).toMatch(/^공통/);
+  });
   it('정상 입력을 받는다', () => {
     expect(parseExpenseInput(ok, '2026-10-21')).toMatchObject({ ok: true, value: { amount: 1000000, repeatMonthly: false, repeatUntil: null } });
     expect(parseExpenseInput({ ...ok, repeatMonthly: true, repeatUntil: '2027-03-31' }, '2026-10-21')).toMatchObject({ ok: true, value: { repeatMonthly: true, repeatUntil: '2027-03-31' } });

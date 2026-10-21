@@ -7,7 +7,7 @@ const parse = (over: Record<string, unknown> = {}) => parseManualRevenueInput({ 
 it('정상 입력은 다듬어서 통과한다', () => {
   expect(parse()).toEqual({
     ok: true,
-    value: { receivedOn: '2026-10-10', type: 'session', description: '녹음 3시간', totalAmount: 275000, vatMode: 'included', method: '계좌 입금', memo: null },
+    value: { receivedOn: '2026-10-10', type: 'session', description: '녹음 3시간', totalAmount: 275000, vatMode: 'included', method: '계좌 입금', memo: null, businessLine: null },
   });
 });
 
@@ -23,8 +23,14 @@ it.each([
   ['자릿수 실수', { totalAmount: 1_000_000_000 }],
   ['부가세 구분 없음', { vatMode: 'x' }],
   ['모르는 방법', { method: '카드' }],
+  ['모르는 분야', { businessLine: 'studio' }],
 ])('거절: %s', (_name, over) => {
   expect(parse(over).ok).toBe(false);
+});
+
+it('분야는 고르면 그대로, 비우면 null(유형의 기본 분야)', () => {
+  expect(parse({ businessLine: 'practice' })).toMatchObject({ ok: true, value: { businessLine: 'practice' } });
+  expect(parse({ businessLine: '' })).toMatchObject({ ok: true, value: { businessLine: null } });
 });
 
 it('부가세는 총액/11 반올림, 면세는 0', () => {

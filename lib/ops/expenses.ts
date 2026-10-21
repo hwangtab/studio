@@ -6,7 +6,7 @@ import { kstDateString } from '../booking/kst';
 
 /**
  * 지출 항목 — 임대료·청소비·공과금처럼 스튜디오가 쓴 돈(db/schema.ts `studioExpenses`, 마이그레이션 0080).
- * 매출 현황의 **연습실 손익**(월 입주 수입 − 연습실 지출)이 읽는다. 주문·결제와 연결하지 않는다(수기 매출과 같다).
+ * 매출 현황의 **분야별 매출·수익**(분야 매출 − 그 분야 지출, 공통 지출은 전체 수익에서만 뺀다 — businessLinePnl.ts)이 읽는다. 주문·결제와 연결하지 않는다(수기 매출과 같다).
  *
  * 반복(`repeatMonthly`)은 쓴 날의 달부터 `repeatUntil`이 속한 달까지(없으면 계속) **매달 같은 금액**이 나간 것으로 센다 — 임대료를 매달 적지 않게.
  * 그 달에 없는 날(31일)은 말일로 보정한다. 표가 없는 DB(0080 전)에서는 읽기가 던진다 — 호출부가 잡아 "지출 표 미적용"으로 알린다
@@ -20,12 +20,27 @@ export const EXPENSE_CATEGORY_LABELS: Record<string, string> = {
   maintenance: '수선·관리',
   supplies: '소모품',
   other: '기타',
+  // 손익에 넣지 않는 지출(현금은 나가지만 비용이 아니다) — 대출 원금. 이자는 비용이라 '기타' 등으로 따로 적는다.
+  loan_principal: '대출 원금 상환',
 };
 
+/** 손익(수익 계산)에서 빼는 항목 — 매출 현황에 "손익에 넣지 않는 지출"로 따로 보인다(마이그레이션 0084). */
+export const NON_OPERATING_EXPENSE_CATEGORIES: readonly string[] = ['loan_principal'];
+export const isNonOperatingCategory = (category: string): boolean => NON_OPERATING_EXPENSE_CATEGORIES.includes(category);
+
+/**
+ * 구분 = 지출이 속한 사업 분야(lib/ops/businessLine.ts). 저장값 'studio'는 예전 "스튜디오 전체"를 데이터 이전 없이 **공통**으로 이름만 바꾼 것이다.
+ * 'recording'·'platform'은 마이그레이션 0084의 CHECK가 받아 준다 — 그 전에는 저장이 실패한다(API가 알린다).
+ */
 export const EXPENSE_SCOPE_LABELS: Record<string, string> = {
   practice: '연습실',
-  studio: '스튜디오 전체',
+  recording: '녹음·제작',
+  platform: '플랫폼',
+  studio: '공통(분야 나누기 어려운 비용)',
 };
+
+/** 마이그레이션 0084 전 DB의 CHECK가 받지 않는 값. */
+export const EXPENSE_VALUES_NEEDING_0084 = { categories: ['loan_principal'], scopes: ['recording', 'platform'] } as const;
 
 /** 한 건 상한 — 자릿수 실수를 걸러내는 안전판이지 사업 한도가 아니다. */
 export const EXPENSE_MAX_AMOUNT = 100_000_000;
@@ -62,7 +77,7 @@ export const parseExpenseInput = (raw: unknown, today: string): Parsed => {
   const category = typeof b.category === 'string' ? b.category : '';
   if (!(category in EXPENSE_CATEGORY_LABELS)) return { ok: false, message: '항목을 골라 주세요.' };
   const scope = typeof b.scope === 'string' ? b.scope : 'practice';
-  if (!(scope in EXPENSE_SCOPE_LABELS)) return { ok: false, message: '구분(연습실·스튜디오 전체)을 골라 주세요.' };
+  if (!(scope in EXPENSE_SCOPE_LABELS)) return { ok: false, message: '구분(연습실·녹음·제작·플랫폼·공통)을 골라 주세요.' };
   const description = typeof b.description === 'string' ? b.description.trim() : '';
   if (description === '') return { ok: false, message: '내용을 적어 주세요. (예: 10월 임대료)' };
   if (description.length > 100) return { ok: false, message: '내용은 100자까지 적을 수 있습니다.' };
@@ -138,15 +153,24 @@ export const loadExpenseOccurrences = async (range: { from: Date; toExclusive: D
   expandExpenses(await loadExpenseRows(), kstDateString(range.from), kstDateString(range.toExclusive));
 
 export interface ExpenseSummary {
+  /** 손익에 넣는 지출 합(대출 원금 같은 손익 밖 지출은 뺀다). */
   total: number;
+  /** 손익에 넣는 지출의 항목별. */
   byCategory: Array<{ category: string; label: string; amount: number }>;
+  /** 손익에 넣지 않는 지출(대출 원금 등) 합 — 현금 흐름 참고용. */
+  nonOperatingTotal: number;
 }
 
 export const summarizeExpenses = (occurrences: readonly ExpenseOccurrence[], scope?: string): ExpenseSummary => {
   const byCategory = new Map<string, number>();
   let total = 0;
+  let nonOperatingTotal = 0;
   for (const o of occurrences) {
     if (scope && o.scope !== scope) continue;
+    if (isNonOperatingCategory(o.category)) {
+      nonOperatingTotal += o.amount;
+      continue;
+    }
     total += o.amount;
     byCategory.set(o.category, (byCategory.get(o.category) ?? 0) + o.amount);
   }
@@ -155,7 +179,15 @@ export const summarizeExpenses = (occurrences: readonly ExpenseOccurrence[], sco
     byCategory: [...byCategory.entries()]
       .map(([category, amount]) => ({ category, label: EXPENSE_CATEGORY_LABELS[category] ?? category, amount }))
       .sort((a, b) => b.amount - a.amount),
+    nonOperatingTotal,
   };
+};
+
+/** 마이그레이션 0084 전 DB에서 새 구분·항목을 저장하려다 CHECK에 걸린 오류인가. */
+export const isExpenseCheckViolation = (error: unknown): boolean => {
+  const text = (e: unknown): string => (e instanceof Error ? `${e.message} ${(e as { code?: unknown }).code ?? ''}` : '');
+  const all = `${text(error)} ${text((error as { cause?: unknown } | null)?.cause)}`;
+  return /CHECK constraint failed|SQLITE_CONSTRAINT_CHECK/i.test(all);
 };
 
 export const createExpense = async (input: ExpenseInput, actor: string): Promise<string> => {

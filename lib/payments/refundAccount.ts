@@ -68,15 +68,9 @@ export const holderMatchesCustomer = (holder: string, customerName: string): boo
  * 계좌번호 암호문·예금주가 그대로 서버 로그에 남는다(lib/crypto/CLAUDE.md "평문·암호문을 로그에
  * 넣지 않는다"). 메시지 본문은 버리고 SQLite 코드(예: SQLITE_ERROR)만 남긴다.
  */
-export const safeDbErrorSummary = (error: unknown): { name: string; code?: string } => {
-  if (!(error instanceof Error)) return { name: 'unknown' };
-  const pick = (e: unknown): string | undefined => {
-    const c = (e as { code?: unknown } | null)?.code;
-    return typeof c === 'string' ? c : undefined;
-  };
-  const code = pick(error) ?? pick((error as { cause?: unknown }).cause);
-  return code ? { name: error.name, code } : { name: error.name };
-};
+import { safeDbErrorSummary } from './dbErrorSummary';
+
+export { safeDbErrorSummary };
 
 /** 주문 하나를 가리키는 키. */
 export interface RefundAccountKey {

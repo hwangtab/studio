@@ -11,10 +11,10 @@ import { Notice } from '../../components/ui/Notice';
 import { lightOnlyField } from '../../components/ui/adminFieldClass';
 import { kstDateString } from '../../lib/booking/kst';
 import { authenticateAdminRequest } from '../../lib/contracts/admin-auth';
-import { EXPENSE_CATEGORY_LABELS, EXPENSE_SCOPE_LABELS, loadExpenseRows } from '../../lib/ops/expenses';
+import { EXPENSE_CATEGORY_LABELS, EXPENSE_SCOPE_LABELS, expandExpenses, isNonOperatingCategory, loadExpenseRows, summarizeExpenses } from '../../lib/ops/expenses';
 
 /**
- * 지출 관리 — 임대료·청소비·공과금 같은 스튜디오 지출을 적는다. 매출 현황의 "연습실 손익"(월 입주 수입 − 연습실 지출)이 읽는다.
+ * 지출 관리 — 임대료·청소비·공과금 같은 스튜디오 지출을 적는다. 매출 현황의 "분야별 매출·수익"(분야 매출 − 그 분야 지출, 공통 지출은 전체에서만)이 읽는다.
  * 임대료처럼 매달 같은 금액이면 "매달 반복"으로 한 번만 적는다. 규칙은 lib/ops/expenses.ts.
  */
 
@@ -30,8 +30,20 @@ interface ExpenseView {
   memo: string | null;
 }
 
+interface MonthScopeTotal {
+  scope: string;
+  label: string;
+  /** 손익에 넣는 지출. */
+  total: number;
+  /** 손익에 넣지 않는 지출(대출 원금 등). */
+  nonOperating: number;
+}
+
 interface Props {
   expenses: ExpenseView[];
+  /** 이번 달(KST) 구분별 합계. */
+  monthLabel?: string;
+  monthTotals?: MonthScopeTotal[];
   today: string;
   /** 표를 못 읽은 사유(마이그레이션 0080 전). */
   unavailable: string | null;
@@ -47,7 +59,15 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
       .map((r) => ({ id: r.id, spentOn: r.spentOn, category: r.category, scope: r.scope, description: r.description, amount: r.amount, repeatMonthly: r.repeatMonthly, repeatUntil: r.repeatUntil, memo: r.memo }))
       .sort((a, b) => b.spentOn.localeCompare(a.spentOn))
       .slice(0, 300);
-    return { props: { expenses, today, unavailable: null } };
+    const monthKey = today.slice(0, 7);
+    const [y, m] = monthKey.split('-').map(Number);
+    const nextMonth = m === 12 ? `${y + 1}-01-01` : `${y}-${String(m + 1).padStart(2, '0')}-01`;
+    const occurrences = expandExpenses(rows, `${monthKey}-01`, nextMonth);
+    const monthTotals = Object.entries(EXPENSE_SCOPE_LABELS).map(([scope, label]) => {
+      const summary = summarizeExpenses(occurrences, scope);
+      return { scope, label, total: summary.total, nonOperating: summary.nonOperatingTotal };
+    });
+    return { props: { expenses, today, unavailable: null, monthLabel: `${m}월`, monthTotals } };
   } catch (error: unknown) {
     console.error('[admin/expenses] 조회 실패:', error);
     return { props: { expenses: [], today, unavailable: '지출 표를 읽지 못했습니다(마이그레이션 0080 적용 전이거나 조회 오류).' } };
@@ -71,7 +91,7 @@ const call = async (method: 'POST' | 'PATCH' | 'DELETE', body: unknown): Promise
   }
 };
 
-export default function AdminExpensesPage({ expenses, today, unavailable }: Props) {
+export default function AdminExpensesPage({ expenses, today, unavailable, monthLabel, monthTotals = [] }: Props) {
   const router = useRouter();
   const [spentOn, setSpentOn] = useState(today);
   const [category, setCategory] = useState('rent');
@@ -98,7 +118,7 @@ export default function AdminExpensesPage({ expenses, today, unavailable }: Prop
     setDescription('');
     setAmount('');
     setMemo('');
-    setNotice('지출을 적었어요. 매출 현황의 연습실 손익에 바로 반영됩니다.');
+    setNotice(isNonOperatingCategory(category) ? '적었어요. 대출 원금은 수익에서 빼지 않고 매출 현황의 “손익에 넣지 않는 지출”에 따로 보입니다.' : '지출을 적었어요. 매출 현황의 분야별 수익에 바로 반영됩니다.');
     await refresh();
   };
 
@@ -128,7 +148,7 @@ export default function AdminExpensesPage({ expenses, today, unavailable }: Prop
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <AdminShell title="지출 관리" description="임대료·청소비 같은 지출을 적으면 매출 현황의 연습실 손익에서 월 입주 수입에서 빠집니다." width="wide">
+      <AdminShell title="지출 관리" description="임대료·청소비 같은 지출을 적으면 매출 현황의 분야별 수익(매출 − 지출)에서 빠집니다." width="wide">
         {unavailable && <Notice tone="warning" light>{unavailable}</Notice>}
         {notice && <Notice tone="info" light>{notice}</Notice>}
 
@@ -162,13 +182,31 @@ export default function AdminExpensesPage({ expenses, today, unavailable }: Prop
           <div className="mt-4">
             <Button light disabled={busy || unavailable !== null || description.trim() === '' || amount.trim() === ''} onClick={submit}>{busy ? '저장 중…' : '지출 적기'}</Button>
           </div>
-          <p className="mt-2 text-xs text-gray-500">구분이 “연습실”이면 연습실 손익에서 빠지고, “스튜디오 전체”는 손익에 넣지 않고 참고로만 보입니다. 잘못 적었으면 지우고 다시 적어 주세요.</p>
+          <p className="mt-2 text-xs text-gray-500">
+            구분이 연습실·녹음·제작·플랫폼이면 그 분야의 수익에서 빠지고, “공통”은 어느 분야에도 나누지 않고 전체 수익에서만 빠집니다.
+            항목이 “대출 원금 상환”이면 수익에서 빼지 않고 현금 흐름 참고로만 보입니다(이자는 비용이라 다른 항목으로 적어 주세요). 잘못 적었으면 지우고 다시 적어 주세요.
+          </p>
         </section>
+
+        {monthTotals.length > 0 && (
+          <section className="mt-6 rounded-2xl bg-white p-4 shadow-sm md:p-6">
+            <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-gray-900">{monthLabel} 구분별 지출</h2>
+            <dl className="grid grid-cols-2 gap-3 text-sm md:grid-cols-4">
+              {monthTotals.map((t) => (
+                <div key={t.scope} className="rounded-xl border border-gray-200 p-3">
+                  <dt className="text-gray-500">{t.label}</dt>
+                  <dd className="mt-0.5 font-semibold tabular-nums text-gray-900">{won(t.total)}</dd>
+                  {t.nonOperating > 0 && <dd className="mt-0.5 text-xs text-gray-500">손익 밖 {won(t.nonOperating)} 별도</dd>}
+                </div>
+              ))}
+            </dl>
+          </section>
+        )}
 
         <section className="mt-6 rounded-2xl bg-white p-4 shadow-sm md:p-6">
           <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
             <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900">적은 지출</h2>
-            <Link href="/admin/revenue" className="text-sm font-medium text-primary hover:underline">매출 현황(연습실 손익) →</Link>
+            <Link href="/admin/revenue" className="text-sm font-medium text-primary hover:underline">매출 현황(분야별 수익) →</Link>
           </div>
           {expenses.length === 0 ? (
             <p className="text-sm text-gray-600">아직 적은 지출이 없습니다.</p>

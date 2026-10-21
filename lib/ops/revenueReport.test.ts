@@ -78,6 +78,29 @@ describe('summarizeRevenue', () => {
     expect(s.byGroup.find((g) => g.group === 'brokered')?.totals.net).toBe(30000);
   });
 
+  it('분야별 합계는 필터와 무관하게 전체 분야를, 분야 필터는 나머지(유형별 표 포함)를 그 분야로 좁힌다', () => {
+    const lined = [
+      ...rows,
+      row({ at: '2026-09-13T03:00:00Z', type: 'tenancy', gross: 360000, vat: 0 }),
+      row({ at: '2026-09-14T03:00:00Z', type: 'session', line: 'practice', gross: 20000, vat: 1818 }),
+      row({ at: '2026-09-15T03:00:00Z', type: 'deposit', line: 'practice', gross: 50000, vat: 4545 }),
+      row({ at: '2026-09-16T03:00:00Z', type: 'lesson', gross: 385000, vat: 35000 }),
+    ];
+    const all = summarizeRevenue(lined, { year: 2026, month: 9 });
+    expect(all.byLine.map((l) => [l.line, l.totals.net])).toEqual([['practice', 430000], ['recording', 100000], ['platform', 30000], ['other', 385000]]);
+    expect(all.line).toBeNull();
+    const practice = summarizeRevenue(lined, { year: 2026, month: 9, line: 'practice' });
+    expect(practice.line).toBe('practice');
+    expect(practice.totals.net).toBe(430000);
+    expect(practice.byType.map((l) => l.key).sort()).toEqual(['deposit', 'session', 'tenancy']);
+    expect(practice.byLine.map((l) => l.totals.net)).toEqual(all.byLine.map((l) => l.totals.net));
+    expect(practice.entries).toHaveLength(3);
+    // 분야 + 유형을 함께 걸면 둘 다 만족하는 행만.
+    expect(summarizeRevenue(lined, { year: 2026, month: 9, line: 'practice', type: 'session' }).totals.net).toBe(20000);
+    // 모르는 분야 필터는 무시한다.
+    expect(summarizeRevenue(lined, { year: 2026, month: 9, line: 'studio' }).totals.net).toBe(all.totals.net);
+  });
+
   it('알 수 없는 유형 필터는 무시한다', () => {
     expect(summarizeRevenue(rows, { year: 2026, month: 9, type: 'nope' }).totals.count).toBe(3);
   });

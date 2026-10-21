@@ -668,7 +668,16 @@ PATCH가 실패해도 DB는 되돌리지 않고 `gcal_error`에 적는다("캘�
   **세무용 결제 장부 CSV(`salesLedger.ts`)는 실제 거래라 빼지 않는다.** 직접 서비스(예약·믹싱·구독·예약금·소프트웨어·**연습실 월 입주**)와 판매·중개(펀딩·공연·상점)는 가르되, **판매·중개의 매출은 결제액이 아니라 스튜디오 몫(플랫폼 수수료)** 이다(`lib/ops/platformFee.ts`, 운영자 결정 2026-10-21 — 정산해 줄 돈까지 매출에 올리면 부풀어 보인다).
   펀딩·공연은 순결제액 × `FUNDING_PLATFORM_FEE_PERCENT`(5.5%), 상점은 아티스트 상품 판매가의 `100 − SHOP_ARTIST_SHARE_PERCENT`%·스튜디오 자체 상품 전액·배송비는 발송하는 쪽(`artistPayout.ts`와 같은 규칙). 결제(PG) 수수료는 비용이라 매출에서 더하거나 빼지 않는다. 행에는 원래 결제액이 `sourceGross`로 남는다.
   **정산 규칙(수수료율·아티스트 몫)을 바꾸면 이 파일의 비율도 같이** — 정산 기록의 실제 금액과는 반올림·부분 환불에서 몇 원 다를 수 있는 발생 기준 추정이다.
-  새 `orders.type`을 만들면 `REVENUE_TYPE_LABELS`·`REVENUE_GROUP_OF`·장부 `TYPE_LABELS`에 함께 넣을 것(공연 티켓이 한동안 `ticket`으로 찍혔다).
+  새 `orders.type`을 만들면 `REVENUE_TYPE_LABELS`·`REVENUE_GROUP_OF`·`DEFAULT_LINE_OF_TYPE`(lib/ops/businessLine.ts)·장부 `TYPE_LABELS`에 함께 넣을 것(공연 티켓이 한동안 `ticket`으로 찍혔다 — 분야 표는 `businessLine.test.ts`가 짝을 강제한다).
+- **분야별 매출·수익(마이그레이션 0084)**: 매출 현황 맨 위 표와 대시보드 카드가 연습실 / 녹음·제작 / 플랫폼 / 기타로 **매출 − 지출 = 수익**을 보인다. 판정은
+  `lib/ops/businessLine.ts`(유형 기본값 + 행의 `line`), 계산은 `businessLinePnl.ts` 하나다 — 화면마다 다시 계산하지 말 것. 세션 예약은 `service_type = practice-room`이면 연습실,
+  구독은 종류로(연습실 월 이용료 → 연습실, 아티스트 구독 → 플랫폼, 레슨 → 유형째 `lesson`), 결제 링크는 제작 계약 링크면 항상 녹음·제작 → 링크에 고른 분야 → 기본 녹음·제작,
+  수기 매출은 고른 분야 → 유형. 레슨·소프트웨어는 운영자 지정으로 '기타'다. 지출 구분 저장값 `studio`는 **공통**(분야에 나누지 않고 전체 수익에서만 뺀다)이고,
+  항목 `loan_principal`(대출 원금)은 수익에서 빼지 않고 "손익에 넣지 않는 지출"로만 보인다. 플랫폼 수익은 PG 수수료를 빼지 않은 값이다(DB에 수수료 기록이 없다).
+  결제 링크·수기 매출의 분야는 **그 표에 컬럼을 더하지 않고** `revenue_line_assignments`(raw SQL 전용, `businessLineStore.ts`)에 둔다 — `payment_links`·`manual_revenues`는 결제 링크 결제·
+  결제 확인·수기 목록이 drizzle로 전체 컬럼을 SELECT해, 컬럼을 선언한 채 마이그레이션보다 먼저 배포하면 결제가 깨진다(0022 절). 0084은 `studio_expenses`도 다시 만들어 CHECK를 넓힌다.
+  **순서는 마이그레이션 → 배포가 맞지만 뒤집혀도 안 깨진다**: 표가 없으면 분야 지정은 기본값으로 읽히고 저장은 "분야는 저장하지 못했다"고 알리며(링크·매출 기록은 만들어진다),
+  새 지출 구분·항목 저장만 503으로 거절된다. 확인은 `PRAGMA table_info(revenue_line_assignments);`.
 - **수기 매출(`manual_revenues`, 0063·0065)은 주문·예약과 연결하지 않는다.** 이름·연락처 칸이 없다(내용에 적는다). 삭제는 소프트 삭제(`deleted_at/by`) — 읽는 곳은 전부 `deleted_at IS NULL`을 본다.
   환불 변경은 메모에 누가·얼마→얼마를 남긴다. 장부 CSV에는 들어가지 않는다.
 - **수기 예약 등록은 고객 계좌 입금과 같은 함수**(`createBookingOrder`/`createMixingOrder` → `confirmBookingBankDeposit`)를 탄다(`lib/booking/manualEntry.ts`). 점유·캘린더·환불·매출이 웹 예약과 같은 원장이다.
