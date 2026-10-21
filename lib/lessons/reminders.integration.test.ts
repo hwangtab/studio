@@ -100,6 +100,22 @@ describe('수업 전날 안내', () => {
     expect(sendEmail.mock.calls[1][0].subject).toContain('16:00');
   });
 
+  it('발송 도중 끊겨 결과가 안 적힌 기록은 다음 실행이 운영자에게 알릴 건으로 올린다', async () => {
+    const id = await seed();
+    await client.execute(`INSERT INTO lesson_reminders (id, kind, ref_id, sent_at, error) VALUES ('r1', 'session', '${id}@2026-10-22T14:00', unixepoch('2026-10-20 00:00:00'), 'pending')`);
+    const r = await sendLessonReminders(NOW);
+    expect(r.failed).toEqual([{ refId: `${id}@2026-10-22T14:00`, code: 'unconfirmed' }]);
+    expect(sendEmail).not.toHaveBeenCalled();
+    const again = await sendLessonReminders(NOW);
+    expect(again.failed).toEqual([]); // 한 번만 알린다
+  });
+
+  it('방금 넣은(30분 안) 진행 중 기록은 끊긴 것으로 보지 않는다', async () => {
+    const id = await seed();
+    await client.execute(`INSERT INTO lesson_reminders (id, kind, ref_id, sent_at, error) VALUES ('r2', 'session', '${id}@2026-10-22T14:00', ${Math.floor(NOW.getTime() / 1000) - 60}, 'pending')`);
+    expect((await sendLessonReminders(NOW)).failed).toEqual([]);
+  });
+
   it('발송 실패는 기록하고 다시 보내지 않는다', async () => {
     const id = await seed();
     sendEmail.mockResolvedValue({ ok: false, errorCode: 'API_ERROR' });
@@ -107,6 +123,8 @@ describe('수업 전날 안내', () => {
     expect(r.failed).toEqual([{ refId: `${id}@2026-10-22T14:00`, code: 'API_ERROR' }]);
     const row = (await client.execute(`SELECT error FROM lesson_reminders WHERE ref_id LIKE '${id}@%'`)).rows[0] as unknown as { error: string };
     expect(row.error).toBe('API_ERROR');
+    const ok = await client.execute("SELECT COUNT(*) AS n FROM lesson_reminders WHERE error IS NULL");
+    expect(Number((ok.rows[0] as unknown as { n: number }).n)).toBe(0);
     sendEmail.mockClear();
     await sendLessonReminders(NOW);
     expect(sendEmail).not.toHaveBeenCalled();

@@ -34,6 +34,11 @@ export interface ReminderResult {
   failed: Array<{ refId: string; code: string }>;
 }
 
+/** 기록을 넣은 순간의 표시 — 발송 결과를 적으면 NULL(성공)이나 오류 코드로 바뀐다. 이 표시가 남은 채 오래되면 중간에 끊긴 것이다. */
+const PENDING = 'pending';
+const UNCONFIRMED = 'unconfirmed';
+const STALE_AFTER_SECONDS = 30 * 60;
+
 const reminderRef = (row: Pick<DueRow, 'session_id' | 'scheduled_on' | 'start_time'>): string => `${row.session_id}@${row.scheduled_on}T${row.start_time}`;
 
 const mmdd = (date: string): string => `${Number(date.slice(5, 7))}/${Number(date.slice(8, 10))}`;
@@ -85,16 +90,23 @@ export const sendLessonReminders = async (now: Date = new Date()): Promise<Remin
   `);
 
   const result: ReminderResult = { considered: due.length, sent: 0, failed: [] };
+  // 지난 실행이 기록만 넣고 결과를 적지 못한 채 끊긴 건(함수 시간 초과·죽음) — 메일이 나갔는지 알 수 없다. 조용히 넘기지 말고 운영자에게 알린다.
+  const stale = await db.all<{ ref_id: string }>(sql`SELECT ref_id FROM lesson_reminders WHERE kind = 'session' AND error = ${PENDING} AND sent_at < ${Math.floor(now.getTime() / 1000) - STALE_AFTER_SECONDS}`);
+  for (const row of stale) {
+    await db.run(sql`UPDATE lesson_reminders SET error = ${UNCONFIRMED} WHERE kind = 'session' AND ref_id = ${row.ref_id} AND error = ${PENDING}`);
+    result.failed.push({ refId: row.ref_id, code: UNCONFIRMED });
+  }
   for (const row of due) {
     // 기록 키는 회차 id + 날짜 + 시각이다 — 안내 뒤에 운영자가 그 회차를 옮기면 새 일정으로 다시 한 번 안내한다(회차 id만 쓰면 옮긴 일정은 영영 안내가 없다).
     const refId = reminderRef(row);
     // 기록을 먼저 — 겹친 실행이 같은 회차를 또 보내지 않게. 0행이면 다른 실행이 이미 잡았다.
-    const claim = await db.run(sql`INSERT INTO lesson_reminders (id, kind, ref_id) VALUES (lower(hex(randomblob(16))), 'session', ${refId}) ON CONFLICT (kind, ref_id) DO NOTHING`);
+    const claim = await db.run(sql`INSERT INTO lesson_reminders (id, kind, ref_id, error) VALUES (lower(hex(randomblob(16))), 'session', ${refId}, ${PENDING}) ON CONFLICT (kind, ref_id) DO NOTHING`);
     if (Number(claim.rowsAffected) === 0) continue;
     try {
       const mail = buildLessonReminderEmail(row);
       const sent = await sendEmail({ to: row.student_email, ...mail });
       if (sent.ok) {
+        await db.run(sql`UPDATE lesson_reminders SET error = NULL WHERE kind = 'session' AND ref_id = ${refId}`);
         result.sent += 1;
       } else {
         const code = sent.errorCode ?? 'send_failed';

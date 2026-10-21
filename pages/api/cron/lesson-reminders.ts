@@ -34,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           cron: 'cron/lesson-reminders',
           rows: [{ label: '발송', value: `${result.sent}건` }, { label: '실패', value: `${result.failed.length}건`, emphasis: true }],
           reason: result.failed.map((f) => `회차 ${f.refId}: ${f.code}`).join('\n'),
-          hints: ['수업 전날 한 번뿐인 안내라 다시 보내지 않습니다 — 해당 수강생에게 직접 연락해 주세요.'],
+          hints: ['수업 전날 한 번뿐인 안내라 다시 보내지 않습니다 — 해당 수강생에게 직접 연락해 주세요.', 'unconfirmed는 지난 실행이 발송 도중 끊겨 메일이 나갔는지 알 수 없다는 뜻입니다(보냈을 수도 있습니다).'],
         }),
       }).catch(() => undefined);
     }
