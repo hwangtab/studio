@@ -582,6 +582,13 @@
       "when": 1792575654641,
       "tag": "0082_lesson_contracts",
       "breakpoints": true
+    },
+    {
+      "idx": 83,
+      "version": "6",
+      "when": 1792585565858,
+      "tag": "0083_lesson_reminders",
+      "breakpoints": true
     }
   ]
 }

@@ -2787,6 +2787,23 @@ export const lessonContracts = sqliteTable('lesson_contracts', {
 }));
 
 export type LessonContract = typeof lessonContracts.$inferSelect;
+
+/**
+ * 레슨 수강생에게 보낸 안내 메일 기록(마이그레이션 0083) — 수업 전날 일정 안내. (kind, ref_id)가 유일해 같은 회차에 두 번 보내지 않는다.
+ * **기록을 먼저 넣고 보낸다**(크론이 겹쳐도 한 통만) — 실패는 `error`에 남기고 다시 보내지 않는다(수업 전날 한 번뿐인 안내라 늦은 재발송이 오히려 혼란이다).
+ * 새 표뿐이고 어떤 `relations()`에도 잇지 않는다(0022 함정).
+ */
+export const lessonReminderKindEnum = ['session'] as const;
+export const lessonReminders = sqliteTable('lesson_reminders', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  kind: text('kind', { enum: lessonReminderKindEnum }).notNull(),
+  /** kind='session'이면 lesson_sessions.id. */
+  refId: text('ref_id').notNull(),
+  sentAt: integer('sent_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  error: text('error'),
+}, (t) => ({
+  kindRefUq: uniqueIndex('lesson_reminders_kind_ref_uq').on(t.kind, t.refId),
+}));
 export type LessonEnrollment = typeof lessonEnrollments.$inferSelect;
 export type LessonSession = typeof lessonSessions.$inferSelect;
 export type LessonPayment = typeof lessonPayments.$inferSelect;
