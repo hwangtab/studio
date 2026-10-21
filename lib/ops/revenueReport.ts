@@ -2,6 +2,8 @@ import { and, gte, isNotNull, lt } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { fundingPledges, payments } from '../../db/schema';
+import { BUSINESS_LINE_LABELS, BUSINESS_LINES, lineOfRow, lineOfSessionService, parseBusinessLine, type BusinessLine } from './businessLine';
+import { assignDepositLines } from './businessLineStore';
 import { reclassifyLessonSubscriptions } from './lessonRevenue';
 import { applyPlatformFees } from './platformFee';
 
@@ -96,6 +98,11 @@ export interface RevenueRow {
   /** 수기 매출의 내용. */
   note?: string;
   memo?: string | null;
+  /**
+   * 사업 분야(lib/ops/businessLine.ts). 비어 있으면 유형의 기본 분야 — 연습실 예약·연습실/아티스트 구독·분야를 고른 결제 링크와
+   * 수기 매출만 채운다.
+   */
+  line?: BusinessLine;
 }
 
 export interface Totals {
@@ -135,6 +142,10 @@ export interface RevenueSummary {
   monthly: MonthPoint[];
   byType: BreakdownLine[];
   byGroup: Array<{ group: RevenueGroup; label: string; totals: Totals }>;
+  /** 사업 분야별(연습실·녹음·제작·플랫폼·기타) — 유형·분야 필터와 무관하게 그 기간 전체. 지출·수익은 businessLinePnl이 더한다. */
+  byLine: Array<{ line: BusinessLine; label: string; totals: Totals }>;
+  /** 보고 있는 분야 필터(없으면 null). */
+  line: BusinessLine | null;
   byProject: BreakdownLine[];
   byMethod: BreakdownLine[];
   entries: RevenueRow[];
@@ -215,8 +226,10 @@ const breakdown = (rows: RevenueRow[], keyOf: (row: RevenueRow) => string, label
 export interface SummarizeOptions {
   year: number;
   month: number | 'all';
-  /** 유형 필터(드릴다운). 유형별 표는 항상 전체 유형을 보여 주고, 나머지는 이 유형만 센다. */
+  /** 유형 필터(드릴다운). 유형별 표는 항상 (분야 안의) 전체 유형을 보여 주고, 나머지는 이 유형만 센다. */
   type?: string | null;
+  /** 분야 필터(드릴다운). 분야별 표는 항상 전체 분야를 보여 주고, 나머지(유형별 표 포함)는 이 분야만 센다. */
+  line?: string | null;
 }
 
 export const summarizeRevenue = (allRows: RevenueRow[], options: SummarizeOptions): RevenueSummary => {
@@ -225,9 +238,12 @@ export const summarizeRevenue = (allRows: RevenueRow[], options: SummarizeOption
   const prev = previousPeriod(year, month);
   const prevRange = periodRange(prev.year, prev.month);
 
-  const periodAll = allRows.filter((row) => inRange(row, range));
+  const periodEvery = allRows.filter((row) => inRange(row, range));
+  const lineFilter = parseBusinessLine(options.line);
+  const inLine = (row: RevenueRow) => (lineFilter ? lineOfRow(row) === lineFilter : true);
+  const periodAll = periodEvery.filter(inLine);
   const typeFilter = options.type && options.type in REVENUE_TYPE_LABELS ? options.type : null;
-  const matches = (row: RevenueRow) => (typeFilter ? row.type === typeFilter : true);
+  const matches = (row: RevenueRow) => inLine(row) && (typeFilter ? row.type === typeFilter : true);
 
   const period = periodAll.filter(matches);
   const totals = sumRows(period);
@@ -269,6 +285,12 @@ export const summarizeRevenue = (allRows: RevenueRow[], options: SummarizeOption
       label: REVENUE_GROUP_LABELS[group],
       totals: sumRows(groupTotals.get(group) ?? []),
     })),
+    byLine: BUSINESS_LINES.map((line) => ({
+      line,
+      label: BUSINESS_LINE_LABELS[line],
+      totals: sumRows(periodEvery.filter((row) => lineOfRow(row) === line)),
+    })),
+    line: lineFilter,
     byProject: breakdown(period.filter((row) => row.projectSlug), (row) => row.projectSlug as string, (key) => key),
     byMethod: breakdown(period, (row) => row.method || '미상', (key) => key),
     entries: sorted.slice(0, ENTRY_LIMIT),
@@ -285,7 +307,7 @@ export const loadRevenueRows = async (range: PeriodRange): Promise<RevenueRow[]>
 
   const paid = await db.query.payments.findMany({
     where: and(isNotNull(payments.approvedAt), gte(payments.approvedAt, range.from), lt(payments.approvedAt, range.toExclusive)),
-    with: { refunds: true, order: { with: { fundingPledge: true } } },
+    with: { refunds: true, order: { with: { fundingPledge: true, bookings: { columns: { serviceType: true } } } } },
   });
 
   const byOrder = new Map<string, RevenueRow>();
@@ -302,6 +324,8 @@ export const loadRevenueRows = async (range: PeriodRange): Promise<RevenueRow[]>
       if (at < existing.at) existing.at = at;
       continue;
     }
+    // 세션 예약은 예약의 서비스 종류로 연습실/녹음·제작을 가른다(lib/booking/line.ts와 같은 판정). 예약 행이 없으면 기본(녹음·제작).
+    const sessionLine = order.type === 'session' ? lineOfSessionService(order.bookings[0]?.serviceType) : null;
     byOrder.set(order.id, {
       at,
       orderNo: order.orderNo,
@@ -312,6 +336,7 @@ export const loadRevenueRows = async (range: PeriodRange): Promise<RevenueRow[]>
       vat: order.vatAmount,
       refunded,
       offline: false,
+      ...(sessionLine ? { line: sessionLine } : {}),
     });
   }
 
@@ -338,5 +363,5 @@ export const loadRevenueRows = async (range: PeriodRange): Promise<RevenueRow[]>
     });
   }
 
-  return applyPlatformFees(await reclassifyLessonSubscriptions([...byOrder.values()]));
+  return applyPlatformFees(await assignDepositLines(await reclassifyLessonSubscriptions([...byOrder.values()])));
 };

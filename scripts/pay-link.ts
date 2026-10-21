@@ -12,6 +12,8 @@
  * - `--session "YYYY-MM-DD HH:mm"`(한국시간) + `--hours N`: 이용 일시·시간. 결제되면 관리자 대시보드 "이번 주 세션"·예약 목록에 그 시각으로 보이고,
  *   **그 시간대를 "예약 불가 블록"으로 자동 차단한다**(웹 이중 예약 방지) — 막지 않으려면 `--no-block`. 링크를 결제 없이 `close`하면 블록도 풀린다.
  * - `--expires YYYY-MM-DD`: 그날 끝까지만 열린다. `--memo`: 운영자 메모(고객에게 안 보인다).
+ * - `--line practice|recording|platform|other`: 매출 현황의 사업 분야(lib/ops/businessLine.ts). 비우면 녹음·제작으로 센다.
+ *   분야는 따로 둔 표(마이그레이션 0083)에 적는다 — 표가 없으면 링크는 만들고 분야만 저장하지 못했다고 알린다.
  *
  * 접속: `TURSO_DATABASE_URL`·`TURSO_AUTH_TOKEN`이 있으면 그걸 쓰고, 없으면 로그인된 Turso CLI(`~/.turso/turso`, DB `studio-nol`)로
  * 만료 1일 토큰을 만들어 쓴다(루트 CLAUDE.md "운영 DB 마이그레이션 적용 방법"). 토큰은 파일에 쓰지 않는다.
@@ -22,6 +24,7 @@ import { homedir } from 'node:os';
 
 import { splitInclusiveAmount } from '../lib/booking/amounts';
 import { PAYMENT_LINK_SLUG_PATTERN, validatePaymentLinkInput } from '../lib/payments/paymentLinkRules';
+import { BUSINESS_LINE_LABELS, BUSINESS_LINES, parseBusinessLine } from '../lib/ops/businessLine';
 
 const SITE = 'https://studionol.co.kr';
 const TURSO = `${homedir()}/.turso/turso`;
@@ -59,12 +62,19 @@ const main = async (): Promise<void> => {
       process.exit(1);
     }
     const v = input.value;
+    const rawLine = flag('line');
+    const businessLine = rawLine === undefined ? null : parseBusinessLine(rawLine);
+    if (rawLine !== undefined && businessLine === null) {
+      console.error(`--line은 ${BUSINESS_LINES.join('|')} 중 하나여야 합니다.`);
+      process.exit(1);
+    }
     const split = splitInclusiveAmount(v.totalAmount);
     console.log(`상품명   ${v.itemName}`);
     console.log(`금액     ${won(v.totalAmount)} (부가세 포함) = 공급가 ${won(split.itemAmount)} + 부가세 ${won(split.vatAmount)}`);
     console.log(`이용     ${v.sessionAt ? `${kstLabel(v.sessionAt)} · ${v.sessionHours}시간 — ${v.blockSlot ? '그 시간대를 예약 불가로 차단' : '슬롯은 차단하지 않음'}` : '일시 없음(대시보드·예약 목록에 안 보임)'}`);
     console.log(`만료     ${v.expiresOn ?? '없음(닫을 때까지)'}`);
     console.log(`메모     ${v.memo ?? '-'}`);
+    console.log(`분야     ${BUSINESS_LINE_LABELS[businessLine ?? 'recording']}${businessLine ? '' : '(기본)'}`);
     if (!has('yes')) {
       console.log('\n미리보기입니다. 위 금액이 고객이 결제할 총액이 맞으면 --yes를 붙여 다시 실행하세요.');
       return;
@@ -72,6 +82,12 @@ const main = async (): Promise<void> => {
     const lib = await connect();
     const { slug, blockId } = await lib.createPaymentLink(v);
     console.log(`\n만들었습니다${blockId ? '(슬롯 차단 포함)' : ''} — 바로 열립니다:\n${SITE}/ko/pay/${slug}`);
+    if (businessLine) {
+      const { saveLineAssignment } = await import('../lib/ops/businessLineStore');
+      if (!(await saveLineAssignment('payment_link', slug, businessLine, 'cli'))) {
+        console.warn('매출 분야는 저장하지 못했습니다(마이그레이션 0083 적용 전) — 녹음·제작으로 셉니다.');
+      }
+    }
     return;
   }
 
@@ -101,7 +117,7 @@ const main = async (): Promise<void> => {
     return;
   }
 
-  console.error('사용법:\n  create --name <상품명> --amount <부가세 포함 총액> [--session "YYYY-MM-DD HH:mm" --hours N [--no-block]] [--expires YYYY-MM-DD] [--memo <메모>] [--yes]\n  list\n  close <slug>');
+  console.error('사용법:\n  create --name <상품명> --amount <부가세 포함 총액> [--session "YYYY-MM-DD HH:mm" --hours N [--no-block]] [--expires YYYY-MM-DD] [--memo <메모>] [--line practice|recording|platform|other] [--yes]\n  list\n  close <slug>');
   process.exit(1);
 };
 

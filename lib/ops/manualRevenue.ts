@@ -3,6 +3,8 @@ import { and, eq, isNull } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { manualRevenues, type ManualRevenue } from '../../db/schema';
 import { kstDateString } from '../booking/kst';
+import { parseBusinessLine, type BusinessLine } from './businessLine';
+import { loadLineAssignments } from './businessLineStore';
 import { REVENUE_TYPE_LABELS, type RevenueRow } from './revenueReport';
 
 /**
@@ -30,6 +32,8 @@ export interface ManualRevenueInput {
   vatMode: VatMode;
   method: ManualMethod;
   memo: string | null;
+  /** 사업 분야(선택). 비우면 유형의 기본 분야(lib/ops/businessLine.ts) — 따로 둔 표에 적는다(businessLineStore.ts, 0083). */
+  businessLine?: BusinessLine | null;
 }
 
 type Parsed = { ok: true; value: ManualRevenueInput } | { ok: false; message: string };
@@ -74,9 +78,13 @@ export const parseManualRevenueInput = (raw: unknown, today: string): Parsed => 
   const memoRaw = typeof body.memo === 'string' ? body.memo.trim() : '';
   if (memoRaw.length > 500) return { ok: false, message: '메모는 500자까지 적을 수 있습니다.' };
 
+  const rawLine = body.businessLine;
+  const businessLine = rawLine === undefined || rawLine === null || rawLine === '' ? null : parseBusinessLine(rawLine);
+  if (businessLine === null && !(rawLine === undefined || rawLine === null || rawLine === '')) return { ok: false, message: '분야를 다시 골라 주세요.' };
+
   return {
     ok: true,
-    value: { receivedOn, type, description, totalAmount, vatMode, method: method as ManualMethod, memo: memoRaw || null },
+    value: { receivedOn, type, description, totalAmount, vatMode, method: method as ManualMethod, memo: memoRaw || null, businessLine },
   };
 };
 
@@ -152,5 +160,11 @@ export const loadManualRevenueRows = async (range: { from: Date; toExclusive: Da
   const rows = await getDb().query.manualRevenues.findMany({
     where: (t, { and, gte, lt, isNull }) => and(gte(t.receivedOn, from), lt(t.receivedOn, to), isNull(t.deletedAt)),
   });
-  return rows.map(manualRevenueRow);
+  // 분야 지정은 따로 둔 표에서 읽는다(0083 전이면 빈 지정 — 유형의 기본 분야로 센다).
+  const lines = await loadLineAssignments('manual_revenue', rows.map((r) => r.id));
+  return rows.map((r) => {
+    const row = manualRevenueRow(r);
+    const line = lines.get(r.id);
+    return line ? { ...row, line } : row;
+  });
 };

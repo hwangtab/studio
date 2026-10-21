@@ -2624,14 +2624,15 @@ export type ManualRevenue = typeof manualRevenues.$inferSelect;
  * — 임대료처럼 매달 같은 값을 매번 적지 않게. 금액은 부가세 포함 지출액. 소프트 삭제(수기 매출과 같은 이유 — 누가 언제 지웠는지 남긴다).
  * 새 표뿐이고 어떤 `relations()`에도 잇지 않는다(0022 함정) — 표가 없는 DB에서는 손익 칸만 "지출 표 미적용"으로 열린다.
  */
-export const expenseCategoryEnum = ['rent', 'cleaning', 'utilities', 'maintenance', 'supplies', 'other'] as const;
-export const expenseScopeEnum = ['practice', 'studio'] as const;
+// 0083: 'loan_principal'(대출 원금 상환 — 손익에 넣지 않는 지출), 구분에 'recording'(녹음·제작)·'platform'(플랫폼). 'studio'는 저장값을 두고 이름만 "공통"으로 바꿨다.
+export const expenseCategoryEnum = ['rent', 'cleaning', 'utilities', 'maintenance', 'supplies', 'other', 'loan_principal'] as const;
+export const expenseScopeEnum = ['practice', 'studio', 'recording', 'platform'] as const;
 export const studioExpenses = sqliteTable('studio_expenses', {
   id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
   /** 쓴 날(KST 달력, 'YYYY-MM-DD'). 반복이면 첫 달의 날짜(그 달에 없는 날이면 말일). */
   spentOn: text('spent_on').notNull(),
   category: text('category', { enum: expenseCategoryEnum }).notNull(),
-  /** 'practice' = 연습실 지출(월 입주 손익에서 뺀다), 'studio' = 스튜디오 전체 지출. */
+  /** 분야(lib/ops/businessLine.ts expenseBucketOfScope): 'practice' 연습실 · 'recording' 녹음·제작 · 'platform' 플랫폼 · 'studio' 공통(분야를 나누기 어려운 비용). */
   scope: text('scope', { enum: expenseScopeEnum }).notNull().default('practice'),
   description: text('description').notNull(),
   /** 부가세 포함 금액(원). 반복이면 한 달치. */
@@ -2646,11 +2647,33 @@ export const studioExpenses = sqliteTable('studio_expenses', {
   deletedBy: text('deleted_by'),
 }, (t) => ({
   spentOnIdx: index('studio_expenses_spent_on_idx').on(t.spentOn),
-  categoryCheck: check('studio_expenses_category_check', sql`${t.category} in ('rent','cleaning','utilities','maintenance','supplies','other')`),
-  scopeCheck: check('studio_expenses_scope_check', sql`${t.scope} in ('practice','studio')`),
+  categoryCheck: check('studio_expenses_category_check', sql`${t.category} in ('rent','cleaning','utilities','maintenance','supplies','other','loan_principal')`),
+  scopeCheck: check('studio_expenses_scope_check', sql`${t.scope} in ('practice','studio','recording','platform')`),
 }));
 
 export type StudioExpense = typeof studioExpenses.$inferSelect;
+
+/**
+ * 매출 행의 **사업 분야 지정**(마이그레이션 0083) — 결제 링크(`subject_kind = 'payment_link'`, subject_id = slug)와
+ * 수기 매출(`'manual_revenue'`, subject_id = manual_revenues.id)에 운영자가 고른 분야를 적는다. 없으면 유형의 기본 분야(lib/ops/businessLine.ts).
+ *
+ * `payment_links`·`manual_revenues`에 컬럼을 더하지 않고 따로 둔 이유는 배포 순서다(0037·0061과 같다): 그 두 표는 결제 링크 결제 화면·
+ * 결제 확인·수기 매출 목록이 drizzle로 **전체 컬럼을 SELECT**해, 컬럼을 선언한 채 마이그레이션 전에 배포하면 결제 링크 결제가 깨진다.
+ * 이 표는 raw SQL로만 읽고 쓰며(lib/ops/businessLineStore.ts), 없으면 읽기는 빈 지정(기본 분야), 쓰기는 실패를 알리고 넘어간다.
+ * 어떤 `relations()`에도 잇지 않는다.
+ */
+export const revenueLineSubjectEnum = ['payment_link', 'manual_revenue'] as const;
+export const revenueLineAssignments = sqliteTable('revenue_line_assignments', {
+  subjectKind: text('subject_kind', { enum: revenueLineSubjectEnum }).notNull(),
+  subjectId: text('subject_id').notNull(),
+  businessLine: text('business_line').notNull(),
+  createdBy: text('created_by'),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  pk: primaryKey({ columns: [t.subjectKind, t.subjectId] }),
+  subjectCheck: check('revenue_line_assignments_subject_check', sql`${t.subjectKind} in ('payment_link','manual_revenue')`),
+  lineCheck: check('revenue_line_assignments_line_check', sql`${t.businessLine} in ('practice','recording','platform','other')`),
+}));
 
 // ─── 프로듀싱 레슨(마이그레이션 0081) ───────────────────────────────────────────────────────────────
 //

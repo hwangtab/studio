@@ -3,7 +3,9 @@ import { kstYearMonth, loadRevenueRows, periodRange, previousPeriod, summarizeRe
 import { loadManualRevenueRows } from './manualRevenue';
 import { loadTenancyRevenueRows } from './tenancyRevenue';
 import { loadLessonRevenueRows } from './lessonRevenue';
-import { loadExpenseOccurrences, summarizeExpenses } from './expenses';
+import { loadExpenseOccurrences, type ExpenseOccurrence } from './expenses';
+import { computeBusinessPnl } from './businessLinePnl';
+import type { BusinessLine } from './businessLine';
 
 /**
  * 관리자 첫 화면의 이번 달 매출 요약 — 매출 현황(`/admin/revenue`)과 **같은 집계**(summarizeRevenue)를 쓴다.
@@ -22,13 +24,13 @@ export interface RevenueSnapshot {
   previousNet: number;
   /** 전월 대비 증감(%). 전월 매출이 0이면 null. */
   changeRate: number | null;
-  directNet: number;
-  brokeredNet: number;
   manualMissing: boolean;
-  /** 이번 달 연습실 월 입주 수입(순). 월 입주 표를 못 읽었으면 null. */
-  practiceIncome: number | null;
-  /** 이번 달 연습실 지출. 지출 표를 못 읽었으면(마이그레이션 0080 전) null. */
-  practiceExpense: number | null;
+  /** 분야별 이번 달 순매출·지출·수익(businessLinePnl.ts). 지출 표를 못 읽으면 expense·profit이 null. */
+  lines: Array<{ line: BusinessLine; label: string; net: number; expense: number | null; profit: number | null }>;
+  /** 공통 지출(어느 분야에도 나누지 않음). 지출 표를 못 읽으면 null. */
+  commonExpense: number | null;
+  /** 전체 수익 = 순매출 − (분야 지출 + 공통 지출). 손익 밖 지출(대출 원금)은 빼지 않는다. */
+  totalProfit: number | null;
   tenancyMissing: boolean;
 }
 
@@ -65,17 +67,13 @@ export const loadRevenueSnapshot = async (now: Date): Promise<RevenueSnapshot> =
   }
 
   const summary = summarizeRevenue(rows, { year, month });
-  const thisMonth = periodRange(year, month);
-  let practiceExpense: number | null = null;
+  let expenses: ExpenseOccurrence[] | null = null;
   try {
-    practiceExpense = summarizeExpenses(await loadExpenseOccurrences(thisMonth), 'practice').total;
+    expenses = await loadExpenseOccurrences(periodRange(year, month));
   } catch (error: unknown) {
     console.error('[admin/dashboard] 지출 조회 실패(마이그레이션 0080 전일 수 있음):', error);
   }
-  const practiceIncome = tenancyMissing
-    ? null
-    : summarizeRevenue(rows, { year, month, type: 'tenancy' }).totals.net;
-  const group = (key: 'direct' | 'brokered') => summary.byGroup.find((g) => g.group === key)?.totals.net ?? 0;
+  const pnl = computeBusinessPnl(summary.byLine, expenses);
   return {
     year,
     month,
@@ -85,11 +83,10 @@ export const loadRevenueSnapshot = async (now: Date): Promise<RevenueSnapshot> =
     count: summary.totals.count,
     previousNet: summary.previous.net,
     changeRate: summary.changeRate,
-    directNet: group('direct'),
-    brokeredNet: group('brokered'),
     manualMissing,
-    practiceIncome,
-    practiceExpense,
+    lines: pnl.lines.map((l) => ({ line: l.line, label: l.label, net: l.revenue, expense: l.expense, profit: l.profit })),
+    commonExpense: pnl.commonExpense,
+    totalProfit: pnl.totalProfit,
     tenancyMissing,
   };
 };

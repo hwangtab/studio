@@ -10,9 +10,14 @@ import { kstDateString } from '../../../lib/booking/kst';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { PAYMENT_LINK_LIMITS } from '../../../lib/payments/paymentLinkRules';
 import { listPaymentLinks, type PaymentLinkListRow } from '../../../lib/payments/paymentLinks';
+import { BUSINESS_LINE_LABELS, BUSINESS_LINES } from '../../../lib/ops/businessLine';
+import { loadPaymentLinkLines } from '../../../lib/ops/businessLineStore';
+
+/** 목록 행 + 매출 분야 이름(지정이 없으면 기본 '녹음·제작'). */
+type LinkView = PaymentLinkListRow & { lineLabel: string };
 
 interface Props {
-  links: PaymentLinkListRow[];
+  links: LinkView[];
   /** 목록이 상한(200개)에서 잘렸는가. */
   truncated: boolean;
   /** 표가 아직 없는 DB(마이그레이션 0060 전) — 목록 조회가 실패했다. */
@@ -26,13 +31,19 @@ const LINK_LIST_LIMIT = 200;
 export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
   const auth = await authenticateAdminRequest(context);
   if (!auth.ok) return { redirect: { destination: '/admin/login', permanent: false } };
-  let links: PaymentLinkListRow[] = [];
+  let rows: PaymentLinkListRow[] = [];
   let tableMissing = false;
   try {
-    links = await listPaymentLinks(LINK_LIST_LIMIT + 1);
+    rows = await listPaymentLinks(LINK_LIST_LIMIT + 1);
   } catch {
     tableMissing = true;
   }
+  // 분야 지정 표(0083)가 없으면 빈 지정 — 모두 기본(녹음·제작)으로 보인다.
+  const lines = await loadPaymentLinkLines(rows.map((r) => r.slug));
+  const links: LinkView[] = rows.map((r) => {
+    const found = lines.get(r.slug);
+    return { ...r, lineLabel: found ? `${BUSINESS_LINE_LABELS[found.line]}${found.fixed ? '(제작 계약)' : ''}` : BUSINESS_LINE_LABELS.recording };
+  });
   const today = kstDateString(new Date());
   const fileLinks = Object.entries(PAYMENT_LINKS).map(([slug, l]) => ({
     slug, itemName: l.itemName, totalAmount: l.totalAmount, expiresOn: l.expiresOn ?? null, open: !(l.expiresOn && today > l.expiresOn),
@@ -56,6 +67,7 @@ export default function AdminPaymentLinksPage({ links: initialLinks, truncated, 
   const [sessionAt, setSessionAt] = useState('');
   const [sessionHours, setSessionHours] = useState('3');
   const [blockSlot, setBlockSlot] = useState(true);
+  const [businessLine, setBusinessLine] = useState('recording');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [created, setCreated] = useState<string | null>(null);
@@ -75,9 +87,10 @@ export default function AdminPaymentLinksPage({ links: initialLinks, truncated, 
     }
   };
 
-  const post = async (body: Record<string, unknown>): Promise<{ ok?: boolean; message?: string; slug?: string; blocked?: boolean; blockReleased?: boolean; code?: string } | null> => {
+  type PostResult = { ok?: boolean; message?: string; slug?: string; blocked?: boolean; blockReleased?: boolean; code?: string; warning?: string };
+  const post = async (body: Record<string, unknown>): Promise<PostResult | null> => {
     const res = await fetch('/api/admin/payment-links', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-    return (await res.json().catch(() => null)) as { ok?: boolean; message?: string; slug?: string; blocked?: boolean; blockReleased?: boolean; code?: string } | null;
+    return (await res.json().catch(() => null)) as PostResult | null;
   };
 
   const create = async (e: React.FormEvent) => {
@@ -88,7 +101,7 @@ export default function AdminPaymentLinksPage({ links: initialLinks, truncated, 
     setBusy(true);
     setError(null);
     try {
-      const payload = { action: 'create', itemName, totalAmount: amount, expiresOn, memo, sessionAt, ...(sessionAt ? { sessionHours, blockSlot } : {}) };
+      const payload = { action: 'create', itemName, totalAmount: amount, expiresOn, memo, sessionAt, businessLine, ...(sessionAt ? { sessionHours, blockSlot } : {}) };
       let data = await post(payload);
       if (data && !data.ok && data.code === 'conflicts') {
         // 이미 잡힌 예약과 겹친다 — 그대로 막으면 그 예약은 남은 채 시간만 "휴무"가 된다. 알고도 만들겠다고 해야 통과한다(예약 목록의 블록 등록과 같다).
@@ -101,10 +114,12 @@ export default function AdminPaymentLinksPage({ links: initialLinks, truncated, 
           memo: memo.trim() || null, closedAt: null, createdAt: Math.floor(Date.now() / 1000), open: true,
           sessionAt: sessionAt ? Math.floor(new Date(`${sessionAt}:00+09:00`).getTime() / 1000) : null,
           sessionHours: sessionAt ? Number(sessionHours) : null, blocked: Boolean(data.blocked),
+          lineLabel: data.warning ? BUSINESS_LINE_LABELS.recording : BUSINESS_LINE_LABELS[businessLine as keyof typeof BUSINESS_LINE_LABELS] ?? BUSINESS_LINE_LABELS.recording,
         }, ...prev]);
         setCreated(data.slug);
+        if (data.warning) setError(data.warning);
         await copy(data.slug);
-        setItemName(''); setAmountText(''); setExpiresOn(''); setMemo(''); setSessionAt(''); setSessionHours('3'); setBlockSlot(true);
+        setItemName(''); setAmountText(''); setExpiresOn(''); setMemo(''); setSessionAt(''); setSessionHours('3'); setBlockSlot(true); setBusinessLine('recording');
       } else setError(data?.message ?? '만들지 못했어요.');
     } finally {
       setBusy(false);
@@ -170,7 +185,13 @@ export default function AdminPaymentLinksPage({ links: initialLinks, truncated, 
                 그 시간대를 예약 불가로 막기(웹 이중 예약 방지)
               </span>
             </label>
-            <label className="block sm:col-span-2">메모(선택, 고객에게 안 보여요)
+            <label className="block">매출 분야(매출 현황의 분야별 표)
+              <select value={businessLine} onChange={(e) => setBusinessLine(e.target.value)} className={`mt-1 ${inputClass}`}>
+                {BUSINESS_LINES.map((line) => <option key={line} value={line}>{BUSINESS_LINE_LABELS[line]}</option>)}
+              </select>
+              <span className="mt-1 block text-xs text-gray-600">녹음·제작 대금이 아니면(예: 연습실 이용료) 바꿔 주세요. 제작 계약 링크는 늘 녹음·제작이에요.</span>
+            </label>
+            <label className="block">메모(선택, 고객에게 안 보여요)
               <input value={memo} onChange={(e) => setMemo(e.target.value)} maxLength={PAYMENT_LINK_LIMITS.memoMax} placeholder="예: 김준호님" className={`mt-1 ${inputClass}`} />
             </label>
             <div className="sm:col-span-2">
@@ -196,7 +217,7 @@ export default function AdminPaymentLinksPage({ links: initialLinks, truncated, 
                       </p>
                     )}
                     <p className="text-xs text-gray-600">
-                      {kst(l.createdAt)} 생성 · {l.closedAt ? `${kst(l.closedAt)} 닫음` : l.expiresOn ? (l.open ? `${l.expiresOn}까지` : `${l.expiresOn} 만료`) : '만료일 없음'} · {l.open ? '열림' : '닫힘'}
+                      {l.lineLabel} · {kst(l.createdAt)} 생성 · {l.closedAt ? `${kst(l.closedAt)} 닫음` : l.expiresOn ? (l.open ? `${l.expiresOn}까지` : `${l.expiresOn} 만료`) : '만료일 없음'} · {l.open ? '열림' : '닫힘'}
                     </p>
                   </div>
                   {l.open && (

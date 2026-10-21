@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { kstDateString } from '../../../../lib/booking/kst';
-import { createExpense, deleteExpense, endExpenseRepeat, parseExpenseInput } from '../../../../lib/ops/expenses';
+import { createExpense, deleteExpense, endExpenseRepeat, isExpenseCheckViolation, parseExpenseInput } from '../../../../lib/ops/expenses';
 
 /**
  * 지출 항목 등록·삭제·반복 끝내기. 규칙은 lib/ops/expenses.ts. 개인정보를 받지 않는 장부라 접속기록 대상이 아니다.
@@ -16,8 +16,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (req.method === 'POST') {
       const parsed = parseExpenseInput(req.body, kstDateString(new Date()));
       if (!parsed.ok) return res.status(400).json({ ok: false, message: parsed.message });
-      const id = await createExpense(parsed.value, auth.actor);
-      return res.status(201).json({ ok: true, id });
+      try {
+        const id = await createExpense(parsed.value, auth.actor);
+        return res.status(201).json({ ok: true, id });
+      } catch (error: unknown) {
+        // 새 구분(녹음·제작·플랫폼)·항목(대출 원금)은 마이그레이션 0083의 CHECK가 받아 준다 — 그 전에는 여기서 걸린다.
+        if (isExpenseCheckViolation(error)) {
+          return res.status(503).json({ ok: false, message: '이 구분·항목은 아직 저장할 수 없어요(마이그레이션 0083 적용 전). 연습실·공통과 기존 항목은 저장됩니다.' });
+        }
+        throw error;
+      }
     }
 
     if (req.method === 'PATCH') {

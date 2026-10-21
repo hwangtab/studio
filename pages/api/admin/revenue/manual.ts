@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { kstDateString } from '../../../../lib/booking/kst';
 import { createManualRevenue, deleteManualRevenue, parseManualRevenueInput, setManualRefund } from '../../../../lib/ops/manualRevenue';
+import { saveLineAssignment } from '../../../../lib/ops/businessLineStore';
 
 /**
  * 수기 매출 등록·환불 기록·삭제. 규칙은 lib/ops/manualRevenue.ts.
@@ -18,6 +19,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const parsed = parseManualRevenueInput(req.body, kstDateString(new Date()));
       if (!parsed.ok) return res.status(400).json({ ok: false, message: parsed.message });
       const id = await createManualRevenue(parsed.value, auth.actor);
+      // 분야는 따로 둔 표(0083)에 적는다 — 실패해도 매출 기록은 남기고, 분야가 기본값으로 셀 것이라고 알린다.
+      if (parsed.value.businessLine && !(await saveLineAssignment('manual_revenue', id, parsed.value.businessLine, auth.actor))) {
+        return res.status(201).json({ ok: true, id, warning: '매출은 기록했지만 분야는 저장하지 못했어요(마이그레이션 0083 적용 전). 유형의 기본 분야로 셉니다.' });
+      }
       return res.status(201).json({ ok: true, id });
     }
 

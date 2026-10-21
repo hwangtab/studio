@@ -193,5 +193,7 @@ describe('수납·매출', () => {
       { ...base, orderNo: 'NO-S', type: 'session' },
     ]);
     expect(out.map((r) => [r.orderNo, r.type])).toEqual([['NO-L', 'lesson'], ['NO-P', 'subscription'], ['NO-S', 'session']]);
+    // 연습실 월 이용료 구독은 유형은 구독 그대로, 분야는 연습실.
+    expect(out.map((r) => r.line)).toEqual([undefined, 'practice', undefined]);
   });
 });

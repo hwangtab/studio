@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { kstDateString } from '../booking/kst';
+import { lineOfSubscriptionKind } from './businessLine';
 import type { RevenueRow } from './revenueReport';
 
 /**
@@ -34,21 +35,32 @@ export const loadLessonRevenueRows = async (range: { from: Date; toExclusive: Da
   }));
 };
 
+/**
+ * 구독 결제 주문을 구독 종류로 가른다 — 레슨 구독은 유형을 `lesson`으로 옮기고, 연습실 월 이용료·아티스트 구독은 유형은 `구독` 그대로 두되
+ * 사업 분야(`line`)를 채운다(연습실 / 플랫폼, lib/ops/businessLine.ts). 금액은 그대로라 합계는 변하지 않는다.
+ * 조회가 실패하면 그대로 둔다(분야는 기본값 '기타') — 숫자를 지어내지 않는다.
+ */
 export const reclassifyLessonSubscriptions = async (rows: RevenueRow[]): Promise<RevenueRow[]> => {
   const subscriptionNos = rows.filter((r) => r.type === 'subscription').map((r) => r.orderNo);
   if (subscriptionNos.length === 0) return rows;
   try {
-    const found = await getDb().all<{ order_no: string }>(sql`
-      SELECT DISTINCT o.order_no AS order_no
+    const found = await getDb().all<{ order_no: string; kind: string }>(sql`
+      SELECT DISTINCT o.order_no AS order_no, s.kind AS kind
       FROM subscription_payments sp
       JOIN orders o ON o.id = sp.order_id
       JOIN subscriptions s ON s.id = sp.subscription_id
-      WHERE s.kind = 'lesson' AND o.order_no IN (${sql.join(subscriptionNos.map((n) => sql`${n}`), sql`, `)})
+      WHERE o.order_no IN (${sql.join(subscriptionNos.map((n) => sql`${n}`), sql`, `)})
     `);
-    const lessonNos = new Set(found.map((f) => f.order_no));
-    return rows.map((r) => (r.type === 'subscription' && lessonNos.has(r.orderNo) ? { ...r, type: 'lesson' } : r));
+    const kindOf = new Map(found.map((f) => [f.order_no, f.kind]));
+    return rows.map((r) => {
+      if (r.type !== 'subscription') return r;
+      const kind = kindOf.get(r.orderNo);
+      if (kind === 'lesson') return { ...r, type: 'lesson' };
+      const line = lineOfSubscriptionKind(kind);
+      return line ? { ...r, line } : r;
+    });
   } catch (error) {
-    console.error('[revenue] 레슨 구독 분류 조회 실패 — 구독으로 둡니다:', error instanceof Error ? error.message : String(error));
+    console.error('[revenue] 구독 종류 조회 실패 — 구독(분야 기타)으로 둡니다:', error instanceof Error ? error.message : String(error));
     return rows;
   }
 };

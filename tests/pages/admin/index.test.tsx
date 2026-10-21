@@ -62,7 +62,14 @@ const DASHBOARD: AdminDashboard = {
 
 const REVENUE: RevenueSnapshot = {
   year: 2026, month: 10, net: 1_250_000, gross: 1_300_000, refunded: 50_000, count: 7,
-  previousNet: 1_000_000, changeRate: 25, directNet: 900_000, brokeredNet: 350_000, manualMissing: false, practiceIncome: 3_786_000, practiceExpense: 1_000_000, tenancyMissing: false,
+  previousNet: 1_000_000, changeRate: 25, manualMissing: false, tenancyMissing: false,
+  lines: [
+    { line: 'practice', label: '연습실', net: 500_000, expense: 200_000, profit: 300_000 },
+    { line: 'recording', label: '녹음·제작', net: 400_000, expense: 0, profit: 400_000 },
+    { line: 'platform', label: '플랫폼', net: 350_000, expense: 0, profit: 350_000 },
+    { line: 'other', label: '기타', net: 0, expense: 0, profit: 0 },
+  ],
+  commonExpense: 50_000, totalProfit: 1_000_000,
 };
 
 const SHOP_QUEUES = { pendingProducts: 2, awaitingShipment: { studio: 5, preorder: 1, artist: 2 } };
@@ -97,7 +104,8 @@ it('점검 항목은 심각도 배지와 처리 링크를, 대기열은 건수�
 
   expect(screen.getByText('2026.09.17 (목) 14:00')).toBeInTheDocument();
   expect(screen.getByText('홍길동 · 보컬 녹음 3시간')).toBeInTheDocument();
-  expect(screen.getByRole('link', { name: 'SNB-2' })).toHaveAttribute('href', '/admin/bookings/o1');
+  // 세션 줄은 줄 전체가 예약 상세로 가는 링크다(주문번호만 누를 수 있던 것을 넓혔다).
+  expect(screen.getByRole('link', { name: /2026\.09\.17 \(목\) 14:00.*SNB-2/ })).toHaveAttribute('href', '/admin/bookings/o1');
 
   expect(screen.getByLabelText('시작일')).toHaveValue('2026-09-01');
   expect(screen.getByLabelText('종료일')).toHaveValue('2026-09-16');
@@ -142,13 +150,17 @@ it('getServerSideProps는 KST 기준 이번 달 1일부터 오늘까지를 장�
 });
 
 describe('이번 달 매출 요약', () => {
-  it('순매출·전월 대비·직접/중개 구성을 그리고 매출 현황으로 잇는다', () => {
+  it('순매출·전월 대비·분야별 매출·수익을 그리고 매출 현황으로 잇는다', () => {
     render(<AdminIndexPage dashboard={DASHBOARD} shopQueues={SHOP_QUEUES} revenue={REVENUE} ledgerFrom="2026-10-01" ledgerTo="2026-10-16" />);
     expect(screen.getByRole('heading', { name: '10월 매출' })).toBeInTheDocument();
-    expect(screen.getByText('1,250,000원')).toBeInTheDocument();
+    expect(screen.getByText('1,250,000원').closest('a')).toHaveAttribute('href', '/admin/revenue');
     expect(screen.getByText(/25\.0% 전월\(1,000,000원\)/)).toBeInTheDocument();
-    expect(screen.getByText('900,000원')).toBeInTheDocument();
-    expect(screen.getByText('350,000원')).toBeInTheDocument();
+    // 분야 칸은 칸 전체가 그 분야의 매출 현황으로 가는 링크다.
+    const practice = screen.getByRole('link', { name: /연습실\s*500,000원\s*수익 300,000원/ });
+    expect(practice).toHaveAttribute('href', '/admin/revenue?line=practice');
+    expect(screen.getByRole('link', { name: /플랫폼/ })).toHaveAttribute('href', '/admin/revenue?line=platform');
+    expect(screen.getByText('공통 지출 (분야에 나누지 않음)').closest('div')).toHaveTextContent('-50,000원');
+    expect(screen.getByText('전체 수익 (매출 − 지출)').closest('div')).toHaveTextContent('1,000,000원');
     expect(screen.getByRole('link', { name: /매출 현황/ })).toHaveAttribute('href', '/admin/revenue');
   });
 

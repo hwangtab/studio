@@ -39,7 +39,7 @@ const pay = async (id: string, type: string, total: number, iso: string) => {
   await client.execute({ sql: `INSERT INTO payments (id, order_id, payment_key, method, approved_at) VALUES (?, ?, ?, '카드', ?)`, args: [`p-${id}`, id, `pk-${id}`, EPOCH(iso)] });
 };
 
-it('이번 달·전월 순매출과 직접/중개 구성, 수기 매출 합산을 한 번에 돌려준다', async () => {
+it('이번 달·전월 순매출과 분야별 구성, 수기 매출 합산을 한 번에 돌려준다', async () => {
   await pay('a', 'session', 110000, '2026-10-05T03:00:00Z'); // 이번 달 직접
   await pay('b', 'funding', 50000, '2026-10-06T03:00:00Z'); // 이번 달 중개 — 매출은 수수료 5.5%(2,750원)만
   await pay('c', 'session', 100000, '2026-09-20T03:00:00Z'); // 전월
@@ -48,7 +48,10 @@ it('이번 달·전월 순매출과 직접/중개 구성, 수기 매출 합산�
 
   const snap = await loadRevenueSnapshot(new Date('2026-10-15T03:00:00Z'));
 
-  expect(snap).toMatchObject({ year: 2026, month: 10, net: 142750, count: 3, previousNet: 100000, directNet: 140000, brokeredNet: 2750, manualMissing: false });
+  expect(snap).toMatchObject({ year: 2026, month: 10, net: 142750, count: 3, previousNet: 100000, manualMissing: false });
+  // 분야별: 세션(예약 행 없음 → 녹음·제작) 110,000 + 수기 믹싱 30,000 = 녹음·제작, 펀딩 수수료 2,750 = 플랫폼. 지출이 없어 수익 = 매출.
+  expect(snap.lines.map((l) => [l.line, l.net, l.profit])).toEqual([['practice', 0, 0], ['recording', 140000, 140000], ['platform', 2750, 2750], ['other', 0, 0]]);
+  expect(snap).toMatchObject({ commonExpense: 0, totalProfit: 142750 });
   expect(snap.changeRate).toBeCloseTo(42.75, 5);
 });
 

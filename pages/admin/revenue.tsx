@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 import { AdminShell } from '../../components/admin/AdminShell';
 import { ManualRevenuePanel, type ManualRevenueView } from '../../components/admin/ManualRevenuePanel';
+import { Disclosure } from '../../components/ui/Disclosure';
 import { Notice } from '../../components/ui/Notice';
 import { kstDateString } from '../../lib/booking/kst';
 import { loadManualRevenueRows, MANUAL_METHODS, MANUAL_TYPES } from '../../lib/ops/manualRevenue';
@@ -20,12 +21,13 @@ import {
   ENTRY_LIMIT,
   type BreakdownLine,
   type RevenueSummary,
-  type Totals,
 } from '../../lib/ops/revenueReport';
 import { loadProductionRevenueRows } from '../../lib/ops/productionRevenue';
 import { loadTenancyRevenueRows } from '../../lib/ops/tenancyRevenue';
 import { loadLessonRevenueRows } from '../../lib/ops/lessonRevenue';
-import { loadExpenseOccurrences, summarizeExpenses, type ExpenseSummary } from '../../lib/ops/expenses';
+import { loadExpenseOccurrences, type ExpenseOccurrence } from '../../lib/ops/expenses';
+import { BUSINESS_LINE_LABELS, lineOfRow, parseBusinessLine, type BusinessLine } from '../../lib/ops/businessLine';
+import { computeBusinessPnl, type BusinessPnl } from '../../lib/ops/businessLinePnl';
 
 /**
  * 매출 현황 — 월·연 단위 순매출, 전기 대비, 월별 추이, 유형·펀딩 프로젝트·결제수단별 구성.
@@ -37,6 +39,8 @@ import { loadExpenseOccurrences, summarizeExpenses, type ExpenseSummary } from '
 interface RevenuePageProps {
   summary: RevenueSummary | null;
   type: string | null;
+  /** 분야 필터(`?line=`). */
+  line?: BusinessLine | null;
   years: number[];
   /** 지금(KST) 년·월 — 진행 중인 기간 표시용. */
   nowYear: number;
@@ -47,21 +51,12 @@ interface RevenuePageProps {
   manualEntries: ManualRevenueView[];
   /** 수기 매출 표를 못 읽은 사유(마이그레이션 0063 전). 있으면 숫자에 직접 입금분이 빠져 있다. */
   manualError: string | null;
-  /** 연습실 손익 — 월 입주 수입 − 연습실 지출. 월 입주 표를 못 읽으면 null. */
-  practice?: PracticePnl | null;
-  /** 손익 칸을 못 채운 사유(월 입주 표 0066·지출 표 0080 전 등). */
-  practiceNotice?: string | null;
+  /** 분야별 매출·지출·수익(lib/ops/businessLinePnl.ts). 지출 표를 못 읽으면 지출·수익 칸이 null. */
+  pnl?: BusinessPnl | null;
+  /** 월 입주 수입·지출을 못 읽은 사유(월 입주 표 0066·지출 표 0080 전 등). */
+  pnlNotice?: string | null;
   lessonError?: string | null;
   error?: string;
-}
-
-interface PracticePnl {
-  income: number;
-  incomeCount: number;
-  /** 지출 표를 못 읽으면 null. */
-  expense: ExpenseSummary | null;
-  /** 스튜디오 전체 지출(연습실 손익에는 안 뺀다) — 참고. */
-  studioExpenseTotal: number | null;
 }
 
 const FIRST_YEAR = 2025;
@@ -80,9 +75,10 @@ export const getServerSideProps: GetServerSideProps<RevenuePageProps> = async (c
   const month: number | 'all' = monthRaw === 'all' ? 'all' : Number.isInteger(monthParam) && monthParam >= 1 && monthParam <= 12 ? monthParam : now.month;
   const typeParam = single(context.query.type);
   const type = typeParam && typeParam in REVENUE_TYPE_LABELS ? typeParam : null;
+  const line = parseBusinessLine(single(context.query.line));
   const years = Array.from({ length: now.year - FIRST_YEAR + 1 }, (_, i) => now.year - i);
   const today = kstDateString(new Date());
-  const base = { type, years, nowYear: now.year, nowMonth: now.month, today };
+  const base = { type, line, years, nowYear: now.year, nowMonth: now.month, today };
 
   try {
     const window = loadWindow(year);
@@ -113,26 +109,19 @@ export const getServerSideProps: GetServerSideProps<RevenuePageProps> = async (c
       console.error('[admin/revenue] 레슨 수납 조회 실패:', lessonFailure);
       lessonError = '레슨 계좌·현금 수납 표를 읽지 못했습니다(마이그레이션 0081 적용 전이거나 조회 오류). 그 금액이 아래 숫자에 빠져 있습니다.';
     }
-    const summary = summarizeRevenue(rows, { year, month, type });
+    const summary = summarizeRevenue(rows, { year, month, type, line });
     const range = periodRange(year, month);
-    let practice: PracticePnl | null = null;
-    let practiceNotice: string | null = null;
-    if (tenancyFailed) {
-      practiceNotice = '월 입주 수입을 읽지 못했습니다(마이그레이션 0066 확인). 아래 매출에는 월 입주 수입이 빠져 있습니다.';
-    } else {
-      const tenancy = summarizeRevenue(rows, { year, month, type: 'tenancy' }).totals;
-      let expense: ExpenseSummary | null = null;
-      let studioExpenseTotal: number | null = null;
-      try {
-        const occurrences = await loadExpenseOccurrences(range);
-        expense = summarizeExpenses(occurrences, 'practice');
-        studioExpenseTotal = summarizeExpenses(occurrences, 'studio').total;
-      } catch (expenseFailure: unknown) {
-        console.error('[admin/revenue] 지출 조회 실패:', expenseFailure);
-        practiceNotice = '지출 표를 읽지 못했습니다(마이그레이션 0080 적용 전이거나 조회 오류). 연습실 손익에서 지출을 뺄 수 없습니다.';
-      }
-      practice = { income: tenancy.net, incomeCount: tenancy.count, expense, studioExpenseTotal };
+    const notices: string[] = [];
+    if (tenancyFailed) notices.push('월 입주 수입을 읽지 못했습니다(마이그레이션 0066 확인). 연습실 매출에 월 입주 수입이 빠져 있습니다.');
+    let expenses: ExpenseOccurrence[] | null = null;
+    try {
+      expenses = await loadExpenseOccurrences(range);
+    } catch (expenseFailure: unknown) {
+      console.error('[admin/revenue] 지출 조회 실패:', expenseFailure);
+      notices.push('지출 표를 읽지 못했습니다(마이그레이션 0080 적용 전이거나 조회 오류). 수익(매출 − 지출)을 낼 수 없어 지출·수익 칸을 비웠습니다.');
     }
+    const pnl = computeBusinessPnl(summary.byLine, expenses);
+    const pnlNotice = notices.length > 0 ? notices.join(' ') : null;
     const manualEntries: ManualRevenueView[] = rows
       .filter((row) => row.manualId && row.at >= range.from && row.at < range.toExclusive)
       .sort((a, b) => b.at.getTime() - a.at.getTime())
@@ -140,6 +129,7 @@ export const getServerSideProps: GetServerSideProps<RevenuePageProps> = async (c
         id: row.manualId as string,
         receivedOn: kstDateString(row.at),
         typeLabel: REVENUE_TYPE_LABELS[row.type] ?? row.type,
+        lineLabel: BUSINESS_LINE_LABELS[lineOfRow(row)],
         description: row.note ?? '',
         method: row.method,
         memo: row.memo ?? null,
@@ -153,14 +143,14 @@ export const getServerSideProps: GetServerSideProps<RevenuePageProps> = async (c
         entryDates: summary.entries.map((row) => formatKstDateTimeFull(row.at.toISOString())),
         manualEntries,
         manualError,
-        practice,
-        practiceNotice,
+        pnl,
+        pnlNotice,
         lessonError,
       },
     };
   } catch (error: unknown) {
     console.error('[admin/revenue] 집계 실패:', error);
-    return { props: { ...base, summary: null, entryDates: [], manualEntries: [], manualError: null, practice: null, practiceNotice: null, error: '매출을 불러오지 못했습니다. 잠시 뒤 다시 열어 주세요.' } };
+    return { props: { ...base, summary: null, entryDates: [], manualEntries: [], manualError: null, pnl: null, pnlNotice: null, error: '매출을 불러오지 못했습니다. 잠시 뒤 다시 열어 주세요.' } };
   }
 };
 
@@ -173,8 +163,9 @@ const compactWon = (value: number): string => {
   return man >= 1000 ? `${(man / 10000).toFixed(1)}억` : `${Math.round(man).toLocaleString('ko-KR')}만`;
 };
 
-const href = (year: number, month: number | 'all', type: string | null) => {
+const href = (year: number, month: number | 'all', type: string | null, line: BusinessLine | null = null) => {
   const params = new URLSearchParams({ year: String(year), month: String(month) });
+  if (line) params.set('line', line);
   if (type) params.set('type', type);
   return `/admin/revenue?${params.toString()}`;
 };
@@ -216,6 +207,7 @@ const Kpi = ({ label, value, sub }: { label: string; value: string; sub?: React.
 );
 
 const MonthlyChart = ({ summary, type }: { summary: RevenueSummary; type: string | null }) => {
+  const line = summary.line;
   const peak = Math.max(1, ...summary.monthly.flatMap((m) => [m.net, m.previousYearNet]));
   return (
     <div>
@@ -225,7 +217,7 @@ const MonthlyChart = ({ summary, type }: { summary: RevenueSummary; type: string
           return (
             <Link
               key={point.month}
-              href={href(summary.year, point.month, type)}
+              href={href(summary.year, point.month, type, line)}
               title={`${point.month}월 순매출 ${won(point.net)} (${point.count}건) · 전년 ${won(point.previousYearNet)}`}
               className={`flex h-full flex-1 items-end justify-center gap-0.5 rounded-lg px-0.5 pb-0.5 hover:bg-gray-50 ${selected ? 'bg-blue-50' : ''}`}
             >
@@ -315,15 +307,123 @@ const BreakdownTable = ({
   </section>
 );
 
-const GroupCard = ({ label, totals }: { label: string; totals: Totals }) => (
-  <div className="rounded-xl border border-gray-200 bg-white p-4">
-    <p className="text-sm text-gray-500">{label}</p>
-    <p className="mt-1 text-lg font-bold text-gray-900 tabular-nums">{won(totals.net)}</p>
-    <p className="mt-0.5 text-xs text-gray-500">{totals.count}건</p>
-  </div>
-);
+const signedWon = (value: number | null) => (value === null ? '-' : value > 0 ? `-${won(value)}` : '0원');
+const profitClass = (value: number | null) => (value !== null && value < 0 ? 'text-red-700' : 'text-gray-900');
 
-export default function AdminRevenuePage({ summary, type, years, nowYear, nowMonth, entryDates, today, manualEntries, manualError, practice = null, practiceNotice = null, lessonError = null, error }: RevenuePageProps) {
+const ExpenseItems = ({ title, items }: { title: string; items: Array<{ category: string; label: string; amount: number }> }) =>
+  items.length === 0 ? null : (
+    <div>
+      <p className="text-xs font-semibold text-gray-700">{title}</p>
+      <ul className="mt-1 space-y-0.5">
+        {items.map((c) => (
+          <li key={c.category} className="flex justify-between gap-3 text-xs text-gray-600">
+            <span>{c.label}</span>
+            <span className="tabular-nums">{won(c.amount)}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+
+/**
+ * 분야별 매출 · 지출 · 수익. 숫자는 lib/ops/businessLinePnl.ts 하나에서 온다(대시보드 카드와 같다). 분야 이름을 누르면 아래 유형별 표·
+ * 결제 내역이 그 분야만 보인다(`?line=`). 공통 지출은 어느 분야에도 나누지 않는다 — 나눌 기준(면적·시간)을 정하지 않았기 때문이다.
+ */
+const BusinessPnlSection = ({ pnl, summary }: { pnl: BusinessPnl; summary: RevenueSummary }) => {
+  const expenseKnown = pnl.expenseTotal !== null;
+  const lineExpenseTotal = pnl.lines.reduce((acc, l) => acc + (l.expense ?? 0), 0);
+  const hasBreakdown = pnl.lines.some((l) => l.expenseByCategory.length > 0) || pnl.commonExpenseByCategory.length > 0 || pnl.nonOperatingByCategory.length > 0;
+  return (
+    <section className="rounded-2xl bg-white p-4 shadow-sm md:p-8">
+      <div className="mb-1 flex flex-wrap items-baseline justify-between gap-2">
+        <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900">분야별 매출·수익 · {summary.periodLabel}</h2>
+        <Link href="/admin/expenses" className="text-sm font-medium text-primary hover:underline">지출 관리 →</Link>
+      </div>
+      <p className="mb-4 text-xs text-gray-500">수익 = 매출 − 지출. 분야 이름을 누르면 아래 유형별 표와 결제 내역이 그 분야만 보입니다.</p>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-gray-200 text-left text-xs text-gray-500">
+              <th className="py-2 pr-3 font-medium">분야</th>
+              <th className="px-3 py-2 text-right font-medium">매출(순, 환불 제외)</th>
+              <th className="px-3 py-2 text-right font-medium">지출</th>
+              <th className="py-2 pl-3 text-right font-medium">수익</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100 tabular-nums">
+            {pnl.lines.map((l) => (
+              <tr key={l.line} className={summary.line === l.line ? 'bg-blue-50' : ''}>
+                <td className="py-2 pr-3 font-medium text-gray-900">
+                  <Link href={href(summary.year, summary.month, null, summary.line === l.line ? null : l.line)} className="hover:underline">
+                    {l.label}
+                  </Link>
+                  <span className="ml-1 text-xs font-normal text-gray-500">{l.count}건</span>
+                </td>
+                <td className="px-3 py-2 text-right text-gray-900">{won(l.revenue)}</td>
+                <td className="px-3 py-2 text-right text-gray-700">{signedWon(l.expense)}</td>
+                <td className={`py-2 pl-3 text-right font-semibold ${profitClass(l.profit)}`}>{l.profit === null ? '-' : won(l.profit)}</td>
+              </tr>
+            ))}
+            <tr>
+              <td className="py-2 pr-3 text-gray-700">
+                공통 지출 <span className="text-xs text-gray-500">(분야에 나누지 않음)</span>
+              </td>
+              <td className="px-3 py-2 text-right text-gray-400">-</td>
+              <td className="px-3 py-2 text-right text-gray-700">{signedWon(pnl.commonExpense)}</td>
+              <td className="py-2 pl-3 text-right text-gray-700">{pnl.commonExpense === null ? '-' : pnl.commonExpense > 0 ? `-${won(pnl.commonExpense)}` : '0원'}</td>
+            </tr>
+            <tr className="border-t-2 border-gray-200">
+              <td className="py-2 pr-3 font-bold text-gray-900">전체 수익</td>
+              <td className="px-3 py-2 text-right font-semibold text-gray-900">{won(pnl.revenueTotal)}</td>
+              <td className="px-3 py-2 text-right font-semibold text-gray-900">{signedWon(pnl.expenseTotal)}</td>
+              <td className={`py-2 pl-3 text-right text-base font-bold ${profitClass(pnl.totalProfit)}`}>{pnl.totalProfit === null ? '-' : won(pnl.totalProfit)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {expenseKnown && (
+        <dl className="mt-4 space-y-1.5 rounded-xl bg-gray-50 p-3 text-sm">
+          <div className="flex justify-between gap-3">
+            <dt className="text-gray-600">손익에 넣지 않는 지출(대출 원금 등)</dt>
+            <dd className="tabular-nums text-gray-900">{signedWon(pnl.nonOperatingTotal)}</dd>
+          </div>
+          <div className="flex justify-between gap-3">
+            <dt className="text-gray-600">현금 흐름 참고 (전체 수익 − 그 지출)</dt>
+            <dd className={`font-semibold tabular-nums ${profitClass(pnl.cashFlow)}`}>{pnl.cashFlow === null ? '-' : won(pnl.cashFlow)}</dd>
+          </div>
+        </dl>
+      )}
+
+      {expenseKnown && pnl.commonExpense !== null && pnl.commonExpense > 0 && (
+        <p className="mt-3 text-xs text-gray-600">
+          분야별 수익은 <strong>그 분야로 적은 지출만</strong> 뺀 값입니다
+          {lineExpenseTotal === 0 ? '(이 기간에는 분야로 적은 지출이 없어 분야별 수익이 매출과 같습니다)' : ''}. 공통 지출 {won(pnl.commonExpense)}은 어느 분야에도 나누지 않고 전체 수익에서만 빼므로,
+          분야별 수익을 더하면 전체 수익보다 큽니다. 분야별 수익을 “그 분야가 남긴 돈”으로 읽으려면 공통 지출 몫을 감안해 주세요.
+        </p>
+      )}
+
+      {hasBreakdown && (
+        <Disclosure summary="지출 항목 보기" variant="plain" className="mt-3" bodyClassName="mt-2 grid grid-cols-1 gap-3 md:grid-cols-3">
+          {pnl.lines.map((l) => (
+            <ExpenseItems key={l.line} title={l.label} items={l.expenseByCategory} />
+          ))}
+          <ExpenseItems title="공통" items={pnl.commonExpenseByCategory} />
+          <ExpenseItems title="손익에 넣지 않는 지출" items={pnl.nonOperatingByCategory} />
+        </Disclosure>
+      )}
+
+      <p className="mt-3 text-xs text-gray-500">
+        기준: 매출은 부가세 포함 순매출이고(월 입주 이용료는 부가세를 따로 나누지 않았습니다), 지출은 부가세 포함 금액으로 적습니다 — 둘 다 부가세를 빼지 않은 금액이라
+        세무상 이익과는 다릅니다. 연습실 매출은 월 입주(입주해 있는 달마다 월 이용료) · 연습실 시간제 예약 · 연습실 월 이용료 카드 구독입니다.
+        플랫폼 매출은 정산 몫을 뺀 수수료이고, <strong>결제 대행(PG) 수수료는 빼지 않은 금액</strong>입니다(수수료 기록이 DB에 없습니다).
+        결제 링크는 링크를 만들 때 고른 분야(없으면 녹음·제작), 직접 받은 매출은 고른 분야(없으면 유형)로 셉니다.
+      </p>
+    </section>
+  );
+};
+
+export default function AdminRevenuePage({ summary, type, line = null, years, nowYear, nowMonth, entryDates, today, manualEntries, manualError, pnl = null, pnlNotice = null, lessonError = null, error }: RevenuePageProps) {
   const inProgress = summary !== null && summary.year === nowYear && (summary.month === 'all' || summary.month === nowMonth);
 
   return (
@@ -347,7 +447,7 @@ export default function AdminRevenuePage({ summary, type, years, nowYear, nowMon
                 {years.map((y) => (
                   <Link
                     key={y}
-                    href={href(y, summary.month === 'all' ? 'all' : summary.month, type)}
+                    href={href(y, summary.month === 'all' ? 'all' : summary.month, type, line)}
                     className={`rounded-full px-3 py-1.5 text-sm font-medium ${y === summary.year ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
                   >
                     {y}년
@@ -355,7 +455,7 @@ export default function AdminRevenuePage({ summary, type, years, nowYear, nowMon
                 ))}
                 <span className="mx-1 hidden h-5 w-px bg-gray-200 md:inline-block" />
                 <Link
-                  href={href(summary.year, 'all', type)}
+                  href={href(summary.year, 'all', type, line)}
                   className={`rounded-full px-3 py-1.5 text-sm font-medium ${summary.month === 'all' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
                 >
                   연 전체
@@ -363,16 +463,16 @@ export default function AdminRevenuePage({ summary, type, years, nowYear, nowMon
                 {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
                   <Link
                     key={m}
-                    href={href(summary.year, m, type)}
+                    href={href(summary.year, m, type, line)}
                     className={`rounded-full px-3 py-1.5 text-sm font-medium ${summary.month === m ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
                   >
                     {m}월
                   </Link>
                 ))}
               </div>
-              {type && (
+              {(type || line) && (
                 <p className="mt-3 text-sm text-gray-700">
-                  <strong>{REVENUE_TYPE_LABELS[type]}</strong>만 보는 중 ·{' '}
+                  <strong>{[line ? BUSINESS_LINE_LABELS[line] : null, type ? REVENUE_TYPE_LABELS[type] : null].filter(Boolean).join(' · ')}</strong>만 보는 중 ·{' '}
                   <Link href={href(summary.year, summary.month, null)} className="text-primary hover:underline">
                     전체 보기
                   </Link>
@@ -398,6 +498,8 @@ export default function AdminRevenuePage({ summary, type, years, nowYear, nowMon
               </Notice>
             )}
 
+            {pnl && <BusinessPnlSection pnl={pnl} summary={summary} />}
+
             <section>
               <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-gray-900">{summary.periodLabel}</h2>
               <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -415,48 +517,16 @@ export default function AdminRevenuePage({ summary, type, years, nowYear, nowMon
                 <Kpi label="공급가액" value={won(summary.totals.netSupply)} />
                 <Kpi label="부가세" value={won(summary.totals.netVat)} />
               </div>
-              <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
-                {summary.byGroup.map((g) => (
-                  <GroupCard key={g.group} label={g.label} totals={g.totals} />
-                ))}
-              </div>
               <p className="mt-2 text-xs text-gray-500">
                 펀딩·공연·상점은 개설자·주최자·아티스트에게 정산해 줄 몫을 뺀 <strong>플랫폼 수수료</strong>만 매출로 잡습니다(펀딩·공연 5.5%, 상점은 아티스트 상품 판매가의 45%·스튜디오 상품 전액).
                 결제(PG) 수수료는 비용이라 매출에서 더하거나 빼지 않고, 정산 기록의 실제 금액과는 반올림·부분 환불에서 몇 원 다를 수 있습니다.
               </p>
             </section>
 
-            {practiceNotice && (
+            {pnlNotice && (
               <Notice tone="warning" light>
-                {practiceNotice}
+                {pnlNotice}
               </Notice>
-            )}
-
-            {practice && (
-              <section className="rounded-2xl bg-white p-4 shadow-sm md:p-6">
-                <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
-                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900">연습실 손익 · {summary.periodLabel}</h2>
-                  <Link href="/admin/expenses" className="text-sm font-medium text-primary hover:underline">지출 관리 →</Link>
-                </div>
-                <dl className="space-y-2 text-sm">
-                  <div className="flex justify-between gap-3"><dt className="text-gray-600">월 입주 수입 ({practice.incomeCount}건)</dt><dd className="font-semibold tabular-nums text-gray-900">{won(practice.income)}</dd></div>
-                  {practice.expense === null ? (
-                    <div className="flex justify-between gap-3"><dt className="text-gray-600">연습실 지출</dt><dd className="text-gray-500">읽지 못함</dd></div>
-                  ) : (
-                    <>
-                      {practice.expense.byCategory.map((c) => (
-                        <div key={c.category} className="flex justify-between gap-3 pl-3"><dt className="text-gray-500">− {c.label}</dt><dd className="tabular-nums text-gray-700">{won(c.amount)}</dd></div>
-                      ))}
-                      <div className="flex justify-between gap-3"><dt className="text-gray-600">연습실 지출 합계</dt><dd className="tabular-nums text-gray-900">{practice.expense.total > 0 ? `-${won(practice.expense.total)}` : '0원'}</dd></div>
-                      <div className="flex justify-between gap-3 border-t border-gray-200 pt-2"><dt className="font-semibold text-gray-900">연습실 순수익</dt><dd className={`text-base font-bold tabular-nums ${practice.income - practice.expense.total < 0 ? 'text-red-700' : 'text-gray-900'}`}>{won(practice.income - practice.expense.total)}</dd></div>
-                    </>
-                  )}
-                </dl>
-                {practice.studioExpenseTotal !== null && practice.studioExpenseTotal > 0 && (
-                  <p className="mt-3 text-xs text-gray-500">스튜디오 전체 지출 {won(practice.studioExpenseTotal)}은 연습실 손익에 넣지 않았습니다(지출 관리에서 구분이 “스튜디오 전체”인 건).</p>
-                )}
-                <p className="mt-2 text-xs text-gray-500">월 입주 수입은 입주해 있는 달마다 월 이용료를 셉니다(입금일이 아직 안 와도 입주 중이면 그 달 매출 — 방이 비면 줄어요). 부가세는 따로 나누지 않았고, 지출은 부가세 포함 금액으로 적습니다.</p>
-              </section>
             )}
 
             <section className="rounded-2xl bg-white p-4 shadow-sm md:p-8">
@@ -470,7 +540,7 @@ export default function AdminRevenuePage({ summary, type, years, nowYear, nowMon
               note="유형 이름을 누르면 그 유형만 모아 봅니다."
               firstColumn="유형"
               lines={summary.byType}
-              linkFor={(line) => href(summary.year, summary.month, type === line.key ? null : line.key)}
+              linkFor={(entry) => href(summary.year, summary.month, type === entry.key ? null : entry.key, line)}
               activeKey={type}
             />
 
