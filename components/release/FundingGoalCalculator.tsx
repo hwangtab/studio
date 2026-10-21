@@ -13,11 +13,10 @@ import { computeFundingGoal } from '../../lib/funding/goal';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 
 const copy = releasePipelineCopy.calculator;
-type ProductionKey = ReleaseTierKey | 'none';
+type ProductionKey = ReleaseTierKey | 'none' | 'custom';
 type DesignKey = 'design' | 'direct';
 const PRODUCTIONS: ProductionKey[] = ['none', 'single', 'ep', 'album'];
 const DESIGNS: DesignKey[] = ['design', 'direct'];
-const productionLabel = (key: ProductionKey) => (key === 'none' ? copy.noProduction : copy.tiers[key]);
 const won = (n: number) => `${formatPriceAmount(n)}원`;
 
 interface FundingGoalCalculatorProps {
@@ -29,6 +28,18 @@ interface FundingGoalCalculatorProps {
   /** 배경. 펀딩 설계 페이지는 앞 절(진행 과정)에 이어 붙이려고 alternate로 쓴다. */
   variant?: 'default' | 'alternate';
 }
+
+const MAX_PREFILL_COST = 100_000_000;
+
+/** 주소의 ?cost=&from= → 미리 채울 값. 숫자가 아니거나 범위를 벗어난 cost는 버린다. */
+export const goalPrefillFromQuery = (params: URLSearchParams): { customCost: number | null; fromRelease: boolean } => {
+  const raw = params.get('cost');
+  const cost = raw && /^\d+$/.test(raw) ? Number(raw) : NaN;
+  return {
+    customCost: Number.isFinite(cost) && cost > 0 && cost <= MAX_PREFILL_COST ? cost : null,
+    fromRelease: params.get('from') === 'release',
+  };
+};
 
 /** 알약형 라디오 한 벌 — 제작 규모와 개설 방식이 같은 모양이다. 모양은 ChoiceGroup/ChoiceCard(variant="pill")가 소유한다. */
 function PillRadios<K extends string>({ name, legend, options, value, label, onChange }: {
@@ -78,15 +89,33 @@ const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component =
   const [withholding, setWithholding] = React.useState(true);
   const [copied, setCopied] = React.useState(false);
   const usedRef = React.useRef(false);
+  // 발매 페이지 예산 계산기에서 넘어온 값(?cost=제작비&from=release). 그 예산으로 시작해야 "제작 없음"(0원)으로
+  // 열려 목표액이 낮게 나오는 일이 없다(2026-10-22 검토). from=release는 사용 이벤트를 출처별로 가른다.
+  const [customCost, setCustomCost] = React.useState<number | null>(null);
+  const [fromRelease, setFromRelease] = React.useState(false);
+
+  React.useEffect(() => {
+    const prefill = goalPrefillFromQuery(new URLSearchParams(window.location.search));
+    if (prefill.fromRelease) setFromRelease(true);
+    if (prefill.customCost) {
+      setCustomCost(prefill.customCost);
+      setTier('custom');
+    } else if (prefill.fromRelease) {
+      setTier('single');
+    }
+  }, []);
+
+  const productionLabel = (key: ProductionKey) =>
+    key === 'none' ? copy.noProduction : key === 'custom' ? `발매 예산 계산 결과 (${won(customCost ?? 0)})` : copy.tiers[key];
 
   const markUsed = () => {
     if (usedRef.current) return;
     usedRef.current = true;
-    trackMicroEvent('micro_pipeline_calc', { locale: 'ko', component, cta_id: 'pipeline_calc_use' });
+    trackMicroEvent('micro_pipeline_calc', { locale: 'ko', component, cta_id: fromRelease ? 'pipeline_calc_use_from_release' : 'pipeline_calc_use' });
   };
 
   const otherCost = Math.max(0, Number(otherCostInput.replace(/[^0-9]/g, '')) || 0);
-  const production = tier === 'none' ? 0 : PIPELINE_BUNDLE_PRICES[tier];
+  const production = tier === 'none' ? 0 : tier === 'custom' ? customCost ?? 0 : PIPELINE_BUNDLE_PRICES[tier];
   const design = designKey === 'design' ? FUNDING_DESIGN_PRICE : 0;
   const result = computeFundingGoal({ productionCost: production + design, otherCost, withholding });
 
@@ -100,7 +129,7 @@ const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component =
   ].join('\n');
 
   const onConsult = () => {
-    trackLeadEvent('lead_click_kakao', { locale: 'ko', component, cta_id: 'release_funding_consult' });
+    trackLeadEvent('lead_click_kakao', { locale: 'ko', component, cta_id: fromRelease ? 'release_funding_consult_from_release' : 'release_funding_consult' });
     try {
       void navigator.clipboard?.writeText(summary).then(
         () => setCopied(true),
@@ -112,7 +141,7 @@ const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component =
   };
 
   const rows: Array<[string, number, boolean?]> = [
-    ...(production > 0 ? ([[copy.rows.production, production]] as Array<[string, number]>) : []),
+    ...(production > 0 ? ([[tier === 'custom' ? '제작비 (발매 예산 계산 결과)' : copy.rows.production, production]] as Array<[string, number]>) : []),
     ...(design > 0 ? ([[copy.rows.design, design]] as Array<[string, number]>) : []),
     [copy.rows.other, otherCost],
     [copy.rows.platformFee, result.platformFee, true],
@@ -145,7 +174,7 @@ const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component =
           <PillRadios
             name="funding-goal-tier"
             legend={copy.tierLabel}
-            options={PRODUCTIONS}
+            options={customCost ? (['custom', ...PRODUCTIONS] as ProductionKey[]) : PRODUCTIONS}
             value={tier}
             label={productionLabel}
             onChange={(key) => { setTier(key); markUsed(); }}

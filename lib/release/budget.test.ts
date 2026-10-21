@@ -9,7 +9,8 @@ import {
   VOCAL_TUNING_ADDON_PRICE,
 } from '../../data/pricing';
 import ko from '../../public/locales/ko/common.json';
-import { computeReleaseBudget, releaseBundleFor, RELEASE_BUDGET_MAX_SONGS, type ReleaseBudgetInput } from './budget';
+import { computeReleaseBudget, fundingGoalForBudget, fundingGoalLinkFor, releaseBundleFor, RELEASE_BUDGET_MAX_SONGS, type ReleaseBudgetInput } from './budget';
+import { computeFundingGoal } from '../funding/goal';
 
 const base: ReleaseBudgetInput = { songs: 1, trackScale: 'l1', arrangementSongs: 0, vocalTuning: false, fundingSource: 'self' };
 const amount = (songs: number) => releaseBundleFor(songs).amount;
@@ -67,5 +68,19 @@ describe('발매 예산 — 추가 항목', () => {
     expect(b.total).toBe(EP_BUNDLE_PRICE + VOCAL_TUNING_ADDON_PRICE * 3 + FUNDING_DESIGN_PRICE);
     expect(computeReleaseBudget({ ...base, fundingSource: 'grant' }).total).toBe(SINGLE_BUNDLE_PRICE);
     expect(computeReleaseBudget({ ...base, fundingSource: 'unsure' }).total).toBe(SINGLE_BUNDLE_PRICE);
+  });
+});
+
+describe('발매 예산 — 펀딩을 고르면 목표액과 넘겨줄 주소', () => {
+  const funded = computeReleaseBudget({ ...base, songs: 4, trackScale: 'l2', arrangementSongs: 1, fundingSource: 'funding' });
+
+  it('목표액은 예산 합계(설계비 포함)를 개인 정산 기준으로 역산한 값', () => {
+    expect(fundingGoalForBudget(funded)).toEqual(computeFundingGoal({ productionCost: funded.total, otherCost: 0, withholding: true }));
+    expect(fundingGoalForBudget(funded).goal).toBeGreaterThan(funded.total);
+  });
+
+  it('넘겨줄 cost는 설계비를 뺀 제작비 — 그쪽 계산기가 설계비를 따로 더한다', () => {
+    const href = fundingGoalLinkFor(funded);
+    expect(href).toBe(`/ko/crowdfunding-design?cost=${funded.total - FUNDING_DESIGN_PRICE}&from=release#funding-goal`);
   });
 });

@@ -92,7 +92,8 @@ export const releasePipelineCopy = {
         stat: '성공 수수료 없음 · 목표에 못 미쳐도 모인 금액으로 진행해요',
         links: [
           // 목표액 계산기는 펀딩 설계 페이지에만 있다(2026-10-22 발매 페이지에서 뺐다).
-          { href: '/ko/crowdfunding-design#funding-goal', label: '목표액 계산해 보기' },
+          // from=release — 펀딩 설계 페이지 계산기가 싱글로 시작하고 사용 이벤트를 발매 페이지 출처로 센다.
+          { href: '/ko/crowdfunding-design?from=release#funding-goal', label: '목표액 계산해 보기' },
           { href: '/ko/crowdfunding-design', label: '펀딩 설계 자세히' },
         ],
       },

@@ -13,6 +13,7 @@ import {
   SINGLE_BUNDLE_PRICE,
   VOCAL_TUNING_ADDON_PRICE,
 } from '../../data/pricing';
+import { computeFundingGoal, type FundingGoalResult } from '../funding/goal';
 
 /**
  * 발매 예산 계산 — 순수 함수. 화면은 components/release/ReleaseBudgetCalculator.tsx.
@@ -94,4 +95,22 @@ export const computeReleaseBudget = (input: ReleaseBudgetInput): ReleaseBudget =
 
   const total = lines.reduce((sum, l) => sum + l.amount, 0);
   return { tier: bundle.tier, lines, total };
+};
+
+/**
+ * 펀딩으로 마련할 때의 목표액 — 예산 합계(설계비 포함)를 정산 뒤 손에 남기려면 얼마를 모아야 하나.
+ * 펀딩 목표액 계산기와 같은 식(lib/funding/goal.ts)이라 두 화면의 숫자가 어긋나지 않는다. 개인 정산(부가세 상당액·
+ * 원천징수 공제) 기준이고 리워드 원가는 0이다 — 그건 펀딩 설계 페이지 계산기에서 더한다(fundingGoalLinkFor).
+ * 2026-10-22: 발매 페이지에서 목표액 계산기를 뺀 뒤, 펀딩을 고른 사람에게만 목표액을 이 한 줄로 보여 준다.
+ */
+export const fundingGoalForBudget = (budget: ReleaseBudget): FundingGoalResult =>
+  computeFundingGoal({ productionCost: budget.total, otherCost: 0, withholding: true });
+
+/**
+ * 펀딩 설계 페이지 계산기로 예산을 실어 보내는 주소. cost는 설계비를 뺀 제작비 — 그쪽 계산기가 설계비를 따로 더한다.
+ * from=release로 그 계산기가 사용 이벤트를 발매 페이지 출처로 따로 센다.
+ */
+export const fundingGoalLinkFor = (budget: ReleaseBudget): string => {
+  const production = budget.lines.filter((l) => l.id !== 'funding').reduce((sum, l) => sum + l.amount, 0);
+  return `/ko/crowdfunding-design?cost=${production}&from=release#funding-goal`;
 };

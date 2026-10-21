@@ -27,7 +27,8 @@ describe('발매 예산 계산기', () => {
     fireEvent.change(screen.getByLabelText('몇 곡을 내시나요?'), { target: { value: '4' } });
     fireEvent.click(screen.getByLabelText('크라우드펀딩'));
     expect(screen.getByText(won(EP_BUNDLE_PRICE + FUNDING_DESIGN_PRICE))).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: '목표액 계산해 보기' })).toHaveAttribute('href', '/ko/crowdfunding-design#funding-goal');
+    expect(screen.getByText('펀딩 목표 예상')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '리워드 원가까지 넣어 계산하기' })).toHaveAttribute('href', `/ko/crowdfunding-design?cost=${EP_BUNDLE_PRICE}&from=release#funding-goal`);
     expect(trackMicroEvent).toHaveBeenCalledTimes(1);
     expect(trackMicroEvent).toHaveBeenCalledWith('micro_release_budget', expect.objectContaining({ component: 'ReleaseBudgetCalculator' }));
   });
@@ -38,6 +39,11 @@ describe('발매 예산 계산기', () => {
     fireEvent.change(screen.getByLabelText('편곡이 필요한 곡'), { target: { value: '3' } });
     fireEvent.change(screen.getByLabelText('몇 곡을 내시나요?'), { target: { value: '2' } });
     expect((screen.getByLabelText('편곡이 필요한 곡') as HTMLSelectElement).value).toBe('2');
+  });
+
+  it('직접 준비면 펀딩 목표 줄이 없다', () => {
+    render(<ReleaseBudgetCalculator kakaoUrl={KAKAO} />);
+    expect(screen.queryByText('펀딩 목표 예상')).toBeNull();
   });
 
   it('카톡 버튼은 견적 코드와 함께 리드로 잡히고 요약을 복사한다', () => {
