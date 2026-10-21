@@ -28,6 +28,7 @@ import { loadLessonRevenueRows } from '../../lib/ops/lessonRevenue';
 import { loadExpenseOccurrences, type ExpenseOccurrence } from '../../lib/ops/expenses';
 import { BUSINESS_LINE_LABELS, lineOfRow, parseBusinessLine, type BusinessLine } from '../../lib/ops/businessLine';
 import { computeBusinessPnl, type BusinessPnl } from '../../lib/ops/businessLinePnl';
+import { describeDuplicateMatches, listManualRevenueDuplicates } from '../../lib/ops/manualRevenueDuplicates';
 
 /**
  * 매출 현황 — 월·연 단위 순매출, 전기 대비, 월별 추이, 유형·펀딩 프로젝트·결제수단별 구성.
@@ -122,14 +123,28 @@ export const getServerSideProps: GetServerSideProps<RevenuePageProps> = async (c
     }
     const pnl = computeBusinessPnl(summary.byLine, expenses);
     const pnlNotice = notices.length > 0 ? notices.join(' ') : null;
+    // 중복 의심(같은 금액의 사이트 주문·같은 날 수기 매출) — 목록에 표시하고 "중복 아님"을 받는다. 조회가 실패해도 화면은 연다.
+    const duplicates = new Map<string, string>();
+    if (!manualError) {
+      try {
+        const found = await listManualRevenueDuplicates({ from: kstDateString(range.from), to: kstDateString(new Date(range.toExclusive.getTime() - 1)) });
+        for (const d of found) duplicates.set(d.manualId, describeDuplicateMatches(d));
+      } catch (duplicateFailure: unknown) {
+        console.error('[admin/revenue] 중복 의심 조회 실패 — 표시 없이 엽니다:', duplicateFailure instanceof Error ? duplicateFailure.name : 'unknown');
+      }
+    }
+    // 분야 필터(`?line=`)는 직접 받은 매출 목록에도 건다 — 위 숫자와 아래 목록이 같은 분야를 말하게.
     const manualEntries: ManualRevenueView[] = rows
-      .filter((row) => row.manualId && row.at >= range.from && row.at < range.toExclusive)
+      .filter((row) => row.manualId && row.at >= range.from && row.at < range.toExclusive && (!line || lineOfRow(row) === line))
       .sort((a, b) => b.at.getTime() - a.at.getTime())
       .map((row) => ({
         id: row.manualId as string,
         receivedOn: kstDateString(row.at),
         typeLabel: REVENUE_TYPE_LABELS[row.type] ?? row.type,
         lineLabel: BUSINESS_LINE_LABELS[lineOfRow(row)],
+        typeKey: row.type,
+        assignedLine: row.line ?? null,
+        duplicateOf: duplicates.get(row.manualId as string) ?? null,
         description: row.note ?? '',
         method: row.method,
         memo: row.memo ?? null,
@@ -417,7 +432,7 @@ const BusinessPnlSection = ({ pnl, summary }: { pnl: BusinessPnl; summary: Reven
         기준: 매출은 부가세 포함 순매출이고(월 입주 이용료는 부가세를 따로 나누지 않았습니다), 지출은 부가세 포함 금액으로 적습니다 — 둘 다 부가세를 빼지 않은 금액이라
         세무상 이익과는 다릅니다. 연습실 매출은 월 입주(입주해 있는 달마다 월 이용료) · 연습실 시간제 예약 · 연습실 월 이용료 카드 구독입니다.
         플랫폼 매출은 정산 몫을 뺀 수수료이고, <strong>결제 대행(PG) 수수료는 빼지 않은 금액</strong>입니다(수수료 기록이 DB에 없습니다).
-        결제 링크는 링크를 만들 때 고른 분야(없으면 녹음·제작), 직접 받은 매출은 고른 분야(없으면 유형)로 셉니다.
+        결제 링크는 링크에 고른 분야(없으면 녹음·제작, 결제 링크 목록에서 바꿀 수 있어요), 직접 받은 매출은 고른 분야(없으면 유형, 아래 목록에서 바꿀 수 있어요)로 셉니다. 지출은 이번 달까지만 셉니다(앞으로 올 달의 반복 지출은 아직 넣지 않아요).
       </p>
     </section>
   );
@@ -530,7 +545,9 @@ export default function AdminRevenuePage({ summary, type, line = null, years, no
             )}
 
             <section className="rounded-2xl bg-white p-4 shadow-sm md:p-8">
-              <h2 className="mb-1 text-lg font-bold text-gray-900 dark:text-gray-900">{summary.year}년 월별 순매출</h2>
+              <h2 className="mb-1 text-lg font-bold text-gray-900 dark:text-gray-900">
+                {summary.year}년 월별 순매출{[line ? BUSINESS_LINE_LABELS[line] : null, type ? REVENUE_TYPE_LABELS[type] : null].filter(Boolean).map((label) => ` · ${label}`).join('')}
+              </h2>
               <p className="mb-4 text-xs text-gray-500">전년 같은 달과 나란히 봅니다.</p>
               <MonthlyChart summary={summary} type={type} />
             </section>
@@ -609,7 +626,7 @@ export default function AdminRevenuePage({ summary, type, line = null, years, no
               types={Object.entries(MANUAL_TYPES).map(([value, label]) => ({ value, label }))}
               methods={[...MANUAL_METHODS]}
               entries={manualEntries}
-              periodLabel={summary.periodLabel}
+              periodLabel={line ? `${summary.periodLabel} · ${BUSINESS_LINE_LABELS[line]}` : summary.periodLabel}
               unavailable={manualError ?? undefined}
             />
 

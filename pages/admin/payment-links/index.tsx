@@ -10,11 +10,14 @@ import { kstDateString } from '../../../lib/booking/kst';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { PAYMENT_LINK_LIMITS } from '../../../lib/payments/paymentLinkRules';
 import { listPaymentLinks, type PaymentLinkListRow } from '../../../lib/payments/paymentLinks';
-import { BUSINESS_LINE_LABELS, BUSINESS_LINES } from '../../../lib/ops/businessLine';
+import { BUSINESS_LINE_LABELS, BUSINESS_LINES, type BusinessLine } from '../../../lib/ops/businessLine';
 import { loadPaymentLinkLines } from '../../../lib/ops/businessLineStore';
 
-/** 목록 행 + 매출 분야 이름(지정이 없으면 기본 '녹음·제작'). */
-type LinkView = PaymentLinkListRow & { lineLabel: string };
+/**
+ * 목록 행 + 매출 분야(지정이 없으면 기본 '녹음·제작'). `lineFixed`면 제작·믹싱 계약 링크라 바꿀 수 없다.
+ * `lineSetBy`·`lineSetAt`은 분야를 마지막으로 정한 사람·시각(unix 초) — 고른 적 없으면 null.
+ */
+type LinkView = PaymentLinkListRow & { lineLabel: string; line?: BusinessLine; lineFixed?: boolean; lineSetBy?: string | null; lineSetAt?: number | null };
 
 interface Props {
   links: LinkView[];
@@ -42,7 +45,14 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   const lines = await loadPaymentLinkLines(rows.map((r) => r.slug));
   const links: LinkView[] = rows.map((r) => {
     const found = lines.get(r.slug);
-    return { ...r, lineLabel: found ? `${BUSINESS_LINE_LABELS[found.line]}${found.fixed ? '(제작 계약)' : ''}` : BUSINESS_LINE_LABELS.recording };
+    return {
+      ...r,
+      lineLabel: found ? `${BUSINESS_LINE_LABELS[found.line]}${found.fixed ? '(제작 계약)' : ''}` : BUSINESS_LINE_LABELS.recording,
+      line: found?.line ?? 'recording',
+      lineFixed: found?.fixed ?? false,
+      lineSetBy: found?.by ?? null,
+      lineSetAt: found?.at ?? null,
+    };
   });
   const today = kstDateString(new Date());
   const fileLinks = Object.entries(PAYMENT_LINKS).map(([slug, l]) => ({
@@ -115,12 +125,32 @@ export default function AdminPaymentLinksPage({ links: initialLinks, truncated, 
           sessionAt: sessionAt ? Math.floor(new Date(`${sessionAt}:00+09:00`).getTime() / 1000) : null,
           sessionHours: sessionAt ? Number(sessionHours) : null, blocked: Boolean(data.blocked),
           lineLabel: data.warning ? BUSINESS_LINE_LABELS.recording : BUSINESS_LINE_LABELS[businessLine as keyof typeof BUSINESS_LINE_LABELS] ?? BUSINESS_LINE_LABELS.recording,
+          line: data.warning ? 'recording' : (businessLine as BusinessLine), lineFixed: false, lineSetBy: null, lineSetAt: null,
         }, ...prev]);
         setCreated(data.slug);
         if (data.warning) setError(data.warning);
         await copy(data.slug);
         setItemName(''); setAmountText(''); setExpiresOn(''); setMemo(''); setSessionAt(''); setSessionHours('3'); setBlockSlot(true); setBusinessLine('recording');
       } else setError(data?.message ?? '만들지 못했어요.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  /** 매출 분야 바꾸기 — 이미 받은 결제에도 소급된다(매출은 링크의 분야로 센다). */
+  const changeLine = async (l: LinkView, next: BusinessLine) => {
+    if (next === l.line) return;
+    if (!window.confirm(`"${l.itemName}" 링크의 매출 분야를 ${BUSINESS_LINE_LABELS[l.line ?? 'recording']} → ${BUSINESS_LINE_LABELS[next]}(으)로 바꿀까요? 이미 받은 결제도 바뀐 분야로 셉니다.`)) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/admin/payment-links', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ slug: l.slug, businessLine: next }) });
+      const data = (await res.json().catch(() => null)) as { ok?: boolean; message?: string } | null;
+      if (data?.ok) {
+        setLinks((prev) => prev.map((x) => (x.slug === l.slug ? { ...x, line: next, lineLabel: BUSINESS_LINE_LABELS[next], lineSetBy: null, lineSetAt: Math.floor(Date.now() / 1000) } : x)));
+      } else setError(data?.message ?? '분야를 바꾸지 못했어요.');
+    } catch {
+      setError('네트워크 오류로 분야를 바꾸지 못했어요.');
     } finally {
       setBusy(false);
     }
@@ -216,8 +246,24 @@ export default function AdminPaymentLinksPage({ links: initialLinks, truncated, 
                         이용 {kstFull(l.sessionAt)} · {l.sessionHours}시간 · {l.blocked ? '슬롯 차단 중' : '슬롯 차단 없음'}
                       </p>
                     )}
+                    <p className="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-gray-600">
+                      {l.lineFixed ? (
+                        <span title="제작·믹싱 계약의 결제 링크는 늘 녹음·제작 매출이라 바꿀 수 없어요">{l.lineLabel} · 계약 링크라 분야 고정</span>
+                      ) : (
+                        <select
+                          aria-label={`${l.itemName} 매출 분야`}
+                          value={l.line ?? 'recording'}
+                          disabled={busy}
+                          onChange={(e) => changeLine(l, e.target.value as BusinessLine)}
+                          className="rounded-lg border border-gray-300 bg-white px-2 py-1 text-xs text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
+                        >
+                          {BUSINESS_LINES.map((line) => <option key={line} value={line}>{BUSINESS_LINE_LABELS[line]}</option>)}
+                        </select>
+                      )}
+                      {l.lineSetAt && <span>분야 지정 {kst(l.lineSetAt)}{l.lineSetBy ? ` · ${l.lineSetBy}` : ''}</span>}
+                    </p>
                     <p className="text-xs text-gray-600">
-                      {l.lineLabel} · {kst(l.createdAt)} 생성 · {l.closedAt ? `${kst(l.closedAt)} 닫음` : l.expiresOn ? (l.open ? `${l.expiresOn}까지` : `${l.expiresOn} 만료`) : '만료일 없음'} · {l.open ? '열림' : '닫힘'}
+                      {kst(l.createdAt)} 생성 · {l.closedAt ? `${kst(l.closedAt)} 닫음` : l.expiresOn ? (l.open ? `${l.expiresOn}까지` : `${l.expiresOn} 만료`) : '만료일 없음'} · {l.open ? '열림' : '닫힘'}
                     </p>
                   </div>
                   {l.open && (

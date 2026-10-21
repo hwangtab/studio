@@ -76,7 +76,8 @@ export const parseExpenseInput = (raw: unknown, today: string): Parsed => {
   if (spentOn > today) return { ok: false, message: '아직 오지 않은 날짜예요. 오늘까지로 적어 주세요.' };
   const category = typeof b.category === 'string' ? b.category : '';
   if (!(category in EXPENSE_CATEGORY_LABELS)) return { ok: false, message: '항목을 골라 주세요.' };
-  const scope = typeof b.scope === 'string' ? b.scope : 'practice';
+  // 구분을 보내지 않으면 공통(분야를 모르는 비용을 한 분야 수익에서 빼지 않게 — 화면의 기본값도 공통이다).
+  const scope = typeof b.scope === 'string' ? b.scope : 'studio';
   if (!(scope in EXPENSE_SCOPE_LABELS)) return { ok: false, message: '구분(연습실·녹음·제작·플랫폼·공통)을 골라 주세요.' };
   const description = typeof b.description === 'string' ? b.description.trim() : '';
   if (description === '') return { ok: false, message: '내용을 적어 주세요. (예: 10월 임대료)' };
@@ -111,11 +112,18 @@ const pad = (n: number): string => String(n).padStart(2, '0');
 
 type ExpenseLike = Pick<StudioExpense, 'id' | 'spentOn' | 'description' | 'amount' | 'repeatMonthly' | 'repeatUntil'> & { category: string; scope: string };
 
-/** 지출 행들을 [from, toExclusive) (KST 날짜 문자열) 안의 발생 건으로 펼친다. 순수 함수. */
+/**
+ * 지출 행들을 [from, toExclusive) (KST 날짜 문자열) 안의 발생 건으로 펼친다. 순수 함수.
+ *
+ * `untilMonth`('YYYY-MM')를 주면 반복 지출을 **그 달까지만** 센다 — 매출 쪽 월 입주 수입(tenancyRevenue.ts)이 오늘이 속한 달까지만
+ * 만들므로, 지출만 앞으로 올 달까지 펼치면 연 전체·다음 달 화면에 "매출 0 · 수익 −임대료" 같은 유령 지출이 생긴다(2026-10-21 감사:
+ * 11월이 수익 −3,075,000원으로 보였다). 이번 달은 날짜가 아직 안 왔어도 전액 센다(월 입주와 같은 규칙).
+ */
 export const expandExpenses = (
   rows: readonly ExpenseLike[],
   from: string,
   toExclusive: string,
+  untilMonth?: string,
 ): ExpenseOccurrence[] => {
   const out: ExpenseOccurrence[] = [];
   const base = (r: (typeof rows)[number], on: string): ExpenseOccurrence => ({
@@ -136,6 +144,7 @@ export const expandExpenses = (
       const key = `${y}-${pad(m)}`;
       if (lastMonth && key > lastMonth) break;
       if (key > windowEndMonth) break;
+      if (untilMonth && key > untilMonth) break;
       const on = `${key}-${pad(Math.min(day, lastDayOf(y, m)))}`;
       if (on >= from && on < toExclusive && on >= r.spentOn) out.push(base(r, on));
       m += 1;
@@ -149,8 +158,9 @@ export const expandExpenses = (
 export const loadExpenseRows = async (): Promise<StudioExpense[]> =>
   getDb().select().from(studioExpenses).where(and(isNull(studioExpenses.deletedAt)));
 
-export const loadExpenseOccurrences = async (range: { from: Date; toExclusive: Date }): Promise<ExpenseOccurrence[]> =>
-  expandExpenses(await loadExpenseRows(), kstDateString(range.from), kstDateString(range.toExclusive));
+/** 기간 안의 지출 발생 건 — 반복 지출은 오늘(KST)이 속한 달까지만(expandExpenses의 `untilMonth`). */
+export const loadExpenseOccurrences = async (range: { from: Date; toExclusive: Date }, now: Date = new Date()): Promise<ExpenseOccurrence[]> =>
+  expandExpenses(await loadExpenseRows(), kstDateString(range.from), kstDateString(range.toExclusive), kstDateString(now).slice(0, 7));
 
 export interface ExpenseSummary {
   /** 손익에 넣는 지출 합(대출 원금 같은 손익 밖 지출은 뺀다). */
@@ -217,4 +227,35 @@ export const endExpenseRepeat = async (id: string, until: string): Promise<boole
   const result = await getDb().update(studioExpenses).set({ repeatUntil: until })
     .where(and(eq(studioExpenses.id, id), isNull(studioExpenses.deletedAt), eq(studioExpenses.repeatMonthly, true), gte(studioExpenses.spentOn, '2020-01-01')));
   return Number(result.rowsAffected) > 0;
+};
+
+/**
+ * 구분·항목·메모를 고친다(금액·날짜·반복은 그대로 — 틀렸으면 지우고 다시 적는다). 구분·항목이 바뀌면 누가·언제·무엇에서 무엇으로를
+ * 메모 끝에 한 줄 남긴다 — 이 표에는 수정 이력 칸이 없다. 새 구분(녹음·제작·플랫폼)·항목(대출 원금)은 0084 전 DB에서 CHECK에 걸려 던진다
+ * (호출부가 isExpenseCheckViolation으로 503). 없거나 지운 행은 'not_found', 바꿀 게 없으면 'unchanged'.
+ */
+export const updateExpenseClassification = async (
+  id: string,
+  change: { scope?: string; category?: string; memo?: string | null },
+  actor: string,
+  now: Date = new Date(),
+): Promise<'ok' | 'not_found' | 'invalid' | 'unchanged'> => {
+  if (change.scope !== undefined && !(change.scope in EXPENSE_SCOPE_LABELS)) return 'invalid';
+  if (change.category !== undefined && !(change.category in EXPENSE_CATEGORY_LABELS)) return 'invalid';
+  const db = getDb();
+  const [row] = await db.select().from(studioExpenses).where(and(eq(studioExpenses.id, id), isNull(studioExpenses.deletedAt)));
+  if (!row) return 'not_found';
+  const scope = change.scope ?? row.scope;
+  const category = change.category ?? row.category;
+  const memoInput = change.memo === undefined ? row.memo : change.memo === null || change.memo.trim() === '' ? null : change.memo.trim().slice(0, 1000);
+  const notes: string[] = [];
+  if (scope !== row.scope) notes.push(`구분 ${EXPENSE_SCOPE_LABELS[row.scope]?.replace(/\(.*\)$/, '') ?? row.scope}→${EXPENSE_SCOPE_LABELS[scope].replace(/\(.*\)$/, '')}`);
+  if (category !== row.category) notes.push(`항목 ${EXPENSE_CATEGORY_LABELS[row.category] ?? row.category}→${EXPENSE_CATEGORY_LABELS[category]}`);
+  if (notes.length === 0 && memoInput === row.memo) return 'unchanged';
+  const trail = notes.length > 0 ? `[${notes.join(' · ')} · ${actor} · ${kstDateString(now)}]` : null;
+  const memo = trail ? `${memoInput ? `${memoInput}\n` : ''}${trail}`.slice(-1000) : memoInput;
+  await db.update(studioExpenses)
+    .set({ scope: scope as StudioExpense['scope'], category: category as StudioExpense['category'], memo })
+    .where(and(eq(studioExpenses.id, id), isNull(studioExpenses.deletedAt)));
+  return 'ok';
 };

@@ -15,6 +15,8 @@ import { formatKstDateTime, formatKstDateTimeFull } from '../booking/format';
 import { getMixingProduct } from '../booking/mixing-products';
 import { getProduct } from '../booking/products';
 import { pledgeLines, pledgeLinesLabel } from '../funding/pledgeLines';
+import { BUSINESS_LINE_LABELS, lineOfSessionService, lineOfSubscriptionKind, lineOfType, type BusinessLine } from './businessLine';
+import { assignDepositLines } from './businessLineStore';
 
 /**
  * 토스 결제 장부 — 기간 안에 승인된 결제 전부를 서비스 구분 없이 한 표로.
@@ -53,6 +55,8 @@ export const SALES_LEDGER_COLUMNS = [
   'netVatAmount',
   'orderStatus',
   'lastRefundAt',
+  // 매출 현황과 같은 사업 분야(연습실·녹음·제작·플랫폼·기타 — businessLine.ts). 기존 스프레드시트가 깨지지 않게 **맨 끝**에 붙였다.
+  'businessLine',
 ] as const;
 
 export type SalesLedgerRow = Record<(typeof SALES_LEDGER_COLUMNS)[number], string | number | null>;
@@ -111,6 +115,18 @@ export const listSalesLedgerRows = async (range: LedgerRange): Promise<SalesLedg
     orderBy: [asc(payments.approvedAt)],
   });
 
+  // 결제 링크 주문(예약금)의 분야는 링크에 고른 분야(분야 지정 표) — 매출 현황과 같은 판정(assignDepositLines)을 쓴다.
+  const depositLines = new Map(
+    (await assignDepositLines(rows.filter((p) => p.order.type === 'deposit').map((p) => ({ type: 'deposit', orderNo: p.order.orderNo } as { type: string; orderNo: string; line?: BusinessLine }))))
+      .map((r) => [r.orderNo, r.line] as const),
+  );
+  const lineOf = (order: (typeof rows)[number]['order']): BusinessLine => {
+    if (order.type === 'session') return lineOfSessionService(order.bookings[0]?.serviceType) ?? lineOfType('session');
+    if (order.type === 'subscription') return lineOfSubscriptionKind(order.subscriptionPayment?.subscription?.kind) ?? lineOfType('subscription');
+    if (order.type === 'deposit') return depositLines.get(order.orderNo) ?? lineOfType('deposit');
+    return lineOfType(order.type);
+  };
+
   return rows.map((payment) => {
     const order = payment.order;
     const done = payment.refunds.filter((r) => r.status === 'done');
@@ -140,6 +156,7 @@ export const listSalesLedgerRows = async (range: LedgerRange): Promise<SalesLedg
       netVatAmount,
       orderStatus: order.status,
       lastRefundAt: lastRefund ? formatKstDateTimeFull(lastRefund.toISOString()) : null,
+      businessLine: BUSINESS_LINE_LABELS[lineOf(order)],
     };
   });
 };

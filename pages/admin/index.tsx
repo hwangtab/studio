@@ -159,20 +159,18 @@ const RevenueSummaryCard = ({ revenue }: { revenue: RevenueSnapshot }) => {
     <section className="bg-white rounded-2xl shadow-sm p-4 md:p-8">
       <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900">{revenue.month}월 매출</h2>
-        <Link href="/admin/revenue" className={`rounded text-sm font-medium text-primary hover:underline ${FOCUS_RING}`}>
+        <Link href="/admin/revenue" aria-label={`${revenue.month}월 매출 현황 자세히 보기`} className={`rounded text-sm font-medium text-primary hover:underline ${FOCUS_RING}`}>
           매출 현황 →
         </Link>
       </div>
-      <Link href="/admin/revenue" className={`group -mx-2 flex items-center justify-between gap-3 rounded-xl px-2 py-1 hover:bg-gray-50 ${FOCUS_RING}`}>
-        <span className="min-w-0">
-          <span className="block text-3xl font-bold tabular-nums text-gray-900">{won(revenue.net)}</span>
-          <span className="mt-1 block text-xs text-gray-500">
-            환불을 뺀 순매출(부가세 포함) · {revenue.count}건
-            {revenue.refunded > 0 ? ` · 환불 -${won(revenue.refunded)}` : ''}
-          </span>
-        </span>
-        <Chevron />
-      </Link>
+      {/* 매출 현황으로 가는 링크는 제목 옆 하나만 둔다 — 큰 숫자까지 같은 곳으로 걸면 화면 낭독기가 같은 링크를 두 번 읽는다. */}
+      <div>
+        <p className="text-3xl font-bold tabular-nums text-gray-900">{won(revenue.net)}</p>
+        <p className="mt-1 text-xs text-gray-500">
+          환불을 뺀 순매출(부가세 포함) · {revenue.count}건
+          {revenue.refunded > 0 ? ` · 환불 -${won(revenue.refunded)}` : ''}
+        </p>
+      </div>
       <p className={`mt-1 text-sm font-medium ${rate === null ? 'text-gray-500' : rate >= 0 ? 'text-green-700' : 'text-red-700'}`}>
         {rate === null ? '전월 매출이 없어 비교하지 않습니다' : `${rate >= 0 ? '▲' : '▼'} ${Math.abs(rate).toFixed(1)}% 전월(${won(revenue.previousNet)}) 전체 대비`}
       </p>

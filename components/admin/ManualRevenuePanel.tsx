@@ -5,7 +5,7 @@ import { Button } from '../ui/Button';
 import { Field, Select, TextInput } from '../ui/Field';
 import { Notice } from '../ui/Notice';
 import { lightOnlyField } from '../ui/adminFieldClass';
-import { BUSINESS_LINE_LABELS, BUSINESS_LINES, lineOfType } from '../../lib/ops/businessLine';
+import { BUSINESS_LINE_LABELS, BUSINESS_LINES, lineOfType, type BusinessLine } from '../../lib/ops/businessLine';
 
 /**
  * 웹사이트를 거치지 않고 계좌·현금으로 받은 매출을 적는 폼과, 이 기간에 적은 기록.
@@ -18,6 +18,11 @@ export interface ManualRevenueView {
   typeLabel: string;
   /** 이 기록이 세어지는 분야 이름(지정 또는 유형의 기본값). */
   lineLabel?: string;
+  /** 유형 값(기본 분야 표기용)과 운영자가 고른 분야(없으면 유형대로). 둘 다 있어야 목록에서 분야를 바꿀 수 있다. */
+  typeKey?: string;
+  assignedLine?: BusinessLine | null;
+  /** 중복 의심 설명(manualRevenueDuplicates.ts). 있으면 "중복 아님" 버튼이 뜬다. */
+  duplicateOf?: string | null;
   description: string;
   method: string;
   memo: string | null;
@@ -37,7 +42,10 @@ interface Props {
 
 const won = (value: number) => `${value.toLocaleString('ko-KR')}원`;
 
-const call = async (method: 'POST' | 'PATCH' | 'DELETE', body: unknown): Promise<{ ok: boolean; message?: string; warning?: string }> => {
+/** 판매·중개 유형 — 받은 돈 전액이 아니라 스튜디오 수수료 몫만 매출이다(lib/ops/platformFee.ts와 같은 원칙). */
+const FEE_ONLY_TYPES = new Set(['funding', 'ticket', 'merch']);
+
+const call = async (method: 'POST' | 'PATCH' | 'DELETE', body: unknown): Promise<{ ok: boolean; message?: string; warning?: string; code?: string }> => {
   try {
     const response = await fetch('/api/admin/revenue/manual', {
       method,
@@ -48,7 +56,7 @@ const call = async (method: 'POST' | 'PATCH' | 'DELETE', body: unknown): Promise
     const result = await response.json().catch(() => ({}));
     return response.ok && result?.ok
       ? { ok: true, warning: typeof result.warning === 'string' ? result.warning : undefined }
-      : { ok: false, message: result?.message || '처리하지 못했습니다.' };
+      : { ok: false, message: result?.message || '처리하지 못했습니다.', code: typeof result?.code === 'string' ? result.code : undefined };
   } catch {
     return { ok: false, message: '네트워크 오류로 처리하지 못했습니다.' };
   }
@@ -75,12 +83,22 @@ export const ManualRevenuePanel = ({ today, types, methods, entries, periodLabel
     const total = Number(amount.replace(/,/g, ''));
     setBusy(true);
     setMessage(null);
-    const result = await call('POST', { receivedOn, type, description, totalAmount: total, vatMode, method, memo, businessLine });
+    const payload = { receivedOn, type, description, totalAmount: total, vatMode, method, memo, businessLine };
+    let result = await call('POST', payload);
+    // 같은 돈이 이미 적혀 있을 수 있다는 경고 — 막지 않고 확인을 받는다. 확인하면 메모에 [중복 아님]이 붙어 운영 점검이 다시 묻지 않는다.
+    if (!result.ok && result.code === 'possible_duplicate') {
+      if (!window.confirm(`${result.message}\n\n다른 거래가 맞으면 "확인"을 눌러 그래도 저장하세요.`)) {
+        setBusy(false);
+        return setMessage({ tone: 'error', text: '저장하지 않았습니다. 이미 적힌 주문·기록을 확인해 주세요.' });
+      }
+      result = await call('POST', { ...payload, confirmDuplicate: true });
+    }
     setBusy(false);
     if (!result.ok) return setMessage({ tone: 'error', text: result.message ?? '저장하지 못했습니다.' });
     setDescription('');
     setAmount('');
     setMemo('');
+    setBusinessLine('');
     setMessage(result.warning ? { tone: 'error', text: result.warning } : { tone: 'success', text: `${won(total)}을 기록했습니다.` });
     await refresh();
   };
@@ -91,6 +109,23 @@ export const ManualRevenuePanel = ({ today, types, methods, entries, periodLabel
     const result = await call('PATCH', { id: entry.id, refundedAmount: Number(input.replace(/,/g, '')) });
     if (!result.ok) return setMessage({ tone: 'error', text: result.message ?? '처리하지 못했습니다.' });
     setMessage({ tone: 'success', text: '환불 금액을 고쳤습니다.' });
+    await refresh();
+  };
+
+  const changeLine = async (entry: ManualRevenueView, next: string) => {
+    const label = next === '' ? `유형대로(${BUSINESS_LINE_LABELS[lineOfType(entry.typeKey ?? 'other')]})` : BUSINESS_LINE_LABELS[next as BusinessLine];
+    if (!window.confirm(`"${entry.description}"의 분야를 ${label}(으)로 바꿀까요? 바꾼 사람·날짜가 메모에 남습니다.`)) return;
+    const result = await call('PATCH', { id: entry.id, businessLine: next });
+    if (!result.ok) return setMessage({ tone: 'error', text: result.message ?? '분야를 바꾸지 못했습니다.' });
+    setMessage({ tone: 'success', text: `분야를 ${label}(으)로 바꿨습니다.` });
+    await refresh();
+  };
+
+  const ackDuplicate = async (entry: ManualRevenueView) => {
+    if (!window.confirm(`"${entry.description}"은(는) ${entry.duplicateOf}와 다른 거래가 맞나요? 메모에 [중복 아님]을 남기고 더 묻지 않습니다.`)) return;
+    const result = await call('PATCH', { id: entry.id, action: 'ackDuplicate' });
+    if (!result.ok) return setMessage({ tone: 'error', text: result.message ?? '처리하지 못했습니다.' });
+    setMessage({ tone: 'success', text: '중복 아님으로 표시했습니다.' });
     await refresh();
   };
 
@@ -140,7 +175,12 @@ export const ManualRevenuePanel = ({ today, types, methods, entries, periodLabel
           <Field id="mr-desc" label="내용" required hint="예: 녹음 3시간 — 김OO" className={`md:col-span-3 ${lightOnlyField}`}>
             <TextInput value={description} onChange={(e) => setDescription(e.target.value)} maxLength={100} required light />
           </Field>
-          <Field id="mr-amount" label="받은 금액 (원)" required hint="부가세 포함 총액" className={`md:col-span-2 ${lightOnlyField}`}>
+          <Field
+            id="mr-amount"
+            label="받은 금액 (원)"
+            required
+            hint={FEE_ONLY_TYPES.has(type) ? '스튜디오 수수료 몫만 적으세요(받은 전액 아님) · 부가세 포함' : '부가세 포함 총액'}
+            className={`md:col-span-2 ${lightOnlyField}`}>
             <TextInput inputMode="numeric" value={amount} onChange={(e) => setAmount(e.target.value.replace(/[^\d,]/g, ''))} required light />
           </Field>
           <Field id="mr-vat" label="부가세" required className={`md:col-span-1 ${lightOnlyField}`}>
@@ -149,7 +189,11 @@ export const ManualRevenuePanel = ({ today, types, methods, entries, periodLabel
               <option value="exempt">면세·없음</option>
             </Select>
           </Field>
-          <Field id="mr-line" label="분야" hint="비우면 유형으로 정해요" className={`md:col-span-2 ${lightOnlyField}`}>
+          <Field
+            id="mr-line"
+            label="분야"
+            hint={type === 'session' ? '연습실 시간제면 분야를 연습실로 고르세요 · 비우면 유형으로 정해요' : '비우면 유형으로 정해요'}
+            className={`md:col-span-2 ${lightOnlyField}`}>
             <Select value={businessLine} onChange={(e) => setBusinessLine(e.target.value)} light>
               <option value="">유형대로 ({BUSINESS_LINE_LABELS[lineOfType(type)]})</option>
               {BUSINESS_LINES.map((line) => (
@@ -191,8 +235,31 @@ export const ManualRevenuePanel = ({ today, types, methods, entries, periodLabel
                   {entry.receivedOn} · {entry.method}
                   {entry.memo ? ` · ${entry.memo}` : ''}
                 </p>
+                {entry.duplicateOf && (
+                  <p className="mt-1 text-xs font-medium text-amber-800">
+                    중복 의심: {entry.duplicateOf}{' '}
+                    <button type="button" onClick={() => ackDuplicate(entry)} className="ml-1 text-primary underline">
+                      중복 아님
+                    </button>
+                  </p>
+                )}
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3">
+                {entry.typeKey && (
+                  <select
+                    aria-label={`${entry.description} 분야`}
+                    value={entry.assignedLine ?? ''}
+                    onChange={(e) => changeLine(entry, e.target.value)}
+                    className="rounded-lg border border-gray-300 bg-white px-2 py-1 text-xs text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
+                  >
+                    <option value="">유형대로 ({BUSINESS_LINE_LABELS[lineOfType(entry.typeKey)]})</option>
+                    {BUSINESS_LINES.map((line) => (
+                      <option key={line} value={line}>
+                        {BUSINESS_LINE_LABELS[line]}
+                      </option>
+                    ))}
+                  </select>
+                )}
                 <span className="tabular-nums text-gray-900">
                   {won(entry.totalAmount)}
                   {entry.refundedAmount > 0 && <span className="text-red-700"> (환불 -{won(entry.refundedAmount)})</span>}

@@ -153,7 +153,10 @@ describe('이번 달 매출 요약', () => {
   it('순매출·전월 대비·분야별 매출·수익을 그리고 매출 현황으로 잇는다', () => {
     render(<AdminIndexPage dashboard={DASHBOARD} shopQueues={SHOP_QUEUES} revenue={REVENUE} ledgerFrom="2026-10-01" ledgerTo="2026-10-16" />);
     expect(screen.getByRole('heading', { name: '10월 매출' })).toBeInTheDocument();
-    expect(screen.getByText('1,250,000원').closest('a')).toHaveAttribute('href', '/admin/revenue');
+    // 매출 현황으로 가는 링크는 하나뿐이다(큰 숫자는 링크가 아니다 — 같은 링크를 두 번 두지 않는다).
+    expect(screen.getByText('1,250,000원').closest('a')).toBeNull();
+    expect(screen.getAllByRole('link').filter((a) => a.getAttribute('href') === '/admin/revenue')).toHaveLength(1);
+    expect(screen.getByRole('link', { name: '10월 매출 현황 자세히 보기' })).toHaveAttribute('href', '/admin/revenue');
     expect(screen.getByText(/25\.0% 전월\(1,000,000원\)/)).toBeInTheDocument();
     // 분야 칸은 칸 전체가 그 분야의 매출 현황으로 가는 링크다.
     const practice = screen.getByRole('link', { name: /연습실\s*500,000원\s*수익 300,000원/ });

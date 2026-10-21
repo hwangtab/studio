@@ -1,4 +1,8 @@
-import { EXPENSE_SCOPE_LABELS, expandExpenses, isExpenseCheckViolation, parseExpenseInput, summarizeExpenses, type ExpenseOccurrence } from './expenses';
+import { EXPENSE_SCOPE_LABELS, expandExpenses, isExpenseCheckViolation, loadExpenseOccurrences, parseExpenseInput, summarizeExpenses, type ExpenseOccurrence } from './expenses';
+import { periodRange } from './revenueReport';
+
+let mockRows: unknown[] = [];
+jest.mock('../../db/client', () => ({ getDb: () => ({ select: () => ({ from: () => ({ where: async () => mockRows }) }) }) }));
 
 const row = (over: Partial<Parameters<typeof expandExpenses>[0][number]> & { id: string; spentOn: string }) => ({
   category: 'rent', scope: 'practice', description: '임대료', amount: 1_000_000, repeatMonthly: false, repeatUntil: null as string | null, ...over,
@@ -26,6 +30,36 @@ describe('expandExpenses', () => {
   it('반복 끝나는 날이 속한 달까지 센다', () => {
     const rows = [row({ id: 'r', spentOn: '2026-08-15', repeatMonthly: true, repeatUntil: '2026-10-02' })];
     expect(expandExpenses(rows, '2026-01-01', '2027-01-01').map((o) => o.on)).toEqual(['2026-08-15', '2026-09-15', '2026-10-15']);
+  });
+});
+
+describe('반복 지출은 오늘이 속한 달까지만 센다(월 입주 수입과 같은 규칙)', () => {
+  // 2026-10-21 KST 낮 — 이번 달은 10월.
+  const NOW = new Date('2026-10-21T03:00:00Z');
+  const rent = row({ id: 'rent', spentOn: '2026-01-25', repeatMonthly: true, amount: 3_075_000, scope: 'studio' });
+  beforeEach(() => { mockRows = [rent]; });
+
+  it('연 전체(periodRange(년, all))는 1~10월만 — 11·12월 유령 지출이 없다', async () => {
+    const occ = await loadExpenseOccurrences(periodRange(2026, 'all'), NOW);
+    expect(occ.map((o) => o.on.slice(0, 7))).toEqual(['2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09', '2026-10']);
+  });
+
+  it('앞으로 올 달(11월)은 지출이 없다', async () => {
+    expect(await loadExpenseOccurrences(periodRange(2026, 11), NOW)).toEqual([]);
+    expect(await loadExpenseOccurrences(periodRange(2027, 'all'), NOW)).toEqual([]);
+  });
+
+  it('이번 달은 날짜(25일)가 아직 안 왔어도 센다', async () => {
+    expect((await loadExpenseOccurrences(periodRange(2026, 10), NOW)).map((o) => [o.on, o.amount])).toEqual([['2026-10-25', 3_075_000]]);
+  });
+
+  it('달이 바뀌면(11/1 KST 0시) 11월부터 센다', async () => {
+    expect(await loadExpenseOccurrences(periodRange(2026, 11), new Date('2026-10-31T15:00:00Z'))).toHaveLength(1);
+  });
+
+  it('untilMonth를 주지 않으면(순수 함수 그대로) 창 끝까지 펼친다', () => {
+    expect(expandExpenses([rent], '2026-11-01', '2027-01-01').map((o) => o.on)).toEqual(['2026-11-25', '2026-12-25']);
+    expect(expandExpenses([rent], '2026-11-01', '2027-01-01', '2026-10')).toEqual([]);
   });
 });
 

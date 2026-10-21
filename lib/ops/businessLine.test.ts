@@ -35,6 +35,9 @@ describe('분야 판정', () => {
     expect(lineOfSubscriptionKind('artist-support')).toBe('platform');
     expect(lineOfSubscriptionKind('lesson')).toBe('other');
     expect(lineOfSubscriptionKind(undefined)).toBeNull();
+    // 모르는 구독 종류는 지정이 없으니 유형(subscription)의 기본값 — 기타.
+    expect(lineOfSubscriptionKind('mystery-kind')).toBeNull();
+    expect(lineOfRow({ type: 'subscription', line: lineOfSubscriptionKind('mystery-kind') })).toBe('other');
   });
 
   it('행에 분야가 있으면 그것(결제 링크·수기 매출 지정), 없으면 유형의 기본값', () => {
