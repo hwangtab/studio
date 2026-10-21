@@ -29,7 +29,8 @@ export default function AdminLoginPage() {
         throw new Error(result?.message || '비밀번호가 올바르지 않습니다.');
       }
 
-      await router.replace('/admin/contracts');
+      // 로그인하면 대시보드로 — 예전엔 계약 목록으로 가서 "처리할 일"이 있는 첫 화면을 건너뛰었다(2026-10-21 운영자 지적).
+      await router.replace('/admin');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : '로그인 중 오류가 발생했습니다.');
     } finally {
