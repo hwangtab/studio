@@ -83,12 +83,33 @@ const TRACKED_EVENT_NAMES = [...ALL_LEAD_EVENT_NAMES, ...MICRO_EVENT_NAMES];
 //
 // 진짜 영어권 방문자는 대부분 google/organic으로 들어오고(555세션, 체류 129초)
 // 한국어 직접유입은 체류 203초라, 이 두 조건의 교집합만 잘라도 실사용자 손실은 미미하다.
+//
+// 지문 2(2026-10-21, 2026-10-20 Opus 리뷰에서 발견): (direct)/(none) + language Chinese도
+// 같은 모양이다. 28일 실측 271세션, 평균 체류 1.18초, engagementRate 0.74% — 위 영어
+// 지문(0.96초·0.34%)과 거의 같다. 참고로 (direct)/(none) + English + country China는
+// 6,088세션(28일)으로 더 크지만 language가 English라 이미 위 필터에 걸린다 — 이번에
+// 놓치고 있던 것은 language가 Chinese로 찍히는 쪽이다. 한국어 직접유입(847세션, 체류
+// 221초)과는 자릿수가 다르다.
 const BOT_EXCLUSION = {
   notExpression: {
-    andGroup: {
+    orGroup: {
       expressions: [
-        { filter: { fieldName: 'sessionSourceMedium', stringFilter: { matchType: 'EXACT', value: '(direct) / (none)' } } },
-        { filter: { fieldName: 'language', stringFilter: { matchType: 'EXACT', value: 'English' } } },
+        {
+          andGroup: {
+            expressions: [
+              { filter: { fieldName: 'sessionSourceMedium', stringFilter: { matchType: 'EXACT', value: '(direct) / (none)' } } },
+              { filter: { fieldName: 'language', stringFilter: { matchType: 'EXACT', value: 'English' } } },
+            ],
+          },
+        },
+        {
+          andGroup: {
+            expressions: [
+              { filter: { fieldName: 'sessionSourceMedium', stringFilter: { matchType: 'EXACT', value: '(direct) / (none)' } } },
+              { filter: { fieldName: 'language', stringFilter: { matchType: 'EXACT', value: 'Chinese' } } },
+            ],
+          },
+        },
       ],
     },
   },
@@ -395,7 +416,7 @@ async function main() {
   console.log(`Property: ${propertyId}`);
   console.log(INCLUDE_BOTS
     ? '봇 필터: OFF (--include-bots) — 원본 그대로'
-    : '봇 필터: ON — (direct)/(none) + English 세션 제외');
+    : '봇 필터: ON — (direct)/(none) + English/Chinese 세션 제외');
 
   const auth = getAuth();
   const analyticsdata = google.analyticsdata({ version: 'v1beta', auth });

@@ -36,9 +36,14 @@ const DATA_FINAL = shift(new Date().toISOString().slice(0, 10), -2); // GA4 당�
 const post = { startDate: FROM, endDate: shift(FROM, DAYS - 1) < DATA_FINAL ? shift(FROM, DAYS - 1) : DATA_FINAL };
 const pre = { startDate: shift(FROM, -DAYS), endDate: shift(FROM, -1) };
 const LEADS = ['lead_click_kakao', 'lead_click_phone', 'lead_click_email', 'lead_submit_success'];
-const BOT = { notExpression: { andGroup: { expressions: [
-  { filter: { fieldName: 'sessionSourceMedium', stringFilter: { matchType: 'EXACT', value: '(direct) / (none)' } } },
-  { filter: { fieldName: 'language', stringFilter: { matchType: 'EXACT', value: 'English' } } } ] } } };
+// ga4-fetch.mjs BOT_EXCLUSION과 같은 지문 둘(영어·중국어 + (direct)/(none)) — 2026-10-21 추가.
+const BOT = { notExpression: { orGroup: { expressions: [
+  { andGroup: { expressions: [
+    { filter: { fieldName: 'sessionSourceMedium', stringFilter: { matchType: 'EXACT', value: '(direct) / (none)' } } },
+    { filter: { fieldName: 'language', stringFilter: { matchType: 'EXACT', value: 'English' } } } ] } },
+  { andGroup: { expressions: [
+    { filter: { fieldName: 'sessionSourceMedium', stringFilter: { matchType: 'EXACT', value: '(direct) / (none)' } } },
+    { filter: { fieldName: 'language', stringFilter: { matchType: 'EXACT', value: 'Chinese' } } } ] } } ] } } };
 
 const oauth2 = new google.auth.OAuth2(process.env.GSC_OAUTH_CLIENT_ID, process.env.GSC_OAUTH_CLIENT_SECRET);
 oauth2.setCredentials({ refresh_token: process.env.GA4_OAUTH_REFRESH_TOKEN });
