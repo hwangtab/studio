@@ -10,7 +10,7 @@ import { Notice } from '../../../components/ui/Notice';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { kstDateString } from '../../../lib/booking/kst';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
-import { ENROLLMENT_STATUS_LABELS, PAYMENT_METHODS, PAY_METHOD_LABELS, SESSION_STATUS_LABELS, WEEKDAY_LABELS, progressOf, weekdayOf } from '../../../lib/lessons/rules';
+import { ENROLLMENT_STATUS_LABELS, PAYMENT_METHODS, PAY_METHOD_LABELS, SESSION_STATUS_LABELS, WEEKDAY_LABELS, arrearsOf, progressOf, weekdayOf } from '../../../lib/lessons/rules';
 import { getEnrollmentDetail } from '../../../lib/lessons/service';
 
 /** 수강 한 건 — 회차(완료·결석·휴강·일정 변경·수업 기록)와 수납. 결석은 보강 없이 소화된 회차로 센다. */
@@ -104,6 +104,7 @@ export default function AdminLessonDetailPage({ found, today, enrollment, sessio
   const progress = progressOf(sessions);
   const active = enrollment.status === 'active';
   const paid = payments.reduce((sum, p) => sum + p.amount, 0);
+  const due = arrearsOf({ payMethod: enrollment.payMethod, monthlyAmount: enrollment.monthlyAmount, sessions, payments, today });
 
   return (
     <>
@@ -182,6 +183,9 @@ export default function AdminLessonDetailPage({ found, today, enrollment, sessio
           ) : (
             <>
               <p className="mb-3 text-sm text-gray-600">누계 {won(paid)} · 매출 현황의 “프로듀싱 레슨”에 수납일 기준으로 들어가요.</p>
+              {active && due.arrears > 0 && (
+                <p className="mb-3 rounded-lg bg-red-50 p-3 text-sm text-red-900">미수 <strong>{won(due.arrears)}</strong> — 지금까지 {due.monthsDue}개월 치({won(due.expected)}) 중 부가세를 뺀 받은 돈이 {won(due.paidNet)}이에요. 받았다면 아래에서 수납을 기록해 주세요.</p>
+              )}
               {payments.length > 0 && (
                 <ul className="mb-4 divide-y divide-gray-100 text-sm text-gray-900">
                   {payments.map((p) => (

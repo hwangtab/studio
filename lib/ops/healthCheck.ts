@@ -7,7 +7,9 @@ import { isNotificationSentinel } from './notificationSentinel';
 import { safeDbErrorSummary } from '../payments/refundAccount';
 import { bookings, contracts, fundingPledges, fundingProjectPayouts, fundingProjects, orders, payments, refunds, subscriptionPayments, subscriptions } from '../../db/schema';
 import { calendarForService, calendarIdFor, fetchBusyRanges, isCalendarActive, roomCalendarEnvKey, type BookingCalendar } from '../booking/gcal';
+import { isMissingTableError } from '../dbErrors';
 import { tenancyCalendarId } from '../tenancy/calendar';
+import { listEnrollments as listLessonEnrollments } from '../lessons/service';
 import { addDays, daysBetween, kstToday, overdueDays } from '../tenancy/rules';
 import { PRACTICE_ROOM_HOURLY_ROOMS } from '../booking/products';
 import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
@@ -500,6 +502,36 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
     }
   } catch (error) {
     console.error('[health] 월 입주 종료·캘린더 점검 실패 — 건너뜁니다', error instanceof Error ? error.message : String(error));
+  }
+
+  /**
+   * 프로듀싱 레슨 — 계좌·현금 선불 수강의 **미수금**과, 마지막 예정 회차가 2주 안으로 다가온 수강(재등록 확인).
+   * 계좌·현금이 대부분이라 사람이 입금을 기억해야 하는 구조다(카드는 구독이 청구한다). 이름·금액만 싣는다. 표가 없는 DB(0081 전)에서는 건너뛴다.
+   */
+  try {
+    const today = kstToday(now);
+    const lessons = (await listLessonEnrollments(now)).filter((r) => r.enrollment.status === 'active');
+    const owed = lessons.filter((r) => r.arrears > 0);
+    if (owed.length > 0) {
+      const total = owed.reduce((sum, r) => sum + r.arrears, 0);
+      issues.push({
+        severity: 'medium',
+        title: `레슨 미수금 ${owed.length}건 (합계 ${total.toLocaleString('ko-KR')}원)`,
+        detail: `${owed.map((r) => `${r.enrollment.studentName} — ${r.arrears.toLocaleString('ko-KR')}원`).join('\n')}\n이미 받았다면 레슨 관리의 수강 상세에서 “수납 기록”을 남겨 주세요. 아직이면 입금을 요청해 주세요.`,
+        href: '/admin/lessons',
+      });
+    }
+    const ending = lessons.filter((r) => r.lastScheduledOn !== null && r.lastScheduledOn >= today && r.lastScheduledOn <= addDays(today, 14));
+    if (ending.length > 0) {
+      issues.push({
+        severity: 'medium',
+        title: `레슨 종료 임박 ${ending.length}건`,
+        detail: `${ending.map((r) => `${r.enrollment.studentName} — 마지막 수업 ${r.lastScheduledOn}(${daysBetween(today, r.lastScheduledOn as string)}일 뒤)`).join('\n')}\n재등록 의사를 확인해 주세요. 이어 가면 새 수강으로 등록하고, 끝이면 그대로 두면 수료돼요.`,
+        href: '/admin/lessons',
+      });
+    }
+  } catch (error) {
+    if (!isMissingTableError(error)) console.error('[health] 레슨 점검 실패 — 건너뜁니다', error instanceof Error ? error.message : String(error));
   }
 
   /**

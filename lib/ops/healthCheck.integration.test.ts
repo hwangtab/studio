@@ -75,7 +75,7 @@ beforeEach(async () => {
   // refunds가 payments를, subscription_payments가 orders·subscriptions를 참조하므로
   // 참조하는 쪽을 먼저 지운다. refunds가 빠져 있어 테스트끼리 오염된 적이 있다.
   // 공연 표들은 orders를 참조한다 — 앞 describe가 남긴 공연 행이 orders 정리를 FK로 막지 않게 먼저 지운다.
-  for (const table of ['show_tickets', 'show_orders', 'show_ticket_types', 'showtimes', 'show_zones', 'shows', 'refund_accounts', 'software_activations', 'software_licenses', 'refunds', 'payments', 'bookings', 'funding_pledges', 'funding_project_payouts', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'funding_projects', 'funding_creators', 'room_tenancy_payments', 'room_tenancies', 'payment_link_orders']) {
+  for (const table of ['lesson_payments', 'lesson_sessions', 'lesson_enrollments', 'show_tickets', 'show_orders', 'show_ticket_types', 'showtimes', 'show_zones', 'shows', 'refund_accounts', 'software_activations', 'software_licenses', 'refunds', 'payments', 'bookings', 'funding_pledges', 'funding_project_payouts', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'funding_projects', 'funding_creators', 'room_tenancy_payments', 'room_tenancies', 'payment_link_orders']) {
     await client.execute(`DELETE FROM ${table}`);
   }
   (fetchBusyRanges as jest.Mock).mockReset().mockResolvedValue([]);
@@ -259,6 +259,23 @@ describe('운영 점검', () => {
     expect(issue?.detail).toContain('R05 연체자');
     expect(issue?.detail).toContain('비상주 비상주사');
     expect(issue?.detail).not.toMatch(/정상|퇴실자|secret/);
+  });
+
+  it('레슨 미수금과 종료 임박을 보고하고 계좌 정보는 싣지 않는다', async () => {
+    const NOW_KST_DAY = new Date(NOW);
+    // 미수: 이미 한 달 치 회차가 진행됐는데 수납 기록이 없는 계좌 선불. 종료 임박: 마지막 예정 회차가 14일 안.
+    await client.executeMultiple(`PRAGMA foreign_keys = OFF;
+      INSERT INTO lesson_enrollments (id, student_name, status, pay_method, course_weeks, start_date, start_time, duration_min, monthly_amount) VALUES ('le1','미수생','active','bank',12,'2026-01-01','14:00',60,350000), ('le2','카드생','active','card',12,'2026-01-01','15:00',60,350000);
+      INSERT INTO lesson_sessions (id, enrollment_id, seq, scheduled_on, start_time, duration_min, status) VALUES ('ls1','le1',1,'2026-09-01','14:00',60,'done'), ('ls2','le1',2,'2026-09-08','14:00',60,'done'), ('ls3','le1',3,'2026-09-15','14:00',60,'done'), ('ls4','le1',4,'2026-09-22','14:00',60,'done'), ('ls5','le1',5,'2026-09-29','14:00',60,'done'),
+        ('ls6','le2',1,'2026-09-01','15:00',60,'done'), ('ls7','le2',2,'2026-NOW_PLUS_7','15:00',60,'scheduled');
+      PRAGMA foreign_keys = ON;`.replace('2026-NOW_PLUS_7', new Date(NOW_KST_DAY.getTime() + 9 * 3600 * 1000 + 7 * 86400000).toISOString().slice(0, 10)));
+    const issues = (await runHealthCheck(NOW)).issues;
+    const owed = issues.find((i) => i.title.startsWith('레슨 미수금'));
+    expect(owed?.title).toBe('레슨 미수금 1건 (합계 700,000원)'); // 5회 진행 → 2개월 치
+    expect(owed?.detail).toContain('미수생');
+    expect(owed?.detail).not.toContain('카드생'); // 카드는 구독이 청구한다
+    expect(owed?.href).toBe('/admin/lessons');
+    expect(issues.find((i) => i.title.startsWith('레슨 종료 임박'))?.detail).toContain('카드생');
   });
 
   it('아무 문제가 없으면 아무것도 보고하지 않는다 (메일이 안 가는 조건)', async () => {

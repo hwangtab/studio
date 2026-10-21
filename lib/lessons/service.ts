@@ -9,7 +9,7 @@ import {
 } from '../../db/schema';
 import { kstDateString } from '../booking/kst';
 import { occupiedBookingSql } from '../booking/service';
-import { addDays, sessionDates, slotRange, type EnrollmentInput, type PaymentInput } from './rules';
+import { addDays, arrearsOf, sessionDates, slotRange, type EnrollmentInput, type PaymentInput } from './rules';
 
 /**
  * 프로듀싱 레슨 운영 — 수강 등록·회차·수납. 규칙의 근거는 docs/lesson-management-design-2026-10.md.
@@ -245,6 +245,10 @@ export interface LessonListRow {
   unmarked: number;
   lastPaidOn: string | null;
   paidTotal: number;
+  /** 계좌·현금 선불의 미수금(수강 중일 때만, 카드는 0) — arrearsOf. */
+  arrears: number;
+  /** 아직 남은 마지막 예정 회차의 날짜 — 종료 임박 판정용. 예정 회차가 없으면 null. */
+  lastScheduledOn: string | null;
 }
 
 export const listEnrollments = async (now: Date = new Date()): Promise<LessonListRow[]> => {
@@ -267,6 +271,10 @@ export const listEnrollments = async (now: Date = new Date()): Promise<LessonLis
       unmarked: mine.filter((s) => s.status === 'scheduled' && s.scheduledOn < today).length,
       lastPaidOn: paid.map((p) => p.paidOn).sort().pop() ?? null,
       paidTotal: paid.reduce((sum, p) => sum + p.amount, 0),
+      arrears: enrollment.status === 'active'
+        ? arrearsOf({ payMethod: enrollment.payMethod, monthlyAmount: enrollment.monthlyAmount, sessions: mine, payments: paid, today }).arrears
+        : 0,
+      lastScheduledOn: mine.filter((s) => s.status === 'scheduled').map((s) => s.scheduledOn).sort().pop() ?? null,
     };
   });
 };
