@@ -86,6 +86,7 @@ export const ADMIN_NAV_ENTRIES: readonly AdminNavEntry[] = [
     label: '공통',
     items: [
       { href: '/admin/revenue', label: '매출' },
+      { href: '/admin/expenses', label: '지출' },
       { href: '/admin/payment-links', label: '결제 링크' },
       { href: '/admin/privacy-logs', label: '접속기록' },
     ],

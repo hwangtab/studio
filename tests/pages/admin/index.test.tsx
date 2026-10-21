@@ -61,7 +61,7 @@ const DASHBOARD: AdminDashboard = {
 
 const REVENUE: RevenueSnapshot = {
   year: 2026, month: 10, net: 1_250_000, gross: 1_300_000, refunded: 50_000, count: 7,
-  previousNet: 1_000_000, changeRate: 25, directNet: 900_000, brokeredNet: 350_000, manualMissing: false,
+  previousNet: 1_000_000, changeRate: 25, directNet: 900_000, brokeredNet: 350_000, manualMissing: false, practiceIncome: 3_786_000, practiceExpense: 1_000_000, tenancyMissing: false,
 };
 
 const SHOP_QUEUES = { pendingProducts: 2, awaitingShipment: { studio: 5, preorder: 1, artist: 2 } };

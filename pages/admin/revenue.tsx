@@ -7,7 +7,7 @@ import { AdminShell } from '../../components/admin/AdminShell';
 import { ManualRevenuePanel, type ManualRevenueView } from '../../components/admin/ManualRevenuePanel';
 import { Notice } from '../../components/ui/Notice';
 import { kstDateString } from '../../lib/booking/kst';
-import { loadManualRevenueRows, MANUAL_METHODS } from '../../lib/ops/manualRevenue';
+import { loadManualRevenueRows, MANUAL_METHODS, MANUAL_TYPES } from '../../lib/ops/manualRevenue';
 import { formatKstDateTimeFull } from '../../lib/booking/format';
 import { authenticateAdminRequest } from '../../lib/contracts/admin-auth';
 import {
@@ -23,6 +23,8 @@ import {
   type Totals,
 } from '../../lib/ops/revenueReport';
 import { loadProductionRevenueRows } from '../../lib/ops/productionRevenue';
+import { loadTenancyRevenueRows } from '../../lib/ops/tenancyRevenue';
+import { loadExpenseOccurrences, summarizeExpenses, type ExpenseSummary } from '../../lib/ops/expenses';
 
 /**
  * 매출 현황 — 월·연 단위 순매출, 전기 대비, 월별 추이, 유형·펀딩 프로젝트·결제수단별 구성.
@@ -44,7 +46,20 @@ interface RevenuePageProps {
   manualEntries: ManualRevenueView[];
   /** 수기 매출 표를 못 읽은 사유(마이그레이션 0063 전). 있으면 숫자에 직접 입금분이 빠져 있다. */
   manualError: string | null;
+  /** 연습실 손익 — 월 입주 수입 − 연습실 지출. 월 입주 표를 못 읽으면 null. */
+  practice?: PracticePnl | null;
+  /** 손익 칸을 못 채운 사유(월 입주 표 0066·지출 표 0080 전 등). */
+  practiceNotice?: string | null;
   error?: string;
+}
+
+interface PracticePnl {
+  income: number;
+  incomeCount: number;
+  /** 지출 표를 못 읽으면 null. */
+  expense: ExpenseSummary | null;
+  /** 스튜디오 전체 지출(연습실 손익에는 안 뺀다) — 참고. */
+  studioExpenseTotal: number | null;
 }
 
 const FIRST_YEAR = 2025;
@@ -80,8 +95,34 @@ export const getServerSideProps: GetServerSideProps<RevenuePageProps> = async (c
       console.error('[admin/revenue] 수기 매출 조회 실패:', manualFailure);
       manualError = '직접 받은 매출 표를 읽지 못했습니다(마이그레이션 0063·0065 적용 전이거나 조회 오류). 아래 숫자에는 직접 입금분이 빠져 있습니다.';
     }
+    // 연습실 월 입주 수납 — 결제 행이 없어 위 조회에 안 잡힌다(tenancyRevenue.ts). 못 읽으면 손익 칸에 알린다.
+    let tenancyFailed = false;
+    try {
+      rows.push(...(await loadTenancyRevenueRows(window)));
+    } catch (tenancyFailure: unknown) {
+      console.error('[admin/revenue] 월 입주 수입 조회 실패:', tenancyFailure);
+      tenancyFailed = true;
+    }
     const summary = summarizeRevenue(rows, { year, month, type });
     const range = periodRange(year, month);
+    let practice: PracticePnl | null = null;
+    let practiceNotice: string | null = null;
+    if (tenancyFailed) {
+      practiceNotice = '월 입주 수입을 읽지 못했습니다(마이그레이션 0066 확인). 아래 매출에는 월 입주 수입이 빠져 있습니다.';
+    } else {
+      const tenancy = summarizeRevenue(rows, { year, month, type: 'tenancy' }).totals;
+      let expense: ExpenseSummary | null = null;
+      let studioExpenseTotal: number | null = null;
+      try {
+        const occurrences = await loadExpenseOccurrences(range);
+        expense = summarizeExpenses(occurrences, 'practice');
+        studioExpenseTotal = summarizeExpenses(occurrences, 'studio').total;
+      } catch (expenseFailure: unknown) {
+        console.error('[admin/revenue] 지출 조회 실패:', expenseFailure);
+        practiceNotice = '지출 표를 읽지 못했습니다(마이그레이션 0080 적용 전이거나 조회 오류). 연습실 손익에서 지출을 뺄 수 없습니다.';
+      }
+      practice = { income: tenancy.net, incomeCount: tenancy.count, expense, studioExpenseTotal };
+    }
     const manualEntries: ManualRevenueView[] = rows
       .filter((row) => row.manualId && row.at >= range.from && row.at < range.toExclusive)
       .sort((a, b) => b.at.getTime() - a.at.getTime())
@@ -102,11 +143,13 @@ export const getServerSideProps: GetServerSideProps<RevenuePageProps> = async (c
         entryDates: summary.entries.map((row) => formatKstDateTimeFull(row.at.toISOString())),
         manualEntries,
         manualError,
+        practice,
+        practiceNotice,
       },
     };
   } catch (error: unknown) {
     console.error('[admin/revenue] 집계 실패:', error);
-    return { props: { ...base, summary: null, entryDates: [], manualEntries: [], manualError: null, error: '매출을 불러오지 못했습니다. 잠시 뒤 다시 열어 주세요.' } };
+    return { props: { ...base, summary: null, entryDates: [], manualEntries: [], manualError: null, practice: null, practiceNotice: null, error: '매출을 불러오지 못했습니다. 잠시 뒤 다시 열어 주세요.' } };
   }
 };
 
@@ -229,7 +272,7 @@ const BreakdownTable = ({
             <tr className="border-b border-gray-200 text-left text-xs text-gray-500">
               <th className="py-2 pr-3 font-medium">{firstColumn}</th>
               <th className="px-3 py-2 text-right font-medium">건수</th>
-              <th className="px-3 py-2 text-right font-medium">결제</th>
+              <th className="px-3 py-2 text-right font-medium">매출(결제)</th>
               <th className="px-3 py-2 text-right font-medium">환불</th>
               <th className="px-3 py-2 text-right font-medium">순매출</th>
               <th className="py-2 pl-3 text-right font-medium">비중</th>
@@ -269,7 +312,7 @@ const GroupCard = ({ label, totals }: { label: string; totals: Totals }) => (
   </div>
 );
 
-export default function AdminRevenuePage({ summary, type, years, nowYear, nowMonth, entryDates, today, manualEntries, manualError, error }: RevenuePageProps) {
+export default function AdminRevenuePage({ summary, type, years, nowYear, nowMonth, entryDates, today, manualEntries, manualError, practice = null, practiceNotice = null, error }: RevenuePageProps) {
   const inProgress = summary !== null && summary.year === nowYear && (summary.month === 'all' || summary.month === nowMonth);
 
   return (
@@ -361,9 +404,43 @@ export default function AdminRevenuePage({ summary, type, years, nowYear, nowMon
                 ))}
               </div>
               <p className="mt-2 text-xs text-gray-500">
-                펀딩·공연·상점은 개설자·주최자·아티스트에게 정산하는 몫이 들어 있는 결제액입니다. 스튜디오가 가져가는 수수료가 아니므로 직접 서비스와 나눠 봅니다.
+                펀딩·공연·상점은 개설자·주최자·아티스트에게 정산해 줄 몫을 뺀 <strong>플랫폼 수수료</strong>만 매출로 잡습니다(펀딩·공연 5.5%, 상점은 아티스트 상품 판매가의 45%·스튜디오 상품 전액).
+                결제(PG) 수수료는 비용이라 매출에서 더하거나 빼지 않고, 정산 기록의 실제 금액과는 반올림·부분 환불에서 몇 원 다를 수 있습니다.
               </p>
             </section>
+
+            {practiceNotice && (
+              <Notice tone="warning" light>
+                {practiceNotice}
+              </Notice>
+            )}
+
+            {practice && (
+              <section className="rounded-2xl bg-white p-4 shadow-sm md:p-6">
+                <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
+                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900">연습실 손익 · {summary.periodLabel}</h2>
+                  <Link href="/admin/expenses" className="text-sm font-medium text-primary hover:underline">지출 관리 →</Link>
+                </div>
+                <dl className="space-y-2 text-sm">
+                  <div className="flex justify-between gap-3"><dt className="text-gray-600">월 입주 수입 ({practice.incomeCount}건)</dt><dd className="font-semibold tabular-nums text-gray-900">{won(practice.income)}</dd></div>
+                  {practice.expense === null ? (
+                    <div className="flex justify-between gap-3"><dt className="text-gray-600">연습실 지출</dt><dd className="text-gray-500">읽지 못함</dd></div>
+                  ) : (
+                    <>
+                      {practice.expense.byCategory.map((c) => (
+                        <div key={c.category} className="flex justify-between gap-3 pl-3"><dt className="text-gray-500">− {c.label}</dt><dd className="tabular-nums text-gray-700">{won(c.amount)}</dd></div>
+                      ))}
+                      <div className="flex justify-between gap-3"><dt className="text-gray-600">연습실 지출 합계</dt><dd className="tabular-nums text-gray-900">{practice.expense.total > 0 ? `-${won(practice.expense.total)}` : '0원'}</dd></div>
+                      <div className="flex justify-between gap-3 border-t border-gray-200 pt-2"><dt className="font-semibold text-gray-900">연습실 순수익</dt><dd className={`text-base font-bold tabular-nums ${practice.income - practice.expense.total < 0 ? 'text-red-700' : 'text-gray-900'}`}>{won(practice.income - practice.expense.total)}</dd></div>
+                    </>
+                  )}
+                </dl>
+                {practice.studioExpenseTotal !== null && practice.studioExpenseTotal > 0 && (
+                  <p className="mt-3 text-xs text-gray-500">스튜디오 전체 지출 {won(practice.studioExpenseTotal)}은 연습실 손익에 넣지 않았습니다(지출 관리에서 구분이 “스튜디오 전체”인 건).</p>
+                )}
+                <p className="mt-2 text-xs text-gray-500">월 입주 수납은 입금일 기준이고 부가세는 따로 나누지 않았습니다. 지출은 부가세 포함 금액으로 적습니다.</p>
+              </section>
+            )}
 
             <section className="rounded-2xl bg-white p-4 shadow-sm md:p-8">
               <h2 className="mb-1 text-lg font-bold text-gray-900 dark:text-gray-900">{summary.year}년 월별 순매출</h2>
@@ -381,7 +458,7 @@ export default function AdminRevenuePage({ summary, type, years, nowYear, nowMon
             />
 
             {summary.byProject.length > 0 && (
-              <BreakdownTable title="펀딩 프로젝트별" note="후원 총액(개설자 정산 전)입니다. 계좌 입금·수기 등록 후원을 포함합니다." firstColumn="프로젝트" lines={summary.byProject} />
+              <BreakdownTable title="펀딩 프로젝트별" note="플랫폼 수수료 몫입니다(개설자에게 정산할 몫은 뺐어요). 계좌 입금·수기 등록 후원을 포함합니다." firstColumn="프로젝트" lines={summary.byProject} />
             )}
 
             <BreakdownTable title="결제수단별" firstColumn="결제수단" lines={summary.byMethod} />
@@ -417,7 +494,7 @@ export default function AdminRevenuePage({ summary, type, years, nowYear, nowMon
                     </thead>
                     <tbody className="divide-y divide-gray-100 tabular-nums">
                       {summary.entries.map((row, index) => (
-                        <tr key={row.orderNo}>
+                        <tr key={`${row.orderNo}-${index}`}>
                           <td className="whitespace-nowrap py-2 pr-3 text-gray-700">{entryDates[index]}</td>
                           <td className="whitespace-nowrap px-3 py-2 text-gray-900">{row.orderNo}</td>
                           <td className="whitespace-nowrap px-3 py-2 text-gray-700">
@@ -426,7 +503,10 @@ export default function AdminRevenuePage({ summary, type, years, nowYear, nowMon
                             {row.note ? ` · ${row.note}` : ''}
                           </td>
                           <td className="whitespace-nowrap px-3 py-2 text-gray-700">{row.method}</td>
-                          <td className="whitespace-nowrap px-3 py-2 text-right text-gray-700">{won(row.gross)}</td>
+                          <td className="whitespace-nowrap px-3 py-2 text-right text-gray-700">
+                            {won(row.gross)}
+                            {row.sourceGross !== undefined && <div className="text-xs text-gray-400">결제 {won(row.sourceGross)}</div>}
+                          </td>
                           <td className="whitespace-nowrap px-3 py-2 text-right text-gray-700">{row.refunded > 0 ? `-${won(row.refunded)}` : '-'}</td>
                           <td className="whitespace-nowrap py-2 pl-3 text-right font-semibold text-gray-900">{won(Math.max(0, row.gross - row.refunded))}</td>
                         </tr>
@@ -439,7 +519,7 @@ export default function AdminRevenuePage({ summary, type, years, nowYear, nowMon
 
             <ManualRevenuePanel
               today={today}
-              types={Object.entries(REVENUE_TYPE_LABELS).map(([value, label]) => ({ value, label }))}
+              types={Object.entries(MANUAL_TYPES).map(([value, label]) => ({ value, label }))}
               methods={[...MANUAL_METHODS]}
               entries={manualEntries}
               periodLabel={summary.periodLabel}

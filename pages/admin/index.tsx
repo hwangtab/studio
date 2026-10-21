@@ -128,10 +128,27 @@ const RevenueSummaryCard = ({ revenue }: { revenue: RevenueSnapshot }) => {
           <dd className="mt-0.5 font-semibold tabular-nums text-gray-900">{won(revenue.directNet)}</dd>
         </div>
         <div className="rounded-xl border border-gray-200 p-3">
-          <dt className="text-gray-500">판매·중개 (정산 전)</dt>
+          <dt className="text-gray-500">판매·중개 수수료</dt>
           <dd className="mt-0.5 font-semibold tabular-nums text-gray-900">{won(revenue.brokeredNet)}</dd>
         </div>
       </dl>
+      {revenue.practiceIncome !== null && (
+        <div className="mt-3 rounded-xl border border-gray-200 p-3 text-sm">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <p className="text-gray-500">연습실 월 입주 수입 − 지출</p>
+            <Link href="/admin/expenses" className="text-xs font-medium text-primary hover:underline">지출 관리 →</Link>
+          </div>
+          <p className="mt-0.5 font-semibold tabular-nums text-gray-900">
+            {revenue.practiceExpense === null ? `${won(revenue.practiceIncome)} (지출 표 미적용)` : won(revenue.practiceIncome - revenue.practiceExpense)}
+          </p>
+          {revenue.practiceExpense !== null && (
+            <p className="mt-0.5 text-xs text-gray-500">입주 수입 {won(revenue.practiceIncome)} · 지출 {won(revenue.practiceExpense)} (위 매출에는 입주 수입만 들어 있어요)</p>
+          )}
+        </div>
+      )}
+      {revenue.tenancyMissing && (
+        <p className="mt-3 text-xs text-amber-800">월 입주 수입을 읽지 못해 그 금액이 빠져 있습니다(마이그레이션 0066 확인).</p>
+      )}
       {revenue.manualMissing && (
         <p className="mt-3 text-xs text-amber-800">직접 받은 매출 표를 읽지 못해 그 금액이 빠져 있습니다(마이그레이션 0063 확인).</p>
       )}

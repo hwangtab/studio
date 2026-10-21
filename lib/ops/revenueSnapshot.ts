@@ -1,6 +1,8 @@
 import { loadProductionRevenueRows } from './productionRevenue';
 import { kstYearMonth, loadRevenueRows, periodRange, previousPeriod, summarizeRevenue } from './revenueReport';
 import { loadManualRevenueRows } from './manualRevenue';
+import { loadTenancyRevenueRows } from './tenancyRevenue';
+import { loadExpenseOccurrences, summarizeExpenses } from './expenses';
 
 /**
  * 관리자 첫 화면의 이번 달 매출 요약 — 매출 현황(`/admin/revenue`)과 **같은 집계**(summarizeRevenue)를 쓴다.
@@ -22,6 +24,11 @@ export interface RevenueSnapshot {
   directNet: number;
   brokeredNet: number;
   manualMissing: boolean;
+  /** 이번 달 연습실 월 입주 수입(순). 월 입주 표를 못 읽었으면 null. */
+  practiceIncome: number | null;
+  /** 이번 달 연습실 지출. 지출 표를 못 읽었으면(마이그레이션 0080 전) null. */
+  practiceExpense: number | null;
+  tenancyMissing: boolean;
 }
 
 export const loadRevenueSnapshot = async (now: Date): Promise<RevenueSnapshot> => {
@@ -40,7 +47,26 @@ export const loadRevenueSnapshot = async (now: Date): Promise<RevenueSnapshot> =
     manualMissing = true;
   }
 
+  // 연습실 월 입주 수납 — 결제 행이 없어 위 조회에 안 잡힌다(tenancyRevenue.ts). 못 읽으면 그 사실을 알린다.
+  let tenancyMissing = false;
+  try {
+    rows.push(...(await loadTenancyRevenueRows(range)));
+  } catch (error: unknown) {
+    console.error('[admin/dashboard] 월 입주 수입 조회 실패:', error);
+    tenancyMissing = true;
+  }
+
   const summary = summarizeRevenue(rows, { year, month });
+  const thisMonth = periodRange(year, month);
+  let practiceExpense: number | null = null;
+  try {
+    practiceExpense = summarizeExpenses(await loadExpenseOccurrences(thisMonth), 'practice').total;
+  } catch (error: unknown) {
+    console.error('[admin/dashboard] 지출 조회 실패(마이그레이션 0080 전일 수 있음):', error);
+  }
+  const practiceIncome = tenancyMissing
+    ? null
+    : summarizeRevenue(rows, { year, month, type: 'tenancy' }).totals.net;
   const group = (key: 'direct' | 'brokered') => summary.byGroup.find((g) => g.group === key)?.totals.net ?? 0;
   return {
     year,
@@ -54,5 +80,8 @@ export const loadRevenueSnapshot = async (now: Date): Promise<RevenueSnapshot> =
     directNet: group('direct'),
     brokeredNet: group('brokered'),
     manualMissing,
+    practiceIncome,
+    practiceExpense,
+    tenancyMissing,
   };
 };

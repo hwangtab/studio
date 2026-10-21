@@ -2616,6 +2616,40 @@ export const manualRevenues = sqliteTable('manual_revenues', {
 
 export type ManualRevenue = typeof manualRevenues.$inferSelect;
 
+/**
+ * 지출 항목(마이그레이션 0080) — 임대료·청소비·공과금처럼 **스튜디오가 쓴 돈**의 장부. 매출 현황이 연습실 손익(월 입주 수입 − 지출)을 낼 때 읽는다.
+ * 주문·결제와 연결하지 않는다(수기 매출과 같다). `repeat_monthly`면 `spent_on`의 달부터 `repeat_until`(없으면 계속)까지 매달 같은 금액이 나간 것으로 센다
+ * — 임대료처럼 매달 같은 값을 매번 적지 않게. 금액은 부가세 포함 지출액. 소프트 삭제(수기 매출과 같은 이유 — 누가 언제 지웠는지 남긴다).
+ * 새 표뿐이고 어떤 `relations()`에도 잇지 않는다(0022 함정) — 표가 없는 DB에서는 손익 칸만 "지출 표 미적용"으로 열린다.
+ */
+export const expenseCategoryEnum = ['rent', 'cleaning', 'utilities', 'maintenance', 'supplies', 'other'] as const;
+export const expenseScopeEnum = ['practice', 'studio'] as const;
+export const studioExpenses = sqliteTable('studio_expenses', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  /** 쓴 날(KST 달력, 'YYYY-MM-DD'). 반복이면 첫 달의 날짜(그 달에 없는 날이면 말일). */
+  spentOn: text('spent_on').notNull(),
+  category: text('category', { enum: expenseCategoryEnum }).notNull(),
+  /** 'practice' = 연습실 지출(월 입주 손익에서 뺀다), 'studio' = 스튜디오 전체 지출. */
+  scope: text('scope', { enum: expenseScopeEnum }).notNull().default('practice'),
+  description: text('description').notNull(),
+  /** 부가세 포함 금액(원). 반복이면 한 달치. */
+  amount: integer('amount').notNull(),
+  repeatMonthly: integer('repeat_monthly', { mode: 'boolean' }).notNull().default(false),
+  /** 반복 마지막 날(이 날이 속한 달까지). 비우면 계속. */
+  repeatUntil: text('repeat_until'),
+  memo: text('memo'),
+  createdBy: text('created_by'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  deletedAt: integer('deleted_at', { mode: 'timestamp' }),
+  deletedBy: text('deleted_by'),
+}, (t) => ({
+  spentOnIdx: index('studio_expenses_spent_on_idx').on(t.spentOn),
+  categoryCheck: check('studio_expenses_category_check', sql`${t.category} in ('rent','cleaning','utilities','maintenance','supplies','other')`),
+  scopeCheck: check('studio_expenses_scope_check', sql`${t.scope} in ('practice','studio')`),
+}));
+
+export type StudioExpense = typeof studioExpenses.$inferSelect;
+
 // ─── 상점·공연 정산 기록(저널의 partner_payouts) ─────────────────────────────────────────────────
 //
 // 설계: docs/settlement-record-design-2026-10.md. 펀딩 정산 기록(`funding_project_payouts`)과 같은 모양을 상점(P1)·공연(P2)이 같이 쓴다.
