@@ -1136,7 +1136,8 @@
     "subtitle": "Tecnología probada y sinceridad verificada por muchos que han visitado Studio NOL.",
     "ratingAria": "Calificación {{rating}} estrellas",
     "aggregateAria": "Valoración media {{rating}}, {{count}} reseñas",
-    "aggregateCount": "{{count}} reseñas reales"
+    "aggregateCount": "{{count}} reseñas reales",
+    "sourceLink": "Ver original"
   },
   "notFound": {
     "popularTitle": "Páginas populares",

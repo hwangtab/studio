@@ -1140,7 +1140,8 @@
     "subtitle": "เทคโนโลยีที่พิสูจน์แล้วและความจริงใจที่ได้รับการยืนยันจากผู้ที่เคยมา Studio NOL",
     "ratingAria": "คะแนน {{rating}} ดาว",
     "aggregateAria": "คะแนนเฉลี่ย {{rating}} จาก {{count}} รีวิว",
-    "aggregateCount": "รีวิวจริง {{count}} รายการ"
+    "aggregateCount": "รีวิวจริง {{count}} รายการ",
+    "sourceLink": "อ่านต้นฉบับ"
   },
   "notFound": {
     "popularTitle": "หน้ายอดนิยม",

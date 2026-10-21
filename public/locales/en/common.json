@@ -1164,7 +1164,8 @@
     "subtitle": "Proven technology and sincerity verified by many who have visited Studio NOL.",
     "ratingAria": "Rating {{rating}} stars",
     "aggregateAria": "Average rating {{rating}}, {{count}} reviews",
-    "aggregateCount": "{{count}} verified reviews"
+    "aggregateCount": "{{count}} verified reviews",
+    "sourceLink": "Read original"
   },
   "notFound": {
     "popularTitle": "Popular pages",

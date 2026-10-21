@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, MessageSquare, Quote } from '@/lib/lucide-icons';
+import { Star, MessageSquare, Quote, ExternalLink } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import BaseCard from './BaseCard';
 import SectionHeading from './SectionHeading';
@@ -86,10 +86,9 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko', eyebrow,
 
             {/* 후기가 1개여도 왼쪽 절반에 홀로 서지 않게 가운데로(2026-10-12 운영자, docs/grid-orphan-audit-2026-10.md). */}
             <div className={`${REVIEW_GRID.container} max-w-6xl mx-auto`}>
-                {/* 리뷰 schema는 JSON-LD(generateDefaultSchema의 LocalBusiness.review)
-                    에서 완전 형태로 이미 출력됨. microdata로 중복 마킹 시 itemReviewed의
-                    bare LocalBusiness가 4개씩 생겨 Google Rich Results 검사기 warning 양산.
-                    의미 정보는 JSON-LD가 단독으로 모두 표현하므로 microdata 제거. */}
+                {/* review/aggregateRating JSON-LD는 2026-08 결정으로 발행하지 않는다
+                    (utils/schema/business.ts 머리 주석 참고, self-serving 리치결과 리스크).
+                    이 섹션은 사람이 읽는 사회적 증거만 담당 — microdata도 안 쓴다. */}
                 {reviews.map((review, index) => (
                     <div key={`${review.author}-${review.categoryKey}-${review.datePublished}`} className={REVIEW_GRID.item}>
                         <BaseCard
@@ -116,9 +115,23 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko', eyebrow,
                                     ))}
                                 </div>
 
-                                <p className={`typo-card-body text-lg leading-relaxed mb-8 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
+                                <p className={`typo-card-body text-lg leading-relaxed mb-4 ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
                                     &quot;{review.content}&quot;
                                 </p>
+
+                                {/* 본인 동의를 받아 원문(네이버 블로그 등)을 링크하는 후기 전용 —
+                                    요약만 싣고 전문은 원문으로 보낸다(2026-10-21, review-5). */}
+                                {review.sourceUrl && (
+                                    <a
+                                        href={review.sourceUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="mb-4 inline-flex min-h-[32px] items-center gap-1 text-sm text-primary dark:text-primary-lighter hover:underline"
+                                    >
+                                        <ExternalLink size={14} aria-hidden="true" />
+                                        {t('reviewSection.sourceLink', { defaultValue: '원문 보기' })}
+                                    </a>
+                                )}
 
                                 <div className="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 pt-6">
                                     <div>
