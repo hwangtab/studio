@@ -13,8 +13,8 @@ import { REVENUE_TYPE_LABELS, type RevenueRow } from './revenueReport';
  * 조용히 빈 목록을 돌려주면 직접 입금분이 통째로 없는 숫자를 정상으로 읽게 된다.
  */
 
-// 월 입주 수납은 입주 관리가 따로 읽는다(tenancyRevenue.ts) — 수기로 또 적으면 두 번 센다.
-export const MANUAL_TYPES: Record<string, string> = Object.fromEntries(Object.entries(REVENUE_TYPE_LABELS).filter(([key]) => key !== 'tenancy'));
+// 월 입주(tenancyRevenue.ts)·레슨(lessonRevenue.ts)은 각자 관리 화면이 따로 읽는다 — 수기로 또 적으면 두 번 센다.
+export const MANUAL_TYPES: Record<string, string> = Object.fromEntries(Object.entries(REVENUE_TYPE_LABELS).filter(([key]) => key !== 'tenancy' && key !== 'lesson'));
 export const MANUAL_METHODS = ['계좌 입금', '현금'] as const;
 export type ManualMethod = (typeof MANUAL_METHODS)[number];
 export type VatMode = 'included' | 'exempt';

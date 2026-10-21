@@ -2650,6 +2650,91 @@ export const studioExpenses = sqliteTable('studio_expenses', {
 
 export type StudioExpense = typeof studioExpenses.$inferSelect;
 
+// ─── 프로듀싱 레슨(마이그레이션 0081) ───────────────────────────────────────────────────────────────
+//
+// 설계: docs/lesson-management-design-2026-10.md. 수강 등록 한 건(한 사람의 한 과정)이 중심이고 회차·수납이 달린다.
+// 전부 **새 표**다 — 기존 표에 컬럼을 더하지 않고 어떤 `relations()`에도 잇지 않는다(0022 함정). 표가 없는 DB에서는 레슨 화면만 "미적용"으로 열린다.
+// 연락처·이메일은 **아직 저장하지 않는다** — 수강 계약 단계(P2)에서 서명 때 받는다(개인정보 수집 항목·처리방침을 함께 고쳐야 한다).
+export const lessonEnrollmentStatusEnum = ['active', 'completed', 'ended'] as const;
+export const lessonPayMethodEnum = ['card', 'bank', 'cash'] as const;
+export const lessonSessionStatusEnum = ['scheduled', 'done', 'absent', 'studio_cancelled', 'dropped'] as const;
+
+export const lessonEnrollments = sqliteTable('lesson_enrollments', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  studentName: text('student_name').notNull(),
+  status: text('status', { enum: lessonEnrollmentStatusEnum }).notNull().default('active'),
+  /** card = 카드 정기결제 구독(`subscription_id`), bank·cash = 계좌·현금 선불(`lesson_payments`). */
+  payMethod: text('pay_method', { enum: lessonPayMethodEnum }).notNull(),
+  subscriptionId: text('subscription_id'),
+  /** 12 또는 24 — 주 1회라 회차 수와 같다. */
+  courseWeeks: integer('course_weeks').notNull(),
+  /** 첫 수업 날짜(KST 'YYYY-MM-DD')와 시각('HH:MM'). 요일·시각은 이 값으로 정해진다. */
+  startDate: text('start_date').notNull(),
+  startTime: text('start_time').notNull(),
+  durationMin: integer('duration_min').notNull().default(60),
+  /** 월 수강료(공급가, VAT 별도). 기본 350,000원 — 협의가는 그 값으로. */
+  monthlyAmount: integer('monthly_amount').notNull(),
+  note: text('note'),
+  endedOn: text('ended_on'),
+  endedReason: text('ended_reason'),
+  createdBy: text('created_by'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  statusIdx: index('lesson_enrollments_status_idx').on(t.status, t.startDate),
+  statusCheck: check('lesson_enrollments_status_check', sql`${t.status} in ('active','completed','ended')`),
+  payMethodCheck: check('lesson_enrollments_pay_method_check', sql`${t.payMethod} in ('card','bank','cash')`),
+  weeksCheck: check('lesson_enrollments_weeks_check', sql`${t.courseWeeks} in (12,24)`),
+}));
+
+export const lessonSessions = sqliteTable('lesson_sessions', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  enrollmentId: text('enrollment_id').notNull().references(() => lessonEnrollments.id),
+  seq: integer('seq').notNull(),
+  scheduledOn: text('scheduled_on').notNull(),
+  startTime: text('start_time').notNull(),
+  durationMin: integer('duration_min').notNull(),
+  status: text('status', { enum: lessonSessionStatusEnum }).notNull().default('scheduled'),
+  /** 이 회차가 컨트롤 룸을 막는 "예약 불가 블록"(`availability_blocks.id`). 끝났거나 취소되면 비운다. */
+  blockId: text('block_id'),
+  /** 스튜디오 사정 휴강이 만든 보충 회차면 그 휴강 회차의 id — 휴강을 되돌리면 같이 지운다. */
+  extendsSessionId: text('extends_session_id'),
+  topic: text('topic'),
+  homework: text('homework'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  enrollmentSeqUq: uniqueIndex('lesson_sessions_enrollment_seq_uq').on(t.enrollmentId, t.seq),
+  dateIdx: index('lesson_sessions_date_idx').on(t.scheduledOn, t.status),
+  statusCheck: check('lesson_sessions_status_check', sql`${t.status} in ('scheduled','done','absent','studio_cancelled','dropped')`),
+}));
+
+/** 계좌·현금 수납 — 카드는 구독 결제가 정본이라 여기에 없다. 매출 현황은 이 표를 수납일 기준으로 읽는다(lib/ops/lessonRevenue.ts). 소프트 삭제. */
+export const lessonPayments = sqliteTable('lesson_payments', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  enrollmentId: text('enrollment_id').notNull().references(() => lessonEnrollments.id),
+  paidOn: text('paid_on').notNull(),
+  /** 실제로 받은 돈. 계좌·현금은 부가세를 받지 않으면 수강료 그대로(350,000원). */
+  amount: integer('amount').notNull(),
+  vatAmount: integer('vat_amount').notNull().default(0),
+  /** 어느 기간 치인지 자유 서술(예: "10월", "1~4회", "12주 일괄"). */
+  periodLabel: text('period_label').notNull(),
+  method: text('method').notNull(),
+  memo: text('memo'),
+  receiptIssued: integer('receipt_issued', { mode: 'boolean' }).notNull().default(false),
+  createdBy: text('created_by'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  deletedAt: integer('deleted_at', { mode: 'timestamp' }),
+  deletedBy: text('deleted_by'),
+}, (t) => ({
+  paidOnIdx: index('lesson_payments_paid_on_idx').on(t.paidOn),
+  enrollmentIdx: index('lesson_payments_enrollment_idx').on(t.enrollmentId),
+}));
+
+export type LessonEnrollment = typeof lessonEnrollments.$inferSelect;
+export type LessonSession = typeof lessonSessions.$inferSelect;
+export type LessonPayment = typeof lessonPayments.$inferSelect;
+
 // ─── 상점·공연 정산 기록(저널의 partner_payouts) ─────────────────────────────────────────────────
 //
 // 설계: docs/settlement-record-design-2026-10.md. 펀딩 정산 기록(`funding_project_payouts`)과 같은 모양을 상점(P1)·공연(P2)이 같이 쓴다.

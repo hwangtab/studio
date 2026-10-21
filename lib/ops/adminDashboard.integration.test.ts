@@ -171,6 +171,7 @@ it('대기열 건수 — 믹싱 착수 대기·작업 중, 구독 카드 대기�
     sessionsAwaitingMark: 0,
     showSubmissionsAwaitingReview: 0,
     sessionMusiciansNew: 0,
+    lessons: { unmarked: 0, today: 0 },
   });
   expect(dash.issues.map((i) => i.title)).toContain('서명 기한이 지난 계약 1건');
 });

@@ -24,6 +24,7 @@ import {
 } from '../../lib/ops/revenueReport';
 import { loadProductionRevenueRows } from '../../lib/ops/productionRevenue';
 import { loadTenancyRevenueRows } from '../../lib/ops/tenancyRevenue';
+import { loadLessonRevenueRows } from '../../lib/ops/lessonRevenue';
 import { loadExpenseOccurrences, summarizeExpenses, type ExpenseSummary } from '../../lib/ops/expenses';
 
 /**
@@ -50,6 +51,7 @@ interface RevenuePageProps {
   practice?: PracticePnl | null;
   /** 손익 칸을 못 채운 사유(월 입주 표 0066·지출 표 0080 전 등). */
   practiceNotice?: string | null;
+  lessonError?: string | null;
   error?: string;
 }
 
@@ -103,6 +105,14 @@ export const getServerSideProps: GetServerSideProps<RevenuePageProps> = async (c
       console.error('[admin/revenue] 월 입주 수입 조회 실패:', tenancyFailure);
       tenancyFailed = true;
     }
+    let lessonError: string | null = null;
+    // 레슨 계좌·현금 수납(lesson_payments) — 카드 레슨은 위 결제 행에 이미 있다. 못 읽으면 알린다(마이그레이션 0081 전).
+    try {
+      rows.push(...(await loadLessonRevenueRows(window)));
+    } catch (lessonFailure: unknown) {
+      console.error('[admin/revenue] 레슨 수납 조회 실패:', lessonFailure);
+      lessonError = '레슨 계좌·현금 수납 표를 읽지 못했습니다(마이그레이션 0081 적용 전이거나 조회 오류). 그 금액이 아래 숫자에 빠져 있습니다.';
+    }
     const summary = summarizeRevenue(rows, { year, month, type });
     const range = periodRange(year, month);
     let practice: PracticePnl | null = null;
@@ -145,6 +155,7 @@ export const getServerSideProps: GetServerSideProps<RevenuePageProps> = async (c
         manualError,
         practice,
         practiceNotice,
+        lessonError,
       },
     };
   } catch (error: unknown) {
@@ -312,7 +323,7 @@ const GroupCard = ({ label, totals }: { label: string; totals: Totals }) => (
   </div>
 );
 
-export default function AdminRevenuePage({ summary, type, years, nowYear, nowMonth, entryDates, today, manualEntries, manualError, practice = null, practiceNotice = null, error }: RevenuePageProps) {
+export default function AdminRevenuePage({ summary, type, years, nowYear, nowMonth, entryDates, today, manualEntries, manualError, practice = null, practiceNotice = null, lessonError = null, error }: RevenuePageProps) {
   const inProgress = summary !== null && summary.year === nowYear && (summary.month === 'all' || summary.month === nowMonth);
 
   return (
@@ -372,6 +383,12 @@ export default function AdminRevenuePage({ summary, type, years, nowYear, nowMon
             {manualError && (
               <Notice tone="warning" light>
                 {manualError}
+              </Notice>
+            )}
+
+            {lessonError && (
+              <Notice tone="warning" light>
+                {lessonError}
               </Notice>
             )}
 
