@@ -120,7 +120,7 @@ export default function AdminSessionMusiciansPage({ rows, filters, migrationNeed
         </form>
 
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto max-md:p-3">
             <table className="admin-table w-full text-sm text-left">
               <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
                 <tr>

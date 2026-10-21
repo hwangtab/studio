@@ -445,7 +445,7 @@ export default function ProductionContractForm({
           )}
         </div>
 
-        <h3 className="mt-6 mb-2 font-semibold text-gray-900 dark:text-gray-900">해지 시 공제 항목표 (제10조)</h3>
+        <h3 className="mt-6 mb-2 text-base font-semibold text-gray-900 dark:text-gray-900">해지 시 공제 항목표 (제10조)</h3>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
           {terms.refundSchedule.map((item, index) => (
             <Field key={item.key} label={REFUND_SHORT_LABEL[item.key]} id={`terms.refundSchedule.${item.key}`} error={errorMap[`terms.refundSchedule.${item.key}`]} className={ADMIN_FIELD}>

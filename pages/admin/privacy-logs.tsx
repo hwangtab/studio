@@ -169,7 +169,7 @@ export default function AdminPrivacyLogsPage({
         {rows.length === 0 && !error ? (
           <p className="text-sm text-gray-600">해당하는 기록이 없습니다.</p>
         ) : (
-          <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+          <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white max-md:rounded-none max-md:border-0 max-md:bg-transparent">
             <table className="admin-table min-w-full text-sm">
               <caption className="sr-only">개인정보 접속기록 목록</caption>
               <thead className="bg-gray-50 text-left text-gray-600">

@@ -12,6 +12,7 @@ import { PAYMENT_LINK_LIMITS } from '../../../lib/payments/paymentLinkRules';
 import { listPaymentLinks, type PaymentLinkListRow } from '../../../lib/payments/paymentLinks';
 import { BUSINESS_LINE_LABELS, BUSINESS_LINES, type BusinessLine } from '../../../lib/ops/businessLine';
 import { loadPaymentLinkLines } from '../../../lib/ops/businessLineStore';
+import { buttonVariants } from '../../../components/ui/Button';
 
 /**
  * 목록 행 + 매출 분야(지정이 없으면 기본 '녹음·제작'). `lineFixed`면 제작·믹싱 계약 링크라 바꿀 수 없다.
@@ -63,7 +64,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 };
 
 const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
-const buttonClass = 'rounded-lg bg-gray-900 px-4 py-2 text-white disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
+const buttonClass = buttonVariants({ variant: 'solid', size: 'sm', light: true });
+const rowButtonClass = buttonVariants({ variant: 'weak', size: 'sm', light: true });
 const kstFull = (sec: number) => new Date(sec * 1000).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit' });
 const kst = (sec: number) => new Date(sec * 1000).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
@@ -239,7 +241,7 @@ export default function AdminPaymentLinksPage({ links: initialLinks, truncated, 
             <ul className="divide-y divide-gray-100">
               {links.map((l) => (
                 <li key={l.slug} className="flex flex-wrap items-center gap-2 py-3">
-                  <div className="min-w-0 flex-1">
+                  <div className="min-w-0 flex-1 basis-full sm:basis-0">
                     <p className="font-semibold">{l.itemName} · {formatPriceAmount(l.totalAmount)}원{l.memo && <span className="ml-2 font-normal text-gray-600">({l.memo})</span>}</p>
                     {l.sessionAt && (
                       <p className="text-xs font-medium text-gray-800">
@@ -268,8 +270,8 @@ export default function AdminPaymentLinksPage({ links: initialLinks, truncated, 
                   </div>
                   {l.open && (
                     <>
-                      <button type="button" onClick={() => copy(l.slug)} className={buttonClass}>{copied === l.slug ? '복사함' : '주소 복사'}</button>
-                      <button type="button" disabled={busy} onClick={() => close(l.slug, l.itemName)} className={buttonClass}>닫기</button>
+                      <button type="button" onClick={() => copy(l.slug)} className={rowButtonClass}>{copied === l.slug ? '복사함' : '주소 복사'}</button>
+                      <button type="button" disabled={busy} onClick={() => close(l.slug, l.itemName)} className={rowButtonClass}>닫기</button>
                     </>
                   )}
                 </li>
@@ -284,8 +286,8 @@ export default function AdminPaymentLinksPage({ links: initialLinks, truncated, 
             <ul className="divide-y divide-gray-100">
               {fileLinks.map((l) => (
                 <li key={l.slug} className="flex flex-wrap items-center gap-2 py-3">
-                  <p className="min-w-0 flex-1">{l.itemName} · {formatPriceAmount(l.totalAmount)}원 · {l.expiresOn ? (l.open ? `${l.expiresOn}까지` : `${l.expiresOn} 만료`) : '만료일 없음'}</p>
-                  {l.open && <button type="button" onClick={() => copy(l.slug)} className={buttonClass}>{copied === l.slug ? '복사함' : '주소 복사'}</button>}
+                  <p className="min-w-0 flex-1 basis-full sm:basis-0">{l.itemName} · {formatPriceAmount(l.totalAmount)}원 · {l.expiresOn ? (l.open ? `${l.expiresOn}까지` : `${l.expiresOn} 만료`) : '만료일 없음'}</p>
+                  {l.open && <button type="button" onClick={() => copy(l.slug)} className={rowButtonClass}>{copied === l.slug ? '복사함' : '주소 복사'}</button>}
                 </li>
               ))}
             </ul>

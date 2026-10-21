@@ -8,6 +8,7 @@ import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { tenancyCalendarId } from '../../../lib/tenancy/calendar';
 import { currentTermEnd, daysBetween, flagsOf, kstToday, overdueDays, type TenancyFlag } from '../../../lib/tenancy/rules';
 import { listTenancies, type TenancyListRow } from '../../../lib/tenancy/service';
+import { buttonVariants } from '../../../components/ui/Button';
 
 interface Props {
   rows: TenancyListRow[];
@@ -32,7 +33,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 const won = (n: number) => `${n.toLocaleString('ko-KR')}원`;
 const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
 const btn = 'rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-900 hover:bg-gray-50 disabled:opacity-50';
-const btnPrimary = 'rounded-lg bg-gray-900 px-4 py-2 text-white disabled:opacity-50';
+const btnPrimary = buttonVariants({ variant: 'solid', size: 'sm', light: true });
 
 const FLAG_LABEL: Record<TenancyFlag, { text: string; cls: string }> = {
   overdue: { text: '연체', cls: 'bg-red-100 text-red-800' },

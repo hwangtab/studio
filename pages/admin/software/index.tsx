@@ -9,6 +9,7 @@ import { SOFTWARE_SALES_OPEN } from '../../../data/software/policy';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { recordAdminPrivacyAccess } from '../../../lib/privacy/accessLog';
 import { listAdminLicenses, type AdminLicenseRow } from '../../../lib/software/service';
+import { buttonVariants } from '../../../components/ui/Button';
 
 const LICENSE_LIST_LIMIT = 100;
 
@@ -49,7 +50,7 @@ const STATUS_LABEL: Record<string, string> = { active: '사용 중', revoked: '�
 const kst = (iso: string) => new Date(iso).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', year: '2-digit', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
 const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
-const buttonClass = 'rounded-lg bg-gray-900 px-3 py-2 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 disabled:opacity-50';
+const buttonClass = buttonVariants({ variant: 'solid', size: 'sm', light: true });
 const linkButtonClass = 'text-xs text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
 
 const post = async (url: string, body: unknown): Promise<{ ok: boolean; data: Record<string, unknown> | null }> => {
@@ -90,7 +91,7 @@ function IssueForm({ products }: { products: Props['products'] }) {
             {' '}아래 목록에서도 다시 볼 수 있습니다.
           </p>
         </Notice>
-        <button type="button" className={buttonClass} onClick={() => window.location.reload()}>목록 새로고침</button>
+        <button type="button" className={buttonVariants({ variant: 'weak', size: 'sm', light: true })} onClick={() => window.location.reload()}>목록 새로고침</button>
       </div>
     );
   }
@@ -172,9 +173,9 @@ function LicenseRow({ row }: { row: AdminLicenseRow }) {
         <span className="block text-xs text-gray-500">{row.productSlug} · {SOURCE_LABEL[row.source] ?? row.source}{row.orderNo ? ` · ${row.orderNo}` : ''}</span>
         {row.note && <span className="block text-xs text-gray-500">{row.note}</span>}
       </td>
-      <td className="py-2 pr-3">{row.email}{row.customerName && <span className="block text-xs text-gray-500">{row.customerName}</span>}</td>
-      <td className="py-2 pr-3 text-xs">{kst(row.issuedAt)}{row.firstActivatedAt && <span className="block text-gray-500">첫 활성화 {kst(row.firstActivatedAt)}</span>}</td>
-      <td className="py-2 pr-3">
+      <td data-label="받는 분" className="py-2 pr-3">{row.email}{row.customerName && <span className="block text-xs text-gray-500">{row.customerName}</span>}</td>
+      <td data-label="발급" className="py-2 pr-3 text-xs">{kst(row.issuedAt)}{row.firstActivatedAt && <span className="block text-gray-500">첫 활성화 {kst(row.firstActivatedAt)}</span>}</td>
+      <td data-label="기기" className="py-2 pr-3">
         <span className="tabular-nums">{row.activations.length} / {row.maxActivations}</span>
         <ul className="mt-1 space-y-1 text-xs text-gray-600">
           {row.activations.map((a) => (
@@ -186,7 +187,7 @@ function LicenseRow({ row }: { row: AdminLicenseRow }) {
           ))}
         </ul>
       </td>
-      <td className="py-2">
+      <td data-label="상태" className="py-2">
         <span>{STATUS_LABEL[row.status] ?? row.status}</span>
         <div className="mt-1 flex flex-col items-start gap-1">
           {row.activations.length > 0 && (
@@ -246,7 +247,7 @@ export default function AdminSoftwarePage({ licenses, truncated = false, product
             <p className="text-gray-600">{q ? '찾는 라이선스가 없습니다.' : '아직 발급한 라이선스가 없습니다.'}</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left">
+              <table className="admin-table w-full text-left">
                 <thead className="text-xs text-gray-500">
                   <tr><th className="py-2 pr-3">키</th><th className="py-2 pr-3">받는 분</th><th className="py-2 pr-3">발급</th><th className="py-2 pr-3">기기</th><th className="py-2">상태</th></tr>
                 </thead>

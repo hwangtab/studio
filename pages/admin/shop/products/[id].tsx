@@ -17,6 +17,7 @@ import { SHOP_STATUS_LABELS } from '../../../../lib/shop/productRules';
 import { describeShopArtistTerms } from '../../../../lib/shop/artistTerms';
 import { loadShopArtistTermsStatus } from '../../../../lib/shop/artistTermsAgreement';
 import { isStudioShopArtistSlug } from '../../../../lib/shop/studioArtist';
+import { buttonVariants } from '../../../../components/ui/Button';
 
 interface Props {
   product: AdminShopProductDetail;
@@ -50,7 +51,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 };
 
 const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
-const primaryBtn = 'rounded-lg bg-gray-900 px-4 py-2 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 disabled:opacity-60';
+const primaryBtn = buttonVariants({ variant: 'solid', size: 'sm', light: true });
 const secondaryBtn = 'rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 disabled:opacity-60';
 const card = 'mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6';
 

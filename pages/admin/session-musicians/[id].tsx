@@ -133,7 +133,7 @@ export default function AdminSessionMusicianDetailPage({ profile }: Props) {
         {message && <Notice tone={message.tone} light className="mb-4">{message.text}</Notice>}
 
         <section className="bg-white rounded-2xl shadow-sm p-6 mb-4">
-          <h2 className="font-semibold mb-3">프로필</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-3">프로필</h2>
           <dl className="space-y-2 text-sm">
             <Row label="주 악기">{instrumentLabel(profile.primaryInstrument)}</Row>
             <Row label="다루는 악기">{instruments.join(', ') || '-'}</Row>
@@ -169,7 +169,7 @@ export default function AdminSessionMusicianDetailPage({ profile }: Props) {
         </section>
 
         <section className="bg-white rounded-2xl shadow-sm p-6 mb-4">
-          <h2 className="font-semibold mb-2">연락처</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-2">연락처</h2>
           {privateInfo ? (
             <dl className="space-y-2 text-sm">
               <Row label="실명">{privateInfo.realName}</Row>
@@ -186,7 +186,7 @@ export default function AdminSessionMusicianDetailPage({ profile }: Props) {
         </section>
 
         <section className="bg-white rounded-2xl shadow-sm p-6 mb-4">
-          <h2 className="font-semibold mb-3">운영 상태와 메모</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-3">운영 상태와 메모</h2>
           <label className="mb-3 flex flex-col gap-1 text-sm">
             <span className="text-gray-600">상태</span>
             <select value={status} onChange={(e) => setStatus(e.target.value)} className="rounded-lg border border-gray-300 bg-white px-3 py-2">
@@ -203,7 +203,7 @@ export default function AdminSessionMusicianDetailPage({ profile }: Props) {
         </section>
 
         <section className="bg-white rounded-2xl shadow-sm p-6">
-          <h2 className="font-semibold mb-2">삭제</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-2">삭제</h2>
           <p className="text-sm text-gray-600 mb-3">본인이 관리 링크를 잃고 삭제를 요청했을 때 쓰세요. 바로 지워지고 되돌릴 수 없어요.</p>
           {confirmingDelete ? (
             <div className="flex gap-2">

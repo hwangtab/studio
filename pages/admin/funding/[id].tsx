@@ -103,6 +103,9 @@ const STATUS_LABELS: Record<string, string> = {
   refunded: '환불완료',
   failed: '결제실패',
   expired: '만료',
+  auto_cancel_pending: '자동 취소 처리 중',
+  awaiting_deposit: '계좌 입금 대기',
+  deposit_cancelled: '입금 전 취소',
 };
 
 const PAYMENT_LABELS: Record<string, string> = { toss: '카드', bank_transfer: '계좌 입금' };

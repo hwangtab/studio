@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { Button } from '../ui/Button';
-import { Field, TextInput } from '../ui/Field';
+import { Field, Select, TextInput } from '../ui/Field';
 import { lightOnlyField } from '../ui/adminFieldClass';
 import { formatCurrency, formatDate, formatDateTime } from '../../lib/contracts/format';
 import { adminEventTypesFor, EVENT_SPEC, eventLabelFor, eventStagesFor, isPerSongEvent, STAGE_LABEL } from '../../lib/contracts/production/event-spec';
@@ -111,29 +111,29 @@ function RecordForm({
     <form onSubmit={submit} className="space-y-3">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <Field label="기록 종류" id="event-type" className={lightOnlyField}>
-          <select
+          <Select light
             id="event-type"
             value={type}
             onChange={(e) => {
               setType(e.target.value as ProductionEventType);
               setStage('');
             }}
-            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
+            className="text-sm"
           >
             {adminEventTypesFor(mixMaster).map((value) => (
               <option key={value} value={value}>
                 {eventLabelFor(value, mixMaster)}
               </option>
             ))}
-          </select>
+          </Select>
         </Field>
         {spec.stages && (
           <Field label="단계" id="event-stage" className={lightOnlyField}>
-            <select
+            <Select light
               id="event-stage"
               value={stage}
               onChange={(e) => setStage(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
+              className="text-sm"
             >
               <option value="">고르기</option>
               {spec.stages.map((value) => (
@@ -141,23 +141,23 @@ function RecordForm({
                   {STAGE_LABEL[value]}
                 </option>
               ))}
-            </select>
+            </Select>
           </Field>
         )}
         {needsSong && (
           <Field label="곡" id="event-song" className={lightOnlyField}>
-            <select
+            <Select light
               id="event-song"
               value={song}
               onChange={(e) => setSong(Number(e.target.value))}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
+              className="text-sm"
             >
               {songLabels.map((label, index) => (
                 <option key={label} value={index}>
                   {label}
                 </option>
               ))}
-            </select>
+            </Select>
           </Field>
         )}
         {spec.amount && (
@@ -167,15 +167,15 @@ function RecordForm({
         )}
         {spec.cause && (
           <Field label="정지 사유" id="event-cause" hint="의뢰인 사유만 작업 기간을 늘립니다(제4조 2항)." className={lightOnlyField}>
-            <select
+            <Select light
               id="event-cause"
               value={cause}
               onChange={(e) => setCause(e.target.value as 'client' | 'studio')}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900"
+              className="text-sm"
             >
               <option value="client">의뢰인 사유</option>
               <option value="studio">스튜디오 사유</option>
-            </select>
+            </Select>
           </Field>
         )}
         <Field label="일어난 때" id="event-occurred" hint="비우면 지금. 소급 기록은 화면에 표시됩니다." className={lightOnlyField}>
@@ -345,13 +345,13 @@ export default function ProductionProgressPanel({
 
       {editable && (
         <div className="p-4 md:p-8 border-b border-gray-200">
-          <h3 className="font-bold text-gray-900 dark:text-gray-900 mb-3">기록 추가</h3>
+          <h3 className="text-base font-bold text-gray-900 dark:text-gray-900 mb-3">기록 추가</h3>
           <RecordForm contractId={contractId} songLabels={view.songLabels} mixMaster={view.mixMaster} onDone={refresh} />
         </div>
       )}
 
       <div className="p-4 md:p-8">
-        <h3 className="font-bold text-gray-900 dark:text-gray-900 mb-3">기록 (최근 순)</h3>
+        <h3 className="text-base font-bold text-gray-900 dark:text-gray-900 mb-3">기록 (최근 순)</h3>
         {view.timeline.length === 0 ? (
           <p className="text-sm text-gray-500">아직 기록이 없습니다.</p>
         ) : (
