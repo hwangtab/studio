@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { withI18nServerProps } from '../../../../lib/getStatic';
 import Head from 'next/head';
 
 import ContractNotice from '../../../../components/contracts/ContractNotice';
-import { TextInput } from '../../../../components/ui/Field';
+import ContractPdfDownload from '../../../../components/contracts/ContractPdfDownload';
 import { Button } from '../../../../components/ui/Button';
 import { getDb } from '../../../../db/client';
 import { formatDate } from '../../../../lib/contracts/format';
 import { IDENTITY_DIGITS } from '../../../../lib/contracts/identity';
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
 import { getEffectiveStatus } from '../../../../lib/contracts/status';
-import { Notice } from '../../../../components/ui/Notice';
+import { BANK_ACCOUNT } from '../../../../lib/payments/bankAccount';
 
 /**
  * 이 페이지가 화면에 실제로 그리는 값만 담는다.
@@ -28,6 +28,8 @@ interface CompleteViewContract {
   startDate: string;
   endDate: string;
   monthlyRent: number;
+  /** 매월 선불 납부일(계약서 제2조·요약표). */
+  paymentDay: number;
   signedAt: string | null;
 }
 
@@ -109,6 +111,7 @@ export const getServerSideProps = withI18nServerProps<CompletePageProps>(async (
           startDate: contract.startDate.toISOString(),
           endDate: contract.endDate.toISOString(),
           monthlyRent: contract.monthlyRent,
+          paymentDay: contract.paymentDay,
           signedAt: contract.signedAt ? contract.signedAt.toISOString() : null,
         },
         downloadUrl: `/api/contracts/${contract.id}/download?token=${encodeURIComponent(token)}`,
@@ -132,21 +135,6 @@ export default function ContractCompletePage({
   unavailable,
   terminated,
 }: CompletePageProps) {
-  const [downloading, setDownloading] = useState(false);
-  const [downloadError, setDownloadError] = useState<string | null>(null);
-  /**
-   * 서명본에는 성명·생년월일·주소·서명 이미지가 들어 있다. 서명할 때 요구한 뒷자리를
-   * 받을 때도 요구한다 — 안 그러면 링크를 전달받은 사람이 그대로 내려받을 수 있다.
-   */
-  const [identityDigits, setIdentityDigits] = useState('');
-
-  /**
-   * 링크로 바로 이동하지 않고 받아서 저장한다.
-   *
-   * API 라우트는 실패를 JSON으로 돌려주므로, 링크를 그대로 누르면 계약서 대신
-   * {"ok":false,...} 한 줄이 적힌 흰 화면으로 넘어간다. 이 링크는 메일함에 영구히 남아
-   * 몇 년 뒤에도 눌리는데, 그때 고객이 보는 것이 그 화면이어서는 안 된다.
-   */
   if (unavailable || !contract) {
     // 장애로 못 읽은 것과 링크가 죽은 것은 고객이 할 일이 다르다. 제목부터 구분한다.
     const isError = unavailable === 'error';
@@ -169,42 +157,6 @@ export default function ContractCompletePage({
       </>
     );
   }
-
-  const handleDownload = async () => {
-    setDownloading(true);
-    setDownloadError(null);
-
-    try {
-      const response = await fetch(downloadUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ identityDigits }),
-      });
-
-      if (!response.ok) {
-        const message = await response
-          .json()
-          .then((body) => (typeof body?.message === 'string' ? body.message : null))
-          .catch(() => null);
-        setDownloadError(message ?? '계약서를 받지 못했습니다. 잠시 후 다시 시도해 주세요.');
-        return;
-      }
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `${contract.customerName}_음악연습실_이용계약서.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
-    } catch {
-      setDownloadError('연결이 끊겼습니다. 잠시 후 다시 시도해 주세요.');
-    } finally {
-      setDownloading(false);
-    }
-  };
 
   return (
     <>
@@ -270,6 +222,23 @@ export default function ContractCompletePage({
             </dl>
           </div>
 
+          {/* 다음 할 일 — 계약서 요약표와 서명 완료 메일에 이미 적힌 사실만 옮긴다(첫 입금 시점 같은 계약서에 없는 약속은 적지 않는다). */}
+          {!terminated && !purged && (
+            <div className="bg-gray-50 dark:bg-gray-50 rounded-xl p-6 text-left mb-8">
+              <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-3">다음 할 일</h2>
+              <ul className="list-disc space-y-2 pl-5 text-sm text-gray-700 dark:text-gray-700 leading-relaxed">
+                <li>
+                  월 이용료(부가세 별도)는 매월 <strong>{contract.paymentDay}일</strong>에 <strong>선불</strong>로 입금해 주세요.{' '}
+                  <span className="block text-gray-500 dark:text-gray-500">
+                    입금 계좌: {BANK_ACCOUNT.bankName} {BANK_ACCOUNT.accountNumber} (예금주: {BANK_ACCOUNT.accountHolder})
+                  </span>
+                </li>
+                <li>이용 시작일부터 24시간 상시 이용하실 수 있습니다.</li>
+                <li>궁금하신 점은 010-4255-7893으로 연락해 주세요.</li>
+              </ul>
+            </div>
+          )}
+
           {/* 메일이 유실되거나 첨부가 열리지 않는 경우가 있어, 이 자리에서 바로 받을 수 있게 한다.
               보관 기간이 지나 파기된 계약은 내려받을 원본이 없다 — 눌러도 실패하는 버튼 대신
               왜 받을 수 없는지 알린다. */}
@@ -279,49 +248,18 @@ export default function ContractCompletePage({
               <span className="block">문의는 010-4255-7893으로 연락해 주세요.</span>
             </p>
           ) : (
-            <>
-              <label
-                htmlFor="download-identity-digits"
-                className="block text-left text-sm text-gray-600 dark:text-gray-600 mb-2"
-              >
-                본인 확인을 위해 계약서에 등록된 연락처 뒤 {IDENTITY_DIGITS}자리를 입력해 주세요.
-              </label>
-              <TextInput
-                id="download-identity-digits"
-                type="text"
-                inputMode="numeric"
-                autoComplete="off"
-                maxLength={IDENTITY_DIGITS}
-                value={identityDigits}
-                onChange={(event) => setIdentityDigits(event.target.value.replace(/\D/g, ''))}
-                placeholder="0000"
-                aria-describedby={downloadError ? 'download-identity-error' : undefined}
-                aria-invalid={downloadError ? true : undefined}
-                invalid={Boolean(downloadError)}
-                light className="mb-4 px-4 py-3 text-center text-lg tracking-[0.5em]"
-              />
-
-              <Button light
-                size="lg"
-                fullWidth
-                disabled={downloading || identityDigits.length !== IDENTITY_DIGITS}
-                onClick={handleDownload}
-              >
-                {downloading ? '준비 중…' : '계약서 PDF 내려받기'}
-              </Button>
-
-              {downloadError && (
-                <Notice tone="error" light className="mt-3">
-                  <span className="block">{downloadError}</span>
-                  <span className="block">계약서는 메일로도 보내 드렸습니다. 급하시면 010-4255-7893으로 연락해 주세요.</span>
-                </Notice>
-              )}
-
-              <p className="text-sm text-gray-500 dark:text-gray-500 mt-4 mb-6">
-                같은 계약서를 메일로도 보내 드렸습니다. 메일이 오지 않았다면 스팸함을 확인하시거나
-                010-4255-7893으로 문의해 주세요.
-              </p>
-            </>
+            <ContractPdfDownload
+              formal
+              downloadUrl={downloadUrl}
+              fileName={`${contract.customerName}_음악연습실_이용계약서.pdf`}
+              labelText={`본인 확인을 위해 계약서에 등록된 연락처 뒤 ${IDENTITY_DIGITS}자리를 입력해 주세요.`}
+              footer={
+                <p className="text-sm text-gray-500 dark:text-gray-500 mt-4 mb-6">
+                  같은 계약서를 메일로도 보내 드렸습니다. 메일이 오지 않았다면 스팸함을 확인하시거나
+                  010-4255-7893으로 문의해 주세요.
+                </p>
+              }
+            />
           )}
 
           {/* 문서 이동(<a href>)으로 나간다 — next/link로 클라이언트 전환을 하면 홈에서 켜진 GA가

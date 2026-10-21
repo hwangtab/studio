@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
+import { PAYMENT_BROWSER_LABEL, classifyPaymentBrowser, type PaymentBrowserKind } from './browserKind';
 import { PAYMENT_ORDER_NO_PATTERN } from './recordFailure';
 
 /**
@@ -10,29 +11,7 @@ import { PAYMENT_ORDER_NO_PATTERN } from './recordFailure';
  * User-Agent는 저장하지 않고 인앱 여부를 가를 만큼만 분류한다.
  */
 
-export type PaymentBrowserKind = 'kakaotalk' | 'instagram' | 'facebook' | 'naver' | 'line' | 'mobile' | 'desktop';
-
-export const PAYMENT_BROWSER_LABEL: Record<PaymentBrowserKind, string> = {
-  kakaotalk: '카카오톡 인앱',
-  instagram: '인스타그램 인앱',
-  facebook: '페이스북 인앱',
-  naver: '네이버 앱',
-  line: '라인 인앱',
-  mobile: '모바일 브라우저',
-  desktop: '데스크톱',
-};
-
-/** 인앱 표식을 먼저 본다 — 인앱 브라우저의 UA에도 Mobile·Safari가 들어 있다. */
-export const classifyPaymentBrowser = (userAgent: string | null | undefined): PaymentBrowserKind => {
-  const ua = userAgent ?? '';
-  if (/KAKAOTALK/i.test(ua)) return 'kakaotalk';
-  if (/Instagram/i.test(ua)) return 'instagram';
-  if (/FBAN|FBAV|FB_IAB/.test(ua)) return 'facebook';
-  if (/NAVER\(inapp|NAVER\//i.test(ua)) return 'naver';
-  if (/\bLine\//.test(ua)) return 'line';
-  if (/Mobi|Android|iPhone|iPad/i.test(ua)) return 'mobile';
-  return 'desktop';
-};
+export { PAYMENT_BROWSER_LABEL, classifyPaymentBrowser, type PaymentBrowserKind } from './browserKind';
 
 /**
  * 결제 대기(pending) 주문에만 적는다. 확정·환불된 주문에 뒤늦은 비콘이 와도 기록을 흐리지

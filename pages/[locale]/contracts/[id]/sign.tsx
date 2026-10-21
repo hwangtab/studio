@@ -1,4 +1,5 @@
 import ContractNotice from '../../../../components/contracts/ContractNotice';
+import ContractSignNav, { SIGNATURE_SECTION_ID } from '../../../../components/contracts/ContractSignNav';
 import { focusFirstMissing, MISSING_RING, type MissingItem } from '../../../../components/contracts/missingGuide';
 import { withI18nServerProps } from '../../../../lib/getStatic';
 import React, { useEffect, useRef, useState } from 'react';
@@ -20,6 +21,7 @@ import {
   type SerializedContract,
 } from '../../../../lib/contracts/serialize';
 import { IDENTITY_DIGITS, maskIdentityDigitsInContent } from '../../../../lib/contracts/identity';
+import { birthdateErrorMessage, formatBirthdateInput, isUnder19, parseBirthdate } from '../../../../lib/contracts/birthdate';
 import { getClientIp } from '../../../../lib/contracts/client-ip';
 import { CONTRACT_MARKDOWN_OPTIONS } from '../../../../lib/contracts/html-escape';
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
@@ -205,11 +207,22 @@ export default function ContractSignPage({
     attachments.every((attachment) => agreements[attachment.id]);
 
   const identityReady = identityDigits.length === IDENTITY_DIGITS && identityConfirmed;
-  const detailsReady = customerBirthdate !== '' && customerAddress.trim() !== '';
+  // 생년월일은 숫자 8자리를 치면 `YYYY-MM-DD`로 정리되는 글자 칸이다(lib/contracts/birthdate.ts). 서버가 받는 값은 그대로 이 형식.
+  const birthdateParse = parseBirthdate(customerBirthdate);
+  const under19 = isUnder19(customerBirthdate);
+  const detailsReady = birthdateParse.ok && customerAddress.trim() !== '';
+  /** 칸을 고치면 그 칸의 서버 오류를 지운다 — 고친 뒤에도 옛 오류가 남아 있으면 무엇이 틀렸는지 헷갈린다. */
+  const clearFieldError = (field: string) =>
+    setDetailErrors((prev) => {
+      if (!(field in prev)) return prev;
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
 
   /** 빠진 항목 — 화면 위에서 아래 순서. */
   const missing: MissingItem[] = [
-    ...(!customerBirthdate ? [{ id: 'customerBirthdate', label: '생년월일' }] : []),
+    ...(!birthdateParse.ok ? [{ id: 'customerBirthdate', label: '생년월일' }] : []),
     ...(!customerAddress.trim() ? [{ id: 'customerAddress', label: '주소' }] : []),
     ...clauses.filter((clause) => !agreements[clause.id]).map((clause) => ({ id: `clause-${clause.id}`, label: `${clause.clauseNumber} 동의 체크` })),
     ...attachments.filter((a) => !agreements[a.id]).map((a) => ({ id: `attachment-${a.id}`, label: `「${a.title}」 동의 체크` })),
@@ -228,7 +241,7 @@ export default function ContractSignPage({
   useEffect(() => {
     if (!contract) return;
     const draft = readDraft(contract.id);
-    if (draft.customerBirthdate) setCustomerBirthdate(draft.customerBirthdate);
+    if (draft.customerBirthdate) setCustomerBirthdate(formatBirthdateInput(draft.customerBirthdate));
     if (draft.customerAddress) setCustomerAddress(draft.customerAddress);
   }, [contract]);
 
@@ -281,7 +294,7 @@ export default function ContractSignPage({
           agreements: [...clauses.map((c) => c.id), ...attachments.map((a) => a.id)],
           identityDigits,
           identityConfirmed,
-          customerBirthdate,
+          customerBirthdate: birthdateParse.ok ? birthdateParse.value : '',
           customerAddress: customerAddress.trim(),
         }),
       });
@@ -314,6 +327,9 @@ export default function ContractSignPage({
             }
           }
           setDetailErrors(map);
+          // 서버가 짚은 칸 중 화면 위쪽 첫 칸으로 옮기고 커서를 둔다(버튼 근처에서는 어느 칸이 틀렸는지 안 보인다).
+          const failed = ['customerBirthdate', 'customerAddress'].filter((field) => field in map);
+          if (failed.length > 0) window.setTimeout(() => focusFirstMissing(failed.map((id) => ({ id, label: id }))), 0);
         }
         throw new Error(result.message || '서명 제출에 실패했습니다.');
       }
@@ -431,23 +447,29 @@ export default function ContractSignPage({
               </p>
             </div>
 
-            <div className="p-6 md:p-10">
+            <div className="p-4 sm:p-6 md:p-10">
+              <ContractSignNav content={contract.content} formal />
+
               <ContractContent content={contract.content} />
 
               {rulesContent && (
                 <div className="mt-8 border border-gray-200 dark:border-gray-200 rounded-xl overflow-hidden">
                   <button
                     type="button"
+                    aria-expanded={showRules}
+                    aria-controls="house-rules-panel"
                     onClick={() => setShowRules((prev) => !prev)}
                     className="w-full flex items-center justify-between px-5 py-4 bg-gray-50 dark:bg-gray-50 hover:bg-gray-100 text-left"
                   >
                     <span className="font-medium text-gray-900 dark:text-gray-900">
                       첨부 「공동생활 이용수칙」 {showRules ? '접기' : '펼쳐 보기'}
                     </span>
-                    <span className="text-gray-400 dark:text-gray-400">{showRules ? '−' : '+'}</span>
+                    <span aria-hidden="true" className="text-gray-400 dark:text-gray-400">
+                      {showRules ? '−' : '+'}
+                    </span>
                   </button>
                   {showRules && (
-                    <div className="px-5 py-4 prose prose-sm max-w-none prose-headings:font-bold">
+                    <div id="house-rules-panel" className="px-5 py-4 prose prose-sm max-w-none prose-headings:font-bold">
                       <Markdown options={CONTRACT_MARKDOWN_OPTIONS}>{rulesContent}</Markdown>
                     </div>
                   )}
@@ -472,20 +494,31 @@ export default function ContractSignPage({
                     id="customerBirthdate"
                     label="생년월일"
                     required
-                    error={detailErrors.customerBirthdate ?? (isMissing('customerBirthdate') ? '입력해 주세요.' : undefined)}
+                    hint="숫자 8자리로 적습니다. 예: 19900115"
+                    error={detailErrors.customerBirthdate ?? birthdateErrorMessage(birthdateParse, isMissing('customerBirthdate'))}
                     className={LIGHT_FIELD}
                   >
                     <TextInput
-                      type="date"
+                      type="text"
+                      inputMode="numeric"
                       value={customerBirthdate}
-                      onChange={(e) => setCustomerBirthdate(e.target.value)}
-                      max={new Date().toISOString().slice(0, 10)}
+                      onChange={(e) => {
+                        setCustomerBirthdate(formatBirthdateInput(e.target.value));
+                        clearFieldError('customerBirthdate');
+                      }}
+                      maxLength={10}
+                      placeholder="예: 19900115"
                       autoComplete="bday"
-
                       light
-                      className="px-4 py-3 [color-scheme:light]"
+                      className="px-4 py-3"
                     />
                   </Field>
+
+                  {under19 && (
+                    <Notice tone="warning" light className="md:col-span-2">
+                      만 19세 미만은 온라인으로 계약할 수 없습니다. 010-4255-7893으로 문의해 주세요.
+                    </Notice>
+                  )}
 
                   <Field
                     id="customerAddress"
@@ -496,7 +529,10 @@ export default function ContractSignPage({
                   >
                     <TextInput
                       value={customerAddress}
-                      onChange={(e) => setCustomerAddress(e.target.value)}
+                      onChange={(e) => {
+                        setCustomerAddress(e.target.value);
+                        clearFieldError('customerAddress');
+                      }}
                       placeholder="예: 서울시 은평구 대조동 00-0"
                       autoComplete="street-address"
                       light
@@ -597,13 +633,13 @@ export default function ContractSignPage({
                 </label>
               </div>
 
-              <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
+              <div id={SIGNATURE_SECTION_ID} className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
                 <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-2">전자서명</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-600 mb-4">
                   아래 영역에 마우스나 손가락으로 서명해 주세요.
                 </p>
 
-                <div id="signature-pad" tabIndex={-1} className={`rounded-xl ${isMissing('signature-pad') ? MISSING_RING : ''}`}>
+                <div id="signature-pad" tabIndex={-1} className={`rounded-xl focus:outline-none ${isMissing('signature-pad') ? MISSING_RING : ''}`}>
                   <SignaturePad ref={signaturePadRef} onSignedChange={setHasSigned} />
                 </div>
               </div>

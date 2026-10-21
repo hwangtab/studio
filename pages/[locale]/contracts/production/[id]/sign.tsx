@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import ContractContent from '../../../../../components/contracts/ContractContent';
+import ContractSignNav, { SIGNATURE_SECTION_ID } from '../../../../../components/contracts/ContractSignNav';
 import { focusFirstMissing, MISSING_RING, type MissingItem } from '../../../../../components/contracts/missingGuide';
 import ContractNotice from '../../../../../components/contracts/ContractNotice';
 import { SignaturePad, type SignaturePadHandle } from '../../../../../components/contracts/SignaturePad';
@@ -11,6 +12,7 @@ import { Field, TextInput } from '../../../../../components/ui/Field';
 import { Notice } from '../../../../../components/ui/Notice';
 import { lightOnlyField } from '../../../../../components/ui/adminFieldClass';
 import { getDb } from '../../../../../db/client';
+import { birthdateErrorMessage, formatBirthdateInput, isUnder19, parseBirthdate } from '../../../../../lib/contracts/birthdate';
 import { getClientIp } from '../../../../../lib/contracts/client-ip';
 import { IDENTITY_DIGITS, maskIdentityDigitsInContent } from '../../../../../lib/contracts/identity';
 import { denyContractPageCaching } from '../../../../../lib/contracts/page-cache';
@@ -30,7 +32,7 @@ interface ProductionSignPageProps {
   locale: string;
   token: string;
   /** 화면이 그리는 값만 싣는다 — props는 __NEXT_DATA__로 HTML에 그대로 실린다(연습실 sign.tsx 주석). */
-  contract: { id: string; title: string; clientName: string; content: string; contractName: string; openLink: boolean } | null;
+  contract: { id: string; title: string; clientName: string; content: string; contractName: string; openLink: boolean; hasGuardian: boolean } | null;
   /** 이 링크의 서명자. 법정대리인은 생년월일·주소를 채우지 않는다(의뢰인 정보다). */
   signer: { role: 'client' | 'guardian'; name: string; relation: string | null } | null;
   clauses: ProductionClause[];
@@ -97,6 +99,8 @@ export const getServerSideProps = withI18nServerProps<ProductionSignPageProps>(a
           contractName: contractNameFor(contract.kind),
           // 링크 계약 — 의뢰인이 이름·이메일·연락처를 여기서 채우고 뒷자리 확인을 하지 않는다(open-link.ts).
           openLink: isOpenProductionContract(contract),
+          // 만 19세 미만 안내가 달라진다(법정대리인이 지정돼 있으면 미성년 의뢰인도 서명할 수 있다 — API sign.ts).
+          hasGuardian: contract.signers.some((s) => s.role === 'guardian'),
           // 서명자들의 연락처는 본인 확인의 정답이라 본문에서도 가린다. 서명본에는 전체 번호가 들어간다.
           content: identityPhones.reduce((content, phone) => maskIdentityDigitsInContent(content, phone), contract.content),
         },
@@ -113,7 +117,7 @@ export const getServerSideProps = withI18nServerProps<ProductionSignPageProps>(a
     return {
       props: {
         ...empty,
-        error: `지금 계약서를 불러올 수 없습니다. 잠시 후 링크를 다시 열어 주세요. 계속 안 되면 ${OPERATOR_PHONE}으로 연락해 주세요.`,
+        error: `지금 계약서를 불러올 수 없어요. 잠시 후 링크를 다시 열어 주세요. 계속 안 되면 ${OPERATOR_PHONE}으로 연락해 주세요.`,
       },
     };
   }
@@ -122,21 +126,24 @@ export const getServerSideProps = withI18nServerProps<ProductionSignPageProps>(a
 const UNAVAILABLE_COPY: Record<UnavailableReason, { headTitle: string; title: string; description: string }> = {
   expired: {
     headTitle: '서명 링크 만료',
-    title: '서명 링크가 만료되었습니다',
-    description: '보안을 위해 서명 링크는 일정 기간이 지나면 사용할 수 없습니다. 운영자에게 재발송을 요청해 주세요.',
+    title: '서명 링크가 만료되었어요',
+    description: '보안을 위해 서명 링크는 일정 기간이 지나면 쓸 수 없어요. 스튜디오에 다시 보내 달라고 요청해 주세요.',
   },
   superseded: {
     headTitle: '사용할 수 없는 링크',
-    title: '이 서명 링크는 더 이상 사용할 수 없습니다',
+    title: '이 서명 링크는 더 이상 쓸 수 없어요',
     description:
-      '계약서를 다시 보내 드렸다면 가장 최근에 받으신 링크(메일 또는 카카오톡)를 열어 주세요. 최근 링크가 없다면 운영자에게 재발송을 요청해 주세요.',
+      '계약서를 다시 보내 드렸다면 가장 최근에 받은 링크(메일 또는 카카오톡)를 열어 주세요. 최근 링크가 없다면 스튜디오에 다시 보내 달라고 요청해 주세요.',
   },
   cancelled: {
     headTitle: '취소된 계약',
-    title: '취소된 계약입니다',
-    description: '이 계약은 운영자가 취소했습니다. 내용이 맞지 않는다면 스튜디오로 문의해 주세요.',
+    title: '취소된 계약이에요',
+    description: '이 계약은 스튜디오가 취소했어요. 내용이 맞지 않는다면 스튜디오로 문의해 주세요.',
   },
 };
+
+/** 서버 필드 오류가 화면에 놓인 순서(첫 오류 칸으로 옮기는 데 쓴다). */
+const FIELD_ORDER = ['clientName', 'clientStageName', 'clientEmail', 'clientPhone', 'clientBirthdate', 'clientAddress'];
 
 const CHECKBOX_CLASS =
   'mt-1 h-5 w-5 shrink-0 accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary/70 focus-visible:ring-offset-white';
@@ -188,7 +195,10 @@ export default function ProductionContractSignPage({
       delete next[field];
       return next;
     });
-  const detailsReady = isGuardian || (clientBirthdate !== '' && clientAddress.trim() !== '' && openReady);
+  // 생년월일은 숫자 8자리를 치면 `YYYY-MM-DD`로 정리되는 글자 칸이다(lib/contracts/birthdate.ts). 서버가 받는 값은 그대로 이 형식.
+  const birthdateParse = parseBirthdate(clientBirthdate);
+  const under19 = !isGuardian && isUnder19(clientBirthdate);
+  const detailsReady = isGuardian || (birthdateParse.ok && clientAddress.trim() !== '' && openReady);
   const ready = detailsReady && allAgreed && identityReady && hasSigned;
 
   /** 빠진 항목 — 화면 위에서 아래 순서(components/contracts/missingGuide.ts). */
@@ -199,7 +209,7 @@ export default function ProductionContractSignPage({
       ? [{ id: 'clientEmailConfirm', label: emailMismatch ? '이메일 확인(이메일과 다름)' : '이메일 확인' }]
       : []),
     ...(openLink && !openPhone.trim() ? [{ id: 'clientPhone', label: '휴대폰 번호' }] : []),
-    ...(!isGuardian && !clientBirthdate ? [{ id: 'clientBirthdate', label: '생년월일' }] : []),
+    ...(!isGuardian && !birthdateParse.ok ? [{ id: 'clientBirthdate', label: '생년월일' }] : []),
     ...(!isGuardian && !clientAddress.trim() ? [{ id: 'clientAddress', label: '주소' }] : []),
     ...clauses
       .filter((clause) => !agreements[clause.key])
@@ -215,7 +225,7 @@ export default function ProductionContractSignPage({
   useEffect(() => {
     if (!contract) return;
     const draft = readDraft(contract.id);
-    if (draft.customerBirthdate) setClientBirthdate(draft.customerBirthdate);
+    if (draft.customerBirthdate) setClientBirthdate(formatBirthdateInput(draft.customerBirthdate));
     if (draft.customerAddress) setClientAddress(draft.customerAddress);
     // 링크 계약의 이름·활동명·연락처·이메일도 — 카톡 인앱 브라우저에서 앱을 오가면 다시 열린다(sign-draft.ts).
     if (draft.clientName) setOpenName(draft.clientName);
@@ -248,14 +258,14 @@ export default function ProductionContractSignPage({
   }
 
   if (error || !contract) {
-    const title = error ? '계약서를 여는 중 문제가 생겼습니다' : '계약서를 찾을 수 없습니다';
+    const title = error ? '계약서를 여는 중 문제가 생겼어요' : '계약서를 찾을 수 없어요';
     return (
       <>
         <Head>
           <title>{`${title} | Studio NOL`}</title>
           <meta name="robots" content="noindex, nofollow" />
         </Head>
-        <ContractNotice title={title} description={error || '잘못된 링크입니다. 메일이나 카카오톡으로 받은 링크를 다시 확인해 주세요.'} />
+        <ContractNotice title={title} description={error || '잘못된 링크예요. 메일이나 카카오톡으로 받은 링크를 다시 확인해 주세요.'} />
       </>
     );
   }
@@ -280,7 +290,7 @@ export default function ProductionContractSignPage({
           agreements: clauses.map((clause) => clause.key),
           identityDigits,
           identityConfirmed,
-          ...(isGuardian ? {} : { clientBirthdate, clientAddress: clientAddress.trim() }),
+          ...(isGuardian ? {} : { clientBirthdate: birthdateParse.ok ? birthdateParse.value : '', clientAddress: clientAddress.trim() }),
           ...(openLink
             ? { clientName: openName.trim(), clientStageName: openStageName.trim(), clientEmail: openEmail.trim(), clientPhone: openPhone.trim() }
             : {}),
@@ -302,8 +312,11 @@ export default function ProductionContractSignPage({
             if (item && typeof item.field === 'string' && typeof item.message === 'string') map[item.field] = item.message;
           }
           setDetailErrors(map);
+          // 서버가 짚은 칸 중 화면 위쪽 첫 칸으로 옮기고 커서를 둔다(버튼 근처에서는 어느 칸이 틀렸는지 안 보인다).
+          const failed = FIELD_ORDER.filter((field) => field in map);
+          if (failed.length > 0) window.setTimeout(() => focusFirstMissing(failed.map((id) => ({ id, label: id }))), 0);
         }
-        throw new Error(result.message || '서명 제출에 실패했습니다.');
+        throw new Error(result.message || '서명 제출에 실패했어요.');
       }
 
       setDetailErrors({});
@@ -313,10 +326,10 @@ export default function ProductionContractSignPage({
       // 네트워크 끊김은 "Failed to fetch"를 그대로 보여 주지 않는다 — 실제로 접수됐을 수 있다.
       setSubmitError(
         err instanceof TypeError
-          ? '제출 결과를 확인하지 못했습니다. 연결을 확인한 뒤 아래 버튼을 다시 눌러 주세요. 이미 접수되었다면 완료 화면으로 이동합니다.'
+          ? '제출 결과를 확인하지 못했어요. 연결을 확인한 뒤 아래 버튼을 다시 눌러 주세요. 이미 접수됐다면 완료 화면으로 이동해요.'
           : err instanceof Error
             ? err.message
-            : '서명 제출 중 오류가 발생했습니다.',
+            : '서명 제출 중 오류가 생겼어요.',
       );
       setSubmitting(false);
     }
@@ -388,17 +401,28 @@ export default function ProductionContractSignPage({
                       </Field>
                     </>
                   )}
-                  <Field id="clientBirthdate" label="생년월일" required error={detailErrors.clientBirthdate ?? requiredError('clientBirthdate')} className={lightOnlyField}>
+                  <Field id="clientBirthdate" label="생년월일" required hint="숫자 8자리로 적어요. 예: 19900115" error={detailErrors.clientBirthdate ?? birthdateErrorMessage(birthdateParse, isMissing('clientBirthdate'))} className={lightOnlyField}>
                     <TextInput
-                      type="date"
+                      type="text"
+                      inputMode="numeric"
                       value={clientBirthdate}
-                      onChange={(e) => { setClientBirthdate(e.target.value); clearFieldError('clientBirthdate'); }}
-                      max={new Date().toISOString().slice(0, 10)}
+                      onChange={(e) => { setClientBirthdate(formatBirthdateInput(e.target.value)); clearFieldError('clientBirthdate'); }}
+                      maxLength={10}
+                      placeholder="예: 19900115"
                       autoComplete="bday"
                       light
-                      className="px-4 py-3 [color-scheme:light]"
+                      className="px-4 py-3"
                     />
                   </Field>
+                  {under19 && (
+                    <Notice tone="warning" light className="md:col-span-2">
+                      {contract?.hasGuardian
+                        ? '만 19세 미만이면 법정대리인이 함께 서명해야 해요. 이 계약에는 법정대리인이 지정돼 있어요.'
+                        : `만 19세 미만이면 법정대리인이 함께 서명해야 해요. ${OPERATOR_PHONE}으로 연락해 주시면 ${
+                            openLink ? '법정대리인과 함께 서명하는 계약서를 새로 보내 드려요.' : '대리인 서명을 준비해 드려요.'
+                          }`}
+                    </Notice>
+                  )}
                   <Field id="clientAddress" label="주소" required error={detailErrors.clientAddress ?? requiredError('clientAddress')} className={lightOnlyField}>
                     <TextInput
                       value={clientAddress}
@@ -436,7 +460,9 @@ export default function ProductionContractSignPage({
               </p>
             </div>
 
-            <div className="p-6 md:p-10">
+            <div className="p-4 sm:p-6 md:p-10">
+              <ContractSignNav content={contract.content} />
+
               {/* 링크 계약은 의뢰인이 누구인지 서명 전에는 모른다 — 입력 칸을 본문 위에 둔다(본문을 끝까지 내려야 나오면 헷갈린다). */}
               {openLink && clientInfo}
               <ContractContent content={contract.content} />
@@ -528,10 +554,10 @@ export default function ProductionContractSignPage({
                 </label>
               </div>
 
-              <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
+              <div id={SIGNATURE_SECTION_ID} className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
                 <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-2">전자서명</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-600 mb-4">아래 영역에 마우스나 손가락으로 서명해 주세요.</p>
-                <div id="signature-pad" tabIndex={-1} className={`rounded-xl ${isMissing('signature-pad') ? MISSING_RING : ''}`}>
+                <div id="signature-pad" tabIndex={-1} className={`rounded-xl focus:outline-none ${isMissing('signature-pad') ? MISSING_RING : ''}`}>
                   <SignaturePad ref={signaturePadRef} onSignedChange={setHasSigned} />
                 </div>
               </div>

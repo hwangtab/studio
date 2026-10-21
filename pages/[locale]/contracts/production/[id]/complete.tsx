@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Head from 'next/head';
 
 import ContractNotice from '../../../../../components/contracts/ContractNotice';
+import ContractPdfDownload from '../../../../../components/contracts/ContractPdfDownload';
 import { Button } from '../../../../../components/ui/Button';
-import { TextInput } from '../../../../../components/ui/Field';
-import { Notice } from '../../../../../components/ui/Notice';
 import { getDb } from '../../../../../db/client';
 import { formatCurrency, formatDate } from '../../../../../lib/contracts/format';
 import { IDENTITY_DIGITS } from '../../../../../lib/contracts/identity';
@@ -160,10 +159,6 @@ export default function ProductionContractCompletePage({
   waitingFor,
   waitingExpired,
 }: CompletePageProps) {
-  const [downloading, setDownloading] = useState(false);
-  const [downloadError, setDownloadError] = useState<string | null>(null);
-  const [identityDigits, setIdentityDigits] = useState('');
-
   if (waitingFor) {
     return (
       <>
@@ -203,40 +198,6 @@ export default function ProductionContractCompletePage({
       </>
     );
   }
-
-  /** 링크로 바로 이동하지 않고 받아서 저장한다 — 실패가 JSON 한 줄짜리 흰 화면으로 보이지 않게(연습실과 같다). */
-  const handleDownload = async () => {
-    setDownloading(true);
-    setDownloadError(null);
-    try {
-      const response = await fetch(downloadUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ identityDigits }),
-      });
-      if (!response.ok) {
-        const message = await response
-          .json()
-          .then((body) => (typeof body?.message === 'string' ? body.message : null))
-          .catch(() => null);
-        setDownloadError(message ?? '계약서를 받지 못했습니다. 잠시 후 다시 시도해 주세요.');
-        return;
-      }
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `${contract.clientName}_음원제작용역계약서.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
-    } catch {
-      setDownloadError('연결이 끊겼습니다. 잠시 후 다시 시도해 주세요.');
-    } finally {
-      setDownloading(false);
-    }
-  };
 
   return (
     <>
@@ -315,37 +276,16 @@ export default function ProductionContractCompletePage({
               <span className="block">문의는 {OPERATOR_PHONE}으로 연락해 주세요.</span>
             </p>
           ) : (
-            <>
-              <label
-                htmlFor="download-identity-digits"
-                className="block text-left text-sm text-gray-600 dark:text-gray-600 mb-2"
-              >
-                본인 확인을 위해 {contract.openLinkSigned ? '서명할 때 적으신 휴대폰 번호' : '계약서에 등록된 연락처'} 뒤 {IDENTITY_DIGITS}자리를 입력해 주세요.
-              </label>
-              <TextInput
-                id="download-identity-digits"
-                type="text"
-                inputMode="numeric"
-                autoComplete="off"
-                maxLength={IDENTITY_DIGITS}
-                value={identityDigits}
-                onChange={(event) => setIdentityDigits(event.target.value.replace(/\D/g, ''))}
-                placeholder="0000"
-                aria-invalid={downloadError ? true : undefined}
-                invalid={Boolean(downloadError)}
-                light
-                className="mb-4 px-4 py-3 text-center text-lg tracking-[0.5em]"
-              />
-              <Button light size="lg" fullWidth disabled={downloading || identityDigits.length !== IDENTITY_DIGITS} onClick={handleDownload}>
-                {downloading ? '준비 중…' : '계약서 PDF 내려받기'}
-              </Button>
-              {downloadError && (
-                <Notice tone="error" light className="mt-3">
-                  <span className="block">{downloadError}</span>
-                  <span className="block">계약서는 메일로도 보내 드렸어요. 급하시면 {OPERATOR_PHONE}으로 연락해 주세요.</span>
-                </Notice>
-              )}
-            </>
+            <ContractPdfDownload
+              downloadUrl={downloadUrl}
+              fileName={`${contract.clientName}_음원제작용역계약서.pdf`}
+              labelText={
+                <>
+                  본인 확인을 위해 {contract.openLinkSigned ? '서명할 때 적으신 휴대폰 번호' : '계약서에 등록된 연락처'} 뒤 {IDENTITY_DIGITS}자리를
+                  입력해 주세요.
+                </>
+              }
+            />
           )}
 
           {progressPath && (

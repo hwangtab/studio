@@ -80,7 +80,7 @@ const buildDraftContent = (data: ProductionContractPayload, template: string): s
       guardian: data.guardian,
       kind: data.kind,
       terms: data.terms,
-      contractDate: new Date().toISOString(),
+      contractDate: null,
     },
     template,
   );
