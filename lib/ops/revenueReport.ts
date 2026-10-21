@@ -31,7 +31,7 @@ export const REVENUE_TYPE_LABELS: Record<string, string> = {
   subscription: '구독',
   deposit: '예약금',
   software: '소프트웨어',
-  // 연습실 월 입주 수납(room_tenancy_payments) — 결제 행이 없어 tenancyRevenue.ts가 따로 읽는다.
+  // 연습실 월 입주(room_tenancies, 발생 기준) — 결제 행이 없어 tenancyRevenue.ts가 따로 읽는다.
   tenancy: '연습실 월 입주',
   // 펀딩·공연·상점은 **플랫폼 수수료 몫**만 매출이다(platformFee.ts).
   funding: '펀딩 수수료',

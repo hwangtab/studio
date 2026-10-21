@@ -438,7 +438,7 @@ export default function AdminRevenuePage({ summary, type, years, nowYear, nowMon
                 {practice.studioExpenseTotal !== null && practice.studioExpenseTotal > 0 && (
                   <p className="mt-3 text-xs text-gray-500">스튜디오 전체 지출 {won(practice.studioExpenseTotal)}은 연습실 손익에 넣지 않았습니다(지출 관리에서 구분이 “스튜디오 전체”인 건).</p>
                 )}
-                <p className="mt-2 text-xs text-gray-500">월 입주 수납은 입금일 기준이고 부가세는 따로 나누지 않았습니다. 지출은 부가세 포함 금액으로 적습니다.</p>
+                <p className="mt-2 text-xs text-gray-500">월 입주 수입은 입주해 있는 달마다 월 이용료를 셉니다(입금일이 아직 안 와도 입주 중이면 그 달 매출 — 방이 비면 줄어요). 부가세는 따로 나누지 않았고, 지출은 부가세 포함 금액으로 적습니다.</p>
               </section>
             )}
 

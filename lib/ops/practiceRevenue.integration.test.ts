@@ -23,6 +23,7 @@ import { summarizeRevenue, type RevenueRow } from './revenueReport';
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
 
+const kstMonth = (d: Date) => new Date(d.getTime() + 9 * 3600 * 1000).toISOString().slice(0, 7);
 const kst = (date: string) => new Date(new Date(`${date}T00:00:00Z`).getTime() - 9 * 3600 * 1000);
 
 beforeAll(async () => {
@@ -49,22 +50,46 @@ const insert = async (table: string, values: Record<string, unknown>) => {
   await client.execute({ sql: `INSERT INTO ${table} (${cols.join(',')}) VALUES (${cols.map(() => '?').join(',')})`, args: cols.map((c) => row[c] as never) });
 };
 
-describe('월 입주 수입 → 매출 행', () => {
+describe('월 입주 수입 → 매출 행(발생 기준)', () => {
   beforeEach(async () => {
     for (const t of ['room_tenancy_payments', 'room_tenancies']) await client.execute(`DELETE FROM ${t}`);
   });
 
-  it('입금일(KST) 기준으로 기간 안의 수납만 읽고, 방 번호만 싣는다', async () => {
-    await insert('room_tenancies', { id: 't1', kind: 'room', room_number: 'R05', tenant_name: '홍길동', monthly_amount: 360000, start_date: '2026-01-01', billing_day: 5, next_due_on: '2026-11-05' });
-    await insert('room_tenancies', { id: 't2', kind: 'virtual', room_number: null, tenant_name: '주식회사', monthly_amount: 33000, start_date: '2026-01-01', billing_day: 5, next_due_on: '2026-11-05' });
-    await insert('room_tenancy_payments', { id: 'p1', tenancy_id: 't1', paid_on: '2026-10-06', amount: 360000 });
-    await insert('room_tenancy_payments', { id: 'p2', tenancy_id: 't2', paid_on: '2026-10-26', amount: 33000 });
-    await insert('room_tenancy_payments', { id: 'p3', tenancy_id: 't1', paid_on: '2026-09-06', amount: 360000 });
-    const rows = await loadTenancyRevenueRows({ from: kst('2026-10-01'), toExclusive: kst('2026-11-01') });
-    expect(rows.map((r) => [r.orderNo, r.gross, r.type])).toEqual([['R05 월 입주', 360000, 'tenancy'], ['비상주 월 입주', 33000, 'tenancy']]);
+  const tenancy = (id: string, over: Record<string, unknown>) =>
+    insert('room_tenancies', { id, kind: 'room', room_number: id.toUpperCase(), tenant_name: '홍길동', monthly_amount: 360000, start_date: '2026-01-01', billing_day: 25, next_due_on: '2026-11-25', ...over });
+  const NOW = new Date('2026-10-21T03:00:00Z');
+  const OCT = { from: kst('2026-10-01'), toExclusive: kst('2026-11-01') };
+
+  it('입금일이 아직 안 온 사람도 입주해 있으면 이번 달 매출이다(입금 기록과 무관)', async () => {
+    await tenancy('r05', { monthly_amount: 360000 });
+    await tenancy('v1', { kind: 'virtual', room_number: null, monthly_amount: 33000 });
+    // 10월 입금 기록이 하나도 없어도 같다 — 입금일 기준이 아니다.
+    const rows = await loadTenancyRevenueRows(OCT, NOW);
+    expect(rows.map((r) => [r.orderNo, r.gross, r.type]).sort()).toEqual([['R05 월 입주', 360000, 'tenancy'], ['비상주 월 입주', 33000, 'tenancy']]);
     expect(JSON.stringify(rows)).not.toContain('홍길동');
-    const s = summarizeRevenue(rows, { year: 2026, month: 10, type: 'tenancy' });
-    expect(s.totals.net).toBe(393000);
+    expect(summarizeRevenue(rows, { year: 2026, month: 10, type: 'tenancy' }).totals.net).toBe(393000);
+  });
+
+  it('방이 비면 그 달부터 빠지고, 입주 전 달·퇴실한 달 다음부터는 세지 않는다', async () => {
+    await tenancy('r01', { start_date: '2026-10-15' }); // 10월 중간 입주 — 10월부터
+    await tenancy('r02', { start_date: '2026-11-01' }); // 아직 입주 전
+    await tenancy('r03', { status: 'ended', ended_on: '2026-09-30' }); // 9월 말 퇴실 — 10월은 빈 방
+    await tenancy('r04', { status: 'ended', ended_on: '2026-10-10' }); // 10월 중 퇴실 — 선불이라 10월 치는 센다
+    const oct = await loadTenancyRevenueRows(OCT, NOW);
+    expect(oct.map((r) => r.orderNo).sort()).toEqual(['R01 월 입주', 'R04 월 입주']);
+    const sep = await loadTenancyRevenueRows({ from: kst('2026-09-01'), toExclusive: kst('2026-10-01') }, NOW);
+    expect(sep.map((r) => r.orderNo).sort()).toEqual(['R03 월 입주', 'R04 월 입주']);
+  });
+
+  it('퇴실일이 비어 있으면 마지막 입금일을 퇴실일로 보고, 앞으로 올 달은 만들지 않는다', async () => {
+    await tenancy('r06', { status: 'ended', ended_on: null });
+    await insert('room_tenancy_payments', { id: 'pp', tenancy_id: 'r06', paid_on: '2026-08-25', amount: 360000 });
+    const range = { from: kst('2026-08-01'), toExclusive: kst('2027-01-01') };
+    const rows = await loadTenancyRevenueRows(range, NOW);
+    expect(rows.map((r) => kstMonth(r.at))).toEqual(['2026-08']); // 8월 이후는 퇴실로 본다
+    await tenancy('r07', {});
+    const future = await loadTenancyRevenueRows({ from: kst('2026-10-01'), toExclusive: kst('2027-01-01') }, NOW);
+    expect([...new Set(future.map((r) => kstMonth(r.at)))]).toEqual(['2026-10']); // 11·12월은 아직 매출이 아니다
   });
 });
 
