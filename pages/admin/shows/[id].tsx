@@ -417,7 +417,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
         </div>
       )}
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto max-md:p-3">
         <table className="admin-table w-full text-sm">
           <thead className="bg-gray-50 text-gray-600">
             <tr>

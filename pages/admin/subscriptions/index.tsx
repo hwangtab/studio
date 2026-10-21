@@ -196,7 +196,7 @@ export default function AdminSubscriptionsPage({ subscriptions: allSubscriptions
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto max-md:p-3">
             <table className="admin-table w-full text-sm">
               <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
                 <tr>

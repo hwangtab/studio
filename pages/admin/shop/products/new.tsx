@@ -6,6 +6,7 @@ import { AdminShell } from '../../../../components/admin/AdminShell';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { listShopArtistsForAdmin } from '../../../../lib/shop/artists';
 import { isStudioShopArtistSlug, STUDIO_SHOP_ARTIST_NAME } from '../../../../lib/shop/studioArtist';
+import { buttonVariants } from '../../../../components/ui/Button';
 
 interface Props {
   /** 스튜디오 계정은 뺀 등재 아티스트(스튜디오는 고정 선택지로 따로 둔다). */
@@ -79,7 +80,7 @@ export default function AdminShopNewProductPage({ artists, error }: Props) {
               : '아티스트 대신 등록한 상품은 그 아티스트의 콘솔에도 보이고, 판매되면 정산 예정 표에 들어갑니다. 목록에 없으면 먼저 아티스트를 등재해 주세요.'}
           </p>
           {message && <p role="alert" className="text-sm text-red-700">{message}</p>}
-          <button type="submit" disabled={busy} className="rounded-lg bg-gray-900 px-4 py-2 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 disabled:opacity-60">
+          <button type="submit" disabled={busy} className={buttonVariants({ variant: 'solid', size: 'sm', light: true })}>
             {busy ? '만드는 중…' : '초안 만들기'}
           </button>
         </form>

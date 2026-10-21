@@ -1,6 +1,5 @@
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 import { useState } from 'react';
 
 import { AdminShell } from '../../../components/admin/AdminShell';
@@ -19,6 +18,7 @@ import { formatShipsOn } from '../../../lib/shop/preorder';
 import { findShopOrderByOrderNo } from '../../../lib/shop/service';
 import { normalizeShopOrderNo, shopOrderShips } from '../../../lib/shop/shape';
 import { SHOP_STUDIO_COURIER } from '../../../lib/shop/shipper';
+import { buttonVariants } from '../../../components/ui/Button';
 
 /** 환불 계좌 요약 — 은행명·예금주만. 계좌번호는 props에 싣지 않는다("계좌 보기"가 API로 가져온다). */
 type RefundAccountSummaryProps =
@@ -119,7 +119,8 @@ const kst = (sec: number) => new Date(sec * 1000).toLocaleString('ko-KR', { time
 const PAYMENT_LABEL: Record<string, string> = { pending: '결제 대기', paid: '결제 완료', partially_refunded: '부분 환불', refunded: '환불', auto_cancel_pending: '자동 취소 중', expired: '만료', failed: '결제 실패', awaiting_deposit: '입금 대기', deposit_cancelled: '미입금 취소' };
 const FULFILLMENT_LABEL: Record<string, string> = { preparing: '발송 준비', shipped: '발송함', delivered: '배송 완료', cancelled: '취소' };
 const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
-const buttonClass = 'rounded-lg bg-gray-900 px-4 py-2 text-white disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
+const buttonClass = buttonVariants({ variant: 'solid', size: 'sm', light: true });
+const weakButtonClass = buttonVariants({ variant: 'weak', size: 'sm', light: true });
 
 export default function AdminShopOrderPage(p: Props) {
   // 스튜디오가 보내는 주문은 택배사가 로젠택배다 — 처음 보낼 때 채워 둔다. 아티스트가 보내는 주문은 아티스트가 고른 택배사를 따른다.
@@ -167,8 +168,7 @@ export default function AdminShopOrderPage(p: Props) {
         <title>{p.orderNo} | 상점 관리</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <AdminShell title={`상점 주문 ${p.orderNo}`} description={`${PAYMENT_LABEL[p.status] ?? p.status} · ${FULFILLMENT_LABEL[p.fulfillmentStatus] ?? p.fulfillmentStatus}`}>
-        <p className="mb-4 text-sm"><Link href="/admin/shop" className="text-primary hover:underline">← 상점 관리</Link></p>
+      <AdminShell title={`상점 주문 ${p.orderNo}`} backHref="/admin/shop" backLabel="상점 관리" description={`${PAYMENT_LABEL[p.status] ?? p.status} · ${FULFILLMENT_LABEL[p.fulfillmentStatus] ?? p.fulfillmentStatus}`}>
         {error && <div role="alert" className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-900">{error}</div>}
         {p.notificationError && <div className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">마지막 메일 발송 실패: {p.notificationError}</div>}
 
@@ -194,8 +194,8 @@ export default function AdminShopOrderPage(p: Props) {
             <p className="mb-3">통장에 <strong>{p.customer.name}</strong> 이름으로 <strong>{formatPriceAmount(p.totalAmount)}원</strong>이 들어왔는지 확인하고 <strong>입금 확인</strong>을 눌러 주세요. 확인하면 주문이 확정되고 고객에게 메일이 가요. 자동 취소는 없어요 — 입금하지 않을 것 같으면 <strong>미입금 취소</strong>로 닫아 재고를 풀어 주세요.</p>
             <div className="flex flex-wrap gap-2">
               <button type="button" disabled={busy} onClick={() => act({ action: 'confirm_deposit' }, `${formatPriceAmount(p.totalAmount)}원 입금을 확인했나요? 주문이 확정됩니다.`)} className={buttonClass}>입금 확인</button>
-              <button type="button" disabled={busy} onClick={() => act({ action: 'cancel_deposit' }, '미입금으로 취소할까요? 잡아 둔 재고가 풀립니다.')} className={buttonClass}>미입금 취소</button>
-              <button type="button" disabled={busy} onClick={() => act({ action: 'resend_deposit_guide' })} className={buttonClass}>입금 안내 재발송</button>
+              <button type="button" disabled={busy} onClick={() => act({ action: 'cancel_deposit' }, '미입금으로 취소할까요? 잡아 둔 재고가 풀립니다.')} className={weakButtonClass}>미입금 취소</button>
+              <button type="button" disabled={busy} onClick={() => act({ action: 'resend_deposit_guide' })} className={weakButtonClass}>입금 안내 재발송</button>
             </div>
           </section>
         )}

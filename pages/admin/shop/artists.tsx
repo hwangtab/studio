@@ -11,6 +11,7 @@ import { describeShopArtistTerms } from '../../../lib/shop/artistTerms';
 import { loadShopArtistTermsStatuses } from '../../../lib/shop/artistTermsAgreement';
 import { listShopArtistsForAdmin, type AdminShopArtistRow } from '../../../lib/shop/artists';
 import { isStudioShopArtistSlug } from '../../../lib/shop/studioArtist';
+import { buttonVariants } from '../../../components/ui/Button';
 
 type ArtistWithTerms = AdminShopArtistRow & { termsLabel: string; termsAgreed: boolean };
 
@@ -81,7 +82,7 @@ function CreateForm() {
         data/artists의 후원 아티스트와 같은 사람
       </label>
       <div className="flex items-center gap-3">
-        <button type="submit" disabled={busy} className="rounded-lg bg-gray-900 px-4 py-2 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 disabled:opacity-60">{busy ? '등재 중…' : '등재'}</button>
+        <button type="submit" disabled={busy} className={buttonVariants({ variant: 'solid', size: 'sm', light: true })}>{busy ? '등재 중…' : '등재'}</button>
         {message && <span role="alert" className="text-red-700">{message}</span>}
       </div>
     </form>
@@ -111,7 +112,7 @@ function ArtistRow({ artist }: { artist: ArtistWithTerms }) {
           <div className="flex flex-wrap items-center gap-2">
             <input value={slug} onChange={(e) => setSlug(e.target.value)} disabled={locked} aria-label={`${artist.name} 주소`} className={`${inputClass} w-48`} />
             <label className="flex items-center gap-1 text-xs"><input type="checkbox" checked={linkCurated} disabled={locked} onChange={(e) => setLinkCurated(e.target.checked)} className="accent-primary" />후원 아티스트와 같은 사람</label>
-            {!locked && <button type="button" onClick={save} className="rounded-lg bg-gray-900 px-3 py-1 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70">저장</button>}
+            {!locked && <button type="button" onClick={save} className={buttonVariants({ variant: 'solid', size: 'sm', light: true })}>저장</button>}
           </div>
           {locked && <span className="block text-xs text-gray-500">승인된 상품이 있어 주소를 바꿀 수 없습니다.</span>}
           {message && <span className="block text-xs text-gray-600">{message}</span>}
@@ -150,7 +151,7 @@ export default function AdminShopArtistsPage({ artists, error }: Props) {
             <p className="text-gray-600">아직 없습니다.</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left">
+              <table className="w-full min-w-[44rem] text-left">
                 <thead className="text-xs text-gray-500"><tr><th className="py-2 pr-3">아티스트</th><th className="py-2 pr-3">주소</th><th className="py-2 pr-3">승인 상품</th><th className="py-2">위탁 약관</th></tr></thead>
                 <tbody>{artists.map((a) => <ArtistRow key={a.creatorId} artist={a} />)}</tbody>
               </table>

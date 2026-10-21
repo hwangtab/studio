@@ -106,9 +106,13 @@ export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps
     .catch(() => null);
   const adminEvents = await listContractAdminEvents(id);
 
+  // 관계 행(서명·조항·첨부 본문)은 아래에서 따로 직렬화한다 — 계약 행에 그대로 얹어 보내면 Date가 섞여 dev에서 500이 나고,
+  // 운영에서는 첨부 본문 전문이 props에 한 번 더 실린다.
+  const { signatures: _signatures, contractClauses: _clauses, contractAttachments: _attachments, ...contractRow } = contract;
+
   return {
     props: {
-      contract: serializeContractForAdmin(contract),
+      contract: serializeContractForAdmin(contractRow),
       signatures: contract.signatures.map(serializeSignature),
       clauses: contract.contractClauses.map(serializeClause),
       attachments: contract.contractAttachments.map(serializeAttachment),

@@ -284,8 +284,8 @@ const BreakdownTable = ({
     {lines.length === 0 ? (
       <p className="mt-3 text-sm text-gray-600">이 기간에는 해당 매출이 없습니다.</p>
     ) : (
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+      <div className="-mx-4 overflow-x-auto px-4 md:mx-0 md:px-0">
+        <table className="w-full whitespace-nowrap text-sm">
           <thead>
             <tr className="border-b border-gray-200 text-left text-xs text-gray-500">
               <th className="py-2 pr-3 font-medium">{firstColumn}</th>
@@ -355,8 +355,8 @@ const BusinessPnlSection = ({ pnl, summary }: { pnl: BusinessPnl; summary: Reven
         <Link href="/admin/expenses" className="text-sm font-medium text-primary hover:underline">지출 관리 →</Link>
       </div>
       <p className="mb-4 text-xs text-gray-500">수익 = 매출 − 지출. 분야 이름을 누르면 아래 유형별 표와 결제 내역이 그 분야만 보입니다.</p>
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+      <div className="-mx-4 overflow-x-auto px-4 md:mx-0 md:px-0">
+        <table className="w-full whitespace-nowrap text-sm">
           <thead>
             <tr className="border-b border-gray-200 text-left text-xs text-gray-500">
               <th className="py-2 pr-3 font-medium">분야</th>
@@ -583,7 +583,7 @@ export default function AdminRevenuePage({ summary, type, line = null, years, no
               {summary.entries.length === 0 ? (
                 <p className="text-sm text-gray-600">이 기간에는 결제가 없습니다.</p>
               ) : (
-                <div className="overflow-x-auto">
+                <div className="-mx-4 overflow-x-auto px-4 md:mx-0 md:px-0">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-gray-200 text-left text-xs text-gray-500">

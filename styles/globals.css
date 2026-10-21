@@ -317,6 +317,8 @@
   }
   .admin-table td[data-label] {
     padding-left: 5rem;
+    /* 값이 빈 칸도 이름 한 줄만큼은 높이를 갖는다 — 없으면 이름(::before, absolute)이 다음 칸 이름과 겹친다(접속기록의 빈 '건수' 칸). */
+    min-height: 2rem;
   }
   .admin-table td[data-label]::before {
     content: attr(data-label);
@@ -344,6 +346,7 @@
   }
   .admin-table-compact td[data-label] {
     padding: 0;
+    min-height: 0;
   }
   .admin-table-compact td[data-label]::before {
     display: none;
@@ -385,6 +388,9 @@
     grid-column: 3;
     grid-row: 4;
     justify-self: end;
+    /* .admin-table td의 width:100%가 남으면 칸이 열 너비를 다 차지해 justify-self가 듣지 않고, 상세 버튼이 행마다 다른 자리에 선다. */
+    width: auto;
+    text-align: right;
   }
 }
 

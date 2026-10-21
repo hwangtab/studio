@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useState } from 'react';
 
-import { Button } from '../../../components/ui/Button';
+import { Button, buttonVariants } from '../../../components/ui/Button';
 import { TextInput } from '../../../components/ui/Field';
 import { AdminShell } from '../../../components/admin/AdminShell';
 import { ShopPayoutSection } from '../../../components/admin/ShopPayoutSection';
@@ -119,16 +119,16 @@ function StockRow({ row }: { row: AdminSkuStockRow }) {
   return (
     <tr className="border-t border-gray-100">
       <td className="py-2 pr-3">{row.productTitle}{row.optionLabel ? ` · ${row.optionLabel}` : ''}<span className="block text-xs text-gray-500">{row.skuId}{row.retired ? ' · 판매 종료' : ''}{!row.published ? ' · 비공개' : ''}</span></td>
-      <td className="py-2 pr-3 tabular-nums">{formatPriceAmount(row.price)}원</td>
-      <td className="py-2 pr-3 tabular-nums">{row.remaining}</td>
-      <td className="py-2">
+      <td data-label="가격" className="py-2 pr-3 tabular-nums">{formatPriceAmount(row.price)}원</td>
+      <td data-label="남음" className="py-2 pr-3 tabular-nums">{row.remaining}</td>
+      <td data-label="총 재고" className="py-2">
         <div className="flex items-center gap-2">
           <input
             type="number" min={0} inputMode="numeric" value={value} onChange={(e) => setValue(e.target.value)}
             aria-label={`${row.skuId} 총 재고`}
-            className="w-24 rounded-lg border border-gray-300 bg-white px-2 py-1 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
+            className="h-11 w-24 rounded-lg border border-gray-300 bg-white px-3 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
           />
-          <button type="button" onClick={save} className="rounded-lg bg-gray-900 px-3 py-1 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70">저장</button>
+          <button type="button" onClick={save} className={buttonVariants({ variant: 'solid', size: 'sm', light: true })}>저장</button>
           {state && <span className="text-xs text-gray-600">{state}</span>}
         </div>
       </td>
@@ -156,7 +156,7 @@ function ArtistSalesSection({ rows, month, prevMonth, nextMonth }: Pick<Props, '
         <p className="text-gray-600">이 달에 발송한 아티스트 상품이 없습니다.</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
+          <table className="admin-table w-full text-left">
             <thead className="text-xs text-gray-500">
               <tr><th className="py-2 pr-3">아티스트</th><th className="py-2 pr-3">수량</th><th className="py-2 pr-3">판매액</th><th className="py-2 pr-3">공제</th><th className="py-2">이체액</th></tr>
             </thead>
@@ -174,17 +174,17 @@ function ArtistSalesSection({ rows, month, prevMonth, nextMonth }: Pick<Props, '
                       <span className="block text-xs text-amber-800">부분 환불 주문은 빼고 계산했습니다 — 직접 확인: {r.needsReviewOrderNos.join(', ')}</span>
                     )}
                   </td>
-                  <td className="py-2 pr-3 tabular-nums">{r.quantity}</td>
-                  <td className="py-2 pr-3 tabular-nums">
+                  <td data-label="수량" className="py-2 pr-3 tabular-nums">{r.quantity}</td>
+                  <td data-label="판매액" className="py-2 pr-3 tabular-nums">
                     {won(r.salesAmount)}
                     {r.shippingAmount > 0 && <span className="block text-xs text-gray-600">+ 배송비 {won(r.shippingAmount)} ({r.shippingOrderCount}건, 전액 아티스트 몫)</span>}
                   </td>
-                  <td className="py-2 pr-3 text-xs tabular-nums text-gray-600">
+                  <td data-label="공제" className="py-2 pr-3 text-xs tabular-nums text-gray-600">
                     {r.payout ? (
                       <>상점 {won(r.payout.storeAmount)}{r.payout.vatDeductionAmount > 0 && <><br />부가세 상당 {won(r.payout.vatDeductionAmount)}</>}{r.payout.withholdingAmount > 0 && <><br />원천징수 {won(r.payout.withholdingAmount)}</>}</>
                     ) : '—'}
                   </td>
-                  <td className="py-2 font-semibold tabular-nums">{r.payout ? won(r.payout.netAmount) : '세금 유형을 몰라 계산하지 않음'}</td>
+                  <td data-label="이체액" className="py-2 font-semibold tabular-nums">{r.payout ? won(r.payout.netAmount) : '세금 유형을 몰라 계산하지 않음'}</td>
                 </tr>
               ))}
             </tbody>
@@ -204,7 +204,7 @@ export default function AdminShopPage({ orders, ordersTruncated = false, q = '',
       </Head>
       <AdminShell title="상점 관리" description="음반·굿즈 주문과 재고입니다. 새 상품은 상품 등록에서 만들고(스튜디오 상품도 같습니다), 아티스트가 올린 상품은 상품 심사에서 다룹니다. data/shop/catalog.ts의 기존 상품은 파일에서 고칩니다." width="wide" actions={(
         <span className="flex flex-wrap items-center gap-x-4 gap-y-2">
-          <Link href="/admin/shop/products/new" className="rounded-lg bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-800">상품 등록</Link>
+          <Link href="/admin/shop/products/new" className={buttonVariants({ variant: 'solid', size: 'sm', light: true })}>상품 등록</Link>
           <Link href="/admin/shop/products" className="text-sm font-medium text-primary hover:underline">
             상품 심사{pendingProducts ? `(대기 ${pendingProducts})` : ''}
           </Link>
@@ -225,7 +225,7 @@ export default function AdminShopPage({ orders, ordersTruncated = false, q = '',
             <p className="text-gray-600">카탈로그에 상품이 없습니다.</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left">
+              <table className="admin-table w-full text-left">
                 <thead className="text-xs text-gray-500"><tr><th className="py-2 pr-3">SKU</th><th className="py-2 pr-3">가격</th><th className="py-2 pr-3">남음</th><th className="py-2">총 재고</th></tr></thead>
                 <tbody>{skus.map((row) => <StockRow key={row.skuId} row={row} />)}</tbody>
               </table>
@@ -264,7 +264,7 @@ export default function AdminShopPage({ orders, ordersTruncated = false, q = '',
             <p className="text-gray-600">{q ? '검색 결과가 없습니다.' : '아직 주문이 없습니다.'}</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left">
+              <table className="admin-table w-full text-left">
                 <thead className="text-xs text-gray-500"><tr><th className="py-2 pr-3">주문</th><th className="py-2 pr-3">상품</th><th className="py-2 pr-3">금액</th><th className="py-2 pr-3">결제</th><th className="py-2">발송</th></tr></thead>
                 <tbody>
                   {orders.map((o) => (
@@ -273,10 +273,10 @@ export default function AdminShopPage({ orders, ordersTruncated = false, q = '',
                         <Link href={`/admin/shop/${o.orderNo}`} className="font-medium text-primary hover:underline">{o.orderNo}</Link>
                         <span className="block text-xs text-gray-500">{o.customerName} · {kst(o.createdAt)}</span>
                       </td>
-                      <td className="py-2 pr-3">{o.itemSummary}</td>
-                      <td className="py-2 pr-3 tabular-nums">{formatPriceAmount(o.totalAmount)}원</td>
-                      <td className="py-2 pr-3">{STATUS_LABEL[o.status] ?? o.status}</td>
-                      <td className="py-2">
+                      <td data-label="상품" className="py-2 pr-3">{o.itemSummary}</td>
+                      <td data-label="금액" className="py-2 pr-3 tabular-nums">{formatPriceAmount(o.totalAmount)}원</td>
+                      <td data-label="결제" className="py-2 pr-3">{STATUS_LABEL[o.status] ?? o.status}</td>
+                      <td data-label="발송" className="py-2">
                         {FULFILLMENT_LABEL[o.fulfillmentStatus] ?? o.fulfillmentStatus}
                         {o.artistShipper && <span className="block text-xs text-amber-800">아티스트 발송: {o.artistShipper}</span>}
                       </td>

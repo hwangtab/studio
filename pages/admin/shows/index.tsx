@@ -73,7 +73,7 @@ export default function AdminShowsPage({ shows, pendingSubmissions, error }: Adm
                   <Link href={`/admin/shows/${show.id}`} className="text-sm font-medium text-primary hover:underline">상세·운영 →</Link>
                 </div>
               </div>
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto max-md:p-3">
                 <table className="admin-table w-full text-sm">
                   <thead className="bg-gray-50 text-gray-600">
                     <tr>
