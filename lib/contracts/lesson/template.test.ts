@@ -37,8 +37,18 @@ describe('수강 계약 본문', () => {
     expect(content).toContain('{{studentName}}');
   });
 
-  it('확정 전 환불 조항 표시가 본문에 남아 있다 — 발송 막이가 이것을 본다', () => {
-    expect(template).toContain(DRAFT_MARKER);
-    expect(hasDraftMarker(buildLessonContent({ studentName: '김수강', studentPhone: '010-1234-5678', terms: terms(), contractDate: null }, template))).toBe(true);
+  it('제9조는 시행령 별표 4 기준을 담고 확정 전 표시는 없다', () => {
+    expect(template).not.toContain(DRAFT_MARKER);
+    const content = buildLessonContent({ studentName: '김수강', studentPhone: '010-1234-5678', terms: terms(), contractDate: null }, template);
+    expect(hasDraftMarker(content)).toBe(false);
+    expect(content).toContain('별표 4');
+    expect(content).toContain('낸 수강료 전액');
+    expect(content).toContain('수강료의 2분의 1');
+    expect(content).toContain('5일 안에');
+    expect(content).toContain('3분의 2');
+  });
+
+  it('발송 막이는 표시가 붙은 문안을 알아본다', () => {
+    expect(hasDraftMarker(`${DRAFT_MARKER} — 법률 확인 전】`)).toBe(true);
   });
 });
