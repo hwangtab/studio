@@ -162,7 +162,7 @@ export const createContract = async (data: CreateContractPayload): Promise<Contr
     monthlyRent: data.monthlyRent,
     depositAmount: data.depositAmount,
     paymentDay: data.paymentDay,
-    contractDate: new Date().toISOString(),
+    contractDate: null,
     specialTerms: data.specialTerms,
   }, template);
 
@@ -270,7 +270,7 @@ export const updateDraftContract = async (
     monthlyRent: data.monthlyRent,
     depositAmount: data.depositAmount,
     paymentDay: data.paymentDay,
-    contractDate: new Date().toISOString(),
+    contractDate: null,
     specialTerms: data.specialTerms,
   }, template);
 

@@ -14,6 +14,7 @@ import {
 } from '../../../../../lib/contracts/admin-rate-limit';
 import { IDENTITY_DIGITS, verifyIdentityDigits } from '../../../../../lib/contracts/identity';
 import { productionCompletePath, productionRateLimitKey } from '../../../../../lib/contracts/production/links';
+import { grantPortalAccess } from '../../../../../lib/contracts/production/portal-session';
 import { loadOrRenderProductionPdf } from '../../../../../lib/contracts/production/pdf-storage';
 import { hasSignedDocument } from '../../../../../lib/contracts/production/status';
 
@@ -87,6 +88,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     await resetDownloadIdentityAttempts(rateKey);
+
+    // 의뢰인이 연락처 뒷자리를 맞혔다 — 진행 페이지(unlock)가 요구하는 것과 같은 확인(둘 다 contract.clientPhone 대조, 링크 계약도
+    // 서명자가 적은 번호를 대조한다)이라 그 쿠키를 함께 준다. 법정대리인은 진행 페이지를 열 수 없다(의뢰인 토큰만).
+    // 쿠키를 못 만들어도(키 없음) 내려받기는 계속된다.
+    if (linkSigner.role === 'client') grantPortalAccess(res, contract.id, token);
 
     // PDF 생성은 Chromium을 띄우는 무거운 작업이다.
     if (!(await checkDownloadRateLimit(rateKey))) {

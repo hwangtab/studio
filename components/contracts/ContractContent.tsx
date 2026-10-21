@@ -1,7 +1,11 @@
 import React from 'react';
 import Markdown from 'markdown-to-jsx';
 
+import { headingAnchorId } from '../../lib/contracts/headings';
 import { CONTRACT_MARKDOWN_OPTIONS } from '../../lib/contracts/html-escape';
+
+// 조문 제목에 한글 앵커 id를 붙인다(서명 화면의 목차 링크 — lib/contracts/headings.ts). 화면에만 쓰고 PDF 옵션은 건드리지 않는다.
+const SCREEN_MARKDOWN_OPTIONS = { ...CONTRACT_MARKDOWN_OPTIONS, slugify: headingAnchorId };
 
 interface ContractContentProps {
   content: string;
@@ -32,7 +36,7 @@ interface ContractContentProps {
 export default function ContractContent({ content, size = 'base' }: ContractContentProps) {
   return (
     <div className={`contract-body ${size === 'sm' ? 'contract-body--sm' : ''}`}>
-      <Markdown options={CONTRACT_MARKDOWN_OPTIONS}>{content}</Markdown>
+      <Markdown options={SCREEN_MARKDOWN_OPTIONS}>{content}</Markdown>
 
       <style jsx global>{`
         /*
@@ -87,6 +91,7 @@ export default function ContractContent({ content, size = 'base' }: ContractCont
           line-height: 1.35;
         }
         .contract-body h2 {
+          scroll-margin-top: 1rem;
           font-size: 1.15rem;
           font-weight: 700;
           margin: 1.5rem 0 0.5rem;

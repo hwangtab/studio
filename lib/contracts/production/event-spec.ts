@@ -34,7 +34,7 @@ export const EVENT_SPEC: Record<ProductionEventType, EventSpec> = {
   payment_received: { label: '입금 확인', amount: 'required', note: 'optional', notifies: true },
   source_received: { label: '1차 완성본 수령', link: 'optional', note: 'optional', notifies: true },
   source_replaced: { label: '1차 완성본 교체', link: 'optional', note: 'optional', notifies: true },
-  kickoff: { label: '착수 (기획 상담·편곡 시작)', note: 'optional', notifies: true },
+  kickoff: { label: '작업 시작(착수) — 기획 상담·편곡', note: 'optional', notifies: true },
   stage_delivered: {
     label: '결과물 전달',
     stages: ['arrangement', 'tuning', 'mixing', 'mastering'],
@@ -57,13 +57,13 @@ export const EVENT_SPEC: Record<ProductionEventType, EventSpec> = {
   },
   pause_started: { label: '작업 정지 시작', cause: 'required', note: 'required', notifies: true },
   pause_ended: { label: '작업 정지 끝', note: 'optional', notifies: true },
-  extra_cost_agreed: { label: '추가 비용 동의 (제6조)', amount: 'required', note: 'required', notifies: true },
+  extra_cost_agreed: { label: '추가 비용 동의(계약서 제6조)', amount: 'required', note: 'required', notifies: true },
   client_contacted: { label: '의뢰인에게 연락함', note: 'required', notifies: false },
   client_responded: { label: '의뢰인이 응답함', note: 'optional', notifies: false },
   final_delivered: { label: '최종 파일 인도', link: 'optional', note: 'optional', notifies: true },
   distribution_submitted: { label: '유통 등록', note: 'optional', notifies: true },
   released: { label: '발매', note: 'optional', notifies: true },
-  termination_notice: { label: '해지 통지 (제10조 5항)', note: 'required', notifies: true },
+  termination_notice: { label: '해지 통지(의뢰인 사정, 계약서 제10조 5항)', note: 'required', notifies: true },
   note: { label: '메모', note: 'required', notifies: false },
   reminder_sent: { label: '기한 안내 발송', notifies: false, internal: true },
   void: { label: '기록 무효', notifies: false, internal: true },
@@ -87,7 +87,7 @@ const MIXMASTER_HIDDEN_TYPES: ReadonlySet<ProductionEventType> = new Set(['recor
 const MIXMASTER_LABEL: Partial<Record<ProductionEventType, string>> = {
   source_received: '작업 파일 수령',
   source_replaced: '작업 파일 교체',
-  kickoff: '착수 (믹싱 시작)',
+  kickoff: '작업 시작(착수) — 믹싱',
 };
 
 export const eventLabelFor = (type: ProductionEventType, mixMaster: boolean): string =>

@@ -71,6 +71,9 @@ const PAYLOAD = {
 // 새 계약은 중요 조항 요약 하나를 한 번에 확인받는다(clauses.ts buildProductionClauses, 2026-10-20).
 const ALL_CLAUSES = ['key-terms'];
 
+/** 마지막 callSign 응답에 실린 헤더(setHeader 호출) — 쿠키 확인용. */
+let lastSignHeaders: Array<[string, string]> = [];
+
 const callSign = async (contractId: string, body: Record<string, unknown>) => {
   const res: Record<string, jest.Mock> = {};
   res.status = jest.fn().mockReturnValue(res);
@@ -92,6 +95,7 @@ const callSign = async (contractId: string, body: Record<string, unknown>) => {
     },
   } as unknown as NextApiRequest;
   await signHandler(req, res as unknown as NextApiResponse);
+  lastSignHeaders = res.setHeader.mock.calls as Array<[string, string]>;
   return { status: res.status.mock.calls[0]?.[0] as number, body: res.json.mock.calls[0]?.[0] as Record<string, unknown> };
 };
 
@@ -172,10 +176,16 @@ describe('제작 계약 체결 흐름', () => {
     const { id } = await createProductionContract(PAYLOAD);
     await sendAsOperator(id);
 
+    const draft = await loadContract(id);
+    // 초안 본문의 계약일은 만든 날이 아니라 "서명하는 날로 기재"다 — 계약일은 서명 순간에 확정된다.
+    expect(draft?.content).toContain('**계약일**: (서명하는 날로 기재)');
+
     const result = await callSign(id, { token: await clientToken(id) });
-    expect(result).toEqual({ status: 200, body: { ok: true } });
+    expect(result).toMatchObject({ status: 200, body: { ok: true } });
 
     const loaded = await loadContract(id);
+    expect(loaded?.content).not.toContain('(서명하는 날로 기재)');
+    expect(loaded?.content).toMatch(/\*\*계약일\*\*: \d{4}년 \d{1,2}월 \d{1,2}일/);
     expect(loaded?.status).toBe('signed');
     expect(loaded?.clientBirthdate).toBe('1990-05-15');
     expect(loaded?.content).toContain('서울시 은평구 대조동 1-1');
@@ -183,6 +193,38 @@ describe('제작 계약 체결 흐름', () => {
     // 동의 기록에는 조항 키와 "본인이 계약 당사자임을 확인" 체크가 함께 남는다(서명본 PDF에 찍힌다).
     expect(loaded?.signers.find((signer) => signer.role === 'client')?.agreedClauses).toBe(JSON.stringify([...ALL_CLAUSES, 'identity-confirmed']));
     expect(verifyStoredProductionContract(loaded!)).toMatchObject({ kind: 'match' });
+  });
+
+  describe('서명 직후 진행 페이지 쿠키', () => {
+    const SECRET = 'x'.repeat(40);
+    let previousSecret: string | undefined;
+    beforeEach(() => {
+      previousSecret = process.env.ADMIN_SESSION_SECRET;
+      process.env.ADMIN_SESSION_SECRET = SECRET;
+    });
+    afterEach(() => {
+      if (previousSecret === undefined) delete process.env.ADMIN_SESSION_SECRET;
+      else process.env.ADMIN_SESSION_SECRET = previousSecret;
+    });
+
+    it('연락처 뒷자리로 본인 확인을 마친 의뢰인에게는 진행 페이지 접근 쿠키를 함께 준다', async () => {
+      const { id } = await createProductionContract(PAYLOAD);
+      await sendAsOperator(id);
+      const token = await clientToken(id);
+      const result = await callSign(id, { token });
+      expect(result.status).toBe(200);
+      const cookie = lastSignHeaders.find(([name]) => name === 'Set-Cookie');
+      expect(cookie?.[1]).toContain('HttpOnly');
+      expect(cookie?.[1]).toContain(`nol_pc_${id.replace(/[^a-zA-Z0-9]/g, '').slice(0, 12)}=`);
+    });
+
+    it('틀린 뒷자리로 거절된 요청에는 쿠키를 주지 않는다', async () => {
+      const { id } = await createProductionContract(PAYLOAD);
+      await sendAsOperator(id);
+      const result = await callSign(id, { token: await clientToken(id), identityDigits: '0000' });
+      expect(result.status).toBe(400);
+      expect(lastSignHeaders.find(([name]) => name === 'Set-Cookie')).toBeUndefined();
+    });
   });
 
   it('서명 뒤 금액을 바꾸면 지문 대조가 불일치로 드러난다', async () => {

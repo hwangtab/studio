@@ -197,6 +197,7 @@ describe('서명 완료 페이지 props', () => {
         'customerName',
         'endDate',
         'monthlyRent',
+        'paymentDay',
         'roomNumber',
         'signedAt',
         'startDate',

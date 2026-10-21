@@ -9,6 +9,7 @@ import { parseStoredClauses } from '../../../../../lib/contracts/production/clau
 import { finalizeSignedProductionContract } from '../../../../../lib/contracts/production/finalize';
 import { productionSignerRateLimitKey } from '../../../../../lib/contracts/production/links';
 import { IDENTITY_CONFIRMED_KEY, isOpenProductionContract, validateOpenLinkClient, type OpenLinkClientInput } from '../../../../../lib/contracts/production/open-link';
+import { grantPortalAccess } from '../../../../../lib/contracts/production/portal-session';
 import { finalizeProductionContractIfComplete } from '../../../../../lib/contracts/production/service';
 import { buildProductionSignStatements } from '../../../../../lib/contracts/production/sign-transaction';
 import { checkProductionAction, getEffectiveProductionStatus } from '../../../../../lib/contracts/production/status';
@@ -219,6 +220,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // 다른 서명자가 남았으면 여기서 끝난다(완료 화면이 "상대 서명을 기다려요"를 보인다).
     const completed = await finalizeProductionContractIfComplete(contract.id, now);
     if (completed) waitUntil(finalizeSignedProductionContract(contract.id));
+
+    // 의뢰인이 연락처 뒷자리를 방금 맞혔다 — 진행 페이지(unlock)가 요구하는 것과 같은 확인이라 그 쿠키를 함께 준다
+    // (같은 번호를 진행 페이지에서 또 묻지 않는다). 링크 계약은 맞힐 번호가 없었으니(자기가 적은 번호) 주지 않는다.
+    // 쿠키를 못 만들어도(키 없음) 서명은 이미 끝났고 진행 페이지가 직접 묻는다.
+    if (role === 'client' && !openLink) grantPortalAccess(res, contract.id, token);
 
     // 계약 레코드를 응답에 싣지 않는다 — 화면은 ok만 보고 완료 페이지로 간다(연습실과 같다).
     return res.status(200).json({ ok: true });

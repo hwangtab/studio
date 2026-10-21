@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
@@ -9,7 +9,7 @@ import { Notice } from '../../../../../components/ui/Notice';
 import { formatCurrency, formatDate } from '../../../../../lib/contracts/format';
 import { IDENTITY_DIGITS } from '../../../../../lib/contracts/identity';
 import { denyContractPageCaching } from '../../../../../lib/contracts/page-cache';
-import { productionSignPath } from '../../../../../lib/contracts/production/links';
+import { productionCompletePath, productionSignPath } from '../../../../../lib/contracts/production/links';
 import { hasPortalAccess } from '../../../../../lib/contracts/production/portal-session';
 import { ensureContractPaymentLink } from '../../../../../lib/contracts/production/payment-link';
 import { loadProgressContext } from '../../../../../lib/contracts/production/progress';
@@ -33,6 +33,10 @@ interface ProgressPageProps {
   depositWord: string;
   /** 지금 받을 돈의 결제 페이지(payment-link.ts). 없으면 버튼이 없다. 확인 전(locked)에는 싣지 않는다. */
   payment: { url: string; amount: number; label: string } | null;
+  /** 링크 계약으로 서명했는가(연락처 대조 없음) — 본인 확인 안내를 "서명할 때 적으신 번호"로 바꾼다(complete.tsx와 같다). */
+  openLinkSigned: boolean;
+  /** 잔금 기한(마지막 마스터 승인일부터 며칠) — 마지막 단계 승인 확인 문구에 쓴다. */
+  balanceDueDays: number;
   /** 연락처 뒷자리를 아직 확인하지 않았다 — 진행 내용을 싣지 않는다. */
   locked: boolean;
   /** 진행이 끝난 계약 — 승인·수정 버튼이 없다. */
@@ -68,6 +72,8 @@ export const getServerSideProps = withI18nServerProps<ProgressPageProps>(async (
     serviceLabel: '음원 제작',
     sourceLabel: '1차 완성본',
     depositWord: '계약금',
+    openLinkSigned: false,
+    balanceDueDays: 7,
     payment: null,
     locked: true,
     closed: false,
@@ -108,6 +114,8 @@ export const getServerSideProps = withI18nServerProps<ProgressPageProps>(async (
         serviceLabel: isMixMasterKind(progress.contract.kind) ? '믹싱·마스터링' : '음원 제작',
         sourceLabel: sourceLabelFor(progress.contract.kind),
         depositWord: depositWordFor(progress.terms),
+        openLinkSigned: client.identityVerifiedAt === null,
+        balanceDueDays: progress.terms.amount.balanceDueDays,
         locked,
         closed: progress.contract.status !== 'signed',
         view: locked ? null : buildClientProgressView(progress.terms, progress.ledger),
@@ -139,8 +147,11 @@ const post = async (contractId: string, body: Record<string, unknown>) => {
   }
 };
 
+/** 수정 요청 기한이 지나 자동으로 승인된 것 — 계약서 제5조 5항을 모르는 사람도 읽히게 풀어 쓴다. */
+const DEEMED_APPROVED_LABEL = '수정 요청 기한이 지나 승인됨';
+
 const stageStatus = (stage: StageView): string => {
-  if (stage.approved) return stage.approved.mode === 'deemed' ? '승인됨 (기한 경과)' : '승인됨';
+  if (stage.approved) return stage.approved.mode === 'deemed' ? DEEMED_APPROVED_LABEL : '승인됨';
   if (stage.pending) return '확인을 기다려요';
   if (stage.revising) return '수정 반영 중';
   return stage.deliveries > 0 ? '진행 중' : '준비 중';
@@ -152,6 +163,7 @@ function StageCard({
   token,
   closed,
   extraFee,
+  finalNote,
   onDone,
 }: {
   stage: StageView;
@@ -159,9 +171,11 @@ function StageCard({
   token: string;
   closed: boolean;
   extraFee: number;
-  onDone: () => Promise<void>;
+  /** 마지막 단계(마스터링) 승인이 부르는 일 — 남은 대금과 기한. 승인 확인 상자에 보인다. */
+  finalNote: string | null;
+  onDone: (message: string) => Promise<void>;
 }) {
-  const [mode, setMode] = useState<'idle' | 'revision'>('idle');
+  const [mode, setMode] = useState<'idle' | 'approve' | 'revision'>('idle');
   const [note, setNote] = useState('');
   const [acceptFee, setAcceptFee] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -185,7 +199,14 @@ function StageCard({
       setError(result.message ?? '처리하지 못했어요.');
       return;
     }
-    await onDone();
+    // 보낸 요청이 남지 않게 닫는다(수정 요청 글은 보냈으니 비운다). 성공 안내는 화면 위쪽에 한 번 띄운다 — 이 카드는 답할 일이
+    // 없어지면 같이 사라지기 때문이다.
+    setMode('idle');
+    if (action === 'revision') {
+      setNote('');
+      setAcceptFee(false);
+    }
+    await onDone(action === 'approve' ? `「${stage.label}」 단계를 승인했어요.` : `「${stage.label}」 수정 요청을 보냈어요. 스튜디오가 확인하는 대로 반영해 드려요.`);
   };
 
   return (
@@ -218,7 +239,7 @@ function StageCard({
 
           {!closed && mode === 'idle' && (
             <div className="mt-4 flex flex-wrap gap-2">
-              <Button light disabled={busy} onClick={() => submit('approve')}>
+              <Button light disabled={busy} onClick={() => setMode('approve')}>
                 이대로 승인해요
               </Button>
               <Button light variant="weak" disabled={busy} onClick={() => setMode('revision')}>
@@ -227,10 +248,33 @@ function StageCard({
             </div>
           )}
 
+          {/* 승인은 되돌릴 수 없다 — 한 번 더 확인받는다(window.confirm 대신 화면 안에서). */}
+          {!closed && mode === 'approve' && (
+            <Notice
+              tone="warning"
+              light
+              className="mt-4"
+              title="이대로 승인할까요?"
+              actions={
+                <>
+                  <Button light disabled={busy} onClick={() => submit('approve')}>
+                    {busy ? '처리 중…' : '네, 승인할게요'}
+                  </Button>
+                  <Button light variant="weak" disabled={busy} onClick={() => setMode('idle')}>
+                    취소
+                  </Button>
+                </>
+              }
+            >
+              <span className="block">승인하면 이 단계는 더 수정 요청할 수 없어요.</span>
+              {finalNote && <span className="block mt-1">{finalNote}</span>}
+            </Notice>
+          )}
+
           {!closed && mode === 'revision' && (
             <div className="mt-4 space-y-3">
               <label htmlFor={`note-${stage.stage}-${stage.song ?? "album"}`} className="block text-sm text-gray-700 dark:text-gray-700">
-                수정할 내용을 한 번에 정리해 적어 주세요. 한 번 보낸 요청이 1회로 셉니다(계약서 제5조 2항).
+                수정할 내용을 한 번에 정리해 적어 주세요. 한 번 보낸 요청이 1회로 계산돼요(계약서 제5조 2항).
               </label>
               <textarea
                 id={`note-${stage.stage}-${stage.song ?? "album"}`}
@@ -241,10 +285,10 @@ function StageCard({
                 className="w-full rounded-lg border border-gray-300 dark:border-gray-300 bg-white dark:bg-white p-3 text-sm text-gray-900 dark:text-gray-900"
               />
               {needsFee && (
-                <label className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-700">
+                <label className="flex items-start gap-3 rounded-xl bg-white p-4 text-sm text-gray-700 cursor-pointer dark:bg-white dark:text-gray-700">
                   <input
                     type="checkbox"
-                    className="mt-0.5 h-4 w-4 accent-primary"
+                    className="mt-0.5 h-5 w-5 shrink-0 accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary/70 focus-visible:ring-offset-white"
                     checked={acceptFee}
                     onChange={(e) => setAcceptFee(e.target.checked)}
                   />
@@ -262,10 +306,8 @@ function StageCard({
                   light
                   variant="weak"
                   disabled={busy}
-                  onClick={() => {
-                    setMode('idle');
-                    setNote('');
-                  }}
+                  // 닫기만 한다 — 길게 적은 수정 내용을 지우지 않는다(다시 열면 그대로 있다).
+                  onClick={() => setMode('idle')}
                 >
                   취소
                 </Button>
@@ -318,10 +360,10 @@ function RefundSection({
       <p className="text-sm text-gray-700 dark:text-gray-700">
         {refund.refundable > 0 ? (
           <>
-            계약이 해지되어 계약서 제10조에 따라 정산한 <strong>{formatCurrency(refund.refundable)}원</strong>을 돌려드려요.
+            계약이 해지되어, 진행한 작업분을 정산하고 남은 <strong>{formatCurrency(refund.refundable)}원</strong>을 돌려드려요(계약서 제10조).
           </>
         ) : (
-          '계약이 해지되었고, 계약서 제10조에 따라 정산한 결과 돌려드릴 금액은 없어요.'
+          '계약이 해지되었고, 진행한 작업분을 정산한 결과 돌려드릴 금액은 없어요(계약서 제10조).'
         )}
       </p>
       {refund.refundable <= 0 ? null : refund.account ? (
@@ -369,6 +411,8 @@ export default function ProductionProgressPage({
   serviceLabel,
   sourceLabel,
   depositWord,
+  openLinkSigned,
+  balanceDueDays,
   payment,
   locked,
   closed,
@@ -377,6 +421,13 @@ export default function ProductionProgressPage({
   unavailable,
 }: ProgressPageProps) {
   const router = useRouter();
+  // 승인·수정 요청을 보낸 직후 한 번 띄우는 성공 안내. 카드는 답할 일이 없어지면 사라지므로 페이지가 들고 있는다.
+  const [flash, setFlash] = useState<string | null>(null);
+  useEffect(() => {
+    if (!flash) return;
+    const timer = window.setTimeout(() => setFlash(null), 10_000);
+    return () => window.clearTimeout(timer);
+  }, [flash]);
   const [digits, setDigits] = useState('');
   const [unlockError, setUnlockError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -403,6 +454,7 @@ export default function ProductionProgressPage({
   }
 
   const unlock = async () => {
+    setFlash(null);
     setBusy(true);
     setUnlockError(null);
     const result = await post(contractId, { action: 'unlock', token, identityDigits: digits });
@@ -428,12 +480,27 @@ export default function ProductionProgressPage({
             <p className="text-sm font-medium text-gray-400 dark:text-gray-400">스튜디오 놀 · {serviceLabel}</p>
             <h1 className="typo-page-title text-gray-900 dark:text-gray-900 mt-1">{releaseLabel ?? '작업 진행'}</h1>
             <p className="mt-2 text-gray-600 dark:text-gray-600">{clientName}님의 작업 진행 상황이에요.</p>
+            {/* 같은 비공개 경로 안의 이동이라도 문서 이동으로 간다(complete.tsx의 진행 링크와 같은 이유). */}
+            <a
+              href={productionCompletePath(contractId, token, locale)}
+              rel="noreferrer"
+              className="mt-3 inline-flex min-h-[44px] items-center text-sm font-medium text-primary underline underline-offset-2"
+            >
+              계약서 보기·내려받기
+            </a>
           </div>
 
           {locked || !view ? (
-            <div className="bg-white dark:bg-white rounded-2xl shadow-sm p-6 md:p-8">
+            <form
+              className="bg-white dark:bg-white rounded-2xl shadow-sm p-6 md:p-8"
+              onSubmit={(event) => {
+                event.preventDefault();
+                if (!busy && digits.length === IDENTITY_DIGITS) void unlock();
+              }}
+            >
               <label htmlFor="progress-digits" className="block text-sm text-gray-700 dark:text-gray-700 mb-3">
-                발매 전 음원이 있는 페이지라 본인 확인이 필요해요. 계약서에 등록된 연락처 뒤 {IDENTITY_DIGITS}자리를 입력해 주세요.
+                발매 전 음원이 있는 페이지라 본인 확인이 필요해요.{' '}
+                {openLinkSigned ? '서명할 때 적으신 휴대폰 번호' : '계약서에 등록된 연락처'} 뒤 {IDENTITY_DIGITS}자리를 입력해 주세요.
               </label>
               <TextInput
                 id="progress-digits"
@@ -443,21 +510,30 @@ export default function ProductionProgressPage({
                 value={digits}
                 onChange={(e) => setDigits(e.target.value.replace(/\D/g, ''))}
                 placeholder="0000"
+                aria-describedby={unlockError ? 'progress-digits-error' : undefined}
+                aria-invalid={unlockError ? true : undefined}
+                invalid={Boolean(unlockError)}
                 light
                 className="mb-4 px-4 py-3 text-center text-lg tracking-[0.5em]"
               />
-              <Button light size="lg" fullWidth disabled={busy || digits.length !== IDENTITY_DIGITS} onClick={unlock}>
+              <Button type="submit" light size="lg" fullWidth disabled={busy || digits.length !== IDENTITY_DIGITS}>
                 {busy ? '확인 중…' : '진행 상황 보기'}
               </Button>
               {unlockError && (
-                <Notice tone="error" light className="mt-3">
+                <Notice id="progress-digits-error" tone="error" light className="mt-3">
                   {unlockError}
                 </Notice>
               )}
-            </div>
+            </form>
           ) : (
             <>
               {refund && <RefundSection contractId={contractId} token={token} refund={refund} onDone={reload} />}
+
+              {flash && (
+                <Notice tone="success" light>
+                  {flash}
+                </Notice>
+              )}
 
               <section className="bg-white dark:bg-white rounded-2xl shadow-sm p-6 md:p-8 space-y-4">
                 <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900">단계별 확인</h2>
@@ -472,7 +548,15 @@ export default function ProductionProgressPage({
                     token={token}
                     closed={closed}
                     extraFee={view.extraRevisionFee[stage.stage]}
-                    onDone={reload}
+                    finalNote={
+                      stage.stage === 'mastering' && view.payments.remaining > 0
+                        ? `마스터링을 승인하면 남은 대금 ${formatCurrency(view.payments.remaining)}원을 승인한 날부터 ${balanceDueDays}일 안에 보내 주셔야 해요. 입금을 확인한 뒤 최종 파일을 드려요.`
+                        : null
+                    }
+                    onDone={async (message) => {
+                      await reload();
+                      setFlash(message);
+                    }}
                   />
                 ))}
               </section>
@@ -534,7 +618,7 @@ export default function ProductionProgressPage({
                         <span className="text-gray-400 dark:text-gray-400">{formatDate(item.occurredAt)}</span>{' '}
                         <span className="font-medium text-gray-900 dark:text-gray-900">
                           {item.stage ? `${item.stage} ` : ''}
-                          {item.type === 'stage_approved' && item.mode === 'deemed' ? '승인 (기한 경과)' : item.label.replace(/ \(의뢰인 대신 기록\)$/, '')}
+                          {item.type === 'stage_approved' && item.mode === 'deemed' ? DEEMED_APPROVED_LABEL : item.label.replace(/ \(의뢰인 대신 기록\)$/, '')}
                         </span>
                         {item.amount !== null && <span className="text-gray-600 dark:text-gray-600"> · {formatCurrency(item.amount)}원</span>}
                         {item.note && <p className="mt-1 whitespace-pre-line text-gray-600 dark:text-gray-600">{item.note}</p>}

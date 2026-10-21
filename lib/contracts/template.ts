@@ -17,7 +17,8 @@ export interface ContractTemplateData {
   monthlyRent: number;
   depositAmount: number;
   paymentDay?: number;
-  contractDate: string;
+  /** 계약일(ISO). null이면 서명 전 초안 — 본문에 "서명하는 날로 기재"라고 적는다(계약일은 서명 순간에 확정된다). */
+  contractDate: string | null;
   specialTerms?: string[];
 }
 
@@ -26,6 +27,9 @@ export interface ContractTemplateData {
 // 계약일이 하루 앞당겨 인쇄됐다(밤 12~9시 KST 서명 시 계약일과 서명 일시가 하루 어긋남).
 // contractDate는 startDate/endDate와 달리 '순간'이라 이 차이가 그대로 드러났다.
 // format.ts는 Asia/Seoul을 못박고 그 사고 경위를 파일 주석에 남겨 뒀다.
+
+/** 서명 전 초안 본문의 계약일 자리. 서명하면 서명한 날(KST)로 바뀐다(buildSignedContractContent). */
+export const DRAFT_CONTRACT_DATE_TEXT = '(서명하는 날로 기재)';
 
 /** 현재 계약서 템플릿 원문. 새 계약을 만들 때만 읽는다 — 이미 만든 계약은 사본(contract_template_snapshots)을 쓴다. */
 export const readContractTemplate = (): string =>
@@ -52,7 +56,7 @@ export const buildContractContent = (
     monthlyRent: formatCurrency(data.monthlyRent),
     depositAmount: formatCurrency(data.depositAmount),
     paymentDay: String(data.paymentDay ?? 1),
-    contractDate: formatDate(data.contractDate),
+    contractDate: data.contractDate === null ? DRAFT_CONTRACT_DATE_TEXT : formatDate(data.contractDate),
   };
 
   // 특약사항도 표 셀에 들어간다 — 위 필드들과 같은 escapeTableCell을 쓴다.

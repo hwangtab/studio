@@ -192,8 +192,8 @@ describe('진행 기록', () => {
     expect(types).not.toContain('released');
     expect(eventStagesFor('stage_delivered', true)).toEqual(['mixing', 'mastering']);
     expect(eventLabelFor('source_received', true)).toBe('작업 파일 수령');
-    expect(eventLabelFor('kickoff', true)).toBe('착수 (믹싱 시작)');
-    expect(eventLabelFor('kickoff', false)).toBe('착수 (기획 상담·편곡 시작)');
+    expect(eventLabelFor('kickoff', true)).toBe('작업 시작(착수) — 믹싱');
+    expect(eventLabelFor('kickoff', false)).toBe('작업 시작(착수) — 기획 상담·편곡');
   });
 });
 

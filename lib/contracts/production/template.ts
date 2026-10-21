@@ -3,6 +3,7 @@ import path from 'node:path';
 
 import { formatCurrency, formatDate } from '../format';
 import { fillPlaceholders } from '../placeholders';
+import { DRAFT_CONTRACT_DATE_TEXT } from '../template';
 import { escapeTableCell } from '../html-escape';
 import { depositWordFor, isMixMasterKind, isSinglePayment, KIND_LABEL, PER_SONG_MILESTONES, type ProductionKind, type ProductionTerms, type RefundItemKey, type RefundMilestoneEvent } from './terms';
 
@@ -43,8 +44,8 @@ export interface ProductionTemplateData {
   /** 미성년 의뢰인의 법정대리인(운영자가 적은 값). 없으면 그 칸이 계약서에 나오지 않는다. */
   guardian?: { name: string; relation: string | null; phone: string | null } | null;
   terms: ProductionTerms;
-  /** 계약일. 서명 순간에 확정된다(초안을 만든 날이 아니다). */
-  contractDate: string;
+  /** 계약일. 서명 순간에 확정된다(초안을 만든 날이 아니다) — null이면 서명 전 초안이라 "서명하는 날로 기재"로 적는다. */
+  contractDate: string | null;
 }
 
 /** 항목을 주어로 쓸 때의 이름(조사 포함). 제10조 3항 문장에 들어간다. */
@@ -198,7 +199,7 @@ export const buildProductionContent = (data: ProductionTemplateData, template: s
     credits: escapeTableCell(terms.credits),
     refundRows: refundRows,
     refundMilestones: describeRefundMilestones(terms, data.kind),
-    contractDate: formatDate(data.contractDate),
+    contractDate: data.contractDate === null ? DRAFT_CONTRACT_DATE_TEXT : formatDate(data.contractDate),
   };
 
   return fillPlaceholders(template, replacements);
