@@ -24,6 +24,7 @@ export const ACTION_LABEL: Record<string, string> = {
   contract_view: '계약서 상세 열람',
   production_contract_pdf_download: '제작 계약서 PDF',
   production_contract_view: '제작 계약서 상세 열람',
+  lesson_contract_view: '레슨 수강 계약서 상세 열람',
   show_roster_export: '공연 명단 CSV',
   shop_artist_shipping_view: '상점 아티스트 발송 화면 열람',
   creator_business_certificate_view: '사업자등록증 열람',

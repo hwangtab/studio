@@ -10,6 +10,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
 import { isCronAuthorized } from '../../../lib/cron/auth';
+import { purgeExpiredLessonPersonalData } from '../../../lib/contracts/lesson/retention';
 import { purgeExpiredProductionPersonalData } from '../../../lib/contracts/production/retention';
 import { purgeExpiredPersonalData, RETENTION_YEARS } from '../../../lib/contracts/retention';
 import { buildOperatorAlertHtml } from '../../../lib/email/operatorAlert';
@@ -31,6 +32,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // 월 입주 기록(퇴실 3년 개인정보·5년 전체)도 같은 달 크론에서 파기한다. 실패해도 계약 파기 결과를 가리지 않는다.
     const tenancy = await purgeEndedTenancies().catch((error: unknown) => {
       console.error('[cron/purge-contracts] 월 입주 기록 파기 실패', error instanceof Error ? error.name : 'unknown');
+      return null;
+    });
+
+    // 프로듀싱 레슨 수강 계약(수강 종료 3년)·수강 등록 이름(5년)도 같은 달 크론에서 파기한다. 표가 없으면(0081·0082 전) 건너뛴다 — 지울 것이 없다.
+    const lessons = await purgeExpiredLessonPersonalData().catch((error: unknown) => {
+      const message = error instanceof Error ? error.message : '';
+      if (/no such table/i.test(message)) return { contractsPurged: 0, enrollmentsCleared: 0 };
+      console.error('[cron/purge-contracts] 레슨 기록 파기 실패', error instanceof Error ? error.name : 'unknown');
       return null;
     });
 
@@ -102,6 +111,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(500).json({ ok: false, ...result, production, tenancy, sessionMusicians });
     }
 
+    // 레슨 기록 파기가 실패하면 알린다 — 수강 계약서 제10조·처리방침으로 약속한 파기(수강 종료 3년·5년)이므로 조용히 200으로 끝나면 안 된다.
+    if (lessons === null) {
+      await sendEmail({
+        to: OPERATOR_EMAIL,
+        subject: '[Studio NOL] 레슨 기록 파기 실패',
+        text: '수강 종료 후 3년(수강 계약서 개인정보)·5년(수강 등록 이름)이 지난 레슨 기록의 파기가 실패했습니다.\n\n수강 계약서 제10조로 약속한 파기이므로 확인이 필요합니다. 다음 주기에 다시 시도하지만 반복되면 Turso 연결과 lesson_contracts·lesson_enrollments 표를 확인해 주세요.',
+        html: buildOperatorAlertHtml({
+          title: '레슨 기록 파기가 실패했습니다',
+          cron: 'cron/purge-contracts',
+          hints: ['수강 계약서 제10조로 약속한 파기(수강 종료 3년 계약서 개인정보·5년 수강 등록 이름)입니다.', '반복되면 Turso 연결과 lesson_contracts·lesson_enrollments 표를 확인해 주세요.'],
+        }),
+      }).catch(() => {});
+      return res.status(500).json({ ok: false, ...result, production, tenancy, lessons, sessionMusicians });
+    }
+
     // 세션 연주자 등록 파기가 실패하면 알린다 — 처리방침 18항 ⑯에서 "마지막 확인 2년 뒤 지운다"고 약속했으므로 조용히 200으로 끝나면 안 된다.
     if (sessionMusicians === null) {
       await sendEmail({
@@ -136,7 +160,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }).catch(() => {});
     }
 
-    return res.status(200).json({ ok: true, ...result, production, tenancy, sessionMusicians, sessionReconfirm });
+    return res.status(200).json({ ok: true, ...result, production, tenancy, lessons, sessionMusicians, sessionReconfirm });
   } catch (error: unknown) {
     const detail = error instanceof Error ? error.message : String(error);
     console.error('[cron/purge-contracts] Failed:', error);

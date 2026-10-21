@@ -8,7 +8,13 @@ import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextInput } from '../../../components/ui/Field';
 import { Notice } from '../../../components/ui/Notice';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
+import Link from 'next/link';
+
 import { kstDateString } from '../../../lib/booking/kst';
+import { buildLessonSignUrl } from '../../../lib/contracts/lesson/links';
+import { LESSON_STATUS_LABEL, getEffectiveLessonStatus } from '../../../lib/contracts/lesson/status';
+import { hasDraftMarker } from '../../../lib/contracts/lesson/template';
+import { listLessonContractsFor } from '../../../lib/contracts/lesson/service';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { ENROLLMENT_STATUS_LABELS, PAYMENT_METHODS, PAY_METHOD_LABELS, SESSION_STATUS_LABELS, WEEKDAY_LABELS, arrearsOf, progressOf, weekdayOf } from '../../../lib/lessons/rules';
 import { getEnrollmentDetail } from '../../../lib/lessons/service';
@@ -17,7 +23,24 @@ import { getEnrollmentDetail } from '../../../lib/lessons/service';
 
 interface SessionView { id: string; seq: number; scheduledOn: string; startTime: string; status: string; topic: string | null; homework: string | null }
 interface PaymentView { id: string; paidOn: string; amount: number; vatAmount: number; periodLabel: string; method: string; memo: string | null; receiptIssued: boolean }
+/** 계약 행 — 이름·연락처는 싣지 않는다(상세는 접속기록이 남는 계약서 화면에서만). */
+interface ContractView {
+  id: string;
+  status: string;
+  statusLabel: string;
+  sentAt: string | null;
+  signedAt: string | null;
+  expiresAt: string | null;
+  /** 확정 전 문안이 남아 발송할 수 없는가. */
+  blockedByDraftText: boolean;
+  /** 서명 대기일 때 서명 링크 — 운영자가 카톡으로 보낼 수 있게. */
+  signUrl: string | null;
+  mailFailed: boolean;
+}
+
 interface Props {
+  contracts?: ContractView[];
+  contractsUnavailable?: boolean;
   found: boolean;
   today: string;
   enrollment?: { id: string; studentName: string; status: string; payMethod: string; courseWeeks: number; startDate: string; startTime: string; durationMin: number; monthlyAmount: number; note: string | null; endedOn: string | null; endedReason: string | null };
@@ -36,8 +59,27 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   });
   if (!detail) return { props: { found: false, today } };
   const e = detail.enrollment;
+  let contracts: ContractView[] = [];
+  let contractsUnavailable = false;
+  try {
+    contracts = (await listLessonContractsFor(id)).map((c) => {
+      const effective = getEffectiveLessonStatus(c);
+      return {
+        id: c.id, status: effective, statusLabel: LESSON_STATUS_LABEL[effective],
+        sentAt: c.sentAt ? c.sentAt.toISOString() : null, signedAt: c.signedAt ? c.signedAt.toISOString() : null, expiresAt: c.expiresAt ? c.expiresAt.toISOString() : null,
+        blockedByDraftText: hasDraftMarker(c.content) || hasDraftMarker(c.template),
+        signUrl: effective === 'sent' && c.signToken ? buildLessonSignUrl(c.id, c.signToken) : null,
+        mailFailed: c.notificationError !== null && c.notificationError !== '',
+      };
+    });
+  } catch (error: unknown) {
+    console.error('[admin/lessons/[id]] 계약 조회 실패:', error);
+    contractsUnavailable = true;
+  }
   return {
     props: {
+      contracts,
+      contractsUnavailable,
       found: true,
       today,
       enrollment: { id: e.id, studentName: e.studentName, status: e.status, payMethod: e.payMethod, courseWeeks: e.courseWeeks, startDate: e.startDate, startTime: e.startTime, durationMin: e.durationMin, monthlyAmount: e.monthlyAmount, note: e.note, endedOn: e.endedOn, endedReason: e.endedReason },
@@ -53,7 +95,7 @@ const STATUS_CLASS: Record<string, string> = {
   studio_cancelled: 'bg-amber-100 text-amber-800', dropped: 'bg-gray-100 text-gray-600',
 };
 
-export default function AdminLessonDetailPage({ found, today, enrollment, sessions = [], payments = [] }: Props) {
+export default function AdminLessonDetailPage({ found, today, enrollment, sessions = [], payments = [], contracts = [], contractsUnavailable = false }: Props) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -67,6 +109,9 @@ export default function AdminLessonDetailPage({ found, today, enrollment, sessio
   const [payMethod, setPayMethod] = useState<string>(PAYMENT_METHODS[0]);
   const [payMemo, setPayMemo] = useState('');
   const [receipt, setReceipt] = useState(false);
+  const [ctName, setCtName] = useState(enrollment?.studentName ?? '');
+  const [ctEmail, setCtEmail] = useState('');
+  const [ctPhone, setCtPhone] = useState('');
 
   if (!found || !enrollment) {
     return (
@@ -99,6 +144,24 @@ export default function AdminLessonDetailPage({ found, today, enrollment, sessio
       : status === 'studio_cancelled' ? `${s.scheduledOn} 수업을 스튜디오 사정 휴강으로 표시할까요? 과정 끝에 보충 회차가 하나 붙어요.` : null;
     if (confirmText && !window.confirm(confirmText)) return;
     void post({ action: 'session_status', sessionId: s.id, status }, '표시했어요.');
+  };
+
+  const postContract = async (body: Record<string, unknown>, success?: string): Promise<{ ok: boolean; signUrl?: string }> => {
+    setBusy(true);
+    setNotice(null);
+    let result: { ok?: boolean; message?: string; signUrl?: string; emailSent?: boolean } = {};
+    try {
+      const response = await fetch(`/api/admin/lessons/${enrollment.id}/contract`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify(body) });
+      result = await response.json().catch(() => ({}));
+      result.ok = response.ok && result.ok;
+    } catch {
+      result = { ok: false, message: '네트워크 오류로 처리하지 못했습니다.' };
+    }
+    setBusy(false);
+    if (!result.ok) setNotice(result.message || '처리하지 못했습니다.');
+    else setNotice([success, result.emailSent === false ? '메일이 나가지 않았어요 — 아래 서명 링크를 카톡으로 보내 주세요.' : null].filter(Boolean).join(' ') || null);
+    await router.replace(router.asPath, undefined, { scroll: false });
+    return { ok: Boolean(result.ok), signUrl: result.signUrl };
   };
 
   const progress = progressOf(sessions);
@@ -213,6 +276,64 @@ export default function AdminLessonDetailPage({ found, today, enrollment, sessio
               <div className="mt-3">
                 <Button light disabled={busy || payPeriod.trim() === ''} onClick={async () => { if (await post({ action: 'payment_add', paidOn: payOn, amount: Number(payAmount.replace(/[,\s원]/g, '')), vatAmount: Number(payVat.replace(/[,\s원]/g, '')) || 0, periodLabel: payPeriod, method: payMethod, memo: payMemo, receiptIssued: receipt }, '수납을 기록했어요.')) { setPayPeriod(''); setPayMemo(''); } }}>수납 기록</Button>
               </div>
+            </>
+          )}
+        </section>
+
+        <section className="mt-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
+          <h2 className="mb-1 text-lg font-bold text-gray-900 dark:text-gray-900">수강 계약</h2>
+          {contractsUnavailable ? (
+            <p className="text-gray-600">계약 표를 읽지 못했어요(마이그레이션 0082 적용 전이거나 조회 오류).</p>
+          ) : (
+            <>
+              <p className="mb-3 text-gray-600">전자서명 계약서를 보내고 체결 여부를 봐요. 수강생의 연락처·이메일은 이 계약에서 받아요(수강생이 서명 때 연락처 뒤 4자리로 본인 확인).</p>
+              {contracts.length > 0 && (
+                <ul className="mb-4 divide-y divide-gray-100">
+                  {contracts.map((c) => (
+                    <li key={c.id} className="py-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <p>
+                          <span className="rounded bg-gray-100 px-2 py-0.5 text-xs font-medium">{c.statusLabel}</span>
+                          {c.sentAt && <span className="ml-2 text-gray-600">발송 {new Date(c.sentAt).toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' })}</span>}
+                          {c.signedAt && <span className="ml-2 text-gray-600">체결 {new Date(c.signedAt).toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' })}</span>}
+                          {c.mailFailed && <span className="ml-2 text-xs font-medium text-red-700">메일 실패</span>}
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          <Link href={`/admin/lessons/contract/${c.id}`}><Button light variant="weak" size="sm">{c.status === 'signed' ? '서명본 보기' : '문안 보기'}</Button></Link>
+                          {(c.status === 'draft' || c.status === 'expired') && (
+                            <Button light size="sm" disabled={busy || c.blockedByDraftText} onClick={() => { if (window.confirm('계약서를 수강생에게 보낼까요? 보내는 것이 스튜디오의 서명이에요.')) void postContract({ action: 'send', contractId: c.id }, '계약서를 보냈어요.'); }}>
+                              {c.status === 'draft' ? '보내기' : '다시 보내기'}
+                            </Button>
+                          )}
+                          {c.status === 'sent' && (
+                            <>
+                              <Button light variant="weak" size="sm" disabled={busy} onClick={() => { if (c.signUrl) { void navigator.clipboard?.writeText(c.signUrl); setNotice('서명 링크를 복사했어요.'); } }}>링크 복사</Button>
+                              <Button light variant="weak" size="sm" disabled={busy} onClick={() => { if (window.confirm('새 링크로 다시 보낼까요? 이전 링크는 못 써요.')) void postContract({ action: 'send', contractId: c.id }, '다시 보냈어요.'); }}>다시 보내기</Button>
+                            </>
+                          )}
+                          {(c.status === 'draft' || c.status === 'sent' || c.status === 'expired') && (
+                            <Button light variant="weak" size="sm" disabled={busy} onClick={() => { if (window.confirm('계약을 취소할까요? 보낸 링크는 못 쓰게 돼요.')) void postContract({ action: 'cancel', contractId: c.id }, '취소했어요.'); }}>취소</Button>
+                          )}
+                        </div>
+                      </div>
+                      {c.blockedByDraftText && (c.status === 'draft' || c.status === 'expired') && (
+                        <p className="mt-2 rounded-lg bg-amber-50 p-2 text-xs text-amber-900">문안에 확정 전 조항(제9조 환불)이 남아 있어 보낼 수 없어요 — 교습비 반환 기준을 법률 확인한 뒤 문안을 확정해야 해요.</p>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {!contracts.some((c) => c.status !== 'cancelled') && enrollment.status !== 'ended' && (
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+                  <Field id="ct-name" label="수강생 실명" className={lightOnlyField}><TextInput value={ctName} onChange={(e) => setCtName(e.target.value)} light /></Field>
+                  <Field id="ct-email" label="이메일 (서명 요청·체결 메일)" className={lightOnlyField}><TextInput type="email" value={ctEmail} onChange={(e) => setCtEmail(e.target.value)} light /></Field>
+                  <Field id="ct-phone" label="연락처 (본인 확인에 뒤 4자리)" className={lightOnlyField}><TextInput type="tel" value={ctPhone} onChange={(e) => setCtPhone(e.target.value)} light /></Field>
+                  <div className="md:col-span-3">
+                    <Button light disabled={busy || ctName.trim() === '' || ctEmail.trim() === '' || ctPhone.trim() === ''} onClick={() => void postContract({ action: 'create', studentName: ctName, studentEmail: ctEmail, studentPhone: ctPhone }, '계약 초안을 만들었어요.')}>계약 초안 만들기</Button>
+                    <span className="ml-3 text-xs text-gray-500">초안은 아직 보내지 않아요. 문안을 확인한 뒤 보내기를 눌러요.</span>
+                  </div>
+                </div>
+              )}
             </>
           )}
         </section>

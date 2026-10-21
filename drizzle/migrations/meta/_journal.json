@@ -575,6 +575,13 @@
       "when": 1792569426099,
       "tag": "0081_lessons",
       "breakpoints": true
+    },
+    {
+      "idx": 82,
+      "version": "6",
+      "when": 1792575654641,
+      "tag": "0082_lesson_contracts",
+      "breakpoints": true
     }
   ]
 }

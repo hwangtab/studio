@@ -21,13 +21,17 @@ const nextConfig = {
     '/api/contracts/**': [
       './lib/contracts/*.md',
       './lib/contracts/production/*.md',
+      './lib/contracts/lesson/*.md',
       './lib/fonts/pretendard-variable-full.woff2',
       './public/images/contract-seal.png',
       // externalize만으로는 .br 바이너리가 추적되지 않는다(코드에서 동적으로 참조).
       './node_modules/@sparticuz/chromium/bin/**',
     ],
-    '/[locale]/contracts/**': ['./lib/contracts/*.md', './lib/contracts/production/*.md'],
+    '/[locale]/contracts/**': ['./lib/contracts/*.md', './lib/contracts/production/*.md', './lib/contracts/lesson/*.md'],
     '/admin/contracts/**': ['./lib/contracts/*.md', './lib/contracts/production/*.md'],
+    // 수강 계약 템플릿(lib/contracts/lesson/lesson-template.md)은 계약을 만들 때 fs로 읽는다 — 이 목록에 없으면 배포판에서만 계약 만들기가 실패한다.
+    '/api/admin/lessons/**': ['./lib/contracts/lesson/*.md'],
+    '/admin/lessons/**': ['./lib/contracts/lesson/*.md'],
     // 펀딩 프로젝트 md는 런타임에 fs로 읽는다(getFundingProject) — 계약서 md와 같은 이유로
     // 이 목록에 없으면 서버리스 번들에서 빠져 배포판에서만 프로젝트가 통째로 사라진다.
     '/api/funding/**': ['./content/funding/*.md'],

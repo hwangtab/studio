@@ -1799,6 +1799,8 @@ export const privacyAccessActionEnum = [
   'contract_view',
   /** 제작 계약 상세 열람 (pages/admin/contracts/production/[id]/index.tsx, API GET). contract_view와 같은 이유. 대상은 계약 id. */
   'production_contract_view',
+  /** 프로듀싱 레슨 수강 계약서 상세·서명본 열람(이름·연락처·생년월일·주소가 든 본문, pages/admin/lessons/contract/[contractId].tsx). 값은 적지 않는다. */
+  'lesson_contract_view',
   /** 관리자 제작 계약서 PDF 내려받기 (pages/api/contracts/production/[id]/pdf.ts). contract_pdf_download와 같은 이유. */
   'production_contract_pdf_download',
   /**
@@ -2731,6 +2733,60 @@ export const lessonPayments = sqliteTable('lesson_payments', {
   enrollmentIdx: index('lesson_payments_enrollment_idx').on(t.enrollmentId),
 }));
 
+
+/**
+ * 프로듀싱 레슨 수강 계약(마이그레이션 0082) — 수강생 한 명이 서명하는 전자계약. 설계 docs/lesson-management-design-2026-10.md §4.
+ * 음원 제작 계약 엔진의 원칙(템플릿 사본·서명 때 본문 완성·지문·연락처 뒷자리 본인 확인)을 쓰되 서명자가 한 명이라 서명 표를 따로 두지 않는다 —
+ * 서명 칸이 이 행에 있다. 미성년(만 19세 미만)은 법정대리인 서명 경로가 없어 받지 않는다. 새 표뿐이고 어떤 `relations()`에도 잇지 않는다(0022 함정).
+ * 개인정보(이름·이메일·연락처·생년월일·주소·서명)는 계약이 끝난 뒤 3년이 지나면 파기한다(lib/contracts/lesson/retention.ts, 처리방침 ⑫).
+ */
+export const lessonContractStatusEnum = ['draft', 'sent', 'signed', 'cancelled', 'expired'] as const;
+export const lessonContracts = sqliteTable('lesson_contracts', {
+  id: text('id').primaryKey(),
+  enrollmentId: text('enrollment_id').notNull().references(() => lessonEnrollments.id),
+  status: text('status', { enum: lessonContractStatusEnum }).notNull().default('draft'),
+  studentName: text('student_name').notNull(),
+  studentEmail: text('student_email').notNull(),
+  /** 뒷자리가 본인 확인의 기준이다(lib/contracts/identity.ts). */
+  studentPhone: text('student_phone').notNull(),
+  /** 서명 화면에서 본인이 채운다. */
+  studentBirthdate: text('student_birthdate'),
+  studentAddress: text('student_address'),
+  /** 계약 조건(lib/contracts/lesson/terms.ts, JSON) — 계약마다 굳힌다. 발송 뒤에는 바뀌지 않는다. */
+  termsJson: text('terms_json').notNull(),
+  /** 서명 때 개별 동의를 받는 조항 목록의 계약 시점 사본(JSON). */
+  clausesJson: text('clauses_json').notNull(),
+  template: text('template').notNull(),
+  templateHash: text('template_hash').notNull(),
+  content: text('content').notNull(),
+  /** 서명 시점 문서의 지문 `l1:<sha256>`(lib/contracts/lesson/integrity.ts). */
+  contentHash: text('content_hash'),
+  /** 발송할 때 처음 만든다 — 운영자가 서명하기 전 문서의 서명 링크는 있을 이유가 없다. 재발송하면 바뀐다(옛 링크 즉시 무효). */
+  signToken: text('sign_token'),
+  operatorActor: text('operator_actor'),
+  operatorSignedAt: integer('operator_signed_at', { mode: 'timestamp' }),
+  operatorIp: text('operator_ip'),
+  sentAt: integer('sent_at', { mode: 'timestamp' }),
+  expiresAt: integer('expires_at', { mode: 'timestamp' }),
+  signedAt: integer('signed_at', { mode: 'timestamp' }),
+  signatureData: text('signature_data'),
+  signerIp: text('signer_ip'),
+  signerUserAgent: text('signer_user_agent'),
+  identityVerifiedAt: integer('identity_verified_at', { mode: 'timestamp' }),
+  agreedClauses: text('agreed_clauses'),
+  firstViewedAt: integer('first_viewed_at', { mode: 'timestamp' }),
+  notificationError: text('notification_error'),
+  notifiedAt: integer('notified_at', { mode: 'timestamp' }),
+  purgedAt: integer('purged_at', { mode: 'timestamp' }),
+  createdBy: text('created_by'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  enrollmentIdx: index('lesson_contracts_enrollment_idx').on(t.enrollmentId),
+  statusCheck: check('lesson_contracts_status_check', sql`${t.status} in ('draft','sent','signed','cancelled','expired')`),
+}));
+
+export type LessonContract = typeof lessonContracts.$inferSelect;
 export type LessonEnrollment = typeof lessonEnrollments.$inferSelect;
 export type LessonSession = typeof lessonSessions.$inferSelect;
 export type LessonPayment = typeof lessonPayments.$inferSelect;
