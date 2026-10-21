@@ -6,9 +6,13 @@ import { ChoiceCard, ChoiceGroup } from '../ui/Choice';
 import { Checkbox } from '../ui/Checkbox';
 import { Field, Select } from '../ui/Field';
 import { Panel } from '../ui/Panel';
+import { Disclosure } from '../ui/Disclosure';
 import { formatPriceAmount } from '../../data/pricing';
+import { releasePipelineCopy } from '../../data/releasePipeline';
 import {
   computeReleaseBudget,
+  fundingGoalForBudget,
+  fundingGoalLinkFor,
   RELEASE_BUDGET_MAX_SONGS,
   type FundingSource,
   type TrackScale,
@@ -17,6 +21,8 @@ import { makeQuoteCode } from '../../lib/quote/estimate';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 
 const won = (n: number) => `${formatPriceAmount(n)}원`;
+/** 공제 줄 이름은 펀딩 설계 페이지 계산기와 같은 카피를 쓴다. */
+const goalRows = releasePipelineCopy.calculator.rows;
 
 const SCALES: { id: TrackScale; label: string }[] = [
   { id: 'l1', label: '보컬 + 반주 위주 (10트랙 이하)' },
@@ -68,6 +74,7 @@ const ReleaseBudgetCalculator = ({ kakaoUrl, id }: { kakaoUrl: string; id?: stri
   const budget = computeReleaseBudget({ songs, trackScale, arrangementSongs, vocalTuning, fundingSource });
   const scaleLabel = SCALES.find((s) => s.id === trackScale)?.label ?? '';
   const sourceLabel = SOURCES.find((s) => s.id === fundingSource)?.label ?? '';
+  const goal = fundingSource === 'funding' ? fundingGoalForBudget(budget) : null;
 
   const summary = [
     `[스튜디오 놀 발매 예산 ${code}]`,
@@ -76,6 +83,7 @@ const ReleaseBudgetCalculator = ({ kakaoUrl, id }: { kakaoUrl: string; id?: stri
     `제작비 마련: ${sourceLabel}`,
     ...budget.lines.map((l) => `- ${l.label}: ${won(l.amount)}`),
     `예상 예산: ${won(budget.total)} (부가세 포함)`,
+    ...(goal ? [`펀딩 목표 예상: ${won(goal.goal)} (수수료·개인 정산 공제 포함, 리워드 원가 제외)`] : []),
   ].join('\n');
 
   const onKakao = () => {
@@ -190,13 +198,37 @@ const ReleaseBudgetCalculator = ({ kakaoUrl, id }: { kakaoUrl: string; id?: stri
               </div>
             ))}
           </dl>
-          {fundingSource === 'funding' && (
-            <p className="mt-4 text-sm text-gray-700 dark:text-gray-300">
-              설계비와 제작비는 펀딩이 끝나 모금액을 정산할 때 모금액에서 받아요.{' '}
-              <Link href="/ko/crowdfunding-design#funding-goal" prefetch={false} className="font-semibold text-primary underline underline-offset-4 dark:text-primary-lighter">
-                목표액 계산해 보기
-              </Link>
-            </p>
+          {/* 펀딩을 고른 사람에게만 목표액 한 줄 — 발매 페이지에 목표액 계산기를 따로 두지 않는다(2026-10-22).
+              식은 펀딩 설계 페이지 계산기와 같다(fundingGoalForBudget). */}
+          {goal && (
+            <div className="mt-5 border-t border-gray-200 pt-4 dark:border-gray-700">
+              <p className="text-sm text-gray-500 dark:text-gray-400">펀딩 목표 예상</p>
+              <p className="text-xl font-bold text-gray-900 dark:text-white">약 {won(goal.goal)}</p>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                수수료와 개인 정산 공제를 떼고도 위 예산이 남는 금액이에요. CD·굿즈·배송 같은 리워드 원가는 빠져 있어요.
+              </p>
+              <Disclosure variant="plain" summary="공제 내역 보기" className="mt-2">
+                <dl className="space-y-2 text-sm">
+                  {([
+                    [goalRows.platformFee, goal.platformFee],
+                    [goalRows.paymentFee, goal.paymentFee],
+                    [goalRows.vatDeduction, goal.vatDeduction],
+                    [goalRows.withheld, goal.withheld],
+                  ] as const).map(([label, value]) => (
+                    <div key={label} className="flex justify-between gap-4">
+                      <dt className="text-gray-600 dark:text-gray-400">{label}</dt>
+                      <dd className="text-gray-900 dark:text-white tabular-nums whitespace-nowrap">−{won(value)}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </Disclosure>
+              <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                설계비와 제작비는 펀딩이 끝나 모금액을 정산할 때 모금액에서 받아요.{' '}
+                <Link href={fundingGoalLinkFor(budget)} prefetch={false} className="font-semibold text-primary underline underline-offset-4 dark:text-primary-lighter">
+                  리워드 원가까지 넣어 계산하기
+                </Link>
+              </p>
+            </div>
           )}
           {fundingSource === 'grant' && (
             <p className="mt-4 text-sm text-gray-700 dark:text-gray-300">
