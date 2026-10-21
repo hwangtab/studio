@@ -34,6 +34,8 @@ export interface ReminderResult {
   failed: Array<{ refId: string; code: string }>;
 }
 
+const reminderRef = (row: Pick<DueRow, 'session_id' | 'scheduled_on' | 'start_time'>): string => `${row.session_id}@${row.scheduled_on}T${row.start_time}`;
+
 const mmdd = (date: string): string => `${Number(date.slice(5, 7))}/${Number(date.slice(8, 10))}`;
 
 export const buildLessonReminderEmail = (row: Pick<DueRow, 'scheduled_on' | 'start_time' | 'duration_min' | 'student_name'>): { subject: string; html: string; text: string } => {
@@ -78,14 +80,16 @@ export const sendLessonReminders = async (now: Date = new Date()): Promise<Remin
       WHERE c2.enrollment_id = e.id AND c2.status = 'signed' AND c2.purged_at IS NULL ORDER BY c2.signed_at DESC LIMIT 1
     )
     WHERE s.status = 'scheduled' AND s.scheduled_on = ${tomorrow} AND e.status = 'active'
-      AND NOT EXISTS (SELECT 1 FROM lesson_reminders r WHERE r.kind = 'session' AND r.ref_id = s.id)
+      AND NOT EXISTS (SELECT 1 FROM lesson_reminders r WHERE r.kind = 'session' AND r.ref_id = s.id || '@' || s.scheduled_on || 'T' || s.start_time)
     ORDER BY s.start_time
   `);
 
   const result: ReminderResult = { considered: due.length, sent: 0, failed: [] };
   for (const row of due) {
+    // 기록 키는 회차 id + 날짜 + 시각이다 — 안내 뒤에 운영자가 그 회차를 옮기면 새 일정으로 다시 한 번 안내한다(회차 id만 쓰면 옮긴 일정은 영영 안내가 없다).
+    const refId = reminderRef(row);
     // 기록을 먼저 — 겹친 실행이 같은 회차를 또 보내지 않게. 0행이면 다른 실행이 이미 잡았다.
-    const claim = await db.run(sql`INSERT INTO lesson_reminders (id, kind, ref_id) VALUES (lower(hex(randomblob(16))), 'session', ${row.session_id}) ON CONFLICT (kind, ref_id) DO NOTHING`);
+    const claim = await db.run(sql`INSERT INTO lesson_reminders (id, kind, ref_id) VALUES (lower(hex(randomblob(16))), 'session', ${refId}) ON CONFLICT (kind, ref_id) DO NOTHING`);
     if (Number(claim.rowsAffected) === 0) continue;
     try {
       const mail = buildLessonReminderEmail(row);
@@ -94,13 +98,13 @@ export const sendLessonReminders = async (now: Date = new Date()): Promise<Remin
         result.sent += 1;
       } else {
         const code = sent.errorCode ?? 'send_failed';
-        await db.run(sql`UPDATE lesson_reminders SET error = ${code} WHERE kind = 'session' AND ref_id = ${row.session_id}`);
-        result.failed.push({ refId: row.session_id, code });
+        await db.run(sql`UPDATE lesson_reminders SET error = ${code} WHERE kind = 'session' AND ref_id = ${refId}`);
+        result.failed.push({ refId, code });
       }
     } catch (error: unknown) {
       const code = error instanceof Error ? error.message.slice(0, 80) : 'send_exception';
-      await db.run(sql`UPDATE lesson_reminders SET error = ${code} WHERE kind = 'session' AND ref_id = ${row.session_id}`).catch(() => undefined);
-      result.failed.push({ refId: row.session_id, code });
+      await db.run(sql`UPDATE lesson_reminders SET error = ${code} WHERE kind = 'session' AND ref_id = ${refId}`).catch(() => undefined);
+      result.failed.push({ refId, code });
     }
   }
   return result;
