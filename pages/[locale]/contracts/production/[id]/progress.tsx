@@ -474,7 +474,7 @@ export default function ProductionProgressPage({
         <meta name="referrer" content="no-referrer" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 dark:bg-gray-50 py-8 md:py-12">
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-50 [color-scheme:light] py-8 md:py-12">
         <div className="max-w-2xl mx-auto px-4 space-y-6">
           <div className="bg-white dark:bg-white rounded-2xl shadow-sm p-6 md:p-8">
             <p className="text-sm font-medium text-gray-400 dark:text-gray-400">스튜디오 놀 · {serviceLabel}</p>
