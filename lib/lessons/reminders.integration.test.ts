@@ -90,12 +90,22 @@ describe('수업 전날 안내', () => {
     expect(sendEmail).not.toHaveBeenCalled();
   });
 
+  it('안내 뒤 회차를 옮기면 새 일정으로 한 번 더 안내한다', async () => {
+    const id = await seed();
+    await sendLessonReminders(NOW);
+    await client.execute(`UPDATE lesson_sessions SET start_time = '16:00' WHERE id = '${id}'`);
+    const r = await sendLessonReminders(NOW);
+    expect(r.sent).toBe(1);
+    expect(sendEmail).toHaveBeenCalledTimes(2);
+    expect(sendEmail.mock.calls[1][0].subject).toContain('16:00');
+  });
+
   it('발송 실패는 기록하고 다시 보내지 않는다', async () => {
     const id = await seed();
     sendEmail.mockResolvedValue({ ok: false, errorCode: 'API_ERROR' });
     const r = await sendLessonReminders(NOW);
-    expect(r.failed).toEqual([{ refId: id, code: 'API_ERROR' }]);
-    const row = (await client.execute(`SELECT error FROM lesson_reminders WHERE ref_id = '${id}'`)).rows[0] as unknown as { error: string };
+    expect(r.failed).toEqual([{ refId: `${id}@2026-10-22T14:00`, code: 'API_ERROR' }]);
+    const row = (await client.execute(`SELECT error FROM lesson_reminders WHERE ref_id LIKE '${id}@%'`)).rows[0] as unknown as { error: string };
     expect(row.error).toBe('API_ERROR');
     sendEmail.mockClear();
     await sendLessonReminders(NOW);
