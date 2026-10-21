@@ -1,11 +1,11 @@
-import { and, eq, isNull } from 'drizzle-orm';
+import { and, eq, isNull, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { manualRevenues, type ManualRevenue } from '../../db/schema';
 import { kstDateString } from '../booking/kst';
 import { BUSINESS_LINE_LABELS, lineOfType, parseBusinessLine, type BusinessLine } from './businessLine';
 import { clearLineAssignment, loadLineAssignments, saveLineAssignment } from './businessLineStore';
-import { DUPLICATE_ACK_MARKER } from './manualRevenueDuplicates';
+import { appendMemoLine, DUPLICATE_ACK_MARKER, MEMO_CONFLICT, retryOnMemoConflict } from './memoTrail';
 import { REVENUE_TYPE_LABELS, type RevenueRow } from './revenueReport';
 
 /**
@@ -106,8 +106,11 @@ export const createManualRevenue = async (input: ManualRevenueInput, actor: stri
   return row.id;
 };
 
-/** 메모 끝에 한 줄을 붙인다(1,000자 상한 — 넘으면 앞을 버린다). */
-const appendMemo = (memo: string | null, line: string): string => `${memo ? `${memo}\n` : ''}${line}`.slice(-1000);
+/**
+ * 메모 끝에 한 줄을 붙인다 — 상한을 넘으면 오래된 기록 줄부터 버리고 운영자 메모·`[중복 아님]`은 지킨다(memoTrail.ts).
+ * 읽은 메모가 그 사이 바뀌었으면(`memo IS <읽은 값>` 조건이 0행) 다시 읽어 붙인다 — 동시 요청이 서로의 기록 줄을 덮어쓰지 않게.
+ */
+const sameMemo = (memo: string | null) => sql`${manualRevenues.memo} IS ${memo}`;
 
 /**
  * 돌려준 누적 금액을 정한다(덮어쓰기). 총액을 넘으면 거절 — 'not_found'면 그 행이 없다.
@@ -117,16 +120,22 @@ const appendMemo = (memo: string | null, line: string): string => `${memo ? `${m
  */
 export const setManualRefund = async (id: string, refundedAmount: number, actor?: string): Promise<'ok' | 'not_found' | 'invalid'> => {
   const db = getDb();
-  const row = await db.query.manualRevenues.findFirst({ where: and(eq(manualRevenues.id, id), isNull(manualRevenues.deletedAt)) });
-  if (!row) return 'not_found';
-  if (!Number.isInteger(refundedAmount) || refundedAmount < 0 || refundedAmount > row.totalAmount) return 'invalid';
-  const trail =
-    actor && refundedAmount !== row.refundedAmount
-      ? `[환불 ${row.refundedAmount.toLocaleString('ko-KR')}→${refundedAmount.toLocaleString('ko-KR')}원 · ${actor} · ${kstDateString(new Date())}]`
-      : null;
-  const memo = trail ? appendMemo(row.memo, trail) : row.memo;
-  await db.update(manualRevenues).set({ refundedAmount, memo }).where(and(eq(manualRevenues.id, id), isNull(manualRevenues.deletedAt)));
-  return 'ok';
+  return retryOnMemoConflict<'ok' | 'not_found' | 'invalid'>(async () => {
+    const row = await db.query.manualRevenues.findFirst({ where: and(eq(manualRevenues.id, id), isNull(manualRevenues.deletedAt)) });
+    if (!row) return 'not_found';
+    if (!Number.isInteger(refundedAmount) || refundedAmount < 0 || refundedAmount > row.totalAmount) return 'invalid';
+    const trail =
+      actor && refundedAmount !== row.refundedAmount
+        ? `[환불 ${row.refundedAmount.toLocaleString('ko-KR')}→${refundedAmount.toLocaleString('ko-KR')}원 · ${actor} · ${kstDateString(new Date())}]`
+        : null;
+    const memo = trail ? appendMemoLine(row.memo, trail) : row.memo;
+    const updated = await db
+      .update(manualRevenues)
+      .set({ refundedAmount, memo })
+      .where(and(eq(manualRevenues.id, id), isNull(manualRevenues.deletedAt), sameMemo(row.memo), eq(manualRevenues.refundedAmount, row.refundedAmount)))
+      .returning({ id: manualRevenues.id });
+    return updated.length > 0 ? 'ok' : MEMO_CONFLICT;
+  });
 };
 
 /**
@@ -145,7 +154,16 @@ export const setManualRevenueLine = async (id: string, line: BusinessLine | null
   if (!saved) return 'unavailable';
   if (before !== after) {
     const trail = `[분야 변경 ${BUSINESS_LINE_LABELS[before]}→${BUSINESS_LINE_LABELS[after]}${line === null ? '(유형대로)' : ''} · ${actor} · ${kstDateString(new Date())}]`;
-    await db.update(manualRevenues).set({ memo: appendMemo(row.memo, trail) }).where(and(eq(manualRevenues.id, id), isNull(manualRevenues.deletedAt)));
+    await retryOnMemoConflict<'done'>(async () => {
+      const current = await db.query.manualRevenues.findFirst({ where: and(eq(manualRevenues.id, id), isNull(manualRevenues.deletedAt)) });
+      if (!current) return 'done'; // 그 사이 지워졌다 — 남길 메모가 없다.
+      const updated = await db
+        .update(manualRevenues)
+        .set({ memo: appendMemoLine(current.memo, trail) })
+        .where(and(eq(manualRevenues.id, id), isNull(manualRevenues.deletedAt), sameMemo(current.memo)))
+        .returning({ id: manualRevenues.id });
+      return updated.length > 0 ? 'done' : MEMO_CONFLICT;
+    });
   }
   return 'ok';
 };
@@ -153,12 +171,17 @@ export const setManualRevenueLine = async (id: string, line: BusinessLine | null
 /** 중복 의심(manualRevenueDuplicates.ts)을 확인했다는 표시 — 메모에 `[중복 아님]`을 붙인다. 이미 있으면 그대로. */
 export const acknowledgeManualDuplicate = async (id: string, actor: string): Promise<boolean> => {
   const db = getDb();
-  const row = await db.query.manualRevenues.findFirst({ where: and(eq(manualRevenues.id, id), isNull(manualRevenues.deletedAt)) });
-  if (!row) return false;
-  if (row.memo?.includes(DUPLICATE_ACK_MARKER)) return true;
-  await db.update(manualRevenues).set({ memo: appendMemo(row.memo, `${DUPLICATE_ACK_MARKER} ${actor} · ${kstDateString(new Date())}`) })
-    .where(and(eq(manualRevenues.id, id), isNull(manualRevenues.deletedAt)));
-  return true;
+  return retryOnMemoConflict<boolean>(async () => {
+    const row = await db.query.manualRevenues.findFirst({ where: and(eq(manualRevenues.id, id), isNull(manualRevenues.deletedAt)) });
+    if (!row) return false;
+    if (row.memo?.includes(DUPLICATE_ACK_MARKER)) return true;
+    const updated = await db
+      .update(manualRevenues)
+      .set({ memo: appendMemoLine(row.memo, `${DUPLICATE_ACK_MARKER} ${actor} · ${kstDateString(new Date())}`) })
+      .where(and(eq(manualRevenues.id, id), isNull(manualRevenues.deletedAt), sameMemo(row.memo)))
+      .returning({ id: manualRevenues.id });
+    return updated.length > 0 ? true : MEMO_CONFLICT;
+  });
 };
 
 /**

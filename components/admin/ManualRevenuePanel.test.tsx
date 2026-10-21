@@ -120,7 +120,42 @@ it('목록에서 분야를 바꾸면 확인 뒤 PATCH하고, 중복 의심이면
   fireEvent.change(screen.getByLabelText('녹음 분야'), { target: { value: 'practice' } });
   await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
   expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ id: 'm1', businessLine: 'practice' });
+  await waitFor(() => expect(replace).toHaveBeenCalledTimes(1));
+  await waitFor(() => expect(screen.getByRole('button', { name: '중복 아님' })).toBeEnabled());
   fireEvent.click(screen.getByRole('button', { name: '중복 아님' }));
   await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
   expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({ id: 'm1', action: 'ackDuplicate' });
+});
+
+it('분야로 연습실을 고르면 월 입주 이용료는 자동으로 잡힌다는 안내가 뜬다', () => {
+  render(<ManualRevenuePanel {...base} />);
+  expect(screen.queryByText(/월 입주 이용료는 자동으로 매출에 잡혀요/)).not.toBeInTheDocument();
+  fireEvent.change(screen.getByLabelText(/^분야/), { target: { value: 'practice' } });
+  expect(screen.getByText('연습실 월 입주 이용료는 자동으로 매출에 잡혀요 — 시간제·기타 수입만 적으세요')).toBeInTheDocument();
+});
+
+it('한 행의 요청이 진행 중이면 그 행의 분야 선택·중복 아님 버튼이 잠긴다', async () => {
+  const entries = [{ id: 'm1', receivedOn: '2026-10-03', typeLabel: '세션 예약', typeKey: 'session', assignedLine: null, duplicateOf: '사이트 주문 NO-9', description: '녹음', method: '현금', memo: null, totalAmount: 50000, refundedAmount: 0 }];
+  jest.spyOn(window, 'confirm').mockReturnValue(true);
+  let finish: (v: unknown) => void = () => undefined;
+  fetchMock.mockReturnValueOnce(new Promise((resolve) => { finish = resolve; }));
+  render(<ManualRevenuePanel {...base} entries={entries} />);
+  fireEvent.change(screen.getByLabelText('녹음 분야'), { target: { value: 'practice' } });
+  await waitFor(() => expect(screen.getByLabelText('녹음 분야')).toBeDisabled());
+  expect(screen.getByRole('button', { name: '중복 아님' })).toBeDisabled();
+  expect(screen.getByRole('button', { name: '삭제' })).toBeDisabled();
+  finish({ ok: true, json: async () => ({ ok: true }) });
+  await waitFor(() => expect(screen.getByLabelText('녹음 분야')).toBeEnabled());
+  expect(screen.getByRole('button', { name: '중복 아님' })).toBeEnabled();
+});
+
+it('행 요청이 실패하면 그 행 아래에 사유를 보이고 잠금을 푼다', async () => {
+  const entries = [{ id: 'm1', receivedOn: '2026-10-03', typeLabel: '세션 예약', typeKey: 'session', assignedLine: null, duplicateOf: '사이트 주문 NO-9', description: '녹음', method: '현금', memo: null, totalAmount: 50000, refundedAmount: 0 }];
+  jest.spyOn(window, 'confirm').mockReturnValue(true);
+  fetchMock.mockResolvedValueOnce({ ok: false, json: async () => ({ ok: false, message: '기록을 찾을 수 없습니다.' }) });
+  render(<ManualRevenuePanel {...base} entries={entries} />);
+  fireEvent.click(screen.getByRole('button', { name: '중복 아님' }));
+  expect(await screen.findByRole('alert')).toHaveTextContent('기록을 찾을 수 없습니다.');
+  expect(screen.getByRole('button', { name: '중복 아님' })).toBeEnabled();
+  expect(replace).not.toHaveBeenCalled();
 });

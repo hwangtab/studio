@@ -5,14 +5,15 @@ import { kstDateString } from '../../../../lib/booking/kst';
 import { acknowledgeManualDuplicate, createManualRevenue, deleteManualRevenue, parseManualRevenueInput, setManualRefund, setManualRevenueLine } from '../../../../lib/ops/manualRevenue';
 import { saveLineAssignment } from '../../../../lib/ops/businessLineStore';
 import { parseBusinessLine } from '../../../../lib/ops/businessLine';
-import { describeDuplicateMatches, DUPLICATE_ACK_MARKER, findManualRevenueDuplicates, manualRef } from '../../../../lib/ops/manualRevenueDuplicates';
+import { describeDuplicateMatches, findManualRevenueDuplicates, hasDuplicateMatches, manualRef, type DuplicateMatches } from '../../../../lib/ops/manualRevenueDuplicates';
+import { appendMemoLine, DUPLICATE_ACK_MARKER } from '../../../../lib/ops/memoTrail';
 import { safeDbErrorSummary } from '../../../../lib/payments/dbErrorSummary';
 
 /**
  * 수기 매출 등록·환불 기록·분야 변경·중복 아님 표시·삭제. 규칙은 lib/ops/manualRevenue.ts.
  * 개인정보를 받지 않는 장부라 접속기록 대상이 아니다.
  *
- * 등록 때 같은 금액의 사이트 주문(±3일)·같은 날 수기 매출이 있으면 저장하지 않고 409 `possible_duplicate`로 알린다(manualRevenueDuplicates.ts).
+ * 등록 때 같은 금액의 사이트 주문·계약 입금(±3일)·연습실 월 입주 이용료·같은 날 수기 매출이 있으면 저장하지 않고 409 `possible_duplicate`로 알린다(manualRevenueDuplicates.ts).
  * 운영자가 확인하고 `confirmDuplicate: true`로 다시 보내면 저장하고 메모에 `[중복 아님]`을 붙인다(운영 점검이 다시 묻지 않게).
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -25,16 +26,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const parsed = parseManualRevenueInput(req.body, kstDateString(new Date()));
       if (!parsed.ok) return res.status(400).json({ ok: false, message: parsed.message });
       const confirmDuplicate = (req.body as { confirmDuplicate?: unknown } | null)?.confirmDuplicate === true;
-      let matches: { orderNos: string[]; manualIds: string[] } | null = null;
+      let matches: DuplicateMatches | null = null;
       try {
-        matches = await findManualRevenueDuplicates({ receivedOn: parsed.value.receivedOn, totalAmount: parsed.value.totalAmount });
+        matches = await findManualRevenueDuplicates({
+          receivedOn: parsed.value.receivedOn,
+          totalAmount: parsed.value.totalAmount,
+          type: parsed.value.type,
+          businessLine: parsed.value.businessLine,
+        });
       } catch (error: unknown) {
         // 점검 조회가 실패해도 저장은 막지 않는다(경고일 뿐이다).
         console.error('[API/admin/revenue/manual] 중복 점검 실패 — 경고 없이 저장합니다:', safeDbErrorSummary(error));
       }
-      const hasMatches = matches !== null && (matches.orderNos.length > 0 || matches.manualIds.length > 0);
+      const hasMatches = matches !== null && hasDuplicateMatches(matches);
       if (matches && hasMatches && !confirmDuplicate) {
-        const refs = { orderNos: matches.orderNos, manualRefs: matches.manualIds.map(manualRef) };
+        const refs = { orderNos: matches.orderNos, contractRefs: matches.contractRefs, tenancyRooms: matches.tenancyRooms, manualRefs: matches.manualIds.map(manualRef) };
         return res.status(409).json({
           ok: false,
           code: 'possible_duplicate',
@@ -42,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           message: `이미 적힌 것 같은 돈이 있어요: ${describeDuplicateMatches(refs)}. 같은 입금을 두 번 적으면 매출이 두 배가 됩니다.`,
         });
       }
-      const input = hasMatches ? { ...parsed.value, memo: `${parsed.value.memo ? `${parsed.value.memo} ` : ''}${DUPLICATE_ACK_MARKER}`.slice(0, 500) } : parsed.value;
+      const input = hasMatches ? { ...parsed.value, memo: appendMemoLine(parsed.value.memo, DUPLICATE_ACK_MARKER) } : parsed.value;
       const id = await createManualRevenue(input, auth.actor);
       // 분야는 따로 둔 표(0084)에 적는다 — 실패해도 매출 기록은 남기고, 분야가 기본값으로 셀 것이라고 알린다.
       if (input.businessLine && !(await saveLineAssignment('manual_revenue', id, input.businessLine, auth.actor))) {
