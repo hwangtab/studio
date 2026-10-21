@@ -1,7 +1,7 @@
 import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { safeDbErrorSummary } from '../payments/refundAccount';
+import { safeDbErrorSummary } from '../payments/dbErrorSummary';
 import type { BusinessLine } from './businessLine';
 import { parseBusinessLine } from './businessLine';
 
