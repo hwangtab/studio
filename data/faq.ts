@@ -46,7 +46,7 @@ const faqData = {
     },
     {
       question: '어떤 장비를 보유하고 있나요?',
-      answer: 'Neumann U87AI, AKG C414 XLS 마이크, Vintech X73i 프리앰프, Prism Sound Lyra 2 인터페이스, SSL Fusion 프로세서 등 프리미엄 아날로그/디지털 장비를 구비하고 있어요.',
+      answer: 'Neumann U87AI, AKG C414 XLS 마이크, Midas Venice 320 아날로그 콘솔, Vintech X73i 프리앰프, Prism Sound Lyra 2 인터페이스, SSL Fusion 프로세서 등 프리미엄 아날로그/디지털 장비를 구비하고 있어요.',
     },
     {
       question: '스튜디오 놀은 주말이나 공휴일에도 영업하나요?',
@@ -125,7 +125,7 @@ const faqData = {
     },
     {
       question: 'What equipment do you have?',
-      answer: 'We have premium gear including Neumann U87AI, AKG C414 XLS mics, Vintech X73i preamp, Prism Sound Lyra 2 interface, and SSL Fusion processor.',
+      answer: 'We have premium gear including Neumann U87AI, AKG C414 XLS mics, a Midas Venice 320 analog mixing console, Vintech X73i preamp, Prism Sound Lyra 2 interface, and SSL Fusion processor.',
     },
     {
       question: 'Is Studio NOL open on weekends or holidays?',
@@ -196,7 +196,7 @@ const faqData = {
     },
     {
       question: '有哪些设备？',
-      answer: '配备 Neumann U87AI、AKG C414 XLS 麦克风、Vintech X73i 前级、Prism Sound Lyra 2 接口、SSL Fusion 处理器等高端模拟/数字设备。',
+      answer: '配备 Neumann U87AI、AKG C414 XLS 麦克风、Midas Venice 320 模拟调音台、Vintech X73i 前级、Prism Sound Lyra 2 接口、SSL Fusion 处理器等高端模拟/数字设备。',
     },
     {
       question: '提供音乐发行服务吗？',
@@ -242,7 +242,7 @@ const faqData = {
     },
     {
       question: '¿Qué equipo tienen?',
-      answer: 'Contamos con equipo premium como Neumann U87AI, AKG C414 XLS, preamplificador Vintech X73i, interfaz Prism Sound Lyra 2 y procesador SSL Fusion.',
+      answer: 'Contamos con equipo premium como Neumann U87AI, AKG C414 XLS, consola analógica Midas Venice 320, preamplificador Vintech X73i, interfaz Prism Sound Lyra 2 y procesador SSL Fusion.',
     },
     {
       question: '¿Ofrecen distribución musical?',
@@ -288,7 +288,7 @@ const faqData = {
     },
     {
       question: 'Có những thiết bị nào?',
-      answer: 'Trang bị Neumann U87AI, AKG C414 XLS, preamp Vintech X73i, interface Prism Sound Lyra 2, bộ xử lý SSL Fusion, v.v.',
+      answer: 'Trang bị Neumann U87AI, AKG C414 XLS, console analog Midas Venice 320, preamp Vintech X73i, interface Prism Sound Lyra 2, bộ xử lý SSL Fusion, v.v.',
     },
     {
       question: 'Có dịch vụ phát hành nhạc không?',
@@ -334,7 +334,7 @@ const faqData = {
     },
     {
       question: 'มีอุปกรณ์อะไรบ้าง?',
-      answer: 'มีอุปกรณ์ระดับพรีเมียม เช่น ไมค์ Neumann U87AI, AKG C414 XLS, พรีแอมป์ Vintech X73i, อินเทอร์เฟซ Prism Sound Lyra 2 และโปรเซสเซอร์ SSL Fusion เป็นต้น',
+      answer: 'มีอุปกรณ์ระดับพรีเมียม เช่น ไมค์ Neumann U87AI, AKG C414 XLS, คอนโซลอนาล็อก Midas Venice 320, พรีแอมป์ Vintech X73i, อินเทอร์เฟซ Prism Sound Lyra 2 และโปรเซสเซอร์ SSL Fusion เป็นต้น',
     },
     {
       question: 'มีบริการจัดจำหน่ายเพลงไหม?',
@@ -380,7 +380,7 @@ const faqData = {
     },
     {
       question: 'Qanday uskunalar bor?',
-      answer: 'Neumann U87AI, AKG C414 XLS mikrofonlari, Vintech X73i preamp, Prism Sound Lyra 2 interfeys, SSL Fusion protsessori kabi premium analog/raqamli uskunalar mavjud.',
+      answer: 'Neumann U87AI, AKG C414 XLS mikrofonlari, Midas Venice 320 analog konsoli, Vintech X73i preamp, Prism Sound Lyra 2 interfeys, SSL Fusion protsessori kabi premium analog/raqamli uskunalar mavjud.',
     },
     {
       question: 'Musiqa tarqatish xizmati ham bormi?',
@@ -506,7 +506,11 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
       items: [
         {
           heading: 'Microphones and Signal Chain',
-          body: 'Neumann U87Ai and AKG C414 XLS condensers, Shure SM58 and SM57 dynamics, a Vintech X73i preamp in the Neve 1073 tradition, and Prism Sound Lyra 2 conversion. A Yamaha U3 upright piano is available for acoustic recording.'
+          body: 'Neumann U87AI and AKG C414 XLS condensers, Shure SM58 and SM57 dynamics, a Vintech X73i preamp in the Neve 1073 tradition, and Prism Sound Lyra 2 conversion. A Yamaha U3 upright piano is available for acoustic recording.'
+        },
+        {
+          heading: 'Mixing Console',
+          body: 'Mixes run through a Midas Venice 320 analog console, not a plugin emulation — a real analog desk, which is unusual at this scale among Korean indie studios.'
         },
         {
           heading: 'Monitoring',
@@ -568,7 +572,11 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
       items: [
         {
           heading: '麦克风与信号链',
-          body: '配备 Neumann U87Ai 和 AKG C414 XLS 电容麦克风、Shure SM58 和 SM57 动圈麦克风、承袭 Neve 1073 血统的 Vintech X73i 前级，以及 Prism Sound Lyra 2 音频接口。此外还有 Yamaha U3 立式钢琴，可供原声录音使用。'
+          body: '配备 Neumann U87AI 和 AKG C414 XLS 电容麦克风、Shure SM58 和 SM57 动圈麦克风、承袭 Neve 1073 血统的 Vintech X73i 前级，以及 Prism Sound Lyra 2 音频接口。此外还有 Yamaha U3 立式钢琴，可供原声录音使用。'
+        },
+        {
+          heading: '混音台',
+          body: '混音经过 Midas Venice 320 模拟调音台处理——不是插件模拟，而是真正的模拟调音台，这在韩国同等规模的独立音乐工作室中并不常见。'
         },
         {
           heading: '监听',
@@ -630,7 +638,11 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
       items: [
         {
           heading: 'Micrófonos y cadena de señal',
-          body: 'Condensadores Neumann U87Ai y AKG C414 XLS, dinámicos Shure SM58 y SM57, un preamplificador Vintech X73i dentro de la tradición Neve 1073, y conversión Prism Sound Lyra 2. También contamos con un piano vertical Yamaha U3 para grabación acústica.'
+          body: 'Condensadores Neumann U87AI y AKG C414 XLS, dinámicos Shure SM58 y SM57, un preamplificador Vintech X73i dentro de la tradición Neve 1073, y conversión Prism Sound Lyra 2. También contamos con un piano vertical Yamaha U3 para grabación acústica.'
+        },
+        {
+          heading: 'Consola de mezcla',
+          body: 'Las mezclas pasan por una consola analógica Midas Venice 320 — no una emulación por plugin, sino una consola analógica real, algo poco habitual a esta escala entre estudios indie coreanos.'
         },
         {
           heading: 'Monitoreo',
@@ -692,7 +704,11 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
       items: [
         {
           heading: 'Micro và chuỗi tín hiệu',
-          body: 'Micro condenser Neumann U87Ai và AKG C414 XLS, micro dynamic Shure SM58 và SM57, preamp Vintech X73i theo phong cách Neve 1073, và bộ chuyển đổi Prism Sound Lyra 2. Ngoài ra còn có piano đứng Yamaha U3 cho thu âm mộc.'
+          body: 'Micro condenser Neumann U87AI và AKG C414 XLS, micro dynamic Shure SM58 và SM57, preamp Vintech X73i theo phong cách Neve 1073, và bộ chuyển đổi Prism Sound Lyra 2. Ngoài ra còn có piano đứng Yamaha U3 cho thu âm mộc.'
+        },
+        {
+          heading: 'Bàn mixing (Console)',
+          body: 'Bản mix đi qua console analog Midas Venice 320 — không phải plugin giả lập, mà là console analog thật, điều hiếm thấy ở quy mô này trong các studio indie Hàn Quốc.'
         },
         {
           heading: 'Giám sát âm thanh (Monitor)',
@@ -754,7 +770,11 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
       items: [
         {
           heading: 'ไมโครโฟนและสัญญาณเสียง',
-          body: 'ไมค์คอนเดนเซอร์ Neumann U87Ai และ AKG C414 XLS ไมค์ไดนามิก Shure SM58 และ SM57 ปรีแอมป์ Vintech X73i ในสาย Neve 1073 และตัวแปลงสัญญาณ Prism Sound Lyra 2 นอกจากนี้ยังมีเปียโนตั้ง Yamaha U3 สำหรับบันทึกเสียงอะคูสติก'
+          body: 'ไมค์คอนเดนเซอร์ Neumann U87AI และ AKG C414 XLS ไมค์ไดนามิก Shure SM58 และ SM57 ปรีแอมป์ Vintech X73i ในสาย Neve 1073 และตัวแปลงสัญญาณ Prism Sound Lyra 2 นอกจากนี้ยังมีเปียโนตั้ง Yamaha U3 สำหรับบันทึกเสียงอะคูสติก'
+        },
+        {
+          heading: 'คอนโซลมิกซ์',
+          body: 'มิกซ์ผ่านคอนโซลอนาล็อก Midas Venice 320 — ไม่ใช่ปลั๊กอินจำลอง แต่เป็นคอนโซลอนาล็อกตัวจริง ซึ่งหาได้ยากในสตูดิโออินดี้ระดับนี้ของเกาหลี'
         },
         {
           heading: 'มอนิเตอร์',
@@ -816,7 +836,11 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
       items: [
         {
           heading: "Mikrofonlar va signal zanjiri",
-          body: "Neumann U87Ai va AKG C414 XLS kondensator mikrofonlari, Shure SM58 va SM57 dinamik mikrofonlari, Neve 1073 an'analaridagi Vintech X73i preamp va Prism Sound Lyra 2 konvertatsiya. Akustik yozuv uchun Yamaha U3 pianino ham mavjud."
+          body: "Neumann U87AI va AKG C414 XLS kondensator mikrofonlari, Shure SM58 va SM57 dinamik mikrofonlari, Neve 1073 an'analaridagi Vintech X73i preamp va Prism Sound Lyra 2 konvertatsiya. Akustik yozuv uchun Yamaha U3 pianino ham mavjud."
+        },
+        {
+          heading: "Miks konsoli",
+          body: "Mikslar Midas Venice 320 analog konsoli orqali o'tadi — plagin emulyatsiyasi emas, haqiqiy analog konsol, bu Koreya indie studiyalari orasida bu darajada kamdan-kam uchraydi."
         },
         {
           heading: "Monitoring",

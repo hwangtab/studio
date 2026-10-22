@@ -108,6 +108,18 @@ export const getEquipmentData = (locale: Locale) => {
       })
     },
     {
+      src: "/images/console.webp",
+      alt: t(locale, {
+        ko: "Midas Venice 320 아날로그 믹싱 콘솔",
+        en: "Midas Venice 320 analog mixing console",
+        zh: "Midas Venice 320 模拟调音台",
+        es: "Consola de mezcla analógica Midas Venice 320",
+        vi: "Console mixing analog Midas Venice 320",
+        th: "คอนโซลมิกซ์อนาล็อก Midas Venice 320",
+        uz: "Midas Venice 320 analog miks konsoli",
+      })
+    },
+    {
       // 2026-09-26 Vox AC30 → Bad Cat Hot Cat 30R로 교체(운영자). 예전 사진(hardware4)은 스토리
       // 공용 썸네일로 계속 쓰이므로 지우지 않고, 장비를 가리키는 이 자리만 새 사진으로 바꾼다.
       src: "/images/hardware-badcat-hotcat30r.webp",
