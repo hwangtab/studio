@@ -84,12 +84,20 @@ export const ADMIN_NAV_ENTRIES: readonly AdminNavEntry[] = [
     ],
   },
   {
+    // 매출·지출·장부는 재무 한 화면의 탭이다(components/admin/FinanceTabs.tsx). 결제 링크는 돈을 받는 도구라 여기 둔다.
+    label: '재무',
+    items: [
+      { href: '/admin/finance', label: '매출·수익' },
+      { href: '/admin/finance/expenses', label: '지출' },
+      { href: '/admin/finance/export', label: '장부 내보내기' },
+      { href: '/admin/payment-links', label: '결제 링크' },
+    ],
+  },
+  {
     label: '공통',
     items: [
-      { href: '/admin/revenue', label: '매출' },
-      { href: '/admin/expenses', label: '지출' },
-      { href: '/admin/payment-links', label: '결제 링크' },
       { href: '/admin/privacy-logs', label: '접속기록' },
+      { href: '/admin/contracts/history', label: '계약 변경 이력' },
     ],
   },
 ];

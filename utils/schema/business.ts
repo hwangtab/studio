@@ -1,5 +1,5 @@
 import { type Locale } from '../../lib/i18n';
-import { getSiteConfig, socialProfiles } from '../../data/siteConfig';
+import { getSiteConfig, listingProfiles, socialProfiles } from '../../data/siteConfig';
 import {
   COVER_VIDEO_PACKAGE_PRICE,
   FUNDING_DESIGN_PRICE,
@@ -71,6 +71,7 @@ export const generateDefaultSchema = (
     config.contact.naverPlaceUrl,
     config.contact.googleBusinessUrl,
     ...socialLinks,
+    ...Object.values(listingProfiles),
   ].filter(url => typeof url === 'string' && url.trim() !== '');
 
   const organizationId = `${siteUrl}/#organization`;
@@ -152,7 +153,8 @@ export const generateDefaultSchema = (
             telephone: `+82-${config.contact.phone.replace(/^0/, '')}`,
             email: config.contact.email,
             url: localeContactUrl,
-            // 응대 가능한 언어만 — 사이트 번역 언어(7개)와 다르다. 영어는 예약 응대·원격 믹싱까지(docs/wiki/entities/services.md 서비스 범위 가드).
+            // 상담·예약 응대는 한국어·영어뿐이다(영어 전담 엔지니어 없음, docs/wiki/entities/services.md).
+            // 사이트 번역 로케일 7개를 응대 언어로 적으면 없는 서비스를 약속하게 된다(2026-10-09 리뷰 SEO-3).
             availableLanguage: ['ko-KR', 'en-US'],
           },
         ],
@@ -175,7 +177,6 @@ export const generateDefaultSchema = (
         founder: { '@id': personId },
         description: config.description,
         slogan: 'Realizing artists\' musical vision through sound',
-        // 조직이 쓰는 언어(응대 기준). 번역 페이지가 있다고 그 언어로 상담·작업하는 것은 아니다.
         knowsLanguage: ['ko-KR', 'en-US'],
         knowsAbout: [
           'Music Recording', 'Audio Mixing', 'Audio Mastering', 'Music Production',

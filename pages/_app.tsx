@@ -5,6 +5,7 @@ import { pretendard, displayFont } from '../lib/fonts';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import Layout from '../components/Layout';
+import { LocaleFallbackPathsContext, type LocaleFallbackPaths } from '../lib/localeFallbackPaths';
 import ErrorBoundary from '../components/ErrorBoundary';
 
 // 3rd-party 측정 스크립트(GTM·Vercel Analytics·SpeedInsights)를 사용자 interaction
@@ -35,6 +36,9 @@ const localeLoadingMessage: Record<Locale, string> = {
   th: 'กําลังโหลดเนื้อหา...',
   uz: 'Kontent yuklanmoqda...',
 };
+
+// 매 렌더 새 객체를 만들지 않게(컨텍스트 소비자가 다시 그려지지 않게) 빈 값을 하나로 둔다.
+const NO_LOCALE_FALLBACKS: LocaleFallbackPaths = {};
 
 function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   const router = useRouter();
@@ -374,6 +378,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
             <MotionConfig reducedMotion={reducedMotion}>
               {/* 글로벌 미니 플레이어(라이너 노트 §3-6) — Layout 바깥이라 라우트가 바뀌어도 소리가 이어진다. */}
               <GlobalPlayerProvider>
+              <LocaleFallbackPathsContext.Provider value={(pageProps?.localeFallbackPaths as LocaleFallbackPaths | undefined) ?? NO_LOCALE_FALLBACKS}>
               <Layout hasHero={hasHero} locale={locale}>
                 {/* 페이지 전환 애니메이션은 없다. 예전엔 AnimatePresence(mode="wait")로 감쌌는데 exit·enter
                     애니메이션이 이미 꺼져 있었고(흰 배경 번쩍임 때문), 남은 효과는 옛 페이지를 한 커밋 더
@@ -395,6 +400,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
                     내보낸다(lib/analytics/privatePaths). */}
                 {!isPrivateAnalyticsPath(router.asPath) && <DeferredAnalytics />}
               </Layout>
+              </LocaleFallbackPathsContext.Provider>
               </GlobalPlayerProvider>
             </MotionConfig>
           </LazyMotion>

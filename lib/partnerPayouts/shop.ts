@@ -13,7 +13,7 @@ import { kstDateString } from '../booking/kst';
 import { kstMonthRange } from '../shop/artistPayout';
 import { listShopArtistSales, type AdminShopArtistSalesRow } from '../shop/adminQueries';
 import { loadShopArtistTermsStatuses } from '../shop/artistTermsAgreement';
-import { isMissingTableError } from '../dbErrors';
+import { isMissingTableError, isUniqueConstraintError } from '../dbErrors';
 import { listAllUnappliedAdjustments } from './adjustments';
 import { computeShopPayoutCalc } from './shopCalc';
 import { listPartnerPayouts } from './store';
@@ -292,7 +292,7 @@ export const recordShopPayout = async (
     await db.batch(statements as [typeof statements[number], ...typeof statements]);
   } catch (error) {
     // 유니크 위반 = 동시에 두 번 눌렀다(배치는 통째로 되돌아간다). 다른 오류면 그대로 올린다.
-    if (String(error).includes('UNIQUE')) return { ok: false, code: 'already_recorded' };
+    if (isUniqueConstraintError(error)) return { ok: false, code: 'already_recorded' };
     throw error;
   }
   const [saved] = await listPartnerPayouts('shop', period).then((rows) => rows.filter((p) => p.id === id));

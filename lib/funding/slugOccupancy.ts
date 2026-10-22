@@ -2,6 +2,7 @@ import { and, eq, ne, notInArray } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { fundingProjects } from '../../db/schema';
+import { isUniqueConstraintError } from '../dbErrors';
 
 /**
  * slug를 **놓아주는** 심사 상태 — 반려뿐이다.
@@ -66,18 +67,10 @@ export const hasApprovedFundingSlug = async (slug: string, exceptProjectId: stri
  * **`cause`까지 따라간다.** 드라이버가 메시지를 싣는 자리가 경로마다 다르다 — `db.batch`는
  * `LibsqlBatchError.message`에 sqlite 원문을 그대로 담지만, 단일 문장 쿼리는 drizzle이
  * "Failed query: …"로 감싸고 sqlite 원문을 `cause`에 넣는다. `message`만 보면 후자를 놓쳐
- * 운영자가 원문 SQL이 박힌 500을 받는다.
+ * 운영자가 원문 SQL이 박힌 500을 받는다. 판정 본체는 공용 `isUniqueConstraintError`(lib/dbErrors.ts) 하나다.
  */
-export const isUniqueConflictError = (error: unknown, qualifiedColumn: string): boolean => {
-  const pattern = new RegExp(
-    `UNIQUE constraint failed: ${qualifiedColumn.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`,
-    'i',
-  );
-  for (let e: unknown = error, depth = 0; e instanceof Error && depth < 5; e = e.cause, depth += 1) {
-    if (pattern.test(e.message)) return true;
-  }
-  return false;
-};
+export const isUniqueConflictError = (error: unknown, qualifiedColumn: string): boolean =>
+  isUniqueConstraintError(error, qualifiedColumn);
 
 /**
  * 부분 유니크 인덱스(`funding_projects_slug_live_unique`)가 막아 낸 경합인가.

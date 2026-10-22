@@ -106,7 +106,10 @@ export const buildBookingHub = (): BookingHubGroup[] => {
       description: '촬영·녹음·기본 믹싱을 한 세션에. 4K 영상과 음원을 함께 드려요. 보컬 튠은 별도예요.',
       priceNote: '부가세 포함',
       href: '/ko/booking/cover-video',
-      entries: [sessionEntry('cover-video', '촬영 + 보컬 녹음 + 기본 믹싱 + 4K 편집', '커버 영상 올인원')],
+      entries: [
+        sessionEntry('cover-video', '촬영 + 보컬 녹음 + 기본 믹싱 + 4K 편집', '커버 영상 올인원'),
+        sessionEntry('cover-video-tuning', '올인원 + 정교한 보컬 튠·박자 보정(1곡)', '커버 영상 올인원 + 보컬 튠'),
+      ],
     },
     {
       id: 'practice-room',

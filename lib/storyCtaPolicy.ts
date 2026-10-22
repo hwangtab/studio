@@ -33,8 +33,12 @@ const RELEASE_SLUG_PATTERN =
 const getCategoryFallbackCTA = (categoryKey: string | undefined): StoryCTAOverride => {
   switch (categoryKey) {
     case 'instrument':
-    case 'region':
       return 'practice';
+    // 지역 글 377편은 제목이 "○○ 녹음실 / 서울 녹음실 방문 가이드"다 — 녹음실을 찾는 독자를
+    // 연습실(/practice-room)로 보내고 있었다(2026-10-22 SEO 점검). 연습실 지역 글은 슬러그가
+    // practice-room-* 라 아래 resolve의 슬러그 규칙이 먼저 연습실로 보낸다.
+    case 'region':
+      return 'recording';
     // 음악 제작(작곡·DAW) 카테고리 — 2026-09-25에 practice → lesson(위 COMPOSITION 주석과 같은 결정).
     case 'production':
     case 'lesson':

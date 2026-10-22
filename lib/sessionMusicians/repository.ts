@@ -13,18 +13,6 @@ import type { SessionInstrumentEntry, SessionRegistrationInput, SessionSampleLin
 
 export const isSessionMusicianTableMissing = (error: unknown): boolean => isMissingTableError(error, 'session_musicians');
 
-/** UNIQUE 위반(이메일 해시·토큰 해시). drizzle이 감싸면 원문이 cause에 있다. */
-export const isUniqueViolation = (error: unknown): boolean => {
-  const seen = new Set<unknown>();
-  let cur: unknown = error;
-  while (cur && !seen.has(cur)) {
-    seen.add(cur);
-    const msg = cur instanceof Error ? cur.message : '';
-    if (/UNIQUE constraint failed/i.test(msg)) return true;
-    cur = (cur as { cause?: unknown }).cause;
-  }
-  return false;
-};
 
 const parseJson = <T>(raw: string | null, fallback: T): T => {
   if (!raw) return fallback;
@@ -115,9 +103,11 @@ export const insertSessionMusician = async (row: NewSessionMusicianRow): Promise
   return created.id;
 };
 
-export const findIdByEmailHash = async (emailHash: string): Promise<{ id: string; stageName: string } | null> => {
+export const findIdByEmailHash = async (
+  emailHash: string,
+): Promise<{ id: string; stageName: string; manageTokenHash: string } | null> => {
   const [row] = await getDb()
-    .select({ id: sessionMusicians.id, stageName: sessionMusicians.stageName })
+    .select({ id: sessionMusicians.id, stageName: sessionMusicians.stageName, manageTokenHash: sessionMusicians.manageTokenHash })
     .from(sessionMusicians)
     .where(eq(sessionMusicians.emailHash, emailHash))
     .limit(1);
@@ -127,6 +117,14 @@ export const findIdByEmailHash = async (emailHash: string): Promise<{ id: string
 /** 관리 링크를 다시 보낼 때 새 토큰으로 바꾼다 — 원문을 저장하지 않으니 옛 링크를 다시 만들 수 없다. */
 export const replaceManageTokenHash = async (id: string, manageTokenHash: string): Promise<void> => {
   await getDb().update(sessionMusicians).set({ manageTokenHash }).where(eq(sessionMusicians.id, id));
+};
+
+/** 새 토큰으로 바꾼 직후 메일이 실패했을 때 옛 토큰으로 되돌린다 — 그 사이 다른 요청이 또 바꿨으면(현재 값이 `from`이 아니면) 건드리지 않는다. */
+export const restoreManageTokenHash = async (id: string, from: string, to: string): Promise<void> => {
+  await getDb()
+    .update(sessionMusicians)
+    .set({ manageTokenHash: to })
+    .where(and(eq(sessionMusicians.id, id), eq(sessionMusicians.manageTokenHash, from)));
 };
 
 export const findByManageTokenHash = async (tokenHash: string): Promise<SessionMusician | null> => {

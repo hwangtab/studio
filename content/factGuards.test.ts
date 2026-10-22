@@ -69,6 +69,29 @@ describe('canonical fact guards', () => {
     expect(codeFiles.length).toBeGreaterThan(50);
     expectNoViolations(codeFiles, 'code', 'code surfaces');
   });
+
+  /**
+   * 사이트맵 설정(next-sitemap.config.js의 이미지 title·caption)과 lib/sitemap/도 공개 산출물이다 — 예전엔 스캔 밖이라
+   * "vocal … lessons"(보컬 레슨 미운영)·"10-Year"(정본 15년)가 CI를 통과해 sitemap.xml에 실렸다(2026-10-22 리뷰).
+   * 기존 룰은 "vocal, mixing, and music production lessons"처럼 나열 속에 끼운 표현을 못 잡아서 문구 검사를 따로 둔다.
+   */
+  it('keeps sitemap config free of forbidden fact claims', () => {
+    const files = [
+      path.join(ROOT, 'next-sitemap.config.js'),
+      ...listFilesRecursive(path.join(ROOT, 'lib/sitemap'), ['.js', '.ts']),
+    ].filter((f) => !/\.test\.[jt]sx?$/.test(f));
+    expectNoViolations(files, 'code', 'sitemap config');
+
+    const config = fs.readFileSync(path.join(ROOT, 'next-sitemap.config.js'), 'utf8');
+    // 경로(슬러그)는 빼고 사람이 읽는 title·caption 문구만 본다 — '/guides/vocal-beginners-guide' 같은 주소가 걸리지 않게.
+    const texts = [...config.matchAll(/\b(?:title|caption):\s*'([^']*)'/g)].map((m) => m[1]);
+    expect(texts.length).toBeGreaterThan(10);
+    const offending = texts.filter((t) =>
+      (/lessons?/i.test(t) && /\b(?:vocal|singing|instrument|guitar|piano|drum)s?\b(?!\s+(?:recording|tuning|mix))/i.test(t))
+      || /\b(?!15\b)\d{1,2}[-\s]years?\b/i.test(t),
+    );
+    expect(offending).toEqual([]);
+  });
 });
 
 describe('fact token integrity', () => {

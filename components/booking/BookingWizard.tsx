@@ -99,11 +99,14 @@ const formatOrderName = (nameKo: string, date: string, startHour: number): strin
   return `${nameKo} (${Number(monthStr)}/${Number(dayStr)} ${hh}:00)`;
 };
 
+// 단계 제목 id — 단계가 바뀌면 이 제목으로 포커스가 간다(useScrollTopOnStep).
+const BOOKING_STEP_HEADING_ID = (n: number) => `booking-step${n}-heading`;
+
 export default function BookingWizard({ service, products, initialProductId }: BookingWizardProps) {
   const firstProduct = products.find((p) => p.id === initialProductId) ?? products[0];
 
   const [step, setStep] = useState<Step>(1);
-  useScrollTopOnStep(step);
+  useScrollTopOnStep(step, BOOKING_STEP_HEADING_ID);
 
   // Step 1: 상품 · 시간
   const [selectedProductId, setSelectedProductId] = useState(firstProduct.id);
@@ -475,7 +478,7 @@ export default function BookingWizard({ service, products, initialProductId }: B
 
       {step === 1 && (
         <section aria-labelledby="booking-step1-heading">
-          <h2 id="booking-step1-heading" className="typo-card-subtitle text-gray-900 dark:text-white mb-3">
+          <h2 id="booking-step1-heading" tabIndex={-1} className="focus:outline-none typo-card-subtitle text-gray-900 dark:text-white mb-3">
             1. 상품과 시간 선택
           </h2>
 
@@ -526,7 +529,7 @@ export default function BookingWizard({ service, products, initialProductId }: B
 
       {step === 2 && (
         <section aria-labelledby="booking-step2-heading">
-          <h2 id="booking-step2-heading" className="typo-card-subtitle text-gray-900 dark:text-white mb-3">
+          <h2 id="booking-step2-heading" tabIndex={-1} className="focus:outline-none typo-card-subtitle text-gray-900 dark:text-white mb-3">
             2. 날짜와 시간 선택
           </h2>
 
@@ -614,7 +617,7 @@ export default function BookingWizard({ service, products, initialProductId }: B
 
       {step === 3 && (
         <section aria-labelledby="booking-step3-heading">
-          <h2 id="booking-step3-heading" className="typo-card-subtitle text-gray-900 dark:text-white mb-3">
+          <h2 id="booking-step3-heading" tabIndex={-1} className="focus:outline-none typo-card-subtitle text-gray-900 dark:text-white mb-3">
             3. 예약자 정보
           </h2>
 

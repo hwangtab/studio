@@ -1,4 +1,4 @@
-import { lt, lte, sql } from 'drizzle-orm';
+import { and, eq, gt, lt, lte, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { rateLimits, webhookEvents } from '../../db/schema';
@@ -67,5 +67,21 @@ export const consumeRateLimit = async (
     console.error('[booking-rate-limit] Rate limit check unavailable, allowing:', error);
     // 셀 수 없다는 이유로 정당한 예약 시도를 막지 않는다(admin-rate-limit과 동일 판단).
     return true;
+  }
+};
+
+/**
+ * 방금 `consumeRateLimit`로 센 한 번을 되돌린다 — 그 요청이 우리 쪽 장애(DB·설정 오류)로 아무것도 하지 못했을 때.
+ * 안 되돌리면 장애 중에 다시 시도한 정당한 사용자가 한도에 막힌다(세션 연주자 등록은 막힌 사람에게 가짜 성공을 보여 준다).
+ * 0 아래로는 내리지 않는다. 실패해도 삼킨다 — 되돌리기는 부가 처리다.
+ */
+export const releaseRateLimit = async (key: string): Promise<void> => {
+  try {
+    await getDb()
+      .update(rateLimits)
+      .set({ count: sql`${rateLimits.count} - 1` })
+      .where(and(eq(rateLimits.key, key), gt(rateLimits.count, 0)));
+  } catch (error: unknown) {
+    console.error('[booking-rate-limit] 한도 되돌리기 실패(무시):', error instanceof Error ? error.name : 'unknown');
   }
 };

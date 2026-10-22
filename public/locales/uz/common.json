@@ -1219,7 +1219,7 @@
       "items": [
         {
           "q": "Yaxshi kuylaya olmasam ham bo'ladimi?",
-          "a": "Albatta. Muhandis siz bilan birga qo'shiqni satrma-satr ishlab chiqadi, so'ng ohang va ritm tuzatish bilan tabiiy sayqallaydi."
+          "a": "Albatta. Muhandis siz bilan birga qo'shiqni satrma-satr ishlab chiqadi, so'ng ohang va ritmni to'g'rilash bilan tabiiy sayqallaydi."
         },
         {
           "q": "Narxi qancha?",
@@ -2459,7 +2459,7 @@
   "coverVideo": {
     "seo": {
       "title": "Cover video suratga olish · 4K video + audio to'liq paket ₩350K | Studio NOL",
-      "description": "Yeonsinnae stantsiyasi 4-chiqishdan 5 daqiqa yurish. Cover video suratga olish + oddiy miks bir seansda. 4K MP4 + WAV/MP3. To'liq paket ₩350,000 (QQS bilan).",
+      "description": "Yeonsinnae stantsiyasi 4-chiqishdan 5 daqiqa yurish. Cover video suratga olish + asosiy miks bir seansda. 4K MP4 + WAV/MP3. To'liq paket ₩350,000 (QQS bilan).",
       "keywords": "cover video suratga olish, cover qo'shiq, youtube cover video, musiqa studiyasi Seul, Yeonsinnae"
     },
     "hero": {
@@ -2474,7 +2474,7 @@
       "items": [
         {
           "q": "Suratga olish va yozishni bir vaqtda qilish mumkinmi?",
-          "a": "Ha. Studiya yozuvi va video suratga olish bir seansda bir vaqtda amalga oshiriladi. Suratga olish, oddiy miks (balansni sozlash) va montaj kiritilgan."
+          "a": "Ha. Studiya yozuvi va video suratga olish bir seansda bir vaqtda amalga oshiriladi. Suratga olish, asosiy miks (balansni sozlash) va montaj kiritilgan."
         },
         {
           "q": "Narxi qancha?",
@@ -2514,7 +2514,7 @@
         "Neumann U87AI yuqori darajadagi mikrofon — aniq va boy vokal yozuvi",
         "4K kamera (1 ta) + doimiy yoritish to'plami",
         "To'liq tovush o'tkazmaydigan kabina — mukammal audio sifati",
-        "Maxsus muhandis suratga olish, yozuv & oddiy miksni boshidan oxirigacha amalga oshiradi"
+        "Maxsus muhandis suratga olish, yozuv & asosiy miksni boshidan oxirigacha amalga oshiradi"
       ]
     },
     "package": {
@@ -2534,7 +2534,7 @@
         },
         {
           "title": "Miks & Montaj",
-          "description": "Oddiy miks (balansni sozlash) va video montaj birgalikda yakunlanadi. Vokal tuning kiritilmagan."
+          "description": "Asosiy miks (balansni sozlash) va video montaj birgalikda yakunlanadi. Vokal tuning kiritilmagan."
         },
         {
           "title": "Yakuniy Topshirish",
@@ -2564,11 +2564,11 @@
         },
         {
           "q": "Videosiz faqat cover qo'shiqni yozish mumkinmi?",
-          "a": "Ha, oddiy yozuv xizmati sifatida (vokal yozuvi, 3 soat, ₩250,000, qo'shiqlar soni cheklanmagan). To'liq paketdagi miks faqat balansni sozlaydigan oddiy miks bo'lib, vokal tuningni o'z ichiga olmaydi. Tuning yoki to'liq miks va mastering alohida buyurtma qilinadi."
+          "a": "Ha, oddiy yozuv xizmati sifatida (vokal yozuvi, 3 soat, ₩250,000, qo'shiqlar soni cheklanmagan). To'liq paketdagi miks faqat balansni sozlaydigan asosiy miks bo'lib, vokal tuningni o'z ichiga olmaydi. Tuning yoki to'liq miks va mastering alohida buyurtma qilinadi."
         },
         {
           "q": "Vokal tuning qo'shish mumkinmi?",
-          "a": "Ha, ixtiyoriy xizmat sifatida. Batafsil vokal tuning va ritm tuzatish — har bir qo'shiq uchun +₩150,000. To'liq paketga kiritilmagan, murojaat qilganda ayting."
+          "a": "Ha, ixtiyoriy xizmat sifatida. Batafsil vokal tuning va ritmni to'g'rilash — har bir qo'shiq uchun +₩150,000. To'liq paketga kiritilmagan, murojaat qilganda ayting."
         },
         {
           "q": "3 soat yetarli bo'lmasa nima bo'ladi?",
@@ -2583,7 +2583,7 @@
     "cta": {
       "titleLine1": "Sizning cover videongiz,",
       "titleHighlight": "hoziroq yarating",
-      "subtitleLine1": "Suratga olish · Yozuv · Oddiy miks · Montaj To'liq Paket",
+      "subtitleLine1": "Suratga olish · Yozuv · Asosiy miks · Montaj To'liq Paket",
       "subtitleLine2": "KakaoTalk orqali osonlik bilan band qiling.",
       "location": "Yo'nalish",
       "inquiry": "Cover Video Seansini Band Qilish",
@@ -2605,14 +2605,14 @@
   },
   "musicVideo": {
     "seo": {
-      "title": "Klip va jonli video suratga olish {{from}} dan | Studio NOL",
-      "description": "Haebang Film rejissyori Chichi suratga oladigan kliplar, jonli kliplar va YouTube suhbat/intervyu videolari. {{from}} dan; kameralar, vaqt va joy maslahatda kelishiladi. Yozish va miks Seuldagi bir joyda.",
+      "title": "Kliplar {{mv}} dan · jonli videolar {{live}} dan | Studio NOL",
+      "description": "Kliplar ({{mv}} dan) hamda jonli kliplar va YouTube suhbat/intervyulari ({{live}} dan) — g'oyani Studio NOL va Haebang Film rejissyori Park Chichi birga ishlab chiqadi, suratga olish va montajni Park Chichi bajaradi. Kameralar, vaqt va joy maslahatda kelishiladi.",
       "keywords": "klip ishlab chiqarish Seul, jonli video, konsert videosi, YouTube video, Haebang Film"
     },
     "hero": {
       "title": "Kliplar va jonli videolar",
-      "subtitleLine1": "Haebang Film rejissyori Chichi — g'oyadan yakuniy montajgacha",
-      "subtitleLine2": "Kliplar, jonli kliplar va YouTube kontenti {{from}} dan",
+      "subtitleLine1": "G'oya Studio NOL bilan birga, suratga olish va montaj — Park Chichi (Haebang Film)",
+      "subtitleLine2": "Kliplar {{mv}} dan · jonli va YouTube videolari {{live}} dan",
       "alt": "Mariko & Yukie “Namsan Tower Lights” klipidagi sahna ko'rinishi",
       "seeWorks": "Ishlarni ko'rish"
     },
@@ -2622,11 +2622,11 @@
       "items": [
         {
           "q": "Narxi qancha?",
-          "a": "Kliplar va jonli kliplar / YouTube videolari {{from}} dan (QQS bilan). Narx kameralar, vaqt va joyga bog'liq; narxni oldindan aytamiz."
+          "a": "Kliplar {{mv}} dan, jonli kliplar va YouTube videolari {{live}} dan (QQS bilan). Narx kameralar, vaqt va joyga bog'liq; narxni oldindan aytamiz."
         },
         {
-          "q": "Kim suratga oladi?",
-          "a": "Haebang Film rejissyori Chichi g'oya, suratga olish, montaj va rang tuzatishni bajaradi. Quyidagi barcha videolarni Chichi suratga olgan."
+          "q": "Kim tayyorlaydi?",
+          "a": "G'oyani Studio NOL va Haebang Film rejissyori Park Chichi birga ishlab chiqadi; suratga olish, montaj va rang tuzatishni Park Chichi bajaradi. U Bap va Nineteen, Seomjin River filmlarida operator bo'lgan va KBS Open Channel efirida ko'rsatilgan A Concert for One Person musiqiy hujjatli filmini suratga olgan."
         },
         {
           "q": "Qanday boshlayman?",
@@ -2636,7 +2636,7 @@
     },
     "portfolio": {
       "title": "Ishlar",
-      "subtitle": "Haebang Film rejissyori Chichi suratga olgan kliplar, jonli kliplar va YouTube kontenti. Ko'rish uchun bosing.",
+      "subtitle": "Haebang Film rejissyori Park Chichi suratga olgan va montaj qilgan kliplar, jonli kliplar va YouTube kontenti. Ko'rish uchun bosing.",
       "kinds": {
         "all": "Barchasi",
         "music-video": "Kliplar",
@@ -2663,19 +2663,22 @@
       ]
     },
     "director": {
-      "title": "Haebang Film rejissyori Chichi suratga oladi",
-      "body": "Haebang Film rejissyori Chichi suratga olishni boshqaradi: lokatsiyadagi kliplar, konsertlar va ko'p qismli YouTube suhbat seriyalari — yuqoridagi videolar natijasi.",
+      "title": "Rejissyor Park Chichi, Haebang Film",
+      "body": "Park Chichi (asl ismi Park Geon-ju) filmlar, hujjatli filmlar, veb-dramalar, YouTube kontenti va kliplarni rejadan suratga olish, montaj va rang tuzatishgacha o'zi yaratib kelgan. 2019 yildan mustaqil hujjatli film kompaniyasi Haebang Filmni boshqarib, A Concert for One Person (KBS Open Channel) musiqiy hujjatli filmini suratga olgan, Bap, Grandma, Me and the Dandelion va Nineteen, Seomjin River filmlarida operator/prodyuser bo'lgan. U yillar davomida konsert va festivallarni suratga olib keladi va o'zi ham musiqachi.",
       "points": [
-        "G'oya va storyboarddan montaj va rang tuzatishgacha bitta rejissyor",
-        "Qo'shiq va byudjetga mos kameralar — bittadan multikameragacha",
-        "Ovoz Studio NOL da — yozish, miks va mastering bir joyda",
-        "Joylanadigan platformaga (YouTube, Instagram va b.) mos kadr nisbati"
+        "G'oya Studio NOL bilan; suratga olish, montaj va rang boshidan oxirigacha Park Chichi",
+        "Film va hujjatli — Bap, Grandma, Me and the Dandelion (2025); Nineteen, Seomjin River, Blue Wind (2024)",
+        "Musiqiy filmlar — A Concert for One Person (KBS), “Namsan Tower Lights” klipi, Gangjeong Peace & Music Camp (51 guruh)",
+        "Festival video rahbari — Resistance Arts Festival (200+ guruh), Ssiat Fest (100+ san'atkor)"
       ],
-      "imageAlt": "“Namsan Tower Lights” klipidan bir sahna"
+      "imageAlt": "“Namsan Tower Lights” klipidan bir sahna",
+      "worksTitle": "Tanlangan ishlar",
+      "careerTitle": "Tajriba va festival videolari",
+      "photoAlt": "Videokamera bilan suratga olayotgan rejissyor Park Chichi"
     },
     "pricing": {
       "title": "Video ishlab chiqarish narxi",
-      "subtitle": "Ikkalasi ham {{from}} dan. Aniq narxni suratga olish rejasi kelishilgach aytamiz.",
+      "subtitle": "Kliplar {{mv}} dan, jonli kliplar va YouTube videolari {{live}} dan. Aniq narxni suratga olish rejasi kelishilgach aytamiz.",
       "factorsTitle": "Narxni nima belgilaydi",
       "factors": [
         {
@@ -2705,7 +2708,7 @@
         "Namuna videolar havolalari",
         "Kerakli sana, joy va video joylanadigan platforma"
       ],
-      "coverNote": "Studiyada faqat bitta qo'shiq kover videosi kerakmi? Cover Video paketi ({{cover}}) suratga olish, oddiy miks va montajni o'z ichiga oladi."
+      "coverNote": "Studiyada faqat bitta qo'shiq kover videosi kerakmi? Cover Video paketi ({{cover}}) suratga olish, asosiy miks va montajni o'z ichiga oladi."
     },
     "tierBar": {
       "message": "Qo'shiq va kayfiyatni ayting. Reja va narx bilan javob beramiz.",
@@ -2722,7 +2725,7 @@
         },
         {
           "title": "Reja va narx",
-          "description": "Rejissyor Chichi bilan g'oya, storyboard, joy va kameralarni kelishib, narxni tasdiqlaymiz."
+          "description": "Studio NOL va rejissyor Park Chichi bilan g'oya, storyboard, joy va kameralarni kelishib, narxni tasdiqlaymiz."
         },
         {
           "title": "Suratga olish",
@@ -2739,8 +2742,12 @@
       "subtitle": "Tez-tez beriladigan savollar.",
       "items": [
         {
-          "q": "{{from}} ga nimalar kiradi?",
+          "q": "Boshlang'ich narxga nimalar kiradi?",
           "a": "G'oya maslahati, suratga olish, montaj, rang tuzatish va subtitrlar. Kameralar va vaqt qo'shiq va byudjetga mos belgilanadi; ko'lam kattalashsa narx oshadi."
+        },
+        {
+          "q": "Rejissyor Park Chichi kim?",
+          "a": "Filmlar, hujjatli filmlar, veb-dramalar, YouTube va kliplarni rejadan suratga olish, montaj va rang tuzatishgacha yaratgan rejissyor (asl ismi Park Geon-ju). Bap, Grandma, Me and the Dandelion, Nineteen, Seomjin River filmlarida operator/prodyuser, A Concert for One Person (KBS Open Channel) rejissyori bo'lgan va Haebang Filmni boshqargan. G'oya Studio NOL bilan ishlab chiqiladi; suratga olish, montaj va rang uniki."
         },
         {
           "q": "Joy ijarasi va aktyor haqi kiradimi?",
@@ -2951,7 +2958,7 @@
               "detail": "Paketga aranjirovka kirmaydi → kichik tarkib ₩500K · to'liq guruh ₩1M · katta tarkib ₩1,2M (kompozitsiya va aranjirovka narxlari bo'yicha, har qo'shiq)"
             },
             {
-              "label": "Vokal tuning va ritm tuzatish",
+              "label": "Vokal tuning va ritmni to'g'rilash",
               "detail": "Paketga kirmaydi → batafsil tuning kerak bo'lsa, har bir qo'shiq uchun +₩150K (ixtiyoriy)"
             },
             {
@@ -2974,7 +2981,7 @@
             },
             {
               "question": "Reliz rejasi bo'lmasa ham bu paketdan foydalansa bo'ladimi?",
-              "answer": "Ha. Uni yozuv, miks va masteringni bir yo'la topshirish uchun ishlatishingiz mumkin. Tarqatish va PRdan foydalanmasangiz ham narx ₩500K bo'lib qoladi va vokal yozuv, miks hamda masteringni alohida buyurtma qilgandagi ₩550K yig'indisidan past. Batafsil vokal tuning va ritm tuzatish — har bir qo'shiq uchun +₩150K (ixtiyoriy); sessiya musiqachilari haqi va aranjirovka kirmaydi."
+              "answer": "Ha. Uni yozuv, miks va masteringni bir yo'la topshirish uchun ishlatishingiz mumkin. Tarqatish va PRdan foydalanmasangiz ham narx ₩500K bo'lib qoladi va vokal yozuv, miks hamda masteringni alohida buyurtma qilgandagi ₩550K yig'indisidan past. Batafsil vokal tuning va ritmni to'g'rilash — har bir qo'shiq uchun +₩150K (ixtiyoriy); sessiya musiqachilari haqi va aranjirovka kirmaydi."
             },
             {
               "question": "So'ramasdan qo'shiqni o'zgartirmaysizlarmi?",

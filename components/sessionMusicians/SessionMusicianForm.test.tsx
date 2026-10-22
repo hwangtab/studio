@@ -77,6 +77,7 @@ describe('SessionMusicianForm — 본인 관리', () => {
 describe('parseOtherInstruments', () => {
   it('쉼표·줄바꿈으로 나누고 한도보다 하나 더 남겨 서버가 거절하게 한다', () => {
     expect(parseOtherInstruments('우쿨렐레, 가야금\n 해금 ,, ')).toEqual(['우쿨렐레', '가야금', '해금']);
+    expect(parseOtherInstruments('우쿨렐레·가야금')).toEqual(['우쿨렐레', '가야금']);
     expect(parseOtherInstruments('a,b,c,d,e,f,g')).toHaveLength(6);
   });
 });

@@ -113,7 +113,7 @@ export const mapChangedFilesToUrls = (entries) => {
       if (NOINDEX_STATIC_ROUTES.has(file)) continue; // 사이트맵에서도 뺀 noindex 라우트 — 제출 안 함
       const routeSuffix = file === 'index' ? '' : `/${file}`;
       urls.add(`${SITE}/ko${routeSuffix}`);
-      if (EN_INDEXABLE_PATHS.has(`/${file}`)) {
+      if (EN_INDEXABLE_PATHS.has(routeSuffix || '/')) {
         urls.add(`${SITE}/en${routeSuffix}`);
       }
     }

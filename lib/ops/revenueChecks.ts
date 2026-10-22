@@ -44,7 +44,7 @@ export const collectRevenueIssues = async (now: Date): Promise<HealthIssue[]> =>
         severity: 'medium',
         title: `직접 받은 매출 중복 의심 ${suspects.length}건`,
         detail: `${sample(suspects.map((s) => `${s.receivedOn} ${s.totalAmount.toLocaleString('ko-KR')}원 ${manualRef(s.manualId)} — ${describeDuplicateMatches(s)}`))}\n같은 입금을 사이트(주문·계약 입금·월 입주)와 직접 받은 매출에 두 번 적으면 매출이 두 배가 됩니다. 중복이면 매출 현황에서 직접 기록을 지우고, 다른 거래가 맞으면 “중복 아님”을 눌러 주세요(메모에 ${DUPLICATE_ACK_MARKER}가 남아 더 묻지 않습니다).`,
-        href: '/admin/revenue',
+        href: '/admin/finance',
       });
     }
   } catch (error) {
@@ -64,7 +64,7 @@ export const collectRevenueIssues = async (now: Date): Promise<HealthIssue[]> =>
         severity: 'medium',
         title: `결제 링크 기록 없는 예약금 주문 ${unlinked.length}건`,
         detail: `${sample(unlinked.map((u) => `${u.order_no} ${Number(u.total_amount).toLocaleString('ko-KR')}원`))}\n어느 결제 링크로 받은 돈인지 기록(payment_link_orders)이 없어 매출 현황에서 분야를 모르고 녹음·제작으로 셉니다. 연습실·플랫폼 매출이었다면 분야별 숫자가 틀립니다 — 옛 파일 링크 결제인지 확인해 주세요(14일이 지나면 이 알림은 저절로 사라집니다).`,
-        href: '/admin/revenue',
+        href: '/admin/finance',
       });
     }
   } catch (error) {
@@ -83,7 +83,7 @@ export const collectRevenueIssues = async (now: Date): Promise<HealthIssue[]> =>
         severity: 'medium',
         title: `연습실 월세 이중 집계 의심 ${both.length}건`,
         detail: `${sample(both.map((b) => `${b.room_number ?? '비상주'} (같은 계약)`))}\n같은 계약이 연습실 월 이용료 카드 구독(결제 행)과 월 입주 기록(입주해 있는 달마다 월 이용료) 양쪽에 있어 연습실 매출에 두 번 잡힐 수 있습니다. 한쪽이 끝났으면 구독을 해지하거나 입주를 퇴실 처리해 주세요.`,
-        href: '/admin/revenue?line=practice',
+        href: '/admin/finance?line=practice',
       });
     }
   } catch (error) {

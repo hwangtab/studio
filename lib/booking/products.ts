@@ -1,5 +1,6 @@
 import {
   COVER_VIDEO_PACKAGE_PRICE,
+  COVER_VIDEO_TUNING_PACKAGE_PRICE,
   DAY_LOCK_4H_HOURS,
   DAY_LOCK_4H_PRICE,
   DAY_LOCK_8H_HOURS,
@@ -92,6 +93,7 @@ export const SESSION_PRODUCTS: readonly SessionProduct[] = [
   { id: 'voice-acting-hourly', service: 'voice-acting', nameKo: '성우 녹음', kind: 'hourly', unitAmount: VOICEOVER_HOURLY_PRICE, minHours: 2, maxHours: 8 },
   { id: 'wedding-song', service: 'wedding-song', nameKo: '축가 녹음 패키지', kind: 'package', unitAmount: WEDDING_PACKAGE_PRICE, sessionHours: 2 },
   { id: 'cover-video', service: 'cover-video', nameKo: '커버 영상 패키지', kind: 'package', unitAmount: COVER_VIDEO_PACKAGE_PRICE, sessionHours: 3 },
+  { id: 'cover-video-tuning', service: 'cover-video', nameKo: '커버 영상 패키지 + 보컬 튠', kind: 'package', unitAmount: COVER_VIDEO_TUNING_PACKAGE_PRICE, sessionHours: 3 },
   /**
    * 음악연습실 시간제 — 24시간, 1시간부터, 무인 셀프 이용. 소비자가는 VAT 포함 6,600원이고
    * computeAmounts가 공급가 6,000 + VAT 600으로 나눈다. 방 자원이라

@@ -3,15 +3,16 @@ import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 
-import { AdminShell } from '../../components/admin/AdminShell';
-import { FilterPill } from '../../components/admin/FilterPill';
-import { ManualRevenuePanel, type ManualRevenueView } from '../../components/admin/ManualRevenuePanel';
-import { Disclosure } from '../../components/ui/Disclosure';
-import { Notice } from '../../components/ui/Notice';
-import { kstDateString } from '../../lib/booking/kst';
-import { loadManualRevenueRows, MANUAL_METHODS, MANUAL_TYPES } from '../../lib/ops/manualRevenue';
-import { formatKstDateTimeFull } from '../../lib/booking/format';
-import { authenticateAdminRequest } from '../../lib/contracts/admin-auth';
+import { AdminShell } from '../../../components/admin/AdminShell';
+import { FilterPill } from '../../../components/admin/FilterPill';
+import { FinanceTabs } from '../../../components/admin/FinanceTabs';
+import { ManualRevenuePanel, type ManualRevenueView } from '../../../components/admin/ManualRevenuePanel';
+import { Disclosure } from '../../../components/ui/Disclosure';
+import { Notice } from '../../../components/ui/Notice';
+import { kstDateString } from '../../../lib/booking/kst';
+import { loadManualRevenueRows, MANUAL_METHODS, MANUAL_TYPES } from '../../../lib/ops/manualRevenue';
+import { formatKstDateTimeFull } from '../../../lib/booking/format';
+import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import {
   loadRevenueRows,
   loadWindow,
@@ -22,20 +23,20 @@ import {
   ENTRY_LIMIT,
   type BreakdownLine,
   type RevenueSummary,
-} from '../../lib/ops/revenueReport';
-import { loadProductionRevenueRows } from '../../lib/ops/productionRevenue';
-import { loadTenancyRevenueRows } from '../../lib/ops/tenancyRevenue';
-import { loadLessonRevenueRows } from '../../lib/ops/lessonRevenue';
-import { loadExpenseOccurrences, type ExpenseOccurrence } from '../../lib/ops/expenses';
-import { BUSINESS_LINE_LABELS, lineOfRow, parseBusinessLine, type BusinessLine } from '../../lib/ops/businessLine';
-import { computeBusinessPnl, type BusinessPnl } from '../../lib/ops/businessLinePnl';
-import { describeDuplicateMatches, listManualRevenueDuplicates } from '../../lib/ops/manualRevenueDuplicates';
+} from '../../../lib/ops/revenueReport';
+import { loadProductionRevenueRows } from '../../../lib/ops/productionRevenue';
+import { loadTenancyRevenueRows } from '../../../lib/ops/tenancyRevenue';
+import { loadLessonRevenueRows } from '../../../lib/ops/lessonRevenue';
+import { loadExpenseOccurrences, type ExpenseOccurrence } from '../../../lib/ops/expenses';
+import { BUSINESS_LINE_LABELS, lineOfRow, parseBusinessLine, type BusinessLine } from '../../../lib/ops/businessLine';
+import { computeBusinessPnl, type BusinessPnl } from '../../../lib/ops/businessLinePnl';
+import { describeDuplicateMatches, listManualRevenueDuplicates } from '../../../lib/ops/manualRevenueDuplicates';
 
 /**
- * 매출 현황 — 월·연 단위 순매출, 전기 대비, 월별 추이, 유형·펀딩 프로젝트·결제수단별 구성.
+ * 재무 › 매출·수익(옛 `/admin/revenue`) — 월·연 단위 순매출, 전기 대비, 월별 추이, 유형·펀딩 프로젝트·결제수단별 구성.
  *
  * 모집단·환불 규칙은 lib/ops/revenueReport.ts 머리 주석. 이름·연락처는 읽지 않으므로 접속기록
- * 대상이 아니다. 세무용 원장은 기존 토스 결제 장부 CSV(대시보드)가 그대로 정본이다.
+ * 대상이 아니다. 세무용 원장은 토스 결제 장부 CSV(재무 › 장부 내보내기)가 그대로 정본이다.
  */
 
 interface RevenuePageProps {
@@ -183,7 +184,7 @@ const href = (year: number, month: number | 'all', type: string | null, line: Bu
   const params = new URLSearchParams({ year: String(year), month: String(month) });
   if (line) params.set('line', line);
   if (type) params.set('type', type);
-  return `/admin/revenue?${params.toString()}`;
+  return `/admin/finance?${params.toString()}`;
 };
 
 const csvHref = (summary: RevenueSummary) => {
@@ -353,7 +354,7 @@ const BusinessPnlSection = ({ pnl, summary }: { pnl: BusinessPnl; summary: Reven
     <section className="rounded-2xl bg-white p-4 shadow-sm md:p-8">
       <div className="mb-1 flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900">분야별 매출·수익 · {summary.periodLabel}</h2>
-        <Link href="/admin/expenses" className="text-sm font-medium text-primary hover:underline">지출 관리 →</Link>
+        <Link href="/admin/finance/expenses" className="text-sm font-medium text-primary hover:underline">지출 관리 →</Link>
       </div>
       <p className="mb-4 text-xs text-gray-500">수익 = 매출 − 지출. 분야 이름을 누르면 아래 유형별 표와 결제 내역이 그 분야만 보입니다.</p>
       <div className="-mx-4 overflow-x-auto px-4 md:mx-0 md:px-0">
@@ -449,7 +450,9 @@ export default function AdminRevenuePage({ summary, type, line = null, years, no
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <AdminShell title="매출 현황" description="결제 승인 기준 순매출(환불 제외)입니다. 세무 자료는 대시보드의 토스 결제 장부를 쓰세요." width="wide">
+      <AdminShell title="재무" description="결제 승인 기준 순매출(환불 제외)과 분야별 수익(매출 − 지출)입니다. 세무용 장부는 장부 내보내기 탭에서 받습니다." width="wide">
+        <div className="space-y-6">
+        <FinanceTabs active="/admin/finance" />
         {error && (
           <div role="alert" className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
             {error}
@@ -626,6 +629,7 @@ export default function AdminRevenuePage({ summary, type, line = null, years, no
             </Notice>
           </>
         )}
+        </div>
       </AdminShell>
     </>
   );

@@ -28,8 +28,30 @@ import {
  * 목록은 접속기록을 남기지 않는다 — 표에 안 나오는 개인정보를 싣지 않기 때문이다(`profile`에 `private`가 없다).
  */
 
+/**
+ * 목록 표에 나오는 칸만 props에 싣는다 — 운영자 메모(개인정보로 취급)·소개·희망 단가·샘플 링크는 상세 화면에서만 연다.
+ * 목록은 접속기록을 남기지 않으므로 표에 안 나오는 개인정보를 페이지 데이터에 실으면 안 된다(CLAUDE.md "관리자 매출 현황·수기 등록·메뉴").
+ */
+type ListRow = Pick<
+  SessionMusicianProfile,
+  'id' | 'stageName' | 'primaryInstrument' | 'instruments' | 'genres' | 'reading' | 'remoteRecording' | 'region' | 'status' | 'createdAt'
+>;
+
+const toListRow = (row: SessionMusicianProfile): ListRow => ({
+  id: row.id,
+  stageName: row.stageName,
+  primaryInstrument: row.primaryInstrument,
+  instruments: row.instruments,
+  genres: row.genres,
+  reading: row.reading,
+  remoteRecording: row.remoteRecording,
+  region: row.region,
+  status: row.status,
+  createdAt: row.createdAt,
+});
+
 interface Props {
-  rows: SessionMusicianProfile[];
+  rows: ListRow[];
   filters: { status: string; instrument: string; genre: string; remote: boolean };
   /** 마이그레이션 0077 전. 표가 없으면 목록 대신 안내를 띄운다. */
   migrationNeeded: boolean;
@@ -47,14 +69,14 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   const genre = one(context.query.genre);
   const filters: SessionMusicianFilters = {};
   // 쿼리는 목록에 있는 값만 받는다(LIKE 패턴에 임의 문자열이 들어가지 않게).
-  if (status in SESSION_STATUS_LABEL) filters.status = status as keyof typeof SESSION_STATUS_LABEL;
+  if (Object.hasOwn(SESSION_STATUS_LABEL, status)) filters.status = status as keyof typeof SESSION_STATUS_LABEL;
   if (SESSION_INSTRUMENTS.some((o) => o.id === instrument)) filters.instrument = instrument;
   if (SESSION_GENRES.some((o) => o.id === genre)) filters.genre = genre;
   if (one(context.query.remote) === '1') filters.remoteOnly = true;
 
   const shown = { status: filters.status ?? '', instrument: filters.instrument ?? '', genre: filters.genre ?? '', remote: Boolean(filters.remoteOnly) };
   try {
-    return { props: { rows: await listSessionMusicians(filters), filters: shown, migrationNeeded: false, error: null } };
+    return { props: { rows: (await listSessionMusicians(filters)).map(toListRow), filters: shown, migrationNeeded: false, error: null } };
   } catch (error: unknown) {
     if (isMissingTableError(error, 'session_musicians')) {
       return { props: { rows: [], filters: shown, migrationNeeded: true, error: null } };

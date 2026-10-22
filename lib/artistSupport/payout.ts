@@ -12,6 +12,7 @@ import { cycleYmOf } from '../billing/schedule';
 const NOT_FOUND_SETTLE_MS = 30 * 60 * 1000;
 import { fetchPaymentByOrderId, isTossPaymentInProgress } from '../billing/toss-billing';
 import { reconcileSubscriptionPaymentFromToss } from '../billing/service';
+import { isUniqueConstraintError } from '../dbErrors';
 
 /**
  * 아티스트 월 정산(스펙 §10).
@@ -196,7 +197,7 @@ export const recordArtistPayout = async (artistSlug: string, period: string, now
     return { ok: true, payout };
   } catch (error) {
     // 유니크 위반 = 동시에 두 번 눌렀다. 다른 오류면 그대로 올린다.
-    if (String(error).includes('UNIQUE')) return { ok: false, code: 'already_recorded' };
+    if (isUniqueConstraintError(error)) return { ok: false, code: 'already_recorded' };
     throw error;
   }
 };

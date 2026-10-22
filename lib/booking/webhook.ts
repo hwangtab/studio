@@ -16,6 +16,7 @@ import { refundLicensesOnFullCancel } from '../software/cancel';
 import { confirmSoftwareOrder } from '../software/confirm';
 import { findOrderByOrderNo } from './service';
 import { cancelPayment, confirmPayment, fetchPayment, type TossPayment } from './toss';
+import { isUniqueConstraintError } from '../dbErrors';
 
 /**
  * 취소 합계로 주문 상태를 정한다.
@@ -236,12 +237,6 @@ const isTransientConfirmFailure = (
 const isTransientShowConfirmFailure = (code: string): boolean =>
   code === 'recording_failed' || code === 'toss_unresolved';
 
-/** unique 위반(PK 충돌 = 이미 처리한 이벤트)인지, 그 외 DB 장애인지를 가른다. */
-const isUniqueViolation = (error: unknown): boolean => {
-  const message = error instanceof Error ? error.message : String(error);
-  const code = error && typeof error === 'object' && 'code' in error ? String((error as { code: unknown }).code) : '';
-  return /unique|sqlite_constraint/i.test(message) || /unique|sqlite_constraint/i.test(code);
-};
 
 export const processTossWebhook = async (payload: unknown): Promise<{ status: number }> => {
   const body = payload as { data?: { paymentKey?: unknown; status?: unknown } } | null;
@@ -277,7 +272,7 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
   try {
     await db.insert(webhookEvents).values({ eventKey, payload: JSON.stringify(payload) });
   } catch (error) {
-    if (isUniqueViolation(error)) return { status: 200 }; // 중복 이벤트
+    if (isUniqueConstraintError(error, 'webhook_events.event_key')) return { status: 200 }; // 중복 이벤트(PK 충돌 = 이미 처리한 이벤트)
     // unique 위반이 아니면 진짜 DB 장애 — 여기서 200을 주면 토스가 재시도를 멈추고 이벤트가
     // 영구히 유실된다. 500으로 재시도를 유도한다: 어차피 같은 DB라 이번 요청에서 후속 처리
     // (확정·동기화)도 불가능한 상태고, DB가 복구된 뒤 재시도가 오면 INSERT가 성공해

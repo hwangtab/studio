@@ -214,9 +214,9 @@ describe('운영 점검(collectRevenueIssues)', () => {
   it('중복 의심·링크 기록 없는 예약금·연습실 구독/입주 이중 집계를 medium으로 올린다', async () => {
     const issues = await collectRevenueIssues(NOW);
     expect(issues.map((i) => [i.severity, i.title, i.href])).toEqual([
-      ['medium', '직접 받은 매출 중복 의심 4건', '/admin/revenue'],
-      ['medium', '결제 링크 기록 없는 예약금 주문 1건', '/admin/revenue'],
-      ['medium', '연습실 월세 이중 집계 의심 1건', '/admin/revenue?line=practice'],
+      ['medium', '직접 받은 매출 중복 의심 4건', '/admin/finance'],
+      ['medium', '결제 링크 기록 없는 예약금 주문 1건', '/admin/finance'],
+      ['medium', '연습실 월세 이중 집계 의심 1건', '/admin/finance?line=practice'],
     ]);
     expect(issues[0].detail).toMatch(/NO-s1/);
     expect(issues[0].detail).toMatch(/PC-PC1/);

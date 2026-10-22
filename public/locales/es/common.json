@@ -2459,7 +2459,7 @@
   "coverVideo": {
     "seo": {
       "title": "Grabación de Video Cover · 4K + Audio Todo en Uno ₩350K | Studio NOL",
-      "description": "A 5 min del exit 4 de Yeonsinnae. Filmación de video cover + mezcla básica en una sesión. 4K MP4 + WAV/MP3. Paquete todo en uno ₩350,000 (IVA incluido).",
+      "description": "A 5 min a pie de la salida 4 de Yeonsinnae. Filmación de video cover + mezcla básica en una sesión. 4K MP4 + WAV/MP3. Paquete todo en uno ₩350,000 (IVA incluido).",
       "keywords": "grabación video cover, estudio cover Seoul, youtube cover video, filmación música, estudio grabación Yeonsinnae"
     },
     "hero": {
@@ -2568,7 +2568,7 @@
         },
         {
           "q": "¿Puedo añadir afinación vocal?",
-          "a": "Sí, como opción. La afinación vocal detallada y la corrección de tiempo cuestan +₩150,000 por canción. No está incluida en el paquete todo en uno, así que indícalo al consultarnos."
+          "a": "Sí, como opción. La afinación vocal detallada y la corrección de ritmo cuestan +₩150,000 por canción. No está incluida en el paquete todo en uno, así que indícalo al consultarnos."
         },
         {
           "q": "¿Qué pasa si 3 horas no son suficientes?",
@@ -2605,14 +2605,14 @@
   },
   "musicVideo": {
     "seo": {
-      "title": "Videoclips y videos en vivo desde {{from}} | Studio NOL",
-      "description": "Videoclips, clips en vivo y charlas o entrevistas para YouTube filmados por el director Chichi de Haebang Film. Desde {{from}}; cámaras, horas y locaciones se acuerdan en la consulta. Grabación y mezcla en el mismo lugar en Seúl.",
+      "title": "Videoclips desde {{mv}} · videos en vivo desde {{live}} | Studio NOL",
+      "description": "Videoclips (desde {{mv}}) y clips en vivo o charlas y entrevistas para YouTube (desde {{live}}), planificados por Studio NOL junto al director Park Chichi de Haebang Film, que filma y edita. Cámaras, horas y locaciones se acuerdan en la consulta.",
       "keywords": "producción de videoclips Seúl, video en vivo, video de concierto, video para YouTube, Haebang Film"
     },
     "hero": {
       "title": "Videoclips y videos en vivo",
-      "subtitleLine1": "El director Chichi de Haebang Film, del concepto al montaje final",
-      "subtitleLine2": "Videoclips, clips en vivo y contenido de YouTube desde {{from}}",
+      "subtitleLine1": "Concepto con Studio NOL; rodaje y edición de Park Chichi (Haebang Film)",
+      "subtitleLine2": "Videoclips desde {{mv}} · videos en vivo y de YouTube desde {{live}}",
       "alt": "Escena en sala del videoclip “Namsan Tower Lights” de Mariko & Yukie",
       "seeWorks": "Ver trabajos"
     },
@@ -2622,11 +2622,11 @@
       "items": [
         {
           "q": "¿Cuánto cuesta?",
-          "a": "Videoclips y clips en vivo / videos de YouTube desde {{from}} (IVA incluido). El presupuesto depende de cámaras, horas y locación, y te lo decimos desde el principio."
+          "a": "Videoclips desde {{mv}}; clips en vivo y videos de YouTube desde {{live}} (IVA incluido). El presupuesto depende de cámaras, horas y locación, y te lo decimos desde el principio."
         },
         {
-          "q": "¿Quién filma?",
-          "a": "El director Chichi de Haebang Film se encarga del concepto, rodaje, edición y color. Todos los videos de abajo los filmó Chichi."
+          "q": "¿Quién lo hace?",
+          "a": "Studio NOL y el director Park Chichi de Haebang Film definen el concepto juntos; Park Chichi filma, edita y etaloniza. Fue director de fotografía de las películas Bap y Nineteen, Seomjin River y dirigió el documental musical A Concert for One Person, emitido en KBS Open Channel."
         },
         {
           "q": "¿Cómo empiezo?",
@@ -2636,7 +2636,7 @@
     },
     "portfolio": {
       "title": "Trabajos",
-      "subtitle": "Videoclips, clips en vivo y contenido de YouTube filmados por el director Chichi de Haebang Film. Toca para reproducir.",
+      "subtitle": "Videoclips, clips en vivo y contenido de YouTube filmados y editados por el director Park Chichi de Haebang Film. Toca para reproducir.",
       "kinds": {
         "all": "Todo",
         "music-video": "Videoclips",
@@ -2663,19 +2663,22 @@
       ]
     },
     "director": {
-      "title": "Filmado por el director Chichi de Haebang Film",
-      "body": "El director Chichi de Haebang Film dirige el rodaje: videoclips en locación, conciertos y series de charlas para YouTube. Los videos de arriba son el resultado.",
+      "title": "Director Park Chichi, Haebang Film",
+      "body": "Park Chichi (nombre real Park Geon-ju) ha hecho películas, documentales, series web, contenido de YouTube y videoclips de principio a fin: planificación, cámara, edición y color. Al frente de la productora documental Haebang Film desde 2019, dirigió el documental musical A Concert for One Person (KBS Open Channel) y fue director de fotografía/productor de Bap, Grandma, Me and the Dandelion y Nineteen, Seomjin River. Lleva años filmando conciertos y festivales, y también es músico.",
       "points": [
-        "Un solo director del concepto y storyboard al rodaje, edición y color",
-        "Cámaras según la canción y el presupuesto, de una a multicámara",
-        "Audio de Studio NOL: grabación, mezcla y master en el mismo lugar",
-        "Formato de imagen pensado para dónde se publicará (YouTube, Instagram…)"
+        "Concepto con Studio NOL; rodaje, edición y color de Park Chichi de principio a fin",
+        "Cine y documental — Bap y Grandma, Me and the Dandelion (2025); Nineteen, Seomjin River y Blue Wind (2024)",
+        "Cine musical — A Concert for One Person (KBS), videoclip “Namsan Tower Lights”, Gangjeong Peace & Music Camp (51 grupos)",
+        "Dirección de video en festivales — Resistance Arts Festival (200+ grupos), Ssiat Fest (100+ artistas)"
       ],
-      "imageAlt": "Escena del videoclip “Namsan Tower Lights”"
+      "imageAlt": "Escena del videoclip “Namsan Tower Lights”",
+      "worksTitle": "Obras seleccionadas",
+      "careerTitle": "Trayectoria y dirección de video",
+      "photoAlt": "El director Park Chichi filmando con una videocámara"
     },
     "pricing": {
       "title": "Precios de producción de video",
-      "subtitle": "Ambos desde {{from}}. Confirmamos el precio exacto al definir el plan de rodaje.",
+      "subtitle": "Videoclips desde {{mv}}; clips en vivo y videos de YouTube desde {{live}}. Confirmamos el precio exacto al definir el plan de rodaje.",
       "factorsTitle": "Qué define el presupuesto",
       "factors": [
         {
@@ -2722,7 +2725,7 @@
         },
         {
           "title": "Plan y presupuesto",
-          "description": "Concepto, storyboard, locación y cámaras con el director Chichi; luego confirmamos el presupuesto."
+          "description": "Concepto, storyboard, locación y cámaras con Studio NOL y el director Park Chichi; luego confirmamos el presupuesto."
         },
         {
           "title": "Rodaje",
@@ -2739,8 +2742,12 @@
       "subtitle": "Dudas habituales.",
       "items": [
         {
-          "q": "¿Qué incluye {{from}}?",
+          "q": "¿Qué incluye el precio inicial?",
           "a": "Consulta de concepto, rodaje, edición, etalonaje y subtítulos. Cámaras y horas se ajustan a la canción y al presupuesto; un montaje mayor sube el precio."
+        },
+        {
+          "q": "¿Quién es el director Park Chichi?",
+          "a": "Cineasta (nombre real Park Geon-ju) que ha llevado películas, documentales, series web, YouTube y videoclips desde la planificación hasta la cámara, la edición y el color. Fue director de fotografía/productor de Bap, Grandma, Me and the Dandelion y Nineteen, Seomjin River, dirigió el documental A Concert for One Person (KBS Open Channel) y dirigió la productora Haebang Film. El concepto se planifica con Studio NOL; el rodaje, la edición y el color son suyos."
         },
         {
           "q": "¿Incluye alquiler de locación y elenco?",

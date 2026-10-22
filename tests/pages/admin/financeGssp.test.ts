@@ -14,7 +14,7 @@ jest.mock('../../../lib/contracts/admin-auth', () => ({ authenticateAdminRequest
 
 /* eslint-disable import/first */
 import type { GetServerSidePropsContext } from 'next';
-import { getServerSideProps } from '../../../pages/admin/revenue';
+import { getServerSideProps } from '../../../pages/admin/finance';
 import { kstYearMonth } from '../../../lib/ops/revenueReport';
 /* eslint-enable import/first */
 

@@ -5,6 +5,7 @@ import { roomTenancies, roomTenancyPayments, type RoomTenancy } from '../../db/s
 import { sealPrivate } from './privateData';
 import { addMonthsOnBillingDay, isPlausibleDate, isValidDate, kstToday, type TenancyInput } from './rules';
 import { syncTenancyCalendar } from './calendar';
+import { isUniqueConstraintError } from '../dbErrors';
 
 /**
  * 월 입주 서비스 — 모든 쓰기는 여기를 지난다(관리자 API·CSV 가져오기 공통). 쓰기 뒤에 캘린더를 맞추되 실패는 삼키고 결과에 싣는다
@@ -21,10 +22,7 @@ const calendarNote = async (id: string): Promise<{ calendarError: string | null 
 };
 
 /** DB의 부분 유일 인덱스(`room_tenancies_active_room_uq`)가 동시 요청의 두 번째 쓰기를 막았는가 — drizzle은 원인 오류를 `cause`에 싣는다. */
-const isActiveRoomConflict = (error: unknown): boolean => {
-  const text = (e: unknown): string => (e instanceof Error ? `${e.message} ${text((e as { cause?: unknown }).cause)}` : typeof e === 'string' ? e : '');
-  return /UNIQUE constraint failed/i.test(text(error));
-};
+const isActiveRoomConflict = (error: unknown): boolean => isUniqueConstraintError(error, 'room_tenancies.room_number');
 
 /** 활성 입주자가 같은 방에 둘이 되면 안 된다(비상주는 방이 없어 제외). */
 const roomTaken = async (roomNumber: string | null, exceptId?: string): Promise<boolean> => {

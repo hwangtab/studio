@@ -43,10 +43,13 @@ export const VOCAL_TUNING_ADDON_PRICE = 150000;
 export const WEDDING_PACKAGE_PRICE = 350000; // 축가/이벤트 녹음(행사용 믹싱 포함)
 export const VOICEOVER_HOURLY_PRICE = 100000;
 export const COVER_VIDEO_PACKAGE_PRICE = 350000;
+/** 커버 영상 올인원 + 정교한 보컬 튜닝(곡당 옵션). 올인원은 1곡 기준이라 합계 그대로 한 상품이다. */
+export const COVER_VIDEO_TUNING_PACKAGE_PRICE = COVER_VIDEO_PACKAGE_PRICE + VOCAL_TUNING_ADDON_PRICE;
 export const RENTAL_HOURLY_PRICE = 100000; // 촬영 대관
-// 영상 제작(/music-video) — 해방필름 치치 감독 촬영. 둘 다 "부터"(하한)이고 카메라 대수·촬영 시간·장소는
-// 상담으로 정한다(운영자 결정 2026-10-22). 온라인 결제 상품이 아니다 — 카카오 상담 → 견적 → 맞춤 결제 링크.
-export const MUSIC_VIDEO_FROM_PRICE = 500000;
+// 영상 제작(/music-video) — 콘셉트는 스튜디오 놀과 해방필름 박치치 감독이 함께, 촬영·편집은 박치치 감독. 둘 다 "부터"(하한)이고 카메라 대수·
+// 촬영 시간·장소는 상담으로 정한다(운영자 결정 2026-10-22). 온라인 결제 상품이 아니다 — 카카오 상담 → 견적 → 맞춤 결제 링크.
+// 뮤직비디오 하한은 같은 날 운영자 결정으로 50만에서 100만으로 올렸다(라이브·유튜브는 50만 그대로).
+export const MUSIC_VIDEO_FROM_PRICE = 1000000;
 // 라이브 클립·유튜브 콘텐츠(토크·인터뷰) 촬영.
 export const LIVE_VIDEO_FROM_PRICE = 500000;
 
@@ -748,7 +751,7 @@ export const getPricingData = (locale: Locale) => {
         es: `Una canción acompañada desde la planificación hasta la distribución y la prensa de lanzamiento. Sin plan de lanzamiento también sirve para encargar grabación, mezcla y masterización de una vez: si no usas distribución ni difusión, el precio es el mismo y queda por debajo de los ${singleLineItemTotalIntl} que sumarían por separado. La afinación vocal detallada y la corrección de tiempo cuestan +${vocalTuningIntl} por canción (opcional).`,
         vi: `Một bài hát được đồng hành từ khâu lên kế hoạch đến phát hành và PR. Dù không có kế hoạch phát hành, bạn vẫn có thể dùng gói này để giao thu âm, mixing và mastering một lần; nếu không dùng phát hành và PR thì giá vẫn như vậy và thấp hơn tổng ${singleLineItemTotalIntl} khi đặt riêng từng hạng mục. Chỉnh giọng và căn nhịp chi tiết là tùy chọn +${vocalTuningIntl} mỗi bài.`,
         th: `ดูแลหนึ่งเพลงตั้งแต่การวางแผนจนถึงการจัดจำหน่ายและประชาสัมพันธ์ แม้ไม่มีแผนปล่อยเพลงก็ใช้เป็นแพ็กเกจฝากอัดเสียง มิกซ์ และมาสเตอร์ในครั้งเดียวได้ ถ้าไม่ใช้การจัดจำหน่ายและประชาสัมพันธ์ ราคาก็เท่าเดิม และต่ำกว่าผลรวม ${singleLineItemTotalIntl} เมื่อสั่งแยกทีละรายการ การจูนเสียงร้องและแก้จังหวะอย่างละเอียดเป็นตัวเลือกเพิ่ม +${vocalTuningIntl} ต่อเพลง`,
-        uz: `Bitta qo'shiq rejalashtirishdan tarqatish va PRgacha birga olib boriladi. Reliz rejasi bo'lmasa ham yozuv, miks va masteringni bir yo'la topshirish uchun ishlatish mumkin: tarqatish va PRdan foydalanmasangiz ham narx o'zgarmaydi va alohida buyurtma qilingandagi ${singleLineItemTotalIntl} yig'indisidan past. Batafsil vokal tuning va ritm tuzatish — har bir qo'shiq uchun +${vocalTuningIntl} (ixtiyoriy).`
+        uz: `Bitta qo'shiq rejalashtirishdan tarqatish va PRgacha birga olib boriladi. Reliz rejasi bo'lmasa ham yozuv, miks va masteringni bir yo'la topshirish uchun ishlatish mumkin: tarqatish va PRdan foydalanmasangiz ham narx o'zgarmaydi va alohida buyurtma qilingandagi ${singleLineItemTotalIntl} yig'indisidan past. Batafsil vokal tuning va ritmni to'g'rilash — har bir qo'shiq uchun +${vocalTuningIntl} (ixtiyoriy).`
       }),
       features: tArray(locale, {
         ko: ['기획 · 방향 디렉팅', '보컬 녹음 3시간 (전담 엔지니어)', '믹싱 10트랙 이하 (수정 2회)', '싱글 마스터링 (수정 1회)', '디지털 유통 등록 (멜론·스포티파이·애플뮤직·유튜브뮤직)', `발매 홍보 — 국내 음악 매체 + 해외 매체·라디오·플레이리스트 피칭`, `제작 단가 합계 ${singleLineItemTotalKo} 대비 약 9% 할인`],
@@ -911,7 +914,7 @@ export const getPricingData = (locale: Locale) => {
         es: 'Filmación de video cover y producción de audio en una sesión — filmación, mezcla básica y edición incluidas.',
         vi: 'Quay video cover và sản xuất âm nhạc trong một buổi — quay phim, mix cơ bản và chỉnh sửa đều được bao gồm.',
         th: 'ถ่ายวิดีโอ cover และงานเสียงในครั้งเดียว — ถ่ายทำ มิกซ์เบื้องต้น และตัดต่อครบในแพ็กเกจเดียว',
-        uz: 'Cover video suratga olish va audio ishlab chiqarish bitta seansda — suratga olish, oddiy miks va montaj kiritilgan.'
+        uz: 'Cover video suratga olish va audio ishlab chiqarish bitta seansda — suratga olish, asosiy miks va montaj kiritilgan.'
       }),
       recommended: true,
       features: tArray(locale, {
@@ -919,26 +922,26 @@ export const getPricingData = (locale: Locale) => {
         en: ['3-hour session (1 song)', '4K camera + lighting included', 'Basic mixing (level balancing) included', '4K MP4 video + WAV & MP3 delivered'],
         zh: ['3小时拍摄+制作基准（1首）', '含4K摄像机1台+灯光', '含基础混音（平衡调整）', '交付4K MP4视频+WAV·MP3'],
         es: ['Sesión de 3 horas (1 canción)', 'Cámara 4K + iluminación incluida', 'Mezcla básica (equilibrio de niveles) incluida', 'Entrega de video 4K MP4 + WAV y MP3'],
-        vi: ['Buổi 3 giờ (1 bài)', 'Camera 4K + đèn chiếu sáng', 'Mix cơ bản (cân chỉnh âm lượng)', 'Giao 4K MP4 + WAV & MP3'],
+        vi: ['Buổi 3 giờ (1 bài)', 'Camera 4K + đèn chiếu sáng', 'Mix cơ bản (cân bằng âm lượng)', 'Giao 4K MP4 + WAV & MP3'],
         th: ['เซสชัน 3 ชั่วโมง (1 เพลง)', 'กล้อง 4K 1 ตัว + แสง', 'มิกซ์เบื้องต้น (ปรับบาลานซ์)', 'ส่งวิดีโอ 4K MP4 + WAV & MP3'],
-        uz: ['3 soatlik seans (1 qo\'shiq)', '4K kamera (1 ta) + yoritish', 'Oddiy miks (balansni sozlash) kiritilgan', '4K MP4 video + WAV & MP3 taqdim etiladi']
+        uz: ['3 soatlik seans (1 qo\'shiq)', '4K kamera (1 ta) + yoritish', 'Asosiy miks (balansni sozlash) kiritilgan', '4K MP4 video + WAV & MP3 taqdim etiladi']
       }),
     },
     {
       id: 'package-music-video',
       title: t(locale, { ko: '뮤직비디오 제작', en: 'Music Video Production', zh: 'MV制作', es: 'Producción de videoclip', vi: 'Sản xuất MV', th: 'ผลิตมิวสิกวิดีโอ', uz: 'Klip (MV) ishlab chiqarish' }),
       subtitle: t(locale, { ko: '기획·촬영·편집, 장소·규모 협의', en: 'Concept, filming & edit — scope agreed together', zh: '策划·拍摄·剪辑，地点与规模协商', es: 'Concepto, rodaje y edición — alcance a convenir', vi: 'Ý tưởng, quay, dựng — quy mô thỏa thuận', th: 'วางคอนเซปต์ ถ่ายทำ ตัดต่อ — ขอบเขตตกลงกัน', uz: 'Konsepsiya, suratga olish, montaj — hajm kelishiladi' }),
-      priceDisplay: t(locale, { ko: '500,000원~', en: 'From ₩500,000', zh: '₩500,000起', es: 'Desde ₩500,000', vi: 'Từ ₩500,000', th: 'เริ่มต้น ₩500,000', uz: '₩500,000 dan' }),
+      priceDisplay: t(locale, { ko: '1,000,000원~', en: 'From ₩1,000,000', zh: '₩1,000,000起', es: 'Desde ₩1,000,000', vi: 'Từ ₩1,000,000', th: 'เริ่มต้น ₩1,000,000', uz: '₩1,000,000 dan' }),
       priceValue: MUSIC_VIDEO_FROM_PRICE,
       unit: t(locale, { ko: '/ 1곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo\'shiq' }),
       description: t(locale, {
-        ko: '해방필름 치치 감독이 콘셉트 상담부터 촬영·편집·색보정까지 맡습니다. 카메라 대수·촬영 시간·장소는 곡과 예산에 맞춰 정합니다.',
-        en: 'Director Chichi of Haebang Film handles concept, filming, editing and colour. Cameras, shooting hours and locations are set to fit the song and budget.',
-        zh: '由解放电影（Haebang Film）的Chichi导演负责从概念到拍摄、剪辑、调色。机位数量、拍摄时长和地点按歌曲与预算商定。',
-        es: 'El director Chichi de Haebang Film se encarga del concepto, rodaje, edición y color. Cámaras, horas y locaciones se ajustan a la canción y al presupuesto.',
-        vi: 'Đạo diễn Chichi (Haebang Film) phụ trách từ ý tưởng đến quay, dựng và chỉnh màu. Số máy quay, thời gian quay và địa điểm được điều chỉnh theo bài hát và ngân sách.',
-        th: 'ผู้กำกับ Chichi จาก Haebang Film ดูแลตั้งแต่คอนเซปต์ ถ่ายทำ ตัดต่อ และเกรดสี จำนวนกล้อง เวลาถ่าย และสถานที่ ปรับตามเพลงและงบประมาณ',
-        uz: 'Haebang Film rejissyori Chichi konsepsiyadan suratga olish, montaj va rang tuzatishgacha shug\'ullanadi. Kameralar soni, vaqt va joy qo\'shiq va byudjetga qarab kelishiladi.'
+        ko: '콘셉트는 스튜디오 놀과 해방필름 박치치 감독이 함께 잡고, 촬영·편집·색보정은 박치치 감독이 맡습니다. 카메라 대수·촬영 시간·장소는 곡과 예산에 맞춰 정합니다.',
+        en: 'Studio NOL and director Park Chichi of Haebang Film shape the concept together; Park Chichi shoots, edits and grades. Cameras, shooting hours and locations are set to fit the song and budget.',
+        zh: '概念由Studio NOL与解放电影（Haebang Film）朴治治导演共同策划，拍摄、剪辑、调色由朴治治导演负责。机位数量、拍摄时长和地点按歌曲与预算商定。',
+        es: 'Studio NOL y el director Park Chichi de Haebang Film definen el concepto juntos; Park Chichi filma, edita y etaloniza. Cámaras, horas y locaciones se ajustan a la canción y al presupuesto.',
+        vi: 'Studio NOL và đạo diễn Park Chichi (Haebang Film) cùng lên ý tưởng; Park Chichi quay, dựng và chỉnh màu. Số máy quay, thời gian quay và địa điểm được điều chỉnh theo bài hát và ngân sách.',
+        th: 'Studio NOL และผู้กำกับ Park Chichi จาก Haebang Film วางคอนเซปต์ร่วมกัน Park Chichi ถ่ายทำ ตัดต่อ และเกรดสี จำนวนกล้อง เวลาถ่าย และสถานที่ ปรับตามเพลงและงบประมาณ',
+        uz: 'G\'oyani Studio NOL va Haebang Film rejissyori Park Chichi birga ishlab chiqadi; suratga olish, montaj va rang tuzatishni Park Chichi bajaradi. Kameralar soni, vaqt va joy qo\'shiq va byudjetga qarab kelishiladi.'
       }),
       features: tArray(locale, {
         ko: ['콘셉트·콘티 상담 포함', '스튜디오·공연장·야외 로케이션 촬영', '카메라 대수·촬영 시간은 협의', '편집·색보정·가사 자막 포함', '장소 대관·출연·스타일링 실비는 별도'],

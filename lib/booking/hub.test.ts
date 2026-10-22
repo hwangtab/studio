@@ -28,7 +28,7 @@ describe('예약 통합 랜딩(/ko/booking) 목록', () => {
     const ids = new Set(entries.map((e) => e.productId));
     for (const p of MIXING_PRODUCTS) expect(ids.has(p.id)).toBe(true);
     for (const id of ['recording-pro', 'recording-hourly', 'recording-daylock-4h', 'recording-daylock-8h',
-      'voice-acting-hourly', 'wedding-song', 'cover-video', 'practice-room-hourly']) {
+      'voice-acting-hourly', 'wedding-song', 'cover-video', 'cover-video-tuning', 'practice-room-hourly']) {
       expect(ids.has(id)).toBe(true);
     }
     expect(ids.has('smoke-test')).toBe(false);

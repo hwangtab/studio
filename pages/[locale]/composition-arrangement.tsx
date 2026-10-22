@@ -150,6 +150,7 @@ const CompositionArrangement: NextPageWithLayout<CompositionArrangementProps> = 
       offerName: smallOffer?.title ?? (locale === 'ko' ? '소편성 편곡' : 'Small-Ensemble Arrangement'),
       offerPrice: ARRANGEMENT_SMALL_PRICE,
       pricingHash: 'arrangement',
+      remote: true,
     }),
     [t, siteConfig, locale, pageUrl, smallOffer]
   );

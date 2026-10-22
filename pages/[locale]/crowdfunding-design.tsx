@@ -67,6 +67,7 @@ const CrowdfundingDesign: NextPageWithLayout<Props> = ({ locale, relatedStories 
           offerName: copy.hero.title,
           offerPrice: FUNDING_DESIGN_PRICE,
           pricingHash: 'support-services',
+          remote: true,
         }),
         generateHowToSchema(
           copy.process.title,

@@ -260,3 +260,17 @@ kosmart 번호가 남은 곳은 D1 하나다(운영자도 받는 번호).
 - SparkToro, AI 추천 비일관성 — https://sparktoro.com/blog/new-research-ais-are-highly-inconsistent-when-recommending-brands-or-products-marketers-should-take-care-when-tracking-ai-visibility/
 - GEO 원논문 — https://arxiv.org/abs/2311.09735 · C-SEO Bench — https://arxiv.org/abs/2506.11097
 - 와이즈앱 AI 앱 MAU(2026-07) — https://wowtale.net/2026/08/11/262725/
+
+## 진행 기록 (2026-10-22) — 사이트 밖 작업
+
+4인 패널(SEO·GEO·ChatGPT·Gemini) 점검 후속으로 운영자 계정(aside)에서 처리했다.
+
+- **D1 카카오맵 정정 완료**(파트너센터 매장 1241075 = 장소 `482217521`, 이미 관리 권한 있음). 상호는 9/26 이후 이미 "스튜디오놀"(불광점 아님)이었다.
+  - 전화 02-764-3114 → **010-4255-7893**
+  - 사이트/SNS `https://www.kosmart.co.kr/practice` → **`https://studionol.co.kr`**
+  - 한줄소개 "연신내역, 불광역(3, 6호선) 도보 5분" → "연신내역 도보 5분 · 보컬 녹음·믹싱·마스터링 · 24시간 음악연습실"
+  - 반영까지 시간이 걸린다는 안내. 확인은 카카오맵 장소 페이지의 전화·URL로.
+- **구글 비즈니스 프로필**: 서비스 "온라인 믹싱·마스터링 (원격)"(최저 200,000원, Midas Venice 320 언급) 추가, 콘솔 사진(`/images/console.webp`의 JPG) 업로드 — 둘 다 구글 검토 대기. 성우 관련은 11/11 voice-acting 판정 뒤로 미뤘다.
+- **SoundBetter 프로필** https://soundbetter.com/profiles/748948-studio-nol — `listingProfiles`로 Organization·LocalBusiness sameAs와 llms.txt에 연결(#865).
+- **리뷰 수 기준선**: 구글 **0** · 카카오맵 **1**(5.0, 2023-07) · 네이버 방문자 미확인. → §측정표 "리뷰 수" 행의 다음 값.
+- 남은 것: 리뷰 루프(P1-1) — 대가·키워드 유도 없이 지난 의뢰인에게 구글·SoundBetter 후기 부탁(운영자). Wikidata(P2-3).

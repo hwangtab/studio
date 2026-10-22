@@ -342,8 +342,8 @@
       "priceCol": "Price"
     },
     "seo": {
-      "title": "Practice Room ₩360K/mo · Recording ₩100K/hr | Studio NOL",
-      "description": "Studio NOL Seoul: practice room ₩360K/mo (no deposit, 24hr access), wedding song ₩350K, recording ₩100K/hr or Day Lock blocks. All prices public, free quote, 5 min from Yeonsinnae station.",
+      "title": "Recording ₩100K/hr · Mixing from ₩200K | Studio NOL Pricing",
+      "description": "Studio NOL Seoul: recording ₩100K/hr or Day Lock blocks, mixing from ₩200K/song, single mastering ₩100K, wedding song ₩350K, practice room ₩360K/mo (no deposit, 24hr). All prices public, 5 min from Yeonsinnae station.",
       "keywords": "Studio pricing Korea, Seoul recording rates, hourly recording studio Seoul, transparent pricing, mixing price, mastering price, Studio NOL pricing",
       "schemaTitle": "Studio NOL Service Pricing"
     },
@@ -1376,8 +1376,8 @@
   },
   "recording": {
     "seo": {
-      "title": "Recording Studio Rental — Yeonsinnae Vocal Recording | Studio NOL",
-      "description": "Recording studio in Yeonsinnae, Eunpyeong-gu, Seoul. Vocal recording ₩250,000 for 3 hours (any number of songs), hourly rental ₩100,000. A dedicated engineer runs every session. Book demo, single, album or cover recording.",
+      "title": "Recording Studio in Seoul — ₩100K/hr, English OK | Studio NOL",
+      "description": "Recording studio in Seoul (Yeonsinnae, Eunpyeong-gu) with English booking. Vocal recording ₩250,000 for 3 hours (any number of songs), hourly rental ₩100,000. A dedicated engineer runs every session. Book demo, single, album or cover recording.",
       "keywords": "recording studio, recording studio rental, vocal recording, recording studio Seoul, Yeonsinnae recording studio, demo recording, hourly recording, English-speaking recording studio Seoul"
     },
     "hero": {
@@ -1844,8 +1844,8 @@
   },
   "musicPromotion": {
     "seo": {
-      "title": "Music Release PR — We Find the Outlets That Would Cover It | Studio NOL",
-      "description": "We find the Korean music outlets and the media, radio stations and record shops across 60 countries that would cover your music, and write to each in the language it reads. Press release in 5 languages, press kit and send-out report included. 1,200,000 KRW → 300,000 KRW.",
+      "title": "Music Release PR — Korea & 60 Countries | Studio NOL",
+      "description": "We find the Korean and international outlets — media, radio and record shops in 60 countries — that would cover your music. Press release in 5 languages, press kit and report included. Intro price 300,000 KRW (regular 1,200,000 KRW) until Dec 31, 2026.",
       "keywords": "music PR, album promotion, music press release, indie music PR, music publicity, release promotion, press release writing, record promotion, music PR agency, international music PR, press kit, EPK"
     },
     "hero": {
@@ -2633,14 +2633,14 @@
   },
   "musicVideo": {
     "seo": {
-      "title": "Music Video & Live Video Production from {{from}} | Studio NOL",
-      "description": "Music videos, live clips and YouTube talk & interview videos shot by director Chichi of Haebang Film. From {{from}}; cameras, hours and locations are agreed in consultation. Recording and mixing under the same roof in Seoul.",
-      "keywords": "music video production Seoul, music video cost Korea, live session video, concert video filming, YouTube video production, interview video, Haebang Film"
+      "title": "Music Videos from {{mv}} · Live Videos from {{live}} | Studio NOL",
+      "description": "Music videos (from {{mv}}) and live clips or YouTube talks & interviews (from {{live}}), planned by Studio NOL with director Park Chichi of Haebang Film — a film and documentary cinematographer who shoots and edits them. Cameras, hours and locations are agreed in consultation.",
+      "keywords": "music video production Seoul, music video cost Korea, live session video, concert video filming, YouTube video production, interview video, Haebang Film, Park Chichi"
     },
     "hero": {
       "title": "Music Videos & Live Videos",
-      "subtitleLine1": "Director Chichi of Haebang Film, from concept to final cut",
-      "subtitleLine2": "Music videos, live clips & YouTube content from {{from}}",
+      "subtitleLine1": "Concept with Studio NOL — filming and editing by Park Chichi of Haebang Film",
+      "subtitleLine2": "Music videos from {{mv}} · live & YouTube videos from {{live}}",
       "alt": "Venue scene from the Mariko & Yukie “Namsan Tower Lights” music video",
       "seeWorks": "Watch our work"
     },
@@ -2650,11 +2650,11 @@
       "items": [
         {
           "q": "How much does it cost?",
-          "a": "Music videos and live clips / YouTube videos both start from {{from}} (VAT included). The quote depends on cameras, shooting hours and location, and we tell you the price up front."
+          "a": "Music videos start from {{mv}}, live clips and YouTube videos from {{live}} (VAT included). The quote depends on cameras, shooting hours and location, and we tell you the price up front."
         },
         {
-          "q": "Who shoots it?",
-          "a": "Director Chichi of Haebang Film handles everything from concept to filming, editing and colour. Every video below was shot by Chichi."
+          "q": "Who makes it?",
+          "a": "Studio NOL and director Park Chichi of Haebang Film plan the concept together; Park Chichi shoots, edits and grades. He was cinematographer on the films Bap and Nineteen, Seomjin River and directed the music documentary A Concert for One Person, aired on KBS Open Channel."
         },
         {
           "q": "How do I start?",
@@ -2664,7 +2664,7 @@
     },
     "portfolio": {
       "title": "Our work",
-      "subtitle": "Music videos, live clips and YouTube content shot by director Chichi of Haebang Film. Tap to play.",
+      "subtitle": "Music videos, live clips and YouTube content shot and edited by director Park Chichi of Haebang Film. Tap to play.",
       "kinds": {
         "all": "All",
         "music-video": "Music videos",
@@ -2691,19 +2691,22 @@
       ]
     },
     "director": {
-      "title": "Filmed by director Chichi of Haebang Film",
-      "body": "Director Chichi of Haebang Film leads the shoot. Location music videos, concert footage and multi-episode YouTube talk series — the videos above are the result.",
+      "title": "Director Park Chichi, Haebang Film",
+      "body": "Park Chichi (real name Park Geon-ju) has made films, documentaries, web dramas, YouTube series and music videos end to end, from planning to camera, editing and colour. Running the independent documentary company Haebang Film from 2019, he directed the music documentary A Concert for One Person (aired on KBS Open Channel), and he was cinematographer/producer on the films Bap, Grandma, Me and the Dandelion and Nineteen, Seomjin River. He has filmed concerts and festivals for years, and he is also a musician who writes and sings his own songs.",
       "points": [
-        "One director from concept and storyboard to filming, editing and colour",
-        "Camera setup matched to the song and budget — from one camera to multi-cam",
-        "Audio by Studio NOL — recording, mixing and mastering in the same place",
-        "Aspect ratio planned for where it will be posted (YouTube, Instagram and more)"
+        "Concept planned with Studio NOL; filming, editing and colour by Park Chichi, start to finish",
+        "Film & documentary — Bap and Grandma, Me and the Dandelion (2025); Nineteen, Seomjin River and Blue Wind (2024)",
+        "Music films — A Concert for One Person (KBS Open Channel), “Namsan Tower Lights” MV, Gangjeong Peace & Music Camp (51 acts)",
+        "Festival video lead — Resistance Arts Festival (200+ acts), Ssiat Fest (100+ artists)"
       ],
-      "imageAlt": "A scene from the “Namsan Tower Lights” music video"
+      "imageAlt": "A scene from the “Namsan Tower Lights” music video",
+      "worksTitle": "Selected works",
+      "careerTitle": "Career & festival video lead",
+      "photoAlt": "Director Park Chichi filming with a camcorder"
     },
     "pricing": {
       "title": "Video production pricing",
-      "subtitle": "Both start from {{from}}. We confirm the exact price once the shooting plan is set.",
+      "subtitle": "Music videos start from {{mv}}, live clips and YouTube videos from {{live}}. We confirm the exact price once the shooting plan is set.",
       "factorsTitle": "What shapes the quote",
       "factors": [
         {
@@ -2750,7 +2753,7 @@
         },
         {
           "title": "Plan & quote",
-          "description": "Settle concept, storyboard, location and camera setup with director Chichi, then confirm the quote."
+          "description": "Settle concept, storyboard, location and camera setup with Studio NOL and director Park Chichi, then confirm the quote."
         },
         {
           "title": "Shoot",
@@ -2767,8 +2770,12 @@
       "subtitle": "Frequently asked questions.",
       "items": [
         {
-          "q": "What does {{from}} include?",
+          "q": "What does the starting price include?",
           "a": "Concept consultation, filming, editing, colour grading and subtitles. Cameras and hours are set to fit the song and budget; a bigger setup raises the quote. We share prices per setup during consultation."
+        },
+        {
+          "q": "Who is director Park Chichi?",
+          "a": "A filmmaker (real name Park Geon-ju) who has taken films, documentaries, web dramas, YouTube series and music videos from planning through camera, editing and colour. He was cinematographer/producer on Bap, Grandma, Me and the Dandelion and Nineteen, Seomjin River, directed the music documentary A Concert for One Person (KBS Open Channel), operated B-camera on the web drama I Refuse That Marriage, and ran the independent documentary company Haebang Film. He led video for the Resistance Arts Festival and Ssiat Fest, and he is also a musician. Concepts are planned with Studio NOL; filming, editing and colour are his."
         },
         {
           "q": "Are venue rental and cast fees included?",

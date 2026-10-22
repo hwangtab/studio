@@ -2,11 +2,11 @@
 import { render, screen, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
-jest.mock('next/router', () => ({ useRouter: () => ({ replace: jest.fn(), asPath: '/admin/revenue', pathname: '/admin/revenue', query: {} }) }));
+jest.mock('next/router', () => ({ useRouter: () => ({ replace: jest.fn(), asPath: '/admin/finance', pathname: '/admin/finance', query: {} }) }));
 jest.mock('../../../components/admin/contractActions', () => ({ logoutAdmin: jest.fn() }));
 jest.mock('../../../lib/contracts/admin-auth', () => ({ authenticateAdminRequest: jest.fn() }));
 
-import AdminRevenuePage from '../../../pages/admin/revenue';
+import AdminRevenuePage from '../../../pages/admin/finance';
 import { summarizeRevenue, type RevenueRow } from '../../../lib/ops/revenueReport';
 import { computeBusinessPnl } from '../../../lib/ops/businessLinePnl';
 import type { ExpenseOccurrence } from '../../../lib/ops/expenses';
@@ -45,15 +45,15 @@ it('순매출·환불·전월 대비를 그린다', () => {
 
 it('유형별 표의 유형 이름은 그 유형만 보는 링크이고, 기간 칩이 연·월로 이동한다', () => {
   render(<AdminRevenuePage {...props()} />);
-  expect(screen.getByRole('link', { name: '펀딩 수수료' })).toHaveAttribute('href', '/admin/revenue?year=2026&month=10&type=funding');
-  expect(screen.getByRole('link', { name: '2025년' })).toHaveAttribute('href', '/admin/revenue?year=2025&month=10');
-  expect(screen.getByRole('link', { name: '연 전체' })).toHaveAttribute('href', '/admin/revenue?year=2026&month=all');
+  expect(screen.getByRole('link', { name: '펀딩 수수료' })).toHaveAttribute('href', '/admin/finance?year=2026&month=10&type=funding');
+  expect(screen.getByRole('link', { name: '2025년' })).toHaveAttribute('href', '/admin/finance?year=2025&month=10');
+  expect(screen.getByRole('link', { name: '연 전체' })).toHaveAttribute('href', '/admin/finance?year=2026&month=all');
 });
 
 it('유형 필터가 걸리면 안내와 해제 링크를 보인다', () => {
   render(<AdminRevenuePage {...props({ summary: JSON.parse(JSON.stringify(summarizeRevenue(ROWS, { year: 2026, month: 10, type: 'funding' }))), type: 'funding' })} />);
   expect(screen.getByText(/만 보는 중/)).toHaveTextContent('펀딩');
-  expect(screen.getByRole('link', { name: '전체 보기' })).toHaveAttribute('href', '/admin/revenue?year=2026&month=10');
+  expect(screen.getByRole('link', { name: '전체 보기' })).toHaveAttribute('href', '/admin/finance?year=2026&month=10');
 });
 
 it('수기 매출 표를 못 읽으면 숫자에 빠진 금액이 있다고 경고하고 폼을 닫는다', () => {
@@ -114,13 +114,13 @@ describe('분야별 매출·수익', () => {
 
   it('분야 이름은 그 분야만 보는 링크이고, 걸려 있으면 다시 누르면 풀린다', () => {
     const first = render(<AdminRevenuePage {...withPnl([])} />);
-    expect(screen.getByRole('link', { name: '연습실' })).toHaveAttribute('href', '/admin/revenue?year=2026&month=10&line=practice');
+    expect(screen.getByRole('link', { name: '연습실' })).toHaveAttribute('href', '/admin/finance?year=2026&month=10&line=practice');
     first.unmount();
     const filtered = withPnl([], { summary: JSON.parse(JSON.stringify(summarizeRevenue(ROWS, { year: 2026, month: 10, line: 'platform' }))), line: 'platform' });
     render(<AdminRevenuePage {...filtered} />);
-    expect(screen.getByRole('link', { name: '플랫폼' })).toHaveAttribute('href', '/admin/revenue?year=2026&month=10');
+    expect(screen.getByRole('link', { name: '플랫폼' })).toHaveAttribute('href', '/admin/finance?year=2026&month=10');
     expect(screen.getByText(/만 보는 중/)).toHaveTextContent('플랫폼');
-    expect(screen.getByRole('link', { name: '펀딩 수수료' })).toHaveAttribute('href', '/admin/revenue?year=2026&month=10&line=platform&type=funding');
+    expect(screen.getByRole('link', { name: '펀딩 수수료' })).toHaveAttribute('href', '/admin/finance?year=2026&month=10&line=platform&type=funding');
   });
 
   it('지출 표를 못 읽으면 수익을 지어내지 않고 사유를 알린다', () => {
