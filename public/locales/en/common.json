@@ -2594,6 +2594,10 @@
           "a": "Yes, as a regular recording session (vocal recording, 3 hours, ₩250,000, any number of songs). The All-in-One package includes only basic mixing that balances levels, and no vocal tuning. Tuning or full mixing and mastering can be ordered separately."
         },
         {
+          "q": "Can I add vocal tuning?",
+          "a": "Yes, as an option. Detailed vocal tuning and timing correction is +₩150,000 per song. It is not included in the All-in-One package, so please mention it when you inquire."
+        },
+        {
           "q": "What if 3 hours isn't enough?",
           "a": "Extra time is billed at the standard hourly rate. We recommend allowing an extra hour as a buffer."
         },

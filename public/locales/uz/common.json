@@ -2566,6 +2566,10 @@
           "a": "Ha, oddiy yozuv xizmati sifatida (vokal yozuvi, 3 soat, ₩250,000, qo'shiqlar soni cheklanmagan). To'liq paketdagi miks faqat balansni sozlaydigan oddiy miks bo'lib, vokal tuningni o'z ichiga olmaydi. Tuning yoki to'liq miks va mastering alohida buyurtma qilinadi."
         },
         {
+          "q": "Vokal tuning qo'shish mumkinmi?",
+          "a": "Ha, ixtiyoriy xizmat sifatida. Batafsil vokal tuning va ritm tuzatish — har bir qo'shiq uchun +₩150,000. To'liq paketga kiritilmagan, murojaat qilganda ayting."
+        },
+        {
           "q": "3 soat yetarli bo'lmasa nima bo'ladi?",
           "a": "Qo'shimcha vaqt standart soatlik tarif bo'yicha hisoblanadi. 1 soat qo'shimcha rezerv qilishni tavsiya etamiz."
         },

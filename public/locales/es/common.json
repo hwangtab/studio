@@ -2566,6 +2566,10 @@
           "a": "Sí, como una sesión de grabación normal (grabación vocal, 3 horas, ₩250,000, sin importar el número de canciones). La mezcla del paquete todo en uno es solo una mezcla básica que equilibra los niveles y no incluye afinación vocal. La afinación o una mezcla y masterización completas se contratan por separado."
         },
         {
+          "q": "¿Puedo añadir afinación vocal?",
+          "a": "Sí, como opción. La afinación vocal detallada y la corrección de tiempo cuestan +₩150,000 por canción. No está incluida en el paquete todo en uno, así que indícalo al consultarnos."
+        },
+        {
           "q": "¿Qué pasa si 3 horas no son suficientes?",
           "a": "El tiempo extra se factura a la tarifa horaria estándar. Recomendamos reservar una hora adicional como margen."
         },
