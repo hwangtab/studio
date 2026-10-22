@@ -1,0 +1,12 @@
+{
+  "default": 80,
+  "estimates": {
+    "online-fallback": 120,
+    "session-checklist": 160,
+    "studio-more": 232,
+    "studio-services": 135,
+    "online-request": 124,
+    "vocal-mix-bridge": 224,
+    "practice-room-terms": 117
+  }
+}

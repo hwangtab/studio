@@ -17,6 +17,7 @@ const matter = require('gray-matter');
 const {
   THIN_CONTENT_THRESHOLD,
   SHORTCODE_CHAR_ESTIMATES,
+  SHORTCODE_DEFAULT_CHAR_ESTIMATE,
   AUTO_EXPAND_BLOCK_REGEX,
   REGION_HUB_SLUGS,
 } = require('../lib/sitemap/thinContent');
@@ -25,7 +26,6 @@ const { applyFactTokens } = require('../lib/factTokens');
 const storiesDirectory = path.join(process.cwd(), 'content/stories');
 const portfolioFile = path.join(process.cwd(), 'data/portfolio.ts');
 
-const SHORTCODE_DEFAULT_CHAR_ESTIMATE = 80;
 const DEFAULT_LOCALE = 'ko';
 const LOCALES = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'];
 const args = process.argv.slice(2);

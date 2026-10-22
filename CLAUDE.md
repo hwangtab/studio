@@ -951,7 +951,7 @@ CI에 넣었다 — 섹션 해시가 파일 간 같으면 잡는다.
 
 **같은 안내를 여러 글에 넣어야 하면 복붙 대신 숏코드 컴포넌트를 쓴다**
 (`%%session-checklist%%`·`%%studio-more%%`). 새 숏코드를 만들면 세 곳을 함께 고쳐야 한다 —
-`MarkdownRenderer` 배선, `lib/storyContentPolicy.ts`의 글자수 추정, `content/factGuards.test.ts`
+`MarkdownRenderer` 배선, `lib/storyShortcodeEstimates.json`의 글자수 추정(런타임·사이트맵·스크립트가 같이 읽는 정본), `content/factGuards.test.ts`
 화이트리스트. 추정치는 **컴포넌트가 실제 렌더하는 분량 실측값**으로 넣을 것: 이 값이 thin
 판정에 직접 들어가서, 과대 계상하면 thin 페이지가 색인 대상으로 잘못 분류된다(실제로
 session-checklist가 실측 160자인데 420으로 잡혀 있었다).

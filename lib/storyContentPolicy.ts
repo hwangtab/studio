@@ -1,4 +1,5 @@
 import { isRegionHub } from './regionHubSlugs';
+import shortcodeEstimates from './storyShortcodeEstimates.json';
 
 // AUTO-EXPAND-V1 블록은 지역 가이드 페이지 등에 자동 삽입된 보일러플레이트 섹션이다.
 // 본문에 그대로 포함되면 도시명만 치환된 동일 텍스트가 1,400+개 페이지에 중복되어
@@ -36,16 +37,11 @@ export const THIN_CONTENT_THRESHOLD = 1500;
 // 컴포넌트 문구를 고치면 여기도 같이 맞춰야 한다 — 추정이 실제보다 크면 thin 페이지가
 // 색인 대상으로 잘못 분류된다. session-checklist는 실측 160자(컴포넌트 항목 7개 + 소제목 2개).
 // studio-more는 실측 232자(제목+리드+링크 7줄+맺음, 공백 제외).
-export const SHORTCODE_CHAR_ESTIMATES: Record<string, number> = {
-  'online-fallback': 120,
-  'session-checklist': 160,
-  'studio-more': 232,
-  'studio-services': 135,
-  'online-request': 124,
-  'vocal-mix-bridge': 224,
-  'practice-room-terms': 117,
-};
-export const SHORTCODE_DEFAULT_CHAR_ESTIMATE = 80;
+// 값의 정본은 lib/storyShortcodeEstimates.json 하나다 — 사이트맵(lib/sitemap/thinContent.js)과
+// 빌드 스크립트(CommonJS·.mjs)가 같은 파일을 읽는다. 예전엔 여기와 사이트맵이 표를 따로 들고 있다가
+// 갈라져(session-checklist 420 vs 160, 나머지 5종 누락) 런타임 noindex 38편이 사이트맵에 실렸다(2026-10-22).
+export const SHORTCODE_CHAR_ESTIMATES: Readonly<Record<string, number>> = shortcodeEstimates.estimates;
+export const SHORTCODE_DEFAULT_CHAR_ESTIMATE: number = shortcodeEstimates.default;
 
 export const computeThinContentStatus = (
   contentAfterAutoExpandStrip: string,
