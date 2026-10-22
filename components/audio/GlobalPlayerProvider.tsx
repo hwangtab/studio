@@ -40,8 +40,6 @@ export type GlobalPlayerStatus = 'idle' | 'loading' | 'playing' | 'paused' | 'er
 export interface GlobalPlayerContextValue {
   track: GlobalTrack | null;
   status: GlobalPlayerStatus;
-  currentTime: number;
-  duration: number;
   /** 트랙을 바꾸거나(새 src) 같은 트랙이면 이어서 재생한다. */
   play: (track: GlobalTrack) => Promise<void>;
   pause: () => void;
@@ -54,7 +52,18 @@ export interface GlobalPlayerContextValue {
   isPlaying: (trackId: string) => boolean;
 }
 
+/** 재생 위치 — timeupdate마다(초당 수 회) 바뀐다. 이걸 쓰는 건 도크뿐이라 따로 둔다. */
+export interface GlobalPlayerProgress {
+  currentTime: number;
+  duration: number;
+}
+
 const GlobalPlayerContext = React.createContext<GlobalPlayerContextValue | null>(null);
+/**
+ * 재생 위치를 본 컨텍스트에 함께 두면 커버·발췌 재생 버튼(재생 여부만 본다)이 재생 중 초당 수 회씩 다시 그려졌다
+ * (2026-10-22 리뷰). 위치는 이 컨텍스트로만 내려 보낸다.
+ */
+const GlobalPlayerProgressContext = React.createContext<GlobalPlayerProgress>({ currentTime: 0, duration: 0 });
 
 const GlobalPlayerDock = dynamic(() => import('./GlobalPlayerDock'), { ssr: false });
 
@@ -167,16 +176,20 @@ export const GlobalPlayerProvider = ({ children }: { children: React.ReactNode }
     [track, status],
   );
 
+  const progress = React.useMemo<GlobalPlayerProgress>(() => ({ currentTime, duration }), [currentTime, duration]);
+
   const value = React.useMemo<GlobalPlayerContextValue>(
-    () => ({ track, status, currentTime, duration, play, pause, toggle, seek, close, isPlaying }),
-    [track, status, currentTime, duration, play, pause, toggle, seek, close, isPlaying],
+    () => ({ track, status, play, pause, toggle, seek, close, isPlaying }),
+    [track, status, play, pause, toggle, seek, close, isPlaying],
   );
 
   return (
     <GlobalPlayerContext.Provider value={value}>
-      {children}
-      {/* 도크 청크는 트랙이 생긴 뒤에야 받는다 — 재생 전 페이지에는 코드도 소리도 없다. */}
-      {track && <GlobalPlayerDock />}
+      <GlobalPlayerProgressContext.Provider value={progress}>
+        {children}
+        {/* 도크 청크는 트랙이 생긴 뒤에야 받는다 — 재생 전 페이지에는 코드도 소리도 없다. */}
+        {track && <GlobalPlayerDock />}
+      </GlobalPlayerProgressContext.Provider>
     </GlobalPlayerContext.Provider>
   );
 };
@@ -185,8 +198,6 @@ export const GlobalPlayerProvider = ({ children }: { children: React.ReactNode }
 const NOOP: GlobalPlayerContextValue = {
   track: null,
   status: 'idle',
-  currentTime: 0,
-  duration: 0,
   play: async () => undefined,
   pause: () => undefined,
   toggle: () => undefined,
@@ -196,5 +207,8 @@ const NOOP: GlobalPlayerContextValue = {
 };
 
 export const useGlobalPlayer = (): GlobalPlayerContextValue => React.useContext(GlobalPlayerContext) ?? NOOP;
+
+/** 재생 위치·길이 — 진행 막대처럼 시간을 그리는 곳만 쓴다. */
+export const useGlobalPlayerProgress = (): GlobalPlayerProgress => React.useContext(GlobalPlayerProgressContext);
 
 export default GlobalPlayerProvider;

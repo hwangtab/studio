@@ -182,9 +182,10 @@ const SEO = ({
   const effectiveOgImageWidth = ogImageWidth ?? (isDefaultOgImage ? 1200 : undefined);
   const effectiveOgImageHeight = ogImageHeight ?? (isDefaultOgImage ? 630 : undefined);
 
-  const ogImageMimeType = React.useMemo(() => {
-    // @vercel/og API routes return PNG by default
-    if (ogImage.includes('/api/og/')) return 'image/png';
+  const ogImageMimeType = React.useMemo((): string | null => {
+    // 동적 OG(/api/og/)는 성공하면 PNG지만 실패하면 기본 webp로 302한다 — 형식이 응답마다 달라 선언하지 않는다
+    // (png라고 적어 두면 실패 응답을 받은 크롤러가 형식 불일치로 그 이미지를 버린다, 2026-10-22 리뷰).
+    if (ogImage.includes('/api/og/')) return null;
     // query(?...)·fragment(#...) 모두 제거한 뒤 확장자 추출
     const ext = ogImage.split('?')[0].split('#')[0].split('.').pop()?.toLowerCase();
     if (ext === 'webp') return 'image/webp';
@@ -409,7 +410,7 @@ const SEO = ({
       {typeof effectiveOgImageHeight === 'number' && effectiveOgImageHeight > 0 && (
         <meta property="og:image:height" content={String(effectiveOgImageHeight)} />
       )}
-      <meta property="og:image:type" content={ogImageMimeType} />
+      {ogImageMimeType && <meta property="og:image:type" content={ogImageMimeType} />}
       <meta property="og:locale" content={ogLocaleByLocale[currentLocale] || ogLocaleByLocale[defaultLocale]} />
       <meta property="og:site_name" content={siteConfig.name} />
 

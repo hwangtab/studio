@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 const mockLead = jest.fn();
@@ -90,5 +90,18 @@ describe('QuoteWizard — 입구 링크의 미리 고르기', () => {
     pick('3개월 안');
     expect(screen.getByText(`${formatPriceLabel(EP_BUNDLE_PRICE, 'ko')}부터`)).toBeInTheDocument();
     expect(mockMicro).toHaveBeenCalledWith('micro_quote_start', expect.objectContaining({ component: 'QuoteWizard' }));
+  });
+
+  // 클립보드가 막힌 환경(인앱 브라우저·권한 거부)에서 "복사되고 카카오톡이 열려요"만 남으면 고객이 빈 대화창에 붙여 넣는다.
+  it('복사가 실패하면 실패를 알리고 요약을 펼쳐 손으로 복사하게 한다', async () => {
+    Object.assign(navigator, { clipboard: { writeText: jest.fn().mockRejectedValue(new Error('denied')) } });
+    render(<QuoteWizard kakaoUrl={KAKAO} />);
+    pick('보컬·악기 녹음');
+    pick('1곡');
+    pick('곡·가사가 완성돼 있어요');
+    pick('2주 안');
+    await act(async () => { fireEvent.click(screen.getByRole('link', { name: /카카오톡으로 보내기/ })); });
+    expect(screen.getByRole('status')).toHaveTextContent('자동 복사가 안 됐어요');
+    expect((screen.getByRole('textbox', { name: '견적 요약' }) as HTMLTextAreaElement).value).toContain('서비스: 보컬·악기 녹음 — 1곡');
   });
 });

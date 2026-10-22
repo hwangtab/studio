@@ -66,7 +66,9 @@ const QuoteChoiceGroup = ({
 const QuoteWizard = ({ kakaoUrl }: QuoteWizardProps) => {
   const [answers, setAnswers] = React.useState<QuoteAnswers>({});
   const [code, setCode] = React.useState('');
-  const [copied, setCopied] = React.useState(false);
+  // 'idle' → 아직 안 누름, 'copied' → 복사됨, 'failed' → 클립보드가 막혀 복사 못 함(인앱 브라우저·권한 거부).
+  // 예전엔 실패를 삼키고 "복사되고 카카오톡이 열려요"를 그대로 보여 줘, 고객이 빈 대화창에 붙여 넣었다(2026-10-22 리뷰).
+  const [copyState, setCopyState] = React.useState<'idle' | 'copied' | 'failed'>('idle');
   const startedRef = React.useRef(false);
 
   React.useEffect(() => {
@@ -82,7 +84,7 @@ const QuoteWizard = ({ kakaoUrl }: QuoteWizardProps) => {
       startedRef.current = true;
       trackMicroEvent('micro_quote_start', { locale: 'ko', component: 'QuoteWizard' });
     }
-    setCopied(false);
+    setCopyState('idle');
     setAnswers((prev) => ({ ...prev, ...patch }));
   };
 
@@ -103,13 +105,15 @@ const QuoteWizard = ({ kakaoUrl }: QuoteWizardProps) => {
       quote_code: code,
       quote_service: answers.service ?? '',
     });
+    // 클립보드가 막힌 환경이어도 카톡은 그대로 연다 — 대신 아래에 요약을 펼쳐 손으로 복사하게 한다.
     try {
-      void navigator.clipboard?.writeText(summary).then(
-        () => setCopied(true),
-        () => undefined,
+      if (!navigator.clipboard) { setCopyState('failed'); return; }
+      void navigator.clipboard.writeText(summary).then(
+        () => setCopyState('copied'),
+        () => setCopyState('failed'),
       );
     } catch {
-      // 클립보드가 막힌 환경이어도 카톡은 그대로 연다.
+      setCopyState('failed');
     }
   };
 
@@ -212,10 +216,22 @@ const QuoteWizard = ({ kakaoUrl }: QuoteWizardProps) => {
               )}
             </div>
             <p className="text-sm text-gray-500 dark:text-gray-400" role="status">
-              {copied
+              {copyState === 'copied'
                 ? '요약을 복사했어요. 카카오톡 대화창에 붙여 넣어 보내 주세요.'
-                : '버튼을 누르면 위 답변과 견적 코드가 복사되고 카카오톡이 열려요. 이름·연락처는 받지 않아요.'}
+                : copyState === 'failed'
+                  ? '이 브라우저에서는 자동 복사가 안 됐어요. 아래 요약을 길게 눌러 복사한 뒤 카카오톡에 붙여 넣어 주세요.'
+                  : '버튼을 누르면 위 답변과 견적 코드가 복사되고 카카오톡이 열려요. 이름·연락처는 받지 않아요.'}
             </p>
+            {copyState === 'failed' && (
+              <textarea
+                readOnly
+                aria-label="견적 요약"
+                value={summary}
+                rows={Math.min(10, summary.split('\n').length + 1)}
+                onFocus={(e) => e.currentTarget.select()}
+                className="w-full rounded-lg border border-gray-300 bg-white p-3 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
+              />
+            )}
           </Panel>
         ) : (
           <p className="text-sm text-gray-500 dark:text-gray-400">질문에 답하시면 여기에 예상 비용이 바로 나와요.</p>

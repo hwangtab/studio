@@ -45,13 +45,9 @@ class MyDocument extends Document<Props> {
           <link rel="dns-prefetch" href="https://analytics.google.com" />
           <link rel="dns-prefetch" href="https://vitals.vercel-insights.com" />
           <link rel="dns-prefetch" href="https://va.vercel-scripts.com" />
-          {/* Portfolio image CDN prefetch */}
-          <link rel="dns-prefetch" href="https://image.bugsm.co.kr" />
+          {/* 유튜브 썸네일은 YouTubeFacade가 <img>로 직접 받는다. 포트폴리오 커버(벅스·애플뮤직·텀블벅 등)는
+              next/image가 우리 서버에서 받아 오므로 브라우저가 그 호스트를 조회할 일이 없다 — 미리 조회하지 않는다(2026-10-22 리뷰). */}
           <link rel="dns-prefetch" href="https://i.ytimg.com" />
-          <link rel="dns-prefetch" href="https://is1-ssl.mzstatic.com" />
-          <link rel="dns-prefetch" href="https://img.tumblbug.com" />
-          <link rel="dns-prefetch" href="https://thumb.mt.co.kr" />
-          <link rel="dns-prefetch" href="https://cdn.imweb.me" />
           {/* 폰트 preload 제거: Slow 4G에서 1MB 폰트가 preload로 CSS/JS 다운로드를 블로킹하던 현상 해소.
               font-display: swap 으로 시스템 폰트 즉시 렌더 → 폰트 도착 후 swap. FCP 대폭 단축. */}
           {/* theme-init: FOUC 방지를 위해 <head>에서 *동기* 실행이 의도적.

@@ -85,7 +85,8 @@ export const generateCourseSchema = (
       availability: 'https://schema.org/InStock',
       url: normalizedCanonical,
     },
-    availableLanguage: [schemaLanguage],
+    // 수업 언어 — 페이지 로케일이 아니다(태국어 페이지라고 태국어로 가르치지 않는다). 레슨은 한국어로 한다.
+    availableLanguage: ['ko-KR'],
     hasCourseInstance: {
       '@type': 'CourseInstance',
       courseMode: 'onsite',
