@@ -1219,7 +1219,7 @@
       "items": [
         {
           "q": "Yaxshi kuylaya olmasam ham bo'ladimi?",
-          "a": "Albatta. Muhandis siz bilan birga qo'shiqni satrma-satr ishlab chiqadi, so'ng ohang va ritm tuzatish bilan tabiiy sayqallaydi."
+          "a": "Albatta. Muhandis siz bilan birga qo'shiqni satrma-satr ishlab chiqadi, so'ng ohang va ritmni to'g'rilash bilan tabiiy sayqallaydi."
         },
         {
           "q": "Narxi qancha?",
@@ -2459,7 +2459,7 @@
   "coverVideo": {
     "seo": {
       "title": "Cover video suratga olish · 4K video + audio to'liq paket ₩350K | Studio NOL",
-      "description": "Yeonsinnae stantsiyasi 4-chiqishdan 5 daqiqa yurish. Cover video suratga olish + oddiy miks bir seansda. 4K MP4 + WAV/MP3. To'liq paket ₩350,000 (QQS bilan).",
+      "description": "Yeonsinnae stantsiyasi 4-chiqishdan 5 daqiqa yurish. Cover video suratga olish + asosiy miks bir seansda. 4K MP4 + WAV/MP3. To'liq paket ₩350,000 (QQS bilan).",
       "keywords": "cover video suratga olish, cover qo'shiq, youtube cover video, musiqa studiyasi Seul, Yeonsinnae"
     },
     "hero": {
@@ -2474,7 +2474,7 @@
       "items": [
         {
           "q": "Suratga olish va yozishni bir vaqtda qilish mumkinmi?",
-          "a": "Ha. Studiya yozuvi va video suratga olish bir seansda bir vaqtda amalga oshiriladi. Suratga olish, oddiy miks (balansni sozlash) va montaj kiritilgan."
+          "a": "Ha. Studiya yozuvi va video suratga olish bir seansda bir vaqtda amalga oshiriladi. Suratga olish, asosiy miks (balansni sozlash) va montaj kiritilgan."
         },
         {
           "q": "Narxi qancha?",
@@ -2514,7 +2514,7 @@
         "Neumann U87AI yuqori darajadagi mikrofon — aniq va boy vokal yozuvi",
         "4K kamera (1 ta) + doimiy yoritish to'plami",
         "To'liq tovush o'tkazmaydigan kabina — mukammal audio sifati",
-        "Maxsus muhandis suratga olish, yozuv & oddiy miksni boshidan oxirigacha amalga oshiradi"
+        "Maxsus muhandis suratga olish, yozuv & asosiy miksni boshidan oxirigacha amalga oshiradi"
       ]
     },
     "package": {
@@ -2534,7 +2534,7 @@
         },
         {
           "title": "Miks & Montaj",
-          "description": "Oddiy miks (balansni sozlash) va video montaj birgalikda yakunlanadi. Vokal tuning kiritilmagan."
+          "description": "Asosiy miks (balansni sozlash) va video montaj birgalikda yakunlanadi. Vokal tuning kiritilmagan."
         },
         {
           "title": "Yakuniy Topshirish",
@@ -2564,11 +2564,11 @@
         },
         {
           "q": "Videosiz faqat cover qo'shiqni yozish mumkinmi?",
-          "a": "Ha, oddiy yozuv xizmati sifatida (vokal yozuvi, 3 soat, ₩250,000, qo'shiqlar soni cheklanmagan). To'liq paketdagi miks faqat balansni sozlaydigan oddiy miks bo'lib, vokal tuningni o'z ichiga olmaydi. Tuning yoki to'liq miks va mastering alohida buyurtma qilinadi."
+          "a": "Ha, oddiy yozuv xizmati sifatida (vokal yozuvi, 3 soat, ₩250,000, qo'shiqlar soni cheklanmagan). To'liq paketdagi miks faqat balansni sozlaydigan asosiy miks bo'lib, vokal tuningni o'z ichiga olmaydi. Tuning yoki to'liq miks va mastering alohida buyurtma qilinadi."
         },
         {
           "q": "Vokal tuning qo'shish mumkinmi?",
-          "a": "Ha, ixtiyoriy xizmat sifatida. Batafsil vokal tuning va ritm tuzatish — har bir qo'shiq uchun +₩150,000. To'liq paketga kiritilmagan, murojaat qilganda ayting."
+          "a": "Ha, ixtiyoriy xizmat sifatida. Batafsil vokal tuning va ritmni to'g'rilash — har bir qo'shiq uchun +₩150,000. To'liq paketga kiritilmagan, murojaat qilganda ayting."
         },
         {
           "q": "3 soat yetarli bo'lmasa nima bo'ladi?",
@@ -2583,7 +2583,7 @@
     "cta": {
       "titleLine1": "Sizning cover videongiz,",
       "titleHighlight": "hoziroq yarating",
-      "subtitleLine1": "Suratga olish · Yozuv · Oddiy miks · Montaj To'liq Paket",
+      "subtitleLine1": "Suratga olish · Yozuv · Asosiy miks · Montaj To'liq Paket",
       "subtitleLine2": "KakaoTalk orqali osonlik bilan band qiling.",
       "location": "Yo'nalish",
       "inquiry": "Cover Video Seansini Band Qilish",
@@ -2705,7 +2705,7 @@
         "Namuna videolar havolalari",
         "Kerakli sana, joy va video joylanadigan platforma"
       ],
-      "coverNote": "Studiyada faqat bitta qo'shiq kover videosi kerakmi? Cover Video paketi ({{cover}}) suratga olish, oddiy miks va montajni o'z ichiga oladi."
+      "coverNote": "Studiyada faqat bitta qo'shiq kover videosi kerakmi? Cover Video paketi ({{cover}}) suratga olish, asosiy miks va montajni o'z ichiga oladi."
     },
     "tierBar": {
       "message": "Qo'shiq va kayfiyatni ayting. Reja va narx bilan javob beramiz.",
@@ -2951,7 +2951,7 @@
               "detail": "Paketga aranjirovka kirmaydi → kichik tarkib ₩500K · to'liq guruh ₩1M · katta tarkib ₩1,2M (kompozitsiya va aranjirovka narxlari bo'yicha, har qo'shiq)"
             },
             {
-              "label": "Vokal tuning va ritm tuzatish",
+              "label": "Vokal tuning va ritmni to'g'rilash",
               "detail": "Paketga kirmaydi → batafsil tuning kerak bo'lsa, har bir qo'shiq uchun +₩150K (ixtiyoriy)"
             },
             {
@@ -2974,7 +2974,7 @@
             },
             {
               "question": "Reliz rejasi bo'lmasa ham bu paketdan foydalansa bo'ladimi?",
-              "answer": "Ha. Uni yozuv, miks va masteringni bir yo'la topshirish uchun ishlatishingiz mumkin. Tarqatish va PRdan foydalanmasangiz ham narx ₩500K bo'lib qoladi va vokal yozuv, miks hamda masteringni alohida buyurtma qilgandagi ₩550K yig'indisidan past. Batafsil vokal tuning va ritm tuzatish — har bir qo'shiq uchun +₩150K (ixtiyoriy); sessiya musiqachilari haqi va aranjirovka kirmaydi."
+              "answer": "Ha. Uni yozuv, miks va masteringni bir yo'la topshirish uchun ishlatishingiz mumkin. Tarqatish va PRdan foydalanmasangiz ham narx ₩500K bo'lib qoladi va vokal yozuv, miks hamda masteringni alohida buyurtma qilgandagi ₩550K yig'indisidan past. Batafsil vokal tuning va ritmni to'g'rilash — har bir qo'shiq uchun +₩150K (ixtiyoriy); sessiya musiqachilari haqi va aranjirovka kirmaydi."
             },
             {
               "question": "So'ramasdan qo'shiqni o'zgartirmaysizlarmi?",

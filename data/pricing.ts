@@ -750,7 +750,7 @@ export const getPricingData = (locale: Locale) => {
         es: `Una canción acompañada desde la planificación hasta la distribución y la prensa de lanzamiento. Sin plan de lanzamiento también sirve para encargar grabación, mezcla y masterización de una vez: si no usas distribución ni difusión, el precio es el mismo y queda por debajo de los ${singleLineItemTotalIntl} que sumarían por separado. La afinación vocal detallada y la corrección de tiempo cuestan +${vocalTuningIntl} por canción (opcional).`,
         vi: `Một bài hát được đồng hành từ khâu lên kế hoạch đến phát hành và PR. Dù không có kế hoạch phát hành, bạn vẫn có thể dùng gói này để giao thu âm, mixing và mastering một lần; nếu không dùng phát hành và PR thì giá vẫn như vậy và thấp hơn tổng ${singleLineItemTotalIntl} khi đặt riêng từng hạng mục. Chỉnh giọng và căn nhịp chi tiết là tùy chọn +${vocalTuningIntl} mỗi bài.`,
         th: `ดูแลหนึ่งเพลงตั้งแต่การวางแผนจนถึงการจัดจำหน่ายและประชาสัมพันธ์ แม้ไม่มีแผนปล่อยเพลงก็ใช้เป็นแพ็กเกจฝากอัดเสียง มิกซ์ และมาสเตอร์ในครั้งเดียวได้ ถ้าไม่ใช้การจัดจำหน่ายและประชาสัมพันธ์ ราคาก็เท่าเดิม และต่ำกว่าผลรวม ${singleLineItemTotalIntl} เมื่อสั่งแยกทีละรายการ การจูนเสียงร้องและแก้จังหวะอย่างละเอียดเป็นตัวเลือกเพิ่ม +${vocalTuningIntl} ต่อเพลง`,
-        uz: `Bitta qo'shiq rejalashtirishdan tarqatish va PRgacha birga olib boriladi. Reliz rejasi bo'lmasa ham yozuv, miks va masteringni bir yo'la topshirish uchun ishlatish mumkin: tarqatish va PRdan foydalanmasangiz ham narx o'zgarmaydi va alohida buyurtma qilingandagi ${singleLineItemTotalIntl} yig'indisidan past. Batafsil vokal tuning va ritm tuzatish — har bir qo'shiq uchun +${vocalTuningIntl} (ixtiyoriy).`
+        uz: `Bitta qo'shiq rejalashtirishdan tarqatish va PRgacha birga olib boriladi. Reliz rejasi bo'lmasa ham yozuv, miks va masteringni bir yo'la topshirish uchun ishlatish mumkin: tarqatish va PRdan foydalanmasangiz ham narx o'zgarmaydi va alohida buyurtma qilingandagi ${singleLineItemTotalIntl} yig'indisidan past. Batafsil vokal tuning va ritmni to'g'rilash — har bir qo'shiq uchun +${vocalTuningIntl} (ixtiyoriy).`
       }),
       features: tArray(locale, {
         ko: ['기획 · 방향 디렉팅', '보컬 녹음 3시간 (전담 엔지니어)', '믹싱 10트랙 이하 (수정 2회)', '싱글 마스터링 (수정 1회)', '디지털 유통 등록 (멜론·스포티파이·애플뮤직·유튜브뮤직)', `발매 홍보 — 국내 음악 매체 + 해외 매체·라디오·플레이리스트 피칭`, `제작 단가 합계 ${singleLineItemTotalKo} 대비 약 9% 할인`],
@@ -913,7 +913,7 @@ export const getPricingData = (locale: Locale) => {
         es: 'Filmación de video cover y producción de audio en una sesión — filmación, mezcla básica y edición incluidas.',
         vi: 'Quay video cover và sản xuất âm nhạc trong một buổi — quay phim, mix cơ bản và chỉnh sửa đều được bao gồm.',
         th: 'ถ่ายวิดีโอ cover และงานเสียงในครั้งเดียว — ถ่ายทำ มิกซ์เบื้องต้น และตัดต่อครบในแพ็กเกจเดียว',
-        uz: 'Cover video suratga olish va audio ishlab chiqarish bitta seansda — suratga olish, oddiy miks va montaj kiritilgan.'
+        uz: 'Cover video suratga olish va audio ishlab chiqarish bitta seansda — suratga olish, asosiy miks va montaj kiritilgan.'
       }),
       recommended: true,
       features: tArray(locale, {
@@ -921,9 +921,9 @@ export const getPricingData = (locale: Locale) => {
         en: ['3-hour session (1 song)', '4K camera + lighting included', 'Basic mixing (level balancing) included', '4K MP4 video + WAV & MP3 delivered'],
         zh: ['3小时拍摄+制作基准（1首）', '含4K摄像机1台+灯光', '含基础混音（平衡调整）', '交付4K MP4视频+WAV·MP3'],
         es: ['Sesión de 3 horas (1 canción)', 'Cámara 4K + iluminación incluida', 'Mezcla básica (equilibrio de niveles) incluida', 'Entrega de video 4K MP4 + WAV y MP3'],
-        vi: ['Buổi 3 giờ (1 bài)', 'Camera 4K + đèn chiếu sáng', 'Mix cơ bản (cân chỉnh âm lượng)', 'Giao 4K MP4 + WAV & MP3'],
+        vi: ['Buổi 3 giờ (1 bài)', 'Camera 4K + đèn chiếu sáng', 'Mix cơ bản (cân bằng âm lượng)', 'Giao 4K MP4 + WAV & MP3'],
         th: ['เซสชัน 3 ชั่วโมง (1 เพลง)', 'กล้อง 4K 1 ตัว + แสง', 'มิกซ์เบื้องต้น (ปรับบาลานซ์)', 'ส่งวิดีโอ 4K MP4 + WAV & MP3'],
-        uz: ['3 soatlik seans (1 qo\'shiq)', '4K kamera (1 ta) + yoritish', 'Oddiy miks (balansni sozlash) kiritilgan', '4K MP4 video + WAV & MP3 taqdim etiladi']
+        uz: ['3 soatlik seans (1 qo\'shiq)', '4K kamera (1 ta) + yoritish', 'Asosiy miks (balansni sozlash) kiritilgan', '4K MP4 video + WAV & MP3 taqdim etiladi']
       }),
     },
     {
