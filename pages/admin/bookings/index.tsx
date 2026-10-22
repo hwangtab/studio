@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 
 import { createBlock, deleteBlock } from '../../../components/admin/bookingActions';
 import { AdminShell } from '../../../components/admin/AdminShell';
+import { FilterPill } from '../../../components/admin/FilterPill';
 import { ManualBookingPanel } from '../../../components/admin/ManualBookingPanel';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextInput } from '../../../components/ui/Field';
@@ -440,16 +441,9 @@ export default function AdminBookingsPage({
                   const active = line === value;
                   const count = value ? bookings.filter((b) => bookingLineOf(b) === value).length : bookings.length;
                   return (
-                    <Link
-                      key={value ?? 'all'}
-                      href={value ? `/admin/bookings?line=${value}` : '/admin/bookings'}
-                      aria-current={active ? 'true' : undefined}
-                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 ${
-                        active ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                    >
+                    <FilterPill key={value ?? 'all'} active={active} href={value ? `/admin/bookings?line=${value}` : '/admin/bookings'}>
                       {value ? BOOKING_LINE_LABELS[value] : '전체'} ({count})
-                    </Link>
+                    </FilterPill>
                   );
                 })}
               </div>
@@ -457,47 +451,24 @@ export default function AdminBookingsPage({
               <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
                 <div className="flex flex-wrap gap-2">
                   {sessionUnmarked && (
-                    <Link
-                      href="/admin/bookings"
-                      className="px-3 py-1.5 rounded-full text-sm font-medium bg-violet-700 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
-                    >
+                    <FilterPill active tone="violet" href="/admin/bookings">
                       완료·노쇼 표시 대기 ({bookings.length}) · 전체 보기
-                    </Link>
+                    </FilterPill>
                   )}
                   {workFilter && (
-                    <Link
-                      href="/admin/bookings"
-                      className="px-3 py-1.5 rounded-full text-sm font-medium bg-violet-700 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
-                    >
+                    <FilterPill active tone="violet" href="/admin/bookings">
                       {workFilter === 'received' ? '믹싱 착수 대기' : '믹싱 작업 중'} ({bookings.length}) · 전체 보기
-                    </Link>
+                    </FilterPill>
                   )}
-                  <Link
-                    href={depositPending ? '/admin/bookings' : '/admin/bookings?deposit=pending'}
-                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 ${
-                      depositPending
-                        ? 'bg-sky-700 text-white'
-                        : 'bg-sky-100 text-sky-900 hover:bg-sky-200'
-                    }`}
-                  >
+                  <FilterPill active={depositPending} tone="sky" href={depositPending ? '/admin/bookings' : '/admin/bookings?deposit=pending'}>
                     입금 대기 ({depositPendingCount})
-                  </Link>
+                  </FilterPill>
                   {['all', ...orderStatusEnum].map((status) => (
-                    <button
-                      key={status}
-                      type="button"
-                      aria-pressed={filter === status}
-                      onClick={() => setFilter(status)}
-                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                        filter === status
-                          ? 'bg-gray-900 text-white'
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                      }`}
-                    >
+                    <FilterPill key={status} active={filter === status} onClick={() => setFilter(status)}>
                       {status === 'all'
                         ? `전체 (${counts.all})`
                         : `${ORDER_STATUS_LABELS[status] ?? status} (${counts[status] ?? 0})`}
-                    </button>
+                    </FilterPill>
                   ))}
                 </div>
 

@@ -10,6 +10,7 @@ import {
   mutateContract,
 } from '../../../components/admin/contractActions';
 import { AdminShell } from '../../../components/admin/AdminShell';
+import { FilterPill } from '../../../components/admin/FilterPill';
 import { Button } from '../../../components/ui/Button';
 import { TextInput } from '../../../components/ui/Field';
 import { getDb } from '../../../db/client';
@@ -304,9 +305,9 @@ export default function AdminContractsPage({
               <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
                 {serverFilter ? (
                   <div className="flex flex-wrap items-center gap-3 text-sm">
-                    <span className="inline-flex rounded-full bg-gray-900 px-3 py-1.5 font-medium text-white">
+                    <FilterPill active>
                       {serverFilter === 'termination' ? '종료 처리 필요' : getStatusLabel(serverFilter as never)} ({contracts.length})
-                    </span>
+                    </FilterPill>
                     <Link href="/admin/contracts" className="text-primary hover:underline">
                       전체 보기
                     </Link>
@@ -314,21 +315,11 @@ export default function AdminContractsPage({
                 ) : (
                 <div className="flex flex-wrap gap-2">
                   {['all', ...contractStatusEnum].map((status) => (
-                    <button
-                      key={status}
-                      type="button"
-                      aria-pressed={filter === status}
-                      onClick={() => setFilter(status)}
-                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                        filter === status
-                          ? 'bg-gray-900 text-white'
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                      }`}
-                    >
+                    <FilterPill key={status} active={filter === status} onClick={() => setFilter(status)}>
                       {status === 'all'
                         ? `전체 (${counts.all})`
                         : `${getStatusLabel(status as never)} (${counts[status] ?? 0})`}
-                    </button>
+                    </FilterPill>
                   ))}
                 </div>
                 )}

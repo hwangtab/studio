@@ -91,6 +91,15 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 };
 
 const won = (value: number) => `${value.toLocaleString('ko-KR')}원`;
+/** 폰 회차 버튼의 칸 폭(6칸 격자) — 버튼 수 → 각 버튼의 col-span. 5개는 3+2, 4개는 2+2, 3개는 한 줄, 2개는 반반, 1개는 한 줄 전체. */
+const SESSION_ACTION_SPANS: Record<number, string[]> = {
+  1: ['col-span-6'],
+  2: ['col-span-3', 'col-span-3'],
+  3: ['col-span-2', 'col-span-2', 'col-span-2'],
+  4: ['col-span-3', 'col-span-3', 'col-span-3', 'col-span-3'],
+  5: ['col-span-2', 'col-span-2', 'col-span-2', 'col-span-3', 'col-span-3'],
+};
+
 const STATUS_CLASS: Record<string, string> = {
   scheduled: 'bg-sky-100 text-sky-800', done: 'bg-green-100 text-green-800', absent: 'bg-red-100 text-red-800',
   studio_cancelled: 'bg-amber-100 text-amber-800', dropped: 'bg-gray-100 text-gray-600',
@@ -184,7 +193,7 @@ export default function AdminLessonDetailPage({ found, today, enrollment, sessio
           <p className="flex flex-wrap items-center gap-2">
             <span className="rounded bg-gray-100 px-2 py-0.5 text-xs font-medium">{ENROLLMENT_STATUS_LABELS[enrollment.status]}</span>
             <span>진행 {progress.consumed}/{progress.total}회 (완료 {progress.done} · 결석 {progress.absent} · 남음 {progress.scheduled})</span>
-            <span className="text-gray-500">· 월 {won(enrollment.monthlyAmount)}(부가세 별도)</span>
+            <span className="text-gray-500">월 {won(enrollment.monthlyAmount)}(부가세 별도)</span>
           </p>
           {enrollment.endedOn && <p className="mt-1 text-red-800">{enrollment.endedOn} 중도 종료 — {enrollment.endedReason}</p>}
           {enrollment.note && <p className="mt-1 text-gray-600">메모: {enrollment.note}</p>}
@@ -203,27 +212,43 @@ export default function AdminLessonDetailPage({ found, today, enrollment, sessio
                       <span className={`ml-2 rounded px-1.5 py-0.5 text-xs font-medium ${STATUS_CLASS[s.status]}`}>{SESSION_STATUS_LABELS[s.status]}</span>
                       {overdue && <span className="ml-1 text-xs font-medium text-amber-700">표시 필요</span>}
                     </p>
-                    <div className="flex flex-wrap gap-2">
-                      {s.status === 'scheduled' && active && (
-                        <>
-                          <Button light size="sm" disabled={busy} onClick={() => mark(s, 'done')}>완료</Button>
-                          <Button light variant="weak" size="sm" disabled={busy} onClick={() => mark(s, 'absent')}>결석</Button>
-                          <Button light variant="weak" size="sm" disabled={busy} onClick={() => mark(s, 'studio_cancelled')}>스튜디오 휴강</Button>
-                          <Button light variant="weak" size="sm" disabled={busy} onClick={() => { setMoveId(s.id); setMoveDate(s.scheduledOn); setMoveTime(s.startTime); }}>일정 변경</Button>
-                        </>
-                      )}
-                      {s.status !== 'dropped' && enrollment.status !== 'ended' && (
-                        <Button light variant="weak" size="sm" disabled={busy} onClick={() => {
-                          const topic = window.prompt('다룬 내용(비우면 지워요)', s.topic ?? '');
-                          if (topic === null) return;
-                          const homework = window.prompt('과제(비우면 지워요)', s.homework ?? '');
-                          if (homework === null) return;
-                          void post({ action: 'session_status', sessionId: s.id, status: s.status, topic, homework }, '수업 기록을 저장했어요.');
-                        }}>기록</Button>
-                      )}
-                      {s.status !== 'scheduled' && s.status !== 'dropped' && enrollment.status !== 'ended' && (
-                        <Button light variant="weak" size="sm" disabled={busy} onClick={() => mark(s, 'scheduled')}>되돌리기</Button>
-                      )}
+                    <div className="grid w-full grid-cols-6 gap-2 sm:flex sm:w-auto sm:flex-wrap">
+                      {(() => {
+                        // 폰(390px)에서 다섯 버튼이 4+1로 접혀 '기록'만 둘째 줄에 남던 것 — 6칸 격자에 개수별로 폭을 나눠
+                        // 3+2(또는 2, 1)로 빈틈없이 채운다. sm 이상은 예전처럼 한 줄로 흐른다. 누르는 동작은 그대로다.
+                        const actions: Array<{ key: string; label: string; primary?: boolean; onClick: () => void }> = [];
+                        const scheduledActive = s.status === 'scheduled' && active;
+                        if (scheduledActive) {
+                          actions.push({ key: 'done', label: '완료', primary: true, onClick: () => mark(s, 'done') });
+                          actions.push({ key: 'absent', label: '결석', onClick: () => mark(s, 'absent') });
+                        }
+                        if (s.status !== 'dropped' && enrollment.status !== 'ended') {
+                          actions.push({
+                            key: 'note',
+                            label: '기록',
+                            onClick: () => {
+                              const topic = window.prompt('다룬 내용(비우면 지워요)', s.topic ?? '');
+                              if (topic === null) return;
+                              const homework = window.prompt('과제(비우면 지워요)', s.homework ?? '');
+                              if (homework === null) return;
+                              void post({ action: 'session_status', sessionId: s.id, status: s.status, topic, homework }, '수업 기록을 저장했어요.');
+                            },
+                          });
+                        }
+                        if (scheduledActive) {
+                          actions.push({ key: 'cancel', label: '스튜디오 휴강', onClick: () => mark(s, 'studio_cancelled') });
+                          actions.push({ key: 'move', label: '일정 변경', onClick: () => { setMoveId(s.id); setMoveDate(s.scheduledOn); setMoveTime(s.startTime); } });
+                        }
+                        if (s.status !== 'scheduled' && s.status !== 'dropped' && enrollment.status !== 'ended') {
+                          actions.push({ key: 'revert', label: '되돌리기', onClick: () => mark(s, 'scheduled') });
+                        }
+                        const spans = SESSION_ACTION_SPANS[actions.length] ?? [];
+                        return actions.map((a, i) => (
+                          <Button key={a.key} light variant={a.primary ? 'solid' : 'weak'} size="sm" disabled={busy} onClick={a.onClick} className={`${spans[i] ?? 'col-span-3'} px-2 sm:px-3`}>
+                            {a.label}
+                          </Button>
+                        ));
+                      })()}
                     </div>
                   </div>
                   {(s.topic || s.homework) && <p className="mt-1 text-xs text-gray-600">{s.topic ? `다룬 내용: ${s.topic}` : ''}{s.topic && s.homework ? ' · ' : ''}{s.homework ? `과제: ${s.homework}` : ''}</p>}

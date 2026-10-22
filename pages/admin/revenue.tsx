@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 
 import { AdminShell } from '../../components/admin/AdminShell';
+import { FilterPill } from '../../components/admin/FilterPill';
 import { ManualRevenuePanel, type ManualRevenueView } from '../../components/admin/ManualRevenuePanel';
 import { Disclosure } from '../../components/ui/Disclosure';
 import { Notice } from '../../components/ui/Notice';
@@ -460,29 +461,18 @@ export default function AdminRevenuePage({ summary, type, line = null, years, no
             <section className="rounded-2xl bg-white p-4 shadow-sm md:p-6">
               <div className="flex flex-wrap items-center gap-2">
                 {years.map((y) => (
-                  <Link
-                    key={y}
-                    href={href(y, summary.month === 'all' ? 'all' : summary.month, type, line)}
-                    className={`rounded-full px-3 py-1.5 text-sm font-medium ${y === summary.year ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                  >
+                  <FilterPill key={y} active={y === summary.year} href={href(y, summary.month === 'all' ? 'all' : summary.month, type, line)}>
                     {y}년
-                  </Link>
+                  </FilterPill>
                 ))}
                 <span className="mx-1 hidden h-5 w-px bg-gray-200 md:inline-block" />
-                <Link
-                  href={href(summary.year, 'all', type, line)}
-                  className={`rounded-full px-3 py-1.5 text-sm font-medium ${summary.month === 'all' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                >
+                <FilterPill active={summary.month === 'all'} href={href(summary.year, 'all', type, line)}>
                   연 전체
-                </Link>
+                </FilterPill>
                 {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
-                  <Link
-                    key={m}
-                    href={href(summary.year, m, type, line)}
-                    className={`rounded-full px-3 py-1.5 text-sm font-medium ${summary.month === m ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                  >
+                  <FilterPill key={m} active={summary.month === m} href={href(summary.year, m, type, line)}>
                     {m}월
-                  </Link>
+                  </FilterPill>
                 ))}
               </div>
               {(type || line) && (

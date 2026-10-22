@@ -328,18 +328,18 @@ export default function AdminIndexPage({ dashboard, shopQueues, revenue = null, 
                 <ul className="divide-y divide-gray-100">
                   {dashboard.upcomingSessions.map((session) => (
                     <li key={session.orderId}>
+                      {/* 처리할 일과 같은 두 줄 행 — 1줄 일시(+결제 링크 배지), 2줄 고객 · 상품 · 주문번호. 예전엔 세 조각을 flex-wrap으로
+                          흘려 폭에 따라 행마다 접히는 자리가 달랐다. */}
                       <Link href={`/admin/bookings/${session.orderId}`} className={`${ROW_LINK} text-sm`}>
-                        <span className="flex min-w-0 flex-1 flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                          <span className="font-medium text-gray-900 tabular-nums">{formatKstDateTime(session.startAt)}</span>
-                          <span className="text-gray-700">
-                            {session.customerName} · {session.productName}
-                            {session.kind === 'link' && (
-                              <Badge tone="warning" className="ml-2">
-                                결제 링크
-                              </Badge>
-                            )}
+                        <span className="min-w-0 flex-1">
+                          <span className="flex flex-wrap items-center gap-2">
+                            <span className="font-medium text-primary tabular-nums group-hover:underline">{formatKstDateTime(session.startAt)}</span>
+                            {session.kind === 'link' && <Badge tone="warning">결제 링크</Badge>}
                           </span>
-                          <span className="text-primary group-hover:underline">{session.orderNo}</span>
+                          <span className="mt-0.5 block text-gray-700">
+                            {session.customerName} · {session.productName}
+                            <span className="ml-2 text-xs text-gray-500 tabular-nums">{session.orderNo}</span>
+                          </span>
                         </span>
                         <Chevron />
                       </Link>
@@ -358,22 +358,22 @@ export default function AdminIndexPage({ dashboard, shopQueues, revenue = null, 
                 {dashboard.calendarError && <p className="text-sm text-amber-800">{dashboard.calendarError}</p>}
                 <ul className="divide-y divide-gray-100">
                   {dashboard.calendarEvents.map((event) => (
-                    <li key={event.id} className="py-2 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-sm">
-                      <span className="font-medium text-gray-900 tabular-nums">{event.allDay ? `${formatKstDateTime(event.startAt).slice(0, 14)} 종일` : formatKstDateTime(event.startAt)}</span>
-                      <span className="text-gray-700">
-                        {event.summary}
-                        <Badge tone="info" className="ml-2">
-                          캘린더
-                        </Badge>
+                    <li key={event.id} className="flex items-center justify-between gap-3 py-2 text-sm">
+                      <span className="min-w-0 flex-1">
+                        <span className="flex flex-wrap items-center gap-2">
+                          <span className="font-medium text-gray-900 tabular-nums">{event.allDay ? `${formatKstDateTime(event.startAt).slice(0, 14)} 종일` : formatKstDateTime(event.startAt)}</span>
+                          <Badge tone="info">캘린더</Badge>
+                        </span>
+                        <span className="mt-0.5 block break-words text-gray-700">{event.summary}</span>
                       </span>
                       {event.adoptable ? (
-                        <Button asChild light variant="weak" size="sm">
+                        <Button asChild light variant="weak" size="sm" className="shrink-0">
                           <Link href={`/admin/bookings?${new URLSearchParams({ fromEvent: event.id, start: event.startAt, end: event.endAt, title: event.summary }).toString()}`}>
                             사이트에 등록
                           </Link>
                         </Button>
                       ) : (
-                        <span className="text-xs text-gray-500">종일 일정은 직접 등록해 주세요</span>
+                        <span className="shrink-0 text-right text-xs text-gray-500">종일 일정은<br className="sm:hidden" /> 직접 등록해 주세요</span>
                       )}
                     </li>
                   ))}
