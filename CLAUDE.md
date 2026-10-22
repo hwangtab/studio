@@ -1293,3 +1293,12 @@ atomic update에서 이 방식으로 전환). 따라서 **같은 minor 안의 �
   puppeteer-core 중첩 `proxy-agent`를 걷어내 CI의 `npm ci`가 "Missing: proxy-agent@…"로 실패한다. `npx -y npm@10 ci --dry-run`으로
   먼저 확인할 것.
 - `postcss` 8.4.31(next 번들)은 audit이 잡지 않는다. next가 올라가면 함께 정리된다.
+
+## WebFetch가 막힌 외부 페이지는 crawl4ai로 읽는다
+
+네이버 블로그(`blog.naver.com`)처럼 WebFetch가 "unable to fetch"로 거절하거나 본문이 비어 오는 페이지는 포기하지 말고 **crawl4ai**로 읽는다
+(2026-10-22 운영자 지시 — 후기 원문 확인 때 WebFetch가 막혔다). 예: `crwl <URL> -o markdown`.
+- 이 맥에 설치했다(2026-10-22, `crwl`은 pyenv 3.13). 없으면 `pip3 install crawl4ai && crawl4ai-setup`. 배너는 `CRAWL4AI_NO_CLOUD_NOTICE=1`로 끈다.
+  **네이버 블로그는 `https://blog.naver.com/PostView.naver?blogId=<아이디>&logNo=<글번호>`로 넣어야 본문이 나온다**(`blog.naver.com/<아이디>/<글번호>` 그대로는
+  껍데기만 온다). 출력이 메뉴·카테고리로 길어서 `grep`으로 본문 키워드가 든 줄을 찾고 `sed -E 's/\(https?:[^)]*\)//g'`로 링크를 걷어 읽는다.
+- 읽은 내용은 후기·인용처럼 사이트에 싣는 문구의 근거 확인용이다. 원문을 그대로 옮겨 쓸 때는 `sourceUrl`을 남긴다(`data/reviews.ts` 참조).
