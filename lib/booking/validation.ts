@@ -1,5 +1,5 @@
-import isEmail from 'validator/lib/isEmail';
-
+import { contactProblems, type ContactField } from '../contact/rules';
+import { normalizeKoreanMobile } from '../contact/phone';
 import { daysUntilKst, kstDateTime } from './kst';
 import { getMixingProduct, resolveSongCount } from './mixing-products';
 import { getProduct, resolveHours } from './products';
@@ -78,31 +78,26 @@ interface CustomerFields {
 
 type CustomerResult = { ok: true; value: CustomerFields } | { ok: false; message: string };
 
-/**
- * 휴대폰 번호 정규화 — 국제 형식(+82 10-4255-7893, +821042557893, 82-10-…)과
- * 공백·하이픈·괄호 섞인 입력을 전부 010XXXXXXXX로 모은 뒤 검증한다.
- * 저장은 항상 010-1234-5678 형태로 통일해 메일·관리자 화면 표기를 일관되게 한다.
- * 정규화 불가(자릿수·국번 불일치)면 null.
- */
-export const normalizeKoreanMobile = (raw: string): string | null => {
-  let digits = raw.replace(/[^\d+]/g, '');
-  if (digits.startsWith('+82')) digits = '0' + digits.slice(3);
-  else if (digits.startsWith('82') && digits.length >= 12) digits = '0' + digits.slice(2);
-  digits = digits.replace(/\D/g, '');
-  if (!/^01[016789]\d{7,8}$/.test(digits)) return null;
-  const mid = digits.length === 11 ? digits.slice(3, 7) : digits.slice(3, 6);
-  return `${digits.slice(0, 3)}-${mid}-${digits.slice(-4)}`;
-};
+// 휴대폰 정규화는 말단 모듈(lib/contact/phone.ts)에 있다 — 결제 화면이 이 파일(상품 카탈로그를 import)을
+// 끌어오지 않고도 같은 규칙을 쓰게. 기존 import 경로는 그대로 둔다.
+export { normalizeKoreanMobile } from '../contact/phone';
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+const SERVER_CONTACT_MESSAGES: Record<ContactField, string> = {
+  customerName: '이름을 확인해 주세요.',
+  customerPhone: '휴대폰 번호를 확인해 주세요.',
+  customerEmail: '이메일을 확인해 주세요.',
+};
 
 /** 이름·휴대폰·이메일만 — 환불 규정 동의가 없는 흐름(예약금 결제 링크)용. */
 export const validateCustomerContact = (b: Record<string, unknown>): CustomerResult => {
-  const name = typeof b.customerName === 'string' ? b.customerName.trim() : '';
-  if (name.length < 2 || name.length > 40) return { ok: false, message: '이름을 확인해 주세요.' };
-  const phone = typeof b.customerPhone === 'string' ? normalizeKoreanMobile(b.customerPhone) : null;
-  if (!phone) return { ok: false, message: '휴대폰 번호를 확인해 주세요.' };
-  const email = typeof b.customerEmail === 'string' ? b.customerEmail.trim() : '';
-  if (!isEmail(email)) return { ok: false, message: '이메일을 확인해 주세요.' };
+  // 판정은 lib/contact/rules.ts 하나 — 결제 화면의 칸별 검사와 같은 규칙이다. 여기서는 서버 문구만 고른다.
+  const text = (k: ContactField) => (typeof b[k] === 'string' ? (b[k] as string) : '');
+  const [problem] = contactProblems({ customerName: text('customerName'), customerPhone: text('customerPhone'), customerEmail: text('customerEmail') });
+  if (problem) return { ok: false, message: SERVER_CONTACT_MESSAGES[problem.field] };
+  const name = text('customerName').trim();
+  const phone = normalizeKoreanMobile(text('customerPhone')) as string;
+  const email = text('customerEmail').trim();
   const note = typeof b.customerNote === 'string' ? b.customerNote.trim().slice(0, 500) : undefined;
 
   return { ok: true, value: { customerName: name, customerPhone: phone, customerEmail: email, customerNote: note } };
@@ -113,7 +108,7 @@ export const validateCustomerContact = (b: Record<string, unknown>): CustomerRes
  * 정보 검증. 원래 validateCreateBookingPayload 안에 있던 로직을 그대로 옮겼을 뿐이라
  * 메시지·동작은 바뀌지 않는다.
  */
-const validateCustomerFields = (b: Record<string, unknown>): CustomerResult => {
+const validateCustomerContactWithConsent = (b: Record<string, unknown>): CustomerResult => {
   const contact = validateCustomerContact(b);
   if (!contact.ok) return contact;
   if (b.refundPolicyAgreed !== true) return { ok: false, message: '환불 규정에 동의해 주세요.' };
@@ -143,7 +138,7 @@ export const validateCreateBookingPayload = (body: unknown, now: Date): Result =
   if (daysUntilKst(now, startAt) > MAX_BOOK_DAYS)
     return { ok: false, message: `예약은 ${MAX_BOOK_DAYS}일 이내만 가능해요.` };
 
-  const customer = validateCustomerFields(b);
+  const customer = validateCustomerContactWithConsent(b);
   if (!customer.ok) return customer;
 
   return {
@@ -170,7 +165,7 @@ export const validateCreateMixingOrderPayload = (body: unknown, now: Date): Mixi
   if (b.vocalTuning && !product.tuningEligible)
     return { ok: false, message: '이 상품은 보컬 튜닝 옵션을 선택할 수 없어요.' };
 
-  const customer = validateCustomerFields(b);
+  const customer = validateCustomerContactWithConsent(b);
   if (!customer.ok) return customer;
 
   return {

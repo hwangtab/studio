@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import type { CheckoutPaymentMethod } from '../../lib/payments/bankDeposit';
 import { wantsBankFallback } from '../../lib/payments/bankFallback';
-import { focusFirstCustomerFieldError, validateCustomerFields, type CustomerFieldErrors, type CustomerFieldKey } from '../../lib/booking/customerFields';
+import CustomerContactFields from '../forms/CustomerContactFields';
+import { useContactValidation } from '../forms/useContactValidation';
 import { reportPaymentFailure } from '../../utils/reportPaymentFailure';
 import { Button } from '../ui/Button';
-import { Field, TextInput } from '../ui/Field';
 import { Notice } from '../ui/Notice';
 import BankDepositGuide from './BankDepositGuide';
 import PaymentMethodPicker from './PaymentMethodPicker';
@@ -23,11 +23,12 @@ export default function PaymentLinkCheckout({ slug, totalAmount }: { slug: strin
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
-  // 주문자 칸 오류 — 브라우저 기본 검증(말풍선) 대신 칸 아래 한국어 문구로 보인다(noValidate, lib/booking/customerFields.ts).
-  const [fieldErrors, setFieldErrors] = useState<CustomerFieldErrors>({});
-  const clearFieldError = (key: CustomerFieldKey) =>
-    setFieldErrors((prev) => (prev[key] ? { ...prev, [key]: undefined } : prev));
+  // 주문자 칸 검사 — 브라우저 기본 검증(말풍선) 대신 칸 아래 한국어 문구(noValidate, components/forms/useContactValidation.ts).
+  const contact = useContactValidation();
   const [submitting, setSubmitting] = useState(false);
+  // 같은 틱에 Enter가 두 번 들어와도 주문이 둘 생기지 않게 — state는 다음 렌더에야 바뀐다.
+  const submittingRef = useRef(false);
+  const setBusy = (busy: boolean) => { submittingRef.current = busy; setSubmitting(busy); };
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [bankGuide, setBankGuide] = useState<{ deadline: string; customerName: string } | null>(null);
 
@@ -51,11 +52,11 @@ export default function PaymentLinkCheckout({ slug, totalAmount }: { slug: strin
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const nextFieldErrors = validateCustomerFields({ customerName, customerPhone, customerEmail });
-    setFieldErrors(nextFieldErrors);
-    if (focusFirstCustomerFieldError(nextFieldErrors)) return;
-    if (submitting) return;
-    setSubmitting(true);
+    if (submittingRef.current) return;
+    // 검사보다 먼저 지운다 — 칸 오류와 지난 제출의 서버·네트워크 오류가 같이 보이지 않게.
+    setSubmitError(null);
+    if (!contact.validate({ customerName, customerPhone, customerEmail })) return;
+    setBusy(true);
     setSubmitError(null);
     let createdOrderNo: string | null = null;
     try {
@@ -106,7 +107,7 @@ export default function PaymentLinkCheckout({ slug, totalAmount }: { slug: strin
       if (code === 'USER_CANCEL' || code === 'PAY_PROCESS_CANCELED') return;
       setSubmitError('네트워크 오류로 주문 신청에 실패했어요. 잠시 후 다시 시도해 주세요. 결제가 계속 어려우시면 결제수단에서 "계좌로 직접 입금"을 고르실 수 있어요.');
     } finally {
-      setSubmitting(false);
+      setBusy(false);
     }
   };
 
@@ -120,36 +121,15 @@ export default function PaymentLinkCheckout({ slug, totalAmount }: { slug: strin
         주문자 정보
       </h2>
       <form onSubmit={handleSubmit} noValidate className="space-y-4">
-        <Field id="customerName" label="이름" required error={fieldErrors.customerName}>
-          <TextInput
-            type="text"
-            autoComplete="name"
-            value={customerName}
-            onChange={(e) => { setCustomerName(e.target.value); clearFieldError('customerName'); }}
-            required
-          />
-        </Field>
-        <Field id="customerPhone" label="휴대폰 번호" required error={fieldErrors.customerPhone}>
-          <TextInput
-            type="tel"
-            inputMode="tel"
-            autoComplete="tel"
-            placeholder="010-1234-5678"
-            value={customerPhone}
-            onChange={(e) => { setCustomerPhone(e.target.value); clearFieldError('customerPhone'); }}
-            required
-          />
-        </Field>
-        <Field id="customerEmail" label="이메일" required error={fieldErrors.customerEmail}>
-          <TextInput
-            type="email"
-            inputMode="email"
-            autoComplete="email"
-            value={customerEmail}
-            onChange={(e) => { setCustomerEmail(e.target.value); clearFieldError('customerEmail'); }}
-            required
-          />
-        </Field>
+        <CustomerContactFields
+          contact={contact}
+          values={{ customerName, customerPhone, customerEmail }}
+          onChange={(field, value) => {
+            if (field === 'customerName') setCustomerName(value);
+            else if (field === 'customerPhone') setCustomerPhone(value);
+            else setCustomerEmail(value);
+          }}
+        />
 
         {/* 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금(우리 계좌번호 안내). 토스 계좌이체는 2026-10-14에 뺐다. */}
         <div className="pt-2">

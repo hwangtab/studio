@@ -1,6 +1,5 @@
-import isEmail from 'validator/lib/isEmail';
-
-import { normalizeKoreanMobile } from '../booking/validation';
+import { normalizeKrOrIntlPhone } from '../contact/phone';
+import { contactProblems } from '../contact/rules';
 import type { ShowLocale } from './i18n';
 import { SHOW_MAX_PER_ORDER_CAP } from './limits';
 
@@ -22,16 +21,7 @@ const ID_PATTERN = /^[A-Za-z0-9_-]{1,64}$/;
  * (영어 화면을 연 2026-10-07부터 — 해외에서 온 관객은 한국 번호가 없다). 문자 발송에 쓰지 않고 운영자가
  * 연락할 때만 쓴다. 해외 번호는 `+` 뒤 숫자 7~15자리(E.164 상한)를 `+<숫자>`로 저장한다.
  */
-export function normalizeShowContact(raw: string): string | null {
-  const kr = normalizeKoreanMobile(raw);
-  if (kr) return kr;
-  const trimmed = raw.trim();
-  if (!trimmed.startsWith('+')) return null;
-  if (!/^\+[\d\s().-]+$/.test(trimmed)) return null;
-  const digits = trimmed.slice(1).replace(/\D/g, '');
-  if (digits.length < 7 || digits.length > 15 || digits.startsWith('0')) return null;
-  return `+${digits}`;
-}
+export const normalizeShowContact = normalizeKrOrIntlPhone;
 
 const MESSAGES = {
   ko: {
@@ -78,13 +68,15 @@ export function validateCreateShowOrderPayload(body: unknown, locale: ShowLocale
     return { ok: false, message: m.quantity(SHOW_MAX_PER_ORDER_CAP) };
   }
 
-  const name = typeof b.buyerName === 'string' ? b.buyerName.trim() : '';
-  if (name.length < 2 || name.length > 40) return { ok: false, message: m.name };
-  const phone = typeof b.buyerContact === 'string' ? normalizeShowContact(b.buyerContact) : null;
-  if (!phone) return { ok: false, message: m.phone };
-  const email = typeof b.buyerEmail === 'string' ? b.buyerEmail.trim() : '';
-  // 티켓(QR)은 메일로 전달되므로 필수다.
-  if (email === '' || email.length > 254 || !isEmail(email)) return { ok: false, message: m.email };
+  // 판정은 lib/contact/rules.ts(해외 번호 허용 'kr-or-intl') — 예매 화면의 칸별 검사와 같은 규칙. 티켓(QR)은 메일로 가므로 이메일은 필수다.
+  const rawName = typeof b.buyerName === 'string' ? b.buyerName : '';
+  const rawContact = typeof b.buyerContact === 'string' ? b.buyerContact : '';
+  const rawEmail = typeof b.buyerEmail === 'string' ? b.buyerEmail : '';
+  const [problem] = contactProblems({ customerName: rawName, customerPhone: rawContact, customerEmail: rawEmail }, 'kr-or-intl');
+  if (problem) return { ok: false, message: problem.field === 'customerName' ? m.name : problem.field === 'customerPhone' ? m.phone : m.email };
+  const name = rawName.trim();
+  const phone = normalizeShowContact(rawContact) as string;
+  const email = rawEmail.trim();
 
   if (b.refundPolicyAgreed !== true) return { ok: false, message: m.agree };
 

@@ -422,3 +422,41 @@ describe('BookingWizard 상품 미리 고르기', () => {
     expect(screen.getByRole('radio', { name: new RegExp(PRODUCT.nameKo) })).toBeChecked();
   });
 });
+
+/** 주문자 칸 검사(2026-10-22) — 브라우저 말풍선 대신 칸별 한국어 오류, 서버에 보내기 전에 막는다. */
+describe('주문자 칸 검사', () => {
+  afterEach(() => { requestPayment.mockClear(); });
+  const bookingPosts = () => (global.fetch as jest.Mock).mock.calls.filter((c) => c[0] === '/api/bookings');
+
+  it('빈 값으로 결제하기 → 주문을 만들지 않고 요약 한 줄 + 이름 칸 포커스', async () => {
+    const user = userEvent.setup();
+    render(<BookingWizard service="recording" products={[PRODUCT]} />);
+    await goToStep3(user);
+    await user.click(screen.getByRole('button', { name: /결제하기/ }));
+    expect(bookingPosts()).toHaveLength(0);
+    expect(requestPayment).not.toHaveBeenCalled();
+    expect(screen.getByRole('alert')).toHaveTextContent('아래 3개 항목을 확인해 주세요.');
+    expect(screen.getByLabelText(/^이름/)).toHaveFocus();
+  });
+
+  it('지난 제출의 서버 오류는 다시 누를 때 지운다 — 칸 오류와 같이 남지 않는다', async () => {
+    (global.fetch as jest.Mock).mockImplementation(async (input: RequestInfo | URL) => {
+      const url = typeof input === 'string' ? input : input.toString();
+      if (url.startsWith('/api/bookings/slots')) return { ok: true, status: 200, json: async () => slotsResponse } as Response;
+      throw new Error('network down');
+    });
+    const user = userEvent.setup();
+    render(<BookingWizard service="recording" products={[PRODUCT]} />);
+    await goToStep3(user);
+    await user.type(screen.getByLabelText(/^이름/), '김고객');
+    await user.type(screen.getByLabelText(/휴대폰/), '010-1111-2222');
+    await user.type(screen.getByLabelText(/이메일/), 'a@b.com');
+    await user.click(screen.getByRole('button', { name: /결제하기/ }));
+    await waitFor(() => expect(screen.getByText(/네트워크/)).toBeInTheDocument());
+
+    await user.clear(screen.getByLabelText(/^이름/));
+    await user.click(screen.getByRole('button', { name: /결제하기/ }));
+    expect(screen.queryByText(/네트워크/)).toBeNull();
+    expect(screen.getByText('이름을 입력해 주세요.')).toBeInTheDocument();
+  });
+});
