@@ -194,10 +194,10 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
   // 2026-09-25 추가 — 커버 영상·발매 홍보로 가는 본문 동선이 0~2건이었다.
   cover: {
     title: '커버 영상 촬영 올인원',
-    description: '노래 커버 영상을 촬영·녹음·믹싱까지 한 번에 진행하고, 4K 영상과 음원을 함께 드려요.',
+    description: '노래 커버 영상을 촬영·녹음·기본 믹싱까지 한 번에 진행하고, 4K 영상과 음원을 함께 드려요.',
     features: [
       `올인원 ${man(COVER_VIDEO_PACKAGE_PRICE)} (3시간)`,
-      '촬영 + 보컬 녹음 + 믹싱',
+      '촬영 + 보컬 녹음 + 기본 믹싱',
       '4K 영상 + 음원 파일 납품',
       '조명을 갖춘 스튜디오 촬영',
     ],
