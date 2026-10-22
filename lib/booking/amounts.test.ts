@@ -6,6 +6,7 @@ import {
   DAY_LOCK_8H_PRICE,
   RECORDING_HOURLY_PRICE,
   VOCAL_PACKAGE_PRICE,
+  VOCAL_TUNING_ADDON_PRICE,
   VOICEOVER_HOURLY_PRICE,
   WEDDING_PACKAGE_PRICE,
 } from '../../data/pricing';
@@ -101,5 +102,15 @@ describe('연습실 시간제 청구액 — 소비자가 6,600원(VAT 포함) ×
   });
   it('1시간은 6,600원 그대로 — 7,260원(VAT 별도 착각)이 되면 안 된다', () => {
     expect(computeAmounts(getProduct('practice-room-hourly')!, 1).totalAmount).toBe(6600);
+  });
+});
+
+describe('커버 영상 + 보컬 튠 상품', () => {
+  it('올인원 + 튠 애드온 합계이고 VAT 분리가 맞다', () => {
+    const p = getProduct('cover-video-tuning')!;
+    expect(p.unitAmount).toBe(COVER_VIDEO_PACKAGE_PRICE + VOCAL_TUNING_ADDON_PRICE);
+    const a = computeAmounts(p, 3);
+    expect(a.totalAmount).toBe(500000);
+    expect(a.itemAmount + a.vatAmount).toBe(500000);
   });
 });

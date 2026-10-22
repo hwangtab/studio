@@ -19,5 +19,7 @@
  * bots whose token doesn't follow the "-user" suffix convention.
  */
 
+// 맨 앞 `bot`은 "...Bot" 꼴 크롤러를 넓게 잡는다. 다만 휴대폰 제조사 CUBOT("CUBOT P50" 등)의 실제 모바일 UA까지
+// 봇으로 보고 Accept-Language를 무시한 채 /ko로 308했다(2026-10-22 리뷰) — 앞이 "cu"인 경우만 뺀다.
 export const BOT_PATTERN =
-    /bot|googlebot|google-extended|googleother|bingbot|bingpreview|adsbot|mediapartners|crawler|spider|robot|crawling|yeti|naverbot|daumoa|petalbot|slurp|duckduckbot|applebot|facebookexternalhit|linkedinbot|twitterbot|slackbot|whatsapp|discordbot|gptbot|oai-searchbot|chatgpt-user|claudebot|anthropic-ai|perplexitybot|ccbot|bytespider|mj12bot|ahrefsbot|semrushbot|[a-z]+-user/i;
+    /(?<!cu)bot|googlebot|google-extended|googleother|bingbot|bingpreview|adsbot|mediapartners|crawler|spider|robot|crawling|yeti|naverbot|daumoa|petalbot|slurp|duckduckbot|applebot|facebookexternalhit|linkedinbot|twitterbot|slackbot|whatsapp|discordbot|gptbot|oai-searchbot|chatgpt-user|claudebot|anthropic-ai|perplexitybot|ccbot|bytespider|mj12bot|ahrefsbot|semrushbot|[a-z]+-user/i;
