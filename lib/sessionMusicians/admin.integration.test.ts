@@ -18,7 +18,7 @@ import detailHandler from '../../pages/api/admin/session-musicians/[id]/index';
 import privateHandler from '../../pages/api/admin/session-musicians/[id]/private';
 import { authenticateAdminApi } from '../contracts/admin-auth';
 import { sealSessionPrivate } from './privateData';
-import { countNewSessionMusicians, insertSessionMusician, listSessionMusicians, toProfile, getSessionMusician } from './repository';
+import { countNewSessionMusicians, insertSessionMusician, listSessionMusicians, parseSessionMusicianSort, toProfile, getSessionMusician } from './repository';
 /* eslint-enable import/first */
 
 let client: Client;
@@ -66,11 +66,11 @@ const call = async (handler: (req: NextApiRequest, res: NextApiResponse) => unkn
   return out;
 };
 
-const seed = async (stageName = '김베이스', email = 'player@example.com') =>
+const seed = async (stageName = '김베이스', email = 'player@example.com', ratePerSong: number | null = null) =>
   insertSessionMusician({
     input: {
       stageName, realName: '김하늘', primaryInstrument: 'bass', instruments: ['bass', { other: '우쿨렐레' }], genres: ['jazz'], yearsExperience: 5,
-      reading: 'chart', remoteRecording: true, region: '서울', bio: '소개', sampleLinks: [{ url: 'https://example.org/a', label: '' }], rateNote: null,
+      reading: 'chart', remoteRecording: true, region: '서울', bio: '소개', sampleLinks: [{ url: 'https://example.org/a', label: '' }], ratePerSong, rateNote: null,
       phone: '010-1111-2222', email, kakaoId: 'k1',
     },
     privateEnc: sealSessionPrivate({ realName: '김하늘', phone: '010-1111-2222', email, kakaoId: 'k1' }),
@@ -127,6 +127,22 @@ describe('상태·메모·삭제', () => {
     expect(row.stageName).toBe('김베이스');
   });
 
+  it('운영자가 곡당 연주비·연주비 메모를 고친다 — 쉼표 문자열도 받고, 비우면 미정(null)', async () => {
+    const id = await seed();
+    expect((await call(detailHandler, 'PATCH', id, { ratePerSong: '200,000', rateNote: ' 편곡 포함 시 별도 ' })).status).toBe(200);
+    let row = (await getSessionMusician(id))!;
+    expect(row.ratePerSong).toBe(200_000);
+    expect(row.rateNote).toBe('편곡 포함 시 별도');
+
+    expect((await call(detailHandler, 'PATCH', id, { ratePerSong: '', rateNote: '' })).status).toBe(200);
+    row = (await getSessionMusician(id))!;
+    expect(row.ratePerSong).toBeNull();
+    expect(row.rateNote).toBeNull();
+
+    expect((await call(detailHandler, 'PATCH', id, { ratePerSong: '5000' })).status).toBe(400);
+    expect((await call(detailHandler, 'PATCH', id, { ratePerSong: '20만원' })).status).toBe(400);
+  });
+
   it('잘못된 상태는 400', async () => {
     const id = await seed();
     expect((await call(detailHandler, 'PATCH', id, { status: 'hired' })).status).toBe(400);
@@ -173,5 +189,35 @@ describe('목록 조회', () => {
     expect((await listSessionMusicians({ status: 'reviewed' })).map((p) => p.stageName)).toEqual(['드러머']);
     expect(toProfile((await getSessionMusician(a))!).instruments).toEqual(['bass', { other: '우쿨렐레' }]);
     expect(await countNewSessionMusicians()).toBe(1);
+  });
+
+  it('ratePerSong을 저장해 프로필로 돌려준다 — 미기재는 null', async () => {
+    const withRate = await seed('연주비있음', 'rate@example.com', 150000);
+    const without = await seed('연주비없음', 'none@example.com');
+    expect(toProfile((await getSessionMusician(withRate))!).ratePerSong).toBe(150000);
+    expect(toProfile((await getSessionMusician(without))!).ratePerSong).toBeNull();
+  });
+
+  it('sort=rate는 곡당 연주비 낮은 순이고 미기재는 맨 뒤 — 기본은 최신순', async () => {
+    await seed('비쌈', 'a@example.com', 300000);
+    await seed('미기재1', 'b@example.com');
+    await seed('쌈', 'c@example.com', 80000);
+    await seed('중간', 'd@example.com', 150000);
+    await seed('미기재2', 'e@example.com');
+    // createdAt 이 같은 초에 몰려도 최신순이 흔들리지 않게 명시한다.
+    for (const [name, at] of [['비쌈', 1000], ['미기재1', 2000], ['쌈', 3000], ['중간', 4000], ['미기재2', 5000]] as const) {
+      await client.execute({ sql: 'UPDATE session_musicians SET created_at = ? WHERE stage_name = ?', args: [at, name] });
+    }
+    const byRate = (await listSessionMusicians({ sort: 'rate' })).map((p) => p.stageName);
+    expect(byRate).toEqual(['쌈', '중간', '비쌈', '미기재2', '미기재1']);
+    const newest = (await listSessionMusicians()).map((p) => p.stageName);
+    expect(newest).toEqual(['미기재2', '중간', '쌈', '미기재1', '비쌈']);
+    expect((await listSessionMusicians({ sort: 'newest' })).map((p) => p.stageName)).toEqual(newest);
+  });
+
+  it('정렬 쿼리는 고정 목록의 값만 받는다', () => {
+    expect(parseSessionMusicianSort('rate')).toBe('rate');
+    expect(parseSessionMusicianSort('newest')).toBe('newest');
+    for (const bad of ['', 'price', 'rate; DROP TABLE', undefined, ['rate'], 1]) expect(parseSessionMusicianSort(bad)).toBe('newest');
   });
 });

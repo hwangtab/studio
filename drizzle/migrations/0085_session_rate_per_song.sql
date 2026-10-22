@@ -1,0 +1,1 @@
+ALTER TABLE `session_musicians` ADD `rate_per_song` integer;

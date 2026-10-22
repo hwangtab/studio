@@ -1,4 +1,4 @@
-import { and, desc, eq, like, or, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, like, or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { sessionMusicians, type SessionMusician } from '../../db/schema';
@@ -36,6 +36,8 @@ export interface SessionMusicianProfile {
   region: string | null;
   bio: string | null;
   sampleLinks: SessionSampleLink[];
+  /** 곡당 희망 연주비(원, 참고용). */
+  ratePerSong: number | null;
   rateNote: string | null;
   status: SessionMusician['status'];
   operatorMemo: string | null;
@@ -57,6 +59,7 @@ export const toProfile = (row: SessionMusician): SessionMusicianProfile => ({
   region: row.region ?? null,
   bio: row.bio ?? null,
   sampleLinks: parseJson<SessionSampleLink[]>(row.sampleLinksJson, []),
+  ratePerSong: row.ratePerSong ?? null,
   rateNote: row.rateNote ?? null,
   status: row.status,
   operatorMemo: row.operatorMemo ?? null,
@@ -77,6 +80,7 @@ const plainColumns = (input: SessionRegistrationInput) => ({
   region: input.region,
   bio: input.bio,
   sampleLinksJson: JSON.stringify(input.sampleLinks),
+  ratePerSong: input.ratePerSong,
   rateNote: input.rateNote,
 });
 
@@ -169,7 +173,16 @@ export interface SessionMusicianFilters {
   instrument?: string;
   genre?: string;
   remoteOnly?: boolean;
+  /** 정렬: 기본은 최신 등록순, `rate`는 곡당 희망 연주비 낮은 순(미기재는 맨 뒤). */
+  sort?: SessionMusicianSort;
 }
+
+export const SESSION_MUSICIAN_SORTS = ['newest', 'rate'] as const;
+export type SessionMusicianSort = (typeof SESSION_MUSICIAN_SORTS)[number];
+export const parseSessionMusicianSort = (value: unknown): SessionMusicianSort =>
+  typeof value === 'string' && (SESSION_MUSICIAN_SORTS as readonly string[]).includes(value)
+    ? (value as SessionMusicianSort)
+    : 'newest';
 
 export const LIST_LIMIT = 300;
 
@@ -187,7 +200,11 @@ export const listSessionMusicians = async (filters: SessionMusicianFilters = {})
     .select()
     .from(sessionMusicians)
     .where(conditions.length > 0 ? and(...conditions) : undefined)
-    .orderBy(desc(sessionMusicians.createdAt))
+    .orderBy(
+      ...(filters.sort === 'rate'
+        ? [sql`${sessionMusicians.ratePerSong} IS NULL`, asc(sessionMusicians.ratePerSong), desc(sessionMusicians.createdAt)]
+        : [desc(sessionMusicians.createdAt)]),
+    )
     .limit(LIST_LIMIT);
   return rows.map(toProfile);
 };
@@ -199,11 +216,13 @@ export const getSessionMusician = async (id: string): Promise<SessionMusician | 
 
 export const updateOperatorFields = async (
   id: string,
-  fields: { status?: SessionMusician['status']; operatorMemo?: string | null },
+  fields: { status?: SessionMusician['status']; operatorMemo?: string | null; ratePerSong?: number | null; rateNote?: string | null },
 ): Promise<boolean> => {
   const set: Partial<typeof sessionMusicians.$inferInsert> = { updatedAt: new Date() };
   if (fields.status !== undefined) set.status = fields.status;
   if (fields.operatorMemo !== undefined) set.operatorMemo = fields.operatorMemo;
+  if (fields.ratePerSong !== undefined) set.ratePerSong = fields.ratePerSong;
+  if (fields.rateNote !== undefined) set.rateNote = fields.rateNote;
   const result = await getDb().update(sessionMusicians).set(set).where(eq(sessionMusicians.id, id));
   return result.rowsAffected > 0;
 };

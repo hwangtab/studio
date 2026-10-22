@@ -7,10 +7,11 @@ import { AdminShell } from '../../../components/admin/AdminShell';
 import { DANGER_WEAK_CLASS } from '../../../components/admin/adminDanger';
 import { Button } from '../../../components/ui/Button';
 import { Notice } from '../../../components/ui/Notice';
-import { TextArea } from '../../../components/ui/Field';
+import { TextArea, TextInput } from '../../../components/ui/Field';
 import {
   SESSION_LIMITS,
   SESSION_STATUS_LABEL,
+  formatSessionRate,
   genreLabel,
   instrumentLabel,
   readingLabel,
@@ -65,6 +66,8 @@ export default function AdminSessionMusicianDetailPage({ profile }: Props) {
   const router = useRouter();
   const [status, setStatus] = useState<string>(profile.status);
   const [memo, setMemo] = useState(profile.operatorMemo ?? '');
+  const [rate, setRate] = useState(profile.ratePerSong === null ? '' : profile.ratePerSong.toLocaleString('ko-KR'));
+  const [rateNote, setRateNote] = useState(profile.rateNote ?? '');
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ tone: 'success' | 'error'; text: string } | null>(null);
   const [privateInfo, setPrivateInfo] = useState<PrivateInfo | null>(null);
@@ -83,9 +86,11 @@ export default function AdminSessionMusicianDetailPage({ profile }: Props) {
       const result = await call(`/api/admin/session-musicians/${profile.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status, operatorMemo: memo }),
+        body: JSON.stringify({ status, operatorMemo: memo, ratePerSong: rate, rateNote }),
       });
       setMessage(result.ok ? { tone: 'success', text: '저장했어요.' } : { tone: 'error', text: String(result.data?.message ?? '저장하지 못했어요.') });
+      // 위쪽 프로필 표(곡당 연주비 등)도 저장한 값으로 다시 그린다.
+      if (result.ok) await router.replace(router.asPath, undefined, { scroll: false });
     } catch {
       setMessage({ tone: 'error', text: '네트워크 오류가 났어요.' });
     } finally {
@@ -143,7 +148,8 @@ export default function AdminSessionMusicianDetailPage({ profile }: Props) {
             <Row label="악보 리딩">{readingLabel(profile.reading) || '-'}</Row>
             <Row label="원격 녹음">{profile.remoteRecording ? '가능' : '-'}</Row>
             <Row label="방문 가능 지역">{profile.region ?? '-'}</Row>
-            <Row label="희망 단가 메모">{profile.rateNote ?? '-'}</Row>
+            <Row label="곡당 희망 연주비">{formatSessionRate(profile.ratePerSong)}</Row>
+            <Row label="연주비 메모">{profile.rateNote ?? '-'}</Row>
             <Row label="등록">{formatKstDateTimeFull(new Date(profile.createdAt).toISOString())}</Row>
             <Row label="마지막 확인">{formatKstDateTimeFull(new Date(profile.lastConfirmedAt).toISOString())}</Row>
           </dl>
@@ -187,7 +193,27 @@ export default function AdminSessionMusicianDetailPage({ profile }: Props) {
         </section>
 
         <section className="bg-white rounded-2xl shadow-sm p-6 mb-4">
-          <h2 className="text-lg font-bold text-gray-900 mb-3">운영 상태와 메모</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-3">운영 상태·연주비·메모</h2>
+          <div className="mb-3 grid gap-3 sm:grid-cols-2">
+            <label className="flex flex-col gap-1 text-sm">
+              <span className="text-gray-600">곡당 연주비(원)</span>
+              <TextInput
+                value={rate}
+                inputMode="numeric"
+                placeholder="비워 두면 미정"
+                onChange={(e) => {
+                  const digits = e.target.value.replace(/\D/g, '');
+                  setRate(digits ? Number(digits).toLocaleString('ko-KR') : '');
+                }}
+                light
+              />
+            </label>
+            <label className="flex flex-col gap-1 text-sm">
+              <span className="text-gray-600">연주비 메모</span>
+              <TextInput value={rateNote} onChange={(e) => setRateNote(e.target.value)} maxLength={SESSION_LIMITS.rateNote.max} light />
+            </label>
+          </div>
+          <p className="mb-3 text-xs text-gray-500">원격·스튜디오 모두 곡당 기준이에요. 가격이 바뀌면 여기서 고치세요 — 본인도 관리 링크로 고칠 수 있고, 나중에 고친 쪽이 남아요.</p>
           <label className="mb-3 flex flex-col gap-1 text-sm">
             <span className="text-gray-600">상태</span>
             <select value={status} onChange={(e) => setStatus(e.target.value)} className="rounded-lg border border-gray-300 bg-white px-3 py-2">

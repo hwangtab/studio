@@ -38,6 +38,8 @@ export interface SessionRegistrationInput {
   region: string | null;
   bio: string | null;
   sampleLinks: SessionSampleLink[];
+  /** 곡당 희망 연주비(원, 참고용). 연주비는 곡당 기준 하나뿐이다. */
+  ratePerSong: number | null;
   rateNote: string | null;
   phone: string;
   email: string;
@@ -62,6 +64,7 @@ export type SessionValidationCode =
   | 'sample_links_required'
   | 'sample_links_too_many'
   | 'sample_link_invalid'
+  | 'rate_per_song_invalid'
   | 'rate_note_length'
   | 'phone_required'
   | 'phone_invalid'
@@ -156,6 +159,25 @@ export interface ValidateOptions {
    */
   existingEmail?: string;
 }
+
+/**
+ * 곡당 희망 연주비 — 비면 null. 정수 또는 숫자 문자열(쉼표·공백 허용). 소수·단위 글자·음수·범위 밖은 거절한다.
+ * 등록 폼·관리 링크와 관리자 수정(가격이 바뀌면 운영자가 고친다)이 같은 규칙을 쓴다.
+ */
+export const parseRatePerSong = (raw: unknown): { ok: true; value: number | null } | { ok: false; message: string } => {
+  if (raw === undefined || raw === null || raw === '') return { ok: true, value: null };
+  const { min, max } = SESSION_LIMITS.ratePerSong;
+  const invalid = { ok: false as const, message: `곡당 연주비는 ${min.toLocaleString('ko-KR')}원~${max.toLocaleString('ko-KR')}원 사이의 숫자로 적어 주세요.` };
+  let rate: number;
+  if (typeof raw === 'number') rate = raw;
+  else if (typeof raw === 'string') {
+    const digits = raw.replace(/[,\s]/g, '');
+    if (!/^\d+$/.test(digits)) return invalid;
+    rate = Number(digits);
+  } else return invalid;
+  if (!Number.isSafeInteger(rate) || rate < min || rate > max) return invalid;
+  return { ok: true, value: rate };
+};
 
 export const validateSessionRegistration = (
   body: unknown,
@@ -288,9 +310,13 @@ export const validateSessionRegistration = (
     if (!sampleLinks.some((existing) => existing.url === url)) sampleLinks.push({ url, label });
   }
 
+  const rate = parseRatePerSong(b.ratePerSong);
+  if (!rate.ok) return fail('ratePerSong', 'rate_per_song_invalid', rate.message);
+  const ratePerSong = rate.value;
+
   const rateNote = cleanLine(b.rateNote);
   if (rateNote.length > SESSION_LIMITS.rateNote.max) {
-    return fail('rateNote', 'rate_note_length', `희망 단가 메모는 ${SESSION_LIMITS.rateNote.max}자 이하로 적어 주세요.`);
+    return fail('rateNote', 'rate_note_length', `연주비 메모는 ${SESSION_LIMITS.rateNote.max}자 이하로 적어 주세요.`);
   }
 
   const phone = cleanLine(b.phone);
@@ -325,6 +351,7 @@ export const validateSessionRegistration = (
       region,
       bio: bio || null,
       sampleLinks,
+      ratePerSong,
       rateNote: rateNote || null,
       phone,
       email,

@@ -19,7 +19,8 @@ const valid = (over: Record<string, unknown> = {}) => ({
   region: '서울',
   bio: '재즈 클럽과 스튜디오 세션을 해 왔습니다.',
   sampleLinks: [{ url: 'https://www.youtube.com/watch?v=abc', label: '라이브 영상' }],
-  rateNote: '곡당 협의',
+  ratePerSong: 150000,
+  rateNote: '편곡 포함 시 별도',
   phone: '010-1234-5678',
   email: ' Player@Example.COM ',
   kakaoId: 'player1',
@@ -35,6 +36,41 @@ describe('validateSessionRegistration', () => {
     expect(result.value.instruments).toEqual(['bass', 'upright-bass', { other: '우쿨렐레' }]);
     expect(result.value.reading).toBe('chart');
     expect(result.value.sampleLinks[0].url).toBe('https://www.youtube.com/watch?v=abc');
+  });
+
+  describe('곡당 희망 연주비', () => {
+    const rate = (value: unknown) => validateSessionRegistration(valid({ ratePerSong: value }));
+    const rateOf = (value: unknown) => {
+      const result = rate(value);
+      return result.ok ? result.value.ratePerSong : result;
+    };
+
+    it('정수와 숫자 문자열(쉼표·공백 허용)을 받는다', () => {
+      expect(rateOf(150000)).toBe(150000);
+      expect(rateOf('150000')).toBe(150000);
+      expect(rateOf('150,000')).toBe(150000);
+      expect(rateOf(' 1 50,000 ')).toBe(150000);
+      expect(rateOf(10000)).toBe(10000);
+      expect(rateOf(10000000)).toBe(10000000);
+    });
+
+    it('비어 있으면 null — 빠뜨려도 등록된다', () => {
+      expect(rateOf(undefined)).toBeNull();
+      expect(rateOf(null)).toBeNull();
+      expect(rateOf('')).toBeNull();
+    });
+
+    it('범위(1만~1천만원)를 벗어나거나 숫자가 아니면 rate_per_song_invalid', () => {
+      for (const bad of [9999, 10000001, 0, -5, 1.5, '9,999', '10,000,001', '15만원', '150000원', 'abc', ',', true, {}, []]) {
+        expect(rate(bad)).toMatchObject({ ok: false, field: 'ratePerSong', code: 'rate_per_song_invalid' });
+      }
+    });
+
+    it('오류 메시지는 시간당을 말하지 않는다', () => {
+      const result = rate(5);
+      expect(result.ok).toBe(false);
+      if (!result.ok) expect(result.message).not.toMatch(/시간/);
+    });
   });
 
   it('gmail 점·+태그는 지우지 않는다(서로 다른 사람을 한 주소로 합치지 않는다)', () => {
