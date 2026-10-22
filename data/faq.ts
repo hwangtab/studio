@@ -98,7 +98,7 @@ const faqData = {
     },
     {
       question: '커버 영상도 찍을 수 있나요?',
-      answer: `네, 커버 영상 올인원 패키지(${krw(COVER_VIDEO_PACKAGE_PRICE)}원)로 3시간 동안 촬영·녹음·믹싱을 진행하고 4K 영상과 음원을 함께 드려요.`,
+      answer: `네, 커버 영상 올인원 패키지(${krw(COVER_VIDEO_PACKAGE_PRICE)}원)로 3시간 동안 촬영·녹음·기본 믹싱(밸런스 조정)을 진행하고 4K 영상과 음원을 함께 드려요.`,
     },
 
   ],
@@ -169,7 +169,7 @@ const faqData = {
     },
     {
       question: 'Can you film a cover video?',
-      answer: `Yes. The cover video all-in-one package (${krw(COVER_VIDEO_PACKAGE_PRICE)} KRW) is a 3-hour session of filming, recording and mixing, delivered as a 4K video plus the audio.`,
+      answer: `Yes. The cover video all-in-one package (${krw(COVER_VIDEO_PACKAGE_PRICE)} KRW) is a 3-hour session of filming, recording and basic mixing (level balancing), delivered as a 4K video plus the audio.`,
     },
 
   ],
