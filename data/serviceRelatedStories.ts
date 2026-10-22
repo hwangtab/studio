@@ -11,7 +11,7 @@
  * - 카테고리 분포는 의도적으로 다양하게 (recording/vocal/lesson/business 혼합)
  */
 
-export type ServiceKey = 'recording' | 'wedding-song' | 'voice-acting' | 'lesson' | 'pricing' | 'cover-video' | 'release-project' | 'mixing-mastering' | 'music-promotion' | 'crowdfunding-design' | 'composition-arrangement';
+export type ServiceKey = 'recording' | 'wedding-song' | 'voice-acting' | 'lesson' | 'pricing' | 'cover-video' | 'music-video' | 'release-project' | 'mixing-mastering' | 'music-promotion' | 'crowdfunding-design' | 'composition-arrangement';
 
 export const serviceRelatedStorySlugs: Record<ServiceKey, readonly string[]> = {
   'crowdfunding-design': [
@@ -97,6 +97,14 @@ export const serviceRelatedStorySlugs: Record<ServiceKey, readonly string[]> = {
     'youtube-music-channel1',
     'vocal-recording-guide1',
     'copyright-cover1',
+  ],
+  'music-video': [
+    'music-video1',
+    'mariko-yukie-namsan-tower',
+    'youtube-music-channel1',
+    'youtube-shorts1',
+    'live-recording1',
+    'cover1',
   ],
   'mixing-mastering': [
     'onlinemix1',

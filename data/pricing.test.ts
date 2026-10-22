@@ -11,6 +11,8 @@ import {
   ALBUM_BUNDLE_PRICE,
   ALBUM_LINE_ITEM_TOTAL,
   COVER_VIDEO_PACKAGE_PRICE,
+  MUSIC_VIDEO_FROM_PRICE,
+  LIVE_VIDEO_FROM_PRICE,
   COMPOSITION_PRICE,
   ARRANGEMENT_SMALL_PRICE,
   ARRANGEMENT_BAND_PRICE,
@@ -146,6 +148,9 @@ describe('가격 SSOT 정합', () => {
     expect(byId.get('service-release-press')).toBe(RELEASE_PRESS_INTRO_PRICE);
     expect(byId.get('package-cover-video')).toBe(COVER_VIDEO_PACKAGE_PRICE);
     expect(byId.get('package-rental')).toBe(RENTAL_HOURLY_PRICE);
+    // 영상 제작(/music-video, 2026-10-22) — 둘 다 하한가
+    expect(byId.get('package-music-video')).toBe(MUSIC_VIDEO_FROM_PRICE);
+    expect(byId.get('package-live-video')).toBe(LIVE_VIDEO_FROM_PRICE);
     expect(byId.get('practice-room-monthly')).toBe(PRACTICE_ROOM_MONTHLY_PRICE);
     // 시간제는 VAT 포함 소비자가가 priceValue다(2026-10-15부터 월 이용료·레슨만 별도) — 6,600이 6,000으로 바뀌면 실패
     expect(byId.get('practice-room-hourly')).toBe(PRACTICE_ROOM_HOURLY_PRICE_INCL);
@@ -434,6 +439,8 @@ describe('가격 SSOT 정합', () => {
       ARRANGEMENT_LARGE_PRICE,
       CUSTOM_MR_PRICE,
       RENTAL_HOURLY_PRICE,
+      MUSIC_VIDEO_FROM_PRICE,
+      LIVE_VIDEO_FROM_PRICE,
       LESSON_MONTHLY_PRICE,
       PRACTICE_ROOM_MONTHLY_PRICE,
       RELEASE_SINGLE_FROM_PRICE,

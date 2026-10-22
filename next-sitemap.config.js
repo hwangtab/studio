@@ -88,6 +88,7 @@ const pageImageMap = {
   '/wedding-song': { url: '/images/og-recording3.webp', title: 'Studio NOL Wedding Song Package - ₩350K+', caption: 'Wedding vocal package at Studio NOL: pro recording, mix, and editing.' },
   '/voice-acting': { url: '/images/og-hardware3.webp', title: 'Studio NOL Voiceover Recording - ₩100K/hr', caption: 'Professional voiceover recording at Studio NOL, Yeonsinnae.' },
   '/cover-video': { url: '/images/og-recording1.webp', title: 'Studio NOL Cover Video Package - ₩350K', caption: 'Cover video filming + recording + mixing all-in-one at Studio NOL, Yeonsinnae.' },
+  '/music-video': { url: '/images/og-music-video-20261022.webp', title: 'Studio NOL Music Video & Live Video Production - from ₩500K', caption: 'Music videos, live clips and YouTube videos shot by director Chichi of Haebang Film, with recording and mixing at Studio NOL.' },
   '/composition-arrangement': { url: '/images/og-hardware1.webp', title: 'Studio NOL Composition & Arrangement - from ₩500K/song', caption: 'Composition, arrangement, backing tracks and production by producer Hwang Kyungha at Studio NOL, Yeonsinnae.' },
   // Buyer-intent 가이드 허브 6종 — 이미지 소스는 data/buyerIntentHubs.ts hero.image와
   // 수동 동기(허브 추가/이미지 변경 시 여기도 갱신).
@@ -401,7 +402,7 @@ module.exports = {
     }
 
     // guides 포함: buyer-intent 허브는 구매 직전 의도 LP라 서비스 페이지와 동급(0.9).
-    if (routePath.match(/\/(pricing|contact|studio-info|practice-room|wedding-song|voice-acting|cover-video|composition-arrangement|lesson|release-project|guides|artists)(\/|$)/)) {
+    if (routePath.match(/\/(pricing|contact|studio-info|practice-room|wedding-song|voice-acting|cover-video|music-video|composition-arrangement|lesson|release-project|guides|artists)(\/|$)/)) {
       return { ...entry, priority: 0.9 };
     }
 

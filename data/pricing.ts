@@ -44,6 +44,11 @@ export const WEDDING_PACKAGE_PRICE = 350000; // 축가/이벤트 녹음(행사�
 export const VOICEOVER_HOURLY_PRICE = 100000;
 export const COVER_VIDEO_PACKAGE_PRICE = 350000;
 export const RENTAL_HOURLY_PRICE = 100000; // 촬영 대관
+// 영상 제작(/music-video) — 해방필름 치치 감독 촬영. 둘 다 "부터"(하한)이고 카메라 대수·촬영 시간·장소는
+// 상담으로 정한다(운영자 결정 2026-10-22). 온라인 결제 상품이 아니다 — 카카오 상담 → 견적 → 맞춤 결제 링크.
+export const MUSIC_VIDEO_FROM_PRICE = 500000;
+// 라이브 클립·유튜브 콘텐츠(토크·인터뷰) 촬영.
+export const LIVE_VIDEO_FROM_PRICE = 500000;
 
 // 작곡·편곡·MR 제작 정가 (2026-10-05 신설). 사이트 안의 기존 숫자에서 끌어냈다:
 //   - 등급은 믹싱과 같은 **트랙 수**로 가른다(10트랙 이하 / 11~30 / 31트랙 이상) — 편곡 등급이
@@ -917,6 +922,58 @@ export const getPricingData = (locale: Locale) => {
         vi: ['Buổi 3 giờ (1 bài)', 'Camera 4K + đèn chiếu sáng', 'Mix cơ bản (cân chỉnh âm lượng)', 'Giao 4K MP4 + WAV & MP3'],
         th: ['เซสชัน 3 ชั่วโมง (1 เพลง)', 'กล้อง 4K 1 ตัว + แสง', 'มิกซ์เบื้องต้น (ปรับบาลานซ์)', 'ส่งวิดีโอ 4K MP4 + WAV & MP3'],
         uz: ['3 soatlik seans (1 qo\'shiq)', '4K kamera (1 ta) + yoritish', 'Oddiy miks (balansni sozlash) kiritilgan', '4K MP4 video + WAV & MP3 taqdim etiladi']
+      }),
+    },
+    {
+      id: 'package-music-video',
+      title: t(locale, { ko: '뮤직비디오 제작', en: 'Music Video Production', zh: 'MV制作', es: 'Producción de videoclip', vi: 'Sản xuất MV', th: 'ผลิตมิวสิกวิดีโอ', uz: 'Klip (MV) ishlab chiqarish' }),
+      subtitle: t(locale, { ko: '기획·촬영·편집, 장소·규모 협의', en: 'Concept, filming & edit — scope agreed together', zh: '策划·拍摄·剪辑，地点与规模协商', es: 'Concepto, rodaje y edición — alcance a convenir', vi: 'Ý tưởng, quay, dựng — quy mô thỏa thuận', th: 'วางคอนเซปต์ ถ่ายทำ ตัดต่อ — ขอบเขตตกลงกัน', uz: 'Konsepsiya, suratga olish, montaj — hajm kelishiladi' }),
+      priceDisplay: t(locale, { ko: '500,000원~', en: 'From ₩500,000', zh: '₩500,000起', es: 'Desde ₩500,000', vi: 'Từ ₩500,000', th: 'เริ่มต้น ₩500,000', uz: '₩500,000 dan' }),
+      priceValue: MUSIC_VIDEO_FROM_PRICE,
+      unit: t(locale, { ko: '/ 1곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo\'shiq' }),
+      description: t(locale, {
+        ko: '해방필름 치치 감독이 콘셉트 상담부터 촬영·편집·색보정까지 맡습니다. 카메라 대수·촬영 시간·장소는 곡과 예산에 맞춰 정합니다.',
+        en: 'Director Chichi of Haebang Film handles concept, filming, editing and colour. Cameras, shooting hours and locations are set to fit the song and budget.',
+        zh: '由解放电影（Haebang Film）的Chichi导演负责从概念到拍摄、剪辑、调色。机位数量、拍摄时长和地点按歌曲与预算商定。',
+        es: 'El director Chichi de Haebang Film se encarga del concepto, rodaje, edición y color. Cámaras, horas y locaciones se ajustan a la canción y al presupuesto.',
+        vi: 'Đạo diễn Chichi (Haebang Film) phụ trách từ ý tưởng đến quay, dựng và chỉnh màu. Số máy quay, thời gian quay và địa điểm được điều chỉnh theo bài hát và ngân sách.',
+        th: 'ผู้กำกับ Chichi จาก Haebang Film ดูแลตั้งแต่คอนเซปต์ ถ่ายทำ ตัดต่อ และเกรดสี จำนวนกล้อง เวลาถ่าย และสถานที่ ปรับตามเพลงและงบประมาณ',
+        uz: 'Haebang Film rejissyori Chichi konsepsiyadan suratga olish, montaj va rang tuzatishgacha shug\'ullanadi. Kameralar soni, vaqt va joy qo\'shiq va byudjetga qarab kelishiladi.'
+      }),
+      features: tArray(locale, {
+        ko: ['콘셉트·콘티 상담 포함', '스튜디오·공연장·야외 로케이션 촬영', '카메라 대수·촬영 시간은 협의', '편집·색보정·가사 자막 포함', '장소 대관·출연·스타일링 실비는 별도'],
+        en: ['Concept & storyboard consultation included', 'Studio, venue or outdoor location shoots', 'Number of cameras & hours agreed together', 'Editing, colour grading & lyric subtitles included', 'Location rental, cast & styling billed at cost'],
+        zh: ['含概念·分镜咨询', '录音室·演出场地·户外取景拍摄', '机位数量·拍摄时长协商', '含剪辑·调色·歌词字幕', '场地租赁·演员·造型按实费另计'],
+        es: ['Consulta de concepto y storyboard incluida', 'Rodaje en estudio, sala o exteriores', 'Número de cámaras y horas a convenir', 'Edición, etalonaje y subtítulos de letra incluidos', 'Alquiler de locación, elenco y estilismo al costo'],
+        vi: ['Bao gồm tư vấn ý tưởng & storyboard', 'Quay tại studio, sân khấu hoặc ngoại cảnh', 'Số máy quay & thời gian quay thỏa thuận', 'Bao gồm dựng, chỉnh màu & phụ đề lời', 'Thuê địa điểm, diễn viên, stylist tính theo thực chi'],
+        th: ['รวมปรึกษาคอนเซปต์และสตอรีบอร์ด', 'ถ่ายในสตูดิโอ ฮอลล์ หรือโลเคชันกลางแจ้ง', 'จำนวนกล้องและเวลาถ่ายตกลงกัน', 'รวมตัดต่อ เกรดสี และซับเนื้อเพลง', 'ค่าเช่าสถานที่ นักแสดง สไตลิสต์ คิดตามจริง'],
+        uz: ['Konsepsiya va storyboard maslahati kiritilgan', 'Studiya, sahna yoki tashqi lokatsiyada suratga olish', 'Kameralar soni va vaqt kelishiladi', 'Montaj, rang tuzatish va matn subtitrlari kiritilgan', 'Joy ijarasi, aktyorlar va stilistika haqiqiy narxda alohida']
+      }),
+    },
+    {
+      id: 'package-live-video',
+      title: t(locale, { ko: '라이브 클립·유튜브 영상', en: 'Live Clips & YouTube Videos', zh: '现场片段·YouTube视频', es: 'Clips en vivo y videos de YouTube', vi: 'Clip live & video YouTube', th: 'ไลฟ์คลิปและวิดีโอ YouTube', uz: 'Jonli kliplar va YouTube videolari' }),
+      subtitle: t(locale, { ko: '공연·라이브 세션·토크·인터뷰', en: 'Concerts, live sessions, talks & interviews', zh: '演出·现场·访谈·采访', es: 'Conciertos, sesiones en vivo, charlas y entrevistas', vi: 'Biểu diễn, live session, talk & phỏng vấn', th: 'คอนเสิร์ต ไลฟ์เซสชัน ทอล์ก สัมภาษณ์', uz: 'Konsert, jonli seans, suhbat va intervyu' }),
+      priceDisplay: t(locale, { ko: '500,000원~', en: 'From ₩500,000', zh: '₩500,000起', es: 'Desde ₩500,000', vi: 'Từ ₩500,000', th: 'เริ่มต้น ₩500,000', uz: '₩500,000 dan' }),
+      priceValue: LIVE_VIDEO_FROM_PRICE,
+      unit: t(locale, { ko: '/ 1회 촬영', en: '/ shoot', zh: '/ 次拍摄', es: '/ rodaje', vi: '/ buổi quay', th: '/ ครั้ง', uz: '/ suratga olish' }),
+      description: t(locale, {
+        ko: '공연장·스튜디오 라이브 클립부터 유튜브 토크·인터뷰 시리즈까지. 카메라 구성과 촬영 시간은 공연·회차에 맞춰 정합니다.',
+        en: 'From concert and studio live clips to YouTube talk and interview series. Camera setup and hours are matched to the show or episode.',
+        zh: '从演出场地·录音室现场片段到YouTube访谈系列。机位配置与拍摄时长按演出或集数商定。',
+        es: 'Desde clips en vivo en sala o estudio hasta series de charlas y entrevistas para YouTube. Cámaras y horas se ajustan al show o episodio.',
+        vi: 'Từ clip live tại sân khấu, studio đến series talk, phỏng vấn trên YouTube. Cấu hình máy quay và thời gian được điều chỉnh theo buổi diễn hoặc tập.',
+        th: 'ตั้งแต่ไลฟ์คลิปในฮอลล์หรือสตูดิโอ ไปจนถึงซีรีส์ทอล์กและสัมภาษณ์บน YouTube จำนวนกล้องและเวลาถ่ายปรับตามโชว์หรือตอน',
+        uz: 'Konsert va studiya jonli kliplaridan YouTube suhbat va intervyu seriyalarigacha. Kameralar va vaqt shou yoki epizodga qarab belgilanadi.'
+      }),
+      features: tArray(locale, {
+        ko: ['공연장·스튜디오·야외 어디서나', '멀티캠 구성·촬영 시간 협의', '편집·색보정·자막 포함', '여러 회차 시리즈 촬영 가능', '라이브 음원 녹음·믹싱은 스튜디오 놀에서 함께(별도)'],
+        en: ['Venue, studio or outdoors', 'Multi-cam setup & hours agreed together', 'Editing, colour grading & subtitles included', 'Multi-episode series available', 'Live audio recording & mixing by Studio NOL (separate)'],
+        zh: ['演出场地·录音室·户外均可', '多机位配置·拍摄时长协商', '含剪辑·调色·字幕', '可拍摄多集系列', '现场音源录音·混音可由Studio NOL承接（另计）'],
+        es: ['En sala, estudio o exteriores', 'Multicámara y horas a convenir', 'Edición, etalonaje y subtítulos incluidos', 'Series de varios episodios', 'Grabación y mezcla del audio en vivo con Studio NOL (aparte)'],
+        vi: ['Sân khấu, studio hoặc ngoài trời', 'Multi-cam & thời gian quay thỏa thuận', 'Bao gồm dựng, chỉnh màu & phụ đề', 'Có thể quay series nhiều tập', 'Thu & mix âm thanh live tại Studio NOL (tính riêng)'],
+        th: ['ฮอลล์ สตูดิโอ หรือกลางแจ้ง', 'มัลติแคมและเวลาถ่ายตกลงกัน', 'รวมตัดต่อ เกรดสี และซับไตเติล', 'ถ่ายซีรีส์หลายตอนได้', 'อัดและมิกซ์เสียงไลฟ์ที่ Studio NOL (แยกต่างหาก)'],
+        uz: ['Sahna, studiya yoki ochiq havoda', 'Multikamera va vaqt kelishiladi', 'Montaj, rang tuzatish va subtitrlar kiritilgan', 'Ko\'p qismli seriyalar mumkin', 'Jonli audio yozish va miks Studio NOL da (alohida)']
       }),
     },
     {
