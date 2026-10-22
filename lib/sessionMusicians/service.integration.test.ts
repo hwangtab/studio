@@ -93,6 +93,7 @@ const form = (over: Record<string, unknown> = {}) => ({
   region: '서울',
   bio: '소개',
   sampleLinks: [{ url: 'https://www.youtube.com/watch?v=abc', label: '영상' }],
+  ratePerSong: '',
   rateNote: '',
   phone: '010-9999-8888',
   email: 'Player@Example.com',
@@ -129,6 +130,19 @@ describe('POST /api/session-musicians', () => {
     expect(openSessionPrivate(String(row.private_enc))).toEqual({ realName: '김하늘', phone: '010-9999-8888', email: 'player@example.com', kakaoId: 'player1' });
     expect(String(row.email_hash)).toMatch(/^[0-9a-f]{64}$/);
     expect(String(row.manage_token_hash)).toMatch(/^[0-9a-f]{64}$/);
+  });
+
+  it('곡당 희망 연주비는 쉼표 문자열도 정수로 저장하고, 비우면 null이며, 범위 밖이면 400', async () => {
+    expect((await call(indexHandler, { body: form({ ratePerSong: '150,000' }) })).status).toBe(200);
+    expect((await rows())[0].rate_per_song).toBe(150000);
+    await client.execute('DELETE FROM session_musicians');
+    expect((await call(indexHandler, { body: form({ ratePerSong: '' }) })).status).toBe(200);
+    expect((await rows())[0].rate_per_song).toBeNull();
+    await client.execute('DELETE FROM session_musicians');
+    const bad = await call(indexHandler, { body: form({ ratePerSong: '9,999' }) });
+    expect(bad.status).toBe(400);
+    expect(bad.body).toMatchObject({ code: 'rate_per_song_invalid', field: 'ratePerSong' });
+    expect(await rows()).toHaveLength(0);
   });
 
   it('관리 토큰은 해시만 저장되고 메일의 원문과 짝이 맞는다 — 소문자 hex라 미들웨어의 소문자 308에 깨지지 않는다', async () => {
@@ -313,6 +327,23 @@ describe('/api/session-musicians/manage', () => {
     expect(row.reconfirm_sent_at).toBeNull();
     expect(row.status).toBe('reviewed'); // 운영자 상태는 본인 수정이 건드리지 않는다
     expect(openSessionPrivate(String(row.private_enc))).toMatchObject({ phone: '010-1111-2222', email: 'player@example.com' });
+  });
+
+  it('PATCH는 곡당 희망 연주비를 바꾸고 GET이 숫자로 돌려준다 — 비우면 지워진다', async () => {
+    const token = await register();
+    const patch = (ratePerSong: unknown) =>
+      call(manageHandler, {
+        method: 'PATCH',
+        headers: { 'x-manage-token': token },
+        body: form({ ratePerSong, adultConfirmed: undefined, consent: undefined }),
+      });
+    expect((await patch('200,000')).status).toBe(200);
+    expect((await rows())[0].rate_per_song).toBe(200000);
+    const got = await call(manageHandler, { method: 'GET', headers: { 'x-manage-token': token } });
+    expect((got.body.profile as Record<string, unknown>).ratePerSong).toBe(200000);
+    expect((await patch('')).status).toBe(200);
+    expect((await rows())[0].rate_per_song).toBeNull();
+    expect((await patch(5)).body).toMatchObject({ code: 'rate_per_song_invalid' });
   });
 
   it('PATCH 검증 실패는 400', async () => {

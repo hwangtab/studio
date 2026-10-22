@@ -35,6 +35,7 @@ interface Profile {
   region: string | null;
   bio: string | null;
   sampleLinks: Array<{ url: string; label: string }>;
+  ratePerSong: number | null;
   rateNote: string | null;
   private: { realName: string; phone: string; email: string; kakaoId?: string };
 }
@@ -55,6 +56,7 @@ const toFormValues = (p: Profile): SessionFormValues => ({
   region: p.region ?? '',
   bio: p.bio ?? '',
   sampleLinks: p.sampleLinks.length > 0 ? p.sampleLinks.map((l) => ({ url: l.url, label: l.label })) : [{ url: '', label: '' }],
+  ratePerSong: p.ratePerSong === null || p.ratePerSong === undefined ? '' : String(p.ratePerSong),
   rateNote: p.rateNote ?? '',
   phone: p.private.phone,
   email: p.private.email,

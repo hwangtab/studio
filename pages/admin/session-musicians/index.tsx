@@ -8,6 +8,7 @@ import {
   SESSION_GENRES,
   SESSION_INSTRUMENTS,
   SESSION_STATUS_LABEL,
+  formatSessionRate,
   genreLabel,
   instrumentLabel,
   readingLabel,
@@ -19,6 +20,7 @@ import { Notice } from '../../../components/ui/Notice';
 import {
   LIST_LIMIT,
   listSessionMusicians,
+  parseSessionMusicianSort,
   type SessionMusicianFilters,
   type SessionMusicianProfile,
 } from '../../../lib/sessionMusicians/repository';
@@ -29,12 +31,12 @@ import {
  */
 
 /**
- * 목록 표에 나오는 칸만 props에 싣는다 — 운영자 메모(개인정보로 취급)·소개·희망 단가·샘플 링크는 상세 화면에서만 연다.
+ * 목록 표에 나오는 칸만 props에 싣는다 — 운영자 메모(개인정보로 취급)·소개·연주비 메모·샘플 링크는 상세 화면에서만 연다.
  * 목록은 접속기록을 남기지 않으므로 표에 안 나오는 개인정보를 페이지 데이터에 실으면 안 된다(CLAUDE.md "관리자 매출 현황·수기 등록·메뉴").
  */
 type ListRow = Pick<
   SessionMusicianProfile,
-  'id' | 'stageName' | 'primaryInstrument' | 'instruments' | 'genres' | 'reading' | 'remoteRecording' | 'region' | 'status' | 'createdAt'
+  'id' | 'stageName' | 'primaryInstrument' | 'instruments' | 'genres' | 'reading' | 'remoteRecording' | 'region' | 'status' | 'createdAt' | 'ratePerSong'
 >;
 
 const toListRow = (row: SessionMusicianProfile): ListRow => ({
@@ -48,11 +50,12 @@ const toListRow = (row: SessionMusicianProfile): ListRow => ({
   region: row.region,
   status: row.status,
   createdAt: row.createdAt,
+  ratePerSong: row.ratePerSong,
 });
 
 interface Props {
   rows: ListRow[];
-  filters: { status: string; instrument: string; genre: string; remote: boolean };
+  filters: { status: string; instrument: string; genre: string; remote: boolean; sort: string };
   /** 마이그레이션 0077 전. 표가 없으면 목록 대신 안내를 띄운다. */
   migrationNeeded: boolean;
   error: string | null;
@@ -73,8 +76,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   if (SESSION_INSTRUMENTS.some((o) => o.id === instrument)) filters.instrument = instrument;
   if (SESSION_GENRES.some((o) => o.id === genre)) filters.genre = genre;
   if (one(context.query.remote) === '1') filters.remoteOnly = true;
+  // 정렬은 고정 목록의 값만 받는다. 기본(최신 등록순)은 쿼리에 싣지 않는다.
+  filters.sort = parseSessionMusicianSort(one(context.query.sort));
 
-  const shown = { status: filters.status ?? '', instrument: filters.instrument ?? '', genre: filters.genre ?? '', remote: Boolean(filters.remoteOnly) };
+  const shown = { status: filters.status ?? '', instrument: filters.instrument ?? '', genre: filters.genre ?? '', remote: Boolean(filters.remoteOnly), sort: filters.sort };
   try {
     return { props: { rows: (await listSessionMusicians(filters)).map(toListRow), filters: shown, migrationNeeded: false, error: null } };
   } catch (error: unknown) {
@@ -134,6 +139,13 @@ export default function AdminSessionMusiciansPage({ rows, filters, migrationNeed
               {SESSION_GENRES.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
             </select>
           </label>
+          <label className="flex flex-col gap-1">
+            <span className="text-gray-600">정렬</span>
+            <select name="sort" defaultValue={filters.sort} className="rounded-lg border border-gray-300 bg-white px-3 py-2">
+              <option value="newest">최근 등록순</option>
+              <option value="rate">곡당 연주비 낮은 순</option>
+            </select>
+          </label>
           <label className="flex min-h-[40px] items-center gap-2">
             <input type="checkbox" name="remote" value="1" defaultChecked={filters.remote} className="h-4 w-4 accent-primary" />
             <span>원격 녹음 가능만</span>
@@ -152,6 +164,7 @@ export default function AdminSessionMusiciansPage({ rows, filters, migrationNeed
                   <th className="px-4 py-3">다루는 악기</th>
                   <th className="px-4 py-3">장르</th>
                   <th className="px-4 py-3">리딩</th>
+                  <th className="px-4 py-3">곡당</th>
                   <th className="px-4 py-3">원격</th>
                   <th className="px-4 py-3">지역</th>
                   <th className="px-4 py-3">상태</th>
@@ -170,6 +183,7 @@ export default function AdminSessionMusiciansPage({ rows, filters, migrationNeed
                     </td>
                     <td data-label="장르" className="px-4 py-3">{row.genres.map(genreLabel).join(', ') || '-'}</td>
                     <td data-label="리딩" className="px-4 py-3">{readingLabel(row.reading) || '-'}</td>
+                    <td data-label="곡당" className="px-4 py-3 whitespace-nowrap">{formatSessionRate(row.ratePerSong)}</td>
                     <td data-label="원격" className="px-4 py-3">{row.remoteRecording ? '가능' : '-'}</td>
                     <td data-label="지역" className="px-4 py-3">{row.region ?? '-'}</td>
                     <td data-label="상태" className="px-4 py-3">

@@ -3026,7 +3026,9 @@ export const sessionMusicians = sqliteTable(
     bio: text('bio'),
     /** JSON 배열: [{ url, label }] — https만, 1~5개. 임베드하지 않고 링크로만 연다. */
     sampleLinksJson: text('sample_links_json').notNull(),
-    /** 희망 단가 메모(선택, 참고용). 화면에 금액을 약속하지 않는다. */
+    /** 곡당 희망 연주비(원, 선택, 참고용). 연주비는 곡당 기준 하나뿐이다(시간당 없음). 화면에 금액을 약속하지 않는다. */
+    ratePerSong: integer('rate_per_song'),
+    /** 연주비 메모(선택, 참고용). 화면에 금액을 약속하지 않는다. */
     rateNote: text('rate_note'),
     /** 만 19세 이상 확인(체크) — 만 19세 미만은 받지 않는다. */
     adultConfirmed: integer('adult_confirmed', { mode: 'boolean' }).notNull(),

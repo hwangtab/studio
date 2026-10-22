@@ -50,6 +50,29 @@ describe('SessionMusicianForm — 등록', () => {
     expect(typeof payload._formFillMs).toBe('number');
   });
 
+  it('곡당 희망 연주비는 숫자만 받아 쉼표로 보여 주고, 단가 안내는 곡당 기준이며 시간당을 말하지 않는다', async () => {
+    const onSubmit = jest.fn().mockResolvedValue({ ok: true });
+    render(<SessionMusicianForm mode="register" submitLabel="등록하기" onSubmit={onSubmit} />);
+    const rate = screen.getByLabelText(/곡당 희망 연주비/) as HTMLInputElement;
+    expect(rate).toHaveAttribute('inputmode', 'numeric');
+    fireEvent.change(rate, { target: { value: '1a50000원' } });
+    expect(rate.value).toBe('150,000');
+    expect(screen.getByText(/곡당 기준이에요/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/연주비 메모/)).toBeInTheDocument();
+    expect(document.body.textContent).not.toMatch(/시간당|단가/);
+
+    fireEvent.change(screen.getByLabelText(/활동명/), { target: { value: '김베이스' } });
+    fireEvent.change(screen.getByLabelText(/실명/), { target: { value: '김하늘' } });
+    fireEvent.change(screen.getByLabelText(/주 악기/), { target: { value: 'bass' } });
+    fireEvent.click(screen.getByLabelText(/만 19세 이상이에요/));
+    fireEvent.click(screen.getByLabelText(/위 내용에 동의해요/));
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: '등록하기' }));
+    });
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
+    expect(onSubmit.mock.calls[0][0]).toMatchObject({ ratePerSong: '150000' });
+  });
+
   it('서버가 거절하면 메시지를 보여 준다', async () => {
     const onSubmit = jest.fn().mockResolvedValue({ ok: false, message: '이메일 주소를 다시 확인해 주세요.', field: 'email' });
     render(<SessionMusicianForm mode="register" submitLabel="등록하기" onSubmit={onSubmit} />);
@@ -66,6 +89,11 @@ describe('SessionMusicianForm — 등록', () => {
 });
 
 describe('SessionMusicianForm — 본인 관리', () => {
+  it('저장된 곡당 희망 연주비를 쉼표로 채워 보여 준다', () => {
+    render(<SessionMusicianForm mode="manage" initial={{ ...EMPTY_SESSION_FORM, ratePerSong: '200000', email: 'a@example.com' }} submitLabel="저장하기" onSubmit={jest.fn()} />);
+    expect((screen.getByLabelText(/곡당 희망 연주비/) as HTMLInputElement).value).toBe('200,000');
+  });
+
   it('이메일은 바꿀 수 없고 동의·확인 칸이 없다', () => {
     render(<SessionMusicianForm mode="manage" initial={{ ...EMPTY_SESSION_FORM, email: 'a@example.com' }} submitLabel="저장하기" onSubmit={jest.fn()} />);
     expect(screen.getByLabelText(/^이메일/)).toBeDisabled();

@@ -37,6 +37,8 @@ export interface SessionFormValues {
   region: string;
   bio: string;
   sampleLinks: Array<{ url: string; label: string }>;
+  /** 숫자만 담는다(쉼표는 화면에서만 붙인다). */
+  ratePerSong: string;
   rateNote: string;
   phone: string;
   email: string;
@@ -56,6 +58,7 @@ export const EMPTY_SESSION_FORM: SessionFormValues = {
   region: '',
   bio: '',
   sampleLinks: [{ url: '', label: '' }],
+  ratePerSong: '',
   rateNote: '',
   phone: '',
   email: '',
@@ -118,6 +121,7 @@ export default function SessionMusicianForm({ mode, initial = EMPTY_SESSION_FORM
       region: values.region || null,
       bio: values.bio,
       sampleLinks: values.sampleLinks.filter((link) => link.url.trim() !== ''),
+      ratePerSong: values.ratePerSong,
       rateNote: values.rateNote,
       phone: values.phone,
       email: values.email,
@@ -268,7 +272,22 @@ export default function SessionMusicianForm({ mode, initial = EMPTY_SESSION_FORM
             </Button>
           )}
         </div>
-        <Field id="sm-rate" label="희망 단가 메모(선택)" error={fieldError('rateNote')} hint="참고용이에요. 연주비는 프로젝트마다 협의해요.">
+        <Field
+          id="sm-rate-per-song"
+          label="곡당 희망 연주비(원, 선택)"
+          error={fieldError('ratePerSong')}
+          hint="원격 녹음이든 스튜디오에 와서 하든 곡당 기준이에요. 참고용이고, 실제 연주비는 곡마다 협의해요."
+        >
+          <TextInput
+            value={values.ratePerSong === '' ? '' : Number(values.ratePerSong).toLocaleString('ko-KR')}
+            inputMode="numeric"
+            autoComplete="off"
+            maxLength={12}
+            placeholder="예: 150,000"
+            onChange={(e) => set('ratePerSong', e.target.value.replace(/\D/g, '').slice(0, 9))}
+          />
+        </Field>
+        <Field id="sm-rate" label="연주비 메모(선택)" error={fieldError('rateNote')} hint="예: 편곡 포함 시 별도, 협의 가능">
           <TextInput value={values.rateNote} maxLength={SESSION_LIMITS.rateNote.max} onChange={(e) => set('rateNote', e.target.value)} />
         </Field>
       </section>

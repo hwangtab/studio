@@ -11,6 +11,7 @@ import { TextArea } from '../../../components/ui/Field';
 import {
   SESSION_LIMITS,
   SESSION_STATUS_LABEL,
+  formatSessionRate,
   genreLabel,
   instrumentLabel,
   readingLabel,
@@ -143,7 +144,8 @@ export default function AdminSessionMusicianDetailPage({ profile }: Props) {
             <Row label="악보 리딩">{readingLabel(profile.reading) || '-'}</Row>
             <Row label="원격 녹음">{profile.remoteRecording ? '가능' : '-'}</Row>
             <Row label="방문 가능 지역">{profile.region ?? '-'}</Row>
-            <Row label="희망 단가 메모">{profile.rateNote ?? '-'}</Row>
+            <Row label="곡당 희망 연주비">{formatSessionRate(profile.ratePerSong)}</Row>
+            <Row label="연주비 메모">{profile.rateNote ?? '-'}</Row>
             <Row label="등록">{formatKstDateTimeFull(new Date(profile.createdAt).toISOString())}</Row>
             <Row label="마지막 확인">{formatKstDateTimeFull(new Date(profile.lastConfirmedAt).toISOString())}</Row>
           </dl>

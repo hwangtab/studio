@@ -88,6 +88,8 @@ export const SESSION_LIMITS = {
   realName: { min: 2, max: 50 },
   bio: { max: 1000 },
   rateNote: { max: 200 },
+  /** 곡당 희망 연주비(원) — 참고용 숫자. 폼 안내와 서버 검증이 같은 값을 읽는다. */
+  ratePerSong: { min: 10_000, max: 10_000_000 },
   kakaoId: { max: 50 },
   otherInstrument: { max: 30, count: 5 },
   sampleLinks: { min: 1, max: 5 },
@@ -110,6 +112,10 @@ export const isInstrumentId = (id: unknown): id is string =>
 export const isGenreId = (id: unknown): id is string =>
   typeof id === 'string' && SESSION_GENRES.some((option) => option.id === id);
 
+/** 곡당 희망 연주비 표기 — 관리자 화면용. 미기재는 "-". */
+export const formatSessionRate = (won: number | null | undefined): string =>
+  typeof won === 'number' ? `${won.toLocaleString('ko-KR')}원` : '-';
+
 /** 보유 기간 — 마지막 확인일(등록·수정·재확인 중 나중)부터 2년. 처리방침 3항·18항 ⑯과 같은 약속이다(바꾸면 셋을 함께). */
 export const SESSION_RETENTION_YEARS = 2;
 /** 보유 만료 3개월 전(1년 9개월째)에 "아직 세션 연주 하세요?" 메일을 한 번 보낸다. */
@@ -119,7 +125,7 @@ export const SESSION_RECONFIRM_AFTER_MONTHS = 21;
 export const SESSION_CONSENT_SUMMARY: ReadonlyArray<{ label: string; text: string }> = [
   {
     label: '수집 항목',
-    text: '활동명, 실명, 휴대전화, 이메일, 카카오톡 ID(선택), 악기·장르·경력·소개·샘플 링크·희망 단가 메모(선택) 등 위에 적은 내용',
+    text: '활동명, 실명, 휴대전화, 이메일, 카카오톡 ID(선택), 악기·장르·경력·소개·샘플 링크·곡당 희망 연주비·연주비 메모(선택) 등 위에 적은 내용',
   },
   {
     label: '이용 목적',

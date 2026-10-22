@@ -62,7 +62,7 @@ export default function SessionMusiciansPage() {
           <Panel as="section" variant="outline" padding="default" title="등록하기 전에 알아 두세요">
             <ul className="list-disc space-y-1 pl-5 text-gray-700 dark:text-gray-300">
               <li>등록이 섭외를 약속하는 건 아니에요. 맞는 프로젝트가 생기면 스튜디오 놀이 먼저 연락드려요.</li>
-              <li>연주비는 프로젝트마다 협의해요. 스튜디오는 연주비에서 섭외 수수료를 떼지 않아요.</li>
+              <li>연주비는 곡당으로 협의해요(원격 녹음이든 스튜디오에 와서 하든 같은 기준). 스튜디오는 연주비에서 섭외 수수료를 떼지 않아요.</li>
               <li>등록한 정보는 사이트에 공개하지 않고, 운영자만 봐요.</li>
               <li>만 19세 이상만 등록할 수 있어요.</li>
               <li>등록하면 이메일로 정보를 고치거나 지울 수 있는 링크를 보내 드려요. 로그인은 필요 없어요.</li>
