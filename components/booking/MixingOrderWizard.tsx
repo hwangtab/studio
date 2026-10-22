@@ -19,6 +19,7 @@ import {
   type MixingProduct,
 } from '../../lib/booking/mixing-products';
 import { MIXING_REFUND_POLICY_LINES } from '../../lib/booking/refund-policy';
+import { focusFirstCustomerFieldError, validateCustomerFields, type CustomerFieldErrors, type CustomerFieldKey } from '../../lib/booking/customerFields';
 import { clearStoredDraft, readStringDraft, writeStringDraft } from '../../lib/formDraft';
 import type { CheckoutPaymentMethod } from '../../lib/payments/bankDeposit';
 import { wantsBankFallback } from '../../lib/payments/bankFallback';
@@ -125,6 +126,10 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
+  // 주문자 칸 오류 — 브라우저 기본 검증(말풍선) 대신 칸 아래 한국어 문구로 보인다(noValidate, lib/booking/customerFields.ts).
+  const [fieldErrors, setFieldErrors] = useState<CustomerFieldErrors>({});
+  const clearFieldError = (key: CustomerFieldKey) =>
+    setFieldErrors((prev) => (prev[key] ? { ...prev, [key]: undefined } : prev));
   const [customerNote, setCustomerNote] = useState('');
   // 환불 규정 동의는 임시 저장 대상이 아니다 — 복원된 체크는 사람이 그 자리에서 한
   // 의사표시가 아니라서 매번 새로 눌러야 한다(CLAUDE.md 약관 판본 절과 같은 판단).
@@ -191,6 +196,9 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const nextFieldErrors = validateCustomerFields({ customerName, customerPhone, customerEmail });
+    setFieldErrors(nextFieldErrors);
+    if (focusFirstCustomerFieldError(nextFieldErrors)) return;
     if (usingBank) {
       // 계좌 입금 — 결제창이 없다. 주문을 만들고 주문 확인 페이지(입금 안내)로 옮긴다.
       setSubmitting(true);
@@ -396,41 +404,41 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
             2. 주문자 정보
           </h2>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} noValidate className="space-y-4">
             <div>
-              <Field id="customerName" label="이름" required>
+              <Field id="customerName" label="이름" required error={fieldErrors.customerName}>
                 <TextInput
                   type="text"
                   autoComplete="name"
                   value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
+                  onChange={(e) => { setCustomerName(e.target.value); clearFieldError('customerName'); }}
                   required
                 />
               </Field>
             </div>
 
             <div>
-              <Field id="customerPhone" label="휴대폰 번호" required>
+              <Field id="customerPhone" label="휴대폰 번호" required error={fieldErrors.customerPhone}>
                 <TextInput
                   type="tel"
                   inputMode="tel"
                   autoComplete="tel"
                   placeholder="010-1234-5678"
                   value={customerPhone}
-                  onChange={(e) => setCustomerPhone(e.target.value)}
+                  onChange={(e) => { setCustomerPhone(e.target.value); clearFieldError('customerPhone'); }}
                   required
                 />
               </Field>
             </div>
 
             <div>
-              <Field id="customerEmail" label="이메일" required>
+              <Field id="customerEmail" label="이메일" required error={fieldErrors.customerEmail}>
                 <TextInput
                   type="email"
                   inputMode="email"
                   autoComplete="email"
                   value={customerEmail}
-                  onChange={(e) => setCustomerEmail(e.target.value)}
+                  onChange={(e) => { setCustomerEmail(e.target.value); clearFieldError('customerEmail'); }}
                   required
                 />
               </Field>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import type { CheckoutPaymentMethod } from '../../lib/payments/bankDeposit';
 import { wantsBankFallback } from '../../lib/payments/bankFallback';
+import { focusFirstCustomerFieldError, validateCustomerFields, type CustomerFieldErrors, type CustomerFieldKey } from '../../lib/booking/customerFields';
 import { reportPaymentFailure } from '../../utils/reportPaymentFailure';
 import { Button } from '../ui/Button';
 import { Field, TextInput } from '../ui/Field';
@@ -22,6 +23,10 @@ export default function PaymentLinkCheckout({ slug, totalAmount }: { slug: strin
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
+  // 주문자 칸 오류 — 브라우저 기본 검증(말풍선) 대신 칸 아래 한국어 문구로 보인다(noValidate, lib/booking/customerFields.ts).
+  const [fieldErrors, setFieldErrors] = useState<CustomerFieldErrors>({});
+  const clearFieldError = (key: CustomerFieldKey) =>
+    setFieldErrors((prev) => (prev[key] ? { ...prev, [key]: undefined } : prev));
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [bankGuide, setBankGuide] = useState<{ deadline: string; customerName: string } | null>(null);
@@ -46,6 +51,9 @@ export default function PaymentLinkCheckout({ slug, totalAmount }: { slug: strin
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const nextFieldErrors = validateCustomerFields({ customerName, customerPhone, customerEmail });
+    setFieldErrors(nextFieldErrors);
+    if (focusFirstCustomerFieldError(nextFieldErrors)) return;
     if (submitting) return;
     setSubmitting(true);
     setSubmitError(null);
@@ -111,34 +119,34 @@ export default function PaymentLinkCheckout({ slug, totalAmount }: { slug: strin
       <h2 id="pay-form-heading" className="typo-card-subtitle mb-3 text-gray-900 dark:text-white">
         주문자 정보
       </h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <Field id="customerName" label="이름" required>
+      <form onSubmit={handleSubmit} noValidate className="space-y-4">
+        <Field id="customerName" label="이름" required error={fieldErrors.customerName}>
           <TextInput
             type="text"
             autoComplete="name"
             value={customerName}
-            onChange={(e) => setCustomerName(e.target.value)}
+            onChange={(e) => { setCustomerName(e.target.value); clearFieldError('customerName'); }}
             required
           />
         </Field>
-        <Field id="customerPhone" label="휴대폰 번호" required>
+        <Field id="customerPhone" label="휴대폰 번호" required error={fieldErrors.customerPhone}>
           <TextInput
             type="tel"
             inputMode="tel"
             autoComplete="tel"
             placeholder="010-1234-5678"
             value={customerPhone}
-            onChange={(e) => setCustomerPhone(e.target.value)}
+            onChange={(e) => { setCustomerPhone(e.target.value); clearFieldError('customerPhone'); }}
             required
           />
         </Field>
-        <Field id="customerEmail" label="이메일" required>
+        <Field id="customerEmail" label="이메일" required error={fieldErrors.customerEmail}>
           <TextInput
             type="email"
             inputMode="email"
             autoComplete="email"
             value={customerEmail}
-            onChange={(e) => setCustomerEmail(e.target.value)}
+            onChange={(e) => { setCustomerEmail(e.target.value); clearFieldError('customerEmail'); }}
             required
           />
         </Field>
