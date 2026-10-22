@@ -71,7 +71,7 @@ const pageImageMap = {
   '/release-project/single': { url: '/images/og-recording15.webp', title: 'Studio NOL Single Release - Indie Single by Producer Hwang Gyeongha', caption: 'Indie single release project: planning, vocal recording, sessions, mixing, distribution, and PR by 15-year producer Hwang Gyeongha.' },
   '/release-project/ep': { url: '/images/og-recording15.webp', title: 'Studio NOL EP Release - Indie EP by Producer Hwang Gyeongha', caption: 'Indie EP release project: 3–5 tracks with planning, recording, sessions, mixing, distribution, and PR by 15-year producer Hwang Gyeongha.' },
   '/release-project/album': { url: '/images/og-recording15.webp', title: 'Studio NOL Full Album Release - Indie Album by Producer Hwang Gyeongha', caption: 'Full album release project: planning, vocal recording, sessions, mixing, distribution, and media PR by 15-year producer Hwang Gyeongha.' },
-  '/about': { url: '/images/og-recording15.webp', title: 'Studio NOL - 10-Year Music Production Experience', caption: 'Recording studio in Yeonsinnae, Eunpyeong-gu, Seoul with professional engineers.' },
+  '/about': { url: '/images/og-recording15.webp', title: 'Studio NOL - 15 Years of Music Production', caption: 'Recording studio in Yeonsinnae, Eunpyeong-gu, Seoul, run by 15-year producer Hwang Gyeongha.' },
   // 상업 LP 2종 + 운영자 프로필. ogImage는 각 페이지의 SEO ogImage prop과 동기
   // (recording.tsx:137 · mixing-mastering.tsx:171 · author.tsx:45).
   '/recording': { url: '/images/og-recording1.webp', title: 'Studio NOL Recording Studio - Vocal Recording ₩250K/song', caption: 'Vocal and instrument recording in Yeonsinnae, Seoul: treated live room, STC 60+ booth, Neumann U87Ai, dedicated engineer.' },
@@ -79,7 +79,8 @@ const pageImageMap = {
   '/author': { url: '/images/og-recording15.webp', title: 'Hwang Gyeongha - Producer & Audio Engineer, Studio NOL', caption: 'Producer and audio engineer with 15 years of experience; recipient of the Selection Committee Special Award at the 14th Korean Music Awards (2017).' },
   '/contact': { url: '/images/og-hardware5.webp', title: 'Studio NOL Contact - Book Recording Session', caption: 'Reach Studio NOL for recording, mixing, voiceover, and wedding song production.' },
   '/index': { url: '/images/og-studio2.webp', title: 'Studio NOL - Seoul Music Production Studio', caption: 'Yeonsinnae Studio NOL: recording, mixing, mastering, voiceover, wedding song.' },
-  '/lesson': { url: '/images/og-lesson1.webp', title: 'Studio NOL Music Lessons - Vocal & Production', caption: 'One-on-one vocal, mixing, and music production lessons at Studio NOL.' },
+  // 레슨은 프로듀싱(미디·작곡·믹싱·마스터링) 하나다 — 보컬·악기 레슨은 없다(CLAUDE.md, content/factGuards.test.ts가 지킨다).
+  '/lesson': { url: '/images/og-lesson1.webp', title: 'Studio NOL Producing Lessons - MIDI, Composition & Mixing', caption: 'One-on-one producing lessons at Studio NOL: MIDI, composition, mixing, and mastering.' },
   '/portfolio': { url: '/images/og-recording1.webp', title: 'Studio NOL Portfolio - Recording & Mixing Works', caption: 'Albums, singles, and commercial works produced at Studio NOL.' },
   '/practice-room': { url: '/images/og-room8.webp', title: 'Studio NOL Premium Practice Room - Soundproof Residency', caption: 'Soundproof premium practice room with monthly residency in Eunpyeong-gu, Seoul.' },
   '/pricing': { url: '/images/og-hardware2.webp', title: 'Studio NOL Pricing - Transparent Recording Fees', caption: 'Studio NOL pricing: practice room ₩360K/mo, recording ₩100K/hr, wedding song ₩350K, voiceover ₩100K/hr.' },
