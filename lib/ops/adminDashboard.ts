@@ -26,8 +26,9 @@ import { isMissingTableError } from '../dbErrors';
  * 믹싱·카드 등록 대기·서명 대기)을 건수로 둔다. 판정을 두 벌로 두지 않는 것이 핵심이다 —
  * 메일과 화면이 다른 건수를 말하면 둘 다 못 믿게 된다.
  *
- * 외부 호출(캘린더·GA4·소셜 API)은 하지 않는다. 화면을 열 때마다 구글을 찌르면 느리고,
- * 그쪽 장애가 관리자 화면까지 막는다.
+ * 외부 호출은 구글 캘린더뿐이다(GA4·소셜 API는 부르지 않는다) — 링크 일정 동기화·자동 등록, 캘린더에만 있는 일정 읽기.
+ * 운영자가 "캘린더에 넣으면 사이트에도 들어가길" 기대해서 열람 경로에 남겼고, 둘 다 시간 상한을 둬 구글이 느려도
+ * 첫 화면이 같이 느려지지 않게 한다(LINK_SYNC_WAIT_MS·CALENDAR_READ_WAIT_MS).
  */
 
 import { autoImportCalendarEvents } from '../booking/calendarAutoImport';
@@ -121,6 +122,8 @@ export // 캘린더에만 있는 일정은 이번 주 세션보다 멀리 본다
 const CALENDAR_IMPORT_DAYS = 60;
 const UPCOMING_WINDOW_DAYS = 7;
 const LINK_SYNC_WAIT_MS = 3000;
+/** 캘린더에만 있는 일정 읽기 상한 — 링크 동기화를 기다린 뒤라 둘을 합쳐도 첫 화면이 7초를 넘지 않는다. */
+const CALENDAR_READ_WAIT_MS = 4000;
 
 /** KST 달력의 오늘 0시(UTC Date). 이미 시작한 오늘 세션도 목록에 남긴다. */
 const startOfTodayKst = (now: Date): Date => {
@@ -189,7 +192,18 @@ const [issues, sessions, calendarImport, linkSessions, mixingCounts, subscriptio
       .innerJoin(orders, eq(orders.id, bookings.orderId))
       .where(and(eq(bookings.status, 'confirmed'), gte(bookings.startAt, from), lt(bookings.startAt, to)))
       .orderBy(asc(bookings.startAt)), [], failed),
-    guard('캘린더 미등록 일정', loadUnlinkedCalendarEvents(from, new Date(from.getTime() + CALENDAR_IMPORT_DAYS * DAY_MS)), { events: [], error: '현황 조회 실패' }, failed),
+    // 구글 요청 자체 시간 상한은 8초라(gcal.ts) 그대로 기다리면 첫 화면이 그만큼 늦는다 — 상한을 넘기면 이번 열람은 건너뛰고 알린다.
+    guard(
+      '캘린더 미등록 일정',
+      Promise.race([
+        loadUnlinkedCalendarEvents(from, new Date(from.getTime() + CALENDAR_IMPORT_DAYS * DAY_MS)),
+        new Promise<{ events: UnlinkedCalendarEvent[]; error: string }>((resolve) => {
+          setTimeout(() => resolve({ events: [], error: '캘린더 응답이 늦어 이번에는 읽지 못했어요. 잠시 뒤 새로고침해 주세요.' }), CALENDAR_READ_WAIT_MS).unref?.();
+        }),
+      ]),
+      { events: [], error: '현황 조회 실패' },
+      failed,
+    ),
     // 결제 링크로 결제된 이용(예약 시스템에 행이 없다) — 링크에 적은 이용 일시가 이 창 안인 것. 표가 없는 DB(0062 전)에서도 대시보드는 열린다.
     db.all<{ order_id: string; order_no: string; customer_name: string; item_name: string; session_at: number; session_hours: number | null }>(sql`
       SELECT o.id AS order_id, o.order_no, o.customer_name, plo.item_name, plo.session_at, plo.session_hours

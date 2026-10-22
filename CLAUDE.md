@@ -666,7 +666,7 @@ PATCH가 실패해도 DB는 되돌리지 않고 `gcal_error`에 적는다("캘�
 
 ### 관리자 매출 현황·수기 등록·메뉴 (2026-10) — 어겨도 에러가 안 나는 것만
 
-- **매출 숫자의 정본은 `lib/ops/revenueReport.ts`**(`/admin/revenue`·대시보드 카드가 같은 `summarizeRevenue`를 쓴다). 승인 시각(KST) 기준, 환불은 `done`만(기간 밖 환불도 같은 결제에서 뺀다).
+- **매출 숫자의 정본은 `lib/ops/revenueReport.ts`**(재무 `/admin/finance`·대시보드 수익 카드가 같은 `summarizeRevenue`를 쓴다 — 옛 `/admin/revenue`·`/admin/expenses`는 next.config.mjs가 재무로 돌린다). 승인 시각(KST) 기준, 환불은 `done`만(기간 밖 환불도 같은 결제에서 뺀다).
   결제 행이 없는 **계좌 입금·수기 펀딩은 `funding_pledges.paid_at`**으로 더하되 환불은 주문이 `refunded`일 때만 전액으로 친다. `smoke-test` 펀딩은 매출 화면에서만 뺀다 —
   **세무용 결제 장부 CSV(`salesLedger.ts`)는 실제 거래라 빼지 않는다.** 직접 서비스(예약·믹싱·구독·예약금·소프트웨어·**연습실 월 입주**)와 판매·중개(펀딩·공연·상점)는 가르되, **판매·중개의 매출은 결제액이 아니라 스튜디오 몫(플랫폼 수수료)** 이다(`lib/ops/platformFee.ts`, 운영자 결정 2026-10-21 — 정산해 줄 돈까지 매출에 올리면 부풀어 보인다).
   펀딩·공연은 순결제액 × `FUNDING_PLATFORM_FEE_PERCENT`(5.5%), 상점은 아티스트 상품 판매가의 `100 − SHOP_ARTIST_SHARE_PERCENT`%·스튜디오 자체 상품 전액·배송비는 발송하는 쪽(`artistPayout.ts`와 같은 규칙). 결제(PG) 수수료는 비용이라 매출에서 더하거나 빼지 않는다. 행에는 원래 결제액이 `sourceGross`로 남는다.
@@ -706,14 +706,14 @@ PATCH가 실패해도 DB는 되돌리지 않고 `gcal_error`에 적는다("캘�
   환불 변경은 메모에 누가·얼마→얼마를 남긴다. 장부 CSV에는 들어가지 않는다.
 - **수기 예약 등록은 고객 계좌 입금과 같은 함수**(`createBookingOrder`/`createMixingOrder` → `confirmBookingBankDeposit`)를 탄다(`lib/booking/manualEntry.ts`). 점유·캘린더·환불·매출이 웹 예약과 같은 원장이다.
   이메일을 비우면 `MANUAL_PLACEHOLDER_EMAIL`이 들어가는데 **배달되지 않는 주소**다 — 고객에게 메일을 보내는 새 경로는 `isManualPlaceholderRecipient`(`lib/privacy/manualPlaceholder.ts`)로 먼저 거를 것(반송이 발신 평판을 깎는다).
-- **관리자 메뉴는 `ADMIN_NAV_ENTRIES`(components/admin/AdminShell.tsx) 한 곳**이다 — 연습실 / 녹음실 / 플랫폼 / 공통. 새 구역은 묶음 하나에 넣는다. 예약은 한 화면을 `?line=practice|studio|mixing`으로 갈라 세 곳에 건다(`lib/booking/line.ts`).
+- **관리자 메뉴는 `ADMIN_NAV_ENTRIES`(components/admin/AdminShell.tsx) 한 곳**이다 — 연습실 / 녹음실 / 플랫폼 / 재무 / 공통. 재무는 한 화면의 탭(매출·수익 / 지출 / 장부 내보내기, `components/admin/FinanceTabs.tsx`)이고 하위 경로로 갈린다(`?tab=`이 아니다 — 탭마다 읽는 데이터가 다르다). 대시보드에는 이번 달 수익 한 장만 두고 상세는 재무로 보낸다. 새 구역은 묶음 하나에 넣는다. 예약은 한 화면을 `?line=practice|studio|mixing`으로 갈라 세 곳에 건다(`lib/booking/line.ts`).
 - **개인정보(이름·연락처·이메일·주소)를 props로 싣는 관리자 상세 화면은 열람을 기록한다**: `logAdminView`(`lib/privacy/adminView.ts`) 또는 `recordAdminPrivacyAccess` + `privacyAccessActionEnum` + `accessLogLabels.ts`(열거와 라벨이 어긋나면 테스트가 선다). 값은 적지 않고 대상 id·결과만.
   목록 화면은 기록하지 않는 대신 **표에 안 나오는 개인정보를 props에 싣지 않는다**(`serializePledgeForAdminList`).
 
 ### 연습실 손익 = 월 입주 수입 − 지출 항목 (마이그레이션 0080 `studio_expenses`)
 
 월 입주 수입은 결제 행이 없어 매출 현황에서 통째로 빠져 있었다 — `lib/ops/tenancyRevenue.ts`가 **발생 기준**으로 읽는다(유형 `tenancy`, 직접 서비스): 입주해 있는 달(하루라도, 퇴실한 달 포함)마다 지금의 월 이용료 전액, 오늘이 속한 달까지. **입금일(`room_tenancy_payments`) 기준으로 읽지 않는다** — 달 중순에 입금일이 안 온 사람이 빠져 이번 달이 모자라 보인다(2026-10-21 예정 5,005,000원이 3,786,000원으로 보였다). 운영 판단: 다들 예정일에 내고 매출이 줄어드는 건 방이 비었을 때뿐. 입금이 늦은 사람은 연체 알림이 따로 잡는다. 요금 변경 이력·첫 달 일할은 기록이 없어 반영하지 않는다. 부가세는 나누지 않는다.
-임대료·청소비 같은 **지출은 관리자 `/admin/expenses`에 적는다**(`lib/ops/expenses.ts`). 매달 같은 금액이면 "매달 반복"으로 한 번만(시작 달부터 끝나는 달까지 센다, 31일은 짧은 달 말일로 보정). 구분이 "연습실"인 지출만 매출 현황의 연습실 순수익에서 빼고 "스튜디오 전체"는 참고로만 보인다.
+임대료·청소비 같은 **지출은 관리자 재무 › 지출(`/admin/finance/expenses`)에 적는다**(`lib/ops/expenses.ts`). 매달 같은 금액이면 "매달 반복"으로 한 번만(시작 달부터 끝나는 달까지 센다, 31일은 짧은 달 말일로 보정). 구분이 "연습실"인 지출만 매출 현황의 연습실 순수익에서 빼고 "스튜디오 전체"는 참고로만 보인다.
 - **순서는 마이그레이션 0080 → 배포.** 뒤집어도 결제·매출은 안 깨지고 손익 칸만 "지출 표 미적용"으로 열린다(대시보드 카드는 지출을 빼지 않은 입주 수입만 보인다). 월 입주 표(0066)를 못 읽으면 월 입주 수입이 빠졌다고 알린다.
 - 수기 매출 유형(`MANUAL_TYPES`)에서 `tenancy`는 뺐다 — 수기로 또 적으면 두 번 센다.
 

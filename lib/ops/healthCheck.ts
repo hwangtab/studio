@@ -1566,9 +1566,17 @@ const collectDbIssuesBody = async (db: ReturnType<typeof getDb>, now: Date, issu
     `);
     const total = stale.reduce((sum, r) => sum + Number(r.n), 0);
     if (total > 0) {
+      // 한 종류뿐이면 그 목록의 입금 대기로 바로 보낸다. 여럿이면 대시보드의 "입금 확인" 묶음이 종류별로 갈라 보여 준다
+      // (예전엔 늘 `/admin`이라 대시보드에서 누르면 제자리로 돌아왔다).
+      const DEPOSIT_HREF: Record<string, string> = {
+        '예약·믹싱': '/admin/bookings?deposit=pending',
+        펀딩: '/admin/funding?deposit=pending',
+        공연: '/admin/shows',
+        상점: '/admin/shop',
+      };
       issues.push({
         severity: 'medium',
-        href: '/admin',
+        href: stale.length === 1 ? (DEPOSIT_HREF[stale[0].kind] ?? '/admin#deposits') : '/admin#deposits',
         title: `입금 안내 기한(${BANK_DEPOSIT_GUIDE_DAYS}일)이 지난 계좌 입금 대기 ${total}건`,
         detail:
           `${stale.map((r) => `${r.kind} ${Number(r.n)}건`).join(' · ')}\n` +
