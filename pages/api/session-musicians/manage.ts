@@ -29,7 +29,7 @@ const NOT_FOUND = { ok: false, code: 'not_found', message: '이 링크는 더 �
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
-  res.setHeader('Referrer-Policy', 'no-referrer');
+  res.setHeader('Referrer-Policy', 'same-origin');
   res.setHeader('Vary', 'Origin');
 
   const method = req.method ?? '';

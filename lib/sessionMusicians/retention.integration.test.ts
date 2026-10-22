@@ -27,6 +27,7 @@ jest.mock('../tenancy/retention', () => ({
 /* eslint-disable import/first */
 import cronHandler from '../../pages/api/cron/purge-contracts';
 import { sendEmail } from '../email/resend';
+import { purgeEndedTenancies } from '../tenancy/retention';
 import { sealSessionPrivate } from './privateData';
 import { purgeExpiredSessionMusicians, reconfirmCutoff, retentionCutoff, sendSessionMusicianReconfirmNotices } from './retention';
 import { hashManageToken } from './tokens';
@@ -218,6 +219,25 @@ describe('월간 파기 크론 연결', () => {
         const out = await runCron();
         expect(out.status).toBe(500);
         expect(sendEmailMock.mock.calls.map((c) => c[0].subject)).toContain('[Studio NOL] 세션 연주자 등록 파기 실패');
+      } finally {
+        await client.execute('ALTER TABLE session_musicians RENAME COLUMN last_confirmed_at_x TO last_confirmed_at');
+      }
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  it('월 입주 파기도 같은 달에 실패하면 두 실패를 모두 알린다 — 앞 알림이 뒤 알림을 가리지 않는다', async () => {
+    jest.useFakeTimers({ now: NOW, doNotFake: ['nextTick', 'setImmediate', 'setTimeout', 'setInterval', 'clearTimeout', 'clearInterval'] });
+    (purgeEndedTenancies as jest.Mock).mockRejectedValueOnce(new Error('tenancy down'));
+    try {
+      await client.execute('ALTER TABLE session_musicians RENAME COLUMN last_confirmed_at TO last_confirmed_at_x');
+      try {
+        const out = await runCron();
+        expect(out.status).toBe(500);
+        const subjects = sendEmailMock.mock.calls.map((c) => c[0].subject);
+        expect(subjects).toContain('[Studio NOL] 월 입주 기록 파기 실패');
+        expect(subjects).toContain('[Studio NOL] 세션 연주자 등록 파기 실패');
       } finally {
         await client.execute('ALTER TABLE session_musicians RENAME COLUMN last_confirmed_at_x TO last_confirmed_at');
       }

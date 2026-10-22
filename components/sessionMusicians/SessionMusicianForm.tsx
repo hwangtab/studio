@@ -80,7 +80,7 @@ interface Props {
 /** 직접 입력 악기: 쉼표·가운뎃점·줄바꿈으로 나눠 최대 개수까지. */
 export const parseOtherInstruments = (raw: string): string[] =>
   raw
-    .split(/[,，、\n]/)
+    .split(/[,，、·\n]/)
     .map((part) => part.trim())
     .filter(Boolean)
     .slice(0, SESSION_LIMITS.otherInstrument.count + 1);
