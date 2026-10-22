@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import RuleList from './RuleList';
 
 const items = [
-  { heading: '전문 엔지니어가 처음부터 끝까지 직접', body: 'Neumann U87Ai 등 하이엔드 장비로 1:1 디렉팅.' },
+  { heading: '전문 엔지니어가 처음부터 끝까지 직접', body: 'Neumann U87AI 등 하이엔드 장비로 1:1 디렉팅.' },
   { heading: '세션 전에 확정되는 투명한 가격', body: '숨은 비용 없이 카카오톡으로 무료 견적.' },
   { heading: '녹음·연습실·발매까지 한 곳에서', body: '연신내역 도보 5분.' },
 ];

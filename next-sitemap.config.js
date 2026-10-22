@@ -74,7 +74,7 @@ const pageImageMap = {
   '/about': { url: '/images/og-recording15.webp', title: 'Studio NOL - 15 Years of Music Production', caption: 'Recording studio in Yeonsinnae, Eunpyeong-gu, Seoul, run by 15-year producer Hwang Gyeongha.' },
   // 상업 LP 2종 + 운영자 프로필. ogImage는 각 페이지의 SEO ogImage prop과 동기
   // (recording.tsx:137 · mixing-mastering.tsx:171 · author.tsx:45).
-  '/recording': { url: '/images/og-recording1.webp', title: 'Studio NOL Recording Studio - Vocal Recording ₩250K/song', caption: 'Vocal and instrument recording in Yeonsinnae, Seoul: treated live room, STC 60+ booth, Neumann U87Ai, dedicated engineer.' },
+  '/recording': { url: '/images/og-recording1.webp', title: 'Studio NOL Recording Studio - Vocal Recording ₩250K/3 hours', caption: 'Vocal and instrument recording in Yeonsinnae, Seoul: treated live room, STC 60+ booth, Neumann U87AI, dedicated engineer.' },
   '/mixing-mastering': { url: '/images/og-hardware1.webp', title: 'Studio NOL Mixing & Mastering - From ₩200K/song', caption: 'Professional mixing and mastering by 15-year producer Hwang Gyeongha. Track-count tiers, two revisions included, remote submission accepted.' },
   '/author': { url: '/images/og-recording15.webp', title: 'Hwang Gyeongha - Producer & Audio Engineer, Studio NOL', caption: 'Producer and audio engineer with 15 years of experience; recipient of the Selection Committee Special Award at the 14th Korean Music Awards (2017).' },
   '/contact': { url: '/images/og-hardware5.webp', title: 'Studio NOL Contact - Book Recording Session', caption: 'Reach Studio NOL for recording, mixing, voiceover, and wedding song production.' },

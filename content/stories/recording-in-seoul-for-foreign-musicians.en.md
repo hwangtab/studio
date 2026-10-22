@@ -21,7 +21,7 @@ A typical Seoul recording studio is built around an hourly booking model. You re
 
 Communication culture differs too. Korean artists usually book via KakaoTalk, the dominant messaging app in Korea, or through Instagram DMs and email. Phone calls are less common, especially for first contact. Sessions tend to move quickly — engineers expect the artist to arrive warmed up, with the arrangement and reference tracks ready. The pace is part of why so many K-pop releases land on tight schedules: the workflow is built for efficiency.
 
-You will also notice the gear is serious. Even mid-sized rooms in Seoul tend to invest in flagship microphones, analog outboard, and well-treated booths, because competition between studios is intense and clients listen carefully. At Studio NOL we run a Neumann U87Ai as our primary vocal mic, SSL Fusion on the master bus, ProAc monitors for accurate translation, and a Pro Tools session backbone that any visiting engineer or producer will immediately recognize.
+You will also notice the gear is serious. Even mid-sized rooms in Seoul tend to invest in flagship microphones, analog outboard, and well-treated booths, because competition between studios is intense and clients listen carefully. At Studio NOL we run a Neumann U87AI as our primary vocal mic, SSL Fusion on the master bus, ProAc monitors for accurate translation, and a Pro Tools session backbone that any visiting engineer or producer will immediately recognize.
 
 The other thing to know: Korean studios often double as multi-purpose spaces. A single facility may offer recording, rehearsal rooms, 1:1 lessons, and even voice acting work under one roof. That is by design — it keeps the room busy and the workflow flexible — and it is why your first email might mention three different services at once.
 
@@ -39,7 +39,7 @@ Studio NOL is a working music studio in Eunpyeong-gu, a quiet residential distri
 
 Under one roof we offer recording (vocals, instruments, full band tracking, mixing, and mastering), hourly practice room rentals, voice acting sessions including English dubbing, and wedding song recording for couples who want a personal track for their ceremony. Whatever brings you to Seoul, there is a good chance we can host that part of your project.
 
-On the gear side, our vocal chain is built around the Neumann U87Ai through a clean preamp into Pro Tools, with SSL Fusion analog processing available on the master bus. We monitor on ProAc speakers in a treated control room, and we keep a tuned upright, a stage piano, and a handful of guitars available for visiting artists who travel light. Files go out as WAV by default — 24-bit, 96 kHz unless you ask otherwise — with MP3 references on request.
+On the gear side, our vocal chain is built around the Neumann U87AI through a clean preamp into Pro Tools, with SSL Fusion analog processing available on the master bus. We monitor on ProAc speakers in a treated control room, and we keep a tuned upright, a stage piano, and a handful of guitars available for visiting artists who travel light. Files go out as WAV by default — 24-bit, 96 kHz unless you ask otherwise — with MP3 references on request.
 
 For international musicians, the project side is easy to handle in English: bookings, quotes, mix notes, and revision rounds are all handled in English by email or KakaoTalk, and our remote mixing and mastering service runs entirely in English — send us your tracks from anywhere and we deliver finished files.
 

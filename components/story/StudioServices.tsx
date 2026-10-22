@@ -18,7 +18,7 @@ interface StudioServicesProps {
  */
 const StudioServices: React.FC<StudioServicesProps> = ({ locale = 'ko' }) => {
   const rows: { label: string; body: React.ReactNode }[] = [
-    { label: '보컬 녹음', body: 'Neumann U87Ai, 전용 흡음 부스, 엔지니어 1:1 디렉팅' },
+    { label: '보컬 녹음', body: 'Neumann U87AI, 전용 흡음 부스, 엔지니어 1:1 디렉팅' },
     { label: '믹싱·마스터링', body: '보컬과 MR을 함께 정리하며, 믹싱 2회·마스터링 1회 수정이 기본이에요' },
     {
       label: '온라인 의뢰',
