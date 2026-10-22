@@ -1,0 +1,11 @@
+month,query_id,engine,cited(yes/no),search_triggered(yes/no/unknown),cited_url,cited_section,source_content_type(table/faq/price-card/prose/other/na),position_in_answer,competitors_named,tone(positive/neutral/negative/absent),notes,facts_wrong
+2026-10,Q09-r1,chatgpt,no,yes,na,na,na,na,"SoundBetter;Fiverr;AirGigs;크몽",absent,"스튜디오 놀 언급 전혀 없음. 전부 해외/국내 프리랜서 매칭 플랫폼만 나열",unknown
+2026-10,Q09-r2,chatgpt,no,yes,na,na,na,na,"크몽;SoundBetter;Fiverr;AirGigs",absent,"업체명 추천 0건(전부 플랫폼). 가격표까지 있으나 스튜디오 놀 없음",unknown
+2026-10,Q09-r3,chatgpt,no,yes,na,na,na,na,"크몽;Fiverr;SoundBetter;AirGigs",absent,"크몽 등록상품 가격까지 구체적으로 인용했으나 스튜디오 놀은 후보에 없음",unknown
+2026-10,Q09-r4,chatgpt,no,yes,na,na,na,na,"크몽;SoundBetter;Fiverr;AirGigs",absent,"run1~4 패턴 동일 — 전부 해외/국내 프리랜서 플랫폼만, 특정 국내 스튜디오 이름 전혀 안 나옴",unknown
+2026-10,Q09-r5,chatgpt,no,yes,na,na,na,na,"크몽;Fiverr;SoundBetter;759Sound",absent,"유일하게 개별 업체명(759Sound)이 나왔으나 스튜디오 놀은 아님. 위치 공유 요청 UI가 뜸(국내 신호 보강 시도로 보임)",unknown
+2026-10,Q17-r1,chatgpt,yes,yes,https://studionol.co.kr,na,other,1,키스톤 스튜디오,positive,"지도 위젯 표시. '보컬 녹음 3시간 25만원' 정확. 출처 칩 '스튜디오 놀'",no
+2026-10,Q17-r2,chatgpt,yes,yes,https://studionol.co.kr,na,price-card,1,na,positive,"유일 추천. 주소(대조동 84-3)·전화번호(010-4255-7893)·가격 전부 정확",no
+2026-10,Q17-r3,chatgpt,yes,yes,https://studionol.co.kr,na,price-card,1,na,positive,"유일 추천. '녹음·믹싱·마스터링 통합 50만원' 등 정확",no
+2026-10,Q17-r4,chatgpt,yes,yes,https://studionol.co.kr,na,price-card,1,"소프스튜디오 연신내점;키스톤 스튜디오",positive,"주소·전화번호 정확, 경쟁 연습실 2곳과 비교하며 1순위 추천",no
+2026-10,Q17-r5,chatgpt,yes,yes,https://studionol.co.kr,na,price-card,1,은평생활문화센터 모여락,positive,"가격 정확하나 '표시 가격은 부가세 별도'라고 명시 — 2026-10-15 VAT 포함 정책 전환 이후 사실과 다름",yes
