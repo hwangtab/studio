@@ -11,6 +11,9 @@ import { listTenancies, type TenancyListRow } from '../../../lib/tenancy/service
 import { buttonVariants } from '../../../components/ui/Button';
 import { DANGER_GHOST_CLASS } from '../../../components/admin/adminDanger';
 import { cn } from '../../../lib/utils';
+import { formatAdminDate } from '../../../lib/admin/displayDate';
+import { DangerActions } from '../../../components/admin/DangerActions';
+import { useAdminDialog } from '../../../components/admin/useAdminDialog';
 
 interface Props {
   rows: TenancyListRow[];
@@ -109,6 +112,7 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
   /** 연락처 등 상세를 불러왔는가 — 안 불러온 채 저장하면 서버가 암호문을 그대로 둔다. */
   const [privateLoaded, setPrivateLoaded] = useState(false);
   const [busy, setBusy] = useState(false);
+  const { ask, dialog } = useAdminDialog();
   const [notice, setNotice] = useState<string | null>(null);
   const [showEnded, setShowEnded] = useState(false);
 
@@ -159,9 +163,22 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
   };
 
   const pay = async (t: TenancyListRow) => {
-    const text = window.prompt(`${t.tenantName} — 입금액 (원)\n기본: 월 이용료. 입금 예정일 ${t.nextDueOn} 치를 채우고 다음 예정일로 넘어가요.`, String(t.monthlyAmount));
-    if (text === null) return;
-    const amount = Number(text.replace(/[,\s원]/g, ''));
+    const values = await ask({
+      title: '입금 기록',
+      description: `${t.tenantName} — 입금 예정일 ${formatAdminDate(t.nextDueOn)} 치를 채우고 다음 예정일로 넘어가요.`,
+      fields: [{
+        name: 'amount',
+        label: '입금액 (원)',
+        type: 'number',
+        defaultValue: String(t.monthlyAmount),
+        hint: '기본: 월 이용료',
+        required: '입금액을 적어 주세요.',
+        validate: (v) => (Number.isInteger(Number(v.replace(/[,\s원]/g, ''))) && Number(v.replace(/[,\s원]/g, '')) >= 0 ? null : '입금액을 원 단위 숫자로 적어 주세요.'),
+      }],
+      confirmLabel: '입금 기록',
+    });
+    if (values === null) return;
+    const amount = Number(values.amount.replace(/[,\s원]/g, ''));
     if (!Number.isInteger(amount) || amount < 0) { setNotice('입금액을 확인해 주세요.'); return; }
     setBusy(true);
     finish(await call(`/api/admin/tenancies/${t.id}`, 'POST', { action: 'payment', amount }), '입금을 기록했어요.');
@@ -170,7 +187,7 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
   const end = async (t: TenancyListRow) => {
     // 계약서 제5조: 보증금은 면제이고, 약정 기간을 채우지 않고 퇴실하면 보증금 상당액(월 이용료 1개월분)이 위약금이다. 자동 연장 중 통지 종료는 위약금이 없다.
     const early = t.kind === 'room' && t.endDate !== null && today < t.endDate;
-    const penaltyNote = early ? `\n\n⚠ 약정 종료일(${t.endDate}) 전 퇴실이에요. 계약서 제5조에 따라 위약금(보증금 상당액 = 월 이용료 1개월분, ${won(t.monthlyAmount)})이 발생할 수 있어요. 갑의 귀책·계약서가 정한 예외가 아닌지 확인하세요.` : '';
+    const penaltyNote = early ? `\n\n⚠ 약정 종료일(${formatAdminDate(t.endDate)}) 전 퇴실이에요. 계약서 제5조에 따라 위약금(보증금 상당액 = 월 이용료 1개월분, ${won(t.monthlyAmount)})이 발생할 수 있어요. 갑의 귀책·계약서가 정한 예외가 아닌지 확인하세요.` : '';
     if (!window.confirm(`${t.tenantName}${t.roomNumber ? ` (${t.roomNumber})` : ''} 퇴실 처리할까요? 캘린더 일정이 지워지고 방이 비어요.${penaltyNote}`)) return;
     setBusy(true);
     finish(await call(`/api/admin/tenancies/${t.id}`, 'POST', { action: 'end' }), '퇴실 처리했어요.');
@@ -216,16 +233,18 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
               <dt className="text-gray-500">월 이용료</dt>
               <dd className="tabular-nums text-gray-900">{won(t.monthlyAmount)}{t.roomListPrice !== null && t.roomListPrice !== t.monthlyAmount && <span className="ml-1 text-xs text-gray-500">(방 정가 {won(t.roomListPrice)})</span>}</dd>
               <dt className="text-gray-500">다음 입금</dt>
-              <dd className="tabular-nums text-gray-900">{t.nextDueOn}{late > 0 ? <span className="ml-1 text-xs text-red-700">{late}일 연체</span> : daysBetween(today, t.nextDueOn) <= 7 && <span className="ml-1 text-xs text-amber-700">{daysBetween(today, t.nextDueOn)}일 뒤</span>}</dd>
+              <dd className="tabular-nums text-gray-900">{formatAdminDate(t.nextDueOn)}{late > 0 ? <span className="ml-1 text-xs text-red-700">{late}일 연체</span> : daysBetween(today, t.nextDueOn) <= 7 && <span className="ml-1 text-xs text-amber-700">{daysBetween(today, t.nextDueOn)}일 뒤</span>}</dd>
               <dt className="text-gray-500">계약 종료</dt>
-              <dd className="tabular-nums text-gray-900">{t.endDate ?? '-'}{term && <div className="text-xs text-gray-500">갱신 {term.renewals}회 · 이번 기간 {term.end}까지</div>}</dd>
+              <dd className="tabular-nums text-gray-900">{formatAdminDate(t.endDate)}{term && <div className="text-xs text-gray-500">갱신 {term.renewals}회 · 이번 기간 {formatAdminDate(term.end)}까지</div>}</dd>
               <dt className="text-gray-500">최근 입금</dt>
-              <dd className="tabular-nums text-gray-600">{t.lastPaidOn ?? '-'}{t.lastPaidAmount !== null && t.lastPaidAmount !== t.monthlyAmount && <span className="ml-1 text-xs">({won(t.lastPaidAmount)})</span>}</dd>
+              <dd className="tabular-nums text-gray-600">{formatAdminDate(t.lastPaidOn)}{t.lastPaidAmount !== null && t.lastPaidAmount !== t.monthlyAmount && <span className="ml-1 text-xs">({won(t.lastPaidAmount)})</span>}</dd>
             </dl>
             <div className="mt-3 flex flex-wrap gap-2">
               <button type="button" className={btn} disabled={busy} onClick={() => pay(t)}>입금 기록</button>
               <button type="button" className={btn} disabled={busy} onClick={() => openEdit(t)}>상세·수정</button>
-              <button type="button" className={btnDanger} disabled={busy} onClick={() => end(t)}>퇴실</button>
+              <DangerActions>
+                <button type="button" className={btnDanger} disabled={busy} onClick={() => end(t)}>퇴실</button>
+              </DangerActions>
             </div>
           </li>
         );
@@ -250,23 +269,28 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
                 <td className="pr-3 text-gray-900">{t.tenantName}{t.note && <div className="text-xs text-gray-500">{t.note}</div>}</td>
                 <td className="whitespace-nowrap pr-3 tabular-nums">{won(t.monthlyAmount)}{t.roomListPrice !== null && t.roomListPrice !== t.monthlyAmount && <div className="text-xs text-gray-500">방 정가 {won(t.roomListPrice)}</div>}</td>
                 <td className="whitespace-nowrap pr-3 tabular-nums">
-                  {t.nextDueOn}
+                  {formatAdminDate(t.nextDueOn)}
                   {late > 0 ? <div className="text-xs text-red-700">{late}일 연체</div> : daysBetween(today, t.nextDueOn) <= 7 && <div className="text-xs text-amber-700">{daysBetween(today, t.nextDueOn)}일 뒤</div>}
                 </td>
                 <td className="whitespace-nowrap pr-3 tabular-nums">
-                  {t.endDate ?? '-'}
+                  {formatAdminDate(t.endDate)}
                   {t.status === 'active' && t.endDate && t.endDate < today && (() => {
                     const term = currentTermEnd(t.endDate, today);
-                    return <div className="text-xs text-gray-500">갱신 {term.renewals}회 · 이번 기간 {term.end}까지</div>;
+                    return <div className="text-xs text-gray-500">갱신 {term.renewals}회 · 이번 기간 {formatAdminDate(term.end)}까지</div>;
                   })()}
                 </td>
-                <td className="whitespace-nowrap pr-3 tabular-nums text-gray-600">{t.lastPaidOn ?? '-'}{t.lastPaidAmount !== null && t.lastPaidAmount !== t.monthlyAmount && <div className="text-xs">{won(t.lastPaidAmount)}</div>}</td>
-                <td className="space-x-1 whitespace-nowrap py-1 text-right">
-                  {flags.map((f) => <span key={f} className={`mr-1 inline-block rounded px-1.5 py-0.5 text-xs font-medium ${FLAG_LABEL[f].cls}`}>{FLAG_LABEL[f].text}</span>)}
-                  {t.gcalError && <span title={t.gcalError} className="mr-1 inline-block rounded bg-amber-100 px-1.5 py-0.5 text-xs text-amber-800">캘린더 오류</span>}
-                  <button type="button" className={btn} disabled={busy} onClick={() => pay(t)}>입금 기록</button>
-                  <button type="button" className={btn} disabled={busy} onClick={() => openEdit(t)}>상세·수정</button>
-                  <button type="button" className={btnDanger} disabled={busy} onClick={() => end(t)}>퇴실</button>
+                <td className="whitespace-nowrap pr-3 tabular-nums text-gray-600">{formatAdminDate(t.lastPaidOn)}{t.lastPaidAmount !== null && t.lastPaidAmount !== t.monthlyAmount && <div className="text-xs">{won(t.lastPaidAmount)}</div>}</td>
+                <td className="py-1">
+                  {/* 표시(연체·자동 갱신)와 버튼이 한 줄에 다 안 들어가면 오른쪽 정렬로 줄바꿈한다 — nowrap이던 때는 퇴실 버튼이 표 밖으로 잘렸다. */}
+                  <div className="flex flex-wrap items-center justify-end gap-1">
+                    {flags.map((f) => <span key={f} className={`inline-block rounded px-1.5 py-0.5 text-xs font-medium ${FLAG_LABEL[f].cls}`}>{FLAG_LABEL[f].text}</span>)}
+                    {t.gcalError && <span title={t.gcalError} className="inline-block rounded bg-amber-100 px-1.5 py-0.5 text-xs text-amber-800">캘린더 오류</span>}
+                    <button type="button" className={btn} disabled={busy} onClick={() => pay(t)}>입금 기록</button>
+                    <button type="button" className={btn} disabled={busy} onClick={() => openEdit(t)}>상세·수정</button>
+                    <DangerActions className="sm:ml-1">
+                      <button type="button" className={btnDanger} disabled={busy} onClick={() => end(t)}>퇴실</button>
+                    </DangerActions>
+                  </div>
                 </td>
               </tr>
             );
@@ -355,7 +379,7 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
               <ul className="mt-3 divide-y divide-gray-100 text-sm">
                 {ended.map((t) => (
                   <li key={t.id} className="flex flex-wrap items-center justify-between gap-2 py-2">
-                    <span>{t.roomNumber ?? '비상주'} {t.tenantName} · {t.startDate} ~ {t.endedOn ?? '-'}</span>
+                    <span>{t.roomNumber ?? '비상주'} {t.tenantName} · {formatAdminDate(t.startDate)} ~ {formatAdminDate(t.endedOn)}</span>
                     <button type="button" className={btn} disabled={busy} onClick={() => reopen(t)}>입주 중으로 되돌리기</button>
                   </li>
                 ))}
@@ -363,6 +387,7 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
             )}
           </section>
         )}
+        {dialog}
       </AdminShell>
     </>
   );

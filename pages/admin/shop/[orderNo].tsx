@@ -3,7 +3,8 @@ import Head from 'next/head';
 import { useState } from 'react';
 
 import { AdminShell } from '../../../components/admin/AdminShell';
-import { DANGER_WEAK_CLASS } from '../../../components/admin/adminDanger';
+import { DANGER_GHOST_CLASS, DANGER_WEAK_CLASS } from '../../../components/admin/adminDanger';
+import { DangerActions } from '../../../components/admin/DangerActions';
 import { cn } from '../../../lib/utils';
 import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
@@ -22,6 +23,7 @@ import { normalizeShopOrderNo, shopOrderShips } from '../../../lib/shop/shape';
 import { SHOP_STUDIO_COURIER } from '../../../lib/shop/shipper';
 import { buttonVariants } from '../../../components/ui/Button';
 import { Notice } from '../../../components/ui/Notice';
+import { formatAdminDateTimeFromSeconds } from '../../../lib/admin/displayDate';
 
 /** 환불 계좌 요약 — 은행명·예금주만. 계좌번호는 props에 싣지 않는다("계좌 보기"가 API로 가져온다). */
 type RefundAccountSummaryProps =
@@ -118,7 +120,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
 /** 예금주 ↔ 주문자 이름 비교(공백 무시) — refundAccount.ts의 holderMatchesCustomer와 같은 규칙. 그 모듈은 node:crypto를 물고 있어 클라이언트 번들에 못 가져온다. */
 const sameNameIgnoringSpace = (a: string, b: string): boolean => a.replace(/\s+/g, '') === b.replace(/\s+/g, '');
-const kst = (sec: number) => new Date(sec * 1000).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+const kst = (sec: number) => formatAdminDateTimeFromSeconds(sec);
 const PAYMENT_LABEL: Record<string, string> = { pending: '결제 대기', paid: '결제 완료', partially_refunded: '부분 환불', refunded: '환불', auto_cancel_pending: '자동 취소 중', expired: '만료', failed: '결제 실패', awaiting_deposit: '입금 대기', deposit_cancelled: '미입금 취소' };
 const FULFILLMENT_LABEL: Record<string, string> = { preparing: '발송 준비', shipped: '발송함', delivered: '배송 완료', cancelled: '취소' };
 const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
@@ -197,8 +199,10 @@ export default function AdminShopOrderPage(p: Props) {
             <p className="mb-3">통장에 <strong>{p.customer.name}</strong> 이름으로 <strong>{formatPriceAmount(p.totalAmount)}원</strong>이 들어왔는지 확인하고 <strong>입금 확인</strong>을 눌러 주세요. 확인하면 주문이 확정되고 고객에게 메일이 가요. 자동 취소는 없어요 — 입금하지 않을 것 같으면 <strong>미입금 취소</strong>로 닫아 재고를 풀어 주세요.</p>
             <div className="flex flex-wrap gap-2">
               <button type="button" disabled={busy} onClick={() => act({ action: 'confirm_deposit' }, `${formatPriceAmount(p.totalAmount)}원 입금을 확인했나요? 주문이 확정됩니다.`)} className={buttonClass}>입금 확인</button>
-              <button type="button" disabled={busy} onClick={() => act({ action: 'cancel_deposit' }, '미입금으로 취소할까요? 잡아 둔 재고가 풀립니다.')} className={weakButtonClass}>미입금 취소</button>
               <button type="button" disabled={busy} onClick={() => act({ action: 'resend_deposit_guide' })} className={weakButtonClass}>입금 안내 재발송</button>
+              <DangerActions>
+                <button type="button" disabled={busy} onClick={() => act({ action: 'cancel_deposit' }, '미입금으로 취소할까요? 잡아 둔 재고가 풀립니다.')} className={cn(buttonVariants({ variant: 'ghost', size: 'sm', light: true }), DANGER_GHOST_CLASS)}>미입금 취소</button>
+              </DangerActions>
             </div>
           </section>
         )}

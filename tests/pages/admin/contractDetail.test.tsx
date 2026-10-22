@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 jest.mock('next/router', () => ({
@@ -60,33 +60,36 @@ beforeEach(() => {
 });
 
 describe('이용 종료 확인창', () => {
+  // 사유는 입력창 겸 확인창(useAdminDialog)이 받는다 — 예전 window.prompt.
   const clickTerminate = () => fireEvent.click(screen.getByRole('button', { name: '이용 종료 처리' }));
 
   it('연결된 구독이 있으면 해지와 고객 메일을 미리 알린다', () => {
-    const prompt = jest.spyOn(window, 'prompt').mockReturnValue(null);
     renderPage({}, 2);
     clickTerminate();
-    expect(prompt).toHaveBeenCalledWith(expect.stringContaining('연결된 구독 2건이 함께 해지되고 고객에게 해지 안내 메일이 나갑니다'));
+    expect(screen.getByRole('dialog')).toHaveTextContent('연결된 구독 2건이 함께 해지되고 고객에게 해지 안내 메일이 나갑니다');
   });
 
   it('구독이 없으면 그 문구를 넣지 않는다', () => {
-    const prompt = jest.spyOn(window, 'prompt').mockReturnValue(null);
     renderPage({}, 0);
     clickTerminate();
-    expect(prompt.mock.calls[0][0]).not.toContain('구독');
+    expect(screen.getByRole('dialog')).not.toHaveTextContent('구독');
   });
 
   it('건수를 못 읽었으면 숨기지 않고 있을 수 있다고 알린다', () => {
-    const prompt = jest.spyOn(window, 'prompt').mockReturnValue(null);
     renderPage({}, null);
     clickTerminate();
-    expect(prompt).toHaveBeenCalledWith(expect.stringContaining('건수를 확인하지 못했습니다'));
+    expect(screen.getByRole('dialog')).toHaveTextContent('건수를 확인하지 못했습니다');
   });
 
-  it('사유를 적으면 종료 요청을 보낸다', async () => {
-    jest.spyOn(window, 'prompt').mockReturnValue('기간 만료');
+  it('사유가 비면 창 안에서 막고, 사유를 적으면 종료 요청을 보낸다', async () => {
     renderPage({}, 1);
     clickTerminate();
+    const dialog = screen.getByRole('dialog');
+    fireEvent.click(within(dialog).getByRole('button', { name: '이용 종료' }));
+    expect(await within(dialog).findByText('종료 사유를 입력해 주세요.')).toBeInTheDocument();
+    expect(mutateContract).not.toHaveBeenCalled();
+    fireEvent.change(within(dialog).getByLabelText(/이용 종료 사유/), { target: { value: '기간 만료' } });
+    fireEvent.click(within(dialog).getByRole('button', { name: '이용 종료' }));
     await waitFor(() => expect(mutateContract).toHaveBeenCalledWith('c1', 'terminate', { reason: '기간 만료' }));
   });
 });

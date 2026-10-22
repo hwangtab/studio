@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { Button } from '../ui/Button';
-import { formatCurrency, formatDateTime } from '../../lib/contracts/format';
+import { formatCurrency } from '../../lib/contracts/format';
+import { formatAdminDateTime } from '../../lib/admin/displayDate';
 
 export interface RefundAccountSummaryProps {
   refundable: number;
@@ -58,7 +59,7 @@ export default function ProductionRefundAccountPanel({ contractId, summary }: { 
         <div className="space-y-2">
           <p>
             {account.bankName} · 예금주 {account.accountHolder}
-            {account.refundedAt && <span className="text-green-700"> · 송금 완료 {formatDateTime(account.refundedAt)}</span>}
+            {account.refundedAt && <span className="text-green-700"> · 송금 완료 {formatAdminDateTime(account.refundedAt)}</span>}
           </p>
           {revealed && (
             <p className="font-mono">

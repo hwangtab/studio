@@ -13,6 +13,7 @@ import { verifyLessonFingerprint } from '../../../../lib/contracts/lesson/integr
 import { LESSON_STATUS_LABEL, getEffectiveLessonStatus } from '../../../../lib/contracts/lesson/status';
 import { hasDraftMarker } from '../../../../lib/contracts/lesson/template';
 import { logAdminView } from '../../../../lib/privacy/adminView';
+import { formatAdminDateTime } from '../../../../lib/admin/displayDate';
 
 /**
  * 수강 계약서 상세(읽기 전용) — 이름·연락처·생년월일·주소가 든 본문이 나오므로 **열람을 접속기록에 남긴다**(`lesson_contract_view`, 값은 적지 않는다).
@@ -74,7 +75,7 @@ export default function AdminLessonContractPage({ found, enrollmentId, statusLab
         ) : (
           <>
             <section className="rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
-              <p><span className="rounded bg-gray-100 px-2 py-0.5 text-xs font-medium">{statusLabel}</span>{sentAt && <span className="ml-2 text-gray-600">발송 {new Date(sentAt).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}</span>}{signedAt && <span className="ml-2 text-gray-600">체결 {new Date(signedAt).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}</span>}</p>
+              <p><span className="rounded bg-gray-100 px-2 py-0.5 text-xs font-medium">{statusLabel}</span>{sentAt && <span className="ml-2 text-gray-600">발송 {formatAdminDateTime(sentAt)}</span>}{signedAt && <span className="ml-2 text-gray-600">체결 {formatAdminDateTime(signedAt)}</span>}</p>
               {draftMarker && <p className="mt-2 rounded-lg bg-amber-50 p-3 text-amber-900">이 문안에는 <strong>확정 전 조항(제9조 환불)</strong>이 남아 있어 발송할 수 없어요. 교습비 반환 기준을 법률 확인한 뒤 문안을 확정해야 해요.</p>}
               {fingerprint && <p className={`mt-2 ${fingerprint.status === 'mismatch' ? 'font-semibold text-red-700' : 'text-gray-600'}`}>{FINGERPRINT_TEXT[fingerprint.status] ?? fingerprint.status}{fingerprint.value ? <span className="ml-1 break-all text-xs text-gray-400">{fingerprint.value}</span> : null}</p>}
               {purged && <p className="mt-2 text-gray-600">보관 기간이 지나 개인정보가 파기된 계약이에요.</p>}

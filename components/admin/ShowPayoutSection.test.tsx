@@ -1,7 +1,7 @@
 /**
  * 공연 정산 절 — 지급 뒤 환불로 더 지급된 몫(회수 필요) 안내와 「회수 처리 남기기」가 맞게 나오고, 처리 줄이 덮은 만큼 줄어드는가.
  */
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 
@@ -72,21 +72,32 @@ describe('지급 뒤 환불 — 회수 필요 안내', () => {
   });
 
   it('회수 처리 남기기 — 금액과 메모를 물어 acknowledge_overpayment로 부르고 새로고침한다', async () => {
-    const prompt = jest.spyOn(window, 'prompt').mockReturnValueOnce('50,000').mockReturnValueOnce('주최자에게 계좌로 반환 요청');
     renderSection(view());
     await userEvent.click(screen.getByRole('button', { name: '회수 처리 남기기' }));
+    const dialog = screen.getByRole('dialog');
+    const amount = within(dialog).getByLabelText(/회수 요청을 처리한 금액/);
+    // 기본값은 아직 회수하지 않은 금액이다.
+    expect(amount).toHaveValue('77500');
+    await userEvent.clear(amount);
+    await userEvent.type(amount, '50,000');
+    await userEvent.type(within(dialog).getByLabelText(/메모/), '주최자에게 계좌로 반환 요청');
+    await userEvent.click(within(dialog).getByRole('button', { name: '기록' }));
     await waitFor(() => expect(reload).toHaveBeenCalled());
-    expect(prompt.mock.calls[0][1]).toBe('77500');
     const [url, init] = fetchMock.mock.calls[0];
     expect(url).toBe('/api/admin/shows/s1/payout');
     expect(JSON.parse((init as RequestInit).body as string)).toEqual({ action: 'acknowledge_overpayment', payoutId: 'rec-1', amount: 50000, memo: '주최자에게 계좌로 반환 요청' });
   });
 
   it('메모를 비우거나 금액이 숫자가 아니면 라우트를 부르지 않는다', async () => {
-    jest.spyOn(window, 'prompt').mockReturnValueOnce('abc');
     renderSection(view());
     await userEvent.click(screen.getByRole('button', { name: '회수 처리 남기기' }));
-    expect(await screen.findByText('금액을 1원 이상의 숫자로 적어 주세요.')).toBeInTheDocument();
+    const dialog = screen.getByRole('dialog');
+    const amount = within(dialog).getByLabelText(/회수 요청을 처리한 금액/);
+    await userEvent.clear(amount);
+    await userEvent.type(amount, 'abc');
+    await userEvent.click(within(dialog).getByRole('button', { name: '기록' }));
+    expect(within(dialog).getByText('금액을 1원 이상의 숫자로 적어 주세요.')).toBeInTheDocument();
+    expect(within(dialog).getByText('메모를 적어 주세요.')).toBeInTheDocument();
     expect(fetchMock).not.toHaveBeenCalled();
   });
 });

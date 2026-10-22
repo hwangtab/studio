@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import { AdminShell } from '../../../components/admin/AdminShell';
-import { DANGER_GHOST_CLASS } from '../../../components/admin/adminDanger';
+import { DANGER_GHOST_CLASS, DANGER_WEAK_CLASS } from '../../../components/admin/adminDanger';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextInput } from '../../../components/ui/Field';
 import { Notice } from '../../../components/ui/Notice';
@@ -20,6 +20,8 @@ import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { refundOf } from '../../../lib/lessons/refund';
 import { ENROLLMENT_STATUS_LABELS, PAYMENT_METHODS, PAY_METHOD_LABELS, SESSION_STATUS_LABELS, WEEKDAY_LABELS, arrearsOf, progressOf, weekdayOf } from '../../../lib/lessons/rules';
 import { getEnrollmentDetail } from '../../../lib/lessons/service';
+import { formatAdminDate } from '../../../lib/admin/displayDate';
+import { useAdminDialog } from '../../../components/admin/useAdminDialog';
 
 /** 수강 한 건 — 회차(완료·결석·휴강·일정 변경·수업 기록)와 수납. 결석은 보강 없이 소화된 회차로 센다. */
 
@@ -109,6 +111,7 @@ const STATUS_CLASS: Record<string, string> = {
 export default function AdminLessonDetailPage({ found, today, enrollment, sessions = [], payments = [], contracts = [], contractsUnavailable = false }: Props) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
+  const { ask, dialog } = useAdminDialog();
   const [notice, setNotice] = useState<string | null>(null);
   const [moveId, setMoveId] = useState<string | null>(null);
   const [moveDate, setMoveDate] = useState('');
@@ -151,8 +154,8 @@ export default function AdminLessonDetailPage({ found, today, enrollment, sessio
   };
 
   const mark = (s: SessionView, status: 'done' | 'absent' | 'studio_cancelled' | 'scheduled') => {
-    const confirmText = status === 'absent' ? `${s.scheduledOn} 수업을 결석으로 표시할까요? 보강하지 않아요(회차가 소화된 것으로 셉니다).`
-      : status === 'studio_cancelled' ? `${s.scheduledOn} 수업을 스튜디오 사정 휴강으로 표시할까요? 과정 끝에 보충 회차가 하나 붙어요.` : null;
+    const confirmText = status === 'absent' ? `${formatAdminDate(s.scheduledOn)} 수업을 결석으로 표시할까요? 보강하지 않아요(회차가 소화된 것으로 셉니다).`
+      : status === 'studio_cancelled' ? `${formatAdminDate(s.scheduledOn)} 수업을 스튜디오 사정 휴강으로 표시할까요? 과정 끝에 보충 회차가 하나 붙어요.` : null;
     if (confirmText && !window.confirm(confirmText)) return;
     void post({ action: 'session_status', sessionId: s.id, status }, '표시했어요.');
   };
@@ -196,7 +199,7 @@ export default function AdminLessonDetailPage({ found, today, enrollment, sessio
             <span>진행 {progress.consumed}/{progress.total}회 (완료 {progress.done} · 결석 {progress.absent} · 남음 {progress.scheduled})</span>
             <span className="text-gray-500">월 {won(enrollment.monthlyAmount)}(부가세 별도)</span>
           </p>
-          {enrollment.endedOn && <p className="mt-1 text-red-800">{enrollment.endedOn} 중도 종료 — {enrollment.endedReason}</p>}
+          {enrollment.endedOn && <p className="mt-1 text-red-800">{formatAdminDate(enrollment.endedOn)} 중도 종료 — {enrollment.endedReason}</p>}
           {enrollment.note && <p className="mt-1 text-gray-600">메모: {enrollment.note}</p>}
         </section>
 
@@ -209,7 +212,7 @@ export default function AdminLessonDetailPage({ found, today, enrollment, sessio
                 <li key={s.id} className="py-3 text-sm text-gray-900">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <p className="font-medium">
-                      {s.seq}회 · {s.scheduledOn}({WEEKDAY_LABELS[weekdayOf(s.scheduledOn)]}) {s.startTime}
+                      {s.seq}회 · {formatAdminDate(s.scheduledOn)} {s.startTime}
                       <span className={`ml-2 rounded px-1.5 py-0.5 text-xs font-medium ${STATUS_CLASS[s.status]}`}>{SESSION_STATUS_LABELS[s.status]}</span>
                       {overdue && <span className="ml-1 text-xs font-medium text-amber-700">표시 필요</span>}
                     </p>
@@ -227,12 +230,17 @@ export default function AdminLessonDetailPage({ found, today, enrollment, sessio
                           actions.push({
                             key: 'note',
                             label: '기록',
-                            onClick: () => {
-                              const topic = window.prompt('다룬 내용(비우면 지워요)', s.topic ?? '');
-                              if (topic === null) return;
-                              const homework = window.prompt('과제(비우면 지워요)', s.homework ?? '');
-                              if (homework === null) return;
-                              void post({ action: 'session_status', sessionId: s.id, status: s.status, topic, homework }, '수업 기록을 저장했어요.');
+                            onClick: async () => {
+                              const values = await ask({
+                                title: `${s.seq}회 수업 기록`,
+                                fields: [
+                                  { name: 'topic', label: '다룬 내용', type: 'textarea', defaultValue: s.topic ?? '', hint: '비우면 지워요.' },
+                                  { name: 'homework', label: '과제', type: 'textarea', defaultValue: s.homework ?? '', hint: '비우면 지워요.' },
+                                ],
+                                confirmLabel: '저장',
+                              });
+                              if (values === null) return;
+                              void post({ action: 'session_status', sessionId: s.id, status: s.status, topic: values.topic, homework: values.homework }, '수업 기록을 저장했어요.');
                             },
                           });
                         }
@@ -281,10 +289,10 @@ export default function AdminLessonDetailPage({ found, today, enrollment, sessio
                 <ul className="mb-4 divide-y divide-gray-100 text-sm text-gray-900">
                   {payments.map((p) => (
                     <li key={p.id} className="flex flex-wrap items-center justify-between gap-2 py-2">
-                      <span>{p.paidOn} · {p.periodLabel} · {p.method}{p.vatAmount > 0 ? ` · 부가세 ${won(p.vatAmount)}` : ''}{p.receiptIssued ? ' · 증빙 발행' : ''}{p.memo ? ` · ${p.memo}` : ''}</span>
+                      <span>{formatAdminDate(p.paidOn)} · {p.periodLabel} · {p.method}{p.vatAmount > 0 ? ` · 부가세 ${won(p.vatAmount)}` : ''}{p.receiptIssued ? ' · 증빙 발행' : ''}{p.memo ? ` · ${p.memo}` : ''}</span>
                       <span className="flex items-center gap-2">
                         <strong className="tabular-nums">{won(p.amount)}</strong>
-                        <Button light variant="ghost" size="sm" className={DANGER_GHOST_CLASS} disabled={busy} onClick={() => { if (window.confirm(`${p.paidOn} ${won(p.amount)} 수납 기록을 지울까요? 매출에서도 빠집니다.`)) void post({ action: 'payment_delete', paymentId: p.id }, '지웠어요.'); }}>삭제</Button>
+                        <Button light variant="ghost" size="sm" className={DANGER_GHOST_CLASS} disabled={busy} onClick={() => { if (window.confirm(`${formatAdminDate(p.paidOn)} ${won(p.amount)} 수납 기록을 지울까요? 매출에서도 빠집니다.`)) void post({ action: 'payment_delete', paymentId: p.id }, '지웠어요.'); }}>삭제</Button>
                       </span>
                     </li>
                   ))}
@@ -322,8 +330,8 @@ export default function AdminLessonDetailPage({ found, today, enrollment, sessio
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <p>
                           <span className="rounded bg-gray-100 px-2 py-0.5 text-xs font-medium">{c.statusLabel}</span>
-                          {c.sentAt && <span className="ml-2 text-gray-600">발송 {new Date(c.sentAt).toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' })}</span>}
-                          {c.signedAt && <span className="ml-2 text-gray-600">체결 {new Date(c.signedAt).toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' })}</span>}
+                          {c.sentAt && <span className="ml-2 text-gray-600">발송 {formatAdminDate(c.sentAt)}</span>}
+                          {c.signedAt && <span className="ml-2 text-gray-600">체결 {formatAdminDate(c.signedAt)}</span>}
                           {c.mailFailed && <span className="ml-2 text-xs font-medium text-red-700">메일 실패</span>}
                         </p>
                         <div className="flex flex-wrap gap-2">
@@ -374,9 +382,27 @@ export default function AdminLessonDetailPage({ found, today, enrollment, sessio
               <p className="font-semibold">지금 해지하면 환불 기준액 <span className="text-primary-700">{won(refund.refund)}</span>{enrollment.payMethod === 'card' && refund.refund > 0 ? ` (카드는 부가세 포함 ${won(Math.round(refund.refund * 1.1))} 취소)` : ''}</p>
               <p className="mt-1 text-xs text-gray-600">{refund.note} · 진행 {progress.consumed}회(결석 포함) · 낸 수강료(부가세 제외) {won(payments.reduce((sum, p) => sum + p.amount - p.vatAmount, 0))} − 스튜디오 몫 {won(refund.retained)}.{refund.shortfall > 0 ? ` 낸 돈이 ${won(refund.shortfall)} 모자라요.` : ''} 계약서 제9조(시행령 별표 4) 기준이에요. 해지 통지를 받은 날부터 5일 안에 보내야 하고, 오늘 수업을 아직 표시하지 않았다면 먼저 표시한 뒤 보세요.</p>
             </div>
-            <Button light variant="weak" disabled={busy} onClick={() => { const reason = window.prompt('중도 종료 사유를 적어 주세요.'); if (reason && reason.trim().length >= 2 && window.confirm('남은 회차를 모두 취소하고 수강을 종료할까요? 되돌릴 수 없어요.')) void post({ action: 'end', reason }, '종료했어요.'); }}>중도 종료</Button>
+            <Button
+              light
+              variant="weak"
+              className={DANGER_WEAK_CLASS}
+              disabled={busy}
+              onClick={async () => {
+                const values = await ask({
+                  title: '중도 종료',
+                  description: '남은 회차를 모두 취소하고 수강을 종료합니다. 되돌릴 수 없어요.',
+                  fields: [{ name: 'reason', label: '중도 종료 사유', type: 'textarea', required: '중도 종료 사유를 적어 주세요.', validate: (v) => (v.trim().length >= 2 ? null : '두 글자 이상 적어 주세요.') }],
+                  confirmLabel: '수강 종료',
+                  tone: 'danger',
+                });
+                if (values) void post({ action: 'end', reason: values.reason }, '종료했어요.');
+              }}
+            >
+              중도 종료
+            </Button>
           </section>
         )}
+        {dialog}
       </AdminShell>
     </>
   );

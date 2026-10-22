@@ -4,11 +4,13 @@ import { useRouter } from 'next/router';
 import { Button } from '../ui/Button';
 import { Field, Select, TextInput } from '../ui/Field';
 import { lightOnlyField } from '../ui/adminFieldClass';
-import { formatCurrency, formatDate, formatDateTime } from '../../lib/contracts/format';
+import { formatCurrency } from '../../lib/contracts/format';
+import { formatAdminDate, formatAdminDateTime } from '../../lib/admin/displayDate';
 import { adminEventTypesFor, EVENT_SPEC, eventLabelFor, eventStagesFor, isPerSongEvent, STAGE_LABEL } from '../../lib/contracts/production/event-spec';
 import type { AdminProgressView, TimelineItem } from '../../lib/contracts/production/progress-view';
 import type { ProductionEventType } from '../../db/schema';
 import { ActionNotice } from './ActionNotice';
+import { useAdminDialog } from './useAdminDialog';
 
 /**
  * 제작 계약 상세의 진행 영역 — 할 일, 대금·일정, 단계별 상태, 해지 시 정산 추정, 기록 추가, 기록 목록.
@@ -228,16 +230,27 @@ export default function ProductionProgressPanel({
 }) {
   const router = useRouter();
   const [notice, setNotice] = useState<string | null>(null);
+  const { ask, dialog } = useAdminDialog();
   const refresh = async (message: string | null) => {
     setNotice(message);
     await router.replace(router.asPath, undefined, { scroll: false });
   };
 
   const voidEvent = async (item: TimelineItem) => {
-    const reason = window.prompt(`"${item.label}" 기록을 무효로 합니다. 기록은 지워지지 않고 무효 표시가 남습니다.\n사유를 적어 주세요.`);
-    if (reason === null) return;
-    const result = await post(contractId, { action: 'void', eventId: item.id, reason });
-    await refresh(result.ok ? '무효로 기록했습니다.' : (result.message ?? '처리하지 못했습니다.'));
+    // 서버가 거절하면(사유 누락·환불을 이미 보낸 해지 계약 등) 창을 닫지 않고 그 안에 띄운다.
+    const values = await ask({
+      title: '기록 무효 처리',
+      description: `"${item.label}" 기록을 무효로 합니다. 기록은 지워지지 않고 무효 표시가 남습니다.`,
+      fields: [{ name: 'reason', label: '무효 사유', type: 'textarea', required: '무효 사유를 적어 주세요.' }],
+      confirmLabel: '무효로 기록',
+      tone: 'danger',
+      onSubmit: async ({ reason }) => {
+        const result = await post(contractId, { action: 'void', eventId: item.id, reason });
+        return result.ok ? null : (result.message ?? '처리하지 못했습니다.');
+      },
+    });
+    if (values === null) return;
+    await refresh('무효로 기록했습니다.');
   };
 
   const resendNotice = async (item: TimelineItem) => {
@@ -274,20 +287,20 @@ export default function ProductionProgressPanel({
                 payments.deposit === 0
                   ? '없음'
                   : payments.depositMetAt
-                    ? `입금 ${formatDate(payments.depositMetAt)}`
-                    : `기한 ${formatDate(payments.depositLastDay)}`
+                    ? `입금 ${formatAdminDate(payments.depositMetAt)}`
+                    : `기한 ${formatAdminDate(payments.depositLastDay)}`
               }
             />
-            <Row label="잔금 기한" value={payments.balanceLastDay ? formatDate(payments.balanceLastDay) : '마스터링 승인 후'} />
+            <Row label="잔금 기한" value={payments.balanceLastDay ? formatAdminDate(payments.balanceLastDay) : '마스터링 승인 후'} />
           </dl>
           <dl className="space-y-2">
             <Row
               label="작업 기간 시작"
-              value={work.startedOn ? formatDate(work.startedOn) : payments.deposit === 0 ? `${view.mixMaster ? '작업 파일' : '1차 완성본'} 대기` : `계약금·${view.mixMaster ? '작업 파일' : '1차 완성본'} 대기`}
+              value={work.startedOn ? formatAdminDate(work.startedOn) : payments.deposit === 0 ? `${view.mixMaster ? '작업 파일' : '1차 완성본'} 대기` : `계약금·${view.mixMaster ? '작업 파일' : '1차 완성본'} 대기`}
             />
-            <Row label="완료 예정" value={work.dueOn ? formatDate(work.dueOn) : '-'} />
+            <Row label="완료 예정" value={work.dueOn ? formatAdminDate(work.dueOn) : '-'} />
             <Row label="지연" value={work.delayDays > 0 ? `${work.delayDays}일` : '-'} />
-            <Row label="상태" value={work.paused ? '정지 중' : work.finalDeliveredAt ? `최종 인도 ${formatDate(work.finalDeliveredAt)}` : '진행'} />
+            <Row label="상태" value={work.paused ? '정지 중' : work.finalDeliveredAt ? `최종 인도 ${formatAdminDate(work.finalDeliveredAt)}` : '진행'} />
           </dl>
         </div>
 
@@ -301,9 +314,9 @@ export default function ProductionProgressPanel({
               </p>
               <p className="mt-1">
                 {stage.approved
-                  ? `승인 ${formatDate(stage.approved.at)} (${stage.approved.mode === 'deemed' ? '기한 경과' : stage.approved.mode === 'explicit' ? '의뢰인' : '대리 기록'})`
+                  ? `승인 ${formatAdminDate(stage.approved.at)} (${stage.approved.mode === 'deemed' ? '기한 경과' : stage.approved.mode === 'explicit' ? '의뢰인' : '대리 기록'})`
                   : stage.pending
-                    ? `확인 기한 ${formatDate(stage.pending.lastDayToRespond)}${stage.pending.noticeSent ? '' : ' — 통지 안 됨'}`
+                    ? `확인 기한 ${formatAdminDate(stage.pending.lastDayToRespond)}${stage.pending.noticeSent ? '' : ' — 통지 안 됨'}`
                     : stage.revising
                       ? '수정 반영 중'
                       : '대기'}
@@ -360,7 +373,7 @@ export default function ProductionProgressPanel({
             {view.timeline.map((item) => (
               <li key={item.id} className={`p-3 rounded-lg text-sm ${item.voided ? 'bg-gray-50 text-gray-400 line-through' : 'bg-gray-50'}`}>
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                  <span className="text-gray-500">{formatDateTime(item.occurredAt)}</span>
+                  <span className="text-gray-500">{formatAdminDateTime(item.occurredAt)}</span>
                   <span className="font-medium">
                     {item.stage ? `${item.stage} ` : ''}
                     {item.label}
@@ -399,6 +412,7 @@ export default function ProductionProgressPanel({
           </ol>
         )}
       </div>
+      {dialog}
     </div>
   );
 }

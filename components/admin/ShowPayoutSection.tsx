@@ -4,6 +4,10 @@ import { Button } from '../ui/Button';
 import { formatPriceAmount } from '../../data/pricing';
 import { remainingOverpaid } from '../../lib/partnerPayouts/showOverpayment';
 import type { ShowPayoutPanelState, ShowPayoutView } from '../../lib/partnerPayouts/showView';
+import { formatAdminDate, formatAdminDateFromSeconds } from '../../lib/admin/displayDate';
+import { useAdminDialog } from './useAdminDialog';
+import { DANGER_GHOST_CLASS } from './adminDanger';
+import { DangerActions } from './DangerActions';
 
 /**
  * `/admin/shows/[id]`의 「정산」 — 미리보기 + 기록·지급 완료·기록 취소·계좌 보기 (docs/settlement-record-design-2026-10.md §5).
@@ -15,8 +19,7 @@ import type { ShowPayoutPanelState, ShowPayoutView } from '../../lib/partnerPayo
 const won = (n: number) => `${formatPriceAmount(n)}원`;
 const signed = (n: number) => `${n < 0 ? '−' : '+'}${formatPriceAmount(Math.abs(n))}원`;
 
-const kstDate = (sec: number | null) =>
-  sec == null ? '-' : new Date(sec * 1000).toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul', year: 'numeric', month: 'long', day: 'numeric' });
+const kstDate = (sec: number | null) => formatAdminDateFromSeconds(sec);
 
 const BLOCKER_LABEL: Record<string, string> = {
   no_tax_type: '세금 처리 구분이 등록되지 않았습니다',
@@ -37,6 +40,7 @@ export function ShowPayoutSection({ showId, panel, showtimeLabels }: {
 }) {
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const { ask, dialog } = useAdminDialog();
   const [notified, setNotified] = useState<string | null>(null);
   const [account, setAccount] = useState<RevealedAccount | 'loading' | { error: string } | null>(null);
 
@@ -210,15 +214,29 @@ export function ShowPayoutSection({ showId, panel, showtimeLabels }: {
           <button
             type="button" disabled={busy !== null}
             className="mt-2 text-primary underline disabled:opacity-50"
-            onClick={() => run('ack', null, async () => {
-              const amountText = window.prompt('회수 요청을 처리한 금액(원)', String(remaining));
-              if (amountText === null) return { ok: false, message: '회수 처리 기록을 취소했습니다.' };
-              const amount = Number(amountText.replace(/,/g, '').trim());
-              if (!Number.isSafeInteger(amount) || amount < 1) return { ok: false, message: '금액을 1원 이상의 숫자로 적어 주세요.' };
-              const memo = window.prompt('메모 (필수 — 회수 요청 방법·일자, 상계·반환 합의 등)', '');
-              if (memo === null || !memo.trim()) return { ok: false, message: '메모를 적어 주세요.' };
-              return post({ action: 'acknowledge_overpayment', payoutId: rec.id, amount, memo: memo.trim() });
-            })}
+            onClick={async () => {
+              const values = await ask({
+                title: '회수 처리 남기기',
+                fields: [
+                  {
+                    name: 'amount',
+                    label: '회수 요청을 처리한 금액 (원)',
+                    type: 'number',
+                    defaultValue: String(remaining),
+                    required: '금액을 1원 이상의 숫자로 적어 주세요.',
+                    validate: (v) => {
+                      const n = Number(v.replace(/,/g, '').trim());
+                      return Number.isSafeInteger(n) && n >= 1 ? null : '금액을 1원 이상의 숫자로 적어 주세요.';
+                    },
+                  },
+                  { name: 'memo', label: '메모', type: 'textarea', hint: '회수 요청 방법·일자, 상계·반환 합의 등', required: '메모를 적어 주세요.' },
+                ],
+                confirmLabel: '기록',
+              });
+              if (values === null) return;
+              const amount = Number(values.amount.replace(/,/g, '').trim());
+              await run('ack', null, () => post({ action: 'acknowledge_overpayment', payoutId: rec.id, amount, memo: values.memo.trim() }));
+            }}
           >
             회수 처리 남기기
           </button>
@@ -258,30 +276,19 @@ export function ShowPayoutSection({ showId, panel, showtimeLabels }: {
         {rec?.status === 'pending' && (
           <Button
             light size="sm" disabled={busy !== null}
-            onClick={() => run(
-              'paid',
-              `${v.payeeName}에게 ${won(rec.netAmount)}을 이체했나요? 지급 완료로 기록합니다.${rec.netAmount === 0 ? '\n\n이체할 금액이 0원인 기록입니다(조정으로 상계).' : ''}`,
-              async () => {
-                // 이체 메모(선택) — 이체일·실제 보낸 금액·청구 협의 결과. 기록 행은 불변이라 달라진 것은 여기 적어 둔다.
-                const memo = window.prompt('이체 메모 (선택 — 이체일, 실제 보낸 금액, 세금계산서 수취·청구 협의 등)', '');
-                if (memo === null) return { ok: false, message: '지급 완료 기록을 취소했습니다.' };
-                return post({ action: 'mark_paid', payoutId: rec.id, memo: memo.trim() });
-              },
-            )}
+            onClick={async () => {
+              // 이체 메모(선택) — 이체일·실제 보낸 금액·청구 협의 결과. 기록 행은 불변이라 달라진 것은 여기 적어 둔다.
+              const values = await ask({
+                title: '지급 완료 기록',
+                description: `${v.payeeName}에게 ${won(rec.netAmount)}을 이체했나요? 지급 완료로 기록합니다.${rec.netAmount === 0 ? '\n\n이체할 금액이 0원인 기록입니다(조정으로 상계).' : ''}`,
+                fields: [{ name: 'memo', label: '이체 메모 (선택)', type: 'textarea', hint: '이체일, 실제 보낸 금액, 세금계산서 수취·청구 협의 등' }],
+                confirmLabel: '지급 완료로 기록',
+              });
+              if (values === null) return;
+              await run('paid', null, () => post({ action: 'mark_paid', payoutId: rec.id, memo: values.memo.trim() }));
+            }}
           >
             지급 완료
-          </Button>
-        )}
-        {rec?.status === 'pending' && (
-          <Button
-            light size="sm" variant="weak" disabled={busy !== null}
-            onClick={() => run(
-              'delete',
-              `${v.payeeName}의 기록(${won(rec.netAmount)})을 취소할까요?\n\n기록된 금액은 버려지고 이력도 남지 않으며, 이 정산에 실렸던 조정은 풀립니다. 아직 이체하지 않은 기록만 취소할 수 있습니다.`,
-              () => post({ action: 'delete', payoutId: rec.id }),
-            )}
-          >
-            기록 취소(이체 전)
           </Button>
         )}
         {v.creatorId && (
@@ -289,9 +296,23 @@ export function ShowPayoutSection({ showId, panel, showtimeLabels }: {
             계좌 보기
           </Button>
         )}
+        <DangerActions>
+          {rec?.status === 'pending' && (
+            <Button
+              light size="sm" variant="ghost" className={DANGER_GHOST_CLASS} disabled={busy !== null}
+              onClick={() => run(
+                'delete',
+                `${v.payeeName}의 기록(${won(rec.netAmount)})을 취소할까요?\n\n기록된 금액은 버려지고 이력도 남지 않으며, 이 정산에 실렸던 조정은 풀립니다. 아직 이체하지 않은 기록만 취소할 수 있습니다.`,
+                () => post({ action: 'delete', payoutId: rec.id }),
+              )}
+            >
+              기록 취소(이체 전)
+            </Button>
+          )}
+        </DangerActions>
       </div>
       {rec?.memo && <p className="mt-1 whitespace-pre-line text-xs text-gray-500">메모: {rec.memo}</p>}
-      {rec?.paidAt && <p className="mt-1 text-xs text-gray-500">지급 {new Date(rec.paidAt).toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' })}</p>}
+      {rec?.paidAt && <p className="mt-1 text-xs text-gray-500">지급 {formatAdminDate(rec.paidAt)}</p>}
       {account && account !== 'loading' && (
         'error' in account ? (
           <p role="alert" className="mt-1 text-xs text-red-600">{account.error}</p>
@@ -303,6 +324,7 @@ export function ShowPayoutSection({ showId, panel, showtimeLabels }: {
           </p>
         )
       )}
+      {dialog}
     </>,
   );
 }

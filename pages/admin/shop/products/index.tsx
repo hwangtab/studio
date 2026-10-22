@@ -8,6 +8,7 @@ import { listShopProductsForAdmin, type AdminShopProductSummary } from '../../..
 import { SHOP_STATUS_LABELS, type ShopReviewStatus } from '../../../../lib/shop/productRules';
 import { buttonVariants } from '../../../../components/ui/Button';
 import { Notice } from '../../../../components/ui/Notice';
+import { formatAdminDateTimeFromSeconds } from '../../../../lib/admin/displayDate';
 
 interface Props {
   products: AdminShopProductSummary[];
@@ -33,7 +34,7 @@ const BADGE: Record<ShopReviewStatus, string> = {
   rejected: 'bg-red-100 text-red-800',
 };
 
-const kst = (sec: number) => new Date(sec * 1000).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+const kst = (sec: number) => formatAdminDateTimeFromSeconds(sec);
 
 export default function AdminShopProductsPage({ products, error }: Props) {
   return (

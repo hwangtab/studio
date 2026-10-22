@@ -22,7 +22,8 @@ import {
 } from '../../../lib/contracts/serialize';
 import { expireOverdueContracts } from '../../../lib/contracts/service';
 import { getStatusLabel, needsTermination, terminationCutoff } from '../../../lib/contracts/status';
-import { formatCurrency, formatShortDate as formatDate } from '../../../lib/contracts/format';
+import { formatCurrency } from '../../../lib/contracts/format';
+import { formatAdminDate } from '../../../lib/admin/displayDate';
 import { ActionNotice } from '../../../components/admin/ActionNotice';
 
 /** 한 화면에 싣는 최대 건수. 넘으면 오래된 계약이 잘린다는 사실을 화면에 알린다. */
@@ -398,12 +399,12 @@ export default function AdminContractsPage({
                           </td>
                           <td data-label="호실" className="px-4 py-3">{contract.roomNumber}호</td>
                           <td data-label="기간" className="px-4 py-3 whitespace-nowrap">
-                            {formatDate(contract.startDate)} ~ {formatDate(contract.endDate)}
+                            {formatAdminDate(contract.startDate)} ~ {formatAdminDate(contract.endDate)}
                           </td>
                           <td data-label="월 이용료" className="px-4 py-3 whitespace-nowrap">
                             {formatCurrency(contract.monthlyRent)}원
                           </td>
-                          <td data-label="서명일" className="px-4 py-3">{formatDate(contract.signedAt)}</td>
+                          <td data-label="서명일" className="px-4 py-3">{formatAdminDate(contract.signedAt)}</td>
                           <td data-label="관리" className="px-4 py-3">
                             <div className="flex flex-wrap gap-2">
                               <Button asChild light size="sm" variant="weak">

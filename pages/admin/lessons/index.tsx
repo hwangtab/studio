@@ -14,6 +14,7 @@ import { kstDateString } from '../../../lib/booking/kst';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { ENROLLMENT_STATUS_LABELS, PAY_METHOD_LABELS, WEEKDAY_LABELS, weekdayOf } from '../../../lib/lessons/rules';
 import { listEnrollments } from '../../../lib/lessons/service';
+import { formatAdminDate } from '../../../lib/admin/displayDate';
 
 /**
  * 레슨 관리 — 수강 등록(회차·컨트롤 룸 예약 불가 시간까지 한 번에)과 수강생 목록. 설계: docs/lesson-management-design-2026-10.md.
@@ -60,7 +61,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
       startTime: r.enrollment.startTime,
       total: r.total,
       consumed: r.consumed,
-      nextOn: r.nextSession ? `${r.nextSession.scheduledOn} ${r.nextSession.startTime}` : null,
+      nextOn: r.nextSession ? `${formatAdminDate(r.nextSession.scheduledOn)} ${r.nextSession.startTime}` : null,
       unmarked: r.unmarked,
       lastPaidOn: r.lastPaidOn,
       paidTotal: r.paidTotal,
@@ -129,7 +130,7 @@ export default function AdminLessonsPage({ rows, today, unavailable }: Props) {
       </div>
       <p className="mt-1 text-xs text-gray-600">
         진행 {r.consumed}/{r.total}회{r.nextOn ? ` · 다음 ${r.nextOn}` : ''}
-        {r.payMethod !== 'card' ? ` · ${r.lastPaidOn ? `최근 수납 ${r.lastPaidOn} (누계 ${won(r.paidTotal)})` : '수납 기록 없음'}` : ''}
+        {r.payMethod !== 'card' ? ` · ${r.lastPaidOn ? `최근 수납 ${formatAdminDate(r.lastPaidOn)} (누계 ${won(r.paidTotal)})` : '수납 기록 없음'}` : ''}
       </p>
       <div className="mt-2">
         <Link href={`/admin/lessons/${r.id}`}><Button light variant="weak" size="sm">상세</Button></Link>

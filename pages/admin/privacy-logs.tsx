@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { AdminShell } from '../../components/admin/AdminShell';
 import { authenticateAdminRequest } from '../../lib/contracts/admin-auth';
 import { ACTION_LABEL } from '../../lib/privacy/accessLogLabels';
+import { formatAdminDateTime } from '../../lib/admin/displayDate';
 import {
   listPrivacyAccessActors,
   listPrivacyAccessLogs,
@@ -65,10 +66,10 @@ const RESULT_CLASS: Record<string, string> = {
   error: 'bg-red-50 text-red-700',
 };
 
+// 접속기록은 초까지 본다(같은 분에 여러 번 연 기록을 가르는 감사 기록이다) — 관리자 표시 정본 뒤에 초만 붙인다.
 const formatAt = (iso: string): string => {
-  const d = new Date(iso);
-  const kst = new Date(d.getTime() + 9 * 60 * 60 * 1000);
-  return kst.toISOString().replace('T', ' ').slice(0, 19);
+  const seconds = String(new Date(iso).getUTCSeconds()).padStart(2, '0');
+  return `${formatAdminDateTime(iso)}:${seconds}`;
 };
 
 export const getServerSideProps: GetServerSideProps<AdminPrivacyLogsPageProps> = async (context) => {

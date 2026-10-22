@@ -18,6 +18,10 @@ import { describeShopArtistTerms } from '../../../../lib/shop/artistTerms';
 import { loadShopArtistTermsStatus } from '../../../../lib/shop/artistTermsAgreement';
 import { isStudioShopArtistSlug } from '../../../../lib/shop/studioArtist';
 import { buttonVariants } from '../../../../components/ui/Button';
+import { formatAdminDateTimeFromSeconds } from '../../../../lib/admin/displayDate';
+import { DangerActions } from '../../../../components/admin/DangerActions';
+import { DANGER_GHOST_CLASS } from '../../../../components/admin/adminDanger';
+import { cn } from '../../../../lib/utils';
 
 interface Props {
   product: AdminShopProductDetail;
@@ -52,10 +56,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
 const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
 const primaryBtn = buttonVariants({ variant: 'solid', size: 'sm', light: true });
-const secondaryBtn = 'rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 disabled:opacity-60';
+const secondaryBtn = buttonVariants({ variant: 'secondary', size: 'sm', light: true });
+const dangerBtn = cn(buttonVariants({ variant: 'ghost', size: 'sm', light: true }), DANGER_GHOST_CLASS);
 const card = 'mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6';
 
-const kst = (sec: number) => new Date(sec * 1000).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+const kst = (sec: number) => formatAdminDateTimeFromSeconds(sec);
 
 const toPreview = (p: AdminShopProductDetail): ShopProduct => ({
   slug: p.slug,
@@ -268,7 +273,9 @@ export default function AdminShopProductPage({ product, editable, fulfillment, t
             <div className="mt-3 flex flex-wrap gap-2">
               <button type="button" disabled={busy} onClick={() => decide('approve')} className={primaryBtn}>승인</button>
               <button type="button" disabled={busy || !note.trim()} onClick={() => decide('request_changes')} className={secondaryBtn}>보완 요청</button>
-              <button type="button" disabled={busy || !note.trim()} onClick={() => decide('reject')} className={secondaryBtn}>반려</button>
+              <DangerActions>
+                <button type="button" disabled={busy || !note.trim()} onClick={() => decide('reject')} className={dangerBtn}>반려</button>
+              </DangerActions>
             </div>
           </section>
         )}

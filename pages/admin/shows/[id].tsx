@@ -5,7 +5,8 @@ import { useRouter } from 'next/router';
 
 import { postShowAction } from '../../../components/admin/showActions';
 import { AdminShell } from '../../../components/admin/AdminShell';
-import { DANGER_WEAK_CLASS } from '../../../components/admin/adminDanger';
+import { DANGER_GHOST_CLASS } from '../../../components/admin/adminDanger';
+import { DangerSlot } from '../../../components/admin/DangerActions';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
@@ -23,6 +24,7 @@ import { loadShowPayoutPanel } from '../../../lib/partnerPayouts/showPanel';
 import type { ShowPayoutPanelState } from '../../../lib/partnerPayouts/showView';
 import { REPORT_LINK_DEFAULT_TTL_DAYS, REPORT_LINK_MAX_TTL_DAYS } from '../../../lib/shows/reportLinkLimits';
 import { ActionNotice } from '../../../components/admin/ActionNotice';
+import { formatAdminDateTimeFromSeconds } from '../../../lib/admin/displayDate';
 
 /** 환불 계좌 요약 — 은행·예금주·시각뿐. 계좌번호는 평문도 암호문도 props에 싣지 않는다("계좌 보기" API로만). */
 export interface ShowRefundAccountInfo {
@@ -89,12 +91,7 @@ const ORDER_STATUS_LABEL: Record<string, string> = {
 };
 const TICKET_STATUS_LABEL: Record<string, string> = { held: '보류', issued: '발권', refunding: '환불중', refunded: '환불', void: '무효' };
 
-const kstTime = (sec: number | null) => {
-  if (sec == null) return '-';
-  const k = new Date(sec * 1000 + 9 * 3600 * 1000);
-  const p = (n: number) => String(n).padStart(2, '0');
-  return `${k.getUTCMonth() + 1}/${k.getUTCDate()} ${p(k.getUTCHours())}:${p(k.getUTCMinutes())}`;
-};
+const kstTime = (sec: number | null) => formatAdminDateTimeFromSeconds(sec);
 
 export default function AdminShowDetailPage({ show, refundAccounts = {}, sameNameDeposits = {}, reportLinks = null, payout = { state: 'error' } }: AdminShowDetailPageProps) {
   const router = useRouter();
@@ -312,7 +309,8 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
             명단 CSV
           </a>
           {(scheduled || hasRefundPendingOrders) && (
-            <Button light variant="weak" size="sm" className={scheduled ? DANGER_WEAK_CLASS : undefined} disabled={busy} onClick={() =>
+            <DangerSlot danger={scheduled}>
+            <Button light variant={scheduled ? 'ghost' : 'weak'} size="sm" className={scheduled ? DANGER_GHOST_CLASS : undefined} disabled={busy} onClick={() =>
               run({ action: 'cancel_showtime', showtimeId: t.id }, {
                 confirm: scheduled
                   ? '이 회차를 취소하고, 결제된 주문을 전부 전액 환불합니다(입장한 티켓 제외). 되돌릴 수 없습니다.'
@@ -330,6 +328,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
               })}>
               {scheduled ? '회차 취소' : '환불 이어서 처리'}
             </Button>
+            </DangerSlot>
           )}
           {t.status === 'cancelled' && (
             <Button light variant="weak" size="sm" disabled={busy} onClick={() =>

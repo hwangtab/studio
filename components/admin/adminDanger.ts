@@ -14,3 +14,10 @@
 export const DANGER_GHOST_CLASS = 'text-red-700 hover:bg-red-50 hover:text-red-800 focus-visible:ring-red-600/70';
 export const DANGER_WEAK_CLASS = 'bg-red-50 text-red-700 hover:bg-red-100 focus-visible:ring-red-600/70';
 export const DANGER_TEXT_CLASS = 'text-red-700 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600/70';
+
+/**
+ * 동작 줄의 끝에 되돌릴 수 없는 동작을 모으는 묶음 — 넓은 화면에서는 오른쪽 끝으로 밀고 세로 구분선으로 가른다(2026-10-22 운영자 결정).
+ * 예전엔 '계약 취소 → 복제해서 새 계약 → 삭제'처럼 위험 동작이 평범한 동작 사이에 끼어 있어 손이 잘못 갔다.
+ * 좁은 화면에서는 줄바꿈되어 맨 아래 줄에 선다(구분선 없음).
+ */
+export const DANGER_GROUP_CLASS = 'flex flex-wrap gap-2 sm:ml-auto sm:border-l sm:border-gray-200 sm:pl-3';

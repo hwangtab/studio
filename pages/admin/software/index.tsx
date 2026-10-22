@@ -11,6 +11,7 @@ import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { recordAdminPrivacyAccess } from '../../../lib/privacy/accessLog';
 import { listAdminLicenses, type AdminLicenseRow } from '../../../lib/software/service';
 import { buttonVariants } from '../../../components/ui/Button';
+import { formatAdminDateTime } from '../../../lib/admin/displayDate';
 
 const LICENSE_LIST_LIMIT = 100;
 
@@ -48,7 +49,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
 const SOURCE_LABEL: Record<string, string> = { manual: '수동 발급', toss: '국내 결제', overseas: '해외 결제' };
 const STATUS_LABEL: Record<string, string> = { active: '사용 중', revoked: '취소', refunded: '환불' };
-const kst = (iso: string) => new Date(iso).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', year: '2-digit', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+const kst = (iso: string) => formatAdminDateTime(iso);
 
 const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
 const buttonClass = buttonVariants({ variant: 'solid', size: 'sm', light: true });

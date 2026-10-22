@@ -15,7 +15,7 @@ import {
   searchContractAdminEvents,
   type ContractEventListRow,
 } from '../../../lib/contracts/admin-events';
-import { formatDateTime } from '../../../lib/contracts/format';
+import { formatAdminDateTime } from '../../../lib/admin/displayDate';
 import { getStatusLabel } from '../../../lib/contracts/status';
 
 const LIST_LIMIT = 200;
@@ -157,7 +157,7 @@ export default function AdminContractHistoryPage({ events, actors, filter, trunc
                 <tbody>
                   {events.map((event) => (
                     <tr key={event.id} className="border-b border-gray-100">
-                      <td data-label="일시" className="px-4 py-3 tabular-nums whitespace-nowrap">{formatDateTime(event.at)}</td>
+                      <td data-label="일시" className="px-4 py-3 tabular-nums whitespace-nowrap">{formatAdminDateTime(event.at)}</td>
                       <td data-label="행위" className="px-4 py-3 font-medium text-gray-900">
                         {CONTRACT_ADMIN_ACTION_LABELS[event.action as ContractAdminAction] ?? event.action}
                       </td>

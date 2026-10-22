@@ -18,6 +18,8 @@ import { countSupportersByArtist } from '../../../lib/artistSupport/supporters';
 import { cycleYmOf } from '../../../lib/billing/schedule';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { ActionNotice } from '../../../components/admin/ActionNotice';
+import { useAdminDialog } from '../../../components/admin/useAdminDialog';
+import { DANGER_GHOST_CLASS } from '../../../components/admin/adminDanger';
 
 /**
  * 관리자 아티스트 구역 — 후원자 수와 월 정산(스펙 §10·§12).
@@ -143,10 +145,12 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
   const router = useRouter();
   const [busy, setBusy] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const { ask, dialog } = useAdminDialog();
   const [periodInput, setPeriodInput] = useState(period);
 
-  const run = async (key: string, task: () => Promise<{ ok: boolean; message?: string }>, confirmText: string) => {
-    if (!window.confirm(confirmText)) return;
+  /** confirmText가 null이면 확인을 이미 받은 것(입력창 겸 확인창 — useAdminDialog). */
+  const run = async (key: string, task: () => Promise<{ ok: boolean; message?: string }>, confirmText: string | null) => {
+    if (confirmText !== null && !window.confirm(confirmText)) return;
     setBusy(key);
     setNotice(null);
     const result = await task();
@@ -326,22 +330,21 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
                               light
                               size="sm"
                               disabled={busy === key}
-                              onClick={() =>
-                                run(
-                                  key,
-                                  async () => {
-                                    // 이체 메모(선택) — 이체일·실제 보낸 금액. 기록 뒤 환불로 금액이 달라졌다면 여기 적어 둔다(기록 행은 불변이다).
-                                    const memo = window.prompt('이체 메모 (선택 — 이체일, 실제 보낸 금액 등)', '');
-                                    if (memo === null) return { ok: false, message: '지급 완료 기록을 취소했습니다.' };
-                                    return markPayoutPaid(p.recorded!.id, memo.trim());
-                                  },
-                                  `${p.artistName}에게 ${formatPriceAmount(p.recorded!.netAmount)}원을 이체했나요? 지급 완료로 기록합니다.${
+                              onClick={async () => {
+                                // 이체 메모(선택) — 이체일·실제 보낸 금액. 기록 뒤 환불로 금액이 달라졌다면 여기 적어 둔다(기록 행은 불변이다).
+                                const values = await ask({
+                                  title: '지급 완료 기록',
+                                  description: `${p.artistName}에게 ${formatPriceAmount(p.recorded!.netAmount)}원을 이체했나요? 지급 완료로 기록합니다.${
                                     p.netAmount !== p.recorded!.netAmount
-                                      ? `\n\n⚠ 지금 계산하면 ${formatPriceAmount(p.netAmount)}원으로 기록과 다릅니다(뒤늦은 환불일 수 있어요). 실제로 이체한 금액을 이어서 묻는 메모에 꼭 적어 주세요.`
+                                      ? `\n\n⚠ 지금 계산하면 ${formatPriceAmount(p.netAmount)}원으로 기록과 다릅니다(뒤늦은 환불일 수 있어요). 실제로 이체한 금액을 아래 메모에 꼭 적어 주세요.`
                                       : ''
                                   }`,
-                                )
-                              }
+                                  fields: [{ name: 'memo', label: '이체 메모 (선택)', type: 'textarea', hint: '이체일, 실제 보낸 금액 등' }],
+                                  confirmLabel: '지급 완료로 기록',
+                                });
+                                if (values === null) return;
+                                await run(key, () => markPayoutPaid(p.recorded!.id, values.memo.trim()), null);
+                              }}
                             >
                               지급 완료
                             </Button>
@@ -350,8 +353,8 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
                             <Button
                               light
                               size="sm"
-                              variant="weak"
-                              className="ml-2"
+                              variant="ghost"
+                              className={`ml-2 ${DANGER_GHOST_CLASS}`}
                               disabled={busy === key}
                               onClick={() =>
                                 run(
@@ -410,6 +413,7 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
             </div>
           )}
         </section>
+        {dialog}
       </AdminShell>
     </>
   );

@@ -20,6 +20,10 @@ import { buildFundingPayoutPreview, loadRecordedFundingPayout, recordedVatDeduct
 import { computeProjectState } from '../../../../lib/funding/projectState';
 import { normalizeFundingSlug } from '../../../../lib/funding/reservedSlugs';
 import type { FundingReviewStatus } from '../../../../lib/funding/reviewTransition';
+import { DangerActions } from '../../../../components/admin/DangerActions';
+import { DANGER_GHOST_CLASS } from '../../../../components/admin/adminDanger';
+import { useAdminDialog } from '../../../../components/admin/useAdminDialog';
+import { chargesAfterKindChange, chargesFromService } from '../../../../lib/funding/serviceCharges';
 
 /** 화면이 쓰는 리워드 모양. `lockedAt`은 `Date | null`이라 GSSP props로 그대로 못 내려서
  * 불리언 하나(`locked`)로 좁힌다 — 잠금 여부만 보여주면 되고, 시각까지는 필요 없다. */
@@ -252,6 +256,12 @@ const PROJECT_STATUS_LABELS: Record<string, string> = { auto: '공개중', draft
 export default function AdminFundingProjectDetailPage({ project, payout, pendingPayoutFallback, service }: AdminFundingProjectDetailPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
+  const { ask, dialog } = useAdminDialog();
+  /** 사유 한 칸을 받는 확인창(useAdminDialog) — 예전 window.prompt 자리. 취소하면 null. */
+  const askReason = async (o: { title: string; description: string; label: string; required: string; confirmLabel: string; tone?: 'danger' }) => {
+    const values = await ask({ title: o.title, description: o.description, fields: [{ name: 'reason', label: o.label, type: 'textarea', required: o.required }], confirmLabel: o.confirmLabel, tone: o.tone });
+    return values ? values.reason : null;
+  };
   const [notice, setNotice] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [warnings, setWarnings] = useState<string[]>([]);
@@ -353,8 +363,8 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
     );
   };
 
-  const handleRequestChanges = () => {
-    const reason = window.prompt('개설자에게 보낼 보완 요청 사유를 적어 주세요.');
+  const handleRequestChanges = async () => {
+    const reason = await askReason({ title: '보완 요청', description: '사유가 개설자에게 메일로 전달됩니다.', label: '보완 요청 사유', required: '보완 요청은 사유가 있어야 합니다.', confirmLabel: '보완 요청 보내기' });
     if (reason === null) return;
     if (!reason.trim()) {
       setNotice('보완 요청은 사유가 있어야 합니다.');
@@ -366,14 +376,14 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
     );
   };
 
-  const handleReject = () => {
-    const reason = window.prompt('반려 사유를 적어 주세요 (개설자에게 전달됩니다).');
+  const handleReject = async () => {
+    // 사유 입력과 반려 확인을 한 창에서 — 예전엔 prompt 뒤에 confirm이 한 번 더 떴다.
+    const reason = await askReason({ title: '반려', description: '반려하면 개설자에게 반려 사실과 사유가 메일로 전달됩니다.', label: '반려 사유', required: '반려는 사유가 있어야 합니다.', confirmLabel: '반려', tone: 'danger' });
     if (reason === null) return;
     if (!reason.trim()) {
       setNotice('반려는 사유가 있어야 합니다.');
       return;
     }
-    if (!window.confirm('반려하면 개설자에게 반려 사실과 사유가 메일로 전달됩니다. 반려할까요?')) return;
     return run(() => patchFundingProject(project.id, { action: 'reject', note: reason.trim(), expectedSubmittedAt: project.submittedAt }), '반려 처리했습니다.');
   };
 
@@ -386,12 +396,30 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
   /** 정산이 기록된 뒤에는 서비스 종류·약정 제작비를 잠근다(서버도 409). 집계가 실패해도 이체 대기 정산이 있으면 잠근다. */
   const payoutRecorded = Boolean(payout?.recorded) || Boolean(pendingPayoutFallback);
 
-  const handleSetService = (kind: 'none' | 'design' | 'release') => {
-    if (kind === 'none' && service.available && service.service) {
-      // 약정가·입금 기록은 지우지 않고 보존한다(lib/funding/projectServices.ts) — 예전 문구는
-      // "지워집니다"였고, 실제로 지우던 동안 재지정이 약정가를 그때의 정가로 재발행했다.
-      if (!window.confirm('직접 개설로 되돌릴까요? 약정 설계비·입금 기록은 보존되고, 다시 지정하면 그 값으로 돌아갑니다.')) return;
-    }
+  const handleSetService = async (kind: 'none' | 'design' | 'release') => {
+    // 서비스 종류는 정산 공제액(설계비·제작비)을 바꾼다 — 예전엔 버튼 한 번에 확인 없이 저장됐다(2026-10-22 운영자 결정).
+    // 바꾸기 전 → 뒤 공제액을 정산과 같은 함수(lib/funding/serviceCharges.ts)로 계산해 보여 준다.
+    const current = service.available ? service.service : null;
+    const before = chargesFromService(current);
+    const after = chargesAfterKindChange(current, kind, FUNDING_DESIGN_PRICE);
+    const total = (c: { designFee: number; productionFee: number }) => c.designFee + c.productionFee;
+    const breakdown = (c: { designFee: number; productionFee: number }) =>
+      total(c) === 0 ? '0원' : `${formatPriceAmount(total(c))}원 (설계비 ${formatPriceAmount(c.designFee)}원 · 제작비 ${formatPriceAmount(c.productionFee)}원)`;
+    const fromLabel = PROJECT_SERVICE_LABELS[current?.kind ?? 'none'];
+    const lines = [
+      `서비스를 "${fromLabel}" → "${PROJECT_SERVICE_LABELS[kind]}"(으)로 바꿉니다.`,
+      total(before) === total(after)
+        ? `정산 때 모금액에서 빼는 대금은 그대로입니다: ${breakdown(after)}, 부가세 포함.`
+        : `정산 때 모금액에서 빼는 대금이 바뀝니다: ${breakdown(before)} → ${breakdown(after)}, 부가세 포함.`,
+      '모금액이 대금보다 적으면 빼지 못한 차액은 개설자와 협의합니다. 정산을 기록한 뒤에는 바꿀 수 없습니다.',
+      ...(kind === 'none' && current
+        // 약정가·입금 기록은 지우지 않고 보존한다(lib/funding/projectServices.ts) — 예전 문구는
+        // "지워집니다"였고, 실제로 지우던 동안 재지정이 약정가를 그때의 정가로 재발행했다.
+        ? ['약정 설계비·입금 기록은 보존되고, 다시 지정하면 그 값으로 돌아갑니다.']
+        : []),
+    ];
+    const confirmed = await ask({ title: '스튜디오 서비스 바꾸기', description: lines.join('\n\n'), confirmLabel: `"${PROJECT_SERVICE_LABELS[kind]}"(으)로 저장` });
+    if (confirmed === null) return;
     return run(
       () => patchFundingProject(project.id, { action: 'set_studio_service', kind }),
       `서비스를 "${PROJECT_SERVICE_LABELS[kind]}"(으)로 저장했습니다.`,
@@ -430,8 +458,8 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
    * 개설자 계정 수정. 사유는 서버가 필수로 받고 어느 컬럼에도 저장하지 않는다 — 개설자
    * 메일과 서버 로그에만 남는다(`lib/funding/creatorAccountDecision.ts`).
    */
-  const askAccountReason = (what: string): string | null => {
-    const reason = window.prompt(`${what}을(를) 바꾸는 사유를 적어 주세요 (개설자에게 메일로 전달되고 서버 로그에 남습니다).`);
+  const askAccountReason = async (what: string, detail: string): Promise<string | null> => {
+    const reason = await askReason({ title: `${what} 바꾸기`, description: `${detail}\n\n사유는 개설자에게 메일로 전달되고 서버 로그에 남습니다.`, label: `${what}을(를) 바꾸는 사유`, required: '계정 변경은 사유가 있어야 합니다.', confirmLabel: '바꾸기' });
     if (reason === null) return null;
     if (!reason.trim()) {
       setNotice('계정 변경은 사유가 있어야 합니다.');
@@ -440,7 +468,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
     return reason.trim();
   };
 
-  const handleSaveCreatorName = () => {
+  const handleSaveCreatorName = async () => {
     const next = creatorName.trim();
     if (!next) {
       setNotice('개설자 이름을 적어 주세요.');
@@ -450,22 +478,18 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
       setNotice('지금 저장된 이름과 같습니다.');
       return;
     }
-    const reason = askAccountReason('개설자 이름');
+    const reason = await askAccountReason(
+      '개설자 이름',
+      `개설자 이름을 "${project.creatorName}" → "${next}"로 바꿉니다. 이 개설자의 승인된 프로젝트 페이지에 표시되는 개설자 이름이 모두 함께 바뀝니다.`,
+    );
     if (reason === null) return;
-    if (
-      !window.confirm(
-        `개설자 이름을 "${project.creatorName}" → "${next}"로 바꿉니다. 이 개설자의 승인된 프로젝트 페이지에 표시되는 개설자 이름이 모두 함께 바뀝니다. 진행할까요?`,
-      )
-    ) {
-      return;
-    }
     return run(
       () => patchFundingProject(project.id, { action: 'set_creator_name', value: next, reason }),
       '개설자 이름을 바꿨습니다.',
     );
   };
 
-  const handleSaveCreatorEmail = () => {
+  const handleSaveCreatorEmail = async () => {
     const next = creatorEmail.trim();
     if (!next) {
       setNotice('개설자 이메일을 적어 주세요.');
@@ -475,58 +499,53 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
       setNotice('지금 저장된 이메일과 같습니다.');
       return;
     }
-    const reason = askAccountReason('로그인 이메일');
+    const reason = await askAccountReason(
+      '로그인 이메일',
+      `로그인 이메일을 "${project.creatorEmail}" → "${next}"로 바꿉니다. 이 계정의 로그인 링크는 모두 무효가 되고, 옛 주소와 새 주소 양쪽에 변경 사실을 알립니다.`,
+    );
     if (reason === null) return;
-    if (
-      !window.confirm(
-        `로그인 이메일을 "${project.creatorEmail}" → "${next}"로 바꿉니다. 이 계정의 로그인 링크는 모두 무효가 되고, 옛 주소와 새 주소 양쪽에 변경 사실을 알립니다. 진행할까요?`,
-      )
-    ) {
-      return;
-    }
     return run(
       () => patchFundingProject(project.id, { action: 'set_creator_email', value: next, reason }),
       '로그인 이메일을 바꿨습니다. 기존 로그인 링크는 모두 무효가 됐습니다.',
     );
   };
 
-  const handleArchive = () => {
-    const reason = window.prompt(
-      '보관 사유를 적어 주세요 (개설자에게 메일로 전달되며, 개설자 화면에도 그대로 노출됩니다).',
-    );
+  const handleArchive = async () => {
+    const reason = await askReason({
+      title: '보관',
+      description: '보관하면 이 프로젝트는 되돌릴 수 없이 반려와 같은 상태가 되고, 개설자는 더 이상 편집·재제출할 수 없습니다. 사유는 개설자에게 메일로 전달되며 개설자 화면에도 그대로 노출됩니다.',
+      label: '보관 사유',
+      required: '보관은 사유가 있어야 합니다.',
+      confirmLabel: '보관',
+      tone: 'danger',
+    });
     if (reason === null) return;
     if (!reason.trim()) {
       setNotice('보관은 사유가 있어야 합니다.');
       return;
     }
-    if (
-      !window.confirm(
-        '보관하면 이 프로젝트는 되돌릴 수 없이 반려와 같은 상태가 되고, 개설자는 더 이상 편집·재제출할 수 없습니다. 보관할까요?',
-      )
-    ) {
-      return;
-    }
     return run(() => patchFundingProject(project.id, { action: 'archive', note: reason.trim(), expectedSubmittedAt: project.submittedAt }), '보관 처리했습니다.');
   };
 
-  const handleClose = () => {
-    const reason = window.prompt('종료 사유를 적어 주세요 (개설자에게 메일로 전달됩니다).');
+  const handleClose = async () => {
+    // 마감일 전 종료의 부수효과를 미리 말한다. 배송지·발송 상태는 **날짜** 마감 뒤에만
+    // 열린다(lib/funding/projectState.ts의 isPastFundingEnd) — 그 규칙이 기존 후원자의
+    // 셀프 취소권을 지키므로 코드로 완화하지 않고, 대신 운영자가 알고 누르게 한다.
+    const reason = await askReason({
+      title: '종료',
+      description:
+        `종료하면 /funding/${project.slug} 페이지는 그대로 남지만 더 이상 새 후원을 받지 않습니다. `
+        + '기존 후원자는 원래 마감일까지 후원 확인 페이지에서 스스로 취소할 수 있습니다. '
+        + '같은 이유로 마감일 전에 종료하면 개설자는 마감일까지 배송 목록을 받지 못하고 발송 상태도 바꿀 수 없습니다. '
+        + '나중에 다시 열 수 있습니다(단, 정산을 기록한 뒤에는 다시 열 수 없습니다). 사유는 개설자에게 메일로 전달됩니다.',
+      label: '종료 사유',
+      required: '종료는 사유가 있어야 합니다.',
+      confirmLabel: '종료',
+      tone: 'danger',
+    });
     if (reason === null) return;
     if (!reason.trim()) {
       setNotice('종료는 사유가 있어야 합니다.');
-      return;
-    }
-    if (
-      !window.confirm(
-        // 마감일 전 종료의 부수효과를 미리 말한다. 배송지·발송 상태는 **날짜** 마감 뒤에만
-        // 열린다(lib/funding/projectState.ts의 isPastFundingEnd) — 그 규칙이 기존 후원자의
-        // 셀프 취소권을 지키므로 코드로 완화하지 않고, 대신 운영자가 알고 누르게 한다.
-        `종료하면 /funding/${project.slug} 페이지는 그대로 남지만 더 이상 새 후원을 받지 않습니다. `
-        + '기존 후원자는 원래 마감일까지 후원 확인 페이지에서 스스로 취소할 수 있습니다. '
-        + '같은 이유로 **마감일 전에 종료하면 개설자는 마감일까지 배송 목록을 받지 못하고 발송 상태도 바꿀 수 없습니다.** '
-        + '나중에 다시 열 수 있습니다(단, 정산을 기록한 뒤에는 다시 열 수 없습니다). 종료할까요?',
-      )
-    ) {
       return;
     }
     return run(() => patchFundingProject(project.id, { action: 'close', note: reason.trim() }), '종료했습니다.');
@@ -549,21 +568,18 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
     return run(() => patchFundingProject(project.id, { action: 'reopen' }), '다시 열었습니다.');
   };
 
-  const handleHide = () => {
+  const handleHide = async () => {
     // 숨김은 종료와 달리 페이지·결제가 그대로 열려 있는 조치라 사유를 강제하지 않는다
     // (decidePublicStatus도 hide에는 note를 요구하지 않는다) — 하지만 신고 대응처럼
     // 개설자가 "무엇을 고쳐야 하는지" 알아야 하는 경우가 있으므로 적을 수는 있게 한다.
-    const reason = window.prompt(
-      '숨김 사유를 적어 주세요 (선택 — 적으면 개설자에게 메일로 전달됩니다. 비워 두고 진행할 수도 있습니다).',
-    );
-    if (reason === null) return;
-    if (
-      !window.confirm(
-        `숨기면 /funding 목록과 사이트맵에서 빠지지만, /funding/${project.slug} 주소를 아는 사람은 여전히 볼 수 있고 후원도 계속 받습니다. 숨길까요?`,
-      )
-    ) {
-      return;
-    }
+    const values = await ask({
+      title: '목록에서 숨기기',
+      description: `숨기면 /funding 목록과 사이트맵에서 빠지지만, /funding/${project.slug} 주소를 아는 사람은 여전히 볼 수 있고 후원도 계속 받습니다.`,
+      fields: [{ name: 'reason', label: '숨김 사유 (선택)', type: 'textarea', hint: '적으면 개설자에게 메일로 전달됩니다. 비워 두고 진행할 수도 있습니다.' }],
+      confirmLabel: '숨기기',
+    });
+    if (values === null) return;
+    const reason = values.reason;
     return run(
       () => patchFundingProject(project.id, { action: 'hide', note: reason.trim() || undefined }),
       '목록에서 숨겼습니다.',
@@ -609,18 +625,17 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
     );
   };
 
-  const handleMarkPayoutPaid = () => {
+  const handleMarkPayoutPaid = async () => {
     const recorded = payout?.recorded?.status === 'pending' ? payout.recorded : pendingPayoutFallback;
     if (!recorded) return;
-    const memo = window.prompt('이체 메모를 적어 주세요 (선택 — 개설자에게 가는 메일에 함께 나갑니다).');
-    if (memo === null) return;
-    if (
-      !window.confirm(
-        `${formatPriceAmount(recorded.netAmount)}원을 실제로 이체하셨나요? 지급 완료로 기록하면 되돌릴 수 없습니다.`,
-      )
-    ) {
-      return;
-    }
+    const values = await ask({
+      title: '지급 완료 기록',
+      description: `${formatPriceAmount(recorded.netAmount)}원을 실제로 이체하셨나요? 지급 완료로 기록하면 되돌릴 수 없습니다.`,
+      fields: [{ name: 'memo', label: '이체 메모 (선택)', type: 'textarea', hint: '개설자에게 가는 메일에 함께 나갑니다.' }],
+      confirmLabel: '지급 완료로 기록',
+    });
+    if (values === null) return;
+    const memo = values.memo;
     return run(
       async () => {
         const first = await patchFundingProject(project.id, { action: 'mark_payout_paid', memo: memo.trim() || undefined });
@@ -907,9 +922,11 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
               <Button light variant="secondary" disabled={!canDecide || busy} onClick={handleRequestChanges}>
                 보완 요청
               </Button>
-              <Button light variant="weak" disabled={!canDecide || busy} onClick={handleReject}>
-                반려
-              </Button>
+              <DangerActions>
+                <Button light variant="ghost" className={DANGER_GHOST_CLASS} disabled={!canDecide || busy} onClick={handleReject}>
+                  반려
+                </Button>
+              </DangerActions>
             </div>
           </div>
 
@@ -1137,6 +1154,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
             </div>
           </div>
         </div>
+        {dialog}
       </AdminShell>
     </>
   );
