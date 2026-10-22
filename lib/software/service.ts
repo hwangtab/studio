@@ -8,6 +8,7 @@ import { SOFTWARE_DEACTIVATIONS_PER_30_DAYS } from '../../data/software/policy';
 import { getAnySoftware, maxActivationsOf } from './catalog';
 import { generateLicenseKey, licenseKeyHint, normalizeLicenseKey } from './key';
 import { rawPublicKeyOf, signLicense, type LicenseFile, type LicenseSigner } from './licenseFile';
+import { isUniqueConstraintError } from '../dbErrors';
 
 /**
  * 라이선스 발급·활성화·해제. 규칙은 lib/software/CLAUDE.md.
@@ -62,7 +63,7 @@ export const issueLicense = async (input: IssueLicenseInput): Promise<SoftwareLi
         .returning();
       return row;
     } catch (error) {
-      if (attempt < 2 && error instanceof Error && /UNIQUE/i.test(error.message)) continue;
+      if (attempt < 2 && isUniqueConstraintError(error)) continue;
       throw error;
     }
   }

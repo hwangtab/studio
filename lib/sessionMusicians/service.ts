@@ -7,7 +7,6 @@ import {
   findByManageTokenHash,
   findIdByEmailHash,
   insertSessionMusician,
-  isUniqueViolation,
   replaceManageTokenHash,
   restoreManageTokenHash,
   toProfile,
@@ -16,6 +15,7 @@ import {
 } from './repository';
 import { generateManageToken, hashManageToken, hashSessionEmail, isWellFormedManageToken } from './tokens';
 import { validateSessionRegistration, type SessionRegistrationInput, type SessionValidationResult } from './validate';
+import { isUniqueConstraintError } from '../dbErrors';
 
 /**
  * 세션 연주자 등록의 흐름 — 공개 API(`/api/session-musicians`, `/manage`)가 얇게 부른다.
@@ -56,7 +56,7 @@ export const submitRegistration = async (input: SessionRegistrationInput): Promi
       consentVersion: FUNDING_TERMS_VERSION,
     });
   } catch (error: unknown) {
-    if (!isUniqueViolation(error)) throw error;
+    if (!isUniqueConstraintError(error)) throw error;
     const raced = await findIdByEmailHash(emailHash);
     if (!raced) throw error;
     return resendManageLink(raced, input.email);

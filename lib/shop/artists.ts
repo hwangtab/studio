@@ -8,6 +8,7 @@ import { normalizeCreatorEmail } from '../funding/creatorToken';
 import { OPERATOR_EMAIL } from '../operatorContact';
 import { SHOP_RESERVED_SLUGS, SHOP_SLUG_PATTERN } from './catalog';
 import { isStudioShopArtistSlug, STUDIO_SHOP_ARTIST_NAME, STUDIO_SHOP_ARTIST_SLUG } from './studioArtist';
+import { isUniqueConstraintError } from '../dbErrors';
 
 /**
  * 상점 아티스트 — 서버 전용. 로그인 계정 정본은 `funding_creators`(이름·소개·링크), 상점 공개 정체성(slug·등재·프로필 사진)은
@@ -186,7 +187,6 @@ const checkSlug = (slug: string, linkCurated: boolean): ShopArtistWriteResult | 
   return null;
 };
 
-const isUniqueViolation = (error: unknown): boolean => /UNIQUE|constraint/i.test(error instanceof Error ? error.message : String(error));
 
 /**
  * 아티스트 등재 — 이메일로 `funding_creators`를 찾거나 만들고 `shop_artists` 행을 만든다.
@@ -219,7 +219,7 @@ export const createShopArtist = async (input: {
   try {
     await db.insert(shopArtists).values({ creatorId: creator.id, slug, curatedSlugLinked: Boolean(getSupportedArtist(slug)) && input.linkCurated });
   } catch (error: unknown) {
-    if (isUniqueViolation(error)) return deny('slug_taken', '이미 쓰는 주소예요.');
+    if (isUniqueConstraintError(error, 'shop_artists.slug')) return deny('slug_taken', '이미 쓰는 주소예요.');
     throw error;
   }
   return { ok: true, creatorId: creator.id };
@@ -247,7 +247,7 @@ export const updateShopArtistSlug = async (input: { creatorId: string; slug: str
       .set({ slug, curatedSlugLinked: Boolean(getSupportedArtist(slug)) && input.linkCurated, updatedAt: sql`(unixepoch())` })
       .where(eq(shopArtists.creatorId, input.creatorId));
   } catch (error: unknown) {
-    if (isUniqueViolation(error)) return deny('slug_taken', '이미 쓰는 주소예요.');
+    if (isUniqueConstraintError(error, 'shop_artists.slug')) return deny('slug_taken', '이미 쓰는 주소예요.');
     throw error;
   }
   return { ok: true, creatorId: input.creatorId };

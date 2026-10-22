@@ -15,6 +15,7 @@ import { computeProjectState } from './projectState';
 import { loadBusinessProfile } from './businessProfile';
 import { loadProjectService } from './projectServices';
 import { liveFundingOrderStatusList } from './refundable';
+import { isUniqueConstraintError } from '../dbErrors';
 
 export type FundingCreatorTaxType = (typeof fundingCreatorTaxTypeEnum)[number];
 
@@ -679,7 +680,7 @@ export const recordFundingPayout = async (
     return { ok: true, payout };
   } catch (error) {
     // 유니크 위반 = 동시에 두 번 눌렀다. 다른 오류면 그대로 올린다.
-    if (String(error).includes('UNIQUE')) return { ok: false, code: 'already_recorded' };
+    if (isUniqueConstraintError(error)) return { ok: false, code: 'already_recorded' };
     throw error;
   }
 };

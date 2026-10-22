@@ -7,7 +7,7 @@ import { FUNDING_PAYOUT_BUSINESS_DAYS } from '../funding/policy';
 import { businessDaysAfter } from '../funding/payout';
 import { loadBusinessProfile } from '../funding/businessProfile';
 import { fundingCreators, partnerPayoutAdjustments, type PartnerPayout, type PartnerPayoutAdjustment } from '../../db/schema';
-import { isMissingTableError } from '../dbErrors';
+import { isMissingTableError, isUniqueConstraintError } from '../dbErrors';
 import { computeShowPayoutCalc } from './showCalc';
 import { SHOW_CANCEL_WAIVE_PREFIX, showCancelPayeeKey, syncShowtimeCancelFee } from './showCancelFee';
 import { listAppliedAdjustments } from './adjustments';
@@ -476,7 +476,7 @@ export const recordShowPayout = async (
     await db.batch(statements as [typeof statements[number], ...typeof statements]);
   } catch (error) {
     // 유니크 위반 = 동시에 두 번 눌렀다(배치는 통째로 되돌아간다). 다른 오류면 그대로 올린다.
-    if (String(error).includes('UNIQUE')) return { ok: false, code: 'already_recorded' };
+    if (isUniqueConstraintError(error)) return { ok: false, code: 'already_recorded' };
     throw error;
   }
   const saved = await getDb().all<{ id: string }>(sql`SELECT id FROM partner_payouts WHERE id = ${id}`);

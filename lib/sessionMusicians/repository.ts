@@ -13,18 +13,6 @@ import type { SessionInstrumentEntry, SessionRegistrationInput, SessionSampleLin
 
 export const isSessionMusicianTableMissing = (error: unknown): boolean => isMissingTableError(error, 'session_musicians');
 
-/** UNIQUE 위반(이메일 해시·토큰 해시). drizzle이 감싸면 원문이 cause에 있다. */
-export const isUniqueViolation = (error: unknown): boolean => {
-  const seen = new Set<unknown>();
-  let cur: unknown = error;
-  while (cur && !seen.has(cur)) {
-    seen.add(cur);
-    const msg = cur instanceof Error ? cur.message : '';
-    if (/UNIQUE constraint failed/i.test(msg)) return true;
-    cur = (cur as { cause?: unknown }).cause;
-  }
-  return false;
-};
 
 const parseJson = <T>(raw: string | null, fallback: T): T => {
   if (!raw) return fallback;

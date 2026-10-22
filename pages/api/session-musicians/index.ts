@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { consumeRateLimit } from '../../../lib/booking/rate-limit';
+import { consumeRateLimit, releaseRateLimit } from '../../../lib/booking/rate-limit';
 import { isAllowedContactRequestOrigin } from '../../../lib/contact/origin';
 import { isHoneypotSubmission, isTooFast } from '../../../lib/contact/payload';
 import { getClientIp } from '../../../lib/contracts/client-ip';
@@ -28,6 +28,7 @@ const IP_WINDOW_SECONDS = 3_600;
 const EMAIL_DAILY_LIMIT = 2;
 const GLOBAL_DAILY_CAP = 50;
 const DAY_SECONDS = 86_400;
+const GLOBAL_KEY = 'session_musician:global';
 
 /**
  * rate_limits.key에 평문 이메일을 남기지 않는다. 키 없는 sha256은 흔한 주소 목록으로 되짚을 수 있어
@@ -75,13 +76,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(429).json({ ok: false, code: 'rate_limited', message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
   }
 
+  // 이 요청이 센 이메일·전체 한도. 등록이 우리 쪽 장애로 실패하면 되돌린다 — 안 그러면 장애 중에 다시 시도한 지원자가
+  // 이메일 한도(하루 2건)에 걸려 저장되지 않았는데도 "등록을 받았어요"를 보게 된다(2026-10-22 리뷰).
+  const consumed: string[] = [];
   try {
     // 이메일 단위·전체 상한은 메일을 실제로 보내기 직전에만 소비한다(검증에 걸린 요청이 예산을 태우지 않게).
     // emailKey는 비밀이 없으면 SessionMusicianConfigError를 던지므로 try 안에 둔다.
-    if (!(await consumeRateLimit(emailKey(input.email), EMAIL_DAILY_LIMIT, DAY_SECONDS))) {
+    const emailLimitKey = emailKey(input.email);
+    consumed.push(emailLimitKey);
+    if (!(await consumeRateLimit(emailLimitKey, EMAIL_DAILY_LIMIT, DAY_SECONDS))) {
       return res.status(200).json(OK);
     }
-    if (!(await consumeRateLimit('session_musician:global', GLOBAL_DAILY_CAP, DAY_SECONDS))) {
+    consumed.push(GLOBAL_KEY);
+    if (!(await consumeRateLimit(GLOBAL_KEY, GLOBAL_DAILY_CAP, DAY_SECONDS))) {
       console.error('[session-musicians] 일일 접수 한도 도달 — 접수를 건너뜁니다.');
       return res.status(429).json({ ok: false, code: 'daily_cap', message: '오늘은 접수가 많아요. 내일 다시 시도해 주세요.' });
     }
@@ -89,6 +96,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await submitRegistration(input);
     return res.status(200).json(OK);
   } catch (error: unknown) {
+    await Promise.all(consumed.map((key) => releaseRateLimit(key)));
     if (isSessionMusicianTableMissing(error)) {
       return res.status(503).json({ ok: false, code: 'migration_needed', message: '지금은 등록을 받을 수 없어요. 잠시 후 다시 시도해 주세요.' });
     }

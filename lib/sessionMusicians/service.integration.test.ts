@@ -241,6 +241,22 @@ describe('POST /api/session-musicians', () => {
     expect(await rows()).toHaveLength(0);
   });
 
+  it('등록이 DB 장애로 실패하면 이메일·전체 한도를 되돌린다 — 다시 시도한 지원자가 가짜 성공을 보지 않는다', async () => {
+    await client.execute('ALTER TABLE session_musicians RENAME COLUMN stage_name TO stage_name_x');
+    try {
+      expect((await call(indexHandler, { body: form() })).status).toBe(500);
+      expect((await call(indexHandler, { body: form(), ip: '3.3.3.3' })).status).toBe(500);
+    } finally {
+      await client.execute('ALTER TABLE session_musicians RENAME COLUMN stage_name_x TO stage_name');
+    }
+    const counts = (await client.execute("SELECT key, count FROM rate_limits WHERE key LIKE 'session_musician:email:%' OR key = 'session_musician:global'")).rows;
+    expect(counts.every((row) => Number(row.count) === 0)).toBe(true);
+
+    // 장애가 끝난 뒤 세 번째 시도는 실제로 저장된다(예전엔 이메일 한도에 걸려 저장 없이 200이었다).
+    expect((await call(indexHandler, { body: form(), ip: '4.4.4.4' })).status).toBe(200);
+    expect(await rows()).toHaveLength(1);
+  });
+
   it('메일 발송이 실패해도 접수는 남는다', async () => {
     sendEmailMock.mockResolvedValue({ ok: false, errorCode: 'API_ERROR', errorDetail: 'boom' });
     const out = await call(indexHandler, { body: form() });
