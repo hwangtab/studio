@@ -144,8 +144,10 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 
 Full list with photos: ${siteUrl}/ko/studio-info
 
-- Microphones: Neumann U87Ai, AKG C414 XLS, Shure SM58/SM57
+- Microphones: Neumann U87AI, AKG C414 XLS, Shure SM58/SM57
 - Preamps: Vintech X73i (Neve 1073-style), Focusrite Octopre
+- Mixing Console: Midas Venice 320 analog console (not a digital/plugin emulation — a real analog desk, rare among Korean indie-scale studios)
+- Outboard Processors: Solid State Logic Fusion, Tegeler Vari Tube Compressor
 - Interface / Conversion: Prism Sound Lyra 2
 - Piano: Yamaha U3 upright (acoustic recording available)
 - Rooms: fully treated acoustic space, soundproof vocal booth (STC 60+)
