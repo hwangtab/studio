@@ -7,6 +7,8 @@ import { usePaymentCheckout } from '../payments/usePaymentCheckout';
 import { Button } from '../ui/Button';
 import { Checkbox } from '../ui/Checkbox';
 import { Disclosure } from '../ui/Disclosure';
+import CustomerContactFields from '../forms/CustomerContactFields';
+import { useContactValidation } from '../forms/useContactValidation';
 import { Field, Select, TextInput } from '../ui/Field';
 import { Notice } from '../ui/Notice';
 import { Panel } from '../ui/Panel';
@@ -100,6 +102,8 @@ export default function ShopOrderForm({ product, others: candidates, remaining, 
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  // 주문자 칸 검사 — 서버와 같은 규칙(lib/contact/rules.ts)으로 칸 아래에 알린다. 예전엔 noValidate만 있고 검사가 없어 서버 오류 한 줄로 돌아왔다.
+  const contact = useContactValidation();
   const [sameRecipient, setSameRecipient] = useState(true);
   const [recipientName, setRecipientName] = useState('');
   const [recipientPhone, setRecipientPhone] = useState('');
@@ -184,6 +188,7 @@ export default function ShopOrderForm({ product, others: candidates, remaining, 
     e.preventDefault();
     if (!canOrder || submitting) return;
     setError(null);
+    if (!contact.validate({ customerName: name, customerPhone: phone, customerEmail: email })) return;
     if (needsShipping && (!address.postcode.trim() || !address.address1.trim())) {
       setError('배송지 주소를 찾아 주세요.');
       return;
@@ -357,17 +362,19 @@ export default function ShopOrderForm({ product, others: candidates, remaining, 
         <Notice tone="neutral" icon={false}>판매 준비 중이에요. 열리면 이 페이지에서 바로 주문할 수 있어요.</Notice>
       ) : (
         <>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field id="shop-name" label="주문하시는 분" required>
-              <TextInput value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" maxLength={40} />
-            </Field>
-            <Field id="shop-phone" label="휴대폰 번호" required>
-              <TextInput value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" placeholder="010-1234-5678" />
-            </Field>
-          </div>
-          <Field id="shop-email" label="이메일" required hint={needsShipping ? '주문 확인과 발송 안내(운송장 번호)를 이 주소로 보내 드려요.' : '주문 확인과 내려받기 안내를 이 주소로 보내 드려요.'}>
-            <TextInput value={email} onChange={(e) => setEmail(e.target.value)} type="email" inputMode="email" autoComplete="email" />
-          </Field>
+          <CustomerContactFields
+            contact={contact}
+            values={{ customerName: name, customerPhone: phone, customerEmail: email }}
+            onChange={(field, value) => {
+              if (field === 'customerName') setName(value);
+              else if (field === 'customerPhone') setPhone(value);
+              else setEmail(value);
+            }}
+            ids={{ customerName: 'shop-name', customerPhone: 'shop-phone', customerEmail: 'shop-email' }}
+            labels={{ customerName: '주문하시는 분' }}
+            hints={{ customerEmail: needsShipping ? '주문 확인과 발송 안내(운송장 번호)를 이 주소로 보내 드려요.' : '주문 확인과 내려받기 안내를 이 주소로 보내 드려요.' }}
+            layout="pair"
+          />
 
           {needsShipping && (
           <div>

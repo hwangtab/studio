@@ -5,7 +5,8 @@ import PaymentMethodPicker from '../payments/PaymentMethodPicker';
 import { usePaymentCheckout } from '../payments/usePaymentCheckout';
 import { Button } from '../ui/Button';
 import { Checkbox } from '../ui/Checkbox';
-import { Field, TextInput } from '../ui/Field';
+import CustomerContactFields from '../forms/CustomerContactFields';
+import { useContactValidation } from '../forms/useContactValidation';
 import { Notice } from '../ui/Notice';
 import { PriceSummary } from '../ui/PriceSummary';
 import { formatPriceAmount } from '../../data/pricing';
@@ -35,6 +36,8 @@ export default function SoftwareOrderForm({ product, price }: { product: Softwar
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  // 주문자 칸 검사 — 서버와 같은 규칙(lib/contact/rules.ts)으로 칸 아래에 알린다.
+  const contact = useContactValidation();
   const [ack, setAck] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -72,6 +75,7 @@ export default function SoftwareOrderForm({ product, price }: { product: Softwar
     e.preventDefault();
     if (submitting) return;
     setError(null);
+    if (!contact.validate({ customerName: name, customerPhone: phone, customerEmail: email })) return;
     if (!ack) {
       setError('환불 규정을 확인하고 동의해 주세요.');
       return;
@@ -129,17 +133,19 @@ export default function SoftwareOrderForm({ product, price }: { product: Softwar
     <form id="buy" ref={formRef} onSubmit={submit} noValidate className="scroll-mt-24 space-y-6" aria-label="라이선스 구매">
       <PriceSummary items={[{ label: `${product.title} 라이선스`, amount: price.krw }]} total={price.krw} totalLabel="결제 금액 (부가세 포함)" />
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Field id="sw-name" label="구매하시는 분" required>
-          <TextInput value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" maxLength={40} />
-        </Field>
-        <Field id="sw-phone" label="휴대폰 번호" required>
-          <TextInput value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" placeholder="010-1234-5678" />
-        </Field>
-      </div>
-      <Field id="sw-email" label="이메일" required hint="라이선스 키와 구매 내역 링크를 이 주소로 보내 드려요.">
-        <TextInput value={email} onChange={(e) => setEmail(e.target.value)} type="email" inputMode="email" autoComplete="email" />
-      </Field>
+      <CustomerContactFields
+        contact={contact}
+        values={{ customerName: name, customerPhone: phone, customerEmail: email }}
+        onChange={(field, value) => {
+              if (field === 'customerName') setName(value);
+              else if (field === 'customerPhone') setPhone(value);
+              else setEmail(value);
+            }}
+        ids={{ customerName: 'sw-name', customerPhone: 'sw-phone', customerEmail: 'sw-email' }}
+        labels={{ customerName: '구매하시는 분' }}
+        hints={{ customerEmail: '라이선스 키와 구매 내역 링크를 이 주소로 보내 드려요.' }}
+        layout="pair"
+      />
 
       <div>
         <h3 className="mb-2 typo-card-meta font-medium text-gray-700 dark:text-gray-300">결제수단</h3>

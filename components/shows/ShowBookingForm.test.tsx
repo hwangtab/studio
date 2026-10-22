@@ -107,3 +107,41 @@ describe('ShowBookingForm — 계좌로 직접 입금(2026-10-14 재도입, 토�
     expect(screen.getByRole('radio', { name: /계좌로 직접 입금/ })).toBeDisabled();
   });
 });
+
+/** 주문자 칸 검사(2026-10-22) — 예전엔 noValidate만 있고 검사가 없어 서버 오류 한 줄로 돌아왔다. 해외 번호는 받는다. */
+describe('ShowBookingForm — 주문자 칸 검사', () => {
+  const fill = (name: string, phone: string, email: string) => {
+    fireEvent.change(screen.getByLabelText(/^이름/), { target: { value: name } });
+    fireEvent.change(screen.getByLabelText(/^휴대폰|^연락처/), { target: { value: phone } });
+    fireEvent.change(screen.getByLabelText(/^이메일/), { target: { value: email } });
+  };
+
+  // 마운트 때 잔여석 조회(/api/shows/availability)가 먼저 나간다 — 주문 요청만 센다.
+  const mockFetch = () => {
+    global.fetch = jest.fn(async () => ({ ok: false, status: 500, json: async () => ({ ok: false }) })) as unknown as typeof fetch;
+  };
+  const orderPosts = () => (global.fetch as jest.Mock).mock.calls.filter((c) => !String(c[0]).startsWith('/api/shows/availability'));
+
+  it('계좌 입금이어도 빈 값이면 신청을 보내지 않고 칸 오류를 띄운다', async () => {
+    mockFetch();
+    render(<ShowBookingForm show={base} />);
+    fireEvent.click(screen.getByRole('radio', { name: /계좌로 직접 입금/ }));
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: /계좌 안내 받기/ })); });
+    expect(orderPosts()).toHaveLength(0);
+    expect(screen.getByRole('alert')).toHaveTextContent('아래 3개 항목을 확인해 주세요.');
+  });
+
+  it('해외 번호(+국가번호)는 통과시키고, 국가번호 없는 엉뚱한 번호만 잡는다', async () => {
+    mockFetch();
+    render(<ShowBookingForm show={base} />);
+    fireEvent.click(screen.getByRole('radio', { name: /계좌로 직접 입금/ }));
+    fill('Jane Doe', '415-555-0100', 'jane@example.com');
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: /계좌 안내 받기/ })); });
+    expect(orderPosts()).toHaveLength(0);
+    expect(screen.getByText(/해외 번호는 국가번호/)).toBeTruthy();
+
+    fill('Jane Doe', '+1 415 555 0100', 'jane@example.com');
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: /계좌 안내 받기/ })); });
+    expect(orderPosts()).toHaveLength(1);
+  });
+});

@@ -603,6 +603,9 @@ SDK가 `payment()` 경로에서 `isAPIIndividualKey()`를 단언한다 — 위�
   걸린다(`lib/payments/bankDeposit.ts` 머리 주석). 결제 화면만 만들고 끝나지 않는다.
 - 새 주문 종류를 `orderTypeEnum`에 더하면 `tests/payments/sharedCheckout.guard.test.ts`가 결제 화면(또는 면제 사유)을
   짝지으라고 CI에서 선다. 토스 SDK를 공용 체크아웃 밖에서 직접 import해도 선다. 허용 목록을 늘리지 말고 공용 컴포넌트를 쓴다.
+- **주문자 칸(이름·휴대폰·이메일)은 `components/forms/CustomerContactFields` + `useContactValidation`으로 그린다** — 규칙 정본은
+  `lib/contact/rules.ts`(서버 `validateCustomerContact`·공연 검증도 같은 판정을 쓴다, 공연은 해외 번호 `kr-or-intl`). 폼은 `noValidate`로 두고
+  브라우저 말풍선에 맡기지 않는다. 판정을 화면에 다시 쓰지 말 것(2026-10-22 리뷰 — 사본이 생기면 서버와 갈린다).
 - 새 결제 종류는 CHANGELOG 대신 이 체크리스트로 점검한다: 결제수단 목록(계좌 줄 `withBank`) · 실패 화면 안내 · 계좌 안내 · 운영자 입금 확인 ·
   입금 안내 메일 · 매출장부 라벨 · 비공개 경로(`lib/analytics/privatePaths.ts`) 등록 · 배포 뒤 실제 결제 1건.
 

@@ -2,7 +2,9 @@ import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Button } from '../ui/Button';
-import { Field, TextInput, Select } from '../ui/Field';
+import CustomerContactFields from '../forms/CustomerContactFields';
+import { useContactValidation } from '../forms/useContactValidation';
+import { Field, Select } from '../ui/Field';
 import { ChoiceCard, ChoiceGroup } from '../ui/Choice';
 import { Disclosure } from '../ui/Disclosure';
 import { Notice } from '../ui/Notice';
@@ -94,6 +96,8 @@ export default function ShowBookingForm({ show, locale = 'ko' }: Props) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  // 주문자 칸 검사 — 서버와 같은 규칙(lib/contact/rules.ts, 해외 번호 허용)으로 칸 아래에 알린다.
+  const contact = useContactValidation({ rule: 'kr-or-intl', locale });
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const pendingRef = useRef<PendingOrder | null>(null);
@@ -178,6 +182,7 @@ export default function ShowBookingForm({ show, locale = 'ko' }: Props) {
     e.preventDefault();
     if (!canBook || !ticketType || !showtime || submitting) return;
     setError(null);
+    if (!contact.validate({ customerName: name, customerPhone: phone, customerEmail: email })) return;
     if (usingBank) return submitBankDeposit();
     setSubmitting(true);
     try {
@@ -317,17 +322,20 @@ export default function ShowBookingForm({ show, locale = 'ko' }: Props) {
             </Select>
           </Field>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field id="show-name" label={t.name} required>
-              <TextInput value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" maxLength={40} />
-            </Field>
-            <Field id="show-phone" label={t.phone} required hint={t.phoneHint}>
-              <TextInput value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" placeholder={t.phonePlaceholder} />
-            </Field>
-          </div>
-          <Field id="show-email" label={t.email} required hint={t.emailHint}>
-            <TextInput value={email} onChange={(e) => setEmail(e.target.value)} type="email" inputMode="email" autoComplete="email" />
-          </Field>
+          <CustomerContactFields
+            contact={contact}
+            values={{ customerName: name, customerPhone: phone, customerEmail: email }}
+            onChange={(field, value) => {
+              if (field === 'customerName') setName(value);
+              else if (field === 'customerPhone') setPhone(value);
+              else setEmail(value);
+            }}
+            ids={{ customerName: 'show-name', customerPhone: 'show-phone', customerEmail: 'show-email' }}
+            labels={{ customerName: t.name, customerPhone: t.phone, customerEmail: t.email }}
+            hints={{ customerPhone: t.phoneHint, customerEmail: t.emailHint }}
+            phonePlaceholder={t.phonePlaceholder}
+            layout="pair"
+          />
 
           <div>
             <h3 className="mb-2 typo-card-meta font-medium text-gray-700 dark:text-gray-300">{t.payMethod}</h3>

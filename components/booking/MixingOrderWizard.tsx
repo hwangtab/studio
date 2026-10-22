@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 
 import { reportPaymentFailure } from '../../utils/reportPaymentFailure';
@@ -19,11 +19,12 @@ import {
   type MixingProduct,
 } from '../../lib/booking/mixing-products';
 import { MIXING_REFUND_POLICY_LINES } from '../../lib/booking/refund-policy';
-import { focusFirstCustomerFieldError, validateCustomerFields, type CustomerFieldErrors, type CustomerFieldKey } from '../../lib/booking/customerFields';
+import CustomerContactFields from '../forms/CustomerContactFields';
+import { useContactValidation } from '../forms/useContactValidation';
 import { clearStoredDraft, readStringDraft, writeStringDraft } from '../../lib/formDraft';
 import type { CheckoutPaymentMethod } from '../../lib/payments/bankDeposit';
 import { wantsBankFallback } from '../../lib/payments/bankFallback';
-import { Field, Select, TextArea, TextInput } from '../ui/Field';
+import { Field, Select, TextArea } from '../ui/Field';
 import { ChoiceCard, ChoiceGroup } from '../ui/Choice';
 import { Checkbox } from '../ui/Checkbox';
 import { Disclosure } from '../ui/Disclosure';
@@ -126,14 +127,15 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
-  // 주문자 칸 오류 — 브라우저 기본 검증(말풍선) 대신 칸 아래 한국어 문구로 보인다(noValidate, lib/booking/customerFields.ts).
-  const [fieldErrors, setFieldErrors] = useState<CustomerFieldErrors>({});
-  const clearFieldError = (key: CustomerFieldKey) =>
-    setFieldErrors((prev) => (prev[key] ? { ...prev, [key]: undefined } : prev));
+  // 주문자 칸 검사 — 브라우저 기본 검증(말풍선) 대신 칸 아래 한국어 문구(noValidate, components/forms/useContactValidation.ts).
+  const contact = useContactValidation();
   const [customerNote, setCustomerNote] = useState('');
   // 환불 규정 동의는 임시 저장 대상이 아니다 — 복원된 체크는 사람이 그 자리에서 한
   // 의사표시가 아니라서 매번 새로 눌러야 한다(CLAUDE.md 약관 판본 절과 같은 판단).
   const [submitting, setSubmitting] = useState(false);
+  // 같은 틱에 Enter가 두 번 들어와도 주문이 둘 생기지 않게 — state는 다음 렌더에야 바뀐다.
+  const submittingRef = useRef(false);
+  const setBusy = (busy: boolean) => { submittingRef.current = busy; setSubmitting(busy); };
   const [submitError, setSubmitError] = useState<string | null>(null);
   /**
    * 직전 제출로 만든 주문번호. 다시 제출할 때 보내면 서버가 그 결제 대기 주문을 정리한다
@@ -196,12 +198,13 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const nextFieldErrors = validateCustomerFields({ customerName, customerPhone, customerEmail });
-    setFieldErrors(nextFieldErrors);
-    if (focusFirstCustomerFieldError(nextFieldErrors)) return;
+    if (submittingRef.current) return;
+    // 검사보다 먼저 지운다 — 칸 오류와 지난 제출의 서버·네트워크 오류가 같이 보이지 않게.
+    setSubmitError(null);
+    if (!contact.validate({ customerName, customerPhone, customerEmail })) return;
     if (usingBank) {
       // 계좌 입금 — 결제창이 없다. 주문을 만들고 주문 확인 페이지(입금 안내)로 옮긴다.
-      setSubmitting(true);
+      setBusy(true);
       setSubmitError(null);
       try {
         const res = await fetch('/api/orders/mixing', {
@@ -227,11 +230,11 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
       } catch {
         setSubmitError('네트워크 오류로 주문 신청에 실패했어요. 잠시 후 다시 시도해 주세요.');
       } finally {
-        setSubmitting(false);
+        setBusy(false);
       }
       return;
     }
-    setSubmitting(true);
+    setBusy(true);
     setSubmitError(null);
     // 결제창 실패를 서버에 알릴 때 쓴다 — catch에서 주문번호가 보여야 한다.
     let createdOrderNo: string | null = null;
@@ -298,7 +301,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
       if (code === 'USER_CANCEL' || code === 'PAY_PROCESS_CANCELED') return;
       setSubmitError('네트워크 오류로 주문 신청에 실패했어요. 잠시 후 다시 시도해 주세요. 결제가 계속 어려우시면 결제수단에서 "계좌로 직접 입금"을 고르실 수 있어요.');
     } finally {
-      setSubmitting(false);
+      setBusy(false);
     }
   };
 
@@ -405,44 +408,15 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
           </h2>
 
           <form onSubmit={handleSubmit} noValidate className="space-y-4">
-            <div>
-              <Field id="customerName" label="이름" required error={fieldErrors.customerName}>
-                <TextInput
-                  type="text"
-                  autoComplete="name"
-                  value={customerName}
-                  onChange={(e) => { setCustomerName(e.target.value); clearFieldError('customerName'); }}
-                  required
-                />
-              </Field>
-            </div>
-
-            <div>
-              <Field id="customerPhone" label="휴대폰 번호" required error={fieldErrors.customerPhone}>
-                <TextInput
-                  type="tel"
-                  inputMode="tel"
-                  autoComplete="tel"
-                  placeholder="010-1234-5678"
-                  value={customerPhone}
-                  onChange={(e) => { setCustomerPhone(e.target.value); clearFieldError('customerPhone'); }}
-                  required
-                />
-              </Field>
-            </div>
-
-            <div>
-              <Field id="customerEmail" label="이메일" required error={fieldErrors.customerEmail}>
-                <TextInput
-                  type="email"
-                  inputMode="email"
-                  autoComplete="email"
-                  value={customerEmail}
-                  onChange={(e) => { setCustomerEmail(e.target.value); clearFieldError('customerEmail'); }}
-                  required
-                />
-              </Field>
-            </div>
+            <CustomerContactFields
+              contact={contact}
+              values={{ customerName, customerPhone, customerEmail }}
+              onChange={(field, value) => {
+                if (field === 'customerName') setCustomerName(value);
+                else if (field === 'customerPhone') setCustomerPhone(value);
+                else setCustomerEmail(value);
+              }}
+            />
 
             <div>
               <Field id="customerNote" label="요청사항 (선택)">

@@ -88,6 +88,12 @@ export interface FieldProps {
   hint?: string;
   className?: string;
   /**
+   * 오류 문구를 `role="alert"`로 바로 알릴지(기본 true). 여러 칸을 한꺼번에 검사하는 폼은 칸마다 알리면
+   * 스크린리더가 연달아(또는 마지막 것만) 읽으므로, 요약 한 줄만 알리고 칸 오류는 false로 둔다 —
+   * 칸 오류는 aria-describedby로 그 칸에 포커스가 갈 때 읽힌다(components/forms/CustomerContactFields).
+   */
+  announceError?: boolean;
+  /**
    * 컨트롤 엘리먼트 하나. id는 Field의 id와 같아야 레이블이 연결된다.
    * `TextInput`/`TextArea`/`Select` 사용을 권장한다 — 네이티브 엘리먼트(생짜 `<input>` 등)를
    * 넣으면 오류 테두리(`invalid`)는 적용되지 않고 aria 속성만 배선된다. `invalid`를
@@ -101,7 +107,7 @@ export interface FieldProps {
  * 레이블·필수 표시·도움말·에러를 한 자리에서 배선한다. 컨트롤에는 aria-required·
  * aria-invalid·aria-describedby를 자동으로 붙인다.
  */
-export const Field = ({ id, label, required, error, hint, className, children }: FieldProps) => {
+export const Field = ({ id, label, required, error, hint, className, announceError = true, children }: FieldProps) => {
   const hintId = hint ? `${id}-hint` : undefined;
   const errorId = error ? `${id}-error` : undefined;
   const describedBy = [hintId, errorId].filter(Boolean).join(' ') || undefined;
@@ -125,7 +131,7 @@ export const Field = ({ id, label, required, error, hint, className, children }:
         <p id={hintId} className="typo-caption text-gray-500 dark:text-gray-400">{hint}</p>
       )}
       {error && (
-        <p id={errorId} role="alert" className="typo-caption text-red-600 dark:text-red-400">{error}</p>
+        <p id={errorId} role={announceError ? 'alert' : undefined} className="typo-caption text-red-600 dark:text-red-400">{error}</p>
       )}
     </div>
   );
