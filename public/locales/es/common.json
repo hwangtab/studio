@@ -161,7 +161,7 @@
     "processTitle": "Proceso integral de producción",
     "processSubtitle": "Studio NOL gestiona cada etapa para crear resultados de la más alta calidad.",
     "differenceTitle": "¿Por qué Studio NOL?",
-    "differenceSubtitle": "Sistema de producción integral en Yeonsinnae, con sonido cálido y rico gracias a equipos analógicos.",
+    "differenceSubtitle": "Sistema de producción integral en Yeonsinnae, con sonido cálido y rico gracias a la consola de mezcla analógica Midas Venice 320.",
     "heroAlt": "Acerca de Studio NOL",
     "package": {
       "title": "Opciones de paquetes rentables",
@@ -169,7 +169,7 @@
         "Ahorra con paquetes integrados frente a servicios individuales",
         "Configuración de servicios personalizada según el músico",
         "Infraestructura a medida para músicos independientes",
-        "Sonido cálido y rico gracias a equipos analógicos"
+        "Sonido cálido y rico gracias a una consola de mezcla analógica (Midas Venice 320)"
       ]
     },
     "cta": {
@@ -182,7 +182,7 @@
     "seo": {
       "keywords": "Studio NOL, proceso de producción musical, estudio de grabación, mezcla y masterización, distribución musical, planificación musical, equipo analógico",
       "title": "Estudio de Grabación Seúl · Productor con 15 años de experiencia | Studio NOL",
-      "description": "Studio NOL en Eunpyeong-gu, Seúl: 15+ años de experiencia en discos, equipo analógico vintage, producción musical integral. Consulta gratuita por KakaoTalk."
+      "description": "Studio NOL en Eunpyeong-gu, Seúl: 15+ años de experiencia en discos, consola analógica Midas Venice 320, producción musical integral. Consulta gratuita por KakaoTalk."
     },
     "howToTitle": "Cómo producir música en Studio NOL",
     "howToDescription": "Una guía completa para producir música en un estudio profesional.",
@@ -342,7 +342,7 @@
     },
     "mixing": {
       "title": "Mezcla",
-      "subtitle": "Precio justo según el número de pistas. Outboard analógico Tegeler y SSL junto a lo digital, para el mejor sonido posible.",
+      "subtitle": "Precio justo según el número de pistas. Consola analógica Midas Venice 320 y outboard Tegeler y SSL junto a lo digital, para el mejor sonido posible.",
       "noticeTitle": "Ajuste/edición vocal",
       "noticeBody": "La afinación vocal profesional y corrección de tiempo tiene un costo adicional de ₩150,000 por canción."
     },
@@ -961,7 +961,7 @@
       "subtitle": "Studio NOL nació para apoyar la imaginación y creatividad de los músicos.",
       "quote": "\"Más que un espacio de grabación, es donde artistas e ingenieros respiran juntos para crear en colaboración.\"",
       "paragraphs": [
-        "Neumann U87AI, SSL Fusion, Vintech X73i. El equipo es de primer nivel, pero al final el sonido lo hacen las personas: un ingeniero con 15 años de experiencia lo lleva de principio a fin.",
+        "Neumann U87AI, consola analógica Midas Venice 320, SSL Fusion, Vintech X73i. El equipo es de primer nivel, pero al final el sonido lo hacen las personas: un ingeniero con 15 años de experiencia lo lleva de principio a fin.",
         "El valor que persigue Studio NOL es centrarse en la esencia de la música más allá de la perfección técnica.",
         "Desde grabación, mezcla y masterización hasta lanzamiento y promoción, seremos un socio confiable."
       ]
@@ -1550,14 +1550,14 @@
   "mixingMastering": {
     "seo": {
       "title": "Mezcla y masterización — desde ₩200,000/canción, remoto | Studio NOL",
-      "description": "Mezcla y masterización en Studio NOL, Yeonsinnae, Seúl. La mezcla cuesta entre ₩200,000 y ₩500,000 según el número de pistas (incluye 2 revisiones), y la masterización de un single cuesta ₩100,000. Envía tus archivos desde cualquier parte de Corea o del extranjero y recibe el resultado final en 3-7 días hábiles.",
-      "keywords": "mezcla, masterización, mezcla y masterización, mezcla online, mezcla remota, encargo de mezcla, encargo de masterización, precio de mezcla, precio de masterización, mezcla de audio, mezcla de stems, estudio de mezcla Seúl"
+      "description": "Mezcla en consola analógica y masterización en Studio NOL, Yeonsinnae, Seúl. La mezcla cuesta entre ₩200,000 y ₩500,000 según el número de pistas (incluye 2 revisiones), y la masterización de un single cuesta ₩100,000. Envía tus archivos desde cualquier parte de Corea o del extranjero y recibe el resultado final en 3-7 días hábiles.",
+      "keywords": "mezcla, masterización, mezcla y masterización, mezcla online, mezcla remota, encargo de mezcla, encargo de masterización, precio de mezcla, precio de masterización, mezcla de audio, mezcla de stems, estudio de mezcla Seúl, mezcla en consola analógica, Midas Venice 320"
     },
     "hero": {
       "title": "Mezcla y masterización",
       "subtitleLine1": "Solo tienes que enviarnos tus archivos — desde cualquier parte de Corea o del extranjero",
       "subtitleLine2": "Desde ₩200,000 por canción, con entrega en 3-7 días hábiles",
-      "alt": "Consola de mezcla y monitores de Studio NOL"
+      "alt": "Consola de mezcla analógica Midas Venice 320 y monitores de Studio NOL"
     },
     "quickAnswers": {
       "title": "Mezcla y masterización — Respuestas rápidas",
@@ -1665,8 +1665,9 @@
     },
     "environment": {
       "title": "En qué entorno trabajamos",
-      "imageAlt": "Consola de mezcla y outboard de Studio NOL",
+      "imageAlt": "Consola de mezcla Midas Venice 320 y outboard de Studio NOL",
       "features": [
+        "Consola Midas Venice 320 — una consola analógica real, no una emulación por plugin",
         "Monitores ProAc Tablette 50 · EVE Audio SC207 · ADAM A5 — verificación cruzada entre los tres",
         "Outboard SSL Fusion · Tegeler Vari Tube Compressor · SPL Optimizer",
         "Plugins UAD · Acustica Audio · Softube · Soundtoys · iZotope",

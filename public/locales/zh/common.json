@@ -161,7 +161,7 @@
     "processTitle": "完整专辑制作流程",
     "processSubtitle": "Studio NOL 系统化管理制作的每一步，打造高品质成果。",
     "differenceTitle": "Studio NOL 的独特之处",
-    "differenceSubtitle": "位于延新内的一站式制作系统，通过模拟设备实现温暖且有质感的声音。",
+    "differenceSubtitle": "位于延新内的一站式制作系统，通过 Midas Venice 320 模拟调音台实现温暖且有质感的声音。",
     "heroAlt": "Studio NOL 介绍",
     "package": {
       "title": "高性价比套餐方案",
@@ -169,7 +169,7 @@
         "相较单项服务，整合套餐更省成本",
         "根据音乐人需求定制服务组合",
         "为独立音乐人提供定制化基础设施",
-        "通过模拟设备实现温暖有味的声音"
+        "通过模拟调音台（Midas Venice 320）实现温暖有味的声音"
       ]
     },
     "cta": {
@@ -182,7 +182,7 @@
     "seo": {
       "keywords": "Studio NOL 介绍, 音乐制作流程, 录音室, 混音母带, 音乐发行, 音乐企划, 模拟设备",
       "title": "首尔录音室·15年经验制作人 | Studio NOL 介绍",
-      "description": "首尔恩平区 Studio NOL 距延新内站4号出口步行5分钟。15年资深制作人·工程师与老式模拟设备提供一站式音乐制作：企划·录音·混音·母带·音源发行。KakaoTalk 免费咨询。"
+      "description": "首尔恩平区 Studio NOL 距延新内站4号出口步行5分钟。15年资深制作人·工程师与 Midas Venice 320 模拟调音台提供一站式音乐制作：企划·录音·混音·母带·音源发行。KakaoTalk 免费咨询。"
     },
     "howToTitle": "在 Studio NOL 制作音乐的方法",
     "howToDescription": "为您介绍在专业录音室制作音乐的全过程。",
@@ -342,7 +342,7 @@
     },
     "mixing": {
       "title": "混音",
-      "subtitle": "根据轨道数量的合理定价。Tegeler、SSL 模拟外置设备与数字并用，做出最好的声音。",
+      "subtitle": "根据轨道数量的合理定价。Midas Venice 320 模拟调音台与 Tegeler、SSL 外置设备、数字并用，做出最好的声音。",
       "noticeTitle": "人声修音/编辑选项",
       "noticeBody": "如需精细人声修音和节奏校正，每首加收 150,000 韩元。"
     },
@@ -961,7 +961,7 @@
       "subtitle": "Studio NOL 为支持音乐人的自由想象与创作而诞生。",
       "quote": "“不仅是录音空间，更是艺术家与工程师共同呼吸、实现创意协作的空间。”",
       "paragraphs": [
-        "Neumann U87AI、SSL Fusion、Vintech X73i。设备是顶级的，但声音终究由人做出来 —— 15 年经验的工程师从头到尾亲自把关。",
+        "Neumann U87AI、Midas Venice 320 模拟调音台、SSL Fusion、Vintech X73i。设备是顶级的，但声音终究由人做出来 —— 15 年经验的工程师从头到尾亲自把关。",
         "Studio NOL 追求的价值不仅是技术上的完善，更是对音乐本质的专注。",
         "从录音、混音、母带到发行与宣传，我们将成为音乐人可靠的伙伴。"
       ]
@@ -1550,14 +1550,14 @@
   "mixingMastering": {
     "seo": {
       "title": "混音·母带委托 — 每首200,000韩元起，可远程 | Studio NOL",
-      "description": "首尔延新内 Studio NOL 的混音·母带处理。混音按音轨数收费200,000~500,000韩元（含2次基本修改），单曲母带处理100,000韩元。无论在全国或海外，寄送文件后3~7个工作日内即可收到完成品。",
-      "keywords": "混音, 母带处理, 混音母带, 线上混音, 远程混音, 混音委托, 母带委托, 混音费用, 母带价格, 音源混音, 分轨混音, 首尔混音工作室"
+      "description": "首尔延新内 Studio NOL 的模拟调音台混音·母带处理。混音按音轨数收费200,000~500,000韩元（含2次基本修改），单曲母带处理100,000韩元。无论在全国或海外，寄送文件后3~7个工作日内即可收到完成品。",
+      "keywords": "混音, 母带处理, 混音母带, 线上混音, 远程混音, 混音委托, 母带委托, 混音费用, 母带价格, 音源混音, 分轨混音, 首尔混音工作室, 模拟调音台混音, Midas Venice 320"
     },
     "hero": {
       "title": "混音 · 母带处理委托",
       "subtitleLine1": "只需寄送文件即可 — 无论在全国还是海外",
       "subtitleLine2": "每首200,000韩元起，3~7个工作日内交付完成品",
-      "alt": "Studio NOL 混音调音台与监听音箱"
+      "alt": "Studio NOL Midas Venice 320 模拟调音台与监听音箱"
     },
     "quickAnswers": {
       "title": "混音·母带委托摘要",
@@ -1665,8 +1665,9 @@
     },
     "environment": {
       "title": "作业环境如何",
-      "imageAlt": "Studio NOL 混音调音台与外部处理设备",
+      "imageAlt": "Studio NOL Midas Venice 320 混音调音台与外部处理设备",
       "features": [
+        "调音台 Midas Venice 320 — 真正的模拟调音台，而非插件模拟",
         "监听 ProAc Tablette 50 · EVE Audio SC207 · ADAM A5 — 三组交叉核对",
         "外部处理设备 SSL Fusion · Tegeler Vari Tube Compressor · SPL Optimizer",
         "UAD · Acustica Audio · Softube · Soundtoys · iZotope 插件",

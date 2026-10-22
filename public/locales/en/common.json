@@ -161,7 +161,7 @@
     "processTitle": "Comprehensive Production Process",
     "processSubtitle": "Studio NOL systematically manages every step of album production to create the highest quality results.",
     "differenceTitle": "Why Studio NOL?",
-    "differenceSubtitle": "A one-stop production system in Yeonsinnae, realizing warm and rich sound through analog equipment.",
+    "differenceSubtitle": "A one-stop production system in Yeonsinnae, with warm, rich sound from a Midas Venice 320 analog mixing console.",
     "heroAlt": "Studio NOL About",
     "package": {
       "title": "Cost-Effective Package Options",
@@ -169,7 +169,7 @@
         "Save costs with integrated packages vs. individual services",
         "Customized service configuration for each musician",
         "Tailored infrastructure for independent artists",
-        "Warm, rich sound through analog equipment"
+        "Warm, rich sound through an analog mixing console (Midas Venice 320)"
       ]
     },
     "cta": {
@@ -181,8 +181,8 @@
     },
     "seo": {
       "title": "About Studio NOL — Music Studio in Yeonsinnae, Seoul",
-      "description": "Studio NOL is a music studio in Yeonsinnae, Seoul — 15+ years of record-making experience, vintage analog gear and our story behind end-to-end music production in Korea.",
-      "keywords": "Studio NOL Korea, music studio Yeonsinnae, recording studio Seoul, about Studio NOL, music production process, mixing mastering, analog equipment"
+      "description": "Studio NOL is a music studio in Yeonsinnae, Seoul — 15+ years of record-making experience, a Midas Venice 320 analog console and our story behind end-to-end music production in Korea.",
+      "keywords": "Studio NOL Korea, music studio Yeonsinnae, recording studio Seoul, about Studio NOL, music production process, mixing mastering, analog equipment, analog mixing console"
     },
     "howToTitle": "How to Produce Music at Studio NOL",
     "howToDescription": "A complete guide to producing music at a professional studio.",
@@ -370,7 +370,7 @@
     },
     "mixing": {
       "title": "Mixing",
-      "subtitle": "Fair pricing based on track count. Tegeler and SSL analog outboard alongside digital, for the best possible sound.",
+      "subtitle": "Fair pricing based on track count. A Midas Venice 320 analog console and Tegeler/SSL outboard alongside digital, for the best possible sound.",
       "noticeTitle": "Vocal Tuning/Editing",
       "noticeBody": "Professional vocal tuning and timing correction is available for an additional ₩150,000 per song."
     },
@@ -989,7 +989,7 @@
       "subtitle": "Studio NOL is a space born to support the free imagination and creative activities of musicians.",
       "quote": "\"More than just a recording space, it's where artists and engineers breathe together to achieve creative collaboration.\"",
       "paragraphs": [
-        "Neumann U87AI, SSL Fusion, Vintech X73i. The gear is top-tier, but sound is made by people in the end — an engineer with 15 years of experience runs every step in person.",
+        "Neumann U87AI, a Midas Venice 320 analog console, SSL Fusion, Vintech X73i. The gear is top-tier, but sound is made by people in the end — an engineer with 15 years of experience runs every step in person.",
         "The value Studio NOL pursues is focusing on the essence of music itself, beyond technical perfection.",
         "From recording, mixing, mastering to album release and promotion. We will be a reliable partner so musicians can share their voices with the world."
       ]
@@ -1578,14 +1578,14 @@
   "mixingMastering": {
     "seo": {
       "title": "Mixing & Mastering — From ₩200K/Song, Remote | Studio NOL",
-      "description": "Mixing & mastering at Studio NOL in Yeonsinnae, Seoul. Mixing runs ₩200,000–₩500,000 by track count (2 revisions included); single mastering is ₩100,000. Send your files from anywhere in Korea or abroad and get your finished track in 3-7 business days.",
-      "keywords": "mixing, mastering, mixing and mastering, online mixing, remote mixing, mixing service, mastering service, mixing cost, mastering price, music mixing, stem mixing, Seoul mixing studio"
+      "description": "Analog console mixing & mastering at Studio NOL in Yeonsinnae, Seoul. Mixing runs ₩200,000–₩500,000 by track count (2 revisions included); single mastering is ₩100,000. Send your files from anywhere in Korea or abroad and get your finished track in 3-7 business days.",
+      "keywords": "mixing, mastering, mixing and mastering, online mixing, remote mixing, mixing service, mastering service, mixing cost, mastering price, music mixing, stem mixing, Seoul mixing studio, analog console mixing, Midas Venice 320"
     },
     "hero": {
       "title": "Mixing & Mastering",
       "subtitleLine1": "Just send us your files — from anywhere in Korea or abroad",
       "subtitleLine2": "From ₩200,000 per song, delivered in 3-7 business days",
-      "alt": "Studio NOL mixing console and monitor speakers"
+      "alt": "Studio NOL Midas Venice 320 analog mixing console and monitor speakers"
     },
     "quickAnswers": {
       "title": "Mixing & Mastering — Quick Answers",
@@ -1693,8 +1693,9 @@
     },
     "environment": {
       "title": "What We Work With",
-      "imageAlt": "Studio NOL mixing console and outboard gear",
+      "imageAlt": "Studio NOL Midas Venice 320 mixing console and outboard gear",
       "features": [
+        "Console: Midas Venice 320 — a real analog desk, not a plugin emulation",
         "Monitors: ProAc Tablette 50 · EVE Audio SC207 · ADAM A5 — cross-checked across all three",
         "Outboard: SSL Fusion · Tegeler Vari Tube Compressor · SPL Optimizer",
         "Plugins: UAD · Acustica Audio · Softube · Soundtoys · iZotope",

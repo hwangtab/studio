@@ -161,7 +161,7 @@
     "processTitle": "Kompleks prodakshn jarayoni",
     "processSubtitle": "Studio NOL albom ishlab chiqarishning har bir bosqichini tizimli boshqarib, eng yuqori sifatga erishadi.",
     "differenceTitle": "Nega Studio NOL?",
-    "differenceSubtitle": "Yeonsinnaedagi bir oynali prodakshn tizimi, analog uskunalar orqali iliq va boy ovoz.",
+    "differenceSubtitle": "Yeonsinnaedagi bir oynali prodakshn tizimi, Midas Venice 320 analog miks konsoli orqali iliq va boy ovoz.",
     "heroAlt": "Studio NOL haqida",
     "package": {
       "title": "Tejamkor paket variantlari",
@@ -169,7 +169,7 @@
         "Alohida xizmatlarga nisbatan integratsiyalashgan paketlarda xarajatni tejash",
         "Har bir musiqachiga moslashtirilgan xizmat konfiguratsiyasi",
         "Mustaqil artistlar uchun mos infratuzilma",
-        "Analog uskunalar orqali iliq, boy ovoz"
+        "Analog miks konsoli (Midas Venice 320) orqali iliq, boy ovoz"
       ]
     },
     "cta": {
@@ -342,7 +342,7 @@
     },
     "mixing": {
       "title": "Miks",
-      "subtitle": "Trek soniga asoslangan adolatli narx. Tegeler va SSL analog uskunalari raqamli bilan birga — eng yaxshi ovoz uchun.",
+      "subtitle": "Trek soniga asoslangan adolatli narx. Midas Venice 320 analog konsoli, Tegeler va SSL uskunalari raqamli bilan birga — eng yaxshi ovoz uchun.",
       "noticeTitle": "Vokal tuning/editing",
       "noticeBody": "Professional vokal tuning va timing tuzatish har bir qo'shiq uchun qo'shimcha 150,000 KRW."
     },
@@ -961,7 +961,7 @@
       "subtitle": "Studio NOL - musiqachilarning erkin tasavvuri va ijodiy faoliyatini qo'llab-quvvatlash uchun yaratilgan makon.",
       "quote": "\"Oddiy yozuv joyidan ko'ra ko'proq, bu yerda artistlar va muhandislar birgalikda nafas olib, ijodiy hamkorlikka erishadi.\"",
       "paragraphs": [
-        "Neumann U87AI, SSL Fusion, Vintech X73i. Uskunalar eng yuqori darajada, ammo ovozni oxir-oqibat odam yaratadi — 15 yillik tajribali muhandis boshidan oxirigacha o‘zi olib boradi.",
+        "Neumann U87AI, Midas Venice 320 analog konsoli, SSL Fusion, Vintech X73i. Uskunalar eng yuqori darajada, ammo ovozni oxir-oqibat odam yaratadi — 15 yillik tajribali muhandis boshidan oxirigacha o‘zi olib boradi.",
         "Studio NOL uchun muhim narsa - texnik mukammallikdan tashqari, musiqaning o'z mohiyatiga e'tibor.",
         "Yozuv, miks, masteringdan albom relizi va promo'ga qadar. Musiqachilar o'z ovozini dunyoga yetkazishi uchun ishonchli hamkormiz."
       ]
@@ -1550,14 +1550,14 @@
   "mixingMastering": {
     "seo": {
       "title": "Miks va mastering — ₩200,000/qo'shiqdan, masofadan | Studio NOL",
-      "description": "Studio NOL (Yeonsinnae, Seul)da miks va mastering. Miks trek soniga qarab ₩200,000–₩500,000 (2 marta tuzatish kiritilgan), yakka qo'shiq masteringi ₩100,000. Butun mamlakat yoki chet eldan faylni yuboring, 3-7 ish kunida tayyor natijani oling.",
-      "keywords": "miks, mastering, miks va mastering, onlayn miks, masofaviy miks, miks buyurtma, mastering buyurtma, miks narxi, mastering narxi, musiqa miksi, stem miks, Seul miks studiyasi"
+      "description": "Studio NOL (Yeonsinnae, Seul)da analog konsolda miks va mastering. Miks trek soniga qarab ₩200,000–₩500,000 (2 marta tuzatish kiritilgan), yakka qo'shiq masteringi ₩100,000. Butun mamlakat yoki chet eldan faylni yuboring, 3-7 ish kunida tayyor natijani oling.",
+      "keywords": "miks, mastering, miks va mastering, onlayn miks, masofaviy miks, miks buyurtma, mastering buyurtma, miks narxi, mastering narxi, musiqa miksi, stem miks, Seul miks studiyasi, analog konsolda miks, Midas Venice 320"
     },
     "hero": {
       "title": "Miks · Mastering",
       "subtitleLine1": "Shunchaki faylni yuboring — butun mamlakat yoki chet eldan bo'lsa ham",
       "subtitleLine2": "₩200,000/qo'shiqdan, 3-7 ish kunida tayyor natija",
-      "alt": "Studio NOL miks konsoli va monitor kolonkalari"
+      "alt": "Studio NOL Midas Venice 320 analog miks konsoli va monitor kolonkalari"
     },
     "quickAnswers": {
       "title": "Miks·mastering buyurtmasi haqida qisqacha",
@@ -1665,8 +1665,9 @@
     },
     "environment": {
       "title": "Qanday muhitda ishlaymiz",
-      "imageAlt": "Studio NOL miks konsoli va outboard uskunalari",
+      "imageAlt": "Studio NOL Midas Venice 320 miks konsoli va outboard uskunalari",
       "features": [
+        "Konsol Midas Venice 320 — plagin emulyatsiyasi emas, haqiqiy analog konsol",
         "Monitorlar ProAc Tablette 50 · EVE Audio SC207 · ADAM A5 — uchalasida o'zaro tekshiruv",
         "Outboard SSL Fusion · Tegeler Vari Tube Compressor · SPL Optimizer",
         "UAD · Acustica Audio · Softube · Soundtoys · iZotope plaginlari",
