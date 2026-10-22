@@ -72,7 +72,7 @@ const homeData = {
       },
       {
         title: '커버 영상 촬영',
-        description: '촬영 + 음원 녹음 + 믹싱 + 편집까지 올인원. 4K 영상과 WAV·MP3를 한 세션에 완성하세요.',
+        description: '촬영 + 음원 녹음 + 기본 믹싱 + 편집까지 올인원. 4K 영상과 WAV·MP3를 한 세션에 완성하세요.',
         link: '/cover-video',
         icon: 'Video',
       },
@@ -204,7 +204,7 @@ const homeData = {
       },
       {
         title: 'Cover Video Filming',
-        description: 'Filming + recording + mixing + editing all in one. Get your 4K video and WAV/MP3 in a single 3-hour session.',
+        description: 'Filming + recording + basic mixing + editing all in one. Get your 4K video and WAV/MP3 in a single 3-hour session.',
         link: '/cover-video',
         icon: 'Video',
       },
@@ -304,7 +304,7 @@ const homeData = {
       },
       {
         title: '翻唱视频拍摄',
-        description: '拍摄+录音+混音+剪辑一站式。一次3小时完成4K视频与WAV·MP3。',
+        description: '拍摄+录音+基础混音+剪辑一站式。一次3小时完成4K视频与WAV·MP3。',
         link: '/cover-video',
         icon: 'Video',
       },
@@ -404,7 +404,7 @@ const homeData = {
       },
       {
         title: 'Grabación de Video Cover',
-        description: 'Filmación + grabación + mezcla + edición todo en uno. Video 4K y WAV/MP3 en una sola sesión de 3 horas.',
+        description: 'Filmación + grabación + mezcla básica + edición todo en uno. Video 4K y WAV/MP3 en una sola sesión de 3 horas.',
         link: '/cover-video',
         icon: 'Video',
       },
@@ -504,7 +504,7 @@ const homeData = {
       },
       {
         title: 'Quay Video Cover',
-        description: 'Quay phim + thu âm + mix + dựng phim trọn gói. Video 4K và WAV/MP3 trong một buổi 3 giờ.',
+        description: 'Quay phim + thu âm + mix cơ bản + dựng phim trọn gói. Video 4K và WAV/MP3 trong một buổi 3 giờ.',
         link: '/cover-video',
         icon: 'Video',
       },
@@ -604,7 +604,7 @@ const homeData = {
       },
       {
         title: 'ถ่ายวิดีโอ Cover',
-        description: 'ถ่ายทำ + อัดเสียง + มิกซ์ + ตัดต่อครบวงจร วิดีโอ 4K และ WAV/MP3 ในเซสชันเดียว 3 ชั่วโมง',
+        description: 'ถ่ายทำ + อัดเสียง + มิกซ์เบื้องต้น + ตัดต่อครบวงจร วิดีโอ 4K และ WAV/MP3 ในเซสชันเดียว 3 ชั่วโมง',
         link: '/cover-video',
         icon: 'Video',
       },
@@ -704,7 +704,7 @@ const homeData = {
       },
       {
         title: "Cover video suratga olish",
-        description: "Suratga olish + yozuv + miks + montaj bitta paketda. 3 soatlik bitta seansda 4K video va WAV/MP3.",
+        description: "Suratga olish + yozuv + oddiy miks + montaj bitta paketda. 3 soatlik bitta seansda 4K video va WAV/MP3.",
         link: '/cover-video',
         icon: 'Video',
       },
