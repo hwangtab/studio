@@ -8,23 +8,6 @@ const t = (locale: Locale, dict: { ko: string; en: string; zh?: string; es?: str
 export const getReviews = (locale: Locale) => {
   return [
     {
-      id: 'review-1',
-      author: t(locale, { ko: "김*준", en: "Kim *Jun", zh: "Kim *Jun", es: "Kim *Jun", vi: "Kim *Jun", th: "Kim *Jun", uz: "Kim *Jun" }),
-      rating: 5,
-      categoryKey: 'production',
-      category: t(locale, { ko: "음반 프로덕션", en: "Music Production", zh: "唱片制作", es: "Producción Musical", vi: "Sản xuất âm nhạc", th: "โปรดักชันเพลง", uz: "Musiqa prodakshn" }),
-      content: t(locale, {
-        ko: "녹음만 하고 끝나는 곳이 아닙니다. 아티스트 의도를 깊이 이해하시고 제가 원하는 음악적 방향으로 갈 수 있게 세심하게 가이드해주십니다. 그 덕에 첫 음반이었는데도 생각했던 것보다 훨씬 멋진 결과물이 나왔어요.",
-        en: "It's not just a recording studio; they deeply understand the artist's intent and guide you to your desired musical direction. Even though it was my first album, the result was better than I imagined.",
-        zh: "不仅仅是录音的地方，而是深入理解艺人的意图，细心引导我走向想要的音乐方向。多亏了这些，虽然是第一张专辑，但是结果比预想的还要好。",
-        es: "No es solo un estudio de grabación; entienden profundamente la intención del artista y te guían hacia tu dirección musical deseada. Aunque fue mi primer álbum, el resultado fue mejor de lo que imaginaba.",
-        vi: "Không chỉ là phòng thu, họ hiểu sâu ý đồ của nghệ sĩ và hướng dẫn tỉ mỉ để tôi đi đúng hướng âm nhạc. Nhờ vậy dù là album đầu tay, kết quả còn tuyệt hơn mong đợi.",
-        th: "ที่นี่ไม่ใช่แค่ห้องอัด แต่เข้าใจเจตนาของศิลปินอย่างลึกซึ้งและคอยชี้แนวทางให้ไปในทิศทางที่ต้องการ แม้จะเป็นอัลบั้มแรก ผลลัพธ์ก็ดีกว่าที่คิดมาก",
-        uz: "Bu faqat yozuv studiyasi emas, ular san’atkor niyatini chuqur tushunib, men istagan musiqiy yo‘nalishga nozik yo‘l-yo‘riq beradi. Birinchi albomim bo‘lsa ham, natija kutganimdan ham zo‘r bo‘ldi."
-      }),
-      datePublished: "2024-11-20"
-    },
-    {
       id: 'review-2',
       author: t(locale, { ko: "이*정", en: "Lee *Jeong", zh: "Lee *Jeong", es: "Lee *Jeong", vi: "Lee *Jeong", th: "Lee *Jeong", uz: "Lee *Jeong" }),
       rating: 5,
@@ -83,16 +66,16 @@ export const getReviews = (locale: Locale) => {
       id: 'review-5',
       author: t(locale, { ko: "가원", en: "Ga-won", zh: "Ga-won", es: "Ga-won", vi: "Ga-won", th: "Ga-won", uz: "Ga-won" }),
       rating: 5,
-      categoryKey: 'practice',
-      category: t(locale, { ko: "음악연습실", en: "Music Practice Room", zh: "音乐练习室", es: "Sala de Práctica Musical", vi: "Phòng tập nhạc", th: "ห้องซ้อมดนตรี", uz: "Musiqa mashg’ulot xonasi" }),
+      categoryKey: 'recording',
+      category: t(locale, { ko: "보컬 녹음", en: "Vocal Recording", zh: "人声录音", es: "Grabación de voz", vi: "Thu âm giọng hát", th: "อัดเสียงร้อง", uz: "Vokal yozuvi" }),
       content: t(locale, {
-        ko: "연습실에 입실할 때도 컴퓨터 탁자 피아노 오인페 마이크 스피커 의자 조명 다 마련해주셔서 장비가 완전히 다 마련된 채로 몸만 들어가면 되었다!!! ...엔지니어시라기보다는 프로듀서에 가깝게 보컬테크닉적인 부분이라던지 감정 같은 것, 곡의 색채에 맞는 프로듀싱을 해주셔서 지도하에 따라가며 녹음했더니 기대 이상의 결과가 나왔다.",
-        en: "When I moved into the practice room, the computer, desk, piano, audio interface, mic, speakers, chair, and lighting were all already set up, so I just had to walk in with nothing. [...] More like a producer than an engineer, they directed things like vocal technique and emotion to match the song's color, and following that direction while recording gave me a result beyond what I expected.",
-        zh: "入住练习室时，电脑、桌子、钢琴、音频接口、麦克风、音箱、椅子、灯光全都已经准备好了，人去就能直接用！[...] 比起工程师更像制作人，指导了声乐技巧、情感之类符合歌曲色彩的内容，跟着这个方向录音后，得到了超出预期的结果。",
-        es: "Cuando me instalé en la sala de práctica, el ordenador, la mesa, el piano, la interfaz de audio, el micrófono, los altavoces, la silla y la iluminación ya estaban todos preparados, así que solo tuve que entrar. [...] Más como un productor que un ingeniero, dirigió cosas como la técnica vocal y la emoción para encajar con el color de la canción, y seguir esa dirección mientras grababa dio un resultado mejor de lo que esperaba.",
-        vi: "Khi vào phòng tập, máy tính, bàn, piano, audio interface, mic, loa, ghế, đèn đều đã chuẩn bị sẵn, chỉ cần đi vào là dùng được! [...] Giống producer hơn là kỹ sư, anh chỉ đạo về kỹ thuật hát, cảm xúc sao cho hợp với màu sắc bài hát, và khi thu theo sự chỉ đạo đó, kết quả vượt ngoài mong đợi.",
-        th: "ตอนเข้าห้องซ้อม คอมพิวเตอร์ โต๊ะ เปียโน ออดิโออินเตอร์เฟส ไมค์ ลำโพง เก้าอี้ ไฟ เตรียมพร้อมไว้หมดแล้ว แค่เดินตัวเปล่าเข้าไปก็ใช้ได้เลย! [...] เหมือนโปรดิวเซอร์มากกว่าวิศวกร กำกับเรื่องเทคนิคการร้องและอารมณ์ให้เข้ากับสีสันของเพลง ทำตามคำแนะนำนั้นแล้วผลลัพธ์ดีเกินคาด",
-        uz: "Mashg‘ulot xonasiga kirganimda kompyuter, stol, pianino, audio interfeys, mikrofon, dinamik, stul, yorug‘lik — hammasi tayyor edi, shunchaki kirib bordim! [...] Muhandisdan ko‘ra prodyuser kabi, vokal texnikasi va qo‘shiq kayfiyatiga mos hissiyotni yo‘naltirdi, shu yo‘nalishga ergashib yozib olganimda kutganimdan ham yaxshi natija chiqdi."
+        ko: "엔지니어시라기보다는 프로듀서에 가깝게 보컬테크닉적인 부분이라던지 감정 같은 것, 곡의 색채에 맞는 프로듀싱을 해주셔서 지도하에 따라가며 녹음했더니 기대 이상의 결과가 나왔다.",
+        en: "More like a producer than an engineer, they directed things like vocal technique and emotion to match the song's color, and following that direction while recording gave me a result beyond what I expected.",
+        zh: "比起工程师更像制作人，指导了声乐技巧、情感之类符合歌曲色彩的内容，跟着这个方向录音后，得到了超出预期的结果。",
+        es: "Más como un productor que un ingeniero, dirigió cosas como la técnica vocal y la emoción para encajar con el color de la canción, y seguir esa dirección mientras grababa me dio un resultado mejor de lo esperado.",
+        vi: "Giống producer hơn là kỹ sư, anh chỉ đạo về kỹ thuật hát, cảm xúc sao cho hợp với màu sắc bài hát, và khi thu theo sự chỉ đạo đó, kết quả vượt ngoài mong đợi.",
+        th: "เหมือนโปรดิวเซอร์มากกว่าวิศวกร กำกับเรื่องเทคนิคการร้องและอารมณ์ให้เข้ากับสีสันของเพลง ทำตามคำแนะนำนั้นแล้วผลลัพธ์ดีเกินคาด",
+        uz: "Muhandisdan ko‘ra prodyuser kabi, vokal texnikasi va qo‘shiq kayfiyatiga mos hissiyotni yo‘naltirdi, shu yo‘nalishga ergashib yozib olganimda kutganimdan ham yaxshi natija chiqdi."
       }),
       sourceUrl: 'https://blog.naver.com/soulwon05/224339683075',
       datePublished: "2026-07-07"

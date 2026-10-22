@@ -66,7 +66,7 @@ const TIER_HERO_IMAGES: Record<'single' | 'ep' | 'album', string> = {
   album: '/images/recording15.webp',
 };
 const ALL_TIERS: Array<'single' | 'ep' | 'album'> = ['single', 'ep', 'album'];
-const REVIEW_IDS_FOR_RELEASE_PROJECT = ['review-1', 'review-3'];
+const REVIEW_IDS_FOR_RELEASE_PROJECT = ['review-3'];
 
 export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems }) => {
   const { t } = useTranslation('common', { lng: locale });
