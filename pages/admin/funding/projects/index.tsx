@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 
 import { AdminShell } from '../../../../components/admin/AdminShell';
+import { FilterPill } from '../../../../components/admin/FilterPill';
 import { formatPriceAmount } from '../../../../data/pricing';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { formatKstDateTimeFull } from '../../../../lib/booking/format';
@@ -95,9 +96,9 @@ export default function AdminFundingProjectsPage({ projects, services, nowMs, pa
       >
         {payoutFilter && (
           <div className="mb-4 flex flex-wrap items-center gap-3 text-sm">
-            <span className="inline-flex rounded-full bg-gray-900 px-3 py-1.5 font-medium text-white">
+            <FilterPill active>
               {payoutFilter === 'pending' ? '이체 대기 정산' : '정산 기록 대기'} ({projects.length})
-            </span>
+            </FilterPill>
             <Link href="/admin/funding/projects" className="text-primary hover:underline">
               전체 보기
             </Link>

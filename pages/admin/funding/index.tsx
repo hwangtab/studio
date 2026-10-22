@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 
 import { createManualPledge, type ExistingDepositCandidate } from '../../../components/admin/fundingActions';
 import { AdminShell } from '../../../components/admin/AdminShell';
+import { FilterPill } from '../../../components/admin/FilterPill';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
@@ -381,34 +382,22 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
               </form>
 
               <div className="flex flex-wrap gap-2 mb-6">
-                <Link
+                <FilterPill
+                  active={awaitingDepositOnly}
+                  tone="sky"
                   href={awaitingDepositOnly
                     ? (slug ? `/admin/funding?slug=${encodeURIComponent(slug)}` : '/admin/funding')
                     : (slug ? `/admin/funding?slug=${encodeURIComponent(slug)}&deposit=pending` : '/admin/funding?deposit=pending')}
-                  passHref
                 >
-                  <button
-                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${awaitingDepositOnly ? 'bg-sky-700 text-white' : 'bg-sky-50 text-sky-800 hover:bg-sky-100'}`}
-                    aria-pressed={awaitingDepositOnly}
-                  >
-                    입금 대기 {totals.awaitingDepositCount}건
-                  </button>
-                </Link>
-                <Link href="/admin/funding" passHref>
-                  <button
-                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${!slug ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
-                  >
-                    전체
-                  </button>
-                </Link>
+                  입금 대기 {totals.awaitingDepositCount}건
+                </FilterPill>
+                <FilterPill active={!slug} href="/admin/funding">
+                  전체
+                </FilterPill>
                 {projects.map((p) => (
-                  <Link key={p.slug} href={`/admin/funding?slug=${encodeURIComponent(p.slug)}`} passHref>
-                    <button
-                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${slug === p.slug ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
-                    >
-                      {p.title}
-                    </button>
-                  </Link>
+                  <FilterPill key={p.slug} active={slug === p.slug} href={`/admin/funding?slug=${encodeURIComponent(p.slug)}`}>
+                    {p.title}
+                  </FilterPill>
                 ))}
               </div>
 

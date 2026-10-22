@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 
 import { AdminShell } from '../../../components/admin/AdminShell';
+import { FilterPill } from '../../../components/admin/FilterPill';
 import { Button } from '../../../components/ui/Button';
 import { TextInput } from '../../../components/ui/Field';
 import { artistSupportTierLabel, subscriptionOrderName } from '../../../lib/billing/amounts';
@@ -166,32 +167,17 @@ export default function AdminSubscriptionsPage({ subscriptions: allSubscriptions
 
         <div className="mb-2 flex flex-wrap gap-2">
           {STATUS_FILTERS.map((f) => (
-            <button
-              key={f.key}
-              type="button"
-              aria-pressed={statusFilter === f.key}
-              onClick={() => setStatusFilter(f.key)}
-              className={`px-3 py-1.5 rounded-full text-sm ${
-                statusFilter === f.key ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
+            <FilterPill key={f.key} active={statusFilter === f.key} onClick={() => setStatusFilter(f.key)}>
               {f.label} ({statusCountOf(f.key)})
-            </button>
+            </FilterPill>
           ))}
         </div>
 
         <div className="mb-4 flex flex-wrap gap-2">
           {KIND_FILTERS.map((f) => (
-            <button
-              key={f.key}
-              type="button"
-              onClick={() => setKindFilter(f.key)}
-              className={`px-3 py-1.5 rounded-full text-sm ${
-                kindFilter === f.key ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
+            <FilterPill key={f.key} active={kindFilter === f.key} onClick={() => setKindFilter(f.key)}>
               {f.label} ({countOf(f.key)})
-            </button>
+            </FilterPill>
           ))}
         </div>
 
