@@ -29,6 +29,7 @@ const RelatedStoriesSection = dynamic(() => import('../../components/ui/RelatedS
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
+import { DIRECTOR_CAREER, DIRECTOR_WORKS, type DirectorWork } from '../../data/videoDirector';
 import { COVER_VIDEO_PACKAGE_PRICE, LIVE_VIDEO_FROM_PRICE, MUSIC_VIDEO_FROM_PRICE, formatPriceLabel, getPricingData } from '../../data/pricing';
 import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
 import type { StoryCardData } from '../../types/story';
@@ -55,6 +56,7 @@ interface MusicVideoProps {
   relatedStories: StoryCardData[];
 }
 
+const DIRECTOR_PHOTO = '/images/director-park-chichi-20261022.webp';
 const HAEBANG_FILM_CHANNEL_URL = 'https://www.youtube.com/@liberationfilm0518';
 const VIDEO_OFFER_IDS = ['package-music-video', 'package-live-video'] as const;
 const PRICE_GRID = centeredGrid({ md: 2, gap: 6 });
@@ -66,6 +68,30 @@ const DIRECTOR_TEXT_ANIMATION = createInViewEnterAnimation({ axis: 'x', distance
 const PRICING_FACTORS_ANIMATION = createInViewEnterAnimation({ axis: 'x', distance: -50 });
 const PRICING_PREP_ANIMATION = createInViewEnterAnimation({ axis: 'x', distance: 50 });
 const PROCESS_ANIMATION = createFadeInAnimation();
+
+/** 감독 이력 목록 — 연도 · 제목 · 역할(· 비고). 비-ko는 영문. */
+const DirectorList = ({ title, items, locale }: { title: string; items: readonly DirectorWork[]; locale: Locale }) => {
+  const pick = (v: { ko: string; en: string }) => (locale === 'ko' ? v.ko : v.en);
+  return (
+    <div>
+      <h3 className="typo-card-subtitle mb-4">{title}</h3>
+      <ul className="divide-y divide-gray-200 dark:divide-gray-800 border-t border-gray-200 dark:border-gray-800">
+        {items.map((w) => (
+          <li key={`${w.year}-${w.title.ko}`} className="flex gap-4 py-3">
+            <span className="w-20 flex-shrink-0 typo-card-meta tabular-nums pt-0.5">{w.year}</span>
+            <div className="min-w-0">
+              <p className="typo-card-body text-base font-semibold text-gray-900 dark:text-gray-100 break-keep">{pick(w.title)}</p>
+              <p className="typo-card-meta mt-0.5 break-keep">
+                {pick(w.role)}
+                {w.note && <> · {pick(w.note)}</>}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 const MusicVideo: NextPageWithLayout<MusicVideoProps> = ({ locale, pricingData, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
@@ -115,8 +141,13 @@ const MusicVideo: NextPageWithLayout<MusicVideoProps> = ({ locale, pricingData, 
           '@type': 'Person',
           '@id': `${pageUrl}#director`,
           name: locale === 'ko' ? '박치치' : 'Park Chichi',
-          jobTitle: locale === 'ko' ? '영상 감독' : 'Film director',
-          worksFor: {
+          alternateName: locale === 'ko' ? ['박건주', 'Park Chichi'] : ['박치치', '박건주'],
+          jobTitle: locale === 'ko' ? '영상 감독 · 촬영 감독' : 'Film director and cinematographer',
+          image: `${siteConfig.url}${DIRECTOR_PHOTO}`,
+          knowsAbout: locale === 'ko'
+            ? ['뮤직비디오 연출', '촬영', '편집', '색보정', '다큐멘터리', '공연 실황 촬영']
+            : ['Music video direction', 'Cinematography', 'Editing', 'Colour grading', 'Documentary', 'Concert filming'],
+          affiliation: {
             '@type': 'Organization',
             name: locale === 'ko' ? '해방필름' : 'Haebang Film',
             sameAs: [HAEBANG_FILM_CHANNEL_URL],
@@ -216,20 +247,21 @@ const MusicVideo: NextPageWithLayout<MusicVideoProps> = ({ locale, pricingData, 
         </m.div>
       </Section>
 
-      {/* 촬영 감독 */}
+      {/* 감독 — 소개 + 필모그래피 */}
       <Section variant="alternate">
-        <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-[2fr_3fr] gap-12 items-center max-w-6xl mx-auto">
           <m.div
             {...DIRECTOR_IMAGE_ANIMATION}
-            className="relative h-[320px] lg:h-[440px] rounded-2xl overflow-hidden shadow-2xl"
+            className="relative h-[420px] lg:h-[520px] rounded-2xl overflow-hidden shadow-2xl"
           >
+            {/* 감독 본인 포트폴리오의 프로필 사진(캠코더를 든 모습). */}
             <ResponsiveImage
-              src="/images/music-video-scene-20261022.webp"
-              alt={t('musicVideo.director.imageAlt')}
-              className="w-full h-full object-cover"
+              src={DIRECTOR_PHOTO}
+              alt={t('musicVideo.director.photoAlt')}
+              className="w-full h-full object-cover object-[50%_30%]"
               pictureClassName="block h-full"
               fill
-              sizes="(min-width: 1024px) 50vw, 100vw"
+              sizes="(min-width: 1024px) 40vw, 100vw"
             />
           </m.div>
           <m.div {...DIRECTOR_TEXT_ANIMATION}>
@@ -251,6 +283,12 @@ const MusicVideo: NextPageWithLayout<MusicVideoProps> = ({ locale, pricingData, 
               ))}
             </ul>
           </m.div>
+        </div>
+
+        {/* 필모그래피 — 감독 포트폴리오(노션)에서 옮긴 것. 정본은 data/videoDirector.ts. */}
+        <div className="grid lg:grid-cols-2 gap-x-12 gap-y-10 max-w-6xl mx-auto mt-16">
+          <DirectorList title={t('musicVideo.director.worksTitle')} items={DIRECTOR_WORKS} locale={locale} />
+          <DirectorList title={t('musicVideo.director.careerTitle')} items={DIRECTOR_CAREER} locale={locale} />
         </div>
       </Section>
 

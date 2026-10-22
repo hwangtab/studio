@@ -2626,7 +2626,7 @@
         },
         {
           "q": "Kim tayyorlaydi?",
-          "a": "G'oyani Studio NOL va Haebang Film rejissyori Park Chichi birga ishlab chiqadi; suratga olish, montaj va rang tuzatishni Park Chichi bajaradi. U 2019 yildan beri Haebang Film kanalida 500 ga yaqin konsert va klip videolarini to'plagan, shuningdek o'z qo'shiqlarini yozib kuylaydigan musiqachi."
+          "a": "G'oyani Studio NOL va Haebang Film rejissyori Park Chichi birga ishlab chiqadi; suratga olish, montaj va rang tuzatishni Park Chichi bajaradi. U Bap va Nineteen, Seomjin River filmlarida operator bo'lgan va KBS Open Channel efirida ko'rsatilgan A Concert for One Person musiqiy hujjatli filmini suratga olgan."
         },
         {
           "q": "Qanday boshlayman?",
@@ -2664,14 +2664,17 @@
     },
     "director": {
       "title": "Rejissyor Park Chichi, Haebang Film",
-      "body": "Park Chichi 2019 yildan beri Haebang Film nomi bilan mustaqil musiqa sahnasini suratga oladi: klub va konsert zallaridagi chiqishlar, Pungcheon-ri konsertlari va Jeju Hayot va Tinchlik yurishi kabi joylardagi yozuvlar, Mariko & Yukie “Namsan Tower Lights” klipi va taqdimot konserti. Faqat Haebang Film YouTube kanalida 500 ga yaqin video bor (2026 yil oktyabr). U qo'shiq yozib kuylaydigan musiqachi ham, shuning uchun har bir video qo'shiqni tinglashdan boshlanadi.",
+      "body": "Park Chichi (asl ismi Park Geon-ju) filmlar, hujjatli filmlar, veb-dramalar, YouTube kontenti va kliplarni rejadan suratga olish, montaj va rang tuzatishgacha o'zi yaratib kelgan. 2019 yildan mustaqil hujjatli film kompaniyasi Haebang Filmni boshqarib, A Concert for One Person (KBS Open Channel) musiqiy hujjatli filmini suratga olgan, Bap, Grandma, Me and the Dandelion va Nineteen, Seomjin River filmlarida operator/prodyuser bo'lgan. U yillar davomida konsert va festivallarni suratga olib keladi va o'zi ham musiqachi.",
       "points": [
-        "G'oyani Studio NOL va Park Chichi birga ishlab chiqadi; suratga olish, montaj va rang — Park Chichi",
-        "Rejissura — Samgakjeonpasa Dystopia 2025 tizeri, Mariko & Yukie “Namsan Tower Lights” klipi",
-        "Musiqachi — she'r/qo'shiq kitoblari Baljak (2022) va Gangdo (2024); Fish Die Without Water (2022) to'plamida “Last Greeting”",
-        "Arxiv — 2019 yildan Haebang Film kanalida 500 ga yaqin konsert va klip videolari"
+        "G'oya Studio NOL bilan; suratga olish, montaj va rang boshidan oxirigacha Park Chichi",
+        "Film va hujjatli — Bap, Grandma, Me and the Dandelion (2025); Nineteen, Seomjin River, Blue Wind (2024)",
+        "Musiqiy filmlar — A Concert for One Person (KBS), “Namsan Tower Lights” klipi, Gangjeong Peace & Music Camp (51 guruh)",
+        "Festival video rahbari — Resistance Arts Festival (200+ guruh), Ssiat Fest (100+ san'atkor)"
       ],
-      "imageAlt": "“Namsan Tower Lights” klipidan bir sahna"
+      "imageAlt": "“Namsan Tower Lights” klipidan bir sahna",
+      "worksTitle": "Tanlangan ishlar",
+      "careerTitle": "Tajriba va festival videolari",
+      "photoAlt": "Videokamera bilan suratga olayotgan rejissyor Park Chichi"
     },
     "pricing": {
       "title": "Video ishlab chiqarish narxi",
@@ -2744,7 +2747,7 @@
         },
         {
           "q": "Rejissyor Park Chichi kim?",
-          "a": "Haebang Film rejissyori va musiqachi. 2019 yildan beri Haebang Film YouTube kanalida 500 ga yaqin konsert va klip videolarini joylagan, Samgakjeonpasa Dystopia 2025 tizerini va Mariko & Yukie “Namsan Tower Lights” klipini suratga olgan, Baljak (2022) va Gangdo (2024) she'r/qo'shiq kitoblarini chiqargan. G'oya Studio NOL bilan birga ishlab chiqiladi; suratga olish, montaj va rang uniki."
+          "a": "Filmlar, hujjatli filmlar, veb-dramalar, YouTube va kliplarni rejadan suratga olish, montaj va rang tuzatishgacha yaratgan rejissyor (asl ismi Park Geon-ju). Bap, Grandma, Me and the Dandelion, Nineteen, Seomjin River filmlarida operator/prodyuser, A Concert for One Person (KBS Open Channel) rejissyori bo'lgan va Haebang Filmni boshqargan. G'oya Studio NOL bilan ishlab chiqiladi; suratga olish, montaj va rang uniki."
         },
         {
           "q": "Joy ijarasi va aktyor haqi kiradimi?",

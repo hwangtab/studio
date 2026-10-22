@@ -2634,7 +2634,7 @@
   "musicVideo": {
     "seo": {
       "title": "Music Videos from {{mv}} · Live Videos from {{live}} | Studio NOL",
-      "description": "Music videos (from {{mv}}) and live clips or YouTube talks & interviews (from {{live}}), planned by Studio NOL with director Park Chichi of Haebang Film, who shoots and edits them. Cameras, hours and locations are agreed in consultation. Recording and mixing under the same roof in Seoul.",
+      "description": "Music videos (from {{mv}}) and live clips or YouTube talks & interviews (from {{live}}), planned by Studio NOL with director Park Chichi of Haebang Film — a film and documentary cinematographer who shoots and edits them. Cameras, hours and locations are agreed in consultation.",
       "keywords": "music video production Seoul, music video cost Korea, live session video, concert video filming, YouTube video production, interview video, Haebang Film, Park Chichi"
     },
     "hero": {
@@ -2654,7 +2654,7 @@
         },
         {
           "q": "Who makes it?",
-          "a": "Studio NOL and director Park Chichi of Haebang Film plan the concept together; Park Chichi shoots, edits and grades. He has built up nearly 500 concert and music videos on the Haebang Film channel since 2019, and he is also a musician who writes and sings his own songs."
+          "a": "Studio NOL and director Park Chichi of Haebang Film plan the concept together; Park Chichi shoots, edits and grades. He was cinematographer on the films Bap and Nineteen, Seomjin River and directed the music documentary A Concert for One Person, aired on KBS Open Channel."
         },
         {
           "q": "How do I start?",
@@ -2692,14 +2692,17 @@
     },
     "director": {
       "title": "Director Park Chichi, Haebang Film",
-      "body": "Park Chichi has filmed the indie music scene as Haebang Film since 2019: club and venue concerts, field recordings such as the Pungcheon-ri concerts and the Jeju Life & Peace March, and Mariko & Yukie's “Namsan Tower Lights” music video and release show. The Haebang Film YouTube channel alone holds nearly 500 videos (as of October 2026). He is also a musician who writes and sings, so every video starts with listening to the song.",
+      "body": "Park Chichi (real name Park Geon-ju) has made films, documentaries, web dramas, YouTube series and music videos end to end, from planning to camera, editing and colour. Running the independent documentary company Haebang Film from 2019, he directed the music documentary A Concert for One Person (aired on KBS Open Channel), and he was cinematographer/producer on the films Bap, Grandma, Me and the Dandelion and Nineteen, Seomjin River. He has filmed concerts and festivals for years, and he is also a musician who writes and sings his own songs.",
       "points": [
-        "Concept planned by Studio NOL and Park Chichi together; filming, editing and colour by Park Chichi",
-        "Directing — teaser for Samgakjeonpasa's Dystopia 2025, Mariko & Yukie's “Namsan Tower Lights” music video",
-        "Musician — poetry/song books Baljak (2022) and Gangdo (2024); “Last Greeting” on the compilation Fish Die Without Water (2022)",
-        "Archive — nearly 500 concert and music videos on the Haebang Film channel since 2019"
+        "Concept planned with Studio NOL; filming, editing and colour by Park Chichi, start to finish",
+        "Film & documentary — Bap and Grandma, Me and the Dandelion (2025); Nineteen, Seomjin River and Blue Wind (2024)",
+        "Music films — A Concert for One Person (KBS Open Channel), “Namsan Tower Lights” MV, Gangjeong Peace & Music Camp (51 acts)",
+        "Festival video lead — Resistance Arts Festival (200+ acts), Ssiat Fest (100+ artists)"
       ],
-      "imageAlt": "A scene from the “Namsan Tower Lights” music video"
+      "imageAlt": "A scene from the “Namsan Tower Lights” music video",
+      "worksTitle": "Selected works",
+      "careerTitle": "Career & festival video lead",
+      "photoAlt": "Director Park Chichi filming with a camcorder"
     },
     "pricing": {
       "title": "Video production pricing",
@@ -2772,7 +2775,7 @@
         },
         {
           "q": "Who is director Park Chichi?",
-          "a": "A filmmaker and musician behind Haebang Film. Since 2019 he has posted nearly 500 concert and music videos on the Haebang Film YouTube channel, and he directed the teaser for Samgakjeonpasa's Dystopia 2025 and Mariko & Yukie's “Namsan Tower Lights” music video. He has also published two poetry/song books, Baljak (2022) and Gangdo (2024). Concept planning is done together with Studio NOL; filming, editing and colour are his."
+          "a": "A filmmaker (real name Park Geon-ju) who has taken films, documentaries, web dramas, YouTube series and music videos from planning through camera, editing and colour. He was cinematographer/producer on Bap, Grandma, Me and the Dandelion and Nineteen, Seomjin River, directed the music documentary A Concert for One Person (KBS Open Channel), operated B-camera on the web drama I Refuse That Marriage, and ran the independent documentary company Haebang Film. He led video for the Resistance Arts Festival and Ssiat Fest, and he is also a musician. Concepts are planned with Studio NOL; filming, editing and colour are his."
         },
         {
           "q": "Are venue rental and cast fees included?",
