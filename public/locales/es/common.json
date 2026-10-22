@@ -2605,14 +2605,14 @@
   },
   "musicVideo": {
     "seo": {
-      "title": "Videoclips y videos en vivo desde {{from}} | Studio NOL",
-      "description": "Videoclips, clips en vivo y charlas o entrevistas para YouTube filmados por el director Chichi de Haebang Film. Desde {{from}}; cámaras, horas y locaciones se acuerdan en la consulta. Grabación y mezcla en el mismo lugar en Seúl.",
+      "title": "Videoclips desde {{mv}} · videos en vivo desde {{live}} | Studio NOL",
+      "description": "Videoclips (desde {{mv}}) y clips en vivo o charlas y entrevistas para YouTube (desde {{live}}), con concepto, rodaje y edición del director Chichi de Haebang Film. Cámaras, horas y locaciones se acuerdan en la consulta.",
       "keywords": "producción de videoclips Seúl, video en vivo, video de concierto, video para YouTube, Haebang Film"
     },
     "hero": {
       "title": "Videoclips y videos en vivo",
-      "subtitleLine1": "El director Chichi de Haebang Film, del concepto al montaje final",
-      "subtitleLine2": "Videoclips, clips en vivo y contenido de YouTube desde {{from}}",
+      "subtitleLine1": "El director Chichi de Haebang Film — concepto, rodaje y edición",
+      "subtitleLine2": "Videoclips desde {{mv}} · videos en vivo y de YouTube desde {{live}}",
       "alt": "Escena en sala del videoclip “Namsan Tower Lights” de Mariko & Yukie",
       "seeWorks": "Ver trabajos"
     },
@@ -2622,11 +2622,11 @@
       "items": [
         {
           "q": "¿Cuánto cuesta?",
-          "a": "Videoclips y clips en vivo / videos de YouTube desde {{from}} (IVA incluido). El presupuesto depende de cámaras, horas y locación, y te lo decimos desde el principio."
+          "a": "Videoclips desde {{mv}}; clips en vivo y videos de YouTube desde {{live}} (IVA incluido). El presupuesto depende de cámaras, horas y locación, y te lo decimos desde el principio."
         },
         {
-          "q": "¿Quién filma?",
-          "a": "El director Chichi de Haebang Film se encarga del concepto, rodaje, edición y color. Todos los videos de abajo los filmó Chichi."
+          "q": "¿Quién lo hace?",
+          "a": "El director Chichi de Haebang Film se encarga de todo: concepto, rodaje, edición y color. Todos los videos de abajo son obra de Chichi."
         },
         {
           "q": "¿Cómo empiezo?",
@@ -2636,7 +2636,7 @@
     },
     "portfolio": {
       "title": "Trabajos",
-      "subtitle": "Videoclips, clips en vivo y contenido de YouTube filmados por el director Chichi de Haebang Film. Toca para reproducir.",
+      "subtitle": "Videoclips, clips en vivo y contenido de YouTube concebidos, filmados y editados por el director Chichi de Haebang Film. Toca para reproducir.",
       "kinds": {
         "all": "Todo",
         "music-video": "Videoclips",
@@ -2663,8 +2663,8 @@
       ]
     },
     "director": {
-      "title": "Filmado por el director Chichi de Haebang Film",
-      "body": "El director Chichi de Haebang Film dirige el rodaje: videoclips en locación, conciertos y series de charlas para YouTube. Los videos de arriba son el resultado.",
+      "title": "Concepto, rodaje y edición: director Chichi",
+      "body": "El director Chichi de Haebang Film lleva cada video del concepto al rodaje, la edición y el color: videoclips en locación, conciertos y series de charlas para YouTube. Los videos de arriba son el resultado.",
       "points": [
         "Un solo director del concepto y storyboard al rodaje, edición y color",
         "Cámaras según la canción y el presupuesto, de una a multicámara",
@@ -2675,7 +2675,7 @@
     },
     "pricing": {
       "title": "Precios de producción de video",
-      "subtitle": "Ambos desde {{from}}. Confirmamos el precio exacto al definir el plan de rodaje.",
+      "subtitle": "Videoclips desde {{mv}}; clips en vivo y videos de YouTube desde {{live}}. Confirmamos el precio exacto al definir el plan de rodaje.",
       "factorsTitle": "Qué define el presupuesto",
       "factors": [
         {
@@ -2739,7 +2739,7 @@
       "subtitle": "Dudas habituales.",
       "items": [
         {
-          "q": "¿Qué incluye {{from}}?",
+          "q": "¿Qué incluye el precio inicial?",
           "a": "Consulta de concepto, rodaje, edición, etalonaje y subtítulos. Cámaras y horas se ajustan a la canción y al presupuesto; un montaje mayor sube el precio."
         },
         {

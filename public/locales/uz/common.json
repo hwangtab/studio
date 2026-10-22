@@ -2605,14 +2605,14 @@
   },
   "musicVideo": {
     "seo": {
-      "title": "Klip va jonli video suratga olish {{from}} dan | Studio NOL",
-      "description": "Haebang Film rejissyori Chichi suratga oladigan kliplar, jonli kliplar va YouTube suhbat/intervyu videolari. {{from}} dan; kameralar, vaqt va joy maslahatda kelishiladi. Yozish va miks Seuldagi bir joyda.",
+      "title": "Kliplar {{mv}} dan · jonli videolar {{live}} dan | Studio NOL",
+      "description": "Kliplar ({{mv}} dan) hamda jonli kliplar va YouTube suhbat/intervyulari ({{live}} dan) — g'oya, suratga olish va montajni Haebang Film rejissyori Chichi bajaradi. Kameralar, vaqt va joy maslahatda kelishiladi.",
       "keywords": "klip ishlab chiqarish Seul, jonli video, konsert videosi, YouTube video, Haebang Film"
     },
     "hero": {
       "title": "Kliplar va jonli videolar",
-      "subtitleLine1": "Haebang Film rejissyori Chichi — g'oyadan yakuniy montajgacha",
-      "subtitleLine2": "Kliplar, jonli kliplar va YouTube kontenti {{from}} dan",
+      "subtitleLine1": "Haebang Film rejissyori Chichi — g'oya, suratga olish va montaj",
+      "subtitleLine2": "Kliplar {{mv}} dan · jonli va YouTube videolari {{live}} dan",
       "alt": "Mariko & Yukie “Namsan Tower Lights” klipidagi sahna ko'rinishi",
       "seeWorks": "Ishlarni ko'rish"
     },
@@ -2622,11 +2622,11 @@
       "items": [
         {
           "q": "Narxi qancha?",
-          "a": "Kliplar va jonli kliplar / YouTube videolari {{from}} dan (QQS bilan). Narx kameralar, vaqt va joyga bog'liq; narxni oldindan aytamiz."
+          "a": "Kliplar {{mv}} dan, jonli kliplar va YouTube videolari {{live}} dan (QQS bilan). Narx kameralar, vaqt va joyga bog'liq; narxni oldindan aytamiz."
         },
         {
-          "q": "Kim suratga oladi?",
-          "a": "Haebang Film rejissyori Chichi g'oya, suratga olish, montaj va rang tuzatishni bajaradi. Quyidagi barcha videolarni Chichi suratga olgan."
+          "q": "Kim tayyorlaydi?",
+          "a": "Haebang Film rejissyori Chichi hammasini bajaradi: g'oya, suratga olish, montaj va rang tuzatish. Quyidagi barcha videolar Chichi ishi."
         },
         {
           "q": "Qanday boshlayman?",
@@ -2636,7 +2636,7 @@
     },
     "portfolio": {
       "title": "Ishlar",
-      "subtitle": "Haebang Film rejissyori Chichi suratga olgan kliplar, jonli kliplar va YouTube kontenti. Ko'rish uchun bosing.",
+      "subtitle": "Haebang Film rejissyori Chichi g'oyasini ishlab chiqib, suratga olib, montaj qilgan kliplar, jonli kliplar va YouTube kontenti. Ko'rish uchun bosing.",
       "kinds": {
         "all": "Barchasi",
         "music-video": "Kliplar",
@@ -2663,8 +2663,8 @@
       ]
     },
     "director": {
-      "title": "Haebang Film rejissyori Chichi suratga oladi",
-      "body": "Haebang Film rejissyori Chichi suratga olishni boshqaradi: lokatsiyadagi kliplar, konsertlar va ko'p qismli YouTube suhbat seriyalari — yuqoridagi videolar natijasi.",
+      "title": "G'oya, suratga olish va montaj: rejissyor Chichi",
+      "body": "Haebang Film rejissyori Chichi har bir videoni g'oyadan suratga olish, montaj va rang tuzatishgacha olib boradi: lokatsiyadagi kliplar, konsertlar va YouTube suhbat seriyalari — yuqoridagi videolar natijasi.",
       "points": [
         "G'oya va storyboarddan montaj va rang tuzatishgacha bitta rejissyor",
         "Qo'shiq va byudjetga mos kameralar — bittadan multikameragacha",
@@ -2675,7 +2675,7 @@
     },
     "pricing": {
       "title": "Video ishlab chiqarish narxi",
-      "subtitle": "Ikkalasi ham {{from}} dan. Aniq narxni suratga olish rejasi kelishilgach aytamiz.",
+      "subtitle": "Kliplar {{mv}} dan, jonli kliplar va YouTube videolari {{live}} dan. Aniq narxni suratga olish rejasi kelishilgach aytamiz.",
       "factorsTitle": "Narxni nima belgilaydi",
       "factors": [
         {
@@ -2739,7 +2739,7 @@
       "subtitle": "Tez-tez beriladigan savollar.",
       "items": [
         {
-          "q": "{{from}} ga nimalar kiradi?",
+          "q": "Boshlang'ich narxga nimalar kiradi?",
           "a": "G'oya maslahati, suratga olish, montaj, rang tuzatish va subtitrlar. Kameralar va vaqt qo'shiq va byudjetga mos belgilanadi; ko'lam kattalashsa narx oshadi."
         },
         {

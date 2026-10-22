@@ -2633,14 +2633,14 @@
   },
   "musicVideo": {
     "seo": {
-      "title": "Music Video & Live Video Production from {{from}} | Studio NOL",
-      "description": "Music videos, live clips and YouTube talk & interview videos shot by director Chichi of Haebang Film. From {{from}}; cameras, hours and locations are agreed in consultation. Recording and mixing under the same roof in Seoul.",
+      "title": "Music Videos from {{mv}} · Live Videos from {{live}} | Studio NOL",
+      "description": "Music videos (from {{mv}}) and live clips or YouTube talks & interviews (from {{live}}), with concept, filming and editing by director Chichi of Haebang Film. Cameras, hours and locations are agreed in consultation. Recording and mixing under the same roof in Seoul.",
       "keywords": "music video production Seoul, music video cost Korea, live session video, concert video filming, YouTube video production, interview video, Haebang Film"
     },
     "hero": {
       "title": "Music Videos & Live Videos",
-      "subtitleLine1": "Director Chichi of Haebang Film, from concept to final cut",
-      "subtitleLine2": "Music videos, live clips & YouTube content from {{from}}",
+      "subtitleLine1": "Director Chichi of Haebang Film — concept, filming and editing",
+      "subtitleLine2": "Music videos from {{mv}} · live & YouTube videos from {{live}}",
       "alt": "Venue scene from the Mariko & Yukie “Namsan Tower Lights” music video",
       "seeWorks": "Watch our work"
     },
@@ -2650,11 +2650,11 @@
       "items": [
         {
           "q": "How much does it cost?",
-          "a": "Music videos and live clips / YouTube videos both start from {{from}} (VAT included). The quote depends on cameras, shooting hours and location, and we tell you the price up front."
+          "a": "Music videos start from {{mv}}, live clips and YouTube videos from {{live}} (VAT included). The quote depends on cameras, shooting hours and location, and we tell you the price up front."
         },
         {
-          "q": "Who shoots it?",
-          "a": "Director Chichi of Haebang Film handles everything from concept to filming, editing and colour. Every video below was shot by Chichi."
+          "q": "Who makes it?",
+          "a": "Director Chichi of Haebang Film handles everything — concept, filming, editing and colour. Every video below is Chichi's work."
         },
         {
           "q": "How do I start?",
@@ -2664,7 +2664,7 @@
     },
     "portfolio": {
       "title": "Our work",
-      "subtitle": "Music videos, live clips and YouTube content shot by director Chichi of Haebang Film. Tap to play.",
+      "subtitle": "Music videos, live clips and YouTube content conceived, shot and edited by director Chichi of Haebang Film. Tap to play.",
       "kinds": {
         "all": "All",
         "music-video": "Music videos",
@@ -2691,8 +2691,8 @@
       ]
     },
     "director": {
-      "title": "Filmed by director Chichi of Haebang Film",
-      "body": "Director Chichi of Haebang Film leads the shoot. Location music videos, concert footage and multi-episode YouTube talk series — the videos above are the result.",
+      "title": "Concept, filming & editing by director Chichi",
+      "body": "Director Chichi of Haebang Film takes each video from concept through filming, editing and colour. Location music videos, concert footage and multi-episode YouTube talk series — the videos above are the result.",
       "points": [
         "One director from concept and storyboard to filming, editing and colour",
         "Camera setup matched to the song and budget — from one camera to multi-cam",
@@ -2703,7 +2703,7 @@
     },
     "pricing": {
       "title": "Video production pricing",
-      "subtitle": "Both start from {{from}}. We confirm the exact price once the shooting plan is set.",
+      "subtitle": "Music videos start from {{mv}}, live clips and YouTube videos from {{live}}. We confirm the exact price once the shooting plan is set.",
       "factorsTitle": "What shapes the quote",
       "factors": [
         {
@@ -2767,7 +2767,7 @@
       "subtitle": "Frequently asked questions.",
       "items": [
         {
-          "q": "What does {{from}} include?",
+          "q": "What does the starting price include?",
           "a": "Concept consultation, filming, editing, colour grading and subtitles. Cameras and hours are set to fit the song and budget; a bigger setup raises the quote. We share prices per setup during consultation."
         },
         {

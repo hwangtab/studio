@@ -29,7 +29,7 @@ const RelatedStoriesSection = dynamic(() => import('../../components/ui/RelatedS
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
-import { COVER_VIDEO_PACKAGE_PRICE, MUSIC_VIDEO_FROM_PRICE, formatPriceLabel, getPricingData } from '../../data/pricing';
+import { COVER_VIDEO_PACKAGE_PRICE, LIVE_VIDEO_FROM_PRICE, MUSIC_VIDEO_FROM_PRICE, formatPriceLabel, getPricingData } from '../../data/pricing';
 import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
 import type { StoryCardData } from '../../types/story';
 import { buildSchemaGraph, buildStudioServiceSchema } from '../../lib/studioServiceSchema';
@@ -67,10 +67,11 @@ const PROCESS_ANIMATION = createFadeInAnimation();
 const MusicVideo: NextPageWithLayout<MusicVideoProps> = ({ locale, pricingData, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
-  // 카피의 금액은 상수에서 — {{from}} = 영상 하한가, {{cover}} = 커버 영상 패키지.
+  // 카피의 금액은 상수에서 — {{mv}} = 뮤직비디오 하한, {{live}} = 라이브·유튜브 하한, {{cover}} = 커버 영상 패키지.
   const priceVars = React.useMemo(
     () => ({
-      from: formatPriceLabel(MUSIC_VIDEO_FROM_PRICE, locale),
+      mv: formatPriceLabel(MUSIC_VIDEO_FROM_PRICE, locale),
+      live: formatPriceLabel(LIVE_VIDEO_FROM_PRICE, locale),
       cover: formatPriceLabel(COVER_VIDEO_PACKAGE_PRICE, locale),
     }),
     [locale]
