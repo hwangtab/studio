@@ -23,6 +23,7 @@ jest.mock('next/router', () => ({
 }));
 
 import { LanguageSwitcher } from '../../components/LanguageSwitcher';
+import { LocaleFallbackPathsContext } from '../../lib/localeFallbackPaths';
 
 describe('LanguageSwitcher — ko 전용 라우트 탈출', () => {
   it('/ko/funding에서 en 링크는 /en/funding이 아니라 /en으로 간다', () => {
@@ -131,5 +132,30 @@ describe('LanguageSwitcher — ko 전용 라우트 탈출', () => {
     fireEvent.click(screen.getByRole('button'));
     const enLink = screen.getByRole('link', { name: 'English' });
     expect(enLink).toHaveAttribute('href', '/en/pricing?utm_source=x');
+  });
+});
+
+/**
+ * ko 원본이 없는 native-only 스토리(slug.en.md만 있는 글)에서 한국어를 고르면 /ko/stories/<slug>가 404였다
+ * (2026-10-22 리뷰). 스토리 페이지가 localeFallbackPaths로 알려 주면 그 로케일만 대신 주소로 보낸다.
+ */
+describe('LanguageSwitcher — 페이지가 알려 준 대신 주소', () => {
+  it('native-only 스토리에서 한국어는 목록으로, 다른 로케일은 같은 글로 간다', () => {
+    mockAsPath.current = '/en/stories/some-english-story';
+    render(
+      <LocaleFallbackPathsContext.Provider value={{ ko: '/ko/stories' }}>
+        <LanguageSwitcher currentLocale="en" isFloating={false} variant="inline" />
+      </LocaleFallbackPathsContext.Provider>,
+    );
+    fireEvent.click(screen.getByRole('button'));
+    expect(screen.getByRole('link', { name: '한국어' })).toHaveAttribute('href', '/ko/stories');
+    expect(screen.getByRole('link', { name: '中文' })).toHaveAttribute('href', '/zh/stories/some-english-story');
+  });
+
+  it('알려 준 것이 없으면 평소대로 세그먼트만 바꾼다', () => {
+    mockAsPath.current = '/en/stories/translated-story';
+    render(<LanguageSwitcher currentLocale="en" isFloating={false} variant="inline" />);
+    fireEvent.click(screen.getByRole('button'));
+    expect(screen.getByRole('link', { name: '한국어' })).toHaveAttribute('href', '/ko/stories/translated-story');
   });
 });
