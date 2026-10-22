@@ -460,3 +460,17 @@ describe('주문자 칸 검사', () => {
     expect(screen.getByText('이름을 입력해 주세요.')).toBeInTheDocument();
   });
 });
+
+/** 단계가 바뀌면 누른 버튼이 사라지며 포커스가 body로 떨어졌다 — 새 단계 제목으로 옮긴다(2026-10-22 리뷰). */
+describe('단계 전환 포커스', () => {
+  it('다음을 누르면 새 단계 제목에 포커스가 간다', async () => {
+    const user = userEvent.setup();
+    render(<BookingWizard service="recording" products={[PRODUCT]} />);
+    await user.click(screen.getByRole('button', { name: '다음: 날짜·시간 선택' }));
+    expect(screen.getByRole('heading', { name: /2\. 날짜와 시간 선택/ })).toHaveFocus();
+    fireEvent.change(screen.getByLabelText('날짜'), { target: { value: BOOKING_DATE } });
+    await user.click(await screen.findByRole('button', { name: '10:00' }));
+    await user.click(screen.getByRole('button', { name: '다음: 예약자 정보' }));
+    expect(screen.getByRole('heading', { name: /3\. 예약자 정보/ })).toHaveFocus();
+  });
+});

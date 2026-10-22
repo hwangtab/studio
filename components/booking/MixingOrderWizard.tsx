@@ -85,11 +85,14 @@ const PRODUCT_GROUPS: { serviceType: MixingProduct['serviceType']; label: string
 /** '믹싱 · 10트랙 이하' + 3곡 → '믹싱 · 10트랙 이하 × 3곡' */
 const formatOrderName = (nameKo: string, songCount: number): string => `${nameKo} × ${songCount}곡`;
 
+// 단계 제목 id — 단계가 바뀌면 이 제목으로 포커스가 간다(useScrollTopOnStep).
+const MIXING_STEP_HEADING_ID = (n: number) => `mixing-step${n}-heading`;
+
 export default function MixingOrderWizard({ initialProductId }: MixingOrderWizardProps) {
   const firstProduct = getMixingProduct(initialProductId ?? '') ?? MIXING_PRODUCTS[0];
 
   const [step, setStep] = useState<Step>(1);
-  useScrollTopOnStep(step);
+  useScrollTopOnStep(step, MIXING_STEP_HEADING_ID);
   const [mixCompareOpened, setMixCompareOpened] = useState(false);
 
   // Step 1: 상품 · 곡 수 · 튜닝
@@ -313,7 +316,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
 
       {step === 1 && (
         <section aria-labelledby="mixing-step1-heading">
-          <h2 id="mixing-step1-heading" className="typo-card-subtitle text-gray-900 dark:text-white mb-3">
+          <h2 id="mixing-step1-heading" tabIndex={-1} className="focus:outline-none typo-card-subtitle text-gray-900 dark:text-white mb-3">
             1. 상품과 곡 수 선택
           </h2>
 
@@ -403,7 +406,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
 
       {step === 2 && (
         <section aria-labelledby="mixing-step2-heading">
-          <h2 id="mixing-step2-heading" className="typo-card-subtitle text-gray-900 dark:text-white mb-3">
+          <h2 id="mixing-step2-heading" tabIndex={-1} className="focus:outline-none typo-card-subtitle text-gray-900 dark:text-white mb-3">
             2. 주문자 정보
           </h2>
 

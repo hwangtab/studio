@@ -7,6 +7,7 @@ import { Globe } from '@/lib/lucide-icons';
 import { locales, localeNames, type Locale } from '../lib/i18n';
 import { isRoutePatternPath } from '../lib/routePattern';
 import { isKoOnlyRoutePath, isTranslatedKoOnlyPath } from '../lib/koOnlyRoutes';
+import { useLocaleFallbackPaths } from '../lib/localeFallbackPaths';
 import { DUR, EASE_STANDARD, TRANSITION_STANDARD } from '../utils/animationUtils';
 
 interface LanguageSwitcherProps {
@@ -21,6 +22,7 @@ export const LanguageSwitcher = ({
   variant = 'dropdown'
 }: LanguageSwitcherProps) => {
   const router = useRouter();
+  const localeFallbackPaths = useLocaleFallbackPaths();
   const { t } = useTranslation('common', { lng: currentLocale });
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -57,6 +59,10 @@ export const LanguageSwitcher = ({
       return `/${targetLocale}`;
     }
 
+    // 이 페이지가 그 로케일로는 열리지 않는다고 알려 왔으면(예: ko 원본이 없는 스토리) 그 대신 주소로 보낸다.
+    const fallback = localeFallbackPaths[targetLocale];
+    if (fallback && targetLocale !== currentLocale) return fallback;
+
     const segments = path.split('/');
     const hasLocaleSegment = locales.includes(segments[1] as Locale);
 
@@ -83,7 +89,7 @@ export const LanguageSwitcher = ({
     }
 
     return `/${targetLocale}${path === '/' ? '' : path}`;
-  }, [router.asPath]);
+  }, [router.asPath, localeFallbackPaths, currentLocale]);
 
   useEffect(() => {
     if (!router?.events) return undefined;

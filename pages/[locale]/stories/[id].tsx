@@ -411,6 +411,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         story,
         relatedStories,
         relatedPortfolio,
+        // ko 원본이 없는 글은 /ko/stories/<slug>가 404다 — 언어 전환기가 한국어를 고르면 목록으로 보낸다(lib/localeFallbackPaths.ts).
+        ...(story.isNativeOnly ? { localeFallbackPaths: { ko: '/ko/stories' } } : {}),
       },
       { revalidate: 3600, i18nSections: ['stories'] }
     );
