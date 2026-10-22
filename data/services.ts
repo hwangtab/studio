@@ -52,13 +52,13 @@ export const getServicesData = (locale: Locale) => {
     {
       title: t(locale, { ko: "믹싱/마스터링", en: "Mixing/Mastering", zh: "混音/母带", es: "Mezcla/Masterización", vi: "Mixing/Mastering", th: "มิกซ์/มาสเตอริ่ง", uz: "Miks/Mastering" }),
       description: t(locale, {
-        ko: "Tegeler·SSL 아날로그 아웃보드로 따뜻하고 입체적인 사운드를 만들어 음악에 생명을 불어넣어요.",
-        en: "Tegeler and SSL analog outboard gear brings warm, three-dimensional sound — and breathes life into the music.",
-        zh: "用 Tegeler、SSL 模拟外置设备实现温暖且立体的声音，为音乐注入生命。",
-        es: "Con equipos analógicos externos Tegeler y SSL logramos un sonido cálido y tridimensional que da vida a la música.",
-        vi: "Thiết bị analog outboard Tegeler và SSL mang lại âm thanh ấm áp, có chiều sâu và thổi sự sống vào âm nhạc.",
-        th: "อุปกรณ์อนาล็อกภายนอก Tegeler และ SSL สร้างซาวด์อบอุ่นมีมิติ และเติมชีวิตให้เพลง",
-        uz: "Tegeler va SSL analog uskunalari iliq, hajmli tovush beradi va musiqaga hayot bag‘ishlaydi."
+        ko: "Midas Venice 320 아날로그 콘솔과 Tegeler·SSL 아웃보드로 따뜻하고 입체적인 사운드를 만들어 음악에 생명을 불어넣어요.",
+        en: "A Midas Venice 320 analog console with Tegeler and SSL outboard gear brings warm, three-dimensional sound — and breathes life into the music.",
+        zh: "用 Midas Venice 320 模拟调音台与 Tegeler、SSL 外置设备实现温暖且立体的声音，为音乐注入生命。",
+        es: "Con la consola analógica Midas Venice 320 y equipos externos Tegeler y SSL logramos un sonido cálido y tridimensional que da vida a la música.",
+        vi: "Console analog Midas Venice 320 cùng outboard Tegeler và SSL mang lại âm thanh ấm áp, có chiều sâu và thổi sự sống vào âm nhạc.",
+        th: "คอนโซลอนาล็อก Midas Venice 320 กับอุปกรณ์ภายนอก Tegeler และ SSL สร้างซาวด์อบอุ่นมีมิติ และเติมชีวิตให้เพลง",
+        uz: "Midas Venice 320 analog konsoli hamda Tegeler va SSL uskunalari iliq, hajmli tovush beradi va musiqaga hayot bag‘ishlaydi."
       }),
       icon: 'Music'
     },

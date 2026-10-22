@@ -161,7 +161,7 @@
     "processTitle": "Quy trình sản xuất toàn diện",
     "processSubtitle": "Studio NOL quản lý hệ thống từng bước của sản xuất album để tạo ra kết quả chất lượng cao nhất.",
     "differenceTitle": "Vì sao là Studio NOL?",
-    "differenceSubtitle": "Hệ thống one‑stop tại Yeonsinnae, tạo âm thanh ấm và dày nhờ thiết bị analog.",
+    "differenceSubtitle": "Hệ thống one‑stop tại Yeonsinnae, tạo âm thanh ấm và dày nhờ bàn mixing analog Midas Venice 320.",
     "heroAlt": "Giới thiệu Studio NOL",
     "package": {
       "title": "Gói dịch vụ tiết kiệm",
@@ -169,7 +169,7 @@
         "Tiết kiệm chi phí với gói tích hợp so với dịch vụ rời",
         "Cấu hình dịch vụ theo từng nghệ sĩ",
         "Hạ tầng tối ưu cho nghệ sĩ độc lập",
-        "Âm thanh ấm và dày nhờ thiết bị analog"
+        "Âm thanh ấm và dày nhờ bàn mixing analog (Midas Venice 320)"
       ]
     },
     "cta": {
@@ -342,7 +342,7 @@
     },
     "mixing": {
       "title": "Mixing",
-      "subtitle": "Giá công bằng theo số track. Outboard analog Tegeler và SSL kết hợp digital, cho âm thanh tốt nhất.",
+      "subtitle": "Giá công bằng theo số track. Console analog Midas Venice 320 và outboard Tegeler, SSL kết hợp digital, cho âm thanh tốt nhất.",
       "noticeTitle": "Chỉnh giọng/Biên tập vocal",
       "noticeBody": "Dịch vụ chỉnh giọng và timing chuyên nghiệp có thêm 150.000 KRW/bài."
     },
@@ -961,7 +961,7 @@
       "subtitle": "Studio NOL được sinh ra để hỗ trợ trí tưởng tượng tự do và hoạt động sáng tạo của nhạc sĩ.",
       "quote": "\"Không chỉ là không gian thu âm, mà là nơi nghệ sĩ và kỹ sư cùng hít thở để tạo nên cộng tác sáng tạo.\"",
       "paragraphs": [
-        "Neumann U87AI, SSL Fusion, Vintech X73i. Thiết bị thuộc hàng đầu, nhưng âm thanh rốt cuộc do con người tạo ra — kỹ sư 15 năm kinh nghiệm trực tiếp làm từ đầu đến cuối.",
+        "Neumann U87AI, console analog Midas Venice 320, SSL Fusion, Vintech X73i. Thiết bị thuộc hàng đầu, nhưng âm thanh rốt cuộc do con người tạo ra — kỹ sư 15 năm kinh nghiệm trực tiếp làm từ đầu đến cuối.",
         "Giá trị Studio NOL hướng tới là tập trung vào bản chất của âm nhạc, vượt lên sự hoàn hảo kỹ thuật.",
         "Từ thu âm, mixing, mastering đến phát hành và quảng bá. Chúng tôi sẽ là đối tác đáng tin cậy để tiếng nói của bạn vang xa."
       ]
@@ -1550,14 +1550,14 @@
   "mixingMastering": {
     "seo": {
       "title": "Mixing & Mastering — Từ ₩200,000/bài, làm từ xa | Studio NOL",
-      "description": "Mixing & mastering tại Studio NOL, Yeonsinnae, Seoul. Mixing tính theo số track: ₩200,000–₩500,000 (gồm 2 lần sửa), mastering single ₩100,000. Gửi file từ bất cứ đâu trong nước hoặc nước ngoài, nhận bản hoàn thiện trong 3-7 ngày làm việc.",
-      "keywords": "mixing, mastering, mixing và mastering, mixing online, mixing từ xa, đặt mixing, đặt mastering, chi phí mixing, giá mastering, mixing nhạc, mixing stem, phòng mixing Seoul"
+      "description": "Mixing trên console analog & mastering tại Studio NOL, Yeonsinnae, Seoul. Mixing tính theo số track: ₩200,000–₩500,000 (gồm 2 lần sửa), mastering single ₩100,000. Gửi file từ bất cứ đâu trong nước hoặc nước ngoài, nhận bản hoàn thiện trong 3-7 ngày làm việc.",
+      "keywords": "mixing, mastering, mixing và mastering, mixing online, mixing từ xa, đặt mixing, đặt mastering, chi phí mixing, giá mastering, mixing nhạc, mixing stem, phòng mixing Seoul, mixing console analog, Midas Venice 320"
     },
     "hero": {
       "title": "Mixing · Mastering",
       "subtitleLine1": "Chỉ cần gửi file — từ bất cứ đâu trong nước hay nước ngoài",
       "subtitleLine2": "Từ ₩200,000/bài, nhận bản hoàn thiện trong 3-7 ngày làm việc",
-      "alt": "Bàn mixing và loa monitor tại Studio NOL"
+      "alt": "Bàn mixing analog Midas Venice 320 và loa monitor tại Studio NOL"
     },
     "quickAnswers": {
       "title": "Tóm tắt đặt mixing·mastering",
@@ -1665,8 +1665,9 @@
     },
     "environment": {
       "title": "Làm việc trong môi trường nào",
-      "imageAlt": "Bàn mixing và outboard tại Studio NOL",
+      "imageAlt": "Bàn mixing Midas Venice 320 và outboard tại Studio NOL",
       "features": [
+        "Console Midas Venice 320 — bàn mixing analog thật, không phải plugin giả lập",
         "Monitor ProAc Tablette 50 · EVE Audio SC207 · ADAM A5 — đối chiếu chéo cả ba",
         "Outboard SSL Fusion · Tegeler Vari Tube Compressor · SPL Optimizer",
         "Plugin UAD · Acustica Audio · Softube · Soundtoys · iZotope",

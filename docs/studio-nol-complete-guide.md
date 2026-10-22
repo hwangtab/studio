@@ -255,6 +255,7 @@
 
 | 콘솔 | 특징 |
 |------|------|
+| **Midas Venice 320** | 아날로그 믹싱 콘솔 — 플러그인 에뮬레이션이 아닌 실물 (믹싱 차별점) |
 | **Softube Console 1** | 플러그인 기반 믹싱 콘솔 |
 | **Softube Console 1 Fader** | 물리적 페이더 컨트롤러 |
 | **Presonus Faderport V2** | DAW 컨트롤러 |
