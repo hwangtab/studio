@@ -150,6 +150,25 @@ export interface ValidateOptions {
   existingEmail?: string;
 }
 
+/**
+ * 곡당 희망 연주비 — 비면 null. 정수 또는 숫자 문자열(쉼표·공백 허용). 소수·단위 글자·음수·범위 밖은 거절한다.
+ * 등록 폼·관리 링크와 관리자 수정(가격이 바뀌면 운영자가 고친다)이 같은 규칙을 쓴다.
+ */
+export const parseRatePerSong = (raw: unknown): { ok: true; value: number | null } | { ok: false; message: string } => {
+  if (raw === undefined || raw === null || raw === '') return { ok: true, value: null };
+  const { min, max } = SESSION_LIMITS.ratePerSong;
+  const invalid = { ok: false as const, message: `곡당 연주비는 ${min.toLocaleString('ko-KR')}원~${max.toLocaleString('ko-KR')}원 사이의 숫자로 적어 주세요.` };
+  let rate: number;
+  if (typeof raw === 'number') rate = raw;
+  else if (typeof raw === 'string') {
+    const digits = raw.replace(/[,\s]/g, '');
+    if (!/^\d+$/.test(digits)) return invalid;
+    rate = Number(digits);
+  } else return invalid;
+  if (!Number.isSafeInteger(rate) || rate < min || rate > max) return invalid;
+  return { ok: true, value: rate };
+};
+
 export const validateSessionRegistration = (
   body: unknown,
   options: ValidateOptions = {},
@@ -281,33 +300,9 @@ export const validateSessionRegistration = (
     if (!sampleLinks.some((existing) => existing.url === url)) sampleLinks.push({ url, label });
   }
 
-  // 곡당 희망 연주비: 비면 null. 정수 또는 숫자 문자열(쉼표·공백 허용). 소수·단위 글자·음수는 거절한다.
-  let ratePerSong: number | null = null;
-  if (b.ratePerSong !== undefined && b.ratePerSong !== null && b.ratePerSong !== '') {
-    const { min, max } = SESSION_LIMITS.ratePerSong;
-    const rateError = fail(
-      'ratePerSong',
-      'rate_per_song_invalid',
-      `곡당 희망 연주비는 ${min.toLocaleString('ko-KR')}원~${max.toLocaleString('ko-KR')}원 사이의 숫자로 적어 주세요.`,
-    );
-    let rate: number;
-    if (typeof b.ratePerSong === 'number') {
-      rate = b.ratePerSong;
-    } else if (typeof b.ratePerSong === 'string') {
-      const digits = b.ratePerSong.replace(/[,\s]/g, '');
-      if (digits === '') {
-        rate = Number.NaN;
-      } else if (!/^\d+$/.test(digits)) {
-        return rateError;
-      } else {
-        rate = Number(digits);
-      }
-    } else {
-      return rateError;
-    }
-    if (!Number.isSafeInteger(rate) || rate < min || rate > max) return rateError;
-    ratePerSong = rate;
-  }
+  const rate = parseRatePerSong(b.ratePerSong);
+  if (!rate.ok) return fail('ratePerSong', 'rate_per_song_invalid', rate.message);
+  const ratePerSong = rate.value;
 
   const rateNote = cleanLine(b.rateNote);
   if (rateNote.length > SESSION_LIMITS.rateNote.max) {

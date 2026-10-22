@@ -127,6 +127,22 @@ describe('상태·메모·삭제', () => {
     expect(row.stageName).toBe('김베이스');
   });
 
+  it('운영자가 곡당 연주비·연주비 메모를 고친다 — 쉼표 문자열도 받고, 비우면 미정(null)', async () => {
+    const id = await seed();
+    expect((await call(detailHandler, 'PATCH', id, { ratePerSong: '200,000', rateNote: ' 편곡 포함 시 별도 ' })).status).toBe(200);
+    let row = (await getSessionMusician(id))!;
+    expect(row.ratePerSong).toBe(200_000);
+    expect(row.rateNote).toBe('편곡 포함 시 별도');
+
+    expect((await call(detailHandler, 'PATCH', id, { ratePerSong: '', rateNote: '' })).status).toBe(200);
+    row = (await getSessionMusician(id))!;
+    expect(row.ratePerSong).toBeNull();
+    expect(row.rateNote).toBeNull();
+
+    expect((await call(detailHandler, 'PATCH', id, { ratePerSong: '5000' })).status).toBe(400);
+    expect((await call(detailHandler, 'PATCH', id, { ratePerSong: '20만원' })).status).toBe(400);
+  });
+
   it('잘못된 상태는 400', async () => {
     const id = await seed();
     expect((await call(detailHandler, 'PATCH', id, { status: 'hired' })).status).toBe(400);

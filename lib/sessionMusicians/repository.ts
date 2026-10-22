@@ -216,11 +216,13 @@ export const getSessionMusician = async (id: string): Promise<SessionMusician | 
 
 export const updateOperatorFields = async (
   id: string,
-  fields: { status?: SessionMusician['status']; operatorMemo?: string | null },
+  fields: { status?: SessionMusician['status']; operatorMemo?: string | null; ratePerSong?: number | null; rateNote?: string | null },
 ): Promise<boolean> => {
   const set: Partial<typeof sessionMusicians.$inferInsert> = { updatedAt: new Date() };
   if (fields.status !== undefined) set.status = fields.status;
   if (fields.operatorMemo !== undefined) set.operatorMemo = fields.operatorMemo;
+  if (fields.ratePerSong !== undefined) set.ratePerSong = fields.ratePerSong;
+  if (fields.rateNote !== undefined) set.rateNote = fields.rateNote;
   const result = await getDb().update(sessionMusicians).set(set).where(eq(sessionMusicians.id, id));
   return result.rowsAffected > 0;
 };

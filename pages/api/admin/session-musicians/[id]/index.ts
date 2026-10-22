@@ -5,10 +5,12 @@ import { SESSION_LIMITS } from '../../../../../data/sessionMusicians';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { recordAdminPrivacyAccess } from '../../../../../lib/privacy/accessLog';
 import { deleteSessionMusicianById, isSessionMusicianTableMissing, updateOperatorFields } from '../../../../../lib/sessionMusicians/repository';
-import { cleanMultiline } from '../../../../../lib/sessionMusicians/validate';
+import { cleanLine, cleanMultiline, parseRatePerSong } from '../../../../../lib/sessionMusicians/validate';
 
 /**
- * PATCH { status?, operatorMemo? } — 운영자 상태·메모. 본인 입력(프로필)은 건드리지 않는다.
+ * PATCH { status?, operatorMemo?, ratePerSong?, rateNote? } — 운영자 상태·메모, 그리고 연주비(곡당·메모).
+ * 연주비는 바뀔 수 있어 운영자가 바로 고친다(2026-10-22 운영자 요청). 그 밖의 본인 입력(프로필)은 건드리지 않는다.
+ * 같은 칸을 본인도 관리 링크로 고칠 수 있다 — 나중에 고친 쪽이 남는다.
  * DELETE — 등록 즉시 삭제(행 삭제). 관리 링크를 잃은 본인이 삭제를 요구할 때(열람·정정·삭제권) 쓴다.
  *   누가 언제 지웠는지 접속기록(`session_musician_delete`)에 남긴다 — 삭제 요구를 처리한 근거다. 지운 값은 적지 않는다.
  * 메모는 개인정보로 취급한다 — 행과 함께 지워지고 알림 메일에 싣지 않는다.
@@ -49,6 +51,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ ok: false, message: `메모는 ${SESSION_LIMITS.operatorMemo.max}자 이하로 적어 주세요.` });
       }
       fields.operatorMemo = memo || null;
+    }
+    if (body.ratePerSong !== undefined) {
+      const rate = parseRatePerSong(body.ratePerSong);
+      if (!rate.ok) return res.status(400).json({ ok: false, message: rate.message });
+      fields.ratePerSong = rate.value;
+    }
+    if (body.rateNote !== undefined) {
+      if (body.rateNote !== null && typeof body.rateNote !== 'string') {
+        return res.status(400).json({ ok: false, message: '연주비 메모 형식이 올바르지 않아요.' });
+      }
+      const note = cleanLine(body.rateNote);
+      if (note.length > SESSION_LIMITS.rateNote.max) {
+        return res.status(400).json({ ok: false, message: `연주비 메모는 ${SESSION_LIMITS.rateNote.max}자 이하로 적어 주세요.` });
+      }
+      fields.rateNote = note || null;
     }
     if (Object.keys(fields).length === 0) return res.status(400).json({ ok: false, message: '바꿀 값이 없어요.' });
     const updated = await updateOperatorFields(id, fields);
