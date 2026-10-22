@@ -321,7 +321,9 @@ module.exports = {
     // CTR 0.62%로 검색 트래픽 사실상 없어 인덱싱 풀 정리.
     // 단, 상업 3페이지(/pricing·/contact·/release-project)의 en 버전은 선별 색인
     // 개방 대상이라 예외로 등재 — 런타임 metadataUrls의 EN_INDEXABLE_PATHS와 대칭.
-    if (locale !== 'ko' && !(locale === 'en' && EN_INDEXABLE_PATHS.has(pathWithoutLocale))) {
+    // 홈은 여기서 '/index'로 잡히지만 enIndexablePaths는 런타임·hreflang과 같은 '/'로 적는다.
+    const enIndexableKey = pathWithoutLocale === '/index' ? '/' : pathWithoutLocale;
+    if (locale !== 'ko' && !(locale === 'en' && EN_INDEXABLE_PATHS.has(enIndexableKey))) {
       return null;
     }
 

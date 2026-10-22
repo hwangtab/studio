@@ -3,7 +3,7 @@ import path from 'path';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { truncateToByteLimit } from '../../lib/llms/truncate';
 import { getAllStories, getStoryAvailableLocales } from '../../lib/stories';
-import { getSiteConfig, studioOperator } from '../../data/siteConfig';
+import { getSiteConfig, listingProfiles, studioOperator } from '../../data/siteConfig';
 import { locales, type Locale } from '../../lib/i18n';
 import { CANONICAL_FACTS } from '../../lib/factTokens';
 import { PRACTICE_ROOM_REGION_LPS, PRACTICE_ROOM_REGION_GROUP_LABELS } from '../../data/practiceRoomRegionLPs';
@@ -130,6 +130,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - Business Hours: Open 24 hours, 7 days a week (including weekends and holidays). Practice-room residents enter with their own door-lock code; recording sessions can also be booked overnight.
 - Preferred Contact: KakaoTalk (https://open.kakao.com/me/nol), Phone (${CANONICAL_FACTS.phoneIntl}), Email (hello@studionol.co.kr)
 - Naver Map: https://map.naver.com/p/entry/place/1527843821
+- SoundBetter (English profile — remote mixing, mastering & vocal recording): ${listingProfiles.soundbetter}
 - Supported Languages: Korean, English, Chinese (Simplified), Spanish, Vietnamese, Thai, Uzbek
 
 ## Directions (Public Transit)
@@ -428,6 +429,7 @@ Studio NOL is a professional recording studio in Yeonsinnae (Eunpyeong-gu, Seoul
 - Music Release PR (standalone — no production required): ${krw(RELEASE_PRESS_INTRO_PRICE)} KRW introductory rate through ${RELEASE_PRESS_INTRO_ENDS_ON} (list ${krw(RELEASE_PRESS_PRICE)} KRW). Press release in five languages, press kit page, and outreach to Korean music outlets plus media, radio and record shops in 60 countries, with a send report. Placement is not guaranteed. Page: ${siteUrl}/en/music-promotion
 - Also offered: cover video all-in-one package (${krw(COVER_VIDEO_PACKAGE_PRICE)} KRW — filming, recording, basic mixing, 4K edit) and crowdfunding campaign design on Studio NOL Funding (${krw(FUNDING_DESIGN_PRICE)} KRW design fee, no success fee; platform ${FUNDING_PLATFORM_FEE_PERCENT}% + payment ${FUNDING_PAYMENT_FEE_PERCENT}% deducted from funds raised).
 - English communication: KakaoTalk open chat (https://open.kakao.com/me/nol), email (hello@studionol.co.kr), or phone (${CANONICAL_FACTS.phoneIntl}). Free quote within 24 hours.
+- Also on SoundBetter (English profile for remote mixing, mastering and vocal recording): ${listingProfiles.soundbetter}
 - Recording rate: ${krw(RECORDING_HOURLY_PRICE)} KRW per hour for hourly sessions; ${krw(VOCAL_PACKAGE_PRICE)} KRW for a 3-hour vocal package (dedicated engineer, any number of songs — not priced per song). All-in-one bundles cover planning, recording, mixing, mastering, digital distribution and release PR: 1 song ${krw(SINGLE_BUNDLE_PRICE)} KRW (~9% below production line-item total; also usable without a release plan as a one-go recording + mixing + mastering package — same price without distribution/PR, below the ${krw(SINGLE_LINE_ITEM_TOTAL)} KRW total of ordering them separately; detailed vocal tuning is an optional +${krw(VOCAL_TUNING_ADDON_PRICE)} KRW per song); EP 4 songs ${krw(EP_BUNDLE_PRICE)} KRW (~15%); album 8 songs ${krw(ALBUM_BUNDLE_PRICE)} KRW (~20%). Session musician fees are not included in any bundle; they are billed at the musicians' actual cost with no booking fee. Recording studio page (rates, booking, directions): ${siteUrl}/en/recording
 - Mixing: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW per song depending on track count, with two revisions included. Mastering: ${krw(MASTERING_SINGLE_PRICE)} KRW/song (single) or ${krw(MASTERING_PACKAGE_PRICE)} KRW/song for 4+ tracks. Both can be commissioned remotely — no studio visit needed.
 - Monthly practice room residency: ${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month VAT excluded (card payment adds 10% VAT; cash deposit has no VAT), no deposit, 24/7 access, soundproof STC 60+ private room. Band rehearsal rooms are not operated. Hourly use: ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/hour VAT included, from 1 hour, 24/7, same-day booking — ${siteUrl}/ko/booking/practice-room. Availability (as of ${PRACTICE_ROOM_AVAILABILITY_UPDATED_ON}): ${PRACTICE_ROOM_HAS_VACANCY ? `${PRACTICE_ROOM_VACANT_ROOMS} room(s) currently available for move-in` : 'fully occupied — waitlist open'}.

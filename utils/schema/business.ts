@@ -1,5 +1,5 @@
 import { type Locale } from '../../lib/i18n';
-import { getSiteConfig, socialProfiles } from '../../data/siteConfig';
+import { getSiteConfig, listingProfiles, socialProfiles } from '../../data/siteConfig';
 import {
   COVER_VIDEO_PACKAGE_PRICE,
   FUNDING_DESIGN_PRICE,
@@ -71,6 +71,7 @@ export const generateDefaultSchema = (
     config.contact.naverPlaceUrl,
     config.contact.googleBusinessUrl,
     ...socialLinks,
+    ...Object.values(listingProfiles),
   ].filter(url => typeof url === 'string' && url.trim() !== '');
 
   const organizationId = `${siteUrl}/#organization`;

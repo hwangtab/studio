@@ -73,11 +73,11 @@ describe('mapChangedFilesToUrls', () => {
     expect(urls).toEqual(['https://studionol.co.kr/ko/wedding-song']);
   });
 
-  it('maps pages/[locale]/index.tsx to the bare /ko URL (no trailing /index)', () => {
+  it('maps pages/[locale]/index.tsx to the bare /ko URL (no trailing /index), plus /en (home is en-indexable)', () => {
     const urls = mapChangedFilesToUrls([
       { status: 'M', path: 'pages/[locale]/index.tsx' },
     ]);
-    expect(urls).toEqual(['https://studionol.co.kr/ko']);
+    expect(urls).toEqual(['https://studionol.co.kr/ko', 'https://studionol.co.kr/en']);
   });
 
   it('also submits the /en URL for routes whitelisted in lib/enIndexablePaths.json', () => {
