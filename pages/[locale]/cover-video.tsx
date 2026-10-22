@@ -105,7 +105,7 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
   );
 
   const faqItems = React.useMemo(
-    () => createTranslatedQaItems(tPrice, 'coverVideo.faq.items', 6),
+    () => createTranslatedQaItems(tPrice, 'coverVideo.faq.items', 8),
     [tPrice]
   );
 
