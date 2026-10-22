@@ -130,6 +130,10 @@ const nextConfig = {
 
   async redirects() {
     return [
+      // 매출·지출은 재무 한 곳으로 모았다(2026-10-22). 이미 나간 운영 점검 메일·북마크가 옛 주소를 담고 있어 남긴다 —
+      // 쿼리(year·month·line·type)는 그대로 넘어간다. 관리자 화면이라 영구 리다이렉트로 굳히지 않는다.
+      { source: '/admin/revenue', destination: '/admin/finance', permanent: false },
+      { source: '/admin/expenses', destination: '/admin/finance/expenses', permanent: false },
       // song-structure1 → songstructure1 규칙은 여기 없다: lib/regionRedirectMap.json에
       // 같은 키가 있어 middleware가 항상 먼저 308을 낸다(실측 2026-09-08, 단일 308 확인).
       // 이 규칙이 있었을 때도 절대 실행되지 않는 죽은 코드였다 — 제거함.

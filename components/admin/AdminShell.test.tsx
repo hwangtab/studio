@@ -64,7 +64,7 @@ it('묶음에 들어 있지 않은 구역이 없다 — 새 구역을 더하면 
   const grouped = ADMIN_NAV_ENTRIES.flatMap((entry) => (isNavGroup(entry) ? entry.items : [entry])).map((i) => i.href);
   expect(new Set(grouped).size).toBe(grouped.length);
   expect(grouped).toEqual(ADMIN_NAV.map((i) => i.href));
-  expect(grouped).toEqual(expect.arrayContaining(['/admin/revenue', '/admin/payment-links', '/admin/privacy-logs', '/admin/contracts', '/admin/subscriptions', '/admin/artists']));
+  expect(grouped).toEqual(expect.arrayContaining(['/admin/finance', '/admin/finance/expenses', '/admin/finance/export', '/admin/payment-links', '/admin/privacy-logs', '/admin/contracts', '/admin/subscriptions', '/admin/artists']));
   // 예약은 한 화면을 라인으로 갈라 세 곳에 걸린다.
   expect(grouped.filter((h) => h.startsWith('/admin/bookings'))).toEqual(['/admin/bookings?line=practice', '/admin/bookings?line=studio', '/admin/bookings?line=mixing']);
 });
@@ -88,9 +88,9 @@ describe('데스크톱 드롭다운', () => {
   it('한 번에 하나만 열린다', async () => {
     await renderShell(<AdminShell title="대시보드">본문</AdminShell>);
     await act(async () => group('플랫폼').click());
-    await act(async () => group('공통').click());
+    await act(async () => group('재무').click());
     expect(within(nav()).queryByRole('link', { name: '펀딩' })).not.toBeInTheDocument();
-    expect(within(nav()).getByRole('link', { name: '매출' })).toBeInTheDocument();
+    expect(within(nav()).getByRole('link', { name: '매출·수익' })).toBeInTheDocument();
   });
 
   it('Esc와 바깥 클릭으로 닫힌다', async () => {

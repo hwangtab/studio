@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 const replace = jest.fn().mockResolvedValue(true);
-jest.mock('next/router', () => ({ useRouter: () => ({ replace, asPath: '/admin/revenue' }) }));
+jest.mock('next/router', () => ({ useRouter: () => ({ replace, asPath: '/admin/finance' }) }));
 
 import { ManualRevenuePanel } from './ManualRevenuePanel';
 
@@ -35,7 +35,7 @@ it('입력을 채워 기록하면 숫자를 정수로 바꿔 POST하고 페이�
   expect(url).toBe('/api/admin/revenue/manual');
   expect(init.method).toBe('POST');
   expect(JSON.parse(init.body)).toMatchObject({ receivedOn: '2026-10-16', type: 'session', description: '녹음 3시간 — 김OO', totalAmount: 275000, vatMode: 'included', method: '계좌 입금' });
-  await waitFor(() => expect(replace).toHaveBeenCalledWith('/admin/revenue'));
+  await waitFor(() => expect(replace).toHaveBeenCalledWith('/admin/finance'));
   expect(await screen.findByText(/275,000원을 기록했습니다/)).toBeInTheDocument();
 });
 
