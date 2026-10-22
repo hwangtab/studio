@@ -25,7 +25,7 @@ related:
 | 항목 | 내용 |
 |---|---|
 | 메인 마이크 | Neumann U87AI, AKG C414 XLS, SM58/57 등 |
-| 프리앰프 | Vintech X73i (Neve 1073 스타일), Focusrite Octopre |
+| 프리앰프 | Vintech X73i (Neve 1073 스타일), Midas Venice 320 콘솔 내장 프리(Vintech을 안 쓸 때 녹음에 사용 — 운영자 확인 2026-10-22), Focusrite Octopre |
 | 믹싱 콘솔 | Midas Venice 320 (아날로그 콘솔 — 플러그인 에뮬레이션이 아니라 실물) |
 | 인터페이스 | Prism Sound Lyra 2 |
 | 요금 | 100,000원/시간 (최소 2시간), Day Lock 4시간 350,000원·8시간 650,000원 (2026-09-26 재편, 온라인 예약 가능) |

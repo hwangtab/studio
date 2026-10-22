@@ -147,7 +147,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 Full list with photos: ${siteUrl}/ko/studio-info
 
 - Microphones: Neumann U87AI, AKG C414 XLS, Shure SM58/SM57
-- Preamps: Vintech X73i (Neve 1073-style), Focusrite Octopre
+- Preamps: Vintech X73i (Neve 1073-style), Midas Venice 320 console mic preamps (used for tracking when the Vintech is not), Focusrite Octopre
 - Mixing Console: Midas Venice 320 analog console (a real analog desk, not a digital/plugin emulation)
 - Outboard Processors: Solid State Logic Fusion, Tegeler Vari Tube Compressor
 - Interface / Conversion: Prism Sound Lyra 2
