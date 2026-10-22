@@ -54,6 +54,8 @@ export const loadTenancyRevenueRows = async (range: { from: Date; toExclusive: D
         projectSlug: null,
         method: '월 입주',
         gross: Number(t.monthly_amount),
+        // 월 입주 이용료는 계좌로 받고 부가세를 받지 않는다(운영자 확인 2026-10-22: "계좌로 받은 건 부가세 안 받은 것, 카드는 받은 것").
+        // 카드로 내는 연습실 월 이용료 구독은 이용료 + 부가세를 결제해 결제 행(orders.vat_amount)에 이미 부가세가 있다 — 여기서 0을 바꾸지 말 것.
         vat: 0,
         refunded: 0,
         offline: true,
