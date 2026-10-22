@@ -2606,12 +2606,12 @@
   "musicVideo": {
     "seo": {
       "title": "MV từ {{mv}} · video live từ {{live}} | Studio NOL",
-      "description": "MV (từ {{mv}}) và clip live, video talk & phỏng vấn YouTube (từ {{live}}) do đạo diễn Chichi (Haebang Film) phụ trách ý tưởng, quay và dựng. Số máy quay, thời gian và địa điểm được thỏa thuận khi tư vấn.",
+      "description": "MV (từ {{mv}}) và clip live, video talk & phỏng vấn YouTube (từ {{live}}) do Studio NOL cùng đạo diễn Park Chichi (Haebang Film) lên ý tưởng, Park Chichi quay và dựng. Số máy quay, thời gian và địa điểm được thỏa thuận khi tư vấn.",
       "keywords": "sản xuất MV Seoul, quay video live, video concert, quay video YouTube, Haebang Film"
     },
     "hero": {
       "title": "Sản xuất MV & video live",
-      "subtitleLine1": "Đạo diễn Chichi (Haebang Film) — ý tưởng, quay và dựng",
+      "subtitleLine1": "Ý tưởng cùng Studio NOL, quay và dựng bởi Park Chichi (Haebang Film)",
       "subtitleLine2": "MV từ {{mv}} · video live & YouTube từ {{live}}",
       "alt": "Cảnh sân khấu trong MV “Namsan Tower Lights” của Mariko & Yukie",
       "seeWorks": "Xem tác phẩm"
@@ -2626,7 +2626,7 @@
         },
         {
           "q": "Ai thực hiện?",
-          "a": "Đạo diễn Chichi của Haebang Film phụ trách toàn bộ: ý tưởng, quay, dựng và chỉnh màu. Tất cả video bên dưới là tác phẩm của Chichi."
+          "a": "Studio NOL và đạo diễn Park Chichi (Haebang Film) cùng lên ý tưởng; Park Chichi quay, dựng và chỉnh màu. Từ 2019 anh đã đăng gần 500 video biểu diễn và MV trên kênh Haebang Film, đồng thời là nhạc sĩ tự sáng tác và hát."
         },
         {
           "q": "Bắt đầu thế nào?",
@@ -2636,7 +2636,7 @@
     },
     "portfolio": {
       "title": "Tác phẩm",
-      "subtitle": "MV, clip live và nội dung YouTube do đạo diễn Chichi (Haebang Film) lên ý tưởng, quay và dựng. Nhấn để xem.",
+      "subtitle": "MV, clip live và nội dung YouTube do đạo diễn Park Chichi (Haebang Film) quay và dựng. Nhấn để xem.",
       "kinds": {
         "all": "Tất cả",
         "music-video": "MV",
@@ -2663,13 +2663,13 @@
       ]
     },
     "director": {
-      "title": "Ý tưởng, quay & dựng: đạo diễn Chichi",
-      "body": "Đạo diễn Chichi của Haebang Film thực hiện mỗi video từ ý tưởng đến quay, dựng và chỉnh màu: MV ngoại cảnh, video biểu diễn và series talk YouTube nhiều tập — các video bên trên là kết quả.",
+      "title": "Đạo diễn Park Chichi, Haebang Film",
+      "body": "Park Chichi ghi lại sân khấu âm nhạc indie dưới tên Haebang Film từ 2019: biểu diễn ở club và sân khấu, ghi hình hiện trường như hòa nhạc Pungcheon-ri và Đại hành trình Sự sống & Hòa bình Jeju, cùng MV và buổi ra mắt “Namsan Tower Lights” của Mariko & Yukie. Riêng kênh YouTube Haebang Film có gần 500 video (tháng 10/2026). Là nhạc sĩ tự sáng tác và hát, mỗi video của anh bắt đầu từ việc nghe bài hát.",
       "points": [
-        "Một đạo diễn từ ý tưởng, storyboard đến quay, dựng, chỉnh màu",
-        "Số máy quay theo bài hát và ngân sách — từ 1 máy đến multi-cam",
-        "Âm thanh do Studio NOL — thu, mix, master tại cùng một nơi",
-        "Tỷ lệ khung hình theo nơi đăng (YouTube, Instagram…)"
+        "Ý tưởng do Studio NOL và Park Chichi cùng lên; quay, dựng, chỉnh màu do Park Chichi",
+        "Đạo diễn — teaser Dystopia 2025 của Samgakjeonpasa, MV “Namsan Tower Lights” của Mariko & Yukie",
+        "Nhạc sĩ — tập thơ/ca khúc Baljak (2022), Gangdo (2024); “Lời chào cuối” trong album tuyển tập Fish Die Without Water (2022)",
+        "Lưu trữ — gần 500 video biểu diễn và MV trên kênh Haebang Film từ 2019"
       ],
       "imageAlt": "Một cảnh trong MV “Namsan Tower Lights”"
     },
@@ -2722,7 +2722,7 @@
         },
         {
           "title": "Kế hoạch & báo giá",
-          "description": "Chốt ý tưởng, storyboard, địa điểm, máy quay với đạo diễn Chichi rồi xác nhận báo giá."
+          "description": "Chốt ý tưởng, storyboard, địa điểm, máy quay với Studio NOL và đạo diễn Park Chichi rồi xác nhận báo giá."
         },
         {
           "title": "Quay",
@@ -2741,6 +2741,10 @@
         {
           "q": "Giá khởi điểm bao gồm những gì?",
           "a": "Tư vấn ý tưởng, quay, dựng, chỉnh màu và phụ đề. Số máy quay và thời gian theo bài hát và ngân sách; quy mô lớn hơn thì giá cao hơn."
+        },
+        {
+          "q": "Đạo diễn Park Chichi là ai?",
+          "a": "Nhà làm phim và nhạc sĩ của Haebang Film. Từ 2019 anh đã đăng gần 500 video biểu diễn và MV trên kênh YouTube Haebang Film, đạo diễn teaser Dystopia 2025 của Samgakjeonpasa và MV “Namsan Tower Lights” của Mariko & Yukie, và xuất bản hai tập thơ/ca khúc Baljak (2022), Gangdo (2024). Ý tưởng được lên cùng Studio NOL; quay, dựng và chỉnh màu do anh thực hiện."
         },
         {
           "q": "Có gồm phí thuê địa điểm, diễn viên không?",

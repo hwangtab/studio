@@ -46,7 +46,7 @@ export const COVER_VIDEO_PACKAGE_PRICE = 350000;
 /** 커버 영상 올인원 + 정교한 보컬 튜닝(곡당 옵션). 올인원은 1곡 기준이라 합계 그대로 한 상품이다. */
 export const COVER_VIDEO_TUNING_PACKAGE_PRICE = COVER_VIDEO_PACKAGE_PRICE + VOCAL_TUNING_ADDON_PRICE;
 export const RENTAL_HOURLY_PRICE = 100000; // 촬영 대관
-// 영상 제작(/music-video) — 해방필름 치치 감독이 콘셉트·촬영·편집까지 맡는다. 둘 다 "부터"(하한)이고 카메라 대수·
+// 영상 제작(/music-video) — 콘셉트는 스튜디오 놀과 해방필름 박치치 감독이 함께, 촬영·편집은 박치치 감독. 둘 다 "부터"(하한)이고 카메라 대수·
 // 촬영 시간·장소는 상담으로 정한다(운영자 결정 2026-10-22). 온라인 결제 상품이 아니다 — 카카오 상담 → 견적 → 맞춤 결제 링크.
 // 뮤직비디오 하한은 같은 날 운영자 결정으로 50만에서 100만으로 올렸다(라이브·유튜브는 50만 그대로).
 export const MUSIC_VIDEO_FROM_PRICE = 1000000;
@@ -935,13 +935,13 @@ export const getPricingData = (locale: Locale) => {
       priceValue: MUSIC_VIDEO_FROM_PRICE,
       unit: t(locale, { ko: '/ 1곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo\'shiq' }),
       description: t(locale, {
-        ko: '해방필름 치치 감독이 콘셉트 상담부터 촬영·편집·색보정까지 맡습니다. 카메라 대수·촬영 시간·장소는 곡과 예산에 맞춰 정합니다.',
-        en: 'Director Chichi of Haebang Film handles concept, filming, editing and colour. Cameras, shooting hours and locations are set to fit the song and budget.',
-        zh: '由解放电影（Haebang Film）的Chichi导演负责从概念到拍摄、剪辑、调色。机位数量、拍摄时长和地点按歌曲与预算商定。',
-        es: 'El director Chichi de Haebang Film se encarga del concepto, rodaje, edición y color. Cámaras, horas y locaciones se ajustan a la canción y al presupuesto.',
-        vi: 'Đạo diễn Chichi (Haebang Film) phụ trách từ ý tưởng đến quay, dựng và chỉnh màu. Số máy quay, thời gian quay và địa điểm được điều chỉnh theo bài hát và ngân sách.',
-        th: 'ผู้กำกับ Chichi จาก Haebang Film ดูแลตั้งแต่คอนเซปต์ ถ่ายทำ ตัดต่อ และเกรดสี จำนวนกล้อง เวลาถ่าย และสถานที่ ปรับตามเพลงและงบประมาณ',
-        uz: 'Haebang Film rejissyori Chichi konsepsiyadan suratga olish, montaj va rang tuzatishgacha shug\'ullanadi. Kameralar soni, vaqt va joy qo\'shiq va byudjetga qarab kelishiladi.'
+        ko: '콘셉트는 스튜디오 놀과 해방필름 박치치 감독이 함께 잡고, 촬영·편집·색보정은 박치치 감독이 맡습니다. 카메라 대수·촬영 시간·장소는 곡과 예산에 맞춰 정합니다.',
+        en: 'Studio NOL and director Park Chichi of Haebang Film shape the concept together; Park Chichi shoots, edits and grades. Cameras, shooting hours and locations are set to fit the song and budget.',
+        zh: '概念由Studio NOL与解放电影（Haebang Film）朴治治导演共同策划，拍摄、剪辑、调色由朴治治导演负责。机位数量、拍摄时长和地点按歌曲与预算商定。',
+        es: 'Studio NOL y el director Park Chichi de Haebang Film definen el concepto juntos; Park Chichi filma, edita y etaloniza. Cámaras, horas y locaciones se ajustan a la canción y al presupuesto.',
+        vi: 'Studio NOL và đạo diễn Park Chichi (Haebang Film) cùng lên ý tưởng; Park Chichi quay, dựng và chỉnh màu. Số máy quay, thời gian quay và địa điểm được điều chỉnh theo bài hát và ngân sách.',
+        th: 'Studio NOL และผู้กำกับ Park Chichi จาก Haebang Film วางคอนเซปต์ร่วมกัน Park Chichi ถ่ายทำ ตัดต่อ และเกรดสี จำนวนกล้อง เวลาถ่าย และสถานที่ ปรับตามเพลงและงบประมาณ',
+        uz: 'G\'oyani Studio NOL va Haebang Film rejissyori Park Chichi birga ishlab chiqadi; suratga olish, montaj va rang tuzatishni Park Chichi bajaradi. Kameralar soni, vaqt va joy qo\'shiq va byudjetga qarab kelishiladi.'
       }),
       features: tArray(locale, {
         ko: ['콘셉트·콘티 상담 포함', '스튜디오·공연장·야외 로케이션 촬영', '카메라 대수·촬영 시간은 협의', '편집·색보정·가사 자막 포함', '장소 대관·출연·스타일링 실비는 별도'],

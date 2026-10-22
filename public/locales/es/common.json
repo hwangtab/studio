@@ -2606,12 +2606,12 @@
   "musicVideo": {
     "seo": {
       "title": "Videoclips desde {{mv}} · videos en vivo desde {{live}} | Studio NOL",
-      "description": "Videoclips (desde {{mv}}) y clips en vivo o charlas y entrevistas para YouTube (desde {{live}}), con concepto, rodaje y edición del director Chichi de Haebang Film. Cámaras, horas y locaciones se acuerdan en la consulta.",
+      "description": "Videoclips (desde {{mv}}) y clips en vivo o charlas y entrevistas para YouTube (desde {{live}}), planificados por Studio NOL junto al director Park Chichi de Haebang Film, que filma y edita. Cámaras, horas y locaciones se acuerdan en la consulta.",
       "keywords": "producción de videoclips Seúl, video en vivo, video de concierto, video para YouTube, Haebang Film"
     },
     "hero": {
       "title": "Videoclips y videos en vivo",
-      "subtitleLine1": "El director Chichi de Haebang Film — concepto, rodaje y edición",
+      "subtitleLine1": "Concepto con Studio NOL; rodaje y edición de Park Chichi (Haebang Film)",
       "subtitleLine2": "Videoclips desde {{mv}} · videos en vivo y de YouTube desde {{live}}",
       "alt": "Escena en sala del videoclip “Namsan Tower Lights” de Mariko & Yukie",
       "seeWorks": "Ver trabajos"
@@ -2626,7 +2626,7 @@
         },
         {
           "q": "¿Quién lo hace?",
-          "a": "El director Chichi de Haebang Film se encarga de todo: concepto, rodaje, edición y color. Todos los videos de abajo son obra de Chichi."
+          "a": "Studio NOL y el director Park Chichi de Haebang Film definen el concepto juntos; Park Chichi filma, edita y etaloniza. Desde 2019 ha reunido casi 500 videos de conciertos y videoclips en el canal de Haebang Film, y también es músico: escribe y canta sus propias canciones."
         },
         {
           "q": "¿Cómo empiezo?",
@@ -2636,7 +2636,7 @@
     },
     "portfolio": {
       "title": "Trabajos",
-      "subtitle": "Videoclips, clips en vivo y contenido de YouTube concebidos, filmados y editados por el director Chichi de Haebang Film. Toca para reproducir.",
+      "subtitle": "Videoclips, clips en vivo y contenido de YouTube filmados y editados por el director Park Chichi de Haebang Film. Toca para reproducir.",
       "kinds": {
         "all": "Todo",
         "music-video": "Videoclips",
@@ -2663,13 +2663,13 @@
       ]
     },
     "director": {
-      "title": "Concepto, rodaje y edición: director Chichi",
-      "body": "El director Chichi de Haebang Film lleva cada video del concepto al rodaje, la edición y el color: videoclips en locación, conciertos y series de charlas para YouTube. Los videos de arriba son el resultado.",
+      "title": "Director Park Chichi, Haebang Film",
+      "body": "Park Chichi filma la escena musical independiente como Haebang Film desde 2019: conciertos en clubes y salas, registros de campo como los conciertos de Pungcheon-ri y la Marcha por la Vida y la Paz de Jeju, y el videoclip y el concierto de lanzamiento de “Namsan Tower Lights” de Mariko & Yukie. Solo el canal de Haebang Film reúne casi 500 videos (octubre de 2026). Como músico que escribe y canta, cada video empieza escuchando la canción.",
       "points": [
-        "Un solo director del concepto y storyboard al rodaje, edición y color",
-        "Cámaras según la canción y el presupuesto, de una a multicámara",
-        "Audio de Studio NOL: grabación, mezcla y master en el mismo lugar",
-        "Formato de imagen pensado para dónde se publicará (YouTube, Instagram…)"
+        "Concepto planificado por Studio NOL y Park Chichi; rodaje, edición y color de Park Chichi",
+        "Dirección — tráiler de Dystopia 2025 de Samgakjeonpasa, videoclip “Namsan Tower Lights” de Mariko & Yukie",
+        "Músico — libros de poemas/canciones Baljak (2022) y Gangdo (2024); “Último saludo” en el recopilatorio Fish Die Without Water (2022)",
+        "Archivo — casi 500 videos de conciertos y videoclips en el canal de Haebang Film desde 2019"
       ],
       "imageAlt": "Escena del videoclip “Namsan Tower Lights”"
     },
@@ -2722,7 +2722,7 @@
         },
         {
           "title": "Plan y presupuesto",
-          "description": "Concepto, storyboard, locación y cámaras con el director Chichi; luego confirmamos el presupuesto."
+          "description": "Concepto, storyboard, locación y cámaras con Studio NOL y el director Park Chichi; luego confirmamos el presupuesto."
         },
         {
           "title": "Rodaje",
@@ -2741,6 +2741,10 @@
         {
           "q": "¿Qué incluye el precio inicial?",
           "a": "Consulta de concepto, rodaje, edición, etalonaje y subtítulos. Cámaras y horas se ajustan a la canción y al presupuesto; un montaje mayor sube el precio."
+        },
+        {
+          "q": "¿Quién es el director Park Chichi?",
+          "a": "Cineasta y músico de Haebang Film. Desde 2019 ha publicado casi 500 videos de conciertos y videoclips en el canal de YouTube de Haebang Film, y dirigió el tráiler de Dystopia 2025 de Samgakjeonpasa y el videoclip “Namsan Tower Lights” de Mariko & Yukie. También publicó los libros de poemas/canciones Baljak (2022) y Gangdo (2024). El concepto se planifica con Studio NOL; el rodaje, la edición y el color son suyos."
         },
         {
           "q": "¿Incluye alquiler de locación y elenco?",

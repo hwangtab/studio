@@ -2606,12 +2606,12 @@
   "musicVideo": {
     "seo": {
       "title": "Kliplar {{mv}} dan · jonli videolar {{live}} dan | Studio NOL",
-      "description": "Kliplar ({{mv}} dan) hamda jonli kliplar va YouTube suhbat/intervyulari ({{live}} dan) — g'oya, suratga olish va montajni Haebang Film rejissyori Chichi bajaradi. Kameralar, vaqt va joy maslahatda kelishiladi.",
+      "description": "Kliplar ({{mv}} dan) hamda jonli kliplar va YouTube suhbat/intervyulari ({{live}} dan) — g'oyani Studio NOL va Haebang Film rejissyori Park Chichi birga ishlab chiqadi, suratga olish va montajni Park Chichi bajaradi. Kameralar, vaqt va joy maslahatda kelishiladi.",
       "keywords": "klip ishlab chiqarish Seul, jonli video, konsert videosi, YouTube video, Haebang Film"
     },
     "hero": {
       "title": "Kliplar va jonli videolar",
-      "subtitleLine1": "Haebang Film rejissyori Chichi — g'oya, suratga olish va montaj",
+      "subtitleLine1": "G'oya Studio NOL bilan birga, suratga olish va montaj — Park Chichi (Haebang Film)",
       "subtitleLine2": "Kliplar {{mv}} dan · jonli va YouTube videolari {{live}} dan",
       "alt": "Mariko & Yukie “Namsan Tower Lights” klipidagi sahna ko'rinishi",
       "seeWorks": "Ishlarni ko'rish"
@@ -2626,7 +2626,7 @@
         },
         {
           "q": "Kim tayyorlaydi?",
-          "a": "Haebang Film rejissyori Chichi hammasini bajaradi: g'oya, suratga olish, montaj va rang tuzatish. Quyidagi barcha videolar Chichi ishi."
+          "a": "G'oyani Studio NOL va Haebang Film rejissyori Park Chichi birga ishlab chiqadi; suratga olish, montaj va rang tuzatishni Park Chichi bajaradi. U 2019 yildan beri Haebang Film kanalida 500 ga yaqin konsert va klip videolarini to'plagan, shuningdek o'z qo'shiqlarini yozib kuylaydigan musiqachi."
         },
         {
           "q": "Qanday boshlayman?",
@@ -2636,7 +2636,7 @@
     },
     "portfolio": {
       "title": "Ishlar",
-      "subtitle": "Haebang Film rejissyori Chichi g'oyasini ishlab chiqib, suratga olib, montaj qilgan kliplar, jonli kliplar va YouTube kontenti. Ko'rish uchun bosing.",
+      "subtitle": "Haebang Film rejissyori Park Chichi suratga olgan va montaj qilgan kliplar, jonli kliplar va YouTube kontenti. Ko'rish uchun bosing.",
       "kinds": {
         "all": "Barchasi",
         "music-video": "Kliplar",
@@ -2663,13 +2663,13 @@
       ]
     },
     "director": {
-      "title": "G'oya, suratga olish va montaj: rejissyor Chichi",
-      "body": "Haebang Film rejissyori Chichi har bir videoni g'oyadan suratga olish, montaj va rang tuzatishgacha olib boradi: lokatsiyadagi kliplar, konsertlar va YouTube suhbat seriyalari — yuqoridagi videolar natijasi.",
+      "title": "Rejissyor Park Chichi, Haebang Film",
+      "body": "Park Chichi 2019 yildan beri Haebang Film nomi bilan mustaqil musiqa sahnasini suratga oladi: klub va konsert zallaridagi chiqishlar, Pungcheon-ri konsertlari va Jeju Hayot va Tinchlik yurishi kabi joylardagi yozuvlar, Mariko & Yukie “Namsan Tower Lights” klipi va taqdimot konserti. Faqat Haebang Film YouTube kanalida 500 ga yaqin video bor (2026 yil oktyabr). U qo'shiq yozib kuylaydigan musiqachi ham, shuning uchun har bir video qo'shiqni tinglashdan boshlanadi.",
       "points": [
-        "G'oya va storyboarddan montaj va rang tuzatishgacha bitta rejissyor",
-        "Qo'shiq va byudjetga mos kameralar — bittadan multikameragacha",
-        "Ovoz Studio NOL da — yozish, miks va mastering bir joyda",
-        "Joylanadigan platformaga (YouTube, Instagram va b.) mos kadr nisbati"
+        "G'oyani Studio NOL va Park Chichi birga ishlab chiqadi; suratga olish, montaj va rang — Park Chichi",
+        "Rejissura — Samgakjeonpasa Dystopia 2025 tizeri, Mariko & Yukie “Namsan Tower Lights” klipi",
+        "Musiqachi — she'r/qo'shiq kitoblari Baljak (2022) va Gangdo (2024); Fish Die Without Water (2022) to'plamida “Last Greeting”",
+        "Arxiv — 2019 yildan Haebang Film kanalida 500 ga yaqin konsert va klip videolari"
       ],
       "imageAlt": "“Namsan Tower Lights” klipidan bir sahna"
     },
@@ -2722,7 +2722,7 @@
         },
         {
           "title": "Reja va narx",
-          "description": "Rejissyor Chichi bilan g'oya, storyboard, joy va kameralarni kelishib, narxni tasdiqlaymiz."
+          "description": "Studio NOL va rejissyor Park Chichi bilan g'oya, storyboard, joy va kameralarni kelishib, narxni tasdiqlaymiz."
         },
         {
           "title": "Suratga olish",
@@ -2741,6 +2741,10 @@
         {
           "q": "Boshlang'ich narxga nimalar kiradi?",
           "a": "G'oya maslahati, suratga olish, montaj, rang tuzatish va subtitrlar. Kameralar va vaqt qo'shiq va byudjetga mos belgilanadi; ko'lam kattalashsa narx oshadi."
+        },
+        {
+          "q": "Rejissyor Park Chichi kim?",
+          "a": "Haebang Film rejissyori va musiqachi. 2019 yildan beri Haebang Film YouTube kanalida 500 ga yaqin konsert va klip videolarini joylagan, Samgakjeonpasa Dystopia 2025 tizerini va Mariko & Yukie “Namsan Tower Lights” klipini suratga olgan, Baljak (2022) va Gangdo (2024) she'r/qo'shiq kitoblarini chiqargan. G'oya Studio NOL bilan birga ishlab chiqiladi; suratga olish, montaj va rang uniki."
         },
         {
           "q": "Joy ijarasi va aktyor haqi kiradimi?",

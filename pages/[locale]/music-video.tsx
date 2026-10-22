@@ -40,7 +40,9 @@ import { trackLeadEvent } from '../../utils/analytics';
 import type { NextPageWithLayout } from '../../types';
 
 /**
- * 영상 제작 — 뮤직비디오·라이브 클립·유튜브 콘텐츠(토크·인터뷰). 촬영은 해방필름 치치 감독.
+ * 영상 제작 — 뮤직비디오·라이브 클립·유튜브 콘텐츠(토크·인터뷰). 콘셉트는 스튜디오 놀과 해방필름 박치치 감독이 함께,
+ * 촬영·편집은 박치치 감독(운영자 결정 2026-10-22). 감독 이력은 확인된 것만 쓴다 — 저장소(data/portfolio/items.ts의
+ * 《Dystopia 2025》 티저 연출, 펀딩 글의 시/노래집)와 해방필름 유튜브 채널(2019년부터, 영상 약 500편, 2026-10 기준).
  * 설계: docs/video-production-design-2026-10.md.
  *
  * 견적형 상품이라 온라인 예약·결제가 없다 — 1차 행동은 전부 카카오 상담(비-ko는 문의 폼).
@@ -53,6 +55,7 @@ interface MusicVideoProps {
   relatedStories: StoryCardData[];
 }
 
+const HAEBANG_FILM_CHANNEL_URL = 'https://www.youtube.com/@liberationfilm0518';
 const VIDEO_OFFER_IDS = ['package-music-video', 'package-live-video'] as const;
 const PRICE_GRID = centeredGrid({ md: 2, gap: 6 });
 const SERVICE_ICONS: LucideIcon[] = [Video, Mic, MessageSquare];
@@ -87,7 +90,7 @@ const MusicVideo: NextPageWithLayout<MusicVideoProps> = ({ locale, pricingData, 
   );
 
   const quickAnswers = React.useMemo(() => createTranslatedQaItems(tPrice, 'musicVideo.quickAnswers.items', 3), [tPrice]);
-  const faqItems = React.useMemo(() => createTranslatedQaItems(tPrice, 'musicVideo.faq.items', 7), [tPrice]);
+  const faqItems = React.useMemo(() => createTranslatedQaItems(tPrice, 'musicVideo.faq.items', 8), [tPrice]);
   const howToSteps = React.useMemo(() => createTranslatedHowToSteps(t, 'musicVideo.process.steps', 4), [t]);
 
   const pageUrl = `${siteConfig.url}/${locale}/music-video`;
@@ -106,7 +109,19 @@ const MusicVideo: NextPageWithLayout<MusicVideoProps> = ({ locale, pricingData, 
           offerName: videoOffers[0]?.title,
           offerPrice: MUSIC_VIDEO_FROM_PRICE,
         }),
-        generateHowToSchema(t('musicVideo.process.title'), t('musicVideo.process.subtitle'), howToSteps, undefined, locale)
+        generateHowToSchema(t('musicVideo.process.title'), t('musicVideo.process.subtitle'), howToSteps, undefined, locale),
+        // 촬영·편집을 맡는 감독 — 검색·AI 답변이 "누가 찍나"를 사람과 채널로 잇게 한다.
+        {
+          '@type': 'Person',
+          '@id': `${pageUrl}#director`,
+          name: locale === 'ko' ? '박치치' : 'Park Chichi',
+          jobTitle: locale === 'ko' ? '영상 감독' : 'Film director',
+          worksFor: {
+            '@type': 'Organization',
+            name: locale === 'ko' ? '해방필름' : 'Haebang Film',
+            sameAs: [HAEBANG_FILM_CHANNEL_URL],
+          },
+        }
       ),
     [t, tPrice, siteConfig, locale, pageUrl, videoOffers, howToSteps]
   );

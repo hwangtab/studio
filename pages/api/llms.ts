@@ -288,7 +288,7 @@ const localeKeyPages = (siteUrl: string, locale: Locale, label: string) => `## K
   - Full Album Release tier: ${siteUrl}/${locale}/release-project/album
 - Music Release PR (standalone, no production required): ${siteUrl}/${locale}/music-promotion
 ${fundingKeyPageLine(siteUrl, locale)}- Cover Video Package: ${siteUrl}/${locale}/cover-video
-- Music Video & Live/YouTube Video Production (director Chichi of Haebang Film, quote-based): ${siteUrl}/${locale}/music-video
+- Music Video & Live/YouTube Video Production (concept by Studio NOL with director Park Chichi of Haebang Film, who shoots and edits; quote-based): ${siteUrl}/${locale}/music-video
 - Portfolio: ${siteUrl}/${locale}/portfolio
 ${artistsLine(siteUrl, locale)}- Stories & News: ${siteUrl}/${locale}/stories
 - Contact: ${siteUrl}/${locale}/contact
