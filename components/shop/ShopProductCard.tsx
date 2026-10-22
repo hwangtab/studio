@@ -22,6 +22,8 @@ export default function ShopProductCard({ product, soldOut }: { product: ShopPro
           alt=""
           containerClassName="relative block aspect-square w-full overflow-hidden"
           className="object-cover"
+          // 상점 목록은 lg 3열(약 370px)이지만 아티스트 상점은 sm부터 2열이라 lg에서 약 600px까지 넓어진다 — 넓은 쪽에 맞춘다.
+          sizes="(min-width: 1024px) 600px, (min-width: 640px) 50vw, 100vw"
           loading="lazy"
         />
       ) : (

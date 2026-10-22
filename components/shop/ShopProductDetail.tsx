@@ -45,6 +45,8 @@ export default function ShopProductDetail({ product, remaining = null, artist = 
             alt={`${product.title} 사진 ${active + 1}`}
             containerClassName="relative block aspect-square w-full overflow-hidden rounded-2xl bg-gray-100 dark:bg-gray-800"
             className="object-contain"
+            // 나란히 놓이면 max-w-6xl(1152px)의 절반, 아니면 그 폭 전체까지다.
+            sizes={layout === 'split' ? '(min-width: 1024px) 560px, 100vw' : '(min-width: 1200px) 1152px, 100vw'}
             priority={active === 0}
           />
         )}
@@ -59,7 +61,7 @@ export default function ShopProductDetail({ product, remaining = null, artist = 
                 aria-label={`사진 ${i + 1}`}
                 className={`h-16 w-16 overflow-hidden rounded-lg border-2 ${i === active ? 'border-primary' : 'border-transparent'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70`}
               >
-                <ResponsiveImage src={img} alt="" containerClassName="relative block h-full w-full" className="object-cover" loading="lazy" />
+                <ResponsiveImage src={img} alt="" containerClassName="relative block h-full w-full" className="object-cover" sizes="64px" loading="lazy" />
               </button>
             ))}
           </div>

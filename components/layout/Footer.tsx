@@ -13,8 +13,12 @@ import { useDesignEdition } from '../../lib/designEdition';
 
 interface FooterProps {
   locale: Locale;
-  /** 휴대폰 하단 고정 바(KakaoFab bar)가 뜨는 화면 — 바가 푸터 끝을 가리지 않게 그만큼 아래 여백을 푸터 색으로 둔다. */
-  bottomBarSpace?: boolean;
+  /**
+   * 하단 고정 바가 뜨는 화면 — 바가 푸터 끝(사업자 정보)을 가리지 않게 그만큼 아래 여백을 푸터 색으로 둔다.
+   * `true`는 휴대폰에만 뜨는 바(KakaoFab bar·펀딩/공연 상세의 MobileStickyCta, lg:hidden),
+   * `'always'`는 데스크톱에도 뜨는 바(스토리 상세의 StickyBottomCTA, sm:bottom-8).
+   */
+  bottomBarSpace?: boolean | 'always';
 }
 
 const LINK_CLASS = "typo-footer-body text-gray-200/80 hover:text-white transition-colors duration-300 link-underline rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary";
@@ -57,7 +61,13 @@ export const Footer = ({ locale, bottomBarSpace = false }: FooterProps) => {
           edition === 'v2'
             ? 'v2-footer bg-gray-950 border-t border-white/10 text-white p-8 font-title'
             : 'bg-gradient-to-r from-primary via-primary to-primary text-white p-8 font-title'
-        }${bottomBarSpace ? ' pb-[calc(6rem+env(safe-area-inset-bottom))] lg:pb-8' : ''}`
+        }${
+          bottomBarSpace === 'always'
+            ? ' pb-[calc(7rem+env(safe-area-inset-bottom))] sm:pb-32'
+            : bottomBarSpace
+              ? ' pb-[calc(6rem+env(safe-area-inset-bottom))] lg:pb-8'
+              : ''
+        }`
       }
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

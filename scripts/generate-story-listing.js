@@ -30,6 +30,7 @@ const { applyFactTokens } = require('../lib/factTokens');
 const {
   THIN_CONTENT_THRESHOLD,
   SHORTCODE_CHAR_ESTIMATES,
+  SHORTCODE_DEFAULT_CHAR_ESTIMATE,
   AUTO_EXPAND_BLOCK_REGEX,
   REGION_HUB_SLUGS,
 } = require('../lib/sitemap/thinContent');
@@ -52,7 +53,6 @@ const DEFAULT_LOCALE = 'ko';
 const LOCALES = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'];
 const DEFAULT_AUTHOR = '스튜디오 놀';
 const DEFAULT_TAGS = ['기본'];
-const SHORTCODE_DEFAULT_CHAR_ESTIMATE = 80;
 
 // --- lib/storyFrontmatter.ts:stripCodeFenceWrapper 미러 ---
 const stripCodeFenceWrapper = (source) => {

@@ -197,6 +197,13 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
    * 보여 그대로 닫고 나가게 된다. 계약 서명·관리자 화면은 그대로 둔다 — 거기는 외부에서
    * 들어오는 자리가 아니다.
    */
+  /**
+   * 푸터 아래 여백. 스토리·펀딩·공연 상세는 FAB 행 대신 자기 하단 고정 바를 띄우는데, 예전엔 여백을
+   * `hasFloatingRow`에만 물려 이 세 화면의 푸터 끝(사업자·호스팅 정보)이 바 뒤에 영구히 가려졌다(2026-10-22 리뷰).
+   */
+  const footerBottomSpace: boolean | 'always' = isStoryDetail
+    ? 'always'
+    : (hasFloatingRow || isFundingDetail || isShowDetail) && !isBookingWizard;
   const showPaymentBrandBar = isPrivatePaymentPage && !isContractPage && !isAdminPage;
   const textBreakClass = locale === 'ko' ? 'break-keep' : 'break-words';
   /**
@@ -258,7 +265,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
         {children}
       </main>
 
-      {!isBareLayout && <Footer locale={locale} bottomBarSpace={hasFloatingRow && !isBookingWizard} />}
+      {!isBareLayout && <Footer locale={locale} bottomBarSpace={footerBottomSpace} />}
       {/*
         우하단 플로팅 컨트롤은 한 행에 묶는다. 예전에는 「맨 위로」가 bottom-24, FAB이
         bottom-6에 따로 떠서 고정 영역이 세로로 140px 두 밴드를 차지했고, 두 덩어리가

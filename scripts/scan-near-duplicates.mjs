@@ -53,19 +53,11 @@ const SKETCH_K = 128; // bottom-k 스케치 크기 (MinHash 128 perm 등가 정�
 const SKETCH_EST_MIN = 0.25; // 스케치 추정 J 통과 하한 — 0.45 대비 σ≈0.044의 ≈4.5σ 여유
 // lib/storyContentPolicy.ts와 동기 (thin-content 판정 재현용)
 const THIN_CONTENT_THRESHOLD = 1500;
-// 값은 lib/storyContentPolicy.ts의 SHORTCODE_CHAR_ESTIMATES와 같아야 한다(.ts라 import 불가라 미러링).
-// 숏코드를 추가하거나 컴포넌트 문구를 고치면 여기도 같이 고칠 것 — 어긋나면 이 스캔의
-// 색인 가능성 판정이 실제와 달라진다(session-checklist가 420으로 남아 있던 적이 있다).
-const SHORTCODE_CHAR_ESTIMATES = {
-  'online-fallback': 120,
-  'session-checklist': 160,
-  'studio-more': 204,
-  'studio-services': 135,
-  'online-request': 124,
-  'vocal-mix-bridge': 224,
-  'practice-room-terms': 117,
-};
-const SHORTCODE_DEFAULT_CHAR_ESTIMATE = 80;
+// 숏코드 글자 수 추정은 런타임·사이트맵과 같은 정본(lib/storyShortcodeEstimates.json)을 읽는다.
+// 예전엔 여기에 사본을 두었다가 studio-more가 204로 남아 있었다.
+const shortcodeEstimates = JSON.parse(fs.readFileSync(new URL('../lib/storyShortcodeEstimates.json', import.meta.url), 'utf8'));
+const SHORTCODE_CHAR_ESTIMATES = shortcodeEstimates.estimates;
+const SHORTCODE_DEFAULT_CHAR_ESTIMATE = shortcodeEstimates.default;
 const AUTO_EXPAND_BLOCK_REGEX = /<!--\s*AUTO-EXPAND-V1\s*-->[\s\S]*?<!--\s*\/AUTO-EXPAND-V1\s*-->/g;
 // sanity check 대상: [기처리 페어(결과에 없어야 정상), 미해결 cover 페어(잡혀야 정상)]
 const WATCH_PAIRS = [
