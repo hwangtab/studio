@@ -24,3 +24,8 @@ Write succinct, sentence-style commit subjects, optionally with a scope. PRs sho
 Studio facts (services offered, phone number, station exits, pricing) have a single source of truth: `docs/wiki/entities/services.md` and `docs/wiki/entities/naver-place.md`. `lib/factGuards.ts` enforces the critical subset in CI (`content/factGuards.test.ts`). Before writing content that states a fact about the studio, check the wiki. Never claim: vocal/instrument lessons (only producing lessons exist), English-speaking engineers (English = booking + remote mixing only), the retired 0507 number, or wrong station exits (Yeonsinnae exit 4, Bulgwang exit 7).
 
 **Phone number in markdown**: never hardcode it in `content/stories/` — write `%%phone%%` (or `%%phone-intl%%` for the +82 form). The value lives in `lib/factTokens.js` and is substituted at load time by every raw-md reader; hardcoding fails CI (`phone-hardcoded-in-content`). If a rotating fact changes (e.g. the phone number), update `lib/factTokens.js` + the wiki + `lib/factGuards.ts` together — content files need no edits.
+
+## Claude Code Document Pointers
+Full operating rules live in the root `CLAUDE.md` (1292 lines). It is not auto-loaded; read only the relevant section when making decisions about builds, deployment, SEO/GA4/GSC analysis, content policy, or canonical facts.
+
+Domain rules live in `lib/shop/CLAUDE.md`, `lib/funding/CLAUDE.md`, `lib/shows/CLAUDE.md`, `lib/crypto/CLAUDE.md`, and `lib/software/CLAUDE.md`. Read the matching file before modifying anything under that directory.
