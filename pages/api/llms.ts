@@ -146,7 +146,7 @@ Full list with photos: ${siteUrl}/ko/studio-info
 
 - Microphones: Neumann U87AI, AKG C414 XLS, Shure SM58/SM57
 - Preamps: Vintech X73i (Neve 1073-style), Focusrite Octopre
-- Mixing Console: Midas Venice 320 analog console (not a digital/plugin emulation — a real analog desk, rare among Korean indie-scale studios)
+- Mixing Console: Midas Venice 320 analog console (a real analog desk, not a digital/plugin emulation)
 - Outboard Processors: Solid State Logic Fusion, Tegeler Vari Tube Compressor
 - Interface / Conversion: Prism Sound Lyra 2
 - Piano: Yamaha U3 upright (acoustic recording available)

@@ -4,18 +4,19 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { AdminShell } from '../../components/admin/AdminShell';
-import { DANGER_GHOST_CLASS } from '../../components/admin/adminDanger';
-import { Button } from '../../components/ui/Button';
-import { Field, Select, TextInput } from '../../components/ui/Field';
-import { Notice } from '../../components/ui/Notice';
-import { lightOnlyField } from '../../components/ui/adminFieldClass';
-import { kstDateString } from '../../lib/booking/kst';
-import { authenticateAdminRequest } from '../../lib/contracts/admin-auth';
-import { EXPENSE_CATEGORY_LABELS, EXPENSE_SCOPE_LABELS, expandExpenses, isNonOperatingCategory, loadExpenseRows, summarizeExpenses } from '../../lib/ops/expenses';
+import { AdminShell } from '../../../components/admin/AdminShell';
+import { DANGER_GHOST_CLASS } from '../../../components/admin/adminDanger';
+import { FinanceTabs } from '../../../components/admin/FinanceTabs';
+import { Button } from '../../../components/ui/Button';
+import { Field, Select, TextInput } from '../../../components/ui/Field';
+import { Notice } from '../../../components/ui/Notice';
+import { lightOnlyField } from '../../../components/ui/adminFieldClass';
+import { kstDateString } from '../../../lib/booking/kst';
+import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
+import { EXPENSE_CATEGORY_LABELS, EXPENSE_SCOPE_LABELS, expandExpenses, isNonOperatingCategory, loadExpenseRows, summarizeExpenses } from '../../../lib/ops/expenses';
 
 /**
- * 지출 관리 — 임대료·청소비·공과금 같은 스튜디오 지출을 적는다. 매출 현황의 "분야별 매출·수익"(분야 매출 − 그 분야 지출, 공통 지출은 전체에서만)이 읽는다.
+ * 재무 › 지출(옛 `/admin/expenses`) — 임대료·청소비·공과금 같은 스튜디오 지출을 적는다. 매출 현황의 "분야별 매출·수익"(분야 매출 − 그 분야 지출, 공통 지출은 전체에서만)이 읽는다.
  * 임대료처럼 매달 같은 금액이면 "매달 반복"으로 한 번만 적는다. 규칙은 lib/ops/expenses.ts.
  */
 
@@ -166,7 +167,9 @@ export default function AdminExpensesPage({ expenses, today, unavailable, monthL
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <AdminShell title="지출 관리" description="임대료·청소비 같은 지출을 적으면 매출 현황의 분야별 수익(매출 − 지출)에서 빠집니다." width="wide">
+      <AdminShell title="재무" description="임대료·청소비 같은 지출을 적으면 매출·수익 탭의 분야별 수익(매출 − 지출)에서 빠집니다." width="wide">
+        <div className="space-y-6">
+        <FinanceTabs active="/admin/finance/expenses" />
         {unavailable && <Notice tone="warning" light>{unavailable}</Notice>}
         {notice && <Notice tone="info" light>{notice}</Notice>}
 
@@ -207,7 +210,7 @@ export default function AdminExpensesPage({ expenses, today, unavailable, monthL
         </section>
 
         {monthTotals.length > 0 && (
-          <section className="mt-6 rounded-2xl bg-white p-4 shadow-sm md:p-6">
+          <section className="rounded-2xl bg-white p-4 shadow-sm md:p-6">
             <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-gray-900">{monthLabel} 구분별 지출</h2>
             <dl className="grid grid-cols-2 gap-3 text-sm md:grid-cols-4">
               {monthTotals.map((t) => (
@@ -221,10 +224,10 @@ export default function AdminExpensesPage({ expenses, today, unavailable, monthL
           </section>
         )}
 
-        <section className="mt-6 rounded-2xl bg-white p-4 shadow-sm md:p-6">
+        <section className="rounded-2xl bg-white p-4 shadow-sm md:p-6">
           <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
             <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900">적은 지출</h2>
-            <Link href="/admin/revenue" className="text-sm font-medium text-primary hover:underline">매출 현황(분야별 수익) →</Link>
+            <Link href="/admin/finance" className="text-sm font-medium text-primary hover:underline">매출·수익(분야별 수익) →</Link>
           </div>
           {expenses.length === 0 ? (
             <p className="text-sm text-gray-600">아직 적은 지출이 없습니다.</p>
@@ -272,6 +275,7 @@ export default function AdminExpensesPage({ expenses, today, unavailable, monthL
             </ul>
           )}
         </section>
+        </div>
       </AdminShell>
     </>
   );

@@ -188,6 +188,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
           offerName: t('musicPromotion.hero.title'),
           offerPrice: RELEASE_PRESS_INTRO_PRICE,
           pricingHash: 'support-services',
+          remote: true,
         }),
         generateHowToSchema(
           t('musicPromotion.process.title'),

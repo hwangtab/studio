@@ -2474,7 +2474,7 @@
       "items": [
         {
           "q": "Có thể quay và thu âm cùng lúc không?",
-          "a": "Có. Thu âm và quay video diễn ra đồng thời trong một buổi. Quay phim, mix cơ bản (cân chỉnh âm lượng) và dựng phim đều được bao gồm."
+          "a": "Có. Thu âm và quay video diễn ra đồng thời trong một buổi. Quay phim, mix cơ bản (cân bằng âm lượng) và dựng phim đều được bao gồm."
         },
         {
           "q": "Chi phí là bao nhiêu?",
@@ -2534,7 +2534,7 @@
         },
         {
           "title": "Mix & Dựng Phim",
-          "description": "Mix cơ bản (cân chỉnh âm lượng) và dựng video hoàn thành cùng nhau. Không bao gồm chỉnh giọng."
+          "description": "Mix cơ bản (cân bằng âm lượng) và dựng video hoàn thành cùng nhau. Không bao gồm chỉnh giọng."
         },
         {
           "title": "Giao Hàng Cuối Cùng",
@@ -2564,7 +2564,7 @@
         },
         {
           "q": "Có thể chỉ thu âm bài cover mà không quay video không?",
-          "a": "Có, thực hiện như buổi thu âm thông thường (thu giọng 3 giờ, ₩250,000, không giới hạn số bài). Phần mix của gói trọn gói chỉ là mix cơ bản cân chỉnh âm lượng và không bao gồm chỉnh giọng. Chỉnh giọng hoặc mix & mastering đầy đủ được đặt riêng."
+          "a": "Có, thực hiện như buổi thu âm thông thường (thu giọng 3 giờ, ₩250,000, không giới hạn số bài). Phần mix của gói trọn gói chỉ là mix cơ bản cân bằng âm lượng và không bao gồm chỉnh giọng. Chỉnh giọng hoặc mix & mastering đầy đủ được đặt riêng."
         },
         {
           "q": "Có thể thêm chỉnh giọng không?",

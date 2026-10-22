@@ -187,6 +187,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
       offerName: locale === 'ko' ? '믹싱 (10트랙 이하)' : 'Mixing (up to 10 tracks)',
       offerPrice: MIXING_LEVEL1_PRICE,
       pricingHash: 'mixing',
+      remote: true,
     }),
     [t, siteConfig, locale, pageUrl]
   );
