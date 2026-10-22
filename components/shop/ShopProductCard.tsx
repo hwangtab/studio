@@ -22,6 +22,7 @@ export default function ShopProductCard({ product, soldOut }: { product: ShopPro
           alt=""
           containerClassName="relative block aspect-square w-full overflow-hidden"
           className="object-cover"
+          sizes="(min-width: 1024px) 384px, (min-width: 768px) 50vw, 100vw"
           loading="lazy"
         />
       ) : (

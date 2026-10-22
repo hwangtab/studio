@@ -34,6 +34,7 @@ export default function ShowCard({ show, nowSec, past = false, locale = 'ko' }: 
             alt=""
             containerClassName="relative block aspect-[3/4] w-full overflow-hidden"
             className="object-cover"
+            sizes="(min-width: 1024px) 384px, (min-width: 768px) 50vw, 100vw"
             loading="lazy"
           />
         ) : (

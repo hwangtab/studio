@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import type { NextPageWithLayout } from '../../types';
 import type { GetStaticProps, GetStaticPaths } from 'next';
 import dynamic from 'next/dynamic';
@@ -97,14 +97,25 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
     }
   }, [router.query.item, initialPortfolioItems]);
 
+  // 카드를 눌러 연 모달은 히스토리를 한 칸 쌓는다. 닫을 때 또 push하면 Back이 모달을 다시 열었다 —
+  // 그래서 이 페이지에서 연 모달은 back()으로 그 칸을 걷고, ?item= 링크로 바로 들어온 경우만 replace한다
+  // (back()이면 사이트를 떠난다).
+  const openedHere = useRef(false);
+
   const handleCardClick = (item: PortfolioItem) => {
     setSelectedItem(item);
+    openedHere.current = true;
     router.push(`/${locale}/portfolio?item=${item.id}`, undefined, { shallow: true, scroll: false });
   };
 
   const handleCloseModal = () => {
     setSelectedItem(null);
-    router.push(`/${locale}/portfolio`, undefined, { shallow: true, scroll: false });
+    if (openedHere.current) {
+      openedHere.current = false;
+      router.back();
+      return;
+    }
+    router.replace(`/${locale}/portfolio`, undefined, { shallow: true, scroll: false });
   };
 
   const handleCategoryChange = (categoryId: string) => {

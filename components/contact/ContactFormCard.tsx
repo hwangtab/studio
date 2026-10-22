@@ -174,7 +174,8 @@ const ContactFormCard = ({
           })}
         </Notice>
       )}
-      <form id="contact-form" onSubmit={handleGatedSubmit} className="space-y-4 scroll-mt-24">
+      {/* noValidate: 필드의 required는 보조기술용으로 두고, 검증은 useContactForm 하나로 한다 — 브라우저 말풍선이 먼저 막으면 오류 요약·포커스 이동·한국어 문구가 돌지 않는다. */}
+      <form id="contact-form" noValidate onSubmit={handleGatedSubmit} className="space-y-4 scroll-mt-24">
         <input
           type="text"
           name="company"
