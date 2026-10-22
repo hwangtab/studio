@@ -43,6 +43,8 @@ export const VOCAL_TUNING_ADDON_PRICE = 150000;
 export const WEDDING_PACKAGE_PRICE = 350000; // 축가/이벤트 녹음(행사용 믹싱 포함)
 export const VOICEOVER_HOURLY_PRICE = 100000;
 export const COVER_VIDEO_PACKAGE_PRICE = 350000;
+/** 커버 영상 올인원 + 정교한 보컬 튜닝(곡당 옵션). 올인원은 1곡 기준이라 합계 그대로 한 상품이다. */
+export const COVER_VIDEO_TUNING_PACKAGE_PRICE = COVER_VIDEO_PACKAGE_PRICE + VOCAL_TUNING_ADDON_PRICE;
 export const RENTAL_HOURLY_PRICE = 100000; // 촬영 대관
 // 영상 제작(/music-video) — 해방필름 치치 감독 촬영. 둘 다 "부터"(하한)이고 카메라 대수·촬영 시간·장소는
 // 상담으로 정한다(운영자 결정 2026-10-22). 온라인 결제 상품이 아니다 — 카카오 상담 → 견적 → 맞춤 결제 링크.
