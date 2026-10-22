@@ -116,12 +116,22 @@ describe('validateSessionRegistration', () => {
 });
 
 describe('parseSampleUrl', () => {
+  it('앞부분 없이 붙여 넣은 주소는 https://를 붙여 받는다', () => {
+    expect(parseSampleUrl('youtube.com/watch?v=abc')).toBe('https://youtube.com/watch?v=abc');
+    expect(parseSampleUrl('www.youtube.com/watch?v=abc')).toBe('https://www.youtube.com/watch?v=abc');
+    expect(parseSampleUrl('youtu.be/abc')).toBe('https://youtu.be/abc');
+    expect(parseSampleUrl('//example.com/a')).toBe('https://example.com/a');
+    expect(parseSampleUrl('example.com:443/a')).toBe('https://example.com/a');
+    expect(parseSampleUrl('mailto:a@example.com')).toBeNull();
+    expect(parseSampleUrl('ftp://example.com/a')).toBeNull();
+    expect(parseSampleUrl('유튜브')).toBeNull();
+  });
+
   it('https만 받는다', () => {
     expect(parseSampleUrl('https://soundcloud.com/a/b')).toBe('https://soundcloud.com/a/b');
-    expect(parseSampleUrl('http://soundcloud.com/a')).toBeNull();
+    expect(parseSampleUrl('http://soundcloud.com/a')).toBe('https://soundcloud.com/a');
     expect(parseSampleUrl('javascript:alert(1)')).toBeNull();
     expect(parseSampleUrl('data:text/html,hi')).toBeNull();
-    expect(parseSampleUrl('//example.com/a')).toBeNull();
   });
 
   it('호스트에 점이 없거나 계정이 있거나 공백·양방향 문자가 있으면 거절한다', () => {

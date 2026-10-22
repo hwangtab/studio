@@ -125,9 +125,19 @@ export const parseSampleUrl = (raw: unknown): string | null => {
   if (!trimmed || trimmed.length > SESSION_LIMITS.sampleUrl.max) return null;
   // 공백·제어·양방향 문자가 섞인 주소는 고쳐 쓰지 않고 거절한다 — 붙여 넣기 실수이거나 속임수다.
   if (/\s/.test(trimmed) || hasUnsafeChars(trimmed)) return null;
+  // 붙여 넣기 편의(2026-10-22 운영자 요청 — 샘플은 유튜브 링크 정도로 가볍게): `youtube.com/watch?…`처럼 앞부분이 없으면
+  // https://를 붙이고, http://는 https://로 올린다. 그 밖의 스킴(javascript:·data:·mailto: 등)은 그대로 거절한다.
+  // `youtube.com:443/…`의 `:443`은 스킴이 아니라 포트라 숫자가 뒤따르는 경우는 스킴으로 보지 않는다.
+  let candidate = trimmed;
+  if (/^http:\/\//i.test(candidate)) candidate = `https://${candidate.slice('http://'.length)}`;
+  else if (/^\/\//.test(candidate)) candidate = `https:${candidate}`;
+  else if (!/^https:\/\//i.test(candidate)) {
+    if (/^[a-z][a-z0-9+.-]*:(?!\d)/i.test(candidate)) return null;
+    candidate = `https://${candidate}`;
+  }
   let url: URL;
   try {
-    url = new URL(trimmed);
+    url = new URL(candidate);
   } catch {
     return null;
   }
@@ -270,7 +280,7 @@ export const validateSessionRegistration = (
   for (const link of rawLinks) {
     if (!link || typeof link !== 'object') return fail('sampleLinks', 'sample_link_invalid', '샘플 링크를 확인해 주세요.');
     const url = parseSampleUrl((link as { url?: unknown }).url);
-    if (!url) return fail('sampleLinks', 'sample_link_invalid', '샘플 링크는 https:// 로 시작하는 주소만 넣을 수 있어요.');
+    if (!url) return fail('sampleLinks', 'sample_link_invalid', '샘플 링크 주소를 확인해 주세요. 유튜브·사운드클라우드 같은 웹 주소를 붙여 넣으면 돼요.');
     const label = cleanLine((link as { label?: unknown }).label);
     if (label.length > SESSION_LIMITS.sampleLabel.max) {
       return fail('sampleLinks', 'sample_link_invalid', `링크 설명은 ${SESSION_LIMITS.sampleLabel.max}자 이하로 적어 주세요.`);

@@ -251,11 +251,11 @@ export default function SessionMusicianForm({ mode, initial = EMPTY_SESSION_FORM
           <p className="typo-card-meta font-medium text-gray-700 dark:text-gray-300">
             연주 샘플 링크 <span className="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
           </p>
-          <p className="typo-caption">유튜브·사운드클라우드·드라이브 같은 https 링크를 1~{SESSION_LIMITS.sampleLinks.max}개 넣어 주세요. 파일은 받지 않아요.</p>
+          <p className="typo-caption">유튜브·사운드클라우드·인스타그램·드라이브 같은 링크를 1~{SESSION_LIMITS.sampleLinks.max}개 붙여 넣어 주세요. 음원 파일을 따로 만들 필요는 없어요.</p>
           {values.sampleLinks.map((link, index) => (
             <div key={index} className="grid gap-2 sm:grid-cols-[2fr_1fr]">
               <Field id={`sm-link-${index}`} label={`링크 ${index + 1}`} error={index === 0 ? fieldError('sampleLinks') : undefined}>
-                <TextInput value={link.url} onChange={(e) => setLink(index, { url: e.target.value })} type="url" inputMode="url" placeholder="https://" maxLength={SESSION_LIMITS.sampleUrl.max} />
+                <TextInput value={link.url} onChange={(e) => setLink(index, { url: e.target.value })} type="text" inputMode="url" autoComplete="off" placeholder="예: youtube.com/watch?v=…" maxLength={SESSION_LIMITS.sampleUrl.max} />
               </Field>
               <Field id={`sm-link-label-${index}`} label="설명(선택)">
                 <TextInput value={link.label} onChange={(e) => setLink(index, { label: e.target.value })} maxLength={SESSION_LIMITS.sampleLabel.max} />
