@@ -21,6 +21,8 @@ interface PortfolioDetailSummaryProps {
    * 명시하지 않으면 titleTag(호출부가 이미 page='h1'/modal='h2'로 구분해 넘김)로 유추한다.
    */
   imagePriority?: boolean;
+  /** 커버 위에 얹는 요소(30초 발췌 재생 버튼). 커버 칸이 relative라 호출부가 absolute로 둔다. */
+  coverOverlay?: React.ReactNode;
   imageSectionClassName?: string;
   imageWrapperClassName?: string;
   contentSectionClassName?: string;
@@ -42,6 +44,7 @@ const PortfolioDetailSummary = ({
   actions,
   titleTag = 'h2',
   imagePriority,
+  coverOverlay,
   imageSectionClassName = 'px-6 pt-6',
   imageWrapperClassName = 'relative aspect-square max-w-xs mx-auto rounded-xl overflow-hidden shadow-lg',
   contentSectionClassName = 'p-6',
@@ -68,6 +71,7 @@ const PortfolioDetailSummary = ({
             priority={resolvedImagePriority}
             fill
           />
+          {coverOverlay}
         </div>
       </div>
 

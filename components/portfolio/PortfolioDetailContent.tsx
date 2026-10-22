@@ -5,6 +5,8 @@ import type { Locale } from '../../lib/i18n';
 import { getCategoryInfo } from '../../utils/portfolioDataUtils';
 import PortfolioDetailSummary from './PortfolioDetailSummary';
 import PortfolioDetailBody from './PortfolioDetailBody';
+import CoverPlayButton from '../audio/CoverPlayButton';
+import { getExcerptForPortfolio, toGlobalTrack } from '../../data/audioExcerpts';
 
 interface PortfolioDetailContentProps {
   item: PortfolioItem;
@@ -54,6 +56,11 @@ const PortfolioDetailContent = ({
 }: PortfolioDetailContentProps) => {
   const { t } = useTranslation('common', { lng: locale });
   const categoryInfo = getCategoryInfo(item.category, categories);
+  // 30초 발췌가 있는 작품은 커버에 재생 버튼(그리드와 같은 버튼·같은 글로벌 플레이어). 페이지(h1)·모달(h2)을 계측에서 가른다.
+  const excerpt = getExcerptForPortfolio(item.id);
+  const coverTrack = excerpt
+    ? toGlobalTrack(excerpt, locale, titleTag === 'h1' ? 'PortfolioDetail' : 'PortfolioModal', `/${locale}/portfolio/${item.id}`)
+    : null;
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -69,6 +76,7 @@ const PortfolioDetailContent = ({
           listenUrl={item.link}
           titleTag={titleTag}
           actions={summaryActions}
+          {...(coverTrack && { coverOverlay: <CoverPlayButton track={coverTrack} className="absolute bottom-3 right-3" /> })}
           {...(imageSectionClassName && { imageSectionClassName })}
           {...(imageWrapperClassName && { imageWrapperClassName })}
           {...(contentSectionClassName && { contentSectionClassName })}
