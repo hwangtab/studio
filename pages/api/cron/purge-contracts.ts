@@ -54,6 +54,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return null;
     });
 
+    let anyFailed = false;
+
     /**
      * 일부라도 실패하면 알린다.
      *
@@ -92,8 +94,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }),
       }).catch(() => {});
 
-      // 크론 실행 자체를 실패로 남긴다. 재시도는 안전하다 — 이미 파기된 건은 건너뛴다.
-      return res.status(500).json({ ok: false, ...result, production, sessionMusicians });
+      // 크론 실행 자체를 실패로 남긴다(맨 아래). 다른 파기의 실패 알림이 가려지지 않게 여기서 돌아가지 않는다 — 재시도는 안전하다(이미 파기된 건은 건너뛴다).
+
+      anyFailed = true;
     }
 
     // 월 입주 기록 파기가 실패하면 알린다 — 처리방침 19항에서 "퇴실 3년·5년 뒤 지운다"고 약속했으므로 조용히 200으로 끝나면 안 된다(감사 2026-10-19).
@@ -108,7 +111,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           hints: ['처리방침 19항으로 약속한 파기(퇴실 3년 개인정보·5년 기록 전체)입니다.', '반복되면 Turso 연결과 room_tenancies 표를 확인해 주세요.'],
         }),
       }).catch(() => {});
-      return res.status(500).json({ ok: false, ...result, production, tenancy, sessionMusicians });
+      // 크론 실행 자체를 실패로 남긴다(맨 아래). 다른 파기의 실패 알림이 가려지지 않게 여기서 돌아가지 않는다 — 재시도는 안전하다(이미 파기된 건은 건너뛴다).
+      anyFailed = true;
     }
 
     // 레슨 기록 파기가 실패하면 알린다 — 수강 계약서 제10조·처리방침으로 약속한 파기(수강 종료 3년·5년)이므로 조용히 200으로 끝나면 안 된다.
@@ -123,7 +127,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           hints: ['수강 계약서 제10조로 약속한 파기(수강 종료 3년 계약서 개인정보·5년 수강 등록 이름)입니다.', '반복되면 Turso 연결과 lesson_contracts·lesson_enrollments 표를 확인해 주세요.'],
         }),
       }).catch(() => {});
-      return res.status(500).json({ ok: false, ...result, production, tenancy, lessons, sessionMusicians });
+      // 크론 실행 자체를 실패로 남긴다(맨 아래). 다른 파기의 실패 알림이 가려지지 않게 여기서 돌아가지 않는다 — 재시도는 안전하다(이미 파기된 건은 건너뛴다).
+      anyFailed = true;
     }
 
     // 세션 연주자 등록 파기가 실패하면 알린다 — 처리방침 18항 ⑯에서 "마지막 확인 2년 뒤 지운다"고 약속했으므로 조용히 200으로 끝나면 안 된다.
@@ -138,7 +143,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           hints: ['처리방침 18항 ⑯으로 약속한 파기(마지막 확인 2년 뒤 행 삭제)입니다.', '반복되면 Turso 연결과 session_musicians 표를 확인해 주세요.'],
         }),
       }).catch(() => {});
-      return res.status(500).json({ ok: false, ...result, production, tenancy, sessionMusicians });
+      // 크론 실행 자체를 실패로 남긴다(맨 아래). 다른 파기의 실패 알림이 가려지지 않게 여기서 돌아가지 않는다 — 재시도는 안전하다(이미 파기된 건은 건너뛴다).
+      anyFailed = true;
     }
 
     // 재확인 메일이 나가지 않은 건은 알리되 크론을 실패로 만들지 않는다 — 다음 달에 보유 기한 안에서 다시 시도한다.
@@ -160,7 +166,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }).catch(() => {});
     }
 
-    return res.status(200).json({ ok: true, ...result, production, tenancy, lessons, sessionMusicians, sessionReconfirm });
+    const body = { ...result, production, tenancy, lessons, sessionMusicians, sessionReconfirm };
+    if (anyFailed) return res.status(500).json({ ok: false, ...body });
+    return res.status(200).json({ ok: true, ...body });
   } catch (error: unknown) {
     const detail = error instanceof Error ? error.message : String(error);
     console.error('[cron/purge-contracts] Failed:', error);

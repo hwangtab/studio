@@ -9,6 +9,7 @@ import {
   insertSessionMusician,
   isUniqueViolation,
   replaceManageTokenHash,
+  restoreManageTokenHash,
   toProfile,
   updateByManageTokenHash,
   type SessionMusicianProfile,
@@ -37,7 +38,7 @@ export const submitRegistration = async (input: SessionRegistrationInput): Promi
   const emailHash = hashSessionEmail(input.email);
 
   const existing = await findIdByEmailHash(emailHash);
-  if (existing) return resendManageLink(existing.id, existing.stageName, input.email);
+  if (existing) return resendManageLink(existing, input.email);
 
   const token = generateManageToken();
   let id: string;
@@ -58,7 +59,7 @@ export const submitRegistration = async (input: SessionRegistrationInput): Promi
     if (!isUniqueViolation(error)) throw error;
     const raced = await findIdByEmailHash(emailHash);
     if (!raced) throw error;
-    return resendManageLink(raced.id, raced.stageName, input.email);
+    return resendManageLink(raced, input.email);
   }
 
   // 메일 실패는 접수를 되돌리지 않는다 — 로그만 남긴다(운영자 알림 실패는 email.ts가 경보한다).
@@ -74,11 +75,23 @@ export const submitRegistration = async (input: SessionRegistrationInput): Promi
   return { kind: 'created', id };
 };
 
-const resendManageLink = async (id: string, stageName: string, email: string): Promise<SubmitOutcome> => {
+/**
+ * 새 관리 링크를 만들어 보낸다. **메일이 실패하면 옛 토큰으로 되돌린다** — 안 그러면 본인이 가진 링크는 끊기고 새 링크는
+ * 도착하지 않아 수정·삭제할 길이 사라진다(재확인 메일 `retention.ts`와 같은 처리).
+ */
+const resendManageLink = async (
+  existing: { id: string; stageName: string; manageTokenHash: string },
+  email: string,
+): Promise<SubmitOutcome> => {
+  const { id } = existing;
   const token = generateManageToken();
-  await replaceManageTokenHash(id, hashManageToken(token));
-  const mailError = await sendRegistrationMail('already', email, stageName, manageLinkUrl(token));
-  if (mailError) console.error(`[session-musicians] 관리 링크 재발송 메일 실패 (id=${id}):`, mailError);
+  const newHash = hashManageToken(token);
+  await replaceManageTokenHash(id, newHash);
+  const mailError = await sendRegistrationMail('already', email, existing.stageName, manageLinkUrl(token));
+  if (mailError) {
+    console.error(`[session-musicians] 관리 링크 재발송 메일 실패 (id=${id}) — 옛 링크로 되돌립니다:`, mailError);
+    await restoreManageTokenHash(id, newHash, existing.manageTokenHash);
+  }
   return { kind: 'duplicate', id };
 };
 

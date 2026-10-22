@@ -1,5 +1,3 @@
-import { createHash } from 'node:crypto';
-
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
@@ -8,7 +6,7 @@ import { isHoneypotSubmission, isTooFast } from '../../../lib/contact/payload';
 import { getClientIp } from '../../../lib/contracts/client-ip';
 import { isSessionMusicianTableMissing } from '../../../lib/sessionMusicians/repository';
 import { submitRegistration } from '../../../lib/sessionMusicians/service';
-import { SessionMusicianConfigError } from '../../../lib/sessionMusicians/tokens';
+import { hashSessionEmail, SessionMusicianConfigError } from '../../../lib/sessionMusicians/tokens';
 import { validateSessionRegistration } from '../../../lib/sessionMusicians/validate';
 
 /**
@@ -31,9 +29,11 @@ const EMAIL_DAILY_LIMIT = 2;
 const GLOBAL_DAILY_CAP = 50;
 const DAY_SECONDS = 86_400;
 
-/** rate_limits.key에 평문 이메일을 남기지 않는다. */
-const emailKey = (email: string): string =>
-  `session_musician:email:${createHash('sha256').update(email).digest('hex').slice(0, 16)}`;
+/**
+ * rate_limits.key에 평문 이메일을 남기지 않는다. 키 없는 sha256은 흔한 주소 목록으로 되짚을 수 있어
+ * 중복 판정과 같은 키 있는 해시(`hashSessionEmail`)를 쓴다.
+ */
+const emailKey = (email: string): string => `session_musician:email:${hashSessionEmail(email).slice(0, 32)}`;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -62,27 +62,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (!isAllowedContactRequestOrigin(req)) return res.status(403).json({ ok: false, message: 'Forbidden' });
 
-  const ip = getClientIp(req) ?? 'unknown';
-  if (!(await consumeRateLimit(`session_musician:ip:${ip}`, IP_LIMIT, IP_WINDOW_SECONDS))) {
-    return res.status(429).json({ ok: false, code: 'rate_limited', message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
-  }
-
+  // 검증을 먼저 한다 — 검증은 DB·메일을 건드리지 않으니 횟수를 세지 않는다. 입력을 고쳐 다시 내는 지원자가
+  // 시간당 한도(3건)를 오타로 다 써 버리지 않게(2026-10-22 리뷰).
   const validation = validateSessionRegistration(body);
   if (!validation.ok) {
     return res.status(400).json({ ok: false, field: validation.field, code: validation.code, message: validation.message });
   }
   const input = validation.value;
 
-  // 이메일 단위·전체 상한은 메일을 실제로 보내기 직전에만 소비한다(검증에 걸린 요청이 예산을 태우지 않게).
-  if (!(await consumeRateLimit(emailKey(input.email), EMAIL_DAILY_LIMIT, DAY_SECONDS))) {
-    return res.status(200).json(OK);
-  }
-  if (!(await consumeRateLimit('session_musician:global', GLOBAL_DAILY_CAP, DAY_SECONDS))) {
-    console.error('[session-musicians] 일일 접수 한도 도달 — 접수를 건너뜁니다.');
-    return res.status(429).json({ ok: false, code: 'daily_cap', message: '오늘은 접수가 많아요. 내일 다시 시도해 주세요.' });
+  const ip = getClientIp(req) ?? 'unknown';
+  if (!(await consumeRateLimit(`session_musician:ip:${ip}`, IP_LIMIT, IP_WINDOW_SECONDS))) {
+    return res.status(429).json({ ok: false, code: 'rate_limited', message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
   }
 
   try {
+    // 이메일 단위·전체 상한은 메일을 실제로 보내기 직전에만 소비한다(검증에 걸린 요청이 예산을 태우지 않게).
+    // emailKey는 비밀이 없으면 SessionMusicianConfigError를 던지므로 try 안에 둔다.
+    if (!(await consumeRateLimit(emailKey(input.email), EMAIL_DAILY_LIMIT, DAY_SECONDS))) {
+      return res.status(200).json(OK);
+    }
+    if (!(await consumeRateLimit('session_musician:global', GLOBAL_DAILY_CAP, DAY_SECONDS))) {
+      console.error('[session-musicians] 일일 접수 한도 도달 — 접수를 건너뜁니다.');
+      return res.status(429).json({ ok: false, code: 'daily_cap', message: '오늘은 접수가 많아요. 내일 다시 시도해 주세요.' });
+    }
+
     await submitRegistration(input);
     return res.status(200).json(OK);
   } catch (error: unknown) {
