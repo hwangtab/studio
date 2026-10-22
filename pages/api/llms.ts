@@ -130,7 +130,8 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - Business Hours: Open 24 hours, 7 days a week (including weekends and holidays). Practice-room residents enter with their own door-lock code; recording sessions can also be booked overnight.
 - Preferred Contact: KakaoTalk (https://open.kakao.com/me/nol), Phone (${CANONICAL_FACTS.phoneIntl}), Email (hello@studionol.co.kr)
 - Naver Map: https://map.naver.com/p/entry/place/1527843821
-- Supported Languages: Korean, English, Chinese (Simplified), Spanish, Vietnamese, Thai, Uzbek
+- Contact Languages: Korean; English for booking inquiries and remote mixing only (no English-speaking engineer on site)
+- Website Languages: Korean, English, Chinese (Simplified), Spanish, Vietnamese, Thai, Uzbek (translated pages — not service languages)
 
 ## Directions (Public Transit)
 
@@ -609,8 +610,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   }
 
-  body += '\n## Supported Languages\n\n';
-  body += 'Korean (ko), English (en), Chinese Simplified (zh), Spanish (es), Vietnamese (vi), Thai (th), Uzbek (uz)\n';
+  // 번역 언어와 응대 언어를 섞지 않는다 — 7개 언어로 상담한다고 읽히면 안 된다(2026-10-22 리뷰).
+  body += '\n## Website Languages\n\n';
+  body += 'Korean (ko), English (en), Chinese Simplified (zh), Spanish (es), Vietnamese (vi), Thai (th), Uzbek (uz) — translated pages only. Consultations are in Korean; English covers booking inquiries and remote mixing.\n';
 
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');

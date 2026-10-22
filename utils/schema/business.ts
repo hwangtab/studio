@@ -152,7 +152,8 @@ export const generateDefaultSchema = (
             telephone: `+82-${config.contact.phone.replace(/^0/, '')}`,
             email: config.contact.email,
             url: localeContactUrl,
-            availableLanguage: ['ko-KR', 'en-US', 'zh-CN', 'es-ES', 'vi-VN', 'th-TH', 'uz-UZ'],
+            // 응대 가능한 언어만 — 사이트 번역 언어(7개)와 다르다. 영어는 예약 응대·원격 믹싱까지(docs/wiki/entities/services.md 서비스 범위 가드).
+            availableLanguage: ['ko-KR', 'en-US'],
           },
         ],
         legalName: 'Studio NOL',
@@ -172,10 +173,10 @@ export const generateDefaultSchema = (
         // "이 스튜디오를 누가 운영하는가"를 AI 엔진이 따라갈 수 있게 만든다
         // (실체는 아래 @graph의 #person-hwang 노드).
         founder: { '@id': personId },
-        numberOfEmployees: { '@type': 'QuantitativeValue', value: 5 },
         description: config.description,
         slogan: 'Realizing artists\' musical vision through sound',
-        knowsLanguage: ['ko-KR', 'en-US', 'zh-CN', 'es-ES', 'vi-VN', 'th-TH', 'uz-UZ'],
+        // 조직이 쓰는 언어(응대 기준). 번역 페이지가 있다고 그 언어로 상담·작업하는 것은 아니다.
+        knowsLanguage: ['ko-KR', 'en-US'],
         knowsAbout: [
           'Music Recording', 'Audio Mixing', 'Audio Mastering', 'Music Production',
           'Vocal Recording', 'Voice Acting Recording', 'Wedding Song Recording',
