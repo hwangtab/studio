@@ -29,6 +29,7 @@ import { BOOKING_LINES, BOOKING_LINE_LABELS, bookingLineOf, parseBookingLine } f
 import { expireStaleOrders } from '../../../lib/booking/service';
 import { unmarkedSessionRange } from '../../../lib/booking/unmarkedSessions';
 import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
+import { Notice } from '../../../components/ui/Notice';
 
 /** 한 화면에 싣는 최대 건수. 넘으면 오래된 주문이 잘린다는 사실을 화면에 알린다(contracts와 동일). */
 const LIST_LIMIT = 200;
@@ -389,7 +390,7 @@ export default function AdminBookingsPage({
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
             <div className="p-4 md:p-8">
               {notice && (
-                <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>
+                <Notice tone="info" light className="mb-4">{notice}</Notice>
               )}
 
               {mismatched.length > 0 && (
@@ -475,6 +476,7 @@ export default function AdminBookingsPage({
                 <TextInput
                   type="text"
                   placeholder="이름, 이메일, 전화번호, 주문번호 검색"
+                  aria-label="예약 검색"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   light className="w-auto flex-1 min-w-[240px] px-4"
@@ -575,11 +577,11 @@ export default function AdminBookingsPage({
                             )}
                           </td>
                           <td data-label="관리" className="px-4 py-3">
-                            <Link href={`/admin/bookings/${booking.id}`} passHref>
-                              <Button light size="sm" variant="weak">
+                            <Button asChild light size="sm" variant="weak">
+                              <Link href={`/admin/bookings/${booking.id}`}>
                                 상세
-                              </Button>
-                            </Link>
+                              </Link>
+                            </Button>
                           </td>
                         </tr>
                       );
@@ -590,7 +592,7 @@ export default function AdminBookingsPage({
 
               {filteredBookings.length === 0 && (
                 <div className="text-center py-12 text-gray-500">
-                  {bookings.length === 0 ? '아직 접수된 예약이 없습니다.' : '검색 결과가 없습니다.'}
+                  {bookings.length === 0 ? '아직 접수된 예약이 없습니다.' : search.trim() ? '검색 결과가 없습니다.' : '이 조건에 맞는 예약이 없습니다.'}
                 </div>
               )}
             </div>

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Button } from '../ui/Button';
 import { formatPriceAmount, SHOP_ARTIST_SHARE_PERCENT } from '../../data/pricing';
 import type { AdjustmentView, ShopPayoutRowView } from '../../lib/partnerPayouts/shopView';
+import { DANGER_TEXT_CLASS } from './adminDanger';
 
 /**
  * `/admin/shop`의 「아티스트 정산」 — 달별 미리보기 + 기록·지급 완료·기록 취소·계좌 보기 (docs/settlement-record-design-2026-10.md §5).
@@ -62,7 +63,7 @@ function AdjustmentList({ items, onDelete, busy }: { items: AdjustmentView[]; on
           {a.sourceRef?.startsWith('carryover:') ? ' · 이월' : ''}
           {a.memo ? <span className="block text-gray-500">{a.memo}</span> : null}
           {onDelete && a.deletable && (
-            <button type="button" disabled={busy} onClick={() => onDelete(a.id)} className="ml-2 text-primary hover:underline disabled:opacity-50">삭제</button>
+            <button type="button" disabled={busy} onClick={() => onDelete(a.id)} className={`ml-2 disabled:opacity-50 ${DANGER_TEXT_CLASS}`}>삭제</button>
           )}
         </li>
       ))}
@@ -322,7 +323,7 @@ export function ShopPayoutSection({ rows, month, prevMonth, nextMonth, otherAdju
             {otherAdjustments.map((a) => (
               <li key={a.id}>
                 {a.payeeName ?? a.payeeKey} · {REASON_LABEL[a.reason]} {signed(a.amount)}{a.memo ? ` · ${a.memo}` : ''}
-                {a.deletable && <button type="button" disabled={busy !== null} onClick={() => deleteAdjustment(a.id)} className="ml-2 text-primary hover:underline disabled:opacity-50">삭제</button>}
+                {a.deletable && <button type="button" disabled={busy !== null} onClick={() => deleteAdjustment(a.id)} className={`ml-2 disabled:opacity-50 ${DANGER_TEXT_CLASS}`}>삭제</button>}
               </li>
             ))}
           </ul>

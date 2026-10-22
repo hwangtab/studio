@@ -3,7 +3,8 @@ import type { NextPageWithLayout } from '../types';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { m } from 'framer-motion';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useTranslation } from 'react-i18next';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
 import SEO from '../components/SEO';
@@ -11,6 +12,11 @@ import { Section } from '../components/ui/Section';
 import { Button } from '../components/ui/Button';
 import { defaultLocale, locales, type Locale } from '../lib/i18n';
 import { getErrorPageStaticProps } from '../lib/getStatic';
+import { isAdminNotFoundPath } from '../lib/adminRoute';
+
+// 관리자 주소의 404는 관리자 껍데기로 보여 준다(사이트 404의 홈·문의·인기 페이지는 관리자에게 막다른 길이다). 사이트 404 번들에
+// 관리자 코드가 실리지 않게 나눠 불러온다.
+const AdminNotFound = dynamic(() => import('../components/admin/AdminNotFound'), { ssr: false });
 
 const NotFoundPage: NextPageWithLayout = () => {
   const router = useRouter();
@@ -26,9 +32,16 @@ const NotFoundPage: NextPageWithLayout = () => {
   }, [router.asPath]);
 
   const { t } = useTranslation('common', { lng: locale });
+  // 미리 만든 404 HTML에는 요청 주소가 없어 마운트 뒤에 판정한다(lib/adminRoute.ts isAdminNotFoundPath).
+  const [isAdminNotFound, setIsAdminNotFound] = useState(false);
+  useEffect(() => {
+    setIsAdminNotFound(isAdminNotFoundPath(router.pathname, window.location.pathname));
+  }, [router.pathname]);
   const pageContentMotionProps = PAGE_CONTENT_ANIMATION;
   // variant가 표현하지 못하는 레이아웃(모바일 전폭·가변 높이·긴 라벨 줄바꿈)만 유지한다.
   const errorCtaLayout = 'w-full sm:w-auto h-auto min-h-[44px] px-6 py-3 text-center whitespace-normal leading-snug touch-manipulation';
+
+  if (isAdminNotFound) return <AdminNotFound />;
 
   return (
     <Section variant="default" className="min-h-[60vh] flex flex-col justify-center text-center">

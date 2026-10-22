@@ -281,8 +281,10 @@
 /* 관리자 목록 표 — 좁은 화면에서는 행 하나를 카드 하나로 쌓는다.
    표 그대로 두면 열이 7~8개라 가로 스크롤 안쪽에 숨고, 전화번호가 세 줄로 접힌다.
    칸 이름은 td의 data-label에서 온다. data-label이 없는 칸(관리 버튼·빈 목록 안내)은
-   이름 없이 한 줄을 다 쓴다. md 이상에서는 아무것도 바꾸지 않는다. */
-@media (max-width: 767px) {
+   이름 없이 한 줄을 다 쓴다. lg(1024px) 이상에서는 아무것도 바꾸지 않는다.
+   경계를 md(768px)에서 lg로 올렸다(2026-10-22) — 태블릿 폭(768~1023px)에서 7~8열 표가 본문 폭(약 736px)에 끼어
+   금액·관리 열이 가로 스크롤 밖으로 잘리고 리워드 이름이 한 글자씩 접혔다. 표 감싸개의 `max-lg:` 여백도 이 경계와 짝이다. */
+@media (max-width: 1023px) {
   .admin-table,
   .admin-table tbody,
   .admin-table tr,
@@ -335,7 +337,7 @@
 /* 예약 목록처럼 행이 많은 표 — 모바일에서 한 행을 4줄로 줄인다(7줄 카드는 34건이 화면 1만 2천 px였다).
    .admin-table과 함께 쓴다. 칸 이름은 data-label로 찾으므로 그 이름과 이 규칙이 짝이다(pages/admin/bookings/index.tsx).
    1줄 일시 | 상태 · 2줄 고객 · 3줄 유형 상품 · 4줄 금액 | 상세 버튼. */
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .admin-table-compact tr {
     display: grid;
     grid-template-columns: auto 1fr auto;

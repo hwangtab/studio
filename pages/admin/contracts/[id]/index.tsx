@@ -13,6 +13,7 @@ import {
 } from '../../../../components/admin/contractActions';
 import { createSubscription as createSubscriptionRequest } from '../../../../components/admin/subscriptionActions';
 import { AdminShell } from '../../../../components/admin/AdminShell';
+import { DANGER_GHOST_CLASS } from '../../../../components/admin/adminDanger';
 import { Button } from '../../../../components/ui/Button';
 import { getDb } from '../../../../db/client';
 import { OCCUPYING_STATUSES } from '../../../../lib/billing/service';
@@ -34,6 +35,7 @@ import { formatCurrency, formatDate, formatDateTime } from '../../../../lib/cont
 import { getStatusLabel, isActionAllowed, needsTermination } from '../../../../lib/contracts/status';
 import { resolveRulesContent } from '../../../../lib/contracts/template';
 import { buildAuditTrail, serializeAuditTrail, type SerializedAuditTrail } from '../../../../lib/contracts/audit-trail';
+import { ActionNotice } from '../../../../components/admin/ActionNotice';
 
 interface AdminContractDetailPageProps {
   contract: AdminSerializedContract;
@@ -251,7 +253,7 @@ export default function AdminContractDetailPage({
   return (
     <>
       <Head>
-        <title>{contract.customerName}님 계약 상세 | Studio NOL</title>
+        <title>{`${contract.customerName}님 계약 상세 | Studio NOL`}</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
@@ -261,9 +263,7 @@ export default function AdminContractDetailPage({
         backHref="/admin/contracts"
         backLabel="계약 목록"
       >
-        {notice && (
-          <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>
-        )}
+        <ActionNotice message={notice} />
 
         {/* 계약은 종료됐지만 구독 해지나 해지 안내 메일이 실패한 경우. 그대로 두면 비운 방에
             청구가 계속되거나 고객이 해지 사실을 모른다 — 사람이 마무리해야 하는 일이다. */}
@@ -599,9 +599,9 @@ export default function AdminContractDetailPage({
             )}
 
             {contract.status === 'signed' && subscriptionId && (
-              <Link href={`/admin/subscriptions/${subscriptionId}`} passHref>
-                <Button light variant="weak">{subscriptionClosed ? '이전 구독 보기' : '정기결제 구독 보기'}</Button>
-              </Link>
+              <Button asChild light variant="weak">
+                <Link href={`/admin/subscriptions/${subscriptionId}`}>{subscriptionClosed ? '이전 구독 보기' : '정기결제 구독 보기'}</Link>
+              </Button>
             )}
 
             {contract.status === 'signed' && (!subscriptionId || subscriptionClosed) && (
@@ -632,9 +632,9 @@ export default function AdminContractDetailPage({
             )}
 
             {isActionAllowed(contract.status, 'update') && (
-              <Link href={`/admin/contracts/${contract.id}/edit`} passHref>
-                <Button light variant="weak">수정</Button>
-              </Link>
+              <Button asChild light variant="weak">
+                <Link href={`/admin/contracts/${contract.id}/edit`}>수정</Link>
+              </Button>
             )}
 
             {(contract.status === 'signed' || contract.status === 'terminated') && !contract.purgedAt && (
@@ -649,6 +649,7 @@ export default function AdminContractDetailPage({
             {isActionAllowed(contract.status, 'cancel') && (
               <Button light
                 variant="ghost"
+                className={DANGER_GHOST_CLASS}
                 disabled={busy}
                 onClick={() =>
                   run(
@@ -666,13 +667,13 @@ export default function AdminContractDetailPage({
             {contract.purgedAt ? (
               <p className="self-center text-sm text-gray-500">개인정보가 파기되어 재발송·복제할 수 없습니다.</p>
             ) : (
-              <Link href={`/admin/contracts/new?from=${contract.id}`} passHref>
-                <Button light variant="weak">복제해서 새 계약</Button>
-              </Link>
+              <Button asChild light variant="weak">
+                <Link href={`/admin/contracts/new?from=${contract.id}`}>복제해서 새 계약</Link>
+              </Button>
             )}
 
             {isActionAllowed(contract.status, 'terminate') && (
-              <Button light variant="ghost" disabled={busy} onClick={handleTerminate}>
+              <Button light variant="ghost" className={DANGER_GHOST_CLASS} disabled={busy} onClick={handleTerminate}>
                 이용 종료 처리
               </Button>
             )}
@@ -680,7 +681,7 @@ export default function AdminContractDetailPage({
             {isActionAllowed(contract.status, 'delete') && (
               <Button light
                 variant="ghost"
-                className="text-red-600 hover:bg-red-50"
+                className={DANGER_GHOST_CLASS}
                 disabled={busy}
                 onClick={handleDelete}
               >

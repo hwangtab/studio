@@ -429,6 +429,7 @@ export default function ContractForm({
               className="text-sm"
                   value={term}
                   placeholder={`특약 ${index + 1}`}
+                  aria-label={`특약 ${index + 1}`}
                   onChange={(e) => updateSpecialTerm(index, e.target.value)}
                 />
                 <button

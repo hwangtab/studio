@@ -95,9 +95,9 @@ export default function ProductionContractsPage({ rows, truncated, error }: Prod
         title="제작 계약"
         description="음원 제작·믹싱·마스터링 용역 계약 — 작성, 서명하고 발송, 체결 확인"
         actions={
-          <Link href="/admin/contracts/production/new" passHref>
-            <Button light>새 제작 계약</Button>
-          </Link>
+          <Button asChild light>
+            <Link href="/admin/contracts/production/new">새 제작 계약</Link>
+          </Button>
         }
       >
         {error && <div className="mb-4 p-4 bg-red-50 text-red-700 rounded-xl text-sm">{error}</div>}

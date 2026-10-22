@@ -217,7 +217,7 @@ const Delta = ({ rate, label }: { rate: number | null; label: string }) => {
 const Kpi = ({ label, value, sub }: { label: string; value: string; sub?: React.ReactNode }) => (
   <div className="rounded-xl border border-gray-200 bg-white p-4">
     <p className="text-sm text-gray-500">{label}</p>
-    <p className="mt-1 text-xl font-bold text-gray-900 tabular-nums md:text-2xl">{value}</p>
+    <p className="mt-1 text-lg font-bold text-gray-900 tabular-nums [overflow-wrap:normal] sm:text-xl lg:text-2xl">{value}</p>
     {sub}
   </div>
 );
@@ -507,7 +507,7 @@ export default function AdminRevenuePage({ summary, type, line = null, years, no
 
             <section>
               <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-gray-900">{summary.periodLabel}</h2>
-              <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
                 <Kpi label="순매출 (부가세 포함)" value={won(summary.totals.net)} sub={<Delta rate={summary.changeRate} label={`${summary.previousLabel} 대비`} />} />
                 <Kpi label="결제 총액" value={won(summary.totals.gross)} sub={<p className="mt-1 text-xs text-gray-500">{summary.totals.count}건</p>} />
                 <Kpi

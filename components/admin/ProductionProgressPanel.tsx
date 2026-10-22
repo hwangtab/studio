@@ -8,6 +8,7 @@ import { formatCurrency, formatDate, formatDateTime } from '../../lib/contracts/
 import { adminEventTypesFor, EVENT_SPEC, eventLabelFor, eventStagesFor, isPerSongEvent, STAGE_LABEL } from '../../lib/contracts/production/event-spec';
 import type { AdminProgressView, TimelineItem } from '../../lib/contracts/production/progress-view';
 import type { ProductionEventType } from '../../db/schema';
+import { ActionNotice } from './ActionNotice';
 
 /**
  * 제작 계약 상세의 진행 영역 — 할 일, 대금·일정, 단계별 상태, 해지 시 정산 추정, 기록 추가, 기록 목록.
@@ -250,7 +251,7 @@ export default function ProductionProgressPanel({
     <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
       <div className="p-4 md:p-8 border-b border-gray-200">
         <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">진행</h2>
-        {notice && <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>}
+        <ActionNotice message={notice} />
 
         {view.todos.length > 0 && (
           <ul className="mb-6 space-y-2">

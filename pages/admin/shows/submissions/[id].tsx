@@ -149,7 +149,7 @@ export default function AdminShowSubmissionDetailPage({ submission }: AdminShowS
   return (
     <>
       <Head>
-        <title>{draft.title || '공연'} 심사 | Studio NOL</title>
+        <title>{`${draft.title || '공연'} 심사 | Studio NOL`}</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 

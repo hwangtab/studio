@@ -7,6 +7,7 @@ import { AdminShell } from '../../../components/admin/AdminShell';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { listAdminShows, type AdminShowListItem } from '../../../lib/shows/adminQueries';
 import { countPendingSubmissions } from '../../../lib/shows/organizer/adminSubmissions';
+import { Notice } from '../../../components/ui/Notice';
 
 interface AdminShowsPageProps {
   shows: AdminShowListItem[];
@@ -48,7 +49,7 @@ export default function AdminShowsPage({ shows, pendingSubmissions, error }: Adm
           </Link>
         </div>
         {error && (
-          <div role="alert" className="mb-4 p-3 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">{error}</div>
+          <Notice tone="error" light className="mb-4">{error}</Notice>
         )}
         {shows.length === 0 && !error && (
           <div className="bg-white rounded-2xl shadow-sm p-4 md:p-8 text-center text-gray-600">등록된 공연이 없습니다.</div>
@@ -73,7 +74,7 @@ export default function AdminShowsPage({ shows, pendingSubmissions, error }: Adm
                   <Link href={`/admin/shows/${show.id}`} className="text-sm font-medium text-primary hover:underline">상세·운영 →</Link>
                 </div>
               </div>
-              <div className="overflow-x-auto max-md:p-3">
+              <div className="overflow-x-auto max-lg:p-3">
                 <table className="admin-table w-full text-sm">
                   <thead className="bg-gray-50 text-gray-600">
                     <tr>

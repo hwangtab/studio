@@ -7,6 +7,7 @@ import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { listShopProductsForAdmin, type AdminShopProductSummary } from '../../../../lib/shop/adminProducts';
 import { SHOP_STATUS_LABELS, type ShopReviewStatus } from '../../../../lib/shop/productRules';
 import { buttonVariants } from '../../../../components/ui/Button';
+import { Notice } from '../../../../components/ui/Notice';
 
 interface Props {
   products: AdminShopProductSummary[];
@@ -44,7 +45,7 @@ export default function AdminShopProductsPage({ products, error }: Props) {
       <AdminShell title="상품 심사" description="아티스트가 올린 상품을 검토하고 승인·보완 요청·반려합니다. 제출된 것이 위에 옵니다." backHref="/admin/shop" backLabel="상점" width="wide" actions={(
         <Link href="/admin/shop/products/new" className={buttonVariants({ variant: 'solid', size: 'sm', light: true })}>상품 등록</Link>
       )}>
-        {error && <div role="alert" className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-900">{error}</div>}
+        {error && <Notice tone="error" light className="mb-4">{error}</Notice>}
         <section className="rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
           {products.length === 0 ? (
             <p className="text-gray-600">올라온 상품이 없습니다.</p>

@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import { AdminShell } from '../../../components/admin/AdminShell';
+import { DANGER_WEAK_CLASS } from '../../../components/admin/adminDanger';
 import { Button } from '../../../components/ui/Button';
 import { Notice } from '../../../components/ui/Notice';
 import { TextArea } from '../../../components/ui/Field';
@@ -126,7 +127,7 @@ export default function AdminSessionMusicianDetailPage({ profile }: Props) {
   return (
     <>
       <Head>
-        <title>{profile.stageName} | 세션 연주자 | Studio NOL</title>
+        <title>{`${profile.stageName} | 세션 연주자 | Studio NOL`}</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <AdminShell title={profile.stageName} description="세션 연주자 등록 상세" backHref="/admin/session-musicians" backLabel="세션 연주자" width="narrow">
@@ -207,7 +208,7 @@ export default function AdminSessionMusicianDetailPage({ profile }: Props) {
           <p className="text-sm text-gray-600 mb-3">본인이 관리 링크를 잃고 삭제를 요청했을 때 쓰세요. 바로 지워지고 되돌릴 수 없어요.</p>
           {confirmingDelete ? (
             <div className="flex gap-2">
-              <Button type="button" variant="secondary" light onClick={remove} disabled={busy}>네, 지울게요</Button>
+              <Button type="button" variant="weak" light className={DANGER_WEAK_CLASS} onClick={remove} disabled={busy}>네, 지울게요</Button>
               <Button type="button" variant="ghost" light onClick={() => setConfirmingDelete(false)} disabled={busy}>그만두기</Button>
             </div>
           ) : (

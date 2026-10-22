@@ -15,6 +15,7 @@ import {
 import { formatKstDateTimeFull } from '../../../lib/booking/format';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { isMissingTableError } from '../../../lib/dbErrors';
+import { Notice } from '../../../components/ui/Notice';
 import {
   LIST_LIMIT,
   listSessionMusicians,
@@ -87,7 +88,7 @@ export default function AdminSessionMusiciansPage({ rows, filters, migrationNeed
             마이그레이션 0077(session_musicians)이 아직 적용되지 않았습니다. 적용하기 전에는 등록을 받을 수 없고 명단도 비어 있습니다.
           </div>
         )}
-        {error && <div role="alert" className="mb-4 p-3 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">{error}</div>}
+        {error && <Notice tone="error" light className="mb-4">{error}</Notice>}
 
         <form method="get" className="mb-4 flex flex-wrap items-end gap-3 text-sm">
           <label className="flex flex-col gap-1">
@@ -120,7 +121,7 @@ export default function AdminSessionMusiciansPage({ rows, filters, migrationNeed
         </form>
 
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-          <div className="overflow-x-auto max-md:p-3">
+          <div className="overflow-x-auto max-lg:p-3">
             <table className="admin-table w-full text-sm text-left">
               <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
                 <tr>

@@ -95,14 +95,14 @@ describe('개인정보가 파기된 계약', () => {
   it('재발송·복제 입구를 띄우지 않고 이유를 알린다', () => {
     renderPage({ status: 'expired', purgedAt: D('2026-09-01T00:00:00Z'), customerName: '(개인정보 파기됨)' }, 0);
     expect(screen.queryByRole('button', { name: '재발송' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: '복제해서 새 계약' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: '복제해서 새 계약' })).not.toBeInTheDocument();
     expect(screen.getByText(/개인정보가 파기되어 재발송·복제할 수 없습니다/)).toBeInTheDocument();
   });
 
   it('파기되지 않은 만료 계약에는 재발송·복제가 있다', () => {
     renderPage({ status: 'expired' }, 0);
     expect(screen.getByRole('button', { name: '재발송' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '복제해서 새 계약' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '복제해서 새 계약' })).toBeInTheDocument();
   });
 });
 

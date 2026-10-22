@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 
 import { fetchRefundAccount, patchPledge, type FundingActionResult, type RefundAccountView } from '../../../components/admin/fundingActions';
 import { AdminShell } from '../../../components/admin/AdminShell';
+import { DANGER_WEAK_CLASS } from '../../../components/admin/adminDanger';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextArea, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
@@ -21,6 +22,7 @@ import { formatKstDeadline } from '../../../lib/payments/bankAccount';
 import { loadRefundAccountSummary } from '../../../lib/payments/refundAccount';
 import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
 import { loadPaymentWindowOpen } from '../../../lib/payments/windowOpen';
+import { ActionNotice } from '../../../components/admin/ActionNotice';
 
 interface AdminFundingDetailPageProps {
   pledge: AdminPledgeItem;
@@ -326,7 +328,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
   return (
     <>
       <Head>
-        <title>{pledge.customerName}님 펀딩 상세 | Studio NOL</title>
+        <title>{`${pledge.customerName}님 펀딩 상세 | Studio NOL`}</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
@@ -336,7 +338,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
         backHref="/admin/funding"
         backLabel="펀딩 목록"
       >
-        {notice && <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>}
+        <ActionNotice message={notice} />
 
           {pledge.mismatch && (
             <div className="mb-4 p-4 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">
@@ -574,7 +576,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
 
             <div className="flex flex-wrap gap-2">
               {canRefund && (
-                <Button light variant="secondary" disabled={busy} onClick={handleRefund}>
+                <Button light variant="weak" className={DANGER_WEAK_CLASS} disabled={busy} onClick={handleRefund}>
                   {isBankTransfer ? '송금 완료(환불 기록)' : '환불'}
                 </Button>
               )}

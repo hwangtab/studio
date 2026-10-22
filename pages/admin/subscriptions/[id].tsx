@@ -10,6 +10,7 @@ import {
   type SubscriptionActionResult,
 } from '../../../components/admin/subscriptionActions';
 import { AdminShell } from '../../../components/admin/AdminShell';
+import { DANGER_WEAK_CLASS } from '../../../components/admin/adminDanger';
 import { Button } from '../../../components/ui/Button';
 import { Field, TextArea, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
@@ -29,6 +30,7 @@ import {
   type SerializedSubscriptionPayment,
 } from '../../../lib/billing/admin-serialize';
 import { formatKstDate, formatKstDateTimeFull } from '../../../lib/booking/format';
+import { ActionNotice } from '../../../components/admin/ActionNotice';
 
 interface AdminSubscriptionDetailPageProps {
   subscription: SerializedSubscription;
@@ -293,7 +295,7 @@ export default function AdminSubscriptionDetailPage({
   return (
     <>
       <Head>
-        <title>{subscription.customerName}님 구독 상세 | Studio NOL</title>
+        <title>{`${subscription.customerName}님 구독 상세 | Studio NOL`}</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
@@ -303,7 +305,7 @@ export default function AdminSubscriptionDetailPage({
         backHref="/admin/subscriptions"
         backLabel="구독 목록"
       >
-        {notice && <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>}
+        <ActionNotice message={notice} />
 
         {linkNotice && (
           <div className="mb-4 p-4 bg-green-50 border border-green-200 text-green-900 rounded-lg text-sm">
@@ -601,7 +603,7 @@ export default function AdminSubscriptionDetailPage({
                     light className="min-h-0 text-sm"
                   />
                 </Field>
-                <Button light type="submit" variant="weak" disabled={busy}>
+                <Button light type="submit" variant="weak" className={DANGER_WEAK_CLASS} disabled={busy}>
                   해지 처리
                 </Button>
               </form>

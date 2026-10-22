@@ -3,6 +3,8 @@ import Head from 'next/head';
 import { useState } from 'react';
 
 import { AdminShell } from '../../../components/admin/AdminShell';
+import { DANGER_WEAK_CLASS } from '../../../components/admin/adminDanger';
+import { cn } from '../../../lib/utils';
 import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { recordAdminPrivacyAccess } from '../../../lib/privacy/accessLog';
@@ -19,6 +21,7 @@ import { findShopOrderByOrderNo } from '../../../lib/shop/service';
 import { normalizeShopOrderNo, shopOrderShips } from '../../../lib/shop/shape';
 import { SHOP_STUDIO_COURIER } from '../../../lib/shop/shipper';
 import { buttonVariants } from '../../../components/ui/Button';
+import { Notice } from '../../../components/ui/Notice';
 
 /** 환불 계좌 요약 — 은행명·예금주만. 계좌번호는 props에 싣지 않는다("계좌 보기"가 API로 가져온다). */
 type RefundAccountSummaryProps =
@@ -165,11 +168,11 @@ export default function AdminShopOrderPage(p: Props) {
   return (
     <>
       <Head>
-        <title>{p.orderNo} | 상점 관리</title>
+        <title>{`${p.orderNo} | 상점 관리`}</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <AdminShell title={`상점 주문 ${p.orderNo}`} backHref="/admin/shop" backLabel="상점 관리" description={`${PAYMENT_LABEL[p.status] ?? p.status} · ${FULFILLMENT_LABEL[p.fulfillmentStatus] ?? p.fulfillmentStatus}`}>
-        {error && <div role="alert" className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-900">{error}</div>}
+        {error && <Notice tone="error" light className="mb-4">{error}</Notice>}
         {p.notificationError && <div className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">마지막 메일 발송 실패: {p.notificationError}</div>}
 
         <section className="mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
@@ -225,7 +228,7 @@ export default function AdminShopOrderPage(p: Props) {
           </section>
         )}
         {p.refundAccount?.status === 'unavailable' && (
-          <div role="alert" className="mb-4 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">환불 계좌를 불러오지 못했습니다(마이그레이션 0048·0061 확인).</div>
+          <Notice tone="warning" light className="mb-4">환불 계좌를 불러오지 못했습니다(마이그레이션 0048·0061 확인).</Notice>
         )}
 
         <section className="mb-6 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
@@ -290,7 +293,7 @@ export default function AdminShopOrderPage(p: Props) {
               <p className="mb-3 text-gray-600">토스로 {formatPriceAmount(p.refundable)}원을 돌려주고 주문을 취소합니다. 발송한 뒤라면 반품을 받은 다음에 누르세요. 일부만 돌려줄 때는 토스 콘솔에서 하면 웹훅이 기록을 맞춥니다.</p>
             )}
             <label className="block">사유<input value={reason} onChange={(e) => setReason(e.target.value)} placeholder="예: 반품 접수(불량)" className={`mt-1 ${inputClass}`} /></label>
-            <button type="button" disabled={busy} onClick={() => act({ action: 'refund', reason }, `${p.downloadedAt ? `고객이 ${kst(p.downloadedAt)}에 파일을 내려받았습니다. ` : ''}${formatPriceAmount(p.refundable)}원을 환불할까요? 되돌릴 수 없습니다.`)} className={`mt-3 ${buttonClass}`}>
+            <button type="button" disabled={busy} onClick={() => act({ action: 'refund', reason }, `${p.downloadedAt ? `고객이 ${kst(p.downloadedAt)}에 파일을 내려받았습니다. ` : ''}${formatPriceAmount(p.refundable)}원을 환불할까요? 되돌릴 수 없습니다.`)} className={cn('mt-3', weakButtonClass, DANGER_WEAK_CLASS)}>
               전액 환불
             </button>
           </section>

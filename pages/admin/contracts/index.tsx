@@ -23,6 +23,7 @@ import {
 import { expireOverdueContracts } from '../../../lib/contracts/service';
 import { getStatusLabel, needsTermination, terminationCutoff } from '../../../lib/contracts/status';
 import { formatCurrency, formatShortDate as formatDate } from '../../../lib/contracts/format';
+import { ActionNotice } from '../../../components/admin/ActionNotice';
 
 /** 한 화면에 싣는 최대 건수. 넘으면 오래된 계약이 잘린다는 사실을 화면에 알린다. */
 const LIST_LIMIT = 200;
@@ -253,20 +254,18 @@ export default function AdminContractsPage({
         width="wide"
         actions={
           <>
-            <Link href="/admin/contracts/history" passHref>
-              <Button light variant="weak">작업 이력</Button>
-            </Link>
-            <Link href="/admin/contracts/new" passHref>
-              <Button light>새 계약 작성</Button>
-            </Link>
+            <Button asChild light variant="weak">
+              <Link href="/admin/contracts/history">작업 이력</Link>
+            </Button>
+            <Button asChild light>
+              <Link href="/admin/contracts/new">새 계약 작성</Link>
+            </Button>
           </>
         }
       >
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
             <div className="p-4 md:p-8">
-              {notice && (
-                <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>
-              )}
+              <ActionNotice message={notice} />
 
               {/* 메일 실패를 가장 먼저 알린다. 고객이 아무것도 못 받은 상태이고,
                   운영자가 알아채지 못하면 계약이 그대로 멈춘다. */}
@@ -327,6 +326,7 @@ export default function AdminContractsPage({
                 <TextInput
                   type="text"
                   placeholder="이름, 이메일, 전화번호, 호실 검색"
+                  aria-label="계약 검색"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   light className="w-auto flex-1 min-w-[240px] px-4"
@@ -406,11 +406,11 @@ export default function AdminContractsPage({
                           <td data-label="서명일" className="px-4 py-3">{formatDate(contract.signedAt)}</td>
                           <td data-label="관리" className="px-4 py-3">
                             <div className="flex flex-wrap gap-2">
-                              <Link href={`/admin/contracts/${contract.id}`} passHref>
-                                <Button light size="sm" variant="weak">
+                              <Button asChild light size="sm" variant="weak">
+                                <Link href={`/admin/contracts/${contract.id}`}>
                                   상세
-                                </Button>
-                              </Link>
+                                </Link>
+                              </Button>
 
                               {contract.status === 'draft' && (
                                 <Button light
@@ -468,7 +468,9 @@ export default function AdminContractsPage({
                 <div className="text-center py-12 text-gray-500">
                   {contracts.length === 0
                     ? '아직 작성된 계약이 없습니다. “새 계약 작성”으로 시작하세요.'
-                    : '검색 결과가 없습니다.'}
+                    : search.trim()
+                      ? '검색 결과가 없습니다.'
+                      : '이 조건에 맞는 계약이 없습니다.'}
                 </div>
               )}
             </div>

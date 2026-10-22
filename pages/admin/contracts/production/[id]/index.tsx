@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { AdminShell } from '../../../../../components/admin/AdminShell';
+import { DANGER_GHOST_CLASS } from '../../../../../components/admin/adminDanger';
 import { copyToClipboard } from '../../../../../components/admin/contractActions';
 import {
   deleteProductionContractRequest,
@@ -39,6 +40,7 @@ import { buildAdminProgressView, type AdminProgressView } from '../../../../../l
 import { ensureContractPaymentLink, listContractPaymentLinks } from '../../../../../lib/contracts/production/payment-link';
 import { isOneSongKind, releaseTitle } from '../../../../../lib/contracts/production/terms';
 import { recordAdminPrivacyAccess } from '../../../../../lib/privacy/accessLog';
+import { ActionNotice } from '../../../../../components/admin/ActionNotice';
 
 interface ProductionContractDetailProps {
   contract: AdminSerializedProductionContract;
@@ -243,7 +245,7 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
         backHref="/admin/contracts/production"
         backLabel="제작 계약 목록"
       >
-        {notice && <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>}
+        <ActionNotice message={notice} />
 
         {/* 메일·PDF는 응답 뒤에 처리돼 실패가 화면에 흔적을 남기지 않는다. 남겨 둔 사유를 띄운다. */}
         {contract.notificationError && (
@@ -513,9 +515,9 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
             )}
 
             {allowed('update') && (
-              <Link href={`/admin/contracts/production/${contract.id}/edit`} passHref>
-                <Button light variant="weak">수정</Button>
-              </Link>
+              <Button asChild light variant="weak">
+                <Link href={`/admin/contracts/production/${contract.id}/edit`}>수정</Link>
+              </Button>
             )}
 
             {hasSignedDocument(contract.status) && !contract.purgedAt && (
@@ -565,6 +567,7 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
               <Button
                 light
                 variant="ghost"
+                className={DANGER_GHOST_CLASS}
                 disabled={busy}
                 onClick={() => run(() => mutateProductionContract(contract.id, 'cancel'), '이 계약을 취소할까요? 서명 링크가 무효가 됩니다.')}
               >
@@ -572,18 +575,18 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
               </Button>
             )}
 
-            <Link href={`/admin/contracts/production/new?from=${contract.id}`} passHref>
-              <Button light variant="weak">복제해서 새 계약</Button>
-            </Link>
+            <Button asChild light variant="weak">
+              <Link href={`/admin/contracts/production/new?from=${contract.id}`}>복제해서 새 계약</Link>
+            </Button>
 
             {allowed('terminate') && (
-              <Button light variant="ghost" disabled={busy} onClick={handleTerminate}>
+              <Button light variant="ghost" className={DANGER_GHOST_CLASS} disabled={busy} onClick={handleTerminate}>
                 해지 처리
               </Button>
             )}
 
             {allowed('delete') && (
-              <Button light variant="ghost" className="text-red-600 hover:bg-red-50" disabled={busy} onClick={handleDelete}>
+              <Button light variant="ghost" className={DANGER_GHOST_CLASS} disabled={busy} onClick={handleDelete}>
                 삭제
               </Button>
             )}

@@ -144,9 +144,9 @@ export default function AdminSubscriptionsPage({ subscriptions: allSubscriptions
         title="구독 관리"
         width="wide"
         actions={
-          <Link href="/admin/subscriptions/new" passHref>
-            <Button light>레슨 구독 만들기</Button>
-          </Link>
+          <Button asChild light>
+            <Link href="/admin/subscriptions/new">레슨 구독 만들기</Link>
+          </Button>
         }
       >
         {truncated && (
@@ -182,7 +182,7 @@ export default function AdminSubscriptionsPage({ subscriptions: allSubscriptions
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-          <div className="overflow-x-auto max-md:p-3">
+          <div className="overflow-x-auto max-lg:p-3">
             <table className="admin-table w-full text-sm">
               <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
                 <tr>
