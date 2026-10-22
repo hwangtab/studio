@@ -2606,12 +2606,12 @@
   "musicVideo": {
     "seo": {
       "title": "Kliplar {{mv}} dan · jonli videolar {{live}} dan | Studio NOL",
-      "description": "Kliplar ({{mv}} dan) hamda jonli kliplar va YouTube suhbat/intervyulari ({{live}} dan) — g'oya, suratga olish va montajni Haebang Film rejissyori Chichi bajaradi. Kameralar, vaqt va joy maslahatda kelishiladi.",
+      "description": "Kliplar ({{mv}} dan) hamda jonli kliplar va YouTube suhbat/intervyulari ({{live}} dan) — g'oyani Studio NOL va Haebang Film rejissyori Park Chichi birga ishlab chiqadi, suratga olish va montajni Park Chichi bajaradi. Kameralar, vaqt va joy maslahatda kelishiladi.",
       "keywords": "klip ishlab chiqarish Seul, jonli video, konsert videosi, YouTube video, Haebang Film"
     },
     "hero": {
       "title": "Kliplar va jonli videolar",
-      "subtitleLine1": "Haebang Film rejissyori Chichi — g'oya, suratga olish va montaj",
+      "subtitleLine1": "G'oya Studio NOL bilan birga, suratga olish va montaj — Park Chichi (Haebang Film)",
       "subtitleLine2": "Kliplar {{mv}} dan · jonli va YouTube videolari {{live}} dan",
       "alt": "Mariko & Yukie “Namsan Tower Lights” klipidagi sahna ko'rinishi",
       "seeWorks": "Ishlarni ko'rish"
@@ -2626,7 +2626,7 @@
         },
         {
           "q": "Kim tayyorlaydi?",
-          "a": "Haebang Film rejissyori Chichi hammasini bajaradi: g'oya, suratga olish, montaj va rang tuzatish. Quyidagi barcha videolar Chichi ishi."
+          "a": "G'oyani Studio NOL va Haebang Film rejissyori Park Chichi birga ishlab chiqadi; suratga olish, montaj va rang tuzatishni Park Chichi bajaradi. U Bap va Nineteen, Seomjin River filmlarida operator bo'lgan va KBS Open Channel efirida ko'rsatilgan A Concert for One Person musiqiy hujjatli filmini suratga olgan."
         },
         {
           "q": "Qanday boshlayman?",
@@ -2636,7 +2636,7 @@
     },
     "portfolio": {
       "title": "Ishlar",
-      "subtitle": "Haebang Film rejissyori Chichi g'oyasini ishlab chiqib, suratga olib, montaj qilgan kliplar, jonli kliplar va YouTube kontenti. Ko'rish uchun bosing.",
+      "subtitle": "Haebang Film rejissyori Park Chichi suratga olgan va montaj qilgan kliplar, jonli kliplar va YouTube kontenti. Ko'rish uchun bosing.",
       "kinds": {
         "all": "Barchasi",
         "music-video": "Kliplar",
@@ -2663,15 +2663,18 @@
       ]
     },
     "director": {
-      "title": "G'oya, suratga olish va montaj: rejissyor Chichi",
-      "body": "Haebang Film rejissyori Chichi har bir videoni g'oyadan suratga olish, montaj va rang tuzatishgacha olib boradi: lokatsiyadagi kliplar, konsertlar va YouTube suhbat seriyalari — yuqoridagi videolar natijasi.",
+      "title": "Rejissyor Park Chichi, Haebang Film",
+      "body": "Park Chichi (asl ismi Park Geon-ju) filmlar, hujjatli filmlar, veb-dramalar, YouTube kontenti va kliplarni rejadan suratga olish, montaj va rang tuzatishgacha o'zi yaratib kelgan. 2019 yildan mustaqil hujjatli film kompaniyasi Haebang Filmni boshqarib, A Concert for One Person (KBS Open Channel) musiqiy hujjatli filmini suratga olgan, Bap, Grandma, Me and the Dandelion va Nineteen, Seomjin River filmlarida operator/prodyuser bo'lgan. U yillar davomida konsert va festivallarni suratga olib keladi va o'zi ham musiqachi.",
       "points": [
-        "G'oya va storyboarddan montaj va rang tuzatishgacha bitta rejissyor",
-        "Qo'shiq va byudjetga mos kameralar — bittadan multikameragacha",
-        "Ovoz Studio NOL da — yozish, miks va mastering bir joyda",
-        "Joylanadigan platformaga (YouTube, Instagram va b.) mos kadr nisbati"
+        "G'oya Studio NOL bilan; suratga olish, montaj va rang boshidan oxirigacha Park Chichi",
+        "Film va hujjatli — Bap, Grandma, Me and the Dandelion (2025); Nineteen, Seomjin River, Blue Wind (2024)",
+        "Musiqiy filmlar — A Concert for One Person (KBS), “Namsan Tower Lights” klipi, Gangjeong Peace & Music Camp (51 guruh)",
+        "Festival video rahbari — Resistance Arts Festival (200+ guruh), Ssiat Fest (100+ san'atkor)"
       ],
-      "imageAlt": "“Namsan Tower Lights” klipidan bir sahna"
+      "imageAlt": "“Namsan Tower Lights” klipidan bir sahna",
+      "worksTitle": "Tanlangan ishlar",
+      "careerTitle": "Tajriba va festival videolari",
+      "photoAlt": "Videokamera bilan suratga olayotgan rejissyor Park Chichi"
     },
     "pricing": {
       "title": "Video ishlab chiqarish narxi",
@@ -2722,7 +2725,7 @@
         },
         {
           "title": "Reja va narx",
-          "description": "Rejissyor Chichi bilan g'oya, storyboard, joy va kameralarni kelishib, narxni tasdiqlaymiz."
+          "description": "Studio NOL va rejissyor Park Chichi bilan g'oya, storyboard, joy va kameralarni kelishib, narxni tasdiqlaymiz."
         },
         {
           "title": "Suratga olish",
@@ -2741,6 +2744,10 @@
         {
           "q": "Boshlang'ich narxga nimalar kiradi?",
           "a": "G'oya maslahati, suratga olish, montaj, rang tuzatish va subtitrlar. Kameralar va vaqt qo'shiq va byudjetga mos belgilanadi; ko'lam kattalashsa narx oshadi."
+        },
+        {
+          "q": "Rejissyor Park Chichi kim?",
+          "a": "Filmlar, hujjatli filmlar, veb-dramalar, YouTube va kliplarni rejadan suratga olish, montaj va rang tuzatishgacha yaratgan rejissyor (asl ismi Park Geon-ju). Bap, Grandma, Me and the Dandelion, Nineteen, Seomjin River filmlarida operator/prodyuser, A Concert for One Person (KBS Open Channel) rejissyori bo'lgan va Haebang Filmni boshqargan. G'oya Studio NOL bilan ishlab chiqiladi; suratga olish, montaj va rang uniki."
         },
         {
           "q": "Joy ijarasi va aktyor haqi kiradimi?",

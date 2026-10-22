@@ -2634,12 +2634,12 @@
   "musicVideo": {
     "seo": {
       "title": "Music Videos from {{mv}} · Live Videos from {{live}} | Studio NOL",
-      "description": "Music videos (from {{mv}}) and live clips or YouTube talks & interviews (from {{live}}), with concept, filming and editing by director Chichi of Haebang Film. Cameras, hours and locations are agreed in consultation. Recording and mixing under the same roof in Seoul.",
-      "keywords": "music video production Seoul, music video cost Korea, live session video, concert video filming, YouTube video production, interview video, Haebang Film"
+      "description": "Music videos (from {{mv}}) and live clips or YouTube talks & interviews (from {{live}}), planned by Studio NOL with director Park Chichi of Haebang Film — a film and documentary cinematographer who shoots and edits them. Cameras, hours and locations are agreed in consultation.",
+      "keywords": "music video production Seoul, music video cost Korea, live session video, concert video filming, YouTube video production, interview video, Haebang Film, Park Chichi"
     },
     "hero": {
       "title": "Music Videos & Live Videos",
-      "subtitleLine1": "Director Chichi of Haebang Film — concept, filming and editing",
+      "subtitleLine1": "Concept with Studio NOL — filming and editing by Park Chichi of Haebang Film",
       "subtitleLine2": "Music videos from {{mv}} · live & YouTube videos from {{live}}",
       "alt": "Venue scene from the Mariko & Yukie “Namsan Tower Lights” music video",
       "seeWorks": "Watch our work"
@@ -2654,7 +2654,7 @@
         },
         {
           "q": "Who makes it?",
-          "a": "Director Chichi of Haebang Film handles everything — concept, filming, editing and colour. Every video below is Chichi's work."
+          "a": "Studio NOL and director Park Chichi of Haebang Film plan the concept together; Park Chichi shoots, edits and grades. He was cinematographer on the films Bap and Nineteen, Seomjin River and directed the music documentary A Concert for One Person, aired on KBS Open Channel."
         },
         {
           "q": "How do I start?",
@@ -2664,7 +2664,7 @@
     },
     "portfolio": {
       "title": "Our work",
-      "subtitle": "Music videos, live clips and YouTube content conceived, shot and edited by director Chichi of Haebang Film. Tap to play.",
+      "subtitle": "Music videos, live clips and YouTube content shot and edited by director Park Chichi of Haebang Film. Tap to play.",
       "kinds": {
         "all": "All",
         "music-video": "Music videos",
@@ -2691,15 +2691,18 @@
       ]
     },
     "director": {
-      "title": "Concept, filming & editing by director Chichi",
-      "body": "Director Chichi of Haebang Film takes each video from concept through filming, editing and colour. Location music videos, concert footage and multi-episode YouTube talk series — the videos above are the result.",
+      "title": "Director Park Chichi, Haebang Film",
+      "body": "Park Chichi (real name Park Geon-ju) has made films, documentaries, web dramas, YouTube series and music videos end to end, from planning to camera, editing and colour. Running the independent documentary company Haebang Film from 2019, he directed the music documentary A Concert for One Person (aired on KBS Open Channel), and he was cinematographer/producer on the films Bap, Grandma, Me and the Dandelion and Nineteen, Seomjin River. He has filmed concerts and festivals for years, and he is also a musician who writes and sings his own songs.",
       "points": [
-        "One director from concept and storyboard to filming, editing and colour",
-        "Camera setup matched to the song and budget — from one camera to multi-cam",
-        "Audio by Studio NOL — recording, mixing and mastering in the same place",
-        "Aspect ratio planned for where it will be posted (YouTube, Instagram and more)"
+        "Concept planned with Studio NOL; filming, editing and colour by Park Chichi, start to finish",
+        "Film & documentary — Bap and Grandma, Me and the Dandelion (2025); Nineteen, Seomjin River and Blue Wind (2024)",
+        "Music films — A Concert for One Person (KBS Open Channel), “Namsan Tower Lights” MV, Gangjeong Peace & Music Camp (51 acts)",
+        "Festival video lead — Resistance Arts Festival (200+ acts), Ssiat Fest (100+ artists)"
       ],
-      "imageAlt": "A scene from the “Namsan Tower Lights” music video"
+      "imageAlt": "A scene from the “Namsan Tower Lights” music video",
+      "worksTitle": "Selected works",
+      "careerTitle": "Career & festival video lead",
+      "photoAlt": "Director Park Chichi filming with a camcorder"
     },
     "pricing": {
       "title": "Video production pricing",
@@ -2750,7 +2753,7 @@
         },
         {
           "title": "Plan & quote",
-          "description": "Settle concept, storyboard, location and camera setup with director Chichi, then confirm the quote."
+          "description": "Settle concept, storyboard, location and camera setup with Studio NOL and director Park Chichi, then confirm the quote."
         },
         {
           "title": "Shoot",
@@ -2769,6 +2772,10 @@
         {
           "q": "What does the starting price include?",
           "a": "Concept consultation, filming, editing, colour grading and subtitles. Cameras and hours are set to fit the song and budget; a bigger setup raises the quote. We share prices per setup during consultation."
+        },
+        {
+          "q": "Who is director Park Chichi?",
+          "a": "A filmmaker (real name Park Geon-ju) who has taken films, documentaries, web dramas, YouTube series and music videos from planning through camera, editing and colour. He was cinematographer/producer on Bap, Grandma, Me and the Dandelion and Nineteen, Seomjin River, directed the music documentary A Concert for One Person (KBS Open Channel), operated B-camera on the web drama I Refuse That Marriage, and ran the independent documentary company Haebang Film. He led video for the Resistance Arts Festival and Ssiat Fest, and he is also a musician. Concepts are planned with Studio NOL; filming, editing and colour are his."
         },
         {
           "q": "Are venue rental and cast fees included?",

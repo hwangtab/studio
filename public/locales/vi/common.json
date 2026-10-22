@@ -2606,12 +2606,12 @@
   "musicVideo": {
     "seo": {
       "title": "MV từ {{mv}} · video live từ {{live}} | Studio NOL",
-      "description": "MV (từ {{mv}}) và clip live, video talk & phỏng vấn YouTube (từ {{live}}) do đạo diễn Chichi (Haebang Film) phụ trách ý tưởng, quay và dựng. Số máy quay, thời gian và địa điểm được thỏa thuận khi tư vấn.",
+      "description": "MV (từ {{mv}}) và clip live, video talk & phỏng vấn YouTube (từ {{live}}) do Studio NOL cùng đạo diễn Park Chichi (Haebang Film) lên ý tưởng, Park Chichi quay và dựng. Số máy quay, thời gian và địa điểm được thỏa thuận khi tư vấn.",
       "keywords": "sản xuất MV Seoul, quay video live, video concert, quay video YouTube, Haebang Film"
     },
     "hero": {
       "title": "Sản xuất MV & video live",
-      "subtitleLine1": "Đạo diễn Chichi (Haebang Film) — ý tưởng, quay và dựng",
+      "subtitleLine1": "Ý tưởng cùng Studio NOL, quay và dựng bởi Park Chichi (Haebang Film)",
       "subtitleLine2": "MV từ {{mv}} · video live & YouTube từ {{live}}",
       "alt": "Cảnh sân khấu trong MV “Namsan Tower Lights” của Mariko & Yukie",
       "seeWorks": "Xem tác phẩm"
@@ -2626,7 +2626,7 @@
         },
         {
           "q": "Ai thực hiện?",
-          "a": "Đạo diễn Chichi của Haebang Film phụ trách toàn bộ: ý tưởng, quay, dựng và chỉnh màu. Tất cả video bên dưới là tác phẩm của Chichi."
+          "a": "Studio NOL và đạo diễn Park Chichi (Haebang Film) cùng lên ý tưởng; Park Chichi quay, dựng và chỉnh màu. Anh từng là đạo diễn hình ảnh phim Bap, Nineteen, Seomjin River và đạo diễn phim tài liệu âm nhạc A Concert for One Person phát trên KBS Open Channel."
         },
         {
           "q": "Bắt đầu thế nào?",
@@ -2636,7 +2636,7 @@
     },
     "portfolio": {
       "title": "Tác phẩm",
-      "subtitle": "MV, clip live và nội dung YouTube do đạo diễn Chichi (Haebang Film) lên ý tưởng, quay và dựng. Nhấn để xem.",
+      "subtitle": "MV, clip live và nội dung YouTube do đạo diễn Park Chichi (Haebang Film) quay và dựng. Nhấn để xem.",
       "kinds": {
         "all": "Tất cả",
         "music-video": "MV",
@@ -2663,15 +2663,18 @@
       ]
     },
     "director": {
-      "title": "Ý tưởng, quay & dựng: đạo diễn Chichi",
-      "body": "Đạo diễn Chichi của Haebang Film thực hiện mỗi video từ ý tưởng đến quay, dựng và chỉnh màu: MV ngoại cảnh, video biểu diễn và series talk YouTube nhiều tập — các video bên trên là kết quả.",
+      "title": "Đạo diễn Park Chichi, Haebang Film",
+      "body": "Park Chichi (tên thật Park Geon-ju) đã làm phim, phim tài liệu, web drama, nội dung YouTube và MV trọn vẹn từ lên kế hoạch đến quay, dựng, chỉnh màu. Điều hành công ty phim tài liệu độc lập Haebang Film từ 2019, anh đạo diễn phim tài liệu âm nhạc A Concert for One Person (KBS Open Channel) và là đạo diễn hình ảnh/nhà sản xuất của Bap, Grandma, Me and the Dandelion, Nineteen, Seomjin River. Anh ghi hình các buổi diễn và lễ hội nhiều năm, đồng thời là nhạc sĩ.",
       "points": [
-        "Một đạo diễn từ ý tưởng, storyboard đến quay, dựng, chỉnh màu",
-        "Số máy quay theo bài hát và ngân sách — từ 1 máy đến multi-cam",
-        "Âm thanh do Studio NOL — thu, mix, master tại cùng một nơi",
-        "Tỷ lệ khung hình theo nơi đăng (YouTube, Instagram…)"
+        "Ý tưởng cùng Studio NOL; quay, dựng, chỉnh màu do Park Chichi đảm nhận trọn vẹn",
+        "Phim & tài liệu — Bap, Grandma, Me and the Dandelion (2025); Nineteen, Seomjin River, Blue Wind (2024)",
+        "Phim âm nhạc — A Concert for One Person (KBS), MV “Namsan Tower Lights”, Gangjeong Peace & Music Camp (51 nhóm)",
+        "Phụ trách video lễ hội — Resistance Arts Festival (200+ nhóm), Ssiat Fest (100+ nghệ sĩ)"
       ],
-      "imageAlt": "Một cảnh trong MV “Namsan Tower Lights”"
+      "imageAlt": "Một cảnh trong MV “Namsan Tower Lights”",
+      "worksTitle": "Tác phẩm tiêu biểu",
+      "careerTitle": "Kinh nghiệm & phụ trách video",
+      "photoAlt": "Đạo diễn Park Chichi quay bằng máy quay cầm tay"
     },
     "pricing": {
       "title": "Chi phí sản xuất video",
@@ -2722,7 +2725,7 @@
         },
         {
           "title": "Kế hoạch & báo giá",
-          "description": "Chốt ý tưởng, storyboard, địa điểm, máy quay với đạo diễn Chichi rồi xác nhận báo giá."
+          "description": "Chốt ý tưởng, storyboard, địa điểm, máy quay với Studio NOL và đạo diễn Park Chichi rồi xác nhận báo giá."
         },
         {
           "title": "Quay",
@@ -2741,6 +2744,10 @@
         {
           "q": "Giá khởi điểm bao gồm những gì?",
           "a": "Tư vấn ý tưởng, quay, dựng, chỉnh màu và phụ đề. Số máy quay và thời gian theo bài hát và ngân sách; quy mô lớn hơn thì giá cao hơn."
+        },
+        {
+          "q": "Đạo diễn Park Chichi là ai?",
+          "a": "Nhà làm phim (tên thật Park Geon-ju) đã thực hiện phim, tài liệu, web drama, YouTube và MV từ lên kế hoạch đến quay, dựng, chỉnh màu. Anh là đạo diễn hình ảnh/nhà sản xuất của Bap, Grandma, Me and the Dandelion, Nineteen, Seomjin River, đạo diễn A Concert for One Person (KBS Open Channel) và điều hành Haebang Film. Ý tưởng được lên cùng Studio NOL; quay, dựng và chỉnh màu do anh thực hiện."
         },
         {
           "q": "Có gồm phí thuê địa điểm, diễn viên không?",
