@@ -44,6 +44,10 @@ try {
 } catch (error) {
   fail(`Turso CLI 실패 — 로그인(~/.turso/turso auth login) 상태를 확인할 것: ${error instanceof Error ? error.message.split('\n')[0] : String(error)}`);
 }
+// Turso CLI는 로그인이 풀려도 "You are not logged in…"을 찍고 0으로 끝난다 — 그 문구를 주소로 읽으면 운영 적용이 0개로 보여
+// 저널 전체(86개)를 "적용 예정"으로 늘어놓는다(2026-10-22 실제로 그렇게 보였다). 주소·조회 결과가 정상 모양이 아니면 멈춘다.
+if (!/^libsql:\/\/\S+$/.test(url)) fail(`Turso CLI가 DB 주소를 돌려주지 않았다 — 로그인이 풀렸을 수 있다(~/.turso/turso auth login): ${url.split('\n')[0]}`);
+if (!/\d{13}/.test(shellOut)) fail(`운영 __drizzle_migrations를 읽지 못했다 — 로그인·DB 이름을 확인할 것: ${shellOut.split('\n')[0]}`);
 const host = url.replace(/^libsql:\/\//, '');
 
 // 3) 저널 vs 운영 __drizzle_migrations 대조
@@ -73,6 +77,7 @@ try {
 } catch (error) {
   fail(`토큰 발급 실패: ${error instanceof Error ? error.message.split('\n')[0] : String(error)}`);
 }
+if (!/^[A-Za-z0-9._-]{40,}$/.test(token)) fail(`토큰 발급 결과가 토큰 모양이 아니다 — 로그인 상태를 확인할 것: ${token.split('\n')[0]}`);
 const r = spawnSync(path.join(top, 'node_modules/.bin/drizzle-kit'), ['migrate'], {
   stdio: 'inherit', env: { ...process.env, TURSO_DATABASE_URL: url, TURSO_AUTH_TOKEN: token },
 });
