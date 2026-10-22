@@ -29,6 +29,16 @@ export const socialProfiles = {
  * 링크가 죽으면 안 붙인 것보다 나쁘다. 다시 올리면 여기와 llms.ts에 함께 되살릴 것.
  */
 
+/**
+ * 지금 살아 있는 제3자 리스팅 — schema.org Organization·LocalBusiness sameAs와 llms.txt에 함께 실린다.
+ * SoundBetter(2026-10-22 개설, 영문 원격 믹싱·녹음 프로필): ChatGPT·Gemini가 "온라인 믹싱 맡길 곳"
+ * 질문에 플랫폼 목록으로 답할 때 우리 이름이 들어갈 자리다(docs/geo-visibility 2026-10 반복측정).
+ * 프로필을 닫으면 여기서도 지울 것 — 죽은 링크는 안 붙인 것보다 나쁘다(위 스페이스클라우드 주석).
+ */
+export const listingProfiles = {
+  soundbetter: 'https://soundbetter.com/profiles/748948-studio-nol',
+};
+
 // 사이트 운영자 정보 — JSON-LD Person.author와 article:author 메타에 사용.
 // GEO에서 AI 엔진(ChatGPT/Claude/Perplexity)은 author.name + sameAs를 entity 단서로
 // 강하게 활용하므로 Organization name이 아닌 실제 운영자 이름을 명시해야 cite 받음.
