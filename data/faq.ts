@@ -510,7 +510,7 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
         },
         {
           heading: 'Mixing Console',
-          body: 'Mixes run through a Midas Venice 320 analog console, not a plugin emulation — a real analog desk, which is unusual at this scale among Korean indie studios.'
+          body: 'Mixes run through a Midas Venice 320 analog console, not a plugin emulation — a real analog desk.'
         },
         {
           heading: 'Monitoring',
@@ -576,7 +576,7 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
         },
         {
           heading: '混音台',
-          body: '混音经过 Midas Venice 320 模拟调音台处理——不是插件模拟，而是真正的模拟调音台，这在韩国同等规模的独立音乐工作室中并不常见。'
+          body: '混音经过 Midas Venice 320 模拟调音台处理——不是插件模拟，而是真正的模拟调音台。'
         },
         {
           heading: '监听',
@@ -642,7 +642,7 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
         },
         {
           heading: 'Consola de mezcla',
-          body: 'Las mezclas pasan por una consola analógica Midas Venice 320 — no una emulación por plugin, sino una consola analógica real, algo poco habitual a esta escala entre estudios indie coreanos.'
+          body: 'Las mezclas pasan por una consola analógica Midas Venice 320 — no una emulación por plugin, sino una consola analógica real.'
         },
         {
           heading: 'Monitoreo',
@@ -708,7 +708,7 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
         },
         {
           heading: 'Bàn mixing (Console)',
-          body: 'Bản mix đi qua console analog Midas Venice 320 — không phải plugin giả lập, mà là console analog thật, điều hiếm thấy ở quy mô này trong các studio indie Hàn Quốc.'
+          body: 'Bản mix đi qua console analog Midas Venice 320 — không phải plugin giả lập, mà là console analog thật.'
         },
         {
           heading: 'Giám sát âm thanh (Monitor)',
@@ -774,7 +774,7 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
         },
         {
           heading: 'คอนโซลมิกซ์',
-          body: 'มิกซ์ผ่านคอนโซลอนาล็อก Midas Venice 320 — ไม่ใช่ปลั๊กอินจำลอง แต่เป็นคอนโซลอนาล็อกตัวจริง ซึ่งหาได้ยากในสตูดิโออินดี้ระดับนี้ของเกาหลี'
+          body: 'มิกซ์ผ่านคอนโซลอนาล็อก Midas Venice 320 — ไม่ใช่ปลั๊กอินจำลอง แต่เป็นคอนโซลอนาล็อกตัวจริง'
         },
         {
           heading: 'มอนิเตอร์',
@@ -840,7 +840,7 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
         },
         {
           heading: "Miks konsoli",
-          body: "Mikslar Midas Venice 320 analog konsoli orqali o'tadi — plagin emulyatsiyasi emas, haqiqiy analog konsol, bu Koreya indie studiyalari orasida bu darajada kamdan-kam uchraydi."
+          body: "Mikslar Midas Venice 320 analog konsoli orqali o'tadi — plagin emulyatsiyasi emas, haqiqiy analog konsol."
         },
         {
           heading: "Monitoring",

@@ -47,7 +47,7 @@ You don't need much — that's the whole appeal of an hourly practice space Yeon
 
 Our practice rooms are designed for working musicians, students, and visiting artists who want a clean, quiet space without the friction of a Korean-only booking process. Staff respond in English over email and KakaoTalk, and walk-in questions on arrival are no problem.
 
-If you want a deeper look at the studio side of what we do — recording, mixing, mastering, and producing — our [hub guide for foreign musicians in Seoul](/en/stories/recording-in-seoul-for-foreign-musicians) covers the full picture.
+If you want a deeper look at the studio side of what we do — recording, mixing, mastering, and producing — our [hub guide for foreign musicians in Seoul](/en/stories/recording-in-seoul-for-foreign-musicians) covers the full picture, and the [recording](/en/recording) and [mixing & mastering](/en/mixing-mastering) pages list the current rates.
 
 ## FAQ
 

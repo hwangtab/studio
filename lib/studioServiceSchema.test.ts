@@ -115,4 +115,26 @@ describe('buildStudioServiceSchema — 견적형 서비스', () => {
     expect(schema).not.toHaveProperty('offers');
     expect(schema).toMatchObject({ '@type': 'Service', url: 'https://studionol.co.kr/ko/composition-arrangement' });
   });
+  it('remote services serve Korea and worldwide instead of Eunpyeong-gu only', () => {
+    const schema = buildStudioServiceSchema({
+      locale: 'en',
+      siteName: 'Studio NOL',
+      siteUrl: 'https://studionol.co.kr',
+      pageUrl: 'https://studionol.co.kr/en/mixing-mastering',
+      name: 'Mixing',
+      description: 'Remote mixing',
+      serviceType: 'Mixing & Mastering',
+      remote: true,
+    }) as Record<string, unknown>;
+
+    expect(schema.areaServed).toEqual([
+      { '@type': 'Country', name: 'South Korea' },
+      { '@type': 'Place', name: 'Worldwide (remote)' },
+    ]);
+    expect(schema.availableChannel).toMatchObject({
+      '@type': 'ServiceChannel',
+      serviceUrl: 'https://studionol.co.kr/en/mixing-mastering',
+    });
+    expect(schema.location).toBeDefined();
+  });
 });
