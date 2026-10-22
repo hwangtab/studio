@@ -263,7 +263,7 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
       return {
         priceLabel: won(COVER_VIDEO_PACKAGE_PRICE),
         vat: 'included',
-        basis: ['3시간 세션 — 촬영·믹싱·편집, 4K 영상과 음원 납품'],
+        basis: ['3시간 세션 — 촬영·기본 믹싱·편집, 4K 영상과 음원 납품'],
         bookingHref: '/ko/booking/cover-video',
       };
     case 'voice': {

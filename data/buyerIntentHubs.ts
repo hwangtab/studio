@@ -407,7 +407,7 @@ export const buyerIntentHubs: Record<BuyerIntentHubSlug, BuyerIntentHub> = {
     forWhom: [
       {
         title: '유튜브·인스타·틱톡에 커버 영상을 올리고 싶은 분',
-        description: '4K 촬영 + 믹싱 음원 + 편집까지 원스톱으로 해결해요.',
+        description: '4K 촬영 + 기본 믹싱 음원 + 편집까지 원스톱으로 해결해요.',
       },
       {
         title: '홈 촬영 품질에 한계를 느끼는 분',
@@ -415,7 +415,7 @@ export const buyerIntentHubs: Record<BuyerIntentHubSlug, BuyerIntentHub> = {
       },
       {
         title: '음원과 영상을 따로 외주 맡기기 번거로운 분',
-        description: '촬영·녹음·믹싱·영상 편집을 한 팀이 담당해 납품까지 한 번에 끝나요.',
+        description: '촬영·녹음·기본 믹싱·영상 편집을 한 팀이 담당해 납품까지 한 번에 끝나요.',
       },
     ],
     quickAnswers: [
