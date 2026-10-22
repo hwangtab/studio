@@ -704,7 +704,7 @@ const homeData = {
       },
       {
         title: "Cover video suratga olish",
-        description: "Suratga olish + yozuv + oddiy miks + montaj bitta paketda. 3 soatlik bitta seansda 4K video va WAV/MP3.",
+        description: "Suratga olish + yozuv + asosiy miks + montaj bitta paketda. 3 soatlik bitta seansda 4K video va WAV/MP3.",
         link: '/cover-video',
         icon: 'Video',
       },
