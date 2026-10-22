@@ -877,7 +877,7 @@ export const getPricingData = (locale: Locale) => {
     {
       id: 'package-voiceover',
       title: t(locale, { ko: '성우/나레이션 녹음', en: 'Voiceover & Narration', zh: '配音/旁白录音', es: 'Locución y Narración', vi: 'Voiceover & Narration', th: 'อัดเสียงพากย์/บรรยาย', uz: 'Voiceover/Narratsiya yozuvi' }),
-      subtitle: t(locale, { ko: 'U87Ai, 유튜브·광고', en: 'U87Ai, YouTube & commercials', zh: 'U87Ai, YouTube·广告', es: 'U87Ai, YouTube y comerciales', vi: 'U87Ai, YouTube & quảng cáo', th: 'U87Ai, YouTube & โฆษณา', uz: 'U87Ai, YouTube va reklama' }),
+      subtitle: t(locale, { ko: 'U87AI, 유튜브·광고', en: 'U87AI, YouTube & commercials', zh: 'U87AI, YouTube·广告', es: 'U87AI, YouTube y comerciales', vi: 'U87AI, YouTube & quảng cáo', th: 'U87AI, YouTube & โฆษณา', uz: 'U87AI, YouTube va reklama' }),
       priceDisplay: t(locale, { ko: '100,000원', en: '₩100,000', zh: '₩100,000', es: '₩100,000', vi: '₩100,000', th: '₩100,000', uz: '₩100,000' }),
       priceValue: 100000,
       unit: t(locale, { ko: '/ 시간', en: '/ hour', zh: '/ 小时', es: '/ hora', vi: '/ giờ', th: '/ ชั่วโมง', uz: '/ soat' }),
