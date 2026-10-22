@@ -13,6 +13,7 @@ import {
 } from '../../../components/admin/bookingActions';
 import { bookingLineOf } from '../../../lib/booking/line';
 import { AdminShell } from '../../../components/admin/AdminShell';
+import { DANGER_WEAK_CLASS } from '../../../components/admin/adminDanger';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextArea, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
@@ -32,6 +33,7 @@ import { formatKstDeadline } from '../../../lib/payments/bankAccount';
 import { findSameNameDepositOrders, type SameNameDepositOrder } from '../../../lib/payments/bankDepositOrders';
 import { loadRefundAccountSummary } from '../../../lib/payments/refundAccount';
 import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
+import { Notice } from '../../../components/ui/Notice';
 
 /** 환불 계좌 요약 — 은행명·예금주만. 계좌번호는 props에 싣지 않는다("계좌 보기"가 API로 가져온다). */
 type RefundAccountSummaryProps =
@@ -196,6 +198,8 @@ export default function AdminBookingDetailPage({
   }, [booking.refundableAmount]);
   const [refundReason, setRefundReason] = useState('');
   const [refundError, setRefundError] = useState<string | null>(null);
+  // 사유 오류는 사유 칸 아래에 — 예전엔 금액 칸이 빨갛게 되며 "사유를 입력해 주세요"가 금액 밑에 떴다.
+  const [refundReasonError, setRefundReasonError] = useState<string | null>(null);
 
   const run = async (task: () => Promise<BookingActionResult>, confirmText?: string) => {
     if (confirmText && !window.confirm(confirmText)) return;
@@ -364,6 +368,7 @@ export default function AdminBookingDetailPage({
   const handleRefund = async (e: React.FormEvent) => {
     e.preventDefault();
     setRefundError(null);
+    setRefundReasonError(null);
 
     // 상한은 총액이 아니라 **잔액**이다 — cancel.ts validateOverrideAmount와 같은 기준.
     // 총액을 상한으로 두면 부분환불 이력이 있는 건에서 서버가 되돌리는 죽은 입력이 된다.
@@ -381,7 +386,7 @@ export default function AdminBookingDetailPage({
       return;
     }
     if (refundReason.trim() === '') {
-      setRefundError('환불 사유를 입력해 주세요.');
+      setRefundReasonError('환불 사유를 입력해 주세요.');
       return;
     }
     if (
@@ -581,7 +586,7 @@ export default function AdminBookingDetailPage({
   return (
     <>
       <Head>
-        <title>{booking.customerName}님 예약 상세 | Studio NOL</title>
+        <title>{`${booking.customerName}님 예약 상세 | Studio NOL`}</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
@@ -593,7 +598,7 @@ export default function AdminBookingDetailPage({
         navLine={bookingLine}
       >
         {notice && (
-          <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>
+          <Notice tone="info" light className="mb-4">{notice}</Notice>
         )}
 
         {booking.bankDeposit === 'awaiting' && (
@@ -849,13 +854,13 @@ export default function AdminBookingDetailPage({
                 {canEditDetails && (
                   <div className="pt-3">
                     {editOpen ? (
-                      <div className="grid grid-cols-2 gap-3 rounded-lg border border-gray-200 p-3">
+                      <div className="grid grid-cols-1 gap-3 rounded-lg border border-gray-200 p-3">
                         <Field id="ed-name" label="이름" className={lightOnlyField}><TextInput value={editName} onChange={(e) => setEditName(e.target.value)} light /></Field>
                         <Field id="ed-amount" label="금액 (부가세 포함, 원)" className={lightOnlyField}><TextInput inputMode="numeric" value={editAmount} onChange={(e) => setEditAmount(e.target.value)} light /></Field>
                         <Field id="ed-phone" label="연락처 (비우면 기록만)" className={lightOnlyField}><TextInput value={editPhone} onChange={(e) => setEditPhone(e.target.value)} light /></Field>
                         <Field id="ed-email" label="이메일 (저장만 해요 — 안내 메일은 “입금 안내 재발송”으로)" className={lightOnlyField}><TextInput value={editEmail} onChange={(e) => setEditEmail(e.target.value)} light /></Field>
-                        <p className="col-span-2 text-xs text-gray-500">입금 확인 전의 예약만 여기서 고쳐요. 입금 확인 뒤에는 결제 금액 칸의 “금액 정정”을 쓰세요.</p>
-                        <div className="col-span-2 flex flex-wrap gap-2">
+                        <p className="text-xs text-gray-500">입금 확인 전의 예약만 여기서 고쳐요. 입금 확인 뒤에는 결제 금액 칸의 “금액 정정”을 쓰세요.</p>
+                        <div className="flex flex-wrap gap-2">
                           <Button light size="sm" disabled={busy || editName.trim() === ''} onClick={handleEditDetails}>저장</Button>
                           <Button light variant="weak" size="sm" disabled={busy} onClick={() => setEditOpen(false)}>닫기</Button>
                         </div>
@@ -1142,7 +1147,7 @@ export default function AdminBookingDetailPage({
                     light className="text-sm"
                   />
                 </Field>
-                <Field id="refund-reason" label="환불 사유" className={lightOnlyField}>
+                <Field id="refund-reason" label="환불 사유" error={refundReasonError ?? undefined} className={lightOnlyField}>
                   <TextArea
                     value={refundReason}
                     onChange={(e) => setRefundReason(e.target.value)}
@@ -1151,7 +1156,7 @@ export default function AdminBookingDetailPage({
                     light className="min-h-0 text-sm"
                   />
                 </Field>
-                <Button light type="submit" variant="weak" disabled={busy}>
+                <Button light type="submit" variant="weak" className={DANGER_WEAK_CLASS} disabled={busy}>
                   {isBankPaid ? '송금 완료(환불 기록)' : '환불 처리'}
                 </Button>
               </form>

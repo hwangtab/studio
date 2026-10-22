@@ -83,7 +83,8 @@ function QuotePaste({
         value={text}
         onChange={(e) => setText(e.target.value)}
         rows={6}
-        className="mt-3 w-full rounded-lg border border-gray-300 bg-white p-3 text-sm text-gray-900"
+        aria-label="견적 요청서 요약"
+        className="mt-3 w-full rounded-lg border border-gray-300 bg-white p-3 text-sm text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70"
       />
       <div className="mt-2 flex items-center gap-3">
         <Button

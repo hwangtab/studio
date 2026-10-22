@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 
 import { postShowAction } from '../../../components/admin/showActions';
 import { AdminShell } from '../../../components/admin/AdminShell';
+import { DANGER_WEAK_CLASS } from '../../../components/admin/adminDanger';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
@@ -21,6 +22,7 @@ import { ShowPayoutSection } from '../../../components/admin/ShowPayoutSection';
 import { loadShowPayoutPanel } from '../../../lib/partnerPayouts/showPanel';
 import type { ShowPayoutPanelState } from '../../../lib/partnerPayouts/showView';
 import { REPORT_LINK_DEFAULT_TTL_DAYS, REPORT_LINK_MAX_TTL_DAYS } from '../../../lib/shows/reportLinkLimits';
+import { ActionNotice } from '../../../components/admin/ActionNotice';
 
 /** 환불 계좌 요약 — 은행·예금주·시각뿐. 계좌번호는 평문도 암호문도 props에 싣지 않는다("계좌 보기" API로만). */
 export interface ShowRefundAccountInfo {
@@ -132,7 +134,7 @@ export default function AdminShowDetailPage({ show, refundAccounts = {}, sameNam
   return (
     <>
       <Head>
-        <title>{show.title} | 공연 관리</title>
+        <title>{`${show.title} | 공연 관리`}</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <AdminShell
@@ -148,8 +150,8 @@ export default function AdminShowDetailPage({ show, refundAccounts = {}, sameNam
           </Button>
         }
       >
-        {notice && <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>}
-        {error && <div role="alert" className="mb-4 p-3 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">{error}</div>}
+        <ActionNotice message={notice} />
+        <ActionNotice message={error} tone="error" />
 
         <section className="bg-white rounded-2xl shadow-sm p-4 md:p-6 mb-6 text-sm text-gray-900">
           <p className="mb-2"><strong>상태</strong> {STATUS_LABEL[show.status] ?? show.status}</p>
@@ -310,7 +312,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
             명단 CSV
           </a>
           {(scheduled || hasRefundPendingOrders) && (
-            <Button light variant="weak" size="sm" disabled={busy} onClick={() =>
+            <Button light variant="weak" size="sm" className={scheduled ? DANGER_WEAK_CLASS : undefined} disabled={busy} onClick={() =>
               run({ action: 'cancel_showtime', showtimeId: t.id }, {
                 confirm: scheduled
                   ? '이 회차를 취소하고, 결제된 주문을 전부 전액 환불합니다(입장한 티켓 제외). 되돌릴 수 없습니다.'
@@ -417,7 +419,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
         </div>
       )}
 
-      <div className="overflow-x-auto max-md:p-3">
+      <div className="overflow-x-auto max-lg:p-3">
         <table className="admin-table w-full text-sm">
           <thead className="bg-gray-50 text-gray-600">
             <tr>

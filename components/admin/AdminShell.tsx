@@ -325,8 +325,9 @@ export const AdminShell = ({
           </button>
         </div>
 
+        {/* 상단 바가 sticky라 메뉴가 화면보다 길면(가로 모드·작은 폰) 아래쪽 구역과 로그아웃에 닿지 못한다 — 메뉴 안에서 스크롤한다. */}
         {menuOpen && (
-          <div id="admin-mobile-menu" className="lg:hidden border-t border-gray-200 bg-white px-4 pb-4 pt-3">
+          <div id="admin-mobile-menu" className="lg:hidden max-h-[calc(100dvh-3.5rem)] overflow-y-auto overscroll-contain border-t border-gray-200 bg-white px-4 pb-4 pt-3">
             <nav aria-label="관리자 구역 메뉴">
               <ul className="space-y-4">
                 {ADMIN_NAV_ENTRIES.map((entry) => {

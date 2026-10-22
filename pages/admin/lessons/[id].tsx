@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import { AdminShell } from '../../../components/admin/AdminShell';
+import { DANGER_GHOST_CLASS } from '../../../components/admin/adminDanger';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextInput } from '../../../components/ui/Field';
 import { Notice } from '../../../components/ui/Notice';
@@ -183,7 +184,7 @@ export default function AdminLessonDetailPage({ found, today, enrollment, sessio
   return (
     <>
       <Head>
-        <title>{enrollment.studentName} 수강 | Studio NOL</title>
+        <title>{`${enrollment.studentName} 수강 | Studio NOL`}</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <AdminShell title={`${enrollment.studentName} 수강`} description={`${PAY_METHOD_LABELS[enrollment.payMethod]} · ${enrollment.courseWeeks}주 · 매주 ${WEEKDAY_LABELS[weekdayOf(enrollment.startDate)]} ${enrollment.startTime} (${enrollment.durationMin}분)`} backHref="/admin/lessons" backLabel="레슨 목록" width="wide">
@@ -283,7 +284,7 @@ export default function AdminLessonDetailPage({ found, today, enrollment, sessio
                       <span>{p.paidOn} · {p.periodLabel} · {p.method}{p.vatAmount > 0 ? ` · 부가세 ${won(p.vatAmount)}` : ''}{p.receiptIssued ? ' · 증빙 발행' : ''}{p.memo ? ` · ${p.memo}` : ''}</span>
                       <span className="flex items-center gap-2">
                         <strong className="tabular-nums">{won(p.amount)}</strong>
-                        <Button light variant="weak" size="sm" disabled={busy} onClick={() => { if (window.confirm(`${p.paidOn} ${won(p.amount)} 수납 기록을 지울까요? 매출에서도 빠집니다.`)) void post({ action: 'payment_delete', paymentId: p.id }, '지웠어요.'); }}>삭제</Button>
+                        <Button light variant="ghost" size="sm" className={DANGER_GHOST_CLASS} disabled={busy} onClick={() => { if (window.confirm(`${p.paidOn} ${won(p.amount)} 수납 기록을 지울까요? 매출에서도 빠집니다.`)) void post({ action: 'payment_delete', paymentId: p.id }, '지웠어요.'); }}>삭제</Button>
                       </span>
                     </li>
                   ))}

@@ -9,6 +9,8 @@ import { tenancyCalendarId } from '../../../lib/tenancy/calendar';
 import { currentTermEnd, daysBetween, flagsOf, kstToday, overdueDays, type TenancyFlag } from '../../../lib/tenancy/rules';
 import { listTenancies, type TenancyListRow } from '../../../lib/tenancy/service';
 import { buttonVariants } from '../../../components/ui/Button';
+import { DANGER_GHOST_CLASS } from '../../../components/admin/adminDanger';
+import { cn } from '../../../lib/utils';
 
 interface Props {
   rows: TenancyListRow[];
@@ -32,7 +34,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 
 const won = (n: number) => `${n.toLocaleString('ko-KR')}원`;
 const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
-const btn = 'rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-900 hover:bg-gray-50 disabled:opacity-50';
+// 보조 버튼도 공용 Button 모양으로 — 예전엔 py-1.5 손 조립이라 옆의 '저장'(h-11)과 높이가 달랐다.
+const btn = buttonVariants({ variant: 'secondary', size: 'sm', light: true });
+const btnDanger = cn(btn, DANGER_GHOST_CLASS, 'border-red-200');
 const btnPrimary = buttonVariants({ variant: 'solid', size: 'sm', light: true });
 
 const FLAG_LABEL: Record<TenancyFlag, { text: string; cls: string }> = {
@@ -193,7 +197,7 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
   const table = (list: TenancyListRow[], virtual: boolean) => (
     <>
     {/* 모바일은 표 대신 카드 — 표는 칸이 좁아 날짜가 글자 중간에서 꺾이고 버튼이 화면 밖으로 밀렸다(2026-10-20). */}
-    <ul className="space-y-3 md:hidden">
+    <ul className="space-y-3 lg:hidden">
       {list.map((t) => {
         const flags = flagsOf(t, today);
         const late = overdueDays(t.nextDueOn, today);
@@ -221,14 +225,14 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
             <div className="mt-3 flex flex-wrap gap-2">
               <button type="button" className={btn} disabled={busy} onClick={() => pay(t)}>입금 기록</button>
               <button type="button" className={btn} disabled={busy} onClick={() => openEdit(t)}>상세·수정</button>
-              <button type="button" className={btn} disabled={busy} onClick={() => end(t)}>퇴실</button>
+              <button type="button" className={btnDanger} disabled={busy} onClick={() => end(t)}>퇴실</button>
             </div>
           </li>
         );
       })}
       {list.length === 0 && <li className="py-4 text-gray-500">없음</li>}
     </ul>
-    <div className="hidden overflow-x-auto md:block">
+    <div className="hidden overflow-x-auto lg:block">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-gray-200 text-left text-gray-500">
@@ -244,25 +248,25 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
               <tr key={t.id} className="border-b border-gray-100 align-top">
                 <td className="py-2 pr-3 font-medium text-gray-900">{virtual ? '비상주' : t.roomNumber}</td>
                 <td className="pr-3 text-gray-900">{t.tenantName}{t.note && <div className="text-xs text-gray-500">{t.note}</div>}</td>
-                <td className="pr-3 tabular-nums">{won(t.monthlyAmount)}{t.roomListPrice !== null && t.roomListPrice !== t.monthlyAmount && <div className="text-xs text-gray-500">방 정가 {won(t.roomListPrice)}</div>}</td>
+                <td className="whitespace-nowrap pr-3 tabular-nums">{won(t.monthlyAmount)}{t.roomListPrice !== null && t.roomListPrice !== t.monthlyAmount && <div className="text-xs text-gray-500">방 정가 {won(t.roomListPrice)}</div>}</td>
                 <td className="whitespace-nowrap pr-3 tabular-nums">
                   {t.nextDueOn}
                   {late > 0 ? <div className="text-xs text-red-700">{late}일 연체</div> : daysBetween(today, t.nextDueOn) <= 7 && <div className="text-xs text-amber-700">{daysBetween(today, t.nextDueOn)}일 뒤</div>}
                 </td>
-                <td className="pr-3 tabular-nums">
+                <td className="whitespace-nowrap pr-3 tabular-nums">
                   {t.endDate ?? '-'}
                   {t.status === 'active' && t.endDate && t.endDate < today && (() => {
                     const term = currentTermEnd(t.endDate, today);
                     return <div className="text-xs text-gray-500">갱신 {term.renewals}회 · 이번 기간 {term.end}까지</div>;
                   })()}
                 </td>
-                <td className="pr-3 tabular-nums text-gray-600">{t.lastPaidOn ?? '-'}{t.lastPaidAmount !== null && t.lastPaidAmount !== t.monthlyAmount && <div className="text-xs">{won(t.lastPaidAmount)}</div>}</td>
+                <td className="whitespace-nowrap pr-3 tabular-nums text-gray-600">{t.lastPaidOn ?? '-'}{t.lastPaidAmount !== null && t.lastPaidAmount !== t.monthlyAmount && <div className="text-xs">{won(t.lastPaidAmount)}</div>}</td>
                 <td className="space-x-1 whitespace-nowrap py-1 text-right">
                   {flags.map((f) => <span key={f} className={`mr-1 inline-block rounded px-1.5 py-0.5 text-xs font-medium ${FLAG_LABEL[f].cls}`}>{FLAG_LABEL[f].text}</span>)}
                   {t.gcalError && <span title={t.gcalError} className="mr-1 inline-block rounded bg-amber-100 px-1.5 py-0.5 text-xs text-amber-800">캘린더 오류</span>}
                   <button type="button" className={btn} disabled={busy} onClick={() => pay(t)}>입금 기록</button>
                   <button type="button" className={btn} disabled={busy} onClick={() => openEdit(t)}>상세·수정</button>
-                  <button type="button" className={btn} disabled={busy} onClick={() => end(t)}>퇴실</button>
+                  <button type="button" className={btnDanger} disabled={busy} onClick={() => end(t)}>퇴실</button>
                 </td>
               </tr>
             );
@@ -278,7 +282,7 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
   return (
     <>
       <Head><title>입주 관리 | Studio NOL 관리자</title><meta name="robots" content="noindex" /></Head>
-      <AdminShell title="입주 관리" description="연습실 월 입주자와 비상주 사무실 — 입금 예정일을 구글 캘린더에도 올립니다.">
+      <AdminShell title="입주 관리" width="wide" description="연습실 월 입주자와 비상주 사무실 — 입금 예정일을 구글 캘린더에도 올립니다.">
         {tableMissing && <div className="mb-4 rounded-lg bg-amber-50 p-4 text-sm text-amber-900">입주 기록을 읽지 못했어요 — 마이그레이션 0066 전이거나 DB 문제예요. 서버 로그를 확인해 주세요.</div>}
         {!calendarConfigured && <div className="mb-4 rounded-lg bg-amber-50 p-4 text-sm text-amber-900">연습실 캘린더가 설정돼 있지 않아 캘린더 일정은 만들어지지 않아요(환경변수 PRACTICE_ROOM_GCAL_ID 또는 TENANCY_GCAL_ID).</div>}
         {notice && <div className="mb-4 rounded-lg bg-blue-50 p-3 text-sm text-blue-800">{notice}</div>}

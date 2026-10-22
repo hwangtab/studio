@@ -17,6 +17,7 @@ import { PERIOD_PATTERN } from '../../../lib/artistSupport/period';
 import { countSupportersByArtist } from '../../../lib/artistSupport/supporters';
 import { cycleYmOf } from '../../../lib/billing/schedule';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
+import { ActionNotice } from '../../../components/admin/ActionNotice';
 
 /**
  * 관리자 아티스트 구역 — 후원자 수와 월 정산(스펙 §10·§12).
@@ -167,7 +168,7 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
         width="wide"
       >
         {error && <div className="mb-4 p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm">{error}</div>}
-        {notice && <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>}
+        <ActionNotice message={notice} />
 
         <div
           className={`mb-6 p-4 rounded-lg text-sm border ${

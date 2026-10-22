@@ -167,7 +167,7 @@ export default function AdminShopProductPage({ product, editable, fulfillment, t
   return (
     <>
       <Head>
-        <title>{product.title || '상품'} 심사 | Studio NOL</title>
+        <title>{`${product.title || '상품'} 심사 | Studio NOL`}</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <AdminShell

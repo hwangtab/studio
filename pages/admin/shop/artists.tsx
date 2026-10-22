@@ -12,6 +12,7 @@ import { loadShopArtistTermsStatuses } from '../../../lib/shop/artistTermsAgreem
 import { listShopArtistsForAdmin, type AdminShopArtistRow } from '../../../lib/shop/artists';
 import { isStudioShopArtistSlug } from '../../../lib/shop/studioArtist';
 import { buttonVariants } from '../../../components/ui/Button';
+import { Notice } from '../../../components/ui/Notice';
 
 type ArtistWithTerms = AdminShopArtistRow & { termsLabel: string; termsAgreed: boolean };
 
@@ -143,7 +144,7 @@ export default function AdminShopArtistsPage({ artists, error }: Props) {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <AdminShell title="상점 아티스트" description="위탁 계약을 맺은 아티스트를 등재합니다. 등재하면 아티스트가 개설자 콘솔의 상점 탭을 쓸 수 있습니다." backHref="/admin/shop" backLabel="상점" width="wide">
-        {error && <div role="alert" className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-900">{error}</div>}
+        {error && <Notice tone="error" light className="mb-4">{error}</Notice>}
         <CreateForm />
         <section className="rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
           <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-gray-900">등재된 아티스트</h2>

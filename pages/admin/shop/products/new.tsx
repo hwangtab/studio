@@ -7,6 +7,7 @@ import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { listShopArtistsForAdmin } from '../../../../lib/shop/artists';
 import { isStudioShopArtistSlug, STUDIO_SHOP_ARTIST_NAME } from '../../../../lib/shop/studioArtist';
 import { buttonVariants } from '../../../../components/ui/Button';
+import { Notice } from '../../../../components/ui/Notice';
 
 interface Props {
   /** 스튜디오 계정은 뺀 등재 아티스트(스튜디오는 고정 선택지로 따로 둔다). */
@@ -65,7 +66,7 @@ export default function AdminShopNewProductPage({ artists, error }: Props) {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <AdminShell title="상품 등록" description="누구의 상품인지 고르면 빈 초안이 만들어지고, 다음 화면에서 내용을 채워 바로 승인할 수 있습니다." backHref="/admin/shop/products" backLabel="상품 심사" width="narrow">
-        {error && <div role="alert" className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-900">{error}</div>}
+        {error && <Notice tone="error" light className="mb-4">{error}</Notice>}
         <form onSubmit={submit} className="space-y-4 rounded-2xl bg-white p-4 text-sm text-gray-900 shadow-sm md:p-6">
           <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900">누구의 상품인가요</h2>
           <label className="block">판매 주체

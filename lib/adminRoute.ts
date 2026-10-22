@@ -10,3 +10,13 @@
  */
 export const isAdminRoute = (pathname: string): boolean =>
   pathname === '/admin' || pathname.startsWith('/admin/');
+
+/**
+ * 관리자 주소에서 404가 났는가(없는 예약·계약 id 등 — GSSP의 `notFound`).
+ *
+ * 그때 `router.pathname`은 `/404`라 위 판정이 거짓이 되어, 관리자에게 사이트 404(카카오톡 버튼·사이트 메뉴·
+ * "홈으로 이동")가 떴다(2026-10-22 점검). 브라우저 주소(`window.location.pathname`)로 본다 — 서버가 미리 만든 404 HTML에는
+ * 요청 주소가 없으므로 마운트 뒤에만 부를 것(SSR·첫 렌더에서 부르면 하이드레이션이 어긋난다).
+ */
+export const isAdminNotFoundPath = (pathname: string, locationPathname: string): boolean =>
+  pathname === '/404' && isAdminRoute(locationPathname);

@@ -19,6 +19,7 @@ import { MAX_MANUAL_ACTUAL_AMOUNT } from '../../../lib/funding/policy';
 import { formatKstDateTime } from '../../../lib/booking/format';
 import { getAllFundingProjectsAsync } from '../../../lib/funding/repository';
 import { expireStalePledges } from '../../../lib/funding/service';
+import { ActionNotice } from '../../../components/admin/ActionNotice';
 
 const LIST_LIMIT = 200;
 
@@ -311,14 +312,14 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
         description="펀딩 현황을 확인하고 관리합니다."
         width="wide"
         actions={
-          <Link href="/admin/funding/projects" passHref>
-            <Button light variant="weak">프로젝트 심사</Button>
-          </Link>
+          <Button asChild light variant="weak">
+            <Link href="/admin/funding/projects">프로젝트 심사</Link>
+          </Button>
         }
       >
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
             <div className="p-4 md:p-8">
-              {notice && <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>}
+              <ActionNotice message={notice} />
 
               {error && (
                 <div role="alert" className="mb-4 p-3 bg-amber-50 border border-amber-300 text-amber-900 rounded-lg text-sm">
@@ -405,7 +406,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
                 펀딩 '건수'와 '인원'을 나란히 둔다 — COUNT(*)는 건수이고, 같은 사람이 두 번
                 펀딩하면 2다. 예전엔 그 값을 '후원자 수 N명'으로 적어 인원을 부풀렸다.
               */}
-              <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-2">
+              <div className="grid grid-cols-2 gap-4 mb-2 md:grid-cols-3 xl:grid-cols-6">
                 <div className="p-4 bg-gray-50 rounded-xl">
                   <div className="text-xs text-gray-500">모금액(입금 대기 포함)</div>
                   <div className="text-lg font-bold text-gray-900">{formatPriceAmount(totals.confirmedAmount)}원</div>

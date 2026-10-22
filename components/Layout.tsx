@@ -7,7 +7,7 @@ import { Footer } from './layout/Footer';
 import { PaymentBrandBar } from './layout/PaymentBrandBar';
 import { type Locale, defaultLocale } from '../lib/i18n';
 import { isPrivatePageRoute } from '../lib/analytics/privatePaths';
-import { isAdminRoute } from '../lib/adminRoute';
+import { isAdminNotFoundPath, isAdminRoute } from '../lib/adminRoute';
 
 // 스크롤 인터랙션 보조 컴포넌트들은 첫 paint에 시각적 영향이 없어 hydration 후 lazy load.
 // LCP/FCP 측정 창에서 빠지면서 _app/Layout 청크에서 분리.
@@ -53,7 +53,12 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   // 칸 이름·본문은 연한 회색이 된다(관리자 쪽 `dark:text-gray-900` 짝을 빠뜨린 곳마다 깨졌다). 그래서 관리자에서는 `.dark`를
   // 걷고 저장된 선호(localStorage)는 건드리지 않는다 — 사이트로 돌아오면 원래 선호로 복원한다(public/scripts/theme-init.js와 같은 판정).
 
-  const isAdminPage = isAdminRoute(router.pathname);
+  // 관리자 주소의 404(없는 id)도 관리자 화면으로 본다 — 사이트 헤더·카카오톡 버튼을 붙이지 않는다(lib/adminRoute.ts).
+  const [isAdminNotFound, setIsAdminNotFound] = useState(false);
+  useEffect(() => {
+    setIsAdminNotFound(isAdminNotFoundPath(router.pathname, window.location.pathname));
+  }, [router.pathname]);
+  const isAdminPage = isAdminRoute(router.pathname) || isAdminNotFound;
 
   // Consolidated Theme Management
   useEffect(() => {

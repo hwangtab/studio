@@ -13,6 +13,7 @@ import { listPaymentLinks, type PaymentLinkListRow } from '../../../lib/payments
 import { BUSINESS_LINE_LABELS, BUSINESS_LINES, type BusinessLine } from '../../../lib/ops/businessLine';
 import { loadPaymentLinkLines } from '../../../lib/ops/businessLineStore';
 import { buttonVariants } from '../../../components/ui/Button';
+import { Notice } from '../../../components/ui/Notice';
 
 /**
  * 목록 행 + 매출 분야(지정이 없으면 기본 '녹음·제작'). `lineFixed`면 제작·믹싱 계약 링크라 바꿀 수 없다.
@@ -184,7 +185,7 @@ export default function AdminPaymentLinksPage({ links: initialLinks, truncated, 
             결제 링크 표가 아직 없어요(마이그레이션 0060 미적용). 아래 옛 링크만 동작하고, 새 링크는 표를 만든 뒤에 만들 수 있어요.
           </div>
         )}
-        {error && <div role="alert" className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-900">{error}</div>}
+        {error && <Notice tone="error" light className="mb-4">{error}</Notice>}
         {created && (
           <div role="status" className="mb-4 rounded-lg border border-green-300 bg-green-50 p-3 text-sm text-green-900">
             링크를 만들었어요{copied === created ? '(주소를 복사했어요)' : ''}: <span className="break-all font-mono">{urlOf(created)}</span>

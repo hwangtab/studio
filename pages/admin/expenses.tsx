@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { AdminShell } from '../../components/admin/AdminShell';
+import { DANGER_GHOST_CLASS } from '../../components/admin/adminDanger';
 import { Button } from '../../components/ui/Button';
 import { Field, Select, TextInput } from '../../components/ui/Field';
 import { Notice } from '../../components/ui/Notice';
@@ -242,7 +243,7 @@ export default function AdminExpensesPage({ expenses, today, unavailable, monthL
                     <span className="font-semibold tabular-nums">{won(e.amount)}{e.repeatMonthly ? ' / 월' : ''}</span>
                     {e.repeatMonthly && !e.repeatUntil && <Button light variant="weak" size="sm" disabled={busy} onClick={() => endRepeat(e)}>반복 끝내기</Button>}
                     <Button light variant="weak" size="sm" disabled={busy} onClick={() => setEditing({ id: e.id, scope: e.scope, category: e.category, memo: e.memo ?? '' })}>구분·항목 고치기</Button>
-                    <Button light variant="weak" size="sm" disabled={busy} onClick={() => remove(e)}>삭제</Button>
+                    <Button light variant="ghost" size="sm" className={DANGER_GHOST_CLASS} disabled={busy} onClick={() => remove(e)}>삭제</Button>
                   </div>
                   {editing?.id === e.id && (
                     <div className="grid w-full grid-cols-1 gap-3 rounded-xl bg-gray-50 p-3 md:grid-cols-3">

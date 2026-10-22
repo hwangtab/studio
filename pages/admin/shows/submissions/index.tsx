@@ -7,6 +7,7 @@ import { AdminShell } from '../../../../components/admin/AdminShell';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { formatKstDateTimeFull } from '../../../../lib/booking/format';
 import { listSubmissionsForAdmin, type AdminSubmissionSummary } from '../../../../lib/shows/organizer/adminSubmissions';
+import { Notice } from '../../../../components/ui/Notice';
 
 interface AdminShowSubmissionsPageProps {
   submissions: AdminSubmissionSummary[];
@@ -58,10 +59,10 @@ export default function AdminShowSubmissionsPage({ submissions, error }: AdminSh
         width="wide"
       >
         {error && (
-          <div role="alert" className="mb-4 p-3 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">{error}</div>
+          <Notice tone="error" light className="mb-4">{error}</Notice>
         )}
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-          <div className="overflow-x-auto max-md:p-3">
+          <div className="overflow-x-auto max-lg:p-3">
             <table className="admin-table w-full text-sm text-left">
               <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
                 <tr>

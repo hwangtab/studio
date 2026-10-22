@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useState } from 'react';
 
 import { AdminShell } from '../../../components/admin/AdminShell';
+import { DANGER_TEXT_CLASS } from '../../../components/admin/adminDanger';
 import { Notice } from '../../../components/ui/Notice';
 import { SOFTWARE_PRODUCTS } from '../../../data/software/catalog';
 import { SOFTWARE_SALES_OPEN } from '../../../data/software/policy';
@@ -200,7 +201,7 @@ function LicenseRow({ row }: { row: AdminLicenseRow }) {
             <button type="button" className={linkButtonClass} onClick={() => act({ action: 'email_key' }, `${row.email}로 키 메일을 다시 보낼까요?`)}>키 메일 보내기</button>
           )}
           {row.status === 'active' && (
-            <button type="button" className={linkButtonClass} onClick={() => act({ action: 'revoke' }, '이 라이선스를 취소할까요? 새 기기 활성화가 막힙니다(이미 활성화한 기기는 계속 돕니다).')}>라이선스 취소</button>
+            <button type="button" className={`text-xs ${DANGER_TEXT_CLASS}`} onClick={() => act({ action: 'revoke' }, '이 라이선스를 취소할까요? 새 기기 활성화가 막힙니다(이미 활성화한 기기는 계속 돕니다).')}>라이선스 취소</button>
           )}
           {state && <span className="text-xs text-gray-600">{state}</span>}
         </div>

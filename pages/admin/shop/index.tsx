@@ -19,6 +19,7 @@ import {
   serializeAdjustment, serializeShopPayoutPreview, type AdjustmentView, type ShopPayoutRowView,
 } from '../../../lib/partnerPayouts/shopView';
 import { countPendingShopProducts } from '../../../lib/shop/adminProducts';
+import { Notice } from '../../../components/ui/Notice';
 import {
   listAdminShopOrders, listAdminSkuStock, listShopArtistSales,
   type AdminShopArtistSalesRow, type AdminShopOrderRow, type AdminSkuStockRow,
@@ -211,7 +212,7 @@ export default function AdminShopPage({ orders, ordersTruncated = false, q = '',
           <Link href="/admin/shop/artists" className="text-sm font-medium text-primary hover:underline">아티스트</Link>
         </span>
       )}>
-        {error && <div role="alert" className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-900">{error}</div>}
+        {error && <Notice tone="error" light className="mb-4">{error}</Notice>}
         {!salesOpen && (
           <div className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
             판매가 닫혀 있습니다(data/shop/policy.ts의 SHOP_SALES_OPEN). 여는 순서는 lib/shop/CLAUDE.md의 판매 개시 체크리스트를 보세요.
@@ -239,7 +240,7 @@ export default function AdminShopPage({ orders, ordersTruncated = false, q = '',
           </div>
         )}
         {payoutsError === 'error' && (
-          <div role="alert" className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-900">정산 기록을 불러오지 못해 예전 「정산 예정」 표로 대신합니다. 잠시 뒤 새로고침해 주세요.</div>
+          <Notice tone="error" light className="mb-4">정산 기록을 불러오지 못해 예전 「정산 예정」 표로 대신합니다. 잠시 뒤 새로고침해 주세요.</Notice>
         )}
         {payoutRows ? (
           <ShopPayoutSection rows={payoutRows} month={month} prevMonth={prevMonth} nextMonth={nextMonth} otherAdjustments={otherAdjustments} />

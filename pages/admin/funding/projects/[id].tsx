@@ -667,7 +667,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, pending
   return (
     <>
       <Head>
-        <title>{project.title} 심사 | Studio NOL</title>
+        <title>{`${project.title} 심사 | Studio NOL`}</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
