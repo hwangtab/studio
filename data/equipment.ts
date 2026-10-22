@@ -30,7 +30,7 @@ export const getEquipmentData = (locale: Locale) => {
       "Shure SM58",
       "Shure SM57",
     ],
-    preamps: ["Vintech X73i Preamp", "Focusrite Saffire Octopre", "Shure FP42"],
+    preamps: ["Vintech X73i Preamp", "Midas Venice 320 Mic Preamps", "Focusrite Saffire Octopre", "Shure FP42"],
     equalizers: ["SPL Optimizer Parametric Equalizer"],
     compressors: ["Tegeler Vari Tube Compressor", "Alctron Cp540v2"],
     interfaces: ["Prism Sound Lyra 2", "Arturia X8 OUT", "Behringer XR18"],
