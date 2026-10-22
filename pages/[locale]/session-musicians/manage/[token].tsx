@@ -150,7 +150,7 @@ export default function SessionMusicianManagePage() {
       <Head>
         <title>세션 연주자 등록 관리 | 스튜디오 놀</title>
         <meta name="robots" content="noindex, nofollow" />
-        <meta name="referrer" content="no-referrer" />
+        <meta name="referrer" content="same-origin" />
       </Head>
       <PageShell>
         <p className="typo-card-meta mb-4 text-center">스튜디오 놀</p>
@@ -244,7 +244,7 @@ type Props = Record<string, never>;
 
 export const getServerSideProps = withI18nServerProps<Props>(async ({ params, res }) => {
   res.setHeader('Cache-Control', 'private, no-store');
-  res.setHeader('Referrer-Policy', 'no-referrer');
+  res.setHeader('Referrer-Policy', 'same-origin');
   if (params?.locale !== 'ko') {
     const token = typeof params?.token === 'string' ? encodeURIComponent(params.token) : '';
     return { redirect: { destination: `/ko/session-musicians/manage/${token}`, permanent: false } };

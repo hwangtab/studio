@@ -190,6 +190,23 @@ describe('POST /api/session-musicians', () => {
     expect(await rows()).toHaveLength(0);
   });
 
+  it('같은 이메일 재등록의 재발송 메일이 실패하면 옛 관리 링크가 그대로 살아 있다', async () => {
+    await call(indexHandler, { body: form() });
+    const oldToken = tokenFromMail();
+    sendEmailMock.mockResolvedValue({ ok: false, errorCode: 'API_ERROR', errorDetail: 'boom' });
+
+    expect((await call(indexHandler, { body: form() })).status).toBe(200);
+    sendEmailMock.mockResolvedValue({ ok: true });
+    expect((await call(manageHandler, { method: 'GET', headers: { 'x-manage-token': oldToken } })).status).toBe(200);
+  });
+
+  it('검증에 걸리면 IP 한도도 쓰지 않는다 — 오타를 고쳐 다시 내는 지원자가 막히지 않는다', async () => {
+    for (let i = 0; i < 5; i += 1) {
+      expect((await call(indexHandler, { body: form({ phone: '12' }) })).status).toBe(400);
+    }
+    expect((await call(indexHandler, { body: form() })).status).toBe(200);
+  });
+
   it('검증에 걸리면 400이고 제한 예산을 쓰지 않는다', async () => {
     const out = await call(indexHandler, { body: form({ adultConfirmed: false }) });
     expect(out.status).toBe(400);
