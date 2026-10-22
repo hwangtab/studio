@@ -29,9 +29,19 @@ describe('BOT_PATTERN', () => {
       'Android WebView',
       'Mozilla/5.0 (Linux; Android 14; SM-S911N Build/UP1A.231005.007; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/126.0.6478.122 Mobile Safari/537.36',
     ],
+    [
+      // 제조사명에 "bot"이 들어간 실제 휴대폰(2026-10-22 리뷰 — 봇으로 오판해 언어 감지를 건너뛰었다)
+      'Chrome on CUBOT',
+      'Mozilla/5.0 (Linux; Android 13; CUBOT P80) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36',
+    ],
   ];
 
   test.each(humanCases)('does not match real browser UA: %s', (_label, ua) => {
     expect(BOT_PATTERN.test(ua)).toBe(false);
+  });
+
+  test('still matches generic "...Bot" crawlers', () => {
+    expect(BOT_PATTERN.test('Mozilla/5.0 (compatible; DotBot/1.2; +https://opensiteexplorer.org/dotbot)')).toBe(true);
+    expect(BOT_PATTERN.test('Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots)')).toBe(true);
   });
 });

@@ -75,9 +75,11 @@ export default async function handler(req: NextRequest) {
     'unknown';
   const allowed = await checkOgRateLimit(ip);
   if (!allowed) {
-    return new Response('Too Many Requests', {
-      status: 429,
-      headers: { 'Retry-After': String(OG_RATE_WINDOW) },
+    // 글자 응답(429)을 주면 소셜 크롤러가 "이미지 아님"을 캐시한다 — 실패 경로와 같이 기본 이미지로 보낸다.
+    // 짧게만 캐시해 한도가 풀리면 다시 그린 이미지를 받게 한다.
+    return new Response(null, {
+      status: 302,
+      headers: { Location: '/images/og-default.webp', 'Cache-Control': 'public, max-age=60', 'Retry-After': String(OG_RATE_WINDOW) },
     });
   }
   try {

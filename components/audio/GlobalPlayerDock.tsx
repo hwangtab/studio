@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { Pause, Play, X } from '@/lib/lucide-icons';
-import { useGlobalPlayer } from './GlobalPlayerProvider';
+import { useGlobalPlayer, useGlobalPlayerProgress } from './GlobalPlayerProvider';
 
 /**
  * 글로벌 미니 플레이어의 화면(라이너 노트 §3-6). 상태는 GlobalPlayerProvider가 갖고, 이 파일은 그리기만 한다.
@@ -45,7 +45,8 @@ const fmt = (s: number): string => {
 };
 
 const GlobalPlayerDock = () => {
-  const { track, status, currentTime, duration, toggle, seek, close } = useGlobalPlayer();
+  const { track, status, toggle, seek, close } = useGlobalPlayer();
+  const { currentTime, duration } = useGlobalPlayerProgress();
   const router = useRouter();
   const { t } = useTranslation('common', { lng: track?.locale });
   const bars = React.useMemo(() => barsFor(track?.id ?? ''), [track?.id]);

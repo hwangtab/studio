@@ -64,6 +64,12 @@ export const SectionAnchorNav = ({ items, ariaLabel, className }: SectionAnchorN
         typeof window !== 'undefined' &&
         window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       target.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'start' });
+      // 기본 앵커 동작을 막았으니 포커스도 직접 옮긴다 — 안 그러면 키보드·스크린리더 사용자는 눈에 보이는
+      // 위치만 바뀌고 다음 Tab이 메뉴 다음 칸에서 이어진다(2026-10-22 리뷰). 섹션은 보통 포커스를 못 받으므로
+      // tabindex=-1을 붙이고, 스크롤은 위에서 했으니 preventScroll. 포커스 링은 그리지 않는다(마우스로 눌러도 생기지 않게).
+      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+      target.style.outline = 'none';
+      target.focus({ preventScroll: true });
       setActiveId(id);
       // 딥링크·뒤로가기 보존. 스크롤은 위에서 이미 처리했으므로 해시만 바꾼다(Next 히스토리 상태는 지키면서).
       replaceHashPreservingState(id);
