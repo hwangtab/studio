@@ -208,8 +208,8 @@ export default function AdminSessionMusicianDetailPage({ profile }: Props) {
           <p className="text-sm text-gray-600 mb-3">본인이 관리 링크를 잃고 삭제를 요청했을 때 쓰세요. 바로 지워지고 되돌릴 수 없어요.</p>
           {confirmingDelete ? (
             <div className="flex gap-2">
-              <Button type="button" variant="weak" light className={DANGER_WEAK_CLASS} onClick={remove} disabled={busy}>네, 지울게요</Button>
               <Button type="button" variant="ghost" light onClick={() => setConfirmingDelete(false)} disabled={busy}>그만두기</Button>
+              <Button type="button" variant="weak" light className={DANGER_WEAK_CLASS} onClick={remove} disabled={busy}>네, 지울게요</Button>
             </div>
           ) : (
             <Button type="button" variant="secondary" light onClick={() => setConfirmingDelete(true)}>이 등록 삭제</Button>

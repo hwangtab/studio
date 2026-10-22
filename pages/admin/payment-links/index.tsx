@@ -14,6 +14,8 @@ import { BUSINESS_LINE_LABELS, BUSINESS_LINES, type BusinessLine } from '../../.
 import { loadPaymentLinkLines } from '../../../lib/ops/businessLineStore';
 import { buttonVariants } from '../../../components/ui/Button';
 import { Notice } from '../../../components/ui/Notice';
+import { formatAdminDate, formatAdminDateTimeFromSeconds } from '../../../lib/admin/displayDate';
+import { useAdminDialog } from '../../../components/admin/useAdminDialog';
 
 /**
  * 목록 행 + 매출 분야(지정이 없으면 기본 '녹음·제작'). `lineFixed`면 제작·믹싱 계약 링크라 바꿀 수 없다.
@@ -67,12 +69,13 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
 const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70';
 const buttonClass = buttonVariants({ variant: 'solid', size: 'sm', light: true });
 const rowButtonClass = buttonVariants({ variant: 'weak', size: 'sm', light: true });
-const kstFull = (sec: number) => new Date(sec * 1000).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit' });
-const kst = (sec: number) => new Date(sec * 1000).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+const kstFull = (sec: number) => formatAdminDateTimeFromSeconds(sec);
+const kst = (sec: number) => formatAdminDateTimeFromSeconds(sec);
 
 export default function AdminPaymentLinksPage({ links: initialLinks, truncated, tableMissing, fileLinks }: Props) {
   // 만든 링크를 목록 맨 위에 바로 보인다(SSR 목록은 새로고침 전엔 낡는다 — 방금 만든 링크가 안 보이면 두 번 만들게 된다).
   const [links, setLinks] = useState(initialLinks);
+  const { ask, dialog } = useAdminDialog();
   const [itemName, setItemName] = useState('');
   const [amountText, setAmountText] = useState('');
   const [expiresOn, setExpiresOn] = useState('');
@@ -96,7 +99,14 @@ export default function AdminPaymentLinksPage({ links: initialLinks, truncated, 
       await navigator.clipboard.writeText(urlOf(slug));
       setCopied(slug);
     } catch {
-      window.prompt('주소를 복사해 주세요', urlOf(slug));
+      // 클립보드를 쓸 수 없는 브라우저(권한 거부·비보안 문맥) — 주소를 칸에 띄워 손으로 복사하게 한다.
+      await ask({
+        title: '주소 복사',
+        description: '자동 복사가 막혀 있어요. 아래 주소를 길게 눌러(또는 전체 선택해) 복사해 주세요.',
+        fields: [{ name: 'url', label: '결제 링크 주소', defaultValue: urlOf(slug) }],
+        confirmLabel: '닫기',
+        cancelLabel: '취소',
+      });
     }
   };
 
@@ -266,7 +276,7 @@ export default function AdminPaymentLinksPage({ links: initialLinks, truncated, 
                       {l.lineSetAt && <span>분야 지정 {kst(l.lineSetAt)}{l.lineSetBy ? ` · ${l.lineSetBy}` : ''}</span>}
                     </p>
                     <p className="text-xs text-gray-600">
-                      {kst(l.createdAt)} 생성 · {l.closedAt ? `${kst(l.closedAt)} 닫음` : l.expiresOn ? (l.open ? `${l.expiresOn}까지` : `${l.expiresOn} 만료`) : '만료일 없음'} · {l.open ? '열림' : '닫힘'}
+                      {kst(l.createdAt)} 생성 · {l.closedAt ? `${kst(l.closedAt)} 닫음` : l.expiresOn ? (l.open ? `${formatAdminDate(l.expiresOn)}까지` : `${formatAdminDate(l.expiresOn)} 만료`) : '만료일 없음'} · {l.open ? '열림' : '닫힘'}
                     </p>
                   </div>
                   {l.open && (
@@ -287,7 +297,7 @@ export default function AdminPaymentLinksPage({ links: initialLinks, truncated, 
             <ul className="divide-y divide-gray-100">
               {fileLinks.map((l) => (
                 <li key={l.slug} className="flex flex-wrap items-center gap-2 py-3">
-                  <p className="min-w-0 flex-1 basis-full sm:basis-0">{l.itemName} · {formatPriceAmount(l.totalAmount)}원 · {l.expiresOn ? (l.open ? `${l.expiresOn}까지` : `${l.expiresOn} 만료`) : '만료일 없음'}</p>
+                  <p className="min-w-0 flex-1 basis-full sm:basis-0">{l.itemName} · {formatPriceAmount(l.totalAmount)}원 · {l.expiresOn ? (l.open ? `${formatAdminDate(l.expiresOn)}까지` : `${formatAdminDate(l.expiresOn)} 만료`) : '만료일 없음'}</p>
                   {l.open && <button type="button" onClick={() => copy(l.slug)} className={rowButtonClass}>{copied === l.slug ? '복사함' : '주소 복사'}</button>}
                 </li>
               ))}
@@ -295,6 +305,7 @@ export default function AdminPaymentLinksPage({ links: initialLinks, truncated, 
             <p className="mt-2 text-xs text-gray-600">파일 링크는 읽기 전용이에요(닫으려면 코드에서 만료일을 지나간 날짜로).</p>
           </section>
         )}
+        {dialog}
       </AdminShell>
     </>
   );

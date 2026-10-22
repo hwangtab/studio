@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { findAdminDialog, submitAdminDialog } from '../../../helpers/adminDialog';
 import '@testing-library/jest-dom';
 
 jest.mock('next/router', () => ({ useRouter: () => ({ replace: jest.fn(), pathname: '/admin/funding/[id]' }) }));
@@ -60,21 +61,22 @@ it('환불 요청 건은 발송 저장이 잠기고, 되돌릴 경로를 안내�
 });
 
 // 사유 없이 지우면 청약철회가 조용히 사라진다 — 화면도 API와 같은 판정이어야 한다.
-it('환불 요청 취소는 사유를 받고, 빈 사유면 요청을 보내지 않는다', () => {
+it('환불 요청 취소는 사유를 받고, 빈 사유면 요청을 보내지 않는다', async () => {
   // 이 파일에는 공용 beforeEach가 없다 — 앞선 케이스의 호출이 남아 있으면 오판한다.
   (patchPledge as jest.Mock).mockReset().mockResolvedValue({ ok: true });
   const pledge = { ...PLEDGE, refundRequested: true, refundRequestedAt: '2026-10-16T02:00:00Z' };
 
-  window.prompt = jest.fn().mockReturnValue('  ');
   render(<AdminFundingDetailPage pledge={pledge} refundableAmount={30000} />);
   fireEvent.click(screen.getByRole('button', { name: '환불 요청 취소' }));
-  expect(patchPledge).not.toHaveBeenCalled();
   // 확인 문구는 "후원자가 직접 철회 의사를 밝힌 경우"로 좁혀 둔다.
-  expect((window.prompt as jest.Mock).mock.calls[0][0]).toContain('후원자가 직접 철회 의사를 밝힌 경우에만');
+  expect(await findAdminDialog()).toHaveTextContent('후원자가 직접 철회 의사를 밝힌 경우에만');
+  const dialog = await submitAdminDialog('  ');
+  expect(await screen.findByText('환불 요청을 취소하려면 사유를 입력해야 합니다.')).toBeInTheDocument();
+  expect(patchPledge).not.toHaveBeenCalled();
 
-  window.prompt = jest.fn().mockReturnValue(' 후원자 전화 철회 ');
-  fireEvent.click(screen.getByRole('button', { name: '환불 요청 취소' }));
-  expect(patchPledge).toHaveBeenCalledWith('order-1', { action: 'clear_refund_request', reason: '후원자 전화 철회' });
+  await submitAdminDialog(' 후원자 전화 철회 ');
+  await waitFor(() => expect(patchPledge).toHaveBeenCalledWith('order-1', { action: 'clear_refund_request', reason: '후원자 전화 철회' }));
+  expect(dialog).not.toBeInTheDocument();
 });
 
 /**
@@ -128,21 +130,22 @@ it('메모가 그대로인 갱신에서는 입력 중인 초안을 유지한다'
  * 이 저장소가 refundRequestedAt으로 이미 겪은 형태다. 환불 요청 취소와 같은 모양으로
  * 사유를 강제한다.
  */
-it('재고 확인 필요 건에 배너와 “재고 확인 완료” 버튼이 뜬다', () => {
+it('재고 확인 필요 건에 배너와 “재고 확인 완료” 버튼이 뜬다', async () => {
   (patchPledge as jest.Mock).mockResolvedValue({ ok: true });
-  window.prompt = jest.fn().mockReturnValue('잔여 3개 확인');
   render(<AdminFundingDetailPage pledge={{ ...PLEDGE, needsReview: true }} refundableAmount={30000} />);
   expect(screen.getByText(/재고 확인 필요/)).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: '재고 확인 완료' }));
-  expect(patchPledge).toHaveBeenCalledWith('order-1', { action: 'clear_stock_review', reason: '잔여 3개 확인' });
+  await submitAdminDialog('잔여 3개 확인');
+  await waitFor(() => expect(patchPledge).toHaveBeenCalledWith('order-1', { action: 'clear_stock_review', reason: '잔여 3개 확인' }));
 });
 
-it('사유를 비우면 API를 부르지 않는다', () => {
+it('사유를 비우면 API를 부르지 않는다', async () => {
   // 이 파일에는 전역 clearAllMocks가 없다 — 직전 테스트의 호출이 남는다.
   (patchPledge as jest.Mock).mockClear();
-  window.prompt = jest.fn().mockReturnValue('   ');
   render(<AdminFundingDetailPage pledge={{ ...PLEDGE, needsReview: true }} refundableAmount={30000} />);
   fireEvent.click(screen.getByRole('button', { name: '재고 확인 완료' }));
+  await submitAdminDialog('   ');
+  expect(await screen.findByText('재고 확인을 닫으려면 확인 내용을 입력해야 합니다.')).toBeInTheDocument();
   expect(patchPledge).not.toHaveBeenCalled();
 });
 
@@ -209,12 +212,12 @@ it('실패 기록이 없으면 그 줄을 그리지 않는다', () => {
  * 후원자가 공개를 껐다 켜면 버튼이 사라졌다 다시 나타난다. unpublish API엔 그 조건이 없다.
  */
 describe('후원자 명단에서 내리기 버튼', () => {
-  it.each([['공개 동의 없음', false], ['공개 동의 있음', true]])('%s인 후원도 버튼이 뜬다', (_label, displayNamePublic) => {
+  it.each([['공개 동의 없음', false], ['공개 동의 있음', true]])('%s인 후원도 버튼이 뜬다', async (_label, displayNamePublic) => {
     (patchPledge as jest.Mock).mockReset().mockResolvedValue({ ok: true });
-    window.prompt = jest.fn().mockReturnValue('사칭 이름');
     render(<AdminFundingDetailPage pledge={{ ...PLEDGE, displayNamePublic }} refundableAmount={30000} />);
     fireEvent.click(screen.getByRole('button', { name: '후원자 명단에서 내리기' }));
-    expect(patchPledge).toHaveBeenCalledWith('order-1', { action: 'unpublish', reason: '사칭 이름' });
+    await submitAdminDialog('사칭 이름');
+    await waitFor(() => expect(patchPledge).toHaveBeenCalledWith('order-1', { action: 'unpublish', reason: '사칭 이름' }));
   });
 
   it('이미 내려간 건에는 숨김 해제만 뜬다', () => {
@@ -279,12 +282,11 @@ describe('리워드별 일부 환불', () => {
 
   it('줄마다 환불 버튼을 두고, 사유와 수량을 담아 refund_line을 보낸다', async () => {
     (patchPledge as jest.Mock).mockResolvedValue({ ok: true });
-    jest.spyOn(window, 'prompt').mockReturnValue('청약철회');
     render(<AdminFundingDetailPage pledge={multi} refundableAmount={23000} />);
     expect(screen.getByText(/시집 × 2 \(1개 환불됨\)/)).toBeInTheDocument();
     fireEvent.click(screen.getAllByRole('button', { name: '이 리워드 환불' })[1]);
-    await Promise.resolve();
-    expect(patchPledge).toHaveBeenCalledWith(multi.id, { action: 'refund_line', rewardId: 'book', quantity: 1, reason: '청약철회' });
+    await submitAdminDialog('청약철회');
+    await waitFor(() => expect(patchPledge).toHaveBeenCalledWith(multi.id, { action: 'refund_line', rewardId: 'book', quantity: 1, reason: '청약철회' }));
   });
 
   it('계좌(수기) 후원에는 보이지 않는다', () => {

@@ -16,6 +16,7 @@ import { loadBusinessProfile } from './businessProfile';
 import { loadProjectService } from './projectServices';
 import { liveFundingOrderStatusList } from './refundable';
 import { isUniqueConstraintError } from '../dbErrors';
+import { chargesFromService } from './serviceCharges';
 
 export type FundingCreatorTaxType = (typeof fundingCreatorTaxTypeEnum)[number];
 
@@ -338,12 +339,8 @@ export const buildFundingPayoutPreview = async (projectId: string): Promise<Fund
    */
   const serviceResult = await loadProjectService(projectId);
   const service = serviceResult.available ? serviceResult.service : null;
-  const charges: FundingServiceCharges = service && service.kind !== 'none'
-    ? {
-      designFee: service.designFeePaidAt ? 0 : service.designFee,
-      productionFee: service.productionFee,
-    }
-    : { designFee: 0, productionFee: 0 };
+  // 규칙은 lib/funding/serviceCharges.ts 하나에 — 관리자 화면의 종류 변경 미리보기도 같은 함수를 쓴다.
+  const charges: FundingServiceCharges = chargesFromService(service);
 
   return {
     projectId,

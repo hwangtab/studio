@@ -13,7 +13,8 @@ import {
 } from '../../../components/admin/bookingActions';
 import { bookingLineOf } from '../../../lib/booking/line';
 import { AdminShell } from '../../../components/admin/AdminShell';
-import { DANGER_WEAK_CLASS } from '../../../components/admin/adminDanger';
+import { DANGER_GHOST_CLASS, DANGER_WEAK_CLASS } from '../../../components/admin/adminDanger';
+import { DangerActions } from '../../../components/admin/DangerActions';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextArea, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
@@ -615,8 +616,10 @@ export default function AdminBookingDetailPage({
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <Button light disabled={busy} onClick={handleConfirmDeposit}>{busy ? '처리 중…' : '입금 확인'}</Button>
-              <Button light variant="weak" disabled={busy} onClick={handleCancelUnpaid}>미입금 취소</Button>
               <Button light variant="weak" disabled={busy} onClick={handleResendDepositGuide}>입금 안내 재발송</Button>
+              <DangerActions>
+                <Button light variant="ghost" className={DANGER_GHOST_CLASS} disabled={busy} onClick={handleCancelUnpaid}>미입금 취소</Button>
+              </DangerActions>
             </div>
           </div>
         )}

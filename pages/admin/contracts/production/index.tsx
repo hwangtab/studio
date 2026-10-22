@@ -7,7 +7,8 @@ import { AdminShell } from '../../../../components/admin/AdminShell';
 import { Button } from '../../../../components/ui/Button';
 import { getDb } from '../../../../db/client';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
-import { formatCurrency, formatShortDate } from '../../../../lib/contracts/format';
+import { formatCurrency } from '../../../../lib/contracts/format';
+import { formatAdminDate } from '../../../../lib/admin/displayDate';
 import { expireOverdueProductionContracts } from '../../../../lib/contracts/production/service';
 import { getEffectiveProductionStatus, getProductionStatusLabel } from '../../../../lib/contracts/production/status';
 import { parseStoredTerms, releaseTitle } from '../../../../lib/contracts/production/terms';
@@ -130,10 +131,10 @@ export default function ProductionContractsPage({ rows, truncated, error }: Prod
                     {row.notificationError && <span className="text-xs font-medium text-amber-700">메일 실패</span>}
                     <span className="ml-auto text-xs text-gray-400">
                       {row.signedAt
-                        ? `체결 ${formatShortDate(row.signedAt)}`
+                        ? `체결 ${formatAdminDate(row.signedAt)}`
                         : row.sentAt
-                          ? `발송 ${formatShortDate(row.sentAt)}`
-                          : `작성 ${formatShortDate(row.createdAt)}`}
+                          ? `발송 ${formatAdminDate(row.sentAt)}`
+                          : `작성 ${formatAdminDate(row.createdAt)}`}
                     </span>
                   </Link>
                 </li>

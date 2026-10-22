@@ -1,5 +1,5 @@
 import type { Contract, ContractAttachment, ContractClause, Signature } from '../../db/schema';
-import { formatDateTime } from './format';
+import { formatAdminDateTime } from '../admin/displayDate';
 import {
   buildFingerprintInput,
   formatFingerprintForDisplay,
@@ -195,8 +195,8 @@ export const buildAuditTrail = (contract: LoadedContract): AuditTrail => {
   return { events, fingerprint: verifyFingerprint(contract), chainGaps };
 };
 
-/** 화면에 그대로 찍는 문자열. 시각은 Asia/Seoul로 못박은 format.ts를 쓴다. */
-export const formatAuditTime = (at: Date): string => formatDateTime(at);
+/** 관리자 화면에 그대로 찍는 문자열 — 관리자 날짜 표시 정본(KST, `2026.10.22 (목) 00:01`)을 쓴다. 계약서 PDF에는 실리지 않는다. */
+export const formatAuditTime = (at: Date): string => formatAdminDateTime(at);
 
 export interface SerializedAuditEvent {
   label: string;

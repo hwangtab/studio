@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { cancelAdminDialog, findAdminDialog, submitAdminDialog } from '../../../helpers/adminDialog';
 import '@testing-library/jest-dom';
 
 jest.mock('next/router', () => ({
@@ -79,18 +80,19 @@ describe('경고 배너 — 판정 네 경로 전부', () => {
 
   it('보완 요청 성공 + warnings → 경고 배너가 뜬다', async () => {
     (patchFundingProject as jest.Mock).mockResolvedValue({ ok: true, warnings: ['재검증에 실패했습니다.'] });
-    window.prompt = jest.fn().mockReturnValue('사진을 다시 올려 주세요.');
     render(<AdminFundingProjectDetailPage project={PROJECT} payout={null} service={NO_SERVICE} />);
     fireEvent.click(screen.getByRole('button', { name: '보완 요청' }));
+    await submitAdminDialog('사진을 다시 올려 주세요.');
     expect(await screen.findByText('재검증에 실패했습니다.')).toBeInTheDocument();
   });
 
   it('반려 성공 + warnings → 경고 배너가 뜬다', async () => {
     (patchFundingProject as jest.Mock).mockResolvedValue({ ok: true, warnings: ['운영자 폴백 알림도 실패했습니다.'] });
-    window.prompt = jest.fn().mockReturnValue('요건 미충족');
-    window.confirm = jest.fn().mockReturnValue(true);
     render(<AdminFundingProjectDetailPage project={PROJECT} payout={null} service={NO_SERVICE} />);
     fireEvent.click(screen.getByRole('button', { name: '반려' }));
+    // 사유 입력과 반려 확인을 한 창에서 받는다.
+    expect(await findAdminDialog()).toHaveTextContent('반려 사실과 사유가 메일로 전달됩니다');
+    await submitAdminDialog('요건 미충족');
     expect(await screen.findByText('운영자 폴백 알림도 실패했습니다.')).toBeInTheDocument();
   });
 
@@ -151,18 +153,20 @@ describe('승인 확인창', () => {
 });
 
 describe('사유 필수(보완 요청·반려)', () => {
-  it('보완 요청은 사유가 없으면 API를 부르지 않는다', () => {
-    window.prompt = jest.fn().mockReturnValue('   ');
+  it('보완 요청은 사유가 없으면 API를 부르지 않는다', async () => {
     render(<AdminFundingProjectDetailPage project={PROJECT} payout={null} service={NO_SERVICE} />);
     fireEvent.click(screen.getByRole('button', { name: '보완 요청' }));
+    await submitAdminDialog('   ');
+    expect(await screen.findByText('보완 요청은 사유가 있어야 합니다.')).toBeInTheDocument();
     expect(patchFundingProject).not.toHaveBeenCalled();
   });
 
-  it('반려는 사유가 없으면 confirm까지 가지 않는다', () => {
-    window.prompt = jest.fn().mockReturnValue('');
+  it('반려는 사유가 없으면 창 안에서 막고 보내지 않는다', async () => {
     window.confirm = jest.fn();
     render(<AdminFundingProjectDetailPage project={PROJECT} payout={null} service={NO_SERVICE} />);
     fireEvent.click(screen.getByRole('button', { name: '반려' }));
+    await submitAdminDialog('');
+    expect(await screen.findByText('반려는 사유가 있어야 합니다.')).toBeInTheDocument();
     expect(window.confirm).not.toHaveBeenCalled();
     expect(patchFundingProject).not.toHaveBeenCalled();
   });
@@ -216,7 +220,26 @@ describe('스튜디오 서비스', () => {
     render(<AdminFundingProjectDetailPage project={PROJECT} payout={null} service={NO_SERVICE} />);
     expect(screen.getByRole('button', { name: '직접 개설' })).toHaveAttribute('aria-pressed', 'true');
     fireEvent.click(screen.getByRole('button', { name: '펀딩 설계 대행' }));
-    expect(patchFundingProject).toHaveBeenCalledWith('proj-1', { action: 'set_studio_service', kind: 'design' });
+    // 정산 공제액이 바뀐다는 확인을 먼저 받는다 — 0원 → 설계비 정가.
+    const dialog = await findAdminDialog();
+    expect(dialog).toHaveTextContent('정산 때 모금액에서 빼는 대금이 바뀝니다: 0원 → 500,000원');
+    expect(patchFundingProject).not.toHaveBeenCalled();
+    await submitAdminDialog();
+    await waitFor(() => expect(patchFundingProject).toHaveBeenCalledWith('proj-1', { action: 'set_studio_service', kind: 'design' }));
+  });
+
+  it('설계 대행 ↔ 발매 연계는 공제액이 그대로라고 알린다', async () => {
+    render(
+      <AdminFundingProjectDetailPage
+        project={PROJECT}
+        payout={null}
+        service={{ available: true, service: { kind: 'design', designFee: 500000, designFeePaidAt: null, productionFee: 1200000 } }}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: '발매 프로젝트 연계' }));
+    expect(await findAdminDialog()).toHaveTextContent('그대로입니다: 1,700,000원 (설계비 500,000원 · 제작비 1,200,000원)');
+    await cancelAdminDialog();
+    expect(patchFundingProject).not.toHaveBeenCalled();
   });
 
   it('지정된 서비스는 약정 설계비와 미입금을 보여 주고 입금 확인을 보낸다', () => {
@@ -248,8 +271,7 @@ describe('스튜디오 서비스', () => {
     expect(patchFundingProject).toHaveBeenCalledWith('proj-1', { action: 'set_production_fee', productionFee: 1_800_000 });
   });
 
-  it('직접 개설로 되돌릴 때 확인창을 거절하면 보내지 않는다', () => {
-    const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(false);
+  it('직접 개설로 되돌릴 때 확인창을 거절하면 보내지 않는다', async () => {
     render(
       <AdminFundingProjectDetailPage
         project={PROJECT}
@@ -258,8 +280,8 @@ describe('스튜디오 서비스', () => {
       />,
     );
     fireEvent.click(screen.getByRole('button', { name: '직접 개설' }));
+    await cancelAdminDialog();
     expect(patchFundingProject).not.toHaveBeenCalled();
-    confirmSpy.mockRestore();
   });
 
   /**
@@ -282,8 +304,7 @@ describe('스튜디오 서비스', () => {
     expect(screen.getByText(/이전 약정 보존/)).toHaveTextContent('입금 확인');
   });
 
-  it('되돌리기 확인창은 기록이 보존된다고 말한다 — 지워진다고 말하지 않는다', () => {
-    const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(false);
+  it('되돌리기 확인창은 기록이 보존된다고 말한다 — 지워진다고 말하지 않는다', async () => {
     render(
       <AdminFundingProjectDetailPage
         project={PROJECT}
@@ -292,9 +313,10 @@ describe('스튜디오 서비스', () => {
       />,
     );
     fireEvent.click(screen.getByRole('button', { name: '직접 개설' }));
-    expect(confirmSpy.mock.calls[0][0]).toContain('보존');
-    expect(confirmSpy.mock.calls[0][0]).not.toContain('지워집니다');
-    confirmSpy.mockRestore();
+    const dialog = await findAdminDialog();
+    expect(dialog).toHaveTextContent('보존');
+    expect(dialog).not.toHaveTextContent('지워집니다');
+    expect(dialog).toHaveTextContent('500,000원 (설계비 500,000원 · 제작비 0원) → 0원');
   });
 
   it('0037이 운영 DB에 없으면 버튼 대신 마이그레이션 안내를 띄운다', () => {

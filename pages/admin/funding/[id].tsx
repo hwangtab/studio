@@ -5,7 +5,8 @@ import { useRouter } from 'next/router';
 
 import { fetchRefundAccount, patchPledge, type FundingActionResult, type RefundAccountView } from '../../../components/admin/fundingActions';
 import { AdminShell } from '../../../components/admin/AdminShell';
-import { DANGER_WEAK_CLASS } from '../../../components/admin/adminDanger';
+import { DANGER_GHOST_CLASS, DANGER_WEAK_CLASS } from '../../../components/admin/adminDanger';
+import { DangerActions } from '../../../components/admin/DangerActions';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextArea, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
@@ -23,6 +24,7 @@ import { loadRefundAccountSummary } from '../../../lib/payments/refundAccount';
 import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
 import { loadPaymentWindowOpen } from '../../../lib/payments/windowOpen';
 import { ActionNotice } from '../../../components/admin/ActionNotice';
+import { useAdminDialog } from '../../../components/admin/useAdminDialog';
 
 interface AdminFundingDetailPageProps {
   pledge: AdminPledgeItem;
@@ -123,6 +125,12 @@ const DescriptionRow = ({ label, value }: { label: string; value: React.ReactNod
 export default function AdminFundingDetailPage({ pledge, refundableAmount, paymentWindow = null, sameNameDeposits = [], refundAccount = null, depositPayoutWarning = null, refundPayoutWarning = null }: AdminFundingDetailPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
+  const { ask, dialog } = useAdminDialog();
+  /** 사유 한 칸을 받는 확인창(useAdminDialog) — 예전 window.prompt 자리. 취소하면 null. */
+  const askReason = async (o: { title: string; description: string; label: string; required: string; confirmLabel: string; tone?: 'danger' }) => {
+    const values = await ask({ title: o.title, description: o.description, fields: [{ name: 'reason', label: o.label, type: 'textarea', required: o.required }], confirmLabel: o.confirmLabel, tone: o.tone });
+    return values ? values.reason : null;
+  };
   const [notice, setNotice] = useState<string | null>(null);
 
   const [fulfillmentStatus, setFulfillmentStatus] = useState(pledge.fulfillmentStatus);
@@ -214,12 +222,16 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
    */
   const canRefundLine = canRefund && pledge.paymentMethod === 'toss';
   const [lineRefundQty, setLineRefundQty] = useState<Record<string, number>>({});
-  const handleRefundLine = (line: AdminPledgeItem['lines'][number]) => {
+  const handleRefundLine = async (line: AdminPledgeItem['lines'][number]) => {
     const quantity = lineRefundQty[line.rewardId] ?? 1;
-    const reason = window.prompt(
-      `${line.rewardTitle} ${quantity}개, ${formatPriceAmount(line.unitAmount * quantity)}원을 환불합니다. 되돌릴 수 없습니다.`
-        + `${refundPayoutWarning ? `\n${refundPayoutWarning}` : ''}\n사유를 적어 주세요(후원자 메일에 들어갑니다).`,
-    );
+    const reason = await askReason({
+      title: '일부 환불',
+      description: `${line.rewardTitle} ${quantity}개, ${formatPriceAmount(line.unitAmount * quantity)}원을 환불합니다. 되돌릴 수 없습니다.${refundPayoutWarning ? `\n${refundPayoutWarning}` : ''}`,
+      label: '환불 사유 (후원자 메일에 들어갑니다)',
+      required: '일부 환불에는 사유가 필요합니다.',
+      confirmLabel: '환불',
+      tone: 'danger',
+    });
     if (reason === null) return;
     if (!reason.trim()) {
       setNotice('일부 환불에는 사유가 필요합니다.');
@@ -244,10 +256,14 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
    * 고객이 남긴 청약철회 의사를 지우는 조작이라 사유를 반드시 받는다(API도 없으면 400).
    * 사유는 관리자 메모에 날짜와 함께 덧붙고, 후원자에게는 확인 메일이 나간다.
    */
-  const handleClearRefundRequest = () => {
-    const reason = window.prompt(
-      '후원자가 직접 철회 의사를 밝힌 경우에만 사용하세요. 사유를 적어 주세요 (관리자 메모에 남고 후원자에게 확인 메일이 나갑니다).',
-    );
+  const handleClearRefundRequest = async () => {
+    const reason = await askReason({
+      title: '환불 요청 취소',
+      description: '후원자가 직접 철회 의사를 밝힌 경우에만 사용하세요. 사유는 관리자 메모에 남고 후원자에게 확인 메일이 나갑니다.',
+      label: '취소 사유',
+      required: '환불 요청을 취소하려면 사유를 입력해야 합니다.',
+      confirmLabel: '환불 요청 취소',
+    });
     if (reason === null) return;
     if (!reason.trim()) {
       setNotice('환불 요청을 취소하려면 사유를 입력해야 합니다.');
@@ -260,10 +276,14 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
    * needsReview를 끄는 유일한 경로. 해제 경로가 없는 경고는 첫 사용 직후 경보 피로로
    * 죽는다 — 환불 요청 취소와 같은 모양(사유 필수·메모 append)을 그대로 쓴다.
    */
-  const handleClearStockReview = () => {
-    const reason = window.prompt(
-      '한정 리워드 재고를 확인한 뒤에 닫아 주세요. 확인 내용을 적어 주세요 (관리자 메모에 날짜와 함께 남습니다).',
-    );
+  const handleClearStockReview = async () => {
+    const reason = await askReason({
+      title: '재고 확인 닫기',
+      description: '한정 리워드 재고를 확인한 뒤에 닫아 주세요. 확인 내용은 관리자 메모에 날짜와 함께 남습니다.',
+      label: '확인 내용',
+      required: '재고 확인을 닫으려면 확인 내용을 입력해야 합니다.',
+      confirmLabel: '닫기',
+    });
     if (reason === null) return;
     if (!reason.trim()) {
       setNotice('재고 확인을 닫으려면 확인 내용을 입력해야 합니다.');
@@ -281,10 +301,15 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
    *
    * 다른 해제 조작과 같은 모양 — 사유 필수, 관리자 메모에 날짜와 함께 남는다.
    */
-  const handleClearDownloadRecord = () => {
-    const reason = window.prompt(
-      '후원자가 파일을 받지 못했다고 확인된 경우에만 사용하세요. 사유를 적어 주세요 (관리자 메모에 날짜와 함께 남습니다).',
-    );
+  const handleClearDownloadRecord = async () => {
+    const reason = await askReason({
+      title: '내려받기 기록 지우기',
+      description: '후원자가 파일을 받지 못했다고 확인된 경우에만 사용하세요. 지우면 막혀 있던 셀프 취소가 되살아납니다. 사유는 관리자 메모에 날짜와 함께 남습니다.',
+      label: '사유',
+      required: '내려받기 기록을 지우려면 사유를 입력해야 합니다.',
+      confirmLabel: '기록 지우기',
+      tone: 'danger',
+    });
     if (reason === null) return;
     if (!reason.trim()) {
       setNotice('내려받기 기록을 지우려면 사유를 입력해야 합니다.');
@@ -298,8 +323,14 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
    * (약관 제13조). 후원자의 공개 동의는 그대로 두고 운영자 숨김만 건다 — 후원자가 펀딩 확인
    * 페이지에서 공개를 다시 켜도 되살아나지 않는다. 사유는 관리자 메모에 날짜와 함께 남는다.
    */
-  const handleHideListing = () => {
-    const reason = window.prompt('후원자 명단에서 내리는 사유를 적어 주세요 (관리자 메모에 날짜와 함께 남습니다). 표시 이름과 응원 메시지가 함께 빠집니다. 프로젝트 페이지에는 캐시 때문에 최대 몇 분 뒤 반영됩니다.');
+  const handleHideListing = async () => {
+    const reason = await askReason({
+      title: '후원자 명단에서 내리기',
+      description: '표시 이름과 응원 메시지가 함께 빠집니다. 프로젝트 페이지에는 캐시 때문에 최대 몇 분 뒤 반영됩니다. 사유는 관리자 메모에 날짜와 함께 남습니다.',
+      label: '내리는 사유',
+      required: '명단에서 내리려면 사유를 입력해야 합니다.',
+      confirmLabel: '명단에서 내리기',
+    });
     if (reason === null) return;
     if (!reason.trim()) {
       setNotice('명단에서 내리려면 사유를 입력해야 합니다.');
@@ -479,8 +510,10 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
                   <Button light disabled={busy} onClick={handleConfirmDeposit}>입금 확인</Button>
                   {pledge.status === 'pending' && (
                     <>
-                      <Button light variant="weak" disabled={busy} onClick={handleCancelUnpaid}>미입금 취소</Button>
                       <Button light variant="weak" disabled={busy} onClick={handleResendDepositGuide}>입금 안내 재발송</Button>
+                      <DangerActions>
+                        <Button light variant="ghost" className={DANGER_GHOST_CLASS} disabled={busy} onClick={handleCancelUnpaid}>미입금 취소</Button>
+                      </DangerActions>
                     </>
                   )}
                 </div>
@@ -660,6 +693,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
               </div>
             </div>
           </div>
+        {dialog}
       </AdminShell>
     </>
   );

@@ -4,7 +4,10 @@ import React, { useState } from 'react';
 import { Button } from '../ui/Button';
 import { formatPriceAmount, SHOP_ARTIST_SHARE_PERCENT } from '../../data/pricing';
 import type { AdjustmentView, ShopPayoutRowView } from '../../lib/partnerPayouts/shopView';
-import { DANGER_TEXT_CLASS } from './adminDanger';
+import { DANGER_GHOST_CLASS, DANGER_TEXT_CLASS } from './adminDanger';
+import { formatAdminDate } from '../../lib/admin/displayDate';
+import { useAdminDialog } from './useAdminDialog';
+import { DangerActions } from './DangerActions';
 
 /**
  * `/admin/shop`의 「아티스트 정산」 — 달별 미리보기 + 기록·지급 완료·기록 취소·계좌 보기 (docs/settlement-record-design-2026-10.md §5).
@@ -81,11 +84,13 @@ export function ShopPayoutSection({ rows, month, prevMonth, nextMonth, otherAdju
 }) {
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const { ask, dialog } = useAdminDialog();
   const [notified, setNotified] = useState<string | null>(null);
   const [accounts, setAccounts] = useState<Record<string, RevealedAccount | 'loading' | { error: string }>>({});
 
-  const run = async (key: string, confirmText: string, action: () => Promise<{ ok: boolean; message?: string; warnings?: string[] }>) => {
-    if (!window.confirm(confirmText)) return;
+  /** confirmText가 null이면 확인을 이미 받은 것(입력창 겸 확인창 — useAdminDialog). */
+  const run = async (key: string, confirmText: string | null, action: () => Promise<{ ok: boolean; message?: string; warnings?: string[] }>) => {
+    if (confirmText !== null && !window.confirm(confirmText)) return;
     setBusy(key);
     setMessage(null);
     const result = await action();
@@ -112,12 +117,29 @@ export function ShopPayoutSection({ rows, month, prevMonth, nextMonth, otherAdju
   };
 
   const addAdjustment = async (r: ShopPayoutRowView) => {
-    const amountText = window.prompt(`${r.payeeName} — 수기 조정 금액(아티스트 몫 기준, 원).\n차감은 음수(예: -5000), 가산은 양수. 다음 정산에 실립니다.`, '');
-    if (amountText === null) return;
-    const amount = Number(amountText.replace(/,/g, ''));
-    if (!Number.isInteger(amount) || amount === 0) { setMessage('0이 아닌 정수 금액을 입력해 주세요.'); return; }
-    const memo = window.prompt('조정 사유(필수 — 나중에 읽을 길이 이것뿐입니다)', '');
-    if (memo === null || !memo.trim()) { setMessage('사유를 적어 주세요.'); return; }
+    const values = await ask({
+      title: '수기 조정 추가',
+      description: `${r.payeeName} — 다음 정산에 실립니다.`,
+      fields: [
+        {
+          name: 'amount',
+          label: '조정 금액 (아티스트 몫 기준, 원)',
+          inputMode: 'text',
+          placeholder: '-5000',
+          hint: '차감은 음수(예: -5000), 가산은 양수.',
+          required: '0이 아닌 정수 금액을 입력해 주세요.',
+          validate: (v) => {
+            const n = Number(v.replace(/,/g, ''));
+            return Number.isInteger(n) && n !== 0 ? null : '0이 아닌 정수 금액을 입력해 주세요.';
+          },
+        },
+        { name: 'memo', label: '조정 사유', type: 'textarea', hint: '나중에 읽을 길이 이것뿐입니다.', required: '사유를 적어 주세요.' },
+      ],
+      confirmLabel: '조정 추가',
+    });
+    if (values === null) return;
+    const amount = Number(values.amount.replace(/,/g, ''));
+    const memo = values.memo;
     setBusy(`${r.subjectKey}:adj`);
     const result = await post({ action: 'add_adjustment', subjectKey: r.subjectKey, amount, memo: memo.trim() });
     if (result.ok) window.location.reload();
@@ -263,30 +285,24 @@ export function ShopPayoutSection({ rows, month, prevMonth, nextMonth, otherAdju
                       {rec?.status === 'pending' && (
                         <Button
                           light size="sm" disabled={busy === key}
-                          onClick={() => run(
-                            key,
-                            `${r.payeeName}에게 ${won(rec.netAmount)}을 이체했나요? 지급 완료로 기록합니다.${rec.netAmount === 0 ? '\n\n이체할 금액이 0원인 기록입니다(조정으로 상계).' : ''}`,
-                            async () => {
-                              // 이체 메모(선택) — 이체일·실제 보낸 금액. 기록 행은 불변이라 달라진 것은 여기 적어 둔다.
-                              const memo = window.prompt('이체 메모 (선택 — 이체일, 실제 보낸 금액, 세금계산서 수취 여부 등)\n※ 이 메모는 아티스트에게 가는 「정산금을 보냈어요」 메일에 그대로 실립니다. 아티스트에게 보여도 되는 말만 적어 주세요.', '');
-                              if (memo === null) return { ok: false, message: '지급 완료 기록을 취소했습니다.' };
-                              return post({ action: 'mark_paid', id: rec.id, memo: memo.trim() });
-                            },
-                          )}
+                          onClick={async () => {
+                            // 이체 메모(선택) — 이체일·실제 보낸 금액. 기록 행은 불변이라 달라진 것은 여기 적어 둔다.
+                            const values = await ask({
+                              title: '지급 완료 기록',
+                              description: `${r.payeeName}에게 ${won(rec.netAmount)}을 이체했나요? 지급 완료로 기록합니다.${rec.netAmount === 0 ? '\n\n이체할 금액이 0원인 기록입니다(조정으로 상계).' : ''}`,
+                              fields: [{
+                                name: 'memo',
+                                label: '이체 메모 (선택)',
+                                type: 'textarea',
+                                hint: '이체일, 실제 보낸 금액, 세금계산서 수취 여부 등. 이 메모는 아티스트에게 가는 「정산금을 보냈어요」 메일에 그대로 실립니다 — 아티스트에게 보여도 되는 말만 적어 주세요.',
+                              }],
+                              confirmLabel: '지급 완료로 기록',
+                            });
+                            if (values === null) return;
+                            await run(key, null, () => post({ action: 'mark_paid', id: rec.id, memo: values.memo.trim() }));
+                          }}
                         >
                           지급 완료
-                        </Button>
-                      )}
-                      {rec?.status === 'pending' && (
-                        <Button
-                          light size="sm" variant="weak" disabled={busy === key}
-                          onClick={() => run(
-                            key,
-                            `${r.payeeName} ${r.period}의 기록(${won(rec.netAmount)})을 취소할까요?\n\n기록된 금액은 버려지고 이력도 남지 않으며, 이 정산에 실렸던 조정은 풀립니다. 아직 이체하지 않은 기록만 취소할 수 있습니다.`,
-                            () => post({ action: 'delete', id: rec.id }),
-                          )}
-                        >
-                          기록 취소(이체 전)
                         </Button>
                       )}
                       {r.creatorId && (
@@ -295,9 +311,23 @@ export function ShopPayoutSection({ rows, month, prevMonth, nextMonth, otherAdju
                         </Button>
                       )}
                       <Button light size="sm" variant="weak" disabled={busy !== null} onClick={() => addAdjustment(r)}>조정 추가</Button>
+                      <DangerActions>
+                        {rec?.status === 'pending' && (
+                          <Button
+                            light size="sm" variant="ghost" className={DANGER_GHOST_CLASS} disabled={busy === key}
+                            onClick={() => run(
+                              key,
+                              `${r.payeeName} ${r.period}의 기록(${won(rec.netAmount)})을 취소할까요?\n\n기록된 금액은 버려지고 이력도 남지 않으며, 이 정산에 실렸던 조정은 풀립니다. 아직 이체하지 않은 기록만 취소할 수 있습니다.`,
+                              () => post({ action: 'delete', id: rec.id }),
+                            )}
+                          >
+                            기록 취소(이체 전)
+                          </Button>
+                        )}
+                      </DangerActions>
                     </div>
                     {rec?.memo && <span className="mt-1 block text-xs text-gray-500">메모: {rec.memo}</span>}
-                    {rec?.paidAt && <span className="mt-1 block text-xs text-gray-500">지급 {new Date(rec.paidAt).toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' })}</span>}
+                    {rec?.paidAt && <span className="mt-1 block text-xs text-gray-500">지급 {formatAdminDate(rec.paidAt)}</span>}
                     {account && account !== 'loading' && (
                       'error' in account ? (
                         <span role="alert" className="mt-1 block text-xs text-red-600">{account.error}</span>
@@ -329,6 +359,7 @@ export function ShopPayoutSection({ rows, month, prevMonth, nextMonth, otherAdju
           </ul>
         </div>
       )}
+      {dialog}
     </section>
   );
 }

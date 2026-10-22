@@ -6,6 +6,8 @@ import { Field, Select, TextInput } from '../ui/Field';
 import { Notice } from '../ui/Notice';
 import { lightOnlyField } from '../ui/adminFieldClass';
 import { BUSINESS_LINE_LABELS, BUSINESS_LINES, lineOfType, type BusinessLine } from '../../lib/ops/businessLine';
+import { formatAdminDate } from '../../lib/admin/displayDate';
+import { useAdminDialog } from './useAdminDialog';
 
 /**
  * 웹사이트를 거치지 않고 계좌·현금으로 받은 매출을 적는 폼과, 이 기간에 적은 기록.
@@ -74,6 +76,7 @@ export const ManualRevenuePanel = ({ today, types, methods, entries, periodLabel
   /** '' = 유형의 기본 분야. */
   const [businessLine, setBusinessLine] = useState('');
   const [busy, setBusy] = useState(false);
+  const { ask, dialog } = useAdminDialog();
   const [message, setMessage] = useState<{ tone: 'success' | 'error'; text: string } | null>(null);
   /** 요청이 진행 중인 행 id — 그 행의 분야 선택·버튼을 잠근다(같은 행에 요청이 겹치지 않게). */
   const [busyRows, setBusyRows] = useState<ReadonlySet<string>>(new Set());
@@ -134,8 +137,26 @@ export const ManualRevenuePanel = ({ today, types, methods, entries, periodLabel
   };
 
   const setRefund = async (entry: ManualRevenueView) => {
-    const input = window.prompt(`돌려준 금액(누적, 원) — 받은 금액 ${won(entry.totalAmount)} 이하`, String(entry.refundedAmount));
-    if (input === null) return;
+    const values = await ask({
+      title: '환불 기록',
+      description: `“${entry.description}” — 받은 금액 ${won(entry.totalAmount)}`,
+      fields: [{
+        name: 'refunded',
+        label: '돌려준 금액 (누적, 원)',
+        type: 'number',
+        defaultValue: String(entry.refundedAmount),
+        hint: `받은 금액 ${won(entry.totalAmount)} 이하. 0이면 환불 없음.`,
+        required: '돌려준 금액을 적어 주세요(없으면 0).',
+        validate: (v) => {
+          const n = Number(v.replace(/,/g, ''));
+          if (!Number.isInteger(n) || n < 0) return '원 단위 숫자로 적어 주세요.';
+          return n > entry.totalAmount ? `받은 금액 ${won(entry.totalAmount)}보다 많을 수 없어요.` : null;
+        },
+      }],
+      confirmLabel: '저장',
+    });
+    if (values === null) return;
+    const input = values.refunded;
     await runRow(entry.id, () => call('PATCH', { id: entry.id, refundedAmount: Number(input.replace(/,/g, '')) }), '환불 금액을 고쳤습니다.', '처리하지 못했습니다.');
   };
 
@@ -256,7 +277,7 @@ export const ManualRevenuePanel = ({ today, types, methods, entries, periodLabel
                   {entry.description} <span className="font-normal text-gray-500">· {entry.typeLabel}{entry.lineLabel ? ` · ${entry.lineLabel}` : ''}</span>
                 </p>
                 <p className="text-xs text-gray-500">
-                  {entry.receivedOn} · {entry.method}
+                  {formatAdminDate(entry.receivedOn)} · {entry.method}
                   {entry.memo ? ` · ${entry.memo}` : ''}
                 </p>
                 {entry.duplicateOf && (
@@ -305,6 +326,7 @@ export const ManualRevenuePanel = ({ today, types, methods, entries, periodLabel
           ))}
         </ul>
       )}
+      {dialog}
     </section>
   );
 };

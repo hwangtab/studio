@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 
 import { AdminShell } from '../../../../../components/admin/AdminShell';
 import { DANGER_GHOST_CLASS } from '../../../../../components/admin/adminDanger';
+import { DangerActions } from '../../../../../components/admin/DangerActions';
 import { copyToClipboard } from '../../../../../components/admin/contractActions';
 import {
   deleteProductionContractRequest,
@@ -22,7 +23,8 @@ import { loadRefundAccountSummary } from '../../../../../lib/payments/refundAcco
 import { Button } from '../../../../../components/ui/Button';
 import { getDb } from '../../../../../db/client';
 import { authenticateAdminRequest } from '../../../../../lib/contracts/admin-auth';
-import { formatCurrency, formatDate, formatDateTime } from '../../../../../lib/contracts/format';
+import { formatCurrency } from '../../../../../lib/contracts/format';
+import { formatAdminDate, formatAdminDateTime } from '../../../../../lib/admin/displayDate';
 import { verifyStoredProductionContract, type ProductionFingerprintVerdict } from '../../../../../lib/contracts/production/audit';
 import {
   serializeProductionContractForAdmin,
@@ -41,6 +43,7 @@ import { ensureContractPaymentLink, listContractPaymentLinks } from '../../../..
 import { isOneSongKind, releaseTitle } from '../../../../../lib/contracts/production/terms';
 import { recordAdminPrivacyAccess } from '../../../../../lib/privacy/accessLog';
 import { ActionNotice } from '../../../../../components/admin/ActionNotice';
+import { useAdminDialog } from '../../../../../components/admin/useAdminDialog';
 
 interface ProductionContractDetailProps {
   contract: AdminSerializedProductionContract;
@@ -165,6 +168,7 @@ const FingerprintLine = ({ verdict }: { verdict: ProductionFingerprintVerdict })
 export default function ProductionContractDetailPage({ contract, fingerprint, progress, refundAccount, paymentLinks }: ProductionContractDetailProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
+  const { ask, dialog } = useAdminDialog();
   const [notice, setNotice] = useState<string | null>(null);
   const { terms } = contract;
   const allowed = (action: Parameters<typeof isProductionActionAllowed>[1]) =>
@@ -181,13 +185,6 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
     await router.replace(router.asPath, undefined, { scroll: false });
   };
 
-  /** 끝난 날(KST)을 받는다. 보관 기간의 기산점이라 실제 날짜를 넣는다 — 비우면 오늘. */
-  const askClosedOn = (question: string): string | null => {
-    const today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Seoul' });
-    const value = window.prompt(question, today);
-    return value === null ? null : value.trim();
-  };
-
   const handleComplete = () => {
     // 완료일은 기록된 최종 인도일로 정해진다(개인정보 3년 보관의 기산점, 제13조).
     void run(
@@ -196,28 +193,46 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
     );
   };
 
-  const handleTerminate = () => {
+  const handleTerminate = async () => {
     // 누구의 사정인지가 정산 조항을 가른다 — 스튜디오 사정(제10조 4항)이면 추가 비용·초과 수정 요금도 돌려준다.
-    const causeInput = window.prompt(
-      '누구의 사정으로 해지하나요? 번호를 적어 주세요.\n\n1 — 의뢰인 사정 (제10조 3항)\n2 — 의뢰인 무응답·대금 지체, 통지 후 해지 (제10조 5항)\n3 — 스튜디오 사정 (제10조 4항, 제12조 2항 지연 포함)',
-    );
-    if (causeInput === null) return;
-    const cause = ({ '1': 'client', '2': 'client_default', '3': 'studio' } as const)[causeInput.trim() as '1' | '2' | '3'];
-    if (!cause) {
-      setNotice('해지 사유 구분은 1·2·3 중 하나로 적어 주세요.');
-      return;
-    }
-    const reason = window.prompt(
-      '해지 사유를 적어 주세요.\n\n예: 편곡 1차 시안 전달 후 의뢰인 요청으로 해지 / 대금 14일 지체로 통지 후 해지',
-    );
-    if (reason === null) return;
-    if (reason.trim() === '') {
-      setNotice('해지 사유를 입력해 주세요.');
-      return;
-    }
-    const closedOn = askClosedOn('해지한 날(YYYY-MM-DD)을 확인해 주세요.');
-    if (closedOn === null) return;
-    void run(() => mutateProductionContract(contract.id, 'terminate', { cause, reason: reason.trim(), closedOn }));
+    const values = await ask({
+      title: '해지 처리',
+      description: '해지한 뒤에는 되돌릴 수 없습니다. 의뢰인에게 해지·환불 안내 메일이 나갑니다.',
+      fields: [
+        {
+          name: 'cause',
+          label: '누구의 사정으로 해지하나요?',
+          type: 'select',
+          defaultValue: '',
+          options: [
+            { value: '', label: '고르기' },
+            { value: 'client', label: '의뢰인 사정 (제10조 3항)' },
+            { value: 'client_default', label: '의뢰인 무응답·대금 지체, 통지 후 해지 (제10조 5항)' },
+            { value: 'studio', label: '스튜디오 사정 (제10조 4항, 제12조 2항 지연 포함)' },
+          ],
+          required: '해지 사유 구분을 골라 주세요.',
+        },
+        {
+          name: 'reason',
+          label: '해지 사유',
+          type: 'textarea',
+          placeholder: '예: 편곡 1차 시안 전달 후 의뢰인 요청으로 해지 / 대금 14일 지체로 통지 후 해지',
+          required: '해지 사유를 입력해 주세요.',
+        },
+        {
+          name: 'closedOn',
+          label: '해지한 날',
+          type: 'date',
+          defaultValue: new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Seoul' }),
+          hint: '보관 기간(3년)의 기산점이라 실제 날짜를 넣어 주세요. 비우면 오늘.',
+        },
+      ],
+      confirmLabel: '해지 처리',
+      tone: 'danger',
+    });
+    if (values === null) return;
+    const cause = values.cause as 'client' | 'client_default' | 'studio';
+    void run(() => mutateProductionContract(contract.id, 'terminate', { cause, reason: values.reason.trim(), closedOn: values.closedOn.trim() }));
   };
 
   const handleDelete = async () => {
@@ -265,7 +280,7 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
         {contract.purgedAt && (
           <div className="mb-4 p-4 bg-gray-100 border border-gray-300 text-gray-700 rounded-lg text-sm">
             <strong className="block mb-1">보관 기간이 지나 개인정보가 파기된 계약입니다</strong>
-            {formatDate(contract.purgedAt)}에 의뢰인 정보·본문·서명 기록을 지웠습니다. 금액·날짜만 운영 기록으로 남아 있습니다.
+            {formatAdminDate(contract.purgedAt)}에 의뢰인 정보·본문·서명 기록을 지웠습니다. 금액·날짜만 운영 기록으로 남아 있습니다.
           </div>
         )}
 
@@ -324,17 +339,17 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
 
             <div className="mt-6 pt-6 border-t border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
               <dl className="space-y-2">
-                <Row label="작성일" value={formatDateTime(contract.createdAt)} />
-                <Row label="발송일" value={formatDateTime(contract.sentAt)} />
+                <Row label="작성일" value={formatAdminDateTime(contract.createdAt)} />
+                <Row label="발송일" value={formatAdminDateTime(contract.sentAt)} />
                 <Row
                   label="링크 만료"
-                  value={contract.status === 'sent' || contract.status === 'expired' ? `${formatDateTime(contract.expiresAt)}${contract.status === 'expired' ? ' (만료됨 — 재발송하면 새 링크)' : ''}` : '-'}
+                  value={contract.status === 'sent' || contract.status === 'expired' ? `${formatAdminDateTime(contract.expiresAt)}${contract.status === 'expired' ? ' (만료됨 — 재발송하면 새 링크)' : ''}` : '-'}
                 />
               </dl>
               <dl className="space-y-2">
-                <Row label="체결일" value={formatDateTime(contract.signedAt)} />
-                {contract.completedAt && <Row label="완료일" value={formatDate(contract.completedAt)} />}
-                {contract.terminatedAt && <Row label="해지일" value={formatDate(contract.terminatedAt)} />}
+                <Row label="체결일" value={formatAdminDateTime(contract.signedAt)} />
+                {contract.completedAt && <Row label="완료일" value={formatAdminDate(contract.completedAt)} />}
+                {contract.terminatedAt && <Row label="해지일" value={formatAdminDate(contract.terminatedAt)} />}
                 {contract.terminationReason && <Row label="해지 사유" value={contract.terminationReason} />}
               </dl>
             </div>
@@ -358,18 +373,18 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
                       {signer.phone ? ` · ${signer.phone}` : ''}
                     </dd>
                     {signer.adminActor && <dd>관리자 계정: {signer.adminActor} (발송 = 운영자 서명, 직인)</dd>}
-                    <dd>서명: {signer.status === 'signed' ? formatDateTime(signer.signedAt) : '대기'}</dd>
+                    <dd>서명: {signer.status === 'signed' ? formatAdminDateTime(signer.signedAt) : '대기'}</dd>
                     <dd>IP: {signer.ipAddress || '-'}</dd>
                     {signer.role !== 'operator' && (
                       <>
                         <dd>
-                          열람: {signer.firstViewedAt ? `처음 ${formatDateTime(signer.firstViewedAt)} · ${signer.viewCount}회` : '기록 없음'}
+                          열람: {signer.firstViewedAt ? `처음 ${formatAdminDateTime(signer.firstViewedAt)} · ${signer.viewCount}회` : '기록 없음'}
                           {signer.firstViewedIp ? ` (처음 연 IP ${signer.firstViewedIp})` : ''}
                         </dd>
                         <dd>
                           본인 확인:{' '}
                           {signer.identityVerifiedAt
-                            ? `연락처 뒷자리 대조 완료 (${formatDateTime(signer.identityVerifiedAt)})`
+                            ? `연락처 뒷자리 대조 완료 (${formatAdminDateTime(signer.identityVerifiedAt)})`
                             : signer.status === 'signed' && signer.role === 'client'
                               ? '연락처 대조 없음 — 링크 계약(카톡 상대와 이름·연락처가 맞는지 확인해 주세요)'
                               : '기록 없음'}
@@ -413,7 +428,7 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
                   <span className={link.paid ? 'text-green-700' : link.open ? 'text-blue-700' : 'text-gray-500'}>
                     {link.paid ? '결제됨' : link.open ? '열림 — 결제 대기' : '닫힘'}
                   </span>
-                  <span className="text-gray-500">{formatDateTime(link.createdAt)}</span>
+                  <span className="text-gray-500">{formatAdminDateTime(link.createdAt)}</span>
                   {link.open && (
                     <Button
                       light
@@ -563,35 +578,39 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
               </Button>
             )}
 
-            {allowed('cancel') && (
-              <Button
-                light
-                variant="ghost"
-                className={DANGER_GHOST_CLASS}
-                disabled={busy}
-                onClick={() => run(() => mutateProductionContract(contract.id, 'cancel'), '이 계약을 취소할까요? 서명 링크가 무효가 됩니다.')}
-              >
-                계약 취소
-              </Button>
-            )}
-
             <Button asChild light variant="weak">
               <Link href={`/admin/contracts/production/new?from=${contract.id}`}>복제해서 새 계약</Link>
             </Button>
 
-            {allowed('terminate') && (
-              <Button light variant="ghost" className={DANGER_GHOST_CLASS} disabled={busy} onClick={handleTerminate}>
-                해지 처리
-              </Button>
-            )}
+            {/* 되돌릴 수 없는 동작은 줄 끝에 모은다(DangerActions). */}
+            <DangerActions>
+              {allowed('cancel') && (
+                <Button
+                  light
+                  variant="ghost"
+                  className={DANGER_GHOST_CLASS}
+                  disabled={busy}
+                  onClick={() => run(() => mutateProductionContract(contract.id, 'cancel'), '이 계약을 취소할까요? 서명 링크가 무효가 됩니다.')}
+                >
+                  계약 취소
+                </Button>
+              )}
 
-            {allowed('delete') && (
-              <Button light variant="ghost" className={DANGER_GHOST_CLASS} disabled={busy} onClick={handleDelete}>
-                삭제
-              </Button>
-            )}
+              {allowed('terminate') && (
+                <Button light variant="ghost" className={DANGER_GHOST_CLASS} disabled={busy} onClick={handleTerminate}>
+                  해지 처리
+                </Button>
+              )}
+
+              {allowed('delete') && (
+                <Button light variant="ghost" className={DANGER_GHOST_CLASS} disabled={busy} onClick={handleDelete}>
+                  삭제
+                </Button>
+              )}
+            </DangerActions>
           </div>
         </div>
+        {dialog}
       </AdminShell>
     </>
   );

@@ -16,6 +16,9 @@ import { logAdminView } from '../../../../lib/privacy/adminView';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { formatKstDateTimeFull } from '../../../../lib/booking/format';
 import { loadSubmissionForAdmin, type AdminSubmissionDetail } from '../../../../lib/shows/organizer/adminSubmissions';
+import { DangerActions } from '../../../../components/admin/DangerActions';
+import { DANGER_GHOST_CLASS } from '../../../../components/admin/adminDanger';
+import { useAdminDialog } from '../../../../components/admin/useAdminDialog';
 
 interface AdminShowSubmissionDetailPageProps {
   submission: AdminSubmissionDetail;
@@ -51,6 +54,7 @@ export default function AdminShowSubmissionDetailPage({ submission }: AdminShowS
   const router = useRouter();
   const { draft } = submission;
   const [busy, setBusy] = useState(false);
+  const { ask, dialog } = useAdminDialog();
   const [notice, setNotice] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [warnings, setWarnings] = useState<string[]>([]);
@@ -111,9 +115,15 @@ export default function AdminShowSubmissionDetailPage({ submission }: AdminShowS
     );
   };
 
-  const handleRequestChanges = () => {
-    const reason = window.prompt('주최자에게 보낼 보완 요청 사유를 적어 주세요.');
-    if (reason === null) return;
+  const handleRequestChanges = async () => {
+    const values = await ask({
+      title: '보완 요청',
+      description: '사유가 주최자에게 메일로 전달됩니다.',
+      fields: [{ name: 'reason', label: '보완 요청 사유', type: 'textarea', required: '보완 요청은 사유가 있어야 합니다.' }],
+      confirmLabel: '보완 요청 보내기',
+    });
+    if (values === null) return;
+    const reason = values.reason;
     if (!reason.trim()) {
       setNotice('보완 요청은 사유가 있어야 합니다.');
       return;
@@ -124,14 +134,21 @@ export default function AdminShowSubmissionDetailPage({ submission }: AdminShowS
     );
   };
 
-  const handleReject = () => {
-    const reason = window.prompt('반려 사유를 적어 주세요 (주최자에게 전달됩니다).');
-    if (reason === null) return;
+  const handleReject = async () => {
+    // 사유 입력과 반려 확인을 한 창에서 — 예전엔 prompt 뒤에 confirm이 한 번 더 떴다.
+    const values = await ask({
+      title: '반려',
+      description: '반려하면 주최자에게 반려 사실과 사유가 메일로 전달됩니다.',
+      fields: [{ name: 'reason', label: '반려 사유', type: 'textarea', required: '반려는 사유가 있어야 합니다.' }],
+      confirmLabel: '반려',
+      tone: 'danger',
+    });
+    if (values === null) return;
+    const reason = values.reason;
     if (!reason.trim()) {
       setNotice('반려는 사유가 있어야 합니다.');
       return;
     }
-    if (!window.confirm('반려하면 주최자에게 반려 사실과 사유가 메일로 전달됩니다. 반려할까요?')) return;
     return run(
       () => patchShowSubmission(submission.id, { action: 'reject', note: reason.trim(), expectedSubmittedAt }),
       () => '반려 처리했습니다.',
@@ -317,7 +334,9 @@ export default function AdminShowSubmissionDetailPage({ submission }: AdminShowS
                 <div className="flex flex-wrap gap-2">
                   <Button light disabled={busy} onClick={handleApprove}>승인하고 공개</Button>
                   <Button light variant="weak" disabled={busy} onClick={handleRequestChanges}>보완 요청</Button>
-                  <Button light variant="weak" disabled={busy} onClick={handleReject}>반려</Button>
+                  <DangerActions>
+                    <Button light variant="ghost" className={DANGER_GHOST_CLASS} disabled={busy} onClick={handleReject}>반려</Button>
+                  </DangerActions>
                 </div>
               </div>
             </div>
@@ -342,6 +361,7 @@ export default function AdminShowSubmissionDetailPage({ submission }: AdminShowS
             </div>
           </div>
         </div>
+        {dialog}
       </AdminShell>
     </>
   );

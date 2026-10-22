@@ -88,22 +88,26 @@ describe('미기록 행', () => {
 
 describe('기록된 행', () => {
   it('이체 전(pending): 지급 완료·기록 취소가 있다. 지급 완료는 메모를 묻고 mark_paid로 부른다', async () => {
-    jest.spyOn(window, 'prompt').mockReturnValue('10/30 이체 19,340원');
     renderSection([baseRow({ recorded: record() })]);
     expect(screen.queryByRole('button', { name: '정산 기록' })).not.toBeInTheDocument();
     expect(screen.getByText('이체 대기')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '기록 취소(이체 전)' })).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: '지급 완료' }));
+    // 메모는 입력창 겸 확인창(useAdminDialog)이 받는다 — 예전 window.prompt + confirm 두 번.
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveTextContent('19,340원');
+    await userEvent.type(within(dialog).getByLabelText('이체 메모 (선택)'), '10/30 이체 19,340원');
+    await userEvent.click(within(dialog).getByRole('button', { name: '지급 완료로 기록' }));
     await waitFor(() => expect(reload).toHaveBeenCalled());
     expect(postBodies()).toEqual([{ action: 'mark_paid', id: 'rec-1', memo: '10/30 이체 19,340원' }]);
   });
 
   it('지급 완료 메모 입력을 취소하면 요청하지 않는다', async () => {
-    jest.spyOn(window, 'prompt').mockReturnValue(null);
     renderSection([baseRow({ recorded: record() })]);
     await userEvent.click(screen.getByRole('button', { name: '지급 완료' }));
+    await userEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: '취소' }));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(postBodies()).toEqual([]);
-    expect(await screen.findByRole('alert')).toHaveTextContent('지급 완료 기록을 취소했습니다');
   });
 
   it('기록 취소는 확인 뒤 delete 액션', async () => {
@@ -160,9 +164,15 @@ describe('계좌 보기', () => {
 
 describe('수기 조정', () => {
   it('금액·사유를 묻고 add_adjustment로 부른다', async () => {
-    jest.spyOn(window, 'prompt').mockReturnValueOnce('-5000').mockReturnValueOnce('선지급 상계');
     renderSection([baseRow()]);
     await userEvent.click(screen.getByRole('button', { name: '조정 추가' }));
+    const dialog = screen.getByRole('dialog');
+    // 0이 아닌 정수가 아니면 창 안에서 막는다.
+    await userEvent.click(within(dialog).getByRole('button', { name: '조정 추가' }));
+    expect(within(dialog).getByText('0이 아닌 정수 금액을 입력해 주세요.')).toBeInTheDocument();
+    await userEvent.type(within(dialog).getByLabelText(/조정 금액/), '-5000');
+    await userEvent.type(within(dialog).getByLabelText(/조정 사유/), '선지급 상계');
+    await userEvent.click(within(dialog).getByRole('button', { name: '조정 추가' }));
     await waitFor(() => expect(reload).toHaveBeenCalled());
     expect(postBodies()).toEqual([{ action: 'add_adjustment', subjectKey: 'creator:c1', amount: -5000, memo: '선지급 상계' }]);
   });

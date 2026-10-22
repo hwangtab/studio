@@ -13,6 +13,7 @@ jest.mock('../../../../lib/contracts/admin-auth', () => ({ authenticateAdminRequ
 
 import AdminFundingProjectDetailPage from '../../../../pages/admin/funding/projects/[id]';
 import { patchFundingProject } from '../../../../components/admin/fundingProjectActions';
+import { findAdminDialog, submitAdminDialog } from '../../../helpers/adminDialog';
 
 beforeAll(() => {
   Element.prototype.scrollIntoView = jest.fn();
@@ -31,7 +32,6 @@ const SERVICE = { available: true as const, service: null };
 beforeEach(() => {
   (patchFundingProject as jest.Mock).mockReset().mockResolvedValue({ ok: true });
   window.confirm = jest.fn().mockReturnValue(true);
-  window.prompt = jest.fn().mockReturnValue('10/14 이체');
 });
 
 // 집계가 죽으면(payout=null) 지급 완료 버튼까지 사라져, 이체를 끝내고도 기록할 수 없었다.
@@ -41,6 +41,9 @@ it('정산 집계가 실패해도 이체 대기 정산이 기록돼 있으면 �
   expect(screen.getByText(/이체 대기 정산이 기록되어 있습니다/)).toBeInTheDocument();
   expect(screen.getByText(/1,234,000원/)).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: '지급 완료로 표시' }));
+  // 이체 메모와 지급 확인을 한 창에서 받는다(useAdminDialog).
+  expect(await findAdminDialog()).toHaveTextContent('1,234,000원을 실제로 이체하셨나요?');
+  await submitAdminDialog('10/14 이체');
 
   await waitFor(() => expect(patchFundingProject).toHaveBeenCalledWith('proj-1', { action: 'mark_payout_paid', memo: '10/14 이체' }));
 });

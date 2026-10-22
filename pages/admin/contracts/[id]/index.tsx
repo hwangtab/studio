@@ -14,6 +14,7 @@ import {
 import { createSubscription as createSubscriptionRequest } from '../../../../components/admin/subscriptionActions';
 import { AdminShell } from '../../../../components/admin/AdminShell';
 import { DANGER_GHOST_CLASS } from '../../../../components/admin/adminDanger';
+import { DangerActions } from '../../../../components/admin/DangerActions';
 import { Button } from '../../../../components/ui/Button';
 import { getDb } from '../../../../db/client';
 import { OCCUPYING_STATUSES } from '../../../../lib/billing/service';
@@ -31,11 +32,13 @@ import {
   type SerializedClause,
   type SerializedSignature,
 } from '../../../../lib/contracts/serialize';
-import { formatCurrency, formatDate, formatDateTime } from '../../../../lib/contracts/format';
+import { formatCurrency } from '../../../../lib/contracts/format';
+import { formatAdminDate, formatAdminDateTime } from '../../../../lib/admin/displayDate';
 import { getStatusLabel, isActionAllowed, needsTermination } from '../../../../lib/contracts/status';
 import { resolveRulesContent } from '../../../../lib/contracts/template';
 import { buildAuditTrail, serializeAuditTrail, type SerializedAuditTrail } from '../../../../lib/contracts/audit-trail';
 import { ActionNotice } from '../../../../components/admin/ActionNotice';
+import { useAdminDialog } from '../../../../components/admin/useAdminDialog';
 
 interface AdminContractDetailPageProps {
   contract: AdminSerializedContract;
@@ -160,6 +163,7 @@ export default function AdminContractDetailPage({
 }: AdminContractDetailPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
+  const { ask, dialog } = useAdminDialog();
   const [notice, setNotice] = useState<string | null>(null);
   /** 종료는 됐지만 구독 해지·해지 안내가 실패했다는 서버 경고 — 일반 안내와 섞이지 않게 따로 띄운다. */
   const [terminationWarning, setTerminationWarning] = useState<string | null>(null);
@@ -202,12 +206,21 @@ export default function AdminContractDetailPage({
         : occupyingSubscriptionCount > 0
           ? `연결된 구독 ${occupyingSubscriptionCount}건이 함께 해지되고 고객에게 해지 안내 메일이 나갑니다. 되돌릴 수 없습니다.\n\n`
           : '';
-    const reason = window.prompt(
-      subscriptionNotice +
-        '이용 종료 사유를 적어 주세요. 계약서는 그대로 보관되고, 이 호실로 새 계약을 만들 수 있게 됩니다.\n\n' +
-        '예: 기간 만료 후 종료 / 중도 퇴실(위약금 납부) / 이용료 연체로 해지',
-    );
-    if (reason === null) return;
+    const values = await ask({
+      title: '이용 종료 처리',
+      description: `${subscriptionNotice}계약서는 그대로 보관되고, 이 호실로 새 계약을 만들 수 있게 됩니다.`,
+      fields: [{
+        name: 'reason',
+        label: '이용 종료 사유',
+        type: 'textarea',
+        placeholder: '예: 기간 만료 후 종료 / 중도 퇴실(위약금 납부) / 이용료 연체로 해지',
+        required: '종료 사유를 입력해 주세요.',
+      }],
+      confirmLabel: '이용 종료',
+      tone: 'danger',
+    });
+    if (values === null) return;
+    const reason = values.reason;
 
     if (reason.trim() === '') {
       setNotice('종료 사유를 입력해 주세요.');
@@ -324,7 +337,7 @@ export default function AdminContractDetailPage({
         {contract.purgedAt && (
           <div className="mb-4 p-4 bg-gray-100 border border-gray-300 text-gray-700 rounded-lg text-sm">
             <strong className="block mb-1">보관 기간이 지나 개인정보가 파기된 계약입니다</strong>
-            {formatDate(contract.purgedAt)}에 제목·이름·연락처·계약 본문·서명 기록을 지웠습니다.
+            {formatAdminDate(contract.purgedAt)}에 제목·이름·연락처·계약 본문·서명 기록을 지웠습니다.
             계약 기간과 금액만 운영 기록으로 남아 있으며, 계약서를 다시 발급할 수 없습니다.
           </div>
         )}
@@ -334,7 +347,7 @@ export default function AdminContractDetailPage({
         {needsTermination(contract) && (
           <div className="mb-4 p-4 bg-blue-50 border border-blue-200 text-blue-900 rounded-lg text-sm">
             <strong className="block mb-1">이용 기간이 지났습니다</strong>
-            계약서상 종료일({formatDate(contract.endDate)})이 지났습니다. 갱신해서 계속
+            계약서상 종료일({formatAdminDate(contract.endDate)})이 지났습니다. 갱신해서 계속
             이용 중이면 그대로 두시고, 이용이 끝났다면 아래 “이용 종료 처리”를 눌러 주세요.
             <span className="block mt-2 text-blue-700">
               종료 처리를 해야 {contract.roomNumber}호로 새 계약을 만들 수 있습니다.
@@ -345,7 +358,7 @@ export default function AdminContractDetailPage({
         {contract.status === 'terminated' && (
           <div className="mb-4 p-4 bg-gray-100 border border-gray-300 text-gray-700 rounded-lg text-sm">
             <strong className="block mb-1">이용이 종료된 계약입니다</strong>
-            {formatDate(contract.terminatedAt)}에 종료 처리했습니다.
+            {formatAdminDate(contract.terminatedAt)}에 종료 처리했습니다.
             {contract.terminationReason && (
               <span className="block mt-1">사유: {contract.terminationReason}</span>
             )}
@@ -394,7 +407,7 @@ export default function AdminContractDetailPage({
                   />
                   <DescriptionRow
                     label="계약 기간"
-                    value={`${formatDate(contract.startDate)} ~ ${formatDate(contract.endDate)}`}
+                    value={`${formatAdminDate(contract.startDate)} ~ ${formatAdminDate(contract.endDate)}`}
                   />
                   <DescriptionRow
                     label="월 이용료"
@@ -411,15 +424,15 @@ export default function AdminContractDetailPage({
 
             <div className="mt-6 pt-6 border-t border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
               <dl className="space-y-2">
-                <DescriptionRow label="작성일" value={formatDateTime(contract.createdAt)} />
-                <DescriptionRow label="발송일" value={formatDateTime(contract.sentAt)} />
+                <DescriptionRow label="작성일" value={formatAdminDateTime(contract.createdAt)} />
+                <DescriptionRow label="발송일" value={formatAdminDateTime(contract.sentAt)} />
               </dl>
               <dl className="space-y-2">
                 <DescriptionRow
                   label="링크 만료"
-                  value={contract.status === 'sent' ? formatDateTime(contract.expiresAt) : '-'}
+                  value={contract.status === 'sent' ? formatAdminDateTime(contract.expiresAt) : '-'}
                 />
-                <DescriptionRow label="서명일" value={formatDateTime(contract.signedAt)} />
+                <DescriptionRow label="서명일" value={formatAdminDateTime(contract.signedAt)} />
               </dl>
             </div>
           </div>
@@ -438,7 +451,7 @@ export default function AdminContractDetailPage({
                   <span
                     className={`shrink-0 font-medium ${clause.agreedAt ? 'text-green-600' : 'text-gray-400'}`}
                   >
-                    {clause.agreedAt ? `✓ ${formatDateTime(clause.agreedAt)}` : '미동의'}
+                    {clause.agreedAt ? `✓ ${formatAdminDateTime(clause.agreedAt)}` : '미동의'}
                   </span>
                 </div>
               ))}
@@ -451,7 +464,7 @@ export default function AdminContractDetailPage({
                   <span
                     className={`shrink-0 font-medium ${attachment.agreedAt ? 'text-green-600' : 'text-gray-400'}`}
                   >
-                    {attachment.agreedAt ? `✓ ${formatDateTime(attachment.agreedAt)}` : '미동의'}
+                    {attachment.agreedAt ? `✓ ${formatAdminDateTime(attachment.agreedAt)}` : '미동의'}
                   </span>
                 </div>
               ))}
@@ -473,14 +486,14 @@ export default function AdminContractDetailPage({
                 <div className="text-sm text-gray-600 space-y-0.5">
                   <p>서명자: {customerSignature.signerName}</p>
                   <p>이메일: {customerSignature.signerEmail}</p>
-                  <p>일시: {formatDateTime(customerSignature.signedAt)}</p>
+                  <p>일시: {formatAdminDateTime(customerSignature.signedAt)}</p>
                   <p>IP: {customerSignature.ipAddress || '-'}</p>
                   {/* 분쟁 시 쓰이는 증거이므로 관리자가 바로 확인할 수 있어야 한다. */}
                   <p>
                     본인 확인:{' '}
                     {contract.identityVerifiedAt ? (
                       <span className="text-green-600">
-                        연락처 뒷자리 대조 완료 ({formatDateTime(contract.identityVerifiedAt)})
+                        연락처 뒷자리 대조 완료 ({formatAdminDateTime(contract.identityVerifiedAt)})
                       </span>
                     ) : (
                       <span className="text-gray-400">기록 없음</span>
@@ -504,7 +517,7 @@ export default function AdminContractDetailPage({
               <ol className="space-y-1.5 text-sm text-gray-700">
                 {adminEvents.map((event) => (
                   <li key={event.id} className="flex flex-wrap items-baseline gap-x-3">
-                    <span className="tabular-nums text-gray-500">{formatDateTime(event.at)}</span>
+                    <span className="tabular-nums text-gray-500">{formatAdminDateTime(event.at)}</span>
                     <span className="font-medium text-gray-900">
                       {CONTRACT_ADMIN_ACTION_LABELS[event.action as ContractAdminAction] ?? event.action}
                     </span>
@@ -646,22 +659,6 @@ export default function AdminContractDetailPage({
               </Button>
             )}
 
-            {isActionAllowed(contract.status, 'cancel') && (
-              <Button light
-                variant="ghost"
-                className={DANGER_GHOST_CLASS}
-                disabled={busy}
-                onClick={() =>
-                  run(
-                    () => mutateContract(contract.id, 'cancel'),
-                    '이 계약을 취소할까요? 서명 링크가 무효가 됩니다.',
-                  )
-                }
-              >
-                계약 취소
-              </Button>
-            )}
-
             {/* 같은 고객의 재계약·갱신은 14개 항목을 다시 타이핑하는 자리다.
                 발송 후에는 수정이 막히므로(설계상 의도) 복제해서 새로 만드는 길을 준다. */}
             {contract.purgedAt ? (
@@ -672,22 +669,41 @@ export default function AdminContractDetailPage({
               </Button>
             )}
 
-            {isActionAllowed(contract.status, 'terminate') && (
-              <Button light variant="ghost" className={DANGER_GHOST_CLASS} disabled={busy} onClick={handleTerminate}>
-                이용 종료 처리
-              </Button>
-            )}
+            {/* 되돌릴 수 없는 동작은 줄 끝에 모은다(DangerActions). */}
+            <DangerActions>
+              {isActionAllowed(contract.status, 'cancel') && (
+                <Button light
+                  variant="ghost"
+                  className={DANGER_GHOST_CLASS}
+                  disabled={busy}
+                  onClick={() =>
+                    run(
+                      () => mutateContract(contract.id, 'cancel'),
+                      '이 계약을 취소할까요? 서명 링크가 무효가 됩니다.',
+                    )
+                  }
+                >
+                  계약 취소
+                </Button>
+              )}
 
-            {isActionAllowed(contract.status, 'delete') && (
-              <Button light
-                variant="ghost"
-                className={DANGER_GHOST_CLASS}
-                disabled={busy}
-                onClick={handleDelete}
-              >
-                삭제
-              </Button>
-            )}
+              {isActionAllowed(contract.status, 'terminate') && (
+                <Button light variant="ghost" className={DANGER_GHOST_CLASS} disabled={busy} onClick={handleTerminate}>
+                  이용 종료 처리
+                </Button>
+              )}
+
+              {isActionAllowed(contract.status, 'delete') && (
+                <Button light
+                  variant="ghost"
+                  className={DANGER_GHOST_CLASS}
+                  disabled={busy}
+                  onClick={handleDelete}
+                >
+                  삭제
+                </Button>
+              )}
+            </DangerActions>
           </div>
 
           {contract.status === 'signed' && (
@@ -698,6 +714,7 @@ export default function AdminContractDetailPage({
             </p>
           )}
         </div>
+        {dialog}
       </AdminShell>
     </>
   );

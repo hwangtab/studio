@@ -14,6 +14,9 @@ import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { kstDateString } from '../../../lib/booking/kst';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { EXPENSE_CATEGORY_LABELS, EXPENSE_SCOPE_LABELS, expandExpenses, isNonOperatingCategory, loadExpenseRows, summarizeExpenses } from '../../../lib/ops/expenses';
+import { formatAdminDate } from '../../../lib/admin/displayDate';
+import { DangerActions } from '../../../components/admin/DangerActions';
+import { useAdminDialog } from '../../../components/admin/useAdminDialog';
 
 /**
  * 재무 › 지출(옛 `/admin/expenses`) — 임대료·청소비·공과금 같은 스튜디오 지출을 적는다. 매출 현황의 "분야별 매출·수익"(분야 매출 − 그 분야 지출, 공통 지출은 전체에서만)이 읽는다.
@@ -105,6 +108,7 @@ export default function AdminExpensesPage({ expenses, today, unavailable, monthL
   const [repeatUntil, setRepeatUntil] = useState('');
   const [memo, setMemo] = useState('');
   const [busy, setBusy] = useState(false);
+  const { ask, dialog } = useAdminDialog();
   const [notice, setNotice] = useState<string | null>(null);
   /** 구분·항목·메모를 고치는 중인 지출. */
   const [editing, setEditing] = useState<{ id: string; scope: string; category: string; memo: string } | null>(null);
@@ -151,7 +155,13 @@ export default function AdminExpensesPage({ expenses, today, unavailable, monthL
   };
 
   const endRepeat = async (e: ExpenseView) => {
-    const until = window.prompt('반복을 끝낼 마지막 달의 날짜를 YYYY-MM-DD로 적어 주세요(그 달까지 셉니다).', today);
+    const values = await ask({
+      title: '반복 끝내기',
+      description: `“${e.description}” — 고른 날짜가 든 달까지 셉니다. 그 뒤 달에는 이 지출이 손익에 들어가지 않아요.`,
+      fields: [{ name: 'until', label: '마지막 달의 날짜', type: 'date', defaultValue: today, required: '마지막 달의 날짜를 골라 주세요.' }],
+      confirmLabel: '반복 끝내기',
+    });
+    const until = values?.until;
     if (!until) return;
     setBusy(true);
     const result = await call('PATCH', { id: e.id, repeatUntil: until.trim() });
@@ -238,7 +248,7 @@ export default function AdminExpensesPage({ expenses, today, unavailable, monthL
                   <div className="min-w-0">
                     <p className="font-medium">{e.description} <span className="font-normal text-gray-500">· {EXPENSE_CATEGORY_LABELS[e.category] ?? e.category} · {EXPENSE_SCOPE_LABELS[e.scope] ?? e.scope}</span></p>
                     <p className="mt-0.5 text-xs text-gray-500">
-                      {e.repeatMonthly ? `${e.spentOn}부터 매달${e.repeatUntil ? ` · ${e.repeatUntil.slice(0, 7)}까지` : ' · 계속'}` : e.spentOn}
+                      {e.repeatMonthly ? `${formatAdminDate(e.spentOn)}부터 매달${e.repeatUntil ? ` · ${e.repeatUntil.slice(0, 7).replace('-', '.')}까지` : ' · 계속'}` : formatAdminDate(e.spentOn)}
                       {e.memo ? ` · ${e.memo}` : ''}
                     </p>
                   </div>
@@ -246,7 +256,9 @@ export default function AdminExpensesPage({ expenses, today, unavailable, monthL
                     <span className="font-semibold tabular-nums">{won(e.amount)}{e.repeatMonthly ? ' / 월' : ''}</span>
                     {e.repeatMonthly && !e.repeatUntil && <Button light variant="weak" size="sm" disabled={busy} onClick={() => endRepeat(e)}>반복 끝내기</Button>}
                     <Button light variant="weak" size="sm" disabled={busy} onClick={() => setEditing({ id: e.id, scope: e.scope, category: e.category, memo: e.memo ?? '' })}>구분·항목 고치기</Button>
-                    <Button light variant="ghost" size="sm" className={DANGER_GHOST_CLASS} disabled={busy} onClick={() => remove(e)}>삭제</Button>
+                    <DangerActions>
+                      <Button light variant="ghost" size="sm" className={DANGER_GHOST_CLASS} disabled={busy} onClick={() => remove(e)}>삭제</Button>
+                    </DangerActions>
                   </div>
                   {editing?.id === e.id && (
                     <div className="grid w-full grid-cols-1 gap-3 rounded-xl bg-gray-50 p-3 md:grid-cols-3">
@@ -276,6 +288,7 @@ export default function AdminExpensesPage({ expenses, today, unavailable, monthL
           )}
         </section>
         </div>
+        {dialog}
       </AdminShell>
     </>
   );
