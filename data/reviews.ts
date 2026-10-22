@@ -69,7 +69,7 @@ export const getReviews = (locale: Locale) => {
       categoryKey: 'recording',
       category: t(locale, { ko: "보컬 녹음", en: "Vocal Recording", zh: "人声录音", es: "Grabación de voz", vi: "Thu âm giọng hát", th: "อัดเสียงร้อง", uz: "Vokal yozuvi" }),
       content: t(locale, {
-        ko: "엔지니어시라기보다는 프로듀서에 가깝게 보컬테크닉적인 부분이라던지 감정 같은 것, 곡의 색채에 맞는 프로듀싱을 해주셔서 지도하에 따라가며 녹음했더니 기대 이상의 결과가 나왔다. 앞으로 나에게 있어 녹음실은 스튜디오 놀 하나일 것.",
+        ko: "엔지니어시라기보다는 프로듀서에 가깝게 보컬테크닉적인 부분이라던지 감정 같은 것, 곡의 색채에 맞는 프로듀싱을 해주셔서 지도하에 따라가며 녹음했더니 기대 이상의 결과가 나왔다. 앞으로 나에게 있어 녹음실은 스튜디오 놀 하나일 것임을.",
         en: "More like a producer than an engineer, they directed things like vocal technique and emotion to match the song's color, and following that direction while recording gave me a result beyond what I expected. From now on, for me, the recording studio will be Studio NOL and nothing else.",
         zh: "比起工程师更像制作人，指导了声乐技巧、情感之类符合歌曲色彩的内容，跟着这个方向录音后，得到了超出预期的结果。今后对我来说，录音室只有 Studio NOL 一家。",
         es: "Más como un productor que un ingeniero, dirigió cosas como la técnica vocal y la emoción para encajar con el color de la canción, y seguir esa dirección mientras grababa me dio un resultado mejor de lo esperado. De ahora en adelante, para mí el estudio de grabación será solo Studio NOL.",
