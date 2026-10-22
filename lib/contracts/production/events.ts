@@ -10,6 +10,7 @@ import {
 import { EVENT_SPEC, isPerSongEvent, type ProductionStage } from './event-spec';
 import { findStage, kstDay, type EventData, type PauseCause, type ProductionLedger } from './ledger';
 import { REVISION_STAGES, type RevisionStage } from './terms';
+import { isUniqueConstraintError } from '../../dbErrors';
 
 /**
  * 진행 기록 쓰기. 규칙 셋:
@@ -269,12 +270,6 @@ export class EventSeqConflictError extends Error {
   }
 }
 
-const isUniqueViolation = (error: unknown): boolean => {
-  for (let e: unknown = error; e instanceof Error; e = (e as { cause?: unknown }).cause) {
-    if (/UNIQUE/i.test(e.message)) return true;
-  }
-  return false;
-};
 
 /**
  * 기록을 하나 추가한다. 통지 대상이면 notice_status를 pending으로 넣고, 메일은 호출부가 보낸다(sendEventNotice).
@@ -315,7 +310,7 @@ export const appendProductionEvent = async (
     const [event] = await insert();
     return event;
   } catch (error: unknown) {
-    if (!isUniqueViolation(error)) throw error;
+    if (!isUniqueConstraintError(error)) throw error;
     if (expectedSeq !== null) throw new EventSeqConflictError();
     // 같은 순번을 동시에 잡았다 — 한 번만 다시 시도한다.
     const [event] = await insert();

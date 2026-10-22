@@ -42,6 +42,7 @@ import {
   sendPublicStatusEmail,
   sendPublicStatusOperatorFallback,
 } from '../../../../../lib/funding/reviewEmail';
+import { isUniqueConstraintError } from '../../../../../lib/dbErrors';
 
 /** DecisionResult의 실패 code → HTTP 상태. Step 1 규약 그대로. */
 const DECISION_STATUS: Record<Exclude<DecisionResult, { ok: true }>['code'], number> = {
@@ -373,8 +374,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // libSQL/SQLite가 실제로 던지는 문구("UNIQUE constraint failed: <table>.<column>")를
     // 좁혀 잡는다 — 이 저장소의 다른 곳(lib/booking/confirm.test.ts 등)도 같은 문구를 쓴다.
-    const isSlugConflictError = (error: unknown): boolean =>
-      error instanceof Error && /UNIQUE constraint failed: funding_projects\.slug/i.test(error.message);
+    const isSlugConflictError = (error: unknown): boolean => isUniqueConstraintError(error, 'funding_projects.slug');
 
     let result: DecisionResult;
     try {

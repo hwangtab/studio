@@ -204,7 +204,8 @@ describe('부분취소 2회 — 멱등 키에 취소 합계를 넣는다 (항목
     mockFetch.mockResolvedValueOnce(same).mockResolvedValueOnce(same);
 
     await processTossWebhook({ data: { paymentKey: 'pk_f', status: 'PARTIAL_CANCELED' } });
-    await processTossWebhook({ data: { paymentKey: 'pk_f', status: 'PARTIAL_CANCELED' } });
+    // 재도착은 200이어야 한다 — 500이면 토스가 같은 이벤트를 계속 다시 보낸다.
+    expect(await processTossWebhook({ data: { paymentKey: 'pk_f', status: 'PARTIAL_CANCELED' } })).toEqual({ status: 200 });
 
     expect(await refundRows(orderNo)).toHaveLength(1);
     expect(await eventKeys()).toEqual(['pk_f:PARTIAL_CANCELED:2500']);
