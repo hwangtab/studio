@@ -26,6 +26,7 @@
     "weddingSong": "Canción de Boda",
     "voiceActing": "Locución",
     "coverVideo": "Video Cover",
+    "musicVideo": "Videoclips",
     "compositionArrangement": "Composición y Arreglos",
     "musicPromotion": "Campaña de Prensa",
     "crowdfundingDesign": "Diseño de Crowdfunding",
@@ -2595,6 +2596,182 @@
         "action": "Preguntar por KakaoTalk"
       },
       "contact": "Contáctanos"
+    }
+  },
+  "musicVideo": {
+    "seo": {
+      "title": "Videoclips y videos en vivo desde {{from}} | Studio NOL",
+      "description": "Videoclips, clips en vivo y charlas o entrevistas para YouTube filmados por el director Chichi de Haebang Film. Desde {{from}}; cámaras, horas y locaciones se acuerdan en la consulta. Grabación y mezcla en el mismo lugar en Seúl.",
+      "keywords": "producción de videoclips Seúl, video en vivo, video de concierto, video para YouTube, Haebang Film"
+    },
+    "hero": {
+      "title": "Videoclips y videos en vivo",
+      "subtitleLine1": "El director Chichi de Haebang Film, del concepto al montaje final",
+      "subtitleLine2": "Videoclips, clips en vivo y contenido de YouTube desde {{from}}",
+      "alt": "Escena en sala del videoclip “Namsan Tower Lights” de Mariko & Yukie",
+      "seeWorks": "Ver trabajos"
+    },
+    "quickAnswers": {
+      "title": "Producción de video en breve",
+      "subtitle": "Las tres preguntas más frecuentes.",
+      "items": [
+        {
+          "q": "¿Cuánto cuesta?",
+          "a": "Videoclips y clips en vivo / videos de YouTube desde {{from}} (IVA incluido). El presupuesto depende de cámaras, horas y locación, y te lo decimos desde el principio."
+        },
+        {
+          "q": "¿Quién filma?",
+          "a": "El director Chichi de Haebang Film se encarga del concepto, rodaje, edición y color. Todos los videos de abajo los filmó Chichi."
+        },
+        {
+          "q": "¿Cómo empiezo?",
+          "a": "Envíanos la canción (o la idea), el ambiente y tus fechas. Te respondemos con un plan de rodaje y un presupuesto."
+        }
+      ]
+    },
+    "portfolio": {
+      "title": "Trabajos",
+      "subtitle": "Videoclips, clips en vivo y contenido de YouTube filmados por el director Chichi de Haebang Film. Toca para reproducir.",
+      "kinds": {
+        "all": "Todo",
+        "music-video": "Videoclips",
+        "live": "Clips en vivo",
+        "youtube": "Contenido de YouTube"
+      },
+      "play": "Reproducir video: {{name}}"
+    },
+    "services": {
+      "title": "Qué filmamos",
+      "items": [
+        {
+          "title": "Videoclips",
+          "description": "Definimos el concepto contigo y filmamos en estudio, sala o exteriores: dirección, edición, color y subtítulos de letra en uno."
+        },
+        {
+          "title": "Clips en vivo y conciertos",
+          "description": "Conciertos, sesiones en vivo y showcases con varias cámaras. Studio NOL también puede grabar y mezclar el audio en vivo."
+        },
+        {
+          "title": "Contenido de YouTube",
+          "description": "Charlas, entrevistas y detrás de cámaras para tu canal, también en series de varios episodios."
+        }
+      ]
+    },
+    "director": {
+      "title": "Filmado por el director Chichi de Haebang Film",
+      "body": "El director Chichi de Haebang Film dirige el rodaje: videoclips en locación, conciertos y series de charlas para YouTube. Los videos de arriba son el resultado.",
+      "points": [
+        "Un solo director del concepto y storyboard al rodaje, edición y color",
+        "Cámaras según la canción y el presupuesto, de una a multicámara",
+        "Audio de Studio NOL: grabación, mezcla y master en el mismo lugar",
+        "Formato de imagen pensado para dónde se publicará (YouTube, Instagram…)"
+      ],
+      "imageAlt": "Escena del videoclip “Namsan Tower Lights”"
+    },
+    "pricing": {
+      "title": "Precios de producción de video",
+      "subtitle": "Ambos desde {{from}}. Confirmamos el precio exacto al definir el plan de rodaje.",
+      "factorsTitle": "Qué define el presupuesto",
+      "factors": [
+        {
+          "label": "Número de cámaras",
+          "detail": "De una cámara fija a multicámara; más para actuaciones y coreografías en una sola toma."
+        },
+        {
+          "label": "Horas y episodios",
+          "detail": "Media jornada, un día o varios; en series, el número de episodios."
+        },
+        {
+          "label": "Locación",
+          "detail": "Studio NOL, una sala o exteriores. El alquiler se suma al costo cuando hace falta."
+        },
+        {
+          "label": "Escala de producción",
+          "detail": "Más elenco, utilería, vestuario e iluminación implican más preparación."
+        },
+        {
+          "label": "Alcance de edición",
+          "detail": "Corte, etalonaje y subtítulos son estándar. Gráficos, efectos o reediciones cortas se acuerdan aparte."
+        }
+      ],
+      "prepTitle": "Envía esto para un presupuesto más rápido",
+      "prepItems": [
+        "La canción (enlace) o una descripción del contenido",
+        "Videos de referencia",
+        "Fechas y locación deseadas, y dónde se publicará"
+      ],
+      "coverNote": "¿Solo necesitas un cover de una canción en nuestro estudio? El paquete Video Cover ({{cover}}) incluye rodaje, mezcla básica y edición."
+    },
+    "tierBar": {
+      "message": "Cuéntanos la canción y el ambiente. Te respondemos con un plan y un presupuesto.",
+      "action": "Pedir presupuesto",
+      "contact": "Contáctanos"
+    },
+    "process": {
+      "title": "Cómo funciona",
+      "subtitle": "Cuatro pasos del primer mensaje a la entrega",
+      "steps": [
+        {
+          "title": "Consulta",
+          "description": "Comparte canción o contenido, ambiente y fechas; te respondemos con opciones y un costo aproximado."
+        },
+        {
+          "title": "Plan y presupuesto",
+          "description": "Concepto, storyboard, locación y cámaras con el director Chichi; luego confirmamos el presupuesto."
+        },
+        {
+          "title": "Rodaje",
+          "description": "Filmamos el día acordado en estudio, sala o locación, y grabamos el audio en vivo si hace falta."
+        },
+        {
+          "title": "Edición y entrega",
+          "description": "Edición, color y subtítulos, un primer corte para revisar y el video final tras las correcciones."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "subtitle": "Dudas habituales.",
+      "items": [
+        {
+          "q": "¿Qué incluye {{from}}?",
+          "a": "Consulta de concepto, rodaje, edición, etalonaje y subtítulos. Cámaras y horas se ajustan a la canción y al presupuesto; un montaje mayor sube el precio."
+        },
+        {
+          "q": "¿Incluye alquiler de locación y elenco?",
+          "a": "No. Alquiler de sala o locación, elenco y estilismo se cobran al costo."
+        },
+        {
+          "q": "¿Cuántas revisiones y cuándo se entrega?",
+          "a": "Se acuerdan con el presupuesto según duración y alcance de edición."
+        },
+        {
+          "q": "¿Filman charlas y entrevistas para YouTube?",
+          "a": "Sí, además de videos musicales, incluidas series de varios episodios."
+        },
+        {
+          "q": "¿También graban y mezclan el audio?",
+          "a": "Sí, en Studio NOL. En clips en vivo podemos grabar y mezclar el sonido durante el rodaje (audio aparte)."
+        },
+        {
+          "q": "¿Filman fuera de Seúl o en exteriores?",
+          "a": "Sí, la locación se acuerda. Para lugares lejanos puede sumarse viaje y alojamiento al costo."
+        },
+        {
+          "q": "¿Cómo se paga?",
+          "a": "Con el presupuesto confirmado, por enlace de pago con tarjeta o transferencia bancaria."
+        }
+      ]
+    },
+    "relatedStoriesTitle": "Guías de producción de video",
+    "relatedStoriesSubtitle": "Del plan de un videoclip a gestionar un canal de YouTube.",
+    "cta": {
+      "titleLine1": "Convierte tu música en video,",
+      "titleHighlight": "empieza con un mensaje",
+      "subtitleLine1": "Videoclips · clips en vivo · contenido de YouTube",
+      "subtitleLine2": "Cuéntanos la canción y el ambiente; te respondemos con un plan y un presupuesto.",
+      "location": "Cómo llegar",
+      "inquiry": "Consultar sobre tu video"
     }
   },
   "releaseProject": {

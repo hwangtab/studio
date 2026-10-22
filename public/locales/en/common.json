@@ -26,6 +26,7 @@
     "weddingSong": "Wedding Song",
     "voiceActing": "Voice Acting",
     "coverVideo": "Cover Video",
+    "musicVideo": "Music Videos",
     "compositionArrangement": "Composition & Arrangement",
     "musicPromotion": "Release Press",
     "crowdfundingDesign": "Crowdfunding Design",
@@ -2623,6 +2624,182 @@
         "action": "Ask on KakaoTalk"
       },
       "contact": "Contact us"
+    }
+  },
+  "musicVideo": {
+    "seo": {
+      "title": "Music Video & Live Video Production from {{from}} | Studio NOL",
+      "description": "Music videos, live clips and YouTube talk & interview videos shot by director Chichi of Haebang Film. From {{from}}; cameras, hours and locations are agreed in consultation. Recording and mixing under the same roof in Seoul.",
+      "keywords": "music video production Seoul, music video cost Korea, live session video, concert video filming, YouTube video production, interview video, Haebang Film"
+    },
+    "hero": {
+      "title": "Music Videos & Live Videos",
+      "subtitleLine1": "Director Chichi of Haebang Film, from concept to final cut",
+      "subtitleLine2": "Music videos, live clips & YouTube content from {{from}}",
+      "alt": "Venue scene from the Mariko & Yukie “Namsan Tower Lights” music video",
+      "seeWorks": "Watch our work"
+    },
+    "quickAnswers": {
+      "title": "Video production at a glance",
+      "subtitle": "The three questions we hear most.",
+      "items": [
+        {
+          "q": "How much does it cost?",
+          "a": "Music videos and live clips / YouTube videos both start from {{from}} (VAT included). The quote depends on cameras, shooting hours and location, and we tell you the price up front."
+        },
+        {
+          "q": "Who shoots it?",
+          "a": "Director Chichi of Haebang Film handles everything from concept to filming, editing and colour. Every video below was shot by Chichi."
+        },
+        {
+          "q": "How do I start?",
+          "a": "Send us the song (or content idea), the mood you want and your dates. We reply with a shooting plan and a quote."
+        }
+      ]
+    },
+    "portfolio": {
+      "title": "Our work",
+      "subtitle": "Music videos, live clips and YouTube content shot by director Chichi of Haebang Film. Tap to play.",
+      "kinds": {
+        "all": "All",
+        "music-video": "Music videos",
+        "live": "Live clips",
+        "youtube": "YouTube content"
+      },
+      "play": "Play video: {{name}}"
+    },
+    "services": {
+      "title": "What we film",
+      "items": [
+        {
+          "title": "Music videos",
+          "description": "We shape the concept with you and shoot in the studio, at a venue or on location — direction, editing, colour and lyric subtitles in one go."
+        },
+        {
+          "title": "Live clips & concert videos",
+          "description": "Concerts, studio live sessions and showcases captured with multiple cameras. Studio NOL can record and mix the live audio too."
+        },
+        {
+          "title": "YouTube content",
+          "description": "Talks, interviews and behind-the-scenes videos for your channel, including multi-episode series."
+        }
+      ]
+    },
+    "director": {
+      "title": "Filmed by director Chichi of Haebang Film",
+      "body": "Director Chichi of Haebang Film leads the shoot. Location music videos, concert footage and multi-episode YouTube talk series — the videos above are the result.",
+      "points": [
+        "One director from concept and storyboard to filming, editing and colour",
+        "Camera setup matched to the song and budget — from one camera to multi-cam",
+        "Audio by Studio NOL — recording, mixing and mastering in the same place",
+        "Aspect ratio planned for where it will be posted (YouTube, Instagram and more)"
+      ],
+      "imageAlt": "A scene from the “Namsan Tower Lights” music video"
+    },
+    "pricing": {
+      "title": "Video production pricing",
+      "subtitle": "Both start from {{from}}. We confirm the exact price once the shooting plan is set.",
+      "factorsTitle": "What shapes the quote",
+      "factors": [
+        {
+          "label": "Number of cameras",
+          "detail": "From one locked-off camera to a multi-cam setup — more for performances and choreography that must be caught in one take."
+        },
+        {
+          "label": "Shooting hours & episodes",
+          "detail": "Half day, full day or several days; for a series, the number of episodes."
+        },
+        {
+          "label": "Location",
+          "detail": "Studio NOL, a venue or outdoors. Venue rental is added at cost where needed."
+        },
+        {
+          "label": "Production scale",
+          "detail": "More cast, props, wardrobe and lighting means more preparation."
+        },
+        {
+          "label": "Editing scope",
+          "detail": "Cutting, colour grading and subtitles are standard. Graphics, effects or short-form re-edits are agreed separately."
+        }
+      ],
+      "prepTitle": "Send these for a faster quote",
+      "prepItems": [
+        "The song (audio link) or a description of the content",
+        "Reference videos you like",
+        "Preferred dates and location, and where the video will be posted"
+      ],
+      "coverNote": "Just need a one-song cover video in our studio? The Cover Video package ({{cover}}) bundles filming, basic mixing and editing."
+    },
+    "tierBar": {
+      "message": "Tell us the song and the mood. We reply with a shooting plan and a quote.",
+      "action": "Ask for a quote",
+      "contact": "Contact us"
+    },
+    "process": {
+      "title": "How it works",
+      "subtitle": "Four steps from first message to delivery",
+      "steps": [
+        {
+          "title": "Consultation",
+          "description": "Share the song or content, mood and dates; we reply with possible setups and a rough cost."
+        },
+        {
+          "title": "Plan & quote",
+          "description": "Settle concept, storyboard, location and camera setup with director Chichi, then confirm the quote."
+        },
+        {
+          "title": "Shoot",
+          "description": "We film on the day at the studio, venue or location — and record the live audio if needed."
+        },
+        {
+          "title": "Edit & delivery",
+          "description": "Editing, colour and subtitles, a first cut for your review, then the final video after revisions."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Video production FAQ",
+      "subtitle": "Frequently asked questions.",
+      "items": [
+        {
+          "q": "What does {{from}} include?",
+          "a": "Concept consultation, filming, editing, colour grading and subtitles. Cameras and hours are set to fit the song and budget; a bigger setup raises the quote. We share prices per setup during consultation."
+        },
+        {
+          "q": "Are venue rental and cast fees included?",
+          "a": "No. Venue or location rental, cast and stylist fees are billed at cost. If we shoot at Studio NOL, we cover that in the consultation."
+        },
+        {
+          "q": "How many revisions, and when is it delivered?",
+          "a": "Revisions and delivery dates are agreed with the quote, based on length and editing scope. Tell us early if you have a release or show date."
+        },
+        {
+          "q": "Do you film YouTube talks and interviews?",
+          "a": "Yes — talks, interviews and behind-the-scenes content as well as music videos, including multi-episode series."
+        },
+        {
+          "q": "Can you also record and mix the audio?",
+          "a": "Yes. Record, mix and master at Studio NOL and use that audio for the video. For live clips we can record and mix the live sound during the shoot (audio work billed separately)."
+        },
+        {
+          "q": "Do you shoot outside Seoul or outdoors?",
+          "a": "Yes, locations are agreed together. Travel and lodging may be added at cost for distant locations."
+        },
+        {
+          "q": "How do I pay?",
+          "a": "Once the quote is confirmed, by card payment link or bank transfer."
+        }
+      ]
+    },
+    "relatedStoriesTitle": "Video production guides",
+    "relatedStoriesSubtitle": "From planning a music video to running a YouTube channel.",
+    "cta": {
+      "titleLine1": "Turn your music into video —",
+      "titleHighlight": "start with a message",
+      "subtitleLine1": "Music videos · live clips · YouTube content",
+      "subtitleLine2": "Tell us the song and the mood; we reply with a plan and a quote.",
+      "location": "Directions",
+      "inquiry": "Ask about your video"
     }
   },
   "releaseProject": {

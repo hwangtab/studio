@@ -26,6 +26,7 @@
     "weddingSong": "To'y qo'shig'i",
     "voiceActing": "Ovoz yozish",
     "coverVideo": "Cover video suratga olish",
+    "musicVideo": "Klip ishlab chiqarish",
     "compositionArrangement": "Kompozitsiya va aranjirovka",
     "musicPromotion": "Reliz press-kampaniyasi",
     "crowdfundingDesign": "Crowdfunding dizayni",
@@ -2595,6 +2596,182 @@
         "action": "KakaoTalk orqali so‘rash"
       },
       "contact": "Bog‘lanish"
+    }
+  },
+  "musicVideo": {
+    "seo": {
+      "title": "Klip va jonli video suratga olish {{from}} dan | Studio NOL",
+      "description": "Haebang Film rejissyori Chichi suratga oladigan kliplar, jonli kliplar va YouTube suhbat/intervyu videolari. {{from}} dan; kameralar, vaqt va joy maslahatda kelishiladi. Yozish va miks Seuldagi bir joyda.",
+      "keywords": "klip ishlab chiqarish Seul, jonli video, konsert videosi, YouTube video, Haebang Film"
+    },
+    "hero": {
+      "title": "Kliplar va jonli videolar",
+      "subtitleLine1": "Haebang Film rejissyori Chichi — g'oyadan yakuniy montajgacha",
+      "subtitleLine2": "Kliplar, jonli kliplar va YouTube kontenti {{from}} dan",
+      "alt": "Mariko & Yukie “Namsan Tower Lights” klipidagi sahna ko'rinishi",
+      "seeWorks": "Ishlarni ko'rish"
+    },
+    "quickAnswers": {
+      "title": "Video ishlab chiqarish qisqacha",
+      "subtitle": "Eng ko'p beriladigan uchta savol.",
+      "items": [
+        {
+          "q": "Narxi qancha?",
+          "a": "Kliplar va jonli kliplar / YouTube videolari {{from}} dan (QQS bilan). Narx kameralar, vaqt va joyga bog'liq; narxni oldindan aytamiz."
+        },
+        {
+          "q": "Kim suratga oladi?",
+          "a": "Haebang Film rejissyori Chichi g'oya, suratga olish, montaj va rang tuzatishni bajaradi. Quyidagi barcha videolarni Chichi suratga olgan."
+        },
+        {
+          "q": "Qanday boshlayman?",
+          "a": "Qo'shiq (yoki g'oya), kayfiyat va sanalarni yuboring. Suratga olish rejasi va narx bilan javob beramiz."
+        }
+      ]
+    },
+    "portfolio": {
+      "title": "Ishlar",
+      "subtitle": "Haebang Film rejissyori Chichi suratga olgan kliplar, jonli kliplar va YouTube kontenti. Ko'rish uchun bosing.",
+      "kinds": {
+        "all": "Barchasi",
+        "music-video": "Kliplar",
+        "live": "Jonli kliplar",
+        "youtube": "YouTube kontenti"
+      },
+      "play": "Videoni ijro etish: {{name}}"
+    },
+    "services": {
+      "title": "Nimalarni suratga olamiz",
+      "items": [
+        {
+          "title": "Kliplar",
+          "description": "G'oyani birga belgilab, studiya, sahna yoki ochiq lokatsiyada suratga olamiz — rejissura, montaj, rang va matn subtitrlari bir joyda."
+        },
+        {
+          "title": "Jonli kliplar va konsertlar",
+          "description": "Konsert, studiya jonli seanslari va shoukeyslarni bir nechta kamera bilan yozamiz. Jonli ovozni Studio NOL yozib, miks qilishi mumkin."
+        },
+        {
+          "title": "YouTube kontenti",
+          "description": "Kanalingiz uchun suhbat, intervyu va sahna ortidagi videolar, ko'p qismli seriyalar ham."
+        }
+      ]
+    },
+    "director": {
+      "title": "Haebang Film rejissyori Chichi suratga oladi",
+      "body": "Haebang Film rejissyori Chichi suratga olishni boshqaradi: lokatsiyadagi kliplar, konsertlar va ko'p qismli YouTube suhbat seriyalari — yuqoridagi videolar natijasi.",
+      "points": [
+        "G'oya va storyboarddan montaj va rang tuzatishgacha bitta rejissyor",
+        "Qo'shiq va byudjetga mos kameralar — bittadan multikameragacha",
+        "Ovoz Studio NOL da — yozish, miks va mastering bir joyda",
+        "Joylanadigan platformaga (YouTube, Instagram va b.) mos kadr nisbati"
+      ],
+      "imageAlt": "“Namsan Tower Lights” klipidan bir sahna"
+    },
+    "pricing": {
+      "title": "Video ishlab chiqarish narxi",
+      "subtitle": "Ikkalasi ham {{from}} dan. Aniq narxni suratga olish rejasi kelishilgach aytamiz.",
+      "factorsTitle": "Narxni nima belgilaydi",
+      "factors": [
+        {
+          "label": "Kameralar soni",
+          "detail": "Bitta qo'zg'almas kameradan multikameragacha; bir dublda olinadigan chiqish va raqslar uchun ko'proq."
+        },
+        {
+          "label": "Vaqt va qismlar",
+          "detail": "Yarim kun, bir kun yoki bir necha kun; seriyada qismlar soni."
+        },
+        {
+          "label": "Joy",
+          "detail": "Studio NOL, sahna yoki ochiq havo. Joy ijarasi haqiqiy narxda qo'shiladi."
+        },
+        {
+          "label": "Ishlab chiqarish ko'lami",
+          "detail": "Aktyorlar, rekvizit, kostyum va yoritish ko'paysa tayyorgarlik ham ko'payadi."
+        },
+        {
+          "label": "Montaj hajmi",
+          "detail": "Kesish, rang tuzatish va subtitrlar asosiy. Grafika, effektlar yoki qisqa qayta montaj alohida kelishiladi."
+        }
+      ],
+      "prepTitle": "Tezroq narx uchun yuboring",
+      "prepItems": [
+        "Qo'shiq (havola) yoki kontent tavsifi",
+        "Namuna videolar havolalari",
+        "Kerakli sana, joy va video joylanadigan platforma"
+      ],
+      "coverNote": "Studiyada faqat bitta qo'shiq kover videosi kerakmi? Cover Video paketi ({{cover}}) suratga olish, oddiy miks va montajni o'z ichiga oladi."
+    },
+    "tierBar": {
+      "message": "Qo'shiq va kayfiyatni ayting. Reja va narx bilan javob beramiz.",
+      "action": "Narx so'rash",
+      "contact": "Bog'lanish"
+    },
+    "process": {
+      "title": "Jarayon",
+      "subtitle": "Birinchi xabardan topshirishgacha 4 qadam",
+      "steps": [
+        {
+          "title": "Maslahat",
+          "description": "Qo'shiq yoki kontent, kayfiyat va sanalarni yuboring; variantlar va taxminiy narx bilan javob beramiz."
+        },
+        {
+          "title": "Reja va narx",
+          "description": "Rejissyor Chichi bilan g'oya, storyboard, joy va kameralarni kelishib, narxni tasdiqlaymiz."
+        },
+        {
+          "title": "Suratga olish",
+          "description": "Kelishilgan kuni studiya, sahna yoki lokatsiyada suratga olamiz; kerak bo'lsa jonli ovozni yozamiz."
+        },
+        {
+          "title": "Montaj va topshirish",
+          "description": "Montaj, rang va subtitrlar, ko'rib chiqish uchun dastlabki variant, tuzatishlardan so'ng yakuniy video."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Ko'p so'raladigan savollar",
+      "subtitle": "Tez-tez beriladigan savollar.",
+      "items": [
+        {
+          "q": "{{from}} ga nimalar kiradi?",
+          "a": "G'oya maslahati, suratga olish, montaj, rang tuzatish va subtitrlar. Kameralar va vaqt qo'shiq va byudjetga mos belgilanadi; ko'lam kattalashsa narx oshadi."
+        },
+        {
+          "q": "Joy ijarasi va aktyor haqi kiradimi?",
+          "a": "Yo'q. Joy ijarasi, aktyorlar va stilist xarajatlari haqiqiy narxda alohida."
+        },
+        {
+          "q": "Necha marta tuzatish va qachon topshiriladi?",
+          "a": "Video uzunligi va montaj hajmiga qarab narx bilan birga kelishiladi."
+        },
+        {
+          "q": "YouTube suhbat va intervyularini ham suratga olasizmi?",
+          "a": "Ha, musiqiy videolardan tashqari, ko'p qismli seriyalar ham."
+        },
+        {
+          "q": "Ovozni ham yozib, miks qilasizmi?",
+          "a": "Ha, Studio NOL da. Jonli kliplarda suratga olish paytida ovozni yozib miks qilamiz (ovoz ishi alohida)."
+        },
+        {
+          "q": "Seuldan tashqarida yoki ochiq havoda suratga olasizmi?",
+          "a": "Ha, joy kelishiladi. Uzoq joylar uchun yo'l va turar joy xarajati qo'shilishi mumkin."
+        },
+        {
+          "q": "To'lov qanday?",
+          "a": "Narx tasdiqlangach, karta to'lov havolasi yoki bank o'tkazmasi orqali."
+        }
+      ]
+    },
+    "relatedStoriesTitle": "Video ishlab chiqarish qo'llanmalari",
+    "relatedStoriesSubtitle": "Klip rejasidan YouTube kanalini yuritishgacha.",
+    "cta": {
+      "titleLine1": "Musiqangizni videoga aylantiring,",
+      "titleHighlight": "avval bizga yozing",
+      "subtitleLine1": "Kliplar · jonli kliplar · YouTube kontenti",
+      "subtitleLine2": "Qo'shiq va kayfiyatni ayting; reja va narx bilan javob beramiz.",
+      "location": "Yo'l ko'rsatma",
+      "inquiry": "Video haqida so'rash"
     }
   },
   "releaseProject": {

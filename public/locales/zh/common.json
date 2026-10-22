@@ -26,6 +26,7 @@
     "weddingSong": "婚礼祝歌录音",
     "voiceActing": "配音录音",
     "coverVideo": "翻唱视频拍摄",
+    "musicVideo": "MV·视频制作",
     "compositionArrangement": "作曲·编曲委托",
     "musicPromotion": "音乐发行宣传",
     "crowdfundingDesign": "众筹设计代理",
@@ -2595,6 +2596,182 @@
         "action": "通过KakaoTalk咨询"
       },
       "contact": "联系我们"
+    }
+  },
+  "musicVideo": {
+    "seo": {
+      "title": "MV·现场视频拍摄 {{from}}起 | Studio NOL",
+      "description": "由解放电影（Haebang Film）Chichi导演拍摄的MV、现场片段、YouTube访谈视频。{{from}}起，机位、时长和地点通过咨询商定。录音·混音也在首尔同一处完成。",
+      "keywords": "MV制作, 首尔MV拍摄, 现场视频拍摄, 演出视频, YouTube视频拍摄, 采访视频, Haebang Film"
+    },
+    "hero": {
+      "title": "MV·现场视频制作",
+      "subtitleLine1": "解放电影Chichi导演从策划到剪辑全程负责",
+      "subtitleLine2": "MV·现场片段·YouTube内容 {{from}}起",
+      "alt": "Mariko & Yukie《南山塔》MV中的演出场景",
+      "seeWorks": "观看作品"
+    },
+    "quickAnswers": {
+      "title": "视频制作一览",
+      "subtitle": "最常被问到的三个问题。",
+      "items": [
+        {
+          "q": "费用是多少？",
+          "a": "MV与现场片段/YouTube视频均为{{from}}起（含增值税）。报价取决于机位、拍摄时长和地点，咨询时会先告知金额。"
+        },
+        {
+          "q": "由谁拍摄？",
+          "a": "解放电影的Chichi导演负责从概念到拍摄、剪辑、调色。下方作品均由Chichi导演拍摄。"
+        },
+        {
+          "q": "如何开始？",
+          "a": "请告诉我们歌曲（或内容）、想要的氛围和日期，我们会整理拍摄方案和报价回复您。"
+        }
+      ]
+    },
+    "portfolio": {
+      "title": "作品",
+      "subtitle": "解放电影Chichi导演拍摄的MV、现场片段与YouTube内容。点击即可播放。",
+      "kinds": {
+        "all": "全部",
+        "music-video": "MV",
+        "live": "现场片段",
+        "youtube": "YouTube内容"
+      },
+      "play": "播放视频：{{name}}"
+    },
+    "services": {
+      "title": "我们拍摄的视频",
+      "items": [
+        {
+          "title": "MV",
+          "description": "与您一起确定概念，在录音室、演出场地或户外取景拍摄，导演、剪辑、调色、歌词字幕一次完成。"
+        },
+        {
+          "title": "现场片段·演出视频",
+          "description": "用多台摄像机记录演出、录音室现场和展演。现场音源的录音与混音也可在Studio NOL完成。"
+        },
+        {
+          "title": "YouTube内容",
+          "description": "访谈、采访、幕后等频道内容，也可策划多集系列。"
+        }
+      ]
+    },
+    "director": {
+      "title": "拍摄：解放电影 Chichi导演",
+      "body": "解放电影的Chichi导演负责拍摄。外景MV、演出实况、多集YouTube访谈系列——上方作品就是成果。",
+      "points": [
+        "从概念·分镜到拍摄、剪辑、调色由同一位导演负责",
+        "按歌曲与预算配置机位——从1台到多机位",
+        "音源由Studio NOL完成——录音·混音·母带在同一处",
+        "按发布平台（YouTube、Instagram等）规划画面比例"
+      ],
+      "imageAlt": "《南山塔》MV中的一个场景"
+    },
+    "pricing": {
+      "title": "视频制作费用",
+      "subtitle": "两项均为{{from}}起。确定拍摄方案后告知准确报价。",
+      "factorsTitle": "报价由这些因素决定",
+      "factors": [
+        {
+          "label": "机位数量",
+          "detail": "从1台固定机位到多机位。需要一次拍下的演出、舞蹈越多，机位越多。"
+        },
+        {
+          "label": "拍摄时长·集数",
+          "detail": "半天、一天或多天；系列则按集数而定。"
+        },
+        {
+          "label": "地点",
+          "detail": "Studio NOL、演出场地或户外。需租赁的场地按实费另计。"
+        },
+        {
+          "label": "制作规模",
+          "detail": "演员、道具、服装、灯光越多，准备越多。"
+        },
+        {
+          "label": "剪辑范围",
+          "detail": "剪辑、调色、字幕为基本。图形特效、短视频再剪辑等另行商定。"
+        }
+      ],
+      "prepTitle": "咨询时提供这些，报价更快",
+      "prepItems": [
+        "歌曲（音源链接）或内容说明",
+        "参考视频链接",
+        "希望的日期·地点及发布平台"
+      ],
+      "coverNote": "若只需在录音室拍一首翻唱视频，可选择包含拍摄·基础混音·剪辑的翻唱视频套餐（{{cover}}）。"
+    },
+    "tierBar": {
+      "message": "告诉我们歌曲和氛围，我们整理拍摄方案和报价回复。",
+      "action": "询问报价",
+      "contact": "联系我们"
+    },
+    "process": {
+      "title": "进行流程",
+      "subtitle": "从咨询到交付共4步",
+      "steps": [
+        {
+          "title": "咨询",
+          "description": "告诉我们歌曲·内容、氛围、日期，我们回复可行方案和大致费用。"
+        },
+        {
+          "title": "策划·确认报价",
+          "description": "与Chichi导演确定概念·分镜、地点、机位后确认报价。"
+        },
+        {
+          "title": "拍摄",
+          "description": "在约定日期于录音室·演出场地·外景拍摄，需要时同步录制现场音源。"
+        },
+        {
+          "title": "剪辑·交付",
+          "description": "经剪辑·调色·字幕后提供初剪，按修改意见完成最终视频。"
+        }
+      ]
+    },
+    "faq": {
+      "title": "视频制作FAQ",
+      "subtitle": "常见问题。",
+      "items": [
+        {
+          "q": "{{from}}包含哪些？",
+          "a": "概念咨询、拍摄、剪辑·调色·字幕为基本。机位与时长按歌曲和预算商定，规模越大报价越高。"
+        },
+        {
+          "q": "场地租赁费、演员费包含吗？",
+          "a": "不包含。演出场地·外景租赁费、演员·造型师费用按实费另计。"
+        },
+        {
+          "q": "可以修改几次？何时交付？",
+          "a": "修改次数与交付日期根据视频长度和剪辑范围在报价时商定。"
+        },
+        {
+          "q": "也拍YouTube访谈吗？",
+          "a": "是的，除音乐视频外也拍访谈、采访、幕后等频道内容，可做多集系列。"
+        },
+        {
+          "q": "可以一起做录音·混音吗？",
+          "a": "可以。在Studio NOL录音·混音·母带后用于视频。现场片段可在拍摄时录制并混音现场音源（音源费用另计）。"
+        },
+        {
+          "q": "首尔以外或户外也拍吗？",
+          "a": "可以，地点协商。距离较远时可能另加交通·住宿等实费。"
+        },
+        {
+          "q": "如何付款？",
+          "a": "报价确认后，通过刷卡支付链接或银行转账付款。"
+        }
+      ]
+    },
+    "relatedStoriesTitle": "视频制作指南",
+    "relatedStoriesSubtitle": "从MV策划到YouTube频道运营。",
+    "cta": {
+      "titleLine1": "把音乐变成影像，",
+      "titleHighlight": "先发消息问问吧",
+      "subtitleLine1": "MV · 现场片段 · YouTube内容",
+      "subtitleLine2": "告诉我们歌曲和氛围，我们回复方案和报价。",
+      "location": "交通指南",
+      "inquiry": "咨询视频拍摄"
     }
   },
   "releaseProject": {

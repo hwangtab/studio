@@ -26,6 +26,7 @@
     "weddingSong": "Thu Âm Bài Chúc",
     "voiceActing": "Lồng Tiếng",
     "coverVideo": "Quay Video Cover",
+    "musicVideo": "Sản xuất MV",
     "compositionArrangement": "Sáng tác & Hòa âm",
     "musicPromotion": "Quảng bá phát hành",
     "crowdfundingDesign": "Thiết kế crowdfunding",
@@ -2595,6 +2596,182 @@
         "action": "Hỏi qua KakaoTalk"
       },
       "contact": "Liên hệ"
+    }
+  },
+  "musicVideo": {
+    "seo": {
+      "title": "Quay MV & video live từ {{from}} | Studio NOL",
+      "description": "MV, clip live, video talk & phỏng vấn YouTube do đạo diễn Chichi (Haebang Film) quay. Từ {{from}}; số máy quay, thời gian và địa điểm được thỏa thuận khi tư vấn. Thu âm và mix tại cùng một nơi ở Seoul.",
+      "keywords": "sản xuất MV Seoul, quay video live, video concert, quay video YouTube, Haebang Film"
+    },
+    "hero": {
+      "title": "Sản xuất MV & video live",
+      "subtitleLine1": "Đạo diễn Chichi (Haebang Film) từ ý tưởng đến bản dựng cuối",
+      "subtitleLine2": "MV, clip live & nội dung YouTube từ {{from}}",
+      "alt": "Cảnh sân khấu trong MV “Namsan Tower Lights” của Mariko & Yukie",
+      "seeWorks": "Xem tác phẩm"
+    },
+    "quickAnswers": {
+      "title": "Tóm tắt sản xuất video",
+      "subtitle": "Ba câu hỏi thường gặp nhất.",
+      "items": [
+        {
+          "q": "Chi phí bao nhiêu?",
+          "a": "MV và clip live / video YouTube đều từ {{from}} (đã gồm VAT). Báo giá tùy số máy quay, thời gian và địa điểm, và chúng tôi báo giá trước."
+        },
+        {
+          "q": "Ai quay?",
+          "a": "Đạo diễn Chichi của Haebang Film phụ trách từ ý tưởng, quay, dựng đến chỉnh màu. Tất cả video bên dưới do Chichi quay."
+        },
+        {
+          "q": "Bắt đầu thế nào?",
+          "a": "Gửi bài hát (hoặc ý tưởng), không khí mong muốn và ngày. Chúng tôi trả lời với kế hoạch quay và báo giá."
+        }
+      ]
+    },
+    "portfolio": {
+      "title": "Tác phẩm",
+      "subtitle": "MV, clip live và nội dung YouTube do đạo diễn Chichi (Haebang Film) quay. Nhấn để xem.",
+      "kinds": {
+        "all": "Tất cả",
+        "music-video": "MV",
+        "live": "Clip live",
+        "youtube": "Nội dung YouTube"
+      },
+      "play": "Phát video: {{name}}"
+    },
+    "services": {
+      "title": "Chúng tôi quay gì",
+      "items": [
+        {
+          "title": "MV",
+          "description": "Cùng bạn xây dựng ý tưởng và quay tại studio, sân khấu hoặc ngoại cảnh — đạo diễn, dựng, chỉnh màu, phụ đề lời trọn gói."
+        },
+        {
+          "title": "Clip live & video biểu diễn",
+          "description": "Ghi lại buổi diễn, live session và showcase bằng nhiều máy quay. Studio NOL cũng có thể thu và mix âm thanh live."
+        },
+        {
+          "title": "Nội dung YouTube",
+          "description": "Talk, phỏng vấn, hậu trường cho kênh của bạn, kể cả series nhiều tập."
+        }
+      ]
+    },
+    "director": {
+      "title": "Quay bởi đạo diễn Chichi (Haebang Film)",
+      "body": "Đạo diễn Chichi của Haebang Film phụ trách quay: MV ngoại cảnh, video biểu diễn và series talk YouTube nhiều tập — các video bên trên là kết quả.",
+      "points": [
+        "Một đạo diễn từ ý tưởng, storyboard đến quay, dựng, chỉnh màu",
+        "Số máy quay theo bài hát và ngân sách — từ 1 máy đến multi-cam",
+        "Âm thanh do Studio NOL — thu, mix, master tại cùng một nơi",
+        "Tỷ lệ khung hình theo nơi đăng (YouTube, Instagram…)"
+      ],
+      "imageAlt": "Một cảnh trong MV “Namsan Tower Lights”"
+    },
+    "pricing": {
+      "title": "Chi phí sản xuất video",
+      "subtitle": "Cả hai đều từ {{from}}. Giá chính xác được báo sau khi chốt kế hoạch quay.",
+      "factorsTitle": "Báo giá phụ thuộc vào",
+      "factors": [
+        {
+          "label": "Số máy quay",
+          "detail": "Từ 1 máy cố định đến multi-cam; nhiều hơn với biểu diễn, vũ đạo cần quay một lần."
+        },
+        {
+          "label": "Thời gian & số tập",
+          "detail": "Nửa ngày, một ngày hay nhiều ngày; series theo số tập."
+        },
+        {
+          "label": "Địa điểm",
+          "detail": "Studio NOL, sân khấu hoặc ngoại cảnh. Phí thuê địa điểm tính theo thực chi."
+        },
+        {
+          "label": "Quy mô dàn dựng",
+          "detail": "Càng nhiều diễn viên, đạo cụ, trang phục, ánh sáng thì càng nhiều chuẩn bị."
+        },
+        {
+          "label": "Phạm vi dựng",
+          "detail": "Cắt dựng, chỉnh màu, phụ đề là cơ bản. Đồ họa, hiệu ứng, dựng lại bản ngắn thỏa thuận riêng."
+        }
+      ],
+      "prepTitle": "Gửi những điều này để báo giá nhanh hơn",
+      "prepItems": [
+        "Bài hát (link) hoặc mô tả nội dung",
+        "Video tham khảo",
+        "Ngày, địa điểm mong muốn và nơi sẽ đăng video"
+      ],
+      "coverNote": "Chỉ cần video cover 1 bài trong studio? Gói Cover Video ({{cover}}) gồm quay, mix cơ bản và dựng."
+    },
+    "tierBar": {
+      "message": "Cho chúng tôi biết bài hát và không khí. Chúng tôi trả lời với kế hoạch và báo giá.",
+      "action": "Hỏi báo giá",
+      "contact": "Liên hệ"
+    },
+    "process": {
+      "title": "Quy trình",
+      "subtitle": "4 bước từ tin nhắn đầu tiên đến bàn giao",
+      "steps": [
+        {
+          "title": "Tư vấn",
+          "description": "Gửi bài hát/nội dung, không khí, ngày; chúng tôi trả lời phương án và chi phí sơ bộ."
+        },
+        {
+          "title": "Kế hoạch & báo giá",
+          "description": "Chốt ý tưởng, storyboard, địa điểm, máy quay với đạo diễn Chichi rồi xác nhận báo giá."
+        },
+        {
+          "title": "Quay",
+          "description": "Quay vào ngày đã hẹn tại studio, sân khấu hoặc ngoại cảnh; thu âm live nếu cần."
+        },
+        {
+          "title": "Dựng & bàn giao",
+          "description": "Dựng, chỉnh màu, phụ đề, gửi bản nháp để xem, rồi giao bản cuối sau chỉnh sửa."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Câu hỏi thường gặp",
+      "subtitle": "Những thắc mắc phổ biến.",
+      "items": [
+        {
+          "q": "{{from}} bao gồm những gì?",
+          "a": "Tư vấn ý tưởng, quay, dựng, chỉnh màu và phụ đề. Số máy quay và thời gian theo bài hát và ngân sách; quy mô lớn hơn thì giá cao hơn."
+        },
+        {
+          "q": "Có gồm phí thuê địa điểm, diễn viên không?",
+          "a": "Không. Phí thuê địa điểm, diễn viên, stylist tính theo thực chi."
+        },
+        {
+          "q": "Chỉnh sửa mấy lần, khi nào nhận?",
+          "a": "Thỏa thuận cùng báo giá, tùy độ dài và phạm vi dựng."
+        },
+        {
+          "q": "Có quay talk, phỏng vấn YouTube không?",
+          "a": "Có, ngoài video âm nhạc, kể cả series nhiều tập."
+        },
+        {
+          "q": "Có thu âm và mix luôn không?",
+          "a": "Có, tại Studio NOL. Với clip live có thể thu và mix âm thanh khi quay (phí âm thanh riêng)."
+        },
+        {
+          "q": "Có quay ngoài Seoul hay ngoài trời không?",
+          "a": "Có, địa điểm thỏa thuận. Nơi xa có thể cộng chi phí đi lại, lưu trú."
+        },
+        {
+          "q": "Thanh toán thế nào?",
+          "a": "Sau khi chốt báo giá, qua link thanh toán thẻ hoặc chuyển khoản."
+        }
+      ]
+    },
+    "relatedStoriesTitle": "Hướng dẫn sản xuất video",
+    "relatedStoriesSubtitle": "Từ lên kế hoạch MV đến vận hành kênh YouTube.",
+    "cta": {
+      "titleLine1": "Biến âm nhạc thành video,",
+      "titleHighlight": "hãy nhắn cho chúng tôi trước",
+      "subtitleLine1": "MV · clip live · nội dung YouTube",
+      "subtitleLine2": "Cho biết bài hát và không khí; chúng tôi trả lời kế hoạch và báo giá.",
+      "location": "Chỉ đường",
+      "inquiry": "Hỏi về video của bạn"
     }
   },
   "releaseProject": {
