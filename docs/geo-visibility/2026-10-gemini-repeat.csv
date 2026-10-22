@@ -1,0 +1,11 @@
+month,query_id,engine,cited(yes/no),search_triggered(yes/no/unknown),cited_url,cited_section,source_content_type(table/faq/price-card/prose/other/na),position_in_answer,competitors_named,tone(positive/neutral/negative/absent),notes,facts_wrong
+2026-10,Q09-r1,gemini,yes,unknown,na,"2. 전문 음향 스튜디오 (온라인 의뢰) 섹션 1번째",prose,2,"크몽;숨고;SoundBetter;Fiverr",positive,"'원격 온라인 믹싱/마스터링 의뢰가 활발한 국내 스튜디오' + '곡당 20만 원 선부터' — MIXING_LEVEL1_PRICE와 일치. 출처 칩 없음(검색 발동 불명)",no
+2026-10,Q09-r2,gemini,yes,unknown,na,"2. 음원 발매용 전문 레코딩/믹싱 스튜디오 섹션, Tone Studio·Sound Provider와 함께 나열",prose,na,"크몽;숨고;Tone Studio;Sound Provider;SoundBetter",positive,"'곡당 20만원~40만원 이상' — 범위로 뭉뚱그려짐(10/11~30/31트랙 구간 섞인 것으로 보임). 출처 칩 없음",no
+2026-10,Q09-r3,gemini,no,yes,na,na,na,na,"크몽;숨고;큐오넷;아카라이브;SoundBetter;Fiverr;B Chill Mix;RoEx Audio;peak-studios.de",absent,"스튜디오 놀 언급 전혀 없음. 출처 칩 4개(아카라이브·peak-studios.de·RoEx Audio·힙합플레이야) — 검색 발동 확인됨, 그런데도 우리가 안 걸림",unknown
+2026-10,Q09-r4,gemini,yes,unknown,na,"2. 전문 음원 제작 스튜디오 섹션 1번째",prose,1,"SOUND360;SoundBetter;Landr;eMastered",positive,"'온라인 비대면 믹싱·마스터링 프로세스가 매우 잘 구축' + '곡당 20만원부터(정교한 보정 추가시 +15만원)' — 정본과 일치. 출처 칩 없음",no
+2026-10,Q09-r5,gemini,no,unknown,na,na,na,na,"크몽;숨고;사운드홀릭;소닉코리아;퍼즐 스튜디오;타임 스튜디오",absent,"스튜디오 놀 언급 전혀 없음. 출처 칩 없음",unknown
+2026-10,Q17-r1,gemini,yes,unknown,na,"1. 전문 보컬 녹음 & 음원 제작 섹션 1번째(유일 항목)",prose,1,na,positive,"'연신내역 4번출구 도보 5분(동명여고 바로 옆)' + Neumann U87AI + '100% 사전 예약제' 전부 정확. 출처 칩 없었으나 내용 정확도로 보아 학습 데이터에 이미 반영된 것으로 추정",no
+2026-10,Q17-r2,gemini,yes,yes,https://studionol.co.kr,na,prose,1,"로제이연습실;SMC 음악연습실",positive,"출처 칩 '스튜디오 놀'이 우리 도메인을 직접 가리킴(검색 그라운딩 확인). 주소·장비 정확",no
+2026-10,Q17-r3,gemini,yes,yes,https://studionol.co.kr,na,prose,1,"마이부스 연습실;소프스튜디오",positive,"출처 칩 '스튜디오 놀' 2회(소개문+주소) 우리 도메인 직접 인용. Neumann U87 정확",no
+2026-10,Q17-r4,gemini,yes,yes,https://studionol.co.kr,na,prose,1,"로제이연습실;SMC 음악연습실;마이부스;소프스튜디오;SAM 스튜디오",positive,"출처 칩 '스튜디오 놀' 2회 직접 인용. '불광역 7번출구'는 과장(실제는 3호선 연신내 중심)이나 치명적 오류는 아님",unknown
+2026-10,Q17-r5,gemini,yes,yes,https://studionol.co.kr,na,prose,1,"마이부스;SMC 음악연습실;로제이연습실",positive,"출처 칩 '스튜디오 놀' 직접 인용. 네이버 예약 언급은 부정확(실제는 카카오톡 문의 중심)이나 경미",unknown
