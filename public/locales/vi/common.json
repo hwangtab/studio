@@ -2605,14 +2605,14 @@
   },
   "musicVideo": {
     "seo": {
-      "title": "Quay MV & video live từ {{from}} | Studio NOL",
-      "description": "MV, clip live, video talk & phỏng vấn YouTube do đạo diễn Chichi (Haebang Film) quay. Từ {{from}}; số máy quay, thời gian và địa điểm được thỏa thuận khi tư vấn. Thu âm và mix tại cùng một nơi ở Seoul.",
+      "title": "MV từ {{mv}} · video live từ {{live}} | Studio NOL",
+      "description": "MV (từ {{mv}}) và clip live, video talk & phỏng vấn YouTube (từ {{live}}) do đạo diễn Chichi (Haebang Film) phụ trách ý tưởng, quay và dựng. Số máy quay, thời gian và địa điểm được thỏa thuận khi tư vấn.",
       "keywords": "sản xuất MV Seoul, quay video live, video concert, quay video YouTube, Haebang Film"
     },
     "hero": {
       "title": "Sản xuất MV & video live",
-      "subtitleLine1": "Đạo diễn Chichi (Haebang Film) từ ý tưởng đến bản dựng cuối",
-      "subtitleLine2": "MV, clip live & nội dung YouTube từ {{from}}",
+      "subtitleLine1": "Đạo diễn Chichi (Haebang Film) — ý tưởng, quay và dựng",
+      "subtitleLine2": "MV từ {{mv}} · video live & YouTube từ {{live}}",
       "alt": "Cảnh sân khấu trong MV “Namsan Tower Lights” của Mariko & Yukie",
       "seeWorks": "Xem tác phẩm"
     },
@@ -2622,11 +2622,11 @@
       "items": [
         {
           "q": "Chi phí bao nhiêu?",
-          "a": "MV và clip live / video YouTube đều từ {{from}} (đã gồm VAT). Báo giá tùy số máy quay, thời gian và địa điểm, và chúng tôi báo giá trước."
+          "a": "MV từ {{mv}}, clip live và video YouTube từ {{live}} (đã gồm VAT). Báo giá tùy số máy quay, thời gian và địa điểm, và chúng tôi báo giá trước."
         },
         {
-          "q": "Ai quay?",
-          "a": "Đạo diễn Chichi của Haebang Film phụ trách từ ý tưởng, quay, dựng đến chỉnh màu. Tất cả video bên dưới do Chichi quay."
+          "q": "Ai thực hiện?",
+          "a": "Đạo diễn Chichi của Haebang Film phụ trách toàn bộ: ý tưởng, quay, dựng và chỉnh màu. Tất cả video bên dưới là tác phẩm của Chichi."
         },
         {
           "q": "Bắt đầu thế nào?",
@@ -2636,7 +2636,7 @@
     },
     "portfolio": {
       "title": "Tác phẩm",
-      "subtitle": "MV, clip live và nội dung YouTube do đạo diễn Chichi (Haebang Film) quay. Nhấn để xem.",
+      "subtitle": "MV, clip live và nội dung YouTube do đạo diễn Chichi (Haebang Film) lên ý tưởng, quay và dựng. Nhấn để xem.",
       "kinds": {
         "all": "Tất cả",
         "music-video": "MV",
@@ -2663,8 +2663,8 @@
       ]
     },
     "director": {
-      "title": "Quay bởi đạo diễn Chichi (Haebang Film)",
-      "body": "Đạo diễn Chichi của Haebang Film phụ trách quay: MV ngoại cảnh, video biểu diễn và series talk YouTube nhiều tập — các video bên trên là kết quả.",
+      "title": "Ý tưởng, quay & dựng: đạo diễn Chichi",
+      "body": "Đạo diễn Chichi của Haebang Film thực hiện mỗi video từ ý tưởng đến quay, dựng và chỉnh màu: MV ngoại cảnh, video biểu diễn và series talk YouTube nhiều tập — các video bên trên là kết quả.",
       "points": [
         "Một đạo diễn từ ý tưởng, storyboard đến quay, dựng, chỉnh màu",
         "Số máy quay theo bài hát và ngân sách — từ 1 máy đến multi-cam",
@@ -2675,7 +2675,7 @@
     },
     "pricing": {
       "title": "Chi phí sản xuất video",
-      "subtitle": "Cả hai đều từ {{from}}. Giá chính xác được báo sau khi chốt kế hoạch quay.",
+      "subtitle": "MV từ {{mv}}, clip live và video YouTube từ {{live}}. Giá chính xác được báo sau khi chốt kế hoạch quay.",
       "factorsTitle": "Báo giá phụ thuộc vào",
       "factors": [
         {
@@ -2739,7 +2739,7 @@
       "subtitle": "Những thắc mắc phổ biến.",
       "items": [
         {
-          "q": "{{from}} bao gồm những gì?",
+          "q": "Giá khởi điểm bao gồm những gì?",
           "a": "Tư vấn ý tưởng, quay, dựng, chỉnh màu và phụ đề. Số máy quay và thời gian theo bài hát và ngân sách; quy mô lớn hơn thì giá cao hơn."
         },
         {

@@ -46,9 +46,10 @@ export const COVER_VIDEO_PACKAGE_PRICE = 350000;
 /** 커버 영상 올인원 + 정교한 보컬 튜닝(곡당 옵션). 올인원은 1곡 기준이라 합계 그대로 한 상품이다. */
 export const COVER_VIDEO_TUNING_PACKAGE_PRICE = COVER_VIDEO_PACKAGE_PRICE + VOCAL_TUNING_ADDON_PRICE;
 export const RENTAL_HOURLY_PRICE = 100000; // 촬영 대관
-// 영상 제작(/music-video) — 해방필름 치치 감독 촬영. 둘 다 "부터"(하한)이고 카메라 대수·촬영 시간·장소는
-// 상담으로 정한다(운영자 결정 2026-10-22). 온라인 결제 상품이 아니다 — 카카오 상담 → 견적 → 맞춤 결제 링크.
-export const MUSIC_VIDEO_FROM_PRICE = 500000;
+// 영상 제작(/music-video) — 해방필름 치치 감독이 콘셉트·촬영·편집까지 맡는다. 둘 다 "부터"(하한)이고 카메라 대수·
+// 촬영 시간·장소는 상담으로 정한다(운영자 결정 2026-10-22). 온라인 결제 상품이 아니다 — 카카오 상담 → 견적 → 맞춤 결제 링크.
+// 뮤직비디오 하한은 같은 날 운영자 결정으로 50만에서 100만으로 올렸다(라이브·유튜브는 50만 그대로).
+export const MUSIC_VIDEO_FROM_PRICE = 1000000;
 // 라이브 클립·유튜브 콘텐츠(토크·인터뷰) 촬영.
 export const LIVE_VIDEO_FROM_PRICE = 500000;
 
@@ -930,7 +931,7 @@ export const getPricingData = (locale: Locale) => {
       id: 'package-music-video',
       title: t(locale, { ko: '뮤직비디오 제작', en: 'Music Video Production', zh: 'MV制作', es: 'Producción de videoclip', vi: 'Sản xuất MV', th: 'ผลิตมิวสิกวิดีโอ', uz: 'Klip (MV) ishlab chiqarish' }),
       subtitle: t(locale, { ko: '기획·촬영·편집, 장소·규모 협의', en: 'Concept, filming & edit — scope agreed together', zh: '策划·拍摄·剪辑，地点与规模协商', es: 'Concepto, rodaje y edición — alcance a convenir', vi: 'Ý tưởng, quay, dựng — quy mô thỏa thuận', th: 'วางคอนเซปต์ ถ่ายทำ ตัดต่อ — ขอบเขตตกลงกัน', uz: 'Konsepsiya, suratga olish, montaj — hajm kelishiladi' }),
-      priceDisplay: t(locale, { ko: '500,000원~', en: 'From ₩500,000', zh: '₩500,000起', es: 'Desde ₩500,000', vi: 'Từ ₩500,000', th: 'เริ่มต้น ₩500,000', uz: '₩500,000 dan' }),
+      priceDisplay: t(locale, { ko: '1,000,000원~', en: 'From ₩1,000,000', zh: '₩1,000,000起', es: 'Desde ₩1,000,000', vi: 'Từ ₩1,000,000', th: 'เริ่มต้น ₩1,000,000', uz: '₩1,000,000 dan' }),
       priceValue: MUSIC_VIDEO_FROM_PRICE,
       unit: t(locale, { ko: '/ 1곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo\'shiq' }),
       description: t(locale, {

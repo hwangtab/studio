@@ -2605,14 +2605,14 @@
   },
   "musicVideo": {
     "seo": {
-      "title": "MV·现场视频拍摄 {{from}}起 | Studio NOL",
-      "description": "由解放电影（Haebang Film）Chichi导演拍摄的MV、现场片段、YouTube访谈视频。{{from}}起，机位、时长和地点通过咨询商定。录音·混音也在首尔同一处完成。",
+      "title": "MV制作 {{mv}}起 · 现场视频 {{live}}起 | Studio NOL",
+      "description": "由解放电影（Haebang Film）Chichi导演负责概念、拍摄与剪辑的MV（{{mv}}起）及现场片段、YouTube访谈视频（{{live}}起）。机位、时长和地点通过咨询商定。录音·混音也在首尔同一处完成。",
       "keywords": "MV制作, 首尔MV拍摄, 现场视频拍摄, 演出视频, YouTube视频拍摄, 采访视频, Haebang Film"
     },
     "hero": {
       "title": "MV·现场视频制作",
-      "subtitleLine1": "解放电影Chichi导演从策划到剪辑全程负责",
-      "subtitleLine2": "MV·现场片段·YouTube内容 {{from}}起",
+      "subtitleLine1": "解放电影Chichi导演负责概念·拍摄·剪辑",
+      "subtitleLine2": "MV {{mv}}起 · 现场·YouTube视频 {{live}}起",
       "alt": "Mariko & Yukie《南山塔》MV中的演出场景",
       "seeWorks": "观看作品"
     },
@@ -2622,11 +2622,11 @@
       "items": [
         {
           "q": "费用是多少？",
-          "a": "MV与现场片段/YouTube视频均为{{from}}起（含增值税）。报价取决于机位、拍摄时长和地点，咨询时会先告知金额。"
+          "a": "MV {{mv}}起，现场片段·YouTube视频 {{live}}起（含增值税）。报价取决于机位、拍摄时长和地点，咨询时会先告知金额。"
         },
         {
-          "q": "由谁拍摄？",
-          "a": "解放电影的Chichi导演负责从概念到拍摄、剪辑、调色。下方作品均由Chichi导演拍摄。"
+          "q": "由谁制作？",
+          "a": "解放电影的Chichi导演负责从概念策划到拍摄、剪辑、调色的全部工作。下方作品均出自Chichi导演。"
         },
         {
           "q": "如何开始？",
@@ -2636,7 +2636,7 @@
     },
     "portfolio": {
       "title": "作品",
-      "subtitle": "解放电影Chichi导演拍摄的MV、现场片段与YouTube内容。点击即可播放。",
+      "subtitle": "解放电影Chichi导演策划、拍摄、剪辑的MV、现场片段与YouTube内容。点击即可播放。",
       "kinds": {
         "all": "全部",
         "music-video": "MV",
@@ -2663,8 +2663,8 @@
       ]
     },
     "director": {
-      "title": "拍摄：解放电影 Chichi导演",
-      "body": "解放电影的Chichi导演负责拍摄。外景MV、演出实况、多集YouTube访谈系列——上方作品就是成果。",
+      "title": "策划·拍摄·剪辑：解放电影 Chichi导演",
+      "body": "解放电影的Chichi导演从概念策划到拍摄、剪辑、调色一人负责到底。外景MV、演出实况、多集YouTube访谈系列——上方作品就是成果。",
       "points": [
         "从概念·分镜到拍摄、剪辑、调色由同一位导演负责",
         "按歌曲与预算配置机位——从1台到多机位",
@@ -2675,7 +2675,7 @@
     },
     "pricing": {
       "title": "视频制作费用",
-      "subtitle": "两项均为{{from}}起。确定拍摄方案后告知准确报价。",
+      "subtitle": "MV {{mv}}起，现场片段·YouTube视频 {{live}}起。确定拍摄方案后告知准确报价。",
       "factorsTitle": "报价由这些因素决定",
       "factors": [
         {
@@ -2739,7 +2739,7 @@
       "subtitle": "常见问题。",
       "items": [
         {
-          "q": "{{from}}包含哪些？",
+          "q": "起价包含哪些？",
           "a": "概念咨询、拍摄、剪辑·调色·字幕为基本。机位与时长按歌曲和预算商定，规模越大报价越高。"
         },
         {
