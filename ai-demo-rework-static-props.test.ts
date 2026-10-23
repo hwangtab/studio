@@ -18,7 +18,7 @@ describe('ai-demo-rework static props', () => {
     };
 
     expect(props.locale).toBe('ko');
-    expect(props.priceLabels.vocalOnly).toBe('55만원');
+    expect(props.priceLabels.vocalOnly).toBe('50만원');
     expect(props.relatedStories.some((story) => story.slug === 'suno-ai-song-rework1')).toBe(true);
   });
 });

@@ -3650,7 +3650,7 @@
       "title": "Pricing",
       "subtitle": "Prices include VAT. Add only what you need.",
       "note": "Mixing is delivered in 3–7 business days with 2 revisions included. Session players are paid their actual fee only — no booking commission.",
-      "releaseNote": "If you hand us the release too, the {{releaseBundle}} single bundle replaces the {{vocalOnly}} production estimate. It covers recording, mixing, mastering, distribution registration and release promotion; only arrangement or recomposition is added. With small-ensemble arrangement, release-ready comes to about {{releaseTotal}}.",
+      "releaseNote": "The {{vocalOnly}} vocal rework is priced the same as the single bundle, so handing us the release costs nothing extra: recording, mixing, mastering, distribution registration and release promotion are all included; only arrangement or recomposition is added. With small-ensemble arrangement, release-ready comes to about {{releaseTotal}}.",
       "updated": "Prices and policy last checked: October 23, 2026",
       "cta": "Chat on KakaoTalk"
     },
@@ -3709,7 +3709,7 @@
         },
         {
           "q": "How much does it cost?",
-          "a": "Re-recording vocals only starts at {{vocalOnly}}. Re-arrangement is {{arrangementAdd}}–{{bandAdd}}, rewriting +{{compositionAdd}}. For release, the {{releaseBundle}} single bundle replaces the production estimate — it covers recording, mixing, mastering, distribution and promotion — so with small-ensemble arrangement it comes to about {{releaseTotal}}. All prices include VAT."
+          "a": "Re-recording vocals only starts at {{vocalOnly}}. Re-arrangement is +{{arrangementAdd}}–{{bandAdd}}, rewriting +{{compositionAdd}}. The vocal rework is priced the same as the single bundle, so release (recording, mixing, mastering, distribution and promotion) costs nothing extra; with small-ensemble arrangement it comes to about {{releaseTotal}}. All prices include VAT."
         },
         {
           "q": "How long does it take?",

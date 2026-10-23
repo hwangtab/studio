@@ -3622,7 +3622,7 @@
       "title": "Precios",
       "subtitle": "Precios con IVA incluido. Añade solo lo que necesites.",
       "note": "La mezcla se entrega en 3–7 días hábiles con 2 revisiones incluidas. La sesión de músicos se cobra solo el coste real para el intérprete, sin comisión de contratación.",
-      "releaseNote": "Si también te encargas del lanzamiento, el paquete de sencillo de {{releaseBundle}} sustituye el presupuesto de producción de {{vocalOnly}}: incluye grabación, mezcla, masterización, registro de distribución y promoción. El nuevo arreglo o la recomposición se suman aparte. Con arreglo de formación pequeña, la publicación completa queda en unos {{releaseTotal}}.",
+      "releaseNote": "La regrabación vocal de {{vocalOnly}} tiene el mismo precio que el paquete de sencillo, así que encargar también el lanzamiento no cuesta más: incluye grabación, mezcla, masterización, registro de distribución y promoción. El nuevo arreglo o la recomposición se suman aparte. Con arreglo de formación pequeña, la publicación completa queda en unos {{releaseTotal}}.",
       "updated": "Precios y políticas revisados por última vez: 23 de octubre de 2026",
       "cta": "Consultar por KakaoTalk"
     },
@@ -3681,7 +3681,7 @@
         },
         {
           "q": "¿Cuánto cuesta?",
-          "a": "Regrabar solo la voz parte de {{vocalOnly}}. El nuevo arreglo cuesta {{arrangementAdd}}–{{bandAdd}} y la recomposición +{{compositionAdd}}. Para publicar, el paquete de sencillo de {{releaseBundle}} sustituye el presupuesto de producción (incluye grabación, mezcla, masterización, distribución y promoción), así que con arreglo de formación pequeña queda en unos {{releaseTotal}}. Todos los precios incluyen IVA."
+          "a": "Regrabar solo la voz parte de {{vocalOnly}}. El nuevo arreglo cuesta +{{arrangementAdd}}–{{bandAdd}} y la recomposición +{{compositionAdd}}. La regrabación vocal tiene el mismo precio que el paquete de sencillo, así que el lanzamiento (grabación, mezcla, masterización, distribución y promoción) no cuesta más; con arreglo de formación pequeña queda en unos {{releaseTotal}}. Todos los precios incluyen IVA."
         },
         {
           "q": "¿Cuánto tarda?",

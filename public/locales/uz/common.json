@@ -3622,7 +3622,7 @@
       "title": "Narxlar",
       "subtitle": "Narxlar QQS bilan. Faqat kerakli bandlarni qo'shasiz.",
       "note": "Mikslash 3–7 ish kuni ichida topshiriladi, 2 marta tuzatish kiritilgan. Sessiya ijrochisi uchun faqat ijrochiga to'lanadigan haqiqiy xarajat olinadi, vositachilik haqi yo'q.",
-      "releaseNote": "Chiqarishni ham bizga topshirsangiz, {{releaseBundle}} singl to'plami {{vocalOnly}} ishlab chiqarish taklifi o'rniga qo'llanadi: yozib olish, mikslash, mastering, tarqatishni ro'yxatdan o'tkazish va targ'ibotni o'z ichiga oladi. Aranjirovka yoki qayta kompozitsiya alohida qo'shiladi. Kichik ansambl aranjirovkasi bilan chiqarishgacha jami taxminan {{releaseTotal}}.",
+      "releaseNote": "{{vocalOnly}} lik vokal qayta yozish singl to'plami bilan bir xil narxda, shuning uchun chiqarishni ham topshirsangiz qo'shimcha to'lov yo'q: yozib olish, mikslash, mastering, tarqatishni ro'yxatdan o'tkazish va targ'ibot kiradi. Aranjirovka yoki qayta kompozitsiya alohida qo'shiladi. Kichik ansambl aranjirovkasi bilan chiqarishgacha jami taxminan {{releaseTotal}}.",
       "updated": "Narx va siyosat oxirgi marta tekshirilgan: 2026-yil 23-oktabr",
       "cta": "KakaoTalk orqali maslahat"
     },
@@ -3681,7 +3681,7 @@
         },
         {
           "q": "Narxi qancha?",
-          "a": "Faqat vokalni qayta yozish {{vocalOnly}}dan boshlanadi. Qayta aranjirovka {{arrangementAdd}}–{{bandAdd}}, qayta kompozitsiya +{{compositionAdd}}. Chiqarishgacha qilsangiz, {{releaseBundle}} singl to'plami ishlab chiqarish taklifi o'rniga qo'llanadi (yozib olish, mikslash, mastering, tarqatish va targ'ibot bilan), shuning uchun kichik ansambl aranjirovkasi bilan taxminan {{releaseTotal}}. Barcha narxlar QQS bilan."
+          "a": "Faqat vokalni qayta yozish {{vocalOnly}}dan boshlanadi. Qayta aranjirovka +{{arrangementAdd}}–{{bandAdd}}, qayta kompozitsiya +{{compositionAdd}}. Vokal qayta yozish singl to'plami bilan bir xil narxda, shuning uchun chiqarish (yozib olish, mikslash, mastering, tarqatish va targ'ibot) qo'shimcha to'lovsiz kiradi; kichik ansambl aranjirovkasi bilan taxminan {{releaseTotal}}. Barcha narxlar QQS bilan."
         },
         {
           "q": "Qancha vaqt oladi?",

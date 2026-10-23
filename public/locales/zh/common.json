@@ -3622,7 +3622,7 @@
       "title": "价格",
       "subtitle": "均为含 VAT 的定价。只加需要的项目。",
       "note": "混音 3–7 个工作日交付，含 2 次修改。session 演奏费只收付给演奏者的实费，不收中介费。",
-      "releaseNote": "若连发行一起委托，{{releaseBundle}} 的单曲套餐会替代 {{vocalOnly}} 的制作报价，包含录音、混音、母带、发行登记与发行宣传；编曲、重写作曲另计。按小规模编曲计算，做到发行约 {{releaseTotal}}。",
+      "releaseNote": "{{vocalOnly}} 的人声重录与单曲套餐同价，连发行一起委托也不加价：包含录音、混音、母带、发行登记与发行宣传；编曲、重写作曲另计。按小规模编曲计算，做到发行约 {{releaseTotal}}。",
       "updated": "价格·政策最后确认：2026年10月23日",
       "cta": "KakaoTalk 咨询"
     },
@@ -3681,7 +3681,7 @@
         },
         {
           "q": "费用是多少？",
-          "a": "只重录人声从 {{vocalOnly}} 起。重新编曲为 {{arrangementAdd}}–{{bandAdd}}，重新作曲为 +{{compositionAdd}}。若要发行，{{releaseBundle}} 的单曲套餐替代制作报价（含录音、混音、母带、发行与宣传），按小规模编曲计算约 {{releaseTotal}}。以上均含 VAT。"
+          "a": "只重录人声从 {{vocalOnly}} 起。重新编曲为 +{{arrangementAdd}}–{{bandAdd}}，重新作曲为 +{{compositionAdd}}。人声重录与单曲套餐同价，发行（含录音、混音、母带、发行与宣传）不另加价，按小规模编曲计算约 {{releaseTotal}}。以上均含 VAT。"
         },
         {
           "q": "需要多久？",

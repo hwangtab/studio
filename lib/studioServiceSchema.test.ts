@@ -52,7 +52,7 @@ describe('buildStudioServiceSchema', () => {
       description: 'AI 데모 리워크 서비스',
       serviceType: 'AI 데모 리워크',
       offerName: '보컬만',
-      offerPrice: 550000,
+      offerPrice: 500000,
       offerUrl: 'https://studionol.co.kr/ko/ai-demo-rework#ai-demo-rework-pricing',
     });
 

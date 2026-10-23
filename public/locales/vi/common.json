@@ -3622,7 +3622,7 @@
       "title": "Giá",
       "subtitle": "Giá đã gồm VAT. Chỉ cộng thêm phần bạn cần.",
       "note": "Mix giao trong 3–7 ngày làm việc, gồm 2 lần sửa. Phí nhạc công session chỉ thu đúng chi phí trả cho người chơi, không có phí môi giới.",
-      "releaseNote": "Nếu giao cả khâu phát hành, gói đĩa đơn {{releaseBundle}} sẽ thay cho báo giá sản xuất {{vocalOnly}}: gồm thu âm, mix, master, đăng ký phát hành và quảng bá. Phần phối khí hoặc viết lại chỉ tính thêm riêng. Với phối khí nhóm nhỏ, trọn gói đến khi phát hành khoảng {{releaseTotal}}.",
+      "releaseNote": "Thu lại giọng hát {{vocalOnly}} có giá bằng gói đĩa đơn, nên giao cả khâu phát hành cũng không tốn thêm: gồm thu âm, mix, master, đăng ký phát hành và quảng bá. Phần phối khí hoặc viết lại chỉ tính thêm riêng. Với phối khí nhóm nhỏ, trọn gói đến khi phát hành khoảng {{releaseTotal}}.",
       "updated": "Giá và chính sách kiểm tra lần cuối: 23 tháng 10, 2026",
       "cta": "Tư vấn qua KakaoTalk"
     },
@@ -3681,7 +3681,7 @@
         },
         {
           "q": "Chi phí bao nhiêu?",
-          "a": "Chỉ thu lại giọng hát từ {{vocalOnly}}. Phối khí lại {{arrangementAdd}}–{{bandAdd}}, viết lại +{{compositionAdd}}. Nếu làm đến phát hành, gói đĩa đơn {{releaseBundle}} thay cho báo giá sản xuất (gồm thu âm, mix, master, phát hành và quảng bá), nên với phối khí nhóm nhỏ khoảng {{releaseTotal}}. Tất cả giá đã gồm VAT."
+          "a": "Chỉ thu lại giọng hát từ {{vocalOnly}}. Phối khí lại +{{arrangementAdd}}–{{bandAdd}}, viết lại +{{compositionAdd}}. Thu lại giọng hát có giá bằng gói đĩa đơn, nên phát hành (thu âm, mix, master, phát hành và quảng bá) không tốn thêm; với phối khí nhóm nhỏ khoảng {{releaseTotal}}. Tất cả giá đã gồm VAT."
         },
         {
           "q": "Mất bao lâu?",
