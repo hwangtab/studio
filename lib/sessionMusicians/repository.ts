@@ -119,16 +119,22 @@ export const findIdByEmailHash = async (
 };
 
 /** 관리 링크를 다시 보낼 때 새 토큰으로 바꾼다 — 원문을 저장하지 않으니 옛 링크를 다시 만들 수 없다. */
-export const replaceManageTokenHash = async (id: string, manageTokenHash: string): Promise<void> => {
-  await getDb().update(sessionMusicians).set({ manageTokenHash }).where(eq(sessionMusicians.id, id));
-};
-
-/** 새 토큰으로 바꾼 직후 메일이 실패했을 때 옛 토큰으로 되돌린다 — 그 사이 다른 요청이 또 바꿨으면(현재 값이 `from`이 아니면) 건드리지 않는다. */
-export const restoreManageTokenHash = async (id: string, from: string, to: string): Promise<void> => {
-  await getDb()
+/**
+ * 관리 토큰 해시를 `from`일 때만 `to`로 바꾼다(비교 후 교체). 바뀌었으면 true.
+ * 재발송은 지금 값을 읽고 이 함수로 바꾸며, 메일이 실패하면 같은 함수로 `to → from` 되돌린다 — 그 사이 다른 재발송이
+ * 끼어들었으면 어느 쪽도 남의 링크를 덮지 않는다(2026-10-23 리뷰: 오래된 스냅샷으로 되돌리면 방금 보낸 새 링크가 죽었다).
+ */
+export const swapManageTokenHash = async (id: string, from: string, to: string): Promise<boolean> => {
+  const result = await getDb()
     .update(sessionMusicians)
     .set({ manageTokenHash: to })
     .where(and(eq(sessionMusicians.id, id), eq(sessionMusicians.manageTokenHash, from)));
+  return result.rowsAffected > 0;
+};
+
+export const getManageTokenHash = async (id: string): Promise<string | null> => {
+  const [row] = await getDb().select({ hash: sessionMusicians.manageTokenHash }).from(sessionMusicians).where(eq(sessionMusicians.id, id)).limit(1);
+  return row?.hash ?? null;
 };
 
 export const findByManageTokenHash = async (tokenHash: string): Promise<SessionMusician | null> => {

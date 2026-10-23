@@ -255,6 +255,15 @@ describe('POST /api/session-musicians', () => {
     expect(await rows()).toHaveLength(0);
   });
 
+  it('전체 상한에 걸린 요청은 이메일 한도를 쓰지 않는다 — 재시도가 가짜 200을 받지 않는다', async () => {
+    await client.execute({ sql: 'INSERT INTO rate_limits (key, count, expires_at) VALUES (?, ?, ?)', args: ['session_musician:global', 50, Math.floor(Date.now() / 1000) + 3600] });
+    for (const ip of ['5.5.5.1', '5.5.5.2', '5.5.5.3']) {
+      expect((await call(indexHandler, { body: form(), ip })).body).toMatchObject({ code: 'daily_cap' });
+    }
+    const emailRows = (await client.execute("SELECT count FROM rate_limits WHERE key LIKE 'session_musician:email:%'")).rows;
+    expect(emailRows.every((row) => Number(row.count) === 0)).toBe(true);
+  });
+
   it('등록이 DB 장애로 실패하면 이메일·전체 한도를 되돌린다 — 다시 시도한 지원자가 가짜 성공을 보지 않는다', async () => {
     await client.execute('ALTER TABLE session_musicians RENAME COLUMN stage_name TO stage_name_x');
     try {

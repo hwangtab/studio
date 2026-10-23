@@ -7,8 +7,8 @@ import {
   findByManageTokenHash,
   findIdByEmailHash,
   insertSessionMusician,
-  replaceManageTokenHash,
-  restoreManageTokenHash,
+  getManageTokenHash,
+  swapManageTokenHash,
   toProfile,
   updateByManageTokenHash,
   type SessionMusicianProfile,
@@ -56,7 +56,7 @@ export const submitRegistration = async (input: SessionRegistrationInput): Promi
       consentVersion: FUNDING_TERMS_VERSION,
     });
   } catch (error: unknown) {
-    if (!isUniqueConstraintError(error)) throw error;
+    if (!isUniqueConstraintError(error, 'session_musicians.email_hash')) throw error;
     const raced = await findIdByEmailHash(emailHash);
     if (!raced) throw error;
     return resendManageLink(raced, input.email);
@@ -86,11 +86,25 @@ const resendManageLink = async (
   const { id } = existing;
   const token = generateManageToken();
   const newHash = hashManageToken(token);
-  await replaceManageTokenHash(id, newHash);
+  // 지금 값을 읽고 그 값일 때만 바꾼다 — 동시 재발송·재확인 메일과 겹치면 다시 읽어 시도한다.
+  let previous = existing.manageTokenHash;
+  let swapped = false;
+  for (let attempt = 0; attempt < 3 && !swapped; attempt += 1) {
+    if (attempt > 0) {
+      const current = await getManageTokenHash(id);
+      if (current === null) return { kind: 'duplicate', id }; // 그 사이 본인이 지웠다
+      previous = current;
+    }
+    swapped = await swapManageTokenHash(id, previous, newHash);
+  }
+  if (!swapped) {
+    console.error(`[session-musicians] 관리 링크 재발송 — 토큰을 바꾸지 못해 건너뜀 (id=${id})`);
+    return { kind: 'duplicate', id };
+  }
   const mailError = await sendRegistrationMail('already', email, existing.stageName, manageLinkUrl(token));
   if (mailError) {
-    console.error(`[session-musicians] 관리 링크 재발송 메일 실패 (id=${id}) — 옛 링크로 되돌립니다:`, mailError);
-    await restoreManageTokenHash(id, newHash, existing.manageTokenHash);
+    console.error(`[session-musicians] 관리 링크 재발송 메일 실패 (id=${id}) — 바로 전 링크로 되돌립니다:`, mailError);
+    await swapManageTokenHash(id, newHash, previous);
   }
   return { kind: 'duplicate', id };
 };

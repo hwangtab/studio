@@ -92,11 +92,20 @@ export const sendSessionMusicianReconfirmNotices = async (now: Date = new Date()
   let failed = 0;
   for (const row of due) {
     const token = generateManageToken();
-    // 먼저 잡는다 — 0행이면 다른 실행이 이미 잡았다.
+    const newHash = hashManageToken(token);
+    // 먼저 잡는다 — 0행이면 다른 실행이 이미 잡았거나, 읽은 뒤 본인이 확인·수정했거나(기한 창을 벗어남),
+    // 관리 링크가 재발송으로 바뀌었다(읽어 둔 토큰이 낡음). 셋 다 이번에는 보내지 않는다(2026-10-23 리뷰).
     const claimed = await db
       .update(sessionMusicians)
-      .set({ reconfirmSentAt: now, manageTokenHash: hashManageToken(token) })
-      .where(and(eq(sessionMusicians.id, row.id), isNull(sessionMusicians.reconfirmSentAt)));
+      .set({ reconfirmSentAt: now, manageTokenHash: newHash })
+      .where(
+        and(
+          eq(sessionMusicians.id, row.id),
+          isNull(sessionMusicians.reconfirmSentAt),
+          lt(sessionMusicians.lastConfirmedAt, reconfirmCutoff(now)),
+          eq(sessionMusicians.manageTokenHash, row.manageTokenHash),
+        ),
+      );
     if (claimed.rowsAffected === 0) continue;
 
     let error: string | null;
@@ -116,7 +125,7 @@ export const sendSessionMusicianReconfirmNotices = async (now: Date = new Date()
     await db
       .update(sessionMusicians)
       .set({ reconfirmSentAt: null, manageTokenHash: row.manageTokenHash })
-      .where(and(eq(sessionMusicians.id, row.id), eq(sessionMusicians.reconfirmSentAt, now)));
+      .where(and(eq(sessionMusicians.id, row.id), eq(sessionMusicians.reconfirmSentAt, now), eq(sessionMusicians.manageTokenHash, newHash)));
   }
   return { sent, failed };
 };
