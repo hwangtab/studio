@@ -42,6 +42,25 @@ describe('buildStudioServiceSchema', () => {
     });
   });
 
+  it('uses offerUrl as the Offer URL when the price lives on the page itself', () => {
+    const schema = buildStudioServiceSchema({
+      locale: 'ko',
+      siteName: '스튜디오 놀',
+      siteUrl: 'https://studionol.co.kr',
+      pageUrl: 'https://studionol.co.kr/ko/ai-demo-rework',
+      name: 'AI 데모 리워크',
+      description: 'AI 데모 리워크 서비스',
+      serviceType: 'AI 데모 리워크',
+      offerName: '보컬만',
+      offerPrice: 550000,
+      offerUrl: 'https://studionol.co.kr/ko/ai-demo-rework#ai-demo-rework-pricing',
+    });
+
+    expect(schema.offers?.url).toBe(
+      'https://studionol.co.kr/ko/ai-demo-rework#ai-demo-rework-pricing',
+    );
+  });
+
   it('sets offers.priceValidUntil to a YYYY-MM-DD date roughly 12 months out', () => {
     const schema = buildStudioServiceSchema({
       locale: 'ko',

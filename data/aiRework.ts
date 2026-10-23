@@ -16,6 +16,8 @@ export const AI_REWORK_ARRANGEMENT_ADD_PRICE = ARRANGEMENT_SMALL_PRICE;
 export const AI_REWORK_BAND_ADD_PRICE = ARRANGEMENT_BAND_PRICE;
 export const AI_REWORK_COMPOSITION_ADD_PRICE = COMPOSITION_PRICE;
 export const AI_REWORK_RELEASE_BUNDLE_PRICE = SINGLE_BUNDLE_PRICE;
+export const AI_REWORK_RELEASE_TOTAL_PRICE =
+  AI_REWORK_RELEASE_BUNDLE_PRICE + AI_REWORK_ARRANGEMENT_ADD_PRICE;
 
 export interface AiReworkPriceLabels {
   vocalOnly: string;
@@ -23,6 +25,7 @@ export interface AiReworkPriceLabels {
   bandAdd: string;
   compositionAdd: string;
   releaseBundle: string;
+  releaseTotal: string;
 }
 
 export const getAiReworkPriceLabels = (locale: Locale): AiReworkPriceLabels => ({
@@ -31,4 +34,5 @@ export const getAiReworkPriceLabels = (locale: Locale): AiReworkPriceLabels => (
   bandAdd: formatPriceLabel(AI_REWORK_BAND_ADD_PRICE, locale),
   compositionAdd: formatPriceLabel(AI_REWORK_COMPOSITION_ADD_PRICE, locale),
   releaseBundle: formatPriceLabel(AI_REWORK_RELEASE_BUNDLE_PRICE, locale),
+  releaseTotal: formatPriceLabel(AI_REWORK_RELEASE_TOTAL_PRICE, locale),
 });

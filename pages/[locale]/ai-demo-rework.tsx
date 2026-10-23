@@ -112,7 +112,7 @@ const AiDemoRework: NextPageWithLayout<AiDemoReworkProps> = ({ locale, priceLabe
         serviceType: locale === 'ko' ? 'AI 데모 리워크·음악 제작' : 'AI Demo Rework & Music Production',
         offerName: t('aiDemoRework.tiers.items.0.title'),
         offerPrice: AI_REWORK_VOCAL_ONLY_PRICE,
-        pricingHash: 'arrangement',
+        offerUrl: `${pageUrl}#ai-demo-rework-pricing`,
         remote: true,
       }),
     [t, siteConfig, locale, pageUrl]
