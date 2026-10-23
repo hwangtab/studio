@@ -1,5 +1,5 @@
 import { buildProductionContent, describeRefundMilestones, findUnfilledPlaceholders, readProductionTemplate } from './template';
-import { buildDefaultProductionTerms } from './terms';
+import { buildDefaultProductionTerms, buildDefaultReworkTerms } from './terms';
 
 const template = readProductionTemplate();
 const base = {
@@ -129,5 +129,71 @@ describe('EP·정규 계약서(release-template.md)', () => {
     for (const heading of ['제3조', '제8조', '제9조', '제10조', '제12조', '제13조', '제14조']) {
       expect(section(release, heading)).toBe(section(single, heading));
     }
+  });
+});
+
+describe('AI 리워크 계약서(rework-template.md)', () => {
+  const rework = readProductionTemplate('rework');
+  const reworkBase = { ...base, kind: 'rework' as const, terms: buildDefaultReworkTerms('small') };
+  const content = buildProductionContent(reworkBase, rework);
+
+  it('자리표시자를 하나도 남기지 않는다 — 편곡 없음·소편성·풀밴드 모두', () => {
+    for (const scope of ['none', 'small', 'band'] as const) {
+      const terms = buildDefaultReworkTerms(scope);
+      expect(findUnfilledPlaceholders(buildProductionContent({ ...reworkBase, terms }, rework))).toEqual([]);
+    }
+  });
+
+  it('3회 분할 — 요약표·제3조에 계약금·중간금·잔금과 각 기한', () => {
+    expect(content).toContain('| 계약금 | 500,000원 — 계약 체결일로부터 3일 이내 |');
+    expect(content).toContain('| 중간금 | 300,000원 — 편곡 승인일부터 7일 이내 |');
+    expect(content).toContain('| 잔금 | 200,000원 — 최종 마스터 승인일부터 7일 이내 |');
+    expect(content).toContain('   - 중간금: **300,000원**, 편곡 승인일부터 7일 이내');
+  });
+
+  it('제10조는 항목표가 아니라 받은 금액의 비율표다', () => {
+    expect(content).toContain('| 착수 전 | 받은 금액 전액 |');
+    expect(content).toContain('| 착수한 때부터 | 받은 금액의 70% |');
+    expect(content).toContain('| 보컬 녹음 세션을 마친 때부터 | 받은 금액의 40% |');
+    expect(content).toContain('| 스튜디오가 믹싱 1차 결과물을 전달한 때부터 | 받은 금액의 20% |');
+    expect(content).toContain('| 스튜디오가 마스터링 결과물을 전달한 때부터 | 환불하지 않음 |');
+    expect(content).not.toContain('편곡 (제2조 2호)');
+    expect(content).not.toContain('AI 리워크 제작 일체');
+    expect(content).toContain('스튜디오의 사정으로 해지하는 경우, 이미 받은 금액 전액을 환불한다.');
+  });
+
+  it('납품 기한은 AI 데모 파일 수령일부터 센다', () => {
+    expect(content).toContain('| 납품 기한 | 계약금 입금과 AI 데모 파일 수령일부터 최종 마스터 6주 이내 |');
+  });
+
+  it('AI 권리 보증·AI 표기·유통 미보장을 적는다', () => {
+    expect(content).toContain('## 제8조 (의뢰인의 보증과 AI 사용 표기)');
+    expect(content).toContain('AI 생성물로 분류되지 않는다는 것');
+    expect(content).toContain('게재·승인 여부와 시점은 각 사의 심사에 따르며 스튜디오가 보증하지 않는다');
+  });
+
+  it('편곡 없음은 편곡을 하지 않는다고 적고 편곡 수정 횟수를 말하지 않는다', () => {
+    const none = buildProductionContent({ ...reworkBase, terms: buildDefaultReworkTerms('none') }, rework);
+    expect(none).toContain('2. 편곡: 하지 않는다. AI 데모의 반주를 그대로 쓰고 보컬을 다시 녹음한다');
+    expect(none).toContain('무료 수정 횟수는 **믹싱 2회, 마스터링 1회**로 한다.');
+    expect(none).toContain('| 대금 지급 | 500,000원 일시불');
+    expect(none).not.toContain('중간금:');
+  });
+
+  it('조 번호는 제작 계약과 같고, 제3·11·12·13·14조는 싱글과 글자 하나 다르지 않다', () => {
+    const single = readProductionTemplate('single');
+    const section = (text: string, heading: string) => {
+      const start = text.indexOf(`## ${heading} `);
+      const next = text.indexOf('\n## ', start + 1);
+      return text.slice(start, next === -1 ? undefined : next);
+    };
+    for (let n = 1; n <= 14; n += 1) expect(rework).toContain(`## 제${n}조 `);
+    for (const heading of ['제3조', '제11조', '제12조', '제13조', '제14조']) {
+      expect(section(rework, heading)).toBe(section(single, heading));
+    }
+  });
+
+  it('회귀 — 2회차 없는 싱글 계약서에는 중간금이 나오지 않는다', () => {
+    expect(buildProductionContent(base, template)).not.toContain('중간금');
   });
 });

@@ -25,7 +25,7 @@ import { loadProgressContext } from './progress';
 // eslint-disable-next-line import/first
 import { createProductionContract } from './service';
 // eslint-disable-next-line import/first
-import { applyMixMasterTracks, buildDefaultProductionTerms } from './terms';
+import { applyMixMasterTracks, buildDefaultProductionTerms, type ProductionTerms } from './terms';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
@@ -43,16 +43,56 @@ afterAll(() => client.close());
 beforeEach(() => mockSendEmail.mockClear());
 
 const NOW = new Date('2026-10-21T03:00:00Z');
+const nowSec = Math.floor(NOW.getTime() / 1000);
 
-const signedContract = async (tracks = 30) => {
-  const terms = applyMixMasterTracks(buildDefaultProductionTerms('mixmaster'), tracks);
+const signedContractWithTerms = async (kind: 'single' | 'mixmaster', terms: ProductionTerms, signedAgoSec = 3600) => {
   const created = await createProductionContract({
-    kind: 'mixmaster', title: '테스트', clientName: '김의뢰', clientStageName: null, clientEmail: 'c@example.com', clientPhone: '010-1111-2222', guardian: null, terms,
+    kind, title: '테스트', clientName: '김의뢰', clientStageName: null, clientEmail: 'c@example.com', clientPhone: '010-1111-2222', guardian: null, terms,
   });
-  await client.execute({ sql: "UPDATE production_contracts SET status = 'signed', signed_at = ? WHERE id = ?", args: [Math.floor(NOW.getTime() / 1000) - 3600, created.id] });
+  await client.execute({ sql: "UPDATE production_contracts SET status = 'signed', signed_at = ? WHERE id = ?", args: [nowSec - signedAgoSec, created.id] });
   await client.execute({ sql: "INSERT INTO production_contract_signers (id, contract_id, role, name, email, status, sign_token) VALUES (lower(hex(randomblob(8))), ?, 'client', '김의뢰', 'c@example.com', 'signed', lower(hex(randomblob(16)))) ON CONFLICT DO NOTHING", args: [created.id] });
   await client.execute({ sql: "UPDATE production_contract_signers SET status = 'signed', sign_token = lower(hex(randomblob(16))) WHERE contract_id = ? AND role = 'client'", args: [created.id] });
   return created.id;
+};
+
+const signedContract = async (tracks = 30) =>
+  signedContractWithTerms('mixmaster', applyMixMasterTracks(buildDefaultProductionTerms('mixmaster'), tracks));
+
+/** AI 리워크 3회 분할(계약금 500,000 · 2차 300,000 · 잔금 200,000). */
+const reworkTerms = (): ProductionTerms => ({
+  ...buildDefaultProductionTerms('single'),
+  amount: {
+    total: 1_000_000,
+    deposit: 500_000,
+    second: 300_000,
+    balance: 200_000,
+    depositDueDays: 3,
+    secondDueDays: 7,
+    balanceDueDays: 7,
+  },
+});
+const signedReworkContract = async () => signedContractWithTerms('single', reworkTerms());
+
+/** 진행 기록 한 건을 직접 넣는다(순번은 계약 안에서 1씩). */
+let eventSeq = 0;
+const insertEvent = async (
+  contractId: string,
+  type: string,
+  options: { stage?: string | null; amount?: number | null; atSec?: number } = {},
+) => {
+  eventSeq += 1;
+  const at = options.atSec ?? nowSec;
+  await client.execute({
+    sql: `INSERT INTO production_contract_events (id, contract_id, seq, type, stage, amount, occurred_at, recorded_at, actor)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'admin:test')`,
+    args: [`ev-${contractId.slice(0, 8)}-${eventSeq}`, contractId, eventSeq, type, options.stage ?? null, options.amount ?? null, at, at],
+  });
+};
+
+/** 편곡 결과물 전달 + 승인 — 2차 링크가 열리는 조건. */
+const approveArrangement = async (contractId: string) => {
+  await insertEvent(contractId, 'stage_delivered', { stage: 'arrangement', atSec: nowSec - 7200 });
+  await insertEvent(contractId, 'stage_approved', { stage: 'arrangement', atSec: nowSec - 3600 });
 };
 
 /** 결제 링크로 결제가 확정된 주문을 흉내 낸다(confirmDeposit이 남기는 것과 같은 행). */
@@ -113,6 +153,57 @@ describe('계약 대금 결제 링크', () => {
     await paidLinkOrder('aaaaaaaaaaaaaaaaaaaaaaaa', 10_000, 'PAY-2');
     expect(await isContractPaymentOrder('PAY-2')).toBe(false);
     expect(await recordContractPaymentFromLinkOrder('PAY-2', NOW)).toBe('not_contract');
+  });
+
+  it('계약금을 받았어도 편곡 승인 전에는 다음 링크를 열지 않는다', async () => {
+    const id = await signedReworkContract();
+    await insertEvent(id, 'payment_received', { amount: 500_000 });
+    expect(await ensureContractPaymentLink(id, NOW)).toBeNull();
+  });
+
+  it('편곡이 승인되면 2차(중간금) 링크를 열고, 결제가 끝나면 닫고 잔금 기한 전에는 새 링크가 없다', async () => {
+    const id = await signedReworkContract();
+    await insertEvent(id, 'payment_received', { amount: 500_000 });
+    await approveArrangement(id);
+
+    const second = await ensureContractPaymentLink(id, NOW);
+    expect(second).toMatchObject({ purpose: 'second', amount: 300_000 });
+    const link = await mockDb.query.paymentLinks.findFirst({ where: (t, { eq }) => eq(t.slug, second!.slug) });
+    expect(link).toMatchObject({ itemName: '음원 제작 용역 계약 중간금', totalAmount: 300_000, closedAt: null });
+
+    await paidLinkOrder(second!.slug, 300_000, 'PAY-SECOND-1');
+    expect(await recordContractPaymentFromLinkOrder('PAY-SECOND-1', NOW)).toBe('recorded');
+
+    expect((await mockDb.query.paymentLinks.findFirst({ where: (t, { eq }) => eq(t.slug, second!.slug) }))?.closedAt).not.toBeNull();
+    // 잔금은 마스터링 승인 뒤에 열린다 — 지금은 받을 돈이 없다.
+    expect(await ensureContractPaymentLink(id, NOW)).toBeNull();
+  });
+
+  it('2차를 일부만 받으면 2차 링크 금액을 줄이고 잔금 링크는 열지 않는다', async () => {
+    const id = await signedReworkContract();
+    await insertEvent(id, 'payment_received', { amount: 500_000 });
+    await approveArrangement(id);
+    expect(await ensureContractPaymentLink(id, NOW)).toMatchObject({ purpose: 'second', amount: 300_000 });
+
+    await insertEvent(id, 'payment_received', { amount: 100_000, atSec: nowSec + 1 });
+    const reduced = await ensureContractPaymentLink(id, NOW);
+    expect(reduced).toMatchObject({ purpose: 'second', amount: 200_000 });
+    expect(await ensureContractPaymentLink(id, NOW)).toMatchObject({ purpose: 'second', amount: 200_000 });
+  });
+
+  it('계약금만 일부 받았으면 편곡이 승인돼도 2차 링크 대신 남은 계약금 링크를 연다', async () => {
+    const id = await signedReworkContract();
+    await insertEvent(id, 'payment_received', { amount: 100_000 });
+    await approveArrangement(id);
+    expect(await ensureContractPaymentLink(id, NOW)).toMatchObject({ purpose: 'deposit', amount: 400_000 });
+  });
+
+  it('계약금·2차를 넘겨 받아도 2차 링크에 음수 금액을 만들지 않는다', async () => {
+    const id = await signedReworkContract();
+    await insertEvent(id, 'payment_received', { amount: 900_000 });
+    await approveArrangement(id);
+    expect(await ensureContractPaymentLink(id, NOW)).toBeNull();
+    expect(await ensureContractPaymentLink(id, NOW)).toBeNull();
   });
 
   it('운영자가 계좌 입금을 직접 기록하면 남은 금액에 맞춰 링크를 바꾸고, 끝난 계약은 링크를 닫는다', async () => {

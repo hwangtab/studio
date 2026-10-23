@@ -53,7 +53,7 @@ interface ProductionContractDetailProps {
   /** 해지된 계약의 환불 계좌 요약(은행·예금주만). 해지가 아니면 null. */
   refundAccount: RefundAccountSummaryProps | null;
   /** 계약 대금 결제 링크(payment-link.ts) — 최신순. 열린 것이 지금 받을 돈의 링크다. */
-  paymentLinks: Array<{ url: string; purpose: 'deposit' | 'balance'; amount: number; open: boolean; paid: boolean; createdAt: string }>;
+  paymentLinks: Array<{ url: string; purpose: 'deposit' | 'second' | 'balance'; amount: number; open: boolean; paid: boolean; createdAt: string }>;
 }
 
 export const getServerSideProps: GetServerSideProps<ProductionContractDetailProps> = async (context) => {
@@ -317,13 +317,22 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
                 <dl className="space-y-2 text-sm">
                   <Row label={isOneSongKind(contract.kind) ? '본 곡' : '음반'} value={releaseTitle(contract.kind, terms)} />
                   <Row label="계약금액" value={`${formatCurrency(terms.amount.total)}원`} />
-                  {terms.amount.balance === 0 ? (
+                  {terms.amount.balance === 0 && terms.amount.second === 0 ? (
                     <Row label="대금 지급" value={`일시불 (체결 후 ${terms.amount.depositDueDays}일)`} />
                   ) : (
                     <>
                       <Row label="계약금" value={`${formatCurrency(terms.amount.deposit)}원 (체결 후 ${terms.amount.depositDueDays}일)`} />
+                      {terms.amount.second > 0 && (
+                        <Row label="중간금" value={`${formatCurrency(terms.amount.second)}원 (편곡 승인 후 ${terms.amount.secondDueDays}일)`} />
+                      )}
                       <Row label="잔금" value={`${formatCurrency(terms.amount.balance)}원 (최종 승인 후 ${terms.amount.balanceDueDays}일)`} />
                     </>
+                  )}
+                  {terms.refundPolicy && (
+                    <Row
+                      label="해지 환불"
+                      value={`받은 금액 × 단계 비율 (착수 전 100% · ${terms.refundPolicy.stages.map((s) => `${Math.round(s.ratio * 100)}%`).join(' · ')})`}
+                    />
                   )}
                   <Row
                     label="납품 기한"
@@ -423,7 +432,7 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
             <ul className="space-y-2 text-sm">
               {paymentLinks.map((link) => (
                 <li key={link.url} className="flex flex-wrap items-center gap-3 rounded-lg bg-gray-50 p-3">
-                  <span className="font-semibold text-gray-900">{link.purpose === 'deposit' ? '대금·계약금' : '잔금'}</span>
+                  <span className="font-semibold text-gray-900">{link.purpose === 'deposit' ? '대금·계약금' : link.purpose === 'second' ? '중간금' : '잔금'}</span>
                   <span className="tabular-nums">{formatCurrency(link.amount)}원</span>
                   <span className={link.paid ? 'text-green-700' : link.open ? 'text-blue-700' : 'text-gray-500'}>
                     {link.paid ? '결제됨' : link.open ? '열림 — 결제 대기' : '닫힘'}

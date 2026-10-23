@@ -36,18 +36,32 @@ export const LEGACY_PRODUCTION_CLAUSES: readonly ProductionClause[] = [
  * 새 계약의 동의 항목 — 중요 조항 요약 하나. 승인 간주 기한은 그 계약의 terms에서 온다(계약서 제5조 5항과 같은 수).
  * 포트폴리오 문장은 발매를 전제로 한다(믹싱·마스터링도 의뢰인이 발매한 뒤 — 제11조 2항).
  */
-export const buildProductionClauses = (terms: { deemedApprovalDays: number }): ProductionClause[] => [
-  {
-    key: 'key-terms',
-    clauseNumber: '제5·10·11조',
-    title: '중요 조항 확인',
-    points: [
-      `결과물을 받은 날부터 ${terms.deemedApprovalDays}일 안에 수정 요청이 없으면 그 단계는 승인된 것으로 봐요(제5조 5항).`,
-      '작업을 시작한 뒤 의뢰인 사정으로 해지하면, 진행한 작업분을 빼고 남은 금액을 돌려드려요(제10조 3항).',
-      '곡이 발매되면 곡명·크레딧·아트워크를 스튜디오 웹사이트와 SNS에 포트폴리오로 올릴 수 있어요(제11조 2항).',
-    ],
-  },
-];
+export const buildProductionClauses = (terms: {
+  deemedApprovalDays: number;
+  refundPolicy?: { stages: Array<{ ratio: number }> };
+}): ProductionClause[] => {
+  // 지급 비율 환불(AI 리워크 제10조 3항)은 "작업분을 빼고"가 아니라 "받은 금액의 N%"다 — 요약도 그 말로.
+  const refundPoint = terms.refundPolicy
+    ? `작업을 시작한 뒤 의뢰인 사정으로 해지하면, 진행 단계에 따라 받은 금액의 ${terms.refundPolicy.stages
+        .map((stage) => `${Math.round(stage.ratio * 100)}%`)
+        .join('·')}만 돌려드려요(제10조 3항).`
+    : '작업을 시작한 뒤 의뢰인 사정으로 해지하면, 진행한 작업분을 빼고 남은 금액을 돌려드려요(제10조 3항).';
+  return [
+    {
+      key: 'key-terms',
+      clauseNumber: terms.refundPolicy ? '제5·8·10·11조' : '제5·10·11조',
+      title: '중요 조항 확인',
+      points: [
+        `결과물을 받은 날부터 ${terms.deemedApprovalDays}일 안에 수정 요청이 없으면 그 단계는 승인된 것으로 봐요(제5조 5항).`,
+        refundPoint,
+        ...(terms.refundPolicy
+          ? ['AI 데모의 권리는 의뢰인이 보증하고, AI 사용 표기는 플랫폼 정책에 따라 의뢰인이 해요. 유통 승인은 보장하지 않아요(제8조·제9조).']
+          : []),
+        '곡이 발매되면 곡명·크레딧·아트워크를 스튜디오 웹사이트와 SNS에 포트폴리오로 올릴 수 있어요(제11조 2항).',
+      ],
+    },
+  ];
+};
 
 const isClause = (value: unknown): value is ProductionClause =>
   typeof value === 'object' &&

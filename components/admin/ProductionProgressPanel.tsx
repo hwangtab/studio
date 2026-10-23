@@ -291,6 +291,18 @@ export default function ProductionProgressPanel({
                     : `기한 ${formatAdminDate(payments.depositLastDay)}`
               }
             />
+            {payments.second > 0 && (
+              <Row
+                label={`중간금 ${formatCurrency(payments.second)}원`}
+                value={
+                  payments.secondMetAt
+                    ? `입금 ${formatAdminDate(payments.secondMetAt)}`
+                    : payments.secondLastDay
+                      ? `기한 ${formatAdminDate(payments.secondLastDay)}${payments.secondOverdueDays > 0 ? ` (${payments.secondOverdueDays}일 지남)` : ''}`
+                      : '편곡 승인 후'
+                }
+              />
+            )}
             <Row label="잔금 기한" value={payments.balanceLastDay ? formatAdminDate(payments.balanceLastDay) : '마스터링 승인 후'} />
           </dl>
           <dl className="space-y-2">
@@ -327,6 +339,22 @@ export default function ProductionProgressPanel({
 
         <details className="mt-6 text-sm">
           <summary className="font-semibold cursor-pointer">지금 해지하면 (제10조 3항 추정)</summary>
+          {refund.basis === 'paid_ratio' ? (
+            <>
+              <p className="mt-3">
+                {refund.kickedOff ? '착수 후' : '착수 전 — 받은 금액 전액 환불(제10조 2항)'} · 받은 금액 {formatCurrency(refund.received)}원 ×{' '}
+                {Math.round(refund.ratio * 100)}%
+                {refund.extras > 0 && ` − 추가 비용·이행한 초과 수정 ${formatCurrency(refund.extras)}원`} ={' '}
+                <strong>환불 {formatCurrency(refund.refundable)}원</strong>
+              </p>
+              <p className="mt-1 text-gray-500">
+                {refund.kickedOff
+                  ? `받은 금액 × 단계 비율(계약서 제10조 3항 표). 스튜디오 사정으로 해지하면(제10조 4항) 받은 금액 전액 ${formatCurrency(refund.refundableIfStudio)}원이에요.`
+                  : '착수 전에는 해지 사유와 관계없이 받은 금액 전액이에요.'}
+              </p>
+            </>
+          ) : (
+          <>
           <table className="mt-3 w-full">
             <tbody>
               {refund.lines.map((line) => (
@@ -354,6 +382,8 @@ export default function ProductionProgressPanel({
               ? `스튜디오 사정으로 해지하면(제10조 4항) 추가 비용·초과 수정 요금은 공제하지 않아 환불 ${formatCurrency(refund.refundableIfStudio)}원이에요.`
               : '착수 전에는 해지 사유와 관계없이 받은 금액 전액이에요.'}
           </p>
+          </>
+          )}
         </details>
       </div>
 

@@ -46,7 +46,12 @@ interface ProgressPageProps {
    * 해지된 계약의 환불(제10조 정산). 돌려받을 금액과, 이미 적은 계좌의 은행·예금주(계좌번호는 싣지 않는다 —
    * lib/crypto/CLAUDE.md). 해지가 아니면 null.
    */
-  refund: { refundable: number; account: { bankName: string; accountHolder: string; refunded: boolean } | null } | null;
+  refund: {
+    refundable: number;
+    /** 받은 금액 × 단계 비율로 정산하는 계약(AI 리워크) — 작업분을 공제하지 않으니 문구가 다르다. */
+    paidRatio: boolean;
+    account: { bankName: string; accountHolder: string; refunded: boolean } | null;
+  } | null;
   unavailable?: 'not-found' | 'error';
 }
 
@@ -100,6 +105,7 @@ export const getServerSideProps = withI18nServerProps<ProgressPageProps>(async (
       const summary = await loadRefundAccountSummary({ kind: 'production', orderNo: id });
       refund = {
         refundable: progress.ledger.refund.refundable,
+        paidRatio: progress.ledger.refund.basis === 'paid_ratio',
         account:
           summary.status === 'present'
             ? { bankName: summary.bankName, accountHolder: summary.accountHolder, refunded: summary.refundedAt !== null }
@@ -360,8 +366,11 @@ function RefundSection({
       <p className="text-sm text-gray-700 dark:text-gray-700">
         {refund.refundable > 0 ? (
           <>
-            계약이 해지되어, 진행한 작업분을 정산하고 남은 <strong>{formatCurrency(refund.refundable)}원</strong>을 돌려드려요(계약서 제10조).
+            계약이 해지되어, {refund.paidRatio ? '받은 금액을 진행 단계의 비율로 정산한' : '진행한 작업분을 정산하고 남은'}{' '}
+            <strong>{formatCurrency(refund.refundable)}원</strong>을 돌려드려요(계약서 제10조).
           </>
+        ) : refund.paidRatio ? (
+          '계약이 해지되었고, 받은 금액을 진행 단계의 비율로 정산한 결과 돌려드릴 금액은 없어요(계약서 제10조).'
         ) : (
           '계약이 해지되었고, 진행한 작업분을 정산한 결과 돌려드릴 금액은 없어요(계약서 제10조).'
         )}

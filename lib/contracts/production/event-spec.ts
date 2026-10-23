@@ -75,10 +75,13 @@ export const ADMIN_EVENT_TYPES = (Object.keys(EVENT_SPEC) as ProductionEventType
 );
 
 /**
- * 편곡이 범위에 없는 계약(믹싱·마스터링 — terms.scope.arrangementTracks = 0)인가. 장부(ledger.ts)와 화면이 계약 종류
- * 대신 이 값을 본다 — 장부는 종류를 받지 않고 terms만 읽는다.
+ * 믹싱·마스터링 계약인가 — 편곡도 녹음도 범위에 없다(terms.scope.arrangementTracks = 0, recordingHours = 0). 장부(ledger.ts)와
+ * 화면이 계약 종류 대신 이 값을 본다 — 장부는 종류를 받지 않고 terms만 읽는다. 녹음 시간까지 보는 이유: 편곡 없는 AI 리워크
+ * (arrangementTracks = 0)는 녹음·유통 등록·발매가 범위에 있어 믹싱·마스터링처럼 그 기록을 숨기면 안 된다.
+ * 믹싱·마스터링 계약은 작성 폼·CLI가 녹음 시간을 0으로만 만든다(terms.ts MIXMASTER_BASE).
  */
-export const isMixMasterTerms = (terms: { scope: { arrangementTracks: number } }): boolean => terms.scope.arrangementTracks === 0;
+export const isMixMasterTerms = (terms: { scope: { arrangementTracks: number; recordingHours: number } }): boolean =>
+  terms.scope.arrangementTracks === 0 && terms.scope.recordingHours === 0;
 
 /** 믹싱·마스터링 계약에서 쓰지 않는 기록 — 녹음·유통 등록·발매가 범위 밖이다(mixmaster-template.md 제2조·제9조). */
 const MIXMASTER_HIDDEN_TYPES: ReadonlySet<ProductionEventType> = new Set(['recording_completed', 'distribution_submitted', 'released']);

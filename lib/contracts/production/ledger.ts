@@ -148,6 +148,11 @@ export interface ProductionLedger {
     depositMetAt: Date | null;
     depositLastDay: Date | null;
     depositOverdueDays: number;
+    /** 2회차까지 누적 입금이 닿은 날. 2회차가 없는 계약은 null. */
+    secondMetAt: Date | null;
+    /** 편곡 승인일부터 센 2회차 기한. 승인 전이거나 2회차가 없으면 null. */
+    secondLastDay: Date | null;
+    secondOverdueDays: number;
     balanceLastDay: Date | null;
     balanceOverdueDays: number;
     paidInFull: boolean;
@@ -173,8 +178,19 @@ export interface ProductionLedger {
    * 해지 정산(제10조). `extras`는 동의한 추가 비용(제6조)과 이행한 초과 수정 요금(제5조 3항) — 착수 후 의뢰인
    * 사정의 해지(3·5항)에서만 돌려주지 않는다(3항). 착수 전(2항)·스튜디오 사정(4항)은 0이다. `deduction`은
    * 항목표 공제 + extras. 해지 전에는 의뢰인 사정으로 가정하고, 스튜디오 사정이면 얼마인지 `refundableIfStudio`로 함께 준다.
+   *
+   * `basis`는 정산 방식이다. `work`는 항목표(`refundSchedule`)의 작업분을 공제하고 `ratio`는 0으로 둔다.
+   * `paid_ratio`는 받은 금액 × 닿은 단계 비율에서 extras를 빼며, `ratio`가 그 비율이다(항목표 행은 없다).
    */
-  refund: { lines: RefundLine[]; extras: number; deduction: number; refundable: number; refundableIfStudio: number };
+  refund: {
+    basis: 'work' | 'paid_ratio';
+    ratio: number;
+    lines: RefundLine[];
+    extras: number;
+    deduction: number;
+    refundable: number;
+    refundableIfStudio: number;
+  };
   unresponsive: { since: Date | null; days: number; exceeded: boolean };
   todos: Todo[];
 }
@@ -314,12 +330,28 @@ export const computeProductionLedger = (input: {
   const totalDue = terms.amount.total + extraCosts + revisionFees;
 
   let running = 0;
+  let depositEvent: ProductionContractEvent | null = null;
+  let secondEvent: ProductionContractEvent | null = null;
+  const secondTarget = terms.amount.deposit + terms.amount.second;
+  for (const event of payments) {
+    running += event.amount ?? 0;
+    if (terms.amount.deposit > 0 && !depositEvent && running >= terms.amount.deposit) depositEvent = event;
+    if (terms.amount.second > 0 && !secondEvent && running >= secondTarget) secondEvent = event;
+  }
   // 계약금이 0원인 계약은 체결로 계약금 조건이 채워진 것으로 본다(입금 기록을 기다리면 작업 기간이 시작되지 않는다).
-  const depositEvent =
-    terms.amount.deposit > 0 ? (payments.find((e) => (running += e.amount ?? 0) >= terms.amount.deposit) ?? null) : null;
   const depositMetAt = depositEvent?.occurredAt ?? (terms.amount.deposit === 0 ? signedAt : null);
   const depositLastDay = signedAt ? kstDay(signedAt) + terms.amount.depositDueDays : null;
   const depositOverdueDays = !depositMetAt && depositLastDay !== null ? Math.max(0, today - depositLastDay) : 0;
+
+  const secondMetAt = terms.amount.second > 0 ? (secondEvent?.occurredAt ?? null) : null;
+  const arrangementApproval = findStage({ stages }, 'arrangement')?.approved ?? null;
+  // 계약금을 받은 뒤에야 2차 기한이 생긴다 — 계약금이 밀린 채 편곡만 승인되면 지금 받을 돈은 여전히 계약금이고,
+  // 여기서 기한을 세우면 아직 낼 차례도 아닌 중간금 연체가 화면에 뜬다(payment-link의 dueNow와 같은 순서).
+  const secondLastDay =
+    terms.amount.second > 0 && depositMetAt && arrangementApproval
+      ? kstDay(arrangementApproval.at) + terms.amount.secondDueDays
+      : null;
+  const secondOverdueDays = !secondMetAt && secondLastDay !== null ? Math.max(0, today - secondLastDay) : 0;
 
   const masteringApproval = findStage({ stages }, 'mastering')?.approved ?? null;
   const balanceLastDay = masteringApproval ? kstDay(masteringApproval.at) + terms.amount.balanceDueDays : null;
@@ -380,17 +412,52 @@ export const computeProductionLedger = (input: {
     Array.from({ length: songCount }, (_, song) =>
       milestones.reduce((best, m) => (reachedFor[m.event](song) ? Math.max(best, m.ratio) : best), 0),
     ).reduce((sum, ratio) => sum + ratio, 0) / songCount;
-  // 착수 전 해지는 받은 금액 전액 환불(제10조 2항) — 경계를 보지 않는다.
-  const lines: RefundLine[] = terms.refundSchedule.map((item) => {
-    const ratio = kickedOff ? itemRatio(item.milestones) : 0;
-    return { key: item.key, label: item.label, amount: item.amount, ratio, deducted: Math.round(item.amount * ratio) };
-  });
   // 3항 — 착수 후 의뢰인 사정의 해지에서만. 해지 전에는 의뢰인 사정으로 가정한다(관리자 미리보기).
   const performedFees = stages.reduce((sum, state) => sum + state.performedExtraFee, 0);
   const extrasForClientCause = kickedOff ? extraCosts + performedFees : 0;
   const refundExtras = input.terminationCause === 'studio' ? 0 : extrasForClientCause;
-  const workDeduction = lines.reduce((sum, line) => sum + line.deducted, 0);
-  const deduction = workDeduction + refundExtras;
+
+  let refund: ProductionLedger['refund'];
+  if (terms.refundPolicy?.mode === 'paid_ratio') {
+    // 받은 돈 × 닿은 단계 비율(제10조). 착수 전에는 전액(2항), 스튜디오 사정이면 진행도와 무관하게 전액(4항).
+    const stageRatio = !kickedOff
+      ? 1
+      : terms.refundPolicy.stages.reduce(
+          (best, milestone) => (reachedFor[milestone.event](0) ? Math.min(best, milestone.ratio) : best),
+          1,
+        );
+    const ratio = input.terminationCause === 'studio' ? 1 : stageRatio;
+    const refundable = Math.max(
+      0,
+      Math.round(received * ratio) - (input.terminationCause === 'studio' ? 0 : extrasForClientCause),
+    );
+    refund = {
+      basis: 'paid_ratio',
+      ratio,
+      lines: [],
+      extras: refundExtras,
+      deduction: received - refundable,
+      refundable,
+      refundableIfStudio: received,
+    };
+  } else {
+    // 착수 전 해지는 받은 금액 전액 환불(제10조 2항) — 경계를 보지 않는다.
+    const lines: RefundLine[] = terms.refundSchedule.map((item) => {
+      const ratio = kickedOff ? itemRatio(item.milestones) : 0;
+      return { key: item.key, label: item.label, amount: item.amount, ratio, deducted: Math.round(item.amount * ratio) };
+    });
+    const workDeduction = lines.reduce((sum, line) => sum + line.deducted, 0);
+    const deduction = workDeduction + refundExtras;
+    refund = {
+      basis: 'work',
+      ratio: 0,
+      lines,
+      extras: refundExtras,
+      deduction,
+      refundable: Math.max(0, received - deduction),
+      refundableIfStudio: Math.max(0, received - workDeduction),
+    };
+  }
 
   // ── 의뢰인 무응답(제10조 5항) ────────────────────────────────────────────
   const lastContact = last(of('client_contacted'));
@@ -420,6 +487,9 @@ export const computeProductionLedger = (input: {
       depositMetAt,
       depositLastDay: depositLastDay !== null ? kstDayStart(depositLastDay) : null,
       depositOverdueDays,
+      secondMetAt,
+      secondLastDay: secondLastDay !== null ? kstDayStart(secondLastDay) : null,
+      secondOverdueDays,
       balanceLastDay: balanceLastDay !== null ? kstDayStart(balanceLastDay) : null,
       balanceOverdueDays,
       paidInFull,
@@ -439,13 +509,7 @@ export const computeProductionLedger = (input: {
     },
     stages,
     songs,
-    refund: {
-      lines,
-      extras: refundExtras,
-      deduction,
-      refundable: Math.max(0, received - deduction),
-      refundableIfStudio: Math.max(0, received - workDeduction),
-    },
+    refund,
     unresponsive: {
       since: unresponsiveSince,
       days: unresponsiveDays,
@@ -490,6 +554,14 @@ const buildTodos = (ledger: ProductionLedger, terms: ProductionTerms, today: num
       message:
         `${depositWord} 기한이 ${payments.depositOverdueDays}일 지났어요.` +
         (payments.depositOverdueDays > delayLimit ? ` ${delayLimit}일 이상 지체 — 통지 후 해지할 수 있어요(제10조 5항).` : ''),
+    });
+  }
+  if (payments.secondOverdueDays > 0) {
+    todos.push({
+      severity: payments.secondOverdueDays > delayLimit ? 'alert' : 'warn',
+      message:
+        `중간금 기한이 ${payments.secondOverdueDays}일 지났어요.` +
+        (payments.secondOverdueDays > delayLimit ? ` ${delayLimit}일 이상 지체 — 통지 후 해지할 수 있어요(제10조 5항).` : ''),
     });
   }
   if (payments.balanceOverdueDays > 0) {

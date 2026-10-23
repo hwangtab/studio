@@ -256,10 +256,9 @@ refundPolicy: {
 
 ## 12. 구현 순서
 
-1. **T1** `splitInstallments` + terms v3 타입·검증·v2 호환 + `rework` 기본 조건.
+1. **T1** `splitThreeInstallments` + terms v3 타입·검증·v2 호환.
 2. **T2** ledger: 2차 납부·연체, `paid_ratio` 정산.
 3. **T3** 결제 링크: `second` purpose, dueNow, 관리자 타입, 유통 게이트.
-4. **T4** 계약서 템플릿·PDF·포털 문구.
+4. **T4** `rework` 종류·기본 조건·계약서·마이그레이션 0086.
 5. **T5** 관리자 작성 폼·상세·해지 미리보기, CLI.
-6. **T6** 마이그레이션 0086, 라벨·직렬화.
-7. **T7** 테스트 보강 + 전체 검증 + PR.
+6. **T6** 전체 검증 + PR.

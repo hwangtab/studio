@@ -133,7 +133,7 @@ export const validateProductionContractPayload = (
   // 종류를 모르면 곡 수를 검증할 수 없다. 값이 없으면 싱글(1단계 API 호환).
   const kind = (payload.kind ?? 'single') as ProductionKind;
   const knownKind = Object.prototype.hasOwnProperty.call(SONG_COUNT_RANGE, kind);
-  if (!knownKind) push('kind', '계약 종류(싱글·EP·정규·믹싱·마스터링)를 골라 주세요.');
+  if (!knownKind) push('kind', '계약 종류(싱글·EP·정규·믹싱·마스터링·AI 리워크)를 골라 주세요.');
   const terms = validateProductionTerms(payload.terms, knownKind ? kind : 'single');
   if (!terms.ok) errors.push(...terms.errors);
 
