@@ -137,6 +137,7 @@ export const Footer = ({ locale, bottomBarSpace = false }: FooterProps) => {
               <FooterLink href={`/${locale}/cover-video`}>{t('nav.coverVideo')}</FooterLink>
               <FooterLink href={`/${locale}/music-video`}>{t('nav.musicVideo')}</FooterLink>
               <FooterLink href={`/${locale}/composition-arrangement`}>{t('nav.compositionArrangement')}</FooterLink>
+              <FooterLink href={`/${locale}/ai-demo-rework`}>{t('nav.aiDemoRework')}</FooterLink>
               <FooterLink href={`/${locale}/lesson`}>{t('nav.lesson')}</FooterLink>
               <FooterLink href={`/${locale}/music-promotion`}>{t('nav.musicPromotion')}</FooterLink>
             </ul>
