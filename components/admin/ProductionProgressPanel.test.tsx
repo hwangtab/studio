@@ -73,3 +73,20 @@ describe('회귀 — 항목표 정산 계약', () => {
     expect(screen.queryByText(/^중간금/)).not.toBeInTheDocument();
   });
 });
+
+describe('AI 리워크 자료 이름', () => {
+  it('기록 줄과 작업 기간 칸이 "AI 데모 파일"로 읽힌다', () => {
+    const rework = buildDefaultReworkTerms('none');
+    renderPanel(rework, [ev('payment_received', '2026-11-03T09:00:00', { amount: 500_000 }), ev('source_received', '2026-11-03T10:00:00')]);
+    expect(screen.getByText('AI 데모 파일 수령')).toBeInTheDocument();
+    expect(screen.queryByText('1차 완성본 수령')).not.toBeInTheDocument();
+  });
+
+  it('작업 시작 전 칸 — 리워크는 AI 데모 파일, 싱글은 1차 완성본', () => {
+    const { unmount } = renderPanel(buildDefaultReworkTerms('small'), []);
+    expect(screen.getByText('계약금·AI 데모 파일 대기')).toBeInTheDocument();
+    unmount();
+    renderPanel(buildDefaultProductionTerms(), []);
+    expect(screen.getByText('계약금·1차 완성본 대기')).toBeInTheDocument();
+  });
+});

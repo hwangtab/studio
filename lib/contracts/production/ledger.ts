@@ -1,4 +1,5 @@
 import type { ProductionContractEvent } from '../../../db/schema';
+import { sourceLabelForTerms } from './event-spec';
 import type { TerminationCause } from './termination';
 import {
   depositWordFor,
@@ -192,6 +193,8 @@ export interface ProductionLedger {
     refundableIfStudio: number;
   };
   unresponsive: { since: Date | null; days: number; exceeded: boolean };
+  /** 의뢰인이 처음 보내는 자료의 이름(1차 완성본·작업 파일·AI 데모 파일) — 기록 거절 문구가 쓴다. */
+  sourceLabel: string;
   todos: Todo[];
 }
 
@@ -510,6 +513,7 @@ export const computeProductionLedger = (input: {
     stages,
     songs,
     refund,
+    sourceLabel: sourceLabelForTerms(terms),
     unresponsive: {
       since: unresponsiveSince,
       days: unresponsiveDays,
@@ -572,7 +576,7 @@ const buildTodos = (ledger: ProductionLedger, terms: ProductionTerms, today: num
         (payments.balanceOverdueDays > delayLimit ? ` ${delayLimit}일 이상 지체 — 통지 후 해지할 수 있어요(제10조 5항).` : ''),
     });
   }
-  if (!work.startedOn && payments.depositMetAt) todos.push({ severity: 'info', message: '1차 완성본을 받으면 기록해 주세요. 그날부터 작업 기간을 셉니다.' });
+  if (!work.startedOn && payments.depositMetAt) todos.push({ severity: 'info', message: `${sourceLabelForTerms(terms)}을 받으면 기록해 주세요. 그날부터 작업 기간을 셉니다.` });
 
   for (const state of stages) {
     const name = stageTitle(terms, state.stage, state.song);

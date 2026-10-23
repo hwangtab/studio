@@ -293,7 +293,7 @@ const main = async (): Promise<void> => {
     const allowed = spec.adminEventTypesFor(mixMaster);
     if (type !== undefined && !(allowed as readonly string[]).includes(type)) {
       throw new Error(
-        `--type은 다음 중 하나입니다:\n${allowed.map((t) => `  ${t.padEnd(22)} ${spec.eventLabelFor(t, mixMaster)}`).join('\n')}`,
+        `--type은 다음 중 하나입니다:\n${allowed.map((t) => `  ${t.padEnd(22)} ${spec.eventLabelFor(t, mixMaster, spec.isReworkTerms(context.terms))}`).join('\n')}`,
       );
     }
     const amountRaw = flag('amount');
@@ -331,7 +331,7 @@ const main = async (): Promise<void> => {
     const { songLabel } = await import('../lib/contracts/production/terms');
     console.log(`계약     ${context.contract.title}`);
     console.log(`의뢰인   ${context.contract.clientName || '(의뢰인 미정)'}`);
-    console.log(`기록     ${spec.eventLabelFor(input.type, mixMaster)}${input.voidsEventId ? ` (무효로 할 기록 ${input.voidsEventId})` : ''}`);
+    console.log(`기록     ${spec.eventLabelFor(input.type, mixMaster, spec.isReworkTerms(context.terms))}${input.voidsEventId ? ` (무효로 할 기록 ${input.voidsEventId})` : ''}`);
     if (input.stage) console.log(`단계     ${spec.STAGE_LABEL[input.stage]}`);
     if (input.song !== null && context.terms.songs.length > 1) console.log(`곡       ${songLabel(context.terms, input.song)}`);
     if (input.amount !== null) console.log(`금액     ${won(input.amount)}`);

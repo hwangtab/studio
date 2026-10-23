@@ -83,6 +83,18 @@ export const ADMIN_EVENT_TYPES = (Object.keys(EVENT_SPEC) as ProductionEventType
 export const isMixMasterTerms = (terms: { scope: { arrangementTracks: number; recordingHours: number } }): boolean =>
   terms.scope.arrangementTracks === 0 && terms.scope.recordingHours === 0;
 
+/**
+ * AI 리워크 계약인가 — 지급 비율 환불(refundPolicy)은 리워크 계약에만 붙는다(terms.ts 검증). 장부·화면은 종류를 받지 않으므로
+ * terms로 알아본다(isMixMasterTerms와 같은 이유).
+ */
+export const isReworkTerms = (terms: { refundPolicy?: { mode: string } }): boolean => terms.refundPolicy?.mode === 'paid_ratio';
+
+/** 의뢰인이 처음 보내는 자료의 이름 — terms.ts sourceLabelFor(종류 기준)와 같은 말을 terms로. */
+export const sourceLabelForTerms = (terms: {
+  scope: { arrangementTracks: number; recordingHours: number };
+  refundPolicy?: { mode: string };
+}): string => (isMixMasterTerms(terms) ? '작업 파일' : isReworkTerms(terms) ? 'AI 데모 파일' : '1차 완성본');
+
 /** 믹싱·마스터링 계약에서 쓰지 않는 기록 — 녹음·유통 등록·발매가 범위 밖이다(mixmaster-template.md 제2조·제9조). */
 const MIXMASTER_HIDDEN_TYPES: ReadonlySet<ProductionEventType> = new Set(['recording_completed', 'distribution_submitted', 'released']);
 
@@ -93,8 +105,15 @@ const MIXMASTER_LABEL: Partial<Record<ProductionEventType, string>> = {
   kickoff: '작업 시작(착수) — 믹싱',
 };
 
-export const eventLabelFor = (type: ProductionEventType, mixMaster: boolean): string =>
-  (mixMaster ? MIXMASTER_LABEL[type] : undefined) ?? EVENT_SPEC[type].label;
+/** AI 리워크 계약에서 이름이 다른 기록 — 처음 받는 자료가 "AI 데모 파일"이고, 착수에 녹음 시작도 든다(rework-template.md 제1조·제10조 1항). */
+const REWORK_LABEL: Partial<Record<ProductionEventType, string>> = {
+  source_received: 'AI 데모 파일 수령',
+  source_replaced: 'AI 데모 파일 교체',
+  kickoff: '작업 시작(착수) — 기획 상담·편곡·녹음',
+};
+
+export const eventLabelFor = (type: ProductionEventType, mixMaster: boolean, rework = false): string =>
+  (mixMaster ? MIXMASTER_LABEL[type] : rework ? REWORK_LABEL[type] : undefined) ?? EVENT_SPEC[type].label;
 
 export const adminEventTypesFor = (mixMaster: boolean): ProductionEventType[] =>
   mixMaster ? ADMIN_EVENT_TYPES.filter((type) => !MIXMASTER_HIDDEN_TYPES.has(type)) : ADMIN_EVENT_TYPES;

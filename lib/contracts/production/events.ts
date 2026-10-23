@@ -172,16 +172,17 @@ export const checkEventAllowed = (
   }
   const song = input.song ?? 0;
   const songState = ledger.songs[song];
+  const source = ledger.sourceLabel;
 
   switch (input.type) {
     case 'source_received':
-      return songState?.sourceReceivedAt ? '그 곡의 1차 완성본은 이미 받았습니다. 바꿨다면 "1차 완성본 교체"로 기록해 주세요.' : null;
+      return songState?.sourceReceivedAt ? `그 곡의 ${source}은 이미 받았습니다. 바꿨다면 "${source} 교체"로 기록해 주세요.` : null;
     case 'source_replaced':
-      return songState?.sourceReceivedAt ? null : '먼저 그 곡의 "1차 완성본 수령"을 기록해 주세요.';
+      return songState?.sourceReceivedAt ? null : `먼저 그 곡의 "${source} 수령"을 기록해 주세요.`;
     case 'kickoff':
       if (has('kickoff')) return '착수는 이미 기록했습니다.';
       // 착수는 1차 완성본을 받은 뒤의 일이다(제10조 1항) — 받기 전에 기록하면 착수 전 해지(전액 환불)가 공제로 바뀐다.
-      return ledger.songs.some((s) => s.sourceReceivedAt) ? null : '1차 완성본을 받은 뒤에 착수를 기록할 수 있습니다(제10조 1항).';
+      return ledger.songs.some((s) => s.sourceReceivedAt) ? null : `${source}을 받은 뒤에 착수를 기록할 수 있습니다(제10조 1항).`;
     case 'recording_completed':
       return songState?.recordingCompleted ? '그 곡의 보컬 녹음 세션 마침은 이미 기록했습니다.' : null;
     case 'stage_delivered':
