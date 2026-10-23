@@ -53,6 +53,15 @@ describe('progressOf', () => {
   });
 });
 
+describe('arrearsOf — 휴강 보충 회차', () => {
+  it('보충 회차가 붙어도 과정 개월 수를 넘는 달은 받지 않는다', () => {
+    const sessions = Array.from({ length: 13 }, (_, i) => ({ status: i < 12 ? 'done' : 'scheduled', scheduledOn: `2026-0${1 + Math.floor(i / 4)}-${String(1 + (i % 4) * 7).padStart(2, '0')}` }));
+    const base = { payMethod: 'bank', monthlyAmount: 350000, sessions, payments: [{ amount: 1050000, vatAmount: 0 }], today: '2026-12-31' };
+    expect(arrearsOf({ ...base, courseMonths: 3 })).toMatchObject({ monthsDue: 3, arrears: 0 });
+    expect(arrearsOf(base).monthsDue).toBe(4); // courseMonths를 안 주면 예전 계산(회차 수로 센다)
+  });
+});
+
 describe('arrearsOf — 계좌·현금 선불 미수금', () => {
   const weekly = (start: string, n: number, doneUpTo: string) => sessionDates(start, n).map((on) => ({ scheduledOn: on, status: on <= doneUpTo ? 'done' : 'scheduled' }));
   const base = { payMethod: 'bank', monthlyAmount: 350000, today: '2026-10-21' };

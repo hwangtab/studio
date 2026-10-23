@@ -181,8 +181,10 @@ export default function AdminLessonDetailPage({ found, today, enrollment, sessio
   const progress = progressOf(sessions);
   const active = enrollment.status === 'active';
   const paid = payments.reduce((sum, p) => sum + p.amount, 0);
-  const refund = refundOf({ consumed: progress.consumed, courseMonths: enrollment.courseWeeks / 4, monthlyAmount: enrollment.monthlyAmount, paidNet: payments.reduce((sum, p) => sum + p.amount - p.vatAmount, 0) });
-  const due = arrearsOf({ payMethod: enrollment.payMethod, monthlyAmount: enrollment.monthlyAmount, sessions, payments, today });
+  // 날짜가 지났는데 표시하지 않은 회차도 진행한 것으로 센다(arrearsOf와 같다) — 표시를 빠뜨려 환불을 많이 계산하지 않게.
+  const pastUnmarked = sessions.filter((x) => x.status === 'scheduled' && x.scheduledOn < today).length;
+  const refund = refundOf({ consumed: progress.consumed + pastUnmarked, courseMonths: enrollment.courseWeeks / 4, monthlyAmount: enrollment.monthlyAmount, paidNet: payments.reduce((sum, p) => sum + p.amount - p.vatAmount, 0) });
+  const due = arrearsOf({ payMethod: enrollment.payMethod, monthlyAmount: enrollment.monthlyAmount, sessions, payments, today, courseMonths: enrollment.courseWeeks / 4 });
 
   return (
     <>
@@ -379,8 +381,17 @@ export default function AdminLessonDetailPage({ found, today, enrollment, sessio
             <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-gray-900">중도 종료</h2>
             <p className="mb-3 text-sm text-gray-600">남은 예정 회차를 취소하고 막아 둔 시간을 풀어요. 환불은 수납 기록·구독 환불에서 따로 처리해 주세요.</p>
             <div className="mb-3 rounded-lg bg-gray-50 p-3 text-sm text-gray-800">
-              <p className="font-semibold">지금 해지하면 환불 기준액 <span className="text-primary-700">{won(refund.refund)}</span>{enrollment.payMethod === 'card' && refund.refund > 0 ? ` (카드는 부가세 포함 ${won(Math.round(refund.refund * 1.1))} 취소)` : ''}</p>
-              <p className="mt-1 text-xs text-gray-600">{refund.note} · 진행 {progress.consumed}회(결석 포함) · 낸 수강료(부가세 제외) {won(payments.reduce((sum, p) => sum + p.amount - p.vatAmount, 0))} − 스튜디오 몫 {won(refund.retained)}.{refund.shortfall > 0 ? ` 낸 돈이 ${won(refund.shortfall)} 모자라요.` : ''} 계약서 제9조(시행령 별표 4) 기준이에요. 해지 통지를 받은 날부터 5일 안에 보내야 하고, 오늘 수업을 아직 표시하지 않았다면 먼저 표시한 뒤 보세요.</p>
+              {enrollment.payMethod === 'card' ? (
+                <>
+                  <p className="font-semibold">지금 해지하면 스튜디오가 가지는 수강료 <span className="text-primary-700">{won(refund.retained)}</span> (부가세 제외)</p>
+                  <p className="mt-1 text-xs text-gray-600">{refund.note} · 진행 {progress.consumed + pastUnmarked}회(결석 포함). 카드는 이 화면에 수납 기록이 없어 환불액을 계산하지 못해요 — 구독의 실제 결제 내역에서 낸 금액(부가세 포함)을 확인해, 낸 금액 − 스튜디오 몫×1.1 만큼 취소해 주세요. 계약서 제9조(시행령 별표 4) 기준, 해지 통지일부터 5일 안에 처리해야 해요.</p>
+                </>
+              ) : (
+                <>
+                  <p className="font-semibold">지금 해지하면 환불 기준액 <span className="text-primary-700">{won(refund.refund)}</span></p>
+                  <p className="mt-1 text-xs text-gray-600">{refund.note} · 진행 {progress.consumed + pastUnmarked}회(결석 포함) · 낸 수강료(부가세 제외) {won(payments.reduce((sum, p) => sum + p.amount - p.vatAmount, 0))} − 스튜디오 몫 {won(refund.retained)}.{refund.shortfall > 0 ? ` 낸 돈이 ${won(refund.shortfall)} 모자라요.` : ''} 계약서 제9조(시행령 별표 4) 기준이에요. 해지 통지일부터 5일 안에 보내야 해요.</p>
+                </>
+              )}
             </div>
             <Button
               light

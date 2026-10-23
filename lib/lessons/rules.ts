@@ -126,6 +126,8 @@ export interface ArrearsInput {
   sessions: ReadonlyArray<{ status: string; scheduledOn: string }>;
   payments: ReadonlyArray<{ amount: number; vatAmount: number }>;
   today: string;
+  /** 과정 개월 수(12주 3, 24주 6). 주면 받을 달 수가 이를 넘지 않는다 — 스튜디오 휴강으로 붙은 보충 회차가 한 달 치를 더 받을 이유가 되면 안 된다. */
+  courseMonths?: number;
 }
 
 /**
@@ -138,7 +140,7 @@ export const arrearsOf = (input: ArrearsInput): { monthsDue: number; expected: n
   const live = input.sessions.filter((s) => s.status !== 'studio_cancelled' && s.status !== 'dropped');
   const started = live.filter((s) => s.status === 'done' || s.status === 'absent' || (s.status === 'scheduled' && s.scheduledOn <= input.today)).length;
   const firstOn = live.map((s) => s.scheduledOn).sort()[0];
-  const maxMonths = Math.max(1, Math.ceil(live.length / 4));
+  const maxMonths = input.courseMonths ? Math.max(1, input.courseMonths) : Math.max(1, Math.ceil(live.length / 4));
   const monthsDue = started > 0
     ? Math.min(maxMonths, Math.ceil(started / 4))
     : firstOn && firstOn <= addDays(input.today, 3) ? 1 : 0;
