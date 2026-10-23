@@ -25,14 +25,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.error('[privacy] 접속기록 호출 실패 — 조회는 계속됩니다', error);
     });
   try {
-    const row = await getDb().query.roomTenancies.findFirst({ where: (c, { eq }) => eq(c.id, id), columns: { privateEnc: true } });
+    const row = await getDb().query.roomTenancies.findFirst({ where: (c, { eq }) => eq(c.id, id), columns: { privateEnc: true, contractId: true } });
     if (!row) {
       await log('not_found');
       return res.status(404).json({ ok: false, message: '입주 기록을 찾을 수 없어요.' });
     }
     const data = openPrivate(row.privateEnc);
+    // 입주 기록에 연락처가 없고 전자계약이 연결돼 있으면 계약서의 번호를 함께 돌려준다 — 화면이 문자·전화 연결과 "계약서 번호로 채우기"에 쓴다.
+    let contractPhone: string | null = null;
+    if (!data.phone && row.contractId) {
+      try {
+        const contract = await getDb().query.contracts.findFirst({ where: (c, { eq }) => eq(c.id, row.contractId as string), columns: { customerPhone: true } });
+        contractPhone = contract?.customerPhone && contract.customerPhone.trim() !== '' ? contract.customerPhone : null;
+      } catch {
+        contractPhone = null;
+      }
+    }
     await log('success');
-    return res.status(200).json({ ok: true, private: data });
+    return res.status(200).json({ ok: true, private: data, contractPhone });
   } catch (error) {
     if (error instanceof FieldCryptoError) {
       await log('decrypt_failed');
