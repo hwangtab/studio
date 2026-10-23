@@ -173,6 +173,8 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
     setEditing(t);
     setForm({ ...formOf(t), phone: p.phone ?? '', emergencyContact: p.emergencyContact ?? '', email: p.email ?? '', businessNumber: p.businessNumber ?? '', gender: p.gender ?? '' });
     setPrivateLoaded(true);
+    // 목록이 길면 폼이 화면 밖이라 "아래에 입력"이 안 보인다 — 열린 폼으로 데려간다.
+    setTimeout(() => document.getElementById('tenancy-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
   };
 
   const save = async (e: React.FormEvent) => {
@@ -375,7 +377,7 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
         </div>
 
         {form && (
-          <form onSubmit={save} className="mb-6 grid grid-cols-1 gap-4 rounded-2xl bg-white p-4 shadow-sm md:grid-cols-4 md:p-6">
+          <form id="tenancy-form" onSubmit={save} className="mb-6 grid scroll-mt-20 grid-cols-1 gap-4 rounded-2xl bg-white p-4 shadow-sm md:grid-cols-4 md:p-6">
             <h2 className="text-lg font-bold text-gray-900 md:col-span-4">{editing ? `${editing.tenantName} 수정` : '입주 등록'}</h2>
             {field('유형', <select className={inputClass} value={form.kind} onChange={(e) => set({ kind: e.target.value as 'room' | 'virtual' })} disabled={!!editing}><option value="room">방 입주</option><option value="virtual">비상주(비대면)</option></select>)}
             {form.kind === 'room' && field('방 번호 (R05)', <input className={inputClass} value={form.roomNumber} onChange={(e) => set({ roomNumber: e.target.value })} required />)}
