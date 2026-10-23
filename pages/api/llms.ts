@@ -129,7 +129,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - Business Type: Entertainment Business, Recording Studio, Music Production
 - Industry: Music & Entertainment
 - Specialization: Independent artist support — affordable professional-grade recording, mixing, and production in Seoul
-- Address: 3F, 2-1 Tongil-ro 71-gil (Daejo-dong), Eunpyeong-gu, Seoul, KR 03424 (next to Dongmyeong Girls' High School main gate, 1st floor is a car repair shop)
+- Address: 3F, 2-1 Tongil-ro 71-gil (Daejo-dong), Eunpyeong-gu, Seoul, KR 03391 (next to Dongmyeong Girls' High School main gate, 1st floor is a car repair shop)
 - Geo: 37.614353, 126.925887
 - Phone: ${CANONICAL_FACTS.phoneIntl} (domestic: ${CANONICAL_FACTS.phone})
 - Email: hello@studionol.co.kr

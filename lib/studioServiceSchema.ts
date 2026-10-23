@@ -71,7 +71,7 @@ export const buildStudioServiceSchema = ({
       '@type': 'PostalAddress',
       addressLocality: locale === 'ko' ? '은평구' : 'Eunpyeong-gu',
       addressRegion: locale === 'ko' ? '서울특별시' : 'Seoul',
-      postalCode: '03424',
+      postalCode: '03391',
       addressCountry: 'KR',
     },
     geo: {
