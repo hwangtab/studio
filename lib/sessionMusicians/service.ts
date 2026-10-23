@@ -1,5 +1,5 @@
 import { FUNDING_TERMS_VERSION } from '../funding/policy';
-import { manageLinkUrl, sendOperatorNewRegistrationEmail, sendRegistrationMail } from './email';
+import { mailMayHaveBeenSent, manageLinkUrl, sendOperatorNewRegistrationEmail, sendRegistrationMail } from './email';
 import { openSessionPrivate, sealSessionPrivate, type SessionMusicianPrivate } from './privateData';
 import {
   confirmByManageTokenHash,
@@ -23,6 +23,7 @@ import { isUniqueConstraintError } from '../dbErrors';
  */
 
 export type SubmitOutcome = { kind: 'created' | 'duplicate'; id: string };
+type ResendOutcome = SubmitOutcome | { kind: 'vanished'; id: string };
 
 /**
  * 등록을 받는다.
@@ -38,7 +39,12 @@ export const submitRegistration = async (input: SessionRegistrationInput): Promi
   const emailHash = hashSessionEmail(input.email);
 
   const existing = await findIdByEmailHash(emailHash);
-  if (existing) return resendManageLink(existing, input.email);
+  if (existing) {
+    const resent = await resendManageLink(existing, input.email);
+    // 읽은 뒤 그 등록이 지워졌으면(본인 삭제·운영자 삭제와 겹침) 새 등록으로 받는다 — "받았어요"라고 답하고 아무것도
+    // 남기지 않으면 안 된다(2026-10-23 리뷰).
+    if (resent.kind !== 'vanished') return resent;
+  }
 
   const token = generateManageToken();
   let id: string;
@@ -59,7 +65,9 @@ export const submitRegistration = async (input: SessionRegistrationInput): Promi
     if (!isUniqueConstraintError(error, 'session_musicians.email_hash')) throw error;
     const raced = await findIdByEmailHash(emailHash);
     if (!raced) throw error;
-    return resendManageLink(raced, input.email);
+    const resent = await resendManageLink(raced, input.email);
+    if (resent.kind === 'vanished') throw error;
+    return resent;
   }
 
   // 메일 실패는 접수를 되돌리지 않는다 — 로그만 남긴다(운영자 알림 실패는 email.ts가 경보한다).
@@ -82,7 +90,7 @@ export const submitRegistration = async (input: SessionRegistrationInput): Promi
 const resendManageLink = async (
   existing: { id: string; stageName: string; manageTokenHash: string },
   email: string,
-): Promise<SubmitOutcome> => {
+): Promise<ResendOutcome> => {
   const { id } = existing;
   const token = generateManageToken();
   const newHash = hashManageToken(token);
@@ -92,7 +100,7 @@ const resendManageLink = async (
   for (let attempt = 0; attempt < 3 && !swapped; attempt += 1) {
     if (attempt > 0) {
       const current = await getManageTokenHash(id);
-      if (current === null) return { kind: 'duplicate', id }; // 그 사이 본인이 지웠다
+      if (current === null) return { kind: 'vanished', id }; // 그 사이 본인·운영자가 지웠다 — 호출부가 새로 등록한다
       previous = current;
     }
     swapped = await swapManageTokenHash(id, previous, newHash);
@@ -102,7 +110,9 @@ const resendManageLink = async (
     return { kind: 'duplicate', id };
   }
   const mailError = await sendRegistrationMail('already', email, existing.stageName, manageLinkUrl(token));
-  if (mailError) {
+  if (mailError && mailMayHaveBeenSent(mailError)) {
+    console.error(`[session-musicians] 관리 링크 재발송 메일 응답 지연 (id=${id}) — 도착했을 수 있어 새 링크를 그대로 둡니다`);
+  } else if (mailError) {
     console.error(`[session-musicians] 관리 링크 재발송 메일 실패 (id=${id}) — 바로 전 링크로 되돌립니다:`, mailError);
     await swapManageTokenHash(id, newHash, previous);
   }

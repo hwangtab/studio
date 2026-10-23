@@ -255,7 +255,9 @@ export const validateSessionRegistration = (
 
   let yearsExperience: number | null = null;
   if (b.yearsExperience !== undefined && b.yearsExperience !== null && b.yearsExperience !== '') {
-    const years = typeof b.yearsExperience === 'string' ? Number(b.yearsExperience) : b.yearsExperience;
+    // 문자열은 숫자만 받는다 — Number('   ')는 0, Number('1e1')은 10, Number('0x10')은 16이 된다.
+    const years =
+      typeof b.yearsExperience === 'string' ? (/^\s*\d+\s*$/.test(b.yearsExperience) ? Number(b.yearsExperience) : Number.NaN) : b.yearsExperience;
     if (
       typeof years !== 'number' ||
       !Number.isInteger(years) ||

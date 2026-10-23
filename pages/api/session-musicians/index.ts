@@ -72,13 +72,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const input = validation.value;
 
   const ip = getClientIp(req) ?? 'unknown';
-  if (!(await consumeRateLimit(`session_musician:ip:${ip}`, IP_LIMIT, IP_WINDOW_SECONDS))) {
+  const ipKey = `session_musician:ip:${ip}`;
+  if (!(await consumeRateLimit(ipKey, IP_LIMIT, IP_WINDOW_SECONDS))) {
     return res.status(429).json({ ok: false, code: 'rate_limited', message: '요청이 너무 잦아요. 잠시 후 다시 시도해 주세요.' });
   }
 
   // 이 요청이 센 이메일·전체 한도. 등록이 우리 쪽 장애로 실패하면 되돌린다 — 안 그러면 장애 중에 다시 시도한 지원자가
   // 이메일 한도(하루 2건)에 걸려 저장되지 않았는데도 "등록을 받았어요"를 보게 된다(2026-10-22 리뷰).
-  const consumed: string[] = [];
+  // IP 한도도 함께 되돌린다 — 장애 중 세 번 실패한 사람이 장애가 끝난 뒤 한 시간 막히지 않게.
+  const consumed: string[] = [ipKey];
   try {
     // 이메일 단위·전체 상한은 메일을 실제로 보내기 직전에만 소비한다(검증에 걸린 요청이 예산을 태우지 않게).
     // emailKey는 비밀이 없으면 SessionMusicianConfigError를 던지므로 try 안에 둔다.

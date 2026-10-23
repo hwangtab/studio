@@ -79,13 +79,21 @@ export default function AdminSessionMusicianDetailPage({ profile }: Props) {
     return { ok: res.ok && data?.ok === true, data };
   };
 
-  const initialRate = profile.ratePerSong === null ? '' : profile.ratePerSong.toLocaleString('ko-KR');
+  // 마지막으로 저장된(또는 처음 받은) 값 — "바뀐 칸"은 이것과 비교하고, 위쪽 프로필 표도 이 값을 그린다.
+  // 저장 뒤 페이지를 다시 불러오지 않는다: 다시 불러오면 입력 칸은 옛 값 그대로라 다음 저장이 본인이 그 사이 고친 연주비를
+  // 덮을 수 있고, 저장할 때마다 상세 열람 접속기록이 한 줄씩 늘었다(2026-10-23 리뷰).
+  const [saved, setSaved] = useState({
+    status: profile.status as string,
+    memo: profile.operatorMemo ?? '',
+    rate: profile.ratePerSong === null ? '' : profile.ratePerSong.toLocaleString('ko-KR'),
+    rateNote: profile.rateNote ?? '',
+  });
   const changedFields = (): Record<string, string> => {
     const fields: Record<string, string> = {};
-    if (status !== profile.status) fields.status = status;
-    if (memo !== (profile.operatorMemo ?? '')) fields.operatorMemo = memo;
-    if (rate !== initialRate) fields.ratePerSong = rate;
-    if (rateNote !== (profile.rateNote ?? '')) fields.rateNote = rateNote;
+    if (status !== saved.status) fields.status = status;
+    if (memo.trim() !== saved.memo) fields.operatorMemo = memo;
+    if (rate !== saved.rate) fields.ratePerSong = rate;
+    if (rateNote.trim() !== saved.rateNote) fields.rateNote = rateNote;
     return fields;
   };
 
@@ -104,8 +112,12 @@ export default function AdminSessionMusicianDetailPage({ profile }: Props) {
         body: JSON.stringify(changedFields()),
       });
       setMessage(result.ok ? { tone: 'success', text: '저장했어요.' } : { tone: 'error', text: String(result.data?.message ?? '저장하지 못했어요.') });
-      // 위쪽 프로필 표(곡당 연주비 등)도 저장한 값으로 다시 그린다.
-      if (result.ok) await router.replace(router.asPath, undefined, { scroll: false });
+      if (result.ok) {
+        // 서버가 앞뒤 공백을 걷어 저장하므로 화면도 같은 값으로 맞춘다.
+        setMemo(memo.trim());
+        setRateNote(rateNote.trim());
+        setSaved({ status, memo: memo.trim(), rate, rateNote: rateNote.trim() });
+      }
     } catch {
       setMessage({ tone: 'error', text: '네트워크 오류가 났어요.' });
     } finally {
@@ -163,8 +175,8 @@ export default function AdminSessionMusicianDetailPage({ profile }: Props) {
             <Row label="악보 리딩">{readingLabel(profile.reading) || '-'}</Row>
             <Row label="원격 녹음">{profile.remoteRecording ? '가능' : '-'}</Row>
             <Row label="방문 가능 지역">{profile.region ?? '-'}</Row>
-            <Row label="곡당 희망 연주비">{formatSessionRate(profile.ratePerSong)}</Row>
-            <Row label="연주비 메모">{profile.rateNote ?? '-'}</Row>
+            <Row label="곡당 희망 연주비">{saved.rate ? `${saved.rate}원` : formatSessionRate(null)}</Row>
+            <Row label="연주비 메모">{saved.rateNote || '-'}</Row>
             <Row label="등록">{formatKstDateTimeFull(new Date(profile.createdAt).toISOString())}</Row>
             <Row label="마지막 확인">{formatKstDateTimeFull(new Date(profile.lastConfirmedAt).toISOString())}</Row>
           </dl>
