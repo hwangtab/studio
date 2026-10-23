@@ -451,7 +451,7 @@ Studio NOL 是首尔的一家专业录音棚，位于恩平区延新内 (Yeonsin
 
 - 服务范围：人声录音、混音、母带制作、月租练习室（₩${krw(PRACTICE_ROOM_MONTHLY_PRICE)}／月，不含增值税；刷卡支付加收10%，现金汇款无增值税；0 押金）、1 对 1 音乐制作课程（MIDI·作曲·混音，不提供声乐课）、配音录音、婚礼献唱套餐、翻唱视频套餐、发行企划（A&R 策划·全球发行·面向海外媒体/电台/歌单的宣传推广），以及可单独委托的音源发行宣传（无需在本工作室制作）。
 - 录音报价：按小时 ₩${krw(RECORDING_HOURLY_PRICE)}，人声录音 3 小时套餐（含专属工程师，不限曲数，不按首计价）₩${krw(VOCAL_PACKAGE_PRICE)}；一站式套餐包含策划、录音、混音、母带、数字发行登记与发行宣传：1 首 ₩${krw(SINGLE_BUNDLE_PRICE)}（较制作单项合计便宜约 9%；没有发行计划也可作为录音+混音+母带一次性委托套餐使用，不使用发行与宣传价格不变，低于分别委托的合计 ₩${krw(SINGLE_LINE_ITEM_TOTAL)}；精细人声修音为每首 +₩${krw(VOCAL_TUNING_ADDON_PRICE)} 可选）；EP 4 首 ₩${krw(EP_BUNDLE_PRICE)}（约 15%）；专辑 8 首 ₩${krw(ALBUM_BUNDLE_PRICE)}（约 20%）。会话乐手演奏费不含在任何套餐内，按乐手实际费用另计，不收介绍费。
-- 混音／母带：每首歌 ₩${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)}，按音轨数分级，含 2 次修改。
+- 混音：每首歌 ₩${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)}，按音轨数分级，含 2 次修改，不含母带。母带另行委托：单曲每首 ₩${krw(MASTERING_SINGLE_PRICE)}，4 首以上每首 ₩${krw(MASTERING_PACKAGE_PRICE)}（含增值税）。
 - 月租练习室：₩${krw(PRACTICE_ROOM_MONTHLY_PRICE)}／月（不含增值税；刷卡支付加收10%，现金汇款无增值税），0 押金，24 小时进出，私人隔音房 STC 60+。也可按小时使用：每小时 ₩${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)}（含增值税），1 小时起，可在线预约。不提供乐队排练房。
 - 婚礼献唱套餐：₩${krw(WEDDING_PACKAGE_PRICE)}（2 小时录音 + 人声调音 + 混音及母带），新手友好。
 - 在韩华人音乐人指南（中文 native）：hub 见 ${siteUrl}/zh/stories/recording-in-seoul-for-chinese-musicians，另有 3 篇 spoke 指南（练习室预约、价格、交通指引）。
