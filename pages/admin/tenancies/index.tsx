@@ -6,13 +6,14 @@ import { useState } from 'react';
 import { AdminShell } from '../../../components/admin/AdminShell';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { tenancyCalendarId } from '../../../lib/tenancy/calendar';
+import { smsHref, telHref } from '../../../lib/tenancy/contactLink';
 import { currentTermEnd, daysBetween, flagsOf, kstToday, overdueDays, type TenancyFlag } from '../../../lib/tenancy/rules';
 import { listTenancies, type TenancyListRow } from '../../../lib/tenancy/service';
 import { buttonVariants } from '../../../components/ui/Button';
 import { DANGER_GHOST_CLASS } from '../../../components/admin/adminDanger';
 import { cn } from '../../../lib/utils';
 import { formatAdminDate } from '../../../lib/admin/displayDate';
-import { ROW_BTN, ROW_BTN_DANGER, RowActions, StatusChip, StatusStack, Th } from '../../../components/admin/AdminTable';
+import { ROW_BTN, ROW_BTN_DANGER, ROW_LINK, RowActions, RowLinks, StatusChip, StatusStack, Th } from '../../../components/admin/AdminTable';
 import { DangerActions } from '../../../components/admin/DangerActions';
 import { useAdminDialog } from '../../../components/admin/useAdminDialog';
 
@@ -147,6 +148,35 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
     setPrivateLoaded(true);
   };
 
+  /**
+   * 문자·전화 — 연락처를 그 자리에서 불러와(열람 기록이 남는다) 메시지 앱(`sms:`)·전화 앱(`tel:`)을 연다. 연락처는 목록 props에 없으므로 누를 때만 읽는다.
+   * 입주 기록에 번호가 없으면 계약서에 적힌 번호로 연결하고(저장해 두라고 안내), 그것도 없으면 수정 화면을 열어 번호를 넣게 한다.
+   */
+  const contact = async (t: TenancyListRow, kind: 'sms' | 'tel') => {
+    if (busy) return;
+    setBusy(true);
+    const data = await call(`/api/admin/tenancies/${t.id}/private`, 'GET');
+    setBusy(false);
+    if (!data.ok) { setNotice(data.message ?? '연락처를 읽지 못했어요.'); return; }
+    const p = (data.private ?? {}) as Record<string, string | undefined>;
+    const contractPhone = typeof data.contractPhone === 'string' ? data.contractPhone : null;
+    const own = kind === 'sms' ? smsHref(p.phone) : telHref(p.phone);
+    const fromContract = kind === 'sms' ? smsHref(contractPhone) : telHref(contractPhone);
+    const href = own ?? fromContract;
+    if (href) {
+      if (!own) setNotice(`${t.tenantName}님의 입주 기록에는 연락처가 없어서 계약서에 적힌 번호로 연결해요. 상세·수정에서 연락처를 저장해 두면 다음부터 바로 연결돼요.`);
+      window.location.href = href;
+      return;
+    }
+    // 번호가 없다 — 수정 화면을 연락처가 열린 채로 열어 바로 입력하게 한다.
+    setNotice(p.phone || contractPhone ? `${t.tenantName}님의 번호 형식을 알아볼 수 없어요. 연락처를 고쳐 주세요.` : `${t.tenantName}님의 연락처가 등록돼 있지 않아요. 아래에 입력해 저장해 주세요.`);
+    setEditing(t);
+    setForm({ ...formOf(t), phone: p.phone ?? '', emergencyContact: p.emergencyContact ?? '', email: p.email ?? '', businessNumber: p.businessNumber ?? '', gender: p.gender ?? '' });
+    setPrivateLoaded(true);
+    // 목록이 길면 폼이 화면 밖이라 "아래에 입력"이 안 보인다 — 열린 폼으로 데려간다.
+    setTimeout(() => document.getElementById('tenancy-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+  };
+
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form || busy) return;
@@ -243,6 +273,8 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
             <div className="mt-3 flex flex-wrap gap-2">
               <button type="button" className={btn} disabled={busy} onClick={() => pay(t)}>입금 기록</button>
               <button type="button" className={btn} disabled={busy} onClick={() => openEdit(t)}>상세·수정</button>
+              <button type="button" className={btn} disabled={busy} onClick={() => void contact(t, 'sms')}>문자</button>
+              <button type="button" className={btn} disabled={busy} onClick={() => void contact(t, 'tel')}>전화</button>
               <DangerActions>
                 <button type="button" className={btnDanger} disabled={busy} onClick={() => end(t)}>퇴실</button>
               </DangerActions>
@@ -309,6 +341,10 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
                     <button type="button" className={ROW_BTN} disabled={busy} onClick={() => pay(t)}>입금 기록</button>
                     <button type="button" className={ROW_BTN} disabled={busy} onClick={() => openEdit(t)}>상세·수정</button>
                   </RowActions>
+                  <RowLinks>
+                    <button type="button" className={ROW_LINK} disabled={busy} onClick={() => void contact(t, 'sms')}>문자</button>
+                    <button type="button" className={ROW_LINK} disabled={busy} onClick={() => void contact(t, 'tel')}>전화</button>
+                  </RowLinks>
                 </td>
               </tr>
             );
@@ -341,7 +377,7 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
         </div>
 
         {form && (
-          <form onSubmit={save} className="mb-6 grid grid-cols-1 gap-4 rounded-2xl bg-white p-4 shadow-sm md:grid-cols-4 md:p-6">
+          <form id="tenancy-form" onSubmit={save} className="mb-6 grid scroll-mt-20 grid-cols-1 gap-4 rounded-2xl bg-white p-4 shadow-sm md:grid-cols-4 md:p-6">
             <h2 className="text-lg font-bold text-gray-900 md:col-span-4">{editing ? `${editing.tenantName} 수정` : '입주 등록'}</h2>
             {field('유형', <select className={inputClass} value={form.kind} onChange={(e) => set({ kind: e.target.value as 'room' | 'virtual' })} disabled={!!editing}><option value="room">방 입주</option><option value="virtual">비상주(비대면)</option></select>)}
             {form.kind === 'room' && field('방 번호 (R05)', <input className={inputClass} value={form.roomNumber} onChange={(e) => set({ roomNumber: e.target.value })} required />)}
