@@ -2634,12 +2634,12 @@
   "musicVideo": {
     "seo": {
       "title": "Music Videos from {{mv}} · Live Videos from {{live}} | Studio NOL",
-      "description": "Music videos (from {{mv}}) and live clips or YouTube talks & interviews (from {{live}}), planned by Studio NOL with director Park Chichi of Haebang Film — a film and documentary cinematographer who shoots and edits them. Cameras, hours and locations are agreed in consultation.",
+      "description": "Music videos from {{mv}} (one song, two cameras, half-day shoot) and live clips or YouTube talks & interviews from {{live}}. Studio NOL plans the concept; director Park Chichi of Haebang Film, a film and documentary cinematographer, shoots and edits.",
       "keywords": "music video production Seoul, music video cost Korea, live session video, concert video filming, YouTube video production, interview video, Haebang Film, Park Chichi"
     },
     "hero": {
       "title": "Music Videos & Live Videos",
-      "subtitleLine1": "Concept with Studio NOL — filming and editing by Park Chichi of Haebang Film",
+      "subtitleLine1": "Concept by Studio NOL — filming and editing by Park Chichi of Haebang Film",
       "subtitleLine2": "Music videos from {{mv}} · live & YouTube videos from {{live}}",
       "alt": "Venue scene from the Mariko & Yukie “Namsan Tower Lights” music video",
       "seeWorks": "Watch our work"
@@ -2650,11 +2650,11 @@
       "items": [
         {
           "q": "How much does it cost?",
-          "a": "Music videos start from {{mv}}, live clips and YouTube videos from {{live}} (VAT included). The quote depends on cameras, shooting hours and location, and we tell you the price up front."
+          "a": "Music videos start from {{mv}} — one song filmed with two cameras over a half day (about four hours). Live clips and YouTube videos start from {{live}} (VAT included). More hours, locations or cameras raise the quote, and we tell you the price up front."
         },
         {
           "q": "Who makes it?",
-          "a": "Studio NOL and director Park Chichi of Haebang Film plan the concept together; Park Chichi shoots, edits and grades. He was cinematographer on the films Bap and Nineteen, Seomjin River and directed the music documentary A Concert for One Person, aired on KBS Open Channel."
+          "a": "Studio NOL plans the concept; director Park Chichi of Haebang Film shoots, edits and grades. He was cinematographer on the films Bap and Nineteen, Seomjin River and directed the music documentary A Concert for One Person, aired on KBS Open Channel."
         },
         {
           "q": "How do I start?",
@@ -2671,14 +2671,15 @@
         "live": "Live clips",
         "youtube": "YouTube content"
       },
-      "play": "Play video: {{name}}"
+      "play": "Play video: {{name}}",
+      "credit": "Concept: Studio NOL · Camera & edit: Park Chichi"
     },
     "services": {
       "title": "What we film",
       "items": [
         {
           "title": "Music videos",
-          "description": "We shape the concept with you and shoot in the studio, at a venue or on location — direction, editing, colour and lyric subtitles in one go."
+          "description": "Studio NOL plans the concept and we film at Studio NOL in Seoul, at a venue or on location — direction, editing, colour and lyric subtitles in one go."
         },
         {
           "title": "Live clips & concert videos",
@@ -2694,7 +2695,7 @@
       "title": "Director Park Chichi, Haebang Film",
       "body": "Park Chichi (real name Park Geon-ju) has made films, documentaries, web dramas, YouTube series and music videos end to end, from planning to camera, editing and colour. Running the independent documentary company Haebang Film from 2019, he directed the music documentary A Concert for One Person (aired on KBS Open Channel), and he was cinematographer/producer on the films Bap, Grandma, Me and the Dandelion and Nineteen, Seomjin River. He has filmed concerts and festivals for years, and he is also a musician who writes and sings his own songs.",
       "points": [
-        "Concept planned with Studio NOL; filming, editing and colour by Park Chichi, start to finish",
+        "Concept by Studio NOL; filming, editing and colour by Park Chichi, start to finish",
         "Film & documentary — Bap and Grandma, Me and the Dandelion (2025); Nineteen, Seomjin River and Blue Wind (2024)",
         "Music films — A Concert for One Person (KBS Open Channel), “Namsan Tower Lights” MV, Gangjeong Peace & Music Camp (51 acts)",
         "Festival video lead — Resistance Arts Festival (200+ acts), Ssiat Fest (100+ artists)"
@@ -2736,7 +2737,17 @@
         "Reference videos you like",
         "Preferred dates and location, and where the video will be posted"
       ],
-      "coverNote": "Just need a one-song cover video in our studio? The Cover Video package ({{cover}}) bundles filming, basic mixing and editing."
+      "coverNote": "Just need a one-song cover video in our studio? The Cover Video package ({{cover}}) bundles filming, basic mixing and editing.",
+      "baselineTitle": "What the {{mv}} music video includes (starting price)",
+      "baselineItems": [
+        "One song (3–5 min), one horizontal final cut",
+        "Concept and storyboard by Studio NOL",
+        "Two cameras, basic lighting, half-day shoot (about 4 hours)",
+        "One location — Studio NOL or a place with no rental fee",
+        "Editing, colour grading, lyric subtitles, one revision",
+        "Delivered about 2–3 weeks after the shoot"
+      ],
+      "baselineNote": "More hours, locations, cameras or cast, or extras such as graphics or vertical re-edits, raise the quote. Venue rental and cast fees are billed at cost."
     },
     "tierBar": {
       "message": "Tell us the song and the mood. We reply with a shooting plan and a quote.",
@@ -2753,7 +2764,7 @@
         },
         {
           "title": "Plan & quote",
-          "description": "Settle concept, storyboard, location and camera setup with Studio NOL and director Park Chichi, then confirm the quote."
+          "description": "Studio NOL plans the concept and storyboard, then settles location and camera setup with director Park Chichi and confirms the quote."
         },
         {
           "title": "Shoot",
@@ -2771,11 +2782,11 @@
       "items": [
         {
           "q": "What does the starting price include?",
-          "a": "Concept consultation, filming, editing, colour grading and subtitles. Cameras and hours are set to fit the song and budget; a bigger setup raises the quote. We share prices per setup during consultation."
+          "a": "The {{mv}} starting price covers one song (3–5 min) filmed with two cameras and basic lighting over a half day (about four hours) at one location, with concept planning by Studio NOL, editing, colour grading, lyric subtitles and one revision. More hours, locations or cameras raise the quote; we share prices per setup during consultation."
         },
         {
           "q": "Who is director Park Chichi?",
-          "a": "A filmmaker (real name Park Geon-ju) who has taken films, documentaries, web dramas, YouTube series and music videos from planning through camera, editing and colour. He was cinematographer/producer on Bap, Grandma, Me and the Dandelion and Nineteen, Seomjin River, directed the music documentary A Concert for One Person (KBS Open Channel), operated B-camera on the web drama I Refuse That Marriage, and ran the independent documentary company Haebang Film. He led video for the Resistance Arts Festival and Ssiat Fest, and he is also a musician. Concepts are planned with Studio NOL; filming, editing and colour are his."
+          "a": "A filmmaker (real name Park Geon-ju) who has shot, edited and graded films, documentaries, web dramas, YouTube series and music videos. He was cinematographer/producer on Bap, Grandma, Me and the Dandelion and Nineteen, Seomjin River, directed the music documentary A Concert for One Person (KBS Open Channel), operated B-camera on the web drama I Refuse That Marriage, and ran the independent documentary company Haebang Film. On Studio NOL videos, Studio NOL plans the concept and he shoots, edits and grades."
         },
         {
           "q": "Are venue rental and cast fees included?",
@@ -2783,7 +2794,7 @@
         },
         {
           "q": "How many revisions, and when is it delivered?",
-          "a": "Revisions and delivery dates are agreed with the quote, based on length and editing scope. Tell us early if you have a release or show date."
+          "a": "The base package includes one revision, with delivery about 2–3 weeks after the shoot. For longer videos or heavier editing, revisions and schedule are agreed with the quote. Tell us early if you have a release or show date."
         },
         {
           "q": "Do you film YouTube talks and interviews?",

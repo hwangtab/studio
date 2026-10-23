@@ -79,6 +79,15 @@ const BOOKING_ENTRY: Record<string, { href: string; kind: 'reserve' | 'order' }>
  * 부가 서비스 중 전용 LP가 있는 것 — 카드에 보조 CTA "자세히 보기"를 단다. ko 전용 LP라
  * ko에서만 쓴다(예약 퍼널 BOOKING_ENTRY와 같은 이유로 로케일 접두사를 하드코딩).
  */
+/**
+ * 온라인 예약이 없는 견적형 패키지 중 전용 LP가 있는 것 — 보조 CTA를 "자세히 보기"로 단다(ko 전용).
+ * 영상 제작 카드가 /music-video로 가는 링크 없이 카톡만 있었다(2026-10-23 SEO 점검).
+ */
+const SPECIAL_DETAIL_PAGES: Record<string, string> = {
+  'package-music-video': '/ko/music-video',
+  'package-live-video': '/ko/music-video',
+};
+
 const ADDITIONAL_DETAIL_PAGES: Record<string, string> = {
   'service-funding': '/ko/crowdfunding-design',
 };
@@ -119,7 +128,16 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
     (offerId: string, component: string) => {
       if (locale !== 'ko') return {};
       const entry = BOOKING_ENTRY[offerId];
-      if (!entry) return {};
+      if (!entry) {
+        const detail = SPECIAL_DETAIL_PAGES[offerId];
+        if (!detail) return {};
+        return {
+          secondaryCtaLabel: t('pricing.cta.detail', { defaultValue: '자세히 보기' }),
+          secondaryCtaHref: detail,
+          onSecondaryCtaClick: () =>
+            trackMicroEvent('micro_click_service', { locale, component, cta_id: `pricing_${offerId}_detail` }),
+        };
+      }
       return {
         secondaryCtaLabel:
           entry.kind === 'reserve'
