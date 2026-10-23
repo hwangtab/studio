@@ -1,6 +1,7 @@
 import type { ProductionContractEvent, ProductionEventType } from '../../../db/schema';
 import { computeProductionLedger, findStage, kstDay, type EventData } from './ledger';
-import { buildDefaultProductionTerms } from './terms';
+import { buildDefaultProductionTerms, type ProductionTerms } from './terms';
+import type { TerminationCause } from './termination';
 
 const terms = buildDefaultProductionTerms();
 /** KST 시각 문자열 → Date. */
@@ -410,5 +411,183 @@ describe('여러 곡(EP)', () => {
       events: [ev('stage_delivered', '2026-11-10T09:00:00', { stage: 'mixing', song: 1, noticeStatus: 'failed' })],
     });
     expect(ledger.todos.map((t) => t.message).join('\n')).toContain('2번 곡 「파도」 믹싱 결과물 전달 통지');
+  });
+});
+
+describe('3회 분할 — 2차 납부·연체(제3조)', () => {
+  const reworkTerms: ProductionTerms = {
+    ...buildDefaultProductionTerms('single'),
+    amount: {
+      total: 1_000_000,
+      deposit: 500_000,
+      second: 300_000,
+      balance: 200_000,
+      depositDueDays: 3,
+      secondDueDays: 7,
+      balanceDueDays: 7,
+    },
+    refundPolicy: {
+      mode: 'paid_ratio',
+      stages: [
+        { event: 'kickoff', ratio: 0.7 },
+        { event: 'recording_completed', ratio: 0.4 },
+        { event: 'mixing_delivered', ratio: 0.2 },
+        { event: 'mastering_delivered', ratio: 0 },
+      ],
+    },
+    refundSchedule: [
+      {
+        key: 'planning',
+        label: 'AI 리워크 제작 일체',
+        amount: 1_000_000,
+        milestones: [{ event: 'mastering_delivered', ratio: 1 }],
+      },
+    ],
+  };
+
+  const reworkLedger = (now: string, events: ProductionContractEvent[], terminationCause?: TerminationCause) =>
+    computeProductionLedger({ terms: reworkTerms, signedAt: SIGNED, events, now: kst(now), terminationCause });
+
+  const arrangementApproved = [
+    ev('stage_delivered', '2026-11-10T09:00:00', { stage: 'arrangement' }),
+    ev('stage_approved', '2026-11-11T09:00:00', { stage: 'arrangement', data: { mode: 'explicit' } }),
+  ];
+
+  it('편곡 승인일부터 2차 기한을 세고, 미납이면 연체일을 계산한다', () => {
+    const ledger = reworkLedger('2026-11-25T09:00:00', [
+      ev('payment_received', '2026-11-03T09:00:00', { amount: 500_000 }),
+      ...arrangementApproved,
+    ]);
+    expect(ledger.payments.secondMetAt).toBeNull();
+    expect(kstDay(ledger.payments.secondLastDay!)).toBe(kstDay(kst('2026-11-18T00:00:00')));
+    expect(ledger.payments.secondOverdueDays).toBe(7);
+    expect(ledger.todos.map((t) => t.message)).toContainEqual(expect.stringContaining('중간금 기한이 7일 지났어요'));
+  });
+
+  it('편곡 승인 전에는 2차 기한이 없다', () => {
+    const ledger = reworkLedger('2026-11-25T09:00:00', [
+      ev('payment_received', '2026-11-03T09:00:00', { amount: 500_000 }),
+      ev('stage_delivered', '2026-11-10T09:00:00', { stage: 'arrangement' }),
+    ]);
+    expect(ledger.payments.secondLastDay).toBeNull();
+    expect(ledger.payments.secondOverdueDays).toBe(0);
+  });
+
+  it('2차까지 입금하면 입금일을 기록하고, 잔금이 남으면 완납이 아니다', () => {
+    const ledger = reworkLedger('2026-11-25T09:00:00', [
+      ev('payment_received', '2026-11-03T09:00:00', { amount: 500_000 }),
+      ev('payment_received', '2026-11-04T09:00:00', { amount: 250_000 }),
+      ev('payment_received', '2026-11-05T09:00:00', { amount: 50_000 }),
+      ...arrangementApproved,
+    ]);
+    expect(ledger.payments.received).toBe(800_000);
+    expect(ledger.payments.secondMetAt).toEqual(kst('2026-11-05T09:00:00'));
+    expect(ledger.payments.secondOverdueDays).toBe(0);
+    expect(ledger.payments.paidInFull).toBe(false);
+  });
+
+  it('2차가 없는 계약은 2차 필드가 비어 있고 기존 항목표 정산을 그대로 쓴다', () => {
+    const ledger = ledgerAt('2026-12-01T09:00:00', [
+      ev('payment_received', '2026-11-03T09:00:00', { amount: terms.amount.deposit }),
+      ...arrangementApproved,
+    ]);
+    expect(ledger.payments).toMatchObject({ secondMetAt: null, secondLastDay: null, secondOverdueDays: 0 });
+    expect(ledger.refund).toMatchObject({ basis: 'work', ratio: 0 });
+    expect(ledger.refund.lines.length).toBeGreaterThan(0);
+  });
+});
+
+describe('지급 비율 환불(paid_ratio, 제10조)', () => {
+  const reworkTerms: ProductionTerms = {
+    ...buildDefaultProductionTerms('single'),
+    amount: {
+      total: 1_000_000,
+      deposit: 500_000,
+      second: 300_000,
+      balance: 200_000,
+      depositDueDays: 3,
+      secondDueDays: 7,
+      balanceDueDays: 7,
+    },
+    refundPolicy: {
+      mode: 'paid_ratio',
+      stages: [
+        { event: 'kickoff', ratio: 0.7 },
+        { event: 'recording_completed', ratio: 0.4 },
+        { event: 'mixing_delivered', ratio: 0.2 },
+        { event: 'mastering_delivered', ratio: 0 },
+      ],
+    },
+    refundSchedule: [
+      {
+        key: 'planning',
+        label: 'AI 리워크 제작 일체',
+        amount: 1_000_000,
+        milestones: [{ event: 'mastering_delivered', ratio: 1 }],
+      },
+    ],
+  };
+
+  const reworkLedger = (events: ProductionContractEvent[], terminationCause?: TerminationCause) =>
+    computeProductionLedger({ terms: reworkTerms, signedAt: SIGNED, events, now: kst('2026-11-30T09:00:00'), terminationCause });
+
+  it('단계가 진행될수록 받은 금액에서 돌려줄 비율이 줄어든다', () => {
+    const paid = ev('payment_received', '2026-11-03T09:00:00', { amount: 500_000 });
+    const kickoff = ev('kickoff', '2026-11-04T09:00:00');
+    const recorded = ev('recording_completed', '2026-11-05T09:00:00');
+    const mixed = ev('stage_delivered', '2026-11-06T09:00:00', { stage: 'mixing' });
+    const mastered = ev('stage_delivered', '2026-11-07T09:00:00', { stage: 'mastering' });
+
+    expect(reworkLedger([paid]).refund).toMatchObject({
+      basis: 'paid_ratio',
+      ratio: 1,
+      refundable: 500_000,
+      deduction: 0,
+      lines: [],
+    });
+    expect(reworkLedger([paid, kickoff]).refund).toMatchObject({ ratio: 0.7, refundable: 350_000, deduction: 150_000 });
+    expect(reworkLedger([paid, kickoff, recorded]).refund).toMatchObject({ ratio: 0.4, refundable: 200_000, deduction: 300_000 });
+    expect(reworkLedger([paid, kickoff, recorded, mixed]).refund).toMatchObject({ ratio: 0.2, refundable: 100_000, deduction: 400_000 });
+    expect(reworkLedger([paid, kickoff, recorded, mixed, mastered]).refund).toMatchObject({ ratio: 0, refundable: 0, deduction: 500_000 });
+  });
+
+  it('받은 돈이 0원이면 어떤 단계에서도 환불액이 0이고 음수가 되지 않는다', () => {
+    const kickoff = ev('kickoff', '2026-11-04T09:00:00');
+    const extra = ev('extra_cost_agreed', '2026-11-05T09:00:00', { amount: 100_000, data: { note: '세션' } });
+    const recorded = ev('recording_completed', '2026-11-05T09:00:00');
+    const mixed = ev('stage_delivered', '2026-11-06T09:00:00', { stage: 'mixing' });
+    const mastered = ev('stage_delivered', '2026-11-07T09:00:00', { stage: 'mastering' });
+
+    for (const events of [[], [kickoff], [kickoff, extra], [kickoff, recorded], [kickoff, recorded, mixed], [kickoff, recorded, mixed, mastered]]) {
+      const refund = reworkLedger(events).refund;
+      expect(refund.refundable).toBe(0);
+      expect(refund.deduction).toBe(0);
+    }
+  });
+
+  it('추가 비용은 의뢰인 귀책에서만 공제하고, 스튜디오 귀책이면 받은 금액 전액을 돌려준다', () => {
+    const events = [
+      ev('payment_received', '2026-11-03T09:00:00', { amount: 500_000 }),
+      ev('kickoff', '2026-11-04T09:00:00'),
+      ev('extra_cost_agreed', '2026-11-05T09:00:00', { amount: 100_000, data: { note: '세션' } }),
+    ];
+
+    expect(reworkLedger(events, 'client').refund).toMatchObject({
+      basis: 'paid_ratio',
+      ratio: 0.7,
+      extras: 100_000,
+      refundable: 250_000,
+      deduction: 250_000,
+      refundableIfStudio: 500_000,
+      lines: [],
+    });
+    expect(reworkLedger(events, 'studio').refund).toMatchObject({
+      basis: 'paid_ratio',
+      ratio: 1,
+      extras: 0,
+      refundable: 500_000,
+      deduction: 0,
+      refundableIfStudio: 500_000,
+    });
   });
 });
