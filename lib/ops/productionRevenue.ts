@@ -5,6 +5,7 @@ import { productionContractEvents, refundAccounts } from '../../db/schema';
 import { splitInclusiveAmount } from '../booking/amounts';
 import { activeEvents, computeProductionLedger, parseEventData } from '../contracts/production/ledger';
 import { isMixMasterKind, parseStoredTerms } from '../contracts/production/terms';
+import { allocateContractRefund } from '../contracts/production/refund-plan';
 import { parseTerminationCause } from '../contracts/production/termination';
 import type { RevenueRow } from './revenueReport';
 
@@ -17,8 +18,9 @@ import type { RevenueRow } from './revenueReport';
  *
  * - 기준 시각은 입금 기록의 시각(occurredAt). 무효 처리한 기록은 뺀다(activeEvents).
  * - 금액은 부가세 포함으로 받는다(계약금액이 부가세 포함이다) — 부가세는 그 금액에서 역산한다.
- * - 환불: 해지한 계약에서 환불 송금을 마쳤으면(`refund_accounts.refunded_at`) 정산 계산(ledger)의 환불액을 늦은 입금
- *   행부터 차감한다. 송금 전이면 아직 돌려준 돈이 아니라 빼지 않는다.
+ * - 환불: 해지한 계약에서 환불 송금을 마쳤으면(`refund_accounts.refunded_at`) 정산 환불액을 늦은 입금부터 나눈 배분
+ *   (refund-plan.ts)에서 **직접 기록한 입금의 몫**만 그 행에서 뺀다 — 결제 링크로 받은 몫은 결제 행의 환불로 잡힌다(refund-execute.ts).
+ *   송금 전이면 아직 돌려준 돈이 아니라 빼지 않는다.
  * - 유형: 믹싱·마스터링 계약은 '믹싱·마스터링', 나머지(싱글·EP·정규 제작)는 '음원 제작'. 둘 다 스튜디오 직접 서비스.
  *
  * 개인정보(이름·연락처)는 싣지 않는다 — 매출 현황과 같은 원칙(revenueReport.ts).
@@ -60,7 +62,10 @@ export const loadProductionRevenueRows = async (range: { from: Date; toExclusive
       .filter((e) => e.type === 'payment_received' && (e.amount ?? 0) > 0 && !parseEventData(e).orderNo)
       .sort((a, b) => a.occurredAt.getTime() - b.occurredAt.getTime());
 
-    let refundLeft = 0;
+    // 환불은 늦은 입금부터 나눠 돌려준다(refund-plan.ts allocateContractRefund — 해지 처리와 같은 배분). 여기서 빼는 것은
+    // **직접 기록한 입금의 몫**뿐이다: 결제 링크로 받은 몫은 카드면 토스 취소, 계좌면 송금 완료 때 그 주문의 환불로 남아
+    // 결제 행 쪽 매출에서 빠진다(refund-execute.ts). 송금 전이면 아직 돌려준 돈이 아니라 빼지 않는다.
+    const refunds = new Map<string, number>();
     if (contract.status === 'terminated' && refundedOrders.has(contract.id)) {
       const ledger = computeProductionLedger({
         terms,
@@ -69,16 +74,9 @@ export const loadProductionRevenueRows = async (range: { from: Date; toExclusive
         now,
         terminationCause: parseTerminationCause(contract.terminationReason),
       });
-      refundLeft = Math.max(0, ledger.refund.refundable);
-    }
-
-    // 환불은 늦은 입금부터 차감한다(먼저 받은 계약금이 작업분에 먼저 들어간다고 본다).
-    const refunds = new Map<string, number>();
-    for (const event of [...payments].reverse()) {
-      if (refundLeft <= 0) break;
-      const take = Math.min(refundLeft, event.amount ?? 0);
-      refunds.set(event.id, take);
-      refundLeft -= take;
+      for (const allocation of allocateContractRefund(contract.events, ledger.refund.refundable)) {
+        if (allocation.orderNo === null) refunds.set(allocation.eventId, allocation.amount);
+      }
     }
 
     for (const event of payments) {

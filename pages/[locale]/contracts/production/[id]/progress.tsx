@@ -12,6 +12,7 @@ import { denyContractPageCaching } from '../../../../../lib/contracts/page-cache
 import { productionCompletePath, productionSignPath } from '../../../../../lib/contracts/production/links';
 import { hasPortalAccess } from '../../../../../lib/contracts/production/portal-session';
 import { ensureContractPaymentLink } from '../../../../../lib/contracts/production/payment-link';
+import { loadContractRefundPlan } from '../../../../../lib/contracts/production/refund-execute';
 import { loadProgressContext } from '../../../../../lib/contracts/production/progress';
 import { buildClientProgressView, type ProgressView, type StageView } from '../../../../../lib/contracts/production/progress-view';
 import { hasSignedDocument } from '../../../../../lib/contracts/production/status';
@@ -50,6 +51,10 @@ interface ProgressPageProps {
     refundable: number;
     /** 받은 금액 × 단계 비율로 정산하는 계약(AI 리워크) — 작업분을 공제하지 않으니 문구가 다르다. */
     paidRatio: boolean;
+    /** 카드·간편결제로 받은 몫 — 결제 수단으로 취소한다(계좌를 묻지 않는다). `pending`은 아직 취소되지 않은 금액. */
+    card: { amount: number; pending: number };
+    /** 계좌로 돌려줄 몫(계좌 입금·직접 기록한 입금) — 이게 있을 때만 환불 계좌를 받는다. */
+    bank: number;
     account: { bankName: string; accountHolder: string; refunded: boolean } | null;
   } | null;
   unavailable?: 'not-found' | 'error';
@@ -103,9 +108,13 @@ export const getServerSideProps = withI18nServerProps<ProgressPageProps>(async (
     let refund: ProgressPageProps['refund'] = null;
     if (!locked && progress.contract.status === 'terminated') {
       const summary = await loadRefundAccountSummary({ kind: 'production', orderNo: id });
+      const plan = await loadContractRefundPlan(progress);
       refund = {
         refundable: progress.ledger.refund.refundable,
         paidRatio: progress.ledger.refund.basis === 'paid_ratio',
+        card: { amount: plan?.card.reduce((sum, c) => sum + c.amount, 0) ?? 0, pending: plan?.cardPending ?? 0 },
+        // 계획을 못 읽으면(일시 장애) 전액을 계좌 몫으로 본다 — 계좌를 묻지 않아 돌려줄 길이 없는 쪽보다 낫다.
+        bank: plan?.bankTotal ?? progress.ledger.refund.refundable,
         account:
           summary.status === 'present'
             ? { bankName: summary.bankName, accountHolder: summary.accountHolder, refunded: summary.refundedAt !== null }
@@ -375,7 +384,20 @@ function RefundSection({
           '계약이 해지되었고, 진행한 작업분을 정산한 결과 돌려드릴 금액은 없어요(계약서 제10조).'
         )}
       </p>
-      {refund.refundable <= 0 ? null : refund.account ? (
+      {refund.card.amount > 0 && (
+        <p className="mt-3 text-sm text-gray-600 dark:text-gray-600">
+          카드·간편결제로 결제하신 <strong>{formatCurrency(refund.card.amount)}원</strong>은{' '}
+          {refund.card.pending > 0
+            ? '결제 수단으로 취소하는 중이에요. 처리되면 카드사에 따라 3~5영업일 안에 돌아가요.'
+            : '결제 수단으로 취소했어요. 카드사에 따라 3~5영업일 안에 돌아가요.'}
+        </p>
+      )}
+      {refund.bank > 0 && refund.card.amount > 0 && (
+        <p className="mt-2 text-sm text-gray-600 dark:text-gray-600">
+          계좌로 입금하신 <strong>{formatCurrency(refund.bank)}원</strong>은 아래 계좌로 보내 드려요.
+        </p>
+      )}
+      {refund.bank <= 0 ? null : refund.account ? (
         <p className="mt-3 text-sm text-gray-600 dark:text-gray-600">
           {refund.account.refunded
             ? `${refund.account.bankName} (예금주 ${refund.account.accountHolder}) 계좌로 보내 드렸어요.`
