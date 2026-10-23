@@ -170,6 +170,9 @@ const ORDER_STATUS_LABELS: Record<string, string> = {
   auto_cancel_pending: '자동 취소 처리 중',
 };
 
+/** 상태 알약 순서 — 손댈 일이 있는 것 먼저, 닫힌 것 뒤. 계좌 입금 대기는 위 "입금 대기" 알약이 맡는다. */
+const STATUS_PILL_ORDER = ['pending', 'auto_cancel_pending', 'paid', 'partially_refunded', 'refunded', 'failed', 'expired', 'deposit_cancelled'] as const;
+
 const BOOKING_STATUS_LABELS: Record<string, string> = {
   pending: '대기',
   confirmed: '확정',
@@ -243,6 +246,12 @@ export default function AdminBookingsPage({
     () => (line ? bookings.filter((booking) => bookingLineOf(booking) === line) : bookings),
     [bookings, line],
   );
+
+  /** 지금 라인을 지킨 이 화면 주소(+추가 쿼리) — 입금 대기·작업 묶음을 풀어도 보던 라인에 남는다. */
+  const lineHref = (extra?: string) => {
+    const params = [line ? `line=${line}` : null, extra ?? null].filter(Boolean);
+    return params.length > 0 ? `/admin/bookings?${params.join('&')}` : '/admin/bookings';
+  };
 
   const filteredBookings = useMemo(() => {
     const term = search.trim().toLowerCase();
@@ -450,25 +459,34 @@ export default function AdminBookingsPage({
               </div>
 
               <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
-                <div className="flex flex-wrap gap-2">
+                {/*
+                  상태 알약은 건수가 있는 것만 보인다(운영자 지적 2026-10-23: 0건 알약 열 개가 늘 깔려 지저분했다).
+                  지금 고른 상태는 0건이 돼도 남긴다 — 사라지면 무엇으로 걸러져 있는지 알 수 없다.
+                  계좌 입금 대기는 상태 알약으로 두지 않는다 — 위 "입금 대기"(서버가 200건 상한 없이 전부 센다)와 같은 것이라
+                  둘이 다른 숫자를 말하게 된다.
+                */}
+                <div className="flex flex-wrap gap-2" role="group" aria-label="상태">
                   {sessionUnmarked && (
-                    <FilterPill active tone="violet" href="/admin/bookings">
+                    <FilterPill active tone="violet" href={lineHref()}>
                       완료·노쇼 표시 대기 ({bookings.length}) · 전체 보기
                     </FilterPill>
                   )}
                   {workFilter && (
-                    <FilterPill active tone="violet" href="/admin/bookings">
+                    <FilterPill active tone="violet" href={lineHref()}>
                       {workFilter === 'received' ? '믹싱 착수 대기' : '믹싱 작업 중'} ({bookings.length}) · 전체 보기
                     </FilterPill>
                   )}
-                  <FilterPill active={depositPending} tone="sky" href={depositPending ? '/admin/bookings' : '/admin/bookings?deposit=pending'}>
-                    입금 대기 ({depositPendingCount})
+                  {(depositPending || depositPendingCount > 0) && (
+                    <FilterPill active={depositPending} tone="sky" href={depositPending ? lineHref() : lineHref('deposit=pending')}>
+                      입금 대기 ({depositPendingCount})
+                    </FilterPill>
+                  )}
+                  <FilterPill active={filter === 'all'} onClick={() => setFilter('all')}>
+                    전체 ({counts.all})
                   </FilterPill>
-                  {['all', ...orderStatusEnum].map((status) => (
-                    <FilterPill key={status} active={filter === status} onClick={() => setFilter(status)}>
-                      {status === 'all'
-                        ? `전체 (${counts.all})`
-                        : `${ORDER_STATUS_LABELS[status] ?? status} (${counts[status] ?? 0})`}
+                  {STATUS_PILL_ORDER.filter((status) => (counts[status] ?? 0) > 0 || filter === status).map((status) => (
+                    <FilterPill key={status} active={filter === status} onClick={() => setFilter(filter === status ? 'all' : status)}>
+                      {ORDER_STATUS_LABELS[status] ?? status} ({counts[status] ?? 0})
                     </FilterPill>
                   ))}
                 </div>
