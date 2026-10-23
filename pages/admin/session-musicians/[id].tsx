@@ -79,14 +79,29 @@ export default function AdminSessionMusicianDetailPage({ profile }: Props) {
     return { ok: res.ok && data?.ok === true, data };
   };
 
+  const initialRate = profile.ratePerSong === null ? '' : profile.ratePerSong.toLocaleString('ko-KR');
+  const changedFields = (): Record<string, string> => {
+    const fields: Record<string, string> = {};
+    if (status !== profile.status) fields.status = status;
+    if (memo !== (profile.operatorMemo ?? '')) fields.operatorMemo = memo;
+    if (rate !== initialRate) fields.ratePerSong = rate;
+    if (rateNote !== (profile.rateNote ?? '')) fields.rateNote = rateNote;
+    return fields;
+  };
+
   const save = async () => {
+    if (Object.keys(changedFields()).length === 0) {
+      setMessage({ tone: 'success', text: '바뀐 내용이 없어요.' });
+      return;
+    }
     setBusy(true);
     setMessage(null);
     try {
       const result = await call(`/api/admin/session-musicians/${profile.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status, operatorMemo: memo, ratePerSong: rate, rateNote }),
+        // 바꾼 칸만 보낸다 — 화면을 연 뒤 본인이 관리 링크로 고친 연주비를, 상태만 바꾸려던 저장이 옛 값으로 덮지 않게.
+        body: JSON.stringify(changedFields()),
       });
       setMessage(result.ok ? { tone: 'success', text: '저장했어요.' } : { tone: 'error', text: String(result.data?.message ?? '저장하지 못했어요.') });
       // 위쪽 프로필 표(곡당 연주비 등)도 저장한 값으로 다시 그린다.

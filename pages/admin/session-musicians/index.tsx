@@ -199,7 +199,11 @@ export default function AdminSessionMusiciansPage({ rows, filters, migrationNeed
           </div>
           {rows.length === 0 && !migrationNeeded && !error && <div className="text-center py-12 text-gray-500">등록된 연주자가 없습니다.</div>}
           {rows.length >= LIST_LIMIT && (
-            <p className="px-4 py-3 text-xs text-gray-500">최근 {LIST_LIMIT}명까지만 보여 줍니다. 필터로 좁혀 주세요.</p>
+            <p className="px-4 py-3 text-xs text-gray-500">
+              {filters.sort === 'rate'
+                ? `곡당 연주비가 낮은 ${LIST_LIMIT}명까지만 보여 줍니다(연주비를 적지 않은 사람·그보다 비싼 사람은 빠져요). 필터로 좁혀 주세요.`
+                : `최근 ${LIST_LIMIT}명까지만 보여 줍니다. 필터로 좁혀 주세요.`}
+            </p>
           )}
         </div>
       </AdminShell>

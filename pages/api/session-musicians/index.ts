@@ -90,6 +90,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     consumed.push(GLOBAL_KEY);
     if (!(await consumeRateLimit(GLOBAL_KEY, GLOBAL_DAILY_CAP, DAY_SECONDS))) {
       console.error('[session-musicians] 일일 접수 한도 도달 — 접수를 건너뜁니다.');
+      // 접수하지 않았으니 센 것을 되돌린다 — 안 그러면 내일 다시 오라는 말에 바로 재시도한 사람이 이메일 한도에 걸려
+      // 저장 없이 가짜 200("등록을 받았어요")을 받는다(2026-10-23 리뷰).
+      await Promise.all(consumed.map((key) => releaseRateLimit(key)));
       return res.status(429).json({ ok: false, code: 'daily_cap', message: '오늘은 접수가 많아요. 내일 다시 시도해 주세요.' });
     }
 

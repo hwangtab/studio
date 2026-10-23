@@ -27,6 +27,7 @@ jest.mock('../tenancy/retention', () => ({
 /* eslint-disable import/first */
 import cronHandler from '../../pages/api/cron/purge-contracts';
 import { sendEmail } from '../email/resend';
+import { purgeExpiredPersonalData } from '../contracts/retention';
 import { purgeEndedTenancies } from '../tenancy/retention';
 import { sealSessionPrivate } from './privateData';
 import { purgeExpiredSessionMusicians, reconfirmCutoff, retentionCutoff, sendSessionMusicianReconfirmNotices } from './retention';
@@ -222,6 +223,22 @@ describe('월간 파기 크론 연결', () => {
       } finally {
         await client.execute('ALTER TABLE session_musicians RENAME COLUMN last_confirmed_at_x TO last_confirmed_at');
       }
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  it('계약 파기가 던져도 세션 연주자 파기·재확인 메일은 그달 그대로 돈다 — 운영자 알림 + 500', async () => {
+    jest.useFakeTimers({ now: NOW, doNotFake: ['nextTick', 'setImmediate', 'setTimeout', 'setInterval', 'clearTimeout', 'clearInterval'] });
+    (purgeExpiredPersonalData as jest.Mock).mockRejectedValueOnce(new Error('turso down'));
+    try {
+      await insert('old', 25);
+      await insert('due', 22);
+      const out = await runCron();
+      expect(out.status).toBe(500);
+      expect(out.body.sessionMusicians).toEqual({ deleted: 1 });
+      expect(out.body.sessionReconfirm).toEqual({ sent: 1, failed: 0 });
+      expect(sendEmailMock.mock.calls.map((c) => c[0].subject)).toContain('[Studio NOL] 계약 개인정보 파기 일부 실패');
     } finally {
       jest.useRealTimers();
     }
