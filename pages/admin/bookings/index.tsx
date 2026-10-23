@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -14,7 +14,7 @@ import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { getDb } from '../../../db/client';
 import { loadPaymentLinkOrderInfo } from '../../../lib/payments/paymentLinkOrders';
 import { and, eq, inArray, sql } from 'drizzle-orm';
-import { orderStatusEnum, orders } from '../../../db/schema';
+import { orders } from '../../../db/schema';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatPriceAmount } from '../../../data/pricing';
 import {
@@ -25,6 +25,7 @@ import {
 } from '../../../lib/booking/admin-serialize';
 import { formatKstDateTime } from '../../../lib/booking/format';
 import { kstDateString } from '../../../lib/booking/kst';
+import { STATUS_VIEWS, STATUS_VIEW_LABELS, statusViewOf, type StatusView } from '../../../lib/booking/statusView';
 import { BOOKING_LINES, BOOKING_LINE_LABELS, bookingLineOf, parseBookingLine } from '../../../lib/booking/line';
 import { expireStaleOrders } from '../../../lib/booking/service';
 import { unmarkedSessionRange } from '../../../lib/booking/unmarkedSessions';
@@ -170,9 +171,6 @@ const ORDER_STATUS_LABELS: Record<string, string> = {
   auto_cancel_pending: '자동 취소 처리 중',
 };
 
-/** 상태 알약 순서 — 손댈 일이 있는 것 먼저, 닫힌 것 뒤. 계좌 입금 대기는 위 "입금 대기" 알약이 맡는다. */
-const STATUS_PILL_ORDER = ['pending', 'auto_cancel_pending', 'paid', 'partially_refunded', 'refunded', 'failed', 'expired', 'deposit_cancelled'] as const;
-
 const BOOKING_STATUS_LABELS: Record<string, string> = {
   pending: '대기',
   confirmed: '확정',
@@ -227,7 +225,12 @@ export default function AdminBookingsPage({
         : null,
     [fromEvent, fromStart, fromEnd, fromTitle],
   );
-  const [filter, setFilter] = useState<string>('all');
+  // 대시보드 묶음(입금 대기·믹싱 단계·표시 대기)으로 들어왔으면 그 목록 전부를 본다 — 확정만 보이면 입금 대기 목록이 비어 보인다.
+  const serverFiltered = depositPending || Boolean(workFilter) || sessionUnmarked;
+  const [view, setView] = useState<StatusView>(serverFiltered ? 'all' : 'confirmed');
+  useEffect(() => {
+    setView(serverFiltered ? 'all' : 'confirmed');
+  }, [serverFiltered]);
   const [search, setSearch] = useState<string>('');
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -253,27 +256,43 @@ export default function AdminBookingsPage({
     return params.length > 0 ? `/admin/bookings?${params.join('&')}` : '/admin/bookings';
   };
 
+  const matchesSearch = (booking: AdminBookingListItem, term: string) =>
+    !term ||
+    booking.customerName.toLowerCase().includes(term) ||
+    booking.customerEmail.toLowerCase().includes(term) ||
+    booking.customerPhone.includes(term) ||
+    booking.orderNo.toLowerCase().includes(term);
+
   const filteredBookings = useMemo(() => {
     const term = search.trim().toLowerCase();
-    return lineBookings.filter((booking) => {
-      const matchesFilter = filter === 'all' || booking.orderStatus === filter;
-      const matchesSearch =
-        !term ||
-        booking.customerName.toLowerCase().includes(term) ||
-        booking.customerEmail.toLowerCase().includes(term) ||
-        booking.customerPhone.includes(term) ||
-        booking.orderNo.toLowerCase().includes(term);
-      return matchesFilter && matchesSearch;
-    });
-  }, [lineBookings, filter, search]);
+    const rows = lineBookings.filter((booking) => (view === 'all' || statusViewOf(booking) === view) && matchesSearch(booking, term));
+    if (view !== 'confirmed') return rows;
+    // 확정 보기는 앞으로 올 세션을 가까운 순으로 먼저 — "다음에 누가 오나"가 궁금해서 여는 화면이다. 지난 것·믹싱은 그 뒤에 원래 순서(최근순)대로.
+    const todayStart = new Date(`${kstDateString(new Date())}T00:00:00+09:00`).getTime();
+    const upcomingAt = (b: AdminBookingListItem): number | null => {
+      const at = b.orderType === 'deposit' ? b.linkSessionAt : b.startAt;
+      if (!at) return null;
+      const ms = new Date(at).getTime();
+      return ms >= todayStart ? ms : null;
+    };
+    const upcoming = rows.filter((b) => upcomingAt(b) !== null).sort((a, b) => (upcomingAt(a) as number) - (upcomingAt(b) as number));
+    return [...upcoming, ...rows.filter((b) => upcomingAt(b) === null)];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lineBookings, view, search]);
 
-  const counts = useMemo(() => {
-    const result: Record<string, number> = { all: lineBookings.length };
-    for (const status of orderStatusEnum) {
-      result[status] = lineBookings.filter((b) => b.orderStatus === status).length;
-    }
+  const viewCounts = useMemo(() => {
+    const result: Record<StatusView, number> = { confirmed: 0, awaiting: 0, cancelled: 0, failed: 0, all: lineBookings.length };
+    for (const b of lineBookings) result[statusViewOf(b)] += 1;
     return result;
   }, [lineBookings]);
+
+  /** 검색어가 지금 보기 밖에서만 맞으면 알려 준다 — 확정 보기에서 입금 대기 고객을 찾다가 "없다"로 끝나지 않게. */
+  const searchElsewhere = useMemo(() => {
+    const term = search.trim().toLowerCase();
+    if (!term || view === 'all') return 0;
+    return lineBookings.filter((b) => statusViewOf(b) !== view && matchesSearch(b, term)).length;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lineBookings, view, search]);
 
   const mailFailed = useMemo(() => bookings.filter((b) => b.notificationError), [bookings]);
 
@@ -461,10 +480,9 @@ export default function AdminBookingsPage({
 
               <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
                 {/*
-                  상태 알약은 건수가 있는 것만 보인다(운영자 지적 2026-10-23: 0건 알약 열 개가 늘 깔려 지저분했다).
-                  지금 고른 상태는 0건이 돼도 남긴다 — 사라지면 무엇으로 걸러져 있는지 알 수 없다.
-                  계좌 입금 대기는 상태 알약으로 두지 않는다 — 위 "입금 대기"(서버가 200건 상한 없이 전부 센다)와 같은 것이라
-                  둘이 다른 숫자를 말하게 된다.
+                  상태는 드롭다운 하나(lib/booking/statusView.ts — 확정 / 결제·입금 대기 / 취소·환불 / 실패·만료 / 전체, 기본 확정).
+                  예전엔 주문 상태 아홉 개를 알약으로 늘어놓아 지저분했다(운영자 지적 2026-10-23).
+                  "입금 대기" 알약은 따로 둔다 — 서버가 200건 상한 없이 전부 세는 처리할 일 목록이라 1건 이상일 때만 보인다.
                 */}
                 <div className="flex flex-wrap gap-2" role="group" aria-label="상태">
                   {sessionUnmarked && (
@@ -482,14 +500,16 @@ export default function AdminBookingsPage({
                       입금 대기 ({depositPendingCount})
                     </FilterPill>
                   )}
-                  <FilterPill active={filter === 'all'} onClick={() => setFilter('all')}>
-                    전체 ({counts.all})
-                  </FilterPill>
-                  {STATUS_PILL_ORDER.filter((status) => (counts[status] ?? 0) > 0 || filter === status).map((status) => (
-                    <FilterPill key={status} active={filter === status} onClick={() => setFilter(filter === status ? 'all' : status)}>
-                      {ORDER_STATUS_LABELS[status] ?? status} ({counts[status] ?? 0})
-                    </FilterPill>
-                  ))}
+                  <label className="inline-flex items-center gap-2 text-sm text-gray-700">
+                    <span className="shrink-0">상태</span>
+                    <Select value={view} onChange={(e) => setView(e.target.value as StatusView)} light aria-label="상태 보기" className="w-auto py-1.5 text-sm">
+                      {STATUS_VIEWS.map((v) => (
+                        <option key={v} value={v}>
+                          {STATUS_VIEW_LABELS[v]} ({viewCounts[v]})
+                        </option>
+                      ))}
+                    </Select>
+                  </label>
                 </div>
 
                 <TextInput
@@ -609,9 +629,22 @@ export default function AdminBookingsPage({
                 </table>
               </div>
 
+              {searchElsewhere > 0 && (
+                <p className="mt-3 text-sm text-gray-600">
+                  다른 상태에 맞는 예약이 {searchElsewhere}건 더 있어요 ·{' '}
+                  <button type="button" className="font-medium text-primary hover:underline" onClick={() => setView('all')}>
+                    전체에서 보기
+                  </button>
+                </p>
+              )}
+
               {filteredBookings.length === 0 && (
                 <div className="text-center py-12 text-gray-500">
-                  {bookings.length === 0 ? '아직 접수된 예약이 없습니다.' : search.trim() ? '검색 결과가 없습니다.' : '이 조건에 맞는 예약이 없습니다.'}
+                  {bookings.length === 0
+                    ? '아직 접수된 예약이 없습니다.'
+                    : search.trim()
+                      ? '검색 결과가 없습니다.'
+                      : `${STATUS_VIEW_LABELS[view]} 예약이 없습니다.`}
                 </div>
               )}
             </div>
