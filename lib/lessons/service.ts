@@ -4,7 +4,7 @@ import { and, asc, eq, inArray, isNull, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import {
-  availabilityBlocks, lessonEnrollments, lessonPayments, lessonSessions,
+  availabilityBlocks, lessonContracts, lessonEnrollments, lessonPayments, lessonSessions,
   type LessonEnrollment, type LessonPayment, type LessonSession,
 } from '../../db/schema';
 import { kstDateString } from '../booking/kst';
@@ -138,23 +138,29 @@ export const setSessionStatus = async (input: { sessionId: string; status: Sessi
     return { ok: true, warnings };
   }
 
-  // 스튜디오 휴강을 되돌리면 그 휴강이 붙인 보충 회차를 지운다 — 보충 회차가 이미 진행됐으면 되돌릴 수 없다.
-  if (session.status === 'studio_cancelled' && target !== 'studio_cancelled') {
-    const extensions = await db.select().from(lessonSessions).where(eq(lessonSessions.extendsSessionId, session.id));
-    if (extensions.some((x) => x.status !== 'scheduled')) return { ok: false, message: '이 휴강이 붙인 보충 회차가 이미 진행돼 되돌릴 수 없어요.' };
-    for (const x of extensions) {
-      await releaseBlock(x.blockId);
-      await db.delete(lessonSessions).where(eq(lessonSessions.id, x.id));
-    }
+  // ① 쓰기 전에 거절할 것을 전부 가려낸다 — 거절하면서 일부만 바뀐 채 남지 않게(휴강 되돌리기가 보충 회차만 지우고 실패하던 문제).
+  const revertingCancel = session.status === 'studio_cancelled' && target !== 'studio_cancelled';
+  const extensions = revertingCancel ? await db.select().from(lessonSessions).where(eq(lessonSessions.extendsSessionId, session.id)) : [];
+  if (extensions.some((x) => x.status !== 'scheduled')) return { ok: false, message: '이 휴강이 붙인 보충 회차가 이미 진행돼 되돌릴 수 없어요.' };
+  if (target === 'scheduled' && !session.blockId) {
+    const conflicts = await findSlotConflicts([{ on: session.scheduledOn, time: session.startTime, durationMin: session.durationMin }]);
+    if (conflicts.length > 0) return { ok: false, message: conflictMessage(conflicts) };
+  }
+
+  // ② 상태를 먼저 선점한다 — 같은 회차에 동시에 온 요청 중 하나만 통과해 보충 회차·블록이 두 번 생기지 않는다.
+  const claimed = await db.update(lessonSessions).set({ status: target, updatedAt: new Date() })
+    .where(and(eq(lessonSessions.id, session.id), eq(lessonSessions.status, session.status)));
+  if (Number(claimed.rowsAffected) === 0) return { ok: false, message: '방금 이 회차의 상태가 바뀌었어요. 새로고침 후 다시 시도해 주세요.' };
+
+  // ③ 부수 효과 — 스튜디오 휴강을 되돌리면 그 휴강이 붙인 보충 회차를 지운다.
+  for (const x of extensions) {
+    await releaseBlock(x.blockId);
+    await db.delete(lessonSessions).where(eq(lessonSessions.id, x.id));
   }
 
   let blockId: string | null = session.blockId;
   if (target === 'scheduled') {
-    if (!blockId) {
-      const conflicts = await findSlotConflicts([{ on: session.scheduledOn, time: session.startTime, durationMin: session.durationMin }]);
-      if (conflicts.length > 0) return { ok: false, message: conflictMessage(conflicts) };
-      blockId = await createBlock(session.scheduledOn, session.startTime, session.durationMin);
-    }
+    if (!blockId) blockId = await createBlock(session.scheduledOn, session.startTime, session.durationMin);
   } else {
     await releaseBlock(blockId);
     blockId = null;
@@ -174,7 +180,7 @@ export const setSessionStatus = async (input: { sessionId: string; status: Sessi
     });
   }
 
-  await db.update(lessonSessions).set({ status: target, blockId, ...noteSet, updatedAt: new Date() }).where(eq(lessonSessions.id, session.id));
+  await db.update(lessonSessions).set({ blockId, ...noteSet, updatedAt: new Date() }).where(eq(lessonSessions.id, session.id));
   await syncCompletion(enrollment.id);
   return { ok: true, warnings };
 };
@@ -189,7 +195,9 @@ export const rescheduleSession = async (input: { sessionId: string; date: string
   const { start, end } = slotRange(input.date, input.time, session.durationMin);
   let blockId = session.blockId;
   if (blockId) {
-    await db.update(availabilityBlocks).set({ startAt: start, endAt: end }).where(eq(availabilityBlocks.id, blockId));
+    const moved = await db.update(availabilityBlocks).set({ startAt: start, endAt: end }).where(eq(availabilityBlocks.id, blockId));
+    // 다른 화면에서 블록이 지워졌다면 옮길 행이 없다 — 성공으로 넘기면 새 시간이 막히지 않으니 새로 만든다.
+    if (Number(moved.rowsAffected) === 0) blockId = await createBlock(input.date, input.time, session.durationMin);
   } else {
     blockId = await createBlock(input.date, input.time, session.durationMin);
   }
@@ -203,13 +211,25 @@ export const endEnrollment = async (input: { enrollmentId: string; reason: strin
   if (!enrollment) return { ok: false, message: '수강 등록을 찾을 수 없어요.' };
   if (enrollment.status === 'ended') return { ok: false, message: '이미 중도 종료됐어요.' };
   const pending = await db.select().from(lessonSessions).where(and(eq(lessonSessions.enrollmentId, enrollment.id), eq(lessonSessions.status, 'scheduled')));
-  for (const s of pending) await releaseBlock(s.blockId);
-  if (pending.length > 0) {
-    await db.update(lessonSessions).set({ status: 'dropped', blockId: null, updatedAt: new Date() })
-      .where(inArray(lessonSessions.id, pending.map((s) => s.id)));
+  // 날짜가 지났는데 완료·결석을 표시하지 않은 회차는 종료 때 dropped로 덮이면 환불 계산(진행한 회차)에서 빠진다 — 먼저 표시하게 한다.
+  const unmarked = pending.filter((x) => x.scheduledOn < input.endedOn).sort((a, b) => a.scheduledOn.localeCompare(b.scheduledOn));
+  if (unmarked.length > 0) {
+    return { ok: false, message: `날짜가 지났는데 표시하지 않은 회차가 ${unmarked.length}개 있어요(${unmarked.slice(0, 4).map((x) => x.scheduledOn).join(', ')}${unmarked.length > 4 ? ' …' : ''}). 완료나 결석으로 먼저 표시해 주세요 — 환불 계산에 쓰여요.` };
   }
-  await db.update(lessonEnrollments).set({ status: 'ended', endedOn: input.endedOn, endedReason: input.reason.trim().slice(0, 200), updatedAt: new Date() })
-    .where(eq(lessonEnrollments.id, enrollment.id));
+  const blockIds = pending.map((x) => x.blockId).filter((x): x is string => Boolean(x));
+  // 한 번에 — 중간에 끊겨 블록만 풀리고 회차는 남는 일이 없게.
+  await db.batch([
+    db.update(lessonEnrollments).set({ status: 'ended', endedOn: input.endedOn, endedReason: input.reason.trim().slice(0, 200), updatedAt: new Date() }).where(eq(lessonEnrollments.id, enrollment.id)),
+    ...(pending.length > 0 ? [db.update(lessonSessions).set({ status: 'dropped', blockId: null, updatedAt: new Date() }).where(inArray(lessonSessions.id, pending.map((x) => x.id)))] : []),
+    ...(blockIds.length > 0 ? [db.delete(availabilityBlocks).where(inArray(availabilityBlocks.id, blockIds))] : []),
+  ]);
+  // 아직 체결되지 않은 수강 계약(작성중·서명 대기·만료)은 닫는다 — 종료된 수강에 서명이 들어오지 않게. 계약 표가 없는 DB(0082 전)는 건너뛴다.
+  try {
+    await db.update(lessonContracts).set({ status: 'cancelled', signToken: null, updatedAt: new Date() })
+      .where(and(eq(lessonContracts.enrollmentId, enrollment.id), inArray(lessonContracts.status, ['draft', 'sent', 'expired']), isNull(lessonContracts.purgedAt)));
+  } catch (error) {
+    console.error('[lessons] 중도 종료 — 미체결 계약 정리 실패', error instanceof Error ? error.message : String(error));
+  }
   return { ok: true, warnings: [] };
 };
 
@@ -271,7 +291,7 @@ export const listEnrollments = async (now: Date = new Date()): Promise<LessonLis
       unmarked: mine.filter((s) => s.status === 'scheduled' && s.scheduledOn < today).length,
       lastPaidOn: paid.map((p) => p.paidOn).sort().pop() ?? null,
       paidTotal: paid.reduce((sum, p) => sum + p.amount, 0),
-      arrears: enrollment.status === 'active'
+      arrears: enrollment.status !== 'ended'
         ? arrearsOf({ payMethod: enrollment.payMethod, monthlyAmount: enrollment.monthlyAmount, sessions: mine, payments: paid, today, courseMonths: enrollment.courseWeeks / 4 }).arrears
         : 0,
       lastScheduledOn: mine.filter((s) => s.status === 'scheduled').map((s) => s.scheduledOn).sort().pop() ?? null,

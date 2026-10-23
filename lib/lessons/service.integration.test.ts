@@ -40,7 +40,7 @@ beforeAll(async () => {
 });
 afterAll(() => client.close());
 beforeEach(async () => {
-  for (const t of ['lesson_payments', 'lesson_sessions', 'lesson_enrollments', 'availability_blocks', 'bookings', 'orders']) await client.execute(`DELETE FROM ${t}`);
+  for (const t of ['lesson_contracts', 'lesson_payments', 'lesson_sessions', 'lesson_enrollments', 'availability_blocks', 'bookings', 'orders']) await client.execute(`DELETE FROM ${t}`);
 });
 
 const create = async (over: Partial<EnrollmentInput> = {}) => {
@@ -113,6 +113,30 @@ describe('회차 표시', () => {
     expect(await setSessionStatus({ sessionId: first.id, status: 'scheduled' })).toMatchObject({ ok: false });
   });
 
+  it('휴강 되돌리기가 거절되면 보충 회차는 그대로 남는다', async () => {
+    const id = await create();
+    const first = (await getEnrollmentDetail(id))!.sessions[0];
+    await setSessionStatus({ sessionId: first.id, status: 'studio_cancelled' });
+    // 휴강으로 풀린 그 시간에 다른 예약 불가 블록이 들어온다.
+    const { start, end } = { start: Math.floor(new Date('2026-10-28T05:00:00Z').getTime() / 1000), end: Math.floor(new Date('2026-10-28T06:00:00Z').getTime() / 1000) };
+    await client.execute({ sql: "INSERT INTO availability_blocks (id, room_number, start_at, end_at, memo) VALUES ('x1', NULL, ?, ?, '다른 일정')", args: [start, end] });
+    expect(await setSessionStatus({ sessionId: first.id, status: 'scheduled' })).toMatchObject({ ok: false });
+    const detail = (await getEnrollmentDetail(id))!;
+    expect(detail.sessions).toHaveLength(13);
+    expect(detail.sessions.find((x) => x.id === first.id)?.status).toBe('studio_cancelled');
+  });
+
+  it('같은 회차 휴강이 동시에 와도 보충 회차는 하나만 붙는다', async () => {
+    const id = await create();
+    const first = (await getEnrollmentDetail(id))!.sessions[0];
+    const results = await Promise.all([
+      setSessionStatus({ sessionId: first.id, status: 'studio_cancelled' }),
+      setSessionStatus({ sessionId: first.id, status: 'studio_cancelled' }),
+    ]);
+    expect(results.filter((r) => r.ok).length).toBeGreaterThanOrEqual(1);
+    expect((await getEnrollmentDetail(id))!.sessions).toHaveLength(13);
+  });
+
   it('예정 회차를 모두 소화하면 수료, 다시 되돌리면 수강 중', async () => {
     const id = await create({ courseWeeks: 12 });
     const sessions = (await getEnrollmentDetail(id))!.sessions;
@@ -137,12 +161,40 @@ describe('회차 표시', () => {
     const id = await create();
     const first = (await getEnrollmentDetail(id))!.sessions[0];
     await setSessionStatus({ sessionId: first.id, status: 'done' });
-    expect(await endEnrollment({ enrollmentId: id, reason: '개인 사정', endedOn: '2026-11-05' })).toMatchObject({ ok: true });
+    expect(await endEnrollment({ enrollmentId: id, reason: '개인 사정', endedOn: '2026-11-04' })).toMatchObject({ ok: true });
     const detail = (await getEnrollmentDetail(id))!;
-    expect(detail.enrollment).toMatchObject({ status: 'ended', endedOn: '2026-11-05' });
+    expect(detail.enrollment).toMatchObject({ status: 'ended', endedOn: '2026-11-04' });
     expect(detail.sessions.filter((s) => s.status === 'dropped')).toHaveLength(11);
     expect(await count('SELECT COUNT(*) AS n FROM availability_blocks')).toBe(0);
     expect(await setSessionStatus({ sessionId: first.id, status: 'scheduled' })).toMatchObject({ ok: false });
+  });
+});
+
+describe('중도 종료 보호', () => {
+  it('날짜가 지났는데 표시하지 않은 회차가 있으면 종료를 거절한다 — 환불 계산에서 빠지지 않게', async () => {
+    const id = await create();
+    const r = await endEnrollment({ enrollmentId: id, reason: '개인 사정', endedOn: '2026-11-05' });
+    expect(r).toMatchObject({ ok: false });
+    expect((await getEnrollmentDetail(id))!.enrollment.status).toBe('active');
+    expect(await count("SELECT COUNT(*) AS n FROM lesson_sessions WHERE status = 'dropped'")).toBe(0);
+  });
+
+  it('종료하면 아직 체결되지 않은 수강 계약을 닫는다', async () => {
+    const id = await create();
+    await client.execute({
+      sql: `INSERT INTO lesson_contracts (id, enrollment_id, status, student_name, student_email, student_phone, terms_json, clauses_json, template, template_hash, content, sign_token)
+            VALUES ('c1', ?, 'sent', '김수강', 'a@b.c', '01012345678', '{}', '[]', 't', 'h', 'c', 'tok')`,
+      args: [id],
+    });
+    await client.execute({
+      sql: `INSERT INTO lesson_contracts (id, enrollment_id, status, student_name, student_email, student_phone, terms_json, clauses_json, template, template_hash, content, signed_at)
+            VALUES ('c2', ?, 'signed', '김수강', 'a@b.c', '01012345678', '{}', '[]', 't', 'h', 'c', unixepoch())`,
+      args: [id],
+    });
+    expect(await endEnrollment({ enrollmentId: id, reason: '개인 사정', endedOn: '2026-10-21' })).toMatchObject({ ok: true });
+    const rows = (await client.execute("SELECT id, status, sign_token FROM lesson_contracts ORDER BY id")).rows as unknown as Array<{ id: string; status: string; sign_token: string | null }>;
+    expect(rows[0]).toMatchObject({ id: 'c1', status: 'cancelled', sign_token: null });
+    expect(rows[1]).toMatchObject({ id: 'c2', status: 'signed' }); // 체결된 계약은 기록으로 남는다
   });
 });
 

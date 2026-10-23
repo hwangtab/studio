@@ -511,8 +511,10 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
    */
   try {
     const today = kstToday(now);
-    const lessons = (await listLessonEnrollments(now)).filter((r) => r.enrollment.status === 'active');
-    const owed = lessons.filter((r) => r.arrears > 0);
+    const allLessons = (await listLessonEnrollments(now)).filter((r) => r.enrollment.status !== 'ended');
+    // 미수금은 수료(마지막 회차까지 끝남)한 수강도 본다 — 마지막 달 수강료를 못 받은 채 수료돼 알림이 사라지지 않게.
+    const owed = allLessons.filter((r) => r.arrears > 0);
+    const lessons = allLessons.filter((r) => r.enrollment.status === 'active');
     if (owed.length > 0) {
       const total = owed.reduce((sum, r) => sum + r.arrears, 0);
       issues.push({
