@@ -64,6 +64,18 @@ describe('adjustPaidBankDepositAmount', () => {
     expect(audit.amountAdjustments.map((a: { to: number }) => a.to)).toEqual([500000, 450000]);
   });
 
+  it('같은 금액으로 동시에 정정해도 감사 기록은 이긴 쪽 하나만 남는다', async () => {
+    await seed();
+    const [a, b] = await Promise.all([
+      adjustPaidBankDepositAmount({ orderId: 'o1', totalAmount: 500000, reason: '첫 번째 사람', actor: 'admin-a' }),
+      adjustPaidBankDepositAmount({ orderId: 'o1', totalAmount: 500000, reason: '두 번째 사람', actor: 'admin-b' }),
+    ]);
+    expect([a.ok, b.ok].filter(Boolean)).toHaveLength(1);
+    const audit = JSON.parse(String((await one(`SELECT raw_response FROM payments WHERE id='p1'`))?.raw_response));
+    expect(audit.amountAdjustments).toHaveLength(1);
+    expect(audit.amountAdjustments[0].by).toBe(a.ok ? 'admin-a' : 'admin-b');
+  });
+
   it('카드(토스) 결제는 거절한다 — 승인 금액과 어긋난다', async () => {
     await seed({ paymentKey: 'tgen_abc123' });
     const r = await adjustPaidBankDepositAmount({ orderId: 'o1', totalAmount: 500000, reason: '사유입니다', actor: 'admin' });

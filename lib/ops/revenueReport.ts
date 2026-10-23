@@ -242,7 +242,7 @@ export const summarizeRevenue = (allRows: RevenueRow[], options: SummarizeOption
   const lineFilter = parseBusinessLine(options.line);
   const inLine = (row: RevenueRow) => (lineFilter ? lineOfRow(row) === lineFilter : true);
   const periodAll = periodEvery.filter(inLine);
-  const typeFilter = options.type && options.type in REVENUE_TYPE_LABELS ? options.type : null;
+  const typeFilter = options.type && Object.hasOwn(REVENUE_TYPE_LABELS, options.type) ? options.type : null;
   const matches = (row: RevenueRow) => inLine(row) && (typeFilter ? row.type === typeFilter : true);
 
   const period = periodAll.filter(matches);

@@ -1,4 +1,4 @@
-import { and, eq, gte, isNull, sql } from 'drizzle-orm';
+import { and, eq, gte, isNull, lte, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { studioExpenses, type StudioExpense } from '../../db/schema';
@@ -76,10 +76,10 @@ export const parseExpenseInput = (raw: unknown, today: string): Parsed => {
   // 반복이 아닌 지출은 미래 날짜로 못 적는다(안 쓴 돈을 장부에 올리지 않게). 반복은 시작일이 이미 지났을 때만(다음 달부터는 때가 되면 센다).
   if (spentOn > today) return { ok: false, message: '아직 오지 않은 날짜예요. 오늘까지로 적어 주세요.' };
   const category = typeof b.category === 'string' ? b.category : '';
-  if (!(category in EXPENSE_CATEGORY_LABELS)) return { ok: false, message: '항목을 골라 주세요.' };
+  if (!Object.hasOwn(EXPENSE_CATEGORY_LABELS, category)) return { ok: false, message: '항목을 골라 주세요.' };
   // 구분을 보내지 않으면 공통(분야를 모르는 비용을 한 분야 수익에서 빼지 않게 — 화면의 기본값도 공통이다).
   const scope = typeof b.scope === 'string' ? b.scope : 'studio';
-  if (!(scope in EXPENSE_SCOPE_LABELS)) return { ok: false, message: '구분(연습실·녹음·제작·플랫폼·공통)을 골라 주세요.' };
+  if (!Object.hasOwn(EXPENSE_SCOPE_LABELS, scope)) return { ok: false, message: '구분(연습실·녹음·제작·플랫폼·공통)을 골라 주세요.' };
   const description = typeof b.description === 'string' ? b.description.trim() : '';
   if (description === '') return { ok: false, message: '내용을 적어 주세요. (예: 10월 임대료)' };
   if (description.length > 100) return { ok: false, message: '내용은 100자까지 적을 수 있습니다.' };
@@ -225,8 +225,9 @@ export const deleteExpense = async (id: string, actor: string, now: Date = new D
 /** 반복 지출을 그 달까지로 끝낸다(`until`이 속한 달까지 센다). 반복이 아닌 행·없는 행은 false. */
 export const endExpenseRepeat = async (id: string, until: string): Promise<boolean> => {
   if (!isRealDate(until)) return false;
+  // 시작일보다 앞선 끝나는 날은 받지 않는다(등록 때의 검사와 같다) — 받으면 시작 달부터 반복이 통째로 0원이 되어 손익이 좋아 보인다.
   const result = await getDb().update(studioExpenses).set({ repeatUntil: until })
-    .where(and(eq(studioExpenses.id, id), isNull(studioExpenses.deletedAt), eq(studioExpenses.repeatMonthly, true), gte(studioExpenses.spentOn, '2020-01-01')));
+    .where(and(eq(studioExpenses.id, id), isNull(studioExpenses.deletedAt), eq(studioExpenses.repeatMonthly, true), gte(studioExpenses.spentOn, '2020-01-01'), lte(studioExpenses.spentOn, until)));
   return Number(result.rowsAffected) > 0;
 };
 
@@ -241,8 +242,8 @@ export const updateExpenseClassification = async (
   actor: string,
   now: Date = new Date(),
 ): Promise<'ok' | 'not_found' | 'invalid' | 'unchanged'> => {
-  if (change.scope !== undefined && !(change.scope in EXPENSE_SCOPE_LABELS)) return 'invalid';
-  if (change.category !== undefined && !(change.category in EXPENSE_CATEGORY_LABELS)) return 'invalid';
+  if (change.scope !== undefined && !Object.hasOwn(EXPENSE_SCOPE_LABELS, change.scope)) return 'invalid';
+  if (change.category !== undefined && !Object.hasOwn(EXPENSE_CATEGORY_LABELS, change.category)) return 'invalid';
   const db = getDb();
   return retryOnMemoConflict<'ok' | 'not_found' | 'invalid' | 'unchanged'>(async () => {
     const [row] = await db.select().from(studioExpenses).where(and(eq(studioExpenses.id, id), isNull(studioExpenses.deletedAt)));

@@ -25,8 +25,11 @@ export function PaidAmountCorrection({ totalAmount, busy, note, onSubmit }: {
   }
 
   const submit = () => {
-    const next = Number(amount.replace(/[,\s원]/g, ''));
-    const free = next === 0 ? '0원(완전 무료)으로 정정하면 이 주문의 매출이 0원이 되고 환불할 돈도 없어요.\n\n' : '';
+    const cleaned = amount.replace(/[,\s원]/g, '');
+    // 빈 칸은 Number('')가 0이라 "완전 무료"로 제출되어 버린다 — 무료는 0을 직접 적었을 때만.
+    if (cleaned === '') { window.alert('바꿀 금액을 적어 주세요. 무료면 0을 적어요.'); return; }
+    const next = Number(cleaned);
+    const free = next === 0 ? '0원(완전 무료)으로 정정하면 이 주문의 매출이 0원이 되고 환불할 돈도 없어요.\n\n주의: 0원이 된 주문은 취소(환불) 화면에서 처리되지 않아요. 나중에 취소해야 하면 먼저 금액을 다시 1,000원 이상으로 정정한 뒤, 환불 금액을 0으로 두고 취소하세요.\n\n' : '';
     if (!window.confirm(`${free}금액을 ${formatPriceAmount(totalAmount)}원 → ${Number.isFinite(next) ? formatPriceAmount(next) : amount}원으로 정정할까요?\n\n매출 현황과 환불 가능 금액이 함께 바뀌고, 사유와 함께 기록이 남습니다. 고객에게 메일은 가지 않습니다.`)) return;
     onSubmit(next, reason);
   };

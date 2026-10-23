@@ -119,3 +119,12 @@ describe('parseExpenseInput', () => {
     expect(parseExpenseInput({ ...ok, repeatMonthly: true, repeatUntil: '2026-09-01' }, '2026-10-21')).toMatchObject({ ok: false });
   });
 });
+
+describe('parseExpenseInput — 프로토타입 키', () => {
+  it('constructor·toString 같은 객체 속성 이름은 항목·구분으로 받지 않는다', () => {
+    const base = { spentOn: '2026-10-01', category: 'rent', scope: 'practice', description: '임대료', amount: 1000 };
+    expect(parseExpenseInput({ ...base, category: 'toString' }, '2026-10-21')).toMatchObject({ ok: false });
+    expect(parseExpenseInput({ ...base, scope: 'constructor' }, '2026-10-21')).toMatchObject({ ok: false });
+    expect(parseExpenseInput(base, '2026-10-21')).toMatchObject({ ok: true });
+  });
+});

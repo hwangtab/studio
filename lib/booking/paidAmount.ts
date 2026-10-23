@@ -131,6 +131,7 @@ export const adjustPaidBankDepositAmount = async (input: {
     db.run(sql`
       UPDATE payments SET raw_response = ${auditJson}
       WHERE id = ${bankPayment.id}
+        AND raw_response IS ${bankPayment.rawResponse ?? null}
         AND EXISTS (SELECT 1 FROM orders WHERE id = ${order.id} AND total_amount = ${split.totalAmount})
     `),
     ...ticketUpdates.map((t) => db.run(sql`

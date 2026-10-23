@@ -77,7 +77,7 @@ export const getServerSideProps: GetServerSideProps<RevenuePageProps> = async (c
   const monthParam = Number(monthRaw);
   const month: number | 'all' = monthRaw === 'all' ? 'all' : Number.isInteger(monthParam) && monthParam >= 1 && monthParam <= 12 ? monthParam : now.month;
   const typeParam = single(context.query.type);
-  const type = typeParam && typeParam in REVENUE_TYPE_LABELS ? typeParam : null;
+  const type = typeParam && Object.hasOwn(REVENUE_TYPE_LABELS, typeParam) ? typeParam : null;
   const line = parseBusinessLine(single(context.query.line));
   const years = Array.from({ length: now.year - FIRST_YEAR + 1 }, (_, i) => now.year - i);
   const today = kstDateString(new Date());
