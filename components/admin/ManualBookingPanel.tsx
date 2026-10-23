@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { MIXING_PRODUCTS, mixingUnitAmount } from '../../lib/booking/mixing-products';
 import { SESSION_PRODUCTS, productHours } from '../../lib/booking/products';
 import { VOCAL_TUNING_ADDON_PRICE } from '../../data/pricing';
+import type { BookingLine } from '../../lib/booking/line';
 import { Button } from '../ui/Button';
 import { Field, Select, TextInput } from '../ui/Field';
 import { Notice } from '../ui/Notice';
@@ -17,6 +18,27 @@ import { lightOnlyField } from '../ui/adminFieldClass';
 const won = (value: number) => `${value.toLocaleString('ko-KR')}원`;
 
 const sessionProducts = SESSION_PRODUCTS.filter((p) => p.service !== 'smoke-test');
+
+type EntryKind = 'session' | 'mixing';
+
+/**
+ * 지금 보고 있는 예약 화면(`?line=`)에 맞춘 기본값 — 연습실 화면이면 연습실 상품, 녹음실이면 녹음 상품, 믹싱이면 믹싱 주문.
+ * 운영자가 화면을 골라 들어왔는데 종류·상품을 또 고르게 하지 않는다(운영자 지적 2026-10-23). 라인을 모르면(전체) 전부 보인다.
+ */
+const productsForLine = (line: BookingLine | null) =>
+  line === 'practice'
+    ? sessionProducts.filter((p) => p.service === 'practice-room')
+    : line === 'studio'
+      ? sessionProducts.filter((p) => p.service !== 'practice-room')
+      : sessionProducts;
+
+const kindForLine = (line: BookingLine | null): EntryKind => (line === 'mixing' ? 'mixing' : 'session');
+
+const SESSION_KIND_LABEL: Record<'practice' | 'studio' | 'any', string> = {
+  practice: '연습실 예약',
+  studio: '녹음실 예약',
+  any: '세션·연습실 예약',
+};
 
 interface Result {
   tone: 'success' | 'error';
@@ -39,21 +61,25 @@ export const ManualBookingPanel = ({
   today,
   onCreated,
   prefill,
+  line = null,
 }: {
   today: string;
   onCreated: () => Promise<void>;
   prefill?: ManualBookingPrefill | null;
+  /** 지금 열린 예약 화면의 라인 — 종류·상품 기본값과 상품 목록을 정한다. */
+  line?: BookingLine | null;
 }) => {
+  const lineProducts = productsForLine(line);
   const [open, setOpen] = useState(false);
   const [adoptEventId, setAdoptEventId] = useState<string | null>(null);
   const [adoptWarning, setAdoptWarning] = useState<string | null>(null);
   const [adoptHours, setAdoptHours] = useState<number | null>(null);
-  const [kind, setKind] = useState<'session' | 'mixing'>('session');
-  const [productId, setProductId] = useState(sessionProducts[0].id);
+  const [kind, setKind] = useState<EntryKind>(kindForLine(line));
+  const [productId, setProductId] = useState(lineProducts[0].id);
   const [mixingId, setMixingId] = useState(MIXING_PRODUCTS[0].id);
   const [date, setDate] = useState(today);
   const [startHour, setStartHour] = useState(14);
-  const [hours, setHours] = useState(3);
+  const [hours, setHours] = useState(lineProducts[0].kind === 'hourly' ? (lineProducts[0].minHours ?? 1) : 3);
   const [songCount, setSongCount] = useState(1);
   const [vocalTuning, setVocalTuning] = useState(false);
   const [name, setName] = useState('');
@@ -65,6 +91,22 @@ export const ManualBookingPanel = ({
   const [note, setNote] = useState('');
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
+
+  // 같은 화면 안에서 라인 알약을 눌러 옮기면 패널은 그대로 남는다 — 그때도 기본값을 그 라인으로 맞춘다.
+  // 캘린더 일정을 가져오는 중이면(아래 prefill) 건드리지 않는다 — 그쪽이 시각·길이를 이미 채웠다.
+  useEffect(() => {
+    if (adoptEventId) return;
+    setKind(kindForLine(line));
+    const products = productsForLine(line);
+    if (!products.some((p) => p.id === productId)) {
+      const first = products[0];
+      setProductId(first.id);
+      if (first.kind === 'hourly') setHours(first.minHours ?? 1);
+      setStartHour((h) => Math.min(Math.max(h, productHours(first).openHour), productHours(first).closeHour - 1));
+    }
+    // productId·adoptEventId는 일부러 뺐다 — 라인이 바뀔 때만 다시 맞춘다(운영자가 고른 상품을 되돌리지 않게).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [line]);
 
   useEffect(() => {
     if (!prefill) return;
@@ -94,7 +136,7 @@ export const ManualBookingPanel = ({
     setAdoptEventId(prefill.eventId);
   }, [prefill]);
 
-  const session = sessionProducts.find((p) => p.id === productId) ?? sessionProducts[0];
+  const session = sessionProducts.find((p) => p.id === productId) ?? lineProducts[0];
   const mixing = MIXING_PRODUCTS.find((p) => p.id === mixingId) ?? MIXING_PRODUCTS[0];
   const { openHour, closeHour } = productHours(session);
   // 캘린더 일정 길이와 고른 상품의 이용 시간이 다르면 알린다 — 패키지는 길이가 고정이고, 시간제는 허용 범위가 있다.
@@ -207,8 +249,8 @@ export const ManualBookingPanel = ({
             </div>
           )}
           <Field id="mb-kind" label="종류" required className={`md:col-span-2 ${lightOnlyField}`}>
-            <Select value={kind} onChange={(e) => setKind(e.target.value as 'session' | 'mixing')} light>
-              <option value="session">세션·연습실 예약</option>
+            <Select value={kind} onChange={(e) => setKind(e.target.value as EntryKind)} light>
+              <option value="session">{SESSION_KIND_LABEL[line === 'practice' || line === 'studio' ? line : 'any']}</option>
               <option value="mixing">믹싱·마스터링 주문</option>
             </Select>
           </Field>
@@ -220,14 +262,14 @@ export const ManualBookingPanel = ({
                   value={productId}
                   onChange={(e) => {
                     setProductId(e.target.value);
-                    const next = sessionProducts.find((p) => p.id === e.target.value);
+                    const next = lineProducts.find((p) => p.id === e.target.value);
                     // 캘린더 일정을 가져오는 중이면 그 길이를 지킨다(허용 범위 안에서) — 안 그러면 3시간 일정이 2시간으로 줄고 원본은 지워진다.
                     if (next?.kind === 'hourly') setHours(adoptHours !== null ? Math.min(Math.max(adoptHours, next.minHours ?? 1), next.maxHours ?? 12) : next.minHours ?? 1);
                     if (next) setStartHour(Math.min(Math.max(startHour, productHours(next).openHour), productHours(next).closeHour - 1));
                   }}
                   light
                 >
-                  {sessionProducts.map((p) => (
+                  {lineProducts.map((p) => (
                     <option key={p.id} value={p.id}>
                       {p.nameKo} — {p.kind === 'package' ? `${won(p.unitAmount)} (${p.sessionHours}시간)` : `시간당 ${won(p.unitAmount)}`}
                     </option>

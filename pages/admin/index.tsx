@@ -471,7 +471,7 @@ const CalendarOnlyCard = ({ dashboard }: { dashboard: AdminDashboard }) => (
           </span>
           {event.adoptable ? (
             <Button asChild light variant="weak" size="sm" className="shrink-0">
-              <Link href={`/admin/bookings?${new URLSearchParams({ fromEvent: event.id, start: event.startAt, end: event.endAt, title: event.summary }).toString()}`}>사이트에 등록</Link>
+              <Link href={`/admin/bookings?${new URLSearchParams({ line: 'studio', fromEvent: event.id, start: event.startAt, end: event.endAt, title: event.summary }).toString()}`}>사이트에 등록</Link>
             </Button>
           ) : (
             <span className="shrink-0 text-right text-xs text-gray-500">

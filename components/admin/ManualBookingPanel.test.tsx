@@ -58,3 +58,51 @@ it('서버가 시간대 충돌을 알리면 그 문구를 그대로 보여 준�
   submit();
   expect(await screen.findByText('그 시간대에는 이미 예약이 있거나 막혀 있어요.')).toBeInTheDocument();
 });
+
+describe('지금 보고 있는 예약 화면(라인)에 맞춰 종류·상품이 미리 골라져 있다', () => {
+  const kindSelect = () => screen.getByLabelText(/종류/) as HTMLSelectElement;
+  const productSelect = () => screen.getByLabelText(/^상품/) as HTMLSelectElement;
+  const optionTexts = (select: HTMLSelectElement) => Array.from(select.options).map((o) => o.textContent ?? '');
+
+  it('믹싱 화면이면 믹싱·마스터링 주문이 골라져 있다', () => {
+    render(<ManualBookingPanel today="2026-10-16" onCreated={jest.fn()} line="mixing" />);
+    open();
+    expect(kindSelect().value).toBe('mixing');
+    expect(screen.getByLabelText(/곡 수/)).toBeInTheDocument();
+  });
+
+  it('녹음실 화면이면 녹음실 예약·녹음 상품이고, 연습실 상품은 목록에 없다', async () => {
+    render(<ManualBookingPanel today="2026-10-16" onCreated={jest.fn()} line="studio" />);
+    open();
+    expect(kindSelect().value).toBe('session');
+    expect(kindSelect().options[0].textContent).toBe('녹음실 예약');
+    expect(productSelect().value).toBe('recording-pro');
+    expect(optionTexts(productSelect()).some((t) => t.includes('연습실'))).toBe(false);
+  });
+
+  it('연습실 화면이면 연습실 시간제가 골라져 있고 녹음 상품은 목록에 없다', () => {
+    render(<ManualBookingPanel today="2026-10-16" onCreated={jest.fn()} line="practice" />);
+    open();
+    expect(kindSelect().options[0].textContent).toBe('연습실 예약');
+    expect(productSelect().value).toBe('practice-room-hourly');
+    expect(optionTexts(productSelect()).some((t) => t.includes('녹음'))).toBe(false);
+  });
+
+  it('같은 화면에서 라인을 옮기면 기본값도 따라간다', () => {
+    const { rerender } = render(<ManualBookingPanel today="2026-10-16" onCreated={jest.fn()} line="studio" />);
+    open();
+    rerender(<ManualBookingPanel today="2026-10-16" onCreated={jest.fn()} line="mixing" />);
+    expect(kindSelect().value).toBe('mixing');
+    rerender(<ManualBookingPanel today="2026-10-16" onCreated={jest.fn()} line="practice" />);
+    expect(kindSelect().value).toBe('session');
+    expect(productSelect().value).toBe('practice-room-hourly');
+  });
+
+  it('라인을 모르는 전체 화면에서는 예전처럼 모든 상품이 보인다', () => {
+    render(<ManualBookingPanel today="2026-10-16" onCreated={jest.fn()} />);
+    open();
+    expect(kindSelect().options[0].textContent).toBe('세션·연습실 예약');
+    expect(optionTexts(productSelect()).some((t) => t.includes('연습실'))).toBe(true);
+    expect(optionTexts(productSelect()).some((t) => t.includes('녹음'))).toBe(true);
+  });
+});
