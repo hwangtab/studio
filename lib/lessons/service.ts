@@ -272,7 +272,7 @@ export const listEnrollments = async (now: Date = new Date()): Promise<LessonLis
       lastPaidOn: paid.map((p) => p.paidOn).sort().pop() ?? null,
       paidTotal: paid.reduce((sum, p) => sum + p.amount, 0),
       arrears: enrollment.status === 'active'
-        ? arrearsOf({ payMethod: enrollment.payMethod, monthlyAmount: enrollment.monthlyAmount, sessions: mine, payments: paid, today }).arrears
+        ? arrearsOf({ payMethod: enrollment.payMethod, monthlyAmount: enrollment.monthlyAmount, sessions: mine, payments: paid, today, courseMonths: enrollment.courseWeeks / 4 }).arrears
         : 0,
       lastScheduledOn: mine.filter((s) => s.status === 'scheduled').map((s) => s.scheduledOn).sort().pop() ?? null,
     };
