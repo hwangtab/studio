@@ -83,4 +83,13 @@ describe('관리자 명단 getServerSideProps', () => {
     expect(unknown.rows.map((r) => r.stageName)).toEqual(['쌈', '미기재', '비쌈']);
     expect(unknown.filters.sort).toBe('newest');
   });
+
+  it('악기·장르 필터는 목록에서 고른 값만 정확히 맞춘다 — 직접 입력 악기(키 "other")·대소문자 다른 자유 입력은 걸리지 않는다', async () => {
+    await seed('목록베이스', null, 1000);
+    await seed('자유입력', null, 2000);
+    await client.execute(`UPDATE session_musicians SET primary_instrument = 'vocal', instruments_json = '[{"other":"Bass"}]', genres_json = '["rock"]' WHERE stage_name = '자유입력'`);
+    expect((await run({ instrument: 'bass' })).rows.map((r) => r.stageName)).toEqual(['목록베이스']);
+    expect((await run({ instrument: 'other' })).rows).toHaveLength(0);
+    expect((await run({ genre: 'jazz' })).rows.map((r) => r.stageName)).toEqual(['목록베이스']);
+  });
 });

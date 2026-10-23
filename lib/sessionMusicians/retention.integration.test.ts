@@ -151,6 +151,15 @@ describe('sendSessionMusicianReconfirmNotices', () => {
     expect(await sendSessionMusicianReconfirmNotices(nextMonth)).toEqual({ sent: 1, failed: 0 });
   });
 
+  it('응답 지연(TIMEOUT)이면 도착했을 수 있어 새 링크와 표시를 그대로 둔다', async () => {
+    await insert('due', 22);
+    sendEmailMock.mockResolvedValue({ ok: false, errorCode: 'TIMEOUT' });
+    expect(await sendSessionMusicianReconfirmNotices(NOW)).toEqual({ sent: 1, failed: 0 });
+    const after = await row('due');
+    expect(after.reconfirm_sent_at).not.toBeNull();
+    expect(after.manage_token_hash).not.toBe('old-token-hash-due');
+  });
+
   it('복호화에 실패해도 던지지 않고 실패로 센다', async () => {
     await insert('due', 22);
     process.env.FUNDING_FIELD_KEY = randomBytes(32).toString('base64');

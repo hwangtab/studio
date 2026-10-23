@@ -214,6 +214,26 @@ describe('POST /api/session-musicians', () => {
     expect((await call(manageHandler, { method: 'GET', headers: { 'x-manage-token': oldToken } })).status).toBe(200);
   });
 
+  it('재발송 메일이 응답 지연(TIMEOUT)이면 도착했을 수 있으니 새 링크를 살려 둔다', async () => {
+    await call(indexHandler, { body: form() });
+    sendEmailMock.mockClear();
+    sendEmailMock.mockResolvedValue({ ok: false, errorCode: 'TIMEOUT' });
+    expect((await call(indexHandler, { body: form() })).status).toBe(200);
+    const newToken = tokenFromMail();
+    sendEmailMock.mockResolvedValue({ ok: true });
+    expect((await call(manageHandler, { method: 'GET', headers: { 'x-manage-token': newToken } })).status).toBe(200);
+  });
+
+  it('등록이 서버 장애로 실패하면 IP 한도도 되돌린다 — 장애 뒤 한 시간 막히지 않는다', async () => {
+    await client.execute('ALTER TABLE session_musicians RENAME COLUMN stage_name TO stage_name_x');
+    try {
+      for (let i = 0; i < 3; i += 1) expect((await call(indexHandler, { body: form({ email: `t${i}@example.com` }) })).status).toBe(500);
+    } finally {
+      await client.execute('ALTER TABLE session_musicians RENAME COLUMN stage_name_x TO stage_name');
+    }
+    expect((await call(indexHandler, { body: form() })).status).toBe(200);
+  });
+
   it('검증에 걸리면 IP 한도도 쓰지 않는다 — 오타를 고쳐 다시 내는 지원자가 막히지 않는다', async () => {
     for (let i = 0; i < 5; i += 1) {
       expect((await call(indexHandler, { body: form({ phone: '12' }) })).status).toBe(400);

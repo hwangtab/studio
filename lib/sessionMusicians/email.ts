@@ -71,6 +71,12 @@ export const buildReconfirmMail = (stageName: string, manageUrl: string) => {
 const resultError = (result: Awaited<ReturnType<typeof sendEmail>>): string | null =>
   result.ok ? null : (result.errorDetail ?? result.errorCode ?? '메일 발송 실패');
 
+/**
+ * 응답이 늦어 끊긴 발송(`TIMEOUT`)은 실패가 아니라 "갔을 수도 있음"이다 — Resend가 받아 놓고 늦게 답했을 수 있다.
+ * 관리 링크를 바꾼 뒤 이 경우에 옛 링크로 되돌리면 도착한 메일의 새 링크가 죽는다. 되돌리기는 확실히 안 간 실패에만 한다.
+ */
+export const mailMayHaveBeenSent = (error: string | null): boolean => error === 'TIMEOUT';
+
 /** 보내지 못하면 오류 문구를, 보냈으면 null을 돌려준다(접수를 되돌리지 않으려고 던지지 않는다). */
 export const sendRegistrationMail = async (
   kind: RegistrationMailKind,

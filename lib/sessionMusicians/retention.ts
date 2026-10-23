@@ -5,7 +5,7 @@ import { sessionMusicians } from '../../db/schema';
 import { SESSION_RECONFIRM_AFTER_MONTHS, SESSION_RETENTION_YEARS } from '../../data/sessionMusicians';
 import { isMissingTableError } from '../dbErrors';
 import { FieldCryptoError } from '../crypto/fieldCrypto';
-import { manageLinkUrl, sendReconfirmMail } from './email';
+import { mailMayHaveBeenSent, manageLinkUrl, sendReconfirmMail } from './email';
 import { openSessionPrivate } from './privateData';
 import { generateManageToken, hashManageToken } from './tokens';
 
@@ -116,6 +116,12 @@ export const sendSessionMusicianReconfirmNotices = async (now: Date = new Date()
       error = cause instanceof FieldCryptoError ? `decrypt:${cause.code}` : 'unknown';
     }
     if (error === null) {
+      sent += 1;
+      continue;
+    }
+    if (mailMayHaveBeenSent(error)) {
+      // 응답만 늦었을 수 있다 — 도착한 메일의 새 링크를 죽이지 않게 표시와 토큰을 그대로 둔다(보낸 것으로 센다).
+      console.error(`[session-musicians] 재확인 메일 응답 지연 (id=${row.id}) — 도착했을 수 있어 그대로 둡니다`);
       sent += 1;
       continue;
     }

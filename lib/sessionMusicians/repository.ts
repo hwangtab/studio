@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, like, or, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { sessionMusicians, type SessionMusician } from '../../db/schema';
@@ -118,7 +118,6 @@ export const findIdByEmailHash = async (
   return row ?? null;
 };
 
-/** 관리 링크를 다시 보낼 때 새 토큰으로 바꾼다 — 원문을 저장하지 않으니 옛 링크를 다시 만들 수 없다. */
 /**
  * 관리 토큰 해시를 `from`일 때만 `to`로 바꾼다(비교 후 교체). 바뀌었으면 true.
  * 재발송은 지금 값을 읽고 이 함수로 바꾸며, 메일이 실패하면 같은 함수로 `to → from` 되돌린다 — 그 사이 다른 재발송이
@@ -197,10 +196,16 @@ export const listSessionMusicians = async (filters: SessionMusicianFilters = {})
   if (filters.status) conditions.push(eq(sessionMusicians.status, filters.status));
   if (filters.instrument) {
     conditions.push(
-      or(eq(sessionMusicians.primaryInstrument, filters.instrument), like(sessionMusicians.instrumentsJson, `%"${filters.instrument}"%`)),
+      or(
+        eq(sessionMusicians.primaryInstrument, filters.instrument),
+        // 목록에서 고른 악기(문자열 원소)만 정확히 맞춘다 — LIKE는 직접 입력 악기의 키 "other"와 대소문자 다른 자유 입력까지 걸렀다.
+        sql`EXISTS (SELECT 1 FROM json_each(${sessionMusicians.instrumentsJson}) WHERE json_each.type = 'text' AND json_each.value = ${filters.instrument})`,
+      ),
     );
   }
-  if (filters.genre) conditions.push(like(sessionMusicians.genresJson, `%"${filters.genre}"%`));
+  if (filters.genre) {
+    conditions.push(sql`EXISTS (SELECT 1 FROM json_each(${sessionMusicians.genresJson}) WHERE json_each.type = 'text' AND json_each.value = ${filters.genre})`);
+  }
   if (filters.remoteOnly) conditions.push(eq(sessionMusicians.remoteRecording, true));
   const rows = await getDb()
     .select()

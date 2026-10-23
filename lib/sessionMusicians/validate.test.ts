@@ -127,6 +127,9 @@ describe('validateSessionRegistration', () => {
     expect(validateSessionRegistration(valid({ yearsExperience: -1 }))).toMatchObject({ ok: false, code: 'years_invalid' });
     expect(validateSessionRegistration(valid({ yearsExperience: 1.5 }))).toMatchObject({ ok: false, code: 'years_invalid' });
     expect(validateSessionRegistration(valid({ yearsExperience: '8' })).ok).toBe(true);
+    for (const bad of ['   ', '1e1', '0x10', '8년']) {
+      expect(validateSessionRegistration(valid({ yearsExperience: bad }))).toMatchObject({ ok: false, code: 'years_invalid' });
+    }
     expect(validateSessionRegistration(valid({ reading: 'braille' }))).toMatchObject({ ok: false, code: 'reading_invalid' });
     expect(validateSessionRegistration(valid({ region: '평양' }))).toMatchObject({ ok: false, code: 'region_invalid' });
     expect(validateSessionRegistration(valid({ genres: ['polka'] }))).toMatchObject({ ok: false, code: 'genres_invalid' });
