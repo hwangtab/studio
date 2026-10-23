@@ -51,6 +51,12 @@ export interface ProgressView {
     deposit: number;
     depositMetAt: string | null;
     depositLastDay: string | null;
+    /** 중간금(2회차). 0이면 2회 분할·일시불 — 화면이 그 줄을 숨긴다. */
+    second: number;
+    secondMetAt: string | null;
+    /** 편곡 승인 뒤에 생긴다(ledger.ts secondLastDay). */
+    secondLastDay: string | null;
+    secondOverdueDays: number;
     balanceLastDay: string | null;
     paidInFull: boolean;
   };
@@ -119,6 +125,10 @@ const buildView = (terms: ProductionTerms, ledger: ProductionLedger, timeline: T
       deposit: terms.amount.deposit,
       depositMetAt: iso(payments.depositMetAt),
       depositLastDay: iso(payments.depositLastDay),
+      second: terms.amount.second,
+      secondMetAt: iso(payments.secondMetAt),
+      secondLastDay: iso(payments.secondLastDay),
+      secondOverdueDays: payments.secondOverdueDays,
       balanceLastDay: iso(payments.balanceLastDay),
       paidInFull: payments.paidInFull,
     },

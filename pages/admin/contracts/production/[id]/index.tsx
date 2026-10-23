@@ -317,13 +317,22 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
                 <dl className="space-y-2 text-sm">
                   <Row label={isOneSongKind(contract.kind) ? '본 곡' : '음반'} value={releaseTitle(contract.kind, terms)} />
                   <Row label="계약금액" value={`${formatCurrency(terms.amount.total)}원`} />
-                  {terms.amount.balance === 0 ? (
+                  {terms.amount.balance === 0 && terms.amount.second === 0 ? (
                     <Row label="대금 지급" value={`일시불 (체결 후 ${terms.amount.depositDueDays}일)`} />
                   ) : (
                     <>
                       <Row label="계약금" value={`${formatCurrency(terms.amount.deposit)}원 (체결 후 ${terms.amount.depositDueDays}일)`} />
+                      {terms.amount.second > 0 && (
+                        <Row label="중간금" value={`${formatCurrency(terms.amount.second)}원 (편곡 승인 후 ${terms.amount.secondDueDays}일)`} />
+                      )}
                       <Row label="잔금" value={`${formatCurrency(terms.amount.balance)}원 (최종 승인 후 ${terms.amount.balanceDueDays}일)`} />
                     </>
+                  )}
+                  {terms.refundPolicy && (
+                    <Row
+                      label="해지 환불"
+                      value={`받은 금액 × 단계 비율 (착수 전 100% · ${terms.refundPolicy.stages.map((s) => `${Math.round(s.ratio * 100)}%`).join(' · ')})`}
+                    />
                   )}
                   <Row
                     label="납품 기한"

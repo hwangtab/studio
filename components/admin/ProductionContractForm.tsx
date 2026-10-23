@@ -7,12 +7,19 @@ import type { ValidationError } from '../../lib/contracts/validation';
 import {
   applyMixMasterTracks,
   buildDefaultProductionTerms,
+  buildDefaultReworkTerms,
   isMixMasterKind,
   isOneSongKind,
+  isReworkKind,
   KIND_LABEL,
+  REWORK_SCOPE_LABEL,
+  REWORK_SCOPES,
+  reworkScopeOf,
   splitPayment,
+  splitThreeInstallments,
   parseStoredTerms,
   SONG_COUNT_RANGE,
+  type ReworkScope,
   type ProductionKind,
   type ProductionTerms,
   type RefundItemKey,
@@ -112,8 +119,21 @@ const STAGE_LABEL: Record<RevisionStage, string> = { arrangement: '편곡', mixi
 const DEFAULT_SONG_COUNT: Record<ProductionKind, number> = { single: 1, ep: 4, album: 8, mixmaster: 1, rework: 1 };
 
 /** 곡 목록을 n곡으로 — 있던 제목은 남긴다. */
+/**
+ * 조건의 모양 — 환불 항목 수·환불 정책·편곡 범위가 종류마다 다르다. 모양이 바뀌는 종류 전환은 그 종류의 기본 조건으로 갈아 끼운다
+ * (제작 다섯 항목 ↔ 믹싱·마스터링 한 항목 ↔ AI 리워크 한 항목 + 비율 환불).
+ */
+const termsShape = (kind: ProductionKind) => (isMixMasterKind(kind) ? 'mixmaster' : isReworkKind(kind) ? 'rework' : 'production');
+
 const resizeSongs = (songs: ProductionTerms['songs'], count: number) =>
   Array.from({ length: count }, (_, index) => songs[index] ?? { title: null });
+/** 비율 환불 단계의 짧은 이름(작성 폼 안내). */
+const REFUND_STAGE_LABEL: Partial<Record<string, string>> = {
+  kickoff: '착수 후',
+  recording_completed: '녹음 후',
+  mixing_delivered: '믹싱 1차 후',
+  mastering_delivered: '마스터링 전달 후',
+};
 const REFUND_SHORT_LABEL: Record<RefundItemKey, string> = {
   arrangement: '편곡',
   recording: '보컬 녹음',
@@ -177,21 +197,32 @@ export default function ProductionContractForm({
    * 계약금액·계약금이 바뀌면 잔금이 따라간다. 믹싱·마스터링 계약은 환불 항목이 계약금액 전체인 한 항목이라
    * 그 금액도 따라간다(항목표 합계 = 계약금액, 제10조).
    */
-  const setAmount = (key: 'total' | 'deposit', raw: string) =>
+  const setAmount = (key: 'total' | 'deposit' | 'second', raw: string) =>
     setValues((prev) => {
       const terms = prev.terms;
       // 계약금액을 바꾸면 계약금도 규칙대로 — 50만원 이하는 한 번에(계약금 = 계약금액), 넘으면 절반(terms.ts splitPayment).
-      // 그 뒤 계약금 칸을 직접 고칠 수 있다.
+      // AI 리워크는 100만원 이상이면 50·30·20% 3회(splitThreeInstallments). 그 뒤 계약금·중간금 칸을 직접 고칠 수 있다.
+      const rework = isReworkKind(prev.kind);
+      const split = (total: number) =>
+        rework ? splitThreeInstallments(total) : { ...splitPayment(total), second: 0 };
       const amount =
         key === 'total'
-          ? { ...terms.amount, total: digits(raw), deposit: splitPayment(digits(raw)).deposit }
+          ? { ...terms.amount, total: digits(raw), deposit: split(digits(raw)).deposit, second: split(digits(raw)).second }
           : { ...terms.amount, [key]: digits(raw) };
+      // 항목이 계약금액 전체 하나인 종류(믹싱·마스터링, AI 리워크)는 그 금액도 따라간다(항목표 합계 = 계약금액).
       const refundSchedule =
-        isMixMasterKind(prev.kind) && key === 'total' && terms.refundSchedule.length === 1
+        (isMixMasterKind(prev.kind) || rework) && key === 'total' && terms.refundSchedule.length === 1
           ? [{ ...terms.refundSchedule[0], amount: amount.total }]
           : terms.refundSchedule;
-      return { ...prev, terms: { ...terms, refundSchedule, amount: { ...amount, balance: Math.max(0, amount.total - amount.deposit) } } };
+      return {
+        ...prev,
+        terms: { ...terms, refundSchedule, amount: { ...amount, balance: Math.max(0, amount.total - amount.deposit - amount.second) } },
+      };
     });
+
+  /** AI 리워크 범위를 고르면 그 범위의 기본 조건(금액·분할·수정 횟수·크레딧)으로. 곡 제목·입금 계좌는 남긴다. */
+  const setReworkScope = (scope: ReworkScope) =>
+    setTerms((t) => ({ ...buildDefaultReworkTerms(scope), songs: t.songs, payment: t.payment }));
 
   /**
    * 종류를 바꾸면 곡 목록만 그 종류의 범위로 맞춘다. 금액은 건드리지 않는다 — 운영자가 견적대로 고친 금액을 종류
@@ -202,7 +233,7 @@ export default function ProductionContractForm({
       const songs = resizeSongs(prev.terms.songs, kind === prev.kind ? prev.terms.songs.length : DEFAULT_SONG_COUNT[kind]);
       // 제작 ↔ 믹싱·마스터링은 조건의 모양이 다르다(환불 항목 5개 ↔ 1개, 편곡·녹음 범위 유무, 크레딧) — 그 종류의
       // 기본 조건으로 바꾼다. 곡 제목·입금 계좌는 남긴다.
-      if (isMixMasterKind(kind) !== isMixMasterKind(prev.kind)) {
+      if (termsShape(kind) !== termsShape(prev.kind)) {
         return { ...prev, kind, terms: { ...buildDefaultProductionTerms(kind, songs.length), songs, payment: prev.terms.payment } };
       }
       return {
@@ -218,7 +249,7 @@ export default function ProductionContractForm({
   /** 종류·곡 수의 기본 조건으로 다시 채운다. 곡·음반 제목, 입금 계좌, 크레딧은 남긴다. */
   const fillDefaults = () =>
     setTerms((t) => ({
-      ...buildDefaultProductionTerms(values.kind, t.songs.length),
+      ...(isReworkKind(values.kind) ? buildDefaultReworkTerms(reworkScopeOf(t)) : buildDefaultProductionTerms(values.kind, t.songs.length)),
       albumTitle: t.albumTitle,
       songs: t.songs,
       payment: t.payment,
@@ -227,10 +258,13 @@ export default function ProductionContractForm({
 
   const { terms } = values;
   const mixMaster = isMixMasterKind(values.kind);
-  const serviceName = mixMaster ? '믹싱·마스터링' : '음원 제작';
+  const rework = isReworkKind(values.kind);
+  const serviceName = mixMaster ? '믹싱·마스터링' : rework ? 'AI 리워크' : '음원 제작';
   const refundSum = terms.refundSchedule.reduce((sum, item) => sum + item.amount, 0);
   // 편곡이 없는 계약은 편곡 수정 칸을 숨긴다(값은 0으로 남는다).
-  const revisionStages = (Object.keys(STAGE_LABEL) as RevisionStage[]).filter((stage) => !(mixMaster && stage === 'arrangement'));
+  const revisionStages = (Object.keys(STAGE_LABEL) as RevisionStage[]).filter(
+    (stage) => !((mixMaster || (rework && terms.scope.arrangementTracks === 0)) && stage === 'arrangement'),
+  );
 
   const numberInput = (
     id: string,
@@ -337,10 +371,32 @@ export default function ProductionContractForm({
               <input type="radio" className="h-4 w-4 accent-primary" name="kind" checked={values.kind === kind} onChange={() => changeKind(kind)} />
               {KIND_LABEL[kind]}
               {!isOneSongKind(kind) && ` (${SONG_COUNT_RANGE[kind].min}~${SONG_COUNT_RANGE[kind].max}곡)`}
-              {isMixMasterKind(kind) && ' (1곡)'}
+              {(isMixMasterKind(kind) || isReworkKind(kind)) && ' (1곡)'}
             </label>
           ))}
         </div>
+        {rework && (
+          <fieldset className="mt-4">
+            <legend className="text-sm font-semibold text-gray-900 mb-2">리워크 범위</legend>
+            <div className="flex flex-wrap gap-4 text-sm">
+              {REWORK_SCOPES.map((scope) => (
+                <label key={scope} className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    className="h-4 w-4 accent-primary"
+                    name="reworkScope"
+                    checked={reworkScopeOf(terms) === scope}
+                    onChange={() => setReworkScope(scope)}
+                  />
+                  {REWORK_SCOPE_LABEL[scope]} · {won(buildDefaultReworkTerms(scope).amount.total)}원
+                </label>
+              ))}
+            </div>
+            <p className="mt-2 text-xs text-gray-500">
+              고르면 금액·분할(100만원 이상 50·30·20%)·수정 횟수가 그 범위 기본값으로 바뀌어요. 금액은 그 뒤에 견적대로 고칠 수 있어요.
+            </p>
+          </fieldset>
+        )}
         {!isOneSongKind(values.kind) && (
           <div className="mt-4 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -406,7 +462,7 @@ export default function ProductionContractForm({
               setTerms((t) => ({ ...t, firstDeliveryBusinessDays: digits(raw) })),
             )}
           {/* 믹싱·마스터링 계약은 편곡·녹음이 범위에 없다 — 0으로 두고 칸을 숨긴다. */}
-          {!mixMaster &&
+          {!mixMaster && !rework &&
             numberInput('terms.scope.arrangementTracks', '곡당 편곡 트랙 수(이하)', terms.scope.arrangementTracks, (raw) =>
               setTerms((t) => ({ ...t, scope: { ...t.scope, arrangementTracks: digits(raw) } })),
             )}
@@ -434,17 +490,41 @@ export default function ProductionContractForm({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {numberInput('terms.amount.total', '계약금액', terms.amount.total, (raw) => setAmount('total', raw), '원 단위 숫자')}
           {numberInput('terms.amount.deposit', '계약금', terms.amount.deposit, (raw) => setAmount('deposit', raw))}
-          <Field label="잔금" id="terms.amount.balance" error={errorMap['terms.amount.balance']} hint="계약금액 − 계약금" className={ADMIN_FIELD}>
+          {(rework || terms.amount.second > 0) &&
+            numberInput('terms.amount.second', '중간금(편곡 승인 후)', terms.amount.second, (raw) => setAmount('second', raw), '없으면 0')}
+          <Field
+            label="잔금"
+            id="terms.amount.balance"
+            error={errorMap['terms.amount.balance']}
+            hint={rework || terms.amount.second > 0 ? '계약금액 − 계약금 − 중간금' : '계약금액 − 계약금'}
+            className={ADMIN_FIELD}
+          >
             <TextInput readOnly tabIndex={-1} light className="text-sm bg-gray-50 text-gray-600 dark:bg-gray-50 dark:text-gray-600 cursor-not-allowed" value={won(terms.amount.balance)} />
           </Field>
           {numberInput('terms.amount.depositDueDays', '계약금 기한(체결 후 일)', terms.amount.depositDueDays, (raw) =>
             setTerms((t) => ({ ...t, amount: { ...t.amount, depositDueDays: digits(raw) } })),
           )}
+          {terms.amount.second > 0 &&
+            numberInput('terms.amount.secondDueDays', '중간금 기한(편곡 승인 후 일)', terms.amount.secondDueDays, (raw) =>
+              setTerms((t) => ({ ...t, amount: { ...t.amount, secondDueDays: digits(raw) } })),
+            )}
           {numberInput('terms.amount.balanceDueDays', '잔금 기한(최종 승인 후 일)', terms.amount.balanceDueDays, (raw) =>
             setTerms((t) => ({ ...t, amount: { ...t.amount, balanceDueDays: digits(raw) } })),
           )}
         </div>
 
+        {terms.refundPolicy ? (
+          <>
+            <h3 className="mt-6 mb-2 text-base font-semibold text-gray-900 dark:text-gray-900">해지 시 환불 (제10조 3항)</h3>
+            <p className="text-sm text-gray-700">
+              받은 금액 × 단계 비율 — 착수 전 100% ·{' '}
+              {terms.refundPolicy.stages.map((stage) => `${REFUND_STAGE_LABEL[stage.event] ?? stage.event} ${Math.round(stage.ratio * 100)}%`).join(' · ')}.
+              스튜디오 사정이면 받은 금액 전액. 계약서에 이 표가 그대로 인쇄돼요.
+            </p>
+            {errorMap['terms.refundPolicy'] && <p className="mt-1 text-xs text-red-600">{errorMap['terms.refundPolicy']}</p>}
+          </>
+        ) : (
+        <>
         <h3 className="mt-6 mb-2 text-base font-semibold text-gray-900 dark:text-gray-900">해지 시 공제 항목표 (제10조)</h3>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
           {terms.refundSchedule.map((item, index) => (
@@ -468,6 +548,8 @@ export default function ProductionContractForm({
           합계 {won(refundSum)}원 {refundSum === terms.amount.total ? '— 계약금액과 같습니다.' : `— 계약금액(${won(terms.amount.total)}원)과 같아야 합니다.`}
         </p>
         {errorMap['terms.refundSchedule'] && <p className="mt-1 text-xs text-red-600">{errorMap['terms.refundSchedule']}</p>}
+        </>
+        )}
       </section>
 
       <section>

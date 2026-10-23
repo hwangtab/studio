@@ -8,7 +8,7 @@ import { escapeHtml } from '../html-escape';
 import { STAGE_LABEL, type ProductionStage } from './event-spec';
 import { deemedBaseDay, findStage, kstDayStart, parseEventData, songOf, type ProductionLedger, type Todo } from './ledger';
 import { productionAdminUrl } from './links';
-import { contractNameFor, depositWordFor, isMixMasterKind, REVISION_STAGES, songLabel, sourceLabelFor, type ProductionTerms, type RevisionStage } from './terms';
+import { contractNameFor, depositWordFor, isMixMasterKind, isReworkKind, REVISION_STAGES, songLabel, sourceLabelFor, type ProductionTerms, type RevisionStage } from './terms';
 import { TERMINATION_CAUSE_LABEL, TERMINATION_CLAUSE, type TerminationCause } from './termination';
 
 /**
@@ -382,13 +382,19 @@ export const sendTerminationEmail = async (
 ): Promise<SendContractEmailResult> => {
   const name = escapeHtml(contract.clientName);
   const { refund, payments, work } = ledger;
+  // 지급 비율 환불(AI 리워크)은 작업분을 공제하지 않는다 — 받은 금액에 진행 단계의 비율을 곱한다(제10조 3·4항).
+  const paidRatio = refund.basis === 'paid_ratio';
   const basis = !work.kickedOff
     ? '아직 작업을 시작하기 전이라 받은 금액을 모두 돌려드려요(계약서 제10조 2항).'
     : cause === 'studio'
-      ? '진행한 작업분만 공제하고 남은 금액을 돌려드려요(계약서 제10조 4항).'
-      : `진행한 작업분과 동의한 추가 비용·이행한 초과 수정의 요금을 공제하고 남은 금액을 돌려드려요(계약서 ${TERMINATION_CLAUSE[cause]}).`;
+      ? paidRatio
+        ? '스튜디오 사정으로 해지해 받은 금액을 모두 돌려드려요(계약서 제10조 4항).'
+        : '진행한 작업분만 공제하고 남은 금액을 돌려드려요(계약서 제10조 4항).'
+      : paidRatio
+        ? `진행 단계에 따라 받은 금액의 ${Math.round(refund.ratio * 100)}%에서 동의한 추가 비용·이행한 초과 수정의 요금을 공제하고 돌려드려요(계약서 ${TERMINATION_CLAUSE[cause]}).`
+        : `진행한 작업분과 동의한 추가 비용·이행한 초과 수정의 요금을 공제하고 남은 금액을 돌려드려요(계약서 ${TERMINATION_CLAUSE[cause]}).`;
   const paragraphs = [
-    `${name}님, ${isMixMasterKind(contract.kind) ? '믹싱·마스터링' : '음원 제작'} 계약을 해지했어요(${escapeHtml(TERMINATION_CAUSE_LABEL[cause])}).`,
+    `${name}님, ${isMixMasterKind(contract.kind) ? '믹싱·마스터링' : isReworkKind(contract.kind) ? 'AI 리워크 음원 제작' : '음원 제작'} 계약을 해지했어요(${escapeHtml(TERMINATION_CAUSE_LABEL[cause])}).`,
     basis,
     refund.refundable <= 0
       ? '돌려드릴 금액은 없어요.'

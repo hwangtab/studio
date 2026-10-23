@@ -1,10 +1,13 @@
 /** @jest-environment node */
 
+const mockSendEmail = jest.fn().mockResolvedValue({ ok: true, id: 'm1' });
+jest.mock('../../email/resend', () => ({ sendEmail: (...args: unknown[]) => mockSendEmail(...args) }));
+
 import type { ProductionContract, ProductionContractEvent } from '../../../db/schema';
 import { parseAdminEventInput, parseVoidInput } from './events';
 import { computeProductionLedger } from './ledger';
-import { buildProgressNoticeContent } from './progress-email';
-import { buildDefaultProductionTerms } from './terms';
+import { buildProgressNoticeContent, sendTerminationEmail } from './progress-email';
+import { buildDefaultProductionTerms, buildDefaultReworkTerms } from './terms';
 
 const terms = buildDefaultProductionTerms();
 const kst = (local: string) => new Date(`${local}+09:00`);
@@ -96,5 +99,32 @@ describe('여러 곡 메일의 곡 이름', () => {
     expect(content.subject).toContain("2번 곡 「Don't & Go」");
     expect(content.heading).toContain("「Don't & Go」");
     expect(content.paragraphs[0]).toContain('Don&#039;t &amp; Go');
+  });
+});
+
+describe('AI 리워크 해지 안내(지급 비율 환불)', () => {
+  const rework = buildDefaultReworkTerms('small');
+  const at = (type: ProductionContractEvent['type'], seq: number, local: string, amount: number | null = null) =>
+    ({ ...delivery, id: `r${seq}`, seq, type, stage: null, amount, dataJson: null, occurredAt: kst(local), recordedAt: kst(local), createdAt: kst(local) }) as ProductionContractEvent;
+  const events = [at('payment_received', 1, '2026-11-03T09:00:00', 500_000), at('kickoff', 2, '2026-11-04T10:00:00')];
+  const reworkContract = { ...contract, kind: 'rework' } as ProductionContract;
+  const send = async (cause: 'client' | 'studio') => {
+    mockSendEmail.mockClear();
+    const ledger = computeProductionLedger({ terms: rework, signedAt: kst('2026-11-02T10:00:00'), events, now: kst('2026-11-10T12:00:00'), terminationCause: cause });
+    await sendTerminationEmail(reworkContract, ledger, cause, 'https://studionol.co.kr/p');
+    return mockSendEmail.mock.calls[0][0].text as string;
+  };
+
+  it('의뢰인 사정이면 받은 금액의 70%라고 말하고 작업분 공제를 말하지 않는다', async () => {
+    const text = await send('client');
+    expect(text).toContain('받은 금액의 70%');
+    expect(text).not.toContain('진행한 작업분');
+    expect(text).toContain('돌려받을 금액: 350,000원');
+  });
+
+  it('스튜디오 사정이면 받은 금액 전액', async () => {
+    const text = await send('studio');
+    expect(text).toContain('받은 금액을 모두 돌려드려요(계약서 제10조 4항)');
+    expect(text).toContain('돌려받을 금액: 500,000원');
   });
 });
