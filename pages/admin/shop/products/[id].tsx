@@ -105,7 +105,7 @@ function StockCell({ skuId, stock }: { skuId: string; stock: number | null }) {
     }
   };
   return (
-    <div className="flex flex-wrap items-center justify-end gap-2">
+    <div className="flex flex-wrap items-center justify-end gap-2 lg:flex-nowrap">
       <input
         type="number" min={0} inputMode="numeric" value={value} onChange={(e) => setValue(e.target.value)}
         aria-label={`${skuId} 총 재고`} className="w-24 rounded-lg border border-gray-300 bg-white px-2 py-1 text-gray-900"

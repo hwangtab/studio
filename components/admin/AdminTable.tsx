@@ -35,7 +35,8 @@ export const RowActions = ({ children, danger, className }: { children?: React.R
   // 좁은 화면(.admin-table이 행을 카드로 쌓는 1023px 이하)에서는 줄바꿈을 허용한다 — 카드 폭에 버튼 넷이 안 들어간다.
   <div className={cn('flex flex-wrap items-center justify-start gap-1.5 lg:flex-nowrap lg:justify-end', className)}>
     {children}
-    {danger && <div className="flex flex-wrap items-center gap-1.5 lg:ml-1 lg:flex-nowrap lg:border-l lg:border-gray-200 lg:pl-2">{danger}</div>}
+    {/* 좁은 화면에서는 위험 동작을 맨 아래 줄로 따로 — adminDanger.ts의 DANGER_GROUP_CLASS와 같은 원칙(일반 버튼 옆에 붙어 잘못 누르지 않게). */}
+    {danger && <div className="flex basis-full flex-wrap items-center gap-1.5 pt-1 lg:ml-1 lg:basis-auto lg:flex-nowrap lg:border-l lg:border-gray-200 lg:pl-2 lg:pt-0">{danger}</div>}
   </div>
 );
 

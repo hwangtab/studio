@@ -122,10 +122,10 @@ function StockRow({ row }: { row: AdminSkuStockRow }) {
   return (
     <tr className="border-t border-gray-100">
       <td className="py-2 pr-3">{row.productTitle}{row.optionLabel ? ` · ${row.optionLabel}` : ''}<span className="block text-xs text-gray-500">{row.skuId}{row.retired ? ' · 판매 종료' : ''}{!row.published ? ' · 비공개' : ''}</span></td>
-      <td data-label="가격" className="py-2 pr-3 tabular-nums">{formatPriceAmount(row.price)}원</td>
-      <td data-label="남음" className="py-2 pr-3 tabular-nums">{row.remaining}</td>
+      <td data-label="가격" className="whitespace-nowrap py-2 pr-3 tabular-nums lg:text-right">{formatPriceAmount(row.price)}원</td>
+      <td data-label="남음" className="whitespace-nowrap py-2 pr-3 tabular-nums lg:text-right">{row.remaining}</td>
       <td data-label="총 재고" className="py-2">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 lg:justify-end">
           <input
             type="number" min={0} inputMode="numeric" value={value} onChange={(e) => setValue(e.target.value)}
             aria-label={`${row.skuId} 총 재고`}
@@ -162,7 +162,7 @@ function ArtistSalesSection({ rows, month, prevMonth, nextMonth }: Pick<Props, '
           <table className="admin-table w-full text-left lg:min-w-[56rem] lg:table-fixed">
             <colgroup className="max-lg:hidden">
               <col />
-              {/* 정산 표(ShopPayoutSection)의 판매 w-48 = 수량 w-16 + 판매액 w-32, 공제 w-40, 이체액 w-32와 열을 맞춘다. */}
+              {/* 정산 기록 표(ShopPayoutSection)를 못 읽을 때만 대신 뜨는 표라 둘이 함께 보이지 않는다 — 열 폭만 같은 규모로 맞췄다. */}
               <col className="w-16" />
               <col className="w-32" />
               <col className="w-40" />
@@ -237,7 +237,7 @@ export default function AdminShopPage({ orders, ordersTruncated = false, q = '',
           ) : (
             <div className="overflow-x-auto">
               <table className="admin-table w-full text-left">
-                <thead className="text-xs text-gray-500"><tr><th className="py-2 pr-3">SKU</th><th className="py-2 pr-3">가격</th><th className="py-2 pr-3">남음</th><th className="py-2">총 재고</th></tr></thead>
+                <thead className="text-xs text-gray-500"><tr><th className="py-2 pr-3">SKU</th><th className="py-2 pr-3 lg:text-right">가격</th><th className="py-2 pr-3 lg:text-right">남음</th><th className="py-2 lg:text-right">총 재고</th></tr></thead>
                 <tbody>{skus.map((row) => <StockRow key={row.skuId} row={row} />)}</tbody>
               </table>
             </div>
@@ -276,7 +276,7 @@ export default function AdminShopPage({ orders, ordersTruncated = false, q = '',
           ) : (
             <div className="overflow-x-auto">
               <table className="admin-table w-full text-left">
-                <thead className="text-xs text-gray-500"><tr><th className="py-2 pr-3">주문</th><th className="py-2 pr-3">상품</th><th className="py-2 pr-3">금액</th><th className="py-2 pr-3">결제</th><th className="py-2">발송</th></tr></thead>
+                <thead className="text-xs text-gray-500"><tr><th className="py-2 pr-3">주문</th><th className="py-2 pr-3">상품</th><th className="py-2 pr-3 lg:text-right">금액</th><th className="py-2 pr-3">결제</th><th className="py-2">발송</th></tr></thead>
                 <tbody>
                   {orders.map((o) => (
                     <tr key={o.orderNo} className="border-t border-gray-100 align-top">
@@ -285,7 +285,7 @@ export default function AdminShopPage({ orders, ordersTruncated = false, q = '',
                         <span className="block text-xs text-gray-500">{o.customerName} · {kst(o.createdAt)}</span>
                       </td>
                       <td data-label="상품" className="py-2 pr-3">{o.itemSummary}</td>
-                      <td data-label="금액" className="py-2 pr-3 tabular-nums">{formatPriceAmount(o.totalAmount)}원</td>
+                      <td data-label="금액" className="whitespace-nowrap py-2 pr-3 tabular-nums lg:text-right">{formatPriceAmount(o.totalAmount)}원</td>
                       <td data-label="결제" className="py-2 pr-3">{STATUS_LABEL[o.status] ?? o.status}</td>
                       <td data-label="발송" className="py-2">
                         {FULFILLMENT_LABEL[o.fulfillmentStatus] ?? o.fulfillmentStatus}
