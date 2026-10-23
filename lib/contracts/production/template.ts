@@ -5,7 +5,7 @@ import { formatCurrency, formatDate } from '../format';
 import { fillPlaceholders } from '../placeholders';
 import { DRAFT_CONTRACT_DATE_TEXT } from '../template';
 import { escapeTableCell } from '../html-escape';
-import { depositWordFor, isMixMasterKind, isSinglePayment, KIND_LABEL, PER_SONG_MILESTONES, type ProductionKind, type ProductionTerms, type RefundItemKey, type RefundMilestoneEvent } from './terms';
+import { depositWordFor, isMixMasterKind, isSinglePayment, KIND_LABEL, PER_SONG_MILESTONES, sourceLabelFor, type ProductionKind, type ProductionTerms, type RefundItemKey, type RefundMilestoneEvent } from './terms';
 
 /**
  * 제작 계약서 본문 만들기. 연습실 template.ts와 같은 규칙을 따른다 — 사용자 값은 표 셀 이스케이프,
@@ -92,7 +92,7 @@ const paidRatioRows = (policy: NonNullable<ProductionTerms['refundPolicy']>): st
 export const describeRefundMilestones = (terms: ProductionTerms, kind: ProductionKind = 'single'): string => {
   // 지급 비율 환불은 항목별 작업분을 세지 않는다 — 단계표(refundRows)가 곧 기준이다.
   if (terms.refundPolicy) {
-    return '환불액은 아래 표에 따라, 해지한 때까지 기록된 마지막 단계의 비율을 받은 금액에 곱해 산정한다.';
+    return '비율은 해지한 때까지 이른 마지막 단계의 것을 적용한다.';
   }
   // 믹싱·마스터링 계약은 항목이 제2조 전체 하나라 "제2조 5호"가 아니라 "제2조"를 가리킨다.
   const subject = (key: RefundItemKey) =>
@@ -178,7 +178,7 @@ export const buildProductionContent = (data: ProductionTemplateData, template: s
   const depositWord = depositWordFor(terms);
   const deliverySummary = isMixMasterKind(data.kind)
     ? `${depositWord} 입금과 작업 파일 수령일부터 믹싱 1차 결과물 ${terms.firstDeliveryBusinessDays ?? 7}영업일 이내, 최종 마스터 ${terms.workWeeks}주 이내`
-    : `${depositWord} 입금과 ${terms.songs.length > 1 ? '모든 수록곡의 ' : ''}1차 완성본 수령일부터 최종 마스터 ${terms.workWeeks}주 이내`;
+    : `${depositWord} 입금과 ${terms.songs.length > 1 ? '모든 수록곡의 ' : ''}${sourceLabelFor(data.kind)} 수령일부터 최종 마스터 ${terms.workWeeks}주 이내`;
 
   // AI 리워크 제2조 2호·제5조 1항 — 편곡 없이 맺는 계약(scope.arrangementTracks = 0)은 편곡을 하지 않는다고 적는다.
   const reworkHasArrangement = terms.scope.arrangementTracks > 0;

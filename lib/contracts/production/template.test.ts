@@ -162,6 +162,10 @@ describe('AI 리워크 계약서(rework-template.md)', () => {
     expect(content).toContain('스튜디오의 사정으로 해지하는 경우, 이미 받은 금액 전액을 환불한다.');
   });
 
+  it('납품 기한은 AI 데모 파일 수령일부터 센다', () => {
+    expect(content).toContain('| 납품 기한 | 계약금 입금과 AI 데모 파일 수령일부터 최종 마스터 6주 이내 |');
+  });
+
   it('AI 권리 보증·AI 표기·유통 미보장을 적는다', () => {
     expect(content).toContain('## 제8조 (의뢰인의 보증과 AI 사용 표기)');
     expect(content).toContain('AI 생성물로 분류되지 않는다는 것');
