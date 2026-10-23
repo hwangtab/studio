@@ -109,14 +109,24 @@ export const sendTerminationNotice = async (contractId: string): Promise<void> =
     // 이미 계좌를 받았거나 보냈으면 "계좌를 알려 주세요"를 다시 묻지 않는다(재발송).
     const account = await loadRefundAccountSummary({ kind: 'production', orderNo: contractId });
     const refundStage = account.status === 'present' ? (account.refundedAt ? 'refunded' : 'received') : 'none';
+    // 받은 길로 돌려준다 — 카드 몫(토스 취소, 해지 때 이미 실행)과 계좌 몫(환불 계좌로 송금)을 메일이 나눠 말한다.
+    // refund-execute.ts가 이 파일을 쓰므로 쓸 때만 불러온다(순환 import).
+    const { loadContractRefundPlan, cardRefundPendingMessage } = await import('./refund-execute');
+    const plan = await loadContractRefundPlan(context).catch(() => null);
     const result = await sendTerminationEmail(
       context.contract,
       context.ledger,
       cause,
       buildProductionProgressUrl(contractId, token),
       refundStage,
+      plan,
     );
-    await recordProductionNotificationError(contractId, result.ok ? null : `해지 안내 메일 실패: ${result.errorCode ?? 'UNKNOWN'}`);
+    // 카드 환불이 남았으면 그것도 알림 오류로 남긴다 — 운영 점검이 "메일·PDF 처리 실패 계약"으로 매일 알린다.
+    const problems = [
+      result.ok ? null : `해지 안내 메일 실패: ${result.errorCode ?? 'UNKNOWN'}`,
+      plan ? cardRefundPendingMessage(plan) : null,
+    ].filter((p): p is string => p !== null);
+    await recordProductionNotificationError(contractId, problems.length > 0 ? problems.join(' · ') : null);
   } catch (error: unknown) {
     console.error('[contracts/production/progress] Termination notice failed:', error);
     await recordProductionNotificationError(contractId, '해지 안내 메일 발송 중 오류');

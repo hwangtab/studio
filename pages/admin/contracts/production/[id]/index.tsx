@@ -40,6 +40,7 @@ import { completeStalledProductionContract } from '../../../../../lib/contracts/
 import { loadProgressContext } from '../../../../../lib/contracts/production/progress';
 import { buildAdminProgressView, type AdminProgressView } from '../../../../../lib/contracts/production/progress-view';
 import { ensureContractPaymentLink, listContractPaymentLinks } from '../../../../../lib/contracts/production/payment-link';
+import { loadContractRefundPlan } from '../../../../../lib/contracts/production/refund-execute';
 import { isOneSongKind, paymentPurposeWord, releaseTitle } from '../../../../../lib/contracts/production/terms';
 import { recordAdminPrivacyAccess } from '../../../../../lib/privacy/accessLog';
 import { ActionNotice } from '../../../../../components/admin/ActionNotice';
@@ -94,8 +95,11 @@ export const getServerSideProps: GetServerSideProps<ProductionContractDetailProp
   let refundAccount: RefundAccountSummaryProps | null = null;
   if (progress && contract.status === 'terminated') {
     const summary = await loadRefundAccountSummary({ kind: 'production', orderNo: id });
+    const plan = await loadContractRefundPlan(progress).catch(() => null);
     refundAccount = {
       refundable: progress.ledger.refund.refundable,
+      card: plan ? plan.card.map((c) => ({ orderNo: c.orderNo, amount: c.amount, refunded: Math.min(c.amount, c.refunded) })) : [],
+      bankTotal: plan ? plan.bankTotal : progress.ledger.refund.refundable,
       account:
         summary.status === 'present'
           ? { bankName: summary.bankName, accountHolder: summary.accountHolder, refundedAt: summary.refundedAt?.toISOString() ?? null }

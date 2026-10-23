@@ -12,6 +12,7 @@ import { productionRateLimitKey } from '../../../../../lib/contracts/production/
 import { grantPortalAccess, hasPortalAccess } from '../../../../../lib/contracts/production/portal-session';
 import { hasSignedDocument } from '../../../../../lib/contracts/production/status';
 import { loadProgressContext, recordProgressEvent, sendEventNotice } from '../../../../../lib/contracts/production/progress';
+import { loadContractRefundPlan } from '../../../../../lib/contracts/production/refund-execute';
 import {
   encryptRefundAccountNumber,
   loadRefundAccountSummary,
@@ -92,8 +93,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 계좌번호는 암호화하고(lib/crypto/CLAUDE.md), 로그·응답에 싣지 않는다. 돌려받을 금액이 있을 때만 받는다.
      */
     if (body.action === 'refund-account') {
-      if (context.contract.status !== 'terminated' || context.ledger.refund.refundable <= 0) {
-        return res.status(409).json({ ok: false, message: '돌려받을 금액이 있는 해지 계약에서만 환불 계좌를 받아요.' });
+      // 카드·간편결제 몫은 결제 수단으로 취소하므로 계좌가 필요 없다 — 계좌로 돌려줄 몫이 있을 때만 받는다(refund-plan.ts).
+      const plan = context.contract.status === 'terminated' ? await loadContractRefundPlan(context) : null;
+      const bankDue = plan ? plan.bankTotal : context.ledger.refund.refundable;
+      if (context.contract.status !== 'terminated' || bankDue <= 0) {
+        return res.status(409).json({ ok: false, message: '계좌로 돌려받을 금액이 있는 해지 계약에서만 환불 계좌를 받아요.' });
       }
       const account = validateRefundAccount(body);
       if (!account.ok) return res.status(400).json({ ok: false, message: account.message });

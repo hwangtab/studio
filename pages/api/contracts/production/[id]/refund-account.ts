@@ -4,6 +4,7 @@ import { getDb } from '../../../../../db/client';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { loadRefundAccountSummary, markRefundAccountRefunded } from '../../../../../lib/payments/refundAccount';
 import { handleRefundAccountView } from '../../../../../lib/payments/refundAccountView';
+import { recordContractBankLinkRefunds } from '../../../../../lib/contracts/production/refund-execute';
 
 /**
  * 제작 계약 해지 환불 계좌(관리자).
@@ -47,5 +48,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // 기록이 실패했는데 ok를 돌려주면 새로고침해도 버튼이 그대로라 운영자가 이중 송금할 수 있다.
   const recorded = await markRefundAccountRefunded(key, new Date());
   if (!recorded) return res.status(500).json({ ok: false, message: '송금 완료를 기록하지 못했습니다. 잠시 후 다시 시도해 주세요.' });
+  // 결제 링크 계좌 입금으로 받은 몫은 그 주문의 환불로도 남긴다 — 매출이 결제 행으로 세는 돈이라, 안 남기면 돌려준 돈이
+  // 매출에 그대로 남는다(refund-execute.ts). 실패해도 송금 완료 기록은 되돌리지 않고 알린다(다시 누르면 남은 만큼만 기록한다).
+  const { failed } = await recordContractBankLinkRefunds(id);
+  if (failed.length > 0) {
+    return res.status(200).json({ ok: true, message: `송금 완료는 기록했지만 결제 링크 주문 ${failed.join(', ')}의 환불 기록을 남기지 못했습니다. 예약 목록의 그 주문에서 환불 기록을 확인해 주세요.` });
+  }
   return res.status(200).json({ ok: true });
 }

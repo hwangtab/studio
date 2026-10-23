@@ -661,6 +661,8 @@ const refundDepositOrder = async (
   order: Order & { payments: PaymentWithRefunds[] },
   payment: PaymentWithRefunds | undefined,
   input: CancelInput,
+  /** 고객에게 "예약금이 환불됐어요" 메일을 보내는가. 계약 해지 환불은 해지 안내 메일 한 통으로 알린다(refundContractLinkOrder). */
+  notify = true,
 ): Promise<CancelOutcome> => {
   if (input.requestedBy !== 'admin') {
     return { ok: false, code: 'invalid_state', message: '예약금 환불은 운영자만 처리할 수 있어요.' };
@@ -689,10 +691,29 @@ const refundDepositOrder = async (
   });
   if (failure) return failure;
 
-  await recordNotificationError(
-    order.id, order.orderNo, await sendDepositRefundEmail(order, amount, remaining - amount, 'payment'),
-  );
+  if (notify) {
+    await recordNotificationError(
+      order.id, order.orderNo, await sendDepositRefundEmail(order, amount, remaining - amount, 'payment'),
+    );
+  }
   return { ok: true, refundAmount: amount, refundVia: 'payment' };
+};
+
+/**
+ * 제작 계약 대금을 결제 링크(카드·간편결제)로 받은 주문의 **해지 환불** — 토스 부분취소. 예약금 환불과 같은 길(refunds PK 선점·
+ * (주문번호, 금액) 멱등키 — 재시도해도 두 번 나가지 않는다)이고, 고객 메일만 보내지 않는다(계약 해지 안내가 알린다).
+ * 계좌 입금 주문은 거절한다 — 그 몫은 환불 계좌로 송금한다(lib/contracts/production/refund-plan.ts).
+ */
+export const refundContractLinkOrder = async (input: { orderNo: string; amount: number; reason: string; now: Date }): Promise<CancelOutcome> => {
+  const order = await findOrderByOrderNo(input.orderNo);
+  if (!order) return { ok: false, code: 'not_found', message: '주문을 찾을 수 없어요.' };
+  if (order.type !== 'deposit') return { ok: false, code: 'invalid_state', message: '결제 링크 주문이 아닙니다.' };
+  return refundDepositOrder(
+    order,
+    order.payments[0],
+    { orderNo: input.orderNo, requestedBy: 'admin', reason: input.reason, overrideAmount: input.amount, now: input.now },
+    false,
+  );
 };
 
 export const cancelBookingWithRefund = async (input: CancelInput): Promise<CancelOutcome> => {

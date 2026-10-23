@@ -11,6 +11,7 @@ import {
   cancelProductionContract,
   closeProductionContract,
   deleteProductionContract,
+  recordProductionNotificationError,
   sendProductionContract,
   sendProductionSignRequestNotifications,
   updateDraftProductionContract,
@@ -23,9 +24,10 @@ import {
 import { kstDay as kstDayOf } from '../../../../lib/contracts/production/ledger';
 import { formatTerminationReason, isTerminationCause, parseTerminationCause } from '../../../../lib/contracts/production/termination';
 import { validateProductionContractPayload } from '../../../../lib/contracts/production/validation';
+import { CARD_REFUND_PENDING_PREFIX, runContractCardRefunds } from '../../../../lib/contracts/production/refund-execute';
 import { recordAdminPrivacyAccess } from '../../../../lib/privacy/accessLog';
 
-const MUTABLE_ACTIONS = ['update', 'send', 'resend', 'resend-signed', 'resend-termination', 'cancel', 'complete', 'terminate'] as const;
+const MUTABLE_ACTIONS = ['update', 'send', 'resend', 'resend-signed', 'resend-termination', 'retry-card-refund', 'cancel', 'complete', 'terminate'] as const;
 type MutableAction = (typeof MUTABLE_ACTIONS)[number];
 
 const isMutableAction = (value: unknown): value is MutableAction =>
@@ -150,6 +152,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(200).json({ ok: true, message: '해지 안내 메일을 다시 보내는 중입니다. 잠시 후 새로고침해 결과를 확인해 주세요.' });
       }
 
+      if (action === 'retry-card-refund') {
+        const run = await runContractCardRefunds(id);
+        if (!run) return stale();
+        // 남은 카드 몫이 없으면 그 알림 오류를 걷는다(다른 알림 오류는 그대로 — 해지 안내 메일 실패 등).
+        if (run.plan.cardPending === 0 && contract.notificationError?.startsWith(CARD_REFUND_PENDING_PREFIX)) {
+          await recordProductionNotificationError(id, null);
+        }
+        return res.status(run.failures.length > 0 ? 502 : 200).json({
+          ok: run.failures.length === 0,
+          message:
+            run.failures.length > 0
+              ? `카드 환불이 처리되지 않았어요: ${run.failures.map((f) => f.message).join(' / ')}`
+              : run.refunded > 0
+                ? `카드·간편결제 ${run.refunded.toLocaleString('ko-KR')}원을 취소했어요.`
+                : '취소할 카드 몫이 남아 있지 않아요.',
+        });
+      }
+
       if (action === 'cancel') {
         if (!(await cancelProductionContract(id))) return stale();
         // 끝난 계약의 결제 링크는 닫는다 — 열려 있으면 취소한 계약 대금을 받을 수 있다(payment-link.ts).
@@ -223,8 +243,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
       if (!terminated) return stale();
       await closeContractPaymentLinks(id);
+      // 카드·간편결제로 받은 몫은 지금 토스로 취소한다(다른 결제와 같다) — 해지 안내 메일이 그 결과를 알리므로 먼저 끝낸다.
+      const cardRun = await runContractCardRefunds(id).catch((error: unknown) => {
+        console.error('[API/contracts/production/[id]] 카드 환불 실행 실패', error instanceof Error ? error.message : error);
+        return null;
+      });
       waitUntil(sendTerminationNotice(id));
-      return res.status(200).json({ ok: true });
+      const cardFailed = cardRun ? cardRun.failures.length > 0 : true;
+      return res.status(200).json({
+        ok: true,
+        message:
+          cardRun && cardRun.plan.card.length === 0
+            ? undefined
+            : cardFailed
+              ? `해지했습니다. 카드 환불 ${(cardRun?.plan.cardPending ?? 0).toLocaleString('ko-KR')}원이 처리되지 않았어요 — 환불 칸에서 다시 시도해 주세요.`
+              : `해지했습니다. 카드·간편결제 ${cardRun!.refunded.toLocaleString('ko-KR')}원을 결제 수단으로 취소했어요.`,
+      });
     } catch (error: unknown) {
       console.error(`[API/contracts/production/[id]] Action "${action}" failed:`, error);
       return res.status(500).json({ ok: false, message: '요청을 처리하지 못했습니다.' });

@@ -122,6 +122,34 @@ describe('AI 리워크 해지 안내(지급 비율 환불)', () => {
     expect(text).toContain('돌려받을 금액: 350,000원');
   });
 
+  it('카드 몫은 결제 수단으로 취소했다고, 계좌 몫만 계좌를 묻는다', async () => {
+    mockSendEmail.mockClear();
+    const ledger = computeProductionLedger({ terms: rework, signedAt: kst('2026-11-02T10:00:00'), events, now: kst('2026-11-10T12:00:00'), terminationCause: 'client' });
+    await sendTerminationEmail(reworkContract, ledger, 'client', 'https://studionol.co.kr/p', 'none', {
+      card: [{ orderNo: 'O1', amount: 250_000, refunded: 250_000 }],
+      cardPending: 0,
+      bankTotal: 100_000,
+    });
+    const text = mockSendEmail.mock.calls[0][0].text as string;
+    expect(text).toContain('카드·간편결제로 결제하신 250,000원은 결제 수단으로 취소했어요');
+    expect(text).toContain('계좌로 입금하신 100,000원을 확인하는 대로 보내 드려요');
+    expect(text).toContain('카드·간편결제 취소: 250,000원');
+    expect(text).toContain('계좌로 송금: 100,000원');
+  });
+
+  it('전부 카드면 계좌를 묻지 않는다', async () => {
+    mockSendEmail.mockClear();
+    const ledger = computeProductionLedger({ terms: rework, signedAt: kst('2026-11-02T10:00:00'), events, now: kst('2026-11-10T12:00:00'), terminationCause: 'client' });
+    await sendTerminationEmail(reworkContract, ledger, 'client', 'https://studionol.co.kr/p', 'none', {
+      card: [{ orderNo: 'O1', amount: 350_000, refunded: 350_000 }],
+      cardPending: 0,
+      bankTotal: 0,
+    });
+    const sent = mockSendEmail.mock.calls[0][0];
+    expect(sent.text).not.toContain('환불받을 계좌');
+    expect(sent.html).not.toContain('환불 계좌 알려 주기');
+  });
+
   it('스튜디오 사정이면 받은 금액 전액', async () => {
     const text = await send('studio');
     expect(text).toContain('받은 금액을 모두 돌려드려요(계약서 제10조 4항)');

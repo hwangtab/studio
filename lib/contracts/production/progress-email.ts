@@ -9,6 +9,7 @@ import { STAGE_LABEL, type ProductionStage } from './event-spec';
 import { deemedBaseDay, findStage, kstDayStart, parseEventData, songOf, type ProductionLedger, type Todo } from './ledger';
 import { productionAdminUrl } from './links';
 import { contractNameFor, depositWordFor, isMixMasterKind, isReworkKind, REVISION_STAGES, songLabel, sourceLabelFor, type ProductionTerms, type RevisionStage } from './terms';
+import type { ContractRefundPlan } from './refund-plan';
 import { TERMINATION_CAUSE_LABEL, TERMINATION_CLAUSE, type TerminationCause } from './termination';
 
 /**
@@ -389,6 +390,8 @@ export const sendTerminationEmail = async (
   progressUrl: string,
   /** 환불 계좌 접수 상태 — 재발송 때 이미 받은 계좌를 다시 묻지 않는다. */
   refundStage: 'none' | 'received' | 'refunded' = 'none',
+  /** 받은 길로 나눈 환불(refund-plan.ts). 없으면 전액을 계좌 몫으로 본다(옛 동작). */
+  plan: Pick<ContractRefundPlan, 'card' | 'cardPending' | 'bankTotal'> | null = null,
 ): Promise<SendContractEmailResult> => {
   const name = escapeHtml(contract.clientName);
   const { refund, payments, work } = ledger;
@@ -403,21 +406,38 @@ export const sendTerminationEmail = async (
       : paidRatio
         ? `진행 단계에 따라 받은 금액의 ${Math.round(refund.ratio * 100)}%에서 동의한 추가 비용·이행한 초과 수정의 요금을 공제하고 돌려드려요(계약서 ${TERMINATION_CLAUSE[cause]}).`
         : `진행한 작업분과 동의한 추가 비용·이행한 초과 수정의 요금을 공제하고 남은 금액을 돌려드려요(계약서 ${TERMINATION_CLAUSE[cause]}).`;
-  const paragraphs = [
-    `${name}님, ${isMixMasterKind(contract.kind) ? '믹싱·마스터링' : isReworkKind(contract.kind) ? 'AI 리워크 음원 제작' : '음원 제작'} 계약을 해지했어요(${escapeHtml(TERMINATION_CAUSE_LABEL[cause])}).`,
-    basis,
-    refund.refundable <= 0
-      ? '돌려드릴 금액은 없어요.'
+  // 카드·간편결제 몫은 결제 수단으로 취소하고(해지 때 실행), 계좌 몫만 환불 계좌로 보낸다 — 다른 결제의 환불과 같다.
+  const cardAmount = plan ? plan.card.reduce((sum, c) => sum + c.amount, 0) : 0;
+  const bankAmount = plan ? plan.bankTotal : refund.refundable;
+  const cardLine =
+    cardAmount <= 0
+      ? null
+      : plan && plan.cardPending > 0
+        ? `카드·간편결제로 결제하신 ${escapeHtml(won(cardAmount))}은 결제 수단으로 취소하는 중이에요. 처리되면 카드사에 따라 3~5영업일 안에 돌아가요.`
+        : `카드·간편결제로 결제하신 ${escapeHtml(won(cardAmount))}은 결제 수단으로 취소했어요. 카드사에 따라 3~5영업일 안에 돌아가요.`;
+  const bankLine =
+    bankAmount <= 0
+      ? null
       : refundStage === 'refunded'
         ? '알려 주신 계좌로 환불을 보내 드렸어요.'
         : refundStage === 'received'
           ? '알려 주신 환불 계좌를 받았어요. 확인하는 대로 보내 드려요.'
-          : '<strong>진행 페이지에서 환불받을 계좌를 알려 주세요.</strong> 확인하는 대로 보내 드려요.',
+          : `<strong>진행 페이지에서 환불받을 계좌를 알려 주세요.</strong>${cardAmount > 0 ? ` 계좌로 입금하신 ${escapeHtml(won(bankAmount))}을` : ''} 확인하는 대로 보내 드려요.`;
+  const paragraphs = [
+    `${name}님, ${isMixMasterKind(contract.kind) ? '믹싱·마스터링' : isReworkKind(contract.kind) ? 'AI 리워크 음원 제작' : '음원 제작'} 계약을 해지했어요(${escapeHtml(TERMINATION_CAUSE_LABEL[cause])}).`,
+    basis,
+    ...(refund.refundable <= 0 ? ['돌려드릴 금액은 없어요.'] : [cardLine, bankLine].filter((line): line is string => line !== null)),
   ];
   const rows: ContractEmailRow[] = [
     { label: '받은 금액', value: won(payments.received) },
     { label: '공제', value: won(Math.min(refund.deduction, payments.received)) },
     { label: '돌려받을 금액', value: won(refund.refundable), emphasis: true },
+    ...(cardAmount > 0 && refund.refundable > 0
+      ? [
+          { label: '카드·간편결제 취소', value: won(cardAmount) },
+          ...(bankAmount > 0 ? [{ label: '계좌로 송금', value: won(bankAmount) }] : []),
+        ]
+      : []),
   ];
   return sendEmail({
     to: contract.clientEmail,
@@ -426,7 +446,7 @@ export const sendTerminationEmail = async (
       heading: '계약이 해지됐어요',
       paragraphs,
       rows,
-      cta: { label: refund.refundable > 0 && refundStage === 'none' ? '환불 계좌 알려 주기' : '진행 내용 보기', url: progressUrl },
+      cta: { label: bankAmount > 0 && refundStage === 'none' ? '환불 계좌 알려 주기' : '진행 내용 보기', url: progressUrl },
     }),
     text: [...paragraphs.map((p) => p.replace(/<[^>]+>/g, '')), ...rows.map((r) => `${r.label}: ${r.value}`), '', progressUrl].join('\n'),
   });
