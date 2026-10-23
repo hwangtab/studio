@@ -196,11 +196,11 @@ export function ShopPayoutSection({ rows, month, prevMonth, nextMonth, otherAdju
         <table className="admin-table w-full text-left lg:min-w-[62rem] lg:table-fixed">
           <colgroup className="max-lg:hidden">
             <col />
-            <col className="w-64" />
-            <col className="w-52" />
+            <col className="w-48" />
             <col className="w-40" />
-            <col className="w-28" />
-            <col className="w-[15rem]" />
+            <col className="w-32" />
+            <col className="w-24" />
+            <col className="w-64" />
           </colgroup>
           <thead className="text-xs text-gray-500">
             <tr><Th>아티스트</Th><Th>판매</Th><Th>공제·조정</Th><Th align="right">이체액</Th><Th>상태</Th><Th align="right" className="pr-0">정산</Th></tr>
@@ -226,6 +226,13 @@ export function ShopPayoutSection({ rows, month, prevMonth, nextMonth, otherAdju
                     )}
                     {r.needsReviewOrderNos.length > 0 && (
                       <span className="block text-xs text-amber-800">부분 환불 주문은 빼고 계산했습니다 — 직접 확인: {r.needsReviewOrderNos.join(', ')}</span>
+                    )}
+                  {rec && r.drift && (
+                      // 이체액 열은 좁아 이 경고가 아홉 줄로 늘었다 — 아티스트 칸 아래로 옮긴다.
+                      <span className="mt-1 block text-xs font-normal text-red-600">
+                        기록 뒤 판매액이 바뀌었습니다(지금 집계 {won(r.salesAmount)} · 기록 {won(rec.grossAmount)}) — 뒤늦은 환불은 다음 정산 조정으로 반영됩니다.
+                        {rec.status === 'pending' ? ' 이체 전이라면 「기록 취소」 후 다시 기록해도 됩니다(환불 조정도 함께 취소됩니다).' : ''}
+                      </span>
                     )}
                   </td>
                   <td className="py-2 pr-3 tabular-nums" data-label="판매">
@@ -261,12 +268,6 @@ export function ShopPayoutSection({ rows, month, prevMonth, nextMonth, otherAdju
                   </td>
                   <td className="py-2 pr-3 font-semibold tabular-nums lg:text-right" data-label="이체액">
                     {rec ? won(rec.netAmount) : r.taxType ? won(r.netAmount) : '세금 유형을 몰라 계산하지 않음'}
-                    {rec && r.drift && (
-                      <span className="block text-left text-xs font-normal text-red-600">
-                        기록 뒤 판매액이 바뀌었습니다(지금 집계 {won(r.salesAmount)} · 기록 {won(rec.grossAmount)}) — 뒤늦은 환불은 다음 정산 조정으로 반영됩니다.
-                        {rec.status === 'pending' ? ' 이체 전이라면 「기록 취소」 후 다시 기록해도 됩니다(환불 조정도 함께 취소됩니다).' : ''}
-                      </span>
-                    )}
                   </td>
                   <td className="py-2 pr-3" data-label="상태">
                     {rec ? (
@@ -282,14 +283,14 @@ export function ShopPayoutSection({ rows, month, prevMonth, nextMonth, otherAdju
                     <RowActions
                       danger={rec?.status === 'pending' ? (
                         <button
-                          type="button" className={ROW_BTN_DANGER} disabled={busy === key}
+                          type="button" className={ROW_BTN_DANGER} disabled={busy === key} aria-label="기록 취소(이체 전)" title="이체 전 기록만 취소할 수 있습니다"
                           onClick={() => run(
                             key,
                             `${r.payeeName} ${r.period}의 기록(${won(rec.netAmount)})을 취소할까요?\n\n기록된 금액은 버려지고 이력도 남지 않으며, 이 정산에 실렸던 조정은 풀립니다. 아직 이체하지 않은 기록만 취소할 수 있습니다.`,
                             () => post({ action: 'delete', id: rec.id }),
                           )}
                         >
-                          기록 취소(이체 전)
+                          기록 취소
                         </button>
                       ) : undefined}
                     >

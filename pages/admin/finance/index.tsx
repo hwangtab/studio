@@ -309,7 +309,7 @@ const BreakdownTable = ({
           <tbody className="divide-y divide-gray-100 tabular-nums">
             {lines.map((line) => (
               <tr key={line.key} className={activeKey === line.key ? 'bg-blue-50' : ''}>
-                <td className="py-2 pr-3 font-medium text-gray-900">
+                <td className="whitespace-normal break-keep py-2 pr-3 font-medium text-gray-900">
                   {linkFor ? (
                     <Link href={linkFor(line)} className="hover:underline">
                       {line.label}
@@ -384,7 +384,7 @@ const BusinessPnlSection = ({ pnl, summary }: { pnl: BusinessPnl; summary: Reven
           <tbody className="divide-y divide-gray-100 tabular-nums">
             {pnl.lines.map((l) => (
               <tr key={l.line} className={summary.line === l.line ? 'bg-blue-50' : ''}>
-                <td className="py-2 pr-3 font-medium text-gray-900">
+                <td className="whitespace-normal break-keep py-2 pr-3 font-medium text-gray-900">
                   <Link href={href(summary.year, summary.month, null, summary.line === l.line ? null : l.line)} className="hover:underline">
                     {l.label}
                   </Link>
@@ -396,7 +396,7 @@ const BusinessPnlSection = ({ pnl, summary }: { pnl: BusinessPnl; summary: Reven
               </tr>
             ))}
             <tr>
-              <td className="py-2 pr-3 text-gray-700">
+              <td className="whitespace-normal break-keep py-2 pr-3 text-gray-700">
                 공통 지출 <span className="text-xs text-gray-500">(분야에 나누지 않음)</span>
               </td>
               <td className="px-3 py-2 text-right text-gray-400">-</td>
