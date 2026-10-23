@@ -53,7 +53,7 @@ interface ProductionContractDetailProps {
   /** 해지된 계약의 환불 계좌 요약(은행·예금주만). 해지가 아니면 null. */
   refundAccount: RefundAccountSummaryProps | null;
   /** 계약 대금 결제 링크(payment-link.ts) — 최신순. 열린 것이 지금 받을 돈의 링크다. */
-  paymentLinks: Array<{ url: string; purpose: 'deposit' | 'balance'; amount: number; open: boolean; paid: boolean; createdAt: string }>;
+  paymentLinks: Array<{ url: string; purpose: 'deposit' | 'second' | 'balance'; amount: number; open: boolean; paid: boolean; createdAt: string }>;
 }
 
 export const getServerSideProps: GetServerSideProps<ProductionContractDetailProps> = async (context) => {
@@ -423,7 +423,7 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
             <ul className="space-y-2 text-sm">
               {paymentLinks.map((link) => (
                 <li key={link.url} className="flex flex-wrap items-center gap-3 rounded-lg bg-gray-50 p-3">
-                  <span className="font-semibold text-gray-900">{link.purpose === 'deposit' ? '대금·계약금' : '잔금'}</span>
+                  <span className="font-semibold text-gray-900">{link.purpose === 'deposit' ? '대금·계약금' : link.purpose === 'second' ? '중간금' : '잔금'}</span>
                   <span className="tabular-nums">{formatCurrency(link.amount)}원</span>
                   <span className={link.paid ? 'text-green-700' : link.open ? 'text-blue-700' : 'text-gray-500'}>
                     {link.paid ? '결제됨' : link.open ? '열림 — 결제 대기' : '닫힘'}

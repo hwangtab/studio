@@ -237,6 +237,12 @@ export const checkEventAllowed = (
         return `잔금이 들어오기 전에는 최종 파일을 인도하지 않습니다(제5조 6항). 남은 금액 ${(ledger.payments.totalDue - ledger.payments.received).toLocaleString('ko-KR')}원.`;
       }
       return has('final_delivered') ? '최종 파일 인도는 이미 기록했습니다.' : null;
+    case 'distribution_submitted':
+      // 유통 등록은 대금이 다 들어온 뒤의 일이다 — 잔금 전에 등록하면 인도·정산 전에 음원이 세상에 나간다.
+      if (!ledger.payments.paidInFull) {
+        return `잔금이 들어오기 전에는 유통 등록을 시작하지 않습니다. 남은 금액 ${(ledger.payments.totalDue - ledger.payments.received).toLocaleString('ko-KR')}원.`;
+      }
+      return null;
     case 'void':
       return checkVoid(allEvents, input);
     default:

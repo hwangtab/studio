@@ -39,6 +39,9 @@ import {
 import { validateProductionContractPayload } from './validation';
 import { buildProductionSignStatements } from './sign-transaction';
 import { buildDefaultProductionTerms } from './terms';
+import { checkEventAllowed, type EventInput } from './events';
+import { computeProductionLedger } from './ledger';
+import type { ProductionContractEvent, ProductionEventType } from '../../../db/schema';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 
@@ -561,5 +564,56 @@ describe('동의 항목 — 중요 조항 요약 하나', () => {
     expect(clauses).toHaveLength(1);
     expect(clauses[0]).toMatchObject({ key: 'key-terms', clauseNumber: '제5·10·11조' });
     expect(clauses[0].points[0]).toContain('5일 안에 수정 요청이 없으면');
+  });
+});
+
+/** 진행 기록 판정은 장부만 보는 순수 함수다 — 여기서는 DB 없이 유통 등록 게이트만 확인한다. */
+describe('유통 등록 게이트', () => {
+  const SIGNED_AT = new Date('2026-11-02T10:00:00+09:00');
+  const NOW_AT = new Date('2026-12-01T09:00:00+09:00');
+  const terms = buildDefaultProductionTerms('single');
+  let seq = 0;
+  const event = (
+    type: ProductionEventType,
+    occurredAt: Date,
+    extra: Partial<Omit<ProductionContractEvent, 'dataJson'>> = {},
+  ): ProductionContractEvent => {
+    seq += 1;
+    return {
+      id: `gate-${seq}`,
+      contractId: 'c1',
+      seq,
+      type,
+      stage: null,
+      song: null,
+      amount: null,
+      dataJson: null,
+      occurredAt,
+      recordedAt: occurredAt,
+      actor: 'admin:kyungha',
+      actorIp: null,
+      voidsEventId: null,
+      noticeStatus: 'sent',
+      noticeSentAt: occurredAt,
+      noticeError: null,
+      createdAt: occurredAt,
+      ...extra,
+    };
+  };
+  const verdict = (events: ProductionContractEvent[]): string | null => {
+    const ledger = computeProductionLedger({ terms, signedAt: SIGNED_AT, events, now: NOW_AT });
+    const input: EventInput = { type: 'distribution_submitted', stage: null, song: null, amount: null, occurredAt: NOW_AT, data: {}, voidsEventId: null };
+    return checkEventAllowed({ status: 'signed', purgedAt: null }, ledger, events, input);
+  };
+
+  it('잔금이 다 들어오기 전에는 유통 등록을 시작하지 않는다', () => {
+    const deposit = event('payment_received', new Date('2026-11-03T09:00:00+09:00'), { amount: terms.amount.deposit });
+    expect(verdict([deposit])).toContain('잔금이 들어오기 전에는 유통 등록을 시작하지 않습니다');
+  });
+
+  it('완납하면 유통 등록을 기록할 수 있다', () => {
+    const first = event('payment_received', new Date('2026-11-03T09:00:00+09:00'), { amount: terms.amount.deposit });
+    const second = event('payment_received', new Date('2026-11-04T09:00:00+09:00'), { amount: terms.amount.balance });
+    expect(verdict([first, second])).toBeNull();
   });
 });

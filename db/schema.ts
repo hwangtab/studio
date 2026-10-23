@@ -2554,8 +2554,8 @@ export const productionContractPaymentLinks = sqliteTable(
     contractId: text('contract_id')
       .notNull()
       .references(() => productionContracts.id, { onDelete: 'cascade' }),
-    /** deposit = 계약금(일시불이면 전액), balance = 잔금(추가 비용·초과 수정 요금 포함 남은 금액). */
-    purpose: text('purpose', { enum: ['deposit', 'balance'] }).notNull(),
+    /** deposit = 계약금(일시불이면 전액), second = 2차(중간금), balance = 잔금(추가 비용·초과 수정 요금 포함 남은 금액). */
+    purpose: text('purpose', { enum: ['deposit', 'second', 'balance'] }).notNull(),
     /** 링크를 만들 때의 금액(VAT 포함) — 남은 금액이 바뀌면 옛 링크를 닫고 새로 만든다. */
     amount: integer('amount').notNull(),
     createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),

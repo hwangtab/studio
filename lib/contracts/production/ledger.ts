@@ -345,8 +345,12 @@ export const computeProductionLedger = (input: {
 
   const secondMetAt = terms.amount.second > 0 ? (secondEvent?.occurredAt ?? null) : null;
   const arrangementApproval = findStage({ stages }, 'arrangement')?.approved ?? null;
+  // 계약금을 받은 뒤에야 2차 기한이 생긴다 — 계약금이 밀린 채 편곡만 승인되면 지금 받을 돈은 여전히 계약금이고,
+  // 여기서 기한을 세우면 아직 낼 차례도 아닌 중간금 연체가 화면에 뜬다(payment-link의 dueNow와 같은 순서).
   const secondLastDay =
-    terms.amount.second > 0 && arrangementApproval ? kstDay(arrangementApproval.at) + terms.amount.secondDueDays : null;
+    terms.amount.second > 0 && depositMetAt && arrangementApproval
+      ? kstDay(arrangementApproval.at) + terms.amount.secondDueDays
+      : null;
   const secondOverdueDays = !secondMetAt && secondLastDay !== null ? Math.max(0, today - secondLastDay) : 0;
 
   const masteringApproval = findStage({ stages }, 'mastering')?.approved ?? null;

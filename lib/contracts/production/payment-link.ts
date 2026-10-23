@@ -3,7 +3,7 @@ import { sql } from 'drizzle-orm';
 import { getDb } from '../../../db/client';
 import { productionContractPaymentLinks } from '../../../db/schema';
 import { closePaymentLink, createPaymentLink } from '../../payments/paymentLinks';
-import { parseEventData } from './ledger';
+import { findStage, parseEventData } from './ledger';
 import { loadProgressContext, recordProgressEvent, sendEventNotice } from './progress';
 import { contractNameFor, depositWordFor } from './terms';
 
@@ -16,7 +16,8 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr';
  *
  * ## 지금 받을 돈
  * - 대금(계약금)을 아직 다 받지 않았으면 → `deposit`: 계약금 − 받은 금액(일시불 계약이면 계약금 = 계약금액).
- * - 계약금을 받았고 마스터링이 승인됐으면(잔금 기한이 생겼으면) → `balance`: 총액(추가 비용·초과 수정 요금 포함) − 받은 금액.
+ * - 계약금을 받았고 편곡이 승인됐는데 2차가 남았으면 → `second`: 계약금 + 2차 − 받은 금액(일부 입금은 다음 링크에서 뺀다).
+ * - 2차가 없거나 이미 받았고, 마스터링이 승인됐으면(잔금 기한이 생겼으면) → `balance`: 총액(추가 비용·초과 수정 요금 포함) − 받은 금액.
  * - 그 밖(작업 중·다 받음·끝난 계약) → 없음.
  *
  * 금액이 바뀌면(운영자가 계좌 입금을 직접 기록, 추가 비용 동의 등) 열려 있던 링크를 닫고 새로 만든다 — 결제 링크는 금액을 바꿀
@@ -25,16 +26,18 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr';
  * 모든 함수는 실패를 삼킨다 — 표가 없는 DB(0079 전)·일시 장애에서도 서명·체결·진행 기록은 그대로 돈다(링크가 안 보일 뿐).
  */
 
+export type ContractPaymentLinkPurpose = 'deposit' | 'second' | 'balance';
+
 export interface ContractPaymentLink {
   url: string;
   slug: string;
-  purpose: 'deposit' | 'balance';
+  purpose: ContractPaymentLinkPurpose;
   amount: number;
 }
 
 const urlOf = (slug: string) => `${SITE_URL}/ko/pay/${slug}`;
 
-type Due = { purpose: 'deposit' | 'balance'; amount: number } | null;
+type Due = { purpose: ContractPaymentLinkPurpose; amount: number } | null;
 
 /** 진행 장부로 "지금 받을 돈"을 정한다(위 주석). */
 const dueNow = (context: NonNullable<Awaited<ReturnType<typeof loadProgressContext>>>): Due => {
@@ -45,7 +48,15 @@ const dueNow = (context: NonNullable<Awaited<ReturnType<typeof loadProgressConte
     const amount = Math.max(0, terms.amount.deposit - payments.received);
     return amount > 0 ? { purpose: 'deposit', amount } : null;
   }
-  if (payments.balanceLastDay && !payments.paidInFull) {
+  // 2차는 편곡 승인 뒤에만 연다 — 승인 전에 열면 아직 만들지도 않은 결과물의 대금을 먼저 받는다. 편곡이 범위 밖인
+  // 계약(믹싱·마스터링)은 2차가 없으므로(second === 0) 이 갈래를 지나지 않는다.
+  const secondDue = terms.amount.second > 0 && !payments.secondMetAt;
+  if (secondDue && findStage(ledger, 'arrangement')?.approved) {
+    const amount = Math.max(0, terms.amount.deposit + terms.amount.second - payments.received);
+    return amount > 0 ? { purpose: 'second', amount } : null;
+  }
+  // 잔금은 2차가 없거나 이미 다 받았을 때만. 2차가 남아 있는데 잔금 기한이 먼저 생겨도 2차를 건너뛰지 않는다.
+  if ((terms.amount.second === 0 || payments.secondMetAt) && payments.balanceLastDay && !payments.paidInFull) {
     const amount = Math.max(0, payments.totalDue - payments.received);
     return amount > 0 ? { purpose: 'balance', amount } : null;
   }
@@ -53,7 +64,7 @@ const dueNow = (context: NonNullable<Awaited<ReturnType<typeof loadProgressConte
 };
 
 const openLinksOf = async (contractId: string) =>
-  getDb().all<{ slug: string; purpose: 'deposit' | 'balance'; amount: number }>(sql`
+  getDb().all<{ slug: string; purpose: ContractPaymentLinkPurpose; amount: number }>(sql`
     SELECT m.slug, m.purpose, m.amount FROM production_contract_payment_links m
     JOIN payment_links l ON l.slug = m.slug
     WHERE m.contract_id = ${contractId} AND l.closed_at IS NULL
@@ -75,7 +86,8 @@ export const ensureContractPaymentLink = async (contractId: string, now: Date = 
     if (keep) return { url: urlOf(keep.slug), slug: keep.slug, purpose: keep.purpose, amount: keep.amount };
 
     const { contract, terms } = context;
-    const itemName = `${contractNameFor(contract.kind).replace(/서$/, '')} ${due.purpose === 'deposit' ? depositWordFor(terms) : '잔금'}`;
+    const purposeWord = due.purpose === 'deposit' ? depositWordFor(terms) : due.purpose === 'second' ? '중간금' : '잔금';
+    const itemName = `${contractNameFor(contract.kind).replace(/서$/, '')} ${purposeWord}`;
     const { slug } = await createPaymentLink({
       itemName,
       totalAmount: due.amount,
@@ -177,7 +189,7 @@ export const isContractPaymentOrder = async (orderNo: string): Promise<boolean> 
 /** 관리자 화면용 — 계약에 걸린 결제 링크 전부(열림·닫힘). */
 export const listContractPaymentLinks = async (contractId: string) => {
   try {
-    return await getDb().all<{ slug: string; purpose: 'deposit' | 'balance'; amount: number; closed_at: number | null; created_at: number; paid_orders: number }>(sql`
+    return await getDb().all<{ slug: string; purpose: ContractPaymentLinkPurpose; amount: number; closed_at: number | null; created_at: number; paid_orders: number }>(sql`
       SELECT m.slug, m.purpose, m.amount, l.closed_at, m.created_at,
              (SELECT COUNT(*) FROM payment_link_orders plo JOIN orders o ON o.order_no = plo.order_no
                WHERE plo.slug = m.slug AND o.status IN ('paid', 'partially_refunded', 'refunded')) AS paid_orders

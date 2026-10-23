@@ -473,6 +473,14 @@ describe('3회 분할 — 2차 납부·연체(제3조)', () => {
     expect(ledger.payments.secondOverdueDays).toBe(0);
   });
 
+  it('편곡이 승인됐어도 계약금이 안 들어왔으면 2차 기한이 생기지 않는다 — 받을 돈은 아직 계약금이다', () => {
+    const ledger = reworkLedger('2026-11-25T09:00:00', arrangementApproved);
+    expect(ledger.payments.depositMetAt).toBeNull();
+    expect(ledger.payments.secondLastDay).toBeNull();
+    expect(ledger.payments.secondOverdueDays).toBe(0);
+    expect(ledger.todos.map((t) => t.message)).not.toContainEqual(expect.stringContaining('중간금 기한'));
+  });
+
   it('2차까지 입금하면 입금일을 기록하고, 잔금이 남으면 완납이 아니다', () => {
     const ledger = reworkLedger('2026-11-25T09:00:00', [
       ev('payment_received', '2026-11-03T09:00:00', { amount: 500_000 }),
