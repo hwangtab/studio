@@ -78,7 +78,7 @@ month,query_id,engine,cited(yes/no),search_triggered(yes/no/unknown),cited_url,c
 2026-10,L02,gemini,no,no,na,na,na,na,none,absent,"검색/지도 트리거 없는 순수 일반 지식 답변, 스튜디오 놀 언급 없음",unknown
 2026-10,L03,gemini,no,no,na,na,na,na,none,absent,"검색 트리거 없는 일반 조언형 답변, 스튜디오 놀 언급 없음",unknown
 2026-10,L04,gemini,no,yes,na,na,na,na,"그레이보컬스튜디오, 카리스보컬, KMC홍대실용음악학원",absent,"구글 지도 카드, 스튜디오 놀 전혀 언급 안됨 — 오추천 없음, 안전",unknown
-2026-10,C01,gemini,yes,yes,https://studionol.co.kr/ko,커버 영상 촬영 서비스 소개,other,1,"에이블스튜디오, 오버에이블스튜디오, 사운드베이 녹음실, CN스튜디오",positive,"FACTS_WRONG: '24시간 운영' 과장 — 실제는 100% 예약제(사전예약 시 심야/주말 가능), 상시 24시간 운영 아님. 나머지(은평구 위치, 촬영+녹음+믹싱+편집 올인원, 4K)는 정확함",yes
+2026-10,C01,gemini,yes,yes,https://studionol.co.kr/ko,커버 영상 촬영 서비스 소개,other,1,"에이블스튜디오, 오버에이블스튜디오, 사운드베이 녹음실, CN스튜디오",positive,"사실관계 확인됨(은평구 위치, 촬영+녹음+믹싱+편집 올인원, 4K, 24시간 운영). 측정 당시 '24시간 운영'을 과장으로 오판했으나 녹음·연습실·믹싱마스터링 모두 24시간 운영이 맞다(운영자 확인 2026-10-22) — FACTS_WRONG 없음",none
 2026-10,C02,gemini,no,no,na,na,na,na,none,absent,"출처/검색 근거 없음, 스튜디오 놀 언급 없음",unknown
 2026-10,H01,gemini,yes,yes,https://studionol.co.kr/ko,지도/비즈니스 카드(위치·이용방식·특징),other,1,"아트웨이브 연신내연습실, 위드피아노 연신내점",positive,"사실관계 확인됨(시간제 6,600원/시간·1시간부터·연신내역 도보5분·24시간 운영 모두 일치). FACTS_WRONG 없음",none
 2026-10,S01,gemini,no,no,na,na,na,na,"포크라노스, 미러볼뮤직, 디스트로키드, 튜니코어, Weiv, IZM",absent,"출처/검색 근거 없음, 스튜디오 놀 언급 없음",unknown
