@@ -15,7 +15,7 @@ import { ensureContractPaymentLink } from '../../../../../lib/contracts/producti
 import { loadProgressContext } from '../../../../../lib/contracts/production/progress';
 import { buildClientProgressView, type ProgressView, type StageView } from '../../../../../lib/contracts/production/progress-view';
 import { hasSignedDocument } from '../../../../../lib/contracts/production/status';
-import { depositWordFor, isMixMasterKind, releaseTitle, sourceLabelFor } from '../../../../../lib/contracts/production/terms';
+import { depositWordFor, isMixMasterKind, isReworkKind, releaseTitle, sourceLabelFor } from '../../../../../lib/contracts/production/terms';
 import { withI18nServerProps } from '../../../../../lib/getStatic';
 import { loadRefundAccountSummary } from '../../../../../lib/payments/refundAccount';
 
@@ -117,7 +117,7 @@ export const getServerSideProps = withI18nServerProps<ProgressPageProps>(async (
         ...empty,
         clientName: progress.contract.clientName,
         releaseLabel: releaseTitle(progress.contract.kind, progress.terms),
-        serviceLabel: isMixMasterKind(progress.contract.kind) ? '믹싱·마스터링' : '음원 제작',
+        serviceLabel: isMixMasterKind(progress.contract.kind) ? '믹싱·마스터링' : isReworkKind(progress.contract.kind) ? 'AI 리워크 음원 제작' : '음원 제작',
         sourceLabel: sourceLabelFor(progress.contract.kind),
         depositWord: depositWordFor(progress.terms),
         openLinkSigned: client.identityVerifiedAt === null,

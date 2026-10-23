@@ -62,12 +62,15 @@ function RecordForm({
   contractId,
   songLabels,
   mixMaster,
+  rework,
   onDone,
 }: {
   contractId: string;
   songLabels: string[];
   /** 믹싱·마스터링 계약 — 편곡·녹음·유통 기록과 단계를 숨기고 이름을 바꾼다(event-spec.ts). */
   mixMaster: boolean;
+  /** AI 리워크 계약 — 자료 이름이 "AI 데모 파일"이다(event-spec.ts REWORK_LABEL). */
+  rework: boolean;
   onDone: (message: string | null) => Promise<void>;
 }) {
   const [type, setType] = useState<ProductionEventType>('payment_received');
@@ -125,7 +128,7 @@ function RecordForm({
           >
             {adminEventTypesFor(mixMaster).map((value) => (
               <option key={value} value={value}>
-                {eventLabelFor(value, mixMaster)}
+                {eventLabelFor(value, mixMaster, rework)}
               </option>
             ))}
           </Select>
@@ -308,7 +311,7 @@ export default function ProductionProgressPanel({
           <dl className="space-y-2">
             <Row
               label="작업 기간 시작"
-              value={work.startedOn ? formatAdminDate(work.startedOn) : payments.deposit === 0 ? `${view.mixMaster ? '작업 파일' : '1차 완성본'} 대기` : `계약금·${view.mixMaster ? '작업 파일' : '1차 완성본'} 대기`}
+              value={work.startedOn ? formatAdminDate(work.startedOn) : payments.deposit === 0 ? `${view.sourceLabel} 대기` : `계약금·${view.sourceLabel} 대기`}
             />
             <Row label="완료 예정" value={work.dueOn ? formatAdminDate(work.dueOn) : '-'} />
             <Row label="지연" value={work.delayDays > 0 ? `${work.delayDays}일` : '-'} />
@@ -390,7 +393,7 @@ export default function ProductionProgressPanel({
       {editable && (
         <div className="p-4 md:p-8 border-b border-gray-200">
           <h3 className="text-base font-bold text-gray-900 dark:text-gray-900 mb-3">기록 추가</h3>
-          <RecordForm contractId={contractId} songLabels={view.songLabels} mixMaster={view.mixMaster} onDone={refresh} />
+          <RecordForm contractId={contractId} songLabels={view.songLabels} mixMaster={view.mixMaster} rework={view.rework} onDone={refresh} />
         </div>
       )}
 

@@ -1,5 +1,5 @@
 import type { ProductionContractEvent } from '../../../db/schema';
-import { eventLabelFor, EVENT_SPEC, isMixMasterTerms, isPerSongEvent, STAGE_LABEL, type ProductionStage } from './event-spec';
+import { eventLabelFor, EVENT_SPEC, isMixMasterTerms, isPerSongEvent, isReworkTerms, sourceLabelForTerms, STAGE_LABEL, type ProductionStage } from './event-spec';
 import { parseEventData, stageTitle, type ProductionLedger, type Todo } from './ledger';
 import { songLabel, type ProductionTerms, type RevisionStage } from './terms';
 
@@ -71,6 +71,10 @@ export interface ProgressView {
 export interface AdminProgressView extends ProgressView {
   /** 믹싱·마스터링 계약인가 — 기록 폼이 편곡·녹음·유통 기록과 단계를 숨긴다(event-spec.ts isMixMasterTerms). */
   mixMaster: boolean;
+  /** AI 리워크 계약인가 — 기록 이름이 "AI 데모 파일 수령"처럼 바뀐다(event-spec.ts isReworkTerms). */
+  rework: boolean;
+  /** 의뢰인이 처음 보내는 자료의 이름(1차 완성본·작업 파일·AI 데모 파일). */
+  sourceLabel: string;
   todos: Todo[];
   refund: ProductionLedger['refund'] & { received: number; kickedOff: boolean };
 }
@@ -86,7 +90,7 @@ const timelineStage = (terms: Pick<ProductionTerms, 'songs'>, event: ProductionC
 };
 
 const toTimeline = (
-  terms: Pick<ProductionTerms, 'songs' | 'scope'>,
+  terms: Pick<ProductionTerms, 'songs' | 'scope' | 'refundPolicy'>,
   events: readonly ProductionContractEvent[],
   voidedIds: Set<string>,
 ): TimelineItem[] =>
@@ -97,8 +101,8 @@ const toTimeline = (
       type: event.type,
       // 폼 이름의 "(의뢰인 대신 기록)"은 관리자가 남긴 경우에만 맞는 말이다 — 의뢰인·자동 기록에서는 뗀다.
       label: event.actor.startsWith('admin:')
-        ? eventLabelFor(event.type, isMixMasterTerms(terms))
-        : eventLabelFor(event.type, isMixMasterTerms(terms)).replace(/ \(의뢰인 대신 기록\)$/, ''),
+        ? eventLabelFor(event.type, isMixMasterTerms(terms), isReworkTerms(terms))
+        : eventLabelFor(event.type, isMixMasterTerms(terms), isReworkTerms(terms)).replace(/ \(의뢰인 대신 기록\)$/, ''),
       stage: timelineStage(terms, event),
       amount: event.amount,
       occurredAt: event.occurredAt.toISOString(),
@@ -180,6 +184,8 @@ export const buildAdminProgressView = (
   return {
     ...buildView(terms, ledger, toTimeline(terms, allEvents, voided).reverse()),
     mixMaster: isMixMasterTerms(terms),
+    rework: isReworkTerms(terms),
+    sourceLabel: sourceLabelForTerms(terms),
     todos: active ? ledger.todos : [],
     refund: { ...ledger.refund, received: ledger.payments.received, kickedOff: ledger.work.kickedOff },
   };

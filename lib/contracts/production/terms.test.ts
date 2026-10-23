@@ -1,4 +1,4 @@
-import { adminEventTypesFor, isMixMasterTerms } from './event-spec';
+import { adminEventTypesFor, eventLabelFor, isMixMasterTerms, isReworkTerms, sourceLabelForTerms } from './event-spec';
 import {
   ARRANGEMENT_SMALL_PRICE,
   EP_BUNDLE_PER_SONG_PRICE,
@@ -429,5 +429,15 @@ describe('편곡 없는 AI 리워크는 믹싱·마스터링 계약으로 읽히
     expect(adminEventTypesFor(isMixMasterTerms(buildDefaultReworkTerms('none')))).toEqual(
       expect.arrayContaining(['recording_completed', 'distribution_submitted', 'released']),
     );
+  });
+});
+
+describe('기록 이름 — 종류별 자료 이름', () => {
+  it('리워크는 AI 데모 파일, 믹싱·마스터링은 작업 파일, 제작은 1차 완성본', () => {
+    expect(eventLabelFor('source_received', isMixMasterTerms(buildDefaultReworkTerms('none')), isReworkTerms(buildDefaultReworkTerms('none')))).toBe('AI 데모 파일 수령');
+    expect(eventLabelFor('source_received', true)).toBe('작업 파일 수령');
+    expect(eventLabelFor('source_received', false, isReworkTerms(buildDefaultProductionTerms()))).toBe('1차 완성본 수령');
+    expect(sourceLabelForTerms(buildDefaultReworkTerms('band'))).toBe('AI 데모 파일');
+    expect(sourceLabelForTerms(buildDefaultProductionTerms('mixmaster'))).toBe('작업 파일');
   });
 });
