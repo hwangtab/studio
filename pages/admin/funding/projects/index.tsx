@@ -115,7 +115,7 @@ export default function AdminFundingProjectsPage({ projects, services, nowMs, pa
                   <th className="px-4 py-3">서비스</th>
                   <th className="px-4 py-3">제출 시각</th>
                   <th className="px-4 py-3">모금·정산</th>
-                  <th className="px-4 py-3 rounded-r-lg">목표액</th>
+                  <th className="px-4 py-3 rounded-r-lg text-right tabular-nums whitespace-nowrap">목표액</th>
                 </tr>
               </thead>
               <tbody>
@@ -174,7 +174,7 @@ export default function AdminFundingProjectsPage({ projects, services, nowMs, pa
                         <span className="text-gray-600">모금 중 ({formatKstDateTimeFull(p.endAt).slice(0, 10)}까지)</span>
                       )}
                     </td>
-                    <td data-label="목표액" className="px-4 py-3 whitespace-nowrap">{formatPriceAmount(p.goalAmount)}원</td>
+                    <td data-label="목표액" className="px-4 py-3 text-right tabular-nums whitespace-nowrap">{formatPriceAmount(p.goalAmount)}원</td>
                   </tr>
                 ))}
               </tbody>

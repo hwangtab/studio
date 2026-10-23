@@ -75,17 +75,27 @@ export default function AdminShowsPage({ shows, pendingSubmissions, error }: Adm
                 </div>
               </div>
               <div className="overflow-x-auto max-lg:p-3">
-                <table className="admin-table w-full text-sm">
+                <table className="admin-table w-full lg:min-w-[48rem] lg:table-fixed text-sm">
+                  <colgroup>
+                    <col />
+                    <col className="w-[6rem]" />
+                    <col className="w-[5rem]" />
+                    <col className="w-[5.5rem]" />
+                    <col className="w-[5rem]" />
+                    <col className="w-[5rem]" />
+                    <col className="w-[5rem]" />
+                    <col className="w-[8rem]" />
+                  </colgroup>
                   <thead className="bg-gray-50 text-gray-600">
                     <tr>
                       <th className="text-left px-4 py-2 font-medium">회차</th>
                       <th className="text-left px-4 py-2 font-medium">상태</th>
-                      <th className="text-right px-4 py-2 font-medium">발권</th>
-                      <th className="text-right px-4 py-2 font-medium">결제대기</th>
-                      <th className="text-right px-4 py-2 font-medium">초대</th>
-                      <th className="text-right px-4 py-2 font-medium">정원</th>
-                      <th className="text-right px-4 py-2 font-medium">입장</th>
-                      <th className="text-right px-4 py-2 font-medium">매출</th>
+                      <th className="text-right px-4 py-2 font-medium whitespace-nowrap">발권</th>
+                      <th className="text-right px-4 py-2 font-medium whitespace-nowrap">결제대기</th>
+                      <th className="text-right px-4 py-2 font-medium whitespace-nowrap">초대</th>
+                      <th className="text-right px-4 py-2 font-medium whitespace-nowrap">정원</th>
+                      <th className="text-right px-4 py-2 font-medium whitespace-nowrap">입장</th>
+                      <th className="text-right px-4 py-2 font-medium whitespace-nowrap">매출</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100 text-gray-900">
@@ -93,12 +103,12 @@ export default function AdminShowsPage({ shows, pendingSubmissions, error }: Adm
                       <tr key={t.id}>
                         <td data-label="회차" className="px-4 py-2 whitespace-nowrap">{t.label}</td>
                         <td data-label="상태" className="px-4 py-2">{SHOWTIME_STATUS_LABEL[t.status] ?? t.status}</td>
-                        <td data-label="발권" className="px-4 py-2 text-right">{t.issued}</td>
-                        <td data-label="결제대기" className="px-4 py-2 text-right">{t.held}</td>
-                        <td data-label="초대" className="px-4 py-2 text-right">{t.comp}</td>
-                        <td data-label="정원" className="px-4 py-2 text-right">{t.capacity}</td>
-                        <td data-label="입장" className="px-4 py-2 text-right">{t.checkedIn}</td>
-                        <td data-label="매출" className="px-4 py-2 text-right">{t.grossAmount.toLocaleString('ko-KR')}원</td>
+                        <td data-label="발권" className="px-4 py-2 text-right tabular-nums whitespace-nowrap">{t.issued}</td>
+                        <td data-label="결제대기" className="px-4 py-2 text-right tabular-nums whitespace-nowrap">{t.held}</td>
+                        <td data-label="초대" className="px-4 py-2 text-right tabular-nums whitespace-nowrap">{t.comp}</td>
+                        <td data-label="정원" className="px-4 py-2 text-right tabular-nums whitespace-nowrap">{t.capacity}</td>
+                        <td data-label="입장" className="px-4 py-2 text-right tabular-nums whitespace-nowrap">{t.checkedIn}</td>
+                        <td data-label="매출" className="px-4 py-2 text-right tabular-nums whitespace-nowrap">{t.grossAmount.toLocaleString('ko-KR')}원</td>
                       </tr>
                     ))}
                   </tbody>

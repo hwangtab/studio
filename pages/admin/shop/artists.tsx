@@ -12,6 +12,7 @@ import { loadShopArtistTermsStatuses } from '../../../lib/shop/artistTermsAgreem
 import { listShopArtistsForAdmin, type AdminShopArtistRow } from '../../../lib/shop/artists';
 import { isStudioShopArtistSlug } from '../../../lib/shop/studioArtist';
 import { buttonVariants } from '../../../components/ui/Button';
+import { Th } from '../../../components/admin/AdminTable';
 import { Notice } from '../../../components/ui/Notice';
 
 type ArtistWithTerms = AdminShopArtistRow & { termsLabel: string; termsAgreed: boolean };
@@ -118,8 +119,8 @@ function ArtistRow({ artist }: { artist: ArtistWithTerms }) {
           {locked && <span className="block text-xs text-gray-500">승인된 상품이 있어 주소를 바꿀 수 없습니다.</span>}
           {message && <span className="block text-xs text-gray-600">{message}</span>}
         </td>
-        <td className="py-2 pr-3 tabular-nums">{artist.approvedProducts}</td>
-        <td className={`py-2 text-xs ${artist.termsAgreed ? 'text-gray-700' : 'font-semibold text-red-700'}`}>{artist.termsLabel}</td>
+        <td className="py-2 pr-3 text-right tabular-nums whitespace-nowrap">{artist.approvedProducts}</td>
+        <td className={`py-2 pl-3 text-xs ${artist.termsAgreed ? 'text-gray-700' : 'font-semibold text-red-700'}`}>{artist.termsLabel}</td>
       </tr>
       <tr>
         <td colSpan={4} className="pb-3">
@@ -152,8 +153,14 @@ export default function AdminShopArtistsPage({ artists, error }: Props) {
             <p className="text-gray-600">아직 없습니다.</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[44rem] text-left">
-                <thead className="text-xs text-gray-500"><tr><th className="py-2 pr-3">아티스트</th><th className="py-2 pr-3">주소</th><th className="py-2 pr-3">승인 상품</th><th className="py-2">위탁 약관</th></tr></thead>
+              <table className="w-full min-w-[56rem] table-fixed text-left">
+                <colgroup>
+                  <col className="w-72" />
+                  <col />
+                  <col className="w-24" />
+                  <col className="w-48" />
+                </colgroup>
+                <thead><tr><Th>아티스트</Th><Th>주소</Th><Th align="right">승인 상품</Th><Th className="pl-3">위탁 약관</Th></tr></thead>
                 <tbody>{artists.map((a) => <ArtistRow key={a.creatorId} artist={a} />)}</tbody>
               </table>
             </div>

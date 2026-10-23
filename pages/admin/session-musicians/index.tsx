@@ -164,7 +164,7 @@ export default function AdminSessionMusiciansPage({ rows, filters, migrationNeed
                   <th className="px-4 py-3">다루는 악기</th>
                   <th className="px-4 py-3">장르</th>
                   <th className="px-4 py-3">리딩</th>
-                  <th className="px-4 py-3">곡당</th>
+                  <th className="px-4 py-3 text-right tabular-nums whitespace-nowrap">곡당</th>
                   <th className="px-4 py-3">원격</th>
                   <th className="px-4 py-3">지역</th>
                   <th className="px-4 py-3">상태</th>
@@ -183,7 +183,7 @@ export default function AdminSessionMusiciansPage({ rows, filters, migrationNeed
                     </td>
                     <td data-label="장르" className="px-4 py-3">{row.genres.map(genreLabel).join(', ') || '-'}</td>
                     <td data-label="리딩" className="px-4 py-3">{readingLabel(row.reading) || '-'}</td>
-                    <td data-label="곡당" className="px-4 py-3 whitespace-nowrap">{formatSessionRate(row.ratePerSong)}</td>
+                    <td data-label="곡당" className="px-4 py-3 text-right tabular-nums whitespace-nowrap">{formatSessionRate(row.ratePerSong)}</td>
                     <td data-label="원격" className="px-4 py-3">{row.remoteRecording ? '가능' : '-'}</td>
                     <td data-label="지역" className="px-4 py-3">{row.region ?? '-'}</td>
                     <td data-label="상태" className="px-4 py-3">

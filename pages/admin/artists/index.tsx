@@ -207,8 +207,8 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
                     <th className="px-4 py-3 text-left">아티스트</th>
                     <th className="px-4 py-3 text-left">구독 받음</th>
                     <th className="px-4 py-3 text-left">세금 처리</th>
-                    <th className="px-4 py-3 text-right">후원자</th>
-                    <th className="px-4 py-3 text-right">연락처</th>
+                    <th className="px-4 py-3 text-right tabular-nums">후원자</th>
+                    <th className="px-4 py-3 text-left">연락처</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -222,8 +222,8 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
                       </td>
                       <td data-label="구독 받음" className="px-4 py-3">{a.supportActive ? '예' : '아니오'}</td>
                       <td data-label="세금 처리" className="px-4 py-3 text-gray-600">{TAX_LABELS[a.taxType] ?? a.taxType}</td>
-                      <td data-label="후원자" className="px-4 py-3 text-right font-medium">{a.supporterCount}명</td>
-                      <td data-label="연락처" className="px-4 py-3 text-right">
+                      <td data-label="후원자" className="px-4 py-3 text-right tabular-nums font-medium">{a.supporterCount}명</td>
+                      <td data-label="연락처" className="px-4 py-3">
                         <a href={`/api/admin/artists/${a.slug}/supporters-export`} className="text-primary hover:underline text-xs">
                           CSV
                         </a>
@@ -268,13 +268,13 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
                 <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
                   <tr>
                     <th className="px-3 py-3 text-left">아티스트</th>
-                    <th className="px-3 py-3 text-right">후원자</th>
-                    <th className="px-3 py-3 text-right">결제 합계</th>
-                    <th className="px-3 py-3 text-right">환불</th>
-                    <th className="px-3 py-3 text-right">공급가</th>
-                    <th className="px-3 py-3 text-right">{ARTIST_SUPPORT_SHARE_PERCENT}%</th>
-                    <th className="px-3 py-3 text-right">원천징수</th>
-                    <th className="px-3 py-3 text-right">실수령</th>
+                    <th className="px-3 py-3 text-right tabular-nums">후원자</th>
+                    <th className="px-3 py-3 text-right tabular-nums">결제 합계</th>
+                    <th className="px-3 py-3 text-right tabular-nums">환불</th>
+                    <th className="px-3 py-3 text-right tabular-nums">공급가</th>
+                    <th className="px-3 py-3 text-right tabular-nums">{ARTIST_SUPPORT_SHARE_PERCENT}%</th>
+                    <th className="px-3 py-3 text-right tabular-nums">원천징수</th>
+                    <th className="px-3 py-3 text-right tabular-nums">실수령</th>
                     <th className="px-3 py-3 text-left">상태</th>
                     <th className="px-3 py-3" />
                   </tr>
@@ -286,13 +286,13 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
                     return (
                       <tr key={key}>
                         <td data-label="아티스트" className="px-3 py-3 font-medium text-gray-900">{p.artistName}</td>
-                        <td data-label="후원자" className="px-3 py-3 text-right">{p.subscriberCount}</td>
-                        <td data-label="결제 합계" className="px-3 py-3 text-right">{formatPriceAmount(p.grossAmount)}</td>
-                        <td data-label="환불" className="px-3 py-3 text-right text-gray-500">{p.refundAmount ? `−${formatPriceAmount(p.refundAmount)}` : '-'}</td>
-                        <td data-label="공급가" className="px-3 py-3 text-right">{formatPriceAmount(p.supplyAmount)}</td>
-                        <td data-label={`${ARTIST_SUPPORT_SHARE_PERCENT}%`} className="px-3 py-3 text-right">{formatPriceAmount(p.shareAmount)}</td>
-                        <td data-label="원천징수" className="px-3 py-3 text-right text-gray-500">{p.withholdingAmount ? `−${formatPriceAmount(p.withholdingAmount)}` : '-'}</td>
-                        <td data-label="실수령" className="px-3 py-3 text-right font-bold">{formatPriceAmount(p.netAmount)}원</td>
+                        <td data-label="후원자" className="px-3 py-3 text-right tabular-nums">{p.subscriberCount}</td>
+                        <td data-label="결제 합계" className="px-3 py-3 text-right tabular-nums">{formatPriceAmount(p.grossAmount)}</td>
+                        <td data-label="환불" className="px-3 py-3 text-right tabular-nums text-gray-500">{p.refundAmount ? `−${formatPriceAmount(p.refundAmount)}` : '-'}</td>
+                        <td data-label="공급가" className="px-3 py-3 text-right tabular-nums">{formatPriceAmount(p.supplyAmount)}</td>
+                        <td data-label={`${ARTIST_SUPPORT_SHARE_PERCENT}%`} className="px-3 py-3 text-right tabular-nums">{formatPriceAmount(p.shareAmount)}</td>
+                        <td data-label="원천징수" className="px-3 py-3 text-right tabular-nums text-gray-500">{p.withholdingAmount ? `−${formatPriceAmount(p.withholdingAmount)}` : '-'}</td>
+                        <td data-label="실수령" className="px-3 py-3 text-right tabular-nums font-bold">{formatPriceAmount(p.netAmount)}원</td>
                         <td data-label="상태" className="px-3 py-3">
                           {p.recorded ? (
                             <span
@@ -391,8 +391,8 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
                   <tr>
                     <th className="px-4 py-3 text-left">월</th>
                     <th className="px-4 py-3 text-left">아티스트</th>
-                    <th className="px-4 py-3 text-right">후원자</th>
-                    <th className="px-4 py-3 text-right">실수령</th>
+                    <th className="px-4 py-3 text-right tabular-nums">후원자</th>
+                    <th className="px-4 py-3 text-right tabular-nums">실수령</th>
                     <th className="px-4 py-3 text-left">상태</th>
                     <th className="px-4 py-3 text-left">지급일</th>
                   </tr>
@@ -402,8 +402,8 @@ export default function AdminArtistsPage({ supportOpen, period, artists, preview
                     <tr key={h.id}>
                       <td data-label="월" className="px-4 py-3 font-mono text-xs">{h.period}</td>
                       <td data-label="아티스트" className="px-4 py-3">{h.artistName}</td>
-                      <td data-label="후원자" className="px-4 py-3 text-right">{h.subscriberCount}</td>
-                      <td data-label="실수령" className="px-4 py-3 text-right font-medium">{formatPriceAmount(h.netAmount)}원</td>
+                      <td data-label="후원자" className="px-4 py-3 text-right tabular-nums">{h.subscriberCount}</td>
+                      <td data-label="실수령" className="px-4 py-3 text-right tabular-nums font-medium">{formatPriceAmount(h.netAmount)}원</td>
                       <td data-label="상태" className="px-4 py-3">{h.status === 'paid' ? '지급 완료' : '이체 대기'}</td>
                       <td data-label="지급일" className="px-4 py-3 text-gray-500">{h.paidAt ? h.paidAt.slice(0, 10) : '-'}</td>
                     </tr>

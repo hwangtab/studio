@@ -709,6 +709,7 @@ PATCH가 실패해도 DB는 되돌리지 않고 `gcal_error`에 적는다("캘�
 - **수기 예약 등록은 고객 계좌 입금과 같은 함수**(`createBookingOrder`/`createMixingOrder` → `confirmBookingBankDeposit`)를 탄다(`lib/booking/manualEntry.ts`). 점유·캘린더·환불·매출이 웹 예약과 같은 원장이다.
   이메일을 비우면 `MANUAL_PLACEHOLDER_EMAIL`이 들어가는데 **배달되지 않는 주소**다 — 고객에게 메일을 보내는 새 경로는 `isManualPlaceholderRecipient`(`lib/privacy/manualPlaceholder.ts`)로 먼저 거를 것(반송이 발신 평판을 깎는다).
 - **관리자 메뉴는 `ADMIN_NAV_ENTRIES`(components/admin/AdminShell.tsx) 한 곳**이다 — 연습실 / 녹음실 / 플랫폼 / 재무 / 공통. 재무는 한 화면의 탭(매출·수익 / 지출 / 장부 내보내기, `components/admin/FinanceTabs.tsx`)이고 하위 경로로 갈린다(`?tab=`이 아니다 — 탭마다 읽는 데이터가 다르다). 대시보드에는 이번 달 수익 한 장만 두고 상세는 재무로 보낸다. 새 구역은 묶음 하나에 넣는다. 예약은 한 화면을 `?line=practice|studio|mixing`으로 갈라 세 곳에 건다(`lib/booking/line.ts`).
+- **관리자 표는 `components/admin/AdminTable.tsx` 규칙으로 그린다**(운영자 지적 2026-10-23 "열이 안 맞고 버튼이 줄바꿈되어 개판"): `lg:table-fixed` + `<colgroup>`으로 열 너비를 정하고(같은 화면의 표끼리 같은 너비), 금액·건수는 `text-right tabular-nums whitespace-nowrap`, 상태 배지는 자기 '상태' 열(`StatusChip`), 행 끝 버튼은 `RowActions`(줄바꿈 없음, 위험 동작은 `danger` 슬롯) + `ROW_BTN`(h-9), 자주 안 누르는 보조 동작은 버튼 대신 `RowLinks`. `.admin-table`(좁은 화면 카드) 표에는 `min-w`·`table-fixed`를 `lg:`로만 건다 — 안 그러면 폰에서 카드가 가로로 넘친다.
 - **개인정보(이름·연락처·이메일·주소)를 props로 싣는 관리자 상세 화면은 열람을 기록한다**: `logAdminView`(`lib/privacy/adminView.ts`) 또는 `recordAdminPrivacyAccess` + `privacyAccessActionEnum` + `accessLogLabels.ts`(열거와 라벨이 어긋나면 테스트가 선다). 값은 적지 않고 대상 id·결과만.
   목록 화면은 기록하지 않는 대신 **표에 안 나오는 개인정보를 props에 싣지 않는다**(`serializePledgeForAdminList`).
 

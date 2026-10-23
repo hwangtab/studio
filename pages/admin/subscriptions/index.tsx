@@ -190,8 +190,8 @@ export default function AdminSubscriptionsPage({ subscriptions: allSubscriptions
                   <th className="px-4 py-3 text-left">고객</th>
                   <th className="px-4 py-3 text-left">상태</th>
                   <th className="px-4 py-3 text-left">다음 결제일</th>
-                  <th className="px-4 py-3 text-right">미납 회차</th>
-                  <th className="px-4 py-3 text-right">금액</th>
+                  <th className="px-4 py-3 text-right tabular-nums">미납 회차</th>
+                  <th className="px-4 py-3 text-right tabular-nums">금액</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -220,14 +220,14 @@ export default function AdminSubscriptionsPage({ subscriptions: allSubscriptions
                       </span>
                     </td>
                     <td data-label="다음 결제일" className="px-4 py-3 text-gray-600">{nextBillingLabel(sub)}</td>
-                    <td data-label="미납 회차" className="px-4 py-3 text-right">
+                    <td data-label="미납 회차" className="px-4 py-3 text-right tabular-nums">
                       {sub.failedCount > 0 ? (
                         <span className="text-red-600 font-medium">{sub.failedCount}</span>
                       ) : (
                         <span className="text-gray-500">-</span>
                       )}
                     </td>
-                    <td data-label="금액" className="px-4 py-3 text-right font-medium">
+                    <td data-label="금액" className="px-4 py-3 text-right tabular-nums font-medium">
                       {formatPriceAmount(sub.totalAmount)}원
                     </td>
                   </tr>

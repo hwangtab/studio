@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { postShowAction } from '../../../components/admin/showActions';
 import { AdminShell } from '../../../components/admin/AdminShell';
 import { DANGER_GHOST_CLASS } from '../../../components/admin/adminDanger';
+import { RowActions } from '../../../components/admin/AdminTable';
 import { DangerSlot } from '../../../components/admin/DangerActions';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextInput } from '../../../components/ui/Field';
@@ -419,22 +420,31 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
       )}
 
       <div className="overflow-x-auto max-lg:p-3">
-        <table className="admin-table w-full text-sm">
+        <table className="admin-table w-full lg:min-w-[64rem] lg:table-fixed text-sm">
+          <colgroup>
+            <col className="w-[15rem]" />
+            <col className="w-[11rem]" />
+            <col />
+            <col className="w-[7rem]" />
+            <col className="w-[24rem]" />
+          </colgroup>
           <thead className="bg-gray-50 text-gray-600">
             <tr>
               <th className="text-left px-4 py-2 font-medium">주문</th>
               <th className="text-left px-4 py-2 font-medium">구매자</th>
               <th className="text-left px-4 py-2 font-medium">티켓</th>
-              <th className="text-right px-4 py-2 font-medium">금액</th>
-              <th className="text-left px-4 py-2 font-medium">조작</th>
+              <th className="text-right px-4 py-2 font-medium whitespace-nowrap">금액</th>
+              <th className="text-right px-4 py-2 font-medium">조작</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 text-gray-900">
             {visibleOrders.length === 0 && <tr><td colSpan={5} className="px-4 py-6 text-center text-gray-500">{onlyAwaiting ? '입금 대기 주문이 없습니다.' : '주문이 없습니다.'}</td></tr>}
             {visibleOrders.map((o) => {
               const refundable = o.tickets.filter((k) => k.status === 'issued' && k.checkedInAt == null);
+              const sameName = (o.bankDeposit === 'awaiting' || o.bankDeposit === 'cancelled') ? (sameNameDeposits[o.orderNo] ?? []) : [];
               return (
-                <tr key={o.orderNo} className="align-top">
+                <React.Fragment key={o.orderNo}>
+                <tr className={`align-top ${sameName.length > 0 ? 'border-b-0' : ''}`}>
                   <td data-label="주문" className="px-4 py-2 whitespace-nowrap">
                     <div className="font-mono text-xs">{o.orderNo}</div>
                     <div className="text-xs text-gray-500">
@@ -474,11 +484,11 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
                       ))}
                     </ul>
                   </td>
-                  <td data-label="금액" className="px-4 py-2 text-right whitespace-nowrap">{o.totalAmount.toLocaleString('ko-KR')}원</td>
+                  <td data-label="금액" className="px-4 py-2 text-right tabular-nums whitespace-nowrap">{o.totalAmount.toLocaleString('ko-KR')}원</td>
                   <td className="px-4 py-2">
                     {o.bankDeposit === 'awaiting' && (
-                      <div className="mb-2 space-y-2">
-                        <div className="flex flex-wrap gap-2">
+                      <div className="mb-2">
+                        <RowActions>
                           <Button light size="sm" disabled={busy} onClick={() =>
                             run({ action: 'confirm_deposit', orderNo: o.orderNo }, {
                               confirm: `통장에 실제로 입금됐는지 먼저 확인하세요.\n\n보내는 분 ${o.buyerName} · ${o.totalAmount.toLocaleString('ko-KR')}원이 들어온 것을 확인했나요? 확인하면 티켓이 발급되고 구매자에게 QR 티켓 메일이 나갑니다.`,
@@ -500,17 +510,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
                             })}>
                             입금 안내 재발송
                           </Button>
-                        </div>
-                      </div>
-                    )}
-                    {(o.bankDeposit === 'awaiting' || o.bankDeposit === 'cancelled') && (sameNameDeposits[o.orderNo] ?? []).length > 0 && (
-                      <div className="mb-2 rounded border border-amber-300 bg-amber-50 p-2 text-xs text-amber-950">
-                        <p className="font-semibold">같은 이름의 다른 계좌 입금 신청이 {sameNameDeposits[o.orderNo].length}건 있습니다 — 이중 확인 주의</p>
-                        <ul className="mt-1 space-y-0.5">
-                          {sameNameDeposits[o.orderNo].map((c) => (
-                            <li key={c.id}>{c.orderNo} · {ORDER_STATUS_LABEL[c.status] ?? c.status} · {c.totalAmount.toLocaleString('ko-KR')}원</li>
-                          ))}
-                        </ul>
+                        </RowActions>
                       </div>
                     )}
                     {o.bankDeposit === 'paid' && refundAccounts[o.orderNo] && (
@@ -531,6 +531,21 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
                     )}
                   </td>
                 </tr>
+                {sameName.length > 0 && (
+                  <tr>
+                    <td colSpan={5} className="px-4 pb-3 pt-0">
+                      <div className="rounded border border-amber-300 bg-amber-50 p-2 text-xs text-amber-950">
+                        <p className="font-semibold">같은 이름의 다른 계좌 입금 신청이 {sameName.length}건 있습니다 — 이중 확인 주의</p>
+                        <ul className="mt-1 space-y-0.5">
+                          {sameName.map((c) => (
+                            <li key={c.id}>{c.orderNo} · {ORDER_STATUS_LABEL[c.status] ?? c.status} · {c.totalAmount.toLocaleString('ko-KR')}원</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+                </React.Fragment>
               );
             })}
           </tbody>

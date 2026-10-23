@@ -12,6 +12,7 @@ import { buttonVariants } from '../../../components/ui/Button';
 import { DANGER_GHOST_CLASS } from '../../../components/admin/adminDanger';
 import { cn } from '../../../lib/utils';
 import { formatAdminDate } from '../../../lib/admin/displayDate';
+import { ROW_BTN, ROW_BTN_DANGER, RowActions, StatusChip, StatusStack, Th } from '../../../components/admin/AdminTable';
 import { DangerActions } from '../../../components/admin/DangerActions';
 import { useAdminDialog } from '../../../components/admin/useAdminDialog';
 
@@ -252,11 +253,28 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
       {list.length === 0 && <li className="py-4 text-gray-500">없음</li>}
     </ul>
     <div className="hidden overflow-x-auto lg:block">
-      <table className="w-full text-sm">
+      {/* 열 너비를 고정한다 — 방 입주·비상주 두 표가 같은 열 위치를 갖게(예전엔 내용 길이대로 열이 갈려 두 표가 어긋났다). */}
+      <table className="w-full min-w-[60rem] table-fixed text-sm">
+        <colgroup>
+          <col className="w-16" />
+          <col />
+          <col className="w-28" />
+          <col className="w-36" />
+          <col className="w-44" />
+          <col className="w-32" />
+          <col className="w-28" />
+          <col className="w-[14.5rem]" />
+        </colgroup>
         <thead>
-          <tr className="border-b border-gray-200 text-left text-gray-500">
-            <th className="py-2 pr-3">{virtual ? '구분' : '방'}</th><th className="pr-3">이름</th><th className="pr-3">월 이용료</th><th className="pr-3">다음 입금</th>
-            <th className="pr-3">계약 종료</th><th className="pr-3">최근 입금</th><th />
+          <tr className="border-b border-gray-200 text-left">
+            <Th>{virtual ? '구분' : '방'}</Th>
+            <Th>이름</Th>
+            <Th align="right">월 이용료</Th>
+            <Th className="pl-5">다음 입금</Th>
+            <Th>계약 종료</Th>
+            <Th>최근 입금</Th>
+            <Th>상태</Th>
+            <Th align="right"><span className="sr-only">관리</span></Th>
           </tr>
         </thead>
         <tbody>
@@ -265,37 +283,37 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
             const late = overdueDays(t.nextDueOn, today);
             return (
               <tr key={t.id} className="border-b border-gray-100 align-top">
-                <td className="py-2 pr-3 font-medium text-gray-900">{virtual ? '비상주' : t.roomNumber}</td>
-                <td className="pr-3 text-gray-900">{t.tenantName}{t.note && <div className="text-xs text-gray-500">{t.note}</div>}</td>
-                <td className="whitespace-nowrap pr-3 tabular-nums">{won(t.monthlyAmount)}{t.roomListPrice !== null && t.roomListPrice !== t.monthlyAmount && <div className="text-xs text-gray-500">방 정가 {won(t.roomListPrice)}</div>}</td>
-                <td className="whitespace-nowrap pr-3 tabular-nums">
+                <td className="py-3 pr-3 font-medium text-gray-900">{virtual ? '비상주' : t.roomNumber}</td>
+                <td className="break-keep py-3 pr-3 text-gray-900">{t.tenantName}{t.note && <div className="text-xs text-gray-500">{t.note}</div>}</td>
+                <td className="whitespace-nowrap py-3 pr-3 text-right tabular-nums">{won(t.monthlyAmount)}{t.roomListPrice !== null && t.roomListPrice !== t.monthlyAmount && <div className="text-xs text-gray-500">정가 {won(t.roomListPrice)}</div>}</td>
+                <td className="whitespace-nowrap py-3 pl-5 pr-3 tabular-nums">
                   {formatAdminDate(t.nextDueOn)}
-                  {late > 0 ? <div className="text-xs text-red-700">{late}일 연체</div> : daysBetween(today, t.nextDueOn) <= 7 && <div className="text-xs text-amber-700">{daysBetween(today, t.nextDueOn)}일 뒤</div>}
+                  {late > 0 ? <div className="text-xs text-red-700">{late}일 연체</div> : daysBetween(today, t.nextDueOn) <= 7 && <div className="text-xs text-amber-700">{daysBetween(today, t.nextDueOn) === 0 ? '오늘' : `${daysBetween(today, t.nextDueOn)}일 뒤`}</div>}
                 </td>
-                <td className="whitespace-nowrap pr-3 tabular-nums">
-                  {formatAdminDate(t.endDate)}
+                <td className="py-3 pr-3 tabular-nums">
+                  <span className="whitespace-nowrap">{formatAdminDate(t.endDate)}</span>
                   {t.status === 'active' && t.endDate && t.endDate < today && (() => {
                     const term = currentTermEnd(t.endDate, today);
-                    return <div className="text-xs text-gray-500">갱신 {term.renewals}회 · 이번 기간 {formatAdminDate(term.end)}까지</div>;
+                    return <div className="text-xs text-gray-500">갱신 {term.renewals}회 · {formatAdminDate(term.end)}까지</div>;
                   })()}
                 </td>
-                <td className="whitespace-nowrap pr-3 tabular-nums text-gray-600">{formatAdminDate(t.lastPaidOn)}{t.lastPaidAmount !== null && t.lastPaidAmount !== t.monthlyAmount && <div className="text-xs">{won(t.lastPaidAmount)}</div>}</td>
-                <td className="py-1">
-                  {/* 표시(연체·자동 갱신)와 버튼이 한 줄에 다 안 들어가면 오른쪽 정렬로 줄바꿈한다 — nowrap이던 때는 퇴실 버튼이 표 밖으로 잘렸다. */}
-                  <div className="flex flex-wrap items-center justify-end gap-1">
-                    {flags.map((f) => <span key={f} className={`inline-block rounded px-1.5 py-0.5 text-xs font-medium ${FLAG_LABEL[f].cls}`}>{FLAG_LABEL[f].text}</span>)}
-                    {t.gcalError && <span title={t.gcalError} className="inline-block rounded bg-amber-100 px-1.5 py-0.5 text-xs text-amber-800">캘린더 오류</span>}
-                    <button type="button" className={btn} disabled={busy} onClick={() => pay(t)}>입금 기록</button>
-                    <button type="button" className={btn} disabled={busy} onClick={() => openEdit(t)}>상세·수정</button>
-                    <DangerActions className="sm:ml-1">
-                      <button type="button" className={btnDanger} disabled={busy} onClick={() => end(t)}>퇴실</button>
-                    </DangerActions>
-                  </div>
+                <td className="whitespace-nowrap py-3 pr-3 tabular-nums text-gray-600">{formatAdminDate(t.lastPaidOn)}{t.lastPaidAmount !== null && t.lastPaidAmount !== t.monthlyAmount && <div className="text-xs">{won(t.lastPaidAmount)}</div>}</td>
+                <td className="py-3 pr-3">
+                  <StatusStack>
+                    {flags.map((f) => <StatusChip key={f} className={FLAG_LABEL[f].cls}>{FLAG_LABEL[f].text}</StatusChip>)}
+                    {t.gcalError && <StatusChip title={t.gcalError} className="bg-amber-100 text-amber-800">캘린더 오류</StatusChip>}
+                  </StatusStack>
+                </td>
+                <td className="py-2">
+                  <RowActions danger={<button type="button" className={ROW_BTN_DANGER} disabled={busy} onClick={() => end(t)}>퇴실</button>}>
+                    <button type="button" className={ROW_BTN} disabled={busy} onClick={() => pay(t)}>입금 기록</button>
+                    <button type="button" className={ROW_BTN} disabled={busy} onClick={() => openEdit(t)}>상세·수정</button>
+                  </RowActions>
                 </td>
               </tr>
             );
           })}
-          {list.length === 0 && <tr><td colSpan={7} className="py-4 text-gray-500">없음</td></tr>}
+          {list.length === 0 && <tr><td colSpan={8} className="py-4 text-gray-500">없음</td></tr>}
         </tbody>
       </table>
     </div>
