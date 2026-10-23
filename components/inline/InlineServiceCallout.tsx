@@ -34,6 +34,8 @@ import {
   ARRANGEMENT_BAND_PRICE,
   ARRANGEMENT_LARGE_PRICE,
   CUSTOM_MR_PRICE,
+  LIVE_VIDEO_FROM_PRICE,
+  MUSIC_VIDEO_FROM_PRICE,
 } from '../../data/pricing';
 import type { Locale } from '../../lib/i18n';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
@@ -41,7 +43,7 @@ import { Button } from '../ui/Button';
 import QuoteEntryLink from '../quote/QuoteEntryLink';
 import { NOTICE_TONE_CLASS } from '../ui/Notice';
 
-type ServiceType = 'wedding' | 'voice' | 'lesson' | 'recording' | 'mixing' | 'practice' | 'release' | 'funding' | 'cover' | 'promotion' | 'arrangement';
+type ServiceType = 'wedding' | 'voice' | 'lesson' | 'recording' | 'mixing' | 'practice' | 'release' | 'funding' | 'cover' | 'promotion' | 'arrangement' | 'video';
 
 interface InlineServiceCalloutProps {
   type: string;
@@ -61,6 +63,7 @@ const SERVICE_PATHS: Record<ServiceType, string> = {
   cover: '/cover-video',
   promotion: '/music-promotion',
   arrangement: '/composition-arrangement',
+  video: '/music-video',
 };
 
 const SERVICE_ICONS: Record<ServiceType, React.ElementType> = {
@@ -75,6 +78,7 @@ const SERVICE_ICONS: Record<ServiceType, React.ElementType> = {
   cover: Video,
   promotion: Megaphone,
   arrangement: Piano,
+  video: Video,
 };
 
 const SERVICE_LABEL_KEYS: Record<ServiceType, string> = {
@@ -89,6 +93,7 @@ const SERVICE_LABEL_KEYS: Record<ServiceType, string> = {
   cover: 'nav.coverVideo',
   promotion: 'nav.musicPromotion',
   arrangement: 'nav.compositionArrangement',
+  video: 'nav.musicVideo',
 };
 
 // 가격은 전부 data/pricing.ts 상수에서 온다. 2026-09-25까지 이 블록은 리터럴이었고
@@ -225,6 +230,19 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
     ],
     softNote: '레퍼런스 곡과 휴대폰 녹음 데모만 보내 주시면 등급과 일정을 바로 알려드려요. 상담은 무료예요.',
     detailLabel: '작곡·편곡 의뢰 안내',
+  },
+  // 2026-10-23 추가 — 뮤직비디오 글이 순위를 갖고도 영상 제작 페이지로 가는 길이 없었다.
+  video: {
+    title: '뮤직비디오·라이브 영상 제작',
+    description: '콘셉트는 스튜디오 놀이 기획하고, 영화·다큐 촬영 감독 출신 해방필름 박치치 감독이 촬영·편집해요.',
+    features: [
+      `뮤직비디오 ${man(MUSIC_VIDEO_FROM_PRICE)}부터 — 1곡·카메라 2대·반나절 촬영 기준`,
+      `라이브 클립·유튜브 토크·인터뷰 영상 ${man(LIVE_VIDEO_FROM_PRICE)}부터`,
+      '콘셉트 기획 · 촬영 · 편집 · 색보정 · 가사 자막',
+      '녹음·믹싱까지 같은 곳에서',
+    ],
+    softNote: '곡 링크와 원하는 분위기만 보내 주시면 촬영 구성과 견적을 답해 드려요. 상담은 무료예요.',
+    detailLabel: '뮤직비디오 제작·촬영 안내',
   },
 };
 

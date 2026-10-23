@@ -118,6 +118,7 @@ inlineFallback: {}
 타이틀곡 「남산타워」에는 뮤직비디오가 있습니다. 쇼와 시대 버라이어티 쇼와 빈티지 필름의 톤을 빌려 음반의 분위기를 영상으로 옮겼습니다.
 
 - 뮤직비디오: [youtu.be/bWIwjnij0XQ](https://youtu.be/bWIwjnij0XQ)
+- 뮤직비디오 촬영·편집: 해방필름 박치치 감독 — [스튜디오 놀 뮤직비디오 제작](/music-video)
 - 공식 채널: [youtube.com/@marikoandyukie](https://www.youtube.com/@marikoandyukie)
 
 ## 이제 들을 수 있습니다

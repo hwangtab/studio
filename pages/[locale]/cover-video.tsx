@@ -383,6 +383,7 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
           { href: `/${locale}/pricing`, label: t('nav.pricing'), color: 'primary' },
           { href: `/${locale}/studio-info`, label: t('nav.equipment'), color: 'primary' },
           { href: `/${locale}/wedding-song`, label: t('nav.weddingSong'), color: 'primary' },
+          { href: `/${locale}/music-video`, label: t('nav.musicVideo'), color: 'primary' },
         ]}
       />
 

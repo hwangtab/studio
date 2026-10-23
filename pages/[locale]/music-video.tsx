@@ -93,6 +93,23 @@ const DirectorList = ({ title, items, locale }: { title: string; items: readonly
   );
 };
 
+/**
+ * buildStudioServiceSchema는 Offer를 하나만 싣는다 — 라이브 클립·유튜브 영상 오퍼를 같은 모양으로 덧붙여
+ * 두 하한가(뮤직비디오·라이브)가 모두 구조화 데이터에 나가게 한다.
+ */
+const withLiveOffer = (service: ReturnType<typeof buildStudioServiceSchema>, liveName?: string) => {
+  const mvOffer = (service as { offers?: Record<string, unknown> }).offers;
+  if (!mvOffer || !liveName) return service;
+  const spec = mvOffer.priceSpecification as Record<string, unknown> | undefined;
+  const liveOffer = {
+    ...mvOffer,
+    name: liveName,
+    price: LIVE_VIDEO_FROM_PRICE,
+    ...(spec ? { priceSpecification: { ...spec, price: LIVE_VIDEO_FROM_PRICE } } : {}),
+  };
+  return { ...service, offers: [mvOffer, liveOffer] };
+};
+
 const MusicVideo: NextPageWithLayout<MusicVideoProps> = ({ locale, pricingData, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
@@ -124,17 +141,18 @@ const MusicVideo: NextPageWithLayout<MusicVideoProps> = ({ locale, pricingData, 
   const pageSchema = React.useMemo(
     () =>
       buildSchemaGraph(
-        buildStudioServiceSchema({
+        withLiveOffer(buildStudioServiceSchema({
           locale,
           siteName: siteConfig.name,
           siteUrl: siteConfig.url,
           pageUrl,
-          name: tPrice('musicVideo.seo.title'),
+          // 서비스 이름은 상품 이름으로 — SEO 제목(가격·브랜드가 붙은 문장)을 그대로 쓰지 않는다.
+          name: t('musicVideo.hero.title'),
           description: tPrice('musicVideo.seo.description'),
           serviceType: locale === 'ko' ? '뮤직비디오·영상 제작' : 'Music Video Production',
           offerName: videoOffers[0]?.title,
           offerPrice: MUSIC_VIDEO_FROM_PRICE,
-        }),
+        }), videoOffers[1]?.title),
         generateHowToSchema(t('musicVideo.process.title'), t('musicVideo.process.subtitle'), howToSteps, undefined, locale),
         // 촬영·편집을 맡는 감독 — 검색·AI 답변이 "누가 찍나"를 사람과 채널로 잇게 한다.
         {
@@ -337,6 +355,20 @@ const MusicVideo: NextPageWithLayout<MusicVideoProps> = ({ locale, pricingData, 
           actionLabel={t('musicVideo.tierBar.action')}
           contactLabel={t('musicVideo.tierBar.contact')}
         />
+
+        {/* 최저가 기준 구성 — "100만원에 무엇을 받나"를 AI·검색이 그대로 인용할 수 있게 숫자로 적는다(운영자 위임 2026-10-23). */}
+        <BaseCard variant="glass" className="p-6 md:p-8 max-w-4xl mx-auto mt-10">
+          <h3 className="typo-card-subtitle mb-4">{tPrice('musicVideo.pricing.baselineTitle')}</h3>
+          <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-3">
+            {([0, 1, 2, 3, 4, 5] as const).map((i) => (
+              <li key={i} className="flex gap-3 typo-card-body text-sm">
+                <CheckCircle2 size={18} className="flex-shrink-0 mt-0.5 text-gray-700 dark:text-gray-300" aria-hidden="true" />
+                <span className="min-w-0 break-keep">{t(`musicVideo.pricing.baselineItems.${i}`)}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="typo-card-meta mt-5 break-keep">{t('musicVideo.pricing.baselineNote')}</p>
+        </BaseCard>
 
         <div className="grid lg:grid-cols-2 gap-12 items-start max-w-6xl mx-auto mt-14">
           <m.div {...PRICING_FACTORS_ANIMATION}>

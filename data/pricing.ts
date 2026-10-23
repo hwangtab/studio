@@ -46,9 +46,11 @@ export const COVER_VIDEO_PACKAGE_PRICE = 350000;
 /** 커버 영상 올인원 + 정교한 보컬 튜닝(곡당 옵션). 올인원은 1곡 기준이라 합계 그대로 한 상품이다. */
 export const COVER_VIDEO_TUNING_PACKAGE_PRICE = COVER_VIDEO_PACKAGE_PRICE + VOCAL_TUNING_ADDON_PRICE;
 export const RENTAL_HOURLY_PRICE = 100000; // 촬영 대관
-// 영상 제작(/music-video) — 콘셉트는 스튜디오 놀과 해방필름 박치치 감독이 함께, 촬영·편집은 박치치 감독. 둘 다 "부터"(하한)이고 카메라 대수·
+// 영상 제작(/music-video) — 콘셉트 기획은 스튜디오 놀, 촬영·편집은 해방필름 박치치 감독. 둘 다 "부터"(하한)이고 카메라 대수·
 // 촬영 시간·장소는 상담으로 정한다(운영자 결정 2026-10-22). 온라인 결제 상품이 아니다 — 카카오 상담 → 견적 → 맞춤 결제 링크.
 // 뮤직비디오 하한은 같은 날 운영자 결정으로 50만에서 100만으로 올렸다(라이브·유튜브는 50만 그대로).
+// 100만원 = 최저가 기준 구성(1곡·카메라 2대·반나절 촬영·장소 1곳·수정 1회, 약 2~3주) — 운영자가 구성 작성을 맡겼다(2026-10-23).
+// 구성을 바꾸면 common.json musicVideo.pricing.baseline*·faq, InlineServiceCallout video 문구도 같이.
 export const MUSIC_VIDEO_FROM_PRICE = 1000000;
 // 라이브 클립·유튜브 콘텐츠(토크·인터뷰) 촬영.
 export const LIVE_VIDEO_FROM_PRICE = 500000;
@@ -930,27 +932,27 @@ export const getPricingData = (locale: Locale) => {
     {
       id: 'package-music-video',
       title: t(locale, { ko: '뮤직비디오 제작', en: 'Music Video Production', zh: 'MV制作', es: 'Producción de videoclip', vi: 'Sản xuất MV', th: 'ผลิตมิวสิกวิดีโอ', uz: 'Klip (MV) ishlab chiqarish' }),
-      subtitle: t(locale, { ko: '기획·촬영·편집, 장소·규모 협의', en: 'Concept, filming & edit — scope agreed together', zh: '策划·拍摄·剪辑，地点与规模协商', es: 'Concepto, rodaje y edición — alcance a convenir', vi: 'Ý tưởng, quay, dựng — quy mô thỏa thuận', th: 'วางคอนเซปต์ ถ่ายทำ ตัดต่อ — ขอบเขตตกลงกัน', uz: 'Konsepsiya, suratga olish, montaj — hajm kelishiladi' }),
+      subtitle: t(locale, { ko: '최저가 기준: 1곡 · 카메라 2대 · 반나절 촬영', en: 'Base: one song · two cameras · half-day shoot', zh: '最低价基准：1首·2台摄像机·半天拍摄', es: 'Base: una canción · dos cámaras · media jornada', vi: 'Cơ bản: 1 bài · 2 máy quay · quay nửa ngày', th: 'พื้นฐาน: 1 เพลง · กล้อง 2 ตัว · ถ่ายครึ่งวัน', uz: 'Asos: 1 qo\'shiq · 2 kamera · yarim kun' }),
       priceDisplay: t(locale, { ko: '1,000,000원~', en: 'From ₩1,000,000', zh: '₩1,000,000起', es: 'Desde ₩1,000,000', vi: 'Từ ₩1,000,000', th: 'เริ่มต้น ₩1,000,000', uz: '₩1,000,000 dan' }),
       priceValue: MUSIC_VIDEO_FROM_PRICE,
       unit: t(locale, { ko: '/ 1곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo\'shiq' }),
       description: t(locale, {
-        ko: '콘셉트는 스튜디오 놀과 해방필름 박치치 감독이 함께 잡고, 촬영·편집·색보정은 박치치 감독이 맡습니다. 카메라 대수·촬영 시간·장소는 곡과 예산에 맞춰 정합니다.',
-        en: 'Studio NOL and director Park Chichi of Haebang Film shape the concept together; Park Chichi shoots, edits and grades. Cameras, shooting hours and locations are set to fit the song and budget.',
-        zh: '概念由Studio NOL与解放电影（Haebang Film）朴治治导演共同策划，拍摄、剪辑、调色由朴治治导演负责。机位数量、拍摄时长和地点按歌曲与预算商定。',
-        es: 'Studio NOL y el director Park Chichi de Haebang Film definen el concepto juntos; Park Chichi filma, edita y etaloniza. Cámaras, horas y locaciones se ajustan a la canción y al presupuesto.',
-        vi: 'Studio NOL và đạo diễn Park Chichi (Haebang Film) cùng lên ý tưởng; Park Chichi quay, dựng và chỉnh màu. Số máy quay, thời gian quay và địa điểm được điều chỉnh theo bài hát và ngân sách.',
-        th: 'Studio NOL และผู้กำกับ Park Chichi จาก Haebang Film วางคอนเซปต์ร่วมกัน Park Chichi ถ่ายทำ ตัดต่อ และเกรดสี จำนวนกล้อง เวลาถ่าย และสถานที่ ปรับตามเพลงและงบประมาณ',
-        uz: 'G\'oyani Studio NOL va Haebang Film rejissyori Park Chichi birga ishlab chiqadi; suratga olish, montaj va rang tuzatishni Park Chichi bajaradi. Kameralar soni, vaqt va joy qo\'shiq va byudjetga qarab kelishiladi.'
+        ko: '콘셉트는 스튜디오 놀이 기획하고, 촬영·편집·색보정은 해방필름 박치치 감독이 맡습니다. 최저가는 1곡을 카메라 2대로 반나절(약 4시간) 찍는 기준이고, 촬영 시간·장소·카메라가 늘면 견적이 올라갑니다.',
+        en: 'Studio NOL plans the concept; director Park Chichi of Haebang Film shoots, edits and grades. The starting price covers one song filmed with two cameras over a half day (about four hours); more hours, locations or cameras raise the quote.',
+        zh: '概念由Studio NOL策划，拍摄、剪辑、调色由解放电影朴治治导演负责。最低价以2台摄像机半天（约4小时）拍摄1首为基准，时长、地点、机位增加时报价上调。',
+        es: 'Studio NOL planifica el concepto; el director Park Chichi de Haebang Film filma, edita y etaloniza. El precio inicial cubre una canción con dos cámaras en media jornada (unas 4 horas); más horas, locaciones o cámaras suben el presupuesto.',
+        vi: 'Studio NOL lên ý tưởng; đạo diễn Park Chichi (Haebang Film) quay, dựng và chỉnh màu. Giá khởi điểm là 1 bài quay bằng 2 máy trong nửa ngày (khoảng 4 giờ); thêm giờ, địa điểm hoặc máy quay thì giá tăng.',
+        th: 'Studio NOL วางคอนเซปต์ ผู้กำกับ Park Chichi จาก Haebang Film ถ่ายทำ ตัดต่อ และเกรดสี ราคาเริ่มต้นคือ 1 เพลง กล้อง 2 ตัว ถ่ายครึ่งวัน (ประมาณ 4 ชั่วโมง) เวลา สถานที่ หรือกล้องเพิ่มราคาก็เพิ่ม',
+        uz: 'G\'oyani Studio NOL ishlab chiqadi; Haebang Film rejissyori Park Chichi suratga oladi, montaj va rang tuzatishni bajaradi. Boshlang\'ich narx 1 qo\'shiqni 2 kamera bilan yarim kunda (taxminan 4 soat) suratga olishni o\'z ichiga oladi.'
       }),
       features: tArray(locale, {
-        ko: ['콘셉트·콘티 상담 포함', '스튜디오·공연장·야외 로케이션 촬영', '카메라 대수·촬영 시간은 협의', '편집·색보정·가사 자막 포함', '장소 대관·출연·스타일링 실비는 별도'],
-        en: ['Concept & storyboard consultation included', 'Studio, venue or outdoor location shoots', 'Number of cameras & hours agreed together', 'Editing, colour grading & lyric subtitles included', 'Location rental, cast & styling billed at cost'],
-        zh: ['含概念·分镜咨询', '录音室·演出场地·户外取景拍摄', '机位数量·拍摄时长协商', '含剪辑·调色·歌词字幕', '场地租赁·演员·造型按实费另计'],
-        es: ['Consulta de concepto y storyboard incluida', 'Rodaje en estudio, sala o exteriores', 'Número de cámaras y horas a convenir', 'Edición, etalonaje y subtítulos de letra incluidos', 'Alquiler de locación, elenco y estilismo al costo'],
-        vi: ['Bao gồm tư vấn ý tưởng & storyboard', 'Quay tại studio, sân khấu hoặc ngoại cảnh', 'Số máy quay & thời gian quay thỏa thuận', 'Bao gồm dựng, chỉnh màu & phụ đề lời', 'Thuê địa điểm, diễn viên, stylist tính theo thực chi'],
-        th: ['รวมปรึกษาคอนเซปต์และสตอรีบอร์ด', 'ถ่ายในสตูดิโอ ฮอลล์ หรือโลเคชันกลางแจ้ง', 'จำนวนกล้องและเวลาถ่ายตกลงกัน', 'รวมตัดต่อ เกรดสี และซับเนื้อเพลง', 'ค่าเช่าสถานที่ นักแสดง สไตลิสต์ คิดตามจริง'],
-        uz: ['Konsepsiya va storyboard maslahati kiritilgan', 'Studiya, sahna yoki tashqi lokatsiyada suratga olish', 'Kameralar soni va vaqt kelishiladi', 'Montaj, rang tuzatish va matn subtitrlari kiritilgan', 'Joy ijarasi, aktyorlar va stilistika haqiqiy narxda alohida']
+        ko: ['콘셉트·콘티 기획 — 스튜디오 놀', '카메라 2대 · 기본 조명 · 반나절(약 4시간) 촬영', '촬영 장소 1곳(스튜디오 놀 또는 대관료 없는 장소)', '편집·색보정·가사 자막 · 수정 1회', '시간·장소·카메라 추가는 견적, 대관·출연 실비는 별도'],
+        en: ['Concept & storyboard by Studio NOL', 'Two cameras, basic lighting, half-day shoot (about 4 hours)', 'One location (Studio NOL or a place with no rental fee)', 'Editing, colour grading, lyric subtitles, one revision', 'Extra hours, locations or cameras quoted; rental & cast at cost'],
+        zh: ['概念·分镜策划——Studio NOL', '2台摄像机·基础灯光·半天（约4小时）拍摄', '拍摄地点1处（Studio NOL或无租金场地）', '剪辑·调色·歌词字幕·修改1次', '追加时长·地点·机位另行报价，租金·演员按实费'],
+        es: ['Concepto y storyboard de Studio NOL', 'Dos cámaras, iluminación básica, media jornada (unas 4 horas)', 'Una locación (Studio NOL o un lugar sin alquiler)', 'Edición, etalonaje, subtítulos de letra, una revisión', 'Horas, locaciones o cámaras extra se cotizan; alquiler y elenco al costo'],
+        vi: ['Ý tưởng & storyboard bởi Studio NOL', '2 máy quay, ánh sáng cơ bản, quay nửa ngày (khoảng 4 giờ)', '1 địa điểm (Studio NOL hoặc nơi không mất phí thuê)', 'Dựng, chỉnh màu, phụ đề lời, 1 lần chỉnh sửa', 'Thêm giờ/địa điểm/máy quay báo giá riêng; thuê & diễn viên theo thực chi'],
+        th: ['คอนเซปต์และสตอรีบอร์ดโดย Studio NOL', 'กล้อง 2 ตัว ไฟพื้นฐาน ถ่ายครึ่งวัน (ประมาณ 4 ชั่วโมง)', 'สถานที่ 1 แห่ง (Studio NOL หรือที่ไม่มีค่าเช่า)', 'ตัดต่อ เกรดสี ซับเนื้อเพลง แก้ไข 1 ครั้ง', 'เวลา/สถานที่/กล้องเพิ่มคิดตามใบเสนอราคา ค่าเช่าและนักแสดงคิดตามจริง'],
+        uz: ['G\'oya va storyboard — Studio NOL', '2 kamera, oddiy yoritish, yarim kun (taxminan 4 soat)', '1 joy (Studio NOL yoki ijara haqi yo\'q joy)', 'Montaj, rang tuzatish, matn subtitrlari, 1 marta tuzatish', 'Qo\'shimcha vaqt/joy/kamera alohida narxlanadi; ijara va aktyorlar haqiqiy narxda']
       }),
     },
     {

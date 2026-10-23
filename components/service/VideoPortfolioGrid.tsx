@@ -61,6 +61,7 @@ export default function VideoPortfolioGrid({ locale }: { locale: Locale }) {
                   {artist} <span className="font-normal text-gray-600 dark:text-gray-400">— {title}</span>
                 </p>
                 {note && <p className="typo-card-meta mt-0.5 break-keep">{note}</p>}
+                <p className="typo-card-meta mt-0.5 break-keep">{t('musicVideo.portfolio.credit')}</p>
               </div>
             </li>
           );

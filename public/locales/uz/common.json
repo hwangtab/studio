@@ -2606,12 +2606,12 @@
   "musicVideo": {
     "seo": {
       "title": "Kliplar {{mv}} dan · jonli videolar {{live}} dan | Studio NOL",
-      "description": "Kliplar ({{mv}} dan) hamda jonli kliplar va YouTube suhbat/intervyulari ({{live}} dan) — g'oyani Studio NOL va Haebang Film rejissyori Park Chichi birga ishlab chiqadi, suratga olish va montajni Park Chichi bajaradi. Kameralar, vaqt va joy maslahatda kelishiladi.",
+      "description": "Kliplar {{mv}} dan (1 qo'shiq, 2 kamera, yarim kunlik suratga olish) hamda jonli kliplar va YouTube suhbat/intervyulari {{live}} dan. G'oyani Studio NOL ishlab chiqadi; Haebang Film rejissyori Park Chichi suratga oladi va montaj qiladi.",
       "keywords": "klip ishlab chiqarish Seul, jonli video, konsert videosi, YouTube video, Haebang Film"
     },
     "hero": {
       "title": "Kliplar va jonli videolar",
-      "subtitleLine1": "G'oya Studio NOL bilan birga, suratga olish va montaj — Park Chichi (Haebang Film)",
+      "subtitleLine1": "G'oya — Studio NOL, suratga olish va montaj — Park Chichi (Haebang Film)",
       "subtitleLine2": "Kliplar {{mv}} dan · jonli va YouTube videolari {{live}} dan",
       "alt": "Mariko & Yukie “Namsan Tower Lights” klipidagi sahna ko'rinishi",
       "seeWorks": "Ishlarni ko'rish"
@@ -2622,11 +2622,11 @@
       "items": [
         {
           "q": "Narxi qancha?",
-          "a": "Kliplar {{mv}} dan, jonli kliplar va YouTube videolari {{live}} dan (QQS bilan). Narx kameralar, vaqt va joyga bog'liq; narxni oldindan aytamiz."
+          "a": "Kliplar {{mv}} dan — 1 qo'shiq 2 kamera bilan yarim kunda (taxminan 4 soat) suratga olinadi. Jonli kliplar va YouTube videolari {{live}} dan (QQS bilan). Vaqt, joy yoki kameralar ko'paysa narx oshadi; narxni oldindan aytamiz."
         },
         {
           "q": "Kim tayyorlaydi?",
-          "a": "G'oyani Studio NOL va Haebang Film rejissyori Park Chichi birga ishlab chiqadi; suratga olish, montaj va rang tuzatishni Park Chichi bajaradi. U Bap va Nineteen, Seomjin River filmlarida operator bo'lgan va KBS Open Channel efirida ko'rsatilgan A Concert for One Person musiqiy hujjatli filmini suratga olgan."
+          "a": "G'oyani Studio NOL ishlab chiqadi; suratga olish, montaj va rang tuzatishni Haebang Film rejissyori Park Chichi bajaradi. U Bap va Nineteen, Seomjin River filmlarida operator bo'lgan va A Concert for One Person (KBS Open Channel) musiqiy hujjatli filmini suratga olgan."
         },
         {
           "q": "Qanday boshlayman?",
@@ -2643,14 +2643,15 @@
         "live": "Jonli kliplar",
         "youtube": "YouTube kontenti"
       },
-      "play": "Videoni ijro etish: {{name}}"
+      "play": "Videoni ijro etish: {{name}}",
+      "credit": "G'oya: Studio NOL · Suratga olish va montaj: Park Chichi"
     },
     "services": {
       "title": "Nimalarni suratga olamiz",
       "items": [
         {
           "title": "Kliplar",
-          "description": "G'oyani birga belgilab, studiya, sahna yoki ochiq lokatsiyada suratga olamiz — rejissura, montaj, rang va matn subtitrlari bir joyda."
+          "description": "Studio NOL qo'shiq g'oyasini ishlab chiqadi, biz Studio NOL (Seul), sahna yoki ochiq lokatsiyada suratga olamiz — rejissura, montaj, rang va matn subtitrlari bir joyda."
         },
         {
           "title": "Jonli kliplar va konsertlar",
@@ -2666,7 +2667,7 @@
       "title": "Rejissyor Park Chichi, Haebang Film",
       "body": "Park Chichi (asl ismi Park Geon-ju) filmlar, hujjatli filmlar, veb-dramalar, YouTube kontenti va kliplarni rejadan suratga olish, montaj va rang tuzatishgacha o'zi yaratib kelgan. 2019 yildan mustaqil hujjatli film kompaniyasi Haebang Filmni boshqarib, A Concert for One Person (KBS Open Channel) musiqiy hujjatli filmini suratga olgan, Bap, Grandma, Me and the Dandelion va Nineteen, Seomjin River filmlarida operator/prodyuser bo'lgan. U yillar davomida konsert va festivallarni suratga olib keladi va o'zi ham musiqachi.",
       "points": [
-        "G'oya Studio NOL bilan; suratga olish, montaj va rang boshidan oxirigacha Park Chichi",
+        "G'oya — Studio NOL; suratga olish, montaj va rang boshidan oxirigacha Park Chichi",
         "Film va hujjatli — Bap, Grandma, Me and the Dandelion (2025); Nineteen, Seomjin River, Blue Wind (2024)",
         "Musiqiy filmlar — A Concert for One Person (KBS), “Namsan Tower Lights” klipi, Gangjeong Peace & Music Camp (51 guruh)",
         "Festival video rahbari — Resistance Arts Festival (200+ guruh), Ssiat Fest (100+ san'atkor)"
@@ -2708,7 +2709,17 @@
         "Namuna videolar havolalari",
         "Kerakli sana, joy va video joylanadigan platforma"
       ],
-      "coverNote": "Studiyada faqat bitta qo'shiq kover videosi kerakmi? Cover Video paketi ({{cover}}) suratga olish, asosiy miks va montajni o'z ichiga oladi."
+      "coverNote": "Studiyada faqat bitta qo'shiq kover videosi kerakmi? Cover Video paketi ({{cover}}) suratga olish, asosiy miks va montajni o'z ichiga oladi.",
+      "baselineTitle": "{{mv}} lik klipga nimalar kiradi (boshlang'ich narx)",
+      "baselineItems": [
+        "1 qo'shiq (3–5 daqiqa), 1 ta gorizontal yakuniy video",
+        "G'oya va storyboard — Studio NOL",
+        "2 kamera, oddiy yoritish, yarim kun (taxminan 4 soat)",
+        "1 joy — Studio NOL yoki ijara haqi yo'q joy",
+        "Montaj, rang tuzatish, matn subtitrlari, 1 marta tuzatish",
+        "Suratga olishdan 2–3 hafta keyin topshiriladi"
+      ],
+      "baselineNote": "Vaqt, joy, kameralar yoki aktyorlar ko'paysa yoki grafika, vertikal qayta montaj qo'shilsa narx oshadi. Joy ijarasi va aktyor haqi haqiqiy narxda alohida."
     },
     "tierBar": {
       "message": "Qo'shiq va kayfiyatni ayting. Reja va narx bilan javob beramiz.",
@@ -2725,7 +2736,7 @@
         },
         {
           "title": "Reja va narx",
-          "description": "Studio NOL va rejissyor Park Chichi bilan g'oya, storyboard, joy va kameralarni kelishib, narxni tasdiqlaymiz."
+          "description": "Studio NOL g'oya va storyboardni ishlab chiqadi, so'ng rejissyor Park Chichi bilan joy va kameralarni kelishib, narxni tasdiqlaymiz."
         },
         {
           "title": "Suratga olish",
@@ -2743,11 +2754,11 @@
       "items": [
         {
           "q": "Boshlang'ich narxga nimalar kiradi?",
-          "a": "G'oya maslahati, suratga olish, montaj, rang tuzatish va subtitrlar. Kameralar va vaqt qo'shiq va byudjetga mos belgilanadi; ko'lam kattalashsa narx oshadi."
+          "a": "{{mv}} lik boshlang'ich narx 1 qo'shiqni (3–5 daqiqa) 2 kamera va oddiy yoritish bilan bitta joyda yarim kun (taxminan 4 soat) suratga olishni, Studio NOL g'oyasi, montaj, rang tuzatish, subtitrlar va 1 marta tuzatishni o'z ichiga oladi."
         },
         {
           "q": "Rejissyor Park Chichi kim?",
-          "a": "Filmlar, hujjatli filmlar, veb-dramalar, YouTube va kliplarni rejadan suratga olish, montaj va rang tuzatishgacha yaratgan rejissyor (asl ismi Park Geon-ju). Bap, Grandma, Me and the Dandelion, Nineteen, Seomjin River filmlarida operator/prodyuser, A Concert for One Person (KBS Open Channel) rejissyori bo'lgan va Haebang Filmni boshqargan. G'oya Studio NOL bilan ishlab chiqiladi; suratga olish, montaj va rang uniki."
+          "a": "Filmlar, hujjatli filmlar, veb-dramalar, YouTube va kliplarni suratga olib montaj qilgan rejissyor (asl ismi Park Geon-ju). Bap, Grandma, Me and the Dandelion, Nineteen, Seomjin River filmlarida operator/prodyuser, A Concert for One Person (KBS Open Channel) rejissyori bo'lgan va Haebang Filmni boshqargan. Studio NOL videolarida g'oyani Studio NOL ishlab chiqadi, u suratga oladi va montaj qiladi."
         },
         {
           "q": "Joy ijarasi va aktyor haqi kiradimi?",
@@ -2755,7 +2766,7 @@
         },
         {
           "q": "Necha marta tuzatish va qachon topshiriladi?",
-          "a": "Video uzunligi va montaj hajmiga qarab narx bilan birga kelishiladi."
+          "a": "Asosiy paketda 1 marta tuzatish bor, suratga olishdan 2–3 hafta keyin topshiriladi. Uzun yoki ko'p montajli videolar narx bilan birga kelishiladi."
         },
         {
           "q": "YouTube suhbat va intervyularini ham suratga olasizmi?",
