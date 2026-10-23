@@ -36,7 +36,8 @@
     "releaseAlbum": "专辑",
     "funding": "众筹",
     "shows": "演出",
-    "artists": "Artist Subscriptions"
+    "artists": "Artist Subscriptions",
+    "aiDemoRework": "AI Demo 重制"
   },
   "footer": {
     "rights": "版权所有。",
@@ -3579,5 +3580,123 @@
     "award": "他策划制作的专辑《绅士化》（젠트리피케이션）获得2017年韩国大众音乐奖评选委员特别奖。",
     "creditsLabel": "代表作品：",
     "profileLink": "查看完整履历、获奖与媒体报道 →"
+  },
+  "aiDemoRework": {
+    "seo": {
+      "title": "AI Demo 重制 — 把 Suno·AI 歌曲做成可发行音源 | Studio NOL",
+      "description": "Suno·Udio 做的歌，只重录人声从 {{vocalOnly}} 起。由人重新作曲、编曲、录音，完成可上架 Melon·Spotify 的发行音源。仅受理付费方案制作的歌曲。",
+      "keywords": "AI Demo 重制, Suno 歌曲发行, AI 歌曲编曲, AI 人声录音, 去除 AI 感, AI 歌曲重写, Suno 发行, AI 音乐发行"
+    },
+    "hero": {
+      "title": "AI Demo 重制 — 用 AI 开始的歌，由人重新写出来发行",
+      "subtitleLine1": "用 Suno·Udio 做的歌，只当 demo 用",
+      "subtitleLine2": "人声·编曲·作曲由人重做，一路做到 Melon·Spotify",
+      "alt": "在 Studio NOL 把 AI demo 重制成发行音源的工作"
+    },
+    "intro": {
+      "title": "AI 感来自三个地方",
+      "body": "音质可以靠混音减轻一部分，但人声和结构必须由人重新唱、重新搭才会改变。我们按卡在哪里分成三条路来做。"
+    },
+    "tiers": {
+      "title": "从三条路中选一条开始",
+      "subtitle": "只做需要的部分。录音前先听伴奏，一起决定要不要从 1→2 往上走。",
+      "items": [
+        {
+          "title": "只重录人声",
+          "description": "AI 伴奏原样保留，用真人声音重新唱。我们会指导发音、呼吸和强弱。",
+          "priceNote": "{{vocalOnly}} 起"
+        },
+        {
+          "title": "重新编曲伴奏",
+          "description": "AI 版本只作参考，和弦、结构、声音由人重新建立。使用虚拟乐器与实录 session。",
+          "priceNote": "+{{arrangementAdd}}–{{bandAdd}}"
+        },
+        {
+          "title": "从旋律·歌词重新作曲",
+          "description": "重新写 topline、歌词和歌曲结构。共同作曲署名与分成在开始前以书面确定。",
+          "priceNote": "+{{compositionAdd}}"
+        }
+      ]
+    },
+    "pricing": {
+      "title": "价格",
+      "subtitle": "均为含 VAT 的定价。只加需要的项目。",
+      "note": "混音 3–7 个工作日交付，含 2 次修改。session 演奏费只收付给演奏者的实费，不收中介费。",
+      "releaseNote": "连发行一起委托时，单曲 bundle {{releaseBundle}} 包含发行登记与发行宣传。编曲不含在 bundle 内，需另外加。",
+      "updated": "价格·政策最后确认：2026年10月23日",
+      "cta": "KakaoTalk 咨询"
+    },
+    "requirements": {
+      "title": "提交前请确认",
+      "subtitle": "以下两项必须满足。",
+      "hardTitle": "必需",
+      "hard": [
+        "用 Suno Pro·Premier 等付费方案制作的歌曲（免费方案的歌曲之后付费也不追溯）",
+        "不得冒充或翻唱真实存在的艺人"
+      ],
+      "softTitle": "有会更好",
+      "soft": [
+        "去掉人声的伴奏文件（WAV）— 没有的话从编曲开始",
+        "原始 AI 版本（用于旋律·歌词参考）",
+        "歌词最终版",
+        "生成账号与日期记录（发行权利证明）"
+      ]
+    },
+    "promises": {
+      "title": "我们做的和不能保证的",
+      "includedTitle": "我们做的",
+      "included": [
+        "人声重录与指导、重新编曲·重新作曲",
+        "混音·母带，发行时的发行登记与宣传",
+        "留下工作记录（demo·歌词修改版·工程文件）"
+      ],
+      "excludedTitle": "我们不承诺的",
+      "excluded": [
+        "商店上架与审核、榜单·流媒体数据",
+        "Content ID·推荐曝光",
+        "著作权·信托登记保证"
+      ]
+    },
+    "release": {
+      "title": "国内与海外，一次搞定",
+      "body": "同时瞄准 Melon·Genie·FLO 与 Spotify·Apple Music。发行由 Studio NOL 直接负责，没有中间手续费。",
+      "domestic": "国内：Melon·Genie·FLO 等",
+      "global": "海外：Spotify·Apple Music 等"
+    },
+    "rights": {
+      "title": "权利，说实话",
+      "body": "重新作曲·重新编曲的歌，以人创作的部分为中心上架发行。原样使用 AI 伴奏的人声重制，标注为 AI-assisted。我们不隐瞒 AI 的使用。",
+      "komca": "音著协的 AI 音乐信托标准于 2026 年 8 月施行后在同月撤回，截至 10 月处于暂缓状态。"
+    },
+    "faq": {
+      "title": "常见问题",
+      "items": [
+        {
+          "q": "用 Suno 做的歌可以发行到 Melon·Spotify 吗？",
+          "a": "用付费方案制作、并经过允许的下载的歌曲可以。免费方案的歌曲所有权属于 Suno，无法发行，之后付费也不追溯。"
+        },
+        {
+          "q": "要去掉 AI 感，需要改什么？",
+          "a": "混音能减轻一部分，但人声和结构需要由人重新唱才会改变。咨询时决定是只重录人声、重新编曲伴奏，还是从旋律开始重新作曲。"
+        },
+        {
+          "q": "费用是多少？",
+          "a": "只重录人声从 {{vocalOnly}} 起。重新编曲为 {{arrangementAdd}}–{{bandAdd}}，重新作曲为 +{{compositionAdd}}，连发行则加单曲 bundle {{releaseBundle}}。全部含 VAT。"
+        },
+        {
+          "q": "需要多久？",
+          "a": "混音在 3–7 个工作日内交付，含最多 2 次修改。重新编曲·重新作曲与商店审核时间因歌曲和商店而异，咨询时确定日程。"
+        },
+        {
+          "q": "发行责任在谁？",
+          "a": "发行由 Studio NOL 直接负责，没有中间手续费。音源与行政由工作室负责；因未提交或遗漏材料导致的驳回由艺人负责。"
+        }
+      ]
+    },
+    "cta": {
+      "title": "请把 AI 原版和想要的方向发给我们",
+      "body": "告诉我们是在哪个方案做的、哪里喜欢、哪里不满意，我们会马上确定等级和日程。咨询免费。",
+      "button": "KakaoTalk 咨询"
+    }
   }
 }

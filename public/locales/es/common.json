@@ -36,7 +36,8 @@
     "releaseAlbum": "Álbum completo",
     "funding": "Crowdfunding",
     "shows": "Conciertos",
-    "artists": "Artist Subscriptions"
+    "artists": "Artist Subscriptions",
+    "aiDemoRework": "Rework de demos con IA"
   },
   "footer": {
     "rights": "Todos los derechos reservados.",
@@ -3579,5 +3580,123 @@
     "award": "Planificó y produjo el álbum Gentrification (젠트리피케이션), que recibió el Premio Especial del Comité de Selección en los Korean Music Awards 2017.",
     "creditsLabel": "Trabajos destacados:",
     "profileLink": "Ver trayectoria, premios y prensa →"
+  },
+  "aiDemoRework": {
+    "seo": {
+      "title": "Rework de demos con IA — De una canción de Suno·IA a un máster listo para publicar | Studio NOL",
+      "description": "Canciones hechas con Suno·Udio, con regrabación de voz desde {{vocalOnly}}. Una persona vuelve a componer, arreglar y grabar hasta dejarla lista para Melon y Spotify. Solo aceptamos canciones creadas en un plan de pago.",
+      "keywords": "rework de demos con IA, publicar una canción de Suno, arreglo de canciones con IA, grabación vocal con IA, quitar el sonido de IA, reescribir una canción de IA, lanzamiento en Suno, lanzamiento de música con IA"
+    },
+    "hero": {
+      "title": "Rework de demos con IA — Una canción que empezó con IA, reescrita por una persona para publicarla",
+      "subtitleLine1": "Las canciones hechas con Suno·Udio se quedan como demo",
+      "subtitleLine2": "Una persona rehace la voz, los arreglos y la composición, y la lleva hasta Melon y Spotify",
+      "alt": "Reelaboración de un demo de IA a un máster listo para publicar en Studio NOL"
+    },
+    "intro": {
+      "title": "El sonido de IA viene de tres lugares",
+      "body": "La mezcla puede reducirlo en parte, pero la voz y la estructura solo cambian cuando una persona las vuelve a cantar y a armar. Dividimos el trabajo en tres caminos según dónde esté el problema."
+    },
+    "tiers": {
+      "title": "Empieza por uno de los tres caminos",
+      "subtitle": "Solo lo que necesites. Escucha la base antes de grabar y decidimos juntos si subir de 1→2.",
+      "items": [
+        {
+          "title": "Regrabar solo la voz",
+          "description": "La base de IA se queda como está y se vuelve a cantar con voz real. Dirigimos pronunciación, respiración y dinámica.",
+          "priceNote": "Desde {{vocalOnly}}"
+        },
+        {
+          "title": "Rearreglar la base",
+          "description": "La versión de IA sirve solo de referencia; una persona vuelve a construir acordes, estructura y sonido con instrumentos virtuales y sesiones en vivo.",
+          "priceNote": "+{{arrangementAdd}}–{{bandAdd}}"
+        },
+        {
+          "title": "Recomponer desde la melodía y la letra",
+          "description": "Reescribimos el topline, la letra y la estructura. Los créditos y porcentajes de co-composición se fijan por escrito antes de empezar.",
+          "priceNote": "+{{compositionAdd}}"
+        }
+      ]
+    },
+    "pricing": {
+      "title": "Precios",
+      "subtitle": "Precios con IVA incluido. Añade solo lo que necesites.",
+      "note": "La mezcla se entrega en 3–7 días hábiles con 2 revisiones incluidas. La sesión de músicos se cobra solo el coste real para el intérprete, sin comisión de contratación.",
+      "releaseNote": "Si también te encargas del lanzamiento, el bundle de single de {{releaseBundle}} incluye el registro de distribución y la promoción del lanzamiento. Los arreglos no están incluidos en el bundle y se suman aparte.",
+      "updated": "Precios y políticas revisados por última vez: 23 de octubre de 2026",
+      "cta": "Consultar por KakaoTalk"
+    },
+    "requirements": {
+      "title": "Antes de enviar",
+      "subtitle": "Estos dos puntos son obligatorios.",
+      "hardTitle": "Obligatorio",
+      "hard": [
+        "Canción creada en un plan de pago como Suno Pro o Premier (las canciones de plan gratuito no se vuelven elegibles aunque pagues después)",
+        "La canción no debe suplantar ni versionar a un artista real"
+      ],
+      "softTitle": "Recomendable",
+      "soft": [
+        "Archivo de base sin voz (WAV) — si no lo hay, empezamos por los arreglos",
+        "Versión original de IA (para guiar melodía y letra)",
+        "Letra final",
+        "Registro de la cuenta y fecha de generación (prueba de derechos de distribución)"
+      ]
+    },
+    "promises": {
+      "title": "Lo que prometemos y lo que no",
+      "includedTitle": "Lo que hacemos",
+      "included": [
+        "Regrabación y dirección vocal, rearreglo y recomposición",
+        "Mezcla y masterización, y al publicar, registro de distribución y promoción",
+        "Dejar registro del trabajo (demos, versiones de la letra, archivos del proyecto)"
+      ],
+      "excludedTitle": "Lo que no prometemos",
+      "excluded": [
+        "Publicación y aprobación en las tiendas, cifras de listas o streaming",
+        "Content ID o exposición recomendada",
+        "Garantía de registro de derechos de autor o de la sociedad de gestión"
+      ]
+    },
+    "release": {
+      "title": "Corea y el extranjero, a la vez",
+      "body": "Apostamos a Melon, Genie y FLO junto con Spotify y Apple Music. Studio NOL gestiona la distribución directamente, sin comisión de intermediarios.",
+      "domestic": "Corea: Melon, Genie, FLO y más",
+      "global": "Extranjero: Spotify, Apple Music y más"
+    },
+    "rights": {
+      "title": "Derechos, con honestidad",
+      "body": "En las canciones recompuestas y rearregladas, subimos a distribución centrándonos en la parte creada por personas. Los reworks vocales que usan la base de IA tal cual se marcan como AI-assisted. No ocultamos el uso de IA.",
+      "komca": "El criterio de fideicomiso de música con IA de KOMCA entró en vigor en agosto de 2026 y se retiró ese mismo mes; a octubre sigue en suspenso."
+    },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "items": [
+        {
+          "q": "¿Puedo publicar una canción hecha con Suno en Melon y Spotify?",
+          "a": "Sí, si se hizo en un plan de pago y pasó por una descarga permitida. Las canciones de plan gratuito pertenecen a Suno y no se pueden publicar; pagar después no lo cambia retroactivamente."
+        },
+        {
+          "q": "¿Qué hay que cambiar para quitar el sonido de IA?",
+          "a": "La mezcla reduce una parte, pero la voz y la estructura solo cambian si una persona las vuelve a cantar. En la consulta decidimos si regrabar solo la voz, rearreglar la base o recomponer desde la melodía."
+        },
+        {
+          "q": "¿Cuánto cuesta?",
+          "a": "Regrabar solo la voz desde {{vocalOnly}}. El rearreglo cuesta {{arrangementAdd}}–{{bandAdd}}, la recomposición +{{compositionAdd}}, y si incluimos el lanzamiento se suma el bundle de single de {{releaseBundle}}. Todo con IVA incluido."
+        },
+        {
+          "q": "¿Cuánto tarda?",
+          "a": "La mezcla se entrega en 3–7 días hábiles con hasta 2 revisiones. El rearreglo, la recomposición y la revisión de las tiendas varían según la canción y la tienda, así que fijamos el calendario en la consulta."
+        },
+        {
+          "q": "¿Quién es responsable de la distribución?",
+          "a": "Studio NOL gestiona la distribución directamente, sin comisión de intermediarios. El estudio responde por el audio y el papeleo; los rechazos por materiales no enviados o incompletos son responsabilidad del artista."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Envíanos el original de IA y la dirección que quieres",
+      "body": "Cuéntanos en qué plan lo hiciste y qué te gusta y qué te molesta, y fijamos enseguida el nivel y el calendario. La consulta es gratis.",
+      "button": "Consultar por KakaoTalk"
+    }
   }
 }

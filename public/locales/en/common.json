@@ -36,7 +36,8 @@
     "releaseAlbum": "Full Album",
     "funding": "Funding",
     "shows": "Shows",
-    "artists": "Artist Subscriptions"
+    "artists": "Artist Subscriptions",
+    "aiDemoRework": "AI Demo Rework"
   },
   "footer": {
     "rights": "All rights reserved.",
@@ -3607,5 +3608,123 @@
     "award": "He planned and produced the album Gentrification (젠트리피케이션), which received the Selection Committee Special Award at the 2017 Korean Music Awards.",
     "creditsLabel": "Selected work:",
     "profileLink": "Full profile, awards and press →"
+  },
+  "aiDemoRework": {
+    "seo": {
+      "title": "AI Demo Rework — Turn Suno & AI Tracks into Release-Ready Music | Studio NOL",
+      "description": "Suno or Udio tracks, reworked starting at {{vocalOnly}} for vocals only. A human rewrites, arranges, and re-records it into a release-ready track for Melon and Spotify. We only accept songs made on a paid plan.",
+      "keywords": "AI demo rework, release a Suno song, AI song arrangement, AI vocal recording, remove the AI sound, rewrite an AI song, Suno release, AI music release"
+    },
+    "hero": {
+      "title": "AI Demo Rework — A song that started with AI, rewritten by a human for release",
+      "subtitleLine1": "Tracks made with Suno or Udio stay demos",
+      "subtitleLine2": "A human redoes the vocals, arrangement, and composition, then takes it to Melon and Spotify",
+      "alt": "Reworking an AI demo into a release-ready track at Studio NOL"
+    },
+    "intro": {
+      "title": "The AI sound comes from three places",
+      "body": "Mixing can reduce some of it, but vocals and structure only change when a human sings and rebuilds them. We split the work three ways depending on what's holding the track back."
+    },
+    "tiers": {
+      "title": "Start with one of three paths",
+      "subtitle": "Only as much as you need. Listen to the backing track before recording and decide together whether to move from 1→2.",
+      "items": [
+        {
+          "title": "Re-record vocals only",
+          "description": "Keep the AI backing track and sing it again in a real voice. We direct pronunciation, breath, and dynamics.",
+          "priceNote": "From {{vocalOnly}}"
+        },
+        {
+          "title": "Re-arrange the backing track",
+          "description": "Use the AI version as reference only; a human rebuilds the chords, structure, and sound with virtual instruments and live session players.",
+          "priceNote": "+{{arrangementAdd}}–{{bandAdd}}"
+        },
+        {
+          "title": "Rewrite from the melody and lyrics",
+          "description": "We rewrite the topline, lyrics, and song structure. Co-writing credits and splits are set in writing before we start.",
+          "priceNote": "+{{compositionAdd}}"
+        }
+      ]
+    },
+    "pricing": {
+      "title": "Pricing",
+      "subtitle": "Prices include VAT. Add only what you need.",
+      "note": "Mixing is delivered in 3–7 business days with 2 revisions included. Session players are paid their actual fee only — no booking commission.",
+      "releaseNote": "Hand us the release too, and the single bundle at {{releaseBundle}} includes distribution registration and release promotion. Arrangement is not part of the bundle and is added separately.",
+      "updated": "Prices and policy last checked: October 23, 2026",
+      "cta": "Chat on KakaoTalk"
+    },
+    "requirements": {
+      "title": "Before you submit",
+      "subtitle": "Two things are required.",
+      "hardTitle": "Required",
+      "hard": [
+        "A song made on a paid plan such as Suno Pro or Premier (free-plan songs don't become eligible later if you pay)",
+        "The song must not impersonate or cover a real artist"
+      ],
+      "softTitle": "Helpful to have",
+      "soft": [
+        "A backing track with vocals removed (WAV) — without it, we start from arrangement",
+        "The original AI version (for melody and lyric guidance)",
+        "Final lyrics",
+        "A record of the generating account and date (proof of distribution rights)"
+      ]
+    },
+    "promises": {
+      "title": "What we promise, and what we don't",
+      "includedTitle": "What we do",
+      "included": [
+        "Vocal re-recording and direction, re-arrangement and rewriting",
+        "Mixing and mastering, plus distribution registration and promotion at release",
+        "Keeping a record of the work (demos, lyric revisions, project files)"
+      ],
+      "excludedTitle": "What we don't promise",
+      "excluded": [
+        "Store listing and approval, chart or streaming numbers",
+        "Content ID or algorithmic placement",
+        "Copyright or trust registration guarantees"
+      ]
+    },
+    "release": {
+      "title": "Korea and overseas, at once",
+      "body": "We target Melon, Genie, and FLO alongside Spotify and Apple Music. Studio NOL handles distribution directly, with no middleman commission.",
+      "domestic": "Korea: Melon, Genie, FLO, and more",
+      "global": "Overseas: Spotify, Apple Music, and more"
+    },
+    "rights": {
+      "title": "Rights, honestly",
+      "body": "For rewritten and re-arranged songs, we put the human-created parts at the center of distribution. Vocal reworks that keep the AI backing track are labeled AI-assisted. We don't hide AI use.",
+      "komca": "KOMCA's trust rules for AI-assisted music took effect in August 2026 and were withdrawn the same month; as of October, they are on hold."
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "items": [
+        {
+          "q": "Can I release a Suno song on Melon or Spotify?",
+          "a": "If it was made on a paid plan and went through an allowed download, yes. Free-plan songs are owned by Suno and can't be released, and paying later doesn't change that retroactively."
+        },
+        {
+          "q": "What has to change to remove the AI sound?",
+          "a": "Mixing reduces some of it, but vocals and structure only change when a human sings them again. In consultation we decide whether to re-record vocals only, re-arrange the backing track, or rewrite from the melody."
+        },
+        {
+          "q": "How much does it cost?",
+          "a": "Re-recording vocals only starts at {{vocalOnly}}. Re-arrangement is {{arrangementAdd}}–{{bandAdd}}, rewriting is +{{compositionAdd}}, and a full release adds the single bundle at {{releaseBundle}}. All prices include VAT."
+        },
+        {
+          "q": "How long does it take?",
+          "a": "Mixing is delivered within 3–7 business days with up to 2 revisions. Re-arrangement, rewriting, and store review times vary by song and store, so we set the schedule in consultation."
+        },
+        {
+          "q": "Who is responsible for distribution?",
+          "a": "Studio NOL handles distribution directly, with no middleman commission. The studio is responsible for the audio and the paperwork; rejections caused by missing or incomplete materials are the artist's responsibility."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Send us the AI original and the direction you want",
+      "body": "Tell us which plan you used and what you like and what bothers you, and we'll set the tier and schedule right away. Consultation is free.",
+      "button": "Chat on KakaoTalk"
+    }
   }
 }
