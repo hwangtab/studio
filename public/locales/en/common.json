@@ -3623,26 +3623,26 @@
     },
     "intro": {
       "title": "The AI sound comes from three places",
-      "body": "Mixing can reduce some of it, but vocals and structure only change when a human sings and rebuilds them. We split the work three ways depending on what's holding the track back."
+      "body": "Mixing can reduce some of it, but vocals and structure only change when a human sings and rebuilds them. Depending on what's holding the track back, we either re-sing the vocals only or rewrite the backing and melody too."
     },
     "tiers": {
-      "title": "Start with one of three paths",
-      "subtitle": "Only as much as you need. Listen to the backing track before recording and decide together whether to move from 1→2.",
+      "title": "Pick only what you need",
+      "subtitle": "Listen to the backing track before recording and decide together whether it needs rearranging.",
       "items": [
         {
           "title": "Re-record vocals only",
-          "description": "Keep the AI backing track and sing it again in a real voice. We direct pronunciation, breath, and dynamics.",
+          "description": "Keep the AI backing track and sing it again in a real voice. We direct pronunciation, breath and dynamics, and deliver the recorded files.",
           "priceNote": "From {{vocalOnly}}"
         },
         {
-          "title": "Re-arrange the backing track",
-          "description": "Use the AI version as reference only; a human rebuilds the chords, structure, and sound with virtual instruments and live session players.",
-          "priceNote": "+{{arrangementAdd}}–{{bandAdd}}"
+          "title": "Mixing, mastering and release",
+          "description": "Vocal re-recording plus mixing, mastering, domestic and global distribution and release promotion, all in one.",
+          "priceNote": "{{releaseBundle}}"
         },
         {
-          "title": "Rewrite from the melody and lyrics",
-          "description": "We rewrite the topline, lyrics, and song structure. Co-writing credits and splits are set in writing before we start.",
-          "priceNote": "+{{compositionAdd}}"
+          "title": "Rearrange and rewrite",
+          "description": "The AI version is reference only; a human rewrites the melody, chords, structure and sound with virtual instruments and live session players. Co-writing credits and splits are set in writing before we start. Up to 10 tracks +{{reworkAdd}}; 11+ tracks (full band or larger) +{{reworkLargeAdd}}.",
+          "priceNote": "+{{reworkAdd}}–{{reworkLargeAdd}}"
         }
       ]
     },
@@ -3650,7 +3650,7 @@
       "title": "Pricing",
       "subtitle": "Prices include VAT. Add only what you need.",
       "note": "Mixing is delivered in 3–7 business days with 2 revisions included. Session players are paid their actual fee only — no booking commission.",
-      "releaseNote": "The {{vocalOnly}} vocal rework is priced the same as the single bundle, so handing us the release costs nothing extra: recording, mixing, mastering, distribution registration and release promotion are all included; only arrangement or recomposition is added. With small-ensemble arrangement, release-ready comes to about {{releaseTotal}}.",
+      "releaseNote": "Rearranging and rewriting are added to the prices above. With up to 10 tracks, release-ready comes to about {{releaseTotal}}.",
       "updated": "Prices and policy last checked: October 23, 2026",
       "cta": "Chat on KakaoTalk"
     },
@@ -3705,11 +3705,11 @@
         },
         {
           "q": "What has to change to remove the AI sound?",
-          "a": "Mixing reduces some of it, but vocals and structure only change when a human sings them again. In consultation we decide whether to re-record vocals only, re-arrange the backing track, or rewrite from the melody."
+          "a": "Mixing reduces some of it, but vocals and structure only change when a human sings them again. In consultation we decide whether to re-record vocals only or rewrite the backing and melody too."
         },
         {
           "q": "How much does it cost?",
-          "a": "Re-recording vocals only starts at {{vocalOnly}}. Re-arrangement is +{{arrangementAdd}}–{{bandAdd}}, rewriting +{{compositionAdd}}. The vocal rework is priced the same as the single bundle, so release (recording, mixing, mastering, distribution and promotion) costs nothing extra; with small-ensemble arrangement it comes to about {{releaseTotal}}. All prices include VAT."
+          "a": "Re-recording vocals only starts at {{vocalOnly}}; with mixing, mastering, distribution and release promotion it is {{releaseBundle}}. Rearranging and rewriting add +{{reworkAdd}} (+{{reworkLargeAdd}} for 11+ tracks — full band or larger), so with up to 10 tracks release-ready comes to about {{releaseTotal}}. All prices include VAT."
         },
         {
           "q": "How long does it take?",

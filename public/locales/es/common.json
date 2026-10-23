@@ -3595,26 +3595,26 @@
     },
     "intro": {
       "title": "El sonido de IA viene de tres lugares",
-      "body": "La mezcla puede reducirlo en parte, pero la voz y la estructura solo cambian cuando una persona las vuelve a cantar y a armar. Dividimos el trabajo en tres caminos según dónde esté el problema."
+      "body": "La mezcla puede reducirlo en parte, pero la voz y la estructura solo cambian cuando una persona las vuelve a cantar y a armar. Según dónde esté el problema, regrabamos solo la voz o reescribimos también la base y la melodía."
     },
     "tiers": {
-      "title": "Empieza por uno de los tres caminos",
-      "subtitle": "Solo lo que necesites. Escucha la base antes de grabar y decidimos juntos si subir de 1→2.",
+      "title": "Elige solo lo que necesites",
+      "subtitle": "Escucha la base antes de grabar y decidimos juntos si hace falta rearreglarla.",
       "items": [
         {
           "title": "Regrabar solo la voz",
-          "description": "La base de IA se queda como está y se vuelve a cantar con voz real. Dirigimos pronunciación, respiración y dinámica.",
+          "description": "La base de IA se queda como está y se vuelve a cantar con voz real. Dirigimos pronunciación, respiración y dinámica, y entregamos los archivos grabados.",
           "priceNote": "Desde {{vocalOnly}}"
         },
         {
-          "title": "Rearreglar la base",
-          "description": "La versión de IA sirve solo de referencia; una persona vuelve a construir acordes, estructura y sonido con instrumentos virtuales y sesiones en vivo.",
-          "priceNote": "+{{arrangementAdd}}–{{bandAdd}}"
+          "title": "Mezcla, masterización y lanzamiento",
+          "description": "Regrabación vocal más mezcla, masterización, distribución nacional e internacional y promoción del lanzamiento, todo junto.",
+          "priceNote": "{{releaseBundle}}"
         },
         {
-          "title": "Recomponer desde la melodía y la letra",
-          "description": "Reescribimos el topline, la letra y la estructura. Los créditos y porcentajes de co-composición se fijan por escrito antes de empezar.",
-          "priceNote": "+{{compositionAdd}}"
+          "title": "Rearreglo y recomposición",
+          "description": "La versión de IA sirve solo de referencia; una persona reescribe melodía, acordes, estructura y sonido con instrumentos virtuales y sesiones en vivo. Los créditos y porcentajes de co-composición se fijan por escrito antes de empezar. Hasta 10 pistas +{{reworkAdd}}; 11 pistas o más (banda completa o mayor) +{{reworkLargeAdd}}.",
+          "priceNote": "+{{reworkAdd}}–{{reworkLargeAdd}}"
         }
       ]
     },
@@ -3622,7 +3622,7 @@
       "title": "Precios",
       "subtitle": "Precios con IVA incluido. Añade solo lo que necesites.",
       "note": "La mezcla se entrega en 3–7 días hábiles con 2 revisiones incluidas. La sesión de músicos se cobra solo el coste real para el intérprete, sin comisión de contratación.",
-      "releaseNote": "La regrabación vocal de {{vocalOnly}} tiene el mismo precio que el paquete de sencillo, así que encargar también el lanzamiento no cuesta más: incluye grabación, mezcla, masterización, registro de distribución y promoción. El nuevo arreglo o la recomposición se suman aparte. Con arreglo de formación pequeña, la publicación completa queda en unos {{releaseTotal}}.",
+      "releaseNote": "El rearreglo y la recomposición se suman a los precios de arriba. Con hasta 10 pistas, la publicación completa queda en unos {{releaseTotal}}.",
       "updated": "Precios y políticas revisados por última vez: 23 de octubre de 2026",
       "cta": "Consultar por KakaoTalk"
     },
@@ -3677,11 +3677,11 @@
         },
         {
           "q": "¿Qué hay que cambiar para quitar el sonido de IA?",
-          "a": "La mezcla reduce una parte, pero la voz y la estructura solo cambian si una persona las vuelve a cantar. En la consulta decidimos si regrabar solo la voz, rearreglar la base o recomponer desde la melodía."
+          "a": "La mezcla reduce una parte, pero la voz y la estructura solo cambian si una persona las vuelve a cantar. En la consulta decidimos si regrabar solo la voz o reescribir también la base y la melodía."
         },
         {
           "q": "¿Cuánto cuesta?",
-          "a": "Regrabar solo la voz parte de {{vocalOnly}}. El nuevo arreglo cuesta +{{arrangementAdd}}–{{bandAdd}} y la recomposición +{{compositionAdd}}. La regrabación vocal tiene el mismo precio que el paquete de sencillo, así que el lanzamiento (grabación, mezcla, masterización, distribución y promoción) no cuesta más; con arreglo de formación pequeña queda en unos {{releaseTotal}}. Todos los precios incluyen IVA."
+          "a": "Regrabar solo la voz parte de {{vocalOnly}}; con mezcla, masterización, distribución y promoción del lanzamiento son {{releaseBundle}}. El rearreglo y la recomposición suman +{{reworkAdd}} (+{{reworkLargeAdd}} con 11 pistas o más: banda completa o formación mayor), así que con hasta 10 pistas la publicación completa queda en unos {{releaseTotal}}. Todos los precios incluyen IVA."
         },
         {
           "q": "¿Cuánto tarda?",
