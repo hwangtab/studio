@@ -275,3 +275,21 @@ describe('fact guard rules self-check', () => {
     }
   });
 });
+
+describe('AI 데모 리워크 카피 가드', () => {
+  const check = (text: string) => findFactViolations(text, 'fixture', { surface: 'code' });
+
+  it('flags "AI 곡 아님" without a recomposition/rearrangement context', () => {
+    expect(check('보컬만 리워크는 AI 곡이 아닙니다').map((v) => v.ruleId))
+      .toContain('ai-rework-ai-song-not-ai-claim');
+  });
+
+  it('allows "AI 곡 아님" in recomposition/rearrangement copy', () => {
+    expect(check('재작곡·재편곡한 곡은 AI 곡이 아닙니다')).toEqual([]);
+  });
+
+  it('flags release guarantees', () => {
+    expect(check('AI 곡 발매를 보장합니다').map((v) => v.ruleId))
+      .toContain('ai-release-guarantee-claim');
+  });
+});

@@ -244,6 +244,18 @@ export const FACT_GUARD_RULES: FactGuardRule[] = [
     marker: /스튜디오\s?놀|Studio\s?NOL|저희|연신내/i,
     allow: /의뢰|문의|(?<!불)가능|아파트|자택|가정|상가|단지|이웃|층간|예측/,
   },
+  {
+    id: 'ai-rework-ai-song-not-ai-claim',
+    description: 'AI 반주를 남기는 보컬 리워크에 "AI 곡 아님" 단정 금지 — 재작곡·재편곡 문맥에서만 허용',
+    pattern: /AI\s*곡(?:이|은|도)?\s*(?:아니|아님|아닙니다|아니다)/,
+    allow: /재작곡|재편곡/,
+  },
+  {
+    id: 'ai-release-guarantee-claim',
+    description: 'AI 데모 리워크의 발매·게재·차트 보장 표현 금지',
+    pattern: /(?:AI[^\n]{0,20}|리워크[^\n]{0,20})(?:발매|게재|차트)[^\n]{0,12}(?:보장해|보장합니다|보장드|100%|반드시)/,
+    allow: /보장하지|않/,
+  },
 ];
 
 const FRONTMATTER_EXEMPT_KEYS = new Set(['tags', 'keywords', 'category', 'categories']);
