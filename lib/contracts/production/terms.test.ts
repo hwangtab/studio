@@ -7,9 +7,12 @@ import {
 import {
   buildDefaultProductionTerms,
   canonicalTermsJson,
+  isSinglePayment,
   parseStoredTerms,
   REFUND_ITEM_KEYS,
   releaseTitle,
+  splitThreeInstallments,
+  THREE_INSTALLMENT_MIN,
   validateProductionTerms,
   type ProductionTerms,
 } from './terms';
@@ -161,14 +164,174 @@ describe('여러 곡(EP·정규, 0073)', () => {
     expect(buildDefaultProductionTerms('album', 3).songs).toHaveLength(6);
   });
 
-  it('v1(곡 제목 하나)로 저장된 조건은 곡 하나짜리 v2로 읽는다', () => {
+  it('v1(곡 제목 하나)로 저장된 조건은 곡 하나짜리 v3로 읽는다', () => {
     const { songs: _songs, albumTitle: _albumTitle, ...rest } = buildDefaultProductionTerms();
-    const v1 = JSON.stringify({ ...rest, version: 1, songTitle: '파도' });
-    expect(parseStoredTerms(v1)).toMatchObject({ version: 2, albumTitle: null, songs: [{ title: '파도' }] });
+    const { second: _second, secondDueDays: _secondDueDays, ...amount } = rest.amount;
+    const v1 = JSON.stringify({ ...rest, amount, version: 1, songTitle: '파도' });
+    expect(parseStoredTerms(v1)).toMatchObject({
+      version: 3,
+      albumTitle: null,
+      songs: [{ title: '파도' }],
+      amount: { second: 0, secondDueDays: 7 },
+    });
   });
 
   it('발매 이름 — 싱글은 곡 제목, EP·정규는 음반 제목과 곡 수', () => {
     expect(releaseTitle('single', { albumTitle: null, songs: [{ title: '파도' }] })).toBe('파도');
     expect(releaseTitle('ep', { albumTitle: '바다', songs: [{ title: null }, { title: null }, { title: null }] })).toBe('바다 (EP · 3곡)');
+  });
+});
+
+describe('3회 분할 규칙', () => {
+  it('분할 기준은 100만원이다', () => {
+    expect(THREE_INSTALLMENT_MIN).toBe(1_000_000);
+  });
+
+  it.each([
+    [500_000, 500_000, 0, 0],
+    [999_999, 500_000, 0, 499_999],
+    [1_000_000, 500_000, 300_000, 200_000],
+    [1_100_000, 550_000, 330_000, 220_000],
+    [1_500_000, 750_000, 450_000, 300_000],
+  ])('%i원 → %i / %i / %i', (total, deposit, second, balance) => {
+    expect(splitThreeInstallments(total)).toEqual({ deposit, second, balance });
+  });
+
+  it('합계는 항상 총액과 같다', () => {
+    for (const total of [500_001, 777_777, 999_999, 1_000_001, 1_333_333]) {
+      const parts = splitThreeInstallments(total);
+      expect(parts.deposit + parts.second + parts.balance).toBe(total);
+    }
+  });
+
+  it('1,000,000원 미만은 2회차(second=0)다', () => {
+    expect(splitThreeInstallments(999_999).second).toBe(0);
+  });
+});
+
+describe('한 번에 받는 계약(v3)', () => {
+  const amount = (overrides: Partial<ProductionTerms['amount']>): Pick<ProductionTerms, 'amount'> => ({
+    amount: {
+      total: 500_000,
+      deposit: 500_000,
+      second: 0,
+      balance: 0,
+      depositDueDays: 3,
+      secondDueDays: 7,
+      balanceDueDays: 7,
+      ...overrides,
+    } as ProductionTerms['amount'],
+  });
+
+  it('2회차와 잔금이 모두 0일 때만 일시불이다', () => {
+    expect(isSinglePayment(amount({}))).toBe(true);
+    expect(isSinglePayment(amount({ second: 100_000, balance: 0 }))).toBe(false);
+    expect(isSinglePayment(amount({ total: 500_001, deposit: 250_001, balance: 250_000 }))).toBe(false);
+  });
+});
+
+describe('3회 분할 조건(terms v3)', () => {
+  it('기본 조건은 v3이고 2회차는 0원·7일이다', () => {
+    const terms = buildDefaultProductionTerms();
+    expect(terms.version).toBe(3);
+    expect(terms.amount.second).toBe(0);
+    expect(terms.amount.secondDueDays).toBe(7);
+  });
+
+  it('계약금 + 2회차 + 잔금이 계약금액과 다르면 거부한다', () => {
+    const terms = clone();
+    terms.amount.second += 1;
+    expect(fields(terms)).toContain('terms.amount.balance');
+  });
+
+  it('2회차가 0원이면 secondDueDays 없이도 통과한다', () => {
+    const terms = clone() as unknown as { amount: Record<string, unknown> };
+    delete terms.amount.secondDueDays;
+    expect(fields(terms)).toEqual([]);
+  });
+
+  it('2회차가 있으면 secondDueDays가 필요하다', () => {
+    const terms = clone() as unknown as { amount: Record<string, number> };
+    terms.amount.second = 100_000;
+    terms.amount.balance = terms.amount.total - terms.amount.deposit - terms.amount.second;
+    delete (terms.amount as Record<string, unknown>).secondDueDays;
+    expect(fields(terms)).toContain('terms.amount.secondDueDays');
+  });
+
+  it('2회차 금액이 음수면 거부한다', () => {
+    const terms = clone();
+    terms.amount.second = -1;
+    expect(fields(terms)).toContain('terms.amount.second');
+  });
+
+  it('2회차 기한은 1~90일이어야 한다', () => {
+    const terms = clone();
+    terms.amount.second = 100_000;
+    terms.amount.balance = terms.amount.total - terms.amount.deposit - terms.amount.second;
+    terms.amount.secondDueDays = 0;
+    expect(fields(terms)).toContain('terms.amount.secondDueDays');
+    terms.amount.secondDueDays = 91;
+    expect(fields(terms)).toContain('terms.amount.secondDueDays');
+    terms.amount.secondDueDays = 30;
+    expect(fields(terms)).toEqual([]);
+  });
+
+  it('v2 JSON을 읽으면 2회차를 0원·7일로 보정하고 version 3으로 올린다', () => {
+    const current = buildDefaultProductionTerms();
+    const { second: _second, secondDueDays: _secondDueDays, ...amount } = current.amount;
+    const v2 = JSON.stringify({ ...current, version: 2, amount });
+    expect(parseStoredTerms(v2)).toMatchObject({ version: 3, amount: { second: 0, secondDueDays: 7 } });
+  });
+});
+
+describe('환불 정책(terms v3)', () => {
+  const withPolicy = (stages: unknown): ProductionTerms => {
+    const terms = clone() as unknown as { refundPolicy?: unknown };
+    terms.refundPolicy = { mode: 'paid_ratio', stages };
+    return terms as unknown as ProductionTerms;
+  };
+
+  it('지급 비율 단계는 내림차순이고 마지막이 0이면 통과한다', () => {
+    const policy = {
+      mode: 'paid_ratio' as const,
+      stages: [
+        { event: 'kickoff' as const, ratio: 1 },
+        { event: 'arrangement_delivered' as const, ratio: 0.5 },
+        { event: 'distribution_submitted' as const, ratio: 0 },
+      ],
+    };
+    const result = validateProductionTerms(withPolicy(policy.stages));
+    expect(result.ok && result.data.refundPolicy).toEqual(policy);
+  });
+
+  it('비율이 내림차순이 아니면 거부한다', () => {
+    expect(fields(withPolicy([
+      { event: 'kickoff', ratio: 0.5 },
+      { event: 'arrangement_delivered', ratio: 0.7 },
+      { event: 'distribution_submitted', ratio: 0 },
+    ]))).toContain('terms.refundPolicy');
+  });
+
+  it('마지막 단계가 0이 아니면 거부한다', () => {
+    expect(fields(withPolicy([
+      { event: 'kickoff', ratio: 1 },
+      { event: 'distribution_submitted', ratio: 0.1 },
+    ]))).toContain('terms.refundPolicy');
+  });
+
+  it('모르는 사건 이름을 거부한다', () => {
+    expect(fields(withPolicy([{ event: 'whenever', ratio: 0 }]))).toContain('terms.refundPolicy');
+  });
+
+  it('단계는 1~5개여야 한다', () => {
+    expect(fields(withPolicy([]))).toContain('terms.refundPolicy');
+    expect(fields(withPolicy(Array.from({ length: 6 }, () => ({ event: 'kickoff', ratio: 0 }))))).toContain('terms.refundPolicy');
+  });
+
+  it('비율은 0~1 사이여야 한다', () => {
+    expect(fields(withPolicy([
+      { event: 'kickoff', ratio: 1.2 },
+      { event: 'distribution_submitted', ratio: 0 },
+    ]))).toContain('terms.refundPolicy');
   });
 });

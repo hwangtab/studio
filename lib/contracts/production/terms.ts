@@ -22,7 +22,9 @@ import { CONTROL_CHARS, type ValidationError } from '../validation';
  *
  * 형식이 바뀌면 version을 올리고 옛 version을 읽는 길을 남긴다(지문의 버전 레지스트리와 같은 이유).
  * v2(0073): 곡 목록(songs)과 음반 제목 — EP·정규도 같은 형식이고, 싱글은 곡이 하나인 경우다. v1(songTitle 하나)은
- * 읽을 때 v2로 올린다(parseStoredTerms). 저장된 문자열은 그대로라 지문 대조는 바뀌지 않는다.
+ * 읽을 때 v3로 올린다(parseStoredTerms). 저장된 문자열은 그대로라 지문 대조는 바뀌지 않는다.
+ * v3(2026-10-23): 3회 분할(계약금·2회차·잔금)과 환불 정책. v2·v1로 저장된 조건은 읽을 때 2회차 0원·7일로
+ * 보정해 v3로 올린다 — 저장된 문자열은 건드리지 않는다.
  */
 
 export type ProductionKind = (typeof productionContractKindEnum)[number];
@@ -58,8 +60,33 @@ export const splitPayment = (total: number): { deposit: number; balance: number 
   return { deposit, balance: total - deposit };
 };
 
-/** 잔금 없이 한 번에 받는 계약인가. */
-export const isSinglePayment = (terms: Pick<ProductionTerms, 'amount'>): boolean => terms.amount.balance === 0;
+/**
+ * 3회 분할을 시작하는 계약금액(운영자 결정 2026-10-23). AI 리워크처럼 작업이 길고 금액이 큰 계약은
+ * 계약금 50% · 2회차 30% · 잔금 20%로 나눈다. 그 아래는 기존 규칙(한 번에 또는 절반씩) 그대로다 —
+ * `splitPayment`의 동작은 바꾸지 않는다.
+ */
+export const THREE_INSTALLMENT_MIN = 1_000_000;
+
+/**
+ * 계약금액을 최대 3회로 나눈다. 반올림은 앞의 두 몫에만 하고 잔금이 나머지를 받아 합계가 정확히 총액이 된다.
+ * 50만원 이하: 한 번에 / 100만원 미만: 계약금·잔금 2회 / 그 이상: 50%·30%·20%.
+ */
+export const splitThreeInstallments = (
+  total: number,
+): { deposit: number; second: number; balance: number } => {
+  if (total <= SINGLE_PAYMENT_MAX) return { deposit: total, second: 0, balance: 0 };
+  if (total < THREE_INSTALLMENT_MIN) {
+    const deposit = Math.round(total / 2);
+    return { deposit, second: 0, balance: total - deposit };
+  }
+  const deposit = Math.round(total * 0.5);
+  const second = Math.round(total * 0.3);
+  return { deposit, second, balance: total - deposit - second };
+};
+
+/** 잔금 없이 한 번에 받는 계약인가 — 2회차도 없어야 한다. */
+export const isSinglePayment = (terms: Pick<ProductionTerms, 'amount'>): boolean =>
+  terms.amount.second === 0 && terms.amount.balance === 0;
 
 /** 체결 후 먼저 받는 돈의 이름 — 한 번에 받으면 "대금", 나눠 받으면 "계약금". 계약서·메일·화면이 같은 말을 쓴다. */
 export const depositWordFor = (terms: Pick<ProductionTerms, 'amount'>): string => (isSinglePayment(terms) ? '대금' : '계약금');
@@ -125,13 +152,23 @@ export interface RefundItem {
   milestones: RefundMilestone[];
 }
 
+/**
+ * 환불 정책(v3). 지금은 지급한 금액 비율로 돌려주는 한 가지 방식만 둔다 — 단계는 사건과 그 사건 뒤에
+ * 돌려줄 비율이고, 내림차순으로 마지막이 0이어야 한다(끝까지 가면 환불액이 0). 없으면 기존 항목표
+ * (refundSchedule)만으로 정산한다.
+ */
+export interface RefundPolicy {
+  mode: 'paid_ratio';
+  stages: RefundMilestone[];
+}
+
 export interface ProductionSong {
   /** 곡 제목. 미정이면 null — 제2조가 "제목이 정해지거나 바뀌어도 같은 곡(순번)"이라 정한다. */
   title: string | null;
 }
 
 export interface ProductionTerms {
-  version: 2;
+  version: 3;
   /** 음반 제목(EP·정규). 싱글은 곡 제목이 곧 발매 제목이라 비운다. */
   albumTitle: string | null;
   /** 수록곡. 싱글은 정확히 하나. 진행 기록의 곡 번호(events.song)는 이 배열의 순번이다. */
@@ -148,9 +185,13 @@ export interface ProductionTerms {
     /** 계약금액(부가세 포함). */
     total: number;
     deposit: number;
+    /** 2회차. 2회 분할이면 0원이다. */
+    second: number;
     balance: number;
     /** 계약금 기한: 체결일부터. */
     depositDueDays: number;
+    /** 2회차 기한: 계약금 입금일부터. 2회차가 없으면 쓰지 않는다(보정값 7). */
+    secondDueDays: number;
     /** 잔금 기한: 최종 마스터 승인일부터. */
     balanceDueDays: number;
   };
@@ -169,6 +210,8 @@ export interface ProductionTerms {
   deemedApprovalDays: number;
   /** 착수 후 해지 때 공제하는 항목표(제10조 3항). 합계 = 계약금액. */
   refundSchedule: RefundItem[];
+  /** 지급 비율 환불 정책(v3). 없으면 refundSchedule로 정산한다. */
+  refundPolicy?: RefundPolicy;
   clientUnresponsiveDays: number;
   paymentDelayDays: number;
   /** 스튜디오 사유 지연이 이 주수를 넘으면 의뢰인이 해지할 수 있다(제12조 2항). */
@@ -283,11 +326,11 @@ const MIXMASTER_BASE = (): ProductionTerms => {
   const deposit = Math.round(total / 2);
   const mixingShare = Math.round((MIXING_LEVEL1_PRICE / total) * 100) / 100;
   return {
-    version: 2,
+    version: 3,
     albumTitle: null,
     songs: [{ title: null }],
     scope: { arrangementTracks: 0, recordingHours: 0, mixingTracks: 10 },
-    amount: { total, deposit, balance: total - deposit, depositDueDays: 3, balanceDueDays: 7 },
+    amount: { total, deposit, second: 0, balance: total - deposit, depositDueDays: 3, secondDueDays: 7, balanceDueDays: 7 },
     payment: {
       bank: BANK_ACCOUNT.bankName,
       account: BANK_ACCOUNT.accountNumber,
@@ -338,11 +381,11 @@ export const buildDefaultProductionTerms = (kind: ProductionKind = 'single', son
   };
 
   return {
-    version: 2,
+    version: 3,
     albumTitle: null,
     songs: Array.from({ length: count }, () => ({ title: null })),
     scope: { arrangementTracks: 10, recordingHours: 3, mixingTracks: 10 },
-    amount: { total, deposit, balance: total - deposit, depositDueDays: 3, balanceDueDays: 7 },
+    amount: { total, deposit, second: 0, balance: total - deposit, depositDueDays: 3, secondDueDays: 7, balanceDueDays: 7 },
     payment: {
       bank: BANK_ACCOUNT.bankName,
       account: BANK_ACCOUNT.accountNumber,
@@ -460,6 +503,43 @@ export const validateProductionTerms = (raw: unknown, kind: ProductionKind = 'si
     }
     return milestones;
   };
+
+  /**
+   * 지급 비율 환불 정책. 단계는 1~5개, 사건 이름은 진행 기록과 같은 것만, 비율은 0~1에서 엄격히
+   * 내림차순이고 마지막이 0이어야 한다 — 뒤로 갈수록 돌려줄 돈이 줄어드는 표여야 한다.
+   */
+  const readRefundPolicy = (value: unknown): RefundPolicy | undefined => {
+    if (value === undefined) return undefined;
+    if (!isRecord(value) || value.mode !== 'paid_ratio') {
+      push('terms.refundPolicy', '환불 정책 형식이 올바르지 않습니다.');
+      return undefined;
+    }
+    const entries = value.stages;
+    if (!Array.isArray(entries) || entries.length === 0 || entries.length > 5) {
+      push('terms.refundPolicy', '환불 정책 단계는 1~5개여야 합니다.');
+      return undefined;
+    }
+    const stages: RefundMilestone[] = [];
+    for (const entry of entries) {
+      const event = isRecord(entry) ? entry.event : undefined;
+      const ratio = isRecord(entry) ? entry.ratio : undefined;
+      if (typeof event !== 'string' || !(REFUND_MILESTONE_EVENTS as readonly string[]).includes(event)) {
+        push('terms.refundPolicy', '알 수 없는 환불 기준 사건입니다.');
+        return undefined;
+      }
+      if (typeof ratio !== 'number' || !(ratio >= 0 && ratio <= 1)) {
+        push('terms.refundPolicy', '환불 비율은 0 이상 1 이하여야 합니다.');
+        return undefined;
+      }
+      stages.push({ event: event as RefundMilestoneEvent, ratio });
+    }
+    const descending = stages.every((stage, i) => i === 0 || stage.ratio < stages[i - 1].ratio);
+    if (!descending || stages[stages.length - 1].ratio !== 0) {
+      push('terms.refundPolicy', '환불 비율은 내림차순이고 마지막 단계가 0이어야 합니다.');
+      return undefined;
+    }
+    return { mode: 'paid_ratio', stages };
+  };
   const days = { min: 1, max: 90 };
 
   // 곡이 하나인 종류(싱글·믹싱·마스터링)는 음반 제목을 받지 않는다 — 곡 제목이 곧 발매 제목이다.
@@ -482,19 +562,30 @@ export const validateProductionTerms = (raw: unknown, kind: ProductionKind = 'si
     mixingTracks: readInt(raw.scope, 'mixingTracks', 'terms.scope.mixingTracks', { min: 1, max: 200 }),
   };
 
+  const amountRaw = isRecord(raw.amount) ? raw.amount : {};
   const amount = {
     total: readInt(raw.amount, 'total', 'terms.amount.total', { min: 1, max: MAX_AMOUNT }),
     deposit: readInt(raw.amount, 'deposit', 'terms.amount.deposit', money),
+    // v2 형식(2회차 없음)도 받는다 — 없으면 0원이다.
+    second: amountRaw.second === undefined ? 0 : readInt(raw.amount, 'second', 'terms.amount.second', money),
     balance: readInt(raw.amount, 'balance', 'terms.amount.balance', money),
     depositDueDays: readInt(raw.amount, 'depositDueDays', 'terms.amount.depositDueDays', days),
+    // 2회차가 없으면 쓰지 않는 값이다 — 없으면 v2 보정값(7일)으로 채운다.
+    secondDueDays:
+      amountRaw.secondDueDays === undefined
+        ? 7
+        : readInt(raw.amount, 'secondDueDays', 'terms.amount.secondDueDays', days),
     balanceDueDays: readInt(raw.amount, 'balanceDueDays', 'terms.amount.balanceDueDays', days),
   };
 
-  if (amount.total > 0 && amount.deposit + amount.balance !== amount.total) {
+  if (amount.total > 0 && amount.deposit + amount.second + amount.balance !== amount.total) {
     push(
       'terms.amount.balance',
-      `계약금과 잔금의 합이 계약금액(${amount.total.toLocaleString('ko-KR')}원)과 같아야 합니다.`,
+      `계약금·2회차·잔금의 합이 계약금액(${amount.total.toLocaleString('ko-KR')}원)과 같아야 합니다.`,
     );
+  }
+  if (amount.second > 0 && amountRaw.secondDueDays === undefined) {
+    push('terms.amount.secondDueDays', '2회차 기한을 입력해 주세요.');
   }
 
   const paymentRaw = isRecord(raw.payment) ? raw.payment : {};
@@ -562,12 +653,14 @@ export const validateProductionTerms = (raw: unknown, kind: ProductionKind = 'si
     }
   }
 
+  const refundPolicy = readRefundPolicy(raw.refundPolicy);
+
   if (errors.length > 0) return { ok: false, errors };
 
   return {
     ok: true,
     data: {
-      version: 2,
+      version: 3,
       albumTitle,
       songs,
       scope,
@@ -579,6 +672,7 @@ export const validateProductionTerms = (raw: unknown, kind: ProductionKind = 'si
       extraRevisionFees,
       deemedApprovalDays,
       refundSchedule,
+      ...(refundPolicy !== undefined ? { refundPolicy } : {}),
       clientUnresponsiveDays,
       paymentDelayDays,
       studioDelayWeeks,
@@ -609,19 +703,36 @@ export const canonicalTermsJson = (terms: ProductionTerms): string => {
 /**
  * 저장된 조건을 읽는다. 저장 때 검증을 거쳤으므로 다시 검증하지 않고 형식만 본다 — 읽지 못하면 던진다.
  * 조건을 모르는 계약으로 본문·PDF를 만들면 빈 금액이 인쇄되므로, 조용히 기본값으로 메우지 않는다.
+ *
+ * v2·v1은 v3로 올려 읽는다 — 2회차가 없던 시절의 계약은 2회차 0원, 2회차 기한은 보정값 7일이다.
+ * 반환 객체만 새로 만들 뿐 저장된 문자열은 건드리지 않는다(지문 대조 불변).
  */
 export const parseStoredTerms = (raw: string): ProductionTerms => {
   const parsed: unknown = JSON.parse(raw);
-  if (isRecord(parsed) && parsed.version === 2) return parsed as unknown as ProductionTerms;
+  if (isRecord(parsed) && parsed.version === 3) return parsed as unknown as ProductionTerms;
+
+  const withSecondInstallment = (source: Record<string, unknown>): Record<string, unknown> => {
+    const amount = isRecord(source.amount) ? source.amount : {};
+    return { ...amount, second: amount.second ?? 0, secondDueDays: amount.secondDueDays ?? 7 };
+  };
+
+  if (isRecord(parsed) && parsed.version === 2) {
+    return {
+      ...parsed,
+      version: 3,
+      amount: withSecondInstallment(parsed),
+    } as unknown as ProductionTerms;
+  }
   // v1(0073 전 싱글): 곡 제목 하나 → 곡 목록 하나.
   if (isRecord(parsed) && parsed.version === 1) {
-    const { songTitle, ...rest } = parsed as Record<string, unknown>;
+    const { songTitle, ...rest } = parsed;
     return {
-      ...(rest as unknown as Omit<ProductionTerms, 'version' | 'albumTitle' | 'songs'>),
-      version: 2,
+      ...rest,
+      version: 3,
       albumTitle: null,
       songs: [{ title: typeof songTitle === 'string' ? songTitle : null }],
-    };
+      amount: withSecondInstallment(rest),
+    } as unknown as ProductionTerms;
   }
   throw new Error('알 수 없는 제작 계약 조건 형식입니다.');
 };
