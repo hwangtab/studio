@@ -80,7 +80,7 @@ export default function AdminShowsPage({ shows, pendingSubmissions, error }: Adm
                     <col />
                     <col className="w-[6rem]" />
                     <col className="w-[5rem]" />
-                    <col className="w-[5.5rem]" />
+                    <col className="w-[6rem]" />
                     <col className="w-[5rem]" />
                     <col className="w-[5rem]" />
                     <col className="w-[5rem]" />

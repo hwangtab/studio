@@ -23,7 +23,7 @@ function StockInput({ skuId, label, value }: { skuId: string; label: string; val
     }
   };
   return (
-    <div className="flex flex-wrap items-center justify-end gap-2">
+    <div className="flex flex-wrap items-center justify-end gap-2 lg:flex-nowrap">
       <TextInput
         type="number" min={0} inputMode="numeric" value={text} onChange={(e) => setText(e.target.value)}
         aria-label={`${label} 총 재고`} className="w-24 text-right"

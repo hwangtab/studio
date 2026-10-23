@@ -227,7 +227,7 @@ export function ShopPayoutSection({ rows, month, prevMonth, nextMonth, otherAdju
                     {r.needsReviewOrderNos.length > 0 && (
                       <span className="block text-xs text-amber-800">부분 환불 주문은 빼고 계산했습니다 — 직접 확인: {r.needsReviewOrderNos.join(', ')}</span>
                     )}
-                  {rec && r.drift && (
+                    {rec && r.drift && (
                       // 이체액 열은 좁아 이 경고가 아홉 줄로 늘었다 — 아티스트 칸 아래로 옮긴다.
                       <span className="mt-1 block text-xs font-normal text-red-600">
                         기록 뒤 판매액이 바뀌었습니다(지금 집계 {won(r.salesAmount)} · 기록 {won(rec.grossAmount)}) — 뒤늦은 환불은 다음 정산 조정으로 반영됩니다.

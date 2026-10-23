@@ -196,23 +196,23 @@ function LicenseRow({ row }: { row: AdminLicenseRow }) {
             (row.orderNo && row.status !== 'refunded') || row.status === 'active' ? (
               <>
                 {row.orderNo && row.status !== 'refunded' && (
-                  <button type="button" className={ROW_BTN_DANGER} title="주문 전액 환불" aria-label={`주문 ${row.orderNo} 전액 환불`} onClick={() => refund(row.orderNo as string)}>환불</button>
+                  <button type="button" className={ROW_BTN_DANGER} title="주문 전액 환불" aria-label={`환불 — 주문 ${row.orderNo} 전액`} onClick={() => refund(row.orderNo as string)}>환불</button>
                 )}
                 {row.status === 'active' && (
-                  <button type="button" className={ROW_BTN_DANGER} title="라이선스 취소" aria-label={`${row.email} 라이선스 취소`} onClick={() => act({ action: 'revoke' }, '이 라이선스를 취소할까요? 새 기기 활성화가 막힙니다(이미 활성화한 기기는 계속 돕니다).')}>취소</button>
+                  <button type="button" className={ROW_BTN_DANGER} title="라이선스 취소" aria-label={`취소 — ${row.email} 라이선스`} onClick={() => act({ action: 'revoke' }, '이 라이선스를 취소할까요? 새 기기 활성화가 막힙니다(이미 활성화한 기기는 계속 돕니다).')}>취소</button>
                 )}
               </>
             ) : undefined
           }
         >
           {row.activations.length > 0 && (
-            <button type="button" className={ROW_BTN} title="활성 기기 전부 해제" aria-label={`${row.email} 활성 기기 전부 해제`} onClick={() => act({ action: 'deactivate' }, '활성 기기를 전부 해제할까요?')}>기기 해제</button>
+            <button type="button" className={ROW_BTN} title="활성 기기 전부 해제" aria-label={`기기 해제 — ${row.email}의 활성 기기 전부`} onClick={() => act({ action: 'deactivate' }, '활성 기기를 전부 해제할까요?')}>기기 해제</button>
           )}
           {row.status === 'active' && (
-            <button type="button" className={ROW_BTN} title="키 메일 다시 보내기" aria-label={`${row.email}로 키 메일 다시 보내기`} onClick={() => act({ action: 'email_key' }, `${row.email}로 키 메일을 다시 보낼까요?`)}>키 재발송</button>
+            <button type="button" className={ROW_BTN} title="키 메일 다시 보내기" aria-label={`키 재발송 — ${row.email}로 키 메일 다시 보내기`} onClick={() => act({ action: 'email_key' }, `${row.email}로 키 메일을 다시 보낼까요?`)}>키 재발송</button>
           )}
         </RowActions>
-        {state && <p className="mt-1 text-right text-xs text-gray-600">{state}</p>}
+        {state && <p className="mt-1 text-xs text-gray-600 lg:text-right">{state}</p>}
       </td>
     </tr>
   );
