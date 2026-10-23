@@ -58,7 +58,7 @@ export const parseManualRevenueInput = (raw: unknown, today: string): Parsed => 
   if (receivedOn < '2020-01-01') return { ok: false, message: '받은 날짜가 너무 오래됐습니다.' };
 
   const type = typeof body.type === 'string' ? body.type : '';
-  if (!(type in MANUAL_TYPES)) return { ok: false, message: '유형을 골라 주세요.' };
+  if (!Object.hasOwn(MANUAL_TYPES, type)) return { ok: false, message: '유형을 골라 주세요.' };
 
   const description = typeof body.description === 'string' ? body.description.trim() : '';
   if (description === '') return { ok: false, message: '내용을 적어 주세요. (예: 녹음 3시간 — 김OO)' };

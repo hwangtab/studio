@@ -111,6 +111,10 @@ describe('지출 항목', () => {
     expect(await deleteExpense(other, 'admin')).toBe(false); // 이미 지운 건
     expect(summarizeExpenses(await loadExpenseOccurrences(range)).total).toBe(1_060_000);
 
+    // 시작일(9/1)보다 앞선 끝나는 날은 거절한다 — 받으면 반복이 통째로 0원이 된다.
+    expect(await endExpenseRepeat(rent, '2026-08-31')).toBe(false);
+    expect(summarizeExpenses(await loadExpenseOccurrences(range), 'practice').total).toBe(1_060_000);
+
     // 반복을 9월까지로 끝내면 10월 임대료는 빠진다.
     expect(await endExpenseRepeat(rent, '2026-09-30')).toBe(true);
     expect(summarizeExpenses(await loadExpenseOccurrences(range), 'practice').total).toBe(60_000);

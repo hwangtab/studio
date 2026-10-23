@@ -50,7 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
       if (typeof b.repeatUntil !== 'string') return res.status(400).json({ ok: false, message: '요청이 올바르지 않습니다.' });
       const ended = await endExpenseRepeat(b.id, b.repeatUntil);
-      return ended ? res.status(200).json({ ok: true }) : res.status(404).json({ ok: false, message: '반복 지출을 찾을 수 없거나 날짜가 올바르지 않습니다.' });
+      return ended ? res.status(200).json({ ok: true }) : res.status(404).json({ ok: false, message: '반복 지출을 찾을 수 없거나, 끝나는 날이 올바르지 않습니다(시작일보다 앞일 수 없어요).' });
     }
 
     if (req.method === 'DELETE') {
