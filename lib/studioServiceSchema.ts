@@ -17,6 +17,8 @@ interface BuildStudioServiceSchemaOptions {
   offerName?: string;
   offerPrice?: number;
   pricingHash?: string;
+  /** Offer URL 절대경로 override — 페이지 자체 가격 섹션을 가리킬 때. */
+  offerUrl?: string;
   /**
    * 파일을 주고받아 끝나는 서비스(믹싱·마스터링·작곡·편곡·홍보·펀딩 설계)는 서비스 지역을 은평구로
    * 묶지 않는다 — 같은 페이지가 "전국·해외 어디서든"이라고 말하는데 구조화 데이터만 동네 한정이면
@@ -36,6 +38,7 @@ export const buildStudioServiceSchema = ({
   offerName,
   offerPrice,
   pricingHash = 'special-packages',
+  offerUrl,
   remote = false,
 }: BuildStudioServiceSchemaOptions) => ({
   '@type': 'Service',
@@ -96,7 +99,7 @@ export const buildStudioServiceSchema = ({
           // 이 Service Offer만 빠져 있었다. 없으면 Google이 가격을 만료 처리한다.
           priceValidUntil: getOfferPriceValidUntil(),
           availability: 'https://schema.org/InStock',
-          url: `${siteUrl}/${locale}/pricing#${pricingHash}`,
+          url: offerUrl ?? `${siteUrl}/${locale}/pricing#${pricingHash}`,
         },
       }
     : {}),

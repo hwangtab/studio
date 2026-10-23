@@ -244,6 +244,20 @@ export const FACT_GUARD_RULES: FactGuardRule[] = [
     marker: /스튜디오\s?놀|Studio\s?NOL|저희|연신내/i,
     allow: /의뢰|문의|(?<!불)가능|아파트|자택|가정|상가|단지|이웃|층간|예측/,
   },
+  {
+    id: 'ai-rework-ai-song-not-ai-claim',
+    description: 'AI 반주를 남기는 보컬 리워크에 "AI 곡 아님" 단정 금지 — 재작곡·재편곡 문맥에서만 허용',
+    pattern:
+      /(?<!(?:재작곡|재편곡)[^\n]{0,10}곡(?:은|이|도)?[^\n]{0,3})AI\s*곡(?:이|은|도)?\s*(?:아닙니다|아니에요|아니다|아니라|아니고|아니며|아님|아니)(?!ㄴ지|ㄴ가|냐)/,
+    marker:
+      /리워크|AI\s*반주|AI\s*버전|AI\s*활용|AI-assisted|보컬만|보컬\s*재녹음|재작곡|재편곡|Suno|Udio/i,
+  },
+  {
+    id: 'ai-release-guarantee-claim',
+    description: 'AI 데모 리워크의 발매·게재·차트 보장 표현 금지',
+    pattern:
+      /(?:발매|게재|차트)[^\n]{0,6}보장(?!\s*(?:하지|되지|은\s?(?:하지|없|어렵|않)|할\s?수\s?없|드릴\s?수\s?없|여부))[^\n]{0,4}(?:해|합니다|드립니다|드려|드|$)/,
+  },
 ];
 
 const FRONTMATTER_EXEMPT_KEYS = new Set(['tags', 'keywords', 'category', 'categories']);

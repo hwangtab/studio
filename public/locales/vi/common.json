@@ -36,7 +36,8 @@
     "releaseAlbum": "Album đầy đủ",
     "funding": "Gây quỹ",
     "shows": "Biểu diễn",
-    "artists": "Artist Subscriptions"
+    "artists": "Artist Subscriptions",
+    "aiDemoRework": "Rework bản demo AI"
   },
   "footer": {
     "rights": "Tất cả quyền được bảo lưu.",
@@ -3579,5 +3580,123 @@
     "award": "Anh là người lên kế hoạch và sản xuất album Gentrification (젠트리피케이션), album nhận Giải đặc biệt của Hội đồng tuyển chọn tại Korean Music Awards 2017.",
     "creditsLabel": "Tác phẩm tiêu biểu:",
     "profileLink": "Xem đầy đủ lý lịch, giải thưởng và báo chí →"
+  },
+  "aiDemoRework": {
+    "seo": {
+      "title": "Rework bản demo AI — Từ ca khúc Suno·AI thành bản phát hành | Studio NOL",
+      "description": "Ca khúc làm bằng Suno·Udio, thu lại giọng hát từ {{vocalOnly}}. Người thật sáng tác, hòa âm và thu âm lại để hoàn thiện thành bản phát hành trên Melon·Spotify. Chỉ nhận ca khúc tạo bằng gói trả phí.",
+      "keywords": "rework bản demo AI, phát hành ca khúc Suno, hòa âm ca khúc AI, thu âm giọng hát AI, xóa chất AI, viết lại ca khúc AI, phát hành Suno, phát hành nhạc AI"
+    },
+    "hero": {
+      "title": "Rework bản demo AI — Ca khúc bắt đầu bằng AI, được người thật viết lại để phát hành",
+      "subtitleLine1": "Ca khúc làm bằng Suno·Udio chỉ dùng làm demo",
+      "subtitleLine2": "Người thật làm lại giọng hát, hòa âm, sáng tác và đưa tới Melon·Spotify",
+      "alt": "Công việc biến demo AI thành bản phát hành tại Studio NOL"
+    },
+    "intro": {
+      "title": "Chất AI đến từ ba chỗ",
+      "body": "Âm thanh có thể giảm một phần nhờ mix, nhưng giọng hát và cấu trúc chỉ thay đổi khi người thật hát lại và dựng lại. Chúng tôi chia thành ba hướng tùy chỗ nào đang cản trở."
+    },
+    "tiers": {
+      "title": "Bắt đầu với một trong ba hướng",
+      "subtitle": "Chỉ làm phần cần thiết. Nghe nhạc nền trước khi thu và cùng quyết định có nâng từ 1→2 không.",
+      "items": [
+        {
+          "title": "Chỉ thu lại giọng hát",
+          "description": "Giữ nguyên nhạc nền AI, hát lại bằng giọng thật. Chúng tôi hướng dẫn phát âm, hơi thở và sắc thái mạnh nhẹ.",
+          "priceNote": "Từ {{vocalOnly}}"
+        },
+        {
+          "title": "Hòa âm lại nhạc nền",
+          "description": "Bản AI chỉ để tham khảo; người thật dựng lại hợp âm, cấu trúc và âm thanh bằng nhạc cụ ảo và session chơi thật.",
+          "priceNote": "+{{arrangementAdd}}–{{bandAdd}}"
+        },
+        {
+          "title": "Sáng tác lại từ giai điệu và lời",
+          "description": "Viết lại topline, lời và cấu trúc bài. Ghi công và tỷ lệ đồng sáng tác được chốt bằng văn bản trước khi bắt đầu.",
+          "priceNote": "+{{compositionAdd}}"
+        }
+      ]
+    },
+    "pricing": {
+      "title": "Giá",
+      "subtitle": "Giá đã gồm VAT. Chỉ cộng thêm phần bạn cần.",
+      "note": "Mix giao trong 3–7 ngày làm việc, gồm 2 lần sửa. Phí nhạc công session chỉ thu đúng chi phí trả cho người chơi, không có phí môi giới.",
+      "releaseNote": "Thu lại giọng hát {{vocalOnly}} có giá bằng gói đĩa đơn, nên giao cả khâu phát hành cũng không tốn thêm: gồm thu âm, mix, master, đăng ký phát hành và quảng bá. Phần phối khí hoặc viết lại chỉ tính thêm riêng. Với phối khí nhóm nhỏ, trọn gói đến khi phát hành khoảng {{releaseTotal}}.",
+      "updated": "Giá và chính sách kiểm tra lần cuối: 23 tháng 10, 2026",
+      "cta": "Tư vấn qua KakaoTalk"
+    },
+    "requirements": {
+      "title": "Kiểm tra trước khi gửi",
+      "subtitle": "Hai điều dưới đây là bắt buộc.",
+      "hardTitle": "Bắt buộc",
+      "hard": [
+        "Ca khúc tạo bằng gói trả phí như Suno Pro·Premier (ca khúc gói miễn phí không được tính lại dù sau này bạn trả tiền)",
+        "Ca khúc không mạo danh hay cover nghệ sĩ có thật"
+      ],
+      "softTitle": "Nên có",
+      "soft": [
+        "File nhạc nền đã bỏ giọng hát (WAV) — nếu không có, chúng tôi bắt đầu từ hòa âm",
+        "Bản AI gốc (để tham khảo giai điệu và lời)",
+        "Lời cuối cùng",
+        "Ghi chép tài khoản tạo và ngày tạo (chứng cứ quyền phân phối)"
+      ]
+    },
+    "promises": {
+      "title": "Điều chúng tôi hứa và không hứa",
+      "includedTitle": "Chúng tôi làm",
+      "included": [
+        "Thu lại và hướng dẫn giọng hát, hòa âm lại, sáng tác lại",
+        "Mix và master, đăng ký phân phối và quảng bá khi phát hành",
+        "Lưu lại hồ sơ công việc (demo, bản sửa lời, file dự án)"
+      ],
+      "excludedTitle": "Điều chúng tôi không hứa",
+      "excluded": [
+        "Việc lên store và duyệt, con số bảng xếp hạng hay streaming",
+        "Content ID hay hiển thị gợi ý",
+        "Bảo đảm đăng ký bản quyền hay tín thác"
+      ]
+    },
+    "release": {
+      "title": "Trong nước và quốc tế, cùng một lúc",
+      "body": "Nhắm tới Melon·Genie·FLO cùng Spotify·Apple Music. Studio NOL trực tiếp phụ trách phân phối, không có phí trung gian.",
+      "domestic": "Trong nước: Melon·Genie·FLO v.v.",
+      "global": "Quốc tế: Spotify·Apple Music v.v."
+    },
+    "rights": {
+      "title": "Quyền, một cách trung thực",
+      "body": "Với ca khúc sáng tác lại·hòa âm lại, chúng tôi đưa lên phân phối lấy phần do người thật sáng tạo làm trọng tâm. Bản rework giọng hát dùng nguyên nhạc nền AI được ghi là AI-assisted. Chúng tôi không giấu việc dùng AI.",
+      "komca": "Tiêu chuẩn tín thác nhạc dùng AI của KOMCA có hiệu lực tháng 8 năm 2026 rồi bị thu hồi ngay trong tháng đó; tính đến tháng 10 đang tạm hoãn."
+    },
+    "faq": {
+      "title": "Câu hỏi thường gặp",
+      "items": [
+        {
+          "q": "Ca khúc làm bằng Suno có phát hành trên Melon·Spotify được không?",
+          "a": "Được nếu làm bằng gói trả phí và qua bản tải xuống được phép. Ca khúc gói miễn phí thuộc quyền sở hữu của Suno nên không thể phát hành, và trả tiền sau cũng không được tính lại."
+        },
+        {
+          "q": "Muốn xóa chất AI thì phải thay đổi gì?",
+          "a": "Mix giảm được một phần, nhưng giọng hát và cấu trúc chỉ thay đổi khi người thật hát lại. Khi tư vấn, chúng tôi quyết định thu lại chỉ giọng hát, hòa âm lại nhạc nền, hay sáng tác lại từ giai điệu."
+        },
+        {
+          "q": "Chi phí bao nhiêu?",
+          "a": "Chỉ thu lại giọng hát từ {{vocalOnly}}. Phối khí lại +{{arrangementAdd}}–{{bandAdd}}, viết lại +{{compositionAdd}}. Thu lại giọng hát có giá bằng gói đĩa đơn, nên phát hành (thu âm, mix, master, phát hành và quảng bá) không tốn thêm; với phối khí nhóm nhỏ khoảng {{releaseTotal}}. Tất cả giá đã gồm VAT."
+        },
+        {
+          "q": "Mất bao lâu?",
+          "a": "Mix giao trong 3–7 ngày làm việc, gồm tối đa 2 lần sửa. Hòa âm lại·sáng tác lại và thời gian duyệt của store tùy bài và store, nên chúng tôi chốt lịch khi tư vấn."
+        },
+        {
+          "q": "Trách nhiệm phân phối thuộc về ai?",
+          "a": "Studio NOL trực tiếp phụ trách phân phối, không có phí trung gian. Studio chịu trách nhiệm về âm thanh và giấy tờ; việc bị từ chối do không gửi hoặc thiếu tài liệu là trách nhiệm của nghệ sĩ."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Hãy gửi bản AI gốc và hướng bạn muốn",
+      "body": "Cho chúng tôi biết bạn làm ở gói nào, phần nào bạn thích và phần nào chưa ổn, chúng tôi sẽ chốt hạng và lịch ngay. Tư vấn miễn phí.",
+      "button": "Tư vấn qua KakaoTalk"
+    }
   }
 }

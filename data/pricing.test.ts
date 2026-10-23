@@ -53,6 +53,7 @@ import {
   WEDDING_PACKAGE_PRICE,
   ARTIST_SUPPORT_TIERS,
 } from './pricing';
+import { AI_REWORK_VOCAL_ONLY_PRICE } from './aiRework';
 import { generateDefaultSchema } from '../utils/schema/business';
 import { LESSON_OFFER_NAMES, PRACTICE_OFFER_NAMES } from '../utils/schema/shared';
 import { generatePracticeRoomMonthlyRentSchema } from '../utils/schema/commerce';
@@ -381,6 +382,7 @@ describe('가격 SSOT 정합', () => {
       { route: '/voice-acting', won: VOICEOVER_HOURLY_PRICE },
       { route: '/cover-video', won: COVER_VIDEO_PACKAGE_PRICE },
       { route: '/composition-arrangement', won: ARRANGEMENT_SMALL_PRICE },
+      { route: '/ai-demo-rework', won: AI_REWORK_VOCAL_ONLY_PRICE },
     ];
     // 어긋난 라우트를 한 번에 모아 보여준다 — 하나씩 터지면 여러 번 돌려야 한다.
     const offenders = expectations

@@ -275,3 +275,77 @@ describe('fact guard rules self-check', () => {
     }
   });
 });
+
+describe('AI 데모 리워크 카피 가드', () => {
+  const check = (text: string) => findFactViolations(text, 'fixture', { surface: 'code' });
+
+  it('flags "AI 곡 아님" without a recomposition/rearrangement context', () => {
+    expect(check('보컬만 리워크는 AI 곡이 아닙니다').map((v) => v.ruleId))
+      .toContain('ai-rework-ai-song-not-ai-claim');
+  });
+
+  it('allows "AI 곡 아님" in recomposition/rearrangement copy', () => {
+    expect(check('재작곡·재편곡한 곡은 AI 곡이 아닙니다')).toEqual([]);
+  });
+
+  it('flags release guarantees', () => {
+    expect(check('AI 곡 발매를 보장합니다').map((v) => v.ruleId))
+      .toContain('ai-release-guarantee-claim');
+  });
+
+  it('does not exempt the claim when the qualifier sits on the previous line', () => {
+    expect(
+      check('재작곡한 곡은 다릅니다.\n보컬만 리워크한 곡도 AI 곡이 아닙니다').map((v) => v.ruleId),
+    ).toContain('ai-rework-ai-song-not-ai-claim');
+  });
+
+  it('ignores AI-song negation outside rework context', () => {
+    expect(check('이 곡은 AI 곡이 아니라 사람이 연주한 트랙입니다.')).toEqual([]);
+    expect(check('이 곡이 AI 곡이 아닌지 확인하세요.')).toEqual([]);
+  });
+
+  it('flags a qualifier that does not bind to the claimed subject', () => {
+    expect(check('재작곡과 별개로 보컬만 리워크한 곡은 AI 곡이 아닙니다').map((v) => v.ruleId))
+      .toContain('ai-rework-ai-song-not-ai-claim');
+  });
+
+  it('flags 아니지만 claims', () => {
+    expect(check('AI 곡이 아니지만 보컬만 리워크했습니다').map((v) => v.ruleId))
+      .toContain('ai-rework-ai-song-not-ai-claim');
+  });
+
+  it('flags the claim when rework context sits on the previous line', () => {
+    expect(check('AI 버전은 참고만 하고\nAI 곡이 아닙니다').map((v) => v.ruleId))
+      .toContain('ai-rework-ai-song-not-ai-claim');
+  });
+
+  it('flags a guarantee even when a nearby clause is negated', () => {
+    expect(
+      check('저작권 등록은 보장하지 않습니다.\nAI 곡 발매를 보장합니다.').map((v) => v.ruleId),
+    ).toContain('ai-release-guarantee-claim');
+  });
+
+  it('allows negated release guarantees', () => {
+    expect(check('AI 곡 발매를 보장하지는 않습니다')).toEqual([]);
+    expect(check('AI 곡 발매를 보장하지 못합니다')).toEqual([]);
+    expect(check('AI 곡 발매를 보장은 하지 않습니다')).toEqual([]);
+    expect(check('AI 곡 발매를 보장하지 않습니다')).toEqual([]);
+  });
+
+  it('does not treat 반드시 alone as a guarantee', () => {
+    expect(check('AI 곡 발매 전 반드시 약관을 확인하세요')).toEqual([]);
+  });
+
+  it('does not treat a 100% figure as a guarantee', () => {
+    expect(check('AI 곡 발매 100% 재작곡')).toEqual([]);
+  });
+
+  it('does not treat a contract-term question as a guarantee', () => {
+    expect(check('발매 최소 기준 (발매 보장 여부)')).toEqual([]);
+  });
+
+  it('catches a bare release guarantee', () => {
+    expect(check('AI 데모 리워크 상담 안내\n발매를 보장합니다.').map((v) => v.ruleId))
+      .toContain('ai-release-guarantee-claim');
+  });
+});
