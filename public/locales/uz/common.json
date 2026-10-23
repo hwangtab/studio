@@ -3595,26 +3595,26 @@
     },
     "intro": {
       "title": "AI ta'mi uch joydan keladi",
-      "body": "Ovoz sifatini mikslash bilan qisman kamaytirish mumkin, lekin vokal va tuzilish faqat inson qayta kuylab, qayta qurganda o'zgaradi. Qayerda muammo borligiga qarab uch yo'nalishga bo'lib ishlaymiz."
+      "body": "Ovoz sifatini mikslash bilan qisman kamaytirish mumkin, lekin vokal va tuzilish faqat inson qayta kuylab, qayta qurganda o'zgaradi. Muammo qayerdaligiga qarab faqat vokalni qayta yozamiz yoki fon va kuyni ham qayta yozamiz."
     },
     "tiers": {
-      "title": "Uch yo'nalishdan biri bilan boshlang",
-      "subtitle": "Faqat keraklicha. Yozuvdan oldin fonga quloq solib, 1→2ga ko'tarishni birga hal qilamiz.",
+      "title": "Faqat keraklisini tanlang",
+      "subtitle": "Yozuvdan oldin fonga quloq solib, qayta aranjirovka kerakmi, birga hal qilamiz.",
       "items": [
         {
           "title": "Faqat vokalni qayta yozish",
-          "description": "AI foni o'zgartirilmaydi, haqiqiy ovoz bilan qayta kuylanadi. Talaffuz, nafas va kuch-quvvatni boshqaramiz.",
+          "description": "AI foni o'zgartirilmaydi, haqiqiy ovoz bilan qayta kuylanadi. Talaffuz, nafas va kuch-quvvatni boshqaramiz va yozilgan fayllarni topshiramiz.",
           "priceNote": "{{vocalOnly}}dan boshlab"
         },
         {
-          "title": "Fonni qayta aranjirovka qilish",
-          "description": "AI versiyasi faqat namuna sifatida ishlatiladi; akkord, tuzilish va ovozni inson virtual asboblar va jonli session ijrochilari bilan qaytadan quradi.",
-          "priceNote": "+{{arrangementAdd}}–{{bandAdd}}"
+          "title": "Mikslash, mastering va chiqarish",
+          "description": "Vokalni qayta yozish bilan birga mikslash, mastering, ichki va xalqaro tarqatish hamda chiqarish targ'iboti — hammasi bir yo'la.",
+          "priceNote": "{{releaseBundle}}"
         },
         {
-          "title": "Kuy va matndan boshlab qayta bastalash",
-          "description": "Topline, matn va qo'shiq tuzilishini qayta yozamiz. Birgalikda bastalash krediti va ulushi ish boshlanishidan oldin yozma ravishda belgilanadi.",
-          "priceNote": "+{{compositionAdd}}"
+          "title": "Qayta aranjirovka·qayta bastalash",
+          "description": "AI versiyasi faqat namuna; kuy, akkord, tuzilish va ovozni inson virtual asboblar va jonli session ijrochilari bilan qayta yozadi. Birgalikda bastalash krediti va ulushi ish boshlanishidan oldin yozma ravishda belgilanadi. 10 trekgacha +{{reworkAdd}}, 11 va undan ortiq trek (to'liq guruh yoki kattaroq) +{{reworkLargeAdd}}.",
+          "priceNote": "+{{reworkAdd}}–{{reworkLargeAdd}}"
         }
       ]
     },
@@ -3622,7 +3622,7 @@
       "title": "Narxlar",
       "subtitle": "Narxlar QQS bilan. Faqat kerakli bandlarni qo'shasiz.",
       "note": "Mikslash 3–7 ish kuni ichida topshiriladi, 2 marta tuzatish kiritilgan. Sessiya ijrochisi uchun faqat ijrochiga to'lanadigan haqiqiy xarajat olinadi, vositachilik haqi yo'q.",
-      "releaseNote": "{{vocalOnly}} lik vokal qayta yozish singl to'plami bilan bir xil narxda, shuning uchun chiqarishni ham topshirsangiz qo'shimcha to'lov yo'q: yozib olish, mikslash, mastering, tarqatishni ro'yxatdan o'tkazish va targ'ibot kiradi. Aranjirovka yoki qayta kompozitsiya alohida qo'shiladi. Kichik ansambl aranjirovkasi bilan chiqarishgacha jami taxminan {{releaseTotal}}.",
+      "releaseNote": "Qayta aranjirovka va qayta bastalash yuqoridagi narxlarga qo'shiladi. 10 trekgacha bo'lsa, chiqarishgacha jami taxminan {{releaseTotal}}.",
       "updated": "Narx va siyosat oxirgi marta tekshirilgan: 2026-yil 23-oktabr",
       "cta": "KakaoTalk orqali maslahat"
     },
@@ -3677,11 +3677,11 @@
         },
         {
           "q": "AI ta'mini olib tashlash uchun nimani o'zgartirish kerak?",
-          "a": "Mikslash qisman kamaytiradi, lekin vokal va tuzilish inson qayta kuylaganda o'zgaradi. Maslahatda faqat vokalni qayta yozishni, fonni qayta aranjirovka qilishni yoki kuydan boshlab qayta bastalashni hal qilamiz."
+          "a": "Mikslash qisman kamaytiradi, lekin vokal va tuzilish inson qayta kuylaganda o'zgaradi. Maslahatda faqat vokalni qayta yozishni yoki fon va kuyni ham qayta yozishni hal qilamiz."
         },
         {
           "q": "Narxi qancha?",
-          "a": "Faqat vokalni qayta yozish {{vocalOnly}}dan boshlanadi. Qayta aranjirovka +{{arrangementAdd}}–{{bandAdd}}, qayta kompozitsiya +{{compositionAdd}}. Vokal qayta yozish singl to'plami bilan bir xil narxda, shuning uchun chiqarish (yozib olish, mikslash, mastering, tarqatish va targ'ibot) qo'shimcha to'lovsiz kiradi; kichik ansambl aranjirovkasi bilan taxminan {{releaseTotal}}. Barcha narxlar QQS bilan."
+          "a": "Faqat vokalni qayta yozish {{vocalOnly}}dan boshlanadi; mikslash, mastering, tarqatish va chiqarish targ'iboti bilan {{releaseBundle}}. Qayta aranjirovka va qayta bastalash +{{reworkAdd}} (11 va undan ortiq trek — to'liq guruh yoki kattaroq — +{{reworkLargeAdd}}), shuning uchun 10 trekgacha chiqarishgacha taxminan {{releaseTotal}}. Barcha narxlar QQS bilan."
         },
         {
           "q": "Qancha vaqt oladi?",
