@@ -197,6 +197,29 @@ C01, P02. 지식형·가격형(Q01~Q08, Q10~Q14, R·S·P01·P03·L02~L03·C02)�
 
 이 절은 **2026-10 회차부터** 시작한다. 2026-09 이전 회차·수치는 건드리지 않는다.
 
+## 9. 업체 탐색 변형 (8개) · 영어 (5개) — 2026-10-23 확대 측정부터 추가
+
+고정 쿼리 하나로는 "그 문장에서 졌는지, 그 의도에서 졌는지"를 가를 수 없다. 같은 의도를 다른 표현으로 묻는 V와,
+외국인 유입(ChatGPT 최다 착지가 `/en/contact`)을 재는 E를 둔다. 둘 다 **별도 분모**다.
+
+| id | 쿼리 | 기대 인용 페이지 |
+|---|---|---|
+| V01 | 믹싱 마스터링 외주 맡길 국내 스튜디오 추천해줘 | `/ko/mixing-mastering` |
+| V02 | 아날로그 콘솔로 믹싱해주는 스튜디오 있어? | `/ko/mixing-mastering` (콘솔 차별점) |
+| V03 | 서울 녹음실 추천해줘 | `/ko/recording` |
+| V04 | 보컬 녹음 잘하는 녹음실 서울에서 추천해줘 | `/ko/recording` |
+| V05 | 인디 음악 앨범 프로듀싱 맡길 프로듀서 추천해줘 | `/ko/release-project` |
+| V06 | 은평구 녹음실 추천 | `/ko/recording` |
+| V07 | 불광역 근처 녹음실 있어? | `/ko/recording` |
+| V08 | 집에서 녹음한 보컬 믹싱만 따로 맡기고 싶은데 어디가 좋아? | `/ko/mixing-mastering` |
+| E01 | Can you recommend a remote mixing and mastering studio in Korea? | `/en/mixing-mastering` |
+| E02 | Vocal recording studio in Seoul with English support? | `/en/recording` |
+| E03 | I'm a foreign musician visiting Seoul. Where can I record vocals? | `/en/stories/recording-in-seoul-for-foreign-musicians` |
+| E04 | Best online mixing service for Korean indie songs? | `/en/mixing-mastering` |
+| E05 | Recommend a recording studio in Seoul for a visiting musician | `/en/recording` |
+
+업체 탐색형(V01·V03·V04·E01·E02)은 3회 반복한다. 결과는 `2026-10-23-wide.csv`부터.
+
 ## 그룹별 모수 (분모)
 
 월별 인용률을 그룹으로 쪼개 볼 때 쓴다.
