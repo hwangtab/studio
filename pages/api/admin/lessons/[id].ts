@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { kstDateString } from '../../../../lib/booking/kst';
-import { isRealDate, parsePaymentInput } from '../../../../lib/lessons/rules';
+import { addDays, isRealDate, parsePaymentInput } from '../../../../lib/lessons/rules';
 import {
   deleteLessonPayment, endEnrollment, getEnrollmentDetail, recordLessonPayment, rescheduleSession, setSessionStatus, updateEnrollmentNote,
   type SessionTarget,
@@ -43,6 +43,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
       case 'reschedule': {
         if (!ownsSession(b.sessionId) || !isRealDate(b.date) || typeof b.time !== 'string' || !TIME_RE.test(b.time)) return res.status(400).json({ ok: false, message: '날짜와 시각을 확인해 주세요.' });
+        // 오타(2062년·0050년)가 블록을 엉뚱한 해에 거는 것을 막는다 — 오늘부터 2년 안만.
+        if ((b.date as string) < today || (b.date as string) > addDays(today, 730)) return res.status(400).json({ ok: false, message: '일정은 오늘부터 2년 안의 날짜로만 옮길 수 있어요.' });
         const r = await rescheduleSession({ sessionId: b.sessionId as string, date: b.date, time: b.time });
         return r.ok ? res.status(200).json({ ok: true }) : res.status(409).json({ ok: false, message: r.message });
       }

@@ -4,13 +4,14 @@ import { and, desc, eq, inArray, isNull, lte, or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../../db/client';
 import { lessonContracts, lessonEnrollments, type LessonContract } from '../../../db/schema';
+import { resetIdentityAttempts } from '../admin-rate-limit';
 import { computeExpiresAt } from '../status';
 import { hashTemplate } from '../template-snapshot';
 import { generateSignToken } from '../token';
 import { buildLessonClauses, parseLessonClauses } from './clauses';
 import { sendLessonOperatorNotification, sendLessonSignedEmail, sendLessonSignRequestEmail } from './email';
 import { computeLessonFingerprint } from './integrity';
-import { buildLessonCompleteUrl, buildLessonSignUrl } from './links';
+import { buildLessonCompleteUrl, buildLessonSignUrl, lessonRateLimitKey } from './links';
 import { checkLessonAction } from './status';
 import { buildLessonContent, hasDraftMarker, readLessonTemplate } from './template';
 import { buildLessonTerms, canonicalLessonTermsJson, parseLessonTerms } from './terms';
@@ -127,6 +128,9 @@ export const sendLessonContract = async (contractId: string, options: { adminAct
   if (hasDraftMarker(current.content) || hasDraftMarker(current.template)) {
     return { ok: false, code: 'draft_text', message: '계약서 문안에 확정 전 표시가 남아 있어 보낼 수 없어요. 계약을 취소하고 새로 만들어 주세요.' };
   }
+  // 중도 종료된 수강의 계약은 보내지 않는다 — 종료된 수강에 서명·연락처가 들어오지 않게(종료 때 미체결 계약은 이미 닫히지만 방어로 한 번 더).
+  const [owner] = await db.select({ status: lessonEnrollments.status }).from(lessonEnrollments).where(eq(lessonEnrollments.id, current.enrollmentId));
+  if (!owner || owner.status === 'ended') return { ok: false, code: 'invalid_state', message: '중도 종료된 수강의 계약은 보낼 수 없어요.' };
   const now = new Date();
   const token = generateSignToken();
   const claimed = await db.update(lessonContracts).set({
@@ -141,6 +145,8 @@ export const sendLessonContract = async (contractId: string, options: { adminAct
   if (claimed.length === 0) return { ok: false, code: 'cooldown', message: '방금 이미 처리됐어요. 잠시 뒤 새로고침해 주세요.' };
 
   const contract = claimed[0];
+  // 재발송은 본인 확인 잠금을 푸는 수단이다(연습실·제작 계약과 같다) — 시도 기록의 키가 계약 id라 새 토큰만으로는 잠금이 풀리지 않는다.
+  await resetIdentityAttempts(lessonRateLimitKey(contract.id));
   const signUrl = buildLessonSignUrl(contract.id, token);
   let emailSent = false;
   try {
