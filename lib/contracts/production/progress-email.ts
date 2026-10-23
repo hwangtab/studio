@@ -169,10 +169,14 @@ const buildContent = (
     case 'stage_approved': {
       if (!isRevisionStage(event.stage)) return null;
       const mode = data.mode ?? 'proxy';
+      // 편곡 승인 → 중간금(3회 분할 2회차) 기한이 생긴다(ledger.ts secondLastDay). 마스터링 승인 → 잔금 기한.
+      const secondDue = Math.max(0, terms.amount.deposit + terms.amount.second - payments.received);
       const balance =
         event.stage === 'mastering' && payments.balanceLastDay && remaining > 0
           ? [`잔금 <strong>${escapeHtml(won(remaining))}</strong>을 ${escapeHtml(formatDate(payments.balanceLastDay))}까지 보내 주세요. 입금을 확인한 뒤 최종 파일을 드려요(계약서 제5조 6항).`]
-          : [];
+          : event.stage === 'arrangement' && payments.secondLastDay && !payments.secondMetAt && secondDue > 0
+            ? [`중간금 <strong>${escapeHtml(won(secondDue))}</strong>을 ${escapeHtml(formatDate(payments.secondLastDay))}까지 보내 주세요. 기한까지 들어오지 않으면 다음 단계 작업을 멈출 수 있어요(계약서 제3조 2항·제5조 7항).`]
+            : [];
       return {
         subject: `${stageName(terms, event.stage, event.song)} 단계가 승인됐어요`,
         heading: `${stageName(terms, event.stage, event.song)} 단계가 승인됐어요`,
@@ -299,7 +303,7 @@ export const sendProgressNotice = async (
 export const buildProgressNoticeContent = buildContent;
 
 export interface DueReminder {
-  kind: 'deemed_approval_soon' | 'deposit_due' | 'balance_due';
+  kind: 'deemed_approval_soon' | 'deposit_due' | 'second_due' | 'balance_due';
   /** 안내가 가리키는 기록 — 간주 승인은 결과물 전달, 잔금은 마스터링 승인. 같은 기록에는 한 번만 보낸다. */
   refEventId?: string;
   stage?: RevisionStage;
@@ -307,7 +311,7 @@ export interface DueReminder {
   lastDay: Date;
 }
 
-/** 기한 안내(간주 승인 이틀 전, 계약금·잔금 기한 전날). */
+/** 기한 안내(간주 승인 이틀 전, 계약금·중간금·잔금 기한 전날). */
 export const sendDueReminderEmail = async (
   contract: ProductionContract,
   terms: ProductionTerms,
@@ -320,6 +324,14 @@ export const sendDueReminderEmail = async (
   const name = escapeHtml(contract.clientName);
   const lastDay = formatDate(reminder.lastDay);
   const remaining = Math.max(0, ledger.payments.totalDue - ledger.payments.received);
+  // 이 안내가 말하는 돈 — 계약금은 계약금 − 받은 금액, 중간금은 계약금 + 중간금 − 받은 금액(payment-link.ts dueNow와 같은 계산).
+  const payWord = reminder.kind === 'deposit_due' ? depositWordFor(terms) : reminder.kind === 'second_due' ? '중간금' : '잔금';
+  const payAmount =
+    reminder.kind === 'deposit_due'
+      ? Math.max(0, terms.amount.deposit - ledger.payments.received)
+      : reminder.kind === 'second_due'
+        ? Math.max(0, terms.amount.deposit + terms.amount.second - ledger.payments.received)
+        : remaining;
   const content =
     reminder.kind === 'deemed_approval_soon'
       ? {
@@ -330,18 +342,16 @@ export const sendDueReminderEmail = async (
           rows: [] as ContractEmailRow[],
         }
       : {
-          subject: `${reminder.kind === 'deposit_due' ? depositWordFor(terms) : '잔금'} 입금 기한이 ${lastDay}이에요`,
+          subject: `${payWord} 입금 기한이 ${lastDay}이에요`,
           paragraphs: [
-            `${name}님, ${reminder.kind === 'deposit_due' ? depositWordFor(terms) : '잔금'} 입금 기한이 내일이에요.`,
+            `${name}님, ${payWord} 입금 기한이 내일이에요.`,
             // 입금 확인은 스튜디오가 손으로 기록한다 — 이미 보낸 고객이 독촉으로 읽지 않게(운영 점검 2026-10-20).
             '이미 보내셨다면 확인하는 대로 기록할게요. 이 메일은 무시하셔도 돼요.',
           ],
           rows: [
             {
-              label: reminder.kind === 'deposit_due' ? depositWordFor(terms) : '남은 금액',
-              value: won(
-                reminder.kind === 'deposit_due' ? Math.max(0, terms.amount.deposit - ledger.payments.received) : remaining,
-              ),
+              label: reminder.kind === 'balance_due' ? '남은 금액' : payWord,
+              value: won(payAmount),
               emphasis: true,
             },
             { label: '입금 계좌', value: `${terms.payment.bank} ${terms.payment.account} (예금주 ${terms.payment.holder})` },

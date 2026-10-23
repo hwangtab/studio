@@ -250,6 +250,11 @@ const sendDueReminders = async (context: ProgressContext, today: number, now: Da
   if (!payments.depositMetAt && payments.depositLastDay && kstDay(payments.depositLastDay) - 1 === today) {
     due.push({ kind: 'deposit_due', lastDay: payments.depositLastDay });
   }
+  // 중간금 기한은 편곡 승인에서 나온다(ledger.ts secondLastDay) — 잔금과 같이 그 승인마다 한 번.
+  const arrangementApproval = ledger.stages.find((s) => s.stage === 'arrangement')?.approved ?? null;
+  if (!payments.secondMetAt && payments.secondLastDay && kstDay(payments.secondLastDay) - 1 === today) {
+    due.push({ kind: 'second_due', refEventId: arrangementApproval?.eventId, lastDay: payments.secondLastDay });
+  }
   // 잔금 기한은 마스터링 승인에서 나온다 — 그 승인을 무효로 하고 다시 승인하면 기한도 새로 생기니 안내도 그 승인마다.
   const masteringApproval = ledger.stages.find((s) => s.stage === 'mastering')?.approved ?? null;
   if (!payments.paidInFull && payments.balanceLastDay && kstDay(payments.balanceLastDay) - 1 === today) {

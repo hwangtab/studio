@@ -5,7 +5,7 @@ import { productionContractPaymentLinks } from '../../../db/schema';
 import { closePaymentLink, createPaymentLink } from '../../payments/paymentLinks';
 import { findStage, parseEventData } from './ledger';
 import { loadProgressContext, recordProgressEvent, sendEventNotice } from './progress';
-import { contractNameFor, depositWordFor } from './terms';
+import { contractNameFor, paymentPurposeWord } from './terms';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr';
 
@@ -86,7 +86,7 @@ export const ensureContractPaymentLink = async (contractId: string, now: Date = 
     if (keep) return { url: urlOf(keep.slug), slug: keep.slug, purpose: keep.purpose, amount: keep.amount };
 
     const { contract, terms } = context;
-    const purposeWord = due.purpose === 'deposit' ? depositWordFor(terms) : due.purpose === 'second' ? '중간금' : '잔금';
+    const purposeWord = paymentPurposeWord(due.purpose, terms);
     const itemName = `${contractNameFor(contract.kind).replace(/서$/, '')} ${purposeWord}`;
     const { slug } = await createPaymentLink({
       itemName,

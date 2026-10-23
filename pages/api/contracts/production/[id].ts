@@ -204,6 +204,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           !!ledger &&
           (ledger.unresponsive.exceeded ||
             ledger.payments.depositOverdueDays > limit ||
+            ledger.payments.secondOverdueDays > limit ||
             ledger.payments.balanceOverdueDays > limit);
         const noticed = !!ledger?.events.some((e) => e.type === 'termination_notice');
         if (!grounds || !noticed) {

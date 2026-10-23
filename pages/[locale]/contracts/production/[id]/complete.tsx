@@ -14,7 +14,7 @@ import { getEffectiveProductionStatus, hasSignedDocument } from '../../../../../
 import { maskEmail } from '../../../../../lib/contracts/production/open-link';
 import { ensureContractPaymentLink } from '../../../../../lib/contracts/production/payment-link';
 import { loadProgressContext } from '../../../../../lib/contracts/production/progress';
-import { contractNameFor, depositWordFor, isOneSongKind, parseStoredTerms, releaseTitle } from '../../../../../lib/contracts/production/terms';
+import { contractNameFor, depositWordFor, isOneSongKind, parseStoredTerms, paymentPurposeWord, releaseTitle } from '../../../../../lib/contracts/production/terms';
 import { withI18nServerProps } from '../../../../../lib/getStatic';
 
 /**
@@ -116,7 +116,7 @@ export const getServerSideProps = withI18nServerProps<CompletePageProps>(async (
         locale,
         depositPaid,
         payment: payLink
-          ? { url: payLink.url, amount: payLink.amount, label: payLink.purpose === 'deposit' ? depositWordFor(terms) : '잔금' }
+          ? { url: payLink.url, amount: payLink.amount, label: paymentPurposeWord(payLink.purpose, terms) }
           : null,
         contract: {
           clientName: contract.clientName,

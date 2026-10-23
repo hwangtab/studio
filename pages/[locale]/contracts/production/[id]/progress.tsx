@@ -15,7 +15,7 @@ import { ensureContractPaymentLink } from '../../../../../lib/contracts/producti
 import { loadProgressContext } from '../../../../../lib/contracts/production/progress';
 import { buildClientProgressView, type ProgressView, type StageView } from '../../../../../lib/contracts/production/progress-view';
 import { hasSignedDocument } from '../../../../../lib/contracts/production/status';
-import { depositWordFor, isMixMasterKind, isReworkKind, releaseTitle, sourceLabelFor } from '../../../../../lib/contracts/production/terms';
+import { depositWordFor, isMixMasterKind, isReworkKind, paymentPurposeWord, releaseTitle, sourceLabelFor } from '../../../../../lib/contracts/production/terms';
 import { withI18nServerProps } from '../../../../../lib/getStatic';
 import { loadRefundAccountSummary } from '../../../../../lib/payments/refundAccount';
 
@@ -128,7 +128,7 @@ export const getServerSideProps = withI18nServerProps<ProgressPageProps>(async (
         payment: await (async () => {
           if (locked || progress.contract.status !== 'signed') return null;
           const link = await ensureContractPaymentLink(progress.contract.id);
-          return link ? { url: link.url, amount: link.amount, label: link.purpose === 'deposit' ? depositWordFor(progress.terms) : '잔금' } : null;
+          return link ? { url: link.url, amount: link.amount, label: paymentPurposeWord(link.purpose, progress.terms) } : null;
         })(),
         refund,
       },
@@ -585,6 +585,14 @@ export default function ProductionProgressPage({
                     <>
                       <dt className="text-gray-500 dark:text-gray-500">{depositWord} 기한</dt>
                       <dd className="text-right font-medium text-gray-900 dark:text-gray-900">{formatDate(view.payments.depositLastDay)}</dd>
+                    </>
+                  )}
+                  {!closed && view.payments.second > 0 && !view.payments.secondMetAt && (
+                    <>
+                      <dt className="text-gray-500 dark:text-gray-500">중간금 기한</dt>
+                      <dd className="text-right font-medium text-gray-900 dark:text-gray-900">
+                        {view.payments.secondLastDay ? formatDate(view.payments.secondLastDay) : '편곡 승인 뒤 정해져요'}
+                      </dd>
                     </>
                   )}
                   {!closed && !view.payments.paidInFull && view.payments.balanceLastDay && (

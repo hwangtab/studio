@@ -6,7 +6,7 @@ jest.mock('../../email/resend', () => ({ sendEmail: (...args: unknown[]) => mock
 import type { ProductionContract, ProductionContractEvent } from '../../../db/schema';
 import { parseAdminEventInput, parseVoidInput } from './events';
 import { computeProductionLedger } from './ledger';
-import { buildProgressNoticeContent, sendTerminationEmail } from './progress-email';
+import { buildProgressNoticeContent, sendDueReminderEmail, sendTerminationEmail } from './progress-email';
 import { buildDefaultProductionTerms, buildDefaultReworkTerms } from './terms';
 
 const terms = buildDefaultProductionTerms();
@@ -126,5 +126,39 @@ describe('AI 리워크 해지 안내(지급 비율 환불)', () => {
     const text = await send('studio');
     expect(text).toContain('받은 금액을 모두 돌려드려요(계약서 제10조 4항)');
     expect(text).toContain('돌려받을 금액: 500,000원');
+  });
+});
+
+describe('AI 리워크 중간금 안내', () => {
+  const rework = buildDefaultReworkTerms('small');
+  const mk = (type: ProductionContractEvent['type'], seq: number, local: string, extra: Partial<ProductionContractEvent> = {}) =>
+    ({ ...delivery, id: `s${seq}`, seq, type, stage: null, amount: null, dataJson: null, occurredAt: kst(local), recordedAt: kst(local), createdAt: kst(local), ...extra }) as ProductionContractEvent;
+  const approval = mk('stage_approved', 4, '2026-11-12T10:00:00', { stage: 'arrangement', dataJson: JSON.stringify({ mode: 'explicit' }) });
+  const events = [
+    mk('payment_received', 1, '2026-11-03T09:00:00', { amount: 500_000 }),
+    mk('source_received', 2, '2026-11-03T10:00:00'),
+    mk('stage_delivered', 3, '2026-11-10T10:00:00', { stage: 'arrangement' }),
+    approval,
+  ];
+  const ledger = computeProductionLedger({ terms: rework, signedAt: kst('2026-11-02T10:00:00'), events, now: kst('2026-11-12T10:01:00') });
+  const reworkContract = { ...contract, kind: 'rework' } as ProductionContract;
+
+  it('편곡 승인 메일에 중간금 금액·기한을 싣는다', () => {
+    const content = buildProgressNoticeContent(reworkContract, rework, approval, ledger, kst('2026-11-12T10:01:00'))!;
+    expect((content.notices ?? []).join('')).toContain('중간금 <strong>300,000원</strong>을 2026년 11월 19일까지');
+  });
+
+  it('중간금 기한 전날 안내 — 제목·금액이 중간금', async () => {
+    mockSendEmail.mockClear();
+    await sendDueReminderEmail(reworkContract, rework, ledger, { kind: 'second_due', lastDay: ledger.payments.secondLastDay! }, 'https://x/p', 'https://x/pay');
+    const sent = mockSendEmail.mock.calls[0][0];
+    expect(sent.subject).toContain('중간금 입금 기한이 2026년 11월 19일이에요');
+    expect(sent.text).toContain('중간금: 300,000원');
+  });
+
+  it('싱글 편곡 승인 메일에는 중간금 말이 없다(회귀)', () => {
+    const singleLedger = computeProductionLedger({ terms, signedAt: kst('2026-11-02T10:00:00'), events, now: kst('2026-11-12T10:01:00') });
+    const content = buildProgressNoticeContent(contract, terms, approval, singleLedger, kst('2026-11-12T10:01:00'))!;
+    expect((content.notices ?? []).join('')).not.toContain('중간금');
   });
 });
