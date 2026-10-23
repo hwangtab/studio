@@ -3673,7 +3673,7 @@
       "items": [
         {
           "q": "Suno bilan yaratilgan qo'shiqni Melon·Spotifyda chiqarish mumkinmi?",
-          "a": "Pullik tarifda yaratilgan va ruxsat etilgan yuklab olishdan o'tgan bo'lsa, mumkin. Bepul tarif qo'shiqlari Sunoga tegishli bo'lib chiqarib bo'lmaydi, keyin to'lash ham orqaga qaytarilmaydi."
+          "a": "Pullik tarifda yaratilgan va ruxsat etilgan yuklab olishdan o'tgan bo'lsa, mumkin. Bepul tarif qo'shiqlari Sunoga tegishli bo'lib chiqarib bo'lmaydi; keyinroq to'lov qilsangiz ham bu orqaga qaytib ta'sir qilmaydi."
         },
         {
           "q": "AI ta'mini olib tashlash uchun nimani o'zgartirish kerak?",
