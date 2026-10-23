@@ -7,6 +7,7 @@ import llmsHandler, { CURATED_GUIDES } from '../../pages/api/llms';
 import llmsFullHandler from '../../pages/api/llms-full';
 import rssHandler from '../../pages/api/rss';
 import { getAllStories } from '../../lib/stories';
+import { PRICE_FACTS } from '../../lib/llms/priceFacts';
 
 const createRequest = (query: Record<string, string> = {}, method = 'GET'): NextApiRequest =>
   ({
@@ -93,6 +94,31 @@ describe('LLM contact metadata', () => {
     expect(excludedLines.length).toBeGreaterThan(0);
     for (const line of excludedLines) {
       expect(line).not.toMatch(/Voice Actor|voice-over|dubbing/i);
+    }
+  });
+
+  // 2026-10-23 측정: AI가 축가·커버 영상·발매 홍보를 "부가세 별도"로 답했다(5건). 10/15 전 llms.txt
+  // 가격 절 머리가 "VAT excluded unless noted"라 표시 없는 줄이 별도로 읽혔다 — 줄마다 명시한다.
+  it('every price fact line states its VAT basis explicitly', () => {
+    for (const fact of PRICE_FACTS) {
+      if (!/KRW/.test(fact)) continue;
+      expect(fact).toMatch(/VAT (included|excluded)/i);
+    }
+  });
+
+  it('wedding song, cover video and release PR prices are stated as VAT included', async () => {
+    const { res, getBody } = createResponse();
+
+    await llmsHandler(createRequest(), res);
+    const body = getBody();
+
+    for (const label of [/Wedding Song Complete Package/, /Cover Video All-in-One Package/, /Music Release PR \(standalone\)/]) {
+      const priced = body.split('\n').filter((line) => label.test(line) && /KRW/.test(line));
+      expect(priced.length).toBeGreaterThan(0);
+      for (const line of priced) {
+        expect(line).toMatch(/VAT included/);
+        expect(line).not.toMatch(/VAT excluded/);
+      }
     }
   });
 
