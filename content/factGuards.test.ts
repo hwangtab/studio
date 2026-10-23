@@ -340,6 +340,10 @@ describe('AI 데모 리워크 카피 가드', () => {
     expect(check('AI 곡 발매 100% 재작곡')).toEqual([]);
   });
 
+  it('does not treat a contract-term question as a guarantee', () => {
+    expect(check('발매 최소 기준 (발매 보장 여부)')).toEqual([]);
+  });
+
   it('catches a bare release guarantee', () => {
     expect(check('AI 데모 리워크 상담 안내\n발매를 보장합니다.').map((v) => v.ruleId))
       .toContain('ai-release-guarantee-claim');
