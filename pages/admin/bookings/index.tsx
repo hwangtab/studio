@@ -480,10 +480,9 @@ export default function AdminBookingsPage({
 
               <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
                 {/*
-                  상태 알약은 건수가 있는 것만 보인다(운영자 지적 2026-10-23: 0건 알약 열 개가 늘 깔려 지저분했다).
-                  지금 고른 상태는 0건이 돼도 남긴다 — 사라지면 무엇으로 걸러져 있는지 알 수 없다.
-                  계좌 입금 대기는 상태 알약으로 두지 않는다 — 위 "입금 대기"(서버가 200건 상한 없이 전부 센다)와 같은 것이라
-                  둘이 다른 숫자를 말하게 된다.
+                  상태는 드롭다운 하나(lib/booking/statusView.ts — 확정 / 결제·입금 대기 / 취소·환불 / 실패·만료 / 전체, 기본 확정).
+                  예전엔 주문 상태 아홉 개를 알약으로 늘어놓아 지저분했다(운영자 지적 2026-10-23).
+                  "입금 대기" 알약은 따로 둔다 — 서버가 200건 상한 없이 전부 세는 처리할 일 목록이라 1건 이상일 때만 보인다.
                 */}
                 <div className="flex flex-wrap gap-2" role="group" aria-label="상태">
                   {sessionUnmarked && (
