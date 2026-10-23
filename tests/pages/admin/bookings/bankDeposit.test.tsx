@@ -106,3 +106,23 @@ describe('계좌 입금 확인된 건', () => {
     expect(screen.getByText(/마이그레이션 0048 확인/)).toBeInTheDocument();
   });
 });
+
+describe('결제를 끝내지 않은 만료·실패 주문', () => {
+  const OLD = new Date(Date.now() - 3 * 86400000).toISOString();
+  it('하루가 지났으면 기록 삭제 버튼을 보인다(테스트 주문 정리)', () => {
+    render(<AdminBookingDetailPage booking={{ ...BASE, orderType: 'mixing', orderStatus: 'expired', bankDeposit: null, depositDeadline: null, createdAt: OLD }} />);
+    expect(screen.getByText(/결제를 끝내지 않은 주문입니다\(시간 안에 결제하지 않아 만료\)/)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '기록 삭제' })).toBeInTheDocument();
+  });
+
+  it('방금 만료된 주문은 늦은 결제 승인을 기다리느라 아직 지울 수 없다고 말한다', () => {
+    render(<AdminBookingDetailPage booking={{ ...BASE, orderStatus: 'expired', bankDeposit: null, depositDeadline: null, createdAt: new Date().toISOString() }} />);
+    expect(screen.queryByRole('button', { name: '기록 삭제' })).not.toBeInTheDocument();
+    expect(screen.getByText(/하루가 지나면 지울 수 있어요/)).toBeInTheDocument();
+  });
+
+  it('결제 행이 있으면 아예 보이지 않는다', () => {
+    render(<AdminBookingDetailPage booking={{ ...BASE, orderStatus: 'failed', bankDeposit: null, depositDeadline: null, createdAt: OLD, paymentCount: 1 }} />);
+    expect(screen.queryByText(/결제를 끝내지 않은 주문입니다/)).not.toBeInTheDocument();
+  });
+});
