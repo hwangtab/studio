@@ -247,14 +247,17 @@ export const FACT_GUARD_RULES: FactGuardRule[] = [
   {
     id: 'ai-rework-ai-song-not-ai-claim',
     description: 'AI 반주를 남기는 보컬 리워크에 "AI 곡 아님" 단정 금지 — 재작곡·재편곡 문맥에서만 허용',
-    pattern: /AI\s*곡(?:이|은|도)?\s*(?:아니|아님|아닙니다|아니다)/,
-    allow: /재작곡|재편곡/,
+    pattern:
+      /(?:^|[.!?])\s*(?:(?!(?:재작곡|재편곡))[^\n])*?AI\s*곡(?:이|은|도)?\s*(?:아닙니다|아니에요|아니다|아니라|아니고|아니며|아님|아니)(?![가-힣])/,
+    marker: /리워크|AI\s*반주|보컬만|Suno|Udio/i,
   },
   {
     id: 'ai-release-guarantee-claim',
     description: 'AI 데모 리워크의 발매·게재·차트 보장 표현 금지',
-    pattern: /(?:AI[^\n]{0,20}|리워크[^\n]{0,20})(?:발매|게재|차트)[^\n]{0,12}(?:보장해|보장합니다|보장드|100%|반드시)/,
-    allow: /보장하지|않/,
+    pattern:
+      /(?:발매|게재|차트)[^\n]{0,12}(?:보장해|보장합니다|보장드|보장할|보장하지|보장되지|보장은|100%)/,
+    marker: /AI\s*곡|AI\s*반주|AI\s*데모|리워크|rework|Suno|Udio|보컬만/i,
+    allow: /보장하지\s?않|보장할\s?수\s?없|보장되지\s?않|보장은\s?없|보장드릴\s?수\s?없/,
   },
 ];
 
