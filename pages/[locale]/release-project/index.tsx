@@ -81,7 +81,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
   const { t } = useTranslation('common', { lng: locale });
   const getLink = (path: string) => `/${locale}${path}`;
   const siteConfig = getSiteConfig(locale);
-  const reviewsToShow = getReviews(locale).filter((r) => ['review-1', 'review-3'].includes(r.id));
+  const reviewsToShow = getReviews(locale).filter((r) => ['review-3'].includes(r.id));
   const consultationSteps = t('releaseProject.consultation.steps', { returnObjects: true }) as { num: string; title: string; desc: string }[];
   const scopeItems = t('releaseProject.scope.items', { returnObjects: true }) as string[];
   const producerStats = t('releaseProject.producer.stats', { returnObjects: true }) as Array<{ value: string; label: string }>;
