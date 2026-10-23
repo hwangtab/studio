@@ -40,7 +40,7 @@ import { completeStalledProductionContract } from '../../../../../lib/contracts/
 import { loadProgressContext } from '../../../../../lib/contracts/production/progress';
 import { buildAdminProgressView, type AdminProgressView } from '../../../../../lib/contracts/production/progress-view';
 import { ensureContractPaymentLink, listContractPaymentLinks } from '../../../../../lib/contracts/production/payment-link';
-import { isOneSongKind, releaseTitle } from '../../../../../lib/contracts/production/terms';
+import { isOneSongKind, paymentPurposeWord, releaseTitle } from '../../../../../lib/contracts/production/terms';
 import { recordAdminPrivacyAccess } from '../../../../../lib/privacy/accessLog';
 import { ActionNotice } from '../../../../../components/admin/ActionNotice';
 import { useAdminDialog } from '../../../../../components/admin/useAdminDialog';
@@ -432,7 +432,7 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
             <ul className="space-y-2 text-sm">
               {paymentLinks.map((link) => (
                 <li key={link.url} className="flex flex-wrap items-center gap-3 rounded-lg bg-gray-50 p-3">
-                  <span className="font-semibold text-gray-900">{link.purpose === 'deposit' ? '대금·계약금' : link.purpose === 'second' ? '중간금' : '잔금'}</span>
+                  <span className="font-semibold text-gray-900">{link.purpose === 'deposit' ? '대금·계약금' : paymentPurposeWord(link.purpose, terms)}</span>
                   <span className="tabular-nums">{formatCurrency(link.amount)}원</span>
                   <span className={link.paid ? 'text-green-700' : link.open ? 'text-blue-700' : 'text-gray-500'}>
                     {link.paid ? '결제됨' : link.open ? '열림 — 결제 대기' : '닫힘'}

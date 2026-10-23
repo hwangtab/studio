@@ -55,7 +55,7 @@ export interface EventData {
   orderNo?: string;
 }
 
-export type ReminderKind = 'deemed_approval_soon' | 'deposit_due' | 'balance_due';
+export type ReminderKind = 'deemed_approval_soon' | 'deposit_due' | 'second_due' | 'balance_due';
 
 export const parseEventData = (event: Pick<ProductionContractEvent, 'dataJson'>): EventData => {
   if (!event.dataJson) return {};

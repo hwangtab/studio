@@ -109,6 +109,13 @@ export const isSinglePayment = (terms: Pick<ProductionTerms, 'amount'>): boolean
 /** 체결 후 먼저 받는 돈의 이름 — 한 번에 받으면 "대금", 나눠 받으면 "계약금". 계약서·메일·화면이 같은 말을 쓴다. */
 export const depositWordFor = (terms: Pick<ProductionTerms, 'amount'>): string => (isSinglePayment(terms) ? '대금' : '계약금');
 
+/**
+ * 결제 링크 목적의 이름 — 고객 진행 페이지·서명 완료 화면·관리자 상세·링크 상품명이 같은 말을 쓴다.
+ * 계약금(일시불이면 "대금") / 중간금(3회 분할 2회차) / 잔금.
+ */
+export const paymentPurposeWord = (purpose: 'deposit' | 'second' | 'balance', terms: Pick<ProductionTerms, 'amount'>): string =>
+  purpose === 'deposit' ? depositWordFor(terms) : purpose === 'second' ? '중간금' : '잔금';
+
 /** 계약서 이름 — 메일 제목·PDF·서명 화면에 쓴다. */
 export const contractNameFor = (kind: ProductionKind): string =>
   isMixMasterKind(kind) ? '믹싱·마스터링 용역 계약서' : isReworkKind(kind) ? 'AI 리워크 음원 제작 용역 계약서' : '음원 제작 용역 계약서';
