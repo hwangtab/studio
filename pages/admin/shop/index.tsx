@@ -162,10 +162,11 @@ function ArtistSalesSection({ rows, month, prevMonth, nextMonth }: Pick<Props, '
           <table className="admin-table w-full text-left lg:min-w-[56rem] lg:table-fixed">
             <colgroup className="max-lg:hidden">
               <col />
-              <col className="w-20" />
-              <col className="w-44" />
-              <col className="w-52" />
+              {/* 정산 표(ShopPayoutSection)의 판매 w-48 = 수량 w-16 + 판매액 w-32, 공제 w-40, 이체액 w-32와 열을 맞춘다. */}
+              <col className="w-16" />
+              <col className="w-32" />
               <col className="w-40" />
+              <col className="w-32" />
             </colgroup>
             <thead className="text-xs text-gray-500">
               <tr><Th>아티스트</Th><Th align="right">수량</Th><Th align="right">판매액</Th><Th>공제</Th><Th align="right" className="pr-0">이체액</Th></tr>

@@ -417,14 +417,14 @@ export default function AdminContractsPage({
                           <td data-label="서명일" className="px-4 py-3">{formatAdminDate(contract.signedAt)}</td>
                           <td data-label="관리" className="px-4 py-3">
                             <RowActions>
-                              <Button asChild light size="sm" variant="weak">
+                              <Button className="h-9 px-2.5" asChild light size="sm" variant="weak">
                                 <Link href={`/admin/contracts/${contract.id}`}>
                                   상세
                                 </Link>
                               </Button>
 
                               {contract.status === 'draft' && (
-                                <Button light
+                                <Button className="h-9 px-2.5" light
                                   size="sm"
                                   disabled={busy}
                                   onClick={() => handleSend(contract)}
@@ -434,7 +434,7 @@ export default function AdminContractsPage({
                               )}
 
                               {contract.status === 'sent' && (
-                                <Button light
+                                <Button className="h-9 px-2.5" light
                                   size="sm"
                                   variant="secondary"
                                   onClick={() => handleCopyLink(contract)}
@@ -444,7 +444,7 @@ export default function AdminContractsPage({
                               )}
 
                               {(contract.status === 'expired' || contract.status === 'cancelled') && !contract.purgedAt && (
-                                <Button light
+                                <Button className="h-9 px-2.5" light
                                   size="sm"
                                   disabled={busy}
                                   onClick={() => handleResend(contract)}
@@ -454,7 +454,7 @@ export default function AdminContractsPage({
                               )}
 
                               {(contract.status === 'signed' || contract.status === 'terminated') && !contract.purgedAt && (
-                                <Button light
+                                <Button className="h-9 px-2.5" light
                                   size="sm"
                                   disabled={busy}
                                   onClick={() =>

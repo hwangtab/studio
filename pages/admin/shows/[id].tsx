@@ -444,7 +444,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
               const sameName = (o.bankDeposit === 'awaiting' || o.bankDeposit === 'cancelled') ? (sameNameDeposits[o.orderNo] ?? []) : [];
               return (
                 <React.Fragment key={o.orderNo}>
-                <tr className={`align-top ${sameName.length > 0 ? 'border-b-0' : ''}`}>
+                <tr className="align-top">
                   <td data-label="주문" className="px-4 py-2 whitespace-nowrap">
                     <div className="font-mono text-xs">{o.orderNo}</div>
                     <div className="text-xs text-gray-500">
@@ -489,21 +489,21 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
                     {o.bankDeposit === 'awaiting' && (
                       <div className="mb-2">
                         <RowActions>
-                          <Button light size="sm" disabled={busy} onClick={() =>
+                          <Button className="h-9 px-2.5" light size="sm" disabled={busy} onClick={() =>
                             run({ action: 'confirm_deposit', orderNo: o.orderNo }, {
                               confirm: `통장에 실제로 입금됐는지 먼저 확인하세요.\n\n보내는 분 ${o.buyerName} · ${o.totalAmount.toLocaleString('ko-KR')}원이 들어온 것을 확인했나요? 확인하면 티켓이 발급되고 구매자에게 QR 티켓 메일이 나갑니다.`,
                               success: '입금을 확인하고 티켓을 발급했습니다.',
                             })}>
                             입금 확인
                           </Button>
-                          <Button light variant="weak" size="sm" disabled={busy} onClick={() =>
+                          <Button className="h-9 px-2.5" light variant="weak" size="sm" disabled={busy} onClick={() =>
                             run({ action: 'cancel_unpaid_deposit', orderNo: o.orderNo }, {
                               confirm: '받은 돈이 없는 신청을 닫습니다 — 좌석이 풀리고 메일은 가지 않습니다.',
                               success: '미입금 신청을 닫았습니다.',
                             })}>
                             미입금 취소
                           </Button>
-                          <Button light variant="weak" size="sm" disabled={busy} onClick={() =>
+                          <Button className="h-9 px-2.5" light variant="weak" size="sm" disabled={busy} onClick={() =>
                             run({ action: 'resend_deposit_guide', orderNo: o.orderNo }, { confirm: '입금 안내 메일을 다시 보낼까요?' }).then((r) => {
                               const failure = r?.data?.notificationError;
                               if (typeof failure === 'string' && failure) setNotice(`입금 안내 메일 발송에 실패했습니다(${failure}).`);
@@ -532,7 +532,8 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
                   </td>
                 </tr>
                 {sameName.length > 0 && (
-                  <tr>
+                  // 위 주문 행에 붙여 보이게 — tbody의 divide-y가 이 행 위에 긋는 선을 지운다.
+                  <tr className="!border-t-0">
                     <td colSpan={5} className="px-4 pb-3 pt-0">
                       <div className="rounded border border-amber-300 bg-amber-50 p-2 text-xs text-amber-950">
                         <p className="font-semibold">같은 이름의 다른 계좌 입금 신청이 {sameName.length}건 있습니다 — 이중 확인 주의</p>

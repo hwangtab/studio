@@ -32,9 +32,10 @@ export const RowLinks = ({ children }: { children: React.ReactNode }) => (
 
 /** 행 끝 동작 칸 — 줄바꿈 없이 오른쪽 정렬. `danger`는 구분선 뒤 끝에 둔다. */
 export const RowActions = ({ children, danger, className }: { children?: React.ReactNode; danger?: React.ReactNode; className?: string }) => (
-  <div className={cn('flex flex-nowrap items-center justify-end gap-1.5', className)}>
+  // 좁은 화면(.admin-table이 행을 카드로 쌓는 1023px 이하)에서는 줄바꿈을 허용한다 — 카드 폭에 버튼 넷이 안 들어간다.
+  <div className={cn('flex flex-wrap items-center justify-start gap-1.5 lg:flex-nowrap lg:justify-end', className)}>
     {children}
-    {danger && <div className="ml-1 flex flex-nowrap items-center gap-1.5 border-l border-gray-200 pl-2">{danger}</div>}
+    {danger && <div className="flex flex-wrap items-center gap-1.5 lg:ml-1 lg:flex-nowrap lg:border-l lg:border-gray-200 lg:pl-2">{danger}</div>}
   </div>
 );
 

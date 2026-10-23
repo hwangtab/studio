@@ -260,9 +260,9 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
           <col />
           <col className="w-28" />
           <col className="w-36" />
-          <col className="w-44" />
+          <col className="w-40" />
           <col className="w-32" />
-          <col className="w-28" />
+          <col className="w-24" />
           <col className="w-[14.5rem]" />
         </colgroup>
         <thead>
@@ -294,7 +294,7 @@ export default function AdminTenanciesPage({ rows, today, calendarConfigured, ta
                   <span className="whitespace-nowrap">{formatAdminDate(t.endDate)}</span>
                   {t.status === 'active' && t.endDate && t.endDate < today && (() => {
                     const term = currentTermEnd(t.endDate, today);
-                    return <div className="text-xs text-gray-500">갱신 {term.renewals}회 · {formatAdminDate(term.end)}까지</div>;
+                    return <div className="text-xs text-gray-500">갱신 {term.renewals}회 · <span className="whitespace-nowrap">{formatAdminDate(term.end)}까지</span></div>;
                   })()}
                 </td>
                 <td className="whitespace-nowrap py-3 pr-3 tabular-nums text-gray-600">{formatAdminDate(t.lastPaidOn)}{t.lastPaidAmount !== null && t.lastPaidAmount !== t.monthlyAmount && <div className="text-xs">{won(t.lastPaidAmount)}</div>}</td>
