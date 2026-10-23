@@ -39,6 +39,10 @@
     "width": 960,
     "height": 1280
   },
+  "/images/director-park-chichi-20261022.webp": {
+    "width": 900,
+    "height": 1170
+  },
   "/images/email-logo.png": {
     "width": 280,
     "height": 72
@@ -339,6 +343,14 @@
     "width": 1280,
     "height": 720
   },
+  "/images/music-video-hero-20261022.webp": {
+    "width": 1920,
+    "height": 1080
+  },
+  "/images/music-video-scene-20261022.webp": {
+    "width": 1280,
+    "height": 880
+  },
   "/images/og-default.jpg": {
     "width": 1200,
     "height": 630
@@ -368,6 +380,10 @@
     "height": 630
   },
   "/images/og-music-promotion.webp": {
+    "width": 1200,
+    "height": 630
+  },
+  "/images/og-music-video-20261022.webp": {
     "width": 1200,
     "height": 630
   },
