@@ -109,7 +109,7 @@ const digits = (raw: string): number => Number(raw.replace(/[^0-9]/g, '') || '0'
 const STAGE_LABEL: Record<RevisionStage, string> = { arrangement: '편곡', mixing: '믹싱', mastering: '마스터링' };
 
 /** 종류를 처음 고를 때의 곡 수 — 번들 가격의 기준 곡 수(EP 4곡, 정규 8곡, data/pricing.ts). */
-const DEFAULT_SONG_COUNT: Record<ProductionKind, number> = { single: 1, ep: 4, album: 8, mixmaster: 1 };
+const DEFAULT_SONG_COUNT: Record<ProductionKind, number> = { single: 1, ep: 4, album: 8, mixmaster: 1, rework: 1 };
 
 /** 곡 목록을 n곡으로 — 있던 제목은 남긴다. */
 const resizeSongs = (songs: ProductionTerms['songs'], count: number) =>

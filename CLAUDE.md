@@ -346,6 +346,14 @@ SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이�
   믹싱 몫, 마스터링 전달 때 전액). `mixing`이 아니라 `mixmaster`인 이유는 온라인 믹싱 주문이 이미 `mixing`을 쓰기 때문이다.
   **마이그레이션 0078(kind CHECK 확장, 표 재생성)은 배포 직후 적용한다** — 적용 전에는 믹싱·마스터링 계약 저장만 CHECK에 걸려
   실패한다(기존 종류·결제는 무관). 손으로 SQL을 돌릴 땐 0073과 같이 `PRAGMA foreign_keys=OFF`를 먼저.
+- **AI 리워크 계약(kind `rework`, `rework-template.md`, 2026-10-23)** — AI 데모 1곡을 보컬 재녹음(+선택 재편곡·재작곡)·믹싱·마스터링·유통까지.
+  기본 조건은 `buildDefaultReworkTerms('none'|'small'|'band')`(50만/100만/150만, 정본 `data/aiRework.ts`). **100만원 이상은 50·30·20% 3회 분할**
+  (`splitThreeInstallments`) — 중간금 링크는 계약금이 다 들어오고 **편곡 승인 기록이 있어야** 열린다. 다른 종류의 분할(`splitPayment`)은 그대로다.
+  해지 정산은 항목표가 아니라 `refundPolicy`(paid_ratio, **받은 금액 × 단계 비율**: 착수 70%·녹음 40%·믹싱 1차 20%·마스터링 0%, 스튜디오 사정 100%)이고
+  계약서 제10조 표·`clauses.ts` 요약·`ledger.ts`가 같은 약속을 한다 — 한쪽을 바꾸면 셋 다. `refundPolicy`는 리워크에만 붙는다(검증이 막는다).
+  편곡 없는 리워크도 `arrangementTracks = 0`이라 **믹싱·마스터링 판정(`isMixMasterTerms`)은 녹음 시간까지 0일 때만**이다 — 되돌리면 리워크의 녹음·유통 기록이 숨는다.
+  유통 등록(`distribution_submitted`)은 모든 종류에서 완납 뒤에만 기록된다. **마이그레이션 0086(kind CHECK 확장, 표 재생성)은 배포 직후 적용한다** —
+  적용 전에는 리워크 계약 저장만 CHECK에 걸린다(기존 종류·결제 무관). 손으로 SQL을 돌릴 땐 0073과 같이 `PRAGMA foreign_keys=OFF`를 먼저.
 - **링크 계약(의뢰인 정보를 서명할 때 받기, `open-link.ts`, 2026-10-20)** — 운영자가 의뢰인 이름·연락처를 모를 때 작성 폼의
   체크박스로 만든다. 의뢰인 칸은 빈 문자열로 저장되고(`client_phone = ''`이 판정), 발송하면 메일 없이 링크만 생겨 관리자 상세의
   "서명 링크 복사"로 카카오톡에 보낸다. 의뢰인은 서명 화면에서 이름·활동명·연락처·이메일을 적고, **연락처 뒷자리 대조를 하지

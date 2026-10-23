@@ -9,6 +9,11 @@ import {
   SINGLE_BUNDLE_PRICE,
   VOCAL_TUNING_ADDON_PRICE,
 } from '../../../data/pricing';
+import {
+  AI_REWORK_RELEASE_BUNDLE_PRICE,
+  AI_REWORK_REWRITE_ADD_PRICE,
+  AI_REWORK_REWRITE_LARGE_ADD_PRICE,
+} from '../../../data/aiRework';
 import type { productionContractKindEnum } from '../../../db/schema';
 import { BANK_ACCOUNT } from '../../payments/bankAccount';
 import { CONTROL_CHARS, type ValidationError } from '../validation';
@@ -35,18 +40,31 @@ export const SONG_COUNT_RANGE: Record<ProductionKind, { min: number; max: number
   ep: { min: 2, max: 7 },
   album: { min: 6, max: 20 },
   mixmaster: { min: 1, max: 1 },
+  rework: { min: 1, max: 1 },
 };
 
-export const KIND_LABEL: Record<ProductionKind, string> = { single: '싱글', ep: 'EP', album: '정규 앨범', mixmaster: '믹싱·마스터링' };
+export const KIND_LABEL: Record<ProductionKind, string> = {
+  single: '싱글',
+  ep: 'EP',
+  album: '정규 앨범',
+  mixmaster: '믹싱·마스터링',
+  rework: 'AI 리워크',
+};
 
 /**
  * 곡이 하나인 종류 — 음반 제목이 없고 곡 제목이 곧 화면 이름이다. 싱글 제작과 믹싱·마스터링(1곡)이 여기 든다.
  * `kind === 'single'`로 "곡 하나"를 판정하던 자리는 이 함수를 쓴다 — 믹싱·마스터링이 EP처럼 읽히지 않게.
  */
-export const isOneSongKind = (kind: ProductionKind): boolean => kind === 'single' || kind === 'mixmaster';
+export const isOneSongKind = (kind: ProductionKind): boolean => kind === 'single' || kind === 'mixmaster' || kind === 'rework';
 
 /** 믹싱·마스터링만 하는 계약인가 — 편곡·녹음·유통·홍보가 범위에 없다(mixmaster-template.md). */
 export const isMixMasterKind = (kind: ProductionKind): boolean => kind === 'mixmaster';
+
+/**
+ * AI 데모를 발매작으로 다시 만드는 계약인가(rework-template.md, 2026-10-23). 1곡이고, 해지 정산은 항목표가 아니라
+ * 받은 금액 × 단계 비율(refundPolicy)이다. 편곡은 고른 범위에 따라 없을 수도 있다(scope.arrangementTracks = 0).
+ */
+export const isReworkKind = (kind: ProductionKind): boolean => kind === 'rework';
 
 /**
  * 이 금액 이하 계약은 계약금·잔금으로 나누지 않고 한 번에 받는다(운영자 결정 2026-10-20). 체결 후 계약금 기한
@@ -93,13 +111,14 @@ export const depositWordFor = (terms: Pick<ProductionTerms, 'amount'>): string =
 
 /** 계약서 이름 — 메일 제목·PDF·서명 화면에 쓴다. */
 export const contractNameFor = (kind: ProductionKind): string =>
-  isMixMasterKind(kind) ? '믹싱·마스터링 용역 계약서' : '음원 제작 용역 계약서';
+  isMixMasterKind(kind) ? '믹싱·마스터링 용역 계약서' : isReworkKind(kind) ? 'AI 리워크 음원 제작 용역 계약서' : '음원 제작 용역 계약서';
 
 /**
  * 의뢰인이 처음 보내는 자료의 이름. 제작 계약은 가이드 음원("1차 완성본", 제1조), 믹싱·마스터링 계약은
  * 녹음이 끝난 트랙별 파일("작업 파일", 제1조)이다. 진행 기록의 `source_received`가 이것을 받은 날이다.
  */
-export const sourceLabelFor = (kind: ProductionKind): string => (isMixMasterKind(kind) ? '작업 파일' : '1차 완성본');
+export const sourceLabelFor = (kind: ProductionKind): string =>
+  isMixMasterKind(kind) ? '작업 파일' : isReworkKind(kind) ? 'AI 데모 파일' : '1차 완성본';
 
 export const REFUND_ITEM_KEYS = ['arrangement', 'recording', 'tuning', 'mixmaster', 'planning'] as const;
 export type RefundItemKey = (typeof REFUND_ITEM_KEYS)[number];
@@ -109,7 +128,7 @@ export type RefundItemKey = (typeof REFUND_ITEM_KEYS)[number];
  * 제2조 전체인 한 항목이다 — 그 안의 믹싱·마스터링 경계는 milestones가 나눈다.
  */
 export const refundItemKeysFor = (kind: ProductionKind): readonly RefundItemKey[] =>
-  isMixMasterKind(kind) ? ['mixmaster'] : REFUND_ITEM_KEYS;
+  isMixMasterKind(kind) ? ['mixmaster'] : isReworkKind(kind) ? ['planning'] : REFUND_ITEM_KEYS;
 
 export const REVISION_STAGES = ['arrangement', 'mixing', 'mastering'] as const;
 export type RevisionStage = (typeof REVISION_STAGES)[number];
@@ -190,7 +209,7 @@ export interface ProductionTerms {
     balance: number;
     /** 계약금 기한: 체결일부터. */
     depositDueDays: number;
-    /** 2회차 기한: 계약금 입금일부터. 2회차가 없으면 쓰지 않는다(보정값 7). */
+    /** 2회차(중간금) 기한: 편곡 승인일부터(ledger.ts secondLastDay). 2회차가 없으면 쓰지 않는다(보정값 7). */
     secondDueDays: number;
     /** 잔금 기한: 최종 마스터 승인일부터. */
     balanceDueDays: number;
@@ -221,8 +240,12 @@ export interface ProductionTerms {
 }
 
 /** 제10조 항목표에 인쇄되는 이름. 믹싱·마스터링 계약은 조항 번호가 달라(제2조 전체) 따로 둔다. */
-export const refundLabelFor = (kind: ProductionKind, key: RefundItemKey): string =>
-  isMixMasterKind(kind) && key === 'mixmaster' ? '믹싱·마스터링 (제2조)' : REFUND_LABELS[key];
+export const refundLabelFor = (kind: ProductionKind, key: RefundItemKey): string => {
+  if (isMixMasterKind(kind) && key === 'mixmaster') return '믹싱·마스터링 (제2조)';
+  // AI 리워크는 항목이 제2조 전체 하나다 — 해지 정산은 이 표가 아니라 refundPolicy(받은 금액 × 비율)가 한다.
+  if (isReworkKind(kind) && key === 'planning') return 'AI 리워크 제작 일체 (제2조)';
+  return REFUND_LABELS[key];
+};
 
 const REFUND_LABELS: Record<RefundItemKey, string> = {
   arrangement: '편곡 (제2조 2호)',
@@ -270,7 +293,7 @@ const DEFAULT_CREDITS = 'Arranged by 황경하 / Recorded · Mixed by 스튜디�
 const MIXMASTER_CREDITS = 'Mixed · Mastered by 스튜디오 놀';
 
 /** 곡당 번들 단가 — 싱글 번들, EP·정규 번들의 곡당 값(정본 상수). 믹싱·마스터링은 번들이 아니라 아래에서 따로 만든다. */
-const BUNDLE_PER_SONG: Record<Exclude<ProductionKind, 'mixmaster'>, number> = {
+const BUNDLE_PER_SONG: Record<Exclude<ProductionKind, 'mixmaster' | 'rework'>, number> = {
   single: SINGLE_BUNDLE_PRICE,
   ep: EP_BUNDLE_PER_SONG_PRICE,
   album: ALBUM_BUNDLE_PER_SONG_PRICE,
@@ -280,7 +303,7 @@ const BUNDLE_PER_SONG: Record<Exclude<ProductionKind, 'mixmaster'>, number> = {
  * 작업 기간 기본값(주). 싱글 8주는 계약서 원문, EP·정규는 곡 수를 고려한 출발값이다 — **운영자 확인 필요**
  * (EP·정규 계약서 초안 검토와 함께). 작성 폼에서 계약마다 고친다.
  */
-const DEFAULT_WORK_WEEKS: Record<ProductionKind, number> = { single: 8, ep: 12, album: 20, mixmaster: 2 };
+const DEFAULT_WORK_WEEKS: Record<ProductionKind, number> = { single: 8, ep: 12, album: 20, mixmaster: 2, rework: 6 };
 
 /**
  * 믹싱·마스터링 계약의 기본 조건 — 사이트 정가(믹싱 10트랙 이하 + 싱글 마스터링, data/pricing.ts) 그대로.
@@ -360,11 +383,88 @@ const MIXMASTER_BASE = (): ProductionTerms => {
 };
 
 /**
+ * AI 리워크의 편곡 범위 — 편곡 없음(보컬 재녹음부터) / 소편성(10트랙 이하) / 풀밴드(11~30트랙). 가격은
+ * data/aiRework.ts 정본: 발매까지 번들 + 재편곡·재작곡 추가가.
+ */
+export const REWORK_SCOPES = ['none', 'small', 'band'] as const;
+export type ReworkScope = (typeof REWORK_SCOPES)[number];
+
+export const REWORK_SCOPE_LABEL: Record<ReworkScope, string> = {
+  none: '편곡 없음',
+  small: '재편곡·재작곡 소편성(10트랙 이하)',
+  band: '재편곡·재작곡 풀밴드(11~30트랙)',
+};
+
+/** 범위별 곡당 편곡 트랙 상한(계약서 "N트랙 이하"). 풀밴드는 풀밴드 편곡 상품의 상한 30트랙. */
+const REWORK_ARRANGEMENT_TRACKS: Record<ReworkScope, number> = { none: 0, small: 10, band: 30 };
+
+const REWORK_ADD_PRICE: Record<ReworkScope, number> = {
+  none: 0,
+  small: AI_REWORK_REWRITE_ADD_PRICE,
+  band: AI_REWORK_REWRITE_LARGE_ADD_PRICE,
+};
+
+/** 저장된 조건에서 범위를 읽는다 — 편곡 트랙 수가 기준이다(0 = 없음, 10 이하 = 소편성, 그 위 = 풀밴드). */
+export const reworkScopeOf = (terms: Pick<ProductionTerms, 'scope'>): ReworkScope =>
+  terms.scope.arrangementTracks === 0 ? 'none' : terms.scope.arrangementTracks <= 10 ? 'small' : 'band';
+
+/**
+ * 해지 환불 단계(운영자 결정 2026-10-23, 설계 §6) — 그 사건이 기록된 뒤에는 받은 금액의 이 비율만 돌려준다.
+ * 착수 전은 전액, 마스터링 결과물을 전달한 뒤에는 0. "믹싱 착수" 기록이 없어 20% 경계는 믹싱 1차 전달로 잡는다.
+ */
+const REWORK_REFUND_STAGES: RefundMilestone[] = [
+  { event: 'kickoff', ratio: 0.7 },
+  { event: 'recording_completed', ratio: 0.4 },
+  { event: 'mixing_delivered', ratio: 0.2 },
+  { event: 'mastering_delivered', ratio: 0 },
+];
+
+/**
+ * AI 리워크 기본 조건. 금액은 발매까지 번들 + 범위별 재편곡·재작곡가, 100만원 이상이면 50·30·20% 3회 분할
+ * (splitThreeInstallments). 항목표는 제2조 전체 한 항목(마스터링 결과물 전달 때 완료)으로 두고, 해지 정산은
+ * refundPolicy가 한다. `buildDefaultProductionTerms`의 다른 종류 동작은 바꾸지 않는다.
+ */
+export const buildDefaultReworkTerms = (scope: ReworkScope): ProductionTerms => {
+  const total = AI_REWORK_RELEASE_BUNDLE_PRICE + REWORK_ADD_PRICE[scope];
+  const hasArrangement = scope !== 'none';
+  return {
+    version: 3,
+    albumTitle: null,
+    songs: [{ title: null }],
+    scope: { arrangementTracks: REWORK_ARRANGEMENT_TRACKS[scope], recordingHours: 3, mixingTracks: hasArrangement ? REWORK_ARRANGEMENT_TRACKS[scope] : 10 },
+    amount: { total, ...splitThreeInstallments(total), depositDueDays: 3, secondDueDays: 7, balanceDueDays: 7 },
+    payment: {
+      bank: BANK_ACCOUNT.bankName,
+      account: BANK_ACCOUNT.accountNumber,
+      holder: BANK_ACCOUNT.accountHolder,
+    },
+    workWeeks: DEFAULT_WORK_WEEKS.rework,
+    revisions: { arrangement: hasArrangement ? 2 : 0, mixing: 2, mastering: 1 },
+    extraRevisionFees: { ...DEFAULT_EXTRA_REVISION_FEES, arrangement: hasArrangement ? DEFAULT_EXTRA_REVISION_FEES.arrangement : 0 },
+    deemedApprovalDays: 7,
+    refundSchedule: [
+      {
+        key: 'planning',
+        label: refundLabelFor('rework', 'planning'),
+        amount: total,
+        milestones: [{ event: 'mastering_delivered', ratio: 1 }],
+      },
+    ],
+    refundPolicy: { mode: 'paid_ratio', stages: REWORK_REFUND_STAGES.map((stage) => ({ ...stage })) },
+    clientUnresponsiveDays: 30,
+    paymentDelayDays: 14,
+    studioDelayWeeks: 4,
+    credits: hasArrangement ? DEFAULT_CREDITS : 'Recorded · Mixed by 스튜디오 놀',
+  };
+};
+
+/**
  * 기본 조건. 계약금액은 정본 상수의 곡 수 배다 — 곡마다 소편성 편곡 + 번들 곡당 단가 + 보컬 보정.
  * 작성 폼이 이 값으로 시작하고, 운영자가 견적에 맞춰 고친다.
  */
 export const buildDefaultProductionTerms = (kind: ProductionKind = 'single', songCount = 1): ProductionTerms => {
   if (kind === 'mixmaster') return buildDefaultMixMasterTerms();
+  if (kind === 'rework') return buildDefaultReworkTerms('none');
   const count = Math.min(Math.max(songCount, SONG_COUNT_RANGE[kind].min), SONG_COUNT_RANGE[kind].max);
   const bundle = BUNDLE_PER_SONG[kind] * count;
   const total = (ARRANGEMENT_SMALL_PRICE + VOCAL_TUNING_ADDON_PRICE) * count + bundle;
@@ -556,8 +656,10 @@ export const validateProductionTerms = (raw: unknown, kind: ProductionKind = 'si
 
   // 믹싱·마스터링 계약은 편곡·녹음이 범위에 없다 — 0을 받는다(계약서에 인쇄되지 않는다).
   const mixMaster = isMixMasterKind(kind);
+  // AI 리워크는 편곡 없이(보컬 재녹음부터) 맺을 수 있다 — 편곡 0트랙을 받되 녹음은 범위에 있다.
+  const rework = isReworkKind(kind);
   const scope = {
-    arrangementTracks: readInt(raw.scope, 'arrangementTracks', 'terms.scope.arrangementTracks', { min: mixMaster ? 0 : 1, max: 200 }),
+    arrangementTracks: readInt(raw.scope, 'arrangementTracks', 'terms.scope.arrangementTracks', { min: mixMaster || rework ? 0 : 1, max: 200 }),
     recordingHours: readInt(raw.scope, 'recordingHours', 'terms.scope.recordingHours', { min: mixMaster ? 0 : 1, max: 100 }),
     mixingTracks: readInt(raw.scope, 'mixingTracks', 'terms.scope.mixingTracks', { min: 1, max: 200 }),
   };
@@ -654,6 +756,14 @@ export const validateProductionTerms = (raw: unknown, kind: ProductionKind = 'si
   }
 
   const refundPolicy = readRefundPolicy(raw.refundPolicy);
+  // 지급 비율 환불은 AI 리워크 계약서(제10조)에만 문안이 있다. 리워크인데 없으면 항목표 한 줄(마스터링 전 공제 0)로
+  // 정산돼 계약서와 어긋나고, 다른 종류에 붙으면 그 계약서가 말하지 않는 방식으로 정산된다.
+  if (rework && refundPolicy === undefined && raw.refundPolicy === undefined) {
+    push('terms.refundPolicy', 'AI 리워크 계약에는 단계별 환불 기준이 있어야 합니다.');
+  }
+  if (!rework && refundPolicy !== undefined) {
+    push('terms.refundPolicy', '단계별 환불 기준은 AI 리워크 계약에만 씁니다.');
+  }
 
   if (errors.length > 0) return { ok: false, errors };
 

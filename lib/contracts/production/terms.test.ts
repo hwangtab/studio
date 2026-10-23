@@ -1,3 +1,4 @@
+import { adminEventTypesFor, isMixMasterTerms } from './event-spec';
 import {
   ARRANGEMENT_SMALL_PRICE,
   EP_BUNDLE_PER_SONG_PRICE,
@@ -6,7 +7,12 @@ import {
 } from '../../../data/pricing';
 import {
   buildDefaultProductionTerms,
+  buildDefaultReworkTerms,
   canonicalTermsJson,
+  isOneSongKind,
+  KIND_LABEL,
+  reworkScopeOf,
+  sourceLabelFor,
   isSinglePayment,
   parseStoredTerms,
   REFUND_ITEM_KEYS,
@@ -285,8 +291,13 @@ describe('3회 분할 조건(terms v3)', () => {
 });
 
 describe('환불 정책(terms v3)', () => {
+  // 지급 비율 환불은 AI 리워크 계약에만 붙는다 — 형식 검사는 리워크 조건 위에서 한다.
+  const reworkFields = (raw: unknown) => {
+    const result = validateProductionTerms(raw, 'rework');
+    return result.ok ? [] : result.errors.map((error) => error.field);
+  };
   const withPolicy = (stages: unknown): ProductionTerms => {
-    const terms = clone() as unknown as { refundPolicy?: unknown };
+    const terms = JSON.parse(JSON.stringify(buildDefaultReworkTerms('small'))) as { refundPolicy?: unknown };
     terms.refundPolicy = { mode: 'paid_ratio', stages };
     return terms as unknown as ProductionTerms;
   };
@@ -300,12 +311,12 @@ describe('환불 정책(terms v3)', () => {
         { event: 'distribution_submitted' as const, ratio: 0 },
       ],
     };
-    const result = validateProductionTerms(withPolicy(policy.stages));
+    const result = validateProductionTerms(withPolicy(policy.stages), 'rework');
     expect(result.ok && result.data.refundPolicy).toEqual(policy);
   });
 
   it('비율이 내림차순이 아니면 거부한다', () => {
-    expect(fields(withPolicy([
+    expect(reworkFields(withPolicy([
       { event: 'kickoff', ratio: 0.5 },
       { event: 'arrangement_delivered', ratio: 0.7 },
       { event: 'distribution_submitted', ratio: 0 },
@@ -313,25 +324,110 @@ describe('환불 정책(terms v3)', () => {
   });
 
   it('마지막 단계가 0이 아니면 거부한다', () => {
-    expect(fields(withPolicy([
+    expect(reworkFields(withPolicy([
       { event: 'kickoff', ratio: 1 },
       { event: 'distribution_submitted', ratio: 0.1 },
     ]))).toContain('terms.refundPolicy');
   });
 
   it('모르는 사건 이름을 거부한다', () => {
-    expect(fields(withPolicy([{ event: 'whenever', ratio: 0 }]))).toContain('terms.refundPolicy');
+    expect(reworkFields(withPolicy([{ event: 'whenever', ratio: 0 }]))).toContain('terms.refundPolicy');
   });
 
   it('단계는 1~5개여야 한다', () => {
-    expect(fields(withPolicy([]))).toContain('terms.refundPolicy');
-    expect(fields(withPolicy(Array.from({ length: 6 }, () => ({ event: 'kickoff', ratio: 0 }))))).toContain('terms.refundPolicy');
+    expect(reworkFields(withPolicy([]))).toContain('terms.refundPolicy');
+    expect(reworkFields(withPolicy(Array.from({ length: 6 }, () => ({ event: 'kickoff', ratio: 0 }))))).toContain('terms.refundPolicy');
   });
 
   it('비율은 0~1 사이여야 한다', () => {
-    expect(fields(withPolicy([
+    expect(reworkFields(withPolicy([
       { event: 'kickoff', ratio: 1.2 },
       { event: 'distribution_submitted', ratio: 0 },
     ]))).toContain('terms.refundPolicy');
+  });
+});
+
+describe('AI 리워크 기본 조건(rework, 2026-10-23)', () => {
+  it('편곡 없음은 발매까지 번들 50만원 한 번에 — 2회차·잔금 없음, 지급 비율 환불', () => {
+    const terms = buildDefaultReworkTerms('none');
+    expect(terms.amount).toMatchObject({ total: 500_000, deposit: 500_000, second: 0, balance: 0 });
+    expect(terms.scope.arrangementTracks).toBe(0);
+    expect(terms.scope.recordingHours).toBe(3);
+    expect(terms.refundPolicy?.mode).toBe('paid_ratio');
+    expect(isSinglePayment(terms)).toBe(true);
+  });
+
+  it('소편성은 100만원을 50·30·20%로', () => {
+    const terms = buildDefaultReworkTerms('small');
+    expect(terms.amount).toMatchObject({ total: 1_000_000, deposit: 500_000, second: 300_000, balance: 200_000 });
+    expect(terms.scope.arrangementTracks).toBe(10);
+    expect(reworkScopeOf(terms)).toBe('small');
+  });
+
+  it('풀밴드는 150만원을 75·45·30만원으로, 편곡 상한은 풀밴드 상품의 30트랙', () => {
+    const terms = buildDefaultReworkTerms('band');
+    expect(terms.amount).toMatchObject({ total: 1_500_000, deposit: 750_000, second: 450_000, balance: 300_000 });
+    expect(terms.scope.arrangementTracks).toBe(30);
+    expect(reworkScopeOf(terms)).toBe('band');
+  });
+
+  it('환불 단계는 착수 70% · 녹음 40% · 믹싱 1차 20% · 마스터링 0%', () => {
+    expect(buildDefaultReworkTerms('small').refundPolicy?.stages).toEqual([
+      { event: 'kickoff', ratio: 0.7 },
+      { event: 'recording_completed', ratio: 0.4 },
+      { event: 'mixing_delivered', ratio: 0.2 },
+      { event: 'mastering_delivered', ratio: 0 },
+    ]);
+  });
+
+  it.each(['none', 'small', 'band'] as const)('%s 기본 조건이 검증을 통과하고 그대로 돌아온다', (scope) => {
+    const terms = buildDefaultReworkTerms(scope);
+    const result = validateProductionTerms(JSON.parse(JSON.stringify(terms)), 'rework');
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(canonicalTermsJson(result.data)).toBe(canonicalTermsJson(terms));
+  });
+
+  it('buildDefaultProductionTerms("rework")는 편곡 없음 기본값', () => {
+    expect(buildDefaultProductionTerms('rework')).toEqual(buildDefaultReworkTerms('none'));
+  });
+
+  it('리워크에서 환불 정책을 빼면 거절 — 항목표 한 줄로 정산되면 계약서 제10조와 어긋난다', () => {
+    const { refundPolicy: _omit, ...terms } = buildDefaultReworkTerms('small');
+    const result = validateProductionTerms(JSON.parse(JSON.stringify(terms)), 'rework');
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors.map((e) => e.field)).toContain('terms.refundPolicy');
+  });
+
+  it('다른 종류에는 지급 비율 환불을 붙일 수 없다', () => {
+    const terms = { ...clone(), refundPolicy: buildDefaultReworkTerms('small').refundPolicy };
+    const result = validateProductionTerms(JSON.parse(JSON.stringify(terms)), 'single');
+    expect(result.ok).toBe(false);
+  });
+
+  it('회귀 — 싱글·EP·정규 기본 조건은 2회차가 없고 환불 정책도 없다', () => {
+    for (const [kind, count] of [['single', 1], ['ep', 4], ['album', 8]] as const) {
+      const terms = buildDefaultProductionTerms(kind, count);
+      expect(terms.amount.second).toBe(0);
+      expect(terms.refundPolicy).toBeUndefined();
+    }
+  });
+
+  it('리워크 이름·자료 이름·항목표 라벨', () => {
+    expect(KIND_LABEL.rework).toBe('AI 리워크');
+    expect(sourceLabelFor('rework')).toBe('AI 데모 파일');
+    expect(isOneSongKind('rework')).toBe(true);
+    expect(buildDefaultReworkTerms('small').refundSchedule).toEqual([
+      { key: 'planning', label: 'AI 리워크 제작 일체 (제2조)', amount: 1_000_000, milestones: [{ event: 'mastering_delivered', ratio: 1 }] },
+    ]);
+  });
+});
+
+describe('편곡 없는 AI 리워크는 믹싱·마스터링 계약으로 읽히지 않는다', () => {
+  it('녹음·유통 등록 기록을 숨기지 않는다 — 믹싱·마스터링 판정은 편곡·녹음이 모두 0일 때만', () => {
+    expect(isMixMasterTerms(buildDefaultReworkTerms('none'))).toBe(false);
+    expect(isMixMasterTerms(buildDefaultProductionTerms('mixmaster'))).toBe(true);
+    expect(adminEventTypesFor(isMixMasterTerms(buildDefaultReworkTerms('none')))).toEqual(
+      expect.arrayContaining(['recording_completed', 'distribution_submitted', 'released']),
+    );
   });
 });

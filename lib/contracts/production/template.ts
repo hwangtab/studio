@@ -21,12 +21,15 @@ import { depositWordFor, isMixMasterKind, isSinglePayment, KIND_LABEL, PER_SONG_
  * 판이다 — 공통 조항을 고치면 두 파일을 함께 고친다(template.test.ts가 공통 조항이 같은지 본다).
  * 믹싱·마스터링(1곡)은 mixmaster-template.md. 범위·착수·발매 조항이 다르지만 **조 번호는 제작 계약과 같다** —
  * 진행 기록·메일이 "제5조 5항", "제10조 1항"처럼 조항을 가리키므로 번호를 바꾸지 말 것.
+ * AI 리워크(1곡)는 rework-template.md — 싱글 문안에서 AI 데모·권리 보증·AI 표기·유통 미보장·단계별 환불을 바꾼 판이고,
+ * 조 번호는 같다. 제3·12·14조는 싱글과 같은 문장이다(template.test.ts).
  */
 const TEMPLATE_FILE: Record<ProductionKind, string> = {
   single: 'single-template.md',
   ep: 'release-template.md',
   album: 'release-template.md',
   mixmaster: 'mixmaster-template.md',
+  rework: 'rework-template.md',
 };
 
 export const readProductionTemplate = (kind: ProductionKind = 'single'): string =>
@@ -74,7 +77,23 @@ const EVENT_PHRASE: Record<RefundMilestoneEvent, string> = {
  * 예) "편곡(제2조 2호)은 스튜디오가 편곡 1차 시안을 전달한 때 완료된 것으로 본다. 기획 상담·…는 착수한 때
  *      그 금액의 30%를, 유통 등록을 마친 때 전액을 작업분으로 본다."
  */
+/**
+ * 지급 비율 환불표(AI 리워크 제10조 3항). 단계는 내림차순이고 마지막이 0이다(terms.ts readRefundPolicy) —
+ * 착수 전 전액, 각 사건이 기록된 때부터 받은 금액의 그 비율.
+ */
+const paidRatioRows = (policy: NonNullable<ProductionTerms['refundPolicy']>): string[] => [
+  '| 착수 전 | 받은 금액 전액 |',
+  ...policy.stages.map(
+    ({ event, ratio }) =>
+      `| ${EVENT_PHRASE[event]}부터 | ${ratio > 0 ? `받은 금액의 ${Math.round(ratio * 100)}%` : '환불하지 않음'} |`,
+  ),
+];
+
 export const describeRefundMilestones = (terms: ProductionTerms, kind: ProductionKind = 'single'): string => {
+  // 지급 비율 환불은 항목별 작업분을 세지 않는다 — 단계표(refundRows)가 곧 기준이다.
+  if (terms.refundPolicy) {
+    return '환불액은 아래 표에 따라, 해지한 때까지 기록된 마지막 단계의 비율을 받은 금액에 곱해 산정한다.';
+  }
   // 믹싱·마스터링 계약은 항목이 제2조 전체 하나라 "제2조 5호"가 아니라 "제2조"를 가리킨다.
   const subject = (key: RefundItemKey) =>
     isMixMasterKind(kind) && key === 'mixmaster' ? '믹싱·마스터링(제2조)은' : ITEM_SUBJECT[key];
@@ -105,10 +124,14 @@ export const buildProductionContent = (data: ProductionTemplateData, template: s
   const cell = (value: string | null | undefined, fallback = '') => (value ? escapeTableCell(value) : fallback);
   const won = (amount: number) => formatCurrency(amount);
 
-  const refundRows = [
-    ...terms.refundSchedule.map((item) => `| ${escapeTableCell(item.label)} | ${won(item.amount)}원 |`),
-    `| **합계** | **${won(terms.amount.total)}원** |`,
-  ].join('\n');
+  const refundRows = (
+    terms.refundPolicy
+      ? paidRatioRows(terms.refundPolicy)
+      : [
+          ...terms.refundSchedule.map((item) => `| ${escapeTableCell(item.label)} | ${won(item.amount)}원 |`),
+          `| **합계** | **${won(terms.amount.total)}원** |`,
+        ]
+  ).join('\n');
 
   const { guardian } = data;
   const guardianSection = guardian
@@ -129,10 +152,13 @@ export const buildProductionContent = (data: ProductionTemplateData, template: s
   // 대금 지급(제3조 2항·요약표·제5조 6항) — 한 번에 받는 계약(잔금 0, terms.ts SINGLE_PAYMENT_MAX)은 계약금·잔금을 말하지 않는다.
   const single = isSinglePayment(terms);
   const { amount } = terms;
+  // 중간금(2회차, 3회 분할 — terms.ts splitThreeInstallments)은 편곡이 승인된 뒤에 받는다(payment-link.ts dueNow·ledger.ts secondLastDay).
+  const hasSecond = amount.second > 0;
   const paymentSummaryRows = single
     ? `| 대금 지급 | ${won(amount.total)}원 일시불 — 계약 체결일로부터 ${amount.depositDueDays}일 이내 |`
     : [
         `| 계약금 | ${won(amount.deposit)}원 — 계약 체결일로부터 ${amount.depositDueDays}일 이내 |`,
+        ...(hasSecond ? [`| 중간금 | ${won(amount.second)}원 — 편곡 승인일부터 ${amount.secondDueDays}일 이내 |`] : []),
         `| 잔금 | ${won(amount.balance)}원 — 최종 마스터 승인일부터 ${amount.balanceDueDays}일 이내 |`,
       ].join('\n');
   const paymentTerms = single
@@ -140,6 +166,9 @@ export const buildProductionContent = (data: ProductionTemplateData, template: s
     : [
         '의뢰인은 다음과 같이 지급한다.',
         `   - 계약금: **${won(amount.deposit)}원**, 계약 체결일로부터 ${amount.depositDueDays}일 이내`,
+        ...(hasSecond
+          ? [`   - 중간금: **${won(amount.second)}원**, 편곡 승인일부터 ${amount.secondDueDays}일 이내`]
+          : []),
         `   - 잔금: **${won(amount.balance)}원**, 최종 마스터 승인일부터 ${amount.balanceDueDays}일 이내(최종 마스터 파일 인도 전)`,
       ].join('\n');
   const finalPaymentClause = single
@@ -151,7 +180,22 @@ export const buildProductionContent = (data: ProductionTemplateData, template: s
     ? `${depositWord} 입금과 작업 파일 수령일부터 믹싱 1차 결과물 ${terms.firstDeliveryBusinessDays ?? 7}영업일 이내, 최종 마스터 ${terms.workWeeks}주 이내`
     : `${depositWord} 입금과 ${terms.songs.length > 1 ? '모든 수록곡의 ' : ''}1차 완성본 수령일부터 최종 마스터 ${terms.workWeeks}주 이내`;
 
+  // AI 리워크 제2조 2호·제5조 1항 — 편곡 없이 맺는 계약(scope.arrangementTracks = 0)은 편곡을 하지 않는다고 적는다.
+  const reworkHasArrangement = terms.scope.arrangementTracks > 0;
+  const reworkArrangementItem = reworkHasArrangement
+    ? `AI 데모 기반 재편곡·재작곡 (${terms.scope.arrangementTracks}트랙 이하, 가상악기)`
+    : '편곡: 하지 않는다. AI 데모의 반주를 그대로 쓰고 보컬을 다시 녹음한다';
+  const reworkRevisions = reworkHasArrangement
+    ? `편곡 ${terms.revisions.arrangement}회, 믹싱 ${terms.revisions.mixing}회, 마스터링 ${terms.revisions.mastering}회`
+    : `믹싱 ${terms.revisions.mixing}회, 마스터링 ${terms.revisions.mastering}회`;
+  const reworkRevisionFees = reworkHasArrangement
+    ? `편곡 ${won(terms.extraRevisionFees.arrangement)}원 / 믹싱 ${won(terms.extraRevisionFees.mixing)}원 / 마스터링 ${won(terms.extraRevisionFees.mastering)}원`
+    : `믹싱 ${won(terms.extraRevisionFees.mixing)}원 / 마스터링 ${won(terms.extraRevisionFees.mastering)}원`;
+
   const replacements: Record<string, string> = {
+    reworkArrangementItem,
+    reworkRevisions,
+    reworkRevisionFees,
     paymentSummaryRows,
     paymentTerms,
     finalPaymentClause,
@@ -177,6 +221,8 @@ export const buildProductionContent = (data: ProductionTemplateData, template: s
     total: won(terms.amount.total),
     deposit: won(terms.amount.deposit),
     balance: won(terms.amount.balance),
+    second: won(terms.amount.second),
+    secondDueDays: String(terms.amount.secondDueDays),
     depositDueDays: String(terms.amount.depositDueDays),
     balanceDueDays: String(terms.amount.balanceDueDays),
     bank: escapeTableCell(terms.payment.bank),
