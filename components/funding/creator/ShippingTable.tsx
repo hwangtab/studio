@@ -85,7 +85,7 @@ function ShippingTableRow({ projectId, row }: ShippingTableRowProps) {
       <td className="py-2 pr-4">{row.shippingPhone ?? '연락처 없음'}</td>
       <td className="py-2 pr-4">{formatAddress(row)}</td>
       <td className="py-2 pr-4">{row.rewardTitle}</td>
-      <td className="py-2 pr-4">{row.quantity}</td>
+      <td className="py-2 pr-4 text-right tabular-nums">{row.quantity}</td>
       <td className="py-2 pr-4 text-gray-500 dark:text-gray-400">{row.shippingMemo ?? ''}</td>
       <td className="py-2 pr-4">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
@@ -164,7 +164,7 @@ export function ShippingTable({ projectId, rows }: ShippingTableProps) {
               <th className="py-2 pr-4 font-medium">연락처</th>
               <th className="py-2 pr-4 font-medium">배송지</th>
               <th className="py-2 pr-4 font-medium">리워드</th>
-              <th className="py-2 pr-4 font-medium">수량</th>
+              <th className="py-2 pr-4 font-medium text-right tabular-nums">수량</th>
               <th className="py-2 pr-4 font-medium">메모</th>
               <th className="py-2 pr-4 font-medium">발송 상태</th>
             </tr>

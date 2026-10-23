@@ -445,8 +445,8 @@ export default function AdminSubscriptionDetailPage({
                       <th className="px-2 py-2 text-left">회차</th>
                       <th className="px-2 py-2 text-left">시도</th>
                       <th className="px-2 py-2 text-left">상태</th>
-                      <th className="px-2 py-2 text-right">금액</th>
-                      <th className="px-2 py-2 text-right">환불</th>
+                      <th className="px-2 py-2 text-right tabular-nums">금액</th>
+                      <th className="px-2 py-2 text-right tabular-nums">환불</th>
                       <th className="px-2 py-2 text-left">토스 코드</th>
                       <th className="px-2 py-2 text-left">시도 일시</th>
                       <th className="px-2 py-2" />
@@ -464,8 +464,8 @@ export default function AdminSubscriptionDetailPage({
                             {PAYMENT_STATUS_LABELS[p.status] ?? p.status}
                           </span>
                         </td>
-                        <td data-label="금액" className="px-2 py-2 text-right">{formatPriceAmount(p.amount)}원</td>
-                        <td data-label="환불" className="px-2 py-2 text-right text-gray-500">
+                        <td data-label="금액" className="px-2 py-2 text-right tabular-nums">{formatPriceAmount(p.amount)}원</td>
+                        <td data-label="환불" className="px-2 py-2 text-right tabular-nums text-gray-500">
                           {(() => {
                             const r = refundByCycle.get(p.id);
                             return r && r.refundedAmount > 0 ? `${formatPriceAmount(r.refundedAmount)}원` : '-';

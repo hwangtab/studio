@@ -18,6 +18,7 @@ import { describeShopArtistTerms } from '../../../../lib/shop/artistTerms';
 import { loadShopArtistTermsStatus } from '../../../../lib/shop/artistTermsAgreement';
 import { isStudioShopArtistSlug } from '../../../../lib/shop/studioArtist';
 import { buttonVariants } from '../../../../components/ui/Button';
+import { ROW_BTN, Th } from '../../../../components/admin/AdminTable';
 import { formatAdminDateTimeFromSeconds } from '../../../../lib/admin/displayDate';
 import { DangerActions } from '../../../../components/admin/DangerActions';
 import { DANGER_GHOST_CLASS } from '../../../../components/admin/adminDanger';
@@ -104,12 +105,12 @@ function StockCell({ skuId, stock }: { skuId: string; stock: number | null }) {
     }
   };
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className="flex flex-wrap items-center justify-end gap-2">
       <input
         type="number" min={0} inputMode="numeric" value={value} onChange={(e) => setValue(e.target.value)}
         aria-label={`${skuId} 총 재고`} className="w-24 rounded-lg border border-gray-300 bg-white px-2 py-1 text-gray-900"
       />
-      <button type="button" onClick={save} disabled={value === ''} className={`${secondaryBtn} !px-3 !py-1`}>저장</button>
+      <button type="button" onClick={save} disabled={value === ''} className={ROW_BTN}>저장</button>
       {state && <span role="alert" className="text-xs text-red-700">{state}</span>}
     </div>
   );
@@ -239,15 +240,21 @@ export default function AdminShopProductPage({ product, editable, fulfillment, t
         <section className={card}>
           <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-gray-900">옵션</h2>
           <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead className="text-xs text-gray-500"><tr><th className="py-2 pr-3">옵션</th><th className="py-2 pr-3">가격</th><th className="py-2 pr-3">상태</th><th className="py-2">총 재고</th></tr></thead>
+            <table className="w-full min-w-[40rem] table-fixed text-left">
+              <colgroup>
+                <col />
+                <col className="w-36" />
+                <col className="w-28" />
+                <col className="w-48" />
+              </colgroup>
+              <thead><tr><Th>옵션</Th><Th align="right">가격</Th><Th className="pl-6">상태</Th><Th align="right" className="pr-0">총 재고</Th></tr></thead>
               <tbody>
                 {product.skus.map((s) => (
                   <tr key={s.id} className="border-t border-gray-100">
                     <td className="py-2 pr-3">{s.optionLabel ?? '(옵션 없음)'}<span className="block text-xs text-gray-500">{s.id}</span></td>
-                    <td className="py-2 pr-3 tabular-nums">{formatPriceAmount(s.price)}원</td>
-                    <td className="py-2 pr-3">{s.locked ? (s.retired ? '판매 종료' : '판매 중') : '승인 대기'}</td>
-                    <td className="py-2 tabular-nums">{s.locked ? <StockCell skuId={s.id} stock={s.stock} /> : '—'}</td>
+                    <td className="py-2 pr-3 text-right tabular-nums whitespace-nowrap">{formatPriceAmount(s.price)}원</td>
+                    <td className="py-2 pl-6 pr-3 whitespace-nowrap">{s.locked ? (s.retired ? '판매 종료' : '판매 중') : '승인 대기'}</td>
+                    <td className="py-2 text-right tabular-nums">{s.locked ? <StockCell skuId={s.id} stock={s.stock} /> : '—'}</td>
                   </tr>
                 ))}
               </tbody>

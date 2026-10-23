@@ -10,6 +10,7 @@ import {
   mutateContract,
 } from '../../../components/admin/contractActions';
 import { AdminShell } from '../../../components/admin/AdminShell';
+import { RowActions } from '../../../components/admin/AdminTable';
 import { FilterPill } from '../../../components/admin/FilterPill';
 import { Button } from '../../../components/ui/Button';
 import { TextInput } from '../../../components/ui/Field';
@@ -335,14 +336,23 @@ export default function AdminContractsPage({
               </div>
 
               <div className="overflow-x-auto">
-                <table className="admin-table w-full text-sm text-left">
+                <table className="admin-table w-full lg:min-w-[64rem] lg:table-fixed text-sm text-left">
+                  <colgroup>
+                    <col className="w-24" />
+                    <col />
+                    <col className="w-20" />
+                    <col className="w-56" />
+                    <col className="w-32" />
+                    <col className="w-28" />
+                    <col className="w-64" />
+                  </colgroup>
                   <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
                     <tr>
                       <th className="px-4 py-3 rounded-l-lg">상태</th>
                       <th className="px-4 py-3">이용자</th>
                       <th className="px-4 py-3">호실</th>
                       <th className="px-4 py-3">기간</th>
-                      <th className="px-4 py-3">월 이용료</th>
+                      <th className="px-4 py-3 text-right whitespace-nowrap">월 이용료</th>
                       <th className="px-4 py-3">서명일</th>
                       <th className="px-4 py-3 rounded-r-lg">관리</th>
                     </tr>
@@ -401,12 +411,12 @@ export default function AdminContractsPage({
                           <td data-label="기간" className="px-4 py-3 whitespace-nowrap">
                             {formatAdminDate(contract.startDate)} ~ {formatAdminDate(contract.endDate)}
                           </td>
-                          <td data-label="월 이용료" className="px-4 py-3 whitespace-nowrap">
+                          <td data-label="월 이용료" className="px-4 py-3 text-right tabular-nums whitespace-nowrap">
                             {formatCurrency(contract.monthlyRent)}원
                           </td>
                           <td data-label="서명일" className="px-4 py-3">{formatAdminDate(contract.signedAt)}</td>
                           <td data-label="관리" className="px-4 py-3">
-                            <div className="flex flex-wrap gap-2">
+                            <RowActions>
                               <Button asChild light size="sm" variant="weak">
                                 <Link href={`/admin/contracts/${contract.id}`}>
                                   상세
@@ -456,7 +466,7 @@ export default function AdminContractsPage({
                                   PDF
                                 </Button>
                               )}
-                            </div>
+                            </RowActions>
                           </td>
                         </tr>
                       );

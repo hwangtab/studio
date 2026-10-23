@@ -4,10 +4,10 @@ import React, { useState } from 'react';
 import { Button } from '../ui/Button';
 import { formatPriceAmount, SHOP_ARTIST_SHARE_PERCENT } from '../../data/pricing';
 import type { AdjustmentView, ShopPayoutRowView } from '../../lib/partnerPayouts/shopView';
-import { DANGER_GHOST_CLASS, DANGER_TEXT_CLASS } from './adminDanger';
+import { DANGER_TEXT_CLASS } from './adminDanger';
 import { formatAdminDate } from '../../lib/admin/displayDate';
 import { useAdminDialog } from './useAdminDialog';
-import { DangerActions } from './DangerActions';
+import { ROW_BTN, ROW_BTN_DANGER, ROW_LINK, RowActions, RowLinks, StatusChip, Th } from './AdminTable';
 
 /**
  * `/admin/shop`의 「아티스트 정산」 — 달별 미리보기 + 기록·지급 완료·기록 취소·계좌 보기 (docs/settlement-record-design-2026-10.md §5).
@@ -192,9 +192,18 @@ export function ShopPayoutSection({ rows, month, prevMonth, nextMonth, otherAdju
       {rows.length === 0 ? (
         <p className="text-gray-600">이 달에 발송한 아티스트 상품이 없습니다.</p>
       ) : (
-        <table className="admin-table w-full text-left">
+        <div className="overflow-x-auto">
+        <table className="admin-table w-full text-left lg:min-w-[62rem] lg:table-fixed">
+          <colgroup className="max-lg:hidden">
+            <col />
+            <col className="w-64" />
+            <col className="w-52" />
+            <col className="w-40" />
+            <col className="w-28" />
+            <col className="w-[15rem]" />
+          </colgroup>
           <thead className="text-xs text-gray-500">
-            <tr><th className="py-2 pr-3">아티스트</th><th className="py-2 pr-3">판매</th><th className="py-2 pr-3">공제·조정</th><th className="py-2 pr-3">이체액</th><th className="py-2">정산</th></tr>
+            <tr><Th>아티스트</Th><Th>판매</Th><Th>공제·조정</Th><Th align="right">이체액</Th><Th>상태</Th><Th align="right" className="pr-0">정산</Th></tr>
           </thead>
           <tbody>
             {rows.map((r) => {
@@ -250,27 +259,43 @@ export function ShopPayoutSection({ rows, month, prevMonth, nextMonth, otherAdju
                       </>
                     )}
                   </td>
-                  <td className="py-2 pr-3 font-semibold tabular-nums" data-label="이체액">
+                  <td className="py-2 pr-3 font-semibold tabular-nums lg:text-right" data-label="이체액">
                     {rec ? won(rec.netAmount) : r.taxType ? won(r.netAmount) : '세금 유형을 몰라 계산하지 않음'}
                     {rec && r.drift && (
-                      <span className="block text-xs font-normal text-red-600">
+                      <span className="block text-left text-xs font-normal text-red-600">
                         기록 뒤 판매액이 바뀌었습니다(지금 집계 {won(r.salesAmount)} · 기록 {won(rec.grossAmount)}) — 뒤늦은 환불은 다음 정산 조정으로 반영됩니다.
                         {rec.status === 'pending' ? ' 이체 전이라면 「기록 취소」 후 다시 기록해도 됩니다(환불 조정도 함께 취소됩니다).' : ''}
                       </span>
                     )}
                   </td>
+                  <td className="py-2 pr-3" data-label="상태">
+                    {rec ? (
+                      <StatusChip className={rec.status === 'paid' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-800'}>
+                        {rec.status === 'paid' ? '지급 완료' : '이체 대기'}
+                      </StatusChip>
+                    ) : (
+                      <StatusChip className="bg-gray-100 text-gray-500">미기록</StatusChip>
+                    )}
+                    {rec?.paidAt && <span className="mt-1 block text-xs text-gray-500">지급 {formatAdminDate(rec.paidAt)}</span>}
+                  </td>
                   <td className="py-2" data-label="정산">
-                    <div className="flex flex-wrap items-center gap-2">
-                      {rec ? (
-                        <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${rec.status === 'paid' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-800'}`}>
-                          {rec.status === 'paid' ? '지급 완료' : '이체 대기'}
-                        </span>
-                      ) : (
-                        <span className="text-xs text-gray-400">미기록</span>
-                      )}
-                      {!rec && r.taxType && r.blockers.every((b) => b !== 'nothing_to_pay') && (
-                        <Button
-                          light size="sm" variant="weak"
+                    <RowActions
+                      danger={rec?.status === 'pending' ? (
+                        <button
+                          type="button" className={ROW_BTN_DANGER} disabled={busy === key}
+                          onClick={() => run(
+                            key,
+                            `${r.payeeName} ${r.period}의 기록(${won(rec.netAmount)})을 취소할까요?\n\n기록된 금액은 버려지고 이력도 남지 않으며, 이 정산에 실렸던 조정은 풀립니다. 아직 이체하지 않은 기록만 취소할 수 있습니다.`,
+                            () => post({ action: 'delete', id: rec.id }),
+                          )}
+                        >
+                          기록 취소(이체 전)
+                        </button>
+                      ) : undefined}
+                    >
+{!rec && r.taxType && r.blockers.every((b) => b !== 'nothing_to_pay') && (
+                        <button
+                          type="button" className={ROW_BTN}
                           disabled={busy === key || blocked.length > 0}
                           title={blocked.length > 0 ? blocked.map((b) => BLOCKER_LABEL[b] ?? b).join(' / ') : undefined}
                           onClick={() => run(
@@ -280,11 +305,11 @@ export function ShopPayoutSection({ rows, month, prevMonth, nextMonth, otherAdju
                           )}
                         >
                           정산 기록
-                        </Button>
+                        </button>
                       )}
                       {rec?.status === 'pending' && (
-                        <Button
-                          light size="sm" disabled={busy === key}
+                        <button
+                          type="button" className={ROW_BTN} disabled={busy === key}
                           onClick={async () => {
                             // 이체 메모(선택) — 이체일·실제 보낸 금액. 기록 행은 불변이라 달라진 것은 여기 적어 둔다.
                             const values = await ask({
@@ -303,31 +328,18 @@ export function ShopPayoutSection({ rows, month, prevMonth, nextMonth, otherAdju
                           }}
                         >
                           지급 완료
-                        </Button>
+                        </button>
                       )}
+                    </RowActions>
+                    <RowLinks>
                       {r.creatorId && (
-                        <Button light size="sm" variant="weak" disabled={account === 'loading'} onClick={() => showAccount(r.creatorId as string)}>
+                        <button type="button" className={ROW_LINK} disabled={account === 'loading'} onClick={() => showAccount(r.creatorId as string)}>
                           계좌 보기
-                        </Button>
+                        </button>
                       )}
-                      <Button light size="sm" variant="weak" disabled={busy !== null} onClick={() => addAdjustment(r)}>조정 추가</Button>
-                      <DangerActions>
-                        {rec?.status === 'pending' && (
-                          <Button
-                            light size="sm" variant="ghost" className={DANGER_GHOST_CLASS} disabled={busy === key}
-                            onClick={() => run(
-                              key,
-                              `${r.payeeName} ${r.period}의 기록(${won(rec.netAmount)})을 취소할까요?\n\n기록된 금액은 버려지고 이력도 남지 않으며, 이 정산에 실렸던 조정은 풀립니다. 아직 이체하지 않은 기록만 취소할 수 있습니다.`,
-                              () => post({ action: 'delete', id: rec.id }),
-                            )}
-                          >
-                            기록 취소(이체 전)
-                          </Button>
-                        )}
-                      </DangerActions>
-                    </div>
+                      <button type="button" className={ROW_LINK} disabled={busy !== null} onClick={() => addAdjustment(r)}>조정 추가</button>
+                    </RowLinks>
                     {rec?.memo && <span className="mt-1 block text-xs text-gray-500">메모: {rec.memo}</span>}
-                    {rec?.paidAt && <span className="mt-1 block text-xs text-gray-500">지급 {formatAdminDate(rec.paidAt)}</span>}
                     {account && account !== 'loading' && (
                       'error' in account ? (
                         <span role="alert" className="mt-1 block text-xs text-red-600">{account.error}</span>
@@ -345,6 +357,7 @@ export function ShopPayoutSection({ rows, month, prevMonth, nextMonth, otherAdju
             })}
           </tbody>
         </table>
+        </div>
       )}
       {otherAdjustments.length > 0 && (
         <div className="mt-4 rounded-lg bg-gray-50 p-3 text-xs text-gray-700">

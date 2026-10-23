@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 import { Button, buttonVariants } from '../../../components/ui/Button';
+import { Th } from '../../../components/admin/AdminTable';
 import { TextInput } from '../../../components/ui/Field';
 import { AdminShell } from '../../../components/admin/AdminShell';
 import { ShopPayoutSection } from '../../../components/admin/ShopPayoutSection';
@@ -158,9 +159,16 @@ function ArtistSalesSection({ rows, month, prevMonth, nextMonth }: Pick<Props, '
         <p className="text-gray-600">이 달에 발송한 아티스트 상품이 없습니다.</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="admin-table w-full text-left">
+          <table className="admin-table w-full text-left lg:min-w-[56rem] lg:table-fixed">
+            <colgroup className="max-lg:hidden">
+              <col />
+              <col className="w-20" />
+              <col className="w-44" />
+              <col className="w-52" />
+              <col className="w-40" />
+            </colgroup>
             <thead className="text-xs text-gray-500">
-              <tr><th className="py-2 pr-3">아티스트</th><th className="py-2 pr-3">수량</th><th className="py-2 pr-3">판매액</th><th className="py-2 pr-3">공제</th><th className="py-2">이체액</th></tr>
+              <tr><Th>아티스트</Th><Th align="right">수량</Th><Th align="right">판매액</Th><Th>공제</Th><Th align="right" className="pr-0">이체액</Th></tr>
             </thead>
             <tbody>
               {rows.map((r) => (
@@ -176,8 +184,8 @@ function ArtistSalesSection({ rows, month, prevMonth, nextMonth }: Pick<Props, '
                       <span className="block text-xs text-amber-800">부분 환불 주문은 빼고 계산했습니다 — 직접 확인: {r.needsReviewOrderNos.join(', ')}</span>
                     )}
                   </td>
-                  <td data-label="수량" className="py-2 pr-3 tabular-nums">{r.quantity}</td>
-                  <td data-label="판매액" className="py-2 pr-3 tabular-nums">
+                  <td data-label="수량" className="py-2 pr-3 tabular-nums lg:text-right">{r.quantity}</td>
+                  <td data-label="판매액" className="py-2 pr-3 tabular-nums lg:text-right">
                     {won(r.salesAmount)}
                     {r.shippingAmount > 0 && <span className="block text-xs text-gray-600">+ 배송비 {won(r.shippingAmount)} ({r.shippingOrderCount}건, 전액 아티스트 몫)</span>}
                   </td>
@@ -186,7 +194,7 @@ function ArtistSalesSection({ rows, month, prevMonth, nextMonth }: Pick<Props, '
                       <>상점 {won(r.payout.storeAmount)}{r.payout.vatDeductionAmount > 0 && <><br />부가세 상당 {won(r.payout.vatDeductionAmount)}</>}{r.payout.withholdingAmount > 0 && <><br />원천징수 {won(r.payout.withholdingAmount)}</>}</>
                     ) : '—'}
                   </td>
-                  <td data-label="이체액" className="py-2 font-semibold tabular-nums">{r.payout ? won(r.payout.netAmount) : '세금 유형을 몰라 계산하지 않음'}</td>
+                  <td data-label="이체액" className="py-2 font-semibold tabular-nums lg:text-right">{r.payout ? won(r.payout.netAmount) : '세금 유형을 몰라 계산하지 않음'}</td>
                 </tr>
               ))}
             </tbody>

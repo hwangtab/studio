@@ -287,7 +287,15 @@ const BreakdownTable = ({
       <p className="mt-3 text-sm text-gray-600">이 기간에는 해당 매출이 없습니다.</p>
     ) : (
       <div className="-mx-4 overflow-x-auto px-4 md:mx-0 md:px-0">
-        <table className="w-full whitespace-nowrap text-sm">
+        <table className="w-full min-w-[40rem] table-fixed whitespace-nowrap text-sm">
+          <colgroup>
+            <col />
+            <col className="w-20" />
+            <col className="w-36" />
+            <col className="w-32" />
+            <col className="w-36" />
+            <col className="w-20" />
+          </colgroup>
           <thead>
             <tr className="border-b border-gray-200 text-left text-xs text-gray-500">
               <th className="py-2 pr-3 font-medium">{firstColumn}</th>
@@ -358,7 +366,13 @@ const BusinessPnlSection = ({ pnl, summary }: { pnl: BusinessPnl; summary: Reven
       </div>
       <p className="mb-4 text-xs text-gray-500">수익 = 매출 − 지출. 분야 이름을 누르면 아래 유형별 표와 결제 내역이 그 분야만 보입니다.</p>
       <div className="-mx-4 overflow-x-auto px-4 md:mx-0 md:px-0">
-        <table className="w-full whitespace-nowrap text-sm">
+        <table className="w-full min-w-[34rem] table-fixed whitespace-nowrap text-sm">
+          <colgroup>
+            <col />
+            <col className="w-40" />
+            <col className="w-36" />
+            <col className="w-40" />
+          </colgroup>
           <thead>
             <tr className="border-b border-gray-200 text-left text-xs text-gray-500">
               <th className="py-2 pr-3 font-medium">분야</th>

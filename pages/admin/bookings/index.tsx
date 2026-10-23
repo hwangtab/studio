@@ -530,7 +530,7 @@ export default function AdminBookingsPage({
                       <th className="px-4 py-3">일시 / 상품</th>
                       <th className="px-4 py-3">고객</th>
                       <th className="px-4 py-3">상품</th>
-                      <th className="px-4 py-3">금액</th>
+                      <th className="px-4 py-3 text-right tabular-nums whitespace-nowrap">금액</th>
                       <th className="px-4 py-3">상태</th>
                       <th className="px-4 py-3 rounded-r-lg">관리</th>
                     </tr>
@@ -571,7 +571,7 @@ export default function AdminBookingsPage({
                             </div>
                           </td>
                           <td data-label="상품" className="px-4 py-3">{booking.productName}</td>
-                          <td data-label="금액" className="px-4 py-3 whitespace-nowrap">
+                          <td data-label="금액" className="px-4 py-3 text-right tabular-nums whitespace-nowrap">
                             {formatPriceAmount(booking.totalAmount)}원
                           </td>
                           <td data-label="상태" className="px-4 py-3">
