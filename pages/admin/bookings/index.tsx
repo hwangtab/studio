@@ -301,7 +301,8 @@ export default function AdminBookingsPage({
 
   const refresh = async () => {
     // 캘린더에서 가져온 등록이 끝났으면 fromEvent 주소를 비운다 — 새로고침하면 지워진 일정으로 칸이 다시 열린다.
-    await router.replace(prefill ? '/admin/bookings' : router.asPath, undefined, { scroll: false });
+    // 라인(`?line=`)은 남긴다 — 녹음실 화면에서 가져왔으면 등록 뒤에도 녹음실 목록이어야 한다.
+    await router.replace(prefill ? (line ? `/admin/bookings?line=${line}` : '/admin/bookings') : router.asPath, undefined, { scroll: false });
   };
 
   const handleDeleteBlock = async (block: AdminBlockItem) => {
@@ -386,7 +387,7 @@ export default function AdminBookingsPage({
 
       <AdminShell title="예약 관리" description="세션 예약 현황을 확인하고 관리합니다." width="wide">
         <div className="space-y-6">
-          <ManualBookingPanel today={kstDateString(new Date())} onCreated={refresh} prefill={prefill} />
+          <ManualBookingPanel today={kstDateString(new Date())} onCreated={refresh} prefill={prefill} line={line} />
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
             <div className="p-4 md:p-8">
               {notice && (
