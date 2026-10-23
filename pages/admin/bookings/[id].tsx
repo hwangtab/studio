@@ -30,6 +30,7 @@ import {
   type AdminBookingDetail,
 } from '../../../lib/booking/admin-serialize';
 import { formatKstDateTime, formatKstDateTimeFull } from '../../../lib/booking/format';
+import { canOfferUnpaidDelete } from '../../../lib/booking/unpaidDeletePolicy';
 import { formatKstDeadline } from '../../../lib/payments/bankAccount';
 import { findSameNameDepositOrders, type SameNameDepositOrder } from '../../../lib/payments/bankDepositOrders';
 import { loadRefundAccountSummary } from '../../../lib/payments/refundAccount';
@@ -272,6 +273,20 @@ export default function AdminBookingDetailPage({
     });
 
   /** 계좌 입금 작업 — 같은 POST 엔드포인트의 action만 다르다. 응답의 warnings는 화면에 드러낸다. */
+  /** 돈이 오가지 않은 기록 삭제 — 입금 전 취소, 결제를 끝내지 않은 만료·실패(lib/booking/deleteUnpaid.ts). */
+  const handleDeleteUnpaid = async () => {
+    if (!window.confirm(`${booking.orderNo} 기록을 완전히 삭제할까요? 되돌릴 수 없어요.`)) return;
+    setBusy(true);
+    setNotice(null);
+    const result = await postDepositAction('delete_unpaid_record', '삭제에 실패했습니다.');
+    setBusy(false);
+    if (result.ok) {
+      await router.replace('/admin/bookings');
+    } else {
+      setNotice(result.message ?? '삭제에 실패했습니다.');
+    }
+  };
+
   const postDepositAction = async (action: string, fallback: string): Promise<BookingActionResult> => {
     try {
       const response = await fetch(`/api/admin/bookings/${booking.id}`, {
@@ -640,22 +655,27 @@ export default function AdminBookingDetailPage({
             {!booking.gcalError?.startsWith('waiting_delete: ') && (
               <div className="mt-3">
                 <p className="text-xs text-gray-500">돈이 오간 적 없는 기록이에요. 테스트로 만들었거나 잘못 올렸다면 목록에서 지울 수 있어요(되돌릴 수 없어요).</p>
-                <Button type="button" variant="weak" className="mt-2" disabled={busy}
-                  onClick={async () => {
-                    if (!window.confirm(`${booking.orderNo} 기록을 완전히 삭제할까요? 되돌릴 수 없어요.`)) return;
-                    setBusy(true);
-                    setNotice(null);
-                    const result = await postDepositAction('delete_unpaid_record', '삭제에 실패했습니다.');
-                    setBusy(false);
-                    if (result.ok) {
-                      await router.replace('/admin/bookings');
-                    } else {
-                      setNotice(result.message ?? '삭제에 실패했습니다.');
-                    }
-                  }}>
+                <Button type="button" variant="weak" className="mt-2" disabled={busy} onClick={handleDeleteUnpaid}>
                   기록 삭제
                 </Button>
               </div>
+            )}
+          </div>
+        )}
+
+        {/* 카드 결제창을 열었다가 끝내지 않은 주문(만료·실패) — 돈이 오간 적이 없다. 테스트 주문이 쌓여 지울 길이 없었다(2026-10-23). */}
+        {(booking.orderStatus === 'expired' || booking.orderStatus === 'failed') && booking.paymentCount === 0 && (booking.orderType === 'session' || booking.orderType === 'mixing') && (
+          <div className="mb-4 rounded-lg border border-gray-300 bg-gray-50 p-4 text-sm text-gray-800">
+            결제를 끝내지 않은 주문입니다({booking.orderStatus === 'expired' ? '시간 안에 결제하지 않아 만료' : '결제 실패'}). 돈이 오간 적이 없어요.
+            {canOfferUnpaidDelete(booking) ? (
+              <div className="mt-3">
+                <p className="text-xs text-gray-500">테스트로 만들었거나 필요 없는 기록이면 목록에서 지울 수 있어요(되돌릴 수 없어요).</p>
+                <Button type="button" variant="weak" className="mt-2" disabled={busy} onClick={handleDeleteUnpaid}>
+                  기록 삭제
+                </Button>
+              </div>
+            ) : (
+              <p className="mt-2 text-xs text-gray-500">만든 지 하루가 지나면 지울 수 있어요 — 늦게 도착하는 결제 승인을 기다립니다.</p>
             )}
           </div>
         )}
