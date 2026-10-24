@@ -9,6 +9,8 @@
  */
 
 import {
+  actorDisplayName,
+  adminActorNames,
   ADMIN_FALLBACK_ID,
   ADMIN_FALLBACK_NAME,
   MIN_PASSWORD_LENGTH,
@@ -129,5 +131,31 @@ describe('resolveAdminAccounts — ADMIN_PASSWORD 폴백', () => {
     const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
     expect(resolveAdminAccounts({ ADMIN_PASSWORD: 'short' })).toEqual([]);
     spy.mockRestore();
+  });
+});
+
+describe('수행자 표시 이름', () => {
+  const names = adminActorNames([{ id: 'kyungha', name: '황경하', password: PW_A }]);
+
+  it('id → 이름 표에는 비밀번호가 없다', () => {
+    expect(names).toEqual({ kyungha: '황경하' });
+    expect(JSON.stringify(names)).not.toContain(PW_A);
+  });
+
+  it('id와 제작 계약 기록의 admin:<id> 모두 이름으로 바꾼다', () => {
+    expect(actorDisplayName('kyungha', names)).toBe('황경하');
+    expect(actorDisplayName('admin:kyungha', names)).toBe('황경하');
+  });
+
+  it('표에 없는 값은 지어내지 않고 그대로 둔다', () => {
+    expect(actorDisplayName('admin', names)).toBe('admin');
+    expect(actorDisplayName('system:payment', names)).toBe('system:payment');
+    expect(actorDisplayName('admin:gone', names)).toBe('admin:gone');
+  });
+
+  it('ADMIN_ACCOUNTS가 없는 배포는 폴백 한 사람만 든다', () => {
+    expect(adminActorNames(resolveAdminAccounts({ ADMIN_PASSWORD: PW_A }))).toEqual({
+      [ADMIN_FALLBACK_ID]: ADMIN_FALLBACK_NAME,
+    });
   });
 });

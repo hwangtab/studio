@@ -22,6 +22,7 @@ import ProductionRefundAccountPanel, {
 import { loadRefundAccountSummary } from '../../../../../lib/payments/refundAccount';
 import { Button } from '../../../../../components/ui/Button';
 import { getDb } from '../../../../../db/client';
+import { adminActorNames } from '../../../../../lib/contracts/admin-accounts';
 import { authenticateAdminRequest } from '../../../../../lib/contracts/admin-auth';
 import { formatCurrency } from '../../../../../lib/contracts/format';
 import { formatAdminDate, formatAdminDateTime } from '../../../../../lib/admin/displayDate';
@@ -51,6 +52,8 @@ interface ProductionContractDetailProps {
   fingerprint: ProductionFingerprintVerdict;
   /** 체결된 계약의 진행(장부). 체결 전에는 null. */
   progress: AdminProgressView | null;
+  /** 진행 기록의 수행자 id → 이름. */
+  actorNames: Record<string, string>;
   /** 해지된 계약의 환불 계좌 요약(은행·예금주만). 해지가 아니면 null. */
   refundAccount: RefundAccountSummaryProps | null;
   /** 계약 대금 결제 링크(payment-link.ts) — 최신순. 열린 것이 지금 받을 돈의 링크다. */
@@ -127,6 +130,7 @@ export const getServerSideProps: GetServerSideProps<ProductionContractDetailProp
       fingerprint: verifyStoredProductionContract(contract),
       progress: progress ? buildAdminProgressView(progress.terms, progress.ledger, progress.events, contract.status === 'signed') : null,
       refundAccount,
+      actorNames: adminActorNames(),
     },
   };
 };
@@ -169,7 +173,7 @@ const FingerprintLine = ({ verdict }: { verdict: ProductionFingerprintVerdict })
   }
 };
 
-export default function ProductionContractDetailPage({ contract, fingerprint, progress, refundAccount, paymentLinks }: ProductionContractDetailProps) {
+export default function ProductionContractDetailPage({ contract, fingerprint, progress, actorNames, refundAccount, paymentLinks }: ProductionContractDetailProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const { ask, dialog } = useAdminDialog();
@@ -462,6 +466,7 @@ export default function ProductionContractDetailPage({ contract, fingerprint, pr
           <ProductionProgressPanel
             contractId={contract.id}
             view={progress}
+            actorNames={actorNames}
             editable={contract.status === 'signed'}
             voidable={contract.status === 'signed' || contract.status === 'terminated'}
           />

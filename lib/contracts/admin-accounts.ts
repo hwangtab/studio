@@ -139,3 +139,21 @@ export const resolveAdminAccounts = (
   }
   return [{ id: ADMIN_FALLBACK_ID, name: ADMIN_FALLBACK_NAME, password }];
 };
+
+/**
+ * 기록의 수행자 id → 화면에 띄울 이름. 이력·접속기록 화면이 `id`(`kyungha`) 대신 이름을 보이려고 쓴다.
+ *
+ * **서버에서만 만든다** — 계정 객체에는 비밀번호가 있어, 이름 표만 props로 넘긴다. 기록(`actor`)은 `id` 그대로 두고
+ * 화면에서만 바꾼다(감사 기록의 식별자가 이름 변경에 따라 달라지면 옛 행과 새 행이 다른 사람처럼 보인다).
+ * `ADMIN_ACCOUNTS`가 없는 배포는 폴백 한 사람(`admin` → "관리자")만 든다.
+ */
+export const adminActorNames = (
+  accounts: readonly AdminAccount[] = resolveAdminAccounts(),
+): Record<string, string> => Object.fromEntries(accounts.map((account) => [account.id, account.name]));
+
+/**
+ * 수행자 기록 → 표시 이름. 제작 계약 진행 기록은 `admin:<id>` 꼴이라 접두사를 떼고 찾는다.
+ * 표에 없는 값(계정이 지워진 사람·`client`·`system:payment`)은 지어내지 않고 **받은 그대로** 돌려준다.
+ */
+export const actorDisplayName = (actor: string, names: Readonly<Record<string, string>>): string =>
+  names[actor.replace(/^admin:/, '')] ?? actor;

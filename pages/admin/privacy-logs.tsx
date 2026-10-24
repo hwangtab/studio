@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import { AdminShell } from '../../components/admin/AdminShell';
+import { actorDisplayName, adminActorNames } from '../../lib/contracts/admin-accounts';
 import { authenticateAdminRequest } from '../../lib/contracts/admin-auth';
 import { ACTION_LABEL } from '../../lib/privacy/accessLogLabels';
 import { formatAdminDateTime } from '../../lib/admin/displayDate';
@@ -45,6 +46,8 @@ import {
 interface AdminPrivacyLogsPageProps {
   rows: PrivacyAccessLogRow[];
   actors: string[];
+  /** 수행자 id → 이름. 필터 값·CSV는 id 그대로다. */
+  actorNames: Record<string, string>;
   actorFilter: string | null;
   actionFilter: string | null;
   error?: string;
@@ -84,13 +87,14 @@ export const getServerSideProps: GetServerSideProps<AdminPrivacyLogsPageProps> =
       listPrivacyAccessLogs({ actor: actorFilter, action: actionFilter }),
       listPrivacyAccessActors(),
     ]);
-    return { props: { rows, actors, actorFilter, actionFilter } };
+    return { props: { rows, actors, actorNames: adminActorNames(), actorFilter, actionFilter } };
   } catch (error: unknown) {
     console.error('[admin/privacy-logs] 접속기록 조회 실패:', error);
     return {
       props: {
         rows: [],
         actors: [],
+        actorNames: {},
         actorFilter,
         actionFilter,
         error: '접속기록을 읽지 못했습니다. 잠시 후 다시 시도해 주세요.',
@@ -102,6 +106,7 @@ export const getServerSideProps: GetServerSideProps<AdminPrivacyLogsPageProps> =
 export default function AdminPrivacyLogsPage({
   rows,
   actors,
+  actorNames,
   actorFilter,
   actionFilter,
   error,
@@ -143,7 +148,7 @@ export default function AdminPrivacyLogsPage({
               <option value="">전체</option>
               {actors.map((actor) => (
                 <option key={actor} value={actor}>
-                  {actor}
+                  {actorDisplayName(actor, actorNames)}
                 </option>
               ))}
             </select>
@@ -188,7 +193,7 @@ export default function AdminPrivacyLogsPage({
                 {rows.map((row) => (
                   <tr key={row.id}>
                     <td data-label="시각(KST)" className="px-3 py-2 whitespace-nowrap tabular-nums">{formatAt(row.at)}</td>
-                    <td data-label="수행자" className="px-3 py-2 whitespace-nowrap font-medium">{row.actor}</td>
+                    <td data-label="수행자" className="px-3 py-2 whitespace-nowrap font-medium">{actorDisplayName(row.actor, actorNames)}</td>
                     <td data-label="행위" className="px-3 py-2 whitespace-nowrap">{ACTION_LABEL[row.action] ?? row.action}</td>
                     <td data-label="대상" className="px-3 py-2 break-all">{row.targetId}</td>
                     <td data-label="결과" className="px-3 py-2 whitespace-nowrap">
