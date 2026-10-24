@@ -1,3 +1,4 @@
+import { PRACTICE_ROOM_HOURLY_OPEN } from '../../data/practiceRoomAvailability';
 import { generateDefaultSchema } from './business';
 import { generateCourseSchema, generateHowToSchema } from './basics';
 import { generateAudioObjectSchema } from './media';
@@ -53,9 +54,9 @@ describe('엔티티 그래프 — @id 유일성', () => {
 
   it('연습실 Service의 provider·seller는 @type 없는 순수 참조다', () => {
     const service = generatePracticeRoomMonthlyRentSchema(`${SITE}/ko/practice-room`, 'ko') as Node;
-    // 2026-09-25부터 offers는 [월세, 시간제] 배열 — 둘 다 seller가 순수 참조여야 한다.
+    // 2026-09-25부터 offers는 [월세, 시간제] 배열(시간제 판매를 닫으면 월세 하나) — 전부 seller가 순수 참조여야 한다.
     const offers = service.offers as Node[];
-    expect(Array.isArray(offers) && offers.length).toBe(2);
+    expect(Array.isArray(offers) && offers.length).toBe(PRACTICE_ROOM_HOURLY_OPEN ? 2 : 1);
     expect(service.provider).toEqual({ '@id': `${SITE}/#studio` });
     for (const offer of offers) expect(offer.seller).toEqual({ '@id': `${SITE}/#studio` });
   });

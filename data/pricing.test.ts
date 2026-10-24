@@ -57,6 +57,7 @@ import { AI_REWORK_VOCAL_ONLY_PRICE } from './aiRework';
 import { generateDefaultSchema } from '../utils/schema/business';
 import { LESSON_OFFER_NAMES, PRACTICE_OFFER_NAMES } from '../utils/schema/shared';
 import { generatePracticeRoomMonthlyRentSchema } from '../utils/schema/commerce';
+import { PRACTICE_ROOM_HOURLY_OPEN } from './practiceRoomAvailability';
 import { generateReleaseProjectSchema } from '../utils/schema/releaseProject';
 import { generateCourseSchema } from '../utils/schema/basics';
 import { buildStudioServiceSchema } from '../lib/studioServiceSchema';
@@ -154,7 +155,8 @@ describe('가격 SSOT 정합', () => {
     expect(byId.get('package-live-video')).toBe(LIVE_VIDEO_FROM_PRICE);
     expect(byId.get('practice-room-monthly')).toBe(PRACTICE_ROOM_MONTHLY_PRICE);
     // 시간제는 VAT 포함 소비자가가 priceValue다(2026-10-15부터 월 이용료·레슨만 별도) — 6,600이 6,000으로 바뀌면 실패
-    expect(byId.get('practice-room-hourly')).toBe(PRACTICE_ROOM_HOURLY_PRICE_INCL);
+    // 판매를 닫으면(PRACTICE_ROOM_HOURLY_OPEN=false, 2026-10-24~) 오퍼 자체가 목록에 없다.
+    expect(byId.get('practice-room-hourly')).toBe(PRACTICE_ROOM_HOURLY_OPEN ? PRACTICE_ROOM_HOURLY_PRICE_INCL : undefined);
 
     const d = getPricingData('ko');
     expect(d.lessonMonthlyPrice).toBe(LESSON_MONTHLY_PRICE);
@@ -178,8 +180,8 @@ describe('가격 SSOT 정합', () => {
       // 실제 진입 상품인 싱글 발매 프로젝트(= 싱글 통합 번들)로 교체
       SINGLE_BUNDLE_PRICE,
       PRACTICE_ROOM_MONTHLY_PRICE,
-      // 2026-09-25 추가 — 연습실 시간제(VAT 포함 소비자가). 월세 바로 뒤에 둔다
-      PRACTICE_ROOM_HOURLY_PRICE_INCL,
+      // 2026-09-25 추가 — 연습실 시간제(VAT 포함 소비자가). 월세 바로 뒤에 둔다. 판매를 닫으면 빠진다(2026-10-24~).
+      ...(PRACTICE_ROOM_HOURLY_OPEN ? [PRACTICE_ROOM_HOURLY_PRICE_INCL] : []),
       // 2026-09-16 추가 — 홈 OfferCatalog가 pricing 페이지의 19개 오퍼 중 홍보·펀딩 설계를 빼고 있었다
       RELEASE_PRESS_INTRO_PRICE,
       FUNDING_DESIGN_PRICE,
@@ -209,16 +211,21 @@ describe('가격 SSOT 정합', () => {
       'ko'
     ) as {
       offers: Array<{ price: number; priceSpecification: { price: number; unitCode?: string; valueAddedTaxIncluded?: boolean } }>;
-      potentialAction: { '@type': string; target: { urlTemplate: string } };
+      potentialAction?: { '@type': string; target: { urlTemplate: string } };
     };
     // 2026-09-25부터 offers는 [월세, 시간제] 배열이다.
     expect(schema.offers[0].price).toBe(PRACTICE_ROOM_MONTHLY_PRICE);
     expect(schema.offers[0].priceSpecification.price).toBe(PRACTICE_ROOM_MONTHLY_PRICE);
-    expect(schema.offers[1].price).toBe(PRACTICE_ROOM_HOURLY_PRICE_INCL);
-    expect(schema.offers[1].priceSpecification.unitCode).toBe('HUR');
-    expect(schema.offers[1].priceSpecification.valueAddedTaxIncluded).toBe(true);
-    expect(schema.potentialAction['@type']).toBe('ReserveAction');
-    expect(schema.potentialAction.target.urlTemplate).toContain('/ko/booking/practice-room');
+    if (PRACTICE_ROOM_HOURLY_OPEN) {
+      expect(schema.offers[1].price).toBe(PRACTICE_ROOM_HOURLY_PRICE_INCL);
+      expect(schema.offers[1].priceSpecification.unitCode).toBe('HUR');
+      expect(schema.offers[1].priceSpecification.valueAddedTaxIncluded).toBe(true);
+      expect(schema.potentialAction?.['@type']).toBe('ReserveAction');
+      expect(schema.potentialAction?.target.urlTemplate).toContain('/ko/booking/practice-room');
+    } else {
+      expect(schema.offers).toHaveLength(1);
+      expect(schema.potentialAction).toBeUndefined();
+    }
   });
 
   it('pages/[locale]/studio-info.tsx가 가격 리터럴 대신 SSOT 상수를 import한다', () => {
@@ -681,7 +688,7 @@ describe('JSON-LD Offer 부가세 표기 (2026-10-15 정책)', () => {
       offers: OfferNode[];
     };
     expect(schema.offers[0].priceSpecification?.valueAddedTaxIncluded).toBe(false);
-    expect(schema.offers[1].priceSpecification?.valueAddedTaxIncluded).toBe(true);
+    if (PRACTICE_ROOM_HOURLY_OPEN) expect(schema.offers[1].priceSpecification?.valueAddedTaxIncluded).toBe(true);
     expectVatPolicy('practice-room', schema.offers, (o) => o.price === PRACTICE_ROOM_MONTHLY_PRICE);
   });
 

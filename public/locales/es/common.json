@@ -357,6 +357,7 @@
     },
     "practiceRoom": {
       "title": "Sala de Práctica — Residencia Mensual · Por Horas",
+      "titleMonthly": "Sala de Práctica — Residencia Mensual",
       "subtitle": "Un espacio insonorizado 24/7 alquilado por mes: solemos estar llenos, así que también aceptamos lista de espera.",
       "subtitleVacant": "Un espacio insonorizado 24/7 alquilado por mes: disponible para mudarse ahora mismo.",
       "detailLink": "Ver instalaciones y beneficios para residentes",

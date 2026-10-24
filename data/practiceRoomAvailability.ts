@@ -13,3 +13,11 @@ export const PRACTICE_ROOM_HAS_VACANCY = true;
  */
 export const PRACTICE_ROOM_VACANT_ROOMS = 1;
 export const PRACTICE_ROOM_AVAILABILITY_UPDATED_ON = '2026-09-18';
+
+/**
+ * 연습실 시간제(R02, 시간당 6,600원) 판매 여부. false면 온라인 예약·슬롯·안내·스키마·llms.txt를 전부 닫는다.
+ * 2026-10-24 닫음 — 판매 시작(9/27) 뒤 주문 0건, 연습실 문의는 전부 월세를 보고 온다(운영자).
+ * 가격 상수(PRACTICE_ROOM_HOURLY_PRICE_INCL)와 상품 정의는 남겨 둔다 — 되돌릴 때는 이 값만 true로. 관리자 수기 예약은 닫혀도 받는다.
+ * 설계: docs/design-practice-room-hourly-sunset-2026-10.md
+ */
+export const PRACTICE_ROOM_HOURLY_OPEN = false;

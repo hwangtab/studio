@@ -5,6 +5,12 @@
  * 슬롯 화면(GET /slots)은 표시일 뿐이라, 화면을 미리 열어 두었거나 API를 직접 부르면
  * 캘린더에만 적힌 일정을 뚫고 예약이 성립했다(2026-09-25 감사). 여기서 그 구멍을 고정한다.
  */
+jest.mock('../../../data/practiceRoomAvailability', () => ({
+  ...jest.requireActual('../../../data/practiceRoomAvailability'),
+  // 이 테스트는 연습실 시간제 상품을 방·캘린더 규칙의 수단으로 쓴다 — 판매 스위치와 무관하게 연다.
+  PRACTICE_ROOM_HOURLY_OPEN: true,
+}));
+
 import { createClient, type Client } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
 import { readdirSync, readFileSync } from 'node:fs';

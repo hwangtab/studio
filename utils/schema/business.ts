@@ -1,3 +1,4 @@
+import { PRACTICE_ROOM_HOURLY_OPEN } from '../../data/practiceRoomAvailability';
 import { type Locale } from '../../lib/i18n';
 import { getSiteConfig, listingProfiles, socialProfiles } from '../../data/siteConfig';
 import {
@@ -96,7 +97,7 @@ export const generateDefaultSchema = (
     { name: MIXING_OFFER_NAMES[locale], price: MIXING_LEVEL1_PRICE, path: '/pricing' },
     { name: RELEASE_TIER_LABELS.single[locale], price: SINGLE_BUNDLE_PRICE, path: '/release-project/single' },
     { name: PRACTICE_OFFER_NAMES[locale], price: PRACTICE_ROOM_MONTHLY_PRICE, path: '/practice-room', vatIncluded: false, unitCode: 'MON' },
-    { name: PRACTICE_HOURLY_OFFER_NAMES[locale], price: PRACTICE_ROOM_HOURLY_PRICE_INCL, path: '/practice-room', unitCode: 'HUR' },
+    ...(PRACTICE_ROOM_HOURLY_OPEN ? [{ name: PRACTICE_HOURLY_OFFER_NAMES[locale], price: PRACTICE_ROOM_HOURLY_PRICE_INCL, path: '/practice-room', unitCode: 'HUR' }] : []),
     // 홍보 도입가는 종료일이 정해져 있다 — 일반 오퍼처럼 +12개월로 주장하면 표시광고법상 허위가 된다.
     { name: RELEASE_PRESS_OFFER_NAMES[locale], price: RELEASE_PRESS_INTRO_PRICE, path: '/music-promotion', validUntil: RELEASE_PRESS_INTRO_ENDS_ON },
     // 전용 LP는 ko 전용이라 다른 로케일은 요금 페이지를 가리킨다(/en/crowdfunding-design은 404).

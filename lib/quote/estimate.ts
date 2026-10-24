@@ -1,3 +1,4 @@
+import { PRACTICE_ROOM_HOURLY_OPEN } from '../../data/practiceRoomAvailability';
 import {
   ALBUM_BUNDLE_PRICE,
   COVER_VIDEO_PACKAGE_PRICE,
@@ -94,7 +95,7 @@ export const SCALE_QUESTIONS: Partial<Record<QuoteService, { question: string; c
   practice: {
     question: '어떻게 쓰실 건가요?',
     choices: [
-      { id: 'hourly', label: '시간 단위로' },
+      ...(PRACTICE_ROOM_HOURLY_OPEN ? [{ id: 'hourly', label: '시간 단위로' }] : []),
       { id: 'monthly', label: '월 단위로 입주' },
     ],
   },

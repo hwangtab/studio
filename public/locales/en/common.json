@@ -385,6 +385,7 @@
     },
     "practiceRoom": {
       "title": "Practice Room — Monthly Residency · Hourly",
+      "titleMonthly": "Practice Room — Monthly Residency",
       "subtitle": "A 24/7 soundproof workspace rented by the month — we are often full, so waitlist requests are welcome.",
       "subtitleVacant": "A 24/7 soundproof workspace rented by the month — open for move-in right now.",
       "detailLink": "See practice room facilities and resident perks",

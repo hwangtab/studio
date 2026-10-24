@@ -4,7 +4,7 @@ import { getClientIp } from '../../../lib/contracts/client-ip';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { calendarBlockedRooms } from '../../../lib/booking/calendarGuard';
 import { kstDateTime } from '../../../lib/booking/kst';
-import { getProduct } from '../../../lib/booking/products';
+import { getProduct, isProductOpenForOnlineSale } from '../../../lib/booking/products';
 import { createBookingOrder } from '../../../lib/booking/service';
 import { readPreviousOrderNo } from '../../../lib/booking/token';
 import { validateCreateBookingPayload } from '../../../lib/booking/validation';
@@ -39,6 +39,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // 조회 실패는 fail-closed 503 — 슬롯 조회와 같은 규칙.
   const { productId, date, startHour } = validated.value;
   const product = getProduct(productId)!; // validation이 보장
+  // 판매를 닫은 상품(연습실 시간제)은 만들지 않는다. 이미 만든 주문의 확정·환불 경로는 이 판정을 거치지 않는다.
+  if (!isProductOpenForOnlineSale(product))
+    return res.status(409).json({ ok: false, code: 'sales_closed', message: '지금은 받지 않는 상품이에요.' });
   const hours = validated.value.hours!;
 
   if (paymentMethod === 'bank_transfer') {
