@@ -220,8 +220,8 @@ describe('가격 SSOT 정합', () => {
       expect(schema.offers[1].price).toBe(PRACTICE_ROOM_HOURLY_PRICE_INCL);
       expect(schema.offers[1].priceSpecification.unitCode).toBe('HUR');
       expect(schema.offers[1].priceSpecification.valueAddedTaxIncluded).toBe(true);
-      expect(schema.potentialAction['@type']).toBe('ReserveAction');
-      expect(schema.potentialAction.target.urlTemplate).toContain('/ko/booking/practice-room');
+      expect(schema.potentialAction?.['@type']).toBe('ReserveAction');
+      expect(schema.potentialAction?.target.urlTemplate).toContain('/ko/booking/practice-room');
     } else {
       expect(schema.offers).toHaveLength(1);
       expect(schema.potentialAction).toBeUndefined();
