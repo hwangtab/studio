@@ -18,6 +18,7 @@ import { DangerActions } from '../../../../components/admin/DangerActions';
 import { Button } from '../../../../components/ui/Button';
 import { getDb } from '../../../../db/client';
 import { OCCUPYING_STATUSES } from '../../../../lib/billing/service';
+import { actorDisplayName, adminActorNames } from '../../../../lib/contracts/admin-accounts';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { CONTRACT_ADMIN_ACTION_LABELS, type ContractAdminAction } from '../../../../lib/contracts/admin-event-labels';
 import { listContractAdminEvents, type SerializedContractAdminEvent } from '../../../../lib/contracts/admin-events';
@@ -59,6 +60,8 @@ interface AdminContractDetailPageProps {
   occupyingSubscriptionCount: number | null;
   /** 관리자가 이 계약에 한 변경 행위 이력(최신순). 표가 없으면 빈 목록. */
   adminEvents?: SerializedContractAdminEvent[];
+  /** 이력의 수행자 id → 이름. */
+  actorNames?: Record<string, string>;
 }
 
 export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps> = async (
@@ -127,6 +130,7 @@ export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps
       subscriptionClosed: subscription ? ['cancelled', 'ended'].includes(subscription.status) : false,
       occupyingSubscriptionCount,
       adminEvents,
+      actorNames: adminActorNames(),
     },
   };
 };
@@ -160,6 +164,7 @@ export default function AdminContractDetailPage({
   subscriptionClosed,
   occupyingSubscriptionCount,
   adminEvents = [],
+  actorNames = {},
 }: AdminContractDetailPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -521,7 +526,7 @@ export default function AdminContractDetailPage({
                     <span className="font-medium text-gray-900">
                       {CONTRACT_ADMIN_ACTION_LABELS[event.action as ContractAdminAction] ?? event.action}
                     </span>
-                    <span className="text-gray-600">{event.actor}</span>
+                    <span className="text-gray-600">{actorDisplayName(event.actor, actorNames)}</span>
                     {event.fromStatus !== event.toStatus && (
                       <span className="text-xs text-gray-500">
                         {event.fromStatus ? getStatusLabel(event.fromStatus as never) : '-'} → {event.toStatus ? getStatusLabel(event.toStatus as never) : '삭제'}

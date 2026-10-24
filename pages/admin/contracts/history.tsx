@@ -7,6 +7,7 @@ import { AdminShell } from '../../../components/admin/AdminShell';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
+import { actorDisplayName, adminActorNames } from '../../../lib/contracts/admin-accounts';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { CONTRACT_ADMIN_ACTION_LABELS, type ContractAdminAction } from '../../../lib/contracts/admin-event-labels';
 import {
@@ -23,6 +24,8 @@ const LIST_LIMIT = 200;
 interface AdminContractHistoryPageProps {
   events: ContractEventListRow[];
   actors: string[];
+  /** 수행자 id → 이름. 필터 값·CSV는 id 그대로다. */
+  actorNames: Record<string, string>;
   /** 지금 적용된 필터(폼 기본값 + CSV 링크). */
   filter: { actor: string; action: string; contract: string; from: string; to: string };
   truncated: boolean;
@@ -44,13 +47,14 @@ export const getServerSideProps: GetServerSideProps<AdminContractHistoryPageProp
 
   try {
     const [rows, actors] = await Promise.all([searchContractAdminEvents(parsed), listContractEventActors()]);
-    return { props: { events: rows.slice(0, LIST_LIMIT), actors, filter, truncated: rows.length > LIST_LIMIT } };
+    return { props: { events: rows.slice(0, LIST_LIMIT), actors, actorNames: adminActorNames(), filter, truncated: rows.length > LIST_LIMIT } };
   } catch (error: unknown) {
     console.error('[admin/contracts/history] 이력 조회 실패:', error);
     return {
       props: {
         events: [],
         actors: [],
+        actorNames: {},
         filter,
         truncated: false,
         error: '이력을 불러오지 못했습니다. 운영 DB에 마이그레이션 0075(contract_admin_events)이 적용됐는지 확인해 주세요.',
@@ -66,7 +70,7 @@ const queryString = (filter: AdminContractHistoryPageProps['filter']): string =>
   return text ? `?${text}` : '';
 };
 
-export default function AdminContractHistoryPage({ events, actors, filter, truncated, error }: AdminContractHistoryPageProps) {
+export default function AdminContractHistoryPage({ events, actors, actorNames, filter, truncated, error }: AdminContractHistoryPageProps) {
   return (
     <>
       <Head>
@@ -96,7 +100,7 @@ export default function AdminContractHistoryPage({ events, actors, filter, trunc
                 <option value="">전체</option>
                 {actors.map((actor) => (
                   <option key={actor} value={actor}>
-                    {actor}
+                    {actorDisplayName(actor, actorNames)}
                   </option>
                 ))}
               </Select>
@@ -161,7 +165,7 @@ export default function AdminContractHistoryPage({ events, actors, filter, trunc
                       <td data-label="행위" className="px-4 py-3 font-medium text-gray-900">
                         {CONTRACT_ADMIN_ACTION_LABELS[event.action as ContractAdminAction] ?? event.action}
                       </td>
-                      <td data-label="수행자" className="px-4 py-3">{event.actor}</td>
+                      <td data-label="수행자" className="px-4 py-3">{actorDisplayName(event.actor, actorNames)}</td>
                       <td data-label="상태 변화" className="px-4 py-3 text-gray-600">
                         {event.fromStatus === event.toStatus
                           ? '-'

@@ -37,9 +37,11 @@ const ev = (type: ProductionEventType, at: string, extra: Partial<ProductionCont
   };
 };
 
-const renderPanel = (terms: ProductionTerms, events: ProductionContractEvent[]) => {
+const renderPanel = (terms: ProductionTerms, events: ProductionContractEvent[], actorNames: Record<string, string> = {}) => {
   const ledger = computeProductionLedger({ terms, signedAt: SIGNED, events, now: kst('2026-11-25T09:00:00') });
-  return render(<ProductionProgressPanel contractId="c1" view={buildAdminProgressView(terms, ledger, events)} editable={false} />);
+  return render(
+    <ProductionProgressPanel contractId="c1" view={buildAdminProgressView(terms, ledger, events)} actorNames={actorNames} editable={false} />,
+  );
 };
 
 describe('AI 리워크 진행 패널', () => {
@@ -49,6 +51,16 @@ describe('AI 리워크 진행 패널', () => {
     renderPanel(rework, [ev('payment_received', '2026-11-03T09:00:00', { amount: 500_000 })]);
     expect(screen.getByText('중간금 300,000원')).toBeInTheDocument();
     expect(screen.getByText('편곡 승인 후')).toBeInTheDocument();
+  });
+
+  it('기록한 관리자는 id가 아니라 이름으로 보이고, 이름표에 없으면 기록 그대로다', () => {
+    const events = [ev('payment_received', '2026-11-03T09:00:00', { amount: 500_000 })];
+    const { unmount } = renderPanel(rework, events, { kyungha: '황경하' });
+    expect(screen.getByText('황경하')).toBeInTheDocument();
+    expect(screen.queryByText(/kyungha/)).not.toBeInTheDocument();
+    unmount();
+    renderPanel(rework, events);
+    expect(screen.getByText('admin:kyungha')).toBeInTheDocument();
   });
 
   it('지급 비율 해지 미리보기 — 받은 금액 × 단계 비율, 항목표 행 없음', () => {

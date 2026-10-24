@@ -7,6 +7,7 @@ import { lightOnlyField } from '../ui/adminFieldClass';
 import { formatCurrency } from '../../lib/contracts/format';
 import { formatAdminDate, formatAdminDateTime } from '../../lib/admin/displayDate';
 import { adminEventTypesFor, EVENT_SPEC, eventLabelFor, eventStagesFor, isPerSongEvent, STAGE_LABEL } from '../../lib/contracts/production/event-spec';
+import { actorDisplayName } from '../../lib/contracts/admin-accounts';
 import type { AdminProgressView, TimelineItem } from '../../lib/contracts/production/progress-view';
 import type { ProductionEventType } from '../../db/schema';
 import { ActionNotice } from './ActionNotice';
@@ -48,8 +49,8 @@ const post = async (contractId: string, body: Record<string, unknown>) => {
   }
 };
 
-const actorLabel = (actor: string) =>
-  actor === 'client' ? '의뢰인' : actor === 'system' ? '자동' : actor.replace(/^admin:/, '관리자 ');
+const actorLabel = (actor: string, actorNames: Readonly<Record<string, string>>) =>
+  actor === 'client' ? '의뢰인' : actor === 'system' ? '자동' : actorDisplayName(actor, actorNames);
 
 const Row = ({ label, value }: { label: string; value: React.ReactNode }) => (
   <div className="flex justify-between gap-4">
@@ -221,11 +222,14 @@ function RecordForm({
 export default function ProductionProgressPanel({
   contractId,
   view,
+  actorNames = {},
   editable,
   voidable = editable,
 }: {
   contractId: string;
   view: AdminProgressView;
+  /** 기록의 수행자 id → 이름(서버가 만든다). 표에 없는 값은 기록 그대로 보인다. */
+  actorNames?: Record<string, string>;
   /** 진행 중(signed)일 때만 기록을 더한다. */
   editable: boolean;
   /** 잘못 넣은 기록을 무효로 할 수 있는가 — 진행 중이거나 해지한 계약(환불 정산을 바로잡는다). */
@@ -413,7 +417,7 @@ export default function ProductionProgressPanel({
                     {item.mode === 'deemed' ? ' (기한 경과)' : item.mode === 'explicit' ? ' (의뢰인)' : ''}
                   </span>
                   {item.amount !== null && <span>{formatCurrency(item.amount)}원</span>}
-                  <span className="text-gray-500">{actorLabel(item.actor)}</span>
+                  <span className="text-gray-500">{actorLabel(item.actor, actorNames)}</span>
                   {item.backdated && <span className="text-amber-700">소급</span>}
                   {item.noticeStatus !== 'none' && (
                     <span className={item.noticeStatus === 'failed' ? 'text-red-600' : 'text-gray-500'}>
