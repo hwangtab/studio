@@ -112,3 +112,18 @@ month,query_id,engine,cited(yes/no),search_triggered(yes/no/unknown),cited_url,c
 2026-10,CA02,gemini,no,yes,na,na,na,na,"Isowys' Music, 매일신문",absent,스튜디오 놀 언급 없음,unknown
 2026-10,LS01,gemini,no,yes,na,na,na,na,"Club FF, Vel.R, 제비다방, 프리즘홀, 클럽 라이브앤라우드",absent,"구글 지도 장소카드 5곳(홍대/합정/상수), 스튜디오 놀 언급 없음",unknown
 2026-10,LS02,gemini,no,yes,na,na,na,na,은평문화예술회관,absent,"구글 지도 장소카드 1곳+공연 일정 안내, 스튜디오 놀 언급 없음",unknown
+2026-10,Q09,naver-ai-tab,no,yes,na,na,na,na,크몽 BKSOUND; DH Mastering Studio; Peak-Studios; AmazingTalker; Voice Check,absent,run 1/1 2026-10-24 Sonnet/aside | briefing: no | tier=none | 통합검색 일반결과 2위(studionol 믹싱 20만원부터)인데 AI탭 미인용 | 출처 kmong·cafe.naver·mule·hiphopplaya·뉴스8,none
+2026-10,Q15,naver-ai-tab,yes,yes,https://studionol.co.kr/ko/recording,본문 2문장 + '그 외 추천' 소카드,prose,6,루나뮤직; 블루엘; 스노우핑거; 그레이보컬스튜디오; 키스톤 스튜디오; 제이스스튜디오,neutral,run 1/1 | briefing: no | tier=body | 상위5 카드 아님 | 플레이스 리뷰 4·24시간·장소대여로 표시,none
+2026-10,Q16,naver-ai-tab,yes,yes,na,플레이스 10곳 표,table,8,연신내 음악연습실; 아트웨이브; SMC 연신내점; 엘뮤직; 다스뮤직; 감성팩토리; 키스톤; 서현민음악연습실,neutral,run 1/1 | briefing: no | tier=body | 출처 플레이스뿐(사이트 미인용) | '월세 미공개'로 답함(사이트엔 36만원 공개),none
+2026-10,Q17,naver-ai-tab,yes,yes,https://studionol.co.kr/ko/recording,첫 문장+표+카드,table,1,메이팝스튜디오; 키스톤 스튜디오; 스튜디오 몽묘; 더엠스튜디오,positive,run 1/1 | briefing: no | tier=body | 3시간 25만·시간당 10만·4h 35만·8h 65만·U87Ai·Vintech 정확 | 출처 recording·studio-info·홈·블로그 hwangtab,등록 업종을 '장소 대여'로 서술(플레이스 카테고리 그대로)
+2026-10,Q18,naver-ai-tab,yes,yes,https://studionol.co.kr/ko/practice-room,본문+요금표,table,1,로뎀뮤직스튜디오; 은평구 관인음악학원,positive,"run 1/1 | briefing: 잠시 표시 후 '제공되지 않습니다' | tier=body | 'STC 방음 스튜디오 놀' 표기 | 월 36만·보증금 0·6,600원·공실 1(9/18) 정확",none
+2026-10,Q19,naver-ai-tab,yes,yes,https://studionol.co.kr/ko/wedding-song,가격표 행 + 문장 1,table,7,발할랜드; 스튜디오시즌; 멜로우 사운드; 헤마스튜디오; Orange Music; 스노우핑거; 파도뮤직; 람사운드; 크몽,neutral,"run 1/1 | briefing: yes(킹 스튜디오·답샘·크몽, 우리 미언급) | tier=body | '축가 패키지 35만원' 정확",none
+2026-10,Q20,naver-ai-tab,no,yes,na,na,na,na,미니룹미디어; 위플레이랩스튜디오; 프로보이스,absent,run 1/1 | briefing: no | tier=none | 통합검색 1페이지에도 없음(1위 hivoice),none
+2026-10,L01,naver-ai-tab,no,yes,na,na,na,na,오위드; 커스사운드; 믹스유; PLITDJ; JNY실용음악학원; 시욱미디작곡클래스; 작곡시간,absent,run 1/1 | briefing: no | tier=none | 출처 50건 안에도 없음,none
+2026-10,C01,naver-ai-tab,no,yes,na,na,na,na,에이먼스튜디오; YK유튜브스튜디오; 캣츠스튜디오; 야기스튜디오; 데이사운드; 센트럴 뮤직; 커먼스튜디오; 스노우핑거; 잭팟 레코즈; 아이콘 녹음실,absent,run 1/1 | briefing: no | tier=none | 앞 질의 문맥(성우·더빙) 섞임 — 세션 오염,none
+2026-10,P02,naver-ai-tab,yes,yes,https://studionol.co.kr/ko/release-project,첫 문장+표,table,1,WEownUS MUSIK; 미니룹미디어; Soundlike; 위플레이랩스튜디오; 다함미디어,positive,"run 1/1 | briefing: no | tier=body | 'EP 3~6곡 약 180만원부터, 부가세 포함' 정확 | 후반 성우 절은 앞 질의 문맥",none
+2026-10,Q17,google-ai-mode,yes,yes,https://studionol.co.kr/ko/recording,본문 1위 서술+지도 카드,prose,1,잭실용음악스튜디오; 아트웨이브 연신내연습실,positive,run 1/1 2026-10-24 Chrome udm=50 (pws 켜짐) | tier=body | U87Ai·SSL Fusion·24시간,none
+2026-10,Q09,google-ai-mode,no,yes,na,na,na,na,크몽; SoundBetter; Fiverr; RoEx Automix; LANDR,absent,run 1/1 Chrome udm=50 | tier=none | ChatGPT와 같은 플랫폼 목록,none
+2026-10,V03,google-ai-mode,yes,yes,https://studionol.co.kr/ko/stories/seoul-studio-compare,섹션1 카드+문장,prose,3,블루포닉 5.0(5); 살폿 5.0(5); 콩뮤직 4.9(23); 루나뮤직; 우리녹음실 4.8(17); 잼인서울; 아트하우스,neutral,run 1/1 Chrome udm=50 pws=0 | tier=body | 카드에 평점 없음(경쟁사는 전부 평점) | pws 켜진 1차 실행에선 1위,none
+2026-10,Q19,google-ai-mode,no,yes,https://studionol.co.kr/ko/wedding-song,가격표 출처('스튜디오 놀 +3'),table,na,스노우핑거; 파도뮤직; 크몽,neutral,run 1/1 Chrome udm=50 pws=0 | tier=source | 업체 추천 없이 가격 가이드만,none
+2026-10,P02,google-ai-mode,yes,yes,https://studionol.co.kr/ko/release-project,본문 1위 서술+비용표 출처,prose,1,이메이진 뮤직; 숨고; 크몽; 에이블스튜디오,positive,run 1/1 Chrome udm=50 pws=0 | tier=body | 5개 국어 보도자료·선공개 싱글까지 서술,none
