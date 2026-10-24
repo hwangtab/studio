@@ -24,6 +24,7 @@ import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { formatPriceAmount, getPricingData, PRACTICE_ROOM_HOURLY_PRICE_INCL } from '../../data/pricing';
+import { PRACTICE_ROOM_HOURLY_OPEN } from '../../data/practiceRoomAvailability';
 import {
   PRACTICE_ROOM_HAS_VACANCY,
   PRACTICE_ROOM_VACANT_ROOMS,
@@ -81,7 +82,8 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
   const practiceRoomFaqs = React.useMemo(
     () =>
       // 11 = 기존 9 + 시간제 2(2026-09-25). 7개 로케일 items 길이가 같아야 한다(i18n 테스트).
-      Array.from({ length: 11 }, (_, i) => ({
+      // 시간제 판매를 닫으면(PRACTICE_ROOM_HOURLY_OPEN=false) 뒤의 시간제 2개(9·10번)는 그리지 않는다.
+      Array.from({ length: PRACTICE_ROOM_HOURLY_OPEN ? 11 : 9 }, (_, i) => ({
         question: t(`practiceRoom.faq.items.${i}.q`),
         answer: t(`practiceRoom.faq.items.${i}.a`),
       })),
@@ -174,7 +176,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
             label={t('practiceRoom.cta.inquiry')}
             phone={siteConfig.contact.phone}
             phoneCtaId="practice_room_hero_phone"
-            secondary={isKo ? { label: t('actions.bookHourly'), href: '/ko/booking/practice-room', ctaId: 'practice_room_hero_book_hourly' } : { label: t('actions.seePricing'), href: '#practice-room-pricing', ctaId: 'practice_room_hero_pricing' }}
+            secondary={isKo && PRACTICE_ROOM_HOURLY_OPEN ? { label: t('actions.bookHourly'), href: '/ko/booking/practice-room', ctaId: 'practice_room_hero_book_hourly' } : { label: t('actions.seePricing'), href: '#practice-room-pricing', ctaId: 'practice_room_hero_pricing' }}
           />
         }
       />
@@ -241,22 +243,27 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
                     ? t('practiceRoom.factsTable.vacancyValue', { rooms: PRACTICE_ROOM_VACANT_ROOMS })
                     : t('practiceRoom.factsTable.vacancyFull'),
                 },
-                {
-                  id: 'hourly',
-                  label: t('practiceRoom.factsTable.hourlyLabel'),
-                  subLabel: t('practiceRoom.factsTable.hourlySub'),
-                  price: `${formatPriceAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL)}원`,
-                  unit: t('practiceRoom.factsTable.hourlyUnit'),
-                },
+                ...(PRACTICE_ROOM_HOURLY_OPEN
+                  ? [
+                      {
+                        id: 'hourly',
+                        label: t('practiceRoom.factsTable.hourlyLabel'),
+                        subLabel: t('practiceRoom.factsTable.hourlySub'),
+                        price: `${formatPriceAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL)}원`,
+                        unit: t('practiceRoom.factsTable.hourlyUnit'),
+                      },
+                    ]
+                  : []),
               ],
             },
           ]}
         />
       </Section>
 
-      {/* 시간제 — 2026-09-25 사이트 예약 오픈. 월세 카드(PriceLeader)와 별개의 상품이라 자기 절을 갖는다.
-          가격은 부가세 포함 소비자가(PRACTICE_ROOM_HOURLY_PRICE_INCL) — 이 페이지의 다른 금액과 과세 표기가
-          다르므로 문구에 "부가세 포함"을 명시한다. 예약 버튼은 ko에서만 렌더된다(BookingEntryButton). */}
+      {/* 시간제 절 — 2026-09-25 사이트 예약 오픈. 월세 카드(PriceLeader)와 별개의 상품이라 자기 절을 갖는다.
+          가격은 부가세 포함 소비자가(PRACTICE_ROOM_HOURLY_PRICE_INCL)라 문구에 "부가세 포함"을 명시한다.
+          PRACTICE_ROOM_HOURLY_OPEN이 꺼지면(2026-10-24~) 그리지 않는다. 설계: docs/design-practice-room-hourly-sunset-2026-10.md */}
+      {PRACTICE_ROOM_HOURLY_OPEN && (
       <Section variant="alternate" spacing="tight">
         <SectionHeading
           icon={Info}
@@ -275,12 +282,13 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
           <BookingEntryButton service="practice-room" locale={locale} />
         </div>
       </Section>
+      )}
 
       <QuickAnswers
         title={t('practiceRoom.faq.title')}
         subtitle={t('practiceRoom.faq.subtitle')}
         items={practiceRoomQuickAnswers}
-        variant="default"
+        variant={PRACTICE_ROOM_HOURLY_OPEN ? 'default' : 'alternate'}
       />
 
       {/* 고민 섹션 */}
@@ -533,8 +541,8 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
           imageAlt={t('practiceRoom.cta.imageAlt')}
           primaryButtonLabel={t('practiceRoom.cta.inquiry')}
           // 페이지 끝 2차는 히어로와 같은 규칙 — 온라인 예약이 되는 서비스는 예약으로(docs/hero-cta-audit-2026-10.md). 비-ko는 오시는 길.
-          secondaryButtonLabel={locale === 'ko' ? t('actions.bookHourly') : t('practiceRoom.cta.location')}
-          secondaryHref={locale === 'ko' ? '/booking/practice-room' : undefined}
+          secondaryButtonLabel={locale === 'ko' && PRACTICE_ROOM_HOURLY_OPEN ? t('actions.bookHourly') : t('practiceRoom.cta.location')}
+          secondaryHref={locale === 'ko' && PRACTICE_ROOM_HOURLY_OPEN ? '/booking/practice-room' : undefined}
           headingAs="h3"
         />
       </Section>

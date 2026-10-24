@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { PRACTICE_ROOM_HOURLY_OPEN } from '../../data/practiceRoomAvailability';
 import { ArrowRight, CheckCircle2, Disc, GraduationCap, HandCoins, Heart, Megaphone, MessageCircle, Mic, SlidersHorizontal, Speaker, Sparkles, Video, Piano } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 
@@ -164,10 +165,12 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
   },
   practice: {
     title: '음악연습실',
-    description: '월 이용료 입주형 개인·보컬·키보드·작곡 연습실. 녹음실과 같은 건물이고, 한두 시간만 필요하면 시간제로도 쓸 수 있어요.',
+    description: PRACTICE_ROOM_HOURLY_OPEN
+      ? '월 이용료 입주형 개인·보컬·키보드·작곡 연습실. 녹음실과 같은 건물이고, 한두 시간만 필요하면 시간제로도 쓸 수 있어요.'
+      : '월 이용료 입주형 개인·보컬·키보드·작곡 연습실. 녹음실과 같은 건물이고, 보증금 없이 24시간 쓸 수 있어요.',
     features: [
       `월 ${man(PRACTICE_ROOM_MONTHLY_PRICE)}부터 (1년 계약 첫 달 50% 할인)`,
-      `시간제 시간당 ${formatPriceAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL)}원 (부가세 포함, 온라인 예약)`,
+      ...(PRACTICE_ROOM_HOURLY_OPEN ? [`시간제 시간당 ${formatPriceAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL)}원 (부가세 포함, 온라인 예약)`] : []),
       '같은 건물에서 녹음 연계 가능',
       '밴드 합주실은 운영하지 않음',
     ],

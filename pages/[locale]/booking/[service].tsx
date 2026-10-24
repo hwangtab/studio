@@ -4,7 +4,7 @@ import Head from 'next/head';
 import BookingWizard from '../../../components/booking/BookingWizard';
 import MixingOrderWizard from '../../../components/booking/MixingOrderWizard';
 import { getMixingProduct } from '../../../lib/booking/mixing-products';
-import { productsForService, type SessionProduct } from '../../../lib/booking/products';
+import { isProductOpenForOnlineSale, productsForService, type SessionProduct } from '../../../lib/booking/products';
 
 type BookingPageProps =
   | { service: string; kind: 'session'; products: SessionProduct[]; initialProductId?: string }
@@ -46,8 +46,11 @@ export const getServerSideProps = withI18nServerProps<BookingPageProps>(async ({
     return { props: { service, kind: 'mixing', ...(initialProductId ? { initialProductId } : {}) } };
   }
 
-  const products = productsForService(service);
-  if (products.length === 0) return { notFound: true };
+  const allProducts = productsForService(service);
+  if (allProducts.length === 0) return { notFound: true };
+  // 판매를 닫은 상품(연습실 시간제)만 있는 서비스는 안내 페이지로 보낸다. 이 경로는 robots Disallow라 색인과 무관하다.
+  const products = allProducts.filter(isProductOpenForOnlineSale);
+  if (products.length === 0) return { redirect: { destination: '/ko/practice-room', permanent: false } };
   // 가격표 카드가 ?product=로 상품을 미리 고른다(예: Day Lock). 이 서비스의 상품이 아니면 무시한다.
   const productParam = typeof query?.product === 'string' ? query.product : undefined;
   const initialProductId = productParam && products.some((p) => p.id === productParam) ? productParam : undefined;

@@ -1,3 +1,4 @@
+import { PRACTICE_ROOM_HOURLY_OPEN } from '../../data/practiceRoomAvailability';
 import { formatPriceAmount, PRACTICE_ROOM_HOURLY_PRICE_INCL } from '../../data/pricing';
 import { MASTERING_PACKAGE_MIN_SONGS, MIXING_PRODUCTS, mixingUnitAmount } from './mixing-products';
 import { getProduct } from './products';
@@ -69,6 +70,7 @@ const mixingEntry = (productId: string, detail: string): BookingHubEntry => {
 export const buildBookingHub = (): BookingHubGroup[] => {
   const practiceRoom = getProduct('practice-room-hourly');
   if (!practiceRoom) throw new Error('booking hub: 연습실 시간제 상품이 없다');
+  // 판매를 닫으면(PRACTICE_ROOM_HOURLY_OPEN=false) 허브에서 연습실 시간제 카드를 뺀다.
 
   return [
     {
@@ -111,23 +113,27 @@ export const buildBookingHub = (): BookingHubGroup[] => {
         sessionEntry('cover-video-tuning', '올인원 + 정교한 보컬 튠·박자 보정(1곡)', '커버 영상 올인원 + 보컬 튠'),
       ],
     },
-    {
-      id: 'practice-room',
-      title: '음악연습실 시간제',
-      description: '24시간 방음 개인실을 1시간부터 쓸 수 있어요. 예약 후 확정 메일로 입장 안내를 받아요.',
-      priceNote: '부가세 포함',
-      href: '/ko/booking/practice-room',
-      entries: [
+    ...(PRACTICE_ROOM_HOURLY_OPEN
+      ? [
         {
-          productId: practiceRoom.id,
-          name: practiceRoom.nameKo,
-          price: won(PRACTICE_ROOM_HOURLY_PRICE_INCL),
-          unit: '/ 시간',
-          detail: `${practiceRoom.minHours}~${practiceRoom.maxHours}시간 · 24시간 예약`,
-          href: `/ko/booking/practice-room?product=${practiceRoom.id}`,
+          id: 'practice-room',
+          title: '음악연습실 시간제',
+          description: '24시간 방음 개인실을 1시간부터 쓸 수 있어요. 예약 후 확정 메일로 입장 안내를 받아요.',
+          priceNote: '부가세 포함',
+          href: '/ko/booking/practice-room',
+          entries: [
+            {
+              productId: practiceRoom.id,
+              name: practiceRoom.nameKo,
+              price: won(PRACTICE_ROOM_HOURLY_PRICE_INCL),
+              unit: '/ 시간',
+              detail: `${practiceRoom.minHours}~${practiceRoom.maxHours}시간 · 24시간 예약`,
+              href: `/ko/booking/practice-room?product=${practiceRoom.id}`,
+            },
+          ],
         },
-      ],
-    },
+        ]
+      : []),
     {
       id: 'mixing-mastering',
       title: '믹싱·마스터링 의뢰',

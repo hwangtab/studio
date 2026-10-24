@@ -11,6 +11,7 @@ import {
   VOICEOVER_HOURLY_PRICE,
   WEDDING_PACKAGE_PRICE,
 } from '../../data/pricing';
+import { PRACTICE_ROOM_HOURLY_OPEN } from '../../data/practiceRoomAvailability';
 import { splitInclusiveAmount } from './amounts';
 
 /**
@@ -107,6 +108,13 @@ export const SESSION_PRODUCTS: readonly SessionProduct[] = [
   // 운영자 실결제 검증용 — 220원 결제(공급가 200 + VAT 20). 토스 계좌이체 최소 결제금액이 200원이라 그 위로 잡는다. 가격 SSOT 대상 상품이 아니다.
   { id: 'smoke-test', service: 'smoke-test', nameKo: '결제 연동 테스트 (운영자용)', kind: 'package', unitAmount: 220, sessionHours: 1 },
 ] as const;
+
+/**
+ * 온라인(고객) 예약을 받는 상품인가. 연습실 시간제는 PRACTICE_ROOM_HOURLY_OPEN이 꺼지면 닫힌다.
+ * 관리자 수기 예약은 이 판정을 쓰지 않는다(manualEntry) — 운영자가 예외로 받을 수 있게.
+ */
+export const isProductOpenForOnlineSale = (product: SessionProduct): boolean =>
+  product.id !== 'practice-room-hourly' || PRACTICE_ROOM_HOURLY_OPEN;
 
 export const getProduct = (id: string): SessionProduct | undefined =>
   SESSION_PRODUCTS.find((p) => p.id === id);

@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import ServiceLinkPill from '../../components/ui/ServiceLinkPill';
 import QuoteEntryLink from '../../components/quote/QuoteEntryLink';
+import { PRACTICE_ROOM_HOURLY_OPEN } from '../../data/practiceRoomAvailability';
 import { Mic, SlidersHorizontal, Disc, Info, Star, PlusCircle, ArrowRight, Building, Music } from '@/lib/lucide-icons';
 import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 import MarketPriceComparison from '../../components/pricing/MarketPriceComparison';
@@ -209,7 +210,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       { id: 'mixing', title: t('pricing.mixing.title'), offers: mixingOffers },
       { id: 'mastering', title: t('pricing.mastering.title'), offers: masteringOffers },
       { id: 'arrangement', title: t('pricing.arrangement.title'), offers: arrangementOffers },
-      { id: 'practice-room', title: t('pricing.practiceRoom.title'), offers: practiceRoomOffers },
+      { id: 'practice-room', title: t(PRACTICE_ROOM_HOURLY_OPEN ? 'pricing.practiceRoom.title' : 'pricing.practiceRoom.titleMonthly'), offers: practiceRoomOffers },
     ],
     [t, specialPackages, recordingOffers, mixingOffers, masteringOffers, arrangementOffers, practiceRoomOffers]
   );
@@ -221,7 +222,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
     { id: 'mixing', label: t('pricing.mixing.title') },
     { id: 'mastering', label: t('pricing.mastering.title') },
     { id: 'arrangement', label: t('pricing.arrangement.title') },
-    { id: 'practice-room', label: t('pricing.practiceRoom.title') },
+    { id: 'practice-room', label: t(PRACTICE_ROOM_HOURLY_OPEN ? 'pricing.practiceRoom.title' : 'pricing.practiceRoom.titleMonthly') },
     { id: 'support-services', label: t('pricing.additional.title') },
   ], [t]);
 
@@ -623,7 +624,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       <Section id="practice-room" variant="default" className="scroll-mt-32">
         <SectionHeading
           icon={Building}
-          title={t('pricing.practiceRoom.title')}
+          title={t(PRACTICE_ROOM_HOURLY_OPEN ? 'pricing.practiceRoom.title' : 'pricing.practiceRoom.titleMonthly')}
           subtitle={t(PRACTICE_ROOM_HAS_VACANCY ? 'pricing.practiceRoom.subtitleVacant' : 'pricing.practiceRoom.subtitle', { rooms: PRACTICE_ROOM_VACANT_ROOMS })}
         />
         {/* 월 이용료는 VAT 별도다(운영자 확정 2026-10-01, 2026-10-15 재확인). 나머지 표시 가격은 전부 VAT 포함이라

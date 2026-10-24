@@ -1,4 +1,5 @@
 import type { Locale } from '../lib/i18n';
+import { PRACTICE_ROOM_HOURLY_OPEN } from './practiceRoomAvailability';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 가격 단일 소스(SSOT).
@@ -1111,7 +1112,8 @@ export const getPricingData = (locale: Locale) => {
     arrangementOffers,
     additionalServices,
     specialPackages,
-    practiceRoomOffers,
+    // 시간제 오퍼는 PRACTICE_ROOM_HOURLY_OPEN이 꺼지면 목록에서 뺀다(2026-10-24).
+    practiceRoomOffers: practiceRoomOffers.filter((o) => o.id !== 'practice-room-hourly' || PRACTICE_ROOM_HOURLY_OPEN),
     // 통합 가격표에는 아직 카드로 렌더하지 않지만, 교차판매·스키마 참조를 위해
     // 매출 라인 가격을 데이터로 노출한다(SSOT).
     lessonMonthlyPrice: LESSON_MONTHLY_PRICE,

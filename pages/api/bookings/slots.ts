@@ -5,7 +5,7 @@ import { getDb } from '../../../db/client';
 import { availabilityBlocks, bookings } from '../../../db/schema';
 import { calendarIdFor, fetchBusyRanges, isCalendarActive, type BookingCalendar, type BusyRange } from '../../../lib/booking/gcal';
 import { daysUntilKst, kstDateTime } from '../../../lib/booking/kst';
-import { occupancyConflictKeys, getProduct, productHours, resolveHours, resourceKindOf } from '../../../lib/booking/products';
+import { occupancyConflictKeys, getProduct, isProductOpenForOnlineSale, productHours, resolveHours, resourceKindOf } from '../../../lib/booking/products';
 import { occupancyCalendars } from '../../../lib/booking/calendarGuard';
 import { buildDaySlots, mergeRoomSlots, type DaySlot } from '../../../lib/booking/slots';
 import { expireStaleOrders, occupiedBookingSql } from '../../../lib/booking/service';
@@ -52,6 +52,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const product = typeof productId === 'string' ? getProduct(productId) : undefined;
   if (!product) return res.status(400).json({ ok: false, message: '알 수 없는 상품이에요.' });
+  if (!isProductOpenForOnlineSale(product))
+    return res.status(409).json({ ok: false, code: 'sales_closed', message: '지금은 받지 않는 상품이에요.' });
 
   const requestedHours = typeof hoursParam === 'string' && hoursParam !== '' ? Number(hoursParam) : undefined;
   const hours = resolveHours(product, requestedHours);

@@ -1,3 +1,4 @@
+import { PRACTICE_ROOM_HOURLY_OPEN } from '../../data/practiceRoomAvailability';
 import { type Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { PRACTICE_ROOM_HOURLY_PRICE_INCL, PRACTICE_ROOM_MONTHLY_PRICE } from '../../data/pricing';
@@ -150,7 +151,9 @@ export const generatePracticeRoomMonthlyRentSchema = (
       eligibleRegion: { '@type': 'Country', name: 'KR' },
       // provider와 같은 이유로 참조만 (위 주석 참고).
       seller: { '@id': `${config.url}/#studio` },
-    }, {
+    },
+    // 시간제 오퍼는 PRACTICE_ROOM_HOURLY_OPEN이 꺼지면(2026-10-24~) 싣지 않는다.
+    ...(PRACTICE_ROOM_HOURLY_OPEN ? [{
       // 시간제 — 2026-09-25 사이트 예약 오픈. **VAT 포함** 소비자가(월 이용료는 별도) — 두 오퍼의
       // 과세 표기가 다르다는 것을 여기 남긴다. 예약 액션은 아래 potentialAction.
       '@type': 'Offer',
@@ -176,9 +179,10 @@ export const generatePracticeRoomMonthlyRentSchema = (
           : locale === 'uz' ? 'soat'
           : 'hour',
       },
-    }],
+    }] : []),
+  ],
     // 사이트에서 바로 예약 — AI·검색엔진이 "예약 가능"과 그 주소를 읽게 한다.
-    potentialAction: {
+    ...(PRACTICE_ROOM_HOURLY_OPEN ? { potentialAction: {
       '@type': 'ReserveAction',
       target: {
         '@type': 'EntryPoint',
@@ -187,7 +191,7 @@ export const generatePracticeRoomMonthlyRentSchema = (
         actionPlatform: ['http://schema.org/DesktopWebPlatform', 'http://schema.org/MobileWebPlatform'],
       },
       result: { '@type': 'Reservation', name: copy.hourlyOfferName },
-    },
+    } } : {}),
   };
 };
 

@@ -1,3 +1,4 @@
+import { PRACTICE_ROOM_HOURLY_OPEN } from '../../data/practiceRoomAvailability';
 import { PRACTICE_ROOM_HOURLY_PRICE_INCL, formatPriceAmount } from '../../data/pricing';
 import { BOOKING_HUB_INQUIRY_LINKS, buildBookingHub } from './hub';
 import { MIXING_PRODUCTS } from './mixing-products';
@@ -28,9 +29,11 @@ describe('예약 통합 랜딩(/ko/booking) 목록', () => {
     const ids = new Set(entries.map((e) => e.productId));
     for (const p of MIXING_PRODUCTS) expect(ids.has(p.id)).toBe(true);
     for (const id of ['recording-pro', 'recording-hourly', 'recording-daylock-4h', 'recording-daylock-8h',
-      'voice-acting-hourly', 'wedding-song', 'cover-video', 'cover-video-tuning', 'practice-room-hourly']) {
+      'voice-acting-hourly', 'wedding-song', 'cover-video', 'cover-video-tuning']) {
       expect(ids.has(id)).toBe(true);
     }
+    // 연습실 시간제는 PRACTICE_ROOM_HOURLY_OPEN을 따른다(2026-10-24 판매 중지).
+    expect(ids.has('practice-room-hourly')).toBe(PRACTICE_ROOM_HOURLY_OPEN);
     expect(ids.has('smoke-test')).toBe(false);
   });
 

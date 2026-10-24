@@ -1,4 +1,5 @@
 import type { Locale } from '../lib/i18n';
+import { PRACTICE_ROOM_HOURLY_OPEN as HOURLY_OPEN } from './practiceRoomAvailability';
 import { CANONICAL_FACTS } from '../lib/factTokens';
 import {
   ALBUM_BUNDLE_PRICE,
@@ -74,7 +75,7 @@ const faqData = {
     },
     {
       question: '연습실은 어떻게 이용하나요?',
-      answer: `월정액 입주 프로그램(월 36만원~, 부가세 별도 · 현금 입금 시에는 부가세 없음)이 기본이에요. 보증금 없이 24시간 출입할 수 있는 방음 개인실이고, 한두 시간만 필요하면 시간제(시간당 ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)}원, 부가세 포함, 1시간부터)로 온라인 결제 후 바로 쓸 수 있어요. 밴드 합주실은 운영하지 않아요.`,
+      answer: `월정액 입주 프로그램(월 36만원~, 부가세 별도 · 현금 입금 시에는 부가세 없음)이 기본이에요. 보증금 없이 24시간 출입할 수 있는 방음 개인실이${HOURLY_OPEN ? '고, 한두 시간만 필요하면 시간제(시간당 ' + krw(PRACTICE_ROOM_HOURLY_PRICE_INCL) + '원, 부가세 포함, 1시간부터)로 온라인 결제 후 바로 쓸 수 있어요' : '에요'}. 밴드 합주실은 운영하지 않아요.`,
     },
     // 2026-09-25 — 홈 FAQ가 녹음·믹싱·연습실·축가만 답하고 있었다. ChatGPT는 홈(/ko)을 직접
     // 인용한 적이 있다(GEO 1회차 Q17·Q19). 나머지 주력 상품을 한 문항씩 둔다.
@@ -153,7 +154,7 @@ const faqData = {
     },
     {
       question: 'How does the practice room work?',
-      answer: `It runs mainly as a monthly residency program (from 360,000 KRW/month, VAT excluded) — a soundproof private room with 24/7 access and no deposit. For just an hour or two, hourly use is ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/hour (VAT included, from 1 hour), paid online. Band rehearsal rooms are not operated.`,
+      answer: `It runs mainly as a monthly residency program (from 360,000 KRW/month, VAT excluded) — a soundproof private room with 24/7 access and no deposit.${HOURLY_OPEN ? ` For just an hour or two, hourly use is ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/hour (VAT included, from 1 hour), paid online.` : ''} Band rehearsal rooms are not operated.`,
     },
     {
       question: 'Can I hand off an entire release, from planning to distribution?',
@@ -216,7 +217,7 @@ const faqData = {
     },
     {
       question: '练习室如何使用？',
-      answer: `练习室以月租入驻项目（36万韩元/月起，不含增值税）为主——无押金、24小时出入的隔音独立房间。只需一两个小时也可按小时使用（每小时 ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} 韩元，含增值税，1小时起）。不提供乐队排练室。`,
+      answer: `练习室以月租入驻项目（36万韩元/月起，不含增值税）为主——无押金、24小时出入的隔音独立房间。${HOURLY_OPEN ? `只需一两个小时也可按小时使用（每小时 ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} 韩元，含增值税，1小时起）。` : ''}不提供乐队排练室。`,
     },
   ],
   es: [
@@ -262,7 +263,7 @@ const faqData = {
     },
     {
       question: '¿Cómo funciona la sala de práctica?',
-      answer: `Funciona principalmente como un programa de residencia mensual (desde 360.000 KRW/mes, IVA no incluido): una sala privada insonorizada con acceso 24/7 y sin depósito. Para una o dos horas también hay uso por horas (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/hora, IVA incluido, desde 1 hora). No operamos salas de ensayo para bandas.`,
+      answer: `Funciona principalmente como un programa de residencia mensual (desde 360.000 KRW/mes, IVA no incluido): una sala privada insonorizada con acceso 24/7 y sin depósito.${HOURLY_OPEN ? ` Para una o dos horas también hay uso por horas (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/hora, IVA incluido, desde 1 hora).` : ''} No operamos salas de ensayo para bandas.`,
     },
   ],
   vi: [
@@ -308,7 +309,7 @@ const faqData = {
     },
     {
       question: 'Phòng tập hoạt động như thế nào?',
-      answer: `Phòng tập chủ yếu hoạt động theo chương trình cư trú hàng tháng (từ 360.000 KRW/tháng, chưa gồm VAT) — phòng riêng cách âm, ra vào 24/7, không cần đặt cọc. Nếu chỉ cần một vài giờ, có thể thuê theo giờ (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/giờ, đã gồm VAT, từ 1 giờ). Không có phòng tập cho ban nhạc.`,
+      answer: `Phòng tập chủ yếu hoạt động theo chương trình cư trú hàng tháng (từ 360.000 KRW/tháng, chưa gồm VAT) — phòng riêng cách âm, ra vào 24/7, không cần đặt cọc.${HOURLY_OPEN ? ` Nếu chỉ cần một vài giờ, có thể thuê theo giờ (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/giờ, đã gồm VAT, từ 1 giờ).` : ''} Không có phòng tập cho ban nhạc.`,
     },
   ],
   th: [
@@ -354,7 +355,7 @@ const faqData = {
     },
     {
       question: 'ห้องซ้อมใช้งานอย่างไร?',
-      answer: `ห้องซ้อมให้บริการหลักเป็นโปรแกรมรายเดือน (เริ่มต้น 360,000 วอน/เดือน ไม่รวม VAT) — ห้องส่วนตัวเก็บเสียง เข้าออกได้ 24 ชั่วโมง ไม่มีเงินมัดจำ หากต้องการเพียงชั่วโมงหรือสองชั่วโมงก็ใช้แบบรายชั่วโมงได้ (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} วอน/ชม. รวม VAT ตั้งแต่ 1 ชม.) ไม่มีห้องซ้อมสำหรับวงดนตรี`,
+      answer: `ห้องซ้อมให้บริการหลักเป็นโปรแกรมรายเดือน (เริ่มต้น 360,000 วอน/เดือน ไม่รวม VAT) — ห้องส่วนตัวเก็บเสียง เข้าออกได้ 24 ชั่วโมง ไม่มีเงินมัดจำ${HOURLY_OPEN ? ` หากต้องการเพียงชั่วโมงหรือสองชั่วโมงก็ใช้แบบรายชั่วโมงได้ (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} วอน/ชม. รวม VAT ตั้งแต่ 1 ชม.)` : ''} ไม่มีห้องซ้อมสำหรับวงดนตรี`,
     },
   ],
   uz: [
@@ -400,7 +401,7 @@ const faqData = {
     },
     {
       question: "Mashg'ulot xonasi qanday ishlaydi?",
-      answer: `Mashgʻulot xonasi asosan oylik rezident dastur (360,000 KRW/oy dan, VAT alohida) sifatida ishlaydi — depozitsiz, 24/7 kirish mumkin bo'lgan tovush o'tkazmaydigan shaxsiy xona. Bir-ikki soat kerak bo'lsa, soatbay foydalanish ham bor (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/soat, VAT bilan, 1 soatdan). Guruh repetitsiya xonalari yo'q.`,
+      answer: `Mashgʻulot xonasi asosan oylik rezident dastur (360,000 KRW/oy dan, VAT alohida) sifatida ishlaydi — depozitsiz, 24/7 kirish mumkin bo'lgan tovush o'tkazmaydigan shaxsiy xona.${HOURLY_OPEN ? ` Bir-ikki soat kerak bo'lsa, soatbay foydalanish ham bor (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/soat, VAT bilan, 1 soatdan).` : ''} Guruh repetitsiya xonalari yo'q.`,
     },
   ]
 };

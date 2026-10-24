@@ -11,6 +11,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { PRACTICE_ROOM_HOURLY_OPEN } from '../data/practiceRoomAvailability';
 import { BRAND_COLOR } from '../lib/brandColor';
 import {
   DAY_LOCK_4H_PRICE,
@@ -60,7 +61,7 @@ const GROUPS: Group[] = [
     icon: '🎹', title: '음악연습실', sub: '보증금 0원 · 24시간',
     rows: [
       { name: '월 입주', note: '24시간 자유 이용 · 부가세 별도', price: PRACTICE_ROOM_MONTHLY_PRICE, unit: '원 / 월' },
-      { name: '시간제', note: '1시간부터 · 무인 · 부가세 포함', price: PRACTICE_ROOM_HOURLY_PRICE_INCL, unit: '원 / 시간' },
+      ...(PRACTICE_ROOM_HOURLY_OPEN ? [{ name: '시간제', note: '1시간부터 · 무인 · 부가세 포함', price: PRACTICE_ROOM_HOURLY_PRICE_INCL, unit: '원 / 시간' }] : []),
     ],
   },
 ];

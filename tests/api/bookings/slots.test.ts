@@ -7,6 +7,12 @@
  * - 연습실 캘린더(PRACTICE_ROOM_GCAL_ID)만 env가 없으면 읽지 않는다(confirm.ts가 같은
  *   조건으로 쓰기를 건너뛰므로 짝을 맞춘다). env가 있으면 그 바쁨이 방 전체 슬롯을 막는다.
  */
+jest.mock('../../../data/practiceRoomAvailability', () => ({
+  ...jest.requireActual('../../../data/practiceRoomAvailability'),
+  // 이 테스트는 연습실 시간제 상품을 방·캘린더 규칙의 수단으로 쓴다 — 판매 스위치와 무관하게 연다.
+  PRACTICE_ROOM_HOURLY_OPEN: true,
+}));
+
 import { createClient, type Client } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
 import { readdirSync, readFileSync } from 'node:fs';
