@@ -181,7 +181,10 @@ export const buildPricingPageSchema = ({
             ? [buildPricingCatalogSchema(t('pricing.arrangement.title'), pricingData.arrangementOffers, context)]
             : []),
           ...(pricingData.practiceRoomOffers?.length
-            ? [buildPricingCatalogSchema(t('pricing.practiceRoom.title'), pricingData.practiceRoomOffers, context)]
+            ? [buildPricingCatalogSchema(
+                // 시간제 오퍼가 목록에 있을 때만 "월 입주 · 시간제" 제목을 쓴다(PRACTICE_ROOM_HOURLY_OPEN).
+                t(pricingData.practiceRoomOffers.some((o) => o.id === 'practice-room-hourly') ? 'pricing.practiceRoom.title' : 'pricing.practiceRoom.titleMonthly'),
+                pricingData.practiceRoomOffers, context)]
             : []),
           buildPricingCatalogSchema(
             t('pricing.additional.title'),
